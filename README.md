@@ -161,7 +161,7 @@ In current version, only *model* tests are implemented for sciNote. To execute t
 
 ## Contributing
 
-For contributing, see [CONTRIBUTING.MD](CONTRIBUTING.MD).
+For contributing, see [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## License
 
