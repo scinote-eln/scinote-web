@@ -1,0 +1,63 @@
+@import "colors";
+@import "mixins";
+
+.tree {
+  height: 100%;
+  overflow-y: auto;
+  padding-bottom: 30px;
+}
+.tree > ul {
+  margin-bottom: 0;
+}
+.tree ul {
+  padding-left: 0;
+}
+.tree li {
+  list-style-type: none;
+  margin: 0;
+  padding: 5px 5px 5px 15px;
+  position: relative;
+
+  &.active > span {
+    background-color: $color-white;
+    border: 1px solid $color-white;
+    border-radius: 4px;
+    font-weight: bold;
+  }
+
+  &.active:not span.tree-link:hover {
+    text-decoration: underline;
+  }
+
+  &.leaf {
+    padding-left: 30px;
+  }
+
+  & i.glyphicon {
+    font-size: 9pt;
+
+    &.expanded {
+      @include rotate(45deg);
+    }
+  }
+
+  /* Links are recolored */
+  a {
+    color: $color-emperor;
+
+    &:hover {
+      color: $color-theme-primary;
+    }
+  }
+
+  span {
+    display:inline-block;
+    padding:3px 8px;
+  }
+}
+.tree li.parent_li>span {
+  display: block;
+}
+.tree li:last-child::before {
+  height:30px;
+}

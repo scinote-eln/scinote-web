@@ -1,0 +1,19 @@
+.samples-table {
+  margin-top: 20px;
+}
+
+#samples_filter,
+#samples_paginate,
+#datatables-buttons {
+  float: right;
+  text-align: inherit;
+}
+
+
+#import-errors-container {
+  padding-top: 15px;
+
+  .alert {
+    position: inherit !important;
+  }
+}

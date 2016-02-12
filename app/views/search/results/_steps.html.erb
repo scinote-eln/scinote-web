@@ -1,0 +1,31 @@
+<% results.each do |step| %>
+  <h5>
+    <span class="glyphicon glyphicon-circle-arrow-right"></span>
+    <%= render partial: "search/results/partials/step_text.html.erb", locals: { step: step, query: search_query } %>
+  </h5>
+
+  <p>
+    <span>
+      <%=t "search.index.created_at" %>
+      <%=l step.created_at, format: :full %>
+    </span>
+    <br>
+    <span>
+      <%=t "search.index.module" %>
+      <%= render partial: "search/results/partials/my_module_text.html.erb", locals: { my_module: step.my_module } %>
+    </span>
+    <br>
+    <span>
+      <%=t "search.index.project" %>
+      <%= render partial: "search/results/partials/project_text.html.erb", locals: { project: step.my_module.project } %>
+    </span>
+    <br>
+    <span>
+      <%=t "search.index.organization" %>
+      <%= render partial: "search/results/partials/organization_text.html.erb", locals: { organization: step.my_module.project.organization } %>
+    </span>
+  </p>
+
+  <hr>
+<% end %>
+

@@ -1,0 +1,5 @@
+<% if @my_module.due_date.blank? %>
+  <em><%=t "projects.canvas.full_zoom.no_due_date" %></em>
+<% else %>
+  <strong><%= l(@my_module.due_date, format: :full) %></strong>
+<% end %>

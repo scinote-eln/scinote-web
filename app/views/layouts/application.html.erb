@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%=t "head.title", title: (yield :head_title) %></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track' => true %>
+    <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+
+    <%= favicon_link_tag "favicon.ico" %>
+    <%= favicon_link_tag "favicon-16.png", type: "image/png", size: "16x16" %>
+    <%= favicon_link_tag "favicon-32.png", type: "image/png", size: "32x32" %>
+    <%= favicon_link_tag "favicon-48.png", type: "image/png", size: "48x48" %>
+
+    <%= csrf_meta_tags %>
+  </head>
+  <body class="<%= yield :body_class %>">
+
+    <!-- Activity modal -->
+    <div class="modal" id="activity-modal" tabindex="-1" role="dialog" aria-labelledby="activity-modal-label">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="activity-modal-label"><%= t'activities.modal.modal_title' %></h4>
+          </div>
+          <div class="modal-body"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal"><%=t "general.close" %></button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <%= render "shared/navigation" %>
+
+    <div id="notifications">
+      <% if flash[:success] %>
+      <div class="alert alert-success alert-dismissable alert-floating">
+        <div class="container">
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+          <span class="glyphicon glyphicon-ok-sign"></span>
+          <span><%= flash[:success].html_safe %></span>
+        </div>
+      </div>
+      <% end %>
+      <% if notice %>
+      <div class="alert alert-info alert-dismissable alert-floating">
+        <div class="container">
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+          <span class="glyphicon glyphicon-info-sign"></span>
+          <span><%= notice %></span>
+        </div>
+      </div>
+      <% end %>
+      <% if alert or flash[:error]%>
+      <div class="alert alert-danger alert-dismissable alert-floating">
+        <div class="container">
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+          <span class="glyphicon glyphicon-exclamation-sign"></span>
+          <span><%= alert || flash[:error].html_safe %></span>
+        </div>
+      </div>
+      <% end %>
+    </div>
+
+    <div id="content-wrapper" class="<%= "alert-shown" if flash[:success] || flash[:error] || notice || alert %>">
+      <%= yield :content %>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,21 @@
+<% query ||= nil %>
+<% text = query.present? ? highlight(my_module.name, query) : my_module.name %>
+
+<% if my_module.archived? %>
+  <span class="label label-warning"><%=t "search.index.archived" %></span>
+  <% if can_view_project_archive(my_module.project) and can_restore_module(my_module) %>
+    <a href="<%= module_archive_project_url(my_module.project) %>">
+      <%= text %>
+    </a>
+  <% else %>
+    <%= text %>
+  <% end %>
+<% else %>
+  <% if can_view_module(my_module) %>
+    <a href="<%= samples_my_module_path(my_module) %>">
+      <%= text %>
+    </a>
+  <% else %>
+    <%= text %>
+  <% end %>
+<% end %>

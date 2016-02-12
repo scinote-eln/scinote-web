@@ -1,0 +1,58 @@
+<% results.each do |comment| %>
+
+  <p>
+    <span class="glyphicon glyphicon-comment"></span>
+    <% if comment.project_comment.present? %>
+      <%=t "search.index.comments.project" %>
+    <% elsif comment.my_module_comment.present? %>
+      <%=t "search.index.comments.my_module" %>
+    <% elsif comment.step_comment.present? %>
+      <%=t "search.index.comments.step" %>
+    <% elsif comment.result_comment.present? %>
+      <%=t "search.index.comments.result" %>
+    <% end %>
+  </p>
+  <div class="row">
+    <p class="chat-bubble col-xs-4">
+      <%= highlight comment.message, @search_query %>
+    </p>
+  </div>
+  <p>
+    <span>
+      <%=t "search.index.created_by" %>
+      <%= highlight comment.user.full_name, @search_query %>
+    </span>
+    <br>
+    <span>
+      <%=t "search.index.created_at" %>
+      <%=l comment.created_at, format: :full %>
+    </span>
+    <br>
+  </p>
+
+  <p>
+    <% if comment.project_comment.present? %>
+      <span>
+        <%=t "search.index.project" %>
+        <%= render partial: "search/results/partials/project_text.html.erb", locals: { project: comment.project_comment.project } %>
+      </span>
+    <% elsif comment.my_module_comment.present? %>
+      <span>
+        <%=t "search.index.module" %>
+        <%= render partial: "search/results/partials/my_module_text.html.erb", locals: { my_module: comment.my_module_comment.my_module } %>
+      </span>
+    <% elsif comment.step_comment.present? %>
+      <span>
+        <%=t "search.index.step" %>
+        <%= render partial: "search/results/partials/step_text.html.erb", locals: { step: comment.step_comment.step } %>
+      </span>
+    <% elsif comment.result_comment.present? %>
+      <span>
+        <%=t "search.index.result" %>
+        <%= render partial: "search/results/partials/result_text.html.erb", locals: { result: comment.result_comment.result } %>
+      </span>
+    <% end %>
+  </p>
+
+  <hr>
+<% end %>

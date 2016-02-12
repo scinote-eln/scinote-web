@@ -1,0 +1,76 @@
+<% provide(:head_title, t("users.registrations.new.head_title")) %>
+
+<div class="center-block center-block-narrow">
+  <h2>Sign up</h2>
+
+  <%= form_for(:user, as: resource_name, url: registration_path(resource_name)) do |f| %>
+
+    <div class="form-group">
+      <%= f.label :full_name %>
+      <%= f.text_field :full_name, autofocus: true, class: "form-control" %>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :email %>
+      <%= f.email_field :email, class: "form-control" %>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :password %>
+      <% if @minimum_password_length %>
+      <em>(<%= @minimum_password_length %> characters minimum)</em>
+      <% end %>
+      <%= f.password_field :password, autocomplete: "off", class: "form-control" %>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :password_confirmation %>
+      <%= f.password_field :password_confirmation, autocomplete: "off", class: "form-control" %>
+    </div>
+
+    <div class="form-group">
+      <%= label :organization, :name %>
+      <% if @org %>
+      <%= text_field :organization, :name, class: "form-control", value: @org.name %>
+      <% else %>
+      <%= text_field :organization, :name, class: "form-control" %>
+      <% end %>
+      <span class="help-block"><small><%= t'users.registrations.new.name_help' %></small></span>
+    </div>
+
+    <div class="form-group">
+      <%= f.submit "Sign up", class: "btn btn-primary" %>
+    </div>
+  <% end %>
+
+  <%= render "devise/shared/links" %>
+</div>
+
+<% if resource and not resource.errors.empty? %>
+<script>
+(function () {
+  var formErrors = {};
+
+  <% resource.errors.each do |err, m| %>
+  formErrors["<%= err %>"] =["<%= m %>"];
+  <% end %>
+
+  $("form").render_form_errors("user", formErrors, false);
+}());
+</script>
+<% end %>
+
+<% if @org and not @org.errors.empty? %>
+<script>
+(function () {
+  var formErrors = {};
+
+  <% @org.errors.each do |err, m| %>
+  formErrors["<%= err %>"] =["<%= m %>"];
+  <% end %>
+
+  $("form").render_form_errors("organization", formErrors, false);
+}());
+</script>
+<% end %>
+

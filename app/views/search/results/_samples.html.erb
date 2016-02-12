@@ -1,0 +1,68 @@
+<% results.each do |sample| %>
+  <h5>
+    <span class="glyphicon glyphicon-tint"></span>
+    <%=t "search.index.samples.sample" %>
+    <%= highlight sample.name, search_query %>
+  </h5>
+
+  <p>
+    <span>
+      <%=t "search.index.samples.sample_type" %>
+      <% if sample.sample_type.present? %>
+        <%= highlight sample.sample_type.name, search_query %>
+      <% else %>
+        <em><%=t "search.index.samples.no_sample_type" %></em>
+      <% end %>
+    </span>
+    <br>
+    <span>
+      <%=t "search.index.samples.sample_group" %>
+      <span class="glyphicon glyphicon-asterisk" style="<%= "color: #{sample.sample_group.color}" if sample.sample_group.present? %>"></span>
+      <% if sample.sample_group.present? %>
+        <%= highlight sample.sample_group.name, search_query %>
+      <% else %>
+        <em><%=t "search.index.samples.no_sample_group" %></em>
+      <% end %>
+    </span>
+    <br>
+    <span>
+      <%=t "search.index.samples.added_on" %>
+      <%=l sample.created_at, format: :full %>
+    </span>
+    <br>
+    <span>
+      <%=t "search.index.samples.added_by" %>
+      <%= highlight sample.user.full_name, search_query %>
+    </span>
+    <% sample.sample_custom_fields.each do |sample_custom_field| %>
+      <br>
+      <span>
+        <%=t "search.index.samples.custom_field", cf: sample_custom_field.custom_field.name %>
+        <%= highlight sample_custom_field.value, search_query %>
+      </span>
+    <% end %>
+  </p>
+
+  <p>
+    <span>
+      <%=t "search.index.modules" %>
+      <% if sample.my_modules.count > 0 %>
+        <% sample.my_modules.each_with_index do |mod, i|  %>
+          <%= render partial: "search/results/partials/my_module_text.html.erb", locals: { my_module: mod } %>
+          <% if i != sample.my_modules.count - 1 %>
+            ,&nbsp;
+          <% end %>
+        <% end %>
+      <% else %>
+        <em><%=t "search.index.sample_no_modules" %></em>
+      <% end %>
+    </span>
+    <br>
+    <span>
+      <%=t "search.index.organization" %>
+      <%= render partial: "search/results/partials/organization_text.html.erb", locals: { organization: sample.organization } %>
+    </span>
+  </p>
+
+  <hr>
+<% end %>

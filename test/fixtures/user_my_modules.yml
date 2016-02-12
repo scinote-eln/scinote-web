@@ -1,0 +1,48 @@
+one:
+  user: steve
+  my_module: sample_prep
+  assigned_by: steve
+
+two:
+  user: steve
+  my_module: rna_test
+  assigned_by: jlaw
+
+three:
+  user: jlaw
+  my_module: rna_test
+  assigned_by: jlaw
+
+four:
+  user: steve
+  my_module: qpcr
+  assigned_by: steve
+
+five:
+  user: steve
+  my_module: list_of_samples
+  assigned_by: steve
+
+non_existing_user:
+  user_id: 99999
+  my_module: rna_test
+  assigned_by: jlaw
+
+non_existing_module:
+  user_id: jlaw
+  my_module_id: 99999
+  assigned_by: jlaw
+
+without_user:
+  user_id: 0
+  my_module: rna_test
+  assigned_by: jlaw
+
+without_module:
+  user_id: jlaw
+  my_module: 0
+
+archived:
+  user: steve
+  my_module: archived
+

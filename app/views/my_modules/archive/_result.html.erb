@@ -1,0 +1,52 @@
+<div class="panel panel-default panel-archive">
+
+  <div class="dropdown pull-right">
+    <button class="btn btn-link dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+      <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1">
+      <li class="dropdown-header"><%=t "projects.index.options_header" %></li>
+      <li>
+        <% option_text = t("my_modules.module_archive.option_download") %>
+        <% if result.is_asset %>
+          <%= link_to option_text, download_asset_path(result.asset), data: {no_turbolink: true}  %>
+        <% elsif result.is_text %>
+          <%= link_to option_text, result_text_download_path(result.result_text_id), data: {no_turbolink: true} %>
+        <% elsif result.is_table %>
+          <%= link_to option_text, result_table_download_path(result.result_table_id), data: {no_turbolink: true} %>
+        <% end %>
+      </li>
+    </ul>
+  </div>
+
+  <div class="panel-heading">
+    <h3 class="panel-title">
+      <% if result.is_asset %>
+        <% if result.asset.is_image? %>
+          <span class="glyphicon glyphicon-picture"></span>
+        <% else %>
+          <span class="glyphicon glyphicon-file"></span>
+        <% end %>
+      <% elsif result.is_text %>
+        <span class="glyphicon glyphicon-asterisk"></span>
+      <% elsif result.is_table %>
+        <span class="glyphicon glyphicon-th"></span>
+      <% end %>
+      <%= result.name %>
+    </h3>
+  </div>
+
+  <div class="panel-body">
+    <div class="row">
+      <div class="col-xs-6">
+        <%=t "my_modules.module_archive.archived_on" %>
+      </div>
+      <div class="col-xs-6">
+        <span title="<%=t "my_modules.module_archive.archived_on_title", date: l(result.archived_on, format: :full_date), time: l(result.archived_on, format: :time) %>">
+          <%=l result.archived_on, format: :full_date %>
+        </span>
+      </div>
+    </div>
+  </div>
+
+</div>

@@ -1,0 +1,141 @@
+<% provide(:head_title, t("projects.index.head_title")) %>
+
+<!-- New project modal -->
+<div class="modal" id="new-project-modal" tabindex="-1" role="dialog" aria-labelledby="new-project-modal-label">
+  <%= bootstrap_form_for @project, remote: true do |f| %>
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="new-project-modal-label"><%= t("projects.index.modal_new_project.modal_title") %></h4>
+        </div>
+        <div class="modal-body">
+          <%= render partial: "new.html.erb", locals: { form: f, organizations: @organizations } %>
+        </div>
+        <div class="modal-footer">
+          <%= f.submit t("projects.index.modal_new_project.create"), class: "btn btn-primary" %>
+          <button type="button" class="btn btn-default" data-dismiss="modal"><%=t "general.cancel" %></button>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<!-- Edit project modal -->
+<div class="modal" id="edit-project-modal" tabindex="-1" role="dialog" aria-labelledby="edit-project-modal-label">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="edit-project-modal-label"></h4>
+      </div>
+      <div class="modal-body">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-action="submit"><%=t "projects.index.modal_edit_project.submit" %></button>
+        <button type="button" class="btn btn-default" data-dismiss="modal"><%=t "general.cancel" %></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Manage users modal -->
+<div class="modal" id="manage-users-modal" tabindex="-1" role="dialog" aria-labelledby="manage-users-modal-label">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="manage-users-modal-label"><%= t("projects.index.modal_manage_users.modal_title") %> <span id="manage-users-modal-project"></span></h4>
+      </div>
+      <div class="modal-body"></div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal"><%=t "general.close" %></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="projects-toolbar" data-step="1"
+  data-intro="<%=t 'tutorial.tutorial_welcome_title_html' %>"
+  data-position='left'
+  data-project-options-step-text="<%=t 'tutorial.project_options_html' %>"
+  data-archive-project-step-text="<%=t 'tutorial.archive_project_html' %>">
+
+  <form class="form-inline" action="<%= projects_path %>">
+
+    <div class="form-group">
+      <!-- project archive button -->
+      <a class="btn btn-default pull-right" href="<%= url_for projects_archive_path %>" id="project-archive-btn" title="">
+        <span class="glyphicon glyphicon-briefcase" aria-hidden="true"></span>
+      </a>
+
+      <!-- new project button -->
+      <% if @organizations.length > 0 %>
+        <a class="btn btn-primary pull-right" id="new-project-btn" data-step="2" data-intro="<%=t 'tutorial.create_project_html' %>" data-position='left' disableInteraction="false">
+          <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+          <span class="hidden-xs"><%=t "projects.index.new" %></span>
+        </a>
+      <% end %>
+
+      <!-- organization filter -->
+      <div class="dropdown">
+        <button class="btn btn-default dropdown-toggle" type="button" id="organizationMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+          <span class="hidden-xs"><%= t('projects.index.organization_filter') %></span>
+          <span class="visible-xs-inline"><i class="glyphicon glyphicon-home"></i></span>
+          <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+        <% if @current_organization_id > 1 %>
+          <li><a href="?<%= {sort: @current_sort}.reject{|k,v| v.blank?}.to_query %>"><%= t'projects.index.all_filter' %></a></li>
+        <% end %>
+        <% @organizations.each do |org| %>
+          <% if org.id == @current_organization_id %>
+          <li class="disabled"><a href="#"><%= org.name %></a></li>
+          <% else %>
+          <li><a href="?<%= {organization: org.id, sort: @current_sort}.reject{|k,v| v.blank?}.to_query %>"><%= org.name %></a></li>
+          <% end %>
+        <% end %>
+        </ul>
+      </div>
+
+      <!-- project sort -->
+      <div class="dropdown">
+        <button class="btn btn-default dropdown-toggle" type="button" id="sortMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+          <span class="hidden-xs"><%= t'projects.index.sort' %></span>
+          <span class="visible-xs-inline"><i class="glyphicon glyphicon-sort"></i></span>
+          <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="sortMenu">
+        <% ["new", "old", "atoz", "ztoa"].each do |sort| %>
+          <% if @current_sort != sort %>
+          <li><a href="?<%= {organization: @current_organization_id, sort: sort}.reject{|k,v| v.to_s == "0"}.to_query %>"><%= t('projects.index.sort_' + sort) %></a></li>
+          <% else %>
+          <li class="disabled"><a href="#"><%= t('projects.index.sort_' + sort) %></a></li>
+          <% end %>
+        <% end %>
+        </ul>
+      </div>
+
+    </div>
+  </form>
+</div>
+
+<% if @organizations.length == 0 %>
+  <!-- Show link to organization management if member of
+  no organizations -->
+  <div class="jumbotron">
+  <h2><%= t("projects.index.no_orgs.title") %></h2>
+  <p><%= t("projects.index.no_orgs.text") %></p>
+  <p>
+    <%= link_to t("projects.index.no_orgs.btn"), organizations_path, class: "btn btn-primary" %>
+  </p>
+</div>
+<% end %>
+
+<% if @projects_by_orgs.length > 0 %>
+  <% @projects_by_orgs.each do |org, projects| %>
+    <%= render partial: "projects/index/org_projects", locals: {org: org, projects: projects} %>
+  <% end %>
+<% end %>
+
+<%= javascript_include_tag "projects/index", "data-turbolinks-track" => true %>

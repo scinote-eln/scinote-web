@@ -1,0 +1,8 @@
+<ul class="nav nav-tabs nav-settings">
+  <li role="presentation" class="<%= "active" if action_name == "preferences" %>">
+    <%= link_to t("users.settings.navigation.preferences"), preferences_path %>
+  </li>
+  <li role="presentation" class="<%= "active" if action_name.in?(["organizations", "organization", "new_organization", "create_organization"]) %>">
+    <%= link_to t("users.settings.navigation.organizations"), organizations_path %>
+  </li>
+</ul>

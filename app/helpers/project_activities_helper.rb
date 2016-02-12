@@ -1,0 +1,2 @@
+module ProjectActivitiesHelper
+end

@@ -1,0 +1,2 @@
+module SampleGroupsHelper
+end

@@ -1,0 +1,39 @@
+<% provide(:head_title, t("users.settings.preferences.head_title")) %>
+
+<%= render partial: "users/settings/navigation.html.erb" %>
+<div class="tab-content">
+  <div class="tab-pane tab-pane-settings active" role="tabpanel">
+
+    <%= form_for(@user, url: update_preferences_path(format: :json), remote: true, html: { method: :put, "data-for" => "time_zone" }) do |f| %>
+      <div data-part="view">
+        <div class="form-group">
+          <%= f.label t("users.settings.preferences.edit.time_zone_label") %>
+          <div class="input-group" style="max-width: 500px;">
+            <input class="form-control" disabled="disabled" autocomplete="off" type="text" value="<%= @user.time_zone %>" name="fake_user[time_zone]" id="fake_user_time_zone">
+            <span class="input-group-btn">
+              <a href="#" class="btn btn-default" data-action="edit"><%=t "general.edit" %></a>
+            </span>
+          </div>
+          <small><%= t("users.settings.preferences.edit.time_zone_sublabel") %></small>
+        </div>
+      </div>
+      <div data-part="edit" style="display: none;">
+        <div class="well">
+          <h4><%=t "settings.preferences.edit.time_zone_title" %></h4>
+          <div class="form-group" style="max-width: 500px;">
+            <%= f.select :time_zone, ActiveSupport::TimeZone.all.collect {|tz| [tz.formatted_offset + " " + tz.name, tz.name] }, {}, {class: "form-control selectpicker", "data-role" => "clear"} %>
+            <small><%= t("users.settings.preferences.edit.time_zone_sublabel") %></small>
+          </div>
+          <div>
+            <a href="#" class="btn btn-default" data-action="cancel"><%=t "general.cancel" %></a>
+            <%= f.submit t("general.update"), class: "btn btn-primary" %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+
+  </div>
+  <div class="tab-pane tab-pane-settings" role="tabpanel"></div>
+</div>
+
+<%= javascript_include_tag "users/settings/preferences" %>

@@ -1,0 +1,35 @@
+<% results.each do |mod| %>
+  <h5>
+    <span class="glyphicon glyphicon-credit-card"></span>
+    <%= render partial: "search/results/partials/my_module_text.html.erb", locals: { my_module: mod, query: search_query } %>
+  </h5>
+
+  <% if mod.description and mod.description.include? @search_query %>
+    <p>
+      <span>
+        <%=t "search.index.description" %>
+        <%= highlight mod.description, @search_query  %>
+      </span>
+    <p>
+  <% end %>
+
+  <p>
+    <span>
+      <%=t "search.index.created_at" %>
+      <%=l mod.created_at, format: :full %>
+    </span>
+    <br>
+    <span>
+      <%=t "search.index.project" %>
+      <%= render partial: "search/results/partials/project_text.html.erb", locals: { project: mod.project } %>
+    </span>
+    <br>
+    <span>
+      <%=t "search.index.organization" %>
+      <%= render partial: "search/results/partials/organization_text.html.erb", locals: { organization: mod.project.organization } %>
+    </span>
+  </p>
+
+  <hr>
+<% end %>
+

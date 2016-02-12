@@ -1,0 +1,518 @@
+@import "colors";
+@import "mixins";
+
+/* Index page */
+.report-table {
+  margin-top: 20px;
+}
+
+/* New page navbar */
+.navbar-report {
+  border-left: none;
+  border-top: none;
+  border-right: none;
+  border-bottom: 4px solid $color-silver;
+  background: $color-concrete !important;
+  margin-bottom: 0;
+  min-width: 320px;
+  padding: 0 15px;
+  z-index: 500;
+  position: fixed;
+  width: 100%;
+
+  div.row {
+    margin-right: 0;
+  }
+
+  #report-menu {
+
+    form {
+      display: inline-block;
+    }
+  }
+
+  & > div.row {
+    margin-right: 0;
+  }
+}
+
+#sort-report {
+  display: inline-block;
+}
+
+.get-report-pdf-form {
+  display: inline-block;
+}
+
+/* New page sidebar */
+.report-sidebar-wrapper {
+  background-color: $color-white !important;
+}
+
+// Some additional styling on the treeview
+.report-tree {
+  li {
+    padding: 0 0 0 15px;
+
+    a.report-nav-link:visited {
+      text-decoration: none;
+    }
+    a.report-nav-link:hover {
+      text-decoration: none;
+    }
+  }
+}
+.report-sidebar-panel-description {
+  margin: 10px 10px 0 10px;
+}
+
+.report-item-elements {
+  margin-top: 10px !important;
+  margin-left: 15px !important;
+
+  li {
+    margin: 5px 5px 5px 15px;
+  }
+
+  ul {
+    padding-left: 15px !important;
+  }
+}
+
+/**
+ * Global fix for handsontable
+ */
+.hot-table-container {
+  .ht_master .wtHolder {
+    height: auto !important;
+    width: auto !important;
+  }
+
+  .ht_clone_top,.ht_clone_left,.ht_clone_corner {
+  display: none !important;
+  }
+}
+
+
+/* New page content */
+.report-body {
+  background: $color-dove-gray;
+}
+
+.report-container {
+  overflow-x: auto;
+  overflow-y: auto;
+  padding-top: 30px;
+  padding-bottom: 30px;
+}
+
+#report-content {
+  color: $color-black;
+  background: $color-white;
+  @include box-shadow(0px 0px 58px -10px $color-black);
+  max-width: 800px;
+  min-width: 230px;
+  min-height: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 45px;
+}
+
+@media (max-width: 720px) {
+  #report-content {
+    padding: 25px;
+  }
+}
+
+ul.project-contents-list {
+  padding-left: 15px !important;
+}
+
+/** "New element" floating element */
+.new-element {
+  display: block;
+  position: relative;
+  opacity: 0.05;
+
+  &.initial {
+    /** Special "visual" display of initial new element block */
+    opacity: 0.7;
+    padding: 15px;
+    border-radius: 5px;
+    border: 4px $color-theme-primary solid;
+
+    .plus-icon {
+      bottom: 16px !important;
+    }
+  }
+
+  .line {
+    display: block;
+    float: left;
+    width: 50%;
+
+    .filler-wrapper {
+      display: block;
+
+      .filler {
+        display: block;
+        height: 4px;
+        background-color: $color-theme-primary;
+        border-radius: 1px;
+        margin-top: 8px;
+        margin-bottom: 8px;
+      }
+    }
+  }
+
+  .left-line .filler-wrapper {
+    padding: 0 20px 0 0;
+  }
+
+  .right-line .filler-wrapper {
+    padding: 0 0 0 20px;
+  }
+
+  .plus-icon {
+    color: $color-theme-primary;
+    display: block;
+    text-align: center;
+    width: 40px;
+    position: absolute;
+    bottom: 2px;
+    left: 50%;
+    margin: 0 0 0 -20px;
+  }
+
+  .clear {
+    clear: left;
+  }
+}
+.new-element:hover {
+  opacity: 1.0;
+
+  .filler {
+    background-color: $color-theme-primary;
+
+    .plus-icon span {
+      font-weight: bold;
+    }
+  }
+}
+
+/* GLOBAL REPORT ELEMENT STYLE */
+.report-element {
+  width: 100%;
+  margin-bottom: 15px;
+
+  .report-element-header {
+    border-bottom: 2px solid $color-black;
+
+    .user-time {
+      color: $color-emperor;
+      margin-left: 15px;
+    }
+    .controls {
+      margin-right: 15px;
+      font-size: 12pt;
+      opacity: 0.05;
+    }
+  }
+
+  .report-element-body {
+    padding-top: 10px;
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+
+  .report-element-children {
+    padding-left: 45px;
+    padding-top: 15px;
+  }
+
+  &:hover {
+    background-color: $color-mystic;
+    @include box-shadow(0 0 2px 15px $color-mystic);
+
+    & > .report-element-header {
+
+      .controls {
+        opacity: 1.0;
+      }
+    }
+  }
+}
+
+/* Project header element style */
+.report-project-header-element {
+  margin-bottom: 60px;
+
+  .report-element-header {
+    border-bottom: none;
+  }
+  .report-element-body {
+    .project-name {
+      border-bottom: 4px solid $color-black;
+    }
+  }
+
+  &:hover > .report-element-body .project-name {
+    color: $color-theme-primary;
+  }
+}
+
+/* Module element style */
+.report-module-element {
+  margin-top: 15px;
+  margin-bottom: 15px;
+
+  .report-element-body {
+    .module-name {
+      margin-left: 15px;
+    }
+    .module-tags {
+      margin-left: 0;
+      margin-top: 10px;
+
+      .module-no-tag {
+        margin-left: 5px;
+      }
+
+      .module-tag {
+        margin-left: 5px;
+        border-radius: 4px;
+        padding: 2px 4px;
+        color: $color-white;
+      }
+    }
+  }
+
+  &:hover > .report-element-body .module-name {
+    color: $color-theme-primary;
+  }
+}
+
+/* Result element style (generic) */
+.report-result-element {
+  margin-bottom: 5px;
+
+  .report-element-header {
+    border-bottom: none;
+    height: 0;
+
+    .result-icon {
+      margin-left: 15px;
+    }
+    .result-name {
+      margin-left: 5px;
+    }
+  }
+
+  &:hover > .report-element-header {
+    color: $color-theme-primary;
+  }
+}
+
+/* Result asset element style */
+.report-result-asset-element {
+  .report-element-header {
+    .file-name {
+      margin-left: 15px;
+    }
+  }
+}
+
+/* Result asset element style */
+.report-result-table-element {
+  .report-element-body {
+    padding-top: 30px;
+  }
+}
+
+/* Result text element style */
+.report-result-text-element {
+  .report-element-body {
+    .text-container {
+      border-radius: 4px;
+      padding: 5px;
+      background-color: $color-concrete;
+    }
+  }
+}
+
+/** Step element style  */
+.report-step-element {
+  &:hover > .report-element-body .step-name {
+    color: $color-theme-primary;
+  }
+}
+
+/* Step attachment style (table, asset or checklist) */
+.report-step-attachment-element {
+  .report-element-header {
+    border-bottom: none;
+
+    .attachment-icon {
+      color: $color-emperor;
+    }
+  }
+
+  .report-element-children {
+    height: 0;
+  }
+
+  &:hover > .report-element-header {
+    .attachment-icon {
+      color: $color-theme-primary;
+    }
+  }
+}
+
+/** Step table element style */
+.report-step-table-element {
+  .report-element-header {
+    .user-time {
+      margin-left: 5px;
+    }
+  }
+
+  &:hover > .report-element-header .user-time {
+    color: $color-theme-primary;
+  }
+}
+
+/** Step asset element style */
+.report-step-asset-element {
+  .report-element-header {
+    .file-name {
+      margin-left: 5px;
+    }
+  }
+
+  &:hover > .report-element-header .file-name {
+    color: $color-theme-primary;
+  }
+}
+
+/** Step checklist element style */
+.report-step-checklist-element {
+  .report-element-header {
+    .checklist-name {
+      margin-left: 5px;
+    }
+  }
+
+  .report-element-body {
+    padding-top: 0;
+
+    & > ul > li > span.checked {
+      /* Currently nothing */
+    }
+  }
+
+  &:hover > .report-element-header .checklist-name {
+    color: $color-theme-primary;
+  }
+}
+
+/** Comments element style (generic) */
+.report-comments-element {
+  .report-element-header {
+    border-bottom: none;
+
+    .comments-icon {
+      color: $color-emperor;
+    }
+
+    .comments-name {
+      margin-left: 5px;
+      color: $color-emperor;
+    }
+  }
+
+  .report-element-body {
+    .comments-container {
+      border-radius: 4px;
+      padding: 5px;
+      background-color: $color-alabaster;
+
+       .comment {
+        margin: 3px 2px;
+
+        .comment-prefix {
+          color: $color-emperor;
+        }
+      }
+    }
+  }
+
+  &:hover > .report-element-header {
+    .comments-icon,.comments-name {
+      color: $color-theme-primary;
+    }
+  }
+}
+
+/** Result comments element style */
+.report-result-comments-element {
+
+}
+
+/** Step comments element style */
+.report-step-comments-element {
+
+}
+
+/** Module samples element */
+.report-module-samples-element {
+  margin-bottom: 0;
+
+  .report-element-header {
+    border-bottom: none;
+
+    .samples-name {
+      margin-left: 5px;
+    }
+  }
+
+  &:hover > .report-element-header {
+    .samples-icon,.samples-name {
+      color: $color-theme-primary;
+    }
+  }
+}
+
+/** Module activity element */
+.report-module-activity-element {
+  margin-bottom: 0;
+
+  .report-element-header {
+    border-bottom: none;
+
+    .activity-name {
+      margin-left: 5px;
+    }
+  }
+
+  .report-element-body {
+    .activity-container {
+      border-radius: 4px;
+      padding: 5px;
+      background-color: $color-alabaster;
+
+       .activity {
+        margin: 3px 2px;
+
+        .activity-prefix {
+          color: $color-emperor;
+        }
+      }
+    }
+  }
+
+  &:hover > .report-element-header {
+    .activity-icon,.activity-name {
+      color: $color-theme-primary;
+    }
+  }
+}

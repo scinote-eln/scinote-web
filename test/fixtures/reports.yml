@@ -1,0 +1,6 @@
+one:
+  name: "Report 1"
+  description: "test description"
+  grouped_by: 0
+  project: interfaces
+  user: steve

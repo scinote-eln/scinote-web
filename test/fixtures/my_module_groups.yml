@@ -1,0 +1,14 @@
+wf1:
+  name: Workflow 1
+  project: phd
+  created_by: mark
+
+ge:
+  name: Gene Expression
+  project: interfaces
+  created_by: steve
+
+wf2:
+  name: Workflow 2
+  project: interfaces
+  created_by: jlaw

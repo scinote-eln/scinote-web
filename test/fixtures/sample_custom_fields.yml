@@ -1,0 +1,21 @@
+one:
+  sample: sample1
+  custom_field: volume
+  value: "10ml"
+
+two:
+  sample: sample1
+  custom_field: location
+  value: "New York"
+
+four:
+  sample: sample2
+  custom_field: volume
+  value: "15ml"
+
+five:
+  sample: sample2
+  custom_field: location
+  value: "Paris"
+
+

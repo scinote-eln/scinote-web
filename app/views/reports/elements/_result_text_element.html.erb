@@ -1,0 +1,33 @@
+<% if result.blank? and @result.present? then result = @result end %>
+<% result_text = result.result_text %>
+<% comments = result.comments %>
+<% timestamp = result.updated_at %>
+<% name = result.name %>
+<div class="report-element report-result-element report-result-text-element" data-ts="<%= timestamp.to_i %>" data-type="result_text" data-id="<%= result.id %>" data-modal-title="<%=t "projects.reports.elements.modals.result_contents.head_title", result: result.name %>" data-name="<%= name %>" data-icon-class="glyphicon-asterisk">
+  <div class="report-element-header">
+    <div class="row">
+      <div class="pull-left result-icon">
+          <span class="glyphicon glyphicon-asterisk"></span>
+      </div>
+      <div class="pull-left result-name">
+        <%= name %>
+      </div>
+      <div class="pull-left user-time">
+        <%=t "projects.reports.elements.result_text.user_time", user: result.user.full_name, timestamp: l(timestamp, format: :full) %>
+      </div>
+      <div class="pull-right controls">
+        <%= render partial: "reports/elements/module_element_controls.html.erb" %>
+      </div>
+    </div>
+  </div>
+  <div class="report-element-body">
+    <div class="row">
+      <div class="col-xs-12 text-container">
+        <%= result_text.text %>
+      </div>
+    </div>
+  </div>
+  <div class="report-element-children">
+    <%= children if (defined? children and children.present?) %>
+  </div>
+</div>

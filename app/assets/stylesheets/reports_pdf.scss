@@ -1,0 +1,15 @@
+/**
+ * Additional rules when generating PDF from the reports.
+ */
+
+// Hide all glyphicons
+.glyphicon {
+  display: none;
+}
+
+.print-report-body {
+  .print-report {
+    overflow-y: hidden !important;
+    overflow-x: hidden !important;
+  }
+}

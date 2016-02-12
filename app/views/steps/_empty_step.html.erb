@@ -1,0 +1,59 @@
+<ul class="nav nav-tabs">
+  <li role="presentation" class="active">
+    <a href="#new-step-main" data-toggle="tab">
+      <span class="glyphicon glyphicon-pencil"></span>
+    </a>
+  </li>
+  <li role="presentation">
+    <a href="#new-step-checklists" data-toggle="tab">
+      <span class="glyphicon glyphicon-list"></span>
+      <%=t "my_modules.steps.new.tab_checklists" %>
+    </a>
+  </li>
+  <li role="presentation">
+    <a href="#new-step-assets" data-toggle="tab">
+      <span class="glyphicon glyphicon-file"></span>
+      <%=t "my_modules.steps.new.tab_assets" %>
+    </a>
+  </li>
+  <li role="presentation">
+    <a class="new-step-tables-tab" href="#new-step-tables" data-toggle="tab"
+      <span class="glyphicon glyphicon-th"></span>
+      <%=t "my_modules.steps.new.tab_tables" %>
+    </a>
+  </li>
+</ul>
+<div class="tab-content">
+  <div class="tab-pane active" role="tabpanel" id="new-step-main">
+    <%= f.text_field :name, label: t("my_modules.steps.new.name"), autofocus: true, placeholder: t("my_modules.steps.new.name_placeholder") %>
+
+    <%= f.text_area :description, label: t("my_modules.steps.new.description"), autofocus: true, placeholder: t("my_modules.steps.new.description_placeholder") %>
+  </div>
+  <div class="tab-pane" role="tabpanel" id="new-step-checklists">
+    <%= f.nested_fields_for :checklists do |ff| %>
+      <%= render "form_checklists.html.erb", ff: ff %>
+    <% end %>
+    <%= f.add_nested_fields_link :checklists do %>
+      <span class="glyphicon glyphicon-plus"></span>
+      <%=t "my_modules.steps.new.add_checklist" %>
+    <% end %>
+  </div>
+  <div class="tab-pane" role="tabpanel" id="new-step-assets">
+    <%= f.nested_fields_for :assets do |ff| %>
+      <%= render "form_assets.html.erb", ff: ff %>
+    <% end %>
+    <%= f.add_nested_fields_link :assets do %>
+      <span class="glyphicon glyphicon-plus"></span>
+      <%=t "my_modules.steps.new.add_asset" %>
+    <% end %>
+  </div>
+  <div class="tab-pane" role="tabpanel" id="new-step-tables">
+    <%= f.nested_fields_for :tables do |ff| %>
+      <%= render "form_tables.html.erb", ff: ff %>
+    <% end %>
+    <%= f.add_nested_fields_link :tables, id: "add-table" do %>
+      <span class="glyphicon glyphicon-plus"></span>
+      <%=t "my_modules.steps.new.add_table" %>
+    <% end %>
+  </div>
+  </div>

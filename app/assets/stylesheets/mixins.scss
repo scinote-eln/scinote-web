@@ -1,0 +1,73 @@
+@mixin box-shadow($shadows...) {
+  -moz-box-shadow: $shadows;
+  -webkit-box-shadow: $shadows;
+  box-shadow: $shadows;
+  -o-box-shadow: $shadows;
+}
+
+@mixin glyphicon-flip-horizontal() {
+  -moz-transform: scaleX(-1);
+  -o-transform: scaleX(-1);
+  -webkit-transform: scaleX(-1);
+  transform: scaleX(-1);
+  filter: FlipH;
+  -ms-filter: "FlipH";
+}
+
+@mixin rotate($degrees) {
+  -webkit-transform: rotate($degrees);
+  -moz-transform: rotate($degrees);
+  -ms-transform: rotate($degrees);
+  -o-transform: rotate($degrees);
+  transform: rotate($degrees);
+}
+@mixin rotate-important($degrees) {
+  -webkit-transform: rotate($degrees) !important;
+  -moz-transform: rotate($degrees) !important;
+  -ms-transform: rotate($degrees) !important;
+  -o-transform: rotate($degrees) !important;
+  transform: rotate($degrees) !important;
+}
+
+@mixin no-animation() {
+  -webkit-transition: none !important;
+  -moz-transition: none !important;
+  -ms-transition: none !important;
+  -o-transition: none !important;
+  transition: none !important;
+}
+
+@mixin transition($trans) {
+  -webkit-transition: $trans;
+  -moz-transition: $trans;
+  -ms-transition: $trans;
+  -o-transition: $trans;
+  transition: $trans;
+}
+
+@mixin rotate-animation-important($duration, $degrees) {
+  -webkit-transition-duration: $duration !important;
+  -moz-transition-duration: $duration !important;
+  -ms-transition-duration: $duration !important;
+  -o-transition-duration: $duration !important;
+  transition-duration: $duration !important;
+  -webkit-transition-property: -webkit-transform !important;
+  -moz-transition-property: -moz-transform !important;
+  -ms-transition-property: -ms-transform !important;
+  -o-transition-property: -o-transform !important;
+  transition-property: transform !important;
+  @include rotate-important($degrees);
+}
+@mixin rotate-animation($duration, $degrees) {
+  -webkit-transition-duration: $duration;
+  -moz-transition-duration: $duration;
+  -ms-transition-duration: $duration;
+  -o-transition-duration: $duration;
+  transition-duration: $duration;
+  -webkit-transition-property: -webkit-transform;
+  -moz-transition-property: -moz-transform;
+  -ms-transition-property: -ms-transform;
+  -o-transition-property: -o-transform;
+  transition-property: transform;
+  @include rotate($degrees);
+}

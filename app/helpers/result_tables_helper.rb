@@ -1,0 +1,2 @@
+module ResultTablesHelper
+end

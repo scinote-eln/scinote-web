@@ -1,0 +1,153 @@
+<%= render partial: "custom_fields/new_modal" %>
+<%= render partial: "samples/import_samples_modal" %>
+<%= render partial: "samples/delete_samples_modal" %>
+<%= render partial: "samples/create_sample_group_modal" %>
+<%= render partial: "samples/create_sample_type_modal" %>
+<!-- Modal for parsing sample sheets should be empty at first -->
+<div class="modal fade" id="modal-parse-samples" tabindex="-1" role="dialog" aria-labelledby=="modal-parse-samples-label"></div>
+
+<div id="alert-container"></div>
+
+<% if can_view_samples(@organization) %>
+  <%= bootstrap_form_tag(url: export_samples_organization_path(@organization, format: :csv), html: {id: "form-export", class: "hidden"}) do |f| %>
+  <% end %>
+<% end %>
+
+<%= form_for :sample, url: form_submit_link, html: {id: "form-samples"} do |f|%>
+
+<div id="samples-toolbar"
+  <% if @my_module %>
+    data-module-id="<%= @my_module.id %>"
+    data-samples-step-text="<%=t 'tutorial.samples_html' %>"
+    data-breadcrumbs-step-text="<%=t 'tutorial.breadcrumbs_html' %>"
+  <% end %>>
+
+  <% if can_create_samples(@organization) %>
+    <button type="button" class="btn btn-default editAdd" id="addSample" onclick="onClickAddSample()">
+      <span class="glyphicon glyphicon-plus"></span>
+      <span class="hidden-xs"><%= t("samples.add_new_sample") %></span>
+    </button>
+    <button type="button" class="btn btn-default" data-toggle="modal" data-target="#modal-import-samples">
+      <span class="glyphicon glyphicon-cloud-upload"></span>
+      <span class="hidden-xs"><%= t("samples.import") %></span>
+      </button>
+  <% end %>
+
+  <% if can_view_samples(@organization) %>
+    <a href="#" class="btn btn-default" id="exportSamplesButton" disabled="disabled">
+      <span class="glyphicon glyphicon-cloud-download"></span>
+      <span class="hidden-xs"><%= t("samples.export") %></span>
+    </a>
+  <% end %>
+
+  <div id="datatables-buttons" style="display: inline;">
+  </div>
+
+  <div class="dropdown pull-right" style="display: inline;">
+    <button class="btn btn-default dropdown-toggle" type="button" id="addMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" <%= "disabled" unless can_add_sample_related_things_to_organization%>>
+      <span class="glyphicon glyphicon-plus"></span>
+      <span class="hidden-xs">
+        <%= t'More' %>
+        <span class="caret"></span>
+      </span>
+    </button>
+    <ul class="dropdown-menu" aria-labelledby="addMenu">
+      <% if can_create_custom_field_in_organization(@organization) %>
+      <li>
+        <a id="addNewColumn" data-toggle="modal" data-target="#modal-create-custom-field">
+        <%= t("samples.add_new_column")%>
+        </a>
+      </li>
+      <% end %>
+      <% if can_create_sample_type_in_organization(@organization) %>
+      <li>
+        <a data-toggle="modal" data-target="#modal-create-sample-type">
+        <%= t("samples.add_new_sample_type") %>
+        </a>
+      </li>
+      <% end %>
+      <% if can_create_sample_group_in_organization(@organization) %>
+      <li>
+        <a data-toggle="modal" data-target="#modal-create-sample-group">
+        <%= t("samples.add_new_sample_group") %>
+        </a>
+      </li>
+      <% end %>
+    </ul>
+  </div>
+</div>
+
+<div class="btn-group" id="saveCancel" data-toggle="buttons" style="display:none">
+  <button type="button" class="btn btn-primary" id="saveSample" onclick="onClickSave()">
+    <span class="glyphicon glyphicon-save"></span>
+    <%= t("samples.save_sample") %>
+  </button>
+  <button type="button" class="btn btn-default" id="cancelSave" onclick="onClickCancel()">
+    <span class="glyphicon glyphicon-remove visible-xs-inline"></span>
+    <span class="hidden-xs"><%= t("samples.cancel_save") %></span>
+  </button>
+</div>
+
+<!-- These buttons are appended to table in javascript, after table initialization. -->
+<div class="toolbarButtons" style="display:none">
+  <button type="button" class="btn btn-default editAdd" id="editSample" onclick="onClickEdit()" disabled>
+    <span class="glyphicon glyphicon-pencil"></span>
+    <span class="hidden-xs"><%= t("samples.edit_sample") %></span>
+  </button>
+
+  <% if can_delete_samples(@organization) %>
+    <button type="button" class="btn btn-default"
+      id="deleteSamplesButton" data-target="#deleteSamples" data-toggle="modal" disabled>
+      <span class="glyphicon glyphicon-trash"></span>
+      <span class="hidden-xs"><%= t'samples.delete_samples' %></span>
+        <%= submit_tag MyModulesController::DELETE_SAMPLES, :class => "hidden delete_samples_submit" %>
+    </button>
+  <% end %>
+
+  <% if can_add_samples %>
+    <button type="button" class="btn btn-default"
+      id="assignSamples" onclick="$(this).next().click();" disabled>
+      <span class="glyphicon glyphicon-ok-circle"></span>
+      <span class="hidden-xs"><%= t'samples.assign_samples_to_module' %></span>
+    </button>
+    <%= submit_tag MyModulesController::ASSIGN_SAMPLES, :class => "hidden" %>
+  <% end %>
+  <% if can_remove_samples %>
+    <button type="button" class="btn btn-default"
+      id="unassignSamples" onclick="$(this).next().click();" disabled>
+      <span class="glyphicon glyphicon-ban-circle"></span>
+      <span class="hidden-xs"><%= t'samples.unassign_samples_to_module' %></span>
+    </button>
+    <%= submit_tag MyModulesController::UNASSIGN_SAMPLES, :class => "hidden" %>
+  <% end %>
+</div>
+
+<div class="samples-table">
+  <table id="samples" class="table"
+    data-organization-id="<%= @project.organization.id %>"
+    data-source="<%= @samples_index_link %>"
+    data-num-columns="<%= num_of_columns %>"
+    data-new-sample="<%= new_organization_sample_path(organization_id: @organization) %>"
+    data-create-sample="<%= organization_samples_path(organization_id: @organization) %>"
+    >
+    <thead>
+      <tr>
+        <th id="checkbox"><input name="select_all" value="1" type="checkbox"></th>
+        <th id="assigned"><%= t("samples.table.assigned") %></th>
+        <th id="sample-name"><%= t("samples.table.sample_name") %></th>
+        <th id="sample-type"><%= t("samples.table.sample_type") %></th>
+        <th id="sample-group"><%= t("samples.table.sample_group") %></th>
+        <th id="added-on"><%= t("samples.table.added_on") %></th>
+        <th id="added-by"><%= t("samples.table.added_by") %></th>
+        <% all_custom_fields.each do |cf| %>
+        <th class="custom-field" id="<%= cf.id %>"><%= cf.name %></th>
+        <% end %>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</div>
+<% end %>
+<%= stylesheet_link_tag 'datatables' %>
+<%= javascript_include_tag("samples/samples") %>
+<%= javascript_include_tag("samples/sample_datatable") %>

@@ -1,0 +1,154 @@
+/*!
+ * Start Bootstrap - Simple Sidebar HTML Template (http://startbootstrap.com)
+ * Code licensed under the Apache License v2.0.
+ * For details, see http://www.apache.org/licenses/LICENSE-2.0.
+ */
+
+@import "colors";
+@import "mixins";
+
+$wrapper-width: 280px;
+$toggle-btn-size: 50px;
+
+@mixin sidebar-shown {
+  // This rule is always overriden (show()) in JS
+  // after document is loaded
+  display: none;
+  padding-left: $wrapper-width;
+  padding-right: 0;
+  -webkit-transition: all 0.5s ease;
+  -moz-transition: all 0.5s ease;
+  -o-transition: all 0.5s ease;
+  transition: all 0.5s ease;
+
+  #sidebar-wrapper {
+    background-color: $color-alto;
+    z-index: 1000;
+    position: fixed;
+    width: $wrapper-width;
+    left: $wrapper-width;
+    height: 100%;
+    margin-left: -$wrapper-width;
+    -webkit-transition: all 0.5s ease;
+    -moz-transition: all 0.5s ease;
+    -o-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+
+    #slide-panel {
+      height: 100%;
+
+      .sidebar-header {
+        height: $toggle-btn-size;
+        background: $color-theme-primary;
+        border-bottom: 2px solid darken($color-theme-primary, 10%);
+
+        .sidebar-header-title {
+          width: inherit;
+          color: $color-white;
+          display: inline-block;
+          margin-left: 15px;
+          margin-top: 6px;
+          text-transform: uppercase;
+          max-width: ($wrapper-width - $toggle-btn-size);
+          overflow: hidden;
+          text-overflow: ellipsis;
+          opacity: 1;
+
+          // Animations
+          @include transition(opacity 0.5s ease);
+        }
+      }
+
+      .sidebar-header-toggle {
+        height: $toggle-btn-size;
+        width: $toggle-btn-size;
+        margin-left: ($wrapper-width - $toggle-btn-size);
+        margin-top: -$toggle-btn-size;
+        font-size: 20pt;
+        background: $color-theme-primary;
+        border-left: 2px solid darken($color-theme-primary, 10%);
+        border-bottom: 2px solid darken($color-theme-primary, 10%);
+
+        // Animations
+        @include transition(margin-left 0.5s ease);
+
+        span {
+          margin: 10px;
+          color: $color-white;
+
+          // Animations
+          @include rotate-animation(0.5s, 180deg);
+          @include transition(color 0.5s ease);
+        }
+      }
+
+      .tree {
+        margin-bottom: 0;
+        padding-top: 15px;
+        opacity: 1;
+
+        // Animations
+        @include transition(opacity 0.5s ease);
+      }
+    }
+  }
+}
+
+@mixin sidebar-hidden {
+  padding-left: 0;
+
+  #sidebar-wrapper {
+    width: 0;
+
+    #slide-panel {
+      .sidebar-header .sidebar-header-title {
+        width: 0;
+        opacity: 0;
+
+        @include transition(width 0.5s ease);
+        @include transition(opacity 0.5s ease);
+      }
+
+      .sidebar-header-toggle {
+        margin-left: 0;
+        background: none;
+        border: none;
+
+        @include transition(margin-left 0.5s ease);
+
+        span {
+          color: darken($color-theme-primary, 10%);
+
+          @include rotate-animation(0.5s, 0deg);
+          @include transition(color 0.5s ease);
+        }
+      }
+
+      .tree {
+        opacity: 0;
+
+        @include transition(opacity 0.5s ease);
+      }
+    }
+  }
+}
+
+#wrapper {
+  @include sidebar-shown;
+}
+
+#wrapper.no-animation * {
+  @include no-animation;
+}
+
+#wrapper.toggled {
+  @include sidebar-hidden;
+}
+
+#wrapper.hidden2 {
+  @include sidebar-hidden;
+}
+
+.sidebar-no-module-group {
+  color: $color-silver-chalice;
+}

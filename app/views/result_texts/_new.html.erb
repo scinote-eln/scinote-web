@@ -1,0 +1,12 @@
+<div class="well">
+  <%= bootstrap_form_for(@result, url: my_module_result_texts_path(format: :json), remote: true) do |f| %>
+    <%= f.text_field :name, style: "margin-top: 10px;" %><br />
+    <%= f.fields_for :result_text do |ff| %>
+      <%= ff.text_area :text, style: "margin-top: 10px;" %><br />
+    <% end %>
+    <%= f.submit t("result_texts.new.create"), class: 'btn btn-primary' %>
+    <button type="button" class="btn btn-default cancel-new">
+      <%= t("general.cancel")%>
+    </button>
+  <% end %>
+</div>

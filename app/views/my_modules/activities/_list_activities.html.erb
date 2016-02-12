@@ -1,0 +1,6 @@
+<!-- Show recent activities -->
+<ul id="list-activities" class="no-style content-activities content-module-activities">
+  <% @activities.each do |act| %>
+    <%= render partial: "my_modules/activities/activity.html.erb", locals: { activity: act } %>
+  <% end %>
+</div>

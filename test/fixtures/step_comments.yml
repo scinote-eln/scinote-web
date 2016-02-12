@@ -1,0 +1,17 @@
+one:
+  step: step1
+  comment: one
+
+two:
+  step: step1
+  comment: two
+
+test:
+  step: test
+  comment: test
+
+<% 25.times do |n| %>
+test_<%= n %>:
+  step: test2
+  comment: test_step_comment_<%= n %>
+<% end %>

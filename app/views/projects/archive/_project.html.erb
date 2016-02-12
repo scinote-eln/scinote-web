@@ -1,0 +1,37 @@
+<div class="panel panel-default panel-project panel-archive">
+  <div class="panel-heading">
+
+    <div class="dropdown pull-right">
+      <button class="btn btn-link dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+        <span class="caret"></span>
+      </button>
+      <% project_form = nil %>
+      <%= form_for project, method: :patch, format: :html do |f| %>
+        <% project_form = f %>
+        <%= f.hidden_field :archived, value: false %>
+      <% end %>
+      <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1">
+        <li class="dropdown-header"><%= t('projects.index.options_header') %></li>
+        <li><a href="#" class="form-submit-link" data-submit-form="<%= project_form.options[:html][:id] %>"><%= t 'projects.index.restore_option' %></a></li>
+      </ul>
+    </div>
+
+    <h3 class="panel-title">
+      <% if project.hidden? then %>
+        <span class="glyphicon glyphicon-eye-close" aria-hidden="true" title="<%=t "projects.index.visibility_private" %>"></span>
+      <% else %>
+        <span class="glyphicon glyphicon-eye-open" aria-hidden="true" title="<%=t "projects.index.visibility_public" %>"></span>
+      <% end %>
+      <span><%= project.name %></span>
+    </h3>
+  </div>
+
+  <div class="panel-body">
+    <div class="row">
+      <div class="col-xs-6"><%= t('projects.index.start_date') %></div>
+      <div class="col-xs-6">
+      <%=l project.created_at, format: :full_date %>
+      </div>
+    </div>
+  </div>
+</div>

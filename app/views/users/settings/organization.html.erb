@@ -1,0 +1,118 @@
+<% provide(:head_title, t("users.settings.organizations.head_title")) %>
+
+<%= render partial: "users/settings/navigation.html.erb" %>
+<div class="tab-content">
+  <div class="tab-pane tab-pane-settings" role="tabpanel"></div>
+  <div class="tab-pane tab-pane-settings active" role="tabpanel">
+
+    <%= render partial: "users/settings/organizations/breadcrumbs.html.erb" %>
+
+    <!-- TITLE -->
+    <%= link_to organization_name_path(@org, format: :json), remote: true, class: "name-link name-refresh", style: "color: inherit" do %>
+      <h3><%= @org.name %></h3>
+    <% end %>
+    <br />
+    <!-- End of TITLE -->
+
+    <!-- HEADER -->
+    <div class="row">
+      <div class="col-xs-6 col-sm-3">
+        <div class="badge-icon bg-primary">
+          <span class="glyphicon glyphicon-calendar"></span>
+        </div>
+        <div class="well well-sm">
+          <span class="hidden-xs hidden-sm"><%= t("users.settings.organizations.edit.header_created_at") %></span>
+          <strong><%= l(@org.created_at, format: :full) %></strong>
+        </div>
+      </div>
+
+      <div class="col-xs-6 col-sm-3">
+        <div class="badge-icon bg-primary">
+          <span class="glyphicon glyphicon-user"></span>
+        </div>
+        <div class="well well-sm">
+          <span class="hidden-xs hidden-sm"><%= t("users.settings.organizations.edit.header_joined_on") %></span>
+            <strong><%= l(@user_org.created_at, format: :full) %></strong>
+        </div>
+      </div>
+
+       <div class="col-xs-12 col-sm-6">
+        <div class="badge-icon bg-primary">
+          <span class="glyphicon glyphicon-hdd"></span>
+        </div>
+        <div class="well well-sm">
+          <span class="hidden-xs hidden-sm"><%= t("users.settings.organizations.edit.header_space_taken") %></span>
+            <strong><%= "#{number_to_human_size(@org.space_taken)}" %></strong>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="badge-icon bg-primary">
+        <%= link_to organization_description_path(@org, format: :json), remote: true, class: "description-link", style: "color: inherit" do %>
+          <span class="glyphicon glyphicon-info-sign"></span>
+        <% end %>
+      </div>
+      <div class="well well-sm">
+        <%= link_to organization_description_path(@org, format: :json), remote: true, class: "description-label description-link description-refresh", style: "color: inherit" do %>
+          <%= render partial: "users/settings/organizations/description_label.html.erb", locals: { org: @org } %>
+        <% end %>
+      </div>
+    </div>
+    <!-- End of HEADER -->
+
+    <!-- USERS TABLE -->
+    <div class="panel panel-default panel-organization-users">
+      <div class="panel-heading">
+        <%= t("users.settings.organizations.edit.manage_users") %>
+      </div>
+      <div class="panel-body">
+        <%= link_to "#", class: "btn btn-primary", data: { toggle: "modal", target: "#add-user-modal" } do %>
+          <span class="glyphicon glyphicon-plus"></span>
+          <%= t("users.settings.organizations.edit.add_user") %>
+        <% end %>
+        <div class="users-datatable">
+          <table id="users-table" class="table" data-source="<%= organization_users_datatable_path(@org, format: :json) %>">
+            <thead>
+              <tr>
+                <th id="user-name"><%= t("users.settings.organizations.edit.thead_user_name") %></th>
+                <th id="email"><%= t("users.settings.organizations.edit.thead_email") %></th>
+                <th id="joined-on"><%= t("users.settings.organizations.edit.thead_joined_on") %></th>
+                <th id="status"><%= t("users.settings.organizations.edit.thead_status") %></th>
+                <th id="user-role"><%= t("users.settings.organizations.edit.thead_role") %></th>
+                <th id="options"></th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <!-- End of USERS TABLE -->
+
+    <!-- DELETE PANEL -->
+    <div class="panel panel-danger">
+      <div class="panel-heading">
+        <strong><%= t("users.settings.organizations.edit.delete_organization_heading") %></strong>
+      </div>
+      <div class="panel-body">
+        <% if @org.projects.count > 0 %>
+          <%= t("users.settings.organizations.edit.cannot_delete_message_projects") %>
+        <% else %>
+          <%= t("users.settings.organizations.edit.can_delete_message") %>
+          <a href="#" data-toggle="modal" data-target="#modal-destroy-organization"><%= t("users.settings.organizations.edit.delete_text") %></a>
+        <% end %>
+      </div>
+    </div>
+    <!-- End of DELETE PANEL -->
+
+  </div>
+</div>
+
+<%= render partial: "users/settings/organizations/name_modal.html.erb" %>
+<%= render partial: "users/settings/organizations/description_modal.html.erb" %>
+<%= render partial: "users/settings/organizations/add_user_modal.html.erb", locals: { org: @org } %>
+<%= render partial: "users/settings/organizations/destroy_modal.html.erb", locals: { org: @org } %>
+<%= render partial: "users/settings/organizations/destroy_user_organization_modal.html.erb" %>
+<%= stylesheet_link_tag 'datatables' %>
+<%= javascript_include_tag "users/settings/organization" %>

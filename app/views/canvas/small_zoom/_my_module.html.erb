@@ -1,0 +1,14 @@
+<div class="module-small<%= " alert-red" if my_module.is_overdue? %><%= " alert-yellow" if my_module.is_one_day_prior? %>"
+  id="<%= my_module.id %>"
+  data-module-id="<%= my_module.id %>"
+  data-module-name="<%= my_module.name %>"
+  <% if my_module.my_module_group.present? %>
+  data-module-group="<%= my_module.my_module_group.id %>"
+  <% end %>
+  data-module-x="<%= my_module.x %>"
+  data-module-y="<%= my_module.y %>"
+  data-module-conns="<%= construct_module_connections(my_module) %>">
+  <span>
+    <%= link_to_if can_view_module(my_module), my_module.name[0], steps_my_module_path(my_module) %>
+  </span>
+</div>

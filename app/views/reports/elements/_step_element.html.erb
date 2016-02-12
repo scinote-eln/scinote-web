@@ -1,0 +1,40 @@
+<% if step.blank? and @step.present? then step = @step end %>
+<% timestamp = step.completed_on %>
+<% tables = step.tables %>
+<% assets = step.assets %>
+<% checklists = step.checklists %>
+<% comments = step.comments %>
+<div class="report-element report-step-element" data-ts="<%= timestamp.to_i %>" data-type="step" data-id="<%= step.id %>" data-modal-title="<%=t "projects.reports.elements.modals.step_contents.head_title", step: step.name %>" data-name="<%=t "projects.reports.elements.step.sidebar_name", pos: (step.position + 1), name: step.name %>" data-icon-class="glyphicon-circle-arrow-right">
+  <div class="report-element-header">
+    <div class="row">
+      <div class="pull-left user-time">
+        <%=t "projects.reports.elements.step.user_time", user: step.user.full_name , timestamp: l(timestamp, format: :full) %>
+      </div>
+      <div class="pull-right controls">
+        <%= render partial: "reports/elements/module_element_controls.html.erb", locals: { show_sort: true } %>
+      </div>
+    </div>
+  </div>
+  <div class="report-element-body">
+    <div class="row">
+      <div class="pull-left step-name">
+        <h5>
+          <span class="glyphicon glyphicon-circle-arrow-right"></span>
+          <b><%=t "projects.reports.elements.step.step_pos", pos: (step.position + 1) %></b>&nbsp;<%= step.name %>
+        </h5>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-12">
+        <% if step.description.present? %>
+          <%= step.description %>
+        <% else %>
+           <em><%=t "projects.reports.elements.step.no_description" %></em>
+        <% end %>
+      </div>
+    </div>
+  </div>
+  <div class="report-element-children">
+    <%= children if (defined? children and children.present?) %>
+  </div>
+</div>

@@ -1,0 +1,960 @@
+@import "colors";
+@import "mixins";
+
+/** Layout **/
+
+body,
+#activity-modal,
+#main-nav,
+#notifications,
+#notifications .alert {
+  min-width: 320px;
+}
+
+#alert-container {
+  margin-bottom: 20px;
+}
+
+#main-nav {
+  margin-bottom: 0;
+}
+
+#project-archive-btn {
+  margin-left: 15px;
+}
+
+#projects-toolbar {
+  margin: 15px 0;
+}
+
+#projects-toolbar .form-group {
+  width: 100%;
+}
+
+.form-inline {
+  .form-group .dropdown {
+    display: inline-block;
+  }
+}
+
+#fluid-content {
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-top: 80px;
+}
+
+.spacer {
+  margin-left: 0.5em;
+  margin-right: 0.5em;
+}
+
+#content-wrapper {
+  margin-top: 50px;
+
+  &.alert-shown {
+    margin-top: 102px;
+  }
+}
+
+.center-block-narrow {
+  max-width: 400px;
+}
+
+#search-menu {
+  padding-right: 0;
+
+  .nav {
+    position: relative;
+    z-index: 1000;
+  }
+}
+
+#search-content {
+ padding-left: 0;
+}
+
+#search-container {
+  padding-left: 45px;
+}
+
+.vertical-spacer-one-half {
+  display: inline-block;
+  width: 1.5em;
+}
+
+// Global invisible setter (hide element, but keep its size)
+.invisible {
+  visibility: hidden !important;
+}
+
+/** Skin **/
+
+
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,400italic&subset=latin,latin-ext);
+
+body {
+  background-color: $color-concrete;
+  color: $color-emperor;
+  font-family: "Open Sans",Arial,Helvetica,sans-serif;
+  font-size: 13px;
+}
+
+a {
+  color: $color-theme-primary;
+}
+
+.jumbotron {
+  background-color: inherit;
+}
+
+.alert {
+  border-radius: 0;
+  margin-bottom: 0;
+  opacity: 1;
+  width: 100%;
+
+  &.alert-hidden {
+    display: none;
+  }
+
+  a#hide-alert {
+    margin-left: 15px;
+  }
+
+  &.alert-floating {
+    position: fixed;
+    top: 50px;
+    z-index: 1000;
+  }
+}
+
+.badge {
+  background-color: $color-theme-primary;
+  font-size: 11px;
+  border-radius: 5px;
+}
+
+.badge-indicator,
+.btn .badge-indicator {
+  margin-left: -8px;
+  top: 3px;
+}
+
+.handle-move {
+  cursor: move;
+  cursor: -webkit-grabbing;
+}
+
+.bg-primary {
+  background-color: $color-theme-primary;
+}
+
+/* this rule is strict because the order of css files is not correct */
+.bootstrap-select:not([class*="col-"]):not([class*="form-control"]):not(.input-group-btn) {
+  width: 100% !important;
+}
+
+.btn {
+  border-radius: 1.5em;
+}
+
+.btn-primary {
+  background-color: $color-theme-secondary;
+  border-color: darken($color-theme-secondary, 5%);
+
+  &.active,
+  &.focus,
+  &.active.focus {
+    background-color: darken($color-theme-secondary, 20%);
+    border-color: darken($color-theme-secondary, 25%);
+
+    &:hover {
+      background-color: darken($color-theme-secondary, 25%);
+      border-color: darken($color-theme-secondary, 30%);
+    }
+  }
+
+  &:active,
+  &:focus,
+  &:active:focus,
+  &:active:hover,
+  &:focus:hover,
+  &:active:focus:hover {
+    background-color: darken($color-theme-secondary, 20%);
+    border-color: darken($color-theme-secondary, 25%);
+  }
+
+  &:hover {
+    background-color: darken($color-theme-secondary, 5%);
+    border-color: darken($color-theme-secondary, 10%);
+  }
+}
+
+mark,.mark {
+  background-color: $color-candlelight;
+}
+
+.label-default {
+  background-color: $color-alto;
+}
+
+.label-primary {
+  background-color: $color-theme-primary;
+}
+
+.circle {
+  @extend .badge;
+  background-color: $color-theme-primary;
+  border-radius: 1em;
+
+  &.disabled {
+    background-color: $color-silver-chalice;
+  }
+}
+
+.navbar {
+  border-radius: 0;
+}
+
+.navbar-default {
+  background-color: $color-white;
+  border-color: $color-alto;
+}
+
+.navbar-default .navbar-brand {
+  background-color: $color-theme-primary;
+  font-size: 23px;
+
+  & > img {
+    margin-top: -4px;
+
+    &.with-version {
+      margin-top: -10px;
+    }
+  }
+
+  & > span.version {
+    font-size: 0.6em;
+    color: $color-white;
+    float: right;
+  }
+
+  &:hover,
+  &:focus,
+  &:focus:active,
+  &:focus:visited {
+    background-color: $color-theme-primary;
+  }
+}
+
+.nav-tabs {
+  margin-bottom: 15px;
+
+  & > li.has-error {
+    & > a {
+      color: $color-apple-blossom;
+
+      &:hover {
+        color: $color-mojo;
+      }
+    }
+  }
+}
+
+.nav-tabs-less {
+  margin-bottom: 0;
+}
+
+.nav-pills {
+  & > li {
+    a {
+      color: $color-theme-primary;
+    }
+
+    &:not(.active):hover a {
+      background-color: $color-alto;
+    }
+
+    &.active a {
+      color: $color-white;
+      background-color: $color-theme-primary;
+    }
+  }
+}
+
+.breadcrumb {
+  background-color: transparent;
+  padding: 15px;
+  margin-bottom: 0;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.nav-tabs-less > li.active > a {
+  &,&:hover,&:focus {
+    color: $color-theme-secondary;
+    background-color: transparent;
+    border-color: transparent;
+  }
+}
+
+#secondary-navigation {
+  white-space: nowrap;
+  overflow: hidden
+}
+
+.navbar-secondary {
+  background: $color-concrete !important;
+  margin-left: -280px;
+  padding-left: 295px;
+  padding-right: 15px;
+  margin-bottom: 0;
+  border-color: transparent;
+  z-index: 500;
+  position: fixed;
+  width: 100%;
+
+  .container-fluid {
+    border-left: 0;
+    border-top: 0;
+    border-right: 0;
+    border-bottom: 4px solid $color-silver;
+    padding-right: 0;
+  }
+
+  ul.nav {
+    margin-right: 0;
+
+    & > li {
+      text-transform: uppercase;
+
+      & > a {
+        color: $color-gray;
+
+        span {
+          //width: 14px;
+        }
+      }
+      &.active {
+        @include box-shadow(0 4px 0 $color-theme-primary);
+
+        &> a {
+          font-weight: bold;
+          color: $color-emperor;
+        }
+      }
+    }
+  }
+}
+
+.navbar-secondary {
+  -webkit-transition: all 0.5s ease;
+  -moz-transition: all 0.5s ease;
+  -o-transition: all 0.5s ease;
+  transition: all 0.5s ease;
+}
+
+.navbar-without-sidebar{
+  padding-left: 15px;
+  margin-left: 0px;
+  -webkit-transition: all 0.5s ease;
+  -moz-transition: all 0.5s ease;
+  -o-transition: all 0.5s ease;
+  transition: all 0.5s ease;
+}
+
+/** Chat bubble */
+.chat-bubble {
+  background-color: $color-white;
+  border-radius: 1em;
+  padding: 10px;
+}
+
+/** Search */
+.nav-search {
+  li.disabled {
+    opacity: 0.8;
+
+    .badge {
+      background-color: $color-emperor;
+      opacity: 0.8;
+    }
+  }
+}
+
+/** Settings */
+.nav-settings {
+  margin-top: 15px;
+  margin-bottom: 0;
+}
+
+.tab-pane-settings {
+  background-color: $color-white;
+  padding: 15px;
+  border-left: 1px solid $color-alto;
+  border-right: 1px solid $color-alto;
+  border-bottom: 1px solid $color-alto;
+  margin-bottom: 50px;
+}
+
+.breadcrumb-organizations {
+  background-color: $color-concrete;
+  margin-bottom: 15px;
+}
+
+/** Add users modal  */
+.btn-group-existing-users {
+  width: 100%;
+
+  label.btn {
+    text-align: center;
+
+    &.btn-title {
+      color: $color-white;
+      cursor: inherit;
+      background-color: $color-theme-primary;
+
+      &:focus, &:active, &:hover {
+        box-shadow: none;
+        background-color: $color-theme-primary;
+        border-color: #adadad;
+      }
+    }
+  }
+}
+.existing-users-smalltext {
+  width: 100%;
+  text-align: center;
+}
+
+/** Users datatable */
+.panel-organization-users .panel-body {
+  padding-bottom: 0;
+}
+
+.users-datatable {
+  margin-bottom: 20px;
+
+  #users-table_filter {
+    float: right;
+    margin-top: 19px;
+  }
+
+  #users-table_paginate {
+    float: right;
+  }
+
+  .dropdown-organizations-user {
+    .dropdown-menu li.user-organization-role {
+      & > :first-child {
+        padding-left: 10px;
+      }
+
+      &:not(.disabled) span.glyphicon {
+        color: transparent !important;
+      }
+    }
+  }
+}
+
+@media(max-width:768px) {
+  .navbar-secondary ul.breadcrumb {
+    margin-left: 15px;
+  }
+}
+
+ul.no-style {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+ul.double-line > li {
+  margin-bottom: 1em;
+}
+
+.page-header {
+  border-color: $color-alto;
+}
+
+.pagination > .active > a,
+.pagination > .active > a:hover,
+.pagination > .active > a:focus,
+.pagination > .active > span,
+.pagination > .active > span:hover,
+.pagination > .active > span:focus {
+  background-color: $color-theme-primary;
+}
+
+.pagination > li > a,
+.pagination > li > span {
+  color: $color-theme-primary;
+}
+
+.panel-default > .panel-heading {
+  background-color: $color-mystic;
+
+  &>.panel-title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+.panel-project {
+  .panel-heading {
+    background-color: $color-theme-primary;
+    color: $color-white;
+  }
+}
+
+.panel-archive {
+  .panel-heading {
+    background-color: darken($color-mystic, 5%);
+    color: lighten($color-mine-shaft, 15%);
+  }
+}
+
+.panel-options {
+  position: relative;
+  bottom: 6px;
+}
+
+.panel-footer {
+  padding: 0 15px;
+}
+
+.panel-footer-scinote {
+  background: linear-gradient(to bottom, $color-concrete, $color-white 10px);
+  padding: 0;
+
+  hr {
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+
+  .btn-link {
+    color: $color-silver-chalice;
+  }
+
+  .btn-link:hover {
+    color: darken($color-silver-chalice, 15%);
+  }
+
+  .tab-content ul {
+    margin-bottom: 15px;
+  }
+
+  .tab-content li {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+
+  .content-module-info {
+    max-height: 250px;
+    overflow: auto;
+  }
+
+  .content-comments {
+    max-height: 250px;
+    overflow: auto;
+  }
+
+  .content-activities {
+    max-height: 250px;
+    overflow: auto;
+  }
+
+  .content-users {
+    max-height: 250px;
+    overflow: auto;
+  }
+
+  .content-notifications {
+    max-height: 250px;
+    overflow: auto;
+
+    li.notification.alert-red > .date-time {
+      font-weight: bold;
+      color: $color-milano-red;
+    }
+    li.notification.alert-yellow > .date-time {
+      font-weight: bold;
+      color: $color-candlelight;
+    }
+  }
+}
+
+/* Accordion panel */
+.panel-accordion {
+  border: 0;
+  border-radius: 0;
+  margin-bottom: 0;
+
+  &> .panel-heading {
+    background-color: $color-mystic;
+    border-bottom: 1px solid $color-alto;
+
+    .panel-title > a {
+      &:hover, &:focus {
+        text-decoration: none;
+      }
+
+      & > span {
+        @include rotate(90deg);
+      }
+    }
+  }
+  & .panel-body {
+    background-color: $color-white;
+    padding: 0;
+  }
+}
+
+.form-control.bootstrap-select {
+  background-color: inherit;
+  @include box-shadow(inherit);
+}
+
+.panel-heading .dropdown {
+  bottom: 8px;
+  left: 8px;
+}
+
+#activity-modal {
+  .modal-body {
+    background-color: $color-concrete;
+    color: $color-mine-shaft;
+  }
+}
+
+/** Activity list resembling Bootstrap wells */
+ul.content-activities {
+
+  li.activity-item {
+    border-radius: .25em;
+    background-color: $color-white;
+    border: 1px solid $color-concrete;
+
+    .activity-item-date {
+      display: table-cell;
+      vertical-align: middle;
+      border-top-left-radius: .25em;
+      border-bottom-left-radius: .25em;
+      border: 3px solid $color-alto;
+      background-color: $color-alto;
+      padding-left: 10px;
+      padding-right: 10px;
+      vertical-align: top;
+    }
+    .activity-item-text {
+      display: table-cell;
+      padding: 3px 10px;
+      text-align: justify;
+    }
+  }
+  li.activity-date-item {
+    font-size: 1.4em;
+
+    & > span {
+      padding-left: 2em;
+      padding-right: 2em;
+    }
+  }
+}
+
+ul.content-module-activities {
+
+  li.activity-item {
+    margin-bottom: 15px;
+
+    .activity-item-date {
+      font-size: 1.2em;
+      background-color: $color-theme-primary;
+      border-color: $color-theme-primary;
+      color: $color-white;
+      padding-top: 5px;
+      padding-bottom: 5px;
+    }
+    .activity-item-text {
+      padding-top: 5px;
+      padding-bottom: 5px;
+    }
+  }
+
+}
+
+.step {
+  .panel-heading a[data-toggle] {
+    color: inherit;
+  }
+
+  &.not-completed {
+    .badge-num > span.badge {
+      background-color: $color-silver;
+    }
+  }
+
+}
+
+.well {
+  background-color: $color-white;
+}
+
+.well-sm {
+  border-radius: 0;
+}
+
+/* Steps and Results */
+#steps {
+  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAABCAYAAACsXeyTAAAAIUlEQVQImWNgoD5gZGBgMILSjKRo/P//vwiSGQwMDAwMAEnaA0jgHoquAAAAAElFTkSuQmCC");
+  background-repeat: repeat-y;
+  background-position: -3px 0;
+}
+
+.badge-icon {
+  font-size: 1.4em;
+  float: left;
+  padding: 6px 10px;
+
+  & + .well-sm {
+    margin-left: 38px;
+  }
+}
+
+.step,
+.result {
+  .panel {
+    margin-left: 38px;
+  }
+
+  .badge-num {
+    position: absolute;
+
+    & > .badge {
+      border-radius: 2em;
+      float: left;
+      font-size: 23.4px;
+      padding: 6px 11px;
+      position: relative;
+      top: 2px;
+    }
+
+    .size-digit-2 {
+      font-size: 18px;
+      padding: 8px;
+    }
+
+    .size-digit-3 {
+      font-size: 14px;
+      padding: 10px 6px;
+    }
+
+    & > .badge.icon {
+      font-size: 16.5px;
+      padding: 9px;
+    }
+  }
+
+  .panel-heading a[data-toggle] {
+    color: inherit;
+  }
+
+  .content-comments {
+    max-height: 250px;
+    overflow: auto;
+  }
+}
+
+.hot_table {
+  margin-bottom: 25px;
+}
+
+.step-result-hot-table {
+  max-height: 400px;
+  overflow: hidden;
+  width: 100%;
+}
+
+.btn-greyed {
+  background-color: $color-silver-chalice;
+  border-color: $color-silver-chalice;
+  color: $color-white;
+
+  &:hover,
+  &:focus {
+    background-color: darken($color-silver-chalice, 15%);
+    border-color: darken($color-silver-chalice, 15%);
+    color: $color-white;
+  }
+}
+/* Data table */
+
+table.dataTable {
+  width: 100% !important;
+  background-color: $color-alabaster;
+
+  thead {
+    background-color: $color-gray;
+  }
+
+  thead > tr > th {
+    border-bottom-width: 0;
+    border-left: 2px solid $color-alabaster;
+    color: $color-white;
+    font-weight: normal;
+  }
+
+  thead > tr > th:first-child {
+    border-left: none;
+  }
+
+  thead > tr > th,
+  thead > tr > td {
+    padding: 6px;
+  }
+
+  tbody > tr.selected,
+  tbody > tr > .selected {
+    background-color: $color-alto !important;
+    color: $color-emperor !important;
+  }
+
+  .sorting_desc,
+  .sorting_asc {
+    background-color: $color-theme-primary;
+  }
+}
+
+/* Helpers */
+.line-wrap {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+
+  &.short {
+    position: relative;
+    top: 6px;
+    max-width: 78%;
+  }
+}
+
+/* Sample group color picker */
+.btn-group-sample-group-color {
+  .btn-group > .btn {
+    border-radius: 0 !important;
+  }
+}
+
+#samples_length {
+  display: inline-block;
+}
+
+.toolbarButtons {
+  display: inline-block;
+  padding-left: 20px;
+}
+
+/* Pills with arrow */
+
+.nav-stacked-arrow > li > a {
+    border-radius: 2px;
+}
+.nav-stacked-arrow > li.active > a:after,
+.nav-stacked-arrow > li.active > a:hover:after,
+.nav-stacked-arrow > li.active > a:focus:after {
+    content: '';
+    position: absolute;
+    left: 100%;
+    top: 50%;
+    margin-top: -19px;
+    border-top: 19px solid transparent;
+    border-left: 13px solid #37A0D9;
+    border-bottom: 19px solid transparent;
+}
+
+.nav-stacked-arrow > li.active > a:hover:after {
+  border-left: 13px solid #337ab7;
+}
+
+/* Overlay to disable interaction while loading ajax */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1000000000;
+    cursor: wait;
+}
+
+html.turbolinks-progress-bar::before {
+  background-color: $color-mojo !important;
+}
+
+/* Loading animation for ajax events, inspired by Codrops */
+#loading-animation {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  width: 100%;
+  height: 3px;
+  background: $color-mojo;
+  -webkit-transform: translate3d(-100%, 0, 0);
+  transform: translate3d(-100%, 0, 0);
+  pointer-events: none;
+}
+
+#loading-animation.animate {
+  z-index: 10000000;
+  opacity: 0;
+  -webkit-transition: -webkit-transform 5s ease-in, opacity 1s 5s;
+  transition: transform 5s ease-in, opacity 1s 5s;
+  -webkit-transform: translate3d(0%, 0, 0);
+  transform: translate3d(0%, 0, 0);
+}
+
+/* Custom settings for intro-js */
+.custom .introjs-button {
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.custom .introjs-prevbutton {
+  display: none ;
+}
+
+.custom .introjs-skipbutton {
+  border-radius: 0;
+  color: $color-theme-primary;
+  background-color: $color-white;
+  background-image: none;
+  border: none;
+}
+
+.disabled-next .introjs-nextbutton {
+  display: none;
+}
+
+.introjs-overlay {
+  z-index: 0 !important;
+}
+
+.introjs-helperLayer {
+  z-index: 0 !important;
+}
+
+.introjs-no-overlay {
+  z-index: -1 !important;
+}
+
+.introjs-showElement.send-to-back {
+  z-index: 1 !important;
+}
+
+.introjs-tooltipReferenceLayer:not(.bring-to-front) {
+  z-index: 999999 !important;
+}

@@ -1,0 +1,7 @@
+<% if can_view_projects(organization) %>
+  <a href="<%= projects_path :organization => organization.id %>">
+    <%= organization.name %>
+  </a>
+<% else %>
+  <%= organization.name %>
+<% end %>

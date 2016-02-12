@@ -1,0 +1,59 @@
+<% if my_module.blank? and @my_module.present? then my_module = @my_module end %>
+<% timestamp = my_module.created_at %>
+<% name = my_module.name %>
+<div class="report-element report-module-element" data-ts="<%= timestamp.to_i %>" data-type="my_module" data-id="<%= my_module.id %>" data-modal-title="<%=t "projects.reports.elements.modals.module_contents.head_title", module: my_module.name %>" data-name="<%= name %>" data-icon-class="glyphicon-credit-card">
+  <div class="report-element-header">
+    <div class="row">
+      <div class="pull-left user-time">
+        <%=t "projects.reports.elements.module.user_time", timestamp: l(timestamp, format: :full) %>
+      </div>
+      <div class="pull-right controls">
+        <%= render partial: "reports/elements/module_element_controls.html.erb", locals: { show_sort: true } %>
+      </div>
+    </div>
+  </div>
+  <div class="report-element-body">
+    <div class="row">
+      <div class="pull-left module-name">
+        <h4>
+          <span class="glyphicon glyphicon-credit-card"></span>
+          <%= name %></h4>
+      </div>
+      <div class="pull-right module-due-date">
+        <% if my_module.due_date.present? %>
+          <%=t "projects.reports.elements.module.due_date", due_date: l(my_module.due_date, format: :full) %>
+        <% else %>
+          <em><%=t "projects.reports.elements.module.no_due_date" %></em>
+        <% end %>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-12">
+        <% if my_module.description.present? %>
+          <%= my_module.description %>
+        <% else %>
+           <em><%=t "projects.reports.elements.module.no_description" %></em>
+        <% end %>
+      </div>
+    </div>
+    <div class="row module-tags">
+      <div class="pull-left">
+        <%=t "projects.reports.elements.module.tags_header" %>
+      </div>
+      <% if my_module.tags.count > 0 %>
+        <% my_module.tags.each do |tag| %>
+          <div class="pull-left module-tag" style="background-color: <%= tag.color %>;">
+            <%= tag.name %>
+          </div>
+        <% end %>
+      <% else %>
+        <div class="pull-left module-no-tag">
+          <em><%=t "projects.reports.elements.module.no_tags" %></em>
+        </div>
+      <% end %>
+    </div>
+  </div>
+  <div class="report-element-children">
+    <%= children if (defined? children and children.present?) %>
+  </div>
+</div>

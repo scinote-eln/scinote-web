@@ -1,0 +1,27 @@
+<% provide(:head_title, t("my_modules.activities.head_title", project: @my_module.project.name, module: @my_module.name)) %>
+<%= render partial: "shared/sidebar" %>
+<%= render partial: "shared/secondary_navigation" %>
+
+<div class="row">
+  <% if @activities.length == 0 %>
+    <div class="col-xs-12">
+      <em><%= t 'my_modules.activities.no_activities' %></em>
+    </div>
+  <% else %>
+    <div class="col-xs-10">
+      <%= render partial: "my_modules/activities/list_activities.html.erb" %>
+
+      <!-- Load more activities -->
+      <% if @activities.length == @per_page %>
+        <div class="col-sm-8 fluid-content text-center">
+          <a class="btn btn-primary btn-more-activities" href="<%= @more_activities_url %>" data-remote="true">
+            <%= t('my_modules.activities.more_activities') %></a>
+        </div>
+      <% end %>
+    </div>
+  </div>
+<% end %>
+</div>
+
+<%= javascript_include_tag("my_modules/activities") %>
+

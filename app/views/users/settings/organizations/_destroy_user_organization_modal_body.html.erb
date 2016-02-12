@@ -1,0 +1,3 @@
+<%= bootstrap_form_for user_organization, url: destroy_user_organization_path(user_organization, format: :json), remote: :true, method: :delete, data: { id: "destroy-user-organization-form" } do |f| %>
+  <%= t("users.settings.organizations.edit.destroy_uo_message", user: user_organization.user.full_name, org: user_organization.organization.name) %>
+<% end %>

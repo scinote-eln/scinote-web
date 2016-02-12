@@ -1,0 +1,28 @@
+<% provide(:head_title, t("projects.module_archive.head_title", project: @project.name)) %>
+<%= render partial: "shared/sidebar" %>
+<%= render partial: "shared/secondary_navigation" %>
+
+<% if @project.archived_modules.count > 0 %>
+  <div class="row">
+    <% @project.archived_modules.each_with_index do |my_module, i| %>
+      <div class="col-lg-2 col-md-3 col-sm-4 col-xs-6">
+        <%= render partial: "projects/module_archive/my_module.html.erb", locals: { my_module: my_module} %>
+      </div>
+      <% if (i+1) % 6 == 0 %>
+      <div class="clearfix visible-lg-block"></div>
+      <% end %>
+      <% if (i+1) % 4 == 0 %>
+      <div class="clearfix visible-md-block"></div>
+      <% end %>
+      <% if (i+1) % 3 == 0 %>
+      <div class="clearfix visible-sm-block"></div>
+      <% end %>
+    <% end %>
+  </div>
+<% else %>
+  <div class="row">
+    <div class="col-xs-12">
+      <em><%=t "projects.module_archive.no_archived_modules" %></em>
+    </div>
+  </div>
+<% end %>

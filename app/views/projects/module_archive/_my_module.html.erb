@@ -1,0 +1,39 @@
+<div class="panel panel-default panel-archive">
+
+  <div class="panel-heading">
+
+    <div class="dropdown pull-right">
+      <button class="btn btn-link dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+        <span class="caret"></span>
+      </button>
+      <% my_module_form = nil %>
+      <%= form_for my_module, method: :patch, format: :html do |f| %>
+        <% my_module_form = f %>
+        <%= f.hidden_field :archived, value: false %>
+      <% end %>
+      <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1">
+        <li class="dropdown-header"><%=t "projects.index.options_header" %></li>
+        <% if can_restore_module(my_module) %>
+          <li><a href="#" class="form-submit-link" data-submit-form="<%= my_module_form.options[:html][:id] %>"><%= t "projects.module_archive.restore_option" %></a></li>
+        <% end %>
+      </ul>
+    </div>
+
+    <h3 class="panel-title"><%= my_module.name %></h3>
+
+  </div>
+
+  <div class="panel-body">
+    <div class="row">
+      <div class="col-xs-6">
+        <%=t "projects.module_archive.archived_on" %>
+      </div>
+      <div class="col-xs-6">
+        <span title="<%=t "projects.module_archive.archived_on_title", date: l(my_module.archived_on, format: :full_date), time: l(my_module.archived_on, format: :time) %>">
+          <%=l my_module.archived_on, format: :full_date %>
+        </span>
+      </div>
+    </div>
+  </div>
+
+</div>

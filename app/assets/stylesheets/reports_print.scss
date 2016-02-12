@@ -1,0 +1,163 @@
+@import "colors";
+@import "mixins";
+
+/** Custom CSS for report print (& PDF) */
+body.print-report-body {
+  background-color: $color-white;
+}
+
+div.print-report {
+  background-color: $color-white;
+  padding: 30px;
+
+  .new-element {
+    height: 0;
+    display: none;
+  }
+
+  .report-element {
+    color: $color-black !important;
+
+    .controls {
+      display: none;
+    }
+
+
+    &:hover {
+      background-color: $color-white;
+      @include box-shadow(none);
+    }
+
+    .hot-table-container {
+      .ht_master .wtHolder {
+        overflow: hidden !important;
+
+        .wtHider {
+          height: auto !important;
+        }
+      }
+    }
+  }
+
+  .report-project-header-element {
+    & > .report-element-body .project-name {
+      color: $color-black;
+    }
+
+    &:hover > .report-element-body .project-name {
+      color: $color-black;
+    }
+  }
+
+  .report-module-element:hover {
+    & > .report-element-body .module-name {
+      color: $color-black;
+    }
+
+    &:hover > .report-element-body .module-name {
+      color: $color-black;
+    }
+  }
+
+  .report-result-element {
+    & > .report-element-header {
+      color: $color-black;
+    }
+
+    &:hover > .report-element-header {
+      color: $color-black;
+    }
+  }
+
+  .report-step-element {
+    & > .report-element-body .step-name {
+      color: $color-black;
+    }
+
+    &:hover > .report-element-body .step-name {
+      color: $color-black;
+    }
+  }
+
+  .report-step-attachment-element {
+    & > .report-element-header .attachment-icon {
+      color: $color-black;
+    }
+
+    &:hover > .report-element-header .attachment-icon {
+      color: $color-black;
+    }
+  }
+
+  .report-step-table-element {
+    & > .report-element-header .user-time {
+      color: $color-black;
+    }
+
+    &:hover > .report-element-header .user-time {
+      color: $color-black;
+    }
+  }
+
+  .report-step-asset-element {
+    & > .report-element-header .file-name {
+      color: $color-black;
+    }
+
+    &:hover > .report-element-header .file-name {
+      color: $color-black;
+    }
+  }
+
+  .report-step-checklist-element {
+    & > .report-element-header .checklist-name {
+      color: $color-black;
+    }
+
+    &:hover > .report-element-header .checklist-name {
+      color: $color-black;
+    }
+  }
+
+  .report-comments-element {
+    & > .report-element-header {
+      .comments-icon,.comments-name {
+        color: $color-black !important;
+      }
+    }
+
+    &:hover > .report-element-header {
+      .comments-icon,.comments-name {
+        color: $color-black !important;
+      }
+    }
+  }
+
+  .report-module-samples-element {
+    & > .report-element-header {
+      .samples-icon,.samples-name {
+        color: $color-black !important;
+      }
+    }
+
+    &:hover > .report-element-header {
+      .samples-icon,.samples-name {
+        color: $color-black !important;
+      }
+    }
+  }
+
+  .report-module-activity-element {
+    & > .report-element-header {
+      .activity-icon,.activity-name {
+        color: $color-black !important;
+      }
+    }
+
+    &:hover > .report-element-header {
+      .activity-icon,.activity-name {
+        color: $color-black !important;
+      }
+    }
+  }
+}

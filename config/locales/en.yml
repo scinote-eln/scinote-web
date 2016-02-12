@@ -1,0 +1,1161 @@
+en:
+
+  devise:
+    confirmations:
+      new:
+        head_title: "Resend confirmation instructions"
+        title: "Resend confirmation instructions"
+        submit: "Resend confirmation instructions"
+    passwords:
+      edit:
+        head_title: "Change password"
+        title: "Change your password"
+        password: "New password"
+        password_length: "(%{min_length} characters minimum)"
+        password_confirm: "Confirm new password"
+        submit: "Change my password"
+      new:
+        head_title: "Forgot password"
+        title: "Forgot your password?"
+        submit: "Send me reset password instructions"
+    registrations:
+      password_changed: "Password successfully updated."
+    sessions:
+      new:
+        head_title: "Log in"
+        title: "Log in"
+        email_placeholder: "username@email.com"
+        password_placeholder: "pass****"
+        submit: "Log in"
+      create:
+        org_name: "%{user}'s projects"
+    unlocks:
+      new:
+        head_title: "Resend unlock instructions"
+        title: "Resend unlock instructions"
+        submit: "Resend unlock instructions"
+    links:
+      login: "Log in"
+      signup: "Sign up"
+      forgot: "Forgot your password?"
+      not_receive_confirmation: "Didn't receive confirmation instructions?"
+      not_receive_unlock: "Didn't receive unlock instructions?"
+      sign_in_provider: "Sign in with %{provider}"
+
+  helpers:
+    label:
+      organization:
+        name: "Organization name"
+      user:
+        full_name: "Full name"
+        initials: "Initials"
+        avatar: "Avatar"
+
+  head:
+    title: "sciNote | %{title}"
+
+  nav:
+    search: "Search"
+    user_greeting: "Hi, %{full_name}"
+    advanced_search: "Advanced search"
+    title: "sciNote"
+    user:
+      profile: "My profile"
+      settings: "Settings"
+      logout: "Log out"
+    activities:
+      none: "No activities!"
+    label:
+      projects: "Projects"
+      calendar: "Calendar"
+      activities: "Activities"
+
+  sidebar:
+    title: "Navigation"
+    no_module_group: "No workflow"
+
+  nav2:
+    projects:
+      canvas: "Overview"
+      samples: "Samples"
+      activities: "Activity"
+      reports: "Reports"
+    modules:
+      steps: "Protocols"
+      results: "Results"
+      activities: "Activity"
+      samples: "Samples"
+      archive: "Archive"
+
+  search:
+    index:
+      head_title: "Search"
+      page_title: "Search"
+      results_title_html: "Search Results for '<em>%{query}</em>'"
+      archived: "Archived"
+      created_by: "Created by: "
+      created_at: "Created at: "
+      last_modified_by: "Last modified by: "
+      last_modified_at: "Last modified at: "
+      description: "Description: "
+      no_description: "No description"
+      organization: "Organization: "
+      project: "Project: "
+      modules: "Modules: "
+      tag_no_modules: "not added to any modules"
+      sample_no_modules: "not assigned to any modules"
+      module: "Module: "
+      step: "Step: "
+      result: "Result: "
+      file: "File: %{filename}"
+      error:
+        no_results: "No results for %{q}."
+        query_length: "Search query is too short. The query should contain at least %{n} characters."
+        max_length: "Search query is too long. The query is limited to %{n} characters."
+      samples:
+        sample: "Sample: "
+        sample_type: "Sample type: "
+        no_sample_type: "No sample type"
+        sample_group: "Sample group: "
+        no_sample_group: "No sample group"
+        added_on: "Added on: "
+        added_by: "Added by: "
+        custom_field: "%{cf}: "
+      comments:
+        project: "Project comment"
+        my_module: "Module comment"
+        step: "Step comment"
+        result: "Result comment"
+
+  projects:
+    index:
+      head_title: "Home"
+      new: "New project"
+      visibility_private: "Project is private. Only invited users can see it."
+      visibility_public: "Project is public. Everybody from the organization can see it."
+      user_project: "%{user} joined on %{timestamp}."
+      no_activities: "No activities!"
+      no_comments: "No comments!"
+      no_users: "No users!"
+      manage_users: "Manage users"
+      no_notifications: "No notifications!"
+      module_overdue_html: "Module <em>%{module}</em> is overdue (%{days})."
+      module_overdue_days:
+        one: "1 day"
+        other: "%{count} days"
+      module_one_day_due_html: "Module <em>%{module}</em> is due in less than 1 day."
+      new_comment: "New comment"
+      user_role: "Role: "
+      user_full_name: "User: "
+      edit_user: "Edit role"
+      delete_user: "Remove user from project"
+      delete_user_confirm: "Are you sure you wish to remove user %{user} from project %{project}?"
+      organization_filter: "Show projects from"
+      all_filter: "All"
+      sort: "Sort by"
+      sort_new: "Newest first"
+      sort_old: "Oldest first"
+      sort_atoz: "From A to Z"
+      sort_ztoa: "From Z to A"
+      start_date: "Start date"
+      activity_tab: "Activity"
+      users_tab: "Users"
+      notifications_tab: "Notifications"
+      comment_tab: "Comments"
+      new_comment: "New comment"
+      content_loading: "Loading..."
+      edit_option: "Edit"
+      archive_option: "Archive"
+      archive_confirm: "Are you sure to archive project?"
+      restore_option: "Restore"
+      options_header: "Options"
+      comment_placeholder: "Your Message"
+      more_comments: "More Comments"
+      no_archived_projects: "No archived projects!"
+      back_to_projects_index: "Back to home"
+      modal_new_project:
+        modal_title: "Create new project"
+        create: "Create project"
+        name: "Project name"
+        name_placeholder: "My project"
+        organization: "Organization"
+        visibility: "Visibility"
+        visibility_hidden: "Private"
+        visibility_visible: "Public"
+      modal_edit_project:
+        modal_title: "Edit project %{project}"
+        submit: "Update project"
+      modal_manage_users:
+        modal_title: "Manage users for"
+        no_users: "No users!"
+        create: "Add"
+        select_user_role: "Select Role"
+      no_orgs:
+        title: "It's empty here!"
+        text: "It seems you're not a member of any organization. See organization management to sort it out."
+        btn: "Manage organizations"
+    create:
+      success_flash: "Project <strong>%{name}</strong> successfully created."
+    update:
+      success_flash: "Project <strong>%{name}</strong> successfully updated."
+      error_flash: "Project <strong>%{name}</strong> not updated."
+    archive:
+      head_title: "Projects Archive"
+      success_flash: "Project <strong>%{name}</strong> successfully archived."
+      error_flash: "Project <strong>%{name}</strong> not archived."
+    restore:
+      success_flash: "Project <strong>%{name}</strong> successfully restored."
+      error_flash: "Project <strong>%{name}</strong> not restored."
+    show:
+      head_title: "%{project}"
+    canvas:
+      head_title: "%{project} | Overview"
+      canvas_edit: "Edit workflow"
+      modal_manage_tags:
+        head_title: "Manage tags for"
+        subtitle: "Showing tags of module %{module}"
+        no_tags: "No tags!"
+        edit_tag: "Edit tag."
+        remove_tag: "Remove tag from module %{module}."
+        delete_tag: "Permanently delete tag from all modules."
+        save_tag: "Save tag."
+        cancel_tag: "Cancel changes to the tag."
+        create: "Add tag"
+        create_new: "Create new tag"
+      edit:
+        new_module: "New module"
+        new_module_hover: "Drag me onto canvas"
+        save: "Save workflow"
+        save_short: "Save"
+        cancel: "Cancel"
+        unsaved_work: "Are you sure you want to leave this page? All unsaved data will be lost."
+        drag_connections: "Drag connection/s from here"
+        options_header: "Options"
+        edit_module: "Rename module"
+        edit_module_group: "Rename workflow"
+        clone_module: "Clone module"
+        clone_module_group: "Clone workflow"
+        delete_module: "Archive module"
+        delete_module_group: "Archive workflow"
+        modal_new_module:
+          title: "Add new module"
+          name: "Module name"
+          name_placeholder: "My module"
+          confirm: "Add module"
+          error_length: "Name must contain from 2 to 50 characters."
+          error_invalid: "Name contains invalid characters ('|')."
+          error_whitespaces: "Name cannot be blank."
+        modal_edit_module:
+          title: "Rename module"
+          name: "Module name"
+          confirm: "Rename module"
+        modal_edit_module_group:
+          title: "Rename workflow"
+          name: "Workflow name"
+          confirm: "Rename workflow"
+        modal_delete_module:
+          title: "Archive module"
+          confirm: "Archive module"
+          message: "Are you sure you wish to archive module %{module}? Module's samples and position will be removed."
+        modal_delete_module_group:
+          title: "Archive workflow"
+          confirm: "Archive workflow"
+          message: "Are you sure you wish to archive the workflow module %{module} belongs to? All workflow modules' samples and positions will be removed."
+      popups:
+        info_tab: "Module info"
+        no_description: "This module has no description."
+        full_info: "Edit description"
+        users_tab: "Users"
+        no_users: "This module has no assigned users."
+        manage_users: "Manage users"
+        module_user_join: "Joined on %{date}."
+        module_user_join_full: "%{user} joined on %{date} at %{time}."
+        activities_tab: "Activity"
+        no_activities: "No activities!"
+        more_activities: "All activities"
+        comments_tab: "Comments"
+        no_comments: "No comments!"
+        more_comments: "More Comments"
+        comment_placeholder: "Your Message"
+        new_comment: "New comment"
+        samples_tab: "Samples"
+        no_samples: "No samples!"
+        manage_samples: "Manage samples"
+      full_zoom:
+        due_date: "Due date"
+        no_due_date: "not set"
+        modal_manage_users:
+          modal_title: "Manage users for"
+          no_users: "No users"
+          user_join: "Joined on %{date}."
+          user_join_full: "%{user} joined on %{date} at %{time}."
+          create: "Add"
+      update:
+        success_flash: "Project successfully updated."
+    samples:
+      head_title: "%{project} | Samples"
+    activities:
+      head_title: "%{project} | Activity"
+    reports:
+      print_title: "%{project} | Report"
+      index:
+        head_title: "%{project} | Reports"
+        new: "New report"
+        edit: "Edit report"
+        delete: "Delete report/s"
+        thead_name: "Report name"
+        thead_created_by: "Created by"
+        thead_last_modified_by: "Last modified by"
+        thead_grouped_by: "Grouped by"
+        thead_created_at: "Created at"
+        thead_updated_at: "Last updated at"
+        no_reports: "No reports!"
+        table_grouped_by_module: "By modules"
+        table_grouped_by_timestamp: "By timestamp"
+        modal_new:
+          head_title: "Create new report"
+          grouped_by: "How would you like your report structured?"
+          grouped_by_module: "Group elements by module"
+          grouped_by_timestamp: "Sort elements by timestamp"
+          create: "Create"
+        modal_delete:
+          head_title: "Delete report/s"
+          message: "Are you sure to delete selected report/s?"
+          delete: "Delete"
+      new_by_module:
+      new:
+        head_title: "%{project} | New report"
+        nav_title: "Report for: "
+        nav_print: "Print"
+        nav_pdf: "Export to PDF"
+        nav_save: "Save report"
+        nav_close: "Close"
+        nav_sort_by: "Sort report by"
+        nav_sort_asc: "Oldest on top"
+        nav_sort_desc: "Newest on top"
+        nav_sort: "Sort"
+        sidebar_title: "Navigation"
+        global_sort: "Sorting whole report will undo any custom sorting you might have done. Proceed?"
+        unsaved_work: "Are you sure you want to leave this page? All unsaved data will be lost."
+      elements:
+        modals:
+          project_contents:
+            head_title: "Add contents to report"
+            project_tab: "Choose modules"
+            modules_tab: "Modules content"
+            steps_tab: "Protocols content"
+            results_tab: "Results content"
+          project_contents_inner:
+            instructions: "Select projects/workflows/modules to include in the report"
+            no_modules: "The project contains no modules"
+            no_module_group: "No workflow"
+          module_contents:
+            head_title: "Add contents to module %{module}"
+            module_tab: "Module content"
+            steps_tab: "Protocols content"
+            results_tab: "Results content"
+          module_contents_inner:
+            instructions: "Choose what information from module/s to include in the report"
+            header: "Elements"
+            steps: "Completed protocol steps"
+            no_steps: "Module contains no protocols"
+            results: "Results"
+            result_assets: "Files"
+            result_tables: "Tables"
+            result_texts: "Texts"
+            no_results: "Module contains no results"
+            activity: "Activity"
+            samples: "Samples"
+          step_contents:
+            head_title: "Add contents to step %{step}"
+            step_tab: "Step content"
+            results_tab: "Results content"
+          step_contents_inner:
+            instructions: "Choose what information from module protocol step/s to include in the report"
+            header: "Elements"
+            tables: "Tables"
+            no_tables: "Step contains no tables"
+            assets: "Files"
+            no_assets: "Step contains no uploaded files"
+            checklists: "Checklists"
+            no_checklists: "Step contains no checklists"
+            comments: "Comments"
+          result_contents:
+            head_title: "Add contents to result %{result}"
+          result_contents_inner:
+            instructions: "Include result/s comments in the report?"
+            comments: "Comments"
+          add: "Add to report"
+          save_report:
+            head_title: "Save report"
+            name: "Report name"
+            name_placeholder: "My report"
+            description: "Report description"
+            description_placeholder: "My report description..."
+            save: "Save"
+        all:
+          sort_asc: "Sort element contents by oldest on top"
+          sort_desc: "Sort element contents by newest on top"
+          move_up: "Move element up"
+          move_down: "Move element down"
+          remove: "Remove element from the report"
+        new_element:
+          title: "Add new element/s here"
+        project_header:
+          user_time: "Project created on %{timestamp}."
+          title: "Report for project %{project}"
+        module:
+          user_time: "Module created on %{timestamp}."
+          due_date: "Due date: %{due_date}"
+          no_due_date: "No due date"
+          no_description: "No description"
+          tags_header: "Module tags:"
+          no_tags: "No tags"
+        module_activity:
+          name: "Activity of module %{my_module}"
+          sidebar_name: "Activity"
+          no_activity: "No activities"
+        module_samples:
+          name: "Samples of module %{my_module}"
+          sidebar_name: "Samples"
+          no_samples: "No samples"
+        result_asset:
+          file_name: "[ %{file} ]"
+          user_time: "Uploaded by %{user} on %{timestamp}."
+        result_table:
+          user_time: "Created by %{user} on %{timestamp}."
+        result_text:
+          user_time: "Created by %{user} on %{timestamp}."
+        step:
+          sidebar_name: "Step %{pos}: %{name}"
+          user_time: "Completed by %{user} on %{timestamp}."
+          step_pos: "Step %{pos}:"
+          no_description: "No description"
+        step_table:
+          sidebar_name: "Table" # TODO
+          user_time: "Table created on %{timestamp}."
+        step_asset:
+          sidebar_name: "File %{file}"
+          file_name: "[ %{file} ]"
+          user_time: "File uploaded on %{timestamp}."
+        step_checklist:
+          checklist_name: "[ %{name} ]"
+          user_time: "Checklist created on %{timestamp}."
+        result_comments:
+          sidebar_name: "Comments"
+          name: "Comments for result %{result}"
+          no_comments: "No comments"
+          comment_prefix: "%{user} on %{date} at %{time}:"
+        step_comments:
+          sidebar_name: "Comments"
+          name: "Comments for step %{step}"
+          no_comments: "No comments"
+          comment_prefix: "%{user} on %{date} at %{time}:"
+    module_archive:
+      head_title: "%{project} | Archived modules"
+      no_archived_modules: "No archived modules!"
+      restore_option: "Restore"
+      archived_on: "Archived on"
+      archived_on_title: "Module archived on %{date} at %{time}."
+
+  user_organizations:
+    enums:
+      role:
+        guest: "Guest"
+        normal_user: "Normal user"
+        admin: "Administrator"
+
+  user_projects:
+    enums:
+      role:
+        owner: "Owner"
+        normal_user: "User"
+        technician: "Technician"
+        viewer: "Viewer"
+    new:
+      head_title: "%{project} | Add user"
+      title: "Add user to project %{project}"
+      create: "Add"
+      role: "Role"
+    create:
+      success_flash: "User %{user} successfully added to project <strong>%{project}</strong>."
+      error_flash: "User %{user} not added to project <strong>%{project}</strong>."
+      select_user_role: "Please select a user role."
+      add_user_generic_error: "An error occured. "
+    edit:
+      head_title: "%{project} | Edit user role"
+      title: "Edit role for user %{user} on project %{project}"
+      update: "Update role"
+      update_role: "Change Role"
+    update:
+      success_flash: "Successfully changed project role for user %{user} on project <strong>%{project}</strong>."
+      error_flash: "Project role not changed for user %{user} on project <strong>%{project}</strong>."
+    destroy:
+      success_flash: "Successfully removed user %{user} from project <strong>%{project}</strong>."
+      error_flash: "User %{user} not removed from project <strong>%{project}</strong>."
+
+  my_modules:
+    show:
+      head_title: "%{project} | %{module}"
+      archive_action: "Archive"
+      archive_confirm_text: "All samples will be unassigned from the
+        module when archiving. Are you sure to archive module?"
+    edit:
+      head_title: "%{project} | %{module} | Edit"
+      title: "Edit module %{module}"
+      name: "Module name"
+      due_date: "Due date"
+      save: "Save module"
+    description:
+      title: "Edit module %{module} description"
+      label: "Description"
+    due_date:
+      title: "Edit module %{module} due date"
+      label: "Due date"
+    update:
+      success_flash: "Successfully modified module <strong>%{module}</strong>."
+    destroy:
+      success_flash: "Successfully removed module <strong>%{module}</strong> from project <strong>%{project}</strong>."
+    samples:
+      head_title: "%{project} | %{module} | Samples"
+    module_archive:
+      head_title: "%{project} | %{module} | Archive"
+      archived_on: "Archived on"
+      archived_on_title: "Result archived on %{date} at %{time}."
+      option_download: "Download"
+      no_archived_results: "No archived results!"
+      archive_timelabel: "archived on %{date}"
+    module_header:
+      start_date: "Start date:"
+      due_date: "Due date:"
+      tags: "Tags:"
+      no_tags: "No tags"
+      no_description: "No description"
+    steps:
+      head_title: "%{project} | %{module} | Protocols"
+      subtitle: "Protocol steps"
+      add_due_date: "Add a due date"
+      go_to_results: "Go to results view"
+      expand_label: "Expand  all"
+      collapse_label: "Collapse all"
+      new_step: "Add new"
+      published_on: "Published on <em>%{timestamp}</em> by <em>%{user}</em>"
+      empty_step_name: "Add title"
+      empty_checklist: "No items"
+      save_step: "Save step"
+      tables: "Tables"
+      Files: "Files"
+      info_tab: "Info"
+      comments_tab: "Comments"
+      comment_title: "%{user} at %{time}:"
+      options_label: "Options"
+      new:
+        head_title: "%{project} | %{module} | Add new step"
+        title: "Add new step to module %{module}"
+        add_step_title: "Add new step"
+        tab_checklists: "Checklists"
+        tab_assets: "Files"
+        tab_tables: "Tables"
+        add_step: "Add"
+        name: "Step name"
+        name_placeholder: "mRNA sequencing"
+        description: "Description"
+        description_placeholder: "Write what should be done here ..."
+        checklist_panel_title: "Checklist"
+        checklist_name: "Checklist name"
+        checklist_name_placeholder: "Checklist name"
+        checklist_items: "Items"
+        checklist_item_placeholder: "Task"
+        checklist_add_item: "Add item"
+        add_checklist: "Add checklist"
+        table_panel_title: "Table"
+        table_placeholder: "Table contents"
+        add_table: "Add table"
+        asset_panel_title: "File"
+        add_asset: "Add file"
+      create:
+        success_flash: "Step successfully added to module <strong>%{module}</strong>."
+      edit:
+        head_title: "%{project} | %{module} | Edit step"
+        title: "Edit step %{step} from module %{module}"
+        edit_step_title: "Edit step"
+        edit_step: "Save"
+      update:
+        success_flash: "Step %{step} successfully updated."
+      destroy:
+        confirm: "Are you sure you want to delete step %{step}?"
+        success_flash: "Step %{step} successfully deleted."
+      options:
+        up_arrow_title: "Move step up"
+        down_arrow_title: "Move step down"
+        comment_title: "Comments"
+        no_comments: "No comments"
+        new_comments: "New comment"
+        edit_title: "Edit step"
+        delete_title: "Delete step"
+        duplicate_title: "Duplicate step"
+        complete_title: "Complete step"
+        uncomplete_title: "Uncomplete step"
+    results:
+      head_title: "%{project} | %{module} | Results"
+      add_label: "Add new result:"
+      new_text_result: "Text"
+      new_table_result: "Table"
+      new_asset_result: "File"
+      published_on: "Published on <em>%{timestamp}</em> by <em>%{user}</em>"
+      published_table: "entered a table on %{timestamp}."
+      published_text:  "entered a text on %{timestamp}."
+      published_asset:  "uploaded a file on %{timestamp}."
+      expand_label: "Expand all"
+      collapse_label: "Collapse all"
+      empty_name: "Add title"
+      archive_confirm: "Are you sure to archive result?"
+      info_tab: "Info"
+      comments_tab: "Comments"
+      comment_title: "%{user} at %{time}:"
+      options_label: "Options"
+      options:
+        comment_title: "Comments"
+        no_comments: "No comments"
+        new_comment: "New comment"
+        edit_title: "Edit result"
+        archive_title: "Archive result"
+    activities:
+      head_title: "%{project} | %{module} | Activity"
+      no_activities: "There are no activities for this module."
+      more_activities: "Load older activities"
+
+  my_module_tags:
+    new:
+      head_title: "%{project} | %{module} | Add tag"
+      title: "Add tag to module %{module}"
+      create: "Add tag"
+      new_tag: "Create new tag"
+    create:
+      success_flash: "Successfully added tag <strong>%{tag}</strong> to module <strong>%{module}</strong>."
+      error_flash: "Could not create new tag for module <strong>%{module}</strong>."
+    destroy:
+      success_flash: "Successfully removed tag <strong>%{tag}</strong> from module <strong>%{module}</strong>."
+      error_flash: "Tag <strong>%{tag}</strong> could not be removed from <strong>%{module}</strong>."
+
+  my_module_comments:
+    new:
+      head_title: "%{project} | %{module} | Add comment"
+      title: "Add comment to module %{module}"
+      create: "Add comment"
+    create:
+      success_flash: "Successfully added comment to module <strong>%{module}</strong>."
+
+  my_module_groups:
+    new:
+      name: "Workflow %{index}"
+      suffix: "..."
+
+  tags:
+    new:
+      head_title: "Create tag"
+      title: "Create a new tag"
+      name: "Tag name"
+      name_placeholder: "My tag"
+      color: "Tag color"
+      create: "Create tag"
+    create:
+      new_name: "New tag"
+      success_flash: "Successfully created tag <strong>%{tag}</strong>."
+      error_flash: "Could not create a new tag."
+    destroy:
+      success_flash: "Successfully removed tag <strong>%{tag}</strong>."
+      error_flash: "Could not remove tag <strong>%{tag}</strong>."
+
+  project_comments:
+    new:
+      head_title: "%{project} | Add comment"
+      title: "Add comment to project %{project}"
+      create: "Add comment"
+    create:
+      success_flash: "Successfully added comment to project <strong>%{project}</strong>."
+
+  result_texts:
+    new:
+      head_title: "%{project} | %{module} | Add text result"
+      title: "Add result to module %{module}"
+      create: "Add text result"
+    edit:
+      head_title: "%{project} | %{module} | Edit text result"
+      title: "Edit result from module %{module}"
+      update: "Update text result"
+    create:
+      success_flash: "Successfully added text result to module <strong>%{module}</strong>"
+    update:
+      success_flash: "Successfully updated text result in module <strong>%{module}</strong>"
+    archive:
+      success_flash: "Successfully archived text result in module <strong>%{module}</strong>"
+    destroy:
+      success_flash: "Text result successfully deleted."
+
+  result_assets:
+    new:
+      head_title: "%{project} | %{module} | Add file result"
+      title: "Add result to module %{module}"
+      create: "Add file result"
+    edit:
+      head_title: "%{project} | %{module} | Edit file result"
+      title: "Edit result from module %{module}"
+      update: "Update file result"
+    create:
+      success_flash: "Successfully added file result to module <strong>%{module}</strong>"
+    update:
+      success_flash: "Successfully updated file result in module <strong>%{module}</strong>"
+    archive:
+      success_flash: "Successfully archived file result in module <strong>%{module}</strong>"
+    destroy:
+      success_flash: "File result successfully deleted."
+
+  result_tables:
+    new:
+      head_title: "%{project} | %{module} | Add table result"
+      title: "Add result to module %{module}"
+      create: "Add table result"
+    edit:
+      head_title: "%{project} | %{module} | Edit table result"
+      title: "Edit result from module %{module}"
+      update: "Update table result"
+    create:
+      success_flash: "Successfully added table result to module <strong>%{module}</strong>"
+    update:
+      success_flash: "Successfully updated table result in module <strong>%{module}</strong>"
+    archive:
+      success_flash: "Successfully archived table result in module <strong>%{module}</strong>"
+    destroy:
+      success_flash: "Table result successfully deleted."
+
+  samples:
+    actions: "Actions"
+    add_new_sample: "Add new sample"
+    import: "Import"
+    export: "Export"
+    assign_samples_to_module: "Assign"
+    unassign_samples_to_module: "Unassign"
+    delete_samples: "Delete"
+    edit_sample: "Edit"
+    save_sample: "Save"
+    cancel_save: "Cancel"
+    column_visibility: "Visible columns"
+    add_new_sample_type: "Add sample type"
+    add_new_sample_group: "Add sample group"
+    add_new_column: "Add column"
+    modal_import:
+      title: "Import samples"
+      notice: "You may upload .csv file (comma separated) or tab separated file (.txt or .tdv) or Excel file (.xls, .xlsx). First row should include header names, followed by rows with sample data."
+      upload: "Upload file"
+    modal_delete:
+      title: "Delete samples"
+      notice: "Are you sure you want to delete the selected samples?"
+      other_samples: "Only samples created by you will be deleted."
+      delete: "Delete samples"
+    modal_add_custom_field:
+      title_html: "Add new column to organization <strong>%{organization}</strong>"
+      create: "Add new column"
+    modal_add_new_sample_group:
+      title_html: "Add new sample group to organization <strong>%{organization}</strong>"
+      create: "Add new sample group"
+    modal_add_new_sample_type:
+      title_html: "Add new sample type to organization <strong>%{organization}</strong>"
+      create: "Add new sample type"
+    table:
+      assigned: "Assigned"
+      sample_name: "Sample name"
+      sample_type: "Sample type"
+      sample_group: "Sample group"
+      added_on: "Added on"
+      added_by: "Added by"
+      no_group: "No sample group"
+      no_type: "No sample type"
+    new:
+      head_title: "%{organization} | Add new sample"
+      title: "Add new sample to organization %{organization}"
+      create: "Add new sample"
+      sample_type: "Sample type"
+      sample_group: "Sample group"
+      no_group: "No sample group"
+      no_type: "No sample type"
+      edit_sample_type: "Edit sample type"
+      edit_sample_group: "Edit sample group"
+    edit:
+      head_title: "%{organization} | Edit sample"
+      title: "Edit sample %{sample} from organization %{organization}"
+      create: "Edit sample"
+      scf_does_not_exist: "This field does not exists."
+    create:
+      success_flash: "Successfully added sample to organization <strong>%{organization}</strong>"
+    update:
+      success_flash: "Successfully updated sample <strong>%{sample}</strong> to organization <strong>%{organization}</strong>"
+    destroy:
+      success_flash: "%{sample_number} samples successfully deleted."
+      contains_other_samples_flash: "%{sample_number} samples successfully deleted. %{other_samples_number} of the selected samples were created by other users and were not deleted."
+      no_sample_selected_flash: "There were no selected samples."
+      no_deleted_samples_flash: "No samples were deleted. %{other_samples_number} of the selected samples were created by other users and were not deleted."
+    js:
+      permission_error: "You don't have permission to edit this sample."
+      not_found_error: "This sample does not exist."
+  sample_types:
+    edit:
+      head_title: "%{organization} | Edit sample type"
+      title: "Edit sample type %{sample_type} from organization %{organization}"
+      create: "Edit sample type"
+    create:
+      success_flash: "Successfully added sample type <strong>%{sample_type}</strong> to organization <strong>%{organization}</strong>."
+    update:
+      success_flash: "Successfully updated sample type <strong>%{sample_type}</strong> to organization <strong>%{organization}</strong>."
+    destroy:
+      success_flash: "Sample type <strong>%{sample_type}</strong> successfully deleted."
+
+  custom_fields:
+    new:
+      title_html: "Add new column to organization <strong>%{organization}</strong>"
+      create: "Add new column"
+    create:
+      success_flash: "Successfully added column <strong>%{custom_field}</strong> to organization <strong>%{organization}</strong>."
+
+  organizations:
+    parse_sheet:
+      head_title: "%{organization} | Import samples"
+      title: "Import samples to organization %{organization}"
+      help_text: "Match the columns of your uploaded file with already existing columns in database."
+      scinote_columns_html: "<em>sciNote</em> columns:"
+      file_columns: "Imported columns:"
+      example_value: "Imported file content:"
+      import_samples: "Import samples"
+      do_not_include_column: "Do not include this column"
+      errors:
+        invalid_file: "The file you provided is invalid."
+        invalid_extension: "The file has invalid extension."
+        empty_file: "You've selected empty file. There's not much to import."
+        temp_file_failure: "We couldn't create temporary file. Please contact administrator."
+        no_file_selected: "You didn't select any file."
+        errors_list_title: "Samples were not imported because one or more errors was found:"
+        file_size_exceeded: "Must be less than 50MB"
+        list_row: "Row %{row}"
+        list_error: "%{key}: %{val}"
+    import_samples:
+      head_title: "%{organization} | Import samples"
+      title: "Import samples to organization %{organization}"
+      sample:
+        one: "1 sample"
+        other: "%{count} samples"
+      success_flash: "%{nr} of %{samples} successfully imported."
+      partial_success_flash: "%{nr} of %{samples} successfully imported. Other rows contained errors."
+      errors:
+        temp_file_not_found: "This file could not be found. Your session might expire."
+        session_expired: "Your session expired. Please retry importing samples again."
+        no_data_to_parse: "There's nothing to be parsed."
+        no_sample_name: "Sample name is required!"
+        duplicated_values: "Two or more columns have the same mapping."
+
+  sample_groups:
+    color_label: "Sample group color"
+    edit:
+      head_title: "%{organization} | Edit sample group"
+      title: "Edit sample group %{sample_group} from organization %{organization}"
+      create: "Edit sample group"
+    create:
+      success_flash: "Successfully added sample group <strong>%{sample_group}</strong> to organization <strong>%{organization}</strong>."
+    update:
+      success_flash: "Successfully updated sample group <strong>%{sample_group}</strong> to organization <strong>%{organization}</strong>."
+    destroy:
+      success_flash: "Sample group <strong>%{sample_group}</strong> successfully deleted."
+
+  activities:
+    index:
+      today: "Today"
+      more_activities: "More Activities"
+      no_activities: "No activities!"
+    modal:
+      modal_title: "Activities"
+    create_project: "<i>%{user}</i> created project <strong>%{project}</strong>."
+    rename_project: "<i>%{user}</i> renamed project <strong>%{project_old}</strong> to <strong>%{project_new}</strong>."
+    change_project_visibility: "<i>%{user}</i> changed project <strong>%{project}</strong>'s visibility to %{visibility}."
+    archive_project: "<i>%{user}</i> moved project <strong>%{project}</strong> to archive."
+    restore_project: "<i>%{user}</i> restored project <strong>%{project}</strong> from archive."
+    assign_user_to_project: "<i>%{assigned_user}</i> was added as %{role} to project <strong>%{project}</strong> by <i>%{assigned_by_user}</i>."
+    change_user_role_on_project: "<i>%{actor}</i> changed <i>%{user}</i>'s role on project <strong>%{project}</strong> to %{role}."
+    unassign_user_from_project: "<i>%{unassigned_user}</i> was removed from project <strong>%{project}</strong> by <i>%{unassigned_by_user}</i>."
+    create_module: "<i>%{user}</i> created module <strong>%{module}</strong>."
+    assign_user_to_module: "<i>%{assigned_user}</i> was added to module <strong>%{module}</strong> by <i>%{assigned_by_user}</i>."
+    unassign_user_from_module: "<i>%{unassigned_user}</i> was removed from module <strong>%{module}</strong> by <i>%{unassigned_by_user}</i>."
+    clone_module: "<i>%{user}</i> cloned <strong>%{module_new}</strong> from <strong>%{module_original}</strong>."
+    archive_module: "<i>%{user}</i> moved module <strong>%{module}</strong> to archive."
+    restore_module: "<i>%{user}</i> restored module <strong>%{module}</strong> from archive."
+    change_module_description: "<i>%{user}</i> changed module <strong>%{module}</strong>'s description."
+    create_step: "<i>%{user}</i> created Step %{step} <strong>%{step_name}</strong>."
+    destroy_step: "<i>%{user}</i> deleted Step %{step} <strong>%{step_name}</strong>."
+    add_comment_to_step: "<i>%{user}</i> commented on Step %{step} <strong>%{step_name}</strong>."
+    complete_step: "<i>%{user}</i> completed Step %{step} <strong>%{step_name}</strong> (%{completed}/%{all} completed)."
+    uncomplete_step: "<i>%{user}</i> uncompleted Step %{step} <strong>%{step_name}</strong> (%{completed}/%{all} completed)."
+    check_step_checklist_item: "<i>%{user}</i> completed task <strong>%{checkbox}</strong> (%{completed}/%{all} completed) in Step %{step} <strong>%{step_name}</strong>."
+    uncheck_step_checklist_item: "<i>%{user}</i> uncompleted task <strong>%{checkbox}</strong> (%{completed}/%{all} completed) in Step %{step} <strong>%{step_name}</strong>."
+    edit_step: "<i>%{user}</i> edited Step %{step} <strong>%{step_name}</strong>."
+    add_asset_result: "<i>%{user}</i> added file result <strong>%{result}</strong>."
+    add_text_result: "<i>%{user}</i> added text result <strong>%{result}</strong>."
+    add_table_result: "<i>%{user}</i> added table result <strong>%{result}</strong>."
+    add_comment_to_result: "<i>%{user}</i> commented on result <strong>%{result}</strong>."
+    archive_asset_result: "<i>%{user}</i> archived file result <strong>%{result}</strong>."
+    archive_text_result: "<i>%{user}</i> archived text result <strong>%{result}</strong>."
+    archive_table_result: "<i>%{user}</i> archived table result <strong>%{result}</strong>."
+    edit_asset_result: "<i>%{user}</i> edited file result <strong>%{result}</strong>."
+    edit_text_result: "<i>%{user}</i> edited text result <strong>%{result}</strong>."
+    edit_table_result: "<i>%{user}</i> edited table result <strong>%{result}</strong>."
+
+  user_my_modules:
+    new:
+      head_title: "%{project} | %{module} | Add user"
+      title: "Add user to module %{module}"
+      create: "Add user to module"
+      no_users_available: "All users of the current project all already added to this module."
+      assign_user: "Add user"
+      back_button: "Back to module"
+    create:
+      success_flash: "Successfully added user %{user} to module <strong>%{module}</strong>."
+      error_flash: "User %{user} could not be added to module <strong>%{module}</strong>."
+    destroy:
+      success_flash: "Successfully removed user %{user} from module <strong>%{module}</strong>."
+      error_flash: "User %{user} could not be removed from module <strong>%{module}</strong>."
+
+  step_comments:
+    new:
+      head_title: "%{project} | %{module} | Add comment to step"
+      title: "Add comment to step %{step}"
+      create: "Add comment"
+    create:
+      success_flash: "Successfully added comment to step <strong>%{step}</strong>."
+
+  result_comments:
+    new:
+      head_title: "%{project} | %{module} | Add comment to result"
+      title: "Add comment to result"
+      create: "Add comment"
+    create:
+      success_flash: "Successfully added comment to result."
+
+  users:
+    enums:
+      status:
+        active: "Active"
+        pending: "Pending"
+    invitations:
+      edit:
+        head_title: "Accept invitation"
+        name_label: "Organization name"
+        name_help: "Organization name is required in order to create your own organization."
+    registrations:
+      edit:
+        head_title: "My profile"
+        title: "My profile"
+        avatar_label: "Avatar"
+        avatar_btn: "Change avatar"
+        avatar_title: "Change avatar"
+        avatar_edit_label: "Upload new avatar file"
+        avatar_submit: "Upload"
+        name_label: "Full name"
+        name_title: "Change name"
+        initials_label: "Initials"
+        initials_title: "Change initials"
+        email_label: "Email"
+        email_title: "Change email"
+        new_email_label: "New email"
+        current_password_label: "Current password"
+        password_explanation: "(we need your current password to confirm your changes)"
+        waiting_for_confirm: "Currently waiting confirmation for: %{email}"
+        password_label: "Password"
+        password_title: "Change password"
+        new_password_label: "New password"
+        new_password_2_label: "New password confirmation"
+      new:
+        head_title: "Sign up"
+        name_help: "Organization name is required in order to create your own organization."
+    settings:
+      navigation:
+        preferences: "My preferences"
+        organizations: "My organizations"
+      preferences:
+        head_title: "Settings | My preferences"
+        edit:
+          time_zone_label: "Time zone"
+          time_zone_sublabel: "Time zone setting affects all time & date fields throughout application."
+          time_zone_title: "Time zone"
+        update_flash: "Preferences successfully updated."
+      organizations:
+        head_title: "Settings | My organizations"
+        breadcrumbs:
+          all: "All organizations"
+          new_organization: "New organization"
+        index:
+          member_of:
+            one: "You are member of %{count} organization."
+            other: "You are member of %{count} organizations."
+          no_organizations: "You are not a member of any organization."
+          new_organization: "New organization"
+          thead_name: "Organization"
+          thead_role: "Role"
+          thead_created_at: "Created at"
+          thead_joined_on: "Joined on"
+          thead_members: "Members"
+          na: "n/a"
+          leave: "Leave organization"
+          leave_uo_heading: "Leave organization %{org}"
+          leave_uo_message: "Are you sure you wish to leave organization %{org}? This action is irreversible."
+          leave_uo_confirm: "Leave"
+          leave_flash: "Successfuly left organization %{org}."
+        new:
+          name_label: "Organization name"
+          name_placeholder: "My organization"
+          name_sublabel: "Pick a name that would best describe your organization (e.g. 'University of ..., Department of ...')."
+          description_label: "Description"
+          description_sublabel: "Describe your organization."
+          create: "Create organization"
+        edit:
+          header_created_at: "Created at:"
+          header_joined_on: "Joined on:"
+          header_space_taken: "Space taken:"
+          header_no_description: "No description"
+          name_title: "Edit organization name"
+          name_label: "Name"
+          description_title: "Edit organization description"
+          description_label: "Description"
+          manage_users: "Manage users"
+          add_user: "Invite user"
+          thead_user_name: "Member name"
+          thead_email: "Member email"
+          thead_joined_on: "Joined on"
+          thead_status: "Status"
+          thead_role: "Role"
+          user_dropdown:
+            btn_label: "Edit"
+            role_label: "User role"
+            remove_label: "Remove"
+          destroy_uo_heading: "Remove user %{user} from organization %{org}"
+          destroy_uo_message: "Are you sure you wish to remove user %{user} from organization %{org}?"
+          destroy_uo_confirm: "Remove user"
+          delete_organization_heading: "Delete organization"
+          can_delete_message: "This organization can be deleted because it doesn't have any projects."
+          delete_text: "Delete organization."
+          cannot_delete_message_projects: "Cannot delete this organization. Only empty organizations (without any projects) can be deleted."
+          modal_add_user:
+            title: "Invite user to organization"
+            existing_heading: "Invite existing sciNote user"
+            existing_label: "Find existing user by name or email:"
+            existing_placeholder: "Name or email"
+            existing_query_too_short: "Query is too short (minimum is 3 characters)"
+            existing_query_blank: "Query can't be blank"
+            existing_results_title: "Choose user"
+            no_existing_users: "No existing users found."
+            existing_users_smalltext: "Only showing top %{nr} matched results."
+            existing_flash_success: "User %{user} successfully invited to organization as %{role}."
+            existing_flash_error: "Error inviting user to organization."
+            new_heading: "Invite new user"
+            new_label_name: "Type in the new user's full name:"
+            new_placeholder_name: "Full name"
+            new_label_email: "Type in the new user's email:"
+            new_placeholder_email: "Email"
+            new_flash_success: "User %{user} successfully invited to organization as %{role}. Confirmation email was sent to %{email}."
+            invite: "Invite user"
+            invite_guest: "as Guest"
+            invite_user: "as Normal user"
+            invite_admin: "as Administrator"
+          modal_destroy_organization:
+            title: "Delete organization"
+            message: "Are you sure you wish to delete organization %{org}? All of the users will be removed from the organization as well. This action is irreversible."
+            confirm: "Delete organization"
+            flash_success: "Organization %{org} was successfully deleted."
+  forbidden:
+    title: "Access to this page is denied (403)."
+    notice: "You do not have permission to view this project page using the
+      credentials that you supplied."
+    help: "Ask project owner to grant you permission to access this project."
+    go_back: "You can go back to"
+    homepage: "home page"
+    try_searching: "or try searching."
+
+  not_found:
+    title: "This page could not be found (404)."
+    notice: "You may have mistyped the address or the page may have moved."
+    help: "If you are the application owner check the logs for more information."
+    go_back: "You can go back to"
+    homepage: "home page"
+    try_searching: "or try searching."
+
+  general:
+    update: "Update"
+    edit: "Edit"
+    cancel: "Cancel"
+    close: "Close"
+    check_all: "Check all"
+    no_comments: "No comments!"
+    more_comments: "More comments"
+    comment_placeholder: "Your Message"
+    module:
+      one: "module"
+      other: "modules"
+    public: "public"
+    private: "private"
+    search: "Search"
+
+  time:
+    formats:
+      full: "%d.%m.%Y %H:%M"
+        # This format is used for JS datetimepicker,
+        # only in different notation;
+        # it should be the same as the above full format
+      full_js: "D.M.YYYY HH:mm"
+      full_date: "%d.%m.%Y"
+      time: "%H:%M"
+      short: "%H"
+
+  tutorial:
+    next: "Next"
+    skip_tutorial: "Skip tutorial"
+    end_tutorial: "End tutorial"
+    finish_tutorial: "Start using sciNote"
+    tutorial_welcome_title_html: "Welcome to <em>sciNote</em>"
+    welcome_html: "Take a quick tour to see how <em>SciNote</em> works."
+    create_project_html: "<em>sciNote</em> organizes your work in projects. Click here to create a project and it will appear under the Organization you've chosen. Choose public <span class='glyphicon glyphicon-eye-open'></span> if you want everyone from the organization to view the project or choose private <span class='glyphicon glyphicon-eye-close'></span> so only the people who you invite to the project can see it."
+    project_options_html: "In the bottom row of the project box you can view and add comments <span class='glyphicon glyphicon-comment'></span>, invite collaborators <span class='glyphicon glyphicon-user'></span>, and see the latest activity <span class='glyphicon glyphicon-equalizer'></span> and notifications <span class='glyphicon glyphicon-bell'></span>. You can also edit the project's name and visibility or archive it. You can recall the project from the archive <span class='glyphicon glyphicon-briefcase'></span> at any time. Click on the project name <strong>Demo project - qPCR</strong> to continue."
+    canvas_overview_html: "A module is a basic unit of your experiment. Within a module, you can add protocols, results and add samples. You can connect modules into workflows to assure traceability of your work. You can grab the module or entire workflow and move it in all directions on the canvas. Click <strong>Edit workflow</strong> to add modules or modify your existing workflow."
+    edit_workflow_html: "To add a new module, simply drag and drop the <strong>New module</strong> button to an unoccupied place on the canvas. Modules can be a part of a workflow or detached as a single unit. Create more modules and connect them into workflows by clicking <em>Drag connections from here</em> and drag the arrow to the next module. To remove the connection, click on the <strong>X</strong> in the middle of the arrow. Click <span class='glyphicon glyphicon-triangle-bottom'></span> to rename module, rename workflow, or archive the module. Click <strong>Save workflow</strong> to save the changes you've made."
+    sidebar_html: "Browse the contents in the folder structure or navigate to a specific module on the canvas by clicking the navigate icon <span class='glyphicon glyphicon-map-marker'></span>. Click on the module name <strong>qPCR</strong> to see its contents."
+    module_protocols_html: "Add steps to a protocol, create checklists or upload existing protocol files. After finishing one step, click <strong>Complete step</strong> to proceed to the next step. Exact time and the person who completed the step are recorded and can be seen at any time in <strong>Activity</strong> tab. Click on the <strong>Results</strong> tab to upload experiment results."
+    module_results_html: "You can upload any type of a file, insert table or write comments. Click on the <strong>Samples</strong> tab to import, export or assign samples to the module."
+    samples_html: "You can easily import sample tables from Excel or tab-delimited files. If you assign samples to one module in a workflow, these samples will be automatically assigned to downstream modules."
+    breadcrumbs_html: "You can always use these breadcrumbs to navigate back. Click on the <strong>Reports</strong> tab to go to <strong>Demo project - qPCR</strong> reports page."
+    reports_index_html: "You can automatically generate reports for meetings, projects, patents or theses. Click <strong>New report</strong> to create a new report."
+    new_report_html: "To add elements to the report, click on the <strong>—+—</strong> sign on the sheet. Select the report contents in the tabs and click <strong>Add to report</strong>. You can save the report as a PDF on your computer or save it within sciNote to view and modify later. Click on <strong>%{private_org}</strong> in breadcrumbs to return to the Dashboard."
+    archive_project_html: "Archive demo project by clicking on the down arrow <span class='glyphicon glyphicon-triangle-bottom'></span>. You can always access the archive by clicking the <span class='glyphicon glyphicon-briefcase'></span> button on the top right side of the dashboard and restore any item you have archived."
+
+  # This section contains general words that can be used in any parts of
+  # application.
+
+  errors:
+    upload: "Upload error. Try again or contact the administrator."
+
+  Add: "Add"
+  Asset: "File"
+  AssetTextData: "File Contents"
+  Assets: "Files"
+  Download: "Download"
+  Module: "Module"
+  Modules: "Modules"
+  Project: "Project"
+  Projects: "Projects"
+  Result: "Result"
+  Results: "Results"
+  Sample: "Sample"
+  Samples: "Samples"
+  Reports: "Reports"
+  Comments: "Comments"
+  Step: "Step"
+  Steps: "Steps"
+  Tag: "Tag"
+  Tags: "Tags"
+  Workflow: "Workflow"
+  Workflows: "Workflows"
+  More: "More"

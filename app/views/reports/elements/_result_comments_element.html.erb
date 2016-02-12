@@ -1,0 +1,46 @@
+<% if result.blank? and @result.present? then result = @result end %>
+<% if order.blank? and @order.present? then order = @order end %>
+<% comments = result.comments.order(created_at: order) %>
+<% timestamp = Time.current + 1.year %>
+<div class="report-element report-comments-element report-result-comments-element" data-ts="<%= timestamp.to_i %>" data-order="<%= order == :asc ? "asc" : "desc" %>" data-type="result_comments" data-id="<%= result.id %>" data-name="<%=t "projects.reports.elements.result_comments.sidebar_name" %>" data-icon-class="glyphicon-comment">
+  <div class="report-element-header">
+    <div class="row">
+      <div class="pull-left comments-icon">
+          <span class="glyphicon glyphicon-comment"></span>
+      </div>
+      <div class="pull-left comments-name">
+        <%=t "projects.reports.elements.result_comments.name", result: result.name %>
+      </div>
+      <div class="pull-right controls">
+        <%= render partial: "reports/elements/module_element_controls.html.erb", locals: { show_sort: true, show_move_up: false, show_move_down: false } %>
+      </div>
+    </div>
+  </div>
+  <div class="report-element-body">
+    <div class="row">
+      <div class="col-xs-12 comments-container">
+        <% if comments.count == 0 %>
+          <em><%=t "projects.reports.elements.result_comments.no_comments" %></em>
+        <% else %>
+          <ul class="no-style comments-list">
+            <% comments.each do |comment| %>
+              <% comment_ts = comment.created_at %>
+              <li class="comment" data-ts="<%= comment_ts.to_i %>">
+                <span class="comment-prefix">
+                  <em><%=t "projects.reports.elements.result_comments.comment_prefix", user: comment.user.full_name, date: l(comment_ts, format: :full_date), time: l(comment_ts, format: :time) %></em>
+                </span>
+                <span class="comment-message">
+                  &nbsp;
+                  <%= comment.message %>
+                </span>
+              </li>
+            <% end %>
+          </ul>
+        <% end %>
+      </div>
+    </div>
+  </div>
+  <div class="report-element-children">
+    <%= children if (defined? children and children.present?) %>
+  </div>
+</div>

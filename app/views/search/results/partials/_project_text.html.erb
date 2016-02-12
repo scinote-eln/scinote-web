@@ -1,0 +1,21 @@
+<% query ||= nil %>
+<% text = query.present? ? highlight(project.name, query) : project.name %>
+
+<% if project.archived? %>
+  <span class="label label-warning"><%=t "search.index.archived" %></span>
+  <% if can_view_projects(project.organization) and can_restore_project(project) %>
+    <a href="<%= projects_archive_path(organization: project.organization) %>">
+      <%= text %>
+    </a>
+  <% else %>
+    <%= text %>
+  <% end %>
+<% else %>
+  <% if can_view_project(project) %>
+    <a href="<%= canvas_project_path(project) %>">
+      <%= text %>
+    </a>
+  <% else %>
+    <%= text %>
+  <% end %>
+<% end %>

@@ -1,0 +1,7 @@
+<% if result.is_text %>
+  <%= render partial: "results/result_text.html.erb", locals: {result: result, markdown: markdown} %>
+<% elsif result.is_table %>
+  <%= render partial: "results/result_table.html.erb", locals: {result: result} %>
+<% elsif result.is_asset %>
+  <%= render partial: "results/result_asset.html.erb", locals: {result: result} %>
+<% end %>

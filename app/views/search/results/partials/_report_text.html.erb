@@ -1,0 +1,10 @@
+<% query ||= nil %>
+<% text = query.present? ? highlight(report.name, query) : report.name %>
+
+<% if can_view_reports(report.project) %>
+  <a href="<%= edit_project_report_path(report.project, report) %>">
+    <%= text %>
+  </a>
+<% else %>
+  <%= text %>
+<% end %>

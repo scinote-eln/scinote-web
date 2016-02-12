@@ -1,0 +1,14 @@
+blood:
+  name: Blood
+  color: "#ff0000"
+  organization: biosistemika
+  created_by: steve
+  last_modified_by: mark
+
+
+noble:
+  name: Blue blood
+  color: "#0000ff"
+  organization: biosistemika
+  created_by: steve
+  last_modified_by: steve

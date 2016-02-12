@@ -1,0 +1,10 @@
+<% query ||= nil %>
+<% text = query.present? ? highlight(tag.name, query) : tag.name %>
+
+<% if can_view_project(tag.project) %>
+  <a href="<%= canvas_project_path(tag.project) %>">
+    <%= text %>
+  </a>
+<% else %>
+  <%= text %>
+<% end %>

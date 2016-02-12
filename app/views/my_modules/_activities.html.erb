@@ -1,0 +1,15 @@
+<h5 class="text-center"><%= t("projects.canvas.popups.activities_tab") %></h5>
+<hr>
+<ul class="no-style double-line content-activities">
+  <% if @activities.size == 0 then %>
+    <li><em><%= t 'projects.canvas.popups.no_activities' %></em></li>
+  <% else %>
+    <% @activities.each do |activity| %>
+      <li><span class="text-muted"><%=l activity.created_at, format: :full %></span>
+        <br><span><%= activity.message.html_safe %></span>
+      </li>
+    <% end %>
+  <% end %>
+  <hr>
+  <li><%= link_to t("projects.canvas.popups.more_activities"), activities_my_module_path(@my_module) %></li>
+</ul>

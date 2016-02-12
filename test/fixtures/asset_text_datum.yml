@@ -1,0 +1,15 @@
+one:
+  asset: one
+  data: This is text content of asset file #1.
+
+two:
+  asset: two
+  data: This is text content of asset file #2.
+
+invalid_asset_id:
+  asset_id: 12321321
+  data: This is text content of invalid asset.
+
+invalid_asset_value:
+  asset: nil
+  data: This is text content of nil asset.

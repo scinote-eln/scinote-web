@@ -1,0 +1,37 @@
+<% provide(:head_title, t("projects.canvas.head_title", project: @project.name)) %>
+<%= render partial: "shared/sidebar" %>
+<%= render partial: "shared/secondary_navigation" %>
+
+<div id="diagram-buttons">
+  <% if can_edit_canvas(@project) %>
+    <%=link_to t("projects.canvas.canvas_edit"), canvas_edit_project_url(@project), remote: true, type: "button", class: "ajax btn btn-default", "data-action" => "edit" %>
+  <% end %>
+  <div id="zoom-level-buttons" class="btn-group" data-toggle="buttons">
+    <%=link_to canvas_full_zoom_project_path(@project), remote: true, type: "button", class: "ajax btn btn-primary active", "data-action" => "full_zoom", "data-toggle" => "button", "aria-pressed" => true do %>
+      <span class="glyphicon glyphicon-th-large" aria-hidden="true" ></span>
+    <% end %>
+    <%=link_to canvas_medium_zoom_project_path(@project), remote: true, type: "button", class: "ajax btn btn-primary", "data-action" => "medium_zoom" do %>
+      <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+    <% end %>
+    <%=link_to canvas_small_zoom_project_path(@project), remote: true, type: "button", class: "ajax btn btn-primary", "data-action" => "small_zoom" do %>
+      <span class="glyphicon glyphicon-th" aria-hidden="true"></span>
+    <% end %>
+</div>
+</div>
+<div id="canvas-container" data-project-id="<%= @project.id %>"
+  data-step="4" data-position='left'
+  data-intro="<%=t 'tutorial.canvas_overview_html' %>"
+  data-sidebar-step-text="<%=t 'tutorial.sidebar_html' %>"
+  data-edit-workflow-step-text="<%=t 'tutorial.edit_workflow_html' %>">
+  <%= render partial: 'canvas/full_zoom', locals: { project: @project, my_modules: @project.active_modules } %>
+</div>
+
+<!-- Manage tags modal -->
+<%= render partial: "my_modules/modals/manage_module_tags_modal", locals: { my_module: nil } %>
+
+<!-- Include all the neccesary JS libraries -->
+<%= javascript_include_tag("jsPlumb-2.0.4-min") %>
+<%= javascript_include_tag("jsnetworkx") %>
+<%= javascript_include_tag("eventPause-min") %>
+
+<%= javascript_include_tag("projects/canvas") %>

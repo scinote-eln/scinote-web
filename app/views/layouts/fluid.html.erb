@@ -1,0 +1,12 @@
+<% content_for :content do %>
+    <div class="container-fluid" id="wrapper">
+      <div id="sidebar-wrapper" class="<%= yield :sidebar_wrapper_class %>">
+        <%= yield :sidebar %>
+      </div>
+      <%= yield :secondary_navigation %>
+      <div class="container-fluid <%= yield :container_class %>" id="fluid-content">
+        <%= yield %>
+      </div>
+    </div>
+<% end %>
+<%= render template: 'layouts/application' %>

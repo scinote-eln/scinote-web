@@ -1,0 +1,19 @@
+// Place all the styles related to the Steps controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+#new_step,
+.panel-step-attachment {
+  ul {
+    list-style: none;
+
+    li {
+      margin-bottom: 10px;
+
+      & > div > span.pull-left {
+        margin-top: 8px;
+        font-size: 1.2em;
+      }
+    }
+  }
+}

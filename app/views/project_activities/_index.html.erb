@@ -1,0 +1,13 @@
+<h5 class="text-center"><%= t("projects.index.activity_tab") %></h5>
+<hr>
+<ul class="no-style double-line content-activities">
+  <% if @activities.size == 0 then %>
+    <li><em><%= t 'projects.index.no_activities' %></em></li>
+  <% else %>
+    <% @activities.each do |activity| %>
+      <li><span class="text-muted"><%= l activity.created_at, format: :full %></span>
+        <br><span><%= activity.message.html_safe %></span>
+      </li>
+    <% end %>
+  <% end %>
+</ul>

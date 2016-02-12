@@ -1,0 +1,40 @@
+<% results.each do |result| %>
+  <h5>
+    <% if result.is_text %>
+      <span class="glyphicon glyphicon-asterisk"></span>
+    <% elsif result.is_table %>
+      <span class="glyphicon glyphicon-th"></span>
+    <% else %>
+      <% if result.asset.is_image? %>
+        <span class="glyphicon glyphicon-picture"></span>
+      <% else %>
+        <span class="glyphicon glyphicon-file"></span>
+      <% end %>
+    <% end %>
+    <%= render partial: "search/results/partials/result_text.html.erb", locals: { result: result, query: search_query } %>
+  </h5>
+
+  <p>
+    <span>
+      <%=t "search.index.created_at" %>
+      <%=l result.created_at, format: :full %>
+    </span>
+    <br>
+    <span>
+      <%=t "search.index.module" %>
+      <%= render partial: "search/results/partials/my_module_text.html.erb", locals: { my_module: result.my_module } %>
+    </span>
+    <br>
+    <span>
+      <%=t "search.index.project" %>
+      <%= render partial: "search/results/partials/project_text.html.erb", locals: { project: result.my_module.project } %>
+    </span>
+    <br>
+    <span>
+      <%=t "search.index.organization" %>
+      <%= render partial: "search/results/partials/organization_text.html.erb", locals: { organization: result.my_module.project.organization } %>
+    </span>
+  </p>
+
+  <hr>
+<% end %>

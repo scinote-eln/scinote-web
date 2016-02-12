@@ -1,0 +1,140 @@
+list_of_samples:
+  name: List of samples
+  due_date: 2015-11-10 12:00:00
+  description: Listing samples...
+  x: 0
+  y: 0
+  workflow_order: 0
+  project: interfaces
+  my_module_group: ge
+  tags: urgent, nice
+  created_by: steve
+  last_modified_by: steve
+  archived: false
+  archived_by:
+  restored_by:
+  archived_on:
+  restored_on:
+
+
+sample_prep:
+  name: Sample preparation
+  due_date: 12-04-2015 12:45:00
+  description: nil
+  x: 1
+  y: 0
+  workflow_order: 2
+  project: interfaces
+  my_module_group: ge
+  created_by: mark
+  last_modified_by: mark
+  archived: false
+  archived_by: steve
+  restored_by: steve
+  archived_on: 2012-09-10 16:23:35
+  restored_on: 2012-10-05 06:03:33
+
+qpcr:
+  name: qPCR
+  due_date: 12-04-2015 15:10:00
+  description: nil
+  x: 2
+  y: 0
+  workflow_order: 3
+  project: interfaces
+  my_module_group: ge
+  tags: nice
+  created_by: jlaw
+  last_modified_by: jlaw
+  archived: false
+  archived_by:
+  restored_by:
+  archived_on:
+  restored_on:
+
+quantification:
+  name: Quantification
+  due_date: "04-13-2015 09:45:00"
+  description: nil
+  x: 3
+  y: 0
+  workflow_order: 4
+  project: interfaces
+  my_module_group: ge
+  tags: todo
+  created_by: mark
+  last_modified_by: mark
+  archived: false
+  archived_by:
+  restored_by:
+  archived_on:
+  restored_on:
+
+rna_test:
+  name: RNA quality test
+  due_date: 12-04-2015 16:15:00
+  description: nil
+  x: 1
+  y: 1
+  workflow_order: 1
+  project: interfaces
+  my_module_group: ge
+  tags: urgent, todo
+  created_by: steve
+  last_modified_by: steve
+  archived: false
+  archived_by: mark
+  restored_by: mark
+  archived_on: 2012-02-09 16:23:35
+  restored_on: 2012-12-09 12:33:48
+
+custom:
+  name: Unknown module
+  due_date:
+  description: Hodor hodor hodor.
+  x: 0
+  y: 0
+  workflow_order: -1
+  project: phd
+  my_module_group: wf1
+  created_by: steve
+  last_modified_by: steve
+  archived: false
+  archived_by:
+  restored_by:
+  archived_on:
+  restored_on:
+
+no_group:
+  name: No group module
+  due_date:
+  description: Module without group
+  x: 0
+  y: 3
+  workflow_order: -1
+  project: interfaces
+  my_module_group: wf2
+  created_by: nora
+  last_modified_by: nora
+  archived: false
+  archived_by:
+  restored_by:
+  archived_on:
+  restored_on:
+
+archived:
+  name: Archived module
+  due_date:
+  description: Module in archive
+  x: 0
+  y: 0
+  workflow_order: -1
+  project: interfaces
+  my_module_group:
+  created_by: steve
+  last_modified_by: steve
+  archived: true
+  archived_by: jlaw
+  restored_by:
+  archived_on: 2015-11-16 10:25:34
+  restored_on:

@@ -1,0 +1,64 @@
+<% content_for :secondary_navigation do %>
+
+    <div class="navbar-report">
+      <div>
+        <ul class="breadcrumb" style="margin-left: 15px;">
+          <li>
+            <% if can_view_projects(@project.organization) %>
+              <a href="<%= projects_path :organization => @project.organization.id %>">
+            <% end %>
+            <span class="hidden-sm hidden-md hidden-lg">Org</span>
+            <span class="hidden-xs"><%= @project.organization.name %></span>
+            <% if can_view_projects(@project.organization) %>
+              </a>
+            <% end %>
+          </li>
+            <li class="active">
+              <span class="hidden-sm hidden-md hidden-lg">Project</span>
+              <span class="hidden-xs"><%= @project.name %></span>
+            </li>
+          </ul>
+      </div>
+
+      <div class="center-block" id="report-menu">
+
+        <div class="dropdown" id="sort-report">
+          <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+            <span class="glyphicon glyphicon-sort visible-xs-inline"></span>
+            <span class="hidden-xs"><%= t'projects.reports.new.nav_sort_by' %></span>
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+            <li><a href="#" data-sort="desc"><%= t('projects.reports.new.nav_sort_desc') %></a></li>
+            <li><a href="#" data-sort="asc"><%= t('projects.reports.new.nav_sort_asc') %></a></li>
+          </ul>
+        </div>
+
+        <%= link_to "", class: "btn btn-primary", remote: true, id: "print-report" do %>
+          <span class="glyphicon glyphicon-print"></span>
+          <span class="hidden-xs"><%=t "projects.reports.new.nav_print" %></span>
+        <% end %>
+        <%= form_tag generate_project_reports_path(@project, format: :pdf), method: :post, target: "_blank", class: "get-report-pdf-form" do %>
+          <div class="form-group">
+          <%= hidden_field_tag "html", "" %>
+          <%= link_to "", class: "btn btn-primary", remote: true, id: "get-report-pdf" do %>
+            <span class="glyphicon glyphicon-save-file"></span>
+            <span class="hidden-xs"><%=t "projects.reports.new.nav_pdf" %></span>
+          <% end %>
+          </div>
+        <% end %>
+
+        <%= link_to "", class: "btn btn-primary", remote: true, id: "save-report-link" do %>
+          <span class="glyphicon glyphicon-ok"></span>
+          <span class="hidden-xs"><%=t "projects.reports.new.nav_save" %></span>
+        <% end %>
+
+        <%= link_to project_reports_path(@project), class: "btn btn-default" do %>
+          <span class="glyphicon glyphicon-remove"></span>
+          <span class="hidden-xs"><%=t "projects.reports.new.nav_close" %></span>
+        <% end %>
+
+      </div>
+
+    </div>
+<% end %>

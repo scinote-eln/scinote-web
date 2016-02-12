@@ -1,0 +1,23 @@
+<%
+  current_day = DateTime.current.strftime('%j').to_i
+%>
+<% if !hide_today and activities.count > 0 and activities[0].created_at.strftime('%j').to_i == current_day %>
+  <li class="text-center activity-date-item">
+    <span class="label label-primary">
+      <%=t "activities.index.today" %>
+    </span>
+  </li>
+<% end %>
+<% activities.each do |activity| %>
+  <% activity_day = activity.created_at.strftime('%j').to_i %>
+
+  <% if activity_day < current_day and activity_day < day %>
+    <% day = activity.created_at.strftime('%j').to_i %>
+    <li class="text-center activity-date-item">
+      <span class="label label-primary">
+        <%= activity.created_at.strftime('%d.%m.%Y') %>
+      </span>
+    </li>
+  <% end %>
+  <%= render 'activities/activity.html.erb', activity: activity %>
+<% end %>

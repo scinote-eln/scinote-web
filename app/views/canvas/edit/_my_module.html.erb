@@ -1,0 +1,65 @@
+<div class="panel panel-default module"
+  id="<%= my_module.id %>"
+  data-module-id="<%= my_module.id %>"
+  data-module-name="<%= my_module.name %>"
+  <% if my_module.my_module_group.present? %>
+  data-module-group-name="<%= my_module.my_module_group.name %>"
+  <% else %>
+  data-module-group-name=""
+  <% end %>
+  data-module-x="<%= my_module.x %>"
+  data-module-y="<%= my_module.y %>"
+  data-module-conns="<%= construct_module_connections(my_module) %>">
+
+  <div class="panel-heading">
+
+    <h3 class="panel-title"><%= my_module.name %></h3>
+
+    <div class="dropdown pull-right module-options">
+      <a class="dropdown-toggle" id="<%= my_module.id %>_options" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+        <span class="glyphicon glyphicon-triangle-bottom" aria-hidden="true"></span>
+      </a>
+      <ul class="dropdown-menu no-scale" aria-labelledby="<%= my_module.id %>_options">
+        <li class="dropdown-header"><%= t('projects.index.options_header') %></li>
+        <% if can_edit_module(my_module) %>
+          <li>
+              <a class="edit-module" href="" data-module-id="<%= my_module.id %>"><%=t "projects.canvas.edit.edit_module" %></a>
+          </li>
+        <% end %>
+        <% if can_edit_module_groups(my_module.project) %>
+          <li <%= 'style=display:none;' if my_module.my_module_group.blank? %>>
+              <a class="edit-module-group" href="" data-module-id="<%= my_module.id %>"><%=t "projects.canvas.edit.edit_module_group" %></a>
+          </li>
+        <% end %>
+        <% if can_clone_modules(my_module.project) %>
+          <li>
+            <a class ="clone-module" href="" data-module-id="<%= my_module.id %>"><%=t "projects.canvas.edit.clone_module" %></a>
+          </li>
+          <li <%= 'style=display:none;' if my_module.my_module_group.blank? %>>
+            <a class ="clone-module-group" href="" data-module-id="<%= my_module.id %>"><%=t "projects.canvas.edit.clone_module_group" %></a>
+          </li>
+        <% end %>
+        <% if can_archive_module(my_module) %>
+          <li>
+            <a class="delete-module" href="" data-module-id="<%= my_module.id %>"><%=t "projects.canvas.edit.delete_module" %></a>
+          </li>
+        <% end %>
+        <% if can_archive_modules(my_module.project) %>
+          <li <%= 'style=display:none;' if my_module.my_module_group.blank? %>>
+            <a class ="delete-module-group" href="" data-module-id="<%= my_module.id %>"><%=t "projects.canvas.edit.delete_module_group" %></a>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+
+  </div>
+
+  <% if can_edit_connections(my_module.project) %>
+    <div class="panel-body ep">
+      <%=t "projects.canvas.edit.drag_connections" %>
+    </div>
+  <% end %>
+
+  <div class="overlay"></div>
+
+</div>

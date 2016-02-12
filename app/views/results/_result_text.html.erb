@@ -1,0 +1,5 @@
+<% if markdown.present? %>
+  <%= markdown.render(result.result_text.text).html_safe %>
+<% else %>
+  <%= result.result_text.text %>
+<% end %>

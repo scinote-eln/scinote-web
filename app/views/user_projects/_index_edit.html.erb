@@ -1,0 +1,79 @@
+<ul class="no-style">
+
+<% if @users.size == 0 then %>
+  <li><em><%= t 'projects.index.modal_manage_users.no_users' %></em></li>
+<% else %>
+  <% @users.each_index do |i| user = @users[i].user %>
+  <li>
+  <% if i > 0 %><hr><% end %>
+    <div class="row">
+
+      <div class="col-xs-2">
+        <%= image_tag avatar_path(:icon_small), class: 'img-circle pull-left' %>
+      </div>
+
+      <div class="col-xs-10 col-sm-4">
+        <span><%= user.full_name %></span>
+        <br><span class="text-muted"><%= t('user_projects.enums.role.'<<@users[i].role) %></span>
+      </div>
+
+      <% unless user.id == current_user.id %>
+      <div class="visible-xs">&nbsp;</div>
+      <div class="col-xs-7 col-xs-offset-2 col-sm-4 col-sm-offset-0">
+        <%= form_for @up, url: project_user_project_path(@project, @users[i].id, method: :put, format: :json), format: :json, method: 'put', remote: true, html: { class: 'update-user-form' } do |f| %>
+          <% # TODO replace with form helper %>
+          <input type="hidden" name="user_project[user_id]" value="<%= @users[i].id %>">
+          <% # TODO replace hardcoded select html with rails helper %>
+          <select class="selectpicker" name="user_project[role]">
+            <option value=""><%= t('user_projects.edit.update_role') %></option>
+            <option value="owner"><%=t "user_projects.enums.role.owner" %></option>
+            <option value="normal_user"><%=t "user_projects.enums.role.normal_user" %></option>
+            <option value="technician"><%=t "user_projects.enums.role.technician" %></option>
+            <option value="viewer"><%=t "user_projects.enums.role.viewer" %></option>
+          </select>
+        <% end %>
+      </div>
+      <div class="col-xs-3 col-sm-2">
+        <%= link_to project_user_project_path(@project, @users[i], format: :json), method: :delete, remote: true, class: 'btn btn-link remove-user-link' do %>
+        <span class="glyphicon glyphicon-remove"></span>
+        <% end %>
+      </div>
+
+      <% end %>
+    </div>
+  </li>
+  <% end %>
+<% end %>
+
+<% if @unassigned_users.count > 0 %>
+  <li>
+    <hr>
+    <div class="row">
+    <%= bootstrap_form_for [@project, @up], remote: true, format: :json, html: { class: 'add-user-form' } do |f| %>
+      <%= hidden_field_tag :project_id, @project.id %>
+      <div class="col-xs-12 col-sm-4">
+      <%= collection_select(:user_project, :user_id, @unassigned_users, :id, :full_name, {}, { class: 'selectpicker' }) %>
+      </div>
+      <div class="visible-xs">&nbsp;</div>
+      <div class="col-xs-8 col-sm-4">
+      <% # TODO replace hardcoded select html with rails helper %>
+      <select class="selectpicker" name="user_project[role]">
+        <option value=""><%= t('projects.index.modal_manage_users.select_user_role') %></option>
+        <option value="owner"><%=t "user_projects.enums.role.owner" %></option>
+        <option value="normal_user"><%=t "user_projects.enums.role.normal_user" %></option>
+        <option value="technician"><%=t "user_projects.enums.role.technician" %></option>
+        <option value="viewer"><%=t "user_projects.enums.role.viewer" %></option>
+      </select>
+    </div>
+    <div class="col-xs-4 col-sm-2">
+    <%= f.button class: 'btn btn-primary' do %>
+      <span class="glyphicon glyphicon-plus"></span>
+      <span class="hidden-xs"><%= t("projects.index.modal_manage_users.create") %></span>
+    <% end %>
+    </div>
+  <% end %>
+  </div>
+  </li>
+<% end %>
+
+</ul>

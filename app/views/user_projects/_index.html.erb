@@ -1,0 +1,28 @@
+<h5 class="text-center"><%= t("projects.index.users_tab") %></h5>
+<hr>
+<ul class="no-style content-users">
+  <% if @users.size == 0 then %>
+    <li><em><%= t 'projects.index.no_users' %></em></li>
+  <% else %>
+    <% @users.each_index do |i| user = @users[i].user %>
+      <li>
+        <% if i > 0 %><hr><% end %>
+        <div class="row">
+          <div class="col-xs-2">
+            <%= image_tag avatar_path(:icon_small), class: 'img-circle pull-left' %>
+          </div>
+          <div class="col-xs-10">
+            <span><%= user.full_name %></span>
+            <br><span class="text-muted"><%= t('user_projects.enums.role.'<<@users[i].role.to_s) %></span>
+          </div>
+        </div>
+      </li>
+    <% end %>
+  <% end %>
+  <% if can_edit_users_on_project(@project) %>
+    <li>
+      <hr>
+      <%= link_to t("projects.index.manage_users"), project_users_edit_path(@project, format: :json), class: "manage-users-link", remote: true %>
+      </li>
+  <% end %>
+</ul>

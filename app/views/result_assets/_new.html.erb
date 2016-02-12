@@ -1,0 +1,16 @@
+<div class="well">
+  <%= bootstrap_form_for(@result, url: my_module_result_assets_path(format: :json), remote: true, multipart: true, data: { type: :json }) do |f| %>
+    <%= f.text_field :name, style: "margin-top: 10px;" %><br />
+    <%= f.fields_for :asset do |ff| %>
+      <%= ff.file_field :file %>
+    <% end %>
+    <% if direct_upload %>
+    <%= f.submit t("result_assets.new.create"), class: 'btn btn-primary', onclick: 'startFileUpload(event, this);' %>
+    <% else %>
+    <%= f.submit t("result_assets.new.create"), class: 'btn btn-primary' %>
+    <% end %>
+    <button type="button" class="btn btn-default cancel-new">
+      <%= t("general.cancel")%>
+    </button>
+  <% end %>
+</div>

@@ -1,0 +1,13 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset='utf-8' />
+    <%= wicked_pdf_stylesheet_link_tag "application" %>
+    <%= wicked_pdf_stylesheet_link_tag "reports_pdf" %>
+  </head>
+  <body class="print-report-body">
+    <div class="print-report">
+      <%= @html.html_safe %>
+    </div>
+  </body>
+</html>

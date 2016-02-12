@@ -1,0 +1,55 @@
+<% provide(:head_title, t("my_modules.results.head_title", project: @project.name, module: @my_module.name)) %>
+<%= render partial: "shared/sidebar" %>
+<%= render partial: "shared/secondary_navigation" %>
+
+<div id="results-toolbar">
+  <div class="pull-right">
+    <button class="btn btn-greyed" id="results-collapse-btn">
+      <span class="glyphicon glyphicon-collapse-up"></span>
+      <span class="hidden-xs"><%= t'my_modules.results.collapse_label' %></button></span>
+    <button class="btn btn-greyed" id="results-expand-btn">
+      <span class="glyphicon glyphicon-collapse-down"></span>
+      <span class="hidden-xs"><%= t'my_modules.results.expand_label' %></button></span>
+  </div>
+
+  <% if can_create_result_text_in_module(@my_module) or
+    can_create_result_table_in_module(@my_module) or
+    can_create_result_asset_in_module(@my_module) %>
+    <span class="hidden-xs"><%= t'my_modules.results.add_label' %></span>
+  <% end %>
+  <% if can_create_result_text_in_module(@my_module) %>
+    <a class="btn btn-primary" id="new-result-text" href="<%= new_my_module_result_text_path(my_module_id: @my_module.id) %>" data-remote="true">
+      <span class="glyphicon glyphicon-font"></span>
+      <span class="hidden-xs"><%= t("my_modules.results.new_text_result") %></span>
+    </a>
+  <% end %>
+  <% if can_create_result_table_in_module(@my_module) %>
+    <a class="btn btn-primary" id="new-result-table" href="<%= new_my_module_result_table_path(my_module_id: @my_module.id) %>" data-remote="true">
+      <span class="glyphicon glyphicon-list-alt"></span>
+      <span class="hidden-xs"><%= t("my_modules.results.new_table_result") %></span>
+    </a>
+  <% end %>
+  <% if can_create_result_asset_in_module(@my_module) %>
+    <a class="btn btn-primary" id="new-result-asset" href="<%= new_my_module_result_asset_path(my_module_id: @my_module.id) %>" data-remote="true">
+      <span class="glyphicon glyphicon-picture"></span>
+      <span class="hidden-xs"><%= t("my_modules.results.new_asset_result") %></span>
+    </a>
+  <% end %>
+</div>
+
+<div style="height: 15px;"></div>
+
+<div id="results" data-module-id="<%= @my_module.id %>"
+  data-module-protocols-step-text="<%=t 'tutorial.module_results_html' %>">
+<% ordered_result_of(@my_module).each do |result| %>
+  <%= render partial: "result", locals: {result: result, markdown: @markdown, direct_upload: @direct_upload} %>
+<% end %>
+</div>
+
+<%= javascript_include_tag "handsontable.full.min" %>
+<%= javascript_include_tag("canvas-to-blob.min") %>
+<%= javascript_include_tag("direct-upload") %>
+<%= javascript_include_tag "my_modules/results" %>
+<%= javascript_include_tag "results/result_texts" %>
+<%= javascript_include_tag "results/result_tables" %>
+<%= javascript_include_tag "results/result_assets" %>

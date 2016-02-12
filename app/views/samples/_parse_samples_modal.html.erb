@@ -1,0 +1,54 @@
+<div class="modal-dialog" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <h4 class="modal-title"><%= t("samples.modal_import.title") %></h4>
+    </div>
+    <%= bootstrap_form_tag(url: import_samples_organization_path(@organization, format: :json), html: {"data-type" => "json", id: "form-import"}, remote: true) do |f|%>
+    <div class="modal-body">
+      <h4><%= t("organizations.parse_sheet.help_text") %></h4>
+      <div style="overflow-x: scroll">
+        <table class="table">
+          <thead>
+            <th style="min-width: 100px">
+              <p><%= t("organizations.parse_sheet.scinote_columns_html") %></p>
+              <p style="margin-bottom: 0px"><%= t("organizations.parse_sheet.file_columns") %></p>
+            </th>
+            <% @header.each.with_index do |th, index| %>
+              <th style="min-width: 150px">
+                <%= f.select("mappings[#{index.to_s}]", options_from_collection_for_select(@available_fields, :first, :last), include_blank: t("organizations.parse_sheet.do_not_include_column"), hide_label: true) %>
+                <br />
+                <%= th %>
+              </th>
+            <% end %>
+          </thead>
+          <tbody>
+            <% @rows.each do |row| %>
+              <tr>
+                <td>
+                  <p><%= t("organizations.parse_sheet.example_value") %></p>
+                </td>
+                <% row.each do |td| %>
+                  <td>
+                    <%= td[1] %>
+                  </td>
+                <% end %>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+      <%= hidden_field_tag "file_id", @temp_file.id %>
+
+      <div id="import-errors-container">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-default" data-dismiss="modal"><%= t("general.cancel")%></button>
+      <input type="submit" class="btn btn-primary" value="<%= t("organizations.parse_sheet.import_samples") %>"</input>
+    </div>
+    <% end %>
+  </div>
+</div>
+
+<%= javascript_include_tag("samples/samples_importer") %>

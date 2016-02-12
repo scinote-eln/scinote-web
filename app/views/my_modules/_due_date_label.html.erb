@@ -1,0 +1,8 @@
+<% if my_module.due_date then %>
+  <%=l my_module.due_date, format: :full_date %>
+  <% if my_module.is_overdue? or my_module.is_one_day_prior? %>
+    <span class="glyphicon glyphicon-alert"></span>
+  <% end %>
+<% else %>
+  <em><%=t "projects.canvas.full_zoom.no_due_date" %></em>
+<% end %>

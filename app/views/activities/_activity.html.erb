@@ -1,0 +1,11 @@
+<li class="activity-item">
+  <span class="activity-item-date">
+    <%= l activity.created_at, format: '%H:%M' %>
+  </span>
+  <span class="activity-item-text">
+    <%= activity.message.html_safe %>
+    <% if activity.my_module %>
+      [project: <%= activity.my_module.project.name %>, module: <%= activity.my_module.name %>]
+    <% end %>
+  </span>
+</li>

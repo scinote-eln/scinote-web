@@ -1,0 +1,109 @@
+<%= bootstrap_form_tag remote: true, url: project_contents_project_reports_path(project, format: :json), method: :post, html: { id: "add-contents-form" } do |f| %>
+  <%= hidden_field_tag :id, project.id %>
+  <div>
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs" role="tablist">
+      <li role="presentation" class="active">
+        <a href="#project-tab" aria-controls="project-tab" role="tab" data-toggle="tab">
+          <span class="glyphicon glyphicon-credit-card visible-xs"></span>
+          <span class="hidden-xs"><%= t("projects.reports.elements.modals.project_contents.project_tab") %></span>
+        </a>
+      </li>
+      <% if project.my_modules.count > 0 %>
+      <li role="presentation">
+        <a href="#project-modules-tab" aria-controls="project-modules-tab" role="tab" data-toggle="tab">
+          <span class="glyphicon glyphicon-link visible-xs"></span>
+          <span class="hidden-xs"><%= t("projects.reports.elements.modals.project_contents.modules_tab") %></span>
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#module-steps-tab" aria-controls="module-steps-tab" role="tab" data-toggle="tab">
+          <span class="glyphicon glyphicon-random visible-xs"></span>
+          <span class="hidden-xs"><%= t("projects.reports.elements.modals.project_contents.steps_tab") %></span>
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#step-results-tab" aria-controls="step-results-tab" role="tab" data-toggle="tab">
+          <span class="glyphicon glyphicon-th visible-xs"></span>
+          <span class="hidden-xs"><%= t("projects.reports.elements.modals.project_contents.results_tab") %></span>
+        </a>
+      </li>
+      <% end %>
+    </ul>
+
+    <!-- Tab panes -->
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane active" id="project-tab">
+        <h5 class="visible-xs"><%= t("projects.reports.elements.modals.project_contents.project_tab") %></h5>
+        <%= render partial: "reports/new/modal/project_contents_inner.html.erb", locals: { form: f, project: project } %>
+      </div>
+      <% if project.my_modules.count > 0 %>
+        <div role="tabpanel" class="tab-pane" id="project-modules-tab">
+          <h5 class="visible-xs"><%= t("projects.reports.elements.modals.project_contents.modules_tab") %></h5>
+          <%= render partial: "reports/new/modal/module_contents_inner.html.erb", locals: { form: f } %>
+        </div>
+        <div role="tabpanel" class="tab-pane" id="module-steps-tab">
+          <h5 class="visible-xs"><%= t("projects.reports.elements.modals.project_contents.steps_tab") %></h5>
+          <%= render partial: "reports/new/modal/step_contents_inner.html.erb", locals: { form: f } %>
+        </div>
+        <div role="tabpanel" class="tab-pane" id="step-results-tab">
+          <h5 class="visible-xs"><%= t("projects.reports.elements.modals.project_contents.results_tab") %></h5>
+          <%= render partial: "reports/new/modal/result_contents_inner.html.erb", locals: { form: f } %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+<% end %>
+
+<script type="javascript">
+  $(function() {
+    var form = $("#add-contents-form");
+    var projectTab = form.find("#project-tab");
+    var modulesTab = form.find("#project-modules-tab");
+    var stepsTab = form.find("#module-steps-tab");
+
+    var projectCheckAlls = projectTab.find(".project-all-cb");
+    var projectAll = projectTab.find("input:checkbox");
+    projectCheckAlls.click(function() {
+      var nextUl = $(this).closest("div.checkbox").next();
+      if (nextUl.length && nextUl.is("ul.project-contents-list")) {
+        nextUl.find("input:checkbox").prop("checked", this.checked);
+      }
+    });
+    projectAll.click(function() {
+      var parentLists = $(this).parents("ul.project-contents-list");
+      if (parentLists.length) {
+        var prevEl = parentLists.prev();
+        if (prevEl.length && prevEl.is("div.checkbox")) {
+          prevEl.find("input:checkbox").prop("checked", false);
+        }
+      }
+    });
+
+    var modulesCheckAll = modulesTab.find(".module-check-all");
+    var modulesOthers = modulesTab.find("input:checkbox:not(.module-check-all)");
+    var modulesResultsAll = modulesTab.find(".results-all");
+    var modulesResults = modulesTab.find(".result-cb");
+    modulesCheckAll.click(function() {
+      modulesOthers.prop("checked", this.checked);
+    });
+    modulesOthers.click(function() {
+      modulesCheckAll.prop("checked", false);
+    });
+    modulesResultsAll.click(function() {
+      modulesResults.prop("checked", this.checked);
+    });
+    modulesResults.click(function() {
+      modulesResultsAll.prop("checked", false);
+    });
+
+    var stepsCheckAll = stepsTab.find(".step-check-all");
+    var stepsOthers = stepsTab.find("input:checkbox:not(.step-check-all)");
+    stepsCheckAll.click(function() {
+      stepsOthers.prop("checked", this.checked);
+    });
+    stepsOthers.click(function() {
+      stepsCheckAll.prop("checked", false);
+    });
+  });
+</script>

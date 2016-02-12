@@ -1,0 +1,55 @@
+<% @asset_results.each do |asset|
+  is_result = nil
+  if asset.result.present?
+    is_result = true
+    my_module = asset.result.my_module
+  elsif asset.step.present?
+    is_result = false
+    my_module = asset.step.my_module
+  end
+%>
+  <h5>
+    <% if asset.is_image? %>
+      <span class="glyphicon glyphicon-picture"></span>
+    <% else %>
+      <span class="glyphicon glyphicon-file"></span>
+    <% end %>
+    <%= render partial: "search/results/partials/asset_text.html.erb", locals: { asset: asset, query: search_query, is_result: is_result } %>
+  </h5>
+
+  <p>
+    <span>
+      <%=t "search.index.created_at" %>
+      <%=l asset.created_at, format: :full %>
+    </span>
+    <br>
+    <% if is_result != nil %>
+      <span>
+      <% if is_result %>
+          <%=t "search.index.result" %>
+          <%= render partial: "search/results/partials/result_text.html.erb", locals: { result: asset.result } %>
+      <% else %>
+        <%=t "search.index.step" %>
+        <%= render partial: "search/results/partials/step_text.html.erb", locals: { step: asset.step } %>
+      <% end %>
+      </span>
+      <br>
+      <span>
+        <%=t "search.index.module" %>
+        <%= render partial: "search/results/partials/my_module_text.html.erb", locals: { my_module: my_module } %>
+      </span>
+      <br>
+      <span>
+        <%=t "search.index.project" %>
+        <%= render partial: "search/results/partials/project_text.html.erb", locals: { project: my_module.project } %>
+      </span>
+      <br>
+      <span>
+        <%=t "search.index.organization" %>
+        <%= render partial: "search/results/partials/organization_text.html.erb", locals: { organization: my_module.project.organization } %>
+      </span>
+    <% end %>
+  </p>
+
+  <hr>
+<% end %>

@@ -1,0 +1,22 @@
+<div class="panel panel-default panel-step-attachment">
+  <div class="panel-heading">
+    <span class="glyphicon glyphicon-file"></span>
+    <%=t "my_modules.steps.new.asset_panel_title" %>
+    <div class="pull-right">
+      <%= ff.remove_nested_fields_link do %>
+        <span class="glyphicon glyphicon-remove"></span>
+      <% end %>
+    </div>
+  </div>
+  <div class="panel-body">
+    <% if ff.object.file.exists? %>
+      <% if !(ff.object.file.content_type =~ /^image/).nil? %>
+        <%= image_tag ff.object.file.url(:medium) %>
+      <% else %>
+        <%= ff.object.file_file_name %>
+      <% end %>
+    <% else %>
+      <%= ff.file_field :file %>
+    <% end %>
+  </div>
+</div>

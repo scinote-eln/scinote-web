@@ -1,0 +1,13 @@
+<ul class="no-style double-line content-activities">
+  <% if @activities.length == 0 then %>
+    <li><em><%= t'activities.index.no_activities' %></em></li>
+  <% else %>
+  <%= render 'activities/list.html.erb', activities: @activities, hide_today: hide_today, day: @day %>
+  <% end %>
+  <% if @last_activity_id < 1 and @activities.length == @per_page %>
+  <li class="text-center">
+    <a class="btn btn-default btn-more-activities" href="<%= more_activities_url %>" data-remote="true">
+      <%= t'activities.index.more_activities' %></a>
+  </li>
+  <% end %>
+</ul>

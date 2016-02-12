@@ -1,0 +1,34 @@
+<% results.each do |tag| %>
+  <h5>
+    <span class="glyphicon glyphicon-tag" style="color: <%= tag.color %>"></span>
+    <%= render partial: "search/results/partials/tag_text.html.erb", locals: { tag: tag, query: search_query } %>
+  </h5>
+
+  <p>
+    <span>
+      <%=t "search.index.created_at" %>
+      <%=l tag.created_at, format: :full %>
+    </span>
+    <br>
+    <span>
+      <%=t "search.index.modules" %>
+      <% if tag.my_modules.count > 0 %>
+        <% tag.my_modules.each_with_index do |mod, i| %>
+          <%= render partial: "search/results/partials/my_module_text.html.erb", locals: { my_module: mod } %>
+          <% if i != tag.my_modules.count - 1 %>
+            ,&nbsp;
+          <% end %>
+        <% end %>
+      <% else %>
+        <em><%=t "search.index.tag_no_modules" %></em>
+      <% end %>
+    </span>
+    <br>
+    <span>
+      <%=t "search.index.project" %>
+      <%= render partial: "search/results/partials/project_text.html.erb", locals: { project: tag.project } %>
+    </span>
+  </p>
+
+  <hr>
+<% end %>

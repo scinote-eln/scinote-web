@@ -1,0 +1,16 @@
+<div class="row">
+  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+    <%= form.text_field :name, label: t("projects.index.modal_new_project.name"), autofocus: true, placeholder: t("projects.index.modal_new_project.name_placeholder") %>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+    <div class="form-group">
+      <%= form.label t("projects.index.modal_new_project.organization")  %>
+      <%= collection_select(:project, :organization_id, @organizations, :id, :name, {}, { :class => "form-control"} ) %>
+    </div>
+  </div>
+</div>
+
+<%= form.enum_btn_group :visibility, label: t("projects.index.modal_new_project.visibility"), btn_names: { hidden: t("projects.index.modal_new_project.visibility_hidden"), visible: t("projects.index.modal_new_project.visibility_visible") } %>

@@ -1,0 +1,42 @@
+<% provide(:head_title, t("my_modules.steps.head_title", project: @project.name, module: @my_module.name)) %>
+<%= render partial: "shared/sidebar" %>
+<%= render partial: "shared/secondary_navigation" %>
+
+<%= render partial: "module_header" %>
+
+<div class="pull-right">
+  <% if can_create_step_in_module(@my_module) %>
+    <a class="btn btn-primary" id="new-step" href="<%= new_my_module_step_path(my_module_id: @my_module.id, format: :json) %>" data-remote="true">
+      <%= t("my_modules.steps.new_step") %>
+    </a>
+  <% end %>
+  <button class="btn btn-greyed" id="steps-collapse-btn">
+    <span class="glyphicon glyphicon-collapse-up"></span>
+    <span class="hidden-xs"><%= t'my_modules.steps.collapse_label' %></button></span>
+  <button class="btn btn-greyed" id="steps-expand-btn">
+    <span class="glyphicon glyphicon-collapse-down"></span>
+    <span class="hidden-xs"><%= t'my_modules.steps.expand_label' %></button></span>
+</div>
+
+<h2><%=t "my_modules.steps.subtitle" %></h2>
+
+<div id="steps" data-module-id="<%= @my_module.id %>"
+  data-module-protocols-step-text="<%=t 'tutorial.module_protocols_html' %>">
+<% step_num = 0 %>
+<% ordered_step_of(@my_module).each do |step| step_num += 1 %>
+	<%= render partial: "step", locals: {step: step} %>
+<% end %>
+</div>
+
+<!-- Edit description modal -->
+<%= render partial: "my_modules/modals/manage_description_modal" %>
+
+<!-- Edit due date modal -->
+<%= render partial: "my_modules/modals/manage_due_date_modal" %>
+
+<%= javascript_include_tag "handsontable.full.min" %>
+<%= javascript_include_tag "Sortable.min" %>
+<%= javascript_include_tag("canvas-to-blob.min") %>
+<%= javascript_include_tag("direct-upload") %>
+<%= javascript_include_tag("my_modules/steps") %>
+

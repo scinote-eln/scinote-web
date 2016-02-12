@@ -1,0 +1,17 @@
+<div id="table-form" class="well">
+	<%= bootstrap_form_for(@result, url: result_table_path(format: :json), remote: true) do |f| %>
+		<%= f.text_field :name, style: "margin-top: 10px;" %><br />
+		<div class="editable-table">
+			<%= f.fields_for :table do |ff| %>
+				<%= ff.hidden_field(:contents, value: ff.object.contents_utf_8, class: "hot-contents" ) %>
+				<div class="hot">
+				</div>
+			<% end %>
+		</div>
+    <hr>
+		<%= f.submit t("result_tables.edit.update"), class: 'btn btn-primary' %>
+		<button type="button" class="btn btn-default cancel-edit">
+			<%= t("general.cancel")%>
+		</button>
+	<% end %>
+</div>

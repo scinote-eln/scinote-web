@@ -1,0 +1,16 @@
+<div class="well">
+  <%= bootstrap_form_for(@step, url: my_module_steps_path(@my_module.id, format: :json), remote: true, authenticity_token: true, multipart: true, data: { type: :json }) do |f| %>
+    <h4><%=t "my_modules.steps.new.add_step_title" %></h4>
+    <hr>
+    <%= render partial: "empty_step.html.erb", locals: {step: @step, f: f} %>
+    <hr>
+    <% if direct_upload %>
+    <%= f.submit t("my_modules.steps.new.add_step"), id: "create-step", class: 'btn btn-primary', onclick: 'startFileUpload(event, this);' %>
+    <% else %>
+    <%= f.submit t("my_modules.steps.new.add_step"), id: "create-step", class: 'btn btn-primary' %>
+    <% end %>
+    <button type="button" class="btn btn-default cancel-new">
+      <%= t("general.cancel")%>
+    </button>
+  <% end %>
+</div>

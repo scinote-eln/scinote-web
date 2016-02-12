@@ -1,0 +1,12 @@
+<% day = 366 %>
+<% current_day = DateTime.current.strftime('%j').to_i %>
+
+<% comments.each do |comment| %>
+  <li class="comment">
+  <% comment_day = comment.created_at.strftime('%j').to_i %>
+  <% if comment_day < current_day and comment_day < day %>
+    <% day = comment.created_at.strftime('%j').to_i %>
+    <p class="text-center"><%= comment.created_at.strftime('%d.%m.%Y') %></p>
+  <% end %>
+  <%= render 'project_comments/comment.html.erb', comment: comment %></li>
+<% end %>

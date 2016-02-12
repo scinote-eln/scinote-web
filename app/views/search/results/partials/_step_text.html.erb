@@ -1,0 +1,10 @@
+<% query ||= nil %>
+<% text = query.present? ? highlight(step.name, query) : step.name %>
+
+<% if can_view_steps_in_module(step.my_module) %>
+  <a href="<%= my_module_steps_path(step.my_module) %>">
+    <%= text %>
+  </a>
+<% else %>
+  <%= text %>
+<% end %>

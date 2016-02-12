@@ -1,0 +1,52 @@
+<% results.each do |report| %>
+  <h5>
+    <span class="glyphicon glyphicon-list-alt"></span>
+    <%= render partial: "search/results/partials/report_text.html.erb", locals: { report: report, query: search_query } %>
+  </h5>
+
+  <p>
+    <span>
+      <%=t "search.index.description" %>
+      <% if report.description.present? %>
+        <%= highlight report.description, @search_query  %>
+      <% else %>
+        <em><%=t "search.index.no_description" %></em>
+      <% end %>
+    </span>
+    <br>
+    <span>
+      <%=t "search.index.created_by" %>
+      <%= highlight report.user.full_name, @search_query %>
+    </span>
+    <br>
+    <span>
+      <%=t "search.index.created_at" %>
+      <%=l report.created_at, format: :full %>
+    </span>
+    <br>
+    <span>
+      <%=t "search.index.last_modified_by" %>
+      <%= highlight report.last_modified_by.full_name, @search_query %>
+    </span>
+    <br>
+    <span>
+      <%=t "search.index.last_modified_at" %>
+      <%=l report.updated_at, format: :full %>
+    </span>
+  </p>
+
+  <p>
+    <span>
+      <%=t "search.index.project" %>
+      <%= render partial: "search/results/partials/project_text.html.erb", locals: { project: report.project } %>
+    </span>
+    <br>
+    <span>
+      <%=t "search.index.organization" %>
+      <%= render partial: "search/results/partials/organization_text.html.erb", locals: { organization: report.project.organization } %>
+    </span>
+  </p>
+
+  <hr>
+<% end %>
+

@@ -1,0 +1,58 @@
+<%= bootstrap_form_tag remote: true, url: module_contents_project_reports_path(project, format: :json), method: :post, html: { id: "add-contents-form" } do |f| %>
+  <%= hidden_field_tag :id, my_module.id %>
+  <div>
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs" role="tablist">
+      <li role="presentation" class="active"><a href="#module-tab" aria-controls="module-tab" role="tab" data-toggle="tab"><%= t("projects.reports.elements.modals.module_contents.module_tab") %></a></li>
+      <li role="presentation"><a href="#module-steps-tab" aria-controls="module-steps-tab" role="tab" data-toggle="tab"><%= t("projects.reports.elements.modals.module_contents.steps_tab") %></a></li>
+      <li role="presentation"><a href="#step-results-tab" aria-controls="step-results-tab" role="tab" data-toggle="tab"><%= t("projects.reports.elements.modals.module_contents.results_tab") %></a></li>
+    </ul>
+
+    <!-- Tab panes -->
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane active" id="module-tab">
+        <%= render partial: "reports/new/modal/module_contents_inner.html.erb", locals: { form: f, my_module: my_module } %>
+      </div>
+      <div role="tabpanel" class="tab-pane" id="module-steps-tab">
+        <%= render partial: "reports/new/modal/step_contents_inner.html.erb", locals: { form: f } %>
+      </div>
+      <div role="tabpanel" class="tab-pane" id="step-results-tab">
+        <%= render partial: "reports/new/modal/result_contents_inner.html.erb", locals: { form: f } %>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<script type="javascript">
+  $(function() {
+    var form = $("#add-contents-form");
+    var moduleTab = form.find("#module-tab");
+    var stepsTab = form.find("#module-steps-tab");
+
+    var moduleCheckAll = moduleTab.find(".module-check-all");
+    var moduleOthers = moduleTab.find("input:checkbox:not(.module-check-all)");
+    var moduleResultsAll = moduleTab.find(".results-all");
+    var moduleResults = moduleTab.find(".result-cb");
+    moduleCheckAll.click(function() {
+      moduleOthers.prop("checked", this.checked);
+    });
+    moduleOthers.click(function() {
+      moduleCheckAll.prop("checked", false);
+    });
+    moduleResultsAll.click(function() {
+      moduleResults.prop("checked", this.checked);
+    });
+    moduleResults.click(function() {
+      moduleResultsAll.prop("checked", false);
+    });
+
+    var stepsCheckAll = stepsTab.find(".step-check-all");
+    var stepsOthers = stepsTab.find("input:checkbox:not(.step-check-all)");
+    stepsCheckAll.click(function() {
+      stepsOthers.prop("checked", this.checked);
+    });
+    stepsOthers.click(function() {
+      stepsCheckAll.prop("checked", false);
+    });
+  });
+</script>
