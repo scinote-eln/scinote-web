@@ -46,7 +46,7 @@ Following commands are available:
 
 ## Environmental variables
 
-sciNote reads configuration parameters from system environment parameters. On production servers, this can be simply be system environmentam variables, while for development, a file `config/application.yml` can be created to specify those variables.
+sciNote reads configuration parameters from system environment parameters. On production servers, this can be simply be system environmental variables, while for development, a file `config/application.yml` can be created to specify those variables.
 
 The following table describes all available environmental variables for sciNote server.
 
@@ -66,8 +66,8 @@ The following table describes all available environmental variables for sciNote 
 | SMTP_DOMAIN             | Yes       | The server domain of the SMTP mailer used for delivering emails generated in sciNote. |
 | SMTP_USERNAME           | Yes       | The username for SMTP mailer used for delivering emails generated in sciNote. |
 | SMTP_PASSWORD           | Yes       | The password for SMTP mailer used for delivering emails generated in sciNote. |
-| MAIL_SERVER_URL         | Yes       | The root URL address of the actual sciNote server. This is used in sent emails to redirect user to the correct sciNote server URL. |
-| PAPERCLIP_HASH_SECRET   | Yes       | Random key for generating Paperclip hash key for URLs. Can be generated via following Ruby function: `SecureRandom.base64(128)`. Defaults to `localhost`. |
+| MAIL_SERVER_URL         | Yes       | The root URL address of the actual sciNote server. This is used in sent emails to redirect user to the correct sciNote server URL. Defaults to `localhost`. |
+| PAPERCLIP_HASH_SECRET   | Yes       | Random key for generating Paperclip hash key for URLs. Can be generated via following Ruby function: `SecureRandom.base64(128)`. |
 
 ## Rake tasks
 
