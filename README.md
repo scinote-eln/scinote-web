@@ -4,7 +4,7 @@
 
 ## About
 
-sciNote is an open source electronic scientific notebook ([ELN](https://en.wikipedia.org/wiki/Electronic_lab_notebook)) that helps you manage your laboratory work and stores all your experimental data in one place. sciNote is specifically designed for life science students, researchers, lab technicians and laboratory managers.
+sciNote is an open source electronic lab notebook ([ELN](https://en.wikipedia.org/wiki/Electronic_lab_notebook)) that helps you manage your laboratory work and stores all your experimental data in one place. sciNote is specifically designed for life science students, researchers, lab technicians and laboratory managers.
 
 ## Build & run
 
