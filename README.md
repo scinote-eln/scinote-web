@@ -68,6 +68,7 @@ The following table describes all available environmental variables for sciNote 
 | SMTP_PASSWORD           | Yes       | The password for SMTP mailer used for delivering emails generated in sciNote. |
 | MAIL_SERVER_URL         | Yes       | The root URL address of the actual sciNote server. This is used in sent emails to redirect user to the correct sciNote server URL. Defaults to `localhost`. |
 | PAPERCLIP_HASH_SECRET   | Yes       | Random key for generating Paperclip hash key for URLs. Can be generated via following Ruby function: `SecureRandom.base64(128)`. |
+| ENABLE_TUTORIAL         | Yes       | Whether to display tutorial (and auto-generate demo project) to first-time users. Defaults to `false` on development, and to `true` on production. |
 
 ## Rake tasks
 
