@@ -27,10 +27,10 @@ module SearchableModel
           split_query.each do |word|
             new_query << "%" + word + "%"
           end
+          rejoined_query = new_query.join("")
         else
-          new_query = "%" + query + "%"
+          rejoined_query = "%" + query + "%"
         end
-        rejoined_query = new_query.join("")
         where_str =
           (attrs.map.with_index { |a,i| "#{a} ILIKE :t#{i} OR " }).join[0..-5]
         vals = (attrs.map.with_index { |a,i| [ "t#{i}".to_sym, "#{rejoined_query}" ] }).to_h
