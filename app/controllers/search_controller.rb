@@ -36,7 +36,14 @@ class SearchController < ApplicationController
 
   def new
   end
-
+  
+  def search_options
+    @results = Project.all
+    respond_to do |format|
+        format.json
+    end
+  end
+  
   private
 
   def load_vars
