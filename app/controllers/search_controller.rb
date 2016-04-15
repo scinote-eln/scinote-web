@@ -38,7 +38,10 @@ class SearchController < ApplicationController
   end
   
   def search_options
-    @results = Project.all
+    models = [ Project, MyModule, MyModuleGroup, Tag, Asset, Step, Result, Sample, Report, Comment, AssetTextDatum ]
+    @results = []
+    models.each { |model| @results << options_search(model) if options_search(model).any? }
+    
     respond_to do |format|
         format.json
     end
@@ -184,5 +187,9 @@ class SearchController < ApplicationController
       @contents_results = search_by_name AssetTextDatum
     end
     @search_count = @contents_search_count
+  end
+  
+  def options_search(model)
+    model.search(current_user, true, params[:query]).to_a
   end
 end
