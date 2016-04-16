@@ -191,13 +191,13 @@ class SearchController < ApplicationController
   
   def options_search(model)
     if model == Comment
-      model.search(current_user, true, params[:query]).limit(6).pluck(:message)
+      model.search(current_user, true, params[:query]).limit(3).pluck(:message)
     elsif model == Asset
-      model.search(current_user, true, params[:query]).limit(6).pluck(:file_file_name)
+      model.search(current_user, true, params[:query]).limit(3).pluck(:file_file_name)
     elsif model == AssetTextDatum
-      model.search(current_user, true, params[:query]).limit(6).pluck(:data)
+      model.search(current_user, true, params[:query]).limit(3).pluck(:data)
     else
-      model.search(current_user, true, params[:query]).limit(6).pluck(:name)
+      model.search(current_user, true, params[:query]).limit(3).pluck(:name)
     end
   end
 end

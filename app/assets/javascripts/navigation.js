@@ -4,6 +4,7 @@ $("#search-bar").submit(function (){
   animateSpinner(document.body);
 });
 
+/* Loading sugestions */
 $('#autocomplete').autocomplete({
     serviceUrl: '/search/search_options',
     dataType: 'json',
