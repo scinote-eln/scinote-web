@@ -7,7 +7,6 @@ $("#search-bar").submit(function (){
 $('#autocomplete').autocomplete({
     serviceUrl: '/search/search_options',
     dataType: 'json',
-    
 });
 
   
