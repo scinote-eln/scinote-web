@@ -24,10 +24,8 @@ The following are minimal steps needed to start sciNote in development environme
 
 ### Debian Specific Install Instructions
 
-1.Install Docker and add user 1000 to the docker group as described here [https://docs.docker.com/engine/installation/linux/debian/] (https://docs.docker.com/engine/installation/linux/debian/).
-
+1. Install Docker and add user 1000 to the docker group as described here [https://docs.docker.com/engine/installation/linux/debian/] (https://docs.docker.com/engine/installation/linux/debian/).
 2. Install Docker Compose as described here [https://docs.docker.com/compose/install/] (https://docs.docker.com/compose/install/).
-
 3. Follow Quick Start Guide above as user 1000.
 
 ### Docker structure
