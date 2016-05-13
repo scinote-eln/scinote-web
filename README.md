@@ -28,7 +28,7 @@ The following are minimal steps needed to start sciNote in development environme
 
 1. Install Docker and add user `1000` to the docker group as described [here](https://docs.docker.com/engine/installation/linux/debian/).
 2. Install Docker Compose as described [here](https://docs.docker.com/compose/install/).
-3. Follow Quick Start Guide above as user `1000`.
+3. Follow [Quick Start Guide](#user-content-quick-start) above as user `1000`.
 
 **Mac OS X**
 
@@ -37,7 +37,7 @@ The following are minimal steps needed to start sciNote in development environme
 3. Inside CLI, run `git clone https://github.com/biosistemika/scinote-web.git`.
 4. Run Docker Quickstart Terminal (also described [here](https://docs.docker.com/mac/step_one/)).
 5. Inside this terminal, navigate to cloned Git folder.
-6. Follow the Quick Start Guide above.
+6. Follow the [Quick Start Guide](#user-content-quick-start) above.
 7. When opening sciNote in browser, instead of navigating to `localhost:3000`, navigate to `<docker-machine-ip>:3000` (you can get the docker machine IP by running command `docker-machine ip default`).
 
 ### Docker structure
