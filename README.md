@@ -22,11 +22,23 @@ The following are minimal steps needed to start sciNote in development environme
 6. To start the server, run command `make run`. Wait until the server starts listening on port `3000`.
 7. Open your favourite browser and navigate to [http://localhost:3000](http://localhost:3000/). Use the seeded administrator account from [seeds.rb](db/seeds.rb) to login, or sign up for a new account.
 
-### Debian Specific Install Instructions
+### OS-specific Install Instructions
 
-1. Install Docker and add user 1000 to the docker group as described here [https://docs.docker.com/engine/installation/linux/debian/] (https://docs.docker.com/engine/installation/linux/debian/).
-2. Install Docker Compose as described here [https://docs.docker.com/compose/install/] (https://docs.docker.com/compose/install/).
-3. Follow Quick Start Guide above as user 1000.
+**Debian**
+
+1. Install Docker and add user `1000` to the docker group as described [here](https://docs.docker.com/engine/installation/linux/debian/).
+2. Install Docker Compose as described [here](https://docs.docker.com/compose/install/).
+3. Follow Quick Start Guide above as user `1000`.
+
+**Mac OS X**
+
+1. Install command line developer tools (there are many resources online, like [this](http://osxdaily.com/2014/02/12/install-command-line-tools-mac-os-x/)).
+2. Install Docker Toolbox as described [here](https://docs.docker.com/mac/step_one/).
+3. Inside CLI, run `git clone https://github.com/biosistemika/scinote-web.git`.
+4. Run Docker Quickstart Terminal (also described [here](https://docs.docker.com/mac/step_one/)).
+5. Inside this terminal, navigate to cloned Git folder.
+6. Follow the Quick Start Guide above.
+7. When opening sciNote in browser, instead of navigating to `localhost:3000`, navigate to `<docker-machine-ip>:3000` (you can get the docker machine IP by running command `docker-machine ip default`).
 
 ### Docker structure
 
