@@ -21,9 +21,10 @@ module SearchableModel
       end
 
       if (attrs.length > 0)
+        query.split(" ").length > 1 ? rejoined_query = query.split(" ").map! {|word| "%" + word + "%" }.join("") : rejoined_query = "%" + query + "%"
         where_str =
           (attrs.map.with_index { |a,i| "#{a} ILIKE :t#{i} OR " }).join[0..-5]
-        vals = (attrs.map.with_index { |a,i| [ "t#{i}".to_sym, "%#{query}%" ] }).to_h
+        vals = (attrs.map.with_index { |a,i| [ "t#{i}".to_sym, "#{rejoined_query}" ] }).to_h
 
         return where(where_str, vals)
       end
