@@ -166,6 +166,7 @@ Rails.application.routes.draw do
     as: :result_table_download
 
   get 'search' => 'search#index'
+  get 'search/search_options' => 'search#search_options'
   get 'search/new' => 'search#new', as: :new_search
 
   resources :assets, only: [:show] do

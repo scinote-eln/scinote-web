@@ -36,7 +36,17 @@ class SearchController < ApplicationController
 
   def new
   end
-
+  
+  def search_options
+    models = [ Project, MyModule, MyModuleGroup, Tag, Asset, Step, Result, Sample, Report, Comment, AssetTextDatum ]
+    @results = []
+    models.each { |model| @results << options_search(model) if options_search(model).any? }
+    
+    respond_to do |format|
+        format.json
+    end
+  end
+  
   private
 
   def load_vars
@@ -177,5 +187,17 @@ class SearchController < ApplicationController
       @contents_results = search_by_name AssetTextDatum
     end
     @search_count = @contents_search_count
+  end
+  
+  def options_search(model)
+    if model == Comment
+      model.search(current_user, true, params[:query]).limit(3).pluck(:message)
+    elsif model == Asset
+      model.search(current_user, true, params[:query]).limit(3).pluck(:file_file_name)
+    elsif model == AssetTextDatum
+      model.search(current_user, true, params[:query]).limit(3).pluck(:data)
+    else
+      model.search(current_user, true, params[:query]).limit(3).pluck(:name)
+    end
   end
 end

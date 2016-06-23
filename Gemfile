@@ -13,6 +13,7 @@ gem 'bootstrap_form'
 gem 'yomu'
 # JS datetime library, requirement of datetime picker
 gem 'momentjs-rails', '>= 2.9.0'
+gem 'jbuilder', '~> 2.0'
 # JS datetime picker
 gem 'bootstrap3-datetimepicker-rails', '~> 4.15.35'
 # Select elements for Bootstrap
