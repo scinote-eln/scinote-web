@@ -5,7 +5,7 @@
       <%= ff.file_field :file %>
     <% end %>
     <% if direct_upload %>
-    <%= f.submit t("result_assets.new.create"), class: 'btn btn-primary', onclick: 'animateSpinner(); startFileUpload(event, this);' %>
+    <%= f.submit t("result_assets.new.create"), class: 'btn btn-primary', onclick: 'startFileUpload(event, this);' %>
     <% else %>
     <%= f.submit t("result_assets.new.create"), class: 'btn btn-primary', onclick: 'animateSpinner();' %>
     <% end %>

@@ -8,7 +8,7 @@
     <% end %>
     <hr>
     <% if direct_upload %>
-    <%= f.submit t("result_assets.edit.update"), class: 'btn btn-primary', onclick: 'animateSpinner(); startFileUpload(event, this);' %>
+    <%= f.submit t("result_assets.edit.update"), class: 'btn btn-primary', onclick: 'startFileUpload(event, this);' %>
     <% else %>
     <%= f.submit t("result_assets.edit.update"), class: 'btn btn-primary', onclick: 'animateSpinner();' %>
     <% end %>

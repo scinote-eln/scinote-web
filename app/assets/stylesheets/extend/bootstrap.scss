@@ -1,5 +1,6 @@
-
 /* Extending Bootstrap */
+
+@import "colors";
 
 /* navbar avatar image */
 .navbar-nav .avatar {
@@ -11,6 +12,7 @@
   top: 5px;
 }
 
-.bootstrap-tagsinput > .label {
-  line-height: 2.3;
+/* Active tab with error should retain error color if clicked on again */
+.nav-tabs > li.active.has-error > a {
+    color: $color-apple-blossom;
 }

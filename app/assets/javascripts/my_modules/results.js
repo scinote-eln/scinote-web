@@ -311,6 +311,7 @@ function startFileUpload(ev, btn) {
   var origAssetId = assetInput ? assetInput.value : null;
   var url = '/asset_signature.json';
 
+  animateSpinner();
   $form.clear_form_errors();
 
   directUpload(form, origAssetId, url, function (assetId) {

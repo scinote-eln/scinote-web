@@ -14,6 +14,7 @@ $.fn.render_form_errors_input_group = function(model_name, errors) {
 $.fn.render_form_errors_no_clear = function(model_name, errors, input_group) {
   var form = $(this);
 
+  var firstErr = true;
   $.each(errors, function(field, messages) {
     input = $(_.filter(form.find('input, select, textarea'), function(el) {
       var name = $(el).attr('name');
@@ -33,10 +34,22 @@ $.fn.render_form_errors_no_clear = function(model_name, errors, input_group) {
     } else {
       input.parent().append(error_text);
     }
+
+    if(firstErr) {
+      // Focus and scroll to the first error
+      input.focus();
+      firstErr = false;
+      $('html, body').animate({
+        scrollTop: input.closest(".form-group").offset().top
+          - ($(".navbar-fixed-top").outerHeight(true)
+            + $(".navbar-secondary").outerHeight(true))
+      }, 2000);
+    }
   });
 };
 
 $.fn.clear_form_errors = function() {
+  $(this).find('.nav.nav-tabs li').removeClass('has-error');
   $(this).find('.form-group').removeClass('has-error');
   $(this).find('span.help-block').remove();
 };
@@ -79,20 +92,50 @@ $.fn.add_upload_file_size_check = function(callback) {
   }
 };
 
+ // Show error message and mark error element and, if present, mark
+ // and show the tab where the error occured.
+ // NOTE: Similar to $.fn.render_form_errors, except here we process
+ // one error at a time, which is not read from the form but is
+ // specified manually.
+function renderError(nameInput, errMsg, form) {
+  var errMsgSpan = nameInput.next(".help-block");
+  if(!errMsgSpan.length) {
+    nameInput.after("<span class='help-block'>" + errMsg + "</span>");
+    nameInput.closest(".form-group").addClass("has-error");
+  } else {
+    errMsgSpan.html(errMsg);
+  }
+  tabsPropagateErrorClass($(form));
+
+  // Focus and scroll to the error if it is the first (most upper) one
+  if($(form).find(".form-group.has-error").length === 1) {
+    nameInput.focus();
+    $('html, body').animate({
+      scrollTop: nameInput.closest(".form-group").offset().top
+        - ($(".navbar-fixed-top").outerHeight(true)
+          + $(".navbar-secondary").outerHeight(true))
+    }, 2000);
+  }
+
+  event.preventDefault();
+}
+
 // If any of tabs has errors, add has-error class to
 // parent tab navigation link
 function tabsPropagateErrorClass(parent) {
   var contents = parent.find("div.tab-pane");
-  _.each(contents, function(tab) {
-    var $tab = $(tab);
-    var errorFields = $tab.find(".has-error");
-    if (errorFields.length > 0) {
-      var id = $tab.attr("id");
-      var navLink = parent.find("a[href='#" + id + "'][data-toggle='tab']");
-      if (navLink.parent().length > 0) {
-        navLink.parent().addClass("has-error");
+  if(contents.length) {
+    _.each(contents, function(tab) {
+      var $tab = $(tab);
+      var errorFields = $tab.find(".has-error");
+      if (errorFields.length > 0) {
+        var id = $tab.attr("id");
+        var navLink = parent.find("a[href='#" + id + "'][data-toggle='tab']");
+        if (navLink.parent().length > 0) {
+          navLink.parent().addClass("has-error");
+        }
       }
-    }
-  });
-  $(".nav-tabs .has-error:first > a", parent).tab("show");
+    });
+    $(".nav-tabs .has-error:first > a", parent).tab("show");
+  }
 }

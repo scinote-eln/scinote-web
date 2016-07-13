@@ -588,37 +588,93 @@ $("[data-action='new-step']").on("ajax:success", function(e, data) {
   });
 });
 
-// Needed because Paperclip deletes files on server-side validation fail (after trying to save the model)
-function stepValidator( event ) {
+function nameValidator(event) {
+  var form = $(event.target.form);
   var nameTooShort = $( "#step_name" ).val().length === 0;
   var nameTooLong = $( "#step_name" ).val().length > 50;
   var errMsg;
   if (nameTooShort) {
-    errMsg = I18n.t("devise.names.length_too_short");
-    animateSpinner(null,false);
+    errMsg = I18n.t("devise.names.not_blank");
   } else if (nameTooLong) {
     errMsg = I18n.t("devise.names.length_too_long", { max_length: 50 });
     animateSpinner(null,false);
   }
 
-  if (!_.isUndefined(errMsg)) {
-    if(!$("#step_name_error_msg").length) {
-      $("<span id='step_name_error_msg' class='help-block'>" + errMsg + "</span>").insertAfter("#step_name");
-      $(".form-group:has(> #step_name)").addClass("has-error");
-      $("#new-step-main-tab").addClass("has-error");
-    } else {
-      $("#step_name_error_msg").html(errMsg);
-    }
-    animateSpinner(null,false);
-    $("#new-step-main-tab a").click();
-    event.preventDefault();
+  var hasErrors = !_.isUndefined(errMsg);
+  if (hasErrors) {
+    renderError($("#step_name"), errMsg, form);
   }
+  return !hasErrors;
+}
 
-  clearBlankElements(event.target.form);
+function checklistsValidator(event, editMode) {
+  var form = event.target.form;
+  $(form).clear_form_errors();
+  var noErrors = true;
+
+  // For every visible (i.e. not removed) checklist
+  $(form).find(".nested_step_checklists[style!='display: none']").each(function() {
+    var checklistNameInput = $(this).find(".checklist_name");
+    var checklistNameEmpty = !checklistNameInput.val();
+    anyChecklistItemFilled = false;
+
+    // For every ckecklist item input
+    $(" .checklist-item-text", $(this)).each(function() {
+      if($(this).val()) {
+        anyChecklistItemFilled = true;
+      } else {
+        // Remove empty checklist item
+        $(this).closest("fieldset").remove();
+      }
+    })
+
+    if(checklistNameEmpty) {
+      if(anyChecklistItemFilled || editMode) {
+          // In edit mode, name can't be blank
+          var errMsg = I18n.t("devise.names.not_blank");
+          renderError(checklistNameInput, errMsg, $(form));
+          noErrors = false;
+      } else  {
+        // Hide empty checklist
+        $(this).hide();
+      }
+    }
+  });
+
+  $(event.target).blur();
+  return noErrors;
+}
+
+// Needed because server-side validation failure clears locations of
+// files to be uploaded and checklist's items etc. Also user
+// experience is improved
+function localStepValidator(event, editMode) {
+  if(!editMode) {
+    // Most td's disappear when editing step and not pressing on
+    // edit tab, so we can't use this function
+    clearBlankTables(event.target.form)
+  }
+  clearBlankFileForms(event.target.form);
+  var checklistsValid = checklistsValidator(event, editMode);
+  var nameValid = nameValidator(event);
+
+  var noErrors = checklistsValid && nameValid;
+  if(noErrors) {
+    // Validations passed, so animate spinner for possible file
+    // uploading
+    animateSpinner();
+  }
+  return noErrors;
+}
+
+function S3StepValidator(event, editMode) {
+  if(localStepValidator(event, editMode)) {
+    startFileUpload(event, event.target);
+  }
 }
 
 // Expand all steps
-function expandAllSteps () {
+function expandAllSteps() {
   $('.step .panel-collapse').collapse('show');
   $(document).find("[data-role='step-hot-table']").each(function()  {
     renderTable($(this));
@@ -675,8 +731,9 @@ function startFileUpload(ev, btn) {
   var inputPos = 0;
   var inputPointer = 0;
 
+  animateSpinner();
   $form.clear_form_errors();
-  clearBlankElements(form);
+  clearBlankFileForms(form);
 
   function processFile () {
     var fileInput = fileInputs.get(inputPos);
@@ -723,18 +780,19 @@ function startFileUpload(ev, btn) {
   ev.preventDefault();
 }
 
-// Clear empty fields in steps
-function clearBlankElements(form) {
-  // Remove empty checklist items
-  $(form).find(".checklist-item-text").each(function () {
-    if ($(this).val() === ""){
+// Remove empty file forms in step
+function clearBlankFileForms(form) {
+  $(form).find("input[type='file']").each(function () {
+    if (!this.files[0]) {
       $(this).closest("fieldset").remove();
     }
   });
+}
 
-  // Remove empty file forms
-  $(form).find("input[type='file']").each(function () {
-    if (!this.files[0]) {
+// Remove empty tables in step
+function clearBlankTables(form) {
+  $(form).find(".nested_step_tables").each(function () {
+    if (!$(this).find("td:not(:empty)").length) {
       $(this).closest("fieldset").remove();
     }
   });

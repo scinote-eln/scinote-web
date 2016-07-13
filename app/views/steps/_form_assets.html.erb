@@ -12,6 +12,8 @@
     <% if ff.object.file.exists? %>
       <% if !(ff.object.file.content_type =~ /^image/).nil? %>
         <%= image_tag ff.object.file.url(:medium) %>
+        <br>
+        <%= ff.object.file_file_name %>
       <% else %>
         <%= ff.object.file_file_name %>
       <% end %>
