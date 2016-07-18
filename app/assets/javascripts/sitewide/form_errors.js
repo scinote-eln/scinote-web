@@ -14,7 +14,6 @@ $.fn.render_form_errors_input_group = function(model_name, errors) {
 $.fn.render_form_errors_no_clear = function(model_name, errors, input_group) {
   var form = $(this);
 
-  var firstErr = true;
   $.each(errors, function(field, messages) {
     input = $(_.filter(form.find('input, select, textarea'), function(el) {
       var name = $(el).attr('name');
@@ -33,17 +32,6 @@ $.fn.render_form_errors_no_clear = function(model_name, errors, input_group) {
       input.closest('.form-group').append(error_text);
     } else {
       input.parent().append(error_text);
-    }
-
-    if(firstErr) {
-      // Focus and scroll to the first error
-      input.focus();
-      firstErr = false;
-      $('html, body').animate({
-        scrollTop: input.closest(".form-group").offset().top
-          - ($(".navbar-fixed-top").outerHeight(true)
-            + $(".navbar-secondary").outerHeight(true))
-      }, 2000);
     }
   });
 };
@@ -68,74 +56,81 @@ $.fn.clear_form_fields = function() {
 // Callback function can be provided to be called
 // any time at least one file size is too large
 $.fn.add_upload_file_size_check = function(callback) {
-  var form = $(this);
+  var $form = $(this);
 
-  if (form.length && form.length > 0) {
-    form.submit(function (ev) {
-      var fileInputs = $(this).find("input[type='file']");
-      if (fileInputs.length && fileInputs.length > 0) {
-        var isValid = checkFilesValidity(fileInputs);
-
-        if (!isValid) {
-          // Don't submit form
-          ev.preventDefault();
-          ev.stopPropagation();
-
-          if (callback) {
-            callback();
-          }
-
-          return false;
-        }
-      }
+  if ($form.length && $form.length > 0) {
+    $form.submit(function (ev) {
+       uploadFileSizeCheck(ev, callback);
     });
   }
 };
+
+function uploadFileSizeCheck(ev, callback) {
+  var $fileInputs = $(ev.target.form).find("input[type='file']");
+  if ($fileInputs.length && $fileInputs.length > 0) {
+    var isValid = checkFilesValidity($fileInputs);
+
+    if (!isValid) {
+      // Don't submit form
+      ev.preventDefault();
+      ev.stopPropagation();
+
+      if (callback) {
+        callback();
+      }
+
+      return false;
+    }
+  }
+  return true;
+}
 
  // Show error message and mark error element and, if present, mark
  // and show the tab where the error occured.
  // NOTE: Similar to $.fn.render_form_errors, except here we process
  // one error at a time, which is not read from the form but is
  // specified manually.
-function renderError(nameInput, errMsg, form) {
-  var errMsgSpan = nameInput.next(".help-block");
-  if(!errMsgSpan.length) {
-    nameInput.after("<span class='help-block'>" + errMsg + "</span>");
-    nameInput.closest(".form-group").addClass("has-error");
+function renderError(nameInput, errMsg, errAttributes) {
+  var $errMsgSpan = $(nameInput).next(".help-block");
+  if(!$errMsgSpan.length) {
+    errAttributes = (_.isUndefined(errAttributes)) ? "" : " " + errAttributes;
+    $(nameInput).after("<span class='help-block'" + errAttributes + ">" + errMsg + "</span>");
+    $(nameInput).closest(".form-group").addClass("has-error");
   } else {
-    errMsgSpan.html(errMsg);
+    $errMsgSpan.html(errMsg);
   }
-  tabsPropagateErrorClass($(form));
+
+  $form = $(nameInput).closest("form");
+  $tab = $(nameInput).closest(".tab-pane");
+  if($tab.length) {
+    tabsPropagateErrorClass($form);
+    $parent = $tab;
+  } else {
+    $parent = $form;
+  }
 
   // Focus and scroll to the error if it is the first (most upper) one
-  if($(form).find(".form-group.has-error").length === 1) {
-    nameInput.focus();
-    $('html, body').animate({
-      scrollTop: nameInput.closest(".form-group").offset().top
-        - ($(".navbar-fixed-top").outerHeight(true)
-          + $(".navbar-secondary").outerHeight(true))
-    }, 2000);
+  if($parent.find(".form-group.has-error").length === 1) {
+    goToFormElement(nameInput);
   }
 
   event.preventDefault();
 }
 
-// If any of tabs has errors, add has-error class to
-// parent tab navigation link
+// If any of tabs (if exist) has errors, add has-error class to
+// parent tab navigation link and show the tab (if not already)
 function tabsPropagateErrorClass(parent) {
-  var contents = parent.find("div.tab-pane");
-  if(contents.length) {
-    _.each(contents, function(tab) {
-      var $tab = $(tab);
-      var errorFields = $tab.find(".has-error");
-      if (errorFields.length > 0) {
-        var id = $tab.attr("id");
-        var navLink = parent.find("a[href='#" + id + "'][data-toggle='tab']");
-        if (navLink.parent().length > 0) {
-          navLink.parent().addClass("has-error");
-        }
+  var $contents = parent.find("div.tab-pane");
+  _.each($contents, function(tab) {
+    var $tab = $(tab);
+    var $errorFields = $tab.find(".has-error");
+    if ($errorFields.length > 0) {
+      var id = $tab.attr("id");
+      var navLink = parent.find("a[href='#" + id + "'][data-toggle='tab']");
+      if (navLink.parent().length > 0) {
+        navLink.parent().addClass("has-error");
       }
-    });
-    $(".nav-tabs .has-error:first > a", parent).tab("show");
-  }
+    }
+  });
+  $(".nav-tabs .has-error:first:not(.active) > a", parent).tab("show");
 }

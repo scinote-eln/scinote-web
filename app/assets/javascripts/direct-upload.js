@@ -14,7 +14,7 @@
       var size;
       var offsetX = 0;
       var offsetY = 0;
-      
+
       if (this.width > this.height) {
         size = this.height;
         offsetX = (this.width - this.height) / 2;
@@ -46,7 +46,6 @@
     data.push("file_name=" + file.name);
     data.push("file_size=" + file.size);
     data.push(csrfParam + "=" + encodeURIComponent(csrfToken));
-    
 
     if (origId) {
       data.push("asset_id=" + origId);
@@ -110,57 +109,61 @@
 
     if (!isValid) {
       cbErr();
-      return;
+    } else {
+      fetchUploadSignature(file, origId, signUrl, function (data) {
+
+        function processPost(error) {
+          var postData = posts[postPosition];
+
+          if (error) {
+            var errObj = {};
+            errKey = errKey|| "asset.file";
+            errObj[errKey] = [error];
+
+            cbErr(errObj);
+            isValid = false;
+            return;
+          }
+          if (!postData) {
+            cb(data.asset_id);
+            isValid = false;
+            return;
+          }
+
+          postData.fileName = file.name;
+          postPosition += 1;
+          var styleSize;
+
+          if (postData.style_option) {
+            styleSize = parseStyleOption(postData.style_option);
+
+            generateThumbnail(file, postData.mime_type, styleSize.width,
+              styleSize.height, function (blob) {
+
+              postData.file = blob;
+              uploadData(postData, processPost);
+            });
+
+          } else {
+            postData.file = file;
+            uploadData(postData, processPost);
+          }
+        }
+
+        if (!data || data.status === 'error') {
+          cbErr(data && data.errors);
+          isValid = false;
+          return;
+        }
+
+        var posts = data.posts;
+        var postPosition = 0;
+
+        processPost();
+      });
     }
 
-    fetchUploadSignature(file, origId, signUrl, function (data) {
-
-      function processPost(error) {
-        var postData = posts[postPosition];
-
-        if (error) {
-          var errObj = {};
-          errKey = errKey|| "asset.file";
-          errObj[errKey] = [error];
-
-          cbErr(errObj);
-          return;
-        }
-        if (!postData) {
-          cb(data.asset_id);
-          return;
-        }
-
-        postData.fileName = file.name;
-        postPosition += 1;
-        var styleSize;
-
-        if (postData.style_option) {
-          styleSize = parseStyleOption(postData.style_option);
-
-          generateThumbnail(file, postData.mime_type, styleSize.width,
-            styleSize.height, function (blob) {
-
-            postData.file = blob;
-            uploadData(postData, processPost);
-          });
-
-        } else {
-          postData.file = file;
-          uploadData(postData, processPost);
-        }
-      }
-
-      if (!data || data.status === 'error') {
-        cbErr(data && data.errors);
-        return;
-      }
-
-      var posts = data.posts;
-      var postPosition = 0;
-
-      processPost();
-    });
+    return isValid;
   };
 
 }(this));

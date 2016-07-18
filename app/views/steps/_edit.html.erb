@@ -4,11 +4,7 @@
     <hr>
     <%= render partial: "empty_step.html.erb", locals: {step: @step, f: f} %>
     <hr>
-    <% if direct_upload %>
-      <%= f.submit t("protocols.steps.edit.edit_step"), class: 'btn btn-primary', onclick: 'S3StepValidator(event, true);' %>
-    <% else %>
-      <%= f.submit t("protocols.steps.edit.edit_step"), class: 'btn btn-primary', onclick: 'localStepValidator(event, true);' %>
-    <% end %>
+    <%= f.submit t("protocols.steps.edit.edit_step"), class: 'btn btn-primary', onclick: "stepValidator(event, true, #{direct_upload});" %>
     <a type="button" data-action="cancel-edit" class="btn btn-default" href="<%= step_path(id: @step, format: :json) %>"  data-remote="true">
       <%= t("general.cancel")%>
     </a>

@@ -311,10 +311,10 @@ function startFileUpload(ev, btn) {
   var origAssetId = assetInput ? assetInput.value : null;
   var url = '/asset_signature.json';
 
-  animateSpinner();
   $form.clear_form_errors();
+  animateSpinner();
 
-  directUpload(form, origAssetId, url, function (assetId) {
+  var noErrors = directUpload(form, origAssetId, url, function (assetId) {
     // edit mode - input field has to be removed
     if (assetInput) {
       assetInput.value = assetId;
@@ -334,7 +334,11 @@ function startFileUpload(ev, btn) {
     showResultFormErrors($form, errors);
   });
 
+  if(!noErrors) {
+     animateSpinner(null, false);
+  }
   ev.preventDefault();
+  return noErrors;
 }
 
 // This checks if the ctarget param exist in the

@@ -19,10 +19,7 @@ function checkFilesValidity(fileInputs) {
     input.closest('.form-group').removeClass('has-error');
     input.parent().find("[data-error='file-size']").remove();
     if (assetError) {
-      input.closest('.form-group').addClass('has-error');
-      input.parent().append(
-        "<span class='help-block' data-error='file-size'>" + assetError + "</span>"
-      );
+      renderError(input, assetError, "data-error='file-size'");
       isValid = false;
     }
   });

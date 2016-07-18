@@ -75,7 +75,7 @@ function startFileUpload(ev, btn) {
   $form.clear_form_errors();
   animateSpinner($form);
 
-  directUpload(form, null, url, function (assetId) {
+  var noErrors = directUpload(form, null, url, function (assetId) {
     var file = fileInput.files[0];
     fileInput.type = "hidden";
     fileInput.name = fileInput.name.replace("[avatar]", "[avatar_file_name]");
@@ -103,12 +103,15 @@ function startFileUpload(ev, btn) {
       var $el = $form.find("input[type=file]");
 
       $form.clear_form_errors();
-      $el.closest(".form-group").addClass("has-error");
-      $el.parent().append("<span class='help-block'>" + avatarError + "</span>");
+      renderError($el, avatarError);
     }
   }, "avatar");
 
+  if(!noErrors) {
+     animateSpinner(null, false);
+  }
   ev.preventDefault();
+  return noErrors;
 }
 
 

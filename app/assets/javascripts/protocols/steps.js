@@ -162,11 +162,6 @@ function formCallback($form) {
     }
   });
 
-  // Add asset validation
-  $form.add_upload_file_size_check(function() {
-    tabsPropagateErrorClass($form);
-  });
-
   // Add hidden fields for tables
   $form.submit(function(){
     $(this).find("[data-role='editable-table']").each(function() {
@@ -589,7 +584,7 @@ $("[data-action='new-step']").on("ajax:success", function(e, data) {
 });
 
 function nameValidator(event) {
-  var form = $(event.target.form);
+  var $form = $(event.target.form);
   var nameTooShort = $( "#step_name" ).val().length === 0;
   var nameTooLong = $( "#step_name" ).val().length > 50;
   var errMsg;
@@ -602,20 +597,19 @@ function nameValidator(event) {
 
   var hasErrors = !_.isUndefined(errMsg);
   if (hasErrors) {
-    renderError($("#step_name"), errMsg, form);
+    renderError($("#step_name"), errMsg);
   }
   return !hasErrors;
 }
 
 function checklistsValidator(event, editMode) {
-  var form = event.target.form;
-  $(form).clear_form_errors();
+  var $form = $(event.target.form);
   var noErrors = true;
 
   // For every visible (i.e. not removed) checklist
-  $(form).find(".nested_step_checklists[style!='display: none']").each(function() {
-    var checklistNameInput = $(this).find(".checklist_name");
-    var checklistNameEmpty = !checklistNameInput.val();
+  $form.find(".nested_step_checklists[style!='display: none']").each(function() {
+    var $checklistNameInput = $(this).find(".checklist_name");
+    var checklistNameEmpty = !$checklistNameInput.val();
     anyChecklistItemFilled = false;
 
     // For every ckecklist item input
@@ -632,7 +626,7 @@ function checklistsValidator(event, editMode) {
       if(anyChecklistItemFilled || editMode) {
           // In edit mode, name can't be blank
           var errMsg = I18n.t("devise.names.not_blank");
-          renderError(checklistNameInput, errMsg, $(form));
+          renderError($checklistNameInput, errMsg);
           noErrors = false;
       } else  {
         // Hide empty checklist
@@ -648,28 +642,30 @@ function checklistsValidator(event, editMode) {
 // Needed because server-side validation failure clears locations of
 // files to be uploaded and checklist's items etc. Also user
 // experience is improved
-function localStepValidator(event, editMode) {
+function stepValidator(event, editMode, forS3) {
+  var $form = $(event.target.form);
+  $form.clear_form_errors();
   if(!editMode) {
     // Most td's disappear when editing step and not pressing on
-    // edit tab, so we can't use this function
-    clearBlankTables(event.target.form)
+    // tables tab, so we can't use this function
+    clearBlankTables($form)
   }
-  clearBlankFileForms(event.target.form);
+  clearBlankFileForms($form);
+  // TODO File type check
+  var fileSizeValid = uploadFileSizeCheck(event);
   var checklistsValid = checklistsValidator(event, editMode);
   var nameValid = nameValidator(event);
 
-  var noErrors = checklistsValid && nameValid;
-  if(noErrors) {
-    // Validations passed, so animate spinner for possible file
-    // uploading
-    animateSpinner();
-  }
-  return noErrors;
-}
-
-function S3StepValidator(event, editMode) {
-  if(localStepValidator(event, editMode)) {
-    startFileUpload(event, event.target);
+  if(fileSizeValid && checklistsValid && nameValid) {
+    if(forS3) {
+      // Needed to redirect uploaded files to S3
+      startFileUpload(event, event.target);
+    } else {
+      // Files are saved locally
+      // Validations passed, so animate spinner for possible file uploading
+      // (startFileUpload already calls it)
+      animateSpinner();
+    }
   }
 }
 
@@ -731,9 +727,9 @@ function startFileUpload(ev, btn) {
   var inputPos = 0;
   var inputPointer = 0;
 
-  animateSpinner();
   $form.clear_form_errors();
   clearBlankFileForms(form);
+  animateSpinner();
 
   function processFile () {
     var fileInput = fileInputs.get(inputPos);
@@ -743,17 +739,16 @@ function startFileUpload(ev, btn) {
     if (!fileInput) {
       btn.onclick = null;
       $(btn).click();
-      return;
+      return false;
     }
 
-    directUpload(form, null, url, function (assetId) {
+    return directUpload(form, null, url, function (assetId) {
       fileInput.type = "hidden";
       fileInput.name = fileInput.name.replace("[file]", "[id]");
       fileInput.value = assetId;
       inputPointer -= 1;
 
       processFile();
-
     }, function (errors) {
       var assetError;
 
@@ -768,16 +763,19 @@ function startFileUpload(ev, btn) {
         var $el = $(el);
 
         $form.clear_form_errors();
-        $el.closest(".form-group").addClass("has-error");
-        $el.parent().append("<span class='help-block'>" + assetError + "</span>");
+        renderError($el, assetError);
       } else {
         tabsPropagateErrorClass($form);
       }
     });
   }
 
-  processFile();
+  var noErrors = processFile();
+  if(!noErrors) {
+     animateSpinner(null, false);
+  }
   ev.preventDefault();
+  return noErrors;
 }
 
 // Remove empty file forms in step
