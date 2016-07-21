@@ -11,6 +11,7 @@
 
   var newProjectModal = null;
   var newProjectModalForm = null;
+  var newProjectModalBody = null;
   var newProjectBtn = null;
 
   var editProjectModal = null;
@@ -20,6 +21,7 @@
 
   var manageUsersModal = null;
   var manageUsersModalBody = null;
+  var manageUsersModalFooter = null;
 
   /**
    * Stupid Bootstrap btn-group bug hotfix
@@ -72,12 +74,18 @@
     });
 
     newProjectModalForm
+    .on("ajax:beforeSend", function(){
+      animateSpinner(newProjectModalBody);
+    })
     .on("ajax:success", function(data, status, jqxhr) {
       // Redirect to response page
       $(location).attr("href", status.url);
     })
     .on("ajax:error", function(jqxhr, status, error) {
       $(this).render_form_errors("project", status.responseJSON);
+    })
+    .on("ajax:complete", function(){
+      animateSpinner(newProjectModalBody, false);
     });
 
     newProjectBtn.click(function(e) {
@@ -118,6 +126,9 @@
 
       // Add modal body's submit handler
       editProjectModal.find("form")
+      .on("ajax:beforeSend", function(){
+        animateSpinner(this);
+      })
       .on("ajax:success", function(ev2, data2, status2) {
         // Project saved, replace changed project's title
         var responseHtml = $(data2.html);
@@ -134,6 +145,9 @@
       })
       .on("ajax:error", function(ev2, data2, status2) {
         $(this).render_form_errors("project", data2.responseJSON);
+      })
+      .on("ajax:complete", function(){
+        animateSpinner(this, false);
       });
 
       // Show the modal
@@ -167,6 +181,7 @@
     // Remove modal content when modal window is closed.
     manageUsersModal.on("hidden.bs.modal", function () {
       manageUsersModalBody.html("");
+      manageUsersModalFooter.html("");
     });
   }
 
@@ -266,7 +281,12 @@
         initUsersModalBody(data);
         if (data.status === 'error') {
           $(this).addClass("has-error");
-          $(this).append("<span class='help-block col-xs-8'>" + data.error + "</span>");
+          var errorBlock = $(this).find("span.help-block");
+          if (errorBlock .length && errorBlock.length > 0) {
+            errorBlock.html(data.error);
+          } else {
+            $(this).append("<span class='help-block col-xs-8'>" + data.error + "</span>");
+          }
         }
       });
   }
@@ -304,7 +324,8 @@
   // Initialize ajax listeners and elements style on modal body. This
   // function must be called when modal body is changed.
   function initUsersModalBody(data) {
-    manageUsersModalBody.html(data.html);
+    manageUsersModalBody.html(data.html_body);
+    manageUsersModalFooter.html(data.html_footer);
     manageUsersModalBody.find(".selectpicker").selectpicker();
     initAddUserForm();
     initRemoveUserLinks();
@@ -316,6 +337,7 @@
 
     newProjectModal = $("#new-project-modal");
     newProjectModalForm = newProjectModal.find("form");
+    newProjectModalBody = newProjectModal.find(".modal-body");
     newProjectBtn = $("#new-project-btn");
 
     editProjectModal = $("#edit-project-modal");
@@ -325,6 +347,7 @@
 
     manageUsersModal = $("#manage-users-modal");
     manageUsersModalBody = manageUsersModal.find(".modal-body");
+    manageUsersModalFooter = manageUsersModal.find(".modal-footer");
 
     initNewProjectModal();
     initEditProjectModal();
@@ -374,17 +397,21 @@
       var goToStep = 1;
       var demoProjectId = tutorialData[0].project;
       if (Cookies.get('current_tutorial_step')) {
-        goToStep = parseInt(Cookies.get('current_tutorial_step'));
+        goToStep = parseInt(Cookies.get('current_tutorial_step'), 10);
       }
+      var demoProject = $("#" + demoProjectId);
       if (goToStep < 4) {
         var projectOptionsTutorial = $("#projects-toolbar").attr("data-project-options-step-text");
-        var demoProject = $("#" + demoProjectId);
         demoProject.attr('data-step', '3');
         demoProject.attr('data-intro', projectOptionsTutorial);
-        demoProject.attr('data-position', 'left');
-        demoProject.attr('data-tooltipClass', 'custom disabled-next');
+        demoProject.attr('data-tooltipClass', 'custom next-page-link');
 
-        introJs()
+        if (demoProject.offset().top > window.innerHeight / 2) {
+          demoProject.attr('data-position', 'top');
+        } // Otherwise show bottom
+
+        var $introjs = introJs();
+        $introjs
           .setOptions({
             overlayOpacity: '0.2',
             nextLabel: 'Next',
@@ -392,39 +419,70 @@
             skipLabel: 'End tutorial',
             showBullets: false,
             showStepNumbers: false,
+            exitOnOverlayClick: false,
+            exitOnEsc: false,
+            disableInteraction: true,
             tooltipClass: 'custom'
           })
           .goToStep(goToStep)
           .onafterchange(function (tarEl) {
             Cookies.set('current_tutorial_step', this._currentStep+1);
+            if (this._currentStep == 2) {
+              // Go to project canvas
+              setTimeout(function() {
+                $('.next-page-link a.introjs-nextbutton')
+                  .removeClass('introjs-disabled')
+                  .attr('href', $('#' + demoProjectId + '-project-canvas-link').attr('href'));
+
+                // Disabling interactions for individual steps is
+                // not (yet) possible in intro.js
+                $(".introjs-disableInteraction").remove();
+              }, 500);
+            }
           })
           .start();
 
         // Destroy first-time tutorial cookies when skip tutorial
         // or end tutorial is clicked
-        $(".introjs-skipbutton").each(function (){
+        $('.introjs-skipbutton').each(function (){
           $(this).click(function (){
             Cookies.remove('tutorial_data');
             Cookies.remove('current_tutorial_step');
           });
         });
+
+        window.onresize = function() {
+          if (goToStep == 3) {
+            introJs().refresh();
+          }
+        };
       }
-      else if (goToStep > 11) {
+      else if (goToStep > 18) {
         var archiveProjectTutorial = $("#projects-toolbar").attr("data-archive-project-step-text");
-        Cookies.set('current_tutorial_step', '13');
+        Cookies.set('current_tutorial_step', '20');
+        var position = "right";
+        if (demoProject.offset().left > window.innerWidth / 2 || window.innerWidth < demoProject.width() + 100) {
+          if (demoProject.offset().top > 500 && demoProject.offset().top > window.innerHeight / 2) {
+            position = "top";
+          } else {
+            position = "bottom";
+          }
+        }
 
         introJs()
           .setOptions({
             steps: [{
               element: document.getElementById(demoProjectId),
               intro: archiveProjectTutorial,
-              position: "right"
+              position: position
             }],
             overlayOpacity: '0.2',
             doneLabel: 'Start using sciNote',
             showBullets: false,
             showStepNumbers: false,
-            disableInteraction: false,
+            disableInteraction: true,
+            exitOnOverlayClick: false,
+            exitOnEsc: false,
             tooltipClass: 'custom disabled-next'
           })
           .oncomplete(function () {
@@ -432,9 +490,20 @@
             Cookies.remove('current_tutorial_step');
           })
           .start();
+
+        window.onresize = function() {
+          switch (position) {
+            case "right":
+              $(".introjs-tooltip").css("left", (demoProject.width() + 20)  + "px");
+              break;
+            default:
+              $(".introjs-tooltip").css("left", (demoProject.width()/2 - $(".introjs-tooltip").width()/2)  + "px");
+          }
+        };
       }
     }
   }
 
   init();
+
 }());

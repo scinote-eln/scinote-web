@@ -27,14 +27,14 @@
       <span class="glyphicon glyphicon-plus"></span>
       <span class="hidden-xs"><%= t("samples.add_new_sample") %></span>
     </button>
-    <button type="button" class="btn btn-default" data-toggle="modal" data-target="#modal-import-samples">
+    <button type="button" class="btn btn-default" id="importSamplesButton" data-toggle="modal" data-target="#modal-import-samples">
       <span class="glyphicon glyphicon-cloud-upload"></span>
       <span class="hidden-xs"><%= t("samples.import") %></span>
       </button>
   <% end %>
 
   <% if can_view_samples(@organization) %>
-    <a href="#" class="btn btn-default" id="exportSamplesButton" disabled="disabled">
+    <a href="#" class="btn btn-default" id="exportSamplesButton">
       <span class="glyphicon glyphicon-cloud-download"></span>
       <span class="hidden-xs"><%= t("samples.export") %></span>
     </a>

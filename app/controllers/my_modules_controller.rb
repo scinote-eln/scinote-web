@@ -3,7 +3,7 @@ class MyModulesController < ApplicationController
 
   before_action :load_vars, only: [
     :show, :edit, :update, :destroy,
-    :description, :due_date, :steps, :results,
+    :description, :due_date, :protocols, :results,
     :samples, :activities, :activities_tab,
     :assign_samples, :unassign_samples,
     :delete_samples,
@@ -16,7 +16,7 @@ class MyModulesController < ApplicationController
   before_action :check_destroy_permissions, only: [:destroy]
   before_action :check_view_info_permissions, only: [:show]
   before_action :check_view_activities_permissions, only: [:activities, :activities_tab]
-  before_action :check_view_steps_permissions, only: [:steps]
+  before_action :check_view_protocols_permissions, only: [:protocols]
   before_action :check_view_results_permissions, only: [:results]
   before_action :check_view_samples_permissions, only: [:samples, :samples_index]
   before_action :check_view_archive_permissions, only: [:archive]
@@ -64,8 +64,12 @@ class MyModulesController < ApplicationController
     @last_activity_id = params[:from].to_i || 0
     @per_page = 10
 
-    @activities = @my_module.last_activities(@last_activity_id, @per_page)
+    @activities = @my_module.last_activities(@last_activity_id, @per_page +1 )
     @more_activities_url = ""
+
+    @overflown = @activities.length > @per_page
+
+    @activities = @my_module.last_activities(@last_activity_id, @per_page)
 
     if @activities.count > 0
       @more_activities_url = url_for(
@@ -226,8 +230,8 @@ class MyModulesController < ApplicationController
     end
   end
 
-  def steps
-
+  def protocols
+    @protocol = @my_module.protocol
   end
 
   def results
@@ -281,7 +285,7 @@ class MyModulesController < ApplicationController
       end
 
       @my_module.get_downstream_modules.each do |my_module|
-        my_module.samples.delete(samples & my_module.samples)
+        my_module.samples.destroy(samples & my_module.samples)
       end
     end
     redirect_to samples_my_module_path(@my_module)
@@ -302,7 +306,7 @@ class MyModulesController < ApplicationController
   private
 
   def load_vars
-    @direct_upload = ENV['PAPERCLIP_DIRECT_UPLOAD']
+    @direct_upload = ENV['PAPERCLIP_DIRECT_UPLOAD'] == "true"
     @my_module = MyModule.find_by_id(params[:id])
     if @my_module
       @project = @my_module.project
@@ -345,8 +349,8 @@ class MyModulesController < ApplicationController
     end
   end
 
-  def check_view_steps_permissions
-    unless can_view_steps_in_module(@my_module)
+  def check_view_protocols_permissions
+    unless can_view_module_protocols(@my_module)
       render_403
     end
   end

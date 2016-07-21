@@ -30,7 +30,7 @@ module SidebarHelper
     when "archive", "module_archive"
       return archive_my_module_url(my_module)
     else
-      return my_module_steps_path(my_module)
+      return protocols_my_module_url(my_module)
     end
   end
 end

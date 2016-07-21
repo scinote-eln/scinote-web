@@ -1,0 +1,27 @@
+<ol class="breadcrumb breadcrumb-protocols-manager">
+  <% if action_name == "index" %>
+    <li class="active"><%= t("protocols.nav.breadcrumbs.manager") %></li>
+    <li class="dropdown">
+      <a class="dropdown-toggle" id="organizations-dropdown-a" role="button" data-toggle="dropdown" href="#"><%= current_organization.name %> <span class="caret"></span></a>
+      <ul id="organizations-dropdown" class="dropdown-menu">
+        <% organizations.each do |org| %>
+          <% if org != current_organization %>
+            <li>
+              <%= link_to org.name, protocols_path(organization: org, type: type) %>
+            </li>
+          <% else %>
+            <li class="disabled"><a href="#"><%= org.name %></a></li>
+          <% end %>
+        <% end %>
+      </ul>
+    </li>
+  <% else %>
+    <li><%= link_to t("protocols.nav.breadcrumbs.manager"), protocols_path(organization: current_organization, type: type) %></li>
+    <li class="active"><%= current_organization.name %></li>
+  <% end %>
+  <% if action_name == "edit" %>
+    <li class="active">
+      <%= t("protocols.nav.breadcrumbs.edit") %>
+    </li>
+  <% end %>
+</ol>

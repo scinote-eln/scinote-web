@@ -40,6 +40,11 @@ if ENV['PAPERCLIP_STORAGE'] == "s3"
       icon_small: :reduced_redundancy
     }
   })
+elsif ENV['PAPERCLIP_STORAGE'] == "filesystem"
+  Paperclip::Attachment.default_options.merge!({
+    storage: :filesystem
+  })
+
 end
 
 Paperclip::Attachment.class_eval do

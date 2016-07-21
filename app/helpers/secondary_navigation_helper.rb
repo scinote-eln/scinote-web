@@ -28,8 +28,8 @@ module SecondaryNavigationHelper
     action_name == "show"
   end
 
-  def is_module_steps?
-    action_name == "steps"
+  def is_module_protocols?
+    action_name == "protocols"
   end
 
   def is_module_results?

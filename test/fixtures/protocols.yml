@@ -1,0 +1,32 @@
+rna_test_protocol:
+  name: "RNA Test v1.0"
+  authors: "Schmidt, Jurgen"
+  description: "This is a test protocol."
+  added_by: steve
+  my_module: rna_test
+  organization: biosistemika
+  protocol_type: 1
+  parent: rna_test_protocol_global
+  parent_updated_at: "2015-11-06 11:12:00"
+
+sample_prep_protocol:
+  my_module: sample_prep
+  organization: biosistemika
+  protocol_type: 0
+
+list_of_samples_protocol:
+  name: "List samples"
+  description: "This is WIP, don't touch"
+  my_module: list_of_samples
+  organization: biosistemika
+  protocol_type: 0
+
+rna_test_protocol_global:
+  name: "RNA Test v1.0"
+  authors: "Schmidt, Jurgen"
+  description: "This is a test protocol."
+  added_by: steve
+  organization: biosistemika
+  protocol_type: 3
+  updated_at: "2015-11-06 11:12:00"
+  published_on: "2015-11-06 11:12:00"

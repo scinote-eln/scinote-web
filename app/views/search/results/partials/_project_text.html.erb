@@ -1,5 +1,6 @@
+<% link_to_page = :root if local_assigns[:link_to_page].nil? %>
 <% query ||= nil %>
-<% text = query.present? ? highlight(project.name, query) : project.name %>
+<% text = query.present? ? highlight(project.name, query.strip.split(/\s+/)) : project.name %>
 
 <% if project.archived? %>
   <span class="label label-warning"><%=t "search.index.archived" %></span>
@@ -12,9 +13,15 @@
   <% end %>
 <% else %>
   <% if can_view_project(project) %>
-    <a href="<%= canvas_project_path(project) %>">
-      <%= text %>
-    </a>
+    <% if link_to_page == :canvas %>
+      <a href="<%= canvas_project_path(project) %>">
+        <%= text %>
+      </a>
+    <%  else %>
+      <a href="<%= root_path %>">
+        <%= text %>
+      </a>
+    <% end %>
   <% else %>
     <%= text %>
   <% end %>

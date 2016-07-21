@@ -31,6 +31,9 @@
 
   &.leaf {
     padding-left: 30px;
+    .tree-link::before {
+      content: "\25B8";
+    }
   }
 
   & i.glyphicon {

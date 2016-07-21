@@ -1,14 +1,13 @@
-<% provide(:head_title, t("projects.reports.index.head_title", project: @project.name)) %>
+<% provide(:head_title, raw(t("projects.reports.index.head_title", project: @project.name))) %>
 <%= render partial: "shared/sidebar" %>
 <%= render partial: "shared/secondary_navigation" %>
 
-<div id="content">
+<div id="content"
+  data-reports-step-text="<%=t 'tutorial.reports_index_html' %>"
+  data-reports-click-new-report-step-text="<%=t 'tutorial.reports_index_click_new_report_html' %>">
   <div>
     <% if can_create_new_report(@project) %>
-      <%= link_to new_by_module_project_reports_path(@project), class: "btn btn-primary", id: "new-report-btn",
-        "data-step" => "10", "data-intro" => t("tutorial.reports_index_html") do %>
-      <%# TEMPORARY HIDDEN %>
-      <%#= link_to new_project_report_path(@project, format: :json), remote: true, class: "btn btn-primary pull-left", id: "new-report-btn" do %>
+      <%= link_to new_project_reports_path(@project), class: "btn btn-primary", id: "new-report-btn" do %>
         <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
         <span class="hidden-xs"><%=t "projects.reports.index.new" %></span>
       <% end %>
@@ -32,7 +31,6 @@
       <tr>
         <th><input type="checkbox" class="check-all-reports"></th>
         <th><%=t "projects.reports.index.thead_name" %></th>
-        <th><%=t "projects.reports.index.thead_grouped_by" %></th>
         <th><%=t "projects.reports.index.thead_created_by" %></th>
         <th><%=t "projects.reports.index.thead_last_modified_by" %></th>
         <th><%=t "projects.reports.index.thead_created_at" %></th>
@@ -50,7 +48,6 @@
             >
             <th><input type="checkbox" class="check-report"></th>
             <td><%= report.name %></td>
-            <td><%=t report.by_module? ? "projects.reports.index.table_grouped_by_module" : "projects.reports.index.table_grouped_by_timestamp" %></td>
             <td><%= report.user.full_name %></td>
             <td><%= report.last_modified_by ? report.last_modified_by.full_name : report.user.full_name %></td>
             <td><%=l report.created_at, format: :full %></td>
@@ -63,25 +60,6 @@
     </tbody>
   </table>
 
-</div>
-
-  <!-- New report modal -->
-<div class="modal" id="new-report-modal" tabindex="-1" role="dialog" aria-labelledby="new-report-modal-label">
-  <%= bootstrap_form_tag url: new_project_report_path, method: :get, enforce_utf8: false do |f| %>
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <h4 class="modal-title" id="new-report-modal-label"><%= t("projects.reports.index.modal_new.head_title") %></h4>
-        </div>
-        <div class="modal-body"></div>
-        <div class="modal-footer">
-          <%= f.button t("projects.reports.index.modal_new.create"), class: "btn btn-default", id: "create-new-report-btn", name: nil %>
-          <button type="button" class="btn btn-default" data-dismiss="modal"><%=t "general.cancel" %></button>
-        </div>
-      </div>
-    </div>
-  <% end %>
 </div>
 
 <!-- Save report modal -->

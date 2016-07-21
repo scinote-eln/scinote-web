@@ -5,7 +5,7 @@ def render_new_element(hide)
         locals: { hide: hide }
 end
 
-def render_report_element(element)
+def render_report_element(element, provided_locals = nil)
   children_html = "".html_safe
 
   # First, recursively render element's children
@@ -16,7 +16,7 @@ def render_report_element(element)
     if element.has_children?
       children_html.safe_concat render_new_element(true)
       element.children.each do |child|
-        children_html.safe_concat render_report_element(child)
+        children_html.safe_concat render_report_element(child, provided_locals)
       end
     else
       children_html.safe_concat render_new_element(false)
@@ -25,14 +25,17 @@ def render_report_element(element)
     if element.has_children?
       element.children.each do |child|
         children_html.safe_concat render_new_element(false)
-        children_html.safe_concat render_report_element(child)
+        children_html.safe_concat render_report_element(child, provided_locals)
       end
     end
     children_html.safe_concat render_new_element(false)
   end
 
   view = "reports/elements/#{element.type_of}_element.html.erb"
-  locals = { children: children_html }
+
+  locals = provided_locals.nil? ? {} : provided_locals.clone
+  locals[:children] = children_html
+
   if element.project_header?
     locals[:project] = element.element_reference
   elsif element.my_module?
@@ -70,6 +73,20 @@ def render_report_element(element)
   end
 
   return (render partial: view, locals: locals).html_safe
+end
+
+# "Hack" to omit file preview URL because of WKHTML issues
+def report_image_asset_url(asset)
+  prefix = (ENV["PAPERCLIP_STORAGE"].present? && ENV["MAIL_SERVER_URL"].present? && ENV["PAPERCLIP_STORAGE"] == "filesystem") ? ENV["MAIL_SERVER_URL"] : ""
+  prefix = (!prefix.empty? && !prefix.include?("http://") && !prefix.include?("https://")) ? "http://#{prefix}" : prefix
+  url = prefix + asset.file.url(:medium)
+  image_tag(url)
+end
+
+# "Hack" to load Glyphicons css directly from the CDN site so they work in report
+def bootstrap_cdn_link_tag
+  specs = Gem.loaded_specs["bootstrap-sass"]
+  specs.present? ? stylesheet_link_tag("http://netdna.bootstrapcdn.com/bootstrap/#{specs.version.version}/css/bootstrap.min.css", media: "all") : ""
 end
 
 end

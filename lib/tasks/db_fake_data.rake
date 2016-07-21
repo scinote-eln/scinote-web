@@ -1,6 +1,8 @@
 require "#{Rails.root}/app/utilities/users_generator"
+require "#{Rails.root}/app/utilities/renaming_util"
 require "#{Rails.root}/test/helpers/fake_test_helper"
 include UsersGenerator
+include RenamingUtil
 include FakeTestHelper
 
 namespace :db do
@@ -11,6 +13,8 @@ namespace :db do
   NR_SAMPLE_GROUPS = 20
   NR_CUSTOM_FIELDS = 20
   NR_SAMPLES = 100
+  NR_PROTOCOLS = 20
+  NR_PROTOCOL_KEYWORDS = 20
   NR_PROJECTS = 5
   NR_MODULE_GROUPS = 4
   NR_MODULES = 12
@@ -22,6 +26,10 @@ namespace :db do
   NR_MAX_USER_ORGANIZATIONS = 20
   RATIO_CUSTOM_FIELDS = 0.7
   RATIO_SAMPLE_CUSTOM_FIELDS = 0.6
+  RATIO_PROTOCOL_KEYWORDS = 0.3
+  THRESHOLD_PROTOCOL_IN_MODULE_LINKED = 0.5
+  THRESHOLD_PROTOCOL_PUBLIC = 0.6
+  THRESHOLD_PROTOCOL_ARCHIVED = 0.2
   NR_MAX_USER_PROJECTS = 30
   RATIO_USER_PROJECTS = 0.5
   RATIO_COMMENTS = 0.7
@@ -68,31 +76,31 @@ namespace :db do
 
       puts "Verbose? (Y/n)"
       res = $stdin.gets.to_s.downcase.strip
-      unless res.in?(["y", "n"]) then
+      unless res.in?(["", "y", "n"]) then
         puts "Invalid parameter, exiting"
         return
       end
-      verbose = res == "y"
+      verbose = res.in?(["", "y"])
 
       puts "Simple seeding? (Y/n)"
       res = $stdin.gets.to_s.downcase.strip
-      unless res.in?(["y", "n"]) then
+      unless res.in?(["", "y", "n"]) then
         puts "Invalid parameter, exiting"
         return
       end
-      simple = res == "y"
+      simple = res.in?(["", "y"])
 
       if simple
         puts "Choose the size of generated dataset(T - tiny, " +
-             "S - small, M - medium, L - large, H -huge)"
+             "s - small, m - medium, l - large, h -huge)"
         res = $stdin.gets.to_s.downcase.strip
-        unless res.in?(["t", "s", "m", "l", "h"]) then
+        unless res.in?(["", "t", "s", "m", "l", "h"]) then
           puts "Invalid parameter, exiting"
           return
         end
 
         case res
-          when "t"
+          when "", "t"
             factor = 0.5
           when "s"
             factor = 1
@@ -110,6 +118,8 @@ namespace :db do
         nr_sample_groups = NR_SAMPLE_GROUPS * factor
         nr_custom_fields = NR_CUSTOM_FIELDS * factor
         nr_samples = NR_SAMPLES * factor
+        nr_protocols = NR_PROTOCOLS * factor
+        nr_protocol_keywords = NR_PROTOCOL_KEYWORDS * factor
         nr_projects = NR_PROJECTS * factor
         nr_module_groups = NR_MODULE_GROUPS * factor
         nr_modules = NR_MODULES * factor
@@ -133,6 +143,10 @@ namespace :db do
         nr_custom_fields = $stdin.gets.to_i
         puts "Type in the number of seeded samples for each organization"
         nr_samples = $stdin.gets.to_i
+        puts "Type in the number of seeded protocols for each organization"
+        nr_protocols = $stdin.gets.to_i
+        puts "Type in the number of seeded protocol keywords for each organization"
+        nr_protocol_keywords = $stdin.gets.to_i
         puts "Type in the number of seeded projects for each organization"
         nr_projects = $stdin.gets.to_i
         puts "Type in the number of seeded workflows for each project"
@@ -272,6 +286,32 @@ namespace :db do
                     value: Faker::Team.state
                   )
                 end
+              end
+            end
+          end
+
+          puts "Generating fake protocol keywords"
+          all_organizations.find_each do |org|
+            taken_kw_names = []
+            for _ in 1..nr_protocol_keywords
+              begin
+                name = Faker::Book.genre
+              end while name.in? taken_kw_names
+              taken_kw_names << name
+              ProtocolKeyword.create(
+                organization: org,
+                name: name
+              )
+            end
+          end
+
+          puts "Generating fake repository protocols..."
+          all_organizations.find_each do |org|
+            for _ in 1..nr_protocols
+              protocol = generate_fake_protocol(org, nil, nr_steps, nr_comments)
+
+              if verbose then
+                puts "    Generated protocol #{protocol.name}"
               end
             end
           end
@@ -621,156 +661,10 @@ namespace :db do
             end
           end
 
-          puts "Generating fake module steps..."
+          puts "Generating fake module protocols..."
           Project.find_each do |project|
             project.my_modules.find_each do |my_module|
-              for i in 1..nr_steps
-                created_at = Faker::Time.backward(500)
-                completed = rand <= RATIO_STEP_COMPLETED
-                completed_on = completed ?
-                  Faker::Time.between(created_at, DateTime.now) : nil
-
-                step = Step.create(
-                  created_at: created_at,
-                  name: Faker::Hacker.ingverb,
-                  description: Faker::Hacker.say_something_smart,
-                  position: i - 1,
-                  completed: completed,
-                  user: pluck_random(my_module.users),
-                  my_module: my_module,
-                  completed_on: completed_on
-                )
-                Activity.create(
-                  type_of: :create_step,
-                  project: project,
-                  my_module: my_module,
-                  user: step.user,
-                  created_at: created_at,
-                  message: I18n.t(
-                    "activities.create_step",
-                    user: step.user.full_name,
-                    step: i,
-                    step_name: step.name
-                  )
-                )
-                if completed then
-                  Activity.create(
-                    type_of: :complete_step,
-                    project: project,
-                    my_module: my_module,
-                    user: step.user,
-                    created_at: completed_on,
-                    message: I18n.t(
-                      "activities.complete_step",
-                      user: step.user.full_name,
-                      step: i,
-                      step_name: step.name,
-                      completed: i,
-                      all: i
-                    )
-                  )
-                end
-
-                # Add checklists
-                for _ in 1..NR_MAX_STEP_ATTACHMENTS
-                  if rand <= RATIO_STEP_ATTACHMENTS then
-                    checklist = Checklist.create(
-                      name: Faker::Hacker.noun,
-                      step: step,
-                      created_by: step.user,
-                    )
-
-                    # Add checklist items
-                    for j in 1..NR_MAX_CHECKLIST_ITEMS
-                      if rand <= RATIO_CHECKLIST_ITEM then
-                        checked = rand <= RATIO_CHECKLIST_ITEM_CHECKED
-                        checked_on = Faker::Time.backward(500)
-                        ci = ChecklistItem.create(
-                          created_at: checked_on,
-                          text: Faker::Hipster.sentence,
-                          checklist: checklist,
-                          checked: checked,
-                          created_by: step.user
-                        )
-                        if checked then
-                          Activity.create(
-                            type_of: :check_step_checklist_item,
-                            project: project,
-                            my_module: my_module,
-                            user: step.user,
-                            created_at: checked_on,
-                            message: I18n.t(
-                              "activities.check_step_checklist_item",
-                              user: step.user.full_name,
-                              checkbox: ci.text,
-                              completed: j,
-                              all: j,
-                              step: i,
-                              step_name: step.name
-                            )
-                          )
-                        end
-                      end
-                    end
-                  end
-                end
-
-                # Add assets
-                for _ in 1..NR_MAX_STEP_ATTACHMENTS
-                  if rand <= RATIO_STEP_ATTACHMENTS then
-                    asset = Asset.create(
-                      file: generate_file(rand(MIN_FILE_SIZE..MAX_FILE_SIZE)),
-                      created_by: step.user
-                    )
-                    StepAsset.create(
-                      step: step,
-                      asset: asset
-                    )
-                  end
-                end
-
-                # Add tables
-                for _ in 1..NR_MAX_STEP_ATTACHMENTS
-                  if rand <= RATIO_STEP_ATTACHMENTS then
-                    table = Table.create(
-                      contents:
-                        generate_table_contents(rand(30), rand(150)),
-                      created_by: step.user
-                    )
-                    StepTable.create(
-                      step: step,
-                      table: table
-                    )
-                  end
-                end
-
-                # Add some comments
-                for _ in 1..nr_comments
-                  if rand <= RATIO_COMMENTS
-                    user = pluck_random(project.users)
-                    created_at = Faker::Time.backward(500)
-                    step.comments << Comment.create(
-                      user: user,
-                      message: Faker::Hipster.sentence,
-                      created_at: created_at
-                    )
-                    Activity.create(
-                      type_of: :add_comment_to_step,
-                      project: project,
-                      my_module: my_module,
-                      user: user,
-                      created_at: created_at,
-                      message: I18n.t(
-                        "activities.add_comment_to_step",
-                        user: user.full_name,
-                        step: i,
-                        step_name: step.name
-                      )
-                    )
-                  end
-                end
-
-              end
+              generate_fake_protocol(project.organization, my_module, nr_steps, nr_comments)
             end
           end
 
@@ -893,7 +787,6 @@ namespace :db do
 
               report = Report.create(
                 name: name,
-                grouped_by: 0,
                 description: Faker::Hipster.sentence,
                 project: project,
                 user: user
@@ -916,7 +809,7 @@ namespace :db do
                     my_module: my_module
                   )
 
-                  my_module.completed_steps.each do |step|
+                  my_module.protocol.completed_steps.each do |step|
                     if rand <= RATIO_REPORT_ELEMENTS then
                       re_step = ReportElement.create(
                         sort_order: rand <= 0.5 ? 0 : 1,
@@ -1061,8 +954,235 @@ namespace :db do
         ArgumentError, ActiveRecord::RecordNotSaved => e
         puts "Error seeding fake data, transaction reverted"
         puts "Output: #{e.inspect}"
+        puts e.backtrace.join("\n")
       end
     end
+  end
+
+  def generate_fake_protocol(
+    organization,
+    my_module,
+    nr_steps,
+    nr_comments
+  )
+    protocol = nil
+    if my_module.present?
+      protocol = my_module.protocol
+      users = my_module.users
+      author = pluck_random(users)
+      if rand <= THRESHOLD_PROTOCOL_IN_MODULE_LINKED &&
+        (parent = pluck_random(
+          organization.protocols.where(protocol_type: [
+            Protocol.protocol_types[:in_repository_private],
+            Protocol.protocol_types[:in_repository_public]
+          ]))
+        ).present?
+        protocol.protocol_type = :linked
+        protocol.added_by = author
+        protocol.parent = parent
+        protocol.parent_updated_at = parent.updated_at
+      else
+        protocol.protocol_type = :unlinked
+      end
+      protocol.my_module = my_module
+    else
+      protocol = Protocol.new
+      users = organization.users
+      author = pluck_random(users)
+      val = rand
+      if val > THRESHOLD_PROTOCOL_ARCHIVED
+        if val > THRESHOLD_PROTOCOL_PUBLIC
+          protocol.protocol_type = :in_repository_public
+          protocol.published_on = Faker::Time.backward(500)
+        else
+          protocol.protocol_type = :in_repository_private
+        end
+      else
+        protocol.protocol_type = :in_repository_archived
+        protocol.archived_by = author
+        protocol.archived_on = Faker::Time.backward(500)
+      end
+      protocol.added_by = author
+      protocol.authors = Faker::Book.author
+      protocol.description = Faker::Lorem.paragraph(2)
+    end
+    protocol.name = Faker::Hacker.ingverb
+    protocol.organization = organization
+
+    if protocol.invalid? then
+      rename_record(protocol, :name)
+    end
+
+    protocol.save!
+
+    organization.protocol_keywords.find_each do |kw|
+      if rand <= RATIO_PROTOCOL_KEYWORDS
+        ProtocolProtocolKeyword.create(
+          protocol: protocol,
+          protocol_keyword: kw
+        )
+      end
+    end
+
+    protocol.reload
+    if protocol.linked?
+      # For linked protocols, simply copy their parents' contents
+      protocol.load_from_repository(protocol.parent, author)
+    else
+      # Generate fake protocol data
+      for i in 1..nr_steps
+        created_at = Faker::Time.backward(500)
+        completed = protocol.in_repository? ? false : (rand <= RATIO_STEP_COMPLETED)
+        completed_on = completed ?
+          Faker::Time.between(created_at, DateTime.now) : nil
+
+        step = Step.create(
+          created_at: created_at,
+          name: Faker::Hacker.ingverb,
+          description: Faker::Hacker.say_something_smart,
+          position: i - 1,
+          completed: completed,
+          user: pluck_random(users),
+          protocol: protocol,
+          completed_on: completed_on
+        )
+        if protocol.in_module?
+          Activity.create(
+            type_of: :create_step,
+            project: my_module.project,
+            my_module: my_module,
+            user: step.user,
+            created_at: created_at,
+            message: I18n.t(
+              "activities.create_step",
+              user: step.user.full_name,
+              step: i,
+              step_name: step.name
+            )
+          )
+        end
+        if completed then
+          Activity.create(
+            type_of: :complete_step,
+            project: my_module.project,
+            my_module: my_module,
+            user: step.user,
+            created_at: completed_on,
+            message: I18n.t(
+              "activities.complete_step",
+              user: step.user.full_name,
+              step: i,
+              step_name: step.name,
+              completed: i,
+              all: i
+            )
+          )
+        end
+
+        # Add checklists
+        for _ in 1..NR_MAX_STEP_ATTACHMENTS
+          if rand <= RATIO_STEP_ATTACHMENTS then
+            checklist = Checklist.create(
+              name: Faker::Hacker.noun,
+              step: step,
+              created_by: step.user,
+            )
+
+            # Add checklist items
+            for j in 1..NR_MAX_CHECKLIST_ITEMS
+              if rand <= RATIO_CHECKLIST_ITEM then
+                checked = protocol.in_repository? ? false : (rand <= RATIO_CHECKLIST_ITEM_CHECKED)
+                checked_on = Faker::Time.backward(500)
+                ci = ChecklistItem.create(
+                  created_at: checked_on,
+                  text: Faker::Hipster.sentence,
+                  checklist: checklist,
+                  checked: checked,
+                  created_by: step.user
+                )
+                if checked then
+                  Activity.create(
+                    type_of: :check_step_checklist_item,
+                    project: my_module.project,
+                    my_module: my_module,
+                    user: step.user,
+                    created_at: checked_on,
+                    message: I18n.t(
+                      "activities.check_step_checklist_item",
+                      user: step.user.full_name,
+                      checkbox: ci.text,
+                      completed: j,
+                      all: j,
+                      step: i,
+                      step_name: step.name
+                    )
+                  )
+                end
+              end
+            end
+          end
+        end
+
+        # Add assets
+        for _ in 1..NR_MAX_STEP_ATTACHMENTS
+          if rand <= RATIO_STEP_ATTACHMENTS then
+            asset = Asset.create(
+              file: generate_file(rand(MIN_FILE_SIZE..MAX_FILE_SIZE)),
+              created_by: step.user
+            )
+            StepAsset.create(
+              step: step,
+              asset: asset
+            )
+          end
+        end
+
+        # Add tables
+        for _ in 1..NR_MAX_STEP_ATTACHMENTS
+          if rand <= RATIO_STEP_ATTACHMENTS then
+            table = Table.create(
+              contents:
+                generate_table_contents(rand(30), rand(150)),
+              created_by: step.user
+            )
+            StepTable.create(
+              step: step,
+              table: table
+            )
+          end
+        end
+
+        # Add some comments (only on protocols on module)
+        if protocol.in_module? then
+          for _ in 1..nr_comments
+            if rand <= RATIO_COMMENTS
+              user = pluck_random(users)
+              created_at = Faker::Time.backward(500)
+              step.comments << Comment.create(
+                user: user,
+                message: Faker::Hipster.sentence,
+                created_at: created_at
+              )
+              Activity.create(
+                type_of: :add_comment_to_step,
+                project: my_module.project,
+                my_module: my_module,
+                user: user,
+                created_at: created_at,
+                message: I18n.t(
+                  "activities.add_comment_to_step",
+                  user: user.full_name,
+                  step: i,
+                  step_name: step.name
+                )
+              )
+            end
+          end
+        end
+      end
+    end
+
+    return protocol.reload
   end
 
   def shuffle_report_elements(report_elements)

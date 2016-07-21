@@ -1,0 +1,46 @@
+<% provide(:head_title, raw(t("my_modules.protocols.head_title", project: @project.name, module: @my_module.name))) %>
+<%= render partial: "shared/sidebar" %>
+<%= render partial: "shared/secondary_navigation" %>
+
+<%= render partial: "module_header" %>
+
+<div>
+  <div data-role="protocol-status-bar" style="display: inline;">
+    <%= render partial: "my_modules/protocols/protocol_status_bar.html.erb" %>
+  </div>
+  <%= render partial: "my_modules/protocols/protocol_buttons.html.erb" %>
+</div>
+
+<div data-role="steps-container">
+  <%= render partial: "protocols/steps.html.erb" %>
+</div>
+
+<!-- Tutorial data -->
+<div class="hidden" data-role="tutorial-data" data-module-id="<%= @my_module.id %>"
+  data-module-protocols-step-text="<%=t 'tutorial.module_protocols_html' %>"
+  data-module-protocols-click-results-step-text="<%=t 'tutorial.module_protocols_click_results_html' %>">
+</div>
+
+<!-- URL for status bar refreshing -->
+<div class="hidden" data-role="protocol-status-bar-url" data-url="<%= protocol_status_bar_protocol_path(@protocol) %>"></div>
+
+<!-- Edit description modal -->
+<%= render partial: "my_modules/modals/manage_description_modal" %>
+
+<!-- Edit due date modal -->
+<%= render partial: "my_modules/modals/manage_due_date_modal" %>
+
+<!-- Confirm link update modal -->
+<%= render partial: "my_modules/protocols/confirm_link_update_modal.html.erb" %>
+
+<!-- Load from repository modal -->
+<%= render partial: "my_modules/protocols/load_from_repository_modal.html.erb" %>
+
+<!-- Copy to repository protocol modal -->
+<%= render partial: "my_modules/protocols/copy_to_repository_modal.html.erb" %>
+
+<!-- Import protocol elements -->
+<%= render partial: "protocols/import_export/import_elements.html.erb" %>
+
+<%= stylesheet_link_tag 'datatables' %>
+<%= javascript_include_tag("my_modules/protocols") %>

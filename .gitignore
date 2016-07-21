@@ -22,9 +22,6 @@
 # Ignore gems etc. if built in bundle
 /vendor/bundle
 
-# Ignore any PDFs
-*.pdf
-
 # Ignore custom wmake user file
 wmake.sh
 
@@ -32,8 +29,14 @@ wmake.sh
 Thumbs.db
 ehthumbs.db
 
+# Byebug temp file
+/.byebug_history
+
 # Ignore temporary files
 public/system/*
+
+# Ignore robots.txt
+public/robots.txt
 
 tags
 *.orig

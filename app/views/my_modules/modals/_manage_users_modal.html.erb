@@ -7,6 +7,14 @@
       </div>
       <div class="modal-body"></div>
       <div class="modal-footer">
+        <span class="pull-left">
+          <% if is_admin_of_organization(@project.organization) %>
+            <%= link_to t("projects.canvas.full_zoom.modal_manage_users.invite_users_link"), organization_path(organization_id: @project.organization.id) %>
+            <span><%=t "projects.canvas.full_zoom.modal_manage_users.invite_users_details", organization: @project.organization.name %></span>
+          <% else %>
+            <i><%=t "projects.canvas.full_zoom.modal_manage_users.contact_admins", organization: @project.organization.name %></i>
+          <% end %>
+        </span>
         <button type="button" class="btn btn-default" data-dismiss="modal"><%=t "general.close" %></button>
       </div>
     </div>

@@ -61,3 +61,30 @@ forms
   // Render form errors
   $(this).render_form_errors("user", data.responseJSON);
 });
+
+var repeatTutorialModal = $("#repeat-tutorial-modal");
+var repeatTutorialModalBody = repeatTutorialModal.find(".modal-body");
+initRepeatTutorialModal();
+
+$("#reset-tutorial-btn")
+  .on("ajax:before", function () {
+    repeatTutorialModal.modal('show');
+  })
+
+  .on("ajax:success", function (e, data) {
+    initRepeatTutorialModalBody(data);
+  });
+
+function initRepeatTutorialModal() {
+// Remove modal content when modal window is closed.
+  repeatTutorialModal.on("hidden.bs.modal", function () {
+    repeatTutorialModalBody.html("");
+  });
+}
+
+// Initialize ajax listeners and elements style on modal body. This
+// function must be called when modal body is changed.
+function initRepeatTutorialModalBody(data) {
+  repeatTutorialModalBody.html(data.html);
+  repeatTutorialModalBody.find(".selectpicker").selectpicker();
+}

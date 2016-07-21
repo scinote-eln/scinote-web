@@ -131,8 +131,8 @@ namespace :db do
 
         puts ""
       end
-    rescue ActiveRecord::ActiveRecordError, ArgumentError, ActiveRecord::RecordNotSaved
-      puts "Error creating user, transaction reverted"
+    rescue ActiveRecord::ActiveRecordError, ArgumentError, ActiveRecord::RecordNotSaved => e
+      puts "Error creating user, transaction reverted: #{$!}"
     end
   end
 end

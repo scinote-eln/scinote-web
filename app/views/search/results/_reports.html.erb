@@ -8,7 +8,7 @@
     <span>
       <%=t "search.index.description" %>
       <% if report.description.present? %>
-        <%= highlight report.description, @search_query  %>
+        <%= highlight report.description, @search_query.strip.split(/\s+/)  %>
       <% else %>
         <em><%=t "search.index.no_description" %></em>
       <% end %>
@@ -16,7 +16,7 @@
     <br>
     <span>
       <%=t "search.index.created_by" %>
-      <%= highlight report.user.full_name, @search_query %>
+      <%= highlight report.user.full_name, @search_query.strip.split(/\s+/) %>
     </span>
     <br>
     <span>
@@ -26,7 +26,7 @@
     <br>
     <span>
       <%=t "search.index.last_modified_by" %>
-      <%= highlight report.last_modified_by.full_name, @search_query %>
+      <%= highlight report.last_modified_by.full_name, @search_query.strip.split(/\s+/) %>
     </span>
     <br>
     <span>

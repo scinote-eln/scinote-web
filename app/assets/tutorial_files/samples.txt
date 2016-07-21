@@ -1,0 +1,4 @@
+Sample name	Sample type
+sample6	sample
+sample7	sample
+sample8	sample

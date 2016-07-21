@@ -3,9 +3,25 @@
     <%= l activity.created_at, format: '%H:%M' %>
   </span>
   <span class="activity-item-text">
-    <%= activity.message.html_safe %>
+    <%= activity_truncate( activity.message ) %>
     <% if activity.my_module %>
-      [project: <%= activity.my_module.project.name %>, module: <%= activity.my_module.name %>]
+      [<%=t 'Project' %>:
+      <% if activity.my_module.project.name.length > 20 %>
+        <div class="modal-tooltip">
+          <%= truncate(activity.my_module.project.name, lenght: 20).strip %>
+          <span class="modal-tooltiptext"><%= activity.my_module.project.name %></span>
+        </div>
+      <% else %>
+        <%= activity.my_module.project.name %>
+      <% end %>, <%=t 'Module' %>:
+      <% if activity.my_module.name.length > 20 %>
+        <div class="modal-tooltip"><%= truncate(activity.my_module.name, lenght: 20) %>
+          <span class="modal-tooltiptext"><%= activity.my_module.name %></span>
+        </div>
+      <% else %>
+        <%= activity.my_module.name %>
+      <% end %>
+      ]
     <% end %>
   </span>
 </li>

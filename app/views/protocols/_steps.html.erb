@@ -1,0 +1,32 @@
+<div class="row">
+  <div class="pull-right" style="margin: 20px 15px 0 0;">
+    <% if can_create_step_in_protocol(@protocol) %>
+      <a class="btn btn-primary" data-action="new-step" href="<%= new_protocol_step_path(protocol_id: @protocol.id, format: :json) %>" data-remote="true">
+        <%= t("protocols.steps.new_step") %>
+      </a>
+    <% end %>
+    <a class="btn btn-greyed" data-action="collapse-steps">
+      <span class="glyphicon glyphicon-collapse-up"></span>
+      <span class="hidden-xs"><%= t("protocols.steps.collapse_label") %></a></span>
+    <a class="btn btn-greyed" data-action="expand-steps">
+      <span class="glyphicon glyphicon-collapse-down"></span>
+      <span class="hidden-xs"><%= t("protocols.steps.expand_label") %></a></span>
+  </div>
+
+  <div class="col-xs-4">
+    <h2><%= t("protocols.steps.subtitle") %></h2>
+  </div>
+</div>
+
+<div id="steps">
+  <% @protocol.steps.order(:position).each do |step| %>
+    <%= render partial: "steps/step.html.erb", locals: { step: step } %>
+  <% end %>
+</div>
+<% if @protocol.steps.count == 0 %>
+  <div data-role="no-steps-text">
+    <em><%= t("protocols.steps.no_steps") %></em>
+  </div>
+<% end %>
+
+<%= javascript_include_tag "protocols/steps" %>

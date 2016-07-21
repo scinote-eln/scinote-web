@@ -1,20 +1,32 @@
 <% query ||= nil %>
-<% text = query.present? ? highlight(result.name, query) : result.name %>
+<% text = query.present? ? highlight(result.name, query.strip.split(/\s+/)) : result.name %>
 
 <% if result.archived? %>
   <span class="label label-warning"><%=t "search.index.archived" %></span>
   <% if can_view_module_archive(result.my_module) %>
+    <% if target == :comment %>
+    <%= link_to archive_my_module_path(result.my_module, ctarget: "result-panel-#{result.id}") do %>
+      <%= text %>
+    <% end %>
+    <% else %>
     <a href="<%= archive_my_module_path(result.my_module) %>">
       <%= text %>
     </a>
+    <% end %>
   <% else %>
     <%= text %>
   <% end %>
 <% else %>
   <% if can_view_results_in_module(result.my_module) %>
+    <% if target == :comment %>
+    <%= link_to results_my_module_path(result.my_module, ctarget: "result-panel-#{result.id}") do %>
+      <%= text %>
+    <% end %>
+    <% else %>
     <a href="<%= results_my_module_path(result.my_module) %>">
       <%= text %>
     </a>
+    <% end %>
   <% else %>
     <%= text %>
   <% end %>

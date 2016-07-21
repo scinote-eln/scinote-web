@@ -9,6 +9,6 @@
   data-module-y="<%= my_module.y %>"
   data-module-conns="<%= construct_module_connections(my_module) %>">
   <span>
-    <%= link_to_if can_view_module(my_module), my_module.name[0], steps_my_module_path(my_module) %>
+    <%= link_to_if can_view_module(my_module), my_module.name[0], protocols_my_module_path(my_module) %>
   </span>
 </div>

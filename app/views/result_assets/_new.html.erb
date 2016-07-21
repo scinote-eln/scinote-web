@@ -5,9 +5,9 @@
       <%= ff.file_field :file %>
     <% end %>
     <% if direct_upload %>
-    <%= f.submit t("result_assets.new.create"), class: 'btn btn-primary', onclick: 'startFileUpload(event, this);' %>
+    <%= f.submit t("result_assets.new.create"), class: 'btn btn-primary', onclick: 'animateSpinner(); startFileUpload(event, this);' %>
     <% else %>
-    <%= f.submit t("result_assets.new.create"), class: 'btn btn-primary' %>
+    <%= f.submit t("result_assets.new.create"), class: 'btn btn-primary', onclick: 'animateSpinner();' %>
     <% end %>
     <button type="button" class="btn btn-default cancel-new">
       <%= t("general.cancel")%>

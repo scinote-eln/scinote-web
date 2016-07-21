@@ -1,6 +1,6 @@
 class AssetsController < ApplicationController
   before_action :load_vars, except: [:signature]
-  before_action :check_read_permission, except: [:signature]
+  before_action :check_read_permission, except: [:signature, :file_present]
 
   def signature
     respond_to do |format|
@@ -35,17 +35,42 @@ class AssetsController < ApplicationController
     end
   end
 
+  def file_present
+    respond_to do |format|
+      format.json {
+        if @asset.file_present
+          # Only if file is present,
+          # check_read_permission
+          check_read_permission
+
+          # If check_read_permission already rendered error,
+          # stop execution
+          if performed? then
+            return
+          end
+
+          # If check permission passes, return :ok
+          render json: {}, status: 200
+        else
+          render json: {}, status: 404
+        end
+      }
+    end
+  end
+
   def preview
     if @asset.is_image?
       url = @asset.file.url :medium
-      redirect_to url, status: 307     
+      redirect_to url, status: 307
     else
       render_400
     end
   end
 
   def download
-    if @asset.file.is_stored_on_s3?
+    if !@asset.file_present
+      render_404 and return
+    elsif @asset.file.is_stored_on_s3?
       redirect_to @asset.presigned_url, status: 307
     else
       send_file @asset.file.path, filename: @asset.file_file_name,
@@ -68,19 +93,21 @@ class AssetsController < ApplicationController
     @assoc = step_assoc if not step_assoc.nil?
     @assoc = result_assoc if not result_assoc.nil?
 
-    @my_module = @assoc.my_module
-    @project = @my_module.project
+    if @assoc.class == Step
+      @protocol = @asset.step.protocol
+    else
+      @my_module = @assoc.my_module
+    end
   end
 
   def check_read_permission
-
     if @assoc.class == Step
-      unless can_download_step_assets(@my_module)
-        render_403
+      unless can_view_or_download_step_assets(@protocol)
+        render_403 and return
       end
     elsif @assoc.class == Result
-      unless can_download_result_assets(@my_module)
-        render_403
+      unless can_view_or_download_result_assets(@my_module)
+        render_403 and return
       end
     end
   end
@@ -92,14 +119,14 @@ class AssetsController < ApplicationController
       success_action_status: '201',
       acl: 'private',
       storage_class: "STANDARD",
-      content_length_range: 1..(1024*1024*50),
+      content_length_range: 1..(FILE_SIZE_LIMIT.megabytes),
       content_type: asset.file_content_type
     )
     posts.push({
       url: s3_post.url,
       fields: s3_post.fields
     })
-    
+
     if (asset.file_content_type =~ /^image\//) == 0
       asset.file.options[:styles].each do |style, option|
         s3_post = S3_BUCKET.presigned_post(
@@ -107,7 +134,7 @@ class AssetsController < ApplicationController
           success_action_status: '201',
           acl: 'public-read',
           storage_class: "REDUCED_REDUNDANCY",
-          content_length_range: 1..(1024*1024*50),
+          content_length_range: 1..(FILE_SIZE_LIMIT.megabytes),
           content_type: asset.file_content_type
         )
         posts.push({
@@ -121,5 +148,5 @@ class AssetsController < ApplicationController
 
     posts
   end
-end
 
+end

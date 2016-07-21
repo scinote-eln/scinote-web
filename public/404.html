@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= t("not_found.title") %></title>
+    <title>This page could not be found (404).</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <style>
       body {
@@ -58,14 +58,14 @@
     <!-- This file lives in public/404.html -->
     <div class="dialog">
       <div>
-        <h1><%= t("not_found.title") %></h1>
-        <p><%= t("not_found.notice") %></p>
+        <h1>This page could not be found (404).</h1>
+        <p>You may have mistyped the address or the page may have moved.</p>
       </div>
       <p>
-        <%= t("not_found.help") %><br />
-        <%= t("not_found.go_back") %>
-        <%= link_to t("not_found.homepage"), root_path %>,
-        <%= link_to t("not_found.try_searching"), new_search_path %>
+        If you are the application owner check the logs for more information.
+        You can go back to
+        <a href="/">home page</a>
+        <a href="/search/new">or try searching.</a>
       </p>
     </div>
   </body>

@@ -74,6 +74,7 @@ table = $("#samples").DataTable({
     fnDrawCallback: function(settings, json) {
         animateSpinner(this, false);
         changeToViewMode();
+        updateButtons();
     },
     stateLoadParams: function(settings, data) {
         // Check if URL parameters contain the column to show, if so, display it
@@ -107,6 +108,9 @@ table = $("#samples").DataTable({
 });
 
 table.buttons().container().appendTo('#datatables-buttons');
+
+// Enables noSearchHidden plugin
+$.fn.dataTable.defaults.noSearchHidden = true
 
 // Append button to inner toolbar in table
 $("div.toolbarButtons").appendTo("div.toolbar");
@@ -280,6 +284,7 @@ function onClickEdit() {
 
     clearAllErrors();
     changeToEditMode();
+    updateButtons();
     saveAction = "update";
 
     $.ajax({
@@ -333,6 +338,7 @@ function onClickEdit() {
             if (e.status == 403) {
                 showAlertMessage(I18n.t("samples.js.permission_error"));
                 changeToViewMode();
+                updateButtons();
             }
         }
     });
@@ -401,10 +407,12 @@ function onClickSave() {
             if (e.status == 404) {
                 showAlertMessage(I18n.t("samples.js.not_found_error"));
                 changeToViewMode();
+                updateButtons();
             }
             else if (e.status == 403) {
                 showAlertMessage(I18n.t("samples.js.permission_error"));
                 changeToViewMode();
+                updateButtons();
             }
             else if (e.status == 400) {
                 if (data["init_fields"]) {
@@ -451,29 +459,71 @@ function onClickSave() {
 
 // Enable/disable edit button
 function updateButtons() {
-    if (rowsSelected.length == 1) {
-        $("#editSample").prop("disabled", false);
-        $("#deleteSamplesButton").prop("disabled", false);
-        $("#exportSamplesButton").removeAttr("disabled");
-        $("#exportSamplesButton").on("click", function() { $('#form-export').submit(); });
-        $("#assignSamples").prop("disabled", false);
-        $("#unassignSamples").prop("disabled", false);
+    if (currentMode=="viewMode") {
+        $("#importSamplesButton").removeClass("disabled");
+        $("#importSamplesButton").prop("disabled",false);
+        $("#addSample").removeClass("disabled");
+        $("#addSample").prop("disabled",false);
+        $("#addNewColumn").removeClass("disabled");
+        $("#addNewColumn").prop("disabled",false);
+
+        if (rowsSelected.length == 1) {
+            $("#editSample").prop("disabled", false);
+            $("#editSample").removeClass("disabled");
+            $("#deleteSamplesButton").prop("disabled", false);
+            $("#deleteSamplesButton").removeClass("disabled");
+            $("#exportSamplesButton").removeClass("disabled");
+            $("#exportSamplesButton").prop("disabled",false);
+            $("#exportSamplesButton").on("click", function() { $('#form-export').submit(); });
+            $("#assignSamples").removeClass("disabled");
+            $("#assignSamples").prop("disabled", false);
+            $("#unassignSamples").removeClass("disabled");
+            $("#unassignSamples").prop("disabled", false);
+        }
+        else if (rowsSelected.length == 0) {
+            $("#editSample").prop("disabled", true);
+            $("#editSample").addClass("disabled");
+            $("#deleteSamplesButton").prop("disabled", true);
+            $("#deleteSamplesButton").addClass("disabled");
+            $("#exportSamplesButton").addClass("disabled");
+            $("#exportSamplesButton").prop("disabled",true);
+            $("#exportSamplesButton").off("click");
+            $("#assignSamples").addClass("disabled");
+            $("#assignSamples").prop("disabled", true);
+            $("#unassignSamples").addClass("disabled");
+            $("#unassignSamples").prop("disabled", true);
+        }
+        else {
+            $("#editSample").prop("disabled", true);
+            $("#editSample").addClass("disabled");
+            $("#deleteSamplesButton").prop("disabled", false);
+            $("#deleteSamplesButton").removeClass("disabled");
+            $("#exportSamplesButton").removeClass("disabled");
+            $("#exportSamplesButton").prop("disabled",false);
+            $("#exportSamplesButton").on("click", function() { $('#form-export').submit(); });
+            $("#assignSamples").removeClass("disabled");
+            $("#assignSamples").prop("disabled", false);
+            $("#unassignSamples").removeClass("disabled");
+            $("#unassignSamples").prop("disabled", false);
+        }
     }
-    else if (rowsSelected.length === 0) {
-        $("#editSample").prop("disabled", true);
-        $("#deleteSamplesButton").prop("disabled", true);
-        $("#exportSamplesButton").attr("disabled", "disabled");
-        $("#exportSamplesButton").off("click");
-        $("#assignSamples").prop("disabled", true);
-        $("#unassignSamples").prop("disabled", true);
-    }
-    else {
-        $("#editSample").prop("disabled", true);
-        $("#deleteSamplesButton").prop("disabled", false);
-        $("#exportSamplesButton").removeAttr("disabled");
-        $("#exportSamplesButton").on("click", function() { $('#form-export').submit(); });
-        $("#assignSamples").prop("disabled", false);
-        $("#unassignSamples").prop("disabled", false);
+    else if (currentMode=="editMode") {
+            $("#importSamplesButton").addClass("disabled");
+            $("#importSamplesButton").prop("disabled",true);
+            $("#addSample").addClass("disabled");
+            $("#addSample").prop("disabled",true);
+            $("#editSample").addClass("disabled");
+            $("#editSample").prop("disabled",true);
+            $("#addNewColumn").addClass("disabled");
+            $("#addNewColumn").prop("disabled", true);
+            $("#exportSamplesButton").addClass("disabled");
+            $("#exportSamplesButton").off("click");
+            $("#deleteSamplesButton").addClass("disabled");
+            $("#deleteSamplesButton").prop("disabled",true);
+            $("#assignSamples").addClass("disabled");
+            $("#assignSamples").prop("disabled", true);
+            $("#unassignSamples").addClass("disabled");
+            $("#unassignSamples").prop("disabled", true);
     }
 }
 
@@ -499,6 +549,7 @@ function onClickCancel() {
 
 function onClickAddSample() {
     changeToEditMode();
+    updateButtons();
 
     saveAction = "create";
     $.ajax({
@@ -561,6 +612,7 @@ function onClickAddSample() {
             if (e.status == 403)
                 showAlertMessage(I18n.t("samples.js.permission_error"));
             changeToViewMode();
+            updateButtons();
         }
     });
 
@@ -641,10 +693,6 @@ function changeToViewMode() {
 
     // $("#saveCancel").hide();
 
-    $(".editAdd").removeClass("disabled");
-    $("#addNewColumn").removeClass("disabled");
-    $("#exportSamples").removeClass("disabled");
-
     // Table specific stuff
     table.button(0).enable(true);
 }
@@ -653,10 +701,6 @@ function changeToEditMode() {
     currentMode = "editMode";
 
     // $("#saveCancel").show();
-
-    $(".editAdd").addClass("disabled");
-    $("#addNewColumn").addClass("disabled");
-    $("#exportSamples").addClass("disabled");
 
     // Table specific stuff
     table.button(0).enable(false);

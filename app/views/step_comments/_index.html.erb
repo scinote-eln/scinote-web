@@ -1,4 +1,4 @@
-<h5 class="text-center"><%= t('my_modules.steps.comments_tab') %></h5>
+<h5 class="text-center"><%= t('protocols.steps.comments_tab') %></h5>
 <hr>
 <ul class="no-style double-line content-comments">
   <% if @comments.size == 0 then %>
@@ -14,7 +14,7 @@
   </li>
   <% end %>
 </ul>
-<% if can_add_step_comment_in_module(@my_module) %>
+<% if can_add_step_comment_in_protocol(@protocol) %>
   <ul class="no-style double-line">
     <li>
       <hr>

@@ -1,0 +1,5 @@
+<% if @protocol.description.present? %>
+  <strong><%= @protocol.description %></strong>
+<% else %>
+  <em><%= t("protocols.header.no_description") %></em>
+<% end %>

@@ -1,4 +1,5 @@
 class Checklist < ActiveRecord::Base
+  include SearchableModel
   validates :name,
     presence: true,
     length: { maximum: 50 }
@@ -18,11 +19,36 @@ class Checklist < ActiveRecord::Base
     reject_if: :all_blank,
     allow_destroy: true
 
-  # TODO: get the current_user
-  # before_save do
-  #   if current_user
-  #     self.created_by ||= current_user
-  #     self.last_modified_by = current_user if self.changed?
-  #   end
-  # end
+  def self.search(user, include_archived, query = nil, page = 1)
+    step_ids =
+      Step
+      .search(user, include_archived, nil, SHOW_ALL_RESULTS)
+      .select("id")
+
+    if query
+      a_query = query.strip
+      .gsub("_","\\_")
+      .gsub("%","\\%")
+      .split(/\s+/)
+      .map {|t|  "%" + t + "%" }
+    else
+      a_query = query
+    end
+
+    new_query = Checklist
+        .distinct
+        .where("checklists.step_id IN (?)", step_ids)
+        .joins("LEFT JOIN checklist_items ON checklists.id = checklist_items.checklist_id")
+        .where_attributes_like(["checklists.name",  "checklist_items.text"], a_query)
+
+    # Show all results if needed
+    if page == SHOW_ALL_RESULTS
+      new_query
+    else
+      new_query
+        .limit(SEARCH_LIMIT)
+        .offset((page - 1) * SEARCH_LIMIT)
+    end
+  end
+
 end

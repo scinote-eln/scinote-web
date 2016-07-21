@@ -57,7 +57,6 @@ class ResultTest < ActiveSupport::TestCase
     result.asset = assets(:one)
     assert_not result.valid? "Result should not be valid with both result_text and asset."
 
-    result.asset = nil
     result.table = Table.new(contents: "test")
     assert_not result.valid?, "Result should not be valid with all types assigned."
   end

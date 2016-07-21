@@ -2,7 +2,7 @@
 <% asset = result.asset %>
 <% is_image = result.asset.is_image? %>
 <% comments = result.comments %>
-<% timestamp = asset.updated_at %>
+<% timestamp = asset.created_at %>
 <% name = result.name %>
 <% icon_class = is_image ? "glyphicon-picture" : "glyphicon-file" %>
 <div class="report-element report-result-element report-result-asset-element" data-ts="<%= timestamp.to_i %>" data-type="result_asset" data-id="<%= result.id %>" data-modal-title="<%=t "projects.reports.elements.modals.result_contents.head_title", result: result.name %>" data-name="<%= name %>" data-icon-class="<%= icon_class %>">
@@ -15,7 +15,7 @@
         <%= name %>
       </div>
       <div class="pull-left file-name">
-        <em><%=t "projects.reports.elements.result_asset.file_name", file: asset.file_file_name %></em>
+        <em><%=t "projects.reports.elements.result_asset.file_name", file: truncate( asset.file_file_name, length: 50 ) %></em>
       </div>
       <div class="pull-left user-time">
         <%=t "projects.reports.elements.result_asset.user_time", user: result.user.full_name, timestamp: l(timestamp, format: :full) %>
@@ -25,15 +25,16 @@
       </div>
     </div>
   </div>
-  <div class="report-element-body">
-    <% if is_image %>
-      <div class="row">
-        <div class="col-xs-12 file-image">
-          <%= image_tag preview_asset_path asset %>
+  <div class="row"></div>
+  <% if is_image %>
+    <div class="report-element-body">
+        <div class="row">
+          <div class="col-xs-12 file-image">
+            <%= report_image_asset_url(asset) %>
+          </div>
         </div>
-      </div>
-    <% end %>
-  </div>
+    </div>
+  <% end %>
   <div class="report-element-children">
     <%= children if (defined? children and children.present?) %>
   </div>

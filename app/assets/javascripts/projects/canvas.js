@@ -128,7 +128,7 @@ jsPlumb.ready(function () {
   bindWindowResizeEvent();
   initializeGraph(".diagram .module-large");
   initializeFullZoom();
-  initializeTutorial();
+  initializeTutorial(false);
 });
 
 //************************************
@@ -224,42 +224,7 @@ function initializeEdit() {
     );
   });
 
-  // Add edit canvas tutorial step and show it
-  if (showTutorial() && Cookies.get('current_tutorial_step') == '4') {
-    var editWorkflowTutorial = $("#canvas-container").attr("data-edit-workflow-step-text");
-    Cookies.set('current_tutorial_step', '5');
-    $(".introjs-overlay").remove();
-    $(".introjs-helperLayer").remove();
-    $(".introjs-tooltipReferenceLayer").remove();
-
-    introJs()
-      .setOptions({
-        steps: [{
-          intro: editWorkflowTutorial
-        }],
-        overlayOpacity: '0.1',
-        doneLabel: 'End tutorial',
-        showBullets: false,
-        showStepNumbers: false,
-        tooltipClass: 'custom disabled-next'
-      })
-      .start();
-
-    $(".introjs-overlay").addClass("introjs-no-overlay");
-    var positionLeft = $(".introjs-tooltipReferenceLayer").position().left / 4;
-    $(".introjs-tooltipReferenceLayer")
-      .addClass("bring-to-front")
-      .css({ left: positionLeft + 'px' });
-
-    // Destroy first-time tutorial cookies when skip tutorial
-    // or end tutorial is clicked
-    $(".introjs-skipbutton").each(function (){
-      $(this).click(function (){
-        Cookies.remove('tutorial_data');
-        Cookies.remove('current_tutorial_step');
-      });
-    });
-  }
+  initializeTutorial(true);
 }
 
 function destroyEdit() {
@@ -408,6 +373,17 @@ function destroySmallZoom() {
  * @param activate - True to activate events; false
  * to deactivate them.
  */
+
+var canHammer = function(recognizer, event) {
+    event = event || window.event;
+    if (event==null) {
+      return false;
+    }
+    var result = (event.target instanceof HTMLInputElement && event.target.type == 'text');
+    return !result;
+  }
+
+
 function toggleCanvasEvents(activate) {
   var cmd = "pause";
   if (activate) {
@@ -415,7 +391,7 @@ function toggleCanvasEvents(activate) {
   }
   $("#diagram-container").eventPause(cmd,
     "mousedown mouseup mouseout mousewheel touchstart touchend touchcancel touchmove");
-  hammertime.get('pinch').set({ enable: activate });
+  hammertime.get('pinch').set({ enable: canHammer });
 }
 
 /**
@@ -932,6 +908,14 @@ function bindEditTagsAjax(elements) {
         var li = $this.parents("li.list-group-item");
         var editDiv = $(li.find("div.tag-edit"));
 
+        // Revert all rows to their original states
+        manageTagsModalBody.find("li.list-group-item").each(function(){
+          var li = $(this);
+          li.css("background-color", li.data("color"));
+          li.find(".edit-tag-form").clear_form_errors();
+          li.find("input[type=text]").val(li.data("name"));
+        });
+
         // Hide all other edit divs, show all show divs
         manageTagsModalBody.find("div.tag-edit").hide();
         manageTagsModalBody.find("div.tag-show").show();
@@ -947,7 +931,6 @@ function bindEditTagsAjax(elements) {
         // Change background of the <li>
         var $this = $(this);
         var li = $this.parents("li.list-group-item");
-
         li.css("background-color", $this.data("value"));
       });
     manageTagsModalBody.find(".remove-tag-link")
@@ -991,27 +974,30 @@ function bindEditTagsAjax(elements) {
   manageTagsModalBody = manageTagsModal.find(".modal-body");
 
   // Reload tags HTML element when modal is closed
-  manageTagsModal.on("hide.bs.modal", function () {
-    var moduleEl = $("#" + $(this).attr("data-module-id"));
+  manageTagsModal.on("hide.bs.modal", function(){
+    var tasks = $("div.panel");
 
-    // Load HTML
-    $.ajax({
-      url: moduleEl.attr("data-module-tags-url"),
-      type: "GET",
-      dataType: "json",
-      success: function (data) {
-        moduleEl.find(".edit-tags-link").html(data.html_canvas);
-      },
-      error: function (data) {
-        // TODO
-      }
+    tasks.each(function(){
+      var task = $(this);
+      // Load HTML
+      $.ajax({
+        url: task.attr("data-module-tags-url"),
+        type: "GET",
+        dataType: "json",
+        success: function(data){
+          task.find(".edit-tags-link")
+          .html(data.html_canvas);
+        },
+        error: function(data){
+          // TODO
+        }
+      })
     });
   });
 
   // Remove modal content when modal window is closed.
   manageTagsModal.on("hidden.bs.modal", function () {
     manageTagsModalBody.html("");
-
   });
 
   // initialize my_module tab remote loading
@@ -1024,6 +1010,9 @@ function bindEditTagsAjax(elements) {
   .on("ajax:success", function (e, data) {
     $("#manage-module-tags-modal-module").text(data.my_module.name);
     initTagsModalBody(data);
+  })
+  .on('click', function(){
+    $(this).addClass('updated-module-tags');
   });
 }
 
@@ -1354,10 +1343,12 @@ function updateModuleHtml(module, id, name, gridDistX, gridDistY) {
   if (_.isEqual($("#update-canvas").data("can-reposition-modules"), "yes")) {
     addDraggablesToInstance(module, gridDistX, gridDistY);
   }
+
   if (_.isEqual($("#update-canvas").data("can-edit-connections"), "yes")) {
     setElementsAsDropTargets(module);
     setElementsAsDragSources(module, null, null, EDIT_CONNECTOR_STYLE_2);
   }
+
 
   // Add dropdown touch support
   bindTouchDropdowns($(dropdownToggle));
@@ -2728,10 +2719,14 @@ function initJsPlumb(containerSel, containerChildSel, modulesSel, params) {
       // Scale offset for X
       // (otherwise, this function only works on scale = 1.0)
       x_so = draggable.parent().width() / 2 * (1 - instance.getZoom());
-      x_pos = x_el - x_so + (calcOffsetX(event) - x_start);
-      y_pos = y_el + (calcOffsetY(event) - y_start);
-      x_start = calcOffsetX(event);
-      y_start = calcOffsetY(event);
+
+      var fastOffsetX = calcOffsetX(event);
+      var fastOffsetY = calcOffsetY(event);
+
+      x_pos = x_el - x_so + (fastOffsetX - x_start);
+      y_pos = y_el + (fastOffsetY - y_start);
+      x_start = fastOffsetX;
+      y_start = fastOffsetY;
       if (draggable !== null) {
         elLeft(draggable, x_pos);
         elTop(draggable, y_pos);
@@ -2780,8 +2775,7 @@ function initJsPlumb(containerSel, containerChildSel, modulesSel, params) {
 
   // Script for multitouch events
   hammertime = new Hammer(document.getElementById("canvas-container"));
-  hammertime.get('pinch').set({ enable: true });
-
+  hammertime.get('pinch').set({ enable: canHammer });
 
   function hammerZoom (event) {
     zoom = instance.getZoom() * event.scale;
@@ -2810,6 +2804,9 @@ function initJsPlumb(containerSel, containerChildSel, modulesSel, params) {
   }
 
   if (connectionsEditable) {
+    instance.bind("beforeDetach", function(connection) {
+    });
+
     // Prevent a connection to be made if it already exists between 2 modules
     instance.bind("beforeDrop", function(info) {
       var newConnection = info.connection;
@@ -2967,45 +2964,153 @@ function initJsPlumb(containerSel, containerChildSel, modulesSel, params) {
 }
 
 // Initialize first-time tutorial
-function initializeTutorial() {
+function initializeTutorial(isEditMode) {
   if (showTutorial()) {
     var currentStep = Cookies.get('current_tutorial_step');
-    if (currentStep == '5' || currentStep == '6') {
+    // Add edit canvas tutorial step and show it
+    if (!isEditMode && currentStep > 2 && currentStep < 6) {
+      var $introJs = introJs();
+      $introJs
+        .setOptions({
+          overlayOpacity: '0.2',
+          nextLabel: 'Next',
+          doneLabel: 'End tutorial',
+          skipLabel: 'End tutorial',
+          showBullets: false,
+          showStepNumbers: false,
+          exitOnEsc: false,
+          exitOnOverlayClick: false,
+          tooltipClass: 'custom next-page-link'
+        })
+        .onafterchange(function (tarEl) {
+          Cookies.set('current_tutorial_step', this._currentStep + 4);
+          if (this._currentStep == 1) {
+            $introJs.setOption("disableInteraction", true);
+            // Go to project canvas
+            setTimeout(function() {
+              $('.next-page-link a.introjs-nextbutton')
+              .removeClass('introjs-disabled')
+              .on('click', function() {
+                $('#edit-canvas-button').click();
+              });
+            }, 500);
+          } else {
+            $introJs.setOption("disableInteraction", false);
+            var top = $('#canvas-container').position().top +  $('#canvas-container').height()/3;
+            $(".introjs-tooltipReferenceLayer").css({
+              top: top + 'px'
+            });
+          }
+        })
+        .goToStep(currentStep == "5" ? 2 : 1)
+        .start();
+
+        window.onresize = function() {
+          $(".introjs-tooltip").css("right", ($("#canvas-container").width() + 20)  + "px");
+        };
+    } else if (isEditMode && currentStep > 4 && currentStep < 7) {
+      var editWorkflowTutorial = $("#canvas-container").attr("data-edit-workflow-step-text");
+      var editWorkflowClickSaveTutorial = $("#canvas-container").attr("data-edit-workflow-click-save-step-text");
+      $(".introjs-overlay").remove();
+      $(".introjs-helperLayer").remove();
+      $(".introjs-tooltipReferenceLayer").remove();
+
+      setTimeout(function() {
+        introJs()
+          .setOptions({
+            steps: [
+            {
+              intro: editWorkflowTutorial,
+              element: document.querySelector('#canvas-new-module'),
+              disableInteraction: true
+            },
+            {
+              intro: editWorkflowClickSaveTutorial,
+              element: document.querySelector('#canvas-save')
+            }
+            ],
+            overlayOpacity: '0.1',
+            nextLabel: 'Next',
+            doneLabel: 'End tutorial',
+            skipLabel: 'End tutorial',
+            showBullets: false,
+            showStepNumbers: false,
+            exitOnOverlayClick: false,
+            exitOnEsc: false,
+            tooltipClass: 'custom next-page-link'
+          })
+          .onafterchange(function (tarEl) {
+            // Go to edit workflow mode
+            Cookies.set('current_tutorial_step', this._currentStep + 6);
+            if (this._currentStep == 0) {
+                $(".introjs-tooltipReferenceLayer").addClass("max");
+                $(".introjs-tooltip").css("left", "0");
+            } else if (this._currentStep == 1) {
+              setTimeout(function () {
+                $(".introjs-tooltipReferenceLayer").removeClass("max");
+                $(".introjs-tooltip").css("left", "0");
+                $('.next-page-link a.introjs-nextbutton')
+                  .removeClass('introjs-disabled')
+                  .on('click', function() { $("#" + tarEl.id).click(); });
+              }, 500);
+            }
+          })
+          .start();
+        }, 500);
+
+      // Destroy first-time tutorial cookies when skip tutorial
+      // or end tutorial is clicked
+      $(".introjs-skipbutton").each(function (){
+        $(this).click(function (){
+          Cookies.remove('tutorial_data');
+          Cookies.remove('current_tutorial_step');
+        });
+      });
+    } else if (!isEditMode && currentStep > 5 || currentStep < 10) {
       var sidebarTutorial = $("#canvas-container").attr("data-sidebar-step-text");
-      Cookies.set('current_tutorial_step', '6');
+      var sidebarClickModuleTutorial = $("#canvas-container").attr("data-sidebar-click-module-step-text");
+      Cookies.set('current_tutorial_step', '8');
+      var qpcrModuleLeaf = $("li.leaf[data-module-id='" + tutorialData[0].qpcr_module + "']");
 
       introJs()
         .setOptions({
-          steps: [{
-            element: document.querySelector("li.leaf[data-module-id='" + tutorialData[0].qpcr_module + "']"),
+          steps: [
+          {
+            element: document.querySelector("#slide-panel .tree"),
             intro: sidebarTutorial,
             position: 'right'
-          }],
+          },
+          {
+            element: qpcrModuleLeaf[0],
+            intro: sidebarClickModuleTutorial,
+            position: 'right'
+          }
+          ],
           overlayOpacity: '0.2',
           doneLabel: 'End tutorial',
+          skipLabel: 'End tutorial',
+          nextLabel: 'Next',
           showBullets: false,
           showStepNumbers: false,
-          tooltipClass: 'custom disabled-next'
+          exitOnEsc: false,
+          exitOnOverlayClick: false,
+          tooltipClass: 'custom next-page-link'
         })
-        .start();
-    }
-    else if (currentStep == '3' || currentStep == '4') {
-      Cookies.set('current_tutorial_step', '4');
-      introJs()
-        .setOptions({
-          overlayOpacity: '0.2',
-          doneLabel: 'End tutorial',
-          showBullets: false,
-          showStepNumbers: false,
-          tooltipClass: 'custom disabled-next'
+        .onafterchange(function(tarEl) {
+          Cookies.set('current_tutorial_step', this._currentStep + 8);
+          if (this._currentStep == 1) {
+            setTimeout(function() {
+              $('.next-page-link a.introjs-nextbutton')
+                .removeClass('introjs-disabled')
+                .attr('href', qpcrModuleLeaf.find("a.module-link").attr('href'));
+            }, 500);
+          } else {
+            $(".introjs-tooltipReferenceLayer").css("top", $("#slide-panel .tree").height()/3 + "px");
+          }
         })
+        .goToStep(currentStep == "9" ? 2 : 1)
         .start();
 
-      $(".introjs-overlay").addClass("introjs-no-overlay");
-      var top = $('#canvas-container').position().top +  $('#canvas-container').height()/3;
-      $(".introjs-tooltipReferenceLayer").css({
-        top: top + 'px'
-      });
     }
 
     // Destroy first-time tutorial cookies when skip tutorial

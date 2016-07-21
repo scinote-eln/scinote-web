@@ -4,7 +4,7 @@ step1:
   position: 0
   completed: false
   user: steve
-  my_module: rna_test
+  protocol: rna_test_protocol
   last_modified_by: steve
 
 step2:
@@ -13,7 +13,7 @@ step2:
   position: 1
   completed: false
   user: steve
-  my_module: rna_test
+  protocol: rna_test_protocol
   last_modified_by: jlaw
 
 step3:
@@ -22,7 +22,7 @@ step3:
   position: 2
   completed: false
   user: steve
-  my_module: rna_test
+  protocol: rna_test_protocol
   last_modified_by: steve
 
 test:
@@ -30,14 +30,14 @@ test:
   position: 3
   completed: false
   user: jlaw
-  my_module: sample_prep
+  protocol: sample_prep_protocol
 
 test2:
   name: test
   description: testing description
   completed: false
   user: steve
-  my_module: list_of_samples
+  protocol: list_of_samples_protocol
   position: 5
 
 empty:
@@ -45,4 +45,4 @@ empty:
   position: 4
   completed: false
   user: jlaw
-  my_module: sample_prep
+  protocol: sample_prep_protocol

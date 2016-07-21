@@ -39,50 +39,23 @@ class Result < ActiveRecord::Base
       .select("id")
 
     if query
-      if include_archived
-        new_query = Result
-          .distinct
-          .joins("LEFT JOIN result_texts ON results.id = result_texts.result_id")
-          .joins("LEFT JOIN result_tables ON results.id = result_tables.result_id")
-          .joins("LEFT JOIN tables ON result_tables.table_id = tables.id")
-          .where("results.my_module_id IN (?)", module_ids)
-          .where(
-            "results.name ILIKE ? " +
-            "OR result_texts.text ILIKE ? " +
-            "OR tables.data_vector @@ plainto_tsquery(?) ",
-            "%" + query + "%",
-            "%" + query + "%",
-            query
-          )
-      else
-        new_query = Result
-          .distinct
-          .joins("LEFT JOIN result_texts ON results.id = result_texts.result_id")
-          .joins("LEFT JOIN result_tables ON results.id = result_tables.result_id")
-          .joins("LEFT JOIN tables ON result_tables.table_id = tables.id")
-          .where("results.my_module_id IN (?)", module_ids)
-          .where("results.archived = ?", false)
-          .where(
-            "results.name ILIKE ? " +
-            "OR result_texts.text ILIKE ? " +
-            "OR tables.data_vector @@ plainto_tsquery(?) ",
-            "%" + query + "%",
-            "%" + query + "%",
-            query
-          )
-      end
-
+      a_query = query.strip
+      .gsub("_","\\_")
+      .gsub("%","\\%")
+      .split(/\s+/)
+      .map {|t|  "%" + t + "%" }
     else
-      if include_archived
-        new_query = Result
-          .distinct
-          .where("results.my_module_id IN (?)", module_ids)
-      else
-        new_query = Result
-          .distinct
-          .where("results.my_module_id IN (?)", module_ids)
-          .where("results.archived = ?", false)
-      end
+      a_query = query
+    end
+
+    new_query = Result
+      .distinct
+      .joins("LEFT JOIN result_texts ON results.id = result_texts.result_id")
+      .where("results.my_module_id IN (?)", module_ids)
+      .where_attributes_like(["results.name", "result_texts.text"], a_query)
+
+    unless include_archived
+      new_query = new_query.where("results.archived = ?", false)
     end
 
     # Show all results if needed

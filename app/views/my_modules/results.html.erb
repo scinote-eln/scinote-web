@@ -1,4 +1,4 @@
-<% provide(:head_title, t("my_modules.results.head_title", project: @project.name, module: @my_module.name)) %>
+<% provide(:head_title, raw(t("my_modules.results.head_title", project: @project.name, module: @my_module.name))) %>
 <%= render partial: "shared/sidebar" %>
 <%= render partial: "shared/secondary_navigation" %>
 
@@ -40,7 +40,8 @@
 <div style="height: 15px;"></div>
 
 <div id="results" data-module-id="<%= @my_module.id %>"
-  data-module-protocols-step-text="<%=t 'tutorial.module_results_html' %>">
+  data-module-protocols-step-text="<%=t 'tutorial.module_results_html' %>"
+  data-module-protocols-click-samples-step-text="<%=t 'tutorial.module_results_click_samples_html' %>">
 <% ordered_result_of(@my_module).each do |result| %>
   <%= render partial: "result", locals: {result: result, markdown: @markdown, direct_upload: @direct_upload} %>
 <% end %>

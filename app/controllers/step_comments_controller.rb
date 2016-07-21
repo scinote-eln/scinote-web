@@ -50,19 +50,22 @@ class StepCommentsController < ApplicationController
     respond_to do |format|
       if (@comment.valid? && @step.comments << @comment)
 
-        # Generate activity
-        Activity.create(
-          type_of: :add_comment_to_step,
-          user: current_user,
-          project: @step.my_module.project,
-          my_module: @step.my_module,
-          message: t(
-            "activities.add_comment_to_step",
-            user: current_user.full_name,
-            step: @step.position + 1,
-            step_name: @step.name
+        # Generate activity (this can only occur in module,
+        # but nonetheless check if my module is not nil)
+        if @protocol.in_module?
+          Activity.create(
+            type_of: :add_comment_to_step,
+            user: current_user,
+            project: @step.my_module.project,
+            my_module: @step.my_module,
+            message: t(
+              "activities.add_comment_to_step",
+              user: current_user.full_name,
+              step: @step.position + 1,
+              step_name: @step.name
+            )
           )
-        )
+        end
 
         format.html {
           flash[:success] = t(
@@ -99,7 +102,7 @@ class StepCommentsController < ApplicationController
     @last_comment_id = params[:from].to_i
     @per_page = 10
     @step = Step.find_by_id(params[:step_id])
-    @my_module = @step.my_module
+    @protocol = @step.protocol
 
     unless @step
       render_404
@@ -107,13 +110,13 @@ class StepCommentsController < ApplicationController
   end
 
   def check_view_permissions
-    unless can_view_step_comments(@my_module)
+    unless can_view_step_comments(@protocol)
       render_403
     end
   end
 
   def check_add_permissions
-    unless can_add_step_comment_in_module(@my_module)
+    unless can_add_step_comment_in_protocol(@protocol)
       render_403
     end
   end

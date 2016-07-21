@@ -1,4 +1,4 @@
-<% provide(:head_title, t("user_projects.edit.head_title", project: @project.name)) %>
+<% provide(:head_title, raw(t("user_projects.edit.head_title", project: @project.name))) %>
 <h2><%=t "user_projects.edit.title", user: @up.user.full_name, project: @project.name %></h2>
 
 <%= bootstrap_form_for [@project, @up] do |f| %>

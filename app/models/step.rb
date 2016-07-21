@@ -2,17 +2,17 @@ class Step < ActiveRecord::Base
   include SearchableModel
 
   validates :name, presence: true,
-    length: { maximum: 50 }
+    length: { maximum: 255 }
   validates :description,
-    length: { maximum: 1000}
+    length: { maximum: 4000}
   validates :position, presence: true
   validates :completed, inclusion: { in: [true, false] }
-  validates :user, :my_module, presence: true
+  validates :user, :protocol, presence: true
   validates :completed_on, presence: true, if: "completed?"
 
   belongs_to :user, inverse_of: :steps
   belongs_to :last_modified_by, foreign_key: 'last_modified_by_id', class_name: 'User'
-  belongs_to :my_module, inverse_of: :steps
+  belongs_to :protocol, inverse_of: :steps
   has_many :checklists, inverse_of: :step,
     dependent: :destroy
   has_many :step_comments, inverse_of: :step,
@@ -41,15 +41,25 @@ class Step < ActiveRecord::Base
   before_save :set_last_modified_by
 
   def self.search(user, include_archived, query = nil, page = 1)
-    module_ids =
-      MyModule
+    protocol_ids =
+      Protocol
       .search(user, include_archived, nil, SHOW_ALL_RESULTS)
       .select("id")
 
+    if query
+      a_query = query.strip
+      .gsub("_","\\_")
+      .gsub("%","\\%")
+      .split(/\s+/)
+      .map {|t|  "%" + t + "%" }
+    else
+      a_query = query
+    end
+
     new_query = Step
       .distinct
-      .where("steps.my_module_id IN (?)", module_ids)
-      .where_attributes_like(:name, query)
+      .where("steps.protocol_id IN (?)", protocol_ids)
+      .where_attributes_like([:name, :description], a_query)
 
     # Show all results if needed
     if page == SHOW_ALL_RESULTS
@@ -71,6 +81,10 @@ class Step < ActiveRecord::Base
     @t_ids = self.tables.collect { |t| t.id }
 
     super()
+  end
+
+  def my_module
+    protocol.present? ? protocol.my_module : nil
   end
 
   def last_comments(last_id = 1, per_page = 20)
@@ -105,19 +119,22 @@ class Step < ActiveRecord::Base
     Table.destroy(@t_ids)
     @t_ids = nil
 
-    # Generate "delete" activity
-    Activity.create(
-      type_of: :destroy_step,
-      project: my_module.project,
-      my_module: my_module,
-      user: @current_user,
-      message: I18n.t(
-        "activities.destroy_step",
-        user: @current_user.full_name,
-        step: position + 1,
-        step_name: name
+    # Generate "delete" activity, but only if protocol is
+    # located inside module
+    if (protocol.my_module.present?) then
+      Activity.create(
+        type_of: :destroy_step,
+        project: protocol.my_module.project,
+        my_module: protocol.my_module,
+        user: @current_user,
+        message: I18n.t(
+          "activities.destroy_step",
+          user: @current_user.full_name,
+          step: position + 1,
+          step_name: name
+        )
       )
-    )
+    end
   end
 
   def set_last_modified_by
@@ -141,4 +158,3 @@ class Step < ActiveRecord::Base
     end
   end
 end
-

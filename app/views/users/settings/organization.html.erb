@@ -90,22 +90,6 @@
     </div>
     <!-- End of USERS TABLE -->
 
-    <!-- DELETE PANEL -->
-    <div class="panel panel-danger">
-      <div class="panel-heading">
-        <strong><%= t("users.settings.organizations.edit.delete_organization_heading") %></strong>
-      </div>
-      <div class="panel-body">
-        <% if @org.projects.count > 0 %>
-          <%= t("users.settings.organizations.edit.cannot_delete_message_projects") %>
-        <% else %>
-          <%= t("users.settings.organizations.edit.can_delete_message") %>
-          <a href="#" data-toggle="modal" data-target="#modal-destroy-organization"><%= t("users.settings.organizations.edit.delete_text") %></a>
-        <% end %>
-      </div>
-    </div>
-    <!-- End of DELETE PANEL -->
-
   </div>
 </div>
 

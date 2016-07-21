@@ -1,0 +1,5 @@
+<% if @protocol.authors.present? %>
+  <strong><%= @protocol.authors %></strong>
+<% else %>
+  <em><%= t("protocols.header.no_authors") %></em>
+<% end %>

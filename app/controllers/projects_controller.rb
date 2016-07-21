@@ -1,5 +1,6 @@
 class ProjectsController < ApplicationController
   include SampleActions
+  include RenamingUtil
 
   before_action :load_vars, only: [:show, :edit, :update, :canvas,
                                    :notifications, :reports,
@@ -136,20 +137,20 @@ class ProjectsController < ApplicationController
     @project.last_modified_by = current_user
     if @project.update(project_params)
       # Add activities if needed
-      if message_renamed.present?
-        Activity.create(
-          type_of: :rename_project,
-          user: current_user,
-          project: @project,
-          message: message_renamed
-        )
-      end
       if message_visibility.present?
         Activity.create(
           type_of: :change_project_visibility,
           user: current_user,
           project: @project,
           message: message_visibility
+        )
+      end
+      if message_renamed.present?
+        Activity.create(
+          type_of: :rename_project,
+          user: current_user,
+          project: @project,
+          message: message_renamed
         )
       end
 

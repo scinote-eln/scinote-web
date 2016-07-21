@@ -1,7 +1,7 @@
 <div class="panel panel-default panel-step-attachment">
   <div class="panel-heading">
     <span class="glyphicon glyphicon-list"></span>
-    <%=t "my_modules.steps.new.checklist_panel_title" %>
+    <%= t("protocols.steps.new.checklist_panel_title") %>
     <div class="pull-right">
       <%= ff.remove_nested_fields_link do %>
         <span class="glyphicon glyphicon-remove"></span>
@@ -9,8 +9,8 @@
     </div>
   </div>
   <div class="panel-body">
-    <%= ff.text_field :name, label: t("my_modules.steps.new.checklist_name"), autofocus: true, placeholder: t("my_modules.steps.new.checklist_name_placeholder") %>
-    <%= ff.label t("my_modules.steps.new.checklist_items") %>
+    <%= ff.text_field :name, label: t("protocols.steps.new.checklist_name"), autofocus: true, placeholder: t("protocols.steps.new.checklist_name_placeholder") %>
+    <%= ff.label t("protocols.steps.new.checklist_items") %>
     <ul>
       <%= ff.nested_fields_for :checklist_items, ordered_checklist_items(ff.object) do |chkItems| %>
         <li>
@@ -18,7 +18,7 @@
             <span class="glyphicon glyphicon-chevron-right handle-move pull-left"></span>
             <div class="row">
               <div class="col-xs-6">
-                <%= chkItems.text_field :text, autofocus: true, placeholder: t("my_modules.steps.new.checklist_item_placeholder"), hide_label: true, class: "form-control" %>
+                <%= chkItems.text_field :text, autofocus: true, placeholder: t("protocols.steps.new.checklist_item_placeholder"), hide_label: true, class: "checklist-item-text form-control" %>
                 <%= chkItems.hidden_field :position, class: "checklist-item-pos" %>
               </div>
               <div class="col-xs-1">
@@ -35,7 +35,7 @@
     </ul>
     <%= ff.add_nested_fields_link :checklist_items do %>
       <span class="glyphicon glyphicon-plus"></span>
-      <%=t "my_modules.steps.new.checklist_add_item" %>
+      <%= t("protocols.steps.new.checklist_add_item") %>
     <% end %>
   </div>
 </div>

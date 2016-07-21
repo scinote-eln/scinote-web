@@ -1,7 +1,8 @@
 <% results.each do |project| %>
   <h5>
     <span class="glyphicon glyphicon-blackboard"></span>
-    <%= render partial: "search/results/partials/project_text.html.erb", locals: { project: project, query: search_query } %>
+    <%= render partial: "search/results/partials/project_text.html.erb",
+               locals: { project: project, query: search_query, link_to_page: :canvas } %>
   </h5>
 
   <p>

@@ -7,7 +7,9 @@ class Users::SettingsController < ApplicationController
     :organizations,
     :organization,
     :create_organization,
-    :organization_users_datatable
+    :organization_users_datatable,
+    :tutorial,
+    :reset_tutorial
   ]
 
   before_action :check_organization_permission, only: [
@@ -127,7 +129,11 @@ class Users::SettingsController < ApplicationController
           else
             # Okay, query exists and is non-blank, find users
             nr_of_results = User.search(true, query, @org).count
-            users = User.search(true, query, @org).limit(5)
+
+
+            users = User.search(false, query, @org).limit(5)
+
+            nr_of_members = User.organization_search(false, query, @org).count
 
             render json: {
               html: render_to_string({
@@ -135,6 +141,7 @@ class Users::SettingsController < ApplicationController
                 locals: {
                   users: users,
                   nr_of_results: nr_of_results,
+                  nr_of_members: nr_of_members,
                   org: @org,
                   query: query
                 }
@@ -199,7 +206,12 @@ class Users::SettingsController < ApplicationController
   def create_user_organization
     @new_user_org = UserOrganization.new(create_user_organization_params)
 
-    if @new_user_org.save
+    # Check if such association doesn't exist already
+    if !UserOrganization.where(
+      user: @new_user_org.user,
+      organization: @new_user_org.organization
+      ).exists? && @new_user_org.save
+      AppMailer.delay.invitation_to_organization(@new_user_org.user, @user_organization.user, @new_user_org.organization)
       flash[:notice] = I18n.t(
         "users.settings.organizations.edit.modal_add_user.existing_flash_success",
         user: @new_user_org.user.full_name,
@@ -345,7 +357,36 @@ class Users::SettingsController < ApplicationController
         .where(role: 2)
         .count <= 1
 
-      if !invalid && @user_org.destroy
+        if !invalid then
+          begin
+            UserOrganization.transaction do
+              # If user leaves on his/her own accord,
+              # new owner for projects is the first
+              # administrator of organization
+              if params[:leave]
+                new_owner =
+                  @user_org
+                  .organization
+                  .user_organizations
+                  .where(role: 2)
+                  .where.not(id: @user_org.id)
+                  .first
+                  .user
+              else
+                # Otherwise, the new owner for projects is
+                # the current user (= an administrator removing
+                # the user from the organization)
+                new_owner = current_user
+              end
+
+              @user_org.destroy(new_owner)
+            end
+          rescue Exception
+            invalid = true
+          end
+        end
+
+      if !invalid
         if params[:leave] then
           flash[:notice] = I18n.t(
             "users.settings.organizations.index.leave_flash",
@@ -365,6 +406,45 @@ class Users::SettingsController < ApplicationController
           status: :unprocessable_entity
         }
       end
+    end
+  end
+
+  def tutorial
+    @orgs =
+      @user
+      .user_organizations
+      .includes(organization: :users)
+      .where(role: 1..2)
+      .order(created_at: :asc)
+      .map { |uo| uo.organization }
+    @member_of = @orgs.count
+
+    respond_to do |format|
+      format.json {
+        render json: {
+          status: :ok,
+          html: render_to_string({
+            partial: "users/settings/repeat_tutorial_modal_body.html.erb"
+          })
+        }
+      }
+    end
+  end
+
+  def reset_tutorial
+    if @user.update(tutorial_status: 0) && params[:org][:id]
+      cookies.delete :tutorial_data
+      cookies.delete :current_tutorial_step
+      cookies[:repeat_tutorial_org_id] = {
+        value: params[:org][:id],
+        expires: 1.day.from_now
+      }
+
+      flash[:notice] = t("users.settings.preferences.tutorial.tutorial_reset_flash")
+      redirect_to root_path
+    else
+      flash[:alert] = t("users.settings.preferences.tutorial.tutorial_reset_error")
+      redirect_to :back
     end
   end
 

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title><%= t ("forbidden.title") %></title>
+  <title>Access to this page is denied (403).</title>
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <style>
   body {
@@ -58,14 +58,14 @@
   <!-- This file lives in public/403.html -->
   <div class="dialog">
     <div>
-      <h1><%= t("forbidden.title") %></h1>
-      <p><%= t("forbidden.notice") %></p>
+      <h1>Access to this page is denied (403).</h1>
+      <p>You do not have permission to view this project page using the
+      credentials that you supplied.</p>
     </div>
     <p>
-      <%= t("forbidden.help") %><br />
-      <%= t("forbidden.go_back") %>
-      <%= link_to t("forbidden.homepage"), root_path %>,
-      <%= link_to t("forbidden.try_searching"), new_search_path %>
+      Ask project owner to grant you permission to access this project.<br />
+      <a href="/">home page</a>
+      <a href="/search/new">or try searching.</a>
     </p>
   </div>
 </body>

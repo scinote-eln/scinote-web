@@ -76,6 +76,9 @@ class User < ActiveRecord::Base
   has_many :assigned_user_my_modules, class_name: 'UserMyModule', foreign_key: 'assigned_by_id'
   has_many :assigned_user_organizations, class_name: 'UserOrganization', foreign_key: 'assigned_by_id'
   has_many :assigned_user_projects, class_name: 'UserProject', foreign_key: 'assigned_by_id'
+  has_many :added_protocols, class_name: 'Protocol', foreign_key: 'added_by_id', inverse_of: :added_by
+  has_many :archived_protocols, class_name: 'Protocol', foreign_key: 'archived_by_id', inverse_of: :archived_by
+  has_many :restored_protocols, class_name: 'Protocol', foreign_key: 'restored_by_id', inverse_of: :restored_by
 
   # Prevents repetition of errors after validation (e.g. if file_size
   # exceeds limits, 2 same errors will be shown)
@@ -116,6 +119,39 @@ class User < ActiveRecord::Base
     .where_attributes_like([:full_name, :email], query)
     .distinct
   end
+
+  # Search all active users inside given organization for
+  # username & email.
+  def self.organization_search(
+    active_only,
+    query = nil,
+    organization = nil
+  )
+
+    if !organization.present?
+      result = nil
+    else
+
+      result = User.all
+
+      if active_only
+        result = result.where.not(confirmed_at: nil)
+      end
+
+      ignored_ids =
+        UserOrganization
+        .select(:user_id)
+        .where(organization_id: organization.id)
+      result =
+        result
+        .where("users.id IN (?)", ignored_ids)
+
+      result
+      .where_attributes_like([:full_name, :email], query)
+      .distinct
+    end
+  end
+
 
   def empty_avatar(name, size)
     file_ext = name.split(".").last

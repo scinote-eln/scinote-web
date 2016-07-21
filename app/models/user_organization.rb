@@ -25,4 +25,38 @@ class UserOrganization < ActiveRecord::Base
     end
   end
 
+  def destroy(new_owner)
+    # If any project of the organization has the sole owner and that
+    # owner is the user to be removed from the organization, then we must
+    # create a new owner of the project (the provided user).
+    organization.projects.each do |project|
+      owners = project.user_projects.where(role: 0)
+      if owners.count == 1 && owners.first.user == user
+        UserProject.create(
+          user: new_owner,
+          project: project,
+          role: 0,
+          assigned_by: user
+        )
+      end
+    end
+
+    # Also, make new owner author of all protocols that belong
+    # to the departing user.
+    p_ids = user.added_protocols.pluck(:id)
+    Protocol.find(p_ids).each do |protocol|
+      protocol.record_timestamps = false
+      protocol.added_by = new_owner
+      if protocol.archived_by != nil
+        protocol.archived_by = new_owner
+      end
+      if protocol.restored_by != nil
+        protocol.restored_by = new_owner
+      end
+      protocol.save
+    end
+
+    super()
+  end
+
 end

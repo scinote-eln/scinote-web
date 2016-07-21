@@ -94,6 +94,26 @@ class ReportElement < ActiveRecord::Base
     end
   end
 
+  # removes element that are archived or deleted
+  def clean_removed_or_archived_elements
+    parent_model = ''
+    [ 'project',
+      'my_module',
+      'step',
+      'result',
+      'checklist',
+      'asset',
+      'table'
+    ].each do |el|
+      parent_model = el if self.send el
+    end
+    if parent_model == 'step'
+      self.destroy unless self.send(parent_model).completed
+    else
+      self.destroy unless (self.send(parent_model).active? rescue self.send(parent_model))
+    end
+  end
+
   private
 
   def has_one_of_referenced_elements
@@ -110,5 +130,4 @@ class ReportElement < ActiveRecord::Base
       errors.add(:base, "Report element must have exactly one element reference.")
     end
   end
-
 end

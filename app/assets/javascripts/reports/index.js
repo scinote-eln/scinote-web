@@ -141,16 +141,43 @@
   /* Initilize first-time tutorial if needed */
   function initTutorial() {
     var currentStep = Cookies.get('current_tutorial_step');
-    if (showTutorial() && (currentStep == '10' || currentStep == '11')) {
-      Cookies.set('current_tutorial_step', '11');
+    if (showTutorial() && (currentStep > 14 && currentStep < 18)) {
+      var reportsTutorial =$("#content").attr("data-reports-step-text");
+      var reportsClickNewReportTutorial = $("#content").attr("data-reports-click-new-report-step-text");
       introJs()
         .setOptions({
+          steps: [
+            {
+              intro: reportsTutorial
+            },
+            {
+              element: document.getElementById("new-report-btn"),
+              intro: reportsClickNewReportTutorial,
+              tooltipClass: "custom next-page-link"
+            }
+          ],
           overlayOpacity: '0.1',
+          nextLabel: 'Next',
           doneLabel: 'End tutorial',
+          skipLabel: 'End tutorial',
           showBullets: false,
           showStepNumbers: false,
-          tooltipClass: 'custom disabled-next'
+          exitOnOverlayClick: false,
+          exitOnEsc: false,
+          tooltipClass: 'custom'
         })
+        .onafterchange(function (tarEl) {
+          Cookies.set('current_tutorial_step', this._currentStep + 16);
+
+          if (this._currentStep == 1) {
+            setTimeout(function() {
+              $('.next-page-link a.introjs-nextbutton')
+                .removeClass('introjs-disabled')
+                .attr('href', tarEl.href);
+            }, 500);
+          }
+        })
+        .goToStep(currentStep == 17 ? 2 : 1)
         .start();
 
       // Destroy first-time tutorial cookies when skip tutorial

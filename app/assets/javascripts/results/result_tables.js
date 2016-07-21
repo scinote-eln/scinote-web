@@ -2,20 +2,23 @@
 function initEditableHandsOnTable(root) {
   root.find(".editable-table").each(function() {
     var $container = $(this).find(".hot");
-
-    $container.handsontable({
-      startRows: 5,
-      startCols: 5,
-      rowHeaders: true,
-      colHeaders: true,
-      contextMenu: true
-    });
-    var hot = $(this).find(".hot").handsontable('getInstance');
+    var data = null;
     var contents = $(this).find('.hot-contents');
     if (contents.attr("value")) {
-      var data = JSON.parse(contents.attr("value"));
-      hot.loadData(data.data);
+      data = JSON.parse(contents.attr("value")).data;
     }
+
+    $container.handsontable({
+      data: data,
+      startRows: 5,
+      startCols: 5,
+      minRows: 1,
+      minCols: 1,
+      rowHeaders: true,
+      colHeaders: true,
+      contextMenu: true,
+      preventOverflow: 'horizontal'
+    });
   });
 }
 
@@ -24,7 +27,7 @@ function onSubmitExtractTable($form) {
     var hot = $(".hot").handsontable('getInstance');
     var contents = $('.hot-contents');
     var data = JSON.stringify({data: hot.getData()});
-    contents.attr("value", data)
+    contents.attr("value", data);
     return true;
   });
 }
@@ -51,6 +54,8 @@ function applyEditResultTableCallback() {
     });
 
     toggleResultEditButtons(false);
+
+    $("#result_name").focus();
   });
 
   $(".edit-result-table").on("ajax:error", function(e, xhr, status, error) {
@@ -73,6 +78,8 @@ $("#new-result-table").on("ajax:success", function(e, data) {
   });
 
   toggleResultEditButtons(false);
+
+  $("#result_name").focus();
 });
 
 $("#new-result-table").on("ajax:error", function(e, xhr, status, error) {
@@ -88,11 +95,11 @@ function formAjaxResultTable($form) {
     $(this).remove();
 
     applyEditResultTableCallback();
+    applyCollapseLinkCallBack();
     initHandsOnTables($result);
     toggleResultEditButtons(true);
     initResultCommentTabAjax();
     expandResult($result);
-    initHandsOnTables($result);
   });
   $form.on("ajax:error", function(e, xhr, status, error) {
     var data = xhr.responseJSON;

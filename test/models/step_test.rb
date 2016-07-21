@@ -16,7 +16,7 @@ class StepTest < ActiveSupport::TestCase
 
   test "should not validate with to long name" do
     assert @step.valid?
-    @step.name *= 50
+    @step.name = 'a' * 256
     assert_not @step.valid?
   end
 
@@ -28,7 +28,7 @@ class StepTest < ActiveSupport::TestCase
 
   test "should not validate with to long description" do
     assert @step.valid?
-    @step.name *= 1000
+    @step.name = 'a' * 4001
     assert_not @step.valid?
   end
 
@@ -65,11 +65,11 @@ class StepTest < ActiveSupport::TestCase
     assert_not @step.valid?
    end
 
-  test "should not validate with non existing my_module" do
+  test "should not validate with non existing protocol" do
     assert @step.valid?
-    @step.my_module_id = 12312321
+    @step.protocol_id = 12312321
     assert_not @step.valid?
-    @step.my_module = nil
+    @step.protocol = nil
     assert_not @step.valid?
    end
 

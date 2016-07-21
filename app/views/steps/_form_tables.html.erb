@@ -1,14 +1,14 @@
 <div class="panel panel-default panel-step-attachment">
   <div class="panel-heading">
     <span class="glyphicon glyphicon-th"></span>
-    <%=t "my_modules.steps.new.table_panel_title" %>
+    <%= t("protocols.steps.new.table_panel_title") %>
     <div class="pull-right">
       <%= ff.remove_nested_fields_link do %>
         <span class="glyphicon glyphicon-remove"></span>
       <% end %>
     </div>
   </div>
-  <div class="panel-body editable-table">
+  <div data-role="editable-table" class="panel-body">
     <%= ff.hidden_field(:contents, value: ff.object.contents_utf_8, class: "hot-contents" ) %>
     <div class="hot"></div>
   </div>

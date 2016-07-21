@@ -38,7 +38,7 @@ module UsersGenerator
     if confirmed then
       nu.confirmed_at = Time.now
     end
-    nu.save
+    nu.save!
 
     # TODO: If user is not confirmed, maybe additional email
     # needs to be sent with his/her password & email?

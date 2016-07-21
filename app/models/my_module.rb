@@ -1,6 +1,7 @@
 class MyModule < ActiveRecord::Base
   include ArchivableModel, SearchableModel
 
+  before_create :create_blank_protocol
 
   validates :name,
     presence: true,
@@ -15,7 +16,6 @@ class MyModule < ActiveRecord::Base
   belongs_to :restored_by, foreign_key: 'restored_by_id', class_name: 'User'
   belongs_to :project, inverse_of: :my_modules
   belongs_to :my_module_group, inverse_of: :my_modules
-  has_many :steps, inverse_of: :my_module, :dependent => :destroy
   has_many :results, inverse_of: :my_module, :dependent => :destroy
   has_many :my_module_tags, inverse_of: :my_module, :dependent => :destroy
   has_many :tags, through: :my_module_tags
@@ -31,6 +31,7 @@ class MyModule < ActiveRecord::Base
   has_many :users, through: :user_my_modules
   has_many :activities, inverse_of: :my_module
   has_many :report_elements, inverse_of: :my_module, :dependent => :destroy
+  has_many :protocols, inverse_of: :my_module, dependent: :destroy
 
   def self.search(user, include_archived, query = nil, page = 1)
     project_ids =
@@ -38,17 +39,27 @@ class MyModule < ActiveRecord::Base
       .search(user, include_archived, nil, SHOW_ALL_RESULTS)
       .select("id")
 
+    if query
+      a_query = query.strip
+      .gsub("_","\\_")
+      .gsub("%","\\%")
+      .split(/\s+/)
+      .map {|t|  "%" + t + "%" }
+    else
+      a_query = query
+    end
+
     if include_archived
       new_query = MyModule
         .distinct
         .where("my_modules.project_id IN (?)", project_ids)
-        .where_attributes_like(:name, query)
+        .where_attributes_like([:name, :description], a_query)
     else
       new_query = MyModule
         .distinct
         .where("my_modules.project_id IN (?)", project_ids)
         .where("my_modules.archived = ?", false)
-        .where_attributes_like(:name, query)
+        .where_attributes_like([:name, :description], a_query)
     end
 
     # Show all results if needed
@@ -58,36 +69,6 @@ class MyModule < ActiveRecord::Base
       new_query
         .limit(SEARCH_LIMIT)
         .offset((page - 1) * SEARCH_LIMIT)
-    end
-  end
-
-  # Deep-clone given array of assets
-  def self.deep_clone_assets(assets_to_clone, org)
-    assets_to_clone.each do |src_id, dest_id|
-      src = Asset.find_by_id(src_id)
-      dest = Asset.find_by_id(dest_id)
-      if src.present? and dest.present? then
-        # Clone file
-        dest.file = src.file
-        dest.save
-
-        # Clone extracted text data if it exists
-        if (atd = src.asset_text_datum).present? then
-          atd2 = AssetTextDatum.new(
-            data: atd.data,
-            asset: dest
-          )
-          atd2.save
-        end
-
-        # Update estimated size of cloned asset
-        dest.update(estimated_size: src.estimated_size)
-
-        # Update organization's space taken
-        org.reload
-        org.take_space(dest.estimated_size)
-        org.save
-      end
     end
   end
 
@@ -154,10 +135,6 @@ class MyModule < ActiveRecord::Base
       )
   end
 
-  def number_of_steps
-    steps.count
-  end
-
   def last_activities(count = 20)
     Activity.where(my_module_id: id).order(:created_at).last(count)
   end
@@ -183,12 +160,14 @@ class MyModule < ActiveRecord::Base
       .uniq
   end
 
-  def first_n_samples(count = 20)
-    samples.order(name: :asc).limit(count)
+  def protocol
+    # Temporary function (until we fully support
+    # multiple protocols per module)
+    protocols.count > 0 ? protocols.first : nil
   end
 
-  def completed_steps
-    steps.select { |step| step.completed }
+  def first_n_samples(count = 20)
+    samples.order(name: :asc).limit(count)
   end
 
   def number_of_samples
@@ -217,7 +196,7 @@ class MyModule < ActiveRecord::Base
 
   def space_taken
     st = 0
-    steps.find_each do |step|
+    protocol.steps.find_each do |step|
       st += step.space_taken
     end
     results
@@ -303,8 +282,6 @@ class MyModule < ActiveRecord::Base
   end
 
   def deep_clone(current_user)
-    assets_to_clone = []
-
     # Copy the module
     clone = MyModule.new(
       name: self.name,
@@ -314,70 +291,13 @@ class MyModule < ActiveRecord::Base
       y: self.y)
     clone.save
 
-    # Copy steps
-    self.steps.each do |step|
-      step2 = Step.new(
-        name: step.name,
-        description: step.description,
-        position: step.position,
-        completed: false,
-        user: current_user,
-        my_module: clone)
-      step2.save
+    # Remove the automatically generated protocol,
+    # & clone the protocol instead
+    clone.protocol.destroy
+    clone.reload
 
-      # Copy checklists
-      step.checklists.each do |checklist|
-        checklist2 = Checklist.new(
-          name: checklist.name,
-          step: step2
-          )
-        checklist2.created_by = current_user
-        checklist2.last_modified_by = current_user
-        checklist2.save
-
-        checklist.checklist_items.each do |item|
-          item2 = ChecklistItem.new(
-            text: item.text,
-            checked: false,
-            checklist: checklist2)
-          item2.created_by = current_user
-          item2.last_modified_by = current_user
-          item2.save
-        end
-
-        step2.checklists << checklist2
-      end
-
-      # "Shallow" Copy assets
-      step.assets.each do |asset|
-        asset2 = Asset.new_empty(
-          asset.file_file_name,
-          asset.file_file_size
-        )
-        asset2.created_by = current_user
-        asset2.last_modified_by = current_user
-        asset2.save
-
-        step2.assets << asset2
-        assets_to_clone << [asset.id, asset2.id]
-      end
-
-      # Copy tables
-      step.tables.each do |table|
-        table2 = Table.new(
-          contents: table.contents)
-        table2.created_by = current_user
-        table2.last_modified_by = current_user
-        step2.tables << table2
-      end
-    end
-
-    # Call clone module helper
-    MyModule.delay(queue: :assets).deep_clone_assets(
-      assets_to_clone,
-      self.project.organization
-    )
-
+    # Update the cloned protocol if neccesary
+    clone.protocols << self.protocol.deep_clone_my_module(self, current_user)
     clone.reload
 
     return clone
@@ -390,6 +310,10 @@ class MyModule < ActiveRecord::Base
   end
 
   private
+
+  def create_blank_protocol
+    protocols << Protocol.new_blank_for_module(self)
+  end
 
   # Find an empty position for the restored module. It's
   # basically a first empty row with x=0.

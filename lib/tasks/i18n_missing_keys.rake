@@ -1,4 +1,47 @@
+require "yaml"
+
 namespace :i18n do
+
+  desc "Find unused keys for given locale (default: 'en'); currently only works on OSs that support 'grep' command"
+  task :unused_keys, [ :lang ] => :environment do |_, args|
+
+    def flatten_hash(my_hash, parent=[])
+      my_hash.flat_map do |key, value|
+        case value
+          when Hash then flatten_hash(value, parent + [key])
+          else [(parent + [key]).join("."), value]
+        end
+      end
+    end
+
+    lang = args[:lang] || "en"
+    all_files = Dir.entries("config/locales").select { |f| f.ends_with?("#{lang}.yml") }
+    all_keys = []
+
+    all_files.each do |fname|
+      yml = YAML.load_file("config/locales/#{fname}")
+      res = Hash[*flatten_hash(yml)]
+      res.keys.each do |key|
+        all_keys << (key.start_with?("#{lang}.") ? key.sub("#{lang}.", "") : key)
+      end
+    end
+
+    all_good = true
+    all_keys.each do |key|
+      output = `grep -rn #{key} .`
+      if !$?.success?
+        if all_good
+          all_good = false
+          puts "Following keys are unused (for locale #{lang}):"
+        end
+        puts "  #{key}"
+      end
+    end
+
+    if all_good
+      puts "No unused keys found!"
+    end
+  end
 
   desc "Find and list translation keys that do not exist in all locales"
   task :missing_keys => :environment do

@@ -66,9 +66,8 @@ Rails.application.configure do
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
   config.force_ssl = ENV['RAILS_FORCE_SSL'].present?
 
-  # Use the lowest log level to ensure availability of diagnostic information
-  # when problems arise.
-  config.log_level = :debug
+  # Display info and higher on production.
+  config.log_level = :info
 
   # Prepend all log lines with the following tags.
   # config.log_tags = [ :subdomain, :uuid ]
@@ -101,5 +100,5 @@ Rails.application.configure do
 
   # Enable first-time tutorial for users signing in the sciNote for
   # the first time.
-  config.x.enable_tutorial = ENV["ENABLE_TUTORIAL"] || true
+  config.x.enable_tutorial = ENV["ENABLE_TUTORIAL"] != "false"
 end

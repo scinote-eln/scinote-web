@@ -1,5 +1,5 @@
 <% query ||= nil %>
-<% text = query.present? ? highlight(tag.name, query) : tag.name %>
+<% text = query.present? ? highlight(tag.name, query.strip.split(/\s+/)) : tag.name %>
 
 <% if can_view_project(tag.project) %>
   <a href="<%= canvas_project_path(tag.project) %>">

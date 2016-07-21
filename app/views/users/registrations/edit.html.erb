@@ -14,7 +14,7 @@
     <div data-part="view">
       <div class="form-group">
         <%= f.label t("users.registrations.edit.avatar_label") %><br />
-        <% @user_avatar_url ||= avatar_path(:thumb) %>
+        <% @user_avatar_url ||= avatar_path(current_user, :thumb) %>
         <%= image_tag @user_avatar_url %><br /><br />
         <a href="#" class="btn btn-default" data-action="edit"><%=t "users.registrations.edit.avatar_btn" %></a>
       </div>

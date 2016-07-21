@@ -4,11 +4,11 @@
     <%= render partial: "search/results/partials/my_module_text.html.erb", locals: { my_module: mod, query: search_query } %>
   </h5>
 
-  <% if mod.description and mod.description.include? @search_query %>
+  <% if mod.description.present? && !mod.description.empty? %>
     <p>
       <span>
         <%=t "search.index.description" %>
-        <%= highlight mod.description, @search_query  %>
+        <%= highlight mod.description, search_query.strip.split(/\s+/) %>
       </span>
     <p>
   <% end %>

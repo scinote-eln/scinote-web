@@ -13,7 +13,7 @@ class AssetTest < ActiveSupport::TestCase
       position: 0,
       completed: 0,
       user: @user,
-      my_module: my_modules(:sample_prep))
+      protocol: protocols(:rna_test_protocol))
     @result = Result.create(
       name: "Result test",
       user: @user,
@@ -72,14 +72,14 @@ class AssetTest < ActiveSupport::TestCase
   end
 
 
-  test "should not allow files larger than 20MB" do
-     asset = Asset.new(file: generate_file(21))
+  test "should not allow files larger than 50MB" do
+     asset = Asset.new(file: generate_file(51))
      asset.step = @step
-     assert_not asset.valid?
+     assert asset.invalid?
   end
 
-  test "should allow files <  20MB" do
-    asset = Asset.new(file: generate_file(19))
+  test "should allow files <  50MB" do
+    asset = Asset.new(file: generate_file(49))
     asset.step = @step
     assert asset.valid?
   end

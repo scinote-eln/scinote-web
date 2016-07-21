@@ -4,8 +4,8 @@ class Organization < ActiveRecord::Base
   include ActionView::Helpers::NumberHelper
 
   validates :name,
-    presence: true,
-    length: { minimum: 4, maximum: 100 }
+    presence: { message: '' },
+    length: { minimum: 4, maximum: 100, message: '' }
   validates :space_taken,
     presence: true
 
@@ -19,6 +19,8 @@ class Organization < ActiveRecord::Base
   has_many :logs, inverse_of: :organization
   has_many :projects, inverse_of: :organization
   has_many :custom_fields, inverse_of: :organization
+  has_many :protocols, inverse_of: :organization, dependent: :destroy
+  has_many :protocol_keywords, inverse_of: :organization, dependent: :destroy
 
   # Based on file's extension opens file (used for importing)
   def self.open_spreadsheet(file)
@@ -253,10 +255,10 @@ class Organization < ActiveRecord::Base
   def calculate_space_taken
     st = 0
     projects.includes(
-      my_modules: { steps: :assets, results: { result_asset: :asset } }
+      my_modules: { protocols: { steps: :assets }, results: { result_asset: :asset } }
     ).find_each do |project|
       project.my_modules.find_each do |my_module|
-        my_module.steps.find_each do |step|
+        my_module.protocol.steps.find_each do |step|
           step.assets.find_each { |asset| st += asset.estimated_size }
         end
         my_module.results.find_each do |result|
@@ -290,5 +292,9 @@ class Organization < ActiveRecord::Base
       "space released: " +
       "#{orig_space}B - #{space}B = " +
       "#{self.space_taken}B (#{number_to_human_size(self.space_taken)})"
+  end
+
+  def protocol_keywords_list
+    ProtocolKeyword.where(organization: self).pluck(:name)
   end
 end

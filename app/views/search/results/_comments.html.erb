@@ -14,13 +14,13 @@
   </p>
   <div class="row">
     <p class="chat-bubble col-xs-4">
-      <%= highlight comment.message, @search_query %>
+      <%= highlight comment.message, @search_query.strip.split(/\s+/) %>
     </p>
   </div>
   <p>
     <span>
       <%=t "search.index.created_by" %>
-      <%= highlight comment.user.full_name, @search_query %>
+      <%= highlight comment.user.full_name, @search_query.strip.split(/\s+/) %>
     </span>
     <br>
     <span>
@@ -34,22 +34,24 @@
     <% if comment.project_comment.present? %>
       <span>
         <%=t "search.index.project" %>
-        <%= render partial: "search/results/partials/project_text.html.erb", locals: { project: comment.project_comment.project } %>
+        <%= render partial: "search/results/partials/project_text.html.erb",
+                    locals: { project: comment.project_comment.project, link_to_page: :root } %>
       </span>
     <% elsif comment.my_module_comment.present? %>
       <span>
         <%=t "search.index.module" %>
-        <%= render partial: "search/results/partials/my_module_text.html.erb", locals: { my_module: comment.my_module_comment.my_module } %>
+        <%= render partial: "search/results/partials/my_module_text.html.erb",
+                    locals: { my_module: comment.my_module_comment.my_module, link_to_page: :canvas } %>
       </span>
     <% elsif comment.step_comment.present? %>
       <span>
         <%=t "search.index.step" %>
-        <%= render partial: "search/results/partials/step_text.html.erb", locals: { step: comment.step_comment.step } %>
+        <%= render partial: "search/results/partials/step_text.html.erb", locals: { step: comment.step_comment.step, target: :comment } %>
       </span>
     <% elsif comment.result_comment.present? %>
       <span>
         <%=t "search.index.result" %>
-        <%= render partial: "search/results/partials/result_text.html.erb", locals: { result: comment.result_comment.result } %>
+        <%= render partial: "search/results/partials/result_text.html.erb", locals: { result: comment.result_comment.result, target: :comment } %>
       </span>
     <% end %>
   </p>

@@ -1,15 +1,15 @@
 <div class="well">
-  <%= bootstrap_form_for(@step, url: step_path(id: @step.id, format: :json), remote: true, authenticity_token: true, multipart: true, data: { type: :json }) do |f| %>
-    <h4><%=t "my_modules.steps.edit.edit_step_title" %></h4>
+  <%= bootstrap_form_for(@step, url: step_path(id: @step.id, format: :json), remote: true, authenticity_token: true, multipart: true, data: { role: "edit-step-form", type: :json }) do |f| %>
+    <h4><%= t("protocols.steps.edit.edit_step_title") %></h4>
     <hr>
     <%= render partial: "empty_step.html.erb", locals: {step: @step, f: f} %>
     <hr>
     <% if direct_upload %>
-    <%= f.submit t("my_modules.steps.edit.edit_step"), class: 'btn btn-primary', onclick: 'startFileUpload(event, this);' %>
+      <%= f.submit t("protocols.steps.edit.edit_step"), class: 'btn btn-primary', onclick: 'animateSpinner(); startFileUpload(event, this);' %>
     <% else %>
-    <%= f.submit t("my_modules.steps.edit.edit_step"), class: 'btn btn-primary' %>
+      <%= f.submit t("protocols.steps.edit.edit_step"), class: 'btn btn-primary', onclick: 'animateSpinner(); stepValidator(event);' %>
     <% end %>
-    <a type="button" class="btn btn-default cancel-edit" href="<%= step_path(id: @step, format: :json) %>"  data-remote="true">
+    <a type="button" data-action="cancel-edit" class="btn btn-default" href="<%= step_path(id: @step, format: :json) %>"  data-remote="true">
       <%= t("general.cancel")%>
     </a>
   <% end %>

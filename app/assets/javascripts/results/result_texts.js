@@ -12,6 +12,8 @@ $("#new-result-text").on("ajax:success", function(e, data) {
     });
 
     toggleResultEditButtons(false);
+
+    $("#result_name").focus();
 });
 
 $("#new-result-text").on("ajax:error", function(e, xhr, status, error) {
@@ -38,6 +40,8 @@ function applyEditResultTextCallback() {
         });
 
         toggleResultEditButtons(false);
+
+        $("#result_name").focus();
     });
 
     $(".edit-result-text").on("ajax:error", function(e, xhr, status, error) {
@@ -54,6 +58,7 @@ function formAjaxResultText($form) {
         $(this).remove();
 
         applyEditResultTextCallback();
+        applyCollapseLinkCallBack();
         toggleResultEditButtons(true);
         initResultCommentTabAjax();
         expandResult(newResult);

@@ -1,6 +1,7 @@
 class Asset < ActiveRecord::Base
   include SearchableModel
   include DatabaseHelper
+  include Encryptor
 
   require 'tempfile'
 
@@ -11,7 +12,7 @@ class Asset < ActiveRecord::Base
     }
   }
 
-  validates_attachment :file, presence: true, size: { less_than: 50.megabytes }
+  validates_attachment :file, presence: true, size: { less_than: FILE_SIZE_LIMIT.megabytes }
   validates :estimated_size, presence: true
   validates :file_present, inclusion: { in: [true, false] }
 
@@ -40,6 +41,8 @@ class Asset < ActiveRecord::Base
     dependent: :nullify
   has_many :report_elements, inverse_of: :asset, dependent: :destroy
   has_one :asset_text_datum, inverse_of: :asset, dependent: :destroy
+
+  attr_accessor :file_content, :file_info, :preview_cached
 
   def file_empty(name, size)
     file_ext = name.split(".").last
@@ -76,30 +79,62 @@ class Asset < ActiveRecord::Base
       .select("result_assets.id")
       .distinct
 
-    new_query = Asset
+    if query
+      a_query = query.strip
+      .gsub("_","\\_")
+      .gsub("%","\\%")
+      .split(/\s+/)
+      .map {|t|  "%" + t + "%" }
+    else
+      a_query = query
+    end
+
+    # Trim whitespace and replace it with OR character. Make prefixed
+    # wildcard search term and escape special characters.
+    # For example, search term 'demo project' is transformed to
+    # 'demo:*|project:*' which makes word inclusive search with postfix
+    # wildcard.
+
+    s_query = query.gsub(/[!()&|:]/, " ")
+      .strip
+      .split(/\s+/)
+      .map {|t| t + ":*" }
+      .join("|")
+      .gsub('\'', '"')
+
+    ids = Asset
+      .select(:id)
       .distinct
       .joins("LEFT OUTER JOIN step_assets ON step_assets.asset_id = assets.id")
       .joins("LEFT OUTER JOIN result_assets ON result_assets.asset_id = assets.id")
+      .joins("LEFT JOIN asset_text_data ON assets.id = asset_text_data.asset_id")
+      .where("(step_assets.id IN (?) OR result_assets.id IN (?))", step_ids, result_ids)
       .where(
-        "step_assets.id IN (?) OR result_assets.id IN (?)",
-        step_ids,
-        result_ids
+        "(assets.file_file_name ILIKE ANY (array[?]) " +
+        "OR asset_text_data.data_vector @@ to_tsquery(?))",
+        a_query,
+        s_query
       )
-      .where_attributes_like(:file_file_name, query)
 
     # Show all results if needed
-    if page == SHOW_ALL_RESULTS
-      new_query
-    else
-      new_query
+    if page != SHOW_ALL_RESULTS
+      ids = ids
         .limit(SEARCH_LIMIT)
         .offset((page - 1) * SEARCH_LIMIT)
     end
+
+    Asset
+      .joins("LEFT JOIN asset_text_data ON assets.id = asset_text_data.asset_id")
+      .select("assets.*")
+      .select("ts_headline(data, to_tsquery('" + s_query + "'),
+        'StartSel=<mark>, StopSel=</mark>') headline")
+      .where("assets.id IN (?)",  ids)
   end
 
   def is_image?
     !(self.file.content_type =~ /^image/).nil?
   end
+
   # TODO: get the current_user
   # before_save do
   #   if current_user
@@ -141,7 +176,12 @@ class Asset < ActiveRecord::Base
         file_path = fa.path
       end
 
+      if (!Yomu.class_eval('@@server_pid'))
+        Yomu.server(:text,nil)
+        sleep(5)
+      end
       y = Yomu.new file_path
+
       text_data = y.text
 
       if asset_text_datum.present?
@@ -201,6 +241,16 @@ class Asset < ActiveRecord::Base
     end
   end
 
+  # Preserving attachments (on client-side) between failed validations (only usable for small/few files!)
+  # Needs to be called before save method and view needs to have :file_content and :file_info hidden field
+  # If file is an image, it can be viewed on front-end using @preview_cached with image_tag tag
+  def preserve(file_data)
+    if file_data[:file_content].present?
+      restore_cached(file_data[:file_content], file_data[:file_info])
+    end
+    cache
+  end
+
   protected
 
   # Checks if attachments is an image (in post processing imagemagick will
@@ -234,6 +284,32 @@ class Asset < ActiveRecord::Base
     if step.present? && result.present?
       errors.add(:base, "Asset can only be result or step, not both.")
     end
+  end
+
+  def cache
+    fetched_file = file.fetch
+    file_content = fetched_file.read
+    @file_content = encrypt(file_content)
+    @file_info = %Q[{"content_type" : "#{file.content_type}", "original_filename" : "#{file.original_filename}"}]
+    @file_info = encrypt(@file_info)
+    if !(file.content_type =~ /^image/).nil?
+      @preview_cached = "data:image/png;base64," + Base64.encode64(file_content)
+    end
+  end
+
+  def restore_cached(file_content, file_info)
+    decoded_data = decrypt(file_content)
+    decoded_data_info = decrypt(file_info)
+    decoded_data_info = JSON.parse decoded_data_info
+
+    data = StringIO.new(decoded_data)
+    data.class_eval do
+      attr_accessor :content_type, :original_filename
+    end
+    data.content_type = decoded_data_info['content_type']
+    data.original_filename = File.basename(decoded_data_info['original_filename'])
+
+    self.file = data
   end
 
 end

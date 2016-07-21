@@ -1,14 +1,11 @@
 class Report < ActiveRecord::Base
   include SearchableModel
 
-  enum grouped_by: { by_module: 0, by_timestamp: 1 }
-
   validates :name,
     presence: true,
     length: { minimum: 2, maximum: 30 },
     uniqueness: { scope: [:user, :project], case_sensitive: false }
   validates :description, length: { maximum: 1000 }
-  validates :grouped_by, presence: true
   validates :project, presence: true
   validates :user, presence: true
 
@@ -24,7 +21,6 @@ class Report < ActiveRecord::Base
     user,
     include_archived,
     query = nil,
-    attributes = :name,
     page = 1
   )
 
@@ -33,20 +29,27 @@ class Report < ActiveRecord::Base
       .search(user, include_archived, nil, SHOW_ALL_RESULTS)
       .select("id")
 
+    if query
+      a_query = query.strip
+      .gsub("_","\\_")
+      .gsub("%","\\%")
+      .split(/\s+/)
+      .map {|t|  "%" + t + "%" }
+    else
+      a_query = query
+    end
+
     new_query = Report
       .distinct
-      .joins("LEFT OUTER JOIN users ON users.id = reports.user_id")
-      .joins("LEFT OUTER JOIN users AS users_last_modified_by ON users.id = reports.last_modified_by_id")
+      .joins("LEFT OUTER JOIN users ON users.id = reports.user_id OR users.id = reports.last_modified_by_id")
       .where("reports.project_id IN (?)", project_ids)
       .where("reports.user_id = (?)", user.id)
       .where_attributes_like(
         [
           :name,
-          :description,
-          "users.full_name",
-          "users_last_modified_by.full_name"
+          :description
         ],
-        query
+        a_query
       )
 
     # Show all results if needed
@@ -83,6 +86,14 @@ class Report < ActiveRecord::Base
       return false
     end
     return true
+  end
+
+  # Clean report elements from report
+  # the function runs before the report is edit
+  def cleanup_report
+    report_elements.each do |el|
+      el.clean_removed_or_archived_elements
+    end
   end
 
   private

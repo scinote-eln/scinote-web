@@ -1,0 +1,12 @@
+<%= bootstrap_form_for @new_protocol, remote: :true do |f| %>
+  <input type="hidden" name="organization" id="organization" value="<%= @current_organization.id %>">
+  <input type="hidden" name="type" id="type" value="<%= @type %>">
+
+  <%= f.text_field :name, label: t("protocols.index.create.name_label"), placeholder: t("protocols.index.create.name_placeholder") %>
+
+  <% if @type == :public %>
+    <em><%= t("protocols.index.create.message_public") %></em>
+  <% elsif @type == :private %>
+    <em><%= t("protocols.index.create.message_private") %></em>
+  <% end %>
+<% end %>

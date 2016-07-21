@@ -71,7 +71,8 @@ class CanvasController < ApplicationController
     if can_reposition_modules(@project) and
       update_params[:positions].present? then
       poss = update_params[:positions].split(";")
-      (poss.collect { |pos| pos.split(",") }).each do |pos|
+      center = ""
+      (poss.collect { |pos| pos.split(",") }).each_with_index do |pos, index|
         unless (pos.length == 3 and
           pos[0].is_a? String and
           is_int? pos[1] and
@@ -79,8 +80,14 @@ class CanvasController < ApplicationController
           error = true
           break
         end
-        x = pos[1].to_i
-        y = pos[2].to_i
+        if index == 0
+          center = pos
+          x = 0
+          y = 0
+        else
+          x = pos[1].to_i - center[1].to_i
+          y = pos[2].to_i - center[2].to_i
+        end
         # Multiple modules cannot have same position
         if positions.any? { |k,v| v[:x] == x and v[:y] == y} then
           error = true

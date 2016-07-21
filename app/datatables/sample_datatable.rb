@@ -1,3 +1,5 @@
+require 'active_record'
+
 class SampleDatatable < AjaxDatatablesRails::Base
   include SamplesHelper
 
@@ -29,18 +31,29 @@ class SampleDatatable < AjaxDatatablesRails::Base
   def searchable_columns
     search_array = [
       "Sample.name",
-      "Sample.created_at",
       "SampleType.name",
       "SampleGroup.name",
       "Sample.created_at",
       "User.full_name"
     ]
     search_array.push(*custom_fields_sort_by)
-
-    @searchable_columns ||= search_array
+    @searchable_columns ||= filter_search_array search_array
   end
 
   private
+
+  # filters the search array by checking if the the column is visible
+  def filter_search_array input_array
+    param_index = 2
+    filtered_array =[]
+    input_array.each do |col|
+      unless params[:columns].to_a[param_index] == nil
+        filtered_array.push(col) unless params[:columns].to_a[param_index][1]["searchable"] == "false"
+        param_index += 1
+      end
+    end
+    filtered_array
+  end
 
   # Get array of columns to sort by (for custom fields)
   def custom_fields_sort_by
@@ -160,12 +173,36 @@ class SampleDatatable < AjaxDatatablesRails::Base
           # nulls last on sample_my_modules association
           records.order("sample_my_modules.id NULLS #{sort_null_direction(params[:order].values[0])}")
         elsif @project
-          # For project, simply sort on the count of assigned modules;
-          # if sample is assigned to 0 modules, it's not assigned to project;
-          # if it's assigned to > 0 modules, it's definately assigned to the
-          # @project since we filtered the samples table to only include
-          # the ones on this project
-          records.order("samples.nr_of_modules_assigned_to #{inverse_sort_direction(params[:order].values[0])}")
+          # A very elegant solution to sort assigned samples at a project level
+
+          # grabs the ids of samples which has a modules that belongs to this project
+          assigned = Sample
+            .joins('LEFT OUTER JOIN "sample_my_modules" ON "sample_my_modules"."sample_id" = "samples"."id"')
+            .joins('LEFT OUTER JOIN "my_modules" ON "my_modules"."id" = "sample_my_modules"."my_module_id"')
+            .where('"my_modules"."project_id" = ?', @project.id)
+            .where('"my_modules"."nr_of_assigned_samples" > 0')
+            .select('"samples"."id"')
+            .distinct
+
+          # grabs the ids that are not the previous one but are still of the same organization
+          unassigned = Sample
+            .where('"samples"."organization_id" = ?', @organization.id)
+            .where('"samples"."id" NOT IN (?)', assigned)
+            .select('"samples"."id"')
+            .distinct
+
+          # check the input param and merge the two arrays of ids
+          if params[:order].values[0]["dir"] == "asc"
+            ids = assigned + unassigned
+          elsif params[:order].values[0]["dir"] == "desc"
+            ids = unassigned + assigned
+          end
+          ids = ids.collect { |s| s.id }
+
+          # order the records by input ids
+          order_by_index = ActiveRecord::Base.send(:sanitize_sql_array,
+                                                  ["position((',' || samples.id || ',') in ?)", ids.join(',') + ','] )
+          records.where(id: ids).order(order_by_index)
         end
       elsif sorting_by_custom_column
         # Check if have to filter samples first
@@ -203,7 +240,8 @@ class SampleDatatable < AjaxDatatablesRails::Base
         # Sample object might have id from SampleType, name from
         # User ... chaos ensues basically. If something changes in db this might
         # change.
-        Sample.find_by_sql("SELECT sq.t0_r0 as id, sq.t0_r1 as name, sq.t0_r4 as created_at, sq.t0_r5, sq.t0_r2 as user_id, sq.custom_field_id FROM (#{records.to_sql})
+        formated_date = (I18n.t 'time.formats.datatables_date').gsub!(/^\"|\"?$/, '')
+        Sample.find_by_sql("SELECT sq.t0_r0 as id, sq.t0_r1 as name, to_char( sq.t0_r4, '#{ formated_date }' ) as created_at, sq.t0_r5, sq.t0_r6 as sample_group_id ,sq.t0_r7 as sample_type_id, sq.t0_r2 as user_id, sq.custom_field_id FROM (#{records.to_sql})
                                      as sq ORDER BY CASE WHEN sq.custom_field_id = #{cf_id} THEN 1 ELSE 2 END #{dir}, sq.value #{dir}
                                      LIMIT #{per_page} OFFSET #{offset}")
       else
@@ -212,6 +250,24 @@ class SampleDatatable < AjaxDatatablesRails::Base
     else
       super(records)
     end
+  end
+#(I18n.t('time.formats.datatables_date')).gsub("\"", '\'')
+
+  # A hack that overrides the new_search_contition method default behavior of the ajax-datatables-rails gem
+  # now the method checks if the column is the created_at and generate a custom SQL to parse
+  # it back to the caller method
+  def new_search_condition(column, value)
+    model, column = column.split('.')
+    model = model.constantize
+    formated_date = (I18n.t 'time.formats.datatables_date').gsub!(/^\"|\"?$/, '')
+    if column == 'created_at'
+      casted_column = ::Arel::Nodes::NamedFunction.new('CAST',
+                        [ Arel.sql("to_char( samples.created_at, '#{ formated_date }' ) AS VARCHAR") ] )
+    else
+      casted_column = ::Arel::Nodes::NamedFunction.new('CAST',
+                        [model.arel_table[column.to_sym].as(typecast)])
+    end
+    casted_column.matches("%#{value}%")
   end
 
   def sort_null_direction(item)

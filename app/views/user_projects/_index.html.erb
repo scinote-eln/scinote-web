@@ -9,7 +9,7 @@
         <% if i > 0 %><hr><% end %>
         <div class="row">
           <div class="col-xs-2">
-            <%= image_tag avatar_path(:icon_small), class: 'img-circle pull-left' %>
+            <%= image_tag avatar_path(user, :icon_small), class: 'img-circle pull-left' %>
           </div>
           <div class="col-xs-10">
             <span><%= user.full_name %></span>
@@ -19,10 +19,10 @@
       </li>
     <% end %>
   <% end %>
-  <% if can_edit_users_on_project(@project) %>
-    <li>
+</ul>
+<% if can_edit_users_on_project(@project) %>
+    <p>
       <hr>
       <%= link_to t("projects.index.manage_users"), project_users_edit_path(@project, format: :json), class: "manage-users-link", remote: true %>
-      </li>
+    </p>
   <% end %>
-</ul>

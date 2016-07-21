@@ -1,0 +1,5 @@
+name	sample type
+Mock 1dpi	potatoe leaves
+Mock 6dpi	potatoe leaves
+PVY NTN 1dpi	potatoe leaves
+PVY NTN 6dpi	potatoe leaves

@@ -1,21 +1,19 @@
-<% @asset_results.each do |asset|
-  is_result = nil
-  if asset.result.present?
-    is_result = true
-    my_module = asset.result.my_module
-  elsif asset.step.present?
-    is_result = false
-    my_module = asset.step.my_module
-  end
-%>
+<% @asset_results.each do |asset| %>
   <h5>
     <% if asset.is_image? %>
       <span class="glyphicon glyphicon-picture"></span>
     <% else %>
       <span class="glyphicon glyphicon-file"></span>
     <% end %>
-    <%= render partial: "search/results/partials/asset_text.html.erb", locals: { asset: asset, query: search_query, is_result: is_result } %>
+    <%= render partial: "search/results/partials/asset_text.html.erb", locals: { asset: asset, query: search_query } %>
   </h5>
+
+  <!-- Display asset contents if it exists -->
+  <% if asset.headline.present? && !asset.headline.empty? && asset.headline.include?("<mark>") %>
+    <blockquote class="blockquote-search">
+      <p><%= raw asset.headline %></p>
+    </blockquote>
+  <% end %>
 
   <p>
     <span>
@@ -23,30 +21,52 @@
       <%=l asset.created_at, format: :full %>
     </span>
     <br>
-    <% if is_result != nil %>
+    <% if asset.step %>
       <span>
-      <% if is_result %>
-          <%=t "search.index.result" %>
-          <%= render partial: "search/results/partials/result_text.html.erb", locals: { result: asset.result } %>
-      <% else %>
         <%=t "search.index.step" %>
         <%= render partial: "search/results/partials/step_text.html.erb", locals: { step: asset.step } %>
+      </span>
+      <br>
+      <% if asset.step.protocol.in_module? %>
+        <span>
+          <%=t "search.index.module" %>
+          <%= render partial: "search/results/partials/my_module_text.html.erb", locals: { my_module: asset.step.protocol.my_module } %>
+        </span>
+        <br>
+        <span>
+          <%=t "search.index.project" %>
+          <%= render partial: "search/results/partials/project_text.html.erb", locals: { project: asset.step.protocol.my_module.project } %>
+        </span>
+      <% else %>
+        <span>
+          <%=t "search.index.protocol" %>
+          <%= render partial: "search/results/partials/protocol_text.html.erb", locals: { protocol: asset.step.protocol, query: search_query } %>
+        </span>
       <% end %>
+      <br>
+      <span>
+        <%=t "search.index.organization" %>
+        <%= render partial: "search/results/partials/organization_text.html.erb", locals: { organization: asset.step.protocol.organization } %>
+      </span>
+    <% elsif asset.result %>
+      <span>
+        <%=t "search.index.result" %>
+        <%= render partial: "search/results/partials/result_text.html.erb", locals: { result: asset.result } %>
       </span>
       <br>
       <span>
         <%=t "search.index.module" %>
-        <%= render partial: "search/results/partials/my_module_text.html.erb", locals: { my_module: my_module } %>
+        <%= render partial: "search/results/partials/my_module_text.html.erb", locals: { my_module: asset.result.my_module } %>
       </span>
       <br>
       <span>
         <%=t "search.index.project" %>
-        <%= render partial: "search/results/partials/project_text.html.erb", locals: { project: my_module.project } %>
+        <%= render partial: "search/results/partials/project_text.html.erb", locals: { project: asset.result.my_module.project } %>
       </span>
       <br>
       <span>
         <%=t "search.index.organization" %>
-        <%= render partial: "search/results/partials/organization_text.html.erb", locals: { organization: my_module.project.organization } %>
+        <%= render partial: "search/results/partials/organization_text.html.erb", locals: { organization: asset.result.my_module.project.organization } %>
       </span>
     <% end %>
   </p>

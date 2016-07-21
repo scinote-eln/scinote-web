@@ -55,10 +55,17 @@ Rails.application.configure do
   # Raises helpful error messages.
   config.assets.raise_runtime_errors = true
 
+  # Only log info and higher on development
+  config.log_level = :info
+
+  # Only allow Better Errors to work on trusted ip, use ifconfig to see which
+  # one you use and put it into application.yml!
+  BetterErrors::Middleware.allow_ip! ENV['TRUSTED_IP'] if ENV['TRUSTED_IP']
+
   # Raises error for missing translations
-  # config.action_view.raise_on_missing_translations = true
+  config.action_view.raise_on_missing_translations = true
 
   # Enable first-time tutorial for users signing in the sciNote for
   # the first time.
-  config.x.enable_tutorial = ENV["ENABLE_TUTORIAL"] || false
+  config.x.enable_tutorial = ENV["ENABLE_TUTORIAL"] == "true"
 end

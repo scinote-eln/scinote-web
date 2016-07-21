@@ -44,6 +44,7 @@ $("#modal-create-sample-type").on("shown.bs.modal", function(event) {
 
 $("form#new_sample_type").on("ajax:success", function(ev, data, status) {
     $("#modal-create-sample-type").modal("hide");
+    updateSamplesTypesandGroups();
 });
 
 $("form#new_sample_type").on("ajax:error", function(e, data, status, xhr) {
@@ -71,6 +72,7 @@ $("#modal-create-sample-group").on("shown.bs.modal", function(event) {
 
 $("form#new_sample_group").on("ajax:success", function(ev, data, status) {
     $("#modal-create-sample-group").modal("hide");
+    updateSamplesTypesandGroups();
 });
 
 $("form#new_sample_group").on("ajax:error", function(e, data, status, xhr) {
@@ -103,12 +105,45 @@ $("form#form-samples-file")
   $(this).find(".form-group").append("<span class='help-block'>" + data.responseJSON.message + "</span>");
 });
 
+// Fetch samples data and updates the select options fields for
+// sample group and sample type column
+function updateSamplesTypesandGroups() {
+  changeToEditMode();
+  updateButtons();
+
+  $.ajax({
+    url: $("table#samples").data("new-sample"),
+    type: "GET",
+    dataType: "json",
+    success: function (data) {
+      $("select[name=sample_group_id]").each(function(){
+        var selectGroup = createSampleGroupSelect(data.sample_groups, -1);
+        var gtd = $(this).parent("td");
+        gtd.html(selectGroup[0]);
+      });
+      $("select[name=sample_type_id]").each(function(){
+        var selectType = createSampleTypeSelect(data.sample_types, -1);
+        var ttd = $(this).parent("td");
+        ttd.html(selectType[0]);
+      });
+
+      $("select[name=sample_group_id]").selectpicker();
+      $("select[name=sample_type_id]").selectpicker();
+    },
+    error: function (e, eData, status, xhr) {
+      if (e.status == 403)
+        showAlertMessage(I18n.t("samples.js.permission_error"));
+        changeToViewMode();
+        updateButtons();
+      }
+    });
+}
 
 function initTutorial() {
-  var currentStep = parseInt(Cookies.get('current_tutorial_step'));
+  var currentStep = parseInt(Cookies.get('current_tutorial_step'), 10);
   if (currentStep == 8)
     currentStep++;
-  if (showTutorial() && currentStep == 9 || currentStep == 10) {
+  if (showTutorial() && (currentStep > 12 &&  currentStep < 16)) {
     var samplesTutorial =$("#samples-toolbar").attr("data-samples-step-text");
     var breadcrumbsTutorial = $("#samples-toolbar").attr("data-breadcrumbs-step-text");
 
@@ -117,13 +152,12 @@ function initTutorial() {
         steps: [
           {
             element: document.getElementById("samples-toolbar"),
-            intro: samplesTutorial,
-            tooltipClass: 'custom'
+            intro: samplesTutorial
           },
           {
             element: document.getElementById("secondary-menu"),
             intro: breadcrumbsTutorial,
-            tooltipClass: 'custom disabled-next'
+            tooltipClass: 'custom next-page-link'
           }
         ],
         overlayOpacity: '0.1',
@@ -132,16 +166,27 @@ function initTutorial() {
         skipLabel: 'End tutorial',
         showBullets: false,
         showStepNumbers: false,
-        disableInteraction: true
+        exitOnOverlayClick: false,
+        exitOnEsc: false,
+        disableInteraction: true,
+        tooltipClass: "custom"
       })
-      .goToStep(currentStep - 8)
       .onafterchange(function (tarEl) {
-        Cookies.set('current_tutorial_step', this._currentStep + 9);
+        Cookies.set('current_tutorial_step', this._currentStep + 14);
 
-        // Disable interaction only for first step (dirty hack)
-        if (this._currentStep)
-          $('.introjs-disableInteraction').remove();
+        if (this._currentStep == 1) {
+          setTimeout(function() {
+            $('.next-page-link a.introjs-nextbutton')
+              .removeClass('introjs-disabled')
+              .attr('href', $("#reports-nav-tab a").attr('href'));
+            $('.introjs-disableInteraction').remove();
+            positionTutorialTooltip();
+          }, 500);
+        } else {
+          positionTutorialTooltip();
+        }
       })
+      .goToStep(currentStep == 15 ? 2 : 1)
       .start();
 
     // Destroy first-time tutorial cookies when skip tutorial
@@ -154,6 +199,26 @@ function initTutorial() {
     });
   }
 }
+
+function positionTutorialTooltip() {
+  if (Cookies.get('current_tutorial_step') == 13) {
+    if ($("#reports-nav-tab").offset().left == 0) {
+      $(".introjs-tooltip").css("left", (window.innerWidth / 2 - 50)  + "px");
+      $(".introjs-tooltip").addClass("repositioned");
+    } else if ($(".introjs-tooltip").hasClass("repositioned")) {
+      $(".introjs-tooltip").css("left", "");
+      $(".introjs-tooltip").removeClass("repositioned");
+    }
+  } else {
+    if ($(".introjs-tooltip").offset().left > window.innerWidth) {
+      $(".introjs-tooltip").css("left", (window.innerWidth / 2 - 50)  + "px");
+      $(".introjs-tooltip").addClass("repositioned");
+    } else if ($(".introjs-tooltip").hasClass("repositioned")) {
+      $(".introjs-tooltip").css("left", "");
+      $(".introjs-tooltip").removeClass("repositioned");
+    }
+  }
+};
 
 function showTutorial() {
   var tutorialData;

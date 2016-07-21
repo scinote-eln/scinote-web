@@ -20,8 +20,11 @@
 //= require moment
 //= require bootstrap-datetimepicker
 //= require bootstrap-colorselector
+//= require bootstrap-tagsinput.min
+//= require typeahead.bundle.min
 //= require nested_form_fields
 //= require_directory ./sitewide
+//= require dataTables.noSearchHidden
 //= require bootstrap-select
 //= require underscore
 //= require i18n.js
@@ -79,18 +82,35 @@ function animateLoading(start){
  * Optional parameter options for spin.js options.
  */
 function animateSpinner(el, start, options) {
-  if (start === undefined)
+  // If overlaying the whole page,
+  // put the spinner in the middle of the page
+  var overlayPage = false;
+  if (_.isUndefined(el) || el === null) {
+    overlayPage = true;
+    if ($(document.body).has('.loading-overlay-center').length === 0) {
+      $(document.body).append('<div class="loading-overlay-center" />');
+    }
+    el = $(document.body).find('.loading-overlay-center');
+  }
+
+  if (_.isUndefined(start)) {
     start = true;
+  }
+
   if (start && options) {
     $(el).spin(options);
   }
   else {
     $(el).spin(start);
   }
+
   if (start) {
-    $(el).append('<div class="loading-overlay" />');
-  }
-  else {
+    if (overlayPage) {
+      $(document.body).append('<div class="loading-overlay" />');
+    } else {
+      $(el).append('<div class="loading-overlay" />');
+    }
+  } else {
     $(".loading-overlay").remove();
   }
 
@@ -135,5 +155,29 @@ $(document.body).ready(function () {
 
   activityModal.on('hidden.bs.modal', function () {
     activityModalBody.html('');
+  });
+});
+
+/*
+ * Truncate long strings where is necessary
+ */
+
+function truncateLongString( el, chars ) {
+  var input = $.trim(el.text());
+
+  if( input.length  >= chars){
+    var newText = el.text().slice(0, chars);
+    for( var i = newText.length; i > 0; i--){
+      if(newText[i] === ' '){
+        newText = newText.slice(0, i);
+        break;
+      }
+    }
+  el.text(newText + '...');
+  }
+}
+$(document).ready(function(){
+  $('.tree-link a').each( function(){
+    truncateLongString( $(this), 30);
   });
 });

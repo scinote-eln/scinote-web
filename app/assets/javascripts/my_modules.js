@@ -118,6 +118,14 @@ function bindEditTagsAjax() {
         var li = $this.parents("li.list-group-item");
         var editDiv = $(li.find("div.tag-edit"));
 
+        // Revert all rows to their original states
+        manageTagsModalBody.find("li.list-group-item").each(function(){
+          var li = $(this);
+          li.css("background-color", li.data("color"));
+          li.find(".edit-tag-form").clear_form_errors();
+          li.find("input[type=text]").val(li.data("name"));
+        });
+
         // Hide all other edit divs, show all show divs
         manageTagsModalBody.find("div.tag-edit").hide();
         manageTagsModalBody.find("div.tag-show").show();
@@ -133,7 +141,6 @@ function bindEditTagsAjax() {
         // Change background of the <li>
         var $this = $(this);
         var li = $this.parents("li.list-group-item");
-
         li.css("background-color", $this.data("value"));
       });
     manageTagsModalBody.find(".remove-tag-link")

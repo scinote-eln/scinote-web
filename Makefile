@@ -1,4 +1,5 @@
 APP_HOME="/usr/src/app"
+DB_IP=$(shell docker inspect web_db_1 | grep -m 1 "\"IPAddress\": " | awk '{ match($$0, /"IPAddress": "([0-9\.]*)",/, a); print a[1] }')
 
 all: docker database
 
@@ -13,6 +14,9 @@ docker:
 db-cli:
 	@$(MAKE) rails cmd="rails db"
 
+db-load-dump:
+	@$(MAKE) rails cmd="rake db:drop db:create;pg_restore --verbose --clean --no-acl --no-owner -h $(DB_IP) -p 5432 -U postgres -d scinote_development latest.dump"
+
 database:
 	@$(MAKE) rails cmd="rake db:create db:setup db:migrate"
 
@@ -20,7 +24,9 @@ rails:
 	@docker-compose run web $(cmd)
 
 run:
-	@docker-compose up
+	rm tmp/pids/server.pid || true
+	@docker-compose up -d
+	@docker attach $(shell docker-compose ps web | grep "rails s" | awk '{ print $$1; }')
 
 start:
 	@docker-compose start

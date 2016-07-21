@@ -27,6 +27,19 @@ class Project < ActiveRecord::Base
   belongs_to :organization, inverse_of: :projects
 
   def self.search(user, include_archived, query = nil, page = 1)
+
+
+    if query
+      a_query = query.strip
+      .gsub("_","\\_")
+      .gsub("%","\\%")
+      .split(/\s+/)
+      .map {|t|  "%" + t + "%" }
+    else
+      a_query = query
+    end
+
+
     org_ids =
       Organization
       .joins(:user_organizations)
@@ -40,7 +53,7 @@ class Project < ActiveRecord::Base
         .joins(:user_projects)
         .where("projects.organization_id IN (?)", org_ids)
         .where("projects.visibility = 1 OR user_projects.user_id = ?", user.id)
-        .where_attributes_like(:name, query)
+        .where_attributes_like(:name, a_query)
 
     else
       new_query = Project
@@ -48,7 +61,7 @@ class Project < ActiveRecord::Base
         .joins(:user_projects)
         .where("projects.organization_id IN (?)", org_ids)
         .where("projects.visibility = 1 OR user_projects.user_id = ?", user.id)
-        .where_attributes_like(:name, query)
+        .where_attributes_like(:name, a_query)
         .where("projects.archived = ?", false)
     end
 
@@ -63,7 +76,7 @@ class Project < ActiveRecord::Base
   end
 
   def last_activities(count = 20)
-    activities.order(:created_at).last(count)
+    activities.order(created_at: :desc).first(count)
   end
 
   # Get project comments order by created_at time. Results are paginated
@@ -86,13 +99,11 @@ class Project < ActiveRecord::Base
   end
 
   def unassigned_users
-    User.find_by_sql(
-      "SELECT DISTINCT users.id, users.full_name FROM users " +
-      "INNER JOIN user_organizations ON users.id = user_organizations.user_id " +
-      "WHERE user_organizations.organization_id = " + organization_id.to_s +
-      " AND users.id NOT IN " +
-      "(SELECT DISTINCT user_id FROM user_projects WHERE user_projects.project_id = " + id.to_s + ")"
-    )
+    User
+    .joins("INNER JOIN user_organizations ON users.id = user_organizations.user_id ")
+    .where("user_organizations.organization_id = ?", organization)
+    .where.not(confirmed_at: nil)
+    .where("users.id NOT IN (?)", UserProject.where(project: self).select(:id).distinct)
   end
 
   def assigned_modules(user)

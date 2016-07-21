@@ -93,10 +93,6 @@ class MyModuleTest < ActiveSupport::TestCase
     assert_equal 1, unassigned_tags.size
   end
 
-  test "should count steps of module" do
-    assert_equal 1, @my_module.number_of_steps
-  end
-
   test "should get last comments" do
     skip
   end
@@ -156,6 +152,6 @@ class MyModuleTest < ActiveSupport::TestCase
     message = "This is test message for my module"
     @my_module.log(message)
     log_message = Log.last.message
-    assert_equal log_message[59..-1], message
+    assert_equal log_message[57..-1], message
   end
 end

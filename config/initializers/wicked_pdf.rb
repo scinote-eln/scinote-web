@@ -1,12 +1,8 @@
-WickedPdf.config = {
-  #:wkhtmltopdf => '/usr/local/bin/wkhtmltopdf',
-  #:layout => "pdf.html",
-  #:exe_path => '/usr/local/bin/wkhtmltopdf'
-}
+WickedPdf.config ||= {}
 
 
 # WickedPdfHelper patch that fixes issue with including application.css
-# in environments like Heroku where assets.compile option is disabled and 
+# in environments like Heroku where assets.compile option is disabled and
 # it is not acceptable to enable it.
 if Rails.env.production? and Rails.configuration.assets.compile == false
 

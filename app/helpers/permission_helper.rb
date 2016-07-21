@@ -95,26 +95,17 @@ module PermissionHelper
       :can_edit_users_on_module,
       :can_add_user_to_module,
       :can_remove_user_from_module,
+      :can_view_module_protocols,
+      :can_load_protocol_into_module,
+      :can_export_protocol_from_module,
+      :can_copy_protocol_to_repository,
       :can_view_module_activities,
       :can_view_module_comments,
       :can_add_comment_to_module,
       :can_view_module_samples,
       :can_view_module_archive,
-      :can_view_steps_in_module,
-      :can_create_step_in_module,
-      :can_edit_step_in_module,
-      :can_delete_step_in_module,
-      :can_download_step_assets,
-      :can_view_step_comments,
-      :can_add_step_comment_in_module,
-      :can_complete_step_in_module,
-      :can_uncomplete_step_in_module,
-      :can_duplicate_step_in_module,
-      :can_reorder_step_in_module,
-      :can_check_checkbox,
-      :can_uncheck_checkbox,
       :can_view_results_in_module,
-      :can_download_result_assets,
+      :can_view_or_download_result_assets,
       :can_view_result_comments,
       :can_add_result_comment_in_module,
       :can_create_result_text_in_module,
@@ -390,6 +381,10 @@ module PermissionHelper
     is_owner_of_project(my_module.project)
   end
 
+  def can_view_module_protocols(my_module)
+    can_view_module(my_module)
+  end
+
   def can_view_module_activities(my_module)
     is_member_of_project(my_module.project)
   end
@@ -411,74 +406,14 @@ module PermissionHelper
     is_user_or_higher_of_project(my_module.project)
   end
 
-  # ---- STEPS PERMISSIONS ----
-
-  def can_view_steps_in_module(my_module)
-    can_view_module(my_module)
-  end
-
-  def can_create_step_in_module(my_module)
-    is_user_or_higher_of_project(my_module.project)
-  end
-
-  # Could possibly be divided into:
-  #   - edit step name/description
-  #   - adding checklists
-  #   - adding assets
-  #   - adding tables
-  # but right now we have 1 page to rule them all.
-  def can_edit_step_in_module(my_module)
-    is_user_or_higher_of_project(my_module.project)
-  end
-
-  def can_delete_step_in_module(my_module)
-    is_owner_of_project(my_module.project)
-  end
-
-  def can_download_step_assets(my_module)
-    is_member_of_project(my_module.project)
-  end
-
-  def can_view_step_comments(my_module)
-    can_view_project(my_module.project)
-  end
-
-  def can_add_step_comment_in_module(my_module)
-    is_technician_or_higher_of_project(my_module.project)
-  end
-
-  def can_complete_step_in_module(my_module)
-    is_technician_or_higher_of_project(my_module.project)
-  end
-
-  def can_uncomplete_step_in_module(my_module)
-    is_user_or_higher_of_project(my_module.project)
-  end
-
-  def can_duplicate_step_in_module(my_module)
-    is_user_or_higher_of_project(my_module.project)
-  end
-
-  def can_reorder_step_in_module(my_module)
-    is_user_or_higher_of_project(my_module.project)
-  end
-
-  def can_check_checkbox(my_module)
-    is_technician_or_higher_of_project(my_module.project)
-  end
-
-  def can_uncheck_checkbox(my_module)
-    is_user_or_higher_of_project(my_module.project)
-  end
-
   # ---- RESULTS PERMISSIONS ----
 
   def can_view_results_in_module(my_module)
     can_view_project(my_module.project)
   end
 
-  def can_download_result_assets(my_module)
-    is_member_of_project(my_module.project)
+  def can_view_or_download_result_assets(my_module)
+    is_member_of_project(my_module.project) || can_view_project(my_module.project)
   end
 
   def can_view_result_comments(my_module)
@@ -603,6 +538,277 @@ module PermissionHelper
 
   def can_create_custom_field_in_organization(organization)
     is_normal_user_or_admin_of_organization(organization)
+  end
+
+  # ---- PROTOCOL PERMISSIONS ----
+
+  def can_view_organization_protocols(organization)
+    is_member_of_organization(organization)
+  end
+
+  def can_create_new_protocol(organization)
+    is_normal_user_or_admin_of_organization(organization)
+  end
+
+  def can_import_protocols(organization)
+    is_normal_user_or_admin_of_organization(organization)
+  end
+
+  def can_view_protocol(protocol)
+    if protocol.in_repository_public?
+      is_member_of_organization(protocol.organization)
+    elsif (protocol.in_repository_private? or protocol.in_repository_archived?)
+      is_member_of_organization(protocol.organization) and
+      protocol.added_by == current_user
+    elsif protocol.in_module?
+      my_module = protocol.my_module
+      my_module.active? and my_module.project.active? and can_view_module(my_module)
+    else
+      false
+    end
+  end
+
+  def can_edit_protocol(protocol)
+    is_normal_user_or_admin_of_organization(protocol.organization) and
+    current_user == protocol.added_by and (not protocol.in_repository_archived?)
+  end
+
+  def can_clone_protocol(protocol)
+    is_normal_user_or_admin_of_organization(protocol.organization) and
+    (
+      protocol.in_repository_public? or
+      (protocol.in_repository_private? and current_user == protocol.added_by)
+    )
+  end
+
+  def can_make_protocol_private(protocol)
+    protocol.added_by == current_user and
+    protocol.in_repository_public?
+  end
+
+  def can_publish_protocol(protocol)
+    protocol.added_by == current_user and
+    protocol.in_repository_private?
+  end
+
+  def can_export_protocol(protocol)
+    (protocol.in_repository_public? and is_member_of_organization(protocol.organization)) or
+    (protocol.in_repository_private? and protocol.added_by == current_user) or
+    (protocol.in_module? and can_export_protocol_from_module(protocol.my_module))
+  end
+
+  def can_archive_protocol(protocol)
+    protocol.added_by == current_user and
+    (protocol.in_repository_public? or protocol.in_repository_private?)
+  end
+
+  def can_restore_protocol(protocol)
+    protocol.added_by == current_user and
+    protocol.in_repository_archived?
+  end
+
+  def can_unlink_protocol(protocol)
+    if protocol.linked?
+      my_module = protocol.my_module
+      my_module.active? and my_module.project.active? and is_user_or_higher_of_project(my_module.project)
+    else
+      false
+    end
+  end
+
+  def can_revert_protocol(protocol)
+    if protocol.linked?
+      my_module = protocol.my_module
+      my_module.active? and my_module.project.active? and is_user_or_higher_of_project(my_module.project)
+    else
+      false
+    end
+  end
+
+  def can_update_protocol_from_parent(protocol)
+    if protocol.linked?
+      my_module = protocol.my_module
+      my_module.active? and my_module.project.active? and is_user_or_higher_of_project(my_module.project)
+    else
+      false
+    end
+  end
+
+  def can_load_protocol_from_repository(protocol, source)
+    if can_view_protocol(source)
+      my_module = protocol.my_module
+      my_module.active? and my_module.project.active? and is_user_or_higher_of_project(my_module.project)
+    else
+      false
+    end
+  end
+
+  def can_update_parent_protocol(protocol)
+    if protocol.linked?
+      my_module = protocol.my_module
+      parent = protocol.parent
+
+      my_module.active? and
+      my_module.project.active? and
+      is_normal_user_or_admin_of_organization(parent.organization) and
+      is_user_or_higher_of_project(my_module.project) and
+      (parent.in_repository_public? or parent.in_repository_private?) and
+      parent.added_by == current_user
+    else
+      false
+    end
+  end
+
+  # ---- STEPS PERMISSIONS ----
+
+  def can_load_protocol_into_module(my_module)
+    is_user_or_higher_of_project(my_module.project)
+  end
+
+  def can_export_protocol_from_module(my_module)
+    can_view_module_protocols(my_module)
+  end
+
+  def can_copy_protocol_to_repository(my_module)
+    is_normal_user_or_admin_of_organization(my_module.project.organization)
+  end
+
+  def can_link_copied_protocol_in_repository(protocol)
+    can_copy_protocol_to_repository(protocol.my_module) and
+    is_user_or_higher_of_project(protocol.my_module.project)
+  end
+
+  def can_view_steps_in_protocol(protocol)
+    if protocol.in_module?
+      my_module = protocol.my_module
+      my_module.active? and my_module.project.active? and can_view_module(my_module)
+    elsif protocol.in_repository?
+      protocol.in_repository_active? and can_view_protocol(protocol)
+    else
+      false
+    end
+  end
+
+  def can_create_step_in_protocol(protocol)
+    if protocol.in_module?
+      my_module = protocol.my_module
+      my_module.active? and my_module.project.active? and is_user_or_higher_of_project(my_module.project)
+    elsif protocol.in_repository?
+      protocol.in_repository_active? and can_edit_protocol(protocol)
+    else
+      false
+    end
+  end
+
+  def can_reorder_step_in_protocol(protocol)
+    if protocol.in_module?
+      my_module = protocol.my_module
+      my_module.active? and my_module.project.active? and is_user_or_higher_of_project(my_module.project)
+    elsif protocol.in_repository?
+      protocol.in_repository_active? and can_edit_protocol(protocol)
+    else
+      false
+    end
+  end
+
+  # Could possibly be divided into:
+  #   - edit step name/description
+  #   - adding checklists
+  #   - adding assets
+  #   - adding tables
+  # but right now we have 1 page to rule them all.
+  def can_edit_step_in_protocol(protocol)
+    if protocol.in_module?
+      my_module = protocol.my_module
+      my_module.active? and my_module.project.active? and is_user_or_higher_of_project(my_module.project)
+    elsif protocol.in_repository?
+      protocol.in_repository_active? and can_edit_protocol(protocol)
+    else
+      false
+    end
+  end
+
+  def can_delete_step_in_protocol(protocol)
+    if protocol.in_module?
+      my_module = protocol.my_module
+      my_module.active? and my_module.project.active? and is_owner_of_project(my_module.project)
+    elsif protocol.in_repository?
+      protocol.in_repository_active? and can_edit_protocol(protocol)
+    else
+      false
+    end
+  end
+
+  def can_view_step_comments(protocol)
+    if protocol.in_module?
+      my_module = protocol.my_module
+      my_module.active? and my_module.project.active? and can_view_project(my_module.project)
+    else
+      # In repository, comments are disabled
+      false
+    end
+  end
+
+  def can_add_step_comment_in_protocol(protocol)
+    if protocol.in_module?
+      my_module = protocol.my_module
+      my_module.active? and my_module.project.active? and is_technician_or_higher_of_project(my_module.project)
+    else
+      # In repository, user cannot complete steps
+      false
+    end
+  end
+
+  def can_view_or_download_step_assets(protocol)
+    if protocol.in_module?
+      my_module = protocol.my_module
+      my_module.active? and my_module.project.active? and
+      (is_member_of_project(my_module.project) || can_view_project(my_module.project))
+    elsif protocol.in_repository?
+      protocol.in_repository_active? and can_view_protocol(protocol)
+    else
+      false
+    end
+  end
+
+  def can_complete_step_in_protocol(protocol)
+    if protocol.in_module?
+      my_module = protocol.my_module
+      my_module.active? and my_module.project.active? and is_technician_or_higher_of_project(my_module.project)
+    else
+      # In repository, user cannot complete steps
+      false
+    end
+  end
+
+  def can_uncomplete_step_in_protocol(protocol)
+    if protocol.in_module?
+      my_module = protocol.my_module
+      my_module.active? and my_module.project.active? and is_user_or_higher_of_project(my_module.project)
+    else
+      # In repository, user cannot complete steps
+      false
+    end
+  end
+
+  def can_check_checkbox(protocol)
+    if protocol.in_module?
+      my_module = protocol.my_module
+      my_module.active? and my_module.project.active? and is_technician_or_higher_of_project(my_module.project)
+    else
+      # In repository, user cannot check checkboxes
+      false
+    end
+  end
+
+  def can_uncheck_checkbox(protocol)
+    if protocol.in_module?
+      my_module = protocol.my_module
+      my_module.active? and my_module.project.active? and is_user_or_higher_of_project(my_module.project)
+    else
+      # In repository, user cannot check checkboxes
+      false
+    end
   end
 
 end

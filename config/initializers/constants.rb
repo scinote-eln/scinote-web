@@ -1,5 +1,5 @@
 # Application version
-APP_VERSION = "1.0.0"
+APP_VERSION = "1.1.0"
 
 TAG_COLORS = [
   "#6C159E",
@@ -20,6 +20,9 @@ TAG_COLORS = [
   "#C71585",
   "#000000"
 ]
+
+# Maximum uploaded file size in MB
+FILE_SIZE_LIMIT = 50
 
 SEARCH_LIMIT = 20
 
@@ -48,3 +51,36 @@ MINIMAL_ORGANIZATION_SPACE_TAKEN = 1024*1024
 ASSET_ESTIMATED_SIZE_FACTOR = 1.1
 
 DEFAULT_PRIVATE_ORG_NAME = "My projects"
+
+#                           )       \   /      (
+#                          /|\      )\_/(     /|\
+# *                       / | \    (/\|/\)   / | \                      *
+# |`.____________________/__|__o____\`|'/___o__|__\___________________.'|
+# |                           '^`    \|/   '^`                          |
+# |                                   V                                 |
+# |       _____ _                 _                            __       |
+# |      |_   _| |__   __ _ _ __ | | __   _   _  ___  _   _   (  |      |
+# |        | | | '_ \ / _` | '_ \| |/ /  | | | |/ _ \| | | |  |  )      |
+# |        | | | | | | (_| | | | |   <   | |_| | ( | | |_| |  \_/       |
+# |        |_| |_| |_|\__,_|_| |_|_|\_\   \__, |\___/ \_,|_|   _        |
+# |                                       |___/               (_)       |
+# |                                                                     |
+# |   Special Thank You for supporting sciNote on Kicstarter goes       |
+# |   to the following supporters                                       |
+# | ._________________________________________________________________. |
+# |'               l    /\ /     \\            \ /\   l                `|
+# *                l  /   V       ))            V   \ l                 *
+#                  l/            //                  \I
+KICKSTARTER_SUPPORTERS = [
+  "Manuela Lanzafame",
+  "Fluckiger Rudolf",
+  "Emily Gleason",
+  "Benjamin E Doremus",
+  "Chord Pet Wearable",
+  "Chris Taylor",
+  "Abraham White",
+  "Ryotaro Eguchi",
+  "Simon Waldherr",
+  "Isaac Sandaljian",
+  "Markus Rademacher"
+]

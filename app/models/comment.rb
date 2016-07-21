@@ -40,6 +40,17 @@ class Comment < ActiveRecord::Base
       .search(user, include_archived, nil, SHOW_ALL_RESULTS)
       .select("id")
 
+
+    if query
+      a_query = query.strip
+      .gsub("_","\\_")
+      .gsub("%","\\%")
+      .split(/\s+/)
+      .map {|t|  "%" + t + "%" }
+    else
+      a_query = query
+    end
+
     new_query = Comment
       .distinct
       .joins(:user)
@@ -59,7 +70,7 @@ class Comment < ActiveRecord::Base
       )
       .where_attributes_like(
         [ :message, "users.full_name" ],
-        query
+        a_query
       )
 
       # Show all results if needed

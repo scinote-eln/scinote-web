@@ -10,7 +10,7 @@
 
 <%= form.label t("projects.reports.elements.modals.module_contents_inner.header") %>
 
-<% if my_module_undefined or my_module.steps.count > 0 %>
+<% if my_module_undefined or my_module.protocol.steps.count > 0 %>
   <%= form.check_box :module_steps, label: t("projects.reports.elements.modals.module_contents_inner.steps") %>
 <% else %>
   <div>
@@ -20,20 +20,20 @@
   </div>
 <% end %>
 
-<% if my_module_undefined or my_module.results.count > 0 %>
+<% if my_module_undefined or (my_module.results.select { |r| r.active? }).count > 0 %>
   <%= form.check_box :module_results, label: t("projects.reports.elements.modals.module_contents_inner.results"), class: "results-all" %>
   <ul class="no-style" style="padding-left: 15px;">
-    <% if my_module_undefined or (my_module.results.select { |r| r.is_asset }).count > 0 %>
+    <% if my_module_undefined or (my_module.results.select { |r| r.is_asset && r.active? }).count > 0 %>
       <li>
         <%= form.check_box :module_result_assets, label: t("projects.reports.elements.modals.module_contents_inner.result_assets"), class: "result-cb" %>
       </li>
     <% end %>
-    <% if my_module_undefined or (my_module.results.select { |r| r.is_table }).count > 0 %>
+    <% if my_module_undefined or (my_module.results.select { |r| r.is_table && r.active? }).count > 0 %>
       <li>
         <%= form.check_box :module_result_tables, label: t("projects.reports.elements.modals.module_contents_inner.result_tables"), class: "result-cb" %>
       </li>
     <% end %>
-    <% if my_module_undefined or (my_module.results.select { |r| r.is_text }).count > 0 %>
+    <% if my_module_undefined or (my_module.results.select { |r| r.is_text && r.active? }).count > 0 %>
       <li>
         <%= form.check_box :module_result_texts, label: t("projects.reports.elements.modals.module_contents_inner.result_texts"), class: "result-cb" %>
       </li>

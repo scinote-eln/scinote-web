@@ -1,3 +1,4 @@
+<% @markdown ||= nil %>
 <% results.each do |result| %>
   <h5>
     <% if result.is_text %>
@@ -13,6 +14,14 @@
     <% end %>
     <%= render partial: "search/results/partials/result_text.html.erb", locals: { result: result, query: search_query } %>
   </h5>
+
+  <% if result.is_text && result.result_text.text.present? && !result.result_text.text.empty? && @markdown.present? %>
+    <blockquote class="search-asset-text-data">
+      <p>
+        <%= highlight(@markdown.render(result.result_text.text).html_safe, search_query.strip.split(/\s+/)) %>
+      </p>
+    </blockquote>
+  <% end %>
 
   <p>
     <span>

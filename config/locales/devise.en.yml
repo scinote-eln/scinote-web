@@ -50,7 +50,7 @@ en:
       unlocked: "Your account has been unlocked successfully. Please log in to continue."
   errors:
     messages:
-      already_confirmed: "was already confirmed, please try logging in"
+      already_confirmed: "this email was already confirmed, please try logging in"
       confirmation_period_expired: "needs to be confirmed within %{period}, please request a new one"
       expired: "has expired, please request a new one"
       not_found: "not found"

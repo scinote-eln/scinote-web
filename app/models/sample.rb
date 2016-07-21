@@ -31,6 +31,16 @@ class Sample < ActiveRecord::Base
       .select("id")
       .distinct
 
+    if query
+      a_query = query.strip
+      .gsub("_","\\_")
+      .gsub("%","\\%")
+      .split(/\s+/)
+      .map {|t|  "%" + t + "%" }
+    else
+      a_query = query
+    end
+
     new_query = Sample
       .distinct
       .joins(:user)
@@ -46,7 +56,7 @@ class Sample < ActiveRecord::Base
           "users.full_name",
           "sample_custom_fields.value"
         ],
-        query
+        a_query
       )
 
       # Show all results if needed

@@ -37,11 +37,27 @@ class ApplicationController < ActionController::Base
   end
 
   def render_403
-    render :file => 'public/403.html', :status => :forbidden, :layout => false
+    respond_to do |format|
+      format.html {
+        render file: 'public/403.html', status: :forbidden, layout: false
+      }
+      format.json {
+        render json: {}, status: :forbidden
+      }
+    end
+    return
   end
 
   def render_404
-    render :file => 'public/404.html', :status => :not_found, :layout => false
+    respond_to do |format|
+      format.html {
+        render :file => 'public/404.html', :status => :not_found, :layout => false
+      }
+      format.json {
+        render json: {}, status: :not_found
+      }
+    end
+    return
   end
 
   private

@@ -93,19 +93,22 @@
   var styleOptionRe = /(\d+)x(\d+)/i;
 
   function parseStyleOption(option) {
-    var m = option.match(styleOptionRe)
+    var m = option.match(styleOptionRe);
 
     return {
       width: m && m[1] || 150,
       height: m && m[2] || 150
-    }
+    };
   }
 
 
   exports.directUpload = function (form, origId, signUrl, cb, cbErr, errKey) {
-    var file = $(form).find("input[type=file]").get(0).files[0];
+    var fileInputs = $(form).find("input[type=file]");
+    var file = fileInputs.get(0).files[0];
 
-    if (!file) {
+    var isValid = checkFilesValidity(fileInputs);
+
+    if (!isValid) {
       cbErr();
       return;
     }
@@ -158,7 +161,7 @@
 
       processPost();
     });
-  }
+  };
 
 }(this));
 

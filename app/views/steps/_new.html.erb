@@ -1,15 +1,15 @@
 <div class="well">
-  <%= bootstrap_form_for(@step, url: my_module_steps_path(@my_module.id, format: :json), remote: true, authenticity_token: true, multipart: true, data: { type: :json }) do |f| %>
-    <h4><%=t "my_modules.steps.new.add_step_title" %></h4>
+  <%= bootstrap_form_for(@step, url: protocol_steps_path(@protocol, format: :json), remote: true, authenticity_token: true, multipart: true, data: { role: "new-step-form", type: :json }) do |f| %>
+    <h4><%= t("protocols.steps.new.add_step_title") %></h4>
     <hr>
     <%= render partial: "empty_step.html.erb", locals: {step: @step, f: f} %>
     <hr>
     <% if direct_upload %>
-    <%= f.submit t("my_modules.steps.new.add_step"), id: "create-step", class: 'btn btn-primary', onclick: 'startFileUpload(event, this);' %>
+      <%= f.submit t("protocols.steps.new.add_step"), class: 'btn btn-primary', onclick: 'animateSpinner(); startFileUpload(event, this);' %>
     <% else %>
-    <%= f.submit t("my_modules.steps.new.add_step"), id: "create-step", class: 'btn btn-primary' %>
+      <%= f.submit t("protocols.steps.new.add_step"), id: "create-step", class: 'btn btn-primary', onclick: 'animateSpinner(); stepValidator(event);' %>
     <% end %>
-    <button type="button" class="btn btn-default cancel-new">
+    <button type="button" data-action="cancel-new" class="btn btn-default">
       <%= t("general.cancel")%>
     </button>
   <% end %>

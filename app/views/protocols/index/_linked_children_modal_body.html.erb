@@ -1,0 +1,17 @@
+<% linked_children = protocol.linked_children %>
+
+<% if protocol.nr_of_linked_children > 0 %>
+  <div>
+    <%= t("protocols.index.linked_children.used_in", nr: protocol.nr_of_linked_children) %>
+  </div>
+
+  <div class="linked-children-datatable">
+    <table id="linked-children-table" class="table" data-source="<%= linked_children_datatable_protocol_path(protocol: protocol) %>">
+      <tbody></tbody>
+    </table>
+  </div>
+<% else %>
+  <div>
+    <em><%= t("protocols.index.linked_children.no_linked_children") %></em>
+  </div>
+<% end %>

@@ -3,8 +3,9 @@ class Users::RegistrationsController < Devise::RegistrationsController
   before_action :load_paperclip_vars
 
   def avatar
+    user = User.find_by_id(params[:id]) || current_user
     style = params[:style] || "icon_small"
-    redirect_to current_user.avatar.url(style.to_sym), status: 307
+    redirect_to user.avatar.url(style.to_sym), status: 307
   end
 
   def signature
@@ -30,7 +31,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
   end
 
   def update_resource(resource, params)
-    @user_avatar_url = avatar_path(:thumb)
+    @user_avatar_url = avatar_path(current_user, :thumb)
 
     if @direct_upload
       if params.include? :avatar_file_name
@@ -159,7 +160,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
   protected
 
   def load_paperclip_vars
-    @direct_upload = ENV['PAPERCLIP_DIRECT_UPLOAD']
+    @direct_upload = ENV['PAPERCLIP_DIRECT_UPLOAD'] == "true"
   end
 
   # Called upon creating User (before .save). Permits parameters and extracts
@@ -211,7 +212,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
         success_action_status: '201',
         acl: 'public-read',
         storage_class: "REDUCED_REDUNDANCY",
-        content_length_range: 1..(1024*1024*50),
+        content_length_range: 1..(FILE_SIZE_LIMIT.megabytes),
         content_type: content_type
       )
       posts.push({

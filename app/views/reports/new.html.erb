@@ -1,0 +1,76 @@
+<% provide(:head_title, raw(t("projects.reports.new.head_title", project: @project.name))) %>
+<% provide(:body_class, "report-body") %>
+<% provide(:sidebar_wrapper_class, "report-sidebar-wrapper") %>
+<% provide(:container_class, "report-container") %>
+
+<%= render partial: "reports/new/report_sidebar" %>
+<%= render partial: "reports/new/report_navigation" %>
+
+<div
+  id="data-holder"
+  class="hidden"
+  data-project-modal-title="<%=t "projects.reports.elements.modals.project_contents.head_title" %>"
+  data-add-project-contents-url="<%= project_contents_modal_project_reports_url %>"
+  data-add-module-contents-url="<%= module_contents_modal_project_reports_url %>"
+  data-add-step-contents-url="<%= step_contents_modal_project_reports_url %>"
+  data-add-result-contents-url="<%= result_contents_modal_project_reports_url %>"
+  data-stylesheet-url="<%= stylesheet_path "application" %>"
+  data-print-title="<%=t "projects.reports.print_title", project: @project.name %>"
+  data-project-id="<%= @project.id %>"
+  data-save-report-url="<%= save_modal_project_reports_url %>"
+  data-report-id="<%= @report.present? ? @report.id : "" %>"
+  data-unsaved-work-text="<%=t "projects.reports.new.unsaved_work" %>"
+  data-global-sort-text="<%=t "projects.reports.new.global_sort" %>"
+>
+</div>
+
+<!-- Report "preview" -->
+<div id="report-content">
+
+<% if @report.present? %>
+  <% @report.root_elements.each do |el| %>
+    <%= render_report_element(el, { markdown: @markdown }) %>
+    <%= render_new_element(false) %>
+  <% end %>
+<% else %>
+  <%= render partial: "reports/elements/project_header_element", locals: { project: @project } %>
+  <%= render partial: "reports/elements/new_element", locals: { initial: true } %>
+<% end %>
+</div>
+
+<!-- Add elements modal -->
+<div class="modal" id="add-contents-modal" tabindex="-1" role="dialog" aria-labelledby="add-contents-modal-label">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="add-contents-modal-label"></h4>
+        </div>
+        <div class="modal-body"></div>
+        <div class="modal-footer">
+          <button type="button" data-action="add" class="btn btn-primary"><%=t "projects.reports.elements.modals.add" %></button>
+          <button type="button" class="btn btn-default" data-dismiss="modal"><%=t "general.cancel" %></button>
+        </div>
+      </div>
+    </div>
+</div>
+
+<!-- Save report modal -->
+<div class="modal" id="save-report-modal" tabindex="-1" role="dialog" aria-labelledby="save-report-modal-label">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="save-report-modal-label"><%=t "projects.reports.elements.modals.save_report.head_title" %></h4>
+        </div>
+        <div class="modal-body"></div>
+        <div class="modal-footer">
+          <button type="button" data-action="save" class="btn btn-primary"><%=t "projects.reports.elements.modals.save_report.save" %></button>
+          <button type="button" class="btn btn-default" data-dismiss="modal"><%=t "general.cancel" %></button>
+        </div>
+      </div>
+    </div>
+</div>
+
+<%= javascript_include_tag "handsontable.full.min" %>
+<%= javascript_include_tag("reports/new") %>

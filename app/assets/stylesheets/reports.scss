@@ -60,6 +60,9 @@
     a.report-nav-link:hover {
       text-decoration: none;
     }
+    [data-type='step']:not(.parent_li) {
+      padding-left: 27px;
+    }
   }
 }
 .report-sidebar-panel-description {

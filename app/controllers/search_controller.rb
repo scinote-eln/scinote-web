@@ -1,7 +1,8 @@
 class SearchController < ApplicationController
   before_filter :load_vars, only: :index
+  before_filter :load_markdown, only: :index
 
-  MIN_QUERY_CHARS = 3
+  MIN_QUERY_CHARS = 2
 
   def index
     if not @search_query
@@ -11,22 +12,24 @@ class SearchController < ApplicationController
     count_search_results
 
     search_projects if @search_category == :projects
-    search_modules if @search_category == :modules
     search_workflows if @search_category == :workflows
-    search_tags if @search_category == :tags
-    search_assets if @search_category == :assets
-    search_steps if @search_category == :steps
+    search_modules if @search_category == :modules
     search_results if @search_category == :results
-    search_samples if @search_category == :samples
+    search_tags if @search_category == :tags
     search_reports if @search_category == :reports
+    search_protocols if @search_category == :protocols
+    search_steps if @search_category == :steps
+    search_checklists if @search_category == :checklists
+    search_samples if @search_category == :samples
+    search_assets if @search_category == :assets
+    search_tables if @search_category == :tables
     search_comments if @search_category == :comments
-    search_contents if @search_category == :contents
 
     @search_pages = (@search_count.to_f / SEARCH_LIMIT.to_f).ceil
     @start_page = @search_page - 2
     @start_page = 1 if @start_page < 1
     @end_page = @start_page + 4
-    
+
     if @end_page > @search_pages
       @end_page = @search_pages
       @start_page = @end_page - 4
@@ -45,13 +48,30 @@ class SearchController < ApplicationController
     @search_category = @search_category.to_sym
     @search_page = params[:page].to_i || 1
 
-    if @search_query.length < MIN_QUERY_CHARS
-      flash[:error] = t'search.index.error.query_length', n: MIN_QUERY_CHARS
-      redirect_to new_search_path
+    error = false
+    @search_query.split().each do |w|
+      if w.length < MIN_QUERY_CHARS
+        error = true
+      end
     end
 
+    if error
+      flash[:error] = t'search.index.error.query_length', n: MIN_QUERY_CHARS
+      redirect_to :back
+    end
     if @search_page < 1
       @search_page = 1
+    end
+  end
+# Initialize markdown parser
+  def load_markdown
+    if @search_category == :results
+      @markdown = Redcarpet::Markdown.new(
+        Redcarpet::Render::HTML.new(
+          filter_html: true,
+          no_images: true
+        )
+      )
     end
   end
 
@@ -67,28 +87,32 @@ class SearchController < ApplicationController
 
   def count_search_results
     @project_search_count = count_by_name Project
-    @module_search_count = count_by_name MyModule
     @workflow_search_count = count_by_name MyModuleGroup
-    @tag_search_count = count_by_name Tag
-    @asset_search_count = count_by_name Asset
-    @step_search_count = count_by_name Step
+    @module_search_count = count_by_name MyModule
     @result_search_count = count_by_name Result
-    @sample_search_count = count_by_name Sample
+    @tag_search_count = count_by_name Tag
     @report_search_count = count_by_name Report
+    @protocol_search_count = count_by_name Protocol
+    @step_search_count = count_by_name Step
+    @checklist_search_count = count_by_name Checklist
+    @sample_search_count = count_by_name Sample
+    @asset_search_count = count_by_name Asset
+    @table_search_count = count_by_name Table
     @comment_search_count = count_by_name Comment
-    @contents_search_count = count_by_name AssetTextDatum
 
     @search_results_count = @project_search_count
-    @search_results_count += @module_search_count
     @search_results_count += @workflow_search_count
-    @search_results_count += @tag_search_count
-    @search_results_count += @asset_search_count
-    @search_results_count += @step_search_count
+    @search_results_count += @module_search_count
     @search_results_count += @result_search_count
-    @search_results_count += @sample_search_count
+    @search_results_count += @tag_search_count
     @search_results_count += @report_search_count
+    @search_results_count += @protocol_search_count
+    @search_results_count += @step_search_count
+    @search_results_count += @checklist_search_count
+    @search_results_count += @sample_search_count
+    @search_results_count += @asset_search_count
+    @search_results_count += @table_search_count
     @search_results_count += @comment_search_count
-    @search_results_count += @contents_search_count
   end
 
   def search_projects
@@ -99,14 +123,6 @@ class SearchController < ApplicationController
     @search_count = @project_search_count
   end
 
-  def search_modules
-    @module_results = []
-    if @module_search_count > 0 then
-      @module_results = search_by_name MyModule
-    end
-    @search_count = @module_search_count
-  end
-
   def search_workflows
     @workflow_results = []
     if @workflow_search_count > 0 then
@@ -115,28 +131,12 @@ class SearchController < ApplicationController
     @search_count = @workflow_search_count
   end
 
-  def search_tags
-    @tag_results = []
-    if @tag_search_count > 0 then
-      @tag_results = search_by_name Tag
+  def search_modules
+    @module_results = []
+    if @module_search_count > 0 then
+      @module_results = search_by_name MyModule
     end
-    @search_count = @tag_search_count
-  end
-
-  def search_assets
-    @asset_results = []
-    if @asset_search_count > 0 then
-      @asset_results = search_by_name Asset
-    end
-    @search_count = @asset_search_count
-  end
-
-  def search_steps
-    @step_results = []
-    if @step_search_count > 0 then
-      @step_results = search_by_name Step
-    end
-    @search_count = @step_search_count
+    @search_count = @module_search_count
   end
 
   def search_results
@@ -147,12 +147,12 @@ class SearchController < ApplicationController
     @search_count = @result_search_count
   end
 
-  def search_samples
-    @sample_results = []
-    if @sample_search_count > 0 then
-      @sample_results = search_by_name Sample
+  def search_tags
+    @tag_results = []
+    if @tag_search_count > 0 then
+      @tag_results = search_by_name Tag
     end
-    @search_count = @sample_search_count
+    @search_count = @tag_search_count
   end
 
   def search_reports
@@ -163,19 +163,59 @@ class SearchController < ApplicationController
     @search_count = @report_search_count
   end
 
+  def search_protocols
+    @protocol_results = []
+    if @protocol_search_count > 0 then
+      @protocol_results = search_by_name Protocol
+    end
+    @search_count = @protocol_search_count
+  end
+
+  def search_steps
+    @step_results = []
+    if @step_search_count > 0 then
+      @step_results = search_by_name Step
+    end
+    @search_count = @step_search_count
+  end
+
+  def search_checklists
+    @checklist_results = []
+    if @checklist_search_count > 0 then
+      @checklist_results = search_by_name Checklist
+    end
+    @search_count = @checklist_search_count
+  end
+
+  def search_samples
+    @sample_results = []
+    if @sample_search_count > 0 then
+      @sample_results = search_by_name Sample
+    end
+    @search_count = @sample_search_count
+  end
+
+  def search_assets
+    @asset_results = []
+    if @asset_search_count > 0 then
+      @asset_results = search_by_name Asset
+    end
+    @search_count = @asset_search_count
+  end
+
+  def search_tables
+    @table_results = []
+    if @table_search_count > 0 then
+      @table_results = search_by_name Table
+    end
+    @search_count = @table_search_count
+  end
+
   def search_comments
     @comment_results = []
     if @comment_search_count > 0 then
       @comment_results = search_by_name Comment
     end
     @search_count = @comment_search_count
-  end
-
-  def search_contents
-    @contents_results = []
-    if @contents_search_count > 0 then
-      @contents_results = search_by_name AssetTextDatum
-    end
-    @search_count = @contents_search_count
   end
 end

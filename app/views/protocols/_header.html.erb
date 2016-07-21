@@ -1,0 +1,111 @@
+<div class="page-header">
+  <% if can_edit_protocol(@protocol) %>
+    <a class="edit-name-link" data-action="edit-name" data-role="name-refresh" data-remote="true" href="<%= edit_name_modal_protocol_path(@protocol, format: :json) %>" style="color: inherit;">
+      <%= render partial: "protocols/header/name_label.html.erb" %>
+    </a>
+  <% else %>
+    <%= render partial: "protocols/header/name_label.html.erb" %>
+  <% end %>
+</div>
+
+<div class="row">
+  <div class="col-xs-6 col-sm-4 col-md-4">
+    <div class="badge-icon bg-primary">
+      <span class="glyphicon glyphicon-calendar"></span>
+    </div>
+    <div class="well well-sm">
+      <span class="hidden-xs hidden-sm hidden-md"><%=t "protocols.header.created_at" %>:</span>
+      <strong><%= l(@protocol.created_at, format: :full) %></strong>
+    </div>
+  </div>
+
+  <div class="col-xs-6 col-sm-4 col-md-4">
+    <div class="badge-icon bg-primary">
+      <span class="glyphicon glyphicon-calendar"></span>
+    </div>
+    <div class="well well-sm">
+      <span class="hidden-xs hidden-sm hidden-md"><%=t "protocols.header.updated_at" %>:</span>
+      <strong data-role="updated-at-refresh"><%= render partial: "protocols/header/updated_at_label.html.erb" %></strong>
+    </div>
+  </div>
+
+  <div class="col-xs-12 col-sm-4 col-md-4">
+    <div class="badge-icon bg-primary">
+      <span class="glyphicon glyphicon-user"></span>
+    </div>
+    <div class="well well-sm">
+      <span class="hidden-xs hidden-sm hidden-md"><%=t "protocols.header.added_by" %>:</span>
+      <strong><%= @protocol.added_by.full_name %></strong>
+    </div>
+  </div>
+
+  <div class="col-xs-12 col-sm-6 col-md-6">
+    <div class="badge-icon bg-primary">
+      <% if can_edit_protocol(@protocol) %>
+        <a data-action="edit-keywords" data-remote="true" href="<%= edit_keywords_modal_protocol_path(@protocol, format: :json) %>" style="color: inherit;">
+          <span class="glyphicon glyphicon-text-color"></span>
+        </a>
+      <% else %>
+        <span class="glyphicon glyphicon-text-color"></span>
+      <% end %>
+    </div>
+    <div class="well well-sm">
+      <span class="hidden-xs hidden-sm hidden-md"><%=t "protocols.header.keywords" %>:</span>
+      <% if can_edit_protocol(@protocol) %>
+        <%= link_to edit_keywords_modal_protocol_path(@protocol, format: :json), remote: true, style: "color: inherit;", data: { action: "edit-keywords", role: "keywords-refresh" } do %>
+          <%= render partial: "protocols/header/keywords_label.html.erb" %>
+        <% end %>
+      <% else %>
+        <%= render partial: "protocols/header/keywords_label.html.erb" %>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="col-xs-12 col-sm-6 col-md-6">
+    <div class="badge-icon bg-primary">
+      <% if can_edit_protocol(@protocol) %>
+        <a data-action="edit-authors" data-remote="true" href="<%= edit_authors_modal_protocol_path(@protocol, format: :json) %>" style="color: inherit;">
+          <span class="glyphicon glyphicon-education"></span>
+        </a>
+      <% else %>
+        <span class="glyphicon glyphicon-education"></span>
+      <% end %>
+    </div>
+    <div class="well well-sm">
+      <span class="hidden-xs hidden-sm hidden-md"><%=t "protocols.header.authors" %>:</span>
+      <% if can_edit_protocol(@protocol) %>
+        <%= link_to edit_authors_modal_protocol_path(@protocol, format: :json), remote: true, style: "color: inherit;", data: { action: "edit-authors", role: "authors-refresh" } do %>
+          <%= render partial: "protocols/header/authors_label.html.erb" %>
+        <% end %>
+      <% else %>
+        <%= render partial: "protocols/header/authors_label.html.erb" %>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="col-xs-12 col-sm-12 col-md-12">
+    <div class="badge-icon bg-primary">
+      <% if can_edit_protocol(@protocol) %>
+        <a data-action="edit-description" data-remote="true" href="<%= edit_description_modal_protocol_path(@protocol, format: :json) %>" style="color: inherit;">
+          <span class="glyphicon glyphicon-info-sign"></span>
+        </a>
+      <% else %>
+        <span class="glyphicon glyphicon-info-sign"></span>
+      <% end %>
+    </div>
+    <div class="well well-sm">
+      <span class="hidden-xs hidden-sm hidden-md"><%=t "protocols.header.description" %>:</span>
+      <% if can_edit_protocol(@protocol) %>
+        <%= link_to edit_description_modal_protocol_path(@protocol, format: :json), remote: true, style: "color: inherit;", data: { action: "edit-description", role: "description-refresh" } do %>
+          <%= render partial: "protocols/header/description_label.html.erb" %>
+        <% end %>
+      <% else %>
+        <%= render partial: "protocols/header/description_label.html.erb" %>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<%= render partial: "protocols/header/edit_metadata_modal.html.erb" %>
+
+<%= javascript_include_tag "protocols/header" %>

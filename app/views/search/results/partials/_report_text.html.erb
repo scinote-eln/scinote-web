@@ -1,5 +1,5 @@
 <% query ||= nil %>
-<% text = query.present? ? highlight(report.name, query) : report.name %>
+<% text = query.present? ? highlight(report.name, query.strip.split(/\s+/)) : report.name %>
 
 <% if can_view_reports(report.project) %>
   <a href="<%= edit_project_report_path(report.project, report) %>">

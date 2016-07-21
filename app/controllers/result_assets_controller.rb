@@ -192,7 +192,7 @@ class ResultAssetsController < ApplicationController
   private
 
   def load_paperclip_vars
-    @direct_upload = ENV['PAPERCLIP_DIRECT_UPLOAD']
+    @direct_upload = ENV['PAPERCLIP_DIRECT_UPLOAD'] == "true"
   end
 
   def load_vars

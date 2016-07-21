@@ -1,25 +1,14 @@
-<% is_result ||= nil %>
 <% query ||= nil %>
-<% text = query.present? ? highlight(asset.file_file_name, query) : asset.file_file_name %>
+<% text = query.present? ? highlight(asset.file_file_name, query.strip.split(/\s+/)) : asset.file_file_name %>
 
-<% if is_result.blank? %>
-  <%= text %>
-<% elsif is_result %>
-  <!-- RESULT -->
-  <% if can_download_result_assets(asset.result.my_module) %>
-    <a href="<%= download_asset_path asset %>" target="_blank">
-      <%= text %>
-    </a>
-  <% else %>
+<% if asset.step and can_view_or_download_step_assets(asset.step.protocol) %>
+  <a href="<%= download_asset_path asset %>" target="_blank">
     <%= text %>
-  <% end %>
+  </a>
+<% elsif asset.result and can_view_or_download_result_assets(asset.result.my_module) %>
+  <a href="<%= download_asset_path asset %>" target="_blank">
+    <%= text %>
+  </a>
 <% else %>
-  <!-- STEP -->
-  <% if can_download_step_assets(asset.step.my_module) %>
-    <a href="<%= download_asset_path asset %>" target="_blank">
-      <%= text %>
-    </a>
-  <% else %>
-    <%= text %>
-  <% end %>
+  <%= text %>
 <% end %>

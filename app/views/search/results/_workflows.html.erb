@@ -1,7 +1,7 @@
 <% results.each do |workflow| %>
   <h5>
     <span class="glyphicon glyphicon-random"></span>
-    <%= highlight workflow.name, search_query %>
+    <%= highlight workflow.name, search_query.strip.split(/\s+/) %>
   </h5>
 
   <p>
@@ -12,7 +12,8 @@
     <br>
     <span>
       <%=t "search.index.project" %>
-      <%= render partial: "search/results/partials/project_text.html.erb", locals: { project: workflow.project } %>
+      <%= render partial: "search/results/partials/project_text.html.erb",
+                  locals: { project: workflow.project, link_to_page: :canvas } %>
     </span>
     <br>
     <span>

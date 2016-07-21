@@ -1,11 +1,11 @@
-source 'https://rubygems.org'
+source 'http://rubygems.org'
 
 ruby '2.2.4'
 
 gem 'rails', '4.2.5'
 gem 'figaro'
 gem 'pg'
-gem 'devise'
+gem 'devise', '3.5.6'
 gem 'devise_invitable'
 gem 'bootstrap-sass', '~> 3.3.5'
 gem 'sass-rails', '~> 5.0'
@@ -36,13 +36,13 @@ gem 'logging', '~> 2.0.0'
 gem 'aspector' # Aspect-oriented programming for Rails
 gem 'rgl' # Graph framework for project diagram calculations
 gem 'nested_form_fields'
-gem 'ajax-datatables-rails'
+gem 'ajax-datatables-rails', '~> 0.3.1'
 gem 'commit_param_routing' # Enables different submit actions in the same form to route to different actions in controller
 gem 'kaminari'
 gem "i18n-js", ">= 3.0.0.rc11" # Localization in javascript files
 gem 'roo', '~> 2.1.0' # Spreadsheet parser
 gem 'wicked_pdf'
-gem 'wkhtmltopdf-binary'
+gem 'wkhtmltopdf-heroku'
 gem 'remotipart', '~> 1.2' # Async file uploads
 gem 'redcarpet' # Markdown parser
 gem 'faker' # Generate fake data
@@ -56,6 +56,9 @@ gem 'devise-async'
 group :development, :test do
   gem 'byebug'
   gem 'web-console', '~> 2.0'
+  gem 'better_errors'
+  gem 'binding_of_caller'
+  gem 'awesome_print'
 end
 
 group :production do

@@ -1,4 +1,4 @@
-<% provide(:head_title, t("sample_groups.edit.head_title", organization: @organization.name)) %>
+<% provide(:head_title, raw(t("sample_groups.edit.head_title", organization: @organization.name))) %>
 <h2><%=t "sample_groups.edit.title", sample_group: @sample_group.name, organization: @organization.name %></h2>
 
 <%= bootstrap_form_for [@sample_group], url: sample_group_path do |f| %>

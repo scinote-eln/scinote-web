@@ -32,7 +32,7 @@ class OrganizationTest < ActiveSupport::TestCase
   test "should save log message" do
     message = "This is test message"
     @org.log(message)
-    log_message = Log.last.message[28..-1]
+    log_message = Log.last.message[26..-1]
     assert_equal log_message, message
   end
 

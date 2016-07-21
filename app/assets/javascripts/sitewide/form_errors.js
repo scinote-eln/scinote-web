@@ -61,25 +61,9 @@ $.fn.add_upload_file_size_check = function(callback) {
     form.submit(function (ev) {
       var fileInputs = $(this).find("input[type='file']");
       if (fileInputs.length && fileInputs.length > 0) {
-        var cntr = 0;
-        _.each(fileInputs, function(fileInput) {
-          if (typeof (fileInput.files) != "undefined") {
-            var size = parseInt(fileInput.files[0].size);
-            if (size > 52428800) {
-              cntr++;
-              var input = $(fileInput);
-              var existingError = input.parent().find("[data-error='file-size']");
-              if (!(existingError.length && existingError.length > 0)) {
-                input.closest('.form-group').addClass('has-error');
-                input.parent().append(
-                  "<span class='help-block' data-error='file-size'>Must be less than 50 MB</span>"
-                );
-              }
-            }
-          }
-        });
+        var isValid = checkFilesValidity(fileInputs);
 
-        if (cntr > 0) {
+        if (!isValid) {
           // Don't submit form
           ev.preventDefault();
           ev.stopPropagation();

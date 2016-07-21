@@ -9,6 +9,8 @@ class StepsController < ApplicationController
   before_action :check_edit_permissions, only: [:edit, :update]
   before_action :check_destroy_permissions, only: [:destroy]
 
+  before_action :update_checklist_item_positions, only: [:create, :update]
+
   def new
     @step = Step.new
 
@@ -31,7 +33,6 @@ class StepsController < ApplicationController
       step_data = step_params.except(:assets_attributes)
       step_assets = step_params.slice(:assets_attributes)
       @step = Step.new(step_data)
-
       if step_assets.size > 0
         step_assets[:assets_attributes].each do |i, data|
           asset = Asset.find_by_id(data[:id])
@@ -45,8 +46,8 @@ class StepsController < ApplicationController
     end
 
     @step.completed = false
-    @step.position = @my_module.number_of_steps
-    @step.my_module = @my_module
+    @step.position = @protocol.number_of_steps
+    @step.protocol = @protocol
     @step.user = current_user
     @step.last_modified_by = current_user
 
@@ -61,32 +62,35 @@ class StepsController < ApplicationController
       if @step.save
         # Post process all assets
         @step.assets.each do |asset|
-          asset.post_process_file(@my_module.project.organization)
+          asset.post_process_file(@protocol.organization)
         end
 
         # Generate activity
-        Activity.create(
-          type_of: :create_step,
-          user: current_user,
-          project: @my_module.project,
-          my_module: @my_module,
-          message: t(
-            "activities.create_step",
-            user: current_user.full_name,
-            step: @step.position + 1,
-            step_name: @step.name
+        if @protocol.in_module?
+          Activity.create(
+            type_of: :create_step,
+            user: current_user,
+            project: @my_module.project,
+            my_module: @my_module,
+            message: t(
+              "activities.create_step",
+              user: current_user.full_name,
+              step: @step.position + 1,
+              step_name: @step.name
+            )
           )
-        )
+        else
+          # TODO: Activity for organization if step
+          # created in protocol management??
+        end
 
-        flash_success = t("my_modules.steps.create.success_flash", module: @my_module.name)
-        format.html {
-          flash[:success] = flash_success
-          redirect_to steps_my_module_path(@my_module)
-        }
+        # Update protocol timestamp
+        update_protocol_ts(@step)
+
         format.json {
           render json: {
             html: render_to_string({
-              partial: "my_modules/step.html.erb", locals: {step: @step}
+              partial: "steps/step.html.erb", locals: {step: @step}
             })}, status: :ok
         }
       else
@@ -109,7 +113,7 @@ class StepsController < ApplicationController
       format.json {
         render json: {
           html: render_to_string({
-            partial: "my_modules/step.html.erb", locals: {step: @step}
+            partial: "steps/step.html.erb", locals: {step: @step}
           })}, status: :ok
       }
     end
@@ -165,7 +169,7 @@ class StepsController < ApplicationController
         @step.reload
 
         # Release organization's space taken
-        org = @step.my_module.project.organization
+        org = @protocol.organization
         org.release_space(previous_size)
         org.save
 
@@ -175,30 +179,31 @@ class StepsController < ApplicationController
         end
 
         # Generate activity
-        Activity.create(
-          type_of: :edit_step,
-          user: current_user,
-          project: @step.my_module.project,
-          my_module: @step.my_module,
-          message: t(
-            "activities.edit_step",
-            user: current_user.full_name,
-            step: @step.position + 1,
-            step_name: @step.name
+        if @protocol.in_module?
+          Activity.create(
+            type_of: :edit_step,
+            user: current_user,
+            project: @my_module.project,
+            my_module: @my_module,
+            message: t(
+              "activities.edit_step",
+              user: current_user.full_name,
+              step: @step.position + 1,
+              step_name: @step.name
+            )
           )
-        )
+        else
+          # TODO: Activity for organization if step
+          # updated in protocol management??
+        end
 
-        flash_success = t(
-          "my_modules.steps.update.success_flash",
-          step: (@step.position + 1).to_s)
-        format.html {
-          flash[:success] = flash_success
-          redirect_to steps_my_module_path(@step.my_module)
-        }
+        # Update protocol timestamp
+        update_protocol_ts(@step)
+
         format.json {
           render json: {
             html: render_to_string({
-              partial: "my_modules/step.html.erb", locals: {step: @step}
+              partial: "steps/step.html.erb", locals: {step: @step}
             })}, status: :ok
         }
       else
@@ -217,14 +222,13 @@ class StepsController < ApplicationController
 
   def destroy
     # Update position on other steps of this module
-    my_module = @step.my_module
-    my_module.steps.where("position > ?", @step.position).each do |step|
+    @protocol.steps.where("position > ?", @step.position).each do |step|
       step.position = step.position - 1
       step.save
     end
 
     # Calculate space taken by this step
-    org = @step.my_module.project.organization
+    org = @protocol.organization
     previous_size = @step.space_taken
 
     # Destroy the step
@@ -234,10 +238,17 @@ class StepsController < ApplicationController
     org.release_space(previous_size)
     org.save
 
+    # Update protocol timestamp
+    update_protocol_ts(@step)
+
     flash[:success] = t(
-      "my_modules.steps.destroy.success_flash",
+      "protocols.steps.destroy.success_flash",
       step: (@step.position + 1).to_s)
-    redirect_to steps_my_module_path(@step.my_module)
+    if @protocol.in_module?
+      redirect_to protocols_my_module_path(@step.my_module)
+    else
+      redirect_to edit_protocol_path(@protocol)
+    end
   end
 
   # Responds to checkbox toggling in steps view
@@ -247,9 +258,9 @@ class StepsController < ApplicationController
     respond_to do |format|
       if chkItem
         checked = params[:checked] == "true"
-        my_module = chkItem.checklist.step.my_module
+        protocol = chkItem.checklist.step.protocol
 
-        authorized = ((checked and can_check_checkbox(my_module)) or (!checked and can_uncheck_checkbox(my_module)))
+        authorized = ((checked and can_check_checkbox(protocol)) or (!checked and can_uncheck_checkbox(protocol)))
 
         if authorized
           changed = chkItem.checked != checked
@@ -276,13 +287,17 @@ class StepsController < ApplicationController
                 all: all_items
               )
 
-              Activity.create(
-                user: current_user,
-                project: my_module.project,
-                my_module: my_module,
-                message: message,
-                type_of: checked ? :check_step_checklist_item : :uncheck_step_checklist_item
-              )
+              # This should always hold true (only in module can
+              # check items be checked, but still check just in case)
+              if protocol.in_module?
+                Activity.create(
+                  user: current_user,
+                  project: protocol.my_module.project,
+                  my_module: protocol.my_module,
+                  message: message,
+                  type_of: checked ? :check_step_checklist_item : :uncheck_step_checklist_item
+                )
+              end
             end
           else
             format.json {
@@ -309,9 +324,9 @@ class StepsController < ApplicationController
     respond_to do |format|
       if step
         completed = params[:completed] == "true"
-        my_module = step.my_module
+        protocol = step.protocol
 
-        authorized = ((completed and can_complete_step_in_module(my_module)) or (!completed and can_uncomplete_step_in_module(my_module)))
+        authorized = ((completed and can_complete_step_in_protocol(protocol)) or (!completed and can_uncomplete_step_in_protocol(protocol)))
 
         if authorized
           changed = step.completed != completed
@@ -325,8 +340,8 @@ class StepsController < ApplicationController
           if step.save
             # Create activity
             if changed
-              completed_steps = my_module.steps.where(completed: true).count
-              all_steps = my_module.steps.count
+              completed_steps = protocol.steps.where(completed: true).count
+              all_steps = protocol.steps.count
               str = completed ? "activities.complete_step" :
                 "activities.uncomplete_step"
 
@@ -339,19 +354,24 @@ class StepsController < ApplicationController
                 all: all_steps
               )
 
-              Activity.create(
-                user: current_user,
-                project: my_module.project,
-                my_module: my_module,
-                message: message,
-                type_of: completed ? :complete_step : :uncomplete_step
-              )
+              # Toggling step state can only occur in
+              # module protocols, so my_module is always
+              # not nil; nonetheless, check if my_module is present
+              if protocol.in_module?
+                Activity.create(
+                  user: current_user,
+                  project: protocol.my_module.project,
+                  my_module: protocol.my_module,
+                  message: message,
+                  type_of: completed ? :complete_step : :uncomplete_step
+                )
+              end
             end
 
             # Create localized title for complete/uncomplete button
             localized_title = !completed ?
-              t("my_modules.steps.options.complete_title") :
-              t("my_modules.steps.options.uncomplete_title")
+              t("protocols.steps.options.complete_title") :
+              t("protocols.steps.options.uncomplete_title")
 
             format.json {
               render json: {new_title: localized_title}, status: :accepted
@@ -377,52 +397,106 @@ class StepsController < ApplicationController
   def move_up
     step = Step.find_by_id(params[:id])
 
-    if step
-      if can_reorder_step_in_module(step.my_module)
-        if step.position > 0
-          step_down = step.my_module.steps.where(position: step.position - 1).first
-          step.position -= 1
-          step.save
+    respond_to do |format|
+      if step
+        if can_reorder_step_in_protocol(step.protocol)
+          if step.position > 0
+            step_down = step.protocol.steps.where(position: step.position - 1).first
+            step.position -= 1
+            step.save
 
-          if step_down
-            step_down.position += 1
-            step_down.save
+            if step_down
+              step_down.position += 1
+              step_down.save
+
+              # Update protocol timestamp
+              update_protocol_ts(step)
+
+              format.json {
+                render json: { move_direction: "up", step_up_position: step.position, step_down_position: step_down.position },
+                status: :ok
+              }
+            else
+              format.json {
+              render json: {}, status: :forbidden
+            }
+            end
+          else
+            format.json {
+              render json: {}, status: :forbidden
+            }
           end
+        else
+          format.json {
+              render json: {}, status: :forbidden
+            }
         end
       else
-        render_403 and return
+        format.json {
+          render json: {}, status: :not_found
+        }
       end
-    else
-      render_404 and return
     end
-    redirect_to steps_my_module_path(step.my_module)
   end
 
   def move_down
     step = Step.find_by_id(params[:id])
 
-    if step
-      if can_reorder_step_in_module(step.my_module)
-        if step.position < step.my_module.steps.count - 1
-          step_down = step.my_module.steps.where(position: step.position + 1).first
-          step.position += 1
-          step.save
+    respond_to do |format|
+      if step
+        if can_reorder_step_in_protocol(step.protocol)
+          if step.position < step.protocol.steps.count - 1
+            step_up = step.protocol.steps.where(position: step.position + 1).first
+            step.position += 1
+            step.save
 
-          if step_down
-            step_down.position -= 1
-            step_down.save
+            if step_up
+              step_up.position -= 1
+              step_up.save
+
+              # Update protocol timestamp
+              update_protocol_ts(step)
+
+              format.json {
+                render json: { move_direction: "down", step_up_position: step_up.position, step_down_position: step.position },
+                status: :ok
+              }
+            else
+              format.json {
+                render json: {}, status: :forbidden
+              }
+            end
+          else
+            format.json {
+              render json: {}, status: :forbidden
+            }
           end
+        else
+          format.json {
+            render json: {}, status: :forbidden
+          }
         end
       else
-        render_403 and return
+        format.json {
+          render json: {}, status: :not_found
+        }
       end
-    else
-      render_404 and return
     end
-    redirect_to steps_my_module_path(step.my_module)
   end
 
   private
+
+  def update_checklist_item_positions
+    if params["step"].present? && params["step"]["checklists_attributes"].present?
+      params["step"]["checklists_attributes"].values.each do |cla|
+        if cla["checklist_items_attributes"].present?
+          cla["checklist_items_attributes"].each do |idx, item|
+            item["position"] = idx
+          end
+        end
+      end
+    end
+  end
 
   # This function is used for partial update of step references and
   # it's useful when you want to execute destroy action on attribute
@@ -474,25 +548,31 @@ class StepsController < ApplicationController
   end
 
   def load_paperclip_vars
-    @direct_upload = ENV['PAPERCLIP_DIRECT_UPLOAD']
+    @direct_upload = ENV['PAPERCLIP_DIRECT_UPLOAD'] == "true"
   end
 
   def load_vars
     @step = Step.find_by_id(params[:id])
-    @my_module = @step.my_module
-    @project = @my_module.project
+    @protocol = @step.protocol
 
-    unless @my_module
+    unless @protocol
       render_404
+    end
+
+    if @protocol.in_module?
+      @my_module = @protocol.my_module
     end
   end
 
   def load_vars_nested
-    @my_module = MyModule.find_by_id(params[:my_module_id])
-    @project = @my_module.project
+    @protocol = Protocol.find_by_id(params[:protocol_id])
 
-    unless @my_module
+    unless @protocol
       render_404
+    end
+
+    if @protocol.in_module?
+      @my_module = @protocol.my_module
     end
   end
 
@@ -506,26 +586,32 @@ class StepsController < ApplicationController
     end
   end
 
+  def update_protocol_ts(step)
+    if step.present? && step.protocol.present?
+      step.protocol.update(updated_at: Time.now)
+    end
+  end
+
   def check_view_permissions
-    unless can_view_steps_in_module(@my_module)
+    unless can_view_steps_in_protocol(@protocol)
       render_403
     end
   end
 
   def check_create_permissions
-    unless can_create_step_in_module(@my_module)
+    unless can_create_step_in_protocol(@protocol)
       render_403
     end
   end
 
   def check_edit_permissions
-    unless can_edit_step_in_module(@my_module)
+    unless can_edit_step_in_protocol(@protocol)
       render_403
     end
   end
 
   def check_destroy_permissions
-    unless can_delete_step_in_module(@my_module)
+    unless can_delete_step_in_protocol(@protocol)
       render_403
     end
   end

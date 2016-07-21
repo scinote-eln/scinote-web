@@ -27,6 +27,22 @@ class OrganizationUsersDatatable < AjaxDatatablesRails::Base
     ]
   end
 
+  # A hack that overrides the new_search_contition method default behavior of the ajax-datatables-rails gem
+  # now the method checks if the column is the created_at and generate a custom SQL to parse
+  # it back to the caller method
+  def new_search_condition(column, value)
+    model, column = column.split('.')
+    model = model.constantize
+    formated_date = (I18n.t 'time.formats.datatables_date').gsub!(/^\"|\"?$/, '')
+    if column == 'created_at'
+      casted_column = ::Arel::Nodes::NamedFunction.new('CAST',
+                        [ Arel.sql("to_char( users.created_at, '#{ formated_date }' ) AS VARCHAR") ] )
+    else
+      casted_column = ::Arel::Nodes::NamedFunction.new('CAST',
+                        [model.arel_table[column.to_sym].as(typecast)])
+    end
+    casted_column.matches("%#{value}%")
+  end
   private
 
   # Returns json of current samples (already paginated)

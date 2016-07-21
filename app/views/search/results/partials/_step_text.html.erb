@@ -1,10 +1,24 @@
 <% query ||= nil %>
-<% text = query.present? ? highlight(step.name, query) : step.name %>
+<% text = query.present? ? highlight(step.name, query.strip.split(/\s+/)) : step.name %>
 
-<% if can_view_steps_in_module(step.my_module) %>
-  <a href="<%= my_module_steps_path(step.my_module) %>">
+<% if can_view_steps_in_protocol(step.protocol) %>
+  <% if step.protocol.in_module? %>
+    <% if target == :comment %>
+    <%= link_to protocols_my_module_path(step.protocol.my_module, ctarget: "step-panel-#{step.id}") do %>
+      <%= text %>
+    <% end %>
+    <% else %>
+    <a href="<%= protocols_my_module_path(step.protocol.my_module) %>">
+      <%= text %>
+    </a>
+    <% end %>
+  <% elsif can_edit_protocol(step.protocol) %>
+    <a href="<%= edit_protocol_path(step.protocol) %>">
+      <%= text %>
+    </a>
+  <% else %>
     <%= text %>
-  </a>
+  <% end %>
 <% else %>
   <%= text %>
 <% end %>

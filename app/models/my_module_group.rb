@@ -17,10 +17,20 @@ class MyModuleGroup < ActiveRecord::Base
       .search(user, include_archived, nil, SHOW_ALL_RESULTS)
       .select("id")
 
+    if query
+      a_query = query.strip
+      .gsub("_","\\_")
+      .gsub("%","\\%")
+      .split(/\s+/)
+      .map {|t|  "%" + t + "%" }
+    else
+      a_query = query
+    end
+
     new_query = MyModuleGroup
       .distinct
       .where("my_module_groups.project_id IN (?)", project_ids)
-      .where_attributes_like(:name, query)
+      .where_attributes_like(:name, a_query)
 
     # Show all results if needed
     if page == SHOW_ALL_RESULTS
@@ -30,5 +40,9 @@ class MyModuleGroup < ActiveRecord::Base
         .limit(SEARCH_LIMIT)
         .offset((page - 1) * SEARCH_LIMIT)
     end
+  end
+
+  def ordered_modules
+    my_modules.order(workflow_order: :asc)
   end
 end

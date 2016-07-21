@@ -1,6 +1,6 @@
 module MyModulesHelper
   def ordered_step_of(my_module)
-    my_module.steps.order(:position)
+    my_module.protocol.steps.order(:position)
   end
 
   def ordered_checklist_items(checklist)

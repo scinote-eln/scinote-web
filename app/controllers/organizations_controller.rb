@@ -4,8 +4,6 @@ class OrganizationsController < ApplicationController
   before_action :check_create_sample_permissions, only: [:parse_sheet, :import_samples]
   before_action :check_view_samples_permission, only: [:export_samples]
 
-  FILE_SIZE_LIMIT = 50 * 1024 * 1024
-
   def parse_sheet
     session[:return_to] ||= request.referer
 
@@ -13,7 +11,7 @@ class OrganizationsController < ApplicationController
       if params[:file]
         begin
 
-          if params[:file].size > FILE_SIZE_LIMIT
+          if params[:file].size > FILE_SIZE_LIMIT.megabytes
             error = t("organizations.parse_sheet.errors.file_size_exceeded")
             format.html {
               flash[:alert] = error

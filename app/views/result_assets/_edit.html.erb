@@ -2,13 +2,15 @@
   <%= bootstrap_form_for(@result, url: result_asset_path(format: :json), remote: true, multipart: true, data: { type: :json }) do |f| %>
     <%= f.text_field :name, style: "margin-top: 10px;" %><br />
     <%= f.fields_for :asset do |ff| %>
+      <span><strong><%=t "result_assets.edit.uploaded_asset" %></strong></span>
+      <p style="margin: 10px;"><%= ff.object.file_file_name %></p>
       <%= ff.file_field :file %>
     <% end %>
     <hr>
     <% if direct_upload %>
-    <%= f.submit t("result_assets.edit.update"), class: 'btn btn-primary', onclick: 'startFileUpload(event, this);' %>
+    <%= f.submit t("result_assets.edit.update"), class: 'btn btn-primary', onclick: 'animateSpinner(); startFileUpload(event, this);' %>
     <% else %>
-    <%= f.submit t("result_assets.edit.update"), class: 'btn btn-primary' %>
+    <%= f.submit t("result_assets.edit.update"), class: 'btn btn-primary', onclick: 'animateSpinner();' %>
     <% end %>
     <button type="button" class="btn btn-default cancel-edit">
       <%= t("general.cancel")%>

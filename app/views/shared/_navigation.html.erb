@@ -11,9 +11,9 @@
       </button>
       <a class="navbar-brand" href="<%= root_path %>">
         <% if Rails.env.production? %>
-          <img src="/images/logo.png">
+          <img src="/images/logo.png" id="logo">
         <% else %>
-          <img src="/images/logo.png" class="with-version">
+          <img src="/images/logo.png" class="with-version" id="logo">
           <span class="version">
             <%= APP_VERSION %>
           </span>
@@ -27,8 +27,14 @@
       <ul class="nav navbar-nav">
         <li>
           <a href="<%= projects_path %>">
-            <span class="glyphicon glyphicon-menu-hamburger"></span>
+            <span class="glyphicon glyphicon-home"></span>
             <span class="visible-xs-inline"><%= t('nav.label.projects') %></span>
+          </a>
+        </li>
+        <li>
+          <a href="<%= protocols_path %>">
+            <span class="glyphicon glyphicon-list-alt"></span>
+            <span class="visible-xs-inline"><%= t('nav.label.protocols') %></span>
           </a>
         </li>
 <% if false  %>
@@ -54,7 +60,7 @@
           <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
               <span><%= t('nav.user_greeting', full_name: current_user.full_name) %></span>
-              <%= image_tag avatar_path(:icon_small), class: "avatar" %>
+              <%= image_tag avatar_path(current_user, :icon_small), class: "avatar" %>
             </a>
             <ul class="dropdown-menu">
               <li><%= link_to t('nav.user.profile'), edit_user_registration_path %></li>

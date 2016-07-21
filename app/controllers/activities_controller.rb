@@ -4,6 +4,11 @@ class ActivitiesController < ApplicationController
   def index
     @per_page = 10
     @activities = current_user.last_activities(@last_activity_id,
+      @per_page + 1)
+
+    @overflown = @activities.length > @per_page
+
+    @activities = current_user.last_activities(@last_activity_id,
       @per_page)
 
     # Whether to hide date labels

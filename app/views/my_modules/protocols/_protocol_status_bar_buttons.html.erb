@@ -1,0 +1,147 @@
+<div class="btn-group">
+  <% if @protocol.unlinked? %>
+    <a type="button" class="btn btn-info" tabindex="0" role="button" data-trigger="focus" data-container="body" data-html="true" data-toggle="popover" data-placement="bottom" title="<%= t("my_modules.protocols.protocol_status_bar.btns_unlinked.title") %>" data-content="<%= t("my_modules.protocols.protocol_status_bar.btns_unlinked.text") %>">
+      <span class="glyphicon glyphicon-book"></span>
+      &nbsp;
+      <span class="glyphicon glyphicon-remove-sign"></span>
+    </a>
+    <a type="button" class="btn btn-info dropdown-toggle" disabled="disabled">
+      <span class="caret"></span>
+    </a>
+  <% else %>
+    <% if @protocol.linked_no_diff? %>
+      <a type="button" class="btn btn-info" tabindex="0" role="button" data-trigger="focus" data-container="body" data-html="true" data-toggle="popover" data-placement="bottom" title="<%= t("my_modules.protocols.protocol_status_bar.btns_linked_no_diff.title") %>" data-content="<%= t("my_modules.protocols.protocol_status_bar.btns_linked_no_diff.text") %>">
+        <span class="glyphicon glyphicon-book"></span>
+        &nbsp;
+        <span class="glyphicon glyphicon-ok-sign"></span>
+      </a>
+      <a type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <span class="caret"></span>
+      </a>
+      <ul class="dropdown-menu">
+        <% if can_unlink_protocol(@protocol) %>
+          <li>
+            <%= link_to unlink_modal_protocol_path(@protocol, format: :json), remote: true, title: t("my_modules.protocols.protocol_status_bar.btns.unlink_title"), data: { action: "unlink" } do %>
+              <%= t("my_modules.protocols.protocol_status_bar.btns.unlink") %>
+            <% end %>
+          </li>
+        <% else %>
+          <li class="disabled"><a href="#" title="<%= t("my_modules.protocols.protocol_status_bar.btns.unlink_title") %>"><%= t("my_modules.protocols.protocol_status_bar.btns.unlink") %></a>
+          </li>
+        <% end %>
+      </ul>
+    <% elsif @protocol.newer_than_parent? %>
+      <a type="button" class="btn btn-warning" tabindex="0" role="button" data-trigger="focus" data-container="body" data-html="true" data-toggle="popover" data-placement="bottom" title="<%= t("my_modules.protocols.protocol_status_bar.btns_newer_than_parent.title") %>" data-content="<%= t("my_modules.protocols.protocol_status_bar.btns_newer_than_parent.text", self_ts: l(@protocol.updated_at, format: :full), parent_ts: l(@protocol.parent.updated_at, format: :full)).html_safe %>">
+        <span class="glyphicon glyphicon-book"></span>
+        &nbsp;
+        <span class="glyphicon glyphicon-circle-arrow-down"></span>
+      </a>
+      <a type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <span class="caret"></span>
+      </a>
+      <ul class="dropdown-menu">
+        <% if can_update_parent_protocol(@protocol) %>
+          <li>
+            <%= link_to update_parent_modal_protocol_path(@protocol, format: :json), remote: true, title: t("my_modules.protocols.protocol_status_bar.btns.update_parent_title"), data: { action: "update-parent" } do %>
+              <%= t("my_modules.protocols.protocol_status_bar.btns.update_parent") %>
+            <% end %>
+          </li>
+        <% else %>
+          <li class="disabled"><a href="#" title="<%= t("my_modules.protocols.protocol_status_bar.btns.update_parent_title") %>"><%= t("my_modules.protocols.protocol_status_bar.btns.update_parent") %></a>
+          </li>
+        <% end %>
+        <% if can_revert_protocol(@protocol) %>
+          <li>
+            <%= link_to revert_modal_protocol_path(@protocol, format: :json), remote: true, title: t("my_modules.protocols.protocol_status_bar.btns.revert_title"), data: { action: "revert" } do %>
+              <%= t("my_modules.protocols.protocol_status_bar.btns.revert") %>
+            <% end %>
+          </li>
+        <% else %>
+          <li class="disabled"><a href="#" title="<%= t("my_modules.protocols.protocol_status_bar.btns.revert_title") %>"><%= t("my_modules.protocols.protocol_status_bar.btns.revert") %></a>
+          </li>
+        <% end %>
+        <% if can_unlink_protocol(@protocol) %>
+          <li>
+            <%= link_to unlink_modal_protocol_path(@protocol, format: :json), remote: true, title: t("my_modules.protocols.protocol_status_bar.btns.unlink_title"), data: { action: "unlink" } do %>
+              <%= t("my_modules.protocols.protocol_status_bar.btns.unlink") %>
+            <% end %>
+          </li>
+        <% else %>
+          <li class="disabled"><a href="#" title="<%= t("my_modules.protocols.protocol_status_bar.btns.unlink_title") %>"><%= t("my_modules.protocols.protocol_status_bar.btns.unlink") %></a>
+          </li>
+        <% end %>
+      </ul>
+    <% elsif @protocol.parent_newer? %>
+      <a type="button" class="btn btn-warning" tabindex="0" role="button" data-trigger="focus" data-container="body" data-html="true" data-toggle="popover" data-placement="bottom" title="<%= t("my_modules.protocols.protocol_status_bar.btns_parent_newer.title") %>" data-content="<%= t("my_modules.protocols.protocol_status_bar.btns_parent_newer.text", self_ts: l(@protocol.updated_at, format: :full), parent_ts: l(@protocol.parent.updated_at, format: :full)).html_safe %>">
+        <span class="glyphicon glyphicon-book"></span>
+        &nbsp;
+        <span class="glyphicon glyphicon-circle-arrow-up"></span>
+      </a>
+      <a type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <span class="caret"></span>
+      </a>
+      <ul class="dropdown-menu">
+        <% if can_update_protocol_from_parent(@protocol) %>
+          <li><%= link_to update_from_parent_modal_protocol_path(@protocol, format: :json), remote: true, title: t("my_modules.protocols.protocol_status_bar.btns.update_self_title"), data: { action: "update-self" } do %>
+              <%= t("my_modules.protocols.protocol_status_bar.btns.update_self") %>
+            <% end %>
+          </li>
+        <% else %>
+          <li class="disabled"><a href="#" title="<%= t("my_modules.protocols.protocol_status_bar.btns.update_self_title") %>"><%= t("my_modules.protocols.protocol_status_bar.btns.update_self") %></a>
+          </li>
+        <% end %>
+        <% if can_unlink_protocol(@protocol) %>
+          <li>
+            <%= link_to unlink_modal_protocol_path(@protocol, format: :json), remote: true, title: t("my_modules.protocols.protocol_status_bar.btns.unlink_title"), data: { action: "unlink" } do %>
+              <%= t("my_modules.protocols.protocol_status_bar.btns.unlink") %>
+            <% end %>
+          </li>
+        <% else %>
+          <li class="disabled"><a href="#" title="<%= t("my_modules.protocols.protocol_status_bar.btns.unlink_title") %>"><%= t("my_modules.protocols.protocol_status_bar.btns.unlink") %></a>
+          </li>
+        <% end %>
+      </ul>
+    <% elsif @protocol.parent_and_self_newer? %>
+      <a type="button" class="btn btn-warning" tabindex="0" role="button" data-trigger="focus" data-container="body" data-html="true" data-toggle="popover" data-placement="bottom" title="<%= t("my_modules.protocols.protocol_status_bar.btns_parent_and_self_newer.title") %>" data-content="<%= t("my_modules.protocols.protocol_status_bar.btns_parent_and_self_newer.text", self_ts: l(@protocol.updated_at, format: :full), parent_ts: l(@protocol.parent.updated_at, format: :full)).html_safe %>">
+        <span class="glyphicon glyphicon-book"></span>
+        &nbsp;
+        <span class="glyphicon glyphicon-exclamation-sign"></span>
+      </a>
+      <a type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <span class="caret"></span>
+      </a>
+      <ul class="dropdown-menu">
+        <% if can_update_parent_protocol(@protocol) %>
+          <li>
+            <%= link_to update_parent_modal_protocol_path(@protocol, format: :json), remote: true, title: t("my_modules.protocols.protocol_status_bar.btns.update_parent_title"), data: { action: "update-parent" } do %>
+              <%= t("my_modules.protocols.protocol_status_bar.btns.update_parent") %>
+            <% end %>
+          </li>
+        <% else %>
+          <li class="disabled"><a href="#" title="<%= t("my_modules.protocols.protocol_status_bar.btns.update_parent_title") %>"><%= t("my_modules.protocols.protocol_status_bar.btns.update_parent") %></a>
+          </li>
+        <% end %>
+        <% if can_update_protocol_from_parent(@protocol) %>
+          <li>
+            <%= link_to update_from_parent_modal_protocol_path(@protocol, format: :json), remote: true, title: t("my_modules.protocols.protocol_status_bar.btns.update_self_title"), data: { action: "update-self" } do %>
+              <%= t("my_modules.protocols.protocol_status_bar.btns.update_self") %>
+            <% end %>
+          </li>
+        <% else %>
+          <li class="disabled"><a href="#" title="<%= t("my_modules.protocols.protocol_status_bar.btns.update_self_title") %>"><%= t("my_modules.protocols.protocol_status_bar.btns.update_self") %></a>
+          </li>
+        <% end %>
+        <% if can_unlink_protocol(@protocol) %>
+          <li>
+            <%= link_to unlink_modal_protocol_path(@protocol, format: :json), remote: true, title: t("my_modules.protocols.protocol_status_bar.btns.unlink_title"), data: { action: "unlink" } do %>
+              <%= t("my_modules.protocols.protocol_status_bar.btns.unlink") %>
+            <% end %>
+          </li>
+        <% else %>
+          <li class="disabled"><a href="#" title="<%= t("my_modules.protocols.protocol_status_bar.btns.unlink_title") %>"><%= t("my_modules.protocols.protocol_status_bar.btns.unlink") %></a>
+          </li>
+        <% end %>
+      </ul>
+    <% end %>
+  <% end %>
+</div>

@@ -33,7 +33,7 @@ class ChecklistTest < ActiveSupport::TestCase
     checklist = Checklist.new(
       name: "test",
       step: steps(:step1))
-    step = Step.create(name: "Step test", position: 0, completed: 0, user: users(:steve), my_module: my_modules(:sample_prep))
+    step = Step.create(name: "Step test", position: 0, completed: 0, user: users(:steve), protocol: protocols(:rna_test_protocol))
 
     assert_empty step.checklists
     step.checklists << checklist

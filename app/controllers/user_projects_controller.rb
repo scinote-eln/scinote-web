@@ -31,8 +31,11 @@ class UserProjectsController < ApplicationController
       format.json {
         render :json => {
           :project => @project,
-          :html => render_to_string({
+          :html_body => render_to_string({
             :partial => "index_edit.html.erb"
+          }),
+          :html_footer => render_to_string({
+            :partial => "index_edit_footer.html.erb"
           })
         }
       }

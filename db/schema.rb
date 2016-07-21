@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160205192344) do
+ActiveRecord::Schema.define(version: 20160704110900) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -244,6 +244,55 @@ ActiveRecord::Schema.define(version: 20160205192344) do
   add_index "projects", ["organization_id"], name: "index_projects_on_organization_id", using: :btree
   add_index "projects", ["restored_by_id"], name: "index_projects_on_restored_by_id", using: :btree
 
+  create_table "protocol_keywords", force: :cascade do |t|
+    t.string   "name"
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
+    t.integer  "nr_of_protocols", default: 0
+    t.integer  "organization_id",             null: false
+  end
+
+  add_index "protocol_keywords", ["name"], name: "index_protocol_keywords_on_name", using: :btree
+  add_index "protocol_keywords", ["organization_id"], name: "index_protocol_keywords_on_organization_id", using: :btree
+
+  create_table "protocol_protocol_keywords", force: :cascade do |t|
+    t.integer "protocol_id",         null: false
+    t.integer "protocol_keyword_id", null: false
+  end
+
+  add_index "protocol_protocol_keywords", ["protocol_id"], name: "index_protocol_protocol_keywords_on_protocol_id", using: :btree
+  add_index "protocol_protocol_keywords", ["protocol_keyword_id"], name: "index_protocol_protocol_keywords_on_protocol_keyword_id", using: :btree
+
+  create_table "protocols", force: :cascade do |t|
+    t.string   "name"
+    t.text     "authors"
+    t.text     "description"
+    t.integer  "added_by_id"
+    t.integer  "my_module_id"
+    t.integer  "organization_id",                   null: false
+    t.integer  "protocol_type",         default: 0, null: false
+    t.integer  "parent_id"
+    t.datetime "parent_updated_at"
+    t.integer  "archived_by_id"
+    t.datetime "archived_on"
+    t.integer  "restored_by_id"
+    t.datetime "restored_on"
+    t.datetime "created_at",                        null: false
+    t.datetime "updated_at",                        null: false
+    t.datetime "published_on"
+    t.integer  "nr_of_linked_children", default: 0
+  end
+
+  add_index "protocols", ["added_by_id"], name: "index_protocols_on_added_by_id", using: :btree
+  add_index "protocols", ["archived_by_id"], name: "index_protocols_on_archived_by_id", using: :btree
+  add_index "protocols", ["authors"], name: "index_protocols_on_authors", using: :btree
+  add_index "protocols", ["description"], name: "index_protocols_on_description", using: :btree
+  add_index "protocols", ["my_module_id"], name: "index_protocols_on_my_module_id", using: :btree
+  add_index "protocols", ["name"], name: "index_protocols_on_name", using: :btree
+  add_index "protocols", ["organization_id"], name: "index_protocols_on_organization_id", using: :btree
+  add_index "protocols", ["parent_id"], name: "index_protocols_on_parent_id", using: :btree
+  add_index "protocols", ["restored_by_id"], name: "index_protocols_on_restored_by_id", using: :btree
+
   create_table "report_elements", force: :cascade do |t|
     t.integer  "position",                 null: false
     t.integer  "type_of",                  null: false
@@ -272,13 +321,12 @@ ActiveRecord::Schema.define(version: 20160205192344) do
   add_index "report_elements", ["table_id"], name: "index_report_elements_on_table_id", using: :btree
 
   create_table "reports", force: :cascade do |t|
-    t.string   "name",                            null: false
+    t.string   "name",                null: false
     t.string   "description"
-    t.integer  "grouped_by",          default: 0, null: false
-    t.integer  "project_id",                      null: false
-    t.integer  "user_id",                         null: false
-    t.datetime "created_at",                      null: false
-    t.datetime "updated_at",                      null: false
+    t.integer  "project_id",          null: false
+    t.integer  "user_id",             null: false
+    t.datetime "created_at",          null: false
+    t.datetime "updated_at",          null: false
     t.integer  "last_modified_by_id"
   end
 
@@ -438,17 +486,17 @@ ActiveRecord::Schema.define(version: 20160205192344) do
     t.boolean  "completed",           null: false
     t.datetime "completed_on"
     t.integer  "user_id",             null: false
-    t.integer  "my_module_id",        null: false
     t.datetime "created_at",          null: false
     t.datetime "updated_at",          null: false
     t.integer  "last_modified_by_id"
+    t.integer  "protocol_id",         null: false
   end
 
   add_index "steps", ["created_at"], name: "index_steps_on_created_at", using: :btree
   add_index "steps", ["last_modified_by_id"], name: "index_steps_on_last_modified_by_id", using: :btree
-  add_index "steps", ["my_module_id"], name: "index_steps_on_my_module_id", using: :btree
   add_index "steps", ["name"], name: "index_steps_on_name", using: :gist
   add_index "steps", ["position"], name: "index_steps_on_position", using: :btree
+  add_index "steps", ["protocol_id"], name: "index_steps_on_protocol_id", using: :btree
   add_index "steps", ["user_id"], name: "index_steps_on_user_id", using: :btree
 
   create_table "tables", force: :cascade do |t|
@@ -610,6 +658,15 @@ ActiveRecord::Schema.define(version: 20160205192344) do
   add_foreign_key "projects", "users", column: "created_by_id"
   add_foreign_key "projects", "users", column: "last_modified_by_id"
   add_foreign_key "projects", "users", column: "restored_by_id"
+  add_foreign_key "protocol_keywords", "organizations"
+  add_foreign_key "protocol_protocol_keywords", "protocol_keywords"
+  add_foreign_key "protocol_protocol_keywords", "protocols"
+  add_foreign_key "protocols", "my_modules"
+  add_foreign_key "protocols", "organizations"
+  add_foreign_key "protocols", "protocols", column: "parent_id"
+  add_foreign_key "protocols", "users", column: "added_by_id"
+  add_foreign_key "protocols", "users", column: "archived_by_id"
+  add_foreign_key "protocols", "users", column: "restored_by_id"
   add_foreign_key "report_elements", "assets"
   add_foreign_key "report_elements", "checklists"
   add_foreign_key "report_elements", "my_modules"
@@ -657,7 +714,7 @@ ActiveRecord::Schema.define(version: 20160205192344) do
   add_foreign_key "step_comments", "steps"
   add_foreign_key "step_tables", "steps"
   add_foreign_key "step_tables", "tables"
-  add_foreign_key "steps", "my_modules"
+  add_foreign_key "steps", "protocols"
   add_foreign_key "steps", "users"
   add_foreign_key "steps", "users", column: "last_modified_by_id"
   add_foreign_key "tables", "users", column: "created_by_id"

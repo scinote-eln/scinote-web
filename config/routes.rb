@@ -13,6 +13,8 @@ Rails.application.routes.draw do
   # Settings
   get "users/settings/preferences", to: "users/settings#preferences", as: "preferences"
   put "users/settings/preferences", to: "users/settings#update_preferences", as: "update_preferences"
+  get "users/settings/preferences/tutorial", to: "users/settings#tutorial", as: "tutorial"
+  post "users/settings/preferences/reset_tutorial/", to: "users/settings#reset_tutorial", as: "reset_tutorial"
   get "users/settings/organizations", to: "users/settings#organizations", as: "organizations"
   get "users/settings/organizations/new", to: "users/settings#new_organization", as: "new_organization"
   post "users/settings/organizations/new", to: "users/settings#create_organization", as: "create_organization"
@@ -57,32 +59,31 @@ Rails.application.routes.draw do
         # The posts following here should in theory be gets,
         # but are posts because of parameters payload
         post 'generate', to: 'reports#generate'
-        get 'new/by_module', to: 'reports#new_by_module'
-        get 'new/by_module/project_contents_modal',
+        get 'new/', to: 'reports#new'
+        get 'new/project_contents_modal',
           to: 'reports#project_contents_modal',
           as: :project_contents_modal
-        post 'new/by_module/project_contents',
+        post 'new/project_contents',
           to: 'reports#project_contents',
           as: :project_contents
-        get 'new/by_module/module_contents_modal',
+        get 'new/module_contents_modal',
           to: 'reports#module_contents_modal',
           as: :module_contents_modal
-        post 'new/by_module/module_contents',
+        post 'new/module_contents',
           to: 'reports#module_contents',
           as: :module_contents
-        get 'new/by_module/step_contents_modal',
+        get 'new/step_contents_modal',
           to: 'reports#step_contents_modal',
           as: :step_contents_modal
-        post 'new/by_module/step_contents',
+        post 'new/step_contents',
           to: 'reports#step_contents',
           as: :step_contents
-        get 'new/by_module/result_contents_modal',
+        get 'new/result_contents_modal',
           to: 'reports#result_contents_modal',
           as: :result_contents_modal
-        post 'new/by_module/result_contents',
+        post 'new/result_contents',
           to: 'reports#result_contents',
           as: :result_contents
-        get 'new/by_timestamp', to: 'reports#new_by_timestamp'
         post '_save', to: 'reports#save_modal', as: :save_modal
         post 'destroy', as: :destroy  # Destroy multiple entries at once
       end
@@ -112,7 +113,6 @@ Rails.application.routes.draw do
     resources :user_my_modules, path: "/users", only: [:index, :new, :create, :destroy]
     resources :my_module_comments, path: "/comments", only: [:index, :new, :create]
     resources :sample_my_modules, path: "/samples_index", only: [:index]
-    resources :steps, only: [:new, :create]
     resources :result_texts, only: [:new, :create]
     resources :result_assets, only: [:new, :create]
     resources :result_tables, only: [:new, :create]
@@ -123,7 +123,7 @@ Rails.application.routes.draw do
       get 'activities'
       get 'activities_tab' # Activities in tab view for single module
       get 'due_date'
-      get 'steps' # Steps view for single module
+      get 'protocols' # Protocols view for single module
       get 'results' # Results view for single module
       get 'samples' # Samples view for single module
       get 'archive' # Archive view for single module
@@ -165,20 +165,59 @@ Rails.application.routes.draw do
   get 'result_tables/:id/download' => 'result_tables#download',
     as: :result_table_download
 
-  get 'search' => 'search#index'
-  get 'search/new' => 'search#new', as: :new_search
-
-  resources :assets, only: [:show] do
+  resources :protocols, only: [:index, :edit, :create] do
+    resources :steps, only: [:new, :create]
     member do
-      get :preview
-      get :download
+      get "linked_children", to: "protocols#linked_children"
+      post "linked_children_datatable", to: "protocols#linked_children_datatable"
+      patch "metadata", to: "protocols#update_metadata"
+      patch "keywords", to: "protocols#update_keywords"
+      post "clone", to: "protocols#clone"
+      get "unlink_modal", to: "protocols#unlink_modal"
+      post "unlink", to: "protocols#unlink"
+      get "revert_modal", to: "protocols#revert_modal"
+      post "revert", to: "protocols#revert"
+      get "update_parent_modal", to: "protocols#update_parent_modal"
+      post "update_parent", to: "protocols#update_parent"
+      get "update_from_parent_modal", to: "protocols#update_from_parent_modal"
+      post "update_from_parent", to: "protocols#update_from_parent"
+      post "load_from_repository_datatable", to: "protocols#load_from_repository_datatable"
+      get "load_from_repository_modal", to: "protocols#load_from_repository_modal"
+      post "load_from_repository", to: "protocols#load_from_repository"
+      post "load_from_file", to: "protocols#load_from_file"
+      get "copy_to_repository_modal", to: "protocols#copy_to_repository_modal"
+      post "copy_to_repository", to: "protocols#copy_to_repository"
+      get "protocol_status_bar", to: "protocols#protocol_status_bar"
+      get "updated_at_label", to: "protocols#updated_at_label"
+      get "edit_name_modal", to: "protocols#edit_name_modal"
+      get "edit_keywords_modal", to: "protocols#edit_keywords_modal"
+      get "edit_authors_modal", to: "protocols#edit_authors_modal"
+      get "edit_description_modal", to: "protocols#edit_description_modal"
+    end
+    collection do
+      get "create_new_modal", to: "protocols#create_new_modal"
+      post "datatable", to: "protocols#datatable"
+      post "make_private", to: "protocols#make_private"
+      post "publish", to: "protocols#publish"
+      post "archive", to: "protocols#archive"
+      post "restore", to: "protocols#restore"
+      post "import", to: "protocols#import"
+      get "export", to: "protocols#export"
     end
   end
 
+  get 'search' => 'search#index'
+  get 'search/new' => 'search#new', as: :new_search
+
+  # We cannot use 'resources :assets' because assets is a reserved route
+  # in Rails (assets pipeline) and causes funky behavior
+  get "files/:id/present", to: "assets#file_present", as: "file_present_asset"
+  get "files/:id/download", to: "assets#download", as: "download_asset"
+  get "files/:id/preview", to: "assets#preview", as: "preview_asset"
   post 'asset_signature' => 'assets#signature'
 
   devise_scope :user do
-    get 'avatar/:style' => 'users/registrations#avatar', as: 'avatar'
+    get 'avatar/:id/:style' => 'users/registrations#avatar', as: 'avatar'
     post 'avatar_signature' => 'users/registrations#signature'
   end
 end

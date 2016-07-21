@@ -1,4 +1,4 @@
-<% provide(:head_title, t("my_modules.show.head_title", project: @my_module.project.name, module: @my_module.name)) %>
+<% provide(:head_title, raw(t("my_modules.show.head_title", project: @my_module.project.name, module: @my_module.name))) %>
 <%= render partial: "shared/sidebar" %>
 <%= render partial: "shared/secondary_navigation" %>
 

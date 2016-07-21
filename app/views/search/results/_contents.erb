@@ -1,7 +1,0 @@
-<% @contents_results.each do |content| %>
-  <h5>
-      <span class="glyphicon glyphicon-font"></span>
-    <%= render partial: "search/results/partials/content_text.html.erb", locals: { content: content, query: search_query } %>
-  </h5>
-  <hr>
-<% end %>

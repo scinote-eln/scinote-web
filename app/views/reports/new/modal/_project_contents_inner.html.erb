@@ -14,7 +14,7 @@
         <%= form.check_box "module_group_#{my_module_group.id}", label: my_module_group.name, class: "project-all-cb" %>
         <% if my_module_group.my_modules.present? then %>
           <ul class="no-style project-contents-list">
-            <% my_module_group.my_modules.each do |my_module| %>
+            <% my_module_group.ordered_modules.each do |my_module| %>
               <li>
                 <%= form.check_box "modules[#{my_module.id}]", label: my_module.name %>
               </li>

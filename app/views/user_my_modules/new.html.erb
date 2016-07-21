@@ -1,4 +1,4 @@
-<% provide(:head_title, t("user_my_modules.new.head_title", project: @my_module.project.name, module: @my_module.name)) %>
+<% provide(:head_title, raw(t("user_my_modules.new.head_title", project: @my_module.project.name, module: @my_module.name))) %>
 <h2><%=t "user_my_modules.new.title", module: @my_module.name %></h2>
 
 <%= bootstrap_form_for [@my_module, @um] do |f| %>

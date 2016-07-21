@@ -10,8 +10,6 @@ class ReportsController < ApplicationController
   before_action :load_vars_nested, only: [
     :index,
     :new,
-    :new_by_module,
-    :new_by_timestamp,
     :create,
     :edit,
     :update,
@@ -31,8 +29,6 @@ class ReportsController < ApplicationController
   before_action :check_view_permissions, only: [:index]
   before_action :check_create_permissions, only: [
     :new,
-    :new_by_module,
-    :new_by_timestamp,
     :create,
     :edit,
     :update,
@@ -51,32 +47,23 @@ class ReportsController < ApplicationController
 
   layout "fluid"
 
+  # Initialize markdown parser
+  def load_markdown
+    @markdown = Redcarpet::Markdown.new(
+      Redcarpet::Render::HTML.new(
+        filter_html: true,
+        no_images: true
+      )
+    )
+  end
+
   # Index showing all reports of a single project
   def index
   end
 
-  # Modal for creating a new report/saving an existing report
-  def new
-    respond_to do |format|
-      format.html
-      format.json {
-        render :json => {
-          :html => render_to_string({
-            :partial => "new.html.erb"
-          })
-        }
-      }
-    end
-  end
-
   # Report grouped by modules
-  def new_by_module
+  def new
     @report = nil
-  end
-
-  # Report grouped by timestamp
-  def new_by_timestamp
-    # TODO
   end
 
   # Creating new report from the _save modal of the new page
@@ -109,12 +96,10 @@ class ReportsController < ApplicationController
   end
 
   def edit
-    if @report.by_module?
-      render "reports/new_by_module.html.erb"
-    else
-      # TODO
-      render_403
-    end
+    # cleans all the deleted report
+    @report.cleanup_report
+    load_markdown
+    render "reports/new.html.erb"
   end
 
   # Updating existing report from the _save modal of the new page
@@ -434,8 +419,8 @@ class ReportsController < ApplicationController
 
   def generate_module_contents_json(my_module)
     res = []
-    if in_params? :module_steps then
-      my_module.completed_steps.each do |step|
+    if (in_params? :module_steps) && my_module.protocol.present? then
+      my_module.protocol.completed_steps.each do |step|
         res << generate_new_el(false)
         el = generate_el(
           "reports/elements/step_element.html.erb",
@@ -446,7 +431,7 @@ class ReportsController < ApplicationController
       end
     end
     if in_params? :module_result_assets then
-      (my_module.results.select { |r| r.is_asset }).each do |result_asset|
+      (my_module.results.select { |r| r.is_asset && r.active? }).each do |result_asset|
         res << generate_new_el(false)
         el = generate_el(
           "reports/elements/result_asset_element.html.erb",
@@ -457,7 +442,7 @@ class ReportsController < ApplicationController
       end
     end
     if in_params? :module_result_tables then
-      (my_module.results.select { |r| r.is_table }).each do |result_table|
+      (my_module.results.select { |r| r.is_table && r.active? }).each do |result_table|
         res << generate_new_el(false)
         el = generate_el(
           "reports/elements/result_table_element.html.erb",
@@ -468,11 +453,12 @@ class ReportsController < ApplicationController
       end
     end
     if in_params? :module_result_texts then
-      (my_module.results.select { |r| r.is_text }).each do |result_text|
+      load_markdown
+      (my_module.results.select { |r| r.is_text && r.active? }).each do |result_text|
         res << generate_new_el(false)
         el = generate_el(
           "reports/elements/result_text_element.html.erb",
-          { result: result_text }
+          { result: result_text, markdown: @markdown }
         )
         el[:children] = generate_result_contents_json(result_text)
         res << el

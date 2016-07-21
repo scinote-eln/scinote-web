@@ -1,4 +1,5 @@
 class Table < ActiveRecord::Base
+  include SearchableModel
   validates :contents,
     presence: true,
     length: { maximum: 20971520 }
@@ -13,6 +14,54 @@ class Table < ActiveRecord::Base
   has_many :report_elements, inverse_of: :table, dependent: :destroy
 
   after_save :update_ts_index
+  #accepts_nested_attributes_for :table
+
+  def self.search(user, include_archived, query = nil, page = 1)
+    step_ids =
+      Step
+      .search(user, include_archived, nil, SHOW_ALL_RESULTS)
+      .joins(:step_tables)
+      .select("step_tables.id")
+      .distinct
+
+    result_ids =
+      Result
+      .search(user, include_archived, nil, SHOW_ALL_RESULTS)
+      .joins(:result_table)
+      .select("result_tables.id")
+      .distinct
+
+    # Trim whitespace and replace it with OR character. Make prefixed
+    # wildcard search term and escape special characters.
+    # For example, search term 'demo project' is transformed to
+    # 'demo:*|project:*' which makes word inclusive search with postfix
+    # wildcard.
+    s_query = query.gsub(/[!()&|:]/, " ")
+      .strip
+      .split(/\s+/)
+      .map {|t| t + ":*" }
+      .join("|")
+      .gsub('\'', '"')
+
+    table_query = Table
+      .distinct
+      .joins("LEFT OUTER JOIN step_tables ON step_tables.table_id = tables.id")
+      .joins("LEFT OUTER JOIN result_tables ON result_tables.table_id = tables.id")
+      .joins("LEFT OUTER JOIN results ON result_tables.result_id = results.id")
+      .where("step_tables.id IN (?) OR result_tables.id IN (?)", step_ids, result_ids)
+      .where("tables.data_vector @@ to_tsquery(?) ", s_query)
+
+    new_query = table_query
+
+    # Show all results if needed
+    if page == SHOW_ALL_RESULTS
+      new_query
+    else
+      new_query
+        .limit(SEARCH_LIMIT)
+        .offset((page - 1) * SEARCH_LIMIT)
+    end
+  end
 
   def contents_utf_8
     contents.present? ? contents.force_encoding(Encoding::UTF_8) : nil

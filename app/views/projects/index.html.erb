@@ -32,7 +32,7 @@
       <div class="modal-body">
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-action="submit"><%=t "projects.index.modal_edit_project.submit" %></button>
+        <button type="button" class="btn btn-primary" data-action="submit"><%=t "projects.index.modal_edit_project.submit" %></button>
         <button type="button" class="btn btn-default" data-dismiss="modal"><%=t "general.cancel" %></button>
       </div>
     </div>
@@ -48,16 +48,14 @@
         <h4 class="modal-title" id="manage-users-modal-label"><%= t("projects.index.modal_manage_users.modal_title") %> <span id="manage-users-modal-project"></span></h4>
       </div>
       <div class="modal-body"></div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal"><%=t "general.close" %></button>
-      </div>
+      <div class="modal-footer"></div>
     </div>
   </div>
 </div>
 
 <div id="projects-toolbar" data-step="1"
   data-intro="<%=t 'tutorial.tutorial_welcome_title_html' %>"
-  data-position='left'
+  data-position='bottom'
   data-project-options-step-text="<%=t 'tutorial.project_options_html' %>"
   data-archive-project-step-text="<%=t 'tutorial.archive_project_html' %>">
 
@@ -81,7 +79,7 @@
       <div class="dropdown">
         <button class="btn btn-default dropdown-toggle" type="button" id="organizationMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
           <span class="hidden-xs"><%= t('projects.index.organization_filter') %></span>
-          <span class="visible-xs-inline"><i class="glyphicon glyphicon-home"></i></span>
+          <span class="visible-xs-inline"><i class="glyphicon glyphicon-folder-open"></i></span>
           <span class="caret"></span>
         </button>
         <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
@@ -137,5 +135,4 @@
     <%= render partial: "projects/index/org_projects", locals: {org: org, projects: projects} %>
   <% end %>
 <% end %>
-
 <%= javascript_include_tag "projects/index", "data-turbolinks-track" => true %>

@@ -1,0 +1,40 @@
+<% query ||= nil %>
+<% text = query.present? ? highlight(protocol.name, query.strip.split(/\s+/)) : (protocol.name.empty? ? t("search.index.no_name") : protocol.name) %>
+
+<% if protocol.in_module? %>
+  <span class="label label-info">
+    <span class="glyphicon glyphicon-credit-card"></span>
+  </span>
+  &nbsp;
+  <% if can_view_steps_in_protocol(protocol) %>
+    <a href="<%= protocols_my_module_path(protocol.my_module) %>">
+      <%= text %>
+    </a>
+  <% else %>
+    <%= text %>
+  <% end %>
+<% else %>
+  <% if protocol.in_repository_public? %>
+    <span class="label label-info">
+      <%=t "search.index.public" %>
+    </span>
+    &nbsp;
+  <% elsif protocol.in_repository_private? %>
+    <span class="label label-info">
+      <%=t "search.index.private" %>
+    </span>
+    &nbsp;
+  <% elsif protocol.in_repository_archived? %>
+    <span class="label label-warning">
+      <%=t "search.index.archived" %>
+    </span>
+    &nbsp;
+  <% end %>
+  <% if can_edit_protocol(protocol) %>
+    <a href="<%= edit_protocol_path(protocol) %>">
+      <%= text %>
+    </a>
+  <% else %>
+    <%= text %>
+  <% end %>
+<% end %>

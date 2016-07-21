@@ -26,7 +26,6 @@ class ReportTest < ActiveSupport::TestCase
     # Check if uniqueness constraint works
     @report2 = Report.new(
       name: @report.name_was,
-      grouped_by: 0,
       project: projects(:interfaces),
       user: users(:steve)
     )
@@ -36,11 +35,6 @@ class ReportTest < ActiveSupport::TestCase
   test "should not validate with invalid description" do
     @report.description = "a" * 1001
     assert_not @report.valid?, "Report with description too long was valid"
-  end
-
-  test "should not validate with invalid grouped_by" do
-    @report.grouped_by = nil
-    assert_not @report.valid?, "Report with nil grouped_by was valid"
   end
 
   test "should not validate without project" do
@@ -102,7 +96,6 @@ class ReportTest < ActiveSupport::TestCase
   def new_valid_report
     Report.new(
       name: "report 2",
-      grouped_by: 0,
       project: projects(:interfaces),
       user: users(:steve)
     )
