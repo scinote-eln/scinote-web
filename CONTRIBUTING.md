@@ -12,35 +12,7 @@ If we receive a lot of similar feedback, we will try to provide better instructi
 
 ## Issue Reporting
 
-Before creating new issue make sure that you understand what should be expected
-result of some functionality. Then search for issues if your issue was already
-reported by someone else. Searching includes both issues title and description,
-so it should be easy to locate the potentially existing issues. Mind that some
-terms might have synonyms, so try to include those in your search as well. Make
-sure to include both open and closed issues in your search.
-
-### 1. Issue description
-
-When creating new issue, the **issue description** *must* describe following information:
-
-1. Summary: Summarize your issue in one sentence (what goes wrong, what did you
-expect to happen).
-2. Steps to reproduce: How can we reproduce the issue?
-3. Relevant logs and/or screenshots: Please use code blocks (\`\`\`) to format console
-output, logs, and code as it's very hard to read otherwise. Also, if your copied
-text contains `#` tags or other *Markdown* symbols, please use code blocks
-(\`\`\`) or inline code blocks (\`).
-
-Any issue details that might not be obvious to other users should be added to
-issue description.
-
-### 2. Issue labels
-
-Every issue *must* also be marked with labels that:
-- explains type of issue (`bug`, `feature`, `improvement`);
-- explain issue priority (`critical`, `high`, `medium`, `low`).
-
-Other fields like *Assign to* and *Milestone* can be skipped when reporting an issue.
+For issue reporting, please visit our [Jira page](https://scinote.atlassian.net). It is an open source Jira that requires no sign-up (you can report issues as anonymous user). Detailed instructions about issue reporting are documented there.
 
 ## Pull Requests
 
