@@ -1,4 +1,7 @@
-function nameValidator($nameInput) {
+// Form validators. They'll find, render and focus error/s and
+// prevent form submission.
+
+function nameValidator(ev, $nameInput) {
   var nameTooShort = $nameInput.val().length === 0;
   var nameTooLong = $nameInput.val().length > 50;
   var errMsg;
@@ -10,12 +13,12 @@ function nameValidator($nameInput) {
 
   var hasErrors = !_.isUndefined(errMsg);
   if (hasErrors) {
-    renderFormError($nameInput, errMsg);
+    renderFormError(ev, $nameInput, errMsg);
   }
   return !hasErrors;
 }
 
-function checklistsValidator(checklists, editMode) {
+function checklistsValidator(ev, checklists, editMode) {
   var noErrors = true;
   // For every visible (i.e. not removed) checklist
   checklists.each(function() {
@@ -39,7 +42,7 @@ function checklistsValidator(checklists, editMode) {
         if (anyChecklistItemFilled || editMode) {
             // In edit mode, checklist's name can't be blank
             var errMsg = I18n.t("devise.names.not_blank");
-            renderFormError($checklistNameInput, errMsg);
+            renderFormError(ev, $checklistNameInput, errMsg);
             noErrors = false;
         } else  {
           // Hide empty checklist (remove would break logic)
@@ -59,16 +62,17 @@ $.fn.files_validator = function(callback) {
   var $form = $(this);
   if ($form.length) {
     $form.submit(function (ev) {
-       var $fileInputs = $form.find("input[type=file]");
-       filesValidator($fileInputs, callback);
+      $form.clear_form_errors();
+      var $fileInputs = $form.find("input[type=file]");
+      filesValidator(ev, $fileInputs, callback);
     });
   }
 };
 
-function filesValidator(fileInputs, callback) {
+function filesValidator(ev, fileInputs, callback) {
   var filesSizeValid = true;
   if (fileInputs.length) {
-    var filesSizeValid = filesSizeValidator(fileInputs);
+    var filesSizeValid = filesSizeValidator(ev, fileInputs);
     // TODO File content check
 
     if (!filesSizeValid && callback) {
@@ -78,7 +82,7 @@ function filesValidator(fileInputs, callback) {
   return filesSizeValid;
 }
 
-function filesSizeValidator(fileInputs) {
+function filesSizeValidator(ev, fileInputs) {
 
   function getFileTooBigError(file) {
     if (!file) {
@@ -98,19 +102,19 @@ function filesSizeValidator(fileInputs) {
     var assetError = getFileTooBigError(file);
     var input = $(fileInput);
     if (assetError) {
-      renderFormError(input, assetError, "data-error='file-size'");
+      renderFormError(ev, input, assetError, "data-error='file-size'");
       fileSizeValid = false;
     }
   });
   if(fileSizeValid) {
     // Check if there is enough free space for the files
-    fileSizeValid = enaughSpaceValidator(fileInputs);
+    fileSizeValid = enaughSpaceValidator(ev, fileInputs);
   }
   return fileSizeValid;
 }
 
 // Overriden in billing module for checking
 // whether enough organization space is free
-function enaughSpaceValidator(fileInputs) {
+function enaughSpaceValidator(ev, fileInputs) {
   return true;
 }

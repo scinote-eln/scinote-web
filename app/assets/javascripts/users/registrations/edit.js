@@ -89,28 +89,24 @@ function startFileUpload(ev, btn) {
   }, function (errors) {
     $form.render_form_errors("user", errors);
 
-    var avatarError;
+    var avatarErrorMsg;
 
     animateSpinner($form, false);
     for (var c in errors) {
       if (/^avatar/.test(c)) {
-        avatarError = errors[c];
+        avatarErrorMsg = errors[c];
         break;
       }
     }
 
-    if (avatarError) {
+    if (avatarErrorMsg) {
       var $el = $form.find("input[type=file]");
 
       $form.clear_form_errors();
-      renderFormError($el, avatarError);
+      renderFormError(ev, $el, avatarErrorMsg);
     }
   }, "avatar");
 
-  if(!noErrors) {
-     animateSpinner(null, false);
-  }
-  ev.preventDefault();
   return noErrors;
 }
 

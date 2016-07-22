@@ -1,5 +1,6 @@
 // Scroll to and focus on element
 function goToFormElement(input) {
+	$("html, body").stop();
 	$("html, body").animate(
 		{
 		  scrollTop: $(input).closest(".form-group").offset().top

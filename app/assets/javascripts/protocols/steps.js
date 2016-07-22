@@ -178,7 +178,6 @@ function formCallback($form) {
 
 // Init ajax success/error for edit form
 function formEditAjax($form) {
-  var selectedTabIndex;
   $form
   .on("ajax:beforeSend", function () {
     $(".nested_step_checklists ul").each(function () {
@@ -210,7 +209,7 @@ function formEditAjax($form) {
     $(this).remove();
 
     $errInput = $form.find(".form-group.has-error").first().find("input");
-    renderFormError($errInput);
+    renderFormError(e, $errInput);
 
     formCallback($form);
     initEditableHandsOnTable($form);
@@ -256,7 +255,7 @@ function formNewAjax($form) {
     $(this).remove();
 
     $errInput = $form.find(".form-group.has-error").first().find("input");
-    renderFormError($errInput);
+    renderFormError(e, $errInput);
 
     formCallback($form);
     formNewAjax($form);
@@ -590,11 +589,11 @@ function stepValidator(ev, editMode, forS3) {
   removeBlankFileForms($form);
 
   var $fileInputs = $form.find("input[type=file]");
-  var filesValid = filesValidator($fileInputs);
+  var filesValid = filesValidator(ev, $fileInputs);
   var $checklists = $form.find(".nested_step_checklists");
-  var checklistsValid = checklistsValidator($checklists, editMode);
+  var checklistsValid = checklistsValidator(ev, $checklists, editMode);
   var $nameInput = $form.find("#step_name");
-  var nameValid = nameValidator($nameInput);
+  var nameValid = nameValidator(ev, $nameInput);
 
   if(filesValid && checklistsValid && nameValid) {
     if(forS3) {
@@ -606,9 +605,6 @@ function stepValidator(ev, editMode, forS3) {
       // (startFileUpload already calls it)
       animateSpinner();
     }
-  } else {
-    // Don't submit form
-    ev.preventDefault();
   }
 }
 
@@ -691,20 +687,20 @@ function startFileUpload(ev, btn) {
 
       processFile();
     }, function (errors) {
-      var assetError;
+      var assetErrorMsg;
 
       for (var c in errors) {
         if (/^asset\./.test(c)) {
-          assetError = errors[c];
+          assetErrorMsg = errors[c];
           break;
         }
       }
-      if (assetError) {
+      if (assetErrorMsg) {
         var el = $form.find("input[type=file]").get(inputPointer - 1);
         var $el = $(el);
 
         $form.clear_form_errors();
-        renderFormError($el, assetError);
+        renderFormError(e, $el, assetErrorMsg);
       } else {
         tabsPropagateErrorClass($form);
       }
@@ -712,9 +708,5 @@ function startFileUpload(ev, btn) {
   }
 
   var noErrors = processFile();
-  if(!noErrors) {
-     animateSpinner(null, false);
-  }
-  ev.preventDefault();
   return noErrors;
 }

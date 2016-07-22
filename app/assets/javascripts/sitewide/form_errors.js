@@ -43,7 +43,7 @@ $.fn.render_form_errors_no_clear = function(model_name, errors, input_group) {
  // NOTE: Similar to $.fn.render_form_errors, except here we process
  // one error at a time, which is not read from the form but is
  // specified manually.
-function renderFormError(nameInput, errMsg, errAttributes) {
+function renderFormError(ev, nameInput, errMsg, errAttributes) {
   if(!_.isUndefined(errMsg)) {
     var $errMsgSpan = $(nameInput).next(".help-block");
     errAttributes = _.isUndefined(errAttributes) ? "" : " " + errAttributes;
@@ -67,7 +67,11 @@ function renderFormError(nameInput, errMsg, errAttributes) {
     goToFormElement(nameInput);
   }
 
-  event.preventDefault();
+  // Don't submit form
+  ev.preventDefault();
+  ev.stopPropagation();
+  // Remove spinner if present
+  animateSpinner(null, false);
 }
 
 // If any of tabs (if exist) has errors, mark parent tab

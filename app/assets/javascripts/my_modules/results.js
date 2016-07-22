@@ -334,10 +334,6 @@ function startFileUpload(ev, btn) {
     showResultFormErrors($form, errors);
   });
 
-  if(!noErrors) {
-     animateSpinner(null, false);
-  }
-  ev.preventDefault();
   return noErrors;
 }
 
