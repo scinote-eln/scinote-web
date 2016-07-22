@@ -16,11 +16,10 @@ class Project < ActiveRecord::Base
   belongs_to :restored_by, foreign_key: 'restored_by_id', class_name: 'User'
   has_many :user_projects, inverse_of: :project
   has_many :users, through: :user_projects
-  has_many :my_modules, inverse_of: :project
+  has_many :experiments, inverse_of: :project
   has_many :project_comments, inverse_of: :project
   has_many :comments, through: :project_comments
   has_many :activities, inverse_of: :project
-  has_many :my_module_groups, inverse_of: :project
   has_many :tags, inverse_of: :project
   has_many :reports, inverse_of: :project, dependent: :destroy
   has_many :report_elements, inverse_of: :project, dependent: :destroy

@@ -7,14 +7,14 @@ class MyModule < ActiveRecord::Base
     presence: true,
     length: { minimum: 2, maximum: 50 }
   validates :x, :y, :workflow_order, presence: true
-  validates :project, presence: true
+  validates :experiment, presence: true
   validates :my_module_group, presence: true, if: "!my_module_group_id.nil?"
 
   belongs_to :created_by, foreign_key: 'created_by_id', class_name: 'User'
   belongs_to :last_modified_by, foreign_key: 'last_modified_by_id', class_name: 'User'
   belongs_to :archived_by, foreign_key: 'archived_by_id', class_name: 'User'
   belongs_to :restored_by, foreign_key: 'restored_by_id', class_name: 'User'
-  belongs_to :project, inverse_of: :my_modules
+  belongs_to :experiment, inverse_of: :my_modules
   belongs_to :my_module_group, inverse_of: :my_modules
   has_many :results, inverse_of: :my_module, :dependent => :destroy
   has_many :my_module_tags, inverse_of: :my_module, :dependent => :destroy

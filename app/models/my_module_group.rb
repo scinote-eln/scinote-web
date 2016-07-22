@@ -4,9 +4,9 @@ class MyModuleGroup < ActiveRecord::Base
   validates :name,
     presence: true,
     length: { maximum: 50 }
-  validates :project, presence: true
+  validates :experiment, presence: true
 
-  belongs_to :project, inverse_of: :my_module_groups
+  belongs_to :experiment, inverse_of: :my_module_groups
   belongs_to :created_by, foreign_key: 'created_by_id', class_name: 'User'
   has_many :my_modules, inverse_of: :my_module_group,
     dependent: :nullify
