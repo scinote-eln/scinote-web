@@ -185,9 +185,6 @@ function formEditAjax($form) {
       reorderCheckboxData(this);
     });
   })
-  .on("ajax:send", function(e, data) {
-    selectedTabIndex = $form.find("li.active").index() + 1;
-  })
   .on("ajax:success", function(e, data) {
     $(this).after(data.html);
     var $new_step = $(this).next();
@@ -212,22 +209,18 @@ function formEditAjax($form) {
     var $form = $(this).next();
     $(this).remove();
 
+    $errInput = $form.find(".form-group.has-error").first().find("input");
+    renderFormError($errInput);
+
     formCallback($form);
     initEditableHandsOnTable($form);
     applyCancelCallBack();
     formEditAjax($form);
-    tabsPropagateErrorClass($form);
 
     //Rerender tables
     $form.find("[data-role='step-hot-table']").each(function()  {
       renderTable($(this));
     });
-
-    // Select the same tab pane as before
-    $form.find("ul.nav-tabs li.active").removeClass("active");
-    $form.find(".tab-content div.active").removeClass("active");
-    $form.find("ul.nav-tabs li:nth-child(" + selectedTabIndex + ")").addClass("active");
-    $form.find(".tab-content div:nth-child(" + selectedTabIndex + ")").addClass("active");
 
     animateSpinner(null, false);
   });
@@ -262,10 +255,12 @@ function formNewAjax($form) {
     var $form = $(this).next();
     $(this).remove();
 
+    $errInput = $form.find(".form-group.has-error").first().find("input");
+    renderFormError($errInput);
+
     formCallback($form);
     formNewAjax($form);
     applyCancelOnNew();
-    tabsPropagateErrorClass($form);
 
     animateSpinner(null, false);
   });
@@ -583,89 +578,37 @@ $("[data-action='new-step']").on("ajax:success", function(e, data) {
   });
 });
 
-function nameValidator(event) {
-  var $form = $(event.target.form);
-  var nameTooShort = $( "#step_name" ).val().length === 0;
-  var nameTooLong = $( "#step_name" ).val().length > 50;
-  var errMsg;
-  if (nameTooShort) {
-    errMsg = I18n.t("devise.names.not_blank");
-  } else if (nameTooLong) {
-    errMsg = I18n.t("devise.names.length_too_long", { max_length: 50 });
-    animateSpinner(null,false);
-  }
-
-  var hasErrors = !_.isUndefined(errMsg);
-  if (hasErrors) {
-    renderError($("#step_name"), errMsg);
-  }
-  return !hasErrors;
-}
-
-function checklistsValidator(event, editMode) {
-  var $form = $(event.target.form);
-  var noErrors = true;
-
-  // For every visible (i.e. not removed) checklist
-  $form.find(".nested_step_checklists[style!='display: none']").each(function() {
-    var $checklistNameInput = $(this).find(".checklist_name");
-    var checklistNameEmpty = !$checklistNameInput.val();
-    anyChecklistItemFilled = false;
-
-    // For every ckecklist item input
-    $(" .checklist-item-text", $(this)).each(function() {
-      if($(this).val()) {
-        anyChecklistItemFilled = true;
-      } else {
-        // Remove empty checklist item
-        $(this).closest("fieldset").remove();
-      }
-    })
-
-    if(checklistNameEmpty) {
-      if(anyChecklistItemFilled || editMode) {
-          // In edit mode, name can't be blank
-          var errMsg = I18n.t("devise.names.not_blank");
-          renderError($checklistNameInput, errMsg);
-          noErrors = false;
-      } else  {
-        // Hide empty checklist
-        $(this).hide();
-      }
-    }
-  });
-
-  $(event.target).blur();
-  return noErrors;
-}
-
 // Needed because server-side validation failure clears locations of
 // files to be uploaded and checklist's items etc. Also user
 // experience is improved
-function stepValidator(event, editMode, forS3) {
-  var $form = $(event.target.form);
-  $form.clear_form_errors();
-  if(!editMode) {
-    // Most td's disappear when editing step and not pressing on
-    // tables tab, so we can't use this function
-    clearBlankTables($form)
-  }
-  clearBlankFileForms($form);
-  // TODO File type check
-  var fileSizeValid = uploadFileSizeCheck(event);
-  var checklistsValid = checklistsValidator(event, editMode);
-  var nameValid = nameValidator(event);
+function stepValidator(ev, editMode, forS3) {
+  var $form = $(ev.target.form);
 
-  if(fileSizeValid && checklistsValid && nameValid) {
+  $form.clear_form_errors();
+  $tables = $form.find(".nested_step_tables");
+  removeBlankExcelTables($tables, editMode);
+  removeBlankFileForms($form);
+
+  var $fileInputs = $form.find("input[type=file]");
+  var filesValid = filesValidator($fileInputs);
+  var $checklists = $form.find(".nested_step_checklists");
+  var checklistsValid = checklistsValidator($checklists, editMode);
+  var $nameInput = $form.find("#step_name");
+  var nameValid = nameValidator($nameInput);
+
+  if(filesValid && checklistsValid && nameValid) {
     if(forS3) {
       // Needed to redirect uploaded files to S3
-      startFileUpload(event, event.target);
+      startFileUpload(ev, ev.target);
     } else {
       // Files are saved locally
       // Validations passed, so animate spinner for possible file uploading
       // (startFileUpload already calls it)
       animateSpinner();
     }
+  } else {
+    // Don't submit form
+    ev.preventDefault();
   }
 }
 
@@ -727,8 +670,6 @@ function startFileUpload(ev, btn) {
   var inputPos = 0;
   var inputPointer = 0;
 
-  $form.clear_form_errors();
-  clearBlankFileForms(form);
   animateSpinner();
 
   function processFile () {
@@ -763,7 +704,7 @@ function startFileUpload(ev, btn) {
         var $el = $(el);
 
         $form.clear_form_errors();
-        renderError($el, assetError);
+        renderFormError($el, assetError);
       } else {
         tabsPropagateErrorClass($form);
       }
@@ -777,30 +718,3 @@ function startFileUpload(ev, btn) {
   ev.preventDefault();
   return noErrors;
 }
-
-// Remove empty file forms in step
-function clearBlankFileForms(form) {
-  $(form).find("input[type='file']").each(function () {
-    if (!this.files[0]) {
-      $(this).closest("fieldset").remove();
-    }
-  });
-}
-
-// Remove empty tables in step
-function clearBlankTables(form) {
-  $(form).find(".nested_step_tables").each(function () {
-    if (!$(this).find("td:not(:empty)").length) {
-      $(this).closest("fieldset").remove();
-    }
-  });
-}
-
-// This checks if the ctarget param exist in the
-// rendered url and opens the comment tab
-$(document).ready(function(){
-  if( getParam('ctarget') ){
-    var target = "#"+ getParam('ctarget');
-    $(target).find('a.comment-tab-link').click();
-  }
-});

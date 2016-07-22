@@ -102,10 +102,10 @@
 
 
   exports.directUpload = function (form, origId, signUrl, cb, cbErr, errKey) {
-    var fileInputs = $(form).find("input[type=file]");
-    var file = fileInputs.get(0).files[0];
+    var $fileInputs = $(form).find("input[type=file]");
+    var file = $fileInputs.get(0).files[0];
 
-    var isValid = checkFilesValidity(fileInputs);
+    var isValid = filesValidator($fileInputs);
 
     if (!isValid) {
       cbErr();

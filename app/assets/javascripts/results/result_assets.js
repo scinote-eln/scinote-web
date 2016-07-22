@@ -3,7 +3,7 @@ $("#new-result-asset").on("ajax:success", function(e, data) {
   var $form = $(data.html);
   $("#results").prepend($form);
 
-  $form.add_upload_file_size_check();
+  $form.files_validator();
   formAjaxResultAsset($form);
 
   // Cancel button
@@ -30,7 +30,7 @@ function applyEditResultAssetCallback() {
     $result.after($form);
     $result.remove();
 
-    $form.add_upload_file_size_check();
+    $form.files_validator();
     formAjaxResultAsset($form);
 
     // Cancel button

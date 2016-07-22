@@ -1,0 +1,116 @@
+function nameValidator($nameInput) {
+  var nameTooShort = $nameInput.val().length === 0;
+  var nameTooLong = $nameInput.val().length > 50;
+  var errMsg;
+  if (nameTooShort) {
+    errMsg = I18n.t("devise.names.not_blank");
+  } else if (nameTooLong) {
+    errMsg = I18n.t("devise.names.length_too_long", { max_length: 50 });
+  }
+
+  var hasErrors = !_.isUndefined(errMsg);
+  if (hasErrors) {
+    renderFormError($nameInput, errMsg);
+  }
+  return !hasErrors;
+}
+
+function checklistsValidator(checklists, editMode) {
+  var noErrors = true;
+  // For every visible (i.e. not removed) checklist
+  checklists.each(function() {
+    $checklist = $(this);
+    if ($checklist.css('display') != 'none') {
+      var $checklistNameInput = $checklist.find(".checklist_name");
+      anyChecklistItemFilled = false;
+
+      // For every ckecklist item input
+      $(" .checklist-item-text", $checklist).each(function() {
+        $checklistItemInput = $(this);
+        if ($checklistItemInput.val()) {
+          anyChecklistItemFilled = true;
+        } else {
+          // Remove empty checklist item input
+          $checklistItemInput.closest("fieldset").remove();
+        }
+      })
+
+      if (!$checklistNameInput.val()) {
+        if (anyChecklistItemFilled || editMode) {
+            // In edit mode, checklist's name can't be blank
+            var errMsg = I18n.t("devise.names.not_blank");
+            renderFormError($checklistNameInput, errMsg);
+            noErrors = false;
+        } else  {
+          // Hide empty checklist (remove would break logic)
+          $checklist.hide();
+        }
+      }
+    }
+  });
+
+  return noErrors;
+}
+
+// Add JavaScript client-side upload file checking
+// Callback function can be provided to be called
+// any time at least one file size is not valid
+$.fn.files_validator = function(callback) {
+  var $form = $(this);
+  if ($form.length) {
+    $form.submit(function (ev) {
+       var $fileInputs = $form.find("input[type=file]");
+       filesValidator($fileInputs, callback);
+    });
+  }
+};
+
+function filesValidator(fileInputs, callback) {
+  var filesSizeValid = true;
+  if (fileInputs.length) {
+    var filesSizeValid = filesSizeValidator(fileInputs);
+    // TODO File content check
+
+    if (!filesSizeValid && callback) {
+        callback();
+    }
+  }
+  return filesSizeValid;
+}
+
+function filesSizeValidator(fileInputs) {
+
+  function getFileTooBigError(file) {
+    if (!file) {
+      return ;
+    }
+    var size = parseInt(file.size);
+    <% sizeLimit = FILE_SIZE_LIMIT %>;
+    if (size > <%= sizeLimit.megabytes %>) {
+      return "<%= I18n.t 'general.file_size_exceeded', file_size: sizeLimit %>".strToFormFormat();
+    }
+  };
+
+  // Check if any file exceeds allowed size limit
+  var fileSizeValid = true;
+  _.each(fileInputs, function(fileInput) {
+    var file = fileInput.files[0];
+    var assetError = getFileTooBigError(file);
+    var input = $(fileInput);
+    if (assetError) {
+      renderFormError(input, assetError, "data-error='file-size'");
+      fileSizeValid = false;
+    }
+  });
+  if(fileSizeValid) {
+    // Check if there is enough free space for the files
+    fileSizeValid = enaughSpaceValidator(fileInputs);
+  }
+  return fileSizeValid;
+}
+
+// Overriden in billing module for checking
+// whether enough organization space is free
+function enaughSpaceValidator(fileInputs) {
+  return true;
+}

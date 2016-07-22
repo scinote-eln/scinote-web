@@ -63,7 +63,7 @@ forms
 });
 
 // Add upload file size checking
-$("form[data-for='avatar']").add_upload_file_size_check();
+$("form[data-for='avatar']").files_validator();
 
 // S3 direct uploading
 function startFileUpload(ev, btn) {
@@ -103,7 +103,7 @@ function startFileUpload(ev, btn) {
       var $el = $form.find("input[type=file]");
 
       $form.clear_form_errors();
-      renderError($el, avatarError);
+      renderFormError($el, avatarError);
     }
   }, "avatar");
 

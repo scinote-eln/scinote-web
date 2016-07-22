@@ -158,24 +158,6 @@ $(document.body).ready(function () {
   });
 });
 
-/*
- * Truncate long strings where is necessary
- */
-
-function truncateLongString( el, chars ) {
-  var input = $.trim(el.text());
-
-  if( input.length  >= chars){
-    var newText = el.text().slice(0, chars);
-    for( var i = newText.length; i > 0; i--){
-      if(newText[i] === ' '){
-        newText = newText.slice(0, i);
-        break;
-      }
-    }
-  el.text(newText + '...');
-  }
-}
 $(document).ready(function(){
   $('.tree-link a').each( function(){
     truncateLongString( $(this), 30);

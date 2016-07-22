@@ -19,8 +19,8 @@ en:
         title: "Forgot your password?"
         submit: "Send me reset password instructions"
     names:
-      not_blank: "Name can't be blank"
-      length_too_long: "Name is too long (maximum is %{max_length} characters)"
+      not_blank: "name can't be blank"
+      length_too_long: "name is too long (maximum is %{max_length} characters)"
     registrations:
       password_changed: "Password successfully updated."
     sessions:
