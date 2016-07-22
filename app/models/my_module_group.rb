@@ -29,7 +29,8 @@ class MyModuleGroup < ActiveRecord::Base
 
     new_query = MyModuleGroup
       .distinct
-      .where("my_module_groups.project_id IN (?)", project_ids)
+      .joins(:experiment)
+      .where("experiment.project_id IN (?)", project_ids)
       .where_attributes_like(:name, a_query)
 
     # Show all results if needed

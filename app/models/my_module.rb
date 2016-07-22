@@ -311,6 +311,10 @@ class MyModule < ActiveRecord::Base
     project.log(final)
   end
 
+  # Check if the model has a group
+  def  self.without_group(exp)
+    where(my_module_group: nil, archived: false, experiment_id: exp.id)
+  end
   private
 
   def create_blank_protocol

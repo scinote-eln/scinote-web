@@ -117,6 +117,12 @@ class Project < ActiveRecord::Base
     .where("users.id NOT IN (?)", UserProject.where(project: self).select(:id).distinct)
   end
 
+  def modules_without_group
+    self.experiments.map do |exp|
+      MyModule.where(experiment_id: exp.id).where(my_module_group: nil).where(archived: false)
+    end
+  end
+
   def assigned_modules(user)
     role = self.user_role(user)
     if role.blank?
@@ -140,7 +146,7 @@ class Project < ActiveRecord::Base
   end
 
   def active_module_groups
-    self.experiments.each do |exp|
+    experiments.map do |exp|
       exp.my_module_groups.joins(:my_modules)
       .where('my_modules.archived = ?', false)
       .distinct
