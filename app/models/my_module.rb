@@ -52,12 +52,14 @@ class MyModule < ActiveRecord::Base
     if include_archived
       new_query = MyModule
         .distinct
-        .where("my_modules.project_id IN (?)", project_ids)
+        .joins(:experiment)
+        .where("experiment.project_id IN (?)", project_ids)
         .where_attributes_like([:name, :description], a_query)
     else
       new_query = MyModule
         .distinct
-        .where("my_modules.project_id IN (?)", project_ids)
+        .joins(:experiment)
+        .where("experiment.project_id IN (?)", project_ids)
         .where("my_modules.archived = ?", false)
         .where_attributes_like([:name, :description], a_query)
     end
@@ -285,7 +287,7 @@ class MyModule < ActiveRecord::Base
     # Copy the module
     clone = MyModule.new(
       name: self.name,
-      project: self.project,
+      experiment: self.experiment,
       description: self.description,
       x: self.x,
       y: self.y)
@@ -318,7 +320,7 @@ class MyModule < ActiveRecord::Base
   # Find an empty position for the restored module. It's
   # basically a first empty row with x=0.
   def get_new_position
-    if project.blank?
+    if project.experiment.blank?
       return { x: 0, y: 0 }
     end
 

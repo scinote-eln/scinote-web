@@ -89,12 +89,24 @@ class Project < ActiveRecord::Base
       .limit(per_page)
   end
 
+  def project_my_modules
+    experiments.map{ |exp| exp.my_modules.take}
+  end
+
   def active_modules
-    self.my_modules.where(:archived => false)
+    experiments.map do |exp|
+       exp.my_modules
+      .where(:archived => false)
+      .take
+    end
   end
 
   def archived_modules
-    self.my_modules.where(:archived => true)
+    experiments.map do |exp|
+       exp.my_modules
+      .where(:archived => true)
+      .take
+    end
   end
 
   def unassigned_users
@@ -110,9 +122,9 @@ class Project < ActiveRecord::Base
     if role.blank?
       return MyModule.none
     elsif role == "owner"
-      return self.my_modules.where(archived: false)
+      return self.active_modules
     else
-      return self.my_modules.where(archived: false)
+      return self.active_modules
         .joins(:user_my_modules)
         .where("user_my_modules.user_id IN (?)", user.id)
         .distinct
@@ -127,19 +139,17 @@ class Project < ActiveRecord::Base
     return (self.user_projects.select { |up| up.user == user }).first.role
   end
 
-  def modules_without_group
-    MyModule.where(project_id: id).where(my_module_group: nil)
-      .where(archived: false)
-  end
-
   def active_module_groups
-    self.my_module_groups.joins(:my_modules)
+    self.experiments.each do |exp|
+      exp.my_module_groups.joins(:my_modules)
       .where('my_modules.archived = ?', false)
       .distinct
+      .take
+    end
   end
 
   def assigned_samples
-    Sample.joins(:my_modules).where(my_modules: {id: my_modules} )
+    Sample.joins(:my_modules).where(my_modules: {id: project_my_modules} )
   end
 
   def unassigned_samples(assigned_samples)
@@ -148,7 +158,7 @@ class Project < ActiveRecord::Base
 
   def space_taken
     st = 0
-    my_modules.find_each do |my_module|
+    project_my_modules.find_each do |my_module|
       st += my_module.space_taken
     end
     st
@@ -254,23 +264,23 @@ class Project < ActiveRecord::Base
   # Archive all modules. Receives an array of module integer IDs.
   def archive_modules(module_ids)
     module_ids.each do |m_id|
-      my_module = my_modules.find_by_id(m_id)
+      my_module = project_my_modules.find_by_id(m_id)
       unless my_module.blank?
         my_module.archive!
       end
     end
-    my_modules.reload
+    project_my_modules.reload
   end
 
    # Archive all modules. Receives an array of module integer IDs and current user.
   def archive_modules(module_ids, current_user)
     module_ids.each do |m_id|
-      my_module = my_modules.find_by_id(m_id)
+      my_module = project_my_modules.find_by_id(m_id)
       unless my_module.blank?
         my_module.archive!(current_user)
       end
     end
-    my_modules.reload
+    project_my_modules.reload
   end
 
   # Add modules, and returns a map of "virtual" IDs with
@@ -333,7 +343,7 @@ class Project < ActiveRecord::Base
     dg = RGL::DirectedAdjacencyGraph.new
     connections.each do |a,b|
       # Check if both vertices exist
-      if (my_modules.find_all {|m| [a.to_i, b.to_i].include? m.id }).count == 2
+      if (project_my_modules.find_all {|m| [a.to_i, b.to_i].include? m.id }).count == 2
         dg.add_edge(a, b)
       end
     end
@@ -348,13 +358,13 @@ class Project < ActiveRecord::Base
     # but keep a copy of previous state
     previous_sources = {}
     previous_sources.default = []
-    my_modules.each do |m|
+    project_my_modules.each do |m|
       previous_sources[m.id] = []
       m.inputs.each do |c|
         previous_sources[m.id] << c.from
       end
     end
-    my_modules.each do |m|
+    project_my_modules.each do |m|
       unless m.outputs.destroy_all
         raise ActiveRecord::ActiveRecordError
       end
@@ -374,8 +384,8 @@ class Project < ActiveRecord::Base
     visited = []
     # Assign samples to all new downstream modules
     filtered_edges.each do |a, b|
-      source = my_modules.find(a.to_i)
-      target = my_modules.find(b.to_i)
+      source = project_my_modules.find(a.to_i)
+      target = project_my_modules.find(b.to_i)
       # Do this only for new edges
       if previous_sources[target.id].exclude?(source)
         # Go as high upstream as new edges take us
@@ -386,7 +396,7 @@ class Project < ActiveRecord::Base
 
     # Save topological order of modules (for modules without workflow,
     # leave them unordered)
-    my_modules.each do |m|
+    project_my_modules.each do |m|
       if topsort.include? m.id.to_s
         m.workflow_order = topsort.find_index(m.id.to_s)
       else
@@ -396,14 +406,14 @@ class Project < ActiveRecord::Base
     end
 
     # Make sure to reload my modules, which now have updated connections and samples
-    my_modules.reload
+    project_my_modules.reload
     true
   end
 
   # When connections are deleted, unassign samples that
   # are not inherited anymore
   def unassign_samples_from_old_downstream_modules(sources)
-    my_modules.each do |my_module|
+    project_my_modules.each do |my_module|
       sources[my_module.id].each do |s|
         # Only do this for newly deleted connections
         if s.outputs.map{|i| i.to}.exclude? my_module
@@ -456,17 +466,17 @@ class Project < ActiveRecord::Base
         raise ActiveRecord::ActiveRecordError
       end
     end
-    my_modules.reload
+    project_my_modules.reload
   end
 
   # Normalize module positions in this project.
   def normalize_module_positions
     # This method normalizes module positions so x-s and y-s
     # are all positive
-    x_diff = (my_modules.collect { |m| m.x }).min
-    y_diff = (my_modules.collect { |m| m.y }).min
+    x_diff = (project_my_modules.collect { |m| m.x }).min
+    y_diff = (project_my_modules.collect { |m| m.y }).min
 
-    my_modules.each do |m|
+    project_my_modules.each do |m|
       unless
         m.update_attribute(:x, m.x - x_diff) and
           m.update_attribute(:y, m.y - y_diff)
@@ -484,7 +494,7 @@ class Project < ActiveRecord::Base
 
     dg = RGL::DirectedAdjacencyGraph[]
     group_ids = Set.new
-    my_modules.where(archived: :false).each do |m|
+    active_modules.each do |m|
       unless m.my_module_group.blank?
         group_ids << m.my_module_group.id
       end

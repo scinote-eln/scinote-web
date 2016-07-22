@@ -22,4 +22,9 @@ class Experiment < ActiveRecord::Base
     experiment.validates :archived_by, presence: true
     experiment.validates :archived_on, presence: true
   end
+
+  def modules_without_group
+    MyModule.where(experiment_id: id).where(my_module_group: nil)
+      .where(archived: false)
+  end
 end

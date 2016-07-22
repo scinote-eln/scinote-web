@@ -122,7 +122,7 @@ module PermissionHelper
     ] do |proxy, *args, &block|
       if args[0]
         my_module = args[0]
-        if my_module.active? and my_module.project.active?
+        if my_module.active? and my_module.experiment.project.active?
           proxy.call(*args, &block)
         else
           false
@@ -334,11 +334,11 @@ module PermissionHelper
   end
 
   def can_view_module(my_module)
-    can_view_project(my_module.project)
+    can_view_project(my_module.experiment.project)
   end
 
   def can_edit_module(my_module)
-    is_user_or_higher_of_project(my_module.project)
+    is_user_or_higher_of_project(my_module.experiment.project)
   end
 
   def can_archive_module(my_module)
@@ -350,7 +350,7 @@ module PermissionHelper
   end
 
   def can_edit_tags_for_module(my_module)
-    is_user_or_higher_of_project(my_module.project)
+    is_user_or_higher_of_project(my_module.experiment.project)
   end
 
   def can_add_tag_to_module(my_module)
@@ -362,11 +362,11 @@ module PermissionHelper
   end
 
   def can_view_module_info(my_module)
-    can_view_project(my_module.project)
+    can_view_project(my_module.experiment.project)
   end
 
   def can_view_module_users(my_module)
-    can_view_project(my_module.project)
+    can_view_project(my_module.experiment.project)
   end
 
   def can_edit_users_on_module(my_module)
@@ -386,24 +386,24 @@ module PermissionHelper
   end
 
   def can_view_module_activities(my_module)
-    is_member_of_project(my_module.project)
+    is_member_of_project(my_module.experiment.project)
   end
 
   def can_view_module_comments(my_module)
-    can_view_project(my_module.project)
+    can_view_project(my_module.experiment.project)
   end
 
   def can_add_comment_to_module(my_module)
-    is_technician_or_higher_of_project(my_module.project)
+    is_technician_or_higher_of_project(my_module.experiment.project)
   end
 
   def can_view_module_samples(my_module)
     can_view_module(my_module) and
-    can_view_samples(my_module.project.organization)
+    can_view_samples(my_module.experiment.project.organization)
   end
 
   def can_view_module_archive(my_module)
-    is_user_or_higher_of_project(my_module.project)
+    is_user_or_higher_of_project(my_module.experiment.project)
   end
 
   # ---- RESULTS PERMISSIONS ----
