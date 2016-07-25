@@ -52,15 +52,14 @@ class MyModule < ActiveRecord::Base
     if include_archived
       new_query = MyModule
         .distinct
-        .joins(:experiment)
-        .where('"experiments"."project_id" IN (?)', project_ids)
+        .where("my_modules.project_id IN (?)", project_ids)
         .where_attributes_like([:name, :description], a_query)
     else
       new_query = MyModule
         .distinct
-        .joins(:experiment)
-        .where( '"experiments"."project_id" IN (?) AND "my_modules"."archived" = ?', project_ids, false)
-        .where_attributes_like('"my_modules"."name"', '"my_modules"."description"')
+        .where("my_modules.project_id IN (?)", project_ids)
+        .where("my_modules.archived = ?", false)
+        .where_attributes_like([:name, :description], a_query)
     end
 
     # Show all results if needed
@@ -118,20 +117,22 @@ class MyModule < ActiveRecord::Base
     User.find_by_sql(
       "SELECT DISTINCT users.id, users.full_name FROM users " +
       "INNER JOIN user_projects ON users.id = user_projects.user_id " +
-      "WHERE user_projects.project_id = #{project_id.to_s}" +
+      "INNER JOIN experiments ON experiments.project_id = user_projects.project_id " +
+      "WHERE experiments.id = #{experiment_id.to_s}" +
       " AND users.id NOT IN " +
       "(SELECT DISTINCT user_id FROM user_my_modules WHERE user_my_modules.my_module_id = #{id.to_s})"
     )
   end
 
   def unassigned_samples
-    Sample.where(organization_id: project.organization).where.not(id: samples)
+    Sample.where(organization_id: experiment.project.organization).where.not(id: samples)
   end
 
   def unassigned_tags
     Tag.find_by_sql(
       "SELECT DISTINCT tags.id, tags.name, tags.color FROM tags " +
-      "WHERE tags.project_id = #{project_id.to_s} AND tags.id NOT IN " +
+      "INNER JOIN experiments ON experiments.project_id = tags.project_id " +
+      "WHERE experiments.id = #{experiment_id.to_s} AND tags.id NOT IN " +
       "(SELECT DISTINCT tag_id FROM my_module_tags WHERE my_module_tags.my_module_id = #{id.to_s})"
       )
   end
@@ -307,13 +308,9 @@ class MyModule < ActiveRecord::Base
   # Writes to user log.
   def log(message)
     final = "[%s] %s" % [name, message]
-    project.log(final)
+    experiment.project.log(final)
   end
 
-  # Check if the model has a group
-  def  self.without_group(exp)
-    where(my_module_group: nil, archived: false, experiment_id: exp.id)
-  end
   private
 
   def create_blank_protocol
@@ -323,12 +320,12 @@ class MyModule < ActiveRecord::Base
   # Find an empty position for the restored module. It's
   # basically a first empty row with x=0.
   def get_new_position
-    if project.experiment.blank?
+    if experiment.blank?
       return { x: 0, y: 0 }
     end
 
     new_y = 0
-    positions = project.active_modules.collect{ |m| [m.x, m.y] }
+    positions = experiment.active_modules.collect{ |m| [m.x, m.y] }
     (0..10000).each do |n|
       unless positions.include? [0, n]
         new_y = n
