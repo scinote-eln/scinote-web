@@ -6,7 +6,7 @@ class AddExperimentLevel < ActiveRecord::Migration
       t.text :description
       t.integer :project_id, null: false
       t.integer :created_by_id, null: false
-      t.integer :updated_by_id, null: false
+      t.integer :last_modified_by_id, null: false
       t.boolean :archived, null: false, default: false
       t.integer :archived_by_id
       t.datetime :archived_on
@@ -16,13 +16,13 @@ class AddExperimentLevel < ActiveRecord::Migration
       t.timestamps null: false
     end
     add_foreign_key :experiments, :users, column: :created_by_id
-    add_foreign_key :experiments, :users, column: :updated_by_id
+    add_foreign_key :experiments, :users, column: :last_modified_by_id
     add_foreign_key :experiments, :users, column: :archived_by_id
     add_foreign_key :experiments, :users, column: :restored_by_id
     add_index :experiments, :name
     add_index :experiments, :project_id
     add_index :experiments, :created_by_id
-    add_index :experiments, :updated_by_id
+    add_index :experiments, :last_modified_by_id
     add_index :experiments, :archived_by_id
     add_index :experiments, :restored_by_id
 
@@ -41,7 +41,7 @@ class AddExperimentLevel < ActiveRecord::Migration
           name: 'Test experiment',
           project: project,
           created_by: owner,
-          updated_by: owner
+          last_modified_by: owner
         )
 
         # Assign all modules onto new experiment
@@ -100,11 +100,11 @@ class AddExperimentLevel < ActiveRecord::Migration
     remove_index :experiments, column: :name
     remove_index :experiments, column: :project_id
     remove_index :experiments, column: :created_by_id
-    remove_index :experiments, column: :updated_by_id
+    remove_index :experiments, column: :last_modified_by_id
     remove_index :experiments, column: :archived_by_id
     remove_index :experiments, column: :restored_by_id
     remove_foreign_key :experiments, column: :created_by_id
-    remove_foreign_key :experiments, column: :updated_by_id
+    remove_foreign_key :experiments, column: :last_modified_by_id
     remove_foreign_key :experiments, column: :archived_by_id
     remove_foreign_key :experiments, column: :restored_by_id
     drop_table :experiments

@@ -3,7 +3,7 @@ class Experiment < ActiveRecord::Base
 
   belongs_to :project, inverse_of: :experiments
   belongs_to :created_by, foreign_key: :created_by_id, class_name: 'User'
-  belongs_to :updated_by, foreign_key: :updated_by_id, class_name: 'User'
+  belongs_to :last_modified_by, foreign_key: :last_modified_by_id, class_name: 'User'
   belongs_to :archived_by, foreign_key: :archived_by_id, class_name: 'User'
   belongs_to :restored_by, foreign_key: :restored_by_id, class_name: 'User'
 
@@ -17,7 +17,7 @@ class Experiment < ActiveRecord::Base
   validates :description, length: { maximum: 255 }
   validates :project, presence: true
   validates :created_by, presence: true
-  validates :updated_by, presence: true
+  validates :last_modified_by, presence: true
   with_options if: :archived do |experiment|
     experiment.validates :archived_by, presence: true
     experiment.validates :archived_on, presence: true

@@ -142,7 +142,7 @@ ActiveRecord::Schema.define(version: 20160722082700) do
     t.text     "description"
     t.integer  "project_id",                     null: false
     t.integer  "created_by_id",                  null: false
-    t.integer  "updated_by_id",                  null: false
+    t.integer  "last_modified_by_id",            null: false
     t.boolean  "archived",       default: false, null: false
     t.integer  "archived_by_id"
     t.datetime "archived_on"
@@ -157,7 +157,7 @@ ActiveRecord::Schema.define(version: 20160722082700) do
   add_index "experiments", ["name"], name: "index_experiments_on_name", using: :btree
   add_index "experiments", ["project_id"], name: "index_experiments_on_project_id", using: :btree
   add_index "experiments", ["restored_by_id"], name: "index_experiments_on_restored_by_id", using: :btree
-  add_index "experiments", ["updated_by_id"], name: "index_experiments_on_updated_by_id", using: :btree
+  add_index "experiments", ["last_modified_by_id"], name: "index_experiments_on_last_modified_by_id", using: :btree
 
   create_table "logs", force: :cascade do |t|
     t.integer "organization_id", null: false
@@ -662,7 +662,7 @@ ActiveRecord::Schema.define(version: 20160722082700) do
   add_foreign_key "experiments", "users", column: "archived_by_id"
   add_foreign_key "experiments", "users", column: "created_by_id"
   add_foreign_key "experiments", "users", column: "restored_by_id"
-  add_foreign_key "experiments", "users", column: "updated_by_id"
+  add_foreign_key "experiments", "users", column: "last_modified_by_id"
   add_foreign_key "logs", "organizations"
   add_foreign_key "my_module_comments", "comments"
   add_foreign_key "my_module_comments", "my_modules"
