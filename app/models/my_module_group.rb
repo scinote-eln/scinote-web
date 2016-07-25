@@ -12,10 +12,11 @@ class MyModuleGroup < ActiveRecord::Base
     dependent: :nullify
 
   def self.search(user, include_archived, query = nil, page = 1)
-    project_ids =
-      Project
+    exp_ids =
+      Experiment
       .search(user, include_archived, nil, SHOW_ALL_RESULTS)
       .select("id")
+
 
     if query
       a_query = query.strip
@@ -30,8 +31,8 @@ class MyModuleGroup < ActiveRecord::Base
     new_query = MyModuleGroup
       .distinct
       .joins(:experiment)
-      .where("experiment.project_id IN (?)", project_ids)
-      .where_attributes_like(:name, a_query)
+      .where("my_module_groups.experiment_id IN (?)", exp_ids)
+      .where_attributes_like("my_module_groups.name", a_query)
 
     # Show all results if needed
     if page == SHOW_ALL_RESULTS

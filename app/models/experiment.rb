@@ -1,5 +1,5 @@
 class Experiment < ActiveRecord::Base
-  include ArchivableModel
+  include ArchivableModel, SearchableModel
 
   belongs_to :project, inverse_of: :experiments
   belongs_to :created_by, foreign_key: :created_by_id, class_name: 'User'
@@ -21,6 +21,47 @@ class Experiment < ActiveRecord::Base
   with_options if: :archived do |experiment|
     experiment.validates :archived_by, presence: true
     experiment.validates :archived_on, presence: true
+  end
+
+  scope :is_archived, ->(is_archived) { where("archived = ?", is_archived) }
+
+  def self.search(user, include_archived, query = nil, page = 1)
+    project_ids =
+      Project
+        .search(user, include_archived, nil, SHOW_ALL_RESULTS)
+        .select("id")
+
+    if query
+      a_query = query.strip
+      .gsub("_","\\_")
+      .gsub("%","\\%")
+      .split(/\s+/)
+      .map {|t|  "%" + t + "%" }
+    else
+      a_query = query
+    end
+
+    if include_archived
+      new_query =
+        Experiment
+          .where(project: project_ids)
+          .where_attributes_like([:name, :description], a_query)
+    else
+      new_query =
+        Experiment
+          .is_archived(false)
+          .where(project: project_ids)
+          .where_attributes_like([:name, :description], a_query)
+    end
+
+    # Show all results if needed
+    if page == SHOW_ALL_RESULTS
+      new_query
+    else
+      new_query
+      .limit(SEARCH_LIMIT)
+      .offset((page - 1) * SEARCH_LIMIT)
+    end
   end
 
   def modules_without_group
