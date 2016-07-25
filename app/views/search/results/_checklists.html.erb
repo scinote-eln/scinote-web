@@ -25,7 +25,7 @@
     <br>
     <span>
       <%=t "search.index.step" %>
-      <%= render partial: "search/results/partials/step_text.html.erb", locals: { step: checklist.step } %>
+      <%= render partial: "search/results/partials/step_text.html.erb", locals: { step: checklist.step, target: nil } %>
     </span>
     <br>
     <% if checklist.step.protocol.in_module? %>

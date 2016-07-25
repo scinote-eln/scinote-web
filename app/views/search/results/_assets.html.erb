@@ -24,7 +24,7 @@
     <% if asset.step %>
       <span>
         <%=t "search.index.step" %>
-        <%= render partial: "search/results/partials/step_text.html.erb", locals: { step: asset.step } %>
+        <%= render partial: "search/results/partials/step_text.html.erb", locals: { step: asset.step, target: nil } %>
       </span>
       <br>
       <% if asset.step.protocol.in_module? %>

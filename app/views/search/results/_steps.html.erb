@@ -1,7 +1,7 @@
 <% results.each do |step| %>
   <h5>
     <span class="glyphicon glyphicon-circle-arrow-right"></span>
-    <%= render partial: "search/results/partials/step_text.html.erb", locals: { step: step, query: search_query } %>
+    <%= render partial: "search/results/partials/step_text.html.erb", locals: { step: step, query: search_query, target: nil } %>
   </h5>
 
   <% if step.description.present? && !step.description.empty? %>

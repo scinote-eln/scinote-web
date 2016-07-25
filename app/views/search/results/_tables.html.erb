@@ -13,7 +13,7 @@
     <% if table.step %>
       <span>
         <%=t "search.index.step" %>
-        <%= render partial: "search/results/partials/step_text.html.erb", locals: { step: table.step } %>
+        <%= render partial: "search/results/partials/step_text.html.erb", locals: { step: table.step, target: nil } %>
       </span>
       <br>
       <% if table.step.protocol.in_module? %>
