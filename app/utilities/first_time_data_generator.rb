@@ -82,6 +82,7 @@ module FirstTimeDataGenerator
     end
 
     name = "Demo project - qPCR"
+    exp_name = "My first experiment"
     # If there is an existing demo project, archive and rename it
     if org.projects.where(name: name).present?
       old = org.projects.where(name: "Demo project - qPCR")[0]
@@ -100,11 +101,16 @@ module FirstTimeDataGenerator
       created_by: user,
       created_at: generate_random_time(1.week.ago),
       last_modified_by: user,
-      archived: false,
-      archived_by: nil,
-      archived_on: nil,
-      restored_by: nil,
-      restored_on: nil
+      archived: false
+    )
+
+    experiment = Experiment.create(
+      name: exp_name,
+      description: "This is my very first experiment",
+      project: project,
+      created_by: user,
+      created_at: project.created_at + 5.minutes,
+      last_modified_by: user
     )
 
     # Automatically assign project author onto project
@@ -138,7 +144,7 @@ module FirstTimeDataGenerator
     # Create a module group
     my_module_group = MyModuleGroup.create(
       name: "Potato qPCR workflow",
-      project: project
+      experiment: experiment
     )
 
     # Create project modules
@@ -172,7 +178,7 @@ module FirstTimeDataGenerator
         description: i == 5 ? qpcr_module_description : nil,
         x: i < 4 ? i % 4 : 7 - i,
         y: i/4,
-        project: project,
+        experiment: experiment,
         workflow_order: i,
         my_module_group: my_module_group
       )
@@ -231,7 +237,7 @@ module FirstTimeDataGenerator
       description: nil,
       x: -1,
       y: -1,
-      project: project,
+      experiment: experiment,
       workflow_order: -1,
       my_module_group: nil,
       archived: true,
