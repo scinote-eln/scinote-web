@@ -370,15 +370,15 @@ module PermissionHelper
   end
 
   def can_edit_users_on_module(my_module)
-    is_owner_of_project(my_module.project)
+    is_owner_of_project(my_module.experiment.project)
   end
 
   def can_add_user_to_module(my_module)
-    is_owner_of_project(my_module.project)
+    is_owner_of_project(my_module.experiment.project)
   end
 
   def can_remove_user_from_module(my_module)
-    is_owner_of_project(my_module.project)
+    is_owner_of_project(my_module.experiment.project)
   end
 
   def can_view_module_protocols(my_module)
@@ -409,61 +409,61 @@ module PermissionHelper
   # ---- RESULTS PERMISSIONS ----
 
   def can_view_results_in_module(my_module)
-    can_view_project(my_module.project)
+    can_view_project(my_module.experiment.project)
   end
 
   def can_view_or_download_result_assets(my_module)
-    is_member_of_project(my_module.project) || can_view_project(my_module.project)
+    is_member_of_project(my_module.experiment.project) || can_view_project(my_module.experiment.project)
   end
 
   def can_view_result_comments(my_module)
-    can_view_project(my_module.project)
+    can_view_project(my_module.experiment.project)
   end
 
   def can_add_result_comment_in_module(my_module)
-    is_technician_or_higher_of_project(my_module.project)
+    is_technician_or_higher_of_project(my_module.experiment.project)
   end
 
   # ---- RESULT TEXT PERMISSIONS ----
 
   def can_create_result_text_in_module(my_module)
-    is_user_or_higher_of_project(my_module.project)
+    is_user_or_higher_of_project(my_module.experiment.project)
   end
 
   def can_edit_result_text_in_module(my_module)
-    is_user_or_higher_of_project(my_module.project)
+    is_user_or_higher_of_project(my_module.experiment.project)
   end
 
   def can_archive_result_text_in_module(my_module)
-    is_owner_of_project(my_module.project)
+    is_owner_of_project(my_module.experiment.project)
   end
 
   # ---- RESULT TABLE PERMISSIONS ----
 
   def can_create_result_table_in_module(my_module)
-    is_user_or_higher_of_project(my_module.project)
+    is_user_or_higher_of_project(my_module.experiment.project)
   end
 
   def can_edit_result_table_in_module(my_module)
-    is_user_or_higher_of_project(my_module.project)
+    is_user_or_higher_of_project(my_module.experiment.project)
   end
 
   def can_archive_result_table_in_module(my_module)
-    is_owner_of_project(my_module.project)
+    is_owner_of_project(my_module.experiment.project)
   end
 
   # ---- RESULT ASSET PERMISSIONS ----
 
   def can_create_result_asset_in_module(my_module)
-    is_user_or_higher_of_project(my_module.project)
+    is_user_or_higher_of_project(my_module.experiment.project)
   end
 
   def can_edit_result_asset_in_module(my_module)
-    is_user_or_higher_of_project(my_module.project)
+    is_user_or_higher_of_project(my_module.experiment.project)
   end
 
   def can_archive_result_asset_in_module(my_module)
-    is_owner_of_project(my_module.project)
+    is_owner_of_project(my_module.experiment.project)
   end
 
   # ---- REPORTS PERMISSIONS ----
@@ -507,11 +507,11 @@ module PermissionHelper
   end
 
   def can_add_samples_to_module(my_module)
-    is_technician_or_higher_of_project(my_module.project)
+    is_technician_or_higher_of_project(my_module.experiment.project)
   end
 
   def can_delete_samples_from_module(my_module)
-    is_technician_or_higher_of_project(my_module.project)
+    is_technician_or_higher_of_project(my_module.experiment.project)
   end
 
   # ---- SAMPLE TYPES PERMISSIONS ----
@@ -562,7 +562,7 @@ module PermissionHelper
       protocol.added_by == current_user
     elsif protocol.in_module?
       my_module = protocol.my_module
-      my_module.active? and my_module.project.active? and can_view_module(my_module)
+      my_module.active? and my_module.experiment.project.active? and can_view_module(my_module)
     else
       false
     end
@@ -619,7 +619,7 @@ module PermissionHelper
   def can_revert_protocol(protocol)
     if protocol.linked?
       my_module = protocol.my_module
-      my_module.active? and my_module.project.active? and is_user_or_higher_of_project(my_module.project)
+      my_module.active? and my_module.experiment.project.active? and is_user_or_higher_of_project(my_module.experiment.project)
     else
       false
     end
@@ -628,7 +628,7 @@ module PermissionHelper
   def can_update_protocol_from_parent(protocol)
     if protocol.linked?
       my_module = protocol.my_module
-      my_module.active? and my_module.project.active? and is_user_or_higher_of_project(my_module.project)
+      my_module.active? and my_module.experiment.project.active? and is_user_or_higher_of_project(my_module.experiment.project)
     else
       false
     end
@@ -637,7 +637,7 @@ module PermissionHelper
   def can_load_protocol_from_repository(protocol, source)
     if can_view_protocol(source)
       my_module = protocol.my_module
-      my_module.active? and my_module.project.active? and is_user_or_higher_of_project(my_module.project)
+      my_module.active? and my_module.experiment.project.active? and is_user_or_higher_of_project(my_module.experiment.project)
     else
       false
     end
@@ -649,9 +649,9 @@ module PermissionHelper
       parent = protocol.parent
 
       my_module.active? and
-      my_module.project.active? and
+      my_module.experiment.project.active? and
       is_normal_user_or_admin_of_organization(parent.organization) and
-      is_user_or_higher_of_project(my_module.project) and
+      is_user_or_higher_of_project(my_module.experiment.project) and
       (parent.in_repository_public? or parent.in_repository_private?) and
       parent.added_by == current_user
     else
@@ -662,7 +662,7 @@ module PermissionHelper
   # ---- STEPS PERMISSIONS ----
 
   def can_load_protocol_into_module(my_module)
-    is_user_or_higher_of_project(my_module.project)
+    is_user_or_higher_of_project(my_module.experiment.project)
   end
 
   def can_export_protocol_from_module(my_module)
@@ -670,18 +670,18 @@ module PermissionHelper
   end
 
   def can_copy_protocol_to_repository(my_module)
-    is_normal_user_or_admin_of_organization(my_module.project.organization)
+    is_normal_user_or_admin_of_organization(my_module.experiment.project.organization)
   end
 
   def can_link_copied_protocol_in_repository(protocol)
     can_copy_protocol_to_repository(protocol.my_module) and
-    is_user_or_higher_of_project(protocol.my_module.project)
+    is_user_or_higher_of_project(protocol.my_module.experiment.project)
   end
 
   def can_view_steps_in_protocol(protocol)
     if protocol.in_module?
       my_module = protocol.my_module
-      my_module.active? and my_module.project.active? and can_view_module(my_module)
+      my_module.active? and my_module.experiment.project.active? and can_view_module(my_module)
     elsif protocol.in_repository?
       protocol.in_repository_active? and can_view_protocol(protocol)
     else
@@ -692,7 +692,7 @@ module PermissionHelper
   def can_create_step_in_protocol(protocol)
     if protocol.in_module?
       my_module = protocol.my_module
-      my_module.active? and my_module.project.active? and is_user_or_higher_of_project(my_module.project)
+      my_module.active? and my_module.experiment.project.active? and is_user_or_higher_of_project(my_module.experiment.project)
     elsif protocol.in_repository?
       protocol.in_repository_active? and can_edit_protocol(protocol)
     else
@@ -703,7 +703,7 @@ module PermissionHelper
   def can_reorder_step_in_protocol(protocol)
     if protocol.in_module?
       my_module = protocol.my_module
-      my_module.active? and my_module.project.active? and is_user_or_higher_of_project(my_module.project)
+      my_module.active? and my_module.experiment.project.active? and is_user_or_higher_of_project(my_module.experiment.project)
     elsif protocol.in_repository?
       protocol.in_repository_active? and can_edit_protocol(protocol)
     else
@@ -720,7 +720,7 @@ module PermissionHelper
   def can_edit_step_in_protocol(protocol)
     if protocol.in_module?
       my_module = protocol.my_module
-      my_module.active? and my_module.project.active? and is_user_or_higher_of_project(my_module.project)
+      my_module.active? and my_module.experiment.project.active? and is_user_or_higher_of_project(my_module.experiment.project)
     elsif protocol.in_repository?
       protocol.in_repository_active? and can_edit_protocol(protocol)
     else
@@ -731,7 +731,7 @@ module PermissionHelper
   def can_delete_step_in_protocol(protocol)
     if protocol.in_module?
       my_module = protocol.my_module
-      my_module.active? and my_module.project.active? and is_owner_of_project(my_module.project)
+      my_module.active? and my_module.experiment.project.active? and is_owner_of_project(my_module.experiment.project)
     elsif protocol.in_repository?
       protocol.in_repository_active? and can_edit_protocol(protocol)
     else
@@ -742,7 +742,7 @@ module PermissionHelper
   def can_view_step_comments(protocol)
     if protocol.in_module?
       my_module = protocol.my_module
-      my_module.active? and my_module.project.active? and can_view_project(my_module.project)
+      my_module.active? and my_module.experiment.project.active? and can_view_project(my_module.experiment.project)
     else
       # In repository, comments are disabled
       false
@@ -752,7 +752,7 @@ module PermissionHelper
   def can_add_step_comment_in_protocol(protocol)
     if protocol.in_module?
       my_module = protocol.my_module
-      my_module.active? and my_module.project.active? and is_technician_or_higher_of_project(my_module.project)
+      my_module.active? and my_module.experiment.project.active? and is_technician_or_higher_of_project(my_module.experiment.project)
     else
       # In repository, user cannot complete steps
       false
@@ -762,8 +762,8 @@ module PermissionHelper
   def can_view_or_download_step_assets(protocol)
     if protocol.in_module?
       my_module = protocol.my_module
-      my_module.active? and my_module.project.active? and
-      (is_member_of_project(my_module.project) || can_view_project(my_module.project))
+      my_module.active? and my_module.experiment.project.active? and
+      (is_member_of_project(my_module.experiment.project) || can_view_project(my_module.experiment.project))
     elsif protocol.in_repository?
       protocol.in_repository_active? and can_view_protocol(protocol)
     else
@@ -774,7 +774,7 @@ module PermissionHelper
   def can_complete_step_in_protocol(protocol)
     if protocol.in_module?
       my_module = protocol.my_module
-      my_module.active? and my_module.project.active? and is_technician_or_higher_of_project(my_module.project)
+      my_module.active? and my_module.experiment.project.active? and is_technician_or_higher_of_project(my_module.experiment.project)
     else
       # In repository, user cannot complete steps
       false
@@ -784,7 +784,7 @@ module PermissionHelper
   def can_uncomplete_step_in_protocol(protocol)
     if protocol.in_module?
       my_module = protocol.my_module
-      my_module.active? and my_module.project.active? and is_user_or_higher_of_project(my_module.project)
+      my_module.active? and my_module.experiment.project.active? and is_user_or_higher_of_project(my_module.experiment.project)
     else
       # In repository, user cannot complete steps
       false
@@ -794,7 +794,7 @@ module PermissionHelper
   def can_check_checkbox(protocol)
     if protocol.in_module?
       my_module = protocol.my_module
-      my_module.active? and my_module.project.active? and is_technician_or_higher_of_project(my_module.project)
+      my_module.active? and my_module.experiment.project.active? and is_technician_or_higher_of_project(my_module.experiment.project)
     else
       # In repository, user cannot check checkboxes
       false
@@ -804,7 +804,7 @@ module PermissionHelper
   def can_uncheck_checkbox(protocol)
     if protocol.in_module?
       my_module = protocol.my_module
-      my_module.active? and my_module.project.active? and is_user_or_higher_of_project(my_module.project)
+      my_module.active? and my_module.experiment.project.active? and is_user_or_higher_of_project(my_module.experiment.project)
     else
       # In repository, user cannot check checkboxes
       false
