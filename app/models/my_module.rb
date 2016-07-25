@@ -53,15 +53,14 @@ class MyModule < ActiveRecord::Base
       new_query = MyModule
         .distinct
         .joins(:experiment)
-        .where("experiment.project_id IN (?)", project_ids)
+        .where('"experiments"."project_id" IN (?)', project_ids)
         .where_attributes_like([:name, :description], a_query)
     else
       new_query = MyModule
         .distinct
         .joins(:experiment)
-        .where("experiment.project_id IN (?)", project_ids)
-        .where("my_modules.archived = ?", false)
-        .where_attributes_like([:name, :description], a_query)
+        .where( '"experiments"."project_id" IN (?) AND "my_modules"."archived" = ?', project_ids, false)
+        .where_attributes_like('"my_modules"."name"', '"my_modules"."description"')
     end
 
     # Show all results if needed

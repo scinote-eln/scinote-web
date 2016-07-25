@@ -27,7 +27,6 @@ class Project < ActiveRecord::Base
 
   def self.search(user, include_archived, query = nil, page = 1)
 
-
     if query
       a_query = query.strip
       .gsub("_","\\_")
@@ -90,23 +89,15 @@ class Project < ActiveRecord::Base
   end
 
   def project_my_modules
-    experiments.map{ |exp| exp.my_modules.take}
+    experiments.collect{ |exp| exp.my_modules }.first
   end
 
   def active_modules
-    experiments.map do |exp|
-       exp.my_modules
-      .where(:archived => false)
-      .take
-    end
+    project_my_modules.where(:archived => false)
   end
 
   def archived_modules
-    experiments.map do |exp|
-       exp.my_modules
-      .where(:archived => true)
-      .take
-    end
+    project_my_modules.where(:archived => true)
   end
 
   def unassigned_users
