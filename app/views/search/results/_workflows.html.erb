@@ -12,7 +12,8 @@
     <br>
     <span>
       <%=t "search.index.experiment" %>
-      <%= render partial: "search/results/partials/experiment_text.html.erb", locals: { experiment: workflow.protocol.my_module.experiment } %>
+      <%= render partial: "search/results/partials/experiment_text.html.erb",
+                 locals: { experiment: workflow.experiment } %>
     </span>
     <br>
     <span>
@@ -23,7 +24,8 @@
     <br>
     <span>
       <%=t "search.index.organization" %>
-      <%= render partial: "search/results/partials/organization_text.html.erb", locals: { organization: workflow.project.organization } %>
+      <%= render partial: "search/results/partials/organization_text.html.erb",
+                 locals: { organization: workflow.experiment.project.organization } %>
     </span>
   </p>
 

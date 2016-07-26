@@ -19,7 +19,8 @@
     <br>
     <span>
       <%=t "search.index.organization" %>
-      <%= render partial: "search/results/partials/organization_text.html.erb", locals: { organization: experiment.project.organization } %>
+      <%= render partial: "search/results/partials/organization_text.html.erb",
+                 locals: { organization: experiment.project.organization } %>
     </span>
   </p>
 

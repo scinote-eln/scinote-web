@@ -51,23 +51,27 @@
     <% if protocol.in_module? %>
       <span>
         <%=t "search.index.module" %>
-        <%= render partial: "search/results/partials/my_module_text.html.erb", locals: { my_module: protocol.my_module } %>
+        <%= render partial: "search/results/partials/my_module_text.html.erb",
+                   locals: { my_module: protocol.my_module } %>
       </span>
       <br>
       <span>
         <%=t "search.index.experiment" %>
-        <%= render partial: "search/results/partials/experiment_text.html.erb", locals: { experiment: protocol.my_module.experiment } %>
+        <%= render partial: "search/results/partials/experiment_text.html.erb",
+                   locals: { experiment: protocol.my_module.experiment } %>
       </span>
       <br>
       <span>
         <%=t "search.index.project" %>
-        <%= render partial: "search/results/partials/project_text.html.erb", locals: { project: protocol.my_module.project } %>
+        <%= render partial: "search/results/partials/project_text.html.erb",
+                   locals: { project: protocol.my_module.experiment.project } %>
       </span>
       <br>
     <% end %>
     <span>
       <%=t "search.index.organization" %>
-      <%= render partial: "search/results/partials/organization_text.html.erb", locals: { organization: protocol.organization } %>
+      <%= render partial: "search/results/partials/organization_text.html.erb",
+                 locals: { organization: protocol.organization } %>
     </span>
   </p>
 

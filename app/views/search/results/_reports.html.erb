@@ -38,12 +38,14 @@
   <p>
     <span>
       <%=t "search.index.project" %>
-      <%= render partial: "search/results/partials/project_text.html.erb", locals: { project: report.project } %>
+      <%= render partial: "search/results/partials/project_text.html.erb",
+                 locals: { project: report.project } %>
     </span>
     <br>
     <span>
       <%=t "search.index.organization" %>
-      <%= render partial: "search/results/partials/organization_text.html.erb", locals: { organization: report.project.organization } %>
+      <%= render partial: "search/results/partials/organization_text.html.erb",
+                 locals: { organization: report.project.organization } %>
     </span>
   </p>
 

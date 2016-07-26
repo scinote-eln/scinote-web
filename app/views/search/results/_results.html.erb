@@ -31,22 +31,26 @@
     <br>
     <span>
       <%=t "search.index.module" %>
-      <%= render partial: "search/results/partials/my_module_text.html.erb", locals: { my_module: result.my_module } %>
+      <%= render partial: "search/results/partials/my_module_text.html.erb",
+                 locals: { my_module: result.my_module } %>
     </span>
     <br>
     <span>
       <%=t "search.index.experiment" %>
-      <%= render partial: "search/results/partials/experiment_text.html.erb", locals: { experiment: result.my_module.experiment } %>
+      <%= render partial: "search/results/partials/experiment_text.html.erb",
+                 locals: { experiment: result.my_module.experiment } %>
     </span>
     <br>
     <span>
       <%=t "search.index.project" %>
-      <%= render partial: "search/results/partials/project_text.html.erb", locals: { project: result.my_module.experiment.project } %>
+      <%= render partial: "search/results/partials/project_text.html.erb",
+                 locals: { project: result.my_module.experiment.project } %>
     </span>
     <br>
     <span>
       <%=t "search.index.organization" %>
-      <%= render partial: "search/results/partials/organization_text.html.erb", locals: { organization: result.my_module.project.organization } %>
+      <%= render partial: "search/results/partials/organization_text.html.erb",
+                 locals: { organization: result.my_module.experiment.project.organization } %>
     </span>
   </p>
 

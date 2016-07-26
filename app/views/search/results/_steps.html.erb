@@ -28,23 +28,27 @@
       <br>
       <span>
         <%=t "search.index.experiment" %>
-        <%= render partial: "search/results/partials/experiment_text.html.erb", locals: { experiment: step.protocol.my_module.experiment } %>
+        <%= render partial: "search/results/partials/experiment_text.html.erb",
+                   locals: { experiment: step.protocol.my_module.experiment } %>
       </span>
       <br>
       <span>
         <%=t "search.index.project" %>
-        <%= render partial: "search/results/partials/project_text.html.erb", locals: { project: step.protocol.my_module.project } %>
+        <%= render partial: "search/results/partials/project_text.html.erb",
+                   locals: { project: step.protocol.my_module.experiment.project } %>
       </span>
     <% else %>
       <span>
         <%=t "search.index.protocol" %>
-        <%= render partial: "search/results/partials/protocol_text.html.erb", locals: { protocol: step.protocol, query: search_query } %>
+        <%= render partial: "search/results/partials/protocol_text.html.erb",
+                   locals: { protocol: step.protocol, query: search_query } %>
       </span>
     <% end %>
     <br>
     <span>
       <%=t "search.index.organization" %>
-      <%= render partial: "search/results/partials/organization_text.html.erb", locals: { organization: step.protocol.organization } %>
+      <%= render partial: "search/results/partials/organization_text.html.erb",
+                 locals: { organization: step.protocol.organization } %>
     </span>
   </p>
 

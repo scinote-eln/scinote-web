@@ -21,17 +21,20 @@
     <br>
     <span>
       <%=t "search.index.experiment" %>
-      <%= render partial: "search/results/partials/experiment_text.html.erb", locals: { experiment: mod.experiment } %>
+      <%= render partial: "search/results/partials/experiment_text.html.erb",
+                 locals: { experiment: mod.experiment } %>
     </span>
     <br>
     <span>
       <%=t "search.index.project" %>
-      <%= render partial: "search/results/partials/project_text.html.erb", locals: { project: mod.experiment.project } %>
+      <%= render partial: "search/results/partials/project_text.html.erb",
+                 locals: { project: mod.experiment.project } %>
     </span>
     <br>
     <span>
       <%=t "search.index.organization" %>
-      <%= render partial: "search/results/partials/organization_text.html.erb", locals: { organization: mod.experiment.project.organization } %>
+      <%= render partial: "search/results/partials/organization_text.html.erb",
+                 locals: { organization: mod.experiment.project.organization } %>
     </span>
   </p>
 
