@@ -299,6 +299,28 @@ module PermissionHelper
     is_user_or_higher_of_project(project)
   end
 
+  # ---- EXPERIMENT PERMISSIONS ----
+
+  def can_create_experiment(project)
+    is_user_or_higher_of_project(project)
+  end
+
+  def can_edit_experiment(project)
+    is_user_or_higher_of_project(project)
+  end
+
+  def can_view_experiment(experiment)
+    can_view_project(experiment.project)
+  end
+
+  def can_archive_experiment(project)
+    is_user_or_higher_of_project(project)
+  end
+
+  def can_restore_experiment(experiment)
+    experiment.archived? and is_user_or_higher_of_project(experiment.project)
+  end
+
   # ---- WORKFLOW PERMISSIONS ----
 
   def can_edit_canvas(project)
