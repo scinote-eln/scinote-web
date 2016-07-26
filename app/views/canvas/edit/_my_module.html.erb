@@ -26,12 +26,12 @@
               <a class="edit-module" href="" data-module-id="<%= my_module.id %>"><%=t "projects.canvas.edit.edit_module" %></a>
           </li>
         <% end %>
-        <% if can_edit_module_groups(my_module.project) %>
+        <% if can_edit_module_groups(my_module.experiment.project) %>
           <li <%= 'style=display:none;' if my_module.my_module_group.blank? %>>
               <a class="edit-module-group" href="" data-module-id="<%= my_module.id %>"><%=t "projects.canvas.edit.edit_module_group" %></a>
           </li>
         <% end %>
-        <% if can_clone_modules(my_module.project) %>
+        <% if can_clone_modules(my_module.experiment.project) %>
           <li>
             <a class ="clone-module" href="" data-module-id="<%= my_module.id %>"><%=t "projects.canvas.edit.clone_module" %></a>
           </li>
@@ -44,7 +44,7 @@
             <a class="delete-module" href="" data-module-id="<%= my_module.id %>"><%=t "projects.canvas.edit.delete_module" %></a>
           </li>
         <% end %>
-        <% if can_archive_modules(my_module.project) %>
+        <% if can_archive_modules(my_module.experiment.project) %>
           <li <%= 'style=display:none;' if my_module.my_module_group.blank? %>>
             <a class ="delete-module-group" href="" data-module-id="<%= my_module.id %>"><%=t "projects.canvas.edit.delete_module_group" %></a>
           </li>
@@ -54,7 +54,7 @@
 
   </div>
 
-  <% if can_edit_connections(my_module.project) %>
+  <% if can_edit_connections(my_module.experiment.project) %>
     <div class="panel-body ep">
       <%=t "projects.canvas.edit.drag_connections" %>
     </div>
