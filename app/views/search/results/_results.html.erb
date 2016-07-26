@@ -12,7 +12,7 @@
         <span class="glyphicon glyphicon-file"></span>
       <% end %>
     <% end %>
-    <%= render partial: "search/results/partials/result_text.html.erb", locals: { result: result, query: search_query } %>
+    <%= render partial: "search/results/partials/result_text.html.erb", locals: { result: result, query: search_query, target: nil } %>
   </h5>
 
   <% if result.is_text && result.result_text.text.present? && !result.result_text.text.empty? && @markdown.present? %>

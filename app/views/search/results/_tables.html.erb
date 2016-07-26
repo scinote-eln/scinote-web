@@ -41,7 +41,7 @@
     <% elsif table.result %>
       <span>
         <%=t "search.index.result" %>
-        <%= render partial: "search/results/partials/result_text.html.erb", locals: { result: table.result } %>
+        <%= render partial: "search/results/partials/result_text.html.erb", locals: { result: table.result, target: nil } %>
       </span>
       <br>
       <span>
