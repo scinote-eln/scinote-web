@@ -6,16 +6,16 @@
   data-can-delete-modules="<%= can_archive_modules(@project) ? "yes" : "no" %>"
   data-can-reposition-modules="<%= can_reposition_modules(@project) ? "yes" : "no" %>"
   data-can-edit-connections="<%= can_edit_connections(@project) ? "yes" : "no" %>"
-  data-unsaved-work-text="<%=t "projects.canvas.edit.unsaved_work" %>"
+  data-unsaved-work-text="<%=t "experiments.canvas.edit.unsaved_work" %>"
 >
   <%= bootstrap_form_tag url: canvas_project_url, method: "post" do |f| %>
     <div class="btn-group" role="group">
       <%= f.submit class: "btn btn-primary", id: "canvas-save" do %>
-        <span class="visibile-xs"><%= t("projects.canvas.edit.save_short") %></span>
-        <span class="hidden-xs"><%= t("projects.canvas.edit.save") %></span>
+        <span class="visibile-xs"><%= t("experiments.canvas.edit.save_short") %></span>
+        <span class="hidden-xs"><%= t("experiments.canvas.edit.save") %></span>
       <% end %>
       <%= link_to canvas_project_path(@project), type: "button", class: "btn btn-default cancel-edit-canvas" do %>
-        <span class="hidden-xs"><%= t("projects.canvas.edit.cancel") %></span>
+        <span class="hidden-xs"><%= t("experiments.canvas.edit.cancel") %></span>
         <span class="glyphicon glyphicon-remove visible-xs" style="height: 16px;margin-top: 4px;">&nbsp;</span>
       <% end %>
     </div>
@@ -23,12 +23,12 @@
         <%=link_to "", type: "button", class: "btn btn-default", id: "canvas-new-module" do %>
           <span class="hbtn-default">
             <span class="glyphicon glyphicon-credit-card"></span>
-            <%= t("projects.canvas.edit.new_module") %>
+            <%= t("experiments.canvas.edit.new_module") %>
           </span>
           <span class="hbtn-hover">
             <span class="glyphicon glyphicon-credit-card"></span>
-            <em class="hidden-xs"><%= t("projects.canvas.edit.new_module_hover") %></em>
-            <span class="visible-xs-inline"><%= t("projects.canvas.edit.new_module") %></span>
+            <em class="hidden-xs"><%= t("experiments.canvas.edit.new_module_hover") %></em>
+            <span class="visible-xs-inline"><%= t("experiments.canvas.edit.new_module") %></span>
           </span>
         <% end %>
     <% end %>
@@ -42,28 +42,28 @@
     <%= hidden_field_tag 'module-groups', '{}' %>
   <% end %>
   <span style="display: none;" id="dropdown-header-placeholder">
-    <%=t "projects.canvas.edit.options_header" %>
+    <%=t "experiments.canvas.edit.options_header" %>
   </span>
   <span style="display: none;" id="edit-link-placeholder">
-    <%=t "projects.canvas.edit.edit_module" %>
+    <%=t "experiments.canvas.edit.edit_module" %>
   </span>
   <span style="display: none;" id="edit-group-link-placeholder">
-    <%=t "projects.canvas.edit.edit_module_group" %>
+    <%=t "experiments.canvas.edit.edit_module_group" %>
   </span>
   <span style="display: none;" id="clone-link-placeholder">
-    <%=t "projects.canvas.edit.clone_module" %>
+    <%=t "experiments.canvas.edit.clone_module" %>
   </span>
   <span style="display: none;" id="clone-group-link-placeholder">
-    <%=t "projects.canvas.edit.clone_module_group" %>
+    <%=t "experiments.canvas.edit.clone_module_group" %>
   </span>
   <span style="display: none;" id="delete-link-placeholder">
-    <%=t "projects.canvas.edit.delete_module" %>
+    <%=t "experiments.canvas.edit.delete_module" %>
   </span>
   <span style="display: none;" id="delete-group-link-placeholder">
-    <%=t "projects.canvas.edit.delete_module_group" %>
+    <%=t "experiments.canvas.edit.delete_module_group" %>
   </span>
   <span style="display: none;" id="drag-connections-placeholder">
-    <%=t "projects.canvas.edit.drag_connections" %>
+    <%=t "experiments.canvas.edit.drag_connections" %>
   </span>
 </div>
 <div id="diagram-container">
