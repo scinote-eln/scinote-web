@@ -1,7 +1,8 @@
 <% results.each do |experiment| %>
   <h5>
     <span class="glyphicon glyphicon-filter"></span>
-    <%= highlight experiment.name, search_query.strip.split(/\s+/) %>
+    <%= render partial: "search/results/partials/experiment_text.html.erb",
+               locals: { experiment: experiment, query: search_query } %>
   </h5>
 
   <p>

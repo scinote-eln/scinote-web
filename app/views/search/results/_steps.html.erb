@@ -27,6 +27,11 @@
       </span>
       <br>
       <span>
+        <%=t "search.index.experiment" %>
+        <%= render partial: "search/results/partials/experiment_text.html.erb", locals: { experiment: step.protocol.my_module.experiment } %>
+      </span>
+      <br>
+      <span>
         <%=t "search.index.project" %>
         <%= render partial: "search/results/partials/project_text.html.erb", locals: { project: step.protocol.my_module.project } %>
       </span>

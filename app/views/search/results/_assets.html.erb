@@ -60,8 +60,13 @@
       </span>
       <br>
       <span>
+        <%=t "search.index.experiment" %>
+        <%= render partial: "search/results/partials/experiment_text.html.erb", locals: { experiment: asset.result.my_module.experiment } %>
+      </span>
+      <br>
+      <span>
         <%=t "search.index.project" %>
-        <%= render partial: "search/results/partials/project_text.html.erb", locals: { project: asset.result.my_module.project } %>
+        <%= render partial: "search/results/partials/project_text.html.erb", locals: { project: asset.result.my_module.experiment.project } %>
       </span>
       <br>
       <span>
