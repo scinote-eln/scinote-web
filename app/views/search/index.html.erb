@@ -22,6 +22,17 @@
         </li>
         <li role="presentation"
           class="
+          <%= "active" if @search_category.present? and @search_category == :experiments %>
+          <%= "disabled" if @experiment_search_count == 0 %>"
+        >
+          <a href="?<%= {category: 'experiments', q: @search_query, utf8: '✓'}.to_query %>">
+            <span class="badge pull-right"><%= @experiment_search_count %></span>
+            <span class="glyphicon glyphicon-filter"></span>
+            <%= t'Experiments' %>
+          </a>
+        </li>
+        <li role="presentation"
+          class="
           <%= "active" if @search_category.present? and @search_category == :workflows %>
           <%= "disabled" if @workflow_search_count == 0 %>"
         >
@@ -167,6 +178,9 @@
 
       <% if @search_category == :projects and @project_search_count > 0 %>
         <%= render 'search/results/projects', search_query: @search_query, results: @project_results %>
+      <% end %>
+      <% if @search_category == :experiments and @experiment_search_count > 0 %>
+        <%= render 'search/results/experiments', search_query: @search_query, results: @experiment_results %>
       <% end %>
       <% if @search_category == :workflows and @workflow_search_count > 0 %>
         <%= render 'search/results/workflows', search_query: @search_query, results: @workflow_results %>
