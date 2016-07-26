@@ -31,3 +31,9 @@ We will consider high quality pull requests.
   * Fix the fake seeding rake task - [db_fake_data.rake](lib/tasks/db_fake_data.rake), so it will auto-generate potential new changes.
   * Fix the demo tutorial seeding method - [first_time_data_generator.rb](app/utilities/first_time_data_generator.rb), so it will auto-generate potential new changes.
   * When merging a database-related pull request, always make sure that [schema.rb](db/schema.rb) gets updated. This often means editing `schema.rb` by hand. Make sure all changes are persisted into this document, and that the schema version (`ActiveRecord::Schema.define(version: <version>)`) equals to the last migration in the application.
+
+### Contributor License Agreement (CLA)
+
+In order to accept your pull request, we need you to submit a CLA. You only need to do this once. If you are submitting a pull request for the first time, just let us know that you have completed the CLA and we can cross-check with your GitHub username.
+
+[Complete your CLA here](https://www.clahub.com/agreements/biosistemika/scinote-web)
