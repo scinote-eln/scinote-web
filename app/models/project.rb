@@ -105,7 +105,7 @@ class Project < ActiveRecord::Base
   end
 
   def project_my_modules
-    experiments.collect{ |exp| exp.my_modules }.first
+    MyModule.where('"experiment_id" IN (?)', experiments.select(:id))
   end
 
   def space_taken
