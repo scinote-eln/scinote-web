@@ -148,7 +148,7 @@ class Protocol < ActiveRecord::Base
 
   def self.new_blank_for_module(my_module)
     Protocol.new(
-      organization: my_module.project.organization,
+      organization: my_module.experiment.project.organization,
       protocol_type: :unlinked,
       my_module: my_module
     )
