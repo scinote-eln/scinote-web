@@ -257,7 +257,7 @@ class Organization < ActiveRecord::Base
     projects.includes(
       my_modules: { protocols: { steps: :assets }, results: { result_asset: :asset } }
     ).find_each do |project|
-      project.my_modules.find_each do |my_module|
+      project.project_my_modules.find_each do |my_module|
         my_module.protocol.steps.find_each do |step|
           step.assets.find_each { |asset| st += asset.estimated_size }
         end

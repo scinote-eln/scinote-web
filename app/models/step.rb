@@ -124,7 +124,7 @@ class Step < ActiveRecord::Base
     if (protocol.my_module.present?) then
       Activity.create(
         type_of: :destroy_step,
-        project: protocol.my_module.project,
+        project: protocol.my_module.experiment.project,
         my_module: protocol.my_module,
         user: @current_user,
         message: I18n.t(
