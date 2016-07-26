@@ -48,6 +48,7 @@ Rails.application.routes.draw do
   get 'projects/archive', to: 'projects#archive', as: 'projects_archive'
 
   resources :projects, except: [:new, :destroy] do
+    resources :experiments, except: [:index, :show, :destroy]
     resources :user_projects, path: "/users", only: [:new, :create, :index, :edit, :update, :destroy]
     resources :project_comments, path: "/comments", only: [:new, :create, :index]
     # Activities popup (JSON) for individual project in projects index,
