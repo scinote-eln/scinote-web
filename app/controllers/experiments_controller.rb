@@ -73,18 +73,18 @@ class ExperimentsController < ApplicationController
   end
 
   def check_view_permissions
-    render_403 unless can_view_project(@project)
+    render_403 unless can_view_experiment(@experiment)
   end
 
   def check_edit_permissions
-    render_403 unless can_edit_project(@project)
+    render_403 unless can_edit_experiment(@project)
   end
 
   def check_create_permissions
-    render_403 unless can_create_project(@project.organization)
+    render_403 unless can_create_experiment(@project)
   end
 
   def check_archive_permissions
-    render_403 unless can_archive_project(@project)
+    render_403 unless can_archive_experiment(@project)
   end
 end
