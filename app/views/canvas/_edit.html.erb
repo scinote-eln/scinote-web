@@ -1,11 +1,11 @@
 <div id="update-canvas"
-  data-can-create-modules="<%= can_create_modules(@project) ? "yes" : "no" %>"
-  data-can-edit-modules="<%= can_edit_modules(@project) ? "yes" : "no" %>"
-  data-can-edit-module-groups="<%= can_edit_module_groups(@project) ? "yes" : "no" %>"
-  data-can-clone-modules="<%= can_clone_modules(@project) ? "yes" : "no" %>"
-  data-can-delete-modules="<%= can_archive_modules(@project) ? "yes" : "no" %>"
-  data-can-reposition-modules="<%= can_reposition_modules(@project) ? "yes" : "no" %>"
-  data-can-edit-connections="<%= can_edit_connections(@project) ? "yes" : "no" %>"
+  data-can-create-modules="<%= can_create_modules(@experiment) ? "yes" : "no" %>"
+  data-can-edit-modules="<%= can_edit_modules(@experiment) ? "yes" : "no" %>"
+  data-can-edit-module-groups="<%= can_edit_module_groups(@experiment) ? "yes" : "no" %>"
+  data-can-clone-modules="<%= can_clone_modules(@experiment) ? "yes" : "no" %>"
+  data-can-delete-modules="<%= can_archive_modules(@experiment) ? "yes" : "no" %>"
+  data-can-reposition-modules="<%= can_reposition_modules(@experiment) ? "yes" : "no" %>"
+  data-can-edit-connections="<%= can_edit_connections(@experiment) ? "yes" : "no" %>"
   data-unsaved-work-text="<%=t "experiments.canvas.edit.unsaved_work" %>"
 >
   <%= bootstrap_form_tag url: canvas_project_url, method: "post" do |f| %>
@@ -19,7 +19,7 @@
         <span class="glyphicon glyphicon-remove visible-xs" style="height: 16px;margin-top: 4px;">&nbsp;</span>
       <% end %>
     </div>
-    <% if can_create_modules(@project) %>
+    <% if can_create_modules(@experiment) %>
         <%=link_to "", type: "button", class: "btn btn-default", id: "canvas-new-module" do %>
           <span class="hbtn-default">
             <span class="glyphicon glyphicon-credit-card"></span>
@@ -69,20 +69,20 @@
 <div id="diagram-container">
   <div id="diagram" class="diagram">
     <% my_modules.each do |my_module| %>
-      <%= render partial: "canvas/edit/my_module", locals: {project: @project, my_module: my_module} %>
+      <%= render partial: "canvas/edit/my_module", locals: {experiment: @experiment, my_module: my_module} %>
     <% end %>
 </div>
 
-<% if can_create_modules(@project) %>
-  <%= render partial: "canvas/edit/modal/new_module", locals: {project: @project} %>
+<% if can_create_modules(@experiment) %>
+  <%= render partial: "canvas/edit/modal/new_module", locals: {experiment: @experiment} %>
 <% end %>
-<% if can_edit_modules(@project) %>
-  <%= render partial: "canvas/edit/modal/edit_module", locals: {project: @project } %>
+<% if can_edit_modules(@experiment) %>
+  <%= render partial: "canvas/edit/modal/edit_module", locals: {experiment: @experiment } %>
 <% end %>
-<% if can_edit_module_groups(@project) %>
-  <%= render partial: "canvas/edit/modal/edit_module_group", locals: {project: @project } %>
+<% if can_edit_module_groups(@experiment) %>
+  <%= render partial: "canvas/edit/modal/edit_module_group", locals: {experiment: @experiment } %>
 <% end %>
-<% if can_archive_modules(@project) %>
-  <%= render partial: "canvas/edit/modal/delete_module", locals: {project: @project} %>
-  <%=  render partial: "canvas/edit/modal/delete_module_group", locals: {project: @project} %>
+<% if can_archive_modules(@experiment) %>
+  <%= render partial: "canvas/edit/modal/delete_module", locals: {experiment: @experiment} %>
+  <%=  render partial: "canvas/edit/modal/delete_module_group", locals: {experiment: @experiment} %>
 <% end %>

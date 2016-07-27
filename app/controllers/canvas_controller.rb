@@ -33,7 +33,7 @@ class CanvasController < ApplicationController
 
     # Make sure that remove parameter is valid
     to_archive = []
-    if can_archive_modules(@experiment.project) and
+    if can_archive_modules(@experiment) and
       update_params[:remove].present? then
       to_archive = update_params[:remove].split(",")
       unless to_archive.all? { |id| is_int? id }
@@ -49,7 +49,7 @@ class CanvasController < ApplicationController
 
     # Make sure connections parameter is valid
     connections = []
-    if can_edit_connections(@experiment.project) and
+    if can_edit_connections(@experiment) and
       update_params[:connections].present? then
       conns = update_params[:connections].split(",")
       unless conns.length % 2 == 0 and
@@ -68,7 +68,7 @@ class CanvasController < ApplicationController
 
     # Make sure positions parameter is valid
     positions = Hash.new
-    if can_reposition_modules(@experiment.project) and
+    if can_reposition_modules(@experiment) and
       update_params[:positions].present? then
       poss = update_params[:positions].split(";")
       center = ""
@@ -104,7 +104,7 @@ class CanvasController < ApplicationController
     # Make sure that to_add is an array of strings,
     # as well as that positions for newly added modules exist
     to_add = []
-    if can_create_modules(@experiment.project) and
+    if can_create_modules(@experiment) and
       update_params[:add].present? and
       update_params["add-names"].present? then
       ids = update_params[:add].split(",")
@@ -131,7 +131,7 @@ class CanvasController < ApplicationController
 
     # Make sure rename parameter is valid
     to_rename = Hash.new
-    if can_edit_modules(@experiment.project) and
+    if can_edit_modules(@experiment) and
       update_params[:rename].present? then
       begin
         to_rename = JSON.parse(update_params[:rename])
@@ -156,7 +156,7 @@ class CanvasController < ApplicationController
     # Make sure that to_clone is an array of pairs,
     # as well as that all IDs exist
     to_clone = Hash.new
-    if can_clone_modules(@experiment.project) and
+    if can_clone_modules(@experiment) and
       update_params[:cloned].present? then
       clones = update_params[:cloned].split(";")
       (clones.collect { |v| v.split(",") }).each do |val|
@@ -177,7 +177,7 @@ class CanvasController < ApplicationController
     end
 
     module_groups = Hash.new
-    if can_edit_module_groups(@experiment.project) and
+    if can_edit_module_groups(@experiment) and
       update_params["module-groups"].present? then
       begin
         module_groups = JSON.parse(update_params["module-groups"])
@@ -265,13 +265,13 @@ class CanvasController < ApplicationController
   end
 
   def check_edit_canvas
-    unless can_edit_canvas(@experiment.project)
+    unless can_edit_canvas(@experiment)
       render_403 and return
     end
   end
 
   def check_view_canvas
-    unless can_view_project(@experiment.project)
+    unless can_view_experiment(@experiment)
       render_403 and return
     end
   end
