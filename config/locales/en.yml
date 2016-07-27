@@ -464,6 +464,25 @@ en:
       archived_on: "Archived on"
       archived_on_title: "Task archived on %{date} at %{time}."
 
+  experiments:
+    new:
+      name:
+        label: 'Experiment name'
+        placeholder: 'My experiment'
+      description:
+        label: 'Description'
+        placeholder: 'Describe your experiment'
+      submit: 'Create new experiment'
+    create:
+      success_flash: "Experiment <strong>%{name}</strong> successfully created."
+      error_flash: "Experiment <strong>%{name}</strong> not created."
+    update:
+      success_flash: "Experiment <strong>%{name}</strong> successfully updated."
+      error_flash: "Experiment <strong>%{name}</strong> not updated."
+    archive:
+      success_flash: "Experiment <strong>%{name}</strong> successfully archived."
+      error_flash: "Experiment <strong>%{name}</strong> not archived."
+
   user_organizations:
     enums:
       role:
