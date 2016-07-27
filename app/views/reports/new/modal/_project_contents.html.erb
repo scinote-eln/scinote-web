@@ -74,8 +74,8 @@
       }
     });
     projectAll.click(function() {
-      var parentLists = $(this).parents("ul.project-contents-list, ul.experiment-contents-list");
-
+      var parentLists = $(this).parents("ul.project-contents-list, \
+                                         ul.experiment-contents-list");
       if (parentLists.length) {
         var prevEl = parentLists.prev();
         if (prevEl.length && prevEl.is("div.checkbox")) {
