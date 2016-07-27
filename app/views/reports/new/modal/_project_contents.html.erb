@@ -9,7 +9,7 @@
           <span class="hidden-xs"><%= t("projects.reports.elements.modals.project_contents.project_tab") %></span>
         </a>
       </li>
-      <% if project.my_modules.count > 0 %>
+      <% if project.project_my_modules.count > 0 %>
       <li role="presentation">
         <a href="#project-modules-tab" aria-controls="project-modules-tab" role="tab" data-toggle="tab">
           <span class="glyphicon glyphicon-link visible-xs"></span>
@@ -37,7 +37,7 @@
         <h5 class="visible-xs"><%= t("projects.reports.elements.modals.project_contents.project_tab") %></h5>
         <%= render partial: "reports/new/modal/project_contents_inner.html.erb", locals: { form: f, project: project } %>
       </div>
-      <% if project.my_modules.count > 0 %>
+      <% if project.project_my_modules.count > 0 %>
         <div role="tabpanel" class="tab-pane" id="project-modules-tab">
           <h5 class="visible-xs"><%= t("projects.reports.elements.modals.project_contents.modules_tab") %></h5>
           <%= render partial: "reports/new/modal/module_contents_inner.html.erb", locals: { form: f } %>
@@ -69,9 +69,13 @@
       if (nextUl.length && nextUl.is("ul.project-contents-list")) {
         nextUl.find("input:checkbox").prop("checked", this.checked);
       }
+      if (nextUl.length && nextUl.is("ul.experiment-contents-list")) {
+        nextUl.find("input:checkbox").prop("checked", this.checked);
+      }
     });
     projectAll.click(function() {
-      var parentLists = $(this).parents("ul.project-contents-list");
+      var parentLists = $(this).parents("ul.project-contents-list, ul.experiment-contents-list");
+
       if (parentLists.length) {
         var prevEl = parentLists.prev();
         if (prevEl.length && prevEl.is("div.checkbox")) {
