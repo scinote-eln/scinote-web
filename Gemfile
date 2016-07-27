@@ -67,5 +67,11 @@ group :production do
   gem 'skylight'
 end
 
+group :test do
+  gem 'minitest-reporters', '~> 1.1'
+  gem "shoulda-context"
+  gem "shoulda-matchers", ">= 3.0.1"
+end
+
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]

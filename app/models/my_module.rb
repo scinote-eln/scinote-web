@@ -35,7 +35,7 @@ class MyModule < ActiveRecord::Base
 
   def self.search(user, include_archived, query = nil, page = 1)
     project_ids =
-      Project
+      Experiment
       .search(user, include_archived, nil, SHOW_ALL_RESULTS)
       .select("id")
 
