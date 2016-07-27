@@ -12,6 +12,7 @@ class SearchController < ApplicationController
     count_search_results
 
     search_projects if @search_category == :projects
+    search_experiments if @search_category == :experiments
     search_workflows if @search_category == :workflows
     search_modules if @search_category == :modules
     search_results if @search_category == :results
@@ -63,7 +64,8 @@ class SearchController < ApplicationController
       @search_page = 1
     end
   end
-# Initialize markdown parser
+
+  # Initialize markdown parser
   def load_markdown
     if @search_category == :results
       @markdown = Redcarpet::Markdown.new(
@@ -87,6 +89,7 @@ class SearchController < ApplicationController
 
   def count_search_results
     @project_search_count = count_by_name Project
+    @experiment_search_count = count_by_name Experiment
     @workflow_search_count = count_by_name MyModuleGroup
     @module_search_count = count_by_name MyModule
     @result_search_count = count_by_name Result
@@ -101,6 +104,7 @@ class SearchController < ApplicationController
     @comment_search_count = count_by_name Comment
 
     @search_results_count = @project_search_count
+    @search_results_count += @experiment_search_count
     @search_results_count += @workflow_search_count
     @search_results_count += @module_search_count
     @search_results_count += @result_search_count
@@ -121,6 +125,14 @@ class SearchController < ApplicationController
       @project_results = search_by_name Project
     end
     @search_count = @project_search_count
+  end
+
+  def search_experiments
+    @experiment_results = []
+    if @experiment_search_count > 0 then
+      @experiment_results = search_by_name Experiment
+    end
+    @search_count = @experiment_search_count
   end
 
   def search_workflows

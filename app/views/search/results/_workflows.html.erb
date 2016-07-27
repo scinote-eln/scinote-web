@@ -11,14 +11,21 @@
     </span>
     <br>
     <span>
+      <%=t "search.index.experiment" %>
+      <%= render partial: "search/results/partials/experiment_text.html.erb",
+                 locals: { experiment: workflow.experiment } %>
+    </span>
+    <br>
+    <span>
       <%=t "search.index.project" %>
       <%= render partial: "search/results/partials/project_text.html.erb",
-                  locals: { project: workflow.project, link_to_page: :canvas } %>
+                  locals: { project: workflow.experiment.project, link_to_page: :canvas } %>
     </span>
     <br>
     <span>
       <%=t "search.index.organization" %>
-      <%= render partial: "search/results/partials/organization_text.html.erb", locals: { organization: workflow.project.organization } %>
+      <%= render partial: "search/results/partials/organization_text.html.erb",
+                 locals: { organization: workflow.experiment.project.organization } %>
     </span>
   </p>
 

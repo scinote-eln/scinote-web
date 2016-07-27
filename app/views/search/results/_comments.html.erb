@@ -46,12 +46,14 @@
     <% elsif comment.step_comment.present? %>
       <span>
         <%=t "search.index.step" %>
-        <%= render partial: "search/results/partials/step_text.html.erb", locals: { step: comment.step_comment.step, target: :comment } %>
+        <%= render partial: "search/results/partials/step_text.html.erb",
+                   locals: { step: comment.step_comment.step, target: :comment } %>
       </span>
     <% elsif comment.result_comment.present? %>
       <span>
         <%=t "search.index.result" %>
-        <%= render partial: "search/results/partials/result_text.html.erb", locals: { result: comment.result_comment.result, target: :comment } %>
+        <%= render partial: "search/results/partials/result_text.html.erb",
+                   locals: { result: comment.result_comment.result, target: :comment } %>
       </span>
     <% end %>
   </p>

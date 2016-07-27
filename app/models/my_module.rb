@@ -34,8 +34,8 @@ class MyModule < ActiveRecord::Base
   has_many :protocols, inverse_of: :my_module, dependent: :destroy
 
   def self.search(user, include_archived, query = nil, page = 1)
-    project_ids =
-      Project
+    exp_ids =
+      Experiment
       .search(user, include_archived, nil, SHOW_ALL_RESULTS)
       .select("id")
 
@@ -52,12 +52,12 @@ class MyModule < ActiveRecord::Base
     if include_archived
       new_query = MyModule
         .distinct
-        .where("my_modules.project_id IN (?)", project_ids)
+        .where("my_modules.experiment_id IN (?)", exp_ids)
         .where_attributes_like([:name, :description], a_query)
     else
       new_query = MyModule
         .distinct
-        .where("my_modules.project_id IN (?)", project_ids)
+        .where("my_modules.experiment_id IN (?)", exp_ids)
         .where("my_modules.archived = ?", false)
         .where_attributes_like([:name, :description], a_query)
     end

@@ -15,11 +15,12 @@ namespace :db do
   NR_SAMPLES = 100
   NR_PROTOCOLS = 20
   NR_PROTOCOL_KEYWORDS = 20
-  NR_PROJECTS = 5
+  NR_PROJECTS = 3
+  NR_EXPERIMENTS = 2
   NR_MODULE_GROUPS = 4
-  NR_MODULES = 12
-  NR_STEPS = 6
-  NR_RESULTS = 8
+  NR_MODULES = 4
+  NR_STEPS = 3
+  NR_RESULTS = 4
   NR_REPORTS = 4
   NR_COMMENTS = 10
   RATIO_USER_ORGANIZATIONS = 0.5
@@ -30,17 +31,17 @@ namespace :db do
   THRESHOLD_PROTOCOL_IN_MODULE_LINKED = 0.5
   THRESHOLD_PROTOCOL_PUBLIC = 0.6
   THRESHOLD_PROTOCOL_ARCHIVED = 0.2
-  NR_MAX_USER_PROJECTS = 30
+  NR_MAX_USER_PROJECTS = 15
   RATIO_USER_PROJECTS = 0.5
   RATIO_COMMENTS = 0.7
-  NR_MAX_USER_MODULES = 30
+  NR_MAX_USER_MODULES = 15
   RATIO_USER_MODULES = 0.5
-  NR_MAX_SAMPLE_MODULES = 100
+  NR_MAX_SAMPLE_MODULES = 10
   RATIO_SAMPLE_MODULES = 0.7
   RATIO_MODULE_MODULE_GROUPS = 0.8
   RATIO_EDGES = 0.7
   RATIO_STEP_COMPLETED = 0.5
-  NR_MAX_STEP_ATTACHMENTS = 5
+  NR_MAX_STEP_ATTACHMENTS = 2
   RATIO_STEP_ATTACHMENTS = 0.2
   NR_MAX_CHECKLIST_ITEMS = 20
   RATIO_CHECKLIST_ITEM = 0.2
@@ -52,7 +53,7 @@ namespace :db do
   THRESHOLD_RESTORED = 0.9
 
   MIN_FILE_SIZE = 0.01
-  MAX_FILE_SIZE = 0.3
+  MAX_FILE_SIZE = 0.1
 
   desc "Drops the database, sets it up and inserts fake data for " +
        "the current RAILS_ENV. WARNING: THIS WILL ERASE ALL " +
@@ -121,6 +122,7 @@ namespace :db do
         nr_protocols = NR_PROTOCOLS * factor
         nr_protocol_keywords = NR_PROTOCOL_KEYWORDS * factor
         nr_projects = NR_PROJECTS * factor
+        nr_experiments = NR_EXPERIMENTS * factor
         nr_module_groups = NR_MODULE_GROUPS * factor
         nr_modules = NR_MODULES * factor
         nr_steps = NR_STEPS * factor
@@ -149,9 +151,11 @@ namespace :db do
         nr_protocol_keywords = $stdin.gets.to_i
         puts "Type in the number of seeded projects for each organization"
         nr_projects = $stdin.gets.to_i
-        puts "Type in the number of seeded workflows for each project"
+        puts "Type in the number of seeded experiments for each project"
+        nr_experiments = $stdin.gets.to_i
+        puts "Type in the number of seeded workflows for each experiment"
         nr_module_groups = $stdin.gets.to_i
-        puts "Type in the number of seeded modules for each project"
+        puts "Type in the number of seeded modules for each experiment"
         nr_modules = $stdin.gets.to_i
         puts "Type in the number of seeded steps for each module"
         nr_steps = $stdin.gets.to_i
@@ -444,23 +448,51 @@ namespace :db do
             end
           end
 
-          puts "Generating fake workflows..."
+          puts "Generating fake experiments..."
           Project.find_each do |project|
+            for _ in 1..nr_experiments
+              status = random_status
+              created_at = Faker::Time.backward(500)
+              archived_by = pluck_random(project.users)
+              archived_on = Faker::Time.between(created_at, DateTime.now)
+              restored_by = pluck_random(project.users)
+              restored_on = Faker::Time.between(archived_on, DateTime.now)
+
+              Experiment.create(
+                name: Faker::Hacker.noun,
+                description: Faker::Hipster.sentence,
+                project: project,
+                created_at: created_at,
+                created_by: pluck_random(project.users),
+                archived: status,
+                archived_on: status.in?([:archived, :restored]) ?
+                  archived_on : nil,
+                archived_by: status.in?([:archived, :restored]) ?
+                  archived_by : nil,
+                restored_on: status == :restored ? restored_on : nil,
+                restored_by: status == :restored ? restored_by : nil
+              )
+            end
+          end
+
+          puts "Generating fake workflows..."
+          Experiment.find_each do |experiment|
             for _ in 1..nr_module_groups
               MyModuleGroup.create(
                 name: Faker::Hacker.noun,
-                project: project
+                experiment: experiment
               )
             end
           end
 
           puts "Generating fake modules..."
-          total_projects = Project.count
-          Project.find_each.with_index do |project, i|
+          total_experiment = Experiment.count
+          Experiment.find_each.with_index do |experiment, i|
             if verbose then
-              puts "  Generating modules for project #{project.name} " +
-                   "(#{i + 1} of #{total_projects})..."
+              puts "  Generating modules for experiment #{experiment.name} " +
+                   "(#{i + 1} of #{total_experiment})..."
             end
+            project = experiment.project
             taken_pos = []
             for _ in 1..nr_modules
               begin
@@ -487,7 +519,7 @@ namespace :db do
                   Faker::Hacker.say_something_smart : nil,
                 x: x,
                 y: y,
-                project: project,
+                experiment: experiment,
                 my_module_group: status == :archived ?
                   nil :
                   (rand <= RATIO_MODULE_MODULE_GROUPS ?
@@ -662,15 +694,15 @@ namespace :db do
           end
 
           puts "Generating fake module protocols..."
-          Project.find_each do |project|
-            project.my_modules.find_each do |my_module|
-              generate_fake_protocol(project.organization, my_module, nr_steps, nr_comments)
+          Experiment.find_each do |experiment|
+            experiment.my_modules.find_each do |my_module|
+              generate_fake_protocol(experiment.project.organization, my_module, nr_steps, nr_comments)
             end
           end
 
           puts "Generating fake module results..."
-          Project.find_each do |project|
-            project.my_modules.find_each do |my_module|
+          Experiment.find_each do |experiment|
+            experiment.my_modules.find_each do |my_module|
               for _ in 1..nr_results
                 user = pluck_random(my_module.users)
                 created_at = Faker::Time.backward(500)
@@ -776,7 +808,8 @@ namespace :db do
           end
 
           puts "Generating fake reports..."
-          Project.find_each do |project|
+          Experiment.find_each do |experiment|
+            project = experiment.project
             for _ in 1..nr_reports
               taken_project_names = []
               begin
@@ -799,7 +832,7 @@ namespace :db do
                 report: report,
                 type_of: :project_header
               )
-              project.my_modules.each do |my_module|
+              experiment.my_modules.each do |my_module|
                 if rand <= RATIO_REPORT_ELEMENTS then
                   re_my_module = ReportElement.create(
                     sort_order: rand <= 0.5 ? 0 : 1,

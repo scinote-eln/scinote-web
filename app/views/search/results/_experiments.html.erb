@@ -1,0 +1,28 @@
+<% results.each do |experiment| %>
+  <h5>
+    <span class="glyphicon glyphicon-filter"></span>
+    <%= render partial: "search/results/partials/experiment_text.html.erb",
+               locals: { experiment: experiment, query: search_query } %>
+  </h5>
+
+  <p>
+    <span>
+      <%=t "search.index.created_at" %>
+      <%=l experiment.created_at, format: :full %>
+    </span>
+    <br>
+    <span>
+      <%=t "search.index.project" %>
+      <%= render partial: "search/results/partials/project_text.html.erb",
+                  locals: { project: experiment.project, link_to_page: :canvas } %>
+    </span>
+    <br>
+    <span>
+      <%=t "search.index.organization" %>
+      <%= render partial: "search/results/partials/organization_text.html.erb",
+                 locals: { organization: experiment.project.organization } %>
+    </span>
+  </p>
+
+  <hr>
+<% end %>

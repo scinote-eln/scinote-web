@@ -106,6 +106,8 @@ Rails.application.routes.draw do
     get 'users/edit', to: 'user_projects#index_edit'
   end
 
+  resources :experiments, only: [:show]
+
   # Show action is a popup (JSON) for individual module in full-zoom canvas,
   # as well as "module info" page for single module (HTML)
   resources :my_modules, path: "/modules", only: [:show, :edit, :update, :destroy] do
