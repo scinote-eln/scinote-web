@@ -323,38 +323,38 @@ module PermissionHelper
 
   # ---- WORKFLOW PERMISSIONS ----
 
-  def can_edit_canvas(project)
-    is_user_or_higher_of_project(project)
+  def can_edit_canvas(experiment)
+    is_user_or_higher_of_project(experiment.project)
   end
 
-  def can_reposition_modules(project)
-    is_user_or_higher_of_project(project)
+  def can_reposition_modules(experiment)
+    is_user_or_higher_of_project(experiment.project)
   end
 
-  def can_edit_connections(project)
-    is_user_or_higher_of_project(project)
+  def can_edit_connections(experiment)
+    is_user_or_higher_of_project(experiment.project)
   end
 
   # ---- MODULE PERMISSIONS ----
 
-  def can_create_modules(project)
-    is_user_or_higher_of_project(project)
+  def can_create_modules(experiment)
+    is_user_or_higher_of_project(experiment.project)
   end
 
-  def can_edit_modules(project)
-    is_user_or_higher_of_project(project)
+  def can_edit_modules(experiment)
+    is_user_or_higher_of_project(experiment.project)
   end
 
-  def can_edit_module_groups(project)
-    is_user_or_higher_of_project(project)
+  def can_edit_module_groups(experiment)
+    is_user_or_higher_of_project(experiment.project)
   end
 
-  def can_clone_modules(project)
-    is_user_or_higher_of_project(project)
+  def can_clone_modules(experiment)
+    is_user_or_higher_of_project(experiment.project)
   end
 
-  def can_archive_modules(project)
-    is_user_or_higher_of_project(project)
+  def can_archive_modules(experiment)
+    is_user_or_higher_of_project(experiment.project)
   end
 
   def can_view_module(my_module)
