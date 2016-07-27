@@ -30,7 +30,6 @@ class MyModuleGroup < ActiveRecord::Base
 
     new_query = MyModuleGroup
       .distinct
-      .joins(:experiment)
       .where("my_module_groups.experiment_id IN (?)", exp_ids)
       .where_attributes_like("my_module_groups.name", a_query)
 
