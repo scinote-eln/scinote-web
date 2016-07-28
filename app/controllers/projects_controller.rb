@@ -2,11 +2,11 @@ class ProjectsController < ApplicationController
   include SampleActions
   include RenamingUtil
 
-  before_action :load_vars, only: [:show, :edit, :update, :canvas,
+  before_action :load_vars, only: [:show, :edit, :update,
                                    :notifications, :reports,
                                    :samples, :module_archive,
                                    :delete_samples, :samples_index]
-  before_action :check_view_permissions, only: [:show, :canvas, :reports,
+  before_action :check_view_permissions, only: [:show, :reports,
                                                 :samples, :module_archive,
                                                 :samples_index]
   before_action :check_view_notifications_permissions, only: [ :notifications ]
@@ -236,10 +236,6 @@ class ProjectsController < ApplicationController
 
   def show
     # This is the "info" view
-  end
-
-  def canvas
-    # This is the "structure/overview/canvas" view
   end
 
   def notifications
