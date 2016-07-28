@@ -366,7 +366,7 @@ module PermissionHelper
   end
 
   def can_archive_module(my_module)
-    is_user_or_higher_of_project(my_module.project)
+    is_user_or_higher_of_project(my_module.experiment.project)
   end
 
   def can_restore_module(my_module)

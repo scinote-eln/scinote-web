@@ -1,30 +1,30 @@
 class CanvasController < ApplicationController
   before_action :load_vars
 
-  before_action :check_view_canvas, only: [:edit, :full_zoom, :medium_zoom, :small_zoom]
-  before_action :check_edit_canvas, only: [:edit, :update]
+  # before_action :check_view_canvas, only: [:edit, :full_zoom, :medium_zoom, :small_zoom]
+  # before_action :check_edit_canvas, only: [:edit, :update]
 
   def edit
     render partial: 'canvas/edit',
-      locals: { experiment: @experiment, my_modules: @my_modules },
+      locals: { project: @project, experiment: @experiment, my_modules: @my_modules },
       :content_type => 'text/html'
   end
 
   def full_zoom
     render partial: 'canvas/full_zoom',
-      locals: { experiment: @experiment, my_modules: @my_modules },
+      locals: { project: @project, experiment: @experiment, my_modules: @my_modules },
       :content_type => 'text/html'
   end
 
   def medium_zoom
     render partial: 'canvas/medium_zoom',
-      locals: { experiment: @experiment, my_modules: @my_modules },
+      locals: { project: @project, experiment: @experiment, my_modules: @my_modules },
       :content_type => 'text/html'
   end
 
   def small_zoom
     render partial: 'canvas/small_zoom',
-      locals: { experiment: @experiment, my_modules: @my_modules },
+      locals: { project: @project, experiment: @experiment, my_modules: @my_modules },
       :content_type => 'text/html'
   end
 
@@ -254,6 +254,7 @@ class CanvasController < ApplicationController
 
   def load_vars
     @experiment = Experiment.find_by_id(params[:id])
+    @project = @experiment.project
     unless @experiment
       respond_to do |format|
         format.html { render_404 and return }

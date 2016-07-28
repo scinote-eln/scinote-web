@@ -17,7 +17,7 @@
           <li>
         <% end %>
            <% if can_view_project(@project) %>
-              <a href="<%= canvas_project_url(@project) %>">
+              <a href="<%= canvas_experiment_url(@experiment) %>">
             <% end %>
             <%= @project.name %>
             <% if can_view_project(@project) %>
@@ -150,7 +150,7 @@
           <li>
         <% end %>
            <% if can_view_project(@project) %>
-              <a href="<%= canvas_project_url(@project) %>">
+              <a href="<%= canvas_experiment_url(@experiment) %>">
             <% end %>
             <%= truncate( @project.name, length: 20 ) %>
             <% if can_view_project(@project) %>
