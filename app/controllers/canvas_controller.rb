@@ -6,25 +6,25 @@ class CanvasController < ApplicationController
 
   def edit
     render partial: 'canvas/edit',
-      locals: { project: @project, experiment: @experiment, my_modules: @my_modules },
+      locals: { experiment: @experiment, my_modules: @my_modules },
       :content_type => 'text/html'
   end
 
   def full_zoom
     render partial: 'canvas/full_zoom',
-      locals: { project: @project, experiment: @experiment, my_modules: @my_modules },
+      locals: { experiment: @experiment, my_modules: @my_modules },
       :content_type => 'text/html'
   end
 
   def medium_zoom
     render partial: 'canvas/medium_zoom',
-      locals: { project: @project, experiment: @experiment, my_modules: @my_modules },
+      locals: { experiment: @experiment, my_modules: @my_modules },
       :content_type => 'text/html'
   end
 
   def small_zoom
     render partial: 'canvas/small_zoom',
-      locals: { project: @project, experiment: @experiment, my_modules: @my_modules },
+      locals: { experiment: @experiment, my_modules: @my_modules },
       :content_type => 'text/html'
   end
 

@@ -25,7 +25,7 @@
   data-sidebar-click-module-step-text="<%=t 'tutorial.sidebar_click_module_html' %>"
   data-edit-workflow-step-text="<%=t 'tutorial.edit_workflow_html' %>"
   data-edit-workflow-click-save-step-text="<%=t 'tutorial.edit_workflow_click_save_html' %>">
-  <%= render partial: 'canvas/full_zoom', locals: { project: @project, experiment: @experiment, my_modules: @experiment.active_modules } %>
+  <%= render partial: 'canvas/full_zoom', locals: { experiment: @experiment, my_modules: @experiment.active_modules } %>
 </div>
 
 <!-- Manage tags modal -->

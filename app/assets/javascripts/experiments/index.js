@@ -7,7 +7,7 @@
   function initializeNewExperimentModal(){
     $("#new-experiment")
     .on("ajax:beforeSend", function(){
-      animateSpinner(this);
+      animateSpinner();
     })
     .on("ajax:success", function(e, data){
       $('body').append($.parseHTML(data.html));
@@ -17,11 +17,11 @@
       });
     })
     .on("ajax:error", function() {
-      animateSpinner(this, false);
+      animateSpinner(null, false);
       // TODO
     })
     .on("ajax:complete", function(){
-      animateSpinner(this, false);
+      animateSpinner(null, false);
     });
   }
 

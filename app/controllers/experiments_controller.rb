@@ -25,13 +25,12 @@ class ExperimentsController < ApplicationController
     @experiment.last_modified_by = current_user
     @experiment.project = @project
     if @experiment.save
-      @project.experiments << @experiment
       flash[:success] = t('experiments.create.success_flash', experiment: @experiment.name)
       # have to change to experiments path
       redirect_to root_path
     else
-      flash[:danger]  = t('experiments.create.error_flash')
-      render :new
+      flash[:alert] = t('experiments.create.error_flash')
+      redirect_to :back
     end
   end
 
@@ -47,8 +46,8 @@ class ExperimentsController < ApplicationController
       # have to change to experiments path
       redirect_to root_path
     else
-      flash[:danger] = t('experiments.update.error_flash')
-      render :edit
+      flash[:alert] = t('experiments.update.error_flash')
+      redirect_to :back
     end
   end
 
@@ -61,7 +60,8 @@ class ExperimentsController < ApplicationController
       # have to change to experiments path
       redirect_to root_path
     else
-      flash[:danger] = t('experiments.archive.error_flash')
+      flash[:alert] = t('experiments.archive.error_flash')
+      redirect_to :back
     end
   end
 
