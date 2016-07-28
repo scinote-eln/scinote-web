@@ -1,4 +1,4 @@
-<% link_to_page = :root if local_assigns[:link_to_page].nil? %>
+<% link_to_page = :canvas if local_assigns[:link_to_page].nil? %>
 <% query ||= nil %>
 <% text = query.present? ? highlight(project.name, query.strip.split(/\s+/)) : project.name %>
 
