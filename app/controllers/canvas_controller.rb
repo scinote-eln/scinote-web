@@ -1,8 +1,8 @@
 class CanvasController < ApplicationController
   before_action :load_vars
 
-  # before_action :check_view_canvas, only: [:edit, :full_zoom, :medium_zoom, :small_zoom]
-  # before_action :check_edit_canvas, only: [:edit, :update]
+  before_action :check_view_canvas, only: [:edit, :full_zoom, :medium_zoom, :small_zoom]
+  before_action :check_edit_canvas, only: [:edit, :update]
 
   def edit
     render partial: 'canvas/edit',

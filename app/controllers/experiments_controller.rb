@@ -3,6 +3,9 @@ class ExperimentsController < ApplicationController
   before_action :set_experiment, except: [:new, :create]
   before_action :set_project, only: [:new, :create]
 
+  # except parameter could be used but it is not working.
+  layout :choose_layout
+  
   def new
     @experiment = Experiment.new
   end
@@ -67,5 +70,9 @@ class ExperimentsController < ApplicationController
 
   def experiment_params
     params.require(:experiment).permit(:name, :description, :archived)
+  end
+
+  def choose_layout
+    action_name.in?(['index', 'archive']) ? 'main' : 'fluid'
   end
 end
