@@ -12,8 +12,7 @@ class ExperimentsController < ApplicationController
       format.json  {
         render json:{
           html: render_to_string( {
-            partial: "new_modal.html.erb",
-            locals: { experiment: @experiment }
+            partial: "new_modal.html.erb"
           })
         }
       }
@@ -31,7 +30,7 @@ class ExperimentsController < ApplicationController
       # have to change to experiments path
       redirect_to root_path
     else
-      flash[:danger]  = t('experiments.create.error_flash', name: @experiment.name)
+      flash[:danger]  = t('experiments.create.error_flash')
       render :new
     end
   end
@@ -48,7 +47,7 @@ class ExperimentsController < ApplicationController
       # have to change to experiments path
       redirect_to root_path
     else
-      flash[:danger] = t('experiments.create.error_flash', name: @experiment.name)
+      flash[:danger] = t('experiments.update.error_flash')
       render :edit
     end
   end
@@ -62,7 +61,7 @@ class ExperimentsController < ApplicationController
       # have to change to experiments path
       redirect_to root_path
     else
-      flash[:danger] = t('experiments.archive.error_flash', name: @experiment.name)
+      flash[:danger] = t('experiments.archive.error_flash')
     end
   end
 

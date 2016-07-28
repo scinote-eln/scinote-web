@@ -670,7 +670,15 @@ en:
     edit:
       modal_title: 'Edit experiment %{experiment}'
       modal_create: 'Update experiment'
-
+    create:
+      success_flash: "Successfully created experiment %{experiment}"
+      error_flash: 'Could not create a new experiment.'
+    update:
+      success_flash: "Successfully updated experiment %{experiment}"
+      error_flash: 'Could not update the experiment.'
+    archive:
+      success_flash: "Successfully archived experiment %{experiment}"
+      error_flash: 'Could not archive the experiment.'    
   my_module_tags:
     new:
       head_title: "%{project} | %{module} | Add tag"
