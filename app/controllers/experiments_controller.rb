@@ -26,7 +26,7 @@ class ExperimentsController < ApplicationController
     @experiment.project = @project
     if @experiment.save
       @project.experiments << @experiment
-      flash[:success] = t('experiments.create.success_flash', name: @experiment.name)
+      flash[:success] = t('experiments.create.success_flash', experiment: @experiment.name)
       # have to change to experiments path
       redirect_to root_path
     else
@@ -43,7 +43,7 @@ class ExperimentsController < ApplicationController
     @experiment.update_attributes(experiment_params)
     @experiment.last_modified_by = current_user
     if @experiment.save
-      flash[:success] = t('experiments.update.success_flash', name: @experiment.name)
+      flash[:success] = t('experiments.update.success_flash', experiment: @experiment.name)
       # have to change to experiments path
       redirect_to root_path
     else
@@ -57,7 +57,7 @@ class ExperimentsController < ApplicationController
     @experiment.archived_by = current_user
     @experiment.archived_on = DateTime.now
     if @experiment.save
-      flash[:success] = t('experiments.archive.success_flash', name: @experiment.name)
+      flash[:success] = t('experiments.archive.success_flash', experiment: @experiment.name)
       # have to change to experiments path
       redirect_to root_path
     else
