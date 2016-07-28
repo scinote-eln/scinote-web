@@ -862,7 +862,7 @@ module FirstTimeDataGenerator
       # Create activity
       Activity.create(
         type_of: :create_step,
-        project: my_module.project,
+        project: my_module.experiment.project,
         my_module: my_module,
         user: step.user,
         created_at: created_at,
@@ -876,7 +876,7 @@ module FirstTimeDataGenerator
       if completed then
         Activity.create(
           type_of: :complete_step,
-          project: my_module.project,
+          project: my_module.experiment.project,
           my_module: my_module,
           user: step.user,
           created_at: completed_on,
@@ -907,7 +907,7 @@ module FirstTimeDataGenerator
           )
           Activity.create(
             type_of: :add_comment_to_step,
-            project: my_module.project,
+            project: my_module.experiment.project,
             my_module: my_module,
             user: @user,
             created_at: commented_on,
