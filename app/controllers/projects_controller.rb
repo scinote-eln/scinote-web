@@ -12,7 +12,6 @@ class ProjectsController < ApplicationController
   before_action :check_view_notifications_permissions, only: [ :notifications ]
   before_action :check_edit_permissions, only: [ :edit ]
   before_action :check_module_archive_permissions, only: [:module_archive]
-  before_action :check_canvas_permissions, only: [:workflow]
 
   filter_by_archived = false
 
@@ -307,13 +306,6 @@ class ProjectsController < ApplicationController
 
   def check_edit_permissions
     unless can_edit_project(@project)
-      render_403
-    end
-  end
-
-  def check_canvas_permissions
-    @project = Project.find_by_id(wf_params[:id])
-    unless can_edit_canvas(@project)
       render_403
     end
   end

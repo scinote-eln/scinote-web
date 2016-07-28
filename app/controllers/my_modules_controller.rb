@@ -147,7 +147,7 @@ class MyModulesController < ApplicationController
         # Currently not in use
         Activity.create(
           type_of: :archive_module,
-          project: @my_module.project,
+          project: @my_module.experiment.project,
           my_module: @my_module,
           user: current_user,
           message: t(
@@ -162,7 +162,7 @@ class MyModulesController < ApplicationController
       if saved
         Activity.create(
           type_of: :restore_module,
-          project: @my_module.project,
+          project: @my_module.experiment.project,
           my_module: @my_module,
           user: current_user,
           message: t(
@@ -178,7 +178,7 @@ class MyModulesController < ApplicationController
       if saved and description_changed then
         Activity.create(
           type_of: :change_module_description,
-          project: @my_module.project,
+          project: @my_module.experiment.project,
           my_module: @my_module,
           user: current_user,
           message: t(
@@ -240,7 +240,7 @@ class MyModulesController < ApplicationController
 
   def samples
     @samples_index_link = samples_index_my_module_path(@my_module, format: :json)
-    @organization = @my_module.project.organization
+    @organization = @my_module.experiment.project.organization
   end
 
   def archive
@@ -293,7 +293,7 @@ class MyModulesController < ApplicationController
 
   # AJAX actions
   def samples_index
-    @organization = @my_module.project.organization
+    @organization = @my_module.experiment.project.organization
 
     respond_to do |format|
       format.html
@@ -309,7 +309,7 @@ class MyModulesController < ApplicationController
     @direct_upload = ENV['PAPERCLIP_DIRECT_UPLOAD'] == "true"
     @my_module = MyModule.find_by_id(params[:id])
     if @my_module
-      @project = @my_module.project
+      @project = @my_module.experiment.project
     else
       render_404
     end

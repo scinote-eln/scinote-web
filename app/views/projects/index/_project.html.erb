@@ -33,7 +33,7 @@ data-project-users-tab-url="<%= url_for project_user_projects_path(project_id: p
         <span class="glyphicon glyphicon-eye-open" aria-hidden="true" title="<%=t "projects.index.visibility_public" %>"></span>
       <% end %>
       <% if can_view_project(project) then %>
-        <%#= link_to project.name, canvas_project_path(project), id: "#{project.id}-project-canvas-link"  %>
+        <%= link_to project.name, project_path(project), id: "#{project.id}-project-canvas-link" %>
       <% else %>
         <%= project.name %>
       <% end %>

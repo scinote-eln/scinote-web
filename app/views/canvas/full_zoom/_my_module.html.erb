@@ -32,7 +32,7 @@
   <div class="panel-body">
     <div class="row">
         <div class="col-xs-6">
-          <%= link_to_if can_edit_module(my_module), t("projects.canvas.full_zoom.due_date"), due_date_my_module_path(my_module, format: :json), remote: true, class: "due-date-link" %>
+          <%= link_to_if can_edit_module(my_module), t("experiments.canvas.full_zoom.due_date"), due_date_my_module_path(my_module, format: :json), remote: true, class: "due-date-link" %>
         </div>
         <div class="col-xs-6">
             <% if can_edit_module(my_module) %>

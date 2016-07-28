@@ -15,7 +15,7 @@ module SidebarHelper
     when "archive"
       return module_archive_project_url(project)
     else
-      return canvas_project_path(project)
+      return project_path(project)
     end
   end
 

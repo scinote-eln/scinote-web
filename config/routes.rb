@@ -103,13 +103,13 @@ Rails.application.routes.draw do
 
   resources :experiments, only: [:show] do
     member do
-      get 'canvas' # Overview/structure for single project
+      get 'canvas' # Overview/structure for single experiment
       get 'canvas/edit', to: 'canvas#edit' # AJAX-loaded canvas edit mode (from canvas)
       get 'canvas/full_zoom', to: 'canvas#full_zoom' # AJAX-loaded canvas zoom
       get 'canvas/medium_zoom', to: 'canvas#medium_zoom' # AJAX-loaded canvas zoom
       get 'canvas/small_zoom', to: 'canvas#small_zoom' # AJAX-loaded canvas zoom
       post 'canvas', to: 'canvas#update' # Save updated canvas action
-      get 'module_archive' # Module archive for single project
+      get 'module_archive' # Module archive for single experiment
     end
   end
 

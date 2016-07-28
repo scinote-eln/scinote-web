@@ -323,8 +323,8 @@ module PermissionHelper
 
   # ---- WORKFLOW PERMISSIONS ----
 
-  def can_edit_canvas(project)
-    is_user_or_higher_of_project(project)
+  def can_edit_canvas(experiment)
+    is_user_or_higher_of_project(experiment.project)
   end
 
   def can_reposition_modules(experiment)
@@ -378,11 +378,11 @@ module PermissionHelper
   end
 
   def can_add_tag_to_module(my_module)
-    is_user_or_higher_of_project(my_module.project)
+    is_user_or_higher_of_project(my_module.experiment.project)
   end
 
   def can_remove_tag_from_module(my_module)
-    is_user_or_higher_of_project(my_module.project)
+    is_user_or_higher_of_project(my_module.experiment.project)
   end
 
   def can_view_module_info(my_module)

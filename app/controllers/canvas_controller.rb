@@ -232,7 +232,7 @@ class CanvasController < ApplicationController
     end
 
     flash[:success] = t(
-      "projects.canvas.update.success_flash")
+      "experiments.canvas.update.success_flash")
     redirect_to canvas_experiment_path(@experiment)
   end
 
@@ -254,7 +254,6 @@ class CanvasController < ApplicationController
 
   def load_vars
     @experiment = Experiment.find_by_id(params[:id])
-    @project = @experiment.project
     unless @experiment
       respond_to do |format|
         format.html { render_404 and return }
@@ -266,7 +265,7 @@ class CanvasController < ApplicationController
   end
 
   def check_edit_canvas
-    unless can_edit_canvas(@project)
+    unless can_edit_canvas(@experiment)
       render_403 and return
     end
   end
