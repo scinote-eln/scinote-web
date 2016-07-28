@@ -4,14 +4,14 @@ class ProjectsController < ApplicationController
 
   before_action :load_vars, only: [:show, :edit, :update,
                                    :notifications, :reports,
-                                   :samples, :module_archive,
+                                   :samples, :experiment_archive,
                                    :delete_samples, :samples_index]
   before_action :check_view_permissions, only: [:show, :reports,
-                                                :samples, :module_archive,
+                                                :samples, :experiment_archive,
                                                 :samples_index]
   before_action :check_view_notifications_permissions, only: [ :notifications ]
   before_action :check_edit_permissions, only: [ :edit ]
-  before_action :check_module_archive_permissions, only: [:module_archive]
+  before_action :check_experiment_archive_permissions, only: [:experiment_archive]
 
   filter_by_archived = false
 
@@ -259,8 +259,7 @@ class ProjectsController < ApplicationController
     @organization = @project.organization
   end
 
-  def module_archive
-
+  def experiment_archive
   end
 
   def samples_index
@@ -306,8 +305,8 @@ class ProjectsController < ApplicationController
     end
   end
 
-  def check_module_archive_permissions
-    unless can_restore_archived_modules(@project)
+  def check_experiment_archive_permissions
+    unless can_view_project_archive(@project)
       render_403
     end
   end
