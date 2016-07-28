@@ -5,7 +5,7 @@ class ExperimentsController < ApplicationController
 
   # except parameter could be used but it is not working.
   layout :choose_layout
-  
+
   def new
     @experiment = Experiment.new
   end
@@ -65,7 +65,7 @@ class ExperimentsController < ApplicationController
   end
 
   def set_project
-    @project = Project.find_by_id(params[:project_id])
+    @project = @experiment.project
   end
 
   def experiment_params

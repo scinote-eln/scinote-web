@@ -89,26 +89,28 @@ Rails.application.routes.draw do
       end
     end
     resources :experiments, only: [:new, :create, :edit, :update, :archive]
-    resources :experiments, shallow: true, only: [:show] do
-      member do
-        get 'canvas' # Overview/structure for single project
-        get 'canvas/edit', to: 'canvas#edit' # AJAX-loaded canvas edit mode (from canvas)
-        get 'canvas/full_zoom', to: 'canvas#full_zoom' # AJAX-loaded canvas zoom
-        get 'canvas/medium_zoom', to: 'canvas#medium_zoom' # AJAX-loaded canvas zoom
-        get 'canvas/small_zoom', to: 'canvas#small_zoom' # AJAX-loaded canvas zoom
-        post 'canvas', to: 'canvas#update' # Save updated canvas action
-      end
-    end
     member do
       get 'notifications' # Notifications popup for individual project in projects index
       get 'samples' # Samples for single project
-      get 'module_archive' # Module archive for single project
       post 'samples_index' # Renders sample datatable for single project (ajax action)
+      get 'experiment_archive' # Experiment archive for single project
       post :delete_samples, constraints: CommitParamRouting.new(MyModulesController::DELETE_SAMPLES), action: :delete_samples
     end
 
     # This route is defined outside of member block to preserve original :project_id parameter in URL.
     get 'users/edit', to: 'user_projects#index_edit'
+  end
+
+  resources :experiments, only: [:show] do
+    member do
+      get 'canvas' # Overview/structure for single project
+      get 'canvas/edit', to: 'canvas#edit' # AJAX-loaded canvas edit mode (from canvas)
+      get 'canvas/full_zoom', to: 'canvas#full_zoom' # AJAX-loaded canvas zoom
+      get 'canvas/medium_zoom', to: 'canvas#medium_zoom' # AJAX-loaded canvas zoom
+      get 'canvas/small_zoom', to: 'canvas#small_zoom' # AJAX-loaded canvas zoom
+      post 'canvas', to: 'canvas#update' # Save updated canvas action
+      get 'module_archive' # Module archive for single project
+    end
   end
 
   # Show action is a popup (JSON) for individual module in full-zoom canvas,

@@ -232,7 +232,7 @@ class CanvasController < ApplicationController
     end
 
     flash[:success] = t(
-      "experiments.canvas.update.success_flash")
+      "projects.canvas.update.success_flash")
     redirect_to canvas_experiment_path(@experiment)
   end
 
