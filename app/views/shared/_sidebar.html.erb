@@ -23,9 +23,14 @@
               <span title="<%= @project.name %>"><%= @project.name %></span>
             <% end %>
           </span>
-          <% @experiments.each do |experiment| %>
-          <%= render 'shared/sidebar_elements' %>
-          <% end %>
+          <ul>
+            <li class="<%= 'active' if not is_module_page? %>" >
+              <span class="tree-link line-wrap">
+                <i></i>
+                  <span title="<%= @experiment.name %>"><%= @experiment.name %></span>
+              </span>
+            <%= render 'shared/sidebar_elements' %>
+          </ul>
         </li>
         <li>
           <a href="#"><span class="glyphicon glyphicon-plus"></span> <i>New experiment...</i></a>

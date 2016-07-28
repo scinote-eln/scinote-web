@@ -1,6 +1,6 @@
-<% if experiment.active_modules.present? then %>
+<% if @experiment.active_modules.present? then %>
 <ul>
-  <% experiment.active_module_groups.each do |my_module_group| %>
+  <% @experiment.active_module_groups.each do |my_module_group| %>
     <li data-module-group="<%= my_module_group.id %>">
       <span>
         <i></i>
@@ -35,7 +35,7 @@
       <% end %>
     </li>
   <% end %>
-  <% modules_without_group = experiment.modules_without_group %>
+  <% modules_without_group = @experiment.modules_without_group %>
   <% if modules_without_group.present? then %>
     <li>
       <span>

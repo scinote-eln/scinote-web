@@ -23,7 +23,8 @@ class ExperimentsController < ApplicationController
     end
   end
 
-  def edit
+  def canvas
+    @project = @experiment.project
   end
 
   def update

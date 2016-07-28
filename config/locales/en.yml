@@ -376,8 +376,6 @@ en:
       restore_option: "Restore"
       archived_on: "Archived on"
       archived_on_title: "Task archived on %{date} at %{time}."
-
-  experiments:
     canvas:
       head_title: "%{project} | Overview"
       canvas_edit: "Edit workflow"

@@ -265,7 +265,7 @@ class CanvasController < ApplicationController
   end
 
   def check_edit_canvas
-    unless can_edit_canvas(@experiment)
+    unless can_edit_canvas(@project)
       render_403 and return
     end
   end

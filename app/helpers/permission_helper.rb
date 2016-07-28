@@ -323,8 +323,8 @@ module PermissionHelper
 
   # ---- WORKFLOW PERMISSIONS ----
 
-  def can_edit_canvas(experiment)
-    is_user_or_higher_of_project(experiment.project)
+  def can_edit_canvas(project)
+    is_user_or_higher_of_project(project)
   end
 
   def can_reposition_modules(experiment)
