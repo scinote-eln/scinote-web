@@ -659,6 +659,18 @@ en:
       no_activities: "There are no activities for this task."
       more_activities: "Load older activities"
 
+  experiments:
+    new:
+      create: 'New experiment...'
+      modal_title: 'Create new experiment'
+      modal_create: 'Create experiment'
+      name: 'Experiment name'
+      name_placeholder: 'My experiment'
+      description: 'Description'
+    edit:
+      modal_title: 'Edit experiment %{experiment}'
+      modal_create: 'Update experiment'
+
   my_module_tags:
     new:
       head_title: "%{project} | %{module} | Add tag"

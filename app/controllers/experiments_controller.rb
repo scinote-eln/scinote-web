@@ -8,18 +8,28 @@ class ExperimentsController < ApplicationController
 
   def new
     @experiment = Experiment.new
+    respond_to do |format|
+      format.json  {
+        render json:{
+          html: render_to_string( {
+            partial: "new_modal.html.erb",
+            locals: { experiment: @experiment }
+          })
+        }
+      }
+    end
   end
 
   def create
     @experiment = Experiment.new(experiment_params)
     @experiment.created_by = current_user
-    # @experiment.last_modified_by = current_user
+    @experiment.last_modified_by = current_user
+    @experiment.project = @project
     if @experiment.save
       @project.experiments << @experiment
       flash[:success] = t('experiments.create.success_flash', name: @experiment.name)
-      respond_to do |format|
-        format.json{}
-      end
+      # have to change to experiments path
+      redirect_to root_path
     else
       flash[:danger]  = t('experiments.create.error_flash', name: @experiment.name)
       render :new
@@ -35,9 +45,8 @@ class ExperimentsController < ApplicationController
     @experiment.last_modified_by = current_user
     if @experiment.save
       flash[:success] = t('experiments.update.success_flash', name: @experiment.name)
-      respond_to do |format|
-        format.json{}
-      end
+      # have to change to experiments path
+      redirect_to root_path
     else
       flash[:danger] = t('experiments.create.error_flash', name: @experiment.name)
       render :edit
@@ -50,9 +59,8 @@ class ExperimentsController < ApplicationController
     @experiment.archived_on = DateTime.now
     if @experiment.save
       flash[:success] = t('experiments.archive.success_flash', name: @experiment.name)
-      respond_to do |format|
-        format.json{}
-      end
+      # have to change to experiments path
+      redirect_to root_path
     else
       flash[:danger] = t('experiments.archive.error_flash', name: @experiment.name)
     end
@@ -65,11 +73,11 @@ class ExperimentsController < ApplicationController
   end
 
   def set_project
-    @project = @experiment.project
+    @project = Project.find_by_id(params[:project_id])
   end
 
   def experiment_params
-    params.require(:experiment).permit(:name, :description, :archived)
+    params.require(:experiment).permit(:name, :description)
   end
 
   def choose_layout
