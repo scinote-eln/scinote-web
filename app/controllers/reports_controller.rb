@@ -400,20 +400,36 @@ class ReportsController < ApplicationController
       .keys
       .collect { |id| id.to_i }
 
-      modules.each do |module_id|
-        my_module = MyModule.find_by_id(module_id)
-        if my_module.present?
-          res << generate_new_el(false)
-          el = generate_el(
-            "reports/elements/my_module_element.html.erb",
-            { my_module: my_module }
-          )
-          el[:children] = generate_module_contents_json(my_module)
-          res << el
-        end
+      # Get unique experiments from given modules
+      experiments = MyModule.where(id: modules).map(&:experiment).uniq
+      experiments.each do |experiment|
+        res << generate_new_el(false)
+        el = generate_el(
+          "reports/elements/experiment_element.html.erb",
+          { experiment: experiment }
+        )
+        el[:children] = generate_experiment_contents_json(experiment, modules)
+        res << el
       end
     end
     res << generate_new_el(false)
+    res
+  end
+
+  def generate_experiment_contents_json(experiment, selected_modules)
+    res = []
+    experiment.my_modules.each do |my_module|
+      if selected_modules.include?(my_module.id)
+        res << generate_new_el(false)
+        el = generate_el(
+          "reports/elements/my_module_element.html.erb",
+          { my_module: my_module }
+        )
+        el[:children] = generate_module_contents_json(my_module)
+        res << el
+        res << generate_new_el(false)
+      end
+    end
     res
   end
 

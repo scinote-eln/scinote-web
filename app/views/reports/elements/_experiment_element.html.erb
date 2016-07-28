@@ -1,0 +1,40 @@
+<% timestamp = experiment.created_at %>
+<% name = experiment.name %>
+<div class="report-element report-experiment-element"
+  data-ts="<%= timestamp.to_i %>"
+  data-type="experiment"
+  data-id="<%= experiment.id %>"
+  data-modal-title="<%=t "projects.reports.elements.modals.experiment_contents.head_title",
+    experiment: experiment.name %>" data-name="<%= name %>" data-icon-class="glyphicon-filter">
+  <div class="report-element-header">
+    <div class="row">
+      <div class="pull-left user-time">
+        <%=t "projects.reports.elements.experiment.user_time", timestamp: l(timestamp, format: :full) %>
+      </div>
+      <div class="pull-right controls">
+        <%= render partial: "reports/elements/module_element_controls.html.erb", locals: { show_sort: true } %>
+      </div>
+    </div>
+  </div>
+  <div class="report-element-body">
+    <div class="row">
+      <div class="pull-left experiment-name">
+        <h4>
+          <span class="glyphicon glyphicon-filter"></span>
+          <%= name %></h4>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-12">
+        <% if experiment.description.present? %>
+          <%= experiment.description %>
+        <% else %>
+           <em><%=t "projects.reports.elements.experiment.no_description" %></em>
+        <% end %>
+      </div>
+    </div>
+  </div>
+  <div class="report-element-children">
+    <%= children if (defined? children and children.present?) %>
+  </div>
+</div>

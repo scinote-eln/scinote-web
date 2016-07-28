@@ -275,6 +275,11 @@ en:
             module_tab: "Task content"
             steps_tab: "Protocols content"
             results_tab: "Results content"
+          experiment_contents:
+            head_title: "Add contents to experiment %{experiment}"
+            module_tab: "Task content"
+            steps_tab: "Protocols content"
+            results_tab: "Results content"
           module_contents_inner:
             instructions: "Choose what information from task/s to include in the report"
             header: "Report elements"
@@ -331,6 +336,10 @@ en:
           no_due_date: "No due date"
           no_description: "No description"
           tags_header: "Task tags:"
+          no_tags: "No tags"
+        experiment:
+          user_time: "Experiment created on %{timestamp}."
+          no_description: "No description"
           no_tags: "No tags"
         module_activity:
           name: "Activity of task %{my_module}"
