@@ -101,7 +101,7 @@ Rails.application.routes.draw do
     get 'users/edit', to: 'user_projects#index_edit'
   end
 
-  resources :experiments, only: [:show] do
+  resources :experiments do
     member do
       get 'canvas' # Overview/structure for single experiment
       get 'canvas/edit', to: 'canvas#edit' # AJAX-loaded canvas edit mode (from canvas)
