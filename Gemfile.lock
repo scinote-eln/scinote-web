@@ -39,6 +39,7 @@ GEM
     ajax-datatables-rails (0.3.1)
       railties (>= 3.1)
     algorithms (0.6.1)
+    ansi (1.5.0)
     arel (6.0.3)
     aspector (0.14.0)
     autoprefixer-rails (6.1.2)
@@ -147,6 +148,11 @@ GEM
     mimemagic (0.3.0)
     mini_portile2 (2.1.0)
     minitest (5.9.0)
+    minitest-reporters (1.1.10)
+      ansi
+      builder
+      minitest (>= 5.0)
+      ruby-progressbar
     momentjs-rails (2.10.6)
       railties (>= 3.1)
     multi_json (1.11.2)
@@ -211,6 +217,7 @@ GEM
     roo (2.1.1)
       nokogiri (~> 1)
       rubyzip (~> 1.1, < 2.0.0)
+    ruby-progressbar (1.8.1)
     rubyzip (1.1.7)
     sass (3.4.20)
     sass-rails (5.0.4)
@@ -222,6 +229,9 @@ GEM
     sdoc (0.4.1)
       json (~> 1.7, >= 1.7.7)
       rdoc (~> 4.0)
+    shoulda-context (1.2.1)
+    shoulda-matchers (3.1.1)
+      activesupport (>= 4.0.0)
     skylight (0.10.0)
       activesupport (>= 3.0.0)
     spinjs-rails (1.4)
@@ -292,6 +302,7 @@ DEPENDENCIES
   js_cookie_rails
   kaminari
   logging (~> 2.0.0)
+  minitest-reporters (~> 1.1)
   momentjs-rails (>= 2.9.0)
   nested_form_fields
   paperclip (~> 4.3)
@@ -305,6 +316,8 @@ DEPENDENCIES
   roo (~> 2.1.0)
   sass-rails (~> 5.0)
   sdoc (~> 0.4.0)
+  shoulda-context
+  shoulda-matchers (>= 3.0.1)
   skylight
   spinjs-rails
   turbolinks

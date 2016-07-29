@@ -5,7 +5,7 @@ list_of_samples:
   x: 0
   y: 0
   workflow_order: 0
-  project: interfaces
+  experiment: philadelphia
   my_module_group: ge
   tags: urgent, nice
   created_by: steve
@@ -24,7 +24,7 @@ sample_prep:
   x: 1
   y: 0
   workflow_order: 2
-  project: interfaces
+  experiment: philadelphia
   my_module_group: ge
   created_by: mark
   last_modified_by: mark
@@ -41,7 +41,7 @@ qpcr:
   x: 2
   y: 0
   workflow_order: 3
-  project: interfaces
+  experiment: philadelphia
   my_module_group: ge
   tags: nice
   created_by: jlaw
@@ -59,7 +59,7 @@ quantification:
   x: 3
   y: 0
   workflow_order: 4
-  project: interfaces
+  experiment: philadelphia
   my_module_group: ge
   tags: todo
   created_by: mark
@@ -77,7 +77,7 @@ rna_test:
   x: 1
   y: 1
   workflow_order: 1
-  project: interfaces
+  experiment: philadelphia
   my_module_group: ge
   tags: urgent, todo
   created_by: steve
@@ -95,7 +95,7 @@ custom:
   x: 0
   y: 0
   workflow_order: -1
-  project: phd
+  experiment: philadelphia
   my_module_group: wf1
   created_by: steve
   last_modified_by: steve
@@ -112,7 +112,7 @@ no_group:
   x: 0
   y: 3
   workflow_order: -1
-  project: interfaces
+  experiment: philadelphia
   my_module_group: wf2
   created_by: nora
   last_modified_by: nora
@@ -129,7 +129,7 @@ archived:
   x: 0
   y: 0
   workflow_order: -1
-  project: interfaces
+  experiment: philadelphia
   my_module_group:
   created_by: steve
   last_modified_by: steve

@@ -80,7 +80,7 @@ class UserProjectTest < ActiveSupport::TestCase
     assert user_project.destroy
 
     # Test associations after destroy
-    projects(:interfaces).my_modules.each do |my_module|
+    experiments(:philadelphia).my_modules.each do |my_module|
       assert_equal 0, my_module.user_my_modules
         .select { |um| um.user == user }.count
     end
