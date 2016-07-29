@@ -14,28 +14,16 @@
 
     <div class="tree">
       <ul>
-        <li class="<%= "active" if not is_module_page? %>">
+        <li class="<%= "active" if (project_page? || project_activities_page?) %>">
           <span class="tree-link line-wrap">
             <i></i>
-            <% if is_module_page? %>
+            <% if !project_page? && !project_activities_page? %>
               <%= link_to @project.name, project_action_to_link_to(@project), title: @project.name %>
             <% else %>
               <span title="<%= @project.name %>"><%= @project.name %></span>
             <% end %>
           </span>
-          <ul>
-            <li>
-              <span class="tree-link line-wrap">
-                <i></i>
-                  <span title="<%= @experiment.name %>"><%= @experiment.name %></span>
-              </span>
-            <%= render 'shared/sidebar_elements' %>
-          </ul>
-        </li>
-        <li>
-          <%= link_to new_project_experiment_path(@project), id: 'new-experiment', remote: true do %>
-            <span class="glyphicon glyphicon-plus"></span> <i><%= t('experiments.new.create') %></i></a>
-          <% end %>
+          <%= render 'shared/sidebar_elements' %>
         </li>
       </ul>
     </div>

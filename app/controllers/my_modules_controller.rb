@@ -309,7 +309,10 @@ class MyModulesController < ApplicationController
     @direct_upload = ENV['PAPERCLIP_DIRECT_UPLOAD'] == "true"
     @my_module = MyModule.find_by_id(params[:id])
     if @my_module
-      @project = @my_module.experiment.project
+      @experiment = @my_module.experiment
+      if @experiment
+        @project = @my_module.experiment.project
+      end
     else
       render_404
     end

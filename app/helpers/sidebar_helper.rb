@@ -19,6 +19,11 @@ module SidebarHelper
     end
   end
 
+  def experiment_action_to_link_to(experiment)
+    # TODO
+    return canvas_experiment_path(experiment)
+  end
+
   def module_action_to_link_to(my_module)
     case action_name
     when "results"

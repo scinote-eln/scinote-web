@@ -1,16 +1,18 @@
 module ApplicationHelper
-
-  def is_module_page?
-    controller_name == "my_modules"
+  def module_page?
+    controller_name == 'my_modules'
   end
 
-  def is_project_page?
-    controller_name == "projects" or
-    (controller_name == "reports" and action_name == "index")
+  def experiment_page?
+    controller_name == 'experiments'
   end
 
-  def is_project_activities_page?
-    controller_name == "project_activities"
+  def project_page?
+    controller_name == 'projects' ||
+      (controller_name == 'reports' && action_name == 'index')
   end
 
+  def project_activities_page?
+    controller_name == 'project_activities'
+  end
 end

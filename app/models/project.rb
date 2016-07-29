@@ -104,6 +104,10 @@ class Project < ActiveRecord::Base
     return (self.user_projects.select { |up| up.user == user }).first.role
   end
 
+  def active_experiments
+    self.experiments.is_archived(false)
+  end
+
   def project_my_modules
     MyModule.where('"experiment_id" IN (?)', experiments.select(:id))
   end
