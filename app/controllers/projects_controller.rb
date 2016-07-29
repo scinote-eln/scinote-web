@@ -11,7 +11,8 @@ class ProjectsController < ApplicationController
                                                 :samples_index]
   before_action :check_view_notifications_permissions, only: [ :notifications ]
   before_action :check_edit_permissions, only: [ :edit ]
-  before_action :check_experiment_archive_permissions, only: [:experiment_archive]
+  before_action :check_experiment_archive_permissions,
+                only: [:experiment_archive]
 
   filter_by_archived = false
 
@@ -306,9 +307,7 @@ class ProjectsController < ApplicationController
   end
 
   def check_experiment_archive_permissions
-    unless can_view_project_archive(@project)
-      render_403
-    end
+    render_403 unless can_view_project_archive(@project)
   end
 
   def choose_layout

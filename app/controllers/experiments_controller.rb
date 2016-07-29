@@ -10,13 +10,13 @@ class ExperimentsController < ApplicationController
   def new
     @experiment = Experiment.new
     respond_to do |format|
-      format.json {
-        render json:{
-          html: render_to_string( {
-            partial: "new_modal.html.erb"
-          })
+      format.json do
+        render json: {
+          html: render_to_string(
+            partial: 'new_modal.html.erb'
+          )
         }
-      }
+      end
     end
   end
 
