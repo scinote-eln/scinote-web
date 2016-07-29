@@ -13,7 +13,7 @@ module SecondaryNavigationHelper
   end
 
   def is_project_reports?
-    controller_name == 'reports' and action_name == 'index'
+    controller_name == 'reports' && action_name == 'index'
   end
 
   def is_project_archive?
