@@ -427,7 +427,6 @@ class ReportsController < ApplicationController
         )
         el[:children] = generate_module_contents_json(my_module)
         res << el
-        res << generate_new_el(false)
       end
     end
     res
