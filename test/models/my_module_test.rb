@@ -31,10 +31,10 @@ class MyModuleTest < ActiveSupport::TestCase
     assert_not @my_module.valid?
   end
 
-  test "should not validate with non existing project" do
-    @my_module.project_id = 123123
+  test "should not validate with non existing experiment" do
+    @my_module.experiment_id = 123123
     assert_not @my_module.valid?
-    @my_module.project = nil
+    @my_module.experiment = nil
     assert_not @my_module.valid?
   end
 

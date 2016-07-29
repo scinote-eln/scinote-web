@@ -1,14 +1,14 @@
 wf1:
   name: Workflow 1
-  project: phd
+  experiment: philadelphia
   created_by: mark
 
 ge:
   name: Gene Expression
-  project: interfaces
+  experiment: philadelphia
   created_by: steve
 
 wf2:
   name: Workflow 2
-  project: interfaces
+  experiment: philadelphia
   created_by: jlaw
