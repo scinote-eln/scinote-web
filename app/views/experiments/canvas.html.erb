@@ -1,19 +1,19 @@
-<% provide(:head_title, raw(t("projects.canvas.head_title", project: @project.name))) %>
+<% provide(:head_title, raw(t("experiments.canvas.head_title", project: @project.name))) %>
 <%= render partial: "shared/sidebar" %>
 <%= render partial: "shared/secondary_navigation" %>
 
 <div id="diagram-buttons" data-intro="<%=t ('tutorial.canvas_click_edit_workflow_html') %>" data-step="5" data-position="left">
-  <% if can_edit_canvas(@project) %>
-    <%=link_to t("projects.canvas.canvas_edit"), canvas_edit_project_url(@project), remote: true, type: "button", id: "edit-canvas-button", class: "ajax btn btn-default", "data-action" => "edit" %>
+  <% if can_edit_canvas(@experiment) %>
+    <%=link_to t("experiments.canvas.canvas_edit"), canvas_edit_experiment_url(@experiment), remote: true, type: "button", id: "edit-canvas-button", class: "ajax btn btn-default", "data-action" => "edit" %>
   <% end %>
   <div id="zoom-level-buttons" class="btn-group" data-toggle="buttons">
-    <%=link_to canvas_full_zoom_project_path(@project), remote: true, type: "button", class: "ajax btn btn-primary active", "data-action" => "full_zoom", "data-toggle" => "button", "aria-pressed" => true do %>
+    <%=link_to canvas_full_zoom_experiment_path(@experiment), remote: true, type: "button", class: "ajax btn btn-primary active", "data-action" => "full_zoom", "data-toggle" => "button", "aria-pressed" => true do %>
       <span class="glyphicon glyphicon-th-large" aria-hidden="true" ></span>
     <% end %>
-    <%=link_to canvas_medium_zoom_project_path(@project), remote: true, type: "button", class: "ajax btn btn-primary", "data-action" => "medium_zoom" do %>
+    <%=link_to canvas_medium_zoom_experiment_path(@experiment), remote: true, type: "button", class: "ajax btn btn-primary", "data-action" => "medium_zoom" do %>
       <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
     <% end %>
-    <%=link_to canvas_small_zoom_project_path(@project), remote: true, type: "button", class: "ajax btn btn-primary", "data-action" => "small_zoom" do %>
+    <%=link_to canvas_small_zoom_experiment_path(@experiment), remote: true, type: "button", class: "ajax btn btn-primary", "data-action" => "small_zoom" do %>
       <span class="glyphicon glyphicon-th" aria-hidden="true"></span>
     <% end %>
 </div>
@@ -25,7 +25,7 @@
   data-sidebar-click-module-step-text="<%=t 'tutorial.sidebar_click_module_html' %>"
   data-edit-workflow-step-text="<%=t 'tutorial.edit_workflow_html' %>"
   data-edit-workflow-click-save-step-text="<%=t 'tutorial.edit_workflow_click_save_html' %>">
-  <%= render partial: 'canvas/full_zoom', locals: { project: @project, my_modules: @project.active_modules } %>
+  <%= render partial: 'canvas/full_zoom', locals: { experiment: @experiment, my_modules: @experiment.active_modules } %>
 </div>
 
 <!-- Manage tags modal -->
@@ -37,3 +37,4 @@
 <%= javascript_include_tag("eventPause-min") %>
 
 <%= javascript_include_tag("projects/canvas") %>
+<%= javascript_include_tag("experiments/index") %>

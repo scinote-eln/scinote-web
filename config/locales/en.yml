@@ -377,95 +377,6 @@ en:
       archived_on: "Archived on"
       archived_on_title: "Task archived on %{date} at %{time}."
 
-  experiments:
-    canvas:
-      head_title: "%{project} | Overview"
-      canvas_edit: "Edit workflow"
-      modal_manage_tags:
-        head_title: "Manage tags for"
-        subtitle: "Showing tags of task %{module}"
-        no_tags: "No tags!"
-        edit_tag: "Edit tag."
-        remove_tag: "Remove tag from task %{module}."
-        delete_tag: "Permanently delete tag from all tasks."
-        save_tag: "Save tag."
-        cancel_tag: "Cancel changes to the tag."
-        create: "Add tag"
-        create_new: "Create new tag"
-      edit:
-        new_module: "New task"
-        new_module_hover: "Drag me onto canvas"
-        save: "Save workflow"
-        save_short: "Save"
-        cancel: "Cancel"
-        unsaved_work: "Are you sure you want to leave this page? All unsaved data will be lost."
-        drag_connections: "Drag connection/s from here"
-        options_header: "Options"
-        edit_module: "Rename task"
-        edit_module_group: "Rename workflow"
-        clone_module: "Clone task"
-        clone_module_group: "Clone workflow"
-        delete_module: "Archive task"
-        delete_module_group: "Archive workflow"
-        modal_new_module:
-          title: "Add new task"
-          name: "Task name"
-          name_placeholder: "My task"
-          confirm: "Add task"
-          error_length: "Name must contain from 2 to 50 characters."
-          error_invalid: "Name contains invalid characters ('|')."
-          error_whitespaces: "Name cannot be blank."
-        modal_edit_module:
-          title: "Rename task"
-          name: "Task name"
-          confirm: "Rename task"
-        modal_edit_module_group:
-          title: "Rename workflow"
-          name: "Workflow name"
-          confirm: "Rename workflow"
-        modal_delete_module:
-          title: "Archive task"
-          confirm: "Archive task"
-          message: "Are you sure you wish to archive task %{module}? Task's samples and position will be removed."
-        modal_delete_module_group:
-          title: "Archive workflow"
-          confirm: "Archive workflow"
-          message: "Are you sure you wish to archive the workflow task %{module} belongs to? All workflow tasks' samples and positions will be removed."
-      popups:
-        info_tab: "Task info"
-        no_description: "This task has no description."
-        full_info: "Edit description"
-        users_tab: "Assigned users"
-        no_users: "This task has no assigned users."
-        manage_users: "Manage users"
-        module_user_join: "Joined on %{date}."
-        module_user_join_full: "%{user} joined on %{date} at %{time}."
-        activities_tab: "Activity"
-        no_activities: "No activities!"
-        more_activities: "All activities"
-        comments_tab: "Comments"
-        no_comments: "No comments!"
-        more_comments: "More Comments"
-        comment_placeholder: "Your Message"
-        new_comment: "New comment"
-        samples_tab: "Samples"
-        no_samples: "No samples!"
-        manage_samples: "Manage samples"
-      full_zoom:
-        due_date: "Due date"
-        no_due_date: "not set"
-        modal_manage_users:
-          modal_title: "Manage users for"
-          no_users: "No users"
-          user_join: "Joined on %{date}."
-          user_join_full: "%{user} joined on %{date} at %{time}."
-          create: "Add"
-          invite_users_link: "Invite users"
-          invite_users_details: "to team %{organization}."
-          contact_admins: "To invite additional users to team %{organization}, contact its administrator/s."
-      update:
-        success_flash: "Project successfully updated."
-
   user_organizations:
     enums:
       role:
@@ -660,6 +571,114 @@ en:
       head_title: "%{project} | %{module} | Activity"
       no_activities: "There are no activities for this task."
       more_activities: "Load older activities"
+
+  experiments:
+    new:
+      create: 'New experiment...'
+      modal_title: 'Create new experiment'
+      modal_create: 'Create experiment'
+      name: 'Experiment name'
+      name_placeholder: 'My experiment'
+      description: 'Description'
+    edit:
+      modal_title: 'Edit experiment %{experiment}'
+      modal_create: 'Update experiment'
+    create:
+      success_flash: "Successfully created experiment %{experiment}"
+      error_flash: 'Could not create a new experiment.'
+    update:
+      success_flash: "Successfully updated experiment %{experiment}"
+      error_flash: 'Could not update the experiment.'
+    archive:
+      success_flash: "Successfully archived experiment %{experiment}"
+      error_flash: 'Could not archive the experiment.'
+    canvas:
+      head_title: "%{project} | Overview"
+      canvas_edit: "Edit workflow"
+      modal_manage_tags:
+        head_title: "Manage tags for"
+        subtitle: "Showing tags of task %{module}"
+        no_tags: "No tags!"
+        edit_tag: "Edit tag."
+        remove_tag: "Remove tag from task %{module}."
+        delete_tag: "Permanently delete tag from all tasks."
+        save_tag: "Save tag."
+        cancel_tag: "Cancel changes to the tag."
+        create: "Add tag"
+        create_new: "Create new tag"
+      edit:
+        new_module: "New task"
+        new_module_hover: "Drag me onto canvas"
+        save: "Save workflow"
+        save_short: "Save"
+        cancel: "Cancel"
+        unsaved_work: "Are you sure you want to leave this page? All unsaved data will be lost."
+        drag_connections: "Drag connection/s from here"
+        options_header: "Options"
+        edit_module: "Rename task"
+        edit_module_group: "Rename workflow"
+        clone_module: "Clone task"
+        clone_module_group: "Clone workflow"
+        delete_module: "Archive task"
+        delete_module_group: "Archive workflow"
+        modal_new_module:
+          title: "Add new task"
+          name: "Task name"
+          name_placeholder: "My task"
+          confirm: "Add task"
+          error_length: "Name must contain from 2 to 50 characters."
+          error_invalid: "Name contains invalid characters ('|')."
+          error_whitespaces: "Name cannot be blank."
+        modal_edit_module:
+          title: "Rename task"
+          name: "Task name"
+          confirm: "Rename task"
+        modal_edit_module_group:
+          title: "Rename workflow"
+          name: "Workflow name"
+          confirm: "Rename workflow"
+        modal_delete_module:
+          title: "Archive task"
+          confirm: "Archive task"
+          message: "Are you sure you wish to archive task %{module}? Task's samples and position will be removed."
+        modal_delete_module_group:
+          title: "Archive workflow"
+          confirm: "Archive workflow"
+          message: "Are you sure you wish to archive the workflow task %{module} belongs to? All workflow tasks' samples and positions will be removed."
+      popups:
+        info_tab: "Task info"
+        no_description: "This task has no description."
+        full_info: "Edit description"
+        users_tab: "Assigned users"
+        no_users: "This task has no assigned users."
+        manage_users: "Manage users"
+        module_user_join: "Joined on %{date}."
+        module_user_join_full: "%{user} joined on %{date} at %{time}."
+        activities_tab: "Activity"
+        no_activities: "No activities!"
+        more_activities: "All activities"
+        comments_tab: "Comments"
+        no_comments: "No comments!"
+        more_comments: "More Comments"
+        comment_placeholder: "Your Message"
+        new_comment: "New comment"
+        samples_tab: "Samples"
+        no_samples: "No samples!"
+        manage_samples: "Manage samples"
+      full_zoom:
+        due_date: "Due date"
+        no_due_date: "not set"
+        modal_manage_users:
+          modal_title: "Manage users for"
+          no_users: "No users"
+          user_join: "Joined on %{date}."
+          user_join_full: "%{user} joined on %{date} at %{time}."
+          create: "Add"
+          invite_users_link: "Invite users"
+          invite_users_details: "to team %{organization}."
+          contact_admins: "To invite additional users to team %{organization}, contact its administrator/s."
+      update:
+        success_flash: "Project successfully updated."
 
   my_module_tags:
     new:

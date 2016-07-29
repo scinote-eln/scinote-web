@@ -3,16 +3,16 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="manage-module-users-modal-label"><%= t("projects.canvas.full_zoom.modal_manage_users.modal_title") %> <span id="manage-module-users-modal-module"></span></h4>
+        <h4 class="modal-title" id="manage-module-users-modal-label"><%= t("experiments.canvas.full_zoom.modal_manage_users.modal_title") %> <span id="manage-module-users-modal-module"></span></h4>
       </div>
       <div class="modal-body"></div>
       <div class="modal-footer">
         <span class="pull-left">
-          <% if is_admin_of_organization(@project.organization) %>
-            <%= link_to t("projects.canvas.full_zoom.modal_manage_users.invite_users_link"), organization_path(organization_id: @project.organization.id) %>
-            <span><%=t "projects.canvas.full_zoom.modal_manage_users.invite_users_details", organization: @project.organization.name %></span>
+          <% if is_admin_of_organization(@experiment.project.organization) %>
+            <%= link_to t("experiments.canvas.full_zoom.modal_manage_users.invite_users_link"), organization_path(organization_id: @experiment.project.organization.id) %>
+            <span><%=t "experiments.canvas.full_zoom.modal_manage_users.invite_users_details", organization: @experiment.project.organization.name %></span>
           <% else %>
-            <i><%=t "projects.canvas.full_zoom.modal_manage_users.contact_admins", organization: @project.organization.name %></i>
+            <i><%=t "experiments.canvas.full_zoom.modal_manage_users.contact_admins", organization: @experiment.project.organization.name %></i>
           <% end %>
         </span>
         <button type="button" class="btn btn-default" data-dismiss="modal"><%=t "general.close" %></button>

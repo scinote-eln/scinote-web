@@ -131,7 +131,7 @@ class Experiment < ActiveRecord::Base
           Activity.create(
             type_of: :create_module,
             user: current_user,
-            project: selfproject,
+            project: self.project,
             my_module: m,
             message: I18n.t(
               "activities.create_module",
@@ -489,7 +489,7 @@ class Experiment < ActiveRecord::Base
       if w.length > 1
         group = MyModuleGroup.new(
           name: wf_names[i],
-          project: self,
+          experiment: self,
           my_modules: MyModule.find(w))
         group.created_by = current_user
         group.save!

@@ -366,7 +366,7 @@ module PermissionHelper
   end
 
   def can_archive_module(my_module)
-    is_user_or_higher_of_project(my_module.project)
+    is_user_or_higher_of_project(my_module.experiment.project)
   end
 
   def can_restore_module(my_module)
@@ -378,11 +378,11 @@ module PermissionHelper
   end
 
   def can_add_tag_to_module(my_module)
-    is_user_or_higher_of_project(my_module.project)
+    is_user_or_higher_of_project(my_module.experiment.project)
   end
 
   def can_remove_tag_from_module(my_module)
-    is_user_or_higher_of_project(my_module.project)
+    is_user_or_higher_of_project(my_module.experiment.project)
   end
 
   def can_view_module_info(my_module)
