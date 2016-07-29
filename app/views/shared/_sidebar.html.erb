@@ -14,10 +14,10 @@
 
     <div class="tree">
       <ul>
-        <li class="<%= "active" if (project_page? || project_activities_page?) %>">
+        <li class="<%= "active" if project_page? %>">
           <span class="tree-link line-wrap">
             <i></i>
-            <% if !project_page? && !project_activities_page? %>
+            <% if !project_page? %>
               <%= link_to @project.name, project_action_to_link_to(@project), title: @project.name %>
             <% else %>
               <span title="<%= @project.name %>"><%= @project.name %></span>

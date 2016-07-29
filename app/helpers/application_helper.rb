@@ -11,8 +11,4 @@ module ApplicationHelper
     controller_name == 'projects' ||
       (controller_name == 'reports' && action_name == 'index')
   end
-
-  def project_activities_page?
-    controller_name == 'project_activities'
-  end
 end

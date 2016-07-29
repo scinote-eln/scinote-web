@@ -12,10 +12,6 @@ module SecondaryNavigationHelper
     action_name == "samples"
   end
 
-  def is_project_activities?
-    controller_name == "project_activities" and action_name == "index"
-  end
-
   def is_project_reports?
     controller_name == "reports" and action_name == "index"
   end
