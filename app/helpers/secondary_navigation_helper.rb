@@ -4,8 +4,8 @@ module SecondaryNavigationHelper
     action_name == "show"
   end
 
-  def is_project_canvas?
-    action_name == "canvas"
+  def is_project_show?
+    action_name == "show"
   end
 
   def is_project_samples?
@@ -17,6 +17,14 @@ module SecondaryNavigationHelper
   end
 
   def is_project_archive?
+    action_name == "experiment_archive"
+  end
+
+  def is_experiment_canvas?
+    action_name == "canvas"
+  end
+
+  def is_experiment_archive?
     action_name == "module_archive"
   end
 

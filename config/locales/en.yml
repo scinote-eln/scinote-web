@@ -80,10 +80,12 @@ en:
 
   nav2:
     projects:
-      canvas: "Overview"
+      show: "Overview"
       samples: "Samples"
       activities: "Activity"
       reports: "Reports"
+    experiments:
+      canvas: "Overview"
     modules:
       steps: "Protocols"
       results: "Results"

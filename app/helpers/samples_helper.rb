@@ -29,7 +29,7 @@ module SamplesHelper
   def form_submit_link
     if module_page?
       assign_samples_my_module_path(@my_module)
-    elsif is_project_page?
+    elsif project_page?
       delete_samples_project_path(@project)
     end
   end
