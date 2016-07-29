@@ -1,0 +1,22 @@
+<ul>
+  <% if project.active_experiments.present? then %>
+    <% project.active_experiments.each do |experiment| %>
+      <li class="<%= "active" if experiment_page? %>">
+        <span class="tree-link line-wrap">
+          <i></i>
+          <% if !experiment_page? %>
+            <%= link_to experiment.name, experiment_action_to_link_to(experiment), title: experiment.name %>
+          <% else %>
+            <span title="<%= experiment.name %>"><%= experiment.name %></span>
+          <% end %>
+        </span>
+        <%= render partial: 'shared/sidebar/my_modules', locals: { experiment: experiment } %>
+      </li>
+    <% end %>
+  <% end %>
+  <li>
+    <%= link_to new_project_experiment_path(project), id: 'new-experiment', remote: true do %>
+      <span class="glyphicon glyphicon-plus"></span> <i><%= t('experiments.new.create') %></i>
+    <% end %>
+  </li>
+</ul>

@@ -23,7 +23,7 @@
               <span title="<%= @project.name %>"><%= @project.name %></span>
             <% end %>
           </span>
-          <%= render 'shared/sidebar_elements' %>
+          <%= render partial: 'shared/sidebar/experiments', locals: { project: @project } %>
         </li>
       </ul>
     </div>
