@@ -49,7 +49,7 @@ class SearchController < ApplicationController
     @search_page = params[:page].to_i || 1
     @display_query = @search_query
     # splits the search query to validate all entries
-    @splited_query = @search_query.split()
+    @splited_query = @search_query.split
 
     if @splited_query.first.length < MIN_QUERY_CHARS
       flash[:error] = t'search.index.error.query_length', n: MIN_QUERY_CHARS
