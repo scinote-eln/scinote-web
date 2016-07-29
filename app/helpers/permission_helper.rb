@@ -69,7 +69,8 @@ module PermissionHelper
       :can_archive_modules,
       :can_view_reports,
       :can_create_new_report,
-      :can_delete_reports
+      :can_delete_reports,
+      :can_create_experiment
     ] do |proxy, *args, &block|
       if args[0]
         project = args[0]
@@ -118,8 +119,23 @@ module PermissionHelper
       :can_edit_result_asset_in_module,
       :can_archive_result_asset_in_module,
       :can_add_samples_to_module,
-      :can_delete_samples_from_module,
-      :can_create_experiment,
+      :can_delete_samples_from_module
+    ] do |proxy, *args, &block|
+      if args[0]
+        my_module = args[0]
+        if my_module.active? &&
+           my_module.experiment.active? &&
+           my_module.experiment.project.active?
+          proxy.call(*args, &block)
+        else
+          false
+        end
+      else
+        false
+      end
+    end
+
+    around [
       :can_edit_experiment,
       :can_view_experiment,
       :can_view_experiment_archive,
@@ -127,10 +143,9 @@ module PermissionHelper
       :can_restore_experiment
     ] do |proxy, *args, &block|
       if args[0]
-        my_module = args[0]
-        if my_module.active? &&
-           my_module.experiment.project.active? &&
-           my_module.experiment.active?
+        experiment = args[0]
+        if experiment.active? &&
+           experiment.project.active?
           proxy.call(*args, &block)
         else
           false
@@ -311,8 +326,8 @@ module PermissionHelper
     is_user_or_higher_of_project(project)
   end
 
-  def can_edit_experiment(project)
-    is_user_or_higher_of_project(project)
+  def can_edit_experiment(experiment)
+    is_user_or_higher_of_project(experiment.project)
   end
 
   def can_view_experiment(experiment)
@@ -323,8 +338,8 @@ module PermissionHelper
     can_view_project(experiment.project)
   end
 
-  def can_archive_experiment(project)
-    is_user_or_higher_of_project(project)
+  def can_archive_experiment(experiment)
+    is_user_or_higher_of_project(experiment.project)
   end
 
   def can_restore_experiment(experiment)
