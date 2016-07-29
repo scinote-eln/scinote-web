@@ -65,12 +65,10 @@
 
     <!-- buttons -->
     <div class="collapse navbar-collapse" id="secondary-menu">
+
+      <!-- True secondary navigation (buttons on the right side) -->
       <ul class="nav navbar-nav navbar-right" style="vertical-align: bottom">
         <% if project_page? %>
-          <!-- TEMPORARY HIDDEN -->
-          <!--<li class="<%= "active" if is_project_info? %>">
-            <a href="<%= project_url(@project) %>"><span class="glyphicon glyphicon-info-sign"></span></a>
-          </li>-->
           <% if can_view_project(@project) then %>
             <li id="canvas-nav-tab" class="<%= "active" if is_project_canvas? %>">
               <a href="<%= project_url(@project) %>" title="<%=t "nav2.projects.canvas" %>">
@@ -102,10 +100,6 @@
           <% end %>
 
         <% elsif module_page? %>
-          <!-- TEMPORARY HIDDEN -->
-          <!--<li class="<%= "active" if is_module_info? %>">
-            <a href="<%= my_module_url(@my_module) %>"><span class="glyphicon glyphicon-info-sign"></span></a>
-          </li>-->
           <% if can_view_module_protocols(@my_module) then %>
             <li id="steps-nav-tab" class="<%= "active" if is_module_protocols? %>">
               <a href="<%= protocols_my_module_url(@my_module) %>" title="<%=t "nav2.modules.steps" %>">
@@ -155,6 +149,7 @@
 
         <% end %>
       </ul>
+
       <!-- Breadcrumbs, displayed on large screens -->
       <ul class="breadcrumb hidden-xs">
         <li>
@@ -202,6 +197,7 @@
           </li>
         <% end %>
       </ul>
+
     </div>
   </div>
 </nav>
