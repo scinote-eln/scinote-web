@@ -310,9 +310,7 @@ class MyModulesController < ApplicationController
     @my_module = MyModule.find_by_id(params[:id])
     if @my_module
       @experiment = @my_module.experiment
-      if @experiment
-        @project = @my_module.experiment.project
-      end
+      @project = @my_module.experiment.project if @experiment
     else
       render_404
     end

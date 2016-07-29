@@ -105,7 +105,7 @@ class Project < ActiveRecord::Base
   end
 
   def active_experiments
-    self.experiments.is_archived(false)
+    experiments.is_archived(false)
   end
 
   def project_my_modules
