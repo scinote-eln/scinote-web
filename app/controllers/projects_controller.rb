@@ -2,16 +2,17 @@ class ProjectsController < ApplicationController
   include SampleActions
   include RenamingUtil
 
-  before_action :load_vars, only: [:show, :edit, :update, :canvas,
+  before_action :load_vars, only: [:show, :edit, :update,
                                    :notifications, :reports,
-                                   :samples, :module_archive,
+                                   :samples, :experiment_archive,
                                    :delete_samples, :samples_index]
-  before_action :check_view_permissions, only: [:show, :canvas, :reports,
-                                                :samples, :module_archive,
+  before_action :check_view_permissions, only: [:show, :reports,
+                                                :samples, :experiment_archive,
                                                 :samples_index]
   before_action :check_view_notifications_permissions, only: [ :notifications ]
   before_action :check_edit_permissions, only: [ :edit ]
-  before_action :check_module_archive_permissions, only: [:module_archive]
+  before_action :check_experiment_archive_permissions,
+                only: [:experiment_archive]
 
   filter_by_archived = false
 
@@ -238,10 +239,6 @@ class ProjectsController < ApplicationController
     # This is the "info" view
   end
 
-  def canvas
-    # This is the "structure/overview/canvas" view
-  end
-
   def notifications
     @modules = @project
       .assigned_modules(current_user)
@@ -263,8 +260,7 @@ class ProjectsController < ApplicationController
     @organization = @project.organization
   end
 
-  def module_archive
-
+  def experiment_archive
   end
 
   def samples_index
@@ -310,10 +306,8 @@ class ProjectsController < ApplicationController
     end
   end
 
-  def check_module_archive_permissions
-    unless can_restore_archived_modules(@project)
-      render_403
-    end
+  def check_experiment_archive_permissions
+    render_403 unless can_view_project_archive(@project)
   end
 
   def choose_layout

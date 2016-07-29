@@ -118,7 +118,13 @@ module PermissionHelper
       :can_edit_result_asset_in_module,
       :can_archive_result_asset_in_module,
       :can_add_samples_to_module,
-      :can_delete_samples_from_module
+      :can_delete_samples_from_module,
+      :can_create_experiment,
+      :can_edit_experiment,
+      :can_view_experiment,
+      :can_view_experiment_archive,
+      :can_archive_experiment,
+      :can_restore_experiment
     ] do |proxy, *args, &block|
       if args[0]
         my_module = args[0]
@@ -310,6 +316,10 @@ module PermissionHelper
   end
 
   def can_view_experiment(experiment)
+    can_view_project(experiment.project)
+  end
+
+  def can_view_experiment_archive(experiment)
     can_view_project(experiment.project)
   end
 

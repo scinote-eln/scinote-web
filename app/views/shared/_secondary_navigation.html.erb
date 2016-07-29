@@ -17,7 +17,7 @@
           <li>
         <% end %>
            <% if can_view_project(@project) %>
-              <a href="<%= canvas_experiment_url(@experiment) %>">
+              <a href="<%= project_url(@project) %>">
             <% end %>
             <%= @project.name %>
             <% if can_view_project(@project) %>
@@ -48,7 +48,7 @@
           </li>-->
           <% if can_view_project(@project) then %>
             <li id="canvas-nav-tab" class="<%= "active" if is_project_canvas? %>">
-              <a href="<%= canvas_project_url(@project) %>" title="<%=t "nav2.projects.canvas" %>">
+              <a href="<%= project_url(@project) %>" title="<%=t "nav2.projects.canvas" %>">
                 <span class="hidden-sm hidden-md"><%=t "nav2.projects.canvas" %></span>
                 <span class="hidden-xs hidden-lg glyphicon glyphicon-blackboard"></span>
               </a>
@@ -76,7 +76,7 @@
           <% end %>
           <% if can_view_project_archive(@project) then %>
             <li id="project-archive-nav-tab" class="<%= "active" if is_project_archive? %>">
-              <a href="<%= module_archive_project_url(@project) %>"><span class="glyphicon glyphicon-briefcase"></span></a>
+              <a href="<%= experiment_archive_project_url(@project) %>"><span class="glyphicon glyphicon-briefcase"></span></a>
             </li>
           <% end %>
 
@@ -150,7 +150,7 @@
           <li>
         <% end %>
            <% if can_view_project(@project) %>
-              <a href="<%= canvas_experiment_url(@experiment) %>">
+              <a href="<%= project_url(@project) %>">
             <% end %>
             <%= truncate( @project.name, length: 20 ) %>
             <% if can_view_project(@project) %>

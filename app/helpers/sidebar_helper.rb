@@ -13,7 +13,7 @@ module SidebarHelper
     when "samples"
       return samples_project_path(project)
     when "archive"
-      return module_archive_project_url(project)
+      return experiment_archive_project_url(project)
     else
       return project_path(project)
     end
