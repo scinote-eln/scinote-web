@@ -275,11 +275,6 @@ en:
             module_tab: "Task content"
             steps_tab: "Protocols content"
             results_tab: "Results content"
-          experiment_contents:
-            head_title: "Add contents to experiment %{experiment}"
-            module_tab: "Task content"
-            steps_tab: "Protocols content"
-            results_tab: "Results content"
           module_contents_inner:
             instructions: "Choose what information from task/s to include in the report"
             header: "Report elements"
@@ -292,6 +287,15 @@ en:
             no_results: "Task contains no results"
             activity: "Activity"
             samples: "Samples"
+          experiment_contents:
+            head_title: "Add contents to experiment %{experiment}"
+            experiment_tab: "Experiment content"
+            module_tab: "Task content"
+            steps_tab: "Protocols content"
+            results_tab: "Results content"
+          experiment_contents_inner:
+            instructions: "Select tasks to include in the report"
+            no_modules: "The experiment contains no tasks"
           step_contents:
             head_title: "Add contents to step %{step}"
             step_tab: "Step content"

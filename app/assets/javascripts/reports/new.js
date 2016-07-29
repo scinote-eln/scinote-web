@@ -176,17 +176,18 @@ function initializeNewElement(newEl) {
       parentElementId = parent.data("id");
       modalTitle = parent.data("modal-title");
 
-      if (parent.data("type") == "my_module") {
-        // Adding module contents
-        url = dh.data("add-module-contents-url");
-      } else if (parent.data("type") == "step") {
-        // Adding step contents
-        url = dh.data("add-step-contents-url");
-      } else if (_.contains(
-        ["result_asset", "result_table", "result_text"],
-        parent.data("type"))) {
-        // Adding result comments
-        url = dh.data("add-result-contents-url");
+      // Select correct AJAX URL based on type
+      switch (parent.data("type")) {
+        case "experiment":
+          url = dh.data("add-experiment-contents-url"); break;
+        case "my_module":
+          url = dh.data("add-module-contents-url"); break;
+        case "step":
+          url = dh.data("add-step-contents-url"); break;
+        case "result_asset":
+        case "result_table":
+        case "result_text":
+          url = dh.data("add-result-contents-url"); break;
       }
     }
 

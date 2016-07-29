@@ -17,6 +17,7 @@ class ReportsController < ApplicationController
     :destroy,
     :save_modal,
     :project_contents_modal,
+    :experiment_contents_modal,
     :module_contents_modal,
     :step_contents_modal,
     :result_contents_modal,
@@ -35,6 +36,7 @@ class ReportsController < ApplicationController
     :generate,
     :save_modal,
     :project_contents_modal,
+    :experiment_contents_modal,
     :module_contents_modal,
     :step_contents_modal,
     :result_contents_modal,
@@ -213,24 +215,46 @@ class ReportsController < ApplicationController
     end
   end
 
+  # Experiment for adding contents into experiment element
+  def experiment_contents_modal
+    experiment = Experiment.find_by_id(params[:id])
+
+    respond_to do |format|
+      if experiment.blank?
+        format.json do
+          render json: {}, status: :not_found
+        end
+      else
+        format.json do
+          render json: {
+            html: render_to_string(
+              partial: "reports/new/modal/experiment_contents.html.erb",
+              locals: { project: @project, experiment: experiment }
+            )
+          }
+        end
+      end
+    end
+  end
+
   # Modal for adding contents into module element
   def module_contents_modal
     my_module = MyModule.find_by_id(params[:id])
 
     respond_to do |format|
       if my_module.blank?
-        format.json {
+        format.json do
           render json: {}, status: :not_found
-        }
+        end
       else
-        format.json {
+        format.json do
           render json: {
-            html: render_to_string({
+            html: render_to_string(
               partial: "reports/new/modal/module_contents.html.erb",
               locals: { project: @project, my_module: my_module }
-            })
+            )
           }
-        }
+        end
       end
     end
   end

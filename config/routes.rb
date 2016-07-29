@@ -66,6 +66,12 @@ Rails.application.routes.draw do
         post 'new/project_contents',
           to: 'reports#project_contents',
           as: :project_contents
+        get 'new/experiment_contents_modal',
+          to: 'reports#experiment_contents_modal',
+          as: :experiment_contents_modal
+        post 'new/experiment_contents',
+          to: 'reports#experiment_contents',
+          as: :experiment_contents
         get 'new/module_contents_modal',
           to: 'reports#module_contents_modal',
           as: :module_contents_modal
