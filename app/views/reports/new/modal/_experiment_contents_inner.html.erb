@@ -15,17 +15,15 @@
             </li>
           <% end %>
       <% end %>
+    <% end %>
 
       <!-- Tasks without groups -->
-      <% modules_without_group = experiment.modules_without_group %>
-      <% if modules_without_group.present? and modules_without_group.count > 0 %>
-        <ul class="no-style experiment-contents-list">
-          <% modules_without_group.each do |my_module| %>
-            <li>
-              <%= form.check_box "modules[#{my_module.id}]", label: my_module.name %>
-            </li>
-          <% end %>
-        </ul>
+    <% modules_without_group = experiment.modules_without_group %>
+    <% if modules_without_group.present? and modules_without_group.count > 0 %>
+      <% modules_without_group.each do |my_module| %>
+        <li>
+          <%= form.check_box "modules[#{my_module.id}]", label: my_module.name %>
+        </li>
       <% end %>
     <% end %>
 
