@@ -11,7 +11,7 @@
         <%=t "projects.reports.elements.step.user_time", user: step.user.full_name , timestamp: l(timestamp, format: :full) %>
       </div>
       <div class="pull-right controls">
-        <%= render partial: "reports/elements/module_element_controls.html.erb", locals: { show_sort: true } %>
+        <%= render partial: "reports/elements/element_controls.html.erb", locals: { show_sort: true } %>
       </div>
     </div>
   </div>
