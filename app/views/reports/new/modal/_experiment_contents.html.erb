@@ -30,8 +30,28 @@
 <script type="javascript">
   $(function() {
     var form = $("#add-contents-form");
+    var experimentTab = form.find("#experiment-tab");
     var moduleTab = form.find("#module-tab");
     var stepsTab = form.find("#module-steps-tab");
+
+    var experimentCheckAlls = experimentTab.find(".experiment-all-cb");
+    var experimentAll = experimentTab.find("input:checkbox");
+    experimentCheckAlls.click(function() {
+      var nextUl = $(this).closest("div.checkbox").next();
+      if (nextUl.length && nextUl.is("ul.experiment-contents-list")) {
+        nextUl.find("input:checkbox").prop("checked", this.checked);
+      }
+    });
+    experimentAll.click(function() {
+      var parentLists = $(this).parents("ul.experiment-contents-list");
+
+      if (parentLists.length) {
+        var prevEl = parentLists.prev();
+        if (prevEl.length && prevEl.is("div.checkbox")) {
+          prevEl.find("input:checkbox").prop("checked", false);
+        }
+      }
+    });
 
     var moduleCheckAll = moduleTab.find(".module-check-all");
     var moduleOthers = moduleTab.find("input:checkbox:not(.module-check-all)");
