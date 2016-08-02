@@ -320,6 +320,23 @@ class ReportsController < ApplicationController
     end
   end
 
+  def experiment_contents
+    respond_to do |format|
+      elements = generate_experiment_contents_json
+
+      if elements_empty? elements
+        format.json { render json: {}, status: :no_content }
+      else
+        format.json {
+          render json: {
+            status: :ok,
+            elements: elements
+          }
+        }
+      end
+    end
+  end
+
   def module_contents
     my_module = MyModule.find_by_id(params[:id])
 
