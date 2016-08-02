@@ -1,8 +1,8 @@
 class ExperimentsController < ApplicationController
   include PermissionHelper
   before_action :set_experiment, except: [:new, :create]
-  before_action :set_project, only: [:new, :create, :samples_index, :samples ]
-  # before_action :check_view_permissions, only: [:canvas]
+  before_action :set_project, only: [:new, :create, :samples_index, :samples]
+  before_action :check_view_permissions, only: [:canvas]
 
   # except parameter could be used but it is not working.
   layout :choose_layout
@@ -26,7 +26,8 @@ class ExperimentsController < ApplicationController
     @experiment.last_modified_by = current_user
     @experiment.project = @project
     if @experiment.save
-      flash[:success] = t('experiments.create.success_flash', experiment: @experiment.name)
+      flash[:success] = t('experiments.create.success_flash',
+                          experiment: @experiment.name)
       # have to change to experiments path
       redirect_to root_path
     else
@@ -43,7 +44,8 @@ class ExperimentsController < ApplicationController
     @experiment.update_attributes(experiment_params)
     @experiment.last_modified_by = current_user
     if @experiment.save
-      flash[:success] = t('experiments.update.success_flash', experiment: @experiment.name)
+      flash[:success] = t('experiments.update.success_flash',
+                          experiment: @experiment.name)
       # have to change to experiments path
       redirect_to root_path
     else
@@ -57,7 +59,8 @@ class ExperimentsController < ApplicationController
     @experiment.archived_by = current_user
     @experiment.archived_on = DateTime.now
     if @experiment.save
-      flash[:success] = t('experiments.archive.success_flash', experiment: @experiment.name)
+      flash[:success] = t('experiments.archive.success_flash',
+                          experiment: @experiment.name)
       # have to change to experiments path
       redirect_to root_path
     else
@@ -67,7 +70,8 @@ class ExperimentsController < ApplicationController
   end
 
   def samples
-    @samples_index_link = samples_index_experiment_path(@experiment, format: :json)
+    @samples_index_link = samples_index_experiment_path(@experiment,
+                                                        format: :json)
     @organization = @experiment.project.organization
   end
 
@@ -76,9 +80,12 @@ class ExperimentsController < ApplicationController
 
     respond_to do |format|
       format.html
-      format.json {
-        render json: ::SampleDatatable.new(view_context, @organization, @experiment, nil)
-      }
+      format.json do
+        render json: ::SampleDatatable.new(view_context,
+                                           @organization,
+                                           @experiment,
+                                           nil)
+      end
     end
   end
 
