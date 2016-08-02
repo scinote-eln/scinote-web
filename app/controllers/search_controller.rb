@@ -55,14 +55,17 @@ class SearchController < ApplicationController
       flash[:error] = t'search.index.error.query_length', n: MIN_QUERY_CHARS
       redirect_to :back
     else
-      @splited_query.each_with_index do |w, i|
-        if @splited_query.length > 1 && w.length < MIN_QUERY_CHARS
-          @splited_query.slice!(i)
+      if @splited_query.length > 1
+        @search_query = ''
+        @splited_query.each_with_index do |w, i|
+          if w.length >= MIN_QUERY_CHARS
+            @search_query += "#{@splited_query[i]} "
+          end
         end
+      else
+        @search_query = @splited_query.join(' ')
       end
     end
-
-    @search_query = @splited_query.join(' ')
 
     if @search_page < 1
       @search_page = 1
