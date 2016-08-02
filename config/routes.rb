@@ -101,7 +101,7 @@ Rails.application.routes.draw do
     get 'users/edit', to: 'user_projects#index_edit'
   end
 
-  resources :experiments do
+  resources :experiments, only: :show do
     member do
       get 'canvas' # Overview/structure for single experiment
       get 'canvas/edit', to: 'canvas#edit' # AJAX-loaded canvas edit mode (from canvas)
@@ -110,6 +110,9 @@ Rails.application.routes.draw do
       get 'canvas/small_zoom', to: 'canvas#small_zoom' # AJAX-loaded canvas zoom
       post 'canvas', to: 'canvas#update' # Save updated canvas action
       get 'module_archive' # Module archive for single experiment
+      get 'samples' # Samples for single project
+      post 'samples_index' # Renders sample datatable for single project (ajax action)
+      post :delete_samples, constraints: CommitParamRouting.new(MyModulesController::DELETE_SAMPLES), action: :delete_samples
     end
   end
 
