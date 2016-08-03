@@ -6,10 +6,10 @@ class SampleDatatable < AjaxDatatablesRails::Base
   ASSIGNED_SORT_COL = "assigned"
 
   def initialize(view,
-                organization,
-                project = nil,
-                my_module = nil,
-                experiment = nil)
+                 organization,
+                 project = nil,
+                 my_module = nil,
+                 experiment = nil)
     super(view)
     @organization = organization
     @project = project
@@ -126,37 +126,37 @@ class SampleDatatable < AjaxDatatablesRails::Base
       @assigned_samples = @my_module.samples
 
       samples = samples
-      .joins(
-        "LEFT OUTER JOIN sample_my_modules ON
-        (samples.id = sample_my_modules.sample_id AND
-          (sample_my_modules.my_module_id = #{@my_module.id.to_s} OR
-          sample_my_modules.id IS NULL))"
-      )
-      .references(:sample_my_modules)
+        .joins(
+          "LEFT OUTER JOIN sample_my_modules ON
+          (samples.id = sample_my_modules.sample_id AND
+            (sample_my_modules.my_module_id = #{@my_module.id.to_s} OR
+            sample_my_modules.id IS NULL))"
+        )
+        .references(:sample_my_modules)
     elsif @project
       @assigned_samples = @project.assigned_samples
       ids = @project.my_modules_ids
 
       samples = samples
-      .joins(
-        "LEFT OUTER JOIN sample_my_modules ON
-        (samples.id = sample_my_modules.sample_id AND
-          (sample_my_modules.my_module_id IN (#{ids}) OR
-          sample_my_modules.id IS NULL))"
-      )
-      .references(:sample_my_modules)
+        .joins(
+          "LEFT OUTER JOIN sample_my_modules ON
+          (samples.id = sample_my_modules.sample_id AND
+            (sample_my_modules.my_module_id IN (#{ids}) OR
+            sample_my_modules.id IS NULL))"
+        )
+        .references(:sample_my_modules)
     elsif @experiment
       @assigned_samples = @experiment.assigned_samples
       ids = @experiment.my_modules.select(:id)
 
       samples = samples
-      .joins(
-        "LEFT OUTER JOIN sample_my_modules ON
-        (samples.id = sample_my_modules.sample_id AND
-          (sample_my_modules.my_module_id IN (#{ids.to_sql}) OR
-          sample_my_modules.id IS NULL))"
-      )
-      .references(:sample_my_modules)
+        .joins(
+          "LEFT OUTER JOIN sample_my_modules ON
+          (samples.id = sample_my_modules.sample_id AND
+            (sample_my_modules.my_module_id IN (#{ids.to_sql}) OR
+            sample_my_modules.id IS NULL))"
+        )
+        .references(:sample_my_modules)
     end
 
     # Make mappings of custom fields, so we have same id for every column
@@ -211,12 +211,12 @@ class SampleDatatable < AjaxDatatablesRails::Base
             .distinct
 
           # check the input param and merge the two arrays of ids
-          if params[:order].values[0]["dir"] == "asc"
+          if params[:order].values[0]['dir'] == 'asc'
             ids = assigned + unassigned
-          elsif params[:order].values[0]["dir"] == "desc"
+          elsif params[:order].values[0]['dir'] == 'desc'
             ids = unassigned + assigned
           end
-          ids = ids.collect { |s| s.id }
+          ids = ids.collect(&:id)
 
           # order the records by input ids
           order_by_index = ActiveRecord::Base.send(
