@@ -83,8 +83,9 @@ class ExperimentsController < ApplicationController
       format.json do
         render json: ::SampleDatatable.new(view_context,
                                            @organization,
-                                           @experiment,
-                                           nil)
+                                           nil,
+                                           nil,
+                                           @experiment)
       end
     end
   end

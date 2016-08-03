@@ -5,11 +5,16 @@ class SampleDatatable < AjaxDatatablesRails::Base
 
   ASSIGNED_SORT_COL = "assigned"
 
-  def initialize(view, organization, project = nil, my_module = nil)
+  def initialize(view,
+                organization,
+                project = nil,
+                my_module = nil,
+                experiment = nil)
     super(view)
     @organization = organization
     @project = project
     @my_module = my_module
+    @experiment = experiment
   end
 
   # Define sortable columns, so 1st column will be sorted by attribute in sortable_columns[0]
@@ -119,6 +124,7 @@ class SampleDatatable < AjaxDatatablesRails::Base
 
     if @my_module
       @assigned_samples = @my_module.samples
+
       samples = samples
       .joins(
         "LEFT OUTER JOIN sample_my_modules ON
@@ -129,7 +135,20 @@ class SampleDatatable < AjaxDatatablesRails::Base
       .references(:sample_my_modules)
     elsif @project
       @assigned_samples = @project.assigned_samples
-      ids = @project.my_modules.select(:id)
+      ids = @project.my_modules_ids
+
+      samples = samples
+      .joins(
+        "LEFT OUTER JOIN sample_my_modules ON
+        (samples.id = sample_my_modules.sample_id AND
+          (sample_my_modules.my_module_id IN (#{ids}) OR
+          sample_my_modules.id IS NULL))"
+      )
+      .references(:sample_my_modules)
+    elsif @experiment
+      @assigned_samples = @experiment.assigned_samples
+      ids = @experiment.my_modules.select(:id)
+
       samples = samples
       .joins(
         "LEFT OUTER JOIN sample_my_modules ON
@@ -172,6 +191,39 @@ class SampleDatatable < AjaxDatatablesRails::Base
           # Depending on the sort, order nulls first or
           # nulls last on sample_my_modules association
           records.order("sample_my_modules.id NULLS #{sort_null_direction(params[:order].values[0])}")
+        elsif @experiment
+          # A very elegant solution to sort assigned samples at a experiment level
+
+          # grabs the ids of samples which has a modules that belongs to this project
+          assigned = Sample
+            .joins('LEFT OUTER JOIN "sample_my_modules" ON "sample_my_modules"."sample_id" = "samples"."id"')
+            .joins('LEFT OUTER JOIN "my_modules" ON "my_modules"."id" = "sample_my_modules"."my_module_id"')
+            .where('"my_modules"."experiment_id" = ?', @experiment.id)
+            .where('"my_modules"."nr_of_assigned_samples" > 0')
+            .select('"samples"."id"')
+            .distinct
+
+          # grabs the ids that are not the previous one but are still of the same organization
+          unassigned = Sample
+            .where('"samples"."organization_id" = ?', @organization.id)
+            .where('"samples"."id" NOT IN (?)', assigned)
+            .select('"samples"."id"')
+            .distinct
+
+          # check the input param and merge the two arrays of ids
+          if params[:order].values[0]["dir"] == "asc"
+            ids = assigned + unassigned
+          elsif params[:order].values[0]["dir"] == "desc"
+            ids = unassigned + assigned
+          end
+          ids = ids.collect { |s| s.id }
+
+          # order the records by input ids
+          order_by_index = ActiveRecord::Base.send(
+                                  :sanitize_sql_array,
+                                  ["position((',' || samples.id || ',') in ?)",
+                                  ids.join(',') + ','] )
+          records.where(id: ids).order(order_by_index)
         elsif @project
           # A very elegant solution to sort assigned samples at a project level
 
@@ -179,7 +231,8 @@ class SampleDatatable < AjaxDatatablesRails::Base
           assigned = Sample
             .joins('LEFT OUTER JOIN "sample_my_modules" ON "sample_my_modules"."sample_id" = "samples"."id"')
             .joins('LEFT OUTER JOIN "my_modules" ON "my_modules"."id" = "sample_my_modules"."my_module_id"')
-            .where('"my_modules"."project_id" = ?', @project.id)
+            .joins('LEFT OUTER JOIN "experiments" ON "experiments"."id" = "my_modules"."experiment_id"')
+            .where('"experiments"."project_id" = ?', @project.id)
             .where('"my_modules"."nr_of_assigned_samples" > 0')
             .select('"samples"."id"')
             .distinct
