@@ -631,17 +631,17 @@ function updateElementControls(el) {
 function sortWholeReport(asc) {
   animateLoading();
   var reportContent = $(REPORT_CONTENT);
-  var moduleElements = reportContent.children(".report-module-element");
+  var experimentElements = reportContent.children(".report-experiment-element");
   var newEls = reportContent.children(".new-element");
 
   if (
-  moduleElements.length === 0 || // Nothing to sort
-  moduleElements.length != newEls.length - 1 // This should never happen
+  experimentElements.length === 0 || // Nothing to sort
+  experimentElements.length != newEls.length - 1 // This should never happen
   ) {
     return;
   }
 
-  moduleElements = _.sortBy(moduleElements, function(el) {
+  experimentElements = _.sortBy(experimentElements, function(el) {
     if (!asc)
     {
       return -$(el).data("ts");
@@ -650,18 +650,18 @@ function sortWholeReport(asc) {
   });
 
   newEls.detach();
-  moduleElements = $(moduleElements);
-  moduleElements.detach();
+  experimentElements = $(experimentElements);
+  experimentElements.detach();
 
   // Re-insert the children into DOM
   reportContent.append(newEls[0]);
-  for (var i = 0; i < moduleElements.length; i++) {
-    reportContent.append(moduleElements[i]);
+  for (var i = 0; i < experimentElements.length; i++) {
+    reportContent.append(experimentElements[i]);
     reportContent.append(newEls[i + 1]);
   }
 
   // Finally, fix their controls
-  _.each(moduleElements, function(el) {
+  _.each(experimentElements, function(el) {
     updateElementControls($(el));
     sortElementChildren($(el), asc, true);
   });
