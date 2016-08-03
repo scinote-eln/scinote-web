@@ -38,6 +38,8 @@ def render_report_element(element, provided_locals = nil)
 
   if element.project_header?
     locals[:project] = element.element_reference
+  elsif element.experiment?
+    locals[:experiment] = element.element_reference
   elsif element.my_module?
     locals[:my_module] = element.element_reference
   elsif element.step?
