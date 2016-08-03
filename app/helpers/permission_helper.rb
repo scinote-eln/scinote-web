@@ -343,7 +343,7 @@ module PermissionHelper
   end
 
   def can_restore_experiment(experiment)
-    experiment.archived? and is_user_or_higher_of_project(experiment.project)
+    experiment.archived? && is_user_or_higher_of_project(experiment.project)
   end
 
   # ---- WORKFLOW PERMISSIONS ----

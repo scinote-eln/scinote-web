@@ -62,7 +62,7 @@ class UserMyModulesController < ApplicationController
       )
       Activity.create(
         user: current_user,
-        project: @um.my_module.project,
+        project: @um.my_module.experiment.project,
         my_module: @um.my_module,
         message: message,
         type_of: :assign_user_to_module
@@ -116,7 +116,7 @@ class UserMyModulesController < ApplicationController
 
       Activity.create(
         user: current_user,
-        project: @um.my_module.project,
+        project: @um.my_module.experiment.project,
         my_module: @um.my_module,
         message: message,
         type_of: :unassign_user_from_module
@@ -159,7 +159,7 @@ class UserMyModulesController < ApplicationController
     @my_module = MyModule.find_by_id(params[:my_module_id])
 
     if @my_module
-      @project = @my_module.project
+      @project = @my_module.experiment.project
     else
       render_404
     end
