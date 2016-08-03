@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160722082700) do
+ActiveRecord::Schema.define(version: 20160803082801) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -138,26 +138,26 @@ ActiveRecord::Schema.define(version: 20160722082700) do
   add_index "delayed_jobs", ["queue"], name: "delayed_jobs_queue", using: :btree
 
   create_table "experiments", force: :cascade do |t|
-    t.string   "name",                           null: false
+    t.string   "name",                                null: false
     t.text     "description"
-    t.integer  "project_id",                     null: false
-    t.integer  "created_by_id",                  null: false
-    t.integer  "last_modified_by_id",            null: false
-    t.boolean  "archived",       default: false, null: false
+    t.integer  "project_id",                          null: false
+    t.integer  "created_by_id",                       null: false
+    t.integer  "last_modified_by_id",                 null: false
+    t.boolean  "archived",            default: false, null: false
     t.integer  "archived_by_id"
     t.datetime "archived_on"
     t.integer  "restored_by_id"
     t.datetime "restored_on"
-    t.datetime "created_at",                     null: false
-    t.datetime "updated_at",                     null: false
+    t.datetime "created_at",                          null: false
+    t.datetime "updated_at",                          null: false
   end
 
   add_index "experiments", ["archived_by_id"], name: "index_experiments_on_archived_by_id", using: :btree
   add_index "experiments", ["created_by_id"], name: "index_experiments_on_created_by_id", using: :btree
+  add_index "experiments", ["last_modified_by_id"], name: "index_experiments_on_last_modified_by_id", using: :btree
   add_index "experiments", ["name"], name: "index_experiments_on_name", using: :btree
   add_index "experiments", ["project_id"], name: "index_experiments_on_project_id", using: :btree
   add_index "experiments", ["restored_by_id"], name: "index_experiments_on_restored_by_id", using: :btree
-  add_index "experiments", ["last_modified_by_id"], name: "index_experiments_on_last_modified_by_id", using: :btree
 
   create_table "logs", force: :cascade do |t|
     t.integer "organization_id", null: false
@@ -316,9 +316,9 @@ ActiveRecord::Schema.define(version: 20160722082700) do
   add_index "protocols", ["restored_by_id"], name: "index_protocols_on_restored_by_id", using: :btree
 
   create_table "report_elements", force: :cascade do |t|
-    t.integer  "position",                 null: false
-    t.integer  "type_of",                  null: false
-    t.integer  "sort_order",   default: 0
+    t.integer  "position",                  null: false
+    t.integer  "type_of",                   null: false
+    t.integer  "sort_order",    default: 0
     t.integer  "report_id"
     t.integer  "parent_id"
     t.integer  "project_id"
@@ -328,12 +328,14 @@ ActiveRecord::Schema.define(version: 20160722082700) do
     t.integer  "checklist_id"
     t.integer  "asset_id"
     t.integer  "table_id"
-    t.datetime "created_at",               null: false
-    t.datetime "updated_at",               null: false
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
+    t.integer  "experiment_id"
   end
 
   add_index "report_elements", ["asset_id"], name: "index_report_elements_on_asset_id", using: :btree
   add_index "report_elements", ["checklist_id"], name: "index_report_elements_on_checklist_id", using: :btree
+  add_index "report_elements", ["experiment_id"], name: "index_report_elements_on_experiment_id", using: :btree
   add_index "report_elements", ["my_module_id"], name: "index_report_elements_on_my_module_id", using: :btree
   add_index "report_elements", ["parent_id"], name: "index_report_elements_on_parent_id", using: :btree
   add_index "report_elements", ["project_id"], name: "index_report_elements_on_project_id", using: :btree
@@ -661,8 +663,8 @@ ActiveRecord::Schema.define(version: 20160722082700) do
   add_foreign_key "custom_fields", "users", column: "last_modified_by_id"
   add_foreign_key "experiments", "users", column: "archived_by_id"
   add_foreign_key "experiments", "users", column: "created_by_id"
-  add_foreign_key "experiments", "users", column: "restored_by_id"
   add_foreign_key "experiments", "users", column: "last_modified_by_id"
+  add_foreign_key "experiments", "users", column: "restored_by_id"
   add_foreign_key "logs", "organizations"
   add_foreign_key "my_module_comments", "comments"
   add_foreign_key "my_module_comments", "my_modules"
@@ -695,6 +697,7 @@ ActiveRecord::Schema.define(version: 20160722082700) do
   add_foreign_key "protocols", "users", column: "restored_by_id"
   add_foreign_key "report_elements", "assets"
   add_foreign_key "report_elements", "checklists"
+  add_foreign_key "report_elements", "experiments"
   add_foreign_key "report_elements", "my_modules"
   add_foreign_key "report_elements", "projects"
   add_foreign_key "report_elements", "reports"
