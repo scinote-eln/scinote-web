@@ -68,7 +68,6 @@ class ExperimentsController < ApplicationController
     @experiment.archived = true
     @experiment.archived_by = current_user
     @experiment.archived_on = DateTime.now
-
     if @experiment.save
       flash[:success] = t('experiments.archive.success_flash',
                           experiment: @experiment.name)
