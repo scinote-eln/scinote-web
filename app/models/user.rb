@@ -252,12 +252,40 @@ class User < ActiveRecord::Base
       .uniq
   end
 
-  protected
+  def self.find_by_valid_wopi_token(token)
+    Rails.logger.warn "Searching by token #{token}"
+    user = User.where("wopi_token = ?", token).first
+    return user
+  end
+
+  def token_valid
+    if !self.wopi_token.nil? and (self.wopi_token_ttl==0 or self.wopi_token_ttl > Time.now.to_i)
+      return true
+    else
+      return false
+    end
+  end
+
+  def get_wopi_token
+    unless token_valid
+      # if current token is not valid generate a new one with a one day TTL
+      self.wopi_token = Devise.friendly_token(20)
+      self.wopi_token_ttl = Time.now.to_i + 60*60*24
+      self.save
+      Rails.logger.warn("Generating new token #{self.wopi_token}")
+    end
+    Rails.logger.warn("Returning token #{self.wopi_token}")
+    self.wopi_token
+  end
+
+protected
 
   def time_zone_check
     if time_zone.nil? or ActiveSupport::TimeZone.new(time_zone).nil?
       errors.add(:time_zone)
     end
   end
+
+
 end
 

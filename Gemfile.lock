@@ -321,6 +321,7 @@ DEPENDENCIES
   minitest-reporters (~> 1.1)
   momentjs-rails (>= 2.9.0)
   nested_form_fields
+  nokogiri
   paperclip (~> 4.3)
   pg
   puma

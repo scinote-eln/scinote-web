@@ -57,6 +57,8 @@ gem 'delayed_job_active_record'
 gem 'devise-async'
 gem 'ruby-graphviz', '~> 1.2' # Graphviz for rails
 
+gem 'nokogiri' # XML parser
+
 group :development, :test do
   gem 'byebug'
   gem 'web-console', '~> 2.0'

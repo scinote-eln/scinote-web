@@ -32,6 +32,7 @@ Rails.application.routes.draw do
   get "users/settings/user_organizations/:user_organization_id/destroy_html", to: "users/settings#destroy_user_organization_html", as: "destroy_user_organization_html"
   delete "users/settings/user_organizations/:user_organization_id", to: "users/settings#destroy_user_organization", as: "destroy_user_organization"
 
+
   resources :organizations, only: [] do
     resources :samples, only: [:new, :create]
     resources :sample_types, only: [:new, :create]
@@ -256,10 +257,21 @@ Rails.application.routes.draw do
   get "files/:id/present", to: "assets#file_present", as: "file_present_asset"
   get "files/:id/download", to: "assets#download", as: "download_asset"
   get "files/:id/preview", to: "assets#preview", as: "preview_asset"
+  get "files/:id/view", to: "assets#view", as: "view_asset"
+  get "files/:id/edit", to: "assets#edit", as: "edit_asset"
   post 'asset_signature' => 'assets#signature'
 
   devise_scope :user do
     get 'avatar/:id/:style' => 'users/registrations#avatar', as: 'avatar'
     post 'avatar_signature' => 'users/registrations#signature'
   end
+
+  # Office integration
+  get "wopi/files/:id/contents", to: "wopi#get_file_contents"
+  post "wopi/files/:id/contents", to: "wopi#post_file_contents"
+
+  get "wopi/files/:id", to: "wopi#get_file", as: 'wopi_rest_endpoint'
+  post "wopi/files/:id", to: "wopi#post_file"
+
+
 end

@@ -2,6 +2,7 @@ class Asset < ActiveRecord::Base
   include SearchableModel
   include DatabaseHelper
   include Encryptor
+  include WopiUtil
 
   require 'tempfile'
 
@@ -293,6 +294,23 @@ class Asset < ActiveRecord::Base
       restore_cached(file_data[:file_content], file_data[:file_info])
     end
     cache
+  end
+
+
+  def get_action_path(user,action)
+    file_ext = file_file_name.split(".").last
+    action = get_action(file_ext,action)
+    if !action.nil?
+      edit_url = action.urlsrc
+      edit_url = edit_url.gsub(/<IsLicensedUser=BUSINESS_USER&>/, "IsLicensedUser=1&")
+      edit_url = edit_url.gsub(/<IsLicensedUser=BUSINESS_USER>/, "IsLicensedUser=1")
+      edit_url = edit_url.gsub(/<.*?=.*?>/, "")
+      #This does not work yet - provides path instead of absolute url
+      rest_url = Rails.application.routes.url_helpers.wopi_rest_endpoint_url(host: ENV["WOPI_ENDPOINT_URL"],id: id)
+      edit_url = edit_url + "WOPISrc=#{rest_url}&access_token=#{user.get_wopi_token}&access_token_ttl=#{user.wopi_token_ttl.to_s}"
+    else
+      return nil
+    end
   end
 
   protected

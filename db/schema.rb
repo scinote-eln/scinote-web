@@ -46,16 +46,19 @@ ActiveRecord::Schema.define(version: 20160809074757) do
   add_index "asset_text_data", ["data_vector"], name: "index_asset_text_data_on_data_vector", using: :gin
 
   create_table "assets", force: :cascade do |t|
-    t.datetime "created_at",                          null: false
-    t.datetime "updated_at",                          null: false
+    t.datetime "created_at",                                       null: false
+    t.datetime "updated_at",                                       null: false
     t.string   "file_file_name"
     t.string   "file_content_type"
     t.integer  "file_file_size"
     t.datetime "file_updated_at"
     t.integer  "created_by_id"
     t.integer  "last_modified_by_id"
-    t.integer  "estimated_size",      default: 0,     null: false
-    t.boolean  "file_present",        default: false, null: false
+    t.integer  "estimated_size",                   default: 0,     null: false
+    t.boolean  "file_present",                     default: false, null: false
+    t.string   "lock",                limit: 1024
+    t.integer  "lock_ttl"
+    t.integer  "version"
   end
 
   add_index "assets", ["created_at"], name: "index_assets_on_created_at", using: :btree
@@ -637,6 +640,8 @@ ActiveRecord::Schema.define(version: 20160809074757) do
     t.string   "invited_by_type"
     t.integer  "invitations_count",      default: 0
     t.integer  "tutorial_status",        default: 0,     null: false
+    t.string   "wopi_token"
+    t.integer  "wopi_token_ttl"
   end
 
   add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree
@@ -645,6 +650,29 @@ ActiveRecord::Schema.define(version: 20160809074757) do
   add_index "users", ["invitations_count"], name: "index_users_on_invitations_count", using: :btree
   add_index "users", ["invited_by_id"], name: "index_users_on_invited_by_id", using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
+
+  create_table "wopi_actions", force: :cascade do |t|
+    t.string  "action",      null: false
+    t.string  "extension",   null: false
+    t.string  "urlsrc",      null: false
+    t.integer "wopi_app_id", null: false
+  end
+
+  add_index "wopi_actions", ["extension", "action"], name: "index_wopi_actions_on_extension_and_action", using: :btree
+
+  create_table "wopi_apps", force: :cascade do |t|
+    t.string  "name",              null: false
+    t.string  "icon",              null: false
+    t.integer "wopi_discovery_id", null: false
+  end
+
+  create_table "wopi_discoveries", force: :cascade do |t|
+    t.integer "expires",           null: false
+    t.string  "proof_key_mod",     null: false
+    t.string  "proof_key_exp",     null: false
+    t.string  "proof_key_old_mod", null: false
+    t.string  "proof_key_old_exp", null: false
+  end
 
   add_foreign_key "activities", "my_modules"
   add_foreign_key "activities", "projects"
@@ -764,4 +792,6 @@ ActiveRecord::Schema.define(version: 20160809074757) do
   add_foreign_key "user_projects", "projects"
   add_foreign_key "user_projects", "users"
   add_foreign_key "user_projects", "users", column: "assigned_by_id"
+  add_foreign_key "wopi_actions", "wopi_apps"
+  add_foreign_key "wopi_apps", "wopi_discoveries"
 end
