@@ -37,6 +37,10 @@ $toggle-btn-size: 50px;
     #slide-panel {
       height: 100%;
 
+      .my-module-group-element{
+        border-left: 1px dotted $color-emperor;
+      }
+
       .sidebar-header {
         height: $toggle-btn-size;
         background: $color-theme-primary;
@@ -53,7 +57,10 @@ $toggle-btn-size: 50px;
           overflow: hidden;
           text-overflow: ellipsis;
           opacity: 1;
-
+            h5>a{
+              color: $color-white;
+              text-decoration: none;
+            }
           // Animations
           @include transition(opacity 0.5s ease);
         }
