@@ -125,38 +125,29 @@ class SampleDatatable < AjaxDatatablesRails::Base
     if @my_module
       @assigned_samples = @my_module.samples
 
-      samples = samples
-        .joins(
-          "LEFT OUTER JOIN sample_my_modules ON
-          (samples.id = sample_my_modules.sample_id AND
-            (sample_my_modules.my_module_id = #{@my_module.id.to_s} OR
-            sample_my_modules.id IS NULL))"
-        )
-        .references(:sample_my_modules)
+      samples = samples.joins("LEFT OUTER JOIN sample_my_modules ON
+                          (samples.id = sample_my_modules.sample_id AND
+                          (sample_my_modules.my_module_id = #{@my_module.id.to_s} OR
+                          sample_my_modules.id IS NULL))")
+                          .references(:sample_my_modules)
     elsif @project
       @assigned_samples = @project.assigned_samples
       ids = @project.my_modules_ids
 
-      samples = samples
-        .joins(
-          "LEFT OUTER JOIN sample_my_modules ON
-          (samples.id = sample_my_modules.sample_id AND
-            (sample_my_modules.my_module_id IN (#{ids}) OR
-            sample_my_modules.id IS NULL))"
-        )
-        .references(:sample_my_modules)
+      samples = samples.joins("LEFT OUTER JOIN sample_my_modules ON
+                              (samples.id = sample_my_modules.sample_id AND
+                              (sample_my_modules.my_module_id IN (#{ids}) OR
+                              sample_my_modules.id IS NULL))")
+                              .references(:sample_my_modules)
     elsif @experiment
       @assigned_samples = @experiment.assigned_samples
       ids = @experiment.my_modules.select(:id)
 
-      samples = samples
-        .joins(
-          "LEFT OUTER JOIN sample_my_modules ON
-          (samples.id = sample_my_modules.sample_id AND
-            (sample_my_modules.my_module_id IN (#{ids.to_sql}) OR
-            sample_my_modules.id IS NULL))"
-        )
-        .references(:sample_my_modules)
+      samples = samples.joins("LEFT OUTER JOIN sample_my_modules ON
+                          (samples.id = sample_my_modules.sample_id AND
+                          (sample_my_modules.my_module_id IN (#{ids.to_sql}) OR
+                          sample_my_modules.id IS NULL))")
+                          .references(:sample_my_modules)
     end
 
     # Make mappings of custom fields, so we have same id for every column
