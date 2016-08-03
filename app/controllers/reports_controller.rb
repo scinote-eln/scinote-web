@@ -321,8 +321,22 @@ class ReportsController < ApplicationController
   end
 
   def experiment_contents
+    experiment = Experiment.find_by_id(params[:id])
+    if params.include? :modules then
+      modules =
+      (params[:modules].select { |m, p| p == "1" })
+      .keys
+      .collect { |id| id.to_i }
+    end
+
     respond_to do |format|
-      elements = generate_experiment_contents_json
+      if experiment.blank?
+        format.json { render json: {}, status: :not_found }
+      elsif modules.blank?
+        format.json { render json: {}, status: :no_content }
+      else
+        elements = generate_experiment_contents_json(experiment, modules)
+      end
 
       if elements_empty? elements
         format.json { render json: {}, status: :no_content }
