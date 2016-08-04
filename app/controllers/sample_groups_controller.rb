@@ -18,7 +18,7 @@ class SampleGroupsController < ApplicationController
     respond_to do |format|
       if @sample_group.save
         flash[:success] = t(
-          "sample_groups.create.success_flash",
+          'sample_groups.create.success_flash',
           sample_group: @sample_group.name,
           organization: @organization.name
         )
