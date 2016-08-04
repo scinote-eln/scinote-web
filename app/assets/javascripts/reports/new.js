@@ -979,6 +979,10 @@ function addElements(newElToBeReplaced, elements) {
   // Initialize everything on all elements
   _.each(newElements, function(element) {
     initializeReportElements($(element));
+
+    // Update previous and next element controls
+    updateElementControls(element.prev())
+    updateElementControls(element.next())
   });
 }
 
