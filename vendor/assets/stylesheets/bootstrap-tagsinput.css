@@ -58,3 +58,6 @@
 .bootstrap-tagsinput .tag [data-role="remove"]:hover:active {
   box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
 }
+.label {
+    line-height: 2.3 !important;
+}
