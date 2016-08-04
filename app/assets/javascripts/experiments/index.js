@@ -25,5 +25,29 @@
     });
   }
 
+  // Initialize edit experiment form
+  function initializeEditExperimentModal(){
+    $("#edit-experiment")
+    .on("ajax:beforeSend", function(){
+      animateSpinner();
+    })
+    .on("ajax:success", function(e, data){
+      $('body').append($.parseHTML(data.html));
+      $('#edit-experiment-modal').modal('show',{
+        backdrop: true,
+        keyboard: false,
+      });
+    })
+    .on("ajax:error", function() {
+      animateSpinner(null, false);
+      // TODO
+    })
+    .on("ajax:complete", function(){
+      animateSpinner(null, false);
+    });
+  }
+
+  // init modals
   initializeNewExperimentModal();
+  initializeEditExperimentModal();
 })();

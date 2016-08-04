@@ -26,9 +26,9 @@ class ExperimentsController < ApplicationController
     @experiment.last_modified_by = current_user
     @experiment.project = @project
     if @experiment.save
-      flash[:success] = t('experiments.create.success_flash', experiment: @experiment.name)
-      # have to change to experiments path
-      redirect_to root_path
+      flash[:success] = t('experiments.create.success_flash',
+                          experiment: @experiment.name)
+      redirect_to project_path(@project)
     else
       flash[:alert] = t('experiments.create.error_flash')
       redirect_to :back
@@ -39,27 +39,39 @@ class ExperimentsController < ApplicationController
     @project = @experiment.project
   end
 
+  def edit
+    respond_to do |format|
+      format.json do
+        render json: {
+          html: render_to_string(
+            partial: 'edit_modal.html.erb'
+          )
+        }
+      end
+    end
+  end
+
   def update
     @experiment.update_attributes(experiment_params)
     @experiment.last_modified_by = current_user
     if @experiment.save
-      flash[:success] = t('experiments.update.success_flash', experiment: @experiment.name)
-      # have to change to experiments path
-      redirect_to root_path
+      flash[:success] = t('experiments.update.success_flash',
+                          experiment: @experiment.name)
+      redirect_to canvas_experiment_path(@experiment)
     else
       flash[:alert] = t('experiments.update.error_flash')
       redirect_to :back
     end
   end
 
-  def archive_experiment
+  def archive
     @experiment.archived = true
     @experiment.archived_by = current_user
     @experiment.archived_on = DateTime.now
     if @experiment.save
-      flash[:success] = t('experiments.archive.success_flash', experiment: @experiment.name)
-      # have to change to experiments path
-      redirect_to root_path
+      flash[:success] = t('experiments.archive.success_flash',
+                          experiment: @experiment.name)
+      redirect_to project_path(@experiment.project)
     else
       flash[:alert] = t('experiments.archive.error_flash')
       redirect_to :back
@@ -87,6 +99,6 @@ class ExperimentsController < ApplicationController
   end
 
   def choose_layout
-    action_name.in?(['index', 'archive']) ? 'main' : 'fluid'
+    action_name.in?(%w(index archive)) ? 'main' : 'fluid'
   end
 end

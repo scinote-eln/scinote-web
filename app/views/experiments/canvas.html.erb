@@ -4,9 +4,47 @@
 
 <div id="diagram-buttons" data-intro="<%=t ('tutorial.canvas_click_edit_workflow_html') %>" data-step="5" data-position="left">
   <% if can_edit_canvas(@experiment) %>
-    <%=link_to t("experiments.canvas.canvas_edit"), canvas_edit_experiment_url(@experiment), remote: true, type: "button", id: "edit-canvas-button", class: "ajax btn btn-default", "data-action" => "edit" %>
+    <%=link_to t('experiments.canvas.canvas_edit'),
+                  canvas_edit_experiment_url(@experiment),
+                  remote: true,
+                  type: "button",
+                  id: "edit-canvas-button",
+                  class: "ajax btn btn-default",
+                  "data-action" => "edit" %>
   <% end %>
-  <div id="zoom-level-buttons" class="btn-group" data-toggle="buttons">
+  <% if can_create_experiment(@project) %>
+    <%= link_to t('experiments.new.create'),
+                  new_project_experiment_url(@project),
+                  remote: true,
+                  type: "button",
+                  id: 'new-experiment',
+                  class: "btn btn-primary" %>
+  <% end %>
+  <!-- pexperiment actions -->
+  <span class="dropdown">
+    <button class="btn btn-default dropdown-toggle" type="button" id="exActionsMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+      <span class="hidden-xs"><%= t'experiments.canvas.actions' %></span>
+      <span class="visible-xs-inline"><i class="glyphicon glyphicon-sort"></i></span>
+      <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu" aria-labelledby="exActionsMenu">
+      <% if can_create_experiment(@project) %>
+      <li><%= link_to t('experiments.edit.label_title'),
+                    edit_project_experiment_url(@project, @experiment),
+                    remote: true,
+                    type: 'button',
+                    id: 'edit-experiment' %></li>
+      <% end %>
+      <% if can_archive_experiment(@experiment) %>
+      <li><%= link_to t('experiments.archive.label_title'),
+                    archive_experiment_url(@experiment),
+                    type: 'button',
+                    data: { confirm: t('experiments.canvas.archive_confirm') } %></li>
+      <% end %>
+    </ul>
+  </span>
+
+  <div id="zoom-level-buttons" class="btn-group pull-right" data-toggle="buttons">
     <%=link_to canvas_full_zoom_experiment_path(@experiment), remote: true, type: "button", class: "ajax btn btn-primary active", "data-action" => "full_zoom", "data-toggle" => "button", "aria-pressed" => true do %>
       <span class="glyphicon glyphicon-th-large" aria-hidden="true" ></span>
     <% end %>
@@ -16,8 +54,9 @@
     <%=link_to canvas_small_zoom_experiment_path(@experiment), remote: true, type: "button", class: "ajax btn btn-primary", "data-action" => "small_zoom" do %>
       <span class="glyphicon glyphicon-th" aria-hidden="true"></span>
     <% end %>
+  </div>
 </div>
-</div>
+
 <div id="canvas-container" data-project-id="<%= @project.id %>"
   data-step="4" data-position='left'
   data-intro="<%=t 'tutorial.canvas_overview_html' %>"

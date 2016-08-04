@@ -88,7 +88,9 @@ Rails.application.routes.draw do
         post 'destroy', as: :destroy  # Destroy multiple entries at once
       end
     end
-    resources :experiments, only: [:new, :create, :edit, :update, :archive], defaults: { format: 'json' }
+    resources :experiments,
+              only: [:new, :create, :edit, :update],
+              defaults: { format: 'json' }
     member do
       get 'notifications' # Notifications popup for individual project in projects index
       get 'samples' # Samples for single project
@@ -110,6 +112,7 @@ Rails.application.routes.draw do
       get 'canvas/small_zoom', to: 'canvas#small_zoom' # AJAX-loaded canvas zoom
       post 'canvas', to: 'canvas#update' # Save updated canvas action
       get 'module_archive' # Module archive for single experiment
+      get 'archive' # archive experiment
     end
   end
 

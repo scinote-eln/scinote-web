@@ -576,7 +576,7 @@ en:
 
   experiments:
     new:
-      create: 'New experiment...'
+      create: 'New experiment'
       modal_title: 'Create new experiment'
       modal_create: 'Create experiment'
       name: 'Experiment name'
@@ -585,6 +585,7 @@ en:
     edit:
       modal_title: 'Edit experiment %{experiment}'
       modal_create: 'Update experiment'
+      label_title: "Edit details"
     create:
       success_flash: "Successfully created experiment %{experiment}"
       error_flash: 'Could not create a new experiment.'
@@ -594,9 +595,12 @@ en:
     archive:
       success_flash: "Successfully archived experiment %{experiment}"
       error_flash: 'Could not archive the experiment.'
+      label_title: 'Archive'
     canvas:
+      archive_confirm: "Are you sure to archive this experiment?"
+      actions: 'Actions'
       head_title: "%{project} | Overview"
-      canvas_edit: "Edit workflow"
+      canvas_edit: "Edit experiment"
       modal_manage_tags:
         head_title: "Manage tags for"
         subtitle: "Showing tags of task %{module}"
