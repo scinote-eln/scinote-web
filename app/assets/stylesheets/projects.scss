@@ -406,3 +406,20 @@ li.module-hover {
     margin-right: 15px;
   }
 }
+
+// EXPERIMENT PANEL
+
+.experiment-panel{
+  max-width: 650px;
+  margin: 0 auto;
+  margin-top: 25px;
+  @include box-shadow(0px 4px 8px 0px $color-dove-gray);
+
+}
+
+// SHOW
+.center-btn{
+  margin: 0 auto;
+  display: block;
+  max-width: 200px;
+}

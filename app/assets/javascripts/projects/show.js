@@ -26,30 +26,32 @@
   }
 
   // Initialize edit experiment form
-  function initializeEditExperimentModal(){
-    console.log($("#edit-experiment").data('id'));
-    var id = '#edit-experiment-modal-' + $("#edit-experiment").data('id');
-    $("#edit-experiment")
-    .on("ajax:beforeSend", function(){
-      animateSpinner();
-    })
-    .on("ajax:success", function(e, data){
-      $('body').append($.parseHTML(data.html));
-      $(id).modal('show',{
-        backdrop: true,
-        keyboard: false,
+  function initializeEditExperimentsModal(){
+    $.each($(".experiment-panel"), function(){
+      var id = '#edit-experiment-modal-' + $(this).data('id');
+      $(this)
+      .on("ajax:beforeSend", function(){
+        animateSpinner();
+      })
+      .on("ajax:success", function(e, data){
+        console.log("request success");
+        $('body').append($.parseHTML(data.html));
+        $(id).modal('show',{
+          backdrop: true,
+          keyboard: false,
+        });
+      })
+      .on("ajax:error", function() {
+        animateSpinner(null, false);
+        // TODO
+      })
+      .on("ajax:complete", function(){
+        animateSpinner(null, false);
       });
-    })
-    .on("ajax:error", function() {
-      animateSpinner(null, false);
-      // TODO
-    })
-    .on("ajax:complete", function(){
-      animateSpinner(null, false);
     });
   }
 
   // init modals
   initializeNewExperimentModal();
-  initializeEditExperimentModal();
+  initializeEditExperimentsModal();
 })();
