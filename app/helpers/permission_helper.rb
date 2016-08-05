@@ -140,7 +140,8 @@ module PermissionHelper
       :can_view_experiment,
       :can_view_experiment_archive,
       :can_archive_experiment,
-      :can_restore_experiment
+      :can_restore_experiment,
+      :can_view_experiment_samples
     ] do |proxy, *args, &block|
       if args[0]
         experiment = args[0]
@@ -346,6 +347,9 @@ module PermissionHelper
     experiment.archived? && is_user_or_higher_of_project(experiment.project)
   end
 
+  def can_view_experiment_samples(experiment)
+    can_view_samples(experiment.project.organization)
+  end
   # ---- WORKFLOW PERMISSIONS ----
 
   def can_edit_canvas(experiment)

@@ -1,7 +1,7 @@
 class ExperimentsController < ApplicationController
   include PermissionHelper
   before_action :set_experiment, except: [:new, :create]
-  before_action :set_project, only: [:new, :create]
+  before_action :set_project, only: [:new, :create, :samples_index, :samples]
   before_action :check_view_permissions, only: [:canvas]
 
   # except parameter could be used but it is not working.
@@ -57,6 +57,7 @@ class ExperimentsController < ApplicationController
     if @experiment.save
       flash[:success] = t('experiments.update.success_flash',
                           experiment: @experiment.name)
+
       redirect_to canvas_experiment_path(@experiment)
     else
       flash[:alert] = t('experiments.update.error_flash')
@@ -71,10 +72,32 @@ class ExperimentsController < ApplicationController
     if @experiment.save
       flash[:success] = t('experiments.archive.success_flash',
                           experiment: @experiment.name)
+
       redirect_to project_path(@experiment.project)
     else
       flash[:alert] = t('experiments.archive.error_flash')
       redirect_to :back
+    end
+  end
+
+  def samples
+    @samples_index_link = samples_index_experiment_path(@experiment,
+                                                        format: :json)
+    @organization = @experiment.project.organization
+  end
+
+  def samples_index
+    @organization = @experiment.project.organization
+
+    respond_to do |format|
+      format.html
+      format.json do
+        render json: ::SampleDatatable.new(view_context,
+                                           @organization,
+                                           nil,
+                                           nil,
+                                           @experiment)
+      end
     end
   end
 
@@ -86,7 +109,7 @@ class ExperimentsController < ApplicationController
   end
 
   def set_project
-    @project = Project.find_by_id(params[:project_id])
+    @project = Project.find_by_id(params[:project_id]) || @experiment.project
     render_404 unless @project
   end
 
