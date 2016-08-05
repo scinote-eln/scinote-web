@@ -28,6 +28,10 @@ module SecondaryNavigationHelper
     action_name == 'module_archive'
   end
 
+  def is_experiment_samples?
+    action_name == 'samples'
+  end
+
   def is_module_info?
     action_name == 'show'
   end

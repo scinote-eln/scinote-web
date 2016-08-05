@@ -99,6 +99,14 @@
           <% end %>
 
         <% elsif experiment_page? %>
+        <% if can_view_experiment_samples(@experiment) then %>
+          <li id="experiment-samples-nav-tab" class="<%= "active" if is_experiment_samples? %>">
+            <a href="<%= samples_experiment_url(@experiment) %>" title="<%=t "nav2.projects.samples" %>">
+              <span class="hidden-sm hidden-md"><%=t "nav2.projects.samples" %></span>
+              <span class="hidden-xs hidden-lg glyphicon glyphicon-tint"></span>
+            </a>
+          </li>
+        <% end %>
           <% if can_view_experiment(@experiment) then %>
             <li id="canvas-nav-tab" class="<%= "active" if is_experiment_canvas? %>">
               <a href="<%= project_url(@project) %>" title="<%=t "nav2.experiments.canvas" %>">
