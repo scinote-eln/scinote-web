@@ -1,5 +1,4 @@
 class Users::RegistrationsController < Devise::RegistrationsController
-
   before_action :load_paperclip_vars
 
   def avatar
@@ -14,13 +13,18 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
         # Changed avatar values are only used for pre-generating S3 key
         # and user object is not persisted with this values.
-        current_user.empty_avatar params[:file_name], params[:file_size]
+        current_user.empty_avatar avatar_params[:file].original_filename, avatar_params[:file].size()
 
-        unless current_user.valid?
+        validationAsset = Asset.new(avatar_params)
+        unless current_user.valid? and validationAsset.valid?
+          if validationAsset.errors[:file].any?
+            # Add file content error
+            current_user.errors[:avatar] << validationAsset.errors[:file].first
+          end
           render json: {
             status: 'error',
             errors: current_user.errors
-          }
+          }, status: :bad_request
         else
           render json: {
             posts: generate_upload_posts
@@ -107,7 +111,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
         format.json {
           flash.keep
           sign_in resource_name, resource, bypass: true
-          render json: { status: :ok }
+          render json: {}
         }
       else
         clean_up_passwords resource
@@ -116,7 +120,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
         }
         format.json {
           render json: self.resource.errors,
-          status: :unprocessable_entity
+          status: :bad_request
         }
       end
     end
@@ -189,6 +193,14 @@ class Users::RegistrationsController < Devise::RegistrationsController
     )
   end
 
+  def avatar_params
+    params.permit(
+     :file
+    )
+ end
+
+  # Generates posts for uploading files (many sizes of same file)
+  # to S3 server
   def generate_upload_posts
     posts = []
     file_size = current_user.avatar_file_size
@@ -237,4 +249,5 @@ class Users::RegistrationsController < Devise::RegistrationsController
   def after_inactive_sign_up_path_for(resource)
     new_user_session_path
   end
+
 end

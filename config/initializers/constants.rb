@@ -24,6 +24,9 @@ TAG_COLORS = [
 # Maximum uploaded file size in MB
 FILE_SIZE_LIMIT = 50
 
+# Maximum uploaded avatar size in MB
+AVATAR_SIZE_LIMIT = 0.2
+
 SEARCH_LIMIT = 20
 
 SHOW_ALL_RESULTS = -1

@@ -119,7 +119,7 @@ modal
 })
 .on("ajax:error", inviteExistingForm.selector, function(ev, data, status) {
     // Display form errors
-    inviteExistingForm.render_form_errors_input_group("", data.responseJSON);
+    inviteExistingForm.render_form_errors("", data.responseJSON);
 });
 
 // Update values & enable "invite" button

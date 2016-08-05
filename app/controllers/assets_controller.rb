@@ -6,26 +6,28 @@ class AssetsController < ApplicationController
     respond_to do |format|
       format.json {
 
-        if params[:asset_id]
-          asset = Asset.find_by_id params[:asset_id]
+        validationAsset = nil
+        if asset_params[:asset_id]
+          asset = Asset.find_by_id asset_params[:asset_id]
           asset.file.destroy
-          asset.file_empty params[:file_name], params[:file_size]
+          asset.file_empty asset_params[:file].original_filename, asset_params[:file].size()
+          validationAsset = asset
         else
-          asset = Asset.new_empty params[:file_name], params[:file_size]
+          # We can't verify file content (spoofing) of an empty
+          # file, so we use dummy validationAsset instead
+          asset = Asset.new_empty asset_params[:file].original_filename, asset_params[:file].size()
+          validationAsset = Asset.new(asset_params)
         end
 
-        if not asset.valid?
-          errors = Hash[asset.errors.map{|k,v| ["asset.#{k}",v]}]
-
+        if not validationAsset.valid?
           render json: {
             status: 'error',
-            errors: errors
-          }
+            errors: validationAsset.errors
+          } , status: :bad_request
         else
           asset.save!
 
           posts = generate_upload_posts asset
-
           render json: {
             asset_id: asset.id,
             posts: posts
@@ -147,6 +149,13 @@ class AssetsController < ApplicationController
     end
 
     posts
+  end
+
+  def asset_params
+    params.permit(
+      :asset_id,
+      :file
+    )
   end
 
 end

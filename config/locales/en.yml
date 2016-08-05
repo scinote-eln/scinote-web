@@ -18,9 +18,6 @@ en:
         head_title: "Forgot password"
         title: "Forgot your password?"
         submit: "Send me reset password instructions"
-    names:
-      not_blank: "name can't be blank"
-      length_too_long: "name is too long (maximum is %{max_length} characters)"
     registrations:
       password_changed: "Password successfully updated."
     sessions:
@@ -1415,9 +1412,13 @@ en:
     public: "public"
     private: "private"
     search: "Search"
-    file_size_exceeded: "File size must be less than %{file_size} MB."
-    file_blank: "Please select a file."
-    file_loading: "%{fileName} is loading..."
+    file:
+      loading: "%{fileName} is loading..."
+      size_exceeded: "File size must be less than %{file_size} MB."
+      blank: "You didn't select any file"
+    text:
+      not_blank: "can't be blank"
+      length_too_long: "is too long (maximum is %{max_length} characters)"
 
   mailer:
     invitation_to_organization:

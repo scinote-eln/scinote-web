@@ -1,61 +1,53 @@
 // Define AJAX methods for handling errors on forms
-$.fn.render_form_errors = function(model_name, errors, clear) {
-  if (clear || clear === undefined) {
+
+// Render errors specified in JSON format for many form elements
+$.fn.render_form_errors = function(modelName, errors, clear = true, ev) {
+  if (clear || _.isUndefined(clear)) {
     this.clear_form_errors();
   }
-  $(this).render_form_errors_no_clear(model_name, errors, false);
-};
 
-$.fn.render_form_errors_input_group = function(model_name, errors) {
-  this.clear_form_errors();
-  $(this).render_form_errors_no_clear(model_name, errors, true);
-};
-
-$.fn.render_form_errors_no_clear = function(model_name, errors, input_group) {
   var form = $(this);
-
   $.each(errors, function(field, messages) {
-    input = $(_.filter(form.find('input, select, textarea'), function(el) {
+    $input = $(_.filter(form.find('input, select, textarea'), function(el) {
       var name = $(el).attr('name');
       if (name) {
-        return name.match(new RegExp(model_name + '\\[' + field + '\\(?'));
+        return name.match(new RegExp(modelName + '\\[' + field + '\\(?'));
       }
       return false;
     }));
-    input.closest('.form-group').addClass('has-error');
-    var error_text = '<span class="help-block">';
-    error_text += (_.map(messages, function(m) {
-      return m.charAt(0).toUpperCase() + m.slice(1);
-    })).join('<br />');
-    error_text += '</span>';
-    if (input_group) {
-      input.closest('.form-group').append(error_text);
-    } else {
-      input.parent().append(error_text);
-    }
+
+    renderFormError(ev, $input, messages);
   });
 };
 
- // Show error message and mark error input (if errMsg is defined)
- // and, if present, mark and show the tab where the error occured,
- // and go to the input, if it is the most upper one or if errMsg is
- // undefined
- // NOTE: Similar to $.fn.render_form_errors, except here we process
- // one error at a time, which is not read from the form but is
- // specified manually.
-function renderFormError(ev, nameInput, errMsg, errAttributes) {
-  if(!_.isUndefined(errMsg)) {
-    var $errMsgSpan = $(nameInput).next(".help-block");
-    errAttributes = _.isUndefined(errAttributes) ? "" : " " + errAttributes;
-    if (!$errMsgSpan.length) {
-      $(nameInput).closest(".form-group").addClass("has-error");
+ // Render errors specified in array of strings format (or string if
+ // just one error) for a single form element
+ //
+ // Show error message/s and mark error input (if errMsgs is defined)
+ // and, if present, mark and show the tab where the error occured and
+ // focus/scroll to the error input, if it is the first one to be
+ // specified or if errMsgs is undefined
+function renderFormError(ev, input, errMsgs, errAttributes) {
+  if (!_.isUndefined(errMsgs)) {
+    // Mark error form group
+    $formGroup = $(input).closest(".form-group");
+    if (!$formGroup.hasClass("has-error")) {
+      $formGroup.addClass("has-error");
     }
-    $(nameInput).after("<span class='help-block'" + errAttributes + ">" + errMsg + "</span>");
+
+    // Add error message/s
+    errAttributes = _.isUndefined(errAttributes) ? "" : " " + errAttributes;
+    error_text = ($.makeArray(errMsgs).map(function(m) {
+      return m.strToErrorFormat();
+    })).join("<br />");
+    $errSpan = "<span class='help-block'" + errAttributes + ">" + error_text + "</span>";
+    $formGroup.append($errSpan);
   }
 
-  $form = $(nameInput).closest("form");
-  $tab = $(nameInput).closest(".tab-pane");
+  $form = $(input).closest("form");
+  $tab = $(input).closest(".tab-pane");
   if ($tab.length) {
+    // Mark error tab
     tabsPropagateErrorClass($form);
     $parent = $tab;
   } else {
@@ -63,19 +55,19 @@ function renderFormError(ev, nameInput, errMsg, errAttributes) {
   }
 
   // Focus and scroll to the error if it is the first (most upper) one
-  if ($parent.find(".form-group.has-error").length === 1 || _.isUndefined(errMsg)) {
-    goToFormElement(nameInput);
+  if ($parent.find(".form-group.has-error").length === 1 || _.isUndefined(errMsgs)) {
+    goToFormElement(input);
   }
 
-  // Don't submit form
-  ev.preventDefault();
-  ev.stopPropagation();
-  // Remove spinner if present
-  animateSpinner(null, false);
+  if(!_.isUndefined(ev)) {
+    // Don't submit form
+    ev.preventDefault();
+    ev.stopPropagation();
+  }
 }
 
-// If any of tabs (if exist) has errors, mark parent tab
-// navigation link and show the tab (if not already)
+// If any of form tabs (if exist) has errors, mark it and
+// and show the first erroneous tab
 function tabsPropagateErrorClass($form) {
   var $contents = $form.find("div.tab-pane");
   _.each($contents, function(tab) {
@@ -89,5 +81,5 @@ function tabsPropagateErrorClass($form) {
       }
     }
   });
-  $(".nav-tabs .has-error:first:not(.active) > a", $form).tab("show");
+  $form.find(".nav-tabs .has-error:first > a", $form).tab("show");
 }

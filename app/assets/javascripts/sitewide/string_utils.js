@@ -14,9 +14,9 @@ function truncateLongString( el, chars ) {
   }
 }
 
-// Usefull for converting locals messages to form
+// Usefull for converting locals messages to error
 // format (i.e. lower cased capital and no dot)
-String.prototype.strToFormFormat = function() {
+String.prototype.strToErrorFormat = function() {
 	var length = this.length;
 	if (this[length - 1] === ".") {
 		length -= 1;

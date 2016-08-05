@@ -201,7 +201,8 @@ function formEditAjax($form) {
       renderTable($(this));
     });
 
-    animateSpinner(null, false);
+    var $stepImgs = $new_step.find("img");
+    reloadImagesHack($stepImgs);
   })
   .on("ajax:error", function(e, xhr, status, error) {
     $(this).after(xhr.responseJSON.html);
@@ -220,8 +221,6 @@ function formEditAjax($form) {
     $form.find("[data-role='step-hot-table']").each(function()  {
       renderTable($(this));
     });
-
-    animateSpinner(null, false);
   });
 }
 
@@ -247,7 +246,8 @@ function formNewAjax($form) {
       $(this).handsontable("render");
     });
 
-    animateSpinner(null, false);
+    var $stepImgs = $new_step.find("img");
+    reloadImagesHack($stepImgs);
   })
   .on("ajax:error", function(e, xhr, status, error) {
     $(this).after(xhr.responseJSON.html);
@@ -260,8 +260,6 @@ function formNewAjax($form) {
     formCallback($form);
     formNewAjax($form);
     applyCancelOnNew();
-
-    animateSpinner(null, false);
   });
 }
 
@@ -283,7 +281,6 @@ function toggleButtons(show) {
 
     // Also hide "no steps" label if no steps are present
     $("[data-role='no-steps-text']").hide();
-
   }
 }
 
@@ -580,7 +577,7 @@ $("[data-action='new-step']").on("ajax:success", function(e, data) {
 // Needed because server-side validation failure clears locations of
 // files to be uploaded and checklist's items etc. Also user
 // experience is improved
-function stepValidator(ev, editMode, forS3) {
+function processStep(ev, editMode, forS3) {
   var $form = $(ev.target.form);
 
   $form.clear_form_errors();
@@ -589,20 +586,18 @@ function stepValidator(ev, editMode, forS3) {
   removeBlankFileForms($form);
 
   var $fileInputs = $form.find("input[type=file]");
-  var filesValid = filesValidator(ev, $fileInputs);
+  var filesValid = filesValidator(ev, $fileInputs, FileTypeEnum.FILE);
   var $checklists = $form.find(".nested_step_checklists");
   var checklistsValid = checklistsValidator(ev, $checklists, editMode);
   var $nameInput = $form.find("#step_name");
-  var nameValid = nameValidator(ev, $nameInput);
+  var nameValid = textValidator(ev, $nameInput);
 
   if(filesValid && checklistsValid && nameValid) {
     if(forS3) {
-      // Needed to redirect uploaded files to S3
+      // Redirects file uploading to S3
       startFileUpload(ev, ev.target);
     } else {
-      // Files are saved locally
-      // Validations passed, so animate spinner for possible file uploading
-      // (startFileUpload already calls it)
+      // Local file uploading
       animateSpinner();
     }
   }
@@ -659,54 +654,13 @@ function renderTable(table) {
 
 // S3 direct uploading
 function startFileUpload(ev, btn) {
-  var form = btn.form;
-  var $form = $(form);
-  var fileInputs = $form.find("input[type=file]");
+  var $form = $(btn.form);
+  var $fileInputs = $form.find("input[type=file]");
   var url = '/asset_signature.json';
-  var inputPos = 0;
-  var inputPointer = 0;
 
-  animateSpinner();
-
-  function processFile () {
-    var fileInput = fileInputs.get(inputPos);
-    inputPos += 1;
-    inputPointer += 1;
-
-    if (!fileInput) {
-      btn.onclick = null;
-      $(btn).click();
-      return false;
-    }
-
-    return directUpload(form, null, url, function (assetId) {
-      fileInput.type = "hidden";
-      fileInput.name = fileInput.name.replace("[file]", "[id]");
-      fileInput.value = assetId;
-      inputPointer -= 1;
-
-      processFile();
-    }, function (errors) {
-      var assetErrorMsg;
-
-      for (var c in errors) {
-        if (/^asset\./.test(c)) {
-          assetErrorMsg = errors[c];
-          break;
-        }
-      }
-      if (assetErrorMsg) {
-        var el = $form.find("input[type=file]").get(inputPointer - 1);
-        var $el = $(el);
-
-        $form.clear_form_errors();
-        renderFormError(e, $el, assetErrorMsg);
-      } else {
-        tabsPropagateErrorClass($form);
-      }
-    });
-  }
-
-  var noErrors = processFile();
-  return noErrors;
+  directUpload(ev, $fileInputs, url, function (fileInput, fileId) {
+    fileInput.type = "hidden";
+    fileInput.name = fileInput.name.replace("[file]", "[id]");
+    fileInput.value = fileId;
+  });
 }

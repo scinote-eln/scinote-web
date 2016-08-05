@@ -111,11 +111,18 @@ class ResultAssetsController < ApplicationController
     update_params = result_params
     previous_size = @result.space_taken
 
-    @result.asset.last_modified_by = current_user
+    if update_params.key? :asset_attributes
+      asset = Asset.find_by_id(update_params[:asset_attributes][:id])
+      asset.created_by = current_user
+      asset.last_modified_by = current_user
+      @result.asset = asset
+    end
+
     @result.last_modified_by = current_user
     @result.assign_attributes(update_params)
     success_flash = t("result_assets.update.success_flash",
             module: @my_module.name)
+
     if @result.archived_changed?(from: false, to: true)
       saved = @result.archive(current_user)
       success_flash = t("result_assets.archive.success_flash",
@@ -140,8 +147,6 @@ class ResultAssetsController < ApplicationController
       saved = @result.save
 
       if saved then
-        @result.reload
-
         # Release organization's space taken due to
         # previous asset being removed
         org = @result.my_module.experiment.project.organization
@@ -175,7 +180,6 @@ class ResultAssetsController < ApplicationController
         }
         format.json {
           render json: {
-            status: 'ok',
             html: render_to_string({
               partial: "my_modules/result.html.erb", locals: {result: @result}
             })

@@ -80,9 +80,10 @@ class User < ActiveRecord::Base
   has_many :archived_protocols, class_name: 'Protocol', foreign_key: 'archived_by_id', inverse_of: :archived_by
   has_many :restored_protocols, class_name: 'Protocol', foreign_key: 'restored_by_id', inverse_of: :restored_by
 
-  # Prevents repetition of errors after validation (e.g. if file_size
-  # exceeds limits, 2 same errors will be shown)
-  after_validation :clean_paperclip_errors
+  # If other errors besides parameter "avatar" exist,
+  # they will propagate to "avatar" also, so remove them
+  # and put all other (more specific ones) in it
+  after_validation :filter_paperclip_errors
 
   def name
     full_name
@@ -160,8 +161,18 @@ class User < ActiveRecord::Base
     self.avatar_file_size = size.to_i
   end
 
-  def clean_paperclip_errors
-    errors.delete(:avatar)
+  def filter_paperclip_errors
+    if errors.key? :avatar
+      errors.delete(:avatar)
+      messages = []
+      errors.each do |attribute, error|
+        errors.full_messages_for(attribute).each do |message|
+          messages << message.split(' ').drop(1).join(' ')
+        end
+      end
+      errors.clear()
+      errors.set(:avatar, messages)
+    end
   end
 
   # Whether user is active (= confirmed) or not

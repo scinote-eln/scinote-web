@@ -31,28 +31,29 @@ var forms = $("form[data-for]");
 // Add "edit form" listeners
 forms
 .find("[data-action='edit']").click(function() {
-  var form = $(this).closest("form");
+  var $form = $(this).closest("form");
 
   // First, hide all form edits
   _.each(forms, function(form) {
-    toggleFormVisibility($(form), false);
+    toggleFormVisibility($form, false);
   });
 
   // Then, edit the current form
-  toggleFormVisibility(form, true);
+  toggleFormVisibility($form, true);
 });
 
 // Add "cancel form" listeners
 forms
 .find("[data-action='cancel']").click(function() {
-  var form = $(this).closest("form");
+  var $form = $(this).closest("form");
 
   // Hide the edit portion of the form
-  toggleFormVisibility(form, false);
+  toggleFormVisibility($form, false);
 });
 
 // Add form submit listeners
 forms
+.not("[data-for='avatar']")
 .on("ajax:success", function(ev, data, status) {
   // Simply reload the page
   location.reload();
@@ -62,52 +63,28 @@ forms
   $(this).render_form_errors("user", data.responseJSON);
 });
 
-// Add upload file size checking
-$("form[data-for='avatar']").files_validator();
+function processFile(ev, forS3) {
+  var $form = $(ev.target.form);
+  $form.clear_form_errors();
+
+  var $fileInput = $form.find("input[type=file]");
+  if(filesValidator(ev, $fileInput, FileTypeEnum.AVATAR)) {
+    if(forS3) {
+      // Redirects file uploading to S3
+      startFileUpload(ev, ev.target);
+    } else {
+      // Local file uploading
+      animateSpinner();
+    }
+  }
+}
 
 // S3 direct uploading
 function startFileUpload(ev, btn) {
-  var form = btn.form;
-  var $form = $(form);
-  var fileInput = $form.find("input[type=file]").get(0);
+  var $form = $(btn.form);
+  var $fileInput = $form.find("input[type=file]");
   var url = "/avatar_signature.json";
 
-  $form.clear_form_errors();
-  animateSpinner($form);
-
-  var noErrors = directUpload(form, null, url, function (assetId) {
-    var file = fileInput.files[0];
-    fileInput.type = "hidden";
-    fileInput.name = fileInput.name.replace("[avatar]", "[avatar_file_name]");
-    fileInput.value = file.name;
-
-    $("#user_change_avatar").remove();
-
-    btn.onclick = null;
-    $(btn).click();
-    animateSpinner($form, false);
-  }, function (errors) {
-    $form.render_form_errors("user", errors);
-
-    var avatarErrorMsg;
-
-    animateSpinner($form, false);
-    for (var c in errors) {
-      if (/^avatar/.test(c)) {
-        avatarErrorMsg = errors[c];
-        break;
-      }
-    }
-
-    if (avatarErrorMsg) {
-      var $el = $form.find("input[type=file]");
-
-      $form.clear_form_errors();
-      renderFormError(ev, $el, avatarErrorMsg);
-    }
-  }, "avatar");
-
-  return noErrors;
+  directUpload(ev, $fileInput, url, function () {
+  });
 }
-
-

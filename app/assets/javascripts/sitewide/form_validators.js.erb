@@ -1,19 +1,19 @@
 // Form validators. They'll find, render and focus error/s and
 // prevent form submission.
 
-function nameValidator(ev, $nameInput) {
-  var nameTooShort = $nameInput.val().length === 0;
-  var nameTooLong = $nameInput.val().length > 50;
+function textValidator(ev, textInput, canBeBlank = false, limitLength = true) {
+  var nameTooShort = $(textInput).val().length === 0;
+  var nameTooLong = $(textInput).val().length > 50;
   var errMsg;
-  if (nameTooShort) {
-    errMsg = I18n.t("devise.names.not_blank");
-  } else if (nameTooLong) {
-    errMsg = I18n.t("devise.names.length_too_long", { max_length: 50 });
+  if (!canBeBlank && nameTooShort) {
+    errMsg = I18n.t("general.text.not_blank");
+  } else if (limitLength && nameTooLong) {
+    errMsg = I18n.t("general.text.length_too_long", { max_length: 50 });
   }
 
   var hasErrors = !_.isUndefined(errMsg);
   if (hasErrors) {
-    renderFormError(ev, $nameInput, errMsg);
+    renderFormError(ev, $(textInput), errMsg);
   }
   return !hasErrors;
 }
@@ -41,7 +41,7 @@ function checklistsValidator(ev, checklists, editMode) {
       if (!$checklistNameInput.val()) {
         if (anyChecklistItemFilled || editMode) {
             // In edit mode, checklist's name can't be blank
-            var errMsg = I18n.t("devise.names.not_blank");
+            var errMsg = I18n.t("general.text.not_blank");
             renderFormError(ev, $checklistNameInput, errMsg);
             noErrors = false;
         } else  {
@@ -55,62 +55,77 @@ function checklistsValidator(ev, checklists, editMode) {
   return noErrors;
 }
 
-// Add JavaScript client-side upload file checking
-// Callback function can be provided to be called
-// any time at least one file size is not valid
-$.fn.files_validator = function(callback) {
+$.fn.files_validator = function(fileTypeEnum) {
   var $form = $(this);
   if ($form.length) {
     $form.submit(function (ev) {
       $form.clear_form_errors();
       var $fileInputs = $form.find("input[type=file]");
-      filesValidator(ev, $fileInputs, callback);
+      filesValidator(ev, $fileInputs, fileTypeEnum);
     });
   }
 };
 
-function filesValidator(ev, fileInputs, callback) {
-  var filesSizeValid = true;
+function filesValidator(ev, fileInputs, fileTypeEnum) {
+  var filesValid = true;
   if (fileInputs.length) {
-    var filesSizeValid = filesSizeValidator(ev, fileInputs);
+    var filesPresentValid = filesPresentValidator(ev, fileInputs);
+    var filesSizeValid = filesSizeValidator(ev, fileInputs, fileTypeEnum);
     // TODO File content check
-
-    if (!filesSizeValid && callback) {
-        callback();
-    }
+    filesValid = filesPresentValid && filesSizeValid;
   }
-  return filesSizeValid;
+  return filesValid;
 }
 
-function filesSizeValidator(ev, fileInputs) {
+function filesPresentValidator(ev, fileInputs) {
+  var filesPresentValid = true;
+  _.each(fileInputs, function(fileInput) {
+    if (!fileInput.files[0]) {
+      assetError = I18n.t("general.file.blank");
+      renderFormError(ev, fileInput, assetError, "data-error='file-missing'");
+      filesPresentValid = false;
+    }
+  });
+  return filesPresentValid;
+}
+
+var FileTypeEnum = Object.freeze({
+  FILE: 0,
+  AVATAR: 1
+});
+
+function filesSizeValidator(ev, fileInputs, fileTypeEnum) {
 
   function getFileTooBigError(file) {
     if (!file) {
       return ;
     }
     var size = parseInt(file.size);
-    <% sizeLimit = FILE_SIZE_LIMIT %>;
-    if (size > <%= sizeLimit.megabytes %>) {
-      return "<%= I18n.t 'general.file_size_exceeded', file_size: sizeLimit %>".strToFormFormat();
+    <% avatarSizerLimit = AVATAR_SIZE_LIMIT %>;
+    <% fileSizeLimit = FILE_SIZE_LIMIT %>;
+
+    if (fileTypeEnum == FileTypeEnum.FILE && size > <%= fileSizeLimit.megabytes %>) {
+      return "<%= I18n.t 'general.file.size_exceeded', file_size: fileSizeLimit %>".strToErrorFormat();
+    } else if (fileTypeEnum == FileTypeEnum.AVATAR && size > <%= avatarSizerLimit.megabytes %>) {
+      return "<%= I18n.t 'general.file.size_exceeded', file_size: avatarSizerLimit %>".strToErrorFormat();
     }
   };
 
   // Check if any file exceeds allowed size limit
-  var fileSizeValid = true;
+  var filesSizeValid = true;
   _.each(fileInputs, function(fileInput) {
     var file = fileInput.files[0];
     var assetError = getFileTooBigError(file);
-    var input = $(fileInput);
     if (assetError) {
-      renderFormError(ev, input, assetError, "data-error='file-size'");
-      fileSizeValid = false;
+      renderFormError(ev, fileInput, assetError, "data-error='file-size'");
+      filesSizeValid = false;
     }
   });
-  if(fileSizeValid) {
+  if(filesSizeValid) {
     // Check if there is enough free space for the files
-    fileSizeValid = enaughSpaceValidator(ev, fileInputs);
+    filesSizeValid = enaughSpaceValidator(ev, fileInputs);
   }
-  return fileSizeValid;
+  return filesSizeValid;
 }
 
 // Overriden in billing module for checking

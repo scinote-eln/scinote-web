@@ -42,6 +42,10 @@ class Asset < ActiveRecord::Base
   has_many :report_elements, inverse_of: :asset, dependent: :destroy
   has_one :asset_text_datum, inverse_of: :asset, dependent: :destroy
 
+  # Specific file errors propagate to "fire" error hash key,
+  # so use just these errors
+  after_validation :filter_paperclip_errors
+
   attr_accessor :file_content, :file_info, :preview_cached
 
   def file_empty(name, size)
@@ -262,6 +266,14 @@ class Asset < ActiveRecord::Base
   end
 
   private
+
+  def filter_paperclip_errors
+      if errors.size > 1
+        temp_errors = errors[:file]
+        errors.clear()
+        errors.set(:file, temp_errors)
+      end
+  end
 
   def file_changed?
     previous_changes.present? and

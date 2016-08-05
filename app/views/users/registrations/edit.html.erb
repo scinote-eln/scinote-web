@@ -28,11 +28,7 @@
         </div>
         <div>
           <a href="#" class="btn btn-default" data-action="cancel"><%=t "general.cancel" %></a>
-          <% if @direct_upload %>
-          <%= f.submit t("users.registrations.edit.avatar_submit"), class: "btn btn-primary", onclick: 'startFileUpload(event, this);' %>
-          <% else %>
-          <%= f.submit t("users.registrations.edit.avatar_submit"), class: "btn btn-primary" %>
-          <% end %>
+          <%= f.submit t("users.registrations.edit.avatar_submit"), class: 'btn btn-primary', onclick: "processFile(event, #{@direct_upload});" %>
         </div>
       </div>
     </div>

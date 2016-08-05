@@ -89,9 +89,9 @@ function initResultCommentsLink($el) {
       var listItem = moreBtn.parents('li');
       $(data.html).insertBefore(listItem);
       if (data.results_number < data.per_page) {
-	moreBtn.remove();
+        moreBtn.remove();
       } else {
-	moreBtn.attr("href", data.more_url);
+        moreBtn.attr("href", data.more_url);
       }
     }
   });
@@ -302,39 +302,70 @@ function showTutorial() {
   return tutorialModuleId == currentModuleId;
 }
 
+var ResultTypeEnum = Object.freeze({
+  FILE: 0,
+  TABLE: 1,
+  TEXT: 2,
+  COMMENT: 3
+});
+
+function processResult(ev, resultTypeEnum, forS3) {
+  var $form = $(ev.target.form);
+  $form.clear_form_errors();
+
+  switch(resultTypeEnum) {
+    case ResultTypeEnum.FILE:
+      var $nameInput = $form.find("#result_name");
+      var nameValid = textValidator(ev, $nameInput, true);
+      var $fileInput = $form.find("#result_asset_attributes_file");
+      var filesValid = filesValidator(ev, $fileInput, FileTypeEnum.FILE);
+
+      if(nameValid && filesValid) {
+        if(forS3) {
+          // Redirects file uploading to S3
+          startFileUpload(ev, ev.target);
+        } else {
+          // Local file uploading
+          animateSpinner();
+        }
+      }
+      break;
+    case ResultTypeEnum.TABLE:
+      var $nameInput = $form.find("#result_name");
+      var nameValid = textValidator(ev, $nameInput, true);
+      break;
+    case ResultTypeEnum.TEXT:
+      var $nameInput = $form.find("#result_name");
+      var nameValid = textValidator(ev, $nameInput, true);
+      var $textInput = $form.find("#result_result_text_attributes_text");
+      textValidator(ev, $textInput, false, false);
+      break;
+    case ResultTypeEnum.COMMENT:
+      var $commentInput = $form.find("#comment_message");
+      var commentValid = textValidator(ev, $commentInput, false, false);
+      break;
+  }
+}
+
 // S3 direct uploading
 function startFileUpload(ev, btn) {
-  var form = btn.form;
-  var $form = $(form);
-  var assetInput = $form.find("input[name='result[asset_attributes][id]']").get(0);
-  var fileInput = $form.find("input[type=file]").get(0);
-  var origAssetId = assetInput ? assetInput.value : null;
+  var $form = $(btn.form);
+  var $editFileInput = $form.find("input[name='result[asset_attributes][id]']").get(0);
+  var $fileInput = $form.find("input[type=file]");
   var url = '/asset_signature.json';
 
-  $form.clear_form_errors();
-  animateSpinner();
-
-  var noErrors = directUpload(form, origAssetId, url, function (assetId) {
-    // edit mode - input field has to be removed
-    if (assetInput) {
-      assetInput.value = assetId;
+  directUpload(ev, $fileInput, url, function (fileInput, fileId) {
+    if ($editFileInput) {
+      // edit mode - input field has to be removed
+      $editFileInput.value = fileId;
       $(fileInput).remove();
-
-    // create mode
     } else {
+      // create mode
       fileInput.type = "hidden";
-      fileInput.name = "result[asset_attributes][id]";
-      fileInput.value = assetId;
+      fileInput.name = fileInput.name.replace("[file]", "[id]");
+      fileInput.value = fileId;
     }
-
-    btn.onclick = null;
-    $(btn).click();
-
-  }, function (errors) {
-    showResultFormErrors($form, errors);
   });
-
-  return noErrors;
 }
 
 // This checks if the ctarget param exist in the
