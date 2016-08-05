@@ -128,10 +128,11 @@
 }
 
 ul {
-  .project-contents-list {
+  &.project-contents-list {
     padding-left: 15px !important;
   }
-  .experiment-contents-list {
+
+  &.experiment-contents-list {
     padding-left: 30px !important;
   }
 }

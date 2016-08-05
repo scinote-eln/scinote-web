@@ -61,37 +61,39 @@ Rails.application.routes.draw do
         post 'generate', to: 'reports#generate'
         get 'new/', to: 'reports#new'
         get 'new/project_contents_modal',
-          to: 'reports#project_contents_modal',
-          as: :project_contents_modal
+            to: 'reports#project_contents_modal',
+            as: :project_contents_modal
         post 'new/project_contents',
-          to: 'reports#project_contents',
-          as: :project_contents
+             to: 'reports#project_contents',
+             as: :project_contents
         get 'new/experiment_contents_modal',
-          to: 'reports#experiment_contents_modal',
-          as: :experiment_contents_modal
+            to: 'reports#experiment_contents_modal',
+            as: :experiment_contents_modal
         post 'new/experiment_contents',
-          to: 'reports#experiment_contents',
-          as: :experiment_contents
+             to: 'reports#experiment_contents',
+             as: :experiment_contents
         get 'new/module_contents_modal',
-          to: 'reports#module_contents_modal',
-          as: :module_contents_modal
+            to: 'reports#module_contents_modal',
+            as: :module_contents_modal
         post 'new/module_contents',
-          to: 'reports#module_contents',
-          as: :module_contents
+             to: 'reports#module_contents',
+             as: :module_contents
         get 'new/step_contents_modal',
-          to: 'reports#step_contents_modal',
-          as: :step_contents_modal
+            to: 'reports#step_contents_modal',
+            as: :step_contents_modal
         post 'new/step_contents',
-          to: 'reports#step_contents',
-          as: :step_contents
+             to: 'reports#step_contents',
+             as: :step_contents
         get 'new/result_contents_modal',
-          to: 'reports#result_contents_modal',
-          as: :result_contents_modal
+            to: 'reports#result_contents_modal',
+            as: :result_contents_modal
         post 'new/result_contents',
-          to: 'reports#result_contents',
-          as: :result_contents
-        post '_save', to: 'reports#save_modal', as: :save_modal
-        post 'destroy', as: :destroy  # Destroy multiple entries at once
+             to: 'reports#result_contents',
+             as: :result_contents
+        post '_save',
+             to: 'reports#save_modal',
+             as: :save_modal
+        post 'destroy', as: :destroy # Destroy multiple entries at once
       end
     end
     resources :experiments, only: [:new, :create, :edit, :update, :archive], defaults: { format: 'json' }
