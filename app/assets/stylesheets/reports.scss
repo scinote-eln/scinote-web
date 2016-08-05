@@ -127,12 +127,13 @@
   }
 }
 
-ul.project-contents-list {
-  padding-left: 15px !important;
-}
-
-ul.experiment-contents-list {
-  padding-left: 30px !important;
+ul {
+  .project-contents-list {
+    padding-left: 15px !important;
+  }
+  .experiment-contents-list {
+    padding-left: 30px !important;
+  }
 }
 
 /** "New element" floating element */
