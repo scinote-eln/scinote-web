@@ -33,6 +33,7 @@
                     edit_project_experiment_url(@project, @experiment),
                     remote: true,
                     type: 'button',
+                    data: { id: @experiment.id },
                     id: 'edit-experiment' %></li>
       <% end %>
       <% if can_archive_experiment(@experiment) %>

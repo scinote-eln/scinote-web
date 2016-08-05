@@ -2,4 +2,24 @@
 <%= render partial: "shared/sidebar" %>
 <%= render partial: "shared/secondary_navigation" %>
 
-<!-- TODO -->
+<div class="row">
+  <div class="col-md-12">
+    <h2 class="pull-left"><%= t'projects.show.page_title' %></h2>
+    <% if can_create_experiment(@project) %>
+        <%= link_to t('experiments.new.create'),
+                      new_project_experiment_url(@project),
+                      remote: true,
+                      type: "button",
+                      id: 'new-experiment',
+                      class: "btn btn-primary center-btn" %>
+
+    <% end %>
+  </div>
+</div>
+<% @project.active_experiments.each do |experiment| %>
+  <%= render partial: 'projects/show/experiment',
+             locals: { experiment: experiment } %>
+
+<% end %>
+
+<%= javascript_include_tag("projects/show") %>
