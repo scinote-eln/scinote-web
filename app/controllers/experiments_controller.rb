@@ -57,8 +57,12 @@ class ExperimentsController < ApplicationController
     if @experiment.save
       flash[:success] = t('experiments.update.success_flash',
                           experiment: @experiment.name)
+<<<<<<< HEAD
 
       redirect_to canvas_experiment_path(@experiment)
+=======
+      redirect_to project_path(@experiment.project)
+>>>>>>> a4ec5585965a7a8e565d7ee9072a26e52ccd9fd3
     else
       flash[:alert] = t('experiments.update.error_flash')
       redirect_to :back

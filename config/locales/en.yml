@@ -223,6 +223,7 @@ en:
       error_flash: "Project <strong>%{name}</strong> not restored."
     show:
       head_title: "%{project}"
+      page_title: "Project's experiments"
     samples:
       head_title: "%{project} | Sample library"
     activities:
@@ -586,6 +587,7 @@ en:
       modal_title: 'Edit experiment %{experiment}'
       modal_create: 'Update experiment'
       label_title: "Edit details"
+      panel_label: 'Change details'
     create:
       success_flash: "Successfully created experiment %{experiment}"
       error_flash: 'Could not create a new experiment.'
