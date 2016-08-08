@@ -108,6 +108,10 @@ class Project < ActiveRecord::Base
     experiments.is_archived(false)
   end
 
+  def archived_experiments
+    experiments.is_archived(true)
+  end
+
   def project_my_modules
     MyModule.where('"experiment_id" IN (?)', experiments.select(:id))
   end
