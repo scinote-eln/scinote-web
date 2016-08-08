@@ -1,8 +1,14 @@
 class ExperimentsController < ApplicationController
   include PermissionHelper
-  before_action :set_experiment, except: [:new, :create]
-  before_action :set_project, only: [:new, :create, :samples_index, :samples]
-  before_action :check_view_permissions, only: [:canvas]
+  before_action :set_experiment,
+                except: [:new, :create]
+  before_action :set_project,
+                only: [:new, :create, :samples_index,
+                       :samples, :module_archive]
+  before_action :check_view_permissions,
+                only: [:canvas, :module_archive]
+  before_action :check_module_archive_permissions,
+                only: [:module_archive]
 
   # except parameter could be used but it is not working.
   layout :choose_layout
@@ -79,6 +85,9 @@ class ExperimentsController < ApplicationController
     end
   end
 
+  def module_archive
+  end
+
   def samples
     @samples_index_link = samples_index_experiment_path(@experiment,
                                                         format: :json)
@@ -118,6 +127,10 @@ class ExperimentsController < ApplicationController
 
   def check_view_permissions
     render_403 unless can_view_experiment(@experiment)
+  end
+
+  def check_module_archive_permissions
+    render_403 unless can_view_experiment_archive(@experiment)
   end
 
   def choose_layout

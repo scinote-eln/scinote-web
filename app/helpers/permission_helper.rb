@@ -399,7 +399,8 @@ module PermissionHelper
   end
 
   def can_restore_module(my_module)
-    my_module.archived? and is_user_or_higher_of_project(my_module.project)
+    my_module.archived? &&
+      is_user_or_higher_of_project(my_module.experiment.project)
   end
 
   def can_edit_tags_for_module(my_module)

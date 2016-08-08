@@ -700,6 +700,12 @@ en:
           contact_admins: "To invite additional users to team %{organization}, contact its administrator/s."
       update:
         success_flash: "Project successfully updated."
+    module_archive:
+      head_title: "%{experiment} | Archived tasks"
+      no_archived_modules: "No archived tasks!"
+      restore_option: "Restore"
+      archived_on: "Archived on"
+      archived_on_title: "Module archived on %{date} at %{time}."
 
   my_module_tags:
     new:
