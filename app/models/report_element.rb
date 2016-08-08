@@ -14,7 +14,8 @@ class ReportElement < ActiveRecord::Base
     step_comments: 11,
     result_comments: 12,
     project_activity: 13, # TODO
-    project_samples: 14 # TODO
+    project_samples: 14, # TODO
+    experiment: 15
   }
 
   # This is only used by certain elements
@@ -36,6 +37,7 @@ class ReportElement < ActiveRecord::Base
 
   # References to various report entities
   belongs_to :project, inverse_of: :report_elements
+  belongs_to :experiment, inverse_of: :report_elements
   belongs_to :my_module, inverse_of: :report_elements
   belongs_to :step, inverse_of: :report_elements
   belongs_to :result, inverse_of: :report_elements
@@ -59,6 +61,8 @@ class ReportElement < ActiveRecord::Base
   def element_reference
     if project_header? or project_activity? or project_samples?
       return project
+    elsif experiment?
+      return experiment
     elsif my_module? or my_module_activity? or my_module_samples?
       return my_module
     elsif step? or step_comments?
@@ -79,6 +83,8 @@ class ReportElement < ActiveRecord::Base
   def set_element_reference(ref_id)
     if project_header? or project_activity? or project_samples?
       self.project_id = ref_id
+    elsif experiment?
+      self.experiment_id = ref_id
     elsif my_module? or my_module_activity? or my_module_samples?
       self.my_module_id = ref_id
     elsif step? or step_comments?
@@ -98,6 +104,7 @@ class ReportElement < ActiveRecord::Base
   def clean_removed_or_archived_elements
     parent_model = ''
     [ 'project',
+      'experiment',
       'my_module',
       'step',
       'result',
@@ -119,6 +126,7 @@ class ReportElement < ActiveRecord::Base
   def has_one_of_referenced_elements
     num_of_refs = [
       project,
+      experiment,
       my_module,
       step,
       result,

@@ -288,6 +288,15 @@ en:
             no_results: "Task contains no results"
             activity: "Activity"
             samples: "Samples"
+          experiment_contents:
+            head_title: "Add contents to experiment %{experiment}"
+            experiment_tab: "Experiment content"
+            module_tab: "Task content"
+            steps_tab: "Protocols content"
+            results_tab: "Results content"
+          experiment_contents_inner:
+            instructions: "Select tasks to include in the report"
+            no_modules: "The experiment contains no tasks"
           step_contents:
             head_title: "Add contents to step %{step}"
             step_tab: "Step content"
@@ -332,6 +341,10 @@ en:
           no_due_date: "No due date"
           no_description: "No description"
           tags_header: "Task tags:"
+          no_tags: "No tags"
+        experiment:
+          user_time: "Experiment created on %{timestamp}."
+          no_description: "No description"
           no_tags: "No tags"
         module_activity:
           name: "Activity of task %{my_module}"

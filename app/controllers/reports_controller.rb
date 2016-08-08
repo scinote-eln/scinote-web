@@ -17,6 +17,7 @@ class ReportsController < ApplicationController
     :destroy,
     :save_modal,
     :project_contents_modal,
+    :experiment_contents_modal,
     :module_contents_modal,
     :step_contents_modal,
     :result_contents_modal,
@@ -35,6 +36,7 @@ class ReportsController < ApplicationController
     :generate,
     :save_modal,
     :project_contents_modal,
+    :experiment_contents_modal,
     :module_contents_modal,
     :step_contents_modal,
     :result_contents_modal,
@@ -213,24 +215,46 @@ class ReportsController < ApplicationController
     end
   end
 
+  # Experiment for adding contents into experiment element
+  def experiment_contents_modal
+    experiment = Experiment.find_by_id(params[:id])
+
+    respond_to do |format|
+      if experiment.blank?
+        format.json do
+          render json: {}, status: :not_found
+        end
+      else
+        format.json do
+          render json: {
+            html: render_to_string(
+              partial: 'reports/new/modal/experiment_contents.html.erb',
+              locals: { project: @project, experiment: experiment }
+            )
+          }
+        end
+      end
+    end
+  end
+
   # Modal for adding contents into module element
   def module_contents_modal
     my_module = MyModule.find_by_id(params[:id])
 
     respond_to do |format|
       if my_module.blank?
-        format.json {
+        format.json do
           render json: {}, status: :not_found
-        }
+        end
       else
-        format.json {
+        format.json do
           render json: {
-            html: render_to_string({
+            html: render_to_string(
               partial: "reports/new/modal/module_contents.html.erb",
               locals: { project: @project, my_module: my_module }
-            })
+            )
           }
-        }
+        end
       end
     end
   end
@@ -292,6 +316,34 @@ class ReportsController < ApplicationController
             elements: elements
           }
         }
+      end
+    end
+  end
+
+  def experiment_contents
+    experiment = Experiment.find_by_id(params[:id])
+    modules = (params[:modules].select { |_, p| p == "1" })
+              .keys
+              .collect(&:to_i)
+
+    respond_to do |format|
+      if experiment.blank?
+        format.json { render json: {}, status: :not_found }
+      elsif modules.blank?
+        format.json { render json: {}, status: :no_content }
+      else
+        elements = generate_experiment_contents_json(experiment, modules)
+      end
+
+      if elements_empty? elements
+        format.json { render json: {}, status: :no_content }
+      else
+        format.json do
+          render json: {
+            status: :ok,
+            elements: elements
+          }
+        end
       end
     end
   end
@@ -394,24 +446,39 @@ class ReportsController < ApplicationController
 
   def generate_project_contents_json
     res = []
-    if params.include? :modules then
-      modules =
-      (params[:modules].select { |m, p| p == "1" })
-      .keys
-      .collect { |id| id.to_i }
+    if params.include? :modules
+      modules = (params[:modules].select { |_, p| p == "1" })
+                .keys
+                .collect(&:to_i)
 
-      modules.each do |module_id|
-        my_module = MyModule.find_by_id(module_id)
-        if my_module.present?
-          res << generate_new_el(false)
-          el = generate_el(
-            "reports/elements/my_module_element.html.erb",
-            { my_module: my_module }
-          )
-          el[:children] = generate_module_contents_json(my_module)
-          res << el
-        end
+      # Get unique experiments from given modules
+      experiments = MyModule.where(id: modules).map(&:experiment).uniq
+      experiments.each do |experiment|
+        res << generate_new_el(false)
+        el = generate_el(
+          'reports/elements/experiment_element.html.erb',
+          experiment: experiment
+        )
+        el[:children] = generate_experiment_contents_json(experiment, modules)
+        res << el
       end
+    end
+    res << generate_new_el(false)
+    res
+  end
+
+  def generate_experiment_contents_json(experiment, selected_modules)
+    res = []
+    experiment.my_modules.each do |my_module|
+      next unless selected_modules.include?(my_module.id)
+
+      res << generate_new_el(false)
+      el = generate_el(
+        'reports/elements/my_module_element.html.erb',
+        my_module: my_module
+      )
+      el[:children] = generate_module_contents_json(my_module)
+      res << el
     end
     res << generate_new_el(false)
     res
