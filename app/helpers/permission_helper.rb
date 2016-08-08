@@ -274,11 +274,17 @@ module PermissionHelper
   end
 
   def can_archive_project(project)
-    is_owner_of_project(project)
+    is_owner_of_project(project) ||
+    is_user_of_project(project) ||
+    is_admin_of_organization(project.organization)
   end
 
   def can_restore_project(project)
-    project.archived? and is_owner_of_project(project)
+    project.archived? && (
+      is_owner_of_project(project) ||
+      is_user_of_project(project) ||
+      is_admin_of_organization(project.organization)
+    )
   end
 
   def can_add_user_to_project(project)
