@@ -1,3 +1,5 @@
+require 'graphviz'
+
 class Experiment < ActiveRecord::Base
   include ArchivableModel, SearchableModel
 
@@ -10,6 +12,9 @@ class Experiment < ActiveRecord::Base
   has_many :my_modules, inverse_of: :experiment, dependent: :destroy
   has_many :my_module_groups, inverse_of: :experiment, dependent: :destroy
   has_many :report_elements, inverse_of: :experiment, dependent: :destroy
+
+  has_attached_file :workflowimg
+  validates_attachment_content_type :workflowimg, content_type: /\Aimage\/.*\Z/
 
   validates :name,
             presence: true,
@@ -193,6 +198,43 @@ class Experiment < ActiveRecord::Base
     end
 
     return true
+  end
+
+  def generate_workflow_img
+    graph = GraphViz.new( :G, type: :digraph, use: :neato  )
+    label = 'T'
+    my_module_groups.each do |group|
+      group.ordered_modules.each_with_index do |my_module, index|
+        if(my_module.outputs.any?)
+          parent = graph.add_nodes("N-#{index}", label: label, shape: 'circle', pos: "#{my_module.x},-#{my_module.y}!")
+          my_module.outputs.each_with_index do |output, i|
+            child_mod = MyModule.find_by_id(output.input_id)
+            child_node = graph.add_nodes("N-O#{child_mod.id}-#{i}", label: label, shape: 'circle', pos: "#{child_mod.x},-#{child_mod.y}!")
+            graph.add_edges(parent, child_node)
+          end
+        elsif(my_module.inputs.any?)
+          parent = graph.add_nodes("N-#{index}", label: label, shape: 'circle', pos: "#{my_module.x},-#{my_module.y}!")
+          my_module.inputs.each_with_index do |input, i|
+            child_mod = MyModule.find_by_id(input.output_id)
+            child_node = graph.add_nodes("N-I#{child_mod.id}-#{i}", label: label, shape: 'circle', pos: "#{child_mod.x},-#{child_mod.y}!")
+            graph.add_edges(child_node, parent)
+          end
+        end
+      end
+    end
+
+    graph[:size] = '5,3'
+    file_location = "/tmp/workflowimg_#{Process.pid}.png"
+    graph.output(png: file_location)
+
+    begin
+      file = File.open(file_location)
+      self.workflowimg = file
+      file.close
+      save!
+    rescue => ex
+      logger.error ex.message
+    end
   end
 
   private

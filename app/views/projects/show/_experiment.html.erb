@@ -32,6 +32,9 @@
       </span>
     </div>
     <div class="panel-body">
+      <% if experiment.workflowimg? %>
+        <%= image_tag experiment.workflowimg, class: 'img-responsive center-block' %>
+      <% end %>
       <span>
         <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
         <%= localize(experiment.created_at, format: t('time.formats.full_date')) %>
