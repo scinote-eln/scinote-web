@@ -1,17 +1,31 @@
 <ul>
   <% if project.active_experiments.present? then %>
-    <% project.active_experiments.each do |experiment| %>
-      <li class="<%= "active" if experiment_page? %>">
+    <% if experiment_page? %>
+      <li>
         <span class="tree-link line-wrap">
           <i></i>
-          <% if !experiment_page? %>
-            <%= link_to experiment.name, experiment_action_to_link_to(experiment), title: experiment.name %>
-          <% else %>
-            <span title="<%= experiment.name %>"><%= experiment.name %></span>
-          <% end %>
+          <span title="<%= @experiment.name %>"><%= @experiment.name %></span>
         </span>
-        <%= render partial: 'shared/sidebar/my_modules', locals: { experiment: experiment } %>
+        <%= render partial: 'shared/sidebar/my_modules', locals: { experiment: @experiment } %>
       </li>
+    <% else %>
+      <% project.active_experiments.each do |experiment| %>
+        <li>
+          <span class="tree-link line-wrap">
+            <i></i>
+            <% if can_view_experiment(experiment) %>
+              <%= link_to experiment.name,
+                          experiment_action_to_link_to(experiment),
+                          title: experiment.name,
+                          class: 'overview_exp_label'
+                          %>
+            <% else %>
+              <%= experiment.name %>
+            <% end %>
+          </span>
+          <%= render partial: 'shared/sidebar/my_modules', locals: { experiment: experiment } %>
+        </li>
+      <% end %>
     <% end %>
   <% end %>
 </ul>

@@ -13,19 +13,23 @@
     </div>
 
     <div class="tree">
+      <% if !project_page? %>
       <ul>
-        <li class="<%= "active" if project_page? %>">
+        <li class="active">
           <span class="tree-link line-wrap">
             <i></i>
-            <% if !project_page? %>
-              <%= link_to @project.name, project_action_to_link_to(@project), title: @project.name %>
-            <% else %>
-              <span title="<%= @project.name %>"><%= @project.name %></span>
-            <% end %>
+              <%= link_to @project.name,
+                          project_action_to_link_to(@project),
+                          title: @project.name %>
           </span>
-          <%= render partial: 'shared/sidebar/experiments', locals: { project: @project } %>
+          <%= render partial: 'shared/sidebar/experiments',
+                    locals: { project: @project } %>
         </li>
       </ul>
+      <% else %>
+      <%= render partial: 'shared/sidebar/experiments',
+                locals: { project: @project } %>
+      <% end %>
     </div>
   </div>
 <% end %>
