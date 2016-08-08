@@ -133,8 +133,12 @@ $toggle-btn-size: 50px;
   }
 }
 
-.my-module-group-element{
-  border-left: 1px dotted $color-emperor;
+.my-module-group-element:before {
+  content : "";
+  position: absolute;
+  top: 25px;
+  bottom: 20px;
+  border-left:1px dotted $color-emperor;
 }
 
 #wrapper {
