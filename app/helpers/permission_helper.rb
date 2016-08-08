@@ -135,13 +135,9 @@ module PermissionHelper
       end
     end
 
+    # ---- Some things are disabled for archived experiment ----
     around [
-      :can_edit_experiment,
-      :can_view_experiment,
-      :can_view_experiment_archive,
-      :can_archive_experiment,
-      :can_restore_experiment,
-      :can_view_experiment_samples
+      :can_edit_experiment
     ] do |proxy, *args, &block|
       if args[0]
         experiment = args[0]

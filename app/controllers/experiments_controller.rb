@@ -122,7 +122,7 @@ class ExperimentsController < ApplicationController
   end
 
   def experiment_params
-    params.require(:experiment).permit(:name, :description)
+    params.require(:experiment).permit(:name, :description, :archived)
   end
 
   def check_view_permissions
