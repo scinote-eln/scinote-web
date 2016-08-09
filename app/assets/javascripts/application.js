@@ -81,7 +81,7 @@ function animateLoading(start){
  * Shows spinner if start is true or not given, hides it if false.
  * Optional parameter options for spin.js options.
  */
-function animateSpinner(el, start, options) {
+function animateSpinner(el, start, options, msg) {
   // If overlaying the whole page,
   // put the spinner in the middle of the page
   var overlayPage = false;
@@ -114,6 +114,10 @@ function animateSpinner(el, start, options) {
     $(".loading-overlay").remove();
   }
 
+  busy = start;
+  if (busy && !_.isUndefined(msg)) {
+    busyMsg = msg;
+  }
 }
 
 /*
@@ -163,3 +167,18 @@ $(document).ready(function(){
     truncateLongString( $(this), 30);
   });
 });
+
+/*
+ * Prevents user from accidentally leaving page when
+ * server is busy and notifies him with a message.
+ */
+var busy = false;
+var busyMsg = I18n.t("general.busy");
+window.onbeforeunload = function () {
+  if (busy) {
+    var currentMsg = busyMsg;
+    // Reset to default message
+    busyMsg = I18n.t("general.busy");
+    return currentMsg;
+  }
+}

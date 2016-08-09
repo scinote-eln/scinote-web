@@ -1,6 +1,19 @@
 // Form validators. They'll find, render and focus error/s and
 // prevent form submission.
 
+// Calls specified validator along with the arguments on form submition
+$.fn.onSubmitValidator = function(validatorCb) {
+  var params = Array.prototype.slice.call(arguments, 1);
+  var $form = $(this);
+  if ($form.length) {
+    $form.submit(function (ev) {
+      $form.clear_form_errors();
+      params.unshift(ev);
+      validatorCb.apply(this, params);
+    });
+  }
+};
+
 function textValidator(ev, textInput, canBeBlank = false, limitLength = true) {
   var nameTooShort = $(textInput).val().length === 0;
   var nameTooLong = $(textInput).val().length > 50;
@@ -55,16 +68,10 @@ function checklistsValidator(ev, checklists, editMode) {
   return noErrors;
 }
 
-$.fn.files_validator = function(fileTypeEnum) {
-  var $form = $(this);
-  if ($form.length) {
-    $form.submit(function (ev) {
-      $form.clear_form_errors();
-      var $fileInputs = $form.find("input[type=file]");
-      filesValidator(ev, $fileInputs, fileTypeEnum);
-    });
-  }
-};
+var FileTypeEnum = Object.freeze({
+  FILE: 0,
+  AVATAR: 1
+});
 
 function filesValidator(ev, fileInputs, fileTypeEnum) {
   var filesValid = true;
@@ -88,11 +95,6 @@ function filesPresentValidator(ev, fileInputs) {
   });
   return filesPresentValid;
 }
-
-var FileTypeEnum = Object.freeze({
-  FILE: 0,
-  AVATAR: 1
-});
 
 function filesSizeValidator(ev, fileInputs, fileTypeEnum) {
 

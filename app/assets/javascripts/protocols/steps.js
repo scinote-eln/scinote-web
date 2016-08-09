@@ -360,13 +360,16 @@ function initEditableHandsOnTable(root) {
 }
 
 // Initialize comment form.
-function initStepCommentForm($el) {
-
+function initStepCommentForm(ev, $el) {
   var $form = $el.find("ul form");
+
+  var $commentInput = $form.find("#comment_message");
+  $form.onSubmitValidator(textValidator, $commentInput);
 
   $(".help-block", $form).addClass("hide");
 
-  $form.on("ajax:send", function (data) {
+  $form
+  .on("ajax:send", function (data) {
     $("#comment_message", $form).attr("readonly", true);
   })
   .on("ajax:success", function (e, data) {
@@ -450,7 +453,7 @@ function initStepCommentTabAjax() {
       var parentNode = $this.parents("ul").parent();
 
       target.html(data.html);
-      initStepCommentForm(parentNode);
+      initStepCommentForm(e, parentNode);
       initStepCommentsLink(parentNode);
 
       parentNode.find(".active").removeClass("active");
@@ -598,7 +601,7 @@ function processStep(ev, editMode, forS3) {
       startFileUpload(ev, ev.target);
     } else {
       // Local file uploading
-      animateSpinner();
+      animateSpinner(null, true, undefined, I18n.t("general.file.uploading"));
     }
   }
 }

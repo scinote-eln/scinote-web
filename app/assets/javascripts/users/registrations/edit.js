@@ -74,7 +74,7 @@ function processFile(ev, forS3) {
       startFileUpload(ev, ev.target);
     } else {
       // Local file uploading
-      animateSpinner();
+      animateSpinner(null, true, undefined, I18n.t("general.file.uploading"));
     }
   }
 }

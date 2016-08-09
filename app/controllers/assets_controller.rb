@@ -2,6 +2,8 @@ class AssetsController < ApplicationController
   before_action :load_vars, except: [:signature]
   before_action :check_read_permission, except: [:signature, :file_present]
 
+  # Validates asset and then generates S3 upload posts, because
+  # otherwise untracked files could be uploaded to S3
   def signature
     respond_to do |format|
       format.json {
@@ -19,7 +21,7 @@ class AssetsController < ApplicationController
           validationAsset = Asset.new(asset_params)
         end
 
-        if not validationAsset.valid?
+        if validationAsset.errors.any?
           render json: {
             status: 'error',
             errors: validationAsset.errors

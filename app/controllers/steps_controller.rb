@@ -37,13 +37,8 @@ class StepsController < ApplicationController
       if step_assets.size > 0
         step_assets[:assets_attributes].each do |i, data|
           # Ignore destroy requests on create
-          if data[:_destroy].nil?
-            if data[:id].present?
-              asset = Asset.find_by_id(data[:id])
-            else
-              # For validation purposses if no JS
-              asset = Asset.new(data)
-            end
+          if data[:_destroy].nil? and data[:id].present?
+            asset = Asset.find_by_id(data[:id])
             asset.created_by = current_user
             asset.last_modified_by = current_user
             @step.assets << asset

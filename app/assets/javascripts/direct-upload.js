@@ -1,5 +1,16 @@
 (function (exports) {
 
+  var styleOptionRe = /(\d+)x(\d+)/i;
+
+  function parseStyleOption(option) {
+    var m = option.match(styleOptionRe);
+
+    return {
+      width: m && m[1] || 150,
+      height: m && m[2] || 150
+    };
+  }
+
   // Edits (size, quality, parameters) image file for S3 server uploading
   function generateThumbnail(origFile, type, max_width, max_height, cb) {
     var img = new Image;
@@ -21,7 +32,7 @@
         size = this.width;
         offsetY = (this.height - this.width) / 2;
       }
-      if(type === "image/jpeg") {
+      if (type === "image/jpeg") {
         type = "image/jpg";
       }
 
@@ -35,10 +46,8 @@
   }
 
   // This server checks if files are OK (correct file type, presence,
-  // size and spoofing) and generates posts for S3 server file uploading
-  // (each post for different size of the same file)
-  // We do this synchronically, because we need to verify all files
-  // before uploading them
+  // size and spoofing) and only then generates posts for S3 server
+  // file uploading (each post for different size of the same file)
   function fetchUploadSignature(file, signUrl, cb) {
     var csrfParam = $("meta[name=csrf-param]").attr("content");
     var csrfToken = $("meta[name=csrf-token]").attr("content");
@@ -50,7 +59,6 @@
       url : signUrl,
       type : 'POST',
       data : formData,
-      async : false,
       processData: false,
       contentType: false,
       complete : function(xhr) {
@@ -65,7 +73,7 @@
   }
 
   // Upload file to S3 server
-  function uploadData(postData, cb) {
+  function uploadFile(postData, cb) {
     var xhr = new XMLHttpRequest;
     var fd = new FormData();
     var fields = postData.fields;
@@ -80,94 +88,126 @@
       if (xhr.readyState === 4) { // complete
         cb();
       } else if (xhr.readyState == 0) { // connection error
-        cb(I18n.t("errors.upload"));
+        cb(I18n.t("general.file.upload_failure"));
       }
     }
     xhr.open("POST", url);
     xhr.send(fd);
   }
 
-  var styleOptionRe = /(\d+)x(\d+)/i;
+  // For each file proccesses its posts and uploads them
+  // If one post fails, the user is allowed to leave page,
+  // but other files are still being uplaoded because of
+  // asynchronous behaviour, so errors for other files may
+  // can still show afterwards
+  // TODO On S3 server uplaod error the other files that
+  // were already asynchronously uploaded remain, but
+  // should be deleted - this should generally not happen,
+  // because all files should fail to upload in such cases
+  // (connection error)
+  function  uploadFiles(ev, fileInputs, datas, cb) {
+    var noErrors = true;
+    $.each(datas, function(fileIndex, data) {
+      var fileInput = fileInputs.get(fileIndex);
+      var file = fileInput.files[0];
 
-  function parseStyleOption(option) {
-    var m = option.match(styleOptionRe);
+      function processPost(error) {
+        // File upload error handling
+        if (error) {
+          renderFormError(ev, fileInput, error);
+          noErrors = false;
+          animateSpinner(null, false);
+          return;
+        }
 
-    return {
-      width: m && m[1] || 150,
-      height: m && m[2] || 150
-    };
+        var postData = posts[postIndex];
+        if (!postData) {
+          if (fileIndex === datas.length-1 && noErrors) {
+            // After successful file processing and uploading
+            $.each(datas, function(fileIndex, data) {
+              // Use file input to pass file info on submit
+              var fileInput = fileInputs.get(fileIndex);
+              cb(fileInput, data.asset_id);
+            });
+            animateSpinner(null, false);
+            $(ev.target.form).submit();
+          }
+          return;
+        }
+        postData.fileName = file.name;
+        postIndex++;
+
+        if (postData.style_option) {
+          // Picture file
+          var styleSize = parseStyleOption(postData.style_option);
+          generateThumbnail(file, postData.mime_type, styleSize.width,
+            styleSize.height, function (blob) {
+
+            postData.file = blob;
+            uploadFile(postData, processPost);
+          });
+         } else {
+          // Other file
+          postData.file = file;
+          uploadFile(postData, processPost);
+        }
+      }
+
+      var posts = data.posts;
+      var postIndex = 0;
+      processPost();
+    });
   }
 
-  // Validates files on this server and uploads them to S3 server
+  // Validates files on  server and uploads them to S3 server
+  //
+  // First we validate files on server and generate post requests (fetchUploadSignature),
+  // if OK the post requests are used to uplaod files asyncronously to S3 (uploadFiles),
+  // and if successful the form is submitted, otherwise no file is saved
   exports.directUpload = function (ev, fileInputs, signUrl, cb) {
     var noErrors = true;
-    var inputPointer = 0;
-    animateSpinner();
+    var inputsPosts = []
 
-    function processFile () {
-      var fileInput = fileInputs.get(inputPointer);
+    function processFile(fileIndex) {
+      var fileInput = fileInputs.get(fileIndex);
       if (!fileInput || !fileInput.files[0]) {
+        // After file processing
+        if(fileIndex !== 0) {
+          if(noErrors) {
+            uploadFiles(ev, fileInputs, inputsPosts, cb);
+          } else {
+            animateSpinner(null, false);
+          }
+        }
         return;
       }
+
+      if (fileIndex === 0) {
+        // Before file processing and uploading
+        animateSpinner(null, true, undefined, I18n.t("general.file.uploading"));
+        ev.preventDefault();
+        ev.stopPropagation();
+      }
+
       var file = fileInput.files[0];
-      inputPointer++;
-
       fetchUploadSignature(file, signUrl, function (data) {
-
-        function processError(errMsgs) {
-          renderFormError(ev, fileInput, errMsgs);
-          noErrors = false;
-        }
-
-        function processPost(error) {
-          // File post error handling
-          if (error) {
-            processError(error);
-          }
-
-          var postData = posts[postPosition];
-          if (!postData) {
-            animateSpinner(null, false);
-            return;
-          }
-          postData.fileName = file.name;
-          postPosition += 1;
-
-          if (postData.style_option) {
-            var styleSize = parseStyleOption(postData.style_option);
-            generateThumbnail(file, postData.mime_type, styleSize.width,
-              styleSize.height, function (blob) {
-
-              postData.file = blob;
-              uploadData(postData, processPost);
-            });
-           } else {
-            postData.file = file;
-            uploadData(postData, processPost);
-          }
-        }
-
         // File signature error handling
         if (_.isUndefined(data)) {
-          processError(I18n.t("errors.upload"));
+          renderFormError(ev, fileInput, I18n.t("general.file.upload_failure"));
+          noErrors = false;
         }
-        if (data.status === "error") {
-          processError(jsonToValuesArray(data.errors));
+        else if (data.status === "error") {
+          renderFormError(ev, fileInput, jsonToValuesArray(data.errors));
+          noErrors = false;
+        } else {
+          inputsPosts.push(data);
         }
 
-        processFile();
-        if(noErrors) {
-          // Use file input to pass file info on submit
-          cb(fileInput, data.asset_id);
-
-          var posts = data.posts;
-          var postPosition = 0;
-          processPost();
-        }
+        processFile(fileIndex+1);
       });
     }
 
-    processFile();
+    processFile(0);
   };
 
 }(this));

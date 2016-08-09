@@ -7,6 +7,8 @@ class Users::RegistrationsController < Devise::RegistrationsController
     redirect_to user.avatar.url(style.to_sym), status: 307
   end
 
+  # Validates asset and then generates S3 upload posts, because
+  # otherwise untracked files could be uploaded to S3
   def signature
     respond_to do |format|
       format.json {
