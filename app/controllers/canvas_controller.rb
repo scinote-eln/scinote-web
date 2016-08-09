@@ -232,7 +232,7 @@ class CanvasController < ApplicationController
     end
 
     # Create workflow image
-    @experiment.generate_workflow_img
+    @experiment.delay.generate_workflow_img
 
     flash[:success] = t(
       "experiments.canvas.update.success_flash")
