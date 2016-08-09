@@ -33,6 +33,8 @@ class MyModule < ActiveRecord::Base
   has_many :report_elements, inverse_of: :my_module, :dependent => :destroy
   has_many :protocols, inverse_of: :my_module, dependent: :destroy
 
+  scope :is_archived, ->(is_archived) { where("archived = ?", is_archived) }
+
   def self.search(user, include_archived, query = nil, page = 1)
     exp_ids =
       Experiment
