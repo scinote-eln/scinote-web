@@ -13,7 +13,7 @@ class Experiment < ActiveRecord::Base
   has_many :my_module_groups, inverse_of: :experiment, dependent: :destroy
   has_many :report_elements, inverse_of: :experiment, dependent: :destroy
 
-  has_attached_file :workflowimg
+  has_attached_file :workflowimg, styles: { medium: '300x300>' }
   validates_attachment_content_type :workflowimg, content_type: /\Aimage\/.*\Z/
 
   validates :name,
@@ -290,8 +290,10 @@ class Experiment < ActiveRecord::Base
       end
     end
 
-    file_location = "/tmp/workflowimg_#{Process.pid}.png"
-    graph.output(png: file_location)
+    file_location = Tempfile.open(['wimg', '.png'],
+                                  Rails.root.join('tmp'))
+
+    graph.output(png: file_location.path)
 
     begin
       file = File.open(file_location)
