@@ -137,7 +137,16 @@ module PermissionHelper
 
     # ---- Some things are disabled for archived experiment ----
     around [
-      :can_edit_experiment
+      :can_edit_experiment,
+      :can_archive_experiment,
+      :can_edit_canvas,
+      :can_reposition_modules,
+      :can_edit_connections,
+      :can_create_modules,
+      :can_edit_modules,
+      :can_edit_module_groups,
+      :can_clone_modules,
+      :can_archive_modules
     ] do |proxy, *args, &block|
       if args[0]
         experiment = args[0]
