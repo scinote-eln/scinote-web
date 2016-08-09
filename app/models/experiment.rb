@@ -13,7 +13,7 @@ class Experiment < ActiveRecord::Base
   has_many :my_module_groups, inverse_of: :experiment, dependent: :destroy
   has_many :report_elements, inverse_of: :experiment, dependent: :destroy
 
-  has_attached_file :workflowimg, styles: { medium: '300x300>' }
+  has_attached_file :workflowimg
   validates_attachment_content_type :workflowimg, content_type: /\Aimage\/.*\Z/
 
   validates :name,
