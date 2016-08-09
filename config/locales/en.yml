@@ -391,7 +391,11 @@ en:
       no_archived_experiments: "No archived experiments!"
       restore_option: "Restore"
       archived_on: "Archived on"
+      created_on: "Created on"
+      last_modified_on: "Last modified on"
       archived_on_title: "Experiment archived on %{date} at %{time}."
+      created_on_title: "Experiment created on %{date} at %{time}."
+      last_modified_on_title: "Experiment last modified on %{date} at %{time}."
 
   user_organizations:
     enums:
