@@ -241,7 +241,7 @@ class Asset < ActiveRecord::Base
         key: file.path[1..-1],
         expires_in: 30,
         # this response header forces object download
-        response_content_disposition: 'attachment; filename=' + file_file_name)
+        response_content_disposition: 'attachment; filename=' + URI.escape(file_file_name))
     end
   end
 

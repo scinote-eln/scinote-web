@@ -77,7 +77,7 @@ class AssetsController < ApplicationController
     elsif @asset.file.is_stored_on_s3?
       redirect_to @asset.presigned_url, status: 307
     else
-      send_file @asset.file.path, filename: @asset.file_file_name,
+      send_file @asset.file.path, filename: URI.unescape(@asset.file_file_name),
         type: @asset.file_content_type
     end
   end
