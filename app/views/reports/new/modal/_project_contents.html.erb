@@ -67,7 +67,7 @@
     projectCheckAlls.click(function() {
       var nextUl = $(this).closest("div.checkbox").next();
       if (nextUl.length && nextUl.is("ul.project-contents-list, \
-                                      ul-experiment-contents-list")) {
+                                      ul.experiment-contents-list")) {
         nextUl.find("input:checkbox").prop("checked", this.checked);
       }
     });
