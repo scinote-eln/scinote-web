@@ -200,30 +200,96 @@ class Experiment < ActiveRecord::Base
     return true
   end
 
+  # This method generate the workflow image and saves it as
+  # experiment attachment
   def generate_workflow_img
-    graph = GraphViz.new( :G, type: :digraph, use: :neato  )
+    graph = GraphViz.new(:G,
+                         type: :digraph,
+                         use: :neato)
+
+    graph[:size] = '5,3'
+    graph.node[color: '#d2d2d2',
+               style: :filled,
+               fontcolor: '#555555',
+               shape: 'circle',
+               fontname: 'Arial',
+               fontsize: '16.0']
+
+    graph.edge[color: '#d2d2d2']
+
     label = 'T'
-    my_module_groups.each do |group|
-      group.ordered_modules.each_with_index do |my_module, index|
-        if(my_module.outputs.any?)
-          parent = graph.add_nodes("N-#{index}", label: label, shape: 'circle', pos: "#{my_module.x},-#{my_module.y}!")
-          my_module.outputs.each_with_index do |output, i|
-            child_mod = MyModule.find_by_id(output.input_id)
-            child_node = graph.add_nodes("N-O#{child_mod.id}-#{i}", label: label, shape: 'circle', pos: "#{child_mod.x},-#{child_mod.y}!")
-            graph.add_edges(parent, child_node)
+    subg = {}
+    if my_module_groups.many?
+      my_module_groups.each_with_index do |group, gindex|
+        subgraph_name = "cluster-#{gindex}"
+        subg[subgraph_name] = graph.subgraph(rank: 'same')
+        group.ordered_modules.each_with_index do |my_module, index|
+          if my_module.outputs.any?
+            parent = subg[subgraph_name]
+                     .add_nodes("#{subgraph_name}-#{index}",
+                                label: label,
+                                pos: "#{my_module.x},-#{my_module.y}!")
+
+            my_module.outputs.each_with_index do |output, i|
+              child_mod = MyModule.find_by_id(output.input_id)
+              child_node = subg[subgraph_name]
+                           .add_nodes("#{subgraph_name}-O#{child_mod.id}-#{i}",
+                                      label: label,
+                                      pos: "#{child_mod.x},-#{child_mod.y}!")
+
+              subg[subgraph_name].add_edges(parent, child_node)
+            end
+          elsif my_module.inputs.any?
+            parent = subg[subgraph_name]
+                     .add_nodes("#{subgraph_name}-#{index}",
+                                label: label,
+                                pos: "#{my_module.x},-#{my_module.y}!")
+
+            my_module.inputs.each_with_index do |input, i|
+              child_mod = MyModule.find_by_id(input.output_id)
+              child_node = subg[subgraph_name]
+                           .add_nodes("#{subgraph_name}-I#{child_mod.id}-#{i}",
+                                      label: label,
+                                      pos: "#{child_mod.x},-#{child_mod.y}!")
+
+              subg[subgraph_name].add_edges(child_node, parent)
+            end
           end
-        elsif(my_module.inputs.any?)
-          parent = graph.add_nodes("N-#{index}", label: label, shape: 'circle', pos: "#{my_module.x},-#{my_module.y}!")
-          my_module.inputs.each_with_index do |input, i|
-            child_mod = MyModule.find_by_id(input.output_id)
-            child_node = graph.add_nodes("N-I#{child_mod.id}-#{i}", label: label, shape: 'circle', pos: "#{child_mod.x},-#{child_mod.y}!")
-            graph.add_edges(child_node, parent)
+        end
+      end
+    else
+      my_module_groups.each do |group|
+        group.ordered_modules.each_with_index do |my_module, index|
+          if my_module.outputs.any?
+            parent = graph.add_nodes("N-#{index}",
+                                     label: label,
+                                     pos: "#{my_module.x},-#{my_module.y}!")
+
+            my_module.outputs.each_with_index do |output, i|
+              child_mod = MyModule.find_by_id(output.input_id)
+              child_node = graph
+                           .add_nodes("N-O#{child_mod.id}-#{i}",
+                                      label: label,
+                                      pos: "#{child_mod.x},-#{child_mod.y}!")
+              graph.add_edges(parent, child_node)
+            end
+          elsif my_module.inputs.any?
+            parent = graph.add_nodes("N-#{index}",
+                                     label: label,
+                                     pos: "#{my_module.x},-#{my_module.y}!")
+            my_module.inputs.each_with_index do |input, i|
+              child_mod = MyModule.find_by_id(input.output_id)
+              child_node = graph
+                           .add_nodes("N-I#{child_mod.id}-#{i}",
+                                      label: label,
+                                      pos: "#{child_mod.x},-#{child_mod.y}!")
+              graph.add_edges(child_node, parent)
+            end
           end
         end
       end
     end
 
-    graph[:size] = '5,3'
     file_location = "/tmp/workflowimg_#{Process.pid}.png"
     graph.output(png: file_location)
 
