@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160803082801) do
+ActiveRecord::Schema.define(version: 20160808083040) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -138,18 +138,22 @@ ActiveRecord::Schema.define(version: 20160803082801) do
   add_index "delayed_jobs", ["queue"], name: "delayed_jobs_queue", using: :btree
 
   create_table "experiments", force: :cascade do |t|
-    t.string   "name",                                null: false
+    t.string   "name",                                     null: false
     t.text     "description"
-    t.integer  "project_id",                          null: false
-    t.integer  "created_by_id",                       null: false
-    t.integer  "last_modified_by_id",                 null: false
-    t.boolean  "archived",            default: false, null: false
+    t.integer  "project_id",                               null: false
+    t.integer  "created_by_id",                            null: false
+    t.integer  "last_modified_by_id",                      null: false
+    t.boolean  "archived",                 default: false, null: false
     t.integer  "archived_by_id"
     t.datetime "archived_on"
     t.integer  "restored_by_id"
     t.datetime "restored_on"
-    t.datetime "created_at",                          null: false
-    t.datetime "updated_at",                          null: false
+    t.datetime "created_at",                               null: false
+    t.datetime "updated_at",                               null: false
+    t.string   "workflowimg_file_name"
+    t.string   "workflowimg_content_type"
+    t.integer  "workflowimg_file_size"
+    t.datetime "workflowimg_updated_at"
   end
 
   add_index "experiments", ["archived_by_id"], name: "index_experiments_on_archived_by_id", using: :btree

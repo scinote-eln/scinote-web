@@ -52,6 +52,7 @@ gem 'aws-sdk', '~> 2.2.8'
 gem 'aws-sdk-v1'
 gem 'delayed_job_active_record'
 gem 'devise-async'
+gem 'ruby-graphviz', '~> 1.2' # Graphviz for rails 
 
 group :development, :test do
   gem 'byebug'
