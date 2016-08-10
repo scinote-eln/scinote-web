@@ -1,8 +1,14 @@
 class ExperimentsController < ApplicationController
   include PermissionHelper
-  before_action :set_experiment, except: [:new, :create]
-  before_action :set_project, only: [:new, :create, :samples_index, :samples]
-  before_action :check_view_permissions, only: [:canvas]
+  before_action :set_experiment,
+                except: [:new, :create]
+  before_action :set_project,
+                only: [:new, :create, :samples_index,
+                       :samples, :module_archive]
+  before_action :check_view_permissions,
+                only: [:canvas, :module_archive]
+  before_action :check_module_archive_permissions,
+                only: [:module_archive]
 
   # except parameter could be used but it is not working.
   layout :choose_layout
@@ -57,12 +63,7 @@ class ExperimentsController < ApplicationController
     if @experiment.save
       flash[:success] = t('experiments.update.success_flash',
                           experiment: @experiment.name)
-<<<<<<< HEAD
-
       redirect_to canvas_experiment_path(@experiment)
-=======
-      redirect_to project_path(@experiment.project)
->>>>>>> a4ec5585965a7a8e565d7ee9072a26e52ccd9fd3
     else
       flash[:alert] = t('experiments.update.error_flash')
       redirect_to :back
@@ -82,6 +83,9 @@ class ExperimentsController < ApplicationController
       flash[:alert] = t('experiments.archive.error_flash')
       redirect_to :back
     end
+  end
+
+  def module_archive
   end
 
   def samples
@@ -118,11 +122,15 @@ class ExperimentsController < ApplicationController
   end
 
   def experiment_params
-    params.require(:experiment).permit(:name, :description)
+    params.require(:experiment).permit(:name, :description, :archived)
   end
 
   def check_view_permissions
     render_403 unless can_view_experiment(@experiment)
+  end
+
+  def check_module_archive_permissions
+    render_403 unless can_view_experiment_archive(@experiment)
   end
 
   def choose_layout

@@ -386,12 +386,16 @@ en:
           name: "Comments for step %{step}"
           no_comments: "No comments"
           comment_prefix: "%{user} on %{date} at %{time}:"
-    module_archive:
-      head_title: "%{project} | Archived tasks"
-      no_archived_modules: "No archived tasks!"
+    experiment_archive:
+      head_title: "%{project} | Archived experiments"
+      no_archived_experiments: "No archived experiments!"
       restore_option: "Restore"
       archived_on: "Archived on"
-      archived_on_title: "Task archived on %{date} at %{time}."
+      created_on: "Created on"
+      last_modified_on: "Last modified on"
+      archived_on_title: "Experiment archived on %{date} at %{time}."
+      created_on_title: "Experiment created on %{date} at %{time}."
+      last_modified_on_title: "Experiment last modified on %{date} at %{time}."
 
   user_organizations:
     enums:
@@ -700,6 +704,12 @@ en:
           contact_admins: "To invite additional users to team %{organization}, contact its administrator/s."
       update:
         success_flash: "Project successfully updated."
+    module_archive:
+      head_title: "%{experiment} | Archived tasks"
+      no_archived_modules: "No archived tasks!"
+      restore_option: "Restore"
+      archived_on: "Archived on"
+      archived_on_title: "Module archived on %{date} at %{time}."
 
   my_module_tags:
     new:

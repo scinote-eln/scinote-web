@@ -44,3 +44,6 @@ tags
 
 # Ignore application configuration
 /config/application.yml
+
+# Ignore rubocop cache files
+rubocop_cache

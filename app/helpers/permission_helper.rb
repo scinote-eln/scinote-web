@@ -135,13 +135,18 @@ module PermissionHelper
       end
     end
 
+    # ---- Some things are disabled for archived experiment ----
     around [
       :can_edit_experiment,
-      :can_view_experiment,
-      :can_view_experiment_archive,
       :can_archive_experiment,
-      :can_restore_experiment,
-      :can_view_experiment_samples
+      :can_edit_canvas,
+      :can_reposition_modules,
+      :can_edit_connections,
+      :can_create_modules,
+      :can_edit_modules,
+      :can_edit_module_groups,
+      :can_clone_modules,
+      :can_archive_modules
     ] do |proxy, *args, &block|
       if args[0]
         experiment = args[0]
@@ -278,7 +283,7 @@ module PermissionHelper
   end
 
   def can_restore_project(project)
-    project.archived? and is_owner_of_project(project)
+    project.archived? && is_owner_of_project(project)
   end
 
   def can_add_user_to_project(project)
@@ -399,7 +404,8 @@ module PermissionHelper
   end
 
   def can_restore_module(my_module)
-    my_module.archived? and is_user_or_higher_of_project(my_module.project)
+    my_module.archived? &&
+      is_user_or_higher_of_project(my_module.experiment.project)
   end
 
   def can_edit_tags_for_module(my_module)
