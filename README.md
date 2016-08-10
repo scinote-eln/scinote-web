@@ -154,6 +154,12 @@ Or create new heroku application by executing following command.
 heroku create
 ```
 
+Add graphviz buildpack:
+
+```
+heroku buildpacks:add --index 2 https://github.com/weibeld/heroku-buildpack-graphviz.git
+```
+
 Before pushing to heroku master branch, some environmental variables should be set.
 
 ### Heroku environmental variables
