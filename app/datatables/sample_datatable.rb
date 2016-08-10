@@ -138,13 +138,13 @@ class SampleDatatable < AjaxDatatablesRails::Base
         samples = samples.joins('LEFT OUTER JOIN sample_my_modules ON
                                 (samples.id = sample_my_modules.sample_id AND
                                 sample_my_modules.id IS NULL)')
-                                .references(:sample_my_modules)
+                         .references(:sample_my_modules)
       else
         samples = samples.joins("LEFT OUTER JOIN sample_my_modules ON
                                 (samples.id = sample_my_modules.sample_id AND
                                 (sample_my_modules.my_module_id IN (#{ids}) OR
                                 sample_my_modules.id IS NULL))")
-                                .references(:sample_my_modules)
+                         .references(:sample_my_modules)
       end
     elsif @experiment
       @assigned_samples = @experiment.assigned_samples
