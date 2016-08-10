@@ -56,7 +56,7 @@ class StepCommentsController < ApplicationController
           Activity.create(
             type_of: :add_comment_to_step,
             user: current_user,
-            project: @step.my_module.project,
+            project: @step.my_module.experiment.project,
             my_module: @step.my_module,
             message: t(
               "activities.add_comment_to_step",

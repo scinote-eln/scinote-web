@@ -44,7 +44,7 @@ class ProjectCommentsController < ApplicationController
     @comment = Comment.new(
       message: comment_params[:message],
       user: current_user)
-    
+
     respond_to do |format|
 
       if (@comment.valid? && @project.comments << @comment)
@@ -70,7 +70,7 @@ class ProjectCommentsController < ApplicationController
         format.json {
           render json: {
             errors: @comment.errors.to_hash(true)
-          } 
+          }
         }
       end
     end
