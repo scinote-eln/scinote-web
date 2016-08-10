@@ -5,6 +5,8 @@ class Asset < ActiveRecord::Base
   include WopiUtil
 
   require 'tempfile'
+  # Lock duration set to 30 minutes
+  LOCK_DURATION = 60*30
 
   # Paperclip validation
   has_attached_file :file, {
@@ -296,22 +298,87 @@ class Asset < ActiveRecord::Base
     cache
   end
 
+  def can_perform_action(action)
+    file_ext = file_file_name.split(".").last
+    action = get_action(file_ext,action)
+    if action.nil?
+      return false
+    end
+    true
+  end
 
-  def get_action_path(user,action)
+
+  def get_action_url(user,action,with_tokens = true)
     file_ext = file_file_name.split(".").last
     action = get_action(file_ext,action)
     if !action.nil?
-      edit_url = action.urlsrc
-      edit_url = edit_url.gsub(/<IsLicensedUser=BUSINESS_USER&>/, "IsLicensedUser=1&")
-      edit_url = edit_url.gsub(/<IsLicensedUser=BUSINESS_USER>/, "IsLicensedUser=1")
-      edit_url = edit_url.gsub(/<.*?=.*?>/, "")
-      #This does not work yet - provides path instead of absolute url
+      action_url = action.urlsrc
+      action_url = action_url.gsub(/<IsLicensedUser=BUSINESS_USER&>/, "IsLicensedUser=0&")
+      action_url = action_url.gsub(/<IsLicensedUser=BUSINESS_USER>/, "IsLicensedUser=0")
+      action_url = action_url.gsub(/<.*?=.*?>/, "")
+
       rest_url = Rails.application.routes.url_helpers.wopi_rest_endpoint_url(host: ENV["WOPI_ENDPOINT_URL"],id: id)
-      edit_url = edit_url + "WOPISrc=#{rest_url}&access_token=#{user.get_wopi_token}&access_token_ttl=#{user.wopi_token_ttl.to_s}"
+      action_url = action_url + "WOPISrc=#{rest_url}"
+      if with_tokens
+        action_url = action_url + "&access_token=#{user.get_wopi_token}&access_token_ttl=#{(user.wopi_token_ttl*1000).to_s}"
+      else
+        action_url
+      end
     else
       return nil
     end
   end
+
+  #is_locked, lock_asset and refresh_lock rely on the asset being locked in the database to prevent race conditions
+  def is_locked
+    if lock.nil?
+      return false
+    else
+      return true
+    end
+  end
+
+  def lock_asset(lock_string)
+    self.lock = lock_string
+    self.lock_ttl = Time.now.to_i + LOCK_DURATION
+    delay(queue: :assets, run_at: LOCK_DURATION.seconds.from_now).unlock_expired
+    self.save!
+  end
+
+  def refresh_lock
+    self.lock_ttl = Time.now.to_i + LOCK_DURATION
+    delay(queue: :assets, run_at: LOCK_DURATION.seconds.from_now).unlock_expired
+    self.save!
+  end
+
+  def unlock
+    self.lock = nil
+    self.lock_ttl = nil
+    self.save!
+  end
+
+  def unlock_expired
+    self.with_lock do
+      if !self.lock_ttl.nil? and self.lock_ttl>= Time.now.to_i
+        self.lock = nil
+        self.lock_ttl = nil
+        self.save!
+      end
+    end
+  end
+
+  def update_contents(new_file)
+    new_file.class.class_eval { attr_accessor :original_filename }
+    new_file.original_filename = self.file_file_name
+    self.file = new_file
+    if self.version.nil?
+      self.version = 1
+    else
+      self.version = self.version + 1
+    end
+      self.save
+  end
+
 
   protected
 

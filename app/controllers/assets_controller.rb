@@ -65,6 +65,18 @@ class AssetsController < ApplicationController
     end
   end
 
+  def edit
+    @action_url = @asset.get_action_url(current_user,"edit",false)
+    @token = current_user.get_wopi_token
+    @ttl = (current_user.wopi_token_ttl*1000).to_s
+  end
+
+  def view
+    @action_url = @asset.get_action_url(current_user,"view",false)
+    @token = current_user.get_wopi_token
+    @ttl = (current_user.wopi_token_ttl*1000).to_s
+  end
+
   private
 
   def load_vars

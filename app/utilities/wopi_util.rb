@@ -58,7 +58,10 @@ module WopiUtil
       end
     rescue
       Rails.logger.warn "Initialization failed"
-      WopiDiscovery.first.destroy
+      discovery = WopiDiscovery.first
+      unless discovery.nil?
+        discovery.destroy
+      end
     end
 
   end

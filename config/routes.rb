@@ -267,11 +267,10 @@ Rails.application.routes.draw do
   end
 
   # Office integration
-  get "wopi/files/:id/contents", to: "wopi#get_file_contents"
-  post "wopi/files/:id/contents", to: "wopi#post_file_contents"
+  get "wopi/files/:id/contents", to: "wopi#get_file_contents_endpoint"
+  post "wopi/files/:id/contents", to: "wopi#post_file_contents_endpoint"
 
-  get "wopi/files/:id", to: "wopi#get_file", as: 'wopi_rest_endpoint'
-  post "wopi/files/:id", to: "wopi#post_file"
-
+  get "wopi/files/:id", to: "wopi#get_file_endpoint", as: 'wopi_rest_endpoint'
+  post "wopi/files/:id", to: "wopi#post_file_endpoint"
 
 end

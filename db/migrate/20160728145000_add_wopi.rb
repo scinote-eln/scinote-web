@@ -6,7 +6,7 @@ class AddWopi< ActiveRecord::Migration
 
     add_column :assets, :lock, :string, :limit => 1024
     add_column :assets, :lock_ttl, :integer
-    add_column :assets, :version, :integer
+    add_column :assets, :version, :integer, default: 1
 
     create_table :wopi_discoveries do |t|
       t.integer :expires, null: false

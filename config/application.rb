@@ -30,7 +30,13 @@ module Scinote
       "[#{datetime}] #{severity}: #{msg}\n"
     end
 
+    config.action_dispatch.default_headers = {
+    'X-WOPI-Lock' => "",
+    'Random-header' => "with value",
+    'Random-non-special-header' => "a"
+    }
+
     # Paperclip spoof checking
-    Paperclip.options[:content_type_mappings] = {:csv => "text/plain"}
+    Paperclip.options[:content_type_mappings] = {:csv => "text/plain", wopitest: ['text/plain', 'inode/x-empty'] }
   end
 end

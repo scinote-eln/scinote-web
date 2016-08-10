@@ -58,7 +58,7 @@ ActiveRecord::Schema.define(version: 20160809074757) do
     t.boolean  "file_present",                     default: false, null: false
     t.string   "lock",                limit: 1024
     t.integer  "lock_ttl"
-    t.integer  "version"
+    t.integer  "version",                          default: 1
   end
 
   add_index "assets", ["created_at"], name: "index_assets_on_created_at", using: :btree
