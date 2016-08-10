@@ -1,8 +1,6 @@
 class AddAttachmentWorkflowimgToExperiments < ActiveRecord::Migration
   def self.up
-    change_table :experiments do |t|
-      t.attachment :workflowimg
-    end
+    add_attachment :experiments, :workflowimg
   end
 
   def self.down
