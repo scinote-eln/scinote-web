@@ -53,13 +53,13 @@ class ResultAssetsController < ApplicationController
     respond_to do |format|
       if (@result.save and @asset.save) then
         # Post process file here
-        @asset.post_process_file(@my_module.project.organization)
+        @asset.post_process_file(@my_module.experiment.project.organization)
 
         # Generate activity
         Activity.create(
           type_of: :add_result,
           user: current_user,
-          project: @my_module.project,
+          project: @my_module.experiment.project,
           my_module: @my_module,
           message: t(
             "activities.add_asset_result",
@@ -123,7 +123,7 @@ class ResultAssetsController < ApplicationController
       if saved
         Activity.create(
           type_of: :archive_result,
-          project: @my_module.project,
+          project: @my_module.experiment.project,
           my_module: @my_module,
           user: current_user,
           message: t(
@@ -144,7 +144,7 @@ class ResultAssetsController < ApplicationController
 
         # Release organization's space taken due to
         # previous asset being removed
-        org = @result.my_module.project.organization
+        org = @result.my_module.experiment.project.organization
         org.release_space(previous_size)
         org.save
 
@@ -156,7 +156,7 @@ class ResultAssetsController < ApplicationController
         Activity.create(
           type_of: :edit_result,
           user: current_user,
-          project: @my_module.project,
+          project: @my_module.experiment.project,
           my_module: @my_module,
           message: t(
             "activities.edit_asset_result",
