@@ -14,7 +14,8 @@ class Experiment < ActiveRecord::Base
   has_many :report_elements, inverse_of: :experiment, dependent: :destroy
 
   has_attached_file :workflowimg
-  validates_attachment_content_type :workflowimg, content_type: /\Aimage\/.*\Z/
+  validates_attachment :workflowimg,
+    content_type: { content_type: ["image/png"] }
 
   validates :name,
             presence: true,
