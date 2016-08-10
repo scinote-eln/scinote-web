@@ -409,14 +409,16 @@ li.module-hover {
 
 // EXPERIMENT PANEL
 
-.experiment-panel{
+.experiment-panel {
   max-width: 650px;
   margin: 0 auto;
   margin-top: 25px;
+  margin-bottom: 15px;
   @include box-shadow(0px 4px 8px 0px $color-dove-gray);
-
 }
-
+.workflowimg-container {
+  margin: 15px 0;
+}
 // SHOW
 .center-btn{
   margin: 0 auto;

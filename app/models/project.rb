@@ -105,7 +105,7 @@ class Project < ActiveRecord::Base
   end
 
   def active_experiments
-    experiments.is_archived(false)
+    experiments.is_archived(false).order('created_at DESC')
   end
 
   def archived_experiments

@@ -268,6 +268,7 @@ class Organization < ActiveRecord::Base
         end
       end
     end
+    # project.experiments.each |experiment|
     self.space_taken = [st, MINIMAL_ORGANIZATION_SPACE_TAKEN].max
     Rails::logger.info "Organization #{self.id}: " +
       "space (re)calculated to: " +

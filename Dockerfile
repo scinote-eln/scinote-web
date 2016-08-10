@@ -2,7 +2,7 @@ FROM rails:4.2.5
 MAINTAINER BioSistemika <info@biosistemika.com>
 
 # additional dependecies
-RUN apt-get update -qq && apt-get install -y default-jre-headless unison sudo --no-install-recommends && rm -rf /var/lib/apt/lists/*
+RUN apt-get update -qq && apt-get install -y default-jre-headless unison sudo graphviz --no-install-recommends && rm -rf /var/lib/apt/lists/*
 
 # heroku tools
 RUN wget -O- https://toolbelt.heroku.com/install-ubuntu.sh | sh
