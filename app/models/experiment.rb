@@ -15,7 +15,7 @@ class Experiment < ActiveRecord::Base
 
   has_attached_file :workflowimg
   validates_attachment :workflowimg,
-    content_type: { content_type: ["image/png"] }
+                       content_type: { content_type: ["image/png"] }
 
   validates :name,
             presence: true,
