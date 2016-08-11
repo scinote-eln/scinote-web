@@ -1,0 +1,26 @@
+<!-- Clone experiment modal -->
+<div class="modal"
+     id="clone-experiment-modal-<%= @experiment.id %>"
+     tabindex="-1"
+     role="dialog"
+     aria-labelledby="clone-experiment-modal-label">
+     <%= bootstrap_form_for @experiment, url: clone_experiment_path(),
+                            method: :post do |f| %>
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="clone-experiment-modal-label"><%= t("experiments.clone.modal_title", experiment: @experiment.name ) %></h5>
+        </div>
+        <div class="modal-body">
+          <%= f.select :project_id, @projects.collect { |p| [ p.name, p.id ] }, {},
+                       {class: "form-control selectpicker", "data-role" => "clear"} %>
+        </div>
+        <div class="modal-footer">
+          <%= f.submit t("experiments.clone.modal_submit"), class: "btn btn-primary" %>
+          <button type="button" class="btn btn-default" data-dismiss="modal"><%=t "general.cancel" %></button>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>
