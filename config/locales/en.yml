@@ -619,6 +619,8 @@ en:
       modal_title: 'Clone experiment %{experiment}'
       label_title: 'Clone'
       modal_submit: 'Clone'
+      success_flash: "Successfully cloned experiment %{experiment}"
+      error_flash: 'Could not clone the experiment.'
     canvas:
       archive_confirm: "Are you sure to archive this experiment?"
       actions: 'Actions'

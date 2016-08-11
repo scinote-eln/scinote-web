@@ -306,6 +306,30 @@ class Experiment < ActiveRecord::Base
     end
   end
 
+  # Clone this experiment to given project
+  def deep_clone_to_project(current_user, project)
+    clone = Experiment.new(
+      name: name + rand(1..1000).to_s,
+      description: description,
+      created_by: current_user,
+      last_modified_by: current_user,
+      project: project
+    )
+
+    # Copy all workflows
+    my_module_groups.each do |g|
+      clone.my_module_groups << g.deep_clone_to_experiment(current_user, clone)
+    end
+
+    # Copy modules without group
+    clone.my_modules << modules_without_group.map do |m|
+      m.deep_clone_to_experiment(current_user, clone)
+    end
+    clone.save
+
+    clone
+  end
+
   private
 
   # Archive all modules. Receives an array of module integer IDs.

@@ -90,6 +90,7 @@ class ExperimentsController < ApplicationController
 
   # GET: clone_modal_experiment_path(id)
   def clone_modal
+    @projects = projects_with_role_above_user
     respond_to do |format|
       format.json do
         render json: {
@@ -103,7 +104,18 @@ class ExperimentsController < ApplicationController
 
   # POST: clone_experiment(id)
   def clone
-    redirect_to project_path(@experiment.project)
+    project = Project.find_by_id(params[:experiment][:project_id])
+
+    if projects_with_role_above_user.include?(project)
+      @experiment.deep_clone_to_project(current_user, project)
+      flash[:success] = t('experiments.clone.success_flash',
+                          experiment: @experiment.name)
+      redirect_to project_path(@experiment.project)
+    else
+      flash[:error] = t('experiments.clone.error_flash',
+                          experiment: @experiment.name)
+      redirect_to project_path(@experiment.project)
+    end
   end
 
   def module_archive
@@ -160,5 +172,17 @@ class ExperimentsController < ApplicationController
 
   def choose_layout
     action_name.in?(%w(index archive)) ? 'main' : 'fluid'
+  end
+
+  # Get projects where user is either owner or user in the same organization
+  # as this experiment
+  def projects_with_role_above_user
+    organization = @experiment.project.organization
+    current_user.user_projects
+                .where(project:
+                        Project.where(organization: organization)
+                              .where(archived: false))
+                .where('role < 2')
+                .map(&:project)
   end
 end
