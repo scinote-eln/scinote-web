@@ -422,7 +422,8 @@
             exitOnOverlayClick: false,
             exitOnEsc: false,
             disableInteraction: true,
-            tooltipClass: 'custom'
+            tooltipClass: 'custom',
+            tooltipPosition: 'right'
           })
           .goToStep(goToStep)
           .onafterchange(function (tarEl) {
@@ -504,6 +505,19 @@
     }
   }
 
+  //
+  function project_tutorial_helper(){
+    if( $('.panel').hasClass('introjs-showElement')){
+      $('.introjs-showElement')
+        .find('.form-submit-link')
+        .css({
+          'pointer-events': 'none',
+          'color': '#d2d2d2'});
+
+    }
+  }
+
   init();
+  project_tutorial_helper();
 
 }());
