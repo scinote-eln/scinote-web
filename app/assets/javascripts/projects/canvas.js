@@ -3156,6 +3156,7 @@ function initializeTutorial(isEditMode) {
 function canvas_tutorial_helper(){
   $(document).ready(function(){
     if( $('div').hasClass('introjs-showElement') ){
+
       $('#slide-panel')
       .css({'pointer-events': 'none'});
 
@@ -3172,10 +3173,12 @@ function canvas_tutorial_helper(){
       });
     }
   });
-  $(document).change(function(){
-    console.log("changed");
-    $('#canvas-new-module')
-    .css({'pointer-events': 'none'});
+
+  $( document ).ajaxComplete(function() {
+    if( $('div').hasClass('introjs-showElement') ){
+      $('#canvas-new-module')
+      .css({'pointer-events': 'none'});
+    }
   });
 }
 
