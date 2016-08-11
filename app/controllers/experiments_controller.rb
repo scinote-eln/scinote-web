@@ -9,6 +9,8 @@ class ExperimentsController < ApplicationController
                 only: [:canvas, :module_archive]
   before_action :check_module_archive_permissions,
                 only: [:module_archive]
+  before_action :check_experiment_clone_permissions,
+                only: [:clone_modal, :clone]
 
   # except parameter could be used but it is not working.
   layout :choose_layout
@@ -86,6 +88,24 @@ class ExperimentsController < ApplicationController
     end
   end
 
+  # GET: clone_modal_experiment_path(id)
+  def clone_modal
+    respond_to do |format|
+      format.json do
+        render json: {
+          html: render_to_string(
+            partial: 'clone_modal.html.erb'
+          )
+        }
+      end
+    end
+  end
+
+  # POST: clone_experiment(id)
+  def clone
+    redirect_to project_path(@experiment.project)
+  end
+
   def module_archive
   end
 
@@ -132,6 +152,10 @@ class ExperimentsController < ApplicationController
 
   def check_module_archive_permissions
     render_403 unless can_view_experiment_archive(@experiment)
+  end
+
+  def check_experiment_clone_permissions
+    render_403 unless can_clone_experiment(@experiment)
   end
 
   def choose_layout

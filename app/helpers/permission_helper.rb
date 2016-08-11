@@ -355,6 +355,14 @@ module PermissionHelper
   def can_view_experiment_samples(experiment)
     can_view_samples(experiment.project.organization)
   end
+
+  def can_clone_experiment(experiment)
+    is_user_or_higher_of_project(experiment.project)
+  end
+
+  def can_move_experiment(experiment)
+    is_user_or_higher_of_project(experiment.project)
+  end
   # ---- WORKFLOW PERMISSIONS ----
 
   def can_edit_canvas(experiment)

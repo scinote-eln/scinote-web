@@ -3,15 +3,16 @@
 
 (function(){
 
-  // Initialize new experiment form
-  function initializeNewExperimentModal(){
-    $("#new-experiment")
+  // Create ajax hook on given 'element', which should return modal with 'id' =>
+  // show that modal
+  function initializeModal(element, id){
+    $(element)
     .on("ajax:beforeSend", function(){
       animateSpinner();
     })
     .on("ajax:success", function(e, data){
       $('body').append($.parseHTML(data.html));
-      $('#new-experiment-modal').modal('show',{
+      $(id).modal('show',{
         backdrop: true,
         keyboard: false,
       });
@@ -25,33 +26,30 @@
     });
   }
 
-  // Initialize edit experiment form
-  function initializeEditExperimentsModal(){
+  // Initialize dropdown actions on experiment:
+  // - edit
+  // - clone
+  function initializeDropdownActions(){
+    // { buttonClass: modalName } mappings
+    // click on buttonClass summons modalName dialog
+    modals = {
+      '.edit-experiment': '#edit-experiment-modal-',
+      '.clone-experiment': '#clone-experiment-modal-'
+    }
+
     $.each($(".experiment-panel"), function(){
-      var id = '#edit-experiment-modal-' + $(this).data('id');
-      $(this)
-      .on("ajax:beforeSend", function(){
-        animateSpinner();
-      })
-      .on("ajax:success", function(e, data){
-        console.log("request success");
-        $('body').append($.parseHTML(data.html));
-        $(id).modal('show',{
-          backdrop: true,
-          keyboard: false,
-        });
-      })
-      .on("ajax:error", function() {
-        animateSpinner(null, false);
-        // TODO
-      })
-      .on("ajax:complete", function(){
-        animateSpinner(null, false);
+      var $expPanel = $(this);
+      $.each(modals, function(buttonClass, modalName) {
+        var id = modalName + $expPanel.data('id');
+        initializeModal($expPanel.find(buttonClass), id);
       });
     });
   }
 
-  // init modals
-  initializeNewExperimentModal();
-  initializeEditExperimentsModal();
+  // Bind modal to new-experiment action
+  initializeModal($("#new-experiment"), '#new-experiment-modal');
+
+  // Bind modal to all actions listed on dropdown accesible from experiment
+  // panel
+  initializeDropdownActions();
 })();

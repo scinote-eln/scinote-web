@@ -615,6 +615,10 @@ en:
       success_flash: "Successfully archived experiment %{experiment}"
       error_flash: 'Could not archive the experiment.'
       label_title: 'Archive'
+    clone:
+      modal_title: 'Clone experiment %{experiment}'
+      label_title: 'Clone'
+      modal_submit: 'Clone'
     canvas:
       archive_confirm: "Are you sure to archive this experiment?"
       actions: 'Actions'
