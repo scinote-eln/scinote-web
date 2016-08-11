@@ -308,8 +308,15 @@ class Experiment < ActiveRecord::Base
 
   # Clone this experiment to given project
   def deep_clone_to_project(current_user, project)
+    # First we have to find unique name for our little experiment
+    experiment_names = project.experiments.map(&:name)
+    new_name = name + " - clone "
+
+    i = 1
+    i += 1 while experiment_names.include?(new_name + i.to_s)
+
     clone = Experiment.new(
-      name: name + rand(1..1000).to_s,
+      name: new_name + i.to_s,
       description: description,
       created_by: current_user,
       last_modified_by: current_user,
@@ -326,6 +333,9 @@ class Experiment < ActiveRecord::Base
       m.deep_clone_to_experiment(current_user, clone)
     end
     clone.save
+
+    # Create workflow image
+    clone.delay.generate_workflow_img
 
     clone
   end

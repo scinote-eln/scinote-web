@@ -998,6 +998,7 @@ en:
     edit_asset_result: "<i>%{user}</i> edited file result <strong>%{result}</strong>."
     edit_text_result: "<i>%{user}</i> edited text result <strong>%{result}</strong>."
     edit_table_result: "<i>%{user}</i> edited table result <strong>%{result}</strong>."
+    clone_experiment: "<i>%{user}</i> cloned <strong>%{experiment_new}</strong> from <strong>%{experiment_original}</strong>."
 
   user_my_modules:
     new:
