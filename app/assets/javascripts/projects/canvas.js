@@ -146,6 +146,7 @@ jsPlumb.ready(function () {
   initializeGraph(".diagram .module-large");
   initializeFullZoom();
   initializeTutorial(false);
+  canvas_tutorial_helper();
 });
 
 //************************************
@@ -3090,6 +3091,7 @@ function initializeTutorial(isEditMode) {
         $(this).click(function (){
           Cookies.remove('tutorial_data');
           Cookies.remove('current_tutorial_step');
+          restore_after_tutorial();
         });
       });
     } else if (!isEditMode && currentStep > 5 || currentStep < 10) {
@@ -3145,9 +3147,56 @@ function initializeTutorial(isEditMode) {
       $(this).click(function (){
         Cookies.remove('tutorial_data');
         Cookies.remove('current_tutorial_step');
+        restore_after_tutorial();
       });
     });
   }
+}
+
+function canvas_tutorial_helper(){
+  $(document).ready(function(){
+    if( $('div').hasClass('introjs-showElement') ){
+      $('#slide-panel')
+      .css({'pointer-events': 'none'});
+
+      $.each( $('.panel-default'), function(i, el){
+        $(el)
+        .find('.tab-pane')
+        .css({'pointer-events': 'none'});
+        $(el)
+        .find('.edit-tags-link')
+        .css({'pointer-events': 'none'});
+        $(el)
+        .find('.panel-heading')
+        .css({'pointer-events': 'none'});
+      });
+    }
+  });
+  $(document).change(function(){
+    console.log("changed");
+    $('#canvas-new-module')
+    .css({'pointer-events': 'none'});
+  });
+}
+
+function restore_after_tutorial(){
+  $('#canvas-new-module')
+  .css({'pointer-events': 'auto'});
+
+  $('#slide-panel')
+  .css({'pointer-events': 'auto'});
+
+  $.each( $('.panel-default'), function(i, el){
+    $(el)
+    .find('.tab-pane')
+    .css({'pointer-events': 'auto'});
+    $(el)
+    .find('.edit-tags-link')
+    .css({'pointer-events': 'auto'});
+    $(el)
+    .find('.panel-heading')
+    .css({'pointer-events': 'auto'});
+  });
 }
 
 function showTutorial() {

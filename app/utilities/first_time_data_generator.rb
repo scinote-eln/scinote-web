@@ -170,8 +170,8 @@ module FirstTimeDataGenerator
         created_at: generate_random_time(6.days.ago),
         due_date: Time.now + (2 * i + 1).weeks,
         description: i == 5 ? qpcr_module_description : nil,
-        x: i < 4 ? i % 4 : 7 - i,
-        y: i/4,
+        x: ( i < 4 ? i % 4 : 7 - i ) * 32,
+        y: (i/4) * 16,
         project: project,
         workflow_order: i,
         my_module_group: my_module_group

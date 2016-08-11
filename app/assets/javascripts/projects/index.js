@@ -449,6 +449,7 @@
           $(this).click(function (){
             Cookies.remove('tutorial_data');
             Cookies.remove('current_tutorial_step');
+            restore_after_tutorial();
           });
         });
 
@@ -489,6 +490,7 @@
           .oncomplete(function () {
             Cookies.remove('tutorial_data');
             Cookies.remove('current_tutorial_step');
+            restore_after_tutorial();
           })
           .start();
 
@@ -505,19 +507,42 @@
     }
   }
 
-  //
   function project_tutorial_helper(){
-    if( $('.panel').hasClass('introjs-showElement')){
-      $('.introjs-showElement')
-        .find('.form-submit-link')
-        .css({
-          'pointer-events': 'none',
-          'color': '#d2d2d2'});
+    $(document).ready(function(){
+      if( $('div').hasClass('introjs-overlay')){
+        $.each($('.panel'), function(i, el){
+          $(el)
+          .find('.panel-title')
+          .css({ 'pointer-events': 'none' });
+          $(el)
+          .find('.tab-content')
+          .css({ 'pointer-events': 'none' });
+          $(el)
+          .find('.form-submit-link')
+          .css({
+            'pointer-events': 'none',
+            'color': '#d2d2d2'});
+        });
+      }
+    });
+  }
 
-    }
+  function restore_after_tutorial(){
+    $('.introjs-showElement')
+      .find('.form-submit-link')
+      .css({
+        'pointer-events': 'auto',
+        'color': '#262626'});
+    $.each($('.panel'), function(i, el){
+      $(el)
+      .find('.tab-content')
+      .css({ 'pointer-events': 'auto' });
+    });
   }
 
   init();
   project_tutorial_helper();
+
+
 
 }());
