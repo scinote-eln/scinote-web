@@ -106,11 +106,32 @@ class ExperimentsController < ApplicationController
   def clone
     project = Project.find_by_id(params[:experiment][:project_id])
 
+    # Try to clone the experiment
+    success = true
     if projects_with_role_above_user.include?(project)
-      @experiment.deep_clone_to_project(current_user, project)
+      cloned_experiment = @experiment.deep_clone_to_project(current_user,
+                                                            project)
+      success = cloned_experiment.valid?
+    else
+      success = false
+    end
+
+    if success
+      Activity.create(
+        type_of: :clone_experiment,
+        project: project,
+        user: current_user,
+        message: I18n.t(
+          "activities.clone_experiment",
+          user: current_user.full_name,
+          experiment_new: cloned_experiment.name,
+          experiment_original: @experiment.name
+        )
+      )
+
       flash[:success] = t('experiments.clone.success_flash',
                           experiment: @experiment.name)
-      redirect_to project_path(@experiment.project)
+      redirect_to canvas_experiment_path(cloned_experiment)
     else
       flash[:error] = t('experiments.clone.error_flash',
                           experiment: @experiment.name)
