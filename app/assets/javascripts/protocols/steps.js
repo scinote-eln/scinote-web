@@ -200,9 +200,6 @@ function formEditAjax($form) {
     $new_step.find("[data-role='step-hot-table']").each(function()  {
       renderTable($(this));
     });
-
-    var $stepImgs = $new_step.find("img");
-    reloadImagesHack($stepImgs);
   })
   .on("ajax:error", function(e, xhr, status, error) {
     $(this).after(xhr.responseJSON.html);
@@ -245,9 +242,6 @@ function formNewAjax($form) {
     $new_step.find("div.step-result-hot-table").each(function()  {
       $(this).handsontable("render");
     });
-
-    var $stepImgs = $new_step.find("img");
-    reloadImagesHack($stepImgs);
   })
   .on("ajax:error", function(e, xhr, status, error) {
     $(this).after(xhr.responseJSON.html);
@@ -583,10 +577,9 @@ $("[data-action='new-step']").on("ajax:success", function(e, data) {
 function processStep(ev, editMode, forS3) {
   var $form = $(ev.target.form);
 
-  $form.clear_form_errors();
-  $tables = $form.find(".nested_step_tables");
-  removeBlankExcelTables($tables, editMode);
-  removeBlankFileForms($form);
+  $form.clearFormErrors();
+  $form.removeBlankExcelTables(editMode);
+  $form.removeBlankFileForms();
 
   var $fileInputs = $form.find("input[type=file]");
   var filesValid = filesValidator(ev, $fileInputs, FileTypeEnum.FILE);
@@ -595,13 +588,13 @@ function processStep(ev, editMode, forS3) {
   var $nameInput = $form.find("#step_name");
   var nameValid = textValidator(ev, $nameInput);
 
-  if(filesValid && checklistsValid && nameValid) {
-    if(forS3) {
+  if (filesValid && checklistsValid && nameValid) {
+    if (forS3) {
       // Redirects file uploading to S3
       startFileUpload(ev, ev.target);
     } else {
       // Local file uploading
-      animateSpinner(null, true, undefined, I18n.t("general.file.uploading"));
+      animateSpinner();
     }
   }
 }
@@ -658,10 +651,9 @@ function renderTable(table) {
 // S3 direct uploading
 function startFileUpload(ev, btn) {
   var $form = $(btn.form);
-  var $fileInputs = $form.find("input[type=file]");
   var url = '/asset_signature.json';
 
-  directUpload(ev, $fileInputs, url, function (fileInput, fileId) {
+  directUpload(ev, $form, url, function (fileInput, fileId) {
     fileInput.type = "hidden";
     fileInput.name = fileInput.name.replace("[file]", "[id]");
     fileInput.value = fileId;

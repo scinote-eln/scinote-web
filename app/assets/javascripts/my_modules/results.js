@@ -311,7 +311,7 @@ var ResultTypeEnum = Object.freeze({
 
 function processResult(ev, resultTypeEnum, forS3) {
   var $form = $(ev.target.form);
-  $form.clear_form_errors();
+  $form.clearFormErrors();
 
   switch(resultTypeEnum) {
     case ResultTypeEnum.FILE:
@@ -326,7 +326,7 @@ function processResult(ev, resultTypeEnum, forS3) {
           startFileUpload(ev, ev.target);
         } else {
           // Local file uploading
-          animateSpinner(null, true, undefined, I18n.t("general.file.uploading"));
+          animateSpinner();
         }
       }
       break;
@@ -351,10 +351,9 @@ function processResult(ev, resultTypeEnum, forS3) {
 function startFileUpload(ev, btn) {
   var $form = $(btn.form);
   var $editFileInput = $form.find("input[name='result[asset_attributes][id]']").get(0);
-  var $fileInput = $form.find("input[type=file]");
   var url = '/asset_signature.json';
 
-  directUpload(ev, $fileInput, url, function (fileInput, fileId) {
+  directUpload(ev, $form, url, function (fileInput, fileId) {
     if ($editFileInput) {
       // edit mode - input field has to be removed
       $editFileInput.value = fileId;

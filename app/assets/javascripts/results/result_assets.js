@@ -63,12 +63,9 @@ function formAjaxResultAsset($form) {
     toggleResultEditButtons(true);
     initResultCommentTabAjax();
     expandResult(newResult);
-
-    var $resultImg = newResult.find("img");
-    reloadImagesHack($resultImg);
   })
   .on("ajax:error", function(e, data) {
-    $form.render_form_errors("result", data.errors, true, e);
+    $form.renderFormErrors("result", data.errors, true, e);
   });
 }
 

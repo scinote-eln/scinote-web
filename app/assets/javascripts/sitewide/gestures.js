@@ -1,4 +1,6 @@
-// Scroll to and focus on element
+/*
+ * Scroll to and focus on element.
+ */
 function goToFormElement(input) {
 	$("html, body").stop();
 	$("html, body").animate(

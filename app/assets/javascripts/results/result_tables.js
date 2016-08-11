@@ -103,7 +103,7 @@ function formAjaxResultTable($form) {
   });
   $form.on("ajax:error", function(e, xhr, status, error) {
     var data = xhr.responseJSON;
-    $form.render_form_errors("result", data);
+    $form.renderFormErrors("result", data);
   });
 }
 

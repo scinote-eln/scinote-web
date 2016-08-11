@@ -15,7 +15,7 @@ function toggleFormVisibility(form, edit) {
     form.find("[data-part='edit']").hide();
 
     // Clear all errors on the parent form
-    form.clear_form_errors();
+    form.clearFormErrors();
 
     // Clear any neccesary fields
     form.find("input[data-role='clear']").val("");
@@ -60,12 +60,12 @@ forms
 })
 .on("ajax:error", function(ev, data, status) {
   // Render form errors
-  $(this).render_form_errors("user", data.responseJSON);
+  $(this).renderFormErrors("user", data.responseJSON);
 });
 
 function processFile(ev, forS3) {
   var $form = $(ev.target.form);
-  $form.clear_form_errors();
+  $form.clearFormErrors();
 
   var $fileInput = $form.find("input[type=file]");
   if(filesValidator(ev, $fileInput, FileTypeEnum.AVATAR)) {
@@ -74,7 +74,7 @@ function processFile(ev, forS3) {
       startFileUpload(ev, ev.target);
     } else {
       // Local file uploading
-      animateSpinner(null, true, undefined, I18n.t("general.file.uploading"));
+      animateSpinner();
     }
   }
 }
@@ -82,9 +82,8 @@ function processFile(ev, forS3) {
 // S3 direct uploading
 function startFileUpload(ev, btn) {
   var $form = $(btn.form);
-  var $fileInput = $form.find("input[type=file]");
   var url = "/avatar_signature.json";
 
-  directUpload(ev, $fileInput, url, function () {
+  directUpload(ev, $form, url, function () {
   });
 }

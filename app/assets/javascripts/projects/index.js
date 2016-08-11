@@ -52,10 +52,10 @@
     newProjectModal.on("hidden.bs.modal", function () {
       // When closing the new project modal, clear its input vals
       // and potential errors
-      newProjectModalForm.clear_form_errors();
+      newProjectModalForm.clearFormErrors();
 
       // Clear input fields
-      newProjectModalForm.clear_form_fields();
+      newProjectModalForm.clearFormFields();
       var orgSelect = newProjectModalForm.find('select#project_organization_id');
       orgSelect.val(0);
       orgSelect.selectpicker('refresh');
@@ -82,7 +82,7 @@
       $(location).attr("href", status.url);
     })
     .on("ajax:error", function(jqxhr, status, error) {
-      $(this).render_form_errors("project", status.responseJSON);
+      $(this).renderFormErrors("project", status.responseJSON);
     })
     .on("ajax:complete", function(){
       animateSpinner(newProjectModalBody, false);
@@ -144,7 +144,7 @@
         editProjectModal.modal("hide");
       })
       .on("ajax:error", function(ev2, data2, status2) {
-        $(this).render_form_errors("project", data2.responseJSON);
+        $(this).renderFormErrors("project", data2.responseJSON);
       })
       .on("ajax:complete", function(){
         animateSpinner(this, false);

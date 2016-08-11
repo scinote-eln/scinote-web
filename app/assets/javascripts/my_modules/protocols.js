@@ -30,7 +30,7 @@ function initEditDescription() {
     })
     .on("ajax:error", function(ev2, data2, status2) {
       // Display errors if needed
-      $(this).render_form_errors("my_module", data.responseJSON);
+      $(this).renderFormErrors("my_module", data.responseJSON);
     });
 
     // Show modal
@@ -81,7 +81,7 @@ function bindEditDueDateAjax() {
     })
     .on("ajax:error", function(ev2, data2, status2) {
       // Display errors if needed
-      $(this).render_form_errors("my_module", data.responseJSON);
+      $(this).renderFormErrors("my_module", data.responseJSON);
     });
 
     // Open modal
@@ -206,7 +206,7 @@ function initCopyToRepository() {
     .on("ajax:error", function(e2, data2) {
       // Display errors in form
       if (data2.status === 422) {
-        $(this).render_form_errors("protocol", data2.responseJSON);
+        $(this).renderFormErrors("protocol", data2.responseJSON);
       } else {
         // Simply display global error
         alert(data2.responseJSON.message);

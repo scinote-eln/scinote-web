@@ -622,7 +622,7 @@ function bindFullZoomAjaxTabs() {
       })
       .on("ajax:error", function(ev2, data2, status2) {
         // Display errors if needed
-        $(this).render_form_errors("my_module", data.responseJSON);
+        $(this).renderFormErrors("my_module", data.responseJSON);
       });
 
     // Disable canvas dragging events
@@ -878,7 +878,7 @@ function bindEditDueDateAjax() {
     })
     .on("ajax:error", function(ev2, data2, status2) {
       // Display errors if needed
-      $(this).render_form_errors("my_module", data.responseJSON);
+      $(this).renderFormErrors("my_module", data.responseJSON);
     });
 
     // Disable canvas dragging events
@@ -930,7 +930,7 @@ function bindEditTagsAjax(elements) {
         manageTagsModalBody.find("li.list-group-item").each(function(){
           var li = $(this);
           li.css("background-color", li.data("color"));
-          li.find(".edit-tag-form").clear_form_errors();
+          li.find(".edit-tag-form").clearFormErrors();
           li.find("input[type=text]").val(li.data("name"));
         });
 
@@ -964,7 +964,7 @@ function bindEditTagsAjax(elements) {
         initTagsModalBody(data);
       })
       .on("ajax:error", function (e, data) {
-        $(this).render_form_errors("tag", data.responseJSON);
+        $(this).renderFormErrors("tag", data.responseJSON);
       });
     manageTagsModalBody.find(".cancel-tag-link")
       .on("click", function (e, data) {
@@ -972,7 +972,7 @@ function bindEditTagsAjax(elements) {
         var li = $this.parents("li.list-group-item");
 
         li.css("background-color", li.data("color"));
-        li.find(".edit-tag-form").clear_form_errors();
+        li.find(".edit-tag-form").clearFormErrors();
 
         li.find("div.tag-edit").hide();
         li.find("div.tag-show").show();

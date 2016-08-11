@@ -1,5 +1,7 @@
-// Converts JSON data received from the server
-// to flat array of values
+/*
+ * Converts JSON data received from the server to flat array
+ * of values.
+ */
 function jsonToValuesArray(jsonData) {
   errMsgs =[];
   for (var key in jsonData) {

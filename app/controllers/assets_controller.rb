@@ -8,7 +8,6 @@ class AssetsController < ApplicationController
     respond_to do |format|
       format.json {
 
-        validationAsset = nil
         if asset_params[:asset_id]
           asset = Asset.find_by_id asset_params[:asset_id]
           asset.file.destroy
@@ -21,12 +20,9 @@ class AssetsController < ApplicationController
           validationAsset = Asset.new(asset_params)
         end
 
-        if validationAsset.errors.any?
-          render json: {
-            status: 'error',
-            errors: validationAsset.errors
-          } , status: :bad_request
-        else
+        # We need to validate again so that asset's
+        # after_validation gets triggered
+        if validationAsset.valid?
           asset.save!
 
           posts = generate_upload_posts asset
@@ -34,6 +30,11 @@ class AssetsController < ApplicationController
             asset_id: asset.id,
             posts: posts
           }
+        else
+          render json: {
+            status: 'error',
+            errors: validationAsset.errors
+          } , status: :bad_request
         end
       }
     end

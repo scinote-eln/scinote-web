@@ -1,4 +1,6 @@
-// Truncate long strings where is necessary
+/*
+ * Truncate long strings where is necessary.
+ */
 function truncateLongString( el, chars ) {
   var input = $.trim(el.text());
 
@@ -14,8 +16,10 @@ function truncateLongString( el, chars ) {
   }
 }
 
-// Usefull for converting locals messages to error
-// format (i.e. lower cased capital and no dot)
+/*
+ * Usefull for converting locals messages to error format
+ * (i.e. lower cased capital and no dot at the end).
+ */
 String.prototype.strToErrorFormat = function() {
 	var length = this.length;
 	if (this[length - 1] === ".") {

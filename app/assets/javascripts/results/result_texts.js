@@ -65,7 +65,7 @@ function formAjaxResultText($form) {
     });
     $form.on("ajax:error", function(e, xhr, status, error) {
         var data = xhr.responseJSON;
-        $form.render_form_errors("result", data);
+        $form.renderFormErrors("result", data);
 
         if (data["result_text.text"]) {
             var $el = $form.find("textarea[name=result\\[result_text_attributes\\]\\[text\\]]");

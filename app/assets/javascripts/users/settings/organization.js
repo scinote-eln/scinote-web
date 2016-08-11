@@ -24,7 +24,7 @@ function initEditName() {
       // Display errors if needed
       editNameModalBody
       .find("form")
-      .render_form_errors("organization", data2.responseJSON);
+      .renderFormErrors("organization", data2.responseJSON);
     });
 
     // Show modal
@@ -69,7 +69,7 @@ function initEditDescription() {
       // Display errors if needed
       editDescriptionModalBody
       .find("form")
-      .render_form_errors("organization", data2.responseJSON);
+      .renderFormErrors("organization", data2.responseJSON);
     });
 
     // Show modal

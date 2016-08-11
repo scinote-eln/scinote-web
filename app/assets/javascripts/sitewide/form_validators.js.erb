@@ -1,13 +1,17 @@
-// Form validators. They'll find, render and focus error/s and
-// prevent form submission.
+/*
+ * Form validators. They'll find, render and focus error/s and
+ * prevent form submission.
+ */
 
-// Calls specified validator along with the arguments on form submition
+/*
+ * Calls specified validator along with the arguments on form submition.
+ */
 $.fn.onSubmitValidator = function(validatorCb) {
   var params = Array.prototype.slice.call(arguments, 1);
   var $form = $(this);
   if ($form.length) {
     $form.submit(function (ev) {
-      $form.clear_form_errors();
+      $form.clearFormErrors();
       params.unshift(ev);
       validatorCb.apply(this, params);
     });
@@ -130,8 +134,10 @@ function filesSizeValidator(ev, fileInputs, fileTypeEnum) {
   return filesSizeValid;
 }
 
-// Overriden in billing module for checking
-// whether enough organization space is free
+/*
+ * Overriden in billing module for checking whether enough
+ * organization space is free.
+ */
 function enaughSpaceValidator(ev, fileInputs) {
   return true;
 }
