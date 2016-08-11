@@ -4,7 +4,7 @@ class ExperimentsController < ApplicationController
                 except: [:new, :create]
   before_action :set_project,
                 only: [:new, :create, :samples_index,
-                       :samples, :module_archive]
+                       :samples, :module_archive, :clone_modal]
   before_action :check_view_permissions,
                 only: [:canvas, :module_archive]
   before_action :check_module_archive_permissions,

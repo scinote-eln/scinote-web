@@ -13,8 +13,9 @@
           <h4 class="modal-title" id="clone-experiment-modal-label"><%= t("experiments.clone.modal_title", experiment: @experiment.name ) %></h5>
         </div>
         <div class="modal-body">
-          <%= f.select :project_id, @projects.collect { |p| [ p.name, p.id ] }, {},
-                       {class: "form-control selectpicker", "data-role" => "clear"} %>
+          <%= f.select :project_id, options_for_select(@projects.collect { |p| [ p.name, p.id ] },
+                                                       @project.id ),
+                       {}, {class: "form-control selectpicker", "data-role" => "clear"} %>
         </div>
         <div class="modal-footer">
           <%= f.submit t("experiments.clone.modal_submit"), class: "btn btn-primary" %>
