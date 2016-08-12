@@ -13,3 +13,11 @@
     overflow-x: hidden !important;
   }
 }
+
+tr {
+  page-break-inside: avoid;
+}
+
+thead {
+  display: table-row-group;
+}
