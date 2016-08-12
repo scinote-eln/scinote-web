@@ -334,15 +334,24 @@ function importProtocolFromFile(
     if (importIntoProtocol && !confirm(I18n.t("protocols.import_export.import_modal.import_into_protocol_confirm"))) {
       importModal.modal("hide");
     } else {
-      // Show spinner
-      animateSpinner(importModal);
 
-      importSingleProtocol(currentProtocol, false, function(data) {
-        animateSpinner(importModal, false);
-        importModal.find("[data-role='preview-container']").html("");
-        importModal.modal("hide");
-        afterImportCallback([data]);
-      });
+      var path = new RegExp("modules");
+      if( path.test( window.location.href ) ){
+        importSingleProtocol(currentProtocol, false, function(data) {
+          importModal.find("[data-role='preview-container']").html("");
+          afterImportCallback([data]);
+        });
+
+      } else {
+        // Show spinner
+        animateSpinner(importModal);
+        importSingleProtocol(currentProtocol, false, function(data) {
+            animateSpinner(importModal, false);
+            importModal.find("[data-role='preview-container']").html("");
+            importModal.modal("hide");
+            afterImportCallback([data]);
+        });
+      }
     }
   }
 
