@@ -158,6 +158,7 @@ class SampleDatatable < AjaxDatatablesRails::Base
   def fetch_records
     records = get_raw_records
     records = sort_records(records) if params[:order].present?
+    escape_special_chars
     records = filter_records(records) if params[:search].present? && (not (sorting_by_custom_column))
     records = paginate_records(records) if (not (params[:length].present? && params[:length] == '-1')) && (not (sorting_by_custom_column))
     records
@@ -284,4 +285,12 @@ class SampleDatatable < AjaxDatatablesRails::Base
     params[:order].values[0]["column"].to_i > 6
   end
 
+  # Escapes special characters in search query
+  def escape_special_chars
+    params[:search][:value] = ActiveRecord::Base
+                              .send(:sanitize_sql_like,
+                                    params[:search][:value]) if params[:search]
+                                                                .present?
+
+  end
 end
