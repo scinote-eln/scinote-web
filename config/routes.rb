@@ -125,6 +125,8 @@ Rails.application.routes.draw do
       get 'archive' # archive experiment
       get 'clone_modal' # return modal with clone options
       post 'clone' # clone experiment
+      get 'move_modal' # return modal with move options
+      post 'move' # move experiment
       get 'samples' # Samples for single project
       # Renders sample datatable for single project (ajax action)
       post 'samples_index'

@@ -4,13 +4,16 @@ class ExperimentsController < ApplicationController
                 except: [:new, :create]
   before_action :set_project,
                 only: [:new, :create, :samples_index,
-                       :samples, :module_archive, :clone_modal]
+                       :samples, :module_archive, :clone_modal,
+                       :move_modal]
   before_action :check_view_permissions,
                 only: [:canvas, :module_archive]
   before_action :check_module_archive_permissions,
                 only: [:module_archive]
   before_action :check_experiment_clone_permissions,
                 only: [:clone_modal, :clone]
+  before_action :check_experiment_move_permissions,
+                only: [:move_modal, :move]
 
   # except parameter could be used but it is not working.
   layout :choose_layout
@@ -139,6 +142,34 @@ class ExperimentsController < ApplicationController
     end
   end
 
+  # GET: move_modal_experiment_path(id)
+  def move_modal
+    @projects = projects_with_role_above_user
+    respond_to do |format|
+      format.json do
+        render json: {
+          html: render_to_string(
+            partial: 'move_modal.html.erb'
+          )
+        }
+      end
+    end
+  end
+
+  # POST: move_experiment(id)
+  def move
+    success = true
+    if success
+      flash[:success] = t('experiments.move.success_flash',
+                          experiment: @experiment.name)
+      redirect_to canvas_experiment_path(@experiment)
+    else
+      flash[:error] = t('experiments.move.error_flash',
+                          experiment: @experiment.name)
+      redirect_to project_path(@experiment.project)
+    end
+  end
+
   def module_archive
   end
 
@@ -189,6 +220,10 @@ class ExperimentsController < ApplicationController
 
   def check_experiment_clone_permissions
     render_403 unless can_clone_experiment(@experiment)
+  end
+
+  def check_experiment_move_permissions
+    render_403 unless can_move_experiment(@experiment)
   end
 
   def choose_layout

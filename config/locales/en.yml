@@ -621,6 +621,12 @@ en:
       modal_submit: 'Clone'
       success_flash: "Successfully cloned experiment %{experiment}"
       error_flash: 'Could not clone the experiment.'
+    move:
+      modal_title: 'Move experiment %{experiment}'
+      label_title: 'Move'
+      modal_submit: 'Move'
+      success_flash: "Successfully moved experiment %{experiment}"
+      error_flash: 'Could not move the experiment.'
     canvas:
       archive_confirm: "Are you sure to archive this experiment?"
       actions: 'Actions'

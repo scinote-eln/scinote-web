@@ -17,6 +17,13 @@
                   type: 'button',
                   class: 'clone-experiment' %></li>
   <% end %>
+  <% if can_move_experiment(experiment) %>
+    <li><%= link_to t('experiments.move.label_title'),
+                  move_modal_experiment_url(experiment),
+                  remote: true,
+                  type: 'button',
+                  class: 'move-experiment' %></li>
+  <% end %>
   <% if can_archive_experiment(experiment) %>
   <li><%= link_to t('experiments.archive.label_title'),
                 archive_experiment_url(experiment),
