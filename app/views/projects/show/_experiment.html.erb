@@ -13,29 +13,8 @@
           <span class="visible-xs-inline"><i class="glyphicon glyphicon-sort"></i></span>
           <span class="caret"></span>
         </button>
-        <ul class="dropdown-menu"
-            aria-labelledby="exActionsMenu-<%= experiment.id %>">
-          <% if can_create_experiment(@project) %>
-            <li><%= link_to t('experiments.edit.panel_label'),
-                          edit_project_experiment_url(@project, experiment),
-                          remote: true,
-                          type: 'button',
-                          class: 'edit-experiment' %></li>
-          <% end %>
-          <% if can_clone_experiment(experiment) %>
-            <li><%= link_to t('experiments.clone.label_title'),
-                          clone_modal_experiment_url(experiment),
-                          remote: true,
-                          type: 'button',
-                          class: 'clone-experiment' %></li>
-          <% end %>
-          <% if can_archive_experiment(experiment) %>
-            <li><%= link_to t('experiments.archive.label_title'),
-                          archive_experiment_url(experiment),
-                          type: 'button',
-                          data: { confirm: t('experiments.canvas.archive_confirm') } %></li>
-          <% end %>
-        </ul>
+        <%= render partial: 'experiments/dropdown_actions.html.erb',
+                            locals: { project: @project, experiment: experiment } %>
       </div>
 
       <h3 class="panel-title"><%= link_to experiment.name, canvas_experiment_path(experiment) %></h3>

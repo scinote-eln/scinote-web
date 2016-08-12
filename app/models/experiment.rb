@@ -310,13 +310,13 @@ class Experiment < ActiveRecord::Base
   def deep_clone_to_project(current_user, project)
     # First we have to find unique name for our little experiment
     experiment_names = project.experiments.map(&:name)
-    new_name = name + " - clone "
+    format = "Clone %d - %s"
 
     i = 1
-    i += 1 while experiment_names.include?(new_name + i.to_s)
+    i += 1 while experiment_names.include?((format % [i, name])[0, 50])
 
     clone = Experiment.new(
-      name: new_name + i.to_s,
+      name: (format % [i, name])[0, 50],
       description: description,
       created_by: current_user,
       last_modified_by: current_user,

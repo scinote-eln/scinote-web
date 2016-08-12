@@ -1,0 +1,26 @@
+<ul class="dropdown-menu dropdown-experiment-actions"
+  aria-labelledby="exActionsMenu-<%= experiment.id %>"
+  data-id="<%= experiment.id %>">
+
+  <% if can_edit_experiment(experiment) %>
+  <li><%= link_to t('experiments.edit.label_title'),
+                edit_project_experiment_url(project, experiment),
+                remote: true,
+                type: 'button',
+                data: { id: experiment.id },
+                class: 'edit-experiment' %></li>
+  <% end %>
+  <% if can_clone_experiment(experiment) %>
+    <li><%= link_to t('experiments.clone.label_title'),
+                  clone_modal_experiment_url(experiment),
+                  remote: true,
+                  type: 'button',
+                  class: 'clone-experiment' %></li>
+  <% end %>
+  <% if can_archive_experiment(experiment) %>
+  <li><%= link_to t('experiments.archive.label_title'),
+                archive_experiment_url(experiment),
+                type: 'button',
+                data: { confirm: t('experiments.canvas.archive_confirm') } %></li>
+  <% end %>
+</ul>
