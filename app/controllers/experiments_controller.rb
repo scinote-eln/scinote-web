@@ -93,7 +93,7 @@ class ExperimentsController < ApplicationController
 
   # GET: clone_modal_experiment_path(id)
   def clone_modal
-    @projects = projects_with_role_above_user
+    @projects = projects_with_role_above_user(true)
     respond_to do |format|
       format.json do
         render json: {
@@ -111,7 +111,7 @@ class ExperimentsController < ApplicationController
 
     # Try to clone the experiment
     success = true
-    if projects_with_role_above_user.include?(project)
+    if projects_with_role_above_user(true).include?(project)
       cloned_experiment = @experiment.deep_clone_to_project(current_user,
                                                             project)
       success = cloned_experiment.valid?
@@ -144,7 +144,7 @@ class ExperimentsController < ApplicationController
 
   # GET: move_modal_experiment_path(id)
   def move_modal
-    @projects = projects_with_role_above_user
+    @projects = projects_with_role_above_user(false)
     respond_to do |format|
       format.json do
         render json: {
@@ -232,12 +232,15 @@ class ExperimentsController < ApplicationController
 
   # Get projects where user is either owner or user in the same organization
   # as this experiment
-  def projects_with_role_above_user
+  # - include_this_project: whether to include project from @experiment
+  def projects_with_role_above_user(include_this_project)
     organization = @experiment.project.organization
+    projects = organization.projects.where(archived: false)
+    projects = projects
+               .where.not(id: @experiment.project.id) unless include_this_project
+
     current_user.user_projects
-                .where(project:
-                        Project.where(organization: organization)
-                              .where(archived: false))
+                .where(project: projects)
                 .where('role < 2')
                 .map(&:project)
   end

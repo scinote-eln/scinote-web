@@ -13,7 +13,6 @@
           <h4 class="modal-title" id="move-experiment-modal-label"><%= t("experiments.move.modal_title", experiment: @experiment.name ) %></h5>
         </div>
         <div class="modal-body">
-          asdasd
           <%= f.select :project_id, options_for_select(@projects.collect { |p| [ p.name, p.id ] },
                                                        @project.id ),
                        {}, {class: "form-control selectpicker", "data-role" => "clear"} %>
