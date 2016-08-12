@@ -1105,6 +1105,8 @@ function constructElementContentsJson(el) {
 /* Initialize the first-time demo tutorial if needed. */
 function initializeTutorial() {
   if (showTutorial()) {
+    ignoreUnsavedWorkAlert = true;
+
     introJs()
       .setOptions({
         overlayOpacity: '0.1',
