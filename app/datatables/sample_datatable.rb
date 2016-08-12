@@ -291,6 +291,5 @@ class SampleDatatable < AjaxDatatablesRails::Base
                               .send(:sanitize_sql_like,
                                     params[:search][:value]) if params[:search]
                                                                 .present?
-
   end
 end
