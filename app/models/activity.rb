@@ -27,7 +27,8 @@ class Activity < ActiveRecord::Base
     :add_comment_to_result,
     :archive_result,
     :edit_result,
-    :clone_experiment
+    :clone_experiment,
+    :move_experiment
   ]
 
   validates :type_of, presence: true

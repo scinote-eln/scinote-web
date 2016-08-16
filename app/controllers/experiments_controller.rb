@@ -93,7 +93,7 @@ class ExperimentsController < ApplicationController
 
   # GET: clone_modal_experiment_path(id)
   def clone_modal
-    @projects = projects_with_role_above_user(true)
+    @projects = @experiment.projects_with_role_above_user(current_user)
     respond_to do |format|
       format.json do
         render json: {
@@ -111,7 +111,7 @@ class ExperimentsController < ApplicationController
 
     # Try to clone the experiment
     success = true
-    if projects_with_role_above_user(true).include?(project)
+    if @experiment.projects_with_role_above_user(current_user).include?(project)
       cloned_experiment = @experiment.deep_clone_to_project(current_user,
                                                             project)
       success = cloned_experiment.valid?
@@ -144,7 +144,7 @@ class ExperimentsController < ApplicationController
 
   # GET: move_modal_experiment_path(id)
   def move_modal
-    @projects = projects_with_role_above_user(false)
+    @projects = @experiment.moveable_projects(current_user)
     respond_to do |format|
       format.json do
         render json: {
@@ -158,8 +158,31 @@ class ExperimentsController < ApplicationController
 
   # POST: move_experiment(id)
   def move
+    project = Project.find_by_id(params[:experiment][:project_id])
+    old_project = @experiment.project
+
+    # Try to move the experiment
     success = true
+    if @experiment.moveable_projects(current_user).include?(project)
+      success = @experiment.move_to_project(project)
+    else
+      success = false
+    end
+
     if success
+      Activity.create(
+        type_of: :move_experiment,
+        project: project,
+        user: current_user,
+        message: I18n.t(
+          "activities.move_experiment",
+          user: current_user.full_name,
+          experiment: @experiment.name,
+          project_new: project.name,
+          project_original: old_project.name
+        )
+      )
+
       flash[:success] = t('experiments.move.success_flash',
                           experiment: @experiment.name)
       redirect_to canvas_experiment_path(@experiment)
@@ -230,18 +253,4 @@ class ExperimentsController < ApplicationController
     action_name.in?(%w(index archive)) ? 'main' : 'fluid'
   end
 
-  # Get projects where user is either owner or user in the same organization
-  # as this experiment
-  # - include_this_project: whether to include project from @experiment
-  def projects_with_role_above_user(include_this_project)
-    organization = @experiment.project.organization
-    projects = organization.projects.where(archived: false)
-    projects = projects
-               .where.not(id: @experiment.project.id) unless include_this_project
-
-    current_user.user_projects
-                .where(project: projects)
-                .where('role < 2')
-                .map(&:project)
-  end
 end
