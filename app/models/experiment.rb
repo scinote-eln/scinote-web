@@ -340,6 +340,48 @@ class Experiment < ActiveRecord::Base
     clone
   end
 
+  def move_to_project(project)
+    self.project = project
+
+		my_modules.each do |m|
+			new_tags = []
+			m.tags.each do |t|
+				new_tags << t.deep_clone_to_project(project)
+			end
+			m.my_module_tags.destroy_all
+
+			project.tags << new_tags
+			m.tags << new_tags
+		end
+
+    save
+  end
+
+  # Get projects where user is either owner or user in the same organization
+  # as this experiment
+  def projects_with_role_above_user(current_user)
+    organization = project.organization
+    projects = organization.projects.where(archived: false)
+
+    current_user.user_projects
+                .where(project: projects)
+                .where('role < 2')
+                .map(&:project)
+  end
+
+  # Projects to which this experiment can be moved (inside the same
+  # organization and not archived), all users assigned on experiment.project has
+  # to be assigned on such project
+  def moveable_projects(current_user)
+    projects = projects_with_role_above_user(current_user)
+
+    projects = projects.each_with_object([]) do |p, arr|
+      arr << p if (project.users - p.users).empty?
+      arr
+    end
+    projects - [project]
+  end
+
   private
 
   # Archive all modules. Receives an array of module integer IDs.
