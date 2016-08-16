@@ -331,12 +331,23 @@ function importProtocolFromFile(
 
   function importCurrentProtocol() {
     // Check for confirmation first
-    if (importIntoProtocol && !confirm(I18n.t("protocols.import_export.import_modal.import_into_protocol_confirm"))) {
+    var path = new RegExp("modules");
+    var check_linked = $("[data-role='protocol-status-bar']")
+                        .text();
+    if( path.test( window.location.href ) && check_linked === '(unlinked)' ){
+      console.log("linked");
+      confirm_message = I18n.t("protocols.import_export.import_modal.import_to_linked_task");
+    } else {
+      console.log("unlinked");
+      confirm_message = I18n.t("protocols.import_export.import_modal.import_into_protocol_confirm");
+    }
+
+    if (importIntoProtocol && !confirm(confirm_message)) {
       importModal.modal("hide");
     } else {
 
-      var path = new RegExp("modules");
       if( path.test( window.location.href ) ){
+        animateSpinner();
         importSingleProtocol(currentProtocol, false, function(data) {
           importModal.find("[data-role='preview-container']").html("");
           afterImportCallback([data]);
@@ -504,6 +515,11 @@ function importProtocolFromFile(
       },
       error: function(ev) {
         resultCallback(ev.responseJSON);
+
+        var path = new RegExp("modules");
+        if( path.test( window.location.href ) ){
+          animateSpinner(null, false);
+        }
       }
     });
   }
