@@ -125,7 +125,7 @@ class ExperimentsController < ApplicationController
         project: project,
         user: current_user,
         message: I18n.t(
-          "activities.clone_experiment",
+          'activities.clone_experiment',
           user: current_user.full_name,
           experiment_new: cloned_experiment.name,
           experiment_original: @experiment.name
@@ -137,7 +137,7 @@ class ExperimentsController < ApplicationController
       redirect_to canvas_experiment_path(cloned_experiment)
     else
       flash[:error] = t('experiments.clone.error_flash',
-                          experiment: @experiment.name)
+                        experiment: @experiment.name)
       redirect_to project_path(@experiment.project)
     end
   end
@@ -175,7 +175,7 @@ class ExperimentsController < ApplicationController
         project: project,
         user: current_user,
         message: I18n.t(
-          "activities.move_experiment",
+          'activities.move_experiment',
           user: current_user.full_name,
           experiment: @experiment.name,
           project_new: project.name,
@@ -188,7 +188,7 @@ class ExperimentsController < ApplicationController
       redirect_to canvas_experiment_path(@experiment)
     else
       flash[:error] = t('experiments.move.error_flash',
-                          experiment: @experiment.name)
+                        experiment: @experiment.name)
       redirect_to project_path(@experiment.project)
     end
   end
@@ -252,5 +252,4 @@ class ExperimentsController < ApplicationController
   def choose_layout
     action_name.in?(%w(index archive)) ? 'main' : 'fluid'
   end
-
 end

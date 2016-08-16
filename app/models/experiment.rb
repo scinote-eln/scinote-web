@@ -313,10 +313,10 @@ class Experiment < ActiveRecord::Base
     format = 'Clone %d - %s'
 
     i = 1
-    i += 1 while experiment_names.include?((format(format, i, name))[0, 50])
+    i += 1 while experiment_names.include?(format(format, i, name)[0, 50])
 
     clone = Experiment.new(
-      name: (format(format, i, name))[0, 50],
+      name: format(format, i, name)[0, 50],
       description: description,
       created_by: current_user,
       last_modified_by: current_user,
