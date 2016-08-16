@@ -13,8 +13,16 @@
           <h4 class="modal-title" id="move-experiment-modal-label"><%= t("experiments.move.modal_title", experiment: @experiment.name ) %></h5>
         </div>
         <div class="modal-body">
-          <%= f.select :project_id, options_for_select(@projects.collect { |p| [ p.name, p.id ] }),
-                       {}, {class: "form-control selectpicker", "data-role" => "clear"} %>
+          <% if !@projects.blank? %>
+            <%= f.select :project_id, options_for_select(@projects.collect { |p| [ p.name, p.id ] }),
+                        {}, {class: "form-control selectpicker", "data-role" => "clear"} %>
+          <% else %>
+            <div>
+              <em>
+                <%= t("experiments.move.no_projects") %>
+              </em>
+            </div>
+          <% end %>
         </div>
         <div class="modal-footer">
           <%= f.submit t("experiments.move.modal_submit"), class: "btn btn-primary" %>
