@@ -330,22 +330,21 @@ function importProtocolFromFile(
   /* Actual import */
 
   function importCurrentProtocol() {
-    // Check for confirmation first
-    var path = new RegExp("modules");
+
     var check_linked = $("[data-role='protocol-status-bar']")
                         .text();
-    if( path.test( window.location.href ) && check_linked === '(unlinked)' ){
-      console.log("linked");
+    var confirm_message = "";
+    if( check_linked.trim() !== '(unlinked)' ){
       confirm_message = I18n.t("protocols.import_export.import_modal.import_to_linked_task");
     } else {
-      console.log("unlinked");
       confirm_message = I18n.t("protocols.import_export.import_modal.import_into_protocol_confirm");
     }
 
+    // Check for confirmation first
     if (importIntoProtocol && !confirm(confirm_message)) {
       importModal.modal("hide");
     } else {
-
+      var path = new RegExp("modules");
       if( path.test( window.location.href ) ){
         animateSpinner();
         importSingleProtocol(currentProtocol, false, function(data) {

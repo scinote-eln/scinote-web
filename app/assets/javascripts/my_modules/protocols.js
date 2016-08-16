@@ -453,7 +453,17 @@ function destroyLoadFromRepositoryTable(content) {
 function loadFromRepository() {
   var modal = $("#load-from-repository-modal");
 
-  if (selectedRow !== null && confirm(I18n.t("my_modules.protocols.load_from_repository_modal.confirm_message"))) {
+  var check_linked = $("[data-role='protocol-status-bar']")
+                      .text();
+
+  var confirm_message= "";
+  if( check_linked.trim() !== '(unlinked)' ){
+    confirm_message = I18n.t("protocols.import_export.import_modal.import_to_linked_task");
+  } else {
+    confirm_message = I18n.t("my_modules.protocols.load_from_repository_modal.confirm_message");
+  }
+
+  if (selectedRow !== null && confirm(confirm_message) ) {
     // POST via ajax
     $.ajax({
       url: modal.attr("data-url"),
