@@ -286,7 +286,7 @@ class MyModule < ActiveRecord::Base
   end
 
   def deep_clone(current_user)
-    deep_clone_to_experiment(current_user, self.experiment)
+    deep_clone_to_experiment(current_user, experiment)
   end
 
   def deep_clone_to_experiment(current_user, experiment)

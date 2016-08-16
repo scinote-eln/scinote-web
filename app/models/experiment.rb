@@ -310,13 +310,13 @@ class Experiment < ActiveRecord::Base
   def deep_clone_to_project(current_user, project)
     # First we have to find unique name for our little experiment
     experiment_names = project.experiments.map(&:name)
-    format = "Clone %d - %s"
+    format = 'Clone %d - %s'
 
     i = 1
-    i += 1 while experiment_names.include?((format % [i, name])[0, 50])
+    i += 1 while experiment_names.include?((format(format, i, name))[0, 50])
 
     clone = Experiment.new(
-      name: (format % [i, name])[0, 50],
+      name: (format(format, i, name))[0, 50],
       description: description,
       created_by: current_user,
       last_modified_by: current_user,
@@ -343,16 +343,16 @@ class Experiment < ActiveRecord::Base
   def move_to_project(project)
     self.project = project
 
-		my_modules.each do |m|
-			new_tags = []
-			m.tags.each do |t|
-				new_tags << t.deep_clone_to_project(project)
-			end
-			m.my_module_tags.destroy_all
+    my_modules.each do |m|
+      new_tags = []
+      m.tags.each do |t|
+        new_tags << t.deep_clone_to_project(project)
+      end
+      m.my_module_tags.destroy_all
 
-			project.tags << new_tags
-			m.tags << new_tags
-		end
+      project.tags << new_tags
+      m.tags << new_tags
+    end
 
     save
   end
