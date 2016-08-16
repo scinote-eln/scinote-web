@@ -1,11 +1,10 @@
-require 'graphviz'
-
 class Experiment < ActiveRecord::Base
   include ArchivableModel, SearchableModel
 
   belongs_to :project, inverse_of: :experiments
   belongs_to :created_by, foreign_key: :created_by_id, class_name: 'User'
-  belongs_to :last_modified_by, foreign_key: :last_modified_by_id, class_name: 'User'
+  belongs_to :last_modified_by, foreign_key: :last_modified_by_id,
+                                class_name: 'User'
   belongs_to :archived_by, foreign_key: :archived_by_id, class_name: 'User'
   belongs_to :restored_by, foreign_key: :restored_by_id, class_name: 'User'
 
@@ -15,7 +14,8 @@ class Experiment < ActiveRecord::Base
 
   has_attached_file :workflowimg
   validates_attachment :workflowimg,
-                       content_type: { content_type: ["image/png"] }
+                       content_type: { content_type: ['image/png'] },
+                       if: :workflowimg_check
 
   validates :name,
             presence: true,
@@ -204,6 +204,8 @@ class Experiment < ActiveRecord::Base
   # This method generate the workflow image and saves it as
   # experiment attachment
   def generate_workflow_img
+    require 'graphviz'
+
     graph = GraphViz.new(:G,
                          type: :digraph,
                          use: :neato)
@@ -686,5 +688,11 @@ class Experiment < ActiveRecord::Base
 
     my_module_groups.reload
     true
+  end
+
+  def workflowimg_check
+    workflowimg_content_type
+  rescue
+    false
   end
 end
