@@ -28,22 +28,8 @@
         <span class="visible-xs-inline"><i class="glyphicon glyphicon-sort"></i></span>
         <span class="caret"></span>
       </button>
-      <ul class="dropdown-menu" aria-labelledby="exActionsMenu">
-        <% if can_edit_experiment(@experiment) %>
-        <li><%= link_to t('experiments.edit.label_title'),
-                      edit_project_experiment_url(@project, @experiment),
-                      remote: true,
-                      type: 'button',
-                      data: { id: @experiment.id },
-                      id: 'edit-experiment' %></li>
-        <% end %>
-        <% if can_archive_experiment(@experiment) %>
-        <li><%= link_to t('experiments.archive.label_title'),
-                      archive_experiment_url(@experiment),
-                      type: 'button',
-                      data: { confirm: t('experiments.canvas.archive_confirm') } %></li>
-        <% end %>
-      </ul>
+      <%= render partial: 'experiments/dropdown_actions.html.erb',
+                          locals: { project: @project, experiment: @experiment } %>
     </span>
   <% end %>
 
@@ -79,4 +65,4 @@
 <%= javascript_include_tag("eventPause-min") %>
 
 <%= javascript_include_tag("projects/canvas") %>
-<%= javascript_include_tag("experiments/index") %>
+<%= javascript_include_tag("experiments/dropdown_actions") %>

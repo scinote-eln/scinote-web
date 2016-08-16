@@ -46,4 +46,38 @@ class MyModuleGroup < ActiveRecord::Base
   def ordered_modules
     my_modules.order(workflow_order: :asc)
   end
+
+  def deep_clone_to_experiment(current_user, experiment)
+    clone = MyModuleGroup.new(
+      name: name,
+      created_by: created_by,
+      experiment: experiment
+    )
+
+    # Get clones of modules from this group, save them as hash
+    cloned_modules = ordered_modules.each_with_object({}) do |m, hash|
+      hash[m.id] = m.deep_clone_to_experiment(current_user, experiment)
+      hash
+    end
+
+    ordered_modules.each do |m|
+      # Copy connections
+      m.inputs.each do |inp|
+        Connection.create(
+          input_id: cloned_modules[inp[:input_id]].id,
+          output_id: cloned_modules[inp[:output_id]].id
+        )
+      end
+
+      # Copy remaining variables
+      cloned_module = cloned_modules[m.id]
+      cloned_module.my_module_group = self
+      cloned_module.created_by = m.created_by
+      cloned_module.workflow_order = m.workflow_order
+    end
+
+    clone.my_modules << cloned_modules.values
+    clone.save
+    clone
+  end
 end

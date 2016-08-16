@@ -123,6 +123,10 @@ Rails.application.routes.draw do
       post 'canvas', to: 'canvas#update' # Save updated canvas action
       get 'module_archive' # Module archive for single experiment
       get 'archive' # archive experiment
+      get 'clone_modal' # return modal with clone options
+      post 'clone' # clone experiment
+      get 'move_modal' # return modal with move options
+      post 'move' # move experiment
       get 'samples' # Samples for single project
       # Renders sample datatable for single project (ajax action)
       post 'samples_index'

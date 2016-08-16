@@ -306,6 +306,82 @@ class Experiment < ActiveRecord::Base
     end
   end
 
+  # Clone this experiment to given project
+  def deep_clone_to_project(current_user, project)
+    # First we have to find unique name for our little experiment
+    experiment_names = project.experiments.map(&:name)
+    format = 'Clone %d - %s'
+
+    i = 1
+    i += 1 while experiment_names.include?(format(format, i, name)[0, 50])
+
+    clone = Experiment.new(
+      name: format(format, i, name)[0, 50],
+      description: description,
+      created_by: current_user,
+      last_modified_by: current_user,
+      project: project
+    )
+
+    # Copy all workflows
+    my_module_groups.each do |g|
+      clone.my_module_groups << g.deep_clone_to_experiment(current_user, clone)
+    end
+
+    # Copy modules without group
+    clone.my_modules << modules_without_group.map do |m|
+      m.deep_clone_to_experiment(current_user, clone)
+    end
+    clone.save
+
+    # Create workflow image
+    clone.delay.generate_workflow_img
+
+    clone
+  end
+
+  def move_to_project(project)
+    self.project = project
+
+    my_modules.each do |m|
+      new_tags = []
+      m.tags.each do |t|
+        new_tags << t.deep_clone_to_project(project)
+      end
+      m.my_module_tags.destroy_all
+
+      project.tags << new_tags
+      m.tags << new_tags
+    end
+
+    save
+  end
+
+  # Get projects where user is either owner or user in the same organization
+  # as this experiment
+  def projects_with_role_above_user(current_user)
+    organization = project.organization
+    projects = organization.projects.where(archived: false)
+
+    current_user.user_projects
+                .where(project: projects)
+                .where('role < 2')
+                .map(&:project)
+  end
+
+  # Projects to which this experiment can be moved (inside the same
+  # organization and not archived), all users assigned on experiment.project has
+  # to be assigned on such project
+  def moveable_projects(current_user)
+    projects = projects_with_role_above_user(current_user)
+
+    projects = projects.each_with_object([]) do |p, arr|
+      arr << p if (project.users - p.users).empty?
+      arr
+    end
+    projects - [project]
+  end
+
   private
 
   # Archive all modules. Receives an array of module integer IDs.

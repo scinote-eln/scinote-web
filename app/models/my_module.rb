@@ -286,10 +286,14 @@ class MyModule < ActiveRecord::Base
   end
 
   def deep_clone(current_user)
+    deep_clone_to_experiment(current_user, experiment)
+  end
+
+  def deep_clone_to_experiment(current_user, experiment)
     # Copy the module
     clone = MyModule.new(
       name: self.name,
-      experiment: self.experiment,
+      experiment: experiment,
       description: self.description,
       x: self.x,
       y: self.y)

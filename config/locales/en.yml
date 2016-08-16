@@ -615,6 +615,19 @@ en:
       success_flash: "Successfully archived experiment %{experiment}"
       error_flash: 'Could not archive the experiment.'
       label_title: 'Archive'
+    clone:
+      modal_title: 'Clone experiment %{experiment}'
+      label_title: 'Clone'
+      modal_submit: 'Clone'
+      success_flash: "Successfully cloned experiment %{experiment}"
+      error_flash: 'Could not clone the experiment.'
+    move:
+      modal_title: 'Move experiment %{experiment}'
+      label_title: 'Move'
+      modal_submit: 'Move'
+      success_flash: "Successfully moved experiment %{experiment}"
+      error_flash: 'Could not move the experiment.'
+      no_projects: 'No projects to move this experiment to.'
     canvas:
       archive_confirm: "Are you sure to archive this experiment?"
       actions: 'Actions'
@@ -992,6 +1005,8 @@ en:
     edit_asset_result: "<i>%{user}</i> edited file result <strong>%{result}</strong>."
     edit_text_result: "<i>%{user}</i> edited text result <strong>%{result}</strong>."
     edit_table_result: "<i>%{user}</i> edited table result <strong>%{result}</strong>."
+    clone_experiment: "<i>%{user}</i> cloned <strong>%{experiment_new}</strong> from <strong>%{experiment_original}</strong>."
+    move_experiment: "<i>%{user}</i> moved experiment  <strong>%{experiment}</strong> from project <strong>%{project_original}</strong> to project <strong>%{project_new}</strong>."
 
   user_my_modules:
     new:

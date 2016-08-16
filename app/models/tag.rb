@@ -43,4 +43,14 @@ class Tag < ActiveRecord::Base
         .offset((page - 1) * SEARCH_LIMIT)
     end
   end
+
+  def deep_clone_to_project(project)
+    Tag.create(
+      name: name,
+      color: color,
+      created_by: created_by,
+      last_modified_by: last_modified_by,
+      project: project
+    )
+  end
 end
