@@ -138,7 +138,12 @@ module PermissionHelper
     # ---- Some things are disabled for archived experiment ----
     around [
       :can_edit_experiment,
+      :can_view_experiment,
+      :can_view_experiment_archive,
       :can_archive_experiment,
+      :can_view_experiment_samples,
+      :can_clone_experiment,
+      :can_move_experiment,
       :can_edit_canvas,
       :can_reposition_modules,
       :can_edit_connections,
