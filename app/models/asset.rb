@@ -247,16 +247,17 @@ class Asset < ActiveRecord::Base
     end
   end
 
-  def presigned_url
+  def presigned_url(style = :original, download: false, time: 30)
     if file.is_stored_on_s3?
+      downloadArg = download ? 'attachment; filename=' + URI.escape(file_file_name) : nil
       signer = Aws::S3::Presigner.new(client: S3_BUCKET.client)
-
       signer.presigned_url(:get_object,
         bucket: S3_BUCKET.name,
-        key: file.path[1..-1],
-        expires_in: 30,
+        key: file.path(style)[1..-1],
+        expires_in: time,
         # this response header forces object download
-        response_content_disposition: 'attachment; filename=' + URI.escape(file_file_name))
+        response_content_disposition: downloadArg)
+
     end
   end
 

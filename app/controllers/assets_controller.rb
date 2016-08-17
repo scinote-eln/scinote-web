@@ -52,8 +52,7 @@ class AssetsController < ApplicationController
 
   def preview
     if @asset.is_image?
-      url = @asset.file.url :medium
-      redirect_to url, status: 307
+      redirect_to @asset.presigned_url(:medium), status: 307
     else
       render_400
     end
@@ -63,7 +62,7 @@ class AssetsController < ApplicationController
     if !@asset.file_present
       render_404 and return
     elsif @asset.file.is_stored_on_s3?
-      redirect_to @asset.presigned_url, status: 307
+      redirect_to @asset.presigned_url(download: true), status: 307
     else
       send_file @asset.file.path, filename: URI.unescape(@asset.file_file_name),
         type: @asset.file_content_type

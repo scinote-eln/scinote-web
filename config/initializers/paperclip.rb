@@ -31,7 +31,8 @@ if ENV['PAPERCLIP_STORAGE'] == "s3"
       secret_access_key: ENV['AWS_SECRET_ACCESS_KEY']
     },
     s3_permissions: {
-      original: :private
+      original: :private,
+      medium: :private
     },
     s3_storage_class: {
       medium: :reduced_redundancy,

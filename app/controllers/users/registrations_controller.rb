@@ -4,6 +4,8 @@ class Users::RegistrationsController < Devise::RegistrationsController
   def avatar
     user = User.find_by_id(params[:id]) || current_user
     style = params[:style] || "icon_small"
+    # TODO Maybe avatar should be an Asset, so it's methods could be used,
+    # e.g. presigned_url in this case
     redirect_to user.avatar.url(style.to_sym), status: 307
   end
 
