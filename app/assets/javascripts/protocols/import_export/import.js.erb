@@ -330,19 +330,38 @@ function importProtocolFromFile(
   /* Actual import */
 
   function importCurrentProtocol() {
+
+    var check_linked = $("[data-role='protocol-status-bar']")
+                        .text();
+    var confirm_message = "";
+    if( check_linked.trim() !== '(unlinked)' ){
+      confirm_message = I18n.t("protocols.import_export.import_modal.import_to_linked_task");
+    } else {
+      confirm_message = I18n.t("protocols.import_export.import_modal.import_into_protocol_confirm");
+    }
+
     // Check for confirmation first
-    if (importIntoProtocol && !confirm(I18n.t("protocols.import_export.import_modal.import_into_protocol_confirm"))) {
+    if (importIntoProtocol && !confirm(confirm_message)) {
       importModal.modal("hide");
     } else {
-      // Show spinner
-      animateSpinner(importModal);
+      var path = new RegExp("modules");
+      if( path.test( window.location.href ) ){
+        animateSpinner();
+        importSingleProtocol(currentProtocol, false, function(data) {
+          importModal.find("[data-role='preview-container']").html("");
+          afterImportCallback([data]);
+        });
 
-      importSingleProtocol(currentProtocol, false, function(data) {
-        animateSpinner(importModal, false);
-        importModal.find("[data-role='preview-container']").html("");
-        importModal.modal("hide");
-        afterImportCallback([data]);
-      });
+      } else {
+        // Show spinner
+        animateSpinner(importModal);
+        importSingleProtocol(currentProtocol, false, function(data) {
+            animateSpinner(importModal, false);
+            importModal.find("[data-role='preview-container']").html("");
+            importModal.modal("hide");
+            afterImportCallback([data]);
+        });
+      }
     }
   }
 
@@ -495,6 +514,11 @@ function importProtocolFromFile(
       },
       error: function(ev) {
         resultCallback(ev.responseJSON);
+
+        var path = new RegExp("modules");
+        if( path.test( window.location.href ) ){
+          animateSpinner(null, false);
+        }
       }
     });
   }

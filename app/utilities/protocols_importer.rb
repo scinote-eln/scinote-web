@@ -36,7 +36,9 @@ module ProtocolsImporter
     populate_protocol(protocol, protocol_json, user)
     protocol.reload
 
-    return protocol
+    # Unlink the protocol
+    protocol.unlink
+    protocol
   end
 
   private

@@ -512,7 +512,7 @@ en:
         load_protocol_from_repository: "from repository"
         load_protocol_from_file: "from file"
         export: "Export protocol"
-        copy_to_repository: "Copy protocol to repository"
+        copy_to_repository: "Save to protocol repository"
       confirm_link_update_modal:
         unlink_title: "Unlink protocol"
         unlink_message: "Are you sure you want to unlink the task protocol from the repository version? This will stop any tracking of changes."
@@ -1203,7 +1203,8 @@ en:
         title_import: "Import protocol/s"
         title_import_into_protocol: "Load protocol from file"
         import_into_protocol_message: "This will overwrite the current protocol!"
-        import_into_protocol_confirm: "Are you sure you wish to load protocol from repository? This action will overwrite the current protocol."
+        import_into_protocol_confirm: "Are you sure you wish to load protocol? This action will overwrite the current protocol."
+        import_to_linked_task: "Are you sure you wish to load protocol from repository? This action will overwrite the current protocol in the task and un-link it from repository. The current protocol will remain unchanged in repository."
         name_label: "Protocol name"
         authors_label: "Authors"
         description_label: "Description"
