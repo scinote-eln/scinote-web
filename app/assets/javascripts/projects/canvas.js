@@ -1843,6 +1843,9 @@ function initMoveModules() {
     moveVal[moduleEl.attr("id")] = moveToExperimentId;
     formMoveInput.attr("value", JSON.stringify(moveVal));
 
+    // Delete module from canvas
+    deleteModule(moduleEl.attr("id"));
+
     // Hide modal
     modal.modal("hide");
   }
@@ -1999,9 +2002,19 @@ function deleteModule(id, linkConnections) {
   var formAddNamesInput = $('#update-canvas form input#add-names');
   var formClonedInput = $('#update-canvas form input#cloned');
   var formRemoveInput = $('#update-canvas form input#remove');
+  var formMoveInput = $('#update-canvas form input#move');
   var inputVal, newVal;
   var vals, idx;
   var addToRemoveList = true;
+
+  // If the module was moved, we don't need to do anything with it
+  inputVal = formMoveInput.attr("value");
+  if (!_.isUndefined(inputVal) && inputVal !== "") {
+    if (_.contains(inputVal, id)) {
+      addToRemoveList = false;
+      return;
+    }
+  }
 
   // If the module we are deleting was added via JS
   // (and hasn't been saved yet), we don't need to "add" it
