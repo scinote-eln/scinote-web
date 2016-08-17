@@ -447,7 +447,7 @@ class ReportsController < ApplicationController
   def generate_project_contents_json
     res = []
     if params.include? :modules
-      modules = (params[:modules].select { |_, p| p == "1" })
+      modules = (params[:modules].select { |_, p| p == '1' })
                 .keys
                 .collect(&:to_i)
 

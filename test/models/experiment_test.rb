@@ -3,7 +3,6 @@ require 'helpers/archivable_model_test_helper'
 require 'helpers/searchable_model_test_helper'
 
 class ExperimentTest < ActiveSupport::TestCase
-
   should validate_presence_of(:name)
   should validate_length_of(:name).is_at_least(4).is_at_most(50)
   should validate_presence_of(:project)
@@ -31,5 +30,4 @@ class ExperimentTest < ActiveSupport::TestCase
   should belong_to(:restored_by)
   should have_many(:my_modules)
   should have_many(:my_module_groups)
-
 end

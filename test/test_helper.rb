@@ -1,7 +1,7 @@
 ENV['RAILS_ENV'] ||= 'test'
 require File.expand_path('../../config/environment', __FILE__)
 require 'rails/test_help'
-require "minitest/reporters"
+require 'minitest/reporters'
 Minitest::Reporters.use!
 
 class ActiveSupport::TestCase
@@ -34,7 +34,6 @@ Shoulda::Matchers.configure do |config|
     # Choose a test framework:
     with.test_framework :minitest
     with.test_framework :minitest_4
-
 
     # Choose a library:
     with.library :active_record
