@@ -208,6 +208,21 @@ class Asset < ActiveRecord::Base
     end
   end
 
+  def destroy
+    # Delete files from S3 (when updating an existing file, paperclip does
+    # this automatically, so this is not needed in such cases)
+    key = self.file.path[1..-1]
+    S3_BUCKET.object(key).delete
+    if (self.file_content_type =~ /^image\//) == 0
+      self.file.options[:styles].each do |style, option|
+        key = self.file.path(style)[1..-1]
+        S3_BUCKET.object(key).delete
+      end
+    end
+
+    self.delete
+  end
+
   # If organization is provided, its space_taken
   # is updated as well
   def update_estimated_size(org = nil)
@@ -292,7 +307,7 @@ class Asset < ActiveRecord::Base
 
   def step_or_result
     # We must allow both step and result to be blank because of GUI
-    # (eventhough it's not really a "valid" asset)
+    # (even though it's not really a "valid" asset)
     if step.present? && result.present?
       errors.add(:base, "Asset can only be result or step, not both.")
     end

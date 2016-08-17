@@ -71,19 +71,11 @@ function processFile(ev, forS3) {
   if(filesValidator(ev, $fileInput, FileTypeEnum.AVATAR)) {
     if(forS3) {
       // Redirects file uploading to S3
-      startFileUpload(ev, ev.target);
+      var url = "/avatar_signature.json";
+      directUpload(ev, url);
     } else {
       // Local file uploading
       animateSpinner();
     }
   }
-}
-
-// S3 direct uploading
-function startFileUpload(ev, btn) {
-  var $form = $(btn.form);
-  var url = "/avatar_signature.json";
-
-  directUpload(ev, $form, url, function () {
-  });
 }

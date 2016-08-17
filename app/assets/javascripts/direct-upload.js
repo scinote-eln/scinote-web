@@ -149,12 +149,17 @@
    * TODO On S3 server upload error the other files that were already
    * asynchronously uploaded remain on the server, but should be deleted - this
    * should generally not happen, because all files should fail to upload in
-   * such case (connection error).
+   * such cases (like S3 server connection error), except if user cancels the
+   * upload while still in progress. But this can be abused! One way to solve
+   * it is to make request to our server for each file seperatelly, and not for
+   * all together as it is now, despite being less efficient. To make it
+   * bulletproof, post requests should be issued on server-side.
    */
-  exports.directUpload = function (ev, form, signUrl, cb) {
-    form.clearFormErrors();
-    form.removeBlankFileForms();
-    $fileInputs = $(form).find("input[type=file]");
+  exports.directUpload = function (ev, signUrl) {
+    $form = $(ev.target.form);
+    $form.clearFormErrors();
+    $form.removeBlankFileForms();
+    $fileInputs = $form.find("input[type=file]");
     var signRequests = [];
 
     if ($fileInputs.length) {
@@ -162,7 +167,6 @@
       animateSpinner();
       preventLeavingPage(true, I18n.t("general.file.uploading"));
       ev.preventDefault();
-      ev.stopPropagation();
 
       // Validates files and if OK gets upload post requests
       _.each($fileInputs, function (fileInput) {
@@ -178,7 +182,6 @@
         // After successful file validation and posts fetching
         if (signRequests.length) {
           var fileRequests = [];
-          var fileIds = [];
 
           if (signRequests.length == 1) {
             arguments = [arguments];
@@ -188,7 +191,6 @@
             var jqXHR  = responseData[2];
             var data = JSON.parse(jqXHR.responseText);
             processPosts(ev, $fileInput, data.posts, fileRequests);
-            fileIds.push(data.asset_id);
           });
 
           $.when.apply($, fileRequests).always(function () {
@@ -196,11 +198,7 @@
             preventLeavingPage(false);
           }).then(function () {
             // After successful posts processing and file uploading
-            $.each($fileInputs, function (fileIdx, fileInput) {
-              // Use file input to pass file id on submit
-              cb(fileInput, fileIds[fileIdx]);
-            });
-            $(ev.target.form).submit();
+            $form.submit();
           });
         }
       }, function () {

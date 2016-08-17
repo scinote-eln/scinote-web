@@ -143,7 +143,6 @@ function applyCollapseLinkCallBack() {
       // Toggle collapse button
       collapseIcon.toggleClass("glyphicon-collapse-up", !collapsed);
       collapseIcon.toggleClass("glyphicon-collapse-down", collapsed);
-
     });
 }
 
@@ -323,7 +322,8 @@ function processResult(ev, resultTypeEnum, forS3) {
       if(nameValid && filesValid) {
         if(forS3) {
           // Redirects file uploading to S3
-          startFileUpload(ev, ev.target);
+          var url = '/asset_signature.json';
+          directUpload(ev, url);
         } else {
           // Local file uploading
           animateSpinner();
@@ -345,26 +345,6 @@ function processResult(ev, resultTypeEnum, forS3) {
       var commentValid = textValidator(ev, $commentInput, false, false);
       break;
   }
-}
-
-// S3 direct uploading
-function startFileUpload(ev, btn) {
-  var $form = $(btn.form);
-  var $editFileInput = $form.find("input[name='result[asset_attributes][id]']").get(0);
-  var url = '/asset_signature.json';
-
-  directUpload(ev, $form, url, function (fileInput, fileId) {
-    if ($editFileInput) {
-      // edit mode - input field has to be removed
-      $editFileInput.value = fileId;
-      $(fileInput).remove();
-    } else {
-      // create mode
-      fileInput.type = "hidden";
-      fileInput.name = fileInput.name.replace("[file]", "[id]");
-      fileInput.value = fileId;
-    }
-  });
 }
 
 // This checks if the ctarget param exist in the

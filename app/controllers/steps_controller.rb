@@ -30,21 +30,21 @@ class StepsController < ApplicationController
 
   def create
     if @direct_upload
+      new_assets = []
       step_data = step_params.except(:assets_attributes)
       step_assets = step_params.slice(:assets_attributes)
       @step = Step.new(step_data)
 
-      if step_assets.size > 0
-        step_assets[:assets_attributes].each do |i, data|
-          # Ignore destroy requests on create
-          if data[:_destroy].nil? and data[:id].present?
-            asset = Asset.find_by_id(data[:id])
-            asset.created_by = current_user
-            asset.last_modified_by = current_user
-            @step.assets << asset
-          end
+      step_assets[:assets_attributes].each do |i, data|
+        # Ignore destroy requests on create
+        if data[:_destroy].nil?
+          asset = Asset.new(data)
+          asset.created_by = current_user
+          asset.last_modified_by = current_user
+          new_assets << asset
         end
       end
+      @step.assets << new_assets
     else
       @step = Step.new(step_params)
     end
@@ -98,6 +98,13 @@ class StepsController < ApplicationController
             })}, status: :ok
         }
       else
+        # On error, delete the newly added files from S3, as they were
+        # uploaded on client-side (in case of client-side hacking of
+        # asset's signature response)
+        new_assets.each do |asset|
+          asset.destroy
+        end
+
         format.json {
           render json: {
             html: render_to_string({
@@ -155,8 +162,7 @@ class StepsController < ApplicationController
 
         if step_assets.include? :assets_attributes
           step_assets[:assets_attributes].each do |i, data|
-            asset = Asset.find_by_id(data[:id])
-
+            asset = Asset.new(data)
             unless @step.assets.include? asset or not asset
               asset.created_by = current_user
               asset.last_modified_by = current_user
@@ -532,12 +538,11 @@ class StepsController < ApplicationController
         attr_params = update_params[key]
 
         for pos, attrs in params[key] do
-          assetExists =  Asset.exists?(attrs[:id])
           if attrs[:_destroy] == "1"
             attr_params[pos] = {id: attrs[:id], _destroy: "1"}
-            params[key].delete(pos) if assetExists
+            params[key].delete(pos)
           elsif has_destroy_params(params[key][pos])
-            attr_params[pos] = {id: attrs[:id]} if assetExists
+            attr_params[pos] = {id: attrs[:id]}
             extract_destroy_params(params[key][pos], attr_params[pos])
           end
         end

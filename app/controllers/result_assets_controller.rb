@@ -32,14 +32,7 @@ class ResultAssetsController < ApplicationController
   end
 
   def create
-    asset_attrs = result_params[:asset_attributes]
-
-    if asset_attrs and asset_attrs[:id]
-      @asset = Asset.find_by_id asset_attrs[:id]
-    else
-      @asset = Asset.new(result_params[:asset_attributes])
-    end
-
+    @asset = Asset.new(result_params[:asset_attributes])
     @asset.created_by = current_user
     @asset.last_modified_by = current_user
     @result = Result.new(

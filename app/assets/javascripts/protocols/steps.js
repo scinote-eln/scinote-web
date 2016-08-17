@@ -576,7 +576,6 @@ $("[data-action='new-step']").on("ajax:success", function(e, data) {
 // experience is improved
 function processStep(ev, editMode, forS3) {
   var $form = $(ev.target.form);
-
   $form.clearFormErrors();
   $form.removeBlankExcelTables(editMode);
   $form.removeBlankFileForms();
@@ -591,7 +590,8 @@ function processStep(ev, editMode, forS3) {
   if (filesValid && checklistsValid && nameValid) {
     if (forS3) {
       // Redirects file uploading to S3
-      startFileUpload(ev, ev.target);
+      var url = '/asset_signature.json';
+      directUpload(ev, url);
     } else {
       // Local file uploading
       animateSpinner();
@@ -646,16 +646,4 @@ function renderTable(table) {
   if (parseInt($(table).css("height"), 10) < parseInt($(table).css("max-height"), 10) - 30) {
     $(table).find(".ht_master .wtHolder").css("height", "100%");
   }
-}
-
-// S3 direct uploading
-function startFileUpload(ev, btn) {
-  var $form = $(btn.form);
-  var url = '/asset_signature.json';
-
-  directUpload(ev, $form, url, function (fileInput, fileId) {
-    fileInput.type = "hidden";
-    fileInput.name = fileInput.name.replace("[file]", "[id]");
-    fileInput.value = fileId;
-  });
 }

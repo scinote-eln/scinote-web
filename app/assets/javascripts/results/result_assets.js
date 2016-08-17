@@ -54,15 +54,17 @@ function formAjaxResultAsset($form) {
   $form
   .on("ajax:success", function(e, data) {
     $form.after(data.html);
-    var newResult = $form.next();
-    initFormSubmitLinks(newResult);
+    var $newResult = $form.next();
+    initFormSubmitLinks($newResult);
     $(this).remove();
     applyEditResultAssetCallback();
     applyCollapseLinkCallBack();
 
     toggleResultEditButtons(true);
     initResultCommentTabAjax();
-    expandResult(newResult);
+    expandResult($newResult);
+    $imgs = $newResult.find("img");
+    reloadImages($imgs);
   })
   .on("ajax:error", function(e, data) {
     $form.renderFormErrors("result", data.errors, true, e);

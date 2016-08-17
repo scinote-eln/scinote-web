@@ -116,8 +116,11 @@ function animateSpinner(el, start, options) {
 }
 
 /*
- * Prevents user from accidentally leaving page when
- * server is busy and notifies him with a message.
+ * Prevents user from accidentally leaving page when server is busy
+ * and notifies him with a message.
+ *
+ * NOTE: Don't prevent event propagation (ev.stopPropagation()), or
+ * else all events occurring when alert is up will be ignored.
  */
 function preventLeavingPage(prevent, msg) {
   busy = prevent;
