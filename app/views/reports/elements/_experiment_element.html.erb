@@ -5,7 +5,7 @@
   data-type="experiment"
   data-id="<%= experiment.id %>"
   data-modal-title="<%=t "projects.reports.elements.modals.experiment_contents.head_title",
-    experiment: experiment.name %>" data-name="<%= name %>" data-icon-class="glyphicon-filter">
+    experiment: experiment.name %>" data-name="<%= name %>" data-icon-class="fa fa-flask">
   <div class="report-element-header">
     <div class="row">
       <div class="pull-left user-time">
@@ -20,7 +20,7 @@
     <div class="row">
       <div class="pull-left experiment-name">
         <h4>
-          <span class="glyphicon glyphicon-filter"></span>
+          <%= fa_icon 'flask' %>
           <%= name %></h4>
       </div>
     </div>

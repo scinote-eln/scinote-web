@@ -40,16 +40,16 @@
         <% if experiment_page? || module_page? %>
           <% if !module_page? %>
             <li class="active">
-              <span class="glyphicon glyphicon-filter"></span>
+              <%= fa_icon 'fa-flask' %>
             </li>
           <% else %>
             <li>
               <% if can_view_experiment(@experiment) %>
                 <%= link_to canvas_experiment_path(@experiment) do %>
-                  <span class="glyphicon glyphicon-filter"></span>
+                  <%= fa_icon 'fa-flask' %>
                 <% end %>
               <% else %>
-                <span class="glyphicon glyphicon-filter"></span>
+                <%= fa_icon 'fa-flask' %>
               <% end %>
             </li>
           <% end %>
