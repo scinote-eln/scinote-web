@@ -162,6 +162,7 @@ function initializeEdit() {
   var canEditModuleGroups = _.isEqual($("#update-canvas").data("can-edit-module-groups"), "yes");
   var canCreateModules = _.isEqual($("#update-canvas").data("can-create-modules"), "yes");
   var canCloneModules = _.isEqual($("#update-canvas").data("can-clone-modules"), "yes");
+  var canMoveModules = _.isEqual($("#update-canvas").data("can-move-modules"), "yes");
   var canDeleteModules = _.isEqual($("#update-canvas").data("can-delete-modules"), "yes");
   var canDragModules = _.isEqual($("#update-canvas").data("can-reposition-modules"), "yes");
   var canEditConnections = _.isEqual($("#update-canvas").data("can-edit-connections"), "yes");
@@ -222,6 +223,10 @@ function initializeEdit() {
       ".diagram .module",
       GRID_DIST_EDIT_X,
       GRID_DIST_EDIT_Y);
+  }
+  if (canMoveModules) {
+    initMoveModules();
+    $(".move-module").on("click touchstart", moveModuleHandler);
   }
   if (canDeleteModules) {
     bindDeleteModuleAction();
@@ -1807,6 +1812,82 @@ function initEditModuleGroups() {
  */
 editModuleGroupHandler = function(ev) {
   var modal = $("#modal-edit-module-group");
+  var moduleEl = $(this).closest(".module");
+
+  // Set modal's module id
+  modal.attr("data-module-id", moduleEl.attr("id"));
+
+  // Disable dragging & zooming events on canvas temporarily
+  toggleCanvasEvents(false);
+
+  // Show modal
+  modal.modal("show");
+
+  ev.preventDefault();
+  ev.stopPropagation();
+  return false;
+};
+
+function initMoveModules() {
+  function handleMoveConfirm(modal) {
+    var moduleId = modal.attr("data-module-id");
+    var moduleEl = $("#" + moduleId);
+    var input = modal.find('.selectpicker');
+    var moveToExperimentId = input.val();
+
+    // Add this information to form
+    var formMoveInput = $("#update-canvas form input#move");
+
+    // Actually rename an existing module
+    var moveVal = JSON.parse(formMoveInput.attr("value"));
+    moveVal[moduleEl.attr("id")] = moveToExperimentId;
+    formMoveInput.attr("value", JSON.stringify(moveVal));
+
+    // Hide modal
+    modal.modal("hide");
+  }
+
+  $("#modal-move-module")
+  .on("show.bs.modal", function (event) {
+    var modal = $(this);
+    var moduleId = modal.attr("data-module-id");
+    var moduleEl = $("#" + moduleId);
+    var input = modal.find('.selectpicker');
+
+    // Bind on enter button
+    input.keydown(function(ev) {
+      if (ev.keyCode == 13) {
+        // "Submit" modal
+        handleMoveConfirm(modal);
+
+        // In any case, prevent form submission
+        ev.preventDefault();
+        ev.stopPropagation();
+        return false;
+      }
+    });
+  })
+  .on("shown.bs.modal", function(event) {
+    // Focus the text element
+    $(this).find(".selectpicker").focus();
+  })
+  .on("hide.bs.modal", function (event) {
+    // When hiding modal, re-enable events
+    toggleCanvasEvents(true);
+  });
+
+  // Bind the confirm button on modal
+  $("#modal-move-module").find("button[data-action='confirm']").on("click", function(event) {
+    var modal = $(this).closest(".modal");
+    handleMoveConfirm(modal);
+  });
+}
+
+/**
+ * Handler when trying to move a specific module.
+ */
+moveModuleHandler = function(ev) {
+  var modal = $("#modal-move-module");
   var moduleEl = $(this).closest(".module");
 
   // Set modal's module id

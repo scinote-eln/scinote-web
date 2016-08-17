@@ -31,6 +31,7 @@ class CanvasController < ApplicationController
   def update
     error = false
 
+
     # Make sure that remove parameter is valid
     to_archive = []
     if can_archive_modules(@experiment) and
