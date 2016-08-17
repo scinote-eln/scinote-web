@@ -1,4 +1,4 @@
-<h5 class="text-center"><%=t "projects.canvas.popups.info_tab" %></h5>
+<h5 class="text-center"><%=t "experiments.canvas.popups.info_tab" %></h5>
 <hr>
 <ul class="no-style content-module-info">
   <li>
@@ -9,7 +9,7 @@
   <% if can_edit_module(@my_module) %>
     <hr>
     <li>
-      <%= link_to t("projects.canvas.popups.full_info"), description_my_module_path(@my_module, format: :json), class: "description-link", remote: true %>
+      <%= link_to t("experiments.canvas.popups.full_info"), description_my_module_path(@my_module, format: :json), class: "description-link", remote: true %>
     </li>
   <% end %>
 </ul>

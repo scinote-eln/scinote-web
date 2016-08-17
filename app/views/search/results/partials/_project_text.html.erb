@@ -13,8 +13,8 @@
   <% end %>
 <% else %>
   <% if can_view_project(project) %>
-    <% if link_to_page == :canvas %>
-      <a href="<%= canvas_project_path(project) %>">
+    <% if link_to_page == :show %>
+      <a href="<%= project_path(project) %>">
         <%= text %>
       </a>
     <%  else %>

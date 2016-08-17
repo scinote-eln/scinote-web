@@ -1,26 +1,24 @@
-<% if table.step %>
-  <% if table.blank? and @table.present? then table = @table end %>
-  <% timestamp = table.created_at %>
-  <div class="report-element report-step-attachment-element report-step-table-element" data-ts="<%= timestamp.to_i %>" data-type="step_table" data-id="<%= table.id %>" data-name="<%=t "projects.reports.elements.step_table.sidebar_name" %>" data-icon-class="glyphicon-th">
-    <div class="report-element-header">
-      <div class="row">
-        <div class="pull-left attachment-icon">
-            <span class="glyphicon glyphicon-th"></span>
-        </div>
-        <div class="pull-left user-time">
-          <%=t "projects.reports.elements.step_table.user_time", timestamp: l(timestamp, format: :full) %>
-        </div>
-        <div class="pull-right controls">
-          <%= render partial: "reports/elements/module_element_controls.html.erb" %>
-        </div>
+<% if table.blank? and @table.present? then table = @table end %>
+<% timestamp = table.created_at %>
+<div class="report-element report-step-attachment-element report-step-table-element" data-ts="<%= timestamp.to_i %>" data-type="step_table" data-id="<%= table.id %>" data-name="<%=t "projects.reports.elements.step_table.sidebar_name" %>" data-icon-class="glyphicon-th">
+  <div class="report-element-header">
+    <div class="row">
+      <div class="pull-left attachment-icon">
+          <span class="glyphicon glyphicon-th"></span>
+      </div>
+      <div class="pull-left user-time">
+        <%=t 'projects.reports.elements.step_table.user_time', timestamp: l(timestamp, format: :full) %>
+      </div>
+      <div class="pull-right controls">
+        <%= render partial: 'reports/elements/element_controls.html.erb' %>
       </div>
     </div>
-    <div class="report-element-body">
-      <input type="hidden" class="hot-table-contents" value="<%= table.contents_utf_8 %>" />
-      <div class="hot-table-container"></div>
-    </div>
-    <div class="report-element-children">
-      <%= children if (defined? children and children.present?) %>
-    </div>
   </div>
-<% end %>
+  <div class="report-element-body">
+    <input type="hidden" class="hot-table-contents" value="<%= table.contents_utf_8 %>" />
+    <div class="hot-table-container"></div>
+  </div>
+  <div class="report-element-children">
+    <%= children if (defined? children and children.present?) %>
+  </div>
+</div>

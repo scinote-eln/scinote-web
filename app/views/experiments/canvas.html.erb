@@ -1,0 +1,68 @@
+<% provide(:head_title, raw(t("experiments.canvas.head_title", project: @project.name))) %>
+<%= render partial: "shared/sidebar" %>
+<%= render partial: "shared/secondary_navigation" %>
+
+<div id="diagram-buttons" data-intro="<%=t ('tutorial.canvas_click_edit_workflow_html') %>" data-step="5" data-position="left">
+  <% if can_edit_canvas(@experiment) %>
+    <%=link_to t('experiments.canvas.canvas_edit'),
+                  canvas_edit_experiment_url(@experiment),
+                  remote: true,
+                  type: "button",
+                  id: "edit-canvas-button",
+                  class: "ajax btn btn-default",
+                  "data-action" => "edit" %>
+  <% end %>
+  <% if can_create_experiment(@project) && @experiment.active? %>
+    <%= link_to t('experiments.new.create'),
+                  new_project_experiment_url(@project),
+                  remote: true,
+                  type: "button",
+                  id: 'new-experiment',
+                  class: "btn btn-primary" %>
+  <% end %>
+  <!-- pexperiment actions -->
+  <% if can_edit_experiment(@experiment) || can_archive_experiment(@experiment) %>
+    <span class="dropdown">
+      <button class="btn btn-default dropdown-toggle" type="button" id="exActionsMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+        <span class="hidden-xs"><%= t'experiments.canvas.actions' %></span>
+        <span class="visible-xs-inline"><i class="glyphicon glyphicon-sort"></i></span>
+        <span class="caret"></span>
+      </button>
+      <%= render partial: 'experiments/dropdown_actions.html.erb',
+                          locals: { project: @project, experiment: @experiment } %>
+    </span>
+  <% end %>
+
+  <div id="zoom-level-buttons" class="btn-group pull-right" data-toggle="buttons">
+    <%=link_to canvas_full_zoom_experiment_path(@experiment), remote: true, type: "button", class: "ajax btn btn-primary active", "data-action" => "full_zoom", "data-toggle" => "button", "aria-pressed" => true do %>
+      <span class="glyphicon glyphicon-th-large" aria-hidden="true" ></span>
+    <% end %>
+    <%=link_to canvas_medium_zoom_experiment_path(@experiment), remote: true, type: "button", class: "ajax btn btn-primary", "data-action" => "medium_zoom" do %>
+      <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+    <% end %>
+    <%=link_to canvas_small_zoom_experiment_path(@experiment), remote: true, type: "button", class: "ajax btn btn-primary", "data-action" => "small_zoom" do %>
+      <span class="glyphicon glyphicon-th" aria-hidden="true"></span>
+    <% end %>
+  </div>
+</div>
+
+<div id="canvas-container" data-project-id="<%= @project.id %>"
+  data-step="4" data-position='left'
+  data-intro="<%=t 'tutorial.canvas_overview_html' %>"
+  data-sidebar-step-text="<%=t 'tutorial.sidebar_html' %>"
+  data-sidebar-click-module-step-text="<%=t 'tutorial.sidebar_click_module_html' %>"
+  data-edit-workflow-step-text="<%=t 'tutorial.edit_workflow_html' %>"
+  data-edit-workflow-click-save-step-text="<%=t 'tutorial.edit_workflow_click_save_html' %>">
+  <%= render partial: 'canvas/full_zoom', locals: { experiment: @experiment, my_modules: @experiment.active_modules } %>
+</div>
+
+<!-- Manage tags modal -->
+<%= render partial: "my_modules/modals/manage_module_tags_modal", locals: { my_module: nil } %>
+
+<!-- Include all the neccesary JS libraries -->
+<%= javascript_include_tag("jsPlumb-2.0.4-min") %>
+<%= javascript_include_tag("jsnetworkx") %>
+<%= javascript_include_tag("eventPause-min") %>
+
+<%= javascript_include_tag("projects/canvas") %>
+<%= javascript_include_tag("experiments/dropdown_actions") %>

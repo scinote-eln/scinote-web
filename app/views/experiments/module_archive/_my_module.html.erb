@@ -14,7 +14,7 @@
       <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1">
         <li class="dropdown-header"><%=t "projects.index.options_header" %></li>
         <% if can_restore_module(my_module) %>
-          <li><a href="#" class="form-submit-link" data-submit-form="<%= my_module_form.options[:html][:id] %>"><%= t "projects.module_archive.restore_option" %></a></li>
+          <li><a href="#" class="form-submit-link" data-submit-form="<%= my_module_form.options[:html][:id] %>"><%= t "experiments.module_archive.restore_option" %></a></li>
         <% end %>
       </ul>
     </div>
@@ -26,10 +26,10 @@
   <div class="panel-body">
     <div class="row">
       <div class="col-xs-6">
-        <%=t "projects.module_archive.archived_on" %>
+        <%=t "experiments.module_archive.archived_on" %>
       </div>
       <div class="col-xs-6">
-        <span title="<%=t "projects.module_archive.archived_on_title", date: l(my_module.archived_on, format: :full_date), time: l(my_module.archived_on, format: :time) %>">
+        <span title="<%=t "experiments.module_archive.archived_on_title", date: l(my_module.archived_on, format: :full_date), time: l(my_module.archived_on, format: :time) %>">
           <%=l my_module.archived_on, format: :full_date %>
         </span>
       </div>

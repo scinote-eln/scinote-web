@@ -6,13 +6,13 @@
     <%= activity_truncate( activity.message ) %>
     <% if activity.my_module %>
       [<%=t 'Project' %>:
-      <% if activity.my_module.project.name.length > 20 %>
+      <% if activity.my_module.experiment.project.name.length > 20 %>
         <div class="modal-tooltip">
-          <%= truncate(activity.my_module.project.name, lenght: 20).strip %>
-          <span class="modal-tooltiptext"><%= activity.my_module.project.name %></span>
+          <%= truncate(activity.my_module.experiment.project.name, lenght: 20).strip %>
+          <span class="modal-tooltiptext"><%= activity.my_module.experiment.project.name %></span>
         </div>
       <% else %>
-        <%= activity.my_module.project.name %>
+        <%= activity.my_module.experiment.project.name %>
       <% end %>, <%=t 'Module' %>:
       <% if activity.my_module.name.length > 20 %>
         <div class="modal-tooltip"><%= truncate(activity.my_module.name, lenght: 20) %>

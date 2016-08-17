@@ -1,8 +1,8 @@
-<h5 class="text-center"><%=t "projects.canvas.popups.users_tab" %></h5>
+<h5 class="text-center"><%=t "experiments.canvas.popups.users_tab" %></h5>
 <hr>
 <ul class="no-style content-users">
   <% if @user_my_modules.size == 0 then %>
-    <li><em><%= t "projects.canvas.popups.no_users" %></em></li>
+    <li><em><%= t "experiments.canvas.popups.no_users" %></em></li>
   <% else %>
     <% @user_my_modules.each_with_index do |user_my_module, i| %>
       <%  user = user_my_module.user %>
@@ -14,9 +14,9 @@
           </div>
           <div class="col-xs-10">
             <span><%= user.full_name %></span><br>
-            <span class="text-muted" title="<%=t "projects.canvas.popups.module_user_join_full", user: user.full_name, date: l(user_my_module.created_at, format: :full_date), time: l(user_my_module.created_at, format: :time) %>">
+            <span class="text-muted" title="<%=t "experiments.canvas.popups.module_user_join_full", user: user.full_name, date: l(user_my_module.created_at, format: :full_date), time: l(user_my_module.created_at, format: :time) %>">
               <em>
-              <%=t "projects.canvas.popups.module_user_join", date: l(user_my_module.created_at, format: :full_date) %>
+              <%=t "experiments.canvas.popups.module_user_join", date: l(user_my_module.created_at, format: :full_date) %>
               </em>
             </span>
           </div>
@@ -28,6 +28,6 @@
 <% if can_edit_users_on_module(@my_module) then %>
     <p>
       <hr>
-      <%= link_to t('projects.canvas.popups.manage_users'), my_module_users_edit_path(@my_module, format: :json), remote: true, class: "manage-users-link" %>
+      <%= link_to t('experiments.canvas.popups.manage_users'), my_module_users_edit_path(@my_module, format: :json), remote: true, class: "manage-users-link" %>
     </p>
 <% end %>

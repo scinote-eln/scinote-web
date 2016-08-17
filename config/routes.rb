@@ -61,49 +61,81 @@ Rails.application.routes.draw do
         post 'generate', to: 'reports#generate'
         get 'new/', to: 'reports#new'
         get 'new/project_contents_modal',
-          to: 'reports#project_contents_modal',
-          as: :project_contents_modal
+            to: 'reports#project_contents_modal',
+            as: :project_contents_modal
         post 'new/project_contents',
-          to: 'reports#project_contents',
-          as: :project_contents
+             to: 'reports#project_contents',
+             as: :project_contents
+        get 'new/experiment_contents_modal',
+            to: 'reports#experiment_contents_modal',
+            as: :experiment_contents_modal
+        post 'new/experiment_contents',
+             to: 'reports#experiment_contents',
+             as: :experiment_contents
         get 'new/module_contents_modal',
-          to: 'reports#module_contents_modal',
-          as: :module_contents_modal
+            to: 'reports#module_contents_modal',
+            as: :module_contents_modal
         post 'new/module_contents',
-          to: 'reports#module_contents',
-          as: :module_contents
+             to: 'reports#module_contents',
+             as: :module_contents
         get 'new/step_contents_modal',
-          to: 'reports#step_contents_modal',
-          as: :step_contents_modal
+            to: 'reports#step_contents_modal',
+            as: :step_contents_modal
         post 'new/step_contents',
-          to: 'reports#step_contents',
-          as: :step_contents
+             to: 'reports#step_contents',
+             as: :step_contents
         get 'new/result_contents_modal',
-          to: 'reports#result_contents_modal',
-          as: :result_contents_modal
+            to: 'reports#result_contents_modal',
+            as: :result_contents_modal
         post 'new/result_contents',
-          to: 'reports#result_contents',
-          as: :result_contents
-        post '_save', to: 'reports#save_modal', as: :save_modal
-        post 'destroy', as: :destroy  # Destroy multiple entries at once
+             to: 'reports#result_contents',
+             as: :result_contents
+        post '_save',
+             to: 'reports#save_modal',
+             as: :save_modal
+        post 'destroy', as: :destroy # Destroy multiple entries at once
       end
     end
+    resources :experiments,
+              only: [:new, :create, :edit, :update],
+              defaults: { format: 'json' }
     member do
-      get 'canvas' # Overview/structure for single project
-      get 'canvas/edit', to: 'canvas#edit' # AJAX-loaded canvas edit mode (from canvas)
-      get 'canvas/full_zoom', to: 'canvas#full_zoom' # AJAX-loaded canvas zoom
-      get 'canvas/medium_zoom', to: 'canvas#medium_zoom' # AJAX-loaded canvas zoom
-      get 'canvas/small_zoom', to: 'canvas#small_zoom' # AJAX-loaded canvas zoom
-      post 'canvas', to: 'canvas#update' # Save updated canvas action
       get 'notifications' # Notifications popup for individual project in projects index
       get 'samples' # Samples for single project
-      get 'module_archive' # Module archive for single project
       post 'samples_index' # Renders sample datatable for single project (ajax action)
+      get 'experiment_archive' # Experiment archive for single project
       post :delete_samples, constraints: CommitParamRouting.new(MyModulesController::DELETE_SAMPLES), action: :delete_samples
     end
 
     # This route is defined outside of member block to preserve original :project_id parameter in URL.
     get 'users/edit', to: 'user_projects#index_edit'
+  end
+
+  resources :experiments do
+    member do
+      get 'canvas' # Overview/structure for single experiment
+      # AJAX-loaded canvas edit mode (from canvas)
+      get 'canvas/edit', to: 'canvas#edit'
+      get 'canvas/full_zoom', to: 'canvas#full_zoom' # AJAX-loaded canvas zoom
+      # AJAX-loaded canvas zoom
+      get 'canvas/medium_zoom', to: 'canvas#medium_zoom'
+      get 'canvas/small_zoom', to: 'canvas#small_zoom' # AJAX-loaded canvas zoom
+      post 'canvas', to: 'canvas#update' # Save updated canvas action
+      get 'module_archive' # Module archive for single experiment
+      get 'archive' # archive experiment
+      get 'clone_modal' # return modal with clone options
+      post 'clone' # clone experiment
+      get 'move_modal' # return modal with move options
+      post 'move' # move experiment
+      get 'samples' # Samples for single project
+      # Renders sample datatable for single project (ajax action)
+      post 'samples_index'
+      post :delete_samples,
+           constraints: CommitParamRouting.new(
+             MyModulesController::DELETE_SAMPLES
+           ),
+           action: :delete_samples
+    end
   end
 
   # Show action is a popup (JSON) for individual module in full-zoom canvas,

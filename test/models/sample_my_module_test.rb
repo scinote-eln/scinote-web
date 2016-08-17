@@ -30,7 +30,7 @@ class SampleMyModuleTest < ActiveSupport::TestCase
       organization: organizations(:biosistemika))
     my_module = MyModule.create(
       name: "test module",
-      project: projects(:interfaces),
+      experiment: experiments(:philadelphia),
       my_module_group: my_module_groups(:wf1)
     )
 

@@ -1,36 +1,34 @@
-<% if checklist.step %>
-  <% if checklist.blank? and @checklist.present? then checklist = @checklist end %>
-  <% items = checklist.checklist_items %>
-  <% timestamp = checklist.created_at %>
-  <div class="report-element report-step-attachment-element report-step-checklist-element" data-ts="<%= timestamp.to_i %>" data-type="step_checklist" data-id="<%= checklist.id %>" data-name="<%= checklist.name %>" data-icon-class="glyphicon-list">
-    <div class="report-element-header">
-      <div class="row">
-        <div class="pull-left attachment-icon">
-            <span class="glyphicon glyphicon-list"></span>
-        </div>
-        <div class="pull-left checklist-name">
-          <em><%=t "projects.reports.elements.step_checklist.checklist_name", name: checklist.name %></em>
-        </div>
-        <div class="pull-left user-time">
-          <%=t "projects.reports.elements.step_checklist.user_time", timestamp: l(timestamp, format: :full) %>
-        </div>
-        <div class="pull-right controls">
-          <%= render partial: "reports/elements/module_element_controls.html.erb" %>
-        </div>
+<% if checklist.blank? and @checklist.present? then checklist = @checklist end %>
+<% items = checklist.checklist_items %>
+<% timestamp = checklist.created_at %>
+<div class="report-element report-step-attachment-element report-step-checklist-element" data-ts="<%= timestamp.to_i %>" data-type="step_checklist" data-id="<%= checklist.id %>" data-name="<%= checklist.name %>" data-icon-class="glyphicon-list">
+  <div class="report-element-header">
+    <div class="row">
+      <div class="pull-left attachment-icon">
+          <span class="glyphicon glyphicon-list"></span>
+      </div>
+      <div class="pull-left checklist-name">
+        <em><%=t 'projects.reports.elements.step_checklist.checklist_name', name: checklist.name %></em>
+      </div>
+      <div class="pull-left user-time">
+        <%=t 'projects.reports.elements.step_checklist.user_time', timestamp: l(timestamp, format: :full) %>
+      </div>
+      <div class="pull-right controls">
+        <%= render partial: 'reports/elements/element_controls.html.erb' %>
       </div>
     </div>
-    <div class="report-element-body">
-      <ul class="no-style">
-        <% items.each do |item| %>
-          <li>
-            <input type="checkbox" disabled="disabled" <%= "checked='checked'" if item.checked %>/>
-            <span class="<%= "checked" if item.checked %>"><%= item.text %></span>
-          </li>
-        <% end %>
-      </ul>
-    </div>
-    <div class="report-element-children">
-      <%= children if (defined? children and children.present?) %>
-    </div>
   </div>
-<% end %>
+  <div class="report-element-body">
+    <ul class="no-style">
+      <% items.each do |item| %>
+        <li>
+          <input type="checkbox" disabled="disabled" <%= "checked='checked'" if item.checked %>/>
+          <span class="<%= 'checked' if item.checked %>"><%= item.text %></span>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+  <div class="report-element-children">
+    <%= children if (defined? children and children.present?) %>
+  </div>
+</div>

@@ -1,4 +1,3 @@
-<% modules_without_group = project.modules_without_group %>
 
 <div>
   <em>
@@ -6,32 +5,32 @@
   </em>
 </div>
 
-<% if project.my_modules.count > 0 %>
+<% if project.project_my_modules.is_archived(false).count > 0 %>
   <%= form.check_box :project, label: project.name, class: "project-all-cb" %>
   <ul class="no-style project-contents-list">
-    <% project.my_module_groups.each do |my_module_group| %>
+    <% project.experiments.is_archived(false).each do |experiment| %>
+      <% next unless experiment.my_modules.is_archived(false).count > 0 %>
       <li>
-        <%= form.check_box "module_group_#{my_module_group.id}", label: my_module_group.name, class: "project-all-cb" %>
-        <% if my_module_group.my_modules.present? then %>
-          <ul class="no-style project-contents-list">
-            <% my_module_group.ordered_modules.each do |my_module| %>
+        <%= form.check_box "experiment_#{experiment.id}", label: experiment.name, class: "project-all-cb" %>
+        <ul class="no-style experiment-contents-list">
+          <% experiment.my_module_groups.each do |my_module_group| %>
+            <% if my_module_group.my_modules.is_archived(false).present? then %>
+                <% my_module_group.ordered_modules.is_archived(false).each do |my_module| %>
+                  <li>
+                    <%= form.check_box "modules[#{my_module.id}]", label: my_module.name %>
+                  </li>
+                <% end %>
+            <% end %>
+          <% end %>
+
+          <!-- Tasks without groups -->
+          <% modules_without_group = experiment.modules_without_group %>
+          <% if modules_without_group.present? and modules_without_group.count > 0 %>
+            <% modules_without_group.each do |my_module| %>
               <li>
                 <%= form.check_box "modules[#{my_module.id}]", label: my_module.name %>
               </li>
             <% end %>
-          </ul>
-        <% end %>
-      </li>
-    <% end %>
-
-    <% if modules_without_group.present? and modules_without_group.count > 0 %>
-      <li>
-        <%= form.check_box :no_module_group, label: t("projects.reports.elements.modals.project_contents_inner.no_module_group"), class: "project-all-cb" %>
-        <ul class="no-style project-contents-list">
-          <% modules_without_group.each do |my_module| %>
-            <li>
-              <%= form.check_box "modules[#{my_module.id}]", label: my_module.name %>
-            </li>
           <% end %>
         </ul>
       </li>

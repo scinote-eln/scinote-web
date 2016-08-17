@@ -46,7 +46,7 @@ class ResultTablesController < ApplicationController
         Activity.create(
           type_of: :add_result,
           user: current_user,
-          project: @my_module.project,
+          project: @my_module.experiment.project,
           my_module: @my_module,
           message: t(
             "activities.add_table_result",
@@ -102,7 +102,7 @@ class ResultTablesController < ApplicationController
       if saved
         Activity.create(
           type_of: :archive_result,
-          project: @my_module.project,
+          project: @my_module.experiment.project,
           my_module: @my_module,
           user: current_user,
           message: t(
@@ -121,7 +121,7 @@ class ResultTablesController < ApplicationController
         Activity.create(
           type_of: :edit_result,
           user: current_user,
-          project: @my_module.project,
+          project: @my_module.experiment.project,
           my_module: @my_module,
           message: t(
             "activities.edit_table_result",

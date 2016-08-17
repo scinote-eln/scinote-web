@@ -176,17 +176,18 @@ function initializeNewElement(newEl) {
       parentElementId = parent.data("id");
       modalTitle = parent.data("modal-title");
 
-      if (parent.data("type") == "my_module") {
-        // Adding module contents
-        url = dh.data("add-module-contents-url");
-      } else if (parent.data("type") == "step") {
-        // Adding step contents
-        url = dh.data("add-step-contents-url");
-      } else if (_.contains(
-        ["result_asset", "result_table", "result_text"],
-        parent.data("type"))) {
-        // Adding result comments
-        url = dh.data("add-result-contents-url");
+      // Select correct AJAX URL based on type
+      switch (parent.data("type")) {
+        case "experiment":
+          url = dh.data("add-experiment-contents-url"); break;
+        case "my_module":
+          url = dh.data("add-module-contents-url"); break;
+        case "step":
+          url = dh.data("add-step-contents-url"); break;
+        case "result_asset":
+        case "result_table":
+        case "result_text":
+          url = dh.data("add-result-contents-url"); break;
       }
     }
 
@@ -630,17 +631,17 @@ function updateElementControls(el) {
 function sortWholeReport(asc) {
   animateLoading();
   var reportContent = $(REPORT_CONTENT);
-  var moduleElements = reportContent.children(".report-module-element");
+  var experimentElements = reportContent.children(".report-experiment-element");
   var newEls = reportContent.children(".new-element");
 
   if (
-  moduleElements.length === 0 || // Nothing to sort
-  moduleElements.length != newEls.length - 1 // This should never happen
+  experimentElements.length === 0 || // Nothing to sort
+  experimentElements.length != newEls.length - 1 // This should never happen
   ) {
     return;
   }
 
-  moduleElements = _.sortBy(moduleElements, function(el) {
+  experimentElements = _.sortBy(experimentElements, function(el) {
     if (!asc)
     {
       return -$(el).data("ts");
@@ -649,18 +650,18 @@ function sortWholeReport(asc) {
   });
 
   newEls.detach();
-  moduleElements = $(moduleElements);
-  moduleElements.detach();
+  experimentElements = $(experimentElements);
+  experimentElements.detach();
 
   // Re-insert the children into DOM
   reportContent.append(newEls[0]);
-  for (var i = 0; i < moduleElements.length; i++) {
-    reportContent.append(moduleElements[i]);
+  for (var i = 0; i < experimentElements.length; i++) {
+    reportContent.append(experimentElements[i]);
     reportContent.append(newEls[i + 1]);
   }
 
   // Finally, fix their controls
-  _.each(moduleElements, function(el) {
+  _.each(experimentElements, function(el) {
     updateElementControls($(el));
     sortElementChildren($(el), asc, true);
   });
@@ -978,6 +979,10 @@ function addElements(newElToBeReplaced, elements) {
   // Initialize everything on all elements
   _.each(newElements, function(element) {
     initializeReportElements($(element));
+
+    // Update previous and next element controls
+    updateElementControls(element.prev())
+    updateElementControls(element.next())
   });
 }
 

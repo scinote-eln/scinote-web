@@ -6,9 +6,6 @@ class ProjectActivitiesController < ApplicationController
     @activities = @project.last_activities
 
     respond_to do |format|
-      format.html {
-        render :index, layout: "fluid"
-      }
       format.json {
         render :json => {
           :html => render_to_string({

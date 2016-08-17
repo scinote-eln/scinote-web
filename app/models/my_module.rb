@@ -7,14 +7,14 @@ class MyModule < ActiveRecord::Base
     presence: true,
     length: { minimum: 2, maximum: 50 }
   validates :x, :y, :workflow_order, presence: true
-  validates :project, presence: true
+  validates :experiment, presence: true
   validates :my_module_group, presence: true, if: "!my_module_group_id.nil?"
 
   belongs_to :created_by, foreign_key: 'created_by_id', class_name: 'User'
   belongs_to :last_modified_by, foreign_key: 'last_modified_by_id', class_name: 'User'
   belongs_to :archived_by, foreign_key: 'archived_by_id', class_name: 'User'
   belongs_to :restored_by, foreign_key: 'restored_by_id', class_name: 'User'
-  belongs_to :project, inverse_of: :my_modules
+  belongs_to :experiment, inverse_of: :my_modules
   belongs_to :my_module_group, inverse_of: :my_modules
   has_many :results, inverse_of: :my_module, :dependent => :destroy
   has_many :my_module_tags, inverse_of: :my_module, :dependent => :destroy
@@ -33,9 +33,11 @@ class MyModule < ActiveRecord::Base
   has_many :report_elements, inverse_of: :my_module, :dependent => :destroy
   has_many :protocols, inverse_of: :my_module, dependent: :destroy
 
+  scope :is_archived, ->(is_archived) { where('archived = ?', is_archived) }
+
   def self.search(user, include_archived, query = nil, page = 1)
-    project_ids =
-      Project
+    exp_ids =
+      Experiment
       .search(user, include_archived, nil, SHOW_ALL_RESULTS)
       .select("id")
 
@@ -52,12 +54,12 @@ class MyModule < ActiveRecord::Base
     if include_archived
       new_query = MyModule
         .distinct
-        .where("my_modules.project_id IN (?)", project_ids)
+        .where("my_modules.experiment_id IN (?)", exp_ids)
         .where_attributes_like([:name, :description], a_query)
     else
       new_query = MyModule
         .distinct
-        .where("my_modules.project_id IN (?)", project_ids)
+        .where("my_modules.experiment_id IN (?)", exp_ids)
         .where("my_modules.archived = ?", false)
         .where_attributes_like([:name, :description], a_query)
     end
@@ -117,20 +119,22 @@ class MyModule < ActiveRecord::Base
     User.find_by_sql(
       "SELECT DISTINCT users.id, users.full_name FROM users " +
       "INNER JOIN user_projects ON users.id = user_projects.user_id " +
-      "WHERE user_projects.project_id = #{project_id.to_s}" +
+      "INNER JOIN experiments ON experiments.project_id = user_projects.project_id " +
+      "WHERE experiments.id = #{experiment_id.to_s}" +
       " AND users.id NOT IN " +
       "(SELECT DISTINCT user_id FROM user_my_modules WHERE user_my_modules.my_module_id = #{id.to_s})"
     )
   end
 
   def unassigned_samples
-    Sample.where(organization_id: project.organization).where.not(id: samples)
+    Sample.where(organization_id: experiment.project.organization).where.not(id: samples)
   end
 
   def unassigned_tags
     Tag.find_by_sql(
       "SELECT DISTINCT tags.id, tags.name, tags.color FROM tags " +
-      "WHERE tags.project_id = #{project_id.to_s} AND tags.id NOT IN " +
+      "INNER JOIN experiments ON experiments.project_id = tags.project_id " +
+      "WHERE experiments.id = #{experiment_id.to_s} AND tags.id NOT IN " +
       "(SELECT DISTINCT tag_id FROM my_module_tags WHERE my_module_tags.my_module_id = #{id.to_s})"
       )
   end
@@ -282,10 +286,14 @@ class MyModule < ActiveRecord::Base
   end
 
   def deep_clone(current_user)
+    deep_clone_to_experiment(current_user, experiment)
+  end
+
+  def deep_clone_to_experiment(current_user, experiment)
     # Copy the module
     clone = MyModule.new(
       name: self.name,
-      project: self.project,
+      experiment: experiment,
       description: self.description,
       x: self.x,
       y: self.y)
@@ -306,7 +314,7 @@ class MyModule < ActiveRecord::Base
   # Writes to user log.
   def log(message)
     final = "[%s] %s" % [name, message]
-    project.log(final)
+    experiment.project.log(final)
   end
 
   private
@@ -318,12 +326,12 @@ class MyModule < ActiveRecord::Base
   # Find an empty position for the restored module. It's
   # basically a first empty row with x=0.
   def get_new_position
-    if project.blank?
+    if experiment.blank?
       return { x: 0, y: 0 }
     end
 
     new_y = 0
-    positions = project.active_modules.collect{ |m| [m.x, m.y] }
+    positions = experiment.active_modules.collect{ |m| [m.x, m.y] }
     (0..10000).each do |n|
       unless positions.include? [0, n]
         new_y = n

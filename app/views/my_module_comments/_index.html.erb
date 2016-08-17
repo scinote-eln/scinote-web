@@ -1,15 +1,15 @@
-<h5 class="text-center"><%= t('projects.canvas.popups.comments_tab') %></h5>
+<h5 class="text-center"><%= t('experiments.canvas.popups.comments_tab') %></h5>
 <hr>
 <ul class="no-style double-line content-comments">
   <% if @comments.size == 0 then %>
-    <li class="no-comments"><em><%= t 'projects.canvas.popups.no_comments' %></em></li>
+    <li class="no-comments"><em><%= t 'experiments.canvas.popups.no_comments' %></em></li>
   <% else %>
     <%= render 'my_module_comments/list.html.erb', comments: @comments %>
   <% end %>
   <% if @comments.length == @per_page %>
   <li class="text-center">
     <a class="btn btn-default btn-more-comments" href="<%= more_comments_url %>" data-remote="true">
-      <%=t "projects.canvas.popups.more_comments" %>
+      <%=t "experiments.canvas.popups.more_comments" %>
     </a>
   </li>
   <% end %>
@@ -19,7 +19,7 @@
     <li>
       <hr>
       <%= bootstrap_form_for :comment, url: { format: :json }, method: :post, remote: true do |f| %>
-        <%= f.text_field :message, hide_label: true, placeholder: t("projects.canvas.popups.comment_placeholder"), append: f.submit("+"), help: '.' %>
+        <%= f.text_field :message, hide_label: true, placeholder: t("experiments.canvas.popups.comment_placeholder"), append: f.submit("+"), help: '.' %>
       <% end %>
     </li>
   </ul>

@@ -1,0 +1,34 @@
+<!-- Move experiment modal -->
+<div class="modal"
+     id="move-experiment-modal-<%= @experiment.id %>"
+     tabindex="-1"
+     role="dialog"
+     aria-labelledby="move-experiment-modal-label">
+     <%= bootstrap_form_for @experiment, url: move_experiment_path(),
+                            method: :post do |f| %>
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="move-experiment-modal-label"><%= t("experiments.move.modal_title", experiment: @experiment.name ) %></h5>
+        </div>
+        <div class="modal-body">
+          <% if !@projects.blank? %>
+            <%= f.select :project_id, options_for_select(@projects.collect { |p| [ p.name, p.id ] }),
+                        {}, {class: "form-control selectpicker", "data-role" => "clear"} %>
+          <% else %>
+            <div>
+              <em>
+                <%= t("experiments.move.no_projects") %>
+              </em>
+            </div>
+          <% end %>
+        </div>
+        <div class="modal-footer">
+          <%= f.submit t("experiments.move.modal_submit"), class: "btn btn-primary" %>
+          <button type="button" class="btn btn-default" data-dismiss="modal"><%=t "general.cancel" %></button>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>

@@ -6,25 +6,25 @@ class CanvasController < ApplicationController
 
   def edit
     render partial: 'canvas/edit',
-      locals: { project: @project, my_modules: @my_modules },
+      locals: { experiment: @experiment, my_modules: @my_modules },
       :content_type => 'text/html'
   end
 
   def full_zoom
     render partial: 'canvas/full_zoom',
-      locals: { project: @project, my_modules: @my_modules },
+      locals: { experiment: @experiment, my_modules: @my_modules },
       :content_type => 'text/html'
   end
 
   def medium_zoom
     render partial: 'canvas/medium_zoom',
-      locals: { project: @project, my_modules: @my_modules },
+      locals: { experiment: @experiment, my_modules: @my_modules },
       :content_type => 'text/html'
   end
 
   def small_zoom
     render partial: 'canvas/small_zoom',
-      locals: { project: @project, my_modules: @my_modules },
+      locals: { experiment: @experiment, my_modules: @my_modules },
       :content_type => 'text/html'
   end
 
@@ -33,7 +33,7 @@ class CanvasController < ApplicationController
 
     # Make sure that remove parameter is valid
     to_archive = []
-    if can_archive_modules(@project) and
+    if can_archive_modules(@experiment) and
       update_params[:remove].present? then
       to_archive = update_params[:remove].split(",")
       unless to_archive.all? { |id| is_int? id }
@@ -49,7 +49,7 @@ class CanvasController < ApplicationController
 
     # Make sure connections parameter is valid
     connections = []
-    if can_edit_connections(@project) and
+    if can_edit_connections(@experiment) and
       update_params[:connections].present? then
       conns = update_params[:connections].split(",")
       unless conns.length % 2 == 0 and
@@ -68,7 +68,7 @@ class CanvasController < ApplicationController
 
     # Make sure positions parameter is valid
     positions = Hash.new
-    if can_reposition_modules(@project) and
+    if can_reposition_modules(@experiment) and
       update_params[:positions].present? then
       poss = update_params[:positions].split(";")
       center = ""
@@ -104,7 +104,7 @@ class CanvasController < ApplicationController
     # Make sure that to_add is an array of strings,
     # as well as that positions for newly added modules exist
     to_add = []
-    if can_create_modules(@project) and
+    if can_create_modules(@experiment) and
       update_params[:add].present? and
       update_params["add-names"].present? then
       ids = update_params[:add].split(",")
@@ -131,7 +131,7 @@ class CanvasController < ApplicationController
 
     # Make sure rename parameter is valid
     to_rename = Hash.new
-    if can_edit_modules(@project) and
+    if can_edit_modules(@experiment) and
       update_params[:rename].present? then
       begin
         to_rename = JSON.parse(update_params[:rename])
@@ -156,7 +156,7 @@ class CanvasController < ApplicationController
     # Make sure that to_clone is an array of pairs,
     # as well as that all IDs exist
     to_clone = Hash.new
-    if can_clone_modules(@project) and
+    if can_clone_modules(@experiment) and
       update_params[:cloned].present? then
       clones = update_params[:cloned].split(";")
       (clones.collect { |v| v.split(",") }).each do |val|
@@ -177,7 +177,7 @@ class CanvasController < ApplicationController
     end
 
     module_groups = Hash.new
-    if can_edit_module_groups(@project) and
+    if can_edit_module_groups(@experiment) and
       update_params["module-groups"].present? then
       begin
         module_groups = JSON.parse(update_params["module-groups"])
@@ -200,7 +200,7 @@ class CanvasController < ApplicationController
     end
 
     # Call the "master" function to do all the updating for us
-    unless @project.update_canvas(
+    unless @experiment.update_canvas(
       to_archive,
       to_add,
       to_rename,
@@ -213,13 +213,13 @@ class CanvasController < ApplicationController
       render_403 and return
     end
 
-    # Save activities that modules were archived
+    #Save activities that modules were archived
     to_archive.each do |module_id|
       my_module = MyModule.find_by_id(module_id)
       unless my_module.blank?
         Activity.create(
           type_of: :archive_module,
-          project: my_module.project,
+          project: my_module.experiment.project,
           my_module: my_module,
           user: current_user,
           message: t(
@@ -231,9 +231,12 @@ class CanvasController < ApplicationController
       end
     end
 
+    # Create workflow image
+    @experiment.delay.generate_workflow_img
+
     flash[:success] = t(
-      "projects.canvas.update.success_flash")
-    redirect_to canvas_project_path(@project)
+      "experiments.canvas.update.success_flash")
+    redirect_to canvas_experiment_path(@experiment)
   end
 
   private
@@ -253,25 +256,25 @@ class CanvasController < ApplicationController
   end
 
   def load_vars
-    @project = Project.find_by_id(params[:id])
-    unless @project
+    @experiment = Experiment.find_by_id(params[:id])
+    unless @experiment
       respond_to do |format|
         format.html { render_404 and return }
         format.any(:xml, :json, :js) { render(json: { redirect_url: not_found_url }, status: :not_found) and return }
       end
     end
 
-    @my_modules = @project.active_modules
+    @my_modules = @experiment.active_modules
   end
 
   def check_edit_canvas
-    unless can_edit_canvas(@project)
+    unless can_edit_canvas(@experiment)
       render_403 and return
     end
   end
 
   def check_view_canvas
-    unless can_view_project(@project)
+    unless can_view_experiment(@experiment)
       render_403 and return
     end
   end

@@ -133,6 +133,14 @@ $toggle-btn-size: 50px;
   }
 }
 
+.my-module-group-element::before {
+  border-left: 1px dotted $color-emperor;
+  bottom: 20px;
+  content: "";
+  position: absolute;
+  top: 25px;
+}
+
 #wrapper {
   @include sidebar-shown;
 }

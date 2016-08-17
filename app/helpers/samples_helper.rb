@@ -1,11 +1,11 @@
 module SamplesHelper
 
   def can_add_samples
-    is_module_page? and can_add_samples_to_module(@my_module)
+    module_page? && can_add_samples_to_module(@my_module)
   end
 
   def can_remove_samples
-    is_module_page? and can_delete_samples_from_module(@my_module)
+    module_page? && can_delete_samples_from_module(@my_module)
   end
 
   def can_add_sample_related_things_to_organization
@@ -27,9 +27,9 @@ module SamplesHelper
   end
 
   def form_submit_link
-    if is_module_page?
+    if module_page?
       assign_samples_my_module_path(@my_module)
-    elsif is_project_page?
+    elsif project_page?
       delete_samples_project_path(@project)
     end
   end

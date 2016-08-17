@@ -6,18 +6,26 @@
 
   <p>
     <span>
-      <%=t "search.index.created_at" %>
+      <%=t 'search.index.created_at' %>
       <%=l workflow.created_at, format: :full %>
     </span>
     <br>
     <span>
-      <%=t "search.index.project" %>
-      <%= render partial: "search/results/partials/project_text.html.erb", locals: { project: workflow.project } %>
+      <%=t 'search.index.experiment' %>
+      <%= render partial: 'search/results/partials/experiment_text.html.erb',
+                 locals: { experiment: workflow.experiment } %>
     </span>
     <br>
     <span>
-      <%=t "search.index.organization" %>
-      <%= render partial: "search/results/partials/organization_text.html.erb", locals: { organization: workflow.project.organization } %>
+      <%=t 'search.index.project' %>
+      <%= render partial: 'search/results/partials/project_text.html.erb',
+                  locals: { project: workflow.experiment.project, link_to_page: :show } %>
+    </span>
+    <br>
+    <span>
+      <%=t 'search.index.organization' %>
+      <%= render partial: 'search/results/partials/organization_text.html.erb',
+                 locals: { organization: workflow.experiment.project.organization } %>
     </span>
   </p>
 

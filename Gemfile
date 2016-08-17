@@ -52,6 +52,7 @@ gem 'aws-sdk', '~> 2.2.8'
 gem 'aws-sdk-v1'
 gem 'delayed_job_active_record'
 gem 'devise-async'
+gem 'ruby-graphviz', '~> 1.2' # Graphviz for rails 
 
 group :development, :test do
   gem 'byebug'
@@ -59,12 +60,19 @@ group :development, :test do
   gem 'better_errors'
   gem 'binding_of_caller'
   gem 'awesome_print'
+  gem 'rubocop', require: false
 end
 
 group :production do
   gem 'puma'
   gem 'rails_12factor'
   gem 'skylight'
+end
+
+group :test do
+  gem 'minitest-reporters', '~> 1.1'
+  gem "shoulda-context"
+  gem "shoulda-matchers", ">= 3.0.1"
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem

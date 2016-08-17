@@ -8,7 +8,7 @@ class MyModuleTagsController < ApplicationController
     @my_module_tags = @my_module.my_module_tags
     @unassigned_tags = @my_module.unassigned_tags
     @new_mmt = MyModuleTag.new(my_module: @my_module)
-    @new_tag = Tag.new(project: @my_module.project)
+    @new_tag = Tag.new(project: @my_module.experiment.project)
 
     respond_to do |format|
       format.json {

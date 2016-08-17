@@ -1,7 +1,7 @@
 <ul class="no-style">
 
 <% if @user_my_modules.size == 0 then %>
-  <li><em><%= t 'projects.canvas.full_zoom.modal_manage_users.no_users' %></em></li>
+  <li><em><%= t 'experiments.canvas.full_zoom.modal_manage_users.no_users' %></em></li>
 <% else %>
   <% @user_my_modules.each_with_index do |umm, i| user = umm.user %>
   <li>
@@ -14,8 +14,8 @@
 
       <div class="col-xs-4">
         <span><%= user.full_name %></span>
-        <br><span class="text-muted" title="<%=t "projects.canvas.full_zoom.modal_manage_users.user_join_full", user: user.full_name, date: l(umm.created_at, format: :full_date), time: l(umm.created_at, format: :time) %>">
-          <em><%=t "projects.canvas.full_zoom.modal_manage_users.user_join", date: l(umm.created_at, format: :full_date) %></em>
+        <br><span class="text-muted" title="<%=t "experiments.canvas.full_zoom.modal_manage_users.user_join_full", user: user.full_name, date: l(umm.created_at, format: :full_date), time: l(umm.created_at, format: :time) %>">
+          <em><%=t "experiments.canvas.full_zoom.modal_manage_users.user_join", date: l(umm.created_at, format: :full_date) %></em>
         </span>
       </div>
 
@@ -43,7 +43,7 @@
       <div class="col-xs-2">
         <%= f.button class: 'btn btn-primary' do %>
           <span class="glyphicon glyphicon-plus"></span>
-          <span class="hidden-xs"><%= t("projects.canvas.full_zoom.modal_manage_users.create") %></span>
+          <span class="hidden-xs"><%= t("experiments.canvas.full_zoom.modal_manage_users.create") %></span>
         <% end %>
       </div>
     <% end %>

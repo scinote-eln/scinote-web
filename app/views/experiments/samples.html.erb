@@ -1,0 +1,7 @@
+<% provide(:head_title, raw(t("projects.samples.head_title", project: @experiment.name))) %>
+<%= render partial: "shared/sidebar" %>
+<%= render partial: "shared/secondary_navigation" %>
+
+<div id="content">
+  <%= render partial: "shared/samples" %>
+</div>

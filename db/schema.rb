@@ -137,6 +137,32 @@ ActiveRecord::Schema.define(version: 20160809074757) do
   add_index "delayed_jobs", ["priority", "run_at"], name: "delayed_jobs_priority", using: :btree
   add_index "delayed_jobs", ["queue"], name: "delayed_jobs_queue", using: :btree
 
+  create_table "experiments", force: :cascade do |t|
+    t.string   "name",                                     null: false
+    t.text     "description"
+    t.integer  "project_id",                               null: false
+    t.integer  "created_by_id",                            null: false
+    t.integer  "last_modified_by_id",                      null: false
+    t.boolean  "archived",                 default: false, null: false
+    t.integer  "archived_by_id"
+    t.datetime "archived_on"
+    t.integer  "restored_by_id"
+    t.datetime "restored_on"
+    t.datetime "created_at",                               null: false
+    t.datetime "updated_at",                               null: false
+    t.string   "workflowimg_file_name"
+    t.string   "workflowimg_content_type"
+    t.integer  "workflowimg_file_size"
+    t.datetime "workflowimg_updated_at"
+  end
+
+  add_index "experiments", ["archived_by_id"], name: "index_experiments_on_archived_by_id", using: :btree
+  add_index "experiments", ["created_by_id"], name: "index_experiments_on_created_by_id", using: :btree
+  add_index "experiments", ["last_modified_by_id"], name: "index_experiments_on_last_modified_by_id", using: :btree
+  add_index "experiments", ["name"], name: "index_experiments_on_name", using: :btree
+  add_index "experiments", ["project_id"], name: "index_experiments_on_project_id", using: :btree
+  add_index "experiments", ["restored_by_id"], name: "index_experiments_on_restored_by_id", using: :btree
+
   create_table "logs", force: :cascade do |t|
     t.integer "organization_id", null: false
     t.string  "message",         null: false
@@ -150,16 +176,16 @@ ActiveRecord::Schema.define(version: 20160809074757) do
   add_index "my_module_comments", ["my_module_id", "comment_id"], name: "index_my_module_comments_on_my_module_id_and_comment_id", using: :btree
 
   create_table "my_module_groups", force: :cascade do |t|
-    t.string   "name",          null: false
-    t.datetime "created_at",    null: false
-    t.datetime "updated_at",    null: false
-    t.integer  "project_id",    null: false
+    t.string   "name",                      null: false
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
     t.integer  "created_by_id"
+    t.integer  "experiment_id", default: 0, null: false
   end
 
   add_index "my_module_groups", ["created_by_id"], name: "index_my_module_groups_on_created_by_id", using: :btree
+  add_index "my_module_groups", ["experiment_id"], name: "index_my_module_groups_on_experiment_id", using: :btree
   add_index "my_module_groups", ["name"], name: "index_my_module_groups_on_name", using: :gist
-  add_index "my_module_groups", ["project_id"], name: "index_my_module_groups_on_project_id", using: :btree
 
   create_table "my_module_tags", force: :cascade do |t|
     t.integer "my_module_id"
@@ -177,7 +203,6 @@ ActiveRecord::Schema.define(version: 20160809074757) do
     t.string   "description"
     t.integer  "x",                      default: 0,     null: false
     t.integer  "y",                      default: 0,     null: false
-    t.integer  "project_id",                             null: false
     t.integer  "my_module_group_id"
     t.datetime "created_at",                             null: false
     t.datetime "updated_at",                             null: false
@@ -190,14 +215,15 @@ ActiveRecord::Schema.define(version: 20160809074757) do
     t.datetime "restored_on"
     t.integer  "nr_of_assigned_samples", default: 0
     t.integer  "workflow_order",         default: -1,    null: false
+    t.integer  "experiment_id",          default: 0,     null: false
   end
 
   add_index "my_modules", ["archived_by_id"], name: "index_my_modules_on_archived_by_id", using: :btree
   add_index "my_modules", ["created_by_id"], name: "index_my_modules_on_created_by_id", using: :btree
+  add_index "my_modules", ["experiment_id"], name: "index_my_modules_on_experiment_id", using: :btree
   add_index "my_modules", ["last_modified_by_id"], name: "index_my_modules_on_last_modified_by_id", using: :btree
   add_index "my_modules", ["my_module_group_id"], name: "index_my_modules_on_my_module_group_id", using: :btree
   add_index "my_modules", ["name"], name: "index_my_modules_on_name", using: :gist
-  add_index "my_modules", ["project_id"], name: "index_my_modules_on_project_id", using: :btree
   add_index "my_modules", ["restored_by_id"], name: "index_my_modules_on_restored_by_id", using: :btree
 
   create_table "organizations", force: :cascade do |t|
@@ -294,9 +320,9 @@ ActiveRecord::Schema.define(version: 20160809074757) do
   add_index "protocols", ["restored_by_id"], name: "index_protocols_on_restored_by_id", using: :btree
 
   create_table "report_elements", force: :cascade do |t|
-    t.integer  "position",                 null: false
-    t.integer  "type_of",                  null: false
-    t.integer  "sort_order",   default: 0
+    t.integer  "position",                  null: false
+    t.integer  "type_of",                   null: false
+    t.integer  "sort_order",    default: 0
     t.integer  "report_id"
     t.integer  "parent_id"
     t.integer  "project_id"
@@ -306,12 +332,14 @@ ActiveRecord::Schema.define(version: 20160809074757) do
     t.integer  "checklist_id"
     t.integer  "asset_id"
     t.integer  "table_id"
-    t.datetime "created_at",               null: false
-    t.datetime "updated_at",               null: false
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
+    t.integer  "experiment_id"
   end
 
   add_index "report_elements", ["asset_id"], name: "index_report_elements_on_asset_id", using: :btree
   add_index "report_elements", ["checklist_id"], name: "index_report_elements_on_checklist_id", using: :btree
+  add_index "report_elements", ["experiment_id"], name: "index_report_elements_on_experiment_id", using: :btree
   add_index "report_elements", ["my_module_id"], name: "index_report_elements_on_my_module_id", using: :btree
   add_index "report_elements", ["parent_id"], name: "index_report_elements_on_parent_id", using: :btree
   add_index "report_elements", ["project_id"], name: "index_report_elements_on_project_id", using: :btree
@@ -637,14 +665,18 @@ ActiveRecord::Schema.define(version: 20160809074757) do
   add_foreign_key "custom_fields", "organizations"
   add_foreign_key "custom_fields", "users"
   add_foreign_key "custom_fields", "users", column: "last_modified_by_id"
+  add_foreign_key "experiments", "users", column: "archived_by_id"
+  add_foreign_key "experiments", "users", column: "created_by_id"
+  add_foreign_key "experiments", "users", column: "last_modified_by_id"
+  add_foreign_key "experiments", "users", column: "restored_by_id"
   add_foreign_key "logs", "organizations"
   add_foreign_key "my_module_comments", "comments"
   add_foreign_key "my_module_comments", "my_modules"
-  add_foreign_key "my_module_groups", "projects"
+  add_foreign_key "my_module_groups", "experiments"
   add_foreign_key "my_module_groups", "users", column: "created_by_id"
   add_foreign_key "my_module_tags", "users", column: "created_by_id"
+  add_foreign_key "my_modules", "experiments"
   add_foreign_key "my_modules", "my_module_groups"
-  add_foreign_key "my_modules", "projects"
   add_foreign_key "my_modules", "users", column: "archived_by_id"
   add_foreign_key "my_modules", "users", column: "created_by_id"
   add_foreign_key "my_modules", "users", column: "last_modified_by_id"
@@ -669,6 +701,7 @@ ActiveRecord::Schema.define(version: 20160809074757) do
   add_foreign_key "protocols", "users", column: "restored_by_id"
   add_foreign_key "report_elements", "assets"
   add_foreign_key "report_elements", "checklists"
+  add_foreign_key "report_elements", "experiments"
   add_foreign_key "report_elements", "my_modules"
   add_foreign_key "report_elements", "projects"
   add_foreign_key "report_elements", "reports"

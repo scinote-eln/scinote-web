@@ -13,10 +13,15 @@ module SidebarHelper
     when "samples"
       return samples_project_path(project)
     when "archive"
-      return module_archive_project_url(project)
+      return experiment_archive_project_url(project)
     else
-      return canvas_project_path(project)
+      return project_path(project)
     end
+  end
+
+  def experiment_action_to_link_to(experiment)
+    # TODO
+    canvas_experiment_path(experiment)
   end
 
   def module_action_to_link_to(my_module)

@@ -1,4 +1,4 @@
-<% content_for :sidebar do %>
+<%= content_for :sidebar do %>
   <div id="slide-panel" class="visible">
 
     <div class="sidebar-header">
@@ -13,82 +13,23 @@
     </div>
 
     <div class="tree">
+      <% if !project_page? %>
       <ul>
-        <li class="<%= "active" if not is_module_page? %>">
+        <li class="active">
           <span class="tree-link line-wrap">
             <i></i>
-            <% if is_module_page? %>
-              <%= link_to @project.name, project_action_to_link_to(@project), title: @project.name %>
-            <% else %>
-              <span title="<%= @project.name %>"><%= @project.name %></span>
-            <% end %>
+              <%= link_to @project.name,
+                          project_action_to_link_to(@project),
+                          title: @project.name %>
           </span>
-          <% if @project.active_modules.present? then %>
-            <ul>
-              <% @project.active_module_groups.each do |my_module_group| %>
-                <li data-module-group="<%= my_module_group.id %>">
-                  <span>
-                    <i></i>
-                    <span class="line-wrap short" title="<%= my_module_group.name %>">
-                      <%= my_module_group.name %>
-                    </span>
-                    <% if is_canvas? %>
-                      <a href="" class="canvas-center-on"><span class="glyphicon glyphicon-map-marker"></span></a>
-                    <% end %>
-                  </span>
-                  <% if my_module_group.my_modules.present? then %>
-                    <ul>
-                      <% my_module_group.my_modules.sort_by{|m| m.workflow_order}.each do |my_module| %>
-                        <li class="leaf <%= "active" if currently_active? my_module %>" data-module-id="<%= my_module.id %>">
-                          <span class="tree-link">
-                            <% if currently_active? my_module %>
-                              <%= my_module.name %>
-                            <% else %>
-                              <% if can_view_module(my_module) then %>
-                                <%= link_to my_module.name, module_action_to_link_to(my_module), class: "module-link" %>
-                              <% else %>
-                                <%= my_module.name %>
-                              <% end %>
-                            <% end %>
-                            <% if is_canvas? %>
-                              <a href="#" class="canvas-center-on"><span class="glyphicon glyphicon-map-marker"></span></a>
-                            <% end %>
-                          </span>
-                        </li>
-                      <% end %>
-                    </ul>
-                  <% end %>
-                </li>
-              <% end %>
-              <% modules_without_group = @project.modules_without_group %>
-              <% if modules_without_group.present? then %>
-                <li>
-                  <span>
-                    <i></i>
-                    <span class='sidebar-no-module-group'><%= t("sidebar.no_module_group") %></span>
-                  </span>
-                  <ul>
-                    <% modules_without_group.each do |my_module| %>
-                      <li class="leaf <%= "active" if currently_active? my_module %>" data-module-id="<%= my_module.id %>">
-                        <span class="tree-link">
-                          <% if currently_active? my_module %>
-                              <%= my_module.name %>
-                          <% else %>
-                            <%= link_to my_module.name, module_action_to_link_to(my_module) %>
-                          <% end %>
-                          <% if is_canvas? %>
-                            <a href="" class="canvas-center-on"><span class="glyphicon glyphicon-map-marker"></span></a>
-                          <% end %>
-                        </span>
-                      </li>
-                    <% end %>
-                  </ul>
-                </li>
-              <% end %>
-            </ul>
-          <% end %>
+          <%= render partial: 'shared/sidebar/experiments',
+                    locals: { project: @project } %>
         </li>
       </ul>
+      <% else %>
+      <%= render partial: 'shared/sidebar/experiments',
+                locals: { project: @project } %>
+      <% end %>
     </div>
   </div>
 <% end %>
