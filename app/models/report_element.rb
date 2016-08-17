@@ -103,21 +103,17 @@ class ReportElement < ActiveRecord::Base
   # removes element that are archived or deleted
   def clean_removed_or_archived_elements
     parent_model = ''
-    [ 'project',
-      'experiment',
-      'my_module',
-      'step',
-      'result',
-      'checklist',
-      'asset',
-      'table'
-    ].each do |el|
-      parent_model = el if self.send el
+    %w(project experiment my_module step result checklist asset table)
+      .each do |el|
+      parent_model = el if send el
     end
-    if parent_model == 'step'
-      self.destroy unless self.send(parent_model).completed
+
+    if parent_model == 'experiment'
+      destroy unless send(parent_model).project == report.project
+    elsif parent_model == 'step'
+      destroy unless send(parent_model).completed
     else
-      self.destroy unless (self.send(parent_model).active? rescue self.send(parent_model))
+      destroy unless (send(parent_model).active? rescue send(parent_model))
     end
   end
 
