@@ -4,7 +4,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
   def avatar
     user = User.find_by_id(params[:id]) || current_user
     style = params[:style] || "icon_small"
-    # TODO Maybe avatar should be an Asset, so it's methods could be used,
+    # TODO: Maybe avatar should be an Asset, so it's methods could be used,
     # e.g. presigned_url in this case
     redirect_to user.avatar.url(style.to_sym), status: 307
   end
@@ -17,22 +17,23 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
         # Changed avatar values are only used for pre-generating S3 key
         # and user object is not persisted with this values.
-        current_user.empty_avatar avatar_params[:file].original_filename, avatar_params[:file].size()
+        current_user.empty_avatar avatar_params[:file].original_filename,
+                                  avatar_params[:file].size
 
-        validationAsset = Asset.new(avatar_params)
-        unless current_user.valid? and validationAsset.valid?
-          if validationAsset.errors[:file].any?
+        validation_asset = Asset.new(avatar_params)
+        if current_user.valid? && validation_asset.valid?
+          render json: {
+            posts: generate_upload_posts
+          }
+        else
+          if validation_asset.errors[:file].any?
             # Add file content error
-            current_user.errors[:avatar] << validationAsset.errors[:file].first
+            current_user.errors[:avatar] << validation_asset.errors[:file].first
           end
           render json: {
             status: 'error',
             errors: current_user.errors
           }, status: :bad_request
-        else
-          render json: {
-            posts: generate_upload_posts
-          }
         end
       }
     end
@@ -123,8 +124,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
           respond_with resource, location: edit_user_registration_path
         }
         format.json {
-          render json: self.resource.errors,
-          status: :bad_request
+          render json: resource.errors, status: :bad_request
         }
       end
     end
@@ -199,9 +199,9 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   def avatar_params
     params.permit(
-     :file
+      :file
     )
- end
+  end
 
   # Generates posts for uploading files (many sizes of same file)
   # to S3 server
@@ -253,5 +253,4 @@ class Users::RegistrationsController < Devise::RegistrationsController
   def after_inactive_sign_up_path_for(resource)
     new_user_session_path
   end
-
 end

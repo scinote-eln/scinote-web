@@ -16,7 +16,7 @@ class AssetsController < ApplicationController
           render json: {
             status: 'error',
             errors: asset.errors
-          } , status: :bad_request
+          }, status: :bad_request
         else
           posts = generate_upload_posts asset
           render json: {
@@ -145,5 +145,4 @@ class AssetsController < ApplicationController
       :file
     )
   end
-
 end

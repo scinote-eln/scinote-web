@@ -35,14 +35,14 @@ class StepsController < ApplicationController
       step_assets = step_params.slice(:assets_attributes)
       @step = Step.new(step_data)
 
-      step_assets[:assets_attributes].each do |i, data|
+      step_assets[:assets_attributes].each do |_i, data|
         # Ignore destroy requests on create
-        if data[:_destroy].nil?
-          asset = Asset.new(data)
-          asset.created_by = current_user
-          asset.last_modified_by = current_user
-          new_assets << asset
-        end
+        next if data[:_destroy].present?
+
+        asset = Asset.new(data)
+        asset.created_by = current_user
+        asset.last_modified_by = current_user
+        new_assets << asset
       end
       @step.assets << new_assets
     else
@@ -101,9 +101,7 @@ class StepsController < ApplicationController
         # On error, delete the newly added files from S3, as they were
         # uploaded on client-side (in case of client-side hacking of
         # asset's signature response)
-        new_assets.each do |asset|
-          asset.destroy
-        end
+        Asset.destroy_all(new_assets)
 
         format.json {
           render json: {
@@ -213,13 +211,14 @@ class StepsController < ApplicationController
         format.json {
           render json: {
             html: render_to_string({
-              partial: "step.html.erb", locals: {step: @step}
-            })}
+                partial: 'step.html.erb',
+                locals: { step:  @step }
+                })
+          }
         }
       else
         format.json {
-          render json: @step.errors,
-          status: :bad_request
+          render json: @step.errors, status: :bad_request
         }
       end
     end
@@ -520,7 +519,9 @@ class StepsController < ApplicationController
     for key, values in params do
       if values.respond_to?(:each)
         for pos, attrs in params[key] do
-          return true if attrs[:_destroy] == "1"
+          if attrs[:_destroy] == '1'
+            return true
+          end
         end
       end
     end
@@ -538,11 +539,11 @@ class StepsController < ApplicationController
         attr_params = update_params[key]
 
         for pos, attrs in params[key] do
-          if attrs[:_destroy] == "1"
-            attr_params[pos] = {id: attrs[:id], _destroy: "1"}
+          if attrs[:_destroy] == '1'
+            attr_params[pos] = { id: attrs[:id], _destroy: '1' }
             params[key].delete(pos)
           elsif has_destroy_params(params[key][pos])
-            attr_params[pos] = {id: attrs[:id]}
+            attr_params[pos] = { id: attrs[:id] }
             extract_destroy_params(params[key][pos], attr_params[pos])
           end
         end

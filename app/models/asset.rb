@@ -211,16 +211,16 @@ class Asset < ActiveRecord::Base
   def destroy
     # Delete files from S3 (when updating an existing file, paperclip does
     # this automatically, so this is not needed in such cases)
-    key = self.file.path[1..-1]
+    key = file.path[1..-1]
     S3_BUCKET.object(key).delete
-    if (self.file_content_type =~ /^image\//) == 0
-      self.file.options[:styles].each do |style, option|
-        key = self.file.path(style)[1..-1]
+    if (file_content_type =~ %r{^image\/}) == 0
+      file.options[:styles].each do |style|
+        key = file.path(style)[1..-1]
         S3_BUCKET.object(key).delete
       end
     end
 
-    self.delete
+    delete
   end
 
   # If organization is provided, its space_taken
@@ -249,15 +249,19 @@ class Asset < ActiveRecord::Base
 
   def presigned_url(style = :original, download: false, time: 30)
     if file.is_stored_on_s3?
-      downloadArg = download ? 'attachment; filename=' + URI.escape(file_file_name) : nil
+      if download
+        download_arg = 'attachment; filename=' + URI.escape(file_file_name)
+      else
+        download_arg = nil
+      end
+
       signer = Aws::S3::Presigner.new(client: S3_BUCKET.client)
       signer.presigned_url(:get_object,
         bucket: S3_BUCKET.name,
         key: file.path(style)[1..-1],
         expires_in: time,
         # this response header forces object download
-        response_content_disposition: downloadArg)
-
+        response_content_disposition: download_arg)
     end
   end
 
@@ -284,11 +288,11 @@ class Asset < ActiveRecord::Base
   private
 
   def filter_paperclip_errors
-      if errors.size > 1
-        temp_errors = errors[:file]
-        errors.clear()
-        errors.set(:file, temp_errors)
-      end
+    if errors.size > 1
+      temp_errors = errors[:file]
+      errors.clear
+      errors.set(:file, temp_errors)
+    end
   end
 
   def file_changed?

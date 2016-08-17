@@ -165,12 +165,12 @@ class User < ActiveRecord::Base
     if errors.key? :avatar
       errors.delete(:avatar)
       messages = []
-      errors.each do |attribute, error|
+      errors.each do |attribute|
         errors.full_messages_for(attribute).each do |message|
           messages << message.split(' ').drop(1).join(' ')
         end
       end
-      errors.clear()
+      errors.clear
       errors.set(:avatar, messages)
     end
   end
