@@ -195,6 +195,7 @@ function initTutorial() {
       $(this).click(function (){
         Cookies.remove('tutorial_data');
         Cookies.remove('current_tutorial_step');
+        restore_after_tutorial();
       });
     });
   }
@@ -231,5 +232,21 @@ function showTutorial() {
   return tutorialModuleId == currentModuleId;
 }
 
+function samples_tutorial_helper(){
+  $(document).ready(function(){
+    if( $('div').hasClass('introjs-showElement') ){
+      $('#secondary-menu')
+        .find('a')
+        .css({ 'pointer-events': 'none' });
+    }
+  });
+}
+
+function restore_after_tutorial(){
+  $('#secondary-menu')
+    .find('a')
+    .css({ 'pointer-events': 'auto' });
+}
 // Initialize first-time tutorial
 initTutorial();
+samples_tutorial_helper();
