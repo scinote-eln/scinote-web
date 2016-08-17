@@ -143,4 +143,19 @@ class Project < ActiveRecord::Base
     ids.delete_if { |i| i.flatten.empty? }
     ids.join(', ')
   end
+
+  def assigned_modules(user)
+    role = user_role(user)
+    if role.blank?
+      MyModule.none
+    elsif role == 'owner'
+      project_my_modules.where(archived: false)
+    else
+      project_my_modules
+        .joins(:user_my_modules)
+        .where('user_my_modules.user_id IN (?)', user.id)
+        .where(archived: false)
+        .distinct
+    end
+  end
 end
