@@ -45,7 +45,7 @@ class ApplicationController < ActionController::Base
         render json: {}, status: :forbidden
       }
     end
-    return
+    return true
   end
 
   def render_404
@@ -57,7 +57,7 @@ class ApplicationController < ActionController::Base
         render json: {}, status: :not_found
       }
     end
-    return
+    return true
   end
 
   private
