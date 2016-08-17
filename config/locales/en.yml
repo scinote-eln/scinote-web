@@ -122,7 +122,7 @@ en:
       no_name: "(no name)"
       error:
         no_results: "No results for %{q}."
-        query_length: "Search query is too short. Each word should contain at least %{n} characters."
+        query_length: "Search query is too short. It should contain at least %{n} characters."
         max_length: "Search query is too long. The query is limited to %{n} characters."
       samples:
         sample: "Sample: "

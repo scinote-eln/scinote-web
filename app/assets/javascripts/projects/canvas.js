@@ -46,8 +46,12 @@ var DEFAULT_CONNECTOR_STYLE_2 =
 };
 
 // Zoom-level specific variables
-var GRID_DIST_EDIT_X = 300;
-var GRID_DIST_EDIT_Y = 135;
+//var GRID_DIST_EDIT_X = 300;
+//var GRID_DIST_EDIT_Y = 140; //135
+var GRID_DIST_EDIT_X = 10;
+var GRID_DIST_EDIT_Y = 10;
+var GRID_DIST_EDIT_STEP_X = 10;
+var GRID_DIST_EDIT_STEP_Y = 10;
 var EDIT_ENDPOINT_STYLE =
 [ "Dot", {
   radius: 4,
@@ -61,12 +65,25 @@ var EDIT_CONNECTOR_STYLE_2 =
   outlineColor: "transparent",
   outlineWidth: 0
 };
+/*
 var GRID_DIST_FULL_X = 340;
 var GRID_DIST_FULL_Y = 201;
 var GRID_DIST_MEDIUM_X = 250;
 var GRID_DIST_MEDIUM_Y = 88;
 var GRID_DIST_SMALL_X = 100;
 var GRID_DIST_SMALL_Y = 100;
+*/
+/*
+  Migrations: multiply my_modules (x by 32, y by 16)
+  UPDATE my_modules SET x=x*32, y=y*16
+  themodel.connection.execute("UPDATE my_modules SET x=x*32, y=y*16")
+*/
+var GRID_DIST_FULL_X = 12;
+var GRID_DIST_FULL_Y = 12;
+var GRID_DIST_MEDIUM_X = 8;
+var GRID_DIST_MEDIUM_Y = 8;
+var GRID_DIST_SMALL_X = 5;
+var GRID_DIST_SMALL_Y = 5;
 var SUBMIT_FORM_NAME_SEPARATOR = "|";
 
 //************************************
@@ -168,8 +185,8 @@ function initializeEdit() {
     "div.module",
     {
       scrollEnabled: true,
-      gridDistX: GRID_DIST_EDIT_X,
-      gridDistY: GRID_DIST_EDIT_Y,
+      gridDistX: GRID_DIST_EDIT_STEP_X,
+      gridDistY: GRID_DIST_EDIT_STEP_Y,
       endpointStyle: EDIT_ENDPOINT_STYLE,
       connectorStyle2: EDIT_CONNECTOR_STYLE_2,
       zoomEnabled: true,
@@ -2850,6 +2867,10 @@ function initJsPlumb(containerSel, containerChildSel, modulesSel, params) {
     // this listener sets the connection's internal
     // id as the label overlay's text.
     instance.bind("connection", function (info) {
+    _.each(instance.getAllConnections(), function(conn) {
+      conn.endpoints[0].setEnabled(false);
+      conn.endpoints[1].setEnabled(false);
+      });
     });
 
     // Bind a click listener to each connection
@@ -2901,11 +2922,16 @@ function initJsPlumb(containerSel, containerChildSel, modulesSel, params) {
   }
 
   // Enable/disable connection endpoints
+  /*
   _.each(instance.getAllConnections(), function(conn) {
     conn.endpoints[0].setEnabled(connectionsEditable);
     conn.endpoints[1].setEnabled(connectionsEditable);
   });
-
+  */
+  _.each(instance.getAllConnections(), function(conn) {
+    conn.endpoints[0].setEnabled(false);
+    conn.endpoints[1].setEnabled(false);
+  });
   // Update style on existing connections
   if (connectionsEditable) {
     _.each(instance.getAllConnections(), function(conn) {

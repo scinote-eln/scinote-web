@@ -1,19 +1,19 @@
 <% results.each do |project| %>
   <h5>
     <span class="glyphicon glyphicon-blackboard"></span>
-    <%= render partial: "search/results/partials/project_text.html.erb",
+    <%= render partial: 'search/results/partials/project_text.html.erb',
                locals: { project: project, query: search_query, link_to_page: :show } %>
   </h5>
 
   <p>
     <span>
-      <%=t "search.index.created_at" %>
+      <%=t 'search.index.created_at' %>
       <%=l project.created_at, format: :full %>
     </span>
     <br>
     <span>
-      <%=t "search.index.organization" %>
-      <%= render partial: "search/results/partials/organization_text.html.erb",
+      <%=t 'search.index.organization' %>
+      <%= render partial: 'search/results/partials/organization_text.html.erb',
                  locals: { organization: project.organization } %>
     </span>
   </p>

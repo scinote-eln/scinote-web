@@ -1,3 +1,4 @@
+<% target = nil if local_assigns[:target].nil? %>
 <% query ||= nil %>
 <% text = query.present? ? highlight(step.name, query.strip.split(/\s+/)) : step.name %>
 

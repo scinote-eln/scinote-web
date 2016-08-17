@@ -8,13 +8,13 @@
           <span class="glyphicon glyphicon-list"></span>
       </div>
       <div class="pull-left checklist-name">
-        <em><%=t "projects.reports.elements.step_checklist.checklist_name", name: checklist.name %></em>
+        <em><%=t 'projects.reports.elements.step_checklist.checklist_name', name: checklist.name %></em>
       </div>
       <div class="pull-left user-time">
-        <%=t "projects.reports.elements.step_checklist.user_time", timestamp: l(timestamp, format: :full) %>
+        <%=t 'projects.reports.elements.step_checklist.user_time', timestamp: l(timestamp, format: :full) %>
       </div>
       <div class="pull-right controls">
-        <%= render partial: "reports/elements/element_controls.html.erb" %>
+        <%= render partial: 'reports/elements/element_controls.html.erb' %>
       </div>
     </div>
   </div>
@@ -23,7 +23,7 @@
       <% items.each do |item| %>
         <li>
           <input type="checkbox" disabled="disabled" <%= "checked='checked'" if item.checked %>/>
-          <span class="<%= "checked" if item.checked %>"><%= item.text %></span>
+          <span class="<%= 'checked' if item.checked %>"><%= item.text %></span>
         </li>
       <% end %>
     </ul>

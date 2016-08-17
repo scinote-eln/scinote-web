@@ -1,7 +1,7 @@
 <% if asset.blank? and @asset.present? then asset = @asset end %>
 <% is_image = asset.is_image? %>
 <% timestamp = asset.created_at %>
-<% icon_class = is_image ? "glyphicon-picture" : "glyphicon-file" %>
+<% icon_class = is_image ? 'glyphicon-picture' : 'glyphicon-file' %>
 <div class="report-element report-step-attachment-element report-step-asset-element" data-ts="<%= timestamp.to_i %>" data-type="step_asset" data-id="<%= asset.id %>" data-name="<%=t "projects.reports.elements.step_asset.sidebar_name", file: asset.file_file_name %>" data-icon-class="<%= icon_class %>">
   <div class="report-element-header">
     <div class="row">
@@ -9,13 +9,13 @@
         <span class="glyphicon <%= icon_class %>"></span>
       </div>
       <div class="pull-left file-name">
-        <em><%=t "projects.reports.elements.step_asset.file_name", file: truncate( asset.file_file_name, length: 50 ) %></em>
+        <em><%=t 'projects.reports.elements.step_asset.file_name', file: truncate( asset.file_file_name, length: 50 ) %></em>
       </div>
       <div class="pull-left user-time">
-        <%=t "projects.reports.elements.step_asset.user_time", timestamp: l(timestamp, format: :full) %>
+        <%=t 'projects.reports.elements.step_asset.user_time', timestamp: l(timestamp, format: :full) %>
       </div>
       <div class="pull-right controls">
-        <%= render partial: "reports/elements/element_controls.html.erb" %>
+        <%= render partial: 'reports/elements/element_controls.html.erb' %>
       </div>
     </div>
   </div>
