@@ -537,6 +537,14 @@
       $(el)
       .find('.tab-content')
       .css({ 'pointer-events': 'auto' });
+      $(el)
+      .find('.panel-title')
+      .css({ 'pointer-events': 'auto' });
+      $(el)
+      .find('.form-submit-link')
+      .css({
+        'pointer-events': 'auto',
+        'color': '#262626'});
     });
   }
 
