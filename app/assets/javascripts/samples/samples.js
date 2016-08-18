@@ -45,6 +45,8 @@ $("#modal-create-sample-type").on("shown.bs.modal", function(event) {
 $("form#new_sample_type").on("ajax:success", function(ev, data, status) {
     $("#modal-create-sample-type").modal("hide");
     updateSamplesTypesandGroups();
+
+    window.location.reload();
 });
 
 $("form#new_sample_type").on("ajax:error", function(e, data, status, xhr) {
@@ -73,6 +75,8 @@ $("#modal-create-sample-group").on("shown.bs.modal", function(event) {
 $("form#new_sample_group").on("ajax:success", function(ev, data, status) {
     $("#modal-create-sample-group").modal("hide");
     updateSamplesTypesandGroups();
+
+    window.location.reload();
 });
 
 $("form#new_sample_group").on("ajax:error", function(e, data, status, xhr) {
