@@ -33,7 +33,7 @@
     </span>
   <% end %>
 
-  <div id="zoom-level-buttons" class="btn-group pull-right" data-toggle="buttons">
+  <div id="zoom-level-buttons" class="btn-group <%= 'pull-right' if can_edit_canvas(@experiment) && can_create_experiment(@project)  %>" data-toggle="buttons">
     <%=link_to canvas_full_zoom_experiment_path(@experiment), remote: true, type: "button", class: "ajax btn btn-primary active", "data-action" => "full_zoom", "data-toggle" => "button", "aria-pressed" => true do %>
       <span class="glyphicon glyphicon-th-large" aria-hidden="true" ></span>
     <% end %>

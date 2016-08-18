@@ -82,20 +82,6 @@ class Experiment < ActiveRecord::Base
         .distinct
   end
 
-  def assigned_modules(user)
-    role = self.project.user_role(user)
-    if role.blank?
-      return MyModule.none
-    elsif role == "owner"
-      return self.active_modules
-    else
-      return self.active_modules
-        .joins(:user_my_modules)
-        .where("user_my_modules.user_id IN (?)", user.id)
-        .distinct
-    end
-  end
-
   def active_modules
     my_modules.where(:archived => false)
   end
