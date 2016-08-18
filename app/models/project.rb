@@ -90,10 +90,11 @@ class Project < ActiveRecord::Base
 
   def unassigned_users
     User
-    .joins("INNER JOIN user_organizations ON users.id = user_organizations.user_id ")
-    .where("user_organizations.organization_id = ?", organization)
-    .where.not(confirmed_at: nil)
-    .where("users.id NOT IN (?)", UserProject.where(project: self).select(:user_id).distinct)
+    .joins('INNER JOIN user_organizations ON users.id = user_organizations.user_id')
+      .where('user_organizations.organization_id = ?', organization)
+      .where.not(confirmed_at: nil)
+      .where('users.id NOT IN (?)',
+             UserProject.where(project: self).select(:user_id).distinct)
   end
 
   def user_role(user)
