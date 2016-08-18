@@ -528,11 +528,6 @@
   }
 
   function restore_after_tutorial(){
-    $('.introjs-showElement')
-      .find('.form-submit-link')
-      .css({
-        'pointer-events': 'auto',
-        'color': '#262626'});
     $.each($('.panel'), function(i, el){
       $(el)
       .find('.tab-content')
