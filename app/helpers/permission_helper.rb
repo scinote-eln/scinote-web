@@ -681,8 +681,8 @@ module PermissionHelper
     if protocol.linked?
       my_module = protocol.my_module
       my_module.active? &&
-      my_module.project.active? &&
-      is_user_or_higher_of_project(my_module.project) &&
+      my_module.experiment.project.active? &&
+      is_user_or_higher_of_project(my_module.experiment.project) &&
       my_module.experiment.active?
     else
       false
