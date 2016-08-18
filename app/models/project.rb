@@ -152,12 +152,15 @@ class Project < ActiveRecord::Base
       project_my_modules
         .joins(:experiment)
         .where('experiments.archived=false')
+        .where('my_modules.archived=false')
+
     else
       project_my_modules
         .joins(:user_my_modules)
         .joins(:experiment)
         .where('experiments.archived=false AND user_my_modules.user_id IN (?)',
                user.id)
+        .where('my_modules.archived=false')
         .distinct
     end
   end
