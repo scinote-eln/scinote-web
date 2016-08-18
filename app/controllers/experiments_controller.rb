@@ -80,9 +80,6 @@ class ExperimentsController < ApplicationController
     @experiment.archived = true
     @experiment.archived_by = current_user
     @experiment.archived_on = DateTime.now
-    @experiment.my_modules.each do |my_module|
-      my_module.archive(current_user)
-    end
     if @experiment.save
       flash[:success] = t('experiments.archive.success_flash',
                           experiment: @experiment.name)

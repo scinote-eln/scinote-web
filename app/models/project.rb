@@ -149,12 +149,15 @@ class Project < ActiveRecord::Base
     if role.blank?
       MyModule.none
     elsif role == 'owner'
-      project_my_modules.where(archived: false)
+      project_my_modules
+        .joins(:experiment)
+        .where('experiments.archived=false')
     else
       project_my_modules
         .joins(:user_my_modules)
-        .where('user_my_modules.user_id IN (?)', user.id)
-        .where(archived: false)
+        .joins(:experiment)
+        .where('experiments.archived=false AND user_my_modules.user_id IN (?)',
+               user.id)
         .distinct
     end
   end
