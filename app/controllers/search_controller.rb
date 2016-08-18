@@ -49,6 +49,12 @@ class SearchController < ApplicationController
     @search_category = @search_category.to_sym
     @search_page = params[:page].to_i || 1
     @display_query = @search_query
+
+    if @search_query.length < MIN_QUERY_CHARS
+      flash[:error] = t'search.index.error.query_length', n: MIN_QUERY_CHARS
+      return redirect_to :back
+    end
+
     # splits the search query to validate all entries
     @splited_query = @search_query.split
 
@@ -64,9 +70,7 @@ class SearchController < ApplicationController
       @search_query = @splited_query.join(' ')
     end
 
-    if @search_page < 1
-      @search_page = 1
-    end
+    @search_page = 1 if @search_page < 1
   end
 
   # Initialize markdown parser
