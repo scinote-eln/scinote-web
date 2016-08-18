@@ -80,7 +80,7 @@
                               <%= image_tag preview_asset_path(asset) %>
                             <% end %>
                             <%= raw '<br>' if asset.is_image? %>
-                            <span><%= asset.file_file_name %></span>
+                            <span><%= truncate( asset.file_file_name, length: 50 ) %></span>
                           <% end %>
                         <% else %>
                           <%= asset_loading_span(asset) %>
@@ -88,7 +88,7 @@
                     <% else %>
                       <%= image_tag preview_asset_path(asset) if asset.is_image? %>
                       <%= raw '<br>' if asset.is_image? %>
-                      <span><%= asset.file_file_name %></span>
+                      <span><%= truncate( asset.file_file_name, length: 50 )%></span>
                     <% end %>
                   </li>
                 <% end %>

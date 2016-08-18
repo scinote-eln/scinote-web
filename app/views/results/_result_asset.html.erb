@@ -1,7 +1,7 @@
 <% if can_view_or_download_result_assets(result.my_module) %>
   <%= link_to image_tag(preview_asset_path result.asset),
     download_asset_path(result.asset), data: {no_turbolink: true} if result.asset.is_image? %>
-  <p><%= link_to result.asset.file_file_name, download_asset_path(result.asset), data: {no_turbolink: true} %></p>
+  <p><%= link_to truncate(result.asset.file_file_name, length: 50), download_asset_path(result.asset), data: {no_turbolink: true} %></p>
 <% else %>
   <%= image_tag(preview_asset_path result.asset) if result.asset.is_image? %>
   <p><%= result.asset.file_file_name %></p>
