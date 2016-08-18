@@ -117,12 +117,14 @@ function updateSamplesTypesandGroups() {
     dataType: "json",
     success: function (data) {
       $("select[name=sample_group_id]").each(function(){
-        var selectGroup = createSampleGroupSelect(data.sample_groups, -1);
+        var sample_group = $(this).val();
+        var selectGroup = createSampleGroupSelect(data.sample_groups, sample_group);
         var gtd = $(this).parent("td");
         gtd.html(selectGroup[0]);
       });
       $("select[name=sample_type_id]").each(function(){
-        var selectType = createSampleTypeSelect(data.sample_types, -1);
+        var sample_type = $(this).val();
+        var selectType = createSampleTypeSelect(data.sample_types, sample_type);
         var ttd = $(this).parent("td");
         ttd.html(selectType[0]);
       });
