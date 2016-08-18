@@ -45,6 +45,7 @@ $("#modal-create-sample-type").on("shown.bs.modal", function(event) {
 $("form#new_sample_type").on("ajax:success", function(ev, data, status) {
     $("#modal-create-sample-type").modal("hide");
     updateSamplesTypesandGroups();
+    sampleAlertMsg(data.flash);
 });
 
 $("form#new_sample_type").on("ajax:error", function(e, data, status, xhr) {
@@ -73,6 +74,7 @@ $("#modal-create-sample-group").on("shown.bs.modal", function(event) {
 $("form#new_sample_group").on("ajax:success", function(ev, data, status) {
     $("#modal-create-sample-group").modal("hide");
     updateSamplesTypesandGroups();
+    sampleAlertMsg(data.flash);
 });
 
 $("form#new_sample_group").on("ajax:error", function(e, data, status, xhr) {
@@ -139,6 +141,17 @@ function updateSamplesTypesandGroups() {
         updateButtons();
       }
     });
+}
+
+function sampleAlertMsg(message) {
+  var html_snippet = '<div class="alert alert-success alert-dismissable samples-flash-alert ">' +
+                      '<div class="container">' +
+                        '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>' +
+                          '<span class="glyphicon glyphicon-ok-sign"></span>' +
+                          '<span>'+ message +'</span>' +
+                        '</div>' +
+                      '</div>';
+  $('#notifications').html(html_snippet);
 }
 
 function initTutorial() {
