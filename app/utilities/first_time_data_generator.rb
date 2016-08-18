@@ -178,7 +178,7 @@ module FirstTimeDataGenerator
         description: i == 5 ? qpcr_module_description : nil,
         x: (i < 4 ? i % 4 : 7 - i) * 32,
         y: (i / 4) * 16,
-        project: project,
+        experiment: experiment,
         workflow_order: i,
         my_module_group: my_module_group
       )
