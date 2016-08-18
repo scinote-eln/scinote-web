@@ -27,7 +27,7 @@
         >
           <a href="?<%= {category: 'experiments', q: @search_query, utf8: '✓'}.to_query %>">
             <span class="badge pull-right"><%= @experiment_search_count %></span>
-            <span class="glyphicon glyphicon-filter"></span>
+            <%= fa_icon 'flask' %>
             <%= t'Experiments' %>
           </a>
         </li>
