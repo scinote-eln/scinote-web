@@ -210,7 +210,7 @@ class Experiment < ActiveRecord::Base
                          type: :digraph,
                          use: :neato)
 
-    graph[:size] = '5,3'
+    graph[:size] = '4,4'
     graph.node[color: '#d2d2d2',
                style: :filled,
                fontcolor: '#555555',
@@ -220,8 +220,21 @@ class Experiment < ActiveRecord::Base
 
     graph.edge[color: '#d2d2d2']
 
-    label = 'T'
+    label = ''
     subg = {}
+
+    # Draw orphan modules
+    if modules_without_group
+      modules_without_group.each do |my_module|
+        graph
+          .subgraph(rank: 'same')
+          .add_nodes("Orphan-#{my_module.id}",
+                     label: label,
+                     pos: "#{my_module.x / 10},-#{my_module.y / 10}!")
+      end
+    end
+
+    # Draw grouped modules
     if my_module_groups.many?
       my_module_groups.each_with_index do |group, gindex|
         subgraph_name = "cluster-#{gindex}"
@@ -231,14 +244,14 @@ class Experiment < ActiveRecord::Base
             parent = subg[subgraph_name]
                      .add_nodes("#{subgraph_name}-#{index}",
                                 label: label,
-                                pos: "#{my_module.x},-#{my_module.y}!")
+                                pos: "#{my_module.x / 10},-#{my_module.y / 10}!")
 
             my_module.outputs.each_with_index do |output, i|
               child_mod = MyModule.find_by_id(output.input_id)
               child_node = subg[subgraph_name]
                            .add_nodes("#{subgraph_name}-O#{child_mod.id}-#{i}",
                                       label: label,
-                                      pos: "#{child_mod.x},-#{child_mod.y}!")
+                                      pos: "#{child_mod.x / 10},-#{child_mod.y / 10}!")
 
               subg[subgraph_name].add_edges(parent, child_node)
             end
@@ -246,14 +259,14 @@ class Experiment < ActiveRecord::Base
             parent = subg[subgraph_name]
                      .add_nodes("#{subgraph_name}-#{index}",
                                 label: label,
-                                pos: "#{my_module.x},-#{my_module.y}!")
+                                pos: "#{my_module.x / 10},-#{my_module.y / 10}!")
 
             my_module.inputs.each_with_index do |input, i|
               child_mod = MyModule.find_by_id(input.output_id)
               child_node = subg[subgraph_name]
                            .add_nodes("#{subgraph_name}-I#{child_mod.id}-#{i}",
                                       label: label,
-                                      pos: "#{child_mod.x},-#{child_mod.y}!")
+                                      pos: "#{child_mod.x / 10},-#{child_mod.y / 10}!")
 
               subg[subgraph_name].add_edges(child_node, parent)
             end
@@ -266,26 +279,26 @@ class Experiment < ActiveRecord::Base
           if my_module.outputs.any?
             parent = graph.add_nodes("N-#{index}",
                                      label: label,
-                                     pos: "#{my_module.x},-#{my_module.y}!")
+                                     pos: "#{my_module.x / 10},-#{ my_module.y / 10}!")
 
             my_module.outputs.each_with_index do |output, i|
               child_mod = MyModule.find_by_id(output.input_id)
               child_node = graph
                            .add_nodes("N-O#{child_mod.id}-#{i}",
                                       label: label,
-                                      pos: "#{child_mod.x},-#{child_mod.y}!")
+                                      pos: "#{child_mod.x / 10},-#{child_mod.y / 10}!")
               graph.add_edges(parent, child_node)
             end
           elsif my_module.inputs.any?
             parent = graph.add_nodes("N-#{index}",
                                      label: label,
-                                     pos: "#{my_module.x},-#{my_module.y}!")
+                                     pos: "#{my_module.x / 10},-#{my_module.y / 10}!")
             my_module.inputs.each_with_index do |input, i|
               child_mod = MyModule.find_by_id(input.output_id)
               child_node = graph
                            .add_nodes("N-I#{child_mod.id}-#{i}",
                                       label: label,
-                                      pos: "#{child_mod.x},-#{child_mod.y}!")
+                                      pos: "#{child_mod.x / 10},-#{child_mod.y / 10}!")
               graph.add_edges(child_node, parent)
             end
           end
