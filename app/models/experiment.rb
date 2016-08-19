@@ -116,6 +116,7 @@ class Experiment < ActiveRecord::Base
     to_archive,
     to_add,
     to_rename,
+    to_move,
     to_clone,
     connections,
     positions,
@@ -166,6 +167,9 @@ class Experiment < ActiveRecord::Base
 
         # Then, archive modules that need to be archived
         archive_modules(to_archive, current_user)
+
+        # Finally move any modules to another experiment
+        move_modules(to_move)
 
         # Update connections, positions & module group variables
         # with actual IDs retrieved from the new modules creation
@@ -451,6 +455,33 @@ class Experiment < ActiveRecord::Base
       my_module = MyModule.find_by_id(id)
       if my_module.present?
         my_module.name = new_name
+        my_module.save!
+      end
+    end
+  end
+
+
+  # Move modules; this method accepts a map where keys
+  # represent IDs of modules, and values represent experiment
+  # IDs of new names to which the given modules should be moved.
+  # If a module with given ID doesn't exist (or experiment ID)
+  # it's obviously not updated. Any connection on module is destroyed.
+  def move_modules(to_move)
+    to_move.each do |id, experiment_id|
+      my_module = my_modules.find_by_id(id)
+      experiment = project.experiments.find_by_id(experiment_id)
+      if my_module.present? && experiment.present?
+        my_module.experiment = experiment
+
+        # Calculate new module position
+        new_pos = my_module.get_new_position
+        my_module.x = new_pos[:x]
+        my_module.y = new_pos[:y]
+
+        unless my_module.outputs.destroy_all && my_module.inputs.destroy_all
+          raise ActiveRecord::ActiveRecordError
+        end
+
         my_module.save!
       end
     end

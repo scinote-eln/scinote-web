@@ -7,7 +7,7 @@
       </div>
       <div class="modal-body">
         <%= bootstrap_form_tag do |f| %>
-          <%= f.select :experiment_id, @experiment.project.experiments
+          <%= f.select :experiment_id, @experiment.project.experiments.is_archived(false)
                                       .select { |e| e != @experiment }
                                       .collect { |e| [ e.name, e.id ] }, {},
               {class: "form-control selectpicker", "data-role" => "clear"} %>

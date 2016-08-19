@@ -2010,7 +2010,7 @@ function deleteModule(id, linkConnections) {
   // If the module was moved, we don't need to do anything with it
   inputVal = formMoveInput.attr("value");
   if (!_.isUndefined(inputVal) && inputVal !== "") {
-    if (_.contains(inputVal, id)) {
+    if (id in JSON.parse(formMoveInput.val())) {
       addToRemoveList = false;
       return;
     }
