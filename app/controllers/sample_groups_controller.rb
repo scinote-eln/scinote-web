@@ -21,7 +21,7 @@ class SampleGroupsController < ApplicationController
           render json: {
             id: @sample_group.id,
             flash: t(
-              "sample_groups.create.success_flash",
+              'sample_groups.create.success_flash',
               sample_group: @sample_group.name,
               organization: @organization.name
             )

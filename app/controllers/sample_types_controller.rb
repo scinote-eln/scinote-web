@@ -26,7 +26,7 @@ class SampleTypesController < ApplicationController
           render json: {
             id: @sample_type.id,
             flash: t(
-              "sample_types.create.success_flash",
+              'sample_types.create.success_flash',
               sample_type: @sample_type.name,
               organization: @organization.name
             )
