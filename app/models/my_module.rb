@@ -35,6 +35,10 @@ class MyModule < ActiveRecord::Base
 
   scope :is_archived, ->(is_archived) { where('archived = ?', is_archived) }
 
+  # A module takes this much space in canvas (x, y) in database
+  WIDTH = 30
+  HEIGHT = 14
+
   def self.search(user, include_archived, query = nil, page = 1)
     exp_ids =
       Experiment
@@ -317,29 +321,34 @@ class MyModule < ActiveRecord::Base
     experiment.project.log(final)
   end
 
-  private
-
-  def create_blank_protocol
-    protocols << Protocol.new_blank_for_module(self)
-  end
-
   # Find an empty position for the restored module. It's
-  # basically a first empty row with x=0.
+  # basically a first empty row with empty space inside x=[0, 32).
   def get_new_position
     if experiment.blank?
       return { x: 0, y: 0 }
     end
 
-    new_y = 0
+    # Get all modules position that overlap with first column, [0, WIDTH) and
+    # sort them by y coordinate.
     positions = experiment.active_modules.collect{ |m| [m.x, m.y] }
-    (0..10000).each do |n|
-      unless positions.include? [0, n]
-        new_y = n
-        break
-      end
-    end
+                                         .select{ |x, y| x >= 0 && x < WIDTH }
+                                         .sort_by{ |x, y| y }
+    return { x: 0, y: 0 } if positions.empty? || positions.first[1] >= HEIGHT
 
-    return { x: 0, y: new_y }
+    # It looks we'll have to find a gap between the modules if it exists (at
+    # least 2*HEIGHT wide
+    ind = positions.each_cons(2).map{ |f, s| s[1]-f[1] }
+                                .index { |y| y >= 2*HEIGHT }
+    return { x: 0, y: positions[ind][1] + HEIGHT } if ind
+
+    # We lucked out, no gaps, therefore we need to add it after the last element
+    return { x: 0, y: positions.last[1] + HEIGHT }
+  end
+
+  private
+
+  def create_blank_protocol
+    protocols << Protocol.new_blank_for_module(self)
   end
 
 end
