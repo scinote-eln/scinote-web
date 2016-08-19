@@ -658,6 +658,7 @@ en:
         clone_module: "Clone task"
         clone_module_group: "Clone workflow"
         move_module: "Move task to another experiment"
+        move_module_group: "Move workflow to another experiment"
         delete_module: "Archive task"
         delete_module_group: "Archive workflow"
         modal_new_module:
@@ -678,8 +679,10 @@ en:
           confirm: "Rename workflow"
         modal_move_module:
           title: "Move task to experiment"
-          name: "Task name"
           confirm: "Move task"
+        modal_move_module_group:
+          title: "Move workflow to experiment"
+          confirm: "Move workflow"
         modal_delete_module:
           title: "Archive task"
           confirm: "Archive task"

@@ -43,6 +43,9 @@
           <li>
             <a class="move-module" href="" data-module-id="<%= my_module.id %>"><%=t "experiments.canvas.edit.move_module" %></a>
           </li>
+          <li <%= 'style=display:none;' if my_module.my_module_group.blank? %>>
+            <a class="move-module-group" href="" data-module-id="<%= my_module.id %>"><%=t "experiments.canvas.edit.move_module_group" %></a>
+          </li>
         <% end %>
         <% if can_archive_module(my_module) %>
           <li>

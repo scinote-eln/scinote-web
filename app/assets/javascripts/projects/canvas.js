@@ -227,6 +227,9 @@ function initializeEdit() {
   if (canMoveModules) {
     initMoveModules();
     $(".move-module").on("click touchstart", moveModuleHandler);
+
+    initMoveModuleGroups();
+    $(".move-module-group").on("click touchstart", moveModuleGroupHandler);
   }
   if (canDeleteModules) {
     bindDeleteModuleAction();
@@ -254,6 +257,7 @@ function destroyEdit() {
   // Read permissions from the data attributes of the form
   var canCreateModules = _.isEqual($("#update-canvas").data("can-create-modules"), "yes");
   var canCloneModules = _.isEqual($("#update-canvas").data("can-clone-modules"), "yes");
+  var canMoveModules = _.isEqual($("#update-canvas").data("can-move-modules"), "yes");
   var canDeleteModules = _.isEqual($("#update-canvas").data("can-delete-modules"), "yes");
 
   instance.cleanupListeners();
@@ -280,6 +284,9 @@ function destroyEdit() {
   if (canCloneModules) {
     $(".buttons-container a.clone-module").off("click touchstart");
     $(".buttons-container a.clone-module-group").off("click touchstart");
+  }
+  if (canMoveModules) {
+    $(".move-module").off("click touchstart");
   }
 
   $("#update-canvas .cancel-edit-canvas").off("click");
@@ -1838,7 +1845,7 @@ function initMoveModules() {
     // Add this information to form
     var formMoveInput = $("#update-canvas form input#move");
 
-    // Actually rename an existing module
+    // Save mapping to input
     var moveVal = JSON.parse(formMoveInput.attr("value"));
     moveVal[moduleEl.attr("id")] = moveToExperimentId;
     formMoveInput.attr("value", JSON.stringify(moveVal));
@@ -1891,6 +1898,96 @@ function initMoveModules() {
  */
 moveModuleHandler = function(ev) {
   var modal = $("#modal-move-module");
+  var moduleEl = $(this).closest(".module");
+
+  // Set modal's module id
+  modal.attr("data-module-id", moduleEl.attr("id"));
+
+  // Disable dragging & zooming events on canvas temporarily
+  toggleCanvasEvents(false);
+
+  // Show modal
+  modal.modal("show");
+
+  ev.preventDefault();
+  ev.stopPropagation();
+  return false;
+};
+
+
+/**
+ * Initialize editing of module groups.
+ */
+function initMoveModuleGroups() {
+  function handleMoveModuleGroupConfirm(modal) {
+    var moduleId = modal.attr("data-module-id");
+    var moduleEl = $("#" + moduleId);
+    var input = modal.find('.selectpicker');
+    var moveToExperimentId = input.val();
+
+    // Retrieve all modules in this module group
+    var components = connectedComponents(graph, moduleId.toString());
+    var group = _.map(components, function(id) { return $("#" + id); });
+
+    // Add this information to form
+    var formMoveInput = $("#update-canvas form input#move");
+
+    moveModules = [];
+    _.each(group, function(m) {
+      moveModules.push(m.attr("id"));
+      deleteModule(m.attr("id"));
+    });
+
+    // Put the array into input
+    var moveVal = JSON.parse(formMoveInput.attr("value"));
+    moveVal[moveModules] = moveToExperimentId;
+    formMoveInput.attr("value", JSON.stringify(moveVal));
+
+    // Hide modal
+    modal.modal("hide");
+  }
+
+  $("#modal-move-module-group")
+  .on("show.bs.modal", function (event) {
+    var modal = $(this);
+    var moduleId = modal.attr("data-module-id");
+    var moduleEl = $("#" + moduleId);
+    var input = modal.find('.selectpicker');
+
+    // Bind on enter button
+    input.keydown(function(ev) {
+      if (ev.keyCode == 13) {
+        // "Submit" modal
+        handleMoveConfirm(modal);
+
+        // In any case, prevent form submission
+        ev.preventDefault();
+        ev.stopPropagation();
+        return false;
+      }
+    });
+  })
+  .on("shown.bs.modal", function(event) {
+    // Focus the text element
+    $(this).find(".selectpicker").focus();
+  })
+  .on("hide.bs.modal", function (event) {
+    // When hiding modal, re-enable events
+    toggleCanvasEvents(true);
+  });
+
+  // Bind the confirm button on modal
+  $("#modal-move-module-group").find("button[data-action='confirm']").on("click", function(event) {
+    var modal = $(this).closest(".modal");
+    handleMoveModuleGroupConfirm(modal);
+  });
+}
+
+/**
+ * Handler when editing a module group.
+ */
+moveModuleGroupHandler = function(ev) {
+  var modal = $("#modal-move-module-group");
   var moduleEl = $(this).closest(".module");
 
   // Set modal's module id

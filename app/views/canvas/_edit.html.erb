@@ -86,6 +86,7 @@
 <% end %>
 <% if can_move_modules(@experiment) %>
   <%= render partial: "canvas/edit/modal/move_module", locals: {experiment: @experiment } %>
+  <%= render partial: "canvas/edit/modal/move_module_group", locals: {experiment: @experiment } %>
 <% end %>
 <% if can_archive_modules(@experiment) %>
   <%= render partial: "canvas/edit/modal/delete_module", locals: {experiment: @experiment} %>
