@@ -458,7 +458,7 @@ function loadFromRepository() {
 
   var confirm_message= "";
   if( check_linked.trim() !== '(unlinked)' ){
-    confirm_message = I18n.t("protocols.import_export.import_modal.import_to_linked_task");
+    confirm_message = I18n.t("my_modules.protocols.load_from_repository_modal.import_to_linked_task_rep");
   } else {
     confirm_message = I18n.t("my_modules.protocols.load_from_repository_modal.confirm_message");
   }
