@@ -138,11 +138,7 @@ $(document.body).ready(function () {
       });
   };
 
-  $("#notifications .alert").on("closed.bs.alert", function () {
-    $("#content-wrapper")
-      .addClass("alert-hidden")
-      .removeClass("alert-shown");
-  });
+  notificationAlertClose();
 
   $('#main-menu .btn-activity')
     .on('ajax:before', function () {
@@ -159,12 +155,16 @@ $(document.body).ready(function () {
 });
 
 $(document).ajaxComplete(function(){
+  notificationAlertClose();
+});
+
+function notificationAlertClose(){
   $("#notifications .alert").on("closed.bs.alert", function () {
     $("#content-wrapper")
       .addClass("alert-hidden")
       .removeClass("alert-shown");
   });
-});
+}
 
 /*
  * Truncate long strings where is necessary
