@@ -179,6 +179,9 @@ class Experiment < ActiveRecord::Base
 
         # Finally, update module groups
         update_module_groups(updated_module_groups, current_user)
+
+        # update Experiment timestamp
+        touch
       end
     rescue ActiveRecord::ActiveRecordError, ArgumentError, ActiveRecord::RecordNotSaved
       return false

@@ -217,6 +217,37 @@ class ExperimentsController < ApplicationController
     end
   end
 
+  def updated_img
+    respond_to do |format|
+      format.json do
+        if @experiment.workflowimg_updated_at.to_i !=
+           params[:timestamp].to_time.to_i
+          render json: {}, status: 200
+        else
+          render json: {}, status: 404
+        end
+      end
+    end
+  end
+
+  def get_workflow_img
+    respond_to do |format|
+      format.json do
+        render json: {
+          workflowimg: (link_to image_tag(experiment
+                                          .workflowimg
+                                          .expiring_url(30),
+                                          class: 'img-responsive center-block',
+                                          data: {
+                                            timestamp: experiment
+                                                       .workflowimg_updated_at
+                                                }),
+                                canvas_experiment_path(experiment)).to_s
+        }
+      end
+    end
+  end
+
   private
 
   def set_experiment

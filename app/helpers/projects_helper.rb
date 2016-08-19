@@ -11,4 +11,11 @@ module ProjectsHelper
     end
     conns.to_s[1..-2]
   end
+
+  def last_experiment_updated(project)
+    project
+      .active_experiments(updated_at: :desc)
+      .pluck(:id)
+      .first.to_s
+  end
 end

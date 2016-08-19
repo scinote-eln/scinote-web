@@ -23,7 +23,9 @@
     </div>
   </div>
 </div>
-<div class="row">
+<div class="row"
+     data-lupdated-id="<%= last_experiment_updated(@project) %>"
+     data-lupdated-url="<%= updated_img_experiment_url(last_experiment_updated(@project))%>">
   <% @project.active_experiments.each_with_index do |experiment, index| %>
     <%= render partial: 'projects/show/experiment',
                locals: { experiment: experiment } %>
@@ -32,3 +34,4 @@
   <% end %>
 </div>
 <%= javascript_include_tag("experiments/dropdown_actions") %>
+<%= javascript_include_tag("projects/show") %>
