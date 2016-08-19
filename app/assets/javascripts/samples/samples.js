@@ -148,7 +148,7 @@ function updateSamplesTypesandGroups() {
 }
 
 function sampleAlertMsg(message) {
-  var html_snippet = '<div class="alert alert-success alert-dismissable samples-flash-alert ">' +
+  var html_snippet = '<div class="alert alert-success alert-dismissable alert-floating">' +
                       '<div class="container">' +
                         '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>' +
                           '<span class="glyphicon glyphicon-ok-sign"></span>' +
@@ -156,6 +156,7 @@ function sampleAlertMsg(message) {
                         '</div>' +
                       '</div>';
   $('#notifications').html(html_snippet);
+  $('#content-wrapper').addClass('alert-shown');
 }
 
 function initTutorial() {
