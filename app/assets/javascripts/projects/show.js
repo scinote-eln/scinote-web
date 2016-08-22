@@ -1,48 +1,59 @@
 (function(){
   var count = 0;
 
-  function initProjectExperiment(){
-    var url = $("[data-lupdated-url]").data("lupdated-url");
-    var updated = "[data-id=" + $("[data-lupdated-id]").data('lupdated-id') +"]";
-    var el = $(updated).find("img");
-    var timestamp = el.data("timestamp");
-    var img_url = $(updated).find(".workflowimg-container").data('updated-img');
-
-    animateSpinner($(updated).find(".workflowimg-container"), true);
-    checkUpdatedImg(el, img_url, url, timestamp, updated);
-    animateSpinner($(updated).find(".workflowimg-container"), false);
+  function init(){
+    $("[data-id]").each(function(){
+      var that = $(this);
+      that.find(".workflowimg-container").hide();
+      initProjectExperiment(that);
+    });
   }
 
+  function initProjectExperiment(element){
+    var container = element.find(".workflowimg-container");
+    var url = container.data("check-img");
+    var timestamp = container.data("timestamp");
+    var img_url = container.data('updated-img');
 
-  function checkUpdatedImg(el, img_url, url, timestamp, updated){
-    if (count !== 100){
+    animateSpinner(container, true);
+    checkUpdatedImg(img_url, url, timestamp, container);
+  }
+
+  // checks if the experiment image is updated
+  function checkUpdatedImg(img_url, url, timestamp, container){
+    if (count < 30 && timestamp){
       $.ajax({
         url: url,
         type: "GET",
         data: { "timestamp": timestamp },
         dataType: "json",
         success: function (data) {
-          getNewWorkforwImg(el, img_url, updated);
-          animateSpinner($(updated).find(".workflowimg-container"), false);
+          getNewWorkforwImg(container, img_url);
+          container.show();
+          animateSpinner(container, false);
         },
         error: function (ev) {
           if (ev.status == 404) {
-              setTimeout(checkUpdatedImg(el, img_url, url, timestamp, updated), 200);
-            }
-            count++;
+            setTimeout(checkUpdatedImg(img_url, url, timestamp, container), 500);
+          } else {
+            animateSpinner(container, false);
+          }
+          count++;
           }
       });
+    } else {
+      animateSpinner(container, false);
     }
   }
 
-  function getNewWorkforwImg(el, url, updated){
+  // fetch the new experiment image
+  function getNewWorkforwImg(el, url){
     $.ajax({
       url: url,
       type: "GET",
       dataType: "json",
       success: function (data) {
-        el.html(data.workflowimg);
-        animateSpinner($(updated).find(".workflowimg-container"), false);
+        el.append(data.workflowimg);
       },
       error: function (ev) {
         // TODO
@@ -50,5 +61,5 @@
     });
   }
   // init
-  initProjectExperiment();
+  init();
 })();

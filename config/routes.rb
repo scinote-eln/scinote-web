@@ -129,7 +129,7 @@ Rails.application.routes.draw do
       post 'move' # move experiment
       get 'samples' # Samples for single project
       get 'updated_img' # Checks if the workflow image is updated
-      get 'get_workflow_img' # Get udated workflow img
+      get 'fetch_workflow_img' # Get udated workflow img
       # Renders sample datatable for single project (ajax action)
       post 'samples_index'
       post :delete_samples,

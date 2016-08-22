@@ -23,11 +23,12 @@
     <div class="panel-body">
       <% if experiment.workflowimg? %>
         <div class="workflowimg-container"
-             data-updated-img="<%= get_workflow_img_experiment_url(experiment) %>"
+             data-check-img="<%= updated_img_experiment_url(experiment) %>"
+             data-updated-img="<%= fetch_workflow_img_experiment_url(experiment) %>"
+             data-timestamp="<%= experiment.updated_at %>"
         >
-          <%= link_to image_tag(experiment.workflowimg.expiring_url(30),
+          <%#= link_to image_tag(experiment.workflowimg.expiring_url(30),
                                 class: 'img-responsive center-block',
-                                data: { timestamp: experiment.workflowimg_updated_at }),
                       canvas_experiment_path(experiment) %>
         </div>
       <% end %>

@@ -23,9 +23,7 @@
     </div>
   </div>
 </div>
-<div class="row"
-     data-lupdated-id="<%= last_experiment_updated(@project) %>"
-     data-lupdated-url="<%= updated_img_experiment_url(last_experiment_updated(@project))%>">
+<div class="row">
   <% @project.active_experiments.each_with_index do |experiment, index| %>
     <%= render partial: 'projects/show/experiment',
                locals: { experiment: experiment } %>
