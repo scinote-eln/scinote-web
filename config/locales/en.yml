@@ -549,6 +549,7 @@ en:
         thead_created_at: "Created at"
         thead_updated_at: "Last modified at"
         confirm_message: "Are you sure you wish to load protocol from repository? This action will overwrite the current protocol."
+        import_to_linked_task_rep: "Are you sure you wish to load protocol from repository? This action will overwrite the current protocol in the task and unlink it from repository. The current protocol will remain unchanged in repository."
         load: "Load"
       copy_to_repository_modal:
         title: "Copy protocol to repository"
@@ -1203,8 +1204,8 @@ en:
         title_import: "Import protocol/s"
         title_import_into_protocol: "Load protocol from file"
         import_into_protocol_message: "This will overwrite the current protocol!"
-        import_into_protocol_confirm: "Are you sure you wish to load protocol? This action will overwrite the current protocol."
-        import_to_linked_task: "Are you sure you wish to load protocol from repository? This action will overwrite the current protocol in the task and un-link it from repository. The current protocol will remain unchanged in repository."
+        import_into_protocol_confirm: "Are you sure you wish to load protocol from file? This action will overwrite the current protocol."
+        import_to_linked_task_file: "Are you sure you wish to load protocol from file? This action will overwrite the current protocol in the task and unlink it from repository. The current protocol will remain unchanged in repository."
         name_label: "Protocol name"
         authors_label: "Authors"
         description_label: "Description"
