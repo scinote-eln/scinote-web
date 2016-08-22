@@ -69,7 +69,7 @@ class ExperimentsController < ApplicationController
       flash[:success] = t('experiments.update.success_flash',
                           experiment: @experiment.name)
 
-      redirect_to project_path(@experiment.project)
+      redirect_to :back
     else
       flash[:alert] = t('experiments.update.error_flash')
       redirect_to :back
