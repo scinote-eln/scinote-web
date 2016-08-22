@@ -30,5 +30,8 @@
 
     <%= content_tag(:div, '', class: 'clearfix visible-lg-block') if (index + 1) % 2 == 0 %>
   <% end %>
+  <% if can_create_experiment(@project) %>
+    <%= render 'projects/show/new_experiment' %>
+  <% end %>
 </div>
 <%= javascript_include_tag("experiments/dropdown_actions") %>

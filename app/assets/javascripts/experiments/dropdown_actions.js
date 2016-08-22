@@ -47,6 +47,9 @@
 
   // Bind modal to new-experiment action
   initializeModal($("#new-experiment"), '#new-experiment-modal');
+  
+  // Bind modal to big-plus new experiment actions
+  initializeModal('.big-plus', '#new-experiment-modal');
 
   // Bind modal to all actions listed on dropdown accesible from experiment
   // panel
