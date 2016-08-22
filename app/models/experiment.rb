@@ -117,6 +117,7 @@ class Experiment < ActiveRecord::Base
     to_add,
     to_rename,
     to_move,
+    to_move_groups,
     to_clone,
     connections,
     positions,
@@ -197,6 +198,9 @@ class Experiment < ActiveRecord::Base
 
         # Finally, update module groups
         update_module_groups(updated_module_groups, current_user)
+
+        # Everyhing is set, now we can move any module groups
+        move_module_groups(to_move_groups)
       end
     rescue ActiveRecord::ActiveRecordError, ArgumentError, ActiveRecord::RecordNotSaved
       return false
@@ -483,6 +487,50 @@ class Experiment < ActiveRecord::Base
         end
 
         my_module.save!
+      end
+    end
+  end
+
+  # Move module groups; this method accepts a map where keys
+  # represent IDs of modules which are in module group,
+  # and values represent experiment
+  # IDs of new names to which the given module group should be moved.
+  # If a module with given ID doesn't exist (or experiment ID)
+  # it's obviously not updated. Position for entire module group is updated
+  # to bottom left corner.
+  def move_module_groups(to_move)
+    to_move.each do |ids, experiment_id|
+      modules = my_modules.where(id: ids)
+      groups = Set.new(modules.map(&:my_module_group))
+      experiment = project.experiments.find_by_id(experiment_id)
+
+      groups.each do |group|
+        next unless group && experiment.present?
+
+        # Find the lowest point for current modules(max_y) and the leftmost
+        # module(min_x)
+        if experiment.active_modules.empty?
+          max_y = 0
+          min_x = 0
+        else
+          max_y = experiment.active_modules.maximum(:y) + MyModule::HEIGHT
+          min_x = experiment.active_modules.minimum(:x)
+        end
+
+        # Set new positions
+        min_module = modules.min_by(&:x)
+        modules.each { |m| m.x += -min_module.x + min_x }
+
+        min_module = modules.min_by(&:y)
+        modules.each { |m| m.y += -min_module.y + max_y }
+
+        modules.each do |m|
+          m.experiment = experiment
+          m.save!
+        end
+
+        group.experiment = experiment
+        group.save!
       end
     end
   end
