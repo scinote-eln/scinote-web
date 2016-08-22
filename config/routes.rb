@@ -46,6 +46,13 @@ Rails.application.routes.draw do
   end
 
   get 'projects/archive', to: 'projects#archive', as: 'projects_archive'
+  
+  post 'projects/delete_comment_results', to: 'projects#delete_comment_results'
+  post 'projects/update_comment_results', to: 'projects#update_comment_results'
+  post 'projects/delete_comment_projects', to: 'projects#delete_comment_projects'
+  post 'projects/update_comment_projects', to: 'projects#update_comment_projects'
+  post 'projects/delete_comment_modules', to: 'projects#delete_comment_modules'
+  post 'projects/update_comment_modules', to: 'projects#update_comment_modules'
 
   resources :projects, except: [:new, :destroy] do
     resources :user_projects, path: "/users", only: [:new, :create, :index, :edit, :update, :destroy]
@@ -229,6 +236,8 @@ Rails.application.routes.draw do
       get "edit_description_modal", to: "protocols#edit_description_modal"
     end
     collection do
+      post 'delete_comment', to: 'protocols#delete_comment'
+      post 'update_comment', to: 'protocols#update_comment'
       get "create_new_modal", to: "protocols#create_new_modal"
       post "datatable", to: "protocols#datatable"
       post "make_private", to: "protocols#make_private"

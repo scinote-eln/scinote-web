@@ -67,6 +67,31 @@ class ProtocolsController < ApplicationController
   def index
   end
 
+  def update_comment
+    id = request.request_parameters[:id]
+    msg = request.request_parameters[:msg]
+
+    Comment.where(id:id).update_all(message:msg)
+
+    rb_json = JSON.parse('{"json":['+id+']}') 
+    respond_to do |format|      
+        format.json {render json: rb_json["json"]}
+      end
+  end
+
+  def delete_comment
+    id = request.request_parameters[:id]
+
+
+    StepComment.where(comment_id:id).destroy_all
+    Comment.find(id).destroy
+
+    rb_json = JSON.parse('{"json":['+id+']}') 
+    respond_to do |format|      
+        format.json {render json: rb_json["json"]}
+      end
+  end
+
   def datatable
     respond_to do |format|
       format.json {

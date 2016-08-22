@@ -1,2 +1,12 @@
 <strong><%=t "my_modules.results.comment_title", user: comment.user.full_name, time: l(comment.created_at, format: :time) %></strong>
-<p><span><%= comment.message %></p>
+<span class="input-group">
+  <input type="hidden" class="form-control" id="edit_comment_<%= comment.id %>" value="<%= comment.message %>" onkeydown="if (event.keyCode==13) results_update_comment(<%= comment.id %>)" >
+  <span id="span_comment_<%= comment.id %>"><%= comment.message %></span>
+  <div class="input-group-btn">
+    <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown"><span class="caret"></span></button>
+      <ul class="dropdown-menu pull-right">
+        <li><a href="#" onclick='return results_comment_edit(<%= comment.id %>)'>Edit</a></li>
+        <li><a href="#" onclick='return results_comment_delete(<%= comment.id %>)'>Delete</a></li>
+      </ul>
+    </div>
+</span>

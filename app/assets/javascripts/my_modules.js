@@ -1,3 +1,4 @@
+
 // Bind ajax for editing descriptions
 function bindEditDescriptionAjax() {
   var editDescriptionModal = $("#manage-module-description-modal");
