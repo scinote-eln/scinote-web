@@ -427,16 +427,18 @@ li.module-hover {
   max-width: 200px;
 }
 
-.big-plus{
-  font-size: 250px;
+.big-plus {
   color: $color-mystic;
-  text-align: center;
   display: block;
+  font-size: 250px;
   margin: 20px 0;
-  &:hover{
+  text-align: center;
+
+  &:hover {
     color:$color-alto;
   }
-  &:focus{
+
+  &:focus {
     color:$color-alto;
   }
 }
