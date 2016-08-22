@@ -172,6 +172,15 @@ class CanvasController < ApplicationController
       end
     end
 
+    # Distinguish between moving modules/module_groups
+    to_move_groups = Hash.new
+    to_move.each do |key, value|
+      if key.match(/.*,.*/)
+        to_move_groups[key.split(',').map(&:to_i)] = value
+        to_move.delete(key)
+      end
+    end
+
     if error then
       render_403 and return
     end
@@ -228,6 +237,7 @@ class CanvasController < ApplicationController
       to_add,
       to_rename,
       to_move,
+      to_move_groups,
       to_clone,
       connections,
       positions,
