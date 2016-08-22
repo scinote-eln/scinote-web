@@ -17,11 +17,6 @@ class SampleTypesController < ApplicationController
 
     respond_to do |format|
       if @sample_type.save
-        # flash[:success] = t(
-        #   "sample_types.create.success_flash",
-        #   sample_type: @sample_type.name,
-        #   organization: @organization.name
-        # )
         format.json {
           render json: {
             id: @sample_type.id,
