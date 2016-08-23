@@ -105,8 +105,8 @@ class Project < ActiveRecord::Base
     return (self.user_projects.select { |up| up.user == user }).first.role
   end
 
-  def active_experiments
-    experiments.is_archived(false).order('created_at DESC')
+  def active_experiments(ordered = 'created_at DESC')
+    experiments.is_archived(false).order(ordered)
   end
 
   def archived_experiments

@@ -217,6 +217,31 @@ class ExperimentsController < ApplicationController
     end
   end
 
+  def updated_img
+    respond_to do |format|
+      format.json do
+        if @experiment.workflowimg_updated_at.to_i >=
+           params[:timestamp].to_time.to_i
+          render json: {}, status: 200
+        else
+          render json: {}, status: 404
+        end
+      end
+    end
+  end
+
+  def fetch_workflow_img
+    respond_to do |format|
+      format.json do
+        render json: {
+          workflowimg: render_to_string(
+            partial: 'projects/show/workflow_img.html.erb'
+          )
+        }
+      end
+    end
+  end
+
   private
 
   def set_experiment
