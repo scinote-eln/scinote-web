@@ -28,12 +28,26 @@
              data-timestamp="<%= experiment.updated_at %>"
         >
         </div>
+      <% else %>
+        <div class="workflowimg-container"></div>
       <% end %>
       <span>
         <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
         <%= localize(experiment.created_at, format: t('time.formats.full_date')) %> - <%= localize(experiment.updated_at, format: t('time.formats.full_date')) %>
       </span>
-      <p><%= experiment.description %></p>
+      <% if experiment.description? %>
+        <p class="experiment-description"><%= experiment.description %></p>
+      <% else %>
+        <% if can_edit_experiment(experiment) %>
+        <p class="experiment-description"><i class="no-description"><%= link_to t('experiments.edit.add-description'),
+                      edit_project_experiment_url(@project, experiment),
+                      remote: true,
+                      data: { id: experiment.id },
+                      class: 'no-description-experiment' %></i></p>
+        <% else %>
+          <p class="experiment-description"><i class="no-description"><%= t('experiments.edit.no-description') %></i></p>
+        <% end %>
+      <% end %>
     </div>
   </div>
 </div>

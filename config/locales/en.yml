@@ -606,6 +606,8 @@ en:
       modal_create: 'Update experiment'
       label_title: "Edit details"
       panel_label: 'Change details'
+      add-description: 'Add description'
+      no-description: 'No description'
     create:
       success_flash: "Successfully created experiment %{experiment}"
       error_flash: 'Could not create a new experiment.'
