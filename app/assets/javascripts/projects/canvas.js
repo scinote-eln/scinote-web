@@ -1354,6 +1354,20 @@ function updateModuleHtml(module, id, name, gridDistX, gridDistY) {
     // Add clone click handler for the new module
     $(moveModuleLink).on("click touchstart", moveModuleHandler);
 
+    // Add buttons for module groups
+    var moveModuleGroupItem = document.createElement("li");
+    $(moveModuleGroupItem).appendTo(dropdownMenu);
+    $(moveModuleGroupItem).hide();
+
+    var moveModuleGroupLink = document.createElement("a");
+    $(moveModuleGroupLink)
+    .attr("href", "")
+    .attr("data-module-id", id)
+    .addClass("move-module-group")
+    .html($("#move-group-link-placeholder").text().trim())
+    .appendTo(moveModuleGroupItem);
+
+    $(moveModuleGroupLink).on("click touchstart", moveModuleGroupHandler);
   }
 
   // Add delete links if neccesary
@@ -2108,6 +2122,7 @@ function deleteModule(id, linkConnections) {
           tempModuleEl = $("#" + inEdge[0]);
           tempModuleEl.find(".edit-module-group").parents("li").hide();
           tempModuleEl.find(".clone-module-group").parents("li").hide();
+          tempModuleEl.find(".move-module-group").parents("li").hide();
           tempModuleEl.find(".delete-module-group").parents("li").hide();
         }
       });
@@ -2118,6 +2133,7 @@ function deleteModule(id, linkConnections) {
           tempModuleEl = $("#" + outEdge[1]);
           tempModuleEl.find(".edit-module-group").parents("li").hide();
           tempModuleEl.find(".clone-module-group").parents("li").hide();
+          tempModuleEl.find(".move-module-group").parents("li").hide();
           tempModuleEl.find(".delete-module-group").parents("li").hide();
         }
       });
@@ -2507,6 +2523,7 @@ cloneModuleGroupHandler = function(moduleId, modulesSel, gridDistX, gridDistY) {
     //Show module group options
     nm.find(".edit-module-group").parents("li").show();
     nm.find(".clone-module-group").parents("li").show();
+    nm.find(".move-module-group").parents("li").show();
     nm.find(".delete-module-group").parents("li").show();
 
     clones[m.attr("id")] = nm.attr("id");
@@ -3107,10 +3124,12 @@ function initJsPlumb(containerSel, containerChildSel, modulesSel, params) {
 
       srcModuleEl.find(".edit-module-group").parents("li").show();
       srcModuleEl.find(".clone-module-group").parents("li").show();
+      srcModuleEl.find(".move-module-group").parents("li").show();
       srcModuleEl.find(".delete-module-group").parents("li").show();
 
       targetModuleEl.find(".edit-module-group").parents("li").show();
       targetModuleEl.find(".clone-module-group").parents("li").show();
+      targetModuleEl.find(".move-module-group").parents("li").show();
       targetModuleEl.find(".delete-module-group").parents("li").show();
       return true;
     });
@@ -3143,11 +3162,13 @@ function initJsPlumb(containerSel, containerChildSel, modulesSel, params) {
       if (graph.degree(c.sourceId) === 0) {
         srcModuleEl.find(".edit-module-group").parents("li").hide();
         srcModuleEl.find(".clone-module-group").parents("li").hide();
+        srcModuleEl.find(".move-module-group").parents("li").hide();
         srcModuleEl.find(".delete-module-group").parents("li").hide();
       }
       if (graph.degree(c.targetId) === 0) {
         targetModuleEl.find(".edit-module-group").parents("li").hide();
         targetModuleEl.find(".clone-module-group").parents("li").hide();
+        targetModuleEl.find(".move-module-group").parents("li").hide();
         targetModuleEl.find(".delete-module-group").parents("li").hide();
       }
     });
