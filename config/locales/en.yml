@@ -602,8 +602,8 @@ en:
       name_placeholder: 'My experiment'
       description: 'Description'
     edit:
-      modal_title: 'Edit experiment %{experiment}'
-      modal_create: 'Update experiment'
+      modal_title: 'Edit experiment details'
+      modal_create: 'Save'
       label_title: "Edit details"
       panel_label: 'Change details'
       add-description: 'Add description'
