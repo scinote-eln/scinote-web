@@ -287,6 +287,7 @@ function destroyEdit() {
   }
   if (canMoveModules) {
     $(".move-module").off("click touchstart");
+    $(".move-module-group").off("click touchstart");
   }
 
   $("#update-canvas .cancel-edit-canvas").off("click");
@@ -1337,6 +1338,24 @@ function updateModuleHtml(module, id, name, gridDistX, gridDistY) {
     bindEditModeDropdownHandlers(module);
   }
 
+  // Add move links if neccesary
+  if (_.isEqual($("#update-canvas").data("can-move-modules"), "yes")) {
+    var moveModuleItem = document.createElement("li");
+    $(moveModuleItem).appendTo(dropdownMenu);
+
+    var moveModuleLink = document.createElement("a");
+    $(moveModuleLink)
+    .attr("href", "")
+    .attr("data-module-id", id)
+    .addClass("move-module")
+    .html($("#move-link-placeholder").text().trim())
+    .appendTo(moveModuleItem);
+
+    // Add clone click handler for the new module
+    $(moveModuleLink).on("click touchstart", moveModuleHandler);
+
+  }
+
   // Add delete links if neccesary
   if (_.isEqual($("#update-canvas").data("can-delete-modules"), "yes")) {
     var deleteModuleItem = document.createElement("li");
@@ -1850,6 +1869,8 @@ function initMoveModules() {
     moveVal[moduleEl.attr("id")] = moveToExperimentId;
     formMoveInput.attr("value", JSON.stringify(moveVal));
 
+    updateFormWithModulesData(moduleEl, '', GRID_DIST_EDIT_X, GRID_DIST_EDIT_Y);
+
     // Delete module from canvas
     deleteModule(moduleEl.attr("id"));
 
@@ -1929,31 +1950,11 @@ function initMoveModuleGroups() {
     var components = connectedComponents(graph, moduleId.toString());
     var group = _.map(components, function(id) { return $("#" + id); });
 
-    // Add all connections/positions/names to form (since we'll delete nodes)
-    var connectionsDiv = $('#update-canvas form input#connections');
-    var positionsDiv = $('#update-canvas form input#positions');
-    var moduleNamesDiv = $('#update-canvas form input#module-groups');
-
-    // Find all connections with soon-to-be-moved nodes
     var conns = _.filter(graph.edges(), function(conn) {
       return _.contains(components, conn[0]) || _.contains(components, conn[1]);
     });
 
-    connectionsDiv.attr("value", conns.toString());
-
-    var moduleGroupNames = {};
-    var positionsVal = "";
-    var module, id, x, y;
-    _.each(group, function(m) {
-      module = $(m);
-      id = module.attr("id");
-      x = elLeft(module) / GRID_DIST_EDIT_X;
-      y = elTop(module) / GRID_DIST_EDIT_Y;
-      positionsVal += id + "," + x + "," + y + ";";
-      moduleGroupNames[id] = module.attr("data-module-group-name");
-    });
-    positionsDiv.attr("value", positionsVal);
-    moduleNamesDiv.attr("value", JSON.stringify(moduleGroupNames));
+    updateFormWithModulesData(group, conns.toString(), GRID_DIST_EDIT_X, GRID_DIST_EDIT_Y);
 
     // Add move information to form
     var formMoveInput = $("#update-canvas form input#move");
@@ -2542,39 +2543,54 @@ cloneModuleGroupHandler = function(moduleId, modulesSel, gridDistX, gridDistY) {
 function bindEditFormSubmission(gridDistX, gridDistY) {
   $('#update-canvas form').submit(function(){
     var modules = $(".diagram .module");
-    var connectionsDiv = $('#update-canvas form input#connections');
-    var positionsDiv = $('#update-canvas form input#positions');
-    var moduleNamesDiv = $('#update-canvas form input#module-groups');
 
-    // Connections are easy, just copy graph data
-    if (connectionsDiv.val())
-      connectionsDiv.attr("value", connectionsDiv.val() + ',' + graph.edges().toString());
-    else
-      connectionsDiv.attr("value", graph.edges().toString());
-
-    // Positions are a bit more tricky, but still pretty straightforward
-    var moduleGroupNames = {};
-    var positionsVal = "";
-    var module, id, x, y;
-    _.each(modules, function(m) {
-      module = $(m);
-      id = module.attr("id");
-      x = elLeft(module) / gridDistX;
-      y = elTop(module) / gridDistY;
-      positionsVal += id + "," + x + "," + y + ";";
-      moduleGroupNames[id] = module.attr("data-module-group-name");
-    });
-    positionsDiv.attr("value", positionsDiv.val() + positionsVal);
-
-    if (moduleNamesDiv.val())
-      moduleNamesDiv.attr("value", JSON.stringify($.extend(JSON.parse(moduleNamesDiv.val()),
-                                                           moduleGroupNames)));
-    else
-      moduleNamesDiv.attr("value", JSON.stringify(moduleGroupNames));
+    updateFormWithModulesData(modules, graph.edges().toString(), gridDistX, gridDistY)
 
     ignoreUnsavedWorkAlert = true;
     return true;
   });
+}
+
+/**
+ * Update form with given modules position and connections.
+ * @param modules   - Modules, which should be inserted into form
+ * @param connections- Connections, which should be inserted into form (empty if
+ * no connections)
+ * @param gridDistX - The canvas grid distance in X direction.
+ * @param gridDistY - The canvas grid distance in Y direction.
+ */
+function updateFormWithModulesData(modules, connections, gridDistX, gridDistY) {
+  var connectionsDiv = $('#update-canvas form input#connections');
+  var positionsDiv = $('#update-canvas form input#positions');
+  var moduleNamesDiv = $('#update-canvas form input#module-groups');
+
+  // Connections are easy, just copy graph data
+  if (connections) {
+    if (connectionsDiv.val())
+      connectionsDiv.attr("value", connectionsDiv.val() + ',' + connections.toString());
+    else
+      connectionsDiv.attr("value", connections.toString());
+  }
+
+  // Positions are a bit more tricky, but still pretty straightforward
+  var moduleGroupNames = {};
+  var positionsVal = "";
+  var module, id, x, y;
+  _.each(modules, function(m) {
+    module = $(m);
+    id = module.attr("id");
+    x = elLeft(module) / gridDistX;
+    y = elTop(module) / gridDistY;
+    positionsVal += id + "," + x + "," + y + ";";
+    moduleGroupNames[id] = module.attr("data-module-group-name");
+  });
+  positionsDiv.attr("value", positionsDiv.val() + positionsVal);
+
+  if (moduleNamesDiv.val())
+    moduleNamesDiv.attr("value", JSON.stringify($.extend(JSON.parse(moduleNamesDiv.val()),
+                                                         moduleGroupNames)));
+  else
+    moduleNamesDiv.attr("value", JSON.stringify(moduleGroupNames));
 }
 
 /**

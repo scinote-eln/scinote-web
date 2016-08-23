@@ -169,6 +169,12 @@ class Experiment < ActiveRecord::Base
         # Then, archive modules that need to be archived
         archive_modules(to_archive, current_user)
 
+        # Update connections, positions & module group variables
+        # with actual IDs retrieved from the new modules creation
+        updated_to_move = {}
+        to_move.each do |id, value|
+          updated_to_move[new_ids.fetch(id, id)] = value
+        end
         updated_to_move_groups = {}
         to_move_groups.each do |ids, value|
           mapped = []
@@ -177,9 +183,6 @@ class Experiment < ActiveRecord::Base
           end
           updated_to_move_groups[mapped] = value
         end
-
-        # Update connections, positions & module group variables
-        # with actual IDs retrieved from the new modules creation
         updated_connections = []
         connections.each do |a,b|
           updated_connections << [new_ids.fetch(a, a), new_ids.fetch(b, b)]
@@ -194,7 +197,7 @@ class Experiment < ActiveRecord::Base
         end
 
         # Finally move any modules to another experiment
-        move_modules(to_move)
+        move_modules(updated_to_move)
 
         # Update connections
         update_module_connections(updated_connections)
