@@ -680,9 +680,11 @@ en:
         modal_move_module:
           title: "Move task to experiment"
           confirm: "Move task"
+          no_experiments: "There are no other experiments."
         modal_move_module_group:
           title: "Move workflow to experiment"
           confirm: "Move workflow"
+          no_experiments: "There are no other experiments."
         modal_delete_module:
           title: "Archive task"
           confirm: "Archive task"
