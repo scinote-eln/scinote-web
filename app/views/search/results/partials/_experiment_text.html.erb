@@ -12,7 +12,7 @@
   <% end %>
 <% else %>
   <% if can_view_experiment(experiment) %>
-    <a href="<%= experiment_path(experiment) %>">
+    <a href="<%= canvas_experiment_path(experiment) %>">
       <%= text %>
     </a>
   <% else %>
