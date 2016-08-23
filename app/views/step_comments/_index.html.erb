@@ -5,7 +5,7 @@
     <li class="no-comments"><em><%= t 'general.no_comments' %></em></li>
   <% else %>
     <%= render 'step_comments/list.html.erb', comments: @comments %>
-  <% end %>¸
+  <% end %>
   <% if @comments.length == @per_page %>
   <li class="text-center">
     <a class="btn btn-default btn-more-comments" href="<%= more_comments_url %>" data-remote="true">
