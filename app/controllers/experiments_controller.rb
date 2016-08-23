@@ -68,10 +68,11 @@ class ExperimentsController < ApplicationController
     if @experiment.save
       flash[:success] = t('experiments.update.success_flash',
                           experiment: @experiment.name)
+      redirect_to canvas_experiment_path(@experiment)
     else
       flash[:alert] = t('experiments.update.error_flash')
+      redirect_to :back
     end
-    redirect_to :back
   end
 
   def archive
