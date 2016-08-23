@@ -476,7 +476,6 @@ class Experiment < ActiveRecord::Base
     end
   end
 
-
   # Move modules; this method accepts a map where keys
   # represent IDs of modules, and values represent experiment
   # IDs of new names to which the given modules should be moved.
@@ -486,20 +485,20 @@ class Experiment < ActiveRecord::Base
     to_move.each do |id, experiment_id|
       my_module = my_modules.find_by_id(id)
       experiment = project.experiments.find_by_id(experiment_id)
-      if my_module.present? && experiment.present?
-        my_module.experiment = experiment
+      next unless my_module.present? && experiment.present?
 
-        # Calculate new module position
-        new_pos = my_module.get_new_position
-        my_module.x = new_pos[:x]
-        my_module.y = new_pos[:y]
+      my_module.experiment = experiment
 
-        unless my_module.outputs.destroy_all && my_module.inputs.destroy_all
-          raise ActiveRecord::ActiveRecordError
-        end
+      # Calculate new module position
+      new_pos = my_module.get_new_position
+      my_module.x = new_pos[:x]
+      my_module.y = new_pos[:y]
 
-        my_module.save!
+      unless my_module.outputs.destroy_all && my_module.inputs.destroy_all
+        raise ActiveRecord::ActiveRecordError
       end
+
+      my_module.save!
     end
   end
 

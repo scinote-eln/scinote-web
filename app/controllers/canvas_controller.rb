@@ -154,7 +154,7 @@ class CanvasController < ApplicationController
     end
 
     # Make sure move parameter is valid
-    to_move = Hash.new
+    to_move = {}
     if can_move_modules(@experiment) && update_params[:move].present?
       begin
         to_move = JSON.parse(update_params[:move])
@@ -173,17 +173,15 @@ class CanvasController < ApplicationController
     end
 
     # Distinguish between moving modules/module_groups
-    to_move_groups = Hash.new
+    to_move_groups = {}
     to_move.each do |key, value|
-      if key.match(/.*,.*/)
+      if key =~ /.*,.*/
         to_move_groups[key.split(',')] = value
         to_move.delete(key)
       end
     end
 
-    if error then
-      render_403 and return
-    end
+    render_403 and return if error
 
     # Make sure that to_clone is an array of pairs,
     # as well as that all IDs exist

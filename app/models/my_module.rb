@@ -324,25 +324,23 @@ class MyModule < ActiveRecord::Base
   # Find an empty position for the restored module. It's
   # basically a first empty row with empty space inside x=[0, 32).
   def get_new_position
-    if experiment.blank?
-      return { x: 0, y: 0 }
-    end
+    return { x: 0, y: 0 } if experiment.blank?
 
     # Get all modules position that overlap with first column, [0, WIDTH) and
     # sort them by y coordinate.
-    positions = experiment.active_modules.collect{ |m| [m.x, m.y] }
-                                         .select{ |x, y| x >= 0 && x < WIDTH }
-                                         .sort_by{ |x, y| y }
+    positions = experiment.active_modules.collect { |m| [m.x, m.y] }
+                          .select { |x, _| x >= 0 && x < WIDTH }
+                          .sort_by { |_, y| y }
     return { x: 0, y: 0 } if positions.empty? || positions.first[1] >= HEIGHT
 
     # It looks we'll have to find a gap between the modules if it exists (at
     # least 2*HEIGHT wide
-    ind = positions.each_cons(2).map{ |f, s| s[1]-f[1] }
-                                .index { |y| y >= 2*HEIGHT }
+    ind = positions.each_cons(2).map { |f, s| s[1] - f[1] }
+                   .index { |y| y >= 2 * HEIGHT }
     return { x: 0, y: positions[ind][1] + HEIGHT } if ind
 
     # We lucked out, no gaps, therefore we need to add it after the last element
-    return { x: 0, y: positions.last[1] + HEIGHT }
+    { x: 0, y: positions.last[1] + HEIGHT }
   end
 
   private
@@ -350,5 +348,4 @@ class MyModule < ActiveRecord::Base
   def create_blank_protocol
     protocols << Protocol.new_blank_for_module(self)
   end
-
 end
