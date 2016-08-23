@@ -169,8 +169,14 @@ class Experiment < ActiveRecord::Base
         # Then, archive modules that need to be archived
         archive_modules(to_archive, current_user)
 
-        # Finally move any modules to another experiment
-        move_modules(to_move)
+        updated_to_move_groups = {}
+        to_move_groups.each do |ids, value|
+          mapped = []
+          ids.each do |id|
+            mapped << new_ids.fetch(id, id)
+          end
+          updated_to_move_groups[mapped] = value
+        end
 
         # Update connections, positions & module group variables
         # with actual IDs retrieved from the new modules creation
@@ -187,6 +193,9 @@ class Experiment < ActiveRecord::Base
           updated_module_groups[new_ids.fetch(id, id)] = name
         end
 
+        # Finally move any modules to another experiment
+        move_modules(to_move)
+
         # Update connections
         update_module_connections(updated_connections)
 
@@ -200,7 +209,7 @@ class Experiment < ActiveRecord::Base
         update_module_groups(updated_module_groups, current_user)
 
         # Everyhing is set, now we can move any module groups
-        move_module_groups(to_move_groups)
+        move_module_groups(updated_to_move_groups)
       end
     rescue ActiveRecord::ActiveRecordError, ArgumentError, ActiveRecord::RecordNotSaved
       return false
@@ -518,11 +527,10 @@ class Experiment < ActiveRecord::Base
         end
 
         # Set new positions
-        min_module = modules.min_by(&:x)
-        modules.each { |m| m.x += -min_module.x + min_x }
-
-        min_module = modules.min_by(&:y)
-        modules.each { |m| m.y += -min_module.y + max_y }
+        curr_min_x = modules.min_by(&:x).x
+        curr_min_y = modules.min_by(&:y).y
+        modules.each { |m| m.x += -curr_min_x + min_x }
+        modules.each { |m| m.y += -curr_min_y + max_y }
 
         modules.each do |m|
           m.experiment = experiment

@@ -176,7 +176,7 @@ class CanvasController < ApplicationController
     to_move_groups = Hash.new
     to_move.each do |key, value|
       if key.match(/.*,.*/)
-        to_move_groups[key.split(',').map(&:to_i)] = value
+        to_move_groups[key.split(',')] = value
         to_move.delete(key)
       end
     end
