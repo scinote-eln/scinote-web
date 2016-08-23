@@ -161,7 +161,6 @@ path, ._jsPlumb_endpoint {
 .module {
   cursor: pointer;
   display: block;
-  height: 130px;
   position: absolute;
   width: 290px;
 
@@ -174,7 +173,7 @@ path, ._jsPlumb_endpoint {
     }
   }
   .panel-body {
-    height: 45px;
+    height: 90px;
   }
 
   .ep {
