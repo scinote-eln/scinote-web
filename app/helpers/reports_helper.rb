@@ -91,4 +91,9 @@ def bootstrap_cdn_link_tag
   specs.present? ? stylesheet_link_tag("http://netdna.bootstrapcdn.com/bootstrap/#{specs.version.version}/css/bootstrap.min.css", media: "all") : ""
 end
 
+def font_awesome_cdn_link_tag
+  stylesheet_link_tag(
+    'https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css'
+  )
+end
 end
