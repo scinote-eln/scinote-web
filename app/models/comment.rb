@@ -11,11 +11,11 @@ class Comment < ActiveRecord::Base
   belongs_to :user, inverse_of: :comments
   belongs_to :last_modified_by, foreign_key: 'last_modified_by_id', class_name: 'User'
 
-  has_one :step_comment, inverse_of: :comment
-  has_one :my_module_comment, inverse_of: :comment
-  has_one :result_comment, inverse_of: :comment
-  has_one :sample_comment, inverse_of: :comment
-  has_one :project_comment, inverse_of: :comment
+  has_one :step_comment, inverse_of: :comment, dependent: :destroy
+  has_one :my_module_comment, inverse_of: :comment, dependent: :destroy
+  has_one :result_comment, inverse_of: :comment, dependent: :destroy
+  has_one :sample_comment, inverse_of: :comment, dependent: :destroy
+  has_one :project_comment, inverse_of: :comment, dependent: :destroy
 
   def self.search(
     user,
