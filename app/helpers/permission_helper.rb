@@ -311,8 +311,11 @@ module PermissionHelper
   end
 
   def can_delete_project_comment(comment)
-    comment.user == current_user ||
-      is_owner_of_project(project)
+    comment.project_comment.present? &&
+      (
+        comment.user == current_user ||
+        is_owner_of_project(comment.project_comment.project)
+      )
   end
 
   def can_restore_archived_modules(project)
