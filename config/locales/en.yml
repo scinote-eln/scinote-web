@@ -268,7 +268,7 @@ en:
             steps_tab: "Protocols content"
             results_tab: "Results content"
           project_contents_inner:
-            instructions: "Select projects/workflows/tasks to include in the report"
+            instructions: "Select projects/experiment/tasks to include in the report"
             no_modules: "The project contains no tasks"
             no_module_group: "No workflow"
           module_contents:
