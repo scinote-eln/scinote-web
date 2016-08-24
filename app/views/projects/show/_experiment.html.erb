@@ -29,7 +29,15 @@
         >
         </div>
       <% else %>
-        <div class="workflowimg-container"></div>
+        <div class="no-workflowimg">
+          <% if can_edit_experiment(experiment) %>
+            <p><%= link_to( t('experiments.edit.add_task'),
+                            canvas_experiment_path(experiment,
+                                                   editMode: true)) %></p>
+          <% else %>
+            <p><%= t('experiments.edit.no_workflowimg') %></p>
+          <% end %>
+        </div>
       <% end %>
       <span>
         <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
@@ -39,13 +47,13 @@
         <p class="experiment-description"><%= experiment.description %></p>
       <% else %>
         <% if can_edit_experiment(experiment) %>
-        <p class="experiment-description"><i class="no-description"><%= link_to t('experiments.edit.add-description'),
+        <p class="experiment-description"><span class="no-description"><%= link_to t('experiments.edit.add-description'),
                       edit_project_experiment_url(@project, experiment),
                       remote: true,
                       data: { id: experiment.id },
-                      class: 'no-description-experiment' %></i></p>
+                      class: 'no-description-experiment' %></span></p>
         <% else %>
-          <p class="experiment-description"><i class="no-description"><%= t('experiments.edit.no-description') %></i></p>
+          <p class="experiment-description"><span class="no-description"><%= t('experiments.edit.no-description') %></span></p>
         <% end %>
       <% end %>
     </div>

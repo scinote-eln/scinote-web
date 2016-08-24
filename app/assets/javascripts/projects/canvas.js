@@ -2990,6 +2990,15 @@ function initJsPlumb(containerSel, containerChildSel, modulesSel, params) {
   jsPlumb.fire("jsPlumbLoaded", instance);
 }
 
+// Opens edit mode if redirected from empty experiment
+(function noWorkflowimgEditMode(){
+  if( getParam('editMode') ){
+    $(document).ready(function(){
+      $("#edit-canvas-button").click();
+    });
+  }
+})();
+
 // Initialize first-time tutorial
 function initializeTutorial(isEditMode) {
   if (showTutorial()) {
