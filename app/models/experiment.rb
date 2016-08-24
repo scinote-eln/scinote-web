@@ -196,9 +196,6 @@ class Experiment < ActiveRecord::Base
           updated_module_groups[new_ids.fetch(id, id)] = name
         end
 
-        # Finally move any modules to another experiment
-        move_modules(updated_to_move)
-
         # Update connections
         update_module_connections(updated_connections)
 
@@ -210,6 +207,9 @@ class Experiment < ActiveRecord::Base
 
         # Finally, update module groups
         update_module_groups(updated_module_groups, current_user)
+
+        # Finally move any modules to another experiment
+        move_modules(updated_to_move)
 
         # Everyhing is set, now we can move any module groups
         move_module_groups(updated_to_move_groups)
