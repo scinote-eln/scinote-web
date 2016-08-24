@@ -10,9 +10,9 @@ module SidebarHelper
 
   def project_action_to_link_to(project)
     case action_name
-    when "samples"
+    when 'samples'
       return samples_project_path(project)
-    when "archive"
+    when 'archive', 'module_archive', 'experiment_archive'
       return experiment_archive_project_url(project)
     else
       return project_path(project)
@@ -20,19 +20,25 @@ module SidebarHelper
   end
 
   def experiment_action_to_link_to(experiment)
-    # TODO
-    canvas_experiment_path(experiment)
+    case action_name
+    when 'samples'
+      return samples_experiment_path(experiment)
+    when 'archive', 'module_archive', 'experiment_archive'
+      return module_archive_experiment_url(experiment)
+    else
+      return canvas_experiment_path(experiment)
+    end
   end
 
   def module_action_to_link_to(my_module)
     case action_name
-    when "results"
+    when 'results'
       return results_my_module_url(my_module)
-    when "activities"
+    when 'activities'
       return activities_my_module_url(my_module)
-    when "samples"
+    when 'samples'
       return samples_my_module_url(my_module)
-    when "archive", "module_archive"
+    when 'archive', 'module_archive', 'experiment_archive'
       return archive_my_module_url(my_module)
     else
       return protocols_my_module_url(my_module)

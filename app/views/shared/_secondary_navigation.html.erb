@@ -99,35 +99,35 @@
           <% end %>
 
         <% elsif experiment_page? %>
-        <% if can_view_experiment_samples(@experiment) then %>
-          <li id="experiment-samples-nav-tab" class="<%= "active" if is_experiment_samples? %>">
-            <a href="<%= samples_experiment_url(@experiment) %>" title="<%=t "nav2.projects.samples" %>">
-              <span class="hidden-sm hidden-md"><%=t "nav2.projects.samples" %></span>
-              <span class="hidden-xs hidden-lg glyphicon glyphicon-tint"></span>
-            </a>
-          </li>
-        <% end %>
-          <% if can_view_experiment(@experiment) then %>
-            <li id="canvas-nav-tab" class="<%= "active" if is_experiment_canvas? %>">
-              <a href="<%= project_url(@project) %>" title="<%=t "nav2.experiments.canvas" %>">
-                <span class="hidden-sm hidden-md"><%=t "nav2.experiments.canvas" %></span>
-                <span class="hidden-xs hidden-lg glyphicon glyphicon-blackboard"></span>
+          <% if can_view_experiment_samples(@experiment) then %>
+            <li id="experiment-samples-nav-tab" class="<%= "active" if is_experiment_samples? %>">
+              <a href="<%= samples_experiment_url(@experiment) %>" title="<%=t "nav2.projects.samples" %>">
+                <span class="hidden-sm hidden-md"><%=t "nav2.projects.samples" %></span>
+                <span class="hidden-xs hidden-lg glyphicon glyphicon-tint"></span>
               </a>
             </li>
           <% end %>
-          <% if can_view_reports(@experiment.project) then %>
-            <li id="reports-nav-tab" class="<%= "active" if is_project_reports? %>">
-              <a href="<%= project_reports_url(@experiment.project) %>" title="<%=t "nav2.projects.reports" %>">
-                <span class="hidden-sm hidden-md"><%=t "nav2.projects.reports" %></span>
-                <span class="hidden-xs hidden-lg glyphicon glyphicon-list-alt"></span>
-              </a>
-            </li>
-          <% end %>
-          <% if can_view_experiment_archive(@experiment) then %>
-            <li id="project-archive-nav-tab" class="<%= "active" if is_experiment_archive? %>">
-              <a href="<%= module_archive_experiment_url(@experiment) %>"><span class="glyphicon glyphicon-briefcase"></span></a>
-            </li>
-          <% end %>
+            <% if can_view_experiment(@experiment) then %>
+              <li id="canvas-nav-tab" class="<%= "active" if is_experiment_canvas? %>">
+                <a href="<%= canvas_experiment_url(@experiment) %>" title="<%=t "nav2.experiments.canvas" %>">
+                  <span class="hidden-sm hidden-md"><%=t "nav2.experiments.canvas" %></span>
+                  <span class="hidden-xs hidden-lg glyphicon glyphicon-blackboard"></span>
+                </a>
+              </li>
+            <% end %>
+            <% if can_view_reports(@experiment.project) then %>
+              <li id="reports-nav-tab" class="<%= "active" if is_project_reports? %>">
+                <a href="<%= project_reports_url(@experiment.project) %>" title="<%=t "nav2.projects.reports" %>">
+                  <span class="hidden-sm hidden-md"><%=t "nav2.projects.reports" %></span>
+                  <span class="hidden-xs hidden-lg glyphicon glyphicon-list-alt"></span>
+                </a>
+              </li>
+            <% end %>
+            <% if can_view_experiment_archive(@experiment) then %>
+              <li id="project-archive-nav-tab" class="<%= "active" if is_experiment_archive? %>">
+                <a href="<%= module_archive_experiment_url(@experiment) %>"><span class="glyphicon glyphicon-briefcase"></span></a>
+              </li>
+            <% end %>
 
         <% elsif module_page? %>
           <% if can_view_module_protocols(@my_module) then %>
