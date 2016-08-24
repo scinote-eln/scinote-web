@@ -46,17 +46,12 @@ Rails.application.routes.draw do
   end
 
   get 'projects/archive', to: 'projects#archive', as: 'projects_archive'
-  
-  post 'projects/delete_comment_results', to: 'projects#delete_comment_results'
-  post 'projects/update_comment_results', to: 'projects#update_comment_results'
-  post 'projects/delete_comment_projects', to: 'projects#delete_comment_projects'
-  post 'projects/update_comment_projects', to: 'projects#update_comment_projects'
-  post 'projects/delete_comment_modules', to: 'projects#delete_comment_modules'
-  post 'projects/update_comment_modules', to: 'projects#update_comment_modules'
 
   resources :projects, except: [:new, :destroy] do
     resources :user_projects, path: "/users", only: [:new, :create, :index, :edit, :update, :destroy]
-    resources :project_comments, path: "/comments", only: [:new, :create, :index]
+    resources :project_comments,
+              path: '/comments',
+              only: [:new, :create, :index, :update, :destroy]
     # Activities popup (JSON) for individual project in projects index,
     # as well as all activities page for single project (HTML)
     resources :project_activities, path: "/activities", only: [:index]
@@ -152,7 +147,9 @@ Rails.application.routes.draw do
   resources :my_modules, path: "/modules", only: [:show, :edit, :update, :destroy] do
     resources :my_module_tags, path: "/tags", only: [:index, :create, :update, :destroy]
     resources :user_my_modules, path: "/users", only: [:index, :new, :create, :destroy]
-    resources :my_module_comments, path: "/comments", only: [:index, :new, :create]
+    resources :my_module_comments,
+              path: '/comments',
+              only: [:index, :new, :create, :update, :destroy]
     resources :sample_my_modules, path: "/samples_index", only: [:index]
     resources :result_texts, only: [:new, :create]
     resources :result_assets, only: [:new, :create]
@@ -180,7 +177,9 @@ Rails.application.routes.draw do
   end
 
   resources :steps, only: [:edit, :update, :destroy, :show] do
-    resources :step_comments, path: "/comments", only: [:new, :create, :index]
+    resources :step_comments,
+              path: '/comments',
+              only: [:new, :create, :index, :update, :destroy]
     member do
       post 'checklistitem_state'
       post 'toggle_step_state'
@@ -190,7 +189,9 @@ Rails.application.routes.draw do
   end
 
   resources :results, only: [:update] do
-    resources :result_comments, path: "/comments", only: [:new, :create, :index]
+    resources :result_comments,
+              path: '/comments',
+              only: [:new, :create, :index, :update, :destroy]
   end
 
   resources :samples, only: [:edit, :update, :destroy]
@@ -236,8 +237,6 @@ Rails.application.routes.draw do
       get "edit_description_modal", to: "protocols#edit_description_modal"
     end
     collection do
-      post 'delete_comment', to: 'protocols#delete_comment'
-      post 'update_comment', to: 'protocols#update_comment'
       get "create_new_modal", to: "protocols#create_new_modal"
       post "datatable", to: "protocols#datatable"
       post "make_private", to: "protocols#make_private"
