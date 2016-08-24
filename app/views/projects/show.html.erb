@@ -6,13 +6,15 @@
   <div class="col-sm-12">
       <% if can_create_experiment(@project) %>
       <div class="row">
-        <div class="col-sm-4 col-sm-offset-4">
-          <%= link_to t('experiments.new.create'),
-                        new_project_experiment_url(@project),
+        <div class="col-sm-12">
+          <%= link_to new_project_experiment_url(@project), 
                         remote: true,
                         type: "button",
                         id: 'new-experiment',
-                        class: "btn btn-primary center-btn" %>
+                        class: "btn btn-primary pull-right" do %>
+            <span class="glyphicon glyphicon-plus"></span>
+            <%= t('experiments.new.create') %>
+          <% end %>
         </div>
       </div>
       <% end %>

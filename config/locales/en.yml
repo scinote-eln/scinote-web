@@ -636,6 +636,7 @@ en:
       actions: 'Actions'
       head_title: "%{project} | Overview"
       canvas_edit: "Edit experiment"
+      zoom: "Zoom: "
       modal_manage_tags:
         head_title: "Manage tags for"
         subtitle: "Showing tags of task %{module}"
