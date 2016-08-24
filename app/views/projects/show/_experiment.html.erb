@@ -2,7 +2,7 @@
   <div class="panel panel-default experiment-panel"
        data-id="<%= experiment.id %>">
     <div class="panel-heading">
-      <% if is_user_or_higher_of_project @project %>
+      <% if can_view_experiment_actions experiment %>
         <div class="dropdown pull-right">
           <button class="btn btn-link dropdown-toggle"
                   type="button"
