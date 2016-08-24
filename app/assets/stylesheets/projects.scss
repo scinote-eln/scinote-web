@@ -159,10 +159,10 @@ path, ._jsPlumb_endpoint {
   }
 }
 .module {
-  width: 250px;
   cursor: pointer;
-  position: absolute;
   display: block;
+  position: absolute;
+  width: 290px;
 
   .panel-heading {
     height: 40px;
@@ -173,7 +173,7 @@ path, ._jsPlumb_endpoint {
     }
   }
   .panel-body {
-    height: 45px;
+    height: 90px;
   }
 
   .ep {

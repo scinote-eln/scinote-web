@@ -78,11 +78,11 @@ var GRID_DIST_SMALL_Y = 100;
   UPDATE my_modules SET x=x*32, y=y*16
   themodel.connection.execute("UPDATE my_modules SET x=x*32, y=y*16")
 */
-var GRID_DIST_FULL_X = 12;
-var GRID_DIST_FULL_Y = 12;
-var GRID_DIST_MEDIUM_X = 8;
-var GRID_DIST_MEDIUM_Y = 8;
-var GRID_DIST_SMALL_X = 5;
+var GRID_DIST_FULL_X = 10;
+var GRID_DIST_FULL_Y = 10;
+var GRID_DIST_MEDIUM_X = 7.3;
+var GRID_DIST_MEDIUM_Y = 4;
+var GRID_DIST_SMALL_X = 2.4;
 var GRID_DIST_SMALL_Y = 5;
 var SUBMIT_FORM_NAME_SEPARATOR = "|";
 
