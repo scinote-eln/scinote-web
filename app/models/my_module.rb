@@ -312,6 +312,13 @@ class MyModule < ActiveRecord::Base
     clone.protocols << self.protocol.deep_clone_my_module(self, current_user)
     clone.reload
 
+    # fixes linked protocols
+    clone.protocols.each do |protocol|
+      next unless protocol.linked?
+      protocol.updated_at = protocol.parent_updated_at
+      protocol.save
+    end
+
     return clone
   end
 
