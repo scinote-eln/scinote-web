@@ -11,13 +11,13 @@ class ProtocolLinkedChildrenDatatable < AjaxDatatablesRails::Base
 
   def sortable_columns
     @sortable_columns ||= [
-      "Protocol.id"
+      'Protocol.id'
     ]
   end
 
   def sortable_displayed_columns
     @sortable_displayed_columns ||= [
-      "0"
+      '0'
     ]
   end
 
@@ -31,8 +31,8 @@ class ProtocolLinkedChildrenDatatable < AjaxDatatablesRails::Base
   def data
     records.map do |record|
       {
-        "DT_RowId": record.id,
-        "1": record_html(record)
+        'DT_RowId' => record.id,
+        '1' => record_html(record)
       }
     end
   end
@@ -42,33 +42,38 @@ class ProtocolLinkedChildrenDatatable < AjaxDatatablesRails::Base
   def get_raw_records
     records =
       Protocol
-        .joins(my_module: :project)
-        .includes(my_module: :project)
-        .references(my_module: :project)
-        .where(protocol_type: Protocol.protocol_types[:linked])
-        .where(parent: @protocol)
+      .joins(my_module: { experiment: :project })
+      .includes(my_module: { experiment: :project })
+      .references(my_module: { experiment: :project })
+      .where(protocol_type: Protocol.protocol_types[:linked])
+      .where(parent: @protocol)
     records.distinct
   end
 
   # Helper methods
 
   def record_html(record)
-    res = ""
+    res = ''
     res += "<ol class='breadcrumb'>"
     res += "<li><span class='glyphicon glyphicon-blackboard'></span>&nbsp;"
     res += @controller.render_to_string(
-      partial: "search/results/partials/project_text.html.erb",
-      locals: { project: record.my_module.project }
+      partial: 'search/results/partials/project_text.html.erb',
+      locals: { project: record.my_module.experiment.project }
     )
-    res += "</li>"
+    res += '</li>'
+    res += "<li><i class='fa fa-flask'></i>&nbsp;"
+    res += @controller.render_to_string(
+      partial: 'search/results/partials/experiment_text.html.erb',
+      locals: { experiment: record.my_module.experiment }
+    )
+    res += '</li>'
     res += "<li><span class='glyphicon glyphicon-credit-card'></span>&nbsp;"
     res += @controller.render_to_string(
-      partial: "search/results/partials/my_module_text.html.erb",
+      partial: 'search/results/partials/my_module_text.html.erb',
       locals: { my_module: record.my_module, link_to_page: :protocols }
     )
-    res += "</li>"
-    res += "</ol>"
+    res += '</li>'
+    res += '</ol>'
     res
   end
-
 end
