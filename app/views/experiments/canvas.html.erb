@@ -3,6 +3,14 @@
 <%= render partial: "shared/secondary_navigation" %>
 
 <div id="diagram-buttons" data-intro="<%=t ('tutorial.canvas_click_edit_workflow_html') %>" data-step="5" data-position="left">
+  <% if can_create_experiment(@project) && @experiment.active? %>
+    <%= link_to t('experiments.new.create'),
+                  new_project_experiment_url(@project),
+                  remote: true,
+                  type: "button",
+                  id: 'new-experiment',
+                  class: "btn btn-primary" %>
+  <% end %>
   <% if can_edit_canvas(@experiment) %>
     <%=link_to t('experiments.canvas.canvas_edit'),
                   canvas_edit_experiment_url(@experiment),
@@ -11,14 +19,6 @@
                   id: "edit-canvas-button",
                   class: "ajax btn btn-default",
                   "data-action" => "edit" %>
-  <% end %>
-  <% if can_create_experiment(@project) && @experiment.active? %>
-    <%= link_to t('experiments.new.create'),
-                  new_project_experiment_url(@project),
-                  remote: true,
-                  type: "button",
-                  id: 'new-experiment',
-                  class: "btn btn-primary" %>
   <% end %>
   <!-- pexperiment actions -->
   <% if can_edit_experiment(@experiment) || can_archive_experiment(@experiment) %>
