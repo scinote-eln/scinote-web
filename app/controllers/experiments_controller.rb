@@ -106,7 +106,7 @@ class ExperimentsController < ApplicationController
 
   # POST: clone_experiment(id)
   def clone
-    project = Project.find_by_id(params[:experiment][:project_id])
+    project = Project.find_by_id(params[:experiment].try(:[], :project_id))
 
     # Try to clone the experiment
     success = true
@@ -157,7 +157,7 @@ class ExperimentsController < ApplicationController
 
   # POST: move_experiment(id)
   def move
-    project = Project.find_by_id(params[:experiment][:project_id])
+    project = Project.find_by_id(params[:experiment].try(:[], :project_id))
     old_project = @experiment.project
 
     # Try to move the experiment
