@@ -1169,3 +1169,24 @@ html.turbolinks-progress-bar::before {
   display: inline-block;
   margin-right: 5px;
 }
+
+/* Comments */
+
+.dropdown.dropdown-comment {
+  display: inline-block;
+
+  a[data-role="comment-options"] {
+    color: $color-emperor;
+  }
+}
+
+ul.dropdown-menu.dropdown-menu-fixed {
+  position: fixed;
+  left: auto;
+  top: auto;
+
+  & > li:not(.dropdown-header):hover {
+    background-color: $color-wild-sand;
+  }
+}
+

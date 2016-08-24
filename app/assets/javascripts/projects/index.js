@@ -7,46 +7,7 @@
 // - refresh project users tab after manage user modal is closed
 // - refactor view handling using library, ex. backbone.js
 
-function project_comment_edit(id) {
-  document.getElementById('edit_comment_'+id).type='text';
-  $('#span_comment_'+id).hide();
-  return false;
-}
-
-function project_update_comment(id) {
-  if (document.getElementById('edit_comment_'+id).type=='text') {
-    var txt = document.getElementById('edit_comment_'+id).value;
-    $.ajax({
-        type:   "POST",
-        url:    '/projects/update_comment_projects',
-        dataType:   'json',
-        data:     {id: id, msg: txt},
-        success:  function (data) {
-          document.getElementById('edit_comment_'+id).type='hidden';
-          var txt = document.getElementById('edit_comment_'+id).value;
-          $('#span_comment_'+id).text(txt);
-          $('#span_comment_'+id).show();
-      }
-    });
-  }
-}
-
-function project_comment_delete(id) {
-  if (confirm('Are you sure you want to delete this comment?')) {
-    $.ajax({
-        type:   "POST",
-        url:    '/projects/delete_comment_projects',
-        dataType:   'json',
-        data:     {id: id},
-        success:  function (data) {
-          $('.content-comments').find('#'+id).remove();  
-      }
-    });
-  }
-
-  return false;
-}
-
+//= require comments
 (function () {
 
   var newProjectModal = null;
@@ -255,15 +216,13 @@ function project_comment_delete(id) {
     .on("ajax:success", function (e, data) {
       if (data.html) {
         var list = $form.parents("ul");
-        var s1 = data.html
-        var id = s1.substring(s1.lastIndexOf("delete(")+7,s1.lastIndexOf(")'"))
 
         // Remove potential "no comments" element
         list.parent().find(".content-comments")
           .find("li.no-comments").remove();
 
         list.parent().find(".content-comments")
-          .prepend("<li class='comment' id='"+id+"'>" + data.html + "</li>")
+          .prepend("<li class='comment'>" + data.html + "</li>")
           .scrollTop(0);
         list.parents("ul").find("> li.comment:gt(8)").remove();
         $("#comment_message", $form).val("");
@@ -309,6 +268,9 @@ function project_comment_delete(id) {
           } else {
             moreBtn.attr("href", data.more_url);
           }
+
+          // Reposition dropdown comment options
+          scrollCommentOptions(listItem.closest(".content-comments").find(".dropdown-comment"));
         }
       });
   }
@@ -374,7 +336,6 @@ function project_comment_delete(id) {
     initUserRoleForms();
   }
 
-
   function init() {
 
     newProjectModal = $("#new-project-modal");
@@ -394,6 +355,8 @@ function project_comment_delete(id) {
     initNewProjectModal();
     initEditProjectModal();
     initManageUsersModal();
+    initCommentOptions("ul.content-comments");
+    initDeleteComment(".panel-project .tab-content");
 
     // initialize project tab remote loading
     $(".panel-project .panel-footer [role=tab]")

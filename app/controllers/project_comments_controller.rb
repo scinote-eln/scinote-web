@@ -2,6 +2,8 @@ class ProjectCommentsController < ApplicationController
   before_action :load_vars
   before_action :check_view_permissions, only: [ :index ]
   before_action :check_add_permissions, only: [ :new, :create ]
+  before_action :check_edit_permissions, only: [:edit, :update]
+  before_action :check_destroy_permissions, only: [:destroy]
 
   def index
     @comments = @project.last_comments(@last_comment_id, @per_page)
@@ -76,6 +78,47 @@ class ProjectCommentsController < ApplicationController
     end
   end
 
+  def edit
+    respond_to do |format|
+      format.json do
+        render json: {
+          html: render_to_string(
+            partial: 'edit.html.erb',
+            locals: {
+              comment: @comment
+            }
+          )
+        }
+      end
+    end
+  end
+
+  def update
+    @comment.message = comment_params[:message]
+    respond_to do |format|
+      format.json do
+        if @comment.save
+          render json: {}, status: :ok
+        else
+          render json: @comment.errors, status: :unprocessable_entity
+        end
+      end
+    end
+  end
+
+  def destroy
+    respond_to do |format|
+      format.json do
+        if @comment.destroy
+          render json: {}, status: :ok
+        else
+          render json: { message: I18n.t('comments.delete_error') },
+                 status: :unprocessable_entity
+        end
+      end
+    end
+  end
+
   private
 
   def load_vars
@@ -98,6 +141,16 @@ class ProjectCommentsController < ApplicationController
     unless can_add_comment_to_project(@project)
       render_403
     end
+  end
+
+  def check_edit_permissions
+    @comment = Comment.find_by_id(params[:id])
+    render_403 unless @comment.present? && can_edit_project_comment(@comment)
+  end
+
+  def check_destroy_permissions
+    @comment = Comment.find_by_id(params[:id])
+    render_403 unless @comment.present? && can_delete_project_comment(@comment)
   end
 
   def comment_params

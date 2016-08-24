@@ -1,13 +1,37 @@
-<span class="text-muted pull-right"><%= l comment.created_at, format: '%H:%M' %></span>
-<strong><%= comment.user.full_name %>:</strong>
-<span class="input-group">
-  <input type="hidden" class="form-control" id="edit_comment_<%= comment.id %>" value="<%= comment.message %>" onkeydown="if (event.keyCode==13) project_update_comment(<%= comment.id %>)" >
-  <span id="span_comment_<%= comment.id %>" style="display:block;width:200px;word-wrap:break-word;"><%= comment.message %></span>
-  <div class="input-group-btn">
-    <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown"><span class="caret"></span></button>
-      <ul class="dropdown-menu pull-right">
-        <li><a href="#" onclick='return project_comment_edit(<%= comment.id %>)'>Edit</a></li>
-        <li><a href="#" onclick='return project_comment_delete(<%= comment.id %>)'>Delete</a></li>
+<div class="pull-right">
+  <span class="text-muted"><%= l comment.created_at, format: '%H:%M' %></span>
+  <% if can_edit_project_comment(comment) || can_delete_project_comment(comment) %>
+    <div class="dropdown dropdown-comment">
+      <a href="#"
+         class="dropdown-toggle"
+         data-role="comment-options"
+         type="button"
+         id="comment-<%= comment.id %>-dropdown"
+         data-toggle="dropdown"
+         aria-haspopup="true"
+         aria-expanded="true">
+        <span class="caret"></span>
+      </a>
+      <ul class="dropdown-menu dropdown-menu-fixed" aria-labelledby="comment-<%= comment.id %>-dropdown">
+        <li class="dropdown-header"><%= I18n.t('comments.options_dropdown.header') %></li>
+        <li>
+          <a href="#"
+             data-action="edit-comment"
+             data-url="<%= edit_project_project_comment_path(comment.project_comment.project, comment, format: :json) %>">
+            <%= t('comments.options_dropdown.edit') %>
+          </a>
+          </li>
+        <li>
+          <a href="#"
+             data-action="delete-comment"
+             data-url="<%= project_project_comment_path(comment.project_comment.project, comment, format: :json) %>"
+             data-confirm-message="<%= t('comments.delete_confirm') %>">
+            <%= t('comments.options_dropdown.delete') %>
+          </a>
+        </li>
       </ul>
     </div>
-</span>
+  <% end %>
+</div>
+<strong><%= comment.user.full_name %>:</strong>
+<p><span><%= comment.message %></p>

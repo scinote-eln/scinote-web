@@ -139,6 +139,14 @@ en:
         step: "Step comment"
         result: "Result comment"
 
+  comments:
+    options_dropdown:
+      header: "Comment options"
+      edit: "Edit"
+      delete: "Delete"
+    delete_confirm: "Are you sure you wish to delete this comment?"
+    delete_error: "Error occured while deleting comment."
+
   projects:
     index:
       head_title: "Home"
