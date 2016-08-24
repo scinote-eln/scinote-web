@@ -2,21 +2,21 @@
   <div class="panel panel-default experiment-panel"
        data-id="<%= experiment.id %>">
     <div class="panel-heading">
-
-      <div class="dropdown pull-right">
-        <button class="btn btn-link dropdown-toggle"
-                type="button"
-                id="exActionsMenu-<%= experiment.id %>"
-                data-toggle="dropdown"
-                aria-haspopup="true"
-                aria-expanded="true">
-          <span class="visible-xs-inline"><i class="glyphicon glyphicon-sort"></i></span>
-          <span class="caret"></span>
-        </button>
-        <%= render partial: 'experiments/dropdown_actions.html.erb',
-                            locals: { project: @project, experiment: experiment } %>
-      </div>
-
+      <% if can_view_experiment_actions experiment %>
+        <div class="dropdown pull-right">
+          <button class="btn btn-link dropdown-toggle"
+                  type="button"
+                  id="exActionsMenu-<%= experiment.id %>"
+                  data-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="true">
+            <span class="visible-xs-inline"><i class="glyphicon glyphicon-sort"></i></span>
+            <span class="caret"></span>
+          </button>
+          <%= render partial: 'experiments/dropdown_actions.html.erb',
+                              locals: { project: @project, experiment: experiment } %>
+        </div>
+      <% end %>
       <h3 class="panel-title"><%= link_to experiment.name, canvas_experiment_path(experiment) %></h3>
 
     </div>

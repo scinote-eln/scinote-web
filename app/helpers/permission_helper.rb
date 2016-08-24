@@ -328,6 +328,13 @@ module PermissionHelper
 
   # ---- EXPERIMENT PERMISSIONS ----
 
+  def can_view_experiment_actions(experiment)
+    can_edit_experiment(experiment) &&
+      can_clone_experiment(experiment) &&
+      can_move_experiment(experiment) &&
+      can_archive_experiment(experiment)
+  end
+
   def can_create_experiment(project)
     is_user_or_higher_of_project(project)
   end
