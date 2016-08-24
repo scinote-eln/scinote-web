@@ -63,3 +63,77 @@
   // init
   init();
 })();
+
+
+/* Initialize the first-time demo tutorial if needed. */
+(function(){
+  function initializeTutorial() {
+    if (showTutorial()) {
+      introJs()
+        .setOptions({
+          overlayOpacity: '0.2',
+          hidePrev: true,
+          nextLabel: 'Next',
+          doneLabel: 'End tutorial',
+          skipLabel: 'End tutorial',
+          showBullets: false,
+          showStepNumbers: false,
+          exitOnOverlayClick: false,
+          exitOnEsc: false,
+          tooltipClass: 'custom next-page-link',
+          disableInteraction: true
+        })
+        .onafterchange(function (tarEl) {
+          Cookies.set('current_tutorial_step', this._currentStep + 2);
+
+          if (this._currentStep == 1) {
+            setTimeout(function() {
+              $('.next-page-link a.introjs-nextbutton')
+                .removeClass('introjs-disabled')
+                .attr('href', $('[data-canvas-link]').data('canvasLink'));
+              $('.introjs-disableInteraction').remove();
+            }, 500);
+          } else {
+
+          }
+        })
+        .start();
+
+      window.onresize = function() {
+        if (Cookies.get('current_tutorial_step') == 4 ) {
+          $(".introjs-tooltip").css("right", ($(".new-element.initial").width() + 60)  + "px");
+        }
+      };
+
+      // Destroy first-time tutorial cookies when skip tutorial
+      // or end tutorial is clicked
+      $(".introjs-skipbutton").each(function (){
+        $(this).click(function (){
+          Cookies.remove('tutorial_data');
+          Cookies.remove('current_tutorial_step');
+        });
+      });
+    }
+  }
+
+  function showTutorial() {
+    var tutorialData;
+
+    if (Cookies.get('tutorial_data'))
+      tutorialData = JSON.parse(Cookies.get('tutorial_data'));
+    else
+      return false;
+    var currentStep = Cookies.get('current_tutorial_step');
+    if (currentStep < 3 || currentStep > 5)
+      return false;
+    var tutorialProjectId = tutorialData[0].project;
+    var currentProjectId = $("#data-holder").attr("data-project-id");
+
+    return tutorialProjectId == currentProjectId;
+  }
+
+  $(document).ready(function(){
+    initializeTutorial();
+  });
+
+})();
