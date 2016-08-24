@@ -79,14 +79,12 @@ class ProjectCommentsController < ApplicationController
   end
 
   def edit
+    @update_url = project_project_comment_path(@project, @comment, format: :json)
     respond_to do |format|
       format.json do
         render json: {
           html: render_to_string(
-            partial: 'edit.html.erb',
-            locals: {
-              comment: @comment
-            }
+            partial: '/comments/edit.html.erb'
           )
         }
       end
@@ -100,7 +98,8 @@ class ProjectCommentsController < ApplicationController
         if @comment.save
           render json: {}, status: :ok
         else
-          render json: @comment.errors, status: :unprocessable_entity
+          render json: { errors: @comment.errors.to_hash(true) },
+                 status: :unprocessable_entity
         end
       end
     end

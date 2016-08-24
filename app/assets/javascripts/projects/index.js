@@ -356,7 +356,8 @@
     initEditProjectModal();
     initManageUsersModal();
     initCommentOptions("ul.content-comments");
-    initDeleteComment(".panel-project .tab-content");
+    initEditComments(".panel-project .tab-content");
+    initDeleteComments(".panel-project .tab-content");
 
     // initialize project tab remote loading
     $(".panel-project .panel-footer [role=tab]")

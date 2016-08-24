@@ -34,4 +34,6 @@
   <% end %>
 </div>
 <strong><%= comment.user.full_name %>:</strong>
-<p><span><%= comment.message %></p>
+<div data-role="comment-message-container">
+  <p data-role="comment-message"><%= comment.message %></p>
+</div>
