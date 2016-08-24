@@ -102,6 +102,8 @@ class Experiment < ActiveRecord::Base
     to_archive,
     to_add,
     to_rename,
+    to_move,
+    to_move_groups,
     to_clone,
     connections,
     positions,
@@ -155,6 +157,18 @@ class Experiment < ActiveRecord::Base
 
         # Update connections, positions & module group variables
         # with actual IDs retrieved from the new modules creation
+        updated_to_move = {}
+        to_move.each do |id, value|
+          updated_to_move[new_ids.fetch(id, id)] = value
+        end
+        updated_to_move_groups = {}
+        to_move_groups.each do |ids, value|
+          mapped = []
+          ids.each do |id|
+            mapped << new_ids.fetch(id, id)
+          end
+          updated_to_move_groups[mapped] = value
+        end
         updated_connections = []
         connections.each do |a,b|
           updated_connections << [new_ids.fetch(a, a), new_ids.fetch(b, b)]
@@ -179,6 +193,12 @@ class Experiment < ActiveRecord::Base
 
         # Finally, update module groups
         update_module_groups(updated_module_groups, current_user)
+
+        # Finally move any modules to another experiment
+        move_modules(updated_to_move)
+
+        # Everyhing is set, now we can move any module groups
+        move_module_groups(updated_to_move_groups)
 
         # update Experiment timestamp
         touch
@@ -454,6 +474,75 @@ class Experiment < ActiveRecord::Base
       if my_module.present?
         my_module.name = new_name
         my_module.save!
+      end
+    end
+  end
+
+  # Move modules; this method accepts a map where keys
+  # represent IDs of modules, and values represent experiment
+  # IDs of new names to which the given modules should be moved.
+  # If a module with given ID doesn't exist (or experiment ID)
+  # it's obviously not updated. Any connection on module is destroyed.
+  def move_modules(to_move)
+    to_move.each do |id, experiment_id|
+      my_module = my_modules.find_by_id(id)
+      experiment = project.experiments.find_by_id(experiment_id)
+      next unless my_module.present? && experiment.present?
+
+      my_module.experiment = experiment
+
+      # Calculate new module position
+      new_pos = my_module.get_new_position
+      my_module.x = new_pos[:x]
+      my_module.y = new_pos[:y]
+
+      unless my_module.outputs.destroy_all && my_module.inputs.destroy_all
+        raise ActiveRecord::ActiveRecordError
+      end
+
+      my_module.save!
+    end
+  end
+
+  # Move module groups; this method accepts a map where keys
+  # represent IDs of modules which are in module group,
+  # and values represent experiment
+  # IDs of new names to which the given module group should be moved.
+  # If a module with given ID doesn't exist (or experiment ID)
+  # it's obviously not updated. Position for entire module group is updated
+  # to bottom left corner.
+  def move_module_groups(to_move)
+    to_move.each do |ids, experiment_id|
+      modules = my_modules.where(id: ids)
+      groups = Set.new(modules.map(&:my_module_group))
+      experiment = project.experiments.find_by_id(experiment_id)
+
+      groups.each do |group|
+        next unless group && experiment.present?
+
+        # Find the lowest point for current modules(max_y) and the leftmost
+        # module(min_x)
+        if experiment.active_modules.empty?
+          max_y = 0
+          min_x = 0
+        else
+          max_y = experiment.active_modules.maximum(:y) + MyModule::HEIGHT
+          min_x = experiment.active_modules.minimum(:x)
+        end
+
+        # Set new positions
+        curr_min_x = modules.min_by(&:x).x
+        curr_min_y = modules.min_by(&:y).y
+        modules.each { |m| m.x += -curr_min_x + min_x }
+        modules.each { |m| m.y += -curr_min_y + max_y }
+
+        modules.each do |m|
+          m.experiment = experiment
+          m.save!
+        end
+
+        group.experiment = experiment
+        group.save!
       end
     end
   end

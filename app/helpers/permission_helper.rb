@@ -402,6 +402,10 @@ module PermissionHelper
     is_user_or_higher_of_project(experiment.project)
   end
 
+  def can_move_modules(experiment)
+    is_user_or_higher_of_project(experiment.project)
+  end
+
   def can_archive_modules(experiment)
     is_user_or_higher_of_project(experiment.project)
   end

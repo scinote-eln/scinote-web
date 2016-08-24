@@ -153,6 +153,36 @@ class CanvasController < ApplicationController
       render_403 and return
     end
 
+    # Make sure move parameter is valid
+    to_move = {}
+    if can_move_modules(@experiment) && update_params[:move].present?
+      begin
+        to_move = JSON.parse(update_params[:move])
+
+        # Okay, JSON parsed!
+        unless (
+          to_move.is_a? Hash and
+          to_move.keys.all? { |k| k.is_a? String } &&
+          to_move.values.all? { |k| k.is_a? String }
+        )
+          error = true
+        end
+      rescue
+        error = true
+      end
+    end
+
+    # Distinguish between moving modules/module_groups
+    to_move_groups = {}
+    to_move.each do |key, value|
+      if key =~ /.*,.*/
+        to_move_groups[key.split(',')] = value
+        to_move.delete(key)
+      end
+    end
+
+    render_403 and return if error
+
     # Make sure that to_clone is an array of pairs,
     # as well as that all IDs exist
     to_clone = Hash.new
@@ -204,6 +234,8 @@ class CanvasController < ApplicationController
       to_archive,
       to_add,
       to_rename,
+      to_move,
+      to_move_groups,
       to_clone,
       connections,
       positions,
@@ -249,6 +281,7 @@ class CanvasController < ApplicationController
       :add,
       "add-names",
       :rename,
+      :move,
       :cloned,
       :remove,
       "module-groups"
