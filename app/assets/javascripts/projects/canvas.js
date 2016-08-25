@@ -706,7 +706,8 @@ function bindFullZoomAjaxTabs() {
             .html("")
             .addClass("hide");
         scrollCommentOptions(
-          list.parent().find(".content-comments .dropdown-comment")
+          list.parent().find(".content-comments .dropdown-comment"),
+          false
         );
       }
     })
