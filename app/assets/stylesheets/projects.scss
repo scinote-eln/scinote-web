@@ -407,40 +407,63 @@ li.module-hover {
   }
 }
 
-/* EXPERIMENT PANEL */
+// EXPERIMENT PANEL
 .experiment-panel {
+  @include box-shadow(0 4px 8px 0 $color-dove-gray);
+  height: 550px;
   margin: 0 auto;
   margin-bottom: 35px;
   margin-top: 45px;
   max-width: 700px;
-  height: 550px;
-  @include box-shadow(0px 4px 8px 0px $color-dove-gray);
 
   .experiment-description {
-    margin-top:20px;
+    margin-top: 20px;
   }
 
   .no-description {
+    color: $color-alto;
     display: block;
+    font-size: 18px;
+    font-weight: bold;
     text-align: center;
-    font-size: 16px;
+
+    a {
+      color: $color-alto;
+      text-decoration: none;
+    }
+  }
+
+  .no-workflowimg {
+    color: $color-alto;
+    display: block;
+    font-size: 26px;
+    font-weight: bold;
+    height: 300px;
+    margin: 15px 0;
+    padding-top: 150px;
+    text-align: center;
+
+    a {
+      color: $color-alto;
+      text-decoration: none;
+    }
   }
 }
 
 .workflowimg-container {
-  margin: 15px 0;
   height: 300px;
+  margin: 15px 0;
 
   img {
-    max-width:100%;
     max-height: 300px;
+    max-width: 100%;
   }
 }
 
-/* SHOW */
+// SHOW
 .center-btn {
-  margin: 0 auto;
   display: block;
+  margin: 0 auto;
   max-width: 200px;
 }
 
@@ -452,10 +475,10 @@ li.module-hover {
   text-align: center;
 
   &:hover {
-    color:$color-alto;
+    color: $color-alto;
   }
 
   &:focus {
-    color:$color-alto;
+    color: $color-alto;
   }
 }

@@ -606,8 +606,10 @@ en:
       modal_create: 'Save'
       label_title: "Edit details"
       panel_label: 'Change details'
-      add-description: 'Add description'
+      add-description: 'Add description...'
       no-description: 'No description'
+      no_workflowimg: 'No workflow'
+      add_task: 'Add a task to experiment...'
     create:
       success_flash: "Successfully created experiment %{experiment}"
       error_flash: 'Could not create a new experiment.'
