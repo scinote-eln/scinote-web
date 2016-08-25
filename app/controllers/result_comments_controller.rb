@@ -195,7 +195,6 @@ class ResultCommentsController < ApplicationController
                       can_delete_result_comment_in_module(@comment)
   end
 
-
   def comment_params
     params.require(:comment).permit(:message)
   end

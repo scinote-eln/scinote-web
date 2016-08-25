@@ -1170,28 +1170,28 @@ html.turbolinks-progress-bar::before {
   margin-right: 5px;
 }
 
-/* Comments */
+// Comments
 
 .dropdown.dropdown-comment {
   display: inline-block;
 
-  a[data-role="comment-options"] {
+  [data-role="comment-options"] {
     color: $color-emperor;
   }
 }
 
-ul.dropdown-menu.dropdown-menu-fixed {
-  position: fixed;
+.dropdown-menu.dropdown-menu-fixed {
   left: auto;
+  position: fixed;
   top: auto;
 
-  & > li:not(.dropdown-header):hover {
+  li:not(.dropdown-header):hover {
     background-color: $color-wild-sand;
   }
 }
 
-form.edit-comment-form {
-  span.help-block {
+.edit-comment-form {
+  .help-block {
     display: inline;
   }
 }
