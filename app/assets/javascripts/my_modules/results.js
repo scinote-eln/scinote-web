@@ -195,8 +195,8 @@ initTutorial();
 applyCollapseLinkCallBack();
 
 initCommentOptions("ul.content-comments");
-initEditComments(".panel .tab-content");
-initDeleteComments(".panel .tab-content");
+initEditComments("#results");
+initDeleteComments("#results");
 
 $(function () {
   $("#results-collapse-btn").click(function () {

@@ -654,8 +654,8 @@ setupAssetsLoading();
 
 // Init comments edit/delete
 initCommentOptions("ul.content-comments");
-initEditComments(".panel .tab-content");
-initDeleteComments(".panel .tab-content");
+initEditComments("#steps");
+initDeleteComments("#steps");
 
 $(function () {
 
