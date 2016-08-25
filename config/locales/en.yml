@@ -1480,6 +1480,8 @@ en:
     new_report_click_org_html: "Click on <strong>%{private_org}</strong> in breadcrumbs to return to the Dashboard."
     archive_project_html: "Archive demo project by clicking on the down arrow <span class='glyphicon glyphicon-triangle-bottom'></span>. You can always access the archive by clicking the <span class='glyphicon glyphicon-briefcase'></span> button on the top right side of the dashboard and restore any item you have archived."
 
+  introductory:
+    popup-title: "Dear sciNote user,"
   # This section contains general words that can be used in any parts of
   # application.
 
