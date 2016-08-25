@@ -80,7 +80,8 @@ class MyModuleCommentsController < ApplicationController
   end
 
   def edit
-    @update_url = my_module_my_module_comment_path(@my_module, @comment, format: :json)
+    @update_url =
+      my_module_my_module_comment_path(@my_module, @comment, format: :json)
     respond_to do |format|
       format.json do
         render json: {

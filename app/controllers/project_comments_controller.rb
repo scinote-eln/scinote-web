@@ -79,7 +79,8 @@ class ProjectCommentsController < ApplicationController
   end
 
   def edit
-    @update_url = project_project_comment_path(@project, @comment, format: :json)
+    @update_url =
+      project_project_comment_path(@project, @comment, format: :json)
     respond_to do |format|
       format.json do
         render json: {
