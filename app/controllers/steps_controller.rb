@@ -35,14 +35,16 @@ class StepsController < ApplicationController
       step_assets = step_params.slice(:assets_attributes)
       @step = Step.new(step_data)
 
-      step_assets[:assets_attributes].each do |_i, data|
-        # Ignore destroy requests on create
-        next if data[:_destroy].present?
+      unless step_assets[:assets_attributes].nil?
+        step_assets[:assets_attributes].each do |_i, data|
+          # Ignore destroy requests on create
+          next if data[:_destroy].present?
 
-        asset = Asset.new(data)
-        asset.created_by = current_user
-        asset.last_modified_by = current_user
-        new_assets << asset
+          asset = Asset.new(data)
+          asset.created_by = current_user
+          asset.last_modified_by = current_user
+          new_assets << asset
+        end
       end
       @step.assets << new_assets
     else

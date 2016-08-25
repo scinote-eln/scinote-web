@@ -82,7 +82,7 @@ function filesValidator(ev, fileInputs, fileTypeEnum) {
   if (fileInputs.length) {
     var filesPresentValid = filesPresentValidator(ev, fileInputs);
     var filesSizeValid = filesSizeValidator(ev, fileInputs, fileTypeEnum);
-    // TODO File content check
+    // File spoof check is done on server-side only
     filesValid = filesPresentValid && filesSizeValid;
   }
   return filesValid;
@@ -129,7 +129,7 @@ function filesSizeValidator(ev, fileInputs, fileTypeEnum) {
   });
   if(filesSizeValid) {
     // Check if there is enough free space for the files
-    filesSizeValid = enaughSpaceValidator(ev, fileInputs);
+    filesSizeValid = enoughSpaceValidator(ev, fileInputs);
   }
   return filesSizeValid;
 }
@@ -138,6 +138,6 @@ function filesSizeValidator(ev, fileInputs, fileTypeEnum) {
  * Overriden in billing module for checking whether enough
  * organization space is free.
  */
-function enaughSpaceValidator(ev, fileInputs) {
+function enoughSpaceValidator(ev, fileInputs) {
   return true;
 }

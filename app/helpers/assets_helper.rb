@@ -11,7 +11,7 @@ module AssetsHelper
       data-download-url='#{download_asset_path(asset)}'
     >
       <span class='asset-loading-spinner' id='asset-loading-spinner-#{asset.id}'></span>
-      #{t('general.file.loading', fileName: asset.file_file_name)}
+      #{t('general.file.uploading', fileName: asset.file_file_name)}
     </span>
     <script type='text/javascript'>
       $('#asset-loading-spinner-#{asset.id}').spin(

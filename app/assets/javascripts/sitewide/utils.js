@@ -1,6 +1,5 @@
 /*
- * Converts JSON data received from the server to flat array
- * of values.
+ * Converts JSON data received from the server to flat array of values.
  */
 function jsonToValuesArray(jsonData) {
   errMsgs =[];
@@ -11,4 +10,18 @@ function jsonToValuesArray(jsonData) {
 		});
   }
   return errMsgs;
+}
+
+/*
+ * Calls callback function on AJAX success (because built-in functions don't
+ * work!)
+ */
+$.fn.onAjaxComplete = function (cb) {
+	$(this)
+	.on("ajax:success", function() {
+	  cb();
+	})
+	.on("ajax:error", function() {
+	  cb();
+	});
 }

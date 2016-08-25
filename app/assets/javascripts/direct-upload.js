@@ -139,12 +139,12 @@
   }
 
   /*
-   * Validates files on server and uploads them to S3 server.
+   * Spoof checks files on server and uploads them to S3 server.
    *
-   * First we asyncronously validate files on server and generate post requests
-   * (fetchUploadSignature), if OK the post requests are used to uplaod files
-   * asyncronously to S3 (uploadFile), and if successful the form is submitted,
-   * otherwise no file is saved and errors are shown.
+   * First we asyncronously spoof check files on server and generate post
+   * requests (fetchUploadSignature), if OK the post requests are used to uplaod
+   * files asyncronously to S3 (uploadFile), and if successful the form is
+   * submitted, otherwise no file is saved and errors are shown.
    * If any post fails, the user is allowed to leave the page, but other files
    * are still being uploaded because of asynchronous behaviour, so that errors
    * for other files can still show afterwards.
@@ -171,7 +171,7 @@
       preventLeavingPage(true, I18n.t("general.file.uploading"));
       ev.preventDefault();
 
-      // Validates files and if OK gets upload post requests
+      // Spoof checks files and, if OK, gets upload post requests
       _.each($fileInputs, function (fileInput) {
         var file = fileInput.files[0];
         if (!_.isUndefined(file)) {
@@ -182,7 +182,7 @@
       });
 
       $.when.apply($, signRequests).then(function () {
-        // After successful file validation and posts fetching
+        // After successful file spoof check and upload post requests fetching
         if (signRequests.length) {
           var fileRequests = [];
 
@@ -196,16 +196,21 @@
             processPosts(ev, $fileInput, data.posts, fileRequests);
           });
 
-          $.when.apply($, fileRequests).always(function () {
+          $.when.apply($, fileRequests).then(function () {
+            // After successful posts processing and file uploading
+            $form.onAjaxComplete(function () {
+              animateSpinner(null, false);
+              preventLeavingPage(false);
+            });
+            $form.submit();
+          }, function() {
+            // After unsuccessful posts processing and file uploading
             animateSpinner(null, false);
             preventLeavingPage(false);
-          }).then(function () {
-            // After successful posts processing and file uploading
-            $form.submit();
           });
         }
       }, function () {
-        // After unsuccessful file validation and posts fetching
+        // After unsuccessful file spoof check and posts fetching
         animateSpinner(null, false);
         preventLeavingPage(false);
       });
