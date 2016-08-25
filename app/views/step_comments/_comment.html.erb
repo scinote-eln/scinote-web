@@ -16,21 +16,25 @@
       </a>
       <ul class="dropdown-menu dropdown-menu-fixed" aria-labelledby="comment-<%= comment.id %>-dropdown">
         <li class="dropdown-header"><%= I18n.t('comments.options_dropdown.header') %></li>
-        <li>
-          <a href="#"
-             data-action="edit-comment"
-             data-url="<%= edit_step_step_comment_path(comment.step_comment.step, comment, format: :json) %>">
-            <%= t('comments.options_dropdown.edit') %>
-          </a>
+        <% if can_edit_step_comment_in_protocol(comment) %>
+          <li>
+            <a href="#"
+               data-action="edit-comment"
+               data-url="<%= edit_step_step_comment_path(comment.step_comment.step, comment, format: :json) %>">
+              <%= t('comments.options_dropdown.edit') %>
+            </a>
           </li>
-        <li>
-          <a href="#"
-             data-action="delete-comment"
-             data-url="<%= step_step_comment_path(comment.step_comment.step, comment, format: :json) %>"
-             data-confirm-message="<%= t('comments.delete_confirm') %>">
-            <%= t('comments.options_dropdown.delete') %>
-          </a>
-        </li>
+        <% end %>
+        <% if can_delete_step_comment_in_protocol(comment) %>
+          <li>
+            <a href="#"
+               data-action="delete-comment"
+               data-url="<%= step_step_comment_path(comment.step_comment.step, comment, format: :json) %>"
+               data-confirm-message="<%= t('comments.delete_confirm') %>">
+              <%= t('comments.options_dropdown.delete') %>
+            </a>
+          </li>
+        <% end %>
       </ul>
     </div>
   <% end %>
