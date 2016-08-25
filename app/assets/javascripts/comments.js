@@ -1,17 +1,19 @@
-function initCommentOptions(scrollableContainer) {
+function initCommentOptions(scrollableContainer, useParentOffset = true) {
   document.addEventListener('scroll', function (event) {
     var $target = $(event.target);
 
     if ($target.length && $target.is(scrollableContainer)) {
-      scrollCommentOptions($target.find(".dropdown-comment"));
+      scrollCommentOptions($target.find(".dropdown-comment"), useParentOffset);
     }
   }, true);
 }
 
-function scrollCommentOptions(selector) {
+function scrollCommentOptions(selector, useParentOffset = true) {
   _.each(selector, function(el) {
     var $el = $(el);
-    $el.find(".dropdown-menu-fixed").css("top", $el.offset().top + 20);
+    var offset = useParentOffset ? $el.offset().top : $el.position().top;
+    $el.find(".dropdown-menu-fixed")
+    .offset({ top: (offset + 20) });
   });
 }
 
