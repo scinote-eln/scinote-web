@@ -705,6 +705,9 @@ function bindFullZoomAjaxTabs() {
         $(".help-block", $form)
             .html("")
             .addClass("hide");
+        scrollCommentOptions(
+          list.parent().find(".content-comments .dropdown-comment")
+        );
       }
     })
     .on("ajax:error", function (ev, xhr) {

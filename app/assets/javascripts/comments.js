@@ -1,9 +1,12 @@
 function initCommentOptions(scrollableContainer, useParentOffset = true) {
+  scrollCommentOptions($(".dropdown-comment"), useParentOffset);
+
   document.addEventListener('scroll', function (event) {
     var $target = $(event.target);
+    var parent = $(scrollableContainer);
 
-    if ($target.length && $target.is(scrollableContainer)) {
-      scrollCommentOptions($target.find(".dropdown-comment"), useParentOffset);
+    if ($target.length) {
+      scrollCommentOptions(parent.find(".dropdown-comment"), useParentOffset);
     }
   }, true);
 }
