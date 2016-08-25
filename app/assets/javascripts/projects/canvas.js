@@ -2993,9 +2993,7 @@ function initJsPlumb(containerSel, containerChildSel, modulesSel, params) {
 // Opens edit mode if redirected from empty experiment
 (function noWorkflowimgEditMode(){
   if( getParam('editMode') ){
-    $(document).ready(function(){
-      $("#edit-canvas-button").click();
-    });
+    $("#edit-canvas-button").click();
   }
 })();
 
