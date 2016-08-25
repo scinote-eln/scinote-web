@@ -302,6 +302,22 @@ module PermissionHelper
     is_technician_or_higher_of_project(project)
   end
 
+  def can_edit_project_comment(comment)
+    comment.project_comment.present? &&
+      (
+        comment.user == current_user ||
+        is_owner_of_project(comment.project_comment.project)
+      )
+  end
+
+  def can_delete_project_comment(comment)
+    comment.project_comment.present? &&
+      (
+        comment.user == current_user ||
+        is_owner_of_project(comment.project_comment.project)
+      )
+  end
+
   def can_restore_archived_modules(project)
     is_user_or_higher_of_project(project)
   end
@@ -475,6 +491,26 @@ module PermissionHelper
     is_technician_or_higher_of_project(my_module.experiment.project)
   end
 
+  def can_edit_module_comment(comment)
+    comment.my_module_comment.present? &&
+      (
+        comment.user == current_user ||
+        is_owner_of_project(
+          comment.my_module_comment.my_module.experiment.project
+        )
+      )
+  end
+
+  def can_delete_module_comment(comment)
+    comment.my_module_comment.present? &&
+      (
+        comment.user == current_user ||
+        is_owner_of_project(
+          comment.my_module_comment.my_module.experiment.project
+        )
+      )
+  end
+
   def can_view_module_samples(my_module)
     can_view_module(my_module) and
     can_view_samples(my_module.experiment.project.organization)
@@ -500,6 +536,26 @@ module PermissionHelper
 
   def can_add_result_comment_in_module(my_module)
     is_technician_or_higher_of_project(my_module.experiment.project)
+  end
+
+  def can_edit_result_comment_in_module(comment)
+    comment.result_comment.present? &&
+      (
+        comment.user == current_user ||
+        is_owner_of_project(
+          comment.result_comment.result.my_module.experiment.project
+        )
+      )
+  end
+
+  def can_delete_result_comment_in_module(comment)
+    comment.result_comment.present? &&
+      (
+        comment.user == current_user ||
+        is_owner_of_project(
+          comment.result_comment.result.my_module.experiment.project
+        )
+      )
   end
 
   # ---- RESULT TEXT PERMISSIONS ----
@@ -870,6 +926,34 @@ module PermissionHelper
       is_technician_or_higher_of_project(my_module.experiment.project)
     else
       # In repository, user cannot complete steps
+      false
+    end
+  end
+
+  def can_edit_step_comment_in_protocol(comment)
+    return false if comment.step_comment.blank?
+
+    protocol = comment.step_comment.step.protocol
+    if protocol.in_module?
+      comment.user == current_user ||
+        is_owner_of_project(
+          protocol.my_module.experiment.project
+        )
+    else
+      false
+    end
+  end
+
+  def can_delete_step_comment_in_protocol(comment)
+    return false if comment.step_comment.blank?
+
+    protocol = comment.step_comment.step.protocol
+    if protocol.in_module?
+      comment.user == current_user ||
+        is_owner_of_project(
+          protocol.my_module.experiment.project
+        )
+    else
       false
     end
   end

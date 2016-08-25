@@ -3,6 +3,8 @@ class StepCommentsController < ApplicationController
 
   before_action :check_view_permissions, only: [ :index ]
   before_action :check_add_permissions, only: [ :new, :create ]
+  before_action :check_edit_permissions, only: [:edit, :update]
+  before_action :check_destroy_permissions, only: [:destroy]
 
   def index
     @comments = @step.last_comments(@last_comment_id, @per_page)
@@ -96,6 +98,76 @@ class StepCommentsController < ApplicationController
     end
   end
 
+  def edit
+    @update_url = step_step_comment_path(@step, @comment, format: :json)
+    respond_to do |format|
+      format.json do
+        render json: {
+          html: render_to_string(
+            partial: '/comments/edit.html.erb'
+          )
+        }
+      end
+    end
+  end
+
+  def update
+    @comment.message = comment_params[:message]
+    respond_to do |format|
+      format.json do
+        if @comment.save
+          # Generate activity
+          if @protocol.in_module?
+            Activity.create(
+              type_of: :edit_step_comment,
+              user: current_user,
+              project: @step.my_module.experiment.project,
+              my_module: @step.my_module,
+              message: t(
+                'activities.edit_step_comment',
+                user: current_user.full_name,
+                step: @step.position + 1,
+                step_name: @step.name
+              )
+            )
+          end
+          render json: {}, status: :ok
+        else
+          render json: { errors: @comment.errors.to_hash(true) },
+                 status: :unprocessable_entity
+        end
+      end
+    end
+  end
+
+  def destroy
+    respond_to do |format|
+      format.json do
+        if @comment.destroy
+          # Generate activity
+          if @protocol.in_module?
+            Activity.create(
+              type_of: :delete_step_comment,
+              user: current_user,
+              project: @step.my_module.experiment.project,
+              my_module: @step.my_module,
+              message: t(
+                'activities.delete_step_comment',
+                user: current_user.full_name,
+                step: @step.position + 1,
+                step_name: @step.name
+              )
+            )
+          end
+          render json: {}, status: :ok
+        else
+          render json: { message: I18n.t('comments.delete_error') },
+                 status: :unprocessable_entity
+        end
+      end
+    end
+  end
+
   private
 
   def load_vars
@@ -121,8 +193,19 @@ class StepCommentsController < ApplicationController
     end
   end
 
+  def check_edit_permissions
+    @comment = Comment.find_by_id(params[:id])
+    render_403 unless @comment.present? &&
+                      can_edit_step_comment_in_protocol(@comment)
+  end
+
+  def check_destroy_permissions
+    @comment = Comment.find_by_id(params[:id])
+    render_403 unless @comment.present? &&
+                      can_delete_step_comment_in_protocol(@comment)
+  end
+
   def comment_params
     params.require(:comment).permit(:message)
   end
-
 end

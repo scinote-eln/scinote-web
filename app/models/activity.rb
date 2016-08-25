@@ -28,7 +28,17 @@ class Activity < ActiveRecord::Base
     :archive_result,
     :edit_result,
     :clone_experiment,
-    :move_experiment
+    :move_experiment,
+    :add_comment_to_project,
+    :edit_project_comment,
+    :delete_project_comment,
+    :add_comment_to_module,
+    :edit_module_comment,
+    :delete_module_comment,
+    :edit_step_comment,
+    :delete_step_comment,
+    :edit_result_comment,
+    :delete_result_comment
   ]
 
   validates :type_of, presence: true

@@ -1,3 +1,5 @@
+//= require comments
+
 //************************************
 // CONSTANTS
 //************************************
@@ -321,6 +323,11 @@ function initializeFullZoom() {
 
   // Restore draggable position
   restoreDraggablePosition($("#diagram"), $("#canvas-container"));
+
+  // Initialize comments
+  initCommentOptions("ul.content-comments", false);
+  initEditComments(".panel.module-large .tab-content");
+  initDeleteComments(".panel.module-large .tab-content");
 }
 
 function destroyFullZoom() {
@@ -336,6 +343,13 @@ function destroyFullZoom() {
   $("li[data-module-group] > span > a.canvas-center-on").off("click");
   $("li[data-module-id]").off("mouseenter mouseleave");
   $("li[data-module-id] > span > a.canvas-center-on").off("click");
+
+  // Clean up comments listeners
+  $(document).off("scroll");
+  $(".panel.module-large .tab-content")
+  .off("click", "[data-action=edit-comment]");
+  $(".panel.module-large .tab-content")
+  .off("click", "[data-action=delete-comment]");
 
   // Remember the draggable position
   rememberDraggablePosition($("#diagram"), $("#canvas-container"));
@@ -691,6 +705,10 @@ function bindFullZoomAjaxTabs() {
         $(".help-block", $form)
             .html("")
             .addClass("hide");
+        scrollCommentOptions(
+          list.parent().find(".content-comments .dropdown-comment"),
+          false
+        );
       }
     })
     .on("ajax:error", function (ev, xhr) {
@@ -728,6 +746,12 @@ function bindFullZoomAjaxTabs() {
           } else {
             moreBtn.attr("href", data.more_url);
           }
+
+          // Reposition dropdown comment options
+          scrollCommentOptions(
+            listItem.closest(".content-comments").find(".dropdown-comment"),
+            false
+          );
         }
       });
   }

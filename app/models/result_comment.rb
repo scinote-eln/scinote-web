@@ -4,6 +4,5 @@ class ResultComment < ActiveRecord::Base
 
   belongs_to :result, inverse_of: :result_comments
   belongs_to :comment,
-    inverse_of: :result_comment,
-    dependent: :destroy
+             inverse_of: :result_comment
 end
