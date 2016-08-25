@@ -3,6 +3,8 @@ class ResultCommentsController < ApplicationController
 
   before_action :check_view_permissions, only: [ :index ]
   before_action :check_add_permissions, only: [ :new, :create ]
+  before_action :check_edit_permissions, only: [:edit, :update]
+  before_action :check_destroy_permissions, only: [:destroy]
 
   def index
     @comments = @result.last_comments(@last_comment_id, @per_page)
@@ -54,7 +56,7 @@ class ResultCommentsController < ApplicationController
         Activity.create(
           type_of: :add_comment_to_result,
           user: current_user,
-          project: @result.my_module.project,
+          project: @result.my_module.experiment.project,
           my_module: @result.my_module,
           message: t(
             "activities.add_comment_to_result",
@@ -91,6 +93,47 @@ class ResultCommentsController < ApplicationController
     end
   end
 
+  def edit
+    @update_url =
+      result_result_comment_path(@result, @comment, format: :json)
+    respond_to do |format|
+      format.json do
+        render json: {
+          html: render_to_string(
+            partial: '/comments/edit.html.erb'
+          )
+        }
+      end
+    end
+  end
+
+  def update
+    @comment.message = comment_params[:message]
+    respond_to do |format|
+      format.json do
+        if @comment.save
+          render json: {}, status: :ok
+        else
+          render json: { errors: @comment.errors.to_hash(true) },
+                 status: :unprocessable_entity
+        end
+      end
+    end
+  end
+
+  def destroy
+    respond_to do |format|
+      format.json do
+        if @comment.destroy
+          render json: {}, status: :ok
+        else
+          render json: { message: I18n.t('comments.delete_error') },
+                 status: :unprocessable_entity
+        end
+      end
+    end
+  end
+
   private
 
   def load_vars
@@ -115,6 +158,19 @@ class ResultCommentsController < ApplicationController
       render_403
     end
   end
+
+  def check_edit_permissions
+    @comment = Comment.find_by_id(params[:id])
+    render_403 unless @comment.present? &&
+                      can_edit_result_comment_in_module(@comment)
+  end
+
+  def check_destroy_permissions
+    @comment = Comment.find_by_id(params[:id])
+    render_403 unless @comment.present? &&
+                      can_delete_result_comment_in_module(@comment)
+  end
+
 
   def comment_params
     params.require(:comment).permit(:message)

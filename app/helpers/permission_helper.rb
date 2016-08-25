@@ -931,14 +931,13 @@ module PermissionHelper
   end
 
   def can_edit_step_comment_in_protocol(comment)
+    return false if comment.step_comment.blank?
+
     protocol = comment.step_comment.step.protocol
     if protocol.in_module?
-      comment.step_comment.present? &&
-        (
-          comment.user == current_user ||
-          is_owner_of_project(
-            protocol.my_module.experiment.project
-          )
+      comment.user == current_user ||
+        is_owner_of_project(
+          protocol.my_module.experiment.project
         )
     else
       false
@@ -946,14 +945,13 @@ module PermissionHelper
   end
 
   def can_delete_step_comment_in_protocol(comment)
+    return false if comment.step_comment.blank?
+
     protocol = comment.step_comment.step.protocol
     if protocol.in_module?
-      comment.step_comment.present? &&
-        (
-          comment.user == current_user ||
-          is_owner_of_project(
-            protocol.my_module.experiment.project
-          )
+      comment.user == current_user ||
+        is_owner_of_project(
+          protocol.my_module.experiment.project
         )
     else
       false
