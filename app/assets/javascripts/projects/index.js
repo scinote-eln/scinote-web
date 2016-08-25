@@ -481,7 +481,7 @@
               intro: archiveProjectTutorial,
               position: position
             },{
-              element: document.getElementById("projects-toolbar"),
+              element: document.getElementsByClassName("avatar")[0],
               intro: goodbye_message
             }],
             overlayOpacity: '0.2',
@@ -553,7 +553,5 @@
 
   init();
   project_tutorial_helper();
-
-
 
 }());
