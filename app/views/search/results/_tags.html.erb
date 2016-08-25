@@ -26,9 +26,29 @@
     </span>
     <br>
     <span>
+      <%=t "search.index.experiment" %>
+      <% if tag.my_modules.count > 0 %>
+        <% experiments_results(tag).each_with_index do |exp, i| %>
+          <%= render partial: 'search/results/partials/experiment_text.html.erb',
+                     locals: { experiment: exp } %>
+          <% #byebug %>
+          <% if i != (experiments_results(tag).count - 1) %>
+            ,&nbsp;
+          <% end %>
+        <% end %>
+      <% end %>
+    </span>
+    <br>
+    <span>
       <%=t "search.index.project" %>
       <%= render partial: "search/results/partials/project_text.html.erb",
                  locals: { project: tag.project } %>
+    </span>
+    <br>
+    <span>
+      <%=t "search.index.organization" %>
+      <%= render partial: "search/results/partials/organization_text.html.erb",
+                 locals: { organization: tag.project.organization } %>
     </span>
   </p>
 
