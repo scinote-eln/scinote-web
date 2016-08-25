@@ -50,6 +50,19 @@ class MyModuleCommentsController < ApplicationController
 
     respond_to do |format|
       if (@comment.valid? && @my_module.comments << @comment)
+        # Generate activity
+        Activity.create(
+          type_of: :add_comment_to_module,
+          user: current_user,
+          project: @my_module.experiment.project,
+          my_module: @my_module,
+          message: t(
+            'activities.add_comment_to_module',
+            user: current_user.full_name,
+            module: @my_module.name
+          )
+        )
+
         format.html {
           flash[:success] = t(
             "my_module_comments.create.success_flash",
@@ -98,6 +111,18 @@ class MyModuleCommentsController < ApplicationController
     respond_to do |format|
       format.json do
         if @comment.save
+          # Generate activity
+          Activity.create(
+            type_of: :edit_module_comment,
+            user: current_user,
+            project: @my_module.experiment.project,
+            my_module: @my_module,
+            message: t(
+              'activities.edit_module_comment',
+              user: current_user.full_name,
+              module: @my_module.name
+            )
+          )
           render json: {}, status: :ok
         else
           render json: { errors: @comment.errors.to_hash(true) },
@@ -111,6 +136,18 @@ class MyModuleCommentsController < ApplicationController
     respond_to do |format|
       format.json do
         if @comment.destroy
+          # Generate activity
+          Activity.create(
+            type_of: :delete_module_comment,
+            user: current_user,
+            project: @my_module.experiment.project,
+            my_module: @my_module,
+            message: t(
+              'activities.delete_module_comment',
+              user: current_user.full_name,
+              module: @my_module.name
+            )
+          )
           render json: {}, status: :ok
         else
           render json: { message: I18n.t('comments.delete_error') },

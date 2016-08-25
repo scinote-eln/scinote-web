@@ -50,6 +50,18 @@ class ProjectCommentsController < ApplicationController
     respond_to do |format|
 
       if (@comment.valid? && @project.comments << @comment)
+        # Generate activity
+        Activity.create(
+          type_of: :add_comment_to_project,
+          user: current_user,
+          project: @project,
+          message: t(
+            'activities.add_comment_to_project',
+            user: current_user.full_name,
+            project: @project.name
+          )
+        )
+
         format.html {
           flash[:success] = t(
             "project_comments.create.success_flash",
@@ -97,6 +109,17 @@ class ProjectCommentsController < ApplicationController
     respond_to do |format|
       format.json do
         if @comment.save
+          # Generate activity
+          Activity.create(
+            type_of: :edit_project_comment,
+            user: current_user,
+            project: @project,
+            message: t(
+              'activities.edit_project_comment',
+              user: current_user.full_name,
+              project: @project.name
+            )
+          )
           render json: {}, status: :ok
         else
           render json: { errors: @comment.errors.to_hash(true) },
@@ -110,6 +133,17 @@ class ProjectCommentsController < ApplicationController
     respond_to do |format|
       format.json do
         if @comment.destroy
+          # Generate activity
+          Activity.create(
+            type_of: :delete_project_comment,
+            user: current_user,
+            project: @project,
+            message: t(
+              'activities.delete_project_comment',
+              user: current_user.full_name,
+              project: @project.name
+            )
+          )
           render json: {}, status: :ok
         else
           render json: { message: I18n.t('comments.delete_error') },

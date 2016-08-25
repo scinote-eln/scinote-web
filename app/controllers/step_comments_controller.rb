@@ -116,6 +116,21 @@ class StepCommentsController < ApplicationController
     respond_to do |format|
       format.json do
         if @comment.save
+          # Generate activity
+          if @protocol.in_module?
+            Activity.create(
+              type_of: :edit_step_comment,
+              user: current_user,
+              project: @step.my_module.experiment.project,
+              my_module: @step.my_module,
+              message: t(
+                'activities.edit_step_comment',
+                user: current_user.full_name,
+                step: @step.position + 1,
+                step_name: @step.name
+              )
+            )
+          end
           render json: {}, status: :ok
         else
           render json: { errors: @comment.errors.to_hash(true) },
@@ -129,6 +144,21 @@ class StepCommentsController < ApplicationController
     respond_to do |format|
       format.json do
         if @comment.destroy
+          # Generate activity
+          if @protocol.in_module?
+            Activity.create(
+              type_of: :delete_step_comment,
+              user: current_user,
+              project: @step.my_module.experiment.project,
+              my_module: @step.my_module,
+              message: t(
+                'activities.delete_step_comment',
+                user: current_user.full_name,
+                step: @step.position + 1,
+                step_name: @step.name
+              )
+            )
+          end
           render json: {}, status: :ok
         else
           render json: { message: I18n.t('comments.delete_error') },

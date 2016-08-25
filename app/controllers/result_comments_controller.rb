@@ -112,6 +112,18 @@ class ResultCommentsController < ApplicationController
     respond_to do |format|
       format.json do
         if @comment.save
+          # Generate activity
+          Activity.create(
+            type_of: :edit_result_comment,
+            user: current_user,
+            project: @result.my_module.experiment.project,
+            my_module: @result.my_module,
+            message: t(
+              'activities.edit_result_comment',
+              user: current_user.full_name,
+              result: @result.name
+            )
+          )
           render json: {}, status: :ok
         else
           render json: { errors: @comment.errors.to_hash(true) },
@@ -125,6 +137,18 @@ class ResultCommentsController < ApplicationController
     respond_to do |format|
       format.json do
         if @comment.destroy
+          # Generate activity
+          Activity.create(
+            type_of: :delete_result_comment,
+            user: current_user,
+            project: @result.my_module.experiment.project,
+            my_module: @result.my_module,
+            message: t(
+              'activities.delete_result_comment',
+              user: current_user.full_name,
+              result: @result.name
+            )
+          )
           render json: {}, status: :ok
         else
           render json: { message: I18n.t('comments.delete_error') },

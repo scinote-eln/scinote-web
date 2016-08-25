@@ -1030,6 +1030,16 @@ en:
     edit_table_result: "<i>%{user}</i> edited table result <strong>%{result}</strong>."
     clone_experiment: "<i>%{user}</i> cloned <strong>%{experiment_new}</strong> from <strong>%{experiment_original}</strong>."
     move_experiment: "<i>%{user}</i> moved experiment  <strong>%{experiment}</strong> from project <strong>%{project_original}</strong> to project <strong>%{project_new}</strong>."
+    add_comment_to_project: "<i>%{user}</i> commented on project <strong>%{project}</strong>."
+    edit_project_comment: "<i>%{user}</i> edited comment on project <strong>%{project}</strong>."
+    delete_project_comment: "<i>%{user}</i> deleted comment on project <strong>%{project}</strong>."
+    add_comment_to_module: "<i>%{user}</i> commented on module <strong>%{module}</strong>."
+    edit_module_comment: "<i>%{user}</i> edited comment on module <strong>%{module}</strong>."
+    delete_module_comment: "<i>%{user}</i> deleted comment on module <strong>%{module}</strong>."
+    edit_step_comment: "<i>%{user}</i> edited comment on Step %{step} <strong>%{step_name}</strong>."
+    delete_step_comment: "<i>%{user}</i> deleted comment on Step %{step} <strong>%{step_name}</strong>."
+    edit_result_comment: "<i>%{user}</i> edited comment on result <strong>%{result}</strong>."
+    delete_result_comment: "<i>%{user}</i> deleted comment on result <strong>%{result}</strong>."
 
   user_my_modules:
     new:
