@@ -42,9 +42,11 @@ class Asset < ActiveRecord::Base
   has_many :report_elements, inverse_of: :asset, dependent: :destroy
   has_one :asset_text_datum, inverse_of: :asset, dependent: :destroy
 
-  # Specific file errors propagate to "fire" error hash key,
+  # Specific file errors propagate to "file" error hash key,
   # so use just these errors
   after_validation :filter_paperclip_errors
+  # Needed because Paperclip validatates on creation
+  after_create :filter_paperclip_errors
 
   attr_accessor :file_content, :file_info, :preview_cached
 
@@ -343,5 +345,4 @@ class Asset < ActiveRecord::Base
 
     self.file = data
   end
-
 end

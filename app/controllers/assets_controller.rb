@@ -7,12 +7,8 @@ class AssetsController < ApplicationController
   def signature
     respond_to do |format|
       format.json {
-
         asset = Asset.new(asset_params)
         if asset.errors.any?
-          # We need to validate, although 'new' already does it, so that
-          # asset's after_validation gets triggered, which modifies errors
-          asset.valid?
           render json: {
             status: 'error',
             errors: asset.errors

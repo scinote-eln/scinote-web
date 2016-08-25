@@ -53,9 +53,9 @@
   }
 
   /*
-   * The server checks if files are OK (correct file type, presence,
-   * size and spoofing) and only then generates posts for S3 server file
-   * uploading (each post for different size/style of the same file).
+   * The server checks if files are OK (presence, size and spoofing)
+   * and only then generates posts for S3 server file uploading
+   * (each post for different size/style of the same file).
    */
   function fetchUploadSignature(ev, fileInput, file, signUrl) {
     var formData = new FormData();
@@ -69,17 +69,14 @@
       contentType: false,
       error: function (xhr) {
         try {
-          var data = JSON.parse(xhr.responseText);
-          if (data.status === "error") {
-            // File error
-            var errMsg = jsonToValuesArray(data.errors);
-            renderFormError(ev, fileInput, errMsg);
-          }
+          // File error
+          var jsonData = $.parseJSON(xhr.responseText);
+          var errMsg = jsonToValuesArray(jsonData.errors);
         } catch(err) {
           // Connection error
           var errMsg = I18n.t("general.file.upload_failure");
-          renderFormError(ev, fileInput, errMsg);
         }
+        renderFormError(ev, fileInput, errMsg);
       }
     });
   }
@@ -102,9 +99,15 @@
       data: formData,
       processData: false,
       contentType: false,
-      error: function () {
-        // Connection error
-        var errMsg = I18n.t("general.file.upload_failure");
+      error: function (xhr) {
+        try {
+          // File error
+          var $xmlData = $(xhr.responseText);
+          var errMsg = $xmlData.find("Message").text().strToErrorFormat();
+        } catch(err) {
+          // Connection error
+          var errMsg = I18n.t("general.file.upload_failure");
+        }
         renderFormError(ev, fileInput, errMsg);
       }
     });
