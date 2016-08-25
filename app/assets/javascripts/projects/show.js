@@ -111,6 +111,7 @@
         $(this).click(function (){
           Cookies.remove('tutorial_data');
           Cookies.remove('current_tutorial_step');
+          restore_after_tutorial();
         });
       });
     }
@@ -132,8 +133,27 @@
     return tutorialProjectId == currentProjectId;
   }
 
+  function project_tutorial_helper(){
+    $(document).ready(function(){
+      if( $('div').hasClass('introjs-overlay')){
+        $.each( $(".dropdown-experiment-actions").find("li"),
+          function(){
+            $(this).css({ 'pointer-events': 'none' });
+        });
+      }
+    });
+  }
+
+  function restore_after_tutorial(){
+    $.each( $(".dropdown-experiment-actions").find("li"),
+      function(){
+        $(this).css({ 'pointer-events': 'auto' });
+    });
+  }
+
   $(document).ready(function(){
     initializeTutorial();
+    project_tutorial_helper();
   });
 
 })();
