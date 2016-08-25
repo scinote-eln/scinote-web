@@ -30,13 +30,19 @@ function initDeleteComments(parent) {
         dataType: "json",
         success: function(data) {
           // There are 3 possible actions:
-          // - (A) comment is the last comment in project (not handled differently)
+          // - (A) comment is the last comment in project
           // - (B) comment is the last comment inside specific date (remove the date separator)
           // - (C) comment is a usual comment
+
           var commentEl = $this.closest(".comment");
-          var otherComments = commentEl.siblings(".comment");
+
+          // Case A
+          if (commentEl.prevAll(".comment").length == 0 && commentEl.next().length == 0) {
+            commentEl.after("<li class='no-comments'><em>" + I18n.t("projects.index.no_comments") + "</em></li>");
+          }
+
+          // Case B
           if (commentEl.prev(".comment-date-separator").length > 0 && commentEl.next(".comment").length == 0) {
-            // Case B
             commentEl.prev(".comment-date-separator").remove();
           }
           commentEl.remove();
