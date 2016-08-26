@@ -19,10 +19,16 @@
       </ul>
     </div>
 
-    <h3 class="panel-title"><%= link_to experiment.name, canvas_experiment_path(experiment) %></h3>
+    <h3 class="panel-title"><%= experiment.name %></h3>
   </div>
 
   <div class="panel-body">
+    <% if experiment.workflowimg? %>
+      <div class="workflowimg-container">
+        <%= image_tag(experiment.workflowimg.expiring_url(30),
+                              class: 'img-responsive center-block') %>
+      </div>
+    <% end %>
     <div class="row">
       <div class="col-xs-6">
         <%=t "projects.experiment_archive.archived_on" %>
