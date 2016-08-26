@@ -3476,14 +3476,12 @@ function canvas_tutorial_helper(){
         .css({'pointer-events': 'none'});
       });
     }
+    $( document ).ajaxComplete(function() {
+        $('#canvas-new-module')
+        .css({'pointer-events': 'none'});
+    });
   });
 
-  $( document ).ajaxComplete(function() {
-    if( $('div').hasClass('introjs-showElement') ){
-      $('#canvas-new-module')
-      .css({'pointer-events': 'none'});
-    }
-  });
 }
 
 function restore_after_tutorial(){
