@@ -130,6 +130,10 @@
 </div>
 <% end %>
 
+<% if current_user.confirmed_at < Time.new(2016, 8, 31) %>
+  <%= render partial: 'projects/index/introductory_popup' %>
+  <%= javascript_include_tag "projects/introdutory_popup"%>
+<% end %>
 <% if @projects_by_orgs.length > 0 %>
   <% @projects_by_orgs.each do |org, projects| %>
     <%= render partial: "projects/index/org_projects", locals: {org: org, projects: projects} %>

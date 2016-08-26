@@ -1,0 +1,25 @@
+<!-- introductory popup modal -->
+<div class="modal" id="introductory-popup-modal" tabindex="-1" role="dialog" aria-labelledby="introductory-modal-label">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="introductory-modal-label"><%=t 'introductory.popup-title' %></h4>
+      </div>
+      <div class="modal-body">
+        <p><%= t('introductory.sentence_one_html') %></p>
+        <%= image_tag 'introductory_popup/image2.png', class: 'img-responsive' %>
+        <p><%=t 'introductory.sentence_two_html' %></p>
+        <%= image_tag 'introductory_popup/image1.jpg', class: 'img-responsive' %>
+        <p><%=t 'introductory.sentence_three_html' %></p>
+        <p><%=t 'introductory.sentence_four_html' %></p>
+        <p><%=t 'introductory.sentence_five_html' %></p>
+        <p><%=t 'introductory.sentence_six_html' %></p>
+        <%= image_tag 'introductory_popup/image3.png', class: 'img-responsive' %>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal"><%=t 'introductory.confim' %></button>
+      </div>
+    </div>
+  </div>
+</div>

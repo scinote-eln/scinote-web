@@ -1500,6 +1500,15 @@ en:
     new_report_click_org_html: "Click on <strong>%{private_org}</strong> in breadcrumbs to return to the Dashboard."
     archive_project_html: "Archive demo project by clicking on the down arrow <span class='glyphicon glyphicon-triangle-bottom'></span>. You can always access the archive by clicking the <span class='glyphicon glyphicon-briefcase'></span> button on the top right side of the dashboard and restore any item you have archived."
 
+  introductory:
+    popup-title: "Dear sciNote user,"
+    sentence_one_html: "To give you more flexibility in organization of your work, we have added a new feature to your sciNote: <strong>Experiment level</strong>. Now you are able to organize your Tasks and Workflows into different Experiments inside of an individual project. When you open a project you will see experiments displayed as thumbnails."
+    sentence_two_html: "You can see the changes in the hierarchy in the navigation panel as well."
+    sentence_three_html: "All your existing Tasks and Workflows are now in a single Experiment called \"My first experiment\". You can always rename it, create new Experiments and move workflows between them. To move a Task or a Workflow to a different experiment, do the following:"
+    sentence_four_html: "1. Open experiment that contains a workflow you would like to move and click Edit experiment."
+    sentence_five_html: "2. In the Options dropdown of any task select Move workflow to another experiment."
+    sentence_six_html: "3. Select experiment from the dropdown and click Move workflow. The workflow is now part of the selected experiment. So you can still have multiple workflows in one experiment."
+    confim: "OK, got it"
   # This section contains general words that can be used in any parts of
   # application.
 
