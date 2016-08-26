@@ -530,6 +530,11 @@
           .css({
             'pointer-events': 'none',
             'color': '#d2d2d2'});
+          $(el)
+          .find('[data-action="edit"]')
+          .css({
+            'pointer-events': 'none',
+            'color': '#d2d2d2'});
         });
       }
     });
@@ -545,6 +550,11 @@
       .css({ 'pointer-events': 'auto' });
       $(el)
       .find('.form-submit-link')
+      .css({
+        'pointer-events': 'auto',
+        'color': '#262626'});
+      $(el)
+      .find('[data-action="edit"]')
       .css({
         'pointer-events': 'auto',
         'color': '#262626'});
