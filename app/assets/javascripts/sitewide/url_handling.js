@@ -1,4 +1,6 @@
-// Add parameter to provided specified URL
+/*
+ * Add parameter to provided specified URL.
+ */
 function addParam(url, param, value) {
   var a = document.createElement('a'), regex = /(?:\?|&amp;|&)+([^=]+)(?:=([^&]*))*/gi;
   var params = {}, match, str = []; a.href = url;
@@ -12,7 +14,9 @@ function addParam(url, param, value) {
   return a.href;
 }
 
-// Get URL parameter value
+/*
+ * Get URL parameter value.
+ */
 function getParam(param, asArray) {
   return document.location.search.substring(1).split('&').reduce(function(p,c) {
     var parts = c.split('=', 2).map(function(param) { return decodeURIComponent(param); });
@@ -21,8 +25,10 @@ function getParam(param, asArray) {
   }, []);
 }
 
-// bootstrap-select should handle detection automatically but when
-// rails version it does not detect selects with selectpicker class.
+/*
+ * bootstrap-select should handle detection automatically but when
+ * rails version it does not detect selects with selectpicker class.
+ */
 $(document).ready(function () {
   $(".selectpicker").selectpicker();
   initFormSubmitLinks();

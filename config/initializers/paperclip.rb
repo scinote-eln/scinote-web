@@ -31,7 +31,8 @@ if ENV['PAPERCLIP_STORAGE'] == "s3"
       secret_access_key: ENV['AWS_SECRET_ACCESS_KEY']
     },
     s3_permissions: {
-      original: :private
+      original: :private,
+      medium: :private
     },
     s3_storage_class: {
       medium: :reduced_redundancy,
@@ -54,5 +55,117 @@ Paperclip::Attachment.class_eval do
 
   def fetch
     Paperclip.io_adapters.for self
+  end
+end
+
+module Paperclip
+  # Checks file for spoofing
+  class MediaTypeSpoofDetector
+    def spoofed?
+      if has_name? && has_extension? && (media_type_mismatch? ||
+        mapping_override_mismatch?)
+        Paperclip.log("Content Type Spoof: Filename #{File.basename(@name)} "\
+          "(#{supplied_content_type} from Headers, #{content_types_from_name} "\
+          "from Extension), content type discovered: "\
+          "#{calculated_content_type}. See documentation to allow this "\
+          "combination.")
+        true
+      else
+        false
+      end
+    end
+
+    private
+
+    # Determine file content type from its name
+    def content_types_from_name
+      @content_types_from_name ||=
+        Paperclip.run('mimetype', '-b :file_name', file_name: @name).chomp
+    end
+
+    # Determine file media type from its name
+    def media_types_from_name
+      @media_types_from_name ||= extract_media_type content_types_from_name
+    end
+
+    # Determine file content type from mimetype command
+    def type_from_mimetype_command
+      @type_from_mimetype_command ||=
+        Paperclip.run('mimetype', '-b :file', file: @file.path).chomp
+    end
+
+    # Determine file media type from mimetype command
+    def media_type_from_mimetype_command
+      @media_type_from_mimetype_command ||=
+        extract_media_type type_from_mimetype_command
+    end
+
+    # Determine file content type from it's content (file and mimetype command)
+    def type_from_file_command
+      unless defined? @type_from_file_command
+        @type_from_file_command =
+          Paperclip.run('file', '-b --mime :file', file: @file.path)
+                   .split(/[:;]\s+/).first
+
+        if allowed_spoof_exception?(@type_from_file_command,
+                                    media_type_from_file_command) ||
+           (@type_from_file_command.in?(%w(text/plain text/html)) &&
+            media_type_from_mimetype_command.in?(%w(text application)))
+          # File content type is generalized, so rely on file extension for
+          # correct/more specific content type
+          @type_from_file_command = type_from_mimetype_command
+        end
+      end
+      @type_from_file_command
+    rescue Cocaine::CommandLineError
+      ''
+    end
+
+    # Determine file media type from it's content (file and mimetype command)
+    def media_type_from_file_command
+      @media_type_from_file_command ||=
+        extract_media_type type_from_file_command
+    end
+
+    def extract_media_type(content_type)
+      if content_type.empty?
+        ''
+      else
+        content_type.split('/').first
+      end
+    end
+
+    # Checks file media type mismatch between file's name and header
+    def supplied_type_mismatch?
+      !allowed_spoof_exception?(supplied_content_type, supplied_media_type) &&
+        media_types_from_name != supplied_media_type
+    end
+
+    # Checks file media type mismatch between file's name and content
+    def calculated_type_mismatch?
+      !allowed_spoof_exception?(calculated_content_type,
+                                calculated_media_type) &&
+        media_types_from_name != calculated_media_type
+    end
+
+    # Checks file content type mismatch between file's name and content
+    def mapping_override_mismatch?
+      !allowed_spoof_exception?(calculated_content_type,
+                                calculated_media_type) &&
+        content_types_from_name != calculated_content_type
+    end
+
+    # Check if we have a file spoof exception which is allowed/safe
+    def allowed_spoof_exception?(content_type, media_type)
+      content_type == 'application/octet-stream' ||
+        (content_type == 'inode/x-empty' && @file.size.zero?) ||
+        (content_type == 'text/x-c' &&
+         content_types_from_name == 'text/x-java') ||
+        (media_type.in?(%w(image audio video)) &&
+         media_type == media_types_from_name) ||
+        (content_types_from_name.in? %W(#{}
+                                        text/plain
+                                        application/octet-stream))
+    end
   end
 end

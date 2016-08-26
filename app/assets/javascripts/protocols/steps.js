@@ -163,11 +163,6 @@ function formCallback($form) {
     }
   });
 
-  // Add asset validation
-  $form.add_upload_file_size_check(function() {
-    tabsPropagateErrorClass($form);
-  });
-
   // Add hidden fields for tables
   $form.submit(function(){
     $(this).find("[data-role='editable-table']").each(function() {
@@ -184,15 +179,11 @@ function formCallback($form) {
 
 // Init ajax success/error for edit form
 function formEditAjax($form) {
-  var selectedTabIndex;
   $form
   .on("ajax:beforeSend", function () {
     $(".nested_step_checklists ul").each(function () {
       reorderCheckboxData(this);
     });
-  })
-  .on("ajax:send", function(e, data) {
-    selectedTabIndex = $form.find("li.active").index() + 1;
   })
   .on("ajax:success", function(e, data) {
     $(this).after(data.html);
@@ -210,32 +201,24 @@ function formEditAjax($form) {
     $new_step.find("[data-role='step-hot-table']").each(function()  {
       renderTable($(this));
     });
-
-    animateSpinner(null, false);
   })
   .on("ajax:error", function(e, xhr, status, error) {
     $(this).after(xhr.responseJSON.html);
     var $form = $(this).next();
     $(this).remove();
 
+    $errInput = $form.find(".form-group.has-error").first().find("input");
+    renderFormError(e, $errInput);
+
     formCallback($form);
     initEditableHandsOnTable($form);
     applyCancelCallBack();
     formEditAjax($form);
-    tabsPropagateErrorClass($form);
 
     //Rerender tables
     $form.find("[data-role='step-hot-table']").each(function()  {
       renderTable($(this));
     });
-
-    // Select the same tab pane as before
-    $form.find("ul.nav-tabs li.active").removeClass("active");
-    $form.find(".tab-content div.active").removeClass("active");
-    $form.find("ul.nav-tabs li:nth-child(" + selectedTabIndex + ")").addClass("active");
-    $form.find(".tab-content div:nth-child(" + selectedTabIndex + ")").addClass("active");
-
-    animateSpinner(null, false);
   });
 }
 
@@ -260,20 +243,18 @@ function formNewAjax($form) {
     $new_step.find("div.step-result-hot-table").each(function()  {
       $(this).handsontable("render");
     });
-
-    animateSpinner(null, false);
   })
   .on("ajax:error", function(e, xhr, status, error) {
     $(this).after(xhr.responseJSON.html);
     var $form = $(this).next();
     $(this).remove();
 
+    $errInput = $form.find(".form-group.has-error").first().find("input");
+    renderFormError(e, $errInput);
+
     formCallback($form);
     formNewAjax($form);
     applyCancelOnNew();
-    tabsPropagateErrorClass($form);
-
-    animateSpinner(null, false);
   });
 }
 
@@ -295,7 +276,6 @@ function toggleButtons(show) {
 
     // Also hide "no steps" label if no steps are present
     $("[data-role='no-steps-text']").hide();
-
   }
 }
 
@@ -375,13 +355,16 @@ function initEditableHandsOnTable(root) {
 }
 
 // Initialize comment form.
-function initStepCommentForm($el) {
-
+function initStepCommentForm(ev, $el) {
   var $form = $el.find("ul form");
+
+  var $commentInput = $form.find("#comment_message");
+  $form.onSubmitValidator(textValidator, $commentInput);
 
   $(".help-block", $form).addClass("hide");
 
-  $form.on("ajax:send", function (data) {
+  $form
+  .on("ajax:send", function (data) {
     $("#comment_message", $form).attr("readonly", true);
   })
   .on("ajax:success", function (e, data) {
@@ -471,7 +454,7 @@ function initStepCommentTabAjax() {
       var parentNode = $this.parents("ul").parent();
 
       target.html(data.html);
-      initStepCommentForm(parentNode);
+      initStepCommentForm(e, parentNode);
       initStepCommentsLink(parentNode);
 
       parentNode.find(".active").removeClass("active");
@@ -595,37 +578,36 @@ $("[data-action='new-step']").on("ajax:success", function(e, data) {
   });
 });
 
-// Needed because Paperclip deletes files on server-side validation fail (after trying to save the model)
-function stepValidator( event ) {
-  var nameTooShort = $( "#step_name" ).val().length === 0;
-  var nameTooLong = $( "#step_name" ).val().length > 50;
-  var errMsg;
-  if (nameTooShort) {
-    errMsg = I18n.t("devise.names.length_too_short");
-    animateSpinner(null,false);
-  } else if (nameTooLong) {
-    errMsg = I18n.t("devise.names.length_too_long", { max_length: 50 });
-    animateSpinner(null,false);
-  }
+// Needed because server-side validation failure clears locations of
+// files to be uploaded and checklist's items etc. Also user
+// experience is improved
+function processStep(ev, editMode, forS3) {
+  var $form = $(ev.target.form);
+  $form.clearFormErrors();
+  $form.removeBlankExcelTables(editMode);
+  $form.removeBlankFileForms();
 
-  if (!_.isUndefined(errMsg)) {
-    if(!$("#step_name_error_msg").length) {
-      $("<span id='step_name_error_msg' class='help-block'>" + errMsg + "</span>").insertAfter("#step_name");
-      $(".form-group:has(> #step_name)").addClass("has-error");
-      $("#new-step-main-tab").addClass("has-error");
+  var $fileInputs = $form.find("input[type=file]");
+  var filesValid = filesValidator(ev, $fileInputs, FileTypeEnum.FILE);
+  var $checklists = $form.find(".nested_step_checklists");
+  var checklistsValid = checklistsValidator(ev, $checklists, editMode);
+  var $nameInput = $form.find("#step_name");
+  var nameValid = textValidator(ev, $nameInput);
+
+  if (filesValid && checklistsValid && nameValid) {
+    if (forS3) {
+      // Redirects file uploading to S3
+      var url = '/asset_signature.json';
+      directUpload(ev, url);
     } else {
-      $("#step_name_error_msg").html(errMsg);
+      // Local file uploading
+      animateSpinner();
     }
-    animateSpinner(null,false);
-    $("#new-step-main-tab a").click();
-    event.preventDefault();
   }
-
-  clearBlankElements(event.target.form);
 }
 
 // Expand all steps
-function expandAllSteps () {
+function expandAllSteps() {
   $('.step .panel-collapse').collapse('show');
   $(document).find("[data-role='step-hot-table']").each(function()  {
     renderTable($(this));
@@ -677,86 +659,3 @@ function renderTable(table) {
     $(table).find(".ht_master .wtHolder").css("height", "100%");
   }
 }
-
-// S3 direct uploading
-function startFileUpload(ev, btn) {
-  var form = btn.form;
-  var $form = $(form);
-  var fileInputs = $form.find("input[type=file]");
-  var url = '/asset_signature.json';
-  var inputPos = 0;
-  var inputPointer = 0;
-
-  $form.clear_form_errors();
-  clearBlankElements(form);
-
-  function processFile () {
-    var fileInput = fileInputs.get(inputPos);
-    inputPos += 1;
-    inputPointer += 1;
-
-    if (!fileInput) {
-      btn.onclick = null;
-      $(btn).click();
-      return;
-    }
-
-    directUpload(form, null, url, function (assetId) {
-      fileInput.type = "hidden";
-      fileInput.name = fileInput.name.replace("[file]", "[id]");
-      fileInput.value = assetId;
-      inputPointer -= 1;
-
-      processFile();
-
-    }, function (errors) {
-      var assetError;
-
-      for (var c in errors) {
-        if (/^asset\./.test(c)) {
-          assetError = errors[c];
-          break;
-        }
-      }
-      if (assetError) {
-        var el = $form.find("input[type=file]").get(inputPointer - 1);
-        var $el = $(el);
-
-        $form.clear_form_errors();
-        $el.closest(".form-group").addClass("has-error");
-        $el.parent().append("<span class='help-block'>" + assetError + "</span>");
-      } else {
-        tabsPropagateErrorClass($form);
-      }
-    });
-  }
-
-  processFile();
-  ev.preventDefault();
-}
-
-// Clear empty fields in steps
-function clearBlankElements(form) {
-  // Remove empty checklist items
-  $(form).find(".checklist-item-text").each(function () {
-    if ($(this).val() === ""){
-      $(this).closest("fieldset").remove();
-    }
-  });
-
-  // Remove empty file forms
-  $(form).find("input[type='file']").each(function () {
-    if (!this.files[0]) {
-      $(this).closest("fieldset").remove();
-    }
-  });
-}
-
-// This checks if the ctarget param exist in the
-// rendered url and opens the comment tab
-$(document).ready(function(){
-  if( getParam('ctarget') ){
-    var target = "#"+ getParam('ctarget');
-    $(target).find('a.comment-tab-link').click();
-  }
-});

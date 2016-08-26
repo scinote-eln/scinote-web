@@ -151,7 +151,6 @@ function applyCollapseLinkCallBack() {
       // Toggle collapse button
       collapseIcon.toggleClass("glyphicon-collapse-up", !collapsed);
       collapseIcon.toggleClass("glyphicon-collapse-down", collapsed);
-
     });
 }
 
@@ -314,38 +313,50 @@ function showTutorial() {
   return tutorialModuleId == currentModuleId;
 }
 
-// S3 direct uploading
-function startFileUpload(ev, btn) {
-  var form = btn.form;
-  var $form = $(form);
-  var assetInput = $form.find("input[name='result[asset_attributes][id]']").get(0);
-  var fileInput = $form.find("input[type=file]").get(0);
-  var origAssetId = assetInput ? assetInput.value : null;
-  var url = '/asset_signature.json';
+var ResultTypeEnum = Object.freeze({
+  FILE: 0,
+  TABLE: 1,
+  TEXT: 2,
+  COMMENT: 3
+});
 
-  $form.clear_form_errors();
+function processResult(ev, resultTypeEnum, forS3) {
+  var $form = $(ev.target.form);
+  $form.clearFormErrors();
 
-  directUpload(form, origAssetId, url, function (assetId) {
-    // edit mode - input field has to be removed
-    if (assetInput) {
-      assetInput.value = assetId;
-      $(fileInput).remove();
+  switch(resultTypeEnum) {
+    case ResultTypeEnum.FILE:
+      var $nameInput = $form.find("#result_name");
+      var nameValid = textValidator(ev, $nameInput, true);
+      var $fileInput = $form.find("#result_asset_attributes_file");
+      var filesValid = filesValidator(ev, $fileInput, FileTypeEnum.FILE);
 
-    // create mode
-    } else {
-      fileInput.type = "hidden";
-      fileInput.name = "result[asset_attributes][id]";
-      fileInput.value = assetId;
-    }
-
-    btn.onclick = null;
-    $(btn).click();
-
-  }, function (errors) {
-    showResultFormErrors($form, errors);
-  });
-
-  ev.preventDefault();
+      if(nameValid && filesValid) {
+        if(forS3) {
+          // Redirects file uploading to S3
+          var url = '/asset_signature.json';
+          directUpload(ev, url);
+        } else {
+          // Local file uploading
+          animateSpinner();
+        }
+      }
+      break;
+    case ResultTypeEnum.TABLE:
+      var $nameInput = $form.find("#result_name");
+      var nameValid = textValidator(ev, $nameInput, true);
+      break;
+    case ResultTypeEnum.TEXT:
+      var $nameInput = $form.find("#result_name");
+      var nameValid = textValidator(ev, $nameInput, true);
+      var $textInput = $form.find("#result_result_text_attributes_text");
+      textValidator(ev, $textInput, false, false);
+      break;
+    case ResultTypeEnum.COMMENT:
+      var $commentInput = $form.find("#comment_message");
+      var commentValid = textValidator(ev, $commentInput, false, false);
+      break;
+  }
 }
 
 // This checks if the ctarget param exist in the

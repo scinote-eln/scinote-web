@@ -9,7 +9,7 @@
     </div>
   </div>
   <div class="panel-body">
-    <%= ff.text_field :name, label: t("protocols.steps.new.checklist_name"), autofocus: true, placeholder: t("protocols.steps.new.checklist_name_placeholder") %>
+    <%= ff.text_field :name, label: t("protocols.steps.new.checklist_name"), class: "checklist_name", autofocus: true, placeholder: t("protocols.steps.new.checklist_name_placeholder") %>
     <%= ff.label t("protocols.steps.new.checklist_items") %>
     <ul>
       <%= ff.nested_fields_for :checklist_items, ordered_checklist_items(ff.object) do |chkItems| %>

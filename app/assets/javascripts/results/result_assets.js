@@ -3,7 +3,6 @@ $("#new-result-asset").on("ajax:success", function(e, data) {
   var $form = $(data.html);
   $("#results").prepend($form);
 
-  $form.add_upload_file_size_check();
   formAjaxResultAsset($form);
 
   // Cancel button
@@ -18,7 +17,7 @@ $("#new-result-asset").on("ajax:success", function(e, data) {
 });
 
 $("#new-result-asset").on("ajax:error", function(e, xhr, status, error) {
-  //TODO: Add error handling
+  // TODO
 });
 
 // Edit result asset button behaviour
@@ -30,7 +29,6 @@ function applyEditResultAssetCallback() {
     $result.after($form);
     $result.remove();
 
-    $form.add_upload_file_size_check();
     formAjaxResultAsset($form);
 
     // Cancel button
@@ -47,46 +45,30 @@ function applyEditResultAssetCallback() {
   });
 
   $(".edit-result-asset").on("ajax:error", function(e, xhr, status, error) {
-    //TODO: Add error handling
+  // TODO
   });
-}
-
-function showResultFormErrors($form, errors) {
-  $form.render_form_errors("result", errors);
-
-  if (errors["asset.file"]) {
-  var $el = $form.find("input[type=file]");
-
-  $el.closest(".form-group").addClass("has-error");
-  $el.parent().append("<span class='help-block'>" + errors["asset.file"] + "</span>");
-  }
 }
 
 // Apply ajax callback to form
 function formAjaxResultAsset($form) {
   $form
   .on("ajax:success", function(e, data) {
+    $form.after(data.html);
+    var $newResult = $form.next();
+    initFormSubmitLinks($newResult);
+    $(this).remove();
+    applyEditResultAssetCallback();
+    applyCollapseLinkCallBack();
 
-    if (data.status === "ok") {
-      $form.after(data.html);
-      var newResult = $form.next();
-      initFormSubmitLinks(newResult);
-      $(this).remove();
-      applyEditResultAssetCallback();
-      applyCollapseLinkCallBack();
-      toggleResultEditButtons(true);
-      initResultCommentTabAjax();
-      expandResult(newResult);
-
-    } else if (data.status === 'error') {
-      showResultFormErrors($form, data.errors);
-    }
-    animateSpinner(null, false);
+    toggleResultEditButtons(true);
+    initResultCommentTabAjax();
+    expandResult($newResult);
+    $imgs = $newResult.find("img");
+    reloadImages($imgs);
   })
-  .on("ajax:error", function() {
-    animateSpinner(null, false);
+  .on("ajax:error", function(e, data) {
+    $form.renderFormErrors("result", data.errors, true, e);
   });
 }
-
 
 applyEditResultAssetCallback();

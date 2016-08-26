@@ -4,11 +4,7 @@
     <hr>
     <%= render partial: "empty_step.html.erb", locals: {step: @step, f: f} %>
     <hr>
-    <% if direct_upload %>
-      <%= f.submit t("protocols.steps.new.add_step"), class: 'btn btn-primary', onclick: 'animateSpinner(); startFileUpload(event, this);' %>
-    <% else %>
-      <%= f.submit t("protocols.steps.new.add_step"), id: "create-step", class: 'btn btn-primary', onclick: 'animateSpinner(); stepValidator(event);' %>
-    <% end %>
+    <%= f.submit t("protocols.steps.new.add_step"), class: 'btn btn-primary', onclick: "processStep(event, false, #{direct_upload});" %>
     <button type="button" data-action="cancel-new" class="btn btn-default">
       <%= t("general.cancel")%>
     </button>

@@ -114,7 +114,7 @@ class Step < ActiveRecord::Base
   def cascade_after_destroy
     Comment.destroy(@c_ids)
     @c_ids = nil
-    Asset.destroy(@a_ids)
+    # Assets already deleted by here
     @a_ids = nil
     Table.destroy(@t_ids)
     @t_ids = nil

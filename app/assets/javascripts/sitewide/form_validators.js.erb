@@ -1,0 +1,143 @@
+/*
+ * Form validators. They'll find, render and focus error/s and
+ * prevent form submission.
+ */
+
+/*
+ * Calls specified validator along with the arguments on form submition.
+ */
+$.fn.onSubmitValidator = function(validatorCb) {
+  var params = Array.prototype.slice.call(arguments, 1);
+  var $form = $(this);
+  if ($form.length) {
+    $form.submit(function (ev) {
+      $form.clearFormErrors();
+      params.unshift(ev);
+      validatorCb.apply(this, params);
+    });
+  }
+};
+
+function textValidator(ev, textInput, canBeBlank = false, limitLength = true) {
+  var nameTooShort = $(textInput).val().length === 0;
+  var nameTooLong = $(textInput).val().length > 50;
+  var errMsg;
+  if (!canBeBlank && nameTooShort) {
+    errMsg = I18n.t("general.text.not_blank");
+  } else if (limitLength && nameTooLong) {
+    errMsg = I18n.t("general.text.length_too_long", { max_length: 50 });
+  }
+
+  var hasErrors = !_.isUndefined(errMsg);
+  if (hasErrors) {
+    renderFormError(ev, $(textInput), errMsg);
+  }
+  return !hasErrors;
+}
+
+function checklistsValidator(ev, checklists, editMode) {
+  var noErrors = true;
+  // For every visible (i.e. not removed) checklist
+  checklists.each(function() {
+    $checklist = $(this);
+    if ($checklist.css('display') != 'none') {
+      var $checklistNameInput = $checklist.find(".checklist_name");
+      anyChecklistItemFilled = false;
+
+      // For every ckecklist item input
+      $(" .checklist-item-text", $checklist).each(function() {
+        $checklistItemInput = $(this);
+        if ($checklistItemInput.val()) {
+          anyChecklistItemFilled = true;
+        } else {
+          // Remove empty checklist item input
+          $checklistItemInput.closest("fieldset").remove();
+        }
+      })
+
+      if (!$checklistNameInput.val()) {
+        if (anyChecklistItemFilled || editMode) {
+            // In edit mode, checklist's name can't be blank
+            var errMsg = I18n.t("general.text.not_blank");
+            renderFormError(ev, $checklistNameInput, errMsg);
+            noErrors = false;
+        } else  {
+          // Hide empty checklist (remove would break logic)
+          $checklist.hide();
+        }
+      }
+    }
+  });
+
+  return noErrors;
+}
+
+var FileTypeEnum = Object.freeze({
+  FILE: 0,
+  AVATAR: 1
+});
+
+function filesValidator(ev, fileInputs, fileTypeEnum) {
+  var filesValid = true;
+  if (fileInputs.length) {
+    var filesPresentValid = filesPresentValidator(ev, fileInputs);
+    var filesSizeValid = filesSizeValidator(ev, fileInputs, fileTypeEnum);
+    // File spoof check is done on server-side only
+    filesValid = filesPresentValid && filesSizeValid;
+  }
+  return filesValid;
+}
+
+function filesPresentValidator(ev, fileInputs) {
+  var filesPresentValid = true;
+  _.each(fileInputs, function(fileInput) {
+    if (!fileInput.files[0]) {
+      assetError = I18n.t("general.file.blank");
+      renderFormError(ev, fileInput, assetError, "data-error='file-missing'");
+      filesPresentValid = false;
+    }
+  });
+  return filesPresentValid;
+}
+
+function filesSizeValidator(ev, fileInputs, fileTypeEnum) {
+
+  function getFileTooBigError(file) {
+    if (!file) {
+      return ;
+    }
+    var size = parseInt(file.size);
+    <% avatarSizerLimit = AVATAR_SIZE_LIMIT %>;
+    <% fileSizeLimit = FILE_SIZE_LIMIT %>;
+
+    if (fileTypeEnum == FileTypeEnum.FILE && size > <%= fileSizeLimit.megabytes %>) {
+      return "<%= I18n.t 'general.file.size_exceeded', file_size: fileSizeLimit %>".strToErrorFormat();
+    } else if (fileTypeEnum == FileTypeEnum.AVATAR && size > <%= avatarSizerLimit.megabytes %>) {
+      return "<%= I18n.t 'general.file.size_exceeded', file_size: avatarSizerLimit %>".strToErrorFormat();
+    }
+  };
+
+  // Check if any file exceeds allowed size limit
+  var filesSizeValid = true;
+  _.each(fileInputs, function(fileInput) {
+    var file = fileInput.files[0];
+    var assetError = getFileTooBigError(file);
+    if (assetError) {
+      renderFormError(ev, fileInput, assetError, "data-error='file-size'");
+      filesSizeValid = false;
+    }
+  });
+  if(filesSizeValid) {
+    // Check if there is enough free space for the files
+    filesSizeValid = enoughSpaceValidator(ev, fileInputs);
+  }
+  return filesSizeValid;
+}
+
+/*
+ * Overriden in billing module for checking whether enough
+ * organization space is free.
+ */
+function enoughSpaceValidator(ev, fileInputs) {
+  return true;
+}

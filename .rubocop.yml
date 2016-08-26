@@ -410,6 +410,9 @@ Lint/HandleExceptions:
 Lint/LiteralInCondition:
   Enabled: true
 
+Lint/EmptyInterpolation:
+  Enabled: false
+
 Lint/LiteralInInterpolation:
   Enabled: true
 

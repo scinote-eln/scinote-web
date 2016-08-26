@@ -42,6 +42,12 @@ class Asset < ActiveRecord::Base
   has_many :report_elements, inverse_of: :asset, dependent: :destroy
   has_one :asset_text_datum, inverse_of: :asset, dependent: :destroy
 
+  # Specific file errors propagate to "file" error hash key,
+  # so use just these errors
+  after_validation :filter_paperclip_errors
+  # Needed because Paperclip validatates on creation
+  after_create :filter_paperclip_errors
+
   attr_accessor :file_content, :file_info, :preview_cached
 
   def file_empty(name, size)
@@ -204,6 +210,21 @@ class Asset < ActiveRecord::Base
     end
   end
 
+  def destroy
+    # Delete files from S3 (when updating an existing file, paperclip does
+    # this automatically, so this is not needed in such cases)
+    key = file.path[1..-1]
+    S3_BUCKET.object(key).delete
+    if (file_content_type =~ %r{^image\/}) == 0
+      file.options[:styles].each do |style|
+        key = file.path(style)[1..-1]
+        S3_BUCKET.object(key).delete
+      end
+    end
+
+    delete
+  end
+
   # If organization is provided, its space_taken
   # is updated as well
   def update_estimated_size(org = nil)
@@ -228,16 +249,21 @@ class Asset < ActiveRecord::Base
     end
   end
 
-  def presigned_url
+  def presigned_url(style = :original, download: false, time: 30)
     if file.is_stored_on_s3?
-      signer = Aws::S3::Presigner.new(client: S3_BUCKET.client)
+      if download
+        download_arg = 'attachment; filename=' + URI.escape(file_file_name)
+      else
+        download_arg = nil
+      end
 
+      signer = Aws::S3::Presigner.new(client: S3_BUCKET.client)
       signer.presigned_url(:get_object,
         bucket: S3_BUCKET.name,
-        key: file.path[1..-1],
-        expires_in: 30,
+        key: file.path(style)[1..-1],
+        expires_in: time,
         # this response header forces object download
-        response_content_disposition: 'attachment; filename=' + file_file_name)
+        response_content_disposition: download_arg)
     end
   end
 
@@ -263,6 +289,14 @@ class Asset < ActiveRecord::Base
 
   private
 
+  def filter_paperclip_errors
+    if errors.size > 1
+      temp_errors = errors[:file]
+      errors.clear
+      errors.set(:file, temp_errors)
+    end
+  end
+
   def file_changed?
     previous_changes.present? and
     (
@@ -280,7 +314,7 @@ class Asset < ActiveRecord::Base
 
   def step_or_result
     # We must allow both step and result to be blank because of GUI
-    # (eventhough it's not really a "valid" asset)
+    # (even though it's not really a "valid" asset)
     if step.present? && result.present?
       errors.add(:base, "Asset can only be result or step, not both.")
     end
@@ -311,5 +345,4 @@ class Asset < ActiveRecord::Base
 
     self.file = data
   end
-
 end

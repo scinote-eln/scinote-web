@@ -113,14 +113,39 @@ function animateSpinner(el, start, options) {
   } else {
     $(".loading-overlay").remove();
   }
+}
 
+/*
+ * Prevents user from accidentally leaving page when server is busy
+ * and notifies him with a message.
+ *
+ * NOTE: Don't prevent event propagation (ev.stopPropagation()), or
+ * else all events occurring when alert is up will be ignored.
+ */
+function preventLeavingPage(prevent, msg) {
+  busy = prevent;
+  if (busy && !_.isUndefined(msg)) {
+    busyMsg = msg;
+  }
+}
+var busy = false;
+var busyMsg = I18n.t("general.busy");
+window.onbeforeunload = function () {
+  if (busy) {
+    var currentMsg = busyMsg;
+    // Reset to default message
+    busyMsg = I18n.t("general.busy");
+    return currentMsg;
+  }
 }
 
 /*
  * Disable Firefox caching to get rid of issues with pressing
  * browser back, like opening canvas in edit mode.
  */
-$(window).unload(function () { $(window).unbind('unload'); });
+$(window).unload(function () {
+  $(window).unbind('unload');
+});
 
 $(document.body).ready(function () {
   // Activity feed modal in main navigation menu
@@ -166,24 +191,6 @@ function notificationAlertClose(){
   });
 }
 
-/*
- * Truncate long strings where is necessary
- */
-
-function truncateLongString( el, chars ) {
-  var input = $.trim(el.text());
-
-  if( input.length  >= chars){
-    var newText = el.text().slice(0, chars);
-    for( var i = newText.length; i > 0; i--){
-      if(newText[i] === ' '){
-        newText = newText.slice(0, i);
-        break;
-      }
-    }
-  el.text(newText + '...');
-  }
-}
 $(document).ready(function(){
   $('.tree-link a').each( function(){
     truncateLongString( $(this), 30);

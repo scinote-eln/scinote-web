@@ -2,32 +2,20 @@ class AssetsController < ApplicationController
   before_action :load_vars, except: [:signature]
   before_action :check_read_permission, except: [:signature, :file_present]
 
+  # Validates asset and then generates S3 upload posts, because
+  # otherwise untracked files could be uploaded to S3
   def signature
     respond_to do |format|
       format.json {
-
-        if params[:asset_id]
-          asset = Asset.find_by_id params[:asset_id]
-          asset.file.destroy
-          asset.file_empty params[:file_name], params[:file_size]
-        else
-          asset = Asset.new_empty params[:file_name], params[:file_size]
-        end
-
-        if not asset.valid?
-          errors = Hash[asset.errors.map{|k,v| ["asset.#{k}",v]}]
-
+        asset = Asset.new(asset_params)
+        if asset.errors.any?
           render json: {
             status: 'error',
-            errors: errors
-          }
+            errors: asset.errors
+          }, status: :bad_request
         else
-          asset.save!
-
           posts = generate_upload_posts asset
-
           render json: {
-            asset_id: asset.id,
             posts: posts
           }
         end
@@ -60,8 +48,7 @@ class AssetsController < ApplicationController
 
   def preview
     if @asset.is_image?
-      url = @asset.file.url :medium
-      redirect_to url, status: 307
+      redirect_to @asset.presigned_url(:medium), status: 307
     else
       render_400
     end
@@ -71,9 +58,9 @@ class AssetsController < ApplicationController
     if !@asset.file_present
       render_404 and return
     elsif @asset.file.is_stored_on_s3?
-      redirect_to @asset.presigned_url, status: 307
+      redirect_to @asset.presigned_url(download: true), status: 307
     else
-      send_file @asset.file.path, filename: @asset.file_file_name,
+      send_file @asset.file.path, filename: URI.unescape(@asset.file_file_name),
         type: @asset.file_content_type
     end
   end
@@ -149,4 +136,9 @@ class AssetsController < ApplicationController
     posts
   end
 
+  def asset_params
+    params.permit(
+      :file
+    )
+  end
 end

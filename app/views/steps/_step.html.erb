@@ -74,21 +74,17 @@
                 <% assets.each do |asset| %>
                   <li>
                     <% if can_view_or_download_step_assets(@protocol) %>
-                        <% if asset.file_present %>
-                          <%= link_to download_asset_path(asset), data: {no_turbolink: true, id: true, status: "asset-present"} do %>
-                            <% if asset.is_image? %>
-                              <%= image_tag preview_asset_path(asset) %>
-                            <% end %>
-                            <%= raw '<br>' if asset.is_image? %>
-                            <span><%= truncate( asset.file_file_name, length: 50 ) %></span>
-                          <% end %>
-                        <% else %>
-                          <%= asset_loading_span(asset) %>
+                      <% if asset.file_present %>
+                        <%= link_to download_asset_path(asset), data: {no_turbolink: true, id: true, status: "asset-present"} do %>
+                          <%= image_tag preview_asset_path(asset) if asset.is_image? %>
+                          <p><%= truncate(asset.file_file_name, length: 50) %></p>
                         <% end %>
+                      <% else %>
+                        <%= asset_loading_span(asset) %>
+                      <% end %>
                     <% else %>
                       <%= image_tag preview_asset_path(asset) if asset.is_image? %>
-                      <%= raw '<br>' if asset.is_image? %>
-                      <span><%= truncate( asset.file_file_name, length: 50 )%></span>
+                      <p><%= truncate(asset.file_file_name, length: 50) %></p>
                     <% end %>
                   </li>
                 <% end %>

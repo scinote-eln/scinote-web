@@ -322,7 +322,7 @@ function initializeSaveReport() {
         .on("ajax:error", function(e, xhr, settings, error) {
           // Display errors
           if (xhr.status == 422) {
-            $(this).render_form_errors("report", xhr.responseJSON);
+            $(this).renderFormErrors("report", xhr.responseJSON);
           } else {
             // TODO
           }

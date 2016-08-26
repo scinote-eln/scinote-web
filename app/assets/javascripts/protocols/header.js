@@ -50,7 +50,7 @@ function initEditName() {
     })
     .on("ajax:error", function(ev2, data2, status2) {
       // Display errors if needed
-      $(this).render_form_errors("protocol", data2.responseJSON);
+      $(this).renderFormErrors("protocol", data2.responseJSON);
     });
 
     // Show modal
@@ -142,7 +142,7 @@ function initEditAuthors() {
     })
     .on("ajax:error", function(ev2, data2, status2) {
       // Display errors if needed
-      $(this).render_form_errors("protocol", data2.responseJSON);
+      $(this).renderFormErrors("protocol", data2.responseJSON);
     });
 
     // Show modal
@@ -177,7 +177,7 @@ function initEditDescription() {
     })
     .on("ajax:error", function(ev2, data2, status2) {
       // Display errors if needed
-      $(this).render_form_errors("protocol", data2.responseJSON);
+      $(this).renderFormErrors("protocol", data2.responseJSON);
     });
 
     // Show modal

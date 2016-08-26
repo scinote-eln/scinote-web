@@ -34,18 +34,18 @@ modal
   // Disable invite button,
   // reset forms, reset rendered content
   disableInviteBtn();
-  inviteExistingForm.clear_form_fields();
-  inviteExistingForm.clear_form_errors();
+  inviteExistingForm.clearFormFields();
+  inviteExistingForm.clearFormErrors();
   inviteExistingResults.html("");
-  inviteNewForm.clear_form_fields();
-  inviteNewForm.clear_form_errors();
+  inviteNewForm.clearFormFields();
+  inviteNewForm.clearFormErrors();
 });
 
 inviteExistingCollapsible
 .on("hidden.bs.collapse", function() {
   // Reset form & rendered content
-  inviteExistingForm.clear_form_fields();
-  inviteExistingForm.clear_form_errors();
+  inviteExistingForm.clearFormFields();
+  inviteExistingForm.clearFormErrors();
   inviteExistingResults.html("");
 })
 .on("hide.bs.collapse", function() {
@@ -60,8 +60,8 @@ inviteExistingCollapsible
 inviteNewCollapsible
 .on("hidden.bs.collapse", function() {
   // Reset form
-  inviteNewForm.clear_form_fields();
-  inviteNewForm.clear_form_errors();
+  inviteNewForm.clearFormFields();
+  inviteNewForm.clearFormErrors();
 })
 .on("hide.bs.collapse", function() {
   // Disable invite button
@@ -109,7 +109,7 @@ inviteLinks.on("click", function() {
 modal
 .on("ajax:success", inviteExistingForm.selector, function(ev, data, status) {
   // Clear form errors
-  inviteExistingForm.clear_form_errors();
+  inviteExistingForm.clearFormErrors();
 
   // Alright, render the html
   inviteExistingResults.html(data.html);
@@ -119,7 +119,7 @@ modal
 })
 .on("ajax:error", inviteExistingForm.selector, function(ev, data, status) {
     // Display form errors
-    inviteExistingForm.render_form_errors_input_group("", data.responseJSON);
+    inviteExistingForm.renderFormErrors("", data.responseJSON);
 });
 
 // Update values & enable "invite" button
@@ -147,7 +147,7 @@ inviteNewForm
 .on("ajax:error", function(ev, data, status) {
   // Render form errors
   animateSpinner(modalContent, false);
-  $(this).render_form_errors("user", data.responseJSON);
+  $(this).renderFormErrors("user", data.responseJSON);
 });
 
 

@@ -15,7 +15,7 @@ function toggleFormVisibility(form, edit) {
     form.find("[data-part='edit']").hide();
 
     // Clear all errors on the parent form
-    form.clear_form_errors();
+    form.clearFormErrors();
 
     // Clear any neccesary fields
     form.find("input[data-role='clear']").val("");
@@ -59,7 +59,7 @@ forms
 })
 .on("ajax:error", function(ev, data, status) {
   // Render form errors
-  $(this).render_form_errors("user", data.responseJSON);
+  $(this).renderFormErrors("user", data.responseJSON);
 });
 
 var repeatTutorialModal = $("#repeat-tutorial-modal");

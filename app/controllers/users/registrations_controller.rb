@@ -1,30 +1,39 @@
 class Users::RegistrationsController < Devise::RegistrationsController
-
   before_action :load_paperclip_vars
 
   def avatar
     user = User.find_by_id(params[:id]) || current_user
     style = params[:style] || "icon_small"
+    # TODO: Maybe avatar should be an Asset, so it's methods could be used,
+    # e.g. presigned_url in this case
     redirect_to user.avatar.url(style.to_sym), status: 307
   end
 
+  # Validates asset and then generates S3 upload posts, because
+  # otherwise untracked files could be uploaded to S3
   def signature
     respond_to do |format|
       format.json {
 
         # Changed avatar values are only used for pre-generating S3 key
         # and user object is not persisted with this values.
-        current_user.empty_avatar params[:file_name], params[:file_size]
+        current_user.empty_avatar avatar_params[:file].original_filename,
+                                  avatar_params[:file].size
 
-        unless current_user.valid?
-          render json: {
-            status: 'error',
-            errors: current_user.errors
-          }
-        else
+        validation_asset = Asset.new(avatar_params)
+        if current_user.valid? && validation_asset.valid?
           render json: {
             posts: generate_upload_posts
           }
+        else
+          if validation_asset.errors[:file].any?
+            # Add file content error
+            current_user.errors[:avatar] << validation_asset.errors[:file].first
+          end
+          render json: {
+            status: 'error',
+            errors: current_user.errors
+          }, status: :bad_request
         end
       }
     end
@@ -107,7 +116,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
         format.json {
           flash.keep
           sign_in resource_name, resource, bypass: true
-          render json: { status: :ok }
+          render json: {}
         }
       else
         clean_up_passwords resource
@@ -115,8 +124,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
           respond_with resource, location: edit_user_registration_path
         }
         format.json {
-          render json: self.resource.errors,
-          status: :unprocessable_entity
+          render json: resource.errors, status: :bad_request
         }
       end
     end
@@ -189,6 +197,14 @@ class Users::RegistrationsController < Devise::RegistrationsController
     )
   end
 
+  def avatar_params
+    params.permit(
+      :file
+    )
+  end
+
+  # Generates posts for uploading files (many sizes of same file)
+  # to S3 server
   def generate_upload_posts
     posts = []
     file_size = current_user.avatar_file_size

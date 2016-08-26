@@ -18,9 +18,6 @@ en:
         head_title: "Forgot password"
         title: "Forgot your password?"
         submit: "Send me reset password instructions"
-    names:
-      length_too_short: "Name can't be blank"
-      length_too_long: "Name is too long (maximum is %{max_length} characters)"
     registrations:
       password_changed: "Password successfully updated."
     sessions:
@@ -1435,25 +1432,6 @@ en:
       head_title: "Edit protocol"
     no_keywords: "No keywords"
 
-  general:
-    update: "Update"
-    edit: "Edit"
-    cancel: "Cancel"
-    close: "Close"
-    check_all: "Check all"
-    no_comments: "No comments!"
-    more_comments: "More comments"
-    comment_placeholder: "Your Message"
-    module:
-      one: "task"
-      other: "tasks"
-    public: "public"
-    private: "private"
-    search: "Search"
-    file_size_exceeded: "File size must be less than %{file_size} MB."
-    file_blank: "Please select a file."
-    file_loading: "%{fileName} is loading..."
-
   mailer:
     invitation_to_organization:
       subject: "You have been invited to team"
@@ -1512,8 +1490,30 @@ en:
   # This section contains general words that can be used in any parts of
   # application.
 
-  errors:
-    upload: "Upload error. Try again or contact the administrator."
+  general:
+    update: "Update"
+    edit: "Edit"
+    cancel: "Cancel"
+    close: "Close"
+    check_all: "Check all"
+    no_comments: "No comments!"
+    more_comments: "More comments"
+    comment_placeholder: "Your Message"
+    module:
+      one: "task"
+      other: "tasks"
+    public: "public"
+    private: "private"
+    search: "Search"
+    file:
+      size_exceeded: "File size must be less than %{file_size} MB."
+      blank: "You didn't select any file"
+      uploading: "If you leave this page, the file(s) that are currently uploading will not be saved! Are you sure you want to continue?"
+      upload_failure: "Upload connection error. Try again or contact the administrator."
+    text:
+      not_blank: "can't be blank"
+      length_too_long: "is too long (maximum is %{max_length} characters)"
+    busy: "The server is still processing your request. If you leave this page, the changes will be lost! Are you sure you want to continue?"
 
   Add: "Add"
   Asset: "File"

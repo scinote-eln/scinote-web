@@ -255,7 +255,7 @@ function initCreateNewModal() {
         })
         .on("ajax:error", function(ev2, data2, status2) {
           // Display errors if needed
-          $(this).render_form_errors("protocol", data2.responseJSON);
+          $(this).renderFormErrors("protocol", data2.responseJSON);
         });
 
         modal.modal("show");

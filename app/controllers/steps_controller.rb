@@ -30,17 +30,23 @@ class StepsController < ApplicationController
 
   def create
     if @direct_upload
+      new_assets = []
       step_data = step_params.except(:assets_attributes)
       step_assets = step_params.slice(:assets_attributes)
       @step = Step.new(step_data)
-      if step_assets.size > 0
-        step_assets[:assets_attributes].each do |i, data|
-          asset = Asset.find_by_id(data[:id])
+
+      unless step_assets[:assets_attributes].nil?
+        step_assets[:assets_attributes].each do |_i, data|
+          # Ignore destroy requests on create
+          next if data[:_destroy].present?
+
+          asset = Asset.new(data)
           asset.created_by = current_user
           asset.last_modified_by = current_user
-          @step.assets << asset
+          new_assets << asset
         end
       end
+      @step.assets << new_assets
     else
       @step = Step.new(step_params)
     end
@@ -94,6 +100,11 @@ class StepsController < ApplicationController
             })}, status: :ok
         }
       else
+        # On error, delete the newly added files from S3, as they were
+        # uploaded on client-side (in case of client-side hacking of
+        # asset's signature response)
+        Asset.destroy_all(new_assets)
+
         format.json {
           render json: {
             html: render_to_string({
@@ -151,10 +162,9 @@ class StepsController < ApplicationController
 
         if step_assets.include? :assets_attributes
           step_assets[:assets_attributes].each do |i, data|
-            asset_id = data[:id]
-            asset = Asset.find_by_id(asset_id)
-
+            asset = Asset.new(data)
             unless @step.assets.include? asset or not asset
+              asset.created_by = current_user
               asset.last_modified_by = current_user
               @step.assets << asset
             end
@@ -203,18 +213,14 @@ class StepsController < ApplicationController
         format.json {
           render json: {
             html: render_to_string({
-              partial: "steps/step.html.erb", locals: {step: @step}
-            })}, status: :ok
+                partial: 'step.html.erb',
+                locals: { step:  @step }
+                })
+          }
         }
       else
         format.json {
-          render json: {
-            html: render_to_string({
-              partial: "edit.html.erb",
-              locals: {
-                direct_upload: @direct_upload
-              }
-            })}, status: :bad_request
+          render json: @step.errors, status: :bad_request
         }
       end
     end
@@ -515,7 +521,9 @@ class StepsController < ApplicationController
     for key, values in params do
       if values.respond_to?(:each)
         for pos, attrs in params[key] do
-          return true if attrs[:_destroy] == "1"
+          if attrs[:_destroy] == '1'
+            return true
+          end
         end
       end
     end
@@ -533,14 +541,12 @@ class StepsController < ApplicationController
         attr_params = update_params[key]
 
         for pos, attrs in params[key] do
-          if attrs[:_destroy] == "1"
-            attr_params[pos] = {id: attrs[:id], _destroy: "1"}
+          if attrs[:_destroy] == '1'
+            attr_params[pos] = { id: attrs[:id], _destroy: '1' }
             params[key].delete(pos)
-          else
-            if has_destroy_params(params[key][pos])
-              attr_params[pos] = {id: attrs[:id]}
-              extract_destroy_params(params[key][pos], attr_params[pos])
-            end
+          elsif has_destroy_params(params[key][pos])
+            attr_params[pos] = { id: attrs[:id] }
+            extract_destroy_params(params[key][pos], attr_params[pos])
           end
         end
       end
