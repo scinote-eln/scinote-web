@@ -423,7 +423,9 @@
         $introjs
           .setOptions({
             overlayOpacity: '0.2',
+            hidePrev: true,
             nextLabel: 'Next',
+            prevLabel: 'Back',
             doneLabel: 'End tutorial',
             skipLabel: 'End tutorial',
             showBullets: false,
@@ -470,6 +472,7 @@
       }
       else if (goToStep > 18) {
         var archiveProjectTutorial = $("#projects-toolbar").attr("data-archive-project-step-text");
+        var goodbye_message = $("#projects-toolbar").attr("data-goodbye-tutorial");
         Cookies.set('current_tutorial_step', '20');
         var position = "right";
         if (demoProject.offset().left > window.innerWidth / 2 || window.innerWidth < demoProject.width() + 100) {
@@ -486,15 +489,20 @@
               element: document.getElementById(demoProjectId),
               intro: archiveProjectTutorial,
               position: position
+            },{
+              element: document.getElementsByClassName("avatar")[0],
+              intro: goodbye_message
             }],
             overlayOpacity: '0.2',
             doneLabel: 'Start using sciNote',
+            nextLabel: 'Next',
+            skipLabel: 'End tutorial',
             showBullets: false,
             showStepNumbers: false,
             disableInteraction: true,
             exitOnOverlayClick: false,
             exitOnEsc: false,
-            tooltipClass: 'custom disabled-next'
+            tooltipClass: 'custom next-page-link'
           })
           .oncomplete(function () {
             Cookies.remove('tutorial_data');
@@ -531,6 +539,11 @@
           .css({
             'pointer-events': 'none',
             'color': '#d2d2d2'});
+          $(el)
+          .find('[data-action="edit"]')
+          .css({
+            'pointer-events': 'none',
+            'color': '#d2d2d2'});
         });
       }
     });
@@ -549,12 +562,15 @@
       .css({
         'pointer-events': 'auto',
         'color': '#262626'});
+      $(el)
+      .find('[data-action="edit"]')
+      .css({
+        'pointer-events': 'auto',
+        'color': '#262626'});
     });
   }
 
   init();
   project_tutorial_helper();
-
-
 
 }());

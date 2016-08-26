@@ -171,7 +171,7 @@ function initTutorial() {
       .setOptions({
         steps: [
           {
-            element: document.getElementById("samples-toolbar"),
+            element: document.getElementById("importSamplesButton"),
             intro: samplesTutorial
           },
           {

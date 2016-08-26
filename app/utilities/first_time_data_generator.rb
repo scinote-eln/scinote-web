@@ -813,6 +813,9 @@ module FirstTimeDataGenerator
       )
     )
 
+    # create thumbnail
+    experiment.generate_workflow_img
+    
     # Lastly, create cookie with according ids
     # so tutorial steps can be properly positioned
     JSON.generate([
