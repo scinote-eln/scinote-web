@@ -1488,6 +1488,7 @@ en:
     sentence_four_html: "1. Open experiment that contains a workflow you would like to move and click Edit experiment."
     sentence_five_html: "2. In the Options dropdown of any task select Move workflow to another experiment."
     sentence_six_html: "3. Select experiment from the dropdown and click Move workflow. The workflow is now part of the selected experiment. So you can still have multiple workflows in one experiment."
+    confim: "OK, got it"
   # This section contains general words that can be used in any parts of
   # application.
 
