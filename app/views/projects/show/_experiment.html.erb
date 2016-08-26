@@ -2,37 +2,60 @@
   <div class="panel panel-default experiment-panel"
        data-id="<%= experiment.id %>">
     <div class="panel-heading">
-
-      <div class="dropdown pull-right">
-        <button class="btn btn-link dropdown-toggle"
-                type="button"
-                id="exActionsMenu-<%= experiment.id %>"
-                data-toggle="dropdown"
-                aria-haspopup="true"
-                aria-expanded="true">
-          <span class="visible-xs-inline"><i class="glyphicon glyphicon-sort"></i></span>
-          <span class="caret"></span>
-        </button>
-        <%= render partial: 'experiments/dropdown_actions.html.erb',
-                            locals: { project: @project, experiment: experiment } %>
-      </div>
-
+      <% if can_view_experiment_actions experiment %>
+        <div class="dropdown pull-right">
+          <button class="btn btn-link dropdown-toggle"
+                  type="button"
+                  id="exActionsMenu-<%= experiment.id %>"
+                  data-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="true">
+            <span class="visible-xs-inline"><i class="glyphicon glyphicon-sort"></i></span>
+            <span class="caret"></span>
+          </button>
+          <%= render partial: 'experiments/dropdown_actions.html.erb',
+                              locals: { project: @project, experiment: experiment } %>
+        </div>
+      <% end %>
       <h3 class="panel-title"><%= link_to experiment.name, canvas_experiment_path(experiment) %></h3>
 
     </div>
     <div class="panel-body">
       <% if experiment.workflowimg? %>
-        <div class="workflowimg-container">
-          <%= link_to image_tag(experiment.workflowimg.expiring_url(30),
-                                class: 'img-responsive center-block'),
-                      canvas_experiment_path(experiment) %>
+        <div class="workflowimg-container"
+             data-check-img="<%= updated_img_experiment_url(experiment) %>"
+             data-updated-img="<%= fetch_workflow_img_experiment_url(experiment) %>"
+             data-timestamp="<%= experiment.updated_at %>"
+        >
+        </div>
+      <% else %>
+        <div class="no-workflowimg">
+          <% if can_edit_experiment(experiment) %>
+            <p><%= link_to( t('experiments.edit.add_task'),
+                            canvas_experiment_path(experiment,
+                                                   editMode: true)) %></p>
+          <% else %>
+            <p><%= t('experiments.edit.no_workflowimg') %></p>
+          <% end %>
         </div>
       <% end %>
       <span>
         <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
         <%= localize(experiment.created_at, format: t('time.formats.full_date')) %> - <%= localize(experiment.updated_at, format: t('time.formats.full_date')) %>
       </span>
-      <p><%= experiment.description %></p>
+      <% if experiment.description? %>
+        <p class="experiment-description"><%= experiment.description %></p>
+      <% else %>
+        <% if can_edit_experiment(experiment) %>
+        <p class="experiment-description"><span class="no-description"><%= link_to t('experiments.edit.add-description'),
+                      edit_project_experiment_url(@project, experiment),
+                      remote: true,
+                      data: { id: experiment.id },
+                      class: 'no-description-experiment' %></span></p>
+        <% else %>
+          <p class="experiment-description"><span class="no-description"><%= t('experiments.edit.no-description') %></span></p>
+        <% end %>
+      <% end %>
     </div>
   </div>
 </div>

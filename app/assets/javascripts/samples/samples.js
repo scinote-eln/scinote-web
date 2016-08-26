@@ -45,6 +45,9 @@ $("#modal-create-sample-type").on("shown.bs.modal", function(event) {
 $("form#new_sample_type").on("ajax:success", function(ev, data, status) {
     $("#modal-create-sample-type").modal("hide");
     updateSamplesTypesandGroups();
+    sampleAlertMsg(data.flash);
+    currentMode = "viewMode";
+    updateButtons();
 });
 
 $("form#new_sample_type").on("ajax:error", function(e, data, status, xhr) {
@@ -73,6 +76,9 @@ $("#modal-create-sample-group").on("shown.bs.modal", function(event) {
 $("form#new_sample_group").on("ajax:success", function(ev, data, status) {
     $("#modal-create-sample-group").modal("hide");
     updateSamplesTypesandGroups();
+    sampleAlertMsg(data.flash);
+    currentMode = "viewMode";
+    updateButtons();
 });
 
 $("form#new_sample_group").on("ajax:error", function(e, data, status, xhr) {
@@ -117,12 +123,14 @@ function updateSamplesTypesandGroups() {
     dataType: "json",
     success: function (data) {
       $("select[name=sample_group_id]").each(function(){
-        var selectGroup = createSampleGroupSelect(data.sample_groups, -1);
+        var sample_group = $(this).val();
+        var selectGroup = createSampleGroupSelect(data.sample_groups, sample_group);
         var gtd = $(this).parent("td");
         gtd.html(selectGroup[0]);
       });
       $("select[name=sample_type_id]").each(function(){
-        var selectType = createSampleTypeSelect(data.sample_types, -1);
+        var sample_type = $(this).val();
+        var selectType = createSampleTypeSelect(data.sample_types, sample_type);
         var ttd = $(this).parent("td");
         ttd.html(selectType[0]);
       });
@@ -137,6 +145,18 @@ function updateSamplesTypesandGroups() {
         updateButtons();
       }
     });
+}
+
+function sampleAlertMsg(message) {
+  var html_snippet = '<div class="alert alert-success alert-dismissable alert-floating">' +
+                      '<div class="container">' +
+                        '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>' +
+                          '<span class="glyphicon glyphicon-ok-sign"></span>' +
+                          '<span>'+ message +'</span>' +
+                        '</div>' +
+                      '</div>';
+  $('#notifications').html(html_snippet);
+  $('#content-wrapper').addClass('alert-shown');
 }
 
 function initTutorial() {

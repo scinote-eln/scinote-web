@@ -1,3 +1,5 @@
+//= require comments
+
 function initHandsOnTables(root) {
   root.find("div.hot-table").each(function()  {
     var $container = $(this).find(".step-result-hot-table");
@@ -56,6 +58,9 @@ function initResultCommentForm($el) {
       $(".help-block", $form)
           .html("")
           .addClass("hide");
+      scrollCommentOptions(
+        list.parent().find(".content-comments .dropdown-comment")
+      );
     }
   })
   .on("ajax:error", function (ev, xhr) {
@@ -93,6 +98,9 @@ function initResultCommentsLink($el) {
       } else {
         moreBtn.attr("href", data.more_url);
       }
+
+      // Reposition dropdown comment options
+      scrollCommentOptions(listItem.closest(".content-comments").find(".dropdown-comment"));
     }
   });
 }
@@ -184,6 +192,10 @@ initResultCommentTabAjax();
 expandAllResults();
 initTutorial();
 applyCollapseLinkCallBack();
+
+initCommentOptions("ul.content-comments");
+initEditComments("#results");
+initDeleteComments("#results");
 
 $(function () {
   $("#results-collapse-btn").click(function () {

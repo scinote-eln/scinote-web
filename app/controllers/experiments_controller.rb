@@ -39,7 +39,7 @@ class ExperimentsController < ApplicationController
     if @experiment.save
       flash[:success] = t('experiments.create.success_flash',
                           experiment: @experiment.name)
-      redirect_to project_path(@project)
+      redirect_to canvas_experiment_path(@experiment)
     else
       flash[:alert] = t('experiments.create.error_flash')
       redirect_to :back
@@ -66,10 +66,10 @@ class ExperimentsController < ApplicationController
     @experiment.update_attributes(experiment_params)
     @experiment.last_modified_by = current_user
     if @experiment.save
+      @experiment.touch(:workflowimg_updated_at)
       flash[:success] = t('experiments.update.success_flash',
                           experiment: @experiment.name)
-
-      redirect_to project_path(@experiment.project)
+      redirect_to canvas_experiment_path(@experiment)
     else
       flash[:alert] = t('experiments.update.error_flash')
       redirect_to :back
@@ -107,7 +107,7 @@ class ExperimentsController < ApplicationController
 
   # POST: clone_experiment(id)
   def clone
-    project = Project.find_by_id(params[:experiment][:project_id])
+    project = Project.find_by_id(params[:experiment].try(:[], :project_id))
 
     # Try to clone the experiment
     success = true
@@ -158,7 +158,7 @@ class ExperimentsController < ApplicationController
 
   # POST: move_experiment(id)
   def move
-    project = Project.find_by_id(params[:experiment][:project_id])
+    project = Project.find_by_id(params[:experiment].try(:[], :project_id))
     old_project = @experiment.project
 
     # Try to move the experiment
@@ -213,6 +213,31 @@ class ExperimentsController < ApplicationController
                                            nil,
                                            nil,
                                            @experiment)
+      end
+    end
+  end
+
+  def updated_img
+    respond_to do |format|
+      format.json do
+        if @experiment.workflowimg_updated_at.to_i >=
+           params[:timestamp].to_time.to_i
+          render json: {}, status: 200
+        else
+          render json: {}, status: 404
+        end
+      end
+    end
+  end
+
+  def fetch_workflow_img
+    respond_to do |format|
+      format.json do
+        render json: {
+          workflowimg: render_to_string(
+            partial: 'projects/show/workflow_img.html.erb'
+          )
+        }
       end
     end
   end

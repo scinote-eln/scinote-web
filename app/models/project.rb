@@ -90,10 +90,11 @@ class Project < ActiveRecord::Base
 
   def unassigned_users
     User
-    .joins("INNER JOIN user_organizations ON users.id = user_organizations.user_id ")
-    .where("user_organizations.organization_id = ?", organization)
-    .where.not(confirmed_at: nil)
-    .where("users.id NOT IN (?)", UserProject.where(project: self).select(:id).distinct)
+      .joins('INNER JOIN user_organizations ON users.id = user_organizations.user_id')
+      .where('user_organizations.organization_id = ?', organization)
+      .where.not(confirmed_at: nil)
+      .where('users.id NOT IN (?)',
+             UserProject.where(project: self).select(:user_id).distinct)
   end
 
   def user_role(user)
@@ -104,8 +105,8 @@ class Project < ActiveRecord::Base
     return (self.user_projects.select { |up| up.user == user }).first.role
   end
 
-  def active_experiments
-    experiments.is_archived(false).order('created_at DESC')
+  def active_experiments(ordered = 'created_at DESC')
+    experiments.is_archived(false).order(ordered)
   end
 
   def archived_experiments
@@ -142,5 +143,26 @@ class Project < ActiveRecord::Base
     end
     ids.delete_if { |i| i.flatten.empty? }
     ids.join(', ')
+  end
+
+  def assigned_modules(user)
+    role = user_role(user)
+    if role.blank?
+      MyModule.none
+    elsif role == 'owner'
+      project_my_modules
+        .joins(:experiment)
+        .where('experiments.archived=false')
+        .where('my_modules.archived=false')
+
+    else
+      project_my_modules
+        .joins(:user_my_modules)
+        .joins(:experiment)
+        .where('experiments.archived=false AND user_my_modules.user_id IN (?)',
+               user.id)
+        .where('my_modules.archived=false')
+        .distinct
+    end
   end
 end

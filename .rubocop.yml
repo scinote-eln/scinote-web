@@ -1,0 +1,487 @@
+AllCops:
+  Exclude:
+    - "vendor/**/*"
+    - "db/schema.rb"
+  UseCache: false
+
+##################### Style ####################################
+
+Style/AccessModifierIndentation:
+  EnforcedStyle: indent
+
+Style/AlignHash:
+  EnforcedHashRocketStyle: key
+  EnforcedColonStyle: key
+  EnforcedLastArgumentHashStyle: ignore_implicit
+
+Style/AlignParameters:
+  EnforcedStyle: with_first_parameter
+
+Style/AndOr:
+  EnforcedStyle: conditionals
+
+Style/BarePercentLiterals:
+  EnforcedStyle: bare_percent
+
+Style/BlockDelimiters:
+  EnforcedStyle: line_count_based
+
+Style/BracesAroundHashParameters:
+  EnforcedStyle: no_braces
+
+Style/CaseIndentation:
+  IndentWhenRelativeTo: case
+
+Style/ClassAndModuleChildren:
+  EnforcedStyle: nested
+
+Style/ClassCheck:
+  EnforcedStyle: is_a?
+
+Style/CollectionMethods:
+  PreferredMethods:
+    collect: map
+    collect!: map!
+    detect: find
+    find_all: select
+    reduce: inject
+
+Style/CommandLiteral:
+  EnforcedStyle: backticks
+
+Style/DocumentationMethod:
+  RequireForNonPublicMethods: false
+
+Style/DotPosition:
+  EnforcedStyle: leading
+
+Style/EmptyElse:
+  EnforcedStyle: both
+
+Style/EmptyLineBetweenDefs:
+  AllowAdjacentOneLineDefs: false
+
+Style/EmptyLinesAroundBlockBody:
+  EnforcedStyle: no_empty_lines
+
+Style/EmptyLinesAroundClassBody:
+  EnforcedStyle: no_empty_lines
+
+Style/EmptyLinesAroundModuleBody:
+  EnforcedStyle: no_empty_lines
+
+Style/Encoding:
+  EnforcedStyle: always
+
+Style/ExtraSpacing:
+  AllowForAlignment: true
+  ForceEqualSignAlignment: false
+
+Style/FileName:
+  Enabled: false
+  Exclude: []
+
+Style/FirstParameterIndentation:
+  EnforcedStyle: special_for_inner_method_call_in_parentheses
+
+Style/For:
+  EnforcedStyle: each
+
+Style/FormatString:
+  EnforcedStyle: format
+
+Style/FrozenStringLiteralComment:
+  EnforcedStyle: when_needed
+
+Style/GuardClause:
+  Enabled: false
+  MinBodyLength: 1
+
+Style/HashSyntax:
+  EnforcedStyle: ruby19
+
+Style/IfUnlessModifier:
+  Enabled: true
+  MaxLineLength: 80
+
+Style/IndentationConsistency:
+  EnforcedStyle: normal
+
+Style/IndentationWidth:
+  Width: 2
+
+Style/IndentArray:
+  EnforcedStyle: special_inside_parentheses
+
+Style/IndentHash:
+  EnforcedStyle: special_inside_parentheses
+
+Style/Next:
+  EnforcedStyle: skip_modifier_ifs
+
+Style/NonNilCheck:
+  IncludeSemanticChanges: false
+
+Style/MethodDefParentheses:
+  EnforcedStyle: require_parentheses
+
+Style/MethodName:
+  EnforcedStyle: snake_case
+
+Style/ModuleFunction:
+  EnforcedStyle: module_function
+
+Style/MultilineArrayBraceLayout:
+  EnforcedStyle: symmetrical
+
+Style/MultilineAssignmentLayout:
+  SupportedTypes:
+    - block
+    - case
+    - class
+    - if
+    - kwbegin
+    - module
+  EnforcedStyle: new_line
+
+Style/MultilineHashBraceLayout:
+  EnforcedStyle: symmetrical
+
+Style/MultilineMethodCallBraceLayout:
+  EnforcedStyle: symmetrical
+
+Style/MultilineMethodCallIndentation:
+  EnforcedStyle: aligned
+
+Style/MultilineMethodDefinitionBraceLayout:
+  EnforcedStyle: symmetrical
+
+Style/MultilineOperationIndentation:
+  EnforcedStyle: aligned
+
+Style/NumericLiterals:
+  Enabled: false
+
+Style/NumericLiteralPrefix:
+  EnforcedOctalStyle: zero_with_o
+
+Style/OptionHash:
+  SuspiciousParamNames:
+    - options
+    - opts
+    - args
+    - params
+    - parameters
+
+Style/ParenthesesAroundCondition:
+  AllowSafeAssignment: true
+
+Style/PercentLiteralDelimiters:
+  PreferredDelimiters:
+    "%": "()"
+    "%i": "()"
+    "%q": "()"
+    "%Q": "()"
+    "%r": "{}"
+    "%s": "()"
+    "%w": "()"
+    "%W": "()"
+    "%x": "()"
+
+Style/PercentQLiterals:
+  EnforcedStyle: lower_case_q
+
+Style/PredicateName:
+  Description: Check the names of predicate methods.
+  StyleGuide: https://github.com/bbatsov/ruby-style-guide#bool-methods-qmark
+  Enabled: true
+  NamePrefix:
+  - is_
+  - has_
+  - have_
+  NamePrefixBlacklist:
+  - is_
+  NameWhitelist:
+    - is_a?
+  Exclude:
+  - spec/**/*
+
+Style/RaiseArgs:
+  Description: Checks the arguments passed to raise/fail.
+  EnforcedStyle: exploded
+  SupportedStyles:
+  - compact
+  - exploded
+
+Style/RedundantReturn:
+  AllowMultipleReturnValues: true
+
+Style/RegexpLiteral:
+  EnforcedStyle: slashes
+  AllowInnerSlashes: false
+
+Style/Semicolon:
+  AllowAsExpressionSeparator: true
+
+Style/SignalException:
+  Enabled: true
+  EnforcedStyle: only_raise
+
+Style/SingleLineBlockParams:
+  Enabled: false
+
+Style/SingleLineMethods:
+  Enabled: false
+
+Style/SpaceBeforeFirstArg:
+  AllowForAlignment: true
+
+Style/StringLiterals:
+  Enabled: true
+  EnforcedStyle: single_quotes
+  ConsistentQuotesInMultiline: true
+
+Style/StringLiteralsInInterpolation:
+  EnforcedStyle: single_quotes
+
+Style/StringMethods:
+  PreferredMethods:
+    intern: to_sym
+
+Style/SpaceAroundBlockParameters:
+  EnforcedStyleInsidePipes: no_space
+
+Style/SpaceAroundEqualsInParameterDefault:
+  EnforcedStyle: space
+
+Style/SpaceAroundOperators:
+  AllowForAlignment: true
+
+Style/SpaceBeforeBlockBraces:
+  EnforcedStyle: space
+
+Style/SpaceInsideBlockBraces:
+  EnforcedStyle: space
+  EnforcedStyleForEmptyBraces: no_space
+  SpaceBeforeBlockParameters: true
+
+Style/SpaceInsideHashLiteralBraces:
+  EnforcedStyle: space
+  EnforcedStyleForEmptyBraces: no_space
+
+Style/SpaceInsideStringInterpolation:
+  EnforcedStyle: no_space
+
+Style/SymbolArray:
+  EnforcedStyle: percent
+
+Style/SymbolProc:
+  IgnoredMethods:
+    - respond_to
+    - define_method
+
+Style/TernaryParentheses:
+  EnforcedStyle: require_no_parentheses
+  AllowSafeAssignment: true
+
+Style/TrailingBlankLines:
+  EnforcedStyle: final_newline
+
+Style/TrailingCommaInArguments:
+  EnforcedStyleForMultiline: no_comma
+
+Style/TrailingCommaInLiteral:
+  EnforcedStyleForMultiline: no_comma
+
+Style/VariableName:
+  EnforcedStyle: snake_case
+
+Style/VariableNumber:
+  EnforcedStyle: normalcase
+
+Style/WordArray:
+  EnforcedStyle: percent
+  MinSize: 0
+
+Style/InlineComment:
+  Enabled: false
+
+Style/AccessorMethodName:
+  Enabled: true
+
+Style/Alias:
+  Enabled: true
+
+Style/Documentation:
+  Enabled: false
+
+Style/DoubleNegation:
+  Enabled: true
+
+Style/EachWithObject:
+  Enabled: true
+
+Style/EmptyLiteral:
+  Enabled: true
+
+Style/ModuleFunction:
+  Enabled: true
+
+Style/OneLineConditional:
+  Enabled: true
+
+Style/PerlBackrefs:
+  Enabled: true
+
+Style/Send:
+  Enabled: true
+
+Style/SpecialGlobalVars:
+  Enabled: true
+
+Style/VariableInterpolation:
+  Enabled: true
+
+Style/WhenThen:
+  Enabled: true
+
+##################### Metrics ##################################
+
+Metrics/AbcSize:
+  Enabled: false
+
+Metrics/ClassLength:
+  Enabled: false
+
+Metrics/ModuleLength:
+  Enabled: false
+
+Metrics/CyclomaticComplexity:
+  Enabled: false
+
+Metrics/LineLength:
+  Max: 80
+  AllowHeredoc: true
+  AllowURI: true
+  URISchemes:
+    - http
+    - https
+
+Metrics/MethodLength:
+  Enabled: false
+
+Metrics/ParameterLists:
+  Enabled: false
+
+Metrics/PerceivedComplexity:
+  Enabled: false
+
+##################### Lint #####################################
+
+Lint/AssignmentInCondition:
+  AllowSafeAssignment: true
+
+Lint/BlockAlignment:
+  AlignWith: either
+
+Lint/EndAlignment:
+  AlignWith: keyword
+
+Lint/DuplicateMethods:
+  Enabled: false
+
+Lint/DefEndAlignment:
+  AlignWith: start_of_line
+
+Lint/UnusedBlockArgument:
+  IgnoreEmptyBlocks: true
+  AllowUnusedKeywordArguments: false
+
+Lint/UnusedMethodArgument:
+  AllowUnusedKeywordArguments: false
+  IgnoreEmptyMethods: true
+
+Lint/EachWithObjectArgument:
+  Enabled: true
+
+Lint/HandleExceptions:
+  Enabled: false
+
+Lint/LiteralInCondition:
+  Enabled: true
+
+Lint/EmptyInterpolation:
+  Enabled: false
+
+Lint/LiteralInInterpolation:
+  Enabled: true
+
+##################### Rails ####################################
+
+Rails/ActionFilter:
+  EnforcedStyle: action
+  Include:
+    - app/controllers/**/*.rb
+
+Rails/Date:
+  EnforcedStyle: flexible
+
+Rails/Exit:
+  Include:
+    - app/**/*.rb
+    - config/**/*.rb
+    - lib/**/*.rb
+  Exclude:
+    - lib/**/*.rake
+
+Rails/FindBy:
+  Include:
+    - app/models/**/*.rb
+
+Rails/FindEach:
+  Include:
+    - app/models/**/*.rb
+
+Rails/HasAndBelongsToMany:
+  Include:
+    - app/models/**/*.rb
+
+Rails/NotNullColumn:
+  Include:
+    - db/migrate/*.rb
+
+Rails/Output:
+  Include:
+    - app/**/*.rb
+    - config/**/*.rb
+    - db/**/*.rb
+    - lib/**/*.rb
+
+Rails/ReadWriteAttribute:
+  Include:
+    - app/models/**/*.rb
+
+Rails/RequestReferer:
+  EnforcedStyle: referer
+
+Rails/SafeNavigation:
+  ConvertTry: false
+
+Rails/ScopeArgs:
+  Include:
+    - app/models/**/*.rb
+
+Rails/TimeZone:
+  EnforcedStyle: flexible
+
+Rails/UniqBeforePluck:
+  EnforcedMode: conservative
+
+Rails/Validation:
+  Include:
+    - app/models/**/*.rb
+
+##################### Performance ##############################
+
+Performance/RedundantMerge:
+  Enabled: true

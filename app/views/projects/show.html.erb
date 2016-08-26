@@ -3,17 +3,26 @@
 <%= render partial: "shared/secondary_navigation" %>
 
 <div class="row">
-  <div class="col-md-12">
-    <h2 class="pull-left"><%= t'projects.show.page_title' %></h2>
-    <% if can_create_experiment(@project) %>
-        <%= link_to t('experiments.new.create'),
-                      new_project_experiment_url(@project),
-                      remote: true,
-                      type: "button",
-                      id: 'new-experiment',
-                      class: "btn btn-primary center-btn" %>
-
-    <% end %>
+  <div class="col-sm-12">
+      <% if can_create_experiment(@project) %>
+      <div class="row">
+        <div class="col-sm-12">
+          <%= link_to new_project_experiment_url(@project), 
+                        remote: true,
+                        type: "button",
+                        id: 'new-experiment',
+                        class: "btn btn-primary pull-right" do %>
+            <span class="glyphicon glyphicon-plus"></span>
+            <%= t('experiments.new.create') %>
+          <% end %>
+        </div>
+      </div>
+      <% end %>
+    <div class="row">
+      <div class="col-sm-6">
+        <h2><%= t'projects.show.page_title' %></h2>
+      </div>
+    </div>
   </div>
 </div>
 <div class="row">
@@ -23,5 +32,9 @@
 
     <%= content_tag(:div, '', class: 'clearfix visible-lg-block') if (index + 1) % 2 == 0 %>
   <% end %>
+  <% if can_create_experiment(@project) %>
+    <%= render 'projects/show/new_experiment' %>
+  <% end %>
 </div>
 <%= javascript_include_tag("experiments/dropdown_actions") %>
+<%= javascript_include_tag("projects/show") %>

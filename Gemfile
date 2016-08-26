@@ -11,6 +11,8 @@ gem 'bootstrap-sass', '~> 3.3.5'
 gem 'sass-rails', '~> 5.0'
 gem 'bootstrap_form'
 gem 'yomu'
+gem 'font-awesome-rails', '~> 4.6'
+
 # JS datetime library, requirement of datetime picker
 gem 'momentjs-rails', '>= 2.9.0'
 # JS datetime picker
@@ -52,7 +54,7 @@ gem 'aws-sdk', '~> 2.2.8'
 gem 'aws-sdk-v1'
 gem 'delayed_job_active_record'
 gem 'devise-async'
-gem 'ruby-graphviz', '~> 1.2' # Graphviz for rails 
+gem 'ruby-graphviz', '~> 1.2' # Graphviz for rails
 
 group :development, :test do
   gem 'byebug'

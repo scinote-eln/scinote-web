@@ -136,6 +136,14 @@ en:
         step: "Step comment"
         result: "Result comment"
 
+  comments:
+    options_dropdown:
+      header: "Comment options"
+      edit: "Edit"
+      delete: "Delete"
+    delete_confirm: "Are you sure you wish to delete this comment?"
+    delete_error: "Error occured while deleting comment."
+
   projects:
     index:
       head_title: "Home"
@@ -265,7 +273,7 @@ en:
             steps_tab: "Protocols content"
             results_tab: "Results content"
           project_contents_inner:
-            instructions: "Select projects/workflows/tasks to include in the report"
+            instructions: "Select projects/experiment/tasks to include in the report"
             no_modules: "The project contains no tasks"
             no_module_group: "No workflow"
           module_contents:
@@ -546,6 +554,7 @@ en:
         thead_created_at: "Created at"
         thead_updated_at: "Last modified at"
         confirm_message: "Are you sure you wish to load protocol from repository? This action will overwrite the current protocol."
+        import_to_linked_task_rep: "Are you sure you wish to load protocol from repository? This action will overwrite the current protocol in the task and unlink it from repository. The current protocol will remain unchanged in repository."
         load: "Load"
       copy_to_repository_modal:
         title: "Copy protocol to repository"
@@ -598,10 +607,14 @@ en:
       name_placeholder: 'My experiment'
       description: 'Description'
     edit:
-      modal_title: 'Edit experiment %{experiment}'
-      modal_create: 'Update experiment'
+      modal_title: 'Edit experiment details'
+      modal_create: 'Save'
       label_title: "Edit details"
       panel_label: 'Change details'
+      add-description: 'Add description...'
+      no-description: 'No description'
+      no_workflowimg: 'No workflow'
+      add_task: 'Add a task to experiment...'
     create:
       success_flash: "Successfully created experiment %{experiment}"
       error_flash: 'Could not create a new experiment.'
@@ -620,6 +633,7 @@ en:
       error_flash: 'Could not clone the experiment.'
     move:
       modal_title: 'Move experiment %{experiment}'
+      notice: 'Moving is possible only to projects that contain same (or additional) users.'
       label_title: 'Move'
       modal_submit: 'Move'
       success_flash: "Successfully moved experiment %{experiment}"
@@ -630,6 +644,7 @@ en:
       actions: 'Actions'
       head_title: "%{project} | Overview"
       canvas_edit: "Edit experiment"
+      zoom: "Zoom: "
       modal_manage_tags:
         head_title: "Manage tags for"
         subtitle: "Showing tags of task %{module}"
@@ -654,6 +669,8 @@ en:
         edit_module_group: "Rename workflow"
         clone_module: "Clone task"
         clone_module_group: "Clone workflow"
+        move_module: "Move task to another experiment"
+        move_module_group: "Move workflow to another experiment"
         delete_module: "Archive task"
         delete_module_group: "Archive workflow"
         modal_new_module:
@@ -672,6 +689,14 @@ en:
           title: "Rename workflow"
           name: "Workflow name"
           confirm: "Rename workflow"
+        modal_move_module:
+          title: "Move task to experiment"
+          confirm: "Move task"
+          no_experiments: "There are no other experiments."
+        modal_move_module_group:
+          title: "Move workflow to experiment"
+          confirm: "Move workflow"
+          no_experiments: "There are no other experiments."
         modal_delete_module:
           title: "Archive task"
           confirm: "Archive task"
@@ -1004,6 +1029,16 @@ en:
     edit_table_result: "<i>%{user}</i> edited table result <strong>%{result}</strong>."
     clone_experiment: "<i>%{user}</i> cloned <strong>%{experiment_new}</strong> from <strong>%{experiment_original}</strong>."
     move_experiment: "<i>%{user}</i> moved experiment  <strong>%{experiment}</strong> from project <strong>%{project_original}</strong> to project <strong>%{project_new}</strong>."
+    add_comment_to_project: "<i>%{user}</i> commented on project <strong>%{project}</strong>."
+    edit_project_comment: "<i>%{user}</i> edited comment on project <strong>%{project}</strong>."
+    delete_project_comment: "<i>%{user}</i> deleted comment on project <strong>%{project}</strong>."
+    add_comment_to_module: "<i>%{user}</i> commented on module <strong>%{module}</strong>."
+    edit_module_comment: "<i>%{user}</i> edited comment on module <strong>%{module}</strong>."
+    delete_module_comment: "<i>%{user}</i> deleted comment on module <strong>%{module}</strong>."
+    edit_step_comment: "<i>%{user}</i> edited comment on Step %{step} <strong>%{step_name}</strong>."
+    delete_step_comment: "<i>%{user}</i> deleted comment on Step %{step} <strong>%{step_name}</strong>."
+    edit_result_comment: "<i>%{user}</i> edited comment on result <strong>%{result}</strong>."
+    delete_result_comment: "<i>%{user}</i> deleted comment on result <strong>%{result}</strong>."
 
   user_my_modules:
     new:
@@ -1200,8 +1235,8 @@ en:
         title_import: "Import protocol/s"
         title_import_into_protocol: "Load protocol from file"
         import_into_protocol_message: "This will overwrite the current protocol!"
-        import_into_protocol_confirm: "Are you sure you wish to load protocol? This action will overwrite the current protocol."
-        import_to_linked_task: "Are you sure you wish to load protocol from repository? This action will overwrite the current protocol in the task and un-link it from repository. The current protocol will remain unchanged in repository."
+        import_into_protocol_confirm: "Are you sure you wish to load protocol from file? This action will overwrite the current protocol."
+        import_to_linked_task_file: "Are you sure you wish to load protocol from file? This action will overwrite the current protocol in the task and unlink it from repository. The current protocol will remain unchanged in repository."
         name_label: "Protocol name"
         authors_label: "Authors"
         description_label: "Description"
@@ -1443,6 +1478,15 @@ en:
     new_report_click_org_html: "Click on <strong>%{private_org}</strong> in breadcrumbs to return to the Dashboard."
     archive_project_html: "Archive demo project by clicking on the down arrow <span class='glyphicon glyphicon-triangle-bottom'></span>. You can always access the archive by clicking the <span class='glyphicon glyphicon-briefcase'></span> button on the top right side of the dashboard and restore any item you have archived."
 
+  introductory:
+    popup-title: "Dear sciNote user,"
+    sentence_one_html: "To give you more flexibility in organization of your work, we have added a new feature to your sciNote: <strong>Experiment level</strong>. Now you are able to organize your Tasks and Workflows into different Experiments inside of an individual project. When you open a project you will see experiments displayed as thumbnails."
+    sentence_two_html: "You can see the changes in the hierarchy in the navigation panel as well."
+    sentence_three_html: "All your existing Tasks and Workflows are now in a single Experiment called \"My first experiment\". You can always rename it, create new Experiments and move workflows between them. To move a Task or a Workflow to a different experiment, do the following:"
+    sentence_four_html: "1. Open experiment that contains a workflow you would like to move and click Edit experiment."
+    sentence_five_html: "2. In the Options dropdown of any task select Move workflow to another experiment."
+    sentence_six_html: "3. Select experiment from the dropdown and click Move workflow. The workflow is now part of the selected experiment. So you can still have multiple workflows in one experiment."
+    confim: "OK, got it"
   # This section contains general words that can be used in any parts of
   # application.
 

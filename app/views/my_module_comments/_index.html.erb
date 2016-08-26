@@ -7,7 +7,7 @@
     <%= render 'my_module_comments/list.html.erb', comments: @comments %>
   <% end %>
   <% if @comments.length == @per_page %>
-  <li class="text-center">
+  <li class="comment-more text-center">
     <a class="btn btn-default btn-more-comments" href="<%= more_comments_url %>" data-remote="true">
       <%=t "experiments.canvas.popups.more_comments" %>
     </a>

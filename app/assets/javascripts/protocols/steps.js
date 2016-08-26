@@ -3,6 +3,7 @@
 //= require canvas-to-blob.min
 //= require direct-upload
 //= require assets
+//= require comments
 
 // Sets callbacks for toggling checkboxes
 function applyCheckboxCallBack()  {
@@ -384,6 +385,9 @@ function initStepCommentForm(ev, $el) {
       $(".help-block", $form)
           .html("")
           .addClass("hide");
+      scrollCommentOptions(
+        list.parent().find(".content-comments .dropdown-comment")
+      );
     }
   })
   .on("ajax:error", function (ev, xhr) {
@@ -408,7 +412,6 @@ function initStepCommentForm(ev, $el) {
 
 // Initialize show more comments link.
 function initStepCommentsLink($el) {
-
   $el.find(".btn-more-comments")
   .on("ajax:success", function (e, data) {
     if (data.html) {
@@ -421,6 +424,10 @@ function initStepCommentsLink($el) {
       } else {
         moreBtn.attr("href", data.more_url);
       }
+
+      // Reposition dropdown comment options
+      scrollCommentOptions(listItem.closest(".content-comments")
+      .find(".dropdown-comment"));
     }
   });
 }
@@ -626,6 +633,11 @@ initCallBacks();
 initHandsOnTable($(document));
 expandAllSteps();
 setupAssetsLoading();
+
+// Init comments edit/delete
+initCommentOptions("ul.content-comments");
+initEditComments("#steps");
+initDeleteComments("#steps");
 
 $(function () {
 

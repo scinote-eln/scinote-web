@@ -3,14 +3,17 @@
   current_day = DateTime.current.strftime('%j').to_i
 %>
 <% comments.each do |comment| %>
-  <li class="comment">
   <%
     comment_day = comment.created_at.strftime('%j').to_i
 
-    if comment_day < current_day and comment_day < day then 
+    if comment_day < current_day and comment_day < day then
     day = comment.created_at.strftime('%j').to_i
   %>
-  <p class="text-center"><%= comment.created_at.strftime('%d.%m.%Y') %></p>
+  <li class="comment-date-separator">
+    <p class="text-center"><%= comment.created_at.strftime('%d.%m.%Y') %></p>
+  </li>
   <% end %>
-  <%= render 'project_comments/comment.html.erb', comment: comment %></li>
+  <li class="comment">
+    <%= render 'project_comments/comment.html.erb', comment: comment %>
+  </li>
 <% end %>

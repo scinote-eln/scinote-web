@@ -49,7 +49,9 @@ Rails.application.routes.draw do
 
   resources :projects, except: [:new, :destroy] do
     resources :user_projects, path: "/users", only: [:new, :create, :index, :edit, :update, :destroy]
-    resources :project_comments, path: "/comments", only: [:new, :create, :index]
+    resources :project_comments,
+              path: '/comments',
+              only: [:new, :create, :index, :edit, :update, :destroy]
     # Activities popup (JSON) for individual project in projects index,
     # as well as all activities page for single project (HTML)
     resources :project_activities, path: "/activities", only: [:index]
@@ -128,6 +130,8 @@ Rails.application.routes.draw do
       get 'move_modal' # return modal with move options
       post 'move' # move experiment
       get 'samples' # Samples for single project
+      get 'updated_img' # Checks if the workflow image is updated
+      get 'fetch_workflow_img' # Get udated workflow img
       # Renders sample datatable for single project (ajax action)
       post 'samples_index'
       post :delete_samples,
@@ -143,7 +147,9 @@ Rails.application.routes.draw do
   resources :my_modules, path: "/modules", only: [:show, :edit, :update, :destroy] do
     resources :my_module_tags, path: "/tags", only: [:index, :create, :update, :destroy]
     resources :user_my_modules, path: "/users", only: [:index, :new, :create, :destroy]
-    resources :my_module_comments, path: "/comments", only: [:index, :new, :create]
+    resources :my_module_comments,
+              path: '/comments',
+              only: [:index, :new, :create, :edit, :update, :destroy]
     resources :sample_my_modules, path: "/samples_index", only: [:index]
     resources :result_texts, only: [:new, :create]
     resources :result_assets, only: [:new, :create]
@@ -171,7 +177,9 @@ Rails.application.routes.draw do
   end
 
   resources :steps, only: [:edit, :update, :destroy, :show] do
-    resources :step_comments, path: "/comments", only: [:new, :create, :index]
+    resources :step_comments,
+              path: '/comments',
+              only: [:new, :create, :index, :edit, :update, :destroy]
     member do
       post 'checklistitem_state'
       post 'toggle_step_state'
@@ -181,7 +189,9 @@ Rails.application.routes.draw do
   end
 
   resources :results, only: [:update] do
-    resources :result_comments, path: "/comments", only: [:new, :create, :index]
+    resources :result_comments,
+              path: '/comments',
+              only: [:new, :create, :index, :edit, :update, :destroy]
   end
 
   resources :samples, only: [:edit, :update, :destroy]

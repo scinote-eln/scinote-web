@@ -7,6 +7,7 @@
 // - refresh project users tab after manage user modal is closed
 // - refactor view handling using library, ex. backbone.js
 
+//= require comments
 (function () {
 
   var newProjectModal = null;
@@ -230,6 +231,9 @@
         $(".help-block", $form)
             .html("")
             .addClass("hide");
+        scrollCommentOptions(
+          list.parent().find(".content-comments .dropdown-comment")
+        );
       }
     })
     .on("ajax:error", function (ev, xhr) {
@@ -267,6 +271,9 @@
           } else {
             moreBtn.attr("href", data.more_url);
           }
+
+          // Reposition dropdown comment options
+          scrollCommentOptions(listItem.closest(".content-comments").find(".dropdown-comment"));
         }
       });
   }
@@ -332,7 +339,6 @@
     initUserRoleForms();
   }
 
-
   function init() {
 
     newProjectModal = $("#new-project-modal");
@@ -352,6 +358,9 @@
     initNewProjectModal();
     initEditProjectModal();
     initManageUsersModal();
+    initCommentOptions("ul.content-comments");
+    initEditComments(".panel-project .tab-content");
+    initDeleteComments(".panel-project .tab-content");
 
     // initialize project tab remote loading
     $(".panel-project .panel-footer [role=tab]")
@@ -528,15 +537,18 @@
   }
 
   function restore_after_tutorial(){
-    $('.introjs-showElement')
-      .find('.form-submit-link')
-      .css({
-        'pointer-events': 'auto',
-        'color': '#262626'});
     $.each($('.panel'), function(i, el){
       $(el)
       .find('.tab-content')
       .css({ 'pointer-events': 'auto' });
+      $(el)
+      .find('.panel-title')
+      .css({ 'pointer-events': 'auto' });
+      $(el)
+      .find('.form-submit-link')
+      .css({
+        'pointer-events': 'auto',
+        'color': '#262626'});
     });
   }
 

@@ -1,2 +1,44 @@
-<strong><%=t "my_modules.results.comment_title", user: comment.user.full_name, time: l(comment.created_at, format: :time) %></strong>
-<p><span><%= comment.message %></p>
+<div>
+  <strong>
+    <%=t "my_modules.results.comment_title", user: comment.user.full_name, time: l(comment.created_at, format: :time) %>
+  </strong>
+  <% if can_edit_result_comment_in_module(comment) || can_delete_result_comment_in_module(comment) %>
+    <div class="dropdown dropdown-comment">
+      <a href="#"
+         class="dropdown-toggle"
+         data-role="comment-options"
+         type="button"
+         id="comment-<%= comment.id %>-dropdown"
+         data-toggle="dropdown"
+         aria-haspopup="true"
+         aria-expanded="true">
+        <span class="caret"></span>
+      </a>
+      <ul class="dropdown-menu dropdown-menu-fixed" aria-labelledby="comment-<%= comment.id %>-dropdown">
+        <li class="dropdown-header"><%= I18n.t('comments.options_dropdown.header') %></li>
+        <% if can_edit_result_comment_in_module(comment) %>
+          <li>
+            <a href="#"
+               data-action="edit-comment"
+               data-url="<%= edit_result_result_comment_path(comment.result_comment.result, comment, format: :json) %>">
+              <%= t('comments.options_dropdown.edit') %>
+            </a>
+          </li>
+        <% end %>
+        <% if can_delete_result_comment_in_module(comment) %>
+          <li>
+            <a href="#"
+               data-action="delete-comment"
+               data-url="<%= result_result_comment_path(comment.result_comment.result, comment, format: :json) %>"
+               data-confirm-message="<%= t('comments.delete_confirm') %>">
+              <%= t('comments.options_dropdown.delete') %>
+            </a>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+</div>
+<div data-role="comment-message-container">
+  <p data-role="comment-message"><%= comment.message %></p>
+</div>

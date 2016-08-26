@@ -1,0 +1,14 @@
+<%= bootstrap_form_for(@comment, url: @update_url, remote: true, html: { method: :put, class: 'edit-comment-form' }, data: { role: 'edit-comment-message-form' }) do |f| %>
+  <div class="form-group">
+    <div class="input-group">
+      <%= f.text_field :message, autofocus: true, hide_label: true, data: { role: 'message-input' }, value: @comment.message %>
+      <span class="input-group-btn">
+        <a class="btn btn-default" data-action="save">
+          <span class="glyphicon glyphicon-ok"></span>
+        </a>
+      </span>
+    </div>
+    <span class="help-block hide"></span>
+    <a data-action="cancel" href="#"><%= t('general.cancel') %></a>
+  </div>
+<% end %>

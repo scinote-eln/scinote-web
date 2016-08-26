@@ -34,7 +34,7 @@
       '.edit-experiment': '#edit-experiment-modal-',
       '.clone-experiment': '#clone-experiment-modal-',
       '.move-experiment': '#move-experiment-modal-'
-    }
+    };
 
     $.each($(".dropdown-experiment-actions"), function(){
       var $dropdown = $(this);
@@ -45,10 +45,24 @@
     });
   }
 
+  // Initialize no description edit link
+  function initEditNoDescription(){
+    var modal = "#edit-experiment-modal-";
+    $.each($(".no-description-experiment"), function(){
+      var id = modal + $(this).data("id");
+      initializeModal($(this), id);
+    });
+  }
   // Bind modal to new-experiment action
   initializeModal($("#new-experiment"), '#new-experiment-modal');
+  
+  // Bind modal to big-plus new experiment actions
+  initializeModal('.big-plus', '#new-experiment-modal');
 
   // Bind modal to all actions listed on dropdown accesible from experiment
   // panel
   initializeDropdownActions();
+
+  // init
+  initEditNoDescription();
 })();

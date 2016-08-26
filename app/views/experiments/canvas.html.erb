@@ -3,22 +3,17 @@
 <%= render partial: "shared/secondary_navigation" %>
 
 <div id="diagram-buttons" data-intro="<%=t ('tutorial.canvas_click_edit_workflow_html') %>" data-step="5" data-position="left">
+
   <% if can_edit_canvas(@experiment) %>
-    <%=link_to t('experiments.canvas.canvas_edit'),
-                  canvas_edit_experiment_url(@experiment),
-                  remote: true,
-                  type: "button",
-                  id: "edit-canvas-button",
-                  class: "ajax btn btn-default",
-                  "data-action" => "edit" %>
-  <% end %>
-  <% if can_create_experiment(@project) && @experiment.active? %>
-    <%= link_to t('experiments.new.create'),
-                  new_project_experiment_url(@project),
-                  remote: true,
-                  type: "button",
-                  id: 'new-experiment',
-                  class: "btn btn-primary" %>
+    <%=link_to canvas_edit_experiment_url(@experiment),
+          remote: true,
+          type: "button",
+          id: "edit-canvas-button",
+          class: "ajax btn btn-default",
+          "data-action" => "edit" do %>
+            <span class="glyphicon glyphicon-pencil"></span>
+            <%= t('experiments.canvas.canvas_edit') %>
+          <% end %>
   <% end %>
   <!-- pexperiment actions -->
   <% if can_edit_experiment(@experiment) || can_archive_experiment(@experiment) %>
@@ -32,18 +27,31 @@
                           locals: { project: @project, experiment: @experiment } %>
     </span>
   <% end %>
-
-  <div id="zoom-level-buttons" class="btn-group pull-right" data-toggle="buttons">
-    <%=link_to canvas_full_zoom_experiment_path(@experiment), remote: true, type: "button", class: "ajax btn btn-primary active", "data-action" => "full_zoom", "data-toggle" => "button", "aria-pressed" => true do %>
-      <span class="glyphicon glyphicon-th-large" aria-hidden="true" ></span>
-    <% end %>
-    <%=link_to canvas_medium_zoom_experiment_path(@experiment), remote: true, type: "button", class: "ajax btn btn-primary", "data-action" => "medium_zoom" do %>
-      <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
-    <% end %>
-    <%=link_to canvas_small_zoom_experiment_path(@experiment), remote: true, type: "button", class: "ajax btn btn-primary", "data-action" => "small_zoom" do %>
-      <span class="glyphicon glyphicon-th" aria-hidden="true"></span>
-    <% end %>
+  <div class="toolbarButtons">
+    <%= t('experiments.canvas.zoom') %>
+    <div id="zoom-level-buttons" class=" <%= 'btn-group' if can_edit_canvas(@experiment) && can_create_experiment(@project)  %>" data-toggle="buttons">
+      <%=link_to canvas_full_zoom_experiment_path(@experiment), remote: true, type: "button", class: "ajax btn btn-default active", "data-action" => "full_zoom", "data-toggle" => "button", "aria-pressed" => true do %>
+        <span class="glyphicon glyphicon-th-large" aria-hidden="true" ></span>
+      <% end %>
+      <%=link_to canvas_medium_zoom_experiment_path(@experiment), remote: true, type: "button", class: "ajax btn btn-default", "data-action" => "medium_zoom" do %>
+        <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+      <% end %>
+      <%=link_to canvas_small_zoom_experiment_path(@experiment), remote: true, type: "button", class: "ajax btn btn-default", "data-action" => "small_zoom" do %>
+        <span class="glyphicon glyphicon-th" aria-hidden="true"></span>
+      <% end %>
+    </div>
   </div>
+
+  <% if can_create_experiment(@project) && @experiment.active? %>
+    <%= link_to new_project_experiment_url(@project),
+        remote: true,
+        type: "button",
+        id: 'new-experiment',
+        class: "btn btn-primary pull-right" do %>
+          <span class="glyphicon glyphicon-plus"></span>
+          <%= t('experiments.new.create') %>
+        <% end %>
+  <% end %>
 </div>
 
 <div id="canvas-container" data-project-id="<%= @project.id %>"

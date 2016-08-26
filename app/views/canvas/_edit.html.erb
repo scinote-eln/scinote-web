@@ -3,6 +3,7 @@
   data-can-edit-modules="<%= can_edit_modules(@experiment) ? "yes" : "no" %>"
   data-can-edit-module-groups="<%= can_edit_module_groups(@experiment) ? "yes" : "no" %>"
   data-can-clone-modules="<%= can_clone_modules(@experiment) ? "yes" : "no" %>"
+  data-can-move-modules="<%= can_move_modules(@experiment) ? "yes" : "no" %>"
   data-can-delete-modules="<%= can_archive_modules(@experiment) ? "yes" : "no" %>"
   data-can-reposition-modules="<%= can_reposition_modules(@experiment) ? "yes" : "no" %>"
   data-can-edit-connections="<%= can_edit_connections(@experiment) ? "yes" : "no" %>"
@@ -37,6 +38,7 @@
     <%= hidden_field_tag 'add', '' %>
     <%= hidden_field_tag 'add-names', '' %>
     <%= hidden_field_tag 'rename', '{}' %>
+    <%= hidden_field_tag 'move', '{}' %>
     <%= hidden_field_tag 'cloned', '' %>
     <%= hidden_field_tag 'remove', '' %>
     <%= hidden_field_tag 'module-groups', '{}' %>
@@ -55,6 +57,12 @@
   </span>
   <span style="display: none;" id="clone-group-link-placeholder">
     <%=t "experiments.canvas.edit.clone_module_group" %>
+  </span>
+  <span style="display: none;" id="move-link-placeholder">
+    <%=t "experiments.canvas.edit.move_module" %>
+  </span>
+  <span style="display: none;" id="move-group-link-placeholder">
+    <%=t "experiments.canvas.edit.move_module_group" %>
   </span>
   <span style="display: none;" id="delete-link-placeholder">
     <%=t "experiments.canvas.edit.delete_module" %>
@@ -81,6 +89,10 @@
 <% end %>
 <% if can_edit_module_groups(@experiment) %>
   <%= render partial: "canvas/edit/modal/edit_module_group", locals: {experiment: @experiment } %>
+<% end %>
+<% if can_move_modules(@experiment) %>
+  <%= render partial: "canvas/edit/modal/move_module", locals: {experiment: @experiment } %>
+  <%= render partial: "canvas/edit/modal/move_module_group", locals: {experiment: @experiment } %>
 <% end %>
 <% if can_archive_modules(@experiment) %>
   <%= render partial: "canvas/edit/modal/delete_module", locals: {experiment: @experiment} %>

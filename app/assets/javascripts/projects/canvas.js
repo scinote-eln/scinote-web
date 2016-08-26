@@ -1,3 +1,5 @@
+//= require comments
+
 //************************************
 // CONSTANTS
 //************************************
@@ -78,11 +80,11 @@ var GRID_DIST_SMALL_Y = 100;
   UPDATE my_modules SET x=x*32, y=y*16
   themodel.connection.execute("UPDATE my_modules SET x=x*32, y=y*16")
 */
-var GRID_DIST_FULL_X = 12;
-var GRID_DIST_FULL_Y = 12;
-var GRID_DIST_MEDIUM_X = 8;
-var GRID_DIST_MEDIUM_Y = 8;
-var GRID_DIST_SMALL_X = 5;
+var GRID_DIST_FULL_X = 10;
+var GRID_DIST_FULL_Y = 10;
+var GRID_DIST_MEDIUM_X = 7.3;
+var GRID_DIST_MEDIUM_Y = 4;
+var GRID_DIST_SMALL_X = 2.4;
 var GRID_DIST_SMALL_Y = 5;
 var SUBMIT_FORM_NAME_SEPARATOR = "|";
 
@@ -162,6 +164,7 @@ function initializeEdit() {
   var canEditModuleGroups = _.isEqual($("#update-canvas").data("can-edit-module-groups"), "yes");
   var canCreateModules = _.isEqual($("#update-canvas").data("can-create-modules"), "yes");
   var canCloneModules = _.isEqual($("#update-canvas").data("can-clone-modules"), "yes");
+  var canMoveModules = _.isEqual($("#update-canvas").data("can-move-modules"), "yes");
   var canDeleteModules = _.isEqual($("#update-canvas").data("can-delete-modules"), "yes");
   var canDragModules = _.isEqual($("#update-canvas").data("can-reposition-modules"), "yes");
   var canEditConnections = _.isEqual($("#update-canvas").data("can-edit-connections"), "yes");
@@ -223,6 +226,13 @@ function initializeEdit() {
       GRID_DIST_EDIT_X,
       GRID_DIST_EDIT_Y);
   }
+  if (canMoveModules) {
+    initMoveModules();
+    $(".move-module").on("click touchstart", moveModuleHandler);
+
+    initMoveModuleGroups();
+    $(".move-module-group").on("click touchstart", moveModuleGroupHandler);
+  }
   if (canDeleteModules) {
     bindDeleteModuleAction();
     bindDeleteModuleGroupAction();
@@ -249,6 +259,7 @@ function destroyEdit() {
   // Read permissions from the data attributes of the form
   var canCreateModules = _.isEqual($("#update-canvas").data("can-create-modules"), "yes");
   var canCloneModules = _.isEqual($("#update-canvas").data("can-clone-modules"), "yes");
+  var canMoveModules = _.isEqual($("#update-canvas").data("can-move-modules"), "yes");
   var canDeleteModules = _.isEqual($("#update-canvas").data("can-delete-modules"), "yes");
 
   instance.cleanupListeners();
@@ -275,6 +286,10 @@ function destroyEdit() {
   if (canCloneModules) {
     $(".buttons-container a.clone-module").off("click touchstart");
     $(".buttons-container a.clone-module-group").off("click touchstart");
+  }
+  if (canMoveModules) {
+    $(".move-module").off("click touchstart");
+    $(".move-module-group").off("click touchstart");
   }
 
   $("#update-canvas .cancel-edit-canvas").off("click");
@@ -308,6 +323,11 @@ function initializeFullZoom() {
 
   // Restore draggable position
   restoreDraggablePosition($("#diagram"), $("#canvas-container"));
+
+  // Initialize comments
+  initCommentOptions("ul.content-comments", false);
+  initEditComments(".panel.module-large .tab-content");
+  initDeleteComments(".panel.module-large .tab-content");
 }
 
 function destroyFullZoom() {
@@ -323,6 +343,13 @@ function destroyFullZoom() {
   $("li[data-module-group] > span > a.canvas-center-on").off("click");
   $("li[data-module-id]").off("mouseenter mouseleave");
   $("li[data-module-id] > span > a.canvas-center-on").off("click");
+
+  // Clean up comments listeners
+  $(document).off("scroll");
+  $(".panel.module-large .tab-content")
+  .off("click", "[data-action=edit-comment]");
+  $(".panel.module-large .tab-content")
+  .off("click", "[data-action=delete-comment]");
 
   // Remember the draggable position
   rememberDraggablePosition($("#diagram"), $("#canvas-container"));
@@ -678,6 +705,10 @@ function bindFullZoomAjaxTabs() {
         $(".help-block", $form)
             .html("")
             .addClass("hide");
+        scrollCommentOptions(
+          list.parent().find(".content-comments .dropdown-comment"),
+          false
+        );
       }
     })
     .on("ajax:error", function (ev, xhr) {
@@ -715,6 +746,12 @@ function bindFullZoomAjaxTabs() {
           } else {
             moreBtn.attr("href", data.more_url);
           }
+
+          // Reposition dropdown comment options
+          scrollCommentOptions(
+            listItem.closest(".content-comments").find(".dropdown-comment"),
+            false
+          );
         }
       });
   }
@@ -1325,6 +1362,38 @@ function updateModuleHtml(module, id, name, gridDistX, gridDistY) {
     bindEditModeDropdownHandlers(module);
   }
 
+  // Add move links if neccesary
+  if (_.isEqual($("#update-canvas").data("can-move-modules"), "yes")) {
+    var moveModuleItem = document.createElement("li");
+    $(moveModuleItem).appendTo(dropdownMenu);
+
+    var moveModuleLink = document.createElement("a");
+    $(moveModuleLink)
+    .attr("href", "")
+    .attr("data-module-id", id)
+    .addClass("move-module")
+    .html($("#move-link-placeholder").text().trim())
+    .appendTo(moveModuleItem);
+
+    // Add clone click handler for the new module
+    $(moveModuleLink).on("click touchstart", moveModuleHandler);
+
+    // Add buttons for module groups
+    var moveModuleGroupItem = document.createElement("li");
+    $(moveModuleGroupItem).appendTo(dropdownMenu);
+    $(moveModuleGroupItem).hide();
+
+    var moveModuleGroupLink = document.createElement("a");
+    $(moveModuleGroupLink)
+    .attr("href", "")
+    .attr("data-module-id", id)
+    .addClass("move-module-group")
+    .html($("#move-group-link-placeholder").text().trim())
+    .appendTo(moveModuleGroupItem);
+
+    $(moveModuleGroupLink).on("click touchstart", moveModuleGroupHandler);
+  }
+
   // Add delete links if neccesary
   if (_.isEqual($("#update-canvas").data("can-delete-modules"), "yes")) {
     var deleteModuleItem = document.createElement("li");
@@ -1823,6 +1892,186 @@ editModuleGroupHandler = function(ev) {
   return false;
 };
 
+function initMoveModules() {
+  function handleMoveConfirm(modal) {
+    var moduleId = modal.attr("data-module-id");
+    var moduleEl = $("#" + moduleId);
+    var input = modal.find('.selectpicker');
+    var moveToExperimentId = input.val();
+
+    // Add this information to form
+    var formMoveInput = $("#update-canvas form input#move");
+
+    // Save mapping to input
+    var moveVal = JSON.parse(formMoveInput.attr("value"));
+    moveVal[moduleEl.attr("id")] = moveToExperimentId;
+    formMoveInput.attr("value", JSON.stringify(moveVal));
+
+    updateFormWithModulesData(moduleEl, '', GRID_DIST_EDIT_X, GRID_DIST_EDIT_Y);
+
+    // Delete module from canvas
+    deleteModule(moduleEl.attr("id"));
+
+    // Hide modal
+    modal.modal("hide");
+  }
+
+  $("#modal-move-module")
+  .on("show.bs.modal", function (event) {
+    var modal = $(this);
+    var moduleId = modal.attr("data-module-id");
+    var moduleEl = $("#" + moduleId);
+    var input = modal.find('.selectpicker');
+
+    // Bind on enter button
+    input.keydown(function(ev) {
+      if (ev.keyCode == 13) {
+        // "Submit" modal
+        handleMoveConfirm(modal);
+
+        // In any case, prevent form submission
+        ev.preventDefault();
+        ev.stopPropagation();
+        return false;
+      }
+    });
+  })
+  .on("shown.bs.modal", function(event) {
+    // Focus the text element
+    $(this).find(".selectpicker").focus();
+  })
+  .on("hide.bs.modal", function (event) {
+    // When hiding modal, re-enable events
+    toggleCanvasEvents(true);
+  });
+
+  // Bind the confirm button on modal
+  $("#modal-move-module").find("button[data-action='confirm']").on("click", function(event) {
+    var modal = $(this).closest(".modal");
+    handleMoveConfirm(modal);
+  });
+}
+
+/**
+ * Handler when trying to move a specific module.
+ */
+moveModuleHandler = function(ev) {
+  var modal = $("#modal-move-module");
+  var moduleEl = $(this).closest(".module");
+
+  // Set modal's module id
+  modal.attr("data-module-id", moduleEl.attr("id"));
+
+  // Disable dragging & zooming events on canvas temporarily
+  toggleCanvasEvents(false);
+
+  // Show modal
+  modal.modal("show");
+
+  ev.preventDefault();
+  ev.stopPropagation();
+  return false;
+};
+
+
+/**
+ * Initialize editing of module groups.
+ */
+function initMoveModuleGroups() {
+  function handleMoveModuleGroupConfirm(modal) {
+    var moduleId = modal.attr("data-module-id");
+    var moduleEl = $("#" + moduleId);
+    var input = modal.find('.selectpicker');
+    var moveToExperimentId = input.val();
+
+    // Retrieve all modules in this module group
+    var components = connectedComponents(graph, moduleId.toString());
+    var group = _.map(components, function(id) { return $("#" + id); });
+
+    var conns = _.filter(graph.edges(), function(conn) {
+      return _.contains(components, conn[0]) || _.contains(components, conn[1]);
+    });
+
+    updateFormWithModulesData(group, conns.toString(), GRID_DIST_EDIT_X, GRID_DIST_EDIT_Y);
+
+    // Add move information to form
+    var formMoveInput = $("#update-canvas form input#move");
+
+    moveModules = [];
+    _.each(group, function(m) {
+      moveModules.push(m.attr("id"));
+    });
+
+    // Put the array into input
+    var moveVal = JSON.parse(formMoveInput.attr("value"));
+    moveVal[moveModules] = moveToExperimentId;
+    formMoveInput.attr("value", JSON.stringify(moveVal));
+
+    _.each(group, function(m) {
+      deleteModule(m.attr("id"));
+    });
+
+    // Hide modal
+    modal.modal("hide");
+  }
+
+  $("#modal-move-module-group")
+  .on("show.bs.modal", function (event) {
+    var modal = $(this);
+    var moduleId = modal.attr("data-module-id");
+    var moduleEl = $("#" + moduleId);
+    var input = modal.find('.selectpicker');
+
+    // Bind on enter button
+    input.keydown(function(ev) {
+      if (ev.keyCode == 13) {
+        // "Submit" modal
+        handleMoveConfirm(modal);
+
+        // In any case, prevent form submission
+        ev.preventDefault();
+        ev.stopPropagation();
+        return false;
+      }
+    });
+  })
+  .on("shown.bs.modal", function(event) {
+    // Focus the text element
+    $(this).find(".selectpicker").focus();
+  })
+  .on("hide.bs.modal", function (event) {
+    // When hiding modal, re-enable events
+    toggleCanvasEvents(true);
+  });
+
+  // Bind the confirm button on modal
+  $("#modal-move-module-group").find("button[data-action='confirm']").on("click", function(event) {
+    var modal = $(this).closest(".modal");
+    handleMoveModuleGroupConfirm(modal);
+  });
+}
+
+/**
+ * Handler when editing a module group.
+ */
+moveModuleGroupHandler = function(ev) {
+  var modal = $("#modal-move-module-group");
+  var moduleEl = $(this).closest(".module");
+
+  // Set modal's module id
+  modal.attr("data-module-id", moduleEl.attr("id"));
+
+  // Disable dragging & zooming events on canvas temporarily
+  toggleCanvasEvents(false);
+
+  // Show modal
+  modal.modal("show");
+
+  ev.preventDefault();
+  ev.stopPropagation();
+  return false;
+};
+
 /**
  * Bind the delete module buttons actions.
  */
@@ -1897,6 +2146,7 @@ function deleteModule(id, linkConnections) {
           tempModuleEl = $("#" + inEdge[0]);
           tempModuleEl.find(".edit-module-group").parents("li").hide();
           tempModuleEl.find(".clone-module-group").parents("li").hide();
+          tempModuleEl.find(".move-module-group").parents("li").hide();
           tempModuleEl.find(".delete-module-group").parents("li").hide();
         }
       });
@@ -1907,6 +2157,7 @@ function deleteModule(id, linkConnections) {
           tempModuleEl = $("#" + outEdge[1]);
           tempModuleEl.find(".edit-module-group").parents("li").hide();
           tempModuleEl.find(".clone-module-group").parents("li").hide();
+          tempModuleEl.find(".move-module-group").parents("li").hide();
           tempModuleEl.find(".delete-module-group").parents("li").hide();
         }
       });
@@ -1918,9 +2169,27 @@ function deleteModule(id, linkConnections) {
   var formAddNamesInput = $('#update-canvas form input#add-names');
   var formClonedInput = $('#update-canvas form input#cloned');
   var formRemoveInput = $('#update-canvas form input#remove');
+  var formMoveInput = $('#update-canvas form input#move');
   var inputVal, newVal;
   var vals, idx;
   var addToRemoveList = true;
+
+  // If the module was moved, we don't need to do anything with it
+  inputVal = formMoveInput.attr("value");
+  if (!_.isUndefined(inputVal) && inputVal !== "") {
+    moved = [];
+    $.each(JSON.parse(formMoveInput.val()), function(key, value) {
+      if (key.match(/.*,.*/))
+        moved = moved.concat(key.split(','));
+      else
+        moved.push(key);
+    });
+
+    if (_.contains(moved, id)) {
+      addToRemoveList = false;
+      return;
+    }
+  }
 
   // If the module we are deleting was added via JS
   // (and hasn't been saved yet), we don't need to "add" it
@@ -2278,6 +2547,7 @@ cloneModuleGroupHandler = function(moduleId, modulesSel, gridDistX, gridDistY) {
     //Show module group options
     nm.find(".edit-module-group").parents("li").show();
     nm.find(".clone-module-group").parents("li").show();
+    nm.find(".move-module-group").parents("li").show();
     nm.find(".delete-module-group").parents("li").show();
 
     clones[m.attr("id")] = nm.attr("id");
@@ -2314,31 +2584,54 @@ cloneModuleGroupHandler = function(moduleId, modulesSel, gridDistX, gridDistY) {
 function bindEditFormSubmission(gridDistX, gridDistY) {
   $('#update-canvas form').submit(function(){
     var modules = $(".diagram .module");
-    var connectionsDiv = $('#update-canvas form input#connections');
-    var positionsDiv = $('#update-canvas form input#positions');
-    var moduleNamesDiv = $('#update-canvas form input#module-groups');
 
-    // Connections are easy, just copy graph data
-    connectionsDiv.attr("value", graph.edges().toString());
-
-    // Positions are a bit more tricky, but still pretty straightforward
-    var moduleGroupNames = {};
-    var positionsVal = "";
-    var module, id, x, y;
-    _.each(modules, function(m) {
-      module = $(m);
-      id = module.attr("id");
-      x = elLeft(module) / gridDistX;
-      y = elTop(module) / gridDistY;
-      positionsVal += id + "," + x + "," + y + ";";
-      moduleGroupNames[id] = module.attr("data-module-group-name");
-    });
-    positionsDiv.attr("value", positionsVal);
-    moduleNamesDiv.attr("value", JSON.stringify(moduleGroupNames));
+    updateFormWithModulesData(modules, graph.edges().toString(), gridDistX, gridDistY)
 
     ignoreUnsavedWorkAlert = true;
     return true;
   });
+}
+
+/**
+ * Update form with given modules position and connections.
+ * @param modules   - Modules, which should be inserted into form
+ * @param connections- Connections, which should be inserted into form (empty if
+ * no connections)
+ * @param gridDistX - The canvas grid distance in X direction.
+ * @param gridDistY - The canvas grid distance in Y direction.
+ */
+function updateFormWithModulesData(modules, connections, gridDistX, gridDistY) {
+  var connectionsDiv = $('#update-canvas form input#connections');
+  var positionsDiv = $('#update-canvas form input#positions');
+  var moduleNamesDiv = $('#update-canvas form input#module-groups');
+
+  // Connections are easy, just copy graph data
+  if (connections) {
+    if (connectionsDiv.val())
+      connectionsDiv.attr("value", connectionsDiv.val() + ',' + connections.toString());
+    else
+      connectionsDiv.attr("value", connections.toString());
+  }
+
+  // Positions are a bit more tricky, but still pretty straightforward
+  var moduleGroupNames = {};
+  var positionsVal = "";
+  var module, id, x, y;
+  _.each(modules, function(m) {
+    module = $(m);
+    id = module.attr("id");
+    x = elLeft(module) / gridDistX;
+    y = elTop(module) / gridDistY;
+    positionsVal += id + "," + x + "," + y + ";";
+    moduleGroupNames[id] = module.attr("data-module-group-name");
+  });
+  positionsDiv.attr("value", positionsDiv.val() + positionsVal);
+
+  if (moduleNamesDiv.val())
+    moduleNamesDiv.attr("value", JSON.stringify($.extend(JSON.parse(moduleNamesDiv.val()),
+                                                         moduleGroupNames)));
+  else
+    moduleNamesDiv.attr("value", JSON.stringify(moduleGroupNames));
 }
 
 /**
@@ -2855,10 +3148,12 @@ function initJsPlumb(containerSel, containerChildSel, modulesSel, params) {
 
       srcModuleEl.find(".edit-module-group").parents("li").show();
       srcModuleEl.find(".clone-module-group").parents("li").show();
+      srcModuleEl.find(".move-module-group").parents("li").show();
       srcModuleEl.find(".delete-module-group").parents("li").show();
 
       targetModuleEl.find(".edit-module-group").parents("li").show();
       targetModuleEl.find(".clone-module-group").parents("li").show();
+      targetModuleEl.find(".move-module-group").parents("li").show();
       targetModuleEl.find(".delete-module-group").parents("li").show();
       return true;
     });
@@ -2891,11 +3186,13 @@ function initJsPlumb(containerSel, containerChildSel, modulesSel, params) {
       if (graph.degree(c.sourceId) === 0) {
         srcModuleEl.find(".edit-module-group").parents("li").hide();
         srcModuleEl.find(".clone-module-group").parents("li").hide();
+        srcModuleEl.find(".move-module-group").parents("li").hide();
         srcModuleEl.find(".delete-module-group").parents("li").hide();
       }
       if (graph.degree(c.targetId) === 0) {
         targetModuleEl.find(".edit-module-group").parents("li").hide();
         targetModuleEl.find(".clone-module-group").parents("li").hide();
+        targetModuleEl.find(".move-module-group").parents("li").hide();
         targetModuleEl.find(".delete-module-group").parents("li").hide();
       }
     });
@@ -2989,6 +3286,13 @@ function initJsPlumb(containerSel, containerChildSel, modulesSel, params) {
 
   jsPlumb.fire("jsPlumbLoaded", instance);
 }
+
+// Opens edit mode if redirected from empty experiment
+(function noWorkflowimgEditMode(){
+  if( getParam('editMode') ){
+    $("#edit-canvas-button").click();
+  }
+})();
 
 // Initialize first-time tutorial
 function initializeTutorial(isEditMode) {
