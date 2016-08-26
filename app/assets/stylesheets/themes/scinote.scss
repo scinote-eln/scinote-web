@@ -1116,7 +1116,11 @@ html.turbolinks-progress-bar::before {
 }
 
 .custom .introjs-prevbutton {
-  display: none ;
+  display: none;
+}
+
+.custom .introjs-disabled {
+  display: none;
 }
 
 .custom .introjs-skipbutton {
@@ -1169,6 +1173,7 @@ html.turbolinks-progress-bar::before {
   display: inline-block;
   margin-right: 5px;
 }
+
 
 // Comments
 

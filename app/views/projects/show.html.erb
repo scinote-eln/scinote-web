@@ -3,15 +3,22 @@
 <%= render partial: "shared/secondary_navigation" %>
 
 <div class="row">
-  <div class="col-sm-12">
+  <div class="col-sm-12"
+       id="data-holder"
+       data-project-id="<%= @project.id %>">
       <% if can_create_experiment(@project) %>
       <div class="row">
         <div class="col-sm-12">
-          <%= link_to new_project_experiment_url(@project), 
+          <%= link_to new_project_experiment_url(@project),
                         remote: true,
                         type: "button",
                         id: 'new-experiment',
-                        class: "btn btn-primary pull-right" do %>
+                        class: 'btn btn-primary pull-right',
+                        data: {
+                            intro: t('tutorial.create_experiment_html'),
+                            step: '4',
+                            position: 'left'
+                            }   do %>
             <span class="glyphicon glyphicon-plus"></span>
             <%= t('experiments.new.create') %>
           <% end %>

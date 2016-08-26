@@ -2,15 +2,19 @@
 <%= render partial: "shared/sidebar" %>
 <%= render partial: "shared/secondary_navigation" %>
 
-<div id="diagram-buttons" data-intro="<%=t ('tutorial.canvas_click_edit_workflow_html') %>" data-step="5" data-position="left">
-
+<div id="diagram-buttons">
   <% if can_edit_canvas(@experiment) %>
     <%=link_to canvas_edit_experiment_url(@experiment),
           remote: true,
-          type: "button",
-          id: "edit-canvas-button",
-          class: "ajax btn btn-default",
-          "data-action" => "edit" do %>
+          type: 'button',
+          id: 'edit-canvas-button',
+          class: 'ajax btn btn-default',
+          data: {
+                action: 'edit',
+                intro: t('tutorial.canvas_click_edit_workflow_html'),
+                step: '5',
+                position: 'left'
+            } do %>
             <span class="glyphicon glyphicon-pencil"></span>
             <%= t('experiments.canvas.canvas_edit') %>
           <% end %>
