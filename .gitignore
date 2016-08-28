@@ -47,6 +47,3 @@ tags
 
 # Ignore rubocop cache files
 rubocop_cache
-
-# Ignore billing module
-/billing/
