@@ -80,17 +80,15 @@ class SamplesController < ApplicationController
 
         errors.delete_if { |k, v| v.blank? }
         if errors.empty?
-          format.json {
-            render json: {
+          format.json
+            render json:
               id: sample.id,
               flash: t(
                 'samples.create.success_flash',
                 sample: sample.name,
                 organization: @organization.name
-              )
-            },
+              ),
             status: :ok
-          }
         else
           format.json { render json: errors, status: :bad_request }
         end
@@ -237,17 +235,15 @@ class SamplesController < ApplicationController
             # Now we can destroy empty scfs
             scf_to_delete.map(&:destroy)
 
-            format.json {
-              render json: {
+            format.json
+              render json:
                 id: sample.id,
                 flash: t(
                   'samples.update.success_flash',
                   sample: sample.name,
                   organization: @organization.name
-                )
-              },
+                ),
               status: :ok
-            }
           else
             format.json { render json: errors, status: :bad_request }
           end
