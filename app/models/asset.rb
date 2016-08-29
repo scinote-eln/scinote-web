@@ -221,7 +221,7 @@ class Asset < ActiveRecord::Base
         S3_BUCKET.object(key).delete
       end
     end
-
+    report_elements.destroy_all
     delete
   end
 
