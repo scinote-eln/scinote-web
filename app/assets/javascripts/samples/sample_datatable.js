@@ -398,6 +398,7 @@ function onClickSave() {
         dataType: "json",
         data: data,
         success: function (data) {
+            sampleAlertMsg(data.flash);
             onClickCancel();
         },
         error: function (e, eData, status, xhr) {
