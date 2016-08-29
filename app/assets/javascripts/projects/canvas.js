@@ -3485,8 +3485,10 @@ function canvas_tutorial_helper(){
 }
 
 function restore_after_tutorial(){
-  $('#canvas-new-module')
-  .css({'pointer-events': 'auto'});
+  $( document ).ajaxComplete(function() {
+    $('#canvas-new-module')
+    .css({'pointer-events': 'auto'});
+  });
 
   $('#slide-panel')
   .css({'pointer-events': 'auto'});
