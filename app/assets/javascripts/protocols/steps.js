@@ -359,7 +359,6 @@ function initStepCommentForm(ev, $el) {
   var $form = $el.find("ul form");
 
   var $commentInput = $form.find("#comment_message");
-  $form.onSubmitValidator(textValidator, $commentInput);
 
   $(".help-block", $form).addClass("hide");
 
