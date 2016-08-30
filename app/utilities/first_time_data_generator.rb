@@ -537,7 +537,8 @@ module FirstTimeDataGenerator
     generate_result_comment(
       temp_result,
       user,
-      'PVY NTN 6dpi isolation seems to have failed, please repeat nanodrop measurement.'
+      'PVY NTN 6dpi isolation seems to have failed, ' \
+      'please repeat nanodrop measurement.'
     )
     temp_result.table = Table.new(
       created_by: user,
