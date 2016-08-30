@@ -135,10 +135,10 @@ module FirstTimeDataGenerator
     )
 
     # Add a comment
-    project.comments << Comment.create(
-      user: user,
-      message: "I've created a demo project",
-      created_at: generate_random_time(1.week.ago)
+    generate_project_comment(
+      project,
+      user,
+      "I've created a demo project"
     )
 
     # Create a module group
@@ -316,44 +316,45 @@ module FirstTimeDataGenerator
     end
 
     # Add comments to modules
-    my_modules[0].comments << Comment.create(
-      user: user,
-      message: "We should have a meeting to discuss sampling parametrs soon.",
-      created_at: generate_random_time(my_modules[0].created_at, 1.day)
+    generate_module_comment(
+      my_modules[0],
+      user,
+      'We should have a meeting to discuss sampling parametrs soon.'
     )
-    my_modules[0].comments << Comment.create(
-      user: user,
-      message: "I agree."
-    )
-
-    my_modules[1].comments << Comment.create(
-      user: user,
-      message: "The samples have arrived.",
-      created_at: generate_random_time(my_modules[0].created_at, 2.days)
+    generate_module_comment(
+      my_modules[0],
+      user,
+      'I agree.'
     )
 
-    my_modules[2].comments << Comment.create(
-      user: user,
-      message: "Due date has been postponed for a day.",
-      created_at: generate_random_time(my_modules[0].created_at, 1.days)
+    generate_module_comment(
+      my_modules[1],
+      user,
+      'The samples have arrived.'
     )
 
-    my_modules[4].comments << Comment.create(
-      user: user,
-      message: "Please show Steve the RT procedure.",
-      created_at: generate_random_time(my_modules[0].created_at, 2.days)
+    generate_module_comment(
+      my_modules[2],
+      user,
+      'Due date has been postponed for a day.'
     )
 
-    my_modules[5].comments << Comment.create(
-      user: user,
-      message: "The results must be very definitive.",
-      created_at: generate_random_time(my_modules[0].created_at, 3.days)
+    generate_module_comment(
+      my_modules[4],
+      user,
+      'Please show Steve the RT procedure.'
     )
 
-    my_modules[7].comments << Comment.create(
-      user: user,
-      message: "The due date here is flexible.",
-      created_at: generate_random_time(my_modules[0].created_at, 3.days)
+    generate_module_comment(
+      my_modules[5],
+      user,
+      'The results must be very definitive.'
+    )
+
+    generate_module_comment(
+      my_modules[7],
+      user,
+      'The due date here is flexible.'
     )
 
     # Create tags and add them to module
@@ -422,10 +423,10 @@ module FirstTimeDataGenerator
       created_at: generate_random_time(my_modules[0].created_at, 1.days),
       user: user
     )
-    temp_result.comments << Comment.new(
-      user: user,
-      message: "The table shows proposed number of biological replicates.",
-      created_at: generate_random_time(my_modules[0].created_at, 1.days)
+    generate_result_comment(
+      temp_result,
+      user,
+      'The table shows proposed number of biological replicates.'
     )
     temp_result.table = Table.new(
       created_by: user,
@@ -533,10 +534,10 @@ module FirstTimeDataGenerator
       created_at: generate_random_time(my_modules[2].created_at, 1.days),
       user: user
     )
-    temp_result.comments << Comment.new(
-      user: user,
-      message: "PVY NTN 6dpi isolation seems to have failed, please repeat nanodrop measurement.",
-      created_at: generate_random_time(my_modules[2].created_at, 2.days)
+    generate_result_comment(
+      temp_result,
+      user,
+      'PVY NTN 6dpi isolation seems to have failed, please repeat nanodrop measurement.'
     )
     temp_result.table = Table.new(
       created_by: user,
@@ -738,12 +739,12 @@ module FirstTimeDataGenerator
 
     # Add comment to step
     step = my_modules[6].protocol.steps.where("position = 1").take
-    step.comments << Comment.new(
-      user: user,
-      message: "What is the Cq that should be considered as positive result?",
-      created_at: generate_random_time(step.created_at, 2.hours)
-    )
     step.save
+    generate_step_comment(
+      step,
+      user,
+      'What is the Cq that should be considered as positive result?'
+    )
 
     # ----------------- Module 8 ------------------
     module_step_names = [
@@ -815,7 +816,7 @@ module FirstTimeDataGenerator
 
     # create thumbnail
     experiment.generate_workflow_img
-    
+
     # Lastly, create cookie with according ids
     # so tutorial steps can be properly positioned
     JSON.generate([
@@ -903,27 +904,90 @@ module FirstTimeDataGenerator
         end
         if polite_comment
           commented_on = generate_random_time(completed_on)
-          step.comments << Comment.create(
-            user: @user,
-            message: polite_comment,
-            created_at: commented_on
-          )
-          Activity.create(
-            type_of: :add_comment_to_step,
-            project: my_module.experiment.project,
-            my_module: my_module,
-            user: @user,
-            created_at: commented_on,
-            message: I18n.t(
-              "activities.add_comment_to_step",
-              user: @user.full_name,
-              step: i,
-              step_name: step.name
-            )
+          generate_step_comment(
+            step,
+            @user,
+            polite_comment,
+            commented_on
           )
         end
       end
     end
   end
 
+  def generate_project_comment(project, user, message, created_at = nil)
+    created_at ||= generate_random_time(project.created_at, 1.week)
+    project.comments << Comment.create(
+      user: user,
+      message: message,
+      created_at: created_at
+    )
+    Activity.create(
+      type_of: :add_comment_to_project,
+      user: user,
+      project: project,
+      created_at: created_at,
+      message: t('activities.add_comment_to_project',
+                 user: user.full_name,
+                 project: project.name)
+    )
+  end
+
+  def generate_module_comment(my_module, user, message, created_at = nil)
+    created_at ||= generate_random_time(my_module.created_at, 1.day)
+    my_module.comments << Comment.create(
+      user: user,
+      message: message,
+      created_at: created_at
+    )
+    Activity.create(
+      type_of: :add_comment_to_module,
+      user: user,
+      project: my_module.experiment.project,
+      my_module: my_module,
+      created_at: created_at,
+      message: t('activities.add_comment_to_module',
+                 user: user.full_name,
+                 module: my_module.name)
+    )
+  end
+
+  def generate_result_comment(result, user, message, created_at = nil)
+    created_at ||= generate_random_time(result.created_at, 1.days)
+    result.comments << Comment.new(
+      user: user,
+      message: message,
+      created_at: created_at
+    )
+    Activity.create(
+      type_of: :add_comment_to_result,
+      user: user,
+      project: result.my_module.experiment.project,
+      my_module: result.my_module,
+      created_at: created_at,
+      message: t('activities.add_comment_to_result',
+                 user: user.full_name,
+                 result: result.name)
+    )
+  end
+
+  def generate_step_comment(step, user, message, created_at = nil)
+    created_at ||= generate_random_time(step.created_at, 2.hours)
+    step.comments << Comment.new(
+      user: user,
+      message: message,
+      created_at: created_at
+    )
+    Activity.create(
+      type_of: :add_comment_to_step,
+      user: user,
+      project: step.protocol.my_module.experiment.project,
+      my_module: step.protocol.my_module,
+      created_at: created_at,
+      message: t('activities.add_comment_to_step',
+                 user: user.full_name,
+                 step: step.position + 1,
+                 step_name: step.name)
+    )
+  end
 end
