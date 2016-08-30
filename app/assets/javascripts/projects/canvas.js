@@ -1909,7 +1909,7 @@ function initMoveModules() {
     updateFormWithModulesData(moduleEl, '', GRID_DIST_EDIT_X, GRID_DIST_EDIT_Y);
 
     // Delete module from canvas
-    deleteModule(moduleEl.attr("id"));
+    deleteModule(moduleEl.attr("id"), true);
 
     // Hide modal
     modal.modal("hide");
