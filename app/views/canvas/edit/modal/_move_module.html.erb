@@ -23,10 +23,10 @@
       <% end %>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal"><%=t "general.cancel" %></button>
-        <% if experiments.count > 1 %>
-          <button type="button" class="btn btn-primary" data-action="confirm"><%=t "experiments.canvas.edit.modal_move_module.confirm" %></button>
-        <% end %>
+      <% if experiments.count > 1 %>
+        <button type="button" class="btn btn-primary" data-action="confirm"><%=t "experiments.canvas.edit.modal_move_module.confirm" %></button>
+      <% end %>
+      <button type="button" class="btn btn-default" data-dismiss="modal"><%=t "general.cancel" %></button>
       </div>
     </div>
   </div>
