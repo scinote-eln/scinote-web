@@ -177,7 +177,7 @@ function initTutorial() {
           {
             element: document.getElementById("secondary-menu"),
             intro: breadcrumbsTutorial,
-            tooltipClass: 'custom next-page-link'
+            tooltipClass: 'custom next-page-link',
           }
         ],
         overlayOpacity: '0.1',
@@ -253,19 +253,17 @@ function showTutorial() {
 }
 
 function samples_tutorial_helper(){
-  $(document).ready(function(){
-    if( $('div').hasClass('introjs-showElement') ){
-      $('#secondary-menu')
-        .find('a')
-        .css({ 'pointer-events': 'none' });
+    if( $('div').hasClass('introjs-overlay') ){
+      $.each( $('#secondary-menu').find('a'), function(){
+        $(this).css({ 'pointer-events': 'none' });
+      });
     }
-  });
 }
 
 function restore_after_tutorial(){
-  $('#secondary-menu')
-    .find('a')
-    .css({ 'pointer-events': 'auto' });
+  $.each( $('#secondary-menu').find('a'), function(){
+    $(this).css({ 'pointer-events': 'auto' });
+  });
 }
 // Initialize first-time tutorial
 initTutorial();
