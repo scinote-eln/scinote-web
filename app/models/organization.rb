@@ -255,7 +255,12 @@ class Organization < ActiveRecord::Base
   def calculate_space_taken
     st = 0
     projects.includes(
-      my_modules: { protocols: { steps: :assets }, results: { result_asset: :asset } }
+      experiments: {
+        my_modules: {
+          protocols: { steps: :assets },
+          results: { result_asset: :asset }
+        }
+      }
     ).find_each do |project|
       project.project_my_modules.find_each do |my_module|
         my_module.protocol.steps.find_each do |step|

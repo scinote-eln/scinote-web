@@ -16,7 +16,7 @@ namespace :db do
   NR_PROTOCOLS = 20
   NR_PROTOCOL_KEYWORDS = 20
   NR_PROJECTS = 3
-  NR_EXPERIMENTS = 2
+  NR_EXPERIMENTS = 4
   NR_MODULE_GROUPS = 4
   NR_MODULES = 4
   NR_STEPS = 3
@@ -437,13 +437,7 @@ namespace :db do
 
               # Add some comments
               for _ in 1..nr_comments
-                if rand <= RATIO_COMMENTS
-                  project.comments << Comment.create(
-                    user: pluck_random(project.users),
-                    message: Faker::Hipster.sentence,
-                    created_at: Faker::Time.backward(500)
-                  )
-                end
+                generate_fake_project_comment(project) if rand <= RATIO_COMMENTS
               end
             end
           end
@@ -458,13 +452,15 @@ namespace :db do
               restored_by = pluck_random(project.users)
               restored_on = Faker::Time.between(archived_on, DateTime.now)
 
+              author = pluck_random(project.users)
               Experiment.create(
                 name: Faker::Hacker.noun,
                 description: Faker::Hipster.sentence,
                 project: project,
                 created_at: created_at,
-                created_by: pluck_random(project.users),
-                archived: status,
+                created_by: author,
+                last_modified_by: author,
+                archived: status.in?([:active, :restored]),
                 archived_on: status.in?([:archived, :restored]) ?
                   archived_on : nil,
                 archived_by: status.in?([:archived, :restored]) ?
@@ -496,8 +492,8 @@ namespace :db do
             taken_pos = []
             for _ in 1..nr_modules
               begin
-                x = rand(0..nr_modules)
-                y = rand(0..nr_modules)
+                x = rand(0..nr_modules) * 32
+                y = rand(0..nr_modules) * 16
               end while [x, y].in? taken_pos
               taken_pos << [x, y]
 
@@ -523,7 +519,7 @@ namespace :db do
                 my_module_group: status == :archived ?
                   nil :
                   (rand <= RATIO_MODULE_MODULE_GROUPS ?
-                    pluck_random(project.my_module_groups) : nil
+                    pluck_random(experiment.my_module_groups) : nil
                   ),
                 archived: status == :archived,
                 archived_on: status.in?([:archived, :restored]) ?
@@ -538,7 +534,7 @@ namespace :db do
               Activity.create(
                 type_of: :create_module,
                 user: author,
-                project: my_module.project,
+                project: my_module.experiment.project,
                 my_module: my_module,
                 message: I18n.t(
                   "activities.create_module",
@@ -551,7 +547,7 @@ namespace :db do
                 Activity.create(
                   type_of: :archive_module,
                   user: archived_by,
-                  project: my_module.project,
+                  project: my_module.experiment.project,
                   my_module: my_module,
                   message: I18n.t(
                     "activities.archive_module",
@@ -565,7 +561,7 @@ namespace :db do
                 Activity.create(
                   type_of: :restore_module,
                   user: restored_by,
-                  project: my_module.project,
+                  project: my_module.experiment.project,
                   my_module: my_module,
                   message: I18n.t(
                     "activities.restore_module",
@@ -590,7 +586,7 @@ namespace :db do
                   taken_user_ids << user.id
 
                   assigned_on = Faker::Time.backward(500)
-                  assigned_by = pluck_random(my_module.project.users)
+                  assigned_by = pluck_random(my_module.experiment.project.users)
                   UserMyModule.create(
                     user: user,
                     my_module: my_module,
@@ -600,7 +596,7 @@ namespace :db do
                   Activity.create(
                     type_of: :assign_user_to_module,
                     user: assigned_by,
-                    project: my_module.project,
+                    project: my_module.experiment.project,
                     my_module: my_module,
                     message: I18n.t(
                       "activities.assign_user_to_module",
@@ -634,18 +630,12 @@ namespace :db do
 
               # Add some comments
               for _ in 1..nr_comments
-                if rand <= RATIO_COMMENTS
-                  my_module.comments << Comment.create(
-                    user: pluck_random(my_module.project.users),
-                    message: Faker::Hipster.sentence,
-                    created_at: Faker::Time.backward(500)
-                  )
-                end
+                generate_fake_module_comment(my_module) if rand <= RATIO_COMMENTS
               end
             end
 
             # Generate some connections between modules
-            project.my_module_groups.find_each do |my_module_group|
+            experiment.my_module_groups.find_each do |my_module_group|
               if my_module_group.my_modules.empty? or
                 my_module_group.my_modules.count == 1
                 # If any module group doesn't contain
@@ -753,7 +743,7 @@ namespace :db do
                 # Add activities
                 Activity.create(
                   type_of: :add_result,
-                  project: project,
+                  project: experiment.project,
                   my_module: my_module,
                   user: user,
                   created_at: created_at,
@@ -767,7 +757,7 @@ namespace :db do
                   Activity.create(
                     type_of: :archive_result,
                     user: user,
-                    project: project,
+                    project: experiment.project,
                     my_module: my_module,
                     message: I18n.t(
                       str2,
@@ -781,27 +771,7 @@ namespace :db do
 
                 # Add some comments
                 for _ in 1..nr_comments
-                  if rand <= RATIO_COMMENTS
-                    comment_user = pluck_random(result.my_module.project.users)
-                    comment_created_at = Faker::Time.backward(500)
-                    result.comments << Comment.create(
-                      user: comment_user,
-                      message: Faker::Hipster.sentence,
-                      created_at: comment_created_at
-                    )
-                    Activity.create(
-                      type_of: :add_comment_to_result,
-                      project: project,
-                      my_module: my_module,
-                      user: comment_user,
-                      created_at: comment_created_at,
-                      message: I18n.t(
-                        "activities.add_comment_to_result",
-                        user: user.full_name,
-                        result: result.name
-                      )
-                    )
-                  end
+                  generate_fake_result_comment(result) if rand <= RATIO_COMMENTS
                 end
               end
             end
@@ -972,6 +942,11 @@ namespace :db do
           create_private_user_organization(user, DEFAULT_PRIVATE_ORG_NAME)
         end
 
+        # Generate thumbnails of all experiments
+        Experiment.find_each do |experiment|
+          experiment.generate_workflow_img
+        end
+
         # Calculate space taken by each organization; this must
         # be done in a separate transaction because the estimated
         # asset sizes are calculated in after_commit, which is done
@@ -1001,7 +976,7 @@ namespace :db do
     protocol = nil
     if my_module.present?
       protocol = my_module.protocol
-      users = my_module.users
+      users = my_module.experiment.project.users
       author = pluck_random(users)
       if rand <= THRESHOLD_PROTOCOL_IN_MODULE_LINKED &&
         (parent = pluck_random(
@@ -1082,7 +1057,7 @@ namespace :db do
         if protocol.in_module?
           Activity.create(
             type_of: :create_step,
-            project: my_module.project,
+            project: my_module.experiment.project,
             my_module: my_module,
             user: step.user,
             created_at: created_at,
@@ -1097,7 +1072,7 @@ namespace :db do
         if completed then
           Activity.create(
             type_of: :complete_step,
-            project: my_module.project,
+            project: my_module.experiment.project,
             my_module: my_module,
             user: step.user,
             created_at: completed_on,
@@ -1136,7 +1111,7 @@ namespace :db do
                 if checked then
                   Activity.create(
                     type_of: :check_step_checklist_item,
-                    project: my_module.project,
+                    project: my_module.experiment.project,
                     my_module: my_module,
                     user: step.user,
                     created_at: checked_on,
@@ -1161,6 +1136,8 @@ namespace :db do
           if rand <= RATIO_STEP_ATTACHMENTS then
             asset = Asset.create(
               file: generate_file(rand(MIN_FILE_SIZE..MAX_FILE_SIZE)),
+              estimated_size: 0,
+              file_present: true,
               created_by: step.user
             )
             StepAsset.create(
@@ -1198,7 +1175,7 @@ namespace :db do
               )
               Activity.create(
                 type_of: :add_comment_to_step,
-                project: my_module.project,
+                project: my_module.experiment.project,
                 my_module: my_module,
                 user: user,
                 created_at: created_at,
@@ -1245,6 +1222,90 @@ namespace :db do
         shuffle_report_elements(re2.children)
       end
     end
+  end
+
+  def generate_fake_project_comment(project)
+    user = pluck_random(project.users)
+    created_at = Faker::Time.backward(500)
+    project.comments << Comment.create(
+      user: user,
+      message: Faker::Hipster.sentence,
+      created_at: created_at
+    )
+    Activity.create(
+      type_of: :add_comment_to_project,
+      user: user,
+      project: project,
+      created_at: created_at,
+      message: I18n.t('activities.add_comment_to_project',
+                      user: user.full_name,
+                      project: project.name)
+    )
+  end
+
+  def generate_fake_module_comment(my_module)
+    user = pluck_random(my_module.experiment.project.users)
+    created_at = Faker::Time.backward(500)
+    my_module.comments << Comment.create(
+      user: user,
+      message: Faker::Hipster.sentence,
+      created_at: created_at
+    )
+    Activity.create(
+      type_of: :add_comment_to_module,
+      user: user,
+      project: my_module.experiment.project,
+      my_module: my_module,
+      created_at: created_at,
+      message: I18n.t('activities.add_comment_to_module',
+                      user: user.full_name,
+                      module: my_module.name)
+    )
+  end
+
+  def generate_fake_result_comment(result)
+    user = pluck_random(result.my_module.experiment.project.users)
+    created_at = Faker::Time.backward(500)
+    result.comments << Comment.create(
+      user: user,
+      message: Faker::Hipster.sentence,
+      created_at: created_at
+    )
+    Activity.create(
+      type_of: :add_comment_to_result,
+      project: result.my_module.experiment.project,
+      my_module: result.my_module,
+      user: user,
+      created_at: created_at,
+      message: I18n.t(
+        'activities.add_comment_to_result',
+        user: user.full_name,
+        result: result.name
+      )
+    )
+  end
+
+  def generate_fake_step_comment(step)
+    user = pluck_random(step.protocol.my_module.experiment.project.users)
+    created_at = Faker::Time.backward(500)
+    step.comments << Comment.create(
+      user: user,
+      message: Faker::Hipster.sentence,
+      created_at: created_at
+    )
+    Activity.create(
+      type_of: :add_comment_to_step,
+      project: step.protocol.my_module.experiment.project,
+      my_module: step.protocol.my_module,
+      user: user,
+      created_at: created_at,
+      message: I18n.t(
+        "activities.add_comment_to_step",
+        user: user.full_name,
+        step: step.position + 1,
+        step_name: step.name
+      )
+    )
   end
 
   # WARNING: This only works on PostgreSQL
