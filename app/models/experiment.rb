@@ -199,9 +199,6 @@ class Experiment < ActiveRecord::Base
 
         # Everyhing is set, now we can move any module groups
         move_module_groups(updated_to_move_groups)
-
-        # update Experiment timestamp
-        touch
       end
     rescue ActiveRecord::ActiveRecordError, ArgumentError, ActiveRecord::RecordNotSaved
       return false

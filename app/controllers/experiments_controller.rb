@@ -66,7 +66,7 @@ class ExperimentsController < ApplicationController
     @experiment.update_attributes(experiment_params)
     @experiment.last_modified_by = current_user
     if @experiment.save
-      @experiment.touch(:workflowimg_updated_at)
+      # @experiment.touch(:workflowimg_updated_at)
       flash[:success] = t('experiments.update.success_flash',
                           experiment: @experiment.name)
       redirect_to canvas_experiment_path(@experiment)
