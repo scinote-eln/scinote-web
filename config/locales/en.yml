@@ -909,7 +909,7 @@ en:
       create: "Edit sample"
       scf_does_not_exist: "This field does not exists."
     create:
-      success_flash: "Successfully added sample to team <strong>%{organization}</strong>"
+      success_flash: "Successfully added sample <strong>%{sample}</strong> to team <strong>%{organization}</strong>"
     update:
       success_flash: "Successfully updated sample <strong>%{sample}</strong> to team <strong>%{organization}</strong>"
     destroy:

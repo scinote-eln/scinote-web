@@ -336,7 +336,7 @@ function onClickEdit() {
         },
         error: function (e, data, status, xhr) {
             if (e.status == 403) {
-                showAlertMessage(I18n.t("samples.js.permission_error"));
+                sampleAlertMsg(I18n.t("samples.js.permission_error"), "danger");
                 changeToViewMode();
                 updateButtons();
             }
@@ -398,19 +398,21 @@ function onClickSave() {
         dataType: "json",
         data: data,
         success: function (data) {
+            sampleAlertMsg(data.flash, "success");
             onClickCancel();
         },
         error: function (e, eData, status, xhr) {
             var data = e.responseJSON;
             clearAllErrors();
+            sampleAlertMsgHide();
 
             if (e.status == 404) {
-                showAlertMessage(I18n.t("samples.js.not_found_error"));
+                sampleAlertMsg(I18n.t("samples.js.not_found_error"), "danger");
                 changeToViewMode();
                 updateButtons();
             }
             else if (e.status == 403) {
-                showAlertMessage(I18n.t("samples.js.permission_error"));
+                sampleAlertMsg(I18n.t("samples.js.permission_error"), "danger");
                 changeToViewMode();
                 updateButtons();
             }
@@ -610,7 +612,7 @@ function onClickAddSample() {
         },
         error: function (e, eData, status, xhr) {
             if (e.status == 403)
-                showAlertMessage(I18n.t("samples.js.permission_error"));
+                sampleAlertMsg(I18n.t("samples.js.permission_error"), "danger");
             changeToViewMode();
             updateButtons();
         }
@@ -705,9 +707,3 @@ function changeToEditMode() {
     // Table specific stuff
     table.button(0).enable(false);
 }
-
-// Shows alert and changes
-function showAlertMessage(msg) {
-    $("#alert-container").append("<div class='alert alert-danger'> <strong>Error!</strong> " + msg + "</div>");
-}
-
