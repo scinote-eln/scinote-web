@@ -177,7 +177,8 @@ function initTutorial() {
           {
             element: document.getElementById("secondary-menu"),
             intro: breadcrumbsTutorial,
-            tooltipClass: 'custom next-page-link'
+            tooltipClass: 'custom next-page-link',
+            disableInteraction: true
           }
         ],
         overlayOpacity: '0.1',
