@@ -195,4 +195,7 @@ $(document).ready(function(){
   $('.tree-link a').each( function(){
     truncateLongString( $(this), 30);
   });
+  $(".tree-link span").each( function(){
+    truncateLongString( $(this), 30);
+  });
 });
