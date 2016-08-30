@@ -148,7 +148,6 @@ jsPlumb.ready(function () {
   initializeGraph(".diagram .module-large");
   initializeFullZoom();
   initializeTutorial(false);
-  canvas_tutorial_helper();
 });
 
 //************************************
@@ -3297,6 +3296,7 @@ function initJsPlumb(containerSel, containerChildSel, modulesSel, params) {
 // Initialize first-time tutorial
 function initializeTutorial(isEditMode) {
   if (showTutorial()) {
+    canvas_tutorial_helper();
     var currentStep = Cookies.get('current_tutorial_step');
     // Add edit canvas tutorial step and show it
     if (!isEditMode && currentStep > 2 && currentStep < 6) {
@@ -3340,6 +3340,7 @@ function initializeTutorial(isEditMode) {
           $(".introjs-tooltip").css("right", ($("#canvas-container").width() + 20)  + "px");
         };
     } else if (isEditMode && currentStep > 4 && currentStep < 7) {
+      canvas_tutorial_helper();
       var editWorkflowTutorial = $("#canvas-container").attr("data-edit-workflow-step-text");
       var editWorkflowClickSaveTutorial = $("#canvas-container").attr("data-edit-workflow-click-save-step-text");
       $(".introjs-overlay").remove();
@@ -3391,14 +3392,17 @@ function initializeTutorial(isEditMode) {
 
       // Destroy first-time tutorial cookies when skip tutorial
       // or end tutorial is clicked
-      $(".introjs-skipbutton").each(function (){
-        $(this).click(function (){
-          Cookies.remove('tutorial_data');
-          Cookies.remove('current_tutorial_step');
-          restore_after_tutorial();
+      setTimeout( function(){
+        $(".introjs-skipbutton").each(function (){
+          $(this).click(function (){
+            Cookies.remove('tutorial_data');
+            Cookies.remove('current_tutorial_step');
+            restore_after_tutorial();
+          });
         });
-      });
+      }, 600);
     } else if (!isEditMode && currentStep > 5 || currentStep < 10) {
+      canvas_tutorial_helper();
       var sidebarTutorial = $("#canvas-container").attr("data-sidebar-step-text");
       var sidebarClickModuleTutorial = $("#canvas-container").attr("data-sidebar-click-module-step-text");
       Cookies.set('current_tutorial_step', '8');
@@ -3458,11 +3462,11 @@ function initializeTutorial(isEditMode) {
 }
 
 function canvas_tutorial_helper(){
-  $(document).ready(function(){
-    if( $('div').hasClass('introjs-showElement') ){
-
+    if( $('div').hasClass('introjs-overlay') ){
       $('#slide-panel')
-      .css({'pointer-events': 'none'});
+        .css({'pointer-events': 'none'});
+      $('#canvas-new-module')
+        .css({'pointer-events': 'none'});
 
       $.each( $('.panel-default'), function(i, el){
         $(el)
@@ -3476,20 +3480,13 @@ function canvas_tutorial_helper(){
         .css({'pointer-events': 'none'});
       });
     }
-    $( document ).ajaxComplete(function() {
-        $('#canvas-new-module')
-        .css({'pointer-events': 'none'});
-    });
-  });
-
 }
 
 function restore_after_tutorial(){
   $('#canvas-new-module')
-  .css({'pointer-events': 'auto'});
-
+    .css({'pointer-events': 'auto'});
   $('#slide-panel')
-  .css({'pointer-events': 'auto'});
+    .css({'pointer-events': 'auto'});
 
   $.each( $('.panel-default'), function(i, el){
     $(el)
