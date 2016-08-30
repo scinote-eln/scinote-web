@@ -942,6 +942,11 @@ namespace :db do
           create_private_user_organization(user, DEFAULT_PRIVATE_ORG_NAME)
         end
 
+        # Generate thumbnails of all experiments
+        Experiment.find_each do |experiment|
+          experiment.generate_workflow_img
+        end
+
         # Calculate space taken by each organization; this must
         # be done in a separate transaction because the estimated
         # asset sizes are calculated in after_commit, which is done
