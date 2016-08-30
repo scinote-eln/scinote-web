@@ -321,7 +321,8 @@ class Experiment < ActiveRecord::Base
       file = File.open(file_location)
       self.workflowimg = file
       file.close
-      save!
+      save
+      touch(:workflowimg_updated_at)
     rescue => ex
       logger.error ex.message
     end
