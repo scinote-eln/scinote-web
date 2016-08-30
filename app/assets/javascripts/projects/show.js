@@ -137,11 +137,14 @@
     $(document).ready(function(){
       if( $('div').hasClass('introjs-overlay')){
         $.each( $(".panel-title"), function(){
-          $(this).css({ 'pointer-events': 'none' });
+          $(this).css({ "pointer-events": "none" });
+        });
+        $.each( $(".workflowimg-container"), function(){
+          $(this).css({ "pointer-events": "none" });
         });
         $.each( $(".dropdown-experiment-actions").find("li"),
           function(){
-            $(this).css({ 'pointer-events': 'none' });
+            $(this).css({ "pointer-events": "none" });
         });
       }
     });
@@ -149,11 +152,14 @@
 
   function restore_after_tutorial(){
     $.each( $(".panel-title"), function(){
-      $(this).css({ 'pointer-events': 'auto' });
+      $(this).css({ "pointer-events": "auto" });
+    });
+    $.each( $(".workflowimg-container"), function(){
+      $(this).css({ "pointer-events": "auto" });
     });
     $.each( $(".dropdown-experiment-actions").find("li"),
       function(){
-        $(this).css({ 'pointer-events': 'auto' });
+        $(this).css({ "pointer-events": "auto" });
     });
   }
 
