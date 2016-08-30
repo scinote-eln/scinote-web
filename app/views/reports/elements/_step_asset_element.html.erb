@@ -9,7 +9,7 @@
         <span class="glyphicon <%= icon_class %>"></span>
       </div>
       <div class="pull-left file-name">
-        <em><%=t 'projects.reports.elements.step_asset.file_name', file: truncate( asset.file_file_name, length: 50 ) %></em>
+        <em><%=t 'projects.reports.elements.step_asset.file_name', file: truncate( asset.file_file_name, length: 40 ) %></em>
       </div>
       <div class="pull-left user-time">
         <%=t 'projects.reports.elements.step_asset.user_time', timestamp: l(timestamp, format: :full) %>
