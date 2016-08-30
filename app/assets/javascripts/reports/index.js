@@ -142,14 +142,10 @@
   function initTutorial() {
     var currentStep = Cookies.get('current_tutorial_step');
     if (showTutorial() && (currentStep > 14 && currentStep < 18)) {
-      var reportsTutorial =$("#content").attr("data-reports-step-text");
       var reportsClickNewReportTutorial = $("#content").attr("data-reports-click-new-report-step-text");
       introJs()
         .setOptions({
-          steps: [
-            {
-              intro: reportsTutorial
-            },
+          steps: [{},
             {
               element: document.getElementById("new-report-btn"),
               intro: reportsClickNewReportTutorial,
@@ -177,7 +173,7 @@
             }, 500);
           }
         })
-        .goToStep(currentStep == 17 ? 2 : 1)
+        .goToStep(2)
         .start();
 
       // Destroy first-time tutorial cookies when skip tutorial

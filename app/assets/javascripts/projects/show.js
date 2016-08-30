@@ -136,6 +136,9 @@
   function project_tutorial_helper(){
     $(document).ready(function(){
       if( $('div').hasClass('introjs-overlay')){
+        $.each( $(".panel-title"), function(){
+          $(this).css({ 'pointer-events': 'none' });
+        });
         $.each( $(".dropdown-experiment-actions").find("li"),
           function(){
             $(this).css({ 'pointer-events': 'none' });
@@ -145,6 +148,9 @@
   }
 
   function restore_after_tutorial(){
+    $.each( $(".panel-title"), function(){
+      $(this).css({ 'pointer-events': 'auto' });
+    });
     $.each( $(".dropdown-experiment-actions").find("li"),
       function(){
         $(this).css({ 'pointer-events': 'auto' });
