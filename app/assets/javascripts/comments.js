@@ -1,6 +1,20 @@
 function initCommentOptions(scrollableContainer, useParentOffset = true) {
   scrollCommentOptions($(".dropdown-comment"), useParentOffset);
 
+  // Reposition dropdown to the left
+  // (only do this when using parent offset)
+  if (useParentOffset) {
+    $(document).on("shown.bs.dropdown", ".dropdown-comment", function() {
+      var $el = $(this);
+      var menu = $el.find(".dropdown-menu");
+      var leftPos = $el.offset().left;
+      if (leftPos + menu.width() > $(window).width()) {
+        menu.offset({ left: leftPos - menu.width() });
+      }
+    });
+  }
+
+  // Reposition dropdowns vertically on scroll events
   document.addEventListener('scroll', function (event) {
     var $target = $(event.target);
     var parent = $(scrollableContainer);
