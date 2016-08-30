@@ -199,9 +199,6 @@ class Experiment < ActiveRecord::Base
 
         # Everyhing is set, now we can move any module groups
         move_module_groups(updated_to_move_groups)
-
-        # update Experiment timestamp
-        touch
       end
     rescue ActiveRecord::ActiveRecordError, ArgumentError, ActiveRecord::RecordNotSaved
       return false
@@ -324,7 +321,8 @@ class Experiment < ActiveRecord::Base
       file = File.open(file_location)
       self.workflowimg = file
       file.close
-      save!
+      save
+      touch(:workflowimg_updated_at)
     rescue => ex
       logger.error ex.message
     end
