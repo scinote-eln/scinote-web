@@ -1482,9 +1482,9 @@ en:
     goodbye_message: "To repeat the tutorial, go to your Settings and open <strong>My preferences</strong> tab. Click on the <strong>Repeat tutorial</strong> button and watch the tutorial as many times needed."
 
   introductory:
-    popup-title: "Dear sciNote user,"
+    popup-title: "New: Experiment level"
     sentence_one_html: "To give you more flexibility in organization of your work, we have added a new feature to your sciNote: <strong>Experiment level</strong>. Now you are able to organize your Tasks and Workflows into different Experiments inside of an individual project. When you open a project you will see experiments displayed as thumbnails."
-    sentence_two_html: "You can see the changes in the hierarchy in the navigation panel as well."
+    sentence_two_html: "You can see the changes in the hierarchy in the navigation pane as well."
     sentence_three_html: "All your existing Tasks and Workflows are now in a single Experiment called \"My first experiment\". You can always rename it, create new Experiments and move workflows between them. To move a Task or a Workflow to a different experiment, do the following:"
     sentence_four_html: "1. Open experiment that contains a workflow you would like to move and click Edit experiment."
     sentence_five_html: "2. In the Options dropdown of any task select Move workflow to another experiment."
