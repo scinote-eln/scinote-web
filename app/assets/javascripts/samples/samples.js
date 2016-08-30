@@ -148,22 +148,22 @@ function updateSamplesTypesandGroups() {
 }
 
 function sampleAlertMsg(message, type) {
-  var alert_type, glyph_sign;
-  if (type == "success") {
-    alert_type = " alert-success ";
-    glyph_sign = " glyphicon-ok-sign ";
-  } else if (type == "danger") {
-    alert_type = " alert-danger ";
-    glyph_sign = " glyphicon-exclamation-sign ";
+  var alertType, glyphSign;
+  if (type == 'success') {
+    alertType = ' alert-success ';
+    glyphSign = ' glyphicon-ok-sign ';
+  } else if (type == 'danger') {
+    alertType = ' alert-danger ';
+    glyphSign = ' glyphicon-exclamation-sign ';
   }
-  var html_snippet = '<div class="alert' + alert_type + 'alert-dismissable alert-floating">' +
+  var htmlSnippet = '<div class="alert' + alertType + 'alert-dismissable alert-floating">' +
                       '<div class="container">' +
                         '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>' +
-                          '<span class="glyphicon' + glyph_sign + '"></span>' +
+                          '<span class="glyphicon' + glyphSign + '"></span>' +
                           '<span>'+ message +'</span>' +
                         '</div>' +
                       '</div>';
-  $('#notifications').html(html_snippet);
+  $('#notifications').html(htmlSnippet);
   $('#content-wrapper').addClass('alert-shown');
 }
 
