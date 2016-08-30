@@ -45,7 +45,7 @@ $("#modal-create-sample-type").on("shown.bs.modal", function(event) {
 $("form#new_sample_type").on("ajax:success", function(ev, data, status) {
     $("#modal-create-sample-type").modal("hide");
     updateSamplesTypesandGroups();
-    sampleAlertMsg(data.flash);
+    sampleAlertMsg(data.flash, "success");
     currentMode = "viewMode";
     updateButtons();
 });
@@ -76,7 +76,7 @@ $("#modal-create-sample-group").on("shown.bs.modal", function(event) {
 $("form#new_sample_group").on("ajax:success", function(ev, data, status) {
     $("#modal-create-sample-group").modal("hide");
     updateSamplesTypesandGroups();
-    sampleAlertMsg(data.flash);
+    sampleAlertMsg(data.flash, "success");
     currentMode = "viewMode";
     updateButtons();
 });
@@ -147,16 +147,29 @@ function updateSamplesTypesandGroups() {
     });
 }
 
-function sampleAlertMsg(message) {
-  var html_snippet = '<div class="alert alert-success alert-dismissable alert-floating">' +
+function sampleAlertMsg(message, type) {
+  var alert_type, glyph_sign;
+  if (type == "success") {
+    alert_type = " alert-success ";
+    glyph_sign = " glyphicon-ok-sign ";
+  } else if (type == "danger") {
+    alert_type = " alert-danger ";
+    glyph_sign = " glyphicon-exclamation-sign ";
+  }
+  var html_snippet = '<div class="alert' + alert_type + 'alert-dismissable alert-floating">' +
                       '<div class="container">' +
                         '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>' +
-                          '<span class="glyphicon glyphicon-ok-sign"></span>' +
+                          '<span class="glyphicon' + glyph_sign + '"></span>' +
                           '<span>'+ message +'</span>' +
                         '</div>' +
                       '</div>';
   $('#notifications').html(html_snippet);
   $('#content-wrapper').addClass('alert-shown');
+}
+
+function sampleAlertMsgHide() {
+  $('#notifications').html('<div></div>');
+  $('#content-wrapper').removeClass('alert-shown');
 }
 
 function initTutorial() {
