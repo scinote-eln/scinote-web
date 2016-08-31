@@ -17,8 +17,8 @@
   function generateThumbnail(origFile, type, max_width, max_height, cb) {
     var fileRequest = $.Deferred();
     var img = new Image;
-    var canvas = document.createElement("canvas");
-    var ctx = canvas.getContext("2d");
+    var canvas = document.createElement('canvas');
+    var ctx = canvas.getContext('2d');
     // todo allow for different x/y ratio
     canvas.width = max_width;
     canvas.height = max_height;
@@ -35,8 +35,8 @@
         size = this.width;
         offsetY = (this.height - this.width) / 2;
       }
-      if (type === "image/jpeg") {
-        type = "image/jpg";
+      if (type === 'image/jpeg') {
+        type = 'image/jpg';
       }
 
       ctx.drawImage(this, offsetX, offsetY, size, size, 0, 0,
@@ -59,7 +59,7 @@
    */
   function fetchUploadSignature(ev, fileInput, file, signUrl) {
     var formData = new FormData();
-    formData.append("file", file);
+    formData.append('file', file);
 
     return $.ajax({
       url: signUrl,
@@ -68,13 +68,14 @@
       processData: false,
       contentType: false,
       error: function (xhr) {
+        var errMsg;
         try {
           // File error
           var jsonData = $.parseJSON(xhr.responseText);
-          var errMsg = jsonToValuesArray(jsonData.errors);
+          errMsg = jsonToValuesArray(jsonData.errors);
         } catch(err) {
           // Connection error
-          var errMsg = I18n.t('general.file.upload_failure');
+          errMsg = I18n.t('general.file.upload_failure');
         }
         renderFormError(ev, fileInput, errMsg);
       }
@@ -91,7 +92,7 @@
     for (var k in fields) {
       formData.append(k, fields[k]);
     }
-    formData.append("file", postData.file, postData.fileName);
+    formData.append('file', postData.file, postData.fileName);
 
     return $.ajax({
       url: url,
@@ -100,13 +101,14 @@
       processData: false,
       contentType: false,
       error: function (xhr) {
+        var errMsg;
         try {
           // File error
           var $xmlData = $(xhr.responseText);
-          var errMsg = $xmlData.find("Message").text().strToErrorFormat();
+          errMsg = $xmlData.find('Message').text().strToErrorFormat();
         } catch(err) {
           // Connection error
-          var errMsg = I18n.t('general.file.upload_failure');
+          errMsg = I18n.t('general.file.upload_failure');
         }
         renderFormError(ev, fileInput, errMsg);
       }
@@ -176,10 +178,10 @@
     if (typeof willPageRefresh === 'undefined') {
       willPageRefresh = false;
     }
-    $form = $(ev.target.form);
+    var $form = $(ev.target.form);
     $form.clearFormErrors();
     $form.removeBlankFileForms();
-    $fileInputs = $form.find("input[type=file]");
+    var $fileInputs = $form.find('input[type=file]');
     var signRequests = [];
 
     if ($fileInputs.length) {
