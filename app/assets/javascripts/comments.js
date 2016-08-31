@@ -1,4 +1,5 @@
-function initCommentOptions(scrollableContainer, useParentOffset = true) {
+function initCommentOptions(scrollableContainer, useParentOffset) {
+  useParentOffset = (typeof useParentOffset !== 'undefined') ? useParentOffset : true;
   scrollCommentOptions($(".dropdown-comment"), useParentOffset);
 
   // Reposition dropdown to the left
@@ -25,7 +26,8 @@ function initCommentOptions(scrollableContainer, useParentOffset = true) {
   }, true);
 }
 
-function scrollCommentOptions(selector, useParentOffset = true) {
+function scrollCommentOptions(selector, useParentOffset) {
+  useParentOffset = (typeof useParentOffset !== 'undefined') ? useParentOffset : true;
   _.each(selector, function(el) {
     var $el = $(el);
     var offset = useParentOffset ? $el.offset().top : $el.position().top;
