@@ -5,6 +5,6 @@
       backdrop: true,
       keyboard: false,
     });
-    Cookies.set('popup-already-shown', 'yes');
+    Cookies.set('popup-already-shown', 'yes', { expires: 7300 });
   }
 })();
