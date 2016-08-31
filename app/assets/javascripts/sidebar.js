@@ -19,7 +19,8 @@ function sessionGetCollapsedSidebarElements() {
     sessionStorage.setItem(STORAGE_TREE_KEY, val);
   }
   val = JSON.parse(val);
-  val = val.filter(Number);
+  // console.log(val);
+  // val = val.filter(Number);
   return val;
 }
 
@@ -27,10 +28,17 @@ function sessionGetCollapsedSidebarElements() {
  * Collapse a specified element in the sidebar.
  * @param id - The collapsed element's ID.
  */
-function sessionCollapseSidebarElement(id) {
+function sessionCollapseSidebarElement(project, id) {
   var ids = sessionGetCollapsedSidebarElements();
-  if (_.indexOf(ids, id) === -1) {
-    ids.push(id);
+  if (_.indexOf(ids[project], id) === -1) {
+    var stored_projects = _.pluck(ids, 'name');
+    if( _.contains(stored_projects, project)){
+      _.findWhere(ids, {name: project}).ids.push(id);
+    } else {
+      var collapsed = { name: project, ids: [] };
+      collapsed.ids.push(id);
+      ids.push(collapsed);
+    }
     sessionStorage.setItem(STORAGE_TREE_KEY, JSON.stringify(ids));
   }
 }
@@ -39,12 +47,15 @@ function sessionCollapseSidebarElement(id) {
  * Expand a specified element in the sidebar.
  * @param id - The expanded element's ID.
  */
-function sessionExpandSidebarElement(id) {
+function sessionExpandSidebarElement(project, id) {
   var ids = sessionGetCollapsedSidebarElements();
   var index = _.indexOf(ids, id);
   if (index !== -1) {
+
     ids.splice(index, 1);
-    sessionStorage.setItem(STORAGE_TREE_KEY, JSON.stringify(ids));
+    var items = {};
+    items[project] = ids;
+    sessionStorage.setItem(STORAGE_TREE_KEY, JSON.stringify(items));
   }
 }
 
@@ -81,8 +92,6 @@ function sessionToggleSidebar() {
  */
 function setupSidebarTree() {
   function toggleLi(el, collapse, animate) {
-    var project = $('.tree-link .line-wrap')[0];
-    console.log(project);
     var children = el
     .find(" > ul > li");
 
@@ -125,6 +134,7 @@ function setupSidebarTree() {
   });
 
   // Collapse session-stored elements
+  var project = $('#sidebar-project-name').text();
   var collapsedIds = sessionGetCollapsedSidebarElements();
   _.each($('li.parent_li[data-parent="candidate"]'), function(el) {
     var id = $(el).data("toggle-id");
@@ -138,7 +148,7 @@ function setupSidebarTree() {
       toggleLi(li,
         false,
         false);
-        sessionCollapseSidebarElement(id);
+        sessionCollapseSidebarElement(project, id);
     } else if ($.inArray( id, collapsedIds) === 0 ) {
       console.log("-------------- expanded -------");
       console.log(id);
@@ -146,7 +156,7 @@ function setupSidebarTree() {
       toggleLi(li,
         false,
         false);
-        sessionExpandSidebarElement(id);
+        sessionExpandSidebarElement(project, id);
     } else {
       console.log("-------- colapsed -----");
       console.log(id);
@@ -155,7 +165,7 @@ function setupSidebarTree() {
       toggleLi(li,
         true,
         false);
-      sessionCollapseSidebarElement(id);
+      sessionCollapseSidebarElement(project, id);
     }
   });
 
@@ -169,10 +179,10 @@ function setupSidebarTree() {
 
     if (el.find(" > ul > li").is(":visible")) {
       toggleLi(el, true, true);
-      sessionCollapseSidebarElement(el.data("toggle-id"));
+      sessionCollapseSidebarElement(project, el.data("toggle-id"));
     } else {
       toggleLi(el, false, true);
-      sessionExpandSidebarElement(el.data("toggle-id"));
+      sessionExpandSidebarElement(project, el.data("toggle-id"));
     }
 
     e.stopPropagation();
