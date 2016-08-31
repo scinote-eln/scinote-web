@@ -17,7 +17,11 @@ function sessionGetCollapsedSidebarElements() {
     val = "[]";
     sessionStorage.setItem(STORAGE_TREE_KEY, val);
   }
-  return JSON.parse(val);
+  console.log(val);
+  val = JSON.parse(val);
+  val = val.filter(Number);
+ console.log(val);
+  return val;
 }
 
 /**
@@ -114,24 +118,41 @@ function setupSidebarTree() {
   .addClass("glyphicon glyphicon-triangle-right expanded");
 
   // Add IDs to all parent <lis>
-  var i = 0;
+  var i = 1;
   _.each($(".tree li.parent_li"), function(el) {
     $(el).attr("data-toggle-id", i++);
   });
 
   // Collapse session-stored elements
   var collapsedIds = sessionGetCollapsedSidebarElements();
-  _.each(collapsedIds, function(id) {
+  console.log($(".line-wrap").parent());
+  _.each($(".line-wrap").parent(), function(el) {
+    console.log(collapsedIds);
+    var id = $(el).data("toggle-id");
     var li = $(".tree li.parent_li[data-toggle-id='" + id + "']");
-    if (li.find("li.active").length === 0) {
+    if( li.hasClass("active") ){
       // Only collapse element if it's descendants don't contain the currently
       // active element
       toggleLi(li,
+        false,
+        false);
+        sessionCollapseSidebarElement(id);
+    } else if ($.inArray( id, collapsedIds) === 0 ) {
+      console.log("in");
+      console.log(id);
+      toggleLi(li,
         true,
         false);
+        sessionExpandSidebarElement(id);
     } else {
-      // Else, set the element as expanded
-      sessionExpandSidebarElement(id);
+      console.log("-------- last -----");
+      console.log(id);
+      console.log("-------------------");
+      // collapse all element
+      toggleLi(li,
+        true,
+        false);
+      sessionCollapseSidebarElement(id);
     }
   });
 
