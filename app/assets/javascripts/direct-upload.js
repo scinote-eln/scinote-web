@@ -74,7 +74,7 @@
           var errMsg = jsonToValuesArray(jsonData.errors);
         } catch(err) {
           // Connection error
-          var errMsg = I18n.t("general.file.upload_failure");
+          var errMsg = I18n.t('general.file.upload_failure');
         }
         renderFormError(ev, fileInput, errMsg);
       }
@@ -106,7 +106,7 @@
           var errMsg = $xmlData.find("Message").text().strToErrorFormat();
         } catch(err) {
           // Connection error
-          var errMsg = I18n.t("general.file.upload_failure");
+          var errMsg = I18n.t('general.file.upload_failure');
         }
         renderFormError(ev, fileInput, errMsg);
       }
@@ -138,6 +138,17 @@
     });
   }
 
+  function beforeUpload(ev) {
+    animateSpinner();
+    preventLeavingPage(true, I18n.t('general.file.uploading'));
+    ev.preventDefault();
+  }
+
+  function afterUpload() {
+    animateSpinner(null, false);
+    preventLeavingPage(false);
+  }
+
   /*
    * Spoof checks files on server and uploads them to S3 server.
    *
@@ -157,8 +168,14 @@
    * it is to make request to our server for each file seperatelly, and not for
    * all together as it is now, despite being less efficient. To make it
    * bulletproof, post requests should be issued on server-side.
+   *
+   * @param {boolean} willPageRefresh Whether page refreshes or is updated with
+   *  AJAX. Everything should be done through AJAX, however.
    */
-  exports.directUpload = function (ev, signUrl) {
+  exports.directUpload = function (ev, signUrl, willPageRefresh) {
+    if (typeof willPageRefresh === 'undefined') {
+      willPageRefresh = false;
+    }
     $form = $(ev.target.form);
     $form.clearFormErrors();
     $form.removeBlankFileForms();
@@ -167,9 +184,7 @@
 
     if ($fileInputs.length) {
       // Before file processing and uploading
-      animateSpinner();
-      preventLeavingPage(true, I18n.t("general.file.uploading"));
-      ev.preventDefault();
+      beforeUpload(ev);
 
       // Spoof checks files and, if OK, gets upload post requests
       _.each($fileInputs, function (fileInput) {
@@ -198,22 +213,17 @@
 
           $.when.apply($, fileRequests).then(function () {
             // After successful posts processing and file uploading
-            $form.onAjaxComplete(function () {
-              animateSpinner(null, false);
+            if (willPageRefresh) {
               preventLeavingPage(false);
-            });
+            } else {
+              $form.onAjaxComplete(afterUpload);
+            }
             $form.submit();
-          }, function() {
-            // After unsuccessful posts processing and file uploading
-            animateSpinner(null, false);
-            preventLeavingPage(false);
-          });
+          },// After unsuccessful posts processing and file uploading
+          afterUpload);
         }
-      }, function () {
-        // After unsuccessful file spoof check and posts fetching
-        animateSpinner(null, false);
-        preventLeavingPage(false);
-      });
+      }, // After unsuccessful file spoof check and posts fetching
+      afterUpload);
     }
   };
 

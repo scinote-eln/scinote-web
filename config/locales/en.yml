@@ -1511,7 +1511,7 @@ en:
     file:
       size_exceeded: "File size must be less than %{file_size} MB."
       blank: "You didn't select any file"
-      uploading: "If you leave this page, the file(s) that are currently uploading will not be saved! Are you sure you want to continue?"
+      uploading: "If you leave this page, the file(s) that is/are currently uploading will not be saved! Are you sure you want to continue?"
       upload_failure: "Upload connection error. Try again or contact the administrator."
     text:
       not_blank: "can't be blank"
