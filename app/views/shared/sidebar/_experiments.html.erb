@@ -10,7 +10,7 @@
           <%= render partial: 'shared/sidebar/my_modules', locals: { experiment: @experiment } %>
         </li>
       <% else %>
-        <li>
+        <li data-parent="candidate">
           <span class="tree-link line-wrap">
             <i></i>
             <% if can_view_experiment(experiment) %>

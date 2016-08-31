@@ -13,14 +13,13 @@ var SCREEN_SIZE_LARGE = 928;
  */
 function sessionGetCollapsedSidebarElements() {
   var val = sessionStorage.getItem(STORAGE_TREE_KEY);
+  console.log(val);
   if (val === null) {
     val = "[]";
     sessionStorage.setItem(STORAGE_TREE_KEY, val);
   }
-  console.log(val);
   val = JSON.parse(val);
   val = val.filter(Number);
- console.log(val);
   return val;
 }
 
@@ -82,6 +81,8 @@ function sessionToggleSidebar() {
  */
 function setupSidebarTree() {
   function toggleLi(el, collapse, animate) {
+    var project = $('.tree-link .line-wrap')[0];
+    console.log(project);
     var children = el
     .find(" > ul > li");
 
@@ -119,18 +120,19 @@ function setupSidebarTree() {
 
   // Add IDs to all parent <lis>
   var i = 1;
-  _.each($(".tree li.parent_li"), function(el) {
+  _.each($('[data-parent="candidate"]'), function(el) {
     $(el).attr("data-toggle-id", i++);
   });
 
   // Collapse session-stored elements
   var collapsedIds = sessionGetCollapsedSidebarElements();
-  console.log($(".line-wrap").parent());
-  _.each($(".line-wrap").parent(), function(el) {
-    console.log(collapsedIds);
+  _.each($('li.parent_li[data-parent="candidate"]'), function(el) {
     var id = $(el).data("toggle-id");
     var li = $(".tree li.parent_li[data-toggle-id='" + id + "']");
     if( li.hasClass("active") ){
+      console.log("-------------- active -------");
+      console.log(id);
+      console.log("-------------------------------");
       // Only collapse element if it's descendants don't contain the currently
       // active element
       toggleLi(li,
@@ -138,14 +140,15 @@ function setupSidebarTree() {
         false);
         sessionCollapseSidebarElement(id);
     } else if ($.inArray( id, collapsedIds) === 0 ) {
-      console.log("in");
+      console.log("-------------- expanded -------");
       console.log(id);
+      console.log("-------------------------------");
       toggleLi(li,
-        true,
+        false,
         false);
         sessionExpandSidebarElement(id);
     } else {
-      console.log("-------- last -----");
+      console.log("-------- colapsed -----");
       console.log(id);
       console.log("-------------------");
       // collapse all element
