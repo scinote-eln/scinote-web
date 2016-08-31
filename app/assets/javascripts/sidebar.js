@@ -29,18 +29,21 @@ function sessionGetCollapsedSidebarElements() {
  * @param id - The collapsed element's ID.
  */
 function sessionCollapseSidebarElement(project, id) {
+  console.log("collapsed:   " +  id);
   var ids = sessionGetCollapsedSidebarElements();
-  if (_.indexOf(ids[project], id) === -1) {
-    var stored_projects = _.pluck(ids, 'name');
-    if( _.contains(stored_projects, project)){
+  var item = _.findWhere( ids, {name: project});
+  var collapsed = { name: project, ids: [] };
+  var stored_projects = _.pluck(ids, 'name');
+
+  if( _.contains(stored_projects, project)){
+    if ( item && _.indexOf(item.ids, id) === -1) {
       _.findWhere(ids, {name: project}).ids.push(id);
-    } else {
-      var collapsed = { name: project, ids: [] };
-      collapsed.ids.push(id);
-      ids.push(collapsed);
     }
-    sessionStorage.setItem(STORAGE_TREE_KEY, JSON.stringify(ids));
+  } else {
+    collapsed.ids.push(id);
+    ids.push(collapsed);
   }
+  sessionStorage.setItem(STORAGE_TREE_KEY, JSON.stringify(ids));
 }
 
 /**
@@ -49,13 +52,18 @@ function sessionCollapseSidebarElement(project, id) {
  */
 function sessionExpandSidebarElement(project, id) {
   var ids = sessionGetCollapsedSidebarElements();
-  var index = _.indexOf(ids, id);
-  if (index !== -1) {
+  var item = _.findWhere( ids, {name: project});
+  var index = -1;
+  if ( item ) {
+  index = _.indexOf(
+              item.ids,
+              id
+            );
+  }
 
-    ids.splice(index, 1);
-    var items = {};
-    items[project] = ids;
-    sessionStorage.setItem(STORAGE_TREE_KEY, JSON.stringify(items));
+  if (index !== -1) {
+    item.ids.splice(index, 1);
+    sessionStorage.setItem(STORAGE_TREE_KEY, JSON.stringify(ids));
   }
 }
 
