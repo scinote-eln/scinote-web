@@ -18,7 +18,9 @@ $.fn.onSubmitValidator = function(validatorCb) {
   }
 };
 
-function textValidator(ev, textInput, canBeBlank = false, limitLength = true) {
+function textValidator(ev, textInput, canBeBlank) {
+  canBeBlank = (typeof canBeBlank !== 'undefined') ? canBeBlank : false;
+  limitLength = (typeof limitLength !== 'undefined') ? limitLength : true;
   var nameTooShort = $(textInput).val().length === 0;
   var nameTooLong = $(textInput).val().length > 50;
   var errMsg;

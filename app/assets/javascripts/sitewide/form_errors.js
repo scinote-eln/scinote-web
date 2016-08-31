@@ -5,7 +5,8 @@
 /*
  * Render errors specified in JSON format for many form elements.
  */
-$.fn.renderFormErrors = function (modelName, errors, clear = true, ev) {
+$.fn.renderFormErrors = function (modelName, errors, clear, ev) {
+  clear = (typeof clear !== 'undefined') ? clear : true;
   if (clear || _.isUndefined(clear)) {
     this.clearFormErrors();
   }
