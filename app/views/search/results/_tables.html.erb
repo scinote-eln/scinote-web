@@ -20,7 +20,10 @@
         <span>
           <%=t "search.index.module" %>
           <%= render partial: "search/results/partials/my_module_text.html.erb",
-                      locals: { my_module: table.step.protocol.my_module, link_to_page: :results } %>
+                      locals: {
+                        my_module: table.step.protocol.my_module,
+                        link_to_page: :protocols
+                      } %>
         </span>
         <br>
         <span>
@@ -57,7 +60,7 @@
       <span>
         <%=t "search.index.module" %>
         <%= render partial: "search/results/partials/my_module_text.html.erb",
-                   locals: { my_module: table.result.my_module } %>
+                   locals: { my_module: table.result.my_module, link_to_page: :results } %>
       </span>
       <br>
       <span>
