@@ -27,7 +27,7 @@
 
     </div>
     <div class="panel-body">
-      <% if experiment.workflowimg? %>
+      <% if experiment.workflowimg? && experiment.active_modules.length > 0 %>
         <div class="workflowimg-container"
              data-check-img="<%= updated_img_experiment_url(experiment) %>"
              data-updated-img="<%= fetch_workflow_img_experiment_url(experiment) %>"
