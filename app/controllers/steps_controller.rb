@@ -511,8 +511,19 @@ class StepsController < ApplicationController
   # In case of step model you can delete checkboxes, assets or tables.
   def destroy_attributes(params)
     update_params = {}
+    delete_step_tables(params)
     extract_destroy_params(params, update_params)
     @step.update_attributes(update_params) unless update_params.empty?
+  end
+
+  # Delete the step table
+  def delete_step_tables(params)
+    return unless params[:tables_attributes].present?
+    params[:tables_attributes].each do |table|
+      next unless table.second['_destroy'] != 1
+      table_to_destroy = Table.find_by(id: table.second['id'])
+      table_to_destroy.report_elements.destroy_all
+    end
   end
 
   # Checks if hash contains destroy parameter '_destroy' and returns
