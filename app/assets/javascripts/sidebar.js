@@ -13,15 +13,11 @@ var SCREEN_SIZE_LARGE = 928;
  */
 function sessionGetCollapsedSidebarElements() {
   var val = sessionStorage.getItem(STORAGE_TREE_KEY);
-  console.log(val);
   if (val === null) {
     val = "[]";
     sessionStorage.setItem(STORAGE_TREE_KEY, val);
   }
-  val = JSON.parse(val);
-  // console.log(val);
-  // val = val.filter(Number);
-  return val;
+  return JSON.parse(val);
 }
 
 /**
@@ -29,15 +25,14 @@ function sessionGetCollapsedSidebarElements() {
  * @param id - The collapsed element's ID.
  */
 function sessionCollapseSidebarElement(project, id) {
-  console.log("collapsed:   " +  id);
   var ids = sessionGetCollapsedSidebarElements();
-  var item = _.findWhere( ids, {name: project});
-  var collapsed = { name: project, ids: [] };
-  var stored_projects = _.pluck(ids, 'name');
+  var item = _.findWhere(ids, { prid: project });
+  var collapsed = { prid: project, ids: [] };
+  var stored_projects = _.pluck(ids, 'prid');
 
-  if( _.contains(stored_projects, project)){
-    if ( item && _.indexOf(item.ids, id) === -1) {
-      _.findWhere(ids, {name: project}).ids.push(id);
+  if ( _.contains(stored_projects, project ) ){
+    if ( item && _.indexOf(item.ids, id) === -1 ) {
+      _.findWhere(ids, { prid: project }).ids.push(id);
     }
   } else {
     collapsed.ids.push(id);
@@ -52,16 +47,13 @@ function sessionCollapseSidebarElement(project, id) {
  */
 function sessionExpandSidebarElement(project, id) {
   var ids = sessionGetCollapsedSidebarElements();
-  var item = _.findWhere( ids, {name: project});
+  var item = _.findWhere(ids, { prid: project});
   var index = -1;
   if ( item ) {
-  index = _.indexOf(
-              item.ids,
-              id
-            );
+  index = _.indexOf(item.ids, id);
   }
 
-  if (index !== -1) {
+  if ( index !== -1 ) {
     item.ids.splice(index, 1);
     sessionStorage.setItem(STORAGE_TREE_KEY, JSON.stringify(ids));
   }
@@ -136,46 +128,65 @@ function setupSidebarTree() {
   .addClass("glyphicon glyphicon-triangle-right expanded");
 
   // Add IDs to all parent <lis>
-  var i = 1;
+  var i = 0;
   _.each($('[data-parent="candidate"]'), function(el) {
     $(el).attr("data-toggle-id", i++);
   });
 
-  // Collapse session-stored elements
-  var project = $('#sidebar-project-name').text();
+  // Gets the current project and the session-stored elements
+  var project = $('[data-project-id]').data('projectId');
   var collapsedIds = sessionGetCollapsedSidebarElements();
-  _.each($('li.parent_li[data-parent="candidate"]'), function(el) {
-    var id = $(el).data("toggle-id");
-    var li = $(".tree li.parent_li[data-toggle-id='" + id + "']");
-    if( li.hasClass("active") ){
-      console.log("-------------- active -------");
-      console.log(id);
-      console.log("-------------------------------");
-      // Only collapse element if it's descendants don't contain the currently
-      // active element
-      toggleLi(li,
-        false,
-        false);
+
+  // Get the current project stered elements
+  var currentProjectIds = _.findWhere(collapsedIds, { prid: project });
+  if ( currentProjectIds ){
+    currentProjectIds.ids = _.filter(currentProjectIds.ids,
+                                function(val) {
+                                  return val !== null;
+                                }).join(", ");
+
+    // Collapse session-stored elements
+    _.each($('li.parent_li[data-parent="candidate"]'), function(el) {
+      var id = $(el).data("toggle-id");
+      var li = $(".tree li.parent_li[data-toggle-id='" + id + "']");
+  
+      if( li.hasClass("active") ||  li.find(".active").length > 0){
+        // Always expand the active element
+        toggleLi(li,
+          false,
+          false);
+      } else if ( $.inArray( id.toString(), currentProjectIds.ids.split(", ")) !== -1 ) {
+        // Expande element
+        toggleLi(li,
+          false,
+          false);
+      } else {
+        // Collapse the session-stored element
+        toggleLi(li,
+          true,
+          false);
+      }
+    });
+  } else {
+    // Collapse all
+    _.each($('li.parent_li[data-parent="candidate"]'), function(el) {
+      var id = $(el).data("toggle-id");
+      var li = $(".tree li.parent_li[data-toggle-id='" + id + "']");
+
+      if( li.hasClass("active") ){
+        // Always expand the active element
+        toggleLi(li,
+          false,
+          false);
         sessionCollapseSidebarElement(project, id);
-    } else if ($.inArray( id, collapsedIds) === 0 ) {
-      console.log("-------------- expanded -------");
-      console.log(id);
-      console.log("-------------------------------");
-      toggleLi(li,
-        false,
-        false);
-        sessionExpandSidebarElement(project, id);
-    } else {
-      console.log("-------- colapsed -----");
-      console.log(id);
-      console.log("-------------------");
-      // collapse all element
-      toggleLi(li,
-        true,
-        false);
-      sessionCollapseSidebarElement(project, id);
-    }
-  });
+      } else {
+        // Element collapsed by default
+        toggleLi(li,
+          true,
+          false);
+      }
+    });
+  }
 
   // Add onclick callback to every triangle icon
   $(".tree li.parent_li ")
@@ -187,12 +198,11 @@ function setupSidebarTree() {
 
     if (el.find(" > ul > li").is(":visible")) {
       toggleLi(el, true, true);
-      sessionCollapseSidebarElement(project, el.data("toggle-id"));
+      sessionExpandSidebarElement(project, el.data("toggle-id"));
     } else {
       toggleLi(el, false, true);
-      sessionExpandSidebarElement(project, el.data("toggle-id"));
+      sessionCollapseSidebarElement(project, el.data("toggle-id"));
     }
-
     e.stopPropagation();
     return false;
   });

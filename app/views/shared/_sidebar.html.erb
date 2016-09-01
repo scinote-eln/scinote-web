@@ -18,7 +18,8 @@
           <li class="active">
             <span class="tree-link line-wrap">
               <i></i>
-              <span id="sidebar-project-name" title="<%= @project.name %>"><%= @project.name %></span>
+              <span data-project-id="<%= @project.id %>"
+                    title="<%= @project.name %>"><%= @project.name %></span>
             </span>
           </li>
         <% else %>
@@ -28,7 +29,7 @@
                 <%= link_to @project.name,
                             project_action_to_link_to(@project),
                             title: @project.name,
-                            id: 'sidebar-project-name' %>
+                            data: { project_id: @project.id } %>
             </span>
           </li>
         <% end %>
