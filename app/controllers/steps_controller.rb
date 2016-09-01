@@ -520,7 +520,7 @@ class StepsController < ApplicationController
   def delete_step_tables(params)
     return unless params[:tables_attributes].present?
     params[:tables_attributes].each do |table|
-      next unless table.second['_destroy'] != 1
+      next unless table.second['_destroy']
       table_to_destroy = Table.find_by(id: table.second['id'])
       table_to_destroy.report_elements.destroy_all
     end
