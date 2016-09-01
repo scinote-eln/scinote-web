@@ -154,7 +154,13 @@ Or create new heroku application by executing following command.
 heroku create
 ```
 
-Add graphviz buildpack:
+Add additional heroku buildpacks in the same order as specified in `.buildpacks`:
+
+```
+heroku buildpacks:add --index <i> <buildpack>
+```
+
+e.g. for adding graphviz write:
 
 ```
 heroku buildpacks:add --index 2 https://github.com/weibeld/heroku-buildpack-graphviz.git
