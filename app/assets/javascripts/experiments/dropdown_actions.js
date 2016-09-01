@@ -1,9 +1,10 @@
-
 (function(){
 
   // Create ajax hook on given 'element', which should return modal with 'id' =>
   // show that modal
   function initializeModal(element, id){
+
+    // Initializev new experiment modal listner
     $(element)
     .on("ajax:beforeSend", function(){
       animateSpinner();
@@ -15,6 +16,7 @@
         keyboard: false,
       });
       validateMoveModal(id);
+      validateExperimentForm();
     })
     .on("ajax:error", function() {
       animateSpinner(null, false);
@@ -63,6 +65,14 @@
       })
       .clearFormErrors();
     }
+  // Setup front-end validations for experiment form
+  function validateExperimentForm(){
+    var form = $("#new-experiment-modal").find("form");
+    form.on('submit', function(ev){
+      textValidator(ev, $('#new-experiment-name'), false);
+      textValidator(ev, $('#new-experiment-description'), true);
+    });
+    form.clearFormErrors();
   }
   // Initialize no description edit link
   function initEditNoDescription(){
