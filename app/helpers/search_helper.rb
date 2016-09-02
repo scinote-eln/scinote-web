@@ -6,7 +6,7 @@ module SearchHelper
     end
     experiments.uniq
   end
-  
+
   def sub_results(el)
     elements = []
     el.each do |m|
