@@ -24,23 +24,37 @@ function sessionGetCollapsedSidebarElements() {
  * Collapse a specified element in the sidebar.
  * @param id - The collapsed element's ID.
  */
-function sessionCollapseSidebarElement(id) {
+function sessionCollapseSidebarElement(project, id) {
   var ids = sessionGetCollapsedSidebarElements();
-  if (_.indexOf(ids, id) === -1) {
-    ids.push(id);
-    sessionStorage.setItem(STORAGE_TREE_KEY, JSON.stringify(ids));
+  var item = _.findWhere(ids, { prid: project });
+  var collapsed = { prid: project, ids: [] };
+  var stored_projects = _.pluck(ids, 'prid');
+
+  if ( _.contains(stored_projects, project ) ){
+    if ( item && _.indexOf(item.ids, id) === -1 ) {
+      _.findWhere(ids, { prid: project }).ids.push(id);
+    }
+  } else {
+    collapsed.ids.push(id);
+    ids.push(collapsed);
   }
+  sessionStorage.setItem(STORAGE_TREE_KEY, JSON.stringify(ids));
 }
 
 /**
  * Expand a specified element in the sidebar.
  * @param id - The expanded element's ID.
  */
-function sessionExpandSidebarElement(id) {
+function sessionExpandSidebarElement(project, id) {
   var ids = sessionGetCollapsedSidebarElements();
-  var index = _.indexOf(ids, id);
-  if (index !== -1) {
-    ids.splice(index, 1);
+  var item = _.findWhere(ids, { prid: project});
+  var index = -1;
+  if ( item ) {
+  index = _.indexOf(item.ids, id);
+  }
+
+  if ( index !== -1 ) {
+    item.ids.splice(index, 1);
     sessionStorage.setItem(STORAGE_TREE_KEY, JSON.stringify(ids));
   }
 }
@@ -115,25 +129,64 @@ function setupSidebarTree() {
 
   // Add IDs to all parent <lis>
   var i = 0;
-  _.each($(".tree li.parent_li"), function(el) {
+  _.each($('[data-parent="candidate"]'), function(el) {
     $(el).attr("data-toggle-id", i++);
   });
 
-  // Collapse session-stored elements
+  // Gets the current project and the session-stored elements
+  var project = $('[data-project-id]').data('projectId');
   var collapsedIds = sessionGetCollapsedSidebarElements();
-  _.each(collapsedIds, function(id) {
-    var li = $(".tree li.parent_li[data-toggle-id='" + id + "']");
-    if (li.find("li.active").length === 0) {
-      // Only collapse element if it's descendants don't contain the currently
-      // active element
-      toggleLi(li,
-        true,
-        false);
-    } else {
-      // Else, set the element as expanded
-      sessionExpandSidebarElement(id);
-    }
-  });
+
+  // Get the current project stered elements
+  var currentProjectIds = _.findWhere(collapsedIds, { prid: project });
+  if ( currentProjectIds ){
+    currentProjectIds.ids = _.filter(currentProjectIds.ids,
+                                function(val) {
+                                  return val !== null;
+                                }).join(", ");
+
+    // Collapse session-stored elements
+    _.each($('li.parent_li[data-parent="candidate"]'), function(el) {
+      var id = $(el).data("toggle-id");
+      var li = $(".tree li.parent_li[data-toggle-id='" + id + "']");
+  
+      if( li.hasClass("active") ||  li.find(".active").length > 0){
+        // Always expand the active element
+        toggleLi(li,
+          false,
+          false);
+      } else if ( $.inArray( id.toString(), currentProjectIds.ids.split(", ")) !== -1 ) {
+        // Expande element
+        toggleLi(li,
+          false,
+          false);
+      } else {
+        // Collapse the session-stored element
+        toggleLi(li,
+          true,
+          false);
+      }
+    });
+  } else {
+    // Collapse all
+    _.each($('li.parent_li[data-parent="candidate"]'), function(el) {
+      var id = $(el).data("toggle-id");
+      var li = $(".tree li.parent_li[data-toggle-id='" + id + "']");
+
+      if( li.hasClass("active") ){
+        // Always expand the active element
+        toggleLi(li,
+          false,
+          false);
+        sessionCollapseSidebarElement(project, id);
+      } else {
+        // Element collapsed by default
+        toggleLi(li,
+          true,
+          false);
+      }
+    });
+  }
 
   // Add onclick callback to every triangle icon
   $(".tree li.parent_li ")
@@ -145,12 +198,11 @@ function setupSidebarTree() {
 
     if (el.find(" > ul > li").is(":visible")) {
       toggleLi(el, true, true);
-      sessionCollapseSidebarElement(el.data("toggle-id"));
+      sessionExpandSidebarElement(project, el.data("toggle-id"));
     } else {
       toggleLi(el, false, true);
-      sessionExpandSidebarElement(el.data("toggle-id"));
+      sessionCollapseSidebarElement(project, el.data("toggle-id"));
     }
-
     e.stopPropagation();
     return false;
   });
