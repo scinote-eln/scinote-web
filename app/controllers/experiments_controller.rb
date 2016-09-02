@@ -185,11 +185,22 @@ class ExperimentsController < ApplicationController
 
       flash[:success] = t('experiments.move.success_flash',
                           experiment: @experiment.name)
-      redirect_to canvas_experiment_path(@experiment)
+      respond_to do |format|
+        format.json do
+          render json: { path: canvas_experiment_url(@experiment) }, status: :ok
+        end
+      end
     else
-      flash[:error] = t('experiments.move.error_flash',
-                        experiment: @experiment.name)
-      redirect_to project_path(@experiment.project)
+      # flash[:error] = t('experiments.move.error_flash',
+      #                   experiment: @experiment.name)
+      # redirect_to project_path(@experiment.project)
+      respond_to do |format|
+        format.json do
+          render json: { message: t('experiments.move.error_flash',
+                                    experiment: @experiment.name) },
+                                    status: :unprocessable_entity
+        end
+      end
     end
   end
 

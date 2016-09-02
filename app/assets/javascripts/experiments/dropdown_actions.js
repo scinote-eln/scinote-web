@@ -14,6 +14,7 @@
         backdrop: true,
         keyboard: false,
       });
+      validateMoveModal(id);
     })
     .on("ajax:error", function() {
       animateSpinner(null, false);
@@ -45,6 +46,24 @@
     });
   }
 
+  // Validates move action
+  function validateMoveModal(modal){
+    if ( modal.match(/#move-experiment-modal-[0-9]*/) ) {
+      var form = $(modal).find("form");
+      form
+      .on('ajax:success', function(e, data) {
+        animateSpinner(form, true);
+        window.location.replace(data.path);
+      })
+      .on('ajax:error', function(e, error) {
+        var msg = JSON.parse(error.responseText);
+        renderFormError(e,
+                        form.find("#experiment_project_id"),
+                        msg.message.toString());
+      })
+      .clearFormErrors();
+    }
+  }
   // Initialize no description edit link
   function initEditNoDescription(){
     var modal = "#edit-experiment-modal-";
@@ -55,7 +74,7 @@
   }
   // Bind modal to new-experiment action
   initializeModal($("#new-experiment"), '#new-experiment-modal');
-  
+
   // Bind modal to big-plus new experiment actions
   initializeModal('.big-plus', '#new-experiment-modal');
 
