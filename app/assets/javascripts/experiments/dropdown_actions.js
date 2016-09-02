@@ -16,7 +16,7 @@
         keyboard: false,
       });
       validateMoveModal(id);
-      validateExperimentForm();
+      validateExperimentForm($(id));
     })
     .on("ajax:error", function() {
       animateSpinner(null, false);
@@ -63,37 +63,41 @@
                         form.find("#experiment_project_id"),
                         msg.message.toString());
       })
-      .clearFormErrors();
+      on('submit', function(){
+        form.clearFormErrors();
+      });
     }
   // Setup front-end validations for experiment form
-  function validateExperimentForm(){
-    var form = $("#new-experiment-modal").find("form");
-    form
-    .on('ajax:success' , function(){
-      animateSpinner(form, true);
-      location.reload();
-    })
-    .on('ajax:error', function(e, error){
-      var msg = JSON.parse(error.responseText);
-      if ( 'name' in msg ) {
-        renderFormError(e,
-                        $('#new-experiment-name'),
-                        msg.name.toString());
-      } else if ( 'description' in msg ) {
-        renderFormError(e,
-                        $('#new-experiment-description'),
-                        msg.description.toString());
-      } else {
-        renderFormError(e,
-                        $('#new-experiment-name'),
-                        error.statusText);
-      }
-    })
-    .on('submit', function(ev) {
-      textValidator(ev, $('#new-experiment-name'), false);
-      textValidator(ev, $('#new-experiment-description'), true);
-    })
-    .clearFormErrors();
+  function validateExperimentForm(element){
+    if ( element ) {
+      var form = element.find("form");
+      form
+      .on('ajax:success' , function(){
+        animateSpinner(form, true);
+        location.reload();
+      })
+      .on('ajax:error', function(e, error){
+        var msg = JSON.parse(error.responseText);
+        if ( 'name' in msg ) {
+          renderFormError(e,
+                          element.find("#experiment-name"),
+                          msg.name.toString());
+        } else if ( 'description' in msg ) {
+          renderFormError(e,
+                          element.find("#experiment-description"),
+                          msg.description.toString());
+        } else {
+          renderFormError(e,
+                          element.find("#experiment-name"),
+                          error.statusText);
+        }
+      })
+      .on('submit', function(ev) {
+        textValidator(ev, element.find("#experiment-name"), false);
+        textValidator(ev, element.find("#experiment-description"), true);
+      })
+      .clearFormErrors();
+    }
   }
   // Initialize no description edit link
   function initEditNoDescription(){

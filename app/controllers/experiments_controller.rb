@@ -76,10 +76,17 @@ class ExperimentsController < ApplicationController
       @experiment.touch(:workflowimg_updated_at)
       flash[:success] = t('experiments.update.success_flash',
                           experiment: @experiment.name)
-      redirect_to canvas_experiment_path(@experiment)
+      respond_to do |format|
+        format.json do
+          render json: {}, status: :ok
+        end
+      end
     else
-      flash[:alert] = t('experiments.update.error_flash')
-      redirect_to :back
+      respond_to do |format|
+        format.json do
+          render json: @experiment.errors, status: :unprocessable_entity
+        end
+      end
     end
   end
 
