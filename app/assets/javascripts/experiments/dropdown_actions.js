@@ -68,11 +68,32 @@
   // Setup front-end validations for experiment form
   function validateExperimentForm(){
     var form = $("#new-experiment-modal").find("form");
-    form.on('submit', function(ev){
+    form
+    .on('ajax:success' , function(){
+      animateSpinner(form, true);
+      location.reload();
+    })
+    .on('ajax:error', function(e, error){
+      var msg = JSON.parse(error.responseText);
+      if ( 'name' in msg ) {
+        renderFormError(e,
+                        $('#new-experiment-name'),
+                        msg.name.toString());
+      } else if ( 'description' in msg ) {
+        renderFormError(e,
+                        $('#new-experiment-description'),
+                        msg.description.toString());
+      } else {
+        renderFormError(e,
+                        $('#new-experiment-name'),
+                        error.statusText);
+      }
+    })
+    .on('submit', function(ev) {
       textValidator(ev, $('#new-experiment-name'), false);
       textValidator(ev, $('#new-experiment-description'), true);
-    });
-    form.clearFormErrors();
+    })
+    .clearFormErrors();
   }
   // Initialize no description edit link
   function initEditNoDescription(){
