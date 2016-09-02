@@ -147,15 +147,15 @@ class Protocol < ActiveRecord::Base
   end
 
   def linked_modules
-    MyModule.joins(:protocols).where("protocols.parent_id = ?", id)
+    MyModule.joins(:protocols).where('protocols.parent_id = ?', id)
   end
 
   def linked_experiments
-    Experiment.where("id IN (?)", linked_modules.pluck(:experiment_id).uniq)
+    Experiment.where('id IN (?)', linked_modules.pluck(:experiment_id).uniq)
   end
 
-   def linked_projects
-    Project.where("id IN (?)", linked_experiments.pluck(:project_id).uniq)
+  def linked_projects
+    Project.where('id IN (?)', linked_experiments.pluck(:project_id).uniq)
   end
 
   def self.new_blank_for_module(my_module)
