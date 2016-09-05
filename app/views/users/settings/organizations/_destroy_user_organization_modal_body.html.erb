@@ -1,13 +1,15 @@
 <%= bootstrap_form_for user_organization, url: destroy_user_organization_path(user_organization, format: :json), remote: :true, method: :delete, data: { id: "destroy-user-organization-form" } do |f| %>
   <p><%= t("users.settings.organizations.edit.destroy_uo_message", user: user_organization.user.full_name, org: user_organization.organization.name) %></p>
-  <div class="alert alert-danger" role="alert">
-    <span class="glyphicon glyphicon-exclamation-sign"></span>
-    &nbsp;
-    <%= t("users.settings.organizations.edit.destroy_uo_alert_heading") %>
-    <ul>
-      <li><%= t("users.settings.organizations.edit.destroy_uo_alert_line_1") %></li>
-      <li><%= t("users.settings.organizations.edit.destroy_uo_alert_line_2").html_safe %></li>
-      <li><%= t("users.settings.organizations.edit.destroy_uo_alert_line_3") %></li>
-    </ul>
-  </div>
+  <% if user_organization.user.confirmed? %>
+    <div class="alert alert-danger" role="alert">
+      <span class="glyphicon glyphicon-exclamation-sign"></span>
+      &nbsp;
+      <%= t("users.settings.organizations.edit.destroy_uo_alert_heading") %>
+      <ul>
+        <li><%= t("users.settings.organizations.edit.destroy_uo_alert_line_1") %></li>
+        <li><%= t("users.settings.organizations.edit.destroy_uo_alert_line_2").html_safe %></li>
+        <li><%= t("users.settings.organizations.edit.destroy_uo_alert_line_3") %></li>
+      </ul>
+    </div>
+  <% end %>
 <% end %>
