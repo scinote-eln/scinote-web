@@ -72,7 +72,7 @@ function processFile(ev, forS3) {
     if(forS3) {
       // Redirects file uploading to S3
       var url = "/avatar_signature.json";
-      directUpload(ev, url);
+      directUpload(ev, url, true);
     } else {
       // Local file uploading
       animateSpinner();
