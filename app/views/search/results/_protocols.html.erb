@@ -80,7 +80,7 @@
           <%=t "search.index.project" %>
           <% protocol_linked_projects.each_with_index do |pro, i| %>
             <%= render partial: "search/results/partials/project_text.html.erb",
-                     locals: { project: pro } %>
+                     locals: { project: pro, link_to_page: :show } %>
             <% if i != (protocol_linked_projects.count - 1) %>
               ,&nbsp;
             <% end %>
