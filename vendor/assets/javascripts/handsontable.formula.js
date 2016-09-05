@@ -103,14 +103,6 @@
             value = error;
           }
         }
-
-        // change background color
-        if (instance.plugin.utils.isSet(error)) {
-          Handsontable.Dom.addClass(TD, 'formula-error');
-        } else if (instance.plugin.utils.isSet(result)) {
-          Handsontable.Dom.removeClass(TD, 'formula-error');
-          Handsontable.Dom.addClass(TD, 'formula');
-        }
       }
 
       // apply changes
