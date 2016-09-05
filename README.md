@@ -154,7 +154,7 @@ Or create new heroku application by executing following command.
 heroku create
 ```
 
-Add additional heroku buildpacks in the same order as specified in `.buildpacks`:
+Add additional heroku buildpacks in the same order as specified in [.buildpacks](.buildpacks):
 
 ```
 heroku buildpacks:add --index <i> <buildpack>
