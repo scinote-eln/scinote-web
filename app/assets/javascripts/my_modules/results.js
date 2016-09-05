@@ -12,6 +12,7 @@ function initHandsOnTables(root) {
       rowHeaders: true,
       colHeaders: true,
       fillHandle: false,
+      formulas: true,
       cells: function (row, col, prop) {
         var cellProperties = {};
 
