@@ -55,6 +55,7 @@ inviteExistingCollapsible
 .on("shown.bs.collapse", function() {
   // Focus input when collapsible is shown
   inviteExistingQuery.focus();
+  invitingExisting = true;
 });
 
 inviteNewCollapsible
