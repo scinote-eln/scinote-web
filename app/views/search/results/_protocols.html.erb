@@ -48,6 +48,47 @@
       <%=l protocol.created_at, format: :full %>
     </span>
     <br>
+    <% if protocol.nr_of_linked_children > 0 %>
+      <span>
+        <% if protocol_linked_modules = protocol.linked_modules %>
+          <%=t "search.index.modules" %>
+          <% protocol_linked_modules.each_with_index do |mod, i| %>
+            <%= render partial: "search/results/partials/my_module_text.html.erb",
+                       locals: { my_module: mod } %>
+            <% if i != (protocol_linked_modules.count - 1) %>
+              ,&nbsp;
+            <% end %>
+          <% end %>
+        <% end %>
+      </span>
+      <br>
+      <span>
+        <% if protocol_linked_experiments = protocol.linked_experiments(protocol_linked_modules) %>
+          <%=t "search.index.experiment" %>
+          <% protocol_linked_experiments.each_with_index do |exp, i| %>
+            <%= render partial: "search/results/partials/experiment_text.html.erb",
+                       locals: { experiment: exp } %>
+            <% if i != (protocol_linked_experiments.count - 1) %>
+              ,&nbsp;
+            <% end %>
+          <% end %>
+        <% end %>
+      </span>
+      <br>
+      <span>
+        <% if protocol_linked_projects = protocol.linked_projects(protocol_linked_experiments) %>
+          <%=t "search.index.project" %>
+          <% protocol_linked_projects.each_with_index do |pro, i| %>
+            <%= render partial: "search/results/partials/project_text.html.erb",
+                     locals: { project: pro, link_to_page: :show } %>
+            <% if i != (protocol_linked_projects.count - 1) %>
+              ,&nbsp;
+            <% end %>
+          <% end %>
+        <% end %>
+      </span>
+    <% end %>
+    <br>
     <% if protocol.in_module? %>
       <span>
         <%=t "search.index.module" %>

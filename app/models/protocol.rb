@@ -146,6 +146,18 @@ class Protocol < ActiveRecord::Base
     end
   end
 
+  def linked_modules
+    MyModule.joins(:protocols).where('protocols.parent_id = ?', id)
+  end
+
+  def linked_experiments(linked_mod)
+    Experiment.where('id IN (?)', linked_mod.pluck(:experiment_id).uniq)
+  end
+
+  def linked_projects(linked_exp)
+    Project.where('id IN (?)', linked_exp.pluck(:project_id).uniq)
+  end
+
   def self.new_blank_for_module(my_module)
     Protocol.new(
       organization: my_module.experiment.project.organization,

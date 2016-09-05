@@ -45,7 +45,7 @@
       <span>
         <%=t "search.index.project" %>
         <%= render partial: "search/results/partials/project_text.html.erb",
-                   locals: { project: checklist.step.protocol.my_module.experiment.project } %>
+                   locals: { project: checklist.step.protocol.my_module.experiment.project, link_to_page: :show } %>
       </span>
     <% else %>
       <span>

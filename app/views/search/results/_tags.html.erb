@@ -31,7 +31,6 @@
         <% experiments_results(tag).each_with_index do |exp, i| %>
           <%= render partial: 'search/results/partials/experiment_text.html.erb',
                      locals: { experiment: exp } %>
-          <% #byebug %>
           <% if i != (experiments_results(tag).count - 1) %>
             ,&nbsp;
           <% end %>
@@ -42,7 +41,7 @@
     <span>
       <%=t "search.index.project" %>
       <%= render partial: "search/results/partials/project_text.html.erb",
-                 locals: { project: tag.project } %>
+                 locals: { project: tag.project, link_to_page: :show } %>
     </span>
     <br>
     <span>
