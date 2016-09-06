@@ -47,7 +47,7 @@ function initializeHandsonTable(el) {
     });
     el.handsontable("getInstance").loadData(data);
     el.handsontable("getInstance").sort(3, order);
-    
+
     // "Hack" to disable user sorting rows by clicking on
     // header elements
     el.handsontable("getInstance")
@@ -1185,3 +1185,16 @@ initializeAddContentsModal();
 initializeSidebarNavigation();
 initializeUnsavedWorkDialog();
 initializeTutorial();
+
+$(document).change(function(){
+  setTimeout(function(){
+    $(".report-nav-link").each( function(){
+      truncateLongString( $(this), 30);
+    });
+  }, 1000);
+});
+$(document).ready(function(){
+  $(".report-nav-link").each( function(){
+    truncateLongString( $(this), 30);
+  });
+});
