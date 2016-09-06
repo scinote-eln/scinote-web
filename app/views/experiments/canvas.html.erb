@@ -16,7 +16,7 @@
                 position: 'left'
             } do %>
             <span class="glyphicon glyphicon-pencil"></span>
-            <%= t('experiments.canvas.canvas_edit') %>
+            <span class="hidden-xs"><%=t 'experiments.canvas.canvas_edit' %></span>
           <% end %>
   <% end %>
   <!-- pexperiment actions -->
@@ -32,7 +32,7 @@
     </span>
   <% end %>
   <div class="toolbarButtons">
-    <%= t('experiments.canvas.zoom') %>
+    <span class="hidden-xs"><%=t 'experiments.canvas.zoom' %></span>
     <div id="zoom-level-buttons" class=" <%= 'btn-group' if can_edit_canvas(@experiment) && can_create_experiment(@project)  %>" data-toggle="buttons">
       <%=link_to canvas_full_zoom_experiment_path(@experiment), remote: true, type: "button", class: "ajax btn btn-default active", "data-action" => "full_zoom", "data-toggle" => "button", "aria-pressed" => true do %>
         <span class="glyphicon glyphicon-th-large" aria-hidden="true" ></span>
@@ -53,7 +53,7 @@
         id: 'new-experiment',
         class: "btn btn-primary pull-right" do %>
           <span class="glyphicon glyphicon-plus"></span>
-          <%= t('experiments.new.create') %>
+          <span class="hidden-xs"><%=t 'experiments.new.create' %></span>
         <% end %>
   <% end %>
 </div>
