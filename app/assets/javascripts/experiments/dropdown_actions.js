@@ -63,7 +63,11 @@
                         form.find("#experiment_project_id"),
                         msg.message.toString());
       })
-      on('submit', function(){
+      .on('submit', function(){
+        form.clearFormErrors();
+      });
+
+      $(modal).on("hidden.bs.modal", function (){
         form.clearFormErrors();
       });
     }
