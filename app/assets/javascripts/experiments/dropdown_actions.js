@@ -71,6 +71,7 @@
         form.clearFormErrors();
       });
     }
+  }
   // Setup front-end validations for experiment form
   function validateExperimentForm(element){
     if ( element ) {
