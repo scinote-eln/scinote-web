@@ -1190,7 +1190,6 @@ $(document).change(function(){
   setTimeout(function(){
     $(".report-nav-link").each( function(){
       truncateLongString( $(this), 30);
-      console.log($(this));
     });
   }, 1000);
 });
