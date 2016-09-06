@@ -7,7 +7,7 @@
       <%= ff.file_field :file %>
     <% end %>
     <hr>
-    <%= f.submit t("result_assets.edit.update"), class: 'btn btn-primary', onclick: "processResult(event, ResultTypeEnum.FILE, #{direct_upload});" %>
+    <%= f.submit t("result_assets.edit.update"), class: 'btn btn-primary', onclick: "processResult(event, ResultTypeEnum.FILE, true, #{direct_upload});" %>
     <button type="button" class="btn btn-default cancel-edit">
       <%= t("general.cancel")%>
     </button>

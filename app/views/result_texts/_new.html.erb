@@ -4,7 +4,7 @@
     <%= f.fields_for :result_text do |ff| %>
       <%= ff.text_area :text, style: "margin-top: 10px;" %><br />
     <% end %>
-    <%= f.submit t("result_texts.new.create"), class: 'btn btn-primary', onclick: "processResult(event, ResultTypeEnum.TEXT);" %>
+    <%= f.submit t("result_texts.new.create"), class: 'btn btn-primary', onclick: "processResult(event, ResultTypeEnum.TEXT, false);" %>
     <button type="button" class="btn btn-default cancel-new">
       <%= t("general.cancel")%>
     </button>

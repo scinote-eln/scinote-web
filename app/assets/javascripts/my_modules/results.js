@@ -320,7 +320,8 @@ var ResultTypeEnum = Object.freeze({
   COMMENT: 3
 });
 
-function processResult(ev, resultTypeEnum, forS3) {
+function processResult(ev, resultTypeEnum, editMode, forS3) {
+  forS3 = (typeof forS3 !== 'undefined') ? forS3 : false;
   var $form = $(ev.target.form);
   $form.clearFormErrors();
 
@@ -329,7 +330,7 @@ function processResult(ev, resultTypeEnum, forS3) {
       var $nameInput = $form.find("#result_name");
       var nameValid = textValidator(ev, $nameInput, true);
       var $fileInput = $form.find("#result_asset_attributes_file");
-      var filesValid = filesValidator(ev, $fileInput, FileTypeEnum.FILE);
+      var filesValid = filesValidator(ev, $fileInput, FileTypeEnum.FILE, editMode);
 
       if(nameValid && filesValid) {
         if(forS3) {

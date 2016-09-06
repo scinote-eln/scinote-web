@@ -5,7 +5,7 @@
       <%= ff.text_area :text, style: "margin-top: 10px;" %><br />
     <% end %>
     <hr>
-    <%= f.submit t("result_texts.edit.update"), class: 'btn btn-primary', onclick: "processResult(event, ResultTypeEnum.TEXT);" %>
+    <%= f.submit t("result_texts.edit.update"), class: 'btn btn-primary', onclick: "processResult(event, ResultTypeEnum.TEXT, true);" %>
     <button type="button" class="btn btn-default cancel-edit">
       <%= t("general.cancel")%>
     </button>

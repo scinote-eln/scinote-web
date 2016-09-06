@@ -4,7 +4,7 @@
     <%= f.fields_for :asset do |ff| %>
       <%= ff.file_field :file %>
     <% end %>
-    <%= f.submit t("result_assets.new.create"), class: 'btn btn-primary', onclick: "processResult(event, ResultTypeEnum.FILE, #{direct_upload});" %>
+    <%= f.submit t("result_assets.new.create"), class: 'btn btn-primary', onclick: "processResult(event, ResultTypeEnum.FILE, false, #{direct_upload});" %>
     <button type="button" class="btn btn-default cancel-new">
       <%= t("general.cancel")%>
     </button>
