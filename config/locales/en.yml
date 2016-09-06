@@ -464,6 +464,12 @@ en:
       head_title: "%{project} | %{module} | Sample library"
     module_archive:
       head_title: "%{project} | %{module} | Archive"
+      option_delete: "Delete"
+      confirm_delete: "Are you sure you want to permanently delete result?"
+      delete_flash: "Sucessfully removed result <strong>%{result}</strong> from task <strong>%{module}</strong>."
+      table_log: "%{user} deleted table result <strong>%{result}</strong> on %{date}"
+      text_log: "%{user} deleted text result <strong>%{result}</strong> on %{date}"
+      asset_log: "%{user} deleted file result <strong>%{result}</strong> on %{date}"
       archived_on: "Archived on"
       archived_on_title: "Result archived on %{date} at %{time}."
       option_download: "Download"

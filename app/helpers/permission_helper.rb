@@ -563,6 +563,9 @@ module PermissionHelper
       )
   end
 
+  def can_delete_module_result(result)
+    is_owner_of_project(result.my_module.experiment.project)
+  end
   # ---- RESULT TEXT PERMISSIONS ----
 
   def can_create_result_text_in_module(my_module)

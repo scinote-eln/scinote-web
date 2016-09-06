@@ -38,7 +38,8 @@ class Activity < ActiveRecord::Base
     :edit_step_comment,
     :delete_step_comment,
     :edit_result_comment,
-    :delete_result_comment
+    :delete_result_comment,
+    :destroy_result
   ]
 
   validates :type_of, presence: true
