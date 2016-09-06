@@ -38,8 +38,6 @@ class ResultsController < ApplicationController
   end
 
   def can_destroy_result_permission
-    unless can_delete_module_result(@result)
-      render_403
-    end
+    render_403 unless can_delete_module_result(@result)
   end
 end
