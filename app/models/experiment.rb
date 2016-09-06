@@ -21,7 +21,7 @@ class Experiment < ActiveRecord::Base
             presence: true,
             length: { minimum: 4, maximum: 50 },
             uniqueness: { scope: :project, case_sensitive: false }
-  validates :description, length: { maximum: 255 }
+  validates :description, length: { maximum: 50 }
   validates :project, presence: true
   validates :created_by, presence: true
   validates :last_modified_by, presence: true

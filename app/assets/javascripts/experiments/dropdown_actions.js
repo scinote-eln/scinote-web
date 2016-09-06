@@ -93,12 +93,16 @@
         }
       })
       .on('submit', function(ev) {
-        textValidator(ev, element.find("#experiment-name"), false);
-        textValidator(ev, element.find("#experiment-description"), true);
-      })
-      .clearFormErrors();
+        form.clearFormErrors();
+      });
+
+      $("#new-experiment-modal").on("hidden.bs.modal", function (){
+        form.clearFormErrors();
+      });
+
     }
   }
+
   // Initialize no description edit link
   function initEditNoDescription(){
     var modal = "#edit-experiment-modal-";
