@@ -30,10 +30,10 @@
       </div>
     <% end %>
     <div class="row">
-      <div class="col-xs-6">
+      <div class="col-xs-4">
         <%=t "projects.experiment_archive.archived_on" %>
       </div>
-      <div class="col-xs-6">
+      <div class="col-xs-8">
         <span title="<%=t "projects.experiment_archive.archived_on_title", date: l(experiment.archived_on, format: :full_date), time: l(experiment.archived_on, format: :time) %>">
           <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
           <%=l experiment.archived_on, format: :full_date %>
@@ -41,10 +41,10 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-xs-6">
+      <div class="col-xs-4">
         <%=t "projects.experiment_archive.created_on" %>
       </div>
-      <div class="col-xs-6">
+      <div class="col-xs-8">
         <span title="<%=t "projects.experiment_archive.created_on_title", date: l(experiment.created_at, format: :full_date), time: l(experiment.created_at, format: :time) %>">
           <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
           <%=l experiment.created_at, format: :full_date %>
@@ -52,10 +52,10 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-xs-6">
+      <div class="col-xs-4">
         <%=t "projects.experiment_archive.last_modified_on" %>
       </div>
-      <div class="col-xs-6">
+      <div class="col-xs-8">
         <span title="<%=t "projects.experiment_archive.created_on_title", date: l(experiment.updated_at, format: :full_date), time: l(experiment.updated_at, format: :time) %>">
           <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
           <%=l experiment.updated_at, format: :full_date %>
