@@ -2,7 +2,8 @@
   <div class="pull-right" style="margin: 20px 15px 0 0;">
     <% if can_create_step_in_protocol(@protocol) %>
       <a class="btn btn-primary" data-action="new-step" href="<%= new_protocol_step_path(protocol_id: @protocol.id, format: :json) %>" data-remote="true">
-        <%= t("protocols.steps.new_step") %>
+        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+        <span class="hidden-xs"><%=t "protocols.steps.new_step" %></span>
       </a>
     <% end %>
     <a class="btn btn-greyed" data-action="collapse-steps">
