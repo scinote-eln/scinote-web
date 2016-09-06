@@ -191,9 +191,6 @@ class ExperimentsController < ApplicationController
         end
       end
     else
-      # flash[:error] = t('experiments.move.error_flash',
-      #                   experiment: @experiment.name)
-      # redirect_to project_path(@experiment.project)
       respond_to do |format|
         format.json do
           render json: { message: t('experiments.move.error_flash',
