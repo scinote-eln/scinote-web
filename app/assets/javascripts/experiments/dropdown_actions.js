@@ -92,7 +92,7 @@
                           error.statusText);
         }
       })
-      .on('submit', function(ev) {
+      .on('submit', function() {
         form.clearFormErrors();
       });
 
