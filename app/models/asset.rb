@@ -141,6 +141,10 @@ class Asset < ActiveRecord::Base
     !(self.file.content_type =~ /^image/).nil?
   end
 
+  def text?
+    TEXT_EXTRACT_FILE_TYPES.any? { |v| file_content_type.start_with? v }
+  end
+
   # TODO: get the current_user
   # before_save do
   #   if current_user
@@ -158,7 +162,7 @@ class Asset < ActiveRecord::Base
     self.update(file_present: true)
 
     # Extract asset text if it's of correct type
-    if TEXT_EXTRACT_FILE_TYPES.any? { |v| file_content_type.start_with? v }
+    if text?
       Rails.logger.info "Asset #{id}: Creating extract text job"
       # The extract_asset_text also includes
       # estimated size calculation
@@ -215,13 +219,19 @@ class Asset < ActiveRecord::Base
     # this automatically, so this is not needed in such cases)
     key = file.path[1..-1]
     S3_BUCKET.object(key).delete
+    Rails.logger.info "Asset #{id} (original): Asset file "\
+         "successfully deleted from S3 (" + key.to_s + ')'
     if (file_content_type =~ %r{^image\/}) == 0
-      file.options[:styles].each do |style|
+      file.options[:styles].each do |style, _|
         key = file.path(style)[1..-1]
         S3_BUCKET.object(key).delete
+        Rails.logger.info "Asset #{id} (" + style.to_s + '): Asset file '\
+         'successfully deleted from S3 (' + key.to_s + ')'
       end
     end
+
     report_elements.destroy_all
+    asset_text_datum.destroy if asset_text_datum.present?
     delete
   end
 
