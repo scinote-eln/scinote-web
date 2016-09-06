@@ -637,7 +637,7 @@ en:
       label_title: 'Move'
       modal_submit: 'Move'
       success_flash: "Successfully moved experiment %{experiment}"
-      error_flash: 'Could not move the experiment.'
+      error_flash: ' Could not move the experiment. Experiment name is already in use. '
       no_projects: 'No projects to move this experiment to.'
     canvas:
       archive_confirm: "Are you sure to archive this experiment?"

@@ -5,7 +5,8 @@
      role="dialog"
      aria-labelledby="move-experiment-modal-label">
      <%= bootstrap_form_for @experiment, url: move_experiment_path(),
-                            method: :post do |f| %>
+                            method: :post,
+                            remote: true do |f| %>
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -15,7 +16,7 @@
         <div class="modal-body">
           <% if !@projects.blank? %>
             <%= f.select :project_id, options_for_select(@projects.collect { |p| [ p.name, p.id ] }),
-                        {}, {class: "form-control selectpicker", "data-role" => "clear"} %>
+                        {}, { class: "form-control selectpicker", "data-role" => "clear" } %>
           <% else %>
             <div>
               <em>
