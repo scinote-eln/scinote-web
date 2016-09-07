@@ -19,7 +19,7 @@
     <li>
       <hr>
       <%= bootstrap_form_for :comment, url: { format: :json }, method: :post, remote: true do |f| %>
-        <%= f.text_field :message, hide_label: true, placeholder: t("general.comment_placeholder"), append: f.submit("+", onclick: "processResult(event, ResultTypeEnum.COMMENT);"), help: '.' %>
+        <%= f.text_field :message, hide_label: true, placeholder: t("general.comment_placeholder"), append: f.submit("+", onclick: "processResult(event, ResultTypeEnum.COMMENT, false);"), help: '.' %>
       <% end %>
     </li>
   </ul>

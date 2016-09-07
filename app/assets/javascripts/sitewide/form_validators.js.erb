@@ -18,7 +18,7 @@ $.fn.onSubmitValidator = function(validatorCb) {
   }
 };
 
-function textValidator(ev, textInput, canBeBlank) {
+function textValidator(ev, textInput, canBeBlank, limitLength) {
   canBeBlank = (typeof canBeBlank !== 'undefined') ? canBeBlank : false;
   limitLength = (typeof limitLength !== 'undefined') ? limitLength : true;
   var nameTooShort = $(textInput).val().length === 0;
@@ -30,43 +30,49 @@ function textValidator(ev, textInput, canBeBlank) {
     errMsg = I18n.t("general.text.length_too_long", { max_length: 50 });
   }
 
-  var hasErrors = !_.isUndefined(errMsg);
-  if (hasErrors) {
+  var noErrors = _.isUndefined(errMsg);
+  if (!noErrors) {
     renderFormError(ev, $(textInput), errMsg);
   }
-  return !hasErrors;
+  return noErrors;
 }
 
 function checklistsValidator(ev, checklists, editMode) {
   var noErrors = true;
   // For every visible (i.e. not removed) checklist
-  checklists.each(function() {
-    $checklist = $(this);
+  $(checklists).each(function() {
+    var $checklist = $(this);
     if ($checklist.css('display') != 'none') {
-      var $checklistNameInput = $checklist.find(".checklist_name");
-      anyChecklistItemFilled = false;
 
-      // For every ckecklist item input
+      // For every visible (i.e. not removed) ckecklist item
+      anyChecklistItemFilled = false;
       $(" .checklist-item-text", $checklist).each(function() {
-        $checklistItemInput = $(this);
-        if ($checklistItemInput.val()) {
-          anyChecklistItemFilled = true;
-        } else {
-          // Remove empty checklist item input
-          $checklistItemInput.closest("fieldset").remove();
+        var $itemInput = $(this);
+        var $item = $itemInput.closest("fieldset");
+        if ($item.css('display') != 'none') {
+
+          if ($itemInput.val()) {
+            var itemNameValid = textValidator(ev, $itemInput);
+            if (!itemNameValid) {
+              noErrors = false;
+            }
+            anyChecklistItemFilled = true;
+          } else {
+            // Remove empty checklist item input
+            $item.remove();
+          }
         }
       })
 
-      if (!$checklistNameInput.val()) {
-        if (anyChecklistItemFilled || editMode) {
-            // In edit mode, checklist's name can't be blank
-            var errMsg = I18n.t("general.text.not_blank");
-            renderFormError(ev, $checklistNameInput, errMsg);
-            noErrors = false;
-        } else  {
-          // Hide empty checklist (remove would break logic)
-          $checklist.hide();
-        }
+      // In edit mode, checklist's name can't be blank if any items present
+      var allowBlankChklstName = !(anyChecklistItemFilled || editMode);
+      var $checklistNameInput = $checklist.find(".checklist_name");
+      var checklistNameValid = textValidator(ev, $checklistNameInput, allowBlankChklstName);
+      if (!checklistNameValid) {
+        noErrors = false;
+      } else if (allowBlankChklstName) {
+        // Hide empty checklist (remove would break server-side logic)
+        $checklist.hide();
       }
     }
   });
@@ -79,10 +85,11 @@ var FileTypeEnum = Object.freeze({
   AVATAR: 1
 });
 
-function filesValidator(ev, fileInputs, fileTypeEnum) {
+function filesValidator(ev, fileInputs, fileTypeEnum, canBeEmpty) {
+  canBeEmpty = (typeof canBeEmpty !== 'undefined') ? canBeEmpty : false;
   var filesValid = true;
   if (fileInputs.length) {
-    var filesPresentValid = filesPresentValidator(ev, fileInputs);
+    var filesPresentValid = canBeEmpty || filesPresentValidator(ev, fileInputs);
     var filesSizeValid = filesSizeValidator(ev, fileInputs, fileTypeEnum);
     // File spoof check is done on server-side only
     filesValid = filesPresentValid && filesSizeValid;

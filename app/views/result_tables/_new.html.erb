@@ -8,7 +8,7 @@
 				</div>
 			<% end %>
 		</div>
-		<%= f.submit t("result_tables.new.create"), class: 'btn btn-primary', onclick: "processResult(event, ResultTypeEnum.TABLE);" %>
+		<%= f.submit t("result_tables.new.create"), class: 'btn btn-primary', onclick: "processResult(event, ResultTypeEnum.TABLE, false);" %>
 		<button type="button" class="btn btn-default cancel-new">
 			<%= t("general.cancel")%>
 		</button>

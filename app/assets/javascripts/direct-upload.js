@@ -189,14 +189,22 @@
       beforeUpload(ev);
 
       // Spoof checks files and, if OK, gets upload post requests
+      var anyFile = false;
       _.each($fileInputs, function (fileInput) {
         var file = fileInput.files[0];
         if (!_.isUndefined(file)) {
           signRequests.push(
             fetchUploadSignature(ev, fileInput, file, signUrl)
           );
+          anyFile = true;
         }
       });
+      if (!anyFile) {
+        // No files present
+        afterUpload();
+        $form.submit();
+        return;
+      }
 
       $.when.apply($, signRequests).then(function () {
         // After successful file spoof check and upload post requests fetching
