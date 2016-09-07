@@ -13,8 +13,16 @@
           <h4 class="modal-title" id="clone-experiment-modal-label"><%= t("experiments.clone.modal_title", experiment: @experiment.name ) %></h5>
         </div>
         <div class="modal-body">
-          <%= f.select :project_id, options_for_select(@projects.collect { |p| [ p.name, p.id ] },
-                                                       @project.id ),
+          <%= f.select :project_id,
+                       options_for_select(
+                         @projects.collect do |p|
+                           if p == @experiment.project
+                             [ "#{p.name} #{t('experiments.clone.current_project')}", p.id ]
+                           else
+                             [ p.name, p.id ]
+                           end
+                         end,
+                         @project.id ),
                        {}, {class: "form-control selectpicker", "data-role" => "clear"} %>
         </div>
         <div class="modal-footer">
