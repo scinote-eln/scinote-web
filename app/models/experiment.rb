@@ -377,6 +377,7 @@ class Experiment < ActiveRecord::Base
     end
 
     save
+    touch(:workflowimg_updated_at)
   end
 
   # Get projects where user is either owner or user in the same organization
