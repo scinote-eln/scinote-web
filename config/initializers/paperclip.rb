@@ -177,7 +177,7 @@ module Paperclip
         #
         # Word processor application
         (Set[content_type, content_types_from_name].subset? Set.new %w(
-          application/msword
+          application/vnd.ms-office
           application/msword
           application/vnd.openxmlformats-officedocument.wordprocessingml.document
           application/vnd.openxmlformats-officedocument.wordprocessingml.template
@@ -196,8 +196,7 @@ module Paperclip
         )) ||
         # Spreadsheet application
         (Set[content_type, content_types_from_name].subset? Set.new %w(
-          application/vnd.ms-excel
-          application/vnd.ms-excel
+          application/vnd.ms-office
           application/vnd.ms-excel
           application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
           application/vnd.openxmlformats-officedocument.spreadsheetml.template
@@ -214,9 +213,7 @@ module Paperclip
         )) ||
         # Presentation application
         (Set[content_type, content_types_from_name].subset? Set.new %w(
-          application/vnd.ms-powerpoint
-          application/vnd.ms-powerpoint
-          application/vnd.ms-powerpoint
+          application/vnd.ms-office
           application/vnd.ms-powerpoint
           application/vnd.openxmlformats-officedocument.presentationml.presentation
           application/vnd.openxmlformats-officedocument.presentationml.template
@@ -235,6 +232,7 @@ module Paperclip
         )) ||
         # Graphics application
         (Set[content_type, content_types_from_name].subset? Set.new %w(
+          application/vnd.ms-office
           application/vnd.oasis.opendocument.graphics
           application/vnd.oasis.opendocument.graphics-template
           application/vnd.sun.xml.draw
@@ -244,6 +242,7 @@ module Paperclip
         )) ||
         # Formula application
         (Set[content_type, content_types_from_name].subset? Set.new %w(
+          application/vnd.ms-office
           application/vnd.oasis.opendocument.formula
           application/vnd.sun.xml.math
           application/vnd.stardivision.math
@@ -251,6 +250,7 @@ module Paperclip
         )) ||
         # Chart application
         (Set[content_type, content_types_from_name].subset? Set.new %w(
+          application/vnd.ms-office
           application/vnd.oasis.opendocument.chart
           application/vnd.stardivision.chart
           application/x-starchart
