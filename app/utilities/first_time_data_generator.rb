@@ -760,7 +760,7 @@ module FirstTimeDataGenerator
     DelayedUploaderTutorial.delay(queue: :tutorial).add_step_asset(
       step: my_modules[7].protocol.steps.where("position = 0").take,
       current_user: user,
-      file_name: "ddCq-quantification_diagnostics-trmplate.xls"
+      file_name: "ddCq-quantification_diagnostics-template.xls"
     )
 
     # Add result

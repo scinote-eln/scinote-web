@@ -135,7 +135,13 @@ module Paperclip
       end
     end
 
+    def media_type_mismatch?
+      calculated_type_mismatch?
+    end
+
     # Checks file media type mismatch between file's name and header
+    # NOTE: Can't rely on headers, as different OS can have different file type
+    # MIME mappings
     def supplied_type_mismatch?
       !allowed_spoof_exception?(supplied_content_type, supplied_media_type) &&
         media_types_from_name != supplied_media_type
@@ -165,7 +171,90 @@ module Paperclip
          media_type == media_types_from_name) ||
         (content_types_from_name.in? %W(#{}
                                         text/plain
-                                        application/octet-stream))
+                                        application/octet-stream)) ||
+        # Types taken from: http://filext.com/faq/office_mime_types.php and
+        # https://www.openoffice.org/framework/documentation/mimetypes/mimetypes.html
+        #
+        # Word processor application
+        (Set[content_type, content_types_from_name].subset? Set.new %w(
+          application/vnd.ms-office
+          application/msword
+          application/vnd.openxmlformats-officedocument.wordprocessingml.document
+          application/vnd.openxmlformats-officedocument.wordprocessingml.template
+          application/vnd.ms-word.document.macroEnabled.12
+          application/vnd.ms-word.template.macroEnabled.12
+          application/vnd.oasis.opendocument.text
+          application/vnd.oasis.opendocument.text-template
+          application/vnd.oasis.opendocument.text-web
+          application/vnd.oasis.opendocument.text-master
+          application/vnd.sun.xml.writer
+          application/vnd.sun.xml.writer.template
+          application/vnd.sun.xml.writer.global
+          application/vnd.stardivision.writer
+          application/vnd.stardivision.writer-global
+          application/x-starwriter
+        )) ||
+        # Spreadsheet application
+        (Set[content_type, content_types_from_name].subset? Set.new %w(
+          application/vnd.ms-office
+          application/vnd.ms-excel
+          application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+          application/vnd.openxmlformats-officedocument.spreadsheetml.template
+          application/vnd.ms-excel.sheet.macroEnabled.12
+          application/vnd.ms-excel.template.macroEnabled.12
+          application/vnd.ms-excel.addin.macroEnabled.12
+          application/vnd.ms-excel.sheet.binary.macroEnabled.12
+          application/vnd.oasis.opendocument.spreadsheet
+          application/vnd.oasis.opendocument.spreadsheet-template
+          application/vnd.sun.xml.calc
+          application/vnd.sun.xml.calc.template
+          application/vnd.stardivision.calc
+          application/x-starcalc
+        )) ||
+        # Presentation application
+        (Set[content_type, content_types_from_name].subset? Set.new %w(
+          application/vnd.ms-office
+          application/vnd.ms-powerpoint
+          application/vnd.openxmlformats-officedocument.presentationml.presentation
+          application/vnd.openxmlformats-officedocument.presentationml.template
+          application/vnd.openxmlformats-officedocument.presentationml.slideshow
+          application/vnd.ms-powerpoint.addin.macroEnabled.12
+          application/vnd.ms-powerpoint.presentation.macroEnabled.12
+          application/vnd.ms-powerpoint.template.macroEnabled.12
+          application/vnd.ms-powerpoint.slideshow.macroEnabled.12
+          application/vnd.oasis.opendocument.presentation
+          application/vnd.oasis.opendocument.presentation-template
+          application/vnd.sun.xml.impress
+          application/vnd.sun.xml.impress.template
+          application/vnd.stardivision.impress
+          application/vnd.stardivision.impress-packed
+          application/x-starimpress
+        )) ||
+        # Graphics application
+        (Set[content_type, content_types_from_name].subset? Set.new %w(
+          application/vnd.ms-office
+          application/vnd.oasis.opendocument.graphics
+          application/vnd.oasis.opendocument.graphics-template
+          application/vnd.sun.xml.draw
+          application/vnd.sun.xml.draw.template
+          application/vnd.stardivision.draw
+          application/x-stardraw
+        )) ||
+        # Formula application
+        (Set[content_type, content_types_from_name].subset? Set.new %w(
+          application/vnd.ms-office
+          application/vnd.oasis.opendocument.formula
+          application/vnd.sun.xml.math
+          application/vnd.stardivision.math
+          application/x-starmath
+        )) ||
+        # Chart application
+        (Set[content_type, content_types_from_name].subset? Set.new %w(
+          application/vnd.ms-office
+          application/vnd.oasis.opendocument.chart
+          application/vnd.stardivision.chart
+          application/x-starchart
+        ))
     end
   end
 end
