@@ -1,6 +1,6 @@
 <div class="btn-group" role="group" aria-label="" style="margin-left: 15px;">
   <div class="btn-group">
-    <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="#"><span class="glyphicon glyphicon-import"></span><span class="hidden-xs">&nbsp;<%= t("my_modules.protocols.buttons.load_protocol") %></span></a>
+    <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="#"><span class="glyphicon glyphicon-import"></span><span class="hidden-xs-custom">&nbsp;<%= t("my_modules.protocols.buttons.load_protocol") %></span></a>
     <ul class="dropdown-menu">
       <% if can_load_protocol_into_module(@my_module) %>
         <li>
@@ -24,15 +24,15 @@
     </ul>
   </div>
   <% if can_export_protocol_from_module(@my_module) %>
-    <a href="#" class="btn btn-default" data-action="export" data-id="<%= @protocol.id %>"><span class="glyphicon glyphicon-export"></span><span class="hidden-xs">&nbsp;<%= t("my_modules.protocols.buttons.export") %></span></a>
+    <a href="#" class="btn btn-default" data-action="export" data-id="<%= @protocol.id %>"><span class="glyphicon glyphicon-export"></span><span class="hidden-xs-custom">&nbsp;<%= t("my_modules.protocols.buttons.export") %></span></a>
   <% else %>
-    <a href="#" class="btn btn-default disabled"><span class="glyphicon glyphicon-export"></span><span class="hidden-xs">&nbsp;<%= t("my_modules.protocols.buttons.export") %></span></a>
+    <a href="#" class="btn btn-default disabled"><span class="glyphicon glyphicon-export"></span><span class="hidden-xs-custom">&nbsp;<%= t("my_modules.protocols.buttons.export") %></span></a>
   <% end %>
   <% if can_copy_protocol_to_repository(@my_module) %>
     <%= link_to copy_to_repository_modal_protocol_path(@protocol, format: :json), class: "btn btn-default", remote: true, data: { action: "copy-to-repository" } do %>
-      <span class="glyphicon glyphicon-saved"></span><span class="hidden-xs">&nbsp;<%= t("my_modules.protocols.buttons.copy_to_repository") %></span>
+      <span class="glyphicon glyphicon-saved"></span><span class="hidden-xs-custom">&nbsp;<%= t("my_modules.protocols.buttons.copy_to_repository") %></span>
       <% end %>
   <% else %>
-    <a href="#" class="btn btn-default disabled"><span class="glyphicon glyphicon-saved"></span><span class="hidden-xs">&nbsp;<%= t("my_modules.protocols.buttons.copy_to_repository") %></span></a>
+    <a href="#" class="btn btn-default disabled"><span class="glyphicon glyphicon-saved"></span><span class="hidden-xs-custom">&nbsp;<%= t("my_modules.protocols.buttons.copy_to_repository") %></span></a>
   <% end %>
 </div>
