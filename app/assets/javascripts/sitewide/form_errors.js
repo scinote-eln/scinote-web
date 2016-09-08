@@ -33,9 +33,21 @@ $.fn.renderFormErrors = function (modelName, errors, clear, ev) {
  * and, if present, mark and show the tab where the error occured and
  * focus/scroll to the error input, if it is the first one to be
  * specified or if errMsgs is undefined.
+ *
+ * @param {string} errAttributes Span element (error) attributes
+ * @param {boolean} clearErr Set clearErr to true if this is the only
+ * error that can happen/show.
  */
-var renderFormError = function (ev, input, errMsgs, errAttributes) {
+var renderFormError = function (ev, input, errMsgs, clearErr, errAttributes) {
+  clearErr = _.isUndefined(clearErr) ? false : clearErr;
+  errAttributes = _.isUndefined(errAttributes) ? "" : " " + errAttributes;
+  $form = $(input).closest("form");
+
   if (!_.isUndefined(errMsgs)) {
+    if (clearErr) {
+      $form.clearFormErrors();
+    }
+
     // Mark error form group
     $formGroup = $(input).closest(".form-group");
     if (!$formGroup.hasClass("has-error")) {
@@ -43,7 +55,6 @@ var renderFormError = function (ev, input, errMsgs, errAttributes) {
     }
 
     // Add error message/s
-    errAttributes = _.isUndefined(errAttributes) ? "" : " " + errAttributes;
     error_text = ($.makeArray(errMsgs).map(function (m) {
       return m.strToErrorFormat();
     })).join("<br />");
@@ -51,7 +62,6 @@ var renderFormError = function (ev, input, errMsgs, errAttributes) {
     $formGroup.append($errSpan);
   }
 
-  $form = $(input).closest("form");
   $tab = $(input).closest(".tab-pane");
   if ($tab.length) {
     // Mark error tab

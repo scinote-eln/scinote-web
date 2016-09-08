@@ -61,15 +61,9 @@
         var msg = JSON.parse(error.responseText);
         renderFormError(e,
                         form.find("#experiment_project_id"),
-                        msg.message.toString());
+                        msg.message.toString(),
+                        true);
       })
-      .on('submit', function(){
-        form.clearFormErrors();
-      });
-
-      $(modal).on("hidden.bs.modal", function (){
-        form.clearFormErrors();
-      });
     }
   }
   // Setup front-end validations for experiment form
@@ -86,25 +80,20 @@
         if ( 'name' in msg ) {
           renderFormError(e,
                           element.find("#experiment-name"),
-                          msg.name.toString());
+                          msg.name.toString(),
+                          true);
         } else if ( 'description' in msg ) {
           renderFormError(e,
                           element.find("#experiment-description"),
-                          msg.description.toString());
+                          msg.description.toString(),
+                          true);
         } else {
           renderFormError(e,
                           element.find("#experiment-name"),
-                          error.statusText);
+                          error.statusText,
+                          true);
         }
       })
-      .on('submit', function() {
-        form.clearFormErrors();
-      });
-
-      $("#new-experiment-modal").on("hidden.bs.modal", function (){
-        form.clearFormErrors();
-      });
-
     }
   }
 
