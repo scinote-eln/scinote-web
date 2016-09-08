@@ -351,8 +351,6 @@ module PermissionHelper
 
   def can_view_experiment_actions(experiment)
     can_edit_experiment(experiment) &&
-      can_clone_experiment(experiment) &&
-      can_move_experiment(experiment) &&
       can_archive_experiment(experiment)
   end
 
@@ -385,11 +383,13 @@ module PermissionHelper
   end
 
   def can_clone_experiment(experiment)
-    is_user_or_higher_of_project(experiment.project)
+    is_user_or_higher_of_project(experiment.project) &&
+      is_normal_user_or_admin_of_organization(experiment.project.organization)
   end
 
   def can_move_experiment(experiment)
-    is_user_or_higher_of_project(experiment.project)
+    is_user_or_higher_of_project(experiment.project) &&
+      is_normal_user_or_admin_of_organization(experiment.project.organization)
   end
   # ---- WORKFLOW PERMISSIONS ----
 
