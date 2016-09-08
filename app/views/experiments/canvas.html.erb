@@ -2,60 +2,64 @@
 <%= render partial: "shared/sidebar" %>
 <%= render partial: "shared/secondary_navigation" %>
 
-<div id="diagram-buttons">
-  <% if can_edit_canvas(@experiment) %>
-    <%=link_to canvas_edit_experiment_url(@experiment),
-          remote: true,
-          type: 'button',
-          id: 'edit-canvas-button',
-          class: 'ajax btn btn-default',
-          data: {
-                action: 'edit',
-                intro: t('tutorial.canvas_click_edit_workflow_html'),
-                step: '5',
-                position: 'left'
-            } do %>
-            <span class="glyphicon glyphicon-pencil"></span>
-            <span class="hidden-xs"><%=t 'experiments.canvas.canvas_edit' %></span>
+<div class="row">
+  <div class="container-fluid">
+    <div id="diagram-buttons">
+      <% if can_edit_canvas(@experiment) %>
+        <%=link_to canvas_edit_experiment_url(@experiment),
+              remote: true,
+              type: 'button',
+              id: 'edit-canvas-button',
+              class: 'ajax btn btn-default',
+              data: {
+                    action: 'edit',
+                    intro: t('tutorial.canvas_click_edit_workflow_html'),
+                    step: '5',
+                    position: 'left'
+                } do %>
+                <span class="glyphicon glyphicon-pencil"></span>
+                <span class="hidden-xs"><%=t 'experiments.canvas.canvas_edit' %></span>
+              <% end %>
+      <% end %>
+      <!-- pexperiment actions -->
+      <% if can_edit_experiment(@experiment) || can_archive_experiment(@experiment) %>
+        <span class="dropdown">
+          <button class="btn btn-default dropdown-toggle" type="button" id="exActionsMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+            <span class="hidden-xs"><%= t'experiments.canvas.actions' %></span>
+            <span class="visible-xs-inline"><i class="glyphicon glyphicon-sort"></i></span>
+            <span class="caret"></span>
+          </button>
+          <%= render partial: 'experiments/dropdown_actions.html.erb',
+                              locals: { project: @project, experiment: @experiment } %>
+        </span>
+      <% end %>
+      <div class="toolbarButtons">
+        <span class="hidden-xs"><%=t 'experiments.canvas.zoom' %></span>
+        <div id="zoom-level-buttons" class=" <%= 'btn-group' if can_edit_canvas(@experiment) && can_create_experiment(@project)  %>" data-toggle="buttons">
+          <%=link_to canvas_full_zoom_experiment_path(@experiment), remote: true, type: "button", class: "ajax btn btn-default active", "data-action" => "full_zoom", "data-toggle" => "button", "aria-pressed" => true do %>
+            <span class="glyphicon glyphicon-th-large" aria-hidden="true" ></span>
           <% end %>
-  <% end %>
-  <!-- pexperiment actions -->
-  <% if can_edit_experiment(@experiment) || can_archive_experiment(@experiment) %>
-    <span class="dropdown">
-      <button class="btn btn-default dropdown-toggle" type="button" id="exActionsMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-        <span class="hidden-xs"><%= t'experiments.canvas.actions' %></span>
-        <span class="visible-xs-inline"><i class="glyphicon glyphicon-sort"></i></span>
-        <span class="caret"></span>
-      </button>
-      <%= render partial: 'experiments/dropdown_actions.html.erb',
-                          locals: { project: @project, experiment: @experiment } %>
-    </span>
-  <% end %>
-  <div class="toolbarButtons">
-    <span class="hidden-xs"><%=t 'experiments.canvas.zoom' %></span>
-    <div id="zoom-level-buttons" class=" <%= 'btn-group' if can_edit_canvas(@experiment) && can_create_experiment(@project)  %>" data-toggle="buttons">
-      <%=link_to canvas_full_zoom_experiment_path(@experiment), remote: true, type: "button", class: "ajax btn btn-default active", "data-action" => "full_zoom", "data-toggle" => "button", "aria-pressed" => true do %>
-        <span class="glyphicon glyphicon-th-large" aria-hidden="true" ></span>
-      <% end %>
-      <%=link_to canvas_medium_zoom_experiment_path(@experiment), remote: true, type: "button", class: "ajax btn btn-default", "data-action" => "medium_zoom" do %>
-        <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
-      <% end %>
-      <%=link_to canvas_small_zoom_experiment_path(@experiment), remote: true, type: "button", class: "ajax btn btn-default", "data-action" => "small_zoom" do %>
-        <span class="glyphicon glyphicon-th" aria-hidden="true"></span>
+          <%=link_to canvas_medium_zoom_experiment_path(@experiment), remote: true, type: "button", class: "ajax btn btn-default", "data-action" => "medium_zoom" do %>
+            <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+          <% end %>
+          <%=link_to canvas_small_zoom_experiment_path(@experiment), remote: true, type: "button", class: "ajax btn btn-default", "data-action" => "small_zoom" do %>
+            <span class="glyphicon glyphicon-th" aria-hidden="true"></span>
+          <% end %>
+        </div>
+      </div>
+
+      <% if can_create_experiment(@project) && @experiment.active? %>
+        <%= link_to new_project_experiment_url(@project),
+            remote: true,
+            type: "button",
+            id: 'new-experiment',
+            class: "btn btn-primary pull-right" do %>
+              <span class="glyphicon glyphicon-plus"></span>
+              <span class="hidden-xs-custom"><%=t 'experiments.new.create' %></span>
+            <% end %>
       <% end %>
     </div>
   </div>
-
-  <% if can_create_experiment(@project) && @experiment.active? %>
-    <%= link_to new_project_experiment_url(@project),
-        remote: true,
-        type: "button",
-        id: 'new-experiment',
-        class: "btn btn-primary pull-right" do %>
-          <span class="glyphicon glyphicon-plus"></span>
-          <span class="hidden-xs"><%=t 'experiments.new.create' %></span>
-        <% end %>
-  <% end %>
 </div>
 
 <div id="canvas-container" data-project-id="<%= @project.id %>"

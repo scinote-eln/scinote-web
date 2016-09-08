@@ -16,3 +16,10 @@
 .nav-tabs > li.active.has-error > a {
   color: $color-apple-blossom;
 }
+
+@media (max-width: 886px) {
+  // line 18, /usr/local/bundle/gems/bootstrap-sass-3.3.6/assets/stylesheets/bootstrap/mixins/_responsive-visibility.scss
+  .hidden-xs-custom {
+    display: none;
+  }
+}

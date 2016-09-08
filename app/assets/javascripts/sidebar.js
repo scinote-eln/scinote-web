@@ -237,6 +237,7 @@ function resizeSidebarContents() {
   var wrapper = $("#wrapper");
   var tree = $("#sidebar-wrapper .tree");
   var toggled = sessionIsSidebarToggled();
+  var navbar = $(".navbar-secondary");
 
   if (tree.length && tree.length == 1) {
     tree.css(
@@ -248,8 +249,10 @@ function resizeSidebarContents() {
   if (toggled === null) {
     if ($(window).width() < SCREEN_SIZE_LARGE) {
       wrapper.addClass("toggled");
+      navbar.addClass("navbar-without-sidebar");
     } else {
       wrapper.removeClass("toggled");
+      navbar.removeClass("navbar-without-sidebar");
     }
   }
 }
