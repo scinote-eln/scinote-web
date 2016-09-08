@@ -1,8 +1,8 @@
 class ResultsController < ApplicationController
   before_action :load_vars
+  before_action :can_destroy_result_permission
 
   def destroy
-    can_destroy_result_permission
     act_log = t('my_modules.module_archive.table_log',
                 user: current_user.name,
                 result: @result.name,
