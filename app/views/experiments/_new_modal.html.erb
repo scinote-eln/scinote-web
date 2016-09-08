@@ -1,6 +1,6 @@
 <!-- New experiment modal -->
 <div class="modal" id="new-experiment-modal" tabindex="-1" role="dialog" aria-labelledby="new-experiment-modal-label">
-  <%= bootstrap_form_for [@project, @experiment] do |f| %>
+  <%= bootstrap_form_for [@project, @experiment], remote: true do |f| %>
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">

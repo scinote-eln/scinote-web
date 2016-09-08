@@ -102,7 +102,7 @@ function filesPresentValidator(ev, fileInputs) {
   _.each(fileInputs, function(fileInput) {
     if (!fileInput.files[0]) {
       assetError = I18n.t("general.file.blank");
-      renderFormError(ev, fileInput, assetError, "data-error='file-missing'");
+      renderFormError(ev, fileInput, assetError, false, "data-error='file-missing'");
       filesPresentValid = false;
     }
   });
@@ -132,7 +132,7 @@ function filesSizeValidator(ev, fileInputs, fileTypeEnum) {
     var file = fileInput.files[0];
     var assetError = getFileTooBigError(file);
     if (assetError) {
-      renderFormError(ev, fileInput, assetError, "data-error='file-size'");
+      renderFormError(ev, fileInput, assetError, false, "data-error='file-size'");
       filesSizeValid = false;
     }
   });
