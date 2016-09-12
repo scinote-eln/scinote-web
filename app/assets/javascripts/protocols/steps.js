@@ -422,6 +422,7 @@ function initStepCommentsLink($el) {
         moreBtn.remove();
       } else {
         moreBtn.attr("href", data.more_url);
+        moreBtn.trigger("blur");
       }
 
       // Reposition dropdown comment options
@@ -439,9 +440,6 @@ function initStepCommentTabAjax() {
     var targetId = $this.attr("aria-controls");
 
     if (parentNode.hasClass("active")) {
-      // TODO move to fn
-      parentNode.removeClass("active");
-      $("#" + targetId).removeClass("active");
       return false;
     }
   })
@@ -463,9 +461,6 @@ function initStepCommentTabAjax() {
   })
   .on("ajax:error", function(e, xhr, status, error) {
     // TODO
-  })
-  .on("ajax:complete", function () {
-    $(this).tab("show");
   });
 }
 
@@ -495,49 +490,75 @@ function initCallBacks() {
   initDeleteStep();
 }
 
-function reorderCheckboxData(el) {
-  var itemIds = [];
-  var checkboxes = $(el).find(".nested_fields:not(:hidden) .form-group");
+/*
+ * Correction for sorting with "Sortable.min" JS library to work correctly with
+ * "nested_form_fields" gem.
+ */
+function reorderCheckboxData(checkboxUl) {
+  // Make sure checkbox item insertion script is always at the bottom of "ul"
+  // tag, otherwise item will not be inserted at bottom
+  if(!$(checkboxUl).children().last().is('script')) {
+    $(checkboxUl).find("script").appendTo(checkboxUl);
+  }
 
-  checkboxes.each(function () {
-    var itemId = $(this).find("label").attr("for").match(/(\d+)_text/)[1];
-    itemIds.push(itemId);
-  });
-
-  itemIds.sort();
-
-  checkboxes.each(function (i) {
+  var $checkboxes = $(checkboxUl).find(".nested_fields");
+  $checkboxes.each(function (itemPos) {
     var $this = $(this);
-    var label = $this.find(".control-label");
-    var input = $this.find(".form-control");
-    var posInput = $this.parent().find(".checklist-item-pos");
-    var itemId = itemIds[i];
-    var forAttr = label.attr("for");
-    var idAttr = input.attr("id");
-    var nameAttr = input.attr("name");
-    var posIdAttr = posInput.attr("id");
-    var posNameAttr = posInput.attr("name");
 
-    forAttr = forAttr.replace(/\d+_text/, itemId + "_text");
-    nameAttr = nameAttr.replace(/\[\d+\]\[text\]/, "[" + itemId + "][text]");
-    posIdAttr = posIdAttr.replace(/\d+_position/, itemId + "_text");
-    posNameAttr = posNameAttr.replace(/\[\d+\]\[position\]/, "[" + itemId + "][position]");
+    var $formGroup = $this.find(".form-group");
+    var $label = $formGroup.find(".control-label");
+    var $textInput = $formGroup.find(".checklist-item-text");
+    var $posInput = $formGroup.parent().find(".checklist-item-pos");
+    var $destroyLink = $this.find(".remove_nested_fields_link");
 
-    label.attr("for", forAttr);
-    input.attr("name", nameAttr);
-    input.attr("id", forAttr);
-    posInput.attr("name", posNameAttr);
-    posInput.attr("id", posIdAttr);
-    posInput.val(itemId);
+    var labelFor = $label.attr("for");
+    var textName = $textInput.attr("name");
+    var textId = $textInput.attr("id");
+    var posName = $posInput.attr("name");
+    var posId = $posInput.attr("id");
+    var destroyLink = $destroyLink.attr("data-delete-association-field-name");
+
+    labelFor = labelFor.replace(/\d+_text/, itemPos + "_text");
+    textName = textName.replace(/\[\d+\]\[text\]/, "[" + itemPos + "][text]");
+    textId = textId.replace(/\d+_text/, itemPos + "_text");
+    posName = posName.replace(/\[\d+\]\[position\]/, "[" + itemPos + "][position]");
+    posId = posId.replace(/\d+_position/, itemPos + "_position");
+    destroyLink = destroyLink.replace(/\[\d+\]\[_destroy\]/, "[" + itemPos + "][_destroy]");
+
+    $label.attr("for", labelFor);
+    $textInput.attr("name", textName); // Actually needed for sorting to work
+    $textInput.attr("id", textId);
+    $posInput.attr("name", posName);
+    $posInput.attr("id", posId);
+    $posInput.val(itemPos);
+    $destroyLink.attr("data-delete-association-field-name", destroyLink);
+
+    var $idInput = $this.find("> input");
+    if ($idInput.length) {
+      var idName = $idInput.attr("name");
+      var idId = $idInput.attr("id");
+
+      idName = idName.replace(/\[\d+\]\[id\]/, "[" + itemPos + "][id]");
+      idId = idId.replace(/\d+_id/, itemPos + "_id");
+
+      $idInput.attr("name", idName);
+      $idInput.attr("id", idId);
+    }
+
+    if ($this.css('display') == 'none') {
+      // Actually needed for deleting to work
+      var $destroyInput = $this.prev();
+      var destroyName = $destroyInput.attr("name");
+      destroyName = destroyName.replace(/\[\d+\]\[_destroy\]/, "[" + itemPos + "][_destroy]");
+      $destroyInput.attr("name", destroyName);
+    }
   });
 }
 
 function enableCheckboxSorting(el) {
   Sortable.create(el, {
     draggable: 'fieldset',
-    filter: 'script',
     handle: '.glyphicon-chevron-right',
-
     onUpdate: function () {
       reorderCheckboxData(el);
     }
@@ -548,7 +569,7 @@ function initializeCheckboxSorting() {
   var el = $("#new-step-checklists a[data-association-path=step_checklists]");
 
   el.click(function () {
-    // calling code below must be defered because at this step HTML in not
+    // calling code below must be defered because at this step HTML is not
     // inserted into DOM.
     setTimeout(function () {
       var list = el.parent().find("fieldset.nested_step_checklists:last ul");
