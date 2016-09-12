@@ -913,7 +913,7 @@ var ruleJS = (function (root) {
       'ODD', 'OR',
       'PI', 'POWER',
       'ROUND', 'ROUNDDOWN', 'ROUNDUP',
-      'SIN', 'SINH', 'SPLIT', 'STDEVP', 'STDEVS', 'SQRT', 'SQRTPI', 'SUM', 'SUMIF', 'SUMIFS', 'SUMPRODUCT', 'SUMSQ', 'SUMX2MY2', 'SUMX2PY2', 'SUMXMY2',
+      'SIN', 'SINH', 'SLOPE', 'SPLIT', 'STDEVP', 'STDEVS', 'SQRT', 'SQRTPI', 'SUM', 'SUMIF', 'SUMIFS', 'SUMPRODUCT', 'SUMSQ', 'SUMX2MY2', 'SUMX2PY2', 'SUMXMY2',
       'VARP', 'VARS',
       'TAN', 'TANH', 'TRUE', 'TRUNC',
       'XOR'

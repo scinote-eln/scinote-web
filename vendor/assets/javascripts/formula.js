@@ -5337,6 +5337,8 @@
     };
 
     Formula.SLOPE = function (data_y, data_x) {
+      data_y = Formula.FLATTEN(data_y)
+      data_x = Formula.FLATTEN(data_x)
       var xmean = jStat.mean(data_x);
       var ymean = jStat.mean(data_y);
       var n = data_x.length;
