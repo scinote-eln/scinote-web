@@ -97,6 +97,7 @@ function initResultCommentsLink($el) {
         moreBtn.remove();
       } else {
         moreBtn.attr("href", data.more_url);
+        moreBtn.trigger("blur");
       }
 
       // Reposition dropdown comment options
@@ -113,9 +114,6 @@ function initResultCommentTabAjax() {
     var targetId = $this.attr("aria-controls");
 
     if (parentNode.hasClass("active")) {
-      // TODO move to fn
-      parentNode.removeClass("active");
-      $("#" + targetId).removeClass("active");
       return false;
     }
   })
@@ -137,9 +135,6 @@ function initResultCommentTabAjax() {
   })
   .on("ajax:error", function(e, xhr, status, error) {
     // TODO
-  })
-  .on("ajax:complete", function () {
-    $(this).tab("show");
   });
 }
 
