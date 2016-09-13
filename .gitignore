@@ -41,6 +41,8 @@ public/robots.txt
 tags
 *.orig
 *.swp
+*.out
+*.db
 
 # Ignore application configuration
 /config/application.yml
