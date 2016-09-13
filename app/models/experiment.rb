@@ -500,6 +500,7 @@ class Experiment < ActiveRecord::Base
       end
 
       my_module.save!
+      experiment.delay.generate_workflow_img
     end
   end
 
@@ -542,6 +543,7 @@ class Experiment < ActiveRecord::Base
 
         group.experiment = experiment
         group.save!
+        experiment.delay.generate_workflow_img
       end
     end
   end
