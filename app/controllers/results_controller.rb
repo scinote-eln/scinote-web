@@ -34,6 +34,7 @@ class ResultsController < ApplicationController
 
   def load_vars
     @result = Result.find_by_id(params[:id])
+    return render_403 unless @result
     @my_module = @result.my_module
   end
 
