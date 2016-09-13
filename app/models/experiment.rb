@@ -499,7 +499,12 @@ class Experiment < ActiveRecord::Base
         raise ActiveRecord::ActiveRecordError
       end
 
-      my_module.save!
+      my_module.save
+    end
+
+    # Generate workflow image for the experiment in which we moved the task
+    to_move.each_value do |id|
+      experiment = Experiment.find_by_id(id)
       experiment.delay.generate_workflow_img
     end
   end
@@ -543,8 +548,13 @@ class Experiment < ActiveRecord::Base
 
         group.experiment = experiment
         group.save!
-        experiment.delay.generate_workflow_img
       end
+    end
+
+    # Generate workflow image for the experiment in which we moved the workflow
+    to_move.each_value do |id|
+      experiment = Experiment.find_by_id(id)
+      experiment.delay.generate_workflow_img
     end
   end
 
