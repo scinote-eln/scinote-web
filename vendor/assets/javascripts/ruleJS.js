@@ -1054,6 +1054,9 @@ var ruleJS = (function (root) {
         case '^':
           result = Math.pow(number1, number2);
           break;
+        case 'e':
+          result = number1 * Math.pow(10, number2);
+          break;
       }
 
       return result;
@@ -1227,6 +1230,15 @@ var ruleJS = (function (root) {
         error = null;
 
     try {
+      // Preprocess E-notation, eg. replaces -5.32e-3 with -0.00532
+      // Excel does it too as well, so we're good
+      formula = formula.replace(/(?:([0-9]+(\.[0-9]+)?)+(E|e)((-|\+)?[0-9]+))/g, function(expr) {
+        var spl = expr.split('E')
+        var m = helper.number(spl[0]);
+        var e = helper.number(spl[1]);
+
+        return Big(m).times(Big(10).pow(e)).toFixed();
+      })
 
       parser.setObj(element);
       result = parser.parse(formula);
