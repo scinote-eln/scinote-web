@@ -215,23 +215,12 @@ class Asset < ActiveRecord::Base
   end
 
   def destroy
-    # Delete files from S3 (when updating an existing file, paperclip does
-    # this automatically, so this is not needed in such cases)
-    key = file.path[1..-1]
-    S3_BUCKET.object(key).delete
-    Rails.logger.info "Asset #{id} (original): Asset file "\
-         "successfully deleted from S3 (" + key.to_s + ')'
-    if (file_content_type =~ %r{^image\/}) == 0
-      file.options[:styles].each do |style, _|
-        key = file.path(style)[1..-1]
-        S3_BUCKET.object(key).delete
-        Rails.logger.info "Asset #{id} (" + style.to_s + '): Asset file '\
-         'successfully deleted from S3 (' + key.to_s + ')'
-      end
-    end
-
     report_elements.destroy_all
     asset_text_datum.destroy if asset_text_datum.present?
+
+    # Nullify needed to force paperclip file deletion
+    self.file = nil
+    save
     delete
   end
 
@@ -259,7 +248,16 @@ class Asset < ActiveRecord::Base
     end
   end
 
-  def presigned_url(style = :original, download: false, time: 30)
+  def url(style = :original, timeout: 30)
+    if file.is_stored_on_s3?
+      presigned_url(style, timeout: timeout)
+    else
+      file.url(style)
+    end
+  end
+
+  # When using S3 file upload, we can limit file accessibility with url signing
+  def presigned_url(style = :original, download: false, timeout: 30)
     if file.is_stored_on_s3?
       if download
         download_arg = 'attachment; filename=' + URI.escape(file_file_name)
@@ -271,9 +269,17 @@ class Asset < ActiveRecord::Base
       signer.presigned_url(:get_object,
         bucket: S3_BUCKET.name,
         key: file.path(style)[1..-1],
-        expires_in: time,
+        expires_in: timeout,
         # this response header forces object download
         response_content_disposition: download_arg)
+    end
+  end
+
+  def open
+    if file.is_stored_on_s3?
+      Kernel.open(presigned_url, "rb")
+    else
+      File.open(file.path, "rb")
     end
   end
 

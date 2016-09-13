@@ -81,7 +81,7 @@ end
 def report_image_asset_url(asset)
   prefix = (ENV["PAPERCLIP_STORAGE"].present? && ENV["MAIL_SERVER_URL"].present? && ENV["PAPERCLIP_STORAGE"] == "filesystem") ? ENV["MAIL_SERVER_URL"] : ""
   prefix = (!prefix.empty? && !prefix.include?("http://") && !prefix.include?("https://")) ? "http://#{prefix}" : prefix
-  url = prefix + asset.presigned_url(:medium, time: 86_400)
+  url = prefix + asset.url(:medium, timeout: 86_400)
   image_tag(url)
 end
 
