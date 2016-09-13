@@ -86,7 +86,7 @@ class ResultCommentsController < ApplicationController
         format.html { render :new }
         format.json {
           render json: {
-            errors: @comment.errors
+            errors: @comment.errors.to_hash(true)
           }
         }
       end
