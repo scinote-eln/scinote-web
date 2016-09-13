@@ -188,7 +188,7 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :results, only: [:update] do
+  resources :results, only: [:update, :destroy] do
     resources :result_comments,
               path: '/comments',
               only: [:new, :create, :index, :edit, :update, :destroy]
