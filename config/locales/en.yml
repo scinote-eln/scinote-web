@@ -631,6 +631,7 @@ en:
       modal_submit: 'Clone'
       success_flash: "Successfully cloned experiment %{experiment}"
       error_flash: 'Could not clone the experiment.'
+      current_project: '(current project)'
     move:
       modal_title: 'Move experiment %{experiment}'
       notice: 'Moving is possible only to projects that contain same (or additional) users.'
