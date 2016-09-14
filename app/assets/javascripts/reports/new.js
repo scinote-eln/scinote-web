@@ -1121,9 +1121,7 @@ function initializeReportSidebartruncation() {
                });
     }
   );
-  var config = { attributes: true,
-                 childList: true,
-                 characterData: true };
+  var config = { childList: true };
 
   observer.observe(target, config);
 }
