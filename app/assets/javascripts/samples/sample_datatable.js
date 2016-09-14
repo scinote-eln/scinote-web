@@ -9,13 +9,13 @@ var selectedSample;
 
 table = $("#samples").DataTable({
     order: [[2, "desc"]],
-    dom: "RB<'row'<'col-sm-9 toolbar'l><'col-sm-3'f>>tpi",
+    dom: "RB<'row'<'col-sm-9-custom toolbar'l><'col-sm-3-custom'f>>tpi",
     stateSave: true,
     buttons: [{
         extend: "colvis",
         text: function () {
             return '<span class="glyphicon glyphicon-option-horizontal"></span> ' +
-                '<span class="hidden-xs">' +
+                '<span class="hidden-xs-custom">' +
                 I18n.t('samples.column_visibility') +
                 '</span>';
         },

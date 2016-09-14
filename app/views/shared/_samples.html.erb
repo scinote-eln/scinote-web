@@ -46,7 +46,7 @@
   <div class="dropdown pull-right" style="display: inline;">
     <button class="btn btn-default dropdown-toggle" type="button" id="addMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" <%= "disabled" unless can_add_sample_related_things_to_organization%>>
       <span class="glyphicon glyphicon-plus"></span>
-      <span class="hidden-xs">
+      <span class="hidden-xs-custom">
         <%= t'More' %>
         <span class="caret"></span>
       </span>
@@ -92,14 +92,14 @@
 <div class="toolbarButtons" style="display:none">
   <button type="button" class="btn btn-default editAdd" id="editSample" onclick="onClickEdit()" disabled>
     <span class="glyphicon glyphicon-pencil"></span>
-    <span class="hidden-xs"><%= t("samples.edit_sample") %></span>
+    <span class="hidden-xs-custom"><%= t("samples.edit_sample") %></span>
   </button>
 
   <% if can_delete_samples(@organization) %>
     <button type="button" class="btn btn-default"
       id="deleteSamplesButton" data-target="#deleteSamples" data-toggle="modal" disabled>
       <span class="glyphicon glyphicon-trash"></span>
-      <span class="hidden-xs"><%= t'samples.delete_samples' %></span>
+      <span class="hidden-xs-custom"><%= t'samples.delete_samples' %></span>
         <%= submit_tag MyModulesController::DELETE_SAMPLES, :class => "hidden delete_samples_submit" %>
     </button>
   <% end %>
@@ -108,7 +108,7 @@
     <button type="button" class="btn btn-default"
       id="assignSamples" onclick="$(this).next().click();" disabled>
       <span class="glyphicon glyphicon-ok-circle"></span>
-      <span class="hidden-xs"><%= t'samples.assign_samples_to_module' %></span>
+      <span class="hidden-xs-custom"><%= t'samples.assign_samples_to_module' %></span>
     </button>
     <%= submit_tag MyModulesController::ASSIGN_SAMPLES, :class => "hidden" %>
   <% end %>
@@ -116,7 +116,7 @@
     <button type="button" class="btn btn-default"
       id="unassignSamples" onclick="$(this).next().click();" disabled>
       <span class="glyphicon glyphicon-ban-circle"></span>
-      <span class="hidden-xs"><%= t'samples.unassign_samples_to_module' %></span>
+      <span class="hidden-xs-custom"><%= t'samples.unassign_samples_to_module' %></span>
     </button>
     <%= submit_tag MyModulesController::UNASSIGN_SAMPLES, :class => "hidden" %>
   <% end %>
