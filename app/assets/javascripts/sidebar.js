@@ -45,12 +45,14 @@ function sessionCollapseSidebarElement(project, id) {
  * Expand a specified element in the sidebar.
  * @param id - The expanded element's ID.
  */
-function sessionExpandSidebarElement(project, id) {
+function sessionExpandSidebarElement(project, id, elements) {
   var ids = sessionGetCollapsedSidebarElements();
   var item = _.findWhere(ids, { prid: project});
   var index = -1;
+
   if ( item ) {
-  index = _.indexOf(item.ids, id);
+    index = _.indexOf(item.ids, id);
+    recalculateElementsPositions(ids, item, elements);
   }
 
   if ( index !== -1 ) {
@@ -59,6 +61,30 @@ function sessionExpandSidebarElement(project, id) {
   }
 }
 
+/**
+ * Recalculate the position of the elements after an experiment
+ * is added or archived.
+ */
+function recalculateElementsPositions(ids, item, elements) {
+  var diff;
+
+  if ( item.eleNum > elements ){
+    diff = item.eleNum - elements;
+    _.map(item.ids, function(element, index){
+      item.ids[index] = element - diff;
+    });
+  } else if ( item.eleNum < elements ) {
+    diff = elements - item.eleNum ;
+    _.map(item.ids, function(element, index){
+      item.ids[index] = element + diff;
+    });
+  }
+
+  if ( item.eleNum !== elements) {
+    item.eleNum = elements;
+    sessionStorage.setItem(STORAGE_TREE_KEY, JSON.stringify(ids));
+  }
+}
 /**
  * Get the session stored toggled boolean or null value if
  * sidebar toggle state was not changed by user. It allow for
@@ -133,8 +159,15 @@ function setupSidebarTree() {
     $(el).attr("data-toggle-id", i++);
   });
 
-  // Gets the current project and the session-stored elements
+  // Get the current project
   var project = $('[data-project-id]').data('projectId');
+
+  // Set number of elements
+  sessionExpandSidebarElement(project,
+                              null,
+                              $('[data-parent="candidate"]').length );
+
+  // Get the session-stored elements
   var collapsedIds = sessionGetCollapsedSidebarElements();
 
   // Get the current project stered elements
@@ -149,13 +182,14 @@ function setupSidebarTree() {
     _.each($('li.parent_li[data-parent="candidate"]'), function(el) {
       var id = $(el).data("toggle-id");
       var li = $(".tree li.parent_li[data-toggle-id='" + id + "']");
-  
+
       if( li.hasClass("active") ||  li.find(".active").length > 0){
         // Always expand the active element
         toggleLi(li,
           false,
           false);
-      } else if ( $.inArray( id.toString(), currentProjectIds.ids.split(", ")) !== -1 ) {
+      } else if ( $.inArray( id.toString(),
+                             currentProjectIds.ids.split(", ")) !== -1 ) {
         // Expande element
         toggleLi(li,
           false,
@@ -198,7 +232,9 @@ function setupSidebarTree() {
 
     if (el.find(" > ul > li").is(":visible")) {
       toggleLi(el, true, true);
-      sessionExpandSidebarElement(project, el.data("toggle-id"));
+      sessionExpandSidebarElement(project,
+                                  el.data("toggle-id"),
+                                  $('[data-parent="candidate"]').length );
     } else {
       toggleLi(el, false, true);
       sessionCollapseSidebarElement(project, el.data("toggle-id"));
