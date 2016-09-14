@@ -26,25 +26,26 @@
 
 @media (min-width: 1075px) {
   .col-sm-3-custom {
+    float: left;
     width: 25%;
-    float: left;
   }
+  
   .col-sm-9-custom {
-    width: 75%;
     float: left;
+    width: 75%;
   }
 }
 
 .col-sm-3-custom {
-  position: relative;
   min-height: 1px;
   padding-left: 15px;
   padding-right: 15px;
+  position: relative;
 }
 
 .col-sm-9-custom {
-  position: relative;
   min-height: 1px;
   padding-left: 15px;
   padding-right: 15px;
+  position: relative;
 }
