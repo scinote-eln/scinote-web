@@ -15,7 +15,7 @@ table = $("#samples").DataTable({
         extend: "colvis",
         text: function () {
             return '<span class="glyphicon glyphicon-option-horizontal"></span> ' +
-                '<span class='hidden-xs-custom'>' +
+                "<span class='hidden-xs-custom'>" +
                 I18n.t('samples.column_visibility') +
                 '</span>';
         },
