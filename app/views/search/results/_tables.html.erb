@@ -63,10 +63,16 @@
                    locals: { my_module: table.result.my_module, link_to_page: :results } %>
       </span>
       <br>
+        <span>
+          <%=t "search.index.experiment" %>
+          <%= render partial: "search/results/partials/experiment_text.html.erb",
+                     locals: { experiment: table.result.my_module.experiment } %>
+        </span>
+      <br>
       <span>
         <%=t "search.index.project" %>
         <%= render partial: "search/results/partials/project_text.html.erb",
-                   locals: { project: table.result.my_module.experiment.project } %>
+                   locals: { project: table.result.my_module.experiment.project, link_to_page: :show } %>
       </span>
       <br>
       <span>
