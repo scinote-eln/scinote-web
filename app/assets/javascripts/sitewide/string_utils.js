@@ -17,7 +17,12 @@ function truncateLongString( el, chars ) {
         break;
       }
     }
-  el.html(html.outerHTML + newText + '...' );
+
+    if ( html ) {
+      el.html(html.outerHTML + newText + '...' );
+    } else {
+      el.html(newText + '...' );
+    }
   }
 }
 
