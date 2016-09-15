@@ -555,11 +555,7 @@ class Experiment < ActiveRecord::Base
   # Generates workflow img when the workflow or module is moved
   # to other experiment
   def generate_workflow_img_for_moved_modules(to_move)
-    experiment_ids = []
-    to_move.each_value do |id|
-      experiment_ids << id
-    end
-    experiment_ids.uniq.each do |id|
+    to_move.values.uniq.each do |id|
       experiment = Experiment.find_by_id(id)
       next unless experiment
       experiment.delay.generate_workflow_img
