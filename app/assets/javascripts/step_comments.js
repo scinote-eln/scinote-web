@@ -16,6 +16,7 @@
         beforeSend: animateSpinner(that, true),
         success: function(data){
           $(that.children()[0]).html(data.html);
+          commentFormOnSubmitAction();
           animateSpinner(that, false);
         },
         complete: animateSpinner(that, false)
@@ -24,15 +25,14 @@
   }
 
   function refreshComments(child){
-    var parent = chils.closest(".step-comment");
+    var parent = child.closest(".step-comment");
     var link = parent.attr("data-href");
-
     $.ajax({
       method: 'GET',
       url: link,
       beforeSend: animateSpinner(parent, true),
       success: function(data){
-        $(parent.children()[0]).html(data.html);
+        updateCommentHTML(parent, data);
         animateSpinner(parent, false);
       },
       complete: animateSpinner(parent, false)
@@ -42,15 +42,22 @@
   function commentFormOnSubmitAction(){
     $(".comment-form")
       .each(function() {
-        var obj = $(this);
-        debugger;
-        obj
-          .on('submit', function(){
-            refreshComments(obj);
-          });
+        bindCommentAjax($(this));
       });
   }
 
+  function bindCommentAjax(form){
+    form
+      .ajaxSuccess( function(){
+        refreshComments(form);
+      });
+  }
+
+  function updateCommentHTML(parent, data) {
+    var comment_form = $(parent.find(".comment-form"));
+    $(parent.children()[0]).html(data.html);
+    bindCommentAjax(comment_form);
+  }
+
   initializeComments();
-  commentFormOnSubmitAction();
 })();

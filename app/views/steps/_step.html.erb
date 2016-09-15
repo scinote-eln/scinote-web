@@ -30,8 +30,9 @@
       </a>
     </div>
     <div class="panel-collapse collapse" id="step-panel-<%= step.id %>" role="tabpanel">
-      <div class="panel-body">
+      <div class="panel-body equal">
       <% if @protocol.in_module? %>
+      <div class="col-md-9">
         <ul class="nav nav-tabs">
           <li role="presentation" class="active">
             <a class="step-info-tab" href="#step-info-<%= step.id %>" data-toggle="tab"><span class="glyphicon glyphicon-info-sign"></span>
@@ -40,7 +41,6 @@
         </ul>
         <div class="tab-content">
           <div class="tab-pane active" role="tabpanel" id="step-info-<%= step.id %>">
-            <div class="col-md-9">
       <% end %>
         <% if step.description.blank? %>
           <em><%= t("protocols.steps.no_description") %></em>
@@ -126,13 +126,13 @@
         <% end %>
 <% if @protocol.in_module? %>
           </div>
-          <% if can_view_step_comments(@protocol) %>
-          <div class="col-md-3 step-comment" data-href="<%= url_for step_step_comments_path(step_id: step.id, format: :json) %>">
-            <div id="step-comments-<%= step.id %>"></div>
-          </div>
-          <% end %>
         </div>
       </div>
+      <% if can_view_step_comments(@protocol) %>
+      <div class="col-md-3 step-comment" data-href="<%= url_for step_step_comments_path(step_id: step.id, format: :json) %>">
+        <div id="step-comments-<%= step.id %>"></div>
+      </div>
+      <% end %>
 <% end %>
       </div>
     </div>
