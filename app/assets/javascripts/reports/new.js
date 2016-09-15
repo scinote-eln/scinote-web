@@ -1107,6 +1107,25 @@ function constructElementContentsJson(el) {
   return jsonEl;
 }
 
+/**
+  * Binds listeners to sidebar
+  * that truncate long strings
+  */
+function initializeReportSidebartruncation() {
+  var target = document.getElementById("report-sidebar-tree");
+  var observer = new MutationObserver(
+    function() {
+      $.each($("a.report-nav-link"),
+               function(){
+                 truncateLongString($(this), 30);
+               });
+    }
+  );
+  var config = { childList: true };
+
+  observer.observe(target, config);
+}
+
 /* Initialize the first-time demo tutorial if needed. */
 function initializeTutorial() {
   if (showTutorial()) {
@@ -1177,6 +1196,7 @@ function showTutorial() {
  */
 initializeReportElements($(REPORT_CONTENT));
 
+initializeReportSidebartruncation();
 initializeGlobalReportSort();
 initializePrintPopup();
 initializeSaveToPdf();
@@ -1185,16 +1205,3 @@ initializeAddContentsModal();
 initializeSidebarNavigation();
 initializeUnsavedWorkDialog();
 initializeTutorial();
-
-$(document).change(function(){
-  setTimeout(function(){
-    $(".report-nav-link").each( function(){
-      truncateLongString( $(this), 30);
-    });
-  }, 1000);
-});
-$(document).ready(function(){
-  $(".report-nav-link").each( function(){
-    truncateLongString( $(this), 30);
-  });
-});
