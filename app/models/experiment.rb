@@ -503,10 +503,7 @@ class Experiment < ActiveRecord::Base
     end
 
     # Generate workflow image for the experiment in which we moved the task
-    to_move.each_value do |id|
-      experiment = Experiment.find_by_id(id)
-      experiment.delay.generate_workflow_img
-    end
+    generate_workflow_img_for_moved_modules(to_move)
   end
 
   # Move module groups; this method accepts a map where keys
@@ -552,8 +549,19 @@ class Experiment < ActiveRecord::Base
     end
 
     # Generate workflow image for the experiment in which we moved the workflow
+    generate_workflow_img_for_moved_modules(to_move)
+  end
+
+  # Generates workflow img when the workflow or module is moved
+  # to other experiment
+  def generate_workflow_img_for_moved_modules(to_move)
+    experiment_ids = []
     to_move.each_value do |id|
+      experiment_ids << id
+    end
+    experiment_ids.uniq.each do |id|
       experiment = Experiment.find_by_id(id)
+      next unless experiment
       experiment.delay.generate_workflow_img
     end
   end
