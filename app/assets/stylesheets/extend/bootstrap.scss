@@ -23,3 +23,29 @@
     display: none;
   }
 }
+
+@media (min-width: 1075px) {
+  .col-sm-3-custom {
+    float: left;
+    width: 25%;
+  }
+
+  .col-sm-9-custom {
+    float: left;
+    width: 75%;
+  }
+}
+
+.col-sm-3-custom {
+  min-height: 1px;
+  padding-left: 15px;
+  padding-right: 15px;
+  position: relative;
+}
+
+.col-sm-9-custom {
+  min-height: 1px;
+  padding-left: 15px;
+  padding-right: 15px;
+  position: relative;
+}
