@@ -18,16 +18,27 @@ $.fn.onSubmitValidator = function(validatorCb) {
   }
 };
 
-function textValidator(ev, textInput, canBeBlank, limitLength) {
-  canBeBlank = (typeof canBeBlank !== 'undefined') ? canBeBlank : false;
-  limitLength = (typeof limitLength !== 'undefined') ? limitLength : true;
-  var nameTooShort = $(textInput).val().length === 0;
-  var nameTooLong = $(textInput).val().length > 50;
+var TextLimitEnum = Object.freeze({
+  OPTIONAL: 0,
+  REQUIRED: 1,
+  NAME_MIN_LENGTH: '<%= NAME_MIN_LENGTH %>',
+  NAME_MAX_LENGTH: '<%= NAME_MAX_LENGTH %>',
+  TEXT_MAX_LENGTH: '<%= TEXT_MAX_LENGTH %>'
+});
+
+function textValidator(ev, textInput, textLimitEnumMin, textLimitEnumMax) {
+  var nameTooShort = $(textInput).val().length < textLimitEnumMin;
+  var nameTooLong = $(textInput).val().length > textLimitEnumMax;
+
   var errMsg;
-  if (!canBeBlank && nameTooShort) {
-    errMsg = I18n.t("general.text.not_blank");
-  } else if (limitLength && nameTooLong) {
-    errMsg = I18n.t("general.text.length_too_long", { max_length: 50 });
+  if (nameTooShort) {
+    if (textLimitEnumMin === TextLimitEnum.REQUIRED) {
+      errMsg = I18n.t("general.text.not_blank");
+    } else {
+      errMsg = I18n.t("general.text.length_too_short", { min_length: textLimitEnumMin });
+    }
+  } else if (nameTooLong) {
+    errMsg = I18n.t("general.text.length_too_long", { max_length: textLimitEnumMax });
   }
 
   var noErrors = _.isUndefined(errMsg);
@@ -52,7 +63,7 @@ function checklistsValidator(ev, checklists, editMode) {
         if ($item.css('display') != 'none') {
 
           if ($itemInput.val()) {
-            var itemNameValid = textValidator(ev, $itemInput);
+            var itemNameValid = textValidator(ev, $itemInput, TextLimitEnum.REQUIRED, TextLimitEnum.TEXT_MAX_LENGTH);
             if (!itemNameValid) {
               noErrors = false;
             }
@@ -64,10 +75,12 @@ function checklistsValidator(ev, checklists, editMode) {
         }
       })
 
+      var $checklistInput = $checklist.find(".checklist_name");
       // In edit mode, checklist's name can't be blank if any items present
       var allowBlankChklstName = !(anyChecklistItemFilled || editMode);
-      var $checklistNameInput = $checklist.find(".checklist_name");
-      var checklistNameValid = textValidator(ev, $checklistNameInput, allowBlankChklstName);
+      var textLimitEnumMin = allowBlankChklstName ? TextLimitEnum.OPTIONAL : TextLimitEnum.REQUIRED;
+      var checklistNameValid = textValidator(ev, $checklistInput,
+        textLimitEnumMin, TextLimitEnum.TEXT_MAX_LENGTH);
       if (!checklistNameValid) {
         noErrors = false;
       } else if (allowBlankChklstName) {
@@ -80,9 +93,9 @@ function checklistsValidator(ev, checklists, editMode) {
   return noErrors;
 }
 
-var FileTypeEnum = Object.freeze({
-  FILE: 0,
-  AVATAR: 1
+var FileTypeSizeEnum = Object.freeze({
+  FILE: '<%= FILE_MAX_SIZE.megabytes %>',
+  AVATAR: '<%= AVATAR_MAX_SIZE.megabytes %>'
 });
 
 function filesValidator(ev, fileInputs, fileTypeEnum, canBeEmpty) {
@@ -115,14 +128,13 @@ function filesSizeValidator(ev, fileInputs, fileTypeEnum) {
     if (!file) {
       return ;
     }
-    var size = parseInt(file.size);
-    <% avatarSizerLimit = AVATAR_SIZE_LIMIT %>;
-    <% fileSizeLimit = FILE_SIZE_LIMIT %>;
-
-    if (fileTypeEnum == FileTypeEnum.FILE && size > <%= fileSizeLimit.megabytes %>) {
-      return "<%= I18n.t 'general.file.size_exceeded', file_size: fileSizeLimit %>".strToErrorFormat();
-    } else if (fileTypeEnum == FileTypeEnum.AVATAR && size > <%= avatarSizerLimit.megabytes %>) {
-      return "<%= I18n.t 'general.file.size_exceeded', file_size: avatarSizerLimit %>".strToErrorFormat();
+    if (file.size > fileTypeEnum) {
+      switch (fileTypeEnum) {
+        case FileTypeSizeEnum.FILE:
+         return "<%= I18n.t 'general.file.size_exceeded', file_size: FILE_MAX_SIZE %>".strToErrorFormat();
+        case FileTypeSizeEnum.AVATAR:
+          return "<%= I18n.t 'general.file.size_exceeded', file_size: AVATAR_MAX_SIZE %>".strToErrorFormat();
+      }
     }
   };
 

@@ -1,9 +1,7 @@
 class MyModuleGroup < ActiveRecord::Base
   include SearchableModel
 
-  validates :name,
-    presence: true,
-    length: { maximum: 50 }
+  validates :name, presence: true, length: { maximum: NAME_MAX_LENGTH }
   validates :experiment, presence: true
 
   belongs_to :experiment, inverse_of: :my_module_groups

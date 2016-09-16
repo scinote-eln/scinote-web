@@ -8,16 +8,16 @@ class AssetsController < ApplicationController
     respond_to do |format|
       format.json {
         asset = Asset.new(asset_params)
-        if asset.errors.any?
-          render json: {
-            status: 'error',
-            errors: asset.errors
-          }, status: :bad_request
-        else
+        if asset.valid?
           posts = generate_upload_posts asset
           render json: {
             posts: posts
           }
+        else
+          render json: {
+            status: 'error',
+            errors: asset.errors
+          }, status: :bad_request
         end
       }
     end
@@ -106,7 +106,7 @@ class AssetsController < ApplicationController
       success_action_status: '201',
       acl: 'private',
       storage_class: "STANDARD",
-      content_length_range: 1..(FILE_SIZE_LIMIT.megabytes),
+      content_length_range: 1..FILE_MAX_SIZE.megabytes,
       content_type: asset.file_content_type
     )
     posts.push({
@@ -121,7 +121,7 @@ class AssetsController < ApplicationController
           success_action_status: '201',
           acl: 'public-read',
           storage_class: "REDUCED_REDUNDANCY",
-          content_length_range: 1..(FILE_SIZE_LIMIT.megabytes),
+          content_length_range: 1..FILE_MAX_SIZE.megabytes,
           content_type: asset.file_content_type
         )
         posts.push({

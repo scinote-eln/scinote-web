@@ -1,8 +1,8 @@
 class Table < ActiveRecord::Base
   include SearchableModel
   validates :contents,
-    presence: true,
-    length: { maximum: 20971520 }
+            presence: true,
+            length: { maximum: TABLE_JSON_MAX_SIZE.megabytes }
 
   belongs_to :created_by, foreign_key: 'created_by_id', class_name: 'User'
   belongs_to :last_modified_by, foreign_key: 'last_modified_by_id', class_name: 'User'

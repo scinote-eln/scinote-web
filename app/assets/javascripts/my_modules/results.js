@@ -301,9 +301,10 @@ function processResult(ev, resultTypeEnum, editMode, forS3) {
   switch(resultTypeEnum) {
     case ResultTypeEnum.FILE:
       var $nameInput = $form.find("#result_name");
-      var nameValid = textValidator(ev, $nameInput, true);
+      var nameValid = textValidator(ev, $nameInput, TextLimitEnum.OPTIONAL,
+        TextLimitEnum.NAME_MAX_LENGTH);
       var $fileInput = $form.find("#result_asset_attributes_file");
-      var filesValid = filesValidator(ev, $fileInput, FileTypeEnum.FILE, editMode);
+      var filesValid = filesValidator(ev, $fileInput, FileTypeSizeEnum.FILE, editMode);
 
       if(nameValid && filesValid) {
         if(forS3) {
@@ -318,17 +319,21 @@ function processResult(ev, resultTypeEnum, editMode, forS3) {
       break;
     case ResultTypeEnum.TABLE:
       var $nameInput = $form.find("#result_name");
-      var nameValid = textValidator(ev, $nameInput, true);
+      var nameValid = textValidator(ev, $nameInput, TextLimitEnum.OPTIONAL,
+        TextLimitEnum.NAME_MAX_LENGTH);
       break;
     case ResultTypeEnum.TEXT:
       var $nameInput = $form.find("#result_name");
-      var nameValid = textValidator(ev, $nameInput, true);
+      var nameValid = textValidator(ev, $nameInput, TextLimitEnum.OPTIONAL,
+        TextLimitEnum.NAME_MAX_LENGTH);
       var $textInput = $form.find("#result_result_text_attributes_text");
-      textValidator(ev, $textInput, false, false);
+      textValidator(ev, $textInput, TextLimitEnum.REQUIRED,
+        TextLimitEnum.TEXT_MAX_LENGTH);
       break;
     case ResultTypeEnum.COMMENT:
       var $commentInput = $form.find("#comment_message");
-      var commentValid = textValidator(ev, $commentInput, false, false);
+      var commentValid = textValidator(ev, $commentInput, TextLimitEnum.REQUIRED,
+        TextLimitEnum.TEXT_MAX_LENGTH);
       break;
   }
 }

@@ -1,9 +1,7 @@
 class Comment < ActiveRecord::Base
   include SearchableModel
 
-  validates :message,
-    presence: true,
-    length: { maximum: 1000 }
+  validates :message, presence: true, length: { maximum: TEXT_MAX_LENGTH }
   validates :user, presence: true
 
   validate :belongs_to_only_one_object

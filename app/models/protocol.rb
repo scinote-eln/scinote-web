@@ -13,7 +13,8 @@ class Protocol < ActiveRecord::Base
     in_repository_archived: 4
   }
 
-  validates :name, length: { maximum: 100 }
+  # Name is required when its actually specified (i.e. :in_repository? is true)
+  validates :name, length: { maximum: NAME_MAX_LENGTH }
   validates :organization, presence: true
   validates :protocol_type, presence: true
 

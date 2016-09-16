@@ -2,8 +2,7 @@ class Result < ActiveRecord::Base
   include ArchivableModel, SearchableModel
 
   validates :user, :my_module, presence: true
-  validates :name,
-    length: { maximum: 50 }
+  validates :name, length: { maximum: NAME_MAX_LENGTH }
   validate :text_or_asset_or_table
 
   belongs_to :user, inverse_of: :results

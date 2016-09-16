@@ -11,7 +11,7 @@ class OrganizationsController < ApplicationController
       if params[:file]
         begin
 
-          if params[:file].size > FILE_SIZE_LIMIT.megabytes
+          if params[:file].size > FILE_MAX_SIZE.megabytes
             error = t("organizations.parse_sheet.errors.file_size_exceeded")
             format.html {
               flash[:alert] = error

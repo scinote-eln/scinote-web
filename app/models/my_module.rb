@@ -4,8 +4,7 @@ class MyModule < ActiveRecord::Base
   before_create :create_blank_protocol
 
   validates :name,
-    presence: true,
-    length: { minimum: 2, maximum: 50 }
+            length: { minimum: NAME_MIN_LENGTH, maximum: NAME_MAX_LENGTH }
   validates :x, :y, :workflow_order, presence: true
   validates :experiment, presence: true
   validates :my_module_group, presence: true, if: "!my_module_group_id.nil?"

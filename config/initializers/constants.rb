@@ -21,11 +21,21 @@ TAG_COLORS = [
   "#000000"
 ]
 
-# Maximum uploaded file size in MB
-FILE_SIZE_LIMIT = 50
+# Min/max characters for short text fields
+NAME_MIN_LENGTH = 2
+NAME_MAX_LENGTH = 255
+# Max characters for long text fields
+TEXT_MAX_LENGTH = 10000
+# Max characters for color field (given in HEX format)
+COLOR_MAX_LENGTH = 7
+USER_INITIALS_MAX_LENGTH = 4
 
-# Maximum uploaded avatar size in MB
-AVATAR_SIZE_LIMIT = 0.2
+# Max table JSON size in MB
+TABLE_JSON_MAX_SIZE = 20
+# Max uploaded file size in MB
+FILE_MAX_SIZE = 50
+# Max uploaded user avatar size in MB
+AVATAR_MAX_SIZE = 0.2
 
 SEARCH_LIMIT = 20
 

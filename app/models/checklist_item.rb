@@ -1,7 +1,5 @@
 class ChecklistItem < ActiveRecord::Base
-  validates :text,
-    presence: true,
-    length: { maximum: 1000 }
+  validates :text, presence: true, length: { maximum: TEXT_MAX_LENGTH }
   validates :checklist, presence: true
   validates :checked, inclusion: { in: [true, false] }
 

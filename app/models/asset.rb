@@ -12,7 +12,9 @@ class Asset < ActiveRecord::Base
     }
   }
 
-  validates_attachment :file, presence: true, size: { less_than: FILE_SIZE_LIMIT.megabytes }
+  validates_attachment :file,
+                       presence: true,
+                       size: { less_than: FILE_MAX_SIZE.megabytes }
   validates :estimated_size, presence: true
   validates :file_present, inclusion: { in: [true, false] }
 
@@ -46,7 +48,7 @@ class Asset < ActiveRecord::Base
   # so use just these errors
   after_validation :filter_paperclip_errors
   # Needed because Paperclip validatates on creation
-  after_create :filter_paperclip_errors
+  after_initialize :filter_paperclip_errors, if: :new_record?
 
   attr_accessor :file_content, :file_info, :preview_cached
 

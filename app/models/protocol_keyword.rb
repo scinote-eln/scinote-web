@@ -1,5 +1,5 @@
 class ProtocolKeyword < ActiveRecord::Base
-  validates :name, presence: true, length: { maximum: 50 }
+  validates :name, presence: true, length: { maximum: NAME_MAX_LENGTH }
   validates :organization, presence: true
 
   belongs_to :organization, inverse_of: :protocol_keywords
