@@ -291,6 +291,7 @@ function initHandsOnTable(root) {
       rowHeaders: true,
       colHeaders: true,
       fillHandle: false,
+      formulas: true,
       cells: function (row, col, prop) {
         var cellProperties = {};
 
@@ -338,6 +339,7 @@ function initEditableHandsOnTable(root) {
       rowHeaders: true,
       colHeaders: true,
       contextMenu: true,
+      formulas: true,
       preventOverflow: 'horizontal'
     });
 
@@ -648,30 +650,6 @@ function expandStep(step) {
   });
 }
 
-// On init
-initCallBacks();
-initHandsOnTable($(document));
-expandAllSteps();
-setupAssetsLoading();
-
-// Init comments edit/delete
-initCommentOptions("ul.content-comments");
-initEditComments("#steps");
-initDeleteComments("#steps");
-
-$(function () {
-
-  $("[data-action='collapse-steps']").click(function () {
-    $('.step .panel-collapse').collapse('hide');
-    $(document).find("span.collapse-step-icon").each(function()  {
-      $(this).addClass("glyphicon-collapse-down");
-      $(this).removeClass("glyphicon-collapse-up");
-    });
-  });
-
-  $("[data-action='expand-steps']").click(expandAllSteps);
-});
-
 function renderTable(table) {
   $(table).handsontable("render");
   // Yet another dirty hack to solve HandsOnTable problems
@@ -679,3 +657,29 @@ function renderTable(table) {
     $(table).find(".ht_master .wtHolder").css("height", "100%");
   }
 }
+
+$(document).ready(function() {
+  // On init
+  initCallBacks();
+  initHandsOnTable($(document));
+  expandAllSteps();
+  setupAssetsLoading();
+
+  // Init comments edit/delete
+  initCommentOptions("ul.content-comments");
+  initEditComments("#steps");
+  initDeleteComments("#steps");
+
+  $(function () {
+
+    $("[data-action='collapse-steps']").click(function () {
+      $('.step .panel-collapse').collapse('hide');
+      $(document).find("span.collapse-step-icon").each(function()  {
+        $(this).addClass("glyphicon-collapse-down");
+        $(this).removeClass("glyphicon-collapse-up");
+      });
+    });
+
+    $("[data-action='expand-steps']").click(expandAllSteps);
+  });
+})
