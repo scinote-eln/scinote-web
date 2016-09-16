@@ -10,8 +10,6 @@
                url: link,
                beforeSend: animateSpinner(that, true) })
         .done(function(data){
-          // $(that.children()[0]).html(data.html);
-          debugger;
           updateCommentHTML(that, data);
           animateSpinner(that, false);
         })
@@ -34,18 +32,15 @@
   }
 
   function commentFormOnSubmitAction(){
-    debugger;
     $(".comment-form")
       .each(function() {
-        bindCommentAjax($(this).attr("id"));
+        bindCommentAjax("#" + $(this).attr("id"));
       });
   }
 
   function bindCommentAjax(form){
-    debugger;
     $(document)
       .on('ajax:success', function () {
-        debugger
          refreshComments($(form));
       })
       .on('ajax:error', function () {
@@ -55,7 +50,7 @@
 
   function updateCommentHTML(parent, data) {
     $(parent.children()[0]).html(data.html);
-    var id = $(parent.find(".comment-form")).attr("id")
+    var id = "#" + $(parent.find(".comment-form")).attr("id");
     bindCommentAjax(id);
   }
 
