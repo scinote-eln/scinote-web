@@ -48,7 +48,7 @@ class AssetsController < ApplicationController
 
   def preview
     if @asset.is_image?
-      redirect_to @asset.presigned_url(:medium), status: 307
+      redirect_to @asset.url(:medium), status: 307
     else
       render_400
     end

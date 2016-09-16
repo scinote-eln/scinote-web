@@ -53,11 +53,7 @@ module ProtocolsExporter
         asset_json["fileType"] = asset_json.delete("file_content_type")
 
         # Retrieve file contents
-        if asset.file.is_stored_on_s3?
-          file = open(asset.presigned_url, "rb")
-        else
-          file = File.open(asset.file.path, "rb")
-        end
+        file = asset.open
         asset_json["bytes"] = Base64.encode64(file.read)
         file.close
 
