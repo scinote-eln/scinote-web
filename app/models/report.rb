@@ -2,8 +2,8 @@ class Report < ActiveRecord::Base
   include SearchableModel
 
   validates :name,
-    length: { minimum: NAME_MIN_LENGTH, maximum: NAME_MAX_LENGTH },
-    uniqueness: { scope: [:user, :project], case_sensitive: false }
+            length: { minimum: NAME_MIN_LENGTH, maximum: NAME_MAX_LENGTH },
+            uniqueness: { scope: [:user, :project], case_sensitive: false }
   validates :description, length: { maximum: TEXT_MAX_LENGTH }
   validates :project, presence: true
   validates :user, presence: true

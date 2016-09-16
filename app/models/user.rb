@@ -18,11 +18,11 @@ class User < ActiveRecord::Base
 
   validates :full_name, presence: true, length: { maximum: NAME_MAX_LENGTH }
   validates :initials,
-    presence: true,
-    length: { maximum: USER_INITIALS_MAX_LENGTH }
+            presence: true,
+            length: { maximum: USER_INITIALS_MAX_LENGTH }
   validates_attachment :avatar,
     :content_type => { :content_type => ["image/jpeg", "image/png"] },
-    :size => { :less_than => AVATAR_MAX_SIZE.megabytes }
+    size: { less_than: AVATAR_MAX_SIZE.megabytes }
   validates :time_zone, presence: true
   validate :time_zone_check
 

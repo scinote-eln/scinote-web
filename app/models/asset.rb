@@ -12,7 +12,9 @@ class Asset < ActiveRecord::Base
     }
   }
 
-  validates_attachment :file, presence: true, size: { less_than: FILE_MAX_SIZE.megabytes }
+  validates_attachment :file,
+                       presence: true,
+                       size: { less_than: FILE_MAX_SIZE.megabytes }
   validates :estimated_size, presence: true
   validates :file_present, inclusion: { in: [true, false] }
 
