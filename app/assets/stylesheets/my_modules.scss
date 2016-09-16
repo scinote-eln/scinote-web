@@ -18,17 +18,7 @@
 	background-color: transparent !important;
 }
 
-.step-comment {
-  border: 1px solid $color-gallery;
-}
-
-.equal {
-  display: flex;
-  flex-wrap: wrap;
-  width: 100%;
-
-  & > div[class*='col-'] {
-    display: flex;
-    flex-direction: column;
-  }
+.step-container .row {
+  margin-left: 0;
+  margin-right: 0;
 }

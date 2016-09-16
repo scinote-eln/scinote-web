@@ -1,6 +1,4 @@
-<h5 class="text-center">
-  <span class="glyphicon glyphicon-comment"></span>
-  <%= t('protocols.steps.comments_tab') %></h5>
+<h5 class="text-center"><%= t('protocols.steps.comments_tab') %></h5>
 <hr>
 <ul class="no-style double-line content-comments">
   <% if @comments.size == 0 then %>
@@ -20,7 +18,7 @@
   <ul class="no-style double-line">
     <li>
       <hr>
-      <%= bootstrap_form_for :comment, url: { format: :json }, html: { class: 'comment-form' }, method: :post, remote: true do |f| %>
+      <%= bootstrap_form_for :comment, url: { format: :json }, html: { class: 'comment-form', id: "step-comment-#{@step.id}" }, method: :post, remote: true do |f| %>
         <%= f.text_field :message, hide_label: true, placeholder: t("general.comment_placeholder"), append: f.submit("+"), help: '.' %>
       <% end %>
     </li>

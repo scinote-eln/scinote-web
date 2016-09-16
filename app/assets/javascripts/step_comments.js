@@ -1,7 +1,3 @@
-// Place all the behaviors and hooks related to the matching controller here.
-// All this logic will automatically be available in application.js.
-
-
 (function(){
 
   function initializeComments(){
@@ -10,53 +6,57 @@
       var that = $(this);
       var link = that.attr("data-href");
 
-      $.ajax({
-        method: 'GET',
-        url: link,
-        beforeSend: animateSpinner(that, true),
-        success: function(data){
-          $(that.children()[0]).html(data.html);
-          commentFormOnSubmitAction();
+      $.ajax({ method: 'GET',
+               url: link,
+               beforeSend: animateSpinner(that, true) })
+        .done(function(data){
+          // $(that.children()[0]).html(data.html);
+          debugger;
+          updateCommentHTML(that, data);
           animateSpinner(that, false);
-        },
-        complete: animateSpinner(that, false)
-      });
+        })
+        .always(animateSpinner(that, false));
     });
   }
 
   function refreshComments(child){
     var parent = child.closest(".step-comment");
     var link = parent.attr("data-href");
-    $.ajax({
-      method: 'GET',
-      url: link,
-      beforeSend: animateSpinner(parent, true),
-      success: function(data){
+    $.ajax({ method: 'GET',
+             url: link,
+             beforeSend: animateSpinner(parent, true) })
+      .done(function(data){
         updateCommentHTML(parent, data);
         animateSpinner(parent, false);
-      },
-      complete: animateSpinner(parent, false)
-    });
+      })
+      .always(animateSpinner(parent, false));
+
   }
 
   function commentFormOnSubmitAction(){
+    debugger;
     $(".comment-form")
       .each(function() {
-        bindCommentAjax($(this));
+        bindCommentAjax($(this).attr("id"));
       });
   }
 
   function bindCommentAjax(form){
-    form
-      .ajaxSuccess( function(){
-        refreshComments(form);
+    debugger;
+    $(document)
+      .on('ajax:success', function () {
+        debugger
+         refreshComments($(form));
+      })
+      .on('ajax:error', function () {
+         refreshComments(form);
       });
   }
 
   function updateCommentHTML(parent, data) {
-    var comment_form = $(parent.find(".comment-form"));
     $(parent.children()[0]).html(data.html);
-    bindCommentAjax(comment_form);
+    var id = $(parent.find(".comment-form")).attr("id")
+    bindCommentAjax(id);
   }
 
   initializeComments();
