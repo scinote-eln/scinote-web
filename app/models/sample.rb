@@ -1,9 +1,7 @@
 class Sample < ActiveRecord::Base
   include SearchableModel
 
-  validates :name,
-    presence: true,
-    length: { maximum: 50 }
+  validates :name, presence: true, length: { maximum: NAME_MAX_LENGTH }
   validates :user, :organization, presence: true
 
   belongs_to :user, inverse_of: :samples

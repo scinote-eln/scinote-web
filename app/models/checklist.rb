@@ -1,8 +1,6 @@
 class Checklist < ActiveRecord::Base
   include SearchableModel
-  validates :name,
-    presence: true,
-    length: { maximum: 50 }
+  validates :name, presence: true, length: { maximum: TEXT_MAX_LENGTH }
   validates :step, presence: true
 
   belongs_to :step, inverse_of: :checklists

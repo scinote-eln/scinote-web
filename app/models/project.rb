@@ -4,8 +4,7 @@ class Project < ActiveRecord::Base
   enum visibility: { hidden: 0, visible: 1 }
 
   validates :name,
-    presence: true,
-    length: { minimum: 4, maximum: 30 },
+    length: { minimum: NAME_MIN_LENGTH, maximum: NAME_MAX_LENGTH },
     uniqueness: { scope: :organization, case_sensitive: false }
   validates :visibility, presence: true
   validates :organization, presence: true

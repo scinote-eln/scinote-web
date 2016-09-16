@@ -1,7 +1,5 @@
 class SampleCustomField < ActiveRecord::Base
-  validates :value,
-    presence: true,
-    length: { maximum: 100 }
+  validates :value, presence: true, length: { maximum: NAME_MAX_LENGTH }
   validates :custom_field, :sample, presence: true
 
   belongs_to :custom_field, inverse_of: :sample_custom_fields

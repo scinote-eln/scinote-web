@@ -18,10 +18,9 @@ class Experiment < ActiveRecord::Base
                        if: :workflowimg_check
 
   validates :name,
-            presence: true,
-            length: { minimum: 4, maximum: 50 },
+            length: { minimum: NAME_MIN_LENGTH, maximum: NAME_MAX_LENGTH },
             uniqueness: { scope: :project, case_sensitive: false }
-  validates :description, length: { maximum: 255 }
+  validates :description, length: { maximum: TEXT_MAX_LENGTH }
   validates :project, presence: true
   validates :created_by, presence: true
   validates :last_modified_by, presence: true

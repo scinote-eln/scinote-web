@@ -1,7 +1,5 @@
 class SampleType < ActiveRecord::Base
-  validates :name,
-    presence: true,
-    length: { maximum: 50 }
+  validates :name, presence: true, length: { maximum: NAME_MAX_LENGTH }
   validates :organization, presence: true
 
   belongs_to :created_by, foreign_key: 'created_by_id', class_name: 'User'

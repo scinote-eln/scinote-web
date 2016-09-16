@@ -1,7 +1,7 @@
 class CustomField < ActiveRecord::Base
   validates :name,
     presence: true,
-    length: { maximum: 50 },
+    length: { maximum: NAME_MAX_LENGTH },
     uniqueness: { scope: :organization, case_sensitive: true},
     exclusion: {in: ["Assigned", "Sample name", "Sample type", "Sample group", "Added on", "Added by"]}
   validates :user, :organization, presence: true

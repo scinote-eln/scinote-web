@@ -1,10 +1,8 @@
 class Step < ActiveRecord::Base
   include SearchableModel
 
-  validates :name, presence: true,
-    length: { maximum: 255 }
-  validates :description,
-    length: { maximum: 4000}
+  validates :name, presence: true, length: { maximum: NAME_MAX_LENGTH }
+  validates :description, length: { maximum: TEXT_MAX_LENGTH }
   validates :position, presence: true
   validates :completed, inclusion: { in: [true, false] }
   validates :user, :protocol, presence: true
