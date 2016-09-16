@@ -17,6 +17,7 @@ function initEditableHandsOnTable(root) {
       rowHeaders: true,
       colHeaders: true,
       contextMenu: true,
+      formulas: true,
       preventOverflow: 'horizontal'
     });
   });
