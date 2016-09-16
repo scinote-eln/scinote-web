@@ -92,7 +92,7 @@ class Step < ActiveRecord::Base
     Comment.joins(:step_comment)
     .where(step_comments: {step_id: id})
     .where('comments.id <  ?', last_id)
-    .order(created_at: :desc)
+    .order(created_at: :asc)
     .limit(per_page)
   end
 
