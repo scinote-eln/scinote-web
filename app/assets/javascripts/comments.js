@@ -121,9 +121,8 @@ function initEditComments(parent) {
                 $(".form-group", form)
                 .addClass("has-error");
                 $(".help-block", form)
-                .html(messageError[0])
-                .removeClass("hide")
-                .after(" |");
+                .html(messageError[0] + " |")
+                .removeClass("hide");
               }
             }
           })
