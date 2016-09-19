@@ -377,6 +377,7 @@ class Experiment < ActiveRecord::Base
     end
 
     save
+    touch(:workflowimg_updated_at)
   end
 
   # Get projects where user is either owner or user in the same organization
@@ -498,8 +499,11 @@ class Experiment < ActiveRecord::Base
         raise ActiveRecord::ActiveRecordError
       end
 
-      my_module.save!
+      my_module.save
     end
+
+    # Generate workflow image for the experiment in which we moved the task
+    generate_workflow_img_for_moved_modules(to_move)
   end
 
   # Move module groups; this method accepts a map where keys
@@ -542,6 +546,19 @@ class Experiment < ActiveRecord::Base
         group.experiment = experiment
         group.save!
       end
+    end
+
+    # Generate workflow image for the experiment in which we moved the workflow
+    generate_workflow_img_for_moved_modules(to_move)
+  end
+
+  # Generates workflow img when the workflow or module is moved
+  # to other experiment
+  def generate_workflow_img_for_moved_modules(to_move)
+    to_move.values.uniq.each do |id|
+      experiment = Experiment.find_by_id(id)
+      next unless experiment
+      experiment.delay.generate_workflow_img
     end
   end
 

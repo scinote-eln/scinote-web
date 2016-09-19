@@ -57,27 +57,27 @@
   // }
   //
   // // Initialize show more comments link.
-  // function initStepCommentsLink($el) {
-  //   $el.find(".btn-more-comments")
-  //   .on("ajax:success", function (e, data) {
-  //     if (data.html) {
-  //       var list = $(this).parents("ul");
-  //       var moreBtn = list.find(".btn-more-comments");
-  //       var listItem = moreBtn.parents('li');
-  //       $(data.html).insertBefore(listItem);
-  //       if (data.results_number < data.per_page) {
-  //         moreBtn.remove();
-  //       } else {
-  //         moreBtn.attr("href", data.more_url);
-  //         moreBtn.trigger("blur");
-  //       }
-  //
-  //       // Reposition dropdown comment options
-  //       scrollCommentOptions(listItem.closest(".content-comments")
-  //       .find(".dropdown-comment"));
-  //     }
-  //   });
-  // }
+  function initStepCommentsLink($el) {
+    $el.find(".btn-more-comments")
+    .on("ajax:success", function (e, data) {
+      if (data.html) {
+        var list = $(this).parents("ul");
+        var moreBtn = list.find(".btn-more-comments");
+        var listItem = moreBtn.parents('li');
+        $(data.html).insertBefore(listItem);
+        if (data.results_number < data.per_page) {
+          moreBtn.remove();
+        } else {
+          moreBtn.attr("href", data.more_url);
+          moreBtn.trigger("blur");
+        }
+
+        // Reposition dropdown comment options
+        scrollCommentOptions(listItem.closest(".content-comments")
+        .find(".dropdown-comment"));
+      }
+    });
+  }
   //
   // function initStepCommentTabAjax() {
   //   $(".comment-tab-link")
@@ -116,69 +116,70 @@
     $.each(steps, function(){
       var that = $(this);
       var link = that.attr("data-href");
-      var parentNode = that.parents("ul").parent();
-      debugger;
       $.ajax({ method: 'GET',
                url: link,
                beforeSend: animateSpinner(that, true) })
         .done(function(data){
-          debugger;
           updateCommentHTML(that, data);
+          bindCommentButton();
+          initStepCommentsLink(that);
           animateSpinner(that, false);
         })
         .always(function(data){
-          debugger;
-          animateSpinner(that, false)
+          animateSpinner(that, false);
         });
     });
   }
 
-  function refreshComments(child){
+  function refreshComments(child) {
     var parent = child.closest(".step-comment");
     var link = parent.attr("data-href");
     $.ajax({ method: 'GET',
              url: link,
              beforeSend: animateSpinner(parent, true) })
       .done(function(data){
-        debugger;
         updateCommentHTML(parent, data);
+        bindCommentButton();
+        initStepCommentsLink(parent);
         animateSpinner(parent, false);
       })
       .always(animateSpinner(parent, false));
-
   }
 
-  function commentFormOnSubmitAction(){
-    $(".comment-form")
-      .each(function() {
-        debigger;
-        bindCommentAjax("#" + $(this).attr("id"));
-      });
+  function scrollBottom(id) {
+    var list = id.find(".content-comments");
+    if ( list && list.length > 0) {
+      list.scrollTop($(list)[0].scrollHeight);
+    }
   }
 
-  // function bindMoreCommentButton(){
-  //   $(".btn-more-comments")
-  //     .each(function(){
-  //       bindCommentAjax($(this));
-  //     });
-  // }
+  function bindCommentButton(){
+    $.each($(".comment-form"), function() {
+      $(this)
+        .on("submit", function() {
+          bindCommentAjax($(this));
+        });
+    });
+  }
 
-  function bindCommentAjax(form){
+  function bindCommentAjax(id){
     $(document)
-      .on('ajax:success', function () {
-        debugger;
-        refreshComments($(form));
-      })
-      .on('ajax:error', function () {
-        refreshComments(form);
+      .on( 'ajax:success', function() {
+        refreshComments($(id));
       });
   }
+
 
   function updateCommentHTML(parent, data) {
-    var id = "#" + $(parent.find(".comment-form")).attr("id");
-    debugger;
-    $(parent.children()[0]).html(data.html);
-    bindCommentAjax(id);
+    var id;
+    if ( $(parent.find(".comment-form")).attr("id") !== undefined ) {
+      id = "#" + $(parent.find(".comment-form")).attr("id")
+      $(parent.children()[0]).html(data.html);
+    } else {
+      id = "#" + $( $.parseHTML(data.html) ).find(".comment-form").attr("id");
+      $(parent.children()[1]).html(data.html);
+    }
+    scrollBottom(parent);
   }
 
   initializeComments();
