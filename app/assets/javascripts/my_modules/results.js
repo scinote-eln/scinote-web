@@ -1,5 +1,4 @@
 //= require comments
-
 function initHandsOnTables(root) {
   root.find("div.hot-table").each(function()  {
     var $container = $(this).find(".step-result-hot-table");
@@ -49,7 +48,7 @@ function initResultCommentForm($el) {
         .find("li.no-comments").remove();
 
       list.parent().find(".content-comments")
-        .prepend("<li class='comment'>" + data.html + "</li>")
+        .append("<li class='comment'>" + data.html + "</li>")
         .scrollTop(0);
       list.parents("ul").find("> li.comment:gt(8)").remove();
       $("#comment_message", $form).val("");
@@ -58,9 +57,7 @@ function initResultCommentForm($el) {
       $(".help-block", $form)
           .html("")
           .addClass("hide");
-      scrollCommentOptions(
-        list.parent().find(".content-comments .dropdown-comment")
-      );
+      scrollBottom($el);
     }
   })
   .on("ajax:error", function (ev, xhr) {
@@ -77,6 +74,7 @@ function initResultCommentForm($el) {
     }
   })
   .on("ajax:complete", function () {
+    scrollBottom($("#comment_message", $form));
     $("#comment_message", $form)
       .attr("readonly", false)
       .focus();
@@ -92,7 +90,7 @@ function initResultCommentsLink($el) {
       var list = $(this).parents("ul");
       var moreBtn = list.find(".btn-more-comments");
       var listItem = moreBtn.parents('li');
-      $(data.html).insertBefore(listItem);
+      $(data.html).insertAfter(listItem);
       if (data.results_number < data.per_page) {
         moreBtn.remove();
       } else {
@@ -106,36 +104,70 @@ function initResultCommentsLink($el) {
   });
 }
 
-function initResultCommentTabAjax() {
-  $(".comment-tab-link")
-  .on("ajax:before", function (e) {
-    var $this = $(this);
-    var parentNode = $this.parents("li");
-    var targetId = $this.attr("aria-controls");
+// function initResultCommentTabAjax(element) {
+//   debugger;
+//   $(element)
+//   .on("ajax:before", function (e) {
+//     debugger;
+//     var $this = $(this);
+//     var parentNode = $this.parents("li");
+//     var targetId = $this.attr("aria-controls");
+//
+//     if (parentNode.hasClass("active")) {
+//       return false;
+//     }
+//   })
+//   .on("ajax:success", function (e, data) {
+//     if (data.html) {
+//       var $this = $(this);
+//       var targetId = $this.attr("aria-controls");
+//       var target = $("#" + targetId);
+//       var parentNode = $this.parents("ul").parent();
+//
+//       target.html(data.html);
+//       initResultCommentForm(parentNode);
+//       initResultCommentsLink(parentNode);
+//
+//       parentNode.find(".active").removeClass("active");
+//       $this.parents("li").addClass("active");
+//       target.addClass("active");
+//     }
+//   })
+//   .on("ajax:error", function(e, xhr, status, error) {
+//     // TODO
+//   });
+// }
 
-    if (parentNode.hasClass("active")) {
-      return false;
-    }
-  })
-  .on("ajax:success", function (e, data) {
-    if (data.html) {
-      var $this = $(this);
-      var targetId = $this.attr("aria-controls");
-      var target = $("#" + targetId);
-      var parentNode = $this.parents("ul").parent();
-
-      target.html(data.html);
-      initResultCommentForm(parentNode);
-      initResultCommentsLink(parentNode);
-
-      parentNode.find(".active").removeClass("active");
-      $this.parents("li").addClass("active");
-      target.addClass("active");
-    }
-  })
-  .on("ajax:error", function(e, xhr, status, error) {
-    // TODO
+function loadCommentsIn() {
+  $.each($(".result-comment"), function() {
+    var that = $(this);
+    var link = that.attr("data-href");
+    $.ajax({ method: 'GET',
+             url: link,
+             beforeSend: animateSpinner(that, true) })
+      .done(function(data) {
+        that.html(data.html);
+        initResultCommentForm(that);
+        initResultCommentsLink(that);
+        scrollBottom(that.find(".content-comments"));
+        animateSpinner(that, false);
+      })
+      .always(function(data) {
+        animateSpinner(that, false);
+      });
   });
+}
+
+function scrollBottom(id) {
+  var list;
+  if ( id.hasClass("content-comments")) {
+    list = id;
+  } else {
+    list = id.find(".content-comments");
+  }
+  if ( list && list.length > 0) {
+    list.scrollTop($(list)[0].scrollHeight);
+  }
 }
 
 function applyCollapseLinkCallBack() {
@@ -183,8 +215,9 @@ function expandResult(result) {
 
 
 initHandsOnTables($(document));
-initResultCommentTabAjax();
+//initResultCommentTabAjax();
 expandAllResults();
+loadCommentsIn();
 initTutorial();
 applyCollapseLinkCallBack();
 

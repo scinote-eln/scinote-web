@@ -911,6 +911,10 @@ ul.content-module-activities {
     margin-left: 38px;
   }
 
+  .row {
+    padding: 0 20px;
+  }
+
   .badge-num {
     position: absolute;
 
@@ -1178,6 +1182,9 @@ html.turbolinks-progress-bar::before {
 
 // Comments
 
+.comment-more {
+  margin-left: 15px;
+}
 .dropdown.dropdown-comment {
   display: inline-block;
 
