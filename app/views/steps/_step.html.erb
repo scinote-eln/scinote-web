@@ -128,9 +128,9 @@
           </div>
           <% if can_view_step_comments(@protocol) %>
           <div class="row">
-            <div class="step-comment" data-href="<%= url_for step_step_comments_path(step_id: step.id, format: :json) %>">
-              <div id="step-comments-<%= step.id %>" data-info="step-comment">
-              </div>
+            <div class="step-comment"
+                 id="step-comments-<%= step.id %>"
+                 data-href="<%= url_for step_step_comments_path(step_id: step.id, format: :json) %>">
             </div>
           </div>
           <% end %>
