@@ -64,7 +64,7 @@
         var list = $(this).parents("ul");
         var moreBtn = list.find(".btn-more-comments");
         var listItem = moreBtn.parents('li');
-        $(data.html).insertBefore(listItem);
+        $(data.html).insertAfter(listItem);
         if (data.results_number < data.per_page) {
           moreBtn.remove();
         } else {
@@ -111,6 +111,10 @@
   //   });
   // }
 
+  /**
+    * Initializes the steps comments
+    *
+    */
   function initializeComments(){
     var steps = $(".step-comment");
     $.each(steps, function(){
@@ -164,6 +168,10 @@
     });
   }
 
+  /**
+    * Listen for ajax POST request and trigger the
+    * refreshComment when the comment is successfully posted
+    */
   function bindCommentAjax(id){
     $(id)
       .on('ajax:success', function() {
@@ -181,7 +189,7 @@
       });
   }
 
-
+  // Updates the comments when new comment is created
   function updateCommentHTML(parent, data) {
     var id;
     if ( $(parent.find(".comment-form")).attr("id") !== undefined ) {

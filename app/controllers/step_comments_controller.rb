@@ -20,7 +20,7 @@ class StepCommentsController < ApplicationController
         if @comments.count > 0
           more_url = url_for(step_step_comments_path(@step,
                                                      format: :json,
-                                                     from: @comments.last.id))
+                                                     from: @comments.first.id))
         end
         render :json => {
           per_page: @per_page,
