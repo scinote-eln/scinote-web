@@ -119,31 +119,33 @@
       $.ajax({ method: 'GET',
                url: link,
                beforeSend: animateSpinner(that, true) })
-        .done(function(data){
+        .done(function(data) {
           updateCommentHTML(that, data);
           bindCommentButton();
           initStepCommentsLink(that);
           animateSpinner(that, false);
         })
-        .always(function(data){
+        .always(function(data) {
           animateSpinner(that, false);
         });
     });
   }
 
-  function refreshComments(child) {
+  function refreshComment(child) {
     var parent = child.closest(".step-comment");
     var link = parent.attr("data-href");
     $.ajax({ method: 'GET',
              url: link,
              beforeSend: animateSpinner(parent, true) })
-      .done(function(data){
+      .done(function(data) {
         updateCommentHTML(parent, data);
         bindCommentButton();
         initStepCommentsLink(parent);
         animateSpinner(parent, false);
       })
-      .always(animateSpinner(parent, false));
+      .always(function() {
+        animateSpinner(parent, false);
+      });
   }
 
   function scrollBottom(id) {
@@ -163,9 +165,19 @@
   }
 
   function bindCommentAjax(id){
-    $(document)
-      .on( 'ajax:success', function() {
-        refreshComments($(id));
+    $(id)
+      .on('ajax:success', function() {
+        refreshComment($(id));
+      })
+      .on('ajax:error', function(request, status, error) {
+        var messageError = status.responseJSON.errors.message.toString();
+        if (messageError) {
+          $(request.target)
+            .addClass("has-error");
+          $(".help-block", request.target)
+            .html(messageError)
+            .removeClass("hide");
+        }
       });
   }
 
@@ -173,11 +185,11 @@
   function updateCommentHTML(parent, data) {
     var id;
     if ( $(parent.find(".comment-form")).attr("id") !== undefined ) {
-      id = "#" + $(parent.find(".comment-form")).attr("id")
-      $(parent.children()[0]).html(data.html);
+      id = "#" + $(parent.find(".comment-form")).attr("id");
+      $(parent.find('[data-info="step-comment"]')).html(data.html);
     } else {
       id = "#" + $( $.parseHTML(data.html) ).find(".comment-form").attr("id");
-      $(parent.children()[1]).html(data.html);
+      $(parent.find('[data-info="step-comment"]')).html(data.html);
     }
     scrollBottom(parent);
   }
