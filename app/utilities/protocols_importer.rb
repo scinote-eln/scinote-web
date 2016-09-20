@@ -48,7 +48,9 @@ module ProtocolsImporter
 
     asset_ids = []
     step_pos = 0
-    protocol_json["steps"].values.each do |step_json|
+    # Check if protocol has steps
+    if protocol_json["steps"]
+      protocol_json["steps"].values.each do |step_json|
       step = Step.create!(
         name: step_json["name"],
         description: step_json["description"],
@@ -119,6 +121,7 @@ module ProtocolsImporter
           )
         end
       end
+    end
     end
 
     # Post process assets
