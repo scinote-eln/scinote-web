@@ -11,6 +11,18 @@ body,
   min-width: 320px;
 }
 
+// Word wrapping everywhere, except for table header of "datatables.js"
+body,
+table.dataTable td {
+  text-overflow: ellipsis;
+  word-break: break-word;
+}
+
+// All tables are fixed, except for table of "datatables.js"
+table {
+  table-layout: fixed;
+}
+
 #alert-container {
   margin-bottom: 20px;
 }
@@ -329,7 +341,6 @@ a[data-toggle="tooltip"] {
   background-color: transparent;
   padding: 15px;
   margin-bottom: 0;
-  white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
 }
@@ -675,17 +686,19 @@ ul.double-line > li {
     color: darken($color-silver-chalice, 15%);
   }
 
-  .tab-content ul {
-    margin-bottom: 15px;
-  }
+  .tab-content {
+    ul {
+      margin-bottom: 15px;
+    }
 
-  .tab-content li {
-    padding-left: 15px;
-    padding-right: 15px;
-  }
+    li {
+      padding-left: 15px;
+      padding-right: 15px;
+    }
 
-  .tab-content .manage-users-link {
-    padding-left: 15px;
+    .manage-users-link {
+      padding-left: 15px;
+    }
   }
 
   .content-module-info {
@@ -979,8 +992,11 @@ ul.content-module-activities {
 /* Data table */
 
 table.dataTable {
-  width: 100% !important;
   background-color: $color-alabaster;
+  table-layout: initial;
+  text-overflow: initial;
+  width: 100%;
+  word-break: initial;
 
   thead {
     background-color: $color-gray;

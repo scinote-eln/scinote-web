@@ -203,17 +203,11 @@ function formEditAjax($form) {
     });
   })
   .on("ajax:error", function(e, xhr, status, error) {
-    $(this).after(xhr.responseJSON.html);
-    var $form = $(this).next();
-    $(this).remove();
-
-    $errInput = $form.find(".form-group.has-error").first().find("input");
-    renderFormError(e, $errInput);
+    $form.renderFormErrors('step', xhr.responseJSON, true, e);
 
     formCallback($form);
     initEditableHandsOnTable($form);
     applyCancelCallBack();
-    formEditAjax($form);
 
     //Rerender tables
     $form.find("[data-role='step-hot-table']").each(function()  {
@@ -505,8 +499,11 @@ function processStep(ev, editMode, forS3) {
   var $nameInput = $form.find("#step_name");
   var nameValid = textValidator(ev, $nameInput, TextLimitEnum.REQUIRED,
     TextLimitEnum.NAME_MAX_LENGTH);
+  var $descrTextarea = $form.find("#step_description");
+  var descriptionValid = textValidator(ev, $descrTextarea,
+    TextLimitEnum.OPTIONAL, TextLimitEnum.TEXT_MAX_LENGTH);
 
-  if (filesValid && checklistsValid && nameValid) {
+  if (filesValid && checklistsValid && nameValid && descriptionValid) {
     if (forS3) {
       // Redirects file uploading to S3
       var url = '/asset_signature.json';

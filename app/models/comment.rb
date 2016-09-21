@@ -1,6 +1,7 @@
 class Comment < ActiveRecord::Base
   include SearchableModel
 
+  auto_strip_attributes :message, nullify: false
   validates :message, presence: true, length: { maximum: TEXT_MAX_LENGTH }
   validates :user, presence: true
 

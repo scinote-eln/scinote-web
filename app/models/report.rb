@@ -1,6 +1,7 @@
 class Report < ActiveRecord::Base
   include SearchableModel
 
+  auto_strip_attributes :name, :description, nullify: false
   validates :name,
             length: { minimum: NAME_MIN_LENGTH, maximum: NAME_MAX_LENGTH },
             uniqueness: { scope: [:user, :project], case_sensitive: false }

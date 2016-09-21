@@ -16,10 +16,13 @@ class User < ActiveRecord::Base
     intro_tutorial_done: 1
   }
 
+  auto_strip_attributes :full_name, :initials, nullify: false
   validates :full_name, presence: true, length: { maximum: NAME_MAX_LENGTH }
   validates :initials,
             presence: true,
             length: { maximum: USER_INITIALS_MAX_LENGTH }
+  validates :email, presence: true, length: { maximum: EMAIL_MAX_LENGTH }
+
   validates_attachment :avatar,
     :content_type => { :content_type => ["image/jpeg", "image/png"] },
     size: { less_than: AVATAR_MAX_SIZE.megabytes }

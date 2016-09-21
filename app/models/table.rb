@@ -1,5 +1,6 @@
 class Table < ActiveRecord::Base
   include SearchableModel
+
   validates :contents,
             presence: true,
             length: { maximum: TABLE_JSON_MAX_SIZE.megabytes }

@@ -3,6 +3,7 @@ class Project < ActiveRecord::Base
 
   enum visibility: { hidden: 0, visible: 1 }
 
+  auto_strip_attributes :name, nullify: false
   validates :name,
             length: { minimum: NAME_MIN_LENGTH, maximum: NAME_MAX_LENGTH },
             uniqueness: { scope: :organization, case_sensitive: false }

@@ -26,9 +26,17 @@ var TextLimitEnum = Object.freeze({
   TEXT_MAX_LENGTH: '<%= TEXT_MAX_LENGTH %>'
 });
 
-function textValidator(ev, textInput, textLimitEnumMin, textLimitEnumMax) {
-  var nameTooShort = $(textInput).val().length < textLimitEnumMin;
-  var nameTooLong = $(textInput).val().length > textLimitEnumMax;
+/*
+ * @param {boolean} clearErr Set clearErr to true if this is the only
+ * error that can happen/show.
+ */
+function textValidator(ev, textInput, textLimitEnumMin, textLimitEnumMax, clearErr) {
+  clearErr = _.isUndefined(clearErr) ? false : clearErr;
+
+  var text = $(textInput).val().trim();
+  $(textInput).val(text);
+  var nameTooShort = text.length < textLimitEnumMin;
+  var nameTooLong = text.length > textLimitEnumMax;
 
   var errMsg;
   if (nameTooShort) {
@@ -43,7 +51,7 @@ function textValidator(ev, textInput, textLimitEnumMin, textLimitEnumMax) {
 
   var noErrors = _.isUndefined(errMsg);
   if (!noErrors) {
-    renderFormError(ev, $(textInput), errMsg);
+    renderFormError(ev, textInput, errMsg, clearErr);
   }
   return noErrors;
 }

@@ -29,13 +29,13 @@
     </div>
 
     <div class="form-group">
-      <%= label :organization, :name %>
+      <%= label :organization, :name, t('users.registrations.new.team_name_label') %>
       <% if @org %>
       <%= text_field :organization, :name, class: "form-control", value: @org.name %>
       <% else %>
       <%= text_field :organization, :name, class: "form-control" %>
       <% end %>
-      <span class="help-block"><small><%= t'users.registrations.new.name_help' %></small></span>
+      <span><small><%= t 'users.registrations.new.team_name_help' %></small></span>
     </div>
 
     <div class="form-group">

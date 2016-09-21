@@ -3,6 +3,8 @@
   // Create ajax hook on given 'element', which should return modal with 'id' =>
   // show that modal
   function initializeModal(element, id){
+
+    // Initialize new experiment modal listener
     $(element)
     .on("ajax:beforeSend", function(){
       animateSpinner();
@@ -66,7 +68,7 @@
   // Initialize no description edit link
   function initEditNoDescription(){
     var modal = "#edit-experiment-modal-";
-    $.each($(".no-description-experiment"), function(){
+    $.each($(".experiment-no-description a"), function(){
       var id = modal + $(this).data("id");
       initializeModal($(this), id);
     });

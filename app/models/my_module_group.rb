@@ -1,13 +1,13 @@
 class MyModuleGroup < ActiveRecord::Base
   include SearchableModel
 
+  auto_strip_attributes :name, nullify: false
   validates :name, presence: true, length: { maximum: NAME_MAX_LENGTH }
   validates :experiment, presence: true
 
   belongs_to :experiment, inverse_of: :my_module_groups
   belongs_to :created_by, foreign_key: 'created_by_id', class_name: 'User'
-  has_many :my_modules, inverse_of: :my_module_group,
-    dependent: :nullify
+  has_many :my_modules, inverse_of: :my_module_group, dependent: :nullify
 
   def self.search(user, include_archived, query = nil, page = 1)
     exp_ids =
