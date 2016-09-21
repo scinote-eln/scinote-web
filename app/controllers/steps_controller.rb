@@ -220,7 +220,7 @@ class StepsController < ApplicationController
         }
       else
         format.json {
-          render json: @step.errors, status: :bad_request
+          render json: @step.errors.to_json, status: :bad_request
         }
       end
     end

@@ -223,7 +223,7 @@ class MyModulesController < ApplicationController
           render :edit
         }
         format.json {
-          render json: @project.errors,
+          render json: @my_module.errors,
             status: :unprocessable_entity
         }
       end

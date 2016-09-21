@@ -1086,8 +1086,6 @@ en:
     invitations:
       edit:
         head_title: "Accept invitation"
-        name_label: "Team name"
-        name_help: "Team name is required in order to create your own team. (min 4 characters)"
     registrations:
       edit:
         head_title: "My profile"
@@ -1113,7 +1111,8 @@ en:
         new_password_2_label: "New password confirmation"
       new:
         head_title: "Sign up"
-        name_help: "Team name is required in order to create your own team. (min 4 characters)"
+        team_name_label: "Team name"
+        team_name_help: "Team name is required in order to create your own team."
     settings:
       navigation:
         preferences: "My preferences"

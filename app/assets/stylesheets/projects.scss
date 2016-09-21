@@ -415,13 +415,26 @@ li.module-hover {
   margin-bottom: 35px;
   margin-top: 45px;
   max-width: 700px;
+  display: flex;
+  flex-direction: column;
 
-  .experiment-description {
-    margin-top: 20px;
-    word-wrap: break-word;
+  .panel-body {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
   }
 
-  .no-description {
+  .experiment-description {
+    display: flex;
+    flex: 1 1 auto;
+    margin-top: 10px;
+
+    textarea {
+      resize: none;
+    }
+  }
+
+  .experiment-no-description {
     color: $color-alto;
     display: block;
     font-size: 18px;

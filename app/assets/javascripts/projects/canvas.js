@@ -439,26 +439,6 @@ function toggleCanvasEvents(activate) {
 }
 
 /**
- * Validate the module/module group name.
- * @param The value to be validated.
- * @return 0 if valid; -1 if length too small/large; -2 if
- * it contains invalid characters.
- */
-function validateName(val) {
-  var result = NAME_VALID;
-  if (_.isUndefined(val) ||
-    val.length < 2 ||
-    val.length > 50) {
-    result = NAME_LENGTH_ERROR;
-  } else if (val.indexOf(SUBMIT_FORM_NAME_SEPARATOR) != -1) {
-    result = NAME_INVALID_CHARACTERS_ERROR;
-  } else if (/^\s+$/.test(val)){
-    result = NAME_WHITESPACES_ERROR;
-  }
-  return result;
-}
-
-/**
  * Gets or sets the left CSS position of the element.
  * @param el - The element.
  * @param newVal - The new left CSS value, if setting value.
@@ -648,7 +628,7 @@ function bindFullZoomAjaxTabs() {
       })
       .on("ajax:error", function(ev2, data2, status2) {
         // Display errors if needed
-        $(this).renderFormErrors("my_module", data.responseJSON);
+        $(this).renderFormErrors("my_module", data2.responseJSON);
       });
 
     // Disable canvas dragging events
@@ -914,7 +894,7 @@ function bindEditDueDateAjax() {
     })
     .on("ajax:error", function(ev2, data2, status2) {
       // Display errors if needed
-      $(this).renderFormErrors("my_module", data.responseJSON);
+      $(this).renderFormErrors("my_module", data2.responseJSON);
     });
 
     // Disable canvas dragging events
@@ -1528,40 +1508,15 @@ function bindNewModuleAction(gridDistX, gridDistY) {
     collided = false;
   }
 
-  function handleNewNameConfirm() {
+  function handleNewNameConfirm(ev) {
     var input = $("#new-module-name-input");
-    var error = false;
-    var message;
-
     // Validate module name
-    var res = validateName(input.val());
-    if (res === NAME_LENGTH_ERROR) {
-      error = true;
-      message = modal.find(".module-name-length-error").html();
-    } else if (res === NAME_INVALID_CHARACTERS_ERROR) {
-      error = true;
-      message = modal.find(".module-name-invalid-error").html();
-    } else if (res === NAME_WHITESPACES_ERROR) {
-      error = true;
-      message = modal.find(".module-name-whitespaces-error").html();
-    }
-
-    if (error) {
-      // Style the form so it displays error
-      input.parent().addClass("has-error");
-      input.parent().find("span.help-block").remove();
-      var errorSpan = document.createElement("span");
-      $(errorSpan)
-      .addClass("help-block")
-      .html(message)
-      .appendTo(input.parent());
-
-      return false;
-    } else {
+    var moduleNameValid = textValidator(ev, input, TextLimitEnum.NAME_MIN_LENGTH, TextLimitEnum.NAME_MAX_LENGTH, true);
+    if (moduleNameValid) {
       // Set the "clicked" property to true
       modal.data("submit", "true");
-      return true;
     }
+    return moduleNameValid;
   }
 
   var newModuleBtn = $("#canvas-new-module");
@@ -1583,17 +1538,12 @@ function bindNewModuleAction(gridDistX, gridDistY) {
   });
 
   // Bind the confirm button on modal
-  modal.find("button[data-action='confirm']").on("click", function(event) {
-    if (!handleNewNameConfirm()) {
-      // Prevent modal from closing if errorous form
-      event.preventDefault();
-      event.stopPropagation();
-      return false;
-    }
+  modal.find("button[data-action='confirm']").on("click", function(ev) {
+    handleNewNameConfirm(ev);
   });
 
   // Also, bind on modal window open & close
-  modal.on("show.bs.modal", function(event) {
+  modal.on("show.bs.modal", function(ev) {
     // Clear input
     $(this).removeData("submit");
     $(this).find("#new-module-name-input").val("");
@@ -1605,7 +1555,7 @@ function bindNewModuleAction(gridDistX, gridDistY) {
     // Bind onto input keypress (to prevent form from being submitted)
     $(this).find("#new-module-name-input").keydown(function(ev) {
       if (ev.keyCode == 13) {
-        if (handleNewNameConfirm()) {
+        if (handleNewNameConfirm(ev)) {
           // Close modal
           modal.modal("hide");
         }
@@ -1646,40 +1596,15 @@ function bindNewModuleAction(gridDistX, gridDistY) {
 }
 
 function initEditModules() {
-  function handleRenameConfirm(modal) {
+
+  function handleRenameConfirm(modal, ev) {
     var input = modal.find("#edit-module-name-input");
-
-    var moduleId = modal.attr("data-module-id");
-    var moduleEl = $("#" + moduleId);
-
-    var error = false;
-    var message;
-    var newName;
-
     // Validate module name
-    newName = input.val();
-    var res = validateName(newName);
-    if (res === NAME_LENGTH_ERROR) {
-      error = true;
-      message = modal.find(".module-name-length-error").html();
-    } else if (res === NAME_INVALID_CHARACTERS_ERROR) {
-      error = true;
-      message = modal.find(".module-name-invalid-error").html();
-    } else if (res === NAME_WHITESPACES_ERROR) {
-      error = true;
-      message = modal.find(".module-name-whitespaces-error").html();
-    }
-
-    if (error) {
-      // Style the form so it displays error
-      input.parent().addClass("has-error");
-      input.parent().find("span.help-block").remove();
-      var errorSpan = document.createElement("span");
-      $(errorSpan)
-      .addClass("help-block")
-      .html(message)
-      .appendTo(input.parent());
-    } else {
+    var moduleNameValid = textValidator(ev, input, TextLimitEnum.NAME_MIN_LENGTH, TextLimitEnum.NAME_MAX_LENGTH, true);
+    if (moduleNameValid) {
+      var newName = input.val();
+      var moduleId = modal.attr("data-module-id");
+      var moduleEl = $("#" + moduleId);
       // Update the module's name in GUI
       moduleEl.attr("data-module-name", newName);
       moduleEl.find(".panel-heading .panel-title").html(newName);
@@ -1722,7 +1647,7 @@ function initEditModules() {
     input.keydown(function(ev) {
       if (ev.keyCode == 13) {
         // "Submit" modal
-        handleRenameConfirm(modal);
+        handleRenameConfirm(modal, ev);
 
         // In any case, prevent form submission
         ev.preventDefault();
@@ -1747,9 +1672,9 @@ function initEditModules() {
   });
 
   // Bind the confirm button on modal
-  $("#modal-edit-module").find("button[data-action='confirm']").on("click", function(event) {
+  $("#modal-edit-module").find("button[data-action='confirm']").on("click", function(ev) {
     var modal = $(this).closest(".modal");
-    handleRenameConfirm(modal);
+    handleRenameConfirm(modal, ev);
   });
 }
 
@@ -1778,40 +1703,15 @@ editModuleHandler = function(ev) {
  * Initialize editing of module groups.
  */
 function initEditModuleGroups() {
-  function handleRenameConfirm(modal) {
+
+  function handleRenameConfirm(modal, ev) {
     var input = modal.find("#edit-module-group-name-input");
-
-    var moduleId = modal.attr("data-module-id");
-    var moduleEl = $("#" + moduleId);
-
-    var error = false;
-    var message;
-    var newModuleGroupName;
-
     // Validate module name
-    newModuleGroupName = input.val();
-    var res = validateName(newModuleGroupName);
-    if (res === NAME_LENGTH_ERROR) {
-      error = true;
-      message = modal.find(".module-name-length-error").html();
-    } else if (res === NAME_INVALID_CHARACTERS_ERROR) {
-      error = true;
-      message = modal.find(".module-name-invalid-error").html();
-    } else if (res === NAME_WHITESPACES_ERROR) {
-      error = true;
-      message = modal.find(".module-name-whitespaces-error").html();
-    }
-
-    if (error) {
-      // Style the form so it displays error
-      input.parent().addClass("has-error");
-      input.parent().find("span.help-block").remove();
-      var errorSpan = document.createElement("span");
-      $(errorSpan)
-      .addClass("help-block")
-      .html(message)
-      .appendTo(input.parent());
-    } else {
+    var moduleNameValid = textValidator(ev, input, TextLimitEnum.REQUIRED, TextLimitEnum.NAME_MAX_LENGTH, true);
+    if (moduleNameValid) {
+      var newModuleGroupName = input.val();
+      var moduleId = modal.attr("data-module-id");
+      var moduleEl = $("#" + moduleId);
       // Update the module group name for all modules
       // currently in the module group
       var ids = connectedComponents(graph, moduleEl.attr("id"));
@@ -1840,7 +1740,7 @@ function initEditModuleGroups() {
     input.keydown(function(ev) {
       if (ev.keyCode == 13) {
         // "Submit" modal
-        handleRenameConfirm(modal);
+        handleRenameConfirm(modal, ev);
 
         // In any case, prevent form submission
         ev.preventDefault();
@@ -1864,9 +1764,9 @@ function initEditModuleGroups() {
   });
 
   // Bind the confirm button on modal
-  $("#modal-edit-module-group").find("button[data-action='confirm']").on("click", function(event) {
+  $("#modal-edit-module-group").find("button[data-action='confirm']").on("click", function(ev) {
     var modal = $(this).closest(".modal");
-    handleRenameConfirm(modal);
+    handleRenameConfirm(modal, ev);
   });
 }
 

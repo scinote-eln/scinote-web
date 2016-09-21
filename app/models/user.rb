@@ -21,6 +21,8 @@ class User < ActiveRecord::Base
   validates :initials,
             presence: true,
             length: { maximum: USER_INITIALS_MAX_LENGTH }
+  validates :email, presence: true, length: { maximum: EMAIL_MAX_LENGTH }
+
   validates_attachment :avatar,
     :content_type => { :content_type => ["image/jpeg", "image/png"] },
     size: { less_than: AVATAR_MAX_SIZE.megabytes }

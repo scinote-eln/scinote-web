@@ -31,8 +31,7 @@
         <div class="workflowimg-container"
              data-check-img="<%= updated_img_experiment_url(experiment) %>"
              data-updated-img="<%= fetch_workflow_img_experiment_url(experiment) %>"
-             data-timestamp="<%= experiment.updated_at %>"
-        >
+             data-timestamp="<%= experiment.updated_at %>" >
         </div>
       <% else %>
         <div class="no-workflowimg">
@@ -50,17 +49,20 @@
         <%= localize(experiment.created_at, format: t('time.formats.full_date')) %> - <%= localize(experiment.updated_at, format: t('time.formats.full_date')) %>
       </span>
       <% if experiment.description? %>
-        <p class="experiment-description"><%= experiment.description %></p>
+        <span class='experiment-description'>
+          <%= text_area :entry, :body, value: experiment.description, class: 'form-control', readonly: true %>
+        </span>
       <% else %>
-        <% if can_edit_experiment(experiment) %>
-        <p class="experiment-description"><span class="no-description"><%= link_to t('experiments.edit.add-description'),
-                      edit_project_experiment_url(@project, experiment),
-                      remote: true,
-                      data: { id: experiment.id },
-                      class: 'no-description-experiment' %></span></p>
-        <% else %>
-          <p class="experiment-description"><span class="no-description"><%= t('experiments.edit.no-description') %></span></p>
-        <% end %>
+        <span class='experiment-no-description'>
+          <% if can_edit_experiment(experiment) %>
+            <%= link_to t('experiments.edit.add-description'),
+                        edit_project_experiment_url(@project, experiment),
+                        remote: true,
+                        data: { id: experiment.id } %>
+          <% else %>
+            <p><%= t('experiments.edit.no-description') %></p>
+          <% end %>
+        </span>
       <% end %>
     </div>
   </div>

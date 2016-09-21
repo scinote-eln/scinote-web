@@ -30,7 +30,7 @@ function initEditDescription() {
     })
     .on("ajax:error", function(ev2, data2, status2) {
       // Display errors if needed
-      $(this).renderFormErrors("my_module", data.responseJSON);
+      $(this).renderFormErrors("my_module", data2.responseJSON);
     });
 
     // Show modal
@@ -38,11 +38,6 @@ function initEditDescription() {
   })
   .on("ajax:error", function(ev, data, status) {
     // TODO
-  });
-
-  editDescriptionModalSubmitBtn.on("click", function() {
-    // Submit the form inside the modal
-    editDescriptionModalBody.find("form").submit();
   });
 
   editDescriptionModal.on("hidden.bs.modal", function() {
@@ -81,7 +76,7 @@ function bindEditDueDateAjax() {
     })
     .on("ajax:error", function(ev2, data2, status2) {
       // Display errors if needed
-      $(this).renderFormErrors("my_module", data.responseJSON);
+      $(this).renderFormErrors("my_module", data2.responseJSON);
     });
 
     // Open modal

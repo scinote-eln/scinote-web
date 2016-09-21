@@ -3,9 +3,10 @@ class Organization < ActiveRecord::Base
   # output in space_taken related functions
   include ActionView::Helpers::NumberHelper
 
-  auto_strip_attributes :name, nullify: false
+  auto_strip_attributes :name, :description, nullify: false
   validates :name,
             length: { minimum: NAME_MIN_LENGTH, maximum: NAME_MAX_LENGTH }
+  validates :description, length: { maximum: TEXT_MAX_LENGTH }
   validates :space_taken, presence: true
 
   belongs_to :created_by, :foreign_key => 'created_by_id', :class_name => 'User'

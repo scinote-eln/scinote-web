@@ -3,9 +3,10 @@ class MyModule < ActiveRecord::Base
 
   before_create :create_blank_protocol
 
-  auto_strip_attributes :name, nullify: false
+  auto_strip_attributes :name, :description, nullify: false
   validates :name,
             length: { minimum: NAME_MIN_LENGTH, maximum: NAME_MAX_LENGTH }
+  validates :description, length: { maximum: TEXT_MAX_LENGTH }
   validates :x, :y, :workflow_order, presence: true
   validates :experiment, presence: true
   validates :my_module_group, presence: true, if: "!my_module_group_id.nil?"
