@@ -86,7 +86,7 @@ class ExperimentsController < ApplicationController
         end
       end
     else
-      flash[:alert] = t('experiments.archive.restore_flash')
+      flash[:alert] = t('experiments.update.error_flash')
       respond_to do |format|
         format.json do
           render json: @experiment.errors, status: :unprocessable_entity
