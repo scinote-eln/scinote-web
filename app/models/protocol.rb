@@ -239,9 +239,12 @@ class Protocol < ActiveRecord::Base
           item2 = ChecklistItem.new(
             text: item.text,
             checked: false,
-            checklist: checklist2)
+            checklist: checklist2,
+            position: item.position)
           item2.created_by = current_user
           item2.last_modified_by = current_user
+          p item
+          p item2
           item2.save
         end
 
