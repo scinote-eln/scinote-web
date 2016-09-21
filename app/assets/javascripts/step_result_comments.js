@@ -25,7 +25,7 @@
           scrollBottom(that.find(".content-comments"));
           animateSpinner(that, false);
         })
-        .always(function(data) {
+        .always(function() {
           animateSpinner(that, false);
         });
     });
@@ -52,7 +52,7 @@
       if (data.html) {
         var list = $(this).parents("ul");
         var moreBtn = list.find(".btn-more-comments");
-        var listItem = moreBtn.parents('li');
+        var listItem = moreBtn.parents("li");
         $(data.html).insertAfter(listItem);
         if (data.results_number < data.per_page) {
           moreBtn.remove();
@@ -62,7 +62,9 @@
         }
 
         // Reposition dropdown comment options
-        scrollCommentOptions(listItem.closest(".content-comments").find(".dropdown-comment"));
+        scrollCommentOptions(listItem
+                              .closest(".content-comments")
+                              .find(".dropdown-comment"));
       }
     });
   }
@@ -74,7 +76,7 @@
 
     $(".help-block", $form).addClass("hide");
 
-    $form.on("ajax:send", function (data) {
+    $form.on("ajax:send", function () {
       $("#comment_message", $form).attr("readonly", true);
     })
     .on("ajax:success", function (e, data) {
@@ -126,8 +128,8 @@
         if( document.getElementById("steps") !== null ) {
           $("#steps")
             .change(function() {
-              $('.step-save')
-                .on('click', function() {
+              $(".step-save")
+                .on("click", function() {
                   setTimeout(function() {
                     initializeComments();
                   }, 500);
@@ -136,8 +138,8 @@
         } else if ( document.getElementById("results") !== null ) {
           $("#results")
             .change(function() {
-              $('.save-result')
-                .on('click', function() {
+              $(".save-result")
+                .on("click", function() {
                   setTimeout(function() {
                     initializeComments();
                   }, 500);
