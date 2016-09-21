@@ -631,6 +631,7 @@ en:
       success_flash: "Successfully archived experiment %{experiment}"
       error_flash: 'Could not archive the experiment.'
       label_title: 'Archive'
+      restore_flash: 'Something went wrong try to restore the experiment later'
     clone:
       modal_title: 'Clone experiment %{experiment}'
       label_title: 'Clone'
