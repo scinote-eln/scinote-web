@@ -31,23 +31,17 @@
     </div>
     <div class="panel-collapse collapse" id="step-panel-<%= step.id %>" role="tabpanel">
       <div class="panel-body">
-<% if @protocol.in_module? %>
+      <% if @protocol.in_module? %>
         <ul class="nav nav-tabs">
           <li role="presentation" class="active">
             <a class="step-info-tab" href="#step-info-<%= step.id %>" data-toggle="tab"><span class="glyphicon glyphicon-info-sign"></span>
               <%= t("protocols.steps.info_tab") %></a>
           </li>
-          <% if can_view_step_comments(@protocol) %>
-          <li role="presentation">
-            <a class="comment-tab-link" href="<%= url_for step_step_comments_path(step_id: step.id, format: :json) %>" aria-controls="step-comments-<%= step.id %>" data-remote="true">
-              <span class="glyphicon glyphicon-comment"></span>
-              <%= t("protocols.steps.comments_tab") %></a>
-          </li>
-          <% end %>
         </ul>
-        <div class="tab-content">
+        <div class="tab-content step-container">
           <div class="tab-pane active" role="tabpanel" id="step-info-<%= step.id %>">
-<% end %>
+            <div class="row">
+      <% end %>
         <% if step.description.blank? %>
           <em><%= t("protocols.steps.no_description") %></em>
         <% else %>
@@ -132,8 +126,16 @@
         <% end %>
 <% if @protocol.in_module? %>
           </div>
-          <div class="tab-pane" role="tabpanel" id="step-comments-<%= step.id %>"></div>
+          <% if can_view_step_comments(@protocol) %>
+          <div class="row">
+            <div class="step-comment"
+                 id="step-comments-<%= step.id %>"
+                 data-href="<%= url_for step_step_comments_path(step_id: step.id, format: :json) %>">
+            </div>
+          </div>
+          <% end %>
         </div>
+      </div>
 <% end %>
       </div>
     </div>
