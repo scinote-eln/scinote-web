@@ -2,6 +2,8 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
+@import "colors";
+
 .description-label {
   word-wrap: break-word;
 }
@@ -14,4 +16,9 @@
 
 .btn-colorselector{
 	background-color: transparent !important;
+}
+
+.step-container .row {
+  margin-left: 0;
+  margin-right: 0;
 }

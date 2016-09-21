@@ -87,11 +87,12 @@ class Step < ActiveRecord::Base
 
   def last_comments(last_id = 1, per_page = 20)
     last_id = 9999999999999 if last_id <= 1
-    Comment.joins(:step_comment)
-    .where(step_comments: {step_id: id})
-    .where('comments.id <  ?', last_id)
-    .order(created_at: :desc)
-    .limit(per_page)
+    comments = Comment.joins(:step_comment)
+                      .where(step_comments: { step_id: id })
+                      .where('comments.id <  ?', last_id)
+                      .order(created_at: :desc)
+                      .limit(per_page)
+    comments.reverse
   end
 
   def save(current_user=nil)

@@ -1,11 +1,7 @@
+<hr>
 <h5 class="text-center"><%= t('protocols.steps.comments_tab') %></h5>
 <hr>
 <ul class="no-style double-line content-comments">
-  <% if @comments.size == 0 then %>
-    <li class="no-comments"><em><%= t 'general.no_comments' %></em></li>
-  <% else %>
-    <%= render 'step_comments/list.html.erb', comments: @comments %>
-  <% end %>
   <% if @comments.length == @per_page %>
   <li class="comment-more text-center">
     <a class="btn btn-default btn-more-comments" href="<%= more_comments_url %>" data-remote="true">
@@ -13,12 +9,17 @@
     </a>
   </li>
   <% end %>
+  <% if @comments.size == 0 then %>
+    <li class="no-comments"><em><%= t 'general.no_comments' %></em></li>
+  <% else %>
+    <%= render 'step_comments/list.html.erb', comments: @comments %>
+  <% end %>
 </ul>
 <% if can_add_step_comment_in_protocol(@protocol) %>
   <ul class="no-style double-line">
     <li>
       <hr>
-      <%= bootstrap_form_for :comment, url: { format: :json }, method: :post, remote: true do |f| %>
+      <%= bootstrap_form_for :comment, url: { format: :json }, html: { class: 'comment-form', id: "step-comment-#{@step.id}" }, method: :post, remote: true do |f| %>
         <%= f.text_field :message, hide_label: true, placeholder: t("general.comment_placeholder"), append: f.submit("+"), help: '.' %>
       <% end %>
     </li>
