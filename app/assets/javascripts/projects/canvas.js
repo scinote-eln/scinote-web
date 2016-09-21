@@ -1511,7 +1511,8 @@ function bindNewModuleAction(gridDistX, gridDistY) {
   function handleNewNameConfirm(ev) {
     var input = $("#new-module-name-input");
     // Validate module name
-    var moduleNameValid = textValidator(ev, input, TextLimitEnum.NAME_MIN_LENGTH, TextLimitEnum.NAME_MAX_LENGTH, true);
+    var moduleNameValid = textValidator(ev, input,
+      TextLimitEnum.NAME_MIN_LENGTH, TextLimitEnum.NAME_MAX_LENGTH, true);
     if (moduleNameValid) {
       // Set the "clicked" property to true
       modal.data("submit", "true");
@@ -1600,7 +1601,8 @@ function initEditModules() {
   function handleRenameConfirm(modal, ev) {
     var input = modal.find("#edit-module-name-input");
     // Validate module name
-    var moduleNameValid = textValidator(ev, input, TextLimitEnum.NAME_MIN_LENGTH, TextLimitEnum.NAME_MAX_LENGTH, true);
+    var moduleNameValid = textValidator(ev, input,
+      TextLimitEnum.NAME_MIN_LENGTH, TextLimitEnum.NAME_MAX_LENGTH, true);
     if (moduleNameValid) {
       var newName = input.val();
       var moduleId = modal.attr("data-module-id");
@@ -1706,8 +1708,9 @@ function initEditModuleGroups() {
 
   function handleRenameConfirm(modal, ev) {
     var input = modal.find("#edit-module-group-name-input");
-    // Validate module name
-    var moduleNameValid = textValidator(ev, input, TextLimitEnum.REQUIRED, TextLimitEnum.NAME_MAX_LENGTH, true);
+    // Validate module group name
+    var moduleNameValid = textValidator(ev, input, TextLimitEnum.REQUIRED,
+      TextLimitEnum.NAME_MAX_LENGTH, true);
     if (moduleNameValid) {
       var newModuleGroupName = input.val();
       var moduleId = modal.attr("data-module-id");
