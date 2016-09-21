@@ -48,6 +48,7 @@ gem 'wkhtmltopdf-heroku'
 gem 'remotipart', '~> 1.2' # Async file uploads
 gem 'redcarpet' # Markdown parser
 gem 'faker' # Generate fake data
+gem 'auto_strip_attributes', '~> 2.1' # Removes unnecessary whitespaces from ActiveRecord or ActiveModel attributes
 
 gem 'paperclip', '~> 4.3' # File attachment, image attachment library
 gem 'aws-sdk', '~> 2.2.8'

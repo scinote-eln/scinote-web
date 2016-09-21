@@ -1,7 +1,7 @@
 class SampleMyModule < ActiveRecord::Base
-
   after_create :increment_nr_of_module_samples
   after_destroy :decrement_nr_of_module_samples
+
   validates :sample, :my_module, presence: true
 
   # One sample can only be assigned once to a specific module

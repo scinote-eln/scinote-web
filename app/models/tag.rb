@@ -1,6 +1,7 @@
 class Tag < ActiveRecord::Base
   include SearchableModel
 
+  auto_strip_attributes :name, :color, nullify: false
   validates :name, presence: true, length: { maximum: NAME_MAX_LENGTH }
   validates :color, presence: true, length: { maximum: COLOR_MAX_LENGTH }
   validates :project, presence: true

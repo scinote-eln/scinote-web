@@ -17,6 +17,7 @@ class Experiment < ActiveRecord::Base
                        content_type: { content_type: ['image/png'] },
                        if: :workflowimg_check
 
+  auto_strip_attributes :name, :description, nullify: false
   validates :name,
             length: { minimum: NAME_MIN_LENGTH, maximum: NAME_MAX_LENGTH },
             uniqueness: { scope: :project, case_sensitive: false }

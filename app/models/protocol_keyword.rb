@@ -1,4 +1,5 @@
 class ProtocolKeyword < ActiveRecord::Base
+  auto_strip_attributes :name, nullify: false
   validates :name, presence: true, length: { maximum: NAME_MAX_LENGTH }
   validates :organization, presence: true
 

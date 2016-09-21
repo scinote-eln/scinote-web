@@ -1,4 +1,5 @@
 class ResultText < ActiveRecord::Base
+  auto_strip_attributes :text, nullify: false
   validates :text, presence: true, length: { maximum: TEXT_MAX_LENGTH }
   validates :result, presence: true
 

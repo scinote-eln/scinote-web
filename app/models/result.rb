@@ -1,6 +1,7 @@
 class Result < ActiveRecord::Base
   include ArchivableModel, SearchableModel
 
+  auto_strip_attributes :name, nullify: false
   validates :user, :my_module, presence: true
   validates :name, length: { maximum: NAME_MAX_LENGTH }
   validate :text_or_asset_or_table

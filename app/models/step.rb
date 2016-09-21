@@ -1,6 +1,7 @@
 class Step < ActiveRecord::Base
   include SearchableModel
 
+  auto_strip_attributes :name, :description, nullify: false
   validates :name, presence: true, length: { maximum: NAME_MAX_LENGTH }
   validates :description, length: { maximum: TEXT_MAX_LENGTH }
   validates :position, presence: true

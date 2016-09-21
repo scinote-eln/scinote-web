@@ -1,6 +1,7 @@
 class MyModuleGroup < ActiveRecord::Base
   include SearchableModel
 
+  auto_strip_attributes :name, nullify: false
   validates :name, presence: true, length: { maximum: NAME_MAX_LENGTH }
   validates :experiment, presence: true
 

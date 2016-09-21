@@ -29,6 +29,8 @@ TEXT_MAX_LENGTH = 10000
 # Max characters for color field (given in HEX format)
 COLOR_MAX_LENGTH = 7
 USER_INITIALS_MAX_LENGTH = 4
+# Standard length limit for email
+EMAIL_MAX_LENGTH = 254
 
 # Max table JSON size in MB
 TABLE_JSON_MAX_SIZE = 20
@@ -56,8 +58,8 @@ TEXT_EXTRACT_FILE_TYPES = [
   "text/plain"
 ]
 
-# 1 MB of space is minimal for organizations
-MINIMAL_ORGANIZATION_SPACE_TAKEN = 1024*1024
+# 1 MB of space is minimal for organizations (in B)
+MINIMAL_ORGANIZATION_SPACE_TAKEN = 1.megabyte
 
 # additional space of each file is added to its estimated
 # size to account for DB indexes size etc.

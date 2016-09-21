@@ -3,6 +3,7 @@ class Organization < ActiveRecord::Base
   # output in space_taken related functions
   include ActionView::Helpers::NumberHelper
 
+  auto_strip_attributes :name, nullify: false
   validates :name,
             length: { minimum: NAME_MIN_LENGTH, maximum: NAME_MAX_LENGTH }
   validates :space_taken, presence: true

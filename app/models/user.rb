@@ -16,6 +16,7 @@ class User < ActiveRecord::Base
     intro_tutorial_done: 1
   }
 
+  auto_strip_attributes :full_name, :initials, nullify: false
   validates :full_name, presence: true, length: { maximum: NAME_MAX_LENGTH }
   validates :initials,
             presence: true,
