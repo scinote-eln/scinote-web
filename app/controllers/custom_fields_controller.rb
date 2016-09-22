@@ -20,7 +20,10 @@ class CustomFieldsController < ApplicationController
           },
           status: :ok }
       else
-        format.json { render json: @custom_field.errors, status: :unprocessable_entity }
+        format.json do
+          render json: @custom_field.errors.to_json,
+                 status: :unprocessable_entity
+        end
       end
     end
   end
