@@ -1,6 +1,6 @@
 class WopiController < ActionController::Base
-    before_action :load_vars,:authenticate_user_from_token!
-    #before_action :verify_proof!
+  before_action :load_vars,:authenticate_user_from_token!
+  before_action :verify_proof!
 
   def get_file_endpoint
     Rails.logger.warn "get_file called"
@@ -273,23 +273,19 @@ class WopiController < ActionController::Base
       begin
         token = params[:access_token]
         timestamp = request.headers["X-WOPI-TimeStamp"]
-        url = request.original_url
+        signed_proof = request.headers["X-WOPI-Proof"]
+        signed_proof_old = request.headers["X-WOPI-ProofOld"]
+        url = request.original_url.upcase
 
-        token_length = [token.length].pack('N').bytes
-        timestamp_bytes = [timestamp.to_i].pack('Q').bytes.reverse
-        timestamp_length = [timestamp_bytes.length].pack('N').bytes
-        url_length = [url.length].pack('N').bytes
-
-        proof = token_length + token.bytes + url_length + url.bytes + timestamp_length + timestamp_bytes
-
-        Rails.logger.warn "PROOF: #{proof}"
-
+        unless WopiDiscovery.first.verify_proof(token, timestamp, signed_proof,
+                                                signed_proof_old, url)
+          render :nothing => true, :status => 401 and return
+        end
       rescue
         Rails.logger.warn "proof verification failed"
         render :nothing => true, :status => 401 and return
       end
-
-
     end
+
 
 end
