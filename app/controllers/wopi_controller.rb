@@ -36,6 +36,8 @@ class WopiController < ActionController::Base
         unlock
       when "REFRESH_LOCK"
         refresh_lock
+      when "GET_SHARE_URL"
+        render :nothing => true, :status => 501 and return
       else
         render :nothing => true, :status => 404 and return
       end
