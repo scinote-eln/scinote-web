@@ -38,6 +38,8 @@ TABLE_JSON_MAX_SIZE = 20
 FILE_MAX_SIZE = 50
 # Max uploaded user avatar size in MB
 AVATAR_MAX_SIZE = 0.2
+# Max characters for text in dropdown list
+DROPDOWN_TEXT_MAX_LENGTH = 15
 
 SEARCH_LIMIT = 20
 
