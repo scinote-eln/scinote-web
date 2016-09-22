@@ -17,6 +17,7 @@
       });
       validateMoveModal(id);
       clearModal($(id));
+      reloadPageAfterUpdate($(id));
     })
     .on("ajax:error", function() {
       animateSpinner(null, false);
@@ -71,6 +72,17 @@
                         msg.message.toString());
       })
       .clearFormErrors();
+    }
+  }
+  // Reload after successfully updated experiment
+  function reloadPageAfterUpdate(element){
+    if ( element ) {
+      var form = element.find("form");
+      form
+      .on('ajax:success' , function(){
+        animateSpinner(form, true);
+        location.reload();
+      });
     }
   }
   // Initialize no description edit link
