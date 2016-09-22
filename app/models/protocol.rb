@@ -13,9 +13,10 @@ class Protocol < ActiveRecord::Base
     in_repository_archived: 4
   }
 
-  auto_strip_attributes :name, nullify: false
+  auto_strip_attributes :name, :description, nullify: false
   # Name is required when its actually specified (i.e. :in_repository? is true)
   validates :name, length: { maximum: NAME_MAX_LENGTH }
+  validates :description, length: { maximum: TEXT_MAX_LENGTH }
   validates :organization, presence: true
   validates :protocol_type, presence: true
 

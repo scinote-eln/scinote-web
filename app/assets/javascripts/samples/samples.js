@@ -20,13 +20,7 @@ $("form#new_custom_field").on("ajax:success", function(ev, data, status) {
 });
 
 $("form#new_custom_field").on("ajax:error", function(e, data, status, xhr) {
-    input = $(this).find("#name-input");
-    input.closest(".form-group").find(".help-block").remove();
-    input.closest(".form-group").addClass("has-error");
-
-    $.each(data.responseJSON, function(i, val) {
-        input.parent().append("<span class='help-block'>" + val[0].charAt(0).toUpperCase() + val[0].slice(1) +"<br /></span>");
-    });
+    $('form').renderFormErrors('custom_field', data.responseJSON, true, e);
 });
 
 // Create sample type ajax
@@ -51,13 +45,7 @@ $("form#new_sample_type").on("ajax:success", function(ev, data, status) {
 });
 
 $("form#new_sample_type").on("ajax:error", function(e, data, status, xhr) {
-    input = $(this).find("#name-input");
-    input.closest(".form-group").find(".help-block").remove();
-    input.closest(".form-group").addClass("has-error");
-
-    $.each(data.responseJSON, function(i, val) {
-        input.parent().append("<span class='help-block'>" + val[0].charAt(0).toUpperCase() + val[0].slice(1) +"<br /></span>");
-    });
+  $('form').renderFormErrors('sample_type', data.responseJSON, true, e);
 });
 
 // Create sample group ajax
@@ -82,13 +70,7 @@ $("form#new_sample_group").on("ajax:success", function(ev, data, status) {
 });
 
 $("form#new_sample_group").on("ajax:error", function(e, data, status, xhr) {
-    input = $(this).find("#name-input");
-    input.closest(".form-group").find(".help-block").remove();
-    input.closest(".form-group").addClass("has-error");
-
-    $.each(data.responseJSON, function(i, val) {
-        input.parent().append("<span class='help-block'>" + val[0].charAt(0).toUpperCase() + val[0].slice(1) +"<br /></span>");
-    });
+  $('form').renderFormErrors('sample_group', data.responseJSON, true, e);
 });
 
 
