@@ -1,22 +1,24 @@
 class WopiController < ActionController::Base
+  include WopiUtil
+
   before_action :load_vars,:authenticate_user_from_token!
   before_action :verify_proof!
 
   def get_file_endpoint
-    Rails.logger.warn "get_file called"
+    logger.warn "get_file called"
     #Only used for checkfileinfo
     check_file_info
   end
 
   def get_file_contents_endpoint
-    Rails.logger.warn "get_file_contents called"
+    logger.warn "get_file_contents called"
     #Only used for getfile
     get_file
 
   end
 
   def post_file_endpoint
-    Rails.logger.warn "post_file called"
+    logger.warn "post_file called"
     override = request.headers["X-WOPI-Override"]
     case override
     when "GET_LOCK"
@@ -40,13 +42,13 @@ class WopiController < ActionController::Base
   end
 
   def post_file_contents_endpoint
-    Rails.logger.warn "post_file_contents called"
+    logger.warn "post_file_contents called"
     #Only used for putfile
     put_file
   end
 
   def check_file_info
-      Rails.logger.warn "Check file info started"
+      logger.warn "Check file info started"
       msg = { :BaseFileName => @asset.file_file_name,
             :OwnerId => @asset.created_by_id.to_s,
             :Size => @asset.file_file_size,
@@ -79,19 +81,19 @@ class WopiController < ActionController::Base
   end
 
   def get_file
-    Rails.logger.warn "getting file"
+    logger.warn "getting file"
     response.headers["X-WOPI-ItemVersion"] = @asset.version
     response.body = Paperclip.io_adapters.for(@asset.file).read
     send_data response.body, disposition: "inline", :content_type => 'text/plain'
   end
 
   def put_relative
-    Rails.logger.warn "put relative"
+    logger.warn "put relative"
     render :nothing => true, :status => 501 and return
   end
 
   def lock
-    Rails.logger.warn "lock"
+    logger.warn "lock"
     lock = request.headers["X-WOPI-Lock"]
     if lock.nil? || lock.blank?
       render :nothing => true, :status => 400 and return
@@ -115,7 +117,7 @@ class WopiController < ActionController::Base
   end
 
   def unlock_and_relock
-    Rails.logger.warn "lock and relock"
+    logger.warn "lock and relock"
     lock = request.headers["X-WOPI-Lock"]
     old_lock = request.headers["X-WOPI-OldLock"]
     if lock.nil? || lock.blank? || old_lock.blank?
@@ -140,14 +142,14 @@ class WopiController < ActionController::Base
   end
 
   def unlock
-    Rails.logger.warn "unlock"
+    logger.warn "unlock"
     lock = request.headers["X-WOPI-Lock"]
     if lock.nil? || lock.blank?
       render :nothing => true, :status => 400 and return
     end
     @asset.with_lock do
       if @asset.is_locked
-        Rails.logger.warn "Current asset lock: #{@asset.lock}, unlocking lock #{lock}"
+        logger.warn "Current asset lock: #{@asset.lock}, unlocking lock #{lock}"
         if @asset.lock == lock
           @asset.unlock
           response.headers["X-WOPI-ItemVersion"] = @asset.version
@@ -157,7 +159,7 @@ class WopiController < ActionController::Base
           render :nothing => true, :status => 409 and return
         end
       else
-        Rails.logger.warn "Tried to unlock non-locked file"
+        logger.warn "Tried to unlock non-locked file"
         response.headers["X-WOPI-Lock"] = ""
         render :nothing => true, :status => 409 and return
       end
@@ -165,7 +167,7 @@ class WopiController < ActionController::Base
   end
 
   def refresh_lock
-    Rails.logger.warn "refresh lock"
+    logger.warn "refresh lock"
     lock = request.headers["X-WOPI-Lock"]
     if lock.nil? || lock.blank?
       render :nothing => true, :status => 400 and return
@@ -189,7 +191,7 @@ class WopiController < ActionController::Base
   end
 
   def get_lock
-    Rails.logger.warn "get lock"
+    logger.warn "get lock"
     @asset.with_lock do
       if @asset.is_locked
           response.headers["X-WOPI-Lock"] = @asset.lock
@@ -202,28 +204,28 @@ class WopiController < ActionController::Base
   end
  # TODO When should we extract file text?
   def put_file
-    Rails.logger.warn "put file"
+    logger.warn "put file"
     @asset.with_lock do
       lock = request.headers["X-WOPI-Lock"]
       if @asset.is_locked
         if @asset.lock == lock
-          Rails.logger.warn "replacing file"
+          logger.warn "replacing file"
           @asset.update_contents(request.body)
           response.headers["X-WOPI-ItemVersion"] = @asset.version
           render :nothing => true, :status => 200 and return
         else
-          Rails.logger.warn "wrong lock used to try and modify file"
+          logger.warn "wrong lock used to try and modify file"
           response.headers["X-WOPI-Lock"] = @asset.lock
           render :nothing => true, :status => 409 and return
         end
       else
         if !@asset.file_file_size.nil? and @asset.file_file_size==0
-          Rails.logger.warn "initializing empty file"
+          logger.warn "initializing empty file"
           @asset.update_contents(request.body)
           response.headers["X-WOPI-ItemVersion"] = @asset.version
           render :nothing => true, :status => 200 and return
         else
-          Rails.logger.warn "trying to modify unlocked file"
+          logger.warn "trying to modify unlocked file"
           response.headers["X-WOPI-Lock"] = ""
           render :nothing => true, :status => 409 and return
         end
@@ -237,7 +239,7 @@ class WopiController < ActionController::Base
     if @asset.nil?
       render :nothing => true, :status => 404 and return
     else
-      Rails.logger.warn "Found asset"
+      logger.warn "Found asset"
       step_assoc = @asset.step
       result_assoc = @asset.result
       @assoc = step_assoc if not step_assoc.nil?
@@ -255,37 +257,44 @@ class WopiController < ActionController::Base
     def authenticate_user_from_token!
       wopi_token = params[:access_token]
       if wopi_token.nil?
-        Rails.logger.warn "nil wopi token"
+        logger.warn "nil wopi token"
         render :nothing => true, :status => 401 and return
       end
 
       @user = User.find_by_valid_wopi_token(wopi_token)
       if @user.nil?
-        Rails.logger.warn "no user with this token found"
+        logger.warn "no user with this token found"
         render :nothing => true, :status => 401 and return
       end
-      Rails.logger.warn "user found by token"
+      logger.warn "user found by token"
 
       #TODO check if the user can do anything with the file
     end
 
     def verify_proof!
       begin
-        token = params[:access_token]
-        timestamp = request.headers["X-WOPI-TimeStamp"]
-        signed_proof = request.headers["X-WOPI-Proof"]
-        signed_proof_old = request.headers["X-WOPI-ProofOld"]
-        url = request.original_url.upcase
+        token = params[:access_token].encode('utf-8')
+        timestamp = request.headers['X-WOPI-TimeStamp'].to_i
+        signed_proof = request.headers['X-WOPI-Proof']
+        signed_proof_old = request.headers['X-WOPI-ProofOld']
+        url = request.original_url.upcase.encode('utf-8')
 
-        unless WopiDiscovery.first.verify_proof(token, timestamp, signed_proof,
-                                                signed_proof_old, url)
-          render :nothing => true, :status => 401 and return
+        if convert_to_unix_timestamp(timestamp) + 20.minutes >= Time.now
+          if get_discovery.verify_proof(token, timestamp, signed_proof,
+                                        signed_proof_old, url)
+            logger.warn 'Proof verification: successful'
+          else
+            logger.warn 'Proof verification: not verified'
+            render :nothing => true, :status => 500 and return
+          end
+        else
+          logger.warn 'Proof verification: timestamp too old; ' + timestamp.to_s
+          render :nothing => true, :status => 500 and return
         end
-      rescue
-        Rails.logger.warn "proof verification failed"
-        render :nothing => true, :status => 401 and return
+      rescue => e
+        logger.warn 'Proof verification: failed; ' + e.message
+        render :nothing => true, :status => 500 and return
       end
     end
-
 
 end

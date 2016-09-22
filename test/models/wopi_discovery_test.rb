@@ -1,4 +1,7 @@
 class WopiDiscoveryTest < ActiveSupport::TestCase
+  # These tests are taken from WOPI official documentation
+  # https://github.com/Microsoft/Office-Online-Test-Tools-and-Documentation/
+  # blob/master/samples/python/proof_keys/tests.py
   def setup
     @discovery = wopi_discoveries(:first)
   end

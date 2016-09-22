@@ -1,28 +1,38 @@
 module WopiUtil
   require 'open-uri'
 
+  # Used for timestamp
+  UNIX_EPOCH_IN_CLR_TICKS = 621355968000000000
+  CLR_TICKS_PER_SECOND = 10000000
 
   DISCOVERY_TTL = 60*60*24
   DISCOVERY_TTL.freeze
 
+  # For more explanation see this:
+  # http://stackoverflow.com/questions/11888053/
+  # convert-net-datetime-ticks-property-to-date-in-objective-c
+  def convert_to_unix_timestamp(timestamp)
+    Time.at((timestamp-UNIX_EPOCH_IN_CLR_TICKS)/CLR_TICKS_PER_SECOND)
+  end
+
   def get_action(extension, activity)
+    get_discovery
+    action = WopiAction.find_action(extension, activity)
+  end
+
+  def get_discovery
     discovery = WopiDiscovery.first
-    if discovery.nil? || discovery.expires < Time.now.to_i
-      initializeDiscovery(discovery)
-    end
-
-    action = WopiAction.find_action(extension,activity)
-
+    return discovery if discovery && discovery.expires >= Time.now.to_i
+    initialize_discovery(discovery)
   end
 
   private
+
   # Currently only saves Excel, Word and PowerPoint view and edit actions
-  def initializeDiscovery(discovery)
+  def initialize_discovery(discovery)
     begin
       Rails.logger.warn "Initializing discovery"
-      unless discovery.nil?
-        discovery.destroy
-      end
+      discovery.destroy if discovery
 
       @doc = Nokogiri::XML(open(ENV["WOPI_DISCOVERY_URL"]))
 
@@ -56,15 +66,13 @@ module WopiUtil
           end
         end
       end
+      discovery
     rescue
       Rails.logger.warn "Initialization failed"
       discovery = WopiDiscovery.first
-      unless discovery.nil?
-        discovery.destroy
-      end
+      discovery.destroy if discovery
     end
 
   end
-
 
 end
