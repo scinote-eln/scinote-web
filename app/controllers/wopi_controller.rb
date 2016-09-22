@@ -160,7 +160,7 @@ class WopiController < ActionController::Base
         end
       else
         logger.warn "Tried to unlock non-locked file"
-        response.headers["X-WOPI-Lock"] = ""
+        response.headers["X-WOPI-Lock"] = " "
         render :nothing => true, :status => 409 and return
       end
     end
