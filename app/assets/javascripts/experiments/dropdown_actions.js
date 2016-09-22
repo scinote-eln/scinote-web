@@ -17,7 +17,7 @@
       });
       validateMoveModal(id);
       clearModal($(id));
-      reloadPageAfterUpdate($(id));
+      validateExperimentForm($(id));
     })
     .on("ajax:error", function() {
       animateSpinner(null, false);
@@ -75,13 +75,32 @@
     }
   }
   // Reload after successfully updated experiment
-  function reloadPageAfterUpdate(element){
+  function validateExperimentForm(element){
     if ( element ) {
       var form = element.find("form");
       form
       .on('ajax:success' , function(){
         animateSpinner(form, true);
         location.reload();
+      })
+      .on('ajax:error', function(e, error){
+        var msg = JSON.parse(error.responseText);
+        if ( 'name' in msg ) {
+          renderFormError(e,
+                          element.find("#experiment-name"),
+                          msg.name.toString(),
+                          true);
+        } else if ( 'description' in msg ) {
+          renderFormError(e,
+                          element.find("#experiment-description"),
+                          msg.description.toString(),
+                          true);
+        } else {
+          renderFormError(e,
+                          element.find("#experiment-name"),
+                          error.statusText,
+                          true);
+        }
       });
     }
   }
