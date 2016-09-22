@@ -16,6 +16,7 @@
         keyboard: false,
       });
       validateMoveModal(id);
+      clearModal($(id));
     })
     .on("ajax:error", function() {
       animateSpinner(null, false);
@@ -23,6 +24,13 @@
     })
     .on("ajax:complete", function(){
       animateSpinner(null, false);
+    });
+  }
+
+  function clearModal(id) {
+    //Completely remove modal when it gets closed
+    $(id).on('hidden.bs.modal', function() {
+      $(id).remove();
     });
   }
 

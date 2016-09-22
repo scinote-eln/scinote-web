@@ -375,9 +375,9 @@ class Experiment < ActiveRecord::Base
       project.tags << new_tags
       m.tags << new_tags
     end
-
-    save
-    touch(:workflowimg_updated_at)
+    result = save
+    touch(:workflowimg_updated_at) if result
+    result
   end
 
   # Get projects where user is either owner or user in the same organization
