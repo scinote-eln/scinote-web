@@ -130,9 +130,10 @@
             .change(function() {
               $(".step-save")
                 .on("click", function() {
-                  setTimeout(function() {
-                    initializeComments();
-                  }, 500);
+                  $(document)
+                    .on('ajax:success', function(){
+                      initializeComments();
+                    }); 
                 });
             });
         } else if ( document.getElementById("results") !== null ) {
@@ -140,9 +141,10 @@
             .change(function() {
               $(".save-result")
                 .on("click", function() {
-                  setTimeout(function() {
-                    initializeComments();
-                  }, 500);
+                  $(document)
+                    .on('ajax:success', function(){
+                      initializeComments();
+                    });
                 });
             });
           }
