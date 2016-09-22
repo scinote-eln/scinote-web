@@ -12,23 +12,24 @@
     } else if ( $(".result-comment") && $(".result-comment").length > 0 ) {
       comments = $(".result-comment");
     }
-    $.each(comments, function(){
-      var that = $(this);
-      var link = that.attr("data-href");
-      $.ajax({ method: 'GET',
-               url: link,
-               beforeSend: animateSpinner(that, true) })
-        .done(function(data) {
-          that.html(data.html);
-          initCommentForm(that);
-          initCommentsLink(that);
-          scrollBottom(that.find(".content-comments"));
-          animateSpinner(that, false);
-        })
-        .always(function() {
-          animateSpinner(that, false);
-        });
-    });
+    if(!_.isUndefined(comments)) {
+      $.each(comments, function(){
+        var that = $(this);
+        var link = that.attr('data-href');
+        $.ajax({ method: 'GET',
+                 url: link,
+                 beforeSend: animateSpinner(that, true) })
+          .done(function(data) {
+            that.html(data.html);
+            initCommentForm(that);
+            initCommentsLink(that);
+            scrollBottom(that.find('.content-comments'));
+          })
+          .always(function() {
+            animateSpinner(that, false);
+          });
+      });
+    }
   }
 
   // scroll to the botttom
