@@ -54,6 +54,21 @@
       </ul>
 
       <div>
+        <!-- help -->
+        <ul class="nav navbar-nav navbar-right">
+          <li class="dropdown">
+            <a href="#" id="help-link" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+              <span class="glyphicon glyphicon-info-sign"></span>
+            </a>
+            <ul class="dropdown-menu">
+              <li><%= link_to t('nav.help.tutorials'), TUTORIALS_URL %></li>
+              <li><%= link_to t('nav.help.faq'), FAQ_URL %></li>
+              <li><%= link_to t('nav.help.support'), SUPPORT_URL %></li>
+              <li><%= link_to t('nav.help.plans'), PLANS_URL %></li>
+              <li><%= link_to t('nav.help.contact'), CONTACT_URL %></li>
+            </ul>
+          </li>
+        </ul>
 
         <!-- profile info -->
         <ul class="nav navbar-nav navbar-right">
