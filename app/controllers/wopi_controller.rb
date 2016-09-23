@@ -92,7 +92,7 @@ class WopiController < ActionController::Base
     logger.warn 'WOPI: lock; ' + lock.to_s
     render nothing: :true, status: 404 and return if lock.nil? || lock.blank?
     @asset.with_lock do
-      if @asset.is_locked
+      if @asset.locked?
         if @asset.lock == lock
           @asset.refresh_lock
           response.headers['X-WOPI-ItemVersion'] = @asset.version
@@ -117,7 +117,7 @@ class WopiController < ActionController::Base
       render nothing: :true, status: 400 and return
     end
     @asset.with_lock do
-      if @asset.is_locked
+      if @asset.locked?
         if @asset.lock == old_lock
           @asset.unlock
           @asset.lock_asset(lock)
@@ -138,9 +138,9 @@ class WopiController < ActionController::Base
     lock = request.headers['X-WOPI-Lock']
     render nothing: :true, status: 400 and return if lock.nil? || lock.blank?
     @asset.with_lock do
-      if @asset.is_locked
-        logger.warn 'WOPI: current asset lock: #{@asset.lock},
-                     unlocking lock #{lock}'
+      if @asset.locked?
+        logger.warn "WOPI: current asset lock: #{@asset.lock},
+                     unlocking lock #{lock}"
         if @asset.lock == lock
           @asset.unlock
           response.headers['X-WOPI-ItemVersion'] = @asset.version
@@ -161,7 +161,7 @@ class WopiController < ActionController::Base
     lock = request.headers['X-WOPI-Lock']
     render nothing: :true, status: 400 and return if lock.nil? || lock.blank?
     @asset.with_lock do
-      if @asset.is_locked
+      if @asset.locked?
         if @asset.lock == lock
           @asset.refresh_lock
           response.headers['X-WOPI-ItemVersion'] = @asset.version
@@ -180,7 +180,7 @@ class WopiController < ActionController::Base
 
   def get_lock
     @asset.with_lock do
-      if @asset.is_locked
+      if @asset.locked?
         response.headers['X-WOPI-Lock'] = @asset.lock
       else
         response.headers['X-WOPI-Lock'] = ''
@@ -193,7 +193,7 @@ class WopiController < ActionController::Base
   def put_file
     @asset.with_lock do
       lock = request.headers['X-WOPI-Lock']
-      if @asset.is_locked
+      if @asset.locked?
         if @asset.lock == lock
           logger.warn 'WOPI: replacing file'
           @asset.update_contents(request.body)
@@ -263,8 +263,8 @@ class WopiController < ActionController::Base
     url = request.original_url.upcase.encode('utf-8')
 
     if convert_to_unix_timestamp(timestamp) + 20.minutes >= Time.now
-      if get_discovery.verify_proof(token, timestamp, signed_proof,
-                                    signed_proof_old, url)
+      if current_wopi_discovery.verify_proof(token, timestamp, signed_proof,
+                                             signed_proof_old, url)
         logger.warn 'WOPI: proof verification: successful'
       else
         logger.warn 'WOPI: proof verification: not verified'

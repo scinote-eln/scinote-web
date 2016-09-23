@@ -1,10 +1,9 @@
-class AddWopi< ActiveRecord::Migration
-
+class AddWopi < ActiveRecord::Migration
   def up
-   	add_column :users, :wopi_token, :string
+    add_column :users, :wopi_token, :string
     add_column :users, :wopi_token_ttl, :integer
 
-    add_column :assets, :lock, :string, :limit => 1024
+    add_column :assets, :lock, :string, limit: 1024
     add_column :assets, :lock_ttl, :integer
     add_column :assets, :version, :integer, default: 1
 
@@ -32,8 +31,7 @@ class AddWopi< ActiveRecord::Migration
     add_foreign_key :wopi_actions, :wopi_apps, column: :wopi_app_id
     add_foreign_key :wopi_apps, :wopi_discoveries, column: :wopi_discovery_id
 
-    add_index :wopi_actions, [:extension,:action]
-
+    add_index :wopi_actions, [:extension, :action]
   end
 
   def down

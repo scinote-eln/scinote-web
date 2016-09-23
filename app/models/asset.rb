@@ -288,9 +288,12 @@ class Asset < ActiveRecord::Base
     end
   end
 
-  # Preserving attachments (on client-side) between failed validations (only usable for small/few files!)
-  # Needs to be called before save method and view needs to have :file_content and :file_info hidden field
-  # If file is an image, it can be viewed on front-end using @preview_cached with image_tag tag
+  # Preserving attachments (on client-side) between failed validations
+  # (only usable for small/few files!).
+  # Needs to be called before save method and view needs to have
+  # :file_content and :file_info hidden field.
+  # If file is an image, it can be viewed on front-end
+  # using @preview_cached with image_tag tag.
   def preserve(file_data)
     if file_data[:file_content].present?
       restore_cached(file_data[:file_content], file_data[:file_info])
@@ -299,28 +302,31 @@ class Asset < ActiveRecord::Base
   end
 
   def can_perform_action(action)
-    file_ext = file_file_name.split(".").last
-    action = get_action(file_ext,action)
-    if action.nil?
-      return false
-    end
+    file_ext = file_file_name.split('.').last
+    action = get_action(file_ext, action)
+    return false if action.nil?
     true
   end
 
-
-  def get_action_url(user,action,with_tokens = true)
-    file_ext = file_file_name.split(".").last
-    action = get_action(file_ext,action)
+  def get_action_url(user, action, with_tokens = true)
+    file_ext = file_file_name.split('.').last
+    action = get_action(file_ext, action)
     if !action.nil?
       action_url = action.urlsrc
-      action_url = action_url.gsub(/<IsLicensedUser=BUSINESS_USER&>/, "IsLicensedUser=0&")
-      action_url = action_url.gsub(/<IsLicensedUser=BUSINESS_USER>/, "IsLicensedUser=0")
-      action_url = action_url.gsub(/<.*?=.*?>/, "")
+      action_url = action_url.gsub(/<IsLicensedUser=BUSINESS_USER&>/,
+                                   'IsLicensedUser=0&')
+      action_url = action_url.gsub(/<IsLicensedUser=BUSINESS_USER>/,
+                                   'IsLicensedUser=0')
+      action_url = action_url.gsub(/<.*?=.*?>/, '')
 
-      rest_url = Rails.application.routes.url_helpers.wopi_rest_endpoint_url(host: ENV["WOPI_ENDPOINT_URL"],id: id)
-      action_url = action_url + "WOPISrc=#{rest_url}"
+      rest_url = Rails.application.routes.url_helpers.wopi_rest_endpoint_url(
+        host: ENV['WOPI_ENDPOINT_URL'],
+        id: id
+      )
+      action_url += "WOPISrc=#{rest_url}"
       if with_tokens
-        action_url = action_url + "&access_token=#{user.get_wopi_token}&access_token_ttl=#{(user.wopi_token_ttl*1000).to_s}"
+        action_url + "&access_token=#{user.get_wopi_token}"\
+        "&access_token_ttl=#{(user.wopi_token_ttl * 1000)}"
       else
         action_url
       end
@@ -329,56 +335,48 @@ class Asset < ActiveRecord::Base
     end
   end
 
-  #is_locked, lock_asset and refresh_lock rely on the asset being locked in the database to prevent race conditions
-  def is_locked
-    if lock.nil?
-      return false
-    else
-      return true
-    end
+  # locked?, lock_asset and refresh_lock rely on the asset
+  # being locked in the database to prevent race conditions
+  def locked?
+    !lock.nil?
   end
 
   def lock_asset(lock_string)
     self.lock = lock_string
     self.lock_ttl = Time.now.to_i + LOCK_DURATION
     delay(queue: :assets, run_at: LOCK_DURATION.seconds.from_now).unlock_expired
-    self.save!
+    save!
   end
 
   def refresh_lock
     self.lock_ttl = Time.now.to_i + LOCK_DURATION
     delay(queue: :assets, run_at: LOCK_DURATION.seconds.from_now).unlock_expired
-    self.save!
+    save!
   end
 
   def unlock
     self.lock = nil
     self.lock_ttl = nil
-    self.save!
+    save!
   end
 
   def unlock_expired
-    self.with_lock do
-      if !self.lock_ttl.nil? and self.lock_ttl>= Time.now.to_i
+    with_lock do
+      if !lock_ttl.nil? && lock_ttl >= Time.now.to_i
         self.lock = nil
         self.lock_ttl = nil
-        self.save!
+        save!
       end
     end
   end
 
   def update_contents(new_file)
     new_file.class.class_eval { attr_accessor :original_filename }
-    new_file.original_filename = self.file_file_name
+    new_file.original_filename = file_file_name
     self.file = new_file
-    if self.version.nil?
-      self.version = 1
-    else
-      self.version = self.version + 1
-    end
-      self.save
+    self.version = version.nil? ? 1 : version + 1
+    save
   end
-
 
   protected
 

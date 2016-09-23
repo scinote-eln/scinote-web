@@ -66,31 +66,27 @@ class AssetsController < ApplicationController
   end
 
   def edit
-    @action_url = @asset.get_action_url(current_user,"edit",false)
+    @action_url = @asset.get_action_url(current_user, 'edit', false)
     @token = current_user.get_wopi_token
-    @ttl = (current_user.wopi_token_ttl*1000).to_s
+    @ttl = (current_user.wopi_token_ttl * 1000).to_s
   end
 
   def view
-    @action_url = @asset.get_action_url(current_user,"view",false)
+    @action_url = @asset.get_action_url(current_user, 'view', false)
     @token = current_user.get_wopi_token
-    @ttl = (current_user.wopi_token_ttl*1000).to_s
+    @ttl = (current_user.wopi_token_ttl * 1000).to_s
   end
 
   private
 
   def load_vars
     @asset = Asset.find_by_id(params[:id])
-
-    unless @asset
-      render_404
-    end
+    render_404 unless @asset
 
     step_assoc = @asset.step
     result_assoc = @asset.result
-
-    @assoc = step_assoc if not step_assoc.nil?
-    @assoc = result_assoc if not result_assoc.nil?
+    @assoc = step_assoc unless step_assoc.nil?
+    @assoc = result_assoc unless result_assoc.nil?
 
     if @assoc.class == Step
       @protocol = @asset.step.protocol
