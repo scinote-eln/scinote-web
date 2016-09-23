@@ -67,6 +67,14 @@ ASSET_ESTIMATED_SIZE_FACTOR = 1.1
 
 DEFAULT_PRIVATE_ORG_NAME = "My projects"
 
+# External URLs
+HTTP = 'http://'.freeze
+TUTORIALS_URL = (HTTP + 'scinote.net/product/tutorials/').freeze
+FAQ_URL = (HTTP + 'scinote.net/product/faq/').freeze
+SUPPORT_URL = (HTTP + 'scinote.net/plans/#prof-support').freeze
+PLANS_URL = (HTTP + 'scinote.net/plans/').freeze
+CONTACT_URL = (HTTP + 'scinote.net/about-us/').freeze
+
 #                           )       \   /      (
 #                          /|\      )\_/(     /|\
 # *                       / | \    (/\|/\)   / | \                      *
