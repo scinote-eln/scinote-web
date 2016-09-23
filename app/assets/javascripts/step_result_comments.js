@@ -12,23 +12,24 @@
     } else if ( $(".result-comment") && $(".result-comment").length > 0 ) {
       comments = $(".result-comment");
     }
-    $.each(comments, function(){
-      var that = $(this);
-      var link = that.attr("data-href");
-      $.ajax({ method: 'GET',
-               url: link,
-               beforeSend: animateSpinner(that, true) })
-        .done(function(data) {
-          that.html(data.html);
-          initCommentForm(that);
-          initCommentsLink(that);
-          scrollBottom(that.find(".content-comments"));
-          animateSpinner(that, false);
-        })
-        .always(function() {
-          animateSpinner(that, false);
-        });
-    });
+    if(!_.isUndefined(comments)) {
+      $.each(comments, function(){
+        var that = $(this);
+        var link = that.attr('data-href');
+        $.ajax({ method: 'GET',
+                 url: link,
+                 beforeSend: animateSpinner(that, true) })
+          .done(function(data) {
+            that.html(data.html);
+            initCommentForm(that);
+            initCommentsLink(that);
+            scrollBottom(that.find('.content-comments'));
+          })
+          .always(function() {
+            animateSpinner(that, false);
+          });
+      });
+    }
   }
 
   // scroll to the botttom
@@ -130,9 +131,10 @@
             .change(function() {
               $(".step-save")
                 .on("click", function() {
-                  setTimeout(function() {
-                    initializeComments();
-                  }, 500);
+                  $(document)
+                    .on('ajax:success', function(){
+                      initializeComments();
+                    }); 
                 });
             });
         } else if ( document.getElementById("results") !== null ) {
@@ -140,9 +142,10 @@
             .change(function() {
               $(".save-result")
                 .on("click", function() {
-                  setTimeout(function() {
-                    initializeComments();
-                  }, 500);
+                  $(document)
+                    .on('ajax:success', function(){
+                      initializeComments();
+                    });
                 });
             });
           }
