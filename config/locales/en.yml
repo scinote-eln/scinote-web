@@ -873,6 +873,8 @@ en:
     add_new_sample_type: "Add sample type"
     add_new_sample_group: "Add sample group"
     add_new_column: "Add column"
+    modal_info:
+      title: "Information for sample %{sample}"
     modal_import:
       title: "Import samples"
       notice: "You may upload .csv file (comma separated) or tab separated file (.txt or .tdv) or Excel file (.xls, .xlsx). First row should include header names, followed by rows with sample data."

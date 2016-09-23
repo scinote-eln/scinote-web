@@ -45,6 +45,13 @@ table = $("#samples").DataTable({
         searchable: false,
         orderable: true,
         sWidth: "1%"
+    }, {
+        targets: 2,
+        render: function ( data, type, row, full, meta ) {
+            return '<a href="#" data-href="' + row.sampleUpdateUrl + '"' +
+                    'class="sample_info" data-toggle="modal"' +
+                    'data-target="#modal-info-sample">'+data+'</a>';
+        }
     }],
     rowCallback: function(row, data, dataIndex){
         // Get row ID
@@ -74,6 +81,7 @@ table = $("#samples").DataTable({
     fnDrawCallback: function(settings, json) {
         animateSpinner(this, false);
         changeToViewMode();
+        sampleInfoListener();
         updateButtons();
     },
     stateLoadParams: function(settings, data) {
@@ -155,9 +163,9 @@ function updateDataTableSelectAllCtrl(table){
 }
 
 // Handle click on table cells with checkboxes
-$('#samples').on('click', 'tbody td, thead th:first-child', function(e){
-    $(this).parent().find('input[type="checkbox"]').trigger('click');
-});
+// $('#samples').on('click', 'tbody td, thead th:first-child', function(e){
+//     $(this).parent().find('input[type="checkbox"]').trigger('click');
+// });
 
 // Handle clicks on checkbox
 $("#samples tbody").on("click", "input[type='checkbox']", function(e){
@@ -270,6 +278,32 @@ function appendSamplesIdToForm(form) {
 table.on('draw', function(){
     updateDataTableSelectAllCtrl(table);
 });
+
+//Show sample info
+function sampleInfoListener() {
+    $(".sample_info")
+      .on("click", function(){
+        var that = $(this);
+        $.ajax({
+            method: "GET",
+            url: that.attr("data-href")  + '.json',
+            dataType: "json"
+        }).done(function(xhr, settings, data) {
+            $("body")
+              .append($.parseHTML(data.responseJSON.html));
+            $("#modal-info-sample").modal('show',{
+              backdrop: true,
+              keyboard: false,
+            }).on('hidden.bs.modal', function () {
+              $(this).remove();
+            });
+        }).fail(function(error){
+            // TODO
+        }).always(function(data){
+            // TODO
+        })
+      })
+};
 
 // Edit sample
 function onClickEdit() {
