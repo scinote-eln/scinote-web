@@ -1,5 +1,6 @@
 class WopiController < ActionController::Base
   include WopiUtil
+  include PermissionHelper
 
   before_action :load_vars, :authenticate_user_from_token!
   before_action :verify_proof!
@@ -62,10 +63,8 @@ class WopiController < ActionController::Base
       # which should NOT be business
       LicenseCheckForEditIsEnabled:  true,
       UserFriendlyName:              @user.name,
-      # TODO: Check user permisisons
-      ReadOnly:                 false,
+      UserCanWrite:             @can_write,
       UserCanNotWriteRelative:  true,
-      UserCanWrite:             true,
       # TODO: decide what to put here
       CloseUrl:    'https://scinote-preview.herokuapp.com',
       DownloadUrl: url_for(controller: 'assets', action: 'download',
@@ -252,7 +251,18 @@ class WopiController < ActionController::Base
     end
     logger.warn 'WOPI: user found by token'
 
-    # TODO: check if the user can do anything with the file
+    # This is what we get for settings permission methods with
+    # current_user
+    @current_user = @user
+    if @assoc.class == Step
+      @can_read = can_view_steps_in_protocol(@protocol)
+      @can_write = can_edit_step_in_protocol(@protocol)
+    else
+      @can_read = can_view_or_download_result_assets(@module)
+      @can_write = can_edit_result_asset_in_module(@module)
+    end
+
+    render nothing: :true, status: 404 and return unless @can_read
   end
 
   def verify_proof!
