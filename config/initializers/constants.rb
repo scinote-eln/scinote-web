@@ -38,6 +38,8 @@ TABLE_JSON_MAX_SIZE = 20
 FILE_MAX_SIZE = 50
 # Max uploaded user avatar size in MB
 AVATAR_MAX_SIZE = 0.2
+# Max characters for text in dropdown list
+DROPDOWN_TEXT_MAX_LENGTH = 15
 
 SEARCH_LIMIT = 20
 
@@ -66,6 +68,14 @@ MINIMAL_ORGANIZATION_SPACE_TAKEN = 1.megabyte
 ASSET_ESTIMATED_SIZE_FACTOR = 1.1
 
 DEFAULT_PRIVATE_ORG_NAME = "My projects"
+
+# External URLs
+HTTP = 'http://'.freeze
+TUTORIALS_URL = (HTTP + 'scinote.net/product/tutorials/').freeze
+FAQ_URL = (HTTP + 'scinote.net/product/faq/').freeze
+SUPPORT_URL = (HTTP + 'scinote.net/plans/#prof-support').freeze
+PLANS_URL = (HTTP + 'scinote.net/plans/').freeze
+CONTACT_URL = (HTTP + 'scinote.net/about-us/').freeze
 
 #                           )       \   /      (
 #                          /|\      )\_/(     /|\

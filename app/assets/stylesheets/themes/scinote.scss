@@ -462,6 +462,17 @@ a[data-toggle="tooltip"] {
   margin-bottom: 15px;
 }
 
+// Help link
+
+.glyphicon.glyphicon-info-sign {
+  font-size: 16px;
+  margin-top: 4px;
+
+  #help-link {
+    padding: 13px;
+  }
+}
+
 /** Add users modal  */
 .btn-group-existing-users {
   width: 100%;

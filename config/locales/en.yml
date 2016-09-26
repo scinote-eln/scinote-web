@@ -63,6 +63,12 @@ en:
       profile: "My profile"
       settings: "Settings"
       logout: "Log out"
+    help:
+      tutorials: "Tutorials"
+      faq: "FAQ"
+      support: "Professional support and customization"
+      plans: "Plans"
+      contact: "Contact us"
     activities:
       none: "No activities!"
     label:
