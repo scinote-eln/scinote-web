@@ -54,6 +54,7 @@
         var list = $(this).parents("ul");
         var moreBtn = list.find(".btn-more-comments");
         var listItem = moreBtn.parents("li");
+        list.find($('.comment-date-separator'))[0].remove();
         $(data.html).insertAfter(listItem);
         if (data.results_number < data.per_page) {
           moreBtn.remove();
@@ -134,7 +135,7 @@
                   $(document)
                     .on('ajax:success', function(){
                       initializeComments();
-                    }); 
+                    });
                 });
             });
         } else if ( document.getElementById("results") !== null ) {
