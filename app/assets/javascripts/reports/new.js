@@ -439,12 +439,14 @@ function initializeUnsavedWorkDialog() {
   var alertText = dh.attr('data-unsaved-work-text');
 
   ignoreUnsavedWorkAlert = false;
-  if ( ignoreUnsavedWorkAlert ) return;
+  if ( ignoreUnsavedWorkAlert ) {
+    return;
+  }
 
   $(document).on('page:before-change', beforechange);
   $(window).on('beforeunload', beforeunload);
 
-  function beforeunload(ev) {
+  function beforeunload() {
     //Check if we are actually in report editor
     if ( $(REPORT_CONTENT).length ) {
       return alertText;
@@ -455,7 +457,7 @@ function initializeUnsavedWorkDialog() {
     }
   }
 
-  function beforechange(ev) {
+  function beforechange() {
     //Check if we are actually in report editor
     if ( $(REPORT_CONTENT).length ) {
       var exit;
