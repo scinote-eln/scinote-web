@@ -66,12 +66,12 @@
         window.location.replace(data.path);
       })
       .on('ajax:error', function(e, error) {
+        form.clearFormErrors();
         var msg = JSON.parse(error.responseText);
         renderFormError(e,
                         form.find("#experiment_project_id"),
                         msg.message.toString());
-      })
-      .clearFormErrors();
+      });
     }
   }
   // Reload after successfully updated experiment
