@@ -76,7 +76,8 @@
                         <% if asset.can_perform_action("view") %>
                           <%= link_to "View", view_asset_url(id: asset) %>
                         <% end %>
-                        <% if asset.can_perform_action("edit") %>
+                        <% if can_edit_step_in_protocol(@protocol) &&
+                              asset.can_perform_action("edit") %>
                           <%= link_to "Edit", edit_asset_url(id: asset) %>
                         <% end %>
                       <% else %>

@@ -1,6 +1,7 @@
 class AssetsController < ApplicationController
   before_action :load_vars, except: [:signature]
   before_action :check_read_permission, except: [:signature, :file_present]
+  before_action :check_edit_permission, only: [ :edit ]
 
   # Validates asset and then generates S3 upload posts, because
   # otherwise untracked files could be uploaded to S3
@@ -102,6 +103,18 @@ class AssetsController < ApplicationController
       end
     elsif @assoc.class == Result
       unless can_view_or_download_result_assets(@my_module)
+        render_403 and return
+      end
+    end
+  end
+
+  def check_edit_permission
+    if @assoc.class == Step
+      unless can_edit_step_in_protocol(@protocol)
+        render_403 and return
+      end
+    elsif @assoc.class == Result
+      unless can_edit_result_asset_in_module(@my_module)
         render_403 and return
       end
     end
