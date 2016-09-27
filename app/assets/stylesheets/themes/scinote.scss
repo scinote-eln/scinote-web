@@ -1108,6 +1108,7 @@ table.dataTable {
   position: fixed;
   left:50%;
   top:50%;
+  z-index: 1000000000;
 }
 
 html.turbolinks-progress-bar::before {
