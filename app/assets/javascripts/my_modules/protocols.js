@@ -1,5 +1,6 @@
 //= require protocols/import_export/import
 //= require protocols/import_export/export
+//= require comments
 //= require datatables
 
 // Currently selected row in "load from protocol" modal
@@ -554,6 +555,6 @@ initLoadFromRepository();
 initRefreshStatusBar();
 initImport();
 initExport();
-CommentsHelper.bindNewElement();
-CommentsHelper.initialize();
+Comments.bindNewElement();
+Comments.initialize();
 initTutorial();

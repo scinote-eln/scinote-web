@@ -324,9 +324,9 @@ function initializeFullZoom() {
   restoreDraggablePosition($("#diagram"), $("#canvas-container"));
 
   // Initialize comments
-  initCommentOptions("ul.content-comments", false);
-  initEditComments(".panel.module-large .tab-content");
-  initDeleteComments(".panel.module-large .tab-content");
+  Comments.initCommentOptions("ul.content-comments", false);
+  Comments.initEditComments(".panel.module-large .tab-content");
+  Comments.initDeleteComments(".panel.module-large .tab-content");
 }
 
 function destroyFullZoom() {
@@ -759,8 +759,8 @@ function bindFullZoomAjaxTabs() {
     } else if (targetContents === "users") {
       initUsersEditLink(parentNode);
     } else if (targetContents === "comments") {
-      CommentsHelper.form(parentNode);
-      CommentsHelper.moreComments(parentNode);
+      Comments.form(parentNode);
+      Comments.moreComments(parentNode);
     }
 
     $this.parents("ul").parent().find(".active").removeClass("active");
@@ -771,7 +771,7 @@ function bindFullZoomAjaxTabs() {
     // Call scrollBotton after the comments are displayed
     // so that the scrollHight can be calculated
     if ( targetContents === 'comments' ) {
-      CommentsHelper.scrollBottom(parentNode);
+      Comments.scrollBottom(parentNode);
     }
   })
   .on("ajax:error", function (e, xhr, status, error) {

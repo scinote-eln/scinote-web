@@ -284,9 +284,9 @@
     initNewProjectModal();
     initEditProjectModal();
     initManageUsersModal();
-    initCommentOptions("ul.content-comments");
-    initEditComments(".panel-project .tab-content");
-    initDeleteComments(".panel-project .tab-content");
+    Comments.initCommentOptions("ul.content-comments");
+    Comments.initEditComments(".panel-project .tab-content");
+    Comments.initDeleteComments(".panel-project .tab-content");
 
     // initialize project tab remote loading
     $(".panel-project .panel-footer [role=tab]")
@@ -313,15 +313,15 @@
 
         target.html(data.html);
         initUsersEditLink(parentNode);
-        CommentsHelper.form(parentNode);
-        CommentsHelper.moreComments(parentNode);
+        Comments.form(parentNode);
+        Comments.moreComments(parentNode);
 
         // TODO move to fn
         parentNode.find(".active").removeClass("active");
         $this.parents("li").addClass("active");
         target.addClass("active");
 
-        CommentsHelper.scrollBottom(parentNode);
+        Comments.scrollBottom(parentNode);
       })
 
       .on("ajax:error", function (e, xhr, status, error) {
