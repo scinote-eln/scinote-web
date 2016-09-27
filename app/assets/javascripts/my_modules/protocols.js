@@ -554,4 +554,6 @@ initLoadFromRepository();
 initRefreshStatusBar();
 initImport();
 initExport();
+CommentsHelper.bindNewElement();
+CommentsHelper.initialize();
 initTutorial();

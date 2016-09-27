@@ -270,6 +270,9 @@ $(document).ready(function(){
   initTutorial();
   applyCollapseLinkCallBack();
 
+  CommentsHelper.bindNewElement();
+  CommentsHelper.initialize();
+  
   initCommentOptions("ul.content-comments");
   initEditComments("#results");
   initDeleteComments("#results");
