@@ -54,6 +54,13 @@ var Comments = (function() {
         var list = $(this).parents('ul');
         var moreBtn = list.find('.btn-more-comments');
         var listItem = moreBtn.parents('li');
+        // removes duplicated dates
+        if ( list.find($('.comment-date-separator'))
+                  .first().find('p').text() ===
+                $(data.html).first().find('p').text() ) {
+            list.find($('.comment-date-separator'))[0].remove();
+              }
+
         $(data.html).insertAfter(listItem);
         if (data.results_number < data.per_page) {
           moreBtn.remove();
@@ -234,6 +241,7 @@ var Comments = (function() {
 
   function initEditComments(parent) {
     $(parent).on('click', '[data-action=edit-comment]', function() {
+      console.log("edit");
       var $this = $(this);
       $.ajax({
           url: $this.attr('data-url'),

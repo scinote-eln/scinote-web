@@ -3,7 +3,7 @@
 
 <% comments.each do |comment| %>
   <% comment_day = comment.created_at.strftime('%j').to_i %>
-  <% if comment_day < current_day and comment_day < day %>
+  <% if comment_day < current_day && comment_day > day %>
     <% day = comment.created_at.strftime('%j').to_i %>
     <li class="comment-date-separator">
       <p class="text-center"><%= comment.created_at.strftime('%d.%m.%Y') %></p>
