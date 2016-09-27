@@ -24,9 +24,9 @@ class ResultCommentsController < ApplicationController
                                                                  .first.id))
         end
         render json: {
-          per_page: @per_page,
-          results_number: @comments.length,
-          more_url: more_url,
+          perPage: @per_page,
+          resultsNumber: @comments.length,
+          moreUrl: more_url,
           html: render_to_string(partial: partial,
                                  locals: { comments: @comments,
                                            more_comments_url: more_url })

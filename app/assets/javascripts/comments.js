@@ -62,10 +62,10 @@ var Comments = (function() {
               }
 
         $(data.html).insertAfter(listItem);
-        if (data.results_number < data.per_page) {
+        if (data.resultsNumber < data.perPage) {
           moreBtn.remove();
         } else {
-          moreBtn.attr('href', data.more_url);
+          moreBtn.attr('href', data.moreUrl);
           moreBtn.trigger('blur');
         }
 
@@ -160,7 +160,11 @@ var Comments = (function() {
   }
 
   function initCommentOptions(scrollableContainer, useParentOffset) {
-    useParentOffset = (typeof useParentOffset !== 'undefined') ? useParentOffset : true;
+    if ( ! _.isUndefined(typeof useParentOffset) ) {
+      useParentOffset = useParentOffset;
+    } else {
+      useParentOffset = true;
+    }
     scrollCommentOptions($('.dropdown-comment'), useParentOffset);
 
     // Reposition dropdown to the left
@@ -188,7 +192,11 @@ var Comments = (function() {
   }
 
   function scrollCommentOptions(selector, useParentOffset) {
-    useParentOffset = (typeof useParentOffset !== 'undefined') ? useParentOffset : true;
+    if ( ! _.isUndefined(typeof useParentOffset) ) {
+      useParentOffset = useParentOffset;
+    } else {
+      useParentOffset = true;
+    }
     _.each(selector, function(el) {
       var $el = $(el);
       var offset = useParentOffset ? $el.offset().top : $el.position().top;
