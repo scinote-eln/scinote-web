@@ -191,28 +191,32 @@ var Comments = (function() {
   }
 
   function initDeleteComments(parent) {
-    $(parent).on('click', '[data-action=delete-comment]', function(e) {
+    $(parent).on('click', '[data-action=delete-comment]', function() {
       var $this = $(this);
       if (confirm($this.attr('data-confirm-message'))) {
         $.ajax({
           url: $this.attr('data-url'),
           type: 'DELETE',
           dataType: 'json',
-          success: function(data) {
+          success: function() {
             // There are 3 possible actions:
             // - (A) comment is the last comment in project
-            // - (B) comment is the last comment inside specific date (remove the date separator)
+            // - (B) comment is the last comment inside specific date
+            //   (remove the date separator)
             // - (C) comment is a usual comment
 
             var commentEl = $this.closest('.comment');
 
             // Case A
-            if (commentEl.prevAll('.comment').length == 0 && commentEl.next().length == 0) {
-              commentEl.after('<li class="no-comments"><em>' + I18n.t('projects.index.no_comments') + '</em></li>');
+            if (commentEl.prevAll('.comment').length === 0 &&
+                  commentEl.next().length === 0) {
+              commentEl.after('<li class="no-comments"><em>' +
+                I18n.t('projects.index.no_comments') + '</em></li>');
             }
 
             // Case B
-            if (commentEl.prev('.comment-date-separator').length > 0 && commentEl.next('.comment').length == 0) {
+            if (commentEl.prev('.comment-date-separator').length > 0 &&
+                  commentEl.next('.comment').length === 0) {
               commentEl.prev('.comment-date-separator').remove();
             }
             commentEl.remove();
@@ -229,7 +233,7 @@ var Comments = (function() {
   }
 
   function initEditComments(parent) {
-    $(parent).on('click', '[data-action=edit-comment]', function(e) {
+    $(parent).on('click', '[data-action=edit-comment]', function() {
       var $this = $(this);
       $.ajax({
           url: $this.attr('data-url'),
@@ -237,7 +241,8 @@ var Comments = (function() {
           dataType: 'json',
           success: function(data) {
             var commentEl = $this.closest('.comment');
-            var container = commentEl.find('[data-role=comment-message-container]');
+            var container = commentEl
+                              .find('[data-role=comment-message-container]');
             var oldMessage = container.find('[data-role=comment-message]');
             var optionsBtn = commentEl.find('[data-role=comment-options]');
 
@@ -257,7 +262,7 @@ var Comments = (function() {
             .on('ajax:send', function() {
               input.attr('readonly', true);
             })
-            .on('ajax:success', function(e, data) {
+            .on('ajax:success', function() {
               var newMessage = input.val();
               oldMessage.html(newMessage);
 
@@ -297,7 +302,7 @@ var Comments = (function() {
               optionsBtn.show();
             });
           },
-          error: function(data) {
+          error: function() {
             // TODO
           }
         });
