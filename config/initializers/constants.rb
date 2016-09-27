@@ -76,6 +76,7 @@ FAQ_URL = (HTTP + 'scinote.net/product/faq/').freeze
 SUPPORT_URL = (HTTP + 'scinote.net/plans/#prof-support').freeze
 PLANS_URL = (HTTP + 'scinote.net/plans/').freeze
 CONTACT_URL = (HTTP + 'scinote.net/about-us/').freeze
+RELEASE_NOTES_URL = (HTTP + 'scinote.net/docs/release-notes/').freeze
 
 #                           )       \   /      (
 #                          /|\      )\_/(     /|\
