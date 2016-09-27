@@ -203,83 +203,9 @@
        });
   }
 
-  // Initialize comment form.
-  function initCommentForm($el) {
-
-    var $form = $el.find("ul form");
-
-    $(".help-block", $form).addClass("hide");
-
-    $form.on("ajax:send", function (data) {
-      $("#comment_message", $form).attr("readonly", true);
-    })
-    .on("ajax:success", function (e, data) {
-      if (data.html) {
-        var list = $form.parents("ul");
-
-        // Remove potential "no comments" element
-        list.parent().find(".content-comments")
-          .find("li.no-comments").remove();
-
-        list.parent().find(".content-comments")
-          .prepend("<li class='comment'>" + data.html + "</li>")
-          .scrollTop(0);
-        list.parents("ul").find("> li.comment:gt(8)").remove();
-        $("#comment_message", $form).val("");
-        $(".form-group", $form)
-          .removeClass("has-error");
-        $(".help-block", $form)
-            .html("")
-            .addClass("hide");
-        scrollCommentOptions(
-          list.parent().find(".content-comments .dropdown-comment")
-        );
-      }
-    })
-    .on("ajax:error", function (ev, xhr) {
-      if (xhr.status === 400) {
-        var messageError = xhr.responseJSON.errors.message;
-
-        if (messageError) {
-          $(".form-group", $form)
-            .addClass("has-error");
-          $(".help-block", $form)
-              .html(messageError[0])
-              .removeClass("hide");
-        }
-      }
-    })
-    .on("ajax:complete", function () {
-      $("#comment_message", $form)
-        .attr("readonly", false)
-        .focus();
-    });
-  }
-
-  // Initialize show more comments link.
-  function initCommentsLink($el) {
-
-    $el.find(".btn-more-comments")
-      .on("ajax:success", function (e, data) {
-        if (data.html) {
-          var list = $(this).parents("ul");
-          var moreBtn = list.find(".btn-more-comments");
-          var listItem = moreBtn.parents('li');
-          $(data.html).insertBefore(listItem);
-          if (data.results_number < data.per_page) {
-            moreBtn.remove();
-          } else {
-            moreBtn.attr("href", data.more_url);
-          }
-
-          // Reposition dropdown comment options
-          scrollCommentOptions(listItem.closest(".content-comments").find(".dropdown-comment"));
-        }
-      });
-  }
-
   // Initialize reloading manage user modal content after posting new
   // user.
+
   function initAddUserForm() {
 
     manageUsersModalBody.find(".add-user-form")
@@ -387,13 +313,15 @@
 
         target.html(data.html);
         initUsersEditLink(parentNode);
-        initCommentForm(parentNode);
-        initCommentsLink(parentNode);
+        CommentsHelper.form(parentNode);
+        CommentsHelper.moreComments(parentNode);
 
         // TODO move to fn
         parentNode.find(".active").removeClass("active");
         $this.parents("li").addClass("active");
         target.addClass("active");
+
+        CommentsHelper.scrollBottom(parentNode);
       })
 
       .on("ajax:error", function (e, xhr, status, error) {

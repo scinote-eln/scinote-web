@@ -1,16 +1,16 @@
 <h5 class="text-center"><%= t('projects.index.comment_tab') %></h5>
 <hr>
 <ul class="no-style double-line content-comments">
-  <% if @comments.size == 0 then %>
-    <li class="no-comments"><em><%= t 'projects.index.no_comments' %></em></li>
-  <% else %>
-  <%= render 'project_comments/list.html.erb', comments: @comments %>
-  <% end %>
   <% if @comments.length == @per_page %>
   <li class="comment-more text-center">
     <a class="btn btn-default btn-more-comments" href="<%= more_comments_url %>" data-remote="true">
       <%= t'projects.index.more_comments' %></a>
   </li>
+  <% end %>
+  <% if @comments.size == 0 then %>
+    <li class="no-comments"><em><%= t 'projects.index.no_comments' %></em></li>
+  <% else %>
+  <%= render 'project_comments/list.html.erb', comments: @comments %>
   <% end %>
 </ul>
 <% if can_add_comment_to_project(@project) %>

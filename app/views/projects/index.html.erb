@@ -141,4 +141,5 @@
     <%= render partial: "projects/index/org_projects", locals: {org: org, projects: projects} %>
   <% end %>
 <% end %>
+<%= javascript_include_tag('comments_helper') %>
 <%= javascript_include_tag "projects/index", "data-turbolinks-track" => true %>

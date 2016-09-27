@@ -152,11 +152,12 @@ class MyModule < ActiveRecord::Base
   # using last comment id and per_page parameters.
   def last_comments(last_id = 1, per_page = 20)
     last_id = 9999999999999 if last_id <= 1
-    Comment.joins(:my_module_comment)
-      .where(my_module_comments: {my_module_id: id})
-      .where('comments.id <  ?', last_id)
-      .order(created_at: :desc)
-      .limit(per_page)
+    comments = Comment.joins(:my_module_comment)
+                      .where(my_module_comments: { my_module_id: id })
+                      .where('comments.id <  ?', last_id)
+                      .order(created_at: :desc)
+                      .limit(per_page)
+    comments.reverse
   end
 
   def last_activities(last_id = 1, count = 20)
