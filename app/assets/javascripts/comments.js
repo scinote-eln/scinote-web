@@ -241,7 +241,7 @@ var Comments = (function() {
 
   function initEditComments(parent) {
     $(parent).on('click', '[data-action=edit-comment]', function() {
-      console.log("edit");
+
       var $this = $(this);
       $.ajax({
           url: $this.attr('data-url'),
