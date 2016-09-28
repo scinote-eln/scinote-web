@@ -142,6 +142,7 @@ class WopiController < ActionController::Base
                      unlocking lock #{lock}"
         if @asset.lock == lock
           @asset.unlock
+          @asset.post_process_file(@organization)
           response.headers['X-WOPI-ItemVersion'] = @asset.version
           render nothing: :true, status: 200 and return
         else
@@ -188,7 +189,6 @@ class WopiController < ActionController::Base
     end
   end
 
-  # TODO: When should we extract file text?
   def put_file
     @asset.with_lock do
       lock = request.headers['X-WOPI-Lock']
@@ -233,8 +233,10 @@ class WopiController < ActionController::Base
 
       if @assoc.class == Step
         @protocol = @asset.step.protocol
+        @organization = @protocol.organization
       else
         @my_module = @assoc.my_module
+        @organization = @my_module.experiment.project.organization
       end
     end
   end
