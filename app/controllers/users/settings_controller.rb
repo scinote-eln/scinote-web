@@ -120,19 +120,27 @@ class Users::SettingsController < ApplicationController
     respond_to do |format|
       format.json {
         if params.include? :existing_query and
-          (query = params[:existing_query].strip()).present?
-          if query.length < 3
+          query = params[:existing_query].strip()
+          if query.length < NAME_MIN_LENGTH
             render json: {
               "existing_query": [
-                I18n.t("users.settings.organizations.edit.modal_add_user.existing_query_too_short")
-              ]},
-              status: :unprocessable_entity
+                t('general.query.length_too_short', min_length: NAME_MIN_LENGTH)
+              ]
+            },
+            status: :unprocessable_entity
+          elsif query.length > NAME_MAX_LENGTH
+            render json: {
+              "existing_query": [
+                t('general.query.length_too_long', max_length: NAME_MAX_LENGTH)
+              ]
+            },
+            status: :unprocessable_entity
           else
             # Okay, query exists and is non-blank, find users
             nr_of_results = User.search(true, query, @org).count
 
 
-            users = User.search(false, query, @org).limit(5)
+            users = User.search(false, query, @org).limit(EXISTING_USERS_SEARCH_LIMIT)
 
             nr_of_members = User.organization_search(false, query, @org).count
 
@@ -150,11 +158,7 @@ class Users::SettingsController < ApplicationController
             }
           end
         else
-          render json: {
-            "existing_query": [
-              I18n.t("users.settings.organizations.edit.modal_add_user.existing_query_blank")
-            ]},
-            status: :unprocessable_entity
+          render json: {}, status: :bad_request
         end
       }
     end

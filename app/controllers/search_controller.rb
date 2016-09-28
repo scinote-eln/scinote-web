@@ -2,8 +2,6 @@ class SearchController < ApplicationController
   before_filter :load_vars, only: :index
   before_filter :load_markdown, only: :index
 
-  MIN_QUERY_CHARS = 2
-
   def index
     if not @search_query
       redirect_to new_search_path
@@ -50,21 +48,27 @@ class SearchController < ApplicationController
     @search_page = params[:page].to_i || 1
     @display_query = @search_query
 
-    if @search_query.length < MIN_QUERY_CHARS
-      flash[:error] = t'search.index.error.query_length', n: MIN_QUERY_CHARS
+    if @search_query.length < NAME_MIN_LENGTH
+      flash[:error] = t 'general.query.length_too_short',
+                        min_length: NAME_MIN_LENGTH
       return redirect_to :back
     end
 
     # splits the search query to validate all entries
     @splited_query = @search_query.split
 
-    if @splited_query.first.length < MIN_QUERY_CHARS
-      flash[:error] = t'search.index.error.query_length', n: MIN_QUERY_CHARS
+    if @splited_query.first.length < NAME_MIN_LENGTH
+      flash[:error] = t 'general.query.length_too_short',
+                        min_length: NAME_MIN_LENGTH
+      redirect_to :back
+    elsif @splited_query.first.length > TEXT_MAX_LENGTH
+      flash[:error] = t 'general.query.length_too_long',
+                        max_length: TEXT_MAX_LENGTH
       redirect_to :back
     elsif @splited_query.length > 1
       @search_query = ''
       @splited_query.each_with_index do |w, i|
-        @search_query += "#{@splited_query[i]} " if w.length >= MIN_QUERY_CHARS
+        @search_query += "#{@splited_query[i]} " if w.length >= NAME_MIN_LENGTH
       end
     else
       @search_query = @splited_query.join(' ')

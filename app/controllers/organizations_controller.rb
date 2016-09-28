@@ -12,7 +12,8 @@ class OrganizationsController < ApplicationController
         begin
 
           if params[:file].size > FILE_MAX_SIZE.megabytes
-            error = t("organizations.parse_sheet.errors.file_size_exceeded")
+            error = t 'general.file.size_exceeded', file_size: FILE_MAX_SIZE
+
             format.html {
               flash[:alert] = error
               redirect_to session.delete(:return_to)

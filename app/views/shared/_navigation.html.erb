@@ -107,7 +107,7 @@
       <%= form_tag search_path, method: :get, id: 'search-bar', class: 'navbar-form navbar-right', role: 'search' do %>
         <div class="form-group">
           <div class="input-group">
-            <input class="form-control" type="text" name="q" maxlength="50" placeholder="<%= t('nav.search') %>">
+            <input class="form-control" type="text" name="q" placeholder="<%= t('nav.search') %>">
             <span class="input-group-btn">
               <button id="search-button" class="btn btn-default" type="submit">
                 <span class="glyphicon glyphicon-search"></span>
@@ -122,6 +122,5 @@
   </div>
 </nav>
 <div id="loading-animation"></div>
-
 
 <%= javascript_include_tag("navigation") %>

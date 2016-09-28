@@ -28,12 +28,12 @@ function truncateLongString( el, chars ) {
 
 /*
  * Usefull for converting locals messages to error format
- * (i.e. lower cased capital and no dot at the end).
+ * (i.e. no dot at the end).
  */
 String.prototype.strToErrorFormat = function() {
 	var length = this.length;
 	if (this[length - 1] === ".") {
 		length -= 1;
 	}
-	return this.charAt(0).toLowerCase() + this.slice(1, length);
+	return this.slice(0, length);
 }

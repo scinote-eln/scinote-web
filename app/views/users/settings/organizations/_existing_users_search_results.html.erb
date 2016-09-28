@@ -21,7 +21,7 @@
     <% end %>
     <% if nr_of_results > users.count %>
       <div class="existing-users-smalltext"><em>
-        <%= t("users.settings.organizations.edit.modal_add_user.existing_users_smalltext", nr: users.count) %>
+        <%= t("users.settings.organizations.edit.modal_add_user.existing_users_smalltext", count: users.count) %>
       </em></div>
     <% end %>
   <% end %>
