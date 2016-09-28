@@ -5038,7 +5038,7 @@
     };
 
     Formula.MAX = function () {
-      var range = Formula.FLATTEN(arguments);
+      var range = Formula.NUMBERS(Formula.FLATTEN(arguments));
       var n = range.length;
       var max = (n > 0) ? range[0] : 0;
       for (var i = 0; i < n; i++) {
@@ -5053,11 +5053,11 @@
     };
 
     Formula.MEDIAN = function () {
-      return jStat.median(Formula.FLATTEN(arguments));
+      return jStat.median(Formula.NUMBERS(Formula.FLATTEN(arguments)));
     };
 
     Formula.MIN = function () {
-      var range = Formula.FLATTEN(arguments);
+      var range = Formula.NUMBERS(Formula.FLATTEN(arguments));
       var n = range.length;
       var min = (n > 0) ? range[0] : 0;
       for (var i = 0; i < n; i++) {
@@ -5337,8 +5337,8 @@
     };
 
     Formula.SLOPE = function (data_y, data_x) {
-      data_y = Formula.FLATTEN(data_y)
-      data_x = Formula.FLATTEN(data_x)
+      data_y = Formula.NUMBERS(Formula.FLATTEN(data_y));
+      data_x = Formula.NUMBERS(Formula.FLATTEN(data_x));
       var xmean = jStat.mean(data_x);
       var ymean = jStat.mean(data_y);
       var n = data_x.length;
@@ -5373,7 +5373,7 @@
     };
 
     Formula.STDEVP = function () {
-      var range = Formula.FLATTEN(arguments);
+      var range = Formula.NUMBERS(Formula.FLATTEN(arguments));
       var n = range.length;
       var sigma = 0;
       var count = 0;
@@ -5399,7 +5399,7 @@
     };
 
     Formula.STDEVS = function () {
-      var range = Formula.FLATTEN(arguments);
+      var range = Formula.NUMBERS(Formula.FLATTEN(arguments));
       var n = range.length;
       var sigma = 0;
       var count = 0;
@@ -5530,7 +5530,7 @@
     };
 
     Formula.VARS = function () {
-      var range = Formula.FLATTEN(arguments);
+      var range = Formula.NUMBERS(Formula.FLATTEN(arguments));
       var n = range.length;
       var sigma = 0;
       var count = 0;

@@ -1240,6 +1240,13 @@ var ruleJS = (function (root) {
         return Big(m).times(Big(10).pow(e)).toFixed();
       })
 
+      // Preprocess the following aliases for formulas
+      // or parser won't accept them
+      formula = formula.replace('STDEV.P', 'STDEVP');
+      formula = formula.replace('STDEV.S', 'STDEVS');
+      formula = formula.replace('VAR.P', 'VARP');
+      formula = formula.replace('VAR.S', 'VARS');
+
       parser.setObj(element);
       result = parser.parse(formula);
 
