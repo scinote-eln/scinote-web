@@ -196,6 +196,8 @@ class WopiController < ActionController::Base
         if @asset.lock == lock
           logger.warn 'WOPI: replacing file'
           @asset.update_contents(request.body)
+          @asset.last_modified_by = @user
+          @asset.save
           response.headers['X-WOPI-ItemVersion'] = @asset.version
           render nothing: :true, status: 200 and return
         else
@@ -206,6 +208,8 @@ class WopiController < ActionController::Base
       elsif !@asset.file_file_size.nil? && @asset.file_file_size.zero?
         logger.warn 'WOPI: initializing empty file'
         @asset.update_contents(request.body)
+        @asset.last_modified_by = @user
+        @asset.save
         response.headers['X-WOPI-ItemVersion'] = @asset.version
         render nothing: :true, status: 200 and return
       else
@@ -221,7 +225,7 @@ class WopiController < ActionController::Base
     if @asset.nil?
       render nothing: :true, status: 404 and return
     else
-      logger.warn 'Found asset'
+      logger.warn 'Found asset: ' + @asset.id.to_s
       step_assoc = @asset.step
       result_assoc = @asset.result
       @assoc = step_assoc unless step_assoc.nil?
@@ -249,7 +253,8 @@ class WopiController < ActionController::Base
       logger.warn 'WOPI: no user with this token found'
       render nothing: :true, status: 401 and return
     end
-    logger.warn 'WOPI: user found by token'
+    logger.warn 'WOPI: user found by token ' + wopi_token +
+                ' ID: ' + @user.id.to_s
 
     # This is what we get for settings permission methods with
     # current_user
