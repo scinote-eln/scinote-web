@@ -47,10 +47,10 @@ table = $("#samples").DataTable({
         sWidth: "1%"
     }, {
         targets: 2,
-        render: function ( data, type, row, full, meta ) {
-            return '<a href="#" data-href="' + row.sampleUpdateUrl + '"' +
-                    'class="sample_info" data-toggle="modal"' +
-                    'data-target="#modal-info-sample">'+data+'</a>';
+        render: function (data, type, row) {
+            return "<a href='#' data-href='"+ row.sampleUpdateUrl +"'"+
+                    "class='sample_info' data-toggle='modal'" +
+                    "data-target='#modal-info-sample'>"+ data +"</a>";
         }
     }],
     rowCallback: function(row, data, dataIndex){
