@@ -84,7 +84,8 @@ class User < ActiveRecord::Base
   has_many :added_protocols, class_name: 'Protocol', foreign_key: 'added_by_id', inverse_of: :added_by
   has_many :archived_protocols, class_name: 'Protocol', foreign_key: 'archived_by_id', inverse_of: :archived_by
   has_many :restored_protocols, class_name: 'Protocol', foreign_key: 'restored_by_id', inverse_of: :restored_by
-
+  has_many :user_notifications, inverse_of: :user
+  has_many :notifications, through: :user_notifications
   # If other errors besides parameter "avatar" exist,
   # they will propagate to "avatar" also, so remove them
   # and put all other (more specific ones) in it
@@ -260,4 +261,3 @@ class User < ActiveRecord::Base
     end
   end
 end
-
