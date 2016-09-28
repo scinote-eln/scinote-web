@@ -142,7 +142,7 @@ class WopiController < ActionController::Base
                      unlocking lock #{lock}"
         if @asset.lock == lock
           @asset.unlock
-          @asset.post_process_file(@organization)
+          @asset.post_process_file # Space is already taken in put_file
           response.headers['X-WOPI-ItemVersion'] = @asset.version
           render nothing: :true, status: 200 and return
         else
@@ -195,9 +195,15 @@ class WopiController < ActionController::Base
       if @asset.locked?
         if @asset.lock == lock
           logger.warn 'WOPI: replacing file'
+
+          @organization.release_space(@asset.estimated_size)
           @asset.update_contents(request.body)
           @asset.last_modified_by = @user
           @asset.save
+
+          @organization.take_space(@asset.estimated_size)
+          @organization.save
+
           response.headers['X-WOPI-ItemVersion'] = @asset.version
           render nothing: :true, status: 200 and return
         else
@@ -207,9 +213,13 @@ class WopiController < ActionController::Base
         end
       elsif !@asset.file_file_size.nil? && @asset.file_file_size.zero?
         logger.warn 'WOPI: initializing empty file'
+
+        @organization.release_space(@asset.estimated_size)
         @asset.update_contents(request.body)
         @asset.last_modified_by = @user
         @asset.save
+        @organization.save
+
         response.headers['X-WOPI-ItemVersion'] = @asset.version
         render nothing: :true, status: 200 and return
       else
