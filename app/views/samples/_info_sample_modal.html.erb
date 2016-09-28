@@ -6,13 +6,43 @@
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <h4 class="modal-title"><%= t('samples.modal_info.title', sample: @sample.name) %></h4>
       </div>
-<% byebug %>
+
       <div class="modal-body">
-        <div class="row">
-
-
-
+      <% if @sample.my_modules.count > 0 %>
+        <div class="linked-children-datatable">
+          <table id="sample-info-table" class="table dataTable no-footer" role="grid">
+            <tbody>
+              <% @sample.my_modules.each_with_index do |mod, i|  %>
+                <tr role="row">
+                  <td class="sorting_1">
+                    <ol class='breadcrumb'>
+                      <li><span class='glyphicon glyphicon-blackboard'></span>&nbsp;
+                        <%= render partial: 'search/results/partials/project_text.html.erb',
+                                  locals: { project: mod.experiment.project } %>
+                      </li>
+                      <li><i class='fa fa-flask'></i>&nbsp;
+                        <%= render partial: 'search/results/partials/experiment_text.html.erb',
+                                  locals: { experiment: mod.experiment } %>
+                      </li>
+                      <li><span class='glyphicon glyphicon-credit-card'></span>&nbsp;
+                        <%= render partial: 'search/results/partials/my_module_text.html.erb',
+                                  locals: { my_module: mod, link_to_page: :samples } %>
+                      </li>
+                    </ol>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+            <thead>
+              <tr>
+                <th></th>
+              </tr>
+            </thead>
+          </table>
         </div>
+      <% else %>
+        <em><%=t "search.index.sample_no_modules" %></em>
+      <% end %>
       </div>
 
       <div class="modal-footer">
