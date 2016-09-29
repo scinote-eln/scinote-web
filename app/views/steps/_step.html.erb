@@ -32,110 +32,101 @@
     <div class="panel-collapse collapse" id="step-panel-<%= step.id %>" role="tabpanel">
       <div class="panel-body">
       <% if @protocol.in_module? %>
-        <ul class="nav nav-tabs">
-          <li role="presentation" class="active">
-            <a class="step-info-tab" href="#step-info-<%= step.id %>" data-toggle="tab"><span class="glyphicon glyphicon-info-sign"></span>
-              <%= t("protocols.steps.info_tab") %></a>
-          </li>
-        </ul>
-        <div class="tab-content step-container">
-          <div class="tab-pane active" role="tabpanel" id="step-info-<%= step.id %>">
-            <div class="row">
 
-              <% if step.description.blank? %>
-                <em><%= t("protocols.steps.no_description") %></em>
-              <% else %>
-                <%= step.description %>
-              <% end %>
-              <hr>
-              <div class="row">
-                <% unless step.tables.blank? then %>
-                  <div class="col-xs-12">
-                    <strong><%= t("protocols.steps.tables") %></strong>
-                      <% step.tables.each do |table| %>
-                        <div data-role="hot-table" class="hot-table">
-                          <%= hidden_field(table, :contents, value: table.contents_utf_8, class: "hot-contents") %>
-                          <div data-role="step-hot-table" class="step-result-hot-table"></div>
-                        </div>
-                      <% end %>
-                  </div>
-                <% end %>
-                <% assets = ordered_assets(step) %>
-                <% unless assets.blank? then %>
-                  <div class="col-xs-12">
-                    <strong><%= t("protocols.steps.files") %></strong>
-                    <ul>
-                      <% assets.each do |asset| %>
-                        <li>
-                          <% if can_view_or_download_step_assets(@protocol) %>
-                            <% if asset.file_present %>
-                              <%= link_to download_asset_path(asset), data: {no_turbolink: true, id: true, status: "asset-present"} do %>
-                                <%= image_tag preview_asset_path(asset) if asset.is_image? %>
-                                <p><%= truncate(asset.file_file_name, length: 50) %></p>
-                              <% end %>
-                            <% else %>
-                              <%= asset_loading_span(asset) %>
-                            <% end %>
-                          <% else %>
+        <div class="row">
+          <% if step.description.blank? %>
+            <em><%= t("protocols.steps.no_description") %></em>
+          <% else %>
+            <%= step.description %>
+          <% end %>
+          <hr>
+          <div class="row">
+            <% unless step.tables.blank? then %>
+              <div class="col-xs-12">
+                <strong><%= t("protocols.steps.tables") %></strong>
+                  <% step.tables.each do |table| %>
+                    <div data-role="hot-table" class="hot-table">
+                      <%= hidden_field(table, :contents, value: table.contents_utf_8, class: "hot-contents") %>
+                      <div data-role="step-hot-table" class="step-result-hot-table"></div>
+                    </div>
+                  <% end %>
+              </div>
+            <% end %>
+            <% assets = ordered_assets(step) %>
+            <% unless assets.blank? then %>
+              <div class="col-xs-12">
+                <strong><%= t("protocols.steps.files") %></strong>
+                <ul>
+                  <% assets.each do |asset| %>
+                    <li>
+                      <% if can_view_or_download_step_assets(@protocol) %>
+                        <% if asset.file_present %>
+                          <%= link_to download_asset_path(asset), data: {no_turbolink: true, id: true, status: "asset-present"} do %>
                             <%= image_tag preview_asset_path(asset) if asset.is_image? %>
                             <p><%= truncate(asset.file_file_name, length: 50) %></p>
                           <% end %>
-                        </li>
-                      <% end %>
-                    </ul>
-                  </div>
-                <% end %>
-
-                <% unless step.checklists.blank? then %>
-                  <div class="col-xs-12">
-                    <% step.checklists.each do |checklist| %>
-                      <strong><%= checklist.name %></strong>
-                      <% if checklist.checklist_items.empty? %>
-                        </br>
-                        <%= t("protocols.steps.empty_checklist") %>
-                        </br>
-                      <% else %>
-                        <% ordered_checklist_items(checklist).each do |checklist_item| %>
-                          <div class="checkbox" <%= @protocol.in_module? ? "data-action=check-item" : "" %>>
-                            <label>
-                              <% if @protocol.in_module? %>
-                                <input type="checkbox" value="" data-link-url="<%=checklistitem_state_step_path(step) %>" data-id="<%= checklist_item.id %>" <%= "checked" if checklist_item.checked? %> />
-                              <% else %>
-                                <input type="checkbox" value="" disabled="disabled" />
-                              <% end %>
-                              <%= checklist_item.text %>
-                            </label>
-                          </div>
+                        <% else %>
+                          <%= asset_loading_span(asset) %>
                         <% end %>
+                      <% else %>
+                        <%= image_tag preview_asset_path(asset) if asset.is_image? %>
+                        <p><%= truncate(asset.file_file_name, length: 50) %></p>
                       <% end %>
-                    <% end %>
-                  </div>
-                <% end %>
+                    </li>
+                  <% end %>
+                </ul>
               </div>
+            <% end %>
 
-              <% if @protocol.in_module? %>
-                <% if !step.completed? and can_complete_step_in_protocol(@protocol) %>
-                  <div data-action="complete-step" class="pull-right" data-link-url="<%= toggle_step_state_step_path(step)%>">
-                    <button class="btn btn-primary"><%= t("protocols.steps.options.complete_title") %></button>
-                  </div>
-                <% elsif step.completed? and can_uncomplete_step_in_protocol(@protocol) %>
-                  <div data-action="uncomplete-step" class="pull-right" data-link-url="<%= toggle_step_state_step_path(step)%>">
-                    <button class="btn btn-default"><%= t("protocols.steps.options.uncomplete_title") %></button>
-                  </div>
+            <% unless step.checklists.blank? then %>
+              <div class="col-xs-12">
+                <% step.checklists.each do |checklist| %>
+                  <strong><%= checklist.name %></strong>
+                  <% if checklist.checklist_items.empty? %>
+                    </br>
+                    <%= t("protocols.steps.empty_checklist") %>
+                    </br>
+                  <% else %>
+                    <% ordered_checklist_items(checklist).each do |checklist_item| %>
+                      <div class="checkbox" <%= @protocol.in_module? ? "data-action=check-item" : "" %>>
+                        <label>
+                          <% if @protocol.in_module? %>
+                            <input type="checkbox" value="" data-link-url="<%=checklistitem_state_step_path(step) %>" data-id="<%= checklist_item.id %>" <%= "checked" if checklist_item.checked? %> />
+                          <% else %>
+                            <input type="checkbox" value="" disabled="disabled" />
+                          <% end %>
+                          <%= checklist_item.text %>
+                        </label>
+                      </div>
+                    <% end %>
+                  <% end %>
                 <% end %>
-              <% end %>
-            </div>
-
-            <% if can_view_step_comments(@protocol) %>
-              <div class="row">
-                <div class="step-comment"
-                     id="step-comments-<%= step.id %>"
-                     data-href="<%= url_for step_step_comments_path(step_id: step.id, format: :json) %>">
-                </div>
               </div>
             <% end %>
           </div>
+
+          <% if @protocol.in_module? %>
+            <% if !step.completed? and can_complete_step_in_protocol(@protocol) %>
+              <div data-action="complete-step" class="pull-right" data-link-url="<%= toggle_step_state_step_path(step)%>">
+                <button class="btn btn-primary"><%= t("protocols.steps.options.complete_title") %></button>
+              </div>
+            <% elsif step.completed? and can_uncomplete_step_in_protocol(@protocol) %>
+              <div data-action="uncomplete-step" class="pull-right" data-link-url="<%= toggle_step_state_step_path(step)%>">
+                <button class="btn btn-default"><%= t("protocols.steps.options.uncomplete_title") %></button>
+              </div>
+            <% end %>
+          <% end %>
         </div>
+
+        <% if can_view_step_comments(@protocol) %>
+          <div class="row">
+            <div class="step-comment"
+                 id="step-comments-<%= step.id %>"
+                 data-href="<%= url_for step_step_comments_path(step_id: step.id, format: :json) %>">
+            </div>
+          </div>
+        <% end %>
+
       <% end %>
       </div>
     </div>
