@@ -79,16 +79,16 @@ table {
 
   #count-notifications {
     background-color: $color-theme-primary;
+    border-radius: 5px;
     color: $color-wild-sand;
     font-size: 12px;
     font-weight: bold;
-    z-index: 999999;
-    position: fixed;
-    margin-top: -10px;
     margin-left: 10px;
+    margin-top: -10px;
     padding-left: 4px;
     padding-right: 4px;
-    border-radius: 5px;
+    position: fixed;
+    z-index: 999999;
   }
 }
 
@@ -99,10 +99,25 @@ table {
     margin-top: 10px !important;
   }
 }
+
 .dropdown-notifications {
   min-width: 450px;
   padding-bottom: 0;
   padding-top: 0;
+
+  .notification {
+    border-bottom: 1px solid $color-alto;
+    padding-bottom: 10px;
+    padding-top: 10px;
+  }
+
+  .text-center {
+    padding-top: 10px;
+  }
+
+  .assignment {
+    
+  }
 
   .notifications-dropdown-header {
     background-color: $color-theme-primary;
