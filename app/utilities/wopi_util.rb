@@ -70,4 +70,42 @@ module WopiUtil
     discovery = WopiDiscovery.first
     discovery.destroy if discovery
   end
+
+  def create_wopi_file_activity(current_user, started_editing)
+    if @assoc.class == Step
+      activity = Activity.new(
+        type_of: :start_edit_wopi_file,
+        user: current_user,
+        message: t(
+          started_editing ? 'activities.start_edit_wopi_file_step' :
+                            'activities.unlock_wopi_file_step',
+          user: current_user.full_name,
+          file: @asset.file_file_name,
+          step: @asset.step.position + 1,
+          step_name: @asset.step.name
+        )
+      )
+
+      if @protocol.in_module?
+        activity.my_module = @protocol.my_module
+        activity.project = @protocol.my_module.experiment.project
+      end
+
+      activity.save
+    else
+      Activity.create(
+        type_of: :start_edit_wopi_file,
+        user: current_user,
+        project: @my_module.experiment.project,
+        my_module: @my_module,
+        message: t(
+          started_editing ? 'activities.start_edit_wopi_file_result' :
+                            'activities.unlock_wopi_file_result',
+          user: current_user.full_name,
+          file: @asset.file_file_name,
+          result: @asset.result.name
+        )
+      )
+    end
+  end
 end

@@ -1052,6 +1052,10 @@ en:
     delete_step_comment: "<i>%{user}</i> deleted comment on Step %{step} <strong>%{step_name}</strong>."
     edit_result_comment: "<i>%{user}</i> edited comment on result <strong>%{result}</strong>."
     delete_result_comment: "<i>%{user}</i> deleted comment on result <strong>%{result}</strong>."
+    start_edit_wopi_file_step: "<i>%{user}</i> started editing File %{file} on Step %{step} <strong>%{step_name}</strong>."
+    start_edit_wopi_file_result: "<i>%{user}</i> started editing File %{file} on Result <strong>%{result}</strong>."
+    unlock_wopi_file_step: "<i>%{user}</i>  closed File %{file} for editing on Step %{step} <strong>%{step_name}</strong>."
+    unlock_wopi_file_result: "<i>%{user}</i> started editing File %{file} on Result <strong>%{result}</strong>."
 
   user_my_modules:
     new:

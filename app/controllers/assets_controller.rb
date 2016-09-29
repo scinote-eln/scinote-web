@@ -1,4 +1,6 @@
 class AssetsController < ApplicationController
+  include WopiUtil
+
   before_action :load_vars, except: [:signature]
   before_action :check_read_permission, except: [:signature, :file_present]
   before_action :check_edit_permission, only: [ :edit ]
@@ -71,6 +73,7 @@ class AssetsController < ApplicationController
     @favicon_url = @asset.favicon_url('edit')
     @token = current_user.get_wopi_token
     @ttl = (current_user.wopi_token_ttl * 1000).to_s
+    create_wopi_file_activity(current_user, true)
   end
 
   def view

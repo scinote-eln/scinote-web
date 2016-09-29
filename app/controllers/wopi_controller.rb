@@ -143,6 +143,8 @@ class WopiController < ActionController::Base
         if @asset.lock == lock
           @asset.unlock
           @asset.post_process_file # Space is already taken in put_file
+          create_wopi_file_activity(@user, false)
+
           response.headers['X-WOPI-ItemVersion'] = @asset.version
           render nothing: :true, status: 200 and return
         else

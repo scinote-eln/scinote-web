@@ -39,7 +39,9 @@ class Activity < ActiveRecord::Base
     :delete_step_comment,
     :edit_result_comment,
     :delete_result_comment,
-    :destroy_result
+    :destroy_result,
+    :start_edit_wopi_file,
+    :unlock_wopi_file
   ]
 
   validates :type_of, presence: true
