@@ -1124,7 +1124,7 @@ function initializeReportSidebartruncation() {
     function() {
       $.each($("a.report-nav-link"),
                function(){
-                 truncateLongString($(this), 30);
+                 truncateLongString($(this), NAME_TRUNCATION_LENGTH);
                });
     }
   );
@@ -1214,8 +1214,8 @@ $(document).ready(function() {
     initializeUnsavedWorkDialog();
     initializeTutorial();
 
-    $(".report-nav-link").each( function(){
-      truncateLongString( $(this), 30);
+    $('.report-nav-link').each(function() {
+      truncateLongString($(this), NAME_TRUNCATION_LENGTH);
     });
   }
 })
@@ -1223,7 +1223,7 @@ $(document).ready(function() {
 $(document).change(function(){
   setTimeout(function(){
     $(".report-nav-link").each( function(){
-      truncateLongString( $(this), 30);
+      truncateLongString( $(this), NAME_TRUNCATION_LENGTH);
     });
   }, 1000);
 });

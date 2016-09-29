@@ -3,13 +3,14 @@ class User < ActiveRecord::Base
 
   devise :invitable, :confirmable, :database_authenticatable, :registerable, :async,
     :recoverable, :rememberable, :trackable, :validatable, stretches: 10
-  has_attached_file :avatar, :styles => {
-    :medium => "300x300>",
-    :thumb => "100x100>",
-    :icon => "40x40>",
-    :icon_small => "30x30>"
-  },
-  :default_url => "/images/:style/missing.png"
+  has_attached_file :avatar,
+                    styles: {
+                      medium: MEDIUM_PIC_FORMAT,
+                      thumb: THUMB_PIC_FORMAT,
+                      icon: ICON_PIC_FORMAT,
+                      icon_small: ICON_SMALL_PIC_FORMAT
+                    },
+                    default_url: DEFAULT_AVATAR_URL
 
   enum tutorial_status: {
     no_tutorial_done: 0,
@@ -233,7 +234,7 @@ class User < ActiveRecord::Base
   # Finds all activities of user that is assigned to project. If user
   # is not an owner of the project, user must be also assigned to
   # module.
-  def last_activities(last_activity_id = nil, per_page = 10)
+  def last_activities(last_activity_id = nil, per_page = ACTIVITY_SEARCH_LIMIT)
     # TODO replace with some kind of Infinity value
     last_activity_id = 999999999999999999999999 if last_activity_id < 1
     Activity

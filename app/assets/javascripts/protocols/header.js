@@ -88,11 +88,11 @@ function initEditKeywords() {
 
     // Init tagsinput & typeahead
     input.tagsinput({
-      maxChars: 50,
+      maxChars: NAME_MAX_LENGTH,
       trimValue: true,
       typeaheadjs: {
         highlight: true,
-        minLength: 3,
+        minLength: NAME_MIN_LENGTH,
         name: "keywords",
         source: keywordsEngine
       }

@@ -24,19 +24,19 @@ class Comment < ActiveRecord::Base
   )
     project_ids =
       Project
-      .search(user, include_archived, nil, SHOW_ALL_RESULTS)
+      .search(user, include_archived, nil, SEARCH_NO_LIMIT)
       .select("id")
     my_module_ids =
       MyModule
-      .search(user, include_archived, nil, SHOW_ALL_RESULTS)
+      .search(user, include_archived, nil, SEARCH_NO_LIMIT)
       .select("id")
     step_ids =
       Step
-      .search(user, include_archived, nil, SHOW_ALL_RESULTS)
+      .search(user, include_archived, nil, SEARCH_NO_LIMIT)
       .select("id")
     result_ids =
       Result
-      .search(user, include_archived, nil, SHOW_ALL_RESULTS)
+      .search(user, include_archived, nil, SEARCH_NO_LIMIT)
       .select("id")
 
 
@@ -73,7 +73,7 @@ class Comment < ActiveRecord::Base
       )
 
       # Show all results if needed
-      if page == SHOW_ALL_RESULTS
+      if page == SEARCH_NO_LIMIT
         new_query
       else
         new_query

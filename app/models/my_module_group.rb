@@ -12,7 +12,7 @@ class MyModuleGroup < ActiveRecord::Base
   def self.search(user, include_archived, query = nil, page = 1)
     exp_ids =
       Experiment
-      .search(user, include_archived, nil, SHOW_ALL_RESULTS)
+      .search(user, include_archived, nil, SEARCH_NO_LIMIT)
       .select("id")
 
 
@@ -32,7 +32,7 @@ class MyModuleGroup < ActiveRecord::Base
       .where_attributes_like("my_module_groups.name", a_query)
 
     # Show all results if needed
-    if page == SHOW_ALL_RESULTS
+    if page == SEARCH_NO_LIMIT
       new_query
     else
       new_query

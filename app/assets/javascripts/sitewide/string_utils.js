@@ -9,7 +9,7 @@ function truncateLongString( el, chars ) {
     html = el.children()[0];
   }
 
-  if( input.length  >= chars){
+  if( input.length >= chars ){
     var newText = el.text().slice(0, chars);
     for( var i = newText.length; i > 0; i--){
       if(newText[i] === ' ' && i > 10){

@@ -21,9 +21,9 @@ $.fn.onSubmitValidator = function(validatorCb) {
 var TextLimitEnum = Object.freeze({
   OPTIONAL: 0,
   REQUIRED: 1,
-  NAME_MIN_LENGTH: '<%= NAME_MIN_LENGTH %>',
-  NAME_MAX_LENGTH: '<%= NAME_MAX_LENGTH %>',
-  TEXT_MAX_LENGTH: '<%= TEXT_MAX_LENGTH %>'
+  NAME_MIN_LENGTH: "<%= NAME_MIN_LENGTH %>",
+  NAME_MAX_LENGTH: "<%= NAME_MAX_LENGTH %>",
+  TEXT_MAX_LENGTH: "<%= TEXT_MAX_LENGTH %>"
 });
 
 /*
@@ -102,8 +102,8 @@ function checklistsValidator(ev, checklists, editMode) {
 }
 
 var FileTypeSizeEnum = Object.freeze({
-  FILE: '<%= FILE_MAX_SIZE.megabytes %>',
-  AVATAR: '<%= AVATAR_MAX_SIZE.megabytes %>'
+  FILE: "<%= FILE_MAX_SIZE.megabytes %>",
+  AVATAR: "<%= AVATAR_MAX_SIZE.megabytes %>"
 });
 
 function filesValidator(ev, fileInputs, fileTypeEnum, canBeEmpty) {

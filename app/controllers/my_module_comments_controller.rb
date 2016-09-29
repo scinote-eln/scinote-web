@@ -162,7 +162,7 @@ class MyModuleCommentsController < ApplicationController
 
   def load_vars
     @last_comment_id = params[:from].to_i
-    @per_page = 10
+    @per_page = COMMENTS_SEARCH_LIMIT
     @my_module = MyModule.find_by_id(params[:my_module_id])
 
     unless @my_module

@@ -20,14 +20,14 @@ class Table < ActiveRecord::Base
   def self.search(user, include_archived, query = nil, page = 1)
     step_ids =
       Step
-      .search(user, include_archived, nil, SHOW_ALL_RESULTS)
+      .search(user, include_archived, nil, SEARCH_NO_LIMIT)
       .joins(:step_tables)
       .select("step_tables.id")
       .distinct
 
     result_ids =
       Result
-      .search(user, include_archived, nil, SHOW_ALL_RESULTS)
+      .search(user, include_archived, nil, SEARCH_NO_LIMIT)
       .joins(:result_table)
       .select("result_tables.id")
       .distinct
@@ -55,7 +55,7 @@ class Table < ActiveRecord::Base
     new_query = table_query
 
     # Show all results if needed
-    if page == SHOW_ALL_RESULTS
+    if page == SEARCH_NO_LIMIT
       new_query
     else
       new_query

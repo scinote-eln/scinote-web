@@ -168,7 +168,7 @@ class StepCommentsController < ApplicationController
 
   def load_vars
     @last_comment_id = params[:from].to_i
-    @per_page = 10
+    @per_page = COMMENTS_SEARCH_LIMIT
     @step = Step.find_by_id(params[:step_id])
     @protocol = @step.protocol
 

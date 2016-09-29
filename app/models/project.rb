@@ -64,7 +64,7 @@ class Project < ActiveRecord::Base
     end
 
     # Show all results if needed
-    if page == SHOW_ALL_RESULTS
+    if page == SEARCH_NO_LIMIT
       new_query
     else
       new_query
@@ -73,13 +73,13 @@ class Project < ActiveRecord::Base
     end
   end
 
-  def last_activities(count = 20)
+  def last_activities(count = ACTIVITY_SEARCH_LIMIT)
     activities.order(created_at: :desc).first(count)
   end
 
   # Get project comments order by created_at time. Results are paginated
   # using last comment id and per_page parameters.
-  def last_comments(last_id = 1, per_page = 20)
+  def last_comments(last_id = 1, per_page = COMMENTS_SEARCH_LIMIT)
     last_id = 9999999999999 if last_id <= 1
     comments = Comment.joins(:project_comment)
                       .where(project_comments: { project_id: id })

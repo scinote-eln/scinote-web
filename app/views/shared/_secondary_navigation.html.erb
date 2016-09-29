@@ -186,21 +186,21 @@
           <% if can_view_projects(@project.organization) %>
             <a href="<%= projects_path :organization => @project.organization.id %>">
           <% end %>
-          <%= truncate( @project.organization.name, length: 20 ) %>
+          <%= truncate( @project.organization.name, length: NAME_TRUNCATION_LENGTH ) %>
           <% if can_view_projects(@project.organization) %>
             </a>
           <% end %>
         </li>
         <% if project_page? %>
           <li class="active">
-            <%= truncate( @project.name, length: 20 ) %>
+            <%= truncate( @project.name, length: NAME_TRUNCATION_LENGTH ) %>
           </li>
         <% else %>
           <li>
             <% if can_view_project(@project) %>
               <a href="<%= project_url(@project) %>">
             <% end %>
-            <%= truncate( @project.name, length: 20 ) %>
+            <%= truncate( @project.name, length: NAME_TRUNCATION_LENGTH ) %>
             <% if can_view_project(@project) %>
               </a>
             <% end %>
@@ -209,21 +209,21 @@
         <% if experiment_page? || module_page? %>
           <% if !module_page? %>
             <li class="active">
-              <%= truncate(@experiment.name, length: 20) %>
+              <%= truncate(@experiment.name, length: NAME_TRUNCATION_LENGTH) %>
             </li>
           <% else %>
             <li>
             <% if can_view_experiment(@experiment) %>
-              <%= link_to truncate(@experiment.name, length: 20), canvas_experiment_path(@experiment) %>
+              <%= link_to truncate(@experiment.name, length: NAME_TRUNCATION_LENGTH), canvas_experiment_path(@experiment) %>
             <% else %>
-              <%= truncate(@experiment.name, length: 20) %>
+              <%= truncate(@experiment.name, length: NAME_TRUNCATION_LENGTH) %>
             <% end %>
             </li>
           <% end %>
         <% end %>
         <% if module_page? %>
           <li class="active">
-            <%= truncate( @my_module.name, length: 20 ) %>
+            <%= truncate( @my_module.name, length: NAME_TRUNCATION_LENGTH ) %>
           </li>
         <% end %>
       </ul>

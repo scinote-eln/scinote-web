@@ -35,7 +35,7 @@ class Experiment < ActiveRecord::Base
   def self.search(user, include_archived, query = nil, page = 1)
     project_ids =
       Project
-        .search(user, include_archived, nil, SHOW_ALL_RESULTS)
+        .search(user, include_archived, nil, SEARCH_NO_LIMIT)
         .select("id")
 
     if query
@@ -62,7 +62,7 @@ class Experiment < ActiveRecord::Base
     end
 
     # Show all results if needed
-    if page == SHOW_ALL_RESULTS
+    if page == SEARCH_NO_LIMIT
       new_query
     else
       new_query
@@ -335,10 +335,10 @@ class Experiment < ActiveRecord::Base
     format = 'Clone %d - %s'
 
     i = 1
-    i += 1 while experiment_names.include?(format(format, i, name)[0, 50])
+    i += 1 while experiment_names.include?(format(format, i, name))
 
     clone = Experiment.new(
-      name: format(format, i, name)[0, 50],
+      name: format(format, i, name),
       description: description,
       created_by: current_user,
       last_modified_by: current_user,

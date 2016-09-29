@@ -59,7 +59,7 @@ class Sample < ActiveRecord::Base
       )
 
       # Show all results if needed
-      if page == SHOW_ALL_RESULTS
+      if page == SEARCH_NO_LIMIT
         new_query
       else
         new_query

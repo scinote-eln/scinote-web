@@ -15,7 +15,7 @@ class Tag < ActiveRecord::Base
   def self.search(user, include_archived, query = nil, page = 1)
     project_ids =
       Project
-      .search(user, include_archived, nil, SHOW_ALL_RESULTS)
+      .search(user, include_archived, nil, SEARCH_NO_LIMIT)
       .select("id")
 
     if query
@@ -34,7 +34,7 @@ class Tag < ActiveRecord::Base
       .where_attributes_like(:name, a_query)
 
     # Show all results if needed
-    if page == SHOW_ALL_RESULTS
+    if page == SEARCH_NO_LIMIT
       new_query
     else
       new_query

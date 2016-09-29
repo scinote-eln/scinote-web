@@ -23,7 +23,7 @@ class Checklist < ActiveRecord::Base
   def self.search(user, include_archived, query = nil, page = 1)
     step_ids =
       Step
-      .search(user, include_archived, nil, SHOW_ALL_RESULTS)
+      .search(user, include_archived, nil, SEARCH_NO_LIMIT)
       .select("id")
 
     if query
@@ -43,7 +43,7 @@ class Checklist < ActiveRecord::Base
         .where_attributes_like(["checklists.name",  "checklist_items.text"], a_query)
 
     # Show all results if needed
-    if page == SHOW_ALL_RESULTS
+    if page == SEARCH_NO_LIMIT
       new_query
     else
       new_query

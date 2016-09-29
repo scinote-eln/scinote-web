@@ -194,9 +194,9 @@ function notificationAlertClose(){
 
 $(document).ready(function(){
   $('.tree-link a').each( function(){
-    truncateLongString( $(this), 30);
+    truncateLongString( $(this), NAME_TRUNCATION_LENGTH);
   });
   $(".tree-link span").each( function(){
-    truncateLongString( $(this), 30);
+    truncateLongString( $(this), NAME_TRUNCATION_LENGTH);
   });
 });

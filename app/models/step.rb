@@ -42,7 +42,7 @@ class Step < ActiveRecord::Base
   def self.search(user, include_archived, query = nil, page = 1)
     protocol_ids =
       Protocol
-      .search(user, include_archived, nil, SHOW_ALL_RESULTS)
+      .search(user, include_archived, nil, SEARCH_NO_LIMIT)
       .select("id")
 
     if query
@@ -61,7 +61,7 @@ class Step < ActiveRecord::Base
       .where_attributes_like([:name, :description], a_query)
 
     # Show all results if needed
-    if page == SHOW_ALL_RESULTS
+    if page == SEARCH_NO_LIMIT
       new_query
     else
       new_query
@@ -86,7 +86,7 @@ class Step < ActiveRecord::Base
     protocol.present? ? protocol.my_module : nil
   end
 
-  def last_comments(last_id = 1, per_page = 20)
+  def last_comments(last_id = 1, per_page = COMMENTS_SEARCH_LIMIT)
     last_id = 9999999999999 if last_id <= 1
     comments = Comment.joins(:step_comment)
                       .where(step_comments: { step_id: id })

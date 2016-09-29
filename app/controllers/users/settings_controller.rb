@@ -140,7 +140,7 @@ class Users::SettingsController < ApplicationController
             nr_of_results = User.search(true, query, @org).count
 
 
-            users = User.search(false, query, @org).limit(EXISTING_USERS_SEARCH_LIMIT)
+            users = User.search(false, query, @org).limit(MODAL_SEARCH_LIMIT)
 
             nr_of_members = User.organization_search(false, query, @org).count
 
