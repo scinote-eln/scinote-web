@@ -266,11 +266,11 @@ class User < ActiveRecord::Base
       # If current token is not valid generate a new one with a one day TTL
       self.wopi_token = Devise.friendly_token(20)
       # WOPI uses millisecond TTLs
-      self.wopi_token_ttl = Time.now.to_i + 1.days
+      self.wopi_token_ttl = (Time.now + 1.days).to_i
       save
-      Rails.logger.warn("Generating new token #{wopi_token}")
+      Rails.logger.warn("WOPI: generating new token #{wopi_token}")
     end
-    Rails.logger.warn("Returning token #{wopi_token}")
+    Rails.logger.warn("WOPI: returning token #{wopi_token}")
     wopi_token
   end
 
