@@ -335,6 +335,12 @@ class Asset < ActiveRecord::Base
     end
   end
 
+  def favicon_url(action)
+    file_ext = file_file_name.split('.').last
+    action = get_action(file_ext, action)
+    action.wopi_app.icon if action.wopi_app
+  end
+
   # locked?, lock_asset and refresh_lock rely on the asset
   # being locked in the database to prevent race conditions
   def locked?
