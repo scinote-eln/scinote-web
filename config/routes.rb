@@ -32,6 +32,17 @@ Rails.application.routes.draw do
   get "users/settings/user_organizations/:user_organization_id/destroy_html", to: "users/settings#destroy_user_organization_html", as: "destroy_user_organization_html"
   delete "users/settings/user_organizations/:user_organization_id", to: "users/settings#destroy_user_organization", as: "destroy_user_organization"
 
+  # Notifications
+  get 'users/:id/recent_notifications',
+      to: 'user_notifications#recent_notifications',
+      as: 'recent_notifications',
+      defaults: { format: 'json' }
+
+  get 'users/:id/unseen_notification',
+      to: 'user_notifications#unseen_notification',
+      as: 'unseen_notification',
+      defaults: { format: 'json' }
+
   resources :organizations, only: [] do
     resources :samples, only: [:new, :create]
     resources :sample_types, only: [:new, :create]

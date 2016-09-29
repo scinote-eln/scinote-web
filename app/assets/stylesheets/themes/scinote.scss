@@ -72,6 +72,53 @@ table {
   max-width: 400px;
 }
 
+#notifications-dropdown {
+  .fa-bell {
+    font-size: 15px;
+  }
+
+  #count-notifications {
+    background-color: $color-theme-primary;
+    color: $color-wild-sand;
+    font-size: 12px;
+    font-weight: bold;
+    z-index: 999999;
+    position: fixed;
+    margin-top: -10px;
+    margin-left: 10px;
+    padding-left: 4px;
+    padding-right: 4px;
+    border-radius: 5px;
+  }
+}
+
+@media(max-width:768px) {
+  #count-notifications {
+    position: absolute !important;
+    margin-left: -4px !important;
+    margin-top: 10px !important;
+  }
+}
+.dropdown-notifications {
+  min-width: 450px;
+  padding-bottom: 0;
+  padding-top: 0;
+
+  .notifications-dropdown-header {
+    background-color: $color-theme-primary;
+    color: $color-wild-sand;
+    font-weight: bold;
+    padding: 8px;
+  }
+
+  .notifications-dropdown-footer {
+    background-color: $color-mystic;
+    padding: 8px;
+    text-align: center;
+  }
+
+}
+
 #search-menu {
   padding-right: 0;
 

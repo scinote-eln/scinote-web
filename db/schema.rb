@@ -229,9 +229,10 @@ ActiveRecord::Schema.define(version: 20160928114915) do
   create_table "notifications", force: :cascade do |t|
     t.string   "title"
     t.string   "message"
-    t.integer  "type_of",    null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.integer  "type_of",           null: false
+    t.integer  "generator_user_id"
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
   end
 
   add_index "notifications", ["created_at"], name: "index_notifications_on_created_at", using: :btree
@@ -591,9 +592,9 @@ ActiveRecord::Schema.define(version: 20160928114915) do
   create_table "user_notifications", force: :cascade do |t|
     t.integer  "user_id"
     t.integer  "notification_id"
-    t.boolean  "checked"
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
+    t.boolean  "checked",         default: false
+    t.datetime "created_at",                      null: false
+    t.datetime "updated_at",                      null: false
   end
 
   add_index "user_notifications", ["notification_id"], name: "index_user_notifications_on_notification_id", using: :btree
@@ -702,6 +703,7 @@ ActiveRecord::Schema.define(version: 20160928114915) do
   add_foreign_key "my_modules", "users", column: "created_by_id"
   add_foreign_key "my_modules", "users", column: "last_modified_by_id"
   add_foreign_key "my_modules", "users", column: "restored_by_id"
+  add_foreign_key "notifications", "users", column: "generator_user_id"
   add_foreign_key "organizations", "users", column: "created_by_id"
   add_foreign_key "organizations", "users", column: "last_modified_by_id"
   add_foreign_key "project_comments", "comments"
