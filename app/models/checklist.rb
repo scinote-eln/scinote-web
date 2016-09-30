@@ -9,6 +9,7 @@ class Checklist < ActiveRecord::Base
   belongs_to :created_by, foreign_key: 'created_by_id', class_name: 'User'
   belongs_to :last_modified_by, foreign_key: 'last_modified_by_id', class_name: 'User'
   has_many :checklist_items,
+    -> { order(:position) },
     inverse_of: :checklist,
     dependent: :destroy
   has_many :report_elements,
