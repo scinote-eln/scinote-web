@@ -117,6 +117,7 @@ class MyModule < ActiveRecord::Base
         raise ActiveRecord::Rollback
       end
     end
+    experiment.delay.generate_workflow_img
     restored
   end
 
