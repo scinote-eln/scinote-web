@@ -61,11 +61,12 @@
               <span class="glyphicon glyphicon-info-sign"></span>
             </a>
             <ul class="dropdown-menu">
-              <li><%= link_to t('nav.help.tutorials'), TUTORIALS_URL %></li>
-              <li><%= link_to t('nav.help.faq'), FAQ_URL %></li>
-              <li><%= link_to t('nav.help.support'), SUPPORT_URL %></li>
-              <li><%= link_to t('nav.help.plans'), PLANS_URL %></li>
-              <li><%= link_to t('nav.help.contact'), CONTACT_URL %></li>
+              <li><%= link_to t('nav.help.tutorials'), TUTORIALS_URL, target: "_blank" %></li>
+              <li><%= link_to t('nav.help.faq'), FAQ_URL, target: "_blank" %></li>
+              <li><%= link_to t('nav.help.release_notes'), RELEASE_NOTES_URL, target: "_blank" %></li>
+              <li><%= link_to t('nav.help.support'), SUPPORT_URL, target: "_blank" %></li>
+              <li><%= link_to t('nav.help.plans'), PLANS_URL, target: "_blank" %></li>
+              <li><%= link_to t('nav.help.contact'), CONTACT_URL, target: "_blank" %></li>
             </ul>
           </li>
         </ul>

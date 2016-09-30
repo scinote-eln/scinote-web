@@ -463,13 +463,12 @@ a[data-toggle="tooltip"] {
 }
 
 // Help link
+#help-link {
+  padding: 13px;
 
-.glyphicon.glyphicon-info-sign {
-  font-size: 16px;
-  margin-top: 4px;
-
-  #help-link {
-    padding: 13px;
+  .glyphicon.glyphicon-info-sign {
+    font-size: 16px;
+    margin-top: 4px;
   }
 }
 
