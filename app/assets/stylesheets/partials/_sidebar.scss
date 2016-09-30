@@ -83,6 +83,7 @@ $toggle-btn-size: 50px;
       }
 
       .tree {
+        overflow-y: auto;
         margin-bottom: 0;
         padding-top: 15px;
         opacity: 1;
