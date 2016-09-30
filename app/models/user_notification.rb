@@ -20,9 +20,9 @@ class UserNotification < ActiveRecord::Base
       notification.message = message
       notification.type_of = type
       notification.save!
-      usernotification = UserNotification.new(user: user, notification: notification, checked: false)
+      usernotification = UserNotification
+        .new(user: user, notification: notification, checked: false)
       usernotification.save!
     end
   end
-
 end
