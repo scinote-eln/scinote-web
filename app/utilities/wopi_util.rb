@@ -33,7 +33,7 @@ module WopiUtil
     Rails.logger.warn 'Initializing discovery'
     discovery.destroy if discovery
 
-    @doc = Nokogiri::XML(open(ENV['WOPI_DISCOVERY_URL']))
+    @doc = Nokogiri::XML(Kernel.open(ENV['WOPI_DISCOVERY_URL']))
 
     discovery = WopiDiscovery.new
     discovery.expires = Time.now.to_i + DISCOVERY_TTL
@@ -65,8 +65,9 @@ module WopiUtil
       end
     end
     discovery
-  rescue
-    Rails.logger.warn 'Initialization failed'
+  rescue => e
+    Rails.logger.warn 'WOPI: initialization failed: ' + e.message
+    e.backtrace.each { |line| Rails.logger.error line }
     discovery = WopiDiscovery.first
     discovery.destroy if discovery
   end
