@@ -16,7 +16,7 @@
             <span class="glyphicon glyphicon-edit">
           </a>
         <% end %>
-        <% if can_delete_step_in_protocol(@protocol) %>
+        <% if can_delete_step_in_protocol(@protocol) && step.can_destroy? %>
           <%= link_to(step_path(step), title: t("protocols.steps.options.delete_title"), method: "delete", class: "btn btn-link",
             data: {action: "delete-step", confirm: t("protocols.steps.destroy.confirm", step: step.name)}) do %>
             <span class="glyphicon glyphicon-trash">

@@ -227,29 +227,38 @@ class StepsController < ApplicationController
   end
 
   def destroy
-    # Update position on other steps of this module
-    @protocol.steps.where("position > ?", @step.position).each do |step|
-      step.position = step.position - 1
-      step.save
+    if @step.can_destroy?
+      # Update position on other steps of this module
+      @protocol.steps.where('position > ?', @step.position).each do |step|
+        step.position = step.position - 1
+        step.save
+      end
+
+      # Calculate space taken by this step
+      org = @protocol.organization
+      previous_size = @step.space_taken
+
+      # Destroy the step
+      @step.destroy(current_user)
+
+      # Release space taken by the step
+      org.release_space(previous_size)
+      org.save
+
+      # Update protocol timestamp
+      update_protocol_ts(@step)
+
+      flash[:success] = t(
+        'protocols.steps.destroy.success_flash',
+        step: (@step.position + 1).to_s
+      )
+    else
+      flash[:error] = t(
+        'protocols.steps.destroy.error_flash',
+        step: (@step.position + 1).to_s
+      )
     end
 
-    # Calculate space taken by this step
-    org = @protocol.organization
-    previous_size = @step.space_taken
-
-    # Destroy the step
-    @step.destroy(current_user)
-
-    # Release space taken by the step
-    org.release_space(previous_size)
-    org.save
-
-    # Update protocol timestamp
-    update_protocol_ts(@step)
-
-    flash[:success] = t(
-      "protocols.steps.destroy.success_flash",
-      step: (@step.position + 1).to_s)
     if @protocol.in_module?
       redirect_to protocols_my_module_path(@step.my_module)
     else

@@ -1444,6 +1444,7 @@ en:
       destroy:
         confirm: "Are you sure you want to delete step %{step}?"
         success_flash: "Step %{step} successfully deleted."
+        error_flash: "Step %{step} couldn't be deleted. One or more files are locked."
     edit:
       head_title: "Edit protocol"
     no_keywords: "No keywords"
