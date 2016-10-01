@@ -277,8 +277,8 @@ class WopiController < ActionController::Base
       @can_read = can_view_steps_in_protocol(@protocol)
       @can_write = can_edit_step_in_protocol(@protocol)
     else
-      @can_read = can_view_or_download_result_assets(@module)
-      @can_write = can_edit_result_asset_in_module(@module)
+      @can_read = can_view_or_download_result_assets(@my_module)
+      @can_write = can_edit_result_asset_in_module(@my_module)
     end
 
     render nothing: :true, status: 404 and return unless @can_read
