@@ -25,7 +25,6 @@ class Asset < ActiveRecord::Base
   do_not_validate_attachment_file_type :file
 
   before_file_post_process :allow_styles_on_images
-  before_destroy :check_if_locked
 
   # Asset validation
   # This could cause some problems if you create empty asset and want to
@@ -452,9 +451,5 @@ class Asset < ActiveRecord::Base
     data.original_filename = File.basename(decoded_data_info['original_filename'])
 
     self.file = data
-  end
-
-  def check_if_locked
-    return false if locked?
   end
 end

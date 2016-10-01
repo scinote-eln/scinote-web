@@ -563,7 +563,12 @@ class StepsController < ApplicationController
         for pos, attrs in params[key] do
           if attrs[:_destroy] == '1'
             if attrs[:id].present?
-              attr_params[pos] = { id: attrs[:id], _destroy: '1' }
+              asset = Asset.find_by_id(attrs[:id])
+              if asset.try(&:locked?)
+                asset.errors.add(:base, 'This file is locked.')
+              else
+                attr_params[pos] = { id: attrs[:id], _destroy: '1' }
+              end
             end
             params[key].delete(pos)
           elsif has_destroy_params(params[key][pos])

@@ -3,8 +3,10 @@
     <span class="glyphicon glyphicon-file"></span>
     <%= t("protocols.steps.new.asset_panel_title") %>
     <div class="pull-right">
-      <%= ff.remove_nested_fields_link do %>
-        <span class="glyphicon glyphicon-remove"></span>
+      <% unless ff.object.file.exists? && ff.object.locked? %>
+        <%= ff.remove_nested_fields_link do %>
+          <span class="glyphicon glyphicon-remove"></span>
+        <% end %>
       <% end %>
     </div>
   </div>
