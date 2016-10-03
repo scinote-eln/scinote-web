@@ -326,7 +326,7 @@ function sampleInfoListener() {
         e.preventDefault();
         return false;
     })
-};
+}
 
 // Edit sample
 function onClickEdit() {
