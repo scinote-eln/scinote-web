@@ -1,0 +1,58 @@
+@import "colors";
+@import "mixins";
+
+.notifications-list {
+  list-style: none;
+  min-width: 450px;
+  padding-bottom: 0;
+  padding-top: 0;
+
+  .notification {
+    border-bottom: 1px solid $color-alto;
+    padding-bottom: 10px;
+    padding-top: 10px;
+
+    &:hover {
+      background-color: $color-concrete;
+    }
+  }
+
+  .unseen {
+    border-left: 4px solid $color-theme-primary;
+  }
+
+  .text-center {
+    margin-left: 10px;
+    padding-top: 10px;
+  }
+
+  .assignment {
+    background-color: $color-theme-primary;
+    border-radius: 50%;
+    color: $color-wild-sand;
+    font-size: 15px;
+    padding: 7px;
+  }
+
+  .system_message {
+    background-color: $color-theme-secondary;
+    border-radius: 50%;
+    color: $color-wild-sand;
+    font-size: 13px;
+    padding: 7px 10px;
+  }
+
+  .notifications-header {
+    background-color: $color-theme-primary;
+    color: $color-wild-sand;
+    font-weight: bold;
+    padding: 8px;
+  }
+
+  .notifications-footer {
+    background-color: $color-mystic;
+    padding: 8px;
+    text-align: center;
+  }
+
+}
