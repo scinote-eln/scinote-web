@@ -74,6 +74,8 @@ class AssetsController < ApplicationController
     @token = current_user.get_wopi_token
     @ttl = (current_user.wopi_token_ttl * 1000).to_s
     create_wopi_file_activity(current_user, true)
+
+    render layout: false
   end
 
   def view
@@ -81,6 +83,8 @@ class AssetsController < ApplicationController
     @favicon_url = @asset.favicon_url('view')
     @token = current_user.get_wopi_token
     @ttl = (current_user.wopi_token_ttl * 1000).to_s
+
+    render layout: false
   end
 
   private
