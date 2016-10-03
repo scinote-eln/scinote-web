@@ -9,7 +9,7 @@ class UserNotification < ActiveRecord::Base
                 .limit(10)
   end
 
-  def self.unseen_notification(user)
+  def self.unseen_notification_count(user)
     where('user_id = ? AND checked = false', user.id).count
   end
 end

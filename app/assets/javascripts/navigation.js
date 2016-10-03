@@ -21,12 +21,14 @@
           url: button.attr('data-href'),
           type: 'GET',
           dataType: 'json',
+          beforeSend: animateSpinner($('.notifications-dropdown-header'), true),
           success: function(data) {
             $('.notifications-dropdown-header')
               .nextAll('li.notification')
               .remove();
             $('.notifications-dropdown-header')
               .after(data.html);
+            animateSpinner($('.notifications-dropdown-header'), false);
           }
         });
       });
@@ -40,7 +42,13 @@
       dataType: 'json',
       success: function(data) {
         notificationCount.html('');
-        notificationCount.html(data.notificationNmber);
+        if ( data.notificationNmber > 0 ) {
+          notificationCount.html(data.notificationNmber);
+          notificationCount.show();
+        } else {
+          notificationCount.hide();
+        }
+
       }
     });
   }
