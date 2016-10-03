@@ -530,10 +530,10 @@ class Users::SettingsController < ApplicationController
 
   def generate_notification(user, target_user, role, org)
     title = I18n.t('activities.assign_user_to_organization',
-                  assigned_user: target_user.name,
-                  role: role,
-                  organization: org.name,
-                  assigned_by_user: user.name)
+                   assigned_user: target_user.name,
+                   role: role,
+                   organization: org.name,
+                   assigned_by_user: user.name)
 
     message = "#{I18n.t('search.index.organization')} #{org.name}"
     notification = Notification.create(
