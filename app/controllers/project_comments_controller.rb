@@ -1,7 +1,7 @@
 class ProjectCommentsController < ApplicationController
   before_action :load_vars
-  before_action :check_view_permissions, only: [ :index ]
-  before_action :check_add_permissions, only: [ :new, :create ]
+  before_action :check_view_permissions, only: :index
+  before_action :check_add_permissions, only: [:new, :create]
   before_action :check_edit_permissions, only: [:edit, :update]
   before_action :check_destroy_permissions, only: [:destroy]
 
@@ -9,30 +9,31 @@ class ProjectCommentsController < ApplicationController
     @comments = @project.last_comments(@last_comment_id, @per_page)
 
     respond_to do |format|
-      format.json {
+      format.json do
         # 'index' partial includes header and form for adding new
         # messages. 'list' partial is used for showing more
         # comments.
-        partial = "index.html.erb"
-        partial = "list.html.erb" if @last_comment_id > 0
-        more_url = ""
+        partial = 'index.html.erb'
+        partial = 'list.html.erb' if @last_comment_id > 0
+        more_url = ''
         if @comments.count > 0
           more_url = url_for(project_project_comments_url(format: :json,
-            from: @comments.last.id))
+                                                          from: @comments
+                                                                  .first.id))
         end
-        render :json => {
-          :per_page => @per_page,
-          :results_number => @comments.length,
-          :more_url => more_url,
-          :html => render_to_string({
-            :partial => partial,
-            :locals => {
-              :comments => @comments,
-              :more_comments_url => more_url
+        render json: {
+          perPage: @per_page,
+          resultsNumber: @comments.length,
+          moreUrl: more_url,
+          html: render_to_string(
+            partial: partial,
+            locals: {
+              comments: @comments,
+              more_comments_url: more_url
             }
-          })
+          )
         }
-      }
+      end
     end
   end
 

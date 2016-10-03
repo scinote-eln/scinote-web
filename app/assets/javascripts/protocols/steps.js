@@ -553,9 +553,9 @@ $(document).ready(function() {
   setupAssetsLoading();
 
   // Init comments edit/delete
-  initCommentOptions("ul.content-comments");
-  initEditComments("#steps");
-  initDeleteComments("#steps");
+  Comments.initCommentOptions("ul.content-comments");
+  Comments.initEditComments("#steps");
+  Comments.initDeleteComments("#steps");
 
   $(function () {
 

@@ -30,38 +30,6 @@ function initHandsOnTables(root) {
   });
 }
 
-function initResultCommentTabAjax() {
-  $(".comment-tab-link")
-  .on("ajax:before", function (e) {
-    var $this = $(this);
-    var parentNode = $this.parents("li");
-    var targetId = $this.attr("aria-controls");
-
-    if (parentNode.hasClass("active")) {
-      return false;
-    }
-  })
-  .on("ajax:success", function (e, data) {
-    if (data.html) {
-      var $this = $(this);
-      var targetId = $this.attr("aria-controls");
-      var target = $("#" + targetId);
-      var parentNode = $this.parents("ul").parent();
-
-      target.html(data.html);
-      initCommentForm(parentNode);
-      initCommentsLink(parentNode);
-
-      parentNode.find(".active").removeClass("active");
-      $this.parents("li").addClass("active");
-      target.addClass("active");
-    }
-  })
-  .on("ajax:error", function(e, xhr, status, error) {
-    // TODO
-  });
-}
-
 function applyCollapseLinkCallBack() {
   $(".result-panel-collapse-link")
     .on("ajax:success", function() {
@@ -265,14 +233,16 @@ function processResult(ev, resultTypeEnum, editMode, forS3) {
 // rendered url and opens the comment tab
 $(document).ready(function(){
   initHandsOnTables($(document));
-  initResultCommentTabAjax();
   expandAllResults();
   initTutorial();
   applyCollapseLinkCallBack();
 
-  initCommentOptions("ul.content-comments");
-  initEditComments("#results");
-  initDeleteComments("#results");
+  Comments.bindNewElement();
+  Comments.initialize();
+
+  Comments.initCommentOptions("ul.content-comments");
+  Comments.initEditComments("#results");
+  Comments.initDeleteComments("#results");
 
   $(function () {
     $("#results-collapse-btn").click(function () {
