@@ -881,7 +881,7 @@ en:
     add_new_column: "Add column"
     modal_info:
       head_title: "Information for sample '%{sample}'"
-      title: "This sample is assigned to tasks."
+      title: "This sample is assigned to %{nr} tasks."
       no_tasks: "This sample in not assigned to any task."
     modal_import:
       title: "Import samples"

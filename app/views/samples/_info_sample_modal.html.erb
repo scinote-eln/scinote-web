@@ -10,7 +10,7 @@
       <div class="modal-body">
       <% if @sample.my_modules.count > 0 %>
         <div>
-          <%= t("samples.modal_info.title") %>
+          <%= t("samples.modal_info.title", nr: @sample.my_modules.count) %>
         </div>
         <div class="linked-children-datatable">
           <table id="sample-info-table" class="table dataTable no-footer" role="grid">
