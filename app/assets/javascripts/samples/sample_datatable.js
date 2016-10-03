@@ -45,6 +45,13 @@ table = $("#samples").DataTable({
         searchable: false,
         orderable: true,
         sWidth: "1%"
+    }, {
+        targets: 2,
+        render: function (data, type, row) {
+            return "<a href='#' data-href='"+ row.sampleUpdateUrl +"'"+
+                    "class='sample_info' data-toggle='modal'" +
+                    "data-target='#modal-info-sample'>"+ data +"</a>";
+        }
     }],
     rowCallback: function(row, data, dataIndex){
         // Get row ID
@@ -74,6 +81,7 @@ table = $("#samples").DataTable({
     fnDrawCallback: function(settings, json) {
         animateSpinner(this, false);
         changeToViewMode();
+        sampleInfoListener();
         updateButtons();
     },
     stateLoadParams: function(settings, data) {
@@ -104,6 +112,7 @@ table = $("#samples").DataTable({
     },
     preDrawCallback: function(settings) {
         animateSpinner(this);
+        $(".sample_info").off("click");
     }
 });
 
@@ -270,6 +279,54 @@ function appendSamplesIdToForm(form) {
 table.on('draw', function(){
     updateDataTableSelectAllCtrl(table);
 });
+
+//Show sample info
+function sampleInfoListener() {
+    $(".sample_info").on("click", function(e){
+        var that = $(this);
+        $.ajax({
+            method: "GET",
+            url: that.attr("data-href")  + '.json',
+            dataType: "json"
+        }).done(function(xhr, settings, data) {
+            $("body").append($.parseHTML(data.responseJSON.html));
+            $("#modal-info-sample").modal('show',{
+                backdrop: true,
+                keyboard: false,
+            }).on('hidden.bs.modal', function () {
+                $(this).find(".modal-body #sample-info-table").DataTable().destroy();
+                $(this).remove();
+            });
+
+            $('#sample-info-table').DataTable({
+                dom: "RBltpi",
+                stateSave: false,
+                buttons: [],
+                processing: true,
+                colReorder: {
+                    fixedColumnsLeft: 1000000 // Disable reordering
+                },
+                columnDefs: [{
+                    targets: 0,
+                    searchable: false,
+                    orderable: false
+                }],
+                fnDrawCallback: function(settings, json) {
+                    animateSpinner(this, false);
+                },
+                preDrawCallback: function(settings) {
+                    animateSpinner(this);
+                }
+            });
+        }).fail(function(error){
+            // TODO
+        }).always(function(data){
+            // TODO
+        });
+        e.preventDefault();
+        return false;
+    });
+}
 
 // Edit sample
 function onClickEdit() {

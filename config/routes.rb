@@ -195,6 +195,8 @@ Rails.application.routes.draw do
   end
 
   resources :samples, only: [:edit, :update, :destroy]
+  get 'samples/:id', to: 'samples#show'
+
   resources :sample_types, only: [:edit, :update]
   resources :sample_groups, only: [:edit, :update]
   resources :result_texts, only: [:edit, :update, :destroy]
