@@ -1,4 +1,11 @@
 class UserNotificationsController < ApplicationController
+  layout "fluid"
+
+  def index
+    @notifications = UserNotification.list_all(@current_user)
+    @notifications_by_type = { :assignment => 3, :recent_changes => 4, :system_message => 5 }
+  end
+
   def recent_notifications
     @recent_notifications = UserNotification.recent_notifications(current_user)
 

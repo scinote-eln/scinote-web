@@ -1504,6 +1504,12 @@ en:
 
   notifications:
     title: "Notifications"
+    filter: "Filter"
+    types:
+      assignment: "Assignment"
+      recent_changes: "Recent changes"
+      system_message:  "System changes"
+    show_all: "Show all notifications"
   # This section contains general words that can be used in any parts of
   # application.
 
