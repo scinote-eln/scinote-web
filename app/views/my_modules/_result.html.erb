@@ -36,34 +36,20 @@
     </div>
     <div class="panel-collapse collapse" id="result-panel-<%= result.id %>" role="tabpanel">
       <div class="panel-body">
-        <ul class="nav nav-tabs">
-          <li role="presentation" class="active">
-            <a href="#result-info-<%= result.id %>" data-toggle="tab"><span class="glyphicon glyphicon-info-sign"></span>
-              <%= t'my_modules.results.info_tab' %></a>
-          </li>
-          <% if false %>
-          <li role="presentation">
-            <a class="comment-tab-link" href="<%= url_for result_result_comments_path(result_id: result.id, format: :json) %>" aria-controls="result-comments-<%= result.id %>" data-remote="true">
-              <span class="glyphicon glyphicon-comment"></span>
-              <%= t'my_modules.results.comments_tab' %></a>
-          </li>
-          <% end %>
-        </ul>
-        <div class="tab-content">
-          <div class="tab-pane active" role="tabpanel" id="result-info-<%= result.id %>">
-            <div class="row">
-              <%= render partial: 'my_modules/result_user_generated.html.erb',
-                         locals: { result: result, markdown: markdown } %>
-            </div>
-            <% if can_view_result_comments(@my_module) %>
-            <div class="row">
-              <div class="result-comment"
-                   id="result-comments-<%= result.id %>"
-                   data-href="<%= result_result_comments_url(result) %>"></div>
-            </div>
-            <% end %>
+        <div class="row">
+          <div class="col-xs-12">
+            <%= render partial: 'my_modules/result_user_generated.html.erb',
+                       locals: { result: result, markdown: markdown } %>
           </div>
         </div>
+        <% if can_view_result_comments(@my_module) %>
+          <div class="row">
+            <div class="result-comment"
+                 id="result-comments-<%= result.id %>"
+                 data-href="<%= result_result_comments_url(result) %>">
+            </div>
+          </div>
+        <% end %>
       </div>
     </div>
   </div>
