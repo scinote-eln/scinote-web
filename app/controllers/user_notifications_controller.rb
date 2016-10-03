@@ -11,7 +11,7 @@ class UserNotificationsController < ApplicationController
         }
       end
     end
-    mark_seen_notification @recent_notifications
+    UserNotification.seen_by_user(current_user)
   end
 
   def unseen_notification
@@ -23,14 +23,6 @@ class UserNotificationsController < ApplicationController
           notificationNmber: @number
         }
       end
-    end
-  end
-
-  private
-
-  def mark_seen_notification(notifications)
-    notifications.each do |notification|
-      notification.seen_by_user(current_user)
     end
   end
 end

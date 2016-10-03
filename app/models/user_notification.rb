@@ -12,4 +12,11 @@ class UserNotification < ActiveRecord::Base
   def self.unseen_notification_count(user)
     where('user_id = ? AND checked = false', user.id).count
   end
+
+  def self.seen_by_user(user)
+    where(user: user).map do |n|
+      n.checked = true
+      n.save
+    end
+  end
 end

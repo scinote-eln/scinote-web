@@ -31,6 +31,7 @@
             animateSpinner($('.notifications-dropdown-header'), false);
           }
         });
+        $('#count-notifications').hide();
       });
   }
 

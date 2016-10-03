@@ -10,11 +10,4 @@ class Notification < ActiveRecord::Base
                     .pluck(:checked)
                     .first
   end
-
-  def seen_by_user(user)
-    user_notification = UserNotification.where(notification: self, user: user)
-                                        .first
-    user_notification.checked = true
-    user_notification.save
-  end
 end
