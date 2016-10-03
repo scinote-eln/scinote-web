@@ -211,15 +211,23 @@ class Users::SettingsController < ApplicationController
       user: @new_user_org.user,
       organization: @new_user_org.organization
       ).exists? && @new_user_org.save
-      AppMailer.delay.invitation_to_organization(@new_user_org.user, @user_organization.user, @new_user_org.organization)
+      AppMailer.delay.invitation_to_organization(@new_user_org.user,
+                                                 @user_organization.user,
+                                                 @new_user_org.organization)
+
+      generate_notification(@user_organization.user,
+                            @new_user_org.user,
+                            @new_user_org.role_str,
+                            @new_user_org.organization)
+
       flash[:notice] = I18n.t(
-        "users.settings.organizations.edit.modal_add_user.existing_flash_success",
+        'users.settings.organizations.edit.modal_add_user.existing_flash_success',
         user: @new_user_org.user.full_name,
         role: @new_user_org.role_str
       )
     else
       flash[:alert] =
-        I18n.t("users.settings.organizations.edit.modal_add_user.existing_flash_error")
+        I18n.t('users.settings.organizations.edit.modal_add_user.existing_flash_error')
     end
 
     # Either way, redirect back to organization page
@@ -520,4 +528,21 @@ class Users::SettingsController < ApplicationController
     )
   end
 
+  def generate_notification(user, target_user, role, org)
+    title = I18n.t('activities.assign_user_to_organization',
+                  assigned_user: target_user.name,
+                  role: role,
+                  organization: org.name,
+                  assigned_by_user: user.name)
+
+    message = "#{I18n.t('search.index.organization')} #{org.name}"
+    notification = Notification.create(
+      type_of: :assignment,
+      title:
+        ActionController::Base.helpers.sanitize(title),
+      message:
+      ActionController::Base.helpers.sanitize(message),
+    )
+    UserNotification.create(notification: notification, user: target_user)
+  end
 end

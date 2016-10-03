@@ -1,4 +1,6 @@
 class Activity < ActiveRecord::Base
+  after_create :generate_notification
+
   enum type_of: [
     :create_project,
     :rename_project,
@@ -48,4 +50,31 @@ class Activity < ActiveRecord::Base
   belongs_to :project, inverse_of: :activities
   belongs_to :my_module, inverse_of: :activities
   belongs_to :user, inverse_of: :activities
+
+  private
+
+  def generate_notification
+    if %w(assign_user_to_project assign_user_to_module).include? type_of
+      notification_type = :assignment
+    else
+      notification_type = :recent_changes
+    end
+
+    task_m = "| #{I18n.t('search.index.module')} #{my_module.name}" if my_module
+    notification = Notification.create(
+      type_of: notification_type,
+      title:
+        ActionController::Base.helpers.sanitize(message, tags: %w(strong a)),
+      message:
+      ActionController::Base
+        .helpers.sanitize(
+          "#{I18n.t('search.index.project')} #{project.name} #{task_m}"
+        ),
+      generator_user_id: user.id
+    )
+
+    project.users.each do |project_user|
+      UserNotification.create(notification: notification, user: project_user)
+    end
+  end
 end

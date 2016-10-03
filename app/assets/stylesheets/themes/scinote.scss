@@ -101,7 +101,10 @@ table {
 }
 
 .dropdown-notifications {
+  max-height: 500px;
   min-width: 450px;
+  overflow-x: hidden;
+  overflow-y: scroll;
   padding-bottom: 0;
   padding-top: 0;
 
@@ -116,7 +119,7 @@ table {
   }
 
   .assignment {
-    
+
   }
 
   .notifications-dropdown-header {

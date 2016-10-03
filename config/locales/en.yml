@@ -1052,6 +1052,7 @@ en:
     delete_step_comment: "<i>%{user}</i> deleted comment on Step %{step} <strong>%{step_name}</strong>."
     edit_result_comment: "<i>%{user}</i> edited comment on result <strong>%{result}</strong>."
     delete_result_comment: "<i>%{user}</i> deleted comment on result <strong>%{result}</strong>."
+    assign_user_to_organization: "<i>%{assigned_user}</i> was added as %{role} to organization <strong>%{organization}</strong> by <i>%{assigned_by_user}</i>."
 
   user_my_modules:
     new:
