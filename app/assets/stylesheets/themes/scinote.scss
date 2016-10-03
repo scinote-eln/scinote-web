@@ -89,6 +89,7 @@ table {
     padding-right: 4px;
     position: fixed;
     z-index: 999999;
+    display: none;
   }
 }
 
@@ -109,14 +110,35 @@ table {
     border-bottom: 1px solid $color-alto;
     padding-bottom: 10px;
     padding-top: 10px;
+
+    &:hover {
+      background-color: $color-concrete;
+    }
+  }
+
+  .unseen {
+    border-left: 4px solid $color-theme-primary;
   }
 
   .text-center {
+    margin-left: 10px;
     padding-top: 10px;
   }
 
   .assignment {
-    
+    background-color: $color-theme-primary;
+    border-radius: 50%;
+    color: $color-wild-sand;
+    font-size: 15px;
+    padding: 7px;
+  }
+
+  .system_message {
+    background-color: $color-theme-secondary;
+    border-radius: 50%;
+    color: $color-wild-sand;
+    font-size: 13px;
+    padding: 7px 10px;
   }
 
   .notifications-dropdown-header {
