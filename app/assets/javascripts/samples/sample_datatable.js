@@ -322,10 +322,10 @@ function sampleInfoListener() {
             // TODO
         }).always(function(data){
             // TODO
-        })
+        });
         e.preventDefault();
         return false;
-    })
+    });
 }
 
 // Edit sample
