@@ -844,6 +844,7 @@ en:
       success_flash: "Successfully updated file result in task <strong>%{module}</strong>"
     archive:
       success_flash: "Successfully archived file result in task <strong>%{module}</strong>"
+      error_flash: "Couldn't archive file result. Someone is editing that file."
     destroy:
       success_flash: "File result successfully deleted."
 

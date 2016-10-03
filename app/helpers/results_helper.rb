@@ -39,6 +39,14 @@ module ResultsHelper
     end
   end
 
+  def result_unlocked?(result)
+    if result.is_asset
+      !result.asset.locked?
+    else
+      true
+    end
+  end
+
   def result_path_of_type(result)
     if result.is_asset
       result_asset_path(result.result_asset)

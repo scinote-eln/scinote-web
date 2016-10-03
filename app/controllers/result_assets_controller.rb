@@ -118,6 +118,16 @@ class ResultAssetsController < ApplicationController
             module: @my_module.name)
 
     if @result.archived_changed?(from: false, to: true)
+      if previous_asset.locked?
+        respond_to do |format|
+          format.html {
+            flash[:error] = t('result_assets.archive.error_flash')
+            redirect_to results_my_module_path(@my_module)
+            return
+          }
+        end
+      end
+
       saved = @result.archive(current_user)
       success_flash = t("result_assets.archive.success_flash",
             module: @my_module.name)

@@ -19,7 +19,7 @@
             <span class="glyphicon glyphicon-edit"></span>
           </a>
         <% end %>
-        <% if can_archive_result(result) and not result.archived %>
+        <% if can_archive_result(result) && !result.archived && result_unlocked?(result) %>
           <a href="#" class="btn btn-link form-submit-link" data-submit-form="result-archive-form-<%= result.id %>" data-confirm-form="<%= t('my_modules.results.archive_confirm') %>" title="<%= t'my_modules.results.options.archive_title' %>">
             <span class="glyphicon glyphicon-briefcase"></span>
           </a>

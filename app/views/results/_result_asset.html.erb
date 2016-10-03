@@ -3,13 +3,13 @@
     <%= image_tag(preview_asset_path result.asset) if result.asset.is_image? %>
     <p><%= truncate(result.asset.file_file_name, length: 50) %></p>
   <% end %>
-	<% if result.asset.can_perform_action("view") %>
-		<%= link_to "View", view_asset_url(id: result.asset) %>
-	<% end %>
-	<% if can_edit_result_asset_in_module(result.my_module) &&
-				result.asset.can_perform_action("edit") %>
-		<%= link_to "Edit", edit_asset_url(id: result.asset) %>
-	<% end %>
+  <% if result.asset.can_perform_action("view") %>
+    <%= link_to "View", view_asset_url(id: result.asset) %>
+  <% end %>
+  <% if can_edit_result_asset_in_module(result.my_module) &&
+      result.asset.can_perform_action("edit") %>
+    <%= link_to "Edit", edit_asset_url(id: result.asset) %>
+  <% end %>
 <% else %>
   <%= image_tag(preview_asset_path result.asset) if result.asset.is_image? %>
   <p><%= result.asset.file_file_name %></p>
