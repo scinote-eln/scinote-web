@@ -63,10 +63,9 @@ class WopiController < ActionController::Base
       # which should NOT be business
       LicenseCheckForEditIsEnabled:  true,
       UserFriendlyName:              @user.name,
-      UserCanWrite:             @can_write,
-      UserCanNotWriteRelative:  true,
-      # TODO: decide what to put here
-      CloseUrl:    'https://scinote-preview.herokuapp.com',
+      UserCanWrite:                  @can_write,
+      UserCanNotWriteRelative:       true,
+      CloseUrl:                      @close_url,
       DownloadUrl: url_for(controller: 'assets', action: 'download',
                            id: @asset.id),
       HostEditUrl: url_for(controller: 'assets', action: 'edit',
@@ -276,9 +275,18 @@ class WopiController < ActionController::Base
     if @assoc.class == Step
       @can_read = can_view_steps_in_protocol(@protocol)
       @can_write = can_edit_step_in_protocol(@protocol)
+
+      if @protocol.in_module?
+        @close_url = protocols_my_module_path(@protocol.my_module,
+                                              only_path: false)
+      else
+        @close_url = protocols_path(only_path: false)
+      end
     else
       @can_read = can_view_or_download_result_assets(@my_module)
       @can_write = can_edit_result_asset_in_module(@my_module)
+
+      @close_url = results_my_module_path(@my_module, only_path: false)
     end
 
     render nothing: :true, status: 404 and return unless @can_read
