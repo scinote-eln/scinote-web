@@ -54,12 +54,6 @@ var Comments = (function() {
         var list = $(this).parents('ul');
         var moreBtn = list.find('.btn-more-comments');
         var listItem = moreBtn.parents('li');
-        // removes duplicated dates
-        if ( list.find($('.comment-date-separator'))
-                  .first().find('p').text() ===
-                $(data.html).first().find('p').text() ) {
-            list.find($('.comment-date-separator'))[0].remove();
-              }
 
         $(data.html).insertAfter(listItem);
         if (data.resultsNumber < data.perPage) {
@@ -73,6 +67,8 @@ var Comments = (function() {
         scrollCommentOptions(listItem
                               .closest('.content-comments')
                               .find('.dropdown-comment'));
+      } else {
+        $('.btn-more-comments').remove();
       }
     });
   }
