@@ -71,9 +71,11 @@ class WopiController < ActionController::Base
       HostEditUrl: url_for(controller: 'assets', action: 'edit',
                            id: @asset.id),
       HostViewUrl: url_for(controller: 'assets', action: 'view',
-                           id: @asset.id)
-      # TODO: breadcrumbs?
-      #:FileExtension
+                           id: @asset.id),
+      BreadcrumbBrandName:  @breadcrumb_brand_name,
+      BreadcrumbBrandUrl:   @breadcrumb_brand_url,
+      BreadcrumbFolderName: @breadcrumb_folder_name,
+      BreadcrumbFolderUrl:  @breadcrumb_folder_url
     }
     response.headers['X-WOPI-HostEndpoint'] = ENV['WOPI_ENDPOINT_URL']
     response.headers['X-WOPI-MachineName'] = ENV['WOPI_ENDPOINT_URL']
@@ -279,14 +281,30 @@ class WopiController < ActionController::Base
       if @protocol.in_module?
         @close_url = protocols_my_module_path(@protocol.my_module,
                                               only_path: false)
+
+        project = @protocol.my_module.experiment.project
+        @breadcrumb_brand_name  = project.name
+        @breadcrumb_brand_url   = project_path(project, only_path: false)
+        @breadcrumb_folder_name = @protocol.my_module.name
       else
         @close_url = protocols_path(only_path: false)
+
+        @breadcrump_brand_name  = 'Projects'
+        @breadcrumb_brand_url   = root_path(only_path: false)
+        @breadcrumb_folder_name = 'Protocol managament'
       end
+      @breadcrumb_folder_url  = @close_url
     else
       @can_read = can_view_or_download_result_assets(@my_module)
       @can_write = can_edit_result_asset_in_module(@my_module)
 
       @close_url = results_my_module_path(@my_module, only_path: false)
+
+      @breadcrumb_brand_name  = @my_module.experiment.project.name
+      @breadcrumb_brand_url   = project_path(@my_module.experiment.project,
+                                             only_path: false)
+      @breadcrumb_folder_name = @my_module.name
+      @breadcrumb_folder_url  = @close_url
     end
 
     render nothing: :true, status: 404 and return unless @can_read
