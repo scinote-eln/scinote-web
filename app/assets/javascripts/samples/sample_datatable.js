@@ -112,6 +112,7 @@ table = $("#samples").DataTable({
     },
     preDrawCallback: function(settings) {
         animateSpinner(this);
+        $(".sample_info").off("click");
     }
 });
 
