@@ -28,7 +28,7 @@
               .remove();
             $('.notifications-dropdown-header')
               .after(data.html);
-            animateSpinner($('.notifications-dropdown-header'), false)
+            animateSpinner($('.notifications-dropdown-header'), false);
           }
         });
       });
@@ -46,7 +46,7 @@
           notificationCount.html(data.notificationNmber);
           notificationCount.show();
         } else {
-          notificationCount.hide()
+          notificationCount.hide();
         }
 
       }
