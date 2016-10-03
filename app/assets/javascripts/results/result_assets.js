@@ -67,7 +67,14 @@ function formAjaxResultAsset($form) {
     reloadImages($imgs);
   })
   .on("ajax:error", function(e, data) {
-    $form.renderFormErrors("result", data.errors, true, e);
+    // This check is here only because of remotipart bug, which returns
+    // HTML instead of JSON, go figure
+    var errors = '';
+    if (data.errors)
+      errors = data.errors;
+    else
+      errors = data.responseJSON.errors;
+    $form.renderFormErrors("result", errors, true, e);
   });
 }
 

@@ -837,6 +837,7 @@ en:
       title: "Edit result from task %{module}"
       uploaded_asset: "Uploaded file"
       update: "Update file result"
+      locked_file_error: 'This file is being edited by someone else.'
     create:
       success_flash: "Successfully added file result to task <strong>%{module}</strong>"
     update:
