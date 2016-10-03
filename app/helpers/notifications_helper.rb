@@ -1,8 +1,16 @@
 module NotificationsHelper
   def create_system_notification(title, message)
-    users = User.where.not(confirmed_at: nil)
-    users.each do |u|
-      UserNotification.create_notification(u, title, message, :system_message)
+    notification = Notification.new
+    notification.title = title
+    notification.message = message
+    notification.type_of = :system_message
+    notification.transaction do
+      User.where.not(confirmed_at: nil).find_each do |u|
+        UserNotification
+          .new(user: u, notification: notification, checked: false)
+          .save!
+      end
+      notification.save!
     end
   end
 end
