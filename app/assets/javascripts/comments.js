@@ -63,6 +63,7 @@ var Comments = (function() {
           moreBtn.trigger('blur');
         }
 
+        debugger;
         // Reposition dropdown comment options
         scrollCommentOptions(listItem
                               .closest('.content-comments')
