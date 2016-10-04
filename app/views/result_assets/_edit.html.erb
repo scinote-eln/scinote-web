@@ -3,7 +3,10 @@
     <%= f.text_field :name, style: "margin-top: 10px;" %><br />
     <%= f.fields_for :asset do |ff| %>
       <span><strong><%=t "result_assets.edit.uploaded_asset" %></strong></span>
-      <p style="margin: 10px;"><%= ff.object.file_file_name %></p>
+      <p style="margin: 10px;">
+        <%= file_extension_icon(ff.object) %>
+        <%= ff.object.file_file_name %>
+      </p>
       <%= ff.file_field :file %>
     <% end %>
     <hr>

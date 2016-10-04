@@ -847,6 +847,8 @@ en:
       error_flash: "Couldn't archive file result. Someone is editing that file."
     destroy:
       success_flash: "File result successfully deleted."
+    wopi_open_file: "Open in %{app}"
+    wopi_edit_file: "Edit in %{app}"
 
   result_tables:
     new:

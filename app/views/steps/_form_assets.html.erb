@@ -15,11 +15,17 @@
       <% if can_view_or_download_step_assets(@protocol) %>
         <%= link_to download_asset_path(ff.object), data: {no_turbolink: true} do %>
           <%= image_tag(preview_asset_path ff.object) if ff.object.is_image? %>
-          <p><%= ff.object.file_file_name %></p>
+          <p>
+            <%= file_extension_icon(ff.object) %>
+            <%= ff.object.file_file_name %>
+          </p>
         <% end %>
       <% else %>
         <%= image_tag(preview_asset_path ff.object) if ff.object.is_image? %>
-        <p><%= ff.object.file_file_name %></p>
+        <p>
+          <%= file_extension_icon(ff.object) %>
+          <%= ff.object.file_file_name %>
+        </p>
       <% end %>
     <% else %>
       <%= ff.file_field :file %>
