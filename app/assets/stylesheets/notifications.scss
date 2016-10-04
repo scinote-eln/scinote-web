@@ -2,6 +2,7 @@
 @import "mixins";
 
 .notifications-container {
+  margin-bottom: 20px;
   margin-top: 20px;
 }
 
@@ -17,51 +18,49 @@
   padding: 8px;
 }
 
-.notifications-body {
+.notifications-list {
+  background-color: $color-white;
+  border: 1px solid $color-alto;
+  list-style: none;
+  margin-bottom: 0;
+  padding: 0;
 
-  .notifications-list {
-    background-color: $color-white;
-    border: 1px solid $color-alto;
-    list-style: none;
-    margin-bottom: 0px;
-    padding: 0;
+  .notification {
+    border-bottom: 1px solid $color-alto;
+    padding-bottom: 10px;
+    padding-top: 10px;
 
-    .notification {
-      border-bottom: 1px solid $color-alto;
-      padding-bottom: 10px;
-      padding-top: 10px;
-
-      &:hover {
-        background-color: #ECF5FC;
-      }
-    }
-
-    .unseen {
-      border-left: 4px solid $color-theme-primary;
-    }
-
-    .text-center {
-      margin-left: 10px;
-      padding-top: 10px;
-    }
-
-    .assignment {
-      background-color: $color-theme-primary;
-      border-radius: 50%;
-      color: $color-wild-sand;
-      font-size: 15px;
-      padding: 7px;
-    }
-
-    .system_message {
-      background-color: $color-theme-secondary;
-      border-radius: 50%;
-      color: $color-wild-sand;
-      font-size: 13px;
-      padding: 7px 10px;
+    &:hover {
+      background-color: #ECF5FC;
     }
   }
+
+  .unseen {
+    border-left: 4px solid $color-theme-primary;
+  }
+
+  .text-center {
+    margin-left: 10px;
+    padding-top: 10px;
+  }
+
+  .assignment {
+    background-color: $color-theme-primary;
+    border-radius: 50%;
+    color: $color-wild-sand;
+    font-size: 15px;
+    padding: 7px;
+  }
+
+  .system-message {
+    background-color: $color-theme-secondary;
+    border-radius: 50%;
+    color: $color-wild-sand;
+    font-size: 13px;
+    padding: 7px 10px;
+  }
 }
+
 
 .notifications-footer {
 
@@ -71,7 +70,7 @@
     border-bottom: 1px solid $color-alto;
     border-left: 1px solid $color-alto;
     border-right: 1px solid $color-alto;
-    margin: 0px;
+    margin: 0;
     padding: 8px;
     text-align: center;
 
