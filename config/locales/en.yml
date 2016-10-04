@@ -1057,6 +1057,7 @@ en:
     delete_step_comment: "<i>%{user}</i> deleted comment on Step %{step} <strong>%{step_name}</strong>."
     edit_result_comment: "<i>%{user}</i> edited comment on result <strong>%{result}</strong>."
     delete_result_comment: "<i>%{user}</i> deleted comment on result <strong>%{result}</strong>."
+    assign_user_to_organization: "<i>%{assigned_user}</i> was added as %{role} to organization <strong>%{organization}</strong> by <i>%{assigned_by_user}</i>."
 
   user_my_modules:
     new:
@@ -1508,6 +1509,8 @@ en:
     sentence_seven_html: "<strong>Info tab</strong> <br>In the upper right corner of the Dashboard you can now access the Info button, where you can find links to support on how to use sciNote features (e.g., Tutorials, FAQ) or how to change your current sciNote Plan (e.g., Professional support and customization, Plans). In case you have some other questions or suggestions, click on the Contact us link."
     confim: "OK, got it"
 
+  notifications:
+    title: "Notifications"
   # This section contains general words that can be used in any parts of
   # application.
 

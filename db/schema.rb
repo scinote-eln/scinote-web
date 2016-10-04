@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160809074757) do
+ActiveRecord::Schema.define(version: 20160928114915) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -225,6 +225,17 @@ ActiveRecord::Schema.define(version: 20160809074757) do
   add_index "my_modules", ["my_module_group_id"], name: "index_my_modules_on_my_module_group_id", using: :btree
   add_index "my_modules", ["name"], name: "index_my_modules_on_name", using: :gist
   add_index "my_modules", ["restored_by_id"], name: "index_my_modules_on_restored_by_id", using: :btree
+
+  create_table "notifications", force: :cascade do |t|
+    t.string   "title"
+    t.string   "message"
+    t.integer  "type_of",           null: false
+    t.integer  "generator_user_id"
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
+  end
+
+  add_index "notifications", ["created_at"], name: "index_notifications_on_created_at", using: :btree
 
   create_table "organizations", force: :cascade do |t|
     t.string   "name",                                            null: false
@@ -578,6 +589,17 @@ ActiveRecord::Schema.define(version: 20160809074757) do
   add_index "user_my_modules", ["my_module_id"], name: "index_user_my_modules_on_my_module_id", using: :btree
   add_index "user_my_modules", ["user_id"], name: "index_user_my_modules_on_user_id", using: :btree
 
+  create_table "user_notifications", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "notification_id"
+    t.boolean  "checked",         default: false
+    t.datetime "created_at",                      null: false
+    t.datetime "updated_at",                      null: false
+  end
+
+  add_index "user_notifications", ["notification_id"], name: "index_user_notifications_on_notification_id", using: :btree
+  add_index "user_notifications", ["user_id"], name: "index_user_notifications_on_user_id", using: :btree
+
   create_table "user_organizations", force: :cascade do |t|
     t.integer  "role",            default: 1, null: false
     t.integer  "user_id",                     null: false
@@ -681,6 +703,7 @@ ActiveRecord::Schema.define(version: 20160809074757) do
   add_foreign_key "my_modules", "users", column: "created_by_id"
   add_foreign_key "my_modules", "users", column: "last_modified_by_id"
   add_foreign_key "my_modules", "users", column: "restored_by_id"
+  add_foreign_key "notifications", "users", column: "generator_user_id"
   add_foreign_key "organizations", "users", column: "created_by_id"
   add_foreign_key "organizations", "users", column: "last_modified_by_id"
   add_foreign_key "project_comments", "comments"
@@ -758,6 +781,8 @@ ActiveRecord::Schema.define(version: 20160809074757) do
   add_foreign_key "user_my_modules", "my_modules"
   add_foreign_key "user_my_modules", "users"
   add_foreign_key "user_my_modules", "users", column: "assigned_by_id"
+  add_foreign_key "user_notifications", "notifications"
+  add_foreign_key "user_notifications", "users"
   add_foreign_key "user_organizations", "organizations"
   add_foreign_key "user_organizations", "users"
   add_foreign_key "user_organizations", "users", column: "assigned_by_id"

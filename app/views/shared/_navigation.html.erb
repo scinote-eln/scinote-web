@@ -54,8 +54,26 @@
       </ul>
 
       <div>
-        <!-- help -->
+        <!-- profile info -->
         <ul class="nav navbar-nav navbar-right">
+          <li class="dropdown">
+            <a href="#"
+               id="notifications-dropdown"
+               class="dropdown-toggle"
+               data-toggle="dropdown"
+               role="button"
+               aria-haspopup="true"
+               aria-expanded="false"
+               data-href="<%= recent_notifications_url(current_user) %>">
+              <%= fa_icon 'bell'%>
+              <span id="count-notifications"
+                    data-href="<%= unseen_notification_url(current_user) %>"></span>
+            </a>
+            <ul class="dropdown-menu dropdown-notifications">
+              <li class="notifications-dropdown-header"><span><%= t('notifications.title') %></span><span class="pull-right"><%= t('nav.user.settings') %></span></li>
+              <li class="notifications-dropdown-footer">link to method goes here</li>
+            </ul>
+          </li>
           <li class="dropdown">
             <a href="#" id="help-link" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
               <span class="glyphicon glyphicon-info-sign"></span>
@@ -69,10 +87,8 @@
               <li><%= link_to t('nav.help.contact'), CONTACT_URL, target: "_blank" %></li>
             </ul>
           </li>
-        </ul>
 
-        <!-- profile info -->
-        <ul class="nav navbar-nav navbar-right">
+
           <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
               <span><%= t('nav.user_greeting', full_name: current_user.full_name) %></span>
