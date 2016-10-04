@@ -3,7 +3,11 @@
     <% if asset.is_image? %>
       <span class="glyphicon glyphicon-picture"></span>
     <% else %>
-      <span class="glyphicon glyphicon-file"></span>
+      <% if wopi_file?(asset) %>
+        <%= file_extension_icon(asset) %>
+      <% else %>
+        <span class="glyphicon glyphicon-file"></span>
+      <% end %>
     <% end %>
     <%= render partial: "search/results/partials/asset_text.html.erb", locals: { asset: asset, query: search_query } %>
   </h5>
