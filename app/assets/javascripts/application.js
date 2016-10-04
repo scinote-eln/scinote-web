@@ -21,6 +21,7 @@
 //= require bootstrap-datetimepicker
 //= require bootstrap-colorselector
 //= require bootstrap-tagsinput.min
+//= require bootstrap-checkbox.min
 //= require typeahead.bundle.min
 //= require nested_form_fields
 //= require_directory ./sitewide

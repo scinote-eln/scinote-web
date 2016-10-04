@@ -15,6 +15,10 @@ Rails.application.routes.draw do
   put "users/settings/preferences", to: "users/settings#update_preferences", as: "update_preferences"
   get "users/settings/preferences/tutorial", to: "users/settings#tutorial", as: "tutorial"
   post "users/settings/preferences/reset_tutorial/", to: "users/settings#reset_tutorial", as: "reset_tutorial"
+  post 'users/settings/preferences/notifications_settings',
+       to: 'users/settings#notifications_settings',
+       as: 'notifications_settings',
+       defaults: { format: 'json' }
   get "users/settings/organizations", to: "users/settings#organizations", as: "organizations"
   get "users/settings/organizations/new", to: "users/settings#new_organization", as: "new_organization"
   post "users/settings/organizations/new", to: "users/settings#create_organization", as: "create_organization"

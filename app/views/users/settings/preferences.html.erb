@@ -34,6 +34,28 @@
     <% if Rails.configuration.x.enable_tutorial %>
       <%= link_to t('users.settings.preferences.tutorial.repeat_tutorial'), tutorial_path(format: :json), remote: true, class: "btn btn-primary", id: "reset-tutorial-btn" %>
     <% end %>
+
+    <div class="container">
+      <h4><%= t('notifications.title') %></h4>
+      <%= form_for(@user,
+                   url: notifications_settings_path(format: :json),
+                   html: { method: :post, id: 'notifications-settings-panel' },
+                   remote: true) do |f| %>
+      <div class="row">
+        <div class="col-xs-4 text-right">
+          <div class="notification-settings-labels">
+            <%= f.label t('notifications.form.recent_notification') %> <br>
+            <%= f.label t('notifications.form.assignments') %>
+          </div>
+        </div>
+        <div class="col-xs-8">
+            <h5><%= t('notifications.title') %></h5>
+              <%= check_box_tag :recent_notification, @user.recent_notification %> <br>
+              <%= check_box_tag :assignments_notification, @user.assignments_notification %>
+        </div>
+      </div>
+      <% end %>
+    </div>
   </div>
   <div class="tab-pane tab-pane-settings" role="tabpanel"></div>
 </div>
@@ -53,5 +75,7 @@
     </div>
   </div>
 </div>
+
+
 
 <%= javascript_include_tag "users/settings/preferences" %>
