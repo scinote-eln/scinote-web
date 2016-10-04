@@ -69,7 +69,8 @@ class AssetsController < ApplicationController
   end
 
   def edit
-    @action_url = @asset.get_action_url(current_user, 'edit', false)
+    @action_url = append_wd_params(@asset
+                                   .get_action_url(current_user, 'edit', false))
     @favicon_url = @asset.favicon_url('edit')
     @token = current_user.get_wopi_token
     @ttl = (current_user.wopi_token_ttl * 1000).to_s
@@ -79,7 +80,8 @@ class AssetsController < ApplicationController
   end
 
   def view
-    @action_url = @asset.get_action_url(current_user, 'view', false)
+    @action_url = append_wd_params(@asset
+                                   .get_action_url(current_user, 'view', false))
     @favicon_url = @asset.favicon_url('view')
     @token = current_user.get_wopi_token
     @ttl = (current_user.wopi_token_ttl * 1000).to_s
@@ -164,6 +166,15 @@ class AssetsController < ApplicationController
     end
 
     posts
+  end
+
+  def append_wd_params(url)
+    wd_params = ''
+    params.keys.select { |i| i[/^wd.*/] }.each do |wd|
+      next if wd == 'wdPreviousSession' || wd == 'wdPreviousCorrelation'
+      wd_params += "&#{wd}=#{params[wd]}"
+    end
+    url + wd_params
   end
 
   def asset_params
