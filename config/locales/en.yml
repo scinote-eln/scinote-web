@@ -1515,11 +1515,8 @@ en:
       assignments: "Assignments notifications"
       recent_notification: "Change notifications"
     filter: "Filter"
-    types:
-      assignment: "Assignment"
-      recent_changes: "Recent changes"
-      system_message:  "System changes"
     show_all: "Show all notifications"
+    show_more: "Show more notifications"
   # This section contains general words that can be used in any parts of
   # application.
 

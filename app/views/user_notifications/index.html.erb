@@ -1,40 +1,19 @@
-
-
-<div class="row">
-  <div class="container-fluid">
+<div class="notifications-container">
+  <div class="notifications-header">
+    <span><%= t('notifications.title') %></span><span class="pull-right"><%= t('nav.user.settings') %></span>
+  </div>
+  <div class="notifications-body">
     <ul class="notifications-list">
-      <li class="notifications-header"><span><%= t('notifications.title') %></span><span class="pull-right"><%= t('nav.user.settings') %></span></li>
-      <% @notifications.each do |notification| %>
-        <li class="notification <%= 'unseen' unless notification.already_seen(current_user) %>">
-          <div class="row">
-            <div class="col-xs-2">
-              <% if notification.type_of == 'recent_changes' %>
-              <div class="text-center">
-                <%= image_tag avatar_path(notification.generator_user, :icon_small), class: 'avatar' %>
-              </div>
-              <% end %>
-              <% if notification.type_of == 'assignment' %>
-              <div class="text-center">
-                <span class="assignment"><%= fa_icon 'newspaper-o' %></span>
-              </div>
-              <% end %>
-              <% if notification.type_of == 'system_message' %>
-              <div class="text-center">
-                <span class="system_message"><i class="glyphicon glyphicon-tower" aria-hidden="true"></i></span>
-              </div>
-              <% end %>
-            </div>
-            <div class="col-xs-10">
-              <strong><%= notification.title %></strong> <br>
-              <%= l(notification.created_at, format: :full) %> | <%= notification.message %>
-            </div>
-          </div>
-        </li>
-      <% end %>
+      <%= render 'list', notifications: @notifications %>
     </ul>
+  </div>
+  <div class="notifications-footer">
+    <% if @overflown %>
+      <a class="btn-more-notifications col-xs-12" href="<%= @more_notifications_url %>" data-remote="true">
+        <span><%= t('notifications.show_more') %></span>
+      </a>
+    <% end %>
   </div>
 </div>
 
-<script>
-  document.getElementById("wrapper").style.display = "block";
-</script>
+<%= javascript_include_tag("notifications") %>

@@ -1,0 +1,27 @@
+<% @notifications.each do |notification| %>
+  <li class="notification <%= 'unseen' unless notification.already_seen(current_user) %>">
+    <div class="row">
+      <div class="col-xs-3 col-md-1">
+        <% if notification.type_of == 'recent_changes' %>
+        <div class="text-center">
+          <%= image_tag avatar_path(notification.generator_user, :icon_small), class: 'avatar' %>
+        </div>
+        <% end %>
+        <% if notification.type_of == 'assignment' %>
+        <div class="text-center">
+          <span class="assignment"><%= fa_icon 'newspaper-o' %></span>
+        </div>
+        <% end %>
+        <% if notification.type_of == 'system_message' %>
+        <div class="text-center">
+          <span class="system_message"><i class="glyphicon glyphicon-tower" aria-hidden="true"></i></span>
+        </div>
+        <% end %>
+      </div>
+      <div class="col-xs-9 col-md-11">
+        <strong><%= notification.title %></strong> <br>
+        <%= l(notification.created_at, format: :full) %> | <%= notification.message %>
+      </div>
+    </div>
+  </li>
+<% end %>
