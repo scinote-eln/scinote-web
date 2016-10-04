@@ -1,9 +1,44 @@
 class UserNotificationsController < ApplicationController
-  layout "fluid"
+  layout 'main'
 
   def index
-    @notifications = UserNotification.list_all(@current_user)
-    @notifications_by_type = { :assignment => 3, :recent_changes => 4, :system_message => 5 }
+    @last_notification_id = params[:from].to_i || 0
+    @per_page = 5
+
+    @notifications =
+      UserNotification.last_notifications(@current_user,
+                                          @last_notification_id,
+                                          @per_page + 1)
+
+    @more_notifications_url = ""
+
+    @overflown = @notifications.length > @per_page
+
+    @notifications = UserNotification
+      .last_notifications(@current_user, @last_notification_id, @per_page)
+
+    if @notifications.count > 0
+      @more_notifications_url = url_for(
+        controller: 'user_notifications',
+        action: 'index',
+        format: :json,
+        from: @notifications.last.id)
+    end
+
+    respond_to do |format|
+      format.html
+      format.json {
+        render :json => {
+          :per_page => @per_page,
+          :results_number => @notifications.length,
+          :more_notifications_url => @more_notifications_url,
+          :html => render_to_string({
+            :partial => 'list.html.erb'
+          })
+        }
+      }
+    end
+    mark_seen_notification @notifications
   end
 
   def recent_notifications
