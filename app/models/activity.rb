@@ -60,7 +60,20 @@ class Activity < ActiveRecord::Base
       notification_type = :recent_changes
     end
 
-    task_m = "| #{I18n.t('search.index.module')} #{my_module.name}" if my_module
+    project_m = "<a href='#{Rails
+                             .application
+                             .routes
+                             .url_helpers
+                             .project_path(project)}'>
+                  #{project.name}</a>"
+    task_m = "| #{I18n.t('search.index.module')}
+              <a href='#{Rails
+                          .application
+                          .routes
+                          .url_helpers
+                          .protocols_my_module_path(my_module)}'>
+              #{my_module.name}</a>" if my_module
+
     notification = Notification.create(
       type_of: notification_type,
       title:
@@ -68,13 +81,14 @@ class Activity < ActiveRecord::Base
       message:
       ActionController::Base
         .helpers.sanitize(
-          "#{I18n.t('search.index.project')} #{project.name} #{task_m}"
+          "#{I18n.t('search.index.project')} #{project_m} #{task_m}",
+          tags: %w(strong a)
         ),
       generator_user_id: user.id
     )
 
     project.users.each do |project_user|
-      next if project_user == user
+      # next if project_user == user
       UserNotification.create(notification: notification, user: project_user)
     end
   end
