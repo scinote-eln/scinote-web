@@ -128,20 +128,37 @@ table {
     padding-top: 10px;
   }
 
+  .avatar {
+    height: 45px;
+    margin: 0 auto;
+    margin-left: 5px;
+    width: 45px;
+  }
+
   .assignment {
     background-color: $color-theme-primary;
     border-radius: 50%;
     color: $color-wild-sand;
-    font-size: 15px;
-    padding: 7px;
+    display: block;
+    font-size: 23px;
+    height: 45px;
+    margin: 0 auto;
+    margin-left: 5px;
+    padding-top: 5px;
+    width: 45px;
   }
 
   .system_message {
     background-color: $color-theme-secondary;
     border-radius: 50%;
     color: $color-wild-sand;
-    font-size: 13px;
-    padding: 7px 10px;
+    display: block;
+    font-size: 23px;
+    height: 45px;
+    margin: 0 auto;
+    margin-left: 5px;
+    padding-top: 8px;
+    width: 45px;
   }
 
   .notifications-dropdown-header {
