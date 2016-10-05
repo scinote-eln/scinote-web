@@ -70,7 +70,7 @@
           </a>
           <ul class="dropdown-menu dropdown-notifications">
             <li class="notifications-dropdown-header"><span><%= t('notifications.title') %></span><span class="pull-right"><%= t('nav.user.settings') %></span></li>
-            <li class="notifications-dropdown-footer">link to method goes here</li>
+            <li class="notifications-dropdown-footer"><%= link_to t('notifications.show_all'), notifications_path %></li>
           </ul>
         </li>
         <li class="dropdown">
