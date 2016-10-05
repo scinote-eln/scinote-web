@@ -21,7 +21,7 @@
 
     <div class="col-xs-10">
       <strong><%= notification.title.html_safe %></strong> <br>
-      <%= l(notification.created_at, format: :full) %> | <%= notification.message %>
+      <%= l(notification.created_at, format: :full) %> | <%= notification.message.html_safe %>
     </div>
   </div>
 <li>
