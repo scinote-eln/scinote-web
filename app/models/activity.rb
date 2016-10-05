@@ -88,7 +88,7 @@ class Activity < ActiveRecord::Base
     )
 
     project.users.each do |project_user|
-      # next if project_user == user
+      next if project_user == user
       UserNotification.create(notification: notification, user: project_user)
     end
   end
