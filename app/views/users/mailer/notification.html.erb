@@ -1,0 +1,9 @@
+<p>Hello <%= @user.name %>!</p>
+
+<p>You got new notification!</p>
+
+<p>Type: <%= I18n.t("notifications.types.#{@notification.type_of}") %></p>
+
+<p><%= @notification.title %></p>
+
+<p><%= @notification.message %></p>

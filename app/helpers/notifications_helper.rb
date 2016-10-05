@@ -13,4 +13,8 @@ module NotificationsHelper
       notification.save!
     end
   end
+
+  def send_email_notification(user, notification)
+    AppMailer.delay.notification(user, notification)
+  end
 end
