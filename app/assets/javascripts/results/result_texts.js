@@ -60,7 +60,6 @@ function formAjaxResultText($form) {
         applyEditResultTextCallback();
         applyCollapseLinkCallBack();
         toggleResultEditButtons(true);
-        initResultCommentTabAjax();
         expandResult(newResult);
     });
     $form.on("ajax:error", function(e, xhr, status, error) {

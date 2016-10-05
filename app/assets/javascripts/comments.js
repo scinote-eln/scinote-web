@@ -63,7 +63,15 @@ var Comments = (function() {
           moreBtn.trigger('blur');
         }
 
-        debugger;
+        var date;
+        $.each(list.find('.comment-date-separator'), function() {
+          if ( $(this).find('p').html() === date ) {
+            $(this).remove();
+          } else {
+            date = $(this).find('p').html();
+          }
+        });
+
         // Reposition dropdown comment options
         scrollCommentOptions(listItem
                               .closest('.content-comments')
