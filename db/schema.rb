@@ -63,41 +63,6 @@ ActiveRecord::Schema.define(version: 20161004074754) do
   add_index "assets", ["file_file_name"], name: "index_assets_on_file_file_name", using: :gist
   add_index "assets", ["last_modified_by_id"], name: "index_assets_on_last_modified_by_id", using: :btree
 
-  create_table "billing_accounts", force: :cascade do |t|
-    t.string   "braintree_customer_id"
-    t.datetime "created_at",            null: false
-    t.datetime "updated_at",            null: false
-  end
-
-  add_index "billing_accounts", ["braintree_customer_id"], name: "index_billing_accounts_on_braintree_customer_id", using: :btree
-
-  create_table "billing_plans", force: :cascade do |t|
-    t.string   "braintree_plan_id",                           null: false
-    t.string   "name",                                        null: false
-    t.string   "description"
-    t.integer  "price_cents",                 default: 0,     null: false
-    t.string   "price_currency",              default: "USD", null: false
-    t.datetime "created_at",                                  null: false
-    t.datetime "updated_at",                                  null: false
-    t.boolean  "main",                        default: false, null: false
-    t.integer  "max_storage",       limit: 8, default: 0
-    t.integer  "position",                    default: 0,     null: false
-    t.boolean  "free",                        default: false, null: false
-  end
-
-  add_index "billing_plans", ["braintree_plan_id"], name: "index_billing_plans_on_braintree_plan_id", using: :btree
-
-  create_table "billing_subscriptions", force: :cascade do |t|
-    t.string   "braintree_subscription_id"
-    t.integer  "billing_account_id",                        null: false
-    t.integer  "billing_plan_id",                           null: false
-    t.boolean  "active",                    default: false, null: false
-    t.datetime "created_at",                                null: false
-    t.datetime "updated_at",                                null: false
-  end
-
-  add_index "billing_subscriptions", ["braintree_subscription_id"], name: "index_billing_subscriptions_on_braintree_subscription_id", using: :btree
-
   create_table "checklist_items", force: :cascade do |t|
     t.string   "text",                                null: false
     t.boolean  "checked",             default: false, null: false
@@ -280,11 +245,8 @@ ActiveRecord::Schema.define(version: 20161004074754) do
     t.integer  "last_modified_by_id"
     t.string   "description"
     t.integer  "space_taken",         limit: 8, default: 1048576, null: false
-    t.integer  "billing_account_id"
-    t.integer  "agile_crm_deal_id",   limit: 8
   end
 
-  add_index "organizations", ["billing_account_id"], name: "index_organizations_on_billing_account_id", using: :btree
   add_index "organizations", ["created_by_id"], name: "index_organizations_on_created_by_id", using: :btree
   add_index "organizations", ["last_modified_by_id"], name: "index_organizations_on_last_modified_by_id", using: :btree
   add_index "organizations", ["name"], name: "index_organizations_on_name", using: :btree
@@ -635,6 +597,7 @@ ActiveRecord::Schema.define(version: 20161004074754) do
     t.datetime "updated_at",                      null: false
   end
 
+  add_index "user_notifications", ["checked"], name: "index_user_notifications_on_checked", using: :btree
   add_index "user_notifications", ["notification_id"], name: "index_user_notifications_on_notification_id", using: :btree
   add_index "user_notifications", ["user_id"], name: "index_user_notifications_on_user_id", using: :btree
 
@@ -665,20 +628,20 @@ ActiveRecord::Schema.define(version: 20161004074754) do
   add_index "user_projects", ["user_id"], name: "index_user_projects_on_user_id", using: :btree
 
   create_table "users", force: :cascade do |t|
-    t.string   "full_name",                                          null: false
-    t.string   "initials",                                           null: false
-    t.string   "email",                              default: "",    null: false
-    t.string   "encrypted_password",                 default: "",    null: false
+    t.string   "full_name",                                null: false
+    t.string   "initials",                                 null: false
+    t.string   "email",                    default: "",    null: false
+    t.string   "encrypted_password",       default: "",    null: false
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",                      default: 0,     null: false
+    t.integer  "sign_in_count",            default: 0,     null: false
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
     t.string   "last_sign_in_ip"
-    t.datetime "created_at",                                         null: false
-    t.datetime "updated_at",                                         null: false
+    t.datetime "created_at",                               null: false
+    t.datetime "updated_at",                               null: false
     t.string   "avatar_file_name"
     t.string   "avatar_content_type"
     t.integer  "avatar_file_size"
@@ -687,7 +650,7 @@ ActiveRecord::Schema.define(version: 20161004074754) do
     t.datetime "confirmed_at"
     t.datetime "confirmation_sent_at"
     t.string   "unconfirmed_email"
-    t.string   "time_zone",                          default: "UTC"
+    t.string   "time_zone",                default: "UTC"
     t.string   "invitation_token"
     t.datetime "invitation_created_at"
     t.datetime "invitation_sent_at"
@@ -695,13 +658,10 @@ ActiveRecord::Schema.define(version: 20161004074754) do
     t.integer  "invitation_limit"
     t.integer  "invited_by_id"
     t.string   "invited_by_type"
-    t.integer  "invitations_count",                  default: 0
-    t.integer  "tutorial_status",                    default: 0,     null: false
-    t.integer  "initial_billing_plan_id"
-    t.datetime "last_seen_at"
-    t.integer  "agile_crm_contact_id",     limit: 8
-    t.boolean  "assignments_notification",           default: true
-    t.boolean  "recent_notification",                default: true
+    t.integer  "invitations_count",        default: 0
+    t.integer  "tutorial_status",          default: 0,     null: false
+    t.boolean  "assignments_notification", default: true
+    t.boolean  "recent_notification",      default: true
   end
 
   add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree
@@ -717,8 +677,6 @@ ActiveRecord::Schema.define(version: 20161004074754) do
   add_foreign_key "asset_text_data", "assets"
   add_foreign_key "assets", "users", column: "created_by_id"
   add_foreign_key "assets", "users", column: "last_modified_by_id"
-  add_foreign_key "billing_subscriptions", "billing_accounts"
-  add_foreign_key "billing_subscriptions", "billing_plans"
   add_foreign_key "checklist_items", "checklists"
   add_foreign_key "checklist_items", "users", column: "created_by_id"
   add_foreign_key "checklist_items", "users", column: "last_modified_by_id"
@@ -749,7 +707,6 @@ ActiveRecord::Schema.define(version: 20161004074754) do
   add_foreign_key "my_modules", "users", column: "last_modified_by_id"
   add_foreign_key "my_modules", "users", column: "restored_by_id"
   add_foreign_key "notifications", "users", column: "generator_user_id"
-  add_foreign_key "organizations", "billing_accounts"
   add_foreign_key "organizations", "users", column: "created_by_id"
   add_foreign_key "organizations", "users", column: "last_modified_by_id"
   add_foreign_key "project_comments", "comments"
