@@ -170,7 +170,7 @@ var Comments = (function() {
     } else {
       useParentOffset = true;
     }
-    scrollCommentOptions($('.dropdown-comment'), useParentOffset);
+    scrollCommentOptions($('.dropdown-comment'));
 
     // Reposition dropdown to the left
     // (only do this when using parent offset)
@@ -191,22 +191,17 @@ var Comments = (function() {
       var parent = $(scrollableContainer);
 
       if ($target.length) {
-        scrollCommentOptions(parent.find('.dropdown-comment'), useParentOffset);
+        scrollCommentOptions(parent.find('.dropdown-comment'));
       }
     }, true);
   }
 
-  function scrollCommentOptions(selector, useParentOffset) {
-    if ( ! _.isUndefined(typeof useParentOffset) ) {
-      useParentOffset = useParentOffset;
-    } else {
-      useParentOffset = true;
-    }
+  function scrollCommentOptions(selector) {
     _.each(selector, function(el) {
       var $el = $(el);
-      var offset = useParentOffset ? $el.offset().top : $el.position().top;
+      var offset = $el.offset().top;
       $el.find('.dropdown-menu-fixed')
-      .offset({ top: (offset + 20) });
+        .offset({ top: (offset + 20) });
     });
   }
 
@@ -337,7 +332,6 @@ var Comments = (function() {
     form: initCommentForm,
     bindNewElement: bindCommentInitializerToNewElement,
     initCommentOptions: initCommentOptions,
-    scrollCommentOptions: scrollCommentOptions,
     initDeleteComments: initDeleteComments,
     initEditComments: initEditComments
   };
