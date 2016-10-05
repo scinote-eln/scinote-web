@@ -1,0 +1,81 @@
+@import "colors";
+@import "mixins";
+
+.notifications-container {
+  margin-bottom: 20px;
+  margin-top: 20px;
+}
+
+.notifications-header {
+  background-color: $color-concrete;
+  border-left: 1px solid $color-alto;
+  border-right: 1px solid $color-alto;
+  border-top: 1px solid $color-alto;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  color: $color-dove-gray;
+  font-weight: bold;
+  padding: 8px;
+}
+
+.notifications-list {
+  background-color: $color-white;
+  border: 1px solid $color-alto;
+  list-style: none;
+  margin-bottom: 0;
+  padding: 0;
+
+  .notification {
+    border-bottom: 1px solid $color-alto;
+    padding-bottom: 10px;
+    padding-top: 10px;
+
+    &:hover {
+      background-color: $color-mystic;
+    }
+  }
+
+  .unseen {
+    border-left: 4px solid $color-theme-primary;
+  }
+
+  .text-center {
+    margin-left: 10px;
+    padding-top: 10px;
+  }
+
+  .assignment {
+    background-color: $color-theme-primary;
+    border-radius: 50%;
+    color: $color-wild-sand;
+    font-size: 15px;
+    padding: 7px;
+  }
+
+  .system-message {
+    background-color: $color-theme-secondary;
+    border-radius: 50%;
+    color: $color-wild-sand;
+    font-size: 13px;
+    padding: 7px 10px;
+  }
+}
+
+
+.notifications-footer {
+
+  background-color: $color-mystic;
+
+  .btn-more-notifications {
+    border-bottom: 1px solid $color-alto;
+    border-left: 1px solid $color-alto;
+    border-right: 1px solid $color-alto;
+    margin: 0;
+    padding: 8px;
+    text-align: center;
+
+    &:hover {
+      background-color: $color-mystic;
+    }
+  }
+}

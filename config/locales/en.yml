@@ -1514,6 +1514,9 @@ en:
     form:
       assignments: "Assignments notifications"
       recent_notification: "Change notifications"
+    filter: "Filter"
+    show_all: "Show all notifications"
+    show_more: "Show more notifications"
   # This section contains general words that can be used in any parts of
   # application.
 

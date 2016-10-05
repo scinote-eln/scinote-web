@@ -1,0 +1,20 @@
+<% provide(:head_title, raw(t("notifications.title"))) %>
+<div class="notifications-container">
+  <div class="notifications-header">
+    <span><%= t('notifications.title') %></span><span class="pull-right"><%= t('nav.user.settings') %></span>
+  </div>
+  <div class="notifications-body">
+    <ul class="notifications-list">
+      <%= render 'list', notifications: @notifications %>
+    </ul>
+  </div>
+  <div class="notifications-footer">
+    <% if @overflown %>
+      <a class="btn-more-notifications col-xs-12" href="<%= @more_notifications_url %>" data-remote="true">
+        <span><%= t('notifications.show_more') %></span>
+      </a>
+    <% end %>
+  </div>
+</div>
+
+<%= javascript_include_tag("notifications") %>

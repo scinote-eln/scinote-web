@@ -47,6 +47,10 @@ Rails.application.routes.draw do
       as: 'unseen_notification',
       defaults: { format: 'json' }
 
+  get 'users/notifications',
+      to: 'user_notifications#index',
+      as: 'notifications'
+
   resources :organizations, only: [] do
     resources :samples, only: [:new, :create]
     resources :sample_types, only: [:new, :create]
