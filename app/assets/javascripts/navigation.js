@@ -15,8 +15,11 @@
 
   function loadDropdownNotifications() {
     var button = $('#notifications-dropdown');
+    var noRecentText =
+      $('.dropdown-notifications .notifications-no-recent');
     button
       .on('click', function() {
+        noRecentText.hide();
         $.ajax({
           url: button.attr('data-href'),
           type: 'GET',
@@ -29,6 +32,11 @@
             $('.notifications-dropdown-header')
               .after(data.html);
             animateSpinner($('.notifications-dropdown-header'), false);
+
+            var ul = $('.dropdown-menu.dropdown-notifications');
+            if (ul.children('.notification').length === 0) {
+              noRecentText.show();
+            }
           }
         });
         $('#count-notifications').hide();

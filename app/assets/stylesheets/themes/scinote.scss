@@ -107,6 +107,12 @@ table {
   width: 450px;
   word-wrap: break-word;
 
+  .notifications-no-recent {
+    padding-bottom: 10px;
+    padding-left: 10px;
+    padding-top: 10px;
+  }
+
   .notification {
     border-bottom: 1px solid $color-alto;
     padding-bottom: 10px;

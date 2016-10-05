@@ -5,7 +5,13 @@
   </div>
   <div class="notifications-body">
     <ul class="notifications-list">
-      <%= render 'list', notifications: @notifications %>
+      <% if @notifications.count > 0 %>
+        <%= render 'list', notifications: @notifications %>
+      <% else %>
+        <li class="notification no-notifications">
+          <em><%= t('notifications.no_notifications') %></em>
+        </li>
+      <% end %>
     </ul>
   </div>
   <div class="notifications-footer">

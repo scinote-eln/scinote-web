@@ -70,6 +70,7 @@
           </a>
           <ul class="dropdown-menu dropdown-notifications">
             <li class="notifications-dropdown-header"><span><%= t('notifications.title') %></span><span class="pull-right"><%= link_to t('nav.user.settings'), preferences_path %></span></li>
+            <li class="notifications-no-recent"><em><%= t('notifications.no_recent') %></em></li>
             <li class="notifications-dropdown-footer"><%= link_to t('notifications.show_all'), notifications_path %></li>
           </ul>
         </li>
