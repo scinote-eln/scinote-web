@@ -32,6 +32,7 @@
           }
         });
         $('#count-notifications').hide();
+        toggleNotificationBellPosition();
       });
   }
 
@@ -46,6 +47,7 @@
         if ( data.notificationNmber > 0 ) {
           notificationCount.html(data.notificationNmber);
           notificationCount.show();
+          toggleNotificationBellPosition();
         } else {
           notificationCount.hide();
         }
@@ -54,7 +56,24 @@
     });
   }
 
+  function toggleNotificationBellPosition() {
+    var notificationCount = $('#count-notifications');
+    var button = $('#notifications-dropdown');
+
+    if ( notificationCount.is(":hidden") ) {
+      button
+        .find('.fa-bell')
+        .css('position', 'relative');
+    } else {
+      button
+        .find('.fa-bell')
+        .css('position', 'absolute');
+    }
+
+  }
+
   // init
   loadDropdownNotifications();
   loadUnseenNotificationsNumber();
+  toggleNotificationBellPosition();
 })();
