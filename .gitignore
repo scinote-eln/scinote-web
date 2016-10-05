@@ -49,3 +49,6 @@ tags
 
 # Ignore rubocop cache files
 rubocop_cache
+
+# Ignore ESLint local instalation
+node_modules
