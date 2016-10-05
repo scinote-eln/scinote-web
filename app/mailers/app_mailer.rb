@@ -12,4 +12,12 @@ class AppMailer < Devise::Mailer
     headers = { to: @user.email, subject: (I18n.t('mailer.invitation_to_organization.subject')) }.merge(opts)
     mail(headers)
   end
+
+  def notification(user, notification)
+    @user = user
+    @notification = notification
+    headers = { to: @user.email,
+      subject: "#{I18n.t('notifications.email_title')} - #{notification.title}" }
+    mail(headers)
+  end
 end
