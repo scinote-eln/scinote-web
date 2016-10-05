@@ -101,13 +101,20 @@ table {
   }
 }
 
+@media(max-width:450px) {
+  .dropdown-notifications {
+    width: 100%;
+  }
+}
+
 .dropdown-notifications {
   max-height: 500px;
-  min-width: 450px;
   overflow-x: hidden;
   overflow-y: scroll;
   padding-bottom: 0;
   padding-top: 0;
+  width: 450px;
+  word-wrap: break-word;
 
   .notification {
     border-bottom: 1px solid $color-alto;
