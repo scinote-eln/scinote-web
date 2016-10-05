@@ -1,0 +1,26 @@
+{
+  "name": "scinote-web",
+  "version": "1.0.0",
+  "description": "![sciNote logo](http://scinote.net/wp-content/uploads/2015/10/logo_sciNote_final.png)",
+  "main": "application.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/biosistemika/scinote-web.git"
+  },
+  "author": "SEE AUTHORS AT https://github.com/biosistemika/scinote-web/graphs/contributors",
+  "license": "SEE LICENSE IN LICENSE.txt",
+  "bugs": {
+    "url": "https://scinote.atlassian.net/"
+  },
+  "homepage": "https://github.com/biosistemika/scinote-web#readme",
+  "files": [
+    ".eslintrc.json"
+  ],
+  "scripts": {
+    "lint": "eslint ."
+  },
+  "devDependencies": {
+    "eslint": "^3.7.1",
+    "eslint-config-google": "^0.5.0"
+  }
+}
