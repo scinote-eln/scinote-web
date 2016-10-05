@@ -435,40 +435,45 @@ function initializeSaveToPdf() {
 }
 
 function initializeUnsavedWorkDialog() {
-  var dh = $("#data-holder");
-  var alertText = dh.attr("data-unsaved-work-text");
+  var dh = $('#data-holder');
+  var alertText = dh.attr('data-unsaved-work-text');
 
   ignoreUnsavedWorkAlert = false;
+  if ( ignoreUnsavedWorkAlert ) {
+    return;
+  }
 
-  $(window)
-  .on("beforeunload", function(ev) {
-    if (ignoreUnsavedWorkAlert) {
-      // Remove unload listeners
-      $(window).off("beforeunload");
-      $(document).off("page:before-change");
+  $(document).on('page:before-change', beforechange);
+  $(window).on('beforeunload', beforeunload);
 
-      ev.returnValue = undefined;
-      return undefined;
-    } else {
+  function beforeunload() {
+    //Check if we are actually in report editor
+    if ( $(REPORT_CONTENT).length ) {
       return alertText;
-    }
-  });
-  $(document).on("page:before-change", function(ev) {
-    var exit;
-    if (ignoreUnsavedWorkAlert) {
-      exit = true;
     } else {
+      // We are at another page so remove unload handlers if they exists
+      $(window).off('beforeunload', beforeunload);
+      $(document).off('page:before-change', beforechange);
+    }
+  }
+
+  function beforechange() {
+    //Check if we are actually in report editor
+    if ( $(REPORT_CONTENT).length ) {
+      var exit;
       exit = confirm(alertText);
+      if ( exit ) {
+        // We leave the page so remove all listeners
+        $(window).off();
+        $(document).off();
+      }
+      return exit;
+    } else {
+      // We are at another page so remove unload handlers if they exists
+      $(window).off('beforeunload', beforeunload);
+      $(document).off('page:before-change', beforechange);
     }
-
-    if (exit) {
-      // Remove unload listeners
-      $(window).off("beforeunload");
-      $(document).off("page:before-change");
-    }
-
-    return exit;
-  });
+  }
 }
 
 /**
@@ -1197,19 +1202,22 @@ $(document).ready(function() {
   /**
   * ACTUAL CODE
   */
-  initializeReportElements($(REPORT_CONTENT));
-  initializeGlobalReportSort();
-  initializePrintPopup();
-  initializeSaveToPdf();
-  initializeSaveReport();
-  initializeAddContentsModal();
-  initializeSidebarNavigation();
-  initializeUnsavedWorkDialog();
-  initializeTutorial();
+  //Check if we are actually at new report page
+  if ( $(REPORT_CONTENT).length ) {
+    initializeReportElements($(REPORT_CONTENT));
+    initializeGlobalReportSort();
+    initializePrintPopup();
+    initializeSaveToPdf();
+    initializeSaveReport();
+    initializeAddContentsModal();
+    initializeSidebarNavigation();
+    initializeUnsavedWorkDialog();
+    initializeTutorial();
 
-  $(".report-nav-link").each( function(){
-    truncateLongString( $(this), 30);
-  });
+    $(".report-nav-link").each( function(){
+      truncateLongString( $(this), 30);
+    });
+  }
 })
 
 $(document).change(function(){
