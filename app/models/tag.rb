@@ -2,8 +2,12 @@ class Tag < ActiveRecord::Base
   include SearchableModel
 
   auto_strip_attributes :name, :color, nullify: false
-  validates :name, presence: true, length: { maximum: NAME_MAX_LENGTH }
-  validates :color, presence: true, length: { maximum: COLOR_MAX_LENGTH }
+  validates :name,
+            presence: true,
+            length: { maximum: Constants::NAME_MAX_LENGTH }
+  validates :color,
+            presence: true,
+            length: { maximum: Constants::COLOR_MAX_LENGTH }
   validates :project, presence: true
 
   belongs_to :created_by, foreign_key: 'created_by_id', class_name: 'User'
@@ -15,7 +19,7 @@ class Tag < ActiveRecord::Base
   def self.search(user, include_archived, query = nil, page = 1)
     project_ids =
       Project
-      .search(user, include_archived, nil, SEARCH_NO_LIMIT)
+      .search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
       .select("id")
 
     if query
@@ -34,12 +38,12 @@ class Tag < ActiveRecord::Base
       .where_attributes_like(:name, a_query)
 
     # Show all results if needed
-    if page == SEARCH_NO_LIMIT
+    if page == Constants::SEARCH_NO_LIMIT
       new_query
     else
       new_query
-        .limit(SEARCH_LIMIT)
-        .offset((page - 1) * SEARCH_LIMIT)
+        .limit(Constants::SEARCH_LIMIT)
+        .offset((page - 1) * Constants::SEARCH_LIMIT)
     end
   end
 

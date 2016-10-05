@@ -28,7 +28,7 @@ class OrganizationTest < ActiveSupport::TestCase
 
   test "space_taken_defaults_to_value" do
     org = Organization.new
-    assert_equal MINIMAL_ORGANIZATION_SPACE_TAKEN, org.space_taken
+    assert_equal Constants::MINIMAL_ORGANIZATION_SPACE_TAKEN, org.space_taken
   end
 
   test "should save log message" do

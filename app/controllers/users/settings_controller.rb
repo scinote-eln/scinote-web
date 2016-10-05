@@ -121,17 +121,19 @@ class Users::SettingsController < ApplicationController
       format.json {
         if params.include? :existing_query and
           query = params[:existing_query].strip()
-          if query.length < NAME_MIN_LENGTH
+          if query.length < Constants::NAME_MIN_LENGTH
             render json: {
               "existing_query": [
-                t('general.query.length_too_short', min_length: NAME_MIN_LENGTH)
+                t('general.query.length_too_short',
+                  min_length: Constants::NAME_MIN_LENGTH)
               ]
             },
             status: :unprocessable_entity
-          elsif query.length > NAME_MAX_LENGTH
+          elsif query.length > Constants::NAME_MAX_LENGTH
             render json: {
               "existing_query": [
-                t('general.query.length_too_long', max_length: NAME_MAX_LENGTH)
+                t('general.query.length_too_long',
+                  max_length: Constants::NAME_MAX_LENGTH)
               ]
             },
             status: :unprocessable_entity
@@ -140,7 +142,8 @@ class Users::SettingsController < ApplicationController
             nr_of_results = User.search(true, query, @org).count
 
 
-            users = User.search(false, query, @org).limit(MODAL_SEARCH_LIMIT)
+            users = User.search(false, query, @org)
+                        .limit(Constants::MODAL_SEARCH_LIMIT)
 
             nr_of_members = User.organization_search(false, query, @org).count
 

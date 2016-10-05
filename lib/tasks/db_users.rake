@@ -61,7 +61,7 @@ namespace :db do
             user_hash["email"],
             password,
             true,
-            create_orgs ? DEFAULT_PRIVATE_ORG_NAME : nil,
+            create_orgs ? Constants::DEFAULT_PRIVATE_ORG_NAME : nil,
             org_ids
           )
 
@@ -117,7 +117,7 @@ namespace :db do
           email,
           password,
           true,
-          create_org ? DEFAULT_PRIVATE_ORG_NAME : nil,
+          create_org ? Constants::DEFAULT_PRIVATE_ORG_NAME : nil,
           org_ids
         )
 

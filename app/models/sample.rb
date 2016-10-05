@@ -2,7 +2,9 @@ class Sample < ActiveRecord::Base
   include SearchableModel
 
   auto_strip_attributes :name, nullify: false
-  validates :name, presence: true, length: { maximum: NAME_MAX_LENGTH }
+  validates :name,
+            presence: true,
+            length: { maximum: Constants::NAME_MAX_LENGTH }
   validates :user, :organization, presence: true
 
   belongs_to :user, inverse_of: :samples
@@ -59,12 +61,12 @@ class Sample < ActiveRecord::Base
       )
 
       # Show all results if needed
-      if page == SEARCH_NO_LIMIT
+      if page == Constants::SEARCH_NO_LIMIT
         new_query
       else
         new_query
-          .limit(SEARCH_LIMIT)
-          .offset((page - 1) * SEARCH_LIMIT)
+          .limit(Constants::SEARCH_LIMIT)
+          .offset((page - 1) * Constants::SEARCH_LIMIT)
       end
   end
 

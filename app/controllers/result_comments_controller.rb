@@ -159,7 +159,7 @@ class ResultCommentsController < ApplicationController
 
   def load_vars
     @last_comment_id = params[:from].to_i
-    @per_page = COMMENTS_SEARCH_LIMIT
+    @per_page = Constants::COMMENTS_SEARCH_LIMIT
     @result = Result.find_by_id(params[:result_id])
     @my_module = @result.my_module
 

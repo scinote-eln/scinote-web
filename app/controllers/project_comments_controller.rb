@@ -158,7 +158,7 @@ class ProjectCommentsController < ApplicationController
 
   def load_vars
     @last_comment_id = params[:from].to_i
-    @per_page = COMMENTS_SEARCH_LIMIT
+    @per_page = Constants::COMMENTS_SEARCH_LIMIT
     @project = Project.find_by_id(params[:project_id])
 
     unless @project

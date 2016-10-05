@@ -11,8 +11,9 @@ class OrganizationsController < ApplicationController
       if params[:file]
         begin
 
-          if params[:file].size > FILE_MAX_SIZE.megabytes
-            error = t 'general.file.size_exceeded', file_size: FILE_MAX_SIZE
+          if params[:file].size > Constants::FILE_MAX_SIZE_MB.megabytes
+            error = t 'general.file.size_exceeded',
+                      file_size: Constants::FILE_MAX_SIZE_MB
 
             format.html {
               flash[:alert] = error

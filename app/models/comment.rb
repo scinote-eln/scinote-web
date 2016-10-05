@@ -2,7 +2,9 @@ class Comment < ActiveRecord::Base
   include SearchableModel
 
   auto_strip_attributes :message, nullify: false
-  validates :message, presence: true, length: { maximum: TEXT_MAX_LENGTH }
+  validates :message,
+            presence: true,
+            length: { maximum: Constants::TEXT_MAX_LENGTH }
   validates :user, presence: true
 
   validate :belongs_to_only_one_object
@@ -24,19 +26,19 @@ class Comment < ActiveRecord::Base
   )
     project_ids =
       Project
-      .search(user, include_archived, nil, SEARCH_NO_LIMIT)
+      .search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
       .select("id")
     my_module_ids =
       MyModule
-      .search(user, include_archived, nil, SEARCH_NO_LIMIT)
+      .search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
       .select("id")
     step_ids =
       Step
-      .search(user, include_archived, nil, SEARCH_NO_LIMIT)
+      .search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
       .select("id")
     result_ids =
       Result
-      .search(user, include_archived, nil, SEARCH_NO_LIMIT)
+      .search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
       .select("id")
 
 
@@ -73,12 +75,12 @@ class Comment < ActiveRecord::Base
       )
 
       # Show all results if needed
-      if page == SEARCH_NO_LIMIT
+      if page == Constants::SEARCH_NO_LIMIT
         new_query
       else
         new_query
-          .limit(SEARCH_LIMIT)
-          .offset((page - 1) * SEARCH_LIMIT)
+          .limit(Constants::SEARCH_LIMIT)
+          .offset((page - 1) * Constants::SEARCH_LIMIT)
       end
   end
 

@@ -1,6 +1,8 @@
 class SampleType < ActiveRecord::Base
   auto_strip_attributes :name, nullify: false
-  validates :name, presence: true, length: { maximum: NAME_MAX_LENGTH }
+  validates :name,
+            presence: true,
+            length: { maximum: Constants::NAME_MAX_LENGTH }
   validates :organization, presence: true
 
   belongs_to :created_by, foreign_key: 'created_by_id', class_name: 'User'

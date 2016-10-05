@@ -15,7 +15,11 @@
         <%= name %>
       </div>
       <div class="pull-left file-name">
-        <em><%=t "projects.reports.elements.result_asset.file_name", file: truncate( asset.file_file_name, length: FILENAME_TRUNCATION_LENGTH ) %></em>
+        <em><%=t "projects.reports.elements.result_asset.file_name",
+                 file: truncate(asset.file_file_name,
+                                length: Constants::FILENAME_TRUNCATION_LENGTH)
+            %>
+        </em>
       </div>
       <div class="pull-left user-time">
         <%=t "projects.reports.elements.result_asset.user_time", user: result.user.full_name, timestamp: l(timestamp, format: :full) %>

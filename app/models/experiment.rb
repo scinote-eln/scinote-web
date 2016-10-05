@@ -19,9 +19,10 @@ class Experiment < ActiveRecord::Base
 
   auto_strip_attributes :name, :description, nullify: false
   validates :name,
-            length: { minimum: NAME_MIN_LENGTH, maximum: NAME_MAX_LENGTH },
+            length: { minimum: Constants::NAME_MIN_LENGTH,
+                      maximum: Constants::NAME_MAX_LENGTH },
             uniqueness: { scope: :project, case_sensitive: false }
-  validates :description, length: { maximum: TEXT_MAX_LENGTH }
+  validates :description, length: { maximum: Constants::TEXT_MAX_LENGTH }
   validates :project, presence: true
   validates :created_by, presence: true
   validates :last_modified_by, presence: true
@@ -35,7 +36,7 @@ class Experiment < ActiveRecord::Base
   def self.search(user, include_archived, query = nil, page = 1)
     project_ids =
       Project
-        .search(user, include_archived, nil, SEARCH_NO_LIMIT)
+        .search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
         .select("id")
 
     if query
@@ -62,12 +63,12 @@ class Experiment < ActiveRecord::Base
     end
 
     # Show all results if needed
-    if page == SEARCH_NO_LIMIT
+    if page == Constants::SEARCH_NO_LIMIT
       new_query
     else
       new_query
-      .limit(SEARCH_LIMIT)
-      .offset((page - 1) * SEARCH_LIMIT)
+      .limit(Constants::SEARCH_LIMIT)
+      .offset((page - 1) * Constants::SEARCH_LIMIT)
     end
   end
 

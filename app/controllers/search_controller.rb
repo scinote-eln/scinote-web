@@ -24,7 +24,7 @@ class SearchController < ApplicationController
     search_tables if @search_category == :tables
     search_comments if @search_category == :comments
 
-    @search_pages = (@search_count.to_f / SEARCH_LIMIT.to_f).ceil
+    @search_pages = (@search_count.to_f / Constants::SEARCH_LIMIT.to_f).ceil
     @start_page = @search_page - 2
     @start_page = 1 if @start_page < 1
     @end_page = @start_page + 4
@@ -48,27 +48,29 @@ class SearchController < ApplicationController
     @search_page = params[:page].to_i || 1
     @display_query = @search_query
 
-    if @search_query.length < NAME_MIN_LENGTH
+    if @search_query.length < Constants::NAME_MIN_LENGTH
       flash[:error] = t 'general.query.length_too_short',
-                        min_length: NAME_MIN_LENGTH
+                        min_length: Constants::NAME_MIN_LENGTH
       return redirect_to :back
     end
 
     # splits the search query to validate all entries
     @splited_query = @search_query.split
 
-    if @splited_query.first.length < NAME_MIN_LENGTH
+    if @splited_query.first.length < Constants::NAME_MIN_LENGTH
       flash[:error] = t 'general.query.length_too_short',
-                        min_length: NAME_MIN_LENGTH
+                        min_length: Constants::NAME_MIN_LENGTH
       redirect_to :back
-    elsif @splited_query.first.length > TEXT_MAX_LENGTH
+    elsif @splited_query.first.length > Constants::TEXT_MAX_LENGTH
       flash[:error] = t 'general.query.length_too_long',
-                        max_length: TEXT_MAX_LENGTH
+                        max_length: Constants::TEXT_MAX_LENGTH
       redirect_to :back
     elsif @splited_query.length > 1
       @search_query = ''
       @splited_query.each_with_index do |w, i|
-        @search_query += "#{@splited_query[i]} " if w.length >= NAME_MIN_LENGTH
+        if w.length >= Constants::NAME_MIN_LENGTH
+          @search_query += "#{@splited_query[i]} "
+        end
       end
     else
       @search_query = @splited_query.join(' ')

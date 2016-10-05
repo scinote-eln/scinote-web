@@ -21,9 +21,9 @@ $.fn.onSubmitValidator = function(validatorCb) {
 var TextLimitEnum = Object.freeze({
   OPTIONAL: 0,
   REQUIRED: 1,
-  NAME_MIN_LENGTH: "<%= NAME_MIN_LENGTH %>",
-  NAME_MAX_LENGTH: "<%= NAME_MAX_LENGTH %>",
-  TEXT_MAX_LENGTH: "<%= TEXT_MAX_LENGTH %>"
+  NAME_MIN_LENGTH: "<%= Constants::NAME_MIN_LENGTH %>",
+  NAME_MAX_LENGTH: "<%= Constants::NAME_MAX_LENGTH %>",
+  TEXT_MAX_LENGTH: "<%= Constants::TEXT_MAX_LENGTH %>"
 });
 
 /*
@@ -102,8 +102,8 @@ function checklistsValidator(ev, checklists, editMode) {
 }
 
 var FileTypeSizeEnum = Object.freeze({
-  FILE: "<%= FILE_MAX_SIZE.megabytes %>",
-  AVATAR: "<%= AVATAR_MAX_SIZE.megabytes %>"
+  FILE: "<%= Constants::FILE_MAX_SIZE_MB.megabytes %>",
+  AVATAR: "<%= Constants::AVATAR_MAX_SIZE_MB.megabytes %>"
 });
 
 function filesValidator(ev, fileInputs, fileTypeEnum, canBeEmpty) {
@@ -139,9 +139,9 @@ function filesSizeValidator(ev, fileInputs, fileTypeEnum) {
     if (file.size > fileTypeEnum) {
       switch (fileTypeEnum) {
         case FileTypeSizeEnum.FILE:
-         return "<%= I18n.t 'general.file.size_exceeded', file_size: FILE_MAX_SIZE %>".strToErrorFormat();
+         return "<%= I18n.t 'general.file.size_exceeded', file_size: Constants::FILE_MAX_SIZE_MB %>".strToErrorFormat();
         case FileTypeSizeEnum.AVATAR:
-          return "<%= I18n.t 'general.file.size_exceeded', file_size: AVATAR_MAX_SIZE %>".strToErrorFormat();
+          return "<%= I18n.t 'general.file.size_exceeded', file_size: Constants::AVATAR_MAX_SIZE_MB %>".strToErrorFormat();
       }
     }
   };

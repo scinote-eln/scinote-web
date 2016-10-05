@@ -7,6 +7,6 @@ create_user(
   "admin@scinote.net",
   admin_password,
   true,
-  DEFAULT_PRIVATE_ORG_NAME,
+  Constants::DEFAULT_PRIVATE_ORG_NAME,
   []
 )

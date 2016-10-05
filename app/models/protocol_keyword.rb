@@ -1,7 +1,8 @@
 class ProtocolKeyword < ActiveRecord::Base
   auto_strip_attributes :name, nullify: false
   validates :name,
-            length: { minimum: NAME_MIN_LENGTH, maximum: NAME_MAX_LENGTH }
+            length: { minimum: Constants::NAME_MIN_LENGTH,
+                      maximum: Constants::NAME_MAX_LENGTH }
   validates :organization, presence: true
 
   belongs_to :organization, inverse_of: :protocol_keywords

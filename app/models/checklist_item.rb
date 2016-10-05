@@ -1,6 +1,8 @@
 class ChecklistItem < ActiveRecord::Base
   auto_strip_attributes :text, nullify: false
-  validates :text, presence: true, length: { maximum: TEXT_MAX_LENGTH }
+  validates :text,
+            presence: true,
+            length: { maximum: Constants::TEXT_MAX_LENGTH }
   validates :checklist, presence: true
   validates :checked, inclusion: { in: [true, false] }
 
