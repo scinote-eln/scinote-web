@@ -1,7 +1,7 @@
 <% provide(:head_title, raw(t("notifications.title"))) %>
 <div class="notifications-container">
   <div class="notifications-header">
-    <span><%= t('notifications.title') %></span><span class="pull-right"><%= t('nav.user.settings') %></span>
+    <span><%= t('notifications.title') %></span><span class="pull-right"><%= link_to t('nav.user.settings'), preferences_path %></span>
   </div>
   <div class="notifications-body">
     <ul class="notifications-list">

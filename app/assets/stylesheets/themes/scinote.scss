@@ -159,6 +159,10 @@ table {
     color: $color-wild-sand;
     font-weight: bold;
     padding: 8px;
+
+    a {
+      color: $color-white;
+    }
   }
 
   .notifications-dropdown-footer {
