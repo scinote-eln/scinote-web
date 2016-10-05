@@ -89,6 +89,10 @@ class Activity < ActiveRecord::Base
 
     project.users.each do |project_user|
       next if project_user == user
+      next if !project_user.assignments_notification &&
+              notification.type_of == 'assignment'
+      next if !project_user.recent_notification &&
+              notification.type_of == 'recent_changes'
       UserNotification.create(notification: notification, user: project_user)
     end
   end

@@ -556,6 +556,39 @@ a[data-toggle="tooltip"] {
   margin-bottom: 15px;
 }
 
+.notification-settings-labels {
+  line-height: 3em;
+  margin-top: 40px;
+}
+
+.notification-settings-container {
+  margin-bottom: 50px;
+  margin-top: 50px;
+
+  .col-md-4 {
+    margin-top: 25px;
+  }
+
+  .btn-group {
+    margin-top: 15px;
+  }
+
+  .assignment {
+    background-color: $color-theme-primary;
+    border-radius: 50%;
+    color: $color-wild-sand;
+    font-size: 15px;
+    margin-left: 20px;
+    margin-right: 15px;
+    padding: 7px;
+  }
+
+  .img-circle {
+    margin-left: 20px;
+    margin-right: 15px;
+  }
+}
+
 // Help link
 #help-link {
   padding: 13px;

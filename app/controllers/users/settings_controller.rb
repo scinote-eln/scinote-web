@@ -9,7 +9,8 @@ class Users::SettingsController < ApplicationController
     :create_organization,
     :organization_users_datatable,
     :tutorial,
-    :reset_tutorial
+    :reset_tutorial,
+    :notifications_settings
   ]
 
   before_action :check_organization_permission, only: [
@@ -456,6 +457,29 @@ class Users::SettingsController < ApplicationController
     end
   end
 
+  def notifications_settings
+    @user.assignments_notification = params[:assignments_notification]
+    @user.recent_notification = params[:recent_notification]
+
+    if @user.save
+      respond_to do |format|
+        format.json do
+          render json: {
+            status: :ok
+          }
+        end
+      end
+    else
+      respond_to do |format|
+        format.json do
+          render json: {
+            status: :unprocessable_entity
+          }
+        end
+      end
+    end
+  end
+
   private
 
   def load_user
@@ -543,6 +567,9 @@ class Users::SettingsController < ApplicationController
       message:
       ActionController::Base.helpers.sanitize(message),
     )
-    UserNotification.create(notification: notification, user: target_user)
+
+    if target_user.assignments_notification
+      UserNotification.create(notification: notification, user: target_user)
+    end
   end
 end

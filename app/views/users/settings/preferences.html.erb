@@ -34,6 +34,32 @@
     <% if Rails.configuration.x.enable_tutorial %>
       <%= link_to t('users.settings.preferences.tutorial.repeat_tutorial'), tutorial_path(format: :json), remote: true, class: "btn btn-primary", id: "reset-tutorial-btn" %>
     <% end %>
+
+    <div class="container notification-settings-container">
+      <h4><%= t('notifications.title') %></h4>
+      <%= form_for(@user,
+                   url: notifications_settings_path(format: :json),
+                   html: { method: :post, id: 'notifications-settings-panel' },
+                   remote: true) do |f| %>
+      <div class="row">
+        <div class="col-md-4 col-sm-3 hidden-sm hidden-xs">
+          <div class="notification-settings-labels">
+            <%= image_tag 'icon_small/missing.png', class: 'img-circle ' %>
+            <%= f.label t('notifications.form.recent_notification') %> <br>
+            <span class="assignment hidden-sm"><%= fa_icon 'newspaper-o' %></span>
+            <%= f.label t('notifications.form.assignments') %>
+          </div>
+        </div>
+        <div class="col-md-3 col-sm-3 col-text-center">
+            <h5 class="hidden-sm hidden-xs"><%= t('notifications.title') %></h5>
+              <%= f.label t('notifications.form.recent_notification'), class: 'visible-sm visible-xs'%> <br>
+              <%= check_box_tag :recent_notification, @user.recent_notification %> <br>
+              <%= f.label t('notifications.form.assignments'), class: 'visible-sm visible-xs' %>
+              <%= check_box_tag :assignments_notification, @user.assignments_notification %>
+        </div>
+      </div>
+      <% end %>
+    </div>
   </div>
   <div class="tab-pane tab-pane-settings" role="tabpanel"></div>
 </div>
@@ -53,5 +79,7 @@
     </div>
   </div>
 </div>
+
+
 
 <%= javascript_include_tag "users/settings/preferences" %>

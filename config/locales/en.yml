@@ -1511,6 +1511,9 @@ en:
 
   notifications:
     title: "Notifications"
+    form:
+      assignments: "Assignments notifications"
+      recent_notification: "Change notifications"
   # This section contains general words that can be used in any parts of
   # application.
 
