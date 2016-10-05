@@ -39,7 +39,7 @@ class UserNotificationsController < ApplicationController
         }
       end
     end
-    mark_seen_notification @notifications
+    UserNotification.seen_by_user(current_user)
   end
 
   def recent_notifications
