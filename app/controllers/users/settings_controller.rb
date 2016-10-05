@@ -458,16 +458,8 @@ class Users::SettingsController < ApplicationController
   end
 
   def notifications_settings
-    if params[:assignments_notification]
-      @user.assignments_notification = true
-    else
-      @user.assignments_notification = false
-    end
-    if params[:recent_notification]
-      @user.recent_notification = true
-    else
-      @user.recent_notification = false
-    end
+    @user.assignments_notification = params[:assignments_notification]
+    @user.recent_notification = params[:recent_notification]
 
     if @user.save
       respond_to do |format|
@@ -575,7 +567,7 @@ class Users::SettingsController < ApplicationController
       message:
       ActionController::Base.helpers.sanitize(message),
     )
-    
+
     if target_user.assignments_notification
       UserNotification.create(notification: notification, user: target_user)
     end

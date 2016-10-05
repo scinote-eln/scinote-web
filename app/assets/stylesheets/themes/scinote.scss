@@ -555,15 +555,11 @@ a[data-toggle="tooltip"] {
 }
 
 .notification-settings-container {
-  margin-top: 50px;
   margin-bottom: 50px;
+  margin-top: 50px;
 
-  .col-xs-2 {
-    padding-top: 20px;
-  }
-
-  .col-xs-3 {
-    padding-top: 30px;
+  .col-md-4 {
+    margin-top: 25px;
   }
 
   .btn-group {

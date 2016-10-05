@@ -1,4 +1,4 @@
-class AddNotifivationsSettingsToUser < ActiveRecord::Migration
+class AddNotificationsSettingsToUser < ActiveRecord::Migration
   def up
     add_column :users, :assignments_notification, :boolean, default: true
     add_column :users, :recent_notification, :boolean, default: true
