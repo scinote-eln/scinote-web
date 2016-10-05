@@ -75,29 +75,20 @@ table {
 #notifications-dropdown {
   .fa-bell {
     font-size: 15px;
+    position: absolute;
   }
 
   #count-notifications {
     background-color: $color-theme-primary;
     border-radius: 5px;
     color: $color-wild-sand;
-    font-size: 12px;
-    font-weight: bold;
-    margin-left: 10px;
-    margin-top: -10px;
-    padding-left: 4px;
-    padding-right: 4px;
-    position: fixed;
-    z-index: 999999;
     display: none;
-  }
-}
-
-@media(max-width:768px) {
-  #count-notifications {
-    position: absolute !important;
-    margin-left: -4px !important;
-    margin-top: 10px !important;
+    font-size: 11px;
+    font-weight: bold;
+    margin-left: 12px;
+    padding: 1px 6px;
+    position: relative;
+    z-index: 999999;
   }
 }
 
@@ -124,14 +115,13 @@ table {
   }
 
   .text-center {
-    margin-left: 10px;
-    padding-top: 10px;
+    margin-left: 12px;
   }
 
   .avatar {
+    top: 0px;
+    margin-top: 5px;
     height: 45px;
-    margin: 0 auto;
-    margin-left: 5px;
     width: 45px;
   }
 
@@ -142,8 +132,6 @@ table {
     display: block;
     font-size: 23px;
     height: 45px;
-    margin: 0 auto;
-    margin-left: 5px;
     padding-top: 5px;
     width: 45px;
   }
@@ -155,8 +143,6 @@ table {
     display: block;
     font-size: 23px;
     height: 45px;
-    margin: 0 auto;
-    margin-left: 5px;
     padding-top: 8px;
     width: 45px;
   }
