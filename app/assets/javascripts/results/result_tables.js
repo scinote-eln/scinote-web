@@ -99,7 +99,6 @@ function formAjaxResultTable($form) {
     applyCollapseLinkCallBack();
     initHandsOnTables($result);
     toggleResultEditButtons(true);
-    initResultCommentTabAjax();
     expandResult($result);
   });
   $form.on("ajax:error", function(e, xhr, status, error) {

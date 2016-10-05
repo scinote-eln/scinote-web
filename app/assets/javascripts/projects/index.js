@@ -284,7 +284,7 @@
     initNewProjectModal();
     initEditProjectModal();
     initManageUsersModal();
-    Comments.initCommentOptions("ul.content-comments");
+    Comments.initCommentOptions("ul.content-comments", true);
     Comments.initEditComments(".panel-project .tab-content");
     Comments.initDeleteComments(".panel-project .tab-content");
 

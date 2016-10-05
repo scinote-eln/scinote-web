@@ -63,6 +63,15 @@ var Comments = (function() {
           moreBtn.trigger('blur');
         }
 
+        var date;
+        $.each(list.find('.comment-date-separator'), function() {
+          if ( $(this).find('p').html() === date ) {
+            $(this).remove();
+          } else {
+            date = $(this).find('p').html();
+          }
+        });
+
         // Reposition dropdown comment options
         scrollCommentOptions(listItem
                               .closest('.content-comments')
@@ -197,7 +206,7 @@ var Comments = (function() {
       var $el = $(el);
       var offset = useParentOffset ? $el.offset().top : $el.position().top;
       $el.find('.dropdown-menu-fixed')
-      .offset({ top: (offset + 20) });
+        .offset({ top: (offset + 20) });
     });
   }
 
@@ -328,7 +337,6 @@ var Comments = (function() {
     form: initCommentForm,
     bindNewElement: bindCommentInitializerToNewElement,
     initCommentOptions: initCommentOptions,
-    scrollCommentOptions: scrollCommentOptions,
     initDeleteComments: initDeleteComments,
     initEditComments: initEditComments
   };
