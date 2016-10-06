@@ -23,9 +23,6 @@ class UserNotification < ActiveRecord::Base
   end
 
   def self.seen_by_user(user)
-    where(user: user).map do |n|
-      n.checked = true
-      n.save
-    end
+    where(user: user).where(checked: false).update_all(checked: true)
   end
 end
