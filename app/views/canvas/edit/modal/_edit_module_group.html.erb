@@ -6,15 +6,6 @@
         <h4 class="modal-title" id="modal-edit-module-group-label"><%=t "experiments.canvas.edit.modal_edit_module_group.title" %></h4>
       </div>
       <div class="modal-body">
-        <span class="module-name-length-error" style="display: none;">
-          <%=t "experiments.canvas.edit.modal_new_module.error_length" %>
-        </span>
-        <span class="module-name-invalid-error" style="display: none;">
-          <%=t "experiments.canvas.edit.modal_new_module.error_invalid" %>
-        </span>
-        <span class="module-name-whitespaces-error" style="display: none;">
-          <%=t "experiments.canvas.edit.modal_new_module.error_whitespaces" %>
-        </span>
         <%= bootstrap_form_tag do |f| %>
           <%= f.text_field t("experiments.canvas.edit.modal_edit_module_group.name"), id: "edit-module-group-name-input" %>
         <% end %>
