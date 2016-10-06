@@ -43,6 +43,8 @@ GEM
     arel (6.0.3)
     aspector (0.14.0)
     ast (2.3.0)
+    auto_strip_attributes (2.1.0)
+      activerecord (>= 3.0)
     autoprefixer-rails (6.1.2)
       execjs
       json
@@ -56,6 +58,10 @@ GEM
     aws-sdk-v1 (1.66.0)
       json (~> 1.4)
       nokogiri (>= 1.4.4)
+    babel-source (5.8.35)
+    babel-transpiler (0.7.0)
+      babel-source (>= 4.0, < 6)
+      execjs (~> 2.0)
     bcrypt (3.1.11)
     better_errors (2.1.1)
       coderay (>= 1.0.0)
@@ -84,9 +90,15 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.10.0)
+    colorize (0.8.1)
     commit_param_routing (0.0.1)
     concurrent-ruby (1.0.0)
     debug_inspector (0.0.2)
+    deface (1.0.2)
+      colorize (>= 0.5.8)
+      nokogiri (~> 1.6.0)
+      polyglot
+      rails (>= 3.1)
     delayed_job (4.1.1)
       activesupport (>= 3.0, < 5.0)
     delayed_job_active_record (4.1.0)
@@ -166,6 +178,7 @@ GEM
     nokogiri (1.6.8)
       mini_portile2 (~> 2.1.0)
       pkg-config (~> 1.1.7)
+    oj (2.17.4)
     orm_adapter (0.5.0)
     paperclip (4.3.2)
       activemodel (>= 3.2.0)
@@ -177,6 +190,7 @@ GEM
       ast (~> 2.2)
     pg (0.18.4)
     pkg-config (1.1.7)
+    polyglot (0.3.5)
     powerpack (0.1.1)
     puma (2.15.3)
     rack (1.6.4)
@@ -221,6 +235,7 @@ GEM
     rgl (0.5.1)
       algorithms (~> 0.6.1)
       stream (~> 0.5.0)
+    rkelly-remix (0.0.7)
     roo (2.1.1)
       nokogiri (~> 1)
       rubyzip (~> 1.1, < 2.0.0)
@@ -248,6 +263,7 @@ GEM
       activesupport (>= 4.0.0)
     skylight (0.10.0)
       activesupport (>= 3.0.0)
+    sourcemap (0.1.1)
     spinjs-rails (1.4)
       rails (>= 3.1)
     sprockets (3.5.2)
@@ -257,6 +273,13 @@ GEM
       actionpack (>= 3.0)
       activesupport (>= 3.0)
       sprockets (>= 2.8, < 4.0)
+    starscope (1.5.3)
+      babel-transpiler (~> 0.7)
+      oj (~> 2.9)
+      parser (>= 2.2.2)
+      rkelly-remix (~> 0.0.7)
+      ruby-progressbar (~> 1.5)
+      sourcemap (~> 0.1)
     stream (0.5)
     thor (0.19.1)
     thread_safe (0.3.5)
@@ -289,6 +312,7 @@ PLATFORMS
 DEPENDENCIES
   ajax-datatables-rails (~> 0.3.1)
   aspector
+  auto_strip_attributes (~> 2.1)
   awesome_print
   aws-sdk (~> 2.2.8)
   aws-sdk-v1
@@ -301,6 +325,7 @@ DEPENDENCIES
   bootstrap_form
   byebug
   commit_param_routing
+  deface (~> 1.0)
   delayed_job_active_record
   devise (= 3.5.6)
   devise-async
@@ -338,6 +363,7 @@ DEPENDENCIES
   shoulda-matchers (>= 3.0.1)
   skylight
   spinjs-rails
+  starscope
   turbolinks
   tzinfo-data
   uglifier (>= 1.3.0)
