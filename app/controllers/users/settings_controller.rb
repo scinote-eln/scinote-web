@@ -458,8 +458,13 @@ class Users::SettingsController < ApplicationController
   end
 
   def notifications_settings
-    @user.assignments_notification = params[:assignments_notification]
-    @user.recent_notification = params[:recent_notification]
+    @user.assignments_notification =
+      params[:assignments_notification] ? true : false
+    @user.recent_notification = params[:recent_notification] ? true : false
+    @user.recent_notification_email =
+      params[:recent_notification_email] ? true : false
+    @user.assignments_notification_email =
+      params[:assignments_notification_email] ? true : false
 
     if @user.save
       respond_to do |format|

@@ -95,28 +95,53 @@
 
   // Setup notification checkbox buttons
   function notificationsSettings() {
-    var recent_notification = $('[name="recent_notification"]');
-    recent_notification
-      .checkboxpicker({
-        onActiveCls: 'btn-primary'
-      });
+    var notification_settings = [ "recent_notification",
+                                  "assignments_notification" ]
 
-    if ( recent_notification.attr('value') === 'true' ) {
-      recent_notification.prop('checked', true);
-    } else {
-      recent_notification.prop('checked', false);
+    for (var i = 0; i < notification_settings.length; i++ ) {
+      var setting = $('[name="' + notification_settings[i] + '"]');
+      var dependant = $('[name="' + notification_settings[i] + '_email"]');
+      setting
+        .checkboxpicker({
+          onActiveCls: 'btn-primary'
+        }).change(function() {
+          if ( $(this).prop('checked') ) {
+            enableDependant($('[name="' + $(this).attr('name') + '_email"]'));
+          } else {
+            disableDependant($('[name="' + $(this).attr('name') + '_email"]'));
+          }
+        });
+
+      if ( setting.attr('value') === 'true' ) {
+        setting.prop('checked', true);
+      } else {
+        setting.prop('checked', false);
+        disableDependant(dependant);
+      }
+
+      setEmailSwitch(dependant);
     }
 
-    var assignments_notification = $('[name="assignments_notification"]');
-    assignments_notification
-      .checkboxpicker({
-        onActiveCls: 'btn-primary'
-      });
+    function setEmailSwitch(setting) {
+      setting
+        .checkboxpicker({
+          onActiveCls: 'btn-primary'
+        });
+      if ( setting.attr('value') === 'true' ) {
+        setting.prop('checked', true);
+        enableDependant(setting);
+      } else {
+        setting.prop('checked', false);
+      }
+    }
 
-    if ( assignments_notification.attr('value') === 'true' ) {
-      assignments_notification.prop('checked', true);
-    } else {
-      assignments_notification.prop('checked', false);
+    function disableDependant(dependant) {
+      dependant.checkboxpicker().prop('disabled', true);
+      dependant.checkboxpicker().prop('checked', false);
+    }
+
+    function enableDependant(dependant) {
+      dependant.checkboxpicker().prop('disabled', false);
     }
   }
 
