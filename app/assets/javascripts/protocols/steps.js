@@ -493,15 +493,13 @@ function processStep(ev, editMode, forS3) {
   $form.removeBlankFileForms();
 
   var $fileInputs = $form.find("input[type=file]");
-  var filesValid = filesValidator(ev, $fileInputs, FileTypeSizeEnum.FILE);
+  var filesValid = filesValidator(ev, $fileInputs, FileTypeEnum.FILE);
   var $checklists = $form.find(".nested_step_checklists");
   var checklistsValid = checklistsValidator(ev, $checklists, editMode);
   var $nameInput = $form.find("#step_name");
-  var nameValid = textValidator(ev, $nameInput, TextLimitEnum.REQUIRED,
-    TextLimitEnum.NAME_MAX_LENGTH);
+  var nameValid = textValidator(ev, $nameInput, 1, NAME_MAX_LENGTH);
   var $descrTextarea = $form.find("#step_description");
-  var descriptionValid = textValidator(ev, $descrTextarea,
-    TextLimitEnum.OPTIONAL, TextLimitEnum.TEXT_MAX_LENGTH);
+  var descriptionValid = textValidator(ev, $descrTextarea, 0, TEXT_MAX_LENGTH);
 
   if (filesValid && checklistsValid && nameValid && descriptionValid) {
     if (forS3) {
