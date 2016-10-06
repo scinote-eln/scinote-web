@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <script type="text/javascript" data-hook='vwo-and-gtm-head-snippet'></script>
     <title><%=t "head.title", title: (yield :head_title) %></title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track' => true %>
@@ -14,7 +15,7 @@
     <%= csrf_meta_tags %>
   </head>
   <body class="<%= yield :body_class %>">
-
+    <script type="text/javascript" data-hook='gtm-body-snippet'></script>
     <!-- Activity modal -->
     <div class="modal" id="activity-modal" tabindex="-1" role="dialog" aria-labelledby="activity-modal-label">
       <div class="modal-dialog" role="document">
