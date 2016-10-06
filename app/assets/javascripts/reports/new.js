@@ -443,37 +443,20 @@ function initializeUnsavedWorkDialog() {
     return;
   }
 
-  $(document).on('page:before-change', beforechange);
-  $(window).on('beforeunload', beforeunload);
+  $(window).on("beforeunload", function() {
+    return alertText;
+  });
 
-  function beforeunload() {
-    //Check if we are actually in report editor
-    if ( $(REPORT_CONTENT).length ) {
-      return alertText;
-    } else {
-      // We are at another page so remove unload handlers if they exists
-      $(window).off('beforeunload', beforeunload);
-      $(document).off('page:before-change', beforechange);
+  $(document).on("page:before-change", function() {
+    var exit;
+    exit = confirm(alertText);
+    if ( exit ) {
+      // We leave the page so remove all listeners
+      $(window).off('beforeunload');
+      $(document).off('page:before-change');
     }
-  }
-
-  function beforechange() {
-    //Check if we are actually in report editor
-    if ( $(REPORT_CONTENT).length ) {
-      var exit;
-      exit = confirm(alertText);
-      if ( exit ) {
-        // We leave the page so remove all listeners
-        $(window).off();
-        $(document).off();
-      }
-      return exit;
-    } else {
-      // We are at another page so remove unload handlers if they exists
-      $(window).off('beforeunload', beforeunload);
-      $(document).off('page:before-change', beforechange);
-    }
-  }
+    return exit;
+  });
 }
 
 /**
@@ -1202,22 +1185,19 @@ $(document).ready(function() {
   /**
   * ACTUAL CODE
   */
-  //Check if we are actually at new report page
-  if ( $(REPORT_CONTENT).length ) {
-    initializeReportElements($(REPORT_CONTENT));
-    initializeGlobalReportSort();
-    initializePrintPopup();
-    initializeSaveToPdf();
-    initializeSaveReport();
-    initializeAddContentsModal();
-    initializeSidebarNavigation();
-    initializeUnsavedWorkDialog();
-    initializeTutorial();
+  initializeReportElements($(REPORT_CONTENT));
+  initializeGlobalReportSort();
+  initializePrintPopup();
+  initializeSaveToPdf();
+  initializeSaveReport();
+  initializeAddContentsModal();
+  initializeSidebarNavigation();
+  initializeUnsavedWorkDialog();
+  initializeTutorial();
 
-    $(".report-nav-link").each( function(){
-      truncateLongString( $(this), 30);
-    });
-  }
+  $(".report-nav-link").each( function(){
+    truncateLongString( $(this), 30);
+  });
 })
 
 $(document).change(function(){
