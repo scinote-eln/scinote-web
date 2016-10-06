@@ -528,6 +528,8 @@ function initImport() {
         if (data.status === "ok") {
           // Simply reload page
           location.reload();
+        } else if (data.status === 'locked') {
+          alert(I18n.t("my_modules.protocols.load_from_file_error_locked"));
         } else {
           alert(I18n.t("my_modules.protocols.load_from_file_error"));
         }

@@ -313,125 +313,157 @@ class ProtocolsController < ApplicationController
 
   def revert
     respond_to do |format|
-      transaction_error = false
-      Protocol.transaction do
-        begin
-          # Revert is basically update from parent
-          @protocol.update_from_parent(current_user)
-        rescue Exception
-          transaction_error = true
-          raise ActiveRecord:: Rollback
+      if @protocol.can_destroy?
+        transaction_error = false
+        Protocol.transaction do
+          begin
+            # Revert is basically update from parent
+            @protocol.update_from_parent(current_user)
+          rescue Exception
+            transaction_error = true
+            raise ActiveRecord:: Rollback
+          end
         end
-      end
 
-      if transaction_error
-        # Bad request error
-        format.json {
-          render json: {
-            message: t("my_modules.protocols.revert_error")
-          },
-          status: :bad_request
-        }
+        if transaction_error
+          # Bad request error
+          format.json do
+            render json: {
+              message: t('my_modules.protocols.revert_error')
+            },
+            status: :bad_request
+          end
+        else
+          # Everything good, display flash & render 200
+          flash[:success] = t(
+            'my_modules.protocols.revert_flash'
+          )
+          flash.keep(:success)
+          format.json { render json: {}, status: :ok }
+        end
       else
-        # Everything good, display flash & render 200
-        flash[:success] = t(
-          "my_modules.protocols.revert_flash",
-        )
-        flash.keep(:success)
-        format.json { render json: {}, status: :ok }
+        format.json do
+          render json: {
+            message: t('my_modules.protocols.revert_error_locked')
+          }, status: :bad_request
+        end
       end
     end
   end
 
   def update_parent
     respond_to do |format|
-      transaction_error = false
-      Protocol.transaction do
-        begin
-          @protocol.update_parent(current_user)
-        rescue Exception
-          transaction_error = true
-          raise ActiveRecord:: Rollback
+      if @protocol.parent.can_destroy?
+        transaction_error = false
+        Protocol.transaction do
+          begin
+            @protocol.update_parent(current_user)
+          rescue Exception
+            transaction_error = true
+            raise ActiveRecord:: Rollback
+          end
         end
-      end
 
-      if transaction_error
-        # Bad request error
-        format.json {
-          render json: {
-            message: t("my_modules.protocols.update_parent_error")
-          },
-          status: :bad_request
-        }
+        if transaction_error
+          # Bad request error
+          format.json {
+            render json: {
+              message: t("my_modules.protocols.update_parent_error")
+            },
+            status: :bad_request
+          }
+        else
+          # Everything good, display flash & render 200
+          flash[:success] = t(
+            "my_modules.protocols.update_parent_flash",
+          )
+          flash.keep(:success)
+          format.json { render json: {}, status: :ok }
+        end
       else
-        # Everything good, display flash & render 200
-        flash[:success] = t(
-          "my_modules.protocols.update_parent_flash",
-        )
-        flash.keep(:success)
-        format.json { render json: {}, status: :ok }
+        format.json do
+          render json: {
+            message: t('my_modules.protocols.update_parent_error_locked')
+          }, status: :bad_request
+        end
       end
     end
   end
 
   def update_from_parent
     respond_to do |format|
-      transaction_error = false
-      Protocol.transaction do
-        begin
-          @protocol.update_from_parent(current_user)
-        rescue Exception
-          transaction_error = true
-          raise ActiveRecord:: Rollback
+      if @protocol.can_destroy?
+        transaction_error = false
+        Protocol.transaction do
+          begin
+            @protocol.update_from_parent(current_user)
+          rescue Exception
+            transaction_error = true
+            raise ActiveRecord:: Rollback
+          end
         end
-      end
 
-      if transaction_error
-        # Bad request error
-        format.json {
-          render json: {
-            message: t("my_modules.protocols.update_from_parent_error")
-          },
-          status: :bad_request
-        }
+        if transaction_error
+          # Bad request error
+          format.json {
+            render json: {
+              message: t("my_modules.protocols.update_from_parent_error")
+            },
+            status: :bad_request
+          }
+        else
+          # Everything good, display flash & render 200
+          flash[:success] = t(
+            "my_modules.protocols.update_from_parent_flash",
+          )
+          flash.keep(:success)
+          format.json { render json: {}, status: :ok }
+        end
       else
-        # Everything good, display flash & render 200
-        flash[:success] = t(
-          "my_modules.protocols.update_from_parent_flash",
-        )
-        flash.keep(:success)
-        format.json { render json: {}, status: :ok }
+        format.json do
+          render json: {
+            message: t('my_modules.protocols.update_from_parent_error_locked')
+          }, status: :bad_request
+        end
       end
     end
   end
 
   def load_from_repository
     respond_to do |format|
-      transaction_error = false
-      Protocol.transaction do
-        begin
-          @protocol.load_from_repository(@source, current_user)
-        rescue Exception
-          transaction_error = true
-          raise ActiveRecord:: Rollback
+      if @protocol.can_destroy?
+        transaction_error = false
+        Protocol.transaction do
+          begin
+            @protocol.load_from_repository(@source, current_user)
+          rescue Exception
+            transaction_error = true
+            raise ActiveRecord:: Rollback
+          end
         end
-      end
 
-      if transaction_error
-        # Bad request error
-        format.json {
-          render json: {
-            message: t("my_modules.protocols.load_from_repository_error")
-          },
-          status: :bad_request
-        }
+        if transaction_error
+          # Bad request error
+          format.json {
+            render json: {
+              message: t("my_modules.protocols.load_from_repository_error")
+            },
+            status: :bad_request
+          }
+        else
+          # Everything good, display flash & render 200
+          flash[:success] = t(
+            "my_modules.protocols.load_from_repository_flash",
+          )
+          flash.keep(:success)
+          format.json { render json: {}, status: :ok }
+        end
       else
-        # Everything good, display flash & render 200
-        flash[:success] = t(
-          "my_modules.protocols.load_from_repository_flash",
-        )
-        flash.keep(:success)
-        format.json { render json: {}, status: :ok }
+        format.json do
+          render json: {
+            message: t('my_modules.protocols.load_from_repository_error_locked')
+          }, status: :bad_request
+        end
       end
     end
   end
@@ -439,29 +471,35 @@ class ProtocolsController < ApplicationController
   def load_from_file
     # This is actually very similar to import
     respond_to do |format|
-      transaction_error = false
-      Protocol.transaction do
-        begin
-          import_into_existing(@protocol, @protocol_json, current_user)
-        rescue Exception
-          transaction_error = true
-          raise ActiveRecord:: Rollback
+      if @protocol.can_destroy?
+        transaction_error = false
+        Protocol.transaction do
+          begin
+            import_into_existing(@protocol, @protocol_json, current_user)
+          rescue Exception
+            transaction_error = true
+            raise ActiveRecord:: Rollback
+          end
         end
-      end
 
-      if transaction_error
-        format.json {
-          render json: { status: :error }, status: :bad_request
-        }
+        if transaction_error
+          format.json {
+            render json: { status: :error }, status: :bad_request
+          }
+        else
+          # Everything good, display flash & render 200
+          flash[:success] = t(
+            "my_modules.protocols.load_from_file_flash",
+          )
+          flash.keep(:success)
+          format.json {
+            render json: { status: :ok }, status: :ok
+          }
+        end
       else
-        # Everything good, display flash & render 200
-        flash[:success] = t(
-          "my_modules.protocols.load_from_file_flash",
-        )
-        flash.keep(:success)
-        format.json {
-          render json: { status: :ok }, status: :ok
-        }
+        format.json do
+          render json: { status: :locked }, status: :bad_request
+        end
       end
     end
   end
