@@ -1,5 +1,4 @@
 en:
-
   devise:
     confirmations:
       new:
@@ -1471,6 +1470,7 @@ en:
       short: "%H"
 
   tutorial:
+    title: "Tutorial"
     next: "Next"
     skip_tutorial: "Skip tutorial"
     end_tutorial: "End tutorial"
