@@ -1,10 +1,23 @@
 namespace :notifications do
-
   desc 'Creates new system notification for all active users'
-  task :new_release => :environment do
+  task :new_system, [:title, :message] => :environment do |_, args|
     include NotificationsHelper
-    puts 'Creation of system notification for all active users with link to release notes'
-    create_system_notification('New release', 'http://scinote.net/docs/release-notes/')
-  end
 
+    if args.blank? ||
+       args.empty? ||
+       args[:title].blank? ||
+       args[:message].blank?
+      puts 'One or both of arguments are missing'
+      return
+    end
+
+    title = args[:title]
+    message = args[:message]
+
+    puts 'Creating following system notification:'
+    puts "    ***  #{title} ***"
+    puts "    #{I18n.l(Time.now, format: :full)} | #{message}"
+
+    create_system_notification(title, message)
+  end
 end
