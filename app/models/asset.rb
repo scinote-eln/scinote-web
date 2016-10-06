@@ -10,7 +10,9 @@ class Asset < ActiveRecord::Base
 
   validates_attachment :file,
                        presence: true,
-                       size: { less_than: Constants::FILE_MAX_SIZE_MB.megabytes }
+                       size: {
+                         less_than: Constants::FILE_MAX_SIZE_MB.megabytes
+                       }
   validates :estimated_size, presence: true
   validates :file_present, inclusion: { in: [true, false] }
 
@@ -123,8 +125,8 @@ class Asset < ActiveRecord::Base
     # Show all results if needed
     if page != Constants::SEARCH_NO_LIMIT
       ids = ids
-        .limit(Constants::SEARCH_LIMIT)
-        .offset((page - 1) * Constants::SEARCH_LIMIT)
+            .limit(Constants::SEARCH_LIMIT)
+            .offset((page - 1) * Constants::SEARCH_LIMIT)
     end
 
     Asset
@@ -237,7 +239,7 @@ class Asset < ActiveRecord::Base
       es += get_octet_length_record(asset_text_datum, :data)
       es += get_octet_length_record(asset_text_datum, :data_vector)
     end
-    es = es * Constants::ASSET_ESTIMATED_SIZE_FACTOR
+    es *= Constants::ASSET_ESTIMATED_SIZE_FACTOR
     update(estimated_size: es)
     Rails.logger.info "Asset #{id}: Estimated size successfully calculated"
 

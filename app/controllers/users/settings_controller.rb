@@ -119,8 +119,8 @@ class Users::SettingsController < ApplicationController
   def search_organization_users
     respond_to do |format|
       format.json {
-        if params.include? :existing_query and
-          query = params[:existing_query].strip()
+        if params.include?(:existing_query) && params[:existing_query].strip
+          query = params[:existing_query].strip
           if query.length < Constants::NAME_MIN_LENGTH
             render json: {
               "existing_query": [

@@ -60,14 +60,14 @@ class Sample < ActiveRecord::Base
         a_query
       )
 
-      # Show all results if needed
-      if page == Constants::SEARCH_NO_LIMIT
-        new_query
-      else
-        new_query
-          .limit(Constants::SEARCH_LIMIT)
-          .offset((page - 1) * Constants::SEARCH_LIMIT)
-      end
+    # Show all results if needed
+    if page == Constants::SEARCH_NO_LIMIT
+      new_query
+    else
+      new_query
+        .limit(Constants::SEARCH_LIMIT)
+        .offset((page - 1) * Constants::SEARCH_LIMIT)
+    end
   end
 
 end

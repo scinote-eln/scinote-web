@@ -36,8 +36,8 @@ class Experiment < ActiveRecord::Base
   def self.search(user, include_archived, query = nil, page = 1)
     project_ids =
       Project
-        .search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
-        .select("id")
+      .search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
+      .select('id')
 
     if query
       a_query = query.strip
@@ -67,8 +67,8 @@ class Experiment < ActiveRecord::Base
       new_query
     else
       new_query
-      .limit(Constants::SEARCH_LIMIT)
-      .offset((page - 1) * Constants::SEARCH_LIMIT)
+        .limit(Constants::SEARCH_LIMIT)
+        .offset((page - 1) * Constants::SEARCH_LIMIT)
     end
   end
 
