@@ -207,6 +207,8 @@ class WopiController < ActionController::Base
           @organization.take_space(@asset.estimated_size)
           @organization.save
 
+          @protocol.update(updated_at: Time.now) if @protocol
+
           response.headers['X-WOPI-ItemVersion'] = @asset.version
           render nothing: :true, status: 200 and return
         else
