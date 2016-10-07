@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta data-hook="head-js">
     <title><%=t "head.title", title: (yield :head_title) %></title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track' => true %>
@@ -14,6 +15,8 @@
     <%= csrf_meta_tags %>
   </head>
   <body class="<%= yield :body_class %>">
+
+    <span style="display: none;" data-hook="body-js"></span>
 
     <!-- Activity modal -->
     <div class="modal" id="activity-modal" tabindex="-1" role="dialog" aria-labelledby="activity-modal-label">
