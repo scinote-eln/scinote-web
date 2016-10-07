@@ -1523,7 +1523,7 @@ en:
       assignment: "Assignment"
       recent_changes: "Recent changes"
       system_message: "sciNote system message"
-    email_title: "sciNote notification"
+    email_title: "You've received a sciNote notification!"
   # This section contains general words that can be used in any parts of
   # application.
 
