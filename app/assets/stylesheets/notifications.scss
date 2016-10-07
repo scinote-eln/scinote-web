@@ -50,18 +50,24 @@
 
   .assignment {
     background-color: $color-theme-primary;
+    width: 30px;
+    height: 30px;
+    display: inline-block;
     border-radius: 50%;
     color: $color-wild-sand;
-    font-size: 15px;
-    padding: 7px;
+    font-size: 13px;
+    padding-top: 5px;
   }
 
   .system-message {
     background-color: $color-theme-secondary;
+    width: 30px;
+    height: 30px;
+    display: inline-block;
     border-radius: 50%;
     color: $color-wild-sand;
     font-size: 13px;
-    padding: 7px 10px;
+    padding-top: 5px;
   }
 }
 
