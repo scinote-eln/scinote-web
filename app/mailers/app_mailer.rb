@@ -16,8 +16,10 @@ class AppMailer < Devise::Mailer
   def notification(user, notification)
     @user = user
     @notification = notification
-    headers = { to: @user.email,
-      subject: "#{I18n.t('notifications.email_title')} - #{notification.title}" }
+    headers = {
+      to: @user.email,
+      subject: I18n.t('notifications.email_title')
+    }
     mail(headers)
   end
 end

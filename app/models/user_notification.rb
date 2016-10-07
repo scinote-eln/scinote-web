@@ -31,11 +31,19 @@ class UserNotification < ActiveRecord::Base
   end
 
   def send_email
-    if notification.type_of == 'system_message'
+    case notification.type_of
+    when 'system_message'
       send_email_notification(user, notification)
-    elsif user.assignments_notification_email ||
-          user.recent_notification_email
-      send_email_notification(user, notification)
+    when 'assignment'
+      send_email_notification(
+        user,
+        notification
+      ) if user.assignments_notification_email
+    when 'recent_changes'
+      send_email_notification(
+        user,
+        notification
+      ) if user.recent_notification_email
     end
   end
 end
