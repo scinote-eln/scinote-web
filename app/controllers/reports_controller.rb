@@ -99,9 +99,10 @@ class ReportsController < ApplicationController
 
   def edit
     # cleans all the deleted report
+    current_organization_switch(@report.project.organization)
     @report.cleanup_report
     load_markdown
-    render "reports/new.html.erb"
+    render 'reports/new.html.erb'
   end
 
   # Updating existing report from the _save modal of the new page

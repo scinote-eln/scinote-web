@@ -1,6 +1,7 @@
 class ProjectsController < ApplicationController
   include SampleActions
   include RenamingUtil
+  include OrganizationsHelper
 
   before_action :load_vars, only: [:show, :edit, :update,
                                    :notifications, :reports,
