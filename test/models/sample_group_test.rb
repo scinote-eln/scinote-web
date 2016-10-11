@@ -5,32 +5,14 @@ class SampleGroupTest < ActiveSupport::TestCase
     @sample_group = sample_groups(:blood)
   end
 
+  should validate_presence_of(:name)
+  should validate_length_of(:name).is_at_most(NAME_MAX_LENGTH)
+  should validate_presence_of(:color)
+  should validate_length_of(:color).is_at_most(COLOR_MAX_LENGTH)
+  should validate_presence_of(:organization)
+
   test "should validate with correct data" do
     assert @sample_group.valid?
-  end
-
-  test "should not validate without name" do
-    @sample_group.name = ""
-    assert_not @sample_group.valid?
-    @sample_group.name = nil
-    assert_not @sample_group.valid?
-  end
-
-  test "should validate too long name value" do
-    @sample_group.name *= 50
-    assert_not @sample_group.valid? 
-  end
-
-  test "should validate without color because of default value" do
-    @sample_group.color = ""
-    assert_not @sample_group.valid?
-    @sample_group.color = nil
-    assert_not @sample_group.valid?
-  end
-
-  test "should validate too long color value" do
-    @sample_group.color *= 7
-    assert_not @sample_group.valid? 
   end
 
   test "should not validate without organization" do

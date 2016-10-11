@@ -12,19 +12,13 @@ class ProjectTest < ActiveSupport::TestCase
     @project3 = projects(:test3)
   end
 
+  should validate_length_of(:name)
+    .is_at_least(NAME_MIN_LENGTH)
+    .is_at_most(NAME_MAX_LENGTH)
+
   test "should have non-blank name" do
     @project.name = ""
     assert @project.invalid?, "Project with blank name returns valid? = true"
-  end
-
-  test "should have short name" do
-    @project.name = "k" * 31
-    assert @project.invalid?, "Project with name too long returns valid? = true"
-  end
-
-  test "should have long enough name" do
-    @project.name = "k" * 3
-    assert @project.invalid?, "Project with name too short returns valid? = true"
   end
 
   test "should have organization-wide unique name" do

@@ -7,27 +7,10 @@ class UserTest < ActiveSupport::TestCase
     @org = organizations(:biosistemika)
   end
 
-# Test full_name attribute
-  test "should have non-blank full_name" do
-    @user.full_name = ""
-    assert @user.invalid?, "User with blank full_name is not valid"
-  end
-
-  test "should have short full_name" do
-    @user.full_name = "k" * 51
-    assert @user.invalid?, "User with name too long is not valid"
-  end
-
-# Test initials attribute
-  test "should have non-blank initials" do
-    @user.initials = ""
-    assert @user.invalid?, "User with blank initials is not valid"
-  end
-
-  test "should have short initials" do
-    @user.initials = "k" * 5
-    assert @user.invalid?, "User with initials too long is not valid"
-  end
+  should validate_presence_of(:full_name)
+  should validate_length_of(:full_name).is_at_most(NAME_MAX_LENGTH)
+  should validate_presence_of(:initials)
+  should validate_length_of(:initials).is_at_most(USER_INITIALS_MAX_LENGTH)
 
 # Test password attribute
   test "should have non-blank password" do
@@ -137,7 +120,7 @@ class UserTest < ActiveSupport::TestCase
     assert_equal 10, last_activities.size
     assert_equal first_activity, last_activities.first
     assert_equal last_activity, last_activities.last
-  end 
+  end
 
   test "should get specified number of last activities" do
     last_activities = @user2.last_activities(0, 4)
@@ -146,7 +129,7 @@ class UserTest < ActiveSupport::TestCase
     assert_equal 4, last_activities.size
     assert_equal first_activity, last_activities.first
     assert_equal last_activity, last_activities.last
-  end 
+  end
 
   test "should allow to change time zone" do
     assert @user.valid?
