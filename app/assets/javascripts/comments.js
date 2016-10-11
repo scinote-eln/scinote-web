@@ -165,7 +165,7 @@ var Comments = (function() {
   }
 
   function initCommentOptions(scrollableContainer, useParentOffset) {
-    if ( ! _.isUndefined(typeof useParentOffset) ) {
+    if ( ! _.isUndefined(useParentOffset) ) {
       useParentOffset = useParentOffset;
     } else {
       useParentOffset = true;
@@ -179,8 +179,10 @@ var Comments = (function() {
         var $el = $(this);
         var menu = $el.find('.dropdown-menu');
         var leftPos = $el.offset().left;
+        var parentTopPos = $el.offset().top;
         if (leftPos + menu.width() > $(window).width()) {
-          menu.offset({ left: leftPos - menu.width() });
+          menu.offset({ left: leftPos - menu.width(),
+                        top: (parentTopPos + 20)});
         }
       });
     }
@@ -197,7 +199,7 @@ var Comments = (function() {
   }
 
   function scrollCommentOptions(selector, useParentOffset) {
-    if ( ! _.isUndefined(typeof useParentOffset) ) {
+    if ( ! _.isUndefined(useParentOffset) ) {
       useParentOffset = useParentOffset;
     } else {
       useParentOffset = true;
