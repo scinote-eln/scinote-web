@@ -1,6 +1,6 @@
 <% provide(:head_title, t("protocols.index.head_title")) %>
 
-<% if @organizations.count > 0 %>
+<% if current_organization %>
   <%= render partial: "protocols/breadcrumbs.html.erb", locals: { organizations: @organizations, current_organization: @current_organization, type: @type } %>
 
   <ul class="nav nav-tabs nav-settings">

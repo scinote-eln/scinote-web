@@ -5,6 +5,9 @@
   <a href="<%= edit_project_report_path(report.project, report) %>">
     <%= text %>
   </a>
+  <%= route_to_other_org edit_project_report_path(report.project, report),
+                         report.project.organization,
+                         text %>
 <% else %>
   <%= text %>
 <% end %>
