@@ -55,6 +55,7 @@ class ExperimentsController < ApplicationController
 
   def canvas
     @project = @experiment.project
+    current_organization_switch(@project.organization)
   end
 
   def edit

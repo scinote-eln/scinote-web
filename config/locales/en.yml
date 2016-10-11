@@ -1120,6 +1120,7 @@ en:
     settings:
       changed_org_flash: "You are working on %{team} now!"
       changed_org_error_flash: "Something get wrong! Try again later."
+      changed_org_in_search: "The searched item is not in your current team. You will be redirected on %{team} team!"
       navigation:
         preferences: "My preferences"
         organizations: "My teams"

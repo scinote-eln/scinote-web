@@ -5,18 +5,18 @@
 <% if can_view_steps_in_protocol(step.protocol) %>
   <% if step.protocol.in_module? %>
     <% if target == :comment %>
-    <%= link_to protocols_my_module_path(step.protocol.my_module, ctarget: "step-panel-#{step.id}") do %>
-      <%= text %>
-    <% end %>
+    <%= route_to_other_org protocols_my_module_path(step.protocol.my_module, ctarget: "step-panel-#{step.id}"),
+                           step.protocol.organization,
+                           text %>
     <% else %>
-    <a href="<%= protocols_my_module_path(step.protocol.my_module) %>">
-      <%= text %>
-    </a>
+    <%= route_to_other_org protocols_my_module_path(step.protocol.my_module),
+                           step.protocol.organization,
+                           text %>
     <% end %>
   <% elsif can_edit_protocol(step.protocol) %>
-    <a href="<%= edit_protocol_path(step.protocol) %>">
-      <%= text %>
-    </a>
+    <%= route_to_other_org edit_protocol_path(step.protocol),
+                           step.protocol.organization,
+                           text %>
   <% else %>
     <%= text %>
   <% end %>

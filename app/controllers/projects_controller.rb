@@ -23,10 +23,11 @@ class ProjectsController < ApplicationController
   DELETE_SAMPLES = I18n.t("samples.delete_samples")
 
   def index
-    @current_organization_id = params[:organization].to_i
+    @current_organization_id = current_organization.id
     @current_sort = params[:sort].to_s
-    @projects_by_orgs = current_user.projects_by_orgs(
-      @current_organization_id, @current_sort, @filter_by_archived)
+    @projects_by_orgs = current_user.projects_by_orgs(@current_organization_id,
+                                                      @current_sort,
+                                                      @filter_by_archived)
     @organizations = current_user.organizations
 
     # New project for create new project modal
@@ -237,6 +238,7 @@ class ProjectsController < ApplicationController
 
   def show
     # This is the "info" view
+    current_organization_switch(@project.organization)
   end
 
   def notifications
@@ -261,6 +263,7 @@ class ProjectsController < ApplicationController
   end
 
   def experiment_archive
+    current_organization_switch(@project.organization)
   end
 
   def samples_index

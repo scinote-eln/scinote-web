@@ -9,7 +9,7 @@ class ApplicationController < ActionController::Base
   helper_method :current_organization
   before_action :generate_intro_tutorial, if: :is_current_page_root?
   around_action :set_time_zone, if: :current_user
-  layout "main"
+  layout 'main'
 
   def forbidden
     render_403
@@ -20,7 +20,7 @@ class ApplicationController < ActionController::Base
   end
 
   def is_current_page_root?
-    controller_name == "projects" && action_name == "index"
+    controller_name == 'projects' && action_name == 'index'
   end
 
   # Sets current organization for all controllers

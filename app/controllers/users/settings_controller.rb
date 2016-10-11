@@ -498,10 +498,10 @@ class Users::SettingsController < ApplicationController
     if @user.save
       flash[:success] = t('users.settings.changed_org_flash',
                           team: @changed_org.name)
-      redirect_to :back
+      redirect_to root_path
     else
       flash[:alert] = t('users.settings.changed_org_error_flash')
-      redirect_to :back
+      redirect_to root_path
     end
   end
 
