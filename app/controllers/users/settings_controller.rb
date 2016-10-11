@@ -494,12 +494,13 @@ class Users::SettingsController < ApplicationController
 
   def user_current_organization
     @user.current_organization_id = params[:user][:current_organization_id]
-
+    @changed_org = Organization.find_by_id(@user.current_organization_id)
     if @user.save
-      flash[:success] = 'Success!'
+      flash[:success] = t('users.settings.changed_org_flash',
+                          team: @changed_org.name)
       redirect_to :back
     else
-      flash[:alert] = 'Something get terribly wrong'
+      flash[:alert] = t('users.settings.changed_org_error_flash')
       redirect_to :back
     end
   end

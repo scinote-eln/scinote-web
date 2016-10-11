@@ -103,7 +103,7 @@
         <!-- Global team switch -->
         <li class="dropdown" id="team-switch">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-            <span>Current Organisation</span>
+            <span><%= current_organization.name %></span>
           </a>
           <ul class="dropdown-menu">
             <%= form_for(current_user,
@@ -111,6 +111,7 @@
                         method: :post) do |f| %>
               <%= hidden_field(:user, :current_organization_id) %>
               <% current_user.organizations.each do |org| %>
+                <% next unless org != current_organization %>
                 <li><a href="#" data-id="<%= org.id %>"><%= org.name %></a></li>
               <% end %>
             <% end %>
