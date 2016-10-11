@@ -1,5 +1,5 @@
 # Application version
-APP_VERSION = '1.3'.freeze
+APP_VERSION = '1.3.1'.freeze
 
 TAG_COLORS = [
   "#6C159E",
