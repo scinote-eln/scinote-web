@@ -52,16 +52,22 @@
     background-color: $color-theme-primary;
     border-radius: 50%;
     color: $color-wild-sand;
-    font-size: 15px;
-    padding: 7px;
+    display: inline-block;
+    font-size: 13px;
+    height: 30px;
+    padding-top: 5px;
+    width: 30px;  
   }
 
   .system-message {
     background-color: $color-theme-secondary;
     border-radius: 50%;
     color: $color-wild-sand;
+    display: inline-block;
     font-size: 13px;
-    padding: 7px 10px;
+    height: 30px;
+    padding-top: 5px;
+    width: 30px;
   }
 }
 
