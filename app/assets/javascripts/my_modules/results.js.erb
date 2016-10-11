@@ -192,7 +192,8 @@ function processResult(ev, resultTypeEnum, editMode, forS3) {
   switch(resultTypeEnum) {
     case ResultTypeEnum.FILE:
       var $nameInput = $form.find("#result_name");
-      var nameValid = textValidator(ev, $nameInput, 0, NAME_MAX_LENGTH);
+      var nameValid = textValidator(ev, $nameInput, 0,
+        <%= Constants::NAME_MAX_LENGTH %>);
       var $fileInput = $form.find("#result_asset_attributes_file");
       var filesValid = filesValidator(ev, $fileInput, FileTypeEnum.FILE,
         editMode);
@@ -210,17 +211,20 @@ function processResult(ev, resultTypeEnum, editMode, forS3) {
       break;
     case ResultTypeEnum.TABLE:
       var $nameInput = $form.find("#result_name");
-      var nameValid = textValidator(ev, $nameInput, 0, NAME_MAX_LENGTH);
+      var nameValid = textValidator(ev, $nameInput, 0,
+        <%= Constants::NAME_MAX_LENGTH %>);
       break;
     case ResultTypeEnum.TEXT:
       var $nameInput = $form.find("#result_name");
-      var nameValid = textValidator(ev, $nameInput, 0, NAME_MAX_LENGTH);
+      var nameValid = textValidator(ev, $nameInput, 0,
+        <%= Constants::NAME_MAX_LENGTH %>);
       var $textInput = $form.find("#result_result_text_attributes_text");
-      textValidator(ev, $textInput, 1, TEXT_MAX_LENGTH);
+      textValidator(ev, $textInput, 1, <%= Constants::TEXT_MAX_LENGTH %>);
       break;
     case ResultTypeEnum.COMMENT:
       var $commentInput = $form.find("#comment_message");
-      var commentValid = textValidator(ev, $commentInput, 1, TEXT_MAX_LENGTH);
+      var commentValid = textValidator(ev, $commentInput, 1,
+        <%= Constants::TEXT_MAX_LENGTH %>);
       break;
   }
 }

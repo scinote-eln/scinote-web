@@ -497,9 +497,11 @@ function processStep(ev, editMode, forS3) {
   var $checklists = $form.find(".nested_step_checklists");
   var checklistsValid = checklistsValidator(ev, $checklists, editMode);
   var $nameInput = $form.find("#step_name");
-  var nameValid = textValidator(ev, $nameInput, 1, NAME_MAX_LENGTH);
+  var nameValid = textValidator(ev, $nameInput, 1,
+    <%= Constants::NAME_MAX_LENGTH %>);
   var $descrTextarea = $form.find("#step_description");
-  var descriptionValid = textValidator(ev, $descrTextarea, 0, TEXT_MAX_LENGTH);
+  var descriptionValid = textValidator(ev, $descrTextarea, 0,
+    <%= Constants::TEXT_MAX_LENGTH %>);
 
   if (filesValid && checklistsValid && nameValid && descriptionValid) {
     if (forS3) {

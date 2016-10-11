@@ -64,7 +64,7 @@ function checklistsValidator(ev, checklists, editMode) {
 
           if ($itemInput.val()) {
             var itemNameValid = textValidator(ev, $itemInput, 1,
-              TEXT_MAX_LENGTH);
+              <%= Constants::TEXT_MAX_LENGTH %>);
             if (!itemNameValid) {
               noErrors = false;
             }
@@ -81,7 +81,7 @@ function checklistsValidator(ev, checklists, editMode) {
       var allowBlankChklstName = !(anyChecklistItemFilled || editMode);
       var textLimitMin = allowBlankChklstName ? 0 : 1;
       var checklistNameValid = textValidator(ev, $checklistInput,
-        textLimitMin, TEXT_MAX_LENGTH);
+        textLimitMin, <%= Constants::TEXT_MAX_LENGTH %>);
       if (!checklistNameValid) {
         noErrors = false;
       } else if (allowBlankChklstName) {
@@ -95,8 +95,8 @@ function checklistsValidator(ev, checklists, editMode) {
 }
 
 var FileTypeEnum = Object.freeze({
-  FILE: 0,
-  AVATAR: 1
+  FILE: <%= Constants::FILE_MAX_SIZE_MB.megabytes %>,
+  AVATAR: <%= Constants::AVATAR_MAX_SIZE_MB.megabytes %>
 });
 
 function filesValidator(ev, fileInputs, fileTypeEnum, canBeEmpty) {

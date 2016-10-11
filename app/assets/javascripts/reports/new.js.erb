@@ -1124,7 +1124,8 @@ function initializeReportSidebartruncation() {
     function() {
       $.each($("a.report-nav-link"),
                function(){
-                 truncateLongString($(this), NAME_TRUNCATION_LENGTH);
+                 truncateLongString($(this),
+                 <%= Constants::NAME_TRUNCATION_LENGTH %>);
                });
     }
   );
@@ -1215,7 +1216,7 @@ $(document).ready(function() {
     initializeTutorial();
 
     $('.report-nav-link').each(function() {
-      truncateLongString($(this), NAME_TRUNCATION_LENGTH);
+      truncateLongString($(this), <%= Constants::NAME_TRUNCATION_LENGTH %>);
     });
   }
 })
@@ -1223,7 +1224,7 @@ $(document).ready(function() {
 $(document).change(function(){
   setTimeout(function(){
     $(".report-nav-link").each( function(){
-      truncateLongString( $(this), NAME_TRUNCATION_LENGTH);
+      truncateLongString( $(this), <%= Constants::NAME_TRUNCATION_LENGTH %>);
     });
   }, 1000);
 });

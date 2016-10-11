@@ -62,7 +62,7 @@
                           <%= link_to download_asset_path(asset), data: {no_turbolink: true, id: true, status: "asset-present"} do %>
                             <%= image_tag preview_asset_path(asset) if asset.is_image? %>
                             <p><%= truncate(asset.file_file_name,
-                                            length: FILENAME_TRUNCATION_LENGTH) %></p>
+                                            length: Constants::FILENAME_TRUNCATION_LENGTH) %></p>
                           <% end %>
                         <% else %>
                           <%= asset_loading_span(asset) %>
@@ -70,7 +70,7 @@
                       <% else %>
                         <%= image_tag preview_asset_path(asset) if asset.is_image? %>
                         <p><%= truncate(asset.file_file_name,
-                                        length: FILENAME_TRUNCATION_LENGTH) %></p>
+                                        length: Constants::FILENAME_TRUNCATION_LENGTH) %></p>
                       <% end %>
                     </li>
                   <% end %>

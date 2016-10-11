@@ -83,15 +83,20 @@
           </a>
           <ul class="dropdown-menu">
             <li><%= link_to t('nav.help.tutorials'),
-                              Constants::TUTORIALS_URL %></li>
+                              Constants::TUTORIALS_URL,
+                              target: "_blank" %></li>
             <li><%= link_to t('nav.help.faq'),
-                              Constants::FAQ_URL %></li>
+                              Constants::FAQ_URL,
+                              target: "_blank" %></li>
             <li><%= link_to t('nav.help.support'),
-                              Constants::SUPPORT_URL %></li>
+                              Constants::SUPPORT_URL,
+                              target: "_blank" %></li>
             <li><%= link_to t('nav.help.plans'),
-                              Constants::PLANS_URL %></li>
+                              Constants::PLANS_URL,
+                              target: "_blank" %></li>
             <li><%= link_to t('nav.help.contact'),
-                              Constants::CONTACT_URL %></li>
+                              Constants::CONTACT_URL,
+                              target: "_blank" %></li>
           </ul>
         </li>
 

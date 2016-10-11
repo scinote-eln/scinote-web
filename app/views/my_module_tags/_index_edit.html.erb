@@ -40,7 +40,7 @@
                 <%= f.text_field :name, hide_label: true %>
               </div>
               <div class="pull-right">
-                <%= f.color_picker_select :color, TAG_COLORS, class: "edit-tag-color" %>
+                <%= f.color_picker_select :color, <%= Constants::TAG_COLORS %>, class: "edit-tag-color" %>
                 <%= f.button class: "btn btn-link save-tag-link", title: t("experiments.canvas.modal_manage_tags.save_tag") do %>
                   <span class="glyphicon glyphicon-ok"></span>
                 <% end %>
@@ -84,7 +84,7 @@
         <%= hidden_field_tag :my_module_id, @my_module.id %>
         <%= f.hidden_field :project_id, :value => @my_module.experiment.project.id %>
         <%= f.hidden_field :name, :value => t("tags.create.new_name") %>
-        <%= f.hidden_field :color, :value => TAG_COLORS[0] %>
+        <%= f.hidden_field :color, :value => <%= Constants::TAG_COLORS[0] %> %>
         <%= f.button class: "btn btn-primary" do %>
           <span class="glyphicon glyphicon-tag"></span>
           <span class="hidden-xs"><%=t "experiments.canvas.modal_manage_tags.create_new" %></span>
