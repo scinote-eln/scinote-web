@@ -19,6 +19,9 @@ Rails.application.routes.draw do
        to: 'users/settings#notifications_settings',
        as: 'notifications_settings',
        defaults: { format: 'json' }
+  post 'users/settings/user_current_organization',
+       to: 'users/settings#user_current_organization',
+       as: 'user_current_organization'
   get "users/settings/organizations", to: "users/settings#organizations", as: "organizations"
   get "users/settings/organizations/new", to: "users/settings#new_organization", as: "new_organization"
   post "users/settings/organizations/new", to: "users/settings#create_organization", as: "create_organization"
