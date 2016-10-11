@@ -10,7 +10,8 @@ class Users::SettingsController < ApplicationController
     :organization_users_datatable,
     :tutorial,
     :reset_tutorial,
-    :notifications_settings
+    :notifications_settings,
+    :user_current_organization
   ]
 
   before_action :check_organization_permission, only: [
@@ -488,6 +489,18 @@ class Users::SettingsController < ApplicationController
           }
         end
       end
+    end
+  end
+
+  def user_current_organization
+    @user.current_organization_id = params[:user][:current_organization_id]
+
+    if @user.save
+      flash[:success] = 'Success!'
+      redirect_to :back
+    else
+      flash[:alert] = 'Something get terribly wrong'
+      redirect_to :back
     end
   end
 

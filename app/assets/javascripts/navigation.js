@@ -80,8 +80,23 @@
 
   }
 
+  function initGlobalSwitchForm() {
+    var teamSwitch = $('#team-switch');
+    teamSwitch
+      .find('.dropdown-menu a')
+      .on('click', function(el){
+        $('#user_current_organization_id')
+          .val($(el.toElement).attr('data-id'));
+
+        teamSwitch
+          .find('form')
+          .submit();
+      });
+  }
+
   // init
   loadDropdownNotifications();
   loadUnseenNotificationsNumber();
   toggleNotificationBellPosition();
+  initGlobalSwitchForm();
 })();
