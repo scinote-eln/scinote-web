@@ -4,6 +4,6 @@
 
 <p>Type: <%= I18n.t("notifications.types.#{@notification.type_of}") %></p>
 
-<p><%= @notification.title %></p>
+<p><%= @notification.title.html_safe %></p>
 
-<p><%= @notification.message %></p>
+<p><%= @notification.message.html_safe %></p>
