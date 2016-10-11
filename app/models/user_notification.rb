@@ -1,6 +1,10 @@
 class UserNotification < ActiveRecord::Base
+  include NotificationsHelper
+
   belongs_to :user
   belongs_to :notification
+
+  after_save :send_email
 
   def self.last_notifications(user, last_notification_id = nil, per_page = 10)
     last_notification_id = 999999999999999999999999 if last_notification_id < 1
@@ -24,5 +28,22 @@ class UserNotification < ActiveRecord::Base
 
   def self.seen_by_user(user)
     where(user: user).where(checked: false).update_all(checked: true)
+  end
+
+  def send_email
+    case notification.type_of
+    when 'system_message'
+      send_email_notification(user, notification)
+    when 'assignment'
+      send_email_notification(
+        user,
+        notification
+      ) if user.assignments_notification_email
+    when 'recent_changes'
+      send_email_notification(
+        user,
+        notification
+      ) if user.recent_notification_email
+    end
   end
 end
