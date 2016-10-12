@@ -64,11 +64,13 @@
             <%= check_box_tag :system_message_notification %>
         </div>
         <div class="col-md-3 col-sm-3 col-text-center">
-            <h5 class="hidden-sm hidden-xs"><%= t('notifications.form.email_settings') %></h5>
+            <h5 class="hidden-sm hidden-xs"><%= t('notifications.email_settings') %></h5>
               <%= f.label t('notifications.form.recent_notification'), class: 'visible-sm visible-xs'%> <br>
               <%= check_box_tag :recent_notification_email, @user.recent_notification_email %> <br>
               <%= f.label t('notifications.form.assignments'), class: 'visible-sm visible-xs' %>
-              <%= check_box_tag :assignments_notification_email, @user.assignments_notification_email %>
+              <%= check_box_tag :assignments_notification_email, @user.assignments_notification_email %> <br>
+              <%= f.label t('notifications.form.system_message'), class: 'visible-sm visible-xs' %>
+              <%= check_box_tag :system_message_notification_email, @user.system_message_notification_email %>
         </div>
       </div>
       <% end %>
