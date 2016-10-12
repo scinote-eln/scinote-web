@@ -101,10 +101,12 @@
         </li>
 
         <!-- Global team switch -->
+        <% if current_user.organizations.length > 1 %>
         <li class="dropdown" id="team-switch">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
             <span><%= current_organization.name %></span>
           </a>
+
           <ul class="dropdown-menu ">
             <%= form_for(current_user,
                         url: user_current_organization_path,
@@ -117,6 +119,7 @@
             <% end %>
           </ul>
         </li>
+        <% end %>
 
         <!-- greetings -->
         <li class="dropdown">
