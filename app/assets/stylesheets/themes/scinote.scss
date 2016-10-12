@@ -554,6 +554,33 @@ a[data-toggle="tooltip"] {
   }
 }
 
+// Global team switch
+#team-switch {
+  background: $color-theme-primary;
+  word-wrap: break-word;
+
+  span {
+    color: $color-white;
+  }
+
+  li {
+    display: block;
+    text-align: left;
+
+    &:hover {
+      background-color: $color-concrete;
+    }
+
+    a {
+      color: $color-emperor;
+      line-height: 1.6em;
+      padding: 3px 20px;
+      text-decoration: none;
+      word-wrap: break-word;
+    }
+  }
+}
+
 /** Settings */
 .nav-settings {
   margin-top: 15px;
