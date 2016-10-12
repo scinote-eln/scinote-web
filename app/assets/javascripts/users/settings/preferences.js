@@ -118,6 +118,14 @@
     } else {
       assignments_notification.prop('checked', false);
     }
+
+    var system_message_notification = $('[name="system_message_notification"]');
+    system_message_notification
+      .checkboxpicker({
+        onActiveCls: 'btn-primary'
+      });
+    system_message_notification.prop('checked', true);
+    system_message_notification.prop('disabled', true);
   }
 
   // triggers submit action when the user clicks
