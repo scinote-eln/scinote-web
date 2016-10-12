@@ -158,6 +158,10 @@ class Users::RegistrationsController < Devise::RegistrationsController
             organization: @org,
             role: :admin
           )
+
+          # set current organization to new user
+          resource.current_organization_id = @org.id
+          resource.save
         end
       end
 
