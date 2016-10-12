@@ -279,7 +279,7 @@ class SamplesController < ApplicationController
 
   def load_vars
     @sample = Sample.find_by_id(params[:id])
-    @organization = @sample.organization
+    @organization = current_organization
 
     unless @sample
       render_404

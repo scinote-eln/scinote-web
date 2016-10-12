@@ -1,7 +1,7 @@
 class ExperimentsController < ApplicationController
   include PermissionHelper
   include OrganizationsHelper
-  
+
   before_action :set_experiment,
                 except: [:new, :create]
   before_action :set_project,

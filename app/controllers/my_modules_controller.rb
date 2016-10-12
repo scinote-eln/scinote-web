@@ -1,5 +1,6 @@
 class MyModulesController < ApplicationController
   include SampleActions
+  include OrganizationsHelper
 
   before_action :load_vars, only: [
     :show, :edit, :update, :destroy,

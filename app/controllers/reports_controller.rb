@@ -1,4 +1,5 @@
 class ReportsController < ApplicationController
+  include OrganizationsHelper
   # Ignore CSRF protection just for PDF generation (because it's
   # used via target='_blank')
   protect_from_forgery with: :exception, :except => :generate
