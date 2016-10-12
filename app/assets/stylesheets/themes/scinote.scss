@@ -149,7 +149,7 @@ table {
     width: 45px;
   }
 
-  .system_message {
+  .system-message {
     background-color: $color-theme-secondary;
     border-radius: 50%;
     color: $color-wild-sand;
@@ -591,8 +591,6 @@ a[data-toggle="tooltip"] {
     margin-bottom: 15px;
   }
 
-
-
   .assignment {
     background-color: $color-theme-primary;
     border-radius: 50%;
@@ -601,11 +599,11 @@ a[data-toggle="tooltip"] {
     margin-left: 20px;
     margin-right: 15px;
     padding: 7px;
-    padding-top: 5px;
     padding-bottom: 5px;
+    padding-top: 5px;
   }
 
-  .system_message {
+  .system-message {
     background-color: $color-theme-secondary;
     border-radius: 50%;
     color: $color-wild-sand;
@@ -613,8 +611,8 @@ a[data-toggle="tooltip"] {
     margin-left: 20px;
     margin-right: 15px;
     padding: 8px;
-    padding-top: 5px;
     padding-bottom: 5px;
+    padding-top: 5px;
   }
 
   .img-circle {
