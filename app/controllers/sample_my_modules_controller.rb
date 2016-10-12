@@ -1,4 +1,5 @@
 class SampleMyModulesController < ApplicationController
+  include OrganizationsHelper
   before_action :load_vars
 
   def index

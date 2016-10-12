@@ -24,6 +24,11 @@ class ProjectsController < ApplicationController
   DELETE_SAMPLES = I18n.t("samples.delete_samples")
 
   def index
+    if params[:organization]
+      current_organization_switch(Organization
+                                    .find_by_id(params[:organization]))
+    end
+
     @current_organization_id = current_organization.id
     @current_sort = params[:sort].to_s
     @projects_by_orgs = current_user.projects_by_orgs(@current_organization_id,
