@@ -212,9 +212,6 @@ class Users::SettingsController < ApplicationController
       user: @new_user_org.user,
       organization: @new_user_org.organization
       ).exists? && @new_user_org.save
-      AppMailer.delay.invitation_to_organization(@new_user_org.user,
-                                                 @user_organization.user,
-                                                 @new_user_org.organization)
 
       generate_notification(@user_organization.user,
                             @new_user_org.user,

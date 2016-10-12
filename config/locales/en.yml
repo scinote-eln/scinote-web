@@ -1449,11 +1449,6 @@ en:
       head_title: "Edit protocol"
     no_keywords: "No keywords"
 
-  mailer:
-    invitation_to_organization:
-      subject: "You have been invited to team"
-      text: "User %{addedBy} has added you to team %{organization}."
-
   time:
     formats:
       full: "%d.%m.%Y %H:%M"
