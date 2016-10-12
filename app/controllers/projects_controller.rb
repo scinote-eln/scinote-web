@@ -47,14 +47,14 @@ class ProjectsController < ApplicationController
 
   def new
     @project = Project.new
-    @organizations = current_user.organizations
   end
 
   def create
     @project = Project.new(project_params)
-    @project.created_by =  current_user
+    @project.created_by = current_user
     @project.last_modified_by = current_user
-    if @project.save
+    if current_organization.id == project_params[:organization_id].to_i &&
+       @project.save
       # Create user-project association
       up = UserProject.new(
         role: :owner,
