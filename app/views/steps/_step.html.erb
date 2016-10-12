@@ -31,8 +31,6 @@
     </div>
     <div class="panel-collapse collapse" id="step-panel-<%= step.id %>" role="tabpanel">
       <div class="panel-body">
-      <% if @protocol.in_module? %>
-
         <div class="row">
           <% if step.description.blank? %>
             <em><%= t("protocols.steps.no_description") %></em>
@@ -126,8 +124,6 @@
             </div>
           </div>
         <% end %>
-
-      <% end %>
       </div>
     </div>
   </div>

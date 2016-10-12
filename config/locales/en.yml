@@ -1498,29 +1498,21 @@ en:
     archive_project_html: "Archive Demo project - qPCR by clicking on the down arrow <span class='glyphicon glyphicon-triangle-bottom'></span>. You can always access the Archive by clicking the <span class='glyphicon glyphicon-briefcase'></span> icon on the top right side of the Dashboard and restore any item you have archived."
     goodbye_message: "To repeat the tutorial, go to your Settings and open <strong>My preferences</strong> tab. Click on the <strong>Repeat tutorial</strong> button and watch the tutorial as many times needed."
 
-  introductory:
-    popup-title: "Release notes - sciNote version 1.3"
-    sentence_one_html: "For this sciNote version we focused on <strong>improving Tables in Protocol steps and Results</strong>. Tables now support basic math operations (addition, subtraction, multiplication, division) just like Excel spreadsheets do. "
-    sentence_two_html: "You can also use the functions listed below: <br> <ul><li><strong>SUM</strong> that adds together a supplied set of numbers and returns the sum of these values;</li><li><strong>AVERAGE</strong> that returns the arithmetic mean of a list of supplied numbers;</li><li><strong>MEDIAN</strong> that returns the statistical median (the middle value) of a list of supplied numbers;</li><li><strong>MAX</strong> that returns the largest value from a supplied set of numeric values;</li><li><strong>MIN</strong> that returns the smallest value from a supplied set of numeric values;</li><li><strong>SLOPE</strong> that calculates the slope of the linear regression line through a supplied set of x- and y- values;</li><li><strong>IF</strong> that tests a supplied condition and returns one result if the condition evaluates to TRUE, and another result if the condition evaluates to FALSE;</li><li><strong>SQRT</strong> that calculates the positive square root of a supplied number;</li><li><strong>POWER</strong> that calculates a given number, raised to a supplied power;</li><li><strong>LOG</strong> that calculates the logarithm of a given number, to a supplied base;</li><li><strong>LN</strong> that calculates the natural logarithm of a given number;</li><li><strong>LOG10</strong> that calculates the base 10 logarithm of a given number.</li></ul> Some other improvements have been made in sciNote as well. Let’s take a look at them."
-    sentence_three_html: "<strong>Extended length of text field</strong> <br>You can now write names of Experiments and Protocol steps with limitation of 255 characters and descriptions with 10,000 characters."
-    sentence_four_html: "<strong>Redesigned Navigation pane</strong> <br>We have added the connecting line of Experiments in the Navigation pane, where you can expand or collapse the Experiments and get a better overview."
-    sentence_five_html: "<strong>Reorder of Comments and Messages</strong> <br>The Comments section in Protocols steps and Results has been moved bellow the description (it’s not in a separate tab any more). Also the order of Messages in the Project and Task cards has been changed. The most recent Messages are now seen at the end of the correspondence."
-    sentence_six_html: "<strong>Deleting Results</strong> <br>You can now delete Results. First you archive them, then you go to the Archive and delete them. This way you have a \"safety net\" against deleting Results by accident."
-    sentence_seven_html: "<strong>Info tab</strong> <br>In the upper right corner of the Dashboard you can now access the Info button, where you can find links to support on how to use sciNote features (e.g., Tutorials, FAQ) or how to change your current sciNote Plan (e.g., Professional support and customization, Plans). In case you have some other questions or suggestions, click on the Contact us link."
-    confim: "OK, got it"
-
   notifications:
     title: "Notifications"
     form:
       assignments: "Assignments notifications"
       recent_notification: "Change notifications"
-      system_message: "Update notifications"
-    filter: "Filter"
+      email_settings: "E-mail notifications"
     show_all: "Show all notifications"
     show_more: "Show more notifications"
     no_notifications: "No notifications."
     no_recent: "No recent notifications."
-
+    types:
+      assignment: "Assignment"
+      recent_changes: "Recent changes"
+      system_message: "sciNote system message"
+    email_title: "You've received a sciNote notification!"
   # This section contains general words that can be used in any parts of
   # application.
 
