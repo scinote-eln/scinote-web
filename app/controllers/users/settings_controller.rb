@@ -447,6 +447,7 @@ class Users::SettingsController < ApplicationController
 
   def reset_tutorial
     if @user.update(tutorial_status: 0) && params[:org][:id]
+      @user.update(current_organization_id: params[:org][:id])
       cookies.delete :tutorial_data
       cookies.delete :current_tutorial_step
       cookies[:repeat_tutorial_org_id] = {

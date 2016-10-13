@@ -111,9 +111,6 @@
 </div>
 <% end %>
 
-<%= render partial: 'projects/index/introductory_popup' %>
-<%= javascript_include_tag 'projects/introdutory_popup' %>
-
 <% if current_organization.projects.length> 0 %>
   <%= render partial: "projects/index/org_projects",
              locals: { org: current_organization,
