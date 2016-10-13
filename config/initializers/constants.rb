@@ -40,6 +40,8 @@ FILE_MAX_SIZE = 50
 AVATAR_MAX_SIZE = 0.2
 # Max characters for text in dropdown list
 DROPDOWN_TEXT_MAX_LENGTH = 15
+# Dropdown top offset from the parent
+DROPDOWN_TOP_OFFSET = 20
 
 SEARCH_LIMIT = 20
 
