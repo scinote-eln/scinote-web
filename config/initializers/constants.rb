@@ -23,7 +23,7 @@ class Constants
   PASSWORD_STRETCH_FACTOR = 10
   # Standard max length for email
   EMAIL_MAX_LENGTH = 254
-
+  # Some big value which is still supported by all databases
   INFINITY = 999999999999999999
 
   #=============================================================================
@@ -101,6 +101,9 @@ class Constants
 
   #=============================================================================
   # Application colors
+  #
+  # NOTE: Don't use shortened syntax, e.g. #000 for #000000, as some Gems need
+  # full syntax!
   #=============================================================================
 
   TAG_COLORS = [
@@ -120,7 +123,7 @@ class Constants
     '#DC143C',
     '#FF8C00',
     '#C71585',
-    '#000'
+    '#000000'
   ].freeze
 
   # Theme colors
@@ -129,21 +132,23 @@ class Constants
   COLOR_THEME_DARK = '#6d6e71'.freeze # $color-theme-dark
 
   # Grayscale colors
-  COLOR_WHITE = '#fff'.freeze # $color-white
+  COLOR_WHITE = '#ffffff'.freeze # $color-white
   COLOR_ALABASTER = '#fcfcfc'.freeze # $color-alabaster
+  COLOR_SNOW = '#f9f9f9'.freeze # $color-snow
   COLOR_WILD_SAND = '#f5f5f5'.freeze # $color-wild-sand
   COLOR_CONCRETE = '#f2f2f2'.freeze # $color-concrete
-  COLOR_GALLERY = '#eee'.freeze # $color-gallery
+  COLOR_GALLERY = '#eeeeee'.freeze # $color-gallery
+  COLOR_GAINSBORO = '#e3e3e3'.freeze # $color-gainsboro
   COLOR_ALTO = '#d2d2d2'.freeze # $color-alto
   COLOR_SILVER = '#c5c5c5'.freeze # $color-silver
   COLOR_DARK_GRAY = '#adadad'.freeze # $color-dark-gray
   COLOR_SILVER_CHALICE = '#a0a0a0'.freeze # $color-silver-chalice
   COLOR_GRAY = '#909088'.freeze # $color-gray
-  COLOR_DOVE_GRAY = '#666'.freeze # $color-dove-gray
-  COLOR_EMPEROR = '#555'.freeze # $color-emperor
-  COLOR_MINE_SHAFT = '#333'.freeze # $color-mine-shaft
+  COLOR_DOVE_GRAY = '#666666'.freeze # $color-dove-gray
+  COLOR_EMPEROR = '#555555'.freeze # $color-emperor
+  COLOR_MINE_SHAFT = '#333333'.freeze # $color-mine-shaft
   COLOR_NERO = '#262626'.freeze # $color-nero
-  COLOR_BLACK = '#000'.freeze # $color-black
+  COLOR_BLACK = '#000000'.freeze # $color-black
 
   # Miscelaneous colors
   COLOR_MYSTIC = '#eaeff2'.freeze # $color-mystic
