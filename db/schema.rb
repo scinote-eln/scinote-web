@@ -64,41 +64,6 @@ ActiveRecord::Schema.define(version: 20161012112900) do
   add_index "assets", ["file_file_name"], name: "index_assets_on_file_file_name", using: :gist
   add_index "assets", ["last_modified_by_id"], name: "index_assets_on_last_modified_by_id", using: :btree
 
-  create_table "billing_accounts", force: :cascade do |t|
-    t.string   "braintree_customer_id"
-    t.datetime "created_at",            null: false
-    t.datetime "updated_at",            null: false
-  end
-
-  add_index "billing_accounts", ["braintree_customer_id"], name: "index_billing_accounts_on_braintree_customer_id", using: :btree
-
-  create_table "billing_plans", force: :cascade do |t|
-    t.string   "braintree_plan_id",                           null: false
-    t.string   "name",                                        null: false
-    t.string   "description"
-    t.integer  "price_cents",                 default: 0,     null: false
-    t.string   "price_currency",              default: "USD", null: false
-    t.datetime "created_at",                                  null: false
-    t.datetime "updated_at",                                  null: false
-    t.boolean  "main",                        default: false, null: false
-    t.integer  "max_storage",       limit: 8, default: 0
-    t.integer  "position",                    default: 0,     null: false
-    t.boolean  "free",                        default: false, null: false
-  end
-
-  add_index "billing_plans", ["braintree_plan_id"], name: "index_billing_plans_on_braintree_plan_id", using: :btree
-
-  create_table "billing_subscriptions", force: :cascade do |t|
-    t.string   "braintree_subscription_id"
-    t.integer  "billing_account_id",                        null: false
-    t.integer  "billing_plan_id",                           null: false
-    t.boolean  "active",                    default: false, null: false
-    t.datetime "created_at",                                null: false
-    t.datetime "updated_at",                                null: false
-  end
-
-  add_index "billing_subscriptions", ["braintree_subscription_id"], name: "index_billing_subscriptions_on_braintree_subscription_id", using: :btree
-
   create_table "checklist_items", force: :cascade do |t|
     t.string   "text",                                null: false
     t.boolean  "checked",             default: false, null: false
@@ -281,11 +246,8 @@ ActiveRecord::Schema.define(version: 20161012112900) do
     t.integer  "last_modified_by_id"
     t.string   "description"
     t.integer  "space_taken",         limit: 8, default: 1048576, null: false
-    t.integer  "billing_account_id"
-    t.integer  "agile_crm_deal_id",   limit: 8
   end
 
-  add_index "organizations", ["billing_account_id"], name: "index_organizations_on_billing_account_id", using: :btree
   add_index "organizations", ["created_by_id"], name: "index_organizations_on_created_by_id", using: :btree
   add_index "organizations", ["last_modified_by_id"], name: "index_organizations_on_last_modified_by_id", using: :btree
   add_index "organizations", ["name"], name: "index_organizations_on_name", using: :btree
@@ -720,8 +682,6 @@ ActiveRecord::Schema.define(version: 20161012112900) do
   add_foreign_key "asset_text_data", "assets"
   add_foreign_key "assets", "users", column: "created_by_id"
   add_foreign_key "assets", "users", column: "last_modified_by_id"
-  add_foreign_key "billing_subscriptions", "billing_accounts"
-  add_foreign_key "billing_subscriptions", "billing_plans"
   add_foreign_key "checklist_items", "checklists"
   add_foreign_key "checklist_items", "users", column: "created_by_id"
   add_foreign_key "checklist_items", "users", column: "last_modified_by_id"
@@ -752,7 +712,6 @@ ActiveRecord::Schema.define(version: 20161012112900) do
   add_foreign_key "my_modules", "users", column: "last_modified_by_id"
   add_foreign_key "my_modules", "users", column: "restored_by_id"
   add_foreign_key "notifications", "users", column: "generator_user_id"
-  add_foreign_key "organizations", "billing_accounts"
   add_foreign_key "organizations", "users", column: "created_by_id"
   add_foreign_key "organizations", "users", column: "last_modified_by_id"
   add_foreign_key "project_comments", "comments"
