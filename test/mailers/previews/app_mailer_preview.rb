@@ -29,24 +29,30 @@ class AppMailerPreview < ActionMailer::Preview
         ),
         message: ActionController::Base.helpers.sanitize(
           "<a href='#' target='_blank'>#{fake_org.name}</a>"
-        )
+        ),
+        generator_user: fake_user,
+        created_at: Time.now
       )
     )
   end
 
   def recent_changes_notification
+    user = User.first
+    user = fake_user if user.blank?
     AppMailer.notification(
-      fake_user,
+      user,
       Notification.new(
         type_of: :recent_changes,
         title: I18n.t(
           'activities.create_module',
-          user: fake_user.full_name,
+          user: user.full_name,
           module: 'How to shred'
         ),
         message: ActionController::Base.helpers.sanitize(
-          '<a href="#" target="_blank">School of Rock</a>'
-        )
+          'Project: <a href="#" target="_blank">School of Rock</a>'
+        ),
+        generator_user: user,
+        created_at: Time.now
       )
     )
   end
@@ -57,7 +63,8 @@ class AppMailerPreview < ActionMailer::Preview
       Notification.new(
         type_of: :system_message,
         title: 'sciNote 9.1 released!',
-        message: '<a href="#" target="_blank">View release notes</a>'
+        message: '<a href="#" target="_blank">View release notes</a>',
+        created_at: Time.now
       )
     )
   end
