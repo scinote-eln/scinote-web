@@ -146,7 +146,7 @@ class MyModule < ActiveRecord::Base
       )
   end
 
-  def last_activities(count = Constants::ACTIVITY_SEARCH_LIMIT)
+  def last_activities(count = Constants::ACTIVITY_AND_NOTIF_SEARCH_LIMIT)
     Activity.where(my_module_id: id).order(:created_at).last(count)
   end
 
@@ -162,7 +162,8 @@ class MyModule < ActiveRecord::Base
     comments.reverse
   end
 
-  def last_activities(last_id = 1, count = Constants::ACTIVITY_SEARCH_LIMIT)
+  def last_activities(last_id = 1,
+                      count = Constants::ACTIVITY_AND_NOTIF_SEARCH_LIMIT)
     last_id = 9999999999999 if last_id <= 1
     Activity.joins(:my_module)
       .where(my_module_id: id)
@@ -178,7 +179,7 @@ class MyModule < ActiveRecord::Base
     protocols.count > 0 ? protocols.first : nil
   end
 
-  def first_n_samples(count)
+  def first_n_samples(count = Constants::SEARCH_LIMIT)
     samples.order(name: :asc).limit(count)
   end
 

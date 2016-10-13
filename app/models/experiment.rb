@@ -218,14 +218,14 @@ class Experiment < ActiveRecord::Base
                          use: :neato)
 
     graph[:size] = '4,4'
-    graph.node[color: '#d2d2d2',
+    graph.node[color: Constants::COLOR_ALTO,
                style: :filled,
-               fontcolor: '#555555',
+               fontcolor: Constants::COLOR_EMPEROR,
                shape: 'circle',
                fontname: 'Arial',
                fontsize: '16.0']
 
-    graph.edge[color: '#d2d2d2']
+    graph.edge[color: Constants::COLOR_ALTO]
 
     label = ''
     subg = {}

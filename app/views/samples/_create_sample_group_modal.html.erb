@@ -8,7 +8,7 @@
       <%= bootstrap_form_for SampleGroup.new, remote: true, url: organization_sample_groups_path(@organization) do |f| %>
       <div class="modal-body">
         <%= f.text_field :name, id: "name-input" %>
-        <%= f.color_picker_btn_group :color, <%= Constants::TAG_COLORS %>, id: "color-input", class: "btn-group-sample-group-color", label: t("sample_groups.color_label")%>
+        <%= f.color_picker_btn_group :color, Constants::TAG_COLORS, id: "color-input", class: "btn-group-sample-group-color", label: t("sample_groups.color_label")%>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal"><%= t("general.cancel")%></button>

@@ -16,7 +16,7 @@ module AssetsHelper
     <script type='text/javascript'>
       $('#asset-loading-spinner-#{asset.id}').spin(
         { lines: 9, length: 4, width: 3, radius: 4, scale: 1, corners: 1,
-          color: '#000', opacity: 0.25, rotate: 0, direction: 1, speed: 1,
+          color: #{Constants::COLOR_BLACK}, opacity: 0.25, rotate: 0, direction: 1, speed: 1,
           trail: 60, fps: 20, zIndex: 100, className: 'spinner', top: '75%',
           left: '50%', shadow: false, hwaccel: false, position: 'relative' }
       );

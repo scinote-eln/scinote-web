@@ -1125,7 +1125,7 @@ function initializeReportSidebartruncation() {
       $.each($("a.report-nav-link"),
                function(){
                  truncateLongString($(this),
-                 <%= Constants::NAME_TRUNCATION_LENGTH %>);
+                                    <%= Constants::NAME_TRUNCATION_LENGTH %>);
                });
     }
   );

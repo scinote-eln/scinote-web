@@ -1,51 +1,6 @@
 class Constants
   #=============================================================================
-  # Defaults
-  #=============================================================================
-
-  # Application version
-  APP_VERSION = '1.3.1'.freeze
-
-  TAG_COLORS = [
-    '#6C159E',
-    '#159B5E',
-    '#FF4500',
-    '#008B8B',
-    '#757575',
-    '#32CD32',
-    '#FFD700',
-    '#48D1CC',
-    '#15369E',
-    '#FF69B4',
-    '#CD5C5C',
-    '#C9C9C9',
-    '#6495ED',
-    '#DC143C',
-    '#FF8C00',
-    '#C71585',
-    '#000000'
-  ].freeze
-
-  TEXT_EXTRACT_FILE_TYPES = [
-    'application/pdf',
-    'application/rtf',
-    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-    'application/vnd.openxmlformats-officedocument.presentationml.presentation',
-    'application/vnd.oasis.opendocument.presentation',
-    'application/vnd.oasis.opendocument.spreadsheet',
-    'application/vnd.oasis.opendocument.text',
-    'application/vnd.ms-excel',
-    'application/vnd.ms-powerpoint',
-    'application/vnd.ms-word',
-    'text/plain'
-  ].freeze
-
-  # Organization name for default admin user
-  DEFAULT_PRIVATE_ORG_NAME = 'My projects'.freeze
-
-  #=============================================================================
-  # String length
+  # String lengths
   #=============================================================================
 
   # Min characters for short text fields
@@ -64,6 +19,8 @@ class Constants
   FILENAME_TRUNCATION_LENGTH = 50
 
   USER_INITIALS_MAX_LENGTH = 4
+  # Password 'key stretching' factor
+  PASSWORD_STRETCH_FACTOR = 10
   # Standard max length for email
   EMAIL_MAX_LENGTH = 254
 
@@ -79,7 +36,7 @@ class Constants
   # Comments limited query/display elements for pages
   COMMENTS_SEARCH_LIMIT = 10
   # Activity limited query/display elements for pages
-  ACTIVITY_SEARCH_LIMIT = 20
+  ACTIVITY_AND_NOTIF_SEARCH_LIMIT = 10
 
   #=============================================================================
   # File and data memory size
@@ -93,13 +50,32 @@ class Constants
   AVATAR_MAX_SIZE_MB = 0.2
 
   #=============================================================================
-  # Picture size format
+  # Application space
   #=============================================================================
 
+  # Minimal space needed for organization (in B)
+  MINIMAL_ORGANIZATION_SPACE_TAKEN = 1.megabyte
+  # Additional space of each file is added to its estimated size to account for
+  # DB indexes size etc.
+  ASSET_ESTIMATED_SIZE_FACTOR = 1.1
+
+  #=============================================================================
+  # Format sizes
+  #=============================================================================
+
+  # Picture size formats
   MEDIUM_PIC_FORMAT = '300x300>'.freeze
   THUMB_PIC_FORMAT = '100x100>'.freeze
   ICON_PIC_FORMAT = '40x40>'.freeze
   ICON_SMALL_PIC_FORMAT = '30x30>'.freeze
+
+  # Hands-on-table number of starting columns and rows
+  HANDSONTABLE_INIT_COLS_CNT = 5
+  HANDSONTABLE_INIT_ROWS_CNT = 5
+
+  # Screen width which is still suitable for sidebar to be shown, otherwise
+  # hidden
+  SCREEN_WIDTH_LARGE = 928
 
   #=============================================================================
   # Styling
@@ -122,17 +98,62 @@ class Constants
   URL_LONG_EXPIRE_TIME = 86_400
 
   #=============================================================================
-  # Space
+  # Application colors
   #=============================================================================
 
-  # 1 MB of space is minimal for organizations (in B)
-  MINIMAL_ORGANIZATION_SPACE_TAKEN = 1.megabyte
-  # additional space of each file is added to its estimated
-  # size to account for DB indexes size etc.
-  ASSET_ESTIMATED_SIZE_FACTOR = 1.1
+  TAG_COLORS = [
+    '#6C159E',
+    '#159B5E',
+    '#FF4500',
+    '#008B8B',
+    '#757575',
+    '#32CD32',
+    '#FFD700',
+    '#48D1CC',
+    '#15369E',
+    '#FF69B4',
+    '#CD5C5C',
+    '#C9C9C9',
+    '#6495ED',
+    '#DC143C',
+    '#FF8C00',
+    '#C71585',
+    '#000'
+  ].freeze
+
+  # Theme colors
+  COLOR_THEME_PRIMARY = '#37a0d9'.freeze # $color-theme-primary
+  COLOR_THEME_SECONDARY = '#8fd13f'.freeze # $color-theme-secondary
+  COLOR_THEME_DARK = '#6d6e71'.freeze # $color-theme-dark
+
+  # Grayscale colors
+  COLOR_WHITE = '#fff'.freeze # $color-white
+  COLOR_ALABASTER = '#fcfcfc'.freeze # $color-alabaster
+  COLOR_WILD_SAND = '#f5f5f5'.freeze # $color-wild-sand
+  COLOR_CONCRETE = '#f2f2f2'.freeze # $color-concrete
+  COLOR_GALLERY = '#eee'.freeze # $color-gallery
+  COLOR_ALTO = '#d2d2d2'.freeze # $color-alto
+  COLOR_SILVER = '#c5c5c5'.freeze # $color-silver
+  COLOR_DARK_GRAY = '#adadad'.freeze # $color-dark-gray
+  COLOR_SILVER_CHALICE = '#a0a0a0'.freeze # $color-silver-chalice
+  COLOR_GRAY = '#909088'.freeze # $color-gray
+  COLOR_DOVE_GRAY = '#666'.freeze # $color-dove-gray
+  COLOR_EMPEROR = '#555'.freeze # $color-emperor
+  COLOR_MINE_SHAFT = '#333'.freeze # $color-mine-shaft
+  COLOR_NERO = '#262626'.freeze # $color-nero
+  COLOR_BLACK = '#000'.freeze # $color-black
+
+  # Miscelaneous colors
+  COLOR_MYSTIC = '#eaeff2'.freeze # $color-mystic
+  COLOR_CANDLELIGHT = '#ffda23'.freeze # $color-candlelight
+
+  # Red colors
+  COLOR_MOJO = '#cf4b48'.freeze # $color-mojo
+  COLOR_APPLE_BLOSSOM = '#a94442'.freeze # $color-apple-blossom
+  COLOR_MILANO_RED = '#a70b05'.freeze # $color-milano-red
 
   #=============================================================================
-  # External URL
+  # External URLs
   #=============================================================================
 
   HTTP = 'http://'.freeze
@@ -148,6 +169,27 @@ class Constants
   #=============================================================================
   # Other
   #=============================================================================
+
+  # Application version
+  APP_VERSION = '1.3.1'.freeze
+
+  TEXT_EXTRACT_FILE_TYPES = [
+    'application/pdf',
+    'application/rtf',
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+    'application/vnd.oasis.opendocument.presentation',
+    'application/vnd.oasis.opendocument.spreadsheet',
+    'application/vnd.oasis.opendocument.text',
+    'application/vnd.ms-excel',
+    'application/vnd.ms-powerpoint',
+    'application/vnd.ms-word',
+    'text/plain'
+  ].freeze
+
+  # Organization name for default admin user
+  DEFAULT_PRIVATE_ORG_NAME = 'My projects'.freeze
 
   #                             )       \   /      (
   #                            /|\      )\_/(     /|\

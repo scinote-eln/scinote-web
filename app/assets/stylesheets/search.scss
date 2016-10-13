@@ -2,8 +2,10 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
+@import 'colors';
+
 #search-content {
-  background-color: #fff;
+  background-color: $color-white;
   padding-top: 20px;
 }
 .search-asset-text-data{

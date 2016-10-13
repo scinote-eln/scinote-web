@@ -5,7 +5,6 @@
 
 var STORAGE_TREE_KEY = "scinote-sidebar-tree-collapsed-ids";
 var STORAGE_TOGGLE_KEY = "scinote-sidebar-toggled";
-var SCREEN_SIZE_LARGE = 928;
 
 /**
  * Get all collapsed sidebar elements.
@@ -251,7 +250,8 @@ function initializeSidebarToggle() {
   var wrapper = $("#wrapper");
   var toggled = sessionIsSidebarToggled();
 
-  if (toggled || toggled === null && $(window).width() < SCREEN_SIZE_LARGE) {
+  if (toggled || toggled === null && $(window).width() <
+      <%= Constants::SCREEN_WIDTH_LARGE %>) {
     wrapper.addClass("no-animation");
     wrapper.addClass("toggled");
     // Cause reflow of the wrapper element
@@ -283,7 +283,7 @@ function resizeSidebarContents() {
   }
   // Automatic toggling of sidebar for smaller devices
   if (toggled === null) {
-    if ($(window).width() < SCREEN_SIZE_LARGE) {
+    if ($(window).width() < <%= Constants::SCREEN_WIDTH_LARGE %>) {
       wrapper.addClass("toggled");
       navbar.addClass("navbar-without-sidebar");
     } else {

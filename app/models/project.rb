@@ -74,7 +74,7 @@ class Project < ActiveRecord::Base
     end
   end
 
-  def last_activities(count = Constants::ACTIVITY_SEARCH_LIMIT)
+  def last_activities(count = Constants::ACTIVITY_AND_NOTIF_SEARCH_LIMIT)
     activities.order(created_at: :desc).first(count)
   end
 

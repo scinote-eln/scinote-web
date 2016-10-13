@@ -7,7 +7,7 @@
     <% if activity.my_module %>
       [<%=t 'Project' %>:
       <% if activity.my_module.experiment.project.name.length >
-            <%= Constants::NAME_TRUNCATION_LENGTH %> %>
+             Constants::NAME_TRUNCATION_LENGTH %>
         <div class="modal-tooltip">
           <%= truncate(activity.my_module.experiment.project.name,
                        lenght: Constants::NAME_TRUNCATION_LENGTH).strip %>
@@ -17,7 +17,7 @@
         <%= activity.my_module.experiment.project.name %>
       <% end %>, <%=t 'Module' %>:
       <% if activity.my_module.name.length >
-            <%= Constants::NAME_TRUNCATION_LENGTH %> %>
+             Constants::NAME_TRUNCATION_LENGTH %>
         <div class="modal-tooltip"><%= truncate(
             activity.my_module.name,
             lenght: Constants::NAME_TRUNCATION_LENGTH) %>

@@ -10,8 +10,8 @@ function initEditableHandsOnTable(root) {
 
     $container.handsontable({
       data: data,
-      startRows: 5,
-      startCols: 5,
+      startRows: <%= Constants::HANDSONTABLE_INIT_ROWS_CNT %>,
+      startCols: <%= Constants::HANDSONTABLE_INIT_COLS_CNT %>,
       minRows: 1,
       minCols: 1,
       rowHeaders: true,

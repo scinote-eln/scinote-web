@@ -650,7 +650,7 @@ a[data-toggle="tooltip"] {
       &:focus, &:active, &:hover {
         box-shadow: none;
         background-color: $color-theme-primary;
-        border-color: #adadad;
+        border-color: $color-dark-gray;
       }
     }
   }
@@ -1064,7 +1064,7 @@ ul.content-module-activities {
   }
 
   .badge-preview {
-    background-color:#c5c5c5;
+    background-color: $color-silver;
     border-radius: 2em;
     float: left;
     font-size: 20px;
@@ -1247,12 +1247,12 @@ table.dataTable {
     top: 50%;
     margin-top: -19px;
     border-top: 19px solid transparent;
-    border-left: 13px solid #37A0D9;
+    border-left: 13px solid $color-theme-primary;
     border-bottom: 19px solid transparent;
 }
 
 .nav-stacked-arrow > li.active > a:hover:after {
-  border-left: 13px solid #337ab7;
+  border-left: 13px solid darken($color-theme-primary, 15%);
 }
 
 /* Overlay to disable interaction while loading ajax */

@@ -41,19 +41,19 @@ module FirstTimeDataGenerator
     SampleGroup.create(
       name: "Fodder",
       organization: org,
-      color: "#159B5E"
+      color: Constants::TAG_COLORS[1]
     )
 
     SampleGroup.create(
       name: "Nutrient",
       organization: org,
-      color: "#6C159E"
+      color: Constants::TAG_COLORS[0]
     )
 
     SampleGroup.create(
       name: "Seed",
       organization: org,
-      color: "#FF4500"
+      color: Constants::TAG_COLORS[2]
     )
 
     samples = []
@@ -360,21 +360,21 @@ module FirstTimeDataGenerator
     # Create tags and add them to module
     drylab_tag = Tag.create(
       name: "Drylab",
-      color: "#15369E",
+      color: Constants::TAG_COLORS[8],
       project: project,
       created_by: user,
       last_modified_by: user
     )
     wetlab_tag = Tag.create(
       name: "Wetlab",
-      color: "#FF8C00",
+      color: Constants::TAG_COLORS[14],
       project: project,
       created_by: user,
       last_modified_by: user
     )
     decide_tag = Tag.create(
       name: "Decide",
-      color: "#32CD32",
+      color: Constants::TAG_COLORS[5],
       project: project,
       created_by: user,
       last_modified_by: user

@@ -1,8 +1,9 @@
 class User < ActiveRecord::Base
   include SearchableModel
 
-  devise :invitable, :confirmable, :database_authenticatable, :registerable, :async,
-    :recoverable, :rememberable, :trackable, :validatable, stretches: 10
+  devise :invitable, :confirmable, :database_authenticatable, :registerable,
+         :async, :recoverable, :rememberable, :trackable, :validatable,
+         stretches: Constants::PASSWORD_STRETCH_FACTOR
   has_attached_file :avatar,
                     styles: {
                       medium: Constants::MEDIUM_PIC_FORMAT,
@@ -239,7 +240,7 @@ class User < ActiveRecord::Base
   # is not an owner of the project, user must be also assigned to
   # module.
   def last_activities(last_activity_id = nil,
-                      per_page = Constants::ACTIVITY_SEARCH_LIMIT)
+                      per_page = Constants::ACTIVITY_AND_NOTIF_SEARCH_LIMIT)
     # TODO replace with some kind of Infinity value
     last_activity_id = 999999999999999999999999 if last_activity_id < 1
     Activity
