@@ -665,7 +665,6 @@ ActiveRecord::Schema.define(version: 20161011074804) do
     t.boolean  "assignments_notification_email", default: false
     t.boolean  "recent_notification_email",      default: false
     t.integer  "current_organization_id"
-
   end
 
   add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree
