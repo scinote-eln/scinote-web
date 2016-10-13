@@ -501,7 +501,7 @@ class Users::SettingsController < ApplicationController
       redirect_to root_path
     else
       flash[:alert] = t('users.settings.changed_org_error_flash')
-      redirect_to root_path
+      redirect_to :back
     end
   end
 
