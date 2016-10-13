@@ -557,7 +557,7 @@ class Users::SettingsController < ApplicationController
   end
 
   def generate_notification(user, target_user, role, org)
-    title = I18n.t('activities.assign_user_to_organization',
+    title = I18n.t('notifications.assign_user_to_organization',
                    assigned_user: target_user.name,
                    role: role,
                    organization: org.name,
