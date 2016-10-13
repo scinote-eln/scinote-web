@@ -153,7 +153,7 @@ class MyModule < ActiveRecord::Base
   # Get module comments ordered by created_at time. Results are paginated
   # using last comment id and per_page parameters.
   def last_comments(last_id = 1, per_page = Constants::COMMENTS_SEARCH_LIMIT)
-    last_id = 9999999999999 if last_id <= 1
+    last_id = Constants::INFINITY if last_id <= 1
     comments = Comment.joins(:my_module_comment)
                       .where(my_module_comments: { my_module_id: id })
                       .where('comments.id <  ?', last_id)
@@ -164,7 +164,7 @@ class MyModule < ActiveRecord::Base
 
   def last_activities(last_id = 1,
                       count = Constants::ACTIVITY_AND_NOTIF_SEARCH_LIMIT)
-    last_id = 9999999999999 if last_id <= 1
+    last_id = Constants::INFINITY if last_id <= 1
     Activity.joins(:my_module)
       .where(my_module_id: id)
       .where('activities.id <  ?', last_id)

@@ -73,7 +73,7 @@ class Result < ActiveRecord::Base
   end
 
   def last_comments(last_id = 1, per_page = Constants::COMMENTS_SEARCH_LIMIT)
-    last_id = 9999999999999 if last_id <= 1
+    last_id = Constants::INFINITY if last_id <= 1
     comments = Comment.joins(:result_comment)
                       .where(result_comments: { result_id: id })
                       .where('comments.id <  ?', last_id)

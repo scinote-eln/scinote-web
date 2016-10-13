@@ -81,7 +81,7 @@ class Project < ActiveRecord::Base
   # Get project comments order by created_at time. Results are paginated
   # using last comment id and per_page parameters.
   def last_comments(last_id = 1, per_page = Constants::COMMENTS_SEARCH_LIMIT)
-    last_id = 9999999999999 if last_id <= 1
+    last_id = Constants::INFINITY if last_id <= 1
     comments = Comment.joins(:project_comment)
                       .where(project_comments: { project_id: id })
                       .where('comments.id <  ?', last_id)

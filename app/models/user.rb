@@ -241,8 +241,7 @@ class User < ActiveRecord::Base
   # module.
   def last_activities(last_activity_id = nil,
                       per_page = Constants::ACTIVITY_AND_NOTIF_SEARCH_LIMIT)
-    # TODO replace with some kind of Infinity value
-    last_activity_id = 999999999999999999999999 if last_activity_id < 1
+    last_activity_id = Constants::INFINITY if last_activity_id < 1
     Activity
       .joins(project: :user_projects)
       .joins("LEFT OUTER JOIN my_modules ON activities.my_module_id = my_modules.id")

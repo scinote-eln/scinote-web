@@ -1,4 +1,4 @@
-@import "colors";
+@import 'constants';
 @import "mixins";
 
 /** Layout **/
@@ -88,7 +88,7 @@ table {
     margin-left: 12px;
     padding: 1px 6px;
     position: relative;
-    z-index: 999999;
+    z-index: $infinity;
   }
 }
 
@@ -1331,10 +1331,10 @@ html.turbolinks-progress-bar::before {
 }
 
 .introjs-tooltipReferenceLayer {
-  z-index: 999999 !important;
+  z-index: $infinity !important;
 
   &.max {
-    z-index: 99999999 !important;
+    z-index: calc($infinity + 1) !important;
   }
 }
 
@@ -1355,7 +1355,7 @@ html.turbolinks-progress-bar::before {
   padding: 5px;
   border-radius: 6px;
   position: absolute;
-  z-index: 999999;
+  z-index: $infinity;
 }
 
 .modal-tooltip:hover .modal-tooltiptext {
