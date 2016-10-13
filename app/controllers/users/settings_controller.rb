@@ -462,6 +462,8 @@ class Users::SettingsController < ApplicationController
       params[:recent_notification_email] ? true : false
     @user.assignments_notification_email =
       params[:assignments_notification_email] ? true : false
+    @user.system_message_notification_email =
+      params[:system_message_notification_email] ? true : false
 
     if @user.save
       respond_to do |format|

@@ -1495,10 +1495,11 @@ en:
 
   notifications:
     title: "Notifications"
+    email_settings: "E-mail notifications"
     form:
       assignments: "Assignments notifications"
       recent_notification: "Change notifications"
-      email_settings: "E-mail notifications"
+      system_message: "Update notifications"
     show_all: "Show all notifications"
     show_more: "Show more notifications"
     no_notifications: "No notifications."

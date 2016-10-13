@@ -33,7 +33,10 @@ class UserNotification < ActiveRecord::Base
   def send_email
     case notification.type_of
     when 'system_message'
-      send_email_notification(user, notification)
+      send_email_notification(
+        user,
+        notification
+      ) if user.system_message_notification_email
     when 'assignment'
       send_email_notification(
         user,
