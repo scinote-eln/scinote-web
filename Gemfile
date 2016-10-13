@@ -50,6 +50,7 @@ gem 'redcarpet' # Markdown parser
 gem 'faker' # Generate fake data
 gem 'auto_strip_attributes', '~> 2.1' # Removes unnecessary whitespaces from ActiveRecord or ActiveModel attributes
 gem 'deface', '~> 1.0'
+gem 'nokogiri' # HTML/XML parser
 
 gem 'paperclip', '~> 4.3' # File attachment, image attachment library
 gem 'aws-sdk', '~> 2.2.8'

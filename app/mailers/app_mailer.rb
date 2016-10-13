@@ -1,5 +1,5 @@
 class AppMailer < Devise::Mailer
-  helper :application
+  helper :application, :mailer
   include Devise::Controllers::UrlHelpers
   default template_path: 'users/mailer'
   default from: ENV["MAIL_FROM"]
