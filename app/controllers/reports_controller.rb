@@ -162,7 +162,7 @@ class ReportsController < ApplicationController
     respond_to do |format|
       format.pdf {
         @html = params[:html]
-        if @html.blank? then
+        if @html.blank?
           @html = "<h1>No content</h1>"
         end
         render pdf: "report",
@@ -488,7 +488,7 @@ class ReportsController < ApplicationController
 
   def generate_module_contents_json(my_module)
     res = []
-    if (in_params? :module_steps) && my_module.protocol.present? then
+    if (in_params? :module_steps) && my_module.protocol.present?
       my_module.protocol.completed_steps.each do |step|
         res << generate_new_el(false)
         el = generate_el(
@@ -499,7 +499,7 @@ class ReportsController < ApplicationController
         res << el
       end
     end
-    if in_params? :module_result_assets then
+    if in_params? :module_result_assets
       (my_module.results.select { |r| r.is_asset && r.active? }).each do |result_asset|
         res << generate_new_el(false)
         el = generate_el(
@@ -510,7 +510,7 @@ class ReportsController < ApplicationController
         res << el
       end
     end
-    if in_params? :module_result_tables then
+    if in_params? :module_result_tables
       (my_module.results.select { |r| r.is_table && r.active? }).each do |result_table|
         res << generate_new_el(false)
         el = generate_el(
@@ -521,7 +521,7 @@ class ReportsController < ApplicationController
         res << el
       end
     end
-    if in_params? :module_result_texts then
+    if in_params? :module_result_texts
       load_markdown
       (my_module.results.select { |r| r.is_text && r.active? }).each do |result_text|
         res << generate_new_el(false)
@@ -533,14 +533,14 @@ class ReportsController < ApplicationController
         res << el
       end
     end
-    if in_params? :module_activity then
+    if in_params? :module_activity
       res << generate_new_el(false)
       res << generate_el(
         "reports/elements/my_module_activity_element.html.erb",
         { my_module: my_module, order: :asc }
       )
     end
-    if in_params? :module_samples then
+    if in_params? :module_samples
       res << generate_new_el(false)
       res << generate_el(
         "reports/elements/my_module_samples_element.html.erb",
@@ -553,7 +553,7 @@ class ReportsController < ApplicationController
 
   def generate_step_contents_json(step)
     res = []
-    if in_params? :step_checklists then
+    if in_params? :step_checklists
       step.checklists.each do |checklist|
         res << generate_new_el(false)
         res << generate_el(
@@ -562,7 +562,7 @@ class ReportsController < ApplicationController
         )
       end
     end
-    if in_params? :step_assets then
+    if in_params? :step_assets
       step.assets.each do |asset|
         res << generate_new_el(false)
         res << generate_el(
@@ -571,7 +571,7 @@ class ReportsController < ApplicationController
         )
       end
     end
-    if in_params? :step_tables then
+    if in_params? :step_tables
       step.tables.each do |table|
         res << generate_new_el(false)
         res << generate_el(
@@ -580,7 +580,7 @@ class ReportsController < ApplicationController
         )
       end
     end
-    if in_params? :step_comments then
+    if in_params? :step_comments
       res << generate_new_el(false)
       res << generate_el(
         "reports/elements/step_comments_element.html.erb",
@@ -593,7 +593,7 @@ class ReportsController < ApplicationController
 
   def generate_result_contents_json(result)
     res = []
-    if in_params? :result_comments then
+    if in_params? :result_comments
       res << generate_new_el(true)
       res << generate_el(
         "reports/elements/result_comments_element.html.erb",
@@ -608,7 +608,7 @@ class ReportsController < ApplicationController
   def elements_empty?(elements)
     if elements.blank?
       return true
-    elsif elements.count == 0 then
+    elsif elements.count == 0
       return true
     elsif elements.count == 1
       el = elements[0]
@@ -622,25 +622,23 @@ class ReportsController < ApplicationController
   end
 
   def load_vars
-    @report = Report.find_by_id(params[:id])
-
-    unless @report
-      render_404
-    end
+    # @report = Report.find_by_id(params[:id])
+    @user = current_user
+    @organization = current_organization
+    render_404 unless @user && @organization
   end
 
   def load_vars_nested
-    @project = Project.find_by_id(params[:project_id])
-
-    unless @project
-      render_404
-    end
+    # @project = Project.find_by_id(params[:project_id])
+    @user = current_user
+    @organization = current_organization
+    render_404 unless @user && @organization
   end
 
   def check_view_permissions
-    unless can_view_reports(@project)
-      render_403
-    end
+    # unless can_view_reports(@project)
+    #   render_403
+    # end
   end
 
   def check_create_permissions
@@ -656,7 +654,9 @@ class ReportsController < ApplicationController
   end
 
   def report_params
-    params.require(:report).permit(:name, :description, :grouped_by, :report_contents)
+    params.require(:report).permit(:name,
+                                   :description,
+                                   :grouped_by,
+                                   :report_contents)
   end
-
 end

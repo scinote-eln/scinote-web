@@ -76,7 +76,7 @@ en:
       protocols: "Protocols"
       calendar: "Calendar"
       activities: "Activities"
-
+      reports: "Reports"
   sidebar:
     title: "Navigation"
     no_module_group: "No workflow"
