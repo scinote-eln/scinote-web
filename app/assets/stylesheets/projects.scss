@@ -212,10 +212,10 @@ path, ._jsPlumb_endpoint {
   }
 
   &.group-hover {
-    @include box-shadow(0 0 0 6px $color-group-hover);
+    @include box-shadow(0 0 0 5px $color-group-hover);
   }
   &.module-hover {
-    @include box-shadow(0 0 0 7px $color-module-hover);
+    @include box-shadow(0 0 0 5px $color-module-hover);
   }
   &.alert-yellow .panel-body {
     color: $color-candlelight;
@@ -244,10 +244,10 @@ path, ._jsPlumb_endpoint {
   z-index: 5;
 
   &.group-hover {
-    @include box-shadow(0 0 0 6px $color-group-hover);
+    @include box-shadow(0 0 0 5px $color-group-hover);
   }
   &.module-hover {
-    @include box-shadow(0 0 0 7px $color-module-hover);
+    @include box-shadow(0 0 0 5px $color-module-hover);
   }
   &.alert-yellow {
     border-color: $color-candlelight;
@@ -316,10 +316,10 @@ path, ._jsPlumb_endpoint {
   }
 
   &.group-hover {
-    @include box-shadow(0 0 0 6px $color-group-hover);
+    @include box-shadow(0 0 0 5px $color-group-hover);
   }
   &.module-hover {
-    @include box-shadow(0 0 0 7px $color-module-hover);
+    @include box-shadow(0 0 0 5px $color-module-hover);
   }
   &.alert-yellow {
     border-color: $color-candlelight;
