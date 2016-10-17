@@ -109,6 +109,8 @@
     <%= link_to t("projects.index.no_orgs.btn"), organizations_path, class: "btn btn-primary" %>
   </p>
 </div>
+<% else %>
+  <h2 class="page-header"><%= current_organization.name %></h2>
 <% end %>
 
 <% if current_organization.projects.length > 0 %>
