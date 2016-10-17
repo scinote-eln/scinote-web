@@ -7,7 +7,7 @@ class MyModulesController < ApplicationController
     :samples, :activities, :activities_tab,
     :assign_samples, :unassign_samples,
     :delete_samples,
-    :samples_index, :archive]
+    :samples_index, :archive, :toggle_tab]
   before_action :load_markdown, only: [ :results ]
   before_action :load_vars_nested, only: [:new, :create]
   before_action :check_edit_permissions, only: [
@@ -22,6 +22,7 @@ class MyModulesController < ApplicationController
   before_action :check_view_archive_permissions, only: [:archive]
   before_action :check_assign_samples_permissions, only: [:assign_samples]
   before_action :check_unassign_samples_permissions, only: [:unassign_samples]
+  before_action :check_toggle_tab_permissions, only: [:toggle_tab]
 
   layout "fluid"
 
@@ -303,6 +304,63 @@ class MyModulesController < ApplicationController
     end
   end
 
+  def toggle_tab
+    toggled = true
+
+    case params['tab']
+    when 'protocols'
+      if @my_module.shown_tabs.include?('protocols')
+        if @my_module.protocols.count == 0
+          @my_module.shown_tabs.delete('protocols')
+          @my_module.save
+        else
+          toggled = false
+        end
+      else
+        @my_module.shown_tabs << 'protocols'
+        @my_module.save
+      end
+    when 'results'
+      if @my_module.shown_tabs.include?('results')
+        if @my_module.results.count == 0
+          @my_module.shown_tabs.delete('results')
+          @my_module.save
+        else
+          toggled = false
+        end
+      else
+        @my_module.shown_tabs << 'results'
+        @my_module.save
+      end
+    when 'activity'
+      if @my_module.shown_tabs.include?('activity')
+        @my_module.shown_tabs.delete('activity')
+      else
+        @my_module.shown_tabs << 'activity'
+      end
+      @my_module.save
+    when 'samples'
+      if @my_module.shown_tabs.include?('samples')
+        if @my_module.samples.count == 0
+          @my_module.shown_tabs.delete('samples')
+          @my_module.save
+        else
+          toggled = false
+        end
+      else
+        @my_module.shown_tabs << 'samples'
+        @my_module.save
+      end
+    end
+
+    respond_to do |format|
+      format.html
+      format.json do
+        render json: {}, status: (toggled ? :ok : :unprocessable_entity)
+      end
+    end
+  end
+
   private
 
   def load_vars
@@ -384,6 +442,10 @@ class MyModulesController < ApplicationController
     unless can_delete_samples_from_module(@my_module)
       render_403
     end
+  end
+
+  def check_toggle_tab_permissions
+    render_403 if !can_edit_module_tabs(@my_module) || params['tab'].blank?
   end
 
   def my_module_params

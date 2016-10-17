@@ -188,6 +188,7 @@ Rails.application.routes.draw do
       post :assign_samples, constraints: CommitParamRouting.new(MyModulesController::ASSIGN_SAMPLES), action: :assign_samples
       post :assign_samples, constraints: CommitParamRouting.new(MyModulesController::UNASSIGN_SAMPLES), action: :unassign_samples
       post :assign_samples, constraints: CommitParamRouting.new(MyModulesController::DELETE_SAMPLES), action: :delete_samples
+      post 'toggle_tab'
     end
 
     # Those routes are defined outside of member block to preserve original id parameters in URL.

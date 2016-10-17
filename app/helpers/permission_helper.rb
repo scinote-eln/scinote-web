@@ -91,6 +91,7 @@ module PermissionHelper
       :can_edit_tags_for_module,
       :can_add_tag_to_module,
       :can_remove_tag_from_module,
+      :can_edit_module_tabs,
       :can_view_module_info,
       :can_view_module_users,
       :can_edit_users_on_module,
@@ -457,6 +458,10 @@ module PermissionHelper
   end
 
   def can_remove_tag_from_module(my_module)
+    is_user_or_higher_of_project(my_module.experiment.project)
+  end
+
+  def can_edit_module_tabs(my_module)
     is_user_or_higher_of_project(my_module.experiment.project)
   end
 

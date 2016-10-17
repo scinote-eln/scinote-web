@@ -1399,3 +1399,13 @@ html.turbolinks-progress-bar::before {
     display: inline;
   }
 }
+
+.dropdown-menu-task-tab-selector {
+  li {
+    text-transform: none;
+
+    a {
+      padding-left: 10px;
+    }
+  }
+}
