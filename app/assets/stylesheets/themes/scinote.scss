@@ -565,6 +565,7 @@ a[data-toggle="tooltip"] {
   li {
     display: block;
     text-align: left;
+    word-wrap: break-word;
 
     &:hover {
       background-color: $color-concrete;
@@ -572,8 +573,10 @@ a[data-toggle="tooltip"] {
 
     a {
       color: $color-emperor;
+      display: block;
       line-height: 1.6em;
       padding: 3px 20px;
+      text-align: left;
       text-decoration: none;
       word-wrap: break-word;
     }
