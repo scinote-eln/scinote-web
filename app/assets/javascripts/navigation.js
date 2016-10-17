@@ -84,9 +84,9 @@
     var teamSwitch = $('#team-switch');
     teamSwitch
       .find('.dropdown-menu a')
-      .on('click', function(el){
+      .on('click', function(){
         $('#user_current_organization_id')
-          .val($(el.toElement).attr('data-id'));
+          .val($(this).attr('data-id'));
 
         teamSwitch
           .find('form')

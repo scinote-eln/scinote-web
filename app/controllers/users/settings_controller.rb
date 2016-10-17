@@ -446,7 +446,7 @@ class Users::SettingsController < ApplicationController
   end
 
   def reset_tutorial
-    if @user.update(tutorial_status: 0) && params[:org][:id]
+    if @user.update(tutorial_status: 0) && params[:org][:id].present?
       @user.update(current_organization_id: params[:org][:id])
       cookies.delete :tutorial_data
       cookies.delete :current_tutorial_step
@@ -496,7 +496,7 @@ class Users::SettingsController < ApplicationController
   def user_current_organization
     @user.current_organization_id = params[:user][:current_organization_id]
     @changed_org = Organization.find_by_id(@user.current_organization_id)
-    if @user.save
+    if params[:user][:current_organization_id].present? && @user.save
       flash[:success] = t('users.settings.changed_org_flash',
                           team: @changed_org.name)
       redirect_to root_path
