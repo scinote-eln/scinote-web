@@ -32,6 +32,9 @@ USER_INITIALS_MAX_LENGTH = 4
 # Standard length limit for email
 EMAIL_MAX_LENGTH = 254
 
+# name length
+ORG_NAME_TRUNCATION_LENGTH = 25
+
 # Max table JSON size in MB
 TABLE_JSON_MAX_SIZE = 20
 # Max uploaded file size in MB
