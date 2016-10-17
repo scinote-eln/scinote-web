@@ -23,8 +23,9 @@ class Constants
   PASSWORD_STRETCH_FACTOR = 10
   # Standard max length for email
   EMAIL_MAX_LENGTH = 254
-  # Some big value which is still supported by all databases
-  INFINITY = 999999999999999999
+  # Some big value which is still supported by all databases, no matter what
+  # data type is used
+  INFINITY = 2**32 / 2 - 1
 
   #=============================================================================
   # Query/display limits
