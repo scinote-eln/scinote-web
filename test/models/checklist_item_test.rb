@@ -2,7 +2,7 @@ require 'test_helper'
 
 class ChecklistItemTest < ActiveSupport::TestCase
   should validate_presence_of(:text)
-  should should validate_length_of(:text)
+  should validate_length_of(:text)
     .is_at_most(TEXT_MAX_LENGTH)
 
   test "should validate with correct data" do
