@@ -1,3 +1,5 @@
+//= require datatables
+
 (function () {
 
   var newReportModal = null;
@@ -52,6 +54,25 @@
     */
   }
 
+  function initReportsDataTable() {
+    $('#reportsDataTable')
+      .dataTable({
+        processing: true,
+        serverSide: true,
+        sear
+        ajax: {
+          url: $('#reportsDataTable').attr('data-source'),
+          global: false,
+          type: "POST"
+        },
+        columns: [
+          { data: '0' },
+          { data: '1' },
+          { data: '2' },
+          { data: '3' },
+        ]
+      });
+  }
   /**
    * Initialize interaction between checkboxes, editing and deleting.
    */
@@ -217,6 +238,7 @@
     updateButtons();
     initEditReport();
     initDeleteReports();
+    initReportsDataTable();
     initTutorial();
   });
 

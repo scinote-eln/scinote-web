@@ -67,9 +67,10 @@ class ReportsController < ApplicationController
 
   def reports_table
     respond_to do |format|
-      format.html
       format.json {
-        render json: ::SampleDatatable.new(view_context, @organization, @user)
+        render json: ::ReportsDatatable.new(view_context,
+                                            @user,
+                                            @organization)
       }
     end
   end

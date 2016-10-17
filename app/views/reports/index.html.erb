@@ -59,6 +59,22 @@
     </tbody>
   </table>
 
+  <div class="protocols-datatable">
+    <table id="reportsDataTable"
+           class="table"
+           data-source="<%= datatable_reports_path(format: :json) %>">
+      <thead>
+        <tr>
+          <th id="report-name">Name</th>
+          <th id="report-created_at">Created at</th>
+          <th id="report-updated_at">Updated at</th>
+          <th id="report-project">Project</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
 </div>
 
 <!-- Save report modal -->

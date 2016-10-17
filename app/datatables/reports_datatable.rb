@@ -1,9 +1,8 @@
 class ReportsDatatable < AjaxDatatablesRails::Base
-
-  def initialize(view,
+  def initialize(view_context,
                  user,
                  organization)
-    super(view)
+    super(view_context)
     @user = user
     @organization = organization
   end
@@ -35,16 +34,16 @@ class ReportsDatatable < AjaxDatatablesRails::Base
       [
         # comma separated list of the values for each cell of a table row
         # example: record.attribute,
-        record.name,
-        record.created_at,
-        record.updated_at,
-        record.project
+        '0' => record.name,
+        '1' => record.created_at,
+        '2' => record.updated_at,
+        '3' => record.project.name
       ]
     end
   end
 
   def get_raw_records
-    Reports
+    Report
       .joins(:project)
       .where('reports.user_id = ? AND projects.organization_id = ?',
              @user,
