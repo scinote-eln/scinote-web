@@ -6,4 +6,15 @@ module SearchHelper
     end
     experiments.uniq
   end
+
+  def route_to_other_org(path, search_org, text)
+    if search_org != current_organization
+      link_to text,
+              path,
+              data: { confirm: t('users.settings.changed_org_in_search',
+                                 team: search_org.name) }
+    else
+      link_to text, path
+    end
+  end
 end

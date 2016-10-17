@@ -10,7 +10,8 @@ class Users::SettingsController < ApplicationController
     :organization_users_datatable,
     :tutorial,
     :reset_tutorial,
-    :notifications_settings
+    :notifications_settings,
+    :user_current_organization
   ]
 
   before_action :check_organization_permission, only: [
@@ -445,7 +446,8 @@ class Users::SettingsController < ApplicationController
   end
 
   def reset_tutorial
-    if @user.update(tutorial_status: 0) && params[:org][:id]
+    if @user.update(tutorial_status: 0) && params[:org][:id].present?
+      @user.update(current_organization_id: params[:org][:id])
       cookies.delete :tutorial_data
       cookies.delete :current_tutorial_step
       cookies[:repeat_tutorial_org_id] = {
@@ -488,6 +490,19 @@ class Users::SettingsController < ApplicationController
           }
         end
       end
+    end
+  end
+
+  def user_current_organization
+    @user.current_organization_id = params[:user][:current_organization_id]
+    @changed_org = Organization.find_by_id(@user.current_organization_id)
+    if params[:user][:current_organization_id].present? && @user.save
+      flash[:success] = t('users.settings.changed_org_flash',
+                          team: @changed_org.name)
+      redirect_to root_path
+    else
+      flash[:alert] = t('users.settings.changed_org_error_flash')
+      redirect_to :back
     end
   end
 

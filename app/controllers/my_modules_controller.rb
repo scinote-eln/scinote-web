@@ -1,5 +1,6 @@
 class MyModulesController < ApplicationController
   include SampleActions
+  include OrganizationsHelper
 
   before_action :load_vars, only: [
     :show, :edit, :update, :destroy,
@@ -232,10 +233,14 @@ class MyModulesController < ApplicationController
 
   def protocols
     @protocol = @my_module.protocol
+    current_organization_switch(@protocol.organization)
   end
 
   def results
-
+    current_organization_switch(@my_module
+                                .experiment
+                                .project
+                                .organization)
   end
 
   def samples
@@ -245,6 +250,10 @@ class MyModulesController < ApplicationController
 
   def archive
     @archived_results = @my_module.archived_results
+    current_organization_switch(@my_module
+                                .experiment
+                                .project
+                                .organization)
   end
 
   # Submit actions

@@ -5,22 +5,22 @@
 <% if project.archived? %>
   <span class="label label-warning"><%=t "search.index.archived" %></span>
   <% if can_view_projects(project.organization) and can_restore_project(project) %>
-    <a href="<%= projects_archive_path(organization: project.organization) %>">
-      <%= text %>
-    </a>
+    <%= route_to_other_org projects_archive_path(organization: project.organization),
+                           project.organization,
+                           text %>
   <% else %>
     <%= text %>
   <% end %>
 <% else %>
   <% if can_view_project(project) %>
     <% if link_to_page == :show %>
-      <a href="<%= project_path(project) %>">
-        <%= text %>
-      </a>
+      <%= route_to_other_org project_path(project),
+                             project.organization,
+                             text %>
     <%  else %>
-      <a href="<%= root_path %>">
-        <%= text %>
-      </a>
+      <%= route_to_other_org root_path,
+                             nil,
+                             text %>
     <% end %>
   <% else %>
     <%= text %>
