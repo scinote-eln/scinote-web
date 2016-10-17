@@ -2,8 +2,6 @@ class SearchController < ApplicationController
   before_filter :load_vars, only: :index
   before_filter :load_markdown, only: :index
 
-  MIN_QUERY_CHARS = 2
-
   def index
     if not @search_query
       redirect_to new_search_path
@@ -26,7 +24,7 @@ class SearchController < ApplicationController
     search_tables if @search_category == :tables
     search_comments if @search_category == :comments
 
-    @search_pages = (@search_count.to_f / SEARCH_LIMIT.to_f).ceil
+    @search_pages = (@search_count.to_f / Constants::SEARCH_LIMIT.to_f).ceil
     @start_page = @search_page - 2
     @start_page = 1 if @start_page < 1
     @end_page = @start_page + 4
@@ -50,21 +48,29 @@ class SearchController < ApplicationController
     @search_page = params[:page].to_i || 1
     @display_query = @search_query
 
-    if @search_query.length < MIN_QUERY_CHARS
-      flash[:error] = t'search.index.error.query_length', n: MIN_QUERY_CHARS
+    if @search_query.length < Constants::NAME_MIN_LENGTH
+      flash[:error] = t 'general.query.length_too_short',
+                        min_length: Constants::NAME_MIN_LENGTH
       return redirect_to :back
     end
 
     # splits the search query to validate all entries
     @splited_query = @search_query.split
 
-    if @splited_query.first.length < MIN_QUERY_CHARS
-      flash[:error] = t'search.index.error.query_length', n: MIN_QUERY_CHARS
+    if @splited_query.first.length < Constants::NAME_MIN_LENGTH
+      flash[:error] = t 'general.query.length_too_short',
+                        min_length: Constants::NAME_MIN_LENGTH
+      redirect_to :back
+    elsif @splited_query.first.length > Constants::TEXT_MAX_LENGTH
+      flash[:error] = t 'general.query.length_too_long',
+                        max_length: Constants::TEXT_MAX_LENGTH
       redirect_to :back
     elsif @splited_query.length > 1
       @search_query = ''
       @splited_query.each_with_index do |w, i|
-        @search_query += "#{@splited_query[i]} " if w.length >= MIN_QUERY_CHARS
+        if w.length >= Constants::NAME_MIN_LENGTH
+          @search_query += "#{@splited_query[i]} "
+        end
       end
     else
       @search_query = @splited_query.join(' ')

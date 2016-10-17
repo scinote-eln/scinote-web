@@ -1,15 +1,17 @@
 class User < ActiveRecord::Base
   include SearchableModel
 
-  devise :invitable, :confirmable, :database_authenticatable, :registerable, :async,
-    :recoverable, :rememberable, :trackable, :validatable, stretches: 10
-  has_attached_file :avatar, :styles => {
-    :medium => "300x300>",
-    :thumb => "100x100>",
-    :icon => "40x40>",
-    :icon_small => "30x30>"
-  },
-  :default_url => "/images/:style/missing.png"
+  devise :invitable, :confirmable, :database_authenticatable, :registerable,
+         :async, :recoverable, :rememberable, :trackable, :validatable,
+         stretches: Constants::PASSWORD_STRETCH_FACTOR
+  has_attached_file :avatar,
+                    styles: {
+                      medium: Constants::MEDIUM_PIC_FORMAT,
+                      thumb: Constants::THUMB_PIC_FORMAT,
+                      icon: Constants::ICON_PIC_FORMAT,
+                      icon_small: Constants::ICON_SMALL_PIC_FORMAT
+                    },
+                    default_url: Constants::DEFAULT_AVATAR_URL
 
   enum tutorial_status: {
     no_tutorial_done: 0,
@@ -17,15 +19,19 @@ class User < ActiveRecord::Base
   }
 
   auto_strip_attributes :full_name, :initials, nullify: false
-  validates :full_name, presence: true, length: { maximum: NAME_MAX_LENGTH }
+  validates :full_name,
+            presence: true,
+            length: { maximum: Constants::NAME_MAX_LENGTH }
   validates :initials,
             presence: true,
-            length: { maximum: USER_INITIALS_MAX_LENGTH }
-  validates :email, presence: true, length: { maximum: EMAIL_MAX_LENGTH }
+            length: { maximum: Constants::USER_INITIALS_MAX_LENGTH }
+  validates :email,
+            presence: true,
+            length: { maximum: Constants::EMAIL_MAX_LENGTH }
 
   validates_attachment :avatar,
     :content_type => { :content_type => ["image/jpeg", "image/png"] },
-    size: { less_than: AVATAR_MAX_SIZE.megabytes }
+    size: { less_than: Constants::AVATAR_MAX_SIZE_MB.megabytes }
   validates :time_zone, presence: true
   validate :time_zone_check
 
@@ -233,9 +239,9 @@ class User < ActiveRecord::Base
   # Finds all activities of user that is assigned to project. If user
   # is not an owner of the project, user must be also assigned to
   # module.
-  def last_activities(last_activity_id = nil, per_page = 10)
-    # TODO replace with some kind of Infinity value
-    last_activity_id = 999999999999999999999999 if last_activity_id < 1
+  def last_activities(last_activity_id = nil,
+                      per_page = Constants::ACTIVITY_AND_NOTIF_SEARCH_LIMIT)
+    last_activity_id = Constants::INFINITY if last_activity_id < 1
     Activity
       .joins(project: :user_projects)
       .joins("LEFT OUTER JOIN my_modules ON activities.my_module_id = my_modules.id")

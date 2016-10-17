@@ -1,11 +1,17 @@
 <% provide(:head_title, t("search.index.head_title")) %>
 
-<!--
+
 <h1 class="page-header"><%= t 'search.index.page_title' %></h1>
-<%= form_tag search_path, method: :get, class: 'form-inline' do %>
+<!-- search form -->
+<%= form_tag search_path, method: :get, id: 'search-bar', class: 'navbar-form navbar-left', role: 'search' do %>
   <div class="form-group">
-  <%= text_field_tag :q, '', class: 'form-control', size: 25, maxlength: 50, pattern: '.{0,50}', required: '', title: t('search.index.error.max_length', n: 50) %>
+    <div class="input-group">
+      <input class="form-control" type="text" name="q" placeholder="<%= t('nav.search') %>">
+      <span class="input-group-btn">
+        <button id="search-button" class="btn btn-default" type="submit">
+          <span class="glyphicon glyphicon-search"></span>
+        </button>
+      </span>
+    </div>
   </div>
-  <%= button_tag 'Search', name: '', class: 'btn btn-default' %>
 <% end %>
--->

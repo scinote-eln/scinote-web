@@ -2,7 +2,9 @@ class Checklist < ActiveRecord::Base
   include SearchableModel
 
   auto_strip_attributes :name, nullify: false
-  validates :name, presence: true, length: { maximum: TEXT_MAX_LENGTH }
+  validates :name,
+            presence: true,
+            length: { maximum: Constants::TEXT_MAX_LENGTH }
   validates :step, presence: true
 
   belongs_to :step, inverse_of: :checklists
@@ -23,7 +25,7 @@ class Checklist < ActiveRecord::Base
   def self.search(user, include_archived, query = nil, page = 1)
     step_ids =
       Step
-      .search(user, include_archived, nil, SHOW_ALL_RESULTS)
+      .search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
       .select("id")
 
     if query
@@ -43,12 +45,12 @@ class Checklist < ActiveRecord::Base
         .where_attributes_like(["checklists.name",  "checklist_items.text"], a_query)
 
     # Show all results if needed
-    if page == SHOW_ALL_RESULTS
+    if page == Constants::SEARCH_NO_LIMIT
       new_query
     else
       new_query
-        .limit(SEARCH_LIMIT)
-        .offset((page - 1) * SEARCH_LIMIT)
+        .limit(Constants::SEARCH_LIMIT)
+        .offset((page - 1) * Constants::SEARCH_LIMIT)
     end
   end
 

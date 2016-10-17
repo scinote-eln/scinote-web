@@ -1,4 +1,4 @@
-@import "colors";
+@import 'constants';
 @import "mixins";
 
 /** Layout **/
@@ -88,7 +88,7 @@ table {
     margin-left: 12px;
     padding: 1px 6px;
     position: relative;
-    z-index: 999999;
+    z-index: $infinity;
   }
 }
 
@@ -650,7 +650,7 @@ a[data-toggle="tooltip"] {
       &:focus, &:active, &:hover {
         box-shadow: none;
         background-color: $color-theme-primary;
-        border-color: #adadad;
+        border-color: $color-dark-gray;
       }
     }
   }
@@ -1064,7 +1064,7 @@ ul.content-module-activities {
   }
 
   .badge-preview {
-    background-color:#c5c5c5;
+    background-color: $color-silver;
     border-radius: 2em;
     float: left;
     font-size: 20px;
@@ -1247,12 +1247,12 @@ table.dataTable {
     top: 50%;
     margin-top: -19px;
     border-top: 19px solid transparent;
-    border-left: 13px solid #37A0D9;
+    border-left: 13px solid $color-theme-primary;
     border-bottom: 19px solid transparent;
 }
 
 .nav-stacked-arrow > li.active > a:hover:after {
-  border-left: 13px solid #337ab7;
+  border-left: 13px solid darken($color-theme-primary, 15%);
 }
 
 /* Overlay to disable interaction while loading ajax */
@@ -1331,10 +1331,10 @@ html.turbolinks-progress-bar::before {
 }
 
 .introjs-tooltipReferenceLayer {
-  z-index: 999999 !important;
+  z-index: $infinity !important;
 
   &.max {
-    z-index: 99999999 !important;
+    z-index: calc($infinity + 1) !important;
   }
 }
 
@@ -1355,7 +1355,7 @@ html.turbolinks-progress-bar::before {
   padding: 5px;
   border-radius: 6px;
   position: absolute;
-  z-index: 999999;
+  z-index: $infinity;
 }
 
 .modal-tooltip:hover .modal-tooltiptext {

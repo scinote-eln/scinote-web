@@ -25,8 +25,11 @@
   <div class="panel-body">
     <% if experiment.workflowimg? %>
       <div class="workflowimg-container">
-        <%= image_tag(experiment.workflowimg.expiring_url(30),
-                              class: 'img-responsive center-block') %>
+        <%= image_tag(
+              experiment.workflowimg.expiring_url(
+                Constants::URL_SHORT_EXPIRE_TIME
+              ),
+              class: 'img-responsive center-block') %>
       </div>
     <% end %>
     <div class="row">

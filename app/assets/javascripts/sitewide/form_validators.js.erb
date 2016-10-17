@@ -18,35 +18,27 @@ $.fn.onSubmitValidator = function(validatorCb) {
   }
 };
 
-var TextLimitEnum = Object.freeze({
-  OPTIONAL: 0,
-  REQUIRED: 1,
-  NAME_MIN_LENGTH: '<%= NAME_MIN_LENGTH %>',
-  NAME_MAX_LENGTH: '<%= NAME_MAX_LENGTH %>',
-  TEXT_MAX_LENGTH: '<%= TEXT_MAX_LENGTH %>'
-});
-
 /*
  * @param {boolean} clearErr Set clearErr to true if this is the only
  * error that can happen/show.
  */
-function textValidator(ev, textInput, textLimitEnumMin, textLimitEnumMax, clearErr) {
+function textValidator(ev, textInput, textLimitMin, textLimitMax, clearErr) {
   clearErr = _.isUndefined(clearErr) ? false : clearErr;
 
   var text = $(textInput).val().trim();
   $(textInput).val(text);
-  var nameTooShort = text.length < textLimitEnumMin;
-  var nameTooLong = text.length > textLimitEnumMax;
+  var nameTooShort = text.length < textLimitMin;
+  var nameTooLong = text.length > textLimitMax;
 
   var errMsg;
   if (nameTooShort) {
-    if (textLimitEnumMin === TextLimitEnum.REQUIRED) {
+    if (textLimitMin === 1) {
       errMsg = I18n.t("general.text.not_blank");
     } else {
-      errMsg = I18n.t("general.text.length_too_short", { min_length: textLimitEnumMin });
+      errMsg = I18n.t("general.text.length_too_short", { min_length: textLimitMin });
     }
   } else if (nameTooLong) {
-    errMsg = I18n.t("general.text.length_too_long", { max_length: textLimitEnumMax });
+    errMsg = I18n.t("general.text.length_too_long", { max_length: textLimitMax });
   }
 
   var noErrors = _.isUndefined(errMsg);
@@ -71,7 +63,8 @@ function checklistsValidator(ev, checklists, editMode) {
         if ($item.css('display') != 'none') {
 
           if ($itemInput.val()) {
-            var itemNameValid = textValidator(ev, $itemInput, TextLimitEnum.REQUIRED, TextLimitEnum.TEXT_MAX_LENGTH);
+            var itemNameValid = textValidator(ev, $itemInput, 1,
+              <%= Constants::TEXT_MAX_LENGTH %>);
             if (!itemNameValid) {
               noErrors = false;
             }
@@ -86,9 +79,9 @@ function checklistsValidator(ev, checklists, editMode) {
       var $checklistInput = $checklist.find(".checklist_name");
       // In edit mode, checklist's name can't be blank if any items present
       var allowBlankChklstName = !(anyChecklistItemFilled || editMode);
-      var textLimitEnumMin = allowBlankChklstName ? TextLimitEnum.OPTIONAL : TextLimitEnum.REQUIRED;
+      var textLimitMin = allowBlankChklstName ? 0 : 1;
       var checklistNameValid = textValidator(ev, $checklistInput,
-        textLimitEnumMin, TextLimitEnum.TEXT_MAX_LENGTH);
+        textLimitMin, <%= Constants::TEXT_MAX_LENGTH %>);
       if (!checklistNameValid) {
         noErrors = false;
       } else if (allowBlankChklstName) {
@@ -101,9 +94,9 @@ function checklistsValidator(ev, checklists, editMode) {
   return noErrors;
 }
 
-var FileTypeSizeEnum = Object.freeze({
-  FILE: '<%= FILE_MAX_SIZE.megabytes %>',
-  AVATAR: '<%= AVATAR_MAX_SIZE.megabytes %>'
+var FileTypeEnum = Object.freeze({
+  FILE: <%= Constants::FILE_MAX_SIZE_MB.megabytes %>,
+  AVATAR: <%= Constants::AVATAR_MAX_SIZE_MB.megabytes %>
 });
 
 function filesValidator(ev, fileInputs, fileTypeEnum, canBeEmpty) {
@@ -138,10 +131,10 @@ function filesSizeValidator(ev, fileInputs, fileTypeEnum) {
     }
     if (file.size > fileTypeEnum) {
       switch (fileTypeEnum) {
-        case FileTypeSizeEnum.FILE:
-         return "<%= I18n.t 'general.file.size_exceeded', file_size: FILE_MAX_SIZE %>".strToErrorFormat();
-        case FileTypeSizeEnum.AVATAR:
-          return "<%= I18n.t 'general.file.size_exceeded', file_size: AVATAR_MAX_SIZE %>".strToErrorFormat();
+        case FileTypeEnum.FILE:
+         return "<%= I18n.t 'general.file.size_exceeded', file_size: Constants::FILE_MAX_SIZE_MB %>".strToErrorFormat();
+        case FileTypeEnum.AVATAR:
+          return "<%= I18n.t 'general.file.size_exceeded', file_size: Constants::AVATAR_MAX_SIZE_MB %>".strToErrorFormat();
       }
     }
   };

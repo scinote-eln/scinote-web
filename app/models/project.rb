@@ -5,7 +5,8 @@ class Project < ActiveRecord::Base
 
   auto_strip_attributes :name, nullify: false
   validates :name,
-            length: { minimum: NAME_MIN_LENGTH, maximum: NAME_MAX_LENGTH },
+            length: { minimum: Constants::NAME_MIN_LENGTH,
+                      maximum: Constants::NAME_MAX_LENGTH },
             uniqueness: { scope: :organization, case_sensitive: false }
   validates :visibility, presence: true
   validates :organization, presence: true
@@ -64,23 +65,23 @@ class Project < ActiveRecord::Base
     end
 
     # Show all results if needed
-    if page == SHOW_ALL_RESULTS
+    if page == Constants::SEARCH_NO_LIMIT
       new_query
     else
       new_query
-        .limit(SEARCH_LIMIT)
-        .offset((page - 1) * SEARCH_LIMIT)
+        .limit(Constants::SEARCH_LIMIT)
+        .offset((page - 1) * Constants::SEARCH_LIMIT)
     end
   end
 
-  def last_activities(count = 20)
+  def last_activities(count = Constants::ACTIVITY_AND_NOTIF_SEARCH_LIMIT)
     activities.order(created_at: :desc).first(count)
   end
 
   # Get project comments order by created_at time. Results are paginated
   # using last comment id and per_page parameters.
-  def last_comments(last_id = 1, per_page = 20)
-    last_id = 9999999999999 if last_id <= 1
+  def last_comments(last_id = 1, per_page = Constants::COMMENTS_SEARCH_LIMIT)
+    last_id = Constants::INFINITY if last_id <= 1
     comments = Comment.joins(:project_comment)
                       .where(project_comments: { project_id: id })
                       .where('comments.id <  ?', last_id)

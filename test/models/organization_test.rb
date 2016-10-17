@@ -6,11 +6,11 @@ class OrganizationTest < ActiveSupport::TestCase
   end
 
   should validate_length_of(:name)
-    .is_at_least(NAME_MIN_LENGTH)
-    .is_at_most(NAME_MAX_LENGTH)
+    .is_at_least(Constants::NAME_MIN_LENGTH)
+    .is_at_most(Constants::NAME_MAX_LENGTH)
 
   should validate_length_of(:description)
-    .is_at_most(TEXT_MAX_LENGTH)
+    .is_at_most(Constants::TEXT_MAX_LENGTH)
 
   test "should validate organization default values" do
     assert @org.valid?
@@ -28,7 +28,7 @@ class OrganizationTest < ActiveSupport::TestCase
 
   test "space_taken_defaults_to_value" do
     org = Organization.new
-    assert_equal MINIMAL_ORGANIZATION_SPACE_TAKEN, org.space_taken
+    assert_equal Constants::MINIMAL_ORGANIZATION_SPACE_TAKEN, org.space_taken
   end
 
   test "should save log message" do

@@ -179,7 +179,11 @@ class Users::RegistrationsController < Devise::RegistrationsController
   def sign_up_params
     tmp = params.require(:user).permit(:full_name, :initials, :email, :password, :password_confirmation)
     initials = tmp[:full_name].titleize.scan(/[A-Z]+/).join()
-    initials = initials.strip.empty? ? "PLCH" : initials[0..3]
+    initials = if initials.strip.empty?
+                 'PLCH'
+               else
+                 initials[0..Constants::USER_INITIALS_MAX_LENGTH]
+               end
     tmp.merge(:initials => initials)
   end
 
@@ -229,7 +233,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
         success_action_status: '201',
         acl: 'public-read',
         storage_class: "REDUCED_REDUNDANCY",
-        content_length_range: 1..FILE_MAX_SIZE.megabytes,
+        content_length_range: 1..Constants::FILE_MAX_SIZE_MB.megabytes,
         content_type: content_type
       )
       posts.push({

@@ -11,8 +11,8 @@ class MyModuleTest < ActiveSupport::TestCase
   end
 
   should validate_length_of(:name)
-    .is_at_least(NAME_MIN_LENGTH)
-    .is_at_most(NAME_MAX_LENGTH)
+    .is_at_least(Constants::NAME_MIN_LENGTH)
+    .is_at_most(Constants::NAME_MAX_LENGTH)
 
   test "should validate valid module object" do
     assert @my_module.valid?

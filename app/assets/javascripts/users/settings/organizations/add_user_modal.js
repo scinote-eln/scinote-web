@@ -119,6 +119,9 @@ modal
   disableInviteBtn();
 })
 .on("ajax:error", inviteExistingForm.selector, function(ev, data, status) {
+    //Clear previous info
+    inviteExistingResults.html("");
+
     // Display form errors
     inviteExistingForm.renderFormErrors("", data.responseJSON);
 });

@@ -2,7 +2,7 @@ class ActivitiesController < ApplicationController
   before_filter :load_vars
 
   def index
-    @per_page = 10
+    @per_page = Constants::ACTIVITY_AND_NOTIF_SEARCH_LIMIT
     @activities = current_user.last_activities(@last_activity_id,
       @per_page + 1)
 

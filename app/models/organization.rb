@@ -5,8 +5,9 @@ class Organization < ActiveRecord::Base
 
   auto_strip_attributes :name, :description, nullify: false
   validates :name,
-            length: { minimum: NAME_MIN_LENGTH, maximum: NAME_MAX_LENGTH }
-  validates :description, length: { maximum: TEXT_MAX_LENGTH }
+            length: { minimum: Constants::NAME_MIN_LENGTH,
+                      maximum: Constants::NAME_MAX_LENGTH }
+  validates :description, length: { maximum: Constants::TEXT_MAX_LENGTH }
   validates :space_taken, presence: true
 
   belongs_to :created_by, :foreign_key => 'created_by_id', :class_name => 'User'
@@ -274,7 +275,7 @@ class Organization < ActiveRecord::Base
       end
     end
     # project.experiments.each |experiment|
-    self.space_taken = [st, MINIMAL_ORGANIZATION_SPACE_TAKEN].max
+    self.space_taken = [st, Constants::MINIMAL_ORGANIZATION_SPACE_TAKEN].max
     Rails::logger.info "Organization #{self.id}: " +
       "space (re)calculated to: " +
       "#{self.space_taken}B (#{number_to_human_size(self.space_taken)})"
@@ -293,7 +294,8 @@ class Organization < ActiveRecord::Base
   # Release specified amount of bytes
   def release_space(space)
     orig_space = self.space_taken
-    self.space_taken = [space_taken - space, MINIMAL_ORGANIZATION_SPACE_TAKEN].max
+    self.space_taken = [space_taken - space,
+                        Constants::MINIMAL_ORGANIZATION_SPACE_TAKEN].max
     Rails::logger.info "Organization #{self.id}: " +
       "space released: " +
       "#{orig_space}B - #{space}B = " +

@@ -4,11 +4,6 @@
 // CONSTANTS
 //************************************
 
-var NAME_VALID = 0;
-var NAME_LENGTH_ERROR = -1;
-var NAME_INVALID_CHARACTERS_ERROR = -2;
-var NAME_WHITESPACES_ERROR = -3;
-
 var DRAG_INVALID = 0;
 var DRAG_MOUSE = 1;
 var DRAG_TOUCH = 2;
@@ -41,7 +36,7 @@ var DEFAULT_CONNECTOR_STYLE =
 } ];
 var DEFAULT_CONNECTOR_STYLE_2 =
 {
-  strokeStyle: "#FFFFFF",
+  strokeStyle: '<%= Constants::COLOR_WHITE %>',
   lineWidth: 1.5,
   outlineColor: "transparent",
   outlineWidth: 0
@@ -62,7 +57,7 @@ var EDIT_ENDPOINT_STYLE =
 } ];
 var EDIT_CONNECTOR_STYLE_2 =
 {
-  strokeStyle: "#FFFFFF",
+  strokeStyle: '<%= Constants::COLOR_WHITE %>',
   lineWidth: 3,
   outlineColor: "transparent",
   outlineWidth: 0
@@ -1439,7 +1434,8 @@ function bindNewModuleAction(gridDistX, gridDistY) {
     var input = $("#new-module-name-input");
     // Validate module name
     var moduleNameValid = textValidator(ev, input,
-      TextLimitEnum.NAME_MIN_LENGTH, TextLimitEnum.NAME_MAX_LENGTH, true);
+      <%= Constants::NAME_MIN_LENGTH %>, <%= Constants::NAME_MAX_LENGTH %>,
+      true);
     if (moduleNameValid) {
       // Set the "clicked" property to true
       modal.data("submit", "true");
@@ -1529,7 +1525,8 @@ function initEditModules() {
     var input = modal.find("#edit-module-name-input");
     // Validate module name
     var moduleNameValid = textValidator(ev, input,
-      TextLimitEnum.NAME_MIN_LENGTH, TextLimitEnum.NAME_MAX_LENGTH, true);
+      <%= Constants::NAME_MIN_LENGTH %>, <%= Constants::NAME_MAX_LENGTH %>,
+      true);
     if (moduleNameValid) {
       var newName = input.val();
       var moduleId = modal.attr("data-module-id");
@@ -1636,8 +1633,8 @@ function initEditModuleGroups() {
   function handleRenameConfirm(modal, ev) {
     var input = modal.find("#edit-module-group-name-input");
     // Validate module group name
-    var moduleNameValid = textValidator(ev, input, TextLimitEnum.REQUIRED,
-      TextLimitEnum.NAME_MAX_LENGTH, true);
+    var moduleNameValid = textValidator(ev, input, 1,
+      <%= Constants::NAME_MAX_LENGTH %>, true);
     if (moduleNameValid) {
       var newModuleGroupName = input.val();
       var moduleId = modal.attr("data-module-id");

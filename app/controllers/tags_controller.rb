@@ -20,7 +20,7 @@ class TagsController < ApplicationController
     end
 
     if @tag.color.blank?
-      @tag.color = TAG_COLORS[0]
+      @tag.color = Constants::TAG_COLORS[0]
     end
 
     if @tag.save

@@ -15,7 +15,7 @@
         <% else %>
           <img src="/images/logo.png" class="with-version" id="logo">
           <span class="version">
-            <%= APP_VERSION %>
+            <%= Constants::APP_VERSION %>
           </span>
         <% end %>
       </a>
@@ -55,6 +55,7 @@
 
       <!-- profile info -->
       <ul class="nav navbar-nav navbar-right">
+        <!-- notifications -->
         <li class="dropdown">
           <a href="#"
              id="notifications-dropdown"
@@ -74,21 +75,32 @@
             <li class="notifications-dropdown-footer"><%= link_to t('notifications.show_all'), notifications_path %></li>
           </ul>
         </li>
+
+        <!-- help -->
         <li class="dropdown">
           <a href="#" id="help-link" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
             <span class="glyphicon glyphicon-info-sign"></span>
           </a>
           <ul class="dropdown-menu">
-            <li><%= link_to t('nav.help.tutorials'), TUTORIALS_URL, target: "_blank" %></li>
-            <li><%= link_to t('nav.help.faq'), FAQ_URL, target: "_blank" %></li>
-            <li><%= link_to t('nav.help.release_notes'), RELEASE_NOTES_URL, target: "_blank" %></li>
-            <li><%= link_to t('nav.help.support'), SUPPORT_URL, target: "_blank" %></li>
-            <li><%= link_to t('nav.help.plans'), PLANS_URL, target: "_blank" %></li>
-            <li><%= link_to t('nav.help.contact'), CONTACT_URL, target: "_blank" %></li>
+            <li><%= link_to t('nav.help.tutorials'),
+                              Constants::TUTORIALS_URL,
+                              target: "_blank" %></li>
+            <li><%= link_to t('nav.help.faq'),
+                              Constants::FAQ_URL,
+                              target: "_blank" %></li>
+            <li><%= link_to t('nav.help.support'),
+                              Constants::SUPPORT_URL,
+                              target: "_blank" %></li>
+            <li><%= link_to t('nav.help.plans'),
+                              Constants::PLANS_URL,
+                              target: "_blank" %></li>
+            <li><%= link_to t('nav.help.contact'),
+                              Constants::CONTACT_URL,
+                              target: "_blank" %></li>
           </ul>
         </li>
 
-
+        <!-- greetings -->
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
             <span><%= t('nav.user_greeting', full_name: current_user.full_name) %></span>
@@ -107,7 +119,7 @@
       <%= form_tag search_path, method: :get, id: 'search-bar', class: 'navbar-form navbar-right', role: 'search' do %>
         <div class="form-group">
           <div class="input-group">
-            <input class="form-control" type="text" name="q" maxlength="50" placeholder="<%= t('nav.search') %>">
+            <input class="form-control" type="text" name="q" placeholder="<%= t('nav.search') %>">
             <span class="input-group-btn">
               <button id="search-button" class="btn btn-default" type="submit">
                 <span class="glyphicon glyphicon-search"></span>
@@ -122,6 +134,5 @@
   </div>
 </nav>
 <div id="loading-animation"></div>
-
 
 <%= javascript_include_tag("navigation") %>

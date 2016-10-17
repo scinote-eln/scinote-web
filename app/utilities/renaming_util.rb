@@ -22,7 +22,7 @@ module RenamingUtil
     # Get the max. length validation, if it exist
     # IF MAX_LENGTH IS VERY LOW, this code here could
     # potentially cause trouble. Let's hope max_length is always 10+
-    max_length = 99999
+    max_length = Constants::INFINITY
     clazz
     .validators_on(name_col)
     .select{ |v| v.class == ActiveModel::Validations::LengthValidator }

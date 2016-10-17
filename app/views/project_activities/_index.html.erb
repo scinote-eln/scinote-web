@@ -6,7 +6,7 @@
   <% else %>
     <% @activities.each do |activity| %>
       <li><span class="text-muted"><%= l activity.created_at, format: :full %></span>
-        <br><span><%= activity_truncate( activity.message, 30 ) %></span>
+        <br><span><%= activity_truncate(activity.message) %></span>
       </li>
     <% end %>
   <% end %>

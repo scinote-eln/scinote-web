@@ -1,3 +1,5 @@
-<%= link_to image_tag( @experiment.workflowimg.expiring_url(30),
-                                class: 'img-responsive center-block'),
-                      canvas_experiment_path(@experiment) %>
+<%= link_to image_tag(@experiment.workflowimg.expiring_url(
+                        Constants::URL_SHORT_EXPIRE_TIME
+                      ),
+                      class: 'img-responsive center-block'),
+            canvas_experiment_path(@experiment) %>

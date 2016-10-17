@@ -5,8 +5,9 @@ class MyModule < ActiveRecord::Base
 
   auto_strip_attributes :name, :description, nullify: false
   validates :name,
-            length: { minimum: NAME_MIN_LENGTH, maximum: NAME_MAX_LENGTH }
-  validates :description, length: { maximum: TEXT_MAX_LENGTH }
+            length: { minimum: Constants::NAME_MIN_LENGTH,
+                      maximum: Constants::NAME_MAX_LENGTH }
+  validates :description, length: { maximum: Constants::TEXT_MAX_LENGTH }
   validates :x, :y, :workflow_order, presence: true
   validates :experiment, presence: true
   validates :my_module_group, presence: true, if: "!my_module_group_id.nil?"
@@ -43,7 +44,7 @@ class MyModule < ActiveRecord::Base
   def self.search(user, include_archived, query = nil, page = 1)
     exp_ids =
       Experiment
-      .search(user, include_archived, nil, SHOW_ALL_RESULTS)
+      .search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
       .select("id")
 
     if query
@@ -70,12 +71,12 @@ class MyModule < ActiveRecord::Base
     end
 
     # Show all results if needed
-    if page == SHOW_ALL_RESULTS
+    if page == Constants::SEARCH_NO_LIMIT
       new_query
     else
       new_query
-        .limit(SEARCH_LIMIT)
-        .offset((page - 1) * SEARCH_LIMIT)
+        .limit(Constants::SEARCH_LIMIT)
+        .offset((page - 1) * Constants::SEARCH_LIMIT)
     end
   end
 
@@ -145,14 +146,14 @@ class MyModule < ActiveRecord::Base
       )
   end
 
-  def last_activities(count = 20)
+  def last_activities(count = Constants::ACTIVITY_AND_NOTIF_SEARCH_LIMIT)
     Activity.where(my_module_id: id).order(:created_at).last(count)
   end
 
   # Get module comments ordered by created_at time. Results are paginated
   # using last comment id and per_page parameters.
-  def last_comments(last_id = 1, per_page = 20)
-    last_id = 9999999999999 if last_id <= 1
+  def last_comments(last_id = 1, per_page = Constants::COMMENTS_SEARCH_LIMIT)
+    last_id = Constants::INFINITY if last_id <= 1
     comments = Comment.joins(:my_module_comment)
                       .where(my_module_comments: { my_module_id: id })
                       .where('comments.id <  ?', last_id)
@@ -161,8 +162,9 @@ class MyModule < ActiveRecord::Base
     comments.reverse
   end
 
-  def last_activities(last_id = 1, count = 20)
-    last_id = 9999999999999 if last_id <= 1
+  def last_activities(last_id = 1,
+                      count = Constants::ACTIVITY_AND_NOTIF_SEARCH_LIMIT)
+    last_id = Constants::INFINITY if last_id <= 1
     Activity.joins(:my_module)
       .where(my_module_id: id)
       .where('activities.id <  ?', last_id)
@@ -177,7 +179,7 @@ class MyModule < ActiveRecord::Base
     protocols.count > 0 ? protocols.first : nil
   end
 
-  def first_n_samples(count = 20)
+  def first_n_samples(count = Constants::SEARCH_LIMIT)
     samples.order(name: :asc).limit(count)
   end
 

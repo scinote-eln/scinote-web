@@ -125,8 +125,6 @@ en:
       no_name: "(no name)"
       error:
         no_results: "No results for %{q}."
-        query_length: "Search query is too short. It should contain at least %{n} characters."
-        max_length: "Search query is too long. The query is limited to %{n} characters."
       samples:
         sample: "Sample: "
         sample_type: "Sample type: "
@@ -691,9 +689,6 @@ en:
           name: "Task name"
           name_placeholder: "My task"
           confirm: "Add task"
-          error_length: "Name must contain from 2 to 50 characters."
-          error_invalid: "Name contains invalid characters ('|')."
-          error_whitespaces: "Name cannot be blank."
         modal_edit_module:
           title: "Rename task"
           name: "Task name"
@@ -973,7 +968,6 @@ en:
         temp_file_failure: "We couldn't create temporary file. Please contact administrator."
         no_file_selected: "You didn't select any file."
         errors_list_title: "Samples were not imported because one or more errors was found:"
-        file_size_exceeded: "Must be less than 50MB"
         list_row: "Row %{row}"
         list_error: "%{key}: %{val}"
     import_samples:
@@ -1211,8 +1205,6 @@ en:
             existing_heading: "Invite existing sciNote user"
             existing_label: "Find existing user by name or email:"
             existing_placeholder: "Name or email"
-            existing_query_too_short: "Query is too short (minimum is 3 characters)"
-            existing_query_blank: "Query can't be blank"
             existing_results_title: "Choose user"
             no_existing_users: "No existing users found."
             existing_users_members_smalltext:
@@ -1221,7 +1213,7 @@ en:
             no_existing_users_members_smalltext:
               one: "No existing users that could be invited found; the search, however, matched 1 user that is already member of the team."
               other: "No existing users that could be invited found; the search, however, matched %{count} users that are already members of the team."
-            existing_users_smalltext: "Only showing top %{nr} matched results."
+            existing_users_smalltext: "Only showing top %{count} matched results."
             existing_flash_success: "User %{user} successfully invited to team as %{role}."
             existing_flash_error: "Error inviting user to team."
             new_heading: "Invite new user"
@@ -1537,6 +1529,9 @@ en:
       not_blank: "can't be blank"
       length_too_long: "is too long (maximum is %{max_length} characters)"
       length_too_short: "is too short (minimum is %{min_length} characters)"
+    query:
+      length_too_long: "Search query is too long (maximum is %{max_length} characters)"
+      length_too_short: "Search query is too short (minimum is %{min_length} characters)"
     busy: "The server is still processing your request. If you leave this page, the changes will be lost! Are you sure you want to continue?"
 
   Add: "Add"

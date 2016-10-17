@@ -68,7 +68,7 @@ function processFile(ev, forS3) {
   $form.clearFormErrors();
 
   var $fileInput = $form.find("input[type=file]");
-  if(filesValidator(ev, $fileInput, FileTypeSizeEnum.AVATAR)) {
+  if(filesValidator(ev, $fileInput, FileTypeEnum.AVATAR)) {
     if(forS3) {
       // Redirects file uploading to S3
       var url = "/avatar_signature.json";

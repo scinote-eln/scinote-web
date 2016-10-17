@@ -3,7 +3,7 @@ class UserNotificationsController < ApplicationController
 
   def index
     @last_notification_id = params[:from].to_i || 0
-    @per_page = 10
+    @per_page = Constants::ACTIVITY_AND_NOTIF_SEARCH_LIMIT
 
     @notifications =
       UserNotification.last_notifications(@current_user,

@@ -14,7 +14,7 @@ class CommentTest < ActiveSupport::TestCase
   end
 
   should validate_presence_of(:message)
-  should validate_length_of(:message).is_at_most(TEXT_MAX_LENGTH)
+  should validate_length_of(:message).is_at_most(Constants::TEXT_MAX_LENGTH)
 
   test "should validate" do
     assert @valid.valid?

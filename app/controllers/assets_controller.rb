@@ -106,7 +106,7 @@ class AssetsController < ApplicationController
       success_action_status: '201',
       acl: 'private',
       storage_class: "STANDARD",
-      content_length_range: 1..FILE_MAX_SIZE.megabytes,
+      content_length_range: 1..Constants::FILE_MAX_SIZE_MB.megabytes,
       content_type: asset.file_content_type
     )
     posts.push({
@@ -121,7 +121,7 @@ class AssetsController < ApplicationController
           success_action_status: '201',
           acl: 'public-read',
           storage_class: "REDUCED_REDUNDANCY",
-          content_length_range: 1..FILE_MAX_SIZE.megabytes,
+          content_length_range: 1..Constants::FILE_MAX_SIZE_MB.megabytes,
           content_type: asset.file_content_type
         )
         posts.push({

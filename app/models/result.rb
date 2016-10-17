@@ -3,7 +3,7 @@ class Result < ActiveRecord::Base
 
   auto_strip_attributes :name, nullify: false
   validates :user, :my_module, presence: true
-  validates :name, length: { maximum: NAME_MAX_LENGTH }
+  validates :name, length: { maximum: Constants::NAME_MAX_LENGTH }
   validate :text_or_asset_or_table
 
   belongs_to :user, inverse_of: :results
@@ -35,7 +35,7 @@ class Result < ActiveRecord::Base
   def self.search(user, include_archived, query = nil, page = 1)
     module_ids =
       MyModule
-      .search(user, include_archived, nil, SHOW_ALL_RESULTS)
+      .search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
       .select("id")
 
     if query
@@ -59,12 +59,12 @@ class Result < ActiveRecord::Base
     end
 
     # Show all results if needed
-    if page == SHOW_ALL_RESULTS
+    if page == Constants::SEARCH_NO_LIMIT
       new_query
     else
       new_query
-        .limit(SEARCH_LIMIT)
-        .offset((page - 1) * SEARCH_LIMIT)
+        .limit(Constants::SEARCH_LIMIT)
+        .offset((page - 1) * Constants::SEARCH_LIMIT)
     end
   end
 
@@ -72,8 +72,8 @@ class Result < ActiveRecord::Base
     is_asset ? result_asset.space_taken : 0
   end
 
-  def last_comments(last_id = 1, per_page = 20)
-    last_id = 9999999999999 if last_id <= 1
+  def last_comments(last_id = 1, per_page = Constants::COMMENTS_SEARCH_LIMIT)
+    last_id = Constants::INFINITY if last_id <= 1
     comments = Comment.joins(:result_comment)
                       .where(result_comments: { result_id: id })
                       .where('comments.id <  ?', last_id)

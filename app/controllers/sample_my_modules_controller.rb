@@ -3,7 +3,7 @@ class SampleMyModulesController < ApplicationController
 
   def index
     @number_of_samples = @my_module.number_of_samples
-    @samples = @my_module.first_n_samples(5)
+    @samples = @my_module.first_n_samples
 
     respond_to do |format|
       format.json {

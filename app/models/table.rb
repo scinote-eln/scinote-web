@@ -3,7 +3,7 @@ class Table < ActiveRecord::Base
 
   validates :contents,
             presence: true,
-            length: { maximum: TABLE_JSON_MAX_SIZE.megabytes }
+            length: { maximum: Constants::TABLE_JSON_MAX_SIZE_MB.megabytes }
 
   belongs_to :created_by, foreign_key: 'created_by_id', class_name: 'User'
   belongs_to :last_modified_by, foreign_key: 'last_modified_by_id', class_name: 'User'
@@ -20,14 +20,14 @@ class Table < ActiveRecord::Base
   def self.search(user, include_archived, query = nil, page = 1)
     step_ids =
       Step
-      .search(user, include_archived, nil, SHOW_ALL_RESULTS)
+      .search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
       .joins(:step_tables)
       .select("step_tables.id")
       .distinct
 
     result_ids =
       Result
-      .search(user, include_archived, nil, SHOW_ALL_RESULTS)
+      .search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
       .joins(:result_table)
       .select("result_tables.id")
       .distinct
@@ -55,12 +55,12 @@ class Table < ActiveRecord::Base
     new_query = table_query
 
     # Show all results if needed
-    if page == SHOW_ALL_RESULTS
+    if page == Constants::SEARCH_NO_LIMIT
       new_query
     else
       new_query
-        .limit(SEARCH_LIMIT)
-        .offset((page - 1) * SEARCH_LIMIT)
+        .limit(Constants::SEARCH_LIMIT)
+        .offset((page - 1) * Constants::SEARCH_LIMIT)
     end
   end
 
@@ -78,4 +78,3 @@ class Table < ActiveRecord::Base
     end
   end
 end
-

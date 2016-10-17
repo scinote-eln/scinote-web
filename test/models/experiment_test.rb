@@ -4,13 +4,13 @@ require 'helpers/searchable_model_test_helper'
 
 class ExperimentTest < ActiveSupport::TestCase
   should validate_length_of(:name)
-    .is_at_least(NAME_MIN_LENGTH)
-    .is_at_most(NAME_MAX_LENGTH)
+    .is_at_least(Constants::NAME_MIN_LENGTH)
+    .is_at_most(Constants::NAME_MAX_LENGTH)
   should validate_presence_of(:project)
   should validate_presence_of(:created_by)
   should validate_presence_of(:last_modified_by)
   should validate_length_of(:description)
-    .is_at_most(TEXT_MAX_LENGTH)
+    .is_at_most(Constants::TEXT_MAX_LENGTH)
 
   should have_db_column(:name).of_type(:string)
   should have_db_column(:description).of_type(:text)
