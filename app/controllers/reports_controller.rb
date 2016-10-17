@@ -6,7 +6,8 @@ class ReportsController < ApplicationController
 
   before_action :load_vars, only: [
     :edit,
-    :update
+    :update,
+    :reports_table
   ]
   before_action :load_vars_nested, only: [
     :index,
@@ -48,7 +49,7 @@ class ReportsController < ApplicationController
   ]
   before_action :check_destroy_permissions, only: [:destroy]
 
-  layout "fluid"
+  # layout "fluid"
 
   # Initialize markdown parser
   def load_markdown
@@ -62,6 +63,15 @@ class ReportsController < ApplicationController
 
   # Index showing all reports of a single project
   def index
+  end
+
+  def reports_table
+    respond_to do |format|
+      format.html
+      format.json {
+        render json: ::SampleDatatable.new(view_context, @organization, @user)
+      }
+    end
   end
 
   # Report grouped by modules

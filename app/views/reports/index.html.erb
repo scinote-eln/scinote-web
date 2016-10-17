@@ -1,6 +1,6 @@
 <% provide(:head_title, raw(t("projects.reports.index.head_title", project: 'Reports'))) %>
-<%= render partial: "shared/sidebar" %>
-<%= render partial: "shared/secondary_navigation" %>
+<%#= render partial: "shared/sidebar" %>
+<%# = render partial: "shared/secondary_navigation" %>
 
 <div id="content"
   data-reports-click-new-report-step-text="<%=t 'tutorial.reports_index_click_new_report_html' %>">
@@ -25,7 +25,7 @@
     <%# end %>
   </div>
 
-  <table class="table report-table" data-project-id="<%= @project.id %>">
+  <table class="table report-table" data-project-id="<%#= @project.id %>">
     <thead>
       <tr>
         <th><input type="checkbox" class="check-all-reports"></th>
@@ -42,8 +42,8 @@
         <%# @project.reports.each do |report| %>
           <tr
             class="report-row"
-            data-id="<%= report.id %>"
-            data-edit-link="<%= edit_project_report_path(@project, report) %>"
+            data-id="<%#= report.id %>"
+            data-edit-link="<%#= edit_project_report_path(@project, report) %>"
             >
             <th><input type="checkbox" class="check-report"></th>
             <td><%#= report.name %></td>
@@ -63,7 +63,7 @@
 
 <!-- Save report modal -->
 <div class="modal" id="delete-reports-modal" tabindex="-1" role="dialog" aria-labelledby="delete-reports-modal-label">
-  <%= bootstrap_form_tag url: destroy_project_reports_path, method: :post, id: "delete-reports-form" do |f| %>
+  <%#= bootstrap_form_tag url: destroy_project_reports_path, method: :post, id: "delete-reports-form" do |f| %>
     <input type="hidden" name="report_ids" id="report-ids">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
@@ -75,12 +75,12 @@
           <%=t "projects.reports.index.modal_delete.message" %>
         </div>
         <div class="modal-footer">
-          <%= f.button t("projects.reports.index.modal_delete.delete"), class: "btn btn-primary", id: "confirm-delete-reports-btn", name: nil %>
+          <%#= f.button t("projects.reports.index.modal_delete.delete"), class: "btn btn-primary", id: "confirm-delete-reports-btn", name: nil %>
           <button type="button" class="btn btn-default" data-dismiss="modal"><%=t "general.cancel" %></button>
         </div>
       </div>
     </div>
-  <% end %>
+  <%# end %>
 </div>
 
 
