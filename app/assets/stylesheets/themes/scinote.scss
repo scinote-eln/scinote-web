@@ -556,11 +556,10 @@ a[data-toggle="tooltip"] {
 
 // Global team switch
 #team-switch {
-  background: $color-theme-primary;
   word-wrap: break-word;
 
-  span {
-    color: $color-white;
+  i {
+    margin-right: 5px;
   }
 
   li {
