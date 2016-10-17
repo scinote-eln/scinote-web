@@ -12,11 +12,11 @@ class ReportTest < ActiveSupport::TestCase
   end
 
   should validate_length_of(:name)
-    .is_at_least(NAME_MIN_LENGTH)
-    .is_at_most(NAME_MAX_LENGTH)
+    .is_at_least(Constants::NAME_MIN_LENGTH)
+    .is_at_most(Constants::NAME_MAX_LENGTH)
 
   should validate_length_of(:description)
-    .is_at_most(TEXT_MAX_LENGTH)
+    .is_at_most(Constants::TEXT_MAX_LENGTH)
 
   test "should validate with valid data" do
     assert @report.valid?, "Report with valid data was invalid"

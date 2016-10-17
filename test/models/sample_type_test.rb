@@ -5,7 +5,7 @@ class SampleTypeTest < ActiveSupport::TestCase
     @sample_type = sample_types(:skin)
   end
 
-  should validate_length_of(:name).is_at_most(NAME_MAX_LENGTH)
+  should validate_length_of(:name).is_at_most(Constants::NAME_MAX_LENGTH)
   should validate_presence_of(:name)
   should validate_presence_of(:organization)
 

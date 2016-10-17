@@ -10,7 +10,7 @@ class MyModuleGroupTest < ActiveSupport::TestCase
 
   should validate_presence_of(:name)
   should validate_length_of(:name)
-    .is_at_most(NAME_MAX_LENGTH)
+    .is_at_most(Constants::NAME_MAX_LENGTH)
 
   test "should validate with valid data" do
     assert @module_group.valid?

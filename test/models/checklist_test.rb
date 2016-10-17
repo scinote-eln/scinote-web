@@ -3,7 +3,7 @@ require 'test_helper'
 class ChecklistTest < ActiveSupport::TestCase
   should validate_presence_of(:step)
   should validate_presence_of(:name)
-  should validate_length_of(:name).is_at_most(TEXT_MAX_LENGTH)
+  should validate_length_of(:name).is_at_most(Constants::TEXT_MAX_LENGTH)
 
   test "should validate with correct data" do
     checklist = Checklist.new(

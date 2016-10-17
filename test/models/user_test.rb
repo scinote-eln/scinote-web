@@ -8,9 +8,10 @@ class UserTest < ActiveSupport::TestCase
   end
 
   should validate_presence_of(:full_name)
-  should validate_length_of(:full_name).is_at_most(NAME_MAX_LENGTH)
+  should validate_length_of(:full_name).is_at_most(Constants::NAME_MAX_LENGTH)
   should validate_presence_of(:initials)
-  should validate_length_of(:initials).is_at_most(USER_INITIALS_MAX_LENGTH)
+  should validate_length_of(:initials)
+    .is_at_most(Constants::USER_INITIALS_MAX_LENGTH)
 
 # Test password attribute
   test "should have non-blank password" do

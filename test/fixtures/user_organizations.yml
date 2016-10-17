@@ -77,7 +77,7 @@ without_user:
   user: 0
   organization: nib
   role: 1
-  assigned_by: steve 
+  assigned_by: steve
 
 without_organization:
   user: nora
@@ -96,4 +96,3 @@ with_invalid_organization:
   organization_id: 999999
   role: 1
   assigned_by: steve
-

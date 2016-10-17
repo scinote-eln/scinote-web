@@ -98,7 +98,7 @@ without_user:
   user: 0
   project: decathlon
   role: 1
-  assigned_by: steve 
+  assigned_by: steve
 
 without_project:
   user: nora
@@ -117,4 +117,3 @@ with_invalid_project:
   project_id: 999999
   role: 1
   assigned_by: steve
-

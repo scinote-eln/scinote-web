@@ -13,8 +13,8 @@ class ProtocolTest < ActiveSupport::TestCase
     )
   end
 
-  should validate_length_of(:name).is_at_most(NAME_MAX_LENGTH)
-  should validate_length_of(:description).is_at_most(TEXT_MAX_LENGTH)
+  should validate_length_of(:name).is_at_most(Constants::NAME_MAX_LENGTH)
+  should validate_length_of(:description).is_at_most(Constants::TEXT_MAX_LENGTH)
 
   test "protocol_type enum works" do
     @p.protocol_type = :unlinked
