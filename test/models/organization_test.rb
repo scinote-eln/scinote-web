@@ -5,6 +5,13 @@ class OrganizationTest < ActiveSupport::TestCase
     @org = organizations(:test)
   end
 
+  should validate_length_of(:name)
+    .is_at_least(NAME_MIN_LENGTH)
+    .is_at_most(NAME_MAX_LENGTH)
+
+  should validate_length_of(:description)
+    .is_at_most(TEXT_MAX_LENGTH)
+
   test "should validate organization default values" do
     assert @org.valid?
   end
@@ -12,11 +19,6 @@ class OrganizationTest < ActiveSupport::TestCase
   test "should have non-blank name" do
     @org.name = ""
     assert @org.invalid?, "Organization with blank name returns valid? = true"
-  end
-
-  test "should have short name" do
-    @org.name = "k" * 101
-    assert @org.invalid?, "Organization with name too long returns valid? = true"
   end
 
   test "should have space_taken present" do
