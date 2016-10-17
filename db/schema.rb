@@ -11,7 +11,6 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-
 ActiveRecord::Schema.define(version: 20161012112900) do
 
   # These are extensions that must be enabled in order to support this database
@@ -659,12 +658,13 @@ ActiveRecord::Schema.define(version: 20161012112900) do
     t.integer  "invitation_limit"
     t.integer  "invited_by_id"
     t.string   "invited_by_type"
-    t.integer  "invitations_count",              default: 0
-    t.integer  "tutorial_status",                default: 0,     null: false
-    t.boolean  "assignments_notification",       default: true
-    t.boolean  "recent_notification",            default: true
-    t.boolean  "assignments_notification_email", default: false
-    t.boolean  "recent_notification_email",      default: false
+    t.integer  "invitations_count",                 default: 0
+    t.integer  "tutorial_status",                   default: 0,     null: false
+    t.boolean  "assignments_notification",          default: true
+    t.boolean  "recent_notification",               default: true
+    t.boolean  "assignments_notification_email",    default: false
+    t.boolean  "recent_notification_email",         default: false
+    t.boolean  "system_message_notification_email", default: false
     t.integer  "current_organization_id"
     t.boolean  "system_message_notification_email", default: false
   end

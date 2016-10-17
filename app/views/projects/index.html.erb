@@ -111,7 +111,7 @@
 </div>
 <% end %>
 
-<% if current_organization.projects.length> 0 %>
+<% if current_organization.projects.length > 0 %>
   <%= render partial: "projects/index/org_projects",
              locals: { org: current_organization,
                        projects: current_organization.projects } %>
