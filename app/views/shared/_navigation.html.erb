@@ -104,6 +104,7 @@
         <% if current_user.organizations.length > 1 %>
         <li class="dropdown" id="team-switch">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+            <%= fa_icon 'users' %>
             <span>
               <%= truncate_organization_name(current_organization.name) %>
             </span>
