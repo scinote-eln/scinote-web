@@ -193,6 +193,7 @@ Rails.application.routes.draw do
 
       # Tabs ('overview' tab is routed to 'show')
       get 'protocols' # Protocols view for single module
+      get 'protocols_widget'
       get 'results' # Results view for single module
       get 'activities'
       get 'samples' # Samples view for single module

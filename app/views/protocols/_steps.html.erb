@@ -1,4 +1,5 @@
 <div class="row">
+  <% if !@widget %>
   <div class="pull-right" style="margin: 20px 15px 0 0;">
     <% if can_create_step_in_protocol(@protocol) %>
       <a class="btn btn-primary" data-action="new-step" href="<%= new_protocol_step_path(protocol_id: @protocol.id, format: :json) %>" data-remote="true">
@@ -13,6 +14,7 @@
       <span class="glyphicon glyphicon-collapse-down"></span>
       <span class="hidden-xs"><%= t("protocols.steps.expand_label") %></a></span>
   </div>
+  <% end %>
 
   <div class="col-xs-4">
     <h2><%= t("protocols.steps.subtitle") %></h2>

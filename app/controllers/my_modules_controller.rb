@@ -246,6 +246,11 @@ class MyModulesController < ApplicationController
     current_organization_switch(@protocol.organization)
   end
 
+  def protocols_widget
+    @protocol = @my_module.protocol
+    current_organization_switch(@protocol.organization)
+  end
+
   def results
     current_organization_switch(@my_module
                                 .experiment
