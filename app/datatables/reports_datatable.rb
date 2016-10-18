@@ -1,4 +1,7 @@
 class ReportsDatatable < AjaxDatatablesRails::Base
+  include Rails.application.routes.url_helpers
+  def_delegator :@view, :link_to
+
   def initialize(view_context,
                  user,
                  organization)
@@ -13,7 +16,7 @@ class ReportsDatatable < AjaxDatatablesRails::Base
       'Report.name',
       'Report.created_at',
       'Report.updated_at',
-      'Report.project'
+      'Project.name'
     ]
   end
 
@@ -23,7 +26,7 @@ class ReportsDatatable < AjaxDatatablesRails::Base
       'Report.name',
       'Report.created_at',
       'Report.updated_at',
-      'Report.project'
+      'Project.name'
     ]
   end
 
@@ -34,10 +37,10 @@ class ReportsDatatable < AjaxDatatablesRails::Base
       [
         # comma separated list of the values for each cell of a table row
         # example: record.attribute,
-        '0' => record.name,
-        '1' => record.created_at,
-        '2' => record.updated_at,
-        '3' => record.project.name
+        link_to(record.name, edit_report_path(record)),
+        I18n.l(record.created_at, format: :full),
+        I18n.l(record.updated_at, format: :full),
+        link_to(record.project.name, project_path(record.project))
       ]
     end
   end

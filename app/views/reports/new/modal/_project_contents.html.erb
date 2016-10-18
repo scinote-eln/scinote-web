@@ -1,5 +1,5 @@
-<%= bootstrap_form_tag remote: true, url: project_contents_project_reports_path(project, format: :json), method: :post, html: { id: "add-contents-form" } do |f| %>
-  <%= hidden_field_tag :id, project.id %>
+<%= bootstrap_form_tag remote: true, url: project_contents_reports_path(format: :json), method: :post, html: { id: "add-contents-form" } do |f| %>
+  <%= hidden_field_tag :project_id, project.id %>
   <div>
     <!-- Nav tabs -->
     <ul class="nav nav-tabs" role="tablist">

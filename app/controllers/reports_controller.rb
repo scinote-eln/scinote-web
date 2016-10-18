@@ -2,17 +2,20 @@ class ReportsController < ApplicationController
   include OrganizationsHelper
   # Ignore CSRF protection just for PDF generation (because it's
   # used via target='_blank')
-  protect_from_forgery with: :exception, :except => :generate
+  protect_from_forgery with: :exception,
+                       except: :generate
+
+  before_action :set_user_and_organization
 
   before_action :load_vars, only: [
+    :index,
     :edit,
     :update,
-    :reports_table
+    :reports_table,
+    :create
   ]
   before_action :load_vars_nested, only: [
-    :index,
     :new,
-    :create,
     :edit,
     :update,
     :generate,
@@ -31,25 +34,25 @@ class ReportsController < ApplicationController
 
   before_action :check_view_permissions, only: [:index]
   before_action :check_create_permissions, only: [
-    :new,
-    :create,
-    :edit,
-    :update,
-    :generate,
-    :save_modal,
-    :project_contents_modal,
-    :experiment_contents_modal,
-    :module_contents_modal,
-    :step_contents_modal,
-    :result_contents_modal,
-    :project_contents,
-    :module_contents,
-    :step_contents,
-    :result_contents
+    # :new,
+    # :create,
+    # :edit,
+    # :update,
+    # :generate,
+    # :save_modal,
+    # :project_contents_modal,
+    # :experiment_contents_modal,
+    # :module_contents_modal,
+    # :step_contents_modal,
+    # :result_contents_modal,
+    # :project_contents,
+    # :module_contents,
+    # :step_contents,
+    # :result_contents
   ]
   before_action :check_destroy_permissions, only: [:destroy]
 
-  # layout "fluid"
+  layout :set_layout
 
   # Initialize markdown parser
   def load_markdown
@@ -97,7 +100,7 @@ class ReportsController < ApplicationController
     if continue and @report.save_with_contents(report_contents)
       respond_to do |format|
         format.json {
-          render json: { url: project_reports_path(@project) }, status: :ok
+          render json: { url: reports_path }, status: :ok
         }
       end
     else
@@ -132,7 +135,7 @@ class ReportsController < ApplicationController
     if continue and @report.save_with_contents(report_contents)
       respond_to do |format|
         format.json {
-          render json: { url: project_reports_path(@project) }, status: :ok
+          render json: { url: reports_path }, status: :ok
         }
       end
     else
@@ -164,7 +167,7 @@ class ReportsController < ApplicationController
       end
     end
 
-    redirect_to project_reports_path(@project)
+    redirect_to reports_path
   end
 
   # Generation action
@@ -193,9 +196,9 @@ class ReportsController < ApplicationController
     if @report.blank?
       @report = Report.new
       @method = :post
-      @url = project_reports_path(@project, format: :json)
+      @url = reports_path(format: :json)
     else
-      @url = project_report_path(@project, @report, format: :json)
+      @url = report_path(@report, format: :json)
     end
 
     if !params.include? :contents
@@ -619,7 +622,7 @@ class ReportsController < ApplicationController
   def elements_empty?(elements)
     if elements.blank?
       return true
-    elsif elements.count == 0
+    elsif elements.count.zero?
       return true
     elsif elements.count == 1
       el = elements[0]
@@ -632,18 +635,19 @@ class ReportsController < ApplicationController
     return false
   end
 
-  def load_vars
-    # @report = Report.find_by_id(params[:id])
+  def set_user_and_organization
     @user = current_user
     @organization = current_organization
+  end
+
+  def load_vars
+    @report = Report.find_by_id(params[:id])
     render_404 unless @user && @organization
   end
 
   def load_vars_nested
-    # @project = Project.find_by_id(params[:project_id])
-    @user = current_user
-    @organization = current_organization
-    render_404 unless @user && @organization
+    @project = Project.find_by_id(params[:project_id])
+    render_404 unless @project
   end
 
   def check_view_permissions
@@ -662,6 +666,10 @@ class ReportsController < ApplicationController
     unless can_delete_reports(@project)
       render_403
     end
+  end
+
+  def set_layout
+    action_name == 'index' ? 'main' : 'fluid'
   end
 
   def report_params

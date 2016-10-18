@@ -6,7 +6,7 @@
   data-reports-click-new-report-step-text="<%=t 'tutorial.reports_index_click_new_report_html' %>">
   <div>
     <%# if can_create_new_report(@project) %>
-      <%= link_to new_report_path, class: "btn btn-primary", id: "new-report-btn" do %>
+      <%= link_to "#", class: "btn btn-primary", id: "new-report-btn" do %>
         <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
         <span class="hidden-xs"><%=t "projects.reports.index.new" %></span>
       <% end %>
@@ -99,5 +99,29 @@
   <%# end %>
 </div>
 
+<!-- Save report modal -->
+<div class="modal" id="new-report-modal" tabindex="-1" role="dialog" aria-labelledby="new-report-modal-label">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">Select the project</h4>
+        </div>
+        <div class="modal-body">
+          <%#= select_tag 'Projects', options_from_collection_for_select(current_organization.projects, 'id', 'name') %>
+          <%= collection_select(:project, :project_id, current_organization.projects, :id, :name, {}, { :class => "form-control"} ) %>
+        </div>
+        <div class="modal-footer">
+          <%= link_to 'Go',
+                      '#',
+                      data: { href: new_report_path },
+                      class: 'btn btn-primary',
+                      id: 'create-new-report-btn',
+                      name: nil %>
+          <button type="button" class="btn btn-default" data-dismiss="modal"><%=t "general.cancel" %></button>
+        </div>
+      </div>
+    </div>
+</div>
 
 <%= javascript_include_tag("reports/index") %>

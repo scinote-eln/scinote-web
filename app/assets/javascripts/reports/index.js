@@ -52,6 +52,23 @@
       return false;
     });
     */
+    newReportButton
+      .on('click', function() {
+        newReportModal
+          .modal('show',{
+            backdrop: true,
+            keyboard: false,
+          });
+      });
+
+    newReportCreateButton
+      .on('click', function() {
+        var link = addParam(newReportCreateButton.attr('data-href'),
+                            'project_id',
+                            $('#project_project_id').val());
+  
+        window.location.href = link;
+      });
   }
 
   function initReportsDataTable() {
@@ -59,17 +76,16 @@
       .dataTable({
         processing: true,
         serverSide: true,
-        sear
         ajax: {
           url: $('#reportsDataTable').attr('data-source'),
           global: false,
           type: "POST"
         },
         columns: [
-          { data: '0' },
-          { data: '1' },
-          { data: '2' },
-          { data: '3' },
+          { 'data': '0', 'targets': 'c1', 'searchable': true, 'orderable': true },
+          { 'data': '1', 'targets': 'c2', 'searchable': true, 'orderable': true },
+          { 'data': '2', 'targets': 'c3', 'searchable': true, 'orderable': true },
+          { 'data': '3', 'targets': 'c4', 'searchable': true, 'orderable': true }
         ]
       });
   }
