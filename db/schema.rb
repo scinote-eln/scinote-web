@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161017111700) do
+ActiveRecord::Schema.define(version: 20161018134050) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -675,6 +675,12 @@ ActiveRecord::Schema.define(version: 20161017111700) do
   add_index "users", ["invitations_count"], name: "index_users_on_invitations_count", using: :btree
   add_index "users", ["invited_by_id"], name: "index_users_on_invited_by_id", using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
+
+  create_table "widgets", force: :cascade do |t|
+    t.integer "type"
+    t.integer "position"
+    t.text    "properties"
+  end
 
   add_foreign_key "activities", "my_modules"
   add_foreign_key "activities", "projects"

@@ -199,6 +199,9 @@ class Constants
   # Organization name for default admin user
   DEFAULT_PRIVATE_ORG_NAME = 'My projects'.freeze
 
+  # Task widget types. Order is important, new widget types must be appended!
+  WIDGET_TYPES = %w(results protocol activities).freeze
+
   #                             )       \   /      (
   #                            /|\      )\_/(     /|\
   #   *                       / | \    (/\|/\)   / | \                      *
