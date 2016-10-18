@@ -176,10 +176,10 @@
                     <%= t('nav2.modules.overview') %>
                   </a>
                 </li>
-                <%= my_module_tab_selector_tab_li(@my_module, 'protocols', @my_module.protocols.count == 0) %>
-                <%= my_module_tab_selector_tab_li(@my_module, 'results', @my_module.results.count == 0) %>
+                <%= my_module_tab_selector_tab_li(@my_module, 'protocols') %>
+                <%= my_module_tab_selector_tab_li(@my_module, 'results') %>
                 <%= my_module_tab_selector_tab_li(@my_module, 'activities') %>
-                <%= my_module_tab_selector_tab_li(@my_module, 'samples', @my_module.samples.count == 0) %>
+                <%= my_module_tab_selector_tab_li(@my_module, 'samples') %>
                 <li style="display: none;" data-hook="module-tab-selector"></li>
               </ul>
             </li>

@@ -22,9 +22,9 @@ module MyModuleTabsHelper
     res.html_safe
   end
 
-  def my_module_tab_selector_tab_li(my_module, tab, can_uncheck = true)
+  def my_module_tab_selector_tab_li(my_module, tab)
     res = <<-eos
-    <li class="#{'disabled' if my_module_tab_toggle_disabled?(my_module, tab, can_uncheck)}">
+    <li class="#{'disabled' if my_module_tab_toggle_disabled?(my_module, tab)}">
       <a href="#" data-tab="#{tab}">
         <input type="checkbox" #{'checked="checked"' if my_module.shown_tabs.include?(tab)}>
         #{t('nav2.modules.' + tab)}
@@ -36,7 +36,8 @@ module MyModuleTabsHelper
 
   private
 
-  def my_module_tab_toggle_disabled?(my_module, tab, can_uncheck)
-    my_module.shown_tabs.include?(tab) && !can_uncheck
+  def my_module_tab_toggle_disabled?(my_module, tab)
+    my_module.shown_tabs.include?(tab) &&
+    !my_module.send("can_uncheck_tab_#{tab}?")
   end
 end

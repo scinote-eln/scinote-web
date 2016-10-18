@@ -307,53 +307,7 @@ class MyModulesController < ApplicationController
   end
 
   def toggle_tab
-    toggled = true
-
-    case params['tab']
-    when 'protocols'
-      if @my_module.shown_tabs.include?('protocols')
-        if @my_module.protocols.count == 0
-          @my_module.shown_tabs.delete('protocols')
-          @my_module.save
-        else
-          toggled = false
-        end
-      else
-        @my_module.shown_tabs << 'protocols'
-        @my_module.save
-      end
-    when 'results'
-      if @my_module.shown_tabs.include?('results')
-        if @my_module.results.count == 0
-          @my_module.shown_tabs.delete('results')
-          @my_module.save
-        else
-          toggled = false
-        end
-      else
-        @my_module.shown_tabs << 'results'
-        @my_module.save
-      end
-    when 'activities'
-      if @my_module.shown_tabs.include?('activities')
-        @my_module.shown_tabs.delete('activities')
-      else
-        @my_module.shown_tabs << 'activities'
-      end
-      @my_module.save
-    when 'samples'
-      if @my_module.shown_tabs.include?('samples')
-        if @my_module.samples.count == 0
-          @my_module.shown_tabs.delete('samples')
-          @my_module.save
-        else
-          toggled = false
-        end
-      else
-        @my_module.shown_tabs << 'samples'
-        @my_module.save
-      end
-    end
+    toggled = @my_module.toggle_tab(params['tab'])
 
     respond_to do |format|
       format.html

@@ -21,7 +21,7 @@
       var tab = $this.attr('data-tab');
 
       // Enable spinner on dropdown
-      animateSpinner(parent);
+      animateSpinner();
 
       // Do the AJAX call onto server
       $.ajax({
@@ -35,7 +35,7 @@
         },
         error: function(data) {
           // Disable spinner
-          animateSpinner(parent, false);
+          animateSpinner(null, false);
         }
       });
     });

@@ -356,6 +356,51 @@ class MyModule < ActiveRecord::Base
     { x: 0, y: positions.last[1] + HEIGHT }
   end
 
+  def toggle_tab(tab)
+    toggled = true
+
+    begin
+      # This is done in advance so even if enabling tabs
+      # (where can_uncheck doesn't need to be called),
+      # it's called anyway just to check if the tab
+      # parameter is legal (e.g. it's not an evil,
+      # injected value)
+      can_uncheck = send("can_uncheck_tab_#{tab}?")
+
+      if shown_tabs.include?(tab)
+        if can_uncheck
+          shown_tabs.delete(tab)
+          save
+        else
+          toggled = false
+        end
+      else
+        shown_tabs << tab
+        save
+      end
+    rescue StandardError
+      toggled = false
+    end
+
+    toggled
+  end
+
+  def can_uncheck_tab_protocols?
+    protocols.count == 0
+  end
+
+  def can_uncheck_tab_results?
+    results.count == 0
+  end
+
+  def can_uncheck_tab_activities?
+    true
+  end
+
+  def can_uncheck_tab_samples?
+    samples.count == 0
+  end
+
   private
 
   def create_blank_protocol
