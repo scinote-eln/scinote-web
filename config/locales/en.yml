@@ -1118,6 +1118,9 @@ en:
         team_name_label: "Team name"
         team_name_help: "Team name is required in order to create your own team."
     settings:
+      changed_org_flash: "You are working on %{team} now!"
+      changed_org_error_flash: "Something went wrong! Try again later."
+      changed_org_in_search: "The searched item is not in your current team. You will be redirected to %{team} team!"
       navigation:
         preferences: "My preferences"
         organizations: "My teams"

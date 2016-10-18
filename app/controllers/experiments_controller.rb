@@ -1,5 +1,7 @@
 class ExperimentsController < ApplicationController
   include PermissionHelper
+  include OrganizationsHelper
+
   before_action :set_experiment,
                 except: [:new, :create]
   before_action :set_project,
@@ -55,6 +57,7 @@ class ExperimentsController < ApplicationController
 
   def canvas
     @project = @experiment.project
+    current_organization_switch(@project.organization)
   end
 
   def edit

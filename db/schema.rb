@@ -664,6 +664,7 @@ ActiveRecord::Schema.define(version: 20161012112900) do
     t.boolean  "recent_notification",               default: true
     t.boolean  "assignments_notification_email",    default: false
     t.boolean  "recent_notification_email",         default: false
+    t.integer  "current_organization_id"
     t.boolean  "system_message_notification_email", default: false
   end
 
@@ -795,4 +796,5 @@ ActiveRecord::Schema.define(version: 20161012112900) do
   add_foreign_key "user_projects", "projects"
   add_foreign_key "user_projects", "users"
   add_foreign_key "user_projects", "users", column: "assigned_by_id"
+  add_foreign_key "users", "organizations", column: "current_organization_id"
 end

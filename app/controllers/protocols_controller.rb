@@ -741,9 +741,7 @@ class ProtocolsController < ApplicationController
   end
 
   def load_organization_and_type
-    @organizations = current_user.organizations.order(name: :asc)
-    @current_organization = @organizations.select{ |org| org.id == params[:organization].to_i }.first
-    @current_organization ||= @organizations.first
+    @current_organization = current_organization
     # :public, :private or :archive
     @type = (params[:type] || "public").to_sym
   end

@@ -1,4 +1,5 @@
 class ReportsController < ApplicationController
+  include OrganizationsHelper
   # Ignore CSRF protection just for PDF generation (because it's
   # used via target='_blank')
   protect_from_forgery with: :exception, :except => :generate
@@ -99,9 +100,10 @@ class ReportsController < ApplicationController
 
   def edit
     # cleans all the deleted report
+    current_organization_switch(@report.project.organization)
     @report.cleanup_report
     load_markdown
-    render "reports/new.html.erb"
+    render 'reports/new.html.erb'
   end
 
   # Updating existing report from the _save modal of the new page
