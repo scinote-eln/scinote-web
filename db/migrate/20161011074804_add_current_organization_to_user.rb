@@ -4,7 +4,9 @@ class AddCurrentOrganizationToUser < ActiveRecord::Migration
     add_foreign_key :users, :organizations, column: :current_organization_id
 
     User.find_each do |user|
-      user.update(current_organization_id: user.organizations.first.id)
+      if user.organizations.count > 0
+        user.update(current_organization_id: user.organizations.first.id)
+      end
     end
   end
 
