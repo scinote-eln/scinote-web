@@ -23,6 +23,8 @@ class MyModulesController < ApplicationController
   before_action :check_assign_samples_permissions, only: [:assign_samples]
   before_action :check_unassign_samples_permissions, only: [:unassign_samples]
   before_action :check_toggle_tab_permissions, only: [:toggle_tab]
+  before_action :check_if_tab_is_shown,
+                only: [:protocols, :results, :activities, :samples]
 
   layout "fluid"
 
@@ -332,11 +334,11 @@ class MyModulesController < ApplicationController
         @my_module.shown_tabs << 'results'
         @my_module.save
       end
-    when 'activity'
-      if @my_module.shown_tabs.include?('activity')
-        @my_module.shown_tabs.delete('activity')
+    when 'activities'
+      if @my_module.shown_tabs.include?('activities')
+        @my_module.shown_tabs.delete('activities')
       else
-        @my_module.shown_tabs << 'activity'
+        @my_module.shown_tabs << 'activities'
       end
       @my_module.save
     when 'samples'
@@ -446,6 +448,10 @@ class MyModulesController < ApplicationController
 
   def check_toggle_tab_permissions
     render_403 if !can_edit_module_tabs(@my_module) || params['tab'].blank?
+  end
+
+  def check_if_tab_is_shown
+    redirect_to show unless @my_module.shown_tabs.include?(action_name)
   end
 
   def my_module_params

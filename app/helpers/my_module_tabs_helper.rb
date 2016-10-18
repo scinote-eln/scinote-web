@@ -1,13 +1,20 @@
 module MyModuleTabsHelper
   # Options can contain the following elements:
   # - id - HTML id of the <li> element
-  def my_module_tab_li(my_module, tab, href, active, glyphicon, opts = {})
+  # - href - If route to the tab is different than
+  #          <tab>_my_module_path(my_module)
+  def my_module_tab_li(my_module, tab, active, glyphicon, opts = {})
     return '' unless my_module.shown_tabs.include?(tab)
+
+    title = t("nav2.modules.#{tab}")
+    if opts['href'].blank?
+      opts['href'] = send("#{tab}_my_module_path", my_module)
+    end
 
     res = <<-eos
     <li id="#{opts['id']}" class="#{'active' if active}">
-      <a href="#{href}" title="#{t('nav2.modules.' + tab)}">
-        <span class="hidden-sm hidden-md">#{t('nav2.modules.' + tab)}</span>
+      <a href="#{opts['href']}" title="#{title}">
+        <span class="hidden-sm hidden-md">#{title}</span>
         <span class="hidden-xs hidden-lg glyphicon #{glyphicon}"></span>
       </a>
     </li>

@@ -126,7 +126,6 @@
             <%= my_module_tab_li(
                   @my_module,
                   'protocols',
-                  protocols_my_module_path(@my_module),
                   module_protocols?,
                   'glyphicon-circle-arrow-right',
                   { id: 'steps-nav-tab' }
@@ -137,7 +136,6 @@
             <%= my_module_tab_li(
                   @my_module,
                   'results',
-                  results_my_module_path(@my_module),
                   module_results?,
                   'glyphicon-th',
                   { id: 'results-nav-tab' }
@@ -147,8 +145,7 @@
           <% if can_view_module_activities(@my_module) %>
             <%= my_module_tab_li(
                   @my_module,
-                  'activity',
-                  activities_my_module_path(@my_module),
+                  'activities',
                   module_activities?,
                   'glyphicon-equalizer',
                   { id: 'activities-nav-tab' }
@@ -159,7 +156,6 @@
             <%= my_module_tab_li(
                   @my_module,
                   'samples',
-                  samples_my_module_path(@my_module),
                   module_samples?,
                   'glyphicon-tint',
                   { id: 'module-samples-nav-tab' }
@@ -182,7 +178,7 @@
                 </li>
                 <%= my_module_tab_selector_tab_li(@my_module, 'protocols', @my_module.protocols.count == 0) %>
                 <%= my_module_tab_selector_tab_li(@my_module, 'results', @my_module.results.count == 0) %>
-                <%= my_module_tab_selector_tab_li(@my_module, 'activity') %>
+                <%= my_module_tab_selector_tab_li(@my_module, 'activities') %>
                 <%= my_module_tab_selector_tab_li(@my_module, 'samples', @my_module.samples.count == 0) %>
                 <li style="display: none;" data-hook="module-tab-selector"></li>
               </ul>
