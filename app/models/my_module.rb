@@ -386,11 +386,11 @@ class MyModule < ActiveRecord::Base
   end
 
   def can_uncheck_tab_protocols?
-    protocols.count == 0
+    protocols.count.zero?
   end
 
   def can_uncheck_tab_results?
-    results.count == 0
+    results.count.zero?
   end
 
   def can_uncheck_tab_activities?
@@ -398,7 +398,7 @@ class MyModule < ActiveRecord::Base
   end
 
   def can_uncheck_tab_samples?
-    samples.count == 0
+    samples.count.zero?
   end
 
   private

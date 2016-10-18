@@ -38,6 +38,6 @@ module MyModuleTabsHelper
 
   def my_module_tab_toggle_disabled?(my_module, tab)
     my_module.shown_tabs.include?(tab) &&
-    !my_module.send("can_uncheck_tab_#{tab}?")
+      !my_module.send("can_uncheck_tab_#{tab}?")
   end
 end

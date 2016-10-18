@@ -7,7 +7,8 @@ class MyModulesController < ApplicationController
     :samples, :activities, :activities_tab,
     :assign_samples, :unassign_samples,
     :delete_samples,
-    :samples_index, :archive, :toggle_tab]
+    :samples_index, :archive, :toggle_tab
+  ]
   before_action :load_markdown, only: [ :results ]
   before_action :load_vars_nested, only: [:new, :create]
   before_action :check_edit_permissions, only: [
