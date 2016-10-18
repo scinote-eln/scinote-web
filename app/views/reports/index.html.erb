@@ -6,7 +6,7 @@
   data-reports-click-new-report-step-text="<%=t 'tutorial.reports_index_click_new_report_html' %>">
   <div>
     <% if can_create_new_report(@project) %>
-      <%= link_to new_project_reports_path(@project), class: "btn btn-primary", id: "new-report-btn" do %>
+      <%= link_to new_project_reports_path(@project), class: 'btn btn-primary', id: 'new-report-btn', 'data-no-turbolink' => true do %>
         <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
         <span class="hidden-xs"><%=t "projects.reports.index.new" %></span>
       <% end %>
