@@ -91,9 +91,9 @@ en:
       canvas: "Overview"
     modules:
       overview: "Overview"
-      steps: "Protocols"
+      protocols: "Protocols"
       results: "Results"
-      activities: "Activity"
+      activity: "Activity"
       samples: "Samples"
       archive: "Archive"
 

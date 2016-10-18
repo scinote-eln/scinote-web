@@ -117,81 +117,74 @@
       <% elsif module_page? %>
         <ul class="nav navbar-nav navbar-right" style="vertical-align: bottom">
           <li id="overview-nav-tab" class="<%= "active" if module_overview? %>">
-            <a href="<%= my_module_path(@my_module) %>" title="">
-              <span class="hidden-sm hidden-md"><%=t "nav2.modules.overview" %></span>
+            <a href="<%= my_module_path(@my_module) %>" title="<%= t('nav2.modules.overview') %>">
+              <span class="hidden-sm hidden-md"><%= t('nav2.modules.overview') %></span>
               <span class="hidden-xs hidden-lg glyphicon glyphicon-blackboard"></span>
             </a>
           </li>
-          <% if can_view_module_protocols(@my_module) && @my_module.shown_tabs.include?('protocols') %>
-            <li id="steps-nav-tab" class="<%= "active" if module_protocols? %>">
-              <a href="<%= protocols_my_module_url(@my_module) %>" title="<%=t "nav2.modules.steps" %>">
-                <span class="hidden-sm hidden-md"><%=t "nav2.modules.steps" %></span>
-                <span class="hidden-xs hidden-lg glyphicon glyphicon-circle-arrow-right"></span>
-              </a>
-            </li>
+          <% if can_view_module_protocols(@my_module) %>
+            <%= my_module_tab_li(
+                  @my_module,
+                  'protocols',
+                  protocols_my_module_path(@my_module),
+                  module_protocols?,
+                  'glyphicon-circle-arrow-right',
+                  { id: 'steps-nav-tab' }
+                )
+            %>
           <% end %>
-          <% if can_view_results_in_module(@my_module) && @my_module.shown_tabs.include?('results') %>
-            <li id="results-nav-tab" class="<%= "active" if module_results? %>">
-              <a href="<%= results_my_module_url(@my_module) %>" title="<%=t "nav2.modules.results" %>">
-                <span class="hidden-sm hidden-md"><%=t "nav2.modules.results" %></span>
-                <span class="hidden-xs hidden-lg glyphicon glyphicon-th"></span>
-              </a>
-            </li>
+          <% if can_view_results_in_module(@my_module) %>
+            <%= my_module_tab_li(
+                  @my_module,
+                  'results',
+                  results_my_module_path(@my_module),
+                  module_results?,
+                  'glyphicon-th',
+                  { id: 'results-nav-tab' }
+                )
+            %>
           <% end %>
-          <% if can_view_module_activities(@my_module) && @my_module.shown_tabs.include?('activity') %>
-            <li id="activities-nav-tab" class="<%= "active" if module_activities? %>">
-              <a href="<%= activities_my_module_url(@my_module) %>" title="<%=t "nav2.modules.activities" %>">
-                <span class="hidden-sm hidden-md"><%=t "nav2.modules.activities" %></span>
-                <span class="hidden-xs hidden-lg glyphicon glyphicon-equalizer"></span>
-              </a>
-            </li>
+          <% if can_view_module_activities(@my_module) %>
+            <%= my_module_tab_li(
+                  @my_module,
+                  'activity',
+                  activities_my_module_path(@my_module),
+                  module_activities?,
+                  'glyphicon-equalizer',
+                  { id: 'activities-nav-tab' }
+                )
+            %>
           <% end %>
-          <% if can_view_module_samples(@my_module) && @my_module.shown_tabs.include?('samples') %>
-            <li id="module-samples-nav-tab" class="<%= "active" if module_samples? %>">
-              <a href="<%= samples_my_module_url(@my_module) %>" title="<%=t "nav2.modules.samples" %>">
-                <span class="hidden-sm hidden-md"><%=t "nav2.modules.samples" %></span>
-                <span class="hidden-xs hidden-lg glyphicon glyphicon-tint"></span>
-              </a>
-            </li>
+          <% if can_view_module_samples(@my_module) %>
+            <%= my_module_tab_li(
+                  @my_module,
+                  'samples',
+                  samples_my_module_path(@my_module),
+                  module_samples?,
+                  'glyphicon-tint',
+                  { id: 'module-samples-nav-tab' }
+                )
+            %>
           <% end %>
-            <!-- Deface hook to inject additional tabs after this one-->
-            <li data-hook="module-nav-tabs"></li>
+          <!-- Deface hook to inject additional tabs after this one-->
+          <li data-hook="module-nav-tabs"></li>
           <% if can_edit_module_tabs(@my_module) %>
             <li class="dropdown" data-role="module-tab-selector" data-url="<%= toggle_tab_my_module_path(@my_module) %>">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                 <span class="glyphicon glyphicon-menu-down"></span>
               </a>
-              <ul class="dropdown-menu dropdown-menu-task-tab-selector" data-hook="module-tab-selector">
+              <ul class="dropdown-menu dropdown-menu-module-tab-selector">
                 <li class="disabled">
                   <a href="#">
                     <input type="checkbox" checked="checked">
                     <%= t('nav2.modules.overview') %>
                   </a>
                 </li>
-                <li class="<%= 'disabled' if (@my_module.shown_tabs.include?('protocols') && @my_module.protocols.count > 0) %>">
-                  <a href="#" data-tab="protocols">
-                    <input type="checkbox" <%= 'checked="checked"' if @my_module.shown_tabs.include?('protocols') %>>
-                    <%= t('nav2.modules.steps') %>
-                  </a>
-                </li>
-                <li class="<%= 'disabled' if (@my_module.shown_tabs.include?('results') && @my_module.results.count > 0) %>">
-                  <a href="#" data-tab="results">
-                    <input type="checkbox" <%= 'checked="checked"' if @my_module.shown_tabs.include?('results') %>>
-                    <%= t('nav2.modules.results') %>
-                  </a>
-                </li>
-                <li>
-                  <a href="#" data-tab="activity">
-                    <input type="checkbox" <%= 'checked="checked"' if @my_module.shown_tabs.include?('activity') %>>
-                    <%= t('nav2.modules.activities') %>
-                  </a>
-                </li>
-                <li class="<%= 'disabled' if (@my_module.shown_tabs.include?('samples') && @my_module.samples.count > 0) %>">
-                  <a href="#" data-tab="samples">
-                    <input type="checkbox" <%= 'checked="checked"' if @my_module.shown_tabs.include?('samples') %>>
-                    <%= t('nav2.modules.samples') %>
-                  </a>
-                </li>
+                <%= my_module_tab_selector_tab_li(@my_module, 'protocols', @my_module.protocols.count == 0) %>
+                <%= my_module_tab_selector_tab_li(@my_module, 'results', @my_module.results.count == 0) %>
+                <%= my_module_tab_selector_tab_li(@my_module, 'activity') %>
+                <%= my_module_tab_selector_tab_li(@my_module, 'samples', @my_module.samples.count == 0) %>
+                <li style="display: none;" data-hook="module-tab-selector"></li>
               </ul>
             </li>
           <% end %>
