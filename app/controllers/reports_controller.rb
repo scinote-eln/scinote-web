@@ -8,18 +8,14 @@ class ReportsController < ApplicationController
   before_action :set_user_and_organization
 
   before_action :load_vars, only: [
-    :index,
     :edit,
     :update,
-    :reports_table,
     :create
   ]
   before_action :load_vars_nested, only: [
     :new,
-    :edit,
     :update,
     :generate,
-    :destroy,
     :save_modal,
     :project_contents_modal,
     :experiment_contents_modal,
@@ -50,7 +46,7 @@ class ReportsController < ApplicationController
     # :step_contents,
     # :result_contents
   ]
-  before_action :check_destroy_permissions, only: [:destroy]
+  # before_action :check_destroy_permissions, only: [:destroy]
 
   layout :set_layout
 
@@ -642,7 +638,8 @@ class ReportsController < ApplicationController
 
   def load_vars
     @report = Report.find_by_id(params[:id])
-    render_404 unless @user && @organization
+    @project = @report.project if @report
+    render_404 unless @report
   end
 
   def load_vars_nested

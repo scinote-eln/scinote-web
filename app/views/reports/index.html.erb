@@ -60,7 +60,7 @@
 
 <!-- Save report modal -->
 <div class="modal" id="delete-reports-modal" tabindex="-1" role="dialog" aria-labelledby="delete-reports-modal-label">
-  <%#= bootstrap_form_tag url: destroy_project_reports_path, method: :post, id: "delete-reports-form" do |f| %>
+  <%= bootstrap_form_tag url: destroy_reports_path, method: :post, id: "delete-reports-form" do |f| %>
     <input type="hidden" name="report_ids" id="report-ids">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
@@ -72,12 +72,12 @@
           <%=t "projects.reports.index.modal_delete.message" %>
         </div>
         <div class="modal-footer">
-          <%#= f.button t("projects.reports.index.modal_delete.delete"), class: "btn btn-primary", id: "confirm-delete-reports-btn", name: nil %>
+          <%= f.button t("projects.reports.index.modal_delete.delete"), class: "btn btn-primary", id: "confirm-delete-reports-btn", name: nil %>
           <button type="button" class="btn btn-default" data-dismiss="modal"><%=t "general.cancel" %></button>
         </div>
       </div>
     </div>
-  <%# end %>
+  <% end %>
 </div>
 
 <!-- Save report modal -->
