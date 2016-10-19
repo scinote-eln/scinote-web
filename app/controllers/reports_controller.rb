@@ -9,15 +9,14 @@ class ReportsController < ApplicationController
 
   before_action :load_vars, only: [
     :edit,
-    :update,
-
+    :update
   ]
   before_action :load_vars_nested, only: [
     :new,
     :update,
     :generate,
     :create,
-  #  :save_modal,
+    :save_modal,
     :project_contents_modal,
     :experiment_contents_modal,
     :module_contents_modal,
@@ -29,25 +28,23 @@ class ReportsController < ApplicationController
     :result_contents
   ]
 
-  before_action :check_view_permissions, only: [:index]
-#  before_action :check_create_permissions, only: [
-    # :new,
-    # :create,
-    # :edit,
-    # :update,
-    # :generate,
-    # :save_modal,
-    # :project_contents_modal,
-    # :experiment_contents_modal,
-    # :module_contents_modal,
-    # :step_contents_modal,
-    # :result_contents_modal,
-    # :project_contents,
-    # :module_contents,
-    # :step_contents,
-    # :result_contents
-#  ]
-  # before_action :check_destroy_permissions, only: [:destroy]
+  before_action :check_create_permissions, only: [
+    :new,
+    :create,
+    :edit,
+    :update,
+    :generate,
+    :save_modal,
+    :project_contents_modal,
+    :experiment_contents_modal,
+    :module_contents_modal,
+    :step_contents_modal,
+    :result_contents_modal,
+    :project_contents,
+    :module_contents,
+    :step_contents,
+    :result_contents
+  ]
 
   layout :set_layout
 
@@ -646,20 +643,8 @@ class ReportsController < ApplicationController
     render_404 unless @project
   end
 
-  def check_view_permissions
-    # unless can_view_reports(@project)
-    #   render_403
-    # end
-  end
-
   def check_create_permissions
     unless can_create_new_report(@project)
-      render_403
-    end
-  end
-
-  def check_destroy_permissions
-    unless can_delete_reports(@project)
       render_403
     end
   end

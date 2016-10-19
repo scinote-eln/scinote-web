@@ -1002,6 +1002,9 @@ en:
 
   org_reports:
     tab: 'My reports'
+    new_report:
+      title: 'Select a project'
+      go: 'Go'
   activities:
     index:
       today: "Today"
