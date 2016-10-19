@@ -13,7 +13,6 @@
   var editReportButton = null;
   var deleteReportsButton = null;
   var checkAll = null;
-  var allChecks = null;
   var allRows = null;
 
   var checkedReports = [];
@@ -81,14 +80,17 @@
           global: false,
           type: "POST"
         },
+        drawCallback: function() {
+          $('#select-all').unbind('click');
+        },
         columns: [
-          { 'data': '0', 'targets': 'c1' },
-          { 'data': '1', 'targets': 'c2', 'searchable': true, 'orderable': true },
-          { 'data': '2', 'targets': 'c3', 'searchable': true, 'orderable': true },
-          { 'data': '3', 'targets': 'c4', 'searchable': true, 'orderable': true },
-          { 'data': '4', 'targets': 'c5', 'searchable': true, 'orderable': true },
-          { 'data': '5', 'targets': 'c6', 'searchable': true, 'orderable': true },
-          { 'data': '6', 'targets': 'c7', 'searchable': true, 'orderable': true }
+          { data: '0' },
+          { data: '1' },
+          { data: '2' },
+          { data: '3' },
+          { data: '4' },
+          { data: '5' },
+          { data: '6' }
         ]
       });
   }
@@ -96,8 +98,9 @@
    * Initialize interaction between checkboxes, editing and deleting.
    */
   function initCheckboxesAndEditing() {
-    checkAll.click(function() {
-      allChecks.prop("checked", this.checked);
+
+    checkAll.click(function(event) {
+      $('.check-report').prop("checked", this.checked);
       checkedReports = [];
       if (this.checked) {
         _.each(allRows, function(row) {
@@ -107,21 +110,24 @@
 
       updateButtons();
     });
-    allChecks.click(function() {
-      checkAll.prop("checked", false);
-      var id = $(this).closest(".report-row").data("id");
-      if (this.checked) {
-        if (_.indexOf(checkedReports, id) === -1) {
-          checkedReports.push(id);
-        }
-      } else {
-        var idx = _.indexOf(checkedReports, id);
-        if (idx !== -1) {
-          checkedReports.splice(idx, 1);
-        }
-      }
 
-      updateButtons();
+    $('#reportsDataTable').on( 'draw.dt', function () {
+      $('.check-report').click(function() {
+        checkAll.prop("checked", false);
+        var id = $(this).val();
+        if (this.checked) {
+          if (_.indexOf(checkedReports, id) === -1) {
+            checkedReports.push(id);
+          }
+        } else {
+          var idx = _.indexOf(checkedReports, id);
+          if (idx !== -1) {
+            checkedReports.splice(idx, 1);
+          }
+        }
+
+        updateButtons();
+      });
     });
   }
 
@@ -149,9 +155,8 @@
       animateLoading();
       if (checkedReports.length === 1) {
         var id = checkedReports[0];
-        var row = $(".report-row[data-id='" + id + "']");
-        var url = row.data("edit-link");
-
+        var row = $(".check-report[value='" + id + "']");
+        var url = row.attr("data-editlink");
         $(location).attr("href", url);
       }
 
@@ -248,8 +253,7 @@
     newReportButton = $("#new-report-btn");
     editReportButton = $("#edit-report-btn");
     deleteReportsButton = $("#delete-reports-btn");
-    checkAll = $(".check-all-reports");
-    allChecks = $(".check-report");
+    checkAll = $("[name='select_all']");
     allRows = $(".report-row");
 
     initNewReportModal();
@@ -261,4 +265,4 @@
     initTutorial();
   });
 
-}());
+})();
