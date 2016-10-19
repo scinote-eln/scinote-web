@@ -287,7 +287,6 @@ function initializeSaveReport() {
   var modalContentsUrl = dh.data("save-report-url");
 
   var reportId = dh.data("report-id");
-  debugger;
 
   // Remove "save report" modal content when modal
   // window is closed
@@ -347,6 +346,13 @@ function initializeSaveReport() {
   // submit the form in the modal body
   saveReportModal.find(".modal-footer button[data-action='save']")
   .click(function(e) {
+
+    $('<input>',
+      { type: 'hidden',
+        name: 'project_id',
+        value: $('[data-type="project_header"]').attr('data-id')
+      }).appendTo($(SAVE_REPORT_FORM_ID));
+
     $(SAVE_REPORT_FORM_ID).submit();
   });
 }

@@ -12,15 +12,6 @@ class ReportsDatatable < AjaxDatatablesRails::Base
     @organization = organization
   end
 
-  def view_columns
-    @view_columns ||= {
-      id: { source: "Subject.id", cond: :eq },
-      name: { source: "Subject.name" },
-      suggest: { source: "Subject.suggest" },
-      usage_count: { source: "usage_count" }
-    }
-  end
-
   def sortable_columns
     # Declare strings in this format: ModelName.column_name
     @sortable_columns ||= [
