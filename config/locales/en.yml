@@ -239,6 +239,7 @@ en:
     activities:
       head_title: "%{project} | Activity"
     reports:
+
       print_title: "%{project} | Report"
       index:
         head_title: "%{project} | Reports"
@@ -999,6 +1000,8 @@ en:
     destroy:
       success_flash: "Sample group <strong>%{sample_group}</strong> successfully deleted."
 
+  org_reports:
+    tab: 'My reports'
   activities:
     index:
       today: "Today"

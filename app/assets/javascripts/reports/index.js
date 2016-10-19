@@ -66,7 +66,7 @@
         var link = addParam(newReportCreateButton.attr('data-href'),
                             'project_id',
                             $('#project_project_id').val());
-  
+
         window.location.href = link;
       });
   }
@@ -82,10 +82,13 @@
           type: "POST"
         },
         columns: [
-          { 'data': '0', 'targets': 'c1', 'searchable': true, 'orderable': true },
+          { 'data': '0', 'targets': 'c1' },
           { 'data': '1', 'targets': 'c2', 'searchable': true, 'orderable': true },
           { 'data': '2', 'targets': 'c3', 'searchable': true, 'orderable': true },
-          { 'data': '3', 'targets': 'c4', 'searchable': true, 'orderable': true }
+          { 'data': '3', 'targets': 'c4', 'searchable': true, 'orderable': true },
+          { 'data': '4', 'targets': 'c5', 'searchable': true, 'orderable': true },
+          { 'data': '5', 'targets': 'c6', 'searchable': true, 'orderable': true },
+          { 'data': '6', 'targets': 'c7', 'searchable': true, 'orderable': true }
         ]
       });
   }
