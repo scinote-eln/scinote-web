@@ -357,18 +357,14 @@ class MyModule < ActiveRecord::Base
   end
 
   def toggle_tab(tab)
+    tab_mmt = Extends::MY_MODULE_TABS.find { |mmt| mmt[:id] == tab }
+
+    return false if tab_mmt.blank?
+
     toggled = true
-
     begin
-      # This is done in advance so even if enabling tabs
-      # (where can_uncheck doesn't need to be called),
-      # it's called anyway just to check if the tab
-      # parameter is legal (e.g. it's not an evil,
-      # injected value)
-      can_uncheck = send("can_uncheck_tab_#{tab}?")
-
       if shown_tabs.include?(tab)
-        if can_uncheck
+        if tab_mmt[:can_uncheck].call(self)
           shown_tabs.delete(tab)
           save
         else
@@ -383,23 +379,6 @@ class MyModule < ActiveRecord::Base
     end
 
     toggled
-  end
-
-  def can_uncheck_tab_protocols?
-    protocols.count.zero? ||
-      protocol.steps.count.zero?
-  end
-
-  def can_uncheck_tab_results?
-    results.count.zero?
-  end
-
-  def can_uncheck_tab_activities?
-    true
-  end
-
-  def can_uncheck_tab_samples?
-    samples.count.zero?
   end
 
   private

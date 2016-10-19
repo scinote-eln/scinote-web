@@ -184,10 +184,9 @@ Rails.application.routes.draw do
       get 'due_date'
 
       # Tabs
-      get 'protocols' # Protocols view for single module
-      get 'results' # Results view for single module
-      get 'activities'
-      get 'samples' # Samples view for single module
+      Extends::MY_MODULE_TABS.each do |mmt|
+        get mmt[:url]
+      end
 
       get 'archive' # Archive view for single module
       post 'samples_index' # Renders sample datatable for single module (ajax action)

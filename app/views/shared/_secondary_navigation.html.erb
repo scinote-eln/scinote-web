@@ -122,48 +122,12 @@
               <span class="hidden-xs hidden-lg glyphicon glyphicon-blackboard"></span>
             </a>
           </li>
-          <% if can_view_module_protocols(@my_module) %>
-            <%= my_module_tab_li(
-                  @my_module,
-                  'protocols',
-                  module_protocols?,
-                  'glyphicon-circle-arrow-right',
-                  { id: 'steps-nav-tab' }
-                )
-            %>
+          <% Extends::MY_MODULE_TABS.each do |mmt| %>
+            <% if !mmt[:can_view_permission] || send(mmt[:can_view_permission], @my_module) %>
+              <%= my_module_tab_li(@my_module, mmt, action_name == mmt[:url])
+              %>
+            <% end %>
           <% end %>
-          <% if can_view_results_in_module(@my_module) %>
-            <%= my_module_tab_li(
-                  @my_module,
-                  'results',
-                  module_results?,
-                  'glyphicon-th',
-                  { id: 'results-nav-tab' }
-                )
-            %>
-          <% end %>
-          <% if can_view_module_activities(@my_module) %>
-            <%= my_module_tab_li(
-                  @my_module,
-                  'activities',
-                  module_activities?,
-                  'glyphicon-equalizer',
-                  { id: 'activities-nav-tab' }
-                )
-            %>
-          <% end %>
-          <% if can_view_module_samples(@my_module) %>
-            <%= my_module_tab_li(
-                  @my_module,
-                  'samples',
-                  module_samples?,
-                  'glyphicon-tint',
-                  { id: 'module-samples-nav-tab' }
-                )
-            %>
-          <% end %>
-          <!-- Deface hook to inject additional tabs after this one-->
-          <li data-hook="module-nav-tabs"></li>
           <% if can_edit_module_tabs(@my_module) %>
             <li class="dropdown" data-role="module-tab-selector" data-url="<%= toggle_tab_my_module_path(@my_module) %>">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
@@ -176,11 +140,9 @@
                     <%= t('nav2.modules.overview') %>
                   </a>
                 </li>
-                <%= my_module_tab_selector_tab_li(@my_module, 'protocols') %>
-                <%= my_module_tab_selector_tab_li(@my_module, 'results') %>
-                <%= my_module_tab_selector_tab_li(@my_module, 'activities') %>
-                <%= my_module_tab_selector_tab_li(@my_module, 'samples') %>
-                <li style="display: none;" data-hook="module-tab-selector"></li>
+                <% Extends::MY_MODULE_TABS.each do |mmt| %>
+                  <%= my_module_tab_selector_tab_li(@my_module, mmt) %>
+                <% end %>
               </ul>
             </li>
           <% end %>

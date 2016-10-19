@@ -415,8 +415,10 @@ class MyModulesController < ApplicationController
   end
 
   def check_if_tab_is_shown
+    tab = Extends::MY_MODULE_TABS.find { |mmt| mmt[:url] == action_name }
+
     redirect_to(action: :show) && return unless
-      @my_module.shown_tabs.include?(action_name)
+      @my_module.shown_tabs.include?(tab[:id])
   end
 
   def my_module_params
