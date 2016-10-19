@@ -11,6 +11,7 @@ class MyModule < ActiveRecord::Base
   validates :x, :y, :workflow_order, presence: true
   validates :experiment, presence: true
   validates :my_module_group, presence: true, if: "!my_module_group_id.nil?"
+  validates :shown_tabs, presence: true
 
   belongs_to :created_by, foreign_key: 'created_by_id', class_name: 'User'
   belongs_to :last_modified_by, foreign_key: 'last_modified_by_id', class_name: 'User'
@@ -353,6 +354,52 @@ class MyModule < ActiveRecord::Base
 
     # We lucked out, no gaps, therefore we need to add it after the last element
     { x: 0, y: positions.last[1] + HEIGHT }
+  end
+
+  def toggle_tab(tab)
+    toggled = true
+
+    begin
+      # This is done in advance so even if enabling tabs
+      # (where can_uncheck doesn't need to be called),
+      # it's called anyway just to check if the tab
+      # parameter is legal (e.g. it's not an evil,
+      # injected value)
+      can_uncheck = send("can_uncheck_tab_#{tab}?")
+
+      if shown_tabs.include?(tab)
+        if can_uncheck
+          shown_tabs.delete(tab)
+          save
+        else
+          toggled = false
+        end
+      else
+        shown_tabs << tab
+        save
+      end
+    rescue StandardError
+      toggled = false
+    end
+
+    toggled
+  end
+
+  def can_uncheck_tab_protocols?
+    protocols.count.zero? ||
+      protocol.steps.count.zero?
+  end
+
+  def can_uncheck_tab_results?
+    results.count.zero?
+  end
+
+  def can_uncheck_tab_activities?
+    true
+  end
+
+  def can_uncheck_tab_samples?
+    samples.count.zero?
   end
 
   private

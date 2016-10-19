@@ -90,7 +90,8 @@ en:
     experiments:
       canvas: "Overview"
     modules:
-      steps: "Protocols"
+      overview: "Overview"
+      protocols: "Protocols"
       results: "Results"
       activities: "Activity"
       samples: "Samples"

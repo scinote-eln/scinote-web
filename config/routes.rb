@@ -180,17 +180,21 @@ Rails.application.routes.draw do
       # AJAX popup accessed from full-zoom canvas for single module,
       # as well as full activities view (HTML) for single module
       get 'description'
-      get 'activities'
       get 'activities_tab' # Activities in tab view for single module
       get 'due_date'
+
+      # Tabs
       get 'protocols' # Protocols view for single module
       get 'results' # Results view for single module
+      get 'activities'
       get 'samples' # Samples view for single module
+
       get 'archive' # Archive view for single module
       post 'samples_index' # Renders sample datatable for single module (ajax action)
       post :assign_samples, constraints: CommitParamRouting.new(MyModulesController::ASSIGN_SAMPLES), action: :assign_samples
       post :assign_samples, constraints: CommitParamRouting.new(MyModulesController::UNASSIGN_SAMPLES), action: :unassign_samples
       post :assign_samples, constraints: CommitParamRouting.new(MyModulesController::DELETE_SAMPLES), action: :delete_samples
+      post 'toggle_tab'
     end
 
     # Those routes are defined outside of member block to preserve original id parameters in URL.

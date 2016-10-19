@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161012112900) do
+ActiveRecord::Schema.define(version: 20161017111700) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -216,6 +216,7 @@ ActiveRecord::Schema.define(version: 20161012112900) do
     t.integer  "nr_of_assigned_samples", default: 0
     t.integer  "workflow_order",         default: -1,    null: false
     t.integer  "experiment_id",          default: 0,     null: false
+    t.jsonb    "shown_tabs",             default: [],    null: false
   end
 
   add_index "my_modules", ["archived_by_id"], name: "index_my_modules_on_archived_by_id", using: :btree
