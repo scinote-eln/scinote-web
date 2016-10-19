@@ -28,7 +28,7 @@
         url: ajaxUrl,
         type: 'POST',
         dataType: 'json',
-        data: {tab: tab, },
+        data: {tab: tab},
         success: function(data) {
           // Reload page
           location.reload();

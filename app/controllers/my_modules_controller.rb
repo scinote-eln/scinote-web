@@ -308,7 +308,7 @@ class MyModulesController < ApplicationController
   end
 
   def toggle_tab
-    toggled = @my_module.toggle_tab(params['tab'])
+    toggled = @my_module.toggle_tab(params[:tab])
 
     respond_to do |format|
       format.html
@@ -402,15 +402,16 @@ class MyModulesController < ApplicationController
   end
 
   def check_toggle_tab_permissions
-    render_403 if !can_edit_module_tabs(@my_module) || params['tab'].blank?
+    render_403 if !can_edit_module_tabs(@my_module) || params[:tab].blank?
   end
 
   def check_if_tab_is_shown
-    redirect_to show unless @my_module.shown_tabs.include?(action_name)
+    redirect_to(action: :show) && return unless
+      @my_module.shown_tabs.include?(action_name)
   end
 
   def my_module_params
     params.require(:my_module).permit(:name, :description, :due_date,
-      :archived)
+                                      :archived)
   end
 end

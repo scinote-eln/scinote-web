@@ -386,7 +386,8 @@ class MyModule < ActiveRecord::Base
   end
 
   def can_uncheck_tab_protocols?
-    protocols.count.zero?
+    protocols.count.zero? ||
+      protocol.steps.count.zero?
   end
 
   def can_uncheck_tab_results?

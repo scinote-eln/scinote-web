@@ -6,7 +6,7 @@ module MyModuleTabsHelper
   def my_module_tab_li(my_module, tab, active, glyphicon, opts = {})
     return '' unless my_module.shown_tabs.include?(tab)
 
-    title = t("nav2.modules.#{tab}")
+    title = sanitize(t("nav2.modules.#{tab}"))
     if opts['href'].blank?
       opts['href'] = send("#{tab}_my_module_path", my_module)
     end
@@ -15,7 +15,7 @@ module MyModuleTabsHelper
     <li id="#{opts['id']}" class="#{'active' if active}">
       <a href="#{opts['href']}" title="#{title}">
         <span class="hidden-sm hidden-md">#{title}</span>
-        <span class="hidden-xs hidden-lg glyphicon #{glyphicon}"></span>
+        <span class="hidden-xs hidden-lg glyphicon #{sanitize(glyphicon)}"></span>
       </a>
     </li>
     eos
@@ -27,7 +27,7 @@ module MyModuleTabsHelper
     <li class="#{'disabled' if my_module_tab_toggle_disabled?(my_module, tab)}">
       <a href="#" data-tab="#{tab}">
         <input type="checkbox" #{'checked="checked"' if my_module.shown_tabs.include?(tab)}>
-        #{t('nav2.modules.' + tab)}
+        #{sanitize(t('nav2.modules.' + tab))}
       </a>
     </li>
     eos
