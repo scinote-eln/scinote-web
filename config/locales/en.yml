@@ -1464,7 +1464,7 @@ en:
     skip_tutorial: "Skip tutorial"
     end_tutorial: "End tutorial"
     finish_tutorial: "Start using sciNote"
-    tutorial_welcome_title_html: 'Welcome to <em>sciNote</em>, your electronic lab notebook. <em>sciNote</em> organizes your work in Projects. Click <strong>Show projects from</strong> to choose how you want to view your Projects. You can also reorder them by clicking the <strong>Sort by</strong> button.'
+    tutorial_welcome_title_html: 'Welcome to <em>sciNote</em>, your electronic lab notebook. <em>sciNote</em> organizes your work in Projects. You can reorder them by clicking the <strong>Sort by</strong> button.'
     create_project_html: "Click here to create a Project and it will appear under the Team you've chosen. Choose public <span class='glyphicon glyphicon-eye-open'></span> if you want everyone from the Team to view the Project or choose private <span class='glyphicon glyphicon-eye-close'></span> so only the people who you invite to the project can see it."
     project_options_html: "In the bottom row of the Project card you can check the latest activity <span class='glyphicon glyphicon-equalizer'></span>, invite collaborators <span class='glyphicon glyphicon-user'></span>, see the notifications <span class='glyphicon glyphicon-bell'></span> and write comments <span class='glyphicon glyphicon-comment'></span>. You can also edit the Project's name and visibility or archive it. You can recall the Project from the Archive <span class='glyphicon glyphicon-briefcase'></span> in the top right side of the Dashboard at any time."
     create_experiment_html: "Inside of a Project you can create Experiments. To create one click on this button and edit Experiment’s name and description."
