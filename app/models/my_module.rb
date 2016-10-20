@@ -2,6 +2,7 @@ class MyModule < ActiveRecord::Base
   include ArchivableModel, SearchableModel
 
   before_create :create_blank_protocol
+  before_create :create_empty_shown_tabs
 
   auto_strip_attributes :name, :description, nullify: false
   validates :name,
@@ -11,7 +12,6 @@ class MyModule < ActiveRecord::Base
   validates :x, :y, :workflow_order, presence: true
   validates :experiment, presence: true
   validates :my_module_group, presence: true, if: "!my_module_group_id.nil?"
-  validates :shown_tabs, presence: true
 
   belongs_to :created_by, foreign_key: 'created_by_id', class_name: 'User'
   belongs_to :last_modified_by, foreign_key: 'last_modified_by_id', class_name: 'User'
@@ -406,5 +406,9 @@ class MyModule < ActiveRecord::Base
 
   def create_blank_protocol
     protocols << Protocol.new_blank_for_module(self)
+  end
+
+  def create_empty_shown_tabs
+    self.shown_tabs = []
   end
 end
