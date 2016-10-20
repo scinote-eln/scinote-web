@@ -416,7 +416,7 @@ class MyModulesController < ApplicationController
 
   def check_if_tab_is_shown
     unless @my_module.shown_tabs.include?(action_name)
-      if params[:show_flash] then
+      if params[:show_flash]
         flash[:notice] = t("my_modules.tabs.flash_#{action_name}")
         flash.keep(:notice)
       end
