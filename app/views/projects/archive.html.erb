@@ -6,28 +6,6 @@
   <form class="form-inline" action="<%= projects_archive_path %>">
 
     <div class="form-group">
-
-      <!-- organization filter -->
-      <div class="dropdown">
-        <button class="btn btn-default dropdown-toggle" type="button" id="organizationMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-          <span class="hidden-xs"><%= t('projects.index.organization_filter') %></span>
-          <span class="visible-xs-inline"><i class="glyphicon glyphicon-folder-open"></i></span>
-          <span class="caret"></span>
-        </button>
-        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-        <% if @current_organization_id > 1 %>
-          <li><a href="?<%= {sort: @current_sort}.reject{|k,v| v.blank?}.to_query %>"><%= t'projects.index.all_filter' %></a></li>
-        <% end %>
-        <% @organizations.each do |org| %>
-          <% if org.id == @current_organization_id %>
-          <li class="disabled"><a href="#"><%= org.name %></a></li>
-          <% else %>
-          <li><a href="?<%= {organization: org.id, sort: @current_sort}.reject{|k,v| v.blank?}.to_query %>"><%= org.name %></a></li>
-          <% end %>
-        <% end %>
-        </ul>
-      </div>
-
       <!-- project sort -->
       <div class="dropdown">
         <button class="btn btn-default dropdown-toggle" type="button" id="sortMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
