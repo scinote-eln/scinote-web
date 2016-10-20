@@ -256,7 +256,7 @@ var Comments = (function() {
   }
 
   function initEditComments(parent) {
-    $(parent).on('click', '[data-action=edit-comment]', function() {
+    $(parent).unbind('click').on('click', '[data-action=edit-comment]', function() {
 
       var $this = $(this);
       $.ajax({
