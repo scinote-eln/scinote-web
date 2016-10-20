@@ -122,6 +122,16 @@
               <span class="hidden-xs hidden-lg glyphicon glyphicon-blackboard"></span>
             </a>
           </li>
+          <% if can_view_module(@my_module) %>
+            <%= my_module_tab_li(
+                  @my_module,
+                  'overview',
+                  module_overview?,
+                  'glyphicon-blackboard',
+                  { id: 'overview-nav-tab' }
+                )
+            %>
+          <% end %>
           <% if can_view_module_protocols(@my_module) %>
             <%= my_module_tab_li(
                   @my_module,
