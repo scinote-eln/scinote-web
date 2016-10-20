@@ -28,9 +28,6 @@ class ApplicationController < ActionController::Base
     Organization.find_by_id(current_user.current_organization_id)
   end
 
-  def current_organization
-    Organization.first
-  end
   protected
 
   def log(message)

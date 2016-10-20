@@ -17,11 +17,11 @@ class ReportsDatatable < AjaxDatatablesRails::Base
     @sortable_columns ||= [
       'Report.id',
       'Report.name',
-      'Report.user_id',
-      'Report.last_modified_by_id',
+      'User.full_name',
+      'User.full_name',
       'Report.created_at',
       'Report.updated_at',
-      'Report.project_id'
+      'Project.name'
     ]
   end
 
@@ -30,11 +30,11 @@ class ReportsDatatable < AjaxDatatablesRails::Base
     @searchable_columns ||= [
       'Report.id',
       'Report.name',
-      'Report.user_id',
-      'Report.last_modified_by_id',
+      'User.full_name',
+      'User.full_name',
       'Report.created_at',
       'Report.updated_at',
-      'Report.project_id'
+      'Project.name'
     ]
   end
 

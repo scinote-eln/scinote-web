@@ -156,7 +156,7 @@ class ReportsController < ApplicationController
     report_ids.each do |report_id|
       report = Report.find_by_id(report_id)
 
-      report.destroy if report.present?
+      report.destroy if report.present? && can_delete_reports(report.project)
     end
 
     redirect_to reports_path

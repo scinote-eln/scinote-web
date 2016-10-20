@@ -113,6 +113,28 @@
               <a href="<%= module_archive_experiment_url(@experiment) %>"><span class="glyphicon glyphicon-briefcase"></span></a>
             </li>
           <% end %>
+          <% if can_view_module_activities(@my_module) then %>
+            <li id="activities-nav-tab" class="<%= "active" if is_module_activities? %>">
+              <a href="<%= activities_my_module_url(@my_module) %>" title="<%=t "nav2.modules.activities" %>">
+                <span class="hidden-sm hidden-md"><%=t "nav2.modules.activities" %></span>
+                <span class="hidden-xs hidden-lg glyphicon glyphicon-equalizer"></span>
+              </a>
+            </li>
+          <% end %>
+          <% if can_view_module_samples(@my_module) then %>
+            <li id="module-samples-nav-tab" class="<%= "active" if is_module_samples? %>">
+              <a href="<%= samples_my_module_url(@my_module) %>" title="<%=t "nav2.modules.samples" %>">
+                <span class="hidden-sm hidden-md"><%=t "nav2.modules.samples" %></span>
+                <span class="hidden-xs hidden-lg glyphicon glyphicon-tint"></span>
+              </a>
+            </li>
+          <% end %>
+          <% if can_view_module_archive(@my_module) then %>
+            <li id="archive-nav-tab" class="<%= "active" if is_module_archive? %>">
+              <a href="<%= archive_my_module_url(@my_module) %>">
+                <span class="glyphicon glyphicon-briefcase" title="<%= t'nav2.modules.archive' %>"></span></a>
+            </li>
+          <% end %>
         </ul>
       <% elsif module_page? %>
         <ul class="nav navbar-nav navbar-right" style="vertical-align: bottom">
