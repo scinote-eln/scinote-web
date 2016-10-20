@@ -29,12 +29,18 @@ class ProjectsController < ApplicationController
                                     .find_by_id(params[:organization]))
     end
 
-    @current_organization_id = current_organization.id
-    @current_sort = params[:sort].to_s
-    @projects_by_orgs = current_user.projects_by_orgs(@current_organization_id,
-                                                      @current_sort,
-                                                      @filter_by_archived)
+    if current_user.organizations.any?
+      @current_organization_id = current_organization.id
+      @organization_projects = current_organization.active_project
+      @current_sort = params[:sort].to_s
+      @projects_by_orgs = current_user
+                          .projects_by_orgs(@current_organization_id,
+                                            @current_sort,
+                                            @filter_by_archived)
+    end
+
     @organizations = current_user.organizations
+
 
     # New project for create new project modal
     @project = Project.new
