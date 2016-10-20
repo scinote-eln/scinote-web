@@ -1368,23 +1368,24 @@ html.turbolinks-progress-bar::before {
 }
 
 .modal-tooltip {
-  cursor: help;
-  position: relative;
-  display: inline-block;
   border-bottom: 1px dotted $color-alto;
-}
-
-.modal-tooltip .modal-tooltiptext {
-  visibility: hidden;
-  display: block;
-  width: auto;
-  background-color: $color-alto;
-  color: $color-mine-shaft;
-  text-align: center;
-  padding: 5px;
-  border-radius: 6px;
+  cursor: help;
+  display: inline-block;
   position: absolute;
-  z-index: $infinity;
+
+  .modal-tooltiptext {
+    background-color: $color-alto;
+    border-radius: 6px;
+    color: $color-mine-shaft;
+    display: block;
+    margin-left: 100px;
+    padding: 5px;
+    position: relative;
+    text-align: center;
+    visibility: hidden;
+    width: 200px;
+    z-index: $infinity;
+  }
 }
 
 .modal-tooltip:hover .modal-tooltiptext {
