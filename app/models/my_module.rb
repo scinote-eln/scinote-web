@@ -403,6 +403,10 @@ class MyModule < ActiveRecord::Base
   rescue StandardError
   end
 
+  def can_uncheck_tab_overview?
+    false
+  end
+
   def can_uncheck_tab_protocols?
     protocols.count.zero? ||
       protocol.steps.count.zero?

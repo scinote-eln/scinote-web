@@ -116,12 +116,6 @@
         </ul>
       <% elsif module_page? %>
         <ul class="nav navbar-nav navbar-right" style="vertical-align: bottom">
-          <li id="overview-nav-tab" class="<%= "active" if module_overview? %>">
-            <a href="<%= my_module_path(@my_module) %>" title="<%= t('nav2.modules.overview') %>">
-              <span class="hidden-sm hidden-md"><%= t('nav2.modules.overview') %></span>
-              <span class="hidden-xs hidden-lg glyphicon glyphicon-blackboard"></span>
-            </a>
-          </li>
           <% if can_view_module(@my_module) %>
             <%= my_module_tab_li(
                   @my_module,

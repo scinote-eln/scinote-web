@@ -6,7 +6,7 @@ class AddTabSelectorSupport < ActiveRecord::Migration
                default: [],
                null: false
 
-    MyModule.update_all(shown_tabs: %w(protocols results activities samples))
+    MyModule.update_all(shown_tabs: %w(overview) + Constants::WIDGET_TYPES)
   end
 
   def down
