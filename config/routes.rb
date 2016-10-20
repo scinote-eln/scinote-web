@@ -112,8 +112,8 @@ Rails.application.routes.draw do
            as: :save_modal
       post 'destroy', as: :destroy # Destroy multiple entries at once
       post 'datatable',
-          to: 'reports#reports_table',
-          as: :datatable
+           to: 'reports#reports_table',
+           as: :datatable
     end
   end
 

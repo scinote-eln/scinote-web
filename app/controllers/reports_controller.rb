@@ -64,11 +64,11 @@ class ReportsController < ApplicationController
 
   def reports_table
     respond_to do |format|
-      format.json {
+      format.json do
         render json: ::ReportsDatatable.new(view_context,
                                             @user,
                                             @organization)
-      }
+      end
     end
   end
 
@@ -166,15 +166,13 @@ class ReportsController < ApplicationController
   # Currently, only .PDF is supported
   def generate
     respond_to do |format|
-      format.pdf {
+      format.pdf do
         @html = params[:html]
-        if @html.blank?
-          @html = "<h1>No content</h1>"
-        end
-        render pdf: "report",
+        @html = '<h1>No content</h1>' if @html.blank?
+        render pdf: 'report',
           header: { right: '[page] of [topage]' },
-          template: "reports/report.pdf.erb"
-      }
+          template: 'reports/report.pdf.erb'
+      end
     end
   end
 

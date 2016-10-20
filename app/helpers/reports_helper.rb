@@ -1,5 +1,4 @@
 module ReportsHelper
-
   def render_new_element(hide)
     render partial: "reports/elements/new_element.html.erb",
           locals: { hide: hide }
@@ -87,7 +86,7 @@ module ReportsHelper
 
   # "Hack" to load Glyphicons css directly from the CDN site so they work in report
   def bootstrap_cdn_link_tag
-    specs = Gem.loaded_specs["bootstrap-sass"]
+    specs = Gem.loaded_specs['bootstrap-sass']
     specs.present? ? stylesheet_link_tag("http://netdna.bootstrapcdn.com/bootstrap/#{specs.version.version}/css/bootstrap.min.css", media: "all") : ""
   end
 
