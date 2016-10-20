@@ -23,10 +23,14 @@ module MyModuleTabsHelper
   end
 
   def my_module_tab_selector_tab_li(my_module, tab)
+    toggle_disabled = my_module_tab_toggle_disabled?(my_module, tab)
     res = <<-eos
-    <li class="#{'disabled' if my_module_tab_toggle_disabled?(my_module, tab)}">
+    <li class="#{'disabled' if toggle_disabled}">
       <a href="#" data-tab="#{tab}">
-        <input type="checkbox" #{'checked="checked"' if my_module.shown_tabs.include?(tab)}>
+        <input type="checkbox"
+          #{'checked="checked"' if my_module.shown_tabs.include?(tab)}
+          #{'disabled="disabled"' if toggle_disabled}
+        >
         #{sanitize(t('nav2.modules.' + tab))}
       </a>
     </li>

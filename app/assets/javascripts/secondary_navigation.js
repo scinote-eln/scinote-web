@@ -8,13 +8,6 @@
     // Disable checkboxes if neccesary
     parent.find('li.disabled input[type=checkbox]').attr('disabled');
 
-    // Prevent clicks on checkboxes in dropdown
-    parent.find('input[type=checkbox]').on('click', function(ev) {
-      this.checked = !this.checked;
-      ev.preventDefault();
-      return false;
-    });
-
     // Toggle tab functionality
     parent.find('li:not(.disabled) [data-tab]').on('click', function() {
       var $this = $(this);
