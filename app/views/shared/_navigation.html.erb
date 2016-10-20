@@ -101,7 +101,7 @@
         </li>
 
         <!-- Global team switch -->
-        <% if current_user.organizations.length > 1 %>
+        <% if current_user.organizations.length > 0 %>
         <li class="dropdown" id="team-switch">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
             <%= fa_icon 'users' %>
@@ -118,12 +118,20 @@
               <% current_user.organizations.each do |org| %>
                 <% next unless org != current_organization %>
                 <li>
-                  <a href="#" data-id="<%= org.id %>" class="text-center">
+                  <a href="#"
+                    data-id="<%= org.id %>"
+                    class="text-center change-team">
                     <%= org.name %>
                   </a>
                 </li>
               <% end %>
             <% end %>
+            <li>
+              <%= link_to new_organization_path do %>
+                <span class="glyphicon glyphicon-plus"></span>
+                <%= t('users.settings.organizations.index.new_organization') %>
+              <% end %>
+            </li>
           </ul>
         </li>
         <% end %>

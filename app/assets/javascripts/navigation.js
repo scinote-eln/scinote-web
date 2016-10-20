@@ -83,7 +83,7 @@
   function initGlobalSwitchForm() {
     var teamSwitch = $('#team-switch');
     teamSwitch
-      .find('.dropdown-menu a')
+      .find('.dropdown-menu .change-team')
       .on('click', function(){
         $('#user_current_organization_id')
           .val($(this).attr('data-id'));
