@@ -92,6 +92,9 @@ class User < ActiveRecord::Base
   has_many :restored_protocols, class_name: 'Protocol', foreign_key: 'restored_by_id', inverse_of: :restored_by
   has_many :user_notifications, inverse_of: :user
   has_many :notifications, through: :user_notifications
+  has_many :added_widgets, class_name: 'Widget', foreign_key: 'added_by_id'
+  has_many :last_modified_widgets, class_name: 'Widget', foreign_key: 'last_modified_by_id'
+
   # If other errors besides parameter "avatar" exist,
   # they will propagate to "avatar" also, so remove them
   # and put all other (more specific ones) in it

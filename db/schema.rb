@@ -677,10 +677,22 @@ ActiveRecord::Schema.define(version: 20161018134050) do
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
 
   create_table "widgets", force: :cascade do |t|
-    t.integer "type"
-    t.integer "position"
-    t.text    "properties"
+    t.integer  "widget_type",         null: false
+    t.integer  "position",            null: false
+    t.text     "properties"
+    t.integer  "added_by_id",         null: false
+    t.integer  "last_modified_by_id"
+    t.integer  "my_module_id",        null: false
+    t.datetime "created_at",          null: false
+    t.datetime "updated_at",          null: false
   end
+
+  add_index "widgets", ["added_by_id"], name: "index_widgets_on_added_by_id", using: :btree
+  add_index "widgets", ["created_at"], name: "index_widgets_on_created_at", using: :btree
+  add_index "widgets", ["last_modified_by_id"], name: "index_widgets_on_last_modified_by_id", using: :btree
+  add_index "widgets", ["my_module_id", "position"], name: "index_widgets_on_my_module_id_and_position", unique: true, using: :btree
+  add_index "widgets", ["my_module_id"], name: "index_widgets_on_my_module_id", using: :btree
+  add_index "widgets", ["position"], name: "index_widgets_on_position", using: :btree
 
   add_foreign_key "activities", "my_modules"
   add_foreign_key "activities", "projects"
@@ -804,4 +816,7 @@ ActiveRecord::Schema.define(version: 20161018134050) do
   add_foreign_key "user_projects", "users"
   add_foreign_key "user_projects", "users", column: "assigned_by_id"
   add_foreign_key "users", "organizations", column: "current_organization_id"
+  add_foreign_key "widgets", "my_modules"
+  add_foreign_key "widgets", "users", column: "added_by_id"
+  add_foreign_key "widgets", "users", column: "last_modified_by_id"
 end

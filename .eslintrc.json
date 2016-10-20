@@ -26,6 +26,10 @@
       {
         "avoidEscape": true
       }
+    ],
+    "one-var": [
+      "error",
+      "always"
     ]
   },
   "globals": {

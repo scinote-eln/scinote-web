@@ -1,0 +1,19 @@
+<% provide(:head_title, raw(t('my_modules.overview.head_title', project:
+@project.name, module: @my_module.name))) %>
+<%= render partial: 'shared/sidebar' %>
+<%= render partial: 'shared/secondary_navigation' %>
+<%= render partial: 'module_header' %>
+
+<div id='widget-container'>
+  <% if @my_module.widgets.count == 0 %>
+  <div data-role="no-widgets-text">
+    <em><%= t("my_modules.overview.widgets.none") %></em>
+  </div>
+  <% else %>
+  <% @my_module.widgets.order(:position).each do |widget| %>
+  <%= render partial: 'widgets/widget.html.erb', locals: { widget: widget } %>
+  <% end %>
+  <% end %>
+</div>
+
+<%= javascript_include_tag 'my_modules/overview.js' %>

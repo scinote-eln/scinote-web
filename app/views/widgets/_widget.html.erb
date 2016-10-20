@@ -1,0 +1,55 @@
+<div class='widget'>
+  <div class='panel panel-default'>
+    <div class='panel-heading'>
+      <div class='panel-options pull-right'>
+        <% if can_reorder_widget_in_my_module(@my_module) %>
+        <a
+          data-action='move-widget'
+          class='btn btn-link'
+          href='<%= move_up_widget_path(widget, format: :json) %>'
+          title="<%= t('my_modules.overview.widgets.edit.up_arrow_title') %>"
+          data-remote='true'>
+          <span class='glyphicon glyphicon-arrow-up'></span>
+        </a>
+        <a
+          data-action='move-widget'
+          class='btn btn-link'
+          href='<%= move_down_widget_path(widget, format: :json) %>'
+          title="<%= t('my_modules.overview.widgets.edit.down_arrow_title') %>"
+          data-remote='true'>
+          <span class='glyphicon glyphicon-arrow-down'></span>
+        </a>
+        <% end %>
+        <% if can_delete_widget_in_my_module(@my_module) %>
+        <%= link_to(widget_path(widget), title:
+        t('my_modules.overview.widgets.destroy.title'), method: 'delete', class: 'btn
+        btn-link', data: {action: 'delete-widget', confirm:
+        t('my_modules.overview.widgets.destroy.confirm', widget_type:
+        widget.widget_type)}) do %>
+        <span class='glyphicon glyphicon-trash'></span>
+        <% end %>
+        <% end %>
+      </div>
+      <a
+        class='widget-panel-collapse-link'
+        href='#widget-panel-<%= widget.id %>'
+        data-toggle='collapse'
+        data-remote='true'>
+        <span class='glyphicon glyphicon-collapse-down collapse-widget-icon'></span>
+        <strong><%= widget.widget_type.capitalize %></strong>
+        |
+        <span><%= raw t('my_modules.overview.widgets.new.added_on', timestamp:
+          l(widget.created_at, format: :full), user: widget.added_by.full_name) %></span>
+      </a>
+    </div>
+    <div
+      class='panel-collapse collapse'
+      id='widget-panel-<%= widget.id %>'
+      role='tabpanel'>
+      <div class='panel-body'>
+        <%= render partial: "widgets/widget_#{widget.widget_type}.html.erb", locals: {
+        widget: widget } %>
+      </div>
+    </div>
+  </div>
+</div>
