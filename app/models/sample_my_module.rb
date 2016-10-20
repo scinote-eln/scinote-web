@@ -1,5 +1,6 @@
 class SampleMyModule < ActiveRecord::Base
   after_create :increment_nr_of_module_samples
+  after_create :check_tab_on_module
   after_destroy :decrement_nr_of_module_samples
 
   validates :sample, :my_module, presence: true
@@ -21,5 +22,9 @@ class SampleMyModule < ActiveRecord::Base
   def decrement_nr_of_module_samples
     my_module.decrement!(:nr_of_assigned_samples)
     sample.decrement!(:nr_of_modules_assigned_to)
+  end
+
+  def check_tab_on_module
+    my_module.check_tab('samples')
   end
 end
