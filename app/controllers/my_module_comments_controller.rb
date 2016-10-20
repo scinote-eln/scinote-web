@@ -77,7 +77,8 @@ class MyModuleCommentsController < ApplicationController
               locals: {
                 comment: @comment
               }
-            })
+            }),
+            date: @comment.created_at.strftime('%d.%m.%Y')
           },
           status: :created
         }
