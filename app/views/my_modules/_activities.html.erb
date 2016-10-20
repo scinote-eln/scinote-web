@@ -11,5 +11,5 @@
     <% end %>
   <% end %>
   <hr>
-  <li><%= link_to t("experiments.canvas.popups.more_activities"), activities_my_module_path(@my_module) %></li>
+  <li><%= link_to t("experiments.canvas.popups.more_activities"), activities_my_module_path(@my_module, show_flash: true) %></li>
 </ul>

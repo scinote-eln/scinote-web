@@ -9,5 +9,5 @@
     <% end %>
   <% end %>
   <hr>
-  <li><%= link_to t("experiments.canvas.popups.manage_samples"), samples_my_module_url(id: @my_module.id) %></li>
+  <li><%= link_to t("experiments.canvas.popups.manage_samples"), samples_my_module_url(id: @my_module.id, show_flash: true) %></li>
 </ul>
