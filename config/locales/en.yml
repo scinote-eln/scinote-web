@@ -608,6 +608,11 @@ en:
       head_title: "%{project} | %{module} | Activity"
       no_activities: "There are no activities for this task."
       more_activities: "Load older activities"
+    tabs:
+      flash_protocols: "You don't have protocols tab enabled for the current task. Use tab selector to toggle protocols tab."
+      flash_results: "You don't have results tab enabled for the current task. Use tab selector to toggle results tab."
+      flash_activities: "You don't have activity tab enabled for the current task. Use tab selector to toggle activity tab."
+      flash_samples: "You don't have samples tab enabled for the current task. Use tab selector to toggle samples tab."
 
   experiments:
     new:

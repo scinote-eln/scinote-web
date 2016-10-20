@@ -302,11 +302,13 @@ class MyModule < ActiveRecord::Base
   def deep_clone_to_experiment(current_user, experiment)
     # Copy the module
     clone = MyModule.new(
-      name: self.name,
+      name: name,
       experiment: experiment,
-      description: self.description,
-      x: self.x,
-      y: self.y)
+      description: description,
+      x: x,
+      y: y,
+      shown_tabs: shown_tabs
+    )
     clone.save
 
     # Remove the automatically generated protocol,
@@ -385,6 +387,21 @@ class MyModule < ActiveRecord::Base
     toggled
   end
 
+  def check_tab(tab)
+    # This is done in advance so even if enabling tabs
+    # (where can_uncheck doesn't need to be called),
+    # it's called anyway just to check if the tab
+    # parameter is legal (e.g. it's not an evil,
+    # injected value)
+    send("can_uncheck_tab_#{tab}?")
+
+    unless shown_tabs.include?(tab)
+      shown_tabs << tab
+      save
+    end
+  rescue StandardError
+  end
+
   def can_uncheck_tab_protocols?
     protocols.count.zero? ||
       protocol.steps.count.zero?
@@ -409,6 +426,6 @@ class MyModule < ActiveRecord::Base
   end
 
   def create_empty_shown_tabs
-    self.shown_tabs = []
+    self.shown_tabs = [] if shown_tabs.nil?
   end
 end

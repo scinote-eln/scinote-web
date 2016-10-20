@@ -415,8 +415,13 @@ class MyModulesController < ApplicationController
   end
 
   def check_if_tab_is_shown
-    redirect_to(action: :show) && return unless
-      @my_module.shown_tabs.include?(action_name)
+    unless @my_module.shown_tabs.include?(action_name)
+      if params[:show_flash]
+        flash[:notice] = t("my_modules.tabs.flash_#{action_name}")
+        flash.keep(:notice)
+      end
+      redirect_to(action: :show) && return
+    end
   end
 
   def my_module_params
