@@ -1371,7 +1371,6 @@ html.turbolinks-progress-bar::before {
   border-bottom: 1px dotted $color-alto;
   cursor: help;
   display: inline-block;
-  position: absolute;
 
   .modal-tooltiptext {
     background-color: $color-alto;
@@ -1380,7 +1379,7 @@ html.turbolinks-progress-bar::before {
     display: block;
     margin-left: 100px;
     padding: 5px;
-    position: relative;
+    position: absolute;
     text-align: center;
     visibility: hidden;
     width: 200px;
