@@ -101,6 +101,7 @@
     for (var i = 0; i < notification_settings.length; i++ ) {
       var setting = $('[name="' + notification_settings[i] + '"]');
       var dependant = $('[name="' + notification_settings[i] + '_email"]');
+      dependant.checkboxpicker({ onActiveCls: 'btn-primary' });
       setting
         .checkboxpicker({
           onActiveCls: 'btn-primary'
