@@ -55,6 +55,59 @@
 
       <!-- profile info -->
       <ul class="nav navbar-nav navbar-right">
+
+        <!-- Global team switch -->
+        <% if current_user.organizations.length > 1 %>
+        <li class="dropdown" id="team-switch">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+            <%= fa_icon 'users' %>
+            <span>
+              <%= truncate_organization_name(current_organization.name) %>
+            </span>
+          </a>
+
+          <ul class="dropdown-menu ">
+            <%= form_for(current_user,
+                        url: user_current_organization_path,
+                        method: :post) do |f| %>
+              <%= hidden_field(:user, :current_organization_id) %>
+              <% current_user.organizations.each do |org| %>
+                <% next unless org != current_organization %>
+                <li>
+                  <a href="#" data-id="<%= org.id %>" class="text-center">
+                    <%= org.name %>
+                  </a>
+                </li>
+              <% end %>
+            <% end %>
+          </ul>
+        </li>
+        <% end %>
+
+        <!-- search -->
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+            <span class="glyphicon glyphicon-search"></span>
+          </a>
+          <ul class="dropdown-menu search-dropdown">
+            <li>
+              <!-- search form -->
+              <%= form_tag search_path, method: :get, id: 'search-bar', class: 'navbar-form navbar-right', role: 'search' do %>
+                <div class="form-group">
+                  <div class="input-group">
+                    <input class="form-control" type="text" name="q" placeholder="<%= t('nav.search') %>" autofocus>
+                     <span class="input-group-btn visible-xs visible-sm">
+                      <button id="search-button" class="btn btn-default" type="submit">
+                        <span class="glyphicon glyphicon-menu-right"></span>
+                      </button>
+                    </span>
+                  </div>
+                </div>
+              <% end %>
+            </li>
+          </ul>
+        </li>
+
         <!-- notifications -->
         <li class="dropdown">
           <a href="#"
@@ -100,34 +153,6 @@
           </ul>
         </li>
 
-        <!-- Global team switch -->
-        <% if current_user.organizations.length > 1 %>
-        <li class="dropdown" id="team-switch">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-            <%= fa_icon 'users' %>
-            <span>
-              <%= truncate_organization_name(current_organization.name) %>
-            </span>
-          </a>
-
-          <ul class="dropdown-menu ">
-            <%= form_for(current_user,
-                        url: user_current_organization_path,
-                        method: :post) do |f| %>
-              <%= hidden_field(:user, :current_organization_id) %>
-              <% current_user.organizations.each do |org| %>
-                <% next unless org != current_organization %>
-                <li>
-                  <a href="#" data-id="<%= org.id %>" class="text-center">
-                    <%= org.name %>
-                  </a>
-                </li>
-              <% end %>
-            <% end %>
-          </ul>
-        </li>
-        <% end %>
-
         <!-- greetings -->
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
@@ -142,20 +167,6 @@
           </ul>
         </li>
       </ul>
-
-      <!-- search form -->
-      <%= form_tag search_path, method: :get, id: 'search-bar', class: 'navbar-form navbar-right', role: 'search' do %>
-        <div class="form-group">
-          <div class="input-group">
-            <input class="form-control" type="text" name="q" placeholder="<%= t('nav.search') %>">
-            <span class="input-group-btn">
-              <button id="search-button" class="btn btn-default" type="submit">
-                <span class="glyphicon glyphicon-search"></span>
-              </button>
-            </span>
-          </div>
-        </div>
-      <% end %>
     </div>
     <% end %>
 
