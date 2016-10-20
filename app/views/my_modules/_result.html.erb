@@ -42,12 +42,16 @@
                        locals: { result: result, markdown: markdown } %>
           </div>
         </div>
-        <% if can_view_result_comments(@my_module) %>
+        <% if can_view_result_comments(@my_module) and !@widget %>
           <div class="row">
             <div class="result-comment"
                  id="result-comments-<%= result.id %>"
                  data-href="<%= result_result_comments_url(result) %>">
             </div>
+          </div>
+        <% elsif @widget and result.comments.count > 0 %>
+          <div class="result-comment">
+            <%= render partial: "my_module_comments/widget_comments.html.erb", locals: { result: result } %>
           </div>
         <% end %>
       </div>
