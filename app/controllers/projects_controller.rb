@@ -15,7 +15,7 @@ class ProjectsController < ApplicationController
   before_action :check_experiment_archive_permissions,
                 only: [:experiment_archive]
 
-  filter_by_archived = false
+  @filter_by_archived = false
 
   # except parameter could be used but it is not working.
   layout :choose_layout
@@ -31,7 +31,6 @@ class ProjectsController < ApplicationController
 
     if current_user.organizations.any?
       @current_organization_id = current_organization.id
-      @organization_projects = current_organization.active_project
       @current_sort = params[:sort].to_s
       @projects_by_orgs = current_user
                           .projects_by_orgs(@current_organization_id,
@@ -40,7 +39,6 @@ class ProjectsController < ApplicationController
     end
 
     @organizations = current_user.organizations
-
 
     # New project for create new project modal
     @project = Project.new

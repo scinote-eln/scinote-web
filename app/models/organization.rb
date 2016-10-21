@@ -305,8 +305,4 @@ class Organization < ActiveRecord::Base
   def protocol_keywords_list
     ProtocolKeyword.where(organization: self).pluck(:name)
   end
-
-  def active_project
-    projects.where(archived: false)
-  end
 end
