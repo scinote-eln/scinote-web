@@ -554,9 +554,34 @@ a[data-toggle="tooltip"] {
   }
 }
 
-// Global team switch
+.search-dropdown {
+  padding-right: 25px;
+  width: 250px;
+
+  input {
+    width: 230px;
+  }
+}
+
+@media(max-width:1000px) {
+  .search-dropdown {
+    width: 270px;
+
+    .form-group {
+      padding-left: 15px;
+    }
+  }
+}
+
+ // Global team switch
 #team-switch {
+  border-left: 1px solid $color-alto;
+  border-right: 1px solid $color-alto;
   word-wrap: break-word;
+
+  .dropdown-menu {
+    width: 100%;
+  }
 
   i {
     margin-right: 5px;
