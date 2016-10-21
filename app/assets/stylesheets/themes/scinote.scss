@@ -563,6 +563,20 @@ a[data-toggle="tooltip"] {
   }
 }
 
+@media(max-width:1000px) {
+  .search-dropdown {
+    width: 270px;
+
+    .form-group {
+      padding-left: 15px;
+    }
+  }
+}
+
+@media(max-width:425px) {
+  .search-dropdown {}
+}
+
  // Global team switch
 #team-switch {
   border-left: 1px solid $color-alto;

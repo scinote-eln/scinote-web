@@ -87,6 +87,7 @@
                 </li>
               <% end %>
             <% end %>
+            <li role="separator" class="divider"></li>
             <li>
               <%= link_to new_organization_path do %>
                 <span class="glyphicon glyphicon-plus"></span>
@@ -98,7 +99,8 @@
         <% end %>
 
         <!-- search -->
-        <li class="dropdown">
+        <li class="dropdown"
+            id="search-ico">
           <a href="#"
              class="dropdown-toggle"
              data-toggle="dropdown"
@@ -120,8 +122,7 @@
                     <input class="form-control"
                            type="text"
                            name="q"
-                           placeholder="<%= t('nav.search') %>"
-                           autofocus>
+                           placeholder="<%= t('nav.search') %>">
                      <span class="input-group-btn visible-xs visible-sm">
                       <button id="search-button"
                               class="btn btn-default"

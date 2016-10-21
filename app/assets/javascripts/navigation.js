@@ -94,9 +94,20 @@
       });
   }
 
+  function focusSearchInput() {
+    var searchIco = $('#search-ico');
+    searchIco
+      .on('shown.bs.dropdown', function() {
+        searchIco
+          .find('input.form-control')
+          .focus();
+      });
+  }
+
   // init
   loadDropdownNotifications();
   loadUnseenNotificationsNumber();
   toggleNotificationBellPosition();
+  focusSearchInput();
   initGlobalSwitchForm();
 })();
