@@ -27,8 +27,8 @@ module SecondaryNavigationHelper
     action_name == 'samples'
   end
 
-  def module_overview?
-    action_name == 'overview'
+  def module_show?
+    action_name == 'show'
   end
 
   def module_protocols?

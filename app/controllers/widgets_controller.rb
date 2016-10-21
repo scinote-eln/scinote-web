@@ -12,10 +12,10 @@ class WidgetsController < ApplicationController
     @widget.destroy
     update_my_module_ts(@widget)
 
-    flash[:success] = t('my_modules.overview.widgets.destroy.success_flash',
+    flash[:success] = t('my_modules.show.widgets.destroy.success_flash',
                         type: @widget.widget_type.capitalize,
                         pos: @widget.position + 1)
-    redirect_to overview_my_module_path(@my_module)
+    redirect_to my_module_path(@my_module)
   end
 
   def move_up

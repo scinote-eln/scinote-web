@@ -3,10 +3,10 @@ class AddTabSelectorSupport < ActiveRecord::Migration
     add_column :my_modules,
                :shown_tabs,
                :jsonb,
-               default: [],
-               null: false
+               null: false,
+               default: {}
 
-    MyModule.update_all(shown_tabs: %w(overview) + Constants::WIDGET_TYPES)
+    MyModule.update_all(shown_tabs: %w(protocols results activities samples)
   end
 
   def down

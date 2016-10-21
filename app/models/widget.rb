@@ -5,8 +5,9 @@ class Widget < ActiveRecord::Base
   validates :position,
             presence: true,
             numericality: { greater_than_or_equal_to: 0 }
-  validates :my_module_id, uniqueness: { scope: :position }
-  store :properties, coder: JSON
+  validates :properties, exclusion: { in: [nil] }
+  validates :added_by_id, presence: true
+  validates :my_module_id, presence: true, uniqueness: { scope: :position }
 
   belongs_to :added_by, class_name: 'User', inverse_of: :added_widgets
   belongs_to :last_modified_by,

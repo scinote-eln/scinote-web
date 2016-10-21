@@ -677,14 +677,14 @@ ActiveRecord::Schema.define(version: 20161018134050) do
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
 
   create_table "widgets", force: :cascade do |t|
-    t.integer  "widget_type",         null: false
-    t.integer  "position",            null: false
-    t.text     "properties"
-    t.integer  "added_by_id",         null: false
+    t.integer  "widget_type",                      null: false
+    t.integer  "position",                         null: false
+    t.jsonb    "properties",          default: {}, null: false
+    t.integer  "added_by_id",                      null: false
     t.integer  "last_modified_by_id"
-    t.integer  "my_module_id",        null: false
-    t.datetime "created_at",          null: false
-    t.datetime "updated_at",          null: false
+    t.integer  "my_module_id",                     null: false
+    t.datetime "created_at",                       null: false
+    t.datetime "updated_at",                       null: false
   end
 
   add_index "widgets", ["added_by_id"], name: "index_widgets_on_added_by_id", using: :btree

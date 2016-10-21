@@ -449,6 +449,17 @@ en:
       archive_action: "Archive"
       archive_confirm_text: "All samples will be unassigned from the
         task when archiving. Are you sure to archive task?"
+      widgets:
+        new:
+          added_on: "Added on <em>%{timestamp}</em> by <em>%{user}</em>"
+        edit:
+          up_arrow_title: "Move widget up"
+          down_arrow_title: "Move widget down"
+        destroy:
+          title: "Delete widget"
+          confirm: "Are you sure you want to delete widget %{widget_type}?"
+          success_flash: "%{type} widget at position %{pos} successfully deleted."
+        none: "Task has no widgets."
     edit:
       head_title: "%{project} | %{module} | Edit"
       title: "Edit task %{module}"
@@ -486,19 +497,6 @@ en:
       tags: "Tags:"
       no_tags: "No tags"
       no_description: "No description"
-    overview:
-      head_title: "%{project} | %{module} | Overview"
-      widgets:
-        new:
-          added_on: "Added on <em>%{timestamp}</em> by <em>%{user}</em>"
-        edit:
-          up_arrow_title: "Move widget up"
-          down_arrow_title: "Move widget down"
-        destroy:
-          title: "Delete widget"
-          confirm: "Are you sure you want to delete widget %{widget_type}?"
-          success_flash: "%{type} widget at position %{pos} successfully deleted."
-        none: "Task has no widgets."
     protocols:
       head_title: "%{project} | %{module} | Protocols"
       protocol_status_bar:

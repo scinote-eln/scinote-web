@@ -3,7 +3,7 @@ class CreateWidgets < ActiveRecord::Migration
     create_table :widgets do |t|
       t.integer :widget_type, null: false
       t.integer :position, null: false
-      t.text :properties
+      t.jsonb :properties, null: false, default: {}
       t.integer :added_by_id, null: false
       t.integer :last_modified_by_id
       t.integer :my_module_id, null: false

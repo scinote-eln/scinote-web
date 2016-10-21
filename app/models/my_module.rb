@@ -12,6 +12,7 @@ class MyModule < ActiveRecord::Base
   validates :x, :y, :workflow_order, presence: true
   validates :experiment, presence: true
   validates :my_module_group, presence: true, if: "!my_module_group_id.nil?"
+  validates :shown_tabs, exclusion: { in: [nil] }
 
   belongs_to :created_by, foreign_key: 'created_by_id', class_name: 'User'
   belongs_to :last_modified_by, foreign_key: 'last_modified_by_id', class_name: 'User'
