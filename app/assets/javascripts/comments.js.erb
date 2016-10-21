@@ -100,6 +100,30 @@ var Comments = (function() {
         list.parent().find('.content-comments')
           .find('li.no-comments').remove();
 
+        // Find previous date separator
+        var dateSeparator =  list.parent().find('.comment-date-separator:last');
+        if (dateSeparator.length > 0) {
+          // Parse string with creation date
+          var pr = dateSeparator.text().split('.');
+          var comm = data.date.split('.');
+          // Build Date objects and compare
+          var sepDate = new Date(pr[2], pr[1] - 1, pr[0]);
+          var commDate = new Date(comm[2], comm[1] - 1, comm[0]);
+          if (commDate > sepDate) {
+            // Add date separator
+            list.parent().find('.content-comments')
+              .append('<li class="comment-date-separator">\
+                        <p class="text-center">' + data.date + '</p>\
+                      </li>');
+          }
+        } else {
+          // Comment is the first one so add date separator
+          list.parent().find('.content-comments')
+            .append('<li class="comment-date-separator">\
+                      <p class="text-center">' + data.date + '</p>\
+                    </li>');
+        }
+
         list.parent().find('.content-comments')
           .append('<li class="comment">' + data.html + '</li>')
           .scrollTop(0);

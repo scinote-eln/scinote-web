@@ -72,12 +72,13 @@ class MyModuleCommentsController < ApplicationController
         }
         format.json {
           render json: {
-            html: render_to_string({
+            html: render_to_string(
               partial: "comment.html.erb",
               locals: {
                 comment: @comment
               }
-            })
+            ),
+            date: @comment.created_at.strftime('%d.%m.%Y')
           },
           status: :created
         }
