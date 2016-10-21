@@ -19,7 +19,7 @@
                              text %>
     <%  else %>
       <%= route_to_other_org root_path,
-                             nil,
+                             project.organization,
                              text %>
     <% end %>
   <% else %>
