@@ -111,12 +111,10 @@
 </div>
 <% else %>
   <h2 class="page-header"><%= current_organization.name %></h2>
-<% end %>
-
-<% if current_organization.projects.length > 0 %>
-  <%= render partial: "projects/index/org_projects",
-             locals: { org: current_organization,
-                       projects: current_organization.projects } %>
+  <% @projects_by_orgs.each do |org, projects| %>
+    <%= render partial: "projects/index/org_projects",
+               locals: {org: org, projects: projects} %>
+  <% end %>
 
 <% end %>
 <%= javascript_include_tag "projects/index", "data-turbolinks-track" => true %>
