@@ -20,7 +20,7 @@ class MyModule < ActiveRecord::Base
   belongs_to :restored_by, foreign_key: 'restored_by_id', class_name: 'User'
   belongs_to :experiment, inverse_of: :my_modules
   belongs_to :my_module_group, inverse_of: :my_modules
-  has_many :widgets, inverse_of: :my_module, dependent: :destroy
+  has_many :my_module_widgets, inverse_of: :my_module, dependent: :destroy
   has_many :results, inverse_of: :my_module, :dependent => :destroy
   has_many :my_module_tags, inverse_of: :my_module, :dependent => :destroy
   has_many :tags, through: :my_module_tags

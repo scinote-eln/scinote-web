@@ -5,12 +5,12 @@
 <%= render partial: 'module_header' %>
 
 <div id='widget-container'>
-  <% if @my_module.widgets.count == 0 %>
+  <% if @my_module.my_module_widgets.count == 0 %>
   <div data-role="no-widgets-text">
     <em><%= t("my_modules.show.widgets.none") %></em>
   </div>
   <% else %>
-  <% @my_module.widgets.order(:position).each do |widget| %>
+  <% @my_module.my_module_widgets.order(:position).each do |widget| %>
   <%= render partial: 'widgets/widget.html.erb', locals: { widget: widget } %>
   <% end %>
   <% end %>

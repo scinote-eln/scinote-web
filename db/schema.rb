@@ -197,6 +197,24 @@ ActiveRecord::Schema.define(version: 20161018134050) do
   add_index "my_module_tags", ["my_module_id"], name: "index_my_module_tags_on_my_module_id", using: :btree
   add_index "my_module_tags", ["tag_id"], name: "index_my_module_tags_on_tag_id", using: :btree
 
+  create_table "my_module_widgets", force: :cascade do |t|
+    t.integer  "widget_type",                      null: false
+    t.integer  "position",                         null: false
+    t.jsonb    "properties",          default: {}, null: false
+    t.integer  "added_by_id",                      null: false
+    t.integer  "last_modified_by_id"
+    t.integer  "my_module_id",                     null: false
+    t.datetime "created_at",                       null: false
+    t.datetime "updated_at",                       null: false
+  end
+
+  add_index "my_module_widgets", ["added_by_id"], name: "index_my_module_widgets_on_added_by_id", using: :btree
+  add_index "my_module_widgets", ["created_at"], name: "index_my_module_widgets_on_created_at", using: :btree
+  add_index "my_module_widgets", ["last_modified_by_id"], name: "index_my_module_widgets_on_last_modified_by_id", using: :btree
+  add_index "my_module_widgets", ["my_module_id", "position"], name: "index_my_module_widgets_on_my_module_id_and_position", unique: true, using: :btree
+  add_index "my_module_widgets", ["my_module_id"], name: "index_my_module_widgets_on_my_module_id", using: :btree
+  add_index "my_module_widgets", ["position"], name: "index_my_module_widgets_on_position", using: :btree
+
   create_table "my_modules", force: :cascade do |t|
     t.string   "name",                                   null: false
     t.datetime "due_date"
@@ -676,24 +694,6 @@ ActiveRecord::Schema.define(version: 20161018134050) do
   add_index "users", ["invited_by_id"], name: "index_users_on_invited_by_id", using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
 
-  create_table "widgets", force: :cascade do |t|
-    t.integer  "widget_type",                      null: false
-    t.integer  "position",                         null: false
-    t.jsonb    "properties",          default: {}, null: false
-    t.integer  "added_by_id",                      null: false
-    t.integer  "last_modified_by_id"
-    t.integer  "my_module_id",                     null: false
-    t.datetime "created_at",                       null: false
-    t.datetime "updated_at",                       null: false
-  end
-
-  add_index "widgets", ["added_by_id"], name: "index_widgets_on_added_by_id", using: :btree
-  add_index "widgets", ["created_at"], name: "index_widgets_on_created_at", using: :btree
-  add_index "widgets", ["last_modified_by_id"], name: "index_widgets_on_last_modified_by_id", using: :btree
-  add_index "widgets", ["my_module_id", "position"], name: "index_widgets_on_my_module_id_and_position", unique: true, using: :btree
-  add_index "widgets", ["my_module_id"], name: "index_widgets_on_my_module_id", using: :btree
-  add_index "widgets", ["position"], name: "index_widgets_on_position", using: :btree
-
   add_foreign_key "activities", "my_modules"
   add_foreign_key "activities", "projects"
   add_foreign_key "activities", "users"
@@ -723,6 +723,9 @@ ActiveRecord::Schema.define(version: 20161018134050) do
   add_foreign_key "my_module_groups", "experiments"
   add_foreign_key "my_module_groups", "users", column: "created_by_id"
   add_foreign_key "my_module_tags", "users", column: "created_by_id"
+  add_foreign_key "my_module_widgets", "my_modules"
+  add_foreign_key "my_module_widgets", "users", column: "added_by_id"
+  add_foreign_key "my_module_widgets", "users", column: "last_modified_by_id"
   add_foreign_key "my_modules", "experiments"
   add_foreign_key "my_modules", "my_module_groups"
   add_foreign_key "my_modules", "users", column: "archived_by_id"
@@ -816,7 +819,4 @@ ActiveRecord::Schema.define(version: 20161018134050) do
   add_foreign_key "user_projects", "users"
   add_foreign_key "user_projects", "users", column: "assigned_by_id"
   add_foreign_key "users", "organizations", column: "current_organization_id"
-  add_foreign_key "widgets", "my_modules"
-  add_foreign_key "widgets", "users", column: "added_by_id"
-  add_foreign_key "widgets", "users", column: "last_modified_by_id"
 end

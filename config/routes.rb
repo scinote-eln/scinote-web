@@ -214,7 +214,7 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :widgets, only: [:destroy] do
+  resources :my_module_widgets, only: [:destroy] do
     member do
       get 'move_down'
       get 'move_up'

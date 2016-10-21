@@ -1,10 +1,12 @@
-class WidgetsController < ApplicationController
+class MyModuleWidgetsController < ApplicationController
   before_action :load_vars, only: [:destroy, :move_up, :move_down]
   before_action :check_destroy_permissions, only: [:destroy]
 
   def destroy
-    # Update position on other widgets of this module
-    @my_module.widgets.where('position > ?', @widget.position).each do |widget|
+    # Update position on other module widgets of this module
+    @my_module.my_module_widgets
+              .where('position > ?', @widget.position)
+              .each do |widget|
       widget.position = widget.position - 1
       widget.save
     end
@@ -24,7 +26,7 @@ class WidgetsController < ApplicationController
         if can_reorder_widget_in_my_module(@widget.my_module) &&
            @widget.position > 0
 
-          widget_down = @widget.my_module.widgets
+          widget_down = @widget.my_module.my_module_widgets
                                .where(position: @widget.position - 1).first
 
           if widget_down
@@ -67,9 +69,9 @@ class WidgetsController < ApplicationController
     respond_to do |format|
       if @widget
         if can_reorder_widget_in_my_module(@widget.my_module) &&
-           @widget.position < @widget.my_module.widgets.count - 1
+           @widget.position < @widget.my_module.my_module_widgets.count - 1
 
-          widget_up = @widget.my_module.widgets
+          widget_up = @widget.my_module.my_module_widgets
                              .where(position: @widget.position + 1).first
 
           if widget_up
@@ -111,7 +113,7 @@ class WidgetsController < ApplicationController
   private
 
   def load_vars
-    @widget = Widget.find_by_id(params[:id])
+    @widget = MyModuleWidget.find_by_id(params[:id])
     @my_module = @widget.my_module
     render_404 unless @my_module
   end

@@ -6,7 +6,7 @@
         <a
           data-action='move-widget'
           class='btn btn-link'
-          href='<%= move_up_widget_path(widget, format: :json) %>'
+          href='<%= move_up_my_module_widget_path(widget, format: :json) %>'
           title="<%= t('my_modules.show.widgets.edit.up_arrow_title') %>"
           data-remote='true'>
           <span class='glyphicon glyphicon-arrow-up'></span>
@@ -14,14 +14,14 @@
         <a
           data-action='move-widget'
           class='btn btn-link'
-          href='<%= move_down_widget_path(widget, format: :json) %>'
+          href='<%= move_down_my_module_widget_path(widget, format: :json) %>'
           title="<%= t('my_modules.show.widgets.edit.down_arrow_title') %>"
           data-remote='true'>
           <span class='glyphicon glyphicon-arrow-down'></span>
         </a>
         <% end %>
         <% if can_delete_widget_in_my_module(@my_module) %>
-        <%= link_to(widget_path(widget), title:
+        <%= link_to(my_module_widget_path(widget), title:
         t('my_modules.show.widgets.destroy.title'), method: 'delete', class: 'btn
         btn-link', data: {action: 'delete-widget', confirm:
         t('my_modules.show.widgets.destroy.confirm', widget_type:
@@ -47,7 +47,7 @@
       id='widget-panel-<%= widget.id %>'
       role='tabpanel'>
       <div class='panel-body'>
-        <%= render partial: "widgets/widget_#{widget.widget_type}.html.erb", locals: {
+        <%= render partial: "widgets/my_module/widget_#{widget.widget_type}.html.erb", locals: {
         widget: widget } %>
       </div>
     </div>
