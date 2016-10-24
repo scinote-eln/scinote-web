@@ -20,6 +20,7 @@
           <span class='glyphicon glyphicon-arrow-down'></span>
         </a>
         <% end %>
+        <!-- Removed until readding of widgets is implemented
         <% if can_delete_widget_in_my_module(@my_module) %>
         <%= link_to(my_module_widget_path(widget), title:
         t('my_modules.show.widgets.destroy.title'), method: 'delete', class: 'btn
@@ -29,6 +30,7 @@
         <span class='glyphicon glyphicon-trash'></span>
         <% end %>
         <% end %>
+        -->
       </div>
       <a
         class='widget-panel-collapse-link'
