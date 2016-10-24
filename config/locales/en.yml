@@ -242,7 +242,7 @@ en:
 
       print_title: "%{project} | Report"
       index:
-        head_title: "%{project} | Reports"
+        head_title: "%{organization} | Reports"
         new: "New report"
         edit: "Edit report"
         delete: "Delete report/s"
@@ -251,6 +251,7 @@ en:
         thead_last_modified_by: "Last modified by"
         thead_created_at: "Created at"
         thead_updated_at: "Last updated at"
+        thead_project: 'Project'
         no_reports: "No reports!"
         modal_delete:
           head_title: "Delete report/s"
@@ -1005,6 +1006,9 @@ en:
     new_report:
       title: 'Select a project'
       go: 'Go'
+      no_projects: 'No active projects for which to create a report.'
+      select_project: 'Please select the project before continue.'
+
   activities:
     index:
       today: "Today"

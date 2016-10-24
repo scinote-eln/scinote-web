@@ -13,7 +13,6 @@
   var editReportButton = null;
   var deleteReportsButton = null;
   var checkAll = null;
-  var allRows = null;
 
   var checkedReports = [];
 
@@ -99,19 +98,22 @@
    */
   function initCheckboxesAndEditing() {
 
-    checkAll.click(function(event) {
-      $('.check-report').prop("checked", this.checked);
-      checkedReports = [];
-      if (this.checked) {
-        _.each(allRows, function(row) {
-          checkedReports.push($(row).data("id"));
-        });
-      }
-
-      updateButtons();
-    });
-
     $('#reportsDataTable').on( 'draw.dt', function () {
+
+      // setup click event on check all button in table head_title
+      checkAll.click(function(event) {
+        $('.check-report').prop("checked", this.checked);
+        checkedReports = [];
+        if (this.checked) {
+          _.each($('.check-report'), function(row) {
+            checkedReports.push($(row).attr('value'));
+          });
+        }
+
+        updateButtons();
+      });
+
+      // setup every single checkbox for each row
       $('.check-report').click(function() {
         checkAll.prop("checked", false);
         var id = $(this).val();
@@ -254,7 +256,6 @@
     editReportButton = $("#edit-report-btn");
     deleteReportsButton = $("#delete-reports-btn");
     checkAll = $("[name='select_all']");
-    allRows = $(".report-row");
 
     initNewReportModal();
     initCheckboxesAndEditing();
