@@ -417,10 +417,6 @@ class MyModule < ActiveRecord::Base
     results.count.zero?
   end
 
-  def can_uncheck_tab_activities?
-    true
-  end
-
   def can_uncheck_tab_samples?
     samples.count.zero?
   end
