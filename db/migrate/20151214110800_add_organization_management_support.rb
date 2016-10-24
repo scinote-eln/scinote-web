@@ -13,7 +13,7 @@ class AddOrganizationManagementSupport < ActiveRecord::Migration
 
     # Add space taken to organization (in B!)
     add_column :organizations, :space_taken, :integer,
-      limit: 5, default: MINIMAL_ORGANIZATION_SPACE_TAKEN
+      limit: 5, default: Constants::MINIMAL_ORGANIZATION_SPACE_TAKEN
     change_column_null :organizations, :space_taken, false
 
     # Add reference to private user
