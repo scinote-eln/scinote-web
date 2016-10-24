@@ -1,2 +1,22 @@
 <div class="widget-content">
+  <!-- Show recent 20 activities -->
+  <ul id="list-activities"
+      class="no-style content-activities content-module-activities">
+    <% activities = widget.my_module.
+                           activities.
+                           last(Constants::ACTIVITY_WIDGET_MAX_ACTIVITIES) %>
+    <% if activities.size == 0 then %>
+      <li><em><%= t 'experiments.canvas.popups.no_activities' %></em></li>
+    <% else %>
+      <% activities.each do |act| %>
+        <li class="activity-item">
+          <span class="activity-item-date">
+            <%= l act.created_at, format: :full %>
+          </span>
+          <span class="activity-item-text"><%= act.message.html_safe %>
+          </span>
+        </li>
+      <% end %>
+    <% end %>
+  </div>
 </div>
