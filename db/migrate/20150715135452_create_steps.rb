@@ -13,8 +13,8 @@ class CreateSteps < ActiveRecord::Migration
     end
     add_foreign_key :steps, :users
     add_foreign_key :steps, :my_modules
-    add_index :steps, :my_module_id
     add_index :steps, :user_id
+    add_index :steps, :my_module_id
     add_index :steps, :created_at
     add_index :steps, :position
   end

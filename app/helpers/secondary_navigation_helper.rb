@@ -27,7 +27,7 @@ module SecondaryNavigationHelper
     action_name == 'samples'
   end
 
-  def module_overview?
+  def module_show?
     action_name == 'show'
   end
 

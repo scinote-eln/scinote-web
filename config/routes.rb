@@ -183,7 +183,7 @@ Rails.application.routes.draw do
       get 'activities_tab' # Activities in tab view for single module
       get 'due_date'
 
-      # Tabs
+      # Tabs ('overview' tab is routed to 'show')
       get 'protocols' # Protocols view for single module
       get 'results' # Results view for single module
       get 'activities'
@@ -209,6 +209,13 @@ Rails.application.routes.draw do
     member do
       post 'checklistitem_state'
       post 'toggle_step_state'
+      get 'move_down'
+      get 'move_up'
+    end
+  end
+
+  resources :my_module_widgets, only: [:destroy] do
+    member do
       get 'move_down'
       get 'move_up'
     end

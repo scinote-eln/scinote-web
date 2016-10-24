@@ -12,6 +12,7 @@ class MyModule < ActiveRecord::Base
   validates :x, :y, :workflow_order, presence: true
   validates :experiment, presence: true
   validates :my_module_group, presence: true, if: "!my_module_group_id.nil?"
+  validates :shown_tabs, exclusion: { in: [nil] }
 
   belongs_to :created_by, foreign_key: 'created_by_id', class_name: 'User'
   belongs_to :last_modified_by, foreign_key: 'last_modified_by_id', class_name: 'User'
@@ -19,6 +20,7 @@ class MyModule < ActiveRecord::Base
   belongs_to :restored_by, foreign_key: 'restored_by_id', class_name: 'User'
   belongs_to :experiment, inverse_of: :my_modules
   belongs_to :my_module_group, inverse_of: :my_modules
+  has_many :my_module_widgets, inverse_of: :my_module, dependent: :destroy
   has_many :results, inverse_of: :my_module, :dependent => :destroy
   has_many :my_module_tags, inverse_of: :my_module, :dependent => :destroy
   has_many :tags, through: :my_module_tags
@@ -400,6 +402,10 @@ class MyModule < ActiveRecord::Base
       save
     end
   rescue StandardError
+  end
+
+  def can_uncheck_tab_overview?
+    false
   end
 
   def can_uncheck_tab_protocols?

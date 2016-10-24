@@ -4,7 +4,7 @@ class MyModulesController < ApplicationController
 
   before_action :load_vars, only: [
     :show, :edit, :update, :destroy,
-    :description, :due_date, :protocols, :results,
+    :description, :due_date, :protocols, :results, :show,
     :samples, :activities, :activities_tab,
     :assign_samples, :unassign_samples,
     :delete_samples,
@@ -17,6 +17,7 @@ class MyModulesController < ApplicationController
   ]
   before_action :check_destroy_permissions, only: [:destroy]
   before_action :check_view_info_permissions, only: [:show]
+  before_action :check_view_permissions, only: [:show]
   before_action :check_view_activities_permissions, only: [:activities, :activities_tab]
   before_action :check_view_protocols_permissions, only: [:protocols]
   before_action :check_view_results_permissions, only: [:results]
@@ -38,6 +39,11 @@ class MyModulesController < ApplicationController
   DELETE_SAMPLES = 'Delete'
 
   def show
+    current_organization_switch(@my_module
+                                .experiment
+                                .project
+                                .organization)
+
     respond_to do |format|
       format.html
       format.json {
@@ -366,6 +372,10 @@ class MyModulesController < ApplicationController
     unless can_view_module_info(@my_module)
       render_403
     end
+  end
+
+  def check_view_permissions
+    render_403 unless can_view_module(@my_module)
   end
 
   def check_view_activities_permissions

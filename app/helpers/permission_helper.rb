@@ -883,6 +883,27 @@ module PermissionHelper
     end
   end
 
+  def can_view_widgets_in_my_module(my_module)
+    my_module.active? &&
+      my_module.experiment.project.active? &&
+      my_module.experiment.active? &&
+      can_view_module(my_module)
+  end
+
+  def can_reorder_widget_in_my_module(my_module)
+    my_module.active? &&
+      my_module.experiment.project.active? &&
+      my_module.experiment.active? &&
+      is_user_or_higher_of_project(my_module.experiment.project)
+  end
+
+  def can_delete_widget_in_my_module(my_module)
+    my_module.active? &&
+      my_module.experiment.project.active? &&
+      my_module.experiment.active? &&
+      is_owner_of_project(my_module.experiment.project)
+  end
+
   # Could possibly be divided into:
   #   - edit step name/description
   #   - adding checklists
