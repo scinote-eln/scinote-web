@@ -11,7 +11,8 @@ class Users::SettingsController < ApplicationController
     :tutorial,
     :reset_tutorial,
     :notifications_settings,
-    :user_current_organization
+    :user_current_organization,
+    :destroy_user_organization
   ]
 
   before_action :check_organization_permission, only: [
@@ -401,6 +402,7 @@ class Users::SettingsController < ApplicationController
         end
 
       if !invalid
+        reset_current_organization
         if params[:leave] then
           flash[:notice] = I18n.t(
             "users.settings.organizations.index.leave_flash",
@@ -598,4 +600,15 @@ class Users::SettingsController < ApplicationController
       UserNotification.create(notification: notification, user: target_user)
     end
   end
+
+  # checks if the user is still in the current organization
+  def reset_current_organization
+    if @user.organizations_ids.exclude? @user.current_organization_id
+      @user.current_organization_id = @user.organizations_ids.first
+    end
+  end
+
+  # def reset_current_organization_of_removed_users
+  #
+  # end
 end

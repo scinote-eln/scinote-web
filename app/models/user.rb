@@ -259,6 +259,10 @@ class User < ActiveRecord::Base
       .uniq
   end
 
+  def organizations_ids
+    organizations.pluck(:id)
+  end
+
   protected
 
   def time_zone_check
