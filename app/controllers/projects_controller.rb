@@ -30,7 +30,9 @@ class ProjectsController < ApplicationController
     end
 
     if current_user.organizations.any?
-      @current_organization_id = current_organization.id
+      @current_organization_id = current_organization.id if current_organization
+
+      @current_organization_id ||= current_user.organizations.first.id
       @current_sort = params[:sort].to_s
       @projects_by_orgs = current_user
                           .projects_by_orgs(@current_organization_id,
