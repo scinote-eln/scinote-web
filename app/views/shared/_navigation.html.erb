@@ -26,30 +26,39 @@
       <!-- links -->
       <ul class="nav navbar-nav">
         <li>
-          <a href="<%= projects_path %>">
+          <%= link_to projects_path do %>
             <span class="glyphicon glyphicon-home"></span>
-            <span class="visible-xs-inline visible-sm-inline"><%= t('nav.label.projects') %></span>
-          </a>
+            <span class="visible-xs-inline visible-sm-inline">
+              <%= t('nav.label.projects') %>
+            </span>
+          <% end %>
         </li>
         <li>
-          <a href="<%= protocols_path %>">
+          <%= link_to protocols_path do %>
             <span class="glyphicon glyphicon-list-alt"></span>
-            <span class="visible-xs-inline visible-sm-inline"><%= t('nav.label.protocols') %></span>
-          </a>
+            <span class="visible-xs-inline visible-sm-inline">
+              <%= t('nav.label.protocols') %>
+            </span>
+          <% end %>
         </li>
-<% if false  %>
         <li>
-          <a href="#">
-            <span class="glyphicon glyphicon-calendar"></span>
-            <span class="visible-xs-inline visible-sm-inline"><%= t('nav.label.calendar') %></span>
-          </a>
+          <%= link_to reports_path do %>
+            <%= fa_icon 'inbox' %>
+            <span class="visible-xs-inline visible-sm-inline">
+              <%= t('nav.label.reports') %>
+            </span>
+          <% end %>
         </li>
-<% end %>
         <li>
-          <a class="btn-activity" href="<%= activities_path(format: :json) %>" role="button" data-remote="true">
+          <%= link_to(activities_path(format: :json),
+                      role: 'button',
+                      'data-remote' => 'true',
+                      class: 'btn-activity') do %>
             <span class="glyphicon glyphicon-equalizer"></span>
-            <span class="visible-xs-inline visible-sm-inline"><%= t('nav.label.activities') %></span>
-          </a>
+            <span class="visible-xs-inline visible-sm-inline">
+              <%= t('nav.label.activities') %>
+            </span>
+          <% end %>
         </li>
       </ul>
 

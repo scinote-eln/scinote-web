@@ -1,4 +1,4 @@
-<%= bootstrap_form_tag remote: true, url: module_contents_project_reports_path(project, format: :json), method: :post, html: { id: "add-contents-form" } do |f| %>
+<%= bootstrap_form_tag remote: true, url: module_contents_reports_path(project_id: @project.id, format: :json), method: :post, html: { id: "add-contents-form" } do |f| %>
   <%= hidden_field_tag :id, my_module.id %>
   <div>
     <!-- Nav tabs -->

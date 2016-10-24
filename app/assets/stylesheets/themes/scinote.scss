@@ -1438,3 +1438,20 @@ html.turbolinks-progress-bar::before {
     }
   }
 }
+
+// reports datatTable
+.reports-datatable {
+  margin-top: 50px;
+
+  #select-all {
+    text-align: center;
+  }
+
+  #reportsDataTable_filter {
+    float: right;
+  }
+}
+
+#reports-datatable-buttons {
+  margin-top: 20px;
+}

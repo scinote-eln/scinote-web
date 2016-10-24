@@ -64,7 +64,57 @@ Rails.application.routes.draw do
       post 'import_samples'
       post 'export_samples'
     end
-    match '*path', :to  => 'organizations#routing_error', via: [:get, :post, :put, :patch]
+    match '*path',
+          to: 'organizations#routing_error',
+          via: [:get, :post, :put, :patch]
+  end
+
+  # Reports
+  resources :reports,
+            only: [:index, :new, :create, :edit, :update] do
+    collection do
+      # The posts following here should in theory be gets,
+      # but are posts because of parameters payload
+      post 'generate', to: 'reports#generate'
+      get 'new/', to: 'reports#new'
+      get 'new/project_contents_modal',
+          to: 'reports#project_contents_modal',
+          as: :project_contents_modal
+      post 'new/project_contents',
+           to: 'reports#project_contents',
+           as: :project_contents
+      get 'new/experiment_contents_modal',
+          to: 'reports#experiment_contents_modal',
+          as: :experiment_contents_modal
+      post 'new/experiment_contents',
+           to: 'reports#experiment_contents',
+           as: :experiment_contents
+      get 'new/module_contents_modal',
+          to: 'reports#module_contents_modal',
+          as: :module_contents_modal
+      post 'new/module_contents',
+           to: 'reports#module_contents',
+           as: :module_contents
+      get 'new/step_contents_modal',
+          to: 'reports#step_contents_modal',
+          as: :step_contents_modal
+      post 'new/step_contents',
+           to: 'reports#step_contents',
+           as: :step_contents
+      get 'new/result_contents_modal',
+          to: 'reports#result_contents_modal',
+          as: :result_contents_modal
+      post 'new/result_contents',
+           to: 'reports#result_contents',
+           as: :result_contents
+      post '_save',
+           to: 'reports#save_modal',
+           as: :save_modal
+      post 'destroy', as: :destroy # Destroy multiple entries at once
+      post 'datatable',
+           to: 'reports#reports_table',
+           as: :datatable
+    end
   end
 
   get 'projects/archive', to: 'projects#archive', as: 'projects_archive'
@@ -78,48 +128,6 @@ Rails.application.routes.draw do
     # as well as all activities page for single project (HTML)
     resources :project_activities, path: "/activities", only: [:index]
     resources :tags, only: [:create, :update, :destroy]
-    resources :reports, path: "/reports", only: [:index, :new, :create, :edit, :update] do
-      collection do
-        # The posts following here should in theory be gets,
-        # but are posts because of parameters payload
-        post 'generate', to: 'reports#generate'
-        get 'new/', to: 'reports#new'
-        get 'new/project_contents_modal',
-            to: 'reports#project_contents_modal',
-            as: :project_contents_modal
-        post 'new/project_contents',
-             to: 'reports#project_contents',
-             as: :project_contents
-        get 'new/experiment_contents_modal',
-            to: 'reports#experiment_contents_modal',
-            as: :experiment_contents_modal
-        post 'new/experiment_contents',
-             to: 'reports#experiment_contents',
-             as: :experiment_contents
-        get 'new/module_contents_modal',
-            to: 'reports#module_contents_modal',
-            as: :module_contents_modal
-        post 'new/module_contents',
-             to: 'reports#module_contents',
-             as: :module_contents
-        get 'new/step_contents_modal',
-            to: 'reports#step_contents_modal',
-            as: :step_contents_modal
-        post 'new/step_contents',
-             to: 'reports#step_contents',
-             as: :step_contents
-        get 'new/result_contents_modal',
-            to: 'reports#result_contents_modal',
-            as: :result_contents_modal
-        post 'new/result_contents',
-             to: 'reports#result_contents',
-             as: :result_contents
-        post '_save',
-             to: 'reports#save_modal',
-             as: :save_modal
-        post 'destroy', as: :destroy # Destroy multiple entries at once
-      end
-    end
     resources :experiments,
               only: [:new, :create, :edit, :update],
               defaults: { format: 'json' }

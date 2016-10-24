@@ -303,7 +303,6 @@ class SampleDatatable < AjaxDatatablesRails::Base
       super(records)
     end
   end
-#(I18n.t('time.formats.datatables_date')).gsub("\"", '\'')
 
   # A hack that overrides the new_search_contition method default behavior of the ajax-datatables-rails gem
   # now the method checks if the column is the created_at and generate a custom SQL to parse

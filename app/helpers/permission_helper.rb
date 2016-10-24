@@ -69,7 +69,6 @@ module PermissionHelper
       :can_archive_modules,
       :can_view_reports,
       :can_create_new_report,
-      :can_delete_reports,
       :can_create_experiment
     ] do |proxy, *args, &block|
       if args[0]

@@ -2,20 +2,20 @@ class ReportsController < ApplicationController
   include OrganizationsHelper
   # Ignore CSRF protection just for PDF generation (because it's
   # used via target='_blank')
-  protect_from_forgery with: :exception, :except => :generate
+  protect_from_forgery with: :exception,
+                       except: :generate
+
+  before_action :set_user_and_organization
 
   before_action :load_vars, only: [
     :edit,
     :update
   ]
   before_action :load_vars_nested, only: [
-    :index,
     :new,
-    :create,
-    :edit,
     :update,
     :generate,
-    :destroy,
+    :create,
     :save_modal,
     :project_contents_modal,
     :experiment_contents_modal,
@@ -28,7 +28,6 @@ class ReportsController < ApplicationController
     :result_contents
   ]
 
-  before_action :check_view_permissions, only: [:index]
   before_action :check_create_permissions, only: [
     :new,
     :create,
@@ -46,9 +45,8 @@ class ReportsController < ApplicationController
     :step_contents,
     :result_contents
   ]
-  before_action :check_destroy_permissions, only: [:destroy]
 
-  layout "fluid"
+  layout :set_layout
 
   # Initialize markdown parser
   def load_markdown
@@ -62,6 +60,16 @@ class ReportsController < ApplicationController
 
   # Index showing all reports of a single project
   def index
+  end
+
+  def reports_table
+    respond_to do |format|
+      format.json do
+        render json: ::ReportsDatatable.new(view_context,
+                                            @user,
+                                            @organization)
+      end
+    end
   end
 
   # Report grouped by modules
@@ -86,7 +94,7 @@ class ReportsController < ApplicationController
     if continue and @report.save_with_contents(report_contents)
       respond_to do |format|
         format.json {
-          render json: { url: project_reports_path(@project) }, status: :ok
+          render json: { url: reports_path }, status: :ok
         }
       end
     else
@@ -121,7 +129,7 @@ class ReportsController < ApplicationController
     if continue and @report.save_with_contents(report_contents)
       respond_to do |format|
         format.json {
-          render json: { url: project_reports_path(@project) }, status: :ok
+          render json: { url: reports_path }, status: :ok
         }
       end
     else
@@ -148,27 +156,23 @@ class ReportsController < ApplicationController
     report_ids.each do |report_id|
       report = Report.find_by_id(report_id)
 
-      if report.present?
-        report.destroy
-      end
+      report.destroy if report.present? && can_delete_reports(report.project)
     end
 
-    redirect_to project_reports_path(@project)
+    redirect_to reports_path
   end
 
   # Generation action
   # Currently, only .PDF is supported
   def generate
     respond_to do |format|
-      format.pdf {
+      format.pdf do
         @html = params[:html]
-        if @html.blank? then
-          @html = "<h1>No content</h1>"
-        end
-        render pdf: "report",
+        @html = '<h1>No content</h1>' if @html.blank?
+        render pdf: 'report',
           header: { right: '[page] of [topage]' },
-          template: "reports/report.pdf.erb"
-      }
+          template: 'reports/report.pdf.erb'
+      end
     end
   end
 
@@ -182,9 +186,9 @@ class ReportsController < ApplicationController
     if @report.blank?
       @report = Report.new
       @method = :post
-      @url = project_reports_path(@project, format: :json)
+      @url = reports_path(format: :json)
     else
-      @url = project_report_path(@project, @report, format: :json)
+      @url = report_path(@report, format: :json)
     end
 
     if !params.include? :contents
@@ -488,7 +492,7 @@ class ReportsController < ApplicationController
 
   def generate_module_contents_json(my_module)
     res = []
-    if (in_params? :module_steps) && my_module.protocol.present? then
+    if (in_params? :module_steps) && my_module.protocol.present?
       my_module.protocol.completed_steps.each do |step|
         res << generate_new_el(false)
         el = generate_el(
@@ -499,7 +503,7 @@ class ReportsController < ApplicationController
         res << el
       end
     end
-    if in_params? :module_result_assets then
+    if in_params? :module_result_assets
       (my_module.results.select { |r| r.is_asset && r.active? }).each do |result_asset|
         res << generate_new_el(false)
         el = generate_el(
@@ -510,7 +514,7 @@ class ReportsController < ApplicationController
         res << el
       end
     end
-    if in_params? :module_result_tables then
+    if in_params? :module_result_tables
       (my_module.results.select { |r| r.is_table && r.active? }).each do |result_table|
         res << generate_new_el(false)
         el = generate_el(
@@ -521,7 +525,7 @@ class ReportsController < ApplicationController
         res << el
       end
     end
-    if in_params? :module_result_texts then
+    if in_params? :module_result_texts
       load_markdown
       (my_module.results.select { |r| r.is_text && r.active? }).each do |result_text|
         res << generate_new_el(false)
@@ -533,14 +537,14 @@ class ReportsController < ApplicationController
         res << el
       end
     end
-    if in_params? :module_activity then
+    if in_params? :module_activity
       res << generate_new_el(false)
       res << generate_el(
         "reports/elements/my_module_activity_element.html.erb",
         { my_module: my_module, order: :asc }
       )
     end
-    if in_params? :module_samples then
+    if in_params? :module_samples
       res << generate_new_el(false)
       res << generate_el(
         "reports/elements/my_module_samples_element.html.erb",
@@ -553,7 +557,7 @@ class ReportsController < ApplicationController
 
   def generate_step_contents_json(step)
     res = []
-    if in_params? :step_checklists then
+    if in_params? :step_checklists
       step.checklists.each do |checklist|
         res << generate_new_el(false)
         res << generate_el(
@@ -562,7 +566,7 @@ class ReportsController < ApplicationController
         )
       end
     end
-    if in_params? :step_assets then
+    if in_params? :step_assets
       step.assets.each do |asset|
         res << generate_new_el(false)
         res << generate_el(
@@ -571,7 +575,7 @@ class ReportsController < ApplicationController
         )
       end
     end
-    if in_params? :step_tables then
+    if in_params? :step_tables
       step.tables.each do |table|
         res << generate_new_el(false)
         res << generate_el(
@@ -580,7 +584,7 @@ class ReportsController < ApplicationController
         )
       end
     end
-    if in_params? :step_comments then
+    if in_params? :step_comments
       res << generate_new_el(false)
       res << generate_el(
         "reports/elements/step_comments_element.html.erb",
@@ -593,7 +597,7 @@ class ReportsController < ApplicationController
 
   def generate_result_contents_json(result)
     res = []
-    if in_params? :result_comments then
+    if in_params? :result_comments
       res << generate_new_el(true)
       res << generate_el(
         "reports/elements/result_comments_element.html.erb",
@@ -608,7 +612,7 @@ class ReportsController < ApplicationController
   def elements_empty?(elements)
     if elements.blank?
       return true
-    elsif elements.count == 0 then
+    elsif elements.count.zero?
       return true
     elsif elements.count == 1
       el = elements[0]
@@ -618,29 +622,23 @@ class ReportsController < ApplicationController
         return false
       end
     end
-    return false
+    false
+  end
+
+  def set_user_and_organization
+    @user = current_user
+    @organization = current_organization
   end
 
   def load_vars
     @report = Report.find_by_id(params[:id])
-
-    unless @report
-      render_404
-    end
+    @project = @report.project if @report
+    render_404 unless @report
   end
 
   def load_vars_nested
     @project = Project.find_by_id(params[:project_id])
-
-    unless @project
-      render_404
-    end
-  end
-
-  def check_view_permissions
-    unless can_view_reports(@project)
-      render_403
-    end
+    render_404 unless @project
   end
 
   def check_create_permissions
@@ -649,14 +647,14 @@ class ReportsController < ApplicationController
     end
   end
 
-  def check_destroy_permissions
-    unless can_delete_reports(@project)
-      render_403
-    end
+  def set_layout
+    action_name == 'index' ? 'main' : 'fluid'
   end
 
   def report_params
-    params.require(:report).permit(:name, :description, :grouped_by, :report_contents)
+    params.require(:report).permit(:name,
+                                   :description,
+                                   :grouped_by,
+                                   :report_contents)
   end
-
 end

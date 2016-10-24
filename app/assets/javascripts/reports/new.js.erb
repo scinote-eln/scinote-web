@@ -303,6 +303,7 @@ function initializeSaveReport() {
       dataType: "json",
       data: {
         id: reportId,
+        project_id: $('[data-type="project_header"]').attr('data-id'),
         contents: JSON.stringify(constructReportContentsJson())
       },
       success: function(data, status, jqxhr) {
@@ -346,6 +347,11 @@ function initializeSaveReport() {
   // submit the form in the modal body
   saveReportModal.find(".modal-footer button[data-action='save']")
   .click(function(e) {
+    $('<input>',
+      { type: 'hidden',
+        name: 'project_id',
+        value: $('[data-type="project_header"]').attr('data-id')
+      }).appendTo($(SAVE_REPORT_FORM_ID));
     $(SAVE_REPORT_FORM_ID).submit();
   });
 }
@@ -540,6 +546,13 @@ function initializeSidebarNavigation() {
 
   // Call to sidebar function to re-initialize tree functionality
   setupSidebarTree();
+
+  // inject project id in the save form
+  $('<input>',
+    { type: 'hidden',
+      name: 'project_id',
+      value: $('[data-type="project_header"]').attr('data-id')
+    }).appendTo($(SAVE_REPORT_FORM_ID));
 }
 
 /**
