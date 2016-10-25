@@ -74,6 +74,7 @@
       .dataTable({
         processing: true,
         serverSide: true,
+        destroy: true,
         ajax: {
           url: $('#reportsDataTable').attr('data-source'),
           global: false,
@@ -147,13 +148,15 @@
       });
 
       // setup every single row
-      $('.check-report').closest('tr').click(function() {
+      var rows = $('.check-report').closest('tr');
+      rows.unbind('click');
+      rows.click(function() {
         checkAll.prop("checked", false);
         var checkbox = $(this).find('.check-report')
         var id = checkbox.val();
 
-        if (checkbox.checked) {
-          checkbox.checked = false;
+        if ($(checkbox).is(":checked")) {
+          $(checkbox).prop("checked", false);
           $(this)
             .closest('tr')
             .css('backgroundColor', '');
@@ -161,7 +164,7 @@
             checkedReports.push(id);
           }
         } else {
-          checkbox.checked = true;
+          $(checkbox).prop("checked", true);
           $(this)
             .closest('tr')
             .css('backgroundColor', '<%= Constants::COLOR_ALTO %>');
