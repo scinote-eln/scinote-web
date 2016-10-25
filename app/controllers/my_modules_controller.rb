@@ -341,7 +341,6 @@ class MyModulesController < ApplicationController
     if @my_module
       @experiment = @my_module.experiment
       @project = @my_module.experiment.project if @experiment
-      @protocol = @my_module.protocol
     else
       render_404
     end

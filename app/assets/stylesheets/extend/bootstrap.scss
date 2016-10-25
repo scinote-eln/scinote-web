@@ -58,19 +58,6 @@
   float: none;
 }
 
-// link protocol button
-.btn-info {
-  color: #fff !important;
-  background-color: $color-theme-primary !important;
-  border-color: #2385ba !important;
-}
-
-.btn-info:hover {
-  color: #fff !important;
-  background-color: #2793ce !important;
-  border-color: #2384b8 !important;
-}
-
 @media (max-width: 1000px) {
   .navbar-header {
     float: none;

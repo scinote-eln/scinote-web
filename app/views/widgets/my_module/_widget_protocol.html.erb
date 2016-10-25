@@ -1,21 +1,22 @@
+<% protocol = @my_module.protocol %>
 <div class="widget-content">
   <div data-role="protocol-status-bar" style="display: inline;">
 	<div class="panel panel-default panel-protocol-status">
 	  <div class="panel-body">
-	    <% if @protocol.linked? %>
-	      <%= protocol_name(@protocol.parent) %>
+	    <% if protocol.linked? %>
+	      <%= protocol_name(protocol.parent) %>
 	    <% else %>
 	      <%= t("my_modules.protocols.protocol_status_bar.unlinked") %>
 	    <% end %>
 	    &nbsp;
 		<div class="btn-group">
-		  <% if @protocol.unlinked? or @protocol.linked_no_diff? %>
+		  <% if protocol.unlinked? or protocol.linked_no_diff? %>
 		    <a type="button" class="btn btn-info" disabled="disabled">
 		      <span class="glyphicon glyphicon-book"></span>
 		      &nbsp;
-		      <% if @protocol.unlinked? then %>
+		      <% if protocol.unlinked? then %>
 		      	<span class="glyphicon glyphicon-remove-sign"></span>
-		      <% elsif @protocol.linked_no_diff? %>
+		      <% elsif protocol.linked_no_diff? %>
 		      	<span class="glyphicon glyphicon-ok-sign"></span>
 		      <% end %>
 		    </a>
@@ -26,11 +27,11 @@
 		    <a type="button" class="btn btn-warning" disabled="disabled">
 		      <span class="glyphicon glyphicon-book"></span>
 		      &nbsp;
-		      <% if @protocol.newer_than_parent? %>
+		      <% if protocol.newer_than_parent? %>
 		        <span class="glyphicon glyphicon-circle-arrow-down"></span>
-		      <% elsif @protocol.parent_newer? %>
+		      <% elsif protocol.parent_newer? %>
 		        <span class="glyphicon glyphicon-circle-arrow-up"></span>
-		      <% elsif @protocol.parent_and_self_newer? %>
+		      <% elsif protocol.parent_and_self_newer? %>
 		        <span class="glyphicon glyphicon-exclamation-sign"></span>
 		      <% end %>
 		    </a>
@@ -41,7 +42,6 @@
 		</div>
 	  </div>
 	</div>
-	<%= javascript_include_tag("my_modules/protocols/protocol_status_bar") %>
   </div>
 
   <div data-role="steps-container">
@@ -51,7 +51,7 @@
 	  </div>
 	</div>
 	<div id="steps">
-	  <% @protocol.steps.order(:position).each do |step| %>
+	  <% protocol.steps.order(:position).each do |step| %>
 		<div class ="step <%= step.completed? ? "completed" : "not-completed" %>">
 		  <div class="badge-num">
 		    <span class="badge bg-primary size-digit-<%= (step.position + 1).to_s.length %>"><%= step.position + 1 %></span>
@@ -109,7 +109,7 @@
 		                    <% ordered_checklist_items(checklist).each do |checklist_item| %>
 		                      <div class="checkbox">
 		                        <label>
-		                          <% if @protocol.in_module? %>
+		                          <% if protocol.in_module? %>
 		                            <input type="checkbox" value="" <%= "checked" if checklist_item.checked? %> disabled="disabled"/>
 		                          <% else %>
 		                            <input type="checkbox" value="" disabled="disabled" />
@@ -124,7 +124,7 @@
 		            <% end %>
 		          </div>
 
-		          <% if @protocol.in_module? %>
+		          <% if protocol.in_module? %>
 					<% if step.completed? %>
 					<div data-action="complete-step" class="pull-right" data-link-url="<%= toggle_step_state_step_path(step)%>">
 					  <div class="badge-icon bg-primary">
@@ -158,7 +158,7 @@
 		</div>
 	  <% end %>
 	</div>
-	<% if @protocol.steps.count == 0 %>
+	<% if protocol.steps.count == 0 %>
 	  <div data-role="no-steps-text">
 	    <em><%= t("protocols.steps.no_steps") %></em>
 	  </div>
