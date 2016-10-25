@@ -49,13 +49,14 @@ class ReportsDatatable < AjaxDatatablesRails::Base
                       record.id,
                       false,
                       class: 'check-report',
-                      data: { editLink: edit_report_path(record) }),
-        record.name,
+                      data: { editLink: edit_report_path(record),
+                              editable: record.project.active? }),
+        report_name(record),
         record.user.name,
         record.last_modified_by.name,
         I18n.l(record.created_at, format: :full),
         I18n.l(record.updated_at, format: :full),
-        link_to(record.project.name, project_path(record.project))
+        project_link(record)
       ]
     end
   end
@@ -70,4 +71,18 @@ class ReportsDatatable < AjaxDatatablesRails::Base
   end
 
   # ==== Insert 'presenter'-like methods below if necessary
+
+  def report_name(record)
+    archived = "<span class='label label-warning'> \
+    #{I18n.t('projects.reports.index.archived')} </span>"
+
+    "#{record.name} #{archived if record.project.archived?}"
+  end
+
+  def project_link(record)
+    return link_to(record.project.name,
+                   project_path(record.project)) if record.project.active?
+
+    link_to(record.project.name, projects_archive_path)
+  end
 end

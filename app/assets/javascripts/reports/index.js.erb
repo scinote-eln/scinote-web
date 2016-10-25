@@ -133,10 +133,15 @@
       $('.check-report').click(function() {
         checkAll.prop("checked", false);
         var id = $(this).val();
+<<<<<<< HEAD:app/assets/javascripts/reports/index.js.erb
         if (this.checked) {
           $(this)
             .closest('tr')
             .css('backgroundColor', '<%= Constants::COLOR_ALTO %>');
+=======
+
+        if (this.checked && $(this).data('editable')) {
+>>>>>>> a15400aef722d1eacbe3e7799ec1e8487f7c509f:app/assets/javascripts/reports/index.js
           if (_.indexOf(checkedReports, id) === -1) {
             checkedReports.push(id);
           }
