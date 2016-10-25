@@ -317,7 +317,12 @@ function initializeSaveReport() {
         .on("ajax:success", function(e, xhr, opts, data) {
           if (data.status == 200) {
             // Redirect back to index
+
+            // Turn off all hooks related to alert window
             ignoreUnsavedWorkAlert = true;
+            $(window).off('beforeunload');
+            $(document).off('page:before-change');
+
             $(location).attr("href", xhr.url);
           }
         })
@@ -439,9 +444,6 @@ function initializeUnsavedWorkDialog() {
   var alertText = dh.attr('data-unsaved-work-text');
 
   ignoreUnsavedWorkAlert = false;
-  if ( ignoreUnsavedWorkAlert ) {
-    return;
-  }
 
   $(window).on("beforeunload", function() {
     $(window).off('beforeunload');
@@ -451,7 +453,11 @@ function initializeUnsavedWorkDialog() {
 
   $(document).on("page:before-change", function() {
     var exit;
-    exit = confirm(alertText);
+    if (ignoreUnsavedWorkAlert) {
+      exit = true;
+    } else {
+      exit = confirm(alertText);
+    }
     if ( exit ) {
       // We leave the page so remove all listeners
       $(window).off('beforeunload');
