@@ -87,7 +87,9 @@
                 </li>
               <% end %>
             <% end %>
+            <% if current_user.organizations.length > 1 %>
             <li role="separator" class="divider"></li>
+            <% end %>
             <li>
               <%= link_to new_organization_path do %>
                 <span class="glyphicon glyphicon-plus"></span>
