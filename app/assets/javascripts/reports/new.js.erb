@@ -454,10 +454,8 @@ function initializeUnsavedWorkDialog() {
   $(document).on("page:before-change", function() {
     var exit;
     if (ignoreUnsavedWorkAlert) {
-      console.log('TRUE');
       exit = true;
     } else {
-      console.log('FALSE');
       exit = confirm(alertText);
     }
     if ( exit ) {
