@@ -182,7 +182,7 @@ Rails.application.routes.draw do
       get 'description'
       get 'activities_tab' # Activities in tab view for single module
       get 'due_date'
-
+      post 'assigned_samples_index'
       # Tabs ('overview' tab is routed to 'show')
       get 'protocols' # Protocols view for single module
       get 'results' # Results view for single module
