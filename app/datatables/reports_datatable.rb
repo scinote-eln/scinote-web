@@ -73,8 +73,9 @@ class ReportsDatatable < AjaxDatatablesRails::Base
   # ==== Insert 'presenter'-like methods below if necessary
 
   def report_name(record)
-    "#{record.name} \
-    #{I18n.t('projects.reports.index.archived') if record.project.archived?}"
+    "#{record.name} <span class='label label-warning'> \
+    #{I18n.t('projects.reports.index.archived') if record.project.archived?} \
+    </span>"
   end
 
   def project_link(record)

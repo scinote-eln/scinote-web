@@ -242,7 +242,7 @@ en:
 
       print_title: "%{project} | Report"
       index:
-        archived: "[archived]"
+        archived: "archived"
         head_title: "%{organization} | Reports"
         new: "New report"
         edit: "Edit report"
