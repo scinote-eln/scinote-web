@@ -1439,6 +1439,8 @@ en:
         duplicate_title: "Duplicate step"
         complete_title: "Complete step"
         uncomplete_title: "Uncomplete step"
+        complete_info: "Step completed"
+        uncomplete_info: "Step uncompleted"
       new:
         add_step_title: "Add new step"
         tab_checklists: "Checklists"

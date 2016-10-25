@@ -1,2 +1,180 @@
+<% protocol = @my_module.protocol %>
 <div class="widget-content">
+  <div data-role="protocol-status-bar" style="display: inline;">
+	<div class="panel panel-default panel-protocol-status">
+	  <div class="panel-body">
+	    <% if protocol.linked? %>
+	      <%= protocol_name(protocol.parent) %>
+	    <% else %>
+	      <%= t("my_modules.protocols.protocol_status_bar.unlinked") %>
+	    <% end %>
+	    &nbsp;
+		<div class="btn-group">
+		  <% if protocol.unlinked? or protocol.linked_no_diff? %>
+		    <a type="button" class="btn btn-info" disabled="disabled">
+		      <span class="glyphicon glyphicon-book"></span>
+		      &nbsp;
+		      <% if protocol.unlinked? then %>
+		      	<span class="glyphicon glyphicon-remove-sign"></span>
+		      <% elsif protocol.linked_no_diff? %>
+		      	<span class="glyphicon glyphicon-ok-sign"></span>
+		      <% end %>
+		    </a>
+		    <a type="button" class="btn btn-info dropdown-toggle" disabled="disabled">
+		      <span class="caret"></span>
+		    </a>
+		  <% else %>
+		    <a type="button" class="btn btn-warning" disabled="disabled">
+		      <span class="glyphicon glyphicon-book"></span>
+		      &nbsp;
+		      <% if protocol.newer_than_parent? %>
+		        <span class="glyphicon glyphicon-circle-arrow-down"></span>
+		      <% elsif protocol.parent_newer? %>
+		        <span class="glyphicon glyphicon-circle-arrow-up"></span>
+		      <% elsif protocol.parent_and_self_newer? %>
+		        <span class="glyphicon glyphicon-exclamation-sign"></span>
+		      <% end %>
+		    </a>
+		    <a type="button" class="btn btn-warning dropdown-toggle" disabled="disabled">
+		      <span class="caret"></span>
+		    </a>
+		  <% end %>
+		</div>
+	  </div>
+	</div>
+  </div>
+
+  <div data-role="steps-container">
+	<div class="row">
+	  <div class="col-xs-4">
+	    <h2><%= t("protocols.steps.subtitle") %></h2>
+	  </div>
+	</div>
+	<div id="steps">
+	  <% protocol.steps.order(:position).each do |step| %>
+		<div class ="step <%= step.completed? ? "completed" : "not-completed" %>">
+		  <div class="badge-num">
+		    <span class="badge bg-primary size-digit-<%= (step.position + 1).to_s.length %>"><%= step.position + 1 %></span>
+		  </div>
+		  <div class="panel panel-default">
+		    <div class="panel-heading">
+		      <strong><%= step.name %></strong> |
+		      <span><%= raw t("protocols.steps.published_on", timestamp: l(step.created_at, format: :full), user: step.user.full_name) %></span>
+		    </div>
+		    <div class="panel-collapse collapse" id="step-panel-<%= step.id %>" role="tabpanel">
+		      <div class="panel-body">
+		        <div class="row">
+		          <% if step.description.blank? %>
+		            <em><%= t("protocols.steps.no_description") %></em>
+		          <% else %>
+		            <%= step.description %>
+		          <% end %>
+		          <hr>
+		          <div class="row">
+		            <% unless step.tables.blank? then %>
+		              <div class="col-xs-12">
+		                <strong><%= t("protocols.steps.tables") %></strong>
+		                  <% step.tables.each do |table| %>
+		                    <div data-role="hot-table" class="hot-table">
+		                      <%= hidden_field(table, :contents, value: table.contents_utf_8, class: "hot-contents") %>
+		                      <div data-role="step-hot-table" class="step-result-hot-table"></div>
+		                    </div>
+		                  <% end %>
+		              </div>
+		            <% end %>
+		            <% assets = ordered_assets(step) %>
+		            <% unless assets.blank? then %>
+		              <div class="col-xs-12">
+		                <strong><%= t("protocols.steps.files") %></strong>
+		                <ul class="list-unstyled">
+		                  <% assets.each do |asset| %>
+		                    <li>
+		                      <%= image_tag preview_asset_path(asset) if asset.is_image? %>
+		                      <p><%= truncate(asset.file_file_name,
+		                                    length: Constants::FILENAME_TRUNCATION_LENGTH) %></p>
+		                    </li>
+		                  <% end %>
+		                </ul>
+		              </div>
+		            <% end %>
+		            <% unless step.checklists.blank? then %>
+		              <div class="col-xs-12">
+		                <% step.checklists.each do |checklist| %>
+		                  <strong><%= checklist.name %></strong>
+		                  <% if checklist.checklist_items.empty? %>
+		                    </br>
+		                    <%= t("protocols.steps.empty_checklist") %>
+		                    </br>
+		                  <% else %>
+		                    <% ordered_checklist_items(checklist).each do |checklist_item| %>
+		                      <div class="checkbox">
+		                        <label>
+		                          <% if protocol.in_module? %>
+		                            <input type="checkbox" value="" <%= "checked" if checklist_item.checked? %> disabled="disabled"/>
+		                          <% else %>
+		                            <input type="checkbox" value="" disabled="disabled" />
+		                          <% end %>
+		                          <%= checklist_item.text %>
+		                        </label>
+		                      </div>
+		                    <% end %>
+		                  <% end %>
+		                <% end %>
+		              </div>
+		            <% end %>
+		          </div>
+
+		          <% if protocol.in_module? %>
+					<% if step.completed? %>
+					<div data-action="complete-step" class="pull-right" data-link-url="<%= toggle_step_state_step_path(step)%>">
+					  <div class="badge-icon bg-primary">
+					    <span class="glyphicon glyphicon-ok-sign"></span>
+					  </div>
+					  <div class="well well-sm">
+					    <%=t "protocols.steps.options.complete_info" %>
+					  </div>
+					</div>
+					<% elsif !step.completed? %>
+					<div data-action="complete-step" class="pull-right" data-link-url="<%= toggle_step_state_step_path(step)%>">
+					  <div class="badge-icon bg-primary">
+					    <span class="glyphicon glyphicon-remove-sign"></span>
+					  </div>
+					  <div class="well well-sm">
+					    <%=t "protocols.steps.options.uncomplete_info" %>
+					  </div>
+					</div>
+					<% end %>
+		          <% end %>
+
+		        </div>
+		        <% if step.comments.count > 0 %>
+		          <div class="step-comment">
+		            <%= render partial: "my_module_comments/widget_comments.html.erb", locals: { step: step, result: false } %>
+		          </div>
+		        <% end %>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+	  <% end %>
+	</div>
+	<% if protocol.steps.count == 0 %>
+	  <div data-role="no-steps-text">
+	    <em><%= t("protocols.steps.no_steps") %></em>
+	  </div>
+	<% end %>
+  </div>
 </div>
+
+<!-- Libraries for formulas -->
+<%= javascript_include_tag "lodash" %>
+<%= javascript_include_tag "numeral" %>
+<%= javascript_include_tag "numeric" %>
+<%= javascript_include_tag "md5" %>
+<%= javascript_include_tag "jstat" %>
+<%= javascript_include_tag "formula" %>
+<%= javascript_include_tag "parser" %>
+<%= javascript_include_tag "ruleJS" %>
+<%= javascript_include_tag "handsontable.formula" %>
+<%= javascript_include_tag "big.min" %>
+<%= stylesheet_link_tag "handsontable.formula" %>
