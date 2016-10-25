@@ -74,14 +74,21 @@
       .dataTable({
         processing: true,
         serverSide: true,
+        destroy: true,
+        stateSave: true,
         ajax: {
           url: $('#reportsDataTable').attr('data-source'),
           global: false,
-          type: "POST"
+          type: 'POST'
         },
         drawCallback: function() {
           $('#select-all').unbind('click');
         },
+        columnDefs: [{
+          targets: '0',
+          searchable: false,
+          orderable: false,
+        }],
         columns: [
           { data: '0' },
           { data: '1' },
@@ -106,8 +113,17 @@
         checkedReports = [];
         if (this.checked) {
           _.each($('.check-report'), function(row) {
+            $(row)
+              .closest('tr')
+              .css('backgroundColor', '<%= Constants::COLOR_ALTO %>');
             checkedReports.push($(row).attr('value'));
           });
+        } else {
+          _.each($('.check-report'), function(row) {
+            $(row)
+              .closest('tr')
+              .css('backgroundColor', '');
+            });
         }
 
         updateButtons();
@@ -119,10 +135,16 @@
         var id = $(this).val();
 
         if (this.checked && $(this).data('editable')) {
+          $(this)
+            .closest('tr')
+            .css('backgroundColor', '<%= Constants::COLOR_ALTO %>');
           if (_.indexOf(checkedReports, id) === -1) {
             checkedReports.push(id);
           }
         } else {
+          $(this)
+            .closest('tr')
+            .css('backgroundColor', '');
           var idx = _.indexOf(checkedReports, id);
           if (idx !== -1) {
             checkedReports.splice(idx, 1);
@@ -131,6 +153,37 @@
 
         updateButtons();
       });
+
+      // setup every single row
+      var rows = $('.check-report').closest('tr');
+      rows.unbind('click');
+      rows.click(function() {
+        checkAll.prop("checked", false);
+        var checkbox = $(this).find('.check-report')
+        var id = checkbox.val();
+
+        if ($(checkbox).is(":checked")) {
+          $(checkbox).prop("checked", false);
+          $(this)
+            .closest('tr')
+            .css('backgroundColor', '');
+          if (_.indexOf(checkedReports, id) === -1) {
+            checkedReports.push(id);
+          }
+        } else {
+          $(checkbox).prop("checked", true);
+          $(this)
+            .closest('tr')
+            .css('backgroundColor', '<%= Constants::COLOR_ALTO %>');
+          var idx = _.indexOf(checkedReports, id);
+          if (idx !== -1) {
+            checkedReports.splice(idx, 1);
+          }
+        }
+
+        updateButtons();
+      });
+
     });
   }
 
