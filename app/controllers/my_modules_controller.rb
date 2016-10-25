@@ -323,7 +323,7 @@ class MyModulesController < ApplicationController
   end
 
   def toggle_tab
-    toggled = @my_module.toggle_tab(params[:tab])
+    toggled = @my_module.toggle_tab(params[:tab], current_user)
 
     respond_to do |format|
       format.html

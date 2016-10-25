@@ -14,4 +14,16 @@ class MyModuleWidget < ActiveRecord::Base
              class_name: 'User',
              inverse_of: :last_modified_my_module_widgets
   belongs_to :my_module, inverse_of: :my_module_widgets
+
+  def destroy
+    delete
+
+    # Update position on other module widgets of this widget's module
+    my_module.my_module_widgets
+             .where('position > ?', position)
+             .each do |widget|
+      widget.position -= 1
+      widget.save!
+    end
+  end
 end
