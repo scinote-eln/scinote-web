@@ -37,6 +37,11 @@
 				  <% end %>
 	            </div>
 	          </div>
+	          <% if result.comments.count > 0 %>
+	            <div class="result-comment">
+	              <%= render partial: "my_module_comments/widget_comments.html.erb", locals: { result: result } %>
+	            </div>
+	          <% end %>
 	        </div>
 	      </div>
 	    </div>

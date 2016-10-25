@@ -246,11 +246,6 @@ class MyModulesController < ApplicationController
     current_organization_switch(@protocol.organization)
   end
 
-  def protocols_widget
-    @protocol = @my_module.protocol
-    current_organization_switch(@protocol.organization)
-  end
-
   def results
     current_organization_switch(@my_module
                                 .experiment
@@ -346,6 +341,7 @@ class MyModulesController < ApplicationController
     if @my_module
       @experiment = @my_module.experiment
       @project = @my_module.experiment.project if @experiment
+      @protocol = @my_module.protocol
     else
       render_404
     end

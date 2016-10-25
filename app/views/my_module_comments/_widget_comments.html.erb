@@ -9,9 +9,6 @@
   <% elsif !step.blank? then %>
     <% comments_curr = step.comments %>
   <% end %>
-
-
-
   <%  comments_curr.each do |comment| %>
     <% comment_ts = comment.created_at %>
     <li class="comment" data-ts="<%= comment_ts.to_i %>">
