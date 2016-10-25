@@ -360,7 +360,7 @@ class MyModule < ActiveRecord::Base
     { x: 0, y: positions.last[1] + HEIGHT }
   end
 
-  def toggle_tab(tab)
+  def toggle_tab(tab, added_by)
     toggled = true
 
     begin
@@ -373,12 +373,22 @@ class MyModule < ActiveRecord::Base
 
       if shown_tabs.include?(tab)
         if can_uncheck
+          my_module_widgets.where(widget_type: MyModuleWidget.widget_types[tab])
+                           .first.destroy
+
           shown_tabs.delete(tab)
           save
         else
           toggled = false
         end
       else
+        MyModuleWidget.new(
+          widget_type: MyModuleWidget.widget_types[tab],
+          position: my_module_widgets.count,
+          added_by: added_by,
+          my_module: self
+        ).save
+
         shown_tabs << tab
         save
       end

@@ -20,7 +20,7 @@ class CreateMyModuleWidgets < ActiveRecord::Migration
     add_index :my_module_widgets, [:my_module_id, :position], unique: true
     add_index :my_module_widgets, :created_at
 
-    widget_types = { protocol: 0, results: 1, activities: 2, samples: 3 }
+    widget_types = { protocols: 0, results: 1, activities: 2, samples: 3 }
     MyModule.find_each do |mm|
       widget_pos = mm.my_module_widgets.count
       widget_types.each do |wt|
