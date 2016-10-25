@@ -117,7 +117,8 @@
       $('.check-report').click(function() {
         checkAll.prop("checked", false);
         var id = $(this).val();
-        if (this.checked) {
+
+        if (this.checked && $(this).data('editable')) {
           if (_.indexOf(checkedReports, id) === -1) {
             checkedReports.push(id);
           }
