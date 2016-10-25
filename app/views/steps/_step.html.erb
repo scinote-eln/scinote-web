@@ -54,7 +54,7 @@
             <% unless assets.blank? then %>
               <div class="col-xs-12">
                 <strong><%= t("protocols.steps.files") %></strong>
-                <ul>
+                <ul class="list-unstyled">
                   <% assets.each do |asset| %>
                     <li>
                       <% if can_view_or_download_step_assets(@protocol) %>

@@ -1,0 +1,25 @@
+<hr>
+<div class="col-xs-12">
+  <strong><%= t('protocols.steps.comments_tab') %></strong>
+</div>
+<hr>
+<ul class="no-style double-line content-comments">
+  <% if !result.blank? then %>
+    <% comments_curr = result.comments %>
+  <% elsif !step.blank? then %>
+    <% comments_curr = step.comments %>
+  <% end %>
+  <%  comments_curr.each do |comment| %>
+    <% comment_ts = comment.created_at %>
+    <li class="comment" data-ts="<%= comment_ts.to_i %>">
+      <span class="comment-prefix">
+        <em><%=t "projects.reports.elements.result_comments.comment_prefix", user: comment.user.full_name, date: l(comment_ts, format: :full_date), time: l(comment_ts, format: :time) %></em>
+      </span>
+      <span class="comment-message">
+        &nbsp;
+        <%= comment.message %>
+      </span>
+    </li>
+  <% end %>
+</ul>
+<hr>

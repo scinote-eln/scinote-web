@@ -77,11 +77,11 @@
       <% end %>
     <% else %>
       <% if @my_module.description.present? and not @my_module.description.empty? %>
-          <%= @my_module.description %>
-        <% else %>
-          <em><%=t "my_modules.module_header.no_description" %></em>
-        <% end %>
+        <%= @my_module.description %>
+      <% else %>
+        <em><%=t "my_modules.module_header.no_description" %></em>
       <% end %>
+    <% end %>
   </div>
 </div>
 
