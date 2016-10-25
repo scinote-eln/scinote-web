@@ -1,2 +1,62 @@
 <div class="widget-content">
+  <div id="results" data-module-id="<%= @my_module.id %>">
+    <% ordered_result_of(@my_module).each do |result| %>
+	  <% markdown = markdown ||= nil %>
+	  <div class="result">
+	    <div class="badge-num">
+	      <span class="badge bg-primary icon">
+	      <% if result.is_text %>
+	        <span class="glyphicon glyphicon-font"></span>
+	      <% elsif result.is_table %>
+	        <span class="glyphicon glyphicon-list-alt"></span>
+	      <% elsif result.is_asset %>
+	        <span class="glyphicon glyphicon-picture"></span>
+	      <% end %>
+	      </span>
+	    </div>
+	    <div class="panel panel-default">
+	      <div class="panel-heading">
+	        <strong><%= result.name %></strong> |
+	        <span><%= raw t'my_modules.results.published_on', timestamp: l(result.created_at, format: :full), user: result.user.full_name %></span>
+	      </div>
+	      <div class="panel-collapse collapse" id="result-panel-<%= result.id %>" role="tabpanel">
+	        <div class="panel-body">
+	          <div class="row">
+	            <div class="col-xs-12">
+	              <% if result.is_text %>
+					<%= result.result_text.text %>
+				  <% elsif result.is_table %>
+				    <div class="hot-table">
+					  <%= hidden_field(result.table, :contents, value: result.table.contents_utf_8, class: "hot-contents" ) %>
+					  <div class="step-result-hot-table">
+					  </div>
+					</div>
+				  <% elsif result.is_asset %>
+				    <%= image_tag(preview_asset_path result.asset) if result.asset.is_image? %>
+  					<p><%= result.asset.file_file_name %></p>
+				  <% end %>
+	            </div>
+	          </div>
+	        </div>
+	      </div>
+	    </div>
+	  </div>
+    <% end %>
+  </div>
 </div>
+
+<%= javascript_include_tag "handsontable.full.min" %>
+<%= javascript_include_tag "widgets/my_module/widget_results" %>
+
+<!-- Libraries for formulas -->
+<%= javascript_include_tag "lodash" %>
+<%= javascript_include_tag "numeral" %>
+<%= javascript_include_tag "numeric" %>
+<%= javascript_include_tag "md5" %>
+<%= javascript_include_tag "jstat" %>
+<%= javascript_include_tag "formula" %>
+<%= javascript_include_tag "parser" %>
+<%= javascript_include_tag "ruleJS" %>
+<%= javascript_include_tag "handsontable.formula" %>
+<%= javascript_include_tag "big.min" %>
+<%= stylesheet_link_tag "handsontable.formula" %>
