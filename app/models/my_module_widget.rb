@@ -1,6 +1,8 @@
 class MyModuleWidget < ActiveRecord::Base
   enum widget_type: Constants::MY_MODULE_WIDGET_TYPES
 
+  after_destroy :update_other_widget_positions
+
   validates :widget_type, presence: true
   validates :position,
             presence: true,
@@ -15,9 +17,9 @@ class MyModuleWidget < ActiveRecord::Base
              inverse_of: :last_modified_my_module_widgets
   belongs_to :my_module, inverse_of: :my_module_widgets
 
-  def destroy
-    delete
+  private
 
+  def update_other_widget_positions
     # Update position on other module widgets of this widget's module
     my_module.my_module_widgets
              .where('position > ?', position)
