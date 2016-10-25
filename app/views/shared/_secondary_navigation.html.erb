@@ -143,14 +143,12 @@
             %>
           <% end %>
           <% if can_view_module_activities(@my_module) %>
-            <%= my_module_tab_li(
-                  @my_module,
-                  'activities',
-                  module_activities?,
-                  'glyphicon-equalizer',
-                  { id: 'activities-nav-tab' }
-                )
-            %>
+            <li id="activities-nav-tab" class="<%= "active" if module_activities? %>">
+              <a href="<%= activities_my_module_path(@my_module) %>" title="<%= t('nav2.modules.activities') %>">
+                <span class="hidden-sm hidden-md"><%= t('nav2.modules.activities') %></span>
+                <span class="hidden-xs hidden-lg glyphicon glyphicon-equalizer"></span>
+              </a>
+            </li>
           <% end %>
           <% if can_view_module_samples(@my_module) %>
             <%= my_module_tab_li(
@@ -178,7 +176,12 @@
                 </li>
                 <%= my_module_tab_selector_tab_li(@my_module, 'protocols') %>
                 <%= my_module_tab_selector_tab_li(@my_module, 'results') %>
-                <%= my_module_tab_selector_tab_li(@my_module, 'activities') %>
+                <li class="disabled">
+                  <a href="#">
+                    <input type="checkbox" checked="checked" disabled="disabled">
+                    <%= t('nav2.modules.activities') %>
+                  </a>
+                </li>
                 <%= my_module_tab_selector_tab_li(@my_module, 'samples') %>
                 <li style="display: none;" data-hook="module-tab-selector"></li>
               </ul>
