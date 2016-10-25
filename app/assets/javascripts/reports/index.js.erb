@@ -75,14 +75,20 @@
         processing: true,
         serverSide: true,
         destroy: true,
+        stateSave: true,
         ajax: {
           url: $('#reportsDataTable').attr('data-source'),
           global: false,
-          type: "POST"
+          type: 'POST'
         },
         drawCallback: function() {
           $('#select-all').unbind('click');
         },
+        columnDefs: [{
+          targets: '0',
+          searchable: false,
+          orderable: false,
+        }],
         columns: [
           { data: '0' },
           { data: '1' },
