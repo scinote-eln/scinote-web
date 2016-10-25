@@ -61,6 +61,7 @@ Rails.application.config.assets.precompile += %w(assets.js)
 Rails.application.config.assets.precompile += %w(comments.js)
 Rails.application.config.assets.precompile += %w(projects/show.js)
 Rails.application.config.assets.precompile += %w(notifications.js)
+Rails.application.config.assets.precompile += %w(widgets/my_module/widget_samples.js)
 
 # Libraries needed for Handsontable formulas
 Rails.application.config.assets.precompile += %w(lodash.js)

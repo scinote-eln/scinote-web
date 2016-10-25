@@ -8,7 +8,7 @@ class MyModulesController < ApplicationController
     :samples, :activities, :activities_tab,
     :assign_samples, :unassign_samples,
     :delete_samples,
-    :samples_index, :archive, :toggle_tab
+    :samples_index, :archive, :toggle_tab, :assigned_samples_index
   ]
   before_action :load_markdown, only: [ :results ]
   before_action :load_vars_nested, only: [:new, :create]
@@ -319,6 +319,19 @@ class MyModulesController < ApplicationController
       format.json {
         render json: ::SampleDatatable.new(view_context, @organization, nil, @my_module)
       }
+    end
+  end
+
+  def assigned_samples_index
+    @organization = @my_module.experiment.project.organization
+
+    respond_to do |format|
+      format.html
+      format.json do
+        render json: ::WidgetSamplesDatatable.new(view_context,
+                                                  @organization,
+                                                  @my_module)
+      end
     end
   end
 
