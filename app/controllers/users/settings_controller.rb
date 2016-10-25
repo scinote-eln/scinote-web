@@ -11,7 +11,8 @@ class Users::SettingsController < ApplicationController
     :tutorial,
     :reset_tutorial,
     :notifications_settings,
-    :user_current_organization
+    :user_current_organization,
+    :destroy_user_organization
   ]
 
   before_action :check_organization_permission, only: [
@@ -392,7 +393,7 @@ class Users::SettingsController < ApplicationController
                 # the user from the organization)
                 new_owner = current_user
               end
-
+              reset_user_current_organization(@user_org)
               @user_org.destroy(new_owner)
             end
           rescue Exception
@@ -597,5 +598,12 @@ class Users::SettingsController < ApplicationController
     if target_user.assignments_notification
       UserNotification.create(notification: notification, user: target_user)
     end
+  end
+
+  def reset_user_current_organization(user_org)
+    ids = user_org.user.organizations_ids
+    ids -= [user_org.organization.id]
+    user_org.user.current_organization_id = ids.first
+    user_org.user.save
   end
 end
