@@ -200,7 +200,7 @@ class Constants
   DEFAULT_PRIVATE_ORG_NAME = 'My projects'.freeze
 
   # Task widget types. Should not be freezed, as modules might append to this.
-  MY_MODULE_WIDGET_TYPES = { protocol: 0, results: 1, activities: 2,
+  MY_MODULE_WIDGET_TYPES = { protocols: 0, results: 1, activities: 2,
                              samples: 3 }
   ACTIVITY_WIDGET_MAX_ACTIVITIES = 20
 

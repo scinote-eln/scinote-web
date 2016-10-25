@@ -3,6 +3,7 @@ class MyModule < ActiveRecord::Base
 
   before_create :create_blank_protocol
   before_create :create_empty_shown_tabs
+  after_create :create_empty_activities_widget
 
   auto_strip_attributes :name, :description, nullify: false
   validates :name,
@@ -329,6 +330,30 @@ class MyModule < ActiveRecord::Base
       protocol.save
     end
 
+    # Also clone widgets
+    my_module_widgets.find_each do |widget|
+      # A dirty dirty hack - we need to check if an existing widget of
+      # the same type already exists, and in that case, not create it
+      # (this should go out once widgets are more fully-fledged and
+      # decoupled from tabs)
+      already_present = false
+      clone.my_module_widgets.find_each do |cwidget|
+        if cwidget.widget_type == widget.widget_type
+          already_present = true
+          break
+        end
+      end
+
+      unless already_present
+        MyModuleWidget.create(
+          widget_type: widget.widget_type,
+          position: widget.position,
+          added_by: current_user,
+          my_module: clone
+        )
+      end
+    end
+
     return clone
   end
 
@@ -360,7 +385,7 @@ class MyModule < ActiveRecord::Base
     { x: 0, y: positions.last[1] + HEIGHT }
   end
 
-  def toggle_tab(tab)
+  def toggle_tab(tab, added_by)
     toggled = true
 
     begin
@@ -375,10 +400,24 @@ class MyModule < ActiveRecord::Base
         if can_uncheck
           shown_tabs.delete(tab)
           save
+
+          # This is only temporary - with dynamic widget types, this
+          # should be removed
+          my_module_widgets.where(widget_type: MyModuleWidget.widget_types[tab])
+                           .first.destroy
         else
           toggled = false
         end
       else
+        # This is only temporary - with dynamic widget types, this
+        # should be removed
+        MyModuleWidget.new(
+          widget_type: MyModuleWidget.widget_types[tab],
+          position: my_module_widgets.count,
+          added_by: added_by,
+          my_module: self
+        ).save
+
         shown_tabs << tab
         save
       end
@@ -400,6 +439,14 @@ class MyModule < ActiveRecord::Base
     unless shown_tabs.include?(tab)
       shown_tabs << tab
       save
+
+      # Also create a widget (a temporary fix)
+      MyModuleWidget.create(
+        widget_type: MyModuleWidget.widget_types[tab],
+        position: my_module_widgets.count,
+        added_by: created_by, # temp, this is not very useful!
+        my_module: self
+      )
     end
   rescue StandardError
   end
@@ -429,5 +476,14 @@ class MyModule < ActiveRecord::Base
 
   def create_empty_shown_tabs
     self.shown_tabs = [] if shown_tabs.nil?
+  end
+
+  def create_empty_activities_widget
+    MyModuleWidget.create(
+      widget_type: MyModuleWidget.widget_types[:activities],
+      position: 0,
+      added_by: created_by, # temp, this is not very useful!
+      my_module: self
+    )
   end
 end

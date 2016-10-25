@@ -3,14 +3,6 @@ class MyModuleWidgetsController < ApplicationController
   before_action :check_destroy_permissions, only: [:destroy]
 
   def destroy
-    # Update position on other module widgets of this module
-    @my_module.my_module_widgets
-              .where('position > ?', @widget.position)
-              .each do |widget|
-      widget.position = widget.position - 1
-      widget.save
-    end
-
     @widget.destroy
     update_my_module_ts(@widget)
 
