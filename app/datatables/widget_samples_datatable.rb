@@ -1,5 +1,3 @@
-require 'active_record'
-
 class WidgetSamplesDatatable < AjaxDatatablesRails::Base
   include SamplesHelper
 

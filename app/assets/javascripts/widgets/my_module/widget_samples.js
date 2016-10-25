@@ -1,6 +1,6 @@
 //= require datatables
 $('#samples').DataTable({
-  order: [[0, 'desc']],
+  order: [[0, 'asc']],
   dom: "RB<'row'<'col-sm-9-custom toolbar'l><'col-sm-3-custom'f>>ti",
   stateSave: false,
   buttons: [],
@@ -17,19 +17,7 @@ $('#samples').DataTable({
     fixedColumnsLeft: 1000000 // Disable reordering
   },
   columnDefs: [{
-    targets: 0,
-    sWidth: '1%'
-  }, {
-    targets: 1,
-    sWidth: '1%'
-  }, {
-    targets: 2,
-    sWidth: '1%'
-  }, {
-    targets: 3,
-    sWidth: '1%'
-  }, {
-    targets: 4,
+    targets: [0, 1, 2, 3, 4],
     sWidth: '1%'
   }],
   columns: (function() {
