@@ -393,7 +393,7 @@ class Users::SettingsController < ApplicationController
                 # the user from the organization)
                 new_owner = current_user
               end
-
+              reset_user_current_organization(@user_org)
               @user_org.destroy(new_owner)
             end
           rescue Exception
@@ -402,7 +402,6 @@ class Users::SettingsController < ApplicationController
         end
 
       if !invalid
-        reset_current_organization
         if params[:leave] then
           flash[:notice] = I18n.t(
             "users.settings.organizations.index.leave_flash",
@@ -601,14 +600,10 @@ class Users::SettingsController < ApplicationController
     end
   end
 
-  # checks if the user is still in the current organization
-  def reset_current_organization
-    if @user.organizations_ids.exclude? @user.current_organization_id
-      @user.current_organization_id = @user.organizations_ids.first
-    end
+  def reset_user_current_organization(user_org)
+    ids = user_org.user.organizations_ids
+    ids -= [user_org.organization.id]
+    user_org.user.current_organization_id = ids.first
+    user_org.user.save
   end
-
-  # def reset_current_organization_of_removed_users
-  #
-  # end
 end
