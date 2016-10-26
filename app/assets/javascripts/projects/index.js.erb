@@ -330,125 +330,152 @@
 
     // Initialize first-time tutorial
     if (Cookies.get('tutorial_data')) {
-      var tutorialData = JSON.parse(Cookies.get('tutorial_data'));
-      var goToStep = 1;
-      var demoProjectId = tutorialData[0].project;
-      if (Cookies.get('current_tutorial_step')) {
-        goToStep = parseInt(Cookies.get('current_tutorial_step'), 10);
-      }
-      var demoProject = $("#" + demoProjectId);
-      if (goToStep < 4) {
-        var projectOptionsTutorial = $("#projects-toolbar").attr("data-project-options-step-text");
-        demoProject.attr('data-step', '3');
-        demoProject.attr('data-intro', projectOptionsTutorial);
-        demoProject.attr('data-tooltipClass', 'custom next-page-link');
-
-        if (demoProject.offset().top > window.innerHeight / 2) {
-          demoProject.attr('data-position', 'top');
-        } // Otherwise show bottom
-
-        var $introjs = introJs();
-        $introjs
-          .setOptions({
-            overlayOpacity: '0.2',
-            hidePrev: true,
-            nextLabel: 'Next',
-            prevLabel: 'Back',
-            doneLabel: 'End tutorial',
-            skipLabel: 'End tutorial',
-            showBullets: false,
-            showStepNumbers: false,
-            exitOnOverlayClick: false,
-            exitOnEsc: false,
-            disableInteraction: true,
-            tooltipClass: 'custom',
-            tooltipPosition: 'right'
-          })
-          .goToStep(goToStep)
-          .onafterchange(function (tarEl) {
-            Cookies.set('current_tutorial_step', this._currentStep+1);
-            if (this._currentStep == 2) {
-              // Go to project canvas
-              setTimeout(function() {
-                $('.next-page-link a.introjs-nextbutton')
-                  .removeClass('introjs-disabled')
-                  .attr('href', $('#' + demoProjectId + '-project-canvas-link').attr('href'));
-
-                // Disabling interactions for individual steps is
-                // not (yet) possible in intro.js
-                $(".introjs-disableInteraction").remove();
-              }, 500);
-            }
-          })
-          .start();
-
-        // Destroy first-time tutorial cookies when skip tutorial
-        // or end tutorial is clicked
-        $('.introjs-skipbutton').each(function (){
-          $(this).click(function (){
-            Cookies.remove('tutorial_data');
-            Cookies.remove('current_tutorial_step');
-            restore_after_tutorial();
-          });
+      // Check if we are not in the middle of tutorial
+      if (!Cookies.get('current_tutorial_step') ||
+        parseInt(Cookies.get('current_tutorial_step'), 10) === 1) {
+        $('#pre-tutorial-modal').on('hidden.bs.modal', function() {
+          runTutorial();
         });
-
-        window.onresize = function() {
-          if (goToStep == 3) {
-            introJs().refresh();
-          }
-        };
+        // Get and show one time popup
+        $.get('pre_tutorial_modal', function(data) {
+          $('#pre-tutorial-modal').html(data);
+        });
+        $('#pre-tutorial-modal').modal({backdrop: 'static', keyboard: false});
+      } else {
+        // Seems like we are in the running tutorial, so just continue
+        runTutorial();
       }
-      else if (goToStep > 18) {
-        var archiveProjectTutorial = $("#projects-toolbar").attr("data-archive-project-step-text");
-        var goodbye_message = $("#projects-toolbar").attr("data-goodbye-tutorial");
-        Cookies.set('current_tutorial_step', '20');
-        var position = "right";
-        if (demoProject.offset().left > window.innerWidth / 2 || window.innerWidth < demoProject.width() + 100) {
-          if (demoProject.offset().top > 500 && demoProject.offset().top > window.innerHeight / 2) {
-            position = "top";
-          } else {
-            position = "bottom";
+    }
+  }
+
+  function runTutorial() {
+    var tutorialData = JSON.parse(Cookies.get('tutorial_data'));
+    var goToStep = 1;
+    var demoProjectId = tutorialData[0].project;
+    if (Cookies.get('current_tutorial_step')) {
+      goToStep = parseInt(Cookies.get('current_tutorial_step'), 10);
+    }
+    var demoProject = $('#' + demoProjectId);
+    if (goToStep < 4) {
+      var projectOptionsTutorial =
+        $('#projects-toolbar').attr('data-project-options-step-text');
+      demoProject.attr('data-step', '3');
+      demoProject.attr('data-intro', projectOptionsTutorial);
+      demoProject.attr('data-tooltipClass', 'custom next-page-link');
+
+      if (demoProject.offset().top > window.innerHeight / 2) {
+        demoProject.attr('data-position', 'top');
+      } // Otherwise show bottom
+
+      var $introjs = introJs();
+      $introjs
+        .setOptions({
+          overlayOpacity: '0.2',
+          hidePrev: true,
+          nextLabel: 'Next',
+          prevLabel: 'Back',
+          doneLabel: 'End tutorial',
+          skipLabel: 'End tutorial',
+          showBullets: false,
+          showStepNumbers: false,
+          exitOnOverlayClick: false,
+          exitOnEsc: false,
+          disableInteraction: true,
+          tooltipClass: 'custom',
+          tooltipPosition: 'right'
+        })
+        .goToStep(goToStep)
+        .onafterchange(function() {
+          Cookies.set('current_tutorial_step', this._currentStep + 1);
+          if (this._currentStep === 2) {
+            // Go to project canvas
+            setTimeout(function() {
+              $('.next-page-link a.introjs-nextbutton')
+                .removeClass('introjs-disabled')
+                .attr('href',
+                  $('#' + demoProjectId + '-project-canvas-link')
+                    .attr('href'));
+
+              // Disabling interactions for individual steps is
+              // not (yet) possible in intro.js
+              $('.introjs-disableInteraction').remove();
+            }, 500);
           }
+        })
+        .start();
+
+      // Destroy first-time tutorial cookies when skip tutorial
+      // or end tutorial is clicked
+      $('.introjs-skipbutton').each(function() {
+        $(this).click(function() {
+          Cookies.remove('tutorial_data');
+          Cookies.remove('current_tutorial_step');
+          restore_after_tutorial();
+        });
+      });
+
+      window.onresize = function() {
+        if (goToStep === 3) {
+          introJs().refresh();
         }
-
-        introJs()
-          .setOptions({
-            steps: [{
-              element: document.getElementById(demoProjectId),
-              intro: archiveProjectTutorial,
-              position: position
-            },{
-              element: document.getElementsByClassName("avatar")[0],
-              intro: goodbye_message
-            }],
-            overlayOpacity: '0.2',
-            doneLabel: 'Start using sciNote',
-            nextLabel: 'Next',
-            skipLabel: 'End tutorial',
-            showBullets: false,
-            showStepNumbers: false,
-            disableInteraction: true,
-            exitOnOverlayClick: false,
-            exitOnEsc: false,
-            tooltipClass: 'custom next-page-link'
-          })
-          .oncomplete(function () {
-            Cookies.remove('tutorial_data');
-            Cookies.remove('current_tutorial_step');
-            restore_after_tutorial();
-          })
-          .start();
-
-        window.onresize = function() {
-          switch (position) {
-            case "right":
-              $(".introjs-tooltip").css("left", (demoProject.width() + 20)  + "px");
-              break;
-            default:
-              $(".introjs-tooltip").css("left", (demoProject.width()/2 - $(".introjs-tooltip").width()/2)  + "px");
-          }
-        };
+      };
+    } else if (goToStep > 18) {
+      var archiveProjectTutorial = $('#projects-toolbar')
+        .attr('data-archive-project-step-text');
+      var goodbyeMessage = $('#projects-toolbar')
+        .attr('data-goodbye-tutorial');
+      Cookies.set('current_tutorial_step', '20');
+      var position = 'right';
+      if (demoProject.offset().left > window.innerWidth / 2 ||
+        window.innerWidth < demoProject.width() + 100) {
+        if (demoProject.offset().top > 500 &&
+          demoProject.offset().top > window.innerHeight / 2) {
+          position = 'top';
+        } else {
+          position = 'bottom';
+        }
       }
+
+      introJs()
+        .setOptions({
+          steps: [{
+            element: document.getElementById(demoProjectId),
+            intro: archiveProjectTutorial,
+            position: position
+          }, {
+            element: document.getElementsByClassName('avatar')[0],
+            intro: goodbyeMessage
+          }],
+          overlayOpacity: '0.2',
+          doneLabel: 'Start using sciNote',
+          nextLabel: 'Next',
+          skipLabel: 'End tutorial',
+          showBullets: false,
+          showStepNumbers: false,
+          disableInteraction: true,
+          exitOnOverlayClick: false,
+          exitOnEsc: false,
+          tooltipClass: 'custom next-page-link'
+        })
+        .oncomplete(function() {
+          Cookies.remove('tutorial_data');
+          Cookies.remove('current_tutorial_step');
+          restore_after_tutorial();
+        })
+        .start();
+
+      window.onresize = function() {
+        switch (position) {
+          case 'right':
+            $('.introjs-tooltip').css('left',
+              (demoProject.width() + 20) + 'px');
+            break;
+          default:
+            $('.introjs-tooltip').css('left',
+              (demoProject.width() / 2 -
+                $('.introjs-tooltip').width() / 2) + 'px');
+        }
+      };
     }
   }
 

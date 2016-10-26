@@ -29,6 +29,14 @@ class ApplicationController < ActionController::Base
     Organization.find_by_id(current_user.current_organization_id)
   end
 
+  def pre_tutorial_modal
+    respond_to do |format|
+      format.html do
+        render partial: 'users/pre_tutorial_modal'
+      end
+    end
+  end
+
   protected
 
   def log(message)

@@ -10,6 +10,9 @@ Rails.application.routes.draw do
   get "forbidden", :to => "application#forbidden", as: "forbidden"
   get "not_found", :to => "application#not_found", as: "not_found"
 
+  # Pre tutorial modal
+  get "pre_tutorial_modal", :to => "application#pre_tutorial_modal", as: "pre_tutorial_modal"
+
   # Settings
   get "users/settings/preferences", to: "users/settings#preferences", as: "preferences"
   put "users/settings/preferences", to: "users/settings#update_preferences", as: "update_preferences"
