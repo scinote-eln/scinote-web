@@ -1455,26 +1455,26 @@ html.turbolinks-progress-bar::before {
 }
 
 //edit avatar
-#avatar-container {
-  width: 100px;
+.avatar-container {
   height: 100px;
   position: relative;
+  width: 100px;
 }
 
-#avatar-image,
-#avatar-edit {
-  width: 100%;
+.avatar-image,
+.avatar-edit {
   height: 100%;
   position: absolute;
+  width: 100%;
 }
 
-#avatar-edit {
-  z-index: 10;
-  opacity: 0.8;
+.avatar-edit {
   margin-top: 70px;
+  opacity: .8;
+  z-index: 10;
 
   .btn-greyed {
-    border-radius: 0em;
+    border-radius: 0;
     width: 100px;
   }
 }

@@ -15,11 +15,11 @@
       <div class="form-group">
         <%= f.label t("users.registrations.edit.avatar_label") %><br />
         <% @user_avatar_url ||= avatar_path(current_user, :thumb) %>
-        <div id="avatar-container">
-          <div id="avatar-image">
+        <div class="avatar-container">
+          <div class="avatar-image">
             <%= image_tag @user_avatar_url %>
           </div>
-          <div id="avatar-edit">
+          <div class="avatar-edit">
             <a href="#" class="btn btn-greyed btn-sm" data-action="edit">
               <span class="glyphicon glyphicon-pencil"></span>
               <%=t "users.registrations.edit.avatar_btn" %>
