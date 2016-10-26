@@ -1453,3 +1453,28 @@ html.turbolinks-progress-bar::before {
     display: inline;
   }
 }
+
+//edit avatar
+#avatar-container {
+  width: 100px;
+  height: 100px;
+  position: relative;
+}
+
+#avatar-image,
+#avatar-edit {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+}
+
+#avatar-edit {
+  z-index: 10;
+  opacity: 0.8;
+  margin-top: 70px;
+
+  .btn-greyed {
+    border-radius: 0em;
+    width: 100px;
+  }
+}
