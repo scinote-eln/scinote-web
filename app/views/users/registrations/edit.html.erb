@@ -15,17 +15,19 @@
       <div class="form-group">
         <%= f.label t("users.registrations.edit.avatar_label") %><br />
         <% @user_avatar_url ||= avatar_path(current_user, :thumb) %>
-        <div class="avatar-container">
-          <div class="avatar-image">
-            <%= image_tag @user_avatar_url %>
+        <a href="#" data-action="edit">
+          <div class="avatar-container">
+            <div class="avatar-image">
+              <%= image_tag @user_avatar_url %>
+            </div>
+            <div class="avatar-edit">
+              <div class="btn btn-greyed btn-sm">
+                <span class="glyphicon glyphicon-pencil"></span>
+                <%=t "users.registrations.edit.avatar_btn" %>
+              </div>
+            </div>
           </div>
-          <div class="avatar-edit">
-            <a href="#" class="btn btn-greyed btn-sm" data-action="edit">
-              <span class="glyphicon glyphicon-pencil"></span>
-              <%=t "users.registrations.edit.avatar_btn" %>
-            </a>
-          </div>
-        </div>
+        </a>
       </div>
     </div>
     <div data-part="edit" style="display: none;">
