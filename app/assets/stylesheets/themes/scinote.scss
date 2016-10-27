@@ -1456,28 +1456,28 @@ html.turbolinks-progress-bar::before {
 
 //edit avatar
 .avatar-container {
+  background-color: lighten($color-concrete, 2%);
   height: 100px;
   position: relative;
   width: 100px;
-  background-color: lighten($color-concrete, 2%);
 }
 
-.avatar-container:hover .avatar-edit{
-  display : block;
+.avatar-container:hover .avatar-edit {
+  display: block;
 }
 
 .avatar-image {
+  left: 50%;
   position: absolute;
   top: 50%;
-  left: 50%;
-  transform: translate(-50%,-50%);
+  transform: translate(-50%, -50%);
 }
 
 .avatar-edit {
   display: none;
-  position: absolute;
   margin-top: 70%;
   opacity: .8;
+  position: absolute;
   z-index: 10;
 
   .btn-greyed {
