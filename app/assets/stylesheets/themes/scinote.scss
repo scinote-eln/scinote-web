@@ -744,6 +744,17 @@ a[data-toggle="tooltip"] {
   }
 }
 
+.user-statistics {
+  li {
+    height: 100px;
+    margin: 15px;
+    padding-bottom: 15px;
+    padding-left: 10px;
+    padding-right: 10px;
+    width: 100px;
+  }
+}
+
 /** Protocols management */
 .breadcrumb-protocols-manager {
   overflow: visible;

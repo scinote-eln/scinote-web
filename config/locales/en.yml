@@ -1117,6 +1117,12 @@ en:
         head_title: "Sign up"
         team_name_label: "Team name"
         team_name_help: "Team name is required in order to create your own team."
+    statistics:
+      title: "Statistics"
+      team: "Team"
+      project: "Project"
+      experiment: "Experiment"
+      protocol: "Protocol"
     settings:
       changed_org_flash: "You are working on %{team} now!"
       changed_org_error_flash: "Something went wrong! Try again later."
