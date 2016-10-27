@@ -1459,17 +1459,24 @@ html.turbolinks-progress-bar::before {
   height: 100px;
   position: relative;
   width: 100px;
+  background-color: lighten($color-concrete, 2%);
 }
 
-.avatar-image,
-.avatar-edit {
-  height: 100%;
+.avatar-container:hover .avatar-edit{
+  display : block;
+}
+
+.avatar-image {
   position: absolute;
-  width: 100%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
 }
 
 .avatar-edit {
-  margin-top: 70px;
+  display: none;
+  position: absolute;
+  margin-top: 70%;
   opacity: .8;
   z-index: 10;
 
