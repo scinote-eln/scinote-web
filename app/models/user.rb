@@ -263,6 +263,20 @@ class User < ActiveRecord::Base
     organizations.pluck(:id)
   end
 
+  # Returns a hash with user statistics
+  def statistics
+    statistics = {}
+    statistics[:number_of_teams] = organizations.count
+    statistics[:number_of_projects] = projects.count
+    number_of_experiments = 0
+    projects.find_each do |pr|
+      number_of_experiments += pr.experiments.count
+    end
+    statistics[:number_of_experiments] = number_of_experiments
+    statistics[:number_of_protocols] = added_protocols.count
+    statistics
+  end
+
   protected
 
   def time_zone_check
