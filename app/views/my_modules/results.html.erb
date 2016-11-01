@@ -10,6 +10,10 @@
     <button class="btn btn-greyed" id="results-expand-btn">
       <span class="glyphicon glyphicon-collapse-down"></span>
       <span class="hidden-xs-custom"><%= t'my_modules.results.expand_label' %></button></span>
+    <% if can_view_module_archive(@my_module) then %>
+      <a class="btn btn-default" href="<%= archive_my_module_url(@my_module) %>">
+      <span class="glyphicon glyphicon-briefcase" title="<%= t'nav2.modules.archive' %>"></span></a>
+    <% end %>
   </div>
 
   <% if can_create_result_text_in_module(@my_module) or
