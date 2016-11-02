@@ -1095,7 +1095,7 @@ en:
         head_title: "My profile"
         title: "My profile"
         avatar_label: "Avatar"
-        avatar_btn: "Change avatar"
+        avatar_btn: "Edit avatar"
         avatar_title: "Change avatar"
         avatar_edit_label: "Upload new avatar file"
         avatar_submit: "Upload"

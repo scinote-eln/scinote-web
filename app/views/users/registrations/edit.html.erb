@@ -5,9 +5,32 @@
     <h2><%=t "users.registrations.edit.title" %></h2>
 
     <% if not resource.errors.empty? %>
-    <div class="alert alert-danger">
-    <%= devise_error_messages! %>
-    </div>
+      <div class="alert alert-danger">
+        <%= devise_error_messages! %>
+      </div>
+    <% end %>
+
+    <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, "data-for" => "avatar" }) do |f| %>
+      <%= hidden_field_tag "user[change_avatar]", "true" %>
+      <div data-part="view">
+        <div class="form-group">
+          <%= f.label t("users.registrations.edit.avatar_label") %><br />
+          <% @user_avatar_url ||= avatar_path(current_user, :thumb) %>
+          <a href="#" data-action="edit">
+            <div class="avatar-container">
+              <div class="avatar-image">
+                <%= image_tag @user_avatar_url %>
+              </div>
+              <div class="avatar-edit">
+                <div class="btn btn-greyed btn-sm">
+                  <span class="glyphicon glyphicon-pencil"></span>
+                  <%=t "users.registrations.edit.avatar_btn" %>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
     <% end %>
 
     <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, "data-for" => "avatar" }) do |f| %>
