@@ -5,9 +5,9 @@
 <hr>
 <ul class="no-style double-line content-comments">
   <% if !result.blank? then %>
-    <% comments_curr = result.comments %>
+    <% comments_curr = result.comments.order(created_at: :desc) %>
   <% elsif !step.blank? then %>
-    <% comments_curr = step.comments %>
+    <% comments_curr = step.comments.order(created_at: :desc) %>
   <% end %>
   <%  comments_curr.each do |comment| %>
     <% comment_ts = comment.created_at %>
