@@ -27,7 +27,7 @@ class MyModulesController < ApplicationController
   before_action :check_unassign_samples_permissions, only: [:unassign_samples]
   before_action :check_toggle_tab_permissions, only: [:toggle_tab]
   before_action :check_if_tab_is_shown,
-                only: [:protocols, :results, :activities, :samples]
+                only: [:protocols, :results, :samples]
 
   layout "fluid"
 
