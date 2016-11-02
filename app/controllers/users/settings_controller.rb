@@ -410,9 +410,9 @@ class Users::SettingsController < ApplicationController
           flash.keep(:notice)
         end
         generate_notification(@user_organization.user,
-                            @user_org.user,
-                            @user_org.organization,
-                            false)
+                              @user_org.user,
+                              @user_org.organization,
+                              false)
         format.json {
           render json: {
             status: :ok
@@ -585,15 +585,15 @@ class Users::SettingsController < ApplicationController
   def generate_notification(user, target_user, org, role)
     if role
       title = I18n.t('notifications.assign_user_to_organization',
-                   assigned_user: target_user.name,
-                   role: role,
-                   organization: org.name,
-                   assigned_by_user: user.name)
+                     assigned_user: target_user.name,
+                     role: role,
+                     organization: org.name,
+                     assigned_by_user: user.name)
     else
       title = I18n.t('notifications.unassign_user_from_organization',
-                   unassigned_user: target_user.name,
-                   organization: org.name,
-                   unassigned_by_user: user.name)
+                     unassigned_user: target_user.name,
+                     organization: org.name,
+                     unassigned_by_user: user.name)
     end
 
     message = "#{I18n.t('search.index.organization')} #{org.name}"
@@ -602,7 +602,7 @@ class Users::SettingsController < ApplicationController
       title:
         ActionController::Base.helpers.sanitize(title),
       message:
-        ActionController::Base.helpers.sanitize(message),
+        ActionController::Base.helpers.sanitize(message)
     )
 
     if target_user.assignments_notification

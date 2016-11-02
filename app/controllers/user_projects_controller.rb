@@ -277,12 +277,10 @@ class UserProjectsController < ApplicationController
   end
 
   def generate_notification(user, target_user, project)
-    title = I18n.t(
-              "activities.unassign_user_from_project",
-              unassigned_user: target_user.full_name,
-              project: project.name,
-              unassigned_by_user: user.full_name
-            )
+    title = I18n.t('activities.unassign_user_from_project',
+                   unassigned_user: target_user.full_name,
+                   project: project.name,
+                   unassigned_by_user: user.full_name)
     message = "#{I18n.t('search.index.project')} #{@project.name}"
     notification = Notification.create(
       type_of: :assignment,
