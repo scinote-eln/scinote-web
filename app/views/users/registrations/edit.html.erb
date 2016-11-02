@@ -178,25 +178,28 @@
 
   </div>
   <div class="col-md-7 col-md-offset-1">
-    <h2><%=t "users.statistics.title" %></h2>
-    <ul class="list-inline user-statistics">
-      <li class="label label-primary">
-        <h2><%= @user.statistics[:number_of_teams]%></h2>
-        <%= t("users.statistics.team").pluralize(@user.statistics[:number_of_teams]) %>
-      </li>
-      <li class="label label-primary">
-        <h2><%= @user.statistics[:number_of_projects] %></h2>
-        <%= t("users.statistics.project").pluralize(@user.statistics[:number_of_projects]) %>
-      </li>
-      <li class="label label-primary">
-        <h2><%= @user.statistics[:number_of_experiments] %></h2>
-        <%= t("users.statistics.experiment").pluralize(@user.statistics[:number_of_experiments]) %>
-      </li>
-      <li class="label label-primary">
-        <h2><%= @user.statistics[:number_of_protocols] %></h2>
-        <%= t("users.statistics.protocol").pluralize(@user.statistics[:number_of_protocols]) %>
-      </li>
-    </ul>
+    <div class="row user-statistics">
+      <h2><%=t "users.statistics.title" %></h2>
+      <ul class="list-inline">
+        <li class="label label-primary">
+          <h2><%= @user.statistics[:number_of_teams]%></h2>
+          <%= t("users.statistics.team").pluralize(@user.statistics[:number_of_teams]) %>
+        </li>
+        <li class="label label-primary">
+          <h2><%= @user.statistics[:number_of_projects] %></h2>
+          <%= t("users.statistics.project").pluralize(@user.statistics[:number_of_projects]) %>
+        </li>
+        <li class="label label-primary">
+          <h2><%= @user.statistics[:number_of_experiments] %></h2>
+          <%= t("users.statistics.experiment").pluralize(@user.statistics[:number_of_experiments]) %>
+        </li>
+        <li class="label label-primary">
+          <h2><%= @user.statistics[:number_of_protocols] %></h2>
+          <%= t("users.statistics.protocol").pluralize(@user.statistics[:number_of_protocols]) %>
+        </li>
+      </ul>
+    </div>
+    <span style="display: none;" data-hook="profile-statistics"></span>
   </div>
 </div>
 
