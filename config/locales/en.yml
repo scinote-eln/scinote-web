@@ -1466,6 +1466,9 @@ en:
 
   tutorial:
     title: "Tutorial"
+    pre_modal_title: "Wellcome to sciNote!"
+    pre_modal_message: "Press a button to start tutorial"
+    pre_modal_proceed: "I'm ready to start"
     next: "Next"
     skip_tutorial: "Skip tutorial"
     end_tutorial: "End tutorial"

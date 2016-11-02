@@ -1,5 +1,8 @@
 <% provide(:head_title, t("projects.index.head_title")) %>
 
+<!-- Pre tutorial one time popup modal holder -->
+<div class="modal" id="pre-tutorial-modal" tabindex="-1" role="dialog" aria-labelledby="pre-tutorial-modal-label"></div>
+
 <!-- New project modal -->
 <div class="modal" id="new-project-modal" tabindex="-1" role="dialog" aria-labelledby="new-project-modal-label">
   <%= bootstrap_form_for @project, remote: true do |f| %>
