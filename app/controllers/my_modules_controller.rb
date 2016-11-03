@@ -272,6 +272,7 @@ class MyModulesController < ApplicationController
       end
 
       task_names = []
+      new_samples = []
       @my_module.get_downstream_modules.each do |my_module|
         new_samples = samples.select { |el| my_module.samples.exclude?(el) }
         my_module.samples.push(*new_samples)
@@ -286,7 +287,7 @@ class MyModulesController < ApplicationController
           'activities.assign_sample',
           user: current_user.full_name,
           tasks: task_names.join(', '),
-          samples: samples.map(&:name).join(', ')
+          samples: new_samples.map(&:name).join(', ')
         )
       )
     end
@@ -302,7 +303,7 @@ class MyModulesController < ApplicationController
         sample.last_modified_by = current_user
         sample.save
 
-        if sample
+        if sample && @my_module.samples.include?(sample)
           samples << sample
         end
       end
