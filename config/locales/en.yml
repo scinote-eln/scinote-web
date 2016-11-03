@@ -1449,6 +1449,20 @@ en:
       head_title: "Edit protocol"
     no_keywords: "No keywords"
 
+  invite_users:
+    to_org:
+      title: "Invite users to team %{organization}"
+      heading: "Invite more people to team %{organization} and start using sciNote."
+    no_org:
+      title: "Invite users to sciNote"
+      heading: "Invite more people to start using sciNote."
+    input_subtitle: "Input one or multiple emails, confirm each email with ENTER key."
+    invite_to_org_heading: "Invite users to my team:"
+    invite_btn: "Invite user/s"
+    invite_guest: "as Guest/s"
+    invite_user: "as Normal user/s"
+    invite_admin: "as Administrator/s"
+
   time:
     formats:
       full: "%d.%m.%Y %H:%M"

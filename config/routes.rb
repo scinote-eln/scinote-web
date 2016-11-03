@@ -39,6 +39,11 @@ Rails.application.routes.draw do
   get "users/settings/user_organizations/:user_organization_id/destroy_html", to: "users/settings#destroy_user_organization_html", as: "destroy_user_organization_html"
   delete "users/settings/user_organizations/:user_organization_id", to: "users/settings#destroy_user_organization", as: "destroy_user_organization"
 
+  # Invite users
+  post 'users/invite',
+       to: 'users/invitations#invite_users',
+       as: 'invite_users'
+
   # Notifications
   get 'users/:id/recent_notifications',
       to: 'user_notifications#recent_notifications',

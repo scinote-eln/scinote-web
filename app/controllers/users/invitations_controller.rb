@@ -27,4 +27,8 @@ class Users::InvitationsController < Devise::InvitationsController
 
     resource
   end
+
+  def invite_users
+    # TODO
+  end
 end

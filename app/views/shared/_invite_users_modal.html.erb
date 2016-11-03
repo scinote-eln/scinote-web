@@ -1,0 +1,129 @@
+<%
+# How to use this modal:
+# 1. Render it in the page (HTML) of your choice
+# 2. Add an element (e.g. <a href>) with following attributes:
+#    * data-trigger="invite-users",
+#    * data-modal-id="modal-id",
+#
+# Modal parameters:
+# * modal_id: unique id so the JS works if multiple modals are present
+#   on the same page
+# * type:
+#   * 'invite_to_org' => params: organization
+#   * 'invite_to_org_with_role' => params: organization, role
+#   * 'invite',
+#   * 'invite_with_org_selector',
+#   * 'invite_with_org_selector_and_role' => params: role
+# * organization: invite users to the specified organization
+# * role: all users are invited as the specified role
+%>
+<div
+  class="modal modal-invite-users"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="invite-users-modal-label"
+  data-id="<%= modal_id %>"
+  data-role="invite-users-modal"
+  data-type="<%= type %>"
+  data-url="<%= invite_users_path %>"
+  data-backdrop="static"
+  data-keyboard="false"
+  <%= "data-organization-id=#{organization.id}" if type.in?(['invite_to_org', 'invite_to_org_with_role']) %>
+  <%= "data-organization-role=#{role}" if type.in?(['invite_to_org_with_role', 'invite_with_org_selector_and_role']) %>
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">
+          <% if type.in?(['invite_to_org', 'invite_to_org_with_role']) %>
+            <%= t('invite_users.to_org.title', organization: organization.name) %>
+          <% else %>
+            <%= t('invite_users.no_org.title') %>
+          <% end %>
+        </h4>
+      </div>
+
+      <div class="modal-body">
+        <div data-role="step-form">
+          <p>
+            <% if type.in?(['invite_to_org', 'invite_to_org_with_role']) %>
+              <%= t('invite_users.to_org.heading', organization: organization.name) %>
+            <% else %>
+              <%= t('invite_users.no_org.heading') %>
+            <% end %>
+          </p>
+
+          <select class="emails-input" multiple data-role="tagsinput" name="emails[]">
+          </select>
+          <br />
+          <em><%= t('invite_users.input_subtitle') %></em>
+
+          <% if type.in?(['invite_with_org_selector', 'invite_with_org_selector_and_role']) %>
+            <% uos = current_user.user_organizations.where(role: UserOrganization.roles[:admin]).joins(:organization) %>
+            <% if uos.count > 0 %>
+              <div class="org-selector">
+                <div class="heading">
+                  <input type="checkbox" data-role="org-selector-checkbox" />
+                  <span><%= t('invite_users.invite_to_org_heading') %></span>
+                </div>
+                <%= select_tag(
+                  'organization-select',
+                  options_for_select(
+                    uos.pluck('organizations.name', 'organizations.id')
+                  ),
+                  {
+                    class: 'form-control selectpicker',
+                    'data-role' => 'org-selector-dropdown',
+                    disabled: 'disabled'
+                  }
+                ) %>
+              </div>
+            <% end %>
+          <% end %>
+        </div>
+        <div data-role="step-results" data-clear="true">
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <div data-role="step-form">
+          <button type="button" class="btn btn-default" data-dismiss="modal">
+            <%= t('general.cancel') %>
+          </button>
+
+          <!-- Invite buttons -->
+          <button type="button" data-role="invite-btn" class="btn btn-primary" disabled="disabled" data-action="invite">
+            <%= t('invite_users.invite_btn') %>
+          </button>
+
+          <div class="btn-group" data-role="invite-with-role-div">
+            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" data-id="invite-btn" aria-haspopup="true" aria-expanded="false" data-role="invite-with-role-btn" disabled="disabled">
+              <%= t('invite_users.invite_btn') %>
+              &nbsp;
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+              <li><a href="#" data-action="invite" data-organization-role="guest">
+                <%= t("invite_users.invite_guest") %>
+              </a></li>
+              <li><a href="#" data-action="invite" data-organization-role="normal_user">
+                <%= t("invite_users.invite_user") %>
+              </a></li>
+              <li><a href="#" data-action="invite" data-organization-role="admin">
+                <%= t("invite_users.invite_admin") %>
+              </a></li>
+            </ul>
+          </div>
+        </div>
+        <div data-role="step-results">
+          <button type="button" class="btn btn-default" data-dismiss="modal">
+            <%= t('general.close') %>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
