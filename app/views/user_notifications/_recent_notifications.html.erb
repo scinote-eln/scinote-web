@@ -2,6 +2,7 @@
 <li class="notification <%= 'unseen' unless notification.already_seen(current_user) %>">
   <div class="row">
     <div class="col-xs-2">
+      <span style="display: none;" data-hook="user-notification-recent-list-item"></span>
       <% if notification.type_of == 'recent_changes' %>
       <div class="text-center">
         <%= image_tag avatar_path(notification.generator_user, :icon_small), class: 'avatar' %>
