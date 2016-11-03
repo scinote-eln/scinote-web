@@ -485,7 +485,7 @@ class ProtocolsController < ApplicationController
           message: I18n.t(
             'activities.load_protocol_from_file',
             user: current_user.full_name,
-            protocol: @protocol_json.name
+            protocol: @protocol_json[:name]
           )
         )
         flash[:success] = t(
