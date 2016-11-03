@@ -31,18 +31,6 @@
           </a>
         </div>
       </div>
-    <% end %>
-
-    <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, "data-for" => "avatar" }) do |f| %>
-      <%= hidden_field_tag "user[change_avatar]", "true" %>
-      <div data-part="view">
-        <div class="form-group">
-          <%= f.label t("users.registrations.edit.avatar_label") %><br />
-          <% @user_avatar_url ||= avatar_path(current_user, :thumb) %>
-          <%= image_tag @user_avatar_url %><br /><br />
-          <a href="#" class="btn btn-default" data-action="edit"><%=t "users.registrations.edit.avatar_btn" %></a>
-        </div>
-      </div>
       <div data-part="edit" style="display: none;">
         <div class="well">
           <h4><%=t "users.registrations.edit.avatar_title" %></h4>
@@ -187,7 +175,7 @@
         </div>
       </div>
     <% end %>
-    
+
   </div>
   <div class="col-md-7 col-md-offset-1">
     <h2><%=t "users.statistics.title" %></h2>
