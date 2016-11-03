@@ -26,7 +26,7 @@ rails:
 run:
 	rm tmp/pids/server.pid || true
 	@docker-compose up -d
-	@docker attach $(shell docker-compose ps web | grep "rails s" | awk '{ print $$1; }')
+	@docker attach $(shell docker-compose ps $(basename $(pwd)) | grep "rails s" | awk '{ print $$1; }')
 
 start:
 	@docker-compose start
@@ -53,4 +53,3 @@ export:
 	@git checkout-index -a -f --prefix=scinote/
 	@tar -zcvf scinote-$(shell git rev-parse --short HEAD).tar.gz scinote
 	@rm -rf scinote
-
