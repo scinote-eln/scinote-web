@@ -1462,6 +1462,16 @@ en:
     invite_guest: "as Guest/s"
     invite_user: "as Normal user/s"
     invite_admin: "as Administrator/s"
+    results:
+      heading: "Invitation results:"
+      user_exists: "User is already a member of sciNote."
+      user_exists_unconfirmed: "User is already a member of sciNote but is not confirmed yet - cannot invite to team %{organization}."
+      user_exists_and_in_org: "User is already a member of sciNote and team %{organization} as %{role}."
+      user_exists_invited_to_org: "User was already a member of sciNote - successfully invited to team %{organization} as %{role}."
+      user_created: "User succesfully invited to sciNote."
+      user_created_invited_to_org: "User successfully invited to sciNote and team %{organization} as %{role}."
+      user_invalid: "Invalid email."
+      too_many_emails: "Only invited first %{nr} emails. To invite more users, "
 
   time:
     formats:

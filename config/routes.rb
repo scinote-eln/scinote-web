@@ -40,9 +40,11 @@ Rails.application.routes.draw do
   delete "users/settings/user_organizations/:user_organization_id", to: "users/settings#destroy_user_organization", as: "destroy_user_organization"
 
   # Invite users
-  post 'users/invite',
-       to: 'users/invitations#invite_users',
-       as: 'invite_users'
+  devise_scope :user do
+    post '/invite',
+         to: 'users/invitations#invite_users',
+         as: 'invite_users'
+  end
 
   # Notifications
   get 'users/:id/recent_notifications',

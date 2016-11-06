@@ -6,6 +6,7 @@
     var type = modal.attr('data-type');
     var stepForm = modal.find('[data-role=step-form]');
     var stepResults = modal.find('[data-role=step-results]');
+    var stepResultsDiv = modal.find('[data-role=step-results][data-clear]');
     var inviteBtn = modal.find('[data-role=invite-btn]');
     var inviteWithRoleDiv =
       modal.find('[data-role=invite-with-role-div]');
@@ -16,7 +17,12 @@
     var orgSelectorDropdown =
       modal.find('[data-role=org-selector-dropdown]');
     var orgSelectorDropdown2 = $();
-    var tagsInput = modal.find('[data-role=tagsinput]');
+    var tagsInput = modal.find('[data-role=tags-input]');
+
+    // Set max tags
+    tagsInput.tagsinput({
+      maxTags: <%= Constants::INVITE_USERS_LIMIT %>
+    });
 
     modal
     .on('show.bs.modal', function() {
@@ -86,7 +92,7 @@
       });
 
       // Click action
-      $('[data-action=invite]').on('click', function() {
+      modal.find('[data-action=invite]').on('click', function() {
         animateSpinner(modalDialog);
 
         var data = {
@@ -125,12 +131,26 @@
           dataType: 'json',
           data: data,
           success: function(data) {
+            animateSpinner(modalDialog, false);
+            stepForm.hide();
+            stepResultsDiv.html(data.html);
+            stepResults.show();
+            // Add 'data-invited="true"' status to modal element
+            modal.attr('data-invited', 'true');
+          },
+          error: function() {
+            animateSpinner(modalDialog, false);
+            modal.modal('hide');
+            alert('Error inviting users.');
           }
         });
       });
     })
     .on('shown.bs.modal', function() {
       tagsInput.tagsinput('focus');
+
+      // Remove 'data-invited="true"' status
+      modal.removeAttr('data-invited');
     })
     .on('hide.bs.modal', function() {
       // 'Reset' modal state
@@ -144,6 +164,11 @@
       // Unbind event listeners
       orgSelectorCheckbox.off('change');
       tagsInput.off('itemAdded itemRemoved');
+
+      // Hide contents of the results <div>
+      stepResultsDiv.html('');
+      stepResults.hide();
+      stepForm.show();
     });
   }
 

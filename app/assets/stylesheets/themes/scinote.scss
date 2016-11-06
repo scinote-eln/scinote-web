@@ -1502,6 +1502,17 @@ html.turbolinks-progress-bar::before {
     min-width: 450px;
   }
 
+  .results-container .alert {
+    margin-bottom: 10px;
+    padding: 5px;
+  }
+
+  .results-container .results-wrap {
+    max-height: 400px;
+    overflow-y: auto;
+    padding-right: 10px;
+  }
+
   .org-selector .heading {
     margin-top: 15px;
     margin-bottom: 5px;
