@@ -16,6 +16,12 @@
 #   * 'invite_with_org_selector_and_role' => params: role
 # * organization: invite users to the specified organization
 # * role: all users are invited as the specified role
+# * (optional) text_title: custom title text for modal
+# * (optional) text_invite_heading: custom invite heading text for modal
+%>
+<%
+text_title ||= nil
+text_invite_heading ||= nil
 %>
 <div
   class="modal modal-invite-users"
@@ -37,10 +43,14 @@
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <h4 class="modal-title">
-          <% if type.in?(['invite_to_org', 'invite_to_org_with_role']) %>
-            <%= t('invite_users.to_org.title', organization: organization.name) %>
+          <% if text_title %>
+            <%= text_title %>
           <% else %>
-            <%= t('invite_users.no_org.title') %>
+            <% if type.in?(['invite_to_org', 'invite_to_org_with_role']) %>
+              <%= t('invite_users.to_org.title', organization: organization.name) %>
+            <% else %>
+              <%= t('invite_users.no_org.title') %>
+            <% end %>
           <% end %>
         </h4>
       </div>
@@ -48,10 +58,14 @@
       <div class="modal-body">
         <div data-role="step-form">
           <p>
-            <% if type.in?(['invite_to_org', 'invite_to_org_with_role']) %>
-              <%= t('invite_users.to_org.heading', organization: organization.name) %>
+            <% if text_invite_heading %>
+              <%= text_invite_heading %>
             <% else %>
-              <%= t('invite_users.no_org.heading') %>
+              <% if type.in?(['invite_to_org', 'invite_to_org_with_role']) %>
+                <%= t('invite_users.to_org.heading', organization: organization.name) %>
+              <% else %>
+                <%= t('invite_users.no_org.heading') %>
+              <% end %>
             <% end %>
           </p>
 
