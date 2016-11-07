@@ -271,9 +271,26 @@ class MyModulesController < ApplicationController
         end
       end
 
+      task_names = []
+      new_samples = []
       @my_module.get_downstream_modules.each do |my_module|
         new_samples = samples.select { |el| my_module.samples.exclude?(el) }
         my_module.samples.push(*new_samples)
+        task_names << my_module.name
+      end
+      if new_samples.any?
+        Activity.create(
+          type_of: :assign_sample,
+          project: @my_module.experiment.project,
+          my_module: @my_module,
+          user: current_user,
+          message: I18n.t(
+            'activities.assign_sample',
+            user: current_user.full_name,
+            tasks: task_names.join(', '),
+            samples: new_samples.map(&:name).join(', ')
+          )
+        )
       end
     end
     redirect_to samples_my_module_path(@my_module)
@@ -288,13 +305,29 @@ class MyModulesController < ApplicationController
         sample.last_modified_by = current_user
         sample.save
 
-        if sample
+        if sample && @my_module.samples.include?(sample)
           samples << sample
         end
       end
 
+      task_names = []
       @my_module.get_downstream_modules.each do |my_module|
+        task_names << my_module.name
         my_module.samples.destroy(samples & my_module.samples)
+      end
+      if samples.any?
+        Activity.create(
+          type_of: :unassign_sample,
+          project: @my_module.experiment.project,
+          my_module: @my_module,
+          user: current_user,
+          message: I18n.t(
+            'activities.unassign_sample',
+            user: current_user.full_name,
+            tasks: task_names.join(', '),
+            samples: samples.map(&:name).join(', ')
+          )
+        )
       end
     end
     redirect_to samples_my_module_path(@my_module)

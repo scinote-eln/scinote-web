@@ -29,6 +29,9 @@ class Activity < ActiveRecord::Base
     :add_comment_to_result,
     :archive_result,
     :edit_result,
+    :create_experiment,
+    :edit_experiment,
+    :archive_experiment,
     :clone_experiment,
     :move_experiment,
     :add_comment_to_project,
@@ -41,7 +44,15 @@ class Activity < ActiveRecord::Base
     :delete_step_comment,
     :edit_result_comment,
     :delete_result_comment,
-    :destroy_result
+    :destroy_result,
+    :load_protocol_from_file,
+    :load_protocol_from_repository,
+    :revert_protocol,
+    :create_report,
+    :delete_report,
+    :edit_report,
+    :assign_sample,
+    :unassign_sample
   ]
 
   validates :type_of, presence: true

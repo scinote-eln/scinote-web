@@ -364,7 +364,18 @@ class ProtocolsController < ApplicationController
           status: :bad_request
         }
       else
-        # Everything good, display flash & render 200
+        # Everything good, record activity, display flash & render 200
+        Activity.create(
+          type_of: :revert_protocol,
+          project: @protocol.my_module.experiment.project,
+          my_module: @protocol.my_module,
+          user: current_user,
+          message: I18n.t(
+            'activities.revert_protocol',
+            user: current_user.full_name,
+            protocol: @protocol.name
+          )
+        )
         flash[:success] = t(
           "my_modules.protocols.update_parent_flash",
         )
@@ -426,7 +437,18 @@ class ProtocolsController < ApplicationController
           status: :bad_request
         }
       else
-        # Everything good, display flash & render 200
+        # Everything good, record activity, display flash & render 200
+        Activity.create(
+          type_of: :load_protocol_from_repository,
+          project: @protocol.my_module.experiment.project,
+          my_module: @protocol.my_module,
+          user: current_user,
+          message: I18n.t(
+            'activities.load_protocol_from_repository',
+            user: current_user.full_name,
+            protocol: @source.name
+          )
+        )
         flash[:success] = t(
           "my_modules.protocols.load_from_repository_flash",
         )
@@ -454,7 +476,18 @@ class ProtocolsController < ApplicationController
           render json: { status: :error }, status: :bad_request
         }
       else
-        # Everything good, display flash & render 200
+        # Everything good, record activity, display flash & render 200
+        Activity.create(
+          type_of: :load_protocol_from_file,
+          project: @protocol.my_module.experiment.project,
+          my_module: @protocol.my_module,
+          user: current_user,
+          message: I18n.t(
+            'activities.load_protocol_from_file',
+            user: current_user.full_name,
+            protocol: @protocol_json[:name]
+          )
+        )
         flash[:success] = t(
           "my_modules.protocols.load_from_file_flash",
         )

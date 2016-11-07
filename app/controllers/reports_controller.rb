@@ -84,6 +84,17 @@ class ReportsController < ApplicationController
     @report.last_modified_by = current_user
 
     if continue and @report.save_with_contents(report_contents)
+      # record an activity
+      Activity.create(
+        type_of: :create_report,
+        project: @report.project,
+        user: current_user,
+        message: I18n.t(
+          'activities.create_report',
+          user: current_user.full_name,
+          report: @report.name
+        )
+      )
       respond_to do |format|
         format.json {
           render json: { url: project_reports_path(@project) }, status: :ok
@@ -119,6 +130,17 @@ class ReportsController < ApplicationController
     @report.assign_attributes(report_params)
 
     if continue and @report.save_with_contents(report_contents)
+      # record an activity
+      Activity.create(
+        type_of: :edit_report,
+        project: @report.project,
+        user: current_user,
+        message: I18n.t(
+          'activities.edit_report',
+          user: current_user.full_name,
+          report: @report.name
+        )
+      )
       respond_to do |format|
         format.json {
           render json: { url: project_reports_path(@project) }, status: :ok
@@ -149,6 +171,17 @@ class ReportsController < ApplicationController
       report = Report.find_by_id(report_id)
 
       if report.present?
+        # record an activity
+        Activity.create(
+          type_of: :delete_report,
+          project: report.project,
+          user: current_user,
+          message: I18n.t(
+            'activities.delete_report',
+            user: current_user.full_name,
+            report: report.name
+          )
+        )
         report.destroy
       end
     end
