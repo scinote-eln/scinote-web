@@ -1,5 +1,4 @@
 //= require datatables
-//= require users/settings/organizations/add_user_modal
 
 var usersDatatable = null;
 
@@ -236,8 +235,19 @@ function initRemoveUsers() {
   );
 }
 
+function initReloadPageAfterInviteUsers() {
+  $('[data-id=org-invite-users-modal]')
+  .on('hidden.bs.modal', function() {
+    if ($(this).attr('data-invited') !== undefined) {
+      // Reload the whole table
+      usersDatatable.ajax.reload();
+    }
+  });
+}
+
 initEditName();
 initEditDescription();
 initUsersTable();
 initUpdateRoles();
 initRemoveUsers();
+initReloadPageAfterInviteUsers();

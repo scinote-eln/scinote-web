@@ -21,13 +21,7 @@ class Users::SettingsController < ApplicationController
     :destroy_organization,
     :organization_name,
     :organization_description,
-    :search_organization_users,
-    :organization_users_datatable,
-    :create_user_and_user_organization
-  ]
-
-  before_action :check_create_user_organization_permission, only: [
-    :create_user_organization
+    :organization_users_datatable
   ]
 
   before_action :check_user_organization_permission, only: [
@@ -118,57 +112,6 @@ class Users::SettingsController < ApplicationController
     end
   end
 
-  def search_organization_users
-    respond_to do |format|
-      format.json {
-        if params.include?(:existing_query) && params[:existing_query].strip
-          query = params[:existing_query].strip
-          if query.length < Constants::NAME_MIN_LENGTH
-            render json: {
-              "existing_query": [
-                t('general.query.length_too_short',
-                  min_length: Constants::NAME_MIN_LENGTH)
-              ]
-            },
-            status: :unprocessable_entity
-          elsif query.length > Constants::NAME_MAX_LENGTH
-            render json: {
-              "existing_query": [
-                t('general.query.length_too_long',
-                  max_length: Constants::NAME_MAX_LENGTH)
-              ]
-            },
-            status: :unprocessable_entity
-          else
-            # Okay, query exists and is non-blank, find users
-            nr_of_results = User.search(true, query, @org).count
-
-
-            users = User.search(false, query, @org)
-                        .limit(Constants::MODAL_SEARCH_LIMIT)
-
-            nr_of_members = User.organization_search(false, query, @org).count
-
-            render json: {
-              html: render_to_string({
-                partial: "users/settings/organizations/existing_users_search_results.html.erb",
-                locals: {
-                  users: users,
-                  nr_of_results: nr_of_results,
-                  nr_of_members: nr_of_members,
-                  org: @org,
-                  query: query
-                }
-              })
-            }
-          end
-        else
-          render json: {}, status: :bad_request
-        end
-      }
-    end
-  end
-
   def organization_users_datatable
     respond_to do |format|
       format.json {
@@ -211,101 +154,6 @@ class Users::SettingsController < ApplicationController
 
     # Redirect back to all organizations page
     redirect_to action: :organizations
-  end
-
-  def create_user_organization
-    @new_user_org = UserOrganization.new(create_user_organization_params)
-
-    # Check if such association doesn't exist already
-    if !UserOrganization.where(
-      user: @new_user_org.user,
-      organization: @new_user_org.organization
-      ).exists? && @new_user_org.save
-
-      generate_notification(@user_organization.user,
-                            @new_user_org.user,
-                            @new_user_org.role_str,
-                            @new_user_org.organization)
-
-      flash[:notice] = I18n.t(
-        'users.settings.organizations.edit.modal_add_user.existing_flash_success',
-        user: @new_user_org.user.full_name,
-        role: @new_user_org.role_str
-      )
-    else
-      flash[:alert] =
-        I18n.t('users.settings.organizations.edit.modal_add_user.existing_flash_error')
-    end
-
-    # Either way, redirect back to organization page
-    redirect_to action: :organization,
-      organization_id: @new_user_org.organization_id
-  end
-
-  def create_user_and_user_organization
-    respond_to do |format|
-      # User & organization
-      # parameters are already taken care of,
-      # so only role needs to be verified
-      if !params.include? :role or
-        !UserOrganization.roles.keys.include? params[:role]
-        format.json {
-          render json: "Invalid role provided",
-          status: :unprocessable_entity
-        }
-      else
-        password = generate_user_password
-        user_params = create_user_params
-        full_name = user_params[:full_name]
-        email = user_params[:email]
-
-        # Validate the user data
-        errors = validate_user(full_name, email, password)
-
-        if errors.count == 0
-          @user = User.invite!(
-            full_name: full_name,
-            email: email,
-            initials: full_name.split(" ").map{|w| w[0].upcase}.join[0..3],
-            skip_invitation: true
-          )
-
-          # Sending email invitation is done in background job to prevent
-          # issues with email delivery. Also invite method must be call
-          # with :skip_invitation attribute set to true - see above.
-          @user.delay.deliver_invitation
-
-          # Also generate user organization relation
-          @user_org = UserOrganization.new(
-            user: @user,
-            organization: @org,
-            role: params[:role]
-          )
-          @user_org.save
-
-          # Flash message
-          flash[:notice] = t(
-            "users.settings.organizations.edit.modal_add_user.new_flash_success",
-            user: @user.full_name,
-            role: @user_org.role_str,
-            email: @user.email
-          )
-          flash.keep
-
-          # Return success!
-          format.json {
-            render json: {
-              status: :ok
-            }
-          }
-        else
-          format.json {
-            render json: errors,
-            status: :unprocessable_entity
-          }
-        end
-      end
-    end
   end
 
   def update_user_organization
@@ -520,13 +368,6 @@ class Users::SettingsController < ApplicationController
     end
   end
 
-  def check_create_user_organization_permission
-    @org = Organization.find_by_id(params[:user_organization][:organization_id])
-    unless is_admin_of_organization(@org)
-      render_403
-    end
-  end
-
   def check_user_organization_permission
     @user_org = UserOrganization.find_by_id(params[:user_organization_id])
     @org = @user_org.organization
@@ -562,14 +403,6 @@ class Users::SettingsController < ApplicationController
     params.require(:user).permit(
       :full_name,
       :email
-    )
-  end
-
-  def create_user_organization_params
-    params.require(:user_organization).permit(
-      :user_id,
-      :organization_id,
-      :role
     )
   end
 
