@@ -278,18 +278,20 @@ class MyModulesController < ApplicationController
         my_module.samples.push(*new_samples)
         task_names << my_module.name
       end
-      Activity.create(
-        type_of: :assign_sample,
-        project: @my_module.experiment.project,
-        my_module: @my_module,
-        user: current_user,
-        message: I18n.t(
-          'activities.assign_sample',
-          user: current_user.full_name,
-          tasks: task_names.join(', '),
-          samples: new_samples.map(&:name).join(', ')
+      if new_samples.any?
+        Activity.create(
+          type_of: :assign_sample,
+          project: @my_module.experiment.project,
+          my_module: @my_module,
+          user: current_user,
+          message: I18n.t(
+            'activities.assign_sample',
+            user: current_user.full_name,
+            tasks: task_names.join(', '),
+            samples: new_samples.map(&:name).join(', ')
+          )
         )
-      )
+      end
     end
     redirect_to samples_my_module_path(@my_module)
   end
@@ -313,18 +315,20 @@ class MyModulesController < ApplicationController
         task_names << my_module.name
         my_module.samples.destroy(samples & my_module.samples)
       end
-      Activity.create(
-        type_of: :unassign_sample,
-        project: @my_module.experiment.project,
-        my_module: @my_module,
-        user: current_user,
-        message: I18n.t(
-          'activities.unassign_sample',
-          user: current_user.full_name,
-          tasks: task_names.join(', '),
-          samples: samples.map(&:name).join(', ')
+      if samples.any?
+        Activity.create(
+          type_of: :unassign_sample,
+          project: @my_module.experiment.project,
+          my_module: @my_module,
+          user: current_user,
+          message: I18n.t(
+            'activities.unassign_sample',
+            user: current_user.full_name,
+            tasks: task_names.join(', '),
+            samples: samples.map(&:name).join(', ')
+          )
         )
-      )
+      end
     end
     redirect_to samples_my_module_path(@my_module)
   end
