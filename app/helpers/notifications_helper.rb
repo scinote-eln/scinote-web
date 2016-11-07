@@ -17,4 +17,40 @@ module NotificationsHelper
   def send_email_notification(user, notification)
     AppMailer.delay.notification(user, notification)
   end
+
+  def generate_notification(user, target_user, org, role, project)
+    if org
+      if role
+        title = I18n.t('notifications.assign_user_to_organization',
+                       assigned_user: target_user.name,
+                       role: role,
+                       organization: org.name,
+                       assigned_by_user: user.name)
+      else
+        title = I18n.t('notifications.unassign_user_from_organization',
+                       unassigned_user: target_user.name,
+                       organization: org.name,
+                       unassigned_by_user: user.name)
+      end
+      message = "#{I18n.t('search.index.organization')} #{org.name}"
+    elsif project
+      title = I18n.t('activities.unassign_user_from_project',
+                   unassigned_user: target_user.full_name,
+                   project: project.name,
+                   unassigned_by_user: user.full_name)
+      message = "#{I18n.t('search.index.project')} #{@project.name}"
+    end
+
+    notification = Notification.create(
+      type_of: :assignment,
+      title:
+        ActionController::Base.helpers.sanitize(title),
+      message:
+        ActionController::Base.helpers.sanitize(message)
+    )
+
+    if target_user.assignments_notification
+      UserNotification.create(notification: notification, user: target_user)
+    end
+  end
 end

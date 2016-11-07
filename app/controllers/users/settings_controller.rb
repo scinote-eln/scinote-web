@@ -1,5 +1,6 @@
 class Users::SettingsController < ApplicationController
   include UsersGenerator
+  include NotificationsHelper
 
   before_action :load_user, only: [
     :preferences,
@@ -225,7 +226,8 @@ class Users::SettingsController < ApplicationController
       generate_notification(@user_organization.user,
                             @new_user_org.user,
                             @new_user_org.organization,
-                            @new_user_org.role_str)
+                            @new_user_org.role_str,
+                            false)
 
       flash[:notice] = I18n.t(
         'users.settings.organizations.edit.modal_add_user.existing_flash_success',
@@ -412,6 +414,7 @@ class Users::SettingsController < ApplicationController
         generate_notification(@user_organization.user,
                               @user_org.user,
                               @user_org.organization,
+                              false,
                               false)
         format.json {
           render json: {
@@ -580,34 +583,6 @@ class Users::SettingsController < ApplicationController
     params.require(:user_organization).permit(
       :role
     )
-  end
-
-  def generate_notification(user, target_user, org, role)
-    if role
-      title = I18n.t('notifications.assign_user_to_organization',
-                     assigned_user: target_user.name,
-                     role: role,
-                     organization: org.name,
-                     assigned_by_user: user.name)
-    else
-      title = I18n.t('notifications.unassign_user_from_organization',
-                     unassigned_user: target_user.name,
-                     organization: org.name,
-                     unassigned_by_user: user.name)
-    end
-
-    message = "#{I18n.t('search.index.organization')} #{org.name}"
-    notification = Notification.create(
-      type_of: :assignment,
-      title:
-        ActionController::Base.helpers.sanitize(title),
-      message:
-        ActionController::Base.helpers.sanitize(message)
-    )
-
-    if target_user.assignments_notification
-      UserNotification.create(notification: notification, user: target_user)
-    end
   end
 
   def reset_user_current_organization(user_org)

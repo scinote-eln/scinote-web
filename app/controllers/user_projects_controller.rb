@@ -1,4 +1,6 @@
 class UserProjectsController < ApplicationController
+  include NotificationsHelper
+
   before_action :load_vars
   before_action :check_view_tab_permissions, only: [ :index ]
   before_action :check_view_permissions, only: [ :index_edit ]
@@ -191,7 +193,7 @@ class UserProjectsController < ApplicationController
           unassigned_by_user: current_user.full_name
         )
       )
-      generate_notification(current_user, @up.user, @project)
+      generate_notification(current_user, @up.user, false, false, @project)
 
       respond_to do |format|
         format.html {
@@ -273,24 +275,6 @@ class UserProjectsController < ApplicationController
     end
     unless can_remove_user_from_project(@project)
       render_403
-    end
-  end
-
-  def generate_notification(user, target_user, project)
-    title = I18n.t('activities.unassign_user_from_project',
-                   unassigned_user: target_user.full_name,
-                   project: project.name,
-                   unassigned_by_user: user.full_name)
-    message = "#{I18n.t('search.index.project')} #{@project.name}"
-    notification = Notification.create(
-      type_of: :assignment,
-      title:
-        ActionController::Base.helpers.sanitize(title),
-      message:
-      ActionController::Base.helpers.sanitize(message)
-    )
-    if target_user.assignments_notification
-      UserNotification.create(notification: notification, user: target_user)
     end
   end
 
