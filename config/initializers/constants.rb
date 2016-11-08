@@ -196,10 +196,6 @@ class Constants
     'text/plain'
   ].freeze
 
-  # Notification types. Should not be freezed, as modules might append to this.
-  NOTIFICATIONS_TYPES = { assignment: 0,
-                          recent_changes: 1,
-                          system_message: 2 }
   # Organization name for default admin user
   DEFAULT_PRIVATE_ORG_NAME = 'My projects'.freeze
 
