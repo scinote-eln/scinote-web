@@ -1497,11 +1497,24 @@ html.turbolinks-progress-bar::before {
   }
 }
 
+// Only allow vertical resizing of all text areas
+textarea {
+  resize: vertical;
+}
+
+textarea.textarea-sm {
+  height: 34px;
+  min-height: 34px;
+
+  &.form-control {
+    height: 34px;
+  }
+}
+
 .comment-form {
   textarea {
     height: 34px;
     min-height: 34px;
-    resize: vertical;
   }
 
   .btn.btn-default {
