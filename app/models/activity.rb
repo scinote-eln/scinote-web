@@ -65,7 +65,8 @@ class Activity < ActiveRecord::Base
   private
 
   def generate_notification
-    if %w(assign_user_to_project assign_user_to_module).include? type_of
+    if %w(assign_user_to_project
+          assign_user_to_module unassign_user_from_module).include? type_of
       notification_type = :assignment
     else
       notification_type = :recent_changes

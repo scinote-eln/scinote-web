@@ -1,4 +1,6 @@
 class UserProjectsController < ApplicationController
+  include NotificationsHelper
+
   before_action :load_vars
   before_action :check_view_tab_permissions, only: [ :index ]
   before_action :check_view_permissions, only: [ :index_edit ]
@@ -191,6 +193,7 @@ class UserProjectsController < ApplicationController
           unassigned_by_user: current_user.full_name
         )
       )
+      generate_notification(current_user, @up.user, false, false, @project)
 
       respond_to do |format|
         format.html {

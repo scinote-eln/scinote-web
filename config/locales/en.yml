@@ -1521,6 +1521,7 @@ en:
       system_message: "sciNote system message"
     email_title: "You've received a sciNote notification!"
     assign_user_to_organization: "<i>%{assigned_user}</i> was added as %{role} to team <strong>%{organization}</strong> by <i>%{assigned_by_user}</i>."
+    unassign_user_from_organization: "<i>%{unassigned_user}</i> was removed from team <strong>%{organization}</strong> by <i>%{unassigned_by_user}</i>."
 
   # This section contains general words that can be used in any parts of
   # application.
