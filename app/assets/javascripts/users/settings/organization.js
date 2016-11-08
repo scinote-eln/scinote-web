@@ -238,7 +238,7 @@ function initRemoveUsers() {
 function initReloadPageAfterInviteUsers() {
   $('[data-id=org-invite-users-modal]')
   .on('hidden.bs.modal', function() {
-    if ($(this).attr('data-invited') !== undefined) {
+    if (!_.isUndefined($(this).attr('data-invited'))) {
       // Reload the whole table
       usersDatatable.ajax.reload();
     }

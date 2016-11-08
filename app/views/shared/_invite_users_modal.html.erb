@@ -22,6 +22,7 @@
 <%
 text_title ||= nil
 text_invite_heading ||= nil
+invite_to_org = type.in?(%w(invite_to_org invite_to_org_with_role))
 %>
 <div
   class="modal modal-invite-users"
@@ -34,8 +35,8 @@ text_invite_heading ||= nil
   data-url="<%= invite_users_path %>"
   data-backdrop="static"
   data-keyboard="false"
-  <%= "data-organization-id=#{organization.id}" if type.in?(['invite_to_org', 'invite_to_org_with_role']) %>
-  <%= "data-organization-role=#{role}" if type.in?(['invite_to_org_with_role', 'invite_with_org_selector_and_role']) %>
+  <%= "data-organization-id=#{organization.id}" if invite_to_org %>
+  <%= "data-organization-role=#{role}" if type.in?(%w(invite_to_org_with_role invite_with_org_selector_and_role)) %>
 >
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -46,7 +47,7 @@ text_invite_heading ||= nil
           <% if text_title %>
             <%= text_title %>
           <% else %>
-            <% if type.in?(['invite_to_org', 'invite_to_org_with_role']) %>
+            <% if invite_to_org %>
               <%= t('invite_users.to_org.title', organization: organization.name) %>
             <% else %>
               <%= t('invite_users.no_org.title') %>
@@ -61,7 +62,7 @@ text_invite_heading ||= nil
             <% if text_invite_heading %>
               <%= text_invite_heading %>
             <% else %>
-              <% if type.in?(['invite_to_org', 'invite_to_org_with_role']) %>
+              <% if invite_to_org %>
                 <%= t('invite_users.to_org.heading', organization: organization.name) %>
               <% else %>
                 <%= t('invite_users.no_org.heading') %>
@@ -120,15 +121,15 @@ text_invite_heading ||= nil
               <span class="caret"></span>
             </button>
             <ul class="dropdown-menu">
-              <li><a href="#" data-action="invite" data-organization-role="guest">
-                <%= t("invite_users.invite_guest") %>
-              </a></li>
-              <li><a href="#" data-action="invite" data-organization-role="normal_user">
-                <%= t("invite_users.invite_user") %>
-              </a></li>
-              <li><a href="#" data-action="invite" data-organization-role="admin">
-                <%= t("invite_users.invite_admin") %>
-              </a></li>
+              <li>
+                <%= link_to t('invite_users.invite_guest'), '#', data: { action: 'invite', 'organization-role' => 'guest' } %>
+              </li>
+              <li>
+                <%= link_to t('invite_users.invite_user'), '#', data: { action: 'invite', 'organization-role' => 'normal_user' } %>
+              </li>
+              <li>
+                <%= link_to t('invite_users.invite_admin'), '#', data: { action: 'invite', 'organization-role' => 'admin' } %>
+              </li>
             </ul>
           </div>
         </div>
