@@ -22,7 +22,7 @@
     <li>
       <hr>
       <%= bootstrap_form_for :comment, url: { format: :json }, html: { class: 'comment-form', id: "step-comment-#{@step.id}" }, method: :post, remote: true do |f| %>
-        <%= f.text_area :message, hide_label: true, placeholder: t("general.comment_placeholder"), append: f.submit("+"), help: '.' %>
+        <%= f.text_area :message, class: 'textarea-sm', hide_label: true, placeholder: t("general.comment_placeholder"), append: f.submit("+"), help: '.' %>
       <% end %>
     </li>
   </ul>

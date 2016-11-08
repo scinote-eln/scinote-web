@@ -1497,9 +1497,10 @@ html.turbolinks-progress-bar::before {
   }
 }
 
-// Only allow vertical resizing of all text areas
+// Disable textarea resizing throughout application
+// (will be done via autosize JS plugin)
 textarea {
-  resize: vertical;
+  resize: none;
 }
 
 textarea.textarea-sm {
@@ -1511,14 +1512,7 @@ textarea.textarea-sm {
   }
 }
 
-.comment-form {
-  textarea {
-    height: 34px;
-    min-height: 34px;
-  }
-
-  .btn.btn-default {
-    height: calc(100% + 14px);
-    min-height: 34px;
-  }
+.comment-form .btn.btn-default {
+  height: calc(100% + 14px);
+  min-height: 34px;
 }
