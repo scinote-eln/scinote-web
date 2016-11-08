@@ -76,7 +76,7 @@ text_invite_heading ||= nil
 
           <% if type.in?(['invite_with_org_selector', 'invite_with_org_selector_and_role']) %>
             <% # Only allow inviting to organizations where user is admin %>
-            <% uos = current_user.user_organizations.where(role: UserOrganization.roles[:admin]).joins(:organization) %>
+            <% uos = current_user ? current_user.user_organizations.where(role: UserOrganization.roles[:admin]).joins(:organization) : [] %>
             <% if uos.count > 0 %>
               <div class="org-selector">
                 <div class="heading">
