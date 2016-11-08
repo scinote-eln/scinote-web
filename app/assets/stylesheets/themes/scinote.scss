@@ -1496,3 +1496,16 @@ html.turbolinks-progress-bar::before {
     width: 100px;
   }
 }
+
+.comment-form {
+  textarea {
+    height: 34px;
+    min-height: 34px;
+    resize: vertical;
+  }
+
+  .btn.btn-default {
+    height: calc(100% + 14px);
+    min-height: 34px;
+  }
+}
