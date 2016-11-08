@@ -1,0 +1,54 @@
+<h5>
+  <%= t('invite_users.results.heading') %>
+</h5>
+<hr />
+<div class="results-wrap">
+<% @invite_results.each do |result| %>
+<%   if result[:status] == :user_exists %>
+  <div class="alert alert-info" role="alert">
+    <strong><%= result[:email] %></strong>
+    &nbsp;-&nbsp;
+    <%= t('invite_users.results.user_exists') %>
+  </div>
+<%   elsif result[:status] == :user_exists_unconfirmed %>
+  <div class="alert alert-info" role="alert">
+    <strong><%= result[:email] %></strong>
+    &nbsp;-&nbsp;
+    <%= t('invite_users.results.user_exists_unconfirmed', organization: @org.name) %>
+  </div>
+<%   elsif result[:status] == :user_exists_and_in_org %>
+  <div class="alert alert-info" role="alert">
+    <strong><%= result[:email] %></strong>
+    &nbsp;-&nbsp;
+    <%= t('invite_users.results.user_exists_and_in_org', organization: @org.name, role: t("user_organizations.enums.role.#{result[:user_org].role}")) %>
+  </div>
+<%   elsif result[:status] == :user_exists_invited_to_org %>
+  <div class="alert alert-info" role="alert">
+    <strong><%= result[:email] %></strong>
+    &nbsp;-&nbsp;
+    <%= t('invite_users.results.user_exists_invited_to_org', organization: @org.name, role: t("user_organizations.enums.role.#{result[:user_org].role}")) %>
+</div>
+<%   elsif result[:status] == :user_created %>
+  <div class="alert alert-success" role="alert">
+    <strong><%= result[:email] %></strong>
+    &nbsp;-&nbsp;
+    <%= t('invite_users.results.user_created') %>
+  </div>
+<%   elsif result[:status] == :user_created_invited_to_org %>
+  <div class="alert alert-success" role="alert">
+    <strong><%= result[:email] %></strong>
+    &nbsp;-&nbsp;
+    <%= t('invite_users.results.user_created_invited_to_org', organization: @org.name, role: t("user_organizations.enums.role.#{result[:user_org].role}")) %>
+</div>
+<%   elsif result[:status] == :user_invalid %>
+  <div class="alert alert-danger" role="alert">
+    <strong><%= result[:email] %></strong>
+    &nbsp;-&nbsp;
+    <%= t('invite_users.results.user_invalid') %>
+  </div>
+<%   end %>
+<% end %>
+<% if @too_many_emails %>
+<%= t('invite_users.results.too_many_emails', nr: Constants::INVITE_USERS_LIMIT) %>
+<% end %>
+</div>

@@ -1209,32 +1209,6 @@ en:
           can_delete_message: "This team can be deleted because it doesn't have any projects."
           delete_text: "Delete team."
           cannot_delete_message_projects: "Cannot delete this team. Only empty teams (without any projects) can be deleted."
-          modal_add_user:
-            title: "Invite user to team"
-            existing_heading: "Invite existing sciNote user"
-            existing_label: "Find existing user by name or email:"
-            existing_placeholder: "Name or email"
-            existing_results_title: "Choose user"
-            no_existing_users: "No existing users found."
-            existing_users_members_smalltext:
-              one: "The search matched 1 user that is already member of the team."
-              other: "The search matched %{count} users that are already members of the team."
-            no_existing_users_members_smalltext:
-              one: "No existing users that could be invited found; the search, however, matched 1 user that is already member of the team."
-              other: "No existing users that could be invited found; the search, however, matched %{count} users that are already members of the team."
-            existing_users_smalltext: "Only showing top %{count} matched results."
-            existing_flash_success: "User %{user} successfully invited to team as %{role}."
-            existing_flash_error: "Error inviting user to team."
-            new_heading: "Invite new user"
-            new_label_name: "Type in the new user's full name:"
-            new_placeholder_name: "Full name"
-            new_label_email: "Type in the new user's email:"
-            new_placeholder_email: "Email"
-            new_flash_success: "User %{user} successfully invited to team as %{role}. Confirmation email was sent to %{email}."
-            invite: "Invite user"
-            invite_guest: "as Guest"
-            invite_user: "as Normal user"
-            invite_admin: "as Administrator"
           modal_destroy_organization:
             title: "Delete team"
             message: "Are you sure you wish to delete team %{org}? All of the users will be removed from the team as well. This action is irreversible."
@@ -1448,6 +1422,30 @@ en:
     edit:
       head_title: "Edit protocol"
     no_keywords: "No keywords"
+
+  invite_users:
+    to_org:
+      title: "Invite users to team %{organization}"
+      heading: "Invite more people to team %{organization} and start using sciNote."
+    no_org:
+      title: "Invite users to sciNote"
+      heading: "Invite more people to start using sciNote."
+    input_subtitle: "Input one or multiple emails, confirm each email with ENTER key."
+    invite_to_org_heading: "Invite users to my team:"
+    invite_btn: "Invite user/s"
+    invite_guest: "as Guest/s"
+    invite_user: "as Normal user/s"
+    invite_admin: "as Administrator/s"
+    results:
+      heading: "Invitation results:"
+      user_exists: "User is already a member of sciNote."
+      user_exists_unconfirmed: "User is already a member of sciNote but is not confirmed yet - cannot invite to team %{organization}."
+      user_exists_and_in_org: "User is already a member of sciNote and team %{organization} as %{role}."
+      user_exists_invited_to_org: "User was already a member of sciNote - successfully invited to team %{organization} as %{role}."
+      user_created: "User succesfully invited to sciNote."
+      user_created_invited_to_org: "User successfully invited to sciNote and team %{organization} as %{role}."
+      user_invalid: "Invalid email."
+      too_many_emails: "Only invited first %{nr} emails. To invite more users, "
 
   time:
     formats:

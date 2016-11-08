@@ -67,10 +67,10 @@
         <%= t("users.settings.organizations.edit.manage_users") %>
       </div>
       <div class="panel-body">
-        <%= link_to "#", class: "btn btn-primary", data: { toggle: "modal", target: "#add-user-modal" } do %>
+        <a href="#" class="btn btn-primary" data-trigger="invite-users" data-modal-id="org-invite-users-modal">
           <span class="glyphicon glyphicon-plus"></span>
           <%= t("users.settings.organizations.edit.add_user") %>
-        <% end %>
+        </a>
         <div class="users-datatable">
           <table id="users-table" class="table" data-source="<%= organization_users_datatable_path(@org, format: :json) %>">
             <thead>
@@ -95,7 +95,15 @@
 
 <%= render partial: "users/settings/organizations/name_modal.html.erb" %>
 <%= render partial: "users/settings/organizations/description_modal.html.erb" %>
-<%= render partial: "users/settings/organizations/add_user_modal.html.erb", locals: { org: @org } %>
+<%= render(
+      partial: 'shared/invite_users_modal.html.erb',
+      locals: {
+        modal_id: 'org-invite-users-modal',
+        type: 'invite_to_org',
+        organization: @org
+      }
+    )
+%>
 <%= render partial: "users/settings/organizations/destroy_modal.html.erb", locals: { org: @org } %>
 <%= render partial: "users/settings/organizations/destroy_user_organization_modal.html.erb" %>
 <%= stylesheet_link_tag 'datatables' %>

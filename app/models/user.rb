@@ -133,39 +133,6 @@ class User < ActiveRecord::Base
     .distinct
   end
 
-  # Search all active users inside given organization for
-  # username & email.
-  def self.organization_search(
-    active_only,
-    query = nil,
-    organization = nil
-  )
-
-    if !organization.present?
-      result = nil
-    else
-
-      result = User.all
-
-      if active_only
-        result = result.where.not(confirmed_at: nil)
-      end
-
-      ignored_ids =
-        UserOrganization
-        .select(:user_id)
-        .where(organization_id: organization.id)
-      result =
-        result
-        .where("users.id IN (?)", ignored_ids)
-
-      result
-      .where_attributes_like([:full_name, :email], query)
-      .distinct
-    end
-  end
-
-
   def empty_avatar(name, size)
     file_ext = name.split(".").last
     self.avatar_file_name = name

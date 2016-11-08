@@ -29,15 +29,19 @@ Rails.application.routes.draw do
   put "users/settings/organizations/:organization_id", to: "users/settings#update_organization", as: "update_organization"
   get "users/settings/organizations/:organization_id/name", to: "users/settings#organization_name", as: "organization_name"
   get "users/settings/organizations/:organization_id/description", to: "users/settings#organization_description", as: "organization_description"
-  get "users/settings/organizations/:organization_id/search", to: "users/settings#search_organization_users", as: "search_organization_users"
   post "users/settings/organizations/:organization_id/users_datatable", to: "users/settings#organization_users_datatable", as: "organization_users_datatable"
   delete "users/settings/organizations/:organization_id", to: "users/settings#destroy_organization", as: "destroy_organization"
-  post "users/settings/user_organizations/new", to: "users/settings#create_user_organization", as: "create_user_organization"
-  post "users/settings/users_organizations/new_user", to: "users/settings#create_user_and_user_organization", as: "create_user_and_user_organization"
   put "users/settings/user_organizations/:user_organization_id", to: "users/settings#update_user_organization", as: "update_user_organization"
   get "users/settings/user_organizations/:user_organization_id/leave_html", to: "users/settings#leave_user_organization_html", as: "leave_user_organization_html"
   get "users/settings/user_organizations/:user_organization_id/destroy_html", to: "users/settings#destroy_user_organization_html", as: "destroy_user_organization_html"
   delete "users/settings/user_organizations/:user_organization_id", to: "users/settings#destroy_user_organization", as: "destroy_user_organization"
+
+  # Invite users
+  devise_scope :user do
+    post '/invite',
+         to: 'users/invitations#invite_users',
+         as: 'invite_users'
+  end
 
   # Notifications
   get 'users/:id/recent_notifications',
