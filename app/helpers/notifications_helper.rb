@@ -20,18 +20,15 @@ module NotificationsHelper
 
   def generate_notification(user, target_user, org, role, project)
     if org
-      if role
-        title = I18n.t('notifications.assign_user_to_organization',
-                       assigned_user: target_user.name,
-                       role: role,
-                       organization: org.name,
-                       assigned_by_user: user.name)
-      else
-        title = I18n.t('notifications.unassign_user_from_organization',
-                       unassigned_user: target_user.name,
-                       organization: org.name,
-                       unassigned_by_user: user.name)
-      end
+      title = I18n.t('notifications.unassign_user_from_organization',
+                     unassigned_user: target_user.name,
+                     organization: org.name,
+                     unassigned_by_user: user.name)
+      title = I18n.t('notifications.assign_user_to_organization',
+                     assigned_user: target_user.name,
+                     role: role,
+                     organization: org.name,
+                     assigned_by_user: user.name) if role
       message = "#{I18n.t('search.index.organization')} #{org.name}"
     elsif project
       title = I18n.t('activities.unassign_user_from_project',
