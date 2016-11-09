@@ -29,7 +29,7 @@
     <a href="#" class="btn btn-default disabled"><span class="glyphicon glyphicon-export"></span><span class="hidden-xs-custom">&nbsp;<%= t("my_modules.protocols.buttons.export") %></span></a>
   <% end %>
   <% if can_copy_protocol_to_repository(@my_module) %>
-    <%= link_to copy_to_repository_modal_protocol_path(@protocol, format: :json), class: "btn btn-default", remote: true, data: { action: "copy-to-repository" } do %>
+    <%= link_to copy_to_repository_modal_protocol_path(@protocol, format: :json), id: "protocol-copy-to-repository", class: "btn btn-default", remote: true, data: { action: "copy-to-repository" } do %>
       <span class="glyphicon glyphicon-saved"></span><span class="hidden-xs-custom">&nbsp;<%= t("my_modules.protocols.buttons.copy_to_repository") %></span>
       <% end %>
   <% else %>

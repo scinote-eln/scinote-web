@@ -100,16 +100,25 @@ function bindEditDueDateAjax() {
 
 function initTutorial() {
   var currentStep = Cookies.get('current_tutorial_step');
-  if (showTutorial() && (currentStep > 8 && currentStep < 12)) {
-    var resultsTab = $("#results-nav-tab");
-    var moduleProtocolsTutorial = $("[data-role='tutorial-data']").attr("data-module-protocols-step-text");
-    var moduleProtocolsClickResultsTutorial = $("[data-role='tutorial-data']").attr("data-module-protocols-click-results-step-text");
+  if (showTutorial() && (currentStep > 8 && currentStep < 13)) {
+    var resultsTab = $('#results-nav-tab');
+    var saveRepositoryButton = $('#protocol-copy-to-repository').get(0);
+    var moduleProtocolsTutorial = $("[data-role='tutorial-data']")
+      .attr('data-module-protocols-step-text');
+    var moduleProtocolsSaveTutorial = $("[data-role='tutorial-data']")
+      .attr('data-module-protocols-save-step-text');
+    var moduleProtocolsClickResultsTutorial = $("[data-role='tutorial-data']")
+      .attr('data-module-protocols-click-results-step-text');
 
     introJs()
       .setOptions({
         steps: [
           {
             intro: moduleProtocolsTutorial
+          },
+          {
+            intro: moduleProtocolsSaveTutorial,
+            element: saveRepositoryButton
           },
           {
             intro: moduleProtocolsClickResultsTutorial,
@@ -127,28 +136,28 @@ function initTutorial() {
         exitOnEsc: false,
         tooltipClass: 'custom'
       })
-      .onafterchange(function(tarEl) {
+      .onafterchange(function() {
         Cookies.set('current_tutorial_step', this._currentStep + 10);
-        if (this._currentStep == 1) {
+        if (this._currentStep === 2) {
           setTimeout(function() {
             $('.next-page-link a.introjs-nextbutton')
               .removeClass('introjs-disabled')
-              .attr('href', resultsTab.find("a").attr('href'));
+              .attr('href', resultsTab.find('a').attr('href'));
             positionTutorialTooltip();
           }, 500);
         } else {
           positionTutorialTooltip();
         }
       })
-      .goToStep(currentStep == 11 ? 2 : 1)
+      .goToStep(currentStep === 11 ? 2 : 1)
       .start();
 
     window.onresize = positionTutorialTooltip;
 
     // Destroy first-time tutorial cookies when skip tutorial
     // or end tutorial is clicked
-    $(".introjs-skipbutton").each(function (){
-      $(this).click(function (){
+    $('.introjs-skipbutton').each(function() {
+      $(this).click(function() {
         Cookies.remove('tutorial_data');
         Cookies.remove('current_tutorial_step');
       });
