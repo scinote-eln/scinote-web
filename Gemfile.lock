@@ -193,6 +193,8 @@ GEM
     polyglot (0.3.5)
     powerpack (0.1.1)
     puma (2.15.3)
+    quill-rails (0.1.4)
+      railties (>= 3.1.0, < 5.0)
     rack (1.6.4)
     rack-test (0.6.3)
       rack (>= 1.0)
@@ -353,6 +355,7 @@ DEPENDENCIES
   paperclip (~> 4.3)
   pg
   puma
+  quill-rails (~> 0.1.0)
   rails (= 4.2.5)
   rails_12factor
   redcarpet
