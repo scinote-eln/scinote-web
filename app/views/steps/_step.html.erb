@@ -35,7 +35,7 @@
           <% if step.description.blank? %>
             <em><%= t("protocols.steps.no_description") %></em>
           <% else %>
-            <%= step.description %>
+            <%= step.description.html_safe %>
           <% end %>
           <hr>
           <div class="row">

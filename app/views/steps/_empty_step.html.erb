@@ -26,8 +26,7 @@
 <div class="tab-content">
   <div class="tab-pane active" role="tabpanel" id="new-step-main">
     <%= f.text_field :name, label: t("protocols.steps.new.name"), placeholder: t("protocols.steps.new.name_placeholder") %>
-
-    <%= f.text_area :description, label: t("protocols.steps.new.description"), placeholder: t("protocols.steps.new.description_placeholder") %>
+    <%= quill_editor nil, { name: 'step[description]', value: @step.description } %>
   </div>
   <div class="tab-pane" role="tabpanel" id="new-step-checklists">
     <%= f.nested_fields_for :checklists do |ff| %>
