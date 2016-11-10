@@ -64,6 +64,7 @@ module Users
               initials: email.upcase[0..1],
               skip_invitation: true
             )
+            user.update(invited_by: @user)
 
             result[:status] = :user_created
             result[:user] = user
