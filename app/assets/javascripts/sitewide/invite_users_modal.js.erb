@@ -164,6 +164,7 @@
       // Unbind event listeners
       orgSelectorCheckbox.off('change');
       tagsInput.off('itemAdded itemRemoved');
+      modal.find('[data-action=invite]').off('click');
 
       // Hide contents of the results <div>
       stepResultsDiv.html('');
