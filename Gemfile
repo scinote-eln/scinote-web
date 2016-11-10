@@ -58,7 +58,9 @@ gem 'aws-sdk-v1'
 gem 'delayed_job_active_record'
 gem 'devise-async'
 gem 'ruby-graphviz', '~> 1.2' # Graphviz for rails
-gem 'quill-rails', '~> 0.1.0' # Rich text editor
+gem 'quill-rails',
+    git: 'https://github.com/biosistemika/quill-rails.git',
+    branch: 'update_quill_version' # Rich text editor
 
 group :development, :test do
   gem 'byebug'
