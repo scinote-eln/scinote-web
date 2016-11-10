@@ -59,8 +59,7 @@ gem 'delayed_job_active_record'
 gem 'devise-async'
 gem 'ruby-graphviz', '~> 1.2' # Graphviz for rails
 gem 'quill-rails',
-    git: 'https://github.com/biosistemika/quill-rails.git',
-    branch: 'update_quill_version' # Rich text editor
+    git: 'https://github.com/biosistemika/quill-rails.git' # Rich text editor
 
 group :development, :test do
   gem 'byebug'
