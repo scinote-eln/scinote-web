@@ -548,7 +548,7 @@ class ReportsController < ApplicationController
         res << generate_new_el(false)
         el = generate_el(
           "reports/elements/result_text_element.html.erb",
-          { result: result_text }
+          result: result_text
         )
         el[:children] = generate_result_contents_json(result_text)
         res << el
