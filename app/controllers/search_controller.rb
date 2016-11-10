@@ -1,6 +1,5 @@
 class SearchController < ApplicationController
   before_filter :load_vars, only: :index
-  before_filter :load_markdown, only: :index
 
   def index
     if not @search_query
@@ -77,18 +76,6 @@ class SearchController < ApplicationController
     end
 
     @search_page = 1 if @search_page < 1
-  end
-
-  # Initialize markdown parser
-  def load_markdown
-    if @search_category == :results
-      @markdown = Redcarpet::Markdown.new(
-        Redcarpet::Render::HTML.new(
-          filter_html: true,
-          no_images: true
-        )
-      )
-    end
   end
 
   protected
