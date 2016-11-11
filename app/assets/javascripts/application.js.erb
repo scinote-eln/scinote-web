@@ -191,12 +191,32 @@ function notificationAlertClose(){
       .removeClass("alert-shown");
   });
 }
+(function(){
 
-$(document).ready(function(){
-  $('.tree-link a').each( function(){
-    truncateLongString( $(this), <%= Constants::NAME_TRUNCATION_LENGTH %>);
+  function tree_link_truncation() {
+    $('.tree-link a').each( function(){
+      truncateLongString( $(this), <%= Constants::NAME_TRUNCATION_LENGTH %>);
+    });
+    $(".tree-link span").each( function(){
+      truncateLongString( $(this), <%= Constants::NAME_TRUNCATION_LENGTH %>);
+    });
+  }
+
+  function hide_flash_msg() {
+    var flash = $('.alert');
+    if (flash.length > 0) {
+      window.setTimeout(function () {
+        flash.fadeTo(500, 0).slideUp(500, function () {
+          $(this).remove();
+          $('#content-wrapper')
+            .css('marginTop', '50px');
+        });
+      }, 5000);
+    }
+  }
+
+  $( document ).ready(function() {
+    tree_link_truncation();
+    hide_flash_msg();
   });
-  $(".tree-link span").each( function(){
-    truncateLongString( $(this), <%= Constants::NAME_TRUNCATION_LENGTH %>);
-  });
-});
+})();
