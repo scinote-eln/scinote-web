@@ -1512,7 +1512,22 @@ textarea.textarea-sm {
   }
 }
 
-.comment-form .btn.btn-default {
-  height: calc(100% + 14px);
-  min-height: 34px;
+.comment-form .input-group {
+  height: 100%;
+
+  textarea {
+    -webkit-margin-before: 1px;
+    -webkit-margin-after: 1px;
+  }
+
+  .input-group-btn {
+    height: 100%;
+
+    .btn.btn-default {
+      height: 100%;
+      min-height: 34px;
+      -webkit-padding-before: 0;
+      -webkit-padding-after: 0;
+    }
+  }
 }
