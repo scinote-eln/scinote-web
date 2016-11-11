@@ -46,7 +46,6 @@ gem 'roo', '~> 2.1.0' # Spreadsheet parser
 gem 'wicked_pdf'
 gem 'wkhtmltopdf-heroku'
 gem 'remotipart', '~> 1.2' # Async file uploads
-gem 'redcarpet' # Markdown parser
 gem 'faker' # Generate fake data
 gem 'auto_strip_attributes', '~> 2.1' # Removes unnecessary whitespaces from ActiveRecord or ActiveModel attributes
 gem 'deface', '~> 1.0'

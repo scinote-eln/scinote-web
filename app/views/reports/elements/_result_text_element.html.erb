@@ -23,11 +23,7 @@
   <div class="report-element-body">
     <div class="row">
       <div class="col-xs-12 text-container">
-        <% if markdown.present? %>
-          <%= markdown.render(result_text.text).html_safe %>
-        <% else %>
-          <%= result_text.text %>
-        <% end %>
+        <%= result_text.text.html_safe %>
       </div>
     </div>
   </div>

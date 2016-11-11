@@ -3,7 +3,6 @@ class ResultTextsController < ApplicationController
 
   before_action :load_vars, only: [:edit, :update, :download]
   before_action :load_vars_nested, only: [:new, :create]
-  before_action :load_markdown, only: [ :create, :update ]
 
   before_action :check_create_permissions, only: [:new, :create]
   before_action :check_edit_permissions, only: [:edit, :update]
@@ -63,8 +62,7 @@ class ResultTextsController < ApplicationController
             html: render_to_string({
               partial: "my_modules/result.html.erb",
               locals: {
-                result: @result,
-                markdown: @markdown
+                result: @result
               }
             })
           }, status: :ok
@@ -142,8 +140,7 @@ class ResultTextsController < ApplicationController
             html: render_to_string({
               partial: "my_modules/result.html.erb",
               locals: {
-                result: @result,
-                markdown: @markdown
+                result: @result
               }
             })
           }, status: :ok
@@ -180,16 +177,6 @@ class ResultTextsController < ApplicationController
     unless @my_module
       render_404
     end
-  end
-
-  # Initialize markdown parser
-  def load_markdown
-    @markdown = Redcarpet::Markdown.new(
-      Redcarpet::Render::HTML.new(
-        filter_html: true,
-        no_images: true
-      )
-    )
   end
 
   def check_create_permissions
