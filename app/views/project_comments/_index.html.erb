@@ -17,8 +17,8 @@
   <ul class="no-style double-line">
     <li>
       <hr>
-      <%= bootstrap_form_for :comment, url: {format: :json}, method: :post, remote: true do |f| %>
-        <%= f.text_field :message, hide_label: true, placeholder: t('projects.index.comment_placeholder'), append: f.submit('+'), help: '.' %>
+      <%= bootstrap_form_for :comment, url: {format: :json}, method: :post, remote: true, html: { class: 'comment-form' } do |f| %>
+        <%= f.text_area :message, hide_label: true, placeholder: t('projects.index.comment_placeholder'), append: f.submit('+'), help: '.' %>
       <% end %>
     </li>
   </ul>
