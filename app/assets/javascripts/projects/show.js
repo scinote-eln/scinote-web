@@ -64,15 +64,16 @@
   init();
 })();
 
-
 /* Initialize the first-time demo tutorial if needed. */
-(function(){
+(function() {
   function initializeTutorial() {
     if (showTutorial()) {
+      var stepNum = parseInt(Cookies.get('current_tutorial_step'), 10);
+
       introJs()
         .setOptions({
           overlayOpacity: '0.2',
-          hidePrev: true,
+          prevLabel: 'Back',
           nextLabel: 'Next',
           doneLabel: 'End tutorial',
           skipLabel: 'End tutorial',
@@ -80,39 +81,51 @@
           showStepNumbers: false,
           exitOnOverlayClick: false,
           exitOnEsc: false,
-          tooltipClass: 'custom next-page-link',
-          disableInteraction: true
-        })
-        .onafterchange(function (tarEl) {
-          Cookies.set('current_tutorial_step', this._currentStep + 4);
-
-          if (this._currentStep == 1) {
-            setTimeout(function() {
-              $('.next-page-link a.introjs-nextbutton')
-                .removeClass('introjs-disabled')
-                .attr('href', $('[data-canvas-link]').data('canvasLink'));
-              $('.introjs-disableInteraction').remove();
-            }, 500);
-          } else {
-
-          }
+          disableInteraction: true,
+          tooltipClass: 'custom next-page-link'
         })
         .start();
 
-      window.onresize = function() {
-        if (Cookies.get('current_tutorial_step') == 4 ) {
-          $(".introjs-tooltip").css("right", ($(".new-element.initial").width() + 60)  + "px");
+      // Page navigation when coming to this page from previous/next page
+      $(function() {
+        if (stepNum === 4) {
+          $('.introjs-prevbutton').removeClass('introjs-disabled');
+        } else if (stepNum === 5) {
+          $('.introjs-nextbutton').removeClass('introjs-disabled');
         }
-      };
+      });
 
-      // Destroy first-time tutorial cookies when skip tutorial
-      // or end tutorial is clicked
-      $(".introjs-skipbutton").each(function (){
-        $(this).click(function (){
-          Cookies.remove('tutorial_data');
-          Cookies.remove('current_tutorial_step');
-          restore_after_tutorial();
-        });
+      // Page navigation when already on this page
+      var tutorialData = JSON.parse(Cookies.get('tutorial_data'));
+      $('.introjs-skipbutton').click(function() {
+        restore_after_tutorial();
+      });
+      $('.introjs-prevbutton').click(function() {
+        Cookies.set('current_tutorial_step', --stepNum);
+
+        if (stepNum === 4) {
+          $('.introjs-prevbutton').removeClass('introjs-disabled');
+        } else if (stepNum < 4) {
+          // Going to previous page
+          var prevPage = tutorialData[0].previousPage;
+          $('.introjs-prevbutton').attr('href', prevPage);
+        }
+      });
+      $('.introjs-nextbutton').click(function() {
+        Cookies.set('current_tutorial_step', ++stepNum);
+
+        if (stepNum === 5) {
+          $('.introjs-nextbutton').removeClass('introjs-disabled');
+        } else if (stepNum > 5) {
+          // Going to next page
+
+          var prevPage = window.location.pathname;
+          tutorialData[0].previousPage = prevPage;
+          Cookies.set('tutorial_data', tutorialData);
+
+          var nextPage = $('[data-canvas-link]').data('canvasLink');
+          $('.introjs-nextbutton').attr('href', nextPage);
+        }
       });
     }
   }

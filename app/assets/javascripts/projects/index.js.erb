@@ -329,16 +329,21 @@
       });
 
     // Initialize first-time tutorial
-    if (Cookies.get('tutorial_data')) {
-      var tutorialData = JSON.parse(Cookies.get('tutorial_data'));
-      var goToStep = 1;
+    var tutorialData = Cookies.get('tutorial_data');
+    if (tutorialData) {
+      tutorialData = JSON.parse(tutorialData);
       var demoProjectId = tutorialData[0].project;
-      if (Cookies.get('current_tutorial_step')) {
-        goToStep = parseInt(Cookies.get('current_tutorial_step'), 10);
+      var demoProject = $('#' + demoProjectId);
+      var stepNum = parseInt(Cookies.get('current_tutorial_step'), 10);
+      if (isNaN(stepNum)) {
+        stepNum = 1;
+        Cookies.set('current_tutorial_step', stepNum);
       }
-      var demoProject = $("#" + demoProjectId);
-      if (goToStep < 4) {
-        var projectOptionsTutorial = $("#projects-toolbar").attr("data-project-options-step-text");
+
+      if (stepNum < 4) {
+        var projectOptionsTutorial =
+          $('#projects-toolbar')
+            .attr('data-project-options-step-text');
         demoProject.attr('data-step', '3');
         demoProject.attr('data-intro', projectOptionsTutorial);
         demoProject.attr('data-tooltipClass', 'custom next-page-link');
@@ -347,13 +352,12 @@
           demoProject.attr('data-position', 'top');
         } // Otherwise show bottom
 
-        var $introjs = introJs();
-        $introjs
+        introJs()
           .setOptions({
             overlayOpacity: '0.2',
-            hidePrev: true,
-            nextLabel: 'Next',
+            hidePrev: true, // Doesn't work, so it's handled in css
             prevLabel: 'Back',
+            nextLabel: 'Next',
             doneLabel: 'End tutorial',
             skipLabel: 'End tutorial',
             showBullets: false,
@@ -364,43 +368,13 @@
             tooltipClass: 'custom',
             tooltipPosition: 'right'
           })
-          .goToStep(goToStep)
-          .onafterchange(function (tarEl) {
-            Cookies.set('current_tutorial_step', this._currentStep+1);
-            if (this._currentStep == 2) {
-              // Go to project canvas
-              setTimeout(function() {
-                $('.next-page-link a.introjs-nextbutton')
-                  .removeClass('introjs-disabled')
-                  .attr('href', $('#' + demoProjectId + '-project-canvas-link').attr('href'));
-
-                // Disabling interactions for individual steps is
-                // not (yet) possible in intro.js
-                $(".introjs-disableInteraction").remove();
-              }, 500);
-            }
-          })
+          .goToStep(stepNum)
           .start();
-
-        // Destroy first-time tutorial cookies when skip tutorial
-        // or end tutorial is clicked
-        $('.introjs-skipbutton').each(function (){
-          $(this).click(function (){
-            Cookies.remove('tutorial_data');
-            Cookies.remove('current_tutorial_step');
-            restore_after_tutorial();
-          });
-        });
-
-        window.onresize = function() {
-          if (goToStep == 3) {
-            introJs().refresh();
-          }
-        };
       }
-      else if (goToStep > 21) {
+      else if (stepNum > 18) {
         var archiveProjectTutorial = $("#projects-toolbar").attr("data-archive-project-step-text");
         var goodbye_message = $("#projects-toolbar").attr("data-goodbye-tutorial");
+        stepNum = 20;
         var position = "right";
         if (demoProject.offset().left > window.innerWidth / 2 || window.innerWidth < demoProject.width() + 100) {
           if (demoProject.offset().top > 500 && demoProject.offset().top > window.innerHeight / 2) {
@@ -432,16 +406,43 @@
             exitOnEsc: false,
             tooltipClass: 'custom next-page-link'
           })
-          .onafterchange(function() {
-            Cookies.set('current_tutorial_step', this._currentStep + 24);
-          })
-          .oncomplete(function () {
-            Cookies.remove('tutorial_data');
-            Cookies.remove('current_tutorial_step');
-            restore_after_tutorial();
-          })
           .start();
       }
+
+      // Page navigation when coming to this page from previous/next page
+      $(function() {
+        if (stepNum === 3) {
+          $('.introjs-nextbutton').removeClass('introjs-disabled');
+        }
+      });
+
+      // Page navigation when already on this page
+      $('.introjs-skipbutton').click(function() {
+        restore_after_tutorial();
+      });
+      $('.introjs-prevbutton').click(function() {
+        if (stepNum > 1) {
+          Cookies.set('current_tutorial_step', --stepNum);
+        }
+      });
+      $('.introjs-nextbutton').click(function() {
+        Cookies.set('current_tutorial_step', ++stepNum);
+
+        if (stepNum === 3) {
+          $('.introjs-nextbutton').removeClass('introjs-disabled');
+        } else if (stepNum > 3) {
+          // Going to next page
+
+          var prevPage = window.location.pathname;
+          tutorialData[0].previousPage = prevPage;
+          Cookies.set('tutorial_data', tutorialData);
+
+          var nextPage =
+            $('#' + demoProjectId + '-project-canvas-link')
+              .attr('href');
+          $('.introjs-nextbutton').attr('href', nextPage);
+        }
+      });
     }
   }
 
@@ -470,7 +471,10 @@
     });
   }
 
-  function restore_after_tutorial(){
+  function restore_after_tutorial() {
+    Cookies.remove('tutorial_data');
+    Cookies.remove('current_tutorial_step');
+
     $.each($('.panel'), function(i, el){
       $(el)
       .find('.tab-content')
