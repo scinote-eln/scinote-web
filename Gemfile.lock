@@ -1,3 +1,10 @@
+GIT
+  remote: https://github.com/biosistemika/quill-rails.git
+  revision: a1ae9f8a59d42661f340437bc5f5951530628b15
+  specs:
+    quill-rails (0.1.4)
+      railties (>= 3.1.0, < 5.0)
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -193,8 +200,6 @@ GEM
     polyglot (0.3.5)
     powerpack (0.1.1)
     puma (2.15.3)
-    quill-rails (0.1.4)
-      railties (>= 3.1.0, < 5.0)
     rack (1.6.4)
     rack-test (0.6.3)
       rack (>= 1.0)
@@ -355,7 +360,7 @@ DEPENDENCIES
   paperclip (~> 4.3)
   pg
   puma
-  quill-rails (~> 0.1.0)
+  quill-rails!
   rails (= 4.2.5)
   rails_12factor
   redcarpet
