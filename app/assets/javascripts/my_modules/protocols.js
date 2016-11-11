@@ -100,7 +100,7 @@ function bindEditDueDateAjax() {
 
 function initTutorial() {
   var currentStep = Cookies.get('current_tutorial_step');
-  if (showTutorial() && (currentStep > 8 && currentStep < 13)) {
+  if (showTutorial() && (currentStep > 10 && currentStep < 15)) {
     var resultsTab = $('#results-nav-tab');
     var saveRepositoryButton = $('#protocol-copy-to-repository').get(0);
     var moduleProtocolsTutorial = $("[data-role='tutorial-data']")
@@ -137,7 +137,7 @@ function initTutorial() {
         tooltipClass: 'custom'
       })
       .onafterchange(function() {
-        Cookies.set('current_tutorial_step', this._currentStep + 10);
+        Cookies.set('current_tutorial_step', this._currentStep + 12);
         if (this._currentStep === 2) {
           setTimeout(function() {
             $('.next-page-link a.introjs-nextbutton')
@@ -149,7 +149,7 @@ function initTutorial() {
           positionTutorialTooltip();
         }
       })
-      .goToStep(currentStep === 11 ? 2 : 1)
+      .goToStep(currentStep === 13 ? 2 : 1)
       .start();
 
     window.onresize = positionTutorialTooltip;

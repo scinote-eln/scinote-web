@@ -84,7 +84,7 @@
           disableInteraction: true
         })
         .onafterchange(function (tarEl) {
-          Cookies.set('current_tutorial_step', this._currentStep + 2);
+          Cookies.set('current_tutorial_step', this._currentStep + 4);
 
           if (this._currentStep == 1) {
             setTimeout(function() {

@@ -698,6 +698,47 @@ function initImport() {
   });
 }
 
+/* Initilize first-time tutorial if needed */
+function initTutorial() {
+  var currentStep = Cookies.get('current_tutorial_step');
+  var protocolButtons = $('.nav-tab .nav-settings').get(0);
+  if (currentStep && (currentStep > 20 && currentStep < 23)) {
+    introJs()
+      .setOptions({
+        overlayOpacity: '0.1',
+        nextLabel: 'Next',
+        doneLabel: 'End tutorial',
+        skipLabel: 'End tutorial',
+        showBullets: false,
+        showStepNumbers: false,
+        exitOnOverlayClick: false,
+        exitOnEsc: false,
+        tooltipClass: 'custom'
+      })
+      .onafterchange(function() {
+        Cookies.set('current_tutorial_step', this._currentStep + 22);
+
+        if (this._currentStep === 1) {
+          Cookies.set('current_tutorial_step', this._currentStep + 22);
+          setTimeout(function() {
+            $('.introjs-tooltipbuttons a.introjs-nextbutton')
+              .removeClass('introjs-disabled')
+              .attr('href', '/');
+          }, 500);
+        }
+      }).start();
+
+    // Destroy first-time tutorial cookies when skip tutorial
+    // or end tutorial is clicked
+    $('.introjs-skipbutton').each(function() {
+      $(this).click(function() {
+        Cookies.remove('tutorial_data');
+        Cookies.remove('current_tutorial_step');
+      });
+    });
+  }
+}
+
 // Initialize everything
 updateButtons();
 initProtocolsTable();
@@ -707,3 +748,4 @@ initLinkedChildrenModal();
 initCreateNewModal();
 initModals();
 initImport();
+initTutorial();

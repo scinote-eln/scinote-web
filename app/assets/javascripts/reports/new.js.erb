@@ -1144,13 +1144,12 @@ function initializeTutorial() {
         disableInteraction: true
       })
       .onafterchange(function (tarEl) {
-        Cookies.set('current_tutorial_step', this._currentStep + 18);
-
+        Cookies.set('current_tutorial_step', this._currentStep + 20);
         if (this._currentStep == 1) {
           setTimeout(function() {
             $('.next-page-link a.introjs-nextbutton')
               .removeClass('introjs-disabled')
-              .attr('href', tarEl.href);
+              .attr('href', '/protocols');
             $('.introjs-disableInteraction').remove();
           }, 500);
         } else {
@@ -1160,7 +1159,7 @@ function initializeTutorial() {
       .start();
 
     window.onresize = function() {
-      if (Cookies.get('current_tutorial_step') == 18) {
+      if (Cookies.get('current_tutorial_step') == 20) {
         $(".introjs-tooltip").css("right", ($(".new-element.initial").width() + 60)  + "px");
       }
     };
@@ -1183,7 +1182,7 @@ function showTutorial() {
   else
     return false;
   var currentStep = Cookies.get('current_tutorial_step');
-  if (currentStep < 16 || currentStep > 18)
+  if (currentStep < 18 && currentStep > 22)
     return false;
   var tutorialProjectId = tutorialData[0].project;
   var currentProjectId = $("#data-holder").attr("data-project-id");

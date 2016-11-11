@@ -3126,7 +3126,7 @@ function initializeTutorial(isEditMode) {
     canvas_tutorial_helper();
     var currentStep = Cookies.get('current_tutorial_step');
     // Add edit canvas tutorial step and show it
-    if (!isEditMode && currentStep > 2 && currentStep < 6) {
+    if (!isEditMode && currentStep > 4 && currentStep < 8) {
       var $introJs = introJs();
       $introJs
         .setOptions({
@@ -3141,7 +3141,7 @@ function initializeTutorial(isEditMode) {
           tooltipClass: 'custom next-page-link'
         })
         .onafterchange(function (tarEl) {
-          Cookies.set('current_tutorial_step', this._currentStep + 4);
+          Cookies.set('current_tutorial_step', this._currentStep + 6);
           if (this._currentStep == 1) {
             $introJs.setOption("disableInteraction", true);
             // Go to project canvas
@@ -3160,13 +3160,13 @@ function initializeTutorial(isEditMode) {
             });
           }
         })
-        .goToStep(currentStep == "5" ? 2 : 1)
+        .goToStep(currentStep == "6" ? 2 : 1)
         .start();
 
         window.onresize = function() {
           $(".introjs-tooltip").css("right", ($("#canvas-container").width() + 20)  + "px");
         };
-    } else if (isEditMode && currentStep > 4 && currentStep < 7) {
+    } else if (isEditMode && currentStep > 6 && currentStep < 10) {
       canvas_tutorial_helper();
       var editWorkflowTutorial = $("#canvas-container").attr("data-edit-workflow-step-text");
       var editWorkflowClickSaveTutorial = $("#canvas-container").attr("data-edit-workflow-click-save-step-text");
@@ -3200,7 +3200,7 @@ function initializeTutorial(isEditMode) {
           })
           .onafterchange(function (tarEl) {
             // Go to edit workflow mode
-            Cookies.set('current_tutorial_step', this._currentStep + 6);
+            Cookies.set('current_tutorial_step', this._currentStep + 8);
             if (this._currentStep == 0) {
                 $(".introjs-tooltipReferenceLayer").addClass("max");
                 $(".introjs-tooltip").css("left", "0");
@@ -3228,11 +3228,10 @@ function initializeTutorial(isEditMode) {
           });
         });
       }, 600);
-    } else if (!isEditMode && currentStep > 5 || currentStep < 10) {
+    } else if (!isEditMode && currentStep > 8 && currentStep < 13) {
       canvas_tutorial_helper();
       var sidebarTutorial = $("#canvas-container").attr("data-sidebar-step-text");
       var sidebarClickModuleTutorial = $("#canvas-container").attr("data-sidebar-click-module-step-text");
-      Cookies.set('current_tutorial_step', '8');
       var qpcrModuleLeaf = $("li.leaf[data-module-id='" + tutorialData[0].qpcr_module + "']");
 
       introJs()
@@ -3260,7 +3259,7 @@ function initializeTutorial(isEditMode) {
           tooltipClass: 'custom next-page-link'
         })
         .onafterchange(function(tarEl) {
-          Cookies.set('current_tutorial_step', this._currentStep + 8);
+          Cookies.set('current_tutorial_step', this._currentStep + 10);
           if (this._currentStep == 1) {
             setTimeout(function() {
               $('.next-page-link a.introjs-nextbutton')
@@ -3271,7 +3270,7 @@ function initializeTutorial(isEditMode) {
             $(".introjs-tooltipReferenceLayer").css("top", $("#slide-panel .tree").height()/3 + "px");
           }
         })
-        .goToStep(currentStep == "9" ? 2 : 1)
+        .goToStep(currentStep == "10" ? 2 : 1)
         .start();
 
     }
