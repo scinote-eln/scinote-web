@@ -27,7 +27,7 @@ function textValidator(ev, textInput, textLimitMin, textLimitMax, clearErr) {
 
   var text = $(textInput).val().trim();
   $(textInput).val(text);
-  var text_from_html = (new DOMParser).parseFromString(text,"text/html").documentElement.textContent;
+  var text_from_html = $("<div/>").html(text).text();
   if (text_from_html.length < text.length) text = text_from_html;
 
   var nameTooShort = text.length < textLimitMin;
