@@ -428,6 +428,13 @@ a[data-toggle="tooltip"] {
   }
 }
 
+.has-error {
+  .ql-container.ql-snow,
+  .ql-toolbar.ql-snow {
+    border: 1px solid $color-apple-blossom;
+  }
+}
+
 .nav-tabs-less {
   margin-bottom: 0;
 }

@@ -5,7 +5,7 @@ class Step < ActiveRecord::Base
   validates :name,
             presence: true,
             length: { maximum: Constants::NAME_MAX_LENGTH }
-  validates :description, length: { maximum: Constants::TEXT_MAX_LENGTH }
+  validates :description, length: { maximum: Constants::RICH_TEXT_MAX_LENGTH }
   validates :position, presence: true
   validates :completed, inclusion: { in: [true, false] }
   validates :user, :protocol, presence: true
