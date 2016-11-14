@@ -745,6 +745,14 @@ a[data-toggle="tooltip"] {
 }
 
 .user-statistics {
+  .list-inline {
+    margin-left: 15px;
+  }
+
+  .label {
+    font-size: 100%;
+  }
+
   li {
     height: 100px;
     margin: 15px;
