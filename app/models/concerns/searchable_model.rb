@@ -21,13 +21,16 @@ module SearchableModel
       end
 
       if query.is_a? Array
+
+        rich_text_regex = '<*strong>|<*href>|<*div>|' \
+        '<*link>|<*span>|<(.*)class(.*)>|<(.*)href(.*)>|' \
+        '<(.*)data(.*)>|<*sub>|<*sup>|<*blockquote>|<*li>|' \
+        '<(.*)style(.*)>|<*ol>|<*ul>|<*pre>'
+
         if attrs.length > 0
           where_str =
             (attrs.map.with_index do |a, i|
-              "REGEXP_REPLACE(#{a}, E'<.strong>|<.href>|<.div>|" \
-              "<.link>|<.span>|<(.*)class(.*)>|<(.*)href(.*)>|" \
-              "<(.*)data(.*)>|<.sub>|<.sup>|<.blockquote>|<.li>|" \
-              "<.ol>|<.ul>|<.pre>','', 'g')" \
+              "REGEXP_REPLACE(#{a}, E'#{rich_text_regex}','', 'g')" \
               "ILIKE ANY (array[ :t#{i}]) OR "
             end
             ).join[0..-5]
@@ -42,9 +45,7 @@ module SearchableModel
         if attrs.length > 0
           where_str =
             (attrs.map.with_index do |a, i|
-              "REGEXP_REPLACE(#{a}, E'<.strong>|<.href>|<.div>|" \
-              "<.link>|<.span>|<(.*)class(.*)>|<(.*)href(.*)>|<(.*)data(.*)>|" \
-              "<.sub>|<.sup>|<.blockquote>|<.li>|<.ol>|<.ul>|<.pre>'," \
+              "REGEXP_REPLACE(#{a}, E'#{rich_text_regex}'," \
               " '', 'g' ) ILIKE :t#{i} OR "
             end
             ).join[0..-5]
