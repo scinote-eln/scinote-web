@@ -17,7 +17,7 @@
 
   var editProjectModal = null;
   var editProjectModalTitle = null;
-  var editProjectModalForm = null;
+  var editProjectModalBody = null;
   var editProjectBtn = null;
 
   var manageUsersModal = null;
@@ -37,6 +37,73 @@
     .find("input[type='radio']")
     .attr("checked", "checked")
     .prop("checked", true);
+  }
+
+  /**
+   * Initializes page
+   */
+  function init() {
+    newProjectModal = $('#new-project-modal');
+    newProjectModalForm = newProjectModal.find('form');
+    newProjectModalBody = newProjectModal.find('.modal-body');
+    newProjectBtn = $('#new-project-btn');
+
+    editProjectModal = $('#edit-project-modal');
+    editProjectModalTitle = editProjectModal.find('#edit-project-modal-label');
+    editProjectModalBody = editProjectModal.find('.modal-body');
+    editProjectBtn = editProjectModal.find(".btn[data-action='submit']");
+
+    manageUsersModal = $('#manage-users-modal');
+    manageUsersModalBody = manageUsersModal.find('.modal-body');
+    manageUsersModalFooter = manageUsersModal.find('.modal-footer');
+
+    initNewProjectModal();
+    initEditProjectModal();
+    initManageUsersModal();
+    Comments.initCommentOptions('ul.content-comments', true);
+    Comments.initEditComments('.panel-project .tab-content');
+    Comments.initDeleteComments('.panel-project .tab-content');
+
+    // initialize project tab remote loading
+    $('.panel-project .panel-footer [role=tab]')
+
+      .on('ajax:before', function(e) {
+        var $this = $(this);
+        var parentNode = $this.parents('li');
+        var targetId = $this.attr('aria-controls');
+
+        if (parentNode.hasClass('active')) {
+          // TODO move to fn
+          parentNode.removeClass('active');
+          $('#' + targetId).removeClass('active');
+          return false;
+        }
+      })
+
+      .on('ajax:success', function(e, data, status, xhr) {
+        var $this = $(this);
+        var targetId = $this.attr('aria-controls');
+        var target = $('#' + targetId);
+        var parentNode = $this.parents('ul').parent();
+
+        target.html(data.html);
+        initUsersEditLink(parentNode);
+        Comments.form(parentNode);
+        Comments.moreComments(parentNode);
+
+        // TODO move to fn
+        parentNode.find('.active').removeClass('active');
+        $this.parents('li').addClass('active');
+        target.addClass('active');
+
+        Comments.scrollBottom(parentNode);
+      })
+
+      .on('ajax:error', function() {
+        // TODO
+      });
+
+    initTutorial();
   }
 
   /**
@@ -265,70 +332,10 @@
     initUserRoleForms();
   }
 
-  function init() {
-
-    newProjectModal = $("#new-project-modal");
-    newProjectModalForm = newProjectModal.find("form");
-    newProjectModalBody = newProjectModal.find(".modal-body");
-    newProjectBtn = $("#new-project-btn");
-
-    editProjectModal = $("#edit-project-modal");
-    editProjectModalTitle = editProjectModal.find("#edit-project-modal-label");
-    editProjectModalBody = editProjectModal.find(".modal-body");
-    editProjectBtn = editProjectModal.find(".btn[data-action='submit']");
-
-    manageUsersModal = $("#manage-users-modal");
-    manageUsersModalBody = manageUsersModal.find(".modal-body");
-    manageUsersModalFooter = manageUsersModal.find(".modal-footer");
-
-    initNewProjectModal();
-    initEditProjectModal();
-    initManageUsersModal();
-    Comments.initCommentOptions("ul.content-comments", true);
-    Comments.initEditComments(".panel-project .tab-content");
-    Comments.initDeleteComments(".panel-project .tab-content");
-
-    // initialize project tab remote loading
-    $(".panel-project .panel-footer [role=tab]")
-
-      .on("ajax:before", function (e) {
-        var $this = $(this);
-        var parentNode = $this.parents("li");
-        var targetId = $this.attr("aria-controls");
-
-        if (parentNode.hasClass("active")) {
-          // TODO move to fn
-          parentNode.removeClass("active");
-          $("#" + targetId).removeClass("active");
-          return false;
-        }
-      })
-
-      .on("ajax:success", function (e, data, status, xhr) {
-
-        var $this = $(this);
-        var targetId = $this.attr("aria-controls");
-        var target = $("#" + targetId);
-        var parentNode = $this.parents("ul").parent();
-
-        target.html(data.html);
-        initUsersEditLink(parentNode);
-        Comments.form(parentNode);
-        Comments.moreComments(parentNode);
-
-        // TODO move to fn
-        parentNode.find(".active").removeClass("active");
-        $this.parents("li").addClass("active");
-        target.addClass("active");
-
-        Comments.scrollBottom(parentNode);
-      })
-
-      .on("ajax:error", function (e, xhr, status, error) {
-        // TODO
-      });
-
-    // Initialize first-time tutorial
+  /**
+   * Initializes tutorial
+   */
+  function initTutorial() {
     var tutorialData = Cookies.get('tutorial_data');
     if (tutorialData) {
       tutorialData = JSON.parse(tutorialData);
@@ -341,40 +348,15 @@
       }
 
       if (stepNum < 4) {
-        var projectOptionsTutorial =
-          $('#projects-toolbar')
-            .attr('data-project-options-step-text');
-        demoProject.attr('data-step', '3');
-        demoProject.attr('data-intro', projectOptionsTutorial);
-        demoProject.attr('data-tooltipClass', 'custom next-page-link');
-
-        if (demoProject.offset().top > window.innerHeight / 2) {
-          demoProject.attr('data-position', 'top');
-        } // Otherwise show bottom
-
-        introJs()
-          .setOptions({
-            overlayOpacity: '0.2',
-            hidePrev: true, // Doesn't work, so it's handled in css
-            prevLabel: 'Back',
-            nextLabel: 'Next',
-            doneLabel: 'End tutorial',
-            skipLabel: 'End tutorial',
-            showBullets: false,
-            showStepNumbers: false,
-            exitOnOverlayClick: false,
-            exitOnEsc: false,
-            disableInteraction: true,
-            tooltipClass: 'custom',
-            tooltipPosition: 'right'
-          })
-          .goToStep(stepNum)
-          .start();
+        var nextPage =
+          $('#' + demoProjectId + '-project-canvas-link').attr('href');
+        initPageTutorialSteps(1, 3, nextPage, tutorialBeforeCb,
+                              tutorialAfterCb);
       }
       else if (stepNum > 18) {
         var archiveProjectTutorial = $("#projects-toolbar").attr("data-archive-project-step-text");
         var goodbye_message = $("#projects-toolbar").attr("data-goodbye-tutorial");
-        stepNum = 20;
+        Cookies.set('current_tutorial_step', 20);
         var position = "right";
         if (demoProject.offset().left > window.innerWidth / 2 || window.innerWidth < demoProject.width() + 100) {
           if (demoProject.offset().top > 500 && demoProject.offset().top > window.innerHeight / 2) {
@@ -408,73 +390,50 @@
           })
           .start();
       }
-
-      // Page navigation when coming to this page from previous/next page
-      $(function() {
-        if (stepNum === 3) {
-          $('.introjs-nextbutton').removeClass('introjs-disabled');
-        }
-      });
-
-      // Page navigation when already on this page
-      $('.introjs-skipbutton').click(function() {
-        restore_after_tutorial();
-      });
-      $('.introjs-prevbutton').click(function() {
-        if (stepNum > 1) {
-          Cookies.set('current_tutorial_step', --stepNum);
-        }
-      });
-      $('.introjs-nextbutton').click(function() {
-        Cookies.set('current_tutorial_step', ++stepNum);
-
-        if (stepNum === 3) {
-          $('.introjs-nextbutton').removeClass('introjs-disabled');
-        } else if (stepNum > 3) {
-          // Going to next page
-
-          var prevPage = window.location.pathname;
-          tutorialData[0].previousPage = prevPage;
-          Cookies.set('tutorial_data', tutorialData);
-
-          var nextPage =
-            $('#' + demoProjectId + '-project-canvas-link')
-              .attr('href');
-          $('.introjs-nextbutton').attr('href', nextPage);
-        }
-      });
     }
   }
 
-  function project_tutorial_helper(){
-    $(document).ready(function(){
-      if( $('div').hasClass('introjs-overlay')){
-        $.each($('.panel'), function(i, el){
-          $(el)
-          .find('.panel-title')
-          .css({ 'pointer-events': 'none' });
-          $(el)
-          .find('.tab-content')
-          .css({ 'pointer-events': 'none' });
-          $(el)
-          .find('.form-submit-link')
-          .css({
-            'pointer-events': 'none',
-            'color': '<%= Constants::COLOR_ALTO %>'});
-          $(el)
-          .find('[data-action="edit"]')
-          .css({
-            'pointer-events': 'none',
-            'color': '<%= Constants::COLOR_ALTO %>'});
-        });
-      }
+  /**
+   * Callback to be executed before tutorial sterts
+   */
+  function tutorialBeforeCb() {
+    var tutorialData = JSON.parse(Cookies.get('tutorial_data'));
+    var projectOptionsTutorial =
+      $('#projects-toolbar').attr('data-project-options-step-text');
+    var demoProjectId = tutorialData[0].project;
+    var demoProject = $('#' + demoProjectId);
+    demoProject.attr('data-step', '3');
+    demoProject.attr('data-intro', projectOptionsTutorial);
+    demoProject.attr('data-tooltipClass', 'custom next-page-link');
+
+    if (demoProject.offset().top > window.innerHeight / 2) {
+      demoProject.attr('data-position', 'top');
+    } // Otherwise show bottom
+
+    $.each($('.panel'), function(i, el){
+      $(el)
+      .find('.panel-title')
+      .css({ 'pointer-events': 'none' });
+      $(el)
+      .find('.tab-content')
+      .css({ 'pointer-events': 'none' });
+      $(el)
+      .find('.form-submit-link')
+      .css({
+        'pointer-events': 'none',
+        'color': '<%= Constants::COLOR_ALTO %>'});
+      $(el)
+      .find('[data-action="edit"]')
+      .css({
+        'pointer-events': 'none',
+        'color': '<%= Constants::COLOR_ALTO %>'});
     });
   }
 
-  function restore_after_tutorial() {
-    Cookies.remove('tutorial_data');
-    Cookies.remove('current_tutorial_step');
-
+  /**
+   * Callback to be executed after tutorial exits
+   */
+  function tutorialAfterCb() {
     $.each($('.panel'), function(i, el){
       $(el)
       .find('.tab-content')
@@ -496,6 +455,4 @@
   }
 
   init();
-  project_tutorial_helper();
-
 }());
