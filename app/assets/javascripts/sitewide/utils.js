@@ -35,9 +35,11 @@ var TUTORIAL_STEPS_CNT = 20;
  * @param  {string} nextPagePath Next page absolute path
  * @param {function} beforeCb Callback called before the fucntion logic
  * @param {function} afterCb Callback called after the fucntion logic
+ * @param {object} steps Optional JSON containing introJs steps. They can be
+ *  specified here, or hardcoded in HTML.
  */
 function initPageTutorialSteps(pageFirstStep, pageLastStep, nextPagePath,
-                               beforeCb, afterCb) {
+                               beforeCb, afterCb, steps) {
   var tutorialData = Cookies.get('tutorial_data');
   if (tutorialData) {
     tutorialData = JSON.parse(tutorialData);
@@ -45,34 +47,57 @@ function initPageTutorialSteps(pageFirstStep, pageLastStep, nextPagePath,
     if (isNaN(stepNum)) {
       stepNum = 1;
       Cookies.set('current_tutorial_step', stepNum);
+      tutorialData[0].backPagesPaths = [];
+      Cookies.set('tutorial_data', tutorialData);
     }
+    var thisPagePath = window.location.pathname;
     beforeCb();
 
     // Initialize tutorial for the current page's steps
     var doneLabel = (pageLastStep === TUTORIAL_STEPS_CNT) ?
      'Start using sciNote' : 'End tutorial';
-    introJs()
-      .setOptions({
-        overlayOpacity: '0.2',
-        prevLabel: 'Back',
-        nextLabel: 'Next',
-        skipLabel: 'End tutorial',
-        doneLabel: doneLabel,
-        showBullets: false,
-        showStepNumbers: false,
-        exitOnOverlayClick: false,
-        exitOnEsc: false,
-        disableInteraction: true,
-        tooltipClass: 'custom next-page-link'
-      })
-      .goToStep(stepNum - (pageFirstStep - 1))
-      .start();
+    if (_.isUndefined(steps)) {
+      introJs()
+       .setOptions({
+         overlayOpacity: '0.2',
+         prevLabel: 'Back',
+         nextLabel: 'Next',
+         skipLabel: 'End tutorial',
+         doneLabel: doneLabel,
+         showBullets: false,
+         showStepNumbers: false,
+         exitOnOverlayClick: false,
+         exitOnEsc: false,
+         disableInteraction: true,
+         tooltipClass: 'custom next-page-link'
+       })
+       .goToStep(stepNum - (pageFirstStep - 1))
+       .start();
+    } else {
+      introJs()
+       .setOptions({
+         overlayOpacity: '0.2',
+         prevLabel: 'Back',
+         nextLabel: 'Next',
+         skipLabel: 'End tutorial',
+         doneLabel: doneLabel,
+         showBullets: false,
+         showStepNumbers: false,
+         exitOnOverlayClick: false,
+         exitOnEsc: false,
+         disableInteraction: true,
+         tooltipClass: 'custom next-page-link',
+         steps: steps
+       })
+       .goToStep(stepNum - (pageFirstStep - 1))
+       .start();
+    }
 
     // Page navigation when coming to this page from previous/next page
     $(function() {
       if (stepNum === pageFirstStep && stepNum > 1) {
         $('.introjs-prevbutton').removeClass('introjs-disabled');
-      } else if (stepNum === pageLastStep) {
+      } else if (stepNum === pageLastStep && stepNum < TUTORIAL_STEPS_CNT) {
         $('.introjs-nextbutton').removeClass('introjs-disabled');
       }
     });
@@ -94,9 +119,11 @@ function initPageTutorialSteps(pageFirstStep, pageLastStep, nextPagePath,
         if (stepNum === pageFirstStep && stepNum > 1) {
           $('.introjs-prevbutton').removeClass('introjs-disabled');
         } else if (stepNum < pageFirstStep) {
-          // Going to previous page
-          var prevPage = tutorialData[0].previousPage;
-          $('.introjs-prevbutton').attr('href', prevPage);
+          // Go to previous page;
+
+          var prevPagePath = tutorialData[0].backPagesPaths.pop();
+          Cookies.set('tutorial_data', tutorialData);
+          $('.introjs-prevbutton').attr('href', prevPagePath);
         }
       }
     });
@@ -108,12 +135,10 @@ function initPageTutorialSteps(pageFirstStep, pageLastStep, nextPagePath,
         if (stepNum === pageLastStep && stepNum < TUTORIAL_STEPS_CNT) {
           $('.introjs-nextbutton').removeClass('introjs-disabled');
         } else if (stepNum > pageLastStep) {
-          // Going to next page
+          // Go to next page
 
-          var prevPage = window.location.pathname;
-          tutorialData[0].previousPage = prevPage;
+          tutorialData[0].backPagesPaths.push(thisPagePath);
           Cookies.set('tutorial_data', tutorialData);
-
           $('.introjs-nextbutton').attr('href', nextPagePath);
         }
       }

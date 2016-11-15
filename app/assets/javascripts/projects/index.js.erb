@@ -339,21 +339,23 @@
     var tutorialData = Cookies.get('tutorial_data');
     if (tutorialData) {
       tutorialData = JSON.parse(tutorialData);
-      var demoProjectId = tutorialData[0].project;
-      var demoProject = $('#' + demoProjectId);
       var stepNum = parseInt(Cookies.get('current_tutorial_step'), 10);
       if (isNaN(stepNum)) {
         stepNum = 1;
         Cookies.set('current_tutorial_step', stepNum);
+        tutorialData[0].backPagesPaths = [];
+        Cookies.set('tutorial_data', tutorialData);
       }
+      var demoProjectId = tutorialData[0].project;
+      var demoProject = $('#' + demoProjectId);
 
-      if (stepNum < 4) {
+      if (stepNum <= 3) {
         var nextPage =
           $('#' + demoProjectId + '-project-canvas-link').attr('href');
         initPageTutorialSteps(1, 3, nextPage, tutorialBeforeCb,
                               tutorialAfterCb);
       }
-      else if (stepNum > 18) {
+      else if (stepNum >= 19) {
         var archiveProjectTutorial = $("#projects-toolbar").attr("data-archive-project-step-text");
         var goodbye_message = $("#projects-toolbar").attr("data-goodbye-tutorial");
         Cookies.set('current_tutorial_step', 20);
@@ -394,7 +396,7 @@
   }
 
   /**
-   * Callback to be executed before tutorial sterts
+   * Callback to be executed before tutorial starts
    */
   function tutorialBeforeCb() {
     var tutorialData = JSON.parse(Cookies.get('tutorial_data'));

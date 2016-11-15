@@ -72,7 +72,7 @@
   }
 
   /**
-   * Callback to be executed before tutorial sterts
+   * Callback to be executed before tutorial starts
    */
   function tutorialBeforeCb() {
     $.each( $(".panel-title"), function(){
