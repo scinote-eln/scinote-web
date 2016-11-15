@@ -239,8 +239,8 @@ function initReloadPageAfterInviteUsers() {
   $('[data-id=org-invite-users-modal]')
   .on('hidden.bs.modal', function() {
     if (!_.isUndefined($(this).attr('data-invited'))) {
-      // Reload the whole table
-      usersDatatable.ajax.reload();
+      // Reload page
+      location.reload();
     }
   });
 }
