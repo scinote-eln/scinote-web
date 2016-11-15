@@ -53,7 +53,8 @@ module ProtocolsImporter
       protocol_json['steps'].values.each do |step_json|
       step = Step.create!(
         name: step_json["name"],
-        description: step_json["description"],
+        description: # Sanitize description HTML
+          ActionController::Base.helpers.sanitize(step_json['description']),
         position: step_pos,
         completed: false,
         user: user,
