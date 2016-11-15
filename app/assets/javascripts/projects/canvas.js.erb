@@ -3161,13 +3161,16 @@ function initTutorial() {
             position: 'right'
           }
         ];
-        initPageTutorialSteps(8, 9, nextPage, tutorialBeforeCb,
-                              tutorialAfterCb, steps);
+
+        initPageTutorialSteps(8, 9, nextPage, tutorialBeforeCb, function() {
+          // Go out of edit canvas mode
+          $('.cancel-edit-canvas').click();
+
+          tutorialAfterCb();
+        }, steps);
+
       }, 1000);
     } else if (stepNum >= 10 || stepNum <= 11) {
-      // Go out of edit canvas mode
-      $('.cancel-edit-canvas').click();
-
       var qpcrModuleLeaf =
        $("li.leaf[data-module-id='" + tutorialData[0].qpcr_module + "']");
       var nextPage = qpcrModuleLeaf.find('a.module-link').attr('href');

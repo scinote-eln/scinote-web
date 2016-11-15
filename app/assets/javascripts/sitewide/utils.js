@@ -29,17 +29,19 @@ $.fn.onAjaxComplete = function (cb) {
 var TUTORIAL_STEPS_CNT = 20;
 
 /**
- * Initializes tutorial steps for the current page
+ * Initializes tutorial steps for the current page.
+ * NOTE: If some steps edit page, then this function needs to be called several
+ * times for the same page, but for different steps.
  * @param  {number} pageFirstStep Page's first step
  * @param  {number} pageLastStep Page's last step
  * @param  {string} nextPagePath Next page absolute path
- * @param {function} beforeCb Callback called before the fucntion logic
- * @param {function} afterCb Callback called after the fucntion logic
+ * @param {function} beforeCb Callback called before the tutorial starts
+ * @param {function} endCb Callback called after the tutorial ends
  * @param {object} steps Optional JSON containing introJs steps. They can be
  *  specified here, or hardcoded in HTML.
  */
 function initPageTutorialSteps(pageFirstStep, pageLastStep, nextPagePath,
-                               beforeCb, afterCb, steps) {
+                               beforeCb, endCb, steps) {
   var tutorialData = Cookies.get('tutorial_data');
   if (tutorialData) {
     tutorialData = JSON.parse(tutorialData);
@@ -108,8 +110,7 @@ function initPageTutorialSteps(pageFirstStep, pageLastStep, nextPagePath,
       Cookies.remove('tutorial_data');
       Cookies.remove('current_tutorial_step');
 
-      afterCb();
-      $('.introjs-overlay').remove();
+      endCb();
     });
 
     $('.introjs-prevbutton').click(function() {
@@ -124,6 +125,7 @@ function initPageTutorialSteps(pageFirstStep, pageLastStep, nextPagePath,
           var prevPagePath = tutorialData[0].backPagesPaths.pop();
           Cookies.set('tutorial_data', tutorialData);
           $('.introjs-prevbutton').attr('href', prevPagePath);
+          endCb();
         }
       }
     });
@@ -140,6 +142,7 @@ function initPageTutorialSteps(pageFirstStep, pageLastStep, nextPagePath,
           tutorialData[0].backPagesPaths.push(thisPagePath);
           Cookies.set('tutorial_data', tutorialData);
           $('.introjs-nextbutton').attr('href', nextPagePath);
+          endCb();
         }
       }
     });
