@@ -156,9 +156,7 @@ function sampleAlertMsgHide() {
 
 function initTutorial() {
   var currentStep = parseInt(Cookies.get('current_tutorial_step'), 10);
-  if (currentStep == 8)
-    currentStep++;
-  if (showTutorial() && (currentStep > 12 &&  currentStep < 16)) {
+  if (showTutorial() && (currentStep > 15 &&  currentStep < 19)) {
     var samplesTutorial =$("#samples-toolbar").attr("data-samples-step-text");
     var breadcrumbsTutorial = $("#samples-toolbar").attr("data-breadcrumbs-step-text");
 
@@ -187,7 +185,7 @@ function initTutorial() {
         tooltipClass: "custom"
       })
       .onafterchange(function (tarEl) {
-        Cookies.set('current_tutorial_step', this._currentStep + 14);
+        Cookies.set('current_tutorial_step', this._currentStep + 17);
 
         if (this._currentStep == 1) {
           setTimeout(function() {
@@ -201,7 +199,7 @@ function initTutorial() {
           positionTutorialTooltip();
         }
       })
-      .goToStep(currentStep == 15 ? 2 : 1)
+      .goToStep(currentStep == 18 ? 2 : 1)
       .start();
 
     // Destroy first-time tutorial cookies when skip tutorial

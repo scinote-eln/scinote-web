@@ -141,11 +141,12 @@
   /* Initilize first-time tutorial if needed */
   function initTutorial() {
     var currentStep = Cookies.get('current_tutorial_step');
-    if (showTutorial() && (currentStep > 14 && currentStep < 18)) {
+    if (showTutorial() && (currentStep > 17 && currentStep < 20)) {
       var reportsClickNewReportTutorial = $("#content").attr("data-reports-click-new-report-step-text");
       introJs()
         .setOptions({
-          steps: [{},
+          steps: [
+            {},
             {
               element: document.getElementById("new-report-btn"),
               intro: reportsClickNewReportTutorial,
@@ -163,7 +164,7 @@
           tooltipClass: 'custom'
         })
         .onafterchange(function (tarEl) {
-          Cookies.set('current_tutorial_step', this._currentStep + 16);
+          Cookies.set('current_tutorial_step', this._currentStep + 18);
 
           if (this._currentStep == 1) {
             setTimeout(function() {

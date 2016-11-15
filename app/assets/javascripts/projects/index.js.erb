@@ -398,10 +398,9 @@
           }
         };
       }
-      else if (goToStep > 18) {
+      else if (goToStep > 21) {
         var archiveProjectTutorial = $("#projects-toolbar").attr("data-archive-project-step-text");
         var goodbye_message = $("#projects-toolbar").attr("data-goodbye-tutorial");
-        Cookies.set('current_tutorial_step', '20');
         var position = "right";
         if (demoProject.offset().left > window.innerWidth / 2 || window.innerWidth < demoProject.width() + 100) {
           if (demoProject.offset().top > 500 && demoProject.offset().top > window.innerHeight / 2) {
@@ -410,8 +409,8 @@
             position = "bottom";
           }
         }
-
-        introJs()
+        var $introjs = introJs();
+        $introjs
           .setOptions({
             steps: [{
               element: document.getElementById(demoProjectId),
@@ -431,6 +430,9 @@
             exitOnOverlayClick: false,
             exitOnEsc: false,
             tooltipClass: 'custom next-page-link'
+          })
+          .onafterchange(function() {
+            Cookies.set('current_tutorial_step', this._currentStep + 24);
           })
           .oncomplete(function () {
             Cookies.remove('tutorial_data');
