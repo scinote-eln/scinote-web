@@ -3133,8 +3133,7 @@ function initTutorial() {
 
     if (stepNum >= 6 && stepNum <= 7) {
       var nextPage = window.location.pathname;
-      initPageTutorialSteps(6, 7, nextPage, tutorialBeforeCb,
-                            tutorialAfterCb);
+      initPageTutorialSteps(6, 7, nextPage, tutorialBeforeCb, tutorialAfterCb);
     } else if (stepNum >= 8 && stepNum <= 9) {
       // Go to edit canvas mode
       $('.introjs-overlay').remove();
@@ -3144,54 +3143,46 @@ function initTutorial() {
 
       setTimeout(function() {
         var nextPage = window.location.pathname;
-        var editWorkflowTutorial =
-         $('#canvas-container').attr('data-edit-workflow-step-text');
-        var editWorkflowClickSaveTutorial =
-         $('#canvas-container').attr('data-edit-workflow-click-save-step-text');
         var steps = [
           {
-            intro: editWorkflowTutorial,
+            intro: $('#canvas-container').attr('data-edit-workflow-step-text'),
             element: document.querySelector('#canvas-new-module'),
             disableInteraction: true,
             position: 'right'
           },
           {
-            intro: editWorkflowClickSaveTutorial,
+            intro: $('#canvas-container')
+                    .attr('data-edit-workflow-click-save-step-text'),
             element: document.querySelector('#canvas-save'),
             position: 'right'
           }
         ];
-
         initPageTutorialSteps(8, 9, nextPage, tutorialBeforeCb, function() {
           // Go out of edit canvas mode
           $('.cancel-edit-canvas').click();
 
           tutorialAfterCb();
         }, steps);
-
       }, 1000);
     } else if (stepNum >= 10 || stepNum <= 11) {
       var qpcrModuleLeaf =
        $("li.leaf[data-module-id='" + tutorialData[0].qpcr_module + "']");
       var nextPage = qpcrModuleLeaf.find('a.module-link').attr('href');
-      var sidebarTutorial =
-       $('#canvas-container').attr('data-sidebar-step-text');
-      var sidebarClickModuleTutorial =
-       $('#canvas-container').attr('data-sidebar-click-module-step-text');
       var steps = [
         {
           element: document.querySelector('#slide-panel .tree'),
-          intro: sidebarTutorial,
+          intro: $('#canvas-container').attr('data-sidebar-step-text'),
           position: 'right'
         },
         {
           element: qpcrModuleLeaf[0],
-          intro: sidebarClickModuleTutorial,
+          intro: $('#canvas-container')
+                  .attr('data-sidebar-click-module-step-text'),
           position: 'right'
         }
       ];
-      initPageTutorialSteps(10, 11, nextPage, tutorialBeforeCb,
-                            tutorialAfterCb, steps);
+      initPageTutorialSteps(10, 11, nextPage, tutorialBeforeCb, tutorialAfterCb,
+       steps);
     }
   }
 }
