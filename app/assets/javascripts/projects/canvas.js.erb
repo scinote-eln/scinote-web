@@ -3123,7 +3123,6 @@ function initJsPlumb(containerSel, containerChildSel, modulesSel, params) {
 // Initialize first-time tutorial
 function initializeTutorial(isEditMode) {
   if (showTutorial()) {
-    canvas_tutorial_helper();
     var currentStep = Cookies.get('current_tutorial_step');
     // Add edit canvas tutorial step and show it
     if (!isEditMode && currentStep > 4 && currentStep < 8) {
@@ -3162,12 +3161,12 @@ function initializeTutorial(isEditMode) {
         })
         .goToStep(currentStep == "6" ? 2 : 1)
         .start();
+        canvas_tutorial_helper();
 
         window.onresize = function() {
           $(".introjs-tooltip").css("right", ($("#canvas-container").width() + 20)  + "px");
         };
     } else if (isEditMode && currentStep > 6 && currentStep < 10) {
-      canvas_tutorial_helper();
       var editWorkflowTutorial = $("#canvas-container").attr("data-edit-workflow-step-text");
       var editWorkflowClickSaveTutorial = $("#canvas-container").attr("data-edit-workflow-click-save-step-text");
       $(".introjs-overlay").remove();
@@ -3215,6 +3214,7 @@ function initializeTutorial(isEditMode) {
             }
           })
           .start();
+          canvas_tutorial_helper();
         }, 500);
 
       // Destroy first-time tutorial cookies when skip tutorial
@@ -3229,7 +3229,6 @@ function initializeTutorial(isEditMode) {
         });
       }, 600);
     } else if (!isEditMode && currentStep > 8 && currentStep < 13) {
-      canvas_tutorial_helper();
       var sidebarTutorial = $("#canvas-container").attr("data-sidebar-step-text");
       var sidebarClickModuleTutorial = $("#canvas-container").attr("data-sidebar-click-module-step-text");
       var qpcrModuleLeaf = $("li.leaf[data-module-id='" + tutorialData[0].qpcr_module + "']");
@@ -3272,6 +3271,7 @@ function initializeTutorial(isEditMode) {
         })
         .goToStep(currentStep == "10" ? 2 : 1)
         .start();
+        canvas_tutorial_helper();
 
     }
 
@@ -3291,7 +3291,7 @@ function canvas_tutorial_helper(){
     if( $('div').hasClass('introjs-overlay') ){
       $('#slide-panel')
         .css({'pointer-events': 'none'});
-      $('#canvas-new-module')
+      $('#canvas-container')
         .css({'pointer-events': 'none'});
 
       $.each( $('.panel-default'), function(i, el){
@@ -3309,7 +3309,7 @@ function canvas_tutorial_helper(){
 }
 
 function restore_after_tutorial(){
-  $('#canvas-new-module')
+  $('#canvas-container')
     .css({'pointer-events': 'auto'});
   $('#slide-panel')
     .css({'pointer-events': 'auto'});
