@@ -1439,7 +1439,7 @@ en:
     results:
       heading: "Invitation results:"
       user_exists: "User is already a member of sciNote."
-      user_exists_unconfirmed: "User is already a member of sciNote but is not confirmed yet - cannot invite to team %{organization}."
+      user_exists_unconfirmed_invited_to_org: "User is already a member of sciNote but is not confirmed yet - successfully invited to team %{organization} as %{role}."
       user_exists_and_in_org: "User is already a member of sciNote and team %{organization} as %{role}."
       user_exists_invited_to_org: "User was already a member of sciNote - successfully invited to team %{organization} as %{role}."
       user_created: "User succesfully invited to sciNote."

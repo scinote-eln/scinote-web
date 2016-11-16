@@ -85,11 +85,6 @@ module Users
               UserOrganization.where(user: user, organization: @org).first
 
             result[:status] = :user_exists_and_in_org
-          elsif result[:status] == :user_exists && !user.confirmed?
-            # We don't want to allow inviting unconfirmed
-            # users (that were not invited as part of this action)
-            # into organizations
-            result[:status] = :user_exists_unconfirmed
           else
             # Also generate user organization relation
             user_org = UserOrganization.new(
@@ -106,7 +101,9 @@ module Users
               user_org.organization
             )
 
-            if result[:status] == :user_exists
+            if result[:status] == :user_exists && !user.confirmed?
+              result[:status] = :user_exists_unconfirmed_invited_to_org
+            elsif result[:status] == :user_exists
               result[:status] = :user_exists_invited_to_org
             else
               result[:status] = :user_created_invited_to_org
