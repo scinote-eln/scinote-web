@@ -120,6 +120,7 @@ function bindEditDueDateAjax() {
  */
 function initTutorial() {
   var resultsTab = $('#results-nav-tab');
+
   var nextPage = resultsTab.find('a').attr('href');
   var steps = [
     {

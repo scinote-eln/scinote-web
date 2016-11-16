@@ -30,6 +30,8 @@ var TUTORIAL_STEPS_CNT = 22;
 
 /**
  * Initializes tutorial steps for the current page.
+ * NOTE: You can specify steps manually in JS with steps parameter (preferred
+ * way), or hardcode them in HTML
  * NOTE: If some steps edit page, then this function needs to be called several
  * times for the same page, but for different steps. The same goes if the page
  * has discontinuous tutorial steps. In such cases, use steps branching, e.g.:
@@ -55,9 +57,11 @@ var TUTORIAL_STEPS_CNT = 22;
  *   {
  *   ...
  * ];
+ * NOTE: If only one page step is needed, then make pageFirstStepN ==
+ * pageLastStepN (both represent the one and only step number)
  *
- * @param  {number} pageFirstStep Page's first step
- * @param  {number} pageLastStep Page's last step
+ * @param  {number} pageFirstStepN Page's first step number
+ * @param  {number} pageLastStepN Page's last step number
  * @param  {string} nextPagePath Next page absolute path
  * @param {function} beforeCb Callback called before the tutorial starts. Mainly
  *  used for setting 'pointer-events: none' on the elements the page's steps
@@ -68,13 +72,14 @@ var TUTORIAL_STEPS_CNT = 22;
  * @param {object} steps Optional JSON containing introJs steps. They can be
  *  specified here, or hardcoded in HTML.
  */
-function initPageTutorialSteps(pageFirstStep, pageLastStep, nextPagePath,
+function initPageTutorialSteps(pageFirstStepN, pageLastStepN, nextPagePath,
                                beforeCb, endCb, steps) {
   var tutorialData = Cookies.get('tutorial_data');
   if (tutorialData) {
     tutorialData = JSON.parse(tutorialData);
     var stepNum = parseInt(Cookies.get('current_tutorial_step'), 10);
     if (isNaN(stepNum)) {
+      // Cookies data initialization
       stepNum = 1;
       Cookies.set('current_tutorial_step', stepNum);
       tutorialData[0].backPagesPaths = [];
@@ -84,7 +89,7 @@ function initPageTutorialSteps(pageFirstStep, pageLastStep, nextPagePath,
     beforeCb();
 
     // Initialize tutorial for the current page's steps
-    var doneLabel = (pageLastStep === TUTORIAL_STEPS_CNT) ?
+    var doneLabel = (pageLastStepN === TUTORIAL_STEPS_CNT) ?
      'Start using sciNote' : 'End tutorial';
     if (_.isUndefined(steps)) {
       introJs()
@@ -101,10 +106,10 @@ function initPageTutorialSteps(pageFirstStep, pageLastStep, nextPagePath,
          disableInteraction: true,
          tooltipClass: 'custom next-page-link'
        })
-       .goToStep(stepNum - (pageFirstStep - 1))
+       .goToStep(stepNum - (pageFirstStepN - 1))
        .start();
     } else {
-      if (pageFirstStep === pageLastStep) {
+      if (pageFirstStepN === pageLastStepN) {
         // Only one page step, so add another fake one, so the back and next
         // buttons are added to the popup
         steps.push({});
@@ -124,15 +129,15 @@ function initPageTutorialSteps(pageFirstStep, pageLastStep, nextPagePath,
          tooltipClass: 'custom next-page-link',
          steps: steps
        })
-       .goToStep(stepNum - (pageFirstStep - 1))
+       .goToStep(stepNum - (pageFirstStepN - 1))
        .start();
     }
 
     // Page navigation when coming to this page from previous/next page
     $(function() {
-      if (stepNum === pageFirstStep && stepNum > 1) {
+      if (stepNum === pageFirstStepN && stepNum > 1) {
         $('.introjs-prevbutton').removeClass('introjs-disabled');
-      } else if (stepNum === pageLastStep && stepNum < TUTORIAL_STEPS_CNT) {
+      } else if (stepNum === pageLastStepN && stepNum < TUTORIAL_STEPS_CNT) {
         $('.introjs-nextbutton').removeClass('introjs-disabled');
       }
     });
@@ -150,9 +155,9 @@ function initPageTutorialSteps(pageFirstStep, pageLastStep, nextPagePath,
       if (stepNum > 1) {
         Cookies.set('current_tutorial_step', --stepNum);
 
-        if (stepNum === pageFirstStep && stepNum > 1) {
+        if (stepNum === pageFirstStepN && stepNum > 1) {
           $('.introjs-prevbutton').removeClass('introjs-disabled');
-        } else if (stepNum < pageFirstStep) {
+        } else if (stepNum < pageFirstStepN) {
           // Go to previous page;
 
           var prevPagePath = tutorialData[0].backPagesPaths.pop();
@@ -168,9 +173,9 @@ function initPageTutorialSteps(pageFirstStep, pageLastStep, nextPagePath,
       if (stepNum < TUTORIAL_STEPS_CNT) {
         Cookies.set('current_tutorial_step', ++stepNum);
 
-        if (stepNum === pageLastStep && stepNum < TUTORIAL_STEPS_CNT) {
+        if (stepNum === pageLastStepN && stepNum < TUTORIAL_STEPS_CNT) {
           $('.introjs-nextbutton').removeClass('introjs-disabled');
-        } else if (stepNum > pageLastStep) {
+        } else if (stepNum > pageLastStepN) {
           // Go to next page
 
           tutorialData[0].backPagesPaths.push(thisPagePath);

@@ -3171,6 +3171,7 @@ function initTutorial() {
     } else if (stepNum >= 10 || stepNum <= 11) {
       var qpcrModuleLeaf =
        $("li.leaf[data-module-id='" + tutorialData[0].qpcr_module + "']");
+
       var nextPage = qpcrModuleLeaf.find('a.module-link').attr('href');
       var steps = [
         {
