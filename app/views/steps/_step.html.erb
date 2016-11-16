@@ -35,7 +35,9 @@
           <% if strip_tags(step.description).blank? %>
             <em><%= t("protocols.steps.no_description") %></em>
           <% else %>
-            <%= step.description.html_safe %>
+            <div class="ql-editor">
+              <%= step.description.html_safe %>
+            </div>
           <% end %>
           <hr>
           <div class="row">
