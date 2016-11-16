@@ -1,7 +1,7 @@
 <%= bootstrap_form_for(@comment, url: @update_url, remote: true, html: { method: :put, class: 'comment-form edit-comment-form' }, data: { role: 'edit-comment-message-form' }) do |f| %>
   <div class="form-group">
     <div class="input-group">
-      <%= f.text_area :message, class: 'textarea-sm', autofocus: true, hide_label: true, data: { role: 'message-input' }, value: @comment.message %>
+      <%= f.smart_text_area :message, single_line: true, autofocus: true, hide_label: true, data: { role: 'message-input' }, value: @comment.message %>
       <span class="input-group-btn">
         <a class="btn btn-default" data-action="save">
           <span class="glyphicon glyphicon-ok"></span>

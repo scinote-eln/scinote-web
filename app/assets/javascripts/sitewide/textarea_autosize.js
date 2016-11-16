@@ -1,19 +1,30 @@
-$(document).on('focus', 'textarea', function() {
-  var $this = $(this);
-  var height = $this.css('height');
+$(document).on(
+  'focus',
+  'textarea.smart-text-area:not([readonly]):not([disabled])',
+  function() {
+    var $this = $(this);
+    var height = $this.css('height');
 
-  // Set the nr. of rows to 1 if small textarea
-  if ($this.hasClass('textarea-sm')) {
-    $this.attr('rows', '1');
+    if ($this.hasClass('textarea-sm-present')) {
+      $this
+      .removeClass('textarea-sm-present')
+      .addClass('textarea-sm');
+      $this.attr('rows', '1');
+    } else if ($this.hasClass('textarea-sm')) {
+      // Set the nr. of rows to 1 if small textarea
+      $this.attr('rows', '1');
+    } else {
+      $this.removeAttr('rows');
+    }
+
+    // Initialize autosize plugin if it's not initialized yet
+    if (_.isUndefined($this.data('autosize'))) {
+      $this.autosize({append: ''});
+
+      // Restore previous height!
+      $this.css('height', height);
+    }
+
+    $this.trigger('autosize.resize');
   }
-
-  // Initialize autosize plugin if it's not initialized yet
-  if (_.isUndefined($this.data('autosize'))) {
-    $this.autosize({append: ''});
-
-    // Restore previous height!
-    $this.css('height', height);
-  }
-
-  $this.trigger('autosize.resize');
-});
+);
