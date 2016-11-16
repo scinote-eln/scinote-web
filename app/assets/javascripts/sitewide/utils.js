@@ -104,6 +104,11 @@ function initPageTutorialSteps(pageFirstStep, pageLastStep, nextPagePath,
        .goToStep(stepNum - (pageFirstStep - 1))
        .start();
     } else {
+      if (pageFirstStep === pageLastStep) {
+        // Only one page step, so add another fake one, so the back and next
+        // buttons are added to the popup
+        steps.push({});
+      }
       introJs()
        .setOptions({
          overlayOpacity: '0.2',
