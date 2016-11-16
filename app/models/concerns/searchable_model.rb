@@ -23,9 +23,9 @@ module SearchableModel
       if query.is_a? Array
 
         rich_text_regex = '<*strong>|<*href>|<*div>|' \
-        '<*link>|<*span>|<(.*)class(.*)>|<(.*)href(.*)>|' \
-        '<(.*)data(.*)>|<*sub>|<*sup>|<*blockquote>|<*li>|' \
-        '<(.*)style(.*)>|<*ol>|<*ul>|<*pre>'
+        '<*link>|<*span>|<%class%>|<%href%>|' \
+        '<%data%>|<*sub>|<*sup>|<*blockquote>|<*li>|' \
+        '<%style%>|<*ol>|<*ul>|<*pre>'
 
         if attrs.length > 0
           where_str =
