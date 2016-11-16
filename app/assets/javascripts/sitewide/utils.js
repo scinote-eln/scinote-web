@@ -31,7 +31,31 @@ var TUTORIAL_STEPS_CNT = 20;
 /**
  * Initializes tutorial steps for the current page.
  * NOTE: If some steps edit page, then this function needs to be called several
- * times for the same page, but for different steps.
+ * times for the same page, but for different steps. The same goes if the page
+ * has discontinuous tutorial steps. In such cases, use steps branching, e.g.:
+ * @example
+ * var tutorialData = Cookies.get('tutorial_data');
+ * if (tutorialData) {
+ *   tutorialData = JSON.parse(tutorialData);
+ *   var stepNum = parseInt(Cookies.get('current_tutorial_step'), 10);
+ *
+ *   if (stepNum >= 6 && stepNum <= 7) {
+ *     ...
+ *   } else if ...
+ * NOTE: If an element the popup is pointing at is of lesser horizontal length
+ * than the popup itself, then it will not be positioned correctly if it's
+ * position is top or bottom, so set/change the step's position to either left
+ * or right (and don't use any custom styling!), e.g.:
+ * @example
+ * var steps = [
+ *   {
+ *     ...
+ *     position: 'right'
+ *   },
+ *   {
+ *   ...
+ * ];
+ *
  * @param  {number} pageFirstStep Page's first step
  * @param  {number} pageLastStep Page's last step
  * @param  {string} nextPagePath Next page absolute path
