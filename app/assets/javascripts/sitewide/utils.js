@@ -26,7 +26,7 @@ $.fn.onAjaxComplete = function (cb) {
   });
 }
 
-var TUTORIAL_STEPS_CNT = 20;
+var TUTORIAL_STEPS_CNT = 22;
 
 /**
  * Initializes tutorial steps for the current page.
