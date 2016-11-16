@@ -32,7 +32,7 @@
     <div class="panel-collapse collapse" id="step-panel-<%= step.id %>" role="tabpanel">
       <div class="panel-body">
         <div class="row">
-          <% if step.description.blank? %>
+          <% if strip_tags(step.description).blank? %>
             <em><%= t("protocols.steps.no_description") %></em>
           <% else %>
             <%= step.description.html_safe %>
