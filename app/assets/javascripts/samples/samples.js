@@ -154,89 +154,23 @@ function sampleAlertMsgHide() {
   $('#content-wrapper').removeClass('alert-shown');
 }
 
+/**
+ * Initializes tutorial
+ */
 function initTutorial() {
-  var currentStep = parseInt(Cookies.get('current_tutorial_step'), 10);
-  if (showTutorial() && (currentStep > 15 && currentStep < 19)) {
-    var samplesTutorial = $('#samples-toolbar').attr('data-samples-step-text');
-    var breadcrumbsTutorial = $('#samples-toolbar')
-      .attr('data-breadcrumbs-step-text');
-
-    introJs()
-      .setOptions({
-        steps: [
-          {
-            element: document.getElementById('importSamplesButton'),
-            intro: samplesTutorial,
-            position: 'right'
-          },
-          {
-            element: document.getElementById('secondary-menu'),
-            intro: breadcrumbsTutorial,
-            tooltipClass: 'custom next-page-link'
-          }
-        ],
-        overlayOpacity: '0.1',
-        nextLabel: 'Next',
-        doneLabel: 'End tutorial',
-        skipLabel: 'End tutorial',
-        showBullets: false,
-        showStepNumbers: false,
-        exitOnOverlayClick: false,
-        exitOnEsc: false,
-        disableInteraction: true,
-        tooltipClass: "custom"
-      })
-      .onafterchange(function() {
-        Cookies.set('current_tutorial_step', this._currentStep + 17);
-
-        if (this._currentStep === 1) {
-          setTimeout(function() {
-            $('.next-page-link a.introjs-nextbutton')
-              .removeClass('introjs-disabled')
-              .attr('href', $('#reports-nav-tab a').attr('href'));
-            $('.introjs-disableInteraction').remove();
-          }, 500);
-        }
-      })
-      .goToStep(currentStep === 18 ? 2 : 1)
-      .start();
-
-    // Destroy first-time tutorial cookies when skip tutorial
-    // or end tutorial is clicked
-    $('.introjs-skipbutton').each(function() {
-      $(this).click(function() {
-        Cookies.remove('tutorial_data');
-        Cookies.remove('current_tutorial_step');
-        restore_after_tutorial();
-      });
-    });
-  }
-}
-
-function showTutorial() {
-  var tutorialData;
-  if (Cookies.get('tutorial_data'))
-    tutorialData = JSON.parse(Cookies.get('tutorial_data'));
-  else
-    return false;
-  var tutorialModuleId = tutorialData[0].qpcr_module;
-  var currentModuleId = $("#samples-toolbar").attr("data-module-id");
-  return tutorialModuleId == currentModuleId;
-}
-
-function samples_tutorial_helper(){
-    if( $('div').hasClass('introjs-overlay') ){
-      $.each( $('#secondary-menu').find('a'), function(){
-        $(this).css({ 'pointer-events': 'none' });
-      });
+  var nextPage = $('#reports-nav-tab a').attr('href');
+  var steps = [
+    {
+      element: document.getElementById('importSamplesButton'),
+      intro: $('#samples-toolbar').attr('data-samples-step-text'),
+      position: 'right'
+    },
+    {
+      element: document.getElementById('secondary-menu'),
+      intro: $('#samples-toolbar').attr('data-breadcrumbs-step-text')
     }
+  ];
+  initPageTutorialSteps(16, 17, nextPage, function() {}, function() {}, steps);
 }
 
-function restore_after_tutorial(){
-  $.each( $('#secondary-menu').find('a'), function(){
-    $(this).css({ 'pointer-events': 'auto' });
-  });
-}
-// Initialize first-time tutorial
 initTutorial();
-samples_tutorial_helper();

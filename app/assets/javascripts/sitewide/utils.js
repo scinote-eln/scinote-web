@@ -59,8 +59,12 @@ var TUTORIAL_STEPS_CNT = 20;
  * @param  {number} pageFirstStep Page's first step
  * @param  {number} pageLastStep Page's last step
  * @param  {string} nextPagePath Next page absolute path
- * @param {function} beforeCb Callback called before the tutorial starts
- * @param {function} endCb Callback called after the tutorial ends
+ * @param {function} beforeCb Callback called before the tutorial starts. Mainly
+ *  used for setting 'pointer-events: none' on the elements the page's steps
+ *  highlight.
+ * @param {function} endCb Callback called after the tutorial ends. Mainly used
+ *  for setting 'pointer-events: auto' on the elements the page's steps
+ *  highlight.
  * @param {object} steps Optional JSON containing introJs steps. They can be
  *  specified here, or hardcoded in HTML.
  */
@@ -149,6 +153,7 @@ function initPageTutorialSteps(pageFirstStep, pageLastStep, nextPagePath,
           var prevPagePath = tutorialData[0].backPagesPaths.pop();
           Cookies.set('tutorial_data', tutorialData);
           $('.introjs-prevbutton').attr('href', prevPagePath);
+          introJs().exit();
           endCb();
         }
       }
@@ -166,6 +171,7 @@ function initPageTutorialSteps(pageFirstStep, pageLastStep, nextPagePath,
           tutorialData[0].backPagesPaths.push(thisPagePath);
           Cookies.set('tutorial_data', tutorialData);
           $('.introjs-nextbutton').attr('href', nextPagePath);
+          introJs().exit();
           endCb();
         }
       }
