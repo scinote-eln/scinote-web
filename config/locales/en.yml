@@ -1485,7 +1485,7 @@ en:
     module_results_html: "You can upload any type of a file, insert table or write comments. <strong>(Step 15/25)</strong>"
     module_results_click_samples_html: "Click on the <strong>Samples</strong> tab to import, export or assign samples to the Task. <strong>(Step 16/25)</strong>"
     samples_html: "You can easily import sample tables from Excel or tab-delimited files. If you assign samples to a certain Task, these samples will be automatically assigned downstream the Workflow. <strong>(Step 17/25)</strong>"
-    breadcrumbs_html: "You can always use these breadcrumbs to navigate all the way back to the Dashboard. Click on the <strong>Reports</strong> tab to generate a report of your work. <strong>(Step 18/25)</strong>"
+    breadcrumbs_html: "You can always use these <strong>breadcrumbs</strong> to navigate all the way back to the Dashboard. Click on the <strong>Reports</strong> tab to generate a report of your work. <strong>(Step 18/25)</strong>"
     reports_index_click_new_report_html: "Click the <strong>New report</strong> button to create a new report. <strong>(Step 19/25)</strong>"
     new_report_html: "To add report elements to the report, click on the <strong>—+—</strong> sign on the sheet. Select the report contents in the tabs and click <strong>Add to report</strong>. You can save the report as a PDF on your computer or save it within sciNote for later viewing and modification. <strong>(Step 20/25)</strong>"
     new_report_click_org_html: "Click on <strong>%{private_org}</strong> in breadcrumbs to return to the Dashboard. <strong>(Step 21/25)</strong>"
