@@ -417,8 +417,9 @@
               intro: archiveProjectTutorial,
               position: position
             },{
-              element: document.getElementsByClassName("avatar")[0],
-              intro: goodbye_message
+              element: document.getElementsByClassName("avatar")[0].parentNode,
+              intro: goodbye_message,
+              position: 'bottom-right-aligned'
             }],
             overlayOpacity: '0.2',
             doneLabel: 'Start using sciNote',
@@ -440,16 +441,6 @@
             restore_after_tutorial();
           })
           .start();
-
-        window.onresize = function() {
-          switch (position) {
-            case "right":
-              $(".introjs-tooltip").css("left", (demoProject.width() + 20)  + "px");
-              break;
-            default:
-              $(".introjs-tooltip").css("left", (demoProject.width()/2 - $(".introjs-tooltip").width()/2)  + "px");
-          }
-        };
       }
     }
   }

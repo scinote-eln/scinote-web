@@ -156,21 +156,23 @@ function sampleAlertMsgHide() {
 
 function initTutorial() {
   var currentStep = parseInt(Cookies.get('current_tutorial_step'), 10);
-  if (showTutorial() && (currentStep > 15 &&  currentStep < 19)) {
-    var samplesTutorial =$("#samples-toolbar").attr("data-samples-step-text");
-    var breadcrumbsTutorial = $("#samples-toolbar").attr("data-breadcrumbs-step-text");
+  if (showTutorial() && (currentStep > 15 && currentStep < 19)) {
+    var samplesTutorial = $('#samples-toolbar').attr('data-samples-step-text');
+    var breadcrumbsTutorial = $('#samples-toolbar')
+      .attr('data-breadcrumbs-step-text');
 
     introJs()
       .setOptions({
         steps: [
           {
-            element: document.getElementById("importSamplesButton"),
-            intro: samplesTutorial
+            element: document.getElementById('importSamplesButton'),
+            intro: samplesTutorial,
+            position: 'right'
           },
           {
-            element: document.getElementById("secondary-menu"),
+            element: document.getElementById('secondary-menu'),
             intro: breadcrumbsTutorial,
-            tooltipClass: 'custom next-page-link',
+            tooltipClass: 'custom next-page-link'
           }
         ],
         overlayOpacity: '0.1',
@@ -184,28 +186,25 @@ function initTutorial() {
         disableInteraction: true,
         tooltipClass: "custom"
       })
-      .onafterchange(function (tarEl) {
+      .onafterchange(function() {
         Cookies.set('current_tutorial_step', this._currentStep + 17);
 
-        if (this._currentStep == 1) {
+        if (this._currentStep === 1) {
           setTimeout(function() {
             $('.next-page-link a.introjs-nextbutton')
               .removeClass('introjs-disabled')
-              .attr('href', $("#reports-nav-tab a").attr('href'));
+              .attr('href', $('#reports-nav-tab a').attr('href'));
             $('.introjs-disableInteraction').remove();
-            positionTutorialTooltip();
           }, 500);
-        } else {
-          positionTutorialTooltip();
         }
       })
-      .goToStep(currentStep == 18 ? 2 : 1)
+      .goToStep(currentStep === 18 ? 2 : 1)
       .start();
 
     // Destroy first-time tutorial cookies when skip tutorial
     // or end tutorial is clicked
-    $(".introjs-skipbutton").each(function (){
-      $(this).click(function (){
+    $('.introjs-skipbutton').each(function() {
+      $(this).click(function() {
         Cookies.remove('tutorial_data');
         Cookies.remove('current_tutorial_step');
         restore_after_tutorial();
@@ -213,26 +212,6 @@ function initTutorial() {
     });
   }
 }
-
-function positionTutorialTooltip() {
-  if (Cookies.get('current_tutorial_step') == 13) {
-    if ($("#reports-nav-tab").offset().left == 0) {
-      $(".introjs-tooltip").css("left", (window.innerWidth / 2 - 50)  + "px");
-      $(".introjs-tooltip").addClass("repositioned");
-    } else if ($(".introjs-tooltip").hasClass("repositioned")) {
-      $(".introjs-tooltip").css("left", "");
-      $(".introjs-tooltip").removeClass("repositioned");
-    }
-  } else {
-    if ($(".introjs-tooltip").offset().left > window.innerWidth) {
-      $(".introjs-tooltip").css("left", (window.innerWidth / 2 - 50)  + "px");
-      $(".introjs-tooltip").addClass("repositioned");
-    } else if ($(".introjs-tooltip").hasClass("repositioned")) {
-      $(".introjs-tooltip").css("left", "");
-      $(".introjs-tooltip").removeClass("repositioned");
-    }
-  }
-};
 
 function showTutorial() {
   var tutorialData;
