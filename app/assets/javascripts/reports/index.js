@@ -150,6 +150,7 @@
             {
               element: document.getElementById("new-report-btn"),
               intro: reportsClickNewReportTutorial,
+              position: 'right',
               tooltipClass: "custom next-page-link"
             }
           ],

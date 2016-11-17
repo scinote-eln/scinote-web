@@ -123,6 +123,7 @@ function initTutorial() {
           {
             intro: moduleProtocolsClickResultsTutorial,
             element: resultsTab[0],
+            position: 'bottom-right-aligned',
             tooltipClass: 'custom next-page-link'
           }
         ],
