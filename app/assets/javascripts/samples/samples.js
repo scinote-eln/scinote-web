@@ -167,7 +167,7 @@ function initTutorial() {
     element: $('#secondary-menu')[0],
     intro: $('#samples-toolbar').attr('data-breadcrumbs-step-text')
   }];
-  initPageTutorialSteps(16, 17, nextPage, function() {}, function() {}, steps);
+  initPageTutorialSteps(17, 18, nextPage, function() {}, function() {}, steps);
 }
 
 initTutorial();

@@ -126,12 +126,17 @@ function initTutorial() {
     intro: $("[data-role='tutorial-data']")
             .attr('data-module-protocols-step-text')
   }, {
+    element: $('#protocol-copy-to-repository')[0],
+    intro: $("[data-role='tutorial-data']")
+            .attr('data-module-protocols-save-step-text'),
+    position: 'right'
+  }, {
     element: resultsTab[0],
     intro: $("[data-role='tutorial-data']")
             .attr('data-module-protocols-click-results-step-text'),
     position: 'right'
   }];
-  initPageTutorialSteps(12, 13, nextPage, function() {}, function() {}, steps);
+  initPageTutorialSteps(12, 14, nextPage, function() {}, function() {}, steps);
 }
 
 function initCopyToRepository() {

@@ -5,7 +5,7 @@
         <ul class="breadcrumb" style="margin-left: 15px;">
           <li>
             <% if can_view_projects(@project.organization) %>
-              <a id="organization-link" href="<%= projects_path :organization => @project.organization.id %>" data-intro="<%=t 'tutorial.new_report_click_org_html', private_org: @project.organization.name %>" data-step="20">
+              <a id="organization-link" href="<%= projects_path :organization => @project.organization.id %>" data-intro="<%=t 'tutorial.new_report_click_org_html', private_org: @project.organization.name %>" data-step="21" data-position="left">
             <% end %>
             <span class="hidden-sm hidden-md hidden-lg">Org</span>
             <span class="hidden-xs"><%= @project.organization.name %></span>

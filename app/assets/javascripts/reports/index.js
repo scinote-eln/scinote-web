@@ -173,7 +173,7 @@
       intro: $('#content').attr('data-reports-click-new-report-step-text'),
       position: 'right'
     }];
-    initPageTutorialSteps(18, 18, nextPage, function() {}, function() {},
+    initPageTutorialSteps(19, 19, nextPage, function() {}, function() {},
      steps);
   }
 

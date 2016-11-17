@@ -354,7 +354,7 @@
           $('#' + demoProjectId + '-project-canvas-link').attr('href');
         initPageTutorialSteps(1, 3, nextPage, tutorialBeforeCb,
          tutorialAfterCb);
-      } else if (stepNum >= 21 && stepNum <= 22) {
+      } else if (stepNum >= 24 && stepNum <= 25) {
         var demoProject = $('#' + demoProjectId);
         var firstStepPos = 'right';
         if (demoProject.offset().left > window.innerWidth / 2 ||
@@ -369,7 +369,7 @@
 
         var nextPage = $('#new-report-btn').attr('href');
         var steps = [{
-          element: $(demoProjectId)[0],
+          element: $('#' + demoProjectId)[0],
           intro: $('#projects-toolbar')
                   .attr('data-archive-project-step-text'),
           position: firstStepPos
@@ -378,7 +378,7 @@
           intro: $('#projects-toolbar').attr('data-goodbye-tutorial'),
           position: 'left'
         }];
-        initPageTutorialSteps(21, 22, nextPage, function() {}, function() {},
+        initPageTutorialSteps(24, 25, nextPage, function() {}, function() {},
          steps);
       }
     }
