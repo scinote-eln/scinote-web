@@ -26,7 +26,8 @@ $.fn.onAjaxComplete = function (cb) {
   });
 }
 
-var TUTORIAL_STEPS_CNT = 25;
+// Number of all tutorial steps
+var TUTORIAL_STEPS_CNT = 26;
 
 /**
  * Initializes tutorial steps for the current page.

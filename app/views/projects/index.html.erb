@@ -53,13 +53,7 @@
   </div>
 </div>
 
-<div id="projects-toolbar" data-step="1"
-  data-intro="<%=t 'tutorial.tutorial_welcome_title_html' %>"
-  data-position='bottom'
-  data-project-options-step-text="<%=t 'tutorial.project_options_html' %>"
-  data-archive-project-step-text="<%=t 'tutorial.archive_project_html' %>"
-  data-goodbye-tutorial="<%=t 'tutorial.goodbye_message' %>"
-  >
+<div id="projects-toolbar">
 
   <form class="form-inline" action="<%= projects_path %>">
 
@@ -71,7 +65,7 @@
 
       <!-- new project button -->
       <% if @organizations.length > 0 %>
-        <a class="btn btn-primary pull-right" id="new-project-btn" data-step="2" data-intro="<%=t 'tutorial.create_project_html' %>" data-position='left' disableInteraction="false">
+        <a class="btn btn-primary pull-right" id="new-project-btn">
           <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
           <span class="hidden-xs"><%=t "projects.index.new" %></span>
         </a>
