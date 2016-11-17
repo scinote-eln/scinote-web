@@ -3147,20 +3147,16 @@ function initTutorial() {
 
       setTimeout(function() {
         var nextPage = window.location.pathname;
-        var steps = [
-          {
-            intro: $('#canvas-container').attr('data-edit-workflow-step-text'),
-            element: document.querySelector('#canvas-new-module'),
-            disableInteraction: true,
-            position: 'right'
-          },
-          {
-            intro: $('#canvas-container')
-                    .attr('data-edit-workflow-click-save-step-text'),
-            element: document.querySelector('#canvas-save'),
-            position: 'right'
-          }
-        ];
+        var steps = [{
+          intro: $('#canvas-container').attr('data-edit-workflow-step-text'),
+          element: $('#canvas-new-module')[0],
+          position: 'right'
+        }, {
+          intro: $('#canvas-container')
+                  .attr('data-edit-workflow-click-save-step-text'),
+          element: $('#canvas-save')[0],
+          position: 'right'
+        }];
         initPageTutorialSteps(8, 9, nextPage, tutorialBeforeCb, function() {
           // Go out of edit canvas mode
           $('.cancel-edit-canvas').click();
@@ -3173,21 +3169,18 @@ function initTutorial() {
        $("li.leaf[data-module-id='" + tutorialData[0].qpcr_module + "']");
 
       var nextPage = qpcrModuleLeaf.find('a.module-link').attr('href');
-      var steps = [
-        {
-          element: document.querySelector('#slide-panel .tree'),
-          intro: $('#canvas-container').attr('data-sidebar-step-text'),
-          position: 'right'
-        },
-        {
-          element: qpcrModuleLeaf[0],
-          intro: $('#canvas-container')
-                  .attr('data-sidebar-click-module-step-text'),
-          position: 'right'
-        }
-      ];
-      initPageTutorialSteps(10, 11, nextPage, tutorialBeforeCb, tutorialAfterCb,
-       steps);
+      var steps = [{
+        element: $('#slide-panel .tree')[0],
+        intro: $('#canvas-container').attr('data-sidebar-step-text'),
+        position: 'right'
+      }, {
+        element: qpcrModuleLeaf[0],
+        intro: $('#canvas-container')
+                .attr('data-sidebar-click-module-step-text'),
+        position: 'right'
+      }];
+      initPageTutorialSteps(10, 11, nextPage, tutorialBeforeCb,
+       tutorialAfterCb, steps);
     }
   }
 }

@@ -122,18 +122,15 @@ function initTutorial() {
   var resultsTab = $('#results-nav-tab');
 
   var nextPage = resultsTab.find('a').attr('href');
-  var steps = [
-    {
-      intro: $("[data-role='tutorial-data']")
-              .attr('data-module-protocols-step-text')
-    },
-    {
-      element: resultsTab[0],
-      intro: $("[data-role='tutorial-data']")
-              .attr('data-module-protocols-click-results-step-text'),
-      position: 'right'
-    }
-  ];
+  var steps = [{
+    intro: $("[data-role='tutorial-data']")
+            .attr('data-module-protocols-step-text')
+  }, {
+    element: resultsTab[0],
+    intro: $("[data-role='tutorial-data']")
+            .attr('data-module-protocols-click-results-step-text'),
+    position: 'right'
+  }];
   initPageTutorialSteps(12, 13, nextPage, function() {}, function() {}, steps);
 }
 

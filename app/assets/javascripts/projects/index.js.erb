@@ -368,19 +368,16 @@
         }
 
         var nextPage = $('#new-report-btn').attr('href');
-        var steps = [
-          {
-            element: document.getElementById(demoProjectId),
-            intro: $('#projects-toolbar')
-                    .attr('data-archive-project-step-text'),
-            position: firstStepPos
-          },
-          {
-            element: document.getElementsByClassName('avatar')[0],
-            intro: $('#projects-toolbar').attr('data-goodbye-tutorial'),
-            position: 'left'
-          }
-        ];
+        var steps = [{
+          element: $(demoProjectId)[0],
+          intro: $('#projects-toolbar')
+                  .attr('data-archive-project-step-text'),
+          position: firstStepPos
+        }, {
+          element: $('.avatar')[0],
+          intro: $('#projects-toolbar').attr('data-goodbye-tutorial'),
+          position: 'left'
+        }];
         initPageTutorialSteps(21, 22, nextPage, function() {}, function() {},
          steps);
       }

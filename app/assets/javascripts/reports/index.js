@@ -168,13 +168,11 @@
    */
   function initTutorial() {
     var nextPage = $('#new-report-btn').attr('href');
-    var steps = [
-      {
-        element: $('#new-report-btn')[0],
-        intro: $('#content').attr('data-reports-click-new-report-step-text'),
-        position: 'right'
-      }
-    ];
+    var steps = [{
+      element: $('#new-report-btn')[0],
+      intro: $('#content').attr('data-reports-click-new-report-step-text'),
+      position: 'right'
+    }];
     initPageTutorialSteps(18, 18, nextPage, function() {}, function() {},
      steps);
   }

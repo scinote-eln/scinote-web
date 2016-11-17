@@ -159,17 +159,14 @@ function sampleAlertMsgHide() {
  */
 function initTutorial() {
   var nextPage = $('#reports-nav-tab a').attr('href');
-  var steps = [
-    {
-      element: document.getElementById('importSamplesButton'),
-      intro: $('#samples-toolbar').attr('data-samples-step-text'),
-      position: 'right'
-    },
-    {
-      element: document.getElementById('secondary-menu'),
-      intro: $('#samples-toolbar').attr('data-breadcrumbs-step-text')
-    }
-  ];
+  var steps = [{
+    element: $('#importSamplesButton')[0],
+    intro: $('#samples-toolbar').attr('data-samples-step-text'),
+    position: 'right'
+  }, {
+    element: $('#secondary-menu')[0],
+    intro: $('#samples-toolbar').attr('data-breadcrumbs-step-text')
+  }];
   initPageTutorialSteps(16, 17, nextPage, function() {}, function() {}, steps);
 }
 
