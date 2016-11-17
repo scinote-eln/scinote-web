@@ -8,6 +8,21 @@ var protocolsTableEl = null;
 var protocolsDatatable = null;
 var repositoryType;
 
+/**
+ * Initializes page
+ */
+function init() {
+  updateButtons();
+  initProtocolsTable();
+  initRowSelection();
+  initKeywordFiltering();
+  initLinkedChildrenModal();
+  initCreateNewModal();
+  initModals();
+  initImport();
+  initTutorial();
+}
+
 // Initialize protocols DataTable
 function initProtocolsTable() {
   protocolsTableEl = $("#protocols-table");
@@ -698,12 +713,12 @@ function initImport() {
   });
 }
 
-// Initialize everything
-updateButtons();
-initProtocolsTable();
-initRowSelection();
-initKeywordFiltering();
-initLinkedChildrenModal();
-initCreateNewModal();
-initModals();
-initImport();
+/**
+ * Initializes tutorial
+ */
+function initTutorial() {
+  var nextPage = $('.navbar-brand').attr('href');
+  initPageTutorialSteps(22, 23, nextPage, function() {}, function() {});
+}
+
+init();

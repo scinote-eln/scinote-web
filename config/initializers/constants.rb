@@ -41,6 +41,9 @@ class Constants
   # Activity limited query/display elements for pages
   ACTIVITY_AND_NOTIF_SEARCH_LIMIT = 10
 
+  # Maximum number of users that can be invited in a single action
+  INVITE_USERS_LIMIT = 20
+
   #=============================================================================
   # File and data memory size
   #=============================================================================
@@ -195,6 +198,9 @@ class Constants
     'application/vnd.ms-word',
     'text/plain'
   ].freeze
+
+  # Very basic regex to check for validity of emails
+  BASIC_EMAIL_REGEX = /^[^@]+@[^@]+\.[^@]+$/
 
   # Organization name for default admin user
   DEFAULT_PRIVATE_ORG_NAME = 'My projects'.freeze

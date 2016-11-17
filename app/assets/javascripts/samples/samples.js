@@ -154,112 +154,20 @@ function sampleAlertMsgHide() {
   $('#content-wrapper').removeClass('alert-shown');
 }
 
+/**
+ * Initializes tutorial
+ */
 function initTutorial() {
-  var currentStep = parseInt(Cookies.get('current_tutorial_step'), 10);
-  if (currentStep == 8)
-    currentStep++;
-  if (showTutorial() && (currentStep > 12 &&  currentStep < 16)) {
-    var samplesTutorial =$("#samples-toolbar").attr("data-samples-step-text");
-    var breadcrumbsTutorial = $("#samples-toolbar").attr("data-breadcrumbs-step-text");
-
-    introJs()
-      .setOptions({
-        steps: [
-          {
-            element: document.getElementById("importSamplesButton"),
-            intro: samplesTutorial
-          },
-          {
-            element: document.getElementById("secondary-menu"),
-            intro: breadcrumbsTutorial,
-            tooltipClass: 'custom next-page-link',
-          }
-        ],
-        overlayOpacity: '0.1',
-        nextLabel: 'Next',
-        doneLabel: 'End tutorial',
-        skipLabel: 'End tutorial',
-        showBullets: false,
-        showStepNumbers: false,
-        exitOnOverlayClick: false,
-        exitOnEsc: false,
-        disableInteraction: true,
-        tooltipClass: "custom"
-      })
-      .onafterchange(function (tarEl) {
-        Cookies.set('current_tutorial_step', this._currentStep + 14);
-
-        if (this._currentStep == 1) {
-          setTimeout(function() {
-            $('.next-page-link a.introjs-nextbutton')
-              .removeClass('introjs-disabled')
-              .attr('href', $("#reports-nav-tab a").attr('href'));
-            $('.introjs-disableInteraction').remove();
-            positionTutorialTooltip();
-          }, 500);
-        } else {
-          positionTutorialTooltip();
-        }
-      })
-      .goToStep(currentStep == 15 ? 2 : 1)
-      .start();
-
-    // Destroy first-time tutorial cookies when skip tutorial
-    // or end tutorial is clicked
-    $(".introjs-skipbutton").each(function (){
-      $(this).click(function (){
-        Cookies.remove('tutorial_data');
-        Cookies.remove('current_tutorial_step');
-        restore_after_tutorial();
-      });
-    });
-  }
+  var nextPage = $('#reports-nav-tab a').attr('href');
+  var steps = [{
+    element: $('#importSamplesButton')[0],
+    intro: $('#samples-toolbar').attr('data-samples-step-text'),
+    position: 'right'
+  }, {
+    element: $('#secondary-menu')[0],
+    intro: $('#samples-toolbar').attr('data-breadcrumbs-step-text')
+  }];
+  initPageTutorialSteps(17, 18, nextPage, function() {}, function() {}, steps);
 }
 
-function positionTutorialTooltip() {
-  if (Cookies.get('current_tutorial_step') == 13) {
-    if ($("#reports-nav-tab").offset().left == 0) {
-      $(".introjs-tooltip").css("left", (window.innerWidth / 2 - 50)  + "px");
-      $(".introjs-tooltip").addClass("repositioned");
-    } else if ($(".introjs-tooltip").hasClass("repositioned")) {
-      $(".introjs-tooltip").css("left", "");
-      $(".introjs-tooltip").removeClass("repositioned");
-    }
-  } else {
-    if ($(".introjs-tooltip").offset().left > window.innerWidth) {
-      $(".introjs-tooltip").css("left", (window.innerWidth / 2 - 50)  + "px");
-      $(".introjs-tooltip").addClass("repositioned");
-    } else if ($(".introjs-tooltip").hasClass("repositioned")) {
-      $(".introjs-tooltip").css("left", "");
-      $(".introjs-tooltip").removeClass("repositioned");
-    }
-  }
-};
-
-function showTutorial() {
-  var tutorialData;
-  if (Cookies.get('tutorial_data'))
-    tutorialData = JSON.parse(Cookies.get('tutorial_data'));
-  else
-    return false;
-  var tutorialModuleId = tutorialData[0].qpcr_module;
-  var currentModuleId = $("#samples-toolbar").attr("data-module-id");
-  return tutorialModuleId == currentModuleId;
-}
-
-function samples_tutorial_helper(){
-    if( $('div').hasClass('introjs-overlay') ){
-      $.each( $('#secondary-menu').find('a'), function(){
-        $(this).css({ 'pointer-events': 'none' });
-      });
-    }
-}
-
-function restore_after_tutorial(){
-  $.each( $('#secondary-menu').find('a'), function(){
-    $(this).css({ 'pointer-events': 'auto' });
-  });
-}
-// Initialize first-time tutorial
 initTutorial();
-samples_tutorial_helper();

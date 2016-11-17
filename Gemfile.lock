@@ -1,3 +1,10 @@
+GIT
+  remote: git://github.com/einzige/sneaky-save.git
+  revision: 03866e838f62a4b13e15784974fcc13e14cd9502
+  specs:
+    sneaky-save (0.1.1)
+      activerecord (>= 3.2.0)
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -367,6 +374,7 @@ DEPENDENCIES
   shoulda-context
   shoulda-matchers (>= 3.0.1)
   skylight
+  sneaky-save!
   spinjs-rails
   starscope
   turbolinks

@@ -21,6 +21,25 @@ var ignoreUnsavedWorkAlert;
  * INITIALIZATION FUNCTIONS
  */
 
+ /**
+  * Initializes page
+  */
+ function init() {
+   initializeReportElements($(REPORT_CONTENT));
+   initializeGlobalReportSort();
+   initializePrintPopup();
+   initializeSaveToPdf();
+   initializeSaveReport();
+   initializeAddContentsModal();
+   initializeSidebarNavigation();
+   initializeUnsavedWorkDialog();
+   initTutorial();
+
+   $('.report-nav-link').each(function() {
+     truncateLongString($(this), <%= Constants::NAME_TRUNCATION_LENGTH %>);
+   });
+ }
+
 /**
  * Initialize the hands on table on the given
  * element with the specified data.
@@ -445,26 +464,25 @@ function initializeUnsavedWorkDialog() {
 
   ignoreUnsavedWorkAlert = false;
 
-  $(window).on("beforeunload", function() {
-    $(window).off('beforeunload');
-    $(document).off('page:before-change');
-    return alertText;
-  });
-
-  $(document).on("page:before-change", function() {
+  /**
+   * Before unload event logic
+   */
+  function beforeUnload() {
     var exit;
     if (ignoreUnsavedWorkAlert) {
       exit = true;
     } else {
       exit = confirm(alertText);
     }
-    if ( exit ) {
+    if (exit) {
       // We leave the page so remove all listeners
       $(window).off('beforeunload');
       $(document).off('page:before-change');
     }
-    return exit;
-  });
+  }
+
+  $(window).on('beforeunload', beforeUnload);
+  $(document).on('page:before-change', beforeUnload);
 }
 
 /**
@@ -1125,90 +1143,22 @@ function initializeReportSidebartruncation() {
   observer.observe(target, config);
 }
 
-/* Initialize the first-time demo tutorial if needed. */
-function initializeTutorial() {
-  if (showTutorial()) {
-    ignoreUnsavedWorkAlert = true;
+/**
+ * Initializes tutorial
+ */
+function initTutorial() {
+  ignoreUnsavedWorkAlert = true;
 
-    introJs()
-      .setOptions({
-        overlayOpacity: '0.1',
-        nextLabel: 'Next',
-        doneLabel: 'End tutorial',
-        skipLabel: 'End tutorial',
-        showBullets: false,
-        showStepNumbers: false,
-        exitOnOverlayClick: false,
-        exitOnEsc: false,
-        tooltipClass: 'custom next-page-link',
-        disableInteraction: true
-      })
-      .onafterchange(function (tarEl) {
-        Cookies.set('current_tutorial_step', this._currentStep + 18);
-
-        if (this._currentStep == 1) {
-          setTimeout(function() {
-            $('.next-page-link a.introjs-nextbutton')
-              .removeClass('introjs-disabled')
-              .attr('href', tarEl.href);
-            $('.introjs-disableInteraction').remove();
-          }, 500);
-        } else {
-
-        }
-      })
-      .start();
-
-    window.onresize = function() {
-      if (Cookies.get('current_tutorial_step') == 18) {
-        $(".introjs-tooltip").css("right", ($(".new-element.initial").width() + 60)  + "px");
-      }
-    };
-
-    // Destroy first-time tutorial cookies when skip tutorial
-    // or end tutorial is clicked
-    $(".introjs-skipbutton").each(function (){
-      $(this).click(function (){
-        Cookies.remove('tutorial_data');
-        Cookies.remove('current_tutorial_step');
-      });
-    });
-  }
-}
-
-function showTutorial() {
-  var tutorialData;
-  if (Cookies.get('tutorial_data'))
-    tutorialData = JSON.parse(Cookies.get('tutorial_data'));
-  else
-    return false;
-  var currentStep = Cookies.get('current_tutorial_step');
-  if (currentStep < 16 || currentStep > 18)
-    return false;
-  var tutorialProjectId = tutorialData[0].project;
-  var currentProjectId = $("#data-holder").attr("data-project-id");
-  return tutorialProjectId == currentProjectId;
+  var nextPage = $('#protocol-link').attr('href');
+  initPageTutorialSteps(20, 21, nextPage, function() {}, function() {
+    ignoreUnsavedWorkAlert = false;
+  });
 }
 
 $(document).ready(function() {
-  /**
-  * ACTUAL CODE
-  */
-  //Check if we are actually at new report page
-  if ( $(REPORT_CONTENT).length ) {
-    initializeReportElements($(REPORT_CONTENT));
-    initializeGlobalReportSort();
-    initializePrintPopup();
-    initializeSaveToPdf();
-    initializeSaveReport();
-    initializeAddContentsModal();
-    initializeSidebarNavigation();
-    initializeUnsavedWorkDialog();
-    initializeTutorial();
-
-    $('.report-nav-link').each(function() {
-      truncateLongString($(this), <%= Constants::NAME_TRUNCATION_LENGTH %>);
-    });
+  // Check if we are actually at new report page
+  if ($(REPORT_CONTENT).length) {
+    init();
   }
 })
 
