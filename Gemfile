@@ -29,6 +29,7 @@ gem 'hammerjs-rails'
 gem 'introjs-rails' # Create quick tutorials
 gem 'js_cookie_rails' # Simple JS API for cookies
 gem 'spinjs-rails'
+gem 'autosize-rails' # jQuery autosize plugin
 
 gem 'underscore-rails'
 gem 'turbolinks'
@@ -46,7 +47,6 @@ gem 'roo', '~> 2.1.0' # Spreadsheet parser
 gem 'wicked_pdf'
 gem 'wkhtmltopdf-heroku'
 gem 'remotipart', '~> 1.2' # Async file uploads
-gem 'redcarpet' # Markdown parser
 gem 'faker' # Generate fake data
 gem 'auto_strip_attributes', '~> 2.1' # Removes unnecessary whitespaces from ActiveRecord or ActiveModel attributes
 gem 'deface', '~> 1.0'
@@ -59,6 +59,9 @@ gem 'aws-sdk-v1'
 gem 'delayed_job_active_record'
 gem 'devise-async'
 gem 'ruby-graphviz', '~> 1.2' # Graphviz for rails
+gem 'quill-rails', # Rich text editor
+    git: 'https://github.com/biosistemika/quill-rails.git',
+    ref: 'af89d43'
 
 group :development, :test do
   gem 'byebug'

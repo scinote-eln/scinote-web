@@ -9,7 +9,6 @@ class MyModulesController < ApplicationController
     :assign_samples, :unassign_samples,
     :delete_samples,
     :samples_index, :archive]
-  before_action :load_markdown, only: [ :results ]
   before_action :load_vars_nested, only: [:new, :create]
   before_action :check_edit_permissions, only: [
     :edit, :update, :description, :due_date
@@ -356,16 +355,6 @@ class MyModulesController < ApplicationController
     else
       render_404
     end
-  end
-
-  # Initialize markdown parser
-  def load_markdown
-    @markdown = Redcarpet::Markdown.new(
-      Redcarpet::Render::HTML.new(
-        filter_html: true,
-        no_images: true
-      )
-    )
   end
 
   def check_edit_permissions

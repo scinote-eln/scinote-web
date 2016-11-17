@@ -50,16 +50,6 @@ class ReportsController < ApplicationController
 
   layout "fluid"
 
-  # Initialize markdown parser
-  def load_markdown
-    @markdown = Redcarpet::Markdown.new(
-      Redcarpet::Render::HTML.new(
-        filter_html: true,
-        no_images: true
-      )
-    )
-  end
-
   # Index showing all reports of a single project
   def index
   end
@@ -113,7 +103,6 @@ class ReportsController < ApplicationController
     # cleans all the deleted report
     current_organization_switch(@report.project.organization)
     @report.cleanup_report
-    load_markdown
     render 'reports/new.html.erb'
   end
 
@@ -555,12 +544,11 @@ class ReportsController < ApplicationController
       end
     end
     if in_params? :module_result_texts then
-      load_markdown
       (my_module.results.select { |r| r.is_text && r.active? }).each do |result_text|
         res << generate_new_el(false)
         el = generate_el(
           "reports/elements/result_text_element.html.erb",
-          { result: result_text, markdown: @markdown }
+          result: result_text
         )
         el[:children] = generate_result_contents_json(result_text)
         res << el

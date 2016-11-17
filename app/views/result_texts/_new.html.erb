@@ -2,8 +2,10 @@
   <%= bootstrap_form_for(@result, url: my_module_result_texts_path(format: :json), remote: true) do |f| %>
     <%= f.text_field :name, style: "margin-top: 10px;" %><br />
     <%= f.fields_for :result_text do |ff| %>
-      <%= ff.text_area :text, style: "margin-top: 10px;" %><br />
-    <% end %>
+      <div class="form-group">
+        <%= quill_editor nil, { id: 'result_result_text_attributes_text', name: 'result[result_text_attributes][text]', value: @result.result_text.text } %>
+      </div>
+    <% end %><br />
     <%= f.submit t("result_texts.new.create"), class: 'btn btn-primary save-result', onclick: "processResult(event, ResultTypeEnum.TEXT, false);" %>
     <button type="button" class="btn btn-default cancel-new">
       <%= t("general.cancel")%>

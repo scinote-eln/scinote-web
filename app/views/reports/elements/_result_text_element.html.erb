@@ -2,7 +2,7 @@
 <% result_text = result.result_text %>
 <% comments = result.comments %>
 <% timestamp = result.created_at %>
-<% name = result.name %> 
+<% name = result.name %>
 <div class="report-element report-result-element report-result-text-element" data-ts="<%= timestamp.to_i %>" data-type="result_text" data-id="<%= result.id %>" data-modal-title="<%=t "projects.reports.elements.modals.result_contents.head_title", result: result.name %>" data-name="<%= name %>" data-icon-class="glyphicon-asterisk">
   <div class="report-element-header">
     <div class="row">
@@ -22,12 +22,8 @@
   </div>
   <div class="report-element-body">
     <div class="row">
-      <div class="col-xs-12 text-container">
-        <% if markdown.present? %>
-          <%= markdown.render(result_text.text).html_safe %>
-        <% else %>
-          <%= result_text.text %>
-        <% end %>
+      <div class="col-xs-12 text-container ql-editor">
+        <%= result_text.text.html_safe %>
       </div>
     </div>
   </div>

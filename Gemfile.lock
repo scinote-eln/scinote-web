@@ -5,6 +5,14 @@ GIT
     sneaky-save (0.1.1)
       activerecord (>= 3.2.0)
 
+GIT
+  remote: https://github.com/biosistemika/quill-rails.git
+  revision: af89d434aa8271efe00bbc11dcaeab9cf4fa01ca
+  ref: af89d43
+  specs:
+    quill-rails (0.1.4)
+      railties (>= 3.1.0, < 5.0)
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -55,6 +63,8 @@ GEM
     autoprefixer-rails (6.1.2)
       execjs
       json
+    autosize-rails (1.18.17)
+      rails (>= 3.1)
     awesome_print (1.7.0)
     aws-sdk (2.2.8)
       aws-sdk-resources (= 2.2.8)
@@ -235,7 +245,6 @@ GEM
     rainbow (2.1.0)
     rake (11.2.2)
     rdoc (4.2.0)
-    redcarpet (3.3.3)
     remotipart (1.2.1)
     responders (2.2.0)
       railties (>= 4.2.0, < 5.1)
@@ -323,6 +332,7 @@ DEPENDENCIES
   ajax-datatables-rails (~> 0.3.1)
   aspector
   auto_strip_attributes (~> 2.1)
+  autosize-rails
   awesome_print
   aws-sdk (~> 2.2.8)
   aws-sdk-v1
@@ -360,9 +370,9 @@ DEPENDENCIES
   paperclip (~> 4.3)
   pg
   puma
+  quill-rails!
   rails (= 4.2.5)
   rails_12factor
-  redcarpet
   remotipart (~> 1.2)
   rgl
   roo (~> 2.1.0)

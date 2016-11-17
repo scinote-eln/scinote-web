@@ -43,7 +43,7 @@
   data-module-protocols-step-text="<%=t 'tutorial.module_results_html' %>"
   data-module-protocols-click-samples-step-text="<%=t 'tutorial.module_results_click_samples_html' %>">
 <% ordered_result_of(@my_module).each do |result| %>
-  <%= render partial: "result", locals: {result: result, markdown: @markdown, direct_upload: @direct_upload} %>
+  <%= render partial: "result", locals: {result: result, direct_upload: @direct_upload} %>
 <% end %>
 </div>
 
