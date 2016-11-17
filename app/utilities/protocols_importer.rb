@@ -1,4 +1,5 @@
 module ProtocolsImporter
+  require 'scrubbers/quill_js_scrubber'
   include RenamingUtil
 
   def import_new_protocol(protocol_json, organization, type, user)
@@ -54,7 +55,10 @@ module ProtocolsImporter
       step = Step.create!(
         name: step_json["name"],
         description: # Sanitize description HTML
-          ActionController::Base.helpers.sanitize(step_json['description']),
+          ActionController::Base.helpers.sanitize(
+            step_json['description'],
+            scrubber: QuillJsScrubber.new
+          ),
         position: step_pos,
         completed: false,
         user: user,
