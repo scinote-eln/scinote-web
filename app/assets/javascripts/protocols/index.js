@@ -8,6 +8,21 @@ var protocolsTableEl = null;
 var protocolsDatatable = null;
 var repositoryType;
 
+/**
+ * Initializes page
+ */
+function init() {
+  updateButtons();
+  initProtocolsTable();
+  initRowSelection();
+  initKeywordFiltering();
+  initLinkedChildrenModal();
+  initCreateNewModal();
+  initModals();
+  initImport();
+  initTutorial();
+}
+
 // Initialize protocols DataTable
 function initProtocolsTable() {
   protocolsTableEl = $("#protocols-table");
@@ -698,54 +713,12 @@ function initImport() {
   });
 }
 
-/* Initilize first-time tutorial if needed */
+/**
+ * Initializes tutorial
+ */
 function initTutorial() {
-  var currentStep = Cookies.get('current_tutorial_step');
-  var protocolButtons = $('.nav-tab .nav-settings').get(0);
-  if (currentStep && (currentStep > 20 && currentStep < 23)) {
-    introJs()
-      .setOptions({
-        overlayOpacity: '0.1',
-        nextLabel: 'Next',
-        doneLabel: 'End tutorial',
-        skipLabel: 'End tutorial',
-        showBullets: false,
-        showStepNumbers: false,
-        exitOnOverlayClick: false,
-        exitOnEsc: false,
-        tooltipClass: 'custom'
-      })
-      .onafterchange(function() {
-        Cookies.set('current_tutorial_step', this._currentStep + 22);
-
-        if (this._currentStep === 1) {
-          Cookies.set('current_tutorial_step', this._currentStep + 22);
-          setTimeout(function() {
-            $('.introjs-tooltipbuttons a.introjs-nextbutton')
-              .removeClass('introjs-disabled')
-              .attr('href', '/');
-          }, 500);
-        }
-      }).start();
-
-    // Destroy first-time tutorial cookies when skip tutorial
-    // or end tutorial is clicked
-    $('.introjs-skipbutton').each(function() {
-      $(this).click(function() {
-        Cookies.remove('tutorial_data');
-        Cookies.remove('current_tutorial_step');
-      });
-    });
-  }
+  var nextPage = $('.navbar-brand').attr('href');
+  initPageTutorialSteps(22, 23, nextPage, function() {}, function() {});
 }
 
-// Initialize everything
-updateButtons();
-initProtocolsTable();
-initRowSelection();
-initKeywordFiltering();
-initLinkedChildrenModal();
-initCreateNewModal();
-initModals();
-initImport();
-initTutorial();
+init();

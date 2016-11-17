@@ -6,6 +6,23 @@
 // Currently selected row in "load from protocol" modal
 var selectedRow = null;
 
+/**
+ * Initializes page
+ */
+function init() {
+  bindEditDueDateAjax();
+  initEditDescription();
+  initCopyToRepository();
+  initLinkUpdate();
+  initLoadFromRepository();
+  initRefreshStatusBar();
+  initImport();
+  initExport();
+  Comments.bindNewElement();
+  Comments.initialize();
+  initTutorial();
+}
+
 // Initialize edit description modal window
 function initEditDescription() {
   var editDescriptionModal = $("#manage-module-description-modal");
@@ -98,95 +115,28 @@ function bindEditDueDateAjax() {
   });
 }
 
+/**
+ * Initializes tutorial
+ */
 function initTutorial() {
-  var currentStep = Cookies.get('current_tutorial_step');
-  if (showTutorial() && (currentStep > 10 && currentStep < 15)) {
-    var resultsTab = $('#results-nav-tab');
-    var saveRepositoryButton = $('#protocol-copy-to-repository').get(0);
-    var moduleProtocolsTutorial = $("[data-role='tutorial-data']")
-      .attr('data-module-protocols-step-text');
-    var moduleProtocolsSaveTutorial = $("[data-role='tutorial-data']")
-      .attr('data-module-protocols-save-step-text');
-    var moduleProtocolsClickResultsTutorial = $("[data-role='tutorial-data']")
-      .attr('data-module-protocols-click-results-step-text');
+  var resultsTab = $('#results-nav-tab');
 
-    introJs()
-      .setOptions({
-        steps: [
-          {
-            intro: moduleProtocolsTutorial
-          },
-          {
-            intro: moduleProtocolsSaveTutorial,
-            element: saveRepositoryButton
-          },
-          {
-            intro: moduleProtocolsClickResultsTutorial,
-            element: resultsTab[0],
-            position: 'bottom-right-aligned',
-            tooltipClass: 'custom next-page-link'
-          }
-        ],
-        overlayOpacity: '0.1',
-        doneLabel: 'End tutorial',
-        skipLabel: 'End tutorial',
-        nextLabel: 'Next',
-        showBullets: false,
-        showStepNumbers: false,
-        exitOnOverlayClick: false,
-        exitOnEsc: false,
-        tooltipClass: 'custom'
-      })
-      .onafterchange(function() {
-        Cookies.set('current_tutorial_step', this._currentStep + 12);
-        if (this._currentStep === 2) {
-          setTimeout(function() {
-            $('.next-page-link a.introjs-nextbutton')
-              .removeClass('introjs-disabled')
-              .attr('href', resultsTab.find('a').attr('href'));
-            positionTutorialTooltip();
-          }, 500);
-        } else {
-          positionTutorialTooltip();
-        }
-      })
-      .goToStep(currentStep === 13 ? 2 : 1)
-      .start();
-
-    window.onresize = positionTutorialTooltip;
-
-    // Destroy first-time tutorial cookies when skip tutorial
-    // or end tutorial is clicked
-    $('.introjs-skipbutton').each(function() {
-      $(this).click(function() {
-        Cookies.remove('tutorial_data');
-        Cookies.remove('current_tutorial_step');
-      });
-    });
-  }
-}
-
-function positionTutorialTooltip() {
-  if (Cookies.get('current_tutorial_step') == 11) {
-    if ($("#results-nav-tab").offset().left == 0) {
-      $(".introjs-tooltip").css("left", (window.innerWidth / 2 - 50)  + "px");
-      $(".introjs-tooltip").addClass("repositioned");
-    } else if ($(".introjs-tooltip").hasClass("repositioned")) {
-      $(".introjs-tooltip").css("left", "");
-      $(".introjs-tooltip").removeClass("repositioned");
-    }
-  }
-};
-
-function showTutorial() {
-  var tutorialData;
-  if (Cookies.get('tutorial_data'))
-    tutorialData = JSON.parse(Cookies.get('tutorial_data'));
-  else
-    return false;
-  var tutorialModuleId = tutorialData[0].qpcr_module;
-  var currentModuleId = $("[data-role='tutorial-data']").attr("data-module-id");
-  return tutorialModuleId == currentModuleId;
+  var nextPage = resultsTab.find('a').attr('href');
+  var steps = [{
+    intro: $("[data-role='tutorial-data']")
+            .attr('data-module-protocols-step-text')
+  }, {
+    element: $('#protocol-copy-to-repository')[0],
+    intro: $("[data-role='tutorial-data']")
+            .attr('data-module-protocols-save-step-text'),
+    position: 'right'
+  }, {
+    element: resultsTab[0],
+    intro: $("[data-role='tutorial-data']")
+            .attr('data-module-protocols-click-results-step-text'),
+    position: 'right'
+  }];
+  initPageTutorialSteps(12, 14, nextPage, function() {}, function() {}, steps);
 }
 
 function initCopyToRepository() {
@@ -556,15 +506,4 @@ function initExport() {
   });
 }
 
-// On init
-bindEditDueDateAjax();
-initEditDescription();
-initCopyToRepository();
-initLinkUpdate();
-initLoadFromRepository();
-initRefreshStatusBar();
-initImport();
-initExport();
-Comments.bindNewElement();
-Comments.initialize();
-initTutorial();
+init();

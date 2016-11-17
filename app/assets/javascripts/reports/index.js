@@ -17,6 +17,31 @@
   var checkedReports = [];
 
   /**
+   * Initializes page
+   */
+  function init() {
+    // Initialize selectors
+    newReportModal = $('#new-report-modal');
+    newReportModalBody = newReportModal.find('.modal-body');
+    newReportCreateButton = $('#create-new-report-btn');
+    deleteReportsModal = $('#delete-reports-modal');
+    deleteReportsInput = $('#report-ids');
+    newReportButton = $('#new-report-btn');
+    editReportButton = $('#edit-report-btn');
+    deleteReportsButton = $('#delete-reports-btn');
+    checkAll = $('.check-all-reports');
+    allChecks = $('.check-report');
+    allRows = $('.report-row');
+
+    initNewReportModal();
+    initCheckboxesAndEditing();
+    updateButtons();
+    initEditReport();
+    initDeleteReports();
+    initTutorial();
+  }
+
+  /**
    * Initialize the new report modal.
    */
   function initNewReportModal() {
@@ -138,88 +163,19 @@
     });
   }
 
-  /* Initilize first-time tutorial if needed */
+  /**
+   * Initializes tutorial
+   */
   function initTutorial() {
-    var currentStep = Cookies.get('current_tutorial_step');
-    if (showTutorial() && (currentStep > 17 && currentStep < 20)) {
-      var reportsClickNewReportTutorial = $("#content").attr("data-reports-click-new-report-step-text");
-      introJs()
-        .setOptions({
-          steps: [
-            {},
-            {
-              element: document.getElementById("new-report-btn"),
-              intro: reportsClickNewReportTutorial,
-              position: 'right',
-              tooltipClass: "custom next-page-link"
-            }
-          ],
-          overlayOpacity: '0.1',
-          nextLabel: 'Next',
-          doneLabel: 'End tutorial',
-          skipLabel: 'End tutorial',
-          showBullets: false,
-          showStepNumbers: false,
-          exitOnOverlayClick: false,
-          exitOnEsc: false,
-          tooltipClass: 'custom'
-        })
-        .onafterchange(function (tarEl) {
-          Cookies.set('current_tutorial_step', this._currentStep + 18);
-
-          if (this._currentStep == 1) {
-            setTimeout(function() {
-              $('.next-page-link a.introjs-nextbutton')
-                .removeClass('introjs-disabled')
-                .attr('href', tarEl.href);
-            }, 500);
-          }
-        })
-        .goToStep(2)
-        .start();
-
-      // Destroy first-time tutorial cookies when skip tutorial
-      // or end tutorial is clicked
-      $(".introjs-skipbutton").each(function (){
-        $(this).click(function (){
-          Cookies.remove('tutorial_data');
-          Cookies.remove('current_tutorial_step');
-        });
-      });
-    }
+    var nextPage = $('#new-report-btn').attr('href');
+    var steps = [{
+      element: $('#new-report-btn')[0],
+      intro: $('#content').attr('data-reports-click-new-report-step-text'),
+      position: 'right'
+    }];
+    initPageTutorialSteps(19, 19, nextPage, function() {}, function() {},
+     steps);
   }
 
-  function showTutorial() {
-    var tutorialData;
-    if (Cookies.get('tutorial_data'))
-      tutorialData = JSON.parse(Cookies.get('tutorial_data'));
-    else
-      return false;
-    var tutorialProjectId = tutorialData[0].project;
-    var currentProjectId = $(".report-table").attr("data-project-id");
-    return tutorialProjectId == currentProjectId;
-  }
-
-  $(document).ready(function() {
-    // Initialize selectors
-    newReportModal = $("#new-report-modal");
-    newReportModalBody = newReportModal.find(".modal-body");
-    newReportCreateButton = $("#create-new-report-btn");
-    deleteReportsModal = $("#delete-reports-modal");
-    deleteReportsInput = $("#report-ids");
-    newReportButton = $("#new-report-btn");
-    editReportButton = $("#edit-report-btn");
-    deleteReportsButton = $("#delete-reports-btn");
-    checkAll = $(".check-all-reports");
-    allChecks = $(".check-report");
-    allRows = $(".report-row");
-
-    initNewReportModal();
-    initCheckboxesAndEditing();
-    updateButtons();
-    initEditReport();
-    initDeleteReports();
-    initTutorial();
-  });
-
+  $(document).ready(init);
 }());
