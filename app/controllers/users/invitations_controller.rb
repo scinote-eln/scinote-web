@@ -5,6 +5,7 @@ module Users
     before_action :check_invite_users_permission, only: :invite_users
 
     def update
+      # Instantialize a new organization with the provided name
       @org = Organization.new
       @org.name = params[:organization][:name]
 
@@ -23,9 +24,25 @@ module Users
     end
 
     def accept_resource
-      resource = super
-      resource.errors.add(:base, @org.errors.to_a.first) unless @org.valid?
-      resource
+      unless @org.valid?
+        # Find the user being invited
+        resource = User.find_by_invitation_token(
+          update_resource_params[:invitation_token],
+          false
+        )
+
+        # Check if user's data (passwords etc.) is valid
+        resource.assign_attributes(
+          update_resource_params.except(:invitation_token)
+        )
+        resource.valid? # Call validation to generate errors
+
+        # In any case, add the organization name error
+        resource.errors.add(:base, @org.errors.to_a.first)
+        return resource
+      end
+
+      super
     end
 
     def invite_users
