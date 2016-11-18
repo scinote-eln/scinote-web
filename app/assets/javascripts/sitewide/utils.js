@@ -115,6 +115,14 @@ function initPageTutorialSteps(pageFirstStepN, pageLastStepN, nextPagePath,
          location.reload();
        })
        .goToStep(stepNum - (pageFirstStepN - 1))
+       .onexit(function() {
+         Cookies.remove('tutorial_data');
+         Cookies.remove('current_tutorial_step');
+       })
+       .oncomplete(function() {
+         Cookies.remove('tutorial_data');
+         Cookies.remove('current_tutorial_step');
+       })
        .start();
     } else {
       if (pageFirstStepN === pageLastStepN) {
@@ -145,6 +153,14 @@ function initPageTutorialSteps(pageFirstStepN, pageLastStepN, nextPagePath,
          location.reload();
        })
        .goToStep(stepNum - (pageFirstStepN - 1))
+       .onexit(function() {
+         Cookies.remove('tutorial_data');
+         Cookies.remove('current_tutorial_step');
+       })
+       .oncomplete(function() {
+         Cookies.remove('tutorial_data');
+         Cookies.remove('current_tutorial_step');
+       })
        .start();
     }
 
