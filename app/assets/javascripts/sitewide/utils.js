@@ -107,6 +107,12 @@ function initPageTutorialSteps(pageFirstStepN, pageLastStepN, nextPagePath,
          disableInteraction: true,
          tooltipClass: 'custom next-page-link'
        })
+       .onexit(function() {
+         location.reload();
+       })
+       .oncomplete(function() {
+         location.reload();
+       })
        .goToStep(stepNum - (pageFirstStepN - 1))
        .start();
     } else {
@@ -129,6 +135,12 @@ function initPageTutorialSteps(pageFirstStepN, pageLastStepN, nextPagePath,
          disableInteraction: true,
          tooltipClass: 'custom next-page-link',
          steps: steps
+       })
+       .onexit(function() {
+         location.reload();
+       })
+       .oncomplete(function() {
+         location.reload();
        })
        .goToStep(stepNum - (pageFirstStepN - 1))
        .start();
