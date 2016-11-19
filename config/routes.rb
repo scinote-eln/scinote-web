@@ -172,7 +172,7 @@ Rails.application.routes.draw do
   # as well as "module info" page for single module (HTML)
   resources :my_modules, path: "/modules", only: [:show, :update, :destroy] do
     resources :my_module_tags, path: "/tags", only: [:index, :create, :update, :destroy]
-    resources :user_my_modules, path: "/users", only: [:index, :new, :create, :destroy]
+    resources :user_my_modules, path: "/users", only: [:index, :create, :destroy]
     resources :my_module_comments,
               path: '/comments',
               only: [:index, :create, :edit, :update, :destroy]

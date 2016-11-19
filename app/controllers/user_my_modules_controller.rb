@@ -2,7 +2,7 @@ class UserMyModulesController < ApplicationController
   before_action :load_vars
   before_action :check_view_permissions, only: [ :index ]
   before_action :check_edit_permissions, only: [ :index_edit ]
-  before_action :check_create_permissions, only: [:new, :create]
+  before_action :check_create_permissions, only: [:create]
   before_action :check_delete_permisisons, only: [:destroy]
 
   def index
@@ -34,14 +34,6 @@ class UserMyModulesController < ApplicationController
         }
       }
     end
-  end
-
-  def new
-    @um = UserMyModule.new(
-      my_module: @my_module
-    )
-    init_gui
-    session[:return_to] ||= request.referer
   end
 
   def create
