@@ -34,6 +34,9 @@ start:
 stop:
 	@docker-compose stop
 
+worker:
+	@$(MAKE) rails cmd="rake jobs:work"
+
 cli:
 	@$(MAKE) rails cmd="/bin/bash"
 
