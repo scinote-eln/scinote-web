@@ -1,7 +1,7 @@
 class ProjectCommentsController < ApplicationController
   before_action :load_vars
   before_action :check_view_permissions, only: :index
-  before_action :check_add_permissions, only: [:new, :create]
+  before_action :check_add_permissions, only: [:create]
   before_action :check_edit_permissions, only: [:edit, :update]
   before_action :check_destroy_permissions, only: [:destroy]
 
@@ -35,12 +35,6 @@ class ProjectCommentsController < ApplicationController
         }
       end
     end
-  end
-
-  def new
-    @comment = Comment.new(
-      user: current_user
-    )
   end
 
   def create

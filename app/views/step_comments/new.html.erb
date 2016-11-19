@@ -1,7 +1,0 @@
-<% provide(:head_title, raw(t("step_comments.new.head_title", project: @step.my_module.project.name, module: @step.my_module.name))) %>
-<h2><%=t "step_comments.new.title", step: (@step.position + 1).to_s %></h2>
-
-<%= bootstrap_form_for [@step, @comment], url: step_step_comments_path do |f| %>
-	<%= f.text_area :message, style: "margin-top: 10px;" %><br />
-	<%= f.submit t("step_comments.new.create"), class: 'btn btn-primary' %>
-<% end %>

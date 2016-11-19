@@ -77,7 +77,7 @@ Rails.application.routes.draw do
     resources :user_projects, path: "/users", only: [:new, :create, :index, :edit, :update, :destroy]
     resources :project_comments,
               path: '/comments',
-              only: [:new, :create, :index, :edit, :update, :destroy]
+              only: [:create, :index, :edit, :update, :destroy]
     # Activities popup (JSON) for individual project in projects index,
     # as well as all activities page for single project (HTML)
     resources :project_activities, path: "/activities", only: [:index]
@@ -175,7 +175,7 @@ Rails.application.routes.draw do
     resources :user_my_modules, path: "/users", only: [:index, :new, :create, :destroy]
     resources :my_module_comments,
               path: '/comments',
-              only: [:index, :new, :create, :edit, :update, :destroy]
+              only: [:index, :create, :edit, :update, :destroy]
     resources :sample_my_modules, path: "/samples_index", only: [:index]
     resources :result_texts, only: [:new, :create]
     resources :result_assets, only: [:new, :create]
@@ -217,7 +217,7 @@ Rails.application.routes.draw do
   resources :results, only: [:update, :destroy] do
     resources :result_comments,
               path: '/comments',
-              only: [:new, :create, :index, :edit, :update, :destroy]
+              only: [:create, :index, :edit, :update, :destroy]
   end
 
   resources :samples, only: [:edit, :update, :destroy]
