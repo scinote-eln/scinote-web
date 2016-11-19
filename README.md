@@ -8,15 +8,15 @@ sciNote is an open source electronic lab notebook ([ELN](https://en.wikipedia.or
 
 ## Build & run
 
-Check [Wiki](https://github.com/biosistemika/scinote-web/wiki) pages - [Build & run](https://github.com/biosistemika/scinote-web/wiki/setup-guide#build-&-run) section.
+See [Wiki/Build & run](https://github.com/biosistemika/scinote-web/wiki/setup-guide#build-&-run).
 
 ## Testing
 
-Check [Wiki](https://github.com/biosistemika/scinote-web/wiki) pages - [Testing](https://github.com/biosistemika/scinote-web/wiki/setup-guide#testing) section.
+See [Wiki/Testing](https://github.com/biosistemika/scinote-web/wiki/setup-guide#testing).
 
 ## Contributing
 
-For contributing, see [Wiki](https://github.com/biosistemika/scinote-web/wiki) pages - [Contributing & Collaboration](https://github.com/biosistemika/scinote-web/wiki/contributing-&-collaboration) section.
+See [Wiki/Contributing & Collaboration](https://github.com/biosistemika/scinote-web/wiki/contributing-&-collaboration).
 
 ## License
 
