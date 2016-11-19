@@ -1,7 +1,0 @@
-<% provide(:head_title, raw(t("my_module_comments.new.head_title", project: @my_module.project.name, module: @my_module.name))) %>
-<h2><%=t "my_module_comments.new.title", module: @my_module.name %></h2>
-
-<%= bootstrap_form_for [@my_module, @comment], url: my_module_my_module_comments_path do |f| %>
-  <%= f.text_area :message, style: "margin-top: 10px;" %><br />
-  <%= f.submit t("my_module_comments.new.create"), style: "margin-top: 10px;" %>
-<% end %>

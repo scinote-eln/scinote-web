@@ -170,7 +170,7 @@ Rails.application.routes.draw do
 
   # Show action is a popup (JSON) for individual module in full-zoom canvas,
   # as well as "module info" page for single module (HTML)
-  resources :my_modules, path: "/modules", only: [:show, :edit, :update, :destroy] do
+  resources :my_modules, path: "/modules", only: [:show, :update, :destroy] do
     resources :my_module_tags, path: "/tags", only: [:index, :create, :update, :destroy]
     resources :user_my_modules, path: "/users", only: [:index, :new, :create, :destroy]
     resources :my_module_comments,
@@ -223,8 +223,6 @@ Rails.application.routes.draw do
   resources :samples, only: [:edit, :update, :destroy]
   get 'samples/:id', to: 'samples#show'
 
-  resources :sample_types, only: [:edit, :update]
-  resources :sample_groups, only: [:edit, :update]
   resources :result_texts, only: [:edit, :update, :destroy]
   get 'result_texts/:id/download' => 'result_texts#download',
     as: :result_text_download
