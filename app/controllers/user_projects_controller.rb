@@ -4,7 +4,7 @@ class UserProjectsController < ApplicationController
   before_action :load_vars
   before_action :check_view_tab_permissions, only: [ :index ]
   before_action :check_view_permissions, only: [ :index_edit ]
-  before_action :check_create_permissions, only: [:new, :create]
+  before_action :check_create_permissions, only: [:create]
   # TODO  check update permissions
   before_action :check_update_permisisons, only: [:update]
   before_action :check_delete_permisisons, only: [:destroy]
@@ -42,13 +42,6 @@ class UserProjectsController < ApplicationController
         }
       }
     end
-  end
-
-  def new
-    @up = UserProject.new(
-      project: @project
-    )
-    init_gui
   end
 
   def create
@@ -107,10 +100,6 @@ class UserProjectsController < ApplicationController
         }
       end
     end
-  end
-
-  def edit
-    @up = UserProject.find(params[:id])
   end
 
   def update

@@ -74,7 +74,7 @@ Rails.application.routes.draw do
   get 'projects/archive', to: 'projects#archive', as: 'projects_archive'
 
   resources :projects, except: [:new, :destroy] do
-    resources :user_projects, path: "/users", only: [:new, :create, :index, :edit, :update, :destroy]
+    resources :user_projects, path: "/users", only: [:create, :index, :update, :destroy]
     resources :project_comments,
               path: '/comments',
               only: [:create, :index, :edit, :update, :destroy]
