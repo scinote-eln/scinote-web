@@ -718,7 +718,7 @@ function initImport() {
  */
 function initTutorial() {
   var nextPage = $('.navbar-brand').attr('href');
-  initPageTutorialSteps(22, 23, nextPage, function() {}, function() {});
+  initPageTutorialSteps(23, 24, nextPage, function() {}, function() {});
 }
 
 init();

@@ -348,14 +348,41 @@
         Cookies.set('tutorial_data', tutorialData);
       }
       var demoProjectId = tutorialData[0].project;
+      var demoProject = $('#' + demoProjectId);
 
       if (stepNum >= 1 && stepNum <= 3) {
-        var nextPage =
-          $('#' + demoProjectId + '-project-canvas-link').attr('href');
+        var thirdStepPos = (demoProject.offset().top > window.innerHeight / 2) ?
+         'top' : 'bottom';
+
+        var nextPage = $('#' + demoProjectId + '-project-canvas-link')
+                        .attr('href');
+        var steps = [{
+          element: $('#projects-toolbar')[0],
+          intro: I18n.t('tutorial.tutorial_welcome_title_html'),
+          position: 'bottom'
+        }, {
+          element: $('#new-project-btn')[0],
+          intro: I18n.t('tutorial.create_project_html'),
+          position: 'left'
+        }, {
+          element: demoProject[0],
+          intro: I18n.t('tutorial.project_options_html'),
+          position: thirdStepPos
+        }];
         initPageTutorialSteps(1, 3, nextPage, tutorialBeforeCb,
-         tutorialAfterCb);
-      } else if (stepNum >= 24 && stepNum <= 25) {
-        var demoProject = $('#' + demoProjectId);
+         tutorialAfterCb, steps);
+      } else if (stepNum === 22) {
+        var protocolLink = $('#protocol-link');
+
+        var nextPage = protocolLink.attr('href');
+        var steps = [{
+          element: protocolLink[0],
+          intro: I18n.t('tutorial.protocols_link_html'),
+          position: 'left'
+        }];
+        initPageTutorialSteps(22, 22, nextPage, function() {}, function() {},
+         steps);
+      } else if (stepNum >= 25 && stepNum <= 26) {
         var firstStepPos = 'right';
         if (demoProject.offset().left > window.innerWidth / 2 ||
             window.innerWidth < demoProject.width() + 100) {
@@ -369,16 +396,15 @@
 
         var nextPage = $('#new-report-btn').attr('href');
         var steps = [{
-          element: $('#' + demoProjectId)[0],
-          intro: $('#projects-toolbar')
-                  .attr('data-archive-project-step-text'),
+          element: demoProject[0],
+          intro: I18n.t('tutorial.archive_project_html'),
           position: firstStepPos
         }, {
           element: $('.avatar')[0],
-          intro: $('#projects-toolbar').attr('data-goodbye-tutorial'),
+          intro: I18n.t('tutorial.goodbye_message'),
           position: 'left'
         }];
-        initPageTutorialSteps(24, 25, nextPage, function() {}, function() {},
+        initPageTutorialSteps(25, 26, nextPage, function() {}, function() {},
          steps);
       }
     }
@@ -388,19 +414,6 @@
    * Callback to be executed before tutorial starts
    */
   function tutorialBeforeCb() {
-    var tutorialData = JSON.parse(Cookies.get('tutorial_data'));
-    var projectOptionsTutorial =
-      $('#projects-toolbar').attr('data-project-options-step-text');
-    var demoProjectId = tutorialData[0].project;
-    var demoProject = $('#' + demoProjectId);
-    demoProject.attr('data-step', '3');
-    demoProject.attr('data-intro', projectOptionsTutorial);
-    demoProject.attr('data-tooltipClass', 'custom next-page-link');
-
-    if (demoProject.offset().top > window.innerHeight / 2) {
-      demoProject.attr('data-position', 'top');
-    } // Otherwise show bottom
-
     $.each($('.panel'), function(i, el){
       $(el)
       .find('.panel-title')
