@@ -482,6 +482,17 @@ a[data-toggle="tooltip"] {
   overflow: hidden
 }
 
+.panel-body {
+  .ql-editor {
+    padding: 0;
+    white-space: normal;
+
+    blockquote {
+      padding: 10px 20px;
+    }
+  }
+}
+
 .navbar-secondary {
   background: $color-concrete !important;
   margin-left: -280px;
