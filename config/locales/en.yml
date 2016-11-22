@@ -1015,14 +1015,6 @@ en:
       success_flash: "Successfully removed user %{user} from task <strong>%{module}</strong>."
       error_flash: "User %{user} could not be removed from task <strong>%{module}</strong>."
 
-  step_comments:
-    new:
-      head_title: "%{project} | %{module} | Add comment to step"
-      title: "Add comment to step %{step}"
-      create: "Add comment"
-    create:
-      success_flash: "Successfully added comment to step <strong>%{step}</strong>."
-
   users:
     enums:
       status:

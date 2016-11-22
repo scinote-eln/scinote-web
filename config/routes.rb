@@ -207,7 +207,7 @@ Rails.application.routes.draw do
   resources :steps, only: [:edit, :update, :destroy, :show] do
     resources :step_comments,
               path: '/comments',
-              only: [:new, :create, :index, :edit, :update, :destroy]
+              only: [:create, :index, :edit, :update, :destroy]
     member do
       post 'checklistitem_state'
       post 'toggle_step_state'

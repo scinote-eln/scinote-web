@@ -59,12 +59,6 @@ class StepCommentsController < ApplicationController
           )
         end
 
-        format.html {
-          flash[:success] = t(
-            "step_comments.create.success_flash",
-            step: @step.name)
-          redirect_to session.delete(:return_to)
-        }
         format.json {
           render json: {
             html: render_to_string(
@@ -79,7 +73,6 @@ class StepCommentsController < ApplicationController
         }
       else
         response.status = 400
-        format.html { render :new }
         format.json {
           render json: {
             errors: @comment.errors.to_hash(true)
