@@ -58,16 +58,10 @@ class MyModuleCommentsController < ApplicationController
           )
         )
 
-        format.html {
-          flash[:success] = t(
-            "my_module_comments.create.success_flash",
-            module: @my_module.name)
-          redirect_to session.delete(:return_to)
-        }
-        format.json {
+        format.json do
           render json: {
             html: render_to_string(
-              partial: "comment.html.erb",
+              partial: 'comment.html.erb',
               locals: {
                 comment: @comment
               }
@@ -75,15 +69,14 @@ class MyModuleCommentsController < ApplicationController
             date: @comment.created_at.strftime('%d.%m.%Y')
           },
           status: :created
-        }
+        end
       else
         response.status = 400
-        format.html { render :new }
-        format.json {
+        format.json do
           render json: {
             errors: @comment.errors.to_hash(true)
           }
-        }
+        end
       end
     end
   end

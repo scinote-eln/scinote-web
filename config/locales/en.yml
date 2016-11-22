@@ -754,27 +754,6 @@ en:
       archived_on: "Archived on"
       archived_on_title: "Module archived on %{date} at %{time}."
 
-  my_module_tags:
-    new:
-      head_title: "%{project} | %{module} | Add tag"
-      title: "Add tag to task %{module}"
-      create: "Add tag"
-      new_tag: "Create new tag"
-    create:
-      success_flash: "Successfully added tag <strong>%{tag}</strong> to task <strong>%{module}</strong>."
-      error_flash: "Could not create new tag for task <strong>%{module}</strong>."
-    destroy:
-      success_flash: "Successfully removed tag <strong>%{tag}</strong> from task <strong>%{module}</strong>."
-      error_flash: "Tag <strong>%{tag}</strong> could not be removed from <strong>%{module}</strong>."
-
-  my_module_comments:
-    new:
-      head_title: "%{project} | %{module} | Add comment"
-      title: "Add comment to task %{module}"
-      create: "Add comment"
-    create:
-      success_flash: "Successfully added comment to task <strong>%{module}</strong>."
-
   my_module_groups:
     new:
       name: "Workflow %{index}"
