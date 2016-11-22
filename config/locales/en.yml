@@ -941,16 +941,8 @@ en:
 
   sample_groups:
     color_label: "Sample group color"
-    edit:
-      head_title: "%{organization} | Edit sample group"
-      title: "Edit sample group %{sample_group} from team %{organization}"
-      create: "Edit sample group"
     create:
       success_flash: "Successfully added sample group <strong>%{sample_group}</strong> to team <strong>%{organization}</strong>."
-    update:
-      success_flash: "Successfully updated sample group <strong>%{sample_group}</strong> to team <strong>%{organization}</strong>."
-    destroy:
-      success_flash: "Sample group <strong>%{sample_group}</strong> successfully deleted."
 
   activities:
     index:

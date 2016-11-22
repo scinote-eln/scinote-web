@@ -1,11 +1,6 @@
 class SampleGroupsController < ApplicationController
-  before_action :load_vars_nested, only: [:new, :create]
-  before_action :check_create_permissions, only: [:new, :create]
-
-  def new
-    @sample_group = SampleGroup.new
-    session[:return_to] ||= request.referer
-  end
+  before_action :load_vars_nested, only: [:create]
+  before_action :check_create_permissions, only: [:create]
 
   def create
     @sample_group = SampleGroup.new(sample_group_params)
@@ -32,19 +27,6 @@ class SampleGroupsController < ApplicationController
             status: :unprocessable_entity
         }
       end
-    end
-  end
-
-  def update
-    @sample_group.last_modified_by = current_user
-    if @sample_group.update_attributes(sample_group_params)
-      flash[:success] = t(
-        "sample_groups.update.success_flash",
-        sample_group: @sample_group.name,
-        organization: @organization.name)
-      redirect_to (session.delete(:return_to) || root_path)
-    else
-      render :edit
     end
   end
 
