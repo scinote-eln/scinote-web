@@ -1,8 +1,23 @@
 class UserMyModulesController < ApplicationController
   before_action :load_vars
-  before_action :check_edit_permissions, only: [:index_edit]
-  before_action :check_create_permissions, only: [:create]
-  before_action :check_delete_permisisons, only: [:destroy]
+  before_action :check_view_permissions, only: :index
+  before_action :check_edit_permissions, only: :index_edit
+  before_action :check_create_permissions, only: :create
+  before_action :check_delete_permisisons, only: :destroy
+
+  def index
+    @user_my_modules = @my_module.user_my_modules
+
+    respond_to do |format|
+      format.json {
+        render :json => {
+          :html => render_to_string({
+            :partial => "index.html.erb"
+          })
+        }
+      }
+    end
+  end
 
   def index_edit
     @user_my_modules = @my_module.user_my_modules
@@ -108,6 +123,12 @@ class UserMyModulesController < ApplicationController
       unless @um
         render_404
       end
+    end
+  end
+
+  def check_view_permissions
+    unless can_view_module_users(@my_module)
+      render_403
     end
   end
 

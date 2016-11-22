@@ -174,7 +174,7 @@ Rails.application.routes.draw do
   resources :my_modules, path: '/modules', only: [:show, :update] do
     resources :my_module_tags, path: "/tags", only: [:create, :destroy]
     resources :user_my_modules, path: '/users',
-              only: [:create, :destroy]
+              only: [:index, :create, :destroy]
     resources :my_module_comments,
               path: '/comments',
               only: [:index, :create, :edit, :update, :destroy]

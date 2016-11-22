@@ -418,27 +418,9 @@ en:
         normal_user: "User"
         technician: "Technician"
         viewer: "Viewer"
-    new:
-      head_title: "%{project} | Add user"
-      title: "Add user to project %{project}"
-      create: "Add"
-      role: "Role"
     create:
-      success_flash: "User %{user} successfully added to project <strong>%{project}</strong>."
-      error_flash: "User %{user} not added to project <strong>%{project}</strong>."
       select_user_role: "Please select a user role."
       add_user_generic_error: "An error occured. "
-    edit:
-      head_title: "%{project} | Edit user role"
-      title: "Edit role for user %{user} on project %{project}"
-      update: "Update role"
-      update_role: "Change Role"
-    update:
-      success_flash: "Successfully changed project role for user %{user} on project <strong>%{project}</strong>."
-      error_flash: "Project role not changed for user %{user} on project <strong>%{project}</strong>."
-    destroy:
-      success_flash: "Successfully removed user %{user} from project <strong>%{project}</strong>."
-      error_flash: "User %{user} not removed from project <strong>%{project}</strong>."
 
   my_modules:
     description:
