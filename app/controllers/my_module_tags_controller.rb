@@ -1,7 +1,7 @@
 class MyModuleTagsController < ApplicationController
   before_action :load_vars
   before_action :check_view_permissions, only: [:index_edit]
-  before_action :check_create_permissions, only: [:new, :create]
+  before_action :check_create_permissions, only: [:create]
   before_action :check_destroy_permissions, only: [:destroy]
 
   def index_edit
@@ -20,12 +20,6 @@ class MyModuleTagsController < ApplicationController
         }
       }
     end
-  end
-
-  def new
-    session[:return_to] ||= request.referer
-    @mt = MyModuleTag.new(my_module: @my_module)
-    init_gui
   end
 
   def create

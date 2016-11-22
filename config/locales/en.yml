@@ -235,8 +235,6 @@ en:
       page_title: "Project's experiments"
     samples:
       head_title: "%{project} | Sample library"
-    activities:
-      head_title: "%{project} | Activity"
     reports:
       print_title: "%{project} | Report"
       index:
@@ -443,27 +441,12 @@ en:
       error_flash: "User %{user} not removed from project <strong>%{project}</strong>."
 
   my_modules:
-    show:
-      head_title: "%{project} | %{module}"
-      archive_action: "Archive"
-      archive_confirm_text: "All samples will be unassigned from the
-        task when archiving. Are you sure to archive task?"
-    edit:
-      head_title: "%{project} | %{module} | Edit"
-      title: "Edit task %{module}"
-      name: "Task name"
-      due_date: "Due date"
-      save: "Save task"
     description:
       title: "Edit task %{module} description"
       label: "Description"
     due_date:
       title: "Edit task %{module} due date"
       label: "Due date"
-    update:
-      success_flash: "Successfully modified task <strong>%{module}</strong>."
-    destroy:
-      success_flash: "Successfully removed task <strong>%{module}</strong> from project <strong>%{project}</strong>."
     samples:
       head_title: "%{project} | %{module} | Sample library"
     module_archive:
@@ -775,14 +758,6 @@ en:
       success_flash: "Successfully removed tag <strong>%{tag}</strong>."
       error_flash: "Could not remove tag <strong>%{tag}</strong>."
 
-  project_comments:
-    new:
-      head_title: "%{project} | Add comment"
-      title: "Add comment to project %{project}"
-      create: "Add comment"
-    create:
-      success_flash: "Successfully added comment to project <strong>%{project}</strong>."
-
   result_texts:
     new:
       head_title: "%{project} | %{module} | Add text result"
@@ -1063,14 +1038,6 @@ en:
       create: "Add comment"
     create:
       success_flash: "Successfully added comment to step <strong>%{step}</strong>."
-
-  result_comments:
-    new:
-      head_title: "%{project} | %{module} | Add comment to result"
-      title: "Add comment to result"
-      create: "Add comment"
-    create:
-      success_flash: "Successfully added comment to result."
 
   users:
     enums:

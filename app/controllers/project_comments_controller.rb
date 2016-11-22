@@ -57,12 +57,6 @@ class ProjectCommentsController < ApplicationController
           )
         )
 
-        format.html {
-          flash[:success] = t(
-            "project_comments.create.success_flash",
-            project: @project.name)
-          redirect_to projects_path
-        }
         format.json {
           render json: {
             html: render_to_string(
@@ -76,7 +70,6 @@ class ProjectCommentsController < ApplicationController
         }
       else
         response.status = 400
-        format.html { render :new }
         format.json {
           render json: {
             errors: @comment.errors.to_hash(true)

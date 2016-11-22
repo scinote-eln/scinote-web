@@ -56,11 +56,6 @@ class ResultCommentsController < ApplicationController
           )
         )
 
-        format.html {
-          flash[:success] = t(
-            "result_comments.create.success_flash")
-          redirect_to session.delete(:return_to)
-        }
         format.json {
           render json: {
             html: render_to_string(
@@ -75,7 +70,6 @@ class ResultCommentsController < ApplicationController
         }
       else
         response.status = 400
-        format.html { render :new }
         format.json {
           render json: {
             errors: @comment.errors.to_hash(true)
