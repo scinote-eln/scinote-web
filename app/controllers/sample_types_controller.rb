@@ -1,11 +1,6 @@
 class SampleTypesController < ApplicationController
-  before_action :load_vars_nested, only: [:new, :create]
-  before_action :check_create_permissions, only: [:new, :create]
-
-  def new
-    @sample_type = SampleType.new
-    session[:return_to] ||= request.referer
-  end
+  before_action :load_vars_nested, only: [:create]
+  before_action :check_create_permissions, only: [:create]
 
   def create
     @sample_type = SampleType.new(sample_type_params)

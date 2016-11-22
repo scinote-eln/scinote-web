@@ -887,16 +887,8 @@ en:
       permission_error: "You don't have permission to edit this sample."
       not_found_error: "This sample does not exist."
   sample_types:
-    edit:
-      head_title: "%{organization} | Edit sample type"
-      title: "Edit sample type %{sample_type} from team %{organization}"
-      create: "Edit sample type"
     create:
       success_flash: "Successfully added sample type <strong>%{sample_type}</strong> to team <strong>%{organization}</strong>."
-    update:
-      success_flash: "Successfully updated sample type <strong>%{sample_type}</strong> to team <strong>%{organization}</strong>."
-    destroy:
-      success_flash: "Sample type <strong>%{sample_type}</strong> successfully deleted."
 
   custom_fields:
     new:

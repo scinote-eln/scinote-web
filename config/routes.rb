@@ -60,7 +60,7 @@ Rails.application.routes.draw do
 
   resources :organizations, only: [] do
     resources :samples, only: [:new, :create]
-    resources :sample_types, only: [:new, :create]
+    resources :sample_types, only: [:create]
     resources :sample_groups, only: [:create]
     resources :custom_fields, only: [:create]
     member do
