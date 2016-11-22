@@ -123,19 +123,23 @@ function renderTable(table) {
  * Initializes tutorial
  */
 function initTutorial() {
-  var samplesTab = $('#module-samples-nav-tab');
+  var stepNum = parseInt(Cookies.get('current_tutorial_step'), 10);
+  if (stepNum >= 15 && stepNum <= 16) {
+    var samplesTab = $('#module-samples-nav-tab');
 
-  var nextPage = samplesTab.find('a').attr('href');
-  var steps = [{
-    element: $('#results-toolbar')[0],
-    intro: $('#results').attr('data-module-protocols-step-text')
-  }, {
-    element: samplesTab[0],
-    intro: $('#results')
-            .attr('data-module-protocols-click-samples-step-text'),
-    position: 'left'
-  }];
-  initPageTutorialSteps(15, 16, nextPage, function() {}, function() {}, steps);
+    var nextPage = samplesTab.find('a').attr('href');
+    var steps = [{
+      element: $('#results-toolbar')[0],
+      intro: $('#results').attr('data-module-protocols-step-text')
+    }, {
+      element: samplesTab[0],
+      intro: $('#results')
+              .attr('data-module-protocols-click-samples-step-text'),
+      position: 'left'
+    }];
+    initPageTutorialSteps(15, 16, nextPage, function() {},
+                          function() {}, steps);
+  }
 }
 
 var ResultTypeEnum = Object.freeze({

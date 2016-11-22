@@ -167,14 +167,17 @@
    * Initializes tutorial
    */
   function initTutorial() {
-    var nextPage = $('#new-report-btn').attr('href');
-    var steps = [{
-      element: $('#new-report-btn')[0],
-      intro: $('#content').attr('data-reports-click-new-report-step-text'),
-      position: 'right'
-    }];
-    initPageTutorialSteps(19, 19, nextPage, function() {}, function() {},
-     steps);
+    var stepNum = parseInt(Cookies.get('current_tutorial_step'), 10);
+    if (stepNum === 19) {
+      var nextPage = $('#new-report-btn').attr('href');
+      var steps = [{
+        element: $('#new-report-btn')[0],
+        intro: $('#content').attr('data-reports-click-new-report-step-text'),
+        position: 'right'
+      }];
+      initPageTutorialSteps(19, 19, nextPage, function() {}, function() {},
+       steps);
+    }
   }
 
   $(document).ready(init);
