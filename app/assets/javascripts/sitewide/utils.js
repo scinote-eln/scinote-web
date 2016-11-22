@@ -105,6 +105,7 @@ function initPageTutorialSteps(pageFirstStepN, pageLastStepN, nextPagePath,
          exitOnOverlayClick: false,
          exitOnEsc: false,
          disableInteraction: true,
+         keyboardNavigation: false,
          tooltipClass: 'custom next-page-link'
        })
        .onexit(function() {
@@ -133,6 +134,7 @@ function initPageTutorialSteps(pageFirstStepN, pageLastStepN, nextPagePath,
          exitOnOverlayClick: false,
          exitOnEsc: false,
          disableInteraction: true,
+         keyboardNavigation: false,
          tooltipClass: 'custom next-page-link',
          steps: steps
        })
