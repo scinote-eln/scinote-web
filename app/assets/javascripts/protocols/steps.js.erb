@@ -77,6 +77,11 @@ function applyCancelCallBack() {
     initCallBacks();
     initHandsOnTable($new_step);
     toggleButtons(true);
+
+    setTimeout(function() {
+      initStepsComments();
+    }, 1000);
+
   })
   .on("ajax:error", function(e, xhr, status, error) {
     // TODO: error handling
@@ -173,6 +178,10 @@ function formCallback($form) {
         contents.attr("value", data);
       }
     });
+
+    setTimeout(function() {
+      initStepsComments();
+    }, 1000);
     return true;
   });
 }
@@ -545,17 +554,20 @@ function renderTable(table) {
   }
 }
 
+function initStepsComments() {
+  Comments.initialize();
+  Comments.initCommentOptions("ul.content-comments");
+  Comments.initEditComments("#steps");
+  Comments.initDeleteComments("#steps");
+}
+
 $(document).ready(function() {
   // On init
   initCallBacks();
   initHandsOnTable($(document));
   expandAllSteps();
   setupAssetsLoading();
-
-  // Init comments edit/delete
-  Comments.initCommentOptions("ul.content-comments");
-  Comments.initEditComments("#steps");
-  Comments.initDeleteComments("#steps");
+  initStepsComments();
 
   $(function () {
 
