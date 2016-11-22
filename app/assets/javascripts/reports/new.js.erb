@@ -1147,12 +1147,14 @@ function initializeReportSidebartruncation() {
  * Initializes tutorial
  */
 function initTutorial() {
-  ignoreUnsavedWorkAlert = true;
-
-  var nextPage = $('.navbar-brand').attr('href');
-  initPageTutorialSteps(20, 21, nextPage, function() {}, function() {
-    ignoreUnsavedWorkAlert = false;
-  });
+  var stepNum = parseInt(Cookies.get('current_tutorial_step'), 10);
+  if (stepNum >= 20 && stepNum <= 21) {
+    ignoreUnsavedWorkAlert = true;
+    var nextPage = $('.navbar-brand').attr('href');
+    initPageTutorialSteps(20, 21, nextPage, function() {}, function() {
+      ignoreUnsavedWorkAlert = false;
+    });
+  }
 }
 
 $(document).ready(function() {

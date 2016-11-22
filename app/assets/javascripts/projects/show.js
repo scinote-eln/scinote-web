@@ -67,8 +67,11 @@
    * Initializes tutorial
    */
   function initTutorial() {
-    var nextPage = $('[data-canvas-link]').data('canvasLink');
-    initPageTutorialSteps(4, 5, nextPage, tutorialBeforeCb, tutorialAfterCb);
+    var stepNum = parseInt(Cookies.get('current_tutorial_step'), 10);
+    if (stepNum >= 4 && stepNum <= 5) {
+      var nextPage = $('[data-canvas-link]').data('canvasLink');
+      initPageTutorialSteps(4, 5, nextPage, tutorialBeforeCb, tutorialAfterCb);
+    }
   }
 
   /**

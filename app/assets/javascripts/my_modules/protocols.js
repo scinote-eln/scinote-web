@@ -119,24 +119,28 @@ function bindEditDueDateAjax() {
  * Initializes tutorial
  */
 function initTutorial() {
-  var resultsTab = $('#results-nav-tab');
+  var stepNum = parseInt(Cookies.get('current_tutorial_step'), 10);
+  if (stepNum >= 12 && stepNum <= 14) {
+    var resultsTab = $('#results-nav-tab');
 
-  var nextPage = resultsTab.find('a').attr('href');
-  var steps = [{
-    intro: $("[data-role='tutorial-data']")
-            .attr('data-module-protocols-step-text')
-  }, {
-    element: $('#protocol-copy-to-repository')[0],
-    intro: $("[data-role='tutorial-data']")
-            .attr('data-module-protocols-save-step-text'),
-    position: 'right'
-  }, {
-    element: resultsTab[0],
-    intro: $("[data-role='tutorial-data']")
-            .attr('data-module-protocols-click-results-step-text'),
-    position: 'right'
-  }];
-  initPageTutorialSteps(12, 14, nextPage, function() {}, function() {}, steps);
+    var nextPage = resultsTab.find('a').attr('href');
+    var steps = [{
+      intro: $("[data-role='tutorial-data']")
+              .attr('data-module-protocols-step-text')
+    }, {
+      element: $('#protocol-copy-to-repository')[0],
+      intro: $("[data-role='tutorial-data']")
+              .attr('data-module-protocols-save-step-text'),
+      position: 'right'
+    }, {
+      element: resultsTab[0],
+      intro: $("[data-role='tutorial-data']")
+              .attr('data-module-protocols-click-results-step-text'),
+      position: 'right'
+    }];
+    initPageTutorialSteps(12, 14, nextPage,
+                          function() {}, function() {}, steps);
+  }
 }
 
 function initCopyToRepository() {

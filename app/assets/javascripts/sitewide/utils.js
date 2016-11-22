@@ -105,7 +105,14 @@ function initPageTutorialSteps(pageFirstStepN, pageLastStepN, nextPagePath,
          exitOnOverlayClick: false,
          exitOnEsc: false,
          disableInteraction: true,
+         keyboardNavigation: false,
          tooltipClass: 'custom next-page-link'
+       })
+       .onexit(function() {
+         location.reload();
+       })
+       .oncomplete(function() {
+         location.reload();
        })
        .goToStep(stepNum - (pageFirstStepN - 1))
        .start();
@@ -127,8 +134,15 @@ function initPageTutorialSteps(pageFirstStepN, pageLastStepN, nextPagePath,
          exitOnOverlayClick: false,
          exitOnEsc: false,
          disableInteraction: true,
+         keyboardNavigation: false,
          tooltipClass: 'custom next-page-link',
          steps: steps
+       })
+       .onexit(function() {
+         location.reload();
+       })
+       .oncomplete(function() {
+         location.reload();
        })
        .goToStep(stepNum - (pageFirstStepN - 1))
        .start();

@@ -717,8 +717,11 @@ function initImport() {
  * Initializes tutorial
  */
 function initTutorial() {
-  var nextPage = $('.navbar-brand').attr('href');
-  initPageTutorialSteps(23, 24, nextPage, function() {}, function() {});
+  var stepNum = parseInt(Cookies.get('current_tutorial_step'), 10);
+  if (stepNum >= 23 && stepNum <= 24) {
+    var nextPage = $('.navbar-brand').attr('href');
+    initPageTutorialSteps(23, 24, nextPage, function() {}, function() {});
+  }
 }
 
 init();
