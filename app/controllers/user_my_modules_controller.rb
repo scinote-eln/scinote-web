@@ -9,13 +9,13 @@ class UserMyModulesController < ApplicationController
     @user_my_modules = @my_module.user_my_modules
 
     respond_to do |format|
-      format.json {
-        render :json => {
-          :html => render_to_string({
-            :partial => "index.html.erb"
-          })
+      format.json do
+        render json: {
+          html: render_to_string(
+            partial: 'index.html.erb'
+          )
         }
-      }
+      end
     end
   end
 
