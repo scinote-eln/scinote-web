@@ -101,4 +101,7 @@ Rails.application.configure do
   # Enable first-time tutorial for users signing in the sciNote for
   # the first time.
   config.x.enable_tutorial = ENV["ENABLE_TUTORIAL"] != "false"
+
+  # Enable reCAPTCHA
+  config.x.enable_recaptcha = ENV["ENABLE_RECAPTCHA"] == "true"
 end

@@ -38,6 +38,13 @@
       <span><small><%= t 'users.registrations.new.team_name_help' %></small></span>
     </div>
 
+    <% if Rails.configuration.x.enable_recaptcha %>
+      <div class="form-group">
+        <%= recaptcha_tags %>
+        <%= flash[:recaptcha_error] %>
+      </div>
+    <% end %>
+
     <div class="form-group">
       <%= f.submit "Sign up", class: "btn btn-primary" %>
     </div>
