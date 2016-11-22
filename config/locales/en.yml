@@ -1000,21 +1000,6 @@ en:
     assign_sample: "<i>%{user}</i> assigned sample(s) <strong>%{samples}</strong> to task(s) <strong>%{tasks}</strong>."
     unassign_sample: "<i>%{user}</i> unassigned sample(s) <strong>%{samples}</strong> from task(s) <strong>%{tasks}</strong>."
 
-  user_my_modules:
-    new:
-      head_title: "%{project} | %{module} | Add user"
-      title: "Add user to task %{module}"
-      create: "Add user to task"
-      no_users_available: "All users of the current project all already added to this task."
-      assign_user: "Add user"
-      back_button: "Back to task"
-    create:
-      success_flash: "Successfully added user %{user} to task <strong>%{module}</strong>."
-      error_flash: "User %{user} could not be added to task <strong>%{module}</strong>."
-    destroy:
-      success_flash: "Successfully removed user %{user} from task <strong>%{module}</strong>."
-      error_flash: "User %{user} could not be removed from task <strong>%{module}</strong>."
-
   users:
     enums:
       status:
