@@ -108,20 +108,16 @@ function initPageTutorialSteps(pageFirstStepN, pageLastStepN, nextPagePath,
          keyboardNavigation: false,
          tooltipClass: 'custom next-page-link'
        })
-       .onexit(function() {
-         location.reload();
-       })
-       .oncomplete(function() {
-         location.reload();
-       })
        .goToStep(stepNum - (pageFirstStepN - 1))
        .onexit(function() {
          Cookies.remove('tutorial_data');
          Cookies.remove('current_tutorial_step');
+         location.reload();
        })
        .oncomplete(function() {
          Cookies.remove('tutorial_data');
          Cookies.remove('current_tutorial_step');
+         location.reload();
        })
        .start();
     } else {
