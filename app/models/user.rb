@@ -256,6 +256,10 @@ class User < ActiveRecord::Base
 
   protected
 
+  def confirmation_required?
+    Rails.configuration.x.enable_email_confirmations
+  end
+
   def time_zone_check
     if time_zone.nil? or ActiveSupport::TimeZone.new(time_zone).nil?
       errors.add(:time_zone)

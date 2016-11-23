@@ -104,4 +104,8 @@ Rails.application.configure do
 
   # Enable reCAPTCHA
   config.x.enable_recaptcha = ENV['ENABLE_RECAPTCHA'] == 'true'
+
+  # Enable email confirmations
+  config.x.enable_email_confirmations =
+    ENV['ENABLE_EMAIL_CONFIRMATIONS'] == 'true'
 end
