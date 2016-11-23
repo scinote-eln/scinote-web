@@ -1,5 +1,6 @@
 class Users::RegistrationsController < Devise::RegistrationsController
   before_action :load_paperclip_vars
+  prepend_before_action :check_captcha, only: [:create]
 
   def avatar
     user = User.find_by_id(params[:id]) || current_user
@@ -252,6 +253,15 @@ class Users::RegistrationsController < Devise::RegistrationsController
   end
 
   private
+
+  def check_captcha
+    if Rails.configuration.x.enable_recaptcha
+      unless verify_recaptcha
+        self.resource = resource_class.new sign_up_params
+        respond_with_navigational(resource) { render :new }
+      end
+    end
+  end
 
   # Redirect to login page after signing up
   def after_sign_up_path_for(resource)

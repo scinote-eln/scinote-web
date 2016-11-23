@@ -38,6 +38,8 @@
       <span><small><%= t 'users.registrations.new.team_name_help' %></small></span>
     </div>
 
+    <%= recaptcha_input_tag %>
+
     <div class="form-group">
       <%= f.submit "Sign up", class: "btn btn-primary" %>
     </div>
