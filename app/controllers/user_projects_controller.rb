@@ -76,10 +76,7 @@ class UserProjectsController < ApplicationController
         format.json {
           render :json => {
             status: 'error',
-            error: error,
-            :errors => [
-              flash_error
-            ]
+            error: error
           }
         }
       end

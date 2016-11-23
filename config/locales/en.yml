@@ -418,6 +418,8 @@ en:
         normal_user: "User"
         technician: "Technician"
         viewer: "Viewer"
+    edit:
+      update_role: "Change Role"
     create:
       select_user_role: "Please select a user role."
       add_user_generic_error: "An error occured. "
