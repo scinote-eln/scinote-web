@@ -48,9 +48,11 @@
         <%= localize(experiment.created_at, format: t('time.formats.full_date')) %> - <%= localize(experiment.updated_at, format: t('time.formats.full_date')) %>
       </span>
       <% if experiment.description? %>
-        <span class='experiment-description'>
-          <%= text_area :entry, :body, value: experiment.description, class: 'form-control', readonly: true %>
-        </span>
+        <div class='experiment-description'>
+          <%= auto_link(simple_format(experiment.description),
+                        link: :urls,
+                        html: { target: '_blank' }) %>
+        </div>
       <% else %>
         <span class='experiment-no-description'>
           <% if can_edit_experiment(experiment) %>

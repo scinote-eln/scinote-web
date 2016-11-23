@@ -52,6 +52,7 @@ gem 'auto_strip_attributes', '~> 2.1' # Removes unnecessary whitespaces from Act
 gem 'deface', '~> 1.0'
 gem 'nokogiri' # HTML/XML parser
 gem 'sneaky-save', git: 'git://github.com/einzige/sneaky-save.git'
+gem 'rails_autolink', '~> 1.1', '>= 1.1.6'
 
 gem 'paperclip', '~> 4.3' # File attachment, image attachment library
 gem 'aws-sdk', '~> 2.2.8'

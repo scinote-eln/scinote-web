@@ -425,13 +425,12 @@ li.module-hover {
   }
 
   .experiment-description {
-    display: flex;
-    flex: 1 1 auto;
+    border: 1px solid $color-alto;
+    border-radius: 4px;
+    height: 100px;
     margin-top: 10px;
-
-    textarea {
-      resize: none;
-    }
+    overflow-y: overlay;
+    padding: 10px;
   }
 
   .experiment-no-description {

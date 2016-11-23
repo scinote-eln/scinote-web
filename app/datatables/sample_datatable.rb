@@ -1,6 +1,7 @@
 require 'active_record'
 
 class SampleDatatable < AjaxDatatablesRails::Base
+  include ActionView::Helpers::TextHelper
   include SamplesHelper
 
   ASSIGNED_SORT_COL = "assigned"
@@ -90,7 +91,11 @@ class SampleDatatable < AjaxDatatablesRails::Base
 
       # Add custom attributes
       record.sample_custom_fields.each do |scf|
-        sample[@cf_mappings[scf.custom_field_id]] = scf.value
+        sample[@cf_mappings[scf.custom_field_id]] = auto_link(scf.value,
+                                                              link: :urls,
+                                                              html: {
+                                                                target: '_blank'
+                                                              })
       end
       sample
     end

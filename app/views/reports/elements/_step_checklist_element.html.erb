@@ -23,7 +23,11 @@
       <% items.each do |item| %>
         <li>
           <input type="checkbox" disabled="disabled" <%= "checked='checked'" if item.checked %>/>
-          <span class="<%= 'checked' if item.checked %>"><%= item.text %></span>
+          <span class="<%= 'checked' if item.checked %>">
+            <%= auto_link(simple_format(item.text),
+                                        link: :urls,
+                                        html: { target: '_blank' }) %></span>
+
         </li>
       <% end %>
     </ul>
