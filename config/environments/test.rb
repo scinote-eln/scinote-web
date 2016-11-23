@@ -70,5 +70,5 @@ Rails.application.configure do
   config.x.enable_tutorial = false
 
   # Enable reCAPTCHA
-  config.x.enable_recaptcha = true
+  config.x.enable_recaptcha = false
 end
