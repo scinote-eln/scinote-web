@@ -54,4 +54,16 @@ module DatabaseHelper
     ).getvalue(0, 0).to_i
   end
 
+  # Adds email domain constraint to the users table.
+  def add_email_constraint(domain)
+    ActiveRecord::Base.connection.execute(
+      "ALTER TABLE " \
+         "users " \
+      "DROP CONSTRAINT IF EXISTS email_must_be_company_email, " \
+      "ADD CONSTRAINT " \
+        "email_must_be_company_email " \
+      "CHECK ( email ~* '^[A-Za-z0-9._%-]+@#{domain}' ) " \
+      "not valid;"
+    )
+  end
 end
