@@ -71,4 +71,7 @@ Rails.application.configure do
 
   # Enable reCAPTCHA
   config.x.enable_recaptcha = false
+
+  # Enable email confirmations
+  config.x.enable_email_confirmations = false
 end
