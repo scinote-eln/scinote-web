@@ -2,6 +2,8 @@ module Users
   class InvitationsController < Devise::InvitationsController
     include UsersGenerator
 
+    prepend_before_action :check_captcha, only: [:update]
+
     before_action :check_invite_users_permission, only: :invite_users
 
     def update
@@ -145,6 +147,16 @@ module Users
     end
 
     private
+
+    def check_captcha
+      if Rails.configuration.x.enable_recaptcha
+        unless verify_recaptcha
+          self.resource = resource_class.new
+          resource.invitation_token = update_resource_params[:invitation_token]
+          respond_with_navigational(resource) { render :edit }
+        end
+      end
+    end
 
     def generate_notification(user, target_user, role, org)
       title = I18n.t('notifications.assign_user_to_organization',
