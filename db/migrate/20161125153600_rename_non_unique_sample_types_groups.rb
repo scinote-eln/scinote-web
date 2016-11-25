@@ -9,12 +9,12 @@ class RenameNonUniqueSampleTypesGroups < ActiveRecord::Migration
         end
       end
 
-      next if st_ids.count == 0
+      next if st_ids.count.zero?
 
       cntr = -1
       SampleType.where(id: st_ids).find_each do |st|
         cntr += 1
-        next if cntr == 0
+        next if cntr.zero?
         new_name = "#{st.name} (#{cntr})"
         st.update(name: new_name)
       end
@@ -29,12 +29,12 @@ class RenameNonUniqueSampleTypesGroups < ActiveRecord::Migration
         end
       end
 
-      next if sg_ids.count == 0
+      next if sg_ids.count.zero?
 
       cntr = -1
       SampleGroup.where(id: sg_ids).find_each do |sg|
         cntr += 1
-        next if cntr == 0
+        next if cntr.zero?
         new_name = "#{sg.name} (#{cntr})"
         sg.update(name: new_name)
       end
