@@ -41,39 +41,26 @@
   <% end %>
 
   <div id="datatables-buttons" style="display: inline;">
+    <div id="samples-columns-dropdown" class="dropdown">
+      <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+        <%= t('samples.columns') %>
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu dropdown-menu-right smart-dropdown" id="samples-columns-list">
+      </ul>
+    </div>
   </div>
 
   <div class="dropdown pull-right" style="display: inline;">
-    <button class="btn btn-default dropdown-toggle" type="button" id="addMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" <%= "disabled" unless can_add_sample_related_things_to_organization%>>
-      <span class="glyphicon glyphicon-plus"></span>
-      <span class="hidden-xs-custom">
-        <%= t'More' %>
-        <span class="caret"></span>
-      </span>
+    <button class="btn btn-default dropdown-toggle"
+            type="button"
+            id="addMenu"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="true"
+            <%= "disabled" unless can_add_sample_related_things_to_organization%>>
+      <%= t('samples.types_and_groups') %>
     </button>
-    <ul class="dropdown-menu" aria-labelledby="addMenu">
-      <% if can_create_custom_field_in_organization(@organization) %>
-      <li>
-        <a id="addNewColumn" data-toggle="modal" data-target="#modal-create-custom-field">
-        <%= t("samples.add_new_column")%>
-        </a>
-      </li>
-      <% end %>
-      <% if can_create_sample_type_in_organization(@organization) %>
-      <li>
-        <a data-toggle="modal" data-target="#modal-create-sample-type">
-        <%= t("samples.add_new_sample_type") %>
-        </a>
-      </li>
-      <% end %>
-      <% if can_create_sample_group_in_organization(@organization) %>
-      <li>
-        <a data-toggle="modal" data-target="#modal-create-sample-group">
-        <%= t("samples.add_new_sample_group") %>
-        </a>
-      </li>
-      <% end %>
-    </ul>
   </div>
 </div>
 
