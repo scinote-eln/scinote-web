@@ -133,24 +133,21 @@ class Users::RegistrationsController < Devise::RegistrationsController
   end
 
   def create
+    build_resource(sign_up_params)
+    valid_resource = resource.valid?
 
     # Create new organization for the new user
     @org = Organization.new
     @org.name = params[:organization][:name]
-
-    build_resource(sign_up_params)
-
     valid_org = @org.valid?
-    valid_resource = resource.valid?
 
-    if valid_org and valid_resource
+    if valid_org && valid_resource
 
       # this must be called after @org variable is defined. Otherwise this
       # variable won't be accessable in view.
       super do |resource|
-
-        if resource.valid? and resource.persisted?
-          @org.created_by = resource  #set created_by for oraganization
+        if resource.valid? && resource.persisted?
+          @org.created_by = resource # set created_by for oraganization
           @org.save
 
           # Add this user to the organization as owner
@@ -165,7 +162,6 @@ class Users::RegistrationsController < Devise::RegistrationsController
           resource.save
         end
       end
-
     else
       render :new
     end
