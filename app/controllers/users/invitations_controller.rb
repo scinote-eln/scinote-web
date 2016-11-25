@@ -6,6 +6,8 @@ module Users
 
     before_action :check_invite_users_permission, only: :invite_users
 
+    before_filter :update_sanitized_params, only: :update
+
     def update
       # Instantialize a new organization with the provided name
       @org = Organization.new
@@ -147,6 +149,11 @@ module Users
     end
 
     private
+
+    def update_sanitized_params
+      # Solution for Devise < 4.0.0
+      devise_parameter_sanitizer.for(:accept_invitation) << :full_name
+    end
 
     def check_captcha
       if Rails.configuration.x.enable_recaptcha
