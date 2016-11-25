@@ -138,7 +138,8 @@ class Asset < ActiveRecord::Base
   end
 
   def is_image?
-    !(self.file.content_type =~ /^image/).nil?
+    !(file.content_type =~
+      %r{/^image\/#{Constants::WHITELISTED_IMAGE_TYPES.join("|")}/}).nil?
   end
 
   def text?

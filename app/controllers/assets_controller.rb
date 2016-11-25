@@ -114,7 +114,8 @@ class AssetsController < ApplicationController
       fields: s3_post.fields
     })
 
-    if (asset.file_content_type =~ /^image\//) == 0
+    if (asset.file_content_type =~
+      %r{/^image\/#{Constants::WHITELISTED_IMAGE_TYPES.join("|")}/}) == 0
       asset.file.options[:styles].each do |style, option|
         s3_post = S3_BUCKET.presigned_post(
           key: asset.file.path(style)[1..-1],
