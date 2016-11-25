@@ -40,7 +40,7 @@
 
     <%= recaptcha_input_tag %>
 
-    <div class="form-group">
+    <div class="form-group" data-hook="sign-up-form-submit">
       <%= f.submit "Sign up", class: "btn btn-primary" %>
     </div>
   <% end %>
