@@ -3,7 +3,7 @@ class MyModulesController < ApplicationController
   include OrganizationsHelper
 
   before_action :load_vars, only: [
-    :show, :edit, :update, :destroy,
+    :show, :update, :destroy,
     :description, :due_date, :protocols, :results,
     :samples, :activities, :activities_tab,
     :assign_samples, :unassign_samples,
@@ -11,7 +11,7 @@ class MyModulesController < ApplicationController
     :samples_index, :archive]
   before_action :load_vars_nested, only: [:new, :create]
   before_action :check_edit_permissions, only: [
-    :edit, :update, :description, :due_date
+    :update, :description, :due_date
   ]
   before_action :check_destroy_permissions, only: [:destroy]
   before_action :check_view_info_permissions, only: [:show]
@@ -34,7 +34,6 @@ class MyModulesController < ApplicationController
 
   def show
     respond_to do |format|
-      format.html
       format.json {
         render :json => {
           :html => render_to_string({
@@ -131,10 +130,6 @@ class MyModulesController < ApplicationController
     end
   end
 
-  def edit
-    session[:return_to] ||= request.referer
-  end
-
   def update
     @my_module.assign_attributes(my_module_params)
     @my_module.last_modified_by = current_user
@@ -192,11 +187,6 @@ class MyModulesController < ApplicationController
 
     respond_to do |format|
       if saved
-        format.html {
-          flash[:success] = t("my_modules.update.success_flash",
-            module: @my_module.name)
-          redirect_to(:back)
-        }
         format.json {
           alerts = []
           alerts << "alert-red" if @my_module.is_overdue?
@@ -219,9 +209,6 @@ class MyModulesController < ApplicationController
           }
         }
       else
-        format.html {
-          render :edit
-        }
         format.json {
           render json: @my_module.errors,
             status: :unprocessable_entity

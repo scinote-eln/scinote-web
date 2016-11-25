@@ -235,8 +235,6 @@ en:
       page_title: "Project's experiments"
     samples:
       head_title: "%{project} | Sample library"
-    activities:
-      head_title: "%{project} | Activity"
     reports:
       print_title: "%{project} | Report"
       index:
@@ -420,50 +418,19 @@ en:
         normal_user: "User"
         technician: "Technician"
         viewer: "Viewer"
-    new:
-      head_title: "%{project} | Add user"
-      title: "Add user to project %{project}"
-      create: "Add"
-      role: "Role"
+    edit:
+      update_role: "Change Role"
     create:
-      success_flash: "User %{user} successfully added to project <strong>%{project}</strong>."
-      error_flash: "User %{user} not added to project <strong>%{project}</strong>."
       select_user_role: "Please select a user role."
       add_user_generic_error: "An error occured. "
-    edit:
-      head_title: "%{project} | Edit user role"
-      title: "Edit role for user %{user} on project %{project}"
-      update: "Update role"
-      update_role: "Change Role"
-    update:
-      success_flash: "Successfully changed project role for user %{user} on project <strong>%{project}</strong>."
-      error_flash: "Project role not changed for user %{user} on project <strong>%{project}</strong>."
-    destroy:
-      success_flash: "Successfully removed user %{user} from project <strong>%{project}</strong>."
-      error_flash: "User %{user} not removed from project <strong>%{project}</strong>."
 
   my_modules:
-    show:
-      head_title: "%{project} | %{module}"
-      archive_action: "Archive"
-      archive_confirm_text: "All samples will be unassigned from the
-        task when archiving. Are you sure to archive task?"
-    edit:
-      head_title: "%{project} | %{module} | Edit"
-      title: "Edit task %{module}"
-      name: "Task name"
-      due_date: "Due date"
-      save: "Save task"
     description:
       title: "Edit task %{module} description"
       label: "Description"
     due_date:
       title: "Edit task %{module} due date"
       label: "Due date"
-    update:
-      success_flash: "Successfully modified task <strong>%{module}</strong>."
-    destroy:
-      success_flash: "Successfully removed task <strong>%{module}</strong> from project <strong>%{project}</strong>."
     samples:
       head_title: "%{project} | %{module} | Sample library"
     module_archive:
@@ -754,27 +721,6 @@ en:
       archived_on: "Archived on"
       archived_on_title: "Module archived on %{date} at %{time}."
 
-  my_module_tags:
-    new:
-      head_title: "%{project} | %{module} | Add tag"
-      title: "Add tag to task %{module}"
-      create: "Add tag"
-      new_tag: "Create new tag"
-    create:
-      success_flash: "Successfully added tag <strong>%{tag}</strong> to task <strong>%{module}</strong>."
-      error_flash: "Could not create new tag for task <strong>%{module}</strong>."
-    destroy:
-      success_flash: "Successfully removed tag <strong>%{tag}</strong> from task <strong>%{module}</strong>."
-      error_flash: "Tag <strong>%{tag}</strong> could not be removed from <strong>%{module}</strong>."
-
-  my_module_comments:
-    new:
-      head_title: "%{project} | %{module} | Add comment"
-      title: "Add comment to task %{module}"
-      create: "Add comment"
-    create:
-      success_flash: "Successfully added comment to task <strong>%{module}</strong>."
-
   my_module_groups:
     new:
       name: "Workflow %{index}"
@@ -795,14 +741,6 @@ en:
     destroy:
       success_flash: "Successfully removed tag <strong>%{tag}</strong>."
       error_flash: "Could not remove tag <strong>%{tag}</strong>."
-
-  project_comments:
-    new:
-      head_title: "%{project} | Add comment"
-      title: "Add comment to project %{project}"
-      create: "Add comment"
-    create:
-      success_flash: "Successfully added comment to project <strong>%{project}</strong>."
 
   result_texts:
     new:
@@ -933,16 +871,8 @@ en:
       permission_error: "You don't have permission to edit this sample."
       not_found_error: "This sample does not exist."
   sample_types:
-    edit:
-      head_title: "%{organization} | Edit sample type"
-      title: "Edit sample type %{sample_type} from team %{organization}"
-      create: "Edit sample type"
     create:
       success_flash: "Successfully added sample type <strong>%{sample_type}</strong> to team <strong>%{organization}</strong>."
-    update:
-      success_flash: "Successfully updated sample type <strong>%{sample_type}</strong> to team <strong>%{organization}</strong>."
-    destroy:
-      success_flash: "Sample type <strong>%{sample_type}</strong> successfully deleted."
 
   custom_fields:
     new:
@@ -987,16 +917,8 @@ en:
 
   sample_groups:
     color_label: "Sample group color"
-    edit:
-      head_title: "%{organization} | Edit sample group"
-      title: "Edit sample group %{sample_group} from team %{organization}"
-      create: "Edit sample group"
     create:
       success_flash: "Successfully added sample group <strong>%{sample_group}</strong> to team <strong>%{organization}</strong>."
-    update:
-      success_flash: "Successfully updated sample group <strong>%{sample_group}</strong> to team <strong>%{organization}</strong>."
-    destroy:
-      success_flash: "Sample group <strong>%{sample_group}</strong> successfully deleted."
 
   activities:
     index:
@@ -1061,37 +983,6 @@ en:
     edit_report: "<i>%{user}</i> edited report <strong>%{report}</strong>."
     assign_sample: "<i>%{user}</i> assigned sample(s) <strong>%{samples}</strong> to task(s) <strong>%{tasks}</strong>."
     unassign_sample: "<i>%{user}</i> unassigned sample(s) <strong>%{samples}</strong> from task(s) <strong>%{tasks}</strong>."
-
-  user_my_modules:
-    new:
-      head_title: "%{project} | %{module} | Add user"
-      title: "Add user to task %{module}"
-      create: "Add user to task"
-      no_users_available: "All users of the current project all already added to this task."
-      assign_user: "Add user"
-      back_button: "Back to task"
-    create:
-      success_flash: "Successfully added user %{user} to task <strong>%{module}</strong>."
-      error_flash: "User %{user} could not be added to task <strong>%{module}</strong>."
-    destroy:
-      success_flash: "Successfully removed user %{user} from task <strong>%{module}</strong>."
-      error_flash: "User %{user} could not be removed from task <strong>%{module}</strong>."
-
-  step_comments:
-    new:
-      head_title: "%{project} | %{module} | Add comment to step"
-      title: "Add comment to step %{step}"
-      create: "Add comment"
-    create:
-      success_flash: "Successfully added comment to step <strong>%{step}</strong>."
-
-  result_comments:
-    new:
-      head_title: "%{project} | %{module} | Add comment to result"
-      title: "Add comment to result"
-      create: "Add comment"
-    create:
-      success_flash: "Successfully added comment to result."
 
   users:
     enums:

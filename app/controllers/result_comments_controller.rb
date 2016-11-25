@@ -2,7 +2,7 @@ class ResultCommentsController < ApplicationController
   before_action :load_vars
 
   before_action :check_view_permissions, only: [:index]
-  before_action :check_add_permissions, only: [:new, :create]
+  before_action :check_add_permissions, only: [:create]
   before_action :check_edit_permissions, only: [:edit, :update]
   before_action :check_destroy_permissions, only: [:destroy]
 
@@ -35,12 +35,6 @@ class ResultCommentsController < ApplicationController
     end
   end
 
-  def new
-    @comment = Comment.new(
-      user: current_user
-    )
-  end
-
   def create
     @comment = Comment.new(
       message: comment_params[:message],
@@ -62,11 +56,6 @@ class ResultCommentsController < ApplicationController
           )
         )
 
-        format.html {
-          flash[:success] = t(
-            "result_comments.create.success_flash")
-          redirect_to session.delete(:return_to)
-        }
         format.json {
           render json: {
             html: render_to_string(
@@ -81,7 +70,6 @@ class ResultCommentsController < ApplicationController
         }
       else
         response.status = 400
-        format.html { render :new }
         format.json {
           render json: {
             errors: @comment.errors.to_hash(true)

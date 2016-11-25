@@ -1,13 +1,6 @@
 class SampleTypesController < ApplicationController
-  before_action :load_vars, only: [:edit, :update]
-  before_action :load_vars_nested, only: [:new, :create]
-  before_action :check_create_permissions, only: [:new, :create]
-  before_action :check_edit_permissions, only: [:edit, :update]
-
-  def new
-    @sample_type = SampleType.new
-    session[:return_to] ||= request.referer
-  end
+  before_action :load_vars_nested, only: [:create]
+  before_action :check_create_permissions, only: [:create]
 
   def create
     @sample_type = SampleType.new(sample_type_params)
@@ -37,36 +30,7 @@ class SampleTypesController < ApplicationController
     end
   end
 
-  def edit
-
-  end
-
-  def update
-    @sample_type.last_modified_by = current_user
-    if @sample_type.update_attributes(sample_type_params)
-      flash[:success] = t(
-        "sample_types.update.success_flash",
-        sample_type: @sample_type.name,
-        organization: @organization.name)
-      redirect_to (session.delete(:return_to) || root_path)
-    else
-      render :edit
-    end
-  end
-
-  def destroy
-  end
-
   private
-
-  def load_vars
-    @sample_type = SampleType.find_by_id(params[:id])
-    @organization = @sample_type.organization
-
-    unless @sample_type
-      render_404
-    end
-  end
 
   def load_vars_nested
     @organization = Organization.find_by_id(params[:organization_id])
@@ -78,12 +42,6 @@ class SampleTypesController < ApplicationController
 
   def check_create_permissions
     unless can_create_sample_type_in_organization(@organization)
-      render_403
-    end
-  end
-
-  def check_edit_permissions
-    unless can_edit_sample_type_in_organization(@organization)
       render_403
     end
   end
