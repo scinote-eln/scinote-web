@@ -202,7 +202,7 @@ class Constants
   ].freeze
 
   # Very basic regex to check for validity of emails
-  BASIC_EMAIL_REGEX = /^[^@]+@[^@]+\.[^@]+$/
+  BASIC_EMAIL_REGEX = URI::MailTo::EMAIL_REGEXP
 
   # Organization name for default admin user
   DEFAULT_PRIVATE_ORG_NAME = 'My projects'.freeze
