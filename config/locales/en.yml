@@ -798,6 +798,8 @@ en:
       success_flash: "Table result successfully deleted."
 
   samples:
+    columns: 'Columns'
+    types_and_groups: 'Types and groups'
     actions: "Actions"
     add_new_sample: "Add new sample"
     import: "Import"

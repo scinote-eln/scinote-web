@@ -9,18 +9,8 @@ var selectedSample;
 
 table = $("#samples").DataTable({
     order: [[2, "desc"]],
-    dom: "RB<'row'<'col-sm-9-custom toolbar'l><'col-sm-3-custom'f>>tpi",
+    dom: "R<'row'<'col-sm-9-custom toolbar'l><'col-sm-3-custom'f>>tpi",
     stateSave: true,
-    buttons: [{
-        extend: "colvis",
-        text: function () {
-            return '<span class="glyphicon glyphicon-option-horizontal"></span> ' +
-                "<span class='hidden-xs-custom'>" +
-                I18n.t('samples.column_visibility') +
-                '</span>';
-        },
-        columns: ":gt(2)"
-    }],
     processing: true,
     serverSide: true,
     ajax: {
@@ -115,8 +105,6 @@ table = $("#samples").DataTable({
         $(".sample_info").off("click");
     }
 });
-
-table.buttons().container().appendTo('#datatables-buttons');
 
 // Enables noSearchHidden plugin
 $.fn.dataTable.defaults.noSearchHidden = true
@@ -764,3 +752,77 @@ function changeToEditMode() {
     // Table specific stuff
     table.button(0).enable(false);
 }
+
+(function(table) {
+  'use strict';
+
+  var dropdownList = $('#samples-columns-list');
+
+  // loads the columns names in the dropdown list
+  function loadColumnsNames() {
+    _.each(table.columns().header(), function(el, index) {
+      if( index > 1 ) {
+        var colIndex = $(el).attr('data-column-index');
+        var visible = table.column(colIndex).visible();
+        var visClass = (visible) ? 'glyphicon-eye-open' : 'glyphicon-eye-close';
+        var visLi = (visible) ? '' : 'col-invisible';
+        var html = '<li data-position="' + colIndex + '" class="' + visLi +
+                   '"><i class="grippy"></i> <span class="text">' +
+                   el.innerText + '</span> <span class="pull-right controls">' +
+                   '<span class="vis glyphicon ' + visClass + '"></span> ' +
+                   '<span class="edit glyphicon glyphicon-pencil"></span> ' +
+                   '<span class="del glyphicon glyphicon-trash"></span>' +
+                   '</span></li>';
+        dropdownList.append(html);
+      }
+    });
+
+    // toggles grip img
+    customLiHoverEffect();
+  }
+
+  function customLiHoverEffect() {
+    var liEl = dropdownList.find('li');
+    liEl.mouseover(function() {
+      $(this)
+        .find('.grippy')
+        .addClass('grippy-img');
+    }).mouseout(function() {
+      $(this)
+        .find('.grippy')
+        .removeClass('grippy-img');
+    });
+  }
+
+  function toggleColumnVisibility() {
+    var lis = dropdownList.find('.vis');
+    lis.on('click', function(event) {
+      event.stopPropagation();
+      var self = $(this);
+      var li = self.closest('li');
+      var column = table.column(li.attr('data-position'));
+
+      if ( column.visible() ) {
+        self.addClass('glyphicon-eye-close');
+        self.removeClass('glyphicon-eye-open');
+        li.addClass('col-invisible');
+        column.visible(false);
+      } else {
+        self.addClass('glyphicon-eye-open');
+        self.removeClass('glyphicon-eye-close');
+        li.removeClass('col-invisible');
+        column.visible(true);
+      }
+    });
+  }
+
+  // initialze dropdown after the table is loaded
+  function initDropdown() {
+    table.on('draw.dt', function() {
+      loadColumnsNames();
+      toggleColumnVisibility();
+    });
+  }
+
+  initDropdown();
+})(table);

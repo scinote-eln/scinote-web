@@ -1580,3 +1580,55 @@ textarea.textarea-sm {
     }
   }
 }
+
+// new smart dropdown styles
+
+.smart-dropdown {
+  max-height: 400px;
+  overflow-y: auto;
+  padding: 0;
+  width: 300px;
+
+  li {
+    border: 1px solid $color-alto;
+    padding: 10px 10px 10px 0;
+    vertical-align: middle;
+  }
+
+  .vis {
+    cursor: pointer;
+    margin-right: 5px;
+  }
+
+  .edit {
+    margin-right: 5px;
+  }
+
+  .grippy {
+    background-repeat: none;
+    display: inline-block;
+    height: 19px;
+    margin-top: 5px;
+    width: 10px;
+  }
+
+  .grippy-img {
+    background: url(asset-path('custom/grippy.png'));
+  }
+
+  .text {
+    display: inline-block;
+    padding-left: 15px;
+    padding-top: 5px;
+    position: absolute;
+  }
+
+  .col-invisible {
+    color: $color-alto;
+  }
+
+  .controls {
+    display: inline-block;
+    margin-top: 5px;
+  }
+}
