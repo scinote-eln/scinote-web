@@ -3,10 +3,10 @@ class RenameNonUniqueSampleTypesGroups < ActiveRecord::Migration
     Organization.find_each do |org|
       st_ids = []
       org.sample_types.find_each do |st|
-        if SampleType.where(organization_id: org.id)
-                     .where(name: st.name).count > 1
-          st_ids << st.id
-        end
+        next unless SampleType.where(organization_id: org.id)
+                              .where(name: st.name)
+                              .count > 1
+        st_ids << st.id
       end
 
       next if st_ids.count.zero?
@@ -23,10 +23,10 @@ class RenameNonUniqueSampleTypesGroups < ActiveRecord::Migration
     Organization.find_each do |org|
       sg_ids = []
       org.sample_groups.find_each do |sg|
-        if SampleGroup.where(organization_id: org.id)
-                      .where(name: sg.name).count > 1
-          sg_ids << sg.id
-        end
+        next unless SampleGroup.where(organization_id: org.id)
+                               .where(name: sg.name)
+                               .count > 1
+        sg_ids << sg.id
       end
 
       next if sg_ids.count.zero?
