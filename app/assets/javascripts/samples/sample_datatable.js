@@ -9,9 +9,8 @@ var selectedSample;
 
 table = $("#samples").DataTable({
     order: [[2, "desc"]],
-    dom: "RB<'row'<'col-sm-9-custom toolbar'l><'col-sm-3-custom'f>>tpi",
+    dom: "R<'row'<'col-sm-9-custom toolbar'l><'col-sm-3-custom'f>>tpi",
     stateSave: true,
-    buttons: [{}],
     processing: true,
     serverSide: true,
     ajax: {
@@ -106,8 +105,6 @@ table = $("#samples").DataTable({
         $(".sample_info").off("click");
     }
 });
-
-table.buttons().container().appendTo('#datatables-buttons');
 
 // Enables noSearchHidden plugin
 $.fn.dataTable.defaults.noSearchHidden = true
@@ -759,31 +756,24 @@ function changeToEditMode() {
 (function(table) {
   'use strict';
 
-  var dropdownBtn = $('#samples-columns-dropdown');
   var dropdownList = $('#samples-columns-list');
 
-  // removes button created by dataTables
-  function removeDefaultButton() {
-    $('#datatables-buttons')
-      .find('.dt-buttons')
-      .remove();
-  }
   // loads the columns names in the dropdown list
   function loadColumnsNames() {
-    _.each(table.columns().header() , function(el, index) {
+    _.each(table.columns().header(), function(el, index) {
       if( index > 1 ) {
         var colIndex = $(el).attr('data-column-index');
         var visible = table.column(colIndex).visible();
-        var visClass= (visible) ? 'glyphicon-eye-open' : 'glyphicon-eye-close';
+        var visClass = (visible) ? 'glyphicon-eye-open' : 'glyphicon-eye-close';
         var visLi = (visible) ? '' : 'col-invisible';
         var html = '<li data-position="' + colIndex + '" class="' + visLi +
                    '"><i class="grippy"></i> <span class="text">' +
                    el.innerText + '</span> <span class="pull-right controls">' +
-                   '<span class="vis glyphicon ' + visClass + '"></span> '+
+                   '<span class="vis glyphicon ' + visClass + '"></span> ' +
                    '<span class="edit glyphicon glyphicon-pencil"></span> ' +
                    '<span class="del glyphicon glyphicon-trash"></span>' +
                    '</span></li>';
-        dropdownList.append(html)
+        dropdownList.append(html);
       }
     });
 
@@ -829,9 +819,7 @@ function changeToEditMode() {
   // initialze dropdown after the table is loaded
   function initDropdown() {
     table.on('draw.dt', function() {
-      removeDefaultButton();
       loadColumnsNames();
-      removeDefaultButton();
       toggleColumnVisibility();
     });
   }
