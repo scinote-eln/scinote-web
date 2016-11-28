@@ -2,7 +2,8 @@ class SampleGroup < ActiveRecord::Base
   auto_strip_attributes :name, :color, nullify: false
   validates :name,
             presence: true,
-            length: { maximum: Constants::NAME_MAX_LENGTH }
+            length: { maximum: Constants::NAME_MAX_LENGTH },
+            uniqueness: { scope: :organization, case_sensitive: false }
   validates :color,
             presence: true,
             length: { maximum: Constants::COLOR_MAX_LENGTH }
