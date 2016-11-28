@@ -201,7 +201,9 @@ class Constants
     'text/plain'
   ].freeze
 
-  WHITELISTED_IMAGE_TYPES = ['gif', 'jpeg', 'png', 'svg+xml', 'bmp'].freeze
+  WHITELISTED_IMAGE_TYPES = [
+    'gif', 'jpeg', 'pjpeg', 'png', 'x-png', 'svg+xml', 'bmp'
+  ].freeze
 
   # Very basic regex to check for validity of emails
   BASIC_EMAIL_REGEX = URI::MailTo::EMAIL_REGEXP

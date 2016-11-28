@@ -19,7 +19,7 @@ class Asset < ActiveRecord::Base
   # Should be checked for any security leaks
   do_not_validate_attachment_file_type :file
 
-  before_file_post_process :allow_styles_on_images
+  before_file_post_process :is_image?
 
   # Asset validation
   # This could cause some problems if you create empty asset and want to
@@ -138,8 +138,8 @@ class Asset < ActiveRecord::Base
   end
 
   def is_image?
-    !(file.content_type =~
-      %r{/^image\/#{Constants::WHITELISTED_IMAGE_TYPES.join("|")}/}).nil?
+    %r{^image/#{Regexp.union(Constants::WHITELISTED_IMAGE_TYPES)}} ===
+      file.content_type
   end
 
   def text?
@@ -296,16 +296,6 @@ class Asset < ActiveRecord::Base
       restore_cached(file_data[:file_content], file_data[:file_info])
     end
     cache
-  end
-
-  protected
-
-  # Checks if attachments is an image (in post processing imagemagick will
-  # generate styles)
-  def allow_styles_on_images
-    if !(file.content_type =~ %r{^(image|(x-)?application)/(x-png|pjpeg|jpeg|jpg|png|gif)$})
-      return false
-    end
   end
 
   private
