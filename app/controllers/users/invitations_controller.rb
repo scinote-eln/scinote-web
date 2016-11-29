@@ -8,6 +8,10 @@ module Users
 
     before_filter :update_sanitized_params, only: :update
 
+    def edit
+      resource.full_name = ''
+    end
+
     def update
       # Instantialize a new organization with the provided name
       @org = Organization.new
@@ -158,8 +162,15 @@ module Users
     def check_captcha
       if Rails.configuration.x.enable_recaptcha
         unless verify_recaptcha
+          # Construct new resource before rendering :new
           self.resource = resource_class.new
+          resource.full_name = params[:user][:full_name]
           resource.invitation_token = update_resource_params[:invitation_token]
+
+          # Also validate organization
+          @org = Organization.new(name: params[:organization][:name])
+          @org.valid?
+
           respond_with_navigational(resource) { render :edit }
         end
       end

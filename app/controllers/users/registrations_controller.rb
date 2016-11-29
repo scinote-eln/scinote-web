@@ -253,7 +253,13 @@ class Users::RegistrationsController < Devise::RegistrationsController
   def check_captcha
     if Rails.configuration.x.enable_recaptcha
       unless verify_recaptcha
+        # Construct new resource before rendering :new
         self.resource = resource_class.new sign_up_params
+
+        # Also validate organization
+        @org = Organization.new(name: params[:organization][:name])
+        @org.valid?
+
         respond_with_navigational(resource) { render :new }
       end
     end
