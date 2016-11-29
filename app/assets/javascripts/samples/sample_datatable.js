@@ -802,6 +802,9 @@ function changeToEditMode() {
   table.button(0).enable(false);
 }
 
+/*
+ * Sample columns dropdown
+ */
 (function(table) {
   'use strict';
 
@@ -900,15 +903,25 @@ function changeToEditMode() {
       if (index > 1) {
         var colIndex = $(el).attr('data-column-index');
         var visible = table.column(colIndex).visible();
+        var editable = $(el).is('[data-editable]');
+        var deletable = $(el).is('[data-deletable]');
+
         var visClass = (visible) ? 'glyphicon-eye-open' : 'glyphicon-eye-close';
         var visLi = (visible) ? '' : 'col-invisible';
-        var html = '<li data-position="' + colIndex + '" class="' + visLi +
-                   '"><i class="grippy"></i> <span class="text">' +
-                   el.innerText + '</span> <span class="pull-right controls">' +
-                   '<span class="vis glyphicon ' + visClass + '"></span> ' +
-                   '<span class="edit glyphicon glyphicon-pencil"></span> ' +
-                   '<span class="del glyphicon glyphicon-trash"></span>' +
-                   '</span></li>';
+        var editClass = (editable) ? '' : 'disabled';
+        var delClass = (deletable) ? '' : 'disabled';
+        var html =
+          '<li data-position="' + colIndex + '" class="' + visLi + '">' +
+          '<i class="grippy"></i> ' +
+          '<span class="text">' + el.innerText + '</span> ' +
+          '<span class="pull-right controls">' +
+          '<span class="vis glyphicon ' + visClass + '"></span> ' +
+          '<span class="edit glyphicon glyphicon-pencil ' + editClass + '">' +
+          '</span> ' +
+          '<span class="del glyphicon glyphicon-trash ' + delClass + '">' +
+          '</span>' +
+          '</span>' +
+          '</li>';
         dropdownList.append(html);
       }
     });

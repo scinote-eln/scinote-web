@@ -136,7 +136,13 @@
         <th id="added-on"><%= t("samples.table.added_on") %></th>
         <th id="added-by"><%= t("samples.table.added_by") %></th>
         <% all_custom_fields.each do |cf| %>
-        <th class="custom-field" id="<%= cf.id %>"><%= cf.name %></th>
+        <th class="custom-field"
+            id="<%= cf.id %>"
+            <%= 'data-editable' if can_edit_custom_field(cf) %>
+            <%= 'data-deletable' if can_delete_custom_field(cf) %>
+        >
+          <%= cf.name %>
+        </th>
         <% end %>
       </tr>
     </thead>

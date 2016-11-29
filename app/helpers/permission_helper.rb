@@ -674,6 +674,16 @@ module PermissionHelper
     is_normal_user_or_admin_of_organization(organization)
   end
 
+  def can_edit_custom_field(custom_field)
+    custom_field.user == current_user ||
+      is_admin_of_organization(custom_field.organization)
+  end
+
+  def can_delete_custom_field(custom_field)
+    custom_field.user == current_user ||
+      is_admin_of_organization(custom_field.organization)
+  end
+
   # ---- PROTOCOL PERMISSIONS ----
 
   def can_view_organization_protocols(organization)

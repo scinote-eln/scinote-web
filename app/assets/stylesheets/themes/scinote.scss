@@ -1612,12 +1612,14 @@ textarea.textarea-sm {
   }
 
   .vis {
-    cursor: pointer;
     margin-right: 5px;
   }
 
   .edit {
     margin-right: 5px;
+  }
+
+  .edit {
   }
 
   .grippy {
@@ -1646,5 +1648,17 @@ textarea.textarea-sm {
   .controls {
     display: inline-block;
     margin-top: 5px;
+
+    span {
+      cursor: pointer;
+
+      &.disabled {
+        visibility: hidden;
+      }
+
+      &:hover {
+        color: $color-emperor;
+      }
+    }
   }
 }
