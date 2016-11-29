@@ -1,5 +1,4 @@
 //= require datatables
-//= require jquery-ui
 
 // Create custom field ajax
 $("#modal-create-custom-field").on("show.bs.modal", function(event) {

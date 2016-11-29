@@ -42,11 +42,11 @@
   <div id="datatables-buttons" style="display: inline;">
     <div id="samples-columns-dropdown" class="dropdown">
       <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
-        <%= t("samples.columns") %>
+        <%= t('samples.columns') %>
         <span class="caret"></span>
       </button>
       <ul class="dropdown-menu dropdown-menu-right smart-dropdown" id="samples-columns-list">
-        <li style="padding: 5px;">
+        <li>
           <div id="new-column-form" class="form-group" data-action="<%= organization_custom_fields_path(@organization) %>">
             <div class="input-group">
               <input class="form-control" id="new-column-name" placeholder="<%= t("samples.column_new_text") %>">
