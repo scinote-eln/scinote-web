@@ -52,15 +52,10 @@
   </div>
 
   <div class="dropdown pull-right" style="display: inline;">
-    <button class="btn btn-default dropdown-toggle"
-            type="button"
-            id="addMenu"
-            data-toggle="dropdown"
-            aria-haspopup="true"
-            aria-expanded="true"
-            <%= "disabled" unless can_add_sample_related_things_to_organization%>>
-      <%= t('samples.types_and_groups') %>
-    </button>
+    <%= link_to_if(can_add_sample_related_things_to_organization,
+                   t('samples.types_and_groups'),
+                   organization_sample_types_path(@organization),
+                   class: 'btn btn-default' ) %>
   </div>
 </div>
 

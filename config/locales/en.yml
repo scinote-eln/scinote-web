@@ -873,6 +873,11 @@ en:
       permission_error: "You don't have permission to edit this sample."
       not_found_error: "This sample does not exist."
   sample_types:
+    index:
+      head_title: 'Sample Types'
+      sample_types: 'Sample types'
+      sample_groups: 'Sample groups'
+      new: 'Create Sample type'
     create:
       success_flash: "Successfully added sample type <strong>%{sample_type}</strong> to team <strong>%{organization}</strong>."
 

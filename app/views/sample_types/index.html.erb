@@ -1,0 +1,23 @@
+<% provide(:head_title, t('sample_types.index.head_title')) %>
+
+<% if current_organization %>
+  <ul class="nav nav-tabs nav-settings" data-position="bottom">
+    <li role="presentation" class="active">
+      <%= link_to t('sample_types.index.sample_types'),
+                  organization_sample_types_path(current_organization) %>
+    </li>
+    <li role="presentation">
+      <%= link_to t('sample_types.index.sample_groups'), '#' %>
+    </li>
+  </ul>
+  <div class="tab-content">
+    <div class="tab-pane tab-pane-settings tab-pane-protocols active" role="tabpanel">
+      <ul class="list-unstyled">
+        <li><button class="btn btn-primary pull-right"><%= t 'sample_types.index.new' %></button></li>
+        <% @sample_types.each do |sample_type| %>
+          <li><%= sample_type.name %></li>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+<% end %>

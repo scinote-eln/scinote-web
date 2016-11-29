@@ -30,6 +30,11 @@ class SampleTypesController < ApplicationController
     end
   end
 
+  def index
+    render_404 unless current_organization
+    @sample_types = current_organization.sample_types
+  end
+
   private
 
   def load_vars_nested
