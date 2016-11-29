@@ -808,6 +808,7 @@ function changeToEditMode() {
 (function(table) {
   'use strict';
 
+  var dropdown = $('#samples-columns-dropdown');
   var dropdownList = $('#samples-columns-list');
   var editMode = false;
 
@@ -912,7 +913,11 @@ function changeToEditMode() {
         var editClass = (editable) ? '' : 'disabled';
         var delClass = (deletable) ? '' : 'disabled';
         var html =
-          '<li data-position="' + colIndex + '" class="' + visLi + '">' +
+          '<li ' +
+          'data-position="' + colIndex + '" ' +
+          'data-id="' + $(el).attr('id') + '" ' +
+          'class="' + visLi + '"' +
+          '>' +
           '<i class="grippy"></i> ' +
           '<span class="text">' + el.innerText + '</span> ' +
           '<input type="text" class="text-edit form-control" style="display: none;" />' +
@@ -1004,7 +1009,6 @@ function changeToEditMode() {
 
       cancelEditMode();
 
-
       var self = $(this);
       var li = self.closest('li');
       var text = li.find('.text');
@@ -1027,6 +1031,39 @@ function changeToEditMode() {
 
       // Focus input
       textEdit.focus();
+    });
+
+    // On hiding dropdown, cancel edit mode throughout dropdown
+    dropdown.on('hidden.bs.dropdown', function() {
+      cancelEditMode();
+    });
+
+    // On ok buttons click
+    var okBtns = dropdownList.find('.ok');
+    okBtns.on('click', function(event) {
+      event.stopPropagation();
+
+      var self = $(this);
+      var li = self.closest('li');
+      var id = li.attr('data-id');
+      var text = li.find('.text');
+      var textEdit = li.find('.text-edit');
+      var newName = textEdit.val().trim();
+
+      $.ajax({
+        url: '/organizations/1/custom_fields/' + id,
+        type: 'PUT',
+        data: {custom_field: {name: newName}},
+        dataType: 'json',
+        success: function() {
+          text.text(newName);
+          $(table.columns().header()).filter('#' + id).text(newName);
+          cancelEditMode();
+        },
+        error: function(xhr) {
+          // TODO
+        }
+      });
     });
 
     // On cancel buttons click

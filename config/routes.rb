@@ -79,7 +79,7 @@ Rails.application.routes.draw do
       get 'sample_group_element', to: 'sample_groups#sample_group_element'
       get 'destroy_confirmation', to: 'sample_groups#destroy_confirmation'
     end
-    resources :custom_fields, only: [:create]
+    resources :custom_fields, only: [:create, :update]
     member do
       post 'parse_sheet'
       post 'import_samples'
