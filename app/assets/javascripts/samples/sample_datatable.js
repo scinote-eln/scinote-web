@@ -809,6 +809,7 @@ function changeToEditMode() {
   'use strict';
 
   var dropdownList = $('#samples-columns-list');
+  var editMode = false;
 
   function createNewColumn() {
     // Make an Ajax request to custom_fields_controller
@@ -914,7 +915,10 @@ function changeToEditMode() {
           '<li data-position="' + colIndex + '" class="' + visLi + '">' +
           '<i class="grippy"></i> ' +
           '<span class="text">' + el.innerText + '</span> ' +
+          '<input type="text" class="text-edit form-control" style="display: none;" />' +
           '<span class="pull-right controls">' +
+          '<span class="ok glyphicon glyphicon-ok" style="display: none;"></span>' +
+          '<span class="cancel glyphicon glyphicon-remove" style="display: none;"></span>' +
           '<span class="vis glyphicon ' + visClass + '"></span> ' +
           '<span class="edit glyphicon glyphicon-pencil ' + editClass + '">' +
           '</span> ' +
@@ -984,12 +988,72 @@ function changeToEditMode() {
     });
   }
 
+  function editColumns() {
+    function cancelEditMode() {
+      dropdownList.find('.text-edit').hide();
+      dropdownList.find('.controls .ok,.cancel').hide();
+      dropdownList.find('.text').css('display', ''); // show() doesn't work
+      dropdownList.find('.controls .vis,.edit,.del').css('display', ''); // show() doesn't work
+      editMode = false;
+    }
+
+    // On edit buttons click
+    var editBtns = dropdownList.find('.edit:not(.disabled)');
+    editBtns.on('click', function(event) {
+      event.stopPropagation();
+
+      cancelEditMode();
+
+
+      var self = $(this);
+      var li = self.closest('li');
+      var text = li.find('.text');
+      var textEdit = li.find('.text-edit');
+      var controls = li.find('.controls .vis,.edit,.del');
+      var controlsEdit = li.find('.controls .ok,.cancel');
+
+      // Toggle edit mode
+      editMode = true;
+      li.addClass('editing');
+
+      // Set the text-edit's value
+      textEdit.val(text.text().trim());
+
+      // Toggle elements
+      text.hide();
+      controls.hide();
+      textEdit.css('display', ''); // show() doesn't work
+      controlsEdit.css('display', ''); // show() doesn't work
+
+      // Focus input
+      textEdit.focus();
+    });
+
+    // On cancel buttons click
+    var cancelBtns = dropdownList.find('.cancel');
+    cancelBtns.on('click', function(event) {
+      event.stopPropagation();
+      var self = $(this);
+      var li = self.closest('li');
+
+      editMode = false;
+      li.removeClass('editing');
+
+      li.find('.text-edit').hide();
+      li.find('.controls .ok,.cancel').hide();
+      li.find('.text').css('display', ''); // show() doesn't work
+      li.find('.controls .vis,.edit,.del').css('display', ''); // show() doesn't work
+    });
+  }
+
   // initialze dropdown after the table is loaded
   function initDropdown() {
     table.on('init.dt', function() {
       initNewColumnForm();
       loadColumnsNames();
       initSorting();
+      toggleColumnVisibility();
+      editColumns();
     });
   }
 
