@@ -30,11 +30,19 @@
 
           submitEditSampleTypeForm();
           abortEditSampleTypeAction();
+          destroySampleType();
 
           $('#edit_sample_type_' + data.id)
             .bind('ajax:success', function(ev, data) {
             $(this).closest('li').replaceWith($.parseHTML(data.html));
             editSampleTypeForm();
+            destroySampleType();
+          }).bind('ajax:error', function(ev, error){
+            $(this).clearFormErrors();
+            var msg = $.parseJSON(error.responseText);
+            renderFormError(ev,
+                            $(this).find('#sample_type_name'),
+                            Object.keys(msg)[0] + ' '+ msg.name.toString());
           });
         }
       });
@@ -60,6 +68,7 @@
         success: function(data) {
           $(li).replaceWith($.parseHTML(data.html));
           editSampleTypeForm();
+          destroySampleType();
         }
       });
 
@@ -105,8 +114,14 @@
       $('#name-input').val('');
       $('.new-sample-type-form').slideUp();
       $(li).insertAfter('.new-sample-type-form');
-    }).bind('ajax:error', function() {
-      alert("error");
+      editSampleTypeForm();
+      destroySampleType();
+    }).bind('ajax:error', function(ev, error) {
+      $(this).clearFormErrors();
+      var msg = $.parseJSON(error.responseText);
+      renderFormError(ev,
+                      $(this).find('#name-input'),
+                      Object.keys(msg)[0] + ' '+ msg.name.toString());
     });
   }
 
