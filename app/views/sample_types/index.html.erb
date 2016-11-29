@@ -12,12 +12,33 @@
   </ul>
   <div class="tab-content">
     <div class="tab-pane tab-pane-settings tab-pane-protocols active" role="tabpanel">
-      <ul class="list-unstyled">
-        <li><button class="btn btn-primary pull-right"><%= t 'sample_types.index.new' %></button></li>
-        <% @sample_types.each do |sample_type| %>
-          <li><%= sample_type.name %></li>
+      <div class="pull-right">
+        <button id="create-sample-type"
+               class="btn btn-primary pull-right"><%= t 'sample_types.index.new' %></button>
+      </div>
+      <ul class="list-unstyled" id="sample_types_list">
+        <li class="new-sample-type-form">
+          <%= form_for SampleType.new,
+                                 remote: true,
+                                 html: { class: 'form-inline' },
+                                 url: organization_sample_types_path(current_organization) do |f| %>
+            <div class="form-group">
+              <%= f.text_field :name, id: 'name-input', class: 'form-control' %>
+            </div>
+            <div class="form-group">
+              <span id="submit" class="glyphicon glyphicon-ok"></span>
+              <span id="remove" class="glyphicon glyphicon-remove"></span>
+            </div>
+          <% end %>
+        </li>
+        <% @sample_types.reverse_each do |sample_type| %>
+          <%= render partial: 'sample_type',
+                              locals: { sample_type: sample_type,
+                                        organization: current_organization } %>
         <% end %>
       </ul>
     </div>
   </div>
 <% end %>
+
+<%= javascript_include_tag 'samples/sample_types' %>

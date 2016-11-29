@@ -878,8 +878,10 @@ en:
       sample_types: 'Sample types'
       sample_groups: 'Sample groups'
       new: 'Create Sample type'
-    create:
-      success_flash: "Successfully added sample type <strong>%{sample_type}</strong> to team <strong>%{organization}</strong>."
+      destroy_modal_title: "Permanently delete the \"%{name}\" sample type?"
+      destroy_modal_body: 'This action is irreversible and makes the sample type inaccessible to all team members.'
+      destroy_modal_submit: 'Permanently delete sample type'
+      destroy_flash: "\"%{name}\" sample type was successfully deleted!"
 
   custom_fields:
     new:

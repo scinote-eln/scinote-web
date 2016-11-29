@@ -1,0 +1,35 @@
+@import 'constants';
+
+#sample_types_list {
+  margin-top: 50px;
+
+  li {
+    border-bottom: 1px solid $color-alto;
+    padding: 15px 0;
+    padding-left: 5px;
+
+    &:nth-child(2) {
+      border-top: 1px solid $color-alto;
+    }
+  }
+
+  #name-input {
+    max-width: 200px;
+    padding: 5px;
+  }
+
+  .new-sample-type-form {
+    border-bottom: 0;
+    border-top: 1px solid $color-alto;
+    display: none;
+  }
+
+  .glyphicon-ok {
+    color: $color-theme-secondary;
+  }
+
+  .glyphicon {
+    cursor: pointer;
+    font-size: 15px;
+  }
+}
