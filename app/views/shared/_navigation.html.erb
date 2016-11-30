@@ -9,16 +9,22 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="<%= root_path %>">
-        <% if Rails.env.production? %>
-          <img src="/images/logo.png" id="logo">
-        <% else %>
-          <img src="/images/logo.png" class="with-version" id="logo">
+      <%= link_to(root_path, class: 'navbar-brand') do %>
+        <%
+        show_version = !Rails.env.production?
+        if ENV['NAVBAR_SHOW_VERSION'].present?
+          show_version = YAML.load(ENV['NAVBAR_SHOW_VERSION'])
+        end
+        %>
+        <% if show_version %>
+          <%= image_tag('/images/logo.png', class: 'with-version', id: 'logo') %>
           <span class="version">
             <%= Constants::APP_VERSION %>
           </span>
+        <% else %>
+          <%= image_tag('/images/logo.png', id: 'logo') %>
         <% end %>
-      </a>
+      <% end %>
     </div>
 
     <% if user_signed_in? %>
