@@ -5,6 +5,9 @@ en:
         head_title: "Resend confirmation instructions"
         title: "Resend confirmation instructions"
         submit: "Resend confirmation instructions"
+    invitations:
+      edit:
+        header: "Set your full name and password"
     passwords:
       edit:
         head_title: "Change password"

@@ -12,6 +12,7 @@ gem 'sass-rails', '~> 5.0'
 gem 'bootstrap_form'
 gem 'yomu'
 gem 'font-awesome-rails', '~> 4.6'
+gem 'recaptcha', require: 'recaptcha/rails'
 
 # JS datetime library, requirement of datetime picker
 gem 'momentjs-rails', '>= 2.9.0'

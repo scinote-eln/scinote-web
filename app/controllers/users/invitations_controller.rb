@@ -2,7 +2,15 @@ module Users
   class InvitationsController < Devise::InvitationsController
     include UsersGenerator
 
+    prepend_before_action :check_captcha, only: [:update]
+
     before_action :check_invite_users_permission, only: :invite_users
+
+    before_filter :update_sanitized_params, only: :update
+
+    def edit
+      resource.full_name = ''
+    end
 
     def update
       # Instantialize a new organization with the provided name
@@ -145,6 +153,28 @@ module Users
     end
 
     private
+
+    def update_sanitized_params
+      # Solution for Devise < 4.0.0
+      devise_parameter_sanitizer.for(:accept_invitation) << :full_name
+    end
+
+    def check_captcha
+      if Rails.configuration.x.enable_recaptcha
+        unless verify_recaptcha
+          # Construct new resource before rendering :new
+          self.resource = resource_class.new
+          resource.full_name = params[:user][:full_name]
+          resource.invitation_token = update_resource_params[:invitation_token]
+
+          # Also validate organization
+          @org = Organization.new(name: params[:organization][:name])
+          @org.valid?
+
+          respond_with_navigational(resource) { render :edit }
+        end
+      end
+    end
 
     def generate_notification(user, target_user, role, org)
       title = I18n.t('notifications.assign_user_to_organization',
