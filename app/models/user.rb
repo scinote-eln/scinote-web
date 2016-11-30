@@ -1,6 +1,7 @@
 class User < ActiveRecord::Base
   include SearchableModel
 
+  acts_as_token_authenticatable
   devise :invitable, :confirmable, :database_authenticatable, :registerable,
          :async, :recoverable, :rememberable, :trackable, :validatable,
          stretches: Constants::PASSWORD_STRETCH_FACTOR

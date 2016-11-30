@@ -31,6 +31,8 @@ en:
         submit: "Log in"
       create:
         org_name: "%{user}'s projects"
+      auth_token_create:
+        wrong_credentials: "Failed to automatically sign in (wrong credentials)."
     unlocks:
       new:
         head_title: "Resend unlock instructions"

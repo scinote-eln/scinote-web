@@ -7,6 +7,7 @@ gem 'figaro'
 gem 'pg'
 gem 'devise', '3.5.6'
 gem 'devise_invitable'
+gem 'simple_token_authentication', '~> 1.0' # Token authentication for Devise
 gem 'bootstrap-sass', '~> 3.3.5'
 gem 'sass-rails', '~> 5.0'
 gem 'bootstrap_form'
