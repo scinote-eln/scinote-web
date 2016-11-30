@@ -10,4 +10,6 @@ class SampleType < ActiveRecord::Base
   belongs_to :last_modified_by, foreign_key: 'last_modified_by_id', class_name: 'User'
   belongs_to :organization, inverse_of: :sample_types
   has_many :samples, inverse_of: :sample_types
+
+  scope :sorted, -> { order(name: :asc) }
 end

@@ -29,7 +29,7 @@
             </div>
           <% end %>
         </li>
-        <% @sample_types.reverse_each do |sample_type| %>
+        <% @sample_types.sorted.each do |sample_type| %>
           <%= render partial: 'sample_type',
                               locals: { sample_type: sample_type,
                                         organization: current_organization } %>
