@@ -1394,7 +1394,7 @@ en:
     reports_index_click_new_report_html: "Click the <strong>New report</strong> button to create a new report. <strong>(Step 19/26)</strong>"
     new_report_html: "To add report elements to the report, click on the <strong>—+—</strong> sign on the sheet. Select the report contents in the tabs and click <strong>Add to report</strong>. You can save the report as a PDF on your computer or save it within sciNote for later viewing and modification. <strong>(Step 20/26)</strong>"
     new_report_click_org_html: "Click on <strong>%{private_org}</strong> in breadcrumbs to return to the Dashboard. <strong>(Step 21/26)</strong>"
-    protocols_link_html: "Click on <strong>Protocols repository icon</strong> to go to the Protocols repository page. <strong>(Step 22/26)</strong>"
+    protocols_link_html: "Click on <span class='glyphicon glyphicon-list-alt'></span> to go to the Protocols repository page. <strong>(Step 22/26)</strong>"
     protocols_index_html: "View your Public and Private Protocols, which you can Edit, Create new ones or Clone them. Protocols can be archived and restored from the Archive. <strong>(Step 23/26)</strong>"
     protocols_import_export_html: "You can also Import or Export protocols to your hard drive. Return to the Dashboard. <strong>(Step 24/26)</strong>"
     archive_project_html: "Archive Demo project - qPCR by clicking on the down arrow <span class='glyphicon glyphicon-triangle-bottom'></span>. You can always access the Archive by clicking the <span class='glyphicon glyphicon-briefcase'></span> icon on the top right side of the Dashboard and restore any item you have archived. <strong>(Step 25/26)</strong>"
