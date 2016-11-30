@@ -1,3 +1,5 @@
+//= require jquery-ui
+
 var rowsSelected = [];
 
 // Tells whether we're currently viewing or editing table
@@ -760,8 +762,10 @@ function changeToEditMode() {
 
   // loads the columns names in the dropdown list
   function loadColumnsNames() {
+    // First, clear the list
+    dropdownList.find('li[data-position]').remove();
     _.each(table.columns().header(), function(el, index) {
-      if( index > 1 ) {
+      if (index > 1) {
         var colIndex = $(el).attr('data-column-index');
         var visible = table.column(colIndex).visible();
         var visClass = (visible) ? 'glyphicon-eye-open' : 'glyphicon-eye-close';
@@ -776,7 +780,7 @@ function changeToEditMode() {
         dropdownList.append(html);
       }
     });
-
+    toggleColumnVisibility();
     // toggles grip img
     customLiHoverEffect();
   }
@@ -816,11 +820,30 @@ function changeToEditMode() {
     });
   }
 
+  function initSorting() {
+    dropdownList.sortable({
+      items: 'li:not(.new-samples-column)',
+      cancel: '.new-samples-column',
+      axis: 'y',
+      update: function() {
+        var reorderer = table.colReorder;
+        var listIds = [];
+        // We skip first two columns
+        listIds.push(0, 1);
+        dropdownList.find('li[data-position]').each(function() {
+          listIds.push($(this).first().data('position'));
+        });
+        reorderer.order(listIds, false);
+        loadColumnsNames();
+      }
+    });
+  }
+
   // initialze dropdown after the table is loaded
   function initDropdown() {
     table.on('draw.dt', function() {
       loadColumnsNames();
-      toggleColumnVisibility();
+      initSorting();
     });
   }
 
