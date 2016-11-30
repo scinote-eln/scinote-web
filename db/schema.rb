@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160809074757) do
+ActiveRecord::Schema.define(version: 20161129111100) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -569,6 +569,12 @@ ActiveRecord::Schema.define(version: 20160809074757) do
     t.datetime "file_updated_at"
   end
 
+  create_table "tokens", force: :cascade do |t|
+    t.string  "token",   null: false
+    t.integer "ttl",     null: false
+    t.integer "user_id", null: false
+  end
+
   create_table "user_my_modules", force: :cascade do |t|
     t.integer  "user_id",        null: false
     t.integer  "my_module_id",   null: false
@@ -640,8 +646,6 @@ ActiveRecord::Schema.define(version: 20160809074757) do
     t.string   "invited_by_type"
     t.integer  "invitations_count",      default: 0
     t.integer  "tutorial_status",        default: 0,     null: false
-    t.string   "wopi_token"
-    t.integer  "wopi_token_ttl"
   end
 
   add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree
@@ -783,6 +787,7 @@ ActiveRecord::Schema.define(version: 20160809074757) do
   add_foreign_key "tags", "projects"
   add_foreign_key "tags", "users", column: "created_by_id"
   add_foreign_key "tags", "users", column: "last_modified_by_id"
+  add_foreign_key "tokens", "users"
   add_foreign_key "user_my_modules", "my_modules"
   add_foreign_key "user_my_modules", "users"
   add_foreign_key "user_my_modules", "users", column: "assigned_by_id"

@@ -72,8 +72,9 @@ class AssetsController < ApplicationController
     @action_url = append_wd_params(@asset
                                    .get_action_url(current_user, 'edit', false))
     @favicon_url = @asset.favicon_url('edit')
-    @token = current_user.get_wopi_token
-    @ttl = (current_user.wopi_token_ttl * 1000).to_s
+    tkn = current_user.get_wopi_token
+    @token = tkn.token
+    @ttl = (tkn.ttl * 1000).to_s
     create_wopi_file_activity(current_user, true)
 
     render layout: false
@@ -83,8 +84,9 @@ class AssetsController < ApplicationController
     @action_url = append_wd_params(@asset
                                    .get_action_url(current_user, 'view', false))
     @favicon_url = @asset.favicon_url('view')
-    @token = current_user.get_wopi_token
-    @ttl = (current_user.wopi_token_ttl * 1000).to_s
+    tkn = current_user.get_wopi_token
+    @token = tkn.token
+    @ttl = (tkn.ttl * 1000).to_s
 
     render layout: false
   end

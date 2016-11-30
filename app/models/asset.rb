@@ -302,10 +302,18 @@ class Asset < ActiveRecord::Base
   end
 
   def can_perform_action(action)
-    file_ext = file_file_name.split('.').last
-    action = get_action(file_ext, action)
-    return false if action.nil?
-    true
+  	if (ENV['WOPI_ENABLED'] == "true") 
+    	file_ext = file_file_name.split('.').last
+
+    	if (file_ext=="wopitest" && (!ENV['WOPI_TEST_ENABLED'] || ENV['WOPI_TEST_ENABLED'] == "false"))
+    		return false
+    	end
+    	action = get_action(file_ext, action)
+    	return false if action.nil?
+    	true	
+	else
+	 false
+	end 
   end
 
   def get_action_url(user, action, with_tokens = true)
@@ -325,8 +333,9 @@ class Asset < ActiveRecord::Base
       )
       action_url += "WOPISrc=#{rest_url}"
       if with_tokens
-        action_url + "&access_token=#{user.get_wopi_token}"\
-        "&access_token_ttl=#{(user.wopi_token_ttl * 1000)}"
+      	token = user.get_wopi_token
+        action_url + "&access_token=#{token.token}"\
+        "&access_token_ttl=#{(token.ttl * 1000)}"
       else
         action_url
       end
