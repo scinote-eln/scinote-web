@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+
+ require 'subdomain'
+
+ constraints (UserSubdomain) do	
   devise_for :users, controllers: { registrations: "users/registrations",
     sessions: "users/sessions", invitations: "users/invitations",
     confirmations: "users/confirmations" }
@@ -266,10 +270,14 @@ Rails.application.routes.draw do
     post 'avatar_signature' => 'users/registrations#signature'
   end
 
+ end
+ constraints (WopiSubdomain) do	
+
   # Office integration
   get 'wopi/files/:id/contents', to: 'wopi#file_contents_get_endpoint'
   post 'wopi/files/:id/contents', to: 'wopi#file_contents_post_endpoint'
 
   get 'wopi/files/:id', to: 'wopi#file_get_endpoint', as: 'wopi_rest_endpoint'
   post 'wopi/files/:id', to: 'wopi#post_file_endpoint'
+ end
 end
