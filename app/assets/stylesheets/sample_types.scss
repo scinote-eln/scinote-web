@@ -1,0 +1,46 @@
+@import 'constants';
+
+#sample_types_list {
+  margin-top: 50px;
+
+  li {
+    border-bottom: 1px solid $color-alto;
+    padding: 15px 5px;
+
+    &:nth-child(2) {
+      border-top: 1px solid $color-alto;
+    }
+
+    .edit {
+      margin-right: 5px;
+    }
+
+    .abort {
+      margin-left: 5px;
+    }
+
+    #remove {
+      margin-left: 5px;
+    }
+  }
+
+  #name-input {
+    padding: 5px;
+    width: 203px;
+  }
+
+  .new-sample-type-form {
+    border-bottom: 0;
+    border-top: 1px solid $color-alto;
+    display: none;
+  }
+
+  .glyphicon-ok {
+    color: $color-theme-secondary;
+  }
+
+  .glyphicon {
+    cursor: pointer;
+    font-size: 15px;
+  }
+}

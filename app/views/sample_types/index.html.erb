@@ -1,0 +1,42 @@
+<% provide(:head_title, t('sample_types.index.head_title')) %>
+
+<% if current_organization %>
+  <ul class="nav nav-tabs nav-settings" data-position="bottom">
+    <li role="presentation" class="active">
+      <%= link_to t('sample_types.index.sample_types'),
+                  organization_sample_types_path(current_organization) %>
+    </li>
+    <li role="presentation">
+      <%= link_to t('sample_types.index.sample_groups'), '#' %>
+    </li>
+  </ul>
+  <div class="tab-content">
+    <div class="tab-pane tab-pane-settings tab-pane-protocols active" role="tabpanel">
+      <div class="pull-right">
+        <button id="create-sample-type"
+               class="btn btn-primary pull-right"><%= t 'sample_types.index.new' %></button>
+      </div>
+      <ul class="list-unstyled" id="sample_types_list">
+        <li class="new-sample-type-form">
+          <%= form_for SampleType.new,
+                                 remote: true,
+                                 html: { class: 'form-inline' },
+                                 url: organization_sample_types_path(current_organization) do |f| %>
+            <div class="form-group">
+              <%= f.text_field :name, id: 'name-input', class: 'form-control' %>
+              <span id="submit" class="glyphicon glyphicon-ok"></span>
+              <span id="remove" class="glyphicon glyphicon-remove"></span>
+            </div>
+          <% end %>
+        </li>
+        <% @sample_types.sorted.each do |sample_type| %>
+          <%= render partial: 'sample_type',
+                              locals: { sample_type: sample_type,
+                                        organization: current_organization } %>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+<% end %>
+
+<%= javascript_include_tag 'samples/sample_types' %>

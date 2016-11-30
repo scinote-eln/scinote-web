@@ -60,7 +60,10 @@ Rails.application.routes.draw do
 
   resources :organizations, only: [] do
     resources :samples, only: [:new, :create]
-    resources :sample_types, only: [:create]
+    resources :sample_types, except: [:show, :new] do
+      get 'sample_type_element', to: 'sample_types#sample_type_element'
+      get 'destroy_confirmation', to: 'sample_types#destroy_confirmation'
+    end
     resources :sample_groups, only: [:create]
     resources :custom_fields, only: [:create]
     member do

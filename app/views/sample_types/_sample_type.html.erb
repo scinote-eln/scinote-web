@@ -1,0 +1,14 @@
+<li data-sample-type-id="<%= sample_type.id %>"
+    data-sample-type-edit="<%=
+      edit_organization_sample_type_path(organization,
+                                         sample_type)
+      %>"
+    data-sample-type-delete="<%=
+      organization_sample_type_destroy_confirmation_path(organization, sample_type)
+      %>">
+  <%= sample_type.name %>
+  <span class="pull-right">
+    <span class="edit glyphicon glyphicon-pencil"></span>
+    <span class="delete glyphicon glyphicon-trash"></span>
+  </span>
+</li>
