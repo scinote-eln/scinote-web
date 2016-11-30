@@ -760,6 +760,86 @@ function changeToEditMode() {
 
   var dropdownList = $('#samples-columns-list');
 
+  function initNewColumnForm() {
+    $('#samples-columns-dropdown').on('show.bs.dropdown', function() {
+      // Clear input and errors when dropdown is opened
+      var input = $(this).find('input#new-column-name');
+      input.val('');
+      var form = $('#new-column-form');
+      if (form.hasClass('has-error')) {
+        form.removeClass('has-error');
+      }
+      form.find('.help-block').remove();
+    });
+
+    $('#samples-columns-dropdown').on('hide.bs.dropdown', function() {
+      // Check if we have any new columns and reload the page if any
+      if ($('#samples-columns-list').find('li.new-samples-column').length) {
+        window.location.href = addParam(window.location.href, 'new_col');
+        location.reload();
+      }
+    });
+
+    $('#add-new-column-button').click(function(e) {
+      // Make an Ajax request to custom_fields_controller
+      var url = $('#new-column-form').data('action');
+      e.stopPropagation();
+      var columnName = $('#new-column-name').val();
+      if (columnName.length > 0) {
+        $.ajax({
+          method: 'POST',
+          dataType: 'json',
+          data: {custom_field: {name: columnName}},
+          error: function(data) {
+            var form = $('#new-column-form');
+            form.addClass('has-error');
+            form.find('.help-block').remove();
+            form.append('<span class="help-block alert alert-danger">' +
+              data.responseJSON.name +
+              '</span>');
+          },
+          success: function() {
+            var form = $('#new-column-form');
+            form.find('.help-block').remove();
+            if (form.hasClass('has-error')) {
+              form.removeClass('has-error');
+            }
+            $('#samples-columns-list')
+              .append(newSamplesColumnLi(columnName, false));
+            $('#new-column-name').val('');
+            form.append('<span class="help-block alert alert-success">' +
+              I18n.t('samples.js.column_added') +
+              '</span>');
+          },
+          url: url
+        });
+      } else {
+        var form = $('#new-column-form');
+        form.addClass('has-error');
+        form.find('.help-block').remove();
+        form.append('<span class="help-block alert alert-danger">' +
+          I18n.t('samples.js.empty_column_name') +
+          '</span>');
+      }
+    });
+
+    function newSamplesColumnLi(name, visible) {
+      var colIndex = parseInt($('#samples-columns-list li')
+        .last().attr('data-position'), 10) + 1;
+      var visClass = (visible) ? 'glyphicon-eye-open' : 'glyphicon-eye-close';
+      var visLi = (visible) ? '' : 'col-invisible';
+      var html = '<li data-position="' + colIndex +
+        '" class="new-samples-column ' +
+        visLi + '"><i class="grippy"></i> <span class="text">' +
+        name + '</span> <span class="pull-right controls">' +
+        '<span class="vis glyphicon ' + visClass + '"></span> ' +
+        '<span class="edit glyphicon glyphicon-pencil"></span> ' +
+        '<span class="del glyphicon glyphicon-trash"></span>' +
+        '</span></li>';
+      return html;
+    }
+  }
+
   // loads the columns names in the dropdown list
   function loadColumnsNames() {
     // First, clear the list
@@ -842,6 +922,7 @@ function changeToEditMode() {
   // initialze dropdown after the table is loaded
   function initDropdown() {
     table.on('draw.dt', function() {
+      initNewColumnForm();
       loadColumnsNames();
       initSorting();
     });
