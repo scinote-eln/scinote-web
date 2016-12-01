@@ -159,7 +159,11 @@ class User < ActiveRecord::Base
 
   # Whether user is active (= confirmed) or not
   def active?
-    confirmed_at.present?
+    if confirmation_required?
+      confirmed_at.present?
+    else
+      invited_by.present? ? invitation_accepted? : true
+    end
   end
 
   def active_status_str
