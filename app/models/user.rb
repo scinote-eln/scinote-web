@@ -265,16 +265,16 @@ class User < ActiveRecord::Base
   def get_wopi_token
   	  # WOPI does not have a good way to request a new token, so a new token should be provided each time this is called, while keeping any old tokens
   	  # as long as they have not yet expired
-  	
+
   	tokens = Token.where("user_id = ?", id).distinct
 
   	for token in tokens
   		if (token.ttl < Time.now.to_i)
   			token.delete
   		end
-  	end	
-   	
-    token_string = Devise.friendly_token(20)
+  	end
+
+    token_string = Devise.friendly_token(20) + "-"  + id.to_s
       # WOPI uses millisecond TTLs
     ttl = (Time.now + 1.days).to_i
     wopi_token = Token.create(token: token_string, ttl: ttl, user_id: id)
