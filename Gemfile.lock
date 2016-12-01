@@ -279,6 +279,10 @@ GEM
     shoulda-context (1.2.1)
     shoulda-matchers (3.1.1)
       activesupport (>= 4.0.0)
+    simple_token_authentication (1.14.0)
+      actionmailer (>= 3.2.6, < 6)
+      actionpack (>= 3.2.6, < 6)
+      devise (>= 3.2, < 6)
     skylight (0.10.0)
       activesupport (>= 3.0.0)
     sourcemap (0.1.1)
@@ -382,6 +386,7 @@ DEPENDENCIES
   sdoc (~> 0.4.0)
   shoulda-context
   shoulda-matchers (>= 3.0.1)
+  simple_token_authentication (~> 1.0)
   skylight
   sneaky-save!
   spinjs-rails
