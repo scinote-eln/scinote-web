@@ -289,6 +289,6 @@ Rails.application.routes.draw do
   devise_scope :user do
     get 'avatar/:id/:style' => 'users/registrations#avatar', as: 'avatar'
     post 'avatar_signature' => 'users/registrations#signature'
-    get 'auth_token_sign_in' => 'users/sessions#auth_token_create'
+    get 'users/auth_token_sign_in' => 'users/sessions#auth_token_create'
   end
 end
