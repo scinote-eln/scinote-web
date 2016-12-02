@@ -1,18 +1,7 @@
 class SampleTypesController < ApplicationController
-  before_action :load_vars_nested, only: [:create,
-                                          :index,
-                                          :edit,
-                                          :update,
-                                          :sample_type_element,
-                                          :destroy,
-                                          :destroy_confirmation]
+  before_action :load_vars_nested
   before_action :check_create_permissions
-  before_action :set_sample_type, only: [:edit,
-                                         :update,
-                                         :destroy,
-                                         :sample_type_element,
-                                         :destroy,
-                                         :destroy_confirmation]
+  before_action :set_sample_type, except: [:create, :index]
 
   def create
     @sample_type = SampleType.new(sample_type_params)
@@ -65,9 +54,9 @@ class SampleTypesController < ApplicationController
   def update
     @sample_type.update_attributes(sample_type_params)
 
-    if @sample_type.save
-      respond_to do |format|
-        format.json do
+    respond_to do |format|
+      format.json do
+        if @sample_type.save
           render json: {
             html: render_to_string(
               partial: 'sample_type.html.erb',
@@ -75,11 +64,7 @@ class SampleTypesController < ApplicationController
                                  organization: @organization }
             )
           }
-        end
-      end
-    else
-      respond_to do |format|
-        format.json do
+        else
           render json: @sample_type.errors,
             status: :unprocessable_entity
         end
@@ -130,15 +115,11 @@ class SampleTypesController < ApplicationController
   def load_vars_nested
     @organization = Organization.find_by_id(params[:organization_id])
 
-    unless @organization
-      render_404
-    end
+    render_404 unless @organization
   end
 
   def check_create_permissions
-    unless can_create_sample_type_in_organization(@organization)
-      render_403
-    end
+    render_403 unless can_create_sample_type_in_organization(@organization)
   end
 
   def set_sample_type

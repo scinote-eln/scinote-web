@@ -119,15 +119,11 @@ class SampleGroupsController < ApplicationController
   def load_vars_nested
     @organization = Organization.find_by_id(params[:organization_id])
 
-    unless @organization
-      render_404
-    end
+    render_404 unless @organization
   end
 
   def check_create_permissions
-    unless can_create_sample_type_in_organization(@organization)
-      render_403
-    end
+    render_403 unless can_create_sample_type_in_organization(@organization)
   end
 
   def sample_group_params

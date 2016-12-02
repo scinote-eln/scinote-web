@@ -125,6 +125,7 @@
       initSampleGroupColor();
       appendCarretToColorPickerDropdown();
       editSampleGroupColor();
+      editSampleGroupForm();
     }).bind('ajax:error', function(ev, error) {
       $(this).clearFormErrors();
       var msg = $.parseJSON(error.responseText);

@@ -32,7 +32,7 @@
             </div>
           <% end %>
         </li>
-        <% @sample_groups.each do |sample_group| %>
+        <% @sample_groups.sorted.each do |sample_group| %>
         <%= render partial: 'sample_group',
                             locals: { sample_group: sample_group,
                                       organization: current_organization } %>
