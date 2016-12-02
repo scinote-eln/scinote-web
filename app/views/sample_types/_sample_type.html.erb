@@ -1,9 +1,9 @@
-<li data-sample-type-id="<%= sample_type.id %>"
-    data-sample-type-edit="<%=
+<li data-id="<%= sample_type.id %>"
+    data-edit="<%=
       edit_organization_sample_type_path(organization,
                                          sample_type)
       %>"
-    data-sample-type-delete="<%=
+    data-delete="<%=
       organization_sample_type_destroy_confirmation_path(organization, sample_type)
       %>">
   <%= sample_type.name %>

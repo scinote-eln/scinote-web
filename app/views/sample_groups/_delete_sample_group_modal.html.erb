@@ -10,17 +10,17 @@
                 class="close"
                 data-dismiss="modal"
                 aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title"><%= t('sample_types.index.destroy_modal_title',
-                                      name: sample_type.name) %></h4>
+        <h4 class="modal-title"><%= t('sample_groups.index.destroy_modal_title',
+                                      name: sample_group.name) %></h4>
       </div>
       <div class="modal-body">
-        <%= t'sample_types.index.destroy_modal_body' %>
+        <%= t'sample_groups.index.destroy_modal_body' %>
       </div>
-      <%= bootstrap_form_for [organization, sample_type], html: { method: :delete } do |f| %>
+      <%= bootstrap_form_for [organization, sample_group], html: { method: :delete } do |f| %>
       <div class="modal-footer">
         <input type="submit"
                class="btn btn-danger"
-               value="<%= t'sample_types.index.destroy_modal_submit' %>">
+               value="<%= t'sample_groups.index.destroy_modal_submit' %>">
         <button type="button"
                 class="btn btn-default"
                 data-dismiss="modal"><%= t("general.cancel")%></button>

@@ -1,5 +1,5 @@
-<li data-sample-type-id="<%= sample_type.id %>"
-    data-sample-type-delete="<%=
+<li data-id="<%= sample_type.id %>"
+    data-delete="<%=
       organization_sample_type_destroy_confirmation_path(organization, sample_type)
     %>">
   <div class="row">
@@ -7,10 +7,11 @@
   <%= form_for [organization, sample_type], html: { class: 'form-inline' }, remote: true do |f| %>
     <div class="form-group">
       <%= f.text_field :name, value: sample_type.name , class: 'form-control' %>
-      <span class="edit-sample-type glyphicon glyphicon-ok"></span>
+      <span class="edit-confirm glyphicon glyphicon-ok"></span>
       <span class="abort glyphicon glyphicon-remove"
-            data-sample-type-element="<%= organization_sample_type_sample_type_element_path(organization,
-                                                                                            sample_type) %>"></span>
+            data-element="<%=
+              organization_sample_type_sample_type_element_path(organization,
+                                                                sample_type) %>"></span>
     </div>
   <% end %>
     </div>

@@ -6,11 +6,7 @@ class SampleTypesController < ApplicationController
                                           :sample_type_element,
                                           :destroy,
                                           :destroy_confirmation]
-  before_action :check_create_permissions, only: [:create,
-                                                  :edit,
-                                                  :update,
-                                                  :destroy,
-                                                  :destroy_confirmation]
+  before_action :check_create_permissions
   before_action :set_sample_type, only: [:edit,
                                          :update,
                                          :destroy,
@@ -28,12 +24,11 @@ class SampleTypesController < ApplicationController
       if @sample_type.save
         format.json do
           render json: {
-            id: @sample_type.id,
-            name: @sample_type.name,
-            edit: edit_organization_sample_type_path(current_organization,
-                                                     @sample_type),
-            destroy: organization_sample_type_path(current_organization,
-                                                   @sample_type)
+            html: render_to_string(
+              partial: 'sample_type.html.erb',
+                       locals: { sample_type: @sample_type,
+                                 organization: @organization }
+            )
           },
           status: :ok
         end

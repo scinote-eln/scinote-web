@@ -64,7 +64,10 @@ Rails.application.routes.draw do
       get 'sample_type_element', to: 'sample_types#sample_type_element'
       get 'destroy_confirmation', to: 'sample_types#destroy_confirmation'
     end
-    resources :sample_groups, only: [:create]
+    resources :sample_groups, except: [:show, :new] do
+      get 'sample_group_element', to: 'sample_groups#sample_group_element'
+      get 'destroy_confirmation', to: 'sample_groups#destroy_confirmation'
+    end
     resources :custom_fields, only: [:create]
     member do
       post 'parse_sheet'
