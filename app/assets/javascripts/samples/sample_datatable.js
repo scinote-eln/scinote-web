@@ -821,6 +821,10 @@ function changeToEditMode() {
             $('#samples').off();
             $('#samples thead').empty();
             $('#samples thead').append(originalHeader);
+            // Preserve save/delete buttons as we need them after new table
+            // will be created
+            $('div.toolbarButtons').appendTo('div.samples-table');
+            $('div.toolbarButtons').hide();
             table = dataTableInit();
             table.colReorder.order(colOrder, true);
             loadColumnsNames();
