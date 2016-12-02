@@ -3,128 +3,183 @@
 var rowsSelected = [];
 
 // Tells whether we're currently viewing or editing table
-var currentMode = "viewMode";
+var currentMode = 'viewMode';
 
 // Tells what action will execute by pressing on save button (update/create)
-var saveAction = "update";
+var saveAction = 'update';
 var selectedSample;
+var table;
+var originalHeader;
 
-table = $("#samples").DataTable({
-    order: [[2, "desc"]],
+function dataTableInit() {
+  // Make a copy of original samples table header
+  originalHeader = $('#samples thead').children().clone();
+  table = $('#samples').DataTable({
+    order: [[2, 'desc']],
     dom: "R<'row'<'col-sm-9-custom toolbar'l><'col-sm-3-custom'f>>tpi",
     stateSave: true,
     processing: true,
     serverSide: true,
-    ajax: {
-        url: $("#samples").data("source"),
-        global: false,
-        type: "POST"
-    },
     colReorder: {
-        fixedColumnsLeft: 1000000 // Disable reordering
+      fixedColumnsLeft: 2
+    },
+    destroy: true,
+    ajax: {
+      url: $('#samples').data('source'),
+      global: false,
+      type: 'POST'
     },
     columnDefs: [{
-        targets: 0,
-        searchable: false,
-        orderable: false,
-        className: "dt-body-center",
-        sWidth: "1%",
-        render: function (data, type, full, meta){
-            return "<input type='checkbox'>";
-        }
+      targets: 0,
+      searchable: false,
+      orderable: false,
+      className: 'dt-body-center',
+      sWidth: '1%',
+      render: function() {
+        return "<input type='checkbox'>";
+      }
     }, {
-        targets: 1,
-        searchable: false,
-        orderable: true,
-        sWidth: "1%"
+      targets: 1,
+      searchable: false,
+      orderable: true,
+      sWidth: '1%'
     }, {
-        targets: 2,
-        render: function (data, type, row) {
-            return "<a href='#' data-href='"+ row.sampleUpdateUrl +"'"+
-                    "class='sample_info' data-toggle='modal'" +
-                    "data-target='#modal-info-sample'>"+ data +"</a>";
-        }
+      targets: 2,
+      render: function(data, type, row) {
+        return "<a href='#' data-href='" + row.sampleUpdateUrl + "'" +
+                      "class='sample_info' data-toggle='modal'" +
+                      "data-target='#modal-info-sample'>" + data + '</a>';
+      }
     }],
-    rowCallback: function(row, data, dataIndex){
-        // Get row ID
-        var rowId = data["DT_RowId"];
+    rowCallback: function(row, data) {
+      // Get row ID
+      var rowId = data.DT_RowId;
 
-        // If row ID is in the list of selected row IDs
-        if($.inArray(rowId, rowsSelected) !== -1){
-            $(row).find('input[type="checkbox"]').prop('checked', true);
+      // If row ID is in the list of selected row IDs
+      if ($.inArray(rowId, rowsSelected) !== -1) {
+        $(row).find('input[type="checkbox"]').prop('checked', true);
 
-            $(row).addClass('selected');
-        }
+        $(row).addClass('selected');
+      }
     },
     columns: (function() {
-        var numOfColumns = $("#samples").data("num-columns");
-        var columns = [];
+      var numOfColumns = $('#samples').data('num-columns');
+      var columns = [];
 
-        for (var i = 0; i < numOfColumns; i++) {
-            var visible = (i <= 6);
-            columns.push({
-                data: i + "",
-                defaultContent: "",
-                visible: visible
-            });
-        }
-        return columns;
+      for (var i = 0; i < numOfColumns; i++) {
+        var visible = (i <= 6);
+        columns.push({
+          data: String(i),
+          defaultContent: '',
+          visible: visible
+        });
+      }
+      return columns;
     })(),
-    fnDrawCallback: function(settings, json) {
-        animateSpinner(this, false);
-        changeToViewMode();
-        sampleInfoListener();
-        updateButtons();
+    fnDrawCallback: function() {
+      animateSpinner(this, false);
+      changeToViewMode();
+      sampleInfoListener();
+      updateButtons();
     },
-    stateLoadParams: function(settings, data) {
-        // Check if URL parameters contain the column to show, if so, display it
-        // no matter what
-        if (getParam("new_col") !== null &&
-            data.columns.length === $("#samples").data("num-columns") - 1) {
-            // # of columns grew to +1, we need to add new column to data!
-            var i = data.columns.length + "";
-            data.columns.push({
-                data: i,
-                defaultContent: "",
-                visible: true
-            });
-        }
+    stateSaveCallback: function(settings, data) {
+      // Set a cookie with the table state using the organization id
+      localStorage.setItem('datatables_state/' +
+        $('#samples').attr('data-organization-id'), JSON.stringify(data));
     },
-    stateSaveCallback: function (settings, data) {
-        // Set a cookie with the table state using the organization id
-        localStorage.setItem('datatables_state/' + $("#samples").attr("data-organization-id"), JSON.stringify(data));
+    stateLoadCallback: function() {
+      // Load the table state for the current organization
+      var state = localStorage.getItem('datatables_state/' +
+        $('#samples').attr('data-organization-id'));
+      if (state !== null) {
+        return JSON.parse(state);
+      }
+      return null;
     },
-    stateLoadCallback: function (settings) {
-        // Load the table state for the current organization
-        var state = localStorage.getItem('datatables_state/' + $("#samples").attr("data-organization-id"));
-        if (state !== null) {
-           return JSON.parse(state);
-        }
-        return null;
-    },
-    preDrawCallback: function(settings) {
-        animateSpinner(this);
-        $(".sample_info").off("click");
+    preDrawCallback: function() {
+      animateSpinner(this);
+      $('.sample_info').off('click');
     }
-});
+  });
+
+  // Append button to inner toolbar in table
+  $('div.toolbarButtons').appendTo('div.toolbar');
+  $('div.toolbarButtons').show();
+
+  $('.delete_samples_submit').click(function() {
+      animateLoading();
+  });
+
+  $('#assignSamples, #unassignSamples').click(function() {
+      animateLoading();
+  });
+
+  // Handle click on table cells with checkboxes
+  $('#samples').on('click', 'tbody td, thead th:first-child', function() {
+    $(this).parent().find('input[type="checkbox"]').trigger('click');
+  });
+
+  // Handle clicks on checkbox
+  $('#samples tbody').on('click', "input[type='checkbox']", function(e) {
+    if (currentMode !== 'viewMode') {
+      return false;
+    }
+    // Get row ID
+    var $row = $(this).closest('tr');
+    var data = table.row($row).data();
+    var rowId = data.DT_RowId;
+
+    // Determine whether row ID is in the list of selected row IDs
+    var index = $.inArray(rowId, rowsSelected);
+
+    // If checkbox is checked and row ID is not in list of selected row IDs
+    if (this.checked && index === -1) {
+      rowsSelected.push(rowId);
+    // Otherwise, if checkbox is not checked and row ID is in list of selected row IDs
+    } else if (!this.checked && index !== -1) {
+      rowsSelected.splice(index, 1);
+    }
+
+    if (this.checked) {
+      $row.addClass('selected');
+    } else {
+      $row.removeClass('selected');
+    }
+
+    updateDataTableSelectAllCtrl(table);
+
+    e.stopPropagation();
+
+    updateButtons();
+  });
+
+  // Handle click on "Select all" control
+  $('#samples thead input[name="select_all"]').on('click', function(e) {
+    if (this.checked) {
+      $('#samples tbody input[type="checkbox"]:not(:checked)').trigger('click');
+    } else {
+      $('#samples tbody input[type="checkbox"]:checked').trigger('click');
+    }
+
+    // Prevent click event from propagating to parent
+    e.stopPropagation();
+  });
+
+  // Handle table draw event
+  table.on('draw', function() {
+    updateDataTableSelectAllCtrl(table);
+  });
+
+  return table;
+}
+
+table = dataTableInit();
 
 // Enables noSearchHidden plugin
-$.fn.dataTable.defaults.noSearchHidden = true
-
-// Append button to inner toolbar in table
-$("div.toolbarButtons").appendTo("div.toolbar");
-$("div.toolbarButtons").show();
-
-$(".delete_samples_submit").click(function () {
-    animateLoading();
-});
-
-$("#assignSamples, #unassignSamples").click(function () {
-    animateLoading();
-});
+$.fn.dataTable.defaults.noSearchHidden = true;
 
 // Updates "Select all" control in a data table
-function updateDataTableSelectAllCtrl(table){
+function updateDataTableSelectAllCtrl(table) {
     var $table             = table.table().node();
     var $chkbox_all        = $('tbody input[type="checkbox"]', $table);
     var $chkbox_checked    = $('tbody input[type="checkbox"]:checked', $table);
@@ -152,57 +207,6 @@ function updateDataTableSelectAllCtrl(table){
         }
     }
 }
-
-// Handle click on table cells with checkboxes
-$('#samples').on('click', 'tbody td, thead th:first-child', function(e){
-    $(this).parent().find('input[type="checkbox"]').trigger('click');
-});
-
-// Handle clicks on checkbox
-$("#samples tbody").on("click", "input[type='checkbox']", function(e){
-    if (currentMode != "viewMode")
-        return false;
-
-    // Get row ID
-    var $row = $(this).closest("tr");
-    var data = table.row($row).data();
-    var rowId = data["DT_RowId"];
-
-    // Determine whether row ID is in the list of selected row IDs
-    var index = $.inArray(rowId, rowsSelected);
-
-    // If checkbox is checked and row ID is not in list of selected row IDs
-    if(this.checked && index === -1){
-        rowsSelected.push(rowId);
-        // Otherwise, if checkbox is not checked and row ID is in list of selected row IDs
-    } else if (!this.checked && index !== -1){
-        rowsSelected.splice(index, 1);
-    }
-
-    if(this.checked){
-        $row.addClass('selected');
-    } else {
-        $row.removeClass('selected');
-    }
-
-    updateDataTableSelectAllCtrl(table);
-
-    e.stopPropagation();
-
-    updateButtons();
-});
-
-// Handle click on "Select all" control
-$('#samples thead input[name="select_all"]').on('click', function(e){
-    if(this.checked){
-        $('#samples tbody input[type="checkbox"]:not(:checked)').trigger('click');
-    } else {
-        $('#samples tbody input[type="checkbox"]:checked').trigger('click');
-    }
-
-    // Prevent click event from propagating to parent
-    e.stopPropagation();
-});
 
 // Append selected samples to form
 $("form#form-samples").submit(function(e){
@@ -264,11 +268,6 @@ function appendSamplesIdToForm(form) {
         );
     });
 }
-
-// Handle table draw event
-table.on('draw', function(){
-    updateDataTableSelectAllCtrl(table);
-});
 
 //Show sample info
 function sampleInfoListener() {
@@ -664,34 +663,36 @@ function onClickAddSample() {
             updateButtons();
         }
     });
-
 }
 
 // Handle enter key
-$(document).off("keypress").keypress(function(event) {
-    var keycode = (event.keyCode ? event.keyCode : event.which);
-    if(currentMode == "editMode" && keycode == '13'){
-        $("#saveSample").click();
-        return false;
-    }
+$(document).off('keypress').keypress(function(event) {
+  var keycode = (event.keyCode ? event.keyCode : event.which);
+  if (currentMode === 'editMode' && keycode === '13') {
+    $('#saveSample').click();
+    return false;
+  }
 });
 
 // Helper functions
 function getColumnIndex(id) {
-    if (id < 0) return false;
-    return table.column(id).index("visible");
+  if (id < 0) {
+    return false;
+  }
+  return table.column(id).index('visible');
 }
 
 // Takes object and surrounds it with input
 function changeToInputField(object, name, value) {
-    return "<div class='form-group'><input class='form-control' data-object='" + object + "' name='" + name + "' value='" + value + "'></input></div>";
+  return "<div class='form-group'><input class='form-control' data-object='" +
+      object + "' name='" + name + "' value='" + value + "'></input></div>";
 }
 
 // Return td element with content
 function createTdElement(content) {
-    var td = document.createElement("td");
-    td.innerHTML = content;
-    return td;
+  var td = document.createElement('td');
+  td.innerHTML = content;
+  return td;
 }
 
 /**
@@ -700,17 +701,20 @@ function createTdElement(content) {
  * @param selected Selected sample type id
  */
 function createSampleTypeSelect(data, selected) {
-    var $selectType = $("<select></select>").attr("name",  "sample_type_id").addClass("show-tick");
+  var $selectType = $('<select></select>')
+    .attr('name', 'sample_type_id').addClass('show-tick');
 
-    var $option = $("<option></option>").attr("value", -1).text(I18n.t("samples.table.no_type"))
+  var $option = $('<option></option>')
+    .attr('value', -1).text(I18n.t('samples.table.no_type'))
+  $selectType.append($option);
+
+  $.each(data, function(i, val) {
+    var $option = $('<option></option>')
+      .attr('value', val.id).text(val.name);
     $selectType.append($option);
-
-    $.each(data, function(i, val) {
-        var $option = $("<option></option>").attr("value", val["id"]).text(val["name"]);
-        $selectType.append($option);
-    });
-    $selectType.val(selected);
-    return $selectType;
+  });
+  $selectType.val(selected);
+  return $selectType;
 }
 
 /**
@@ -719,40 +723,44 @@ function createSampleTypeSelect(data, selected) {
  * @param selected Selected sample group id
  */
 function createSampleGroupSelect(data, selected) {
-    var $selectGroup = $("<select></select>").attr("name",  "sample_group_id").addClass("show-tick");
+  var $selectGroup = $('<select></select>')
+    .attr('name', 'sample_group_id').addClass('show-tick');
 
-    var $span = $("<span></span>").addClass("glyphicon glyphicon-asterisk");
-    var $option = $("<option></option>").attr("value", -1).text(I18n.t("samples.table.no_group"))
-    .attr("data-icon", "glyphicon glyphicon-asterisk");
+  var $span = $("<span></span>").addClass('glyphicon glyphicon-asterisk');
+  var $option = $('<option></option>')
+    .attr('value', -1).text(I18n.t('samples.table.no_group'))
+    .attr('data-icon', 'glyphicon glyphicon-asterisk');
+  $selectGroup.append($option);
+
+  $.each(data, function(i, val) {
+    var $span = $('<span></span>').addClass('glyphicon glyphicon-asterisk')
+      .css('color', val.color);
+    var $option = $('<option></option>')
+      .attr('value', val.id).text(val.name)
+      .attr('data-content', $span.prop('outerHTML') + ' ' + val.name);
+
     $selectGroup.append($option);
-
-    $.each(data, function(i, val) {
-        var $span = $("<span></span>").addClass("glyphicon glyphicon-asterisk").css("color", val["color"]);
-        var $option = $("<option></option>").attr("value", val["id"]).text(val["name"])
-        .attr("data-content", $span.prop("outerHTML") + " " + val["name"]);
-
-        $selectGroup.append($option);
-    });
-    $selectGroup.val(selected);
-    return $selectGroup;
+  });
+  $selectGroup.val(selected);
+  return $selectGroup;
 }
 
 function changeToViewMode() {
-    currentMode = "viewMode";
+  currentMode = 'viewMode';
 
     // $("#saveCancel").hide();
 
     // Table specific stuff
-    table.button(0).enable(true);
+  table.button(0).enable(true);
 }
 
 function changeToEditMode() {
-    currentMode = "editMode";
+  currentMode = 'editMode';
 
     // $("#saveCancel").show();
 
     // Table specific stuff
-    table.button(0).enable(false);
+  table.button(0).enable(false);
 }
 
 (function(table) {
@@ -772,14 +780,6 @@ function changeToEditMode() {
       form.find('.help-block').remove();
     });
 
-    $('#samples-columns-dropdown').on('hide.bs.dropdown', function() {
-      // Check if we have any new columns and reload the page if any
-      if ($('#samples-columns-list').find('li.new-samples-column').length) {
-        window.location.href = addParam(window.location.href, 'new_col');
-        location.reload();
-      }
-    });
-
     $('#add-new-column-button').click(function(e) {
       // Make an Ajax request to custom_fields_controller
       var url = $('#new-column-form').data('action');
@@ -794,22 +794,36 @@ function changeToEditMode() {
             var form = $('#new-column-form');
             form.addClass('has-error');
             form.find('.help-block').remove();
-            form.append('<span class="help-block alert alert-danger">' +
+            form.append('<span class="help-block">' +
               data.responseJSON.name +
               '</span>');
           },
-          success: function() {
+          success: function(data) {
             var form = $('#new-column-form');
             form.find('.help-block').remove();
             if (form.hasClass('has-error')) {
               form.removeClass('has-error');
             }
-            $('#samples-columns-list')
-              .append(newSamplesColumnLi(columnName, false));
             $('#new-column-name').val('');
-            form.append('<span class="help-block alert alert-success">' +
+            form.append('<span class="help-block">' +
               I18n.t('samples.js.column_added') +
               '</span>');
+            $('#samples').data('num-columns',
+              $('#samples').data('num-columns') + 1);
+            originalHeader.append(
+              '<th class="custom-field" id="' + data.id + '">' +
+              data.name + '</th>');
+            var colOrder = table.colReorder.order();
+            colOrder.push(colOrder.length);
+            table.colReorder.reset();
+            // Remove all event handlers as we re-initialize them later with
+            // new table
+            $('#samples').off();
+            $('#samples thead').empty();
+            $('#samples thead').append(originalHeader);
+            table = dataTableInit();
+            table.colReorder.order(colOrder, true);
+            loadColumnsNames();
           },
           url: url
         });
@@ -822,22 +836,6 @@ function changeToEditMode() {
           '</span>');
       }
     });
-
-    function newSamplesColumnLi(name, visible) {
-      var colIndex = parseInt($('#samples-columns-list li')
-        .last().attr('data-position'), 10) + 1;
-      var visClass = (visible) ? 'glyphicon-eye-open' : 'glyphicon-eye-close';
-      var visLi = (visible) ? '' : 'col-invisible';
-      var html = '<li data-position="' + colIndex +
-        '" class="new-samples-column ' +
-        visLi + '"><i class="grippy"></i> <span class="text">' +
-        name + '</span> <span class="pull-right controls">' +
-        '<span class="vis glyphicon ' + visClass + '"></span> ' +
-        '<span class="edit glyphicon glyphicon-pencil"></span> ' +
-        '<span class="del glyphicon glyphicon-trash"></span>' +
-        '</span></li>';
-      return html;
-    }
   }
 
   // loads the columns names in the dropdown list
@@ -886,7 +884,7 @@ function changeToEditMode() {
       var li = self.closest('li');
       var column = table.column(li.attr('data-position'));
 
-      if ( column.visible() ) {
+      if (column.visible()) {
         self.addClass('glyphicon-eye-close');
         self.removeClass('glyphicon-eye-open');
         li.addClass('col-invisible');
@@ -902,7 +900,7 @@ function changeToEditMode() {
 
   function initSorting() {
     dropdownList.sortable({
-      items: 'li:not(.new-samples-column)',
+      items: 'li:not(.add-new-column-form)',
       cancel: '.new-samples-column',
       axis: 'y',
       update: function() {
@@ -921,7 +919,7 @@ function changeToEditMode() {
 
   // initialze dropdown after the table is loaded
   function initDropdown() {
-    table.on('draw.dt', function() {
+    table.on('init.dt', function() {
       initNewColumnForm();
       loadColumnsNames();
       initSorting();

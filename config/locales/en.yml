@@ -874,7 +874,7 @@ en:
     js:
       permission_error: "You don't have permission to edit this sample."
       not_found_error: "This sample does not exist."
-      column_added: "New column was created, it will be displayed in the table after you close the dropdown."
+      column_added: "New column was sucessfully created."
       empty_column_name: "Please enter column name."
   sample_types:
     index:

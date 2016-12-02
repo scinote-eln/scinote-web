@@ -11,7 +11,8 @@ class CustomFieldsController < ApplicationController
       if @custom_field.save
         format.json {
           render json: {
-            id: @custom_field.id
+            id: @custom_field.id,
+            name: @custom_field.name
           },
           status: :ok }
       else
