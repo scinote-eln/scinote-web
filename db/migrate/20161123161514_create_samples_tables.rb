@@ -1,5 +1,4 @@
 class CreateSamplesTables < ActiveRecord::Migration
-
   @@def_state = { 'time' => 0,
                   'start' => 0,
                   'length' => 10,
@@ -60,7 +59,6 @@ class CreateSamplesTables < ActiveRecord::Migration
     User.find_each do |user|
       next unless user.organizations
       user.organizations.find_each do |org|
-
         org_status = @@def_state.deep_dup
         next unless org.custom_fields
         org.custom_fields.each_with_index do |_, index|
