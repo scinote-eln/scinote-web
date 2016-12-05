@@ -657,6 +657,7 @@ function initImport() {
             }
           );
           modalBody.append(failedMessageEl);
+          animateSpinner(null, false);
         }
         if (nrSuccessful > 0) {
           var successMessageEl = newElement(

@@ -494,7 +494,12 @@ function initImport() {
           // Simply reload page
           location.reload();
         } else {
-          alert(I18n.t("my_modules.protocols.load_from_file_error"));
+          if (data.status === 'size_too_large') {
+            alert(I18n.t("my_modules.protocols.load_from_file_size_error"));
+          } else {
+            alert(I18n.t("my_modules.protocols.load_from_file_error"));
+          }
+          animateSpinner(null, false);
         }
       });
 
