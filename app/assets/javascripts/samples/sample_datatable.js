@@ -9,6 +9,10 @@ var currentMode = "viewMode";
 var saveAction = "update";
 var selectedSample;
 
+// Helps saving correct table state
+var myData;
+var loadFirstTime = true;
+
 table = $("#samples").DataTable({
     order: [[2, "desc"]],
     dom: "R<'row'<'col-sm-9-custom toolbar'l><'col-sm-3-custom'f>>tpi",
@@ -21,7 +25,7 @@ table = $("#samples").DataTable({
         type: "POST"
     },
     colReorder: {
-        fixedColumnsLeft: 1000000 // Disable reordering
+        realtime: false // Enable reordering
     },
     columnDefs: [{
         targets: 0,
@@ -91,20 +95,54 @@ table = $("#samples").DataTable({
         }
     },
     stateSaveCallback: function (settings, data) {
-        // Set a cookie with the table state using the organization id
-        localStorage.setItem('datatables_state/' + $("#samples").attr("data-organization-id"), JSON.stringify(data));
+        // Send an Ajax request to the server with the state object
+        var org = $("#samples").attr("data-organization-id")
+        var user = $("#samples").attr("data-user-id")
+
+        // Save correct data
+        if (loadFirstTime == true) {
+          data = myData;
+        }
+
+        $.ajax( {
+          url: '/state_save/'+org+'/'+user,
+          data: {org: org, state: data},
+          dataType: "json",
+          type: "POST",
+          success: function () {},
+          error: function () {}
+        } );
+        loadFirstTime = false;
     },
     stateLoadCallback: function (settings) {
-        // Load the table state for the current organization
-        var state = localStorage.getItem('datatables_state/' + $("#samples").attr("data-organization-id"));
-        if (state !== null) {
-           return JSON.parse(state);
-        }
-        return null;
+        var o;
+        // Send an Ajax request to the server to get the data. Note that
+        // this is a synchronous request since the data is expected back from the
+        // function
+        var org = $("#samples").attr("data-organization-id")
+        var user = $("#samples").attr("data-user-id")
+
+        $.ajax( {
+          url: '/state_load/'+org+'/'+user,
+          data: {org: org},
+          async: false,
+          dataType: "json",
+          type: "POST",
+          success: function (json) {
+            o = json.state;
+          },
+          error: function (json) {}
+        } );
+        myData = o;
+        return o;
     },
     preDrawCallback: function(settings) {
         animateSpinner(this);
         $(".sample_info").off("click");
+    },
+    fnInitComplete: function(oSettings, json) {
+        // Reload correct column order (if you refresh page)
+        oSettings._colReorder.fnOrder(myData.ColReorder);
     }
 });
 
