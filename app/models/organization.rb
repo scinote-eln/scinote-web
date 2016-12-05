@@ -15,6 +15,7 @@ class Organization < ActiveRecord::Base
   has_many :user_organizations, inverse_of: :organization, dependent: :destroy
   has_many :users, through: :user_organizations
   has_many :samples, inverse_of: :organization
+  has_many :samples_tables, inverse_of: :organization, dependent: :destroy
   has_many :sample_groups, inverse_of: :organization
   has_many :sample_types, inverse_of: :organization
   has_many :logs, inverse_of: :organization
