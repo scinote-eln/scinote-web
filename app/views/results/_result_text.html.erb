@@ -1,3 +1,5 @@
 <div class="ql-editor">
-  <%= result.result_text.text.html_safe %>
+  <%= auto_link(result.result_text.text,
+                link: :urls,
+                html: { target: '_blank' }).html_safe %>
 </div>

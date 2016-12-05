@@ -30,7 +30,9 @@
     <div class="row">
       <div class="col-xs-12">
         <% if my_module.description.present? %>
-          <%= my_module.description %>
+          <%= auto_link(simple_format(my_module.description),
+                        link: :urls,
+                        html: { target: '_blank' }) %>
         <% else %>
            <em><%=t "projects.reports.elements.module.no_description" %></em>
         <% end %>

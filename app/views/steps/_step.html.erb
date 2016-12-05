@@ -37,7 +37,9 @@
               <em><%= t("protocols.steps.no_description") %></em>
             <% else %>
               <div class="ql-editor">
-                <%= step.description.html_safe %>
+                <%= auto_link(step.description,
+                              link: :urls,
+                              html: { target: '_blank' }).html_safe %>
               </div>
             <% end %>
           </div>
@@ -86,7 +88,9 @@
           <% unless step.checklists.blank? then %>
             <div class="col-xs-12">
               <% step.checklists.each do |checklist| %>
-                <strong><%= checklist.name %></strong>
+                <strong><%= auto_link(simple_format(checklist.name),
+                                      link: :urls,
+                                      html: { target: '_blank' }) %></strong>
                 <% if checklist.checklist_items.empty? %>
                   </br>
                   <%= t("protocols.steps.empty_checklist") %>
@@ -100,7 +104,9 @@
                         <% else %>
                           <input type="checkbox" value="" disabled="disabled" />
                         <% end %>
-                        <%= checklist_item.text %>
+                        <%= auto_link(simple_format(checklist_item.text),
+                                                    link: :urls,
+                                                    html: { target: '_blank' }) %>
                       </label>
                     </div>
                   <% end %>

@@ -27,7 +27,9 @@
     <div class="row">
       <div class="col-xs-12">
         <% if experiment.description.present? %>
-          <%= experiment.description %>
+          <%= auto_link(simple_format(experiment.description),
+                        link: :urls,
+                        html: { target: '_blank' }) %>
         <% else %>
            <em><%=t "projects.reports.elements.experiment.no_description" %></em>
         <% end %>
