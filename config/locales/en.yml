@@ -552,7 +552,7 @@ en:
         confirm: "Copy to repository"
       load_from_file_flash: "Successfully loaded the protocol from the file."
       load_from_file_error: "Failed to load the protocol from file."
-      load_from_file_size_error: "Failed to load the protocol from file. Limit is 50Mb."
+      load_from_file_size_error: "Failed to load the protocol from file. Limit is %{size}Mb."
     results:
       head_title: "%{project} | %{module} | Results"
       add_label: "Add new result:"
