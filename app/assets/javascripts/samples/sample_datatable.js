@@ -141,10 +141,16 @@ table = $("#samples").DataTable({
         $(".sample_info").off("click");
     },
     fnInitComplete: function(oSettings, json) {
-        // Reload correct column order (if you refresh page)
+        // Reload correct column order and visibility (if you refresh page)
         oSettings._colReorder.fnOrder(myData.ColReorder);
+        for (var i = 0; i < table.columns()[0].length; i++) {
+            var visibility = myData.columns[i].visible;
+            var vis_boolean = (visibility === "true");
+            table.column(i).visible(vis_boolean);
+        }
     }
 });
+
 
 // Enables noSearchHidden plugin
 $.fn.dataTable.defaults.noSearchHidden = true
