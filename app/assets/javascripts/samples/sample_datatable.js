@@ -145,8 +145,10 @@ table = $("#samples").DataTable({
         oSettings._colReorder.fnOrder(myData.ColReorder);
         for (var i = 0; i < table.columns()[0].length; i++) {
             var visibility = myData.columns[i].visible;
-            var vis_boolean = (visibility === "true");
-            table.column(i).visible(vis_boolean);
+            if (typeof(visibility) === "string"){
+                var visibility = (visibility === "true");
+            }
+            table.column(i).visible(visibility);
         }
     }
 });
