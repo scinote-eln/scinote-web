@@ -9,14 +9,10 @@ class CustomFieldsController < ApplicationController
 
     respond_to do |format|
       if @custom_field.save
-        flash[:success] = t(
-          "custom_fields.create.success_flash",
-          custom_field: @custom_field.name,
-          organization: @organization.name
-          )
         format.json {
           render json: {
-            id: @custom_field.id
+            id: @custom_field.id,
+            name: @custom_field.name
           },
           status: :ok }
       else

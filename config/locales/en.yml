@@ -798,8 +798,8 @@ en:
       success_flash: "Table result successfully deleted."
 
   samples:
-    columns: 'Columns'
-    types_and_groups: 'Types and groups'
+    columns: "Columns"
+    types_and_groups: "Types and groups"
     actions: "Actions"
     add_new_sample: "Add new sample"
     import: "Import"
@@ -810,6 +810,8 @@ en:
     edit_sample: "Edit"
     save_sample: "Save"
     cancel_save: "Cancel"
+    column_create: "Create"
+    column_new_text: "New column"
     column_visibility: "Visible columns"
     add_new_sample_type: "Add sample type"
     add_new_sample_group: "Add sample group"
@@ -872,6 +874,8 @@ en:
     js:
       permission_error: "You don't have permission to edit this sample."
       not_found_error: "This sample does not exist."
+      column_added: "New column was sucessfully created."
+      empty_column_name: "Please enter column name."
   sample_types:
     index:
       head_title: 'Sample Types'

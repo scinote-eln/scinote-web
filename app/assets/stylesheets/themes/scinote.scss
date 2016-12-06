@@ -1592,15 +1592,23 @@ textarea.textarea-sm {
   li {
     background: $color-white;
     border: 1px solid $color-alto;
-    cursor: -webkit-grab;
-    cursor: grab;
     padding: 10px 10px 10px 0;
     vertical-align: middle;
+  }
+
+  [data-position] {
+    cursor: -webkit-grab;
+    cursor: grab;
   }
 
   .ui-sortable-helper {
     cursor: -webkit-grabbing;
     cursor: grabbing;
+  }
+
+  .form-group {
+    margin-bottom: 0;
+    margin-left: 10px;
   }
 
   .vis {
