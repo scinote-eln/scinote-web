@@ -1,0 +1,31 @@
+<li data-id="<%= sample_group.id %>"
+    data-delete="<%=
+      organization_sample_group_destroy_confirmation_path(organization,
+                                                          sample_group)%>"
+    data-color="<%= sample_group.color %>">
+  <div class="row">
+    <div class="col-xs-6">
+  <%= form_for [organization, sample_group], html: { class: 'form-inline' }, remote: true do |f| %>
+    <div class="form-group">
+      <%= f.text_field :name, value: sample_group.name , class: 'form-control' %>
+      <span class="edit-confirm glyphicon glyphicon-ok"></span>
+      <span class="abort glyphicon glyphicon-remove"
+            data-element="<%= organization_sample_group_sample_group_element_path(organization,
+                                                                                  sample_group) %>"></span>
+    </div>
+  <% end %>
+    </div>
+    <div class="col-xs-6 text-right">
+      <span class="pull-right sample-group-controls">
+        <span class="color-picker">
+          <%= bootstrap_form_for [organization, sample_group], remote: true do |f| %>
+            <%= f.color_picker_select :color,
+                                      Constants::TAG_COLORS,
+                                      class: 'edit-sample-group-color' %>
+          <% end %>
+        </span>
+        <span class="delete glyphicon glyphicon-trash"></span>
+      </span>
+    </div>
+  </div>
+</li>

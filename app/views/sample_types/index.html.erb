@@ -7,17 +7,19 @@
                   organization_sample_types_path(current_organization) %>
     </li>
     <li role="presentation">
-      <%= link_to t('sample_types.index.sample_groups'), '#' %>
+      <%= link_to t('sample_types.index.sample_groups'),
+                  organization_sample_groups_path(current_organization) %>
     </li>
   </ul>
   <div class="tab-content">
     <div class="tab-pane tab-pane-settings tab-pane-protocols active" role="tabpanel">
       <div class="pull-right">
-        <button id="create-sample-type"
+        <button id="create-resource"
                class="btn btn-primary pull-right"><%= t 'sample_types.index.new' %></button>
       </div>
-      <ul class="list-unstyled" id="sample_types_list">
-        <li class="new-sample-type-form">
+      <ul class="list-unstyled sample_types_groups_list"
+          id="sample_types_list">
+        <li class="new-resource-form">
           <%= form_for SampleType.new,
                                  remote: true,
                                  html: { class: 'form-inline' },
@@ -25,8 +27,10 @@
             <div class="form-group">
               <%= f.text_field :name, id: 'name-input', class: 'form-control' %>
               <span id="submit" class="glyphicon glyphicon-ok"></span>
-              <span id="remove" class="glyphicon glyphicon-remove"></span>
             </div>
+            <span class="pull-right">
+              <span id="remove" class="glyphicon glyphicon-trash"></span>
+            </span>
           <% end %>
         </li>
         <% @sample_types.sorted.each do |sample_type| %>
@@ -39,4 +43,4 @@
   </div>
 <% end %>
 
-<%= javascript_include_tag 'samples/sample_types' %>
+<%= javascript_include_tag 'samples/sample_types_groups' %>

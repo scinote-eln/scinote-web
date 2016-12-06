@@ -1,0 +1,109 @@
+@import 'constants';
+
+.sample_types_groups_list {
+  margin-top: 50px;
+
+  li {
+    border-bottom: 1px solid $color-alto;
+    padding: 15px 5px;
+
+    &:nth-child(2) {
+      border-top: 1px solid $color-alto;
+    }
+
+    .edit {
+      margin-right: 5px;
+    }
+
+    .abort {
+      margin-left: 5px;
+    }
+
+    #remove {
+      margin-left: 5px;
+      margin-top: 10px;
+    }
+  }
+
+  #name-input {
+    padding: 5px;
+    width: 203px;
+  }
+
+  .new-resource-form {
+    border-bottom: 0;
+    border-top: 1px solid $color-alto;
+    display: none;
+  }
+
+  .glyphicon-ok {
+    color: $color-theme-secondary;
+  }
+
+  .glyphicon {
+    cursor: pointer;
+    font-size: 15px;
+  }
+
+  .sample-group-colorselector {
+    border-radius: 0;
+    display: inline-block;
+    height: 20px;
+    vertical-align: middle;
+    width: 20px;
+  }
+
+  .color-picker {
+    float: left;
+    margin-right: 15px;
+
+    .btn-colorselector {
+      border: 1px solid $color-black;
+    }
+
+    .dropdown-colorselector > .dropdown-menu > li {
+      border-bottom: 0;
+      padding: 0;
+    }
+
+    .dropdown-colorselector > .dropdown-menu  {
+      left: -80px;
+    }
+
+    .dropdown-menu.dropdown-caret:before {
+      left: 80px;
+    }
+
+    .dropdown-menu.dropdown-caret:after {
+      left: 81px;
+    }
+
+    .caret {
+      color: $color-black;
+    }
+  }
+
+  .sample-group-controls {
+
+    .edit {
+      margin-top: 3px;
+    }
+
+    .delete {
+      margin-top: 3px;
+    }
+  }
+
+  .sample-group-submit {
+    display: inline-block;
+    vertical-align: top;
+
+    #submit {
+      margin-top: 8px;
+    }
+  }
+}
+
+#new_sample_group .color-picker {
+  margin-top: 7px;
+}

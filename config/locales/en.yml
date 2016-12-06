@@ -925,6 +925,13 @@ en:
         duplicated_values: "Two or more columns have the same mapping."
 
   sample_groups:
+    index:
+      head_title: 'Sample Groups'
+      new: 'Create sample group'
+      destroy_modal_title: "Permanently delete the \"%{name}\" sample group?"
+      destroy_modal_body: 'This action is irreversible and makes the sample group inaccessible to all team members.'
+      destroy_modal_submit: 'Permanently delete sample group'
+      destroy_flash: "\"%{name}\" sample group was successfully deleted!"
     color_label: "Sample group color"
     create:
       success_flash: "Successfully added sample group <strong>%{sample_group}</strong> to team <strong>%{organization}</strong>."
