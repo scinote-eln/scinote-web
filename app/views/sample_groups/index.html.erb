@@ -25,11 +25,12 @@
                                  remote: true,
                                  html: { class: 'form-inline' },
                                  url: organization_sample_groups_path(current_organization) do |f| %>
-            <div class="form-group">
-              <%= f.text_field :name,
-                               id: 'name-input',
-                               class: 'form-control',
-                               hide_label: true %>
+
+            <%= f.text_field :name,
+                             id: 'name-input',
+                             class: 'form-control',
+                             hide_label: true %>
+            <div class="sample-group-submit">
               <span id="submit" class="glyphicon glyphicon-ok"></span>
             </div>
             <span class="pull-right sample-group-controls">

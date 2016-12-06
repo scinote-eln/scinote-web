@@ -93,6 +93,15 @@
       margin-top: 3px;
     }
   }
+
+  .sample-group-submit {
+    display: inline-block;
+    vertical-align: top;
+
+    #submit {
+      margin-top: 8px;
+    }
+  }
 }
 
 #new_sample_group .color-picker {
