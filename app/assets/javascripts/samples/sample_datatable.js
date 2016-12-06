@@ -768,6 +768,66 @@ function changeToEditMode() {
 
   var dropdownList = $('#samples-columns-list');
 
+  function createNewColumn() {
+    // Make an Ajax request to custom_fields_controller
+    var url = $('#new-column-form').data('action');
+    var columnName = $('#new-column-name').val();
+    if (columnName.length > 0) {
+      $.ajax({
+        method: 'POST',
+        dataType: 'json',
+        data: {custom_field: {name: columnName}},
+        error: function(data) {
+          var form = $('#new-column-form');
+          form.addClass('has-error');
+          form.find('.help-block').remove();
+          form.append('<span class="help-block">' +
+            data.responseJSON.name +
+            '</span>');
+        },
+        success: function(data) {
+          var form = $('#new-column-form');
+          form.find('.help-block').remove();
+          if (form.hasClass('has-error')) {
+            form.removeClass('has-error');
+          }
+          $('#new-column-name').val('');
+          form.append('<span class="help-block">' +
+            I18n.t('samples.js.column_added') +
+            '</span>');
+          $('#samples').data('num-columns',
+            $('#samples').data('num-columns') + 1);
+          originalHeader.append(
+            '<th class="custom-field" id="' + data.id + '">' +
+            data.name + '</th>');
+          var colOrder = table.colReorder.order();
+          colOrder.push(colOrder.length);
+          table.colReorder.reset();
+          // Remove all event handlers as we re-initialize them later with
+          // new table
+          $('#samples').off();
+          $('#samples thead').empty();
+          $('#samples thead').append(originalHeader);
+          // Preserve save/delete buttons as we need them after new table
+          // will be created
+          $('div.toolbarButtons').appendTo('div.samples-table');
+          $('div.toolbarButtons').hide();
+          table = dataTableInit();
+          table.colReorder.order(colOrder, true);
+          loadColumnsNames();
+        },
+        url: url
+      });
+    } else {
+      var form = $('#new-column-form');
+      form.addClass('has-error');
+      form.find('.help-block').remove();
+      form.append('<span class="help-block">' +
+        I18n.t('samples.js.empty_column_name') +
+        '</span>');
+    }
+  }
+
   function initNewColumnForm() {
     $('#samples-columns-dropdown').on('show.bs.dropdown', function() {
       // Clear input and errors when dropdown is opened
@@ -781,63 +841,14 @@ function changeToEditMode() {
     });
 
     $('#add-new-column-button').click(function(e) {
-      // Make an Ajax request to custom_fields_controller
-      var url = $('#new-column-form').data('action');
       e.stopPropagation();
-      var columnName = $('#new-column-name').val();
-      if (columnName.length > 0) {
-        $.ajax({
-          method: 'POST',
-          dataType: 'json',
-          data: {custom_field: {name: columnName}},
-          error: function(data) {
-            var form = $('#new-column-form');
-            form.addClass('has-error');
-            form.find('.help-block').remove();
-            form.append('<span class="help-block">' +
-              data.responseJSON.name +
-              '</span>');
-          },
-          success: function(data) {
-            var form = $('#new-column-form');
-            form.find('.help-block').remove();
-            if (form.hasClass('has-error')) {
-              form.removeClass('has-error');
-            }
-            $('#new-column-name').val('');
-            form.append('<span class="help-block">' +
-              I18n.t('samples.js.column_added') +
-              '</span>');
-            $('#samples').data('num-columns',
-              $('#samples').data('num-columns') + 1);
-            originalHeader.append(
-              '<th class="custom-field" id="' + data.id + '">' +
-              data.name + '</th>');
-            var colOrder = table.colReorder.order();
-            colOrder.push(colOrder.length);
-            table.colReorder.reset();
-            // Remove all event handlers as we re-initialize them later with
-            // new table
-            $('#samples').off();
-            $('#samples thead').empty();
-            $('#samples thead').append(originalHeader);
-            // Preserve save/delete buttons as we need them after new table
-            // will be created
-            $('div.toolbarButtons').appendTo('div.samples-table');
-            $('div.toolbarButtons').hide();
-            table = dataTableInit();
-            table.colReorder.order(colOrder, true);
-            loadColumnsNames();
-          },
-          url: url
-        });
-      } else {
-        var form = $('#new-column-form');
-        form.addClass('has-error');
-        form.find('.help-block').remove();
-        form.append('<span class="help-block alert alert-danger">' +
-          I18n.t('samples.js.empty_column_name') +
-          '</span>');
+      createNewColumn();
+    });
+
+    $('#new-column-name').keydown(function(e) {
+      if (e.keyCode === 13) {
+        e.preventDefault();
+        createNewColumn();
       }
     });
   }
