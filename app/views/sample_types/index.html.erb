@@ -27,8 +27,10 @@
             <div class="form-group">
               <%= f.text_field :name, id: 'name-input', class: 'form-control' %>
               <span id="submit" class="glyphicon glyphicon-ok"></span>
-              <span id="remove" class="glyphicon glyphicon-remove"></span>
             </div>
+            <span class="pull-right">
+              <span id="remove" class="glyphicon glyphicon-trash"></span>
+            </span>
           <% end %>
         </li>
         <% @sample_types.sorted.each do |sample_type| %>

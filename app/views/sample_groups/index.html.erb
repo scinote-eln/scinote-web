@@ -21,15 +21,25 @@
       <ul class="list-unstyled sample_types_groups_list"
           id="sample_groups_list">
         <li class="new-resource-form">
-          <%= form_for SampleGroup.new,
+          <%= bootstrap_form_for SampleGroup.new,
                                  remote: true,
                                  html: { class: 'form-inline' },
                                  url: organization_sample_groups_path(current_organization) do |f| %>
             <div class="form-group">
-              <%= f.text_field :name, id: 'name-input', class: 'form-control' %>
+              <%= f.text_field :name,
+                               id: 'name-input',
+                               class: 'form-control',
+                               hide_label: true %>
               <span id="submit" class="glyphicon glyphicon-ok"></span>
-              <span id="remove" class="glyphicon glyphicon-remove"></span>
             </div>
+            <span class="pull-right sample-group-controls">
+              <span class="color-picker">
+                  <%= f.color_picker_select :color,
+                                            Constants::TAG_COLORS,
+                                            class: 'new-sample-group-color' %>
+              </span>
+              <span id="remove" class="glyphicon glyphicon-trash"></span>
+            </span>
           <% end %>
         </li>
         <% @sample_groups.sorted.each do |sample_group| %>

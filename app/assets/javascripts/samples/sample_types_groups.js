@@ -43,6 +43,8 @@
           destroySampleTypeGroup();
           initSampleGroupColor();
           appendCarretToColorPickerDropdown();
+          editSampleGroupColor();
+          editSampleGroupForm();
         }
       });
 
@@ -106,7 +108,7 @@
 
   function editSampleGroupColor() {
     $(document).ready(function() {
-      $('.color-btn').on('click', function() {
+      $('.edit_sample_group a.color-btn').on('click', function() {
         var color = $(this).attr('data-value');
         var form = $(this).closest('form');
         $('select[name="sample_group[color]"]')
@@ -126,6 +128,7 @@
       appendCarretToColorPickerDropdown();
       editSampleGroupColor();
       editSampleGroupForm();
+      destroySampleTypeGroup();
     }).bind('ajax:error', function(ev, error) {
       $(this).clearFormErrors();
       var msg = $.parseJSON(error.responseText);

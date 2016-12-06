@@ -21,6 +21,7 @@
 
     #remove {
       margin-left: 5px;
+      margin-top: 10px;
     }
   }
 
@@ -47,10 +48,9 @@
   .sample-group-colorselector {
     border-radius: 0;
     display: inline-block;
-    width: 20px;
     height: 20px;
     vertical-align: middle;
-
+    width: 20px;
   }
 
   .color-picker {
@@ -93,4 +93,8 @@
       margin-top: 3px;
     }
   }
+}
+
+#new_sample_group .color-picker {
+  margin-top: 7px;
 }
