@@ -14,4 +14,21 @@ class CustomField < ActiveRecord::Base
              foreign_key: 'last_modified_by_id',
              class_name: 'User'
   has_many :sample_custom_fields, inverse_of: :custom_field
+
+  def self.new(opt)
+    user = opt[:user]
+    org = opt[:organization]
+    samples_table = SamplesTable.where(user: user,
+                                       organization: org)
+    org_status = samples_table.first['status']
+    index = org_status['columns'].count
+    org_status['columns'][index] = { 'visible' => true,
+                                     'search' => { 'search' => '',
+                                                   'smart' => true,
+                                                   'regex' => false,
+                                                   'caseInsensitive' => true } }
+    org_status['ColReorder'] << index
+    samples_table.first.update(status: org_status)
+    super(opt)
+  end
 end
