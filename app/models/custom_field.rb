@@ -15,11 +15,11 @@ class CustomField < ActiveRecord::Base
              class_name: 'User'
   has_many :sample_custom_fields, inverse_of: :custom_field
 
-  def self.create(opt)
-    user = opt[:user]
-    org = opt[:organization]
+  after_initialize :update_samples_table_state, if: :new_record?
+
+  def update_samples_table_state
     samples_table = SamplesTable.where(user: user,
-                                       organization: org)
+                                       organization: organization)
     org_status = samples_table.first['status']
     index = org_status['columns'].count
     org_status['columns'][index] = { 'visible' => true,
@@ -29,6 +29,5 @@ class CustomField < ActiveRecord::Base
                                                    'caseInsensitive' => true } }
     org_status['ColReorder'] << index
     samples_table.first.update(status: org_status)
-    super(opt)
   end
 end

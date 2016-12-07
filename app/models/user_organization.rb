@@ -10,16 +10,15 @@ class UserOrganization < ActiveRecord::Base
   belongs_to :organization, inverse_of: :user_organizations
 
   before_destroy :destroy_associations
+  after_initialize :create_samples_table_state, if: :new_record?
 
   def role_str
     I18n.t("user_organizations.enums.role.#{role.to_s}")
   end
 
-  def self.create(opt)
-    user = opt[:user]
-    org = opt[:organization]
+  def create_samples_table_state
     org_status = SampleDatatable::SAMPLES_TABLE_DEFAULT_STATE.deep_dup
-    org.custom_fields.each_with_index do |_, index|
+    organization.custom_fields.each_with_index do |_, index|
       org_status['columns'] << { 'visible' => true,
                                  'search' => { 'search' => '',
                                                'smart' => true,
@@ -28,8 +27,9 @@ class UserOrganization < ActiveRecord::Base
       org_status['ColReorder'] << (7 + index)
     end
 
-    SamplesTable.create(user: user, organization: org, status: org_status)
-    super(opt)
+    SamplesTable.create(user: user,
+                        organization: organization,
+                        status: org_status)
   end
 
   def destroy_associations
