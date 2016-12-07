@@ -18,7 +18,7 @@ class UserOrganization < ActiveRecord::Base
   def self.create(opt)
     user = opt[:user]
     org = opt[:organization]
-    org_status = Constants::SAMPLES_TABLE_DEFAULT_STATE
+    org_status = SampleDatatable::SAMPLES_TABLE_DEFAULT_STATE.deep_dup
     org.custom_fields.each_with_index do |_, index|
       org_status['columns'] << { 'visible' => true,
                                  'search' => { 'search' => '',

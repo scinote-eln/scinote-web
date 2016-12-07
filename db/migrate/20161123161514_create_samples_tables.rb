@@ -2,7 +2,7 @@ class CreateSamplesTables < ActiveRecord::Migration
   def change
     create_table :samples_tables do |t|
       t.jsonb :status, null: false,
-                       default: Constants::SAMPLES_TABLE_DEFAULT_STATE
+                       default: SampleDatatable::SAMPLES_TABLE_DEFAULT_STATE
       # Foreign keys
       t.references :user, null: false
       t.references :organization, null: false
@@ -15,7 +15,7 @@ class CreateSamplesTables < ActiveRecord::Migration
     User.find_each do |user|
       next unless user.organizations
       user.organizations.find_each do |org|
-        org_status = Constants::SAMPLES_TABLE_DEFAULT_STATE.deep_dup
+        org_status = SampleDatatable::SAMPLES_TABLE_DEFAULT_STATE.deep_dup
         next unless org.custom_fields
         org.custom_fields.each_with_index do |_, index|
           org_status['columns'] << { 'visible' => true,

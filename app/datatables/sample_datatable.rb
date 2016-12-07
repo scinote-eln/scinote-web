@@ -3,7 +3,30 @@ require 'active_record'
 class SampleDatatable < AjaxDatatablesRails::Base
   include SamplesHelper
 
-  ASSIGNED_SORT_COL = "assigned"
+  ASSIGNED_SORT_COL = 'assigned'
+
+  SAMPLES_TABLE_DEFAULT_STATE = {
+    'time' => 0,
+    'start' => 0,
+    'length' => 10,
+    'order' => [[2, 'desc']],
+    'search' => { 'search' => '',
+                  'smart' => true,
+                  'regex' => false,
+                  'caseInsensitive' => true },
+    'columns' => [],
+    'ColReorder' => [0, 1, 2, 3, 4, 5, 6]
+  }
+  7.times do
+    SAMPLES_TABLE_DEFAULT_STATE['columns'] << {
+      'visible' => true,
+      'search' => { 'search' => '',
+                    'smart' => true,
+                    'regex' => false,
+                    'caseInsensitive' => true }
+    }
+  end
+  SAMPLES_TABLE_DEFAULT_STATE.freeze
 
   def initialize(view,
                  organization,
