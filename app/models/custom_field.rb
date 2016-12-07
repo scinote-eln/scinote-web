@@ -15,7 +15,7 @@ class CustomField < ActiveRecord::Base
              class_name: 'User'
   has_many :sample_custom_fields, inverse_of: :custom_field
 
-  def self.new(opt)
+  def self.create(opt)
     user = opt[:user]
     org = opt[:organization]
     samples_table = SamplesTable.where(user: user,

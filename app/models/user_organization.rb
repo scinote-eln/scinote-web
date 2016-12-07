@@ -15,7 +15,7 @@ class UserOrganization < ActiveRecord::Base
     I18n.t("user_organizations.enums.role.#{role.to_s}")
   end
 
-  def self.new(opt)
+  def self.create(opt)
     user = opt[:user]
     org = opt[:organization]
     org_status = SampleDatatable::SAMPLES_TABLE_DEFAULT_STATE.deep_dup
