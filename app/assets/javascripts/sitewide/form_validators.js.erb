@@ -108,6 +108,7 @@ function filesValidator(ev, fileInputs, fileTypeEnum, canBeEmpty) {
   if (fileInputs.length) {
     var filesPresentValid = canBeEmpty || filesPresentValidator(ev, fileInputs);
     var filesSizeValid = filesSizeValidator(ev, fileInputs, fileTypeEnum);
+
     // File spoof check is done on server-side only
     filesValid = filesPresentValid && filesSizeValid;
   }
@@ -142,11 +143,28 @@ function filesSizeValidator(ev, fileInputs, fileTypeEnum) {
     }
   };
 
+  function checkFilesTotalSize(fileInputs) {
+    if (!fileInputs || fileInputs < 2) {
+      return ;
+    }
+
+    var size = 0;
+    _.each(fileInputs, function(fileInput) {
+      var file = fileInput.files[0]
+      size += file.size;
+    })
+
+    if (size > fileTypeEnum) {
+      return "<%= I18n.t('general.file.total_size', size: Constants::FILE_MAX_SIZE_MB) %>".strToErrorFormat();
+    }
+  }
+
   // Check if any file exceeds allowed size limit
   var filesSizeValid = true;
   _.each(fileInputs, function(fileInput) {
     var file = fileInput.files[0];
     var assetError = getFileTooBigError(file);
+    var assetError = checkFilesTotalSize(fileInputs);
     if (assetError) {
       renderFormError(ev, fileInput, assetError, false, "data-error='file-size'");
       filesSizeValid = false;
