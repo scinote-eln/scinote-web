@@ -25,7 +25,8 @@ table = $("#samples").DataTable({
         type: "POST"
     },
     colReorder: {
-        realtime: false // Enable reordering
+        realtime: false, // Enable reordering
+        fixedColumnsLeft: 1
     },
     columnDefs: [{
         targets: 0,
