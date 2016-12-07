@@ -1,52 +1,8 @@
 class CreateSamplesTables < ActiveRecord::Migration
-  @@def_state = { 'time' => 0,
-                  'start' => 0,
-                  'length' => 10,
-                  'order' => [[2, 'desc']],
-                  'search' => { 'search' => '',
-                                'smart' => true,
-                                'regex' => false,
-                                'caseInsensitive' => true },
-                  'columns' => [{ 'visible' => true,
-                                  'search' => { 'search' => '',
-                                                'smart' => true,
-                                                'regex' => false,
-                                                'caseInsensitive' => true } },
-                                { 'visible' => true,
-                                  'search' => { 'search' => '',
-                                                'smart' => true,
-                                                'regex' => false,
-                                                'caseInsensitive' => true } },
-                                { 'visible' => true,
-                                  'search' => { 'search' => '',
-                                                'smart' => true,
-                                                'regex' => false,
-                                                'caseInsensitive' => true } },
-                                { 'visible' => true,
-                                  'search' => { 'search' => '',
-                                                'smart' => true,
-                                                'regex' => false,
-                                                'caseInsensitive' => true } },
-                                { 'visible' => true,
-                                  'search' => { 'search' => '',
-                                                'smart' => true,
-                                                'regex' => false,
-                                                'caseInsensitive' => true } },
-                                { 'visible' => true,
-                                  'search' => { 'search' => '',
-                                                'smart' => true,
-                                                'regex' => false,
-                                                'caseInsensitive' => true } },
-                                { 'visible' => true,
-                                  'search' => { 'search' => '',
-                                                'smart' => true,
-                                                'regex' => false,
-                                                'caseInsensitive' => true } }],
-                  'ColReorder' => [0, 1, 2, 3, 4, 5, 6] }
-
   def change
     create_table :samples_tables do |t|
-      t.jsonb :status, null: false, default: @@def_state
+      t.jsonb :status, null: false,
+                       default: Constants::SAMPLES_TABLE_DEFAULT_STATE
       # Foreign keys
       t.references :user, null: false
       t.references :organization, null: false
@@ -59,7 +15,7 @@ class CreateSamplesTables < ActiveRecord::Migration
     User.find_each do |user|
       next unless user.organizations
       user.organizations.find_each do |org|
-        org_status = @@def_state.deep_dup
+        org_status = Constants::SAMPLES_TABLE_DEFAULT_STATE.deep_dup
         next unless org.custom_fields
         org.custom_fields.each_with_index do |_, index|
           org_status['columns'] << { 'visible' => true,

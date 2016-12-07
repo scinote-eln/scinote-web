@@ -15,6 +15,23 @@ class UserOrganization < ActiveRecord::Base
     I18n.t("user_organizations.enums.role.#{role.to_s}")
   end
 
+  def self.create(opt)
+    user = opt[:user]
+    org = opt[:organization]
+    org_status = Constants::SAMPLES_TABLE_DEFAULT_STATE
+    org.custom_fields.each_with_index do |_, index|
+      org_status['columns'] << { 'visible' => true,
+                                 'search' => { 'search' => '',
+                                               'smart' => true,
+                                               'regex' => false,
+                                               'caseInsensitive' => true } }
+      org_status['ColReorder'] << (7 + index)
+    end
+
+    SamplesTable.create(user: user, organization: org, status: org_status)
+    super(opt)
+  end
+
   def destroy_associations
     # Destroy the user from all organization's projects
     organization.projects.each do |project|
