@@ -10,7 +10,7 @@ class UserOrganization < ActiveRecord::Base
   belongs_to :organization, inverse_of: :user_organizations
 
   before_destroy :destroy_associations
-  after_initialize :create_samples_table_state, if: :new_record?
+  after_create :create_samples_table_state
 
   def role_str
     I18n.t("user_organizations.enums.role.#{role.to_s}")

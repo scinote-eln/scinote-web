@@ -15,7 +15,7 @@ class CustomField < ActiveRecord::Base
              class_name: 'User'
   has_many :sample_custom_fields, inverse_of: :custom_field
 
-  after_initialize :update_samples_table_state, if: :new_record?
+  after_create :update_samples_table_state
 
   def update_samples_table_state
     samples_table = SamplesTable.where(user: user,
