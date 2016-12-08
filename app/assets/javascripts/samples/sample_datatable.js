@@ -26,7 +26,6 @@ table = $("#samples").DataTable({
     },
     colReorder: {
         realtime: false, // Enable reordering
-        fixedColumnsLeft: 1
     },
     columnDefs: [{
         targets: 0,
