@@ -149,8 +149,8 @@ var ResultTypeEnum = Object.freeze({
   COMMENT: 3
 });
 
-function processResult(ev, resultTypeEnum, editMode, forS3) {
-  forS3 = (typeof forS3 !== 'undefined') ? forS3 : false;
+function processResult(ev, resultTypeEnum, editMode) {
+
   var $form = $(ev.target.form);
   $form.clearFormErrors();
 
@@ -164,14 +164,9 @@ function processResult(ev, resultTypeEnum, editMode, forS3) {
         editMode);
 
       if(nameValid && filesValid) {
-        if(forS3) {
-          // Redirects file uploading to S3
-          var url = '/asset_signature.json';
-          directUpload(ev, url);
-        } else {
-          // Local file uploading
-          animateSpinner();
-        }
+        // Local file uploading
+        animateSpinner();
+
       }
       break;
     case ResultTypeEnum.TABLE:

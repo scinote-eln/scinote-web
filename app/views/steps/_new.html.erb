@@ -4,7 +4,7 @@
     <hr>
     <%= render partial: "empty_step.html.erb", locals: {step: @step, f: f} %>
     <hr>
-    <%= f.submit t("protocols.steps.new.add_step"), class: 'btn btn-primary step-save', onclick: "processStep(event, false, #{direct_upload});" %>
+    <%= f.submit t("protocols.steps.new.add_step"), class: 'btn btn-primary step-save', onclick: "processStep(event, false);" %>
     <button type="button" data-action="cancel-new" class="btn btn-default">
       <%= t("general.cancel")%>
     </button>

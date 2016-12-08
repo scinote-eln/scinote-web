@@ -48,7 +48,11 @@ class AssetsController < ApplicationController
 
   def preview
     if @asset.is_image?
-      redirect_to @asset.url(:medium), status: 307
+      if @asset.file_content_type.include? %w(images/bmp images/tiff)
+        redirect_to @asset.url(:web_friendly), status: 307
+      else
+        redirect_to @asset.url(:medium), status: 307
+      end
     else
       render_400
     end
@@ -129,7 +133,7 @@ class AssetsController < ApplicationController
         posts.push({
           url: s3_post.url,
           fields: s3_post.fields,
-          style_option: option,
+          style_option: option.is_a?(Array) ? option[0] : option,
           mime_type: asset.file_content_type
         })
       end

@@ -1,7 +1,6 @@
 class StepsController < ApplicationController
   before_action :load_vars, only: [:edit, :update, :destroy, :show]
   before_action :load_vars_nested, only: [:new, :create]
-  before_action :load_paperclip_vars
   before_action :convert_table_contents_to_utf8, only: [:create, :update]
 
   before_action :check_view_permissions, only: [:show]
@@ -15,41 +14,16 @@ class StepsController < ApplicationController
     @step = Step.new
 
     respond_to do |format|
-      format.json {
+      format.json do
         render json: {
-          html: render_to_string({
-            partial: "new.html.erb",
-            locals: {
-              direct_upload: @direct_upload
-            }
-          })
+          html: render_to_string(partial: 'new.html.erb')
         }
-      }
+      end
     end
   end
 
   def create
-    if @direct_upload
-      new_assets = []
-      step_data = step_params.except(:assets_attributes)
-      step_assets = step_params.slice(:assets_attributes)
-      @step = Step.new(step_data)
-
-      unless step_assets[:assets_attributes].nil?
-        step_assets[:assets_attributes].each do |_i, data|
-          # Ignore destroy requests on create
-          next if data[:_destroy].present?
-
-          asset = Asset.new(data)
-          asset.created_by = current_user
-          asset.last_modified_by = current_user
-          new_assets << asset
-        end
-      end
-      @step.assets << new_assets
-    else
-      @step = Step.new(step_params)
-    end
+    @step = Step.new(step_params)
 
     @step.completed = false
     @step.position = @protocol.number_of_steps
@@ -107,12 +81,7 @@ class StepsController < ApplicationController
 
         format.json {
           render json: {
-            html: render_to_string({
-              partial: "new.html.erb",
-              locals: {
-                direct_upload: @direct_upload
-              }
-            })
+            html: render_to_string(partial: 'new.html.erb')
           }, status: :bad_request
         }
       end
@@ -121,26 +90,26 @@ class StepsController < ApplicationController
 
   def show
     respond_to do |format|
-      format.json {
+      format.json do
         render json: {
-          html: render_to_string({
-            partial: "steps/step.html.erb", locals: {step: @step}
-          })}, status: :ok
-      }
+          html: render_to_string(
+            partial: 'steps/step.html.erb',
+                     locals: { step: @step }
+          )
+        },
+        status: :ok
+      end
     end
   end
 
   def edit
     respond_to do |format|
-      format.json {
+      format.json do
         render json: {
-          html: render_to_string({
-            partial: "edit.html.erb",
-            locals: {
-              direct_upload: @direct_upload
-            }
-          })}, status: :ok
-      }
+          html: render_to_string(partial: 'edit.html.erb')
+        },
+        status: :ok
+      end
     end
   end
 
@@ -154,23 +123,6 @@ class StepsController < ApplicationController
       # skipping deleting reference in case update validation fails.
       # NOTE - step_params_all variable is updated
       destroy_attributes(step_params_all)
-
-      if @direct_upload
-        step_data = step_params_all.except(:assets_attributes)
-        step_assets = step_params_all.slice(:assets_attributes)
-        step_params_all = step_data
-
-        if step_assets.include? :assets_attributes
-          step_assets[:assets_attributes].each do |i, data|
-            asset = Asset.new(data)
-            unless @step.assets.include? asset or not asset
-              asset.created_by = current_user
-              asset.last_modified_by = current_user
-              @step.assets << asset
-            end
-          end
-        end
-      end
 
       @step.assign_attributes(step_params_all)
       @step.last_modified_by = current_user
@@ -564,10 +516,6 @@ class StepsController < ApplicationController
         end
       end
     end
-  end
-
-  def load_paperclip_vars
-    @direct_upload = ENV['PAPERCLIP_DIRECT_UPLOAD'] == "true"
   end
 
   def load_vars

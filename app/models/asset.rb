@@ -6,7 +6,8 @@ class Asset < ActiveRecord::Base
   require 'tempfile'
 
   # Paperclip validation
-  has_attached_file :file, styles: { medium: Constants::MEDIUM_PIC_FORMAT }
+  has_attached_file :file,
+                    styles: { medium: [Constants::MEDIUM_PIC_FORMAT, :jpg] }
 
   validates_attachment :file,
                        presence: true,
@@ -20,6 +21,7 @@ class Asset < ActiveRecord::Base
   do_not_validate_attachment_file_type :file
 
   before_file_post_process :is_image?
+  process_in_background :file
 
   # Asset validation
   # This could cause some problems if you create empty asset and want to

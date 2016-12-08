@@ -202,7 +202,7 @@ class Constants
   ].freeze
 
   WHITELISTED_IMAGE_TYPES = [
-    'gif', 'jpeg', 'pjpeg', 'png', 'x-png', 'svg+xml', 'bmp'
+    'gif', 'jpeg', 'pjpeg', 'png', 'x-png', 'svg+xml', 'bmp', 'tiff'
   ].freeze
 
   # Very basic regex to check for validity of emails
