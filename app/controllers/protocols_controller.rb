@@ -560,13 +560,38 @@ class ProtocolsController < ApplicationController
   end
 
   def export
+    #respond_to do |format|
+    #  format.json {
+    #    render json: {
+    #        protocols: export_protocols(@protocols)
+    #      }, status: :ok
+    #  }
+    #end
+
+    # Make a zip output stream and send it to the client
     respond_to do |format|
-      format.json {
-        render json: {
-            protocols: export_protocols(@protocols)
-          }, status: :ok
-      }
+      format.html
+      format.zip do
+        Dir.mktmpdir do |tmp_dir|
+
+
+        end
+
+        z_output_stream = Zip::OutputStream.write_buffer do |ostream|
+          ostream.put_next_entry('eln.xml')
+          ostream.print(protocol_xml)
+          ostream.put_next_entry("#{arch_dir}/scinote.xml")
+          ostream.print(envelope_xml)
+          ostream.put_next_entry("#{arch_dir}/scinote.xsd")
+          ostream.print(generate_envelope_xsd)
+          ostream.put_next_entry("#{arch_dir}/eln.xsd")
+          ostream.print(generate_eln_xsd)
+        end
+        z_output_stream.rewind
+        send_data compressed_filestream.read, filename: "protocol.eln"
+      end
     end
+
   end
 
   def unlink_modal

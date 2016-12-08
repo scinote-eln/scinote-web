@@ -1,4 +1,5 @@
 require 'tmpdir'
+require 'zip'
 
 module ProtocolsExporter
   def export_protocols(protocols)
@@ -117,7 +118,7 @@ module ProtocolsExporter
         # individual protocol, save it to protocol folder
         output_file = File.open("#{protocol_dir}/eln.xml", 'w')
         output_file.write(protocol_xml)
-
+        output_file.close
         # Add protocol to the envelope
         envelope_xml << "<protocol id=\"#{protocol.id}\" guid=\"#{protocol_guid}\">#{protocol.name}</protocol>\n"
       end
@@ -126,7 +127,23 @@ module ProtocolsExporter
       # Save envelope to root directory in archive
       output_file = File.open("#{arch_dir}/scinote.xml", 'w')
       output_file.write(envelope_xml)
+      output_file.close
+      output_file = File.open("#{arch_dir}/scinote.xsd", 'w')
+      output_file.write(generate_envelope_xsd)
+      output_file.close
+      output_file = File.open("#{arch_dir}/eln.xsd", 'w')
+      output_file.write(generate_eln_xsd)
+      output_file.close
       puts `ls -la #{arch_dir}`
+
+      # Now make zip output stream and send it to the client
+      zip_name = "#{tmp_dir}/protocol.eln"
+      Zip::File.open(zip_name, Zip::File::CREATE) do |zipfile|
+        zipfile.add("eln.xsd", "#{arch_dir}/eln.xsd")
+        zipfile.add("eln.xsd", "#{arch_dir}/scinote.xml")
+        zipfile.add("eln.xsd", "#{arch_dir}/scinote.xsd")
+      end
+
     end
   end
 
@@ -141,6 +158,138 @@ module ProtocolsExporter
     str2 = '4' + str2
     str2n = str2[0..3] + '-' + str2[4..7] + '-' + str2[8..-1]
     str1 + str2n
+  end
+
+  def generate_envelope_xsd
+    envelope_xsd = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+    envelope_xsd << "<xs:schema xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" elementFormDefault=\"qualified\" attributeFormDefault=\"unqualified\">\n"
+    envelope_xsd << "<xs:element name=\"envelope\">\n"
+    envelope_xsd << "<xs:complexType>\n"
+    envelope_xsd << "<xs:sequence>\n"
+    envelope_xsd << "<xs:element name=\"protocol\" maxOccurs=\"unbounded\">\n"
+    envelope_xsd << "<xs:complexType>\n"
+    envelope_xsd << "<xs:simpleContent>\n"
+    envelope_xsd << "<xs:extension base=\"xs:string\">\n"
+    envelope_xsd << "<xs:attribute name=\"id\" type=\"xs:int\" use=\"required\"></xs:attribute>\n"
+    envelope_xsd << "<xs:attribute name=\"guid\" type=\"xs:string\" use=\"required\"></xs:attribute>\n"
+    envelope_xsd << "</xs:extension>\n"
+    envelope_xsd << "</xs:simpleContent>\n"
+    envelope_xsd << "</xs:complexType>\n"
+    envelope_xsd << "</xs:element>\n"
+    envelope_xsd << "</xs:sequence>\n"
+    envelope_xsd << "<xs:attribute name=\"xmlns\" type=\"xs:string\" use=\"required\"></xs:attribute>\n"
+    envelope_xsd << "<xs:attribute name=\"version\" type=\"xs:string\" use=\"required\"></xs:attribute>\n"
+    envelope_xsd << "</xs:complexType>\n"
+    envelope_xsd << "</xs:element>\n"
+    envelope_xsd << "</xs:schema>\n"
+    envelope_xsd
+  end
+
+  def generate_eln_xsd
+    eln_xsd = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+    eln_xsd << "<xs:schema xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" elementFormDefault=\"qualified\" attributeFormDefault=\"unqualified\">\n"
+    eln_xsd << "<xs:element name=\"eln\">\n"
+    eln_xsd << "<xs:complexType>\n"
+    eln_xsd << "<xs:all>\n"
+    eln_xsd << "<xs:element name=\"protocol\">\n"
+    eln_xsd << "<xs:complexType>\n"
+    eln_xsd << "<xs:all>\n"
+    eln_xsd << "<xs:element name=\"name\" type=\"xs:string\"></xs:element>\n"
+    eln_xsd << "<xs:element name=\"authors\" type=\"xs:string\" minOccurs=\"0\"></xs:element>\n"
+    eln_xsd << "<xs:element name=\"description\" type=\"xs:string\" minOccurs=\"0\"></xs:element>\n"
+    eln_xsd << "<xs:element name=\"created_at\" type=\"xs:string\"></xs:element>\n"
+    eln_xsd << "<xs:element name=\"updated_at\" type=\"xs:string\"></xs:element>\n"
+    eln_xsd << "<xs:element name=\"steps\" minOccurs=\"0\">\n"
+    eln_xsd << "<xs:complexType>\n"
+    eln_xsd << "<xs:sequence>\n"
+    eln_xsd << "<xs:element name=\"step\" maxOccurs=\"unbounded\">\n"
+    eln_xsd << "<xs:complexType>\n"
+    eln_xsd << "<xs:all>\n"
+    eln_xsd << "<xs:element name=\"name\" type=\"xs:string\"></xs:element>\n"
+    eln_xsd << "<xs:element name=\"description\" type=\"xs:string\" minOccurs=\"0\"></xs:element>\n"
+    eln_xsd << "<xs:element name=\"checklists\" minOccurs=\"0\">\n"
+    eln_xsd << "<xs:complexType>\n"
+    eln_xsd << "<xs:sequence>\n"
+    eln_xsd << "<xs:element name=\"checklist\" maxOccurs=\"unbounded\">\n"
+    eln_xsd << "<xs:complexType>\n"
+    eln_xsd << "<xs:all>\n"
+    eln_xsd << "<xs:element name=\"name\" type=\"xs:string\"></xs:element>\n"
+    eln_xsd << "<xs:element name=\"items\" minOccurs=\"0\">\n"
+    eln_xsd << "<xs:complexType>\n"
+    eln_xsd << "<xs:sequence>\n"
+    eln_xsd << "<xs:element name=\"item\" maxOccurs=\"unbounded\">\n"
+    eln_xsd << "<xs:complexType>\n"
+    eln_xsd << "<xs:all>\n"
+    eln_xsd << "<xs:element name=\"text\" type=\"xs:string\"></xs:element>\n"
+    eln_xsd << "</xs:all>\n"
+    eln_xsd << "<xs:attribute name=\"id\" type=\"xs:int\" use=\"required\"></xs:attribute>\n"
+    eln_xsd << "<xs:attribute name=\"guid\" type=\"xs:string\" use=\"required\"></xs:attribute>\n"
+    eln_xsd << "<xs:attribute name=\"position\" type=\"xs:int\" use=\"required\"></xs:attribute>\n"
+    eln_xsd << "</xs:complexType>\n"
+    eln_xsd << "</xs:element>\n"
+    eln_xsd << "</xs:sequence>\n"
+    eln_xsd << "</xs:complexType>\n"
+    eln_xsd << "</xs:element>\n"
+    eln_xsd << "</xs:all>\n"
+    eln_xsd << "<xs:attribute name=\"id\" type=\"xs:int\" use=\"required\"></xs:attribute>\n"
+    eln_xsd << "<xs:attribute name=\"guid\" type=\"xs:string\" use=\"required\"></xs:attribute>\n"
+    eln_xsd << "</xs:complexType>\n"
+    eln_xsd << "</xs:element>\n"
+    eln_xsd << "</xs:sequence>\n"
+    eln_xsd << "</xs:complexType>\n"
+    eln_xsd << "</xs:element>\n"
+    eln_xsd << "<xs:element name=\"assets\" minOccurs=\"0\">\n"
+    eln_xsd << "<xs:complexType>\n"
+    eln_xsd << "<xs:sequence>\n"
+    eln_xsd << "<xs:element name=\"asset\" maxOccurs=\"unbounded\">\n"
+    eln_xsd << "<xs:complexType>\n"
+    eln_xsd << "<xs:all>\n"
+    eln_xsd << "<xs:element name=\"fileName\" type=\"xs:string\"></xs:element>\n"
+    eln_xsd << "<xs:element name=\"fileType\" type=\"xs:string\"></xs:element>\n"
+    eln_xsd << "</xs:all>\n"
+    eln_xsd << "<xs:attribute name=\"id\" type=\"xs:int\" use=\"required\"></xs:attribute>\n"
+    eln_xsd << "<xs:attribute name=\"guid\" type=\"xs:string\" use=\"required\"></xs:attribute>\n"
+    eln_xsd << "<xs:attribute name=\"fileRef\" type=\"xs:string\" use=\"required\"></xs:attribute>\n"
+    eln_xsd << "</xs:complexType>\n"
+    eln_xsd << "</xs:element>\n"
+    eln_xsd << "</xs:sequence>\n"
+    eln_xsd << "</xs:complexType>\n"
+    eln_xsd << "</xs:element>\n"
+    eln_xsd << "<xs:element name=\"elnTables\" minOccurs=\"0\">\n"
+    eln_xsd << "<xs:complexType>\n"
+    eln_xsd << "<xs:sequence>\n"
+    eln_xsd << "<xs:element name=\"elnTable\" maxOccurs=\"unbounded\">\n"
+    eln_xsd << "<xs:complexType>\n"
+    eln_xsd << "<xs:all>\n"
+    eln_xsd << "<xs:element name=\"contents\" type=\"xs:string\"></xs:element>\n"
+    eln_xsd << "</xs:all>\n"
+    eln_xsd << "<xs:attribute name=\"id\" type=\"xs:int\" use=\"required\"></xs:attribute>\n"
+    eln_xsd << "<xs:attribute name=\"guid\" type=\"xs:string\" use=\"required\"></xs:attribute>\n"
+    eln_xsd << "</xs:complexType>\n"
+    eln_xsd << "</xs:element>\n"
+    eln_xsd << "</xs:sequence>\n"
+    eln_xsd << "</xs:complexType>\n"
+    eln_xsd << "</xs:element>\n"
+    eln_xsd << "</xs:all>\n"
+    eln_xsd << "<xs:attribute name=\"id\" type=\"xs:int\" use=\"required\"></xs:attribute>\n"
+    eln_xsd << "<xs:attribute name=\"guid\" type=\"xs:string\" use=\"required\"></xs:attribute>\n"
+    eln_xsd << "<xs:attribute name=\"position\" type=\"xs:int\" use=\"required\"></xs:attribute>\n"
+    eln_xsd << "</xs:complexType>\n"
+    eln_xsd << "</xs:element>\n"
+    eln_xsd << "</xs:sequence>\n"
+    eln_xsd << "</xs:complexType>\n"
+    eln_xsd << "</xs:element>\n"
+    eln_xsd << "</xs:all>\n"
+    eln_xsd << "<xs:attribute name=\"id\" type=\"xs:int\" use=\"required\"></xs:attribute>\n"
+    eln_xsd << "<xs:attribute name=\"guid\" type=\"xs:string\" use=\"required\"></xs:attribute>\n"
+    eln_xsd << "</xs:complexType>\n"
+    eln_xsd << "</xs:element>\n"
+    eln_xsd << "</xs:all>\n"
+    eln_xsd << "<xs:attribute name=\"xmlns\" type=\"xs:string\" use=\"required\"></xs:attribute>\n"
+    eln_xsd << "<xs:attribute name=\"version\" type=\"xs:string\" use=\"required\"></xs:attribute>\n"
+    eln_xsd << "</xs:complexType>\n"
+    eln_xsd << "</xs:element>\n"
+    eln_xsd << '</xs:schema>'
   end
 
   def export_protocol(protocol)
