@@ -18,16 +18,6 @@ class CustomField < ActiveRecord::Base
   after_create :update_samples_table_state
 
   def update_samples_table_state
-    samples_table = SamplesTable.where(user: user,
-                                       organization: organization)
-    org_status = samples_table.first['status']
-    index = org_status['columns'].count
-    org_status['columns'][index] = { 'visible' => true,
-                                     'search' => { 'search' => '',
-                                                   'smart' => true,
-                                                   'regex' => false,
-                                                   'caseInsensitive' => true } }
-    org_status['ColReorder'] << index
-    samples_table.first.update(status: org_status)
+    SamplesTable.update_samples_table_state(self)
   end
 end

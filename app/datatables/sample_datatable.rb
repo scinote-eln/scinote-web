@@ -15,7 +15,7 @@ class SampleDatatable < AjaxDatatablesRails::Base
                   'regex' => false,
                   'caseInsensitive' => true },
     'columns' => [],
-    'ColReorder' => [0, 1, 2, 3, 4, 5, 6]
+    'ColReorder' => [*0..6]
   }
   7.times do
     SAMPLES_TABLE_DEFAULT_STATE['columns'] << {

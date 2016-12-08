@@ -102,21 +102,18 @@ table = $("#samples").DataTable({
 
         // Save correct data
         if (loadFirstTime == true) {
-          data = myData;
+            data = myData;
         }
 
         $.ajax( {
-          url: '/state_save/'+org+'/'+user,
-          data: {org: org, state: data},
-          dataType: "json",
-          type: "POST",
-          success: function () {},
-          error: function () {}
+            url: '/state_save/'+org+'/'+user,
+            data: {org: org, state: data},
+            dataType: "json",
+            type: "POST"
         } );
         loadFirstTime = false;
     },
     stateLoadCallback: function (settings) {
-        var o;
         // Send an Ajax request to the server to get the data. Note that
         // this is a synchronous request since the data is expected back from the
         // function
@@ -124,18 +121,16 @@ table = $("#samples").DataTable({
         var user = $("#samples").attr("data-user-id")
 
         $.ajax( {
-          url: '/state_load/'+org+'/'+user,
-          data: {org: org},
-          async: false,
-          dataType: "json",
-          type: "POST",
-          success: function (json) {
-            o = json.state;
-          },
-          error: function (json) {}
+            url: '/state_load/'+org+'/'+user,
+            data: {org: org},
+            async: false,
+            dataType: "json",
+            type: "POST",
+            success: function (json) {
+                myData = json.state;
+            }
         } );
-        myData = o;
-        return o;
+        return myData
     },
     preDrawCallback: function(settings) {
         animateSpinner(this);
@@ -153,7 +148,6 @@ table = $("#samples").DataTable({
         }
     }
 });
-
 
 // Enables noSearchHidden plugin
 $.fn.dataTable.defaults.noSearchHidden = true

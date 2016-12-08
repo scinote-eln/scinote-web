@@ -2,7 +2,7 @@ class CreateSamplesTables < ActiveRecord::Migration
   def change
     create_table :samples_tables do |t|
       t.jsonb :status, null: false,
-                       default: SampleDatatable::SAMPLES_TABLE_DEFAULT_STATE
+              default: SampleDatatable::SAMPLES_TABLE_DEFAULT_STATE
       # Foreign keys
       t.references :user, null: false
       t.references :organization, null: false

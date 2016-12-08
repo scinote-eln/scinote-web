@@ -17,19 +17,7 @@ class UserOrganization < ActiveRecord::Base
   end
 
   def create_samples_table_state
-    org_status = SampleDatatable::SAMPLES_TABLE_DEFAULT_STATE.deep_dup
-    organization.custom_fields.each_with_index do |_, index|
-      org_status['columns'] << { 'visible' => true,
-                                 'search' => { 'search' => '',
-                                               'smart' => true,
-                                               'regex' => false,
-                                               'caseInsensitive' => true } }
-      org_status['ColReorder'] << (7 + index)
-    end
-
-    SamplesTable.create(user: user,
-                        organization: organization,
-                        status: org_status)
+    SamplesTable.create_samples_table_state(self)
   end
 
   def destroy_associations
