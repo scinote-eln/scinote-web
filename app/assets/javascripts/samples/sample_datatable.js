@@ -664,7 +664,7 @@ function onClickAddSample() {
                 else if ($(th).attr("id") == "sample-type") {
                     var colIndex = getColumnIndex("#sample-type")
                     if (colIndex) {
-                        var selectType = createSampleTypeSelect(data["sample_types"], -1);
+                        var selectType = createSampleTypeSelect(data["sample_types"]);
                         var td = createTdElement("");
                         td.appendChild(selectType[0]);
                         tr.appendChild(td);
@@ -673,7 +673,7 @@ function onClickAddSample() {
                 else if ($(th).attr("id") == "sample-group") {
                     var colIndex = getColumnIndex("#sample-group")
                     if (colIndex) {
-                        var selectGroup = createSampleGroupSelect(data["sample_groups"], -1);
+                        var selectGroup = createSampleGroupSelect(data["sample_groups"]);
                         var td = createTdElement("");
                         td.appendChild(selectGroup[0]);
                         tr.appendChild(td);
@@ -740,9 +740,15 @@ function createTdElement(content) {
  * @param selected Selected sample type id
  */
 function createSampleTypeSelect(data, selected) {
+  selected = _.isUndefined(selected) ? 1 : selected + 1;
+
   var $selectType = $('<select></select>')
     .attr('name', 'sample_type_id').addClass('show-tick');
 
+  var $option = $("<option href='/organizations/1/sample_types'></option>")
+                  .attr('value', -2)
+                  .text(I18n.t('samples.table.add_sample_type'));
+  $selectType.append($option);
   var $option = $('<option></option>')
     .attr('value', -1).text(I18n.t('samples.table.no_type'))
   $selectType.append($option);
@@ -752,7 +758,7 @@ function createSampleTypeSelect(data, selected) {
       .attr('value', val.id).text(val.name);
     $selectType.append($option);
   });
-  $selectType.val(selected);
+  $selectType.makeDropdownOptionsLinks(selected);
   return $selectType;
 }
 
@@ -762,9 +768,14 @@ function createSampleTypeSelect(data, selected) {
  * @param selected Selected sample group id
  */
 function createSampleGroupSelect(data, selected) {
+  selected = _.isUndefined(selected) ? 1 : selected + 1;
+
   var $selectGroup = $('<select></select>')
     .attr('name', 'sample_group_id').addClass('show-tick');
 
+  var $option = $("<option href='/organizations/1/sample_groups'></option>")
+                  .text(I18n.t('samples.table.add_sample_group'));
+  $selectGroup.append($option);
   var $span = $("<span></span>").addClass('glyphicon glyphicon-asterisk');
   var $option = $('<option></option>')
     .attr('value', -1).text(I18n.t('samples.table.no_group'))
@@ -780,7 +791,7 @@ function createSampleGroupSelect(data, selected) {
 
     $selectGroup.append($option);
   });
-  $selectGroup.val(selected);
+  $selectGroup.makeDropdownOptionsLinks(selected);
   return $selectGroup;
 }
 
