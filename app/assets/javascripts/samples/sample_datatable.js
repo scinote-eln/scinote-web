@@ -810,7 +810,7 @@ function changeToEditMode() {
 
   var dropdown = $('#samples-columns-dropdown');
   var dropdownList = $('#samples-columns-list');
-  var editMode = false;
+  var columnEditMode = false;
 
   function createNewColumn() {
     // Make an Ajax request to custom_fields_controller
@@ -842,7 +842,7 @@ function changeToEditMode() {
           $('#samples').data('num-columns',
             $('#samples').data('num-columns') + 1);
           originalHeader.append(
-            '<th class="custom-field" id="' + data.id + '">' +
+            '<th class="custom-field" id="' + data.id + '" data-editable data-deletable>' +
             data.name + '</th>');
           var colOrder = table.colReorder.order();
           colOrder.push(colOrder.length);
@@ -993,18 +993,17 @@ function changeToEditMode() {
     });
   }
 
-  function editColumns() {
+  function initEditColumns() {
     function cancelEditMode() {
       dropdownList.find('.text-edit').hide();
       dropdownList.find('.controls .ok,.cancel').hide();
       dropdownList.find('.text').css('display', ''); // show() doesn't work
       dropdownList.find('.controls .vis,.edit,.del').css('display', ''); // show() doesn't work
-      editMode = false;
+      columnEditMode = false;
     }
 
-    // On edit buttons click
-    var editBtns = dropdownList.find('.edit:not(.disabled)');
-    editBtns.on('click', function(event) {
+    // On edit buttons click (bind onto master dropdown list)
+    dropdownList.on('click', '.edit:not(.disabled)', function(event) {
       event.stopPropagation();
 
       cancelEditMode();
@@ -1017,7 +1016,7 @@ function changeToEditMode() {
       var controlsEdit = li.find('.controls .ok,.cancel');
 
       // Toggle edit mode
-      editMode = true;
+      columnEditMode = true;
       li.addClass('editing');
 
       // Set the text-edit's value
@@ -1039,8 +1038,7 @@ function changeToEditMode() {
     });
 
     // On ok buttons click
-    var okBtns = dropdownList.find('.ok');
-    okBtns.on('click', function(event) {
+    dropdownList.on('click', '.ok', function(event) {
       event.stopPropagation();
 
       var self = $(this);
@@ -1067,13 +1065,12 @@ function changeToEditMode() {
     });
 
     // On cancel buttons click
-    var cancelBtns = dropdownList.find('.cancel');
-    cancelBtns.on('click', function(event) {
+    dropdownList.on('click', '.cancel', function(event) {
       event.stopPropagation();
       var self = $(this);
       var li = self.closest('li');
 
-      editMode = false;
+      columnEditMode = false;
       li.removeClass('editing');
 
       li.find('.text-edit').hide();
@@ -1090,7 +1087,7 @@ function changeToEditMode() {
       loadColumnsNames();
       initSorting();
       toggleColumnVisibility();
-      editColumns();
+      initEditColumns();
     });
   }
 
