@@ -120,6 +120,7 @@
 <div class="samples-table">
   <table id="samples" class="table"
     data-organization-id="<%= @project.organization.id %>"
+    data-user-id="<%= @current_user.id %>"
     data-source="<%= @samples_index_link %>"
     data-num-columns="<%= num_of_columns %>"
     data-new-sample="<%= new_organization_sample_path(organization_id: @organization) %>"

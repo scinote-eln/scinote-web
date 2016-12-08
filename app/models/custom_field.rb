@@ -14,4 +14,10 @@ class CustomField < ActiveRecord::Base
              foreign_key: 'last_modified_by_id',
              class_name: 'User'
   has_many :sample_custom_fields, inverse_of: :custom_field
+
+  after_create :update_samples_table_state
+
+  def update_samples_table_state
+    SamplesTable.update_samples_table_state(self)
+  end
 end

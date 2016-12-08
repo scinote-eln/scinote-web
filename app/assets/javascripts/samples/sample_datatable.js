@@ -8,6 +8,11 @@ var currentMode = 'viewMode';
 // Tells what action will execute by pressing on save button (update/create)
 var saveAction = 'update';
 var selectedSample;
+
+// Helps saving correct table state
+var myData;
+var loadFirstTime = true;
+
 var table;
 var originalHeader;
 
@@ -82,23 +87,57 @@ function dataTableInit() {
       sampleInfoListener();
       updateButtons();
     },
-    stateSaveCallback: function(settings, data) {
-      // Set a cookie with the table state using the organization id
-      localStorage.setItem('datatables_state/' +
-        $('#samples').attr('data-organization-id'), JSON.stringify(data));
-    },
-    stateLoadCallback: function() {
-      // Load the table state for the current organization
-      var state = localStorage.getItem('datatables_state/' +
-        $('#samples').attr('data-organization-id'));
-      if (state !== null) {
-        return JSON.parse(state);
-      }
-      return null;
-    },
     preDrawCallback: function() {
       animateSpinner(this);
-      $('.sample_info').off('click');
+      $(".sample_info").off("click");
+    },
+    stateLoadCallback: function (settings) {
+      // Send an Ajax request to the server to get the data. Note that
+      // this is a synchronous request since the data is expected back from the
+      // function
+      var org = $("#samples").attr("data-organization-id")
+      var user = $("#samples").attr("data-user-id")
+
+      $.ajax( {
+        url: '/state_load/'+org+'/'+user,
+        data: {org: org},
+        async: false,
+        dataType: "json",
+        type: "POST",
+        success: function (json) {
+          myData = json.state;
+        }
+      } );
+      return myData
+    },
+    stateSaveCallback: function (settings, data) {
+      // Send an Ajax request to the server with the state object
+      var org = $("#samples").attr("data-organization-id")
+      var user = $("#samples").attr("data-user-id")
+
+      // Save correct data
+      if (loadFirstTime == true) {
+        data = myData;
+      }
+
+      $.ajax( {
+        url: '/state_save/'+org+'/'+user,
+        data: {org: org, state: data},
+        dataType: "json",
+        type: "POST"
+      } );
+      loadFirstTime = false;
+    },
+    fnInitComplete: function(oSettings, json) {
+      // Reload correct column order and visibility (if you refresh page)
+      oSettings._colReorder.fnOrder(myData.ColReorder);
+      for (var i = 0; i < table.columns()[0].length; i++) {
+        var visibility = myData.columns[i].visible;
+        if (typeof(visibility) === "string"){
+            var visibility = (visibility === "true");
+        }
+        table.column(i).visible(visibility);
+      }
     }
   });
 
