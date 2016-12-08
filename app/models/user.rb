@@ -276,7 +276,7 @@ class User < ActiveRecord::Base
 
     token_string = Devise.friendly_token(20) + "-"  + id.to_s
       # WOPI uses millisecond TTLs
-    ttl = (Time.now + 1.hour).to_i
+    ttl = (Time.now + 1.day).to_i
     wopi_token = Token.create(token: token_string, ttl: ttl, user_id: id)
     Rails.logger.warn("WOPI: generating new token #{wopi_token.token}")
     wopi_token
