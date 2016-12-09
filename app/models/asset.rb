@@ -8,7 +8,7 @@ class Asset < ActiveRecord::Base
   # Paperclip validation
   has_attached_file :file,
                     styles: { medium: [Constants::MEDIUM_PIC_FORMAT, :jpg] },
-                    convert_options: { medium: '-quality 20 -strip' }
+                    convert_options: { medium: '-quality 70 -strip' }
 
   validates_attachment :file,
                        presence: true,
@@ -33,7 +33,7 @@ class Asset < ActiveRecord::Base
                                           {}
                                         end
                                       },
-                        processing_image_url: '/images/medium/processing.gif'
+                        processing_image_url: '/images/:style/processing.gif'
 
   # Asset validation
   # This could cause some problems if you create empty asset and want to

@@ -1,37 +1,39 @@
 class AssetsController < ApplicationController
+  include ActionView::Helpers::TextHelper
   before_action :load_vars
   before_action :check_read_permission, except: :file_present
 
   def file_present
     respond_to do |format|
-      format.json {
-        if @asset.file_present
+      format.json do
+        if @asset.file.processing?
+          render json: {}, status: 404
+        else
           # Only if file is present,
           # check_read_permission
           check_read_permission
 
           # If check_read_permission already rendered error,
           # stop execution
-          if performed? then
-            return
-          end
+          return if performed?
 
           # If check permission passes, return :ok
-          render json: {}, status: 200
-        else
-          render json: {}, status: 404
+          render json: {
+            'preview-url' => @asset.url(:medium),
+            'filename' => truncate(@asset.file_file_name,
+                                   length:
+                                     Constants::FILENAME_TRUNCATION_LENGTH),
+            'download-url' => download_asset_path(@asset),
+            'type' => (@asset.is_image? ? 'image' : 'file')
+          }, status: 200
         end
-      }
+      end
     end
   end
 
   def preview
     if @asset.is_image?
-      if @asset.file.processing?
-        redirect_to image_url('/images/processing.gif'), status: 307
-      else
-        redirect_to @asset.url(:medium), status: 307
-      end
+      redirect_to @asset.url(:medium), status: 307
     else
       render_400
     end

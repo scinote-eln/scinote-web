@@ -67,12 +67,15 @@ class StepsController < ApplicationController
         # Update protocol timestamp
         update_protocol_ts(@step)
 
-        format.json {
+        format.json do
           render json: {
-            html: render_to_string({
-              partial: "steps/step.html.erb", locals: {step: @step}
-            })}, status: :ok
-        }
+            html: render_to_string(
+              partial: 'steps/step.html.erb',
+                       locals: { step: @step }
+            )
+          },
+          status: :ok
+        end
       else
         # On error, delete the newly added files from S3, as they were
         # uploaded on client-side (in case of client-side hacking of

@@ -102,6 +102,7 @@ function applyEditCallBack() {
     formEditAjax($form);
     toggleButtons(false);
     initializeCheckboxSorting();
+    animateSpinner(null, false);
 
     $("#new-step-checklists fieldset.nested_step_checklists ul").each(function () {
       enableCheckboxSorting(this);
@@ -209,6 +210,7 @@ function formEditAjax($form) {
     $new_step.find("[data-role='step-hot-table']").each(function()  {
       renderTable($(this));
     });
+    setupAssetsLoading();
   })
   .on("ajax:error", function(e, xhr, status, error) {
     $form.renderFormErrors('step', xhr.responseJSON, true, e);
@@ -245,6 +247,8 @@ function formNewAjax($form) {
     $new_step.find("div.step-result-hot-table").each(function()  {
       $(this).handsontable("render");
     });
+    animateSpinner(null, false);
+    setupAssetsLoading();
   })
   .on("ajax:error", function(e, xhr, status, error) {
     $(this).after(xhr.responseJSON.html);
@@ -257,6 +261,7 @@ function formNewAjax($form) {
     formCallback($form);
     formNewAjax($form);
     applyCancelOnNew();
+    animateSpinner(null, false);
   });
 }
 
