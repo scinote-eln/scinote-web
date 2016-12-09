@@ -11,7 +11,6 @@ function setupAssetsLoading() {
 
     $.each(elements, function(_, el) {
       var $el = $(el);
-      var spinner = $el.find(".asset-loading-spinner");
 
       // Perform an AJAX call to present URL
       // to check if file already exists
@@ -70,7 +69,6 @@ function setupAssetsLoading() {
     $.each(elements, function(_, el) {
       var $el = $(el);
       $el.attr("data-status", "asset-failed");
-      $el.find(".asset-loading-spinner").spin(false);
       $el.html($el.data("filename"));
     });
   }
