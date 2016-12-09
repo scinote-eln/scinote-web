@@ -217,22 +217,28 @@ function initPageTutorialSteps(pageFirstStepN, pageLastStepN, nextPagePath,
 }
 
 /**
- * Add redirection links on dropdown elements.
- * @param  {[type]} selectedIdx Index of element to be selected.
+ * Add redirection links on dropdown elements. You must specify 'href'
+ * attribute yourself, and the dropdown elments which don't have them, will get
+ * '#' by default.
+ * @param  {number} selectedIdx Index of element to be selected
  * @return {Object}             This
  */
 $.fn.makeDropdownOptionsLinks = function(selectedIdx) {
   selectedIdx = _.isUndefined(selectedIdx) ? 1 : selectedIdx;
+
   $(this).change(function() {
     location = $(this).find('option:selected').attr('href');
   });
+
   $(this).find('option')
-    .each(function(i) {
-      if (!$(this).is("[href]")) {
+    .each(function() {
+      if ($(this).is('[href]')) {
+        $(this).addClass('link-look');
+      } else {
         $(this).attr('href', '#');
       }
     })
     .eq(selectedIdx).attr('selected', true);
 
   return this;
-}
+};

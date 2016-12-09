@@ -736,8 +736,9 @@ function createTdElement(content) {
 
 /**
  * Creates select dropdown for sample type
- * @param data List of sample types
- * @param selected Selected sample type id
+ * @param {Object[]} data List of sample types
+ * @param {number} selected Selected sample type id
+ * @return {Object} select dropdown
  */
 function createSampleTypeSelect(data, selected) {
   selected = _.isUndefined(selected) ? 1 : selected + 1;
@@ -749,7 +750,7 @@ function createSampleTypeSelect(data, selected) {
                   .attr('value', -2)
                   .text(I18n.t('samples.table.add_sample_type'));
   $selectType.append($option);
-  var $option = $('<option></option>')
+  $option = $('<option></option>')
     .attr('value', -1).text(I18n.t('samples.table.no_type'))
   $selectType.append($option);
 
@@ -776,8 +777,7 @@ function createSampleGroupSelect(data, selected) {
   var $option = $("<option href='/organizations/1/sample_groups'></option>")
                   .text(I18n.t('samples.table.add_sample_group'));
   $selectGroup.append($option);
-  var $span = $("<span></span>").addClass('glyphicon glyphicon-asterisk');
-  var $option = $('<option></option>')
+  $option = $('<option></option>')
     .attr('value', -1).text(I18n.t('samples.table.no_group'))
     .attr('data-icon', 'glyphicon glyphicon-asterisk');
   $selectGroup.append($option);
