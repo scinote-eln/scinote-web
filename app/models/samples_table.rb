@@ -14,7 +14,7 @@ class SamplesTable < ActiveRecord::Base
     index = org_status['columns'].count
     org_status['columns'][index] = SampleDatatable::
                                    SAMPLES_TABLE_DEFAULT_STATE['columns'].first
-    org_status['ColReorder'] << index
+    org_status['ColReorder'] << index.to_s
     samples_table.first.update(status: org_status)
   end
 

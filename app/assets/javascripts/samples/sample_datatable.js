@@ -89,43 +89,42 @@ function dataTableInit() {
     },
     preDrawCallback: function() {
       animateSpinner(this);
-      $(".sample_info").off("click");
+      $('.sample_info').off('click');
     },
-    stateLoadCallback: function (settings) {
+    stateLoadCallback: function(settings) {
       // Send an Ajax request to the server to get the data. Note that
       // this is a synchronous request since the data is expected back from the
       // function
-      var org = $("#samples").attr("data-organization-id")
-      var user = $("#samples").attr("data-user-id")
+      var org = $('#samples').attr('data-organization-id');
+      var user = $('#samples').attr('data-user-id');
 
-      $.ajax( {
-        url: '/state_load/'+org+'/'+user,
+      $.ajax({
+        url: '/state_load/' + org + '/' + user,
         data: {org: org},
         async: false,
-        dataType: "json",
-        type: "POST",
-        success: function (json) {
+        dataType: 'json',
+        type: 'POST',
+        success: function(json) {
           myData = json.state;
         }
-      } );
-      return myData
+      });
+      return myData;
     },
-    stateSaveCallback: function (settings, data) {
+    stateSaveCallback: function(settings, data) {
       // Send an Ajax request to the server with the state object
-      var org = $("#samples").attr("data-organization-id")
-      var user = $("#samples").attr("data-user-id")
-
+      var org = $('#samples').attr('data-organization-id');
+      var user = $('#samples').attr('data-user-id');
       // Save correct data
       if (loadFirstTime == true) {
         data = myData;
       }
 
-      $.ajax( {
-        url: '/state_save/'+org+'/'+user,
+      $.ajax({
+        url: '/state_save/' + org + '/' + user,
         data: {org: org, state: data},
-        dataType: "json",
-        type: "POST"
-      } );
+        dataType: 'json',
+        type: 'POST'
+      });
       loadFirstTime = false;
     },
     fnInitComplete: function(oSettings, json) {
@@ -133,8 +132,8 @@ function dataTableInit() {
       oSettings._colReorder.fnOrder(myData.ColReorder);
       for (var i = 0; i < table.columns()[0].length; i++) {
         var visibility = myData.columns[i].visible;
-        if (typeof(visibility) === "string"){
-            var visibility = (visibility === "true");
+        if (typeof (visibility) === 'string') {
+          visibility = (visibility === 'true');
         }
         table.column(i).visible(visibility);
       }
@@ -802,6 +801,7 @@ function changeToEditMode() {
   table.button(0).enable(false);
 }
 
+// Samples table columns dropdown handling code
 (function(table) {
   'use strict';
 
@@ -841,7 +841,6 @@ function changeToEditMode() {
             data.name + '</th>');
           var colOrder = table.colReorder.order();
           colOrder.push(colOrder.length);
-          table.colReorder.reset();
           // Remove all event handlers as we re-initialize them later with
           // new table
           $('#samples').off();
@@ -852,8 +851,7 @@ function changeToEditMode() {
           $('div.toolbarButtons').appendTo('div.samples-table');
           $('div.toolbarButtons').hide();
           table = dataTableInit();
-          table.colReorder.order(colOrder, true);
-          loadColumnsNames();
+          initDropdown();
         },
         url: url
       });
