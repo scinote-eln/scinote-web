@@ -851,7 +851,9 @@ function changeToEditMode() {
           $('div.toolbarButtons').appendTo('div.samples-table');
           $('div.toolbarButtons').hide();
           table = dataTableInit();
-          initDropdown();
+          table.on('init.dt', function() {
+            loadColumnsNames();
+          });
         },
         url: url
       });
