@@ -847,6 +847,8 @@ en:
       added_by: "Added by"
       no_group: "No sample group"
       no_type: "No sample type"
+      add_sample_type: "Add new sample type"
+      add_sample_group: "Add new sample group"
     new:
       head_title: "%{organization} | Add new sample"
       title: "Add new sample to team %{organization}"

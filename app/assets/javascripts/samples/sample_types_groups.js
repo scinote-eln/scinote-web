@@ -4,6 +4,7 @@
   function showNewSampleTypeGroupForm() {
     $('#create-resource').on('click', function() {
       $('.new-resource-form').slideDown();
+      $('#name-input').focus();
     });
   }
 
@@ -211,6 +212,16 @@
     });
   }
 
+/**
+ * Opens adding mode when redirected from samples page, when clicking link for
+ * adding sample type or group link
+ */
+  function sampleTypeGroupEditMode() {
+    if (getParam('add-mode')) {
+      $('#create-resource').click();
+    }
+  }
+
   function initSampleTypesGroups() {
     showNewSampleTypeGroupForm();
     newSampleTypeFormCancel();
@@ -223,6 +234,7 @@
     initSampleGroupColor();
     bindNewSampleGroupAction();
     appendCarretToColorPickerDropdown();
+    sampleTypeGroupEditMode();
   }
 
   // initialize sample types/groups actions

@@ -235,6 +235,18 @@ body {
 
 a {
   color: $color-theme-primary;
+
+  // Override to make link look and behave as a normal link (e.g. used for
+  // elements which have links)
+  &.link-look {
+    color: $color-theme-primary !important;
+
+    :hover,
+    :focus {
+      color: $color-visited-link !important;
+      text-decoration: underline !important;
+    }
+  }
 }
 
 .jumbotron {
