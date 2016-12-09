@@ -832,6 +832,13 @@ en:
     modal_add_custom_field:
       title_html: "Add new column to team <strong>%{organization}</strong>"
       create: "Add new column"
+    modal_delete_custom_field:
+      title: "Delete a column"
+      message: "Are you sure you wish to permanently delete selected column %{cf}? This action is irreversible."
+      alert_heading: "Deleting a column has following consequences:"
+      alert_line_1: "you will lose information in this column for %{nr} samples;"
+      alert_line_2: "the column will be deleted for all team members."
+      delete: "Delete column"
     modal_add_new_sample_group:
       title_html: "Add new sample group to team <strong>%{organization}</strong>"
       create: "Add new sample group"

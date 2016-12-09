@@ -842,7 +842,11 @@ function changeToEditMode() {
           $('#samples').data('num-columns',
             $('#samples').data('num-columns') + 1);
           originalHeader.append(
-            '<th class="custom-field" id="' + data.id + '" data-editable data-deletable>' +
+            '<th class="custom-field" id="' + data.id + '" ' +
+            'data-editable data-deletable ' +
+            'data-edit-url="' + data.edit_url + '" ' +
+            'data-destroy-html-url="' + data.destroy_html_url + '"' +
+            '>' +
             data.name + '</th>');
           var colOrder = table.colReorder.order();
           colOrder.push(colOrder.length);
@@ -916,6 +920,8 @@ function changeToEditMode() {
           '<li ' +
           'data-position="' + colIndex + '" ' +
           'data-id="' + $(el).attr('id') + '" ' +
+          'data-edit-url=' + $(el).attr('data-edit-url') + ' ' +
+          'data-destroy-html-url=' + $(el).attr('data-destroy-html-url') + ' ' +
           'class="' + visLi + '"' +
           '>' +
           '<i class="grippy"></i> ' +
@@ -1002,6 +1008,29 @@ function changeToEditMode() {
       columnEditMode = false;
     }
 
+    function editColumn(li) {
+      var id = li.attr('data-id');
+      var text = li.find('.text');
+      var textEdit = li.find('.text-edit');
+      var newName = textEdit.val().trim();
+      var url = li.attr('data-edit-url');
+
+      $.ajax({
+        url: url,
+        type: 'PUT',
+        data: {custom_field: {name: newName}},
+        dataType: 'json',
+        success: function() {
+          text.text(newName);
+          $(table.columns().header()).filter('#' + id).text(newName);
+          cancelEditMode();
+        },
+        error: function(xhr) {
+          // TODO
+        }
+      });
+    }
+
     // On edit buttons click (bind onto master dropdown list)
     dropdownList.on('click', '.edit:not(.disabled)', function(event) {
       event.stopPropagation();
@@ -1040,28 +1069,19 @@ function changeToEditMode() {
     // On ok buttons click
     dropdownList.on('click', '.ok', function(event) {
       event.stopPropagation();
-
       var self = $(this);
       var li = self.closest('li');
-      var id = li.attr('data-id');
-      var text = li.find('.text');
-      var textEdit = li.find('.text-edit');
-      var newName = textEdit.val().trim();
+      editColumn(li);
+    });
 
-      $.ajax({
-        url: '/organizations/1/custom_fields/' + id,
-        type: 'PUT',
-        data: {custom_field: {name: newName}},
-        dataType: 'json',
-        success: function() {
-          text.text(newName);
-          $(table.columns().header()).filter('#' + id).text(newName);
-          cancelEditMode();
-        },
-        error: function(xhr) {
-          // TODO
-        }
-      });
+    // On enter click while editing column text
+    dropdownList.on('keydown', 'input.text-edit', function(event) {
+      if (event.keyCode === 13) {
+        event.preventDefault();
+        var self = $(this);
+        var li = self.closest('li');
+        editColumn(li);
+      }
     });
 
     // On cancel buttons click
@@ -1080,6 +1100,90 @@ function changeToEditMode() {
     });
   }
 
+  function initDeleteColumns() {
+    var modal = $('#deleteCustomField');
+
+    dropdownList.on('click', '.del', function(event) {
+      event.stopPropagation();
+
+      var self = $(this);
+      var li = self.closest('li');
+      var url = li.attr('data-destroy-html-url');
+
+      $.ajax({
+        url: url,
+        type: 'GET',
+        dataType: 'json',
+        success: function(data) {
+          var modalBody = modal.find('.modal-body');
+
+          // Inject the body's HTML into modal
+          modalBody.html(data.html);
+
+          // Show the modal
+          modal.modal('show');
+        },
+        error: function(xhr) {
+          // TODO
+        }
+      });
+    });
+
+    modal.find('.modal-footer [data-action=delete]').on('click', function() {
+      var modalBody = modal.find('.modal-body');
+      var form = modalBody.find('[data-role=destroy-custom-field-form]');
+      var id = form.attr('data-id');
+
+      form
+      .on('ajax:success', function() {
+        // Destroy datatable
+        table.destroy();
+
+        // Subtract number of columns
+        $('#samples').data(
+          'num-columns',
+          $('#samples').data('num-columns') - 1
+        );
+
+        // Remove column from table (=table header) & rows
+        var th = originalHeader.find('#' + id);
+        var index = th.index();
+        th.remove();
+        $('#samples tbody td:nth-child(' + (index + 1) + ')').remove();
+
+        // Remove all event handlers as we re-initialize them later with
+        // new table
+        $('#samples').off();
+        $('#samples thead').empty();
+        $('#samples thead').append(originalHeader);
+
+        // Preserve save/delete buttons as we need them after new table
+        // will be created
+        $('div.toolbarButtons').appendTo('div.samples-table');
+        $('div.toolbarButtons').hide();
+
+        // Re-initialize datatable
+        table = dataTableInit();
+        loadColumnsNames();
+
+        // Hide modal
+        modal.modal('hide');
+      })
+      .on('ajax:error', function() {
+        // TODO
+      });
+
+      form.submit();
+    });
+
+    modal.on('hidden.bs.modal', function() {
+      // Remove event handlers, clear contents
+      var modalBody = modal.find('.modal-body');
+      modalBody.off();
+      modalBody.html('');
+    });
+  }
+
   // initialze dropdown after the table is loaded
   function initDropdown() {
     table.on('init.dt', function() {
@@ -1088,6 +1192,7 @@ function changeToEditMode() {
       initSorting();
       toggleColumnVisibility();
       initEditColumns();
+      initDeleteColumns();
     });
   }
 
