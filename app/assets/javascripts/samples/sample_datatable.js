@@ -759,7 +759,7 @@ function createSampleTypeSelect(data, selected) {
       .attr('value', val.id).text(val.name);
     $selectType.append($option);
   });
-  $selectType.makeDropdownOptionsLinks(selected);
+  $selectType.makeDropdownOptionsLinks(selected, 'add-mode');
   return $selectType;
 }
 
@@ -791,7 +791,7 @@ function createSampleGroupSelect(data, selected) {
 
     $selectGroup.append($option);
   });
-  $selectGroup.makeDropdownOptionsLinks(selected);
+  $selectGroup.makeDropdownOptionsLinks(selected, 'add-mode');
   return $selectGroup;
 }
 

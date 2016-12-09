@@ -221,13 +221,15 @@ function initPageTutorialSteps(pageFirstStepN, pageLastStepN, nextPagePath,
  * attribute yourself, and the dropdown elments which don't have them, will get
  * '#' by default.
  * @param  {number} selectedIdx Index of element to be selected
+ * @param  {string} urlParam    URL parameter to pass to the link URLs
  * @return {Object}             This
  */
-$.fn.makeDropdownOptionsLinks = function(selectedIdx) {
+$.fn.makeDropdownOptionsLinks = function(selectedIdx, urlParam) {
   selectedIdx = _.isUndefined(selectedIdx) ? 1 : selectedIdx;
 
   $(this).change(function() {
-    location = $(this).find('option:selected').attr('href');
+    window.location.href = addParam($(this).find('option:selected')
+                                      .attr('href'), urlParam);
   });
 
   $(this).find('option')
