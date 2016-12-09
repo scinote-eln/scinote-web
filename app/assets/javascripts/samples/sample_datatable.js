@@ -26,7 +26,8 @@ function dataTableInit() {
     processing: true,
     serverSide: true,
     colReorder: {
-      fixedColumnsLeft: 2
+      fixedColumnsLeft: 2,
+      realtime: false
     },
     destroy: true,
     ajax: {
@@ -129,7 +130,6 @@ function dataTableInit() {
     },
     fnInitComplete: function(oSettings, json) {
       // Reload correct column order and visibility (if you refresh page)
-      oSettings._colReorder.fnOrder(myData.ColReorder);
       for (var i = 0; i < table.columns()[0].length; i++) {
         var visibility = myData.columns[i].visible;
         if (typeof (visibility) === 'string') {
@@ -137,6 +137,7 @@ function dataTableInit() {
         }
         table.column(i).visible(visibility);
       }
+      oSettings._colReorder.fnOrder(myData.ColReorder);
     }
   });
 
@@ -975,8 +976,10 @@ function changeToEditMode() {
   function initDropdown() {
     table.on('init.dt', function() {
       initNewColumnForm();
-      loadColumnsNames();
       initSorting();
+    });
+    $('#samples-columns-dropdown').on('show.bs.dropdown', function() {
+      loadColumnsNames();
     });
   }
 
