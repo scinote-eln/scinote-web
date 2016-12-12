@@ -23,36 +23,6 @@ $("form#new_custom_field").on("ajax:error", function(e, data, status, xhr) {
     $('form').renderFormErrors('custom_field', data.responseJSON, true, e);
 });
 
-$("form#new_sample_type").on("ajax:error", function(e, data, status, xhr) {
-  $('form').renderFormErrors('sample_type', data.responseJSON, true, e);
-});
-
-// Create sample group ajax
-$("#modal-create-sample-group").on("show.bs.modal", function(event) {
-    // Clear input when modal is opened
-    input = $(this).find("input#name-input");
-    input.val("");
-    input.closest(".form-group").removeClass("has-error");
-    input.closest(".form-group").find(".help-block").remove();
-});
-
-$("#modal-create-sample-group").on("shown.bs.modal", function(event) {
-    $(this).find("input#name-input").focus();
-});
-
-$("form#new_sample_group").on("ajax:success", function(ev, data, status) {
-    $("#modal-create-sample-group").modal("hide");
-    updateSamplesTypesandGroups();
-    sampleAlertMsg(data.flash, "success");
-    currentMode = "viewMode";
-    updateButtons();
-});
-
-$("form#new_sample_group").on("ajax:error", function(e, data, status, xhr) {
-  $('form').renderFormErrors('sample_group', data.responseJSON, true, e);
-});
-
-
 // Create import samples ajax
 $("#modal-import-samples").on("show.bs.modal", function(event) {
     formGroup = $(this).find(".form-group");
