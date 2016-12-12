@@ -13,7 +13,7 @@ class CustomField < ActiveRecord::Base
   belongs_to :last_modified_by,
              foreign_key: 'last_modified_by_id',
              class_name: 'User'
-  has_many :sample_custom_fields, inverse_of: :custom_field
+  has_many :sample_custom_fields, inverse_of: :custom_field, dependent: :destroy
 
   after_create :update_samples_table_state
 

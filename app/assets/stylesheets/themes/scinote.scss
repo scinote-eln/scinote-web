@@ -1623,15 +1623,6 @@ textarea.textarea-sm {
     margin-left: 10px;
   }
 
-  .vis {
-    cursor: pointer;
-    margin-right: 5px;
-  }
-
-  .edit {
-    margin-right: 5px;
-  }
-
   .grippy {
     background-repeat: none;
     display: inline-block;
@@ -1640,7 +1631,7 @@ textarea.textarea-sm {
     width: 10px;
   }
 
-  .grippy-img {
+  li:not(.editing) .grippy-img {
     background: url(asset-path('custom/grippy.png'));
   }
 
@@ -1651,6 +1642,14 @@ textarea.textarea-sm {
     position: absolute;
   }
 
+  .text-edit {
+    display: inline-block;
+    margin-left: 2px;
+    margin-top: -2.5px;
+    position: absolute;
+    width: 180px;
+  }
+
   .col-invisible {
     color: $color-alto;
   }
@@ -1658,5 +1657,37 @@ textarea.textarea-sm {
   .controls {
     display: inline-block;
     margin-top: 5px;
+
+    span {
+      cursor: pointer;
+
+      &.disabled {
+        visibility: hidden;
+      }
+
+      &:hover {
+        color: $color-emperor;
+      }
+    }
+
+    .ok {
+      color: $color-theme-secondary;
+      margin-right: 5px;
+    }
+
+    .cancel {
+      margin-right: 28px;
+    }
+
+    .vis {
+      margin-right: 5px;
+    }
+
+    .edit {
+      margin-right: 5px;
+    }
+
+    .del {
+    }
   }
 }
