@@ -26,13 +26,16 @@
 
     #remove {
       margin-left: 5px;
-      margin-top: 10px;
     }
+  }
+
+  .form-inline .form-group,
+  .form-inline .form-control {
+    width: 100%;
   }
 
   #name-input {
     padding: 5px;
-    width: 203px;
   }
 
   .new-resource-form {
@@ -85,26 +88,6 @@
 
     .caret {
       color: $color-black;
-    }
-  }
-
-  .sample-group-controls {
-
-    .edit {
-      margin-top: 3px;
-    }
-
-    .delete {
-      margin-top: 3px;
-    }
-  }
-
-  .sample-group-submit {
-    display: inline-block;
-    vertical-align: top;
-
-    #submit {
-      margin-top: 8px;
     }
   }
 }

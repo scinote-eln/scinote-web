@@ -1444,6 +1444,7 @@ en:
     edit: "Edit"
     cancel: "Cancel"
     close: "Close"
+    create: 'Create'
     check_all: "Check all"
     no_comments: "No comments!"
     more_comments: "More comments"
