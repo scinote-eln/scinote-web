@@ -161,10 +161,14 @@ function filesSizeValidator(ev, fileInputs, fileTypeEnum) {
 
   // Check if any file exceeds allowed size limit
   var filesSizeValid = true;
+
+  // Check total size of uploaded files
+  var totalSizeOK = checkFilesTotalSize(fileInputs);
+
   _.each(fileInputs, function(fileInput) {
     var file = fileInput.files[0];
     var assetError = getFileTooBigError(file);
-    var assetError = checkFilesTotalSize(fileInputs);
+    var assetError = totalSizeOK;
     if (assetError) {
       renderFormError(ev, fileInput, assetError, false, "data-error='file-size'");
       filesSizeValid = false;
