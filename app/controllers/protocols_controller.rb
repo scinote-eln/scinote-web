@@ -560,38 +560,61 @@ class ProtocolsController < ApplicationController
   end
 
   def export
-    #respond_to do |format|
-    #  format.json {
-    #    render json: {
-    #        protocols: export_protocols(@protocols)
-    #      }, status: :ok
-    #  }
-    #end
-
     # Make a zip output stream and send it to the client
     respond_to do |format|
-      format.html
-      format.zip do
-        Dir.mktmpdir do |tmp_dir|
-
-
-        end
-
+      format.html do
         z_output_stream = Zip::OutputStream.write_buffer do |ostream|
-          ostream.put_next_entry('eln.xml')
-          ostream.print(protocol_xml)
-          ostream.put_next_entry("#{arch_dir}/scinote.xml")
-          ostream.print(envelope_xml)
-          ostream.put_next_entry("#{arch_dir}/scinote.xsd")
+          ostream.put_next_entry('scinote.xml')
+          ostream.print(generate_envelope_xml(@protocols))
+          ostream.put_next_entry('scinote.xsd')
           ostream.print(generate_envelope_xsd)
-          ostream.put_next_entry("#{arch_dir}/eln.xsd")
+          ostream.put_next_entry('eln.xsd')
           ostream.print(generate_eln_xsd)
+
+          # Create folder and xml file for each protocol and populate it
+          @protocols.each do |protocol|
+            protocol_dir = get_guid(protocol.id).to_s
+            ostream.put_next_entry("#{protocol_dir}/eln.xml")
+            ostream.print(generate_protocol_xml(protocol))
+            # Add assets to protocol folder
+            if protocol.steps.count > 0
+              protocol.steps.order(:id).each do |step|
+                step_guid = get_guid(step.id)
+                step_dir = "#{protocol_dir}/#{step_guid}"
+                if step.assets.count > 0
+                  step.assets.order(:id).each do |asset|
+                    asset_guid = get_guid(asset.id)
+                    asset_file_name = asset_guid.to_s +
+                                      File.extname(asset.file_file_name).to_s
+                    ostream.put_next_entry("#{step_dir}/#{asset_file_name}")
+                    input_file = asset.open
+                    ostream.print(input_file.read)
+                    input_file.close
+                  end
+                end
+              end
+            end
+          end
         end
         z_output_stream.rewind
-        send_data compressed_filestream.read, filename: "protocol.eln"
+
+        protocol_name = get_protocol_name(@protocols[0])
+
+        # Now generate filename of the archive and send file to user
+        if @protocols.count == 1
+          # Try to construct an OS-safe file name
+          file_name = 'protocol.eln'
+          unless protocol_name.nil?
+            escaped_name = protocol_name.gsub(/[^0-9a-zA-Z-.,_]/i, '_')
+                                        .downcase[0..250]
+            file_name = escaped_name + '.eln' unless escaped_name.empty?
+          end
+        elsif @protocols.length > 1
+          file_name = 'protocols.eln'
+        end
+        send_data(z_output_stream.read, filename: file_name)
       end
     end
-
   end
 
   def unlink_modal

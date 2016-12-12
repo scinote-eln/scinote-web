@@ -1,5 +1,4 @@
 //= require protocols/import_export/import
-//= require protocols/import_export/export
 //= require comments
 //= require datatables
 
@@ -17,7 +16,6 @@ function init() {
   initLoadFromRepository();
   initRefreshStatusBar();
   initImport();
-  initExport();
   Comments.bindNewElement();
   Comments.initialize();
   initTutorial();
@@ -507,13 +505,6 @@ function initImport() {
 
     // Clear input on self
     $(this).val("");
-  });
-}
-
-function initExport() {
-  var exportBtn = $("[data-action='export']");
-  exportBtn.on("click", function() {
-    exportProtocols([ $(this).attr("data-id") ]);
   });
 }
 
