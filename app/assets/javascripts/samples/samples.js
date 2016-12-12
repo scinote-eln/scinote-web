@@ -1,32 +1,5 @@
 //= require datatables
 
-// Create custom field ajax
-$("#modal-create-custom-field").on("show.bs.modal", function(event) {
-    // Clear input when modal is opened
-    input = $(this).find("input#name-input");
-    input.val("");
-    input.closest(".form-group").removeClass("has-error");
-    input.closest(".form-group").find(".help-block").remove();
-});
-$("#modal-create-custom-field").on("shown.bs.modal", function(event) {
-    $(this).find("input#name-input").focus();
-});
-
-$("form#new_custom_field").on("ajax:success", function(ev, data, status) {
-    $("#modal-create-custom-field").modal("hide");
-
-    // Reload page with URL parameter of newly created field
-    window.location.href = addParam(window.location.href, "new_col");
-});
-
-$("form#new_custom_field").on("ajax:error", function(e, data, status, xhr) {
-    $('form').renderFormErrors('custom_field', data.responseJSON, true, e);
-});
-
-$("form#new_sample_type").on("ajax:error", function(e, data, status, xhr) {
-  $('form').renderFormErrors('sample_type', data.responseJSON, true, e);
-});
-
 // Create sample group ajax
 $("#modal-create-sample-group").on("show.bs.modal", function(event) {
     // Clear input when modal is opened

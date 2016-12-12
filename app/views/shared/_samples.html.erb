@@ -1,6 +1,7 @@
 <%= render partial: "samples/import_samples_modal" %>
 <%= render partial: "samples/delete_samples_modal" %>
 <%= render partial: "samples/create_sample_group_modal" %>
+<%= render partial: "samples/delete_custom_field_modal" %>
 <!-- Modal for parsing sample sheets should be empty at first -->
 <div class="modal fade" id="modal-parse-samples" tabindex="-1" role="dialog" aria-labelledby=="modal-parse-samples-label"></div>
 
@@ -136,7 +137,15 @@
         <th id="added-on"><%= t("samples.table.added_on") %></th>
         <th id="added-by"><%= t("samples.table.added_by") %></th>
         <% all_custom_fields.each do |cf| %>
-        <th class="custom-field" id="<%= cf.id %>"><%= cf.name %></th>
+        <th class="custom-field"
+            id="<%= cf.id %>"
+            <%= 'data-editable' if can_edit_custom_field(cf) %>
+            <%= 'data-deletable' if can_delete_custom_field(cf) %>
+            <%= "data-edit-url='#{organization_custom_field_path(@organization, cf)}'" %>
+            <%= "data-destroy-html-url='#{organization_custom_field_destroy_html_path(@organization, cf)}'" %>
+        >
+          <%= cf.name %>
+        </th>
         <% end %>
       </tr>
     </thead>
