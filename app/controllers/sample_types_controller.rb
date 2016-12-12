@@ -116,6 +116,8 @@ class SampleTypesController < ApplicationController
 
   def set_project_my_module
     @project = Project.find_by_id(params[:project_id]) if params[:project_id]
+    @experiment = Experiment
+                  .find_by_id(params[:experiment_id]) if params[:experiment_id]
     @my_module = MyModule
                  .find_by_id(params[:my_module_id]) if params[:my_module_id]
     render_403 unless @project || @my_module

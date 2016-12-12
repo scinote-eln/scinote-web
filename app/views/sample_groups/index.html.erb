@@ -8,13 +8,15 @@
       <%= link_to t('sample_types.index.sample_types'),
                   organization_sample_types_path(current_organization,
                     project_id: (@project.id if @project),
-                    my_module_id: (@my_module.id if @my_module)) %>
+                    my_module_id: (@my_module.id if @my_module),
+                    experiment_id: (@experiment.id if @experiment)) %>
     </li>
     <li role="presentation" class="active">
       <%= link_to t('sample_types.index.sample_groups'),
                   organization_sample_groups_path(current_organization,
                     project_id: (@project.id if @project),
-                    my_module_id: (@my_module.id if @my_module)) %>
+                    my_module_id: (@my_module.id if @my_module),
+                    experiment_id: (@experiment.id if @experiment)) %>
     </li>
   </ul>
   <div class="tab-content">

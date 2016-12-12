@@ -220,7 +220,10 @@
             <% end %>
           </li>
         <% end %>
-        <% if experiment_page? || module_page? %>
+        <% if experiment_page? ||
+              module_page? ||
+              sample_types_page_my_module? ||
+              sample_groups_page_my_module? %>
           <% if !module_page? %>
             <li class="active">
               <%= truncate(@experiment.name,
@@ -239,7 +242,9 @@
             </li>
           <% end %>
         <% end %>
-        <% if module_page? %>
+        <% if module_page? ||
+              sample_types_page_my_module? ||
+              sample_groups_page_my_module? %>
           <li class="active">
             <%= truncate(@my_module.name,
                          length: Constants::NAME_TRUNCATION_LENGTH) %>
