@@ -2,6 +2,8 @@ class SampleGroupsController < ApplicationController
   before_action :load_vars_nested
   before_action :check_create_permissions
   before_action :set_sample_group, except: [:create, :index]
+  before_action :set_project_my_module, only: :index
+  layout 'fluid'
 
   def create
     @sample_group = SampleGroup.new(sample_group_params)
@@ -111,6 +113,13 @@ class SampleGroupsController < ApplicationController
   end
 
   private
+
+  def set_project_my_module
+    @project = Project.find_by_id(params[:project_id]) if params[:project_id]
+    @my_module = MyModule
+                 .find_by_id(params[:my_module_id]) if params[:my_module_id]
+    render_403 unless @project || @my_module
+  end
 
   def set_sample_group
     @sample_group = SampleGroup.find_by_id(params[:id])

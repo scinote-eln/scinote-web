@@ -66,7 +66,10 @@
   <% if can_add_sample_related_things_to_organization %>
   <div class="dropdown pull-right" style="display: inline;">
     <%= link_to(t('samples.types_and_groups'),
-                organization_sample_types_path(@organization),
+                organization_sample_types_path(@organization,
+                  project_id: (@project.id if @project),
+                  my_module_id: (@my_module.id if @my_module),
+                  experiment_id: (@experiment.id if @experiment)),
                 class: 'btn btn-default' ) %>
   </div>
   <% end %>

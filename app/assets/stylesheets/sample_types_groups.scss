@@ -3,6 +3,11 @@
 .sample_types_groups_list {
   margin-top: 50px;
 
+  .sample-type-group-name {
+    display: inline-block;
+    width: 80%;
+  }
+
   li {
     border-bottom: 1px solid $color-alto;
     padding: 15px 5px;

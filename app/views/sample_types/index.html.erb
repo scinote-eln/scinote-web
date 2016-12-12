@@ -1,14 +1,20 @@
 <% provide(:head_title, t('sample_types.index.head_title')) %>
+<%= render partial: "shared/sidebar" %>
+<%= render partial: "shared/secondary_navigation" %>
 
 <% if current_organization %>
   <ul class="nav nav-tabs nav-settings" data-position="bottom">
     <li role="presentation" class="active">
       <%= link_to t('sample_types.index.sample_types'),
-                  organization_sample_types_path(current_organization) %>
+                  organization_sample_types_path(current_organization,
+                    project_id: (@project.id if @project),
+                    my_module_id: (@my_module.id if @my_module)) %>
     </li>
     <li role="presentation">
       <%= link_to t('sample_types.index.sample_groups'),
-                  organization_sample_groups_path(current_organization) %>
+                  organization_sample_groups_path(current_organization,
+                    project_id: (@project.id if @project),
+                    my_module_id: (@my_module.id if @my_module)) %>
     </li>
   </ul>
   <div class="tab-content">

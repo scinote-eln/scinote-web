@@ -5,7 +5,7 @@
       organization_sample_group_destroy_confirmation_path(organization,
                                                           sample_group) %>"
     data-color="<%= sample_group.color %>">
-  <%= sample_group.name %>
+  <span class="sample-type-group-name"><%= sample_group.name %></span>
   <span class="pull-right sample-group-controls">
     <span class="color-picker">
       <%= bootstrap_form_for [organization, sample_group], remote: true do |f| %>
