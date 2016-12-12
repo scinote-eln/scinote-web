@@ -26,7 +26,8 @@ function dataTableInit() {
     processing: true,
     serverSide: true,
     colReorder: {
-      fixedColumnsLeft: 2
+      fixedColumnsLeft: 2,
+      realtime: false
     },
     destroy: true,
     ajax: {
@@ -89,55 +90,54 @@ function dataTableInit() {
     },
     preDrawCallback: function() {
       animateSpinner(this);
-      $(".sample_info").off("click");
+      $('.sample_info').off('click');
     },
-    stateLoadCallback: function (settings) {
+    stateLoadCallback: function(settings) {
       // Send an Ajax request to the server to get the data. Note that
       // this is a synchronous request since the data is expected back from the
       // function
-      var org = $("#samples").attr("data-organization-id")
-      var user = $("#samples").attr("data-user-id")
+      var org = $('#samples').attr('data-organization-id');
+      var user = $('#samples').attr('data-user-id');
 
-      $.ajax( {
-        url: '/state_load/'+org+'/'+user,
+      $.ajax({
+        url: '/state_load/' + org + '/' + user,
         data: {org: org},
         async: false,
-        dataType: "json",
-        type: "POST",
-        success: function (json) {
+        dataType: 'json',
+        type: 'POST',
+        success: function(json) {
           myData = json.state;
         }
-      } );
-      return myData
+      });
+      return myData;
     },
-    stateSaveCallback: function (settings, data) {
+    stateSaveCallback: function(settings, data) {
       // Send an Ajax request to the server with the state object
-      var org = $("#samples").attr("data-organization-id")
-      var user = $("#samples").attr("data-user-id")
-
+      var org = $('#samples').attr('data-organization-id');
+      var user = $('#samples').attr('data-user-id');
       // Save correct data
       if (loadFirstTime == true) {
         data = myData;
       }
 
-      $.ajax( {
-        url: '/state_save/'+org+'/'+user,
+      $.ajax({
+        url: '/state_save/' + org + '/' + user,
         data: {org: org, state: data},
-        dataType: "json",
-        type: "POST"
-      } );
+        dataType: 'json',
+        type: 'POST'
+      });
       loadFirstTime = false;
     },
     fnInitComplete: function(oSettings, json) {
       // Reload correct column order and visibility (if you refresh page)
-      oSettings._colReorder.fnOrder(myData.ColReorder);
       for (var i = 0; i < table.columns()[0].length; i++) {
         var visibility = myData.columns[i].visible;
-        if (typeof(visibility) === "string"){
-            var visibility = (visibility === "true");
+        if (typeof (visibility) === 'string') {
+          visibility = (visibility === 'true');
         }
         table.column(i).visible(visibility);
       }
+      oSettings._colReorder.fnOrder(myData.ColReorder);
     }
   });
 
@@ -664,7 +664,7 @@ function onClickAddSample() {
                 else if ($(th).attr("id") == "sample-type") {
                     var colIndex = getColumnIndex("#sample-type")
                     if (colIndex) {
-                        var selectType = createSampleTypeSelect(data["sample_types"], -1);
+                        var selectType = createSampleTypeSelect(data["sample_types"]);
                         var td = createTdElement("");
                         td.appendChild(selectType[0]);
                         tr.appendChild(td);
@@ -673,7 +673,7 @@ function onClickAddSample() {
                 else if ($(th).attr("id") == "sample-group") {
                     var colIndex = getColumnIndex("#sample-group")
                     if (colIndex) {
-                        var selectGroup = createSampleGroupSelect(data["sample_groups"], -1);
+                        var selectGroup = createSampleGroupSelect(data["sample_groups"]);
                         var td = createTdElement("");
                         td.appendChild(selectGroup[0]);
                         tr.appendChild(td);
@@ -736,14 +736,21 @@ function createTdElement(content) {
 
 /**
  * Creates select dropdown for sample type
- * @param data List of sample types
- * @param selected Selected sample type id
+ * @param {Object[]} data List of sample types
+ * @param {number} selected Selected sample type id
+ * @return {Object} select dropdown
  */
 function createSampleTypeSelect(data, selected) {
+  selected = _.isUndefined(selected) ? 1 : selected + 1;
+
   var $selectType = $('<select></select>')
     .attr('name', 'sample_type_id').addClass('show-tick');
 
-  var $option = $('<option></option>')
+  var $option = $("<option href='/organizations/1/sample_types'></option>")
+                  .attr('value', -2)
+                  .text(I18n.t('samples.table.add_sample_type'));
+  $selectType.append($option);
+  $option = $('<option></option>')
     .attr('value', -1).text(I18n.t('samples.table.no_type'))
   $selectType.append($option);
 
@@ -752,7 +759,7 @@ function createSampleTypeSelect(data, selected) {
       .attr('value', val.id).text(val.name);
     $selectType.append($option);
   });
-  $selectType.val(selected);
+  $selectType.makeDropdownOptionsLinks(selected, 'add-mode');
   return $selectType;
 }
 
@@ -762,11 +769,15 @@ function createSampleTypeSelect(data, selected) {
  * @param selected Selected sample group id
  */
 function createSampleGroupSelect(data, selected) {
+  selected = _.isUndefined(selected) ? 1 : selected + 1;
+
   var $selectGroup = $('<select></select>')
     .attr('name', 'sample_group_id').addClass('show-tick');
 
-  var $span = $("<span></span>").addClass('glyphicon glyphicon-asterisk');
-  var $option = $('<option></option>')
+  var $option = $("<option href='/organizations/1/sample_groups'></option>")
+                  .text(I18n.t('samples.table.add_sample_group'));
+  $selectGroup.append($option);
+  $option = $('<option></option>')
     .attr('value', -1).text(I18n.t('samples.table.no_group'))
     .attr('data-icon', 'glyphicon glyphicon-asterisk');
   $selectGroup.append($option);
@@ -780,7 +791,7 @@ function createSampleGroupSelect(data, selected) {
 
     $selectGroup.append($option);
   });
-  $selectGroup.val(selected);
+  $selectGroup.makeDropdownOptionsLinks(selected, 'add-mode');
   return $selectGroup;
 }
 
@@ -802,10 +813,15 @@ function changeToEditMode() {
   table.button(0).enable(false);
 }
 
+/*
+ * Sample columns dropdown
+ */
 (function(table) {
   'use strict';
 
+  var dropdown = $('#samples-columns-dropdown');
   var dropdownList = $('#samples-columns-list');
+  var columnEditMode = false;
 
   function createNewColumn() {
     // Make an Ajax request to custom_fields_controller
@@ -837,11 +853,14 @@ function changeToEditMode() {
           $('#samples').data('num-columns',
             $('#samples').data('num-columns') + 1);
           originalHeader.append(
-            '<th class="custom-field" id="' + data.id + '">' +
+            '<th class="custom-field" id="' + data.id + '" ' +
+            'data-editable data-deletable ' +
+            'data-edit-url="' + data.edit_url + '" ' +
+            'data-destroy-html-url="' + data.destroy_html_url + '"' +
+            '>' +
             data.name + '</th>');
           var colOrder = table.colReorder.order();
           colOrder.push(colOrder.length);
-          table.colReorder.reset();
           // Remove all event handlers as we re-initialize them later with
           // new table
           $('#samples').off();
@@ -852,8 +871,9 @@ function changeToEditMode() {
           $('div.toolbarButtons').appendTo('div.samples-table');
           $('div.toolbarButtons').hide();
           table = dataTableInit();
-          table.colReorder.order(colOrder, true);
-          loadColumnsNames();
+          table.on('init.dt', function() {
+            loadColumnsNames();
+          });
         },
         url: url
       });
@@ -900,15 +920,34 @@ function changeToEditMode() {
       if (index > 1) {
         var colIndex = $(el).attr('data-column-index');
         var visible = table.column(colIndex).visible();
+        var editable = $(el).is('[data-editable]');
+        var deletable = $(el).is('[data-deletable]');
+
         var visClass = (visible) ? 'glyphicon-eye-open' : 'glyphicon-eye-close';
         var visLi = (visible) ? '' : 'col-invisible';
-        var html = '<li data-position="' + colIndex + '" class="' + visLi +
-                   '"><i class="grippy"></i> <span class="text">' +
-                   el.innerText + '</span> <span class="pull-right controls">' +
-                   '<span class="vis glyphicon ' + visClass + '"></span> ' +
-                   '<span class="edit glyphicon glyphicon-pencil"></span> ' +
-                   '<span class="del glyphicon glyphicon-trash"></span>' +
-                   '</span></li>';
+        var editClass = (editable) ? '' : 'disabled';
+        var delClass = (deletable) ? '' : 'disabled';
+        var html =
+          '<li ' +
+          'data-position="' + colIndex + '" ' +
+          'data-id="' + $(el).attr('id') + '" ' +
+          'data-edit-url=' + $(el).attr('data-edit-url') + ' ' +
+          'data-destroy-html-url=' + $(el).attr('data-destroy-html-url') + ' ' +
+          'class="' + visLi + '"' +
+          '>' +
+          '<i class="grippy"></i> ' +
+          '<span class="text">' + el.innerText + '</span> ' +
+          '<input type="text" class="text-edit form-control" style="display: none;" />' +
+          '<span class="pull-right controls">' +
+          '<span class="ok glyphicon glyphicon-ok" style="display: none;"></span>' +
+          '<span class="cancel glyphicon glyphicon-remove" style="display: none;"></span>' +
+          '<span class="vis glyphicon ' + visClass + '"></span> ' +
+          '<span class="edit glyphicon glyphicon-pencil ' + editClass + '">' +
+          '</span> ' +
+          '<span class="del glyphicon glyphicon-trash ' + delClass + '">' +
+          '</span>' +
+          '</span>' +
+          '</li>';
         dropdownList.append(html);
       }
     });
@@ -971,12 +1010,202 @@ function changeToEditMode() {
     });
   }
 
+  function initEditColumns() {
+    function cancelEditMode() {
+      dropdownList.find('.text-edit').hide();
+      dropdownList.find('.controls .ok,.cancel').hide();
+      dropdownList.find('.text').css('display', ''); // show() doesn't work
+      dropdownList.find('.controls .vis,.edit,.del').css('display', ''); // show() doesn't work
+      columnEditMode = false;
+    }
+
+    function editColumn(li) {
+      var id = li.attr('data-id');
+      var text = li.find('.text');
+      var textEdit = li.find('.text-edit');
+      var newName = textEdit.val().trim();
+      var url = li.attr('data-edit-url');
+
+      $.ajax({
+        url: url,
+        type: 'PUT',
+        data: {custom_field: {name: newName}},
+        dataType: 'json',
+        success: function() {
+          text.text(newName);
+          $(table.columns().header()).filter('#' + id).text(newName);
+          cancelEditMode();
+        },
+        error: function(xhr) {
+          // TODO
+        }
+      });
+    }
+
+    // On edit buttons click (bind onto master dropdown list)
+    dropdownList.on('click', '.edit:not(.disabled)', function(event) {
+      event.stopPropagation();
+
+      cancelEditMode();
+
+      var self = $(this);
+      var li = self.closest('li');
+      var text = li.find('.text');
+      var textEdit = li.find('.text-edit');
+      var controls = li.find('.controls .vis,.edit,.del');
+      var controlsEdit = li.find('.controls .ok,.cancel');
+
+      // Toggle edit mode
+      columnEditMode = true;
+      li.addClass('editing');
+
+      // Set the text-edit's value
+      textEdit.val(text.text().trim());
+
+      // Toggle elements
+      text.hide();
+      controls.hide();
+      textEdit.css('display', ''); // show() doesn't work
+      controlsEdit.css('display', ''); // show() doesn't work
+
+      // Focus input
+      textEdit.focus();
+    });
+
+    // On hiding dropdown, cancel edit mode throughout dropdown
+    dropdown.on('hidden.bs.dropdown', function() {
+      cancelEditMode();
+    });
+
+    // On ok buttons click
+    dropdownList.on('click', '.ok', function(event) {
+      event.stopPropagation();
+      var self = $(this);
+      var li = self.closest('li');
+      editColumn(li);
+    });
+
+    // On enter click while editing column text
+    dropdownList.on('keydown', 'input.text-edit', function(event) {
+      if (event.keyCode === 13) {
+        event.preventDefault();
+        var self = $(this);
+        var li = self.closest('li');
+        editColumn(li);
+      }
+    });
+
+    // On cancel buttons click
+    dropdownList.on('click', '.cancel', function(event) {
+      event.stopPropagation();
+      var self = $(this);
+      var li = self.closest('li');
+
+      columnEditMode = false;
+      li.removeClass('editing');
+
+      li.find('.text-edit').hide();
+      li.find('.controls .ok,.cancel').hide();
+      li.find('.text').css('display', ''); // show() doesn't work
+      li.find('.controls .vis,.edit,.del').css('display', ''); // show() doesn't work
+    });
+  }
+
+  function initDeleteColumns() {
+    var modal = $('#deleteCustomField');
+
+    dropdownList.on('click', '.del', function(event) {
+      event.stopPropagation();
+
+      var self = $(this);
+      var li = self.closest('li');
+      var url = li.attr('data-destroy-html-url');
+
+      $.ajax({
+        url: url,
+        type: 'GET',
+        dataType: 'json',
+        success: function(data) {
+          var modalBody = modal.find('.modal-body');
+
+          // Inject the body's HTML into modal
+          modalBody.html(data.html);
+
+          // Show the modal
+          modal.modal('show');
+        },
+        error: function(xhr) {
+          // TODO
+        }
+      });
+    });
+
+    modal.find('.modal-footer [data-action=delete]').on('click', function() {
+      var modalBody = modal.find('.modal-body');
+      var form = modalBody.find('[data-role=destroy-custom-field-form]');
+      var id = form.attr('data-id');
+
+      form
+      .on('ajax:success', function() {
+        // Destroy datatable
+        table.destroy();
+
+        // Subtract number of columns
+        $('#samples').data(
+          'num-columns',
+          $('#samples').data('num-columns') - 1
+        );
+
+        // Remove column from table (=table header) & rows
+        var th = originalHeader.find('#' + id);
+        var index = th.index();
+        th.remove();
+        $('#samples tbody td:nth-child(' + (index + 1) + ')').remove();
+
+        // Remove all event handlers as we re-initialize them later with
+        // new table
+        $('#samples').off();
+        $('#samples thead').empty();
+        $('#samples thead').append(originalHeader);
+
+        // Preserve save/delete buttons as we need them after new table
+        // will be created
+        $('div.toolbarButtons').appendTo('div.samples-table');
+        $('div.toolbarButtons').hide();
+
+        // Re-initialize datatable
+        table = dataTableInit();
+        loadColumnsNames();
+
+        // Hide modal
+        modal.modal('hide');
+      })
+      .on('ajax:error', function() {
+        // TODO
+      });
+
+      form.submit();
+    });
+
+    modal.on('hidden.bs.modal', function() {
+      // Remove event handlers, clear contents
+      var modalBody = modal.find('.modal-body');
+      modalBody.off();
+      modalBody.html('');
+    });
+  }
+
   // initialze dropdown after the table is loaded
   function initDropdown() {
     table.on('init.dt', function() {
       initNewColumnForm();
-      loadColumnsNames();
       initSorting();
+      toggleColumnVisibility();
+      initEditColumns();
+      initDeleteColumns();
+    });
+    $('#samples-columns-dropdown').on('show.bs.dropdown', function() {
+      loadColumnsNames();
     });
   }
 
