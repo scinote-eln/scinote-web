@@ -937,15 +937,15 @@ function changeToEditMode() {
           '>' +
           '<i class="grippy"></i> ' +
           '<span class="text">' + el.innerText + '</span> ' +
-          '<input type="text" class="text-edit form-control" style="display: none;" />' +
+          '<span class="form-group"><input type="text" class="text-edit form-control" style="display: none;" />' +
           '<span class="pull-right controls">' +
           '<span class="ok glyphicon glyphicon-ok" style="display: none;"></span>' +
           '<span class="cancel glyphicon glyphicon-remove" style="display: none;"></span>' +
           '<span class="vis glyphicon ' + visClass + '"></span> ' +
           '<span class="edit glyphicon glyphicon-pencil ' + editClass + '">' +
-          '</span> ' +
-          '<span class="del glyphicon glyphicon-trash ' + delClass + '">' +
           '</span>' +
+          '<span class="del glyphicon glyphicon-trash ' + delClass + '">' +
+          '</span></span>' +
           '</span>' +
           '</li>';
         dropdownList.append(html);
@@ -1034,10 +1034,15 @@ function changeToEditMode() {
         success: function() {
           text.text(newName);
           $(table.columns().header()).filter('#' + id).text(newName);
+          $(li).clearFormErrors();
           cancelEditMode();
         },
-        error: function(xhr) {
-          // TODO
+        error: function(xhr, ajaxOptions, thrownError) {
+          $(li).clearFormErrors();
+          var msg = $.parseJSON(xhr.responseText);
+          renderFormError(event,
+                          $(li).find('.text-edit'),
+                          Object.keys(msg)[0] + ' '+ msg.name.toString());
         }
       });
     }
@@ -1067,7 +1072,10 @@ function changeToEditMode() {
       controls.hide();
       textEdit.css('display', ''); // show() doesn't work
       controlsEdit.css('display', ''); // show() doesn't work
-
+      dropdownList.sortable('disable');
+      dropdownList.on('click', function(ev) {
+        ev.stopPropagation();
+      });
       // Focus input
       textEdit.focus();
     });
@@ -1080,8 +1088,10 @@ function changeToEditMode() {
     // On ok buttons click
     dropdownList.on('click', '.ok', function(event) {
       event.stopPropagation();
+      dropdownList.sortable('enable');
       var self = $(this);
       var li = self.closest('li');
+      $(li).clearFormErrors();
       editColumn(li);
     });
 
@@ -1089,8 +1099,10 @@ function changeToEditMode() {
     dropdownList.on('keydown', 'input.text-edit', function(event) {
       if (event.keyCode === 13) {
         event.preventDefault();
+        dropdownList.sortable('enable');
         var self = $(this);
         var li = self.closest('li');
+        $(li).clearFormErrors();
         editColumn(li);
       }
     });
@@ -1098,9 +1110,10 @@ function changeToEditMode() {
     // On cancel buttons click
     dropdownList.on('click', '.cancel', function(event) {
       event.stopPropagation();
+      dropdownList.sortable('enable');
       var self = $(this);
       var li = self.closest('li');
-
+      $(li).clearFormErrors();
       columnEditMode = false;
       li.removeClass('editing');
 
@@ -1206,6 +1219,7 @@ function changeToEditMode() {
     });
     $('#samples-columns-dropdown').on('show.bs.dropdown', function() {
       loadColumnsNames();
+      dropdownList.sortable('enable');
     });
   }
 

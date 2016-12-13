@@ -1676,7 +1676,8 @@ textarea.textarea-sm {
     }
 
     .cancel {
-      margin-right: 28px;
+      margin-right: 15px;
+      margin-left: 5px;
     }
 
     .vis {
@@ -1690,4 +1691,14 @@ textarea.textarea-sm {
     .del {
     }
   }
+
+  .help-block {
+    display: inline-block;
+    margin-bottom: 0;
+    margin-left: 25px;
+  }
+}
+
+.add-new-column-form .help-block {
+  margin-left: 0;
 }
