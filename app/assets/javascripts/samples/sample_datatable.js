@@ -914,7 +914,9 @@ function changeToEditMode() {
 
   // loads the columns names in the dropdown list
   function loadColumnsNames() {
-    // First, clear the list
+    // Save scroll position
+    var scrollPosition = dropdownList.scrollTop();
+    // Clear the list
     dropdownList.find('li[data-position]').remove();
     _.each(table.columns().header(), function(el, index) {
       if (index > 1) {
@@ -951,6 +953,8 @@ function changeToEditMode() {
         dropdownList.append(html);
       }
     });
+    // Restore scroll position
+    dropdownList.scrollTop(scrollPosition);
     toggleColumnVisibility();
     // toggles grip img
     customLiHoverEffect();
