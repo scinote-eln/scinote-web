@@ -11,6 +11,7 @@ class ProtocolsController < ApplicationController
   before_action :check_view_permissions, only: [
     :protocol_status_bar,
     :updated_at_label,
+    :preview,
     :linked_children,
     :linked_children_datatable
   ]
@@ -77,6 +78,21 @@ class ProtocolsController < ApplicationController
           current_user
         )
       }
+    end
+  end
+
+  def preview
+    respond_to do |format|
+      format.json do
+        render json: {
+          title: I18n.t('protocols.index.preview.title',
+                        protocol: @protocol.name),
+          html: render_to_string(
+            partial: 'protocols/index/protocol_preview_modal_body.html.erb',
+            locals: { protocol: @protocol }
+          )
+        }
+      end
     end
   end
 

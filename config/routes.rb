@@ -240,6 +240,7 @@ Rails.application.routes.draw do
     member do
       get "linked_children", to: "protocols#linked_children"
       post "linked_children_datatable", to: "protocols#linked_children_datatable"
+      get "preview", to: "protocols#preview"
       patch "metadata", to: "protocols#update_metadata"
       patch "keywords", to: "protocols#update_keywords"
       post "clone", to: "protocols#clone"

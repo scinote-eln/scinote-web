@@ -1201,6 +1201,8 @@ en:
       thead_created_at: "Created at"
       thead_archived_on: "Archived at"
       thead_updated_at: "Last modified at"
+      preview:
+        title: "Protocol preview"
       linked_children:
         title: "Tasks linked to protocol %{protocol}"
         used_in: "Number of tasks linked to this protocol: %{nr}"

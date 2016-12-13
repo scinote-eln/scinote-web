@@ -16,6 +16,7 @@ function init() {
   initProtocolsTable();
   initRowSelection();
   initKeywordFiltering();
+  initProtocolPreviewModal();
   initLinkedChildrenModal();
   initCreateNewModal();
   initModals();
@@ -187,6 +188,33 @@ function initKeywordFiltering() {
   });
 }
 
+function initProtocolPreviewModal() {
+  // Only do this if the repository is public/private
+  if (repositoryType !== "archive") {
+    protocolsTableEl.on("click", "a[data-action='protocol-preview']", function(e) {
+      var link = $(this);
+      $.ajax({
+        url: link.attr("data-url"),
+        type: "GET",
+        dataType: "json",
+        success: function (data) {
+          var modal = $("#protocol-preview-modal");
+          var modalTitle = modal.find(".modal-title");
+          var modalBody = modal.find(".modal-body");
+          modalTitle.html(data.title);
+          modalBody.html(data.html);
+          modal.modal("show");
+        },
+        error: function (error) {
+          // TODO
+        }
+      });
+      e.preventDefault();
+      return false;
+    });
+  }
+}
+
 function initLinkedChildrenModal() {
   // Only do this if the repository is public/private
   if (repositoryType !== "archive") {
@@ -341,6 +369,13 @@ function initModals() {
     $(this).find(".modal-title").html("");
     // Destroy the embedded data table
     $(this).find(".modal-body #linked-children-table").DataTable().destroy();
+    $(this).find(".modal-body").html("");
+  });
+
+  // Protocol preview modal close action
+  $("#protocol-preview-modal").on("hidden.bs.modal", function(e) {
+    $(this).find(".modal-title").html("");
+    // Destroy the embedded data
     $(this).find(".modal-body").html("");
   });
 }
