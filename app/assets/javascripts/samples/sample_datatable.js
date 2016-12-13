@@ -1147,6 +1147,8 @@ function changeToEditMode() {
 
       form
       .on('ajax:success', function() {
+        // Preserve columns ordering before destroying the table
+        var colOrder = table.colReorder.order();
         // Destroy datatable
         table.destroy();
 
@@ -1159,6 +1161,10 @@ function changeToEditMode() {
         // Remove column from table (=table header) & rows
         var th = originalHeader.find('#' + id);
         var index = th.index();
+        var colIndex = $('#samples thead').find('#' + id).index();
+        if (colIndex >= 0) {
+          colOrder.splice(colIndex, 1);
+        }
         th.remove();
         $('#samples tbody td:nth-child(' + (index + 1) + ')').remove();
 
@@ -1175,6 +1181,8 @@ function changeToEditMode() {
 
         // Re-initialize datatable
         table = dataTableInit();
+        // Restore columns ordering
+        table.colReorder.order(colOrder);
         loadColumnsNames();
 
         // Hide modal
