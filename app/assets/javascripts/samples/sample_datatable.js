@@ -1067,7 +1067,10 @@ function changeToEditMode() {
       controls.hide();
       textEdit.css('display', ''); // show() doesn't work
       controlsEdit.css('display', ''); // show() doesn't work
-
+      dropdownList.sortable('disable');
+      dropdownList.on('click', function(ev) {
+        ev.stopPropagation();
+      });
       // Focus input
       textEdit.focus();
     });
@@ -1080,6 +1083,7 @@ function changeToEditMode() {
     // On ok buttons click
     dropdownList.on('click', '.ok', function(event) {
       event.stopPropagation();
+      dropdownList.sortable('enable');
       var self = $(this);
       var li = self.closest('li');
       editColumn(li);
@@ -1089,6 +1093,7 @@ function changeToEditMode() {
     dropdownList.on('keydown', 'input.text-edit', function(event) {
       if (event.keyCode === 13) {
         event.preventDefault();
+        dropdownList.sortable('enable');
         var self = $(this);
         var li = self.closest('li');
         editColumn(li);
@@ -1098,6 +1103,7 @@ function changeToEditMode() {
     // On cancel buttons click
     dropdownList.on('click', '.cancel', function(event) {
       event.stopPropagation();
+      dropdownList.sortable('enable');
       var self = $(this);
       var li = self.closest('li');
 
@@ -1206,6 +1212,7 @@ function changeToEditMode() {
     });
     $('#samples-columns-dropdown').on('show.bs.dropdown', function() {
       loadColumnsNames();
+      dropdownList.sortable('enable');
     });
   }
 
