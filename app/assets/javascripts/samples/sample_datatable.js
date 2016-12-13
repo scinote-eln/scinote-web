@@ -1195,6 +1195,16 @@ function changeToEditMode() {
     });
   }
 
+  // calculate the max height of window and adjust dropdown max-height
+  function dropdownOverflow() {
+    var windowHeight = $( window ).height();
+    var offset = windowHeight - dropdownList.offset().top;
+
+    if(dropdownList.height() >= offset) {
+      dropdownList.css('maxHeight', offset);
+    }
+  }
+
   // initialze dropdown after the table is loaded
   function initDropdown() {
     table.on('init.dt', function() {
@@ -1207,6 +1217,10 @@ function changeToEditMode() {
     $('#samples-columns-dropdown').on('show.bs.dropdown', function() {
       loadColumnsNames();
     });
+
+    $('#samples-columns-dropdown').on('shown.bs.dropdown', function() {
+      dropdownOverflow();
+    })
   }
 
   initDropdown();
