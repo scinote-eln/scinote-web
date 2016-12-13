@@ -21,6 +21,7 @@ class UserSamplesController < ApplicationController
   def load_samples_table_status
     @samples_table_state = SamplesTable.find_status(current_user,
                                                     current_organization).first
+
     respond_to do |format|
       if @samples_table_state
         format.json do

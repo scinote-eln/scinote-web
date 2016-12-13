@@ -5,7 +5,7 @@ class SamplesTable < ActiveRecord::Base
   belongs_to :organization, inverse_of: :samples_tables
 
   scope :find_status,
-        ->(org, user) { where(user: user, organization: org).pluck(:status) }
+        ->(user, org) { where(user: user, organization: org).pluck(:status) }
 
   def self.update_samples_table_state(custom_field)
     samples_table = SamplesTable.where(user: custom_field.user,
