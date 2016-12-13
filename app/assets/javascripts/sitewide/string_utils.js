@@ -2,15 +2,24 @@
  * Truncate long strings where is necessary.
  */
 function truncateLongString( el, chars ) {
-  var input = $.trim(el.text());
+  if($.type(el) !== 'string'){
+    var input = $.trim(el.text());
+  } else {
+    var input = $.trim(el);
+  }
 
   var html = "";
-  if( el.children().hasClass("glyphicon") ){
+  if( $.type(el) !== 'string' &&
+      el.children().hasClass("glyphicon")) {
     html = el.children()[0];
   }
 
   if( input.length >= chars ){
-    var newText = el.text().slice(0, chars);
+    if($.type(el) != 'string') {
+      var newText = el.text().slice(0, chars);
+    }else {
+      var newText = el.slice(0, chars);
+    }
     for( var i = newText.length; i > 0; i--){
       if(newText[i] === ' ' && i > 10){
         newText = newText.slice(0, i);
@@ -21,8 +30,14 @@ function truncateLongString( el, chars ) {
     if ( html ) {
       el.html(html.outerHTML + newText + '...' );
     } else {
+      if($.type(el) === 'string'){
+        return newText + '...';
+      } else {
       el.html(newText + '...' );
+      }
     }
+  } else {
+    return el;
   }
 }
 

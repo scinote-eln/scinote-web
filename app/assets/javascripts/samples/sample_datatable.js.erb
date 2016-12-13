@@ -841,6 +841,7 @@ function changeToEditMode() {
             '</span>');
         },
         success: function(data) {
+          debugger;
           var form = $('#new-column-form');
           form.find('.help-block').remove();
           if (form.hasClass('has-error')) {
@@ -857,8 +858,8 @@ function changeToEditMode() {
             'data-editable data-deletable ' +
             'data-edit-url="' + data.edit_url + '" ' +
             'data-destroy-html-url="' + data.destroy_html_url + '"' +
-            '>' +
-            data.name + '</th>');
+            '>' + truncateLongString(data.name,
+              <%= Constants::NAME_TRUNCATION_LENGTH_DROPDOWN %>) + '</th>');
           var colOrder = table.colReorder.order();
           colOrder.push(colOrder.length);
           // Remove all event handlers as we re-initialize them later with
@@ -936,7 +937,8 @@ function changeToEditMode() {
           'class="' + visLi + '"' +
           '>' +
           '<i class="grippy"></i> ' +
-          '<span class="text">' + el.innerText + '</span> ' +
+          '<span class="text">' + truncateLongString(el.innerText,
+            <%= Constants::NAME_TRUNCATION_LENGTH_DROPDOWN %>) + '</span> ' +
           '<input type="text" class="text-edit form-control" style="display: none;" />' +
           '<span class="pull-right controls">' +
           '<span class="ok glyphicon glyphicon-ok" style="display: none;"></span>' +
@@ -1032,7 +1034,8 @@ function changeToEditMode() {
         data: {custom_field: {name: newName}},
         dataType: 'json',
         success: function() {
-          text.text(newName);
+          text.text(truncateLongString(newName,
+            <%= Constants::NAME_TRUNCATION_LENGTH_DROPDOWN %>));
           $(table.columns().header()).filter('#' + id).text(newName);
           cancelEditMode();
         },
