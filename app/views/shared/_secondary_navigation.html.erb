@@ -170,12 +170,6 @@
               </a>
             </li>
           <% end %>
-          <% if can_view_module_archive(@my_module) then %>
-            <li id="archive-nav-tab" class="<%= "active" if is_module_archive? %>">
-              <a href="<%= archive_my_module_url(@my_module) %>">
-                <span class="glyphicon glyphicon-briefcase" title="<%= t'nav2.modules.archive' %>"></span></a>
-            </li>
-          <% end %>
 
         <% end %>
       </ul>
