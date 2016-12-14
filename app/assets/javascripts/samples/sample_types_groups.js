@@ -17,14 +17,6 @@
     });
   }
 
-  // function newSampleTypeGroupFormSubmit() {
-  //   $('#submit').off();
-  //   $('#submit').on('click', function() {
-  //     var form = $(this).closest('form');
-  //     form.submit();
-  //   });
-  // }
-
   function submitEditSampleTypeGroupForm() {
     $('.edit-confirm').off();
     $('.edit-confirm').on('click', function() {
@@ -254,7 +246,6 @@
   function initSampleTypesGroups() {
     showNewSampleTypeGroupForm();
     newSampleTypeFormCancel();
-    //newSampleTypeGroupFormSubmit();
     bindNewSampleTypeAction();
     editSampleTypeForm();
     destroySampleTypeGroup();
