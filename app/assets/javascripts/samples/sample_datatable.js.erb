@@ -1032,7 +1032,7 @@ function changeToEditMode() {
         data: {custom_field: {name: newName}},
         dataType: 'json',
         success: function() {
-          text.text(generateColumnNameTooltip(newName));
+          text.html(generateColumnNameTooltip(newName));
           $(table.columns().header()).filter('#' + id).text(newName);
           cancelEditMode();
         },
