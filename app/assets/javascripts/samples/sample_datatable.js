@@ -1133,11 +1133,13 @@ function changeToEditMode() {
       var self = $(this);
       var li = self.closest('li');
       var url = li.attr('data-destroy-html-url');
+      var colIndex = originalHeader.find('#' + li.attr('data-id')).index();
 
       $.ajax({
         url: url,
         type: 'GET',
         dataType: 'json',
+        data: {column_index: colIndex},
         success: function(data) {
           var modalBody = modal.find('.modal-body');
 
