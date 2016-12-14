@@ -147,7 +147,7 @@
             <%= "data-edit-url='#{organization_custom_field_path(@organization, cf)}'" %>
             <%= "data-destroy-html-url='#{organization_custom_field_destroy_html_path(@organization, cf)}'" %>
         >
-          <%= cf.name %>
+          <%= display_tooltip(cf.name) %>
         </th>
         <% end %>
       </tr>

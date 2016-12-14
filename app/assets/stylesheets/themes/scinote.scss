@@ -1453,6 +1453,7 @@ html.turbolinks-progress-bar::before {
     text-align: center;
     visibility: hidden;
     width: 200px;
+    word-wrap: break-word;
     z-index: $infinity;
   }
 }
@@ -1596,10 +1597,14 @@ textarea.textarea-sm {
 // new smart dropdown styles
 
 .smart-dropdown {
-  max-height: 400px;
   overflow-y: auto;
   padding: 0;
   width: 300px;
+
+  .modal-tooltiptext {
+    margin-left: 0;
+    z-index: 99999999;
+  }
 
   li {
     background: $color-white;
@@ -1690,4 +1695,9 @@ textarea.textarea-sm {
     .del {
     }
   }
+}
+
+th.custom-field .modal-tooltiptext {
+  margin-left: 0;
+  z-index: 99999999;
 }
