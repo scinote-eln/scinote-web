@@ -10,9 +10,8 @@ Link.sanitize = function(url) {
   return 'http://' + url;
 };
 
-function openLinksInNewEab() {
+function openLinksInNewTab() {
   _.each($('.ql-editor a'), function(el) {
-    debugger;
     if ($(el).attr('target') !== '_blank') {
       $(el).attr('target', '_blank');
     }
@@ -20,5 +19,5 @@ function openLinksInNewEab() {
 }
 
 $(document).ready(function(){
-  openLinksInNewEab();
+  openLinksInNewTab();
 });
