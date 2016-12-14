@@ -1453,6 +1453,7 @@ html.turbolinks-progress-bar::before {
     text-align: center;
     visibility: hidden;
     width: 200px;
+    word-wrap: break-word;
     z-index: $infinity;
   }
 }
@@ -1600,6 +1601,11 @@ textarea.textarea-sm {
   padding: 0;
   width: 300px;
 
+  .modal-tooltiptext {
+    margin-left: 0;
+    z-index: 99999999;
+  }
+
   li {
     background: $color-white;
     border: 1px solid $color-alto;
@@ -1689,4 +1695,9 @@ textarea.textarea-sm {
     .del {
     }
   }
+}
+
+th.custom-field .modal-tooltiptext {
+  margin-left: 0;
+  z-index: 99999999;
 }
