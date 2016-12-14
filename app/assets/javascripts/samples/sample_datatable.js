@@ -138,6 +138,9 @@ function dataTableInit() {
         table.column(i).visible(visibility);
       }
       oSettings._colReorder.fnOrder(myData.ColReorder);
+      table.on('mousedown', function() {
+        $('#samples-columns-dropdown').removeClass('open');
+      });
     }
   });
 
