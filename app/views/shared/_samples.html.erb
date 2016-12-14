@@ -1,7 +1,7 @@
 <%= render partial: "samples/import_samples_modal" %>
 <%= render partial: "samples/delete_samples_modal" %>
-<%= render partial: "samples/create_sample_group_modal" %>
 <%= render partial: "samples/delete_custom_field_modal" %>
+
 <!-- Modal for parsing sample sheets should be empty at first -->
 <div class="modal fade" id="modal-parse-samples" tabindex="-1" role="dialog" aria-labelledby=="modal-parse-samples-label"></div>
 
@@ -67,7 +67,10 @@
   <% if can_add_sample_related_things_to_organization %>
   <div class="dropdown pull-right" style="display: inline;">
     <%= link_to(t('samples.types_and_groups'),
-                organization_sample_types_path(@organization),
+                organization_sample_types_path(@organization,
+                  project_id: (@project.id if @project),
+                  my_module_id: (@my_module.id if @my_module),
+                  experiment_id: (@experiment.id if @experiment)),
                 class: 'btn btn-default' ) %>
   </div>
   <% end %>

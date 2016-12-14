@@ -138,6 +138,9 @@ function dataTableInit() {
         table.column(i).visible(visibility);
       }
       oSettings._colReorder.fnOrder(myData.ColReorder);
+      table.on('mousedown', function() {
+        $('#samples-columns-dropdown').removeClass('open');
+      });
     }
   });
 
@@ -914,7 +917,9 @@ function changeToEditMode() {
 
   // loads the columns names in the dropdown list
   function loadColumnsNames() {
-    // First, clear the list
+    // Save scroll position
+    var scrollPosition = dropdownList.scrollTop();
+    // Clear the list
     dropdownList.find('li[data-position]').remove();
     _.each(table.columns().header(), function(el, index) {
       if (index > 1) {
@@ -951,6 +956,8 @@ function changeToEditMode() {
         dropdownList.append(html);
       }
     });
+    // Restore scroll position
+    dropdownList.scrollTop(scrollPosition);
     toggleColumnVisibility();
     // toggles grip img
     customLiHoverEffect();
@@ -1068,7 +1075,10 @@ function changeToEditMode() {
       controls.hide();
       textEdit.css('display', ''); // show() doesn't work
       controlsEdit.css('display', ''); // show() doesn't work
-
+      dropdownList.sortable('disable');
+      dropdownList.on('click', function(ev) {
+        ev.stopPropagation();
+      });
       // Focus input
       textEdit.focus();
     });
@@ -1081,6 +1091,7 @@ function changeToEditMode() {
     // On ok buttons click
     dropdownList.on('click', '.ok', function(event) {
       event.stopPropagation();
+      dropdownList.sortable('enable');
       var self = $(this);
       var li = self.closest('li');
       editColumn(li);
@@ -1090,6 +1101,7 @@ function changeToEditMode() {
     dropdownList.on('keydown', 'input.text-edit', function(event) {
       if (event.keyCode === 13) {
         event.preventDefault();
+        dropdownList.sortable('enable');
         var self = $(this);
         var li = self.closest('li');
         editColumn(li);
@@ -1099,6 +1111,7 @@ function changeToEditMode() {
     // On cancel buttons click
     dropdownList.on('click', '.cancel', function(event) {
       event.stopPropagation();
+      dropdownList.sortable('enable');
       var self = $(this);
       var li = self.closest('li');
 
@@ -1121,11 +1134,13 @@ function changeToEditMode() {
       var self = $(this);
       var li = self.closest('li');
       var url = li.attr('data-destroy-html-url');
+      var colIndex = originalHeader.find('#' + li.attr('data-id')).index();
 
       $.ajax({
         url: url,
         type: 'GET',
         dataType: 'json',
+        data: {column_index: colIndex},
         success: function(data) {
           var modalBody = modal.find('.modal-body');
 
@@ -1229,6 +1244,7 @@ function changeToEditMode() {
     });
     $('#samples-columns-dropdown').on('show.bs.dropdown', function() {
       loadColumnsNames();
+      dropdownList.sortable('enable');
     });
 
     $('#samples-columns-dropdown').on('shown.bs.dropdown', function() {
