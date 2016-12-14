@@ -66,7 +66,10 @@ class CustomFieldsController < ApplicationController
     respond_to do |format|
       format.json do
         if @custom_field.destroy
-          SamplesTable.update_samples_table_state(@del_custom_field, params[:custom_field][:column_index])
+          SamplesTable.update_samples_table_state(
+            @del_custom_field,
+            params[:custom_field][:column_index]
+          )
           render json: { status: :ok }
         else
           render json: { status: :unprocessable_entity }
