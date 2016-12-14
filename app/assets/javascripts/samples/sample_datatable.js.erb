@@ -1033,7 +1033,8 @@ function changeToEditMode() {
         dataType: 'json',
         success: function() {
           text.html(generateColumnNameTooltip(newName));
-          $(table.columns().header()).filter('#' + id).text(newName);
+          $(table.columns().header()).filter('#' + id)
+            .html(generateColumnNameTooltip(newName));
           cancelEditMode();
         },
         error: function(xhr) {
