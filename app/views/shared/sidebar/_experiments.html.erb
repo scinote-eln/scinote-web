@@ -1,7 +1,9 @@
 <ul>
   <% if project.active_experiments.present? then %>
     <% project.active_experiments.each do |experiment| %>
-      <% if experiment_page? && experiment == @experiment %>
+      <% if (experiment_page? ||
+             sample_groups_page_experiment? ||
+             sample_types_page_expermient?) && experiment == @experiment %>
         <li class="active" data-parent="candidate">
           <span class="tree-link line-wrap">
             <i></i>

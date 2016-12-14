@@ -105,7 +105,9 @@
             </li>
           <% end %>
 
-        <% elsif experiment_page? %>
+        <% elsif experiment_page? ||
+                 sample_groups_page_experiment? ||
+                 sample_types_page_expermient? %>
           <% if can_view_experiment(@experiment) then %>
               <li id="canvas-nav-tab" class="<%= "active" if is_experiment_canvas? %>">
                 <a href="<%= canvas_experiment_url(@experiment) %>" title="<%=t "nav2.experiments.canvas" %>">
@@ -115,7 +117,9 @@
               </li>
           <% end %>
           <% if can_view_experiment_samples(@experiment) then %>
-            <li id="experiment-samples-nav-tab" class="<%= "active" if is_experiment_samples? %>">
+            <li id="experiment-samples-nav-tab" class="<%= "active" if is_experiment_samples? ||
+                                                                       sample_groups_page_experiment? ||
+                                                                       sample_types_page_expermient? %>">
               <a href="<%= samples_experiment_url(@experiment) %>" title="<%=t "nav2.projects.samples" %>">
                 <span class="hidden-sm hidden-md"><%=t "nav2.projects.samples" %></span>
                 <span class="hidden-xs hidden-lg glyphicon glyphicon-tint"></span>
@@ -223,8 +227,12 @@
         <% if experiment_page? ||
               module_page? ||
               sample_types_page_my_module? ||
-              sample_groups_page_my_module? %>
-          <% if !module_page? %>
+              sample_groups_page_my_module? ||
+              sample_groups_page_experiment? ||
+              sample_types_page_expermient? %>
+          <% if !module_page? &&
+                !sample_types_page_my_module? &&
+                !sample_groups_page_my_module? %>
             <li class="active">
               <%= truncate(@experiment.name,
                            length: Constants::NAME_TRUNCATION_LENGTH) %>
