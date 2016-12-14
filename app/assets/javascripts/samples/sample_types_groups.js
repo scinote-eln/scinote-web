@@ -17,13 +17,13 @@
     });
   }
 
-  function newSampleTypeGroupFormSubmit() {
-    $('#submit').off();
-    $('#submit').on('click', function() {
-      var form = $(this).closest('form');
-      form.submit();
-    });
-  }
+  // function newSampleTypeGroupFormSubmit() {
+  //   $('#submit').off();
+  //   $('#submit').on('click', function() {
+  //     var form = $(this).closest('form');
+  //     form.submit();
+  //   });
+  // }
 
   function submitEditSampleTypeGroupForm() {
     $('.edit-confirm').off();
@@ -39,7 +39,7 @@
       var li = $(this).closest('li');
       var href = $(this).attr('data-element');
       var id = $(li).attr('data-id');
-
+      $().clearFormErrors();
       $.ajax({
         url: href,
         data: { id: id },
@@ -47,7 +47,7 @@
           $(li).replaceWith($.parseHTML(data.html));
           editSampleTypeForm();
           destroySampleTypeGroup();
-          initSampleGroupColor();
+          initSampleColorPicker(li)
           appendCarretToColorPickerDropdown();
           editSampleGroupColor();
           editSampleGroupForm();
@@ -95,6 +95,7 @@
       $(li).insertAfter('.new-resource-form');
       editSampleTypeForm();
       destroySampleTypeGroup();
+      $('#new_sample_type').clearFormErrors();
     }).bind('ajax:error', function(ev, error) {
       $(this).clearFormErrors();
       var msg = $.parseJSON(error.responseText);
@@ -128,17 +129,18 @@
   }
 
   function bindNewSampleGroupAction() {
-      $('#new_sample_group').off();
+    $('#new_sample_group').off();
     $('#new_sample_group').bind('ajax:success', function(ev, data) {
       var li = $.parseHTML(data.html);
       $('#name-input').val('');
       $('.new-resource-form').slideUp();
       $(li).insertAfter('.new-resource-form');
-      initSampleGroupColor();
+      initSampleColorPicker(li);
       appendCarretToColorPickerDropdown();
       editSampleGroupColor();
       editSampleGroupForm();
       destroySampleTypeGroup();
+      $('#new_sample_group').clearFormErrors();
     }).bind('ajax:error', function(ev, error) {
       $(this).clearFormErrors();
       var msg = $.parseJSON(error.responseText);
@@ -195,7 +197,7 @@
           submitEditSampleTypeGroupForm();
           abortEditSampleTypeGroupAction();
           destroySampleTypeGroup();
-          initSampleGroupColor();
+          initSampleColorPicker(li);
           appendCarretToColorPickerDropdown();
           editSampleGroupColor();
 
@@ -209,7 +211,7 @@
             $(this).closest('li').replaceWith($.parseHTML(data.html));
             editSampleGroupForm();
             destroySampleTypeGroup();
-            initSampleGroupColor();
+            initSampleColorPicker($(this).closest('li'));
             appendCarretToColorPickerDropdown();
             editSampleGroupColor();
           }).bind('ajax:error', function(ev, error){
@@ -233,6 +235,12 @@
     });
   }
 
+  function initSampleColorPicker(el) {
+    var element = $(el).find('.edit-sample-group-color');
+    var color = $(element).closest('[data-color]').attr('data-color');
+    $(element).colorselector('setColor', color);
+  }
+
 /**
  * Opens adding mode when redirected from samples page, when clicking link for
  * adding sample type or group link
@@ -246,7 +254,7 @@
   function initSampleTypesGroups() {
     showNewSampleTypeGroupForm();
     newSampleTypeFormCancel();
-    newSampleTypeGroupFormSubmit();
+    //newSampleTypeGroupFormSubmit();
     bindNewSampleTypeAction();
     editSampleTypeForm();
     destroySampleTypeGroup();
