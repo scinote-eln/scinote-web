@@ -2,6 +2,8 @@ class SampleTypesController < ApplicationController
   before_action :load_vars_nested
   before_action :check_create_permissions
   before_action :set_sample_type, except: [:create, :index]
+  before_action :set_project_my_module, only: :index
+  layout 'fluid'
 
   def create
     @sample_type = SampleType.new(sample_type_params)
@@ -111,6 +113,15 @@ class SampleTypesController < ApplicationController
   end
 
   private
+
+  def set_project_my_module
+    @project = Project.find_by_id(params[:project_id]) if params[:project_id]
+    @experiment = Experiment
+                  .find_by_id(params[:experiment_id]) if params[:experiment_id]
+    @my_module = MyModule
+                 .find_by_id(params[:my_module_id]) if params[:my_module_id]
+    render_403 unless @project || @my_module
+  end
 
   def load_vars_nested
     @organization = Organization.find_by_id(params[:organization_id])

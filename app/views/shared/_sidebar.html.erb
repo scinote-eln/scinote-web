@@ -14,7 +14,9 @@
 
     <div class="tree">
       <ul>
-        <% if project_page? %>
+        <% if project_page? ||
+              sample_types_page_project? ||
+              sample_groups_page_project? %>
           <li class="active">
             <span class="tree-link line-wrap">
               <i></i>
