@@ -1051,6 +1051,11 @@ function changeToEditMode() {
     dropdownList.on('click', '.edit:not(.disabled)', function(event) {
       event.stopPropagation();
 
+      // Clear all input errors
+      _.each(dropdownList, function(el) {
+        $(el).clearFormErrors();
+      });
+
       cancelEditMode();
 
       var self = $(this);
