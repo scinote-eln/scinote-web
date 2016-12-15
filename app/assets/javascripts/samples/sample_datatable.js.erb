@@ -1048,13 +1048,14 @@ function changeToEditMode() {
 
           cancelEditMode();
         },
-        error: function(xhr, ajaxOptions, thrownError) {
+        error: function(xhr) {
           dropdownList.sortable('disable');
           $(li).clearFormErrors();
           var msg = $.parseJSON(xhr.responseText);
-          renderFormError(event,
+
+          renderFormError(xhr,
                           $(li).find('.text-edit'),
-                          Object.keys(msg)[0] + ' '+ msg.name.toString());
+                          Object.keys(msg)[0] + ' ' + msg.name.toString());
           var verticalHeight = $(li).offset().top;
           dropdownList.scrollTo(verticalHeight,0);
         }
