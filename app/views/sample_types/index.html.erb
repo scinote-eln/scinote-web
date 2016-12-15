@@ -1,14 +1,22 @@
 <% provide(:head_title, t('sample_types.index.head_title')) %>
+<%= render partial: "shared/sidebar" %>
+<%= render partial: "shared/secondary_navigation" %>
 
 <% if current_organization %>
   <ul class="nav nav-tabs nav-settings" data-position="bottom">
     <li role="presentation" class="active">
       <%= link_to t('sample_types.index.sample_types'),
-                  organization_sample_types_path(current_organization) %>
+                  organization_sample_types_path(current_organization,
+                    project_id: (@project.id if @project),
+                    my_module_id: (@my_module.id if @my_module),
+                    experiment_id: (@experiment.id if @experiment)) %>
     </li>
     <li role="presentation">
       <%= link_to t('sample_types.index.sample_groups'),
-                  organization_sample_groups_path(current_organization) %>
+                  organization_sample_groups_path(current_organization,
+                    project_id: (@project.id if @project),
+                    my_module_id: (@my_module.id if @my_module),
+                    experiment_id: (@experiment.id if @experiment)) %>
     </li>
   </ul>
   <div class="tab-content">
@@ -20,18 +28,25 @@
       <ul class="list-unstyled sample_types_groups_list"
           id="sample_types_list">
         <li class="new-resource-form">
-          <%= form_for SampleType.new,
-                                 remote: true,
-                                 html: { class: 'form-inline' },
-                                 url: organization_sample_types_path(current_organization) do |f| %>
-            <div class="form-group">
-              <%= f.text_field :name, id: 'name-input', class: 'form-control' %>
-              <span id="submit" class="glyphicon glyphicon-ok"></span>
-            </div>
-            <span class="pull-right">
-              <span id="remove" class="glyphicon glyphicon-trash"></span>
-            </span>
-          <% end %>
+          <div class="row">
+              <%= form_for SampleType.new,
+                                     remote: true,
+                                     html: { class: 'form-inline' },
+                                     url: organization_sample_types_path(current_organization) do |f| %>
+
+              <div class="col-xs-8">
+                <div class="form-group">
+                  <%= f.text_field :name, id: 'name-input', class: 'form-control' %>
+                </div>
+              </div>
+              <div class="text-right col-md-4">
+                <button id="submit"
+                        class="btn btn-primary"><%= t('general.create') %></button>
+                <button id="remove"
+                        class="btn btn-default"><%= t('general.cancel') %></button>
+              </div>
+            <% end %>
+          </div>
         </li>
         <% @sample_types.sorted.each do |sample_type| %>
           <%= render partial: 'sample_type',

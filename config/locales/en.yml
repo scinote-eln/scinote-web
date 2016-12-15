@@ -890,7 +890,7 @@ en:
       head_title: 'Sample Types'
       sample_types: 'Sample types'
       sample_groups: 'Sample groups'
-      new: 'Create Sample type'
+      new: 'Create sample type'
       destroy_modal_title: "Permanently delete the \"%{name}\" sample type?"
       destroy_modal_body: 'This action is irreversible and makes the sample type inaccessible to all team members.'
       destroy_modal_submit: 'Permanently delete sample type'
@@ -1453,6 +1453,7 @@ en:
     edit: "Edit"
     cancel: "Cancel"
     close: "Close"
+    create: 'Create'
     check_all: "Check all"
     no_comments: "No comments!"
     more_comments: "More comments"

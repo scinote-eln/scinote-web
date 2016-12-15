@@ -53,7 +53,8 @@ class CustomFieldsController < ApplicationController
       format.json do
         render json: {
           html: render_to_string(
-            partial: 'samples/delete_custom_field_modal_body.html.erb'
+            partial: 'samples/delete_custom_field_modal_body.html.erb',
+            locals: { column_index: params[:column_index] }
           )
         }
       end
@@ -61,9 +62,14 @@ class CustomFieldsController < ApplicationController
   end
 
   def destroy
+    @del_custom_field = @custom_field.dup
     respond_to do |format|
       format.json do
         if @custom_field.destroy
+          SamplesTable.update_samples_table_state(
+            @del_custom_field,
+            params[:custom_field][:column_index]
+          )
           render json: { status: :ok }
         else
           render json: { status: :unprocessable_entity }

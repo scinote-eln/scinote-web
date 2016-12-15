@@ -2,6 +2,7 @@
   'use strict';
 
   function showNewSampleTypeGroupForm() {
+    $('#create-resource').off();
     $('#create-resource').on('click', function() {
       $('.new-resource-form').slideDown();
       $('#name-input').focus();
@@ -9,20 +10,15 @@
   }
 
   function newSampleTypeFormCancel() {
+    $('#remove').off();
     $('#remove').on('click', function() {
       $('#name-input').val('');
       $('.new-resource-form').slideUp();
     });
   }
 
-  function newSampleTypeGroupFormSubmit() {
-    $('#submit').on('click', function() {
-      var form = $(this).closest('form');
-      form.submit();
-    });
-  }
-
-  function submitEditSampleTypeGroupForm(button) {
+  function submitEditSampleTypeGroupForm() {
+    $('.edit-confirm').off();
     $('.edit-confirm').on('click', function() {
       var form = $(this).closest('form');
       form.submit();
@@ -30,11 +26,12 @@
   }
 
   function abortEditSampleTypeGroupAction() {
+    $('.abort').off();
     $('.abort').on('click', function() {
       var li = $(this).closest('li');
       var href = $(this).attr('data-element');
       var id = $(li).attr('data-id');
-
+      $().clearFormErrors();
       $.ajax({
         url: href,
         data: { id: id },
@@ -42,7 +39,7 @@
           $(li).replaceWith($.parseHTML(data.html));
           editSampleTypeForm();
           destroySampleTypeGroup();
-          initSampleGroupColor();
+          initSampleColorPicker(li)
           appendCarretToColorPickerDropdown();
           editSampleGroupColor();
           editSampleGroupForm();
@@ -53,6 +50,7 @@
   }
 
   function destroySampleTypeGroup() {
+    $('.delete').off();
     $('.delete').on('click', function() {
       var li = $(this).closest('li');
       var href = li.attr('data-delete');
@@ -81,6 +79,7 @@
   }
 
   function bindNewSampleTypeAction() {
+    $('#new_sample_type').off();
     $('#new_sample_type').bind('ajax:success', function(ev, data) {
       var li = $.parseHTML(data.html);
       $('#name-input').val('');
@@ -88,6 +87,7 @@
       $(li).insertAfter('.new-resource-form');
       editSampleTypeForm();
       destroySampleTypeGroup();
+      $('#new_sample_type').clearFormErrors();
     }).bind('ajax:error', function(ev, error) {
       $(this).clearFormErrors();
       var msg = $.parseJSON(error.responseText);
@@ -109,6 +109,7 @@
 
   function editSampleGroupColor() {
     $(document).ready(function() {
+      $('.edit_sample_group a.color-btn').off();
       $('.edit_sample_group a.color-btn').on('click', function() {
         var color = $(this).attr('data-value');
         var form = $(this).closest('form');
@@ -120,16 +121,18 @@
   }
 
   function bindNewSampleGroupAction() {
+    $('#new_sample_group').off();
     $('#new_sample_group').bind('ajax:success', function(ev, data) {
       var li = $.parseHTML(data.html);
       $('#name-input').val('');
       $('.new-resource-form').slideUp();
       $(li).insertAfter('.new-resource-form');
-      initSampleGroupColor();
+      initSampleColorPicker(li);
       appendCarretToColorPickerDropdown();
       editSampleGroupColor();
       editSampleGroupForm();
       destroySampleTypeGroup();
+      $('#new_sample_group').clearFormErrors();
     }).bind('ajax:error', function(ev, error) {
       $(this).clearFormErrors();
       var msg = $.parseJSON(error.responseText);
@@ -140,7 +143,8 @@
   }
 
   function editSampleTypeForm() {
-    $('.edit').on('click', function() {
+    $('.edit-sample-type').off();
+    $('.edit-sample-type').on('click', function() {
       var li = $(this).closest('li');
       $.ajax({
         url: li.attr('data-edit'),
@@ -150,7 +154,12 @@
           submitEditSampleTypeGroupForm();
           abortEditSampleTypeGroupAction();
           destroySampleTypeGroup();
+          $('#edit_sample_type_' + data.id)
+            .find('[name="sample_type[name]"]')
+            .focus();
 
+
+          $('#edit_sample_type_' + data.id).off();
           $('#edit_sample_type_' + data.id)
             .bind('ajax:success', function(ev, data) {
             $(this).closest('li').replaceWith($.parseHTML(data.html));
@@ -169,7 +178,8 @@
   }
 
   function editSampleGroupForm() {
-    $('.edit').on('click', function() {
+    $('.edit-sample-group').off();
+    $('.edit-sample-group').on('click', function() {
       var li = $(this).closest('li');
       $.ajax({
         url: li.attr('data-edit'),
@@ -179,16 +189,21 @@
           submitEditSampleTypeGroupForm();
           abortEditSampleTypeGroupAction();
           destroySampleTypeGroup();
-          initSampleGroupColor();
+          initSampleColorPicker(li);
           appendCarretToColorPickerDropdown();
           editSampleGroupColor();
 
+          $('#edit_sample_group_' + data.id)
+            .find('[name="sample_group[name]"]')
+            .focus();
+
+          $('#edit_sample_group_' + data.id).off();
           $('#edit_sample_group_' + data.id)
             .bind('ajax:success', function(ev, data) {
             $(this).closest('li').replaceWith($.parseHTML(data.html));
             editSampleGroupForm();
             destroySampleTypeGroup();
-            initSampleGroupColor();
+            initSampleColorPicker($(this).closest('li'));
             appendCarretToColorPickerDropdown();
             editSampleGroupColor();
           }).bind('ajax:error', function(ev, error){
@@ -212,6 +227,12 @@
     });
   }
 
+  function initSampleColorPicker(el) {
+    var element = $(el).find('.edit-sample-group-color');
+    var color = $(element).closest('[data-color]').attr('data-color');
+    $(element).colorselector('setColor', color);
+  }
+
 /**
  * Opens adding mode when redirected from samples page, when clicking link for
  * adding sample type or group link
@@ -225,7 +246,6 @@
   function initSampleTypesGroups() {
     showNewSampleTypeGroupForm();
     newSampleTypeFormCancel();
-    newSampleTypeGroupFormSubmit();
     bindNewSampleTypeAction();
     editSampleTypeForm();
     destroySampleTypeGroup();

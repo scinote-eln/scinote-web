@@ -138,6 +138,9 @@ function dataTableInit() {
         table.column(i).visible(visibility);
       }
       oSettings._colReorder.fnOrder(myData.ColReorder);
+      table.on('mousedown', function() {
+        $('#samples-columns-dropdown').removeClass('open');
+      });
     }
   });
 
@@ -746,7 +749,9 @@ function createSampleTypeSelect(data, selected) {
   var $selectType = $('<select></select>')
     .attr('name', 'sample_type_id').addClass('show-tick');
 
-  var $option = $("<option href='/organizations/1/sample_types'></option>")
+  var sampleTypesLink = $('#samples').attr('data-sample-types-link');
+
+  var $option = $("<option href='" + sampleTypesLink + "'></option>")
                   .attr('value', -2)
                   .text(I18n.t('samples.table.add_sample_type'));
   $selectType.append($option);
@@ -774,7 +779,9 @@ function createSampleGroupSelect(data, selected) {
   var $selectGroup = $('<select></select>')
     .attr('name', 'sample_group_id').addClass('show-tick');
 
-  var $option = $("<option href='/organizations/1/sample_groups'></option>")
+  var sampleGroupsLink = $('#samples').attr('data-sample-groups-link');
+
+  var $option = $("<option href='" + sampleGroupsLink + "'></option>")
                   .text(I18n.t('samples.table.add_sample_group'));
   $selectGroup.append($option);
   $option = $('<option></option>')
@@ -857,8 +864,7 @@ function changeToEditMode() {
             'data-editable data-deletable ' +
             'data-edit-url="' + data.edit_url + '" ' +
             'data-destroy-html-url="' + data.destroy_html_url + '"' +
-            '>' +
-            data.name + '</th>');
+            '>' + generateColumnNameTooltip(data.name) + '</th>');
           var colOrder = table.colReorder.order();
           colOrder.push(colOrder.length);
           // Remove all event handlers as we re-initialize them later with
@@ -873,6 +879,7 @@ function changeToEditMode() {
           table = dataTableInit();
           table.on('init.dt', function() {
             loadColumnsNames();
+            dropdownOverflow();
           });
         },
         url: url
@@ -914,7 +921,9 @@ function changeToEditMode() {
 
   // loads the columns names in the dropdown list
   function loadColumnsNames() {
-    // First, clear the list
+    // Save scroll position
+    var scrollPosition = dropdownList.scrollTop();
+    // Clear the list
     dropdownList.find('li[data-position]').remove();
     _.each(table.columns().header(), function(el, index) {
       if (index > 1) {
@@ -936,21 +945,20 @@ function changeToEditMode() {
           'class="' + visLi + '"' +
           '>' +
           '<i class="grippy"></i> ' +
-          '<span class="text">' + el.innerText + '</span> ' +
+          '<span class="text">' + generateColumnNameTooltip(el.innerText) + '</span> ' +
           '<span class="form-group"><input type="text" class="text-edit form-control" style="display: none;" />' +
           '<span class="pull-right controls">' +
           '<span class="ok glyphicon glyphicon-ok" style="display: none;"></span>' +
           '<span class="cancel glyphicon glyphicon-remove" style="display: none;"></span>' +
           '<span class="vis glyphicon ' + visClass + '"></span> ' +
-          '<span class="edit glyphicon glyphicon-pencil ' + editClass + '">' +
-          '</span>' +
-          '<span class="del glyphicon glyphicon-trash ' + delClass + '">' +
-          '</span></span>' +
-          '</span>' +
-          '</li>';
+          '<span class="edit glyphicon glyphicon-pencil ' + editClass + '"></span>' +
+          '<span class="del glyphicon glyphicon-trash ' + delClass + '"></span>' +
+          '</span></span></li>';
         dropdownList.append(html);
       }
     });
+    // Restore scroll position
+    dropdownList.scrollTop(scrollPosition);
     toggleColumnVisibility();
     // toggles grip img
     customLiHoverEffect();
@@ -1033,9 +1041,11 @@ function changeToEditMode() {
         dataType: 'json',
         success: function() {
           dropdownList.sortable('enable');
-          text.text(newName);
-          $(table.columns().header()).filter('#' + id).text(newName);
           $(li).clearFormErrors();
+          text.html(generateColumnNameTooltip(newName));
+          $(table.columns().header()).filter('#' + id)
+            .html(generateColumnNameTooltip(newName));
+
           cancelEditMode();
         },
         error: function(xhr, ajaxOptions, thrownError) {
@@ -1142,11 +1152,13 @@ function changeToEditMode() {
       var self = $(this);
       var li = self.closest('li');
       var url = li.attr('data-destroy-html-url');
+      var colIndex = originalHeader.find('#' + li.attr('data-id')).index();
 
       $.ajax({
         url: url,
         type: 'GET',
         dataType: 'json',
+        data: {column_index: colIndex},
         success: function(data) {
           var modalBody = modal.find('.modal-body');
 
@@ -1217,6 +1229,28 @@ function changeToEditMode() {
     });
   }
 
+  // calculate the max height of window and adjust dropdown max-height
+  function dropdownOverflow() {
+    var windowHeight = $( window ).height();
+    var offset = windowHeight - dropdownList.offset().top;
+
+    if(dropdownList.height() >= offset) {
+      dropdownList.css('maxHeight', offset);
+    }
+  }
+
+  function generateColumnNameTooltip(name) {
+    if( $.trim(name).length >
+        <%= Constants::NAME_TRUNCATION_LENGTH_DROPDOWN %>) {
+      return '<div class="modal-tooltip">' +
+             truncateLongString(name,
+               <%= Constants::NAME_TRUNCATION_LENGTH_DROPDOWN %>) +
+             '<span class="modal-tooltiptext">' + name + '</span></div>';
+    } else {
+      return name;
+    }
+  }
+
   // initialze dropdown after the table is loaded
   function initDropdown() {
     table.on('init.dt', function() {
@@ -1230,6 +1264,10 @@ function changeToEditMode() {
       loadColumnsNames();
       dropdownList.sortable('enable');
     });
+
+    $('#samples-columns-dropdown').on('shown.bs.dropdown', function() {
+      dropdownOverflow();
+    })
   }
 
   initDropdown();

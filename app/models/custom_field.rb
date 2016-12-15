@@ -18,6 +18,6 @@ class CustomField < ActiveRecord::Base
   after_create :update_samples_table_state
 
   def update_samples_table_state
-    SamplesTable.update_samples_table_state(self)
+    SamplesTable.update_samples_table_state(self, nil)
   end
 end

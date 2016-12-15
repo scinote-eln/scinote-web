@@ -5,16 +5,37 @@ class SamplesTable < ActiveRecord::Base
   belongs_to :organization, inverse_of: :samples_tables
 
   scope :find_status,
-        ->(org, user) { where(user: user, organization: org).pluck(:status) }
+        ->(user, org) { where(user: user, organization: org).pluck(:status) }
 
-  def self.update_samples_table_state(custom_field)
+  def self.update_samples_table_state(custom_field, column_index)
     samples_table = SamplesTable.where(user: custom_field.user,
                                        organization: custom_field.organization)
     org_status = samples_table.first['status']
-    index = org_status['columns'].count
-    org_status['columns'][index] = SampleDatatable::
-                                   SAMPLES_TABLE_DEFAULT_STATE['columns'].first
-    org_status['ColReorder'] << index.to_s
+    if column_index
+      org_status['columns'].delete(column_index)
+      org_status['columns'].keys.each do |index|
+        p index
+        if index.to_i > column_index.to_i
+          org_status['columns'][(index.to_i - 1).to_s] =
+            org_status['columns'].delete(index)
+        else
+          index
+        end
+      end
+      org_status['ColReorder'].delete(column_index)
+      org_status['ColReorder'].map! do |index|
+        if index.to_i > column_index.to_i
+          (index.to_i - 1).to_s
+        else
+          index
+        end
+      end
+    else
+      index = org_status['columns'].count
+      org_status['columns'][index] = SampleDatatable::
+        SAMPLES_TABLE_DEFAULT_STATE['columns'].first
+      org_status['ColReorder'] << index.to_s
+    end
     samples_table.first.update(status: org_status)
   end
 
