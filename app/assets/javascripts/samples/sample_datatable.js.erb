@@ -866,7 +866,7 @@ function changeToEditMode() {
             'data-destroy-html-url="' + data.destroy_html_url + '"' +
             '>' + generateColumnNameTooltip(data.name) + '</th>');
           var colOrder = table.colReorder.order();
-          colOrder.push(colOrder.length);
+          colOrder.splice(2, 0, colOrder.length);
           // Remove all event handlers as we re-initialize them later with
           // new table
           $('#samples').off();

@@ -12,6 +12,7 @@ class SamplesTable < ActiveRecord::Base
                                        organization: custom_field.organization)
     org_status = samples_table.first['status']
     if column_index
+      # delete column
       org_status['columns'].delete(column_index)
       org_status['columns'].keys.each do |index|
         p index
@@ -31,10 +32,11 @@ class SamplesTable < ActiveRecord::Base
         end
       end
     else
+      # add column
       index = org_status['columns'].count
       org_status['columns'][index] = SampleDatatable::
         SAMPLES_TABLE_DEFAULT_STATE['columns'].first
-      org_status['ColReorder'] << index.to_s
+      org_status['ColReorder'].insert(2, index)
     end
     samples_table.first.update(status: org_status)
   end
