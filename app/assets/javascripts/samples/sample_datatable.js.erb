@@ -864,8 +864,7 @@ function changeToEditMode() {
             'data-editable data-deletable ' +
             'data-edit-url="' + data.edit_url + '" ' +
             'data-destroy-html-url="' + data.destroy_html_url + '"' +
-            '>' +
-            data.name + '</th>');
+            '>' + generateColumnNameTooltip(data.name) + '</th>');
           var colOrder = table.colReorder.order();
           colOrder.push(colOrder.length);
           // Remove all event handlers as we re-initialize them later with
@@ -880,6 +879,7 @@ function changeToEditMode() {
           table = dataTableInit();
           table.on('init.dt', function() {
             loadColumnsNames();
+            dropdownOverflow();
           });
         },
         url: url
@@ -945,7 +945,7 @@ function changeToEditMode() {
           'class="' + visLi + '"' +
           '>' +
           '<i class="grippy"></i> ' +
-          '<span class="text">' + el.innerText + '</span> ' +
+          '<span class="text">' + generateColumnNameTooltip(el.innerText) + '</span> ' +
           '<input type="text" class="text-edit form-control" style="display: none;" />' +
           '<span class="pull-right controls">' +
           '<span class="ok glyphicon glyphicon-ok" style="display: none;"></span>' +
@@ -1043,8 +1043,9 @@ function changeToEditMode() {
         data: {custom_field: {name: newName}},
         dataType: 'json',
         success: function() {
-          text.text(newName);
-          $(table.columns().header()).filter('#' + id).text(newName);
+          text.html(generateColumnNameTooltip(newName));
+          $(table.columns().header()).filter('#' + id)
+            .html(generateColumnNameTooltip(newName));
           cancelEditMode();
         },
         error: function(xhr) {
@@ -1214,6 +1215,28 @@ function changeToEditMode() {
     });
   }
 
+  // calculate the max height of window and adjust dropdown max-height
+  function dropdownOverflow() {
+    var windowHeight = $( window ).height();
+    var offset = windowHeight - dropdownList.offset().top;
+
+    if(dropdownList.height() >= offset) {
+      dropdownList.css('maxHeight', offset);
+    }
+  }
+
+  function generateColumnNameTooltip(name) {
+    if( $.trim(name).length >
+        <%= Constants::NAME_TRUNCATION_LENGTH_DROPDOWN %>) {
+      return '<div class="modal-tooltip">' +
+             truncateLongString(name,
+               <%= Constants::NAME_TRUNCATION_LENGTH_DROPDOWN %>) +
+             '<span class="modal-tooltiptext">' + name + '</span></div>';
+    } else {
+      return name;
+    }
+  }
+
   // initialze dropdown after the table is loaded
   function initDropdown() {
     table.on('init.dt', function() {
@@ -1227,6 +1250,10 @@ function changeToEditMode() {
       loadColumnsNames();
       dropdownList.sortable('enable');
     });
+
+    $('#samples-columns-dropdown').on('shown.bs.dropdown', function() {
+      dropdownOverflow();
+    })
   }
 
   initDropdown();
