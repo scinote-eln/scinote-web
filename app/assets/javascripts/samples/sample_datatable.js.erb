@@ -946,17 +946,14 @@ function changeToEditMode() {
           '>' +
           '<i class="grippy"></i> ' +
           '<span class="text">' + generateColumnNameTooltip(el.innerText) + '</span> ' +
-          '<input type="text" class="text-edit form-control" style="display: none;" />' +
+          '<span class="form-group"><input type="text" class="text-edit form-control" style="display: none;" />' +
           '<span class="pull-right controls">' +
           '<span class="ok glyphicon glyphicon-ok" style="display: none;"></span>' +
           '<span class="cancel glyphicon glyphicon-remove" style="display: none;"></span>' +
           '<span class="vis glyphicon ' + visClass + '"></span> ' +
-          '<span class="edit glyphicon glyphicon-pencil ' + editClass + '">' +
-          '</span> ' +
-          '<span class="del glyphicon glyphicon-trash ' + delClass + '">' +
-          '</span>' +
-          '</span>' +
-          '</li>';
+          '<span class="edit glyphicon glyphicon-pencil ' + editClass + '"></span>' +
+          '<span class="del glyphicon glyphicon-trash ' + delClass + '"></span>' +
+          '</span></span></li>';
         dropdownList.append(html);
       }
     });
@@ -1043,13 +1040,23 @@ function changeToEditMode() {
         data: {custom_field: {name: newName}},
         dataType: 'json',
         success: function() {
+          dropdownList.sortable('enable');
+          $(li).clearFormErrors();
           text.html(generateColumnNameTooltip(newName));
           $(table.columns().header()).filter('#' + id)
             .html(generateColumnNameTooltip(newName));
+
           cancelEditMode();
         },
-        error: function(xhr) {
-          // TODO
+        error: function(xhr, ajaxOptions, thrownError) {
+          dropdownList.sortable('disable');
+          $(li).clearFormErrors();
+          var msg = $.parseJSON(xhr.responseText);
+          renderFormError(event,
+                          $(li).find('.text-edit'),
+                          Object.keys(msg)[0] + ' '+ msg.name.toString());
+          var verticalHeight = $(li).offset().top;
+          dropdownList.scrollTo(verticalHeight,0);
         }
       });
     }
@@ -1057,6 +1064,11 @@ function changeToEditMode() {
     // On edit buttons click (bind onto master dropdown list)
     dropdownList.on('click', '.edit:not(.disabled)', function(event) {
       event.stopPropagation();
+
+      // Clear all input errors
+      _.each(dropdownList, function(el) {
+        $(el).clearFormErrors();
+      });
 
       cancelEditMode();
 
@@ -1098,6 +1110,7 @@ function changeToEditMode() {
       dropdownList.sortable('enable');
       var self = $(this);
       var li = self.closest('li');
+      $(li).clearFormErrors();
       editColumn(li);
     });
 
@@ -1108,6 +1121,7 @@ function changeToEditMode() {
         dropdownList.sortable('enable');
         var self = $(this);
         var li = self.closest('li');
+        $(li).clearFormErrors();
         editColumn(li);
       }
     });
@@ -1118,7 +1132,7 @@ function changeToEditMode() {
       dropdownList.sortable('enable');
       var self = $(this);
       var li = self.closest('li');
-
+      $(li).clearFormErrors();
       columnEditMode = false;
       li.removeClass('editing');
 
