@@ -749,7 +749,9 @@ function createSampleTypeSelect(data, selected) {
   var $selectType = $('<select></select>')
     .attr('name', 'sample_type_id').addClass('show-tick');
 
-  var $option = $("<option href='/organizations/1/sample_types'></option>")
+  var sampleTypesLink = $('#samples').attr('data-sample-types-link');
+
+  var $option = $("<option href='" + sampleTypesLink + "'></option>")
                   .attr('value', -2)
                   .text(I18n.t('samples.table.add_sample_type'));
   $selectType.append($option);
@@ -777,7 +779,9 @@ function createSampleGroupSelect(data, selected) {
   var $selectGroup = $('<select></select>')
     .attr('name', 'sample_group_id').addClass('show-tick');
 
-  var $option = $("<option href='/organizations/1/sample_groups'></option>")
+  var sampleGroupsLink = $('#samples').attr('data-sample-groups-link');
+
+  var $option = $("<option href='" + sampleGroupsLink + "'></option>")
                   .text(I18n.t('samples.table.add_sample_group'));
   $selectGroup.append($option);
   $option = $('<option></option>')
