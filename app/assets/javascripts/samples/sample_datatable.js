@@ -1040,13 +1040,13 @@ function changeToEditMode() {
         },
         error: function(xhr, ajaxOptions, thrownError) {
           dropdownList.sortable('disable');
-          var verticalHeight = $(li).offset().top;
-          dropdownList.scrollTo(verticalHeight,0);
           $(li).clearFormErrors();
           var msg = $.parseJSON(xhr.responseText);
           renderFormError(event,
                           $(li).find('.text-edit'),
                           Object.keys(msg)[0] + ' '+ msg.name.toString());
+          var verticalHeight = $(li).offset().top;
+          dropdownList.scrollTo(verticalHeight,0);
         }
       });
     }
