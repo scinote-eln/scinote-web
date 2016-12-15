@@ -1032,12 +1032,16 @@ function changeToEditMode() {
         data: {custom_field: {name: newName}},
         dataType: 'json',
         success: function() {
+          dropdownList.sortable('enable');
           text.text(newName);
           $(table.columns().header()).filter('#' + id).text(newName);
           $(li).clearFormErrors();
           cancelEditMode();
         },
         error: function(xhr, ajaxOptions, thrownError) {
+          dropdownList.sortable('disable');
+          var verticalHeight = $(li).offset().top;
+          dropdownList.scrollTo(verticalHeight,0);
           $(li).clearFormErrors();
           var msg = $.parseJSON(xhr.responseText);
           renderFormError(event,
