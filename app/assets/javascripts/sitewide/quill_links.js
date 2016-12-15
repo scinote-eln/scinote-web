@@ -1,5 +1,6 @@
 //= require quill
 
+
 // Globally overwrite links handling in Quill rich text editor
 var Link = Quill.import('formats/link');
 Link.sanitize = function(url) {
@@ -8,3 +9,15 @@ Link.sanitize = function(url) {
   }
   return 'http://' + url;
 };
+
+function openLinksInNewTab() {
+  _.each($('.ql-editor a'), function(el) {
+    if ($(el).attr('target') !== '_blank') {
+      $(el).attr('target', '_blank');
+    }
+  });
+}
+
+$(document).ready(function(){
+  openLinksInNewTab();
+});

@@ -80,6 +80,7 @@ function applyCancelCallBack() {
 
     setTimeout(function() {
       initStepsComments();
+      openLinksInNewTab();
     }, 1000);
 
   })
@@ -111,6 +112,7 @@ function applyEditCallBack() {
     $("#new-step-main-tab a").on("shown.bs.tab", function() {
       $("#step_name").focus();
     });
+    openLinksInNewTab();
   });
 }
 
@@ -181,6 +183,7 @@ function formCallback($form) {
 
     setTimeout(function() {
       initStepsComments();
+      openLinksInNewTab();
     }, 1000);
     return true;
   });
