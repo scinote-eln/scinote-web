@@ -21,7 +21,7 @@ class Asset < ActiveRecord::Base
   # Should be checked for any security leaks
   do_not_validate_attachment_file_type :file
 
-  # before_file_post_process :is_image?
+  # adds image processing in background job
   process_in_background :file,
                         only_process: lambda { |a|
                                         if a.content_type ==
