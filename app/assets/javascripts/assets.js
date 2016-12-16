@@ -1,6 +1,6 @@
 function setupAssetsLoading() {
-  var DELAY = 2000;
-  var REPETITIONS = 15;
+  var DELAY = 2500;
+  var REPETITIONS = 60;
 
   function refreshAssets() {
     var elements = $("[data-status='asset-loading']");
@@ -11,8 +11,6 @@ function setupAssetsLoading() {
 
     $.each(elements, function(_, el) {
       var $el = $(el);
-      var spinner = $el.find(".asset-loading-spinner");
-      var type = $el.data("type");
 
       // Perform an AJAX call to present URL
       // to check if file already exists
@@ -22,36 +20,41 @@ function setupAssetsLoading() {
         dataType: "json",
         success: function (data) {
           $el.attr("data-status", "asset-loaded");
-          $el.find(".asset-loading-spinner").spin(false);
+          $el.find('img').hide();
+          $el.next().hide();
           $el.html("");
 
-          if (type === "image") {
+          if (data.type === "image") {
             $el.html(
-              "<a href='" + $el.data("download-url") + "'>" +
-              "<img src='" + $el.data("preview-url") + "'><br>" +
-              $el.data("filename") + "</a>"
+              "<a href='" + data['download-url'] + "'>" +
+              "<img src='" + data['preview-url'] + "'><p>" +
+              data.filename + "</p></a>"
             );
           } else {
             $el.html(
-              "<a href='" + $el.data("download-url") + "'>" +
-              $el.data("filename") + "</a>"
+              "<a href='" + data['download-url'] + "'><p>" +
+              data.filename + "</p></a>"
             );
           }
+          animateSpinner(null, false);
         },
         error: function (ev) {
           if (ev.status == 403) {
+            $el.find('img').hide();
+            $el.next().hide();
             // Image/file exists, but user doesn't have
             // rights to download it
             if (type === "image") {
               $el.html(
-                "<img src='" + $el.data("preview-url") + "'><br>" +
-                $el.data("filename")
+                "<img src='" + $data['preview-url'] + "'><p>" +
+                data.filename + "</p>"
               );
             } else {
-              $el.html($el.data("filename"));
+              $el.html("<p>" + data.filename + "</p>");
             }
           } else {
             // Do nothing, file is not yet present
+            animateSpinner(null, false);
           }
         }
       });
@@ -66,7 +69,6 @@ function setupAssetsLoading() {
     $.each(elements, function(_, el) {
       var $el = $(el);
       $el.attr("data-status", "asset-failed");
-      $el.find(".asset-loading-spinner").spin(false);
       $el.html($el.data("filename"));
     });
   }

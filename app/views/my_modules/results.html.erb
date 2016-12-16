@@ -43,13 +43,12 @@
   data-module-protocols-step-text="<%=t 'tutorial.module_results_html' %>"
   data-module-protocols-click-samples-step-text="<%=t 'tutorial.module_results_click_samples_html' %>">
 <% ordered_result_of(@my_module).each do |result| %>
-  <%= render partial: "result", locals: {result: result, direct_upload: @direct_upload} %>
+  <%= render partial: "result", locals: { result: result } %>
 <% end %>
 </div>
 
 <%= javascript_include_tag "handsontable.full.min" %>
 <%= javascript_include_tag("canvas-to-blob.min") %>
-<%= javascript_include_tag("direct-upload") %>
 <%= javascript_include_tag "my_modules/results" %>
 <%= javascript_include_tag "results/result_texts" %>
 <%= javascript_include_tag "results/result_tables" %>

@@ -67,15 +67,32 @@
                     <% if can_view_or_download_step_assets(@protocol) %>
                       <% if asset.file_present %>
                         <%= link_to download_asset_path(asset), data: {no_turbolink: true, id: true, status: "asset-present"} do %>
-                          <%= image_tag preview_asset_path(asset) if asset.is_image? %>
+                          <% if asset.file.processing? %>
+                            <span data-status='asset-loading'
+                                  data-present-url='<%= file_present_asset_path(asset) %>'>
+                              <%= image_tag 'medium/processing.gif' %>
+                            </span>
+                          <% else %>
+                            <%= image_tag preview_asset_path(asset) if asset.is_image? %>
+                          <% end %>
                           <p><%= truncate(asset.file_file_name,
                                           length: Constants::FILENAME_TRUNCATION_LENGTH) %></p>
                         <% end %>
                       <% else %>
-                        <%= asset_loading_span(asset) %>
+                        <span data-status='asset-loading'
+                              data-present-url='<%= file_present_asset_path(asset) %>'>
+                          <%= image_tag 'medium/processing.gif' %>
+                        </span>
                       <% end %>
                     <% else %>
-                      <%= image_tag preview_asset_path(asset) if asset.is_image? %>
+                      <% if asset.file.processing? %>
+                        <span data-status='asset-loading'
+                              data-present-url='<%= file_present_asset_path(asset) %>'>
+                          <%= image_tag 'medium/processing.gif' %>
+                        </span>
+                      <% else %>
+                        <%= image_tag preview_asset_path(asset) if asset.is_image? %>
+                      <% end %>
                       <p><%= truncate(asset.file_file_name,
                                       length: Constants::FILENAME_TRUNCATION_LENGTH) %></p>
                     <% end %>

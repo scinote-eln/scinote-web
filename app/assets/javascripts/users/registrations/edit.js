@@ -63,19 +63,13 @@ forms
   $(this).renderFormErrors("user", data.responseJSON);
 });
 
-function processFile(ev, forS3) {
+function processFile(ev) {
   var $form = $(ev.target.form);
   $form.clearFormErrors();
 
   var $fileInput = $form.find("input[type=file]");
   if(filesValidator(ev, $fileInput, FileTypeEnum.AVATAR)) {
-    if(forS3) {
-      // Redirects file uploading to S3
-      var url = "/avatar_signature.json";
-      directUpload(ev, url, true);
-    } else {
-      // Local file uploading
-      animateSpinner();
-    }
+    // Local file uploading
+    animateSpinner();
   }
 }

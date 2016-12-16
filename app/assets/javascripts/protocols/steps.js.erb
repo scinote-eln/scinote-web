@@ -1,7 +1,6 @@
 //= require handsontable.full.min
 //= require Sortable.min
 //= require canvas-to-blob.min
-//= require direct-upload
 //= require assets
 //= require comments
 
@@ -103,6 +102,7 @@ function applyEditCallBack() {
     formEditAjax($form);
     toggleButtons(false);
     initializeCheckboxSorting();
+    animateSpinner(null, false);
 
     $("#new-step-checklists fieldset.nested_step_checklists ul").each(function () {
       enableCheckboxSorting(this);
@@ -181,6 +181,7 @@ function formCallback($form) {
 
     setTimeout(function() {
       initStepsComments();
+      animateSpinner(null, false);
     }, 1000);
     return true;
   });
@@ -210,6 +211,7 @@ function formEditAjax($form) {
     $new_step.find("[data-role='step-hot-table']").each(function()  {
       renderTable($(this));
     });
+    setupAssetsLoading();
   })
   .on("ajax:error", function(e, xhr, status, error) {
     $form.renderFormErrors('step', xhr.responseJSON, true, e);
@@ -246,6 +248,8 @@ function formNewAjax($form) {
     $new_step.find("div.step-result-hot-table").each(function()  {
       $(this).handsontable("render");
     });
+    animateSpinner(null, false);
+    setupAssetsLoading();
   })
   .on("ajax:error", function(e, xhr, status, error) {
     $(this).after(xhr.responseJSON.html);
@@ -258,6 +262,7 @@ function formNewAjax($form) {
     formCallback($form);
     formNewAjax($form);
     applyCancelOnNew();
+    animateSpinner(null, false);
   });
 }
 
@@ -495,7 +500,7 @@ $("[data-action='new-step']").on("ajax:success", function(e, data) {
 // Needed because server-side validation failure clears locations of
 // files to be uploaded and checklist's items etc. Also user
 // experience is improved
-function processStep(ev, editMode, forS3) {
+function processStep(ev, editMode) {
   var $form = $(ev.target.form);
   $form.clearFormErrors();
   $form.removeBlankExcelTables(editMode);
@@ -513,14 +518,8 @@ function processStep(ev, editMode, forS3) {
     <%= Constants::TEXT_MAX_LENGTH %>);
 
   if (filesValid && checklistsValid && nameValid && descriptionValid) {
-    if (forS3) {
-      // Redirects file uploading to S3
-      var url = '/asset_signature.json';
-      directUpload(ev, url);
-    } else {
-      // Local file uploading
-      animateSpinner();
-    }
+    // Local file uploading
+    animateSpinner();
   }
 }
 

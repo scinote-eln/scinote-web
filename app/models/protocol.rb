@@ -265,6 +265,7 @@ class Protocol < ActiveRecord::Base
         asset2.save
 
         step2.assets << asset2
+        asset2.file.delay.reprocess!(:medium)
         assets_to_clone << [asset.id, asset2.id]
       end
 

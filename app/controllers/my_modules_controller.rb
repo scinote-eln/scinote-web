@@ -334,7 +334,6 @@ class MyModulesController < ApplicationController
   private
 
   def load_vars
-    @direct_upload = ENV['PAPERCLIP_DIRECT_UPLOAD'] == "true"
     @my_module = MyModule.find_by_id(params[:id])
     if @my_module
       @experiment = @my_module.experiment
