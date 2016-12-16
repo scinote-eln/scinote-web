@@ -1712,3 +1712,7 @@ th.custom-field .modal-tooltiptext {
   margin-left: 0;
   z-index: 99999999;
 }
+
+.disable-click {
+  pointer-events: none;
+}

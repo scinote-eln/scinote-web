@@ -556,7 +556,10 @@ function updateButtons() {
         $("#addSample").prop("disabled",false);
         $("#addNewColumn").removeClass("disabled");
         $("#addNewColumn").prop("disabled",false);
-
+        $('#samples-columns-dropdown')
+          .find('.dropdown-toggle')
+          .prop("disabled",false);
+        $("th").removeClass('disable-click');
         if (rowsSelected.length == 1) {
             $("#editSample").prop("disabled", false);
             $("#editSample").removeClass("disabled");
@@ -614,6 +617,10 @@ function updateButtons() {
             $("#assignSamples").prop("disabled", true);
             $("#unassignSamples").addClass("disabled");
             $("#unassignSamples").prop("disabled", true);
+            $('#samples-columns-dropdown')
+              .find('.dropdown-toggle')
+              .prop("disabled",true);
+            $("th").addClass('disable-click');
     }
 }
 
