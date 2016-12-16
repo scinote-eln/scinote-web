@@ -7,7 +7,8 @@ GIT
 
 GIT
   remote: https://github.com/biosistemika/quill-rails.git
-  revision: f229c6779694f40f6facc9e969e52ca46bbe89f0
+  revision: e765c042d9ff7ec22f8c51a0e08e39e783530f8b
+  ref: e765c04
   specs:
     quill-rails (0.1.4)
       railties (>= 3.1.0, < 5.0)
