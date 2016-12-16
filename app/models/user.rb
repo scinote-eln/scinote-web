@@ -47,6 +47,7 @@ class User < ActiveRecord::Base
   has_many :activities, inverse_of: :user
   has_many :results, inverse_of: :user
   has_many :samples, inverse_of: :user
+  has_many :samples_tables, inverse_of: :user, dependent: :destroy
   has_many :steps, inverse_of: :user
   has_many :custom_fields, inverse_of: :user
   has_many :reports, inverse_of: :user

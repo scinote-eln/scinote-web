@@ -61,11 +61,12 @@ function formAjaxResultText($form) {
         applyCollapseLinkCallBack();
         toggleResultEditButtons(true);
         expandResult(newResult);
+        initHighlightjs();
     });
     $form.on("ajax:error", function(e, xhr, status, error) {
         var data = xhr.responseJSON;
         $form.renderFormErrors("result", data);
-
+        initHighlightjs();
         if (data["result_text.text"]) {
             var $el = $form.find("textarea[name=result\\[result_text_attributes\\]\\[text\\]]");
 
@@ -76,4 +77,14 @@ function formAjaxResultText($form) {
 }
 
 
+function initHighlightjs() {
+  if(hljs) {
+    $('.ql-editor pre').each(function(i, block) {
+     hljs.highlightBlock(block);
+   });
+  }
+}
+$(document).ready(function() {
+  initHighlightjs();
+});
 applyEditResultTextCallback();

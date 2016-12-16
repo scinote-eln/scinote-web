@@ -385,6 +385,7 @@ function initCallBacks() {
   applyMoveStepCallBack();
   applyCollapseLinkCallBack();
   initDeleteStep();
+  initHighlightjs();
 }
 
 /*
@@ -557,6 +558,14 @@ function renderTable(table) {
   }
 }
 
+function initHighlightjs() {
+  if(hljs){
+    $('.ql-editor pre').each(function(i, block) {
+     hljs.highlightBlock(block);
+   });
+  }
+}
+
 function initStepsComments() {
   Comments.initialize();
   Comments.initCommentOptions("ul.content-comments");
@@ -571,6 +580,7 @@ $(document).ready(function() {
   expandAllSteps();
   setupAssetsLoading();
   initStepsComments();
+  initHighlightjs();
 
   $(function () {
 

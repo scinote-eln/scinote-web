@@ -1,8 +1,7 @@
-<%= render partial: "custom_fields/new_modal" %>
 <%= render partial: "samples/import_samples_modal" %>
 <%= render partial: "samples/delete_samples_modal" %>
-<%= render partial: "samples/create_sample_group_modal" %>
-<%= render partial: "samples/create_sample_type_modal" %>
+<%= render partial: "samples/delete_custom_field_modal" %>
+
 <!-- Modal for parsing sample sheets should be empty at first -->
 <div class="modal fade" id="modal-parse-samples" tabindex="-1" role="dialog" aria-labelledby=="modal-parse-samples-label"></div>
 
@@ -41,40 +40,40 @@
   <% end %>
 
   <div id="datatables-buttons" style="display: inline;">
+    <div id="samples-columns-dropdown" class="dropdown">
+      <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+        <%= t('samples.columns') %>
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu dropdown-menu-right smart-dropdown" id="samples-columns-list">
+        <% if can_create_custom_field_in_organization(@organization) %>
+          <li class="add-new-column-form">
+            <div id="new-column-form" class="form-group" data-action="<%= organization_custom_fields_path(@organization) %>">
+              <div class="input-group">
+                <input class="form-control" id="new-column-name" placeholder="<%= t("samples.column_new_text") %>">
+                <span class="input-group-btn">
+                  <a id="add-new-column-button" class="btn btn-primary">
+                    <%= t("samples.column_create") %>
+                  </a>
+                </span>
+              </div>
+            </div>
+          </li>
+        <% end %>
+      </ul>
+    </div>
   </div>
 
+  <% if can_add_sample_related_things_to_organization %>
   <div class="dropdown pull-right" style="display: inline;">
-    <button class="btn btn-default dropdown-toggle" type="button" id="addMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" <%= "disabled" unless can_add_sample_related_things_to_organization%>>
-      <span class="glyphicon glyphicon-plus"></span>
-      <span class="hidden-xs-custom">
-        <%= t'More' %>
-        <span class="caret"></span>
-      </span>
-    </button>
-    <ul class="dropdown-menu" aria-labelledby="addMenu">
-      <% if can_create_custom_field_in_organization(@organization) %>
-      <li>
-        <a id="addNewColumn" data-toggle="modal" data-target="#modal-create-custom-field">
-        <%= t("samples.add_new_column")%>
-        </a>
-      </li>
-      <% end %>
-      <% if can_create_sample_type_in_organization(@organization) %>
-      <li>
-        <a data-toggle="modal" data-target="#modal-create-sample-type">
-        <%= t("samples.add_new_sample_type") %>
-        </a>
-      </li>
-      <% end %>
-      <% if can_create_sample_group_in_organization(@organization) %>
-      <li>
-        <a data-toggle="modal" data-target="#modal-create-sample-group">
-        <%= t("samples.add_new_sample_group") %>
-        </a>
-      </li>
-      <% end %>
-    </ul>
+    <%= link_to(t('samples.types_and_groups'),
+                organization_sample_types_path(@organization,
+                  project_id: (@project.id if @project),
+                  my_module_id: (@my_module.id if @my_module),
+                  experiment_id: (@experiment.id if @experiment)),
+                class: 'btn btn-default' ) %>
   </div>
+  <% end %>
 </div>
 
 <div class="btn-group" id="saveCancel" data-toggle="buttons" style="display:none">
@@ -125,10 +124,19 @@
 <div class="samples-table">
   <table id="samples" class="table"
     data-organization-id="<%= @project.organization.id %>"
+    data-user-id="<%= @current_user.id %>"
     data-source="<%= @samples_index_link %>"
     data-num-columns="<%= num_of_columns %>"
     data-new-sample="<%= new_organization_sample_path(organization_id: @organization) %>"
     data-create-sample="<%= organization_samples_path(organization_id: @organization) %>"
+    data-sample-types-link="<%= organization_sample_types_path(@organization,
+      project_id: (@project.id if @project),
+      my_module_id: (@my_module.id if @my_module),
+      experiment_id: (@experiment.id if @experiment)) %>"
+    data-sample-groups-link="<%= organization_sample_groups_path(current_organization,
+      project_id: (@project.id if @project),
+      my_module_id: (@my_module.id if @my_module),
+      experiment_id: (@experiment.id if @experiment)) %>"
     >
     <thead>
       <tr>
@@ -140,7 +148,15 @@
         <th id="added-on"><%= t("samples.table.added_on") %></th>
         <th id="added-by"><%= t("samples.table.added_by") %></th>
         <% all_custom_fields.each do |cf| %>
-        <th class="custom-field" id="<%= cf.id %>"><%= cf.name %></th>
+        <th class="custom-field"
+            id="<%= cf.id %>"
+            <%= 'data-editable' if can_edit_custom_field(cf) %>
+            <%= 'data-deletable' if can_delete_custom_field(cf) %>
+            <%= "data-edit-url='#{organization_custom_field_path(@organization, cf)}'" %>
+            <%= "data-destroy-html-url='#{organization_custom_field_destroy_html_path(@organization, cf)}'" %>
+        >
+          <%= display_tooltip(cf.name) %>
+        </th>
         <% end %>
       </tr>
     </thead>

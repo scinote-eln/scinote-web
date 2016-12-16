@@ -804,6 +804,8 @@ en:
       success_flash: "Table result successfully deleted."
 
   samples:
+    columns: "Columns"
+    types_and_groups: "Types and groups"
     actions: "Actions"
     add_new_sample: "Add new sample"
     import: "Import"
@@ -814,6 +816,8 @@ en:
     edit_sample: "Edit"
     save_sample: "Save"
     cancel_save: "Cancel"
+    column_create: "Create"
+    column_new_text: "New column"
     column_visibility: "Visible columns"
     add_new_sample_type: "Add sample type"
     add_new_sample_group: "Add sample group"
@@ -834,6 +838,13 @@ en:
     modal_add_custom_field:
       title_html: "Add new column to team <strong>%{organization}</strong>"
       create: "Add new column"
+    modal_delete_custom_field:
+      title: "Delete a column"
+      message: "Are you sure you wish to permanently delete selected column %{cf}? This action is irreversible."
+      alert_heading: "Deleting a column has following consequences:"
+      alert_line_1: "you will lose information in this column for %{nr} samples;"
+      alert_line_2: "the column will be deleted for all team members."
+      delete: "Delete column"
     modal_add_new_sample_group:
       title_html: "Add new sample group to team <strong>%{organization}</strong>"
       create: "Add new sample group"
@@ -849,6 +860,8 @@ en:
       added_by: "Added by"
       no_group: "No sample group"
       no_type: "No sample type"
+      add_sample_type: "Add new sample type"
+      add_sample_group: "Add new sample group"
     new:
       head_title: "%{organization} | Add new sample"
       title: "Add new sample to team %{organization}"
@@ -876,9 +889,18 @@ en:
     js:
       permission_error: "You don't have permission to edit this sample."
       not_found_error: "This sample does not exist."
+      column_added: "New column was sucessfully created."
+      empty_column_name: "Please enter column name."
   sample_types:
-    create:
-      success_flash: "Successfully added sample type <strong>%{sample_type}</strong> to team <strong>%{organization}</strong>."
+    index:
+      head_title: 'Sample Types'
+      sample_types: 'Sample types'
+      sample_groups: 'Sample groups'
+      new: 'Create sample type'
+      destroy_modal_title: "Permanently delete the \"%{name}\" sample type?"
+      destroy_modal_body: 'This action is irreversible and makes the sample type inaccessible to all team members.'
+      destroy_modal_submit: 'Permanently delete sample type'
+      destroy_flash: "\"%{name}\" sample type was successfully deleted!"
 
   custom_fields:
     new:
@@ -922,6 +944,13 @@ en:
         duplicated_values: "Two or more columns have the same mapping."
 
   sample_groups:
+    index:
+      head_title: 'Sample Groups'
+      new: 'Create sample group'
+      destroy_modal_title: "Permanently delete the \"%{name}\" sample group?"
+      destroy_modal_body: 'This action is irreversible and makes the sample group inaccessible to all team members.'
+      destroy_modal_submit: 'Permanently delete sample group'
+      destroy_flash: "\"%{name}\" sample group was successfully deleted!"
     color_label: "Sample group color"
     create:
       success_flash: "Successfully added sample group <strong>%{sample_group}</strong> to team <strong>%{organization}</strong>."
@@ -1430,6 +1459,7 @@ en:
     edit: "Edit"
     cancel: "Cancel"
     close: "Close"
+    create: 'Create'
     check_all: "Check all"
     no_comments: "No comments!"
     more_comments: "More comments"

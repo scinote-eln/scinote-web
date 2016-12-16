@@ -1,6 +1,9 @@
 class SampleTypesController < ApplicationController
-  before_action :load_vars_nested, only: [:create]
-  before_action :check_create_permissions, only: [:create]
+  before_action :load_vars_nested
+  before_action :check_create_permissions
+  before_action :set_sample_type, except: [:create, :index]
+  before_action :set_project_my_module, only: :index
+  layout 'fluid'
 
   def create
     @sample_type = SampleType.new(sample_type_params)
@@ -10,21 +13,100 @@ class SampleTypesController < ApplicationController
 
     respond_to do |format|
       if @sample_type.save
-        format.json {
+        format.json do
           render json: {
-            id: @sample_type.id,
-            flash: t(
-              'sample_types.create.success_flash',
-              sample_type: @sample_type.name,
-              organization: @organization.name
+            html: render_to_string(
+              partial: 'sample_type.html.erb',
+                       locals: { sample_type: @sample_type,
+                                 organization: @organization }
             )
           },
           status: :ok
-        }
+        end
       else
-        format.json {
+        format.json do
           render json: @sample_type.errors,
             status: :unprocessable_entity
+        end
+      end
+    end
+  end
+
+  def index
+    render_404 unless current_organization
+    @sample_types = current_organization.sample_types
+  end
+
+  def edit
+    respond_to do |format|
+      format.json do
+        render json: {
+          html:
+            render_to_string(
+              partial: 'edit.html.erb',
+                       locals: { sample_type: @sample_type,
+                                 organization: @organization }
+            ),
+          id: @sample_type.id
+        }
+      end
+    end
+  end
+
+  def update
+    @sample_type.update_attributes(sample_type_params)
+
+    respond_to do |format|
+      format.json do
+        if @sample_type.save
+          render json: {
+            html: render_to_string(
+              partial: 'sample_type.html.erb',
+                       locals: { sample_type: @sample_type,
+                                 organization: @organization }
+            )
+          }
+        else
+          render json: @sample_type.errors,
+            status: :unprocessable_entity
+        end
+      end
+    end
+  end
+
+  def destroy_confirmation
+    respond_to do |format|
+      format.json do
+        render json: {
+          html: render_to_string(
+            partial: 'delete_sample_type_modal.html.erb',
+                     locals: { sample_type: @sample_type,
+                               organization: @organization }
+          )
+        }
+      end
+    end
+  end
+
+  def destroy
+    flash[:success] = t 'sample_types.index.destroy_flash',
+                        name: @sample_type.name
+    Sample.where(sample_type: @sample_type).find_each do |sample|
+      sample.update(sample_type_id: nil)
+    end
+    @sample_type.destroy
+    redirect_to :back
+  end
+
+  def sample_type_element
+    respond_to do |format|
+      format.json do
+        render json: {
+          html: render_to_string(
+            partial: 'sample_type.html.erb',
+                     locals: { sample_type: @sample_type,
+                               organization: @organization }
+          )
         }
       end
     end
@@ -32,18 +114,27 @@ class SampleTypesController < ApplicationController
 
   private
 
+  def set_project_my_module
+    @project = Project.find_by_id(params[:project_id]) if params[:project_id]
+    @experiment = Experiment
+                  .find_by_id(params[:experiment_id]) if params[:experiment_id]
+    @my_module = MyModule
+                 .find_by_id(params[:my_module_id]) if params[:my_module_id]
+    render_403 unless @project || @my_module
+  end
+
   def load_vars_nested
     @organization = Organization.find_by_id(params[:organization_id])
 
-    unless @organization
-      render_404
-    end
+    render_404 unless @organization
   end
 
   def check_create_permissions
-    unless can_create_sample_type_in_organization(@organization)
-      render_403
-    end
+    render_403 unless can_create_sample_type_in_organization(@organization)
+  end
+
+  def set_sample_type
+    @sample_type = SampleType.find_by_id(params[:id])
   end
 
   def sample_type_params
