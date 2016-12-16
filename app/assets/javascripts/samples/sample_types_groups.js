@@ -11,9 +11,12 @@
 
   function newSampleTypeFormCancel() {
     $('#remove').off();
-    $('#remove').on('click', function() {
+    $('#remove').on('click', function(ev) {
+      ev.preventDefault();
       $('#name-input').val('');
       $('.new-resource-form').slideUp();
+      $('#new_sample_type').clearFormErrors();
+      $('#new_sample_group').clearFormErrors();
     });
   }
 
@@ -31,7 +34,7 @@
       var li = $(this).closest('li');
       var href = $(this).attr('data-element');
       var id = $(li).attr('data-id');
-      $().clearFormErrors();
+      $(li).clearFormErrors();
       $.ajax({
         url: href,
         data: { id: id },
