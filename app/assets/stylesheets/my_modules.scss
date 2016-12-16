@@ -2,6 +2,8 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
+@import 'constants';
+
 /* Results index page */
 
 #results {
@@ -26,5 +28,88 @@
   .comment {
     word-break: break-all;
     word-wrap: break-word;
+  }
+}
+
+.modal-image-preview {
+  background: transparent;
+  font-size: 16px;
+
+  .preview-close {
+    background: transparent;
+    border: 0;
+    color: $color-white;
+    display: inline-block;
+    float: right;
+  }
+
+  .modal-content {
+    background: transparent;
+    border: 0;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    color: $color-white;
+  }
+
+  .modal-dialog {
+    margin: 0;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0;
+    width: 100%;
+  }
+
+  .modal-content {
+    height: 100%;
+  }
+
+  .modal-header {
+    background: $color-black;
+    border: 0;
+  }
+
+  .modal-body {
+    height: 100%;
+    text-align: center;
+  }
+
+  .modal-footer {
+    background: $color-black;
+    border: 0;
+    text-align: center;
+  }
+
+  .image-download-link {
+    color: $color-white;
+    display: inline-block;
+    float: right;
+    margin-right: 20px;
+  }
+}
+
+.modal-backdrop.modal-image-preview {
+  background: $color-black;
+
+  .in {
+    filter: alpha(opacity = 99);
+    opacity: .99;
+  }
+}
+
+@media (min-width: 768px) {
+  .modal-image-preview .modal-dialog {
+    width: 760px;
+  }
+}
+
+@media (min-width: 992px) {
+  .modal-image-preview .modal-dialog {
+    width: 980px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .modal-image-preview .modal-dialog {
+    width: 1180px;
   }
 }
