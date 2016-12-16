@@ -936,6 +936,14 @@ function changeToEditMode() {
         var visLi = (visible) ? '' : 'col-invisible';
         var editClass = (editable) ? '' : 'disabled';
         var delClass = (deletable) ? '' : 'disabled';
+
+        var thederName;
+        if ($(el).find('.modal-tooltiptext').length > 0) {
+          thederName = $(el).find('.modal-tooltiptext').text();
+        } else {
+          thederName = el.innerText;
+        }
+
         var html =
           '<li ' +
           'data-position="' + colIndex + '" ' +
@@ -945,7 +953,7 @@ function changeToEditMode() {
           'class="' + visLi + '"' +
           '>' +
           '<i class="grippy"></i> ' +
-          '<span class="text">' + generateColumnNameTooltip(el.innerText) + '</span> ' +
+          '<span class="text">' + generateColumnNameTooltip(thederName) + '</span> ' +
           '<span class="form-group"><input type="text" class="text-edit form-control" style="display: none;" />' +
           '<span class="pull-right controls">' +
           '<span class="ok glyphicon glyphicon-ok" style="display: none;"></span>' +
@@ -1075,6 +1083,9 @@ function changeToEditMode() {
       var self = $(this);
       var li = self.closest('li');
       var text = li.find('.text');
+      if ($(text).find('.modal-tooltiptext').length > 0) {
+        text = $(text).find('.modal-tooltiptext');
+      }
       var textEdit = li.find('.text-edit');
       var controls = li.find('.controls .vis,.edit,.del');
       var controlsEdit = li.find('.controls .ok,.cancel');
