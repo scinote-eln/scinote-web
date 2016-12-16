@@ -76,7 +76,7 @@
                               <%= image_tag 'medium/processing.gif' %>
                             </span>
                           <% else %>
-                            <%= image_tag preview_asset_path(asset) if asset.is_image? %>
+                            <%= image_tag asset.url(:medium), data: {large_url: asset.url(:large)} if asset.is_image? %>
                           <% end %>
                           <p><%= truncate(asset.file_file_name,
                                           length: Constants::FILENAME_TRUNCATION_LENGTH) %></p>

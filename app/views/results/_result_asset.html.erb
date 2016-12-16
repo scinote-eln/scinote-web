@@ -21,7 +21,7 @@
       <%= image_tag 'medium/processing.gif' %>
     </span>
   <% else %>
-    <%= image_tag(preview_asset_path result.asset) if result.asset.is_image? %>
+    <%= image_tag(result.asset.url(:medium), data: {large_url: result.asset.url(:large)}) if result.asset.is_image? %>
     <p><%= result.asset.file_file_name %></p>
   <% end %>
 <% end %>

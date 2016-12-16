@@ -5,7 +5,7 @@ $(document).ready(function() {
     $('.image-preview-link').click(function(e) {
       e.preventDefault();
       var name = $(this).find('p').text();
-      var url = $(this).find('img').attr('src');
+      var url = $(this).find('img').data('large-url');
       var downloadUrl = $(this).attr('href');
       var description = $(this).data('description');
       openPreviewModal(name, url, downloadUrl, description);
