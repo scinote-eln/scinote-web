@@ -1,3 +1,5 @@
+//= require my_modules/image_preview
+
 // New result asset behaviour
 $("#new-result-asset").on("ajax:success", function(e, data) {
   var $form = $(data.html);
@@ -64,6 +66,7 @@ function formAjaxResultAsset($form) {
     expandResult($newResult);
     $imgs = $newResult.find("img");
     reloadImages($imgs);
+    initPreviewModal();
   })
   .on("ajax:error", function(e, data) {
     $form.renderFormErrors("result", data.errors, true, e);
@@ -71,3 +74,4 @@ function formAjaxResultAsset($form) {
 }
 
 applyEditResultAssetCallback();
+initPreviewModal();

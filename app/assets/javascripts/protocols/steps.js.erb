@@ -3,6 +3,7 @@
 //= require canvas-to-blob.min
 //= require assets
 //= require comments
+//= require my_modules/image_preview
 
 // Sets callbacks for toggling checkboxes
 function applyCheckboxCallBack()  {
@@ -567,6 +568,7 @@ $(document).ready(function() {
   expandAllSteps();
   setupAssetsLoading();
   initStepsComments();
+  initPreviewModal();
 
   $(function () {
 

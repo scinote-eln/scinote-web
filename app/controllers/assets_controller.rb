@@ -20,6 +20,7 @@ class AssetsController < ApplicationController
           # If check permission passes, return :ok
           render json: {
             'preview-url' => @asset.url(:medium),
+            'large-preview-url' => @asset.url(:large),
             'filename' => truncate(@asset.file_file_name,
                                    length:
                                      Constants::FILENAME_TRUNCATION_LENGTH),

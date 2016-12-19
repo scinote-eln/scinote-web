@@ -1,3 +1,5 @@
+//= require my_modules/image_preview
+
 function setupAssetsLoading() {
   var DELAY = 2500;
   var REPETITIONS = 60;
@@ -26,9 +28,9 @@ function setupAssetsLoading() {
 
           if (data.type === "image") {
             $el.html(
-              "<a href='" + data['download-url'] + "'>" +
-              "<img src='" + data['preview-url'] + "'><p>" +
-              data.filename + "</p></a>"
+              "<img src='" + data['preview-url'] + "' data-large-url='"
+              + data['large-preview-url'] + "'><p>" +
+              data.filename + "</p>"
             );
           } else {
             $el.html(
@@ -37,6 +39,7 @@ function setupAssetsLoading() {
             );
           }
           animateSpinner(null, false);
+          initPreviewModal();
         },
         error: function (ev) {
           if (ev.status == 403) {

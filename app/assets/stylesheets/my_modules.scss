@@ -34,6 +34,7 @@
 .modal-image-preview {
   background: transparent;
   font-size: 16px;
+  padding-right: 0px !important;
 
   .preview-close {
     background: transparent;
@@ -43,21 +44,31 @@
     float: right;
   }
 
+  .modal-dialog {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    width: auto;
+  }
+
   .modal-content {
     background: transparent;
     border: 0;
     -webkit-box-shadow: none;
     box-shadow: none;
     color: $color-white;
-    padding: 0;
+    height: 100%;
+    width: auto;
   }
 
-  .modal-dialog {
-    margin: 0;
-    margin-left: auto;
-    margin-right: auto;
-    padding: 0;
-    width: 100%;
+  img {
+    left: 50%;
+    margin-right: -50%;
+    max-height: 100%;
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: auto;
   }
 
   .modal-header {
@@ -66,14 +77,18 @@
   }
 
   .modal-body {
-    padding: 0;
-    text-align: center;
+    height: 85%;
+    position: relative;
+    width: auto;
   }
 
   .modal-footer {
     background: $color-black;
     border: 0;
+    bottom: 0;
+    position: fixed;
     text-align: center;
+    width: 100%;
   }
 
   .image-download-link {
@@ -90,23 +105,5 @@
   .in {
     filter: alpha(opacity = 99);
     opacity: .99;
-  }
-}
-
-@media (min-width: 768px) {
-  .modal-image-preview .modal-dialog {
-    width: 760px;
-  }
-}
-
-@media (min-width: 992px) {
-  .modal-image-preview .modal-dialog {
-    width: 980px;
-  }
-}
-
-@media (min-width: 1200px) {
-  .modal-image-preview .modal-dialog {
-    width: 1180px;
   }
 }
