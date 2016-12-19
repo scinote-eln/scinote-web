@@ -6,14 +6,16 @@
 <div class="report-element report-result-element report-result-table-element" data-ts="<%= timestamp.to_i %>" data-type="result_table" data-id="<%= result.id %>" data-modal-title="<%=t "projects.reports.elements.modals.result_contents.head_title", result: result.name %>" data-name="<%= name %>" data-icon-class="glyphicon-th">
   <div class="report-element-header">
     <div class="row">
-      <div class="pull-left result-icon">
-          <span class="glyphicon glyphicon-th"></span>
-      </div>
-      <div class="pull-left result-name">
-        <%= name %>
-      </div>
-      <div class="pull-left user-time">
-        <%=t "projects.reports.elements.result_table.user_time", user: result.user.full_name , timestamp: l(timestamp, format: :full) %>
+      <div class="pull-left result-name-container">
+        <div class="result-icon">
+            <span class="glyphicon glyphicon-th"></span>
+        </div>
+        <div class="result-name">
+          <%= name %>
+        </div>
+        <div class="user-time">
+          <%=t "projects.reports.elements.result_table.user_time", user: result.user.full_name , timestamp: l(timestamp, format: :full) %>
+        </div>
       </div>
       <div class="pull-right controls">
         <%= render partial: "reports/elements/element_controls.html.erb" %>
