@@ -128,16 +128,7 @@
     data-source="<%= @samples_index_link %>"
     data-num-columns="<%= num_of_columns %>"
     data-new-sample="<%= new_organization_sample_path(organization_id: @organization) %>"
-    data-create-sample="<%= organization_samples_path(organization_id: @organization) %>"
-    data-sample-types-link="<%= organization_sample_types_path(@organization,
-      project_id: (@project.id if @project),
-      my_module_id: (@my_module.id if @my_module),
-      experiment_id: (@experiment.id if @experiment)) %>"
-    data-sample-groups-link="<%= organization_sample_groups_path(current_organization,
-      project_id: (@project.id if @project),
-      my_module_id: (@my_module.id if @my_module),
-      experiment_id: (@experiment.id if @experiment)) %>"
-    >
+    data-create-sample="<%= organization_samples_path(organization_id: @organization) %>">
     <thead>
       <tr>
         <th id="checkbox"><input name="select_all" value="1" type="checkbox"></th>
