@@ -751,7 +751,6 @@ function createTdElement(content) {
  * @return {Object} select dropdown
  */
 function createSampleTypeSelect(data, selected) {
-  selected = _.isUndefined(selected) ? 1 : selected + 1;
 
   var $selectType = $('<select></select>')
     .attr('name', 'sample_type_id').addClass('show-tick');
@@ -775,7 +774,6 @@ function createSampleTypeSelect(data, selected) {
  * @param selected Selected sample group id
  */
 function createSampleGroupSelect(data, selected) {
-  selected = _.isUndefined(selected) ? 1 : selected + 1;
 
   var $selectGroup = $('<select></select>')
     .attr('name', 'sample_group_id').addClass('show-tick');
