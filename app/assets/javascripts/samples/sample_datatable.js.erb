@@ -25,6 +25,8 @@ function dataTableInit() {
     stateSave: true,
     processing: true,
     serverSide: true,
+    scrollY: '64vh',
+    scrollCollapse: true,
     colReorder: {
       fixedColumnsLeft: 2,
       realtime: false
@@ -864,25 +866,34 @@ function changeToEditMode() {
           form.append('<span class="help-block">' +
             I18n.t('samples.js.column_added') +
             '</span>');
+
+          // Destroy datatable
+          table.destroy();
+
+          // Add number of columns
           $('#samples').data('num-columns',
             $('#samples').data('num-columns') + 1);
+
+          // Add column to table (=table header)
           originalHeader.append(
             '<th class="custom-field" id="' + data.id + '" ' +
             'data-editable data-deletable ' +
             'data-edit-url="' + data.edit_url + '" ' +
             'data-destroy-html-url="' + data.destroy_html_url + '"' +
             '>' + generateColumnNameTooltip(data.name) + '</th>');
-          var colOrder = table.colReorder.order();
-          colOrder.splice(2, 0, colOrder.length);
+
           // Remove all event handlers as we re-initialize them later with
           // new table
           $('#samples').off();
           $('#samples thead').empty();
           $('#samples thead').append(originalHeader);
+
           // Preserve save/delete buttons as we need them after new table
           // will be created
           $('div.toolbarButtons').appendTo('div.samples-table');
           $('div.toolbarButtons').hide();
+
+          // Re-initialize datatable
           table = dataTableInit();
           table.on('init.dt', function() {
             loadColumnsNames();
