@@ -751,17 +751,10 @@ function createTdElement(content) {
  * @return {Object} select dropdown
  */
 function createSampleTypeSelect(data, selected) {
-  selected = _.isUndefined(selected) ? 1 : selected + 1;
 
   var $selectType = $('<select></select>')
     .attr('name', 'sample_type_id').addClass('show-tick');
 
-  var sampleTypesLink = $('#samples').attr('data-sample-types-link');
-
-  var $option = $("<option href='" + sampleTypesLink + "'></option>")
-                  .attr('value', -2)
-                  .text(I18n.t('samples.table.add_sample_type'));
-  $selectType.append($option);
   $option = $('<option></option>')
     .attr('value', -1).text(I18n.t('samples.table.no_type'))
   $selectType.append($option);
@@ -781,16 +774,10 @@ function createSampleTypeSelect(data, selected) {
  * @param selected Selected sample group id
  */
 function createSampleGroupSelect(data, selected) {
-  selected = _.isUndefined(selected) ? 1 : selected + 1;
 
   var $selectGroup = $('<select></select>')
     .attr('name', 'sample_group_id').addClass('show-tick');
 
-  var sampleGroupsLink = $('#samples').attr('data-sample-groups-link');
-
-  var $option = $("<option href='" + sampleGroupsLink + "'></option>")
-                  .text(I18n.t('samples.table.add_sample_group'));
-  $selectGroup.append($option);
   $option = $('<option></option>')
     .attr('value', -1).text(I18n.t('samples.table.no_group'))
     .attr('data-icon', 'glyphicon glyphicon-asterisk');
