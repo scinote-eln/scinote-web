@@ -28,8 +28,8 @@ function setupAssetsLoading() {
 
           if (data.type === "image") {
             $el.html(
-              "<img src='" + data['preview-url'] + "' data-large-url='"
-              + data['large-preview-url'] + "'><p>" +
+              "<img src='" + data['preview-url'] + "' data-get-preview-url='"
+              + data['get-preview-url'] + "'><p>" +
               data.filename + "</p>"
             );
           } else {
