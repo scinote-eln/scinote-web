@@ -40,6 +40,21 @@ class AssetsController < ApplicationController
     end
   end
 
+  def large_image_url
+    respond_to do |format|
+      format.json do
+        render json: {
+          'large-preview-url' => @asset.url(:large),
+          'filename' => truncate(@asset.file_file_name,
+                                 length:
+                                   Constants::FILENAME_TRUNCATION_LENGTH),
+          'download-url' => download_asset_path(@asset),
+          'type' => (@asset.is_image? ? 'image' : 'file')
+        }
+      end
+    end
+  end
+
   def download
     if !@asset.file_present
       render_404 and return
