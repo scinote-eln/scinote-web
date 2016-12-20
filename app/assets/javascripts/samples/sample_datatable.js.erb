@@ -25,6 +25,8 @@ function dataTableInit() {
     stateSave: true,
     processing: true,
     serverSide: true,
+    sScrollX: '100%',
+    sScrollXInner: '100%',
     scrollY: '64vh',
     scrollCollapse: true,
     colReorder: {
@@ -218,6 +220,12 @@ function dataTableInit() {
 }
 
 table = dataTableInit();
+
+// Timeout for table header scrolling
+setTimeout(function () {
+  table.columns.adjust();
+}, 10);
+
 
 // Enables noSearchHidden plugin
 $.fn.dataTable.defaults.noSearchHidden = true;
@@ -423,6 +431,9 @@ function onClickEdit() {
                         td.html(changeToInputField("custom_fields", $(colHeader).attr("id"), ""));
                 }
             });
+
+            // Adjust columns width in table header
+            table.columns.adjust();
         },
         error: function (e, data, status, xhr) {
             if (e.status == 403) {
@@ -706,6 +717,9 @@ function onClickAddSample() {
             // Init dropdown with icons
             $("select[name=sample_group_id]").selectpicker();
             $("select[name=sample_type_id]").selectpicker();
+
+            // Adjust columns width in table header
+            table.columns.adjust();
         },
         error: function (e, eData, status, xhr) {
             if (e.status == 403)
