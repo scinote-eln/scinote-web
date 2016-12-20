@@ -651,7 +651,7 @@ function clearAllErrors() {
 
 // Restore previous table
 function onClickCancel() {
-    table.ajax.reload();
+    table.draw('page');
 
     changeToViewMode();
     updateButtons();
@@ -881,6 +881,11 @@ function changeToEditMode() {
             I18n.t('samples.js.column_added') +
             '</span>');
 
+          // Preserve save/delete buttons as we need them after new table
+          // will be created
+          $('div.toolbarButtons').appendTo('div.samples-table');
+          $('div.toolbarButtons').hide();
+
           // Destroy datatable
           table.destroy();
 
@@ -901,11 +906,6 @@ function changeToEditMode() {
           $('#samples').off();
           $('#samples thead').empty();
           $('#samples thead').append(originalHeader);
-
-          // Preserve save/delete buttons as we need them after new table
-          // will be created
-          $('div.toolbarButtons').appendTo('div.samples-table');
-          $('div.toolbarButtons').hide();
 
           // Re-initialize datatable
           table = dataTableInit();
