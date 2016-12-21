@@ -1,31 +1,31 @@
 <% if can_view_or_download_result_assets(result.my_module) %>
   <%= link_to download_asset_path(result.asset), data: {no_turbolink: true} do %>
     <%= image_tag(preview_asset_path result.asset) if result.asset.is_image? %>
-		<% if wopi_file?(result.asset) %>
-			<p style='display: inline-block'>
-				<%= file_extension_icon(result.asset) %>
-				<%= truncate(result.asset.file_file_name, length: 50) %>
-			</p>
-		<% else %>
-			<p><%= truncate(result.asset.file_file_name, length: 50) %></p>
-		<% end %>
+    <% if wopi_file?(result.asset) %>
+      <p style='display: inline-block'>
+        <%= file_extension_icon(result.asset) %>
+        <%= truncate(result.asset.file_file_name, length: 50) %>
+      </p>
+    <% else %>
+      <p><%= truncate(result.asset.file_file_name, length: 50) %></p>
+    <% end %>
   <% end %>
-  <% if result.asset.can_perform_action("view") %>
-		<%= link_to view_asset_url(id: result.asset),
-								class: 'btn btn-default btn-sm',
-								style: 'display: inline-block'	do %>
+  <% if result.asset.can_perform_action('view') %>
+    <%= link_to view_asset_url(id: result.asset),
+                class: 'btn btn-default btn-sm',
+                style: 'display: inline-block'	do %>
       <%= file_application_icon(result.asset) %>
-			<%= wopi_button_text(result.asset, 'view') %>
-		<% end %>
+      <%= wopi_button_text(result.asset, 'view') %>
+    <% end %>
   <% end %>
   <% if can_edit_result_asset_in_module(result.my_module) &&
-      result.asset.can_perform_action("edit") %>
-		<%= link_to edit_asset_url(id: result.asset),
-								class: 'btn btn-default btn-sm',
-							  style: 'display: inline-block'	do %>
-			<%= file_application_icon(result.asset) %>
-			<%= wopi_button_text(result.asset, 'edit') %>
-		<% end %>
+        result.asset.can_perform_action('edit') %>
+    <%= link_to edit_asset_url(id: result.asset),
+                class: 'btn btn-default btn-sm',
+                style: 'display: inline-block'	do %>
+      <%= file_application_icon(result.asset) %>
+      <%= wopi_button_text(result.asset, 'edit') %>
+    <% end %>
   <% end %>
 <% else %>
   <%= image_tag(preview_asset_path result.asset) if result.asset.is_image? %>

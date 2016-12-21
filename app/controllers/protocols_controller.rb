@@ -444,17 +444,15 @@ class ProtocolsController < ApplicationController
 
         if transaction_error
           # Bad request error
-          format.json {
+          format.json do
             render json: {
-              message: t("my_modules.protocols.load_from_repository_error")
+              message: t('my_modules.protocols.load_from_repository_error')
             },
             status: :bad_request
-          }
+          end
         else
           # Everything good, display flash & render 200
-          flash[:success] = t(
-            "my_modules.protocols.load_from_repository_flash",
-          )
+          flash[:success] = t('my_modules.protocols.load_from_repository_flash')
           flash.keep(:success)
           format.json { render json: {}, status: :ok }
         end

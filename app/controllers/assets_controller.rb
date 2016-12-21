@@ -1,9 +1,9 @@
 class AssetsController < ApplicationController
   include WopiUtil
 
-  before_action :load_vars, except: [:signature]
+  before_action :load_vars, except: :signature
   before_action :check_read_permission, except: [:signature, :file_present]
-  before_action :check_edit_permission, only: [ :edit ]
+  before_action :check_edit_permission, only: :edit
 
   # Validates asset and then generates S3 upload posts, because
   # otherwise untracked files could be uploaded to S3

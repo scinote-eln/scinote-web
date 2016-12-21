@@ -1,6 +1,5 @@
 class AddWopi < ActiveRecord::Migration
   def up
-
     add_column :assets, :lock, :string, limit: 1024
     add_column :assets, :lock_ttl, :integer
     add_column :assets, :version, :integer, default: 1
@@ -40,7 +39,6 @@ class AddWopi < ActiveRecord::Migration
   end
 
   def down
-
     remove_column :assets, :lock
     remove_column :assets, :lock_ttl
     remove_column :assets, :version

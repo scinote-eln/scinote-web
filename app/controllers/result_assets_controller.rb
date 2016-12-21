@@ -149,7 +149,7 @@ class ResultAssetsController < ApplicationController
     else
       if previous_asset.locked?
         @result.errors.add(:asset_attributes,
-                           I18n.t('result_assets.edit.locked_file_error'))
+                           t('result_assets.edit.locked_file_error'))
         respond_to do |format|
           format.json do
             render json: {
