@@ -382,6 +382,8 @@ class SampleDatatable < AjaxDatatablesRails::Base
     coli = item[:column].to_i - 1
     model, column = sortable_columns[sortable_displayed_columns[coli].to_i]
                     .split('.')
+
+    return model if model == ASSIGNED_SORT_COL
     col = [model.constantize.table_name, column].join('.')
   end
 
