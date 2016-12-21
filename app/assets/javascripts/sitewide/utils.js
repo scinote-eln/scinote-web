@@ -225,7 +225,7 @@ function initPageTutorialSteps(pageFirstStepN, pageLastStepN, nextPagePath,
  * @return {Object}             This
  */
 $.fn.makeDropdownOptionsLinks = function(selectedIdx, urlParam) {
-  selectedIdx = _.isUndefined(selectedIdx) ? 1 : selectedIdx;
+  selectedIdx = _.isUndefined(selectedIdx) ? -1 : selectedIdx;
 
   $(this).change(function() {
     window.location.href = addParam($(this).find('option:selected')
@@ -240,9 +240,11 @@ $.fn.makeDropdownOptionsLinks = function(selectedIdx, urlParam) {
         $(this).attr('href', '#');
       }
     });
-  $(this)
-    .find('option[value=' + selectedIdx + ']')
-    .attr('selected', true);
+  var selectedOpt = $(this).find('option[value="' + selectedIdx + '"]');
+  if (!selectedOpt.length) {
+    selectedOpt = $(this).find('option').eq(1);
+  }
+  selectedOpt.attr('selected', true);
 
   return this;
 };
