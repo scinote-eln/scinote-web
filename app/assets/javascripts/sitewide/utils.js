@@ -239,8 +239,10 @@ $.fn.makeDropdownOptionsLinks = function(selectedIdx, urlParam) {
       } else {
         $(this).attr('href', '#');
       }
-    })
-    .eq(selectedIdx).attr('selected', true);
+    });
+  $(this)
+    .find('option[value=' + selectedIdx + ']')
+    .attr('selected', true);
 
   return this;
 };
