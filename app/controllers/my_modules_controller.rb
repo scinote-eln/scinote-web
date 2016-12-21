@@ -325,9 +325,14 @@ class MyModulesController < ApplicationController
 
     respond_to do |format|
       format.html
-      format.json {
-        render json: ::SampleDatatable.new(view_context, @organization, nil, @my_module)
-      }
+      format.json do
+        render json: ::SampleDatatable.new(view_context,
+                                           @organization,
+                                           nil,
+                                           @my_module,
+                                           nil,
+                                           current_user)
+      end
     end
   end
 

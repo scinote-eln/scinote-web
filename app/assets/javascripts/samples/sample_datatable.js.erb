@@ -220,6 +220,13 @@ table = dataTableInit();
 // Enables noSearchHidden plugin
 $.fn.dataTable.defaults.noSearchHidden = true;
 
+// update datatable step on colReorder
+(function() {
+  table.on('column-reorder', function() {
+    table.state.save();
+  });
+})();
+
 // Updates "Select all" control in a data table
 function updateDataTableSelectAllCtrl(table) {
     var $table             = table.table().node();

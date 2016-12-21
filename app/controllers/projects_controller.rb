@@ -280,12 +280,17 @@ class ProjectsController < ApplicationController
 
   def samples_index
     @organization = @project.organization
-
+    @user = current_user
     respond_to do |format|
       format.html
-      format.json {
-        render json: ::SampleDatatable.new(view_context, @organization, @project, nil)
-      }
+      format.json do
+        render json: ::SampleDatatable.new(view_context,
+                                           @organization,
+                                           @project,
+                                           nil,
+                                           nil,
+                                           @user)
+      end
     end
   end
 
