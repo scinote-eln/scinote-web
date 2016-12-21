@@ -41,6 +41,10 @@ class OrganizationsController < ApplicationController
 
             # Fill in fields for dropdown
             @available_fields = @organization.get_available_sample_fields
+            # Truncate long fields
+            @available_fields.update(@available_fields) do |_k, v|
+              v.truncate(Constants::NAME_TRUNCATION_LENGTH_DROPDOWN)
+            end
 
             # Save file for next step (importing)
             @temp_file = TempFile.new(
