@@ -221,11 +221,9 @@ class SampleDatatable < AjaxDatatablesRails::Base
         if @my_module then
           # Depending on the sort, order nulls first or
           # nulls last on sample_my_modules association
-
           records.order("sample_my_modules.id NULLS #{sort_null_direction(params[:order].values[0])}")
         elsif @experiment
           # A very elegant solution to sort assigned samples at a experiment level
-
           # grabs the ids of samples which has a modules that belongs to this project
           assigned = Sample
             .joins('LEFT OUTER JOIN "sample_my_modules" ON "sample_my_modules"."sample_id" = "samples"."id"')
