@@ -242,7 +242,7 @@ $.fn.makeDropdownOptionsLinks = function(selectedIdx, urlParam) {
     });
   var selectedOpt = $(this).find('option[value="' + selectedIdx + '"]');
   if (!selectedOpt.length) {
-    selectedOpt = $(this).find('option').eq(1);
+    selectedOpt = $(this).find('option').eq(0);
   }
   selectedOpt.attr('selected', true);
 
