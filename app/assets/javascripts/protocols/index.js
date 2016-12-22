@@ -204,6 +204,7 @@ function initProtocolPreviewModal() {
           modalTitle.html(data.title);
           modalBody.html(data.html);
           modal.modal("show");
+          initHandsOnTable($(document));
         },
         error: function (error) {
           // TODO
@@ -375,7 +376,6 @@ function initModals() {
   // Protocol preview modal close action
   $("#protocol-preview-modal").on("hidden.bs.modal", function(e) {
     $(this).find(".modal-title").html("");
-    // Destroy the embedded data
     $(this).find(".modal-body").html("");
   });
 }

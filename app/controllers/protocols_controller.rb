@@ -26,7 +26,8 @@ class ProtocolsController < ApplicationController
   ]
   before_action :check_view_all_permissions, only: [
     :index,
-    :datatable
+    :datatable,
+    :preview
   ]
   before_action :check_unlink_permissions, only: [
     :unlink,
