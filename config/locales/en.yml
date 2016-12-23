@@ -1458,6 +1458,7 @@ en:
     update: "Update"
     edit: "Edit"
     cancel: "Cancel"
+    save: "Save"
     close: "Close"
     create: 'Create'
     check_all: "Check all"
