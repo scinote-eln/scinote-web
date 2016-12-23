@@ -25,6 +25,10 @@ function dataTableInit() {
     stateSave: true,
     processing: true,
     serverSide: true,
+    sScrollX: '100%',
+    sScrollXInner: '100%',
+    scrollY: '64vh',
+    scrollCollapse: true,
     colReorder: {
       fixedColumnsLeft: 2,
       realtime: false
@@ -216,6 +220,12 @@ function dataTableInit() {
 }
 
 table = dataTableInit();
+
+// Timeout for table header scrolling
+setTimeout(function () {
+  table.columns.adjust();
+}, 10);
+
 
 // Enables noSearchHidden plugin
 $.fn.dataTable.defaults.noSearchHidden = true;
@@ -421,6 +431,9 @@ function onClickEdit() {
                         td.html(changeToInputField("custom_fields", $(colHeader).attr("id"), ""));
                 }
             });
+
+            // Adjust columns width in table header
+            table.columns.adjust();
         },
         error: function (e, data, status, xhr) {
             if (e.status == 403) {
@@ -638,7 +651,7 @@ function clearAllErrors() {
 
 // Restore previous table
 function onClickCancel() {
-    table.ajax.reload();
+    table.draw('page');
 
     changeToViewMode();
     updateButtons();
@@ -704,6 +717,9 @@ function onClickAddSample() {
             // Init dropdown with icons
             $("select[name=sample_group_id]").selectpicker();
             $("select[name=sample_type_id]").selectpicker();
+
+            // Adjust columns width in table header
+            table.columns.adjust();
         },
         error: function (e, eData, status, xhr) {
             if (e.status == 403)
@@ -851,25 +867,34 @@ function changeToEditMode() {
           form.append('<span class="help-block">' +
             I18n.t('samples.js.column_added') +
             '</span>');
+
+          // Preserve save/delete buttons as we need them after new table
+          // will be created
+          $('div.toolbarButtons').appendTo('div.samples-table');
+          $('div.toolbarButtons').hide();
+
+          // Destroy datatable
+          table.destroy();
+
+          // Add number of columns
           $('#samples').data('num-columns',
             $('#samples').data('num-columns') + 1);
+
+          // Add column to table (=table header)
           originalHeader.append(
             '<th class="custom-field" id="' + data.id + '" ' +
             'data-editable data-deletable ' +
             'data-edit-url="' + data.edit_url + '" ' +
             'data-destroy-html-url="' + data.destroy_html_url + '"' +
             '>' + generateColumnNameTooltip(data.name) + '</th>');
-          var colOrder = table.colReorder.order();
-          colOrder.splice(2, 0, colOrder.length);
+
           // Remove all event handlers as we re-initialize them later with
           // new table
           $('#samples').off();
           $('#samples thead').empty();
           $('#samples thead').append(originalHeader);
-          // Preserve save/delete buttons as we need them after new table
-          // will be created
-          $('div.toolbarButtons').appendTo('div.samples-table');
-          $('div.toolbarButtons').hide();
+
+          // Re-initialize datatable
           table = dataTableInit();
           table.on('init.dt', function() {
             loadColumnsNames();
