@@ -39,10 +39,11 @@
         url: href,
         data: { id: id },
         success: function(data) {
-          $(li).replaceWith($.parseHTML(data.html));
+          var newLi = $.parseHTML(data.html);
+          $(li).replaceWith(newLi);
           editSampleTypeForm();
           destroySampleTypeGroup();
-          initSampleColorPicker(li)
+          initSampleColorPicker(newLi);
           appendCarretToColorPickerDropdown();
           editSampleGroupColor();
           editSampleGroupForm();
@@ -111,15 +112,13 @@
   }
 
   function editSampleGroupColor() {
-    $(document).ready(function() {
-      $('.edit_sample_group a.color-btn').off();
-      $('.edit_sample_group a.color-btn').on('click', function() {
-        var color = $(this).attr('data-value');
-        var form = $(this).closest('form');
-        $('select[name="sample_group[color]"]')
-          .val(color);
-        form.submit();
-      });
+    $('.edit_sample_group a.color-btn').off();
+    $('.edit_sample_group a.color-btn').on('click', function() {
+      var color = $(this).attr('data-value');
+      var form = $(this).closest('form');
+      $('select[name="sample_group[color]"]')
+        .val(color);
+      form.submit();
     });
   }
 
@@ -187,12 +186,13 @@
       $.ajax({
         url: li.attr('data-edit'),
         success: function(data) {
-          $(li).replaceWith($.parseHTML(data.html));
+          var newLi = $.parseHTML(data.html);
+          $(li).replaceWith(newLi);
 
           submitEditSampleTypeGroupForm();
           abortEditSampleTypeGroupAction();
           destroySampleTypeGroup();
-          initSampleColorPicker(li);
+          initSampleColorPicker(newLi);
           appendCarretToColorPickerDropdown();
           editSampleGroupColor();
 
@@ -203,10 +203,11 @@
           $('#edit_sample_group_' + data.id).off();
           $('#edit_sample_group_' + data.id)
             .bind('ajax:success', function(ev, data) {
-            $(this).closest('li').replaceWith($.parseHTML(data.html));
+            var newLi = $.parseHTML(data.html);
+            $(this).closest('li').replaceWith(newLi);
             editSampleGroupForm();
             destroySampleTypeGroup();
-            initSampleColorPicker($(this).closest('li'));
+            initSampleColorPicker(newLi);
             appendCarretToColorPickerDropdown();
             editSampleGroupColor();
           }).bind('ajax:error', function(ev, error){
