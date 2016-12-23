@@ -72,14 +72,15 @@ class SampleDatatable < AjaxDatatablesRails::Base
   private
 
   # filters the search array by checking if the the column is visible
-  def filter_search_array input_array
+  def filter_search_array(input_array)
     param_index = 2
-    filtered_array =[]
+    filtered_array = []
     input_array.each do |col|
-      unless params[:columns].to_a[param_index] == nil
-        filtered_array.push(col) unless params[:columns].to_a[param_index][1]["searchable"] == "false"
-        param_index += 1
-      end
+      next if params[:columns].to_a[param_index].nil?
+      params_col =
+        params[:columns].to_a.find { |v| v[1]['data'] == param_index.to_s }
+      filtered_array.push(col) unless params_col[1]['searchable'] == 'false'
+      param_index += 1
     end
     filtered_array
   end

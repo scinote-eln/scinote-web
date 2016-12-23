@@ -1,5 +1,22 @@
 //= require jquery-ui
 
+// Extend datatables API with searchable options
+// (http://stackoverflow.com/questions/39912395/datatables-dynamically-set-columns-searchable)
+$.fn.dataTable.Api.register('isColumnSearchable()', function(colSelector) {
+  var idx = this.column(colSelector).index();
+  return this.settings()[0].aoColumns[idx].bSearchable;
+});
+$.fn.dataTable.Api.register('setColumnSearchable()', function(colSelector, value) {
+  if (value !== this.isColumnSearchable(colSelector)) {
+    var idx = this.column(colSelector).index();
+    this.settings()[0].aoColumns[idx].bSearchable = value;
+    if (value === true) {
+      this.rows().invalidate();
+    }
+  }
+  return value;
+});
+
 var rowsSelected = [];
 
 // Tells whether we're currently viewing or editing table
@@ -81,7 +98,8 @@ function dataTableInit() {
         columns.push({
           data: String(i),
           defaultContent: '',
-          visible: visible
+          visible: visible,
+          searchable: visible
         });
       }
       return columns;
@@ -140,6 +158,7 @@ function dataTableInit() {
           visibility = (visibility === 'true');
         }
         table.column(i).visible(visibility);
+        table.setColumnSearchable(i, visibility);
       }
       oSettings._colReorder.fnOrder(myData.ColReorder);
       table.on('mousedown', function() {
@@ -1017,11 +1036,13 @@ function changeToEditMode() {
         self.removeClass('glyphicon-eye-open');
         li.addClass('col-invisible');
         column.visible(false);
+        table.setColumnSearchable(column.index(), false);
       } else {
         self.addClass('glyphicon-eye-open');
         self.removeClass('glyphicon-eye-close');
         li.removeClass('col-invisible');
         column.visible(true);
+        table.setColumnSearchable(column.index(), true);
       }
     });
   }
