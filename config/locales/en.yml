@@ -805,6 +805,8 @@ en:
 
   samples:
     columns: "Columns"
+    columns_visibility: "Toggle visibility"
+    columns_delete: "Delete"
     types_and_groups: "Types and groups"
     actions: "Actions"
     add_new_sample: "Add new sample"

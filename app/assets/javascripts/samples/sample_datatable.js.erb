@@ -975,11 +975,11 @@ function changeToEditMode() {
           '<span class="text">' + generateColumnNameTooltip(thederName) + '</span> ' +
           '<span class="form-group"><input type="text" class="text-edit form-control" style="display: none;" />' +
           '<span class="pull-right controls">' +
-          '<span class="ok glyphicon glyphicon-ok" style="display: none;"></span>' +
-          '<span class="cancel glyphicon glyphicon-remove" style="display: none;"></span>' +
-          '<span class="vis glyphicon ' + visClass + '"></span> ' +
-          '<span class="edit glyphicon glyphicon-pencil ' + editClass + '"></span>' +
-          '<span class="del glyphicon glyphicon-trash ' + delClass + '"></span>' +
+          '<span class="ok glyphicon glyphicon-ok" style="display: none;" title="<%= I18n.t("general.update") %>"></span>' +
+          '<span class="cancel glyphicon glyphicon-remove" style="display: none;" title="<%= I18n.t("general.cancel") %>"></span>' +
+          '<span class="vis glyphicon ' + visClass + '" title="<%= I18n.t("samples.columns_visibility") %>"></span> ' +
+          '<span class="edit glyphicon glyphicon-pencil ' + editClass + '" title="<%= I18n.t("general.edit") %>"></span>' +
+          '<span class="del glyphicon glyphicon-trash ' + delClass + '" title="<%= I18n.t("samples.columns_delete") %>"></span>' +
           '</span><br></span></li>';
         dropdownList.append(html);
       }
