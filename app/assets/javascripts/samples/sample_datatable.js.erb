@@ -487,13 +487,7 @@ function onClickSave() {
         data: data,
         success: function (data) {
             sampleAlertMsg(data.flash, "success");
-            var flash = $('.alert');
-            window.setTimeout(function () {
-              flash.fadeTo(500, 0).slideUp(500, function () {
-                $(this).remove();
-                $('#content-wrapper').removeClass('alert-shown');
-              });
-            }, 5000);
+            HelperModule.hideFlashMsg();
             onClickCancel();
         },
         error: function (e, eData, status, xhr) {
