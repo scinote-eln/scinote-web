@@ -780,9 +780,11 @@ function createSampleTypeSelect(data, selected) {
   $.each(data, function(i, val) {
     var $option = $('<option></option>')
       .attr('value', val.id).text(val.name);
+    if((i + 1) === selected) {
+      $option.attr('selected', true);
+    }
     $selectType.append($option);
   });
-  $selectType.makeDropdownOptionsLinks(selected, 'add-mode');
   return $selectType;
 }
 
@@ -807,10 +809,11 @@ function createSampleGroupSelect(data, selected) {
     var $option = $('<option></option>')
       .attr('value', val.id).text(val.name)
       .attr('data-content', $span.prop('outerHTML') + ' ' + val.name);
-
+    if((i + 1) === selected) {
+      $option.attr('selected', true);
+    }
     $selectGroup.append($option);
   });
-  $selectGroup.makeDropdownOptionsLinks(selected, 'add-mode');
   return $selectGroup;
 }
 
