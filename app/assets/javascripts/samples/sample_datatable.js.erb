@@ -500,6 +500,7 @@ function onClickSave() {
         data: data,
         success: function (data) {
             sampleAlertMsg(data.flash, "success");
+            HelperModule.hideFlashMsg();
             onClickCancel();
         },
         error: function (e, eData, status, xhr) {

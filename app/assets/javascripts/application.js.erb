@@ -193,9 +193,11 @@ function notificationAlertClose(){
       .removeClass("alert-shown");
   });
 }
-(function(){
+var HelperModule = (function(){
 
-  function tree_link_truncation() {
+  var helpers = {};
+
+  helpers.treeLinkTruncation = function() {
     $('.tree-link a').each( function(){
       truncateLongString( $(this), <%= Constants::NAME_TRUNCATION_LENGTH %>);
     });
@@ -204,21 +206,22 @@ function notificationAlertClose(){
     });
   }
 
-  function hide_flash_msg() {
+  helpers.hideFlashMsg =  function() {
     var flash = $('.alert');
     if (flash.length > 0) {
       window.setTimeout(function () {
         flash.fadeTo(500, 0).slideUp(500, function () {
           $(this).remove();
-          $('#content-wrapper')
-            .css('marginTop', '50px');
+          $('#content-wrapper').removeClass('alert-shown');
         });
       }, 5000);
     }
   }
 
   $( document ).ready(function() {
-    tree_link_truncation();
-    hide_flash_msg();
+    helpers.treeLinkTruncation();
+    helpers.hideFlashMsg();
   });
+
+  return helpers;
 })();
