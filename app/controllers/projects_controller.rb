@@ -251,6 +251,7 @@ class ProjectsController < ApplicationController
   def show
     # This is the "info" view
     current_organization_switch(@project.organization)
+    @current_sort = params[:sort].to_s
   end
 
   def notifications
