@@ -207,6 +207,11 @@ class Constants
     'gif', 'jpeg', 'pjpeg', 'png', 'x-png', 'svg+xml', 'bmp'
   ].freeze
 
+  WHITELISTED_TAGS = [
+    'a', 'b', 'strong', 'i', 'em', 'li', 'ul', 'ol', 'h1',
+    'h2', 'h3', 'br', 'sub', 'p', 'div', 'span'
+  ].freeze
+
   # Very basic regex to check for validity of emails
   BASIC_EMAIL_REGEX = URI::MailTo::EMAIL_REGEXP
 

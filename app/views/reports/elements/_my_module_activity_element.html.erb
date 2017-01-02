@@ -30,7 +30,7 @@
                 </span>
                 <span class="activity-message">
                   &nbsp;
-                  <%= activity.message.html_safe %>
+                  <%= sanitize_input(activity.message) %>
                 </span>
               </li>
             <% end %>

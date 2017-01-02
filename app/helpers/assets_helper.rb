@@ -4,7 +4,7 @@ module AssetsHelper
     res = <<-eos
     <span
       data-status='asset-loading'
-      data-filename='#{asset.file_file_name}'
+      data-filename='#{sanitize_input(asset.file_file_name)}'
       data-type='#{asset.is_image? ? "image" : "asset"}'
       data-present-url='#{file_present_asset_path(asset, format: :json)}'
       #{asset.is_image? ? "data-preview-url='" + preview_asset_path(asset) + "'" : ""}'
