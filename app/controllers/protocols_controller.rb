@@ -181,7 +181,7 @@ class ProtocolsController < ApplicationController
     respond_to do |format|
       # sanitize user input
       params[:keywords].collect! do |keyword|
-        ActionController::Base.helpers.sanitize(keyword)
+        sanitize_input(keyword)
       end
       if @protocol.update_keywords(params[:keywords])
         format.json {

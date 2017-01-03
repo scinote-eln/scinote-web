@@ -8,6 +8,6 @@ module ActivityHelper
       title = truncate(activity_title, length: len)
     end
     message = message.gsub(/#{activity_title}/, title )
-    sanitize_input(message.html_safe) if message
+    sanitize_input(message) if message
   end
 end

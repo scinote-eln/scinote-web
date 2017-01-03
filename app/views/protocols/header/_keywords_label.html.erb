@@ -1,5 +1,5 @@
 <% if @protocol.protocol_keywords.count > 0 %>
-  <%= @protocol.protocol_keywords.collect{ |kw| "<strong>#{sanitize(kw.name)}</strong>" }.join(", ").html_safe %>
+  <%= sanitize_input(@protocol.protocol_keywords.collect{ |kw| "<strong>#{kw.name}</strong>" }.join(", ")) %>
 <% else %>
   <em><%= t("protocols.no_keywords") %></em>
 <% end %>

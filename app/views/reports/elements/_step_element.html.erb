@@ -29,7 +29,7 @@
         <% if strip_tags(step.description).present? %>
           <%= auto_link(step.description,
                         link: :urls,
-                        html: { target: '_blank' }).html_safe %>
+                        html: { target: '_blank' }) %>
         <% else %>
            <em><%=t "projects.reports.elements.step.no_description" %></em>
         <% end %>

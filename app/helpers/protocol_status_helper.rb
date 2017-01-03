@@ -6,10 +6,9 @@ module ProtocolStatusHelper
     res << "<a href=\"#\" data-toggle=\"popover\" data-html=\"true\" "
     res << "data-trigger=\"focus\" data-placement=\"bottom\" title=\""
     res << sanitize_input(protocol_status_popover_title(parent)) +
-           '" data-content="' +
-           sanitize_input(protocol_status_popover_content(parent)) +
-           '">' + sanitize_input(protocol_name(parent)) + '</a>'
-    res.html_safe
+           '" data-content="' + protocol_status_popover_content(parent) +
+           '">' + protocol_name(parent) + '</a>'
+    sanitize_input(res)
   end
 
   private
