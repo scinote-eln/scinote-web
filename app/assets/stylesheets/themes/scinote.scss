@@ -1139,7 +1139,7 @@ ul.content-module-activities {
   }
 }
 
-/* Preview protocol modal */
+// Preview protocol modal
 @media (min-width: 768px) {
   #protocol-preview-modal .modal-dialog {
     width: 70%;
@@ -1151,7 +1151,6 @@ ul.content-module-activities {
     max-height: 75vh;
     overflow-y: auto;
     width: 100%;
-
     .ql-editor {
       min-height: initial;
     }
