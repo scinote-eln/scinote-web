@@ -140,7 +140,7 @@ class AssetsController < ApplicationController
       success_action_status: '201',
       acl: 'private',
       storage_class: "STANDARD",
-      content_length_range: 1..FILE_MAX_SIZE.megabytes,
+      content_length_range: 1..Constants::FILE_MAX_SIZE_MB.megabytes,
       content_type: asset.file_content_type
     )
     posts.push({
@@ -148,14 +148,16 @@ class AssetsController < ApplicationController
       fields: s3_post.fields
     })
 
-    if (asset.file_content_type =~ /^image\//) == 0
+    condition = %r{^image/#{Regexp.union(Constants::WHITELISTED_IMAGE_TYPES)}}
+
+    if condition === asset.file_content_type
       asset.file.options[:styles].each do |style, option|
         s3_post = S3_BUCKET.presigned_post(
           key: asset.file.path(style)[1..-1],
           success_action_status: '201',
           acl: 'public-read',
           storage_class: "REDUCED_REDUNDANCY",
-          content_length_range: 1..FILE_MAX_SIZE.megabytes,
+          content_length_range: 1..Constants::FILE_MAX_SIZE_MB.megabytes,
           content_type: asset.file_content_type
         )
         posts.push({

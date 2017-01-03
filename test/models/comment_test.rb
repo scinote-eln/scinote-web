@@ -13,24 +13,11 @@ class CommentTest < ActiveSupport::TestCase
     )
   end
 
+  should validate_presence_of(:message)
+  should validate_length_of(:message).is_at_most(Constants::TEXT_MAX_LENGTH)
+
   test "should validate" do
     assert @valid.valid?
-  end
-
-  test "should not validate with empty or nil message" do
-    comment_empty = Comment.new(message: " ", user: users(:steve))
-    comment_nil  = Comment.new(message: nil, user: users(:steve))
-
-    assert_not comment_empty.valid?, "Comment was created with empty message."
-    assert_not comment_nil.valid?, "Comment was created with nil message."
-  end
-
-  test "should not validate with message too long" do
-    comment = Comment.new(
-      message: "#" * 1001,
-      user: users(:steve)
-    )
-    assert_not comment.valid?, "Comment was created with message being too long."
   end
 
   test "should not validate with empty user_id" do

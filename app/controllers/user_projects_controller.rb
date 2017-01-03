@@ -1,11 +1,13 @@
 class UserProjectsController < ApplicationController
+  include NotificationsHelper
+
   before_action :load_vars
-  before_action :check_view_tab_permissions, only: [ :index ]
-  before_action :check_view_permissions, only: [ :index_edit ]
-  before_action :check_create_permissions, only: [:new, :create]
+  before_action :check_view_tab_permissions, only: :index
+  before_action :check_view_permissions, only: :index_edit
+  before_action :check_create_permissions, only: :create
   # TODO  check update permissions
-  before_action :check_update_permisisons, only: [:update]
-  before_action :check_delete_permisisons, only: [:destroy]
+  before_action :check_update_permisisons, only: :update
+  before_action :check_delete_permisisons, only: :destroy
 
   def index
     @users = @project.user_projects
@@ -42,22 +44,11 @@ class UserProjectsController < ApplicationController
     end
   end
 
-  def new
-    @up = UserProject.new(
-      project: @project
-    )
-    init_gui
-  end
-
   def create
     @up = UserProject.new(up_params.merge(project: @project))
     @up.assigned_by = current_user
 
     if @up.save
-      flash_success = t('user_projects.create.success_flash',
-        user: @up.user.full_name,
-        project: @up.project.name)
-
       # Generate activity
       Activity.create(
         type_of: :assign_user_to_project,
@@ -73,42 +64,23 @@ class UserProjectsController < ApplicationController
       )
 
       respond_to do |format|
-        format.html {
-          flash[:success] = flash_success
-          redirect_to projects_path
-        }
         format.json {
           redirect_to :action => :index_edit, :format => :json
         }
       end
     else
-       flash_error = t('user_projects.create.error_flash',
-         user: @up.user.full_name,
-         project: @up.project.name)
       error = t('user_projects.create.can_add_user_to_project')
       error = t('user_projects.create.select_user_role') unless @up.role
 
       respond_to do |format|
-        format.html {
-          flash[:error] = flash_error
-          init_gui
-          render :new
-        }
         format.json {
           render :json => {
             status: 'error',
-            error: error,
-            :errors => [
-              flash_error
-            ]
+            error: error
           }
         }
       end
     end
-  end
-
-  def edit
-    @up = UserProject.find(params[:id])
   end
 
   def update
@@ -121,11 +93,6 @@ class UserProjectsController < ApplicationController
     @up.role = up_params[:role]
 
     if @up.save
-      flash_success = t(
-        "user_projects.update.success_flash",
-        user: @up.user.full_name,
-        project: @up.project.name)
-
       # Generate activity
       Activity.create(
         type_of: :change_user_role_on_project,
@@ -141,25 +108,12 @@ class UserProjectsController < ApplicationController
       )
 
       respond_to do |format|
-        format.html {
-          flash[:success] = flash_success
-          redirect_to projects_path
-        }
         format.json {
           redirect_to :action => :index_edit, :format => :json
         }
       end
     else
-      flash_error = t('user_projects.update.error_flash',
-        user: @up.user.full_name,
-        project: @up.project.name)
-
       respond_to do |format|
-        format.html {
-          flash[:error] = flash_error
-          init_gui
-          render :new
-        }
         format.json {
           render :json => {
             status: 'error',
@@ -174,11 +128,6 @@ class UserProjectsController < ApplicationController
 
   def destroy
     if @up.destroy
-      flash_success = t(
-        'user_projects.destroy.success_flash',
-         user: @up.user.full_name,
-         project: @up.project.name)
-
       # Generate activity
       Activity.create(
         type_of: :unassign_user_from_project,
@@ -191,28 +140,15 @@ class UserProjectsController < ApplicationController
           unassigned_by_user: current_user.full_name
         )
       )
+      generate_notification(current_user, @up.user, false, false, @project)
 
       respond_to do |format|
-        format.html {
-          flash[:success] = flash_success
-          redirect_to projects_path, :status => 303
-        }
         format.json {
           redirect_to project_users_edit_path(format: :json), :status => 303
         }
       end
     else
-       flash_error = t('user_projects.destroy.error_flash',
-         user: @up.user.full_name,
-         project: @up.project.name)
-
       respond_to do |format|
-        format.html {
-          flash[:error] = flash_error
-          init_gui
-          # TODO handle response for html format in case of error
-          render :new
-        }
         format.json {
           render :json => {
             :errors => [

@@ -2,8 +2,10 @@ class Step < ActiveRecord::Base
   include SearchableModel
 
   auto_strip_attributes :name, :description, nullify: false
-  validates :name, presence: true, length: { maximum: NAME_MAX_LENGTH }
-  validates :description, length: { maximum: TEXT_MAX_LENGTH }
+  validates :name,
+            presence: true,
+            length: { maximum: Constants::NAME_MAX_LENGTH }
+  validates :description, length: { maximum: Constants::RICH_TEXT_MAX_LENGTH }
   validates :position, presence: true
   validates :completed, inclusion: { in: [true, false] }
   validates :user, :protocol, presence: true
@@ -42,7 +44,7 @@ class Step < ActiveRecord::Base
   def self.search(user, include_archived, query = nil, page = 1)
     protocol_ids =
       Protocol
-      .search(user, include_archived, nil, SHOW_ALL_RESULTS)
+      .search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
       .select("id")
 
     if query
@@ -61,12 +63,12 @@ class Step < ActiveRecord::Base
       .where_attributes_like([:name, :description], a_query)
 
     # Show all results if needed
-    if page == SHOW_ALL_RESULTS
+    if page == Constants::SEARCH_NO_LIMIT
       new_query
     else
       new_query
-        .limit(SEARCH_LIMIT)
-        .offset((page - 1) * SEARCH_LIMIT)
+        .limit(Constants::SEARCH_LIMIT)
+        .offset((page - 1) * Constants::SEARCH_LIMIT)
     end
   end
 
@@ -90,8 +92,8 @@ class Step < ActiveRecord::Base
     protocol.present? ? protocol.my_module : nil
   end
 
-  def last_comments(last_id = 1, per_page = 20)
-    last_id = 9999999999999 if last_id <= 1
+  def last_comments(last_id = 1, per_page = Constants::COMMENTS_SEARCH_LIMIT)
+    last_id = Constants::INFINITY if last_id <= 1
     comments = Comment.joins(:step_comment)
                       .where(step_comments: { step_id: id })
                       .where('comments.id <  ?', last_id)

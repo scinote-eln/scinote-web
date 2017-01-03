@@ -22,7 +22,9 @@
             </a>
           <% end %>
         </li>
-        <% if project_page? %>
+        <% if project_page? ||
+              sample_types_page_project? ||
+              sample_groups_page_project? %>
           <li class="active">
             <span class="glyphicon glyphicon-blackboard"></span>
           </li>
@@ -37,7 +39,8 @@
             <% end %>
           </li>
         <% end %>
-        <% if experiment_page? || module_page? %>
+        <% if experiment_page? ||
+              module_page? %>
           <% if !module_page? %>
             <li class="active">
               <%= fa_icon 'fa-flask' %>
@@ -67,7 +70,9 @@
 
       <!-- True secondary navigation (buttons on the right side) -->
       <ul class="nav navbar-nav navbar-right" style="vertical-align: bottom">
-        <% if project_page? %>
+        <% if project_page? ||
+              sample_types_page_project? ||
+              sample_groups_page_project? %>
           <% if can_view_project(@project) then %>
             <li id="canvas-nav-tab" class="<%= "active" if is_project_show? %>">
               <a href="<%= project_url(@project) %>" title="<%=t "nav2.projects.show" %>">
@@ -77,7 +82,9 @@
             </li>
           <% end %>
           <% if can_view_project_samples(@project) then %>
-            <li id="project-samples-nav-tab" class="<%= "active" if is_project_samples? %>">
+            <li id="project-samples-nav-tab" class="<%= "active" if is_project_samples? ||
+                                                                    sample_types_page_project? ||
+                                                                    sample_groups_page_project? %>">
               <a href="<%= samples_project_url(@project) %>" title="<%=t "nav2.projects.samples" %>">
                 <span class="hidden-sm hidden-md"><%=t "nav2.projects.samples" %></span>
                 <span class="hidden-xs hidden-lg glyphicon glyphicon-tint"></span>
@@ -98,7 +105,9 @@
             </li>
           <% end %>
 
-        <% elsif experiment_page? %>
+        <% elsif experiment_page? ||
+                 sample_groups_page_experiment? ||
+                 sample_types_page_expermient? %>
           <% if can_view_experiment(@experiment) then %>
               <li id="canvas-nav-tab" class="<%= "active" if is_experiment_canvas? %>">
                 <a href="<%= canvas_experiment_url(@experiment) %>" title="<%=t "nav2.experiments.canvas" %>">
@@ -108,7 +117,9 @@
               </li>
           <% end %>
           <% if can_view_experiment_samples(@experiment) then %>
-            <li id="experiment-samples-nav-tab" class="<%= "active" if is_experiment_samples? %>">
+            <li id="experiment-samples-nav-tab" class="<%= "active" if is_experiment_samples? ||
+                                                                       sample_groups_page_experiment? ||
+                                                                       sample_types_page_expermient? %>">
               <a href="<%= samples_experiment_url(@experiment) %>" title="<%=t "nav2.projects.samples" %>">
                 <span class="hidden-sm hidden-md"><%=t "nav2.projects.samples" %></span>
                 <span class="hidden-xs hidden-lg glyphicon glyphicon-tint"></span>
@@ -129,7 +140,9 @@
               </li>
           <% end %>
 
-        <% elsif module_page? %>
+        <% elsif module_page? ||
+                 sample_types_page_my_module? ||
+                 sample_groups_page_my_module? %>
           <% if can_view_module_protocols(@my_module) then %>
             <li id="steps-nav-tab" class="<%= "active" if is_module_protocols? %>">
               <a href="<%= protocols_my_module_url(@my_module) %>" title="<%=t "nav2.modules.steps" %>">
@@ -155,7 +168,9 @@
             </li>
           <% end %>
           <% if can_view_module_samples(@my_module) then %>
-            <li id="module-samples-nav-tab" class="<%= "active" if is_module_samples? %>">
+            <li id="module-samples-nav-tab" class="<%= "active" if is_module_samples? ||
+                                                                   sample_types_page_my_module? ||
+                                                                   sample_groups_page_my_module? %>">
               <a href="<%= samples_my_module_url(@my_module) %>" title="<%=t "nav2.modules.samples" %>">
                 <span class="hidden-sm hidden-md"><%=t "nav2.modules.samples" %></span>
                 <span class="hidden-xs hidden-lg glyphicon glyphicon-tint"></span>
@@ -186,44 +201,61 @@
           <% if can_view_projects(@project.organization) %>
             <a href="<%= projects_path :organization => @project.organization.id %>">
           <% end %>
-          <%= truncate( @project.organization.name, length: 20 ) %>
+          <%= truncate(@project.organization.name,
+                       length: Constants::NAME_TRUNCATION_LENGTH) %>
           <% if can_view_projects(@project.organization) %>
             </a>
           <% end %>
         </li>
         <% if project_page? %>
           <li class="active">
-            <%= truncate( @project.name, length: 20 ) %>
+            <%= truncate(@project.name,
+                         length: Constants::NAME_TRUNCATION_LENGTH) %>
           </li>
         <% else %>
           <li>
             <% if can_view_project(@project) %>
               <a href="<%= project_url(@project) %>">
             <% end %>
-            <%= truncate( @project.name, length: 20 ) %>
+            <%= truncate(@project.name,
+                         length: Constants::NAME_TRUNCATION_LENGTH) %>
             <% if can_view_project(@project) %>
               </a>
             <% end %>
           </li>
         <% end %>
-        <% if experiment_page? || module_page? %>
-          <% if !module_page? %>
+        <% if experiment_page? ||
+              module_page? ||
+              sample_types_page_my_module? ||
+              sample_groups_page_my_module? ||
+              sample_groups_page_experiment? ||
+              sample_types_page_expermient? %>
+          <% if !module_page? &&
+                !sample_types_page_my_module? &&
+                !sample_groups_page_my_module? %>
             <li class="active">
-              <%= truncate(@experiment.name, length: 20) %>
+              <%= truncate(@experiment.name,
+                           length: Constants::NAME_TRUNCATION_LENGTH) %>
             </li>
           <% else %>
             <li>
             <% if can_view_experiment(@experiment) %>
-              <%= link_to truncate(@experiment.name, length: 20), canvas_experiment_path(@experiment) %>
+              <%= link_to truncate(@experiment.name,
+                                   length: Constants::NAME_TRUNCATION_LENGTH),
+                          canvas_experiment_path(@experiment) %>
             <% else %>
-              <%= truncate(@experiment.name, length: 20) %>
+              <%= truncate(@experiment.name,
+                           length: Constants::NAME_TRUNCATION_LENGTH) %>
             <% end %>
             </li>
           <% end %>
         <% end %>
-        <% if module_page? %>
+        <% if module_page? ||
+              sample_types_page_my_module? ||
+              sample_groups_page_my_module? %>
           <li class="active">
-            <%= truncate( @my_module.name, length: 20 ) %>
+            <%= truncate(@my_module.name,
+                         length: Constants::NAME_TRUNCATION_LENGTH) %>
           </li>
         <% end %>
       </ul>

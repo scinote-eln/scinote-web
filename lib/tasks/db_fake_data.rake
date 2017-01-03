@@ -939,7 +939,8 @@ namespace :db do
         # Now, at the end, add additional "private" organization
         # to each user
         User.find_each do |user|
-          create_private_user_organization(user, DEFAULT_PRIVATE_ORG_NAME)
+          create_private_user_organization(user,
+                                           Constants::DEFAULT_PRIVATE_ORG_NAME)
         end
 
         # Generate thumbnails of all experiments

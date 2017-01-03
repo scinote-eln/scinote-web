@@ -1,5 +1,6 @@
 class Users::RegistrationsController < Devise::RegistrationsController
   before_action :load_paperclip_vars
+  prepend_before_action :check_captcha, only: [:create]
 
   def avatar
     user = User.find_by_id(params[:id]) || current_user
@@ -132,24 +133,21 @@ class Users::RegistrationsController < Devise::RegistrationsController
   end
 
   def create
+    build_resource(sign_up_params)
+    valid_resource = resource.valid?
 
     # Create new organization for the new user
     @org = Organization.new
     @org.name = params[:organization][:name]
-
-    build_resource(sign_up_params)
-
     valid_org = @org.valid?
-    valid_resource = resource.valid?
 
-    if valid_org and valid_resource
+    if valid_org && valid_resource
 
       # this must be called after @org variable is defined. Otherwise this
       # variable won't be accessable in view.
       super do |resource|
-
-        if resource.valid? and resource.persisted?
-          @org.created_by = resource  #set created_by for oraganization
+        if resource.valid? && resource.persisted?
+          @org.created_by = resource # set created_by for oraganization
           @org.save
 
           # Add this user to the organization as owner
@@ -158,9 +156,12 @@ class Users::RegistrationsController < Devise::RegistrationsController
             organization: @org,
             role: :admin
           )
+
+          # set current organization to new user
+          resource.current_organization_id = @org.id
+          resource.save
         end
       end
-
     else
       render :new
     end
@@ -179,7 +180,11 @@ class Users::RegistrationsController < Devise::RegistrationsController
   def sign_up_params
     tmp = params.require(:user).permit(:full_name, :initials, :email, :password, :password_confirmation)
     initials = tmp[:full_name].titleize.scan(/[A-Z]+/).join()
-    initials = initials.strip.empty? ? "PLCH" : initials[0..3]
+    initials = if initials.strip.empty?
+                 'PLCH'
+               else
+                 initials[0..Constants::USER_INITIALS_MAX_LENGTH]
+               end
     tmp.merge(:initials => initials)
   end
 
@@ -229,7 +234,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
         success_action_status: '201',
         acl: 'public-read',
         storage_class: "REDUCED_REDUNDANCY",
-        content_length_range: 1..FILE_MAX_SIZE.megabytes,
+        content_length_range: 1..Constants::FILE_MAX_SIZE_MB.megabytes,
         content_type: content_type
       )
       posts.push({
@@ -244,6 +249,21 @@ class Users::RegistrationsController < Devise::RegistrationsController
   end
 
   private
+
+  def check_captcha
+    if Rails.configuration.x.enable_recaptcha
+      unless verify_recaptcha
+        # Construct new resource before rendering :new
+        self.resource = resource_class.new sign_up_params
+
+        # Also validate organization
+        @org = Organization.new(name: params[:organization][:name])
+        @org.valid?
+
+        respond_with_navigational(resource) { render :new }
+      end
+    end
+  end
 
   # Redirect to login page after signing up
   def after_sign_up_path_for(resource)

@@ -56,6 +56,10 @@ module UsersGenerator
       end
     end
 
+    # Assign user organization as user current organization
+    nu.current_organization_id = nu.organizations.first.id
+    nu.save!
+
     nu.reload
     return nu
   end

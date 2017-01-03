@@ -98,7 +98,7 @@ without_user:
   user: 0
   project: decathlon
   role: 1
-  assigned_by: steve 
+  assigned_by: steve
 
 without_project:
   user: nora
@@ -107,14 +107,13 @@ without_project:
   assigned_by: steve
 
 with_invalid_user:
-  user_id: 9999999
+  user_id: <%= Constants::INFINITY %>
   project: decathlon
   role: 1
   assigned_by: steve
 
 with_invalid_project:
   user: nora
-  project_id: 999999
+  project_id: <%= Constants::INFINITY %>
   role: 1
   assigned_by: steve
-

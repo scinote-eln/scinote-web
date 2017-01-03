@@ -4,16 +4,24 @@
 
 <h2><%= t 'devise.invitations.edit.header' %></h2>
 
-<%= form_for (resource or :user), :as => resource_name, :url => invitation_path(resource_name), :html => { :method => :put } do |f| %>
+<%= form_for (resource or :user), as: resource_name, url: invitation_path(resource_name), html: { method: :put } do |f| %>
 
   <%= f.hidden_field :invitation_token %>
+
+  <div class="form-group">
+    <%= f.label :full_name %>
+    <%= f.text_field :full_name,
+                     value: (params[:user] ? params[:user][:full_name] : ''),
+                     autofocus: true,
+                     class: 'form-control' %>
+  </div>
 
   <div class="form-group">
     <%= f.label :password %>
     <% if @minimum_password_length %>
     <em>(<%= @minimum_password_length %> characters minimum)</em>
     <% end %>
-    <%= f.password_field :password, autofocus: true, autocomplete: "off", class: "form-control" %>
+    <%= f.password_field :password, autocomplete: "off", class: "form-control" %>
   </div>
 
   <div class="form-group">
@@ -26,12 +34,17 @@
     <% if @org %>
     <%= text_field :organization, :name, class: "form-control", value: @org.name %>
     <% else %>
-    <%= text_field :organization, :name, class: "form-control" %>
+    <%= text_field :organization,
+                   :name,
+                   class: 'form-control',
+                   value: (params[:organization] ? params[:organization][:name] : '') %>
     <% end %>
     <span><small><%= t 'users.registrations.new.team_name_help' %></small></span>
   </div>
 
-  <div class="form-group">
+  <%= recaptcha_input_tag %>
+
+  <div class="form-group" data-hook="confirm-invitation-form-submit">
     <%= f.submit "Sign Up", class: "btn btn-primary" %>
   </div>
 

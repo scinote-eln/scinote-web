@@ -5,20 +5,18 @@ class CustomFieldTest < ActiveSupport::TestCase
     @custom_field = custom_fields(:volume)
   end
 
+  should validate_presence_of(:name)
+  should validate_length_of(:name).is_at_most(Constants::NAME_MAX_LENGTH)
+  should validate_exclusion_of(:name)
+    .in_array(['Assigned',
+               'Sample name',
+               'Sample type',
+               'Sample group',
+               'Added on',
+               'Added by'])
+
   test "should validate with correct data" do
     assert @custom_field.valid?
-  end
-
-  test "should not validate without name" do
-    @custom_field.name = ""
-    assert_not @custom_field.valid?
-    @custom_field.name = nil
-    assert_not @custom_field.valid?
-  end
-
-  test "should not validate with too long name" do
-    @custom_field.name = "n" * 51
-    assert_not @custom_field.valid?
   end
 
   test "should not validate with non existent user" do

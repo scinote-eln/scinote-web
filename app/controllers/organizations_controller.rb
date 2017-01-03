@@ -11,8 +11,10 @@ class OrganizationsController < ApplicationController
       if params[:file]
         begin
 
-          if params[:file].size > FILE_MAX_SIZE.megabytes
-            error = t("organizations.parse_sheet.errors.file_size_exceeded")
+          if params[:file].size > Constants::FILE_MAX_SIZE_MB.megabytes
+            error = t 'general.file.size_exceeded',
+                      file_size: Constants::FILE_MAX_SIZE_MB
+
             format.html {
               flash[:alert] = error
               redirect_to session.delete(:return_to)
@@ -39,6 +41,10 @@ class OrganizationsController < ApplicationController
 
             # Fill in fields for dropdown
             @available_fields = @organization.get_available_sample_fields
+            # Truncate long fields
+            @available_fields.update(@available_fields) do |_k, v|
+              v.truncate(Constants::NAME_TRUNCATION_LENGTH_DROPDOWN)
+            end
 
             # Save file for next step (importing)
             @temp_file = TempFile.new(

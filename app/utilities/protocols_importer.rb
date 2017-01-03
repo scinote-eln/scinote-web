@@ -1,5 +1,5 @@
 module ProtocolsImporter
-  include RenamingUtil
+  include RenamingUtil, QuillJsHelper
 
   def import_new_protocol(protocol_json, organization, type, user)
     remove_empty_inputs(protocol_json)
@@ -53,7 +53,10 @@ module ProtocolsImporter
       protocol_json['steps'].values.each do |step_json|
       step = Step.create!(
         name: step_json["name"],
-        description: step_json["description"],
+        description: # Sanitize description HTML
+          sanitize_quill_js_input(
+            step_json['description']
+          ),
         position: step_pos,
         completed: false,
         user: user,

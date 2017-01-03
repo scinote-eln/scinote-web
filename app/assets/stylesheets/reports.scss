@@ -1,4 +1,4 @@
-@import "colors";
+@import 'constants';
 @import "mixins";
 
 /* Index page */
@@ -309,16 +309,32 @@ ul {
     border-bottom: none;
     height: 0;
 
+    .result-name-container {
+      max-width: 570px;
+    }
+
     .result-icon {
+      display: inline-block;
       margin-left: 15px;
     }
+
     .result-name {
+      display: inline-block;
       margin-left: 5px;
+    }
+
+    .user-time {
+      display: inline-block;
     }
   }
 
   &:hover > .report-element-header {
     color: $color-theme-primary;
+  }
+
+  .report-element-body {
+    clear: left;
+    padding-top: 10px !important;
   }
 }
 

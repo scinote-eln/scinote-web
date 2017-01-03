@@ -11,30 +11,27 @@ class ReportTest < ActiveSupport::TestCase
     }
   end
 
+  should validate_length_of(:name)
+    .is_at_least(Constants::NAME_MIN_LENGTH)
+    .is_at_most(Constants::NAME_MAX_LENGTH)
+
+  should validate_length_of(:description)
+    .is_at_most(Constants::TEXT_MAX_LENGTH)
+
   test "should validate with valid data" do
     assert @report.valid?, "Report with valid data was invalid"
   end
 
-  test "should not validate with invalid name" do
-    @report.name = nil
-    assert_not @report.valid?, "Report with nil name was valid"
-    @report.name = "a"
-    assert_not @report.valid?, "Report with name too short was valid"
-    @report.name = "a" * 31
-    assert_not @report.valid?, "Report with name too long was valid"
-
+  test 'should not validate with invalid name' do
     # Check if uniqueness constraint works
     @report2 = Report.new(
-      name: @report.name_was,
+      name: @report.name,
       project: projects(:interfaces),
       user: users(:steve)
     )
-    assert_not @report.valid?, "Report with same name for specific user was valid"
-  end
 
-  test "should not validate with invalid description" do
-    @report.description = "a" * 1001
-    assert_not @report.valid?, "Report with description too long was valid"
+    assert_not @report2.valid?,
+               'Report with same name for specific user was valid'
   end
 
   test "should not validate without project" do

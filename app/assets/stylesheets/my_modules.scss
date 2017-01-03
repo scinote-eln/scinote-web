@@ -9,10 +9,22 @@
 }
 
 .btn-colorselector{
-	background-color: transparent !important;
+  background-color: transparent;
 }
 
 .step-container .row {
   margin-left: 0;
   margin-right: 0;
+}
+
+.module-large {
+  .description-label {
+    word-break: break-all;
+    word-wrap: break-word;
+  }
+
+  .comment {
+    word-break: break-all;
+    word-wrap: break-word;
+  }
 }

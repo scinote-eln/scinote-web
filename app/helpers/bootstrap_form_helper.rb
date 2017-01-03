@@ -237,5 +237,28 @@ module BootstrapFormHelper
       res << "</div>"
       res.html_safe
     end
+
+    # Returns smart <textarea> that dynamically resizes depending on the user
+    # input. Also has an option 'single_line: true' to render it as a one-line
+    # (imagine <input type="text">) input field that only grows beyond one line
+    # if inputting a larger text (otherwise, by default it spans 2 lines).
+    #
+    # Other than that, it accepts same options as regular text_area helper.
+    def smart_text_area(name, opts = {})
+      opts[:class] = [opts[:class], 'smart-text-area'].join(' ')
+      if !opts[:rows] && @object
+        opts[:rows] =
+          @object.public_send(name).try(:lines).try(:count)
+      end
+      opts.delete(:rows) if opts[:rows].nil?
+      if opts[:single_line]
+        if opts[:rows]
+          opts[:class] = [opts[:class], 'textarea-sm-present'].join(' ')
+        else
+          opts[:class] = [opts[:class], 'textarea-sm'].join(' ')
+        end
+      end
+      text_area(name, opts)
+    end
   end
 end

@@ -8,9 +8,19 @@ Rails.application.routes.draw do
                                       confirmations: 'users/confirmations' }
     root 'projects#index'
 
-    resources :activities, only: [:index]
+    resources :activities, only: :index
     get 'forbidden', to: 'application#forbidden', as: 'forbidden'
     get 'not_found', to: 'application#not_found', as: 'not_found'
+
+    # Save sample table state
+    post '/state_save/:organization_id/:user_id',
+         to: 'user_samples#save_samples_table_status',
+         as: 'save_samples_table_status',
+         defaults: { format: 'json' }
+    post '/state_load/:organization_id/:user_id',
+         to: 'user_samples#load_samples_table_status',
+         as: 'load_samples_table_status',
+         defaults: { format: 'json' }
 
     # Settings
     get 'users/settings/preferences',
@@ -25,6 +35,13 @@ Rails.application.routes.draw do
     post 'users/settings/preferences/reset_tutorial/',
          to: 'users/settings#reset_tutorial',
          as: 'reset_tutorial'
+    post 'users/settings/preferences/notifications_settings',
+         to: 'users/settings#notifications_settings',
+         as: 'notifications_settings',
+         defaults: { format: 'json' }
+    post 'users/settings/user_current_organization',
+         to: 'users/settings#user_current_organization',
+         as: 'user_current_organization'
     get 'users/settings/organizations',
         to: 'users/settings#organizations',
         as: 'organizations'
@@ -74,11 +91,39 @@ Rails.application.routes.draw do
            to: 'users/settings#destroy_user_organization',
            as: 'destroy_user_organization'
 
+    # Invite users
+    devise_scope :user do
+      post '/invite',
+           to: 'users/invitations#invite_users',
+           as: 'invite_users'
+    end
+
+    # Notifications
+    get 'users/:id/recent_notifications',
+        to: 'user_notifications#recent_notifications',
+        as: 'recent_notifications',
+        defaults: { format: 'json' }
+    get 'users/:id/unseen_notification',
+        to: 'user_notifications#unseen_notification',
+        as: 'unseen_notification',
+        defaults: { format: 'json' }
+    get 'users/notifications',
+        to: 'user_notifications#index',
+        as: 'notifications'
+
     resources :organizations, only: [] do
       resources :samples, only: [:new, :create]
-      resources :sample_types, only: [:new, :create]
-      resources :sample_groups, only: [:new, :create]
-      resources :custom_fields, only: [:create]
+      resources :sample_types, except: [:show, :new] do
+        get 'sample_type_element', to: 'sample_types#sample_type_element'
+        get 'destroy_confirmation', to: 'sample_types#destroy_confirmation'
+      end
+      resources :sample_groups, except: [:show, :new] do
+        get 'sample_group_element', to: 'sample_groups#sample_group_element'
+        get 'destroy_confirmation', to: 'sample_groups#destroy_confirmation'
+      end
+      resources :custom_fields, only: [:create, :update, :destroy] do
+        get 'destroy_html'
+      end
       member do
         post 'parse_sheet'
         post 'import_samples'
@@ -162,7 +207,6 @@ Rails.application.routes.draw do
              ),
              action: :delete_samples
       end
-
       # This route is defined outside of member block to preserve original
       # :project_id parameter in URL.
       get 'users/edit', to: 'user_projects#index_edit'
@@ -271,6 +315,7 @@ Rails.application.routes.draw do
     end
 
     resources :samples, only: [:edit, :update, :destroy]
+    get 'samples/:id', to: 'samples#show'
     resources :sample_types, only: [:edit, :update]
     resources :sample_groups, only: [:edit, :update]
     resources :result_texts, only: [:edit, :update, :destroy]
@@ -342,6 +387,7 @@ Rails.application.routes.draw do
     devise_scope :user do
       get 'avatar/:id/:style' => 'users/registrations#avatar', as: 'avatar'
       post 'avatar_signature' => 'users/registrations#signature'
+      get 'users/auth_token_sign_in' => 'users/sessions#auth_token_create'
     end
   end
 

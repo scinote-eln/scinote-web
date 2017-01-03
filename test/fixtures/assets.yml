@@ -2,7 +2,7 @@ one:
   file_file_name: file1.pdf
   file_content_type: application/pdf
   file_file_size: 15
-  estimated_size: <%= (15 * ASSET_ESTIMATED_SIZE_FACTOR).to_i %>
+  estimated_size: <%= (15 * Constants::ASSET_ESTIMATED_SIZE_FACTOR).to_i %>
   created_by: steve
   last_modified_by: steve
 
@@ -10,7 +10,7 @@ two:
   file_file_name: file2.zip
   file_content_type: application/zip
   file_file_size: 32
-  estimated_size: <%= (32 * ASSET_ESTIMATED_SIZE_FACTOR).to_i %>
+  estimated_size: <%= (32 * Constants::ASSET_ESTIMATED_SIZE_FACTOR).to_i %>
   created_by: mark
   last_modified_by: mark
 
@@ -19,7 +19,7 @@ three:
   file_file_name: file3.jpg
   file_content_type: image/jpg
   file_file_size: 64
-  estimated_size: <%= (64 * ASSET_ESTIMATED_SIZE_FACTOR).to_i %>
+  estimated_size: <%= (64 * Constants::ASSET_ESTIMATED_SIZE_FACTOR).to_i %>
   created_by: mark
   last_modified_by: jlaw
 
@@ -27,7 +27,7 @@ four:
   file_file_name: file4.png
   file_content_type: image/png
   file_file_size: 128
-  estimated_size: <%= (128 * ASSET_ESTIMATED_SIZE_FACTOR).to_i %>
+  estimated_size: <%= (128 * Constants::ASSET_ESTIMATED_SIZE_FACTOR).to_i %>
   created_by: steve
   last_modified_by: jlaw
 
@@ -35,7 +35,7 @@ test:
   file_file_name: file7.png
   file_content_type: image/png
   file_file_size: 578
-  estimated_size: <%= (578 * ASSET_ESTIMATED_SIZE_FACTOR).to_i %>
+  estimated_size: <%= (578 * Constants::ASSET_ESTIMATED_SIZE_FACTOR).to_i %>
   created_by: steve
   last_modified_by: jlaw
 
@@ -43,6 +43,6 @@ test_result:
   file_file_name: file8.png
   file_content_type: image/png
   file_file_size: 631
-  estimated_size: <%= (631 * ASSET_ESTIMATED_SIZE_FACTOR).to_i %>
+  estimated_size: <%= (631 * Constants::ASSET_ESTIMATED_SIZE_FACTOR).to_i %>
   created_by: steve
   last_modified_by: steve

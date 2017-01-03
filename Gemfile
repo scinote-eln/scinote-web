@@ -7,11 +7,13 @@ gem 'figaro'
 gem 'pg'
 gem 'devise', '3.5.6'
 gem 'devise_invitable'
+gem 'simple_token_authentication', '~> 1.0' # Token authentication for Devise
 gem 'bootstrap-sass', '~> 3.3.5'
 gem 'sass-rails', '~> 5.0'
 gem 'bootstrap_form'
 gem 'yomu'
 gem 'font-awesome-rails', '~> 4.6'
+gem 'recaptcha', require: 'recaptcha/rails'
 
 # JS datetime library, requirement of datetime picker
 gem 'momentjs-rails', '>= 2.9.0'
@@ -29,6 +31,7 @@ gem 'hammerjs-rails'
 gem 'introjs-rails' # Create quick tutorials
 gem 'js_cookie_rails' # Simple JS API for cookies
 gem 'spinjs-rails'
+gem 'autosize-rails' # jQuery autosize plugin
 
 gem 'underscore-rails'
 gem 'turbolinks'
@@ -46,9 +49,12 @@ gem 'roo', '~> 2.1.0' # Spreadsheet parser
 gem 'wicked_pdf'
 gem 'wkhtmltopdf-heroku'
 gem 'remotipart', '~> 1.2' # Async file uploads
-gem 'redcarpet' # Markdown parser
 gem 'faker' # Generate fake data
 gem 'auto_strip_attributes', '~> 2.1' # Removes unnecessary whitespaces from ActiveRecord or ActiveModel attributes
+gem 'deface', '~> 1.0'
+gem 'nokogiri' # HTML/XML parser
+gem 'sneaky-save', git: 'git://github.com/einzige/sneaky-save.git'
+gem 'rails_autolink', '~> 1.1', '>= 1.1.6'
 
 gem 'paperclip', '~> 4.3' # File attachment, image attachment library
 gem 'aws-sdk', '~> 2.2.8'
@@ -56,6 +62,9 @@ gem 'aws-sdk-v1'
 gem 'delayed_job_active_record'
 gem 'devise-async'
 gem 'ruby-graphviz', '~> 1.2' # Graphviz for rails
+gem 'quill-rails', # Rich text editor
+    git: 'https://github.com/biosistemika/quill-rails.git',
+    ref: 'e765c04'
 
 gem 'nokogiri' # XML parser
 
@@ -65,6 +74,7 @@ group :development, :test do
   gem 'binding_of_caller'
   gem 'awesome_print'
   gem 'rubocop', require: false
+  gem 'scss_lint', require: false
   gem 'starscope', require: false
 end
 

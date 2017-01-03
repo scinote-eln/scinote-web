@@ -1,17 +1,17 @@
 class MyModulesController < ApplicationController
   include SampleActions
+  include OrganizationsHelper
 
   before_action :load_vars, only: [
-    :show, :edit, :update, :destroy,
+    :show, :update, :destroy,
     :description, :due_date, :protocols, :results,
     :samples, :activities, :activities_tab,
     :assign_samples, :unassign_samples,
     :delete_samples,
     :samples_index, :archive]
-  before_action :load_markdown, only: [ :results ]
   before_action :load_vars_nested, only: [:new, :create]
   before_action :check_edit_permissions, only: [
-    :edit, :update, :description, :due_date
+    :update, :description, :due_date
   ]
   before_action :check_destroy_permissions, only: [:destroy]
   before_action :check_view_info_permissions, only: [:show]
@@ -34,7 +34,6 @@ class MyModulesController < ApplicationController
 
   def show
     respond_to do |format|
-      format.html
       format.json {
         render :json => {
           :html => render_to_string({
@@ -131,10 +130,6 @@ class MyModulesController < ApplicationController
     end
   end
 
-  def edit
-    session[:return_to] ||= request.referer
-  end
-
   def update
     @my_module.assign_attributes(my_module_params)
     @my_module.last_modified_by = current_user
@@ -192,11 +187,6 @@ class MyModulesController < ApplicationController
 
     respond_to do |format|
       if saved
-        format.html {
-          flash[:success] = t("my_modules.update.success_flash",
-            module: @my_module.name)
-          redirect_to(:back)
-        }
         format.json {
           alerts = []
           alerts << "alert-red" if @my_module.is_overdue?
@@ -219,9 +209,6 @@ class MyModulesController < ApplicationController
           }
         }
       else
-        format.html {
-          render :edit
-        }
         format.json {
           render json: @my_module.errors,
             status: :unprocessable_entity
@@ -232,10 +219,14 @@ class MyModulesController < ApplicationController
 
   def protocols
     @protocol = @my_module.protocol
+    current_organization_switch(@protocol.organization)
   end
 
   def results
-
+    current_organization_switch(@my_module
+                                .experiment
+                                .project
+                                .organization)
   end
 
   def samples
@@ -245,6 +236,10 @@ class MyModulesController < ApplicationController
 
   def archive
     @archived_results = @my_module.archived_results
+    current_organization_switch(@my_module
+                                .experiment
+                                .project
+                                .organization)
   end
 
   # Submit actions
@@ -262,9 +257,26 @@ class MyModulesController < ApplicationController
         end
       end
 
+      task_names = []
+      new_samples = []
       @my_module.get_downstream_modules.each do |my_module|
         new_samples = samples.select { |el| my_module.samples.exclude?(el) }
         my_module.samples.push(*new_samples)
+        task_names << my_module.name
+      end
+      if new_samples.any?
+        Activity.create(
+          type_of: :assign_sample,
+          project: @my_module.experiment.project,
+          my_module: @my_module,
+          user: current_user,
+          message: I18n.t(
+            'activities.assign_sample',
+            user: current_user.full_name,
+            tasks: task_names.join(', '),
+            samples: new_samples.map(&:name).join(', ')
+          )
+        )
       end
     end
     redirect_to samples_my_module_path(@my_module)
@@ -279,13 +291,29 @@ class MyModulesController < ApplicationController
         sample.last_modified_by = current_user
         sample.save
 
-        if sample
+        if sample && @my_module.samples.include?(sample)
           samples << sample
         end
       end
 
+      task_names = []
       @my_module.get_downstream_modules.each do |my_module|
+        task_names << my_module.name
         my_module.samples.destroy(samples & my_module.samples)
+      end
+      if samples.any?
+        Activity.create(
+          type_of: :unassign_sample,
+          project: @my_module.experiment.project,
+          my_module: @my_module,
+          user: current_user,
+          message: I18n.t(
+            'activities.unassign_sample',
+            user: current_user.full_name,
+            tasks: task_names.join(', '),
+            samples: samples.map(&:name).join(', ')
+          )
+        )
       end
     end
     redirect_to samples_my_module_path(@my_module)
@@ -297,9 +325,14 @@ class MyModulesController < ApplicationController
 
     respond_to do |format|
       format.html
-      format.json {
-        render json: ::SampleDatatable.new(view_context, @organization, nil, @my_module)
-      }
+      format.json do
+        render json: ::SampleDatatable.new(view_context,
+                                           @organization,
+                                           nil,
+                                           @my_module,
+                                           nil,
+                                           current_user)
+      end
     end
   end
 
@@ -314,16 +347,6 @@ class MyModulesController < ApplicationController
     else
       render_404
     end
-  end
-
-  # Initialize markdown parser
-  def load_markdown
-    @markdown = Redcarpet::Markdown.new(
-      Redcarpet::Render::HTML.new(
-        filter_html: true,
-        no_images: true
-      )
-    )
   end
 
   def check_edit_permissions

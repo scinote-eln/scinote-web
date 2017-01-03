@@ -2,7 +2,7 @@ class StepCommentsController < ApplicationController
   before_action :load_vars
 
   before_action :check_view_permissions, only: [:index]
-  before_action :check_add_permissions, only: [:new, :create]
+  before_action :check_add_permissions, only: [:create]
   before_action :check_edit_permissions, only: [:edit, :update]
   before_action :check_destroy_permissions, only: [:destroy]
 
@@ -23,21 +23,15 @@ class StepCommentsController < ApplicationController
                                                      from: @comments.first.id))
         end
         render json: {
-          per_page: @per_page,
-          results_number: @comments.length,
-          more_url: more_url,
+          perPage: @per_page,
+          resultsNumber: @comments.length,
+          moreUrl: more_url,
           html: render_to_string(partial: partial,
                                  locals: { comments: @comments,
                                            more_comments_url: more_url })
         }
       end
     end
-  end
-
-  def new
-    @comment = Comment.new(
-      user: current_user
-    )
   end
 
   def create
@@ -65,26 +59,20 @@ class StepCommentsController < ApplicationController
           )
         end
 
-        format.html {
-          flash[:success] = t(
-            "step_comments.create.success_flash",
-            step: @step.name)
-          redirect_to session.delete(:return_to)
-        }
         format.json {
           render json: {
-            html: render_to_string({
+            html: render_to_string(
               partial: "comment.html.erb",
               locals: {
                 comment: @comment
               }
-            })
+            ),
+            date: @comment.created_at.strftime('%d.%m.%Y')
           },
           status: :created
         }
       else
         response.status = 400
-        format.html { render :new }
         format.json {
           render json: {
             errors: @comment.errors.to_hash(true)
@@ -168,7 +156,7 @@ class StepCommentsController < ApplicationController
 
   def load_vars
     @last_comment_id = params[:from].to_i
-    @per_page = 10
+    @per_page = Constants::COMMENTS_SEARCH_LIMIT
     @step = Step.find_by_id(params[:step_id])
     @protocol = @step.protocol
 

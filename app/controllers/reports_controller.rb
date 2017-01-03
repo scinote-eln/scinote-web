@@ -1,4 +1,5 @@
 class ReportsController < ApplicationController
+  include OrganizationsHelper
   # Ignore CSRF protection just for PDF generation (because it's
   # used via target='_blank')
   protect_from_forgery with: :exception, :except => :generate
@@ -49,16 +50,6 @@ class ReportsController < ApplicationController
 
   layout "fluid"
 
-  # Initialize markdown parser
-  def load_markdown
-    @markdown = Redcarpet::Markdown.new(
-      Redcarpet::Render::HTML.new(
-        filter_html: true,
-        no_images: true
-      )
-    )
-  end
-
   # Index showing all reports of a single project
   def index
   end
@@ -83,6 +74,17 @@ class ReportsController < ApplicationController
     @report.last_modified_by = current_user
 
     if continue and @report.save_with_contents(report_contents)
+      # record an activity
+      Activity.create(
+        type_of: :create_report,
+        project: @report.project,
+        user: current_user,
+        message: I18n.t(
+          'activities.create_report',
+          user: current_user.full_name,
+          report: @report.name
+        )
+      )
       respond_to do |format|
         format.json {
           render json: { url: project_reports_path(@project) }, status: :ok
@@ -99,9 +101,9 @@ class ReportsController < ApplicationController
 
   def edit
     # cleans all the deleted report
+    current_organization_switch(@report.project.organization)
     @report.cleanup_report
-    load_markdown
-    render "reports/new.html.erb"
+    render 'reports/new.html.erb'
   end
 
   # Updating existing report from the _save modal of the new page
@@ -117,6 +119,17 @@ class ReportsController < ApplicationController
     @report.assign_attributes(report_params)
 
     if continue and @report.save_with_contents(report_contents)
+      # record an activity
+      Activity.create(
+        type_of: :edit_report,
+        project: @report.project,
+        user: current_user,
+        message: I18n.t(
+          'activities.edit_report',
+          user: current_user.full_name,
+          report: @report.name
+        )
+      )
       respond_to do |format|
         format.json {
           render json: { url: project_reports_path(@project) }, status: :ok
@@ -147,6 +160,17 @@ class ReportsController < ApplicationController
       report = Report.find_by_id(report_id)
 
       if report.present?
+        # record an activity
+        Activity.create(
+          type_of: :delete_report,
+          project: report.project,
+          user: current_user,
+          message: I18n.t(
+            'activities.delete_report',
+            user: current_user.full_name,
+            report: report.name
+          )
+        )
         report.destroy
       end
     end
@@ -520,12 +544,11 @@ class ReportsController < ApplicationController
       end
     end
     if in_params? :module_result_texts then
-      load_markdown
       (my_module.results.select { |r| r.is_text && r.active? }).each do |result_text|
         res << generate_new_el(false)
         el = generate_el(
           "reports/elements/result_text_element.html.erb",
-          { result: result_text, markdown: @markdown }
+          result: result_text
         )
         el[:children] = generate_result_contents_json(result_text)
         res << el

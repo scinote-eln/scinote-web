@@ -1,7 +1,7 @@
 class MyModuleCommentsController < ApplicationController
   before_action :load_vars
-  before_action :check_view_permissions, only: [ :index ]
-  before_action :check_add_permissions, only: [ :new, :create ]
+  before_action :check_view_permissions, only: :index
+  before_action :check_add_permissions, only: [:create]
   before_action :check_edit_permissions, only: [:edit, :update]
   before_action :check_destroy_permissions, only: [:destroy]
 
@@ -9,38 +9,33 @@ class MyModuleCommentsController < ApplicationController
     @comments = @my_module.last_comments(@last_comment_id, @per_page)
 
     respond_to do |format|
-      format.json {
+      format.json do
         # 'index' partial includes header and form for adding new
         # messages. 'list' partial is used for showing more
         # comments.
-        partial = "index.html.erb"
-        partial = "list.html.erb" if @last_comment_id > 0
-        more_url = ""
+        partial = 'index.html.erb'
+        partial = 'list.html.erb' if @last_comment_id > 0
+        more_url = ''
         if @comments.count > 0
           more_url = url_for(my_module_my_module_comments_url(@my_module,
-            format: :json,
-            from: @comments.last.id))
+                                                              format: :json,
+                                                              from: @comments
+                                                                    .first.id))
         end
-        render :json => {
-          per_page: @per_page,
-          results_number: @comments.length,
-          more_url: more_url,
-          html: render_to_string({
+        render json: {
+          perPage: @per_page,
+          resultsNumber: @comments.length,
+          moreUrl: more_url,
+          html: render_to_string(
             partial: partial,
             locals: {
               comments: @comments,
               more_comments_url: more_url
             }
-          })
+          )
         }
-      }
+      end
     end
-  end
-
-  def new
-    @comment = Comment.new(
-      user: current_user
-    )
   end
 
   def create
@@ -63,31 +58,25 @@ class MyModuleCommentsController < ApplicationController
           )
         )
 
-        format.html {
-          flash[:success] = t(
-            "my_module_comments.create.success_flash",
-            module: @my_module.name)
-          redirect_to session.delete(:return_to)
-        }
-        format.json {
+        format.json do
           render json: {
-            html: render_to_string({
-              partial: "comment.html.erb",
+            html: render_to_string(
+              partial: 'comment.html.erb',
               locals: {
                 comment: @comment
               }
-            })
+            ),
+            date: @comment.created_at.strftime('%d.%m.%Y')
           },
           status: :created
-        }
+        end
       else
         response.status = 400
-        format.html { render :new }
-        format.json {
+        format.json do
           render json: {
             errors: @comment.errors.to_hash(true)
           }
-        }
+        end
       end
     end
   end
@@ -161,7 +150,7 @@ class MyModuleCommentsController < ApplicationController
 
   def load_vars
     @last_comment_id = params[:from].to_i
-    @per_page = 10
+    @per_page = Constants::COMMENTS_SEARCH_LIMIT
     @my_module = MyModule.find_by_id(params[:my_module_id])
 
     unless @my_module

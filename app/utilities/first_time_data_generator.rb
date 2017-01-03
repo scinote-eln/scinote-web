@@ -41,19 +41,19 @@ module FirstTimeDataGenerator
     SampleGroup.create(
       name: "Fodder",
       organization: org,
-      color: "#159B5E"
+      color: Constants::TAG_COLORS[1]
     )
 
     SampleGroup.create(
       name: "Nutrient",
       organization: org,
-      color: "#6C159E"
+      color: Constants::TAG_COLORS[0]
     )
 
     SampleGroup.create(
       name: "Seed",
       organization: org,
-      color: "#FF4500"
+      color: Constants::TAG_COLORS[2]
     )
 
     samples = []
@@ -122,7 +122,7 @@ module FirstTimeDataGenerator
     )
 
     # Activity for creating project
-    Activity.create(
+    Activity.new(
       type_of: :create_project,
       user: user,
       project: project,
@@ -132,7 +132,7 @@ module FirstTimeDataGenerator
         project: project.name
       ),
       created_at: project.created_at
-    )
+    ).sneaky_save
 
     # Add a comment
     generate_project_comment(
@@ -194,7 +194,7 @@ module FirstTimeDataGenerator
       end
 
       # Create module activity
-      Activity.create(
+      Activity.new(
         type_of: :create_module,
         user: user,
         project: project,
@@ -205,7 +205,7 @@ module FirstTimeDataGenerator
           module: my_module.name
         ),
         created_at: my_module.created_at
-      )
+      ).sneaky_save
 
       UserMyModule.create(
         user: user,
@@ -213,7 +213,7 @@ module FirstTimeDataGenerator
         assigned_by: user,
         created_at: generate_random_time(my_module.created_at, 2.minutes)
       )
-      Activity.create(
+      Activity.new(
         type_of: :assign_user_to_module,
         user: user,
         project: project,
@@ -225,7 +225,7 @@ module FirstTimeDataGenerator
             assigned_by_user: user.full_name
         ),
         created_at: generate_random_time(my_module.created_at, 2.minutes)
-      )
+      ).sneaky_save
     end
 
     # Create an archived module
@@ -246,7 +246,7 @@ module FirstTimeDataGenerator
     )
 
     # Activity for creating archived module
-    Activity.create(
+    Activity.new(
       type_of: :create_module,
       user: user,
       project: project,
@@ -257,10 +257,10 @@ module FirstTimeDataGenerator
         module: archived_module.name
       ),
       created_at: archived_module.created_at
-    )
+    ).sneaky_save
 
     # Activity for archiving archived module
-    Activity.create(
+    Activity.new(
       type_of: :archive_module,
       user: user,
       project: project,
@@ -271,7 +271,7 @@ module FirstTimeDataGenerator
         module: archived_module.name
       ),
       created_at: archived_module.archived_on
-    )
+    ).sneaky_save
 
     # Assign new user to archived module
     UserMyModule.create(
@@ -280,7 +280,7 @@ module FirstTimeDataGenerator
       assigned_by: user,
       created_at: generate_random_time(archived_module.created_at, 2.minutes)
     )
-    Activity.create(
+    Activity.new(
       type_of: :assign_user_to_module,
       user: user,
       project: project,
@@ -292,7 +292,7 @@ module FirstTimeDataGenerator
           assigned_by_user: user.full_name
       ),
       created_at: generate_random_time(archived_module.created_at, 2.minutes)
-    )
+    ).sneaky_save
 
     # Assign 4 samples to modules
     samples_to_assign = []
@@ -360,21 +360,21 @@ module FirstTimeDataGenerator
     # Create tags and add them to module
     drylab_tag = Tag.create(
       name: "Drylab",
-      color: "#15369E",
+      color: Constants::TAG_COLORS[8],
       project: project,
       created_by: user,
       last_modified_by: user
     )
     wetlab_tag = Tag.create(
       name: "Wetlab",
-      color: "#FF8C00",
+      color: Constants::TAG_COLORS[14],
       project: project,
       created_by: user,
       last_modified_by: user
     )
     decide_tag = Tag.create(
       name: "Decide",
-      color: "#32CD32",
+      color: Constants::TAG_COLORS[5],
       project: project,
       created_by: user,
       last_modified_by: user
@@ -497,7 +497,7 @@ module FirstTimeDataGenerator
     temp_result.save
 
     # Create result activity
-    Activity.create(
+    Activity.new(
       type_of: :add_result,
       project: project,
       my_module: my_modules[1],
@@ -508,7 +508,7 @@ module FirstTimeDataGenerator
         user: user.full_name,
         result: temp_result.name
       )
-    )
+    ).sneaky_save
     # ----------------- Module 3 ------------------
     module_step_names = [
       "Homogenization of the material",
@@ -547,7 +547,7 @@ module FirstTimeDataGenerator
     temp_result.save
 
     # Create result activity
-    Activity.create(
+    Activity.new(
       type_of: :add_result,
       project: project,
       my_module: my_modules[2],
@@ -558,7 +558,7 @@ module FirstTimeDataGenerator
         user: user.full_name,
         result: temp_result.name
       )
-    )
+    ).sneaky_save
 
     # Second result
     DelayedUploaderTutorial.delay(queue: :tutorial).generate_result_asset(
@@ -689,7 +689,7 @@ module FirstTimeDataGenerator
     temp_result.save
 
     # Create result activity
-    Activity.create(
+    Activity.new(
       type_of: :add_result,
       project: project,
       my_module: my_modules[5],
@@ -700,7 +700,7 @@ module FirstTimeDataGenerator
         user: user.full_name,
         result: temp_result.name
       )
-    )
+    ).sneaky_save
 
     # Results
     DelayedUploaderTutorial.delay(queue: :tutorial).generate_result_asset(
@@ -802,7 +802,7 @@ module FirstTimeDataGenerator
     temp_result.save
 
     # Create result activity
-    Activity.create(
+    Activity.new(
       type_of: :add_result,
       project: project,
       my_module: my_modules[7],
@@ -813,7 +813,7 @@ module FirstTimeDataGenerator
         user: user.full_name,
         result: temp_result.name
       )
-    )
+    ).sneaky_save
 
     # create thumbnail
     experiment.generate_workflow_img
@@ -865,7 +865,7 @@ module FirstTimeDataGenerator
       )
 
       # Create activity
-      Activity.create(
+      Activity.new(
         type_of: :create_step,
         project: my_module.experiment.project,
         my_module: my_module,
@@ -877,9 +877,9 @@ module FirstTimeDataGenerator
           step: i,
           step_name: step.name
         )
-      )
+      ).sneaky_save
       if completed then
-        Activity.create(
+        Activity.new(
           type_of: :complete_step,
           project: my_module.experiment.project,
           my_module: my_module,
@@ -893,7 +893,7 @@ module FirstTimeDataGenerator
             completed: my_module.protocol.completed_steps.count,
             all: i+1
           )
-        )
+        ).sneaky_save
 
         # Also add random comments to completed steps
         if rand < 0.3
@@ -923,7 +923,7 @@ module FirstTimeDataGenerator
       message: message,
       created_at: created_at
     )
-    Activity.create(
+    Activity.new(
       type_of: :add_comment_to_project,
       user: user,
       project: project,
@@ -931,7 +931,7 @@ module FirstTimeDataGenerator
       message: t('activities.add_comment_to_project',
                  user: user.full_name,
                  project: project.name)
-    )
+    ).sneaky_save
   end
 
   def generate_module_comment(my_module, user, message, created_at = nil)
@@ -941,7 +941,7 @@ module FirstTimeDataGenerator
       message: message,
       created_at: created_at
     )
-    Activity.create(
+    Activity.new(
       type_of: :add_comment_to_module,
       user: user,
       project: my_module.experiment.project,
@@ -950,7 +950,7 @@ module FirstTimeDataGenerator
       message: t('activities.add_comment_to_module',
                  user: user.full_name,
                  module: my_module.name)
-    )
+    ).sneaky_save
   end
 
   def generate_result_comment(result, user, message, created_at = nil)
@@ -960,7 +960,7 @@ module FirstTimeDataGenerator
       message: message,
       created_at: created_at
     )
-    Activity.create(
+    Activity.new(
       type_of: :add_comment_to_result,
       user: user,
       project: result.my_module.experiment.project,
@@ -969,7 +969,7 @@ module FirstTimeDataGenerator
       message: t('activities.add_comment_to_result',
                  user: user.full_name,
                  result: result.name)
-    )
+    ).sneaky_save
   end
 
   def generate_step_comment(step, user, message, created_at = nil)
@@ -979,7 +979,7 @@ module FirstTimeDataGenerator
       message: message,
       created_at: created_at
     )
-    Activity.create(
+    Activity.new(
       type_of: :add_comment_to_step,
       user: user,
       project: step.protocol.my_module.experiment.project,
@@ -989,6 +989,6 @@ module FirstTimeDataGenerator
                  user: user.full_name,
                  step: step.position + 1,
                  step_name: step.name)
-    )
+    ).sneaky_save
   end
 end

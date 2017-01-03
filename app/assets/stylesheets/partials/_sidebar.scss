@@ -4,7 +4,7 @@
  * For details, see http://www.apache.org/licenses/LICENSE-2.0.
  */
 
-@import "colors";
+@import 'constants';
 @import "mixins";
 
 $wrapper-width: 280px;
@@ -83,6 +83,7 @@ $toggle-btn-size: 50px;
       }
 
       .tree {
+        overflow-y: auto;
         margin-bottom: 0;
         padding-top: 15px;
         opacity: 1;

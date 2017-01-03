@@ -1,5 +1,7 @@
 class ExperimentsController < ApplicationController
   include PermissionHelper
+  include OrganizationsHelper
+
   before_action :set_experiment,
                 except: [:new, :create]
   before_action :set_project,
@@ -37,6 +39,16 @@ class ExperimentsController < ApplicationController
     @experiment.last_modified_by = current_user
     @experiment.project = @project
     if @experiment.save
+      Activity.create(
+        type_of: :create_experiment,
+        project: @experiment.project,
+        user: current_user,
+        message: I18n.t(
+          'activities.create_experiment',
+          user: current_user.full_name,
+          experiment: @experiment.name
+        )
+      )
       flash[:success] = t('experiments.create.success_flash',
                           experiment: @experiment.name)
       respond_to do |format|
@@ -55,6 +67,7 @@ class ExperimentsController < ApplicationController
 
   def canvas
     @project = @experiment.project
+    current_organization_switch(@project.organization)
   end
 
   def edit
@@ -73,6 +86,16 @@ class ExperimentsController < ApplicationController
     @experiment.update_attributes(experiment_params)
     @experiment.last_modified_by = current_user
     if @experiment.save
+      Activity.create(
+        type_of: :edit_experiment,
+        project: @experiment.project,
+        user: current_user,
+        message: I18n.t(
+          'activities.edit_experiment',
+          user: current_user.full_name,
+          experiment: @experiment.name
+        )
+      )
       @experiment.touch(:workflowimg_updated_at)
       flash[:success] = t('experiments.update.success_flash',
                           experiment: @experiment.name)
@@ -103,6 +126,16 @@ class ExperimentsController < ApplicationController
     @experiment.archived_by = current_user
     @experiment.archived_on = DateTime.now
     if @experiment.save
+      Activity.create(
+        type_of: :archive_experiment,
+        project: @experiment.project,
+        user: current_user,
+        message: I18n.t(
+          'activities.archive_experiment',
+          user: current_user.full_name,
+          experiment: @experiment.name
+        )
+      )
       flash[:success] = t('experiments.archive.success_flash',
                           experiment: @experiment.name)
 
@@ -242,7 +275,8 @@ class ExperimentsController < ApplicationController
                                            @organization,
                                            nil,
                                            nil,
-                                           @experiment)
+                                           @experiment,
+                                           current_user)
       end
     end
   end

@@ -1,6 +1,6 @@
 /* Extending Bootstrap */
 
-@import "colors";
+@import 'constants';
 
 /* navbar avatar image */
 .navbar-nav .avatar {
@@ -48,4 +48,65 @@
   padding-left: 15px;
   padding-right: 15px;
   position: relative;
+}
+
+.step-comment .col-xs-12 {
+  float: none;
+}
+
+.result-comment .col-xs-12 {
+  float: none;
+}
+
+@media (max-width: 1000px) {
+  .navbar-header {
+    float: none;
+  }
+
+  .navbar-left,
+  .navbar-right {
+    float: none !important;
+  }
+
+  .navbar-toggle {
+    background-color: transparent;
+    background-image: none;
+    border: 1px solid transparent;
+    display: block;
+  }
+
+  .navbar-collapse {
+    border-top: 1px solid transparent;
+  }
+
+  .navbar-fixed-top {
+    border-width: 0 0 1px;
+    top: 0;
+  }
+
+  .navbar-collapse.collapse {
+    display: none !important;
+  }
+
+  .navbar-nav {
+    float: none !important;
+    margin-top: 7.5px;
+  }
+
+  .navbar-nav>li {
+    float: none;
+  }
+
+  .navbar-nav>li>a {
+    padding-bottom: 10px;
+    padding-top: 10px;
+  }
+
+  .collapse.in {
+    display: block !important;
+  }
+
+  .container {
+    width: 100%;
+  }
 }

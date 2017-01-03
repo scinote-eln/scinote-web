@@ -1,0 +1,34 @@
+{
+  "extends": "google",
+  "env": {
+    "browser": true,
+    "jquery": true
+  },
+  "rules": {
+    "spaced-comment": [
+      "error",
+      "always",
+      {
+        "markers": [
+          "="
+        ]
+      }
+    ],
+    "lines-around-comment": [
+      "warn",
+      {
+        "beforeLineComment": false
+      }
+    ],
+    "quotes": [
+      "error",
+      "single",
+      {
+        "avoidEscape": true
+      }
+    ]
+  },
+  "globals": {
+    "_": true
+  }
+}

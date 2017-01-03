@@ -9,9 +9,9 @@ module SamplesHelper
   end
 
   def can_add_sample_related_things_to_organization
-    can_create_custom_field_in_organization(@organization) \
-    or can_create_sample_type_in_organization(@organization) \
-    or can_create_sample_group_in_organization(@organization)
+    can_create_custom_field_in_organization(@organization) &&
+      can_create_sample_type_in_organization(@organization) &&
+      can_create_sample_group_in_organization(@organization)
   end
 
   def all_custom_fields

@@ -7,9 +7,9 @@
   </span>
   &nbsp;
   <% if can_view_steps_in_protocol(protocol) %>
-    <a href="<%= protocols_my_module_path(protocol.my_module) %>">
-      <%= text %>
-    </a>
+    <%= route_to_other_org protocols_my_module_path(protocol.my_module),
+                           protocol.organization,
+                           text %>
   <% else %>
     <%= text %>
   <% end %>
@@ -31,9 +31,9 @@
     &nbsp;
   <% end %>
   <% if can_edit_protocol(protocol) %>
-    <a href="<%= edit_protocol_path(protocol) %>">
-      <%= text %>
-    </a>
+    <%= route_to_other_org edit_protocol_path(protocol),
+                           protocol.organization,
+                           text %>
   <% else %>
     <%= text %>
   <% end %>

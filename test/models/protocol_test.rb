@@ -13,6 +13,9 @@ class ProtocolTest < ActiveSupport::TestCase
     )
   end
 
+  should validate_length_of(:name).is_at_most(Constants::NAME_MAX_LENGTH)
+  should validate_length_of(:description).is_at_most(Constants::TEXT_MAX_LENGTH)
+
   test "protocol_type enum works" do
     @p.protocol_type = :unlinked
     assert @p.in_module?
@@ -24,13 +27,6 @@ class ProtocolTest < ActiveSupport::TestCase
     assert @p.in_repository?
     @p.protocol_type = :in_repository_archived
     assert @p.in_repository?
-  end
-
-  test "should not validate with name too long" do
-    @p.name = "Q" * 100
-    assert @p.valid?
-    @p.name = "Q" * 101
-    assert_not @p.valid?
   end
 
   test "should not validate without organization" do

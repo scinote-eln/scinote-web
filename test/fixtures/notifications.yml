@@ -1,0 +1,9 @@
+one:
+  title: 'Notification one'
+  message: 'Message for notification one'
+  type_of: 1
+
+two:
+  title: 'Notification two'
+  message: 'Message for notification two'
+  type_of: 1

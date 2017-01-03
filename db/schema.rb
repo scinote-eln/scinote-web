@@ -11,6 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+
 ActiveRecord::Schema.define(version: 20161129111100) do
 
   # These are extensions that must be enabled in order to support this database
@@ -228,6 +229,17 @@ ActiveRecord::Schema.define(version: 20161129111100) do
   add_index "my_modules", ["my_module_group_id"], name: "index_my_modules_on_my_module_group_id", using: :btree
   add_index "my_modules", ["name"], name: "index_my_modules_on_name", using: :gist
   add_index "my_modules", ["restored_by_id"], name: "index_my_modules_on_restored_by_id", using: :btree
+
+  create_table "notifications", force: :cascade do |t|
+    t.string   "title"
+    t.string   "message"
+    t.integer  "type_of",           null: false
+    t.integer  "generator_user_id"
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
+  end
+
+  add_index "notifications", ["created_at"], name: "index_notifications_on_created_at", using: :btree
 
   create_table "organizations", force: :cascade do |t|
     t.string   "name",                                            null: false
@@ -489,6 +501,17 @@ ActiveRecord::Schema.define(version: 20161129111100) do
   add_index "samples", ["sample_type_id"], name: "index_samples_on_sample_type_id", using: :btree
   add_index "samples", ["user_id"], name: "index_samples_on_user_id", using: :btree
 
+  create_table "samples_tables", force: :cascade do |t|
+    t.jsonb    "status",          default: {"time"=>0, "order"=>[[2, "desc"]], "start"=>0, "length"=>10, "search"=>{"regex"=>false, "smart"=>true, "search"=>"", "caseInsensitive"=>true}, "columns"=>[{"search"=>{"regex"=>false, "smart"=>true, "search"=>"", "caseInsensitive"=>true}, "visible"=>true}, {"search"=>{"regex"=>false, "smart"=>true, "search"=>"", "caseInsensitive"=>true}, "visible"=>true}, {"search"=>{"regex"=>false, "smart"=>true, "search"=>"", "caseInsensitive"=>true}, "visible"=>true}, {"search"=>{"regex"=>false, "smart"=>true, "search"=>"", "caseInsensitive"=>true}, "visible"=>true}, {"search"=>{"regex"=>false, "smart"=>true, "search"=>"", "caseInsensitive"=>true}, "visible"=>true}, {"search"=>{"regex"=>false, "smart"=>true, "search"=>"", "caseInsensitive"=>true}, "visible"=>true}, {"search"=>{"regex"=>false, "smart"=>true, "search"=>"", "caseInsensitive"=>true}, "visible"=>true}], "ColReorder"=>[0, 1, 2, 3, 4, 5, 6]}, null: false
+    t.integer  "user_id",                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        null: false
+    t.integer  "organization_id",                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                null: false
+    t.datetime "created_at",                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     null: false
+    t.datetime "updated_at",                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     null: false
+  end
+
+  add_index "samples_tables", ["organization_id"], name: "index_samples_tables_on_organization_id", using: :btree
+  add_index "samples_tables", ["user_id"], name: "index_samples_tables_on_user_id", using: :btree
+
   create_table "step_assets", force: :cascade do |t|
     t.integer "step_id",  null: false
     t.integer "asset_id", null: false
@@ -587,6 +610,18 @@ ActiveRecord::Schema.define(version: 20161129111100) do
   add_index "user_my_modules", ["my_module_id"], name: "index_user_my_modules_on_my_module_id", using: :btree
   add_index "user_my_modules", ["user_id"], name: "index_user_my_modules_on_user_id", using: :btree
 
+  create_table "user_notifications", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "notification_id"
+    t.boolean  "checked",         default: false
+    t.datetime "created_at",                      null: false
+    t.datetime "updated_at",                      null: false
+  end
+
+  add_index "user_notifications", ["checked"], name: "index_user_notifications_on_checked", using: :btree
+  add_index "user_notifications", ["notification_id"], name: "index_user_notifications_on_notification_id", using: :btree
+  add_index "user_notifications", ["user_id"], name: "index_user_notifications_on_user_id", using: :btree
+
   create_table "user_organizations", force: :cascade do |t|
     t.integer  "role",            default: 1, null: false
     t.integer  "user_id",                     null: false
@@ -614,20 +649,20 @@ ActiveRecord::Schema.define(version: 20161129111100) do
   add_index "user_projects", ["user_id"], name: "index_user_projects_on_user_id", using: :btree
 
   create_table "users", force: :cascade do |t|
-    t.string   "full_name",                              null: false
-    t.string   "initials",                               null: false
-    t.string   "email",                  default: "",    null: false
-    t.string   "encrypted_password",     default: "",    null: false
+    t.string   "full_name",                                         null: false
+    t.string   "initials",                                          null: false
+    t.string   "email",                             default: "",    null: false
+    t.string   "encrypted_password",                default: "",    null: false
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",          default: 0,     null: false
+    t.integer  "sign_in_count",                     default: 0,     null: false
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
     t.string   "last_sign_in_ip"
-    t.datetime "created_at",                             null: false
-    t.datetime "updated_at",                             null: false
+    t.datetime "created_at",                                        null: false
+    t.datetime "updated_at",                                        null: false
     t.string   "avatar_file_name"
     t.string   "avatar_content_type"
     t.integer  "avatar_file_size"
@@ -636,7 +671,7 @@ ActiveRecord::Schema.define(version: 20161129111100) do
     t.datetime "confirmed_at"
     t.datetime "confirmation_sent_at"
     t.string   "unconfirmed_email"
-    t.string   "time_zone",              default: "UTC"
+    t.string   "time_zone",                         default: "UTC"
     t.string   "invitation_token"
     t.datetime "invitation_created_at"
     t.datetime "invitation_sent_at"
@@ -644,8 +679,14 @@ ActiveRecord::Schema.define(version: 20161129111100) do
     t.integer  "invitation_limit"
     t.integer  "invited_by_id"
     t.string   "invited_by_type"
-    t.integer  "invitations_count",      default: 0
-    t.integer  "tutorial_status",        default: 0,     null: false
+    t.integer  "invitations_count",                 default: 0
+    t.integer  "tutorial_status",                   default: 0,     null: false
+    t.boolean  "assignments_notification",          default: true
+    t.boolean  "recent_notification",               default: true
+    t.boolean  "assignments_notification_email",    default: false
+    t.boolean  "recent_notification_email",         default: false
+    t.integer  "current_organization_id"
+    t.boolean  "system_message_notification_email", default: false
   end
 
   add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree
@@ -713,6 +754,7 @@ ActiveRecord::Schema.define(version: 20161129111100) do
   add_foreign_key "my_modules", "users", column: "created_by_id"
   add_foreign_key "my_modules", "users", column: "last_modified_by_id"
   add_foreign_key "my_modules", "users", column: "restored_by_id"
+  add_foreign_key "notifications", "users", column: "generator_user_id"
   add_foreign_key "organizations", "users", column: "created_by_id"
   add_foreign_key "organizations", "users", column: "last_modified_by_id"
   add_foreign_key "project_comments", "comments"
@@ -791,6 +833,8 @@ ActiveRecord::Schema.define(version: 20161129111100) do
   add_foreign_key "user_my_modules", "my_modules"
   add_foreign_key "user_my_modules", "users"
   add_foreign_key "user_my_modules", "users", column: "assigned_by_id"
+  add_foreign_key "user_notifications", "notifications"
+  add_foreign_key "user_notifications", "users"
   add_foreign_key "user_organizations", "organizations"
   add_foreign_key "user_organizations", "users"
   add_foreign_key "user_organizations", "users", column: "assigned_by_id"
@@ -799,4 +843,5 @@ ActiveRecord::Schema.define(version: 20161129111100) do
   add_foreign_key "user_projects", "users", column: "assigned_by_id"
   add_foreign_key "wopi_actions", "wopi_apps"
   add_foreign_key "wopi_apps", "wopi_discoveries"
+  add_foreign_key "users", "organizations", column: "current_organization_id"
 end

@@ -111,8 +111,8 @@ class ResultTest < ActiveSupport::TestCase
     first_comment = comments(:test_result_comment_24)
     last_comment = comments(:test_result_comment_5)
     assert_equal 20, last_comments.size
-    assert_equal first_comment, last_comments.first
-    assert_equal last_comment, last_comments.last
+    assert_equal first_comment, last_comments.last
+    assert_equal last_comment, last_comments.first
   end
 
   # Not possible to test with fixtures and random id values
@@ -125,8 +125,8 @@ class ResultTest < ActiveSupport::TestCase
     first_comment = comments(:test_result_comment_24)
     last_comment = comments(:test_result_comment_20)
     assert_equal 5, last_comments.size
-    assert_equal first_comment, last_comments.first
-    assert_equal last_comment, last_comments.last
+    assert_equal first_comment, last_comments.last
+    assert_equal last_comment, last_comments.first
   end
 
   test "should search for results of user" do

@@ -24,13 +24,13 @@ five:
   assigned_by: steve
 
 non_existing_user:
-  user_id: 99999
+  user_id: <%= Constants::INFINITY %>
   my_module: rna_test
   assigned_by: jlaw
 
 non_existing_module:
   user_id: jlaw
-  my_module_id: 99999
+  my_module_id: <%= Constants::INFINITY %>
   assigned_by: jlaw
 
 without_user:
@@ -45,4 +45,3 @@ without_module:
 archived:
   user: steve
   my_module: archived
-

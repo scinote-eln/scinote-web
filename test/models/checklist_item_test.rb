@@ -1,6 +1,9 @@
 require 'test_helper'
 
 class ChecklistItemTest < ActiveSupport::TestCase
+  should validate_presence_of(:text)
+  should validate_length_of(:text)
+    .is_at_most(Constants::TEXT_MAX_LENGTH)
 
   test "should validate with correct data" do
     chkItem = ChecklistItem.new(
@@ -9,22 +12,6 @@ class ChecklistItemTest < ActiveSupport::TestCase
       checklist: checklists(:one)
     )
     assert chkItem.valid?
-  end
-
-  test "should not validate without text" do
-    chkItem = ChecklistItem.new(
-      text: " ", checked: false,
-      checklist: checklists(:one))
-    assert_not chkItem.valid?, "Checklist item was created without text."
-  end
-
-  test "should not validate with text too long" do
-    chkItem = ChecklistItem.new(
-      text: "#" * 1001,
-      checked: false,
-      checklist: checklists(:one)
-    )
-    assert_not chkItem.valid?, "Checklist item was created with text being too long."
   end
 
   test "should not validate without checked value" do

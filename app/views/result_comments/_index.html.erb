@@ -1,5 +1,7 @@
 <hr>
-<h5 class="text-center"><%= t('my_modules.results.comments_tab') %></h5>
+<div class="col-xs-12">
+  <strong><%= t('my_modules.results.comments_tab') %></strong>
+</div>
 <hr>
 <ul class="no-style double-line content-comments">
   <% if @comments.length == @per_page %>
@@ -19,8 +21,8 @@
   <ul class="no-style double-line">
     <li>
       <hr>
-      <%= bootstrap_form_for :comment, url: { format: :json }, method: :post, remote: true do |f| %>
-        <%= f.text_field :message, hide_label: true, placeholder: t("general.comment_placeholder"), append: f.submit("+", onclick: "processResult(event, ResultTypeEnum.COMMENT, false);"), help: '.' %>
+      <%= bootstrap_form_for :comment, url: { format: :json }, method: :post, remote: true, html: { class: 'comment-form' } do |f| %>
+        <%= f.smart_text_area :message, single_line: true, hide_label: true, placeholder: t("general.comment_placeholder"), append: f.submit("+", onclick: "processResult(event, ResultTypeEnum.COMMENT, false);"), help: '.' %>
       <% end %>
     </li>
   </ul>

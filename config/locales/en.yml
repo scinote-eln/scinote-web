@@ -1,11 +1,13 @@
 en:
-
   devise:
     confirmations:
       new:
         head_title: "Resend confirmation instructions"
         title: "Resend confirmation instructions"
         submit: "Resend confirmation instructions"
+    invitations:
+      edit:
+        header: "Set your full name and password"
     passwords:
       edit:
         head_title: "Change password"
@@ -29,6 +31,8 @@ en:
         submit: "Log in"
       create:
         org_name: "%{user}'s projects"
+      auth_token_create:
+        wrong_credentials: "Failed to automatically sign in (wrong credentials)."
     unlocks:
       new:
         head_title: "Resend unlock instructions"
@@ -66,6 +70,7 @@ en:
     help:
       tutorials: "Tutorials"
       faq: "FAQ"
+      release_notes: "Release notes"
       support: "Professional support and customization"
       plans: "Plans"
       contact: "Contact us"
@@ -125,8 +130,6 @@ en:
       no_name: "(no name)"
       error:
         no_results: "No results for %{q}."
-        query_length: "Search query is too short. It should contain at least %{n} characters."
-        max_length: "Search query is too long. The query is limited to %{n} characters."
       samples:
         sample: "Sample: "
         sample_type: "Sample type: "
@@ -237,8 +240,6 @@ en:
       page_title: "Project's experiments"
     samples:
       head_title: "%{project} | Sample library"
-    activities:
-      head_title: "%{project} | Activity"
     reports:
       print_title: "%{project} | Report"
       index:
@@ -422,50 +423,19 @@ en:
         normal_user: "User"
         technician: "Technician"
         viewer: "Viewer"
-    new:
-      head_title: "%{project} | Add user"
-      title: "Add user to project %{project}"
-      create: "Add"
-      role: "Role"
+    edit:
+      update_role: "Change Role"
     create:
-      success_flash: "User %{user} successfully added to project <strong>%{project}</strong>."
-      error_flash: "User %{user} not added to project <strong>%{project}</strong>."
       select_user_role: "Please select a user role."
       add_user_generic_error: "An error occured. "
-    edit:
-      head_title: "%{project} | Edit user role"
-      title: "Edit role for user %{user} on project %{project}"
-      update: "Update role"
-      update_role: "Change Role"
-    update:
-      success_flash: "Successfully changed project role for user %{user} on project <strong>%{project}</strong>."
-      error_flash: "Project role not changed for user %{user} on project <strong>%{project}</strong>."
-    destroy:
-      success_flash: "Successfully removed user %{user} from project <strong>%{project}</strong>."
-      error_flash: "User %{user} not removed from project <strong>%{project}</strong>."
 
   my_modules:
-    show:
-      head_title: "%{project} | %{module}"
-      archive_action: "Archive"
-      archive_confirm_text: "All samples will be unassigned from the
-        task when archiving. Are you sure to archive task?"
-    edit:
-      head_title: "%{project} | %{module} | Edit"
-      title: "Edit task %{module}"
-      name: "Task name"
-      due_date: "Due date"
-      save: "Save task"
     description:
       title: "Edit task %{module} description"
       label: "Description"
     due_date:
       title: "Edit task %{module} due date"
       label: "Due date"
-    update:
-      success_flash: "Successfully modified task <strong>%{module}</strong>."
-    destroy:
-      success_flash: "Successfully removed task <strong>%{module}</strong> from project <strong>%{project}</strong>."
     samples:
       head_title: "%{project} | %{module} | Sample library"
     module_archive:
@@ -587,6 +557,7 @@ en:
       load_from_file_flash: "Successfully loaded the protocol from the file."
       load_from_file_error: "Failed to load the protocol from file."
       load_from_file_error_locked: "Failed to load the protocol from file. One or more files are currently being edited."
+      load_from_file_size_error: "Failed to load the protocol from file. Limit is %{size}Mb."
     results:
       head_title: "%{project} | %{module} | Results"
       add_label: "Add new result:"
@@ -644,7 +615,7 @@ en:
       label_title: 'Archive'
     clone:
       modal_title: 'Clone experiment %{experiment}'
-      label_title: 'Clone'
+      label_title: 'Clone (only Protocols steps cloned)'
       modal_submit: 'Clone'
       success_flash: "Successfully cloned experiment %{experiment}"
       error_flash: 'Could not clone the experiment.'
@@ -685,8 +656,8 @@ en:
         options_header: "Options"
         edit_module: "Rename task"
         edit_module_group: "Rename workflow"
-        clone_module: "Clone task"
-        clone_module_group: "Clone workflow"
+        clone_module: "Clone task (only Protocols steps cloned)"
+        clone_module_group: "Clone workflow (only Protocols steps cloned)"
         move_module: "Move task to another experiment"
         move_module_group: "Move workflow to another experiment"
         delete_module: "Archive task"
@@ -696,9 +667,6 @@ en:
           name: "Task name"
           name_placeholder: "My task"
           confirm: "Add task"
-          error_length: "Name must contain from 2 to 50 characters."
-          error_invalid: "Name contains invalid characters ('|')."
-          error_whitespaces: "Name cannot be blank."
         modal_edit_module:
           title: "Rename task"
           name: "Task name"
@@ -764,27 +732,6 @@ en:
       archived_on: "Archived on"
       archived_on_title: "Module archived on %{date} at %{time}."
 
-  my_module_tags:
-    new:
-      head_title: "%{project} | %{module} | Add tag"
-      title: "Add tag to task %{module}"
-      create: "Add tag"
-      new_tag: "Create new tag"
-    create:
-      success_flash: "Successfully added tag <strong>%{tag}</strong> to task <strong>%{module}</strong>."
-      error_flash: "Could not create new tag for task <strong>%{module}</strong>."
-    destroy:
-      success_flash: "Successfully removed tag <strong>%{tag}</strong> from task <strong>%{module}</strong>."
-      error_flash: "Tag <strong>%{tag}</strong> could not be removed from <strong>%{module}</strong>."
-
-  my_module_comments:
-    new:
-      head_title: "%{project} | %{module} | Add comment"
-      title: "Add comment to task %{module}"
-      create: "Add comment"
-    create:
-      success_flash: "Successfully added comment to task <strong>%{module}</strong>."
-
   my_module_groups:
     new:
       name: "Workflow %{index}"
@@ -805,14 +752,6 @@ en:
     destroy:
       success_flash: "Successfully removed tag <strong>%{tag}</strong>."
       error_flash: "Could not remove tag <strong>%{tag}</strong>."
-
-  project_comments:
-    new:
-      head_title: "%{project} | Add comment"
-      title: "Add comment to project %{project}"
-      create: "Add comment"
-    create:
-      success_flash: "Successfully added comment to project <strong>%{project}</strong>."
 
   result_texts:
     new:
@@ -874,6 +813,8 @@ en:
       success_flash: "Table result successfully deleted."
 
   samples:
+    columns: "Columns"
+    types_and_groups: "Types and groups"
     actions: "Actions"
     add_new_sample: "Add new sample"
     import: "Import"
@@ -884,10 +825,16 @@ en:
     edit_sample: "Edit"
     save_sample: "Save"
     cancel_save: "Cancel"
+    column_create: "Create"
+    column_new_text: "New column"
     column_visibility: "Visible columns"
     add_new_sample_type: "Add sample type"
     add_new_sample_group: "Add sample group"
     add_new_column: "Add column"
+    modal_info:
+      head_title: "Information for sample '%{sample}'"
+      title: "This sample is assigned to %{nr} tasks."
+      no_tasks: "This sample in not assigned to any task."
     modal_import:
       title: "Import samples"
       notice: "You may upload .csv file (comma separated) or tab separated file (.txt or .tdv) or Excel file (.xls, .xlsx). First row should include header names, followed by rows with sample data."
@@ -900,6 +847,13 @@ en:
     modal_add_custom_field:
       title_html: "Add new column to team <strong>%{organization}</strong>"
       create: "Add new column"
+    modal_delete_custom_field:
+      title: "Delete a column"
+      message: "Are you sure you wish to permanently delete selected column %{cf}? This action is irreversible."
+      alert_heading: "Deleting a column has following consequences:"
+      alert_line_1: "you will lose information in this column for %{nr} samples;"
+      alert_line_2: "the column will be deleted for all team members."
+      delete: "Delete column"
     modal_add_new_sample_group:
       title_html: "Add new sample group to team <strong>%{organization}</strong>"
       create: "Add new sample group"
@@ -915,6 +869,8 @@ en:
       added_by: "Added by"
       no_group: "No sample group"
       no_type: "No sample type"
+      add_sample_type: "Add new sample type"
+      add_sample_group: "Add new sample group"
     new:
       head_title: "%{organization} | Add new sample"
       title: "Add new sample to team %{organization}"
@@ -942,17 +898,18 @@ en:
     js:
       permission_error: "You don't have permission to edit this sample."
       not_found_error: "This sample does not exist."
+      column_added: "New column was sucessfully created."
+      empty_column_name: "Please enter column name."
   sample_types:
-    edit:
-      head_title: "%{organization} | Edit sample type"
-      title: "Edit sample type %{sample_type} from team %{organization}"
-      create: "Edit sample type"
-    create:
-      success_flash: "Successfully added sample type <strong>%{sample_type}</strong> to team <strong>%{organization}</strong>."
-    update:
-      success_flash: "Successfully updated sample type <strong>%{sample_type}</strong> to team <strong>%{organization}</strong>."
-    destroy:
-      success_flash: "Sample type <strong>%{sample_type}</strong> successfully deleted."
+    index:
+      head_title: 'Sample Types'
+      sample_types: 'Sample types'
+      sample_groups: 'Sample groups'
+      new: 'Create sample type'
+      destroy_modal_title: "Permanently delete the \"%{name}\" sample type?"
+      destroy_modal_body: 'This action is irreversible and makes the sample type inaccessible to all team members.'
+      destroy_modal_submit: 'Permanently delete sample type'
+      destroy_flash: "\"%{name}\" sample type was successfully deleted!"
 
   custom_fields:
     new:
@@ -978,7 +935,6 @@ en:
         temp_file_failure: "We couldn't create temporary file. Please contact administrator."
         no_file_selected: "You didn't select any file."
         errors_list_title: "Samples were not imported because one or more errors was found:"
-        file_size_exceeded: "Must be less than 50MB"
         list_row: "Row %{row}"
         list_error: "%{key}: %{val}"
     import_samples:
@@ -997,17 +953,16 @@ en:
         duplicated_values: "Two or more columns have the same mapping."
 
   sample_groups:
+    index:
+      head_title: 'Sample Groups'
+      new: 'Create sample group'
+      destroy_modal_title: "Permanently delete the \"%{name}\" sample group?"
+      destroy_modal_body: 'This action is irreversible and makes the sample group inaccessible to all team members.'
+      destroy_modal_submit: 'Permanently delete sample group'
+      destroy_flash: "\"%{name}\" sample group was successfully deleted!"
     color_label: "Sample group color"
-    edit:
-      head_title: "%{organization} | Edit sample group"
-      title: "Edit sample group %{sample_group} from team %{organization}"
-      create: "Edit sample group"
     create:
       success_flash: "Successfully added sample group <strong>%{sample_group}</strong> to team <strong>%{organization}</strong>."
-    update:
-      success_flash: "Successfully updated sample group <strong>%{sample_group}</strong> to team <strong>%{organization}</strong>."
-    destroy:
-      success_flash: "Sample group <strong>%{sample_group}</strong> successfully deleted."
 
   activities:
     index:
@@ -1049,7 +1004,10 @@ en:
     edit_asset_result: "<i>%{user}</i> edited file result <strong>%{result}</strong>."
     edit_text_result: "<i>%{user}</i> edited text result <strong>%{result}</strong>."
     edit_table_result: "<i>%{user}</i> edited table result <strong>%{result}</strong>."
-    clone_experiment: "<i>%{user}</i> cloned <strong>%{experiment_new}</strong> from <strong>%{experiment_original}</strong>."
+    archive_experiment: "<i>%{user}</i> archived experiment <strong>%{experiment}</strong>."
+    create_experiment: "<i>%{user}</i> created experiment <strong>%{experiment}</strong>."
+    edit_experiment: "<i>%{user}</i> edited experiment <strong>%{experiment}</strong>."
+    clone_experiment: "<i>%{user}</i> cloned experiment <strong>%{experiment_new}</strong> from <strong>%{experiment_original}</strong>."
     move_experiment: "<i>%{user}</i> moved experiment  <strong>%{experiment}</strong> from project <strong>%{project_original}</strong> to project <strong>%{project_new}</strong>."
     add_comment_to_project: "<i>%{user}</i> commented on project <strong>%{project}</strong>."
     edit_project_comment: "<i>%{user}</i> edited comment on project <strong>%{project}</strong>."
@@ -1096,6 +1054,14 @@ en:
       create: "Add comment"
     create:
       success_flash: "Successfully added comment to result."
+    load_protocol_from_file: "<i>%{user}</i> loaded protocol <strong>%{protocol}</strong> from file."
+    load_protocol_from_repository: "<i>%{user}</i> loaded protocol <strong>%{protocol}</strong> from repository."
+    revert_protocol: "<i>%{user}</i> reverted protocol <strong>%{protocol}</strong> from repository."
+    create_report: "<i>%{user}</i> created report <strong>%{report}</strong>."
+    delete_report: "<i>%{user}</i> deleted report <strong>%{report}</strong>."
+    edit_report: "<i>%{user}</i> edited report <strong>%{report}</strong>."
+    assign_sample: "<i>%{user}</i> assigned sample(s) <strong>%{samples}</strong> to task(s) <strong>%{tasks}</strong>."
+    unassign_sample: "<i>%{user}</i> unassigned sample(s) <strong>%{samples}</strong> from task(s) <strong>%{tasks}</strong>."
 
   users:
     enums:
@@ -1110,7 +1076,7 @@ en:
         head_title: "My profile"
         title: "My profile"
         avatar_label: "Avatar"
-        avatar_btn: "Change avatar"
+        avatar_btn: "Edit avatar"
         avatar_title: "Change avatar"
         avatar_edit_label: "Upload new avatar file"
         avatar_submit: "Upload"
@@ -1132,7 +1098,16 @@ en:
         head_title: "Sign up"
         team_name_label: "Team name"
         team_name_help: "Team name is required in order to create your own team."
+    statistics:
+      title: "My statistics"
+      team: "Team"
+      project: "Project"
+      experiment: "Experiment"
+      protocol: "Protocol"
     settings:
+      changed_org_flash: "You are working on %{team} now!"
+      changed_org_error_flash: "Something went wrong! Try again later."
+      changed_org_in_search: "The searched item is not in your current team. You will be redirected to %{team} team!"
       navigation:
         preferences: "My preferences"
         organizations: "My teams"
@@ -1215,34 +1190,6 @@ en:
           can_delete_message: "This team can be deleted because it doesn't have any projects."
           delete_text: "Delete team."
           cannot_delete_message_projects: "Cannot delete this team. Only empty teams (without any projects) can be deleted."
-          modal_add_user:
-            title: "Invite user to team"
-            existing_heading: "Invite existing sciNote user"
-            existing_label: "Find existing user by name or email:"
-            existing_placeholder: "Name or email"
-            existing_query_too_short: "Query is too short (minimum is 3 characters)"
-            existing_query_blank: "Query can't be blank"
-            existing_results_title: "Choose user"
-            no_existing_users: "No existing users found."
-            existing_users_members_smalltext:
-              one: "The search matched 1 user that is already member of the team."
-              other: "The search matched %{count} users that are already members of the team."
-            no_existing_users_members_smalltext:
-              one: "No existing users that could be invited found; the search, however, matched 1 user that is already member of the team."
-              other: "No existing users that could be invited found; the search, however, matched %{count} users that are already members of the team."
-            existing_users_smalltext: "Only showing top %{nr} matched results."
-            existing_flash_success: "User %{user} successfully invited to team as %{role}."
-            existing_flash_error: "Error inviting user to team."
-            new_heading: "Invite new user"
-            new_label_name: "Type in the new user's full name:"
-            new_placeholder_name: "Full name"
-            new_label_email: "Type in the new user's email:"
-            new_placeholder_email: "Email"
-            new_flash_success: "User %{user} successfully invited to team as %{role}. Confirmation email was sent to %{email}."
-            invite: "Invite user"
-            invite_guest: "as Guest"
-            invite_user: "as Normal user"
-            invite_admin: "as Administrator"
           modal_destroy_organization:
             title: "Delete team"
             message: "Are you sure you wish to delete team %{org}? All of the users will be removed from the team as well. This action is irreversible."
@@ -1458,10 +1405,29 @@ en:
       head_title: "Edit protocol"
     no_keywords: "No keywords"
 
-  mailer:
-    invitation_to_organization:
-      subject: "You have been invited to team"
-      text: "User %{addedBy} has added you to team %{organization}."
+  invite_users:
+    to_org:
+      title: "Invite users to team %{organization}"
+      heading: "Invite more people to team %{organization} and start using sciNote."
+    no_org:
+      title: "Invite users to sciNote"
+      heading: "Invite more people to start using sciNote."
+    input_subtitle: "Input one or multiple emails, confirm each email with ENTER key."
+    invite_to_org_heading: "Invite users to my team:"
+    invite_btn: "Invite user/s"
+    invite_guest: "as Guest/s"
+    invite_user: "as Normal user/s"
+    invite_admin: "as Administrator/s"
+    results:
+      heading: "Invitation results:"
+      user_exists: "User is already a member of sciNote."
+      user_exists_unconfirmed_invited_to_org: "User is already a member of sciNote but is not confirmed yet - successfully invited to team %{organization} as %{role}."
+      user_exists_and_in_org: "User is already a member of sciNote and team %{organization} as %{role}."
+      user_exists_invited_to_org: "User was already a member of sciNote - successfully invited to team %{organization} as %{role}."
+      user_created: "User succesfully invited to sciNote."
+      user_created_invited_to_org: "User successfully invited to sciNote and team %{organization} as %{role}."
+      user_invalid: "Invalid email."
+      too_many_emails: "Only invited first %{nr} emails. To invite more users, "
 
   time:
     formats:
@@ -1479,42 +1445,56 @@ en:
       short: "%H"
 
   tutorial:
+    title: "Tutorial"
     next: "Next"
     skip_tutorial: "Skip tutorial"
     end_tutorial: "End tutorial"
     finish_tutorial: "Start using sciNote"
-    tutorial_welcome_title_html: 'Welcome to <em>sciNote</em>, your electronic lab notebook. <em>sciNote</em> organizes your work in Projects. Click <strong>Show projects from</strong> to choose how you want to view your Projects. You can also reorder them by clicking the <strong>Sort by</strong> button.'
-    create_project_html: "Click here to create a Project and it will appear under the Team you've chosen. Choose public <span class='glyphicon glyphicon-eye-open'></span> if you want everyone from the Team to view the Project or choose private <span class='glyphicon glyphicon-eye-close'></span> so only the people who you invite to the project can see it."
-    project_options_html: "In the bottom row of the Project card you can check the latest activity <span class='glyphicon glyphicon-equalizer'></span>, invite collaborators <span class='glyphicon glyphicon-user'></span>, see the notifications <span class='glyphicon glyphicon-bell'></span> and write comments <span class='glyphicon glyphicon-comment'></span>. You can also edit the Project's name and visibility or archive it. You can recall the Project from the Archive <span class='glyphicon glyphicon-briefcase'></span> in the top right side of the Dashboard at any time."
-    create_experiment_html: "Inside of a Project you can create Experiments. To create one click on this button and edit Experiment’s name and description."
-    edit_experiment_html: "By clicking on the down arrow <span class='caret'></span> of an Experiment card you can choose between different actions. You can <strong>Edit details</strong> to the Experiment, such as experiment name and description, <strong>Clone</strong> it inside of a Project, where cloned Experiment is identical to the original one, <strong>Move</strong> it from one Project to another or <strong>Archive</strong> it in the Archive <span class='glyphicon glyphicon-briefcase'></span>."
-    canvas_overview_html: "A Task is a basic unit of your Experiment. Within a Task, you can add Protocols, Results and add Samples. You can connect Tasks into Workflows to assure traceability of your work. You can grab a Task or entire Workflow and move it in all directions on the canvas."
-    canvas_click_edit_workflow_html: " Click <strong>Edit experiment</strong> to add new Tasks or to modify an existing Experiment."
-    edit_workflow_html: "To add a new Task to the Experiment, click on <strong>New task</strong> and drag it onto canvas."
-    edit_workflow_click_save_html: "Click <strong>Save experiment</strong> to save changes you’ve made to the Experiment."
-    sidebar_html: "Navigation bar helps you orient on which Experiment you are currently working. It also helps you to find a specific Task on the canvas by clicking the navigate icon <span class='glyphicon glyphicon-map-marker'></span>. The line that follows down the Tasks on their left side signifies they are connected into a Workflow."
-    sidebar_click_module_html: "Click on the Task name <strong>qPCR</strong> to see its contents."
-    module_protocols_html: "Inside of a Task you can create Protocol steps and upload existing protocol files. After you have finished a certain step, click the <strong>Complete step</strong> button. Exact time and the person who completed the step are recorded and can be seen in the <strong>Activity</strong> tab in the top right side of the Dashboard."
-    module_protocols_click_results_html: "Click on the <strong>Results</strong> tab to upload experiment results."
-    module_results_html: "You can upload any type of a file, insert table or write comments."
-    module_results_click_samples_html: "Click on the <strong>Samples</strong> tab to import, export or assign samples to the Task."
-    samples_html: "You can easily import sample tables from Excel or tab-delimited files. If you assign samples to a certain Task, these samples will be automatically assigned downstream the Workflow."
-    breadcrumbs_html: "You can always use these breadcrumbs to navigate all the way back to the Dashboard. Click on the <strong>Reports</strong> tab to generate reports for meetings, projects, patents or thesis."
-    reports_index_click_new_report_html: "When inside of <strong>Reports</strong>, click the <strong>New report</strong> button to create a new report."
-    new_report_html: "To add report elements to the report, click on the <strong>—+—</strong> sign on the sheet. Select the report contents in the tabs and click <strong>Add to report</strong>. You can save the report as a PDF on your computer or save it within sciNote for later viewing and modification."
-    new_report_click_org_html: "Click on <strong>%{private_org}</strong> in breadcrumbs to return to the Dashboard."
-    archive_project_html: "Archive Demo project - qPCR by clicking on the down arrow <span class='glyphicon glyphicon-triangle-bottom'></span>. You can always access the Archive by clicking the <span class='glyphicon glyphicon-briefcase'></span> icon on the top right side of the Dashboard and restore any item you have archived."
-    goodbye_message: "To repeat the tutorial, go to your Settings and open <strong>My preferences</strong> tab. Click on the <strong>Repeat tutorial</strong> button and watch the tutorial as many times needed."
+    tutorial_welcome_title_html: "Welcome to <em>sciNote</em>, your electronic lab notebook. <em>sciNote</em> organizes your work in Projects. Click <strong>Team icon</strong> to choose Projects from which Team you want to view on your Dashboard. You can also reorder them by clicking the <strong>Sort by</strong> button. <strong>(Step 1/26)</strong>"
+    create_project_html: "Click here to create a Project and it will appear under the Team you've chosen. Choose public <span class='glyphicon glyphicon-eye-open'></span> if you want everyone from the Team to view the Project or choose private <span class='glyphicon glyphicon-eye-close'></span> so only the people who you invite to the Project can see it. <strong>(Step 2/26)</strong>"
+    project_options_html: "In the bottom row of the Project card you can check the latest activity <span class='glyphicon glyphicon-equalizer'></span>, invite collaborators <span class='glyphicon glyphicon-user'></span>, see the notifications <span class='glyphicon glyphicon-bell'></span> and write comments <span class='glyphicon glyphicon-comment'></span>. You can also edit the Project's name and visibility or archive it. You can recall the Project from the Archive <span class='glyphicon glyphicon-briefcase'></span> in the top right side of the Dashboard at any time. <strong>(Step 3/26)</strong>"
+    create_experiment_html: "Inside of a Project you can create Experiments. To create one click on this button and edit Experiment’s name and description. <strong>(Step 4/26)</strong>"
+    edit_experiment_html: "By clicking on the down arrow <span class='caret'></span> of an Experiment card you can choose between different actions. You can <strong>Edit details</strong> to the Experiment, such as experiment name and description, <strong>Clone</strong> it inside of a Project, where cloned Experiment is identical to the original one, <strong>Move</strong> it from one Project to another or <strong>Archive</strong> it in the Archive <span class='glyphicon glyphicon-briefcase'></span>. <strong>(Step 5/26)</strong>"
+    canvas_overview_html: "A Task is a basic unit of your Experiment. Within a Task, you can add Protocols, Results or Samples. You can connect Tasks into Workflows to assure traceability of your work. You can grab a Task or entire Workflow and move it in all directions on the canvas. <strong>(Step 6/26)</strong>"
+    canvas_click_edit_workflow_html: " Click <strong>Edit experiment</strong> to add new Tasks or to modify an existing Experiment. <strong>(Step 7/26)</strong>"
+    edit_workflow_html: "To add a new Task to the Experiment, click on <strong>New task</strong> and drag it onto canvas. <strong>(Step 8/26)</strong>"
+    edit_workflow_click_save_html: "Click <strong>Save experiment</strong> to save changes you’ve made to the Experiment. <strong>(Step 9/26)</strong>"
+    sidebar_html: "Navigation bar helps you to navigate through Experiments. It also helps you to find a specific Task on the canvas by clicking the navigate icon <span class='glyphicon glyphicon-map-marker'></span>. <strong>(Step 10/26)</strong>"
+    sidebar_click_module_html: "Click on the Task name <strong>qPCR</strong> to see its contents. <strong>(Step 11/26)</strong>"
+    module_protocols_html: "Inside of a Task you can create Protocol steps and upload existing protocol files. After you have finished a certain step, click the <strong>Complete step</strong> button. Exact time and the person who completed the step are recorded and can be seen in the <strong>Activity</strong> tab in the top right side of the Dashboard. <strong>(Step 12/26)</strong>"
+    module_protocols_save_html: "You can save the protocol to Protocol repository. Everyone within the same Team will be able to use it. <strong>(Step 13/26)</strong>"
+    module_protocols_click_results_html: "Click on the <strong>Results</strong> tab to upload experiment results. <strong>(Step 14/26)</strong>"
+    module_results_html: "You can upload any type of a file, insert table or write comments. <strong>(Step 15/26)</strong>"
+    module_results_click_samples_html: "Click on the <strong>Samples</strong> tab to import, export or assign samples to the Task. <strong>(Step 16/26)</strong>"
+    samples_html: "You can easily import sample tables from Excel or tab-delimited files. If you assign samples to a certain Task, these samples will be automatically assigned downstream the Workflow. <strong>(Step 17/26)</strong>"
+    breadcrumbs_html: "You can always use these <strong>Breadcrumbs</strong> to navigate all the way back to the Dashboard. Click on the <strong>Reports</strong> tab to generate a report of your work. <strong>(Step 18/26)</strong>"
+    reports_index_click_new_report_html: "Click the <strong>New report</strong> button to create a new report. <strong>(Step 19/26)</strong>"
+    new_report_html: "To add report elements to the report, click on the <strong>—+—</strong> sign on the sheet. Select the report contents in the tabs and click <strong>Add to report</strong>. You can save the report as a PDF on your computer or save it within sciNote for later viewing and modification. <strong>(Step 20/26)</strong>"
+    new_report_click_org_html: "Click on <strong>%{private_org}</strong> in breadcrumbs to return to the Dashboard. <strong>(Step 21/26)</strong>"
+    protocols_link_html: "Click on <span class='glyphicon glyphicon-list-alt'></span> to go to the Protocols repository page. <strong>(Step 22/26)</strong>"
+    protocols_index_html: "View your Public and Private Protocols, which you can Edit, Create new ones or Clone them. Protocols can be archived and restored from the Archive. <strong>(Step 23/26)</strong>"
+    protocols_import_export_html: "You can also Import or Export protocols to your hard drive. Return to the Dashboard. <strong>(Step 24/26)</strong>"
+    archive_project_html: "Archive Demo project - qPCR by clicking on the down arrow <span class='glyphicon glyphicon-triangle-bottom'></span>. You can always access the Archive by clicking the <span class='glyphicon glyphicon-briefcase'></span> icon on the top right side of the Dashboard and restore any item you have archived. <strong>(Step 25/26)</strong>"
+    goodbye_message: "To repeat the tutorial, go to your Settings and open <strong>My preferences</strong> tab. Click on the <strong>Repeat tutorial</strong> button and go through the tutorial as many times needed. <strong>(Step 26/26)</strong>"
 
-  introductory:
-    popup-title: "New: Experiment level"
-    sentence_one_html: "To give you more flexibility in organization of your work, we have added a new feature to your sciNote: <strong>Experiment level</strong>. Now you are able to organize your Tasks and Workflows into different Experiments inside of an individual project. When you open a project you will see experiments displayed as thumbnails."
-    sentence_two_html: "You can see the changes in the hierarchy in the navigation pane as well."
-    sentence_three_html: "All your existing Tasks and Workflows are now in a single Experiment called \"My first experiment\". You can always rename it, create new Experiments and move workflows between them. To move a Task or a Workflow to a different experiment, do the following:"
-    sentence_four_html: "1. Open experiment that contains a workflow you would like to move and click Edit experiment."
-    sentence_five_html: "2. In the Options dropdown of any task select Move workflow to another experiment."
-    sentence_six_html: "3. Select experiment from the dropdown and click Move workflow. The workflow is now part of the selected experiment. So you can still have multiple workflows in one experiment."
-    confim: "OK, got it"
+  notifications:
+    title: "Notifications"
+    email_settings: "E-mail notifications"
+    form:
+      assignments: "Assignments notifications"
+      recent_notification: "Change notifications"
+      system_message: "Update notifications"
+    show_all: "Show all notifications"
+    show_more: "Show more notifications"
+    no_notifications: "No notifications."
+    no_recent: "No recent notifications."
+    types:
+      assignment: "Assignment"
+      recent_changes: "Recent changes"
+      system_message: "sciNote system message"
+    email_title: "You've received a sciNote notification!"
+    assign_user_to_organization: "<i>%{assigned_user}</i> was added as %{role} to team <strong>%{organization}</strong> by <i>%{assigned_by_user}</i>."
+    unassign_user_from_organization: "<i>%{unassigned_user}</i> was removed from team <strong>%{organization}</strong> by <i>%{unassigned_by_user}</i>."
 
   # This section contains general words that can be used in any parts of
   # application.
@@ -1524,6 +1504,7 @@ en:
     edit: "Edit"
     cancel: "Cancel"
     close: "Close"
+    create: 'Create'
     check_all: "Check all"
     no_comments: "No comments!"
     more_comments: "More comments"
@@ -1535,6 +1516,7 @@ en:
     private: "private"
     search: "Search"
     file:
+      total_size: "You can upload max %{size} MB of files at one time. Please remove one or more files and try to submit again."
       size_exceeded: "File size must be less than %{file_size} MB."
       blank: "You didn't select any file"
       uploading: "If you leave this page, the file(s) that is/are currently uploading will not be saved! Are you sure you want to continue?"
@@ -1543,6 +1525,9 @@ en:
       not_blank: "can't be blank"
       length_too_long: "is too long (maximum is %{max_length} characters)"
       length_too_short: "is too short (minimum is %{min_length} characters)"
+    query:
+      length_too_long: "Search query is too long (maximum is %{max_length} characters)"
+      length_too_short: "Search query is too short (minimum is %{min_length} characters)"
     busy: "The server is still processing your request. If you leave this page, the changes will be lost! Are you sure you want to continue?"
 
   Add: "Add"

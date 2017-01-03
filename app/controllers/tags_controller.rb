@@ -1,14 +1,9 @@
 class TagsController < ApplicationController
-  before_action :load_vars, only: [:new, :create, :update, :destroy]
+  before_action :load_vars, only: [:create, :update, :destroy]
   before_action :load_vars_nested, only: [:update, :destroy]
-  before_action :check_create_permissions, only: [:new, :create]
+  before_action :check_create_permissions, only: [:create]
   before_action :check_update_permissions, only: [:update]
   before_action :check_destroy_permissions, only: [:destroy]
-
-  def new
-    @tag = Tag.new
-    session[:return_to] ||= request.referer
-  end
 
   def create
     @tag = Tag.new(tag_params)
@@ -20,7 +15,7 @@ class TagsController < ApplicationController
     end
 
     if @tag.color.blank?
-      @tag.color = TAG_COLORS[0]
+      @tag.color = Constants::TAG_COLORS[0]
     end
 
     if @tag.save

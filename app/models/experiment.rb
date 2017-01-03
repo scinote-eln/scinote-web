@@ -19,9 +19,10 @@ class Experiment < ActiveRecord::Base
 
   auto_strip_attributes :name, :description, nullify: false
   validates :name,
-            length: { minimum: NAME_MIN_LENGTH, maximum: NAME_MAX_LENGTH },
+            length: { minimum: Constants::NAME_MIN_LENGTH,
+                      maximum: Constants::NAME_MAX_LENGTH },
             uniqueness: { scope: :project, case_sensitive: false }
-  validates :description, length: { maximum: TEXT_MAX_LENGTH }
+  validates :description, length: { maximum: Constants::TEXT_MAX_LENGTH }
   validates :project, presence: true
   validates :created_by, presence: true
   validates :last_modified_by, presence: true
@@ -35,8 +36,8 @@ class Experiment < ActiveRecord::Base
   def self.search(user, include_archived, query = nil, page = 1)
     project_ids =
       Project
-        .search(user, include_archived, nil, SHOW_ALL_RESULTS)
-        .select("id")
+      .search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
+      .select('id')
 
     if query
       a_query = query.strip
@@ -62,12 +63,12 @@ class Experiment < ActiveRecord::Base
     end
 
     # Show all results if needed
-    if page == SHOW_ALL_RESULTS
+    if page == Constants::SEARCH_NO_LIMIT
       new_query
     else
       new_query
-      .limit(SEARCH_LIMIT)
-      .offset((page - 1) * SEARCH_LIMIT)
+        .limit(Constants::SEARCH_LIMIT)
+        .offset((page - 1) * Constants::SEARCH_LIMIT)
     end
   end
 
@@ -217,14 +218,14 @@ class Experiment < ActiveRecord::Base
                          use: :neato)
 
     graph[:size] = '4,4'
-    graph.node[color: '#d2d2d2',
+    graph.node[color: Constants::COLOR_ALTO,
                style: :filled,
-               fontcolor: '#555555',
+               fontcolor: Constants::COLOR_EMPEROR,
                shape: 'circle',
                fontname: 'Arial',
                fontsize: '16.0']
 
-    graph.edge[color: '#d2d2d2']
+    graph.edge[color: Constants::COLOR_ALTO]
 
     label = ''
     subg = {}
@@ -335,10 +336,10 @@ class Experiment < ActiveRecord::Base
     format = 'Clone %d - %s'
 
     i = 1
-    i += 1 while experiment_names.include?(format(format, i, name)[0, 50])
+    i += 1 while experiment_names.include?(format(format, i, name))
 
     clone = Experiment.new(
-      name: format(format, i, name)[0, 50],
+      name: format(format, i, name),
       description: description,
       created_by: current_user,
       last_modified_by: current_user,

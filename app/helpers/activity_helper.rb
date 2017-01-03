@@ -1,7 +1,7 @@
 module ActivityHelper
-  def activity_truncate(message, len = 20)
+  def activity_truncate(message, len = Constants::NAME_TRUNCATION_LENGTH)
     activity_title = message.match(/<strong>(.*?)<\/strong>/)[1]
-    if activity_title.length > 20
+    if activity_title.length > Constants::NAME_TRUNCATION_LENGTH
       title = "<div class='modal-tooltip'>#{truncate(activity_title, length: len)}
 		<span class='modal-tooltiptext'>#{activity_title}</span></div>"
     else

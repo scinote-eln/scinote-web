@@ -10,9 +10,14 @@ class UserOrganization < ActiveRecord::Base
   belongs_to :organization, inverse_of: :user_organizations
 
   before_destroy :destroy_associations
+  after_create :create_samples_table_state
 
   def role_str
     I18n.t("user_organizations.enums.role.#{role.to_s}")
+  end
+
+  def create_samples_table_state
+    SamplesTable.create_samples_table_state(self)
   end
 
   def destroy_associations
@@ -29,15 +34,22 @@ class UserOrganization < ActiveRecord::Base
     # If any project of the organization has the sole owner and that
     # owner is the user to be removed from the organization, then we must
     # create a new owner of the project (the provided user).
-    organization.projects.each do |project|
+    organization.projects.find_each do |project|
       owners = project.user_projects.where(role: 0)
       if owners.count == 1 && owners.first.user == user
-        UserProject.create(
-          user: new_owner,
-          project: project,
-          role: 0,
-          assigned_by: user
-        )
+        if project.users.exists?(new_owner.id)
+          # If the new owner is already assigned onto project,
+          # update its role
+          project.user_projects.find_by(user: new_owner).update(role: 0)
+        else
+          # Else, create a new association
+          UserProject.create(
+            user: new_owner,
+            project: project,
+            role: 0,
+            assigned_by: user
+          )
+        end
       end
     end
 

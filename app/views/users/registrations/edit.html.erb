@@ -1,169 +1,208 @@
 <% provide(:head_title, t("users.registrations.edit.head_title")) %>
 
-<div class="center-block center-block-narrow">
-  <h2><%=t "users.registrations.edit.title" %></h2>
+<div class="row">
+  <div class="col-md-4">
+    <h2><%=t "users.registrations.edit.title" %></h2>
 
-  <% if not resource.errors.empty? %>
-  <div class="alert alert-danger">
-  <%= devise_error_messages! %>
-  </div>
-  <% end %>
-
-  <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, "data-for" => "avatar" }) do |f| %>
-    <%= hidden_field_tag "user[change_avatar]", "true" %>
-    <div data-part="view">
-      <div class="form-group">
-        <%= f.label t("users.registrations.edit.avatar_label") %><br />
-        <% @user_avatar_url ||= avatar_path(current_user, :thumb) %>
-        <%= image_tag @user_avatar_url %><br /><br />
-        <a href="#" class="btn btn-default" data-action="edit"><%=t "users.registrations.edit.avatar_btn" %></a>
+    <% if not resource.errors.empty? %>
+      <div class="alert alert-danger">
+        <%= devise_error_messages! %>
       </div>
-    </div>
-    <div data-part="edit" style="display: none;">
-      <div class="well">
-        <h4><%=t "users.registrations.edit.avatar_title" %></h4>
+    <% end %>
+
+    <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, "data-for" => "avatar" }) do |f| %>
+      <%= hidden_field_tag "user[change_avatar]", "true" %>
+      <div data-part="view">
         <div class="form-group">
-          <%= f.label :avatar, t("users.registrations.edit.avatar_edit_label") %>
-          <%= f.file_field :avatar, class: "btn btn-default" %>
-        </div>
-        <div>
-          <a href="#" class="btn btn-default" data-action="cancel"><%=t "general.cancel" %></a>
-          <%= f.submit t("users.registrations.edit.avatar_submit"), class: 'btn btn-primary', onclick: "processFile(event, #{@direct_upload});" %>
-        </div>
-      </div>
-    </div>
-  <% end %>
-
-  <%= form_for(resource, as: resource_name, url: registration_path(resource_name, format: :json), remote: true, html: { method: :put, "data-for" => "full_name" }) do |f| %>
-    <div data-part="view">
-      <div class="form-group">
-        <%= f.label t("users.registrations.edit.name_label") %>
-        <div class="input-group">
-          <input data-role="src" class="form-control" disabled="disabled" type="text" value="<%= @user.full_name %>" name="fake_user[full_name]" id="fake_user_full_name">
-          <span class="input-group-btn">
-            <a href="#" class="btn btn-default" data-action="edit"><%=t "general.edit" %></a>
-          </span>
-        </div>
-      </div>
-    </div>
-    <div data-part="edit" style="display: none;">
-      <div class="well">
-        <h4><%=t "users.registrations.edit.name_title" %></h4>
-        <div class="form-group">
-          <%= f.label :full_name, t("users.registrations.edit.name_label") %>
-          <%= f.text_field :full_name, class: "form-control", "data-role" => "edit" %>
-        </div>
-        <div>
-          <a href="#" class="btn btn-default" data-action="cancel"><%=t "general.cancel" %></a>
-          <%= f.submit t("general.update"), class: "btn btn-primary" %>
-        </div>
-      </div>
-    </div>
-  <% end %>
-
-  <%= form_for(resource, as: resource_name, url: registration_path(resource_name, format: :json), remote: true, html: { method: :put, "data-for" => "initials" }) do |f| %>
-    <div data-part="view">
-      <div class="form-group">
-        <%= f.label t("users.registrations.edit.initials_label") %>
-        <div class="input-group">
-          <input data-role="src" class="form-control" disabled="disabled" type="text" value="<%= @user.initials %>" name="fake_user[initials]" id="fake_user_initials">
-          <span class="input-group-btn">
-            <a href="#" class="btn btn-default" data-action="edit"><%=t "general.edit" %></a>
-          </span>
-        </div>
-      </div>
-    </div>
-    <div data-part="edit" style="display: none;">
-      <div class="well">
-        <h4><%=t "users.registrations.edit.initials_title" %></h4>
-        <div class="form-group">
-          <%= f.label :initials, t("users.registrations.edit.initials_label") %>
-          <%= f.text_field :initials, class: "form-control", "data-role" => "edit" %>
-        </div>
-        <div>
-          <a href="#" class="btn btn-default" data-action="cancel"><%=t "general.cancel" %></a>
-          <%= f.submit t("general.update"), class: "btn btn-primary" %>
-        </div>
-      </div>
-    </div>
-  <% end %>
-
-  <%= form_for(resource, as: resource_name, url: registration_path(resource_name, format: :json), remote: true, html: { method: :put, "data-for" => "email" }) do |f| %>
-    <div data-part="view">
-      <div class="form-group">
-        <%= f.label t("users.registrations.edit.email_label") %>
-        <div class="input-group">
-          <input data-role="src" class="form-control" disabled="disabled" type="text" value="<%= @user.email %>" name="fake_user[email]" id="fake_user_email">
-          <span class="input-group-btn">
-            <a href="#" class="btn btn-default" data-action="edit"><%=t "general.edit" %></a>
-          </span>
-        </div>
-        <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
-          <div class="alert alert-info" style="margin-top: 15px;" role="alert">
-            <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
-            <%=t "users.registrations.edit.waiting_for_confirm", email: resource.unconfirmed_email %>
+          <%= f.label t("users.registrations.edit.avatar_label") %><br />
+          <% @user_avatar_url ||= avatar_path(current_user, :thumb) %>
+          <div class="avatar-container">
+            <a href="#" data-action="edit">
+              <div class="avatar-image">
+                <%= image_tag @user_avatar_url %>
+              </div>
+              <div class="avatar-edit">
+                <div class="btn btn-greyed btn-sm">
+                  <span class="glyphicon glyphicon-pencil"></span>
+                  <%=t "users.registrations.edit.avatar_btn" %>
+                </div>
+              </div>
+            </a>
           </div>
-        <% end %>
-      </div>
-    </div>
-    <div data-part="edit" style="display: none;">
-      <div class="well">
-        <h4><%=t "users.registrations.edit.email_title" %></h4>
-        <div class="form-group">
-          <%= f.label :email, t("users.registrations.edit.new_email_label") %>
-          <%= f.email_field :email, class: "form-control", "data-role" => "edit" %>
-        </div>
-        <div class="form-group">
-          <%= f.label :current_password, t("users.registrations.edit.current_password_label") %> <i><%=t "users.registrations.edit.password_explanation" %></i>
-          <%= f.password_field :current_password, autocomplete: "off", class: "form-control", "data-role" => "clear" %>
-        </div>
-        <div>
-          <a href="#" class="btn btn-default" data-action="cancel"><%=t "general.cancel" %></a>
-          <%= f.submit t("general.update"), class: "btn btn-primary" %>
         </div>
       </div>
-    </div>
-  <% end %>
-
-  <%= form_for(resource, as: resource_name, url: registration_path(resource_name, format: :json), remote: true, html: { method: :put, "data-for" => "password" }) do |f| %>
-    <%= hidden_field_tag "user[change_password]", "true" %>
-    <div data-part="view">
-      <div class="form-group">
-        <%= f.label t("users.registrations.edit.password_label") %>
-        <div class="input-group">
-          <input class="form-control" disabled="disabled" autocomplete="off" type="password" value="aaaaaaaaaa" name="fake_user[current_password]" id="fake_user_current_password">
-          <span class="input-group-btn">
-            <a href="#" class="btn btn-default" data-action="edit"><%=t "general.edit" %></a>
-          </span>
+      <div data-part="edit" style="display: none;">
+        <div class="well">
+          <h4><%=t "users.registrations.edit.avatar_title" %></h4>
+          <div class="form-group">
+            <%= f.label :avatar, t("users.registrations.edit.avatar_edit_label") %>
+            <%= f.file_field :avatar, class: "btn btn-default" %>
+          </div>
+          <div>
+            <a href="#" class="btn btn-default" data-action="cancel"><%=t "general.cancel" %></a>
+            <%= f.submit t("users.registrations.edit.avatar_submit"), class: 'btn btn-primary', onclick: "processFile(event, #{@direct_upload});" %>
+          </div>
         </div>
       </div>
-    </div>
-    <div data-part="edit" style="display: none;">
-      <div class="well">
-        <h4><%=t "users.registrations.edit.password_title" %></h4>
-        <div class="form-group">
-          <%= f.label :current_password, t("users.registrations.edit.current_password_label") %> <i><%=t "users.registrations.edit.password_explanation" %></i>
-          <%= f.password_field :current_password, autocomplete: "off", class: "form-control", "data-role" => "clear" %>
-        </div>
+    <% end %>
 
+    <%= form_for(resource, as: resource_name, url: registration_path(resource_name, format: :json), remote: true, html: { method: :put, "data-for" => "full_name" }) do |f| %>
+      <div data-part="view">
         <div class="form-group">
-            <%= f.label :password, t("users.registrations.edit.new_password_label") %>
-            <%= f.password_field :password, autocomplete: "off", class: "form-control", "data-role" => "clear" %>
-        </div>
-
-        <div class="form-group">
-          <%= f.label :password_confirmation, t("users.registrations.edit.new_password_2_label") %>
-          <%= f.password_field :password_confirmation, autocomplete: "off", class: "form-control", "data-role" => "clear" %>
-        </div>
-
-        <div>
-          <a href="#" class="btn btn-default" data-action="cancel"><%=t "general.cancel" %></a>
-          <%= f.submit t("general.update"), class: "btn btn-primary"  %>
+          <%= f.label t("users.registrations.edit.name_label") %>
+          <div class="input-group">
+            <input data-role="src" class="form-control" disabled="disabled" type="text" value="<%= @user.full_name %>" name="fake_user[full_name]" id="fake_user_full_name">
+            <span class="input-group-btn">
+              <a href="#" class="btn btn-default" data-action="edit"><%=t "general.edit" %></a>
+            </span>
+          </div>
         </div>
       </div>
-    </div>
-  <% end %>
+      <div data-part="edit" style="display: none;">
+        <div class="well">
+          <h4><%=t "users.registrations.edit.name_title" %></h4>
+          <div class="form-group">
+            <%= f.label :full_name, t("users.registrations.edit.name_label") %>
+            <%= f.text_field :full_name, class: "form-control", "data-role" => "edit" %>
+          </div>
+          <div>
+            <a href="#" class="btn btn-default" data-action="cancel"><%=t "general.cancel" %></a>
+            <%= f.submit t("general.update"), class: "btn btn-primary" %>
+          </div>
+        </div>
+      </div>
+    <% end %>
 
+    <%= form_for(resource, as: resource_name, url: registration_path(resource_name, format: :json), remote: true, html: { method: :put, "data-for" => "initials" }) do |f| %>
+      <div data-part="view">
+        <div class="form-group">
+          <%= f.label t("users.registrations.edit.initials_label") %>
+          <div class="input-group">
+            <input data-role="src" class="form-control" disabled="disabled" type="text" value="<%= @user.initials %>" name="fake_user[initials]" id="fake_user_initials">
+            <span class="input-group-btn">
+              <a href="#" class="btn btn-default" data-action="edit"><%=t "general.edit" %></a>
+            </span>
+          </div>
+        </div>
+      </div>
+      <div data-part="edit" style="display: none;">
+        <div class="well">
+          <h4><%=t "users.registrations.edit.initials_title" %></h4>
+          <div class="form-group">
+            <%= f.label :initials, t("users.registrations.edit.initials_label") %>
+            <%= f.text_field :initials, class: "form-control", "data-role" => "edit" %>
+          </div>
+          <div>
+            <a href="#" class="btn btn-default" data-action="cancel"><%=t "general.cancel" %></a>
+            <%= f.submit t("general.update"), class: "btn btn-primary" %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+
+    <%= form_for(resource, as: resource_name, url: registration_path(resource_name, format: :json), remote: true, html: { method: :put, "data-for" => "email" }) do |f| %>
+      <div data-part="view">
+        <div class="form-group">
+          <%= f.label t("users.registrations.edit.email_label") %>
+          <div class="input-group">
+            <input data-role="src" class="form-control" disabled="disabled" type="text" value="<%= @user.email %>" name="fake_user[email]" id="fake_user_email">
+            <span class="input-group-btn">
+              <a href="#" class="btn btn-default" data-action="edit"><%=t "general.edit" %></a>
+            </span>
+          </div>
+          <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
+            <div class="alert alert-info" style="margin-top: 15px;" role="alert">
+              <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+              <%=t "users.registrations.edit.waiting_for_confirm", email: resource.unconfirmed_email %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+      <div data-part="edit" style="display: none;">
+        <div class="well">
+          <h4><%=t "users.registrations.edit.email_title" %></h4>
+          <div class="form-group">
+            <%= f.label :email, t("users.registrations.edit.new_email_label") %>
+            <%= f.email_field :email, class: "form-control", "data-role" => "edit" %>
+          </div>
+          <div class="form-group">
+            <%= f.label :current_password, t("users.registrations.edit.current_password_label") %> <i><%=t "users.registrations.edit.password_explanation" %></i>
+            <%= f.password_field :current_password, autocomplete: "off", class: "form-control", "data-role" => "clear" %>
+          </div>
+          <div>
+            <a href="#" class="btn btn-default" data-action="cancel"><%=t "general.cancel" %></a>
+            <%= f.submit t("general.update"), class: "btn btn-primary" %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+
+    <%= form_for(resource, as: resource_name, url: registration_path(resource_name, format: :json), remote: true, html: { method: :put, "data-for" => "password" }) do |f| %>
+      <%= hidden_field_tag "user[change_password]", "true" %>
+      <div data-part="view">
+        <div class="form-group">
+          <%= f.label t("users.registrations.edit.password_label") %>
+          <div class="input-group">
+            <input class="form-control" disabled="disabled" autocomplete="off" type="password" value="aaaaaaaaaa" name="fake_user[current_password]" id="fake_user_current_password">
+            <span class="input-group-btn">
+              <a href="#" class="btn btn-default" data-action="edit"><%=t "general.edit" %></a>
+            </span>
+          </div>
+        </div>
+      </div>
+      <div data-part="edit" style="display: none;">
+        <div class="well">
+          <h4><%=t "users.registrations.edit.password_title" %></h4>
+          <div class="form-group">
+            <%= f.label :current_password, t("users.registrations.edit.current_password_label") %> <i><%=t "users.registrations.edit.password_explanation" %></i>
+            <%= f.password_field :current_password, autocomplete: "off", class: "form-control", "data-role" => "clear" %>
+          </div>
+
+          <div class="form-group">
+              <%= f.label :password, t("users.registrations.edit.new_password_label") %>
+              <%= f.password_field :password, autocomplete: "off", class: "form-control", "data-role" => "clear" %>
+          </div>
+
+          <div class="form-group">
+            <%= f.label :password_confirmation, t("users.registrations.edit.new_password_2_label") %>
+            <%= f.password_field :password_confirmation, autocomplete: "off", class: "form-control", "data-role" => "clear" %>
+          </div>
+
+          <div>
+            <a href="#" class="btn btn-default" data-action="cancel"><%=t "general.cancel" %></a>
+            <%= f.submit t("general.update"), class: "btn btn-primary"  %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+
+  </div>
+  <div class="col-md-7 col-md-offset-1">
+    <div class="row user-statistics">
+      <div class="col-md-12">
+        <h2><%=t "users.statistics.title" %></h2>
+        <ul class="list-inline">
+          <li class="label label-primary">
+            <h2><%= @user.statistics[:number_of_teams]%></h2>
+            <%= t("users.statistics.team").pluralize(@user.statistics[:number_of_teams]) %>
+          </li>
+          <li class="label label-primary">
+            <h2><%= @user.statistics[:number_of_projects] %></h2>
+            <%= t("users.statistics.project").pluralize(@user.statistics[:number_of_projects]) %>
+          </li>
+          <li class="label label-primary">
+            <h2><%= @user.statistics[:number_of_experiments] %></h2>
+            <%= t("users.statistics.experiment").pluralize(@user.statistics[:number_of_experiments]) %>
+          </li>
+          <li class="label label-primary">
+            <h2><%= @user.statistics[:number_of_protocols] %></h2>
+            <%= t("users.statistics.protocol").pluralize(@user.statistics[:number_of_protocols]) %>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <span style="display: none;" data-hook="profile-statistics"></span>
+  </div>
 </div>
 
 <%= javascript_include_tag("canvas-to-blob.min") %>

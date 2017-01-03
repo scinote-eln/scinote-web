@@ -1,0 +1,20 @@
+<li data-id="<%= sample_group.id %>"
+    data-edit="<%=
+      edit_organization_sample_group_path(organization, sample_group) %>"
+    data-delete="<%=
+      organization_sample_group_destroy_confirmation_path(organization,
+                                                          sample_group) %>"
+    data-color="<%= sample_group.color %>">
+  <span class="sample-type-group-name"><%= sample_group.name %></span>
+  <span class="pull-right sample-group-controls">
+    <span class="color-picker">
+      <%= bootstrap_form_for [organization, sample_group], remote: true do |f| %>
+        <%= f.color_picker_select :color,
+                                  Constants::TAG_COLORS,
+                                  class: 'edit-sample-group-color' %>
+      <% end %>
+    </span>
+    <span class="edit-sample-group glyphicon glyphicon-pencil"></span>
+    <span class="delete glyphicon glyphicon-trash"></span>
+  </span>
+</li>

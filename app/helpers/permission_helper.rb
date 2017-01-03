@@ -662,17 +662,9 @@ module PermissionHelper
     is_normal_user_or_admin_of_organization(organization)
   end
 
-  def can_edit_sample_type_in_organization(organization)
-    is_normal_user_or_admin_of_organization(organization)
-  end
-
   # ---- SAMPLE GROUPS PERMISSIONS ----
 
   def can_create_sample_group_in_organization(organization)
-    is_normal_user_or_admin_of_organization(organization)
-  end
-
-  def can_edit_sample_group_in_organization(organization)
     is_normal_user_or_admin_of_organization(organization)
   end
 
@@ -680,6 +672,16 @@ module PermissionHelper
 
   def can_create_custom_field_in_organization(organization)
     is_normal_user_or_admin_of_organization(organization)
+  end
+
+  def can_edit_custom_field(custom_field)
+    custom_field.user == current_user ||
+      is_admin_of_organization(custom_field.organization)
+  end
+
+  def can_delete_custom_field(custom_field)
+    custom_field.user == current_user ||
+      is_admin_of_organization(custom_field.organization)
   end
 
   # ---- PROTOCOL PERMISSIONS ----

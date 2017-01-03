@@ -61,7 +61,6 @@ function formAjaxResultAsset($form) {
     applyCollapseLinkCallBack();
 
     toggleResultEditButtons(true);
-    initResultCommentTabAjax();
     expandResult($newResult);
     $imgs = $newResult.find("img");
     reloadImages($imgs);

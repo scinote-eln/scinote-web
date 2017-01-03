@@ -1,6 +1,7 @@
 class ProjectsController < ApplicationController
   include SampleActions
   include RenamingUtil
+  include OrganizationsHelper
 
   before_action :load_vars, only: [:show, :edit, :update,
                                    :notifications, :reports,
@@ -14,7 +15,7 @@ class ProjectsController < ApplicationController
   before_action :check_experiment_archive_permissions,
                 only: [:experiment_archive]
 
-  filter_by_archived = false
+  @filter_by_archived = false
 
   # except parameter could be used but it is not working.
   layout :choose_layout
@@ -23,10 +24,22 @@ class ProjectsController < ApplicationController
   DELETE_SAMPLES = I18n.t("samples.delete_samples")
 
   def index
-    @current_organization_id = params[:organization].to_i
-    @current_sort = params[:sort].to_s
-    @projects_by_orgs = current_user.projects_by_orgs(
-      @current_organization_id, @current_sort, @filter_by_archived)
+    if params[:organization]
+      current_organization_switch(Organization
+                                    .find_by_id(params[:organization]))
+    end
+
+    if current_user.organizations.any?
+      @current_organization_id = current_organization.id if current_organization
+
+      @current_organization_id ||= current_user.organizations.first.id
+      @current_sort = params[:sort].to_s
+      @projects_by_orgs = current_user
+                          .projects_by_orgs(@current_organization_id,
+                                            @current_sort,
+                                            @filter_by_archived)
+    end
+
     @organizations = current_user.organizations
 
     # New project for create new project modal
@@ -40,14 +53,14 @@ class ProjectsController < ApplicationController
 
   def new
     @project = Project.new
-    @organizations = current_user.organizations
   end
 
   def create
     @project = Project.new(project_params)
-    @project.created_by =  current_user
+    @project.created_by = current_user
     @project.last_modified_by = current_user
-    if @project.save
+    if current_organization.id == project_params[:organization_id].to_i &&
+       @project.save
       # Create user-project association
       up = UserProject.new(
         role: :owner,
@@ -237,6 +250,8 @@ class ProjectsController < ApplicationController
 
   def show
     # This is the "info" view
+    current_organization_switch(@project.organization)
+    @current_sort = params[:sort].to_s
   end
 
   def notifications
@@ -261,16 +276,22 @@ class ProjectsController < ApplicationController
   end
 
   def experiment_archive
+    current_organization_switch(@project.organization)
   end
 
   def samples_index
     @organization = @project.organization
-
+    @user = current_user
     respond_to do |format|
       format.html
-      format.json {
-        render json: ::SampleDatatable.new(view_context, @organization, @project, nil)
-      }
+      format.json do
+        render json: ::SampleDatatable.new(view_context,
+                                           @organization,
+                                           @project,
+                                           nil,
+                                           nil,
+                                           @user)
+      end
     end
   end
 

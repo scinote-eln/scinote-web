@@ -1,5 +1,5 @@
-<% if markdown.present? %>
-  <%= markdown.render(result.result_text.text).html_safe %>
-<% else %>
-  <%= result.result_text.text %>
-<% end %>
+<div class="ql-editor">
+  <%= auto_link(result.result_text.text,
+                link: :urls,
+                html: { target: '_blank' }).html_safe %>
+</div>

@@ -1,4 +1,4 @@
-<div class="modal-dialog" role="document">
+<div class="modal-dialog modal-lg" role="document">
   <div class="modal-content">
     <div class="modal-header">
       <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -8,17 +8,23 @@
     <div class="modal-body">
       <h4><%= t("organizations.parse_sheet.help_text") %></h4>
       <div style="overflow-x: scroll">
-        <table class="table">
+        <table class="table" style="display: block">
           <thead>
             <th style="min-width: 100px">
               <p><%= t("organizations.parse_sheet.scinote_columns_html") %></p>
               <p style="margin-bottom: 0px"><%= t("organizations.parse_sheet.file_columns") %></p>
             </th>
             <% @header.each.with_index do |th, index| %>
-              <th style="min-width: 150px">
+              <th style="min-width: 150px" title="<%= th %>">
                 <%= f.select("mappings[#{index.to_s}]", options_from_collection_for_select(@available_fields, :first, :last), include_blank: t("organizations.parse_sheet.do_not_include_column"), hide_label: true) %>
                 <br />
-                <%= th %>
+                <% if th.length > Constants::NAME_TRUNCATION_LENGTH_DROPDOWN %>
+                  <div class="modal-tooltip">
+                    <%= truncate(th, length: Constants::NAME_TRUNCATION_LENGTH_DROPDOWN) %>
+                  </div>
+                <% else %>
+                  <%= th %>
+                <% end %>
               </th>
             <% end %>
           </thead>

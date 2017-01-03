@@ -1,0 +1,462 @@
+// Place all the behaviors and hooks related to the matching controller here.
+// All this logic will automatically be available in application.js.
+
+// TODO
+// - error handling of assigning user to project, check XHR data.errors
+// - error handling of removing user from project, check XHR data.errors
+// - refresh project users tab after manage user modal is closed
+// - refactor view handling using library, ex. backbone.js
+
+//= require comments
+(function () {
+
+  var newProjectModal = null;
+  var newProjectModalForm = null;
+  var newProjectModalBody = null;
+  var newProjectBtn = null;
+
+  var editProjectModal = null;
+  var editProjectModalTitle = null;
+  var editProjectModalBody = null;
+  var editProjectBtn = null;
+
+  var manageUsersModal = null;
+  var manageUsersModalBody = null;
+  var manageUsersModalFooter = null;
+
+  /**
+   * Stupid Bootstrap btn-group bug hotfix
+   * @param btnGroup - The button group element.
+   */
+  function activateBtnGroup(btnGroup) {
+    var btns = btnGroup.find(".btn");
+    btns.find("input[type='radio']")
+    .removeAttr("checked")
+    .prop("checked", false);
+    btns.filter(".active")
+    .find("input[type='radio']")
+    .attr("checked", "checked")
+    .prop("checked", true);
+  }
+
+  /**
+   * Initializes page
+   */
+  function init() {
+    newProjectModal = $('#new-project-modal');
+    newProjectModalForm = newProjectModal.find('form');
+    newProjectModalBody = newProjectModal.find('.modal-body');
+    newProjectBtn = $('#new-project-btn');
+
+    editProjectModal = $('#edit-project-modal');
+    editProjectModalTitle = editProjectModal.find('#edit-project-modal-label');
+    editProjectModalBody = editProjectModal.find('.modal-body');
+    editProjectBtn = editProjectModal.find(".btn[data-action='submit']");
+
+    manageUsersModal = $('#manage-users-modal');
+    manageUsersModalBody = manageUsersModal.find('.modal-body');
+    manageUsersModalFooter = manageUsersModal.find('.modal-footer');
+
+    initNewProjectModal();
+    initEditProjectModal();
+    initManageUsersModal();
+    Comments.initCommentOptions('ul.content-comments', true);
+    Comments.initEditComments('.panel-project .tab-content');
+    Comments.initDeleteComments('.panel-project .tab-content');
+
+    // initialize project tab remote loading
+    $('.panel-project .panel-footer [role=tab]')
+
+      .on('ajax:before', function(e) {
+        var $this = $(this);
+        var parentNode = $this.parents('li');
+        var targetId = $this.attr('aria-controls');
+
+        if (parentNode.hasClass('active')) {
+          // TODO move to fn
+          parentNode.removeClass('active');
+          $('#' + targetId).removeClass('active');
+          return false;
+        }
+      })
+
+      .on('ajax:success', function(e, data, status, xhr) {
+        var $this = $(this);
+        var targetId = $this.attr('aria-controls');
+        var target = $('#' + targetId);
+        var parentNode = $this.parents('ul').parent();
+
+        target.html(data.html);
+        initUsersEditLink(parentNode);
+        Comments.form(parentNode);
+        Comments.moreComments(parentNode);
+
+        // TODO move to fn
+        parentNode.find('.active').removeClass('active');
+        $this.parents('li').addClass('active');
+        target.addClass('active');
+
+        Comments.scrollBottom(parentNode);
+      })
+
+      .on('ajax:error', function() {
+        // TODO
+      });
+
+    initTutorial();
+  }
+
+  /**
+   * Initialize the JS for new project modal to work.
+   */
+  function initNewProjectModal() {
+    newProjectModalForm.submit(function() {
+      // Stupid Bootstrap btn-group bug hotfix
+      activateBtnGroup(
+        newProjectModal
+        .find("form .btn-group[data-toggle='buttons']")
+      );
+    });
+    newProjectModal.on("hidden.bs.modal", function () {
+      // When closing the new project modal, clear its input vals
+      // and potential errors
+      newProjectModalForm.clearFormErrors();
+
+      // Clear input fields
+      newProjectModalForm.clearFormFields();
+      var orgSelect = newProjectModalForm.find('select#project_organization_id');
+      orgSelect.val(0);
+      orgSelect.selectpicker('refresh');
+
+      var orgHidden = newProjectModalForm.find('input#project_visibility_hidden');
+      var orgVisible = newProjectModalForm.find('input#project_visibility_visible');
+      orgHidden.prop("checked", true);
+      orgHidden.attr("checked", "checked");
+      orgHidden.parent().addClass("active");
+      orgVisible.prop("checked", false);
+      orgVisible.parent().removeClass("active");
+    })
+    .on("show.bs.modal", function() {
+      var orgSelect = newProjectModalForm.find('select#project_organization_id');
+      orgSelect.selectpicker('refresh');
+    });
+
+    newProjectModalForm
+    .on("ajax:beforeSend", function(){
+      animateSpinner(newProjectModalBody);
+    })
+    .on("ajax:success", function(data, status, jqxhr) {
+      // Redirect to response page
+      $(location).attr("href", status.url);
+    })
+    .on("ajax:error", function(jqxhr, status, error) {
+      $(this).renderFormErrors("project", status.responseJSON);
+    })
+    .on("ajax:complete", function(){
+      animateSpinner(newProjectModalBody, false);
+    });
+
+    newProjectBtn.click(function(e) {
+      // Show the modal
+      newProjectModal.modal("show");
+      return false;
+    });
+  }
+
+  /**
+   * Initialize the JS for edit project modal to work.
+   */
+  function initEditProjectModal() {
+    // Edit button click handler
+    editProjectBtn.click(function() {
+      // Stupid Bootstrap btn-group bug hotfix
+      activateBtnGroup(
+        editProjectModalBody
+        .find("form .btn-group[data-toggle='buttons']")
+      );
+
+      // Submit the modal body's form
+      editProjectModalBody.find("form").submit();
+    });
+
+    // On hide modal handler
+    editProjectModal.on("hidden.bs.modal", function() {
+      editProjectModalBody.html("");
+    });
+
+    $(".panel-project a[data-action='edit']")
+    .on("ajax:success", function(ev, data, status) {
+      // Update modal title
+      editProjectModalTitle.html(data.title);
+
+      // Set modal body
+      editProjectModalBody.html(data.html);
+
+      // Add modal body's submit handler
+      editProjectModal.find("form")
+      .on("ajax:beforeSend", function(){
+        animateSpinner(this);
+      })
+      .on("ajax:success", function(ev2, data2, status2) {
+        // Project saved, replace changed project's title
+        var responseHtml = $(data2.html);
+        var id = responseHtml.attr("data-id");
+        var newTitle = responseHtml.find(".panel-title");
+        var existingTitle =
+          $(".panel-project[data-id='" + id + "'] .panel-title");
+
+        existingTitle.after(newTitle);
+        existingTitle.remove();
+
+        // Hide modal
+        editProjectModal.modal("hide");
+      })
+      .on("ajax:error", function(ev2, data2, status2) {
+        $(this).renderFormErrors("project", data2.responseJSON);
+      })
+      .on("ajax:complete", function(){
+        animateSpinner(this, false);
+      });
+
+      // Show the modal
+      editProjectModal.modal("show");
+    })
+    .on("ajax:error", function(ev, data, status) {
+      // TODO
+    });
+  }
+
+  function initManageUsersModal() {
+    // Reload users tab HTML element when modal is closed
+    manageUsersModal.on("hide.bs.modal", function () {
+      var projectEl = $("#" + $(this).attr("data-project-id"));
+
+      // Load HTML to refresh users list
+      $.ajax({
+        url: projectEl.attr("data-project-users-tab-url"),
+        type: "GET",
+        dataType: "json",
+        success: function (data) {
+          projectEl.find("#users-" + projectEl.attr("id")).html(data.html);
+          initUsersEditLink(projectEl);
+        },
+        error: function (data) {
+          // TODO
+        }
+      });
+    });
+
+    // Remove modal content when modal window is closed.
+    manageUsersModal.on("hidden.bs.modal", function () {
+      manageUsersModalBody.html("");
+      manageUsersModalFooter.html("");
+    });
+  }
+
+  // Initialize users editing modal remote loading.
+  function initUsersEditLink($el) {
+
+     $el.find(".manage-users-link")
+
+       .on("ajax:before", function () {
+        var projectId = $(this).closest(".panel-default").attr("id");
+          manageUsersModal.attr("data-project-id", projectId);
+          manageUsersModal.modal('show');
+       })
+
+       .on("ajax:success", function (e, data) {
+         $("#manage-users-modal-project").text(data.project.name);
+         initUsersModalBody(data);
+       });
+  }
+
+  // Initialize reloading manage user modal content after posting new
+  // user.
+
+  function initAddUserForm() {
+
+    manageUsersModalBody.find(".add-user-form")
+
+      .on("ajax:success", function (e, data) {
+        initUsersModalBody(data);
+        if (data.status === 'error') {
+          $(this).addClass("has-error");
+          var errorBlock = $(this).find("span.help-block");
+          if (errorBlock .length && errorBlock.length > 0) {
+            errorBlock.html(data.error);
+          } else {
+            $(this).append("<span class='help-block col-xs-8'>" + data.error + "</span>");
+          }
+        }
+      });
+  }
+
+  // Initialize remove user from project links.
+  function initRemoveUserLinks() {
+
+    manageUsersModalBody.find(".remove-user-link")
+
+      .on("ajax:success", function (e, data) {
+        initUsersModalBody(data);
+      });
+  }
+
+  //
+  function initUserRoleForms() {
+
+    manageUsersModalBody.find(".update-user-form select")
+
+      .on("change", function () {
+        $(this).parents("form").submit();
+      });
+
+    manageUsersModalBody.find(".update-user-form")
+
+      .on("ajax:success", function (e, data) {
+        initUsersModalBody(data);
+      })
+
+      .on("ajax:error", function (e, xhr, status, error) {
+        // TODO
+      });
+  }
+
+  // Initialize ajax listeners and elements style on modal body. This
+  // function must be called when modal body is changed.
+  function initUsersModalBody(data) {
+    manageUsersModalBody.html(data.html_body);
+    manageUsersModalFooter.html(data.html_footer);
+    manageUsersModalBody.find(".selectpicker").selectpicker();
+    initAddUserForm();
+    initRemoveUserLinks();
+    initUserRoleForms();
+  }
+
+  /**
+   * Initializes tutorial
+   */
+  function initTutorial() {
+    var tutorialData = Cookies.get('tutorial_data');
+    if (tutorialData) {
+      tutorialData = JSON.parse(tutorialData);
+      var stepNum = parseInt(Cookies.get('current_tutorial_step'), 10);
+      if (isNaN(stepNum)) {
+        // Cookies data initialization
+        stepNum = 1;
+        Cookies.set('current_tutorial_step', stepNum);
+        tutorialData[0].backPagesPaths = [];
+        Cookies.set('tutorial_data', tutorialData);
+      }
+      var demoProjectId = tutorialData[0].project;
+      var demoProject = $('#' + demoProjectId);
+
+      if (stepNum >= 1 && stepNum <= 3) {
+        var thirdStepPos = (demoProject.offset().top > window.innerHeight / 2) ?
+         'top' : 'bottom';
+
+        var nextPage = $('#' + demoProjectId + '-project-canvas-link')
+                        .attr('href');
+        var steps = [{
+          element: $('#projects-toolbar')[0],
+          intro: I18n.t('tutorial.tutorial_welcome_title_html'),
+          position: 'bottom'
+        }, {
+          element: $('#new-project-btn')[0],
+          intro: I18n.t('tutorial.create_project_html'),
+          position: 'left'
+        }, {
+          element: demoProject[0],
+          intro: I18n.t('tutorial.project_options_html'),
+          position: thirdStepPos
+        }];
+        initPageTutorialSteps(1, 3, nextPage, tutorialBeforeCb,
+         tutorialAfterCb, steps);
+      } else if (stepNum === 22) {
+        var protocolLink = $('#protocol-link');
+
+        var nextPage = protocolLink.attr('href');
+        var steps = [{
+          element: protocolLink[0],
+          intro: I18n.t('tutorial.protocols_link_html'),
+          position: 'left'
+        }];
+        initPageTutorialSteps(22, 22, nextPage, function() {}, function() {},
+         steps);
+      } else if (stepNum >= 25 && stepNum <= 26) {
+        var firstStepPos = 'right';
+        if (demoProject.offset().left > window.innerWidth / 2 ||
+            window.innerWidth < demoProject.width() + 100) {
+          if (demoProject.offset().top > 500 && demoProject.offset().top >
+              window.innerHeight / 2) {
+            firstStepPos = 'top';
+          } else {
+            firstStepPos = 'bottom';
+          }
+        }
+
+        var nextPage = $('#new-report-btn').attr('href');
+        var steps = [{
+          element: demoProject[0],
+          intro: I18n.t('tutorial.archive_project_html'),
+          position: firstStepPos
+        }, {
+          element: $('.avatar')[0],
+          intro: I18n.t('tutorial.goodbye_message'),
+          position: 'left'
+        }];
+        initPageTutorialSteps(25, 26, nextPage, function() {}, function() {},
+         steps);
+      }
+    }
+  }
+
+  /**
+   * Callback to be executed before tutorial starts
+   */
+  function tutorialBeforeCb() {
+    $.each($('.panel'), function(i, el){
+      $(el)
+      .find('.panel-title')
+      .css({ 'pointer-events': 'none' });
+      $(el)
+      .find('.tab-content')
+      .css({ 'pointer-events': 'none' });
+      $(el)
+      .find('.form-submit-link')
+      .css({
+        'pointer-events': 'none',
+        'color': '<%= Constants::COLOR_ALTO %>'});
+      $(el)
+      .find("[data-action='edit']")
+      .css({
+        'pointer-events': 'none',
+        'color': '<%= Constants::COLOR_ALTO %>'});
+    });
+  }
+
+  /**
+   * Callback to be executed after tutorial exits
+   */
+  function tutorialAfterCb() {
+    $.each($('.panel'), function(i, el){
+      $(el)
+      .find('.tab-content')
+      .css({ 'pointer-events': 'auto' });
+      $(el)
+      .find('.panel-title')
+      .css({ 'pointer-events': 'auto' });
+      $(el)
+      .find('.form-submit-link')
+      .css({
+        'pointer-events': 'auto',
+        'color': '<%= Constants::COLOR_NERO %>'});
+      $(el)
+      .find("[data-action='edit']")
+      .css({
+        'pointer-events': 'auto',
+        'color': '<%= Constants::COLOR_NERO %>'});
+    });
+  }
+
+  init();
+}());

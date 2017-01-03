@@ -9,22 +9,20 @@ class Asset < ActiveRecord::Base
   LOCK_DURATION = 60*30
 
   # Paperclip validation
-  has_attached_file :file, {
-    styles: {
-      medium: '300x300>'
-    }
-  }
+  has_attached_file :file, styles: { medium: Constants::MEDIUM_PIC_FORMAT }
 
   validates_attachment :file,
                        presence: true,
-                       size: { less_than: FILE_MAX_SIZE.megabytes }
+                       size: {
+                         less_than: Constants::FILE_MAX_SIZE_MB.megabytes
+                       }
   validates :estimated_size, presence: true
   validates :file_present, inclusion: { in: [true, false] }
 
   # Should be checked for any security leaks
   do_not_validate_attachment_file_type :file
 
-  before_file_post_process :allow_styles_on_images
+  before_file_post_process :is_image?
 
   # Asset validation
   # This could cause some problems if you create empty asset and want to
@@ -78,14 +76,14 @@ class Asset < ActiveRecord::Base
   )
     step_ids =
       Step
-      .search(user, include_archived, nil, SHOW_ALL_RESULTS)
+      .search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
       .joins(:step_assets)
       .select("step_assets.id")
       .distinct
 
     result_ids =
       Result
-      .search(user, include_archived, nil, SHOW_ALL_RESULTS)
+      .search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
       .joins(:result_asset)
       .select("result_assets.id")
       .distinct
@@ -128,10 +126,10 @@ class Asset < ActiveRecord::Base
       )
 
     # Show all results if needed
-    if page != SHOW_ALL_RESULTS
+    if page != Constants::SEARCH_NO_LIMIT
       ids = ids
-        .limit(SEARCH_LIMIT)
-        .offset((page - 1) * SEARCH_LIMIT)
+            .limit(Constants::SEARCH_LIMIT)
+            .offset((page - 1) * Constants::SEARCH_LIMIT)
     end
 
     Asset
@@ -143,11 +141,14 @@ class Asset < ActiveRecord::Base
   end
 
   def is_image?
-    !(self.file.content_type =~ /^image/).nil?
+    %r{^image/#{Regexp.union(Constants::WHITELISTED_IMAGE_TYPES)}} ===
+      file.content_type
   end
 
   def text?
-    TEXT_EXTRACT_FILE_TYPES.any? { |v| file_content_type.start_with? v }
+    Constants::TEXT_EXTRACT_FILE_TYPES.any? do |v|
+      file_content_type.start_with? v
+    end
   end
 
   # TODO: get the current_user
@@ -242,7 +243,7 @@ class Asset < ActiveRecord::Base
       es += get_octet_length_record(asset_text_datum, :data)
       es += get_octet_length_record(asset_text_datum, :data_vector)
     end
-    es = es * ASSET_ESTIMATED_SIZE_FACTOR
+    es *= Constants::ASSET_ESTIMATED_SIZE_FACTOR
     update(estimated_size: es)
     Rails.logger.info "Asset #{id}: Estimated size successfully calculated"
 
@@ -253,7 +254,7 @@ class Asset < ActiveRecord::Base
     end
   end
 
-  def url(style = :original, timeout: 30)
+  def url(style = :original, timeout: Constants::URL_SHORT_EXPIRE_TIME)
     if file.is_stored_on_s3?
       presigned_url(style, timeout: timeout)
     else
@@ -262,7 +263,9 @@ class Asset < ActiveRecord::Base
   end
 
   # When using S3 file upload, we can limit file accessibility with url signing
-  def presigned_url(style = :original, download: false, timeout: 30)
+  def presigned_url(style = :original,
+                    download: false,
+                    timeout: Constants::URL_SHORT_EXPIRE_TIME)
     if file.is_stored_on_s3?
       if download
         download_arg = 'attachment; filename=' + URI.escape(file_file_name)
@@ -302,18 +305,19 @@ class Asset < ActiveRecord::Base
   end
 
   def can_perform_action(action)
-  	if (ENV['WOPI_ENABLED'] == "true") 
-    	file_ext = file_file_name.split('.').last
+    if ENV['WOPI_ENABLED'] == 'true'
+      file_ext = file_file_name.split('.').last
 
-    	if (file_ext=="wopitest" && (!ENV['WOPI_TEST_ENABLED'] || ENV['WOPI_TEST_ENABLED'] == "false"))
-    		return false
-    	end
-    	action = get_action(file_ext, action)
-    	return false if action.nil?
-    	true	
-	else
-	 false
-	end 
+      if file_ext == 'wopitest' &&
+         (!ENV['WOPI_TEST_ENABLED'] || ENV['WOPI_TEST_ENABLED'] == 'false')
+        return false
+      end
+      action = get_action(file_ext, action)
+      return false if action.nil?
+      true
+    else
+      false
+    end
   end
 
   def get_action_url(user, action, with_tokens = true)

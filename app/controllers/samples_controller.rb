@@ -1,9 +1,9 @@
 class SamplesController < ApplicationController
-  before_action :load_vars, only: [:edit, :update, :destroy]
+  before_action :load_vars, only: [:edit, :update, :destroy, :show]
   before_action :load_vars_nested, only: [:new, :create]
 
-  before_action :check_edit_permissions, only: [:edit]
-  before_action :check_destroy_permissions, only: [:destroy]
+  before_action :check_edit_permissions, only: :edit
+  before_action :check_destroy_permissions, only: :destroy
 
   def new
     respond_to do |format|
@@ -96,6 +96,18 @@ class SamplesController < ApplicationController
         end
       else
         format.json { render json: {}, status: :unauthorized }
+      end
+    end
+  end
+
+  def show
+    respond_to do |format|
+      format.json do
+        render json: {
+          html: render_to_string(
+            partial: 'info_sample_modal.html.erb'
+          )
+        }
       end
     end
   end
@@ -267,7 +279,7 @@ class SamplesController < ApplicationController
 
   def load_vars
     @sample = Sample.find_by_id(params[:id])
-    @organization = @sample.organization
+    @organization = current_organization
 
     unless @sample
       render_404

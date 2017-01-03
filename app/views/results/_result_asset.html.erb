@@ -4,10 +4,12 @@
     <% if wopi_file?(result.asset) %>
       <p style='display: inline-block'>
         <%= file_extension_icon(result.asset) %>
-        <%= truncate(result.asset.file_file_name, length: 50) %>
+        <%= truncate(result.asset.file_file_name,
+                     length: Constants::FILENAME_TRUNCATION_LENGTH) %>
       </p>
     <% else %>
-      <p><%= truncate(result.asset.file_file_name, length: 50) %></p>
+      <p><%= truncate(result.asset.file_file_name,
+                      length: Constants::FILENAME_TRUNCATION_LENGTH) %></p>
     <% end %>
   <% end %>
   <% if result.asset.can_perform_action('view') %>

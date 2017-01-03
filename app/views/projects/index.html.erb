@@ -53,13 +53,7 @@
   </div>
 </div>
 
-<div id="projects-toolbar" data-step="1"
-  data-intro="<%=t 'tutorial.tutorial_welcome_title_html' %>"
-  data-position='bottom'
-  data-project-options-step-text="<%=t 'tutorial.project_options_html' %>"
-  data-archive-project-step-text="<%=t 'tutorial.archive_project_html' %>"
-  data-goodbye-tutorial="<%=t 'tutorial.goodbye_message' %>"
-  >
+<div id="projects-toolbar">
 
   <form class="form-inline" action="<%= projects_path %>">
 
@@ -71,32 +65,11 @@
 
       <!-- new project button -->
       <% if @organizations.length > 0 %>
-        <a class="btn btn-primary pull-right" id="new-project-btn" data-step="2" data-intro="<%=t 'tutorial.create_project_html' %>" data-position='left' disableInteraction="false">
+        <a class="btn btn-primary pull-right" id="new-project-btn">
           <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
           <span class="hidden-xs"><%=t "projects.index.new" %></span>
         </a>
       <% end %>
-
-      <!-- organization filter -->
-      <div class="dropdown">
-        <button class="btn btn-default dropdown-toggle" type="button" id="organizationMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-          <span class="hidden-xs"><%= t('projects.index.organization_filter') %></span>
-          <span class="visible-xs-inline"><i class="glyphicon glyphicon-folder-open"></i></span>
-          <span class="caret"></span>
-        </button>
-        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-        <% if @current_organization_id > 1 %>
-          <li><a href="?<%= {sort: @current_sort}.reject{|k,v| v.blank?}.to_query %>"><%= t'projects.index.all_filter' %></a></li>
-        <% end %>
-        <% @organizations.each do |org| %>
-          <% if org.id == @current_organization_id %>
-          <li class="disabled"><a href="#"><%= org.name %></a></li>
-          <% else %>
-          <li><a href="?<%= {organization: org.id, sort: @current_sort}.reject{|k,v| v.blank?}.to_query %>"><%= org.name %></a></li>
-          <% end %>
-        <% end %>
-        </ul>
-      </div>
 
       <!-- project sort -->
       <div class="dropdown">
@@ -130,15 +103,12 @@
     <%= link_to t("projects.index.no_orgs.btn"), organizations_path, class: "btn btn-primary" %>
   </p>
 </div>
-<% end %>
-
-<% if current_user.confirmed_at < Time.new(2016, 8, 31) %>
-  <%= render partial: 'projects/index/introductory_popup' %>
-  <%= javascript_include_tag "projects/introdutory_popup"%>
-<% end %>
-<% if @projects_by_orgs.length > 0 %>
+<% else %>
+  <h2 class="page-header"><%= current_organization.name %></h2>
   <% @projects_by_orgs.each do |org, projects| %>
-    <%= render partial: "projects/index/org_projects", locals: {org: org, projects: projects} %>
+    <%= render partial: "projects/index/org_projects",
+               locals: {org: org, projects: projects} %>
   <% end %>
+
 <% end %>
 <%= javascript_include_tag "projects/index", "data-turbolinks-track" => true %>

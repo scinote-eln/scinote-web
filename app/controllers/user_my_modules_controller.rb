@@ -1,21 +1,21 @@
 class UserMyModulesController < ApplicationController
   before_action :load_vars
-  before_action :check_view_permissions, only: [ :index ]
-  before_action :check_edit_permissions, only: [ :index_edit ]
-  before_action :check_create_permissions, only: [:new, :create]
-  before_action :check_delete_permisisons, only: [:destroy]
+  before_action :check_view_permissions, only: :index
+  before_action :check_edit_permissions, only: :index_edit
+  before_action :check_create_permissions, only: :create
+  before_action :check_delete_permisisons, only: :destroy
 
   def index
     @user_my_modules = @my_module.user_my_modules
 
     respond_to do |format|
-      format.json {
-        render :json => {
-          :html => render_to_string({
-            :partial => "index.html.erb"
-            })
+      format.json do
+        render json: {
+          html: render_to_string(
+            partial: 'index.html.erb'
+          )
         }
-      }
+      end
     end
   end
 
@@ -36,23 +36,10 @@ class UserMyModulesController < ApplicationController
     end
   end
 
-  def new
-    @um = UserMyModule.new(
-      my_module: @my_module
-    )
-    init_gui
-    session[:return_to] ||= request.referer
-  end
-
   def create
     @um = UserMyModule.new(um_params.merge(my_module: @my_module))
     @um.assigned_by = current_user
     if @um.save
-      flash_success = t(
-        "user_my_modules.create.success_flash",
-        user: @um.user.full_name,
-        module: @um.my_module.name)
-
       # Create activity
       message = t(
         "activities.assign_user_to_module",
@@ -68,25 +55,12 @@ class UserMyModulesController < ApplicationController
         type_of: :assign_user_to_module
       )
       respond_to do |format|
-        format.html {
-          flash[:success] = flash_success
-          redirect_to session.delete(:return_to)
-        }
         format.json {
           redirect_to :action => :index_edit, :format => :json
         }
       end
     else
-      flash_error = t("user_my_modules.create.error_flash",
-        user: @um.user.full_name,
-        module: @um.my_module.name)
-
       respond_to do |format|
-        format.html {
-          flash[:error] = flash_error
-          init_gui
-          render :new
-        }
         format.json {
           render :json => {
             :errors => [
@@ -98,14 +72,7 @@ class UserMyModulesController < ApplicationController
   end
 
   def destroy
-    session[:return_to] ||= request.referer
-
     if @um.destroy
-      flash_success = t(
-        "user_my_modules.destroy.success_flash",
-        user: @um.user.full_name,
-        module: @um.my_module.name)
-
       # Create activity
       message = t(
         "activities.unassign_user_from_module",
@@ -123,25 +90,12 @@ class UserMyModulesController < ApplicationController
       )
 
       respond_to do |format|
-        format.html {
-          flash[:success] = flash_success
-          redirect_to session.delete(:return_to), :status => 303
-        }
         format.json {
           redirect_to my_module_users_edit_path(format: :json), :status => 303
         }
       end
     else
-      flash_error = t("user_my_modules.destroy.error_flash",
-        user: @um.user.full_name,
-        module: @um.my_module.name)
-
       respond_to do |format|
-        format.html {
-          flash[:error] = flash_error
-          init_gui
-          render :new
-        }
         format.json {
           render :json => {
             :errors => [

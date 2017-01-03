@@ -8,6 +8,21 @@ var protocolsTableEl = null;
 var protocolsDatatable = null;
 var repositoryType;
 
+/**
+ * Initializes page
+ */
+function init() {
+  updateButtons();
+  initProtocolsTable();
+  initRowSelection();
+  initKeywordFiltering();
+  initLinkedChildrenModal();
+  initCreateNewModal();
+  initModals();
+  initImport();
+  initTutorial();
+}
+
 // Initialize protocols DataTable
 function initProtocolsTable() {
   protocolsTableEl = $("#protocols-table");
@@ -642,6 +657,7 @@ function initImport() {
             }
           );
           modalBody.append(failedMessageEl);
+          animateSpinner(null, false);
         }
         if (nrSuccessful > 0) {
           var successMessageEl = newElement(
@@ -698,12 +714,15 @@ function initImport() {
   });
 }
 
-// Initialize everything
-updateButtons();
-initProtocolsTable();
-initRowSelection();
-initKeywordFiltering();
-initLinkedChildrenModal();
-initCreateNewModal();
-initModals();
-initImport();
+/**
+ * Initializes tutorial
+ */
+function initTutorial() {
+  var stepNum = parseInt(Cookies.get('current_tutorial_step'), 10);
+  if (stepNum >= 23 && stepNum <= 24) {
+    var nextPage = $('.navbar-brand').attr('href');
+    initPageTutorialSteps(23, 24, nextPage, function() {}, function() {});
+  }
+}
+
+init();

@@ -6,7 +6,20 @@
   <% else %>
     <% @activities.each do |activity| %>
       <li><span class="text-muted"><%= l activity.created_at, format: :full %></span>
-        <br><span><%= activity_truncate( activity.message, 30 ) %></span>
+        <br>
+        <span>
+          <%= activity_truncate(activity.message) %>
+          <% if activity.my_module %>
+            [<%=t 'Module' %>:
+            <% if activity.my_module.name.length >
+                   Constants::NAME_TRUNCATION_LENGTH %>
+              <%= truncate(activity.my_module.name,
+                lenght: Constants::NAME_TRUNCATION_LENGTH) %>
+            <% else %>
+              <%= activity.my_module.name %>
+            <% end %>]
+          <% end %>
+        </span>
       </li>
     <% end %>
   <% end %>

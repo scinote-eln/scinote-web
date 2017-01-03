@@ -1,5 +1,6 @@
 class Users::SettingsController < ApplicationController
   include UsersGenerator
+  include NotificationsHelper
 
   before_action :load_user, only: [
     :preferences,
@@ -9,7 +10,10 @@ class Users::SettingsController < ApplicationController
     :create_organization,
     :organization_users_datatable,
     :tutorial,
-    :reset_tutorial
+    :reset_tutorial,
+    :notifications_settings,
+    :user_current_organization,
+    :destroy_user_organization
   ]
 
   before_action :check_organization_permission, only: [
@@ -18,13 +22,7 @@ class Users::SettingsController < ApplicationController
     :destroy_organization,
     :organization_name,
     :organization_description,
-    :search_organization_users,
-    :organization_users_datatable,
-    :create_user_and_user_organization
-  ]
-
-  before_action :check_create_user_organization_permission, only: [
-    :create_user_organization
+    :organization_users_datatable
   ]
 
   before_action :check_user_organization_permission, only: [
@@ -115,50 +113,6 @@ class Users::SettingsController < ApplicationController
     end
   end
 
-  def search_organization_users
-    respond_to do |format|
-      format.json {
-        if params.include? :existing_query and
-          (query = params[:existing_query].strip()).present?
-          if query.length < 3
-            render json: {
-              "existing_query": [
-                I18n.t("users.settings.organizations.edit.modal_add_user.existing_query_too_short")
-              ]},
-              status: :unprocessable_entity
-          else
-            # Okay, query exists and is non-blank, find users
-            nr_of_results = User.search(true, query, @org).count
-
-
-            users = User.search(false, query, @org).limit(5)
-
-            nr_of_members = User.organization_search(false, query, @org).count
-
-            render json: {
-              html: render_to_string({
-                partial: "users/settings/organizations/existing_users_search_results.html.erb",
-                locals: {
-                  users: users,
-                  nr_of_results: nr_of_results,
-                  nr_of_members: nr_of_members,
-                  org: @org,
-                  query: query
-                }
-              })
-            }
-          end
-        else
-          render json: {
-            "existing_query": [
-              I18n.t("users.settings.organizations.edit.modal_add_user.existing_query_blank")
-            ]},
-            status: :unprocessable_entity
-        end
-      }
-    end
-  end
-
   def organization_users_datatable
     respond_to do |format|
       format.json {
@@ -201,96 +155,6 @@ class Users::SettingsController < ApplicationController
 
     # Redirect back to all organizations page
     redirect_to action: :organizations
-  end
-
-  def create_user_organization
-    @new_user_org = UserOrganization.new(create_user_organization_params)
-
-    # Check if such association doesn't exist already
-    if !UserOrganization.where(
-      user: @new_user_org.user,
-      organization: @new_user_org.organization
-      ).exists? && @new_user_org.save
-      AppMailer.delay.invitation_to_organization(@new_user_org.user, @user_organization.user, @new_user_org.organization)
-      flash[:notice] = I18n.t(
-        "users.settings.organizations.edit.modal_add_user.existing_flash_success",
-        user: @new_user_org.user.full_name,
-        role: @new_user_org.role_str
-      )
-    else
-      flash[:alert] =
-        I18n.t("users.settings.organizations.edit.modal_add_user.existing_flash_error")
-    end
-
-    # Either way, redirect back to organization page
-    redirect_to action: :organization,
-      organization_id: @new_user_org.organization_id
-  end
-
-  def create_user_and_user_organization
-    respond_to do |format|
-      # User & organization
-      # parameters are already taken care of,
-      # so only role needs to be verified
-      if !params.include? :role or
-        !UserOrganization.roles.keys.include? params[:role]
-        format.json {
-          render json: "Invalid role provided",
-          status: :unprocessable_entity
-        }
-      else
-        password = generate_user_password
-        user_params = create_user_params
-        full_name = user_params[:full_name]
-        email = user_params[:email]
-
-        # Validate the user data
-        errors = validate_user(full_name, email, password)
-
-        if errors.count == 0
-          @user = User.invite!(
-            full_name: full_name,
-            email: email,
-            initials: full_name.split(" ").map{|w| w[0].upcase}.join[0..3],
-            skip_invitation: true
-          )
-
-          # Sending email invitation is done in background job to prevent
-          # issues with email delivery. Also invite method must be call
-          # with :skip_invitation attribute set to true - see above.
-          @user.delay.deliver_invitation
-
-          # Also generate user organization relation
-          @user_org = UserOrganization.new(
-            user: @user,
-            organization: @org,
-            role: params[:role]
-          )
-          @user_org.save
-
-          # Flash message
-          flash[:notice] = t(
-            "users.settings.organizations.edit.modal_add_user.new_flash_success",
-            user: @user.full_name,
-            role: @user_org.role_str,
-            email: @user.email
-          )
-          flash.keep
-
-          # Return success!
-          format.json {
-            render json: {
-              status: :ok
-            }
-          }
-        else
-          format.json {
-            render json: errors,
-            status: :unprocessable_entity
-          }
-        end
-      end
-    end
   end
 
   def update_user_organization
@@ -378,7 +242,7 @@ class Users::SettingsController < ApplicationController
                 # the user from the organization)
                 new_owner = current_user
               end
-
+              reset_user_current_organization(@user_org)
               @user_org.destroy(new_owner)
             end
           rescue Exception
@@ -394,7 +258,11 @@ class Users::SettingsController < ApplicationController
           )
           flash.keep(:notice)
         end
-
+        generate_notification(@user_organization.user,
+                              @user_org.user,
+                              @user_org.organization,
+                              false,
+                              false)
         format.json {
           render json: {
             status: :ok
@@ -432,7 +300,8 @@ class Users::SettingsController < ApplicationController
   end
 
   def reset_tutorial
-    if @user.update(tutorial_status: 0) && params[:org][:id]
+    if @user.update(tutorial_status: 0) && params[:org][:id].present?
+      @user.update(current_organization_id: params[:org][:id])
       cookies.delete :tutorial_data
       cookies.delete :current_tutorial_step
       cookies[:repeat_tutorial_org_id] = {
@@ -448,6 +317,49 @@ class Users::SettingsController < ApplicationController
     end
   end
 
+  def notifications_settings
+    @user.assignments_notification =
+      params[:assignments_notification] ? true : false
+    @user.recent_notification = params[:recent_notification] ? true : false
+    @user.recent_notification_email =
+      params[:recent_notification_email] ? true : false
+    @user.assignments_notification_email =
+      params[:assignments_notification_email] ? true : false
+    @user.system_message_notification_email =
+      params[:system_message_notification_email] ? true : false
+
+    if @user.save
+      respond_to do |format|
+        format.json do
+          render json: {
+            status: :ok
+          }
+        end
+      end
+    else
+      respond_to do |format|
+        format.json do
+          render json: {
+            status: :unprocessable_entity
+          }
+        end
+      end
+    end
+  end
+
+  def user_current_organization
+    @user.current_organization_id = params[:user][:current_organization_id]
+    @changed_org = Organization.find_by_id(@user.current_organization_id)
+    if params[:user][:current_organization_id].present? && @user.save
+      flash[:success] = t('users.settings.changed_org_flash',
+                          team: @changed_org.name)
+      redirect_to root_path
+    else
+      flash[:alert] = t('users.settings.changed_org_error_flash')
+      redirect_to :back
+    end
+  end
+
   private
 
   def load_user
@@ -456,13 +368,6 @@ class Users::SettingsController < ApplicationController
 
   def check_organization_permission
     @org = Organization.find_by_id(params[:organization_id])
-    unless is_admin_of_organization(@org)
-      render_403
-    end
-  end
-
-  def check_create_user_organization_permission
-    @org = Organization.find_by_id(params[:user_organization][:organization_id])
     unless is_admin_of_organization(@org)
       render_403
     end
@@ -506,18 +411,16 @@ class Users::SettingsController < ApplicationController
     )
   end
 
-  def create_user_organization_params
-    params.require(:user_organization).permit(
-      :user_id,
-      :organization_id,
-      :role
-    )
-  end
-
   def update_user_organization_params
     params.require(:user_organization).permit(
       :role
     )
   end
 
+  def reset_user_current_organization(user_org)
+    ids = user_org.user.organizations_ids
+    ids -= [user_org.organization.id]
+    user_org.user.current_organization_id = ids.first
+    user_org.user.save
+  end
 end

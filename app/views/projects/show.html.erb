@@ -6,9 +6,9 @@
   <div class="col-sm-12"
        id="data-holder"
        data-project-id="<%= @project.id %>">
-      <% if can_create_experiment(@project) %>
-      <div class="row">
-        <div class="col-sm-12">
+    <div class="row">
+      <div class="col-sm-12">
+        <% if can_create_experiment(@project) %>
           <%= link_to new_project_experiment_url(@project),
                         remote: true,
                         type: "button",
@@ -22,9 +22,26 @@
             <span class="glyphicon glyphicon-plus"></span>
             <span class="hidden-xs"><%=t 'experiments.new.create' %></span>
           <% end %>
+        <% end %>
+        <!-- experiment sort -->
+        <div class="dropdown">
+          <button class="btn btn-default dropdown-toggle" type="button" id="sortMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+            <span class="hidden-xs"><%= t'projects.index.sort' %></span>
+            <span class="visible-xs-inline"><i class="glyphicon glyphicon-sort"></i></span>
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="sortMenu">
+            <% ["new", "old", "atoz", "ztoa"].each do |sort| %>
+              <% if @current_sort != sort %>
+                <li><a href="?<%= {sort: sort}.reject{|v| v.to_s == "0"}.to_query %>"><%= t('projects.index.sort_' + sort) %></a></li>
+              <% else %>
+                <li class="disabled"><a href="#"><%= t('projects.index.sort_' + sort) %></a></li>
+              <% end %>
+            <% end %>
+          </ul>
         </div>
       </div>
-      <% end %>
+    </div>
     <div class="row">
       <div class="col-sm-6">
         <h2><%= t'projects.show.page_title' %></h2>
@@ -33,7 +50,7 @@
   </div>
 </div>
 <div class="row">
-  <% @project.active_experiments.each_with_index do |experiment, index| %>
+  <% @project.active_experiments(@current_sort).each_with_index do |experiment, index| %>
     <%= render partial: 'projects/show/experiment',
                locals: { experiment: experiment } %>
 

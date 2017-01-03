@@ -2,7 +2,9 @@ class MyModuleGroup < ActiveRecord::Base
   include SearchableModel
 
   auto_strip_attributes :name, nullify: false
-  validates :name, presence: true, length: { maximum: NAME_MAX_LENGTH }
+  validates :name,
+            presence: true,
+            length: { maximum: Constants::NAME_MAX_LENGTH }
   validates :experiment, presence: true
 
   belongs_to :experiment, inverse_of: :my_module_groups
@@ -12,7 +14,7 @@ class MyModuleGroup < ActiveRecord::Base
   def self.search(user, include_archived, query = nil, page = 1)
     exp_ids =
       Experiment
-      .search(user, include_archived, nil, SHOW_ALL_RESULTS)
+      .search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
       .select("id")
 
 
@@ -32,12 +34,12 @@ class MyModuleGroup < ActiveRecord::Base
       .where_attributes_like("my_module_groups.name", a_query)
 
     # Show all results if needed
-    if page == SHOW_ALL_RESULTS
+    if page == Constants::SEARCH_NO_LIMIT
       new_query
     else
       new_query
-        .limit(SEARCH_LIMIT)
-        .offset((page - 1) * SEARCH_LIMIT)
+        .limit(Constants::SEARCH_LIMIT)
+        .offset((page - 1) * Constants::SEARCH_LIMIT)
     end
   end
 

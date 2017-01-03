@@ -159,6 +159,10 @@ class ProtocolsController < ApplicationController
 
   def update_keywords
     respond_to do |format|
+      # sanitize user input
+      params[:keywords].collect! do |keyword|
+        ActionController::Base.helpers.sanitize(keyword)
+      end
       if @protocol.update_keywords(params[:keywords])
         format.json {
           render json: {
@@ -373,7 +377,18 @@ class ProtocolsController < ApplicationController
             status: :bad_request
           }
         else
-          # Everything good, display flash & render 200
+          # Everything good, record activity, display flash & render 200
+          Activity.create(
+            type_of: :revert_protocol,
+            project: @protocol.my_module.experiment.project,
+            my_module: @protocol.my_module,
+            user: current_user,
+            message: I18n.t(
+              'activities.revert_protocol',
+              user: current_user.full_name,
+              protocol: @protocol.name
+            )
+          )
           flash[:success] = t(
             "my_modules.protocols.update_parent_flash",
           )
@@ -451,7 +466,18 @@ class ProtocolsController < ApplicationController
             status: :bad_request
           end
         else
-          # Everything good, display flash & render 200
+          # Everything good, record activity, display flash & render 200
+          Activity.create(
+            type_of: :load_protocol_from_repository,
+            project: @protocol.my_module.experiment.project,
+            my_module: @protocol.my_module,
+            user: current_user,
+            message: I18n.t(
+              'activities.load_protocol_from_repository',
+              user: current_user.full_name,
+              protocol: @source.name
+            )
+          )
           flash[:success] = t('my_modules.protocols.load_from_repository_flash')
           flash.keep(:success)
           format.json { render json: {}, status: :ok }
@@ -485,9 +511,20 @@ class ProtocolsController < ApplicationController
             render json: { status: :error }, status: :bad_request
           }
         else
-          # Everything good, display flash & render 200
+          # Everything good, record activity, display flash & render 200
+          Activity.create(
+            type_of: :load_protocol_from_file,
+            project: @protocol.my_module.experiment.project,
+            my_module: @protocol.my_module,
+            user: current_user,
+            message: I18n.t(
+              'activities.load_protocol_from_file',
+              user: current_user.full_name,
+              protocol: @protocol_json[:name]
+            )
+          )
           flash[:success] = t(
-            "my_modules.protocols.load_from_file_flash",
+            'my_modules.protocols.load_from_file_flash',
           )
           flash.keep(:success)
           format.json {
@@ -777,9 +814,7 @@ class ProtocolsController < ApplicationController
   end
 
   def load_organization_and_type
-    @organizations = current_user.organizations.order(name: :asc)
-    @current_organization = @organizations.select{ |org| org.id == params[:organization].to_i }.first
-    @current_organization ||= @organizations.first
+    @current_organization = current_organization
     # :public, :private or :archive
     @type = (params[:type] || "public").to_sym
   end

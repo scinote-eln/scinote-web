@@ -1,3 +1,18 @@
+GIT
+  remote: git://github.com/einzige/sneaky-save.git
+  revision: 03866e838f62a4b13e15784974fcc13e14cd9502
+  specs:
+    sneaky-save (0.1.1)
+      activerecord (>= 3.2.0)
+
+GIT
+  remote: https://github.com/biosistemika/quill-rails.git
+  revision: e765c042d9ff7ec22f8c51a0e08e39e783530f8b
+  ref: e765c04
+  specs:
+    quill-rails (0.1.4)
+      railties (>= 3.1.0, < 5.0)
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -48,6 +63,8 @@ GEM
     autoprefixer-rails (6.1.2)
       execjs
       json
+    autosize-rails (1.18.17)
+      rails (>= 3.1)
     awesome_print (1.7.0)
     aws-sdk (2.2.8)
       aws-sdk-resources (= 2.2.8)
@@ -90,9 +107,15 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.10.0)
+    colorize (0.8.1)
     commit_param_routing (0.0.1)
     concurrent-ruby (1.0.0)
     debug_inspector (0.0.2)
+    deface (1.0.2)
+      colorize (>= 0.5.8)
+      nokogiri (~> 1.6.0)
+      polyglot
+      rails (>= 3.1)
     delayed_job (4.1.1)
       activesupport (>= 3.0, < 5.0)
     delayed_job_active_record (4.1.0)
@@ -184,6 +207,7 @@ GEM
       ast (~> 2.2)
     pg (0.18.4)
     pkg-config (1.1.7)
+    polyglot (0.3.5)
     powerpack (0.1.1)
     puma (2.15.3)
     rack (1.6.4)
@@ -211,6 +235,8 @@ GEM
     rails_12factor (0.0.3)
       rails_serve_static_assets
       rails_stdout_logging
+    rails_autolink (1.1.6)
+      rails (> 3.1)
     rails_serve_static_assets (0.0.4)
     rails_stdout_logging (0.0.4)
     railties (4.2.5)
@@ -221,7 +247,6 @@ GEM
     rainbow (2.1.0)
     rake (11.2.2)
     rdoc (4.2.0)
-    redcarpet (3.3.3)
     remotipart (1.2.1)
     responders (2.2.0)
       railties (>= 4.2.0, < 5.1)
@@ -248,12 +273,19 @@ GEM
       sprockets (>= 2.8, < 4.0)
       sprockets-rails (>= 2.0, < 4.0)
       tilt (>= 1.1, < 3)
+    scss_lint (0.50.2)
+      rake (>= 0.9, < 12)
+      sass (~> 3.4.20)
     sdoc (0.4.1)
       json (~> 1.7, >= 1.7.7)
       rdoc (~> 4.0)
     shoulda-context (1.2.1)
     shoulda-matchers (3.1.1)
       activesupport (>= 4.0.0)
+    simple_token_authentication (1.14.0)
+      actionmailer (>= 3.2.6, < 6)
+      actionpack (>= 3.2.6, < 6)
+      devise (>= 3.2, < 6)
     skylight (0.10.0)
       activesupport (>= 3.0.0)
     sourcemap (0.1.1)
@@ -301,6 +333,7 @@ DEPENDENCIES
   ajax-datatables-rails (~> 0.3.1)
   aspector
   auto_strip_attributes (~> 2.1)
+  autosize-rails
   awesome_print
   aws-sdk (~> 2.2.8)
   aws-sdk-v1
@@ -313,6 +346,7 @@ DEPENDENCIES
   bootstrap_form
   byebug
   commit_param_routing
+  deface (~> 1.0)
   delayed_job_active_record
   devise (= 3.5.6)
   devise-async
@@ -337,19 +371,23 @@ DEPENDENCIES
   paperclip (~> 4.3)
   pg
   puma
+  quill-rails!
   rails (= 4.2.5)
   rails_12factor
-  redcarpet
+  rails_autolink (~> 1.1, >= 1.1.6)
   remotipart (~> 1.2)
   rgl
   roo (~> 2.1.0)
   rubocop
   ruby-graphviz (~> 1.2)
   sass-rails (~> 5.0)
+  scss_lint
   sdoc (~> 0.4.0)
   shoulda-context
   shoulda-matchers (>= 3.0.1)
+  simple_token_authentication (~> 1.0)
   skylight
+  sneaky-save!
   spinjs-rails
   starscope
   turbolinks

@@ -1,32 +1,16 @@
 require 'test_helper'
 
 class ChecklistTest < ActiveSupport::TestCase
+  should validate_presence_of(:step)
+  should validate_presence_of(:name)
+  should validate_length_of(:name).is_at_most(Constants::TEXT_MAX_LENGTH)
+
   test "should validate with correct data" do
     checklist = Checklist.new(
       name: "test",
       step: steps(:step1)
     )
     assert checklist
-  end
-
-  test "should not validate without name" do
-    checklist = Checklist.new(step: steps(:step1))
-    assert_not checklist.valid?
-  end
-
-  test "should not validate with name too long" do
-    checklist = Checklist.new(
-      name: "#" * 51,
-      step: steps(:step1)
-    )
-    assert_not checklist.valid?
-  end
-
-  test "should not validate with non existent step" do
-    checklist = Checklist.new(
-      name: "test",
-      step_id: 123123)
-    assert_not checklist.valid?
   end
 
   test "should have association step -> checklist" do

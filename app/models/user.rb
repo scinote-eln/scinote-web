@@ -1,15 +1,18 @@
 class User < ActiveRecord::Base
   include SearchableModel
 
-  devise :invitable, :confirmable, :database_authenticatable, :registerable, :async,
-    :recoverable, :rememberable, :trackable, :validatable, stretches: 10
-  has_attached_file :avatar, :styles => {
-    :medium => "300x300>",
-    :thumb => "100x100>",
-    :icon => "40x40>",
-    :icon_small => "30x30>"
-  },
-  :default_url => "/images/:style/missing.png"
+  acts_as_token_authenticatable
+  devise :invitable, :confirmable, :database_authenticatable, :registerable,
+         :async, :recoverable, :rememberable, :trackable, :validatable,
+         stretches: Constants::PASSWORD_STRETCH_FACTOR
+  has_attached_file :avatar,
+                    styles: {
+                      medium: Constants::MEDIUM_PIC_FORMAT,
+                      thumb: Constants::THUMB_PIC_FORMAT,
+                      icon: Constants::ICON_PIC_FORMAT,
+                      icon_small: Constants::ICON_SMALL_PIC_FORMAT
+                    },
+                    default_url: Constants::DEFAULT_AVATAR_URL
 
   enum tutorial_status: {
     no_tutorial_done: 0,
@@ -17,15 +20,19 @@ class User < ActiveRecord::Base
   }
 
   auto_strip_attributes :full_name, :initials, nullify: false
-  validates :full_name, presence: true, length: { maximum: NAME_MAX_LENGTH }
+  validates :full_name,
+            presence: true,
+            length: { maximum: Constants::NAME_MAX_LENGTH }
   validates :initials,
             presence: true,
-            length: { maximum: USER_INITIALS_MAX_LENGTH }
-  validates :email, presence: true, length: { maximum: EMAIL_MAX_LENGTH }
+            length: { maximum: Constants::USER_INITIALS_MAX_LENGTH }
+  validates :email,
+            presence: true,
+            length: { maximum: Constants::EMAIL_MAX_LENGTH }
 
   validates_attachment :avatar,
     :content_type => { :content_type => ["image/jpeg", "image/png"] },
-    size: { less_than: AVATAR_MAX_SIZE.megabytes }
+    size: { less_than: Constants::AVATAR_MAX_SIZE_MB.megabytes }
   validates :time_zone, presence: true
   validate :time_zone_check
 
@@ -40,6 +47,7 @@ class User < ActiveRecord::Base
   has_many :activities, inverse_of: :user
   has_many :results, inverse_of: :user
   has_many :samples, inverse_of: :user
+  has_many :samples_tables, inverse_of: :user, dependent: :destroy
   has_many :steps, inverse_of: :user
   has_many :custom_fields, inverse_of: :user
   has_many :reports, inverse_of: :user
@@ -84,12 +92,19 @@ class User < ActiveRecord::Base
   has_many :added_protocols, class_name: 'Protocol', foreign_key: 'added_by_id', inverse_of: :added_by
   has_many :archived_protocols, class_name: 'Protocol', foreign_key: 'archived_by_id', inverse_of: :archived_by
   has_many :restored_protocols, class_name: 'Protocol', foreign_key: 'restored_by_id', inverse_of: :restored_by
-  has_many :tokens, class_name: 'Token', foreign_key: 'user_id', inverse_of: :user
+  has_many :tokens,
+           class_name: 'Token',
+           foreign_key: 'user_id',
+           inverse_of: :user
+  has_many :user_notifications, inverse_of: :user
+  has_many :notifications, through: :user_notifications
 
   # If other errors besides parameter "avatar" exist,
   # they will propagate to "avatar" also, so remove them
   # and put all other (more specific ones) in it
   after_validation :filter_paperclip_errors
+
+  before_destroy :destroy_notifications
 
   def name
     full_name
@@ -123,42 +138,9 @@ class User < ActiveRecord::Base
     end
 
     result
-    .where_attributes_like([:full_name, :email], query)
-    .distinct
-  end
-
-  # Search all active users inside given organization for
-  # username & email.
-  def self.organization_search(
-    active_only,
-    query = nil,
-    organization = nil
-  )
-
-    if !organization.present?
-      result = nil
-    else
-
-      result = User.all
-
-      if active_only
-        result = result.where.not(confirmed_at: nil)
-      end
-
-      ignored_ids =
-        UserOrganization
-        .select(:user_id)
-        .where(organization_id: organization.id)
-      result =
-        result
-        .where("users.id IN (?)", ignored_ids)
-
-      result
       .where_attributes_like([:full_name, :email], query)
       .distinct
-    end
   end
-
 
   def empty_avatar(name, size)
     file_ext = name.split(".").last
@@ -183,7 +165,11 @@ class User < ActiveRecord::Base
 
   # Whether user is active (= confirmed) or not
   def active?
-    confirmed_at.present?
+    if confirmation_required?
+      confirmed_at.present?
+    else
+      invited_by.present? ? invitation_accepted? : true
+    end
   end
 
   def active_status_str
@@ -233,9 +219,9 @@ class User < ActiveRecord::Base
   # Finds all activities of user that is assigned to project. If user
   # is not an owner of the project, user must be also assigned to
   # module.
-  def last_activities(last_activity_id = nil, per_page = 10)
-    # TODO replace with some kind of Infinity value
-    last_activity_id = 999999999999999999999999 if last_activity_id < 1
+  def last_activities(last_activity_id = nil,
+                      per_page = Constants::ACTIVITY_AND_NOTIF_SEARCH_LIMIT)
+    last_activity_id = Constants::INFINITY if last_activity_id < 1
     Activity
       .joins(project: :user_projects)
       .joins("LEFT OUTER JOIN my_modules ON activities.my_module_id = my_modules.id")
@@ -280,7 +266,36 @@ class User < ActiveRecord::Base
     wopi_token
   end
 
+  def organizations_ids
+    organizations.pluck(:id)
+  end
+
+  # Returns a hash with user statistics
+  def statistics
+    statistics = {}
+    statistics[:number_of_teams] = organizations.count
+    statistics[:number_of_projects] = projects.count
+    number_of_experiments = 0
+    projects.find_each do |pr|
+      number_of_experiments += pr.experiments.count
+    end
+    statistics[:number_of_experiments] = number_of_experiments
+    statistics[:number_of_protocols] =
+      added_protocols.where(
+        protocol_type: Protocol.protocol_types.slice(
+          :in_repository_private,
+          :in_repository_public,
+          :in_repository_archived
+        ).values
+      ).count
+    statistics
+  end
+
   protected
+
+  def confirmation_required?
+    Rails.configuration.x.enable_email_confirmations
+  end
 
   def time_zone_check
     if time_zone.nil? or ActiveSupport::TimeZone.new(time_zone).nil?
@@ -288,5 +303,24 @@ class User < ActiveRecord::Base
     end
   end
 
+  private
 
+  def destroy_notifications
+    # Find all notifications where user is the only reference
+    # on the notification, and destroy all such notifications
+    # (user_notifications are destroyed when notification is
+    # destroyed). We try to do this efficiently (hence in_groups_of).
+    nids_all = notifications.pluck(:id)
+    nids_all.in_groups_of(1000, false) do |nids|
+      Notification
+        .where(id: nids)
+        .joins(:user_notifications)
+        .group('notifications.id')
+        .having('count(notification_id) <= 1')
+        .destroy_all
+    end
+
+    # Now, simply destroy all user notification relations left
+    user_notifications.destroy_all
+  end
 end

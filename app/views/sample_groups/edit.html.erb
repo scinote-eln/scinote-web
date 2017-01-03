@@ -1,9 +1,0 @@
-<% provide(:head_title, raw(t("sample_groups.edit.head_title", organization: @organization.name))) %>
-<h2><%=t "sample_groups.edit.title", sample_group: @sample_group.name, organization: @organization.name %></h2>
-
-<%= bootstrap_form_for [@sample_group], url: sample_group_path do |f| %>
-  <%= f.text_area :name, style: "margin-top: 10px;" %>
-  <%= f.text_field :color %>
-  <br />
-  <%= f.submit t("sample_groups.edit.create"), style: "margin-top: 10px;" %>
-<% end %>
