@@ -33,38 +33,42 @@ class SampleDatatable < AjaxDatatablesRails::Base
                  organization,
                  project = nil,
                  my_module = nil,
-                 experiment = nil)
+                 experiment = nil,
+                 user = nil)
     super(view)
     @organization = organization
     @project = project
     @my_module = my_module
     @experiment = experiment
+    @user = user
   end
 
   # Define sortable columns, so 1st column will be sorted by attribute in sortable_columns[0]
   def sortable_columns
     sort_array = [
       ASSIGNED_SORT_COL,
-      "Sample.name",
-      "SampleType.name",
-      "SampleGroup.name",
-      "Sample.created_at",
-      "User.full_name",
+      'Sample.name',
+      'SampleType.name',
+      'SampleGroup.name',
+      'Sample.created_at',
+      'User.full_name'
     ]
+
     sort_array.push(*custom_fields_sort_by)
 
-    @sortable_columns ||= sort_array
+    @sortable_columns = sort_array
   end
 
   # Define attributes on which we perform search
   def searchable_columns
     search_array = [
-      "Sample.name",
-      "SampleType.name",
-      "SampleGroup.name",
-      "Sample.created_at",
-      "User.full_name"
+      'Sample.name',
+      'SampleType.name',
+      'SampleGroup.name',
+      'Sample.created_at',
+      'User.full_name'
     ]
+
     search_array.push(*custom_fields_sort_by)
     @searchable_columns ||= filter_search_array search_array
   end
@@ -72,7 +76,7 @@ class SampleDatatable < AjaxDatatablesRails::Base
   private
 
   # filters the search array by checking if the the column is visible
-  def filter_search_array input_array
+  def filter_search_array(input_array)
     param_index = 2
     filtered_array =[]
     input_array.each do |col|
@@ -90,7 +94,7 @@ class SampleDatatable < AjaxDatatablesRails::Base
     array = []
 
     for _ in 0..num_cf
-      array << "SampleCustomField.value"
+      array << 'SampleCustomField.value'
     end
     array
   end
@@ -99,11 +103,11 @@ class SampleDatatable < AjaxDatatablesRails::Base
   def data
     records.map do |record|
       sample = {
-        "DT_RowId": record.id,
-        "1": assigned_cell(record),
-        "2": record.name,
-        "3": record.sample_type.nil? ? I18n.t("samples.table.no_type") : record.sample_type.name,
-        "4": record.sample_group.nil? ?
+        'DT_RowId': record.id,
+        '1': assigned_cell(record),
+        '2': record.name,
+        '3': record.sample_type.nil? ? I18n.t('samples.table.no_type') : record.sample_type.name,
+        '4': record.sample_group.nil? ?
         "<span class='glyphicon glyphicon-asterisk'></span> " + I18n.t("samples.table.no_group") :
         "<span class='glyphicon glyphicon-asterisk' style='color: #{record.sample_group.color}'></span> " + record.sample_group.name,
         "5": I18n.l(record.created_at, format: :full),
@@ -211,7 +215,7 @@ class SampleDatatable < AjaxDatatablesRails::Base
 
   # Override default sort method if needed
   def sort_records(records)
-    if params[:order].present? and params[:order].length == 1
+    if params[:order].present? && params[:order].length == 1
       if sort_column(params[:order].values[0]) == ASSIGNED_SORT_COL
         # If "assigned" column is sorted
         if @my_module then
@@ -220,7 +224,6 @@ class SampleDatatable < AjaxDatatablesRails::Base
           records.order("sample_my_modules.id NULLS #{sort_null_direction(params[:order].values[0])}")
         elsif @experiment
           # A very elegant solution to sort assigned samples at a experiment level
-
           # grabs the ids of samples which has a modules that belongs to this project
           assigned = Sample
             .joins('LEFT OUTER JOIN "sample_my_modules" ON "sample_my_modules"."sample_id" = "samples"."id"')
@@ -250,6 +253,7 @@ class SampleDatatable < AjaxDatatablesRails::Base
                                   :sanitize_sql_array,
                                   ["position((',' || samples.id || ',') in ?)",
                                   ids.join(',') + ','] )
+
           records.where(id: ids).order(order_by_index)
         elsif @project
           # A very elegant solution to sort assigned samples at a project level
@@ -331,7 +335,7 @@ class SampleDatatable < AjaxDatatablesRails::Base
       super(records)
     end
   end
-#(I18n.t('time.formats.datatables_date')).gsub("\"", '\'')
+
 
   # A hack that overrides the new_search_contition method default behavior of the ajax-datatables-rails gem
   # now the method checks if the column is the created_at and generate a custom SQL to parse
@@ -361,7 +365,7 @@ class SampleDatatable < AjaxDatatablesRails::Base
   end
 
   def sorting_by_custom_column
-    params[:order].values[0]["column"].to_i > 6
+    sort_column(params[:order].values[0]) == 'SampleCustomField.value'
   end
 
   # Escapes special characters in search query
@@ -370,5 +374,26 @@ class SampleDatatable < AjaxDatatablesRails::Base
                               .send(:sanitize_sql_like,
                                     params[:search][:value]) if params[:search]
                                                                 .present?
+  end
+
+  def new_sort_column(item)
+    coli = item[:column].to_i - 1
+    model, column = sortable_columns[sortable_displayed_columns[coli].to_i]
+                    .split('.')
+
+    return model if model == ASSIGNED_SORT_COL
+    col = [model.constantize.table_name, column].join('.')
+  end
+
+  def generate_sortable_displayed_columns
+    sort_order = SamplesTable.where(user: @user,
+                                    organization: @organization)
+                             .pluck(:status)
+                             .first['ColReorder']
+
+    sort_order.shift
+    sort_order.map! { |i| (i.to_i - 1).to_s }
+
+    @sortable_displayed_columns = sort_order
   end
 end

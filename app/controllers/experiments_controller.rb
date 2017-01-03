@@ -275,7 +275,8 @@ class ExperimentsController < ApplicationController
                                            @organization,
                                            nil,
                                            nil,
-                                           @experiment)
+                                           @experiment,
+                                           current_user)
       end
     end
   end
