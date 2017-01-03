@@ -205,6 +205,7 @@ function initProtocolPreviewModal() {
           modalTitle.html(data.title);
           modalBody.html(data.html);
           modalFooter.html(data.footer);
+          initHandsOnTable(modalBody);
           modal.modal("show");
           initHandsOnTable(modalBody);
         },
@@ -379,6 +380,7 @@ function initModals() {
   $("#protocol-preview-modal").on("hidden.bs.modal", function(e) {
     $(this).find(".modal-title").html("");
     $(this).find(".modal-body").html("");
+    $(this).find(".modal-footer").html("");
   });
 }
 
