@@ -91,6 +91,10 @@ class ProtocolsController < ApplicationController
           html: render_to_string(
             partial: 'protocols/index/protocol_preview_modal_body.html.erb',
             locals: { protocol: @protocol }
+          ),
+          footer: render_to_string(
+            partial: 'protocols/index/protocol_preview_modal_footer.html.erb',
+            locals: { protocol: @protocol }
           )
         }
       end

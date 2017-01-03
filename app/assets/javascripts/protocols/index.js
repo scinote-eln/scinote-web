@@ -201,8 +201,10 @@ function initProtocolPreviewModal() {
           var modal = $("#protocol-preview-modal");
           var modalTitle = modal.find(".modal-title");
           var modalBody = modal.find(".modal-body");
+          var modalFooter = modal.find(".modal-footer");
           modalTitle.html(data.title);
           modalBody.html(data.html);
+          modalFooter.html(data.footer);
           modal.modal("show");
           initHandsOnTable($(document));
         },

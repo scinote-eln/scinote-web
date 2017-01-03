@@ -95,7 +95,7 @@ class ProtocolsDatatable < AjaxDatatablesRails::Base
         "DT_CanArchive": can_archive_protocol(protocol),
         "DT_CanRestore": can_restore_protocol(protocol),
         "DT_CanExport": can_export_protocol(protocol),
-        "1": name_html(record),
+        "1": protocol.in_repository_archived? ? record.name : name_html(record),
         "2": keywords_html(record),
         "3": modules_html(record),
         "4": record.full_username_str,
