@@ -11,8 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-
-ActiveRecord::Schema.define(version: 20161129111100) do
+ActiveRecord::Schema.define(version: 20161129171012) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -649,20 +648,20 @@ ActiveRecord::Schema.define(version: 20161129111100) do
   add_index "user_projects", ["user_id"], name: "index_user_projects_on_user_id", using: :btree
 
   create_table "users", force: :cascade do |t|
-    t.string   "full_name",                                         null: false
-    t.string   "initials",                                          null: false
-    t.string   "email",                             default: "",    null: false
-    t.string   "encrypted_password",                default: "",    null: false
+    t.string   "full_name",                                                    null: false
+    t.string   "initials",                                                     null: false
+    t.string   "email",                                        default: "",    null: false
+    t.string   "encrypted_password",                           default: "",    null: false
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",                     default: 0,     null: false
+    t.integer  "sign_in_count",                                default: 0,     null: false
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
     t.string   "last_sign_in_ip"
-    t.datetime "created_at",                                        null: false
-    t.datetime "updated_at",                                        null: false
+    t.datetime "created_at",                                                   null: false
+    t.datetime "updated_at",                                                   null: false
     t.string   "avatar_file_name"
     t.string   "avatar_content_type"
     t.integer  "avatar_file_size"
@@ -671,7 +670,7 @@ ActiveRecord::Schema.define(version: 20161129111100) do
     t.datetime "confirmed_at"
     t.datetime "confirmation_sent_at"
     t.string   "unconfirmed_email"
-    t.string   "time_zone",                         default: "UTC"
+    t.string   "time_zone",                                    default: "UTC"
     t.string   "invitation_token"
     t.datetime "invitation_created_at"
     t.datetime "invitation_sent_at"
@@ -679,16 +678,18 @@ ActiveRecord::Schema.define(version: 20161129111100) do
     t.integer  "invitation_limit"
     t.integer  "invited_by_id"
     t.string   "invited_by_type"
-    t.integer  "invitations_count",                 default: 0
-    t.integer  "tutorial_status",                   default: 0,     null: false
-    t.boolean  "assignments_notification",          default: true
-    t.boolean  "recent_notification",               default: true
-    t.boolean  "assignments_notification_email",    default: false
-    t.boolean  "recent_notification_email",         default: false
+    t.integer  "invitations_count",                            default: 0
+    t.integer  "tutorial_status",                              default: 0,     null: false
+    t.boolean  "assignments_notification",                     default: true
+    t.boolean  "recent_notification",                          default: true
+    t.boolean  "assignments_notification_email",               default: false
+    t.boolean  "recent_notification_email",                    default: false
     t.integer  "current_organization_id"
-    t.boolean  "system_message_notification_email", default: false
+    t.boolean  "system_message_notification_email",            default: false
+    t.string   "authentication_token",              limit: 30
   end
 
+  add_index "users", ["authentication_token"], name: "index_users_on_authentication_token", unique: true, using: :btree
   add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
   add_index "users", ["invitation_token"], name: "index_users_on_invitation_token", unique: true, using: :btree
@@ -841,7 +842,7 @@ ActiveRecord::Schema.define(version: 20161129111100) do
   add_foreign_key "user_projects", "projects"
   add_foreign_key "user_projects", "users"
   add_foreign_key "user_projects", "users", column: "assigned_by_id"
+  add_foreign_key "users", "organizations", column: "current_organization_id"
   add_foreign_key "wopi_actions", "wopi_apps"
   add_foreign_key "wopi_apps", "wopi_discoveries"
-  add_foreign_key "users", "organizations", column: "current_organization_id"
 end
