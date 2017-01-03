@@ -166,10 +166,10 @@ class ProtocolsDatatable < AjaxDatatablesRails::Base
   end
 
   def name_html(record)
-    "<a href='#' data-action='protocol-preview'" +
-    " data-url='#{preview_protocol_path(record)}'>" +
-    "#{record.name}" +
-    "</a>"
+    "<a href='#' data-action='protocol-preview'" \
+      "data-url='#{preview_protocol_path(record)}'>" \
+      "#{record.name}" \
+      "</a>"
   end
 
   def keywords_html(record)

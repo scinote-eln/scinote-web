@@ -206,7 +206,7 @@ function initProtocolPreviewModal() {
           modalBody.html(data.html);
           modalFooter.html(data.footer);
           modal.modal("show");
-          initHandsOnTable($(document));
+          initHandsOnTable(modalBody);
         },
         error: function (error) {
           // TODO
