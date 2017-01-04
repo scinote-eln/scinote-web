@@ -1139,6 +1139,25 @@ ul.content-module-activities {
   }
 }
 
+// Preview protocol modal
+@media (min-width: 768px) {
+  #protocol-preview-modal .modal-dialog {
+    width: 70%;
+  }
+}
+
+#protocol-preview-modal .modal-dialog {
+  .modal-body {
+    max-height: 75vh;
+    overflow-y: auto;
+    width: 100%;
+
+    .ql-editor {
+      min-height: initial;
+    }
+  }
+}
+
 /* Import protocol/s modal */
 #import-protocol-modal .modal-dialog {
   width: 70%;

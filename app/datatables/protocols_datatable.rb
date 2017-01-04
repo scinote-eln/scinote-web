@@ -12,6 +12,7 @@ class ProtocolsDatatable < AjaxDatatablesRails::Base
   def_delegator :@view, :can_restore_protocol
   def_delegator :@view, :can_export_protocol
   def_delegator :@view, :linked_children_protocol_path
+  def_delegator :@view, :preview_protocol_path
 
   def initialize(view, organization, type, user)
     super(view)
@@ -94,7 +95,7 @@ class ProtocolsDatatable < AjaxDatatablesRails::Base
         "DT_CanArchive": can_archive_protocol(protocol),
         "DT_CanRestore": can_restore_protocol(protocol),
         "DT_CanExport": can_export_protocol(protocol),
-        "1": record.name,
+        "1": protocol.in_repository_archived? ? record.name : name_html(record),
         "2": keywords_html(record),
         "3": modules_html(record),
         "4": record.full_username_str,
@@ -162,6 +163,13 @@ class ProtocolsDatatable < AjaxDatatablesRails::Base
     else
       "Protocol.archived_on"
     end
+  end
+
+  def name_html(record)
+    "<a href='#' data-action='protocol-preview'" \
+      "data-url='#{preview_protocol_path(record)}'>" \
+      "#{record.name}" \
+      "</a>"
   end
 
   def keywords_html(record)
