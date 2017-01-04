@@ -1,4 +1,6 @@
 class Organization < ActiveRecord::Base
+  include SearchableModel
+
   # Not really MVC-compliant, but we just use it for logger
   # output in space_taken related functions
   include ActionView::Helpers::NumberHelper
@@ -49,6 +51,24 @@ class Organization < ActiveRecord::Base
     else
       raise TypeError
     end
+  end
+
+  def search_users(
+    query = nil,
+    attributes = [:full_name, :email]
+  )
+    if query
+      a_query = query
+                .strip
+                .gsub('_', '\\_')
+                .gsub('%', '\\%')
+                .split(/\s+/)
+                .map { |t| '%' + t + '%' }
+    else
+      a_query = query
+    end
+
+    users.where_attributes_like(attributes, a_query)
   end
 
   # Writes to user log

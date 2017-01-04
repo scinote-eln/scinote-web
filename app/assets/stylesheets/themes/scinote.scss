@@ -1704,3 +1704,15 @@ th.custom-field .modal-tooltiptext {
 .disable-click {
   pointer-events: none;
 }
+
+// AtWho (smart annotations)
+.atwho-li-user {
+
+  .fa.fa-circle {
+    font-size: 4px;
+  }
+
+  &.highlighted {
+    background-color: #ff0000;
+  }
+}

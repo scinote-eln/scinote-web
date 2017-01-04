@@ -246,6 +246,11 @@ module PermissionHelper
   # to "is project archived" or "is module archived" checks
   # at the beginning of this file (via aspector).
 
+  # ---- ATWHO PERMISSIONS ----
+  def can_view_organization_users(organization)
+    is_member_of_organization(organization)
+  end
+
   # ---- PROJECT PERMISSIONS ----
 
   def can_view_projects(organization)

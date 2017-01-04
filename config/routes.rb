@@ -86,6 +86,9 @@ Rails.application.routes.draw do
       post 'parse_sheet'
       post 'import_samples'
       post 'export_samples'
+      # Used for atwho (smart annotations)
+      get 'atwho_users', to: 'at_who#users'
+
     end
     match '*path', :to  => 'organizations#routing_error', via: [:get, :post, :put, :patch]
   end
