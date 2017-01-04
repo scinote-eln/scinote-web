@@ -1,6 +1,7 @@
 class ProtocolsDatatable < AjaxDatatablesRails::Base
   # Needed for sanitize_sql_like method
   include ActiveRecord::Sanitization::ClassMethods
+  include InputSanitizeHelper
 
   def_delegator :@view, :can_edit_protocol
   def_delegator :@view, :edit_protocol_path
@@ -83,24 +84,34 @@ class ProtocolsDatatable < AjaxDatatablesRails::Base
     records.each do |record|
       protocol = Protocol.find(record.id)
       result_data << {
-        "DT_RowId": record.id,
-        "DT_CanEdit": can_edit_protocol(protocol),
-        "DT_EditUrl": can_edit_protocol(protocol) ?
-          edit_protocol_path(protocol, organization: @organization, type: @type) : nil,
-        "DT_CanClone": can_clone_protocol(protocol),
-        "DT_CloneUrl": can_clone_protocol(protocol) ?
-          clone_protocol_path(protocol, organization: @organization, type: @type) : nil,
-        "DT_CanMakePrivate": can_make_protocol_private(protocol),
-        "DT_CanPublish": can_publish_protocol(protocol),
-        "DT_CanArchive": can_archive_protocol(protocol),
-        "DT_CanRestore": can_restore_protocol(protocol),
-        "DT_CanExport": can_export_protocol(protocol),
-        "1": protocol.in_repository_archived? ? record.name : name_html(record),
-        "2": keywords_html(record),
-        "3": modules_html(record),
-        "4": record.full_username_str,
-        "5": timestamp_column_html(record),
-        "6": I18n.l(record.updated_at, format: :full)
+        'DT_RowId': record.id,
+        'DT_CanEdit': can_edit_protocol(protocol),
+        'DT_EditUrl': if can_edit_protocol(protocol)
+                        edit_protocol_path(protocol,
+                                           organization: @organization,
+                                           type: @type)
+                      end,
+        'DT_CanClone': can_clone_protocol(protocol),
+        'DT_CloneUrl': if can_clone_protocol(protocol)
+                         clone_protocol_path(protocol,
+                                             organization: @organization,
+                                             type: @type)
+                       end,
+        'DT_CanMakePrivate': can_make_protocol_private(protocol),
+        'DT_CanPublish': can_publish_protocol(protocol),
+        'DT_CanArchive': can_archive_protocol(protocol),
+        'DT_CanRestore': can_restore_protocol(protocol),
+        'DT_CanExport': can_export_protocol(protocol),
+        '1': if protocol.in_repository_archived?
+               sanitize_input(record.name)
+             else
+               name_html(record)
+             end,
+        '2': keywords_html(record),
+        '3': modules_html(record),
+        '4': sanitize_input(record.full_username_str),
+        '5': timestamp_column_html(record),
+        '6': I18n.l(record.updated_at, format: :full)
       }
     end
     result_data
@@ -168,7 +179,7 @@ class ProtocolsDatatable < AjaxDatatablesRails::Base
   def name_html(record)
     "<a href='#' data-action='protocol-preview'" \
       "data-url='#{preview_protocol_path(record)}'>" \
-      "#{record.name}" \
+      "#{sanitize_input(record.name)}" \
       "</a>"
   end
 
@@ -181,7 +192,7 @@ class ProtocolsDatatable < AjaxDatatablesRails::Base
       kws.sort_by{ |word| word.downcase }.each do |kw|
         res << "<a href='#' data-action='filter' data-param='#{kw}'>#{kw}</a>"
       end
-      res.join(", ")
+      sanitize_input(res.join(', '))
     end
   end
 

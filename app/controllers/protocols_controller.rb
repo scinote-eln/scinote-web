@@ -2,6 +2,7 @@ class ProtocolsController < ApplicationController
   include RenamingUtil
   include ProtocolsImporter
   include ProtocolsExporter
+  include InputSanitizeHelper
 
   before_action :check_create_permissions, only: [
     :create_new_modal,
@@ -104,7 +105,8 @@ class ProtocolsController < ApplicationController
     respond_to do |format|
       format.json {
         render json: {
-          title: I18n.t("protocols.index.linked_children.title", protocol: @protocol.name),
+          title: I18n.t('protocols.index.linked_children.title',
+                        protocol: sanitize_input(@protocol.name)),
           html: render_to_string({
             partial: "protocols/index/linked_children_modal_body.html.erb",
             locals: { protocol: @protocol }
@@ -700,7 +702,8 @@ class ProtocolsController < ApplicationController
     respond_to do |format|
       format.json {
         render json: {
-          title: I18n.t("protocols.header.edit_name_modal.title", protocol: @protocol.name),
+          title: I18n.t('protocols.header.edit_name_modal.title',
+                        protocol: sanitize_input(@protocol.name)),
           html: render_to_string({
             partial: "protocols/header/edit_name_modal_body.html.erb"
           })
@@ -713,7 +716,8 @@ class ProtocolsController < ApplicationController
     respond_to do |format|
       format.json {
         render json: {
-          title: I18n.t("protocols.header.edit_keywords_modal.title", protocol: @protocol.name),
+          title: I18n.t('protocols.header.edit_keywords_modal.title',
+                        protocol: sanitize_input(@protocol.name)),
           html: render_to_string({
             partial: "protocols/header/edit_keywords_modal_body.html.erb"
           }),
@@ -727,7 +731,8 @@ class ProtocolsController < ApplicationController
     respond_to do |format|
       format.json {
         render json: {
-          title: I18n.t("protocols.header.edit_authors_modal.title", protocol: @protocol.name),
+          title: I18n.t('protocols.header.edit_authors_modal.title',
+                        protocol: sanitize_input(@protocol.name)),
           html: render_to_string({
             partial: "protocols/header/edit_authors_modal_body.html.erb"
           })
@@ -740,7 +745,8 @@ class ProtocolsController < ApplicationController
     respond_to do |format|
       format.json {
         render json: {
-          title: I18n.t("protocols.header.edit_description_modal.title", protocol: @protocol.name),
+          title: I18n.t('protocols.header.edit_description_modal.title',
+                        protocol: sanitize_input(@protocol.name)),
           html: render_to_string({
             partial: "protocols/header/edit_description_modal_body.html.erb"
           })

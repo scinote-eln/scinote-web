@@ -1,6 +1,7 @@
 class LoadFromRepositoryProtocolsDatatable < AjaxDatatablesRails::Base
   # Needed for sanitize_sql_like method
   include ActiveRecord::Sanitization::ClassMethods
+  include InputSanitizeHelper
 
   def initialize(view, organization, type, user)
     super(view)
@@ -69,13 +70,13 @@ class LoadFromRepositoryProtocolsDatatable < AjaxDatatablesRails::Base
   def data
     records.map do |record|
       {
-        "DT_RowId": record.id,
-        "1": record.name,
-        "2": keywords_html(record),
-        "3": record.nr_of_linked_children,
-        "4": record.full_username_str,
-        "5": timestamp_column_html(record),
-        "6": I18n.l(record.updated_at, format: :full)
+        'DT_RowId': record.id,
+        '1': sanitize_input(record.name),
+        '2': keywords_html(record),
+        '3': record.nr_of_linked_children,
+        '4': sanitize_input(record.full_username_str),
+        '5': timestamp_column_html(record),
+        '6': I18n.l(record.updated_at, format: :full)
       }
     end
   end
@@ -140,7 +141,7 @@ class LoadFromRepositoryProtocolsDatatable < AjaxDatatablesRails::Base
       kws.sort_by{ |word| word.downcase }.each do |kw|
         res << "<a href='#' data-action='filter' data-param='#{kw}'>#{kw}</a>"
       end
-      res.join(", ")
+      sanitize_input(res.join(', '))
     end
   end
 

@@ -2,6 +2,7 @@ class ProjectsController < ApplicationController
   include SampleActions
   include RenamingUtil
   include OrganizationsHelper
+  include InputSanitizeHelper
 
   before_action :load_vars, only: [:show, :edit, :update,
                                    :notifications, :reports,
@@ -104,7 +105,8 @@ class ProjectsController < ApplicationController
             partial: "edit.html.erb",
             locals: { project: @project }
           }),
-          title: t("projects.index.modal_edit_project.modal_title", project: @project.name)
+          title: t('projects.index.modal_edit_project.modal_title',
+                   project: sanitize_input(@project.name))
         }
       }
     end

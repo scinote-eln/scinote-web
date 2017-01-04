@@ -1,4 +1,6 @@
 class OrganizationUsersDatatable < AjaxDatatablesRails::Base
+  include InputSanitizeHelper
+
   def_delegator :@view, :link_to
   def_delegator :@view, :update_user_organization_path
   def_delegator :@view, :destroy_user_organization_html_path
@@ -49,13 +51,13 @@ class OrganizationUsersDatatable < AjaxDatatablesRails::Base
   def data
     records.map do |record|
       {
-        "DT_RowId": record.id,
-        "0": record.user.full_name,
-        "1": record.user.email,
-        "2": I18n.l(record.created_at, format: :full),
-        "3": record.user.active_status_str,
-        "4": record.role_str,
-        "5": ApplicationController.new.render_to_string(
+        'DT_RowId': record.id,
+        '0': sanitize_input(record.user.full_name),
+        '1': sanitize_input(record.user.email),
+        '2': I18n.l(record.created_at, format: :full),
+        '3': record.user.active_status_str,
+        '4': record.role_str,
+        '5': ApplicationController.new.render_to_string(
           partial: "users/settings/organizations/user_dropdown.html.erb",
           locals: {
             user_organization: record,

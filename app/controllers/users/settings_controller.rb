@@ -1,6 +1,7 @@
 class Users::SettingsController < ApplicationController
   include UsersGenerator
   include NotificationsHelper
+  include InputSanitizeHelper
 
   before_action :load_user, only: [
     :preferences,
@@ -184,7 +185,7 @@ class Users::SettingsController < ApplicationController
           }),
           heading: I18n.t(
             "users.settings.organizations.index.leave_uo_heading",
-            org: @user_org.organization.name
+            org: sanitize_input(@user_org.organization.name)
           )
         }
       }
@@ -201,8 +202,8 @@ class Users::SettingsController < ApplicationController
           }),
           heading: I18n.t(
             "users.settings.organizations.edit.destroy_uo_heading",
-            user: @user_org.user.full_name,
-            org: @user_org.organization.name
+            user: sanitize_input(@user_org.user.full_name),
+            org: sanitize_input(@user_org.organization.name)
           )
         }
       }
