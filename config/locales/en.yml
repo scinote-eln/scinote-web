@@ -1457,6 +1457,7 @@ en:
   # application.
 
   general:
+    save: "Save"
     update: "Update"
     edit: "Edit"
     cancel: "Cancel"
