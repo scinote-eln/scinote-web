@@ -1,4 +1,6 @@
 class ResultCommentsController < ApplicationController
+  include ActionView::Helpers::TextHelper
+
   before_action :load_vars
 
   before_action :check_view_permissions, only: [:index]
@@ -110,7 +112,13 @@ class ResultCommentsController < ApplicationController
               result: @result.name
             )
           )
-          render json: {}, status: :ok
+          render json: {
+            comment: auto_link(
+              simple_format(@comment.message),
+              link: :urls,
+              html: { target: '_blank' }
+            )
+          }, status: :ok
         else
           render json: { errors: @comment.errors.to_hash(true) },
                  status: :unprocessable_entity
