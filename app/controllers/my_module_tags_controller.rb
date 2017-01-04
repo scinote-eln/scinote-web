@@ -1,6 +1,6 @@
 class MyModuleTagsController < ApplicationController
   before_action :load_vars
-  before_action :check_view_permissions, only: [:index_edit]
+  before_action :check_view_permissions, only: [:index_edit, :index]
   before_action :check_create_permissions, only: [:create]
   before_action :check_destroy_permissions, only: [:destroy]
 
@@ -19,6 +19,23 @@ class MyModuleTagsController < ApplicationController
           })
         }
       }
+    end
+  end
+
+  def index
+    respond_to do |format|
+      format.json do
+        render json: {
+          html_canvas: render_to_string(
+            partial: 'canvas/tags.html.erb',
+            locals: { my_module: @my_module }
+          ),
+          html_module_header: render_to_string(
+            partial: 'my_modules/tags.html.erb',
+            locals: { my_module: @my_module }
+          )
+        }
+      end
     end
   end
 

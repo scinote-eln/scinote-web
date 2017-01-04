@@ -191,7 +191,7 @@ Rails.application.routes.draw do
   # Show action is a popup (JSON) for individual module in full-zoom canvas,
   # as well as "module info" page for single module (HTML)
   resources :my_modules, path: '/modules', only: [:show, :update] do
-    resources :my_module_tags, path: '/tags', only: [:create, :destroy]
+    resources :my_module_tags, path: '/tags', only: [:index, :create, :destroy]
     resources :user_my_modules, path: '/users',
               only: [:index, :create, :destroy]
     resources :my_module_comments,
