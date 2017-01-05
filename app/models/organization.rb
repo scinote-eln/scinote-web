@@ -62,8 +62,6 @@ class Organization < ActiveRecord::Base
                 .strip
                 .gsub('_', '\\_')
                 .gsub('%', '\\%')
-                .split(/\s+/)
-                .map { |t| '%' + t + '%' }
     else
       a_query = query
     end
