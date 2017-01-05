@@ -10,26 +10,9 @@
         .atwho({
           at: '@',
           callbacks: {
-            matcher: function(flag, subtext, should_startWithSpace, acceptSpaceBar) {
-              var _a, _y, match, regexp, space;
-              flag = flag.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
-              if (should_startWithSpace) {
-                flag = '(?:^|\\s)' + flag;
-              }
-              _a = decodeURI("%C3%80");
-              _y = decodeURI("%C3%BF");
-              space = ' \xa0'; // Use space...
-              regexp = new RegExp(flag + "([A-Za-z" + _a + "-" + _y + "0-9_" + space + "\'\.\+\-]*)$|" + flag + "([^\\x00-\\xff]*)$", 'gi');
-              match = regexp.exec(subtext);
-              if (match) {
-                return match[2] || match[1]
-              } else {
-                return null;
-              }
-            },
             remoteFilter: function(query, callback) {
               $.getJSON(
-                '/organizations/1/atwho_users.json',
+                '/organizations/1/atwho_users.json', // TODO
                 {query: query},
                 function(data) {
                   callback(data.users);
@@ -97,8 +80,27 @@
               return res;
             }
           },
-          limit: 5,
-          startsWithSpace: true
+          headerTpl:
+            '<div class="atwho-header-user">' +
+            '<div class="title"><%= I18n.t("atwho.users.title") %></div>' +
+            '<div class="help">' +
+            '<div>' +
+            '<strong><%= I18n.t("atwho.users.navigate_1") %></strong> ' +
+            '<%= I18n.t("atwho.users.navigate_2") %>' +
+            '</div>' +
+            '<div>' +
+            '<strong><%= I18n.t("atwho.users.confirm_1") %></strong> ' +
+            '<%= I18n.t("atwho.users.confirm_2") %>' +
+            '</div>' +
+            '<div>' +
+            '<strong><%= I18n.t("atwho.users.dismiss_1") %></strong> ' +
+            '<%= I18n.t("atwho.users.dismiss_2") %>' +
+            '</div>' +
+            '</div>' +
+            '</div>',
+          limit: <%= Constants::ATWHO_SEARCH_LIMIT %>,
+          startsWithSpace: true,
+          acceptSpaceBar: true
         });
       }
     });
