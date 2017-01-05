@@ -28,7 +28,10 @@
     <%= f.text_field :name, label: t("protocols.steps.new.name"), placeholder: t("protocols.steps.new.name_placeholder") %>
     <div class="form-group">
       <label class="control-label" for="step_description"><%= t('protocols.steps.new.description') %></label>
-      <%= quill_editor nil, { id: 'step_description', name: 'step[description]', value: @step.description } %>
+      <%= quill_editor nil, { id: 'step_description',
+                              name: 'step[description]',
+                              value: @step.description,
+                              data: { 'atwho-res-edit' => '' } } %>
     </div>
   </div>
   <div class="tab-pane" role="tabpanel" id="new-step-checklists">
