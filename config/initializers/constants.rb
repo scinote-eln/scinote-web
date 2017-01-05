@@ -208,8 +208,9 @@ class Constants
   ].freeze
 
   WHITELISTED_TAGS = [
-    'a', 'b', 'strong', 'i', 'em', 'li', 'ul', 'ol', 'h1',
-    'h2', 'h3', 'br', 'sub', 'p', 'div', 'span'
+    'a', 'b', 'strong', 'i', 'em', 'li', 'ul', 'ol', 'h1', 'del', 'ins',
+    'h2', 'h3', 'h4', 'h5', 'h6', 'br', 'sub', 'sup', 'p', 'code', 'hr',
+    'div', 'span', 'u', 's', 'blockquote', 'pre'
   ].freeze
 
   # Very basic regex to check for validity of emails
