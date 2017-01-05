@@ -9,15 +9,6 @@ class SmartAnnotation
     @query = query
   end
 
-  def resources
-    my_modules
-      .concat(projects)
-      .concat(experiments)
-      .concat(samples)
-  end
-
-  private
-
   def my_modules
     # Search tasks
     res = MyModule

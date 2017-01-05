@@ -25,12 +25,48 @@ class AtWhoController < ApplicationController
     end
   end
 
-  def resources
+  def samples
     res = SmartAnnotation.new(current_user, @query)
     respond_to do |format|
       format.json do
         render json: {
-          res: res.resources,
+          res: res.samples,
+          status: :ok
+        }
+      end
+    end
+  end
+
+  def projects
+    res = SmartAnnotation.new(current_user, @query)
+    respond_to do |format|
+      format.json do
+        render json: {
+          res: res.projects,
+          status: :ok
+        }
+      end
+    end
+  end
+
+  def experiments
+    res = SmartAnnotation.new(current_user, @query)
+    respond_to do |format|
+      format.json do
+        render json: {
+          res: res.experiments,
+          status: :ok
+        }
+      end
+    end
+  end
+
+  def my_modules
+    res = SmartAnnotation.new(current_user, @query)
+    respond_to do |format|
+      format.json do
+        render json: {
+          res: res.my_modules,
           status: :ok
         }
       end
