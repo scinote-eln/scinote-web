@@ -1706,13 +1706,70 @@ th.custom-field .modal-tooltiptext {
 }
 
 // AtWho (smart annotations)
-.atwho-li-user {
 
-  .fa.fa-circle {
-    font-size: 4px;
+// <Custom atwho style>
+.atwho-view {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: none;
+  margin-top: 18px;
+  background: $color-white;
+  color: $color-black;
+  border: 1px solid #DDD;
+  border-radius: 3px;
+  box-shadow: 0 0 5px rgba(0,0,0,0.1);
+  min-width: 120px;
+  max-height: 200px;
+  overflow: auto;
+  z-index: 11110 !important;
+
+  small {
+    font-size: smaller;
+    color: $color-emperor;
+    font-weight: normal;
   }
 
-  &.highlighted {
-    background-color: #ff0000;
+  strong {
+    color: $color-theme-primary;
+  }
+
+  .cur {
+    background: $color-theme-primary;
+    color: $color-white;
+
+    small {
+      color: $color-white;
+    }
+
+    strong {
+      color: $color-white;
+      font: bold;
+    }
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: auto;
+
+    li {
+      display: block;
+      padding: 5px 10px;
+      border-bottom: 1px solid #DDD;
+      cursor: pointer;
+    }
+  }
+}
+// <End of overrides>
+
+.atwho-li-user {
+
+  .avatar {
+    border-radius: 50%;
+    margin-left: 5px;
+    margin-right: 10px;
+    height: 20px;
+    width: 20px;
   }
 }
