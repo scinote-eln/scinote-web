@@ -66,7 +66,6 @@ gem 'quill-rails', # Rich text editor
     git: 'https://github.com/biosistemika/quill-rails.git',
     ref: 'e765c04'
 gem 'base62' # Used for smart annotations
-gem 'jquery-atwho-rails' # Used for smart annotations
 
 group :development, :test do
   gem 'byebug'
