@@ -1,5 +1,8 @@
 class CustomField < ActiveRecord::Base
+  include InputSanitizeHelper
+
   auto_strip_attributes :name, nullify: false
+  before_validation :sanitize_fields, on: [:create, :update]
   validates :name,
             presence: true,
             length: { maximum: Constants::NAME_MAX_LENGTH },
@@ -19,5 +22,11 @@ class CustomField < ActiveRecord::Base
 
   def update_samples_table_state
     SamplesTable.update_samples_table_state(self, nil)
+  end
+
+  private
+
+  def sanitize_fields
+    self.name = escape_input(name)
   end
 end

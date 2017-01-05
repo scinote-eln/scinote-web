@@ -1,5 +1,8 @@
 class SampleGroup < ActiveRecord::Base
+  include InputSanitizeHelper
+
   auto_strip_attributes :name, :color, nullify: false
+  before_validation :sanitize_fields, on: [:create, :update]
   validates :name,
             presence: true,
             length: { maximum: Constants::NAME_MAX_LENGTH },
@@ -17,4 +20,11 @@ class SampleGroup < ActiveRecord::Base
   has_many :samples, inverse_of: :sample_groups
 
   scope :sorted, -> { order(name: :asc) }
+
+  private
+
+  def sanitize_fields
+    self.name = escape_input(name)
+    self.color = escape_input(color)
+  end
 end

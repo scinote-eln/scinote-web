@@ -1,9 +1,11 @@
 class MyModule < ActiveRecord::Base
   include ArchivableModel, SearchableModel
+  include InputSanitizeHelper
 
   before_create :create_blank_protocol
 
   auto_strip_attributes :name, :description, nullify: false
+  before_validation :sanitize_fields, on: [:create, :update]
   validates :name,
             length: { minimum: Constants::NAME_MIN_LENGTH,
                       maximum: Constants::NAME_MAX_LENGTH }
@@ -356,6 +358,11 @@ class MyModule < ActiveRecord::Base
   end
 
   private
+
+  def sanitize_fields
+    self.name = escape_input(name)
+    self.description = sanitize_input(description)
+  end
 
   def create_blank_protocol
     protocols << Protocol.new_blank_for_module(self)

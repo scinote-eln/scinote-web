@@ -1,7 +1,9 @@
 class Report < ActiveRecord::Base
   include SearchableModel
+  include InputSanitizeHelper
 
   auto_strip_attributes :name, :description, nullify: false
+  before_validation :sanitize_fields, on: [:create, :update]
   validates :name,
             length: { minimum: Constants::NAME_MIN_LENGTH,
                       maximum: Constants::NAME_MAX_LENGTH },
@@ -114,5 +116,10 @@ class Report < ActiveRecord::Base
         save_json_element(child, i, el)
       end
     end
+  end
+
+  def sanitize_fields
+    self.name = escape_input(name)
+    self.description = sanitize_input(description)
   end
 end

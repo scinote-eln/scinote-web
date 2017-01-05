@@ -1,7 +1,9 @@
 class Tag < ActiveRecord::Base
   include SearchableModel
+  include InputSanitizeHelper
 
   auto_strip_attributes :name, :color, nullify: false
+  before_validation :sanitize_fields, on: [:create, :update]
   validates :name,
             presence: true,
             length: { maximum: Constants::NAME_MAX_LENGTH }
@@ -55,5 +57,12 @@ class Tag < ActiveRecord::Base
       last_modified_by: last_modified_by,
       project: project
     )
+  end
+
+  private
+
+  def sanitize_fields
+    self.name = escape_input(name)
+    self.color = escape_input(color)
   end
 end

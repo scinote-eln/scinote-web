@@ -1,6 +1,7 @@
 class Protocol < ActiveRecord::Base
   include SearchableModel
   include RenamingUtil
+  include InputSanitizeHelper
 
   after_save :update_linked_children
   after_destroy :decrement_linked_children
@@ -14,6 +15,7 @@ class Protocol < ActiveRecord::Base
   }
 
   auto_strip_attributes :name, :description, nullify: false
+  before_validation :sanitize_fields, on: [:create, :update]
   # Name is required when its actually specified (i.e. :in_repository? is true)
   validates :name, length: { maximum: Constants::NAME_MAX_LENGTH }
   validates :description, length: { maximum: Constants::TEXT_MAX_LENGTH }
@@ -589,6 +591,11 @@ class Protocol < ActiveRecord::Base
   end
 
   private
+
+  def sanitize_fields
+    self.name = escape_input(name)
+    self.description = sanitize_input(description)
+  end
 
   def deep_clone(clone, current_user)
     # Save cloned protocol first

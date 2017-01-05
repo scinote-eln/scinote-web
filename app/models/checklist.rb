@@ -1,7 +1,9 @@
 class Checklist < ActiveRecord::Base
   include SearchableModel
+  include InputSanitizeHelper
 
   auto_strip_attributes :name, nullify: false
+  before_validation :sanitize_fields, on: [:create, :update]
   validates :name,
             presence: true,
             length: { maximum: Constants::TEXT_MAX_LENGTH }
@@ -54,4 +56,9 @@ class Checklist < ActiveRecord::Base
     end
   end
 
+  private
+
+  def sanitize_fields
+    self.name = escape_input(name)
+  end
 end

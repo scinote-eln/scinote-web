@@ -1,7 +1,9 @@
 class Comment < ActiveRecord::Base
   include SearchableModel
+  include InputSanitizeHelper
 
   auto_strip_attributes :message, nullify: false
+  before_validation :sanitize_fields, on: [:create, :update]
   validates :message,
             presence: true,
             length: { maximum: Constants::TEXT_MAX_LENGTH }
@@ -101,4 +103,7 @@ class Comment < ActiveRecord::Base
     end
   end
 
+  def sanitize_fields
+    self.message = sanitize_input(message)
+  end
 end
