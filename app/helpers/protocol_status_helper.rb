@@ -5,7 +5,7 @@ module ProtocolStatusHelper
     res = ""
     res << "<a href=\"#\" data-toggle=\"popover\" data-html=\"true\" "
     res << "data-trigger=\"focus\" data-placement=\"bottom\" title=\""
-    res << sanitize_input(protocol_status_popover_title(parent)) +
+    res << protocol_status_popover_title(parent) +
            '" data-content="' + protocol_status_popover_content(parent) +
            '">' + protocol_name(parent) + '</a>'
     sanitize_input(res)
@@ -18,7 +18,11 @@ module ProtocolStatusHelper
   end
 
   def protocol_name(protocol)
-    protocol_private_for_current_user?(protocol) ? I18n.t("my_modules.protocols.protocol_status_bar.private_parent") : protocol.name
+    if protocol_private_for_current_user?(protocol)
+      I18n.t('my_modules.protocols.protocol_status_bar.private_parent')
+    else
+      sanitize_input(protocol.name)
+    end
   end
 
   def protocol_status_popover_title(protocol)
@@ -36,7 +40,10 @@ module ProtocolStatusHelper
     end
     res << "&nbsp;-&nbsp;"
     res << "<span style='font-style: italic;'>" + I18n.t("my_modules.protocols.protocol_status_bar.added_by") + "&nbsp;"
-    res << "<a href='#' data-toggle='tooltip' data-placement='right' title='" + I18n.t("my_modules.protocols.protocol_status_bar.added_by_tooltip", ts: I18n.l(protocol.created_at, format: :full)) + "'>" + protocol.added_by.full_name + "</a></span>"
+    res << "<a href='#' data-toggle='tooltip' data-placement='right' title='" +
+           I18n.t('my_modules.protocols.protocol_status_bar.added_by_tooltip',
+                  ts: I18n.l(protocol.created_at, format: :full)) + "'>" +
+           sanitize_input(protocol.added_by.full_name) + '</a></span>'
   end
 
   def protocol_status_popover_content(protocol)
@@ -45,7 +52,7 @@ module ProtocolStatusHelper
     else
       res = "<p>"
       if protocol.description.present?
-        res << protocol.description
+        res << sanitize_input(protocol.description)
       else
         res << "<em>" + I18n.t("my_modules.protocols.protocol_status_bar.no_description") + "</em>"
       end
