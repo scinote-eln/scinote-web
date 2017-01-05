@@ -213,6 +213,10 @@ class Constants
     'div', 'span', 'u', 's', 'blockquote', 'pre'
   ].freeze
 
+  WHITELISTED_ATTRIBUTES = [
+    'href', 'src', 'width', 'height', 'alt', 'cite', 'datetime', 'title',
+    'class', 'name', 'xml:lang', 'abbr', 'style'
+  ]
   # Very basic regex to check for validity of emails
   BASIC_EMAIL_REGEX = URI::MailTo::EMAIL_REGEXP
 

@@ -1,7 +1,10 @@
 module InputSanitizeHelper
   def sanitize_input(text)
-    ActionController::Base.helpers.sanitize(text,
-                                            tags: Constants::WHITELISTED_TAGS)
+    ActionController::Base.helpers.sanitize(
+      text,
+      tags: Constants::WHITELISTED_TAGS,
+      attributes: Constants::WHITELISTED_ATTRIBUTES
+    )
   end
 
   def escape_input(text)
