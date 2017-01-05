@@ -146,6 +146,11 @@ class Users::RegistrationsController < Devise::RegistrationsController
       # this must be called after @org variable is defined. Otherwise this
       # variable won't be accessable in view.
       super do |resource|
+        # Set the confirmed_at == created_at IF not using email confirmations
+        unless Rails.configuration.x.enable_email_confirmations
+          resource.update(confirmed_at: resource.created_at)
+        end
+
         if resource.valid? && resource.persisted?
           @org.created_by = resource # set created_by for oraganization
           @org.save
