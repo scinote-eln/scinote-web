@@ -191,7 +191,11 @@ function initKeywordFiltering() {
 function initProtocolPreviewModal() {
   // Only do this if the repository is public/private
   if (repositoryType !== "archive") {
-    protocolsTableEl.on("click", "a[data-action='protocol-preview']", function(e) {
+    var protocolsEl = protocolsTableEl;
+    if (document.getElementById("search-content")) {
+      protocolsEl = $("#search-content");
+    }
+    protocolsEl.on("click", "a[data-action='protocol-preview']", function(e) {
       var link = $(this);
       $.ajax({
         url: link.attr("data-url"),
