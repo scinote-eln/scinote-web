@@ -89,7 +89,6 @@ function dataTableInit() {
     fnDrawCallback: function() {
       animateSpinner(this, false);
       changeToViewMode();
-      sampleInfoListener();
       updateButtons();
     },
     preDrawCallback: function() {
@@ -145,7 +144,6 @@ function dataTableInit() {
       table.on('mousedown', function() {
         $('#samples-columns-dropdown').removeClass('open');
       });
-      sampleInfoListener();
     }
   });
 
@@ -215,6 +213,11 @@ function dataTableInit() {
   // Handle table draw event
   table.on('draw', function() {
     updateDataTableSelectAllCtrl(table);
+    sampleInfoListener();
+  });
+
+  table.on('column-reorder', function() {
+    sampleInfoListener();
   });
 
   return table;
@@ -1028,6 +1031,7 @@ function changeToEditMode() {
         li.removeClass('col-invisible');
         column.visible(true);
       }
+      sampleInfoListener();
     });
   }
 
