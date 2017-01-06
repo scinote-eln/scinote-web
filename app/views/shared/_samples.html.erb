@@ -99,7 +99,8 @@
       id="deleteSamplesButton" data-target="#deleteSamples" data-toggle="modal" disabled>
       <span class="glyphicon glyphicon-trash"></span>
       <span class="hidden-xs-custom"><%= t'samples.delete_samples' %></span>
-        <%= submit_tag MyModulesController::DELETE_SAMPLES, :class => "hidden delete_samples_submit" %>
+        <%= submit_tag I18n.t('samples.delete_samples'), :class => "hidden
+        delete_samples_submit" %>
     </button>
   <% end %>
 

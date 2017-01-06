@@ -26,8 +26,8 @@ class MyModulesController < ApplicationController
   layout "fluid"
 
   # Define submit actions constants (used in routing)
-  ASSIGN_SAMPLES = 'Assign'
-  UNASSIGN_SAMPLES = 'Unassign'
+  ASSIGN_SAMPLES = I18n.t('samples.assign_samples_to_module')
+  UNASSIGN_SAMPLES = I18n.t('samples.unassign_samples_to_module')
 
   # Action defined in SampleActions
   DELETE_SAMPLES = I18n.t('samples.delete_samples')
