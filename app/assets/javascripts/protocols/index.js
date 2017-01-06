@@ -191,7 +191,9 @@ function initKeywordFiltering() {
 function initProtocolPreviewModal() {
   // Only do this if the repository is public/private
   if (repositoryType !== "archive") {
+    // If you are in protocol repository
     var protocolsEl = protocolsTableEl;
+    // If you are in search results
     if (document.getElementById("search-content")) {
       protocolsEl = $("#search-content");
     }
