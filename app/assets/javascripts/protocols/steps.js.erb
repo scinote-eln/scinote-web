@@ -3,7 +3,6 @@
 //= require canvas-to-blob.min
 //= require assets
 //= require comments
-//= require my_modules/image_preview
 
 // Sets callbacks for toggling checkboxes
 function applyCheckboxCallBack()  {
@@ -80,6 +79,7 @@ function applyCancelCallBack() {
 
     setTimeout(function() {
       initStepsComments();
+      initPreviewModal();
     }, 1000);
 
   })
@@ -104,6 +104,7 @@ function applyEditCallBack() {
     toggleButtons(false);
     initializeCheckboxSorting();
     animateSpinner(null, false);
+    initPreviewModal();
 
     $("#new-step-checklists fieldset.nested_step_checklists ul").each(function () {
       enableCheckboxSorting(this);

@@ -282,9 +282,10 @@ Rails.application.routes.draw do
   # We cannot use 'resources :assets' because assets is a reserved route
   # in Rails (assets pipeline) and causes funky behavior
   get "files/:id/present", to: "assets#file_present", as: "file_present_asset"
-  get "files/:id/large_url", to: "assets#large_image_url", as: "large_image_url_asset"
+  get 'files/:id/large_url',
+      to: 'assets#large_image_url',
+      as: 'large_image_url_asset'
   get "files/:id/download", to: "assets#download", as: "download_asset"
-  get "files/:id/preview", to: "assets#preview", as: "preview_asset"
   post 'asset_signature' => 'assets#signature'
 
   devise_scope :user do

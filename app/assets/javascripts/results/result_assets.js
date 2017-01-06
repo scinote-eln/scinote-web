@@ -1,5 +1,3 @@
-//= require my_modules/image_preview
-
 // New result asset behaviour
 $("#new-result-asset").on("ajax:success", function(e, data) {
   var $form = $(data.html);
@@ -39,6 +37,7 @@ function applyEditResultAssetCallback() {
       $form.remove();
       applyEditResultAssetCallback();
       toggleResultEditButtons(true);
+      initPreviewModal();
     });
 
     toggleResultEditButtons(false);

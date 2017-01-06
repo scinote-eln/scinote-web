@@ -3,7 +3,7 @@ function initPreviewModal() {
   $('.image-preview-link').click(function(e) {
     e.preventDefault();
     var name = $(this).find('p').text();
-    var url = $(this).find('img').data('get-preview-url');
+    var url = $(this).find('img').data('preview-url');
     var downloadUrl = $(this).attr('href');
     var description = $(this).data('description');
     openPreviewModal(name, url, downloadUrl, description);
@@ -16,7 +16,7 @@ function openPreviewModal(name, url, downloadUrl, description) {
     url: url,
     type: 'GET',
     dataType: 'json',
-    success: function (data) {
+    success: function(data) {
       modal.find('.image-name').text(name);
       var link = modal.find('.image-download-link');
       link.attr('href', downloadUrl);
@@ -25,12 +25,17 @@ function openPreviewModal(name, url, downloadUrl, description) {
       var image = modal.find('.modal-body img');
       image.attr('src', data['large-preview-url']);
       image.attr('alt', name);
+      image.click(function(ev) {
+        ev.stopPropagation();
+      });
       modal.find('.modal-footer .image-description').text(description);
+      modal.find('.modal-body').click(function() {
+        modal.modal('hide');
+      });
       modal.modal();
     },
-    error: function (ev) {
+    error: function(ev) {
       // TODO
     }
   });
-
 }

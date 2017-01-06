@@ -7,8 +7,8 @@ class Asset < ActiveRecord::Base
 
   # Paperclip validation
   has_attached_file :file,
-                    styles: { medium: [Constants::MEDIUM_PIC_FORMAT, :jpg],
-                              large: [Constants::LARGE_PIC_FORMAT, :jpg] },
+                    styles: { large: [Constants::LARGE_PIC_FORMAT, :jpg],
+                              medium: [Constants::MEDIUM_PIC_FORMAT, :jpg] },
                     convert_options: { medium: '-quality 70 -strip' }
 
   validates_attachment :file,
@@ -29,7 +29,7 @@ class Asset < ActiveRecord::Base
                                            %r{^image/#{ Regexp.union(
                                              Constants::WHITELISTED_IMAGE_TYPES
                                            ) }}
-                                          [:medium, :large]
+                                          [:large, :medium]
                                         else
                                           {}
                                         end

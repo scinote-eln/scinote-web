@@ -1,5 +1,3 @@
-//= require my_modules/image_preview
-
 function setupAssetsLoading() {
   var DELAY = 2500;
   var REPETITIONS = 60;
@@ -28,8 +26,8 @@ function setupAssetsLoading() {
 
           if (data.type === "image") {
             $el.html(
-              "<img src='" + data['preview-url'] + "' data-get-preview-url='"
-              + data['get-preview-url'] + "'><p>" +
+              "<img src='" + data['image-tag-url'] + "' data-preview-url='" +
+              data['preview-url'] + "'><p>" +
               data.filename + "</p>"
             );
           } else {
@@ -41,15 +39,15 @@ function setupAssetsLoading() {
           animateSpinner(null, false);
           initPreviewModal();
         },
-        error: function (ev) {
-          if (ev.status == 403) {
+        error: function(data) {
+          if (data.status == 403) {
             $el.find('img').hide();
             $el.next().hide();
             // Image/file exists, but user doesn't have
             // rights to download it
             if (type === "image") {
               $el.html(
-                "<img src='" + $data['preview-url'] + "'><p>" +
+                "<img src='" + data['image-tag-url'] + "'><p>" +
                 data.filename + "</p>"
               );
             } else {
