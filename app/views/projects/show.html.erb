@@ -8,23 +8,8 @@
        data-project-id="<%= @project.id %>">
     <div class="row">
       <div class="col-sm-12">
-        <% if can_create_experiment(@project) %>
-          <%= link_to new_project_experiment_url(@project),
-                        remote: true,
-                        type: "button",
-                        id: 'new-experiment',
-                        class: 'btn btn-primary pull-right',
-                        data: {
-                            intro: t('tutorial.create_experiment_html'),
-                            step: '4',
-                            position: 'left'
-                            }   do %>
-            <span class="glyphicon glyphicon-plus"></span>
-            <span class="hidden-xs"><%=t 'experiments.new.create' %></span>
-          <% end %>
-        <% end %>
         <!-- experiment sort -->
-        <div class="dropdown">
+        <div class="dropdown pull-left">
           <button class="btn btn-default dropdown-toggle" type="button" id="sortMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
             <span class="hidden-xs"><%= t'projects.index.sort' %></span>
             <span class="visible-xs-inline"><i class="glyphicon glyphicon-sort"></i></span>
@@ -40,6 +25,21 @@
             <% end %>
           </ul>
         </div>
+        <% if can_create_experiment(@project) %>
+          <%= link_to new_project_experiment_url(@project),
+                        remote: true,
+                        type: "button",
+                        id: 'new-experiment',
+                        class: 'btn btn-primary pull-right',
+                        data: {
+                            intro: t('tutorial.create_experiment_html'),
+                            step: '4',
+                            position: 'left'
+                            }   do %>
+            <span class="glyphicon glyphicon-plus"></span>
+            <span class="hidden-xs"><%=t 'experiments.new.create' %></span>
+          <% end %>
+        <% end %>
       </div>
     </div>
     <div class="row">
