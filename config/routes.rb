@@ -182,7 +182,7 @@ Rails.application.routes.draw do
       post 'samples_index'
       post :delete_samples,
            constraints: CommitParamRouting.new(
-             MyModulesController::DELETE_SAMPLES
+             ExperimentsController::DELETE_SAMPLES
            ),
            action: :delete_samples
     end

@@ -30,7 +30,7 @@ class MyModulesController < ApplicationController
   UNASSIGN_SAMPLES = 'Unassign'
 
   # Action defined in SampleActions
-  DELETE_SAMPLES = 'Delete'
+  DELETE_SAMPLES = I18n.t('samples.delete_samples')
 
   def show
     respond_to do |format|

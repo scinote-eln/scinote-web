@@ -1,5 +1,4 @@
 module SamplesHelper
-
   def can_add_samples
     module_page? && can_add_samples_to_module(@my_module)
   end
@@ -31,7 +30,8 @@ module SamplesHelper
       assign_samples_my_module_path(@my_module)
     elsif project_page?
       delete_samples_project_path(@project)
+    elsif experiment_page?
+      delete_samples_experiment_path(@experiment)
     end
   end
-
 end
