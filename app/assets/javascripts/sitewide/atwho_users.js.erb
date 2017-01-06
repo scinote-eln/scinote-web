@@ -5,14 +5,19 @@
     'focus',
     '[data-atwho-users-edit]',
     function() {
-      if (_.isUndefined($(this).data('atwho'))) {
+      if (
+        $(document.body).is('[data-atwho-users-url]') &&
+        _.isUndefined($(this).data('atwho'))
+      ) {
+        var dataUrl = $(document.body).attr('data-atwho-users-url');
+
         $(this)
         .atwho({
           at: '@',
           callbacks: {
             remoteFilter: function(query, callback) {
               $.getJSON(
-                '/organizations/1/atwho_users.json', // TODO
+                dataUrl,
                 {query: query},
                 function(data) {
                   callback(data.users);
@@ -103,5 +108,6 @@
           acceptSpaceBar: true
         });
       }
-    });
+    }
+  );
 })();
