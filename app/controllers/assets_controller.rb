@@ -19,6 +19,7 @@ class AssetsController < ApplicationController
 
           # If check permission passes, return :ok
           render json: {
+            'asset-id' => @asset.id,
             'image-tag-url' => @asset.url(:medium),
             'preview-url' => large_image_url_asset_path(@asset),
             'filename' => truncate(@asset.file_file_name,

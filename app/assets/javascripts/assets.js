@@ -26,9 +26,12 @@ function setupAssetsLoading() {
 
           if (data.type === "image") {
             $el.html(
+              "<a class='image-preview-link' id='modal_link" +
+              data['asset-id'] + "' data-status='asset-present' " +
+              "href='" + data['download-url'] + "'>" +
               "<img src='" + data['image-tag-url'] + "' data-preview-url='" +
               data['preview-url'] + "'><p>" +
-              data.filename + "</p>"
+              data.filename + '</p></a>'
             );
           } else {
             $el.html(
