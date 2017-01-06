@@ -22,11 +22,11 @@ module SearchHelper
     if search_org != current_organization
       link_to text,
               path,
-              :class => 'btn btn-primary',
+              class: 'btn btn-primary',
               data: { confirm: t('users.settings.changed_org_in_search',
                                  team: search_org.name) }
     else
-      link_to text, path, :class => 'btn btn-primary'
+      link_to text, path, class: 'btn btn-primary'
     end
   end
 end

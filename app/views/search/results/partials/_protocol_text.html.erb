@@ -18,7 +18,7 @@
   &nbsp;
 <% end %>
 <% if can_view_protocol(protocol) %>
-  <%= link_to text, '#', 'data-action' => 'protocol-preview', 'data-url' => preview_protocol_path(protocol) %>
+  <%= link_to text, '#', 'data-action': 'protocol-preview', 'data-url': preview_protocol_path(protocol) %>
 <% else %>
   <%= text %>
 <% end %>
