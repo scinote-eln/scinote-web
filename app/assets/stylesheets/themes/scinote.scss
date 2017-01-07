@@ -1787,10 +1787,19 @@ th.custom-field .modal-tooltiptext {
       display: inline;
       margin-right: 15px;
       font-size: smaller;
+    }
 
-      strong {
-        color: $color-black;
-      }
+    div strong {
+      color: $color-black;
+    }
+
+    .dismiss {
+      color: $color-emperor;
+    }
+
+    .dismiss:hover {
+      color: $color-black;
+      cursor: pointer;
     }
   }
 }
