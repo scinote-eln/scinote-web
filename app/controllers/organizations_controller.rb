@@ -74,7 +74,8 @@ class OrganizationsController < ApplicationController
             end
           end
         rescue ArgumentError, CSV::MalformedCSVError
-          error = t("organizations.parse_sheet.errors.invalid_file")
+          error = t('organizations.parse_sheet.errors.invalid_file',
+                    encoding: ''.encoding)
           format.html {
             flash[:alert] = error
             redirect_to session.delete(:return_to)

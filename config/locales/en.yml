@@ -922,7 +922,7 @@ en:
       import_samples: "Import samples"
       do_not_include_column: "Do not include this column"
       errors:
-        invalid_file: "The file you provided is invalid."
+        invalid_file: "The file you provided is invalid. Make sure the file is encoded using %{encoding}."
         invalid_extension: "The file has invalid extension."
         empty_file: "You've selected empty file. There's not much to import."
         temp_file_failure: "We couldn't create temporary file. Please contact administrator."
