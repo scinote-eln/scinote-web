@@ -1,40 +1,24 @@
 <% query ||= nil %>
 <% text = query.present? ? highlight(protocol.name, query.strip.split(/\s+/)) : (protocol.name.empty? ? t("search.index.no_name") : protocol.name) %>
 
-<% if protocol.in_module? %>
+<% if protocol.in_repository_public? %>
   <span class="label label-info">
-    <span class="glyphicon glyphicon-credit-card"></span>
+    <%=t "search.index.public" %>
   </span>
   &nbsp;
-  <% if can_view_steps_in_protocol(protocol) %>
-    <%= route_to_other_org protocols_my_module_path(protocol.my_module),
-                           protocol.organization,
-                           text %>
-  <% else %>
-    <%= text %>
-  <% end %>
+<% elsif protocol.in_repository_private? %>
+  <span class="label label-info">
+    <%=t "search.index.private" %>
+  </span>
+  &nbsp;
+<% elsif protocol.in_repository_archived? %>
+  <span class="label label-warning">
+    <%=t "search.index.archived" %>
+  </span>
+  &nbsp;
+<% end %>
+<% if can_view_protocol(protocol) %>
+  <%= link_to text, '#', 'data-action': 'protocol-preview', 'data-url': preview_protocol_path(protocol) %>
 <% else %>
-  <% if protocol.in_repository_public? %>
-    <span class="label label-info">
-      <%=t "search.index.public" %>
-    </span>
-    &nbsp;
-  <% elsif protocol.in_repository_private? %>
-    <span class="label label-info">
-      <%=t "search.index.private" %>
-    </span>
-    &nbsp;
-  <% elsif protocol.in_repository_archived? %>
-    <span class="label label-warning">
-      <%=t "search.index.archived" %>
-    </span>
-    &nbsp;
-  <% end %>
-  <% if can_edit_protocol(protocol) %>
-    <%= route_to_other_org edit_protocol_path(protocol),
-                           protocol.organization,
-                           text %>
-  <% else %>
-    <%= text %>
-  <% end %>
+  <%= text %>
 <% end %>

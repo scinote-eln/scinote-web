@@ -1,4 +1,6 @@
 <button type="button" class="btn btn-default" data-dismiss="modal"><%=t "general.close" %></button>
 <% if can_edit_protocol(@protocol) %>
-  <%= link_to t("general.edit"), edit_protocol_path(@protocol), :class => "btn btn-primary" %>
+  <%= route_to_other_org_btn edit_protocol_path(protocol),
+                             protocol.organization,
+                             t("general.edit") %>
 <% end %>
