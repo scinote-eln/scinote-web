@@ -56,28 +56,28 @@ function updateSamplesTypesandGroups() {
 }
 
 function sampleAlertMsg(message, type) {
-  var alertType, glyphSign;
-  if (type == 'success') {
+  var alertType;
+  var glyphSign;
+  if (type === 'success') {
     alertType = ' alert-success ';
     glyphSign = ' glyphicon-ok-sign ';
-  } else if (type == 'danger') {
+  } else if (type === 'danger') {
     alertType = ' alert-danger ';
     glyphSign = ' glyphicon-exclamation-sign ';
   }
-  var htmlSnippet = '<div class="alert' + alertType + 'alert-dismissable alert-floating">' +
+  var htmlSnippet = '<div class="alert alert' + alertType +
+                    'alert-dismissable alert-floating">' +
                       '<div class="container">' +
-                        '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>' +
+                        '<button type="button" class="close" ' +
+                        'data-dismiss="alert" aria-label="Close">' +
+                        '<span aria-hidden="true">×</span></button>' +
                           '<span class="glyphicon' + glyphSign + '"></span>' +
-                          '<span>'+ message +'</span>' +
+                          '<span>' + message + '</span>' +
                         '</div>' +
                       '</div>';
   $('#notifications').html(htmlSnippet);
   $('#content-wrapper').addClass('alert-shown');
-}
-
-function sampleAlertMsgHide() {
-  $('#notifications').html('<div></div>');
-  $('#content-wrapper').removeClass('alert-shown');
+  HelperModule.hideFlashMsg();
 }
 
 /**
