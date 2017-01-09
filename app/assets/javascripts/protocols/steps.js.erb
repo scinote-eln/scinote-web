@@ -205,6 +205,7 @@ function formEditAjax($form) {
     initCallBacks();
     initHandsOnTable($new_step);
     toggleButtons(true);
+    initPreviewModal();
 
     // Show the edited step
     $new_step.find(".panel-collapse:first").addClass("collapse in");
