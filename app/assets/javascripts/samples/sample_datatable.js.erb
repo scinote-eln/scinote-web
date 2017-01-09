@@ -440,6 +440,9 @@ function onClickEdit() {
 
             // Adjust columns width in table header
             table.columns.adjust();
+            $("select[name=sample_type_id]").on('change', function(){
+              table.columns.adjust();
+            });
         },
         error: function (e, data, status, xhr) {
             if (e.status == 403) {
