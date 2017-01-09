@@ -329,6 +329,7 @@ function appendSamplesIdToForm(form) {
 //Show sample info
 function sampleInfoListener() {
     $(".sample_info").on("click", function(e){
+        $("#modal-info-sample").remove();
         var that = $(this);
         $.ajax({
             method: "GET",
