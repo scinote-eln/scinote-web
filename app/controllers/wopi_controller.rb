@@ -128,7 +128,7 @@ class WopiController < ActionController::Base
           render nothing: :true, status: 409 and return
         end
       else
-        response.headers['X-WOPI-Lock'] = ''
+        response.headers['X-WOPI-Lock'] = ' '
         render nothing: :true, status: 409 and return
       end
     end
@@ -175,7 +175,7 @@ class WopiController < ActionController::Base
           render nothing: :true, status: 409 and return
         end
       else
-        response.headers['X-WOPI-Lock'] = ''
+        response.headers['X-WOPI-Lock'] = ' '
         render nothing: :true, status: 409 and return
       end
     end
@@ -186,7 +186,7 @@ class WopiController < ActionController::Base
       if @asset.locked?
         response.headers['X-WOPI-Lock'] = @asset.lock
       else
-        response.headers['X-WOPI-Lock'] = ''
+        response.headers['X-WOPI-Lock'] = ' '
       end
       render nothing: :true, status: 200 and return
     end
@@ -229,7 +229,7 @@ class WopiController < ActionController::Base
         render nothing: :true, status: 200 and return
       else
         logger.warn 'WOPI: trying to modify unlocked file'
-        response.headers['X-WOPI-Lock'] = ''
+        response.headers['X-WOPI-Lock'] = ' '
         render nothing: :true, status: 409 and return
       end
     end
