@@ -1,13 +1,13 @@
 class ExperimentsController < ApplicationController
+  include SampleActions
   include PermissionHelper
   include OrganizationsHelper
 
   before_action :set_experiment,
                 except: [:new, :create]
   before_action :set_project,
-                only: [:new, :create, :samples_index,
-                       :samples, :module_archive, :clone_modal,
-                       :move_modal]
+                only: [:new, :create, :samples_index, :samples, :module_archive,
+                       :clone_modal, :move_modal, :delete_samples]
   before_action :check_view_permissions,
                 only: [:canvas, :module_archive]
   before_action :check_module_archive_permissions,
@@ -19,6 +19,9 @@ class ExperimentsController < ApplicationController
 
   # except parameter could be used but it is not working.
   layout :choose_layout
+
+  # Action defined in SampleActions
+  DELETE_SAMPLES = I18n.t('samples.delete_samples')
 
   def new
     @experiment = Experiment.new
