@@ -19,7 +19,9 @@ class AssetsController < ApplicationController
 
           # If check permission passes, return :ok
           render json: {
-            'preview-url' => @asset.url(:medium),
+            'asset-id' => @asset.id,
+            'image-tag-url' => @asset.url(:medium),
+            'preview-url' => large_image_url_asset_path(@asset),
             'filename' => truncate(@asset.file_file_name,
                                    length:
                                      Constants::FILENAME_TRUNCATION_LENGTH),
@@ -31,11 +33,18 @@ class AssetsController < ApplicationController
     end
   end
 
-  def preview
-    if @asset.is_image?
-      redirect_to @asset.url(:medium), status: 307
-    else
-      render_400
+  def large_image_url
+    respond_to do |format|
+      format.json do
+        render json: {
+          'large-preview-url' => @asset.url(:large),
+          'filename' => truncate(@asset.file_file_name,
+                                 length:
+                                   Constants::FILENAME_TRUNCATION_LENGTH),
+          'download-url' => download_asset_path(@asset),
+          'type' => (@asset.is_image? ? 'image' : 'file')
+        }
+      end
     end
   end
 

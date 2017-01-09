@@ -42,7 +42,7 @@
   </div>
   <div class="tab-pane" role="tabpanel" id="new-step-assets">
     <%= f.nested_fields_for :assets do |ff| %>
-      <%= render "form_assets.html.erb", ff: ff %>
+      <%= render "form_assets.html.erb", ff: ff, step: step %>
     <% end %>
     <%= f.add_nested_fields_link :assets do %>
       <span class="glyphicon glyphicon-plus"></span>

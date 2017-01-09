@@ -79,6 +79,7 @@ function applyCancelCallBack() {
 
     setTimeout(function() {
       initStepsComments();
+      initPreviewModal();
     }, 1000);
 
   })
@@ -103,6 +104,7 @@ function applyEditCallBack() {
     toggleButtons(false);
     initializeCheckboxSorting();
     animateSpinner(null, false);
+    initPreviewModal();
 
     $("#new-step-checklists fieldset.nested_step_checklists ul").each(function () {
       enableCheckboxSorting(this);
@@ -567,6 +569,7 @@ $(document).ready(function() {
   expandAllSteps();
   setupAssetsLoading();
   initStepsComments();
+  initPreviewModal();
 
   $(function () {
 

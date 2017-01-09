@@ -26,9 +26,12 @@ function setupAssetsLoading() {
 
           if (data.type === "image") {
             $el.html(
-              "<a href='" + data['download-url'] + "'>" +
-              "<img src='" + data['preview-url'] + "'><p>" +
-              data.filename + "</p></a>"
+              "<a class='image-preview-link' id='modal_link" +
+              data['asset-id'] + "' data-status='asset-present' " +
+              "href='" + data['download-url'] + "'>" +
+              "<img src='" + data['image-tag-url'] + "' data-preview-url='" +
+              data['preview-url'] + "'><p>" +
+              data.filename + '</p></a>'
             );
           } else {
             $el.html(
@@ -37,16 +40,17 @@ function setupAssetsLoading() {
             );
           }
           animateSpinner(null, false);
+          initPreviewModal();
         },
-        error: function (ev) {
-          if (ev.status == 403) {
+        error: function(data) {
+          if (data.status == 403) {
             $el.find('img').hide();
             $el.next().hide();
             // Image/file exists, but user doesn't have
             // rights to download it
             if (type === "image") {
               $el.html(
-                "<img src='" + $data['preview-url'] + "'><p>" +
+                "<img src='" + data['image-tag-url'] + "'><p>" +
                 data.filename + "</p>"
               );
             } else {

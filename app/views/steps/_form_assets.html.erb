@@ -11,12 +11,24 @@
   <div class="panel-body">
     <% if ff.object.file.exists? %>
       <% if can_view_or_download_step_assets(@protocol) %>
-        <%= link_to download_asset_path(ff.object), data: {no_turbolink: true} do %>
-          <%= image_tag(preview_asset_path ff.object) if ff.object.is_image? %>
-          <p><%= ff.object.file_file_name %></p>
+        <% if ff.object.is_image? %>
+          <%= link_to download_asset_path(ff.object),
+            class: 'image-preview-link',
+            id: "modal_link#{ff.object.id}",
+            data: {no_turbolink: true, id: true, status: "asset-present", description: "#{step.position + 1}. #{step.name}"} do %>
+            <%= image_tag ff.object.url(:medium), data: {'preview-url': large_image_url_asset_path(ff.object)} %>
+            <p><%= truncate(ff.object.file_file_name,
+                            length: Constants::FILENAME_TRUNCATION_LENGTH) %></p>
+          <% end %>
+        <% else %>
+          <%= link_to download_asset_path(ff.object), data: {no_turbolink: true} do %>
+            <%= image_tag ff.object.url(:medium) if ff.object.is_image? %>
+            <p><%= truncate(ff.object.file_file_name,
+                            length: Constants::FILENAME_TRUNCATION_LENGTH) %></p>
+          <% end %>
         <% end %>
       <% else %>
-        <%= image_tag(preview_asset_path ff.object) if ff.object.is_image? %>
+        <%= image_tag image_tag ff.object.url(:medium) if ff.object.is_image? %>
         <p><%= ff.object.file_file_name %></p>
       <% end %>
     <% else %>

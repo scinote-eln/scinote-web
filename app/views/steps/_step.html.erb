@@ -66,17 +66,27 @@
                   <li>
                     <% if can_view_or_download_step_assets(@protocol) %>
                       <% if asset.file_present %>
-                        <%= link_to download_asset_path(asset), data: {no_turbolink: true, id: true, status: "asset-present"} do %>
-                          <% if asset.file.processing? %>
-                            <span data-status='asset-loading'
-                                  data-present-url='<%= file_present_asset_path(asset) %>'>
-                              <%= image_tag 'medium/processing.gif' %>
-                            </span>
+                        <% if asset.file.processing? %>
+                          <span data-status='asset-loading'
+                                data-present-url='<%= file_present_asset_path(asset) %>'>
+                            <%= image_tag 'medium/processing.gif' %>
+                          </span>
+                        <% else %>
+                          <% if asset.is_image? %>
+                            <%= link_to download_asset_path(asset),
+                              class: 'image-preview-link',
+                              id: "modal_link#{asset.id}",
+                              data: {no_turbolink: true, id: true, status: "asset-present", description: "#{step.position + 1}. #{step.name}"} do %>
+                              <%= image_tag asset.url(:medium), data: {'preview-url': large_image_url_asset_path(asset)} %>
+                              <p><%= truncate(asset.file_file_name,
+                                              length: Constants::FILENAME_TRUNCATION_LENGTH) %></p>
+                            <% end %>
                           <% else %>
-                            <%= image_tag preview_asset_path(asset) if asset.is_image? %>
+                            <%= link_to download_asset_path(asset), data: {no_turbolink: true} do %>
+                            <p><%= truncate(asset.file_file_name,
+                                            length: Constants::FILENAME_TRUNCATION_LENGTH) %></p>
+                            <% end %>
                           <% end %>
-                          <p><%= truncate(asset.file_file_name,
-                                          length: Constants::FILENAME_TRUNCATION_LENGTH) %></p>
                         <% end %>
                       <% else %>
                         <span data-status='asset-loading'
@@ -91,7 +101,7 @@
                           <%= image_tag 'medium/processing.gif' %>
                         </span>
                       <% else %>
-                        <%= image_tag preview_asset_path(asset) if asset.is_image? %>
+                        <%= image_tag asset.url(:medium) if asset.is_image? %>
                       <% end %>
                       <p><%= truncate(asset.file_file_name,
                                       length: Constants::FILENAME_TRUNCATION_LENGTH) %></p>
