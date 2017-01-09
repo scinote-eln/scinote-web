@@ -199,7 +199,7 @@ function dataTableInit() {
   });
 
   // Handle click on "Select all" control
-  $('#samples thead input[name="select_all"]').on('click', function(e) {
+  $('.dataTables_scrollHead input[name="select_all"]').on('click', function(e) {
     if (this.checked) {
       $('#samples tbody input[type="checkbox"]:not(:checked)').trigger('click');
     } else {
@@ -236,10 +236,11 @@ $.fn.dataTable.defaults.noSearchHidden = true;
 
 // Updates "Select all" control in a data table
 function updateDataTableSelectAllCtrl(table) {
-    var $table             = table.table().node();
-    var $chkbox_all        = $('tbody input[type="checkbox"]', $table);
-    var $chkbox_checked    = $('tbody input[type="checkbox"]:checked', $table);
-    var chkbox_select_all  = $('thead input[name="select_all"]', $table).get(0);
+    var $table = table.table().node();
+    var $header = table.table().header();
+    var $chkbox_all = $('tbody input[type="checkbox"]', $table);
+    var $chkbox_checked = $('tbody input[type="checkbox"]:checked', $table);
+    var chkbox_select_all = $('input[name="select_all"]', $header).get(0);
 
     // If none of the checkboxes are checked
     if($chkbox_checked.length === 0){
