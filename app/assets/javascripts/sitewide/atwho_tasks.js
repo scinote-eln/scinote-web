@@ -1,4 +1,4 @@
-(function() {
+var SmartAnnotation = (function() {
   'use strict';
 
   // utilities
@@ -21,7 +21,7 @@
     return publicApi;
   })();
 
-  function smartAnnotation(field) {
+  function setAtWho(field) {
 
     // helper methods for AtWho callback
     function _templateEval(_tpl, map) {
@@ -34,11 +34,12 @@
       return res;
     }
 
-    function _matchHighlighter(li, query) {
+    function _matchHighlighter(li, query, search_filter) {
       var re, li2, prevVal, newVal;
       if (!query) {
         return li;
       }
+      resourcesChecker(query, search_filter);
       li2 = $(li);
       re = new RegExp(query, 'gi');
     prevVal =
@@ -66,8 +67,8 @@
 
     // check if query has some hits and disables the buttons without it
     function resourcesChecker(query, search_filter) {
-      debugger;
-      var src_btn;
+      var src_btn, $element;
+
       switch (search_filter) {
         case 'task#':
           src_btn = 'tsk';
@@ -88,16 +89,26 @@
         function(data){
           if(data) {
             _.each($('.atwho-header .btn'), function(el) {
-              if(data[$(el).data('filter')].length === 0) {
-                $(el).prop('disabled', true);
-                $(el)
+              $element = $(el);
+              if(data[$element.data('filter')].length === 0) {
+                $element.prop('disabled', true);
+                $element
                   .removeClass('btn-primary')
                   .addClass('btn-default');
                 $('[data-filter="' + src_btn +'"]')
                   .removeClass('btn-default')
                   .addClass('btn-primary');
               } else {
-                $(el).prop('disabled', false);
+                $element.prop('disabled', false);
+                if($element.data('filter') == src_btn) {
+                  $element
+                    .removeClass('btn-default')
+                    .addClass('btn-primary');
+                } else {
+                  $element
+                    .removeClass('btn-primary')
+                    .addClass('btn-default');
+                }
               }
             });
           }
@@ -163,7 +174,7 @@
       _a + "-" + _y + "0-9_ \'\.\+\-]*)$|" +
       "(#|task#|project#|sample#|experiment#)([^\\x00-\\xff]*)$", 'gi');
       query_obj = regexp.exec($(field).val());
-      new_query = query_obj.input.replace(query_obj[0], '');
+      new_query = query_obj.input.replace(query_obj[1], '');
 
       $.getJSON(
         link,
@@ -182,7 +193,8 @@
               .addClass('btn-primary');
 
             reinitializeOnListHide();
-            initButtons(new_query, query_obj[0]);
+            initButtons(new_query,
+                        selectedBtn.html());
           } else {
             $(field).atwho('destroy');
             init();
@@ -194,13 +206,13 @@
     function generateFilterMenu(active, res_data) {
       var header = '<div class="atwho-header">' +
        '<button data-filter="prj" class="btn btn-sm ' +
-       (active === 'prj' ? 'btn-primary' : 'btn-default') + '">project #</button>' +
+       (active === 'prj' ? 'btn-primary' : 'btn-default') + '">project#</button>' +
        '<button data-filter="exp" class="btn btn-sm ' +
-       (active === 'exp' ? 'btn-primary' : 'btn-default') + '">experiment #</button>' +
+       (active === 'exp' ? 'btn-primary' : 'btn-default') + '">experiment#</button>' +
        '<button data-filter="tsk" class="btn btn-sm ' +
-       (active === 'tsk' ? 'btn-primary' : 'btn-default') + '">task #</button>' +
+       (active === 'tsk' ? 'btn-primary' : 'btn-default') + '">task#</button>' +
        '<button data-filter="sam" class="btn btn-sm ' +
-       (active === 'sam' ? 'btn-primary' : 'btn-default') + '">sample #</button>' +
+       (active === 'sam' ? 'btn-primary' : 'btn-default') + '">sample#</button>' +
        '<div class="help">' +
        '<div>' +
        '<strong><%= I18n.t("atwho.users.navigate_1") %></strong> ' +
@@ -287,7 +299,7 @@
             return _templateEval(_tpl, map);
           },
           highlighter:  function(li, query) {
-            return _matchHighlighter(li, query);
+            return _matchHighlighter(li, query, '#');
           },
           beforeInsert: function(value, li) {
             return _genrateInputTag(value, li);
@@ -316,7 +328,7 @@
             return _templateEval(_tpl, map);
           },
           highlighter: function(li, query) {
-            return _matchHighlighter(li, query);
+            return _matchHighlighter(li, query, 'task#');
           },
           beforeInsert: function(value, li) {
             return _genrateInputTag(value, li);
@@ -345,7 +357,7 @@
             return _templateEval(_tpl, map);
           },
           highlighter: function(li, query) {
-            return _matchHighlighter(li, query);
+            return _matchHighlighter(li, query, 'project#');
           },
           beforeInsert: function(value, li) {
             return _genrateInputTag(value, li);
@@ -374,7 +386,7 @@
             return _templateEval(_tpl, map);
           },
           highlighter: function(li, query) {
-            return _matchHighlighter(li, query);
+            return _matchHighlighter(li, query, 'experiment#');
           },
           beforeInsert: function(value, li) {
             return _genrateInputTag(value, li);
@@ -403,7 +415,7 @@
             return _templateEval(_tpl, map);
           },
           highlighter: function(li, query) {
-            return _matchHighlighter(li, query);
+            return _matchHighlighter(li, query, 'sample#');
           },
           beforeInsert: function(value, li) {
             return _genrateInputTag(value, li);
@@ -422,13 +434,15 @@
     };
   }
 
-  var smartA = new smartAnnotation('#comment_message');
+  function initialize(field) {
+    var atWho = new setAtWho(field);
+    atWho.init();
+  }
 
-  $(document).ready(function() {
-    setTimeout(function(){
-      smartA.init();
-    }, 2000);
-  });
+  var publicApi = {
+    init: initialize
+  };
 
+  return publicApi;
 
 })();

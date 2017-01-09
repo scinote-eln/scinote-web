@@ -88,3 +88,11 @@ $(document).ready(function() {
   initHighlightjs();
 });
 applyEditResultTextCallback();
+
+
+
+$(document).ready(function() {
+  setTimeout(function(){
+    SmartAnnotation.init('[data-atwho-res-edit]');
+  }, 2000);
+});
