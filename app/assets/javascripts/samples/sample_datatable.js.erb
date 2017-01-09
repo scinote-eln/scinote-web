@@ -89,7 +89,6 @@ function dataTableInit() {
     fnDrawCallback: function() {
       animateSpinner(this, false);
       changeToViewMode();
-      sampleInfoListener();
       updateButtons();
     },
     preDrawCallback: function() {
@@ -325,6 +324,7 @@ function appendSamplesIdToForm(form) {
 //Show sample info
 function sampleInfoListener() {
     $(".sample_info").on("click", function(e){
+        $("#modal-info-sample").remove();
         var that = $(this);
         $.ajax({
             method: "GET",
