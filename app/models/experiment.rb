@@ -33,7 +33,13 @@ class Experiment < ActiveRecord::Base
 
   scope :is_archived, ->(is_archived) { where("archived = ?", is_archived) }
 
-  def self.search(user, include_archived, query = nil, page = 1)
+  def self.search(
+    user,
+    include_archived,
+    query = nil,
+    page = 1,
+    is_smart_annotation = false
+  )
     project_ids =
       Project
       .search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
@@ -49,17 +55,22 @@ class Experiment < ActiveRecord::Base
       a_query = query
     end
 
-    if include_archived
+    if is_smart_annotation
       new_query =
         Experiment
-          .where(project: project_ids)
-          .where_attributes_like([:name, :description], a_query)
+        .where(project: project_ids)
+        .where_attributes_like([:name], a_query)
+    elsif include_archived
+      new_query =
+        Experiment
+        .where(project: project_ids)
+        .where_attributes_like([:name, :description], a_query)
     else
       new_query =
         Experiment
-          .is_archived(false)
-          .where(project: project_ids)
-          .where_attributes_like([:name, :description], a_query)
+        .is_archived(false)
+        .where(project: project_ids)
+        .where_attributes_like([:name, :description], a_query)
     end
 
     # Show all results if needed

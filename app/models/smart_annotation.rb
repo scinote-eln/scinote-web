@@ -23,11 +23,6 @@ class SmartAnnotation
         sanitize(my_module_res.name,
                  length: Constants::NAME_TRUNCATION_LENGTH)
       )
-      my_mod['path'] = Rails
-                       .application
-                       .routes
-                       .url_helpers
-                       .protocols_my_module_path(my_module_res)
       my_mod['archived'] = my_module_res.archived
       my_mod['experimentName'] = truncate(
         sanitize(my_module_res.experiment.name,
@@ -58,11 +53,6 @@ class SmartAnnotation
         sanitize(project_res.name,
                  length: Constants::NAME_TRUNCATION_LENGTH)
       )
-      prj['path'] = Rails
-                    .application
-                    .routes
-                    .url_helpers
-                    .project_path(project_res)
       prj['type'] = 'prj'
       projects_list << prj
     end
@@ -72,7 +62,7 @@ class SmartAnnotation
   def experiments
     # Search experiments
     res = Experiment
-          .search(@current_user, true, @query)
+          .search(@current_user, true, @query, 1, true)
           .limit(Constants::ATWHO_SEARCH_LIMIT)
 
     experiments_list = []
@@ -83,11 +73,6 @@ class SmartAnnotation
         sanitize(experiment_res.name,
                  length: Constants::NAME_TRUNCATION_LENGTH)
       )
-      exp['path'] = Rails
-                    .application
-                    .routes
-                    .url_helpers
-                    .canvas_experiment_path(experiment_res)
       exp['type'] = 'exp'
       exp['project'] = truncate(
         sanitize(experiment_res.project.name,
@@ -101,7 +86,7 @@ class SmartAnnotation
   def samples
     # Search samples
     res = Sample
-          .search(@current_user, true, @query)
+          .search(@current_user, true, @query, 1, true)
           .limit(Constants::ATWHO_SEARCH_LIMIT)
 
     samples_list = []
@@ -112,14 +97,6 @@ class SmartAnnotation
         sanitize(sample_res.name,
                  length: Constants::NAME_TRUNCATION_LENGTH)
       )
-      sam['path'] = Rails
-                    .application
-                    .routes
-                    .url_helpers
-                    .samples_project_path(sample_res
-                                          .organization
-                                          .projects
-                                          .first)
       sam['description'] = "#{I18n.t('Added')} #{I18n.l(
         sample_res.created_at, format: :full_date
       )} #{I18n.t('by')} #{truncate(

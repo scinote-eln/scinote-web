@@ -25,6 +25,22 @@ class AtWhoController < ApplicationController
     end
   end
 
+  def menu_items
+    res = SmartAnnotation.new(current_user, @query)
+
+    respond_to do |format|
+      format.json do
+        render json: {
+          prj: res.projects,
+          exp: res.experiments,
+          tsk: res.my_modules,
+          sam: res.samples,
+          status: :ok
+        }
+      end
+    end
+  end
+
   def samples
     res = SmartAnnotation.new(current_user, @query)
     respond_to do |format|
