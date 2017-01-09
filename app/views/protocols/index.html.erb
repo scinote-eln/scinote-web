@@ -58,7 +58,7 @@
             data-type="<%= @type %>" data-import-url="<%= import_protocols_path %>"
             <%= 'disabled="disabled"' unless can_import_protocols(@current_organization) %>>
           </a>
-          <a class="btn btn-default" data-action="export">
+          <a class="btn btn-default" data-action="export" data-export-url="<%= export_protocols_path() %>">
             <span class="glyphicon glyphicon-export"></span>
             <span class="hidden-xs">&nbsp;<%= t("protocols.index.export") %></span>
           </a>

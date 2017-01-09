@@ -6,9 +6,7 @@ module ProtocolsExporter
   def get_guid(id)
     str1 = '00000000-0000-'
     str2 = id.to_s
-    (19 - str2.size).times do
-      str2 = '0' + str2
-    end
+    str2 = '0' * (19 - str2.size) + str2
     str2 = '4' + str2
     str2n = str2[0..3] + '-' + str2[4..7] + '-' + str2[8..-1]
     str1 + str2n

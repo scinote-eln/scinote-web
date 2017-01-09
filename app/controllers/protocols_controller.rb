@@ -577,21 +577,19 @@ class ProtocolsController < ApplicationController
             ostream.put_next_entry("#{protocol_dir}/eln.xml")
             ostream.print(generate_protocol_xml(protocol))
             # Add assets to protocol folder
-            if protocol.steps.count > 0
-              protocol.steps.order(:id).each do |step|
-                step_guid = get_guid(step.id)
-                step_dir = "#{protocol_dir}/#{step_guid}"
-                if step.assets.count > 0
-                  step.assets.order(:id).each do |asset|
-                    asset_guid = get_guid(asset.id)
-                    asset_file_name = asset_guid.to_s +
-                                      File.extname(asset.file_file_name).to_s
-                    ostream.put_next_entry("#{step_dir}/#{asset_file_name}")
-                    input_file = asset.open
-                    ostream.print(input_file.read)
-                    input_file.close
-                  end
-                end
+            next if protocol.steps.count <= 0
+            protocol.steps.order(:id).each do |step|
+              step_guid = get_guid(step.id)
+              step_dir = "#{protocol_dir}/#{step_guid}"
+              next if step.assets.count <= 0
+              step.assets.order(:id).each do |asset|
+                asset_guid = get_guid(asset.id)
+                asset_file_name = asset_guid.to_s +
+                                  File.extname(asset.file_file_name).to_s
+                ostream.put_next_entry("#{step_dir}/#{asset_file_name}")
+                input_file = asset.open
+                ostream.print(input_file.read)
+                input_file.close
               end
             end
           end
@@ -605,8 +603,8 @@ class ProtocolsController < ApplicationController
           # Try to construct an OS-safe file name
           file_name = 'protocol.eln'
           unless protocol_name.nil?
-            escaped_name = protocol_name.gsub(/[^0-9a-zA-Z-.,_]/i, '_')
-                                        .downcase[0..250]
+            escaped_name = protocol_name.gsub(/[^0-9a-zA-Z\-.,_]/i, '_')
+                                        .downcase[0..Constants::NAME_MAX_LENGTH]
             file_name = escaped_name + '.eln' unless escaped_name.empty?
           end
         elsif @protocols.length > 1

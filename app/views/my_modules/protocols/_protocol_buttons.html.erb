@@ -24,7 +24,7 @@
     </ul>
   </div>
   <% if can_export_protocol_from_module(@my_module) %>
-    <%= link_to raw("<span class=\"glyphicon glyphicon-export\"></span><span class=\"hidden-xs-custom\">&nbsp;" + t('my_modules.protocols.buttons.export') + "</span>"), export_protocols_path(protocol_ids: @protocol.id), class: "btn btn-default" %>
+    <%= link_to raw("<span class=\"glyphicon glyphicon-export\"></span><span class=\"hidden-xs-custom\">&nbsp;" + t('my_modules.protocols.buttons.export') + "</span>"), export_protocols_path(protocol_ids: @protocol.id), class: "btn btn-default", data: {no_turbolink: true} %>
   <% else %>
     <a href="#" class="btn btn-default disabled"><span class="glyphicon glyphicon-export"></span><span class="hidden-xs-custom">&nbsp;<%= t("my_modules.protocols.buttons.export") %></span></a>
   <% end %>
