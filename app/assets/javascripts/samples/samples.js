@@ -58,6 +58,7 @@ function updateSamplesTypesandGroups() {
 function sampleAlertMsg(message, type) {
   var alertType;
   var glyphSign;
+  $('#notifications').html('');
   if (type === 'success') {
     alertType = ' alert-success ';
     glyphSign = ' glyphicon-ok-sign ';
