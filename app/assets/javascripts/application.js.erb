@@ -212,7 +212,9 @@ var HelperModule = (function(){
       window.setTimeout(function () {
         flash.fadeTo(500, 0).slideUp(500, function () {
           $(this).remove();
-          $('#content-wrapper').removeClass('alert-shown');
+          if($('.alert').length <= 0) {
+            $('#content-wrapper').removeClass('alert-shown');
+          }
         });
       }, 5000);
     }
