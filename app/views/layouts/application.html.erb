@@ -14,7 +14,12 @@
 
     <%= csrf_meta_tags %>
   </head>
-  <body class="<%= yield :body_class %>">
+  <body
+    class="<%= yield :body_class %>"
+    <% if user_signed_in? && current_organization.present? %>
+    data-atwho-users-url="<%= atwho_users_organization_path(current_organization) %>"
+    <% end %>
+  >
 
     <span style="display: none;" data-hook="body-js"></span>
     <span style="display: none;" data-hook="application-body-html"></span>

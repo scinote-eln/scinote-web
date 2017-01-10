@@ -10,8 +10,12 @@ class AtWhoController < ApplicationController
           .limit(Constants::ATWHO_SEARCH_LIMIT)
           .as_json
 
-    # Add avatars, convert to JSON
+    # Add avatars, Base62, convert to JSON
     res.each do |user_obj|
+      user_obj['full_name'] =
+        user_obj['full_name']
+        .truncate(Constants::NAME_TRUNCATION_LENGTH_DROPDOWN)
+      user_obj['id'] = user_obj['id'].base62_encode
       user_obj['img_url'] = avatar_path(user_obj['id'], :icon_small)
     end
 
