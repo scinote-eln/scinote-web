@@ -1451,6 +1451,16 @@ en:
     assign_user_to_organization: "<i>%{assigned_user}</i> was added as %{role} to team <strong>%{organization}</strong> by <i>%{assigned_by_user}</i>."
     unassign_user_from_organization: "<i>%{unassigned_user}</i> was removed from team <strong>%{organization}</strong> by <i>%{unassigned_by_user}</i>."
 
+  atwho:
+    users:
+      title: "People"
+      navigate_1: "up/down"
+      navigate_2: "to navigate"
+      confirm_1: "enter/tab"
+      confirm_2: "to confirm"
+      dismiss_1: "esc"
+      dismiss_2: "to dismiss"
+
   # This section contains general words that can be used in any parts of
   # application.
 

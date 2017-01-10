@@ -1716,10 +1716,10 @@ th.custom-field .modal-tooltiptext {
   margin-top: 18px;
   background: $color-white;
   color: $color-black;
-  border: 1px solid #DDD;
+  border: 1px solid $color-emperor;
   border-radius: 3px;
-  box-shadow: 0 0 5px rgba(0,0,0,0.1);
-  min-width: 120px;
+  box-shadow: 0 0 5px $color-cloud;
+  min-width: 520px;
   max-height: 200px;
   overflow: auto;
   z-index: 11110 !important;
@@ -1756,12 +1756,53 @@ th.custom-field .modal-tooltiptext {
     li {
       display: block;
       padding: 5px 10px;
-      border-bottom: 1px solid #DDD;
+      border-bottom: 1px solid $color-emperor;
       cursor: pointer;
     }
   }
 }
 // <End of overrides>
+
+.atwho-header-user {
+  padding-top: 7px;
+  padding-bottom: 7px;
+  height: 34px;
+  background-color: $color-gallery;
+  border-bottom: 1px solid $color-emperor;
+  clear: both;
+
+  > div {
+    display: inline;
+  }
+
+  .title {
+    float: left;
+    margin-left: 15px;
+  }
+
+  .help {
+    float: right;
+
+    div {
+      display: inline;
+      margin-right: 15px;
+      font-size: smaller;
+    }
+
+    div strong {
+      color: $color-black;
+    }
+
+    .dismiss {
+      color: $color-emperor;
+    }
+
+    .dismiss:hover {
+      color: $color-black;
+      cursor: pointer;
+    }
+  }
+}
 
 .atwho-li-user {
 

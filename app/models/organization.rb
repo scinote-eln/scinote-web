@@ -62,13 +62,13 @@ class Organization < ActiveRecord::Base
                 .strip
                 .gsub('_', '\\_')
                 .gsub('%', '\\%')
-                .split(/\s+/)
-                .map { |t| '%' + t + '%' }
     else
       a_query = query
     end
 
-    users.where_attributes_like(attributes, a_query)
+    users
+      .where.not(confirmed_at: nil)
+      .where_attributes_like(attributes, a_query)
   end
 
   # Writes to user log
