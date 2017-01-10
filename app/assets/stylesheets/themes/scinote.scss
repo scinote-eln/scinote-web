@@ -1763,8 +1763,8 @@ th.custom-field .modal-tooltiptext {
 }
 // <End of overrides>
 
-.atwho-header-user {
-  padding-top: 7px;
+.atwho-header-res {
+  padding-top: 3px;
   padding-bottom: 7px;
   height: 34px;
   background-color: $color-gallery;
@@ -1778,10 +1778,25 @@ th.custom-field .modal-tooltiptext {
   .title {
     float: left;
     margin-left: 15px;
+
+    .btn {
+      border-radius: 4px;
+      margin-right: 5px;
+      padding: 3px;
+    }
+
+    .btn:last-child {
+      margin-right: 20px;
+    }
+
+    .btn-default {
+      background-color: transparent;
+    }
   }
 
   .help {
     float: right;
+    padding-top: 4px;
 
     div {
       display: inline;
@@ -1812,5 +1827,33 @@ th.custom-field .modal-tooltiptext {
     margin-right: 10px;
     height: 20px;
     width: 20px;
+  }
+}
+
+.atwho-li-res {
+
+  .glyphicon-tint {
+    margin-left: 5px;
+    margin-right: 5px;
+  }
+
+  .res-type {
+    border: 1px solid $color-black;
+    border-radius: 4px;
+    font-weight: 600;
+    margin-left: 5px;
+    margin-right: 5px;
+    padding: 0 2px;
+    text-transform: capitalize;
+  }
+
+  .res-name {
+    font-weight: 600;
+    margin-right: 5px;
+  }
+
+  .res-description {
+    color: $color-emperor;
+    font-size: 10px;
   }
 }

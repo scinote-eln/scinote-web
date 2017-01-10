@@ -18,6 +18,11 @@
     class="<%= yield :body_class %>"
     <% if user_signed_in? && current_organization.present? %>
     data-atwho-users-url="<%= atwho_users_organization_path(current_organization) %>"
+    data-atwho-task-url="<%= atwho_my_modules_organization_path(current_organization) %>"
+    data-atwho-project-url="<%= atwho_projects_organization_path(current_organization) %>"
+    data-atwho-experiment-url="<%= atwho_experiments_organization_path(current_organization) %>"
+    data-atwho-sample-url="<%= atwho_samples_organization_path(current_organization) %>"
+    data-atwho-menu-items="<%= atwho_menu_items_organization_path(current_organization) %>"
     <% end %>
   >
 

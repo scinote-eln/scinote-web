@@ -22,6 +22,19 @@ var SmartAnnotation = (function() {
   })();
 
   function setAtWho(field) {
+    var dataUserUrl,
+        dataTaskUrl,
+        dataProjectUrl,
+        dataExperimentUrl,
+        dataSampleUrl,
+        dataMenuItemsUrl;
+
+    dataUserUrl = $(document.body).attr('data-atwho-users-url');
+    dataTaskUrl = $(document.body).attr('data-atwho-task-url');
+    dataProjectUrl = $(document.body).attr('data-atwho-project-url');
+    dataExperimentUrl = $(document.body).attr('data-atwho-experiment-url');
+    dataSampleUrl = $(document.body).attr('data-atwho-sample-url');
+    dataMenuItemsUrl = $(document.body).attr('data-atwho-menu-items').freeze;
 
     // helper methods for AtWho callback
     function _templateEval(_tpl, map) {
@@ -84,11 +97,11 @@ var SmartAnnotation = (function() {
           break;
       }
       $.getJSON(
-        '/organizations/1/atwho_menu_items',
+        dataMenuItemsUrl,
         {query: query},
         function(data){
           if(data) {
-            _.each($('.atwho-header .btn'), function(el) {
+            _.each($('.atwho-header-res .title .btn'), function(el) {
               $element = $(el);
               if(data[$element.data('filter')].length === 0) {
                 $element.prop('disabled', true);
@@ -130,45 +143,42 @@ var SmartAnnotation = (function() {
 
     // Initialize filter buttons
     function initButtons(query, search_filter) {
-      $('.atwho-header button').off();
+      $('.atwho-header-res query_obj button').off();
+      $('.atwho-header-res .dismiss').off('click');
+
+      $('.atwho-header-res .dismiss').on('click', function() {
+        $(field).atwho('destroy');
+        init();
+      });
 
       resourcesChecker(query, search_filter);
-      $('.atwho-header button').on('click', function(e) {
+      $('.atwho-header-res .title button').on('click', function(e) {
         var $button, $prevButton;
         e.stopPropagation();
 
-        $('.atwho-header button').off();
         $button = $(this);
-        $prevButton = $button.closest('.atwho-header').children('.btn-primary');
+        $prevButton = $button.closest('.title').children('.btn-primary');
 
         switch ($button.attr('data-filter')) {
           case 'prj':
-            setTimeout(function() {
-              generateNewQuery('/organizations/1/atwho_projects.json',
+              generateNewQuery(dataProjectUrl,
                                $prevButton,
                                $button);
-            }, 300);
             break;
           case 'exp':
-            setTimeout(function() {
-              generateNewQuery('/organizations/1/atwho_experiments.json',
+              generateNewQuery(dataExperimentUrl,
                                $prevButton,
                                $button);
-            }, 300);
             break;
           case 'tsk':
-            setTimeout(function() {
-              generateNewQuery('/organizations/1/atwho_my_modules.json',
+              generateNewQuery(dataTaskUrl,
                                $prevButton,
                                $button);
-            }, 300);
             break;
           case 'sam':
-            setTimeout(function() {
-              generateNewQuery('/organizations/1/atwho_samples.json',
+              generateNewQuery(dataSampleUrl,
                                $prevButton,
                                $button);
-            }, 300);
             break;
         }
       });
@@ -190,50 +200,49 @@ var SmartAnnotation = (function() {
 
       if(field_selected) {
         query_obj = regexp.exec($(field_selected).val());
-        new_query = query_obj.input.replace(query_obj[1], '');
-      } else {
-        query_obj = [''];
-        new_query = '';
+
+        if(query_obj) {
+          $.getJSON(
+            link,
+            {query: query_obj[2]},
+            function(data) {
+              if(data.res.length > 0 && field_selected) {
+                $(field_selected)
+                  .atwho('load', query_obj[0], data.res)
+                  .atwho('run');
+
+                prevBtn
+                  .removeClass('btn-primary')
+                  .addClass('btn-default');
+                selectedBtn
+                  .removeClass('btn-default')
+                  .addClass('btn-primary');
+
+                reinitializeOnListHide();
+                initButtons(query_obj[2],
+                            selectedBtn.html());
+              } else {
+                $(field).atwho('destroy');
+                init();
+              }
+          });
+        }
       }
-
-
-      $.getJSON(
-        link,
-        {query: new_query},
-        function(data) {
-          if(data.res.length > 0 && field_selected) {
-            $(field_selected)
-              .atwho('load', query_obj[0], data.res)
-              .atwho('run');
-
-            prevBtn
-              .removeClass('btn-primary')
-              .addClass('btn-default');
-            selectedBtn
-              .removeClass('btn-default')
-              .addClass('btn-primary');
-
-            reinitializeOnListHide();
-            initButtons(new_query,
-                        selectedBtn.html());
-          } else {
-            $(field).atwho('destroy');
-            init();
-          }
-      });
     }
 
     // Generates suggestion dropdown filter
     function generateFilterMenu(active, res_data) {
-      var header = '<div class="atwho-header">' +
-       '<button data-filter="prj" class="btn btn-sm ' +
+      var header = '<div class="atwho-header-res">' +
+       '<div class="title">' +
+       '<button data-filter="prj" class="btn btn-xs ' +
        (active === 'prj' ? 'btn-primary' : 'btn-default') + '">project#</button>' +
-       '<button data-filter="exp" class="btn btn-sm ' +
+       '<button data-filter="exp" class="btn btn-xs ' +
        (active === 'exp' ? 'btn-primary' : 'btn-default') + '">experiment#</button>' +
-       '<button data-filter="tsk" class="btn btn-sm ' +
+       '<button data-filter="tsk" class="btn btn-xs ' +
        (active === 'tsk' ? 'btn-primary' : 'btn-default') + '">task#</button>' +
-       '<button data-filter="sam" class="btn btn-sm ' +
+       '<button data-filter="sam" class="btn btn-xs ' +
        (active === 'sam' ? 'btn-primary' : 'btn-default') + '">sample#</button>' +
+       '</div>' +
        '<div class="help">' +
        '<div>' +
        '<strong><%= I18n.t("atwho.users.navigate_1") %></strong> ' +
@@ -277,25 +286,27 @@ var SmartAnnotation = (function() {
       }
 
       res += '&nbsp;';
-      res += '<span data-val="name">';
+      res += '<span data-val="name" class="res-name">';
       res += map.name;
       res += '</span>';
       if(map.archived) {
-        res += '<span>(archived)</span>';
+        res += '(archived)</span>';
+      } else {
+        res += '</span>';
       }
       res += '&nbsp;';
 
       switch (map.type) {
         case 'tsk':
 
-          res += '<span>&lt; ' + map.experimentName +
+          res += '<span class="res-description">&lt; ' + map.experimentName +
                  ' &lt; ' + map.projectName + '</span>';
           break;
         case 'exp':
-          res += '<span>&lt; ' + map.projectName + '</span>';
+          res += '<span class="res-description">&lt; ' + map.projectName + '</span>';
           break;
         case 'sam':
-          res += '<span>' + map.description + '</span>';
+          res += '<span class="res-description">' + map.description + '</span>';
           break;
         default:
           break;
@@ -308,11 +319,102 @@ var SmartAnnotation = (function() {
     function init() {
       $(field)
       .atwho({
+        at: '@',
+        callbacks: {
+          remoteFilter: function(query, callback) {
+            $.getJSON(
+              dataUserUrl,
+              {query: query},
+              function(data) {
+                callback(data.users);
+              }
+            );
+          },
+          sorter: function(query, items, _searchKey) {
+            // Sorting is already done on server-side
+            return items;
+          },
+          tplEval: function(_tpl, map) {
+            var res;
+            try {
+              res = '';
+              res += '<li class="atwho-li atwho-li-user" ';
+              res += 'data-id="' + map.id + '" ';
+              res += 'data-full-name="' + map.full_name + '">';
+              res += '<img src="' + map.img_url + '" class="avatar" />';
+              res += '<span data-val="full-name">';
+              res += map.full_name;
+              res += '</span>';
+              res += '<small>';
+              res += '&nbsp;';
+              res += '&#183;';
+              res += '&nbsp;';
+              res += '<span data-val="email">';
+              res += map.email;
+              res += '</span>';
+              res += '</small>';
+              res += '</li>';
+            } catch (_error) {
+              res = '';
+            }
+            return res;
+          },
+          highlighter: function(li, query) {
+            function highlight(el, sel, re) {
+              var prevVal = el.find(sel).html();
+              var newVal = prevVal.replace(re, '<strong>$&</strong>');
+              el.find(sel).html(newVal);
+            }
+
+            if (!query) {
+              return li;
+            }
+
+            var $li = $(li);
+            var re = new RegExp(query, 'gi');
+            highlight($li, '[data-val=full-name]', re);
+            highlight($li, '[data-val=email]', re);
+            return $li[0].outerHTML;
+          },
+          beforeInsert: function(value, li) {
+            var res = '';
+            res += '[@' + li.attr('data-full-name');
+            res += '~' + li.attr('data-id') + ']';
+            return res;
+          }
+        },
+        headerTpl:
+          '<div class="atwho-header-res">' +
+          '<div class="title"><%= I18n.t("atwho.users.title") %></div>' +
+          '<div class="help">' +
+          '<div>' +
+          '<strong><%= I18n.t("atwho.users.navigate_1") %></strong> ' +
+          '<%= I18n.t("atwho.users.navigate_2") %>' +
+          '</div>' +
+          '<div>' +
+          '<strong><%= I18n.t("atwho.users.confirm_1") %></strong> ' +
+          '<%= I18n.t("atwho.users.confirm_2") %>' +
+          '</div>' +
+          '<div>' +
+          '<strong><%= I18n.t("atwho.users.dismiss_1") %></strong> ' +
+          '<%= I18n.t("atwho.users.dismiss_2") %>' +
+          '</div>' +
+          '<div class="dismiss">' +
+          '<span class="glyphicon glyphicon-remove"></span>' +
+          '</div>' +
+          '</div>' +
+          '</div>',
+        limit: <%= Constants::ATWHO_SEARCH_LIMIT %>,
+        startsWithSpace: true,
+        acceptSpaceBar: true,
+        displayTimeout: 120000
+      })
+      .atwho({
         at: '#',
         callbacks: {
           remoteFilter: function(query, callback) {
             $.getJSON(
-              '/organizations/1/atwho_samples.json',
+              dataSampleUrl,
               {query: query},
               function(data) {
                 callback(data.res);
@@ -331,7 +433,7 @@ var SmartAnnotation = (function() {
           }
         },
         headerTpl: generateFilterMenu('sam'),
-        limit: 5,
+        limit: <%= Constants::ATWHO_SEARCH_LIMIT %>,
         startWithSpace: true,
         acceptSpaceBar: true,
         displayTimeout: 120000
@@ -341,7 +443,7 @@ var SmartAnnotation = (function() {
         callbacks: {
           remoteFilter: function(query, callback) {
             $.getJSON(
-              '/organizations/1/atwho_my_modules.json',
+              dataTaskUrl,
               {query: query},
               function(data) {
                 callback(data.res);
@@ -360,7 +462,7 @@ var SmartAnnotation = (function() {
           }
         },
         headerTpl: generateFilterMenu('tsk'),
-        limit: 5,
+        limit: <%= Constants::ATWHO_SEARCH_LIMIT %>,
         startWithSpace: true,
         acceptSpaceBar: true,
         displayTimeout: 120000
@@ -370,7 +472,7 @@ var SmartAnnotation = (function() {
         callbacks: {
           remoteFilter: function(query, callback) {
             $.getJSON(
-              '/organizations/1/atwho_projects.json',
+              dataProjectUrl,
               {query: query},
               function(data) {
                 callback(data.res);
@@ -389,7 +491,7 @@ var SmartAnnotation = (function() {
           }
         },
         headerTpl: generateFilterMenu('prj'),
-        limit: 5,
+        limit: <%= Constants::ATWHO_SEARCH_LIMIT %>,
         startWithSpace: true,
         acceptSpaceBar: true,
         displayTimeout: 120000
@@ -399,7 +501,7 @@ var SmartAnnotation = (function() {
         callbacks: {
           remoteFilter: function(query, callback) {
             $.getJSON(
-              '/organizations/1/atwho_experiments.json',
+              dataExperimentUrl,
               {query: query},
               function(data) {
                 callback(data.res);
@@ -418,7 +520,7 @@ var SmartAnnotation = (function() {
           }
         },
         headerTpl: generateFilterMenu('exp'),
-        limit: 5,
+        limit: <%= Constants::ATWHO_SEARCH_LIMIT %>,
         startWithSpace: true,
         acceptSpaceBar: true,
         displayTimeout: 120000
@@ -428,7 +530,7 @@ var SmartAnnotation = (function() {
         callbacks: {
           remoteFilter: function(query, callback) {
             $.getJSON(
-              '/organizations/1/atwho_samples.json',
+              dataSampleUrl,
               {query: query},
               function(data) {
                 callback(data.res);
@@ -447,7 +549,7 @@ var SmartAnnotation = (function() {
           }
         },
         headerTpl: generateFilterMenu('sam'),
-        limit: 5,
+        limit: <%= Constants::ATWHO_SEARCH_LIMIT %>,
         startWithSpace: true,
         acceptSpaceBar: true,
         displayTimeout: 120000
