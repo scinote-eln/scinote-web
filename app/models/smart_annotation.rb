@@ -74,7 +74,7 @@ class SmartAnnotation
                  length: Constants::NAME_TRUNCATION_LENGTH)
       )
       exp['type'] = 'exp'
-      exp['project'] = truncate(
+      exp['projectName'] = truncate(
         sanitize(experiment_res.project.name,
                  length: Constants::NAME_TRUNCATION_LENGTH)
       )
@@ -102,10 +102,10 @@ class SmartAnnotation
       )} #{I18n.t('by')} #{truncate(
         sanitize(sample_res.user.full_name,
                  length: Constants::NAME_TRUNCATION_LENGTH)
-      )} #{(',' + truncate(
+      )} #{(', ' + truncate(
         sanitize(sample_res.sample_type.name,
                  length: Constants::NAME_TRUNCATION_LENGTH)
-      )) if sample_res.sample_type}, #{(',' + truncate(
+      )) if sample_res.sample_type} #{(', ' + truncate(
         sanitize(sample_res.sample_group.name,
                  length: Constants::NAME_TRUNCATION_LENGTH)
       )) if sample_res.sample_group}"

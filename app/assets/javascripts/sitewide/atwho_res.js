@@ -136,30 +136,39 @@ var SmartAnnotation = (function() {
       $('.atwho-header button').on('click', function(e) {
         var $button, $prevButton;
         e.stopPropagation();
+
         $('.atwho-header button').off();
         $button = $(this);
         $prevButton = $button.closest('.atwho-header').children('.btn-primary');
 
         switch ($button.attr('data-filter')) {
           case 'prj':
-            generateNewQuery('/organizations/1/atwho_projects.json',
-                             $prevButton,
-                             $button);
+            setTimeout(function() {
+              generateNewQuery('/organizations/1/atwho_projects.json',
+                               $prevButton,
+                               $button);
+            }, 300);
             break;
           case 'exp':
-            generateNewQuery('/organizations/1/atwho_experiments.json',
-                             $prevButton,
-                             $button);
+            setTimeout(function() {
+              generateNewQuery('/organizations/1/atwho_experiments.json',
+                               $prevButton,
+                               $button);
+            }, 300);
             break;
           case 'tsk':
-            generateNewQuery('/organizations/1/atwho_my_modules.json',
-                             $prevButton,
-                             $button);
+            setTimeout(function() {
+              generateNewQuery('/organizations/1/atwho_my_modules.json',
+                               $prevButton,
+                               $button);
+            }, 300);
             break;
           case 'sam':
-            generateNewQuery('/organizations/1/atwho_samples.json',
-                             $prevButton,
-                             $button);
+            setTimeout(function() {
+              generateNewQuery('/organizations/1/atwho_samples.json',
+                               $prevButton,
+                               $button);
+            }, 300);
             break;
         }
       });
@@ -167,21 +176,33 @@ var SmartAnnotation = (function() {
 
     // Generates new query when user filters the results
     function generateNewQuery(link, prevBtn, selectedBtn) {
-      var regexp, _a, _y, new_query, query_obj;
+      var regexp, _a, _y, new_query, query_obj, field_selected;
       _a = decodeURI("%C3%80");
       _y = decodeURI("%C3%BF");
       regexp = new RegExp("(#|task#|project#|sample#|experiment#)([A-Za-z" +
       _a + "-" + _y + "0-9_ \'\.\+\-]*)$|" +
       "(#|task#|project#|sample#|experiment#)([^\\x00-\\xff]*)$", 'gi');
-      query_obj = regexp.exec($(field).val());
-      new_query = query_obj.input.replace(query_obj[1], '');
+      // filters field if multiple input fields on the page
+      _.each($(field), function(e) {
+        if($(e).atwho('isSelecting')){
+          field_selected = e;
+      }});
+
+      if(field_selected) {
+        query_obj = regexp.exec($(field_selected).val());
+        new_query = query_obj.input.replace(query_obj[1], '');
+      } else {
+        query_obj = [''];
+        new_query = '';
+      }
+
 
       $.getJSON(
         link,
         {query: new_query},
         function(data) {
-          if(data.res.length > 0) {
-            $(field)
+          if(data.res.length > 0 && field_selected) {
+            $(field_selected)
               .atwho('load', query_obj[0], data.res)
               .atwho('run');
 
@@ -259,10 +280,14 @@ var SmartAnnotation = (function() {
       res += '<span data-val="name">';
       res += map.name;
       res += '</span>';
+      if(map.archived) {
+        res += '<span>(archived)</span>';
+      }
       res += '&nbsp;';
 
       switch (map.type) {
         case 'tsk':
+
           res += '<span>&lt; ' + map.experimentName +
                  ' &lt; ' + map.projectName + '</span>';
           break;

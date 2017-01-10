@@ -86,6 +86,8 @@ var Comments = (function() {
   function initCommentForm($el) {
 
     var $form = $el.find('ul form');
+    // initialize smart annotation
+    SmartAnnotation.init($($form).find('#comment_message'));
 
     $('.help-block', $form).addClass('hide');
 

@@ -88,9 +88,12 @@
           <% unless step.checklists.blank? then %>
             <div class="col-xs-12">
               <% step.checklists.each do |checklist| %>
-                <strong><%= auto_link(simple_format(checklist.name),
-                                      link: :urls,
-                                      html: { target: '_blank' }) %></strong>
+                <strong><%= auto_link(
+                              simple_format(
+                                smart_annotation_parser(checklist.name)
+                              ),
+                              link: :urls,
+                              html: { target: '_blank' }) %></strong>
                 <% if checklist.checklist_items.empty? %>
                   </br>
                   <%= t("protocols.steps.empty_checklist") %>
@@ -104,9 +107,12 @@
                         <% else %>
                           <input type="checkbox" value="" disabled="disabled" />
                         <% end %>
-                        <%= auto_link(simple_format(checklist_item.text),
-                                                    link: :urls,
-                                                    html: { target: '_blank' }) %>
+                        <%= auto_link(
+                              simple_format(
+                                smart_annotation_parser(checklist_item.text)
+                              ),
+                              link: :urls,
+                              html: { target: '_blank' }) %>
                       </label>
                     </div>
                   <% end %>

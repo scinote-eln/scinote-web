@@ -14,6 +14,8 @@ $("#new-result-text").on("ajax:success", function(e, data) {
     toggleResultEditButtons(false);
 
     $("#result_name").focus();
+
+    SmartAnnotation.init('.ql-editor');
 });
 
 $("#new-result-text").on("ajax:error", function(e, xhr, status, error) {
@@ -88,11 +90,3 @@ $(document).ready(function() {
   initHighlightjs();
 });
 applyEditResultTextCallback();
-
-
-
-$(document).ready(function() {
-  setTimeout(function(){
-    SmartAnnotation.init('[data-atwho-res-edit]');
-  }, 2000);
-});

@@ -433,6 +433,11 @@ function onClickEdit() {
                 }
             });
 
+            // initialize smart annotation
+            _.each($('[data-object="custom_fields"]'), function(el) {
+              SmartAnnotation.init(el);
+            });
+
             // Adjust columns width in table header
             table.columns.adjust();
         },

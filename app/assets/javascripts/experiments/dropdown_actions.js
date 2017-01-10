@@ -18,6 +18,8 @@
       validateMoveModal(id);
       clearModal($(id));
       validateExperimentForm($(id));
+      // initialize smart annotation
+      SmartAnnotation.init('#experiment-description');
     })
     .on("ajax:error", function() {
       animateSpinner(null, false);
