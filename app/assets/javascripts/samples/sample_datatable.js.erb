@@ -1044,6 +1044,12 @@ function changeToEditMode() {
         column.visible(true);
         table.setColumnSearchable(column.index(), true);
       }
+
+      // Re-filter/search if neccesary
+      var searchText = $('div.dataTables_filter input').val();
+      if (!_.isEmpty(searchText)) {
+        table.search(searchText).draw();
+      }
     });
   }
 
