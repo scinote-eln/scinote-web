@@ -1305,6 +1305,10 @@ table.dataTable {
   tbody > tr > .selected {
     background-color: $color-alto !important;
     color: $color-emperor !important;
+
+    a {
+      color: $color-theme-primary !important;
+    }
   }
 
   .sorting_desc,
