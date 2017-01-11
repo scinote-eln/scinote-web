@@ -109,12 +109,20 @@
                   <hr>
                   <div class="col-xs-12">
                     <strong><%= t("protocols.steps.files") %></strong>
-                    <ul class="list-unstyled">
+                    <ul>
                       <% assets.each do |asset| %>
                         <li>
-                          <%= image_tag preview_asset_path(asset) if asset.is_image? %>
-                          <p><%= truncate(asset.file_file_name,
-                                          length: Constants::FILENAME_TRUNCATION_LENGTH) %></p>
+                          <% if can_view_or_download_step_assets(@protocol) %>
+                            <%= link_to download_asset_path(asset), data: {no_turbolink: true, id: true, status: "asset-present"} do %>
+                              <%= image_tag preview_asset_path(asset) if asset.is_image? %>
+                              <p><%= truncate(asset.file_file_name,
+                                              length: Constants::FILENAME_TRUNCATION_LENGTH) %></p>
+                            <% end %>
+                          <% else %>
+                            <%= image_tag preview_asset_path(asset) if asset.is_image? %>
+                            <p><%= truncate(asset.file_file_name,
+                                            length: Constants::FILENAME_TRUNCATION_LENGTH) %></p>
+                          <% end %>
                         </li>
                       <% end %>
                     </ul>
@@ -122,7 +130,6 @@
                 <% end %>
 
                 <% unless step.checklists.blank? then %>
-                  <hr>
                   <div class="col-xs-12">
                     <% step.checklists.each do |checklist| %>
                       <strong><%= checklist.name %></strong>
