@@ -141,15 +141,21 @@ var SmartAnnotation = (function() {
       });
     }
 
+    // initialise dropdown dismiss button
+    function initDismissButton() {
+      $('.atwho-header-res .dismiss').off('click');
+      $('.atwho-header-res .dismiss').on('click', function() {
+        $(field).atwho('destroy');
+        init();
+      });
+    }
+
     // Initialize filter buttons
     function initButtons(query, search_filter) {
       $('.atwho-header-res query_obj button').off();
       $('.atwho-header-res .dismiss').off('click');
 
-      $('.atwho-header-res .dismiss').on('click', function() {
-        $(field).atwho('destroy');
-        init();
-      });
+      initDismissButton();
 
       resourcesChecker(query, search_filter);
       $('.atwho-header-res .title button').on('click', function(e) {
@@ -290,7 +296,7 @@ var SmartAnnotation = (function() {
       res += map.name;
       res += '</span>';
       if(map.archived) {
-        res += '(archived)</span>';
+        res += '<%= I18n.t("atwho.res.archived") %></span>';
       } else {
         res += '</span>';
       }
@@ -307,8 +313,6 @@ var SmartAnnotation = (function() {
           break;
         case 'sam':
           res += '<span class="res-description">' + map.description + '</span>';
-          break;
-        default:
           break;
       }
 
@@ -327,6 +331,7 @@ var SmartAnnotation = (function() {
               {query: query},
               function(data) {
                 callback(data.users);
+                initDismissButton();
               }
             );
           },
@@ -385,7 +390,7 @@ var SmartAnnotation = (function() {
         },
         headerTpl:
           '<div class="atwho-header-res">' +
-          '<div class="title"><%= I18n.t("atwho.users.title") %></div>' +
+          '<div class="title title-user"><%= I18n.t("atwho.users.title") %></div>' +
           '<div class="help">' +
           '<div>' +
           '<strong><%= I18n.t("atwho.users.navigate_1") %></strong> ' +

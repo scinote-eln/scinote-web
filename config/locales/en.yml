@@ -1460,7 +1460,9 @@ en:
       confirm_2: "to confirm"
       dismiss_1: "esc"
       dismiss_2: "to dismiss"
-
+    res:
+      archived: "(archived)"
+      deleted: "(deleted)"
   # This section contains general words that can be used in any parts of
   # application.
 

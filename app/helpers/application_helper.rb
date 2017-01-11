@@ -59,19 +59,55 @@ module ApplicationHelper
       match = el.match(sa_reg)
       case match[2]
       when 'prj'
-        link_to match[1], project_path(match[3].to_i)
+        project = Project.find_by_id(match[3].to_i)
+        next unless project
+        if project.archived?
+          "<span class='sa-type'>#{sanitize(match[2])}</span> " \
+          "#{link_to project.name,
+                     projects_archive_path} #{t'atwho.res.archived'}"
+        else
+          "<span class='sa-type'>#{sanitize(match[2])}</span> " \
+          "#{link_to project.name,
+                     project_path(project)}"
+        end
       when 'exp'
-        link_to match[1], canvas_experiment_path(match[3].to_i)
+        experiment = Experiment.find_by_id(match[3].to_i)
+        next unless experiment
+        if experiment.archived?
+          "<span class='sa-type'>#{sanitize(match[2])}</span> " \
+          "#{link_to experiment.name,
+                     experiment_archive_project_path(experiment.project)} " \
+          "#{t'atwho.res.archived'}"
+        else
+          "<span class='sa-type'>#{sanitize(match[2])}</span> " \
+          "#{link_to experiment.name,
+                     canvas_experiment_path(experiment)}"
+        end
       when 'tsk'
-        link_to match[1], protocols_my_module_path(match[3].to_i)
+        my_module = MyModule.find_by_id(match[3].to_i)
+        next unless my_module
+        if my_module.archived?
+          "<span class='sa-type'>#{sanitize(match[2])}</span> " \
+          "#{link_to my_module.name,
+                     module_archive_experiment_path(my_module.experiment)}" \
+          "#{t'atwho.res.archived'}"
+        else
+          "<span class='sa-type'>#{sanitize(match[2])}</span> " \
+          "#{link_to my_module.name,
+                     protocols_my_module_path(my_module)}"
+        end
       when 'sam'
         sample = Sample.find_by_id(match[3])
         if sample
-          link_to match[1],
-                  samples_project_path(sample
-                                       .organization
-                                       .projects
-                                       .first)
+          "<span class='glyphicon glyphicon-tint'></span> " \
+          "#{link_to sample.name,
+                     samples_project_path(sample
+                                          .organization
+                                          .projects
+                                          .first)}"
+        else
+          "<span class='glyphicon glyphicon-tint'></span> " \
+          "#{match[1]} #{t'atwho.res.deleted'}"
         end
       end
     end

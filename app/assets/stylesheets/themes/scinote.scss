@@ -1794,6 +1794,10 @@ th.custom-field .modal-tooltiptext {
     }
   }
 
+  .title-user {
+    padding-top: 4px;
+  }
+
   .help {
     float: right;
     padding-top: 4px;
@@ -1855,5 +1859,19 @@ th.custom-field .modal-tooltiptext {
   .res-description {
     color: $color-emperor;
     font-size: 10px;
+  }
+}
+
+.sa-type {
+  border: 1px solid $color-black;
+  border-radius: 4px;
+  color: $color-black;
+  font-weight: 600;
+  padding: 0 2px;
+  text-decoration: none;
+  text-transform: capitalize;
+
+  &:hover {
+    text-decoration: none;
   }
 }
