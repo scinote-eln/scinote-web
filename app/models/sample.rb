@@ -24,7 +24,7 @@ class Sample < ActiveRecord::Base
     include_archived,
     query = nil,
     page = 1,
-    is_smart_annotation = false
+    current_organization = nil
   )
     org_ids =
       Organization
@@ -43,17 +43,10 @@ class Sample < ActiveRecord::Base
       a_query = query
     end
 
-    if is_smart_annotation
+    if current_organization
       new_query = Sample
                   .distinct
-                  .joins(:user)
-                  .joins('LEFT OUTER JOIN sample_types ON ' \
-                         'samples.sample_type_id = sample_types.id')
-                  .joins('LEFT OUTER JOIN sample_groups ON ' \
-                         'samples.sample_group_id = sample_groups.id')
-                  .joins('LEFT OUTER JOIN sample_custom_fields ON ' \
-                         'samples.id = sample_custom_fields.sample_id')
-                  .where('samples.organization_id IN (?)', org_ids)
+                  .where('samples.organization_id = ?', current_organization.id)
                   .where_attributes_like(['samples.name'], a_query)
     else
       new_query = Sample

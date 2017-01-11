@@ -54,12 +54,12 @@ module ApplicationHelper
   end
 
   def smart_annotation_parser(text)
-    sa_reg = /\[\#(.*?)~(prj|exp|tsk|sam)~([0-9]+)\]/
+    sa_reg = /\[\#(.*?)~(prj|exp|tsk|sam)~([0-9a-zA-Z]+)\]/
     new_text = text.gsub(sa_reg) do |el|
       match = el.match(sa_reg)
       case match[2]
       when 'prj'
-        project = Project.find_by_id(match[3].to_i)
+        project = Project.find_by_id(match[3].base62_decode)
         next unless project
         if project.archived?
           "<span class='sa-type'>#{sanitize(match[2])}</span> " \
@@ -71,7 +71,7 @@ module ApplicationHelper
                      project_path(project)}"
         end
       when 'exp'
-        experiment = Experiment.find_by_id(match[3].to_i)
+        experiment = Experiment.find_by_id(match[3].base62_decode)
         next unless experiment
         if experiment.archived?
           "<span class='sa-type'>#{sanitize(match[2])}</span> " \
@@ -84,7 +84,7 @@ module ApplicationHelper
                      canvas_experiment_path(experiment)}"
         end
       when 'tsk'
-        my_module = MyModule.find_by_id(match[3].to_i)
+        my_module = MyModule.find_by_id(match[3].base62_decode)
         next unless my_module
         if my_module.archived?
           "<span class='sa-type'>#{sanitize(match[2])}</span> " \
@@ -97,7 +97,7 @@ module ApplicationHelper
                      protocols_my_module_path(my_module)}"
         end
       when 'sam'
-        sample = Sample.find_by_id(match[3])
+        sample = Sample.find_by_id(match[3].base62_decode)
         if sample
           "<span class='glyphicon glyphicon-tint'></span> " \
           "#{link_to sample.name,
@@ -112,12 +112,14 @@ module ApplicationHelper
       end
     end
 
-    sa_user = /\[\@(.*?)~([0-9]+)\]/
+    sa_user = /\[\@(.*?)~([0-9a-zA-Z]+)\]/
     new_text = new_text.gsub(sa_user) do |el|
       match = el.match(sa_user)
-      user = User.find_by_id(match[2].to_i)
-      "<span>#{image_tag avatar_path(user, :icon_small)} " \
-      "#{user.full_name}</span>" if user
+      user = User.find_by_id(match[2].base62_decode)
+      if user
+        "<span>#{image_tag avatar_path(user, :icon_small)} " \
+        "#{user.full_name}</span>"
+      end
     end
     new_text
   end

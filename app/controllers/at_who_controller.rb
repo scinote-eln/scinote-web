@@ -30,7 +30,7 @@ class AtWhoController < ApplicationController
   end
 
   def menu_items
-    res = SmartAnnotation.new(current_user, @query)
+    res = SmartAnnotation.new(current_user, current_organization, @query)
 
     respond_to do |format|
       format.json do
@@ -46,7 +46,7 @@ class AtWhoController < ApplicationController
   end
 
   def samples
-    res = SmartAnnotation.new(current_user, @query)
+    res = SmartAnnotation.new(current_user, current_organization, @query)
     respond_to do |format|
       format.json do
         render json: {
@@ -58,7 +58,7 @@ class AtWhoController < ApplicationController
   end
 
   def projects
-    res = SmartAnnotation.new(current_user, @query)
+    res = SmartAnnotation.new(current_user, current_organization, @query)
     respond_to do |format|
       format.json do
         render json: {
@@ -70,7 +70,7 @@ class AtWhoController < ApplicationController
   end
 
   def experiments
-    res = SmartAnnotation.new(current_user, @query)
+    res = SmartAnnotation.new(current_user, current_organization, @query)
     respond_to do |format|
       format.json do
         render json: {
@@ -82,7 +82,7 @@ class AtWhoController < ApplicationController
   end
 
   def my_modules
-    res = SmartAnnotation.new(current_user, @query)
+    res = SmartAnnotation.new(current_user, current_organization, @query)
     respond_to do |format|
       format.json do
         render json: {

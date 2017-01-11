@@ -112,7 +112,6 @@ function applyEditCallBack() {
       $("#step_name").focus();
     });
     openLinksInNewTab();
-    initSmartAnnotation();
   });
 }
 
@@ -430,8 +429,6 @@ function reorderCheckboxData(checkboxUl) {
     $posInput.attr("id", posId);
     $posInput.val(itemPos);
     $destroyLink.attr("data-delete-association-field-name", destroyLink);
-    debugger;
-    SmartAnnotation.init();
 
     var $idInput = $this.find("> input");
     if ($idInput.length) {
@@ -567,27 +564,6 @@ function initHighlightjs() {
   }
 }
 
-// initialize the smart annotations
-function initSmartAnnotation() {
-  $('#new-step-checklists').on('click', function() {
-    setTimeout(function() {
-      SmartAnnotation.init('.checklist_name');
-    }, 300);
-
-    $('[data-object-class="checklist"]').on('click', function() {
-      setTimeout(function() {
-        SmartAnnotation.init('.checklist_name');
-      }, 300);
-    });
-
-    $('[data-object-class="checklist_item"]').on('click', function() {
-      setTimeout(function() {
-        $('.checklist-item-text').atwho('destroy');
-        SmartAnnotation.init('.checklist-item-text');
-      }, 300);
-    });
-  });
-}
 function initStepsComments() {
   Comments.initialize();
   Comments.initCommentOptions("ul.content-comments");

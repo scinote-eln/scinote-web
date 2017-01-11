@@ -2,23 +2,24 @@ class SmartAnnotation
   include ActionView::Helpers::SanitizeHelper
   include ActionView::Helpers::TextHelper
 
-  attr_writer :current_user, :query
+  attr_writer :current_user, :current_organization, :query
 
-  def initialize(current_user, query)
+  def initialize(current_user, current_organization, query)
     @current_user = current_user
+    @current_organization = current_organization
     @query = query
   end
 
   def my_modules
     # Search tasks
     res = MyModule
-          .search(@current_user, true, @query)
+          .search(@current_user, true, @query, @current_organization)
           .limit(Constants::ATWHO_SEARCH_LIMIT)
 
     modules_list = []
     res.each do |my_module_res|
       my_mod = {}
-      my_mod['id'] = my_module_res.id
+      my_mod['id'] = my_module_res.id.base62_encode
       my_mod['name'] = truncate(
         sanitize(my_module_res.name,
                  length: Constants::NAME_TRUNCATION_LENGTH)
@@ -42,13 +43,13 @@ class SmartAnnotation
   def projects
     # Search projects
     res = Project
-          .search(@current_user, true, @query)
+          .search(@current_user, true, @query, 1, @current_organization)
           .limit(Constants::ATWHO_SEARCH_LIMIT)
 
     projects_list = []
     res.each do |project_res|
       prj = {}
-      prj['id'] = project_res.id
+      prj['id'] = project_res.id.base62_encode
       prj['name'] = truncate(
         sanitize(project_res.name,
                  length: Constants::NAME_TRUNCATION_LENGTH)
@@ -62,13 +63,13 @@ class SmartAnnotation
   def experiments
     # Search experiments
     res = Experiment
-          .search(@current_user, true, @query, 1, true)
+          .search(@current_user, true, @query, 1, @current_organization)
           .limit(Constants::ATWHO_SEARCH_LIMIT)
 
     experiments_list = []
     res.each do |experiment_res|
       exp = {}
-      exp['id'] = experiment_res.id
+      exp['id'] = experiment_res.id.base62_encode
       exp['name'] = truncate(
         sanitize(experiment_res.name,
                  length: Constants::NAME_TRUNCATION_LENGTH)
@@ -86,13 +87,13 @@ class SmartAnnotation
   def samples
     # Search samples
     res = Sample
-          .search(@current_user, true, @query, 1, true)
+          .search(@current_user, true, @query, 1, @current_organization)
           .limit(Constants::ATWHO_SEARCH_LIMIT)
 
     samples_list = []
     res.each do |sample_res|
       sam = {}
-      sam['id'] = sample_res.id
+      sam['id'] = sample_res.id.base62_encode
       sam['name'] = truncate(
         sanitize(sample_res.name,
                  length: Constants::NAME_TRUNCATION_LENGTH)

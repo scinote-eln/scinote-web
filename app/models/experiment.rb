@@ -38,7 +38,7 @@ class Experiment < ActiveRecord::Base
     include_archived,
     query = nil,
     page = 1,
-    is_smart_annotation = false
+    current_organization = nil
   )
     project_ids =
       Project
@@ -55,10 +55,19 @@ class Experiment < ActiveRecord::Base
       a_query = query
     end
 
-    if is_smart_annotation
+    if current_organization
+      projects_ids =
+        Project
+        .search(user,
+                include_archived,
+                nil,
+                1,
+                current_organization)
+        .select('id')
+
       new_query =
         Experiment
-        .where(project: project_ids)
+        .where('experiments.project_id IN (?)', projects_ids)
         .where_attributes_like([:name], a_query)
     elsif include_archived
       new_query =

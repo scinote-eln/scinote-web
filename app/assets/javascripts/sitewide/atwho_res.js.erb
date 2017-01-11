@@ -48,29 +48,35 @@ var SmartAnnotation = (function() {
     }
 
     function _matchHighlighter(li, query, search_filter) {
-      var re, li2, prevVal, newVal;
+      var $li, re;
+      // search filter is not passed for users
+      if(search_filter){
+        resourcesChecker(query, search_filter);
+      }
+      function highlight(el, sel, re) {
+        var prevVal, newVal;
+        prevVal = el.find(sel).html();
+        newVal = prevVal.replace(re, '<strong>$&</strong>');
+        el.find(sel).html(newVal);
+      }
+
       if (!query) {
         return li;
       }
-      resourcesChecker(query, search_filter);
-      li2 = $(li);
+
+      $li = $(li);
       re = new RegExp(query, 'gi');
-    prevVal =
-        li2
-        .find('[data-val=name]')
-        .html();
-      newVal =
-        prevVal
-        .replace(re, '<strong>$&</strong>');
-      li2.find('[data-val=name]').html(newVal);
-      newVal =
-        prevVal
-        .replace(re, '<strong>$&</strong>');
-      li2.find('[data-val=email]').html(newVal);
-      return li2[0].outerHTML;
+      if(search_filter) {
+        highlight($li, '[data-val=name]', re);
+      } else {
+        highlight($li, '[data-val=full-name]', re);
+        highlight($li, '[data-val=email]', re);
+      }
+
+      return $li[0].outerHTML
     }
 
-    function _genrateInputTag(value, li) {
+    function _generateInputTag(value, li) {
       var res = '';
       res += '[#' + li.attr('data-name');
       res += '~' + li.attr('data-type');
@@ -365,21 +371,7 @@ var SmartAnnotation = (function() {
             return res;
           },
           highlighter: function(li, query) {
-            function highlight(el, sel, re) {
-              var prevVal = el.find(sel).html();
-              var newVal = prevVal.replace(re, '<strong>$&</strong>');
-              el.find(sel).html(newVal);
-            }
-
-            if (!query) {
-              return li;
-            }
-
-            var $li = $(li);
-            var re = new RegExp(query, 'gi');
-            highlight($li, '[data-val=full-name]', re);
-            highlight($li, '[data-val=email]', re);
-            return $li[0].outerHTML;
+            return _matchHighlighter(li, query);
           },
           beforeInsert: function(value, li) {
             var res = '';
@@ -434,7 +426,7 @@ var SmartAnnotation = (function() {
             return _matchHighlighter(li, query, '#');
           },
           beforeInsert: function(value, li) {
-            return _genrateInputTag(value, li);
+            return _generateInputTag(value, li);
           }
         },
         headerTpl: generateFilterMenu('sam'),
@@ -463,7 +455,7 @@ var SmartAnnotation = (function() {
             return _matchHighlighter(li, query, 'task#');
           },
           beforeInsert: function(value, li) {
-            return _genrateInputTag(value, li);
+            return _generateInputTag(value, li);
           }
         },
         headerTpl: generateFilterMenu('tsk'),
@@ -492,7 +484,7 @@ var SmartAnnotation = (function() {
             return _matchHighlighter(li, query, 'project#');
           },
           beforeInsert: function(value, li) {
-            return _genrateInputTag(value, li);
+            return _generateInputTag(value, li);
           }
         },
         headerTpl: generateFilterMenu('prj'),
@@ -521,7 +513,7 @@ var SmartAnnotation = (function() {
             return _matchHighlighter(li, query, 'experiment#');
           },
           beforeInsert: function(value, li) {
-            return _genrateInputTag(value, li);
+            return _generateInputTag(value, li);
           }
         },
         headerTpl: generateFilterMenu('exp'),
@@ -550,7 +542,7 @@ var SmartAnnotation = (function() {
             return _matchHighlighter(li, query, 'sample#');
           },
           beforeInsert: function(value, li) {
-            return _genrateInputTag(value, li);
+            return _generateInputTag(value, li);
           }
         },
         headerTpl: generateFilterMenu('sam'),
@@ -577,4 +569,12 @@ var SmartAnnotation = (function() {
 
   return publicApi;
 
+})();
+
+
+// initialize the smart annotations
+(function initSmartAnnotation() {
+  $(document).on('focus', '[data-atwho-edit]', function() {
+    SmartAnnotation.init(this);
+  });
 })();

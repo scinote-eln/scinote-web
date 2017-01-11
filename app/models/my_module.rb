@@ -46,7 +46,7 @@ class MyModule < ActiveRecord::Base
     include_archived,
     query = nil,
     page = 1,
-    is_smart_annotation = false
+    current_organization = nil
   )
     exp_ids =
       Experiment
@@ -63,10 +63,17 @@ class MyModule < ActiveRecord::Base
       a_query = query
     end
 
-    if is_smart_annotation
+    if current_organization
+      experiemnts_ids = Experiment
+                        .search(user,
+                                include_archived,
+                                nil,
+                                1,
+                                current_organization)
+                        .select('id')
       new_query = MyModule
                   .distinct
-                  .where('my_modules.experiment_id IN (?)', exp_ids)
+                  .where('my_modules.experiment_id IN (?)', experiemnts_ids)
                   .where_attributes_like([:name], a_query)
     elsif include_archived
       new_query = MyModule
