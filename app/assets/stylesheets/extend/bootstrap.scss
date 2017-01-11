@@ -110,3 +110,8 @@
     width: 100%;
   }
 }
+
+.dataTables_scrollBody {
+  height: auto !important;
+  overflow: visible !important;
+}
