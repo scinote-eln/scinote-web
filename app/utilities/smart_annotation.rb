@@ -103,13 +103,13 @@ class SmartAnnotation
       )} #{I18n.t('by')} #{truncate(
         sanitize(sample_res.user.full_name,
                  length: Constants::NAME_TRUNCATION_LENGTH)
-      )} #{(', ' + truncate(
-        sanitize(sample_res.sample_type.name,
-                 length: Constants::NAME_TRUNCATION_LENGTH)
-      )) if sample_res.sample_type} #{(', ' + truncate(
-        sanitize(sample_res.sample_group.name,
-                 length: Constants::NAME_TRUNCATION_LENGTH)
-      )) if sample_res.sample_group}"
+      )} #{if sample_res.sample_type
+             ', ' + truncate(sanitize(sample_res.sample_type.name),
+                             length: Constants::NAME_TRUNCATION_LENGTH)
+           end} #{if sample_res.sample_group
+                    ', ' + truncate(sanitize(sample_res.sample_group.name),
+                                    length: Constants::NAME_TRUNCATION_LENGTH)
+                  end}"
       sam['type'] = 'sam'
       samples_list << sam
     end
