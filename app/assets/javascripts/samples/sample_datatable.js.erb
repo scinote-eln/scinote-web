@@ -108,7 +108,6 @@ function dataTableInit() {
       animateSpinner(this, false);
       changeToViewMode();
       updateButtons();
-      $('div.dataTables_scrollBody').height($('#samples').height());
     },
     preDrawCallback: function() {
       animateSpinner(this);
@@ -463,17 +462,6 @@ function onClickEdit() {
             $("select[name=sample_type_id]").on('change', function(){
               table.columns.adjust();
             });
-
-            // Adjust tables height when selecting sample type or group
-            $('.btn-group.bootstrap-select.show-tick').on('shown.bs.dropdown', function () {
-              var dropdown_height = $('.dropdown-menu.open').height();
-              var table_body = $('div.dataTables_scrollBody');
-              table_body.height(table_body.height()+dropdown_height+6);
-            })
-            .on('hidden.bs.dropdown', function(){
-              $('div.dataTables_scrollBody').height($('#samples').height());
-            });
-            $('div.dataTables_scrollBody').height($('#samples').height());
         },
         error: function (e, data, status, xhr) {
             if (e.status == 403) {
