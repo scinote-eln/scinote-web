@@ -1,8 +1,7 @@
-<% provide(:head_title, raw(t("my_modules.samples.head_title", project: @project.name, module: @my_module.name))) %>
+<% provide(:head_title, sanitize_input(t("my_modules.samples.head_title", project: @project.name, module: @my_module.name))) %>
 <%= render partial: "shared/sidebar" %>
 <%= render partial: "shared/secondary_navigation" %>
 
 <div id="content">
 	<%= render partial: "shared/samples" %>
 </div>
-

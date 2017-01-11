@@ -207,16 +207,14 @@ class Constants
     'gif', 'jpeg', 'pjpeg', 'png', 'x-png', 'svg+xml', 'bmp'
   ].freeze
 
-  WHITELISTED_TAGS = [
-    'a', 'b', 'strong', 'i', 'em', 'li', 'ul', 'ol', 'h1', 'del', 'ins',
-    'h2', 'h3', 'h4', 'h5', 'h6', 'br', 'sub', 'sup', 'p', 'code', 'hr',
-    'div', 'span', 'u', 's', 'blockquote', 'pre'
-  ].freeze
+  WHITELISTED_TAGS = %w(
+    a b strong i em li ul ol h1 del ins h2 h3 h4 h5 h6 br sub sup p code hr div
+    span u s blockquote pre
+  ).freeze
 
-  WHITELISTED_ATTRIBUTES = [
-    'href', 'src', 'width', 'height', 'alt', 'cite', 'datetime', 'title',
-    'class', 'name', 'xml:lang', 'abbr', 'style'
-  ].freeze
+  WHITELISTED_ATTRIBUTES = %w(
+    href src width height alt cite datetime title class name xml:lang abbr style
+  ).freeze
 
   # Very basic regex to check for validity of emails
   BASIC_EMAIL_REGEX = URI::MailTo::EMAIL_REGEXP

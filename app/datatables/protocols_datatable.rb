@@ -103,13 +103,13 @@ class ProtocolsDatatable < AjaxDatatablesRails::Base
         'DT_CanRestore': can_restore_protocol(protocol),
         'DT_CanExport': can_export_protocol(protocol),
         '1': if protocol.in_repository_archived?
-               sanitize_input(record.name)
+               escape_input(record.name)
              else
                name_html(record)
              end,
         '2': keywords_html(record),
         '3': modules_html(record),
-        '4': sanitize_input(record.full_username_str),
+        '4': escape_input(record.full_username_str),
         '5': timestamp_column_html(record),
         '6': I18n.l(record.updated_at, format: :full)
       }
@@ -179,7 +179,7 @@ class ProtocolsDatatable < AjaxDatatablesRails::Base
   def name_html(record)
     "<a href='#' data-action='protocol-preview'" \
       "data-url='#{preview_protocol_path(record)}'>" \
-      "#{sanitize_input(record.name)}" \
+      "#{escape_input(record.name)}" \
       "</a>"
   end
 

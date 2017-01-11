@@ -52,8 +52,8 @@ class OrganizationUsersDatatable < AjaxDatatablesRails::Base
     records.map do |record|
       {
         'DT_RowId': record.id,
-        '0': sanitize_input(record.user.full_name),
-        '1': sanitize_input(record.user.email),
+        '0': escape_input(record.user.full_name),
+        '1': escape_input(record.user.email),
         '2': I18n.l(record.created_at, format: :full),
         '3': record.user.active_status_str,
         '4': record.role_str,

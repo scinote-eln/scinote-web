@@ -1,4 +1,4 @@
-<% provide(:head_title, raw(t("notifications.title"))) %>
+<% provide(:head_title, sanitize_input(t("notifications.title"))) %>
 <div class="notifications-container">
   <div class="notifications-header">
     <span><%= t('notifications.title') %></span><span class="pull-right"><%= link_to t('nav.user.settings'), preferences_path %></span>

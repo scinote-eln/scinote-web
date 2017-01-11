@@ -185,7 +185,7 @@ class Users::SettingsController < ApplicationController
           }),
           heading: I18n.t(
             "users.settings.organizations.index.leave_uo_heading",
-            org: sanitize_input(@user_org.organization.name)
+            org: escape_input(@user_org.organization.name)
           )
         }
       }
@@ -202,8 +202,8 @@ class Users::SettingsController < ApplicationController
           }),
           heading: I18n.t(
             "users.settings.organizations.edit.destroy_uo_heading",
-            user: sanitize_input(@user_org.user.full_name),
-            org: sanitize_input(@user_org.organization.name)
+            user: escape_input(@user_org.user.full_name),
+            org: escape_input(@user_org.organization.name)
           )
         }
       }

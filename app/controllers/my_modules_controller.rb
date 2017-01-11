@@ -55,7 +55,7 @@ class MyModulesController < ApplicationController
             partial: "description.html.erb"
           }),
           title: t('my_modules.description.title',
-                   module: sanitize_input(@my_module.name))
+                   module: escape_input(@my_module.name))
         }
       }
     end
@@ -127,7 +127,7 @@ class MyModulesController < ApplicationController
             partial: "due_date.html.erb"
           }),
           title: t('my_modules.due_date.title',
-                   module: sanitize_input(@my_module.name))
+                   module: escape_input(@my_module.name))
         }
       }
     end

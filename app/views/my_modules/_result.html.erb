@@ -30,7 +30,7 @@
       <a class="result-panel-collapse-link" href="#result-panel-<%= result.id %>" data-toggle="collapse" data-remote="true">
         <span class="glyphicon glyphicon-collapse-down collapse-result-icon"></span>
         <strong><%= result.name %></strong> |
-        <span><%= raw t'my_modules.results.published_on', timestamp: l(result.created_at, format: :full), user: result.user.full_name %></span>
+        <span><%= sanitize_input t'my_modules.results.published_on', timestamp: l(result.created_at, format: :full), user: result.user.full_name %></span>
       </a>
     </div>
     <div class="panel-collapse collapse" id="result-panel-<%= result.id %>" role="tabpanel">

@@ -71,10 +71,10 @@ class LoadFromRepositoryProtocolsDatatable < AjaxDatatablesRails::Base
     records.map do |record|
       {
         'DT_RowId': record.id,
-        '1': sanitize_input(record.name),
+        '1': escape_input(record.name),
         '2': keywords_html(record),
         '3': record.nr_of_linked_children,
-        '4': sanitize_input(record.full_username_str),
+        '4': escape_input(record.full_username_str),
         '5': timestamp_column_html(record),
         '6': I18n.l(record.updated_at, format: :full)
       }

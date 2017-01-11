@@ -251,7 +251,7 @@ class ExperimentsController < ApplicationController
         format.json do
           render json: { message: t('experiments.move.error_flash',
                                     experiment:
-                                      sanitize_input(@experiment.name)) },
+                                      escape_input(@experiment.name)) },
                                     status: :unprocessable_entity
         end
       end

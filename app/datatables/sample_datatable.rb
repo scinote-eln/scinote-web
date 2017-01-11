@@ -106,22 +106,22 @@ class SampleDatatable < AjaxDatatablesRails::Base
       sample = {
         'DT_RowId': record.id,
         '1': assigned_cell(record),
-        '2': sanitize_input(record.name),
+        '2': escape_input(record.name),
         '3': if record.sample_type.nil?
                I18n.t('samples.table.no_type')
              else
-               sanitize_input(record.sample_type.name)
+               escape_input(record.sample_type.name)
              end,
         '4': if record.sample_group.nil?
                "<span class='glyphicon glyphicon-asterisk'></span> " +
                  I18n.t('samples.table.no_group')
              else
                "<span class='glyphicon glyphicon-asterisk' "\
-               "style='color: #{record.sample_group.color}'></span> " +
-                 sanitize_input(record.sample_group.name)
+               "style='color: #{escape_input(record.sample_group.color)}'>"\
+               "</span> " + escape_input(record.sample_group.name)
              end,
         '5': I18n.l(record.created_at, format: :full),
-        '6': sanitize_input(record.user.full_name),
+        '6': escape_input(record.user.full_name),
         'sampleInfoUrl':
           Rails.application.routes.url_helpers.edit_sample_path(record.id),
         'sampleUpdateUrl':

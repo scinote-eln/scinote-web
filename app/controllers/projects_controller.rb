@@ -106,7 +106,7 @@ class ProjectsController < ApplicationController
             locals: { project: @project }
           }),
           title: t('projects.index.modal_edit_project.modal_title',
-                   project: sanitize_input(@project.name))
+                   project: escape_input(@project.name))
         }
       }
     end
