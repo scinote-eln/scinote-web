@@ -118,7 +118,7 @@ class StepCommentsController < ApplicationController
             )
           end
           render json: {
-            comment: auto_link(
+            comment: custom_auto_link(
               simple_format(@comment.message),
               link: :urls,
               html: { target: '_blank' }

@@ -23,9 +23,8 @@
   <div class="report-element-body">
     <div class="row">
       <div class="col-xs-12 text-container ql-editor">
-        <%= auto_link(result_text.text,
-                      link: :urls,
-                      html: { target: '_blank' }) %>
+        <%= custom_auto_link(result_text.text,
+                             link: :urls, html: { target: '_blank' }) %>
       </div>
     </div>
   </div>
