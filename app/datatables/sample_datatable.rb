@@ -94,7 +94,7 @@ class SampleDatatable < AjaxDatatablesRails::Base
     num_cf = CustomField.where(organization_id: @organization).count
     array = []
 
-    for _ in 0..num_cf
+    num_cf.times do
       array << 'SampleCustomField.value'
     end
     array
@@ -306,7 +306,10 @@ class SampleDatatable < AjaxDatatablesRails::Base
           records = records.where("samples.id IN (#{filter_query})")
         end
 
-        cf_id = all_custom_fields[params[:order].values[0]["column"].to_i - 7].id
+        ci = sortable_displayed_columns[
+          params[:order].values[0][:column].to_i - 1
+        ]
+        cf_id = @cf_mappings.key((ci.to_i + 1).to_s)
         dir = sort_direction(params[:order].values[0])
 
         # Because samples can have multiple sample custom fields, we first group
@@ -366,7 +369,7 @@ class SampleDatatable < AjaxDatatablesRails::Base
   end
 
   def sorting_by_custom_column
-    sort_column(params[:order].values[0]) == 'SampleCustomField.value'
+    sort_column(params[:order].values[0]) == 'sample_custom_fields.value'
   end
 
   # Escapes special characters in search query
