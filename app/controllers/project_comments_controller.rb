@@ -1,5 +1,6 @@
 class ProjectCommentsController < ApplicationController
   include ActionView::Helpers::TextHelper
+  include InputSanitizeHelper
 
   before_action :load_vars
   before_action :check_view_permissions, only: :index

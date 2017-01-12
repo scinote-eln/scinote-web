@@ -1,5 +1,6 @@
 class ResultCommentsController < ApplicationController
   include ActionView::Helpers::TextHelper
+  include InputSanitizeHelper
 
   before_action :load_vars
 
