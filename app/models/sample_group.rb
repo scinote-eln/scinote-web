@@ -1,5 +1,4 @@
 class SampleGroup < ActiveRecord::Base
-
   auto_strip_attributes :name, :color, nullify: false
   validates :name,
             presence: true,

@@ -75,7 +75,7 @@
         <div class="panel panel-default">
           <div class="panel-heading">
             <strong><%= step.name %></strong> |
-            <span><%= sanitize_input t("protocols.steps.published_on", timestamp: l(step.created_at, format: :full), user: h(step.user.full_name)) %></span>
+            <span><%= t("protocols.steps.published_on", timestamp: l(step.created_at, format: :full), user: h(step.user.full_name)).html_safe %></span>
           </div>
           <div class="panel-collapse collapse in" id="step-panel-<%= step.id %>" role="tabpanel" aria-expanded="true">
             <div class="panel-body">
