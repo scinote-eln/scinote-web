@@ -2,10 +2,8 @@ class Organization < ActiveRecord::Base
   # Not really MVC-compliant, but we just use it for logger
   # output in space_taken related functions
   include ActionView::Helpers::NumberHelper
-  include InputSanitizeHelper
 
   auto_strip_attributes :name, :description, nullify: false
-  before_validation :sanitize_fields, on: [:create, :update]
   validates :name,
             length: { minimum: Constants::NAME_MIN_LENGTH,
                       maximum: Constants::NAME_MAX_LENGTH }
@@ -307,12 +305,5 @@ class Organization < ActiveRecord::Base
 
   def protocol_keywords_list
     ProtocolKeyword.where(organization: self).pluck(:name)
-  end
-
-  private
-
-  def sanitize_fields
-    self.name = escape_input(name)
-    self.description = sanitize_input(description)
   end
 end

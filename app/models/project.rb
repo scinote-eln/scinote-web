@@ -1,11 +1,9 @@
 class Project < ActiveRecord::Base
   include ArchivableModel, SearchableModel
-  include InputSanitizeHelper
 
   enum visibility: { hidden: 0, visible: 1 }
 
   auto_strip_attributes :name, nullify: false
-  before_validation :sanitize_fields, on: [:create, :update]
   validates :name,
             length: { minimum: Constants::NAME_MIN_LENGTH,
                       maximum: Constants::NAME_MAX_LENGTH },
@@ -174,11 +172,5 @@ class Project < ActiveRecord::Base
         .where('my_modules.archived=false')
         .distinct
     end
-  end
-
-  private
-
-  def sanitize_fields
-    self.name = escape_input(name)
   end
 end

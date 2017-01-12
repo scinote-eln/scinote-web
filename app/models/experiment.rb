@@ -1,6 +1,5 @@
 class Experiment < ActiveRecord::Base
   include ArchivableModel, SearchableModel
-  include InputSanitizeHelper
 
   belongs_to :project, inverse_of: :experiments
   belongs_to :created_by, foreign_key: :created_by_id, class_name: 'User'
@@ -19,7 +18,6 @@ class Experiment < ActiveRecord::Base
                        if: :workflowimg_check
 
   auto_strip_attributes :name, :description, nullify: false
-  before_validation :sanitize_fields, on: [:create, :update]
   validates :name,
             length: { minimum: Constants::NAME_MIN_LENGTH,
                       maximum: Constants::NAME_MAX_LENGTH },
@@ -409,11 +407,6 @@ class Experiment < ActiveRecord::Base
   end
 
   private
-
-  def sanitize_fields
-    self.name = escape_input(name)
-    self.description = sanitize_input(description)
-  end
 
   # Archive all modules. Receives an array of module integer IDs.
   def archive_modules(module_ids)

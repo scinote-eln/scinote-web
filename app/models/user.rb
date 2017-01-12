@@ -1,6 +1,5 @@
 class User < ActiveRecord::Base
   include SearchableModel
-  include InputSanitizeHelper
 
   acts_as_token_authenticatable
   devise :invitable, :confirmable, :database_authenticatable, :registerable,
@@ -21,7 +20,6 @@ class User < ActiveRecord::Base
   }
 
   auto_strip_attributes :full_name, :initials, nullify: false
-  before_validation :sanitize_fields, on: [:create, :update]
   validates :full_name,
             presence: true,
             length: { maximum: Constants::NAME_MAX_LENGTH }
@@ -275,12 +273,6 @@ class User < ActiveRecord::Base
   end
 
   private
-
-  def sanitize_fields
-    self.full_name = escape_input(full_name)
-    self.initials = escape_input(initials)
-    self.email = escape_input(email)
-  end
 
   def destroy_notifications
     # Find all notifications where user is the only reference

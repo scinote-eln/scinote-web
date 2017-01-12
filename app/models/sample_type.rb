@@ -1,8 +1,5 @@
 class SampleType < ActiveRecord::Base
-  include InputSanitizeHelper
-
   auto_strip_attributes :name, nullify: false
-  before_validation :sanitize_fields, on: [:create, :update]
   validates :name,
             presence: true,
             length: { maximum: Constants::NAME_MAX_LENGTH },
@@ -17,10 +14,4 @@ class SampleType < ActiveRecord::Base
   has_many :samples, inverse_of: :sample_types
 
   scope :sorted, -> { order(name: :asc) }
-
-  private
-
-  def sanitize_fields
-    self.name = escape_input(name)
-  end
 end

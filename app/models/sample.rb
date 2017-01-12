@@ -1,9 +1,7 @@
 class Sample < ActiveRecord::Base
   include SearchableModel
-  include InputSanitizeHelper
 
   auto_strip_attributes :name, nullify: false
-  before_validation :sanitize_fields, on: [:create, :update]
   validates :name,
             presence: true,
             length: { maximum: Constants::NAME_MAX_LENGTH }
@@ -70,11 +68,5 @@ class Sample < ActiveRecord::Base
         .limit(Constants::SEARCH_LIMIT)
         .offset((page - 1) * Constants::SEARCH_LIMIT)
     end
-  end
-
-  private
-
-  def sanitize_fields
-    self.name = escape_input(name)
   end
 end

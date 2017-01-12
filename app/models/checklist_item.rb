@@ -1,8 +1,5 @@
 class ChecklistItem < ActiveRecord::Base
-  include InputSanitizeHelper
-
   auto_strip_attributes :text, nullify: false
-  before_validation :sanitize_fields, on: [:create, :update]
   validates :text,
             presence: true,
             length: { maximum: Constants::TEXT_MAX_LENGTH }
@@ -12,10 +9,4 @@ class ChecklistItem < ActiveRecord::Base
   belongs_to :checklist, inverse_of: :checklist_items
   belongs_to :created_by, foreign_key: 'created_by_id', class_name: 'User'
   belongs_to :last_modified_by, foreign_key: 'last_modified_by_id', class_name: 'User'
-
-  private
-
-  def sanitize_fields
-    self.text = sanitize_input(text)
-  end
 end

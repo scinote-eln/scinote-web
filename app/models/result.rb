@@ -1,9 +1,7 @@
 class Result < ActiveRecord::Base
   include ArchivableModel, SearchableModel
-  include InputSanitizeHelper
 
   auto_strip_attributes :name, nullify: false
-  before_validation :sanitize_fields, on: [:create, :update]
   validates :user, :my_module, presence: true
   validates :name, length: { maximum: Constants::NAME_MAX_LENGTH }
   validate :text_or_asset_or_table
@@ -111,9 +109,5 @@ class Result < ActiveRecord::Base
     elsif num_of_assigns < 1
       errors.add(:base, "Result should be instance of text/asset/table.")
     end
-  end
-
-  def sanitize_fields
-    self.name = escape_input(name)
   end
 end
