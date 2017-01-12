@@ -1,6 +1,6 @@
 class AtWhoController < ApplicationController
   before_action :load_vars
-  before_action :check_users_permissions, only: :users
+  before_action :check_users_permissions
 
   def users
     # Search users
@@ -23,6 +23,70 @@ class AtWhoController < ApplicationController
       format.json do
         render json: {
           users: res,
+          status: :ok
+        }
+      end
+    end
+  end
+
+  def menu_items
+    res = SmartAnnotation.new(current_user, current_organization, @query)
+
+    respond_to do |format|
+      format.json do
+        render json: {
+          prj: res.projects,
+          exp: res.experiments,
+          tsk: res.my_modules,
+          sam: res.samples,
+          status: :ok
+        }
+      end
+    end
+  end
+
+  def samples
+    res = SmartAnnotation.new(current_user, current_organization, @query)
+    respond_to do |format|
+      format.json do
+        render json: {
+          res: res.samples,
+          status: :ok
+        }
+      end
+    end
+  end
+
+  def projects
+    res = SmartAnnotation.new(current_user, current_organization, @query)
+    respond_to do |format|
+      format.json do
+        render json: {
+          res: res.projects,
+          status: :ok
+        }
+      end
+    end
+  end
+
+  def experiments
+    res = SmartAnnotation.new(current_user, current_organization, @query)
+    respond_to do |format|
+      format.json do
+        render json: {
+          res: res.experiments,
+          status: :ok
+        }
+      end
+    end
+  end
+
+  def my_modules
+    res = SmartAnnotation.new(current_user, current_organization, @query)
+    respond_to do |format|
+      format.json do
+        render json: {
+          res: res.my_modules,
           status: :ok
         }
       end

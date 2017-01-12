@@ -39,7 +39,11 @@
 </div>
 <strong><%= comment.user.full_name %>:</strong>
 <div data-role="comment-message-container">
-  <p data-role="comment-message"><%= auto_link(simple_format(comment.message),
-                                               link: :urls,
-                                               html: { target: '_blank' }) %></p>
+  <p data-role="comment-message"><%= auto_link(
+    simple_format(
+      smart_annotation_parser(comment.message)
+    ),
+    link: :urls,
+    html: { target: '_blank' }
+  ) %></p>
 </div>

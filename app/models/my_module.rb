@@ -41,7 +41,13 @@ class MyModule < ActiveRecord::Base
   WIDTH = 30
   HEIGHT = 14
 
-  def self.search(user, include_archived, query = nil, page = 1)
+  def self.search(
+    user,
+    include_archived,
+    query = nil,
+    page = 1,
+    current_organization = nil
+  )
     exp_ids =
       Experiment
       .search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
@@ -57,17 +63,31 @@ class MyModule < ActiveRecord::Base
       a_query = query
     end
 
-    if include_archived
+    if current_organization
+      experiments_ids = Experiment
+                        .search(user,
+                                include_archived,
+                                nil,
+                                1,
+                                current_organization)
+                        .select('id')
       new_query = MyModule
-        .distinct
-        .where("my_modules.experiment_id IN (?)", exp_ids)
-        .where_attributes_like([:name, :description], a_query)
+                  .distinct
+                  .where('my_modules.experiment_id IN (?)', experiments_ids)
+                  .where_attributes_like([:name], a_query)
+                  .limit(Constants::ATWHO_SEARCH_LIMIT)
+      return new_query
+    elsif include_archived
+      new_query = MyModule
+                  .distinct
+                  .where('my_modules.experiment_id IN (?)', exp_ids)
+                  .where_attributes_like([:name, :description], a_query)
     else
       new_query = MyModule
-        .distinct
-        .where("my_modules.experiment_id IN (?)", exp_ids)
-        .where("my_modules.archived = ?", false)
-        .where_attributes_like([:name, :description], a_query)
+                  .distinct
+                  .where('my_modules.experiment_id IN (?)', exp_ids)
+                  .where('my_modules.archived = ?', false)
+                  .where_attributes_like([:name, :description], a_query)
     end
 
     # Show all results if needed

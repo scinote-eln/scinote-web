@@ -9,7 +9,6 @@
 function applyCheckboxCallBack()  {
   $("[data-action='check-item']").on('click', function(e){
     var checkboxitem = $(this).find("input");
-
     var checked = checkboxitem.is(":checked");
     $.ajax({
       url: checkboxitem.data("link-url"),
@@ -471,7 +470,6 @@ function initializeCheckboxSorting() {
     // inserted into DOM.
     setTimeout(function () {
       var list = el.parent().find("fieldset.nested_step_checklists:last ul");
-
       enableCheckboxSorting(list.get(0));
     });
   });

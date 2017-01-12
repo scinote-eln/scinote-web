@@ -23,7 +23,8 @@ class Sample < ActiveRecord::Base
     user,
     include_archived,
     query = nil,
-    page = 1
+    page = 1,
+    current_organization = nil
   )
     org_ids =
       Organization
@@ -42,24 +43,35 @@ class Sample < ActiveRecord::Base
       a_query = query
     end
 
-    new_query = Sample
-      .distinct
-      .joins(:user)
-      .joins("LEFT OUTER JOIN sample_types ON samples.sample_type_id = sample_types.id")
-      .joins("LEFT OUTER JOIN sample_groups ON samples.sample_group_id = sample_groups.id")
-      .joins("LEFT OUTER JOIN sample_custom_fields ON samples.id = sample_custom_fields.sample_id")
-      .where("samples.organization_id IN (?)", org_ids)
-      .where_attributes_like(
-        [
-          "samples.name",
-          "sample_types.name",
-          "sample_groups.name",
-          "users.full_name",
-          "sample_custom_fields.value"
-        ],
-        a_query
-      )
-
+    if current_organization
+      new_query = Sample
+                  .distinct
+                  .where('samples.organization_id = ?', current_organization.id)
+                  .where_attributes_like(['samples.name'], a_query)
+                  .limit(Constants::ATWHO_SEARCH_LIMIT)
+      return new_query
+    else
+      new_query = Sample
+                  .distinct
+                  .joins(:user)
+                  .joins('LEFT OUTER JOIN sample_types ON ' \
+                         'samples.sample_type_id = sample_types.id')
+                  .joins('LEFT OUTER JOIN sample_groups ON ' \
+                         'samples.sample_group_id = sample_groups.id')
+                  .joins('LEFT OUTER JOIN sample_custom_fields ON ' \
+                         'samples.id = sample_custom_fields.sample_id')
+                  .where('samples.organization_id IN (?)', org_ids)
+                  .where_attributes_like(
+                    [
+                      'samples.name',
+                      'sample_types.name',
+                      'sample_groups.name',
+                      'users.full_name',
+                      'sample_custom_fields.value'
+                    ],
+                    a_query
+                  )
+    end
     # Show all results if needed
     if page == Constants::SEARCH_NO_LIMIT
       new_query
