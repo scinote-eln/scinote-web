@@ -34,7 +34,7 @@ var SmartAnnotation = (function() {
     dataProjectUrl = $(document.body).attr('data-atwho-project-url');
     dataExperimentUrl = $(document.body).attr('data-atwho-experiment-url');
     dataSampleUrl = $(document.body).attr('data-atwho-sample-url');
-    dataMenuItemsUrl = $(document.body).attr('data-atwho-menu-items').freeze;
+    dataMenuItemsUrl = $(document.body).attr('data-atwho-menu-items');
 
     // helper methods for AtWho callback
     function _templateEval(_tpl, map) {
@@ -49,10 +49,7 @@ var SmartAnnotation = (function() {
 
     function _matchHighlighter(li, query, search_filter) {
       var $li, re;
-      // search filter is not passed for users
-      if(search_filter){
-        resourcesChecker(query, search_filter);
-      }
+
       function highlight(el, sel, re) {
         var prevVal, newVal;
         prevVal = el.find(sel).html();
@@ -66,6 +63,7 @@ var SmartAnnotation = (function() {
 
       $li = $(li);
       re = new RegExp(query, 'gi');
+      // search_filter is not passed for the user
       if(search_filter) {
         highlight($li, '[data-val=name]', re);
       } else {
@@ -102,6 +100,7 @@ var SmartAnnotation = (function() {
           src_btn = 'sam';
           break;
       }
+
       $.getJSON(
         dataMenuItemsUrl,
         {query: query},
@@ -158,7 +157,7 @@ var SmartAnnotation = (function() {
 
     // Initialize filter buttons
     function initButtons(query, search_filter) {
-      $('.atwho-header-res query_obj button').off();
+      $('.atwho-header-res .title button').off();
       $('.atwho-header-res .dismiss').off('click');
 
       initDismissButton();
@@ -167,6 +166,7 @@ var SmartAnnotation = (function() {
       $('.atwho-header-res .title button').on('click', function(e) {
         var $button, $prevButton;
         e.stopPropagation();
+        e.preventDefault();
 
         $button = $(this);
         $prevButton = $button.closest('.title').children('.btn-primary');
@@ -191,6 +191,8 @@ var SmartAnnotation = (function() {
               generateNewQuery(dataSampleUrl,
                                $prevButton,
                                $button);
+            break;
+          default:
             break;
         }
       });
@@ -423,7 +425,7 @@ var SmartAnnotation = (function() {
             return _templateEval(_tpl, map);
           },
           highlighter:  function(li, query) {
-            return _matchHighlighter(li, query, '#');
+            return _matchHighlighter(li, query, true);
           },
           beforeInsert: function(value, li) {
             return _generateInputTag(value, li);
@@ -452,7 +454,7 @@ var SmartAnnotation = (function() {
             return _templateEval(_tpl, map);
           },
           highlighter: function(li, query) {
-            return _matchHighlighter(li, query, 'task#');
+            return _matchHighlighter(li, query, true);
           },
           beforeInsert: function(value, li) {
             return _generateInputTag(value, li);
@@ -481,7 +483,7 @@ var SmartAnnotation = (function() {
             return _templateEval(_tpl, map);
           },
           highlighter: function(li, query) {
-            return _matchHighlighter(li, query, 'project#');
+            return _matchHighlighter(li, query, true);
           },
           beforeInsert: function(value, li) {
             return _generateInputTag(value, li);
@@ -510,7 +512,7 @@ var SmartAnnotation = (function() {
             return _templateEval(_tpl, map);
           },
           highlighter: function(li, query) {
-            return _matchHighlighter(li, query, 'experiment#');
+            return _matchHighlighter(li, query, true);
           },
           beforeInsert: function(value, li) {
             return _generateInputTag(value, li);
@@ -539,7 +541,7 @@ var SmartAnnotation = (function() {
             return _templateEval(_tpl, map);
           },
           highlighter: function(li, query) {
-            return _matchHighlighter(li, query, 'sample#');
+            return _matchHighlighter(li, query, true);
           },
           beforeInsert: function(value, li) {
             return _generateInputTag(value, li);
@@ -575,6 +577,8 @@ var SmartAnnotation = (function() {
 // initialize the smart annotations
 (function initSmartAnnotation() {
   $(document).on('focus', '[data-atwho-edit]', function() {
-    SmartAnnotation.init(this);
+    if(_.isUndefined($(this).data('atwho'))) {
+      SmartAnnotation.init(this);
+    }
   });
 })();

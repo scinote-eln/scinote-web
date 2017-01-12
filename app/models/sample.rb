@@ -48,6 +48,8 @@ class Sample < ActiveRecord::Base
                   .distinct
                   .where('samples.organization_id = ?', current_organization.id)
                   .where_attributes_like(['samples.name'], a_query)
+                  .limit(Constants::ATWHO_SEARCH_LIMIT)
+      return new_query
     else
       new_query = Sample
                   .distinct

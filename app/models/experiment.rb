@@ -69,6 +69,8 @@ class Experiment < ActiveRecord::Base
         Experiment
         .where('experiments.project_id IN (?)', projects_ids)
         .where_attributes_like([:name], a_query)
+        .limit(Constants::ATWHO_SEARCH_LIMIT)
+      return new_query
     elsif include_archived
       new_query =
         Experiment

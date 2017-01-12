@@ -64,7 +64,7 @@ class MyModule < ActiveRecord::Base
     end
 
     if current_organization
-      experiemnts_ids = Experiment
+      experiments_ids = Experiment
                         .search(user,
                                 include_archived,
                                 nil,
@@ -73,8 +73,10 @@ class MyModule < ActiveRecord::Base
                         .select('id')
       new_query = MyModule
                   .distinct
-                  .where('my_modules.experiment_id IN (?)', experiemnts_ids)
+                  .where('my_modules.experiment_id IN (?)', experiments_ids)
                   .where_attributes_like([:name], a_query)
+                  .limit(Constants::ATWHO_SEARCH_LIMIT)
+      return new_query
     elsif include_archived
       new_query = MyModule
                   .distinct
