@@ -59,6 +59,6 @@ class Checklist < ActiveRecord::Base
   private
 
   def sanitize_fields
-    self.name = sanitize_input(name)
+    self.name = escape_input(name)
   end
 end

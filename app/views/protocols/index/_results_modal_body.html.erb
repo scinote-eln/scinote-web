@@ -23,7 +23,7 @@
         <li>
           <span class="label label-success"><%= t("protocols.index.#{en_action}.row_success") %></span>
           <% if en_action == "restore_results" %>
-            <%= sanitize_input(t("protocols.index.restore_results.row_#{r[:type]}", protocol: r[:name])) %>
+            <%= sanitize_input(t("protocols.index.restore_results.row_#{r[:type]}", protocol: h(r[:name]))) %>
           <% else %>
             <%= r[:name] %>
           <% end %>
@@ -34,7 +34,7 @@
       <% renamed.each do |r| %>
         <li>
           <span class="label label-warning"><%= t("protocols.index.#{en_action}.row_renamed") %></span>
-          <% protocol_str = t("protocols.index.row_renamed_html", old_name: r[:name], new_name: r[:new_name]) %>
+          <% protocol_str = t("protocols.index.row_renamed_html", old_name: h(r[:name]), new_name: h(r[:new_name])) %>
           <% if en_action == "restore_results" %>
             <%= sanitize_input(t("protocols.index.restore_results.row_#{r[:type]}", protocol: protocol_str)) %>
           <% else %>

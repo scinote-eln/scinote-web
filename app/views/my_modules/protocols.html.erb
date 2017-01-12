@@ -1,4 +1,4 @@
-<% provide(:head_title, sanitize_input(t("my_modules.protocols.head_title", project: @project.name, module: @my_module.name))) %>
+<% provide(:head_title, sanitize_input(t("my_modules.protocols.head_title", project: h(@project.name), module: h(@my_module.name)))) %>
 <%= render partial: "shared/sidebar" %>
 <%= render partial: "shared/secondary_navigation" %>
 

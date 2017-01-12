@@ -26,7 +26,7 @@
       <a class="step-panel-collapse-link" href="#step-panel-<%= step.id %>" data-toggle="collapse" data-remote="true">
         <span class="glyphicon glyphicon-collapse-down collapse-step-icon"></span>
         <strong><%= step.name %></strong> |
-        <span><%= sanitize_input t("protocols.steps.published_on", timestamp: l(step.created_at, format: :full), user: step.user.full_name) %></span>
+        <span><%= sanitize_input t("protocols.steps.published_on", timestamp: l(step.created_at, format: :full), user: h(step.user.full_name)) %></span>
       </a>
     </div>
     <div class="panel-collapse collapse" id="step-panel-<%= step.id %>" role="tabpanel">

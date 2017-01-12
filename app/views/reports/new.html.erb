@@ -1,4 +1,4 @@
-<% provide(:head_title, sanitize_input(t("projects.reports.new.head_title", project: @project.name))) %>
+<% provide(:head_title, sanitize_input(t("projects.reports.new.head_title", project: h(@project.name)))) %>
 <% provide(:body_class, "report-body") %>
 <% provide(:sidebar_wrapper_class, "report-sidebar-wrapper") %>
 <% provide(:container_class, "report-container") %>

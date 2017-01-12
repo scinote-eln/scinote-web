@@ -1,4 +1,4 @@
-<% provide(:head_title, sanitize_input(t("experiments.module_archive.head_title", experiment: @experiment.name))) %>
+<% provide(:head_title, sanitize_input(t("experiments.module_archive.head_title", experiment: h(@experiment.name)))) %>
 <%= render partial: "shared/sidebar" %>
 <%= render partial: "shared/secondary_navigation" %>
 
