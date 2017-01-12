@@ -152,7 +152,11 @@ Rails.application.routes.draw do
       get 'samples' # Samples for single project
       post 'samples_index' # Renders sample datatable for single project (ajax action)
       get 'experiment_archive' # Experiment archive for single project
-      post :delete_samples, constraints: CommitParamRouting.new(MyModulesController::DELETE_SAMPLES), action: :delete_samples
+      post :delete_samples,
+           constraints: CommitParamRouting.new(
+             ProjectsController::DELETE_SAMPLES
+           ),
+           action: :delete_samples
     end
 
     # This route is defined outside of member block to preserve original :project_id parameter in URL.
@@ -213,9 +217,21 @@ Rails.application.routes.draw do
       get 'samples' # Samples view for single module
       get 'archive' # Archive view for single module
       post 'samples_index' # Renders sample datatable for single module (ajax action)
-      post :assign_samples, constraints: CommitParamRouting.new(MyModulesController::ASSIGN_SAMPLES), action: :assign_samples
-      post :assign_samples, constraints: CommitParamRouting.new(MyModulesController::UNASSIGN_SAMPLES), action: :unassign_samples
-      post :assign_samples, constraints: CommitParamRouting.new(MyModulesController::DELETE_SAMPLES), action: :delete_samples
+      post :assign_samples,
+           constraints: CommitParamRouting.new(
+             MyModulesController::ASSIGN_SAMPLES
+           ),
+           action: :assign_samples
+      post :assign_samples,
+           constraints: CommitParamRouting.new(
+             MyModulesController::UNASSIGN_SAMPLES
+           ),
+           action: :unassign_samples
+      post :assign_samples,
+           constraints: CommitParamRouting.new(
+             MyModulesController::DELETE_SAMPLES
+           ),
+           action: :delete_samples
     end
 
     # Those routes are defined outside of member block to preserve original id parameters in URL.

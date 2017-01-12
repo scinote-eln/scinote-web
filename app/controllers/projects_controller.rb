@@ -21,7 +21,7 @@ class ProjectsController < ApplicationController
   layout :choose_layout
 
   # Action defined in SampleActions
-  DELETE_SAMPLES = I18n.t('samples.delete_samples')
+  DELETE_SAMPLES = 'Delete'.freeze
 
   def index
     if params[:organization]
