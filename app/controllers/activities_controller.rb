@@ -1,4 +1,6 @@
 class ActivitiesController < ApplicationController
+  include ActivityHelper
+
   before_filter :load_vars
 
   def index
@@ -14,8 +16,8 @@ class ActivitiesController < ApplicationController
     # Whether to hide date labels
     @hide_today = params.include? :from
     @day = @last_activity.present? ?
-      @last_activity.created_at.strftime("%j").to_i :
-      366
+      days_since_1970(@last_activity.created_at) :
+      days_since_1970(DateTime.current + 30.days)
 
     more_url = url_for(activities_url(format: :json,
       from: @activities.last.id))
