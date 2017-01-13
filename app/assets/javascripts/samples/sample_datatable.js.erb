@@ -164,6 +164,7 @@ function dataTableInit() {
         $('#samples-columns-dropdown').removeClass('open');
       });
       // Fix compatibility of fixed table header and column names modal-tooltip
+      // by removing overflow: hidden
       $('.dataTables_scrollHead').css('overflow', '');
     }
   });
