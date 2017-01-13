@@ -97,7 +97,8 @@ var SmartAnnotation = (function() {
           src_btn = 'exp';
           break;
         default:
-          src_btn = 'sam';
+          var $type = $('.atwho-view[style] .btn-primary').data('filter');
+          src_btn = _.isUndefined($type) ? 'sam' : $type;
           break;
       }
 
@@ -133,19 +134,6 @@ var SmartAnnotation = (function() {
         });
     }
 
-    // reset the dropdown
-    function reinitializeOnListHide() {
-      Util.showHideBinding();
-
-      _.map($('.atwho-view'), function(el) {
-        $(el).off('hide');
-        $(el).on('hide', function() {
-          $(field).atwho('destroy');
-          init();
-        });
-      });
-    }
-
     // initialise dropdown dismiss button
     function initDismissButton() {
       $('.atwho-header-res .dismiss').off('click');
@@ -155,93 +143,25 @@ var SmartAnnotation = (function() {
       });
     }
 
-    // Initialize filter buttons
+    // Initialize or update filter buttons
     function initButtons(query, search_filter) {
-      $('.atwho-header-res .title button').off();
-      $('.atwho-header-res .dismiss').off('click');
-
       initDismissButton();
-
       resourcesChecker(query, search_filter);
+
+      $('.atwho-header-res .title button').off();
       $('.atwho-header-res .title button').on('click', function(e) {
-        var $button, $prevButton;
         e.stopPropagation();
         e.preventDefault();
 
-        $button = $(this);
-        $prevButton = $button.closest('.title').children('.btn-primary');
+        // Update the selected filter button
+        var $selectedBtn = $(this);
+        var $prevBtn = $selectedBtn.closest('.title').children('.btn-primary');
+        $selectedBtn.removeClass('btn-default').addClass('btn-primary');
+        $prevBtn.removeClass('btn-primary').addClass('btn-default');
 
-        switch ($button.attr('data-filter')) {
-          case 'prj':
-              generateNewQuery(dataProjectUrl,
-                               $prevButton,
-                               $button);
-            break;
-          case 'exp':
-              generateNewQuery(dataExperimentUrl,
-                               $prevButton,
-                               $button);
-            break;
-          case 'tsk':
-              generateNewQuery(dataTaskUrl,
-                               $prevButton,
-                               $button);
-            break;
-          case 'sam':
-              generateNewQuery(dataSampleUrl,
-                               $prevButton,
-                               $button);
-            break;
-          default:
-            break;
-        }
+        // Updates query and dropdown elements; focuses input
+        $(field).click().focus();
       });
-    }
-
-    // Generates new query when user filters the results
-    function generateNewQuery(link, prevBtn, selectedBtn) {
-      var regexp, _a, _y, new_query, query_obj, field_selected;
-      _a = decodeURI("%C3%80");
-      _y = decodeURI("%C3%BF");
-      regexp = new RegExp("(#|task#|project#|sample#|experiment#)([A-Za-z" +
-      _a + "-" + _y + "0-9_ \'\.\+\-]*)$|" +
-      "(#|task#|project#|sample#|experiment#)([^\\x00-\\xff]*)$", 'gi');
-      // filters field if multiple input fields on the page
-      _.each($(field), function(e) {
-        if($(e).atwho('isSelecting')){
-          field_selected = e;
-      }});
-
-      if(field_selected) {
-        query_obj = regexp.exec($(field_selected).val());
-
-        if(query_obj) {
-          $.getJSON(
-            link,
-            {query: query_obj[2]},
-            function(data) {
-              if(data.res.length > 0 && field_selected) {
-                $(field_selected)
-                  .atwho('load', query_obj[0], data.res)
-                  .atwho('run');
-
-                prevBtn
-                  .removeClass('btn-primary')
-                  .addClass('btn-default');
-                selectedBtn
-                  .removeClass('btn-default')
-                  .addClass('btn-primary');
-
-                reinitializeOnListHide();
-                initButtons(query_obj[2],
-                            selectedBtn.html());
-              } else {
-                $(field).atwho('destroy');
-                init();
-              }
-          });
-        }
-      }
     }
 
     // Generates suggestion dropdown filter
@@ -412,8 +332,26 @@ var SmartAnnotation = (function() {
         at: '#',
         callbacks: {
           remoteFilter: function(query, callback) {
+            var $type = $('.atwho-view[style] .btn-primary').data('filter');
+
+            switch($type) {
+                case 'tsk':
+                    $type = dataTaskUrl;
+                    break;
+                case 'prj':
+                    $type = dataProjectUrl;
+                    break;
+                case 'exp':
+                    $type = dataExperimentUrl;
+                    break;
+                case 'sam':
+                default:
+                    $type = dataSampleUrl;
+                    break;
+            }
+
             $.getJSON(
-              dataSampleUrl,
+              $type,
               {query: query},
               function(data) {
                 callback(data.res);
