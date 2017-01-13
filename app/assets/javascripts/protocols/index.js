@@ -548,15 +548,13 @@ function updateButtons() {
 
 function exportProtocols(ids) {
   if (ids.length > 0) {
-    var exportLink = document.createElement('a');
-    exportLink.id = 'protocolExportLink';
     var params = '?protocol_ids[]=' + ids[0];
     for (var i = 1; i < ids.length; i++) {
       params += '&protocol_ids[]=' + ids[i];
     }
     params = encodeURI(params);
-    exportLink.href = $("[data-action='export']").data('export-url') + params;
-    exportLink.click();
+    window.location.href = $("[data-action='export']")
+                             .data('export-url') + params;
   }
 }
 
