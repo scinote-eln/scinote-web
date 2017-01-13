@@ -163,6 +163,8 @@ function dataTableInit() {
       table.on('mousedown', function() {
         $('#samples-columns-dropdown').removeClass('open');
       });
+      // Fix compatibility of fixed table header and column names modal-tooltip
+      $('.dataTables_scrollHead').css('overflow', '');
     }
   });
 
