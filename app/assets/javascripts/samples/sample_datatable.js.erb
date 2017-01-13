@@ -459,7 +459,7 @@ function onClickEdit() {
 
             // Adjust columns width in table header
             table.columns.adjust();
-            $("select[name=sample_type_id], select[name=sample_group_id]").on('change', function(){
+            $('.dropdown-menu').parent().on('shown.bs.dropdown hidden.bs.dropdown', function () {
               table.columns.adjust();
             });
         },
