@@ -68,12 +68,13 @@
     <div class="row">
       <div class="col-xs-12">
         <%= auto_link(
-          simple_format(
-            smart_annotation_parser(experiment.description)
-          ),
-          link: :urls,
-          html: { target: '_blank' }
-        ) %>
+              smart_annotation_parser(
+                simple_format(experiment.description)
+              ),
+              link: :urls,
+              sanitize: false,
+              html: { target: '_blank' }
+            ).html_safe %>
       </div>
     </div>
   </div>
