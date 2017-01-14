@@ -1,7 +1,7 @@
 <%
-  current_day = DateTime.current.strftime('%j').to_i
+  current_day = days_since_1970(DateTime.current)
 %>
-<% if !hide_today and activities.count > 0 and activities[0].created_at.strftime('%j').to_i == current_day %>
+<% if !hide_today && activities.count > 0 && days_since_1970(activities[0].created_at) == current_day %>
   <li class="text-center activity-date-item">
     <span class="label label-primary">
       <%=t "activities.index.today" %>
@@ -9,10 +9,10 @@
   </li>
 <% end %>
 <% activities.each do |activity| %>
-  <% activity_day = activity.created_at.strftime('%j').to_i %>
+  <% activity_day = days_since_1970(activity.created_at) %>
 
   <% if activity_day < current_day and activity_day < day %>
-    <% day = activity.created_at.strftime('%j').to_i %>
+    <% day = days_since_1970(activity.created_at) %>
     <li class="text-center activity-date-item">
       <span class="label label-primary">
         <%= activity.created_at.strftime('%d.%m.%Y') %>
