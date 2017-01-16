@@ -1,5 +1,3 @@
-//= require datatables
-
 var usersDatatable = null;
 
 // Initialize edit name modal window

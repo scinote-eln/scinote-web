@@ -100,11 +100,9 @@ module ApplicationHelper
         sample = Sample.find_by_id(match[3].base62_decode)
         if sample
           "<span class='glyphicon glyphicon-tint'></span> " \
-          "#{link_to sample.name,
-                     samples_project_path(sample
-                                          .organization
-                                          .projects
-                                          .first)}"
+          "#{link_to(sample.name,
+                     sample_path(sample.id),
+                     class: 'sample-info-link')}"
         else
           "<span class='glyphicon glyphicon-tint'></span> " \
           "#{match[1]} #{t'atwho.res.deleted'}"
