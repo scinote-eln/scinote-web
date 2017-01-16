@@ -1,4 +1,6 @@
 class SamplesController < ApplicationController
+  include InputSanitizeHelper
+
   before_action :load_vars, only: [:edit, :update, :destroy, :show]
   before_action :load_vars_nested, only: [:new, :create]
 
@@ -85,8 +87,8 @@ class SamplesController < ApplicationController
               id: sample.id,
               flash: t(
                 'samples.create.success_flash',
-                sample: sample.name,
-                organization: @organization.name
+                sample: escape_input(sample.name),
+                organization: escape_input(@organization.name)
               )
             },
             status: :ok
@@ -115,7 +117,7 @@ class SamplesController < ApplicationController
   def edit
     json = {
       sample: {
-        name: @sample.name,
+        name: escape_input(@sample.name),
         sample_type: @sample.sample_type.nil? ? "" : @sample.sample_type.id,
         sample_group: @sample.sample_group.nil? ? "" : @sample.sample_group.id,
         custom_fields: {}
@@ -128,7 +130,7 @@ class SamplesController < ApplicationController
     @sample.sample_custom_fields.each do |scf|
       json[:sample][:custom_fields][scf.custom_field_id] = {
         sample_custom_field_id: scf.id,
-        value: scf.value
+        value: escape_input(scf.value)
       }
     end
 
@@ -254,8 +256,8 @@ class SamplesController < ApplicationController
                 id: sample.id,
                 flash: t(
                   'samples.update.success_flash',
-                  sample: sample.name,
-                  organization: @organization.name
+                  sample: escape_input(sample.name),
+                  organization: escape_input(@organization.name)
                 )
               },
               status: :ok

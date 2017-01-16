@@ -100,5 +100,4 @@ class Comment < ActiveRecord::Base
       errors.add(:base, "Comment can only belong to 1 'parent' object.")
     end
   end
-
 end

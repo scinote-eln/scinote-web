@@ -9,7 +9,7 @@
   </head>
   <body class="print-report-body">
     <div class="print-report">
-      <%= @html.html_safe %>
+      <%= sanitize_input(@html) %>
     </div>
   </body>
 </html>

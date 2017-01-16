@@ -40,7 +40,8 @@
   <% end %>
 </div>
 <div data-role="comment-message-container">
-  <div data-role="comment-message"><%= auto_link(simple_format(comment.message),
-                                               link: :urls,
-                                               html: { target: '_blank' }) %></div>
+  <div data-role="comment-message">
+    <%= custom_auto_link(simple_format(comment.message),
+                         link: :urls, html: { target: '_blank' }) %>
+  </div>
 </div>

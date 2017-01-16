@@ -17,7 +17,7 @@
   <% if result.is_text && result.result_text.text.present? && !result.result_text.text.empty? %>
     <blockquote class="search-asset-text-data">
       <p>
-        <%= highlight(result.result_text.text.html_safe, search_query.strip.split(/\s+/)) %>
+        <%= highlight(sanitize_input(result.result_text.text), search_query.strip.split(/\s+/)) %>
       </p>
     </blockquote>
   <% end %>

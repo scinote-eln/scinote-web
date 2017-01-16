@@ -1,4 +1,6 @@
 class CustomFieldsController < ApplicationController
+  include InputSanitizeHelper
+
   before_action :load_vars, only: [:update, :destroy, :destroy_html]
   before_action :load_vars_nested, only: [:create, :destroy_html]
   before_action :check_create_permissions, only: :create
@@ -15,7 +17,7 @@ class CustomFieldsController < ApplicationController
         format.json do
           render json: {
             id: @custom_field.id,
-            name: @custom_field.name,
+            name: escape_input(@custom_field.name),
             edit_url:
               organization_custom_field_path(@organization, @custom_field),
             destroy_html_url:

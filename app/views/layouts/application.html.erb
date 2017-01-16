@@ -43,7 +43,7 @@
         <div class="container">
           <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
           <span class="glyphicon glyphicon-ok-sign"></span>
-          <span><%= flash[:success].html_safe %></span>
+          <span><%= sanitize_input(flash[:success]) %></span>
         </div>
       </div>
       <% end %>
@@ -61,7 +61,7 @@
         <div class="container">
           <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
           <span class="glyphicon glyphicon-exclamation-sign"></span>
-          <span><%= alert || flash[:error].html_safe %></span>
+          <span><%= alert || sanitize_input(flash[:error]) %></span>
         </div>
       </div>
       <% end %>

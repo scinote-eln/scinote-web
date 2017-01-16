@@ -3,6 +3,7 @@ require 'active_record'
 class SampleDatatable < AjaxDatatablesRails::Base
   include ActionView::Helpers::TextHelper
   include SamplesHelper
+  include InputSanitizeHelper
 
   ASSIGNED_SORT_COL = 'assigned'
 
@@ -106,24 +107,32 @@ class SampleDatatable < AjaxDatatablesRails::Base
       sample = {
         'DT_RowId': record.id,
         '1': assigned_cell(record),
-        '2': record.name,
-        '3': record.sample_type.nil? ? I18n.t('samples.table.no_type') : record.sample_type.name,
-        '4': record.sample_group.nil? ?
-        "<span class='glyphicon glyphicon-asterisk'></span> " + I18n.t("samples.table.no_group") :
-        "<span class='glyphicon glyphicon-asterisk' style='color: #{record.sample_group.color}'></span> " + record.sample_group.name,
-        "5": I18n.l(record.created_at, format: :full),
-          "6": record.user.full_name,
-          "sampleInfoUrl": Rails.application.routes.url_helpers.edit_sample_path(record.id),
-          "sampleUpdateUrl": Rails.application.routes.url_helpers.sample_path(record.id)
+        '2': escape_input(record.name),
+        '3': if record.sample_type.nil?
+               I18n.t('samples.table.no_type')
+             else
+               escape_input(record.sample_type.name)
+             end,
+        '4': if record.sample_group.nil?
+               "<span class='glyphicon glyphicon-asterisk'></span> " +
+                 I18n.t('samples.table.no_group')
+             else
+               "<span class='glyphicon glyphicon-asterisk' "\
+               "style='color: #{escape_input(record.sample_group.color)}'>"\
+               "</span> " + escape_input(record.sample_group.name)
+             end,
+        '5': I18n.l(record.created_at, format: :full),
+        '6': escape_input(record.user.full_name),
+        'sampleInfoUrl':
+          Rails.application.routes.url_helpers.edit_sample_path(record.id),
+        'sampleUpdateUrl':
+          Rails.application.routes.url_helpers.sample_path(record.id)
       }
 
       # Add custom attributes
       record.sample_custom_fields.each do |scf|
-        sample[@cf_mappings[scf.custom_field_id]] = auto_link(scf.value,
-                                                              link: :urls,
-                                                              html: {
-                                                                target: '_blank'
-                                                              })
+        sample[@cf_mappings[scf.custom_field_id]] =
+          custom_auto_link(scf.value, link: :urls, html: { target: '_blank' })
       end
       sample
     end

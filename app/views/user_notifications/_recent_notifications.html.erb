@@ -21,8 +21,8 @@
     </div>
 
     <div class="col-xs-10">
-      <strong><%= notification.title.html_safe %></strong> <br>
-      <%= l(notification.created_at, format: :full) %> | <%= notification.message.html_safe %>
+      <strong><%= sanitize_input(notification.title) %></strong> <br>
+      <%= l(notification.created_at, format: :full) %> | <%= sanitize_input(notification.message) %>
     </div>
   </div>
 <li>

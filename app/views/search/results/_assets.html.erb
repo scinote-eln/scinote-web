@@ -11,7 +11,7 @@
   <!-- Display asset contents if it exists -->
   <% if asset.headline.present? && !asset.headline.empty? && asset.headline.include?("<mark>") %>
     <blockquote class="blockquote-search">
-      <p><%= raw asset.headline %></p>
+      <p><%= sanitize_input(asset.headline) %></p>
     </blockquote>
   <% end %>
 

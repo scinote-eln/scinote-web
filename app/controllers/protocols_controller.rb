@@ -2,6 +2,7 @@ class ProtocolsController < ApplicationController
   include RenamingUtil
   include ProtocolsImporter
   include ProtocolsExporter
+  include InputSanitizeHelper
 
   before_action :check_create_permissions, only: [
     :create_new_modal,
@@ -86,7 +87,7 @@ class ProtocolsController < ApplicationController
       format.json do
         render json: {
           title: I18n.t('protocols.index.preview.title',
-                        protocol: @protocol.name),
+                        protocol: escape_input(@protocol.name)),
           html: render_to_string(
             partial: 'protocols/index/protocol_preview_modal_body.html.erb',
             locals: { protocol: @protocol }
@@ -104,7 +105,8 @@ class ProtocolsController < ApplicationController
     respond_to do |format|
       format.json {
         render json: {
-          title: I18n.t("protocols.index.linked_children.title", protocol: @protocol.name),
+          title: I18n.t('protocols.index.linked_children.title',
+                        protocol: escape_input(@protocol.name)),
           html: render_to_string({
             partial: "protocols/index/linked_children_modal_body.html.erb",
             locals: { protocol: @protocol }
@@ -181,7 +183,7 @@ class ProtocolsController < ApplicationController
     respond_to do |format|
       # sanitize user input
       params[:keywords].collect! do |keyword|
-        ActionController::Base.helpers.sanitize(keyword)
+        escape_input(keyword)
       end
       if @protocol.update_keywords(params[:keywords])
         format.json {
@@ -536,10 +538,12 @@ class ProtocolsController < ApplicationController
         end
       end
 
-      p_name = (
-        @protocol_json["name"].present? &&
-        !@protocol_json["name"].empty?
-      ) ? @protocol_json["name"] : t("protocols.index.no_protocol_name")
+      p_name =
+        if @protocol_json['name'].present? && !@protocol_json['name'].empty?
+          escape_input(@protocol_json['name'])
+        else
+          t('protocols.index.no_protocol_name')
+        end
       if transaction_error
         format.json {
           render json: { name: p_name, status: :bad_request }, status: :bad_request
@@ -700,7 +704,8 @@ class ProtocolsController < ApplicationController
     respond_to do |format|
       format.json {
         render json: {
-          title: I18n.t("protocols.header.edit_name_modal.title", protocol: @protocol.name),
+          title: I18n.t('protocols.header.edit_name_modal.title',
+                        protocol: escape_input(@protocol.name)),
           html: render_to_string({
             partial: "protocols/header/edit_name_modal_body.html.erb"
           })
@@ -713,7 +718,8 @@ class ProtocolsController < ApplicationController
     respond_to do |format|
       format.json {
         render json: {
-          title: I18n.t("protocols.header.edit_keywords_modal.title", protocol: @protocol.name),
+          title: I18n.t('protocols.header.edit_keywords_modal.title',
+                        protocol: escape_input(@protocol.name)),
           html: render_to_string({
             partial: "protocols/header/edit_keywords_modal_body.html.erb"
           }),
@@ -727,7 +733,8 @@ class ProtocolsController < ApplicationController
     respond_to do |format|
       format.json {
         render json: {
-          title: I18n.t("protocols.header.edit_authors_modal.title", protocol: @protocol.name),
+          title: I18n.t('protocols.header.edit_authors_modal.title',
+                        protocol: escape_input(@protocol.name)),
           html: render_to_string({
             partial: "protocols/header/edit_authors_modal_body.html.erb"
           })
@@ -740,7 +747,8 @@ class ProtocolsController < ApplicationController
     respond_to do |format|
       format.json {
         render json: {
-          title: I18n.t("protocols.header.edit_description_modal.title", protocol: @protocol.name),
+          title: I18n.t('protocols.header.edit_description_modal.title',
+                        protocol: escape_input(@protocol.name)),
           html: render_to_string({
             partial: "protocols/header/edit_description_modal_body.html.erb"
           })

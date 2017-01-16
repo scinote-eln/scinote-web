@@ -4,14 +4,14 @@ module AssetsHelper
     res = <<-eos
     <span
       data-status='asset-loading'
-      data-filename='#{asset.file_file_name}'
+      data-filename='#{escape_input(asset.file_file_name)}'
       data-type='#{asset.is_image? ? "image" : "asset"}'
       data-present-url='#{file_present_asset_path(asset, format: :json)}'
       #{asset.is_image? ? "data-preview-url='" + preview_asset_path(asset) + "'" : ""}'
       data-download-url='#{download_asset_path(asset)}'
     >
       <span class='asset-loading-spinner' id='asset-loading-spinner-#{asset.id}'></span>
-      #{t('general.file.uploading', fileName: asset.file_file_name)}
+      #{t('general.file.uploading', fileName: escape_input(asset.file_file_name))}
     </span>
     <script type='text/javascript'>
       $('#asset-loading-spinner-#{asset.id}').spin(

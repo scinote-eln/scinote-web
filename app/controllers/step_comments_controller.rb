@@ -1,5 +1,6 @@
 class StepCommentsController < ApplicationController
   include ActionView::Helpers::TextHelper
+  include InputSanitizeHelper
 
   before_action :load_vars
 
@@ -118,7 +119,7 @@ class StepCommentsController < ApplicationController
             )
           end
           render json: {
-            comment: auto_link(
+            comment: custom_auto_link(
               simple_format(@comment.message),
               link: :urls,
               html: { target: '_blank' }

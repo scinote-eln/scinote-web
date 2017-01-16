@@ -31,9 +31,9 @@
                 </span>
                 <span class="comment-message">
                   &nbsp;
-                  <%= auto_link(simple_format(comment.message),
-                                              link: :urls,
-                                              html: { target: '_blank' }) %>
+                  <%= custom_auto_link(simple_format(comment.message),
+                                       link: :urls,
+                                       html: { target: '_blank' }) %>
                 </span>
               </li>
             <% end %>

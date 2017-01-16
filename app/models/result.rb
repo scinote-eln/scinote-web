@@ -95,6 +95,7 @@ class Result < ActiveRecord::Base
   end
 
   private
+
   def text_or_asset_or_table
     num_of_assigns = 0
     num_of_assigns += result_text.blank? ? 0 : 1

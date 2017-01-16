@@ -1,6 +1,7 @@
 class MyModulesController < ApplicationController
   include SampleActions
   include OrganizationsHelper
+  include InputSanitizeHelper
 
   before_action :load_vars, only: [
     :show, :update, :destroy,
@@ -53,7 +54,8 @@ class MyModulesController < ApplicationController
           html: render_to_string({
             partial: "description.html.erb"
           }),
-          title: t("my_modules.description.title", module: @my_module.name)
+          title: t('my_modules.description.title',
+                   module: escape_input(@my_module.name))
         }
       }
     end
@@ -124,7 +126,8 @@ class MyModulesController < ApplicationController
           html: render_to_string({
             partial: "due_date.html.erb"
           }),
-          title: t("my_modules.due_date.title", module: @my_module.name)
+          title: t('my_modules.due_date.title',
+                   module: escape_input(@my_module.name))
         }
       }
     end

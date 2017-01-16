@@ -69,5 +69,4 @@ class Sample < ActiveRecord::Base
         .offset((page - 1) * Constants::SEARCH_LIMIT)
     end
   end
-
 end

@@ -2,6 +2,7 @@ class ExperimentsController < ApplicationController
   include SampleActions
   include PermissionHelper
   include OrganizationsHelper
+  include InputSanitizeHelper
 
   before_action :set_experiment,
                 except: [:new, :create]
@@ -252,7 +253,8 @@ class ExperimentsController < ApplicationController
       respond_to do |format|
         format.json do
           render json: { message: t('experiments.move.error_flash',
-                                    experiment: @experiment.name) },
+                                    experiment:
+                                      escape_input(@experiment.name)) },
                                     status: :unprocessable_entity
         end
       end
