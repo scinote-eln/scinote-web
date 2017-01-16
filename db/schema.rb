@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161208145354) do
+ActiveRecord::Schema.define(version: 20170116143350) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -551,12 +551,13 @@ ActiveRecord::Schema.define(version: 20161208145354) do
   add_index "steps", ["user_id"], name: "index_steps_on_user_id", using: :btree
 
   create_table "tables", force: :cascade do |t|
-    t.binary   "contents",            null: false
-    t.datetime "created_at",          null: false
-    t.datetime "updated_at",          null: false
+    t.binary   "contents",                         null: false
+    t.datetime "created_at",                       null: false
+    t.datetime "updated_at",                       null: false
     t.integer  "created_by_id"
     t.integer  "last_modified_by_id"
     t.tsvector "data_vector"
+    t.string   "name",                default: ""
   end
 
   add_index "tables", ["created_at"], name: "index_tables_on_created_at", using: :btree

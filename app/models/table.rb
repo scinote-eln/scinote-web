@@ -1,6 +1,9 @@
 class Table < ActiveRecord::Base
   include SearchableModel
 
+  auto_strip_attributes :name, nullify: false
+  validates :name,
+            length: { maximum: Constants::NAME_MAX_LENGTH }
   validates :contents,
             presence: true,
             length: { maximum: Constants::TABLE_JSON_MAX_SIZE_MB.megabytes }
