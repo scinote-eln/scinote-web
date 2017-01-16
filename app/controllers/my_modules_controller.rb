@@ -23,14 +23,14 @@ class MyModulesController < ApplicationController
   before_action :check_assign_samples_permissions, only: [:assign_samples]
   before_action :check_unassign_samples_permissions, only: [:unassign_samples]
 
-  layout "fluid"
+  layout 'fluid'.freeze
 
   # Define submit actions constants (used in routing)
-  ASSIGN_SAMPLES = I18n.t('samples.assign_samples_to_module')
-  UNASSIGN_SAMPLES = I18n.t('samples.unassign_samples_to_module')
+  ASSIGN_SAMPLES = 'Assign'.freeze
+  UNASSIGN_SAMPLES = 'Unassign'.freeze
 
   # Action defined in SampleActions
-  DELETE_SAMPLES = I18n.t('samples.delete_samples')
+  DELETE_SAMPLES = 'Delete'.freeze
 
   def show
     respond_to do |format|
