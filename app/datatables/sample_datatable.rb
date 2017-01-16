@@ -111,12 +111,12 @@ class SampleDatatable < AjaxDatatablesRails::Base
         '2': record.name,
         '3': record.sample_type.nil? ? I18n.t('samples.table.no_type') : record.sample_type.name,
         '4': record.sample_group.nil? ?
-        "<span class='glyphicon glyphicon-asterisk'></span> " + I18n.t("samples.table.no_group") :
-        "<span class='glyphicon glyphicon-asterisk' style='color: #{record.sample_group.color}'></span> " + record.sample_group.name,
+          "<span class='glyphicon glyphicon-asterisk'></span> " + I18n.t("samples.table.no_group") :
+          "<span class='glyphicon glyphicon-asterisk' style='color: #{record.sample_group.color}'></span> " + record.sample_group.name,
         "5": I18n.l(record.created_at, format: :full),
-          "6": record.user.full_name,
-          "sampleInfoUrl": Rails.application.routes.url_helpers.edit_sample_path(record.id),
-          "sampleUpdateUrl": Rails.application.routes.url_helpers.sample_path(record.id)
+        "6": record.user.full_name,
+        "sampleInfoUrl": Rails.application.routes.url_helpers.sample_path(record.id),
+        "sampleUpdateUrl": Rails.application.routes.url_helpers.sample_path(record.id)
       }
 
       # Add custom attributes
