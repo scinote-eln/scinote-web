@@ -89,7 +89,7 @@ module ApplicationHelper
         if my_module.archived?
           "<span class='sa-type'>#{sanitize(match[2])}</span> " \
           "#{link_to my_module.name,
-                     module_archive_experiment_path(my_module.experiment)}" \
+                     module_archive_experiment_path(my_module.experiment)} " \
           "#{t'atwho.res.archived'}"
         else
           "<span class='sa-type'>#{sanitize(match[2])}</span> " \
