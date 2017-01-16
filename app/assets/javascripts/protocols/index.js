@@ -1,6 +1,5 @@
 //= require protocols/import_export/import
 //= require protocols/import_export/export
-//= require datatables
 
 // Global variables
 var rowsSelected = [];
