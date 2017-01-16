@@ -13,7 +13,7 @@ class SmartAnnotation
   def my_modules
     # Search tasks
     res = MyModule
-          .search(@current_user, true, @query, 1, @current_organization)
+          .search(@current_user, false, @query, 1, @current_organization)
 
     modules_list = []
     res.each do |my_module_res|
@@ -42,7 +42,7 @@ class SmartAnnotation
   def projects
     # Search projects
     res = Project
-          .search(@current_user, true, @query, 1, @current_organization)
+          .search(@current_user, false, @query, 1, @current_organization)
 
     projects_list = []
     res.each do |project_res|
@@ -61,7 +61,7 @@ class SmartAnnotation
   def experiments
     # Search experiments
     res = Experiment
-          .search(@current_user, true, @query, 1, @current_organization)
+          .search(@current_user, false, @query, 1, @current_organization)
 
     experiments_list = []
     res.each do |experiment_res|
@@ -84,7 +84,7 @@ class SmartAnnotation
   def samples
     # Search samples
     res = Sample
-          .search(@current_user, true, @query, 1, @current_organization)
+          .search(@current_user, false, @query, 1, @current_organization)
 
     samples_list = []
     res.each do |sample_res|

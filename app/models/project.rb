@@ -54,7 +54,11 @@ class Project < ActiveRecord::Base
                          user.id)
                   .where_attributes_like(:name, a_query)
                   .limit(Constants::ATWHO_SEARCH_LIMIT)
-      return new_query
+      if include_archived
+        return new_query
+      else
+        return new_query.where('projects.archived = ?', false)
+      end
     else
       org_ids =
         Organization

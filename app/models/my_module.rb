@@ -76,7 +76,11 @@ class MyModule < ActiveRecord::Base
                   .where('my_modules.experiment_id IN (?)', experiments_ids)
                   .where_attributes_like([:name], a_query)
                   .limit(Constants::ATWHO_SEARCH_LIMIT)
-      return new_query
+      if include_archived
+        return new_query
+      else
+        return new_query.where('my_modules.archived = ?', false)
+      end
     elsif include_archived
       new_query = MyModule
                   .distinct
