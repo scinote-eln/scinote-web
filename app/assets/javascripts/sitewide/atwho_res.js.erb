@@ -47,7 +47,7 @@ var SmartAnnotation = (function() {
       return res;
     }
 
-    function _matchHighlighter(li, query, search_filter) {
+    function _matchHighlighter(li, query, searchFilter) {
       var $li, re;
 
       function highlight(el, sel, re) {
@@ -64,7 +64,7 @@ var SmartAnnotation = (function() {
       $li = $(li);
       re = new RegExp(query, 'gi');
       // search_filter is not passed for the user
-      if(search_filter) {
+      if(searchFilter) {
         highlight($li, '[data-val=name]', re);
       } else {
         highlight($li, '[data-val=full-name]', re);
@@ -83,24 +83,8 @@ var SmartAnnotation = (function() {
     }
 
     // check if query has some hits and disables the buttons without it
-    function resourcesChecker(query, search_filter) {
-      var src_btn, $element;
-
-      switch (search_filter) {
-        case 'task#':
-          src_btn = 'tsk';
-          break;
-        case 'project#':
-          src_btn = 'prj';
-          break;
-        case 'experiment#':
-          src_btn = 'exp';
-          break;
-        default:
-          var $type = $('.atwho-view[style] .btn-primary').data('filter');
-          src_btn = _.isUndefined($type) ? 'sam' : $type;
-          break;
-      }
+    function resourcesChecker(query, searchFilter) {
+      var $element;
 
       $.getJSON(
         dataMenuItemsUrl,
@@ -114,12 +98,12 @@ var SmartAnnotation = (function() {
                 $element
                   .removeClass('btn-primary')
                   .addClass('btn-default');
-                $('[data-filter="' + src_btn +'"]')
+                $('[data-filter="' + searchFilter +'"]')
                   .removeClass('btn-default')
                   .addClass('btn-primary');
               } else {
                 $element.prop('disabled', false);
-                if($element.data('filter') == src_btn) {
+                if($element.data('filter') == searchFilter) {
                   $element
                     .removeClass('btn-default')
                     .addClass('btn-primary');
@@ -144,9 +128,9 @@ var SmartAnnotation = (function() {
     }
 
     // Initialize or update filter buttons
-    function initButtons(query, search_filter) {
+    function initButtons(query, searchFilter) {
       initDismissButton();
-      resourcesChecker(query, search_filter);
+      resourcesChecker(query, searchFilter);
 
       $('.atwho-header-res .title button').off();
       $('.atwho-header-res .title button').on('click', function(e) {
@@ -249,6 +233,9 @@ var SmartAnnotation = (function() {
     }
 
     function init() {
+      // Default selected filter when using '#'
+      var DEFAULT_SEARCH_FILTER = 'sam';
+
       $(field)
       .atwho({
         at: '@',
@@ -332,30 +319,33 @@ var SmartAnnotation = (function() {
         at: '#',
         callbacks: {
           remoteFilter: function(query, callback) {
-            var $type = $('.atwho-view[style] .btn-primary').data('filter');
+            var searchFilter = $('.atwho-view[style] .btn-primary').data('filter');
+            if (_.isUndefined(searchFilter)) {
+              searchFilter = DEFAULT_SEARCH_FILTER;
+            }
 
-            switch($type) {
+            var dataUrl;
+            switch(searchFilter) {
                 case 'tsk':
-                    $type = dataTaskUrl;
+                    dataUrl = dataTaskUrl;
                     break;
                 case 'prj':
-                    $type = dataProjectUrl;
+                    dataUrl = dataProjectUrl;
                     break;
                 case 'exp':
-                    $type = dataExperimentUrl;
+                    dataUrl = dataExperimentUrl;
                     break;
                 case 'sam':
-                default:
-                    $type = dataSampleUrl;
+                    dataUrl = dataSampleUrl;
                     break;
             }
 
             $.getJSON(
-              $type,
+              dataUrl,
               {query: query},
               function(data) {
                 callback(data.res);
-                initButtons(query);
+                initButtons(query, searchFilter);
               }
             );
           },
@@ -369,7 +359,7 @@ var SmartAnnotation = (function() {
             return _generateInputTag(value, li);
           }
         },
-        headerTpl: generateFilterMenu('sam'),
+        headerTpl: generateFilterMenu(DEFAULT_SEARCH_FILTER),
         limit: <%= Constants::ATWHO_SEARCH_LIMIT %>,
         startWithSpace: true,
         acceptSpaceBar: true,
@@ -384,7 +374,7 @@ var SmartAnnotation = (function() {
               {query: query},
               function(data) {
                 callback(data.res);
-                initButtons(query, 'task#');
+                initButtons(query, 'tsk');
               }
             );
           },
@@ -413,7 +403,7 @@ var SmartAnnotation = (function() {
               {query: query},
               function(data) {
                 callback(data.res);
-                initButtons(query, 'project#');
+                initButtons(query, 'prj');
               }
             );
           },
@@ -442,7 +432,7 @@ var SmartAnnotation = (function() {
               {query: query},
               function(data) {
                 callback(data.res);
-                initButtons(query, 'experiment#');
+                initButtons(query, 'exp');
               }
             );
           },
@@ -471,7 +461,7 @@ var SmartAnnotation = (function() {
               {query: query},
               function(data) {
                 callback(data.res);
-                initButtons(query);
+                initButtons(query, 'sam');
               }
             );
           },
