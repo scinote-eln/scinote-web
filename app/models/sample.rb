@@ -34,7 +34,7 @@ class Sample < ActiveRecord::Base
       .distinct
 
     if query
-      a_query = '%' + query.strip.gsub("_","\\_").gsub("%","\\%") + '%'
+      a_query = '%' + query.strip.gsub('_', '\\_').gsub('%', '\\%') + '%'
     else
       a_query = query
     end
