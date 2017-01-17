@@ -90,11 +90,11 @@ div.print-report {
   }
 
   .report-step-table-element {
-    & > .report-element-header .user-time {
+    & > .report-element-header .table-name {
       color: $color-black;
     }
 
-    &:hover > .report-element-header .user-time {
+    &:hover > .report-element-header .table-name {
       color: $color-black;
     }
   }

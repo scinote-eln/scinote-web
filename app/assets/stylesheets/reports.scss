@@ -347,7 +347,7 @@ ul {
   }
 }
 
-/* Result asset element style */
+/* Result table element style */
 .report-result-table-element {
   .report-element-body {
     padding-top: 30px;
@@ -396,13 +396,15 @@ ul {
 /** Step table element style */
 .report-step-table-element {
   .report-element-header {
-    .user-time {
+    .table-name {
       margin-left: 5px;
     }
   }
 
-  &:hover > .report-element-header .user-time {
-    color: $color-theme-primary;
+  &:hover > .report-element-header {
+    .table-name {
+      color: $color-theme-primary;
+    }
   }
 }
 

@@ -380,6 +380,7 @@ en:
           no_description: "No description"
         step_table:
           sidebar_name: "Table" # TODO
+          table_name: "[ %{name} ]"
           user_time: "Table created on %{timestamp}."
         step_asset:
           sidebar_name: "File %{file}"
