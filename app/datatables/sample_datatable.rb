@@ -111,11 +111,11 @@ class SampleDatatable < AjaxDatatablesRails::Base
         '2': record.name,
         '3': record.sample_type.nil? ? I18n.t('samples.table.no_type') : record.sample_type.name,
         '4': sample_group_cell(record),
-        "5": I18n.l(record.created_at, format: :full),
-        "6": record.user.full_name,
-        "sampleInfoUrl":
+        '5': I18n.l(record.created_at, format: :full),
+        '6': record.user.full_name,
+        'sampleInfoUrl':
           Rails.application.routes.url_helpers.sample_path(record.id),
-        "sampleUpdateUrl":
+        'sampleUpdateUrl':
           Rails.application.routes.url_helpers.sample_path(record.id)
       }
 
