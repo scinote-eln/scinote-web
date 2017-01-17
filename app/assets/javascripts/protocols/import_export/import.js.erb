@@ -173,10 +173,14 @@ function importProtocolFromFile(
       if (tableNodes.length > 0) {
         tableNodes.each(function() {
           var tableId = $(this).attr("id");
+          var tableName = $(this).children("name").text();
           var tableContent = $(this).children("contents").text();
 
           // Generate table element
-          var tableEl = newPreviewElement("table");
+          var tableEl = newPreviewElement(
+            "table",
+            { name: tableName }
+          );
           var elnTableEl = generateElnTable(tableId, tableContent);
           addChildToPreviewElement(tableEl, "table", elnTableEl);
 
@@ -458,6 +462,7 @@ function importProtocolFromFile(
       $(this).find("elnTables > elnTable").each(function(){
         var stepTableJson = {};
         stepTableJson.id = $(this).attr("id");
+        stepTableJson.name = $(this).children("name").text();
         var contents = $(this).children("contents").text();
         contents = hex2a(contents);
         contents = window.btoa(contents);

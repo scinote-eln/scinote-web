@@ -94,8 +94,8 @@
                 <% unless step.tables.blank? then %>
                   <hr>
                   <div class="col-xs-12">
-                    <strong><%= t("protocols.steps.tables") %></strong>
                     <% step.tables.each do |table| %>
+                      <strong><%= table.name %></strong>
                       <div data-role="hot-table" class="hot-table">
                         <%= hidden_field(table, :contents, value: table.contents_utf_8, class: "hot-contents") %>
                         <div data-role="step-hot-table" class="step-result-hot-table"></div>

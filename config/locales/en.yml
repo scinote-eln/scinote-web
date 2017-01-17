@@ -1175,7 +1175,6 @@ en:
         updated_at_label: "Last modified at"
         preview_title: "Protocol preview"
         preview_title_position: " | %{current} of %{total}"
-        tables_header: "Tables"
         assets_header: "Files"
         import_current: "Import current"
         import_all: "Import all"
