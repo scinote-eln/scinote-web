@@ -110,13 +110,13 @@ class SampleDatatable < AjaxDatatablesRails::Base
         '1': assigned_cell(record),
         '2': record.name,
         '3': record.sample_type.nil? ? I18n.t('samples.table.no_type') : record.sample_type.name,
-        '4': record.sample_group.nil? ?
-        "<span class='glyphicon glyphicon-asterisk'></span> " + I18n.t("samples.table.no_group") :
-        "<span class='glyphicon glyphicon-asterisk' style='color: #{record.sample_group.color}'></span> " + record.sample_group.name,
-        "5": I18n.l(record.created_at, format: :full),
-          "6": record.user.full_name,
-          "sampleInfoUrl": Rails.application.routes.url_helpers.edit_sample_path(record.id),
-          "sampleUpdateUrl": Rails.application.routes.url_helpers.sample_path(record.id)
+        '4': sample_group_cell(record),
+        '5': I18n.l(record.created_at, format: :full),
+        '6': record.user.full_name,
+        'sampleInfoUrl':
+          Rails.application.routes.url_helpers.sample_path(record.id),
+        'sampleUpdateUrl':
+          Rails.application.routes.url_helpers.sample_path(record.id)
       }
 
       # Add custom attributes
@@ -135,6 +135,17 @@ class SampleDatatable < AjaxDatatablesRails::Base
     @assigned_samples.include?(record) ?
       "<span class='circle'>&nbsp;</span>" :
       "<span class='circle disabled'>&nbsp;</span>"
+  end
+
+  def sample_group_cell(record)
+    if record.sample_group.nil?
+      "<span class='glyphicon glyphicon-asterisk'></span> " \
+        "#{I18n.t('samples.table.no_group')}"
+    else
+      "<span class='glyphicon glyphicon-asterisk' " \
+        "style='color: #{record.sample_group.color}'></span> " \
+        "#{record.sample_group.name}"
+    end
   end
 
   # Query database for records (this will be later paginated and filtered)

@@ -56,9 +56,8 @@ function dataTableInit() {
     }, {
       targets: 2,
       render: function(data, type, row) {
-        return "<a href='#' data-href='" + row.sampleUpdateUrl + "'" +
-                      "class='sample_info' data-toggle='modal'" +
-                      "data-target='#modal-info-sample'>" + data + '</a>';
+        return "<a href='" + row.sampleInfoUrl + "'" +
+                      "class='sample-info-link'>" + data + '</a>';
       }
     }],
     rowCallback: function(row, data) {
@@ -89,12 +88,11 @@ function dataTableInit() {
     fnDrawCallback: function() {
       animateSpinner(this, false);
       changeToViewMode();
-      sampleInfoListener();
       updateButtons();
     },
     preDrawCallback: function() {
       animateSpinner(this);
-      $('.sample_info').off('click');
+      $('.sample-info-link').off('click');
     },
     stateLoadCallback: function(settings) {
       // Send an Ajax request to the server to get the data. Note that
@@ -145,7 +143,6 @@ function dataTableInit() {
       table.on('mousedown', function() {
         $('#samples-columns-dropdown').removeClass('open');
       });
-      sampleInfoListener();
     }
   });
 
@@ -162,8 +159,11 @@ function dataTableInit() {
   });
 
   // Handle click on table cells with checkboxes
-  $('#samples').on('click', 'tbody td, thead th:first-child', function() {
-    $(this).parent().find('input[type="checkbox"]').trigger('click');
+  $('#samples').on('click', 'tbody td, thead th:first-child', function(e) {
+    if (!$(e.target).is('.sample-info-link')) {
+      // Skip if clicking on samples info link
+      $(this).parent().find('input[type="checkbox"]').trigger('click');
+    }
   });
 
   // Handle clicks on checkbox
@@ -319,54 +319,6 @@ function appendSamplesIdToForm(form) {
             .attr('name', 'sample_ids[]')
             .val(rowId)
         );
-    });
-}
-
-//Show sample info
-function sampleInfoListener() {
-    $(".sample_info").on("click", function(e){
-        var that = $(this);
-        $.ajax({
-            method: "GET",
-            url: that.attr("data-href")  + '.json',
-            dataType: "json"
-        }).done(function(xhr, settings, data) {
-            $("body").append($.parseHTML(data.responseJSON.html));
-            $("#modal-info-sample").modal('show',{
-                backdrop: true,
-                keyboard: false,
-            }).on('hidden.bs.modal', function () {
-                $(this).find(".modal-body #sample-info-table").DataTable().destroy();
-                $(this).remove();
-            });
-
-            $('#sample-info-table').DataTable({
-                dom: "RBltpi",
-                stateSave: false,
-                buttons: [],
-                processing: true,
-                colReorder: {
-                    fixedColumnsLeft: 1000000 // Disable reordering
-                },
-                columnDefs: [{
-                    targets: 0,
-                    searchable: false,
-                    orderable: false
-                }],
-                fnDrawCallback: function(settings, json) {
-                    animateSpinner(this, false);
-                },
-                preDrawCallback: function(settings) {
-                    animateSpinner(this);
-                }
-            });
-        }).fail(function(error){
-            // TODO
-        }).always(function(data){
-            // TODO
-        });
-        e.preventDefault();
-        return false;
     });
 }
 
