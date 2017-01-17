@@ -349,7 +349,6 @@ class SampleDatatable < AjaxDatatablesRails::Base
     end
   end
 
-
   # A hack that overrides the new_search_contition method default behavior of the ajax-datatables-rails gem
   # now the method checks if the column is the created_at and generate a custom SQL to parse
   # it back to the caller method
@@ -357,14 +356,35 @@ class SampleDatatable < AjaxDatatablesRails::Base
     model, column = column.split('.')
     model = model.constantize
     formated_date = (I18n.t 'time.formats.datatables_date').gsub!(/^\"|\"?$/, '')
-    if column == 'created_at'
+    if model == SampleCustomField
+      # Find visible (searchable) custom field IDs, and only perform filter
+      # on those custom fields
+      searchable_cfs = params[:columns].select do |_, v|
+        v['searchable'] == 'true' && @cf_mappings.values.include?(v['data'])
+      end
+      cfmi = @cf_mappings.invert
+      cf_ids = searchable_cfs.map { |_, v| cfmi[v['data']] }
+
+      # Do an ILIKE on 'value', as well as make sure to only include
+      # custom fields that have 'custom_field_id' among visible custom fields
+      casted_column = ::Arel::Nodes::NamedFunction.new(
+        'CAST',
+        [model.arel_table[column.to_sym].as(typecast)]
+      )
+      casted_column = casted_column.matches("%#{value}%")
+      casted_column = casted_column.and(
+        model.arel_table['custom_field_id'].in(cf_ids)
+      )
+      casted_column
+    elsif column == 'created_at'
       casted_column = ::Arel::Nodes::NamedFunction.new('CAST',
                         [ Arel.sql("to_char( samples.created_at, '#{ formated_date }' ) AS VARCHAR") ] )
+      casted_column.matches("%#{value}%")
     else
       casted_column = ::Arel::Nodes::NamedFunction.new('CAST',
                         [model.arel_table[column.to_sym].as(typecast)])
+      casted_column.matches("%#{value}%")
     end
-    casted_column.matches("%#{value}%")
   end
 
   def sort_null_direction(item)
