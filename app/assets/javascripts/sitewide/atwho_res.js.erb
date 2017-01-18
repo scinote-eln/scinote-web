@@ -235,6 +235,30 @@ var SmartAnnotation = (function() {
       return res;
     }
 
+    /**
+     * Hackish wrapper function to make AtWho work when switching between
+     * multiple AtWho instances (e.g. from # to task#).
+     *
+     * Prevents second execution of AtWho update callback, triggered when user
+     * switches to different AtWho instance (e.g. from # to task#), which causes
+     * both of them to be called. In such case, AtWhO modal needs to be
+     * rerendered.
+     */
+    function atWhoSwitchHack(searchFilter, remoteFilterCb) {
+      if(atWhoUpdating || (!$(field).length && _.isUndefined(searchFilter))) {
+        setTimeout(function() {
+          $(field).atwho('run');
+        }, 100);
+        return;
+      }
+
+      atWhoUpdating = true;
+      setTimeout(function() {
+        remoteFilterCb();
+        atWhoUpdating = false;
+      }, 100);
+    }
+
     function atWhoSettings(at, defaultSearchFilter) {
       return {
         at: at,
@@ -243,19 +267,7 @@ var SmartAnnotation = (function() {
             var searchFilter = $('.atwho-view[style] .btn-primary')
                                 .data('filter');
 
-            // Hack for preventing second execution of this callback, triggered
-            // when user switches to different AtWho listener (e.g. from # to
-            // task#), which causes both of them to be called. In such case,
-            // AtWHO modal needs to be rerendered.
-            if(atWhoUpdating || (!$(field).length && _.isUndefined(searchFilter))) {
-              setTimeout(function() {
-                $(field).atwho('run');
-              }, 100);
-              return;
-            }
-
-            atWhoUpdating = true;
-            setTimeout(function() {
+            atWhoSwitchHack(searchFilter, function() {
               if (_.isUndefined(searchFilter)) {
                 searchFilter = defaultSearchFilter;
               }
@@ -289,8 +301,7 @@ var SmartAnnotation = (function() {
                   initButtons(query, searchFilter);
                 }
               );
-              atWhoUpdating = false;
-            }, 100);
+            });
           },
           tplEval: function(_tpl, map) {
             return _templateEval(_tpl, map);
