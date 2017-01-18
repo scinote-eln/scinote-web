@@ -35,6 +35,16 @@ class Table < ActiveRecord::Base
       .select("result_tables.id")
       .distinct
 
+    if query
+      a_query = query.strip
+                     .gsub('_', '\\_')
+                     .gsub('%', '\\%')
+                     .split(/\s+/)
+                     .map { |t| '%' + t + '%' }
+    else
+      a_query = query
+    end
+
     # Trim whitespace and replace it with OR character. Make prefixed
     # wildcard search term and escape special characters.
     # For example, search term 'demo project' is transformed to
@@ -47,13 +57,19 @@ class Table < ActiveRecord::Base
       .join("|")
       .gsub('\'', '"')
 
-    table_query = Table
+    table_query =
+      Table
       .distinct
       .joins("LEFT OUTER JOIN step_tables ON step_tables.table_id = tables.id")
       .joins("LEFT OUTER JOIN result_tables ON result_tables.table_id = tables.id")
       .joins("LEFT OUTER JOIN results ON result_tables.result_id = results.id")
       .where("step_tables.id IN (?) OR result_tables.id IN (?)", step_ids, result_ids)
-      .where("tables.data_vector @@ to_tsquery(?) ", s_query)
+      .where(
+        '(tables.name ILIKE ANY (array[?])'\
+        'OR tables.data_vector @@ to_tsquery(?))',
+        a_query,
+        s_query
+      )
 
     new_query = table_query
 
