@@ -41,7 +41,9 @@ namespace :paperclip do
                      "ID: #{asset.id}:"
       end
     end
-    $stderr.puts 'All gone well! ' \
-                 'You can grab a beer now and enjoy the evening.' unless error
+    unless error
+      $stderr.puts 'All gone well! ' \
+                   'You can grab a beer now and enjoy the evening.'
+    end
   end
 end
