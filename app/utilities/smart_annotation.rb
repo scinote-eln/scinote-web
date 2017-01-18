@@ -19,10 +19,7 @@ class SmartAnnotation
     res.each do |my_module_res|
       my_mod = {}
       my_mod['id'] = my_module_res.id.base62_encode
-      my_mod['name'] = truncate(
-        sanitize(my_module_res.name,
-                 length: Constants::NAME_TRUNCATION_LENGTH)
-      )
+      my_mod['name'] = sanitize(my_module_res.name)
       my_mod['archived'] = my_module_res.archived
       my_mod['experimentName'] = truncate(
         sanitize(my_module_res.experiment.name,
@@ -48,10 +45,7 @@ class SmartAnnotation
     res.each do |project_res|
       prj = {}
       prj['id'] = project_res.id.base62_encode
-      prj['name'] = truncate(
-        sanitize(project_res.name,
-                 length: Constants::NAME_TRUNCATION_LENGTH)
-      )
+      prj['name'] = sanitize(project_res.name)
       prj['type'] = 'prj'
       projects_list << prj
     end
@@ -67,10 +61,7 @@ class SmartAnnotation
     res.each do |experiment_res|
       exp = {}
       exp['id'] = experiment_res.id.base62_encode
-      exp['name'] = truncate(
-        sanitize(experiment_res.name,
-                 length: Constants::NAME_TRUNCATION_LENGTH)
-      )
+      exp['name'] = sanitize(experiment_res.name)
       exp['type'] = 'exp'
       exp['projectName'] = truncate(
         sanitize(experiment_res.project.name,
@@ -90,10 +81,7 @@ class SmartAnnotation
     res.each do |sample_res|
       sam = {}
       sam['id'] = sample_res.id.base62_encode
-      sam['name'] = truncate(
-        sanitize(sample_res.name,
-                 length: Constants::NAME_TRUNCATION_LENGTH)
-      )
+      sam['name'] = sanitize(sample_res.name)
       sam['description'] = "#{I18n.t('Added')} #{I18n.l(
         sample_res.created_at, format: :full_date
       )} #{I18n.t('by')} #{truncate(

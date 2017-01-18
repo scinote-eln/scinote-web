@@ -282,7 +282,9 @@ var SmartAnnotation = (function() {
     function generateTemplate(map) {
       var res = '';
       res += '<li class="atwho-li atwho-li-res" data-name="' +
-              map.name + '" data-id="' + map.id + '" data-type="' +
+              truncateLongString(map.name,
+                <%= Constants::NAME_TRUNCATION_LENGTH %>) +
+              '" data-id="' + map.id + '" data-type="' +
               map.type + '">';
       switch(map.type) {
           case 'tsk':
@@ -301,7 +303,8 @@ var SmartAnnotation = (function() {
 
       res += '&nbsp;';
       res += '<span data-val="name" class="res-name">';
-      res += map.name;
+      res += truncateLongString(map.name,
+        <%= Constants::NAME_TRUNCATION_LENGTH %>);
       res += '</span>';
       if(map.archived) {
         res += '<%= I18n.t("atwho.res.archived") %></span>';
