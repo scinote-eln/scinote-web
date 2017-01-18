@@ -243,8 +243,8 @@ var SmartAnnotation = (function() {
      * both of them to be called. In such case, AtWhO modal needs to be
      * rerendered.
      */
-    function atWhoSwitchHack(filterType, remoteFilterCb) {
-      if(atWhoUpdating || (!$(field).length && _.isUndefined(filterType))) {
+    function atWhoSwitchHack(filterTypeTag, remoteFilterCb) {
+      if(atWhoUpdating || (!$(field).length && _.isUndefined(filterTypeTag))) {
         setTimeout(function() {
           $(field).atwho('run');
         }, 100);
@@ -269,8 +269,12 @@ var SmartAnnotation = (function() {
             atWhoSwitchHack(filterTypeTag, function() {
               var filterType;
               if (_.isUndefined(filterTypeTag)) {
+                // Switched smart annotation type (i.e. changed input)
                 filterType = defaultFilterType;
               } else {
+                // Switched filtering type (i.e. different filter button
+                // pressed; works also for specific annotation types, e.g.
+                // task#, and coverts to the correct annotation type on confirm)
                 $.each(FilterTypeEnum, function(k, v) {
                   if (v.tag == filterTypeTag) {
                     filterType = FilterTypeEnum[k];
@@ -279,6 +283,7 @@ var SmartAnnotation = (function() {
                 });
               }
               if (prevAt != at) {
+                // Switching smart annotation type (i.e. chaned input)
                 prevAt = at;
                 $('.atwho-view[style]').removeAttr("style");
                 filterType = defaultFilterType;
