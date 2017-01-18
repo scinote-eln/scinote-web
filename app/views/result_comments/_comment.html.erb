@@ -40,7 +40,12 @@
   <% end %>
 </div>
 <div data-role="comment-message-container">
-  <p data-role="comment-message"><%= auto_link(simple_format(smart_annotation_parser(comment.message)),
-                                               link: :urls,
-                                               html: { target: '_blank' }) %></p>
+  <span data-role="comment-message"><%= auto_link(
+    smart_annotation_parser(simple_format(
+      comment.message),
+    ),
+    link: :urls,
+    sanitize: false,
+    html: { target: '_blank' }
+  ).html_safe %></span>
 </div>

@@ -1,4 +1,7 @@
 module ApplicationHelper
+  include ActionView::Helpers::AssetTagHelper
+  include ActionView::Helpers::UrlHelper
+
   def module_page?
     controller_name == 'my_modules'
   end
@@ -53,7 +56,7 @@ module ApplicationHelper
       !@experiment.nil?
   end
 
-  def smart_annotation_parser(text)
+  def smart_annotation_parser(text, organization = nil)
     sa_reg = /\[\#(.*?)~(prj|exp|tsk|sam)~([0-9a-zA-Z]+)\]/
     new_text = text.gsub(sa_reg) do |el|
       match = el.match(sa_reg)
@@ -114,9 +117,33 @@ module ApplicationHelper
     new_text = new_text.gsub(sa_user) do |el|
       match = el.match(sa_user)
       user = User.find_by_id(match[2].base62_decode)
-      if user
-        "<span>#{image_tag avatar_path(user, :icon_small)} " \
-        "#{user.full_name}</span>"
+      organization ||= current_organization
+      if user && organization
+        user_org = user
+                   .user_organizations
+                   .where('user_organizations.organization_id = ?',
+                          organization).first
+        user_description = %(<div class='pull-left'>
+         <img src='#{avatar_path(user, :thumb)}' alt='thumb'>
+         </div><div class='pull-right'>
+         <div class='row'><div class='col-xs-9 text-left'><h5>
+         #{user.full_name}</h5></div><div class='col-xs-3 text-right'>
+         <span class='glyphicon glyphicon-remove' aria-hidden='true'></span>
+         </div></div><div class='row'><div class='col-xs-12'>
+        <p class='user-email'>#{user.email}</p><p>
+        #{I18n.t('atwho.popover',
+                 role: user_org.role.capitalize,
+                 organization: user_org.organization.name,
+                 time: user_org.created_at.strftime('%B %Y'))}
+        </p></div></div></div>)
+
+        raw(image_tag(avatar_path(user, :icon_small),
+                      class: 'atwho-user-img-popover')) +
+          raw('<a onClick="$(this).popover(\'show\')" ' \
+          'class="atwho-user-popover" data-container="body" ' \
+          'data-html="true" tabindex="0" data-trigger="focus" ' \
+          'data-placement="top" data-toggle="popover" data-content="') +
+          raw(user_description) + raw('" >') + user.full_name + raw('</a>')
       end
     end
     new_text
