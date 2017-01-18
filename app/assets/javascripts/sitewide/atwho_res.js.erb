@@ -22,25 +22,24 @@ var SmartAnnotation = (function() {
   })();
 
   function setAtWho(field) {
-    var dataUserUrl,
-        dataTaskUrl,
-        dataProjectUrl,
-        dataExperimentUrl,
-        dataSampleUrl,
-        dataMenuItemsUrl,
-        prevAt,
-        DEFAULT_SEARCH_FILTER,
-        atWhoUpdating;
-
-    dataUserUrl = $(document.body).attr('data-atwho-users-url');
-    dataTaskUrl = $(document.body).attr('data-atwho-task-url');
-    dataProjectUrl = $(document.body).attr('data-atwho-project-url');
-    dataExperimentUrl = $(document.body).attr('data-atwho-experiment-url');
-    dataSampleUrl = $(document.body).attr('data-atwho-sample-url');
-    dataMenuItemsUrl = $(document.body).attr('data-atwho-menu-items');
-    // Default selected filter when using '#'
-    DEFAULT_SEARCH_FILTER = 'sam';
-    atWhoUpdating = false;
+    var FilterTypeEnum = Object.freeze({
+      USER:       {tag: "users",
+                   dataUrl: $(document.body).attr('data-atwho-users-url')},
+      TASK:       {tag: "tsk",
+                   dataUrl: $(document.body).attr('data-atwho-task-url')},
+      PROJECT:    {tag: "prj",
+                   dataUrl: $(document.body).attr('data-atwho-project-url')},
+      EXPERIMENT: {tag: "exp",
+                   dataUrl: $(document.body).attr('data-atwho-experiment-url')},
+      SAMPLE:     {tag: "sam",
+                   dataUrl: $(document.body).attr('data-atwho-sample-url')},
+      MENU:       {tag: "menu",
+                   dataUrl: $(document.body).attr('data-atwho-menu-items')}
+    });
+    var prevAt,
+        // Default selected filter when using '#'
+        DEFAULT_SEARCH_FILTER = FilterTypeEnum.SAMPLE,
+        atWhoUpdating = false;
 
     // helper methods for AtWho callback
     function _templateEval(_tpl, map) {
@@ -53,7 +52,7 @@ var SmartAnnotation = (function() {
       return res;
     }
 
-    function _matchHighlighter(li, query, searchFilter) {
+    function _matchHighlighter(li, query, filterType) {
       var $li, re;
 
       function highlight(el, sel, re) {
@@ -70,7 +69,7 @@ var SmartAnnotation = (function() {
       $li = $(li);
       re = new RegExp(query, 'gi');
       // search_filter is not passed for the user
-      if(searchFilter) {
+      if(filterType) {
         highlight($li, '[data-val=name]', re);
       } else {
         highlight($li, '[data-val=full-name]', re);
@@ -89,11 +88,11 @@ var SmartAnnotation = (function() {
     }
 
     // check if query has some hits and disables the buttons without it
-    function resourcesChecker(query, searchFilter) {
+    function resourcesChecker(query, filterTypeTag) {
       var $element;
 
       $.getJSON(
-        dataMenuItemsUrl,
+        FilterTypeEnum.MENU.dataUrl,
         {query: query},
         function(data){
           if(data) {
@@ -104,12 +103,12 @@ var SmartAnnotation = (function() {
                 $element
                   .removeClass('btn-primary')
                   .addClass('btn-default');
-                $('[data-filter="' + searchFilter +'"]')
+                $('[data-filter="' + filterTypeTag +'"]')
                   .removeClass('btn-default')
                   .addClass('btn-primary');
               } else {
                 $element.prop('disabled', false);
-                if($element.data('filter') == searchFilter) {
+                if($element.data('filter') == filterTypeTag) {
                   $element
                     .removeClass('btn-default')
                     .addClass('btn-primary');
@@ -134,9 +133,9 @@ var SmartAnnotation = (function() {
     }
 
     // Initialize or update filter buttons
-    function initButtons(query, searchFilter) {
+    function initButtons(query, filterTypeTag) {
       initDismissButton();
-      resourcesChecker(query, searchFilter);
+      resourcesChecker(query, filterTypeTag);
 
       $('.atwho-header-res .title button').off();
       $('.atwho-header-res .title button').on('click', function(e) {
@@ -244,8 +243,8 @@ var SmartAnnotation = (function() {
      * both of them to be called. In such case, AtWhO modal needs to be
      * rerendered.
      */
-    function atWhoSwitchHack(searchFilter, remoteFilterCb) {
-      if(atWhoUpdating || (!$(field).length && _.isUndefined(searchFilter))) {
+    function atWhoSwitchHack(filterType, remoteFilterCb) {
+      if(atWhoUpdating || (!$(field).length && _.isUndefined(filterType))) {
         setTimeout(function() {
           $(field).atwho('run');
         }, 100);
@@ -259,46 +258,38 @@ var SmartAnnotation = (function() {
       }, 100);
     }
 
-    function atWhoSettings(at, defaultSearchFilter) {
+    function atWhoSettings(at, defaultFilterType) {
       return {
         at: at,
         callbacks: {
           remoteFilter: function(query, callback) {
-            var searchFilter = $('.atwho-view[style] .btn-primary')
+            var filterTypeTag = $('.atwho-view[style] .btn-primary')
                                 .data('filter');
 
-            atWhoSwitchHack(searchFilter, function() {
-              if (_.isUndefined(searchFilter)) {
-                searchFilter = defaultSearchFilter;
+            atWhoSwitchHack(filterTypeTag, function() {
+              var filterType;
+              if (_.isUndefined(filterTypeTag)) {
+                filterType = defaultFilterType;
+              } else {
+                $.each(FilterTypeEnum, function(k, v) {
+                  if (v.tag == filterTypeTag) {
+                    filterType = FilterTypeEnum[k];
+                    return false;
+                  }
+                });
               }
-              if(prevAt != at) {
+              if (prevAt != at) {
                 prevAt = at;
                 $('.atwho-view[style]').removeAttr("style");
-                searchFilter = defaultSearchFilter;
-              }
-
-              var dataUrl;
-              switch(searchFilter) {
-                case 'tsk':
-                    dataUrl = dataTaskUrl;
-                    break;
-                case 'prj':
-                    dataUrl = dataProjectUrl;
-                    break;
-                case 'exp':
-                    dataUrl = dataExperimentUrl;
-                    break;
-                case 'sam':
-                    dataUrl = dataSampleUrl;
-                    break;
+                filterType = defaultFilterType;
               }
 
               $.getJSON(
-                dataUrl,
+                filterType.dataUrl,
                 {query: query},
                 function(data) {
                   callback(data.res);
-                  initButtons(query, searchFilter);
+                  initButtons(query, filterType.tag);
                 }
               );
             });
@@ -313,7 +304,7 @@ var SmartAnnotation = (function() {
             return _generateInputTag(value, li);
           }
         },
-        headerTpl: generateFilterMenu(DEFAULT_SEARCH_FILTER),
+        headerTpl: generateFilterMenu(defaultFilterType),
         limit: <%= Constants::ATWHO_SEARCH_LIMIT %>,
         startWithSpace: true,
         acceptSpaceBar: true,
@@ -328,7 +319,7 @@ var SmartAnnotation = (function() {
         callbacks: {
           remoteFilter: function(query, callback) {
             $.getJSON(
-              dataUserUrl,
+              FilterTypeEnum.USER.dataUrl,
               {query: query},
               function(data) {
                 callback(data.users);
@@ -402,10 +393,10 @@ var SmartAnnotation = (function() {
         displayTimeout: 120000
       })
       .atwho(atWhoSettings('#', DEFAULT_SEARCH_FILTER))
-      .atwho(atWhoSettings('task#', 'tsk'))
-      .atwho(atWhoSettings('project#', 'prj'))
-      .atwho(atWhoSettings('experiment#', 'exp'))
-      .atwho(atWhoSettings('sample#', 'sam'));
+      .atwho(atWhoSettings('task#', FilterTypeEnum.TASK))
+      .atwho(atWhoSettings('project#', FilterTypeEnum.PROJECT))
+      .atwho(atWhoSettings('experiment#', FilterTypeEnum.EXPERIMENT))
+      .atwho(atWhoSettings('sample#', FilterTypeEnum.SAMPLE));
     }
 
     return {
