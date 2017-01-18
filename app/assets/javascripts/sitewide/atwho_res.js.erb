@@ -27,7 +27,10 @@ var SmartAnnotation = (function() {
         dataProjectUrl,
         dataExperimentUrl,
         dataSampleUrl,
-        dataMenuItemsUrl;
+        dataMenuItemsUrl,
+        prevAt,
+        DEFAULT_SEARCH_FILTER,
+        atWhoUpdating;
 
     dataUserUrl = $(document.body).attr('data-atwho-users-url');
     dataTaskUrl = $(document.body).attr('data-atwho-task-url');
@@ -35,6 +38,9 @@ var SmartAnnotation = (function() {
     dataExperimentUrl = $(document.body).attr('data-atwho-experiment-url');
     dataSampleUrl = $(document.body).attr('data-atwho-sample-url');
     dataMenuItemsUrl = $(document.body).attr('data-atwho-menu-items');
+    // Default selected filter when using '#'
+    DEFAULT_SEARCH_FILTER = 'sam';
+    atWhoUpdating = false;
 
     // helper methods for AtWho callback
     function _templateEval(_tpl, map) {
@@ -47,7 +53,7 @@ var SmartAnnotation = (function() {
       return res;
     }
 
-    function _matchHighlighter(li, query, search_filter) {
+    function _matchHighlighter(li, query, searchFilter) {
       var $li, re;
 
       function highlight(el, sel, re) {
@@ -64,7 +70,7 @@ var SmartAnnotation = (function() {
       $li = $(li);
       re = new RegExp(query, 'gi');
       // search_filter is not passed for the user
-      if(search_filter) {
+      if(searchFilter) {
         highlight($li, '[data-val=name]', re);
       } else {
         highlight($li, '[data-val=full-name]', re);
@@ -83,23 +89,8 @@ var SmartAnnotation = (function() {
     }
 
     // check if query has some hits and disables the buttons without it
-    function resourcesChecker(query, search_filter) {
-      var src_btn, $element;
-
-      switch (search_filter) {
-        case 'task#':
-          src_btn = 'tsk';
-          break;
-        case 'project#':
-          src_btn = 'prj';
-          break;
-        case 'experiment#':
-          src_btn = 'exp';
-          break;
-        default:
-          src_btn = 'sam';
-          break;
-      }
+    function resourcesChecker(query, searchFilter) {
+      var $element;
 
       $.getJSON(
         dataMenuItemsUrl,
@@ -113,12 +104,12 @@ var SmartAnnotation = (function() {
                 $element
                   .removeClass('btn-primary')
                   .addClass('btn-default');
-                $('[data-filter="' + src_btn +'"]')
+                $('[data-filter="' + searchFilter +'"]')
                   .removeClass('btn-default')
                   .addClass('btn-primary');
               } else {
                 $element.prop('disabled', false);
-                if($element.data('filter') == src_btn) {
+                if($element.data('filter') == searchFilter) {
                   $element
                     .removeClass('btn-default')
                     .addClass('btn-primary');
@@ -133,19 +124,6 @@ var SmartAnnotation = (function() {
         });
     }
 
-    // reset the dropdown
-    function reinitializeOnListHide() {
-      Util.showHideBinding();
-
-      _.map($('.atwho-view'), function(el) {
-        $(el).off('hide');
-        $(el).on('hide', function() {
-          $(field).atwho('destroy');
-          init();
-        });
-      });
-    }
-
     // initialise dropdown dismiss button
     function initDismissButton() {
       $('.atwho-header-res .dismiss').off('click');
@@ -155,93 +133,22 @@ var SmartAnnotation = (function() {
       });
     }
 
-    // Initialize filter buttons
-    function initButtons(query, search_filter) {
-      $('.atwho-header-res .title button').off();
-      $('.atwho-header-res .dismiss').off('click');
-
+    // Initialize or update filter buttons
+    function initButtons(query, searchFilter) {
       initDismissButton();
+      resourcesChecker(query, searchFilter);
 
-      resourcesChecker(query, search_filter);
+      $('.atwho-header-res .title button').off();
       $('.atwho-header-res .title button').on('click', function(e) {
-        var $button, $prevButton;
-        e.stopPropagation();
-        e.preventDefault();
+        // Update the selected filter button
+        var $selectedBtn = $(this);
+        var $prevBtn = $selectedBtn.closest('.title').children('.btn-primary');
+        $selectedBtn.removeClass('btn-default').addClass('btn-primary');
+        $prevBtn.removeClass('btn-primary').addClass('btn-default');
 
-        $button = $(this);
-        $prevButton = $button.closest('.title').children('.btn-primary');
-
-        switch ($button.attr('data-filter')) {
-          case 'prj':
-              generateNewQuery(dataProjectUrl,
-                               $prevButton,
-                               $button);
-            break;
-          case 'exp':
-              generateNewQuery(dataExperimentUrl,
-                               $prevButton,
-                               $button);
-            break;
-          case 'tsk':
-              generateNewQuery(dataTaskUrl,
-                               $prevButton,
-                               $button);
-            break;
-          case 'sam':
-              generateNewQuery(dataSampleUrl,
-                               $prevButton,
-                               $button);
-            break;
-          default:
-            break;
-        }
+        // Updates query and dropdown elements; focuses input
+        $(field).click().focus();
       });
-    }
-
-    // Generates new query when user filters the results
-    function generateNewQuery(link, prevBtn, selectedBtn) {
-      var regexp, _a, _y, new_query, query_obj, field_selected;
-      _a = decodeURI("%C3%80");
-      _y = decodeURI("%C3%BF");
-      regexp = new RegExp("(#|task#|project#|sample#|experiment#)([A-Za-z" +
-      _a + "-" + _y + "0-9_ \'\.\+\-]*)$|" +
-      "(#|task#|project#|sample#|experiment#)([^\\x00-\\xff]*)$", 'gi');
-      // filters field if multiple input fields on the page
-      _.each($(field), function(e) {
-        if($(e).atwho('isSelecting')){
-          field_selected = e;
-      }});
-
-      if(field_selected) {
-        query_obj = regexp.exec($(field_selected).val());
-
-        if(query_obj) {
-          $.getJSON(
-            link,
-            {query: query_obj[2]},
-            function(data) {
-              if(data.res.length > 0 && field_selected) {
-                $(field_selected)
-                  .atwho('load', query_obj[0], data.res)
-                  .atwho('run');
-
-                prevBtn
-                  .removeClass('btn-primary')
-                  .addClass('btn-default');
-                selectedBtn
-                  .removeClass('btn-default')
-                  .addClass('btn-primary');
-
-                reinitializeOnListHide();
-                initButtons(query_obj[2],
-                            selectedBtn.html());
-              } else {
-                $(field).atwho('destroy');
-                init();
-              }
-          });
-        }
-      }
     }
 
     // Generates suggestion dropdown filter
@@ -328,6 +235,92 @@ var SmartAnnotation = (function() {
       return res;
     }
 
+    /**
+     * Hackish wrapper function to make AtWho work when switching between
+     * multiple AtWho instances (e.g. from # to task#).
+     *
+     * Prevents second execution of AtWho update callback, triggered when user
+     * switches to different AtWho instance (e.g. from # to task#), which causes
+     * both of them to be called. In such case, AtWhO modal needs to be
+     * rerendered.
+     */
+    function atWhoSwitchHack(searchFilter, remoteFilterCb) {
+      if(atWhoUpdating || (!$(field).length && _.isUndefined(searchFilter))) {
+        setTimeout(function() {
+          $(field).atwho('run');
+        }, 100);
+        return;
+      }
+
+      atWhoUpdating = true;
+      setTimeout(function() {
+        remoteFilterCb();
+        atWhoUpdating = false;
+      }, 100);
+    }
+
+    function atWhoSettings(at, defaultSearchFilter) {
+      return {
+        at: at,
+        callbacks: {
+          remoteFilter: function(query, callback) {
+            var searchFilter = $('.atwho-view[style] .btn-primary')
+                                .data('filter');
+
+            atWhoSwitchHack(searchFilter, function() {
+              if (_.isUndefined(searchFilter)) {
+                searchFilter = defaultSearchFilter;
+              }
+              if(prevAt != at) {
+                prevAt = at;
+                $('.atwho-view[style]').removeAttr("style");
+                searchFilter = defaultSearchFilter;
+              }
+
+              var dataUrl;
+              switch(searchFilter) {
+                case 'tsk':
+                    dataUrl = dataTaskUrl;
+                    break;
+                case 'prj':
+                    dataUrl = dataProjectUrl;
+                    break;
+                case 'exp':
+                    dataUrl = dataExperimentUrl;
+                    break;
+                case 'sam':
+                    dataUrl = dataSampleUrl;
+                    break;
+              }
+
+              $.getJSON(
+                dataUrl,
+                {query: query},
+                function(data) {
+                  callback(data.res);
+                  initButtons(query, searchFilter);
+                }
+              );
+            });
+          },
+          tplEval: function(_tpl, map) {
+            return _templateEval(_tpl, map);
+          },
+          highlighter:  function(li, query) {
+            return _matchHighlighter(li, query, true);
+          },
+          beforeInsert: function(value, li) {
+            return _generateInputTag(value, li);
+          }
+        },
+        headerTpl: generateFilterMenu(DEFAULT_SEARCH_FILTER),
+        limit: <%= Constants::ATWHO_SEARCH_LIMIT %>,
+        startWithSpace: true,
+        acceptSpaceBar: true,
+        displayTimeout: 120000
+      }
+    }
+
     function init() {
       $(field)
       .atwho({
@@ -408,151 +401,11 @@ var SmartAnnotation = (function() {
         acceptSpaceBar: true,
         displayTimeout: 120000
       })
-      .atwho({
-        at: '#',
-        callbacks: {
-          remoteFilter: function(query, callback) {
-            $.getJSON(
-              dataSampleUrl,
-              {query: query},
-              function(data) {
-                callback(data.res);
-                initButtons(query);
-              }
-            );
-          },
-          tplEval: function(_tpl, map) {
-            return _templateEval(_tpl, map);
-          },
-          highlighter:  function(li, query) {
-            return _matchHighlighter(li, query, true);
-          },
-          beforeInsert: function(value, li) {
-            return _generateInputTag(value, li);
-          }
-        },
-        headerTpl: generateFilterMenu('sam'),
-        limit: <%= Constants::ATWHO_SEARCH_LIMIT %>,
-        startWithSpace: true,
-        acceptSpaceBar: true,
-        displayTimeout: 120000
-      })
-      .atwho({
-        at: 'task#',
-        callbacks: {
-          remoteFilter: function(query, callback) {
-            $.getJSON(
-              dataTaskUrl,
-              {query: query},
-              function(data) {
-                callback(data.res);
-                initButtons(query, 'task#');
-              }
-            );
-          },
-          tplEval: function(_tpl, map) {
-            return _templateEval(_tpl, map);
-          },
-          highlighter: function(li, query) {
-            return _matchHighlighter(li, query, true);
-          },
-          beforeInsert: function(value, li) {
-            return _generateInputTag(value, li);
-          }
-        },
-        headerTpl: generateFilterMenu('tsk'),
-        limit: <%= Constants::ATWHO_SEARCH_LIMIT %>,
-        startWithSpace: true,
-        acceptSpaceBar: true,
-        displayTimeout: 120000
-      })
-      .atwho({
-        at: 'project#',
-        callbacks: {
-          remoteFilter: function(query, callback) {
-            $.getJSON(
-              dataProjectUrl,
-              {query: query},
-              function(data) {
-                callback(data.res);
-                initButtons(query, 'project#');
-              }
-            );
-          },
-          tplEval: function(_tpl, map) {
-            return _templateEval(_tpl, map);
-          },
-          highlighter: function(li, query) {
-            return _matchHighlighter(li, query, true);
-          },
-          beforeInsert: function(value, li) {
-            return _generateInputTag(value, li);
-          }
-        },
-        headerTpl: generateFilterMenu('prj'),
-        limit: <%= Constants::ATWHO_SEARCH_LIMIT %>,
-        startWithSpace: true,
-        acceptSpaceBar: true,
-        displayTimeout: 120000
-      })
-      .atwho({
-        at: 'experiment#',
-        callbacks: {
-          remoteFilter: function(query, callback) {
-            $.getJSON(
-              dataExperimentUrl,
-              {query: query},
-              function(data) {
-                callback(data.res);
-                initButtons(query, 'experiment#');
-              }
-            );
-          },
-          tplEval: function(_tpl, map) {
-            return _templateEval(_tpl, map);
-          },
-          highlighter: function(li, query) {
-            return _matchHighlighter(li, query, true);
-          },
-          beforeInsert: function(value, li) {
-            return _generateInputTag(value, li);
-          }
-        },
-        headerTpl: generateFilterMenu('exp'),
-        limit: <%= Constants::ATWHO_SEARCH_LIMIT %>,
-        startWithSpace: true,
-        acceptSpaceBar: true,
-        displayTimeout: 120000
-      })
-      .atwho({
-        at: 'sample#',
-        callbacks: {
-          remoteFilter: function(query, callback) {
-            $.getJSON(
-              dataSampleUrl,
-              {query: query},
-              function(data) {
-                callback(data.res);
-                initButtons(query);
-              }
-            );
-          },
-          tplEval: function(_tpl, map) {
-            return _templateEval(_tpl, map);
-          },
-          highlighter: function(li, query) {
-            return _matchHighlighter(li, query, true);
-          },
-          beforeInsert: function(value, li) {
-            return _generateInputTag(value, li);
-          }
-        },
-        headerTpl: generateFilterMenu('sam'),
-        limit: <%= Constants::ATWHO_SEARCH_LIMIT %>,
-        startWithSpace: true,
-        acceptSpaceBar: true,
-        displayTimeout: 120000
-      });
+      .atwho(atWhoSettings('#', DEFAULT_SEARCH_FILTER))
+      .atwho(atWhoSettings('task#', 'tsk'))
+      .atwho(atWhoSettings('project#', 'prj'))
+      .atwho(atWhoSettings('experiment#', 'exp'))
+      .atwho(atWhoSettings('sample#', 'sam'));
     }
 
     return {
