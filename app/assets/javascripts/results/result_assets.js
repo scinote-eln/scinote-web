@@ -37,6 +37,7 @@ function applyEditResultAssetCallback() {
       $form.remove();
       applyEditResultAssetCallback();
       toggleResultEditButtons(true);
+      initPreviewModal();
     });
 
     toggleResultEditButtons(false);
@@ -64,6 +65,7 @@ function formAjaxResultAsset($form) {
     expandResult($newResult);
     $imgs = $newResult.find("img");
     reloadImages($imgs);
+    initPreviewModal();
   })
   .on("ajax:error", function(e, data) {
     $form.renderFormErrors("result", data.errors, true, e);
@@ -71,3 +73,4 @@ function formAjaxResultAsset($form) {
 }
 
 applyEditResultAssetCallback();
+initPreviewModal();

@@ -55,6 +55,7 @@ gem 'deface', '~> 1.0'
 gem 'nokogiri' # HTML/XML parser
 gem 'sneaky-save', git: 'git://github.com/einzige/sneaky-save.git'
 gem 'rails_autolink', '~> 1.1', '>= 1.1.6'
+gem 'delayed_paperclip'
 
 gem 'paperclip', '~> 4.3' # File attachment, image attachment library
 gem 'aws-sdk', '~> 2.2.8'

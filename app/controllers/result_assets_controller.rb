@@ -3,7 +3,6 @@ class ResultAssetsController < ApplicationController
 
   before_action :load_vars, only: [:edit, :update, :download]
   before_action :load_vars_nested, only: [:new, :create]
-  before_action :load_paperclip_vars
 
   before_action :check_create_permissions, only: [:new, :create]
   before_action :check_edit_permissions, only: [:edit, :update]
@@ -18,16 +17,11 @@ class ResultAssetsController < ApplicationController
     )
 
     respond_to do |format|
-      format.json {
+      format.json do
         render json: {
-          html: render_to_string({
-            partial: "new.html.erb",
-            locals: {
-              direct_upload: @direct_upload
-            }
-          })
+          html: render_to_string(partial: 'new.html.erb')
         }, status: :ok
-      }
+      end
     end
   end
 
@@ -87,16 +81,11 @@ class ResultAssetsController < ApplicationController
 
   def edit
     respond_to do |format|
-      format.json {
+      format.json do
         render json: {
-          html: render_to_string({
-            partial: "edit.html.erb",
-            locals: {
-              direct_upload: @direct_upload
-            }
-          })
+          html: render_to_string(partial: 'edit.html.erb')
         }, status: :ok
-      }
+      end
     end
   end
 
@@ -187,10 +176,6 @@ class ResultAssetsController < ApplicationController
   end
 
   private
-
-  def load_paperclip_vars
-    @direct_upload = ENV['PAPERCLIP_DIRECT_UPLOAD'] == "true"
-  end
 
   def load_vars
     @result_asset = ResultAsset.find_by_id(params[:id])

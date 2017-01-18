@@ -1,5 +1,4 @@
 class Users::RegistrationsController < Devise::RegistrationsController
-  before_action :load_paperclip_vars
   prepend_before_action :check_captcha, only: [:create]
 
   def avatar
@@ -42,15 +41,6 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   def update_resource(resource, params)
     @user_avatar_url = avatar_path(current_user, :thumb)
-
-    if @direct_upload
-      if params.include? :avatar_file_name
-        file_name = params[:avatar_file_name]
-        file_ext = file_name.split(".").last
-        params[:avatar_content_type] = Rack::Mime.mime_type(".#{file_ext}")
-        resource.avatar.destroy
-      end
-    end
 
     if params.include? :change_password
       # Special handling if changing password
@@ -173,10 +163,6 @@ class Users::RegistrationsController < Devise::RegistrationsController
   end
 
   protected
-
-  def load_paperclip_vars
-    @direct_upload = ENV['PAPERCLIP_DIRECT_UPLOAD'] == "true"
-  end
 
   # Called upon creating User (before .save). Permits parameters and extracts
   # initials from :full_name (takes at most 4 chars). If :full_name is empty, it

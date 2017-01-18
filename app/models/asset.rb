@@ -6,7 +6,10 @@ class Asset < ActiveRecord::Base
   require 'tempfile'
 
   # Paperclip validation
-  has_attached_file :file, styles: { medium: Constants::MEDIUM_PIC_FORMAT }
+  has_attached_file :file,
+                    styles: { large: [Constants::LARGE_PIC_FORMAT, :jpg],
+                              medium: [Constants::MEDIUM_PIC_FORMAT, :jpg] },
+                    convert_options: { medium: '-quality 70 -strip' }
 
   validates_attachment :file,
                        presence: true,
@@ -19,7 +22,19 @@ class Asset < ActiveRecord::Base
   # Should be checked for any security leaks
   do_not_validate_attachment_file_type :file
 
-  before_file_post_process :is_image?
+  # adds image processing in background job
+  process_in_background :file,
+                        only_process: lambda { |a|
+                                        if a.content_type ==
+                                           %r{^image/#{ Regexp.union(
+                                             Constants::WHITELISTED_IMAGE_TYPES
+                                           ) }}
+                                          [:large, :medium]
+                                        else
+                                          {}
+                                        end
+                                      },
+                        processing_image_url: '/images/:style/processing.gif'
 
   # Asset validation
   # This could cause some problems if you create empty asset and want to
@@ -27,10 +42,12 @@ class Asset < ActiveRecord::Base
   validate :step_or_result
 
   belongs_to :created_by, foreign_key: 'created_by_id', class_name: 'User'
-  belongs_to :last_modified_by, foreign_key: 'last_modified_by_id', class_name: 'User'
+  belongs_to :last_modified_by,
+             foreign_key: 'last_modified_by_id',
+             class_name: 'User'
   has_one :step_asset,
-    inverse_of: :asset,
-    dependent: :destroy
+          inverse_of: :asset,
+          dependent: :destroy
   has_one :step, through: :step_asset,
     dependent: :nullify
 

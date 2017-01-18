@@ -40,7 +40,7 @@
           </div>
           <div>
             <a href="#" class="btn btn-default" data-action="cancel"><%=t "general.cancel" %></a>
-            <%= f.submit t("users.registrations.edit.avatar_submit"), class: 'btn btn-primary', onclick: "processFile(event, #{@direct_upload});" %>
+            <%= f.submit t("users.registrations.edit.avatar_submit"), class: 'btn btn-primary', onclick: "processFile(event);" %>
           </div>
         </div>
       </div>
@@ -206,5 +206,4 @@
 </div>
 
 <%= javascript_include_tag("canvas-to-blob.min") %>
-<%= javascript_include_tag("direct-upload") %>
 <%= javascript_include_tag "users/registrations/edit" %>

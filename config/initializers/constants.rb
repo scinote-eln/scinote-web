@@ -74,6 +74,7 @@ class Constants
   #=============================================================================
 
   # Picture size formats
+  LARGE_PIC_FORMAT = '800x600>'.freeze
   MEDIUM_PIC_FORMAT = '300x300>'.freeze
   THUMB_PIC_FORMAT = '100x100>'.freeze
   ICON_PIC_FORMAT = '40x40>'.freeze
@@ -204,7 +205,7 @@ class Constants
   ].freeze
 
   WHITELISTED_IMAGE_TYPES = [
-    'gif', 'jpeg', 'pjpeg', 'png', 'x-png', 'svg+xml', 'bmp'
+    'gif', 'jpeg', 'pjpeg', 'png', 'x-png', 'svg+xml', 'bmp', 'tiff'
   ].freeze
 
   WHITELISTED_TAGS = %w(
