@@ -1452,6 +1452,7 @@ en:
     unassign_user_from_organization: "<i>%{unassigned_user}</i> was removed from team <strong>%{organization}</strong> by <i>%{unassigned_by_user}</i>."
 
   atwho:
+    no_results: "No results found"
     users:
       title: "People"
       navigate_1: "up/down"
