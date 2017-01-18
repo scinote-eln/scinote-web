@@ -29,7 +29,8 @@ var SmartAnnotation = (function() {
         dataSampleUrl,
         dataMenuItemsUrl,
         prevAt,
-        DEFAULT_SEARCH_FILTER;
+        DEFAULT_SEARCH_FILTER,
+        atWhoUpdating;
 
     dataUserUrl = $(document.body).attr('data-atwho-users-url');
     dataTaskUrl = $(document.body).attr('data-atwho-task-url');
@@ -39,6 +40,7 @@ var SmartAnnotation = (function() {
     dataMenuItemsUrl = $(document.body).attr('data-atwho-menu-items');
     // Default selected filter when using '#'
     DEFAULT_SEARCH_FILTER = 'sam';
+    atWhoUpdating = false;
 
     // helper methods for AtWho callback
     function _templateEval(_tpl, map) {
@@ -241,40 +243,54 @@ var SmartAnnotation = (function() {
             var searchFilter = $('.atwho-view[style] .btn-primary')
                                 .data('filter');
 
-            if (_.isUndefined(searchFilter)) {
-              searchFilter = DEFAULT_SEARCH_FILTER;
+            // Hack for preventing second execution of this callback, triggered
+            // when user switches to different AtWho listener (e.g. from # to
+            // task#), which causes both of them to be called. In such case,
+            // AtWHO modal needs to be rerendered.
+            if(atWhoUpdating || (!$(field).length && _.isUndefined(searchFilter))) {
+              setTimeout(function() {
+                $(field).atwho('run');
+              }, 100);
+              return;
             }
 
-            if(prevAt != at) {
-              prevAt = at;
-              $('.atwho-view[style]').removeAttr("style");
-              searchFilter = defaultSearchFilter;
-            }
-
-            var dataUrl;
-            switch(searchFilter) {
-              case 'tsk':
-                  dataUrl = dataTaskUrl;
-                  break;
-              case 'prj':
-                  dataUrl = dataProjectUrl;
-                  break;
-              case 'exp':
-                  dataUrl = dataExperimentUrl;
-                  break;
-              case 'sam':
-                  dataUrl = dataSampleUrl;
-                  break;
-            }
-
-            $.getJSON(
-              dataUrl,
-              {query: query},
-              function(data) {
-                callback(data.res);
-                initButtons(query, searchFilter);
+            atWhoUpdating = true;
+            setTimeout(function() {
+              if (_.isUndefined(searchFilter)) {
+                searchFilter = defaultSearchFilter;
               }
-            );
+              if(prevAt != at) {
+                prevAt = at;
+                $('.atwho-view[style]').removeAttr("style");
+                searchFilter = defaultSearchFilter;
+              }
+
+              var dataUrl;
+              switch(searchFilter) {
+                case 'tsk':
+                    dataUrl = dataTaskUrl;
+                    break;
+                case 'prj':
+                    dataUrl = dataProjectUrl;
+                    break;
+                case 'exp':
+                    dataUrl = dataExperimentUrl;
+                    break;
+                case 'sam':
+                    dataUrl = dataSampleUrl;
+                    break;
+              }
+
+              $.getJSON(
+                dataUrl,
+                {query: query},
+                function(data) {
+                  callback(data.res);
+                  initButtons(query, searchFilter);
+                }
+              );
+              atWhoUpdating = false;
+            }, 100);
           },
           tplEval: function(_tpl, map) {
             return _templateEval(_tpl, map);
