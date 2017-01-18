@@ -244,6 +244,7 @@ function formNewAjax($form) {
     expandStep($new_step);
     toggleButtons(true);
 
+    TinyMCE.init();
     //Rerender tables
     $new_step.find("div.step-result-hot-table").each(function()  {
       $(this).handsontable("render");
@@ -260,6 +261,7 @@ function formNewAjax($form) {
     formCallback($form);
     formNewAjax($form);
     applyCancelOnNew();
+    TinyMCE.destroyAll();
   });
 }
 
