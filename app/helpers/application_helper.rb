@@ -125,25 +125,22 @@ module ApplicationHelper
                    .user_organizations
                    .where('user_organizations.organization_id = ?',
                           organization).first
-        user_description = '<div class=\'pull-left\'>'
-        user_description += '<img src=\'' + avatar_path(user, :thumb) + '\' '
-        user_description += 'alt=\'thumb\' ></div><div class=\'pull-right\'>'
-        user_description += '<div class=\'row\'>'
-        user_description += '<div class=\'col-xs-9 text-left\'><h5>'
-        user_description += user.full_name + '</h5></div>'
-        user_description += '<div class=\'col-xs-3 text-right\'>'
-        user_description += '<span class=\'glyphicon glyphicon-remove\' '
-        user_description += 'aria-hidden=\'true\'></span></div></div>'
-        user_description += '<div class=\'row\'><div class=\'col-xs-12\'>'
-        user_description += '<p class=\'user-email\'>'
-        user_description += user.email + '</p><p>'
-        user_description += I18n.t('atwho.popover',
-                                   role: user_org.role.capitalize,
-                                   organization: user_org.organization.name,
-                                   time: user_org.created_at.strftime('%B %Y'))
-        user_description += '</p></div></div></div>'
+        user_description = %(<div class='pull-left'>
+         <img src='#{avatar_path(user, :thumb)}' alt='thumb'>
+         </div><div class='pull-right'>
+         <div class='row'><div class='col-xs-9 text-left'><h5>
+         #{user.full_name}</h5></div><div class='col-xs-3 text-right'>
+         <span class='glyphicon glyphicon-remove' aria-hidden='true'></span>
+         </div></div><div class='row'><div class='col-xs-12'>
+        <p class='user-email'>#{user.email}</p><p>
+        #{I18n.t('atwho.popover',
+                 role: user_org.role.capitalize,
+                 organization: user_org.organization.name,
+                 time: user_org.created_at.strftime('%B %Y'))}
+        </p></div></div></div>)
 
-        raw(image_tag(avatar_path(user, :icon_small))) +
+        raw(image_tag(avatar_path(user, :icon_small),
+                      class: 'atwho-user-img-popover')) +
           raw('<a onClick="$(this).popover(\'show\')" ' \
           'class="atwho-user-popover" data-container="body" ' \
           'data-html="true" tabindex="0" data-trigger="focus" ' \
