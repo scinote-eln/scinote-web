@@ -1,5 +1,5 @@
 module ProtocolsImporter
-  include RenamingUtil, QuillJsHelper
+  include RenamingUtil, TinyMceJsHelper
 
   def import_new_protocol(protocol_json, organization, type, user)
     remove_empty_inputs(protocol_json)
@@ -54,7 +54,7 @@ module ProtocolsImporter
       step = Step.create!(
         name: step_json["name"],
         description: # Sanitize description HTML
-          sanitize_quill_js_input(
+          sanitize_tiny_mce_js_input(
             step_json['description']
           ),
         position: step_pos,

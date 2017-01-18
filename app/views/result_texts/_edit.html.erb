@@ -3,7 +3,7 @@
     <%= f.text_field :name, style: "margin-top: 10px;" %><br />
     <%= f.fields_for :result_text do |ff| %>
       <div class="form-group">
-        <%= quill_editor nil, { id: 'result_result_text_attributes_text', name: 'result[result_text_attributes][text]', value: @result.result_text.text } %>
+        <%= ff.text_area(:text, class: 'tinymce', cols: 120, rows: 40, value: @result.result_text.text ) %>
       </div>
     <% end %><br />
     <%= f.submit t("result_texts.edit.update"), class: 'btn btn-primary save-result', onclick: "processResult(event, ResultTypeEnum.TEXT, true);" %>
