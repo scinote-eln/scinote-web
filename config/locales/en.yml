@@ -379,7 +379,6 @@ en:
           step_pos: "Step %{pos}:"
           no_description: "No description"
         step_table:
-          sidebar_name: "Table" # TODO
           table_name: "[ %{name} ]"
           user_time: "Table created on %{timestamp}."
         step_asset:
