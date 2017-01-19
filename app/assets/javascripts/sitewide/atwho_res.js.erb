@@ -91,59 +91,31 @@ var SmartAnnotation = (function() {
       return res;
     }
 
-    // check if query has some hits and disables the buttons without it
-    function resourcesChecker(query, filterTypeTag) {
-      var $element;
-
-      $.getJSON(
-        FilterTypeEnum.MENU.dataUrl,
-        {query: query},
-        function(data){
-          if(data) {
-            _.each($('.atwho-header-res .title .btn'), function(el) {
-              $element = $(el);
-              if(data[$element.data('filter')].length === 0) {
-                $element.prop('disabled', true);
-                $element
-                  .removeClass('btn-primary')
-                  .addClass('btn-default');
-                $('[data-filter="' + filterTypeTag +'"]')
-                  .removeClass('btn-default')
-                  .addClass('btn-primary');
-              } else {
-                $element.prop('disabled', false);
-                if($element.data('filter') == filterTypeTag) {
-                  $element
-                    .removeClass('btn-default')
-                    .addClass('btn-primary');
-                } else {
-                  $element
-                    .removeClass('btn-primary')
-                    .addClass('btn-default');
-                }
-              }
-            });
-          }
-        });
-    }
-
     // initialise dropdown dismiss button
-    function initDismissButton() {
-      $('.atwho-header-res .dismiss').off('click');
-      $('.atwho-header-res .dismiss').on('click', function() {
+    function initDismissButton($currentAtWho) {
+      $currentAtWho.find('.dismiss').off('click')
+                                    .on('click', function() {
         $(field).atwho('destroy');
         init();
       });
     }
 
-    // Initialize or update filter buttons
-    function initButtons(query, filterTypeTag) {
-      initDismissButton();
-      resourcesChecker(query, filterTypeTag);
+    // Initialize or update dropdown header buttons
+    function updateHeaderButtons(query, filterTypeTag) {
+      var $currentAtWho = $('.atwho-view[style]');
+      initDismissButton($currentAtWho);
 
-      $('.atwho-header-res .title button').off();
-      $('.atwho-header-res .title button').on('click', function(e) {
-        // Update the selected filter button
+      // Update the selected filter button when changing smart annotation type
+      $currentAtWho.find('[data-filter]')
+                   .removeClass('btn-primary')
+                   .addClass('btn-default');
+      $currentAtWho.find('[data-filter="' + filterTypeTag + '"]')
+                   .removeClass('btn-default')
+                   .addClass('btn-primary');
+
+      // Update the selected filter button when clicking on one of them
+      $currentAtWho.find('[data-filter]').off()
+                                         .on('click', function(e) {
         var $selectedBtn = $(this);
         var $prevBtn = $selectedBtn.closest('.title').children('.btn-primary');
         $selectedBtn.removeClass('btn-default').addClass('btn-primary');
@@ -277,8 +249,10 @@ var SmartAnnotation = (function() {
         at: at,
         callbacks: {
           remoteFilter: function(query, callback) {
-            var filterTypeTag = $('.atwho-view[style] .btn-primary')
-                                .data('filter');
+            var $currentAtWho = $('.atwho-view[style]');
+            var filterTypeTag = $currentAtWho
+                                 .find('.btn-primary')
+                                 .data('filter');
 
             atWhoSwitchHack(filterTypeTag, function() {
               var filterType;
@@ -298,21 +272,25 @@ var SmartAnnotation = (function() {
               }
               if (prevAt != at) {
                 // Switching smart annotation type (i.e. chaned input)
+
                 prevAt = at;
-                $('.atwho-view[style]').removeAttr("style");
                 filterType = defaultFilterType;
+                // Hide current AtWho
+                $currentAtWho.removeAttr("style");
               }
 
               $.getJSON(
                 filterType.dataUrl,
                 {query: query},
                 function(data) {
+                  // Updates dropdown
                   if (data.res.length < 1) {
                     callback([{no_results: 1}]);
                   } else {
                     callback(data.res);
                   }
-                  initButtons(query, filterType.tag);
+
+                  updateHeaderButtons(query, filterType.tag);
                 }
               );
             });
