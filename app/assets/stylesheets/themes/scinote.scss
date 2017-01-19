@@ -854,6 +854,14 @@ a[data-toggle="tooltip"] {
 
   .dataTables_paginate {
     float: right;
+
+    .pagination {
+      margin: 2px 0;
+    }
+  }
+
+  .dataTables_info{
+    padding-top: 8px;
   }
 }
 
