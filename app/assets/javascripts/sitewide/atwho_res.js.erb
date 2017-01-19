@@ -45,7 +45,11 @@ var SmartAnnotation = (function() {
     function _templateEval(_tpl, map) {
       var res;
       try {
-        res = generateTemplate(map);
+        if (map.no_results) {
+          res = noResultsTemplate();
+        } else {
+          res = generateTemplate(map);
+        }
       } catch (_error) {
         res = '';
       }
@@ -62,7 +66,7 @@ var SmartAnnotation = (function() {
         el.find(sel).html(newVal);
       }
 
-      if (!query) {
+      if (!query || $(li).data('no-results')) {
         return li;
       }
 
@@ -184,6 +188,13 @@ var SmartAnnotation = (function() {
       return header;
     }
 
+    function noResultsTemplate() {
+      var res = '<div class="atwho-no-results" data-no-results="1">';
+      res += '<span><%= I18n.t("atwho.no_results") %></span>';
+      res += '</div>';
+      return res;
+    }
+
     // Generates resources list items
     function generateTemplate(map) {
       var res = '';
@@ -296,11 +307,19 @@ var SmartAnnotation = (function() {
                 filterType.dataUrl,
                 {query: query},
                 function(data) {
-                  callback(data.res);
+                  if (data.res.length < 1) {
+                    callback([{no_results: 1}]);
+                  } else {
+                    callback(data.res);
+                  }
                   initButtons(query, filterType.tag);
                 }
               );
             });
+          },
+          sorter: function(query, items, _searchKey) {
+            // Sorting is already done on server-side
+            return items;
           },
           tplEval: function(_tpl, map) {
             return _templateEval(_tpl, map);
@@ -330,7 +349,11 @@ var SmartAnnotation = (function() {
               FilterTypeEnum.USER.dataUrl,
               {query: query},
               function(data) {
-                callback(data.users);
+                if (data.users.length < 1) {
+                   callback([{no_results: 1}]);
+                 } else {
+                   callback(data.users);
+                 }
                 initDismissButton();
               }
             );
@@ -342,23 +365,27 @@ var SmartAnnotation = (function() {
           tplEval: function(_tpl, map) {
             var res;
             try {
-              res = '';
-              res += '<li class="atwho-li atwho-li-user" ';
-              res += 'data-id="' + map.id + '" ';
-              res += 'data-full-name="' + map.full_name + '">';
-              res += '<img src="' + map.img_url + '" class="avatar" />';
-              res += '<span data-val="full-name">';
-              res += map.full_name;
-              res += '</span>';
-              res += '<small>';
-              res += '&nbsp;';
-              res += '&#183;';
-              res += '&nbsp;';
-              res += '<span data-val="email">';
-              res += map.email;
-              res += '</span>';
-              res += '</small>';
-              res += '</li>';
+              if (map.no_results) {
+                res = noResultsTemplate();
+              } else {
+                res = '';
+                res += '<li class="atwho-li atwho-li-user" ';
+                res += 'data-id="' + map.id + '" ';
+                res += 'data-full-name="' + map.full_name + '">';
+                res += '<img src="' + map.img_url + '" class="avatar" />';
+                res += '<span data-val="full-name">';
+                res += map.full_name;
+                res += '</span>';
+                res += '<small>';
+                res += '&nbsp;';
+                res += '&#183;';
+                res += '&nbsp;';
+                res += '<span data-val="email">';
+                res += map.email;
+                res += '</span>';
+                res += '</small>';
+                res += '</li>';
+              }
             } catch (_error) {
               res = '';
             }
