@@ -250,8 +250,8 @@ var SmartAnnotation = (function() {
     function atWhoSwitchHack(searchFilter, remoteFilterCb) {
       if(atWhoUpdating || (!$(field).length && _.isUndefined(searchFilter))) {
         setTimeout(function() {
-          $(field).atwho('run');
-        }, 300);
+          $(field).click();
+        }, 100);
         return;
       }
 
@@ -259,7 +259,7 @@ var SmartAnnotation = (function() {
       setTimeout(function() {
         remoteFilterCb();
         atWhoUpdating = false;
-      }, 300);
+      }, 100);
     }
 
     function atWhoSettings(at, defaultSearchFilter) {
