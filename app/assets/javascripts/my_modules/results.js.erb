@@ -183,8 +183,8 @@ function processResult(ev, resultTypeEnum, editMode, forS3) {
       var $nameInput = $form.find("#result_name");
       var nameValid = textValidator(ev, $nameInput, 0,
         <%= Constants::NAME_MAX_LENGTH %>);
-      var $textInput = $form.find("#result_result_text_attributes_text");
-      textValidator(ev, $textInput, 1, <%= Constants::TEXT_MAX_LENGTH %>);
+      var $textInput = TinyMCE.getContent();// $form.find("#result_result_text_attributes_text");
+      textValidator(ev, $textInput, 1, <%= Constants::TEXT_MAX_LENGTH %>, false, true);
       break;
     case ResultTypeEnum.COMMENT:
       var $commentInput = $form.find("#comment_message");

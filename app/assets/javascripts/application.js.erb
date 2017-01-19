@@ -230,6 +230,7 @@ var HelperModule = (function(){
   return helpers;
 })();
 
+// initialize code markup in step descriptions and text results
 (function() {
   $(document).ready(function() {
     $('pre code [class^=language]').each(function(i, block) {

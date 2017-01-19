@@ -39,6 +39,9 @@ var TinyMCE = (function() {
       this.destroyAll();
       this.init();
     },
+    getContent: function() {
+      return tinymce.editors[0].getContent();
+    },
     highlight: initHighlightjs
   });
 
