@@ -22,13 +22,17 @@ $.fn.onSubmitValidator = function(validatorCb) {
  * @param {boolean} clearErr Set clearErr to true if this is the only
  * error that can happen/show.
  */
-function textValidator(ev, textInput, textLimitMin, textLimitMax, clearErr) {
+function textValidator(ev, textInput, textLimitMin, textLimitMax, clearErr, tinyMCE) {
   clearErr = _.isUndefined(clearErr) ? false : clearErr;
 
-  var text = $(textInput).val().trim();
-  $(textInput).val(text);
-  var text_from_html = $("<div/>").html(text).text();
-  if (text_from_html.length < text.length) text = text_from_html;
+  if(tinyMCE){
+    var text = textInput.length;
+  } else {
+    var text = $(textInput).val().trim();
+    $(textInput).val(text);
+    var text_from_html = $("<div/>").html(text).text();
+    if (text_from_html.length < text.length) text = text_from_html;
+  }
 
   var nameTooShort = text.length < textLimitMin;
   var nameTooLong = text.length > textLimitMax;

@@ -27,6 +27,8 @@
 //= require bootstrap-checkbox.min
 //= require typeahead.bundle.min
 //= require nested_form_fields
+//= require highlight.pack
+//= require tinymce-jquery
 //= require_directory ./sitewide
 //= require datatables
 //= require dataTables.noSearchHidden
@@ -35,7 +37,6 @@
 //= require i18n.js
 //= require i18n/translations
 //= require turbolinks
-//= require quill
 
 
 // Initialize links for submitting forms. This is useful for submitting
@@ -227,4 +228,13 @@ var HelperModule = (function(){
   });
 
   return helpers;
+})();
+
+// initialize code markup in rich text fields
+(function() {
+  $(document).ready(function() {
+    $('pre code [class^=language]').each(function(i, block) {
+      hljs.highlightBlock(block);
+    });
+  });
 })();

@@ -249,7 +249,7 @@ var SmartAnnotation = (function() {
     function atWhoSwitchHack(filterTypeTag, remoteFilterCb) {
       if(atWhoUpdating || (!$(field).length && _.isUndefined(filterTypeTag))) {
         setTimeout(function() {
-          $(field).atwho('run');
+          $(field).click();
         }, 100);
         return;
       }
