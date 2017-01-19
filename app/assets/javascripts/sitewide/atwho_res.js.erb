@@ -251,7 +251,7 @@ var SmartAnnotation = (function() {
       if(atWhoUpdating || (!$(field).length && _.isUndefined(searchFilter))) {
         setTimeout(function() {
           $(field).atwho('run');
-        }, 100);
+        }, 300);
         return;
       }
 
@@ -259,7 +259,7 @@ var SmartAnnotation = (function() {
       setTimeout(function() {
         remoteFilterCb();
         atWhoUpdating = false;
-      }, 100);
+      }, 300);
     }
 
     function atWhoSettings(at, defaultSearchFilter) {
