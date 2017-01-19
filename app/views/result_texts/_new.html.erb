@@ -4,7 +4,6 @@
     <%= f.fields_for :result_text do |ff| %>
       <div class="form-group">
         <%= ff.tiny_mce_editor(:text) %>
-        <%#= ff.text_area(:text, class: 'tinymce', cols: 120, rows: 40) %>
       </div>
     <% end %><br />
     <%= f.submit t("result_texts.new.create"), class: 'btn btn-primary save-result', onclick: "processResult(event, ResultTypeEnum.TEXT, false);" %>
