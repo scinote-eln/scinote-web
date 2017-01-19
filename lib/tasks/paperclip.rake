@@ -29,9 +29,13 @@ namespace :paperclip do
   end
 
   desc 'Reprocess the Assets attachents styles'
-  task reprocess: :environment do
+  task :reprocess, [:before] => :environment do |_, args|
     error = false
-    Asset.find_each(batch_size: 100) do |asset|
+    assets = Asset
+    if args.present? && args[:before].present?
+      assets = assets.where('updated_at < ?', eval(args[:before]))
+    end
+    assets.find_each(batch_size: 100) do |asset|
       next unless asset.is_image?
       begin
         asset.file.reprocess! :medium, :large
