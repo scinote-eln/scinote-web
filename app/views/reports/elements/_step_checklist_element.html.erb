@@ -8,7 +8,7 @@
           <span class="glyphicon glyphicon-list"></span>
       </div>
       <div class="pull-left checklist-name">
-        <%= auto_link(smart_annotation_parser(simple_format(checklist.name)),
+        <%= auto_link(smart_annotation_parser(simple_format(t 'projects.reports.elements.step_checklist.checklist_name', name: checklist.name)),
                       link: :urls,
                       sanitize: false,
                       html: { target: '_blank' }).html_safe %>
