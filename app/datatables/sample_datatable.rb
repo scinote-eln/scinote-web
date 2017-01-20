@@ -115,6 +115,8 @@ class SampleDatatable < AjaxDatatablesRails::Base
         '6': record.user.full_name,
         'sampleInfoUrl':
           Rails.application.routes.url_helpers.sample_path(record.id),
+        'sampleEditUrl':
+          Rails.application.routes.url_helpers.edit_sample_path(record.id),
         'sampleUpdateUrl':
           Rails.application.routes.url_helpers.sample_path(record.id)
       }
