@@ -36,7 +36,7 @@ module ProtocolsExporter
 
       step_json["tables"] = []
       step.tables.find_each do |table|
-        table_json = table.as_json(only: [ :id ])
+        table_json = table.as_json(only: [:id, :name])
         table_json["contents"] = table.contents.unpack("H*")[0]
 
         step_json["tables"] << table_json

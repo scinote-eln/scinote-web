@@ -271,6 +271,7 @@ function exportProtocols(protocol_ids) {
                   var tsb = new StringBuilder();
 
                   tsb.add('<elnTable id="' + table.id + '" guid="' + getGuid(table.id) + '">').nl();
+                  tsb.add('<name>' + esn(table.name) + '</name>').nl();
                   tsb.add('<contents>' + esn(table.contents) + '</contents>').nl();
                   tsb.add('</elnTable>');
 

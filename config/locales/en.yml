@@ -379,7 +379,7 @@ en:
           step_pos: "Step %{pos}:"
           no_description: "No description"
         step_table:
-          sidebar_name: "Table" # TODO
+          table_name: "[ %{name} ]"
           user_time: "Table created on %{timestamp}."
         step_asset:
           sidebar_name: "File %{file}"
@@ -1174,7 +1174,6 @@ en:
         updated_at_label: "Last modified at"
         preview_title: "Protocol preview"
         preview_title_position: " | %{current} of %{total}"
-        tables_header: "Tables"
         assets_header: "Files"
         import_current: "Import current"
         import_all: "Import all"
@@ -1350,7 +1349,8 @@ en:
         checklist_add_item: "Add item"
         add_checklist: "Add checklist"
         table_panel_title: "Table"
-        table_placeholder: "Table contents"
+        table_name: "Table title"
+        table_name_placeholder: "Table title"
         add_table: "Add table"
         asset_panel_title: "File"
         add_asset: "Add file"

@@ -47,13 +47,17 @@
           <hr>
           <% unless step.tables.blank? then %>
             <div class="col-xs-12">
-              <strong><%= t("protocols.steps.tables") %></strong>
-                <% step.tables.each do |table| %>
-                  <div data-role="hot-table" class="hot-table">
-                    <%= hidden_field(table, :contents, value: table.contents_utf_8, class: "hot-contents") %>
-                    <div data-role="step-hot-table" class="step-result-hot-table"></div>
-                  </div>
-                <% end %>
+              <% step.tables.each do |table| %>
+                <strong>
+                  <%= custom_auto_link(simple_format(table.name),
+                                      link: :urls,
+                                      html: { target: '_blank' }) %>
+                </strong>
+                <div data-role="hot-table" class="hot-table">
+                  <%= hidden_field(table, :contents, value: table.contents_utf_8, class: "hot-contents") %>
+                  <div data-role="step-hot-table" class="step-result-hot-table"></div>
+                </div>
+              <% end %>
             </div>
           <% end %>
 

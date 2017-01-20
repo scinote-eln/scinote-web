@@ -608,6 +608,7 @@ class StepsController < ApplicationController
       ],
       tables_attributes: [
         :id,
+        :name,
         :contents,
         :_destroy
       ]

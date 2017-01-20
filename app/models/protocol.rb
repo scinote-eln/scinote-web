@@ -272,6 +272,7 @@ class Protocol < ActiveRecord::Base
       # Copy tables
       step.tables.each do |table|
         table2 = Table.new(
+          name: table.name,
           contents: table.contents)
         table2.created_by = current_user
         table2.last_modified_by = current_user

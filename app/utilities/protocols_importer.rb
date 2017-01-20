@@ -90,10 +90,11 @@ module ProtocolsImporter
         end
       end
 
-      if step_json["tables"]
-        step_json["tables"].values.each do |table_json|
+      if step_json['tables']
+        step_json['tables'].values.each do |table_json|
           table = Table.create!(
-            contents: Base64.decode64(table_json["contents"]),
+            name: table_json['name'],
+            contents: Base64.decode64(table_json['contents']),
             created_by: user,
             last_modified_by: user
           )
