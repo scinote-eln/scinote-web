@@ -31,9 +31,10 @@
                 </span>
                 <span class="comment-message">
                   &nbsp;
-                  <%= auto_link(simple_format(comment.message),
-                                              link: :urls,
-                                              html: { target: '_blank' }) %>
+                  <%= auto_link(smart_annotation_parser(simple_format(comment.message)),
+                                link: :urls,
+                                sanitize: false,
+                                html: { target: '_blank' }).html_safe %>
                 </span>
               </li>
             <% end %>

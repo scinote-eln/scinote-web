@@ -1,5 +1,6 @@
 <div class="ql-editor">
   <%= auto_link(smart_annotation_parser(result.result_text.text),
                 link: :urls,
+                sanitize: false,
                 html: { target: '_blank' }).html_safe %>
 </div>
