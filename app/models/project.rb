@@ -49,7 +49,7 @@ class Project < ActiveRecord::Base
                   .where('projects.visibility = 1 OR user_projects.user_id = ?',
                          user.id)
                   .where_attributes_like(:name, a_query)
-                  .limit(Constants::ATWHO_SEARCH_LIMIT)
+
       if include_archived
         return new_query
       else

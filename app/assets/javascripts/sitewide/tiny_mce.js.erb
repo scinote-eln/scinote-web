@@ -2,13 +2,18 @@ var TinyMCE = (function() {
   'use strict';
 
   function initHighlightjs() {
-    $('pre code [class^=language]').each(function(i, block) {
-      if(!$(block).hasClass('hljs')) {
-        hljs.highlightBlock(block);
-      }
+    $('[class*=language]').each(function(i, block) {
+      hljs.highlightBlock(block);
     });
   }
 
+  function initHighlightjsIframe(iframe) {
+    $('[class*=language]', iframe).each(function(i, block) {
+      hljs.highlightBlock(block);
+    });
+  }
+
+  // returns a public API for TinyMCE editor
   return Object.freeze({
     init : function() {
       if (typeof tinyMCE != 'undefined') {
@@ -19,13 +24,27 @@ var TinyMCE = (function() {
           codesample_languages: [{"text":"R","value":"r"},{"text":"MATLAB","value":"matlab"},{"text":"Python","value":"python"},{"text":"JSON","value":"javascript"},{"text":"HTML/XML","value":"markup"},{"text":"JavaScript","value":"javascript"},{"text":"CSS","value":"css"},{"text":"PHP","value":"php"},{"text":"Ruby","value":"ruby"},{"text":"Java","value":"java"},{"text":"C","value":"c"},{"text":"C#","value":"csharp"},{"text":"C++","value":"cpp"}],
           init_instance_callback: function(editor) {
             SmartAnnotation.init($(editor.contentDocument.activeElement));
+            initHighlightjsIframe($(this.iframeElement).contents());
           },
           setup: function(editor) {
-            editor.on('keydown', function(e) {
-              if(e.keyCode == 13 && $(editor.contentDocument.activeElement).atwho('isSelecting'))
+            editor.on('Change', function(e) {
+              if(e.keyCode == 13 && $(editor.contentDocument.activeElement).atwho('isSelecting')) {
                 return false;
+              }
             });
-          }
+
+            editor.on('NodeChange', function(e) {
+              var node = e.element;
+              var editor = this;
+              setTimeout(function() {
+                if($(node).is('pre') && !editor.isHidden()){
+                  initHighlightjsIframe($(editor.iframeElement).contents());
+                }
+              }, 200);
+
+            });
+          },
+          codesample_content_css: '<%= asset_path('highlightjs-github-theme') %>'
         });
       }
     },

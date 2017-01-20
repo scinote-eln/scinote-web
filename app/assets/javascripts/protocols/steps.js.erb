@@ -79,6 +79,7 @@ function applyCancelCallBack() {
 
     setTimeout(function() {
       initStepsComments();
+      TinyMCE.destroyAll();
     }, 1000);
 
   })
@@ -245,6 +246,7 @@ function formNewAjax($form) {
     toggleButtons(true);
 
     TinyMCE.init();
+    TinyMCE.highlight();
     //Rerender tables
     $new_step.find("div.step-result-hot-table").each(function()  {
       $(this).handsontable("render");

@@ -233,7 +233,7 @@ var HelperModule = (function(){
 // initialize code markup in rich text fields
 (function() {
   $(document).ready(function() {
-    $('pre code [class^=language]').each(function(i, block) {
+    $('[class^=language]').each(function(i, block) {
       hljs.highlightBlock(block);
     });
   });

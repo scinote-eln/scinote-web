@@ -14,6 +14,7 @@ class SmartAnnotation
     # Search tasks
     res = MyModule
           .search(@current_user, false, @query, 1, @current_organization)
+          .limit(Constants::ATWHO_SEARCH_LIMIT)
 
     modules_list = []
     res.each do |my_module_res|
@@ -40,6 +41,7 @@ class SmartAnnotation
     # Search projects
     res = Project
           .search(@current_user, false, @query, 1, @current_organization)
+          .limit(Constants::ATWHO_SEARCH_LIMIT)
 
     projects_list = []
     res.each do |project_res|
@@ -56,6 +58,7 @@ class SmartAnnotation
     # Search experiments
     res = Experiment
           .search(@current_user, false, @query, 1, @current_organization)
+          .limit(Constants::ATWHO_SEARCH_LIMIT)
 
     experiments_list = []
     res.each do |experiment_res|
@@ -76,6 +79,7 @@ class SmartAnnotation
     # Search samples
     res = Sample
           .search(@current_user, false, @query, 1, @current_organization)
+          .limit(Constants::ATWHO_SEARCH_LIMIT)
 
     samples_list = []
     res.each do |sample_res|
