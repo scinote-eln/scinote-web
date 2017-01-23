@@ -678,6 +678,12 @@ function onClickAddSample() {
             $("select[name=sample_group_id]").selectpicker();
             $("select[name=sample_type_id]").selectpicker();
 
+            // initialize smart annotation
+            _.each($('[data-object="custom_fields"]'), function(el) {
+              if(_.isUndefined($(el).data('atwho'))) {
+                SmartAnnotation.init(el);
+              }
+            });
             // Adjust columns width in table header
             table.columns.adjust();
         },
