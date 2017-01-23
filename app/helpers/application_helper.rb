@@ -118,7 +118,10 @@ module ApplicationHelper
       match = el.match(sa_user)
       user = User.find_by_id(match[2].base62_decode)
       organization ||= current_organization
-      if user && organization
+
+      if user &&
+         organization &&
+         UserOrganization.user_in_organization(user, organization).any?
         user_org = user
                    .user_organizations
                    .where('user_organizations.organization_id = ?',

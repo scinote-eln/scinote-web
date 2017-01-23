@@ -30,6 +30,11 @@ class UserOrganization < ActiveRecord::Base
     end
   end
 
+  # returns user_organizations where the user is in org
+  def self.user_in_organization(user, organization)
+    where(user: user, organization: organization)
+  end
+
   def destroy(new_owner)
     # If any project of the organization has the sole owner and that
     # owner is the user to be removed from the organization, then we must
