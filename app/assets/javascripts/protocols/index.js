@@ -1,5 +1,4 @@
 //= require protocols/import_export/import
-//= require protocols/import_export/export
 //= require datatables
 
 // Global variables
@@ -544,6 +543,18 @@ function updateButtons() {
       exportBtn.attr("disabled", "disabled");
       exportBtn.off("click");
     }
+  }
+}
+
+function exportProtocols(ids) {
+  if (ids.length > 0) {
+    var params = '?protocol_ids[]=' + ids[0];
+    for (var i = 1; i < ids.length; i++) {
+      params += '&protocol_ids[]=' + ids[i];
+    }
+    params = encodeURI(params);
+    window.location.href = $("[data-action='export']")
+                             .data('export-url') + params;
   }
 }
 
