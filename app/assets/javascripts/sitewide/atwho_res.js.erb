@@ -21,6 +21,14 @@ var SmartAnnotation = (function() {
     return publicApi;
   })();
 
+  // stop the user annotation popover on click propagation
+  function atwhoStopPropagation(element) {
+    $(element).on('click', function(e) {
+      e.stopPropagation();
+      e.preventDefault();
+    });
+  }
+
   function setAtWho(field) {
     var FilterTypeEnum = Object.freeze({
       USER:       {tag: "users",
@@ -422,9 +430,10 @@ var SmartAnnotation = (function() {
     atWho.init();
   }
 
-  var publicApi = {
-    init: initialize
-  };
+  var publicApi = Object.freeze({
+    init: initialize,
+    preventPropagation: atwhoStopPropagation
+  });
 
   return publicApi;
 
