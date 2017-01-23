@@ -79,6 +79,7 @@ function applyCancelCallBack() {
 
     setTimeout(function() {
       initStepsComments();
+      SmartAnnotation.preventPropagation('.atwho-user-popover');
       TinyMCE.destroyAll();
     }, 1000);
 
@@ -182,6 +183,7 @@ function formCallback($form) {
 
     setTimeout(function() {
       initStepsComments();
+      SmartAnnotation.preventPropagation('.atwho-user-popover');
     }, 1000);
     return true;
   });
@@ -205,6 +207,7 @@ function formEditAjax($form) {
     toggleButtons(true);
 
     TinyMCE.destroyAll();
+    SmartAnnotation.preventPropagation('.atwho-user-popover');
     // Show the edited step
     $new_step.find(".panel-collapse:first").addClass("collapse in");
 
@@ -221,6 +224,8 @@ function formEditAjax($form) {
     applyCancelCallBack();
 
     TinyMCE.refresh();
+    SmartAnnotation.preventPropagation('.atwho-user-popover');
+
     //Rerender tables
     $form.find("[data-role='step-hot-table']").each(function()  {
       renderTable($(this));
@@ -247,6 +252,8 @@ function formNewAjax($form) {
 
     TinyMCE.init();
     TinyMCE.highlight();
+    SmartAnnotation.preventPropagation('.atwho-user-popover');
+
     //Rerender tables
     $new_step.find("div.step-result-hot-table").each(function()  {
       $(this).handsontable("render");
@@ -264,6 +271,7 @@ function formNewAjax($form) {
     formNewAjax($form);
     applyCancelOnNew();
     TinyMCE.destroyAll();
+    SmartAnnotation.preventPropagation('.atwho-user-popover');
   });
 }
 
@@ -576,6 +584,7 @@ $(document).ready(function() {
   setupAssetsLoading();
   initStepsComments();
   TinyMCE.highlight();
+  SmartAnnotation.preventPropagation('.atwho-user-popover');
 
   $(function () {
 
