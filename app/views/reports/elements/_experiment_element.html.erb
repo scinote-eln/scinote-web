@@ -27,8 +27,10 @@
     <div class="row">
       <div class="col-xs-12">
         <% if experiment.description.present? %>
-          <%= custom_auto_link(simple_format(experiment.description),
-                               link: :urls, html: { target: '_blank' }) %>
+          <%= auto_link(smart_annotation_parser(simple_format(sanitize_input(experiment.description))),
+                        link: :urls,
+                        sanitize: false,
+                        html: { target: '_blank' }).html_safe %>
         <% else %>
            <em><%=t "projects.reports.elements.experiment.no_description" %></em>
         <% end %>

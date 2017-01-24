@@ -27,8 +27,10 @@
     <div class="row">
       <div class="col-xs-12 ql-editor">
         <% if strip_tags(step.description).present? %>
-          <%= custom_auto_link(step.description,
-                               link: :urls, html: { target: '_blank' }) %>
+          <%= auto_link(smart_annotation_parser(simple_format(sanitize_input(step.description))),
+                              link: :urls,
+                              sanitize: false,
+                              html: { target: '_blank' }).html_safe %>
         <% else %>
            <em><%=t "projects.reports.elements.step.no_description" %></em>
         <% end %>

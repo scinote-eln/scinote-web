@@ -8,7 +8,6 @@
 function applyCheckboxCallBack()  {
   $("[data-action='check-item']").on('click', function(e){
     var checkboxitem = $(this).find("input");
-
     var checked = checkboxitem.is(":checked");
     $.ajax({
       url: checkboxitem.data("link-url"),
@@ -79,8 +78,9 @@ function applyCancelCallBack() {
 
     setTimeout(function() {
       initStepsComments();
-      openLinksInNewTab();
       initPreviewModal();
+      SmartAnnotation.preventPropagation('.atwho-user-popover');
+      TinyMCE.destroyAll();
     }, 1000);
 
   })
@@ -107,6 +107,7 @@ function applyEditCallBack() {
     animateSpinner(null, false);
     initPreviewModal();
 
+    TinyMCE.init();
     $("#new-step-checklists fieldset.nested_step_checklists ul").each(function () {
       enableCheckboxSorting(this);
     });
@@ -114,7 +115,6 @@ function applyEditCallBack() {
     $("#new-step-main-tab a").on("shown.bs.tab", function() {
       $("#step_name").focus();
     });
-    openLinksInNewTab();
   });
 }
 
@@ -185,8 +185,12 @@ function formCallback($form) {
 
     setTimeout(function() {
       initStepsComments();
+<<<<<<< HEAD
       openLinksInNewTab();
       animateSpinner(null, false);
+=======
+      SmartAnnotation.preventPropagation('.atwho-user-popover');
+>>>>>>> smart-annotations
     }, 1000);
     return true;
   });
@@ -210,6 +214,8 @@ function formEditAjax($form) {
     toggleButtons(true);
     initPreviewModal();
 
+    TinyMCE.destroyAll();
+    SmartAnnotation.preventPropagation('.atwho-user-popover');
     // Show the edited step
     $new_step.find(".panel-collapse:first").addClass("collapse in");
 
@@ -225,6 +231,9 @@ function formEditAjax($form) {
     formCallback($form);
     initEditableHandsOnTable($form);
     applyCancelCallBack();
+
+    TinyMCE.refresh();
+    SmartAnnotation.preventPropagation('.atwho-user-popover');
 
     //Rerender tables
     $form.find("[data-role='step-hot-table']").each(function()  {
@@ -250,6 +259,10 @@ function formNewAjax($form) {
     expandStep($new_step);
     toggleButtons(true);
 
+    TinyMCE.init();
+    TinyMCE.highlight();
+    SmartAnnotation.preventPropagation('.atwho-user-popover');
+
     //Rerender tables
     $new_step.find("div.step-result-hot-table").each(function()  {
       $(this).handsontable("render");
@@ -268,7 +281,12 @@ function formNewAjax($form) {
     formCallback($form);
     formNewAjax($form);
     applyCancelOnNew();
+<<<<<<< HEAD
     animateSpinner(null, false);
+=======
+    TinyMCE.destroyAll();
+    SmartAnnotation.preventPropagation('.atwho-user-popover');
+>>>>>>> smart-annotations
   });
 }
 
@@ -393,7 +411,7 @@ function initCallBacks() {
   applyMoveStepCallBack();
   applyCollapseLinkCallBack();
   initDeleteStep();
-  initHighlightjs();
+  TinyMCE.highlight();
 }
 
 /*
@@ -479,7 +497,6 @@ function initializeCheckboxSorting() {
     // inserted into DOM.
     setTimeout(function () {
       var list = el.parent().find("fieldset.nested_step_checklists:last ul");
-
       enableCheckboxSorting(list.get(0));
     });
   });
@@ -497,6 +514,7 @@ $("[data-action='new-step']").on("ajax:success", function(e, data) {
   applyCancelOnNew();
   toggleButtons(false);
   initializeCheckboxSorting();
+  TinyMCE.init();
 
   $("#step_name").focus();
   $("#new-step-main-tab a").on("shown.bs.tab", function() {
@@ -560,14 +578,6 @@ function renderTable(table) {
   }
 }
 
-function initHighlightjs() {
-  if(hljs){
-    $('.ql-editor pre').each(function(i, block) {
-     hljs.highlightBlock(block);
-   });
-  }
-}
-
 function initStepsComments() {
   Comments.initialize();
   Comments.initCommentOptions("ul.content-comments");
@@ -582,8 +592,9 @@ $(document).ready(function() {
   expandAllSteps();
   setupAssetsLoading();
   initStepsComments();
-  initHighlightjs();
   initPreviewModal();
+  TinyMCE.highlight();
+  SmartAnnotation.preventPropagation('.atwho-user-popover');
 
   $(function () {
 

@@ -33,33 +33,50 @@ class Experiment < ActiveRecord::Base
 
   scope :is_archived, ->(is_archived) { where("archived = ?", is_archived) }
 
-  def self.search(user, include_archived, query = nil, page = 1)
+  def self.search(
+    user,
+    include_archived,
+    query = nil,
+    page = 1,
+    current_organization = nil
+  )
     project_ids =
       Project
       .search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
       .select('id')
 
     if query
-      a_query = query.strip
-      .gsub("_","\\_")
-      .gsub("%","\\%")
-      .split(/\s+/)
-      .map {|t|  "%" + t + "%" }
+      a_query = '%' + query.strip.gsub('_', '\\_').gsub('%', '\\%') + '%'
     else
       a_query = query
     end
 
-    if include_archived
+    if current_organization
+      projects_ids =
+        Project
+        .search(user,
+                include_archived,
+                nil,
+                1,
+                current_organization)
+        .select('id')
+
       new_query =
         Experiment
-          .where(project: project_ids)
-          .where_attributes_like([:name, :description], a_query)
+        .where('experiments.project_id IN (?)', projects_ids)
+        .where_attributes_like([:name], a_query)
+      return include_archived ? new_query : new_query.is_archived(false)
+    elsif include_archived
+      new_query =
+        Experiment
+        .where(project: project_ids)
+        .where_attributes_like([:name, :description], a_query)
     else
       new_query =
         Experiment
-          .is_archived(false)
-          .where(project: project_ids)
-          .where_attributes_like([:name, :description], a_query)
+        .is_archived(false)
+        .where(project: project_ids)
+        .where_attributes_like([:name, :description], a_query)
     end
 
     # Show all results if needed

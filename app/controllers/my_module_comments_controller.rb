@@ -1,6 +1,7 @@
 class MyModuleCommentsController < ApplicationController
   include ActionView::Helpers::TextHelper
   include InputSanitizeHelper
+  include ApplicationHelper
 
   before_action :load_vars
   before_action :check_view_permissions, only: :index
@@ -115,13 +116,15 @@ class MyModuleCommentsController < ApplicationController
               module: @my_module.name
             )
           )
-          render json: {
-            comment: custom_auto_link(
-              simple_format(@comment.message),
-              link: :urls,
-              html: { target: '_blank' }
-            )
-          }, status: :ok
+          message = auto_link(
+            smart_annotation_parser(
+              simple_format(sanitize_input(@comment.message))
+            ),
+            link: :urls,
+            sanitize: false,
+            html: { target: '_blank' }
+          ).html_safe
+          render json: { comment: message }, status: :ok
         else
           render json: { errors: @comment.errors.to_hash(true) },
                  status: :unprocessable_entity

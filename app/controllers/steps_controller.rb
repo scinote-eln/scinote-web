@@ -1,4 +1,7 @@
 class StepsController < ApplicationController
+  include ActionView::Helpers::TextHelper
+  include ApplicationHelper
+
   before_action :load_vars, only: [:edit, :update, :destroy, :show]
   before_action :load_vars_nested, only: [:new, :create]
   before_action :convert_table_contents_to_utf8, only: [:create, :update]
@@ -241,7 +244,7 @@ class StepsController < ApplicationController
               message = t(
                 str,
                 user: current_user.full_name,
-                checkbox: chkItem.text,
+                checkbox: smart_annotation_parser(simple_format(chkItem.text)),
                 step: chkItem.checklist.step.position + 1,
                 step_name: chkItem.checklist.step.name,
                 completed: completed_items,

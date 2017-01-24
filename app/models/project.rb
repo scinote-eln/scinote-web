@@ -26,42 +26,66 @@ class Project < ActiveRecord::Base
   has_many :report_elements, inverse_of: :project, dependent: :destroy
   belongs_to :organization, inverse_of: :projects
 
-  def self.search(user, include_archived, query = nil, page = 1)
+  def self.search(
+    user,
+    include_archived,
+    query = nil,
+    page = 1,
+    current_organization = nil
+  )
 
     if query
-      a_query = query.strip
-      .gsub("_","\\_")
-      .gsub("%","\\%")
-      .split(/\s+/)
-      .map {|t|  "%" + t + "%" }
+      a_query = '%' + query.strip.gsub('_', '\\_').gsub('%', '\\%') + '%'
     else
       a_query = query
     end
 
-
-    org_ids =
-      Organization
-      .joins(:user_organizations)
-      .where("user_organizations.user_id = ?", user.id)
-      .select("id")
-      .distinct
-
-    if include_archived
+    if current_organization
       new_query = Project
-        .distinct
-        .joins(:user_projects)
-        .where("projects.organization_id IN (?)", org_ids)
-        .where("projects.visibility = 1 OR user_projects.user_id = ?", user.id)
-        .where_attributes_like(:name, a_query)
+                  .distinct
+                  .joins(:user_projects)
+                  .where('projects.organization_id = ?',
+                         current_organization.id)
+                  .where('projects.visibility = 1 OR user_projects.user_id = ?',
+                         user.id)
+                  .where_attributes_like(:name, a_query)
 
+      if include_archived
+        return new_query
+      else
+        return new_query.where('projects.archived = ?', false)
+      end
     else
-      new_query = Project
+      org_ids =
+        Organization
+        .joins(:user_organizations)
+        .where('user_organizations.user_id = ?', user.id)
+        .select('id')
         .distinct
-        .joins(:user_projects)
-        .where("projects.organization_id IN (?)", org_ids)
-        .where("projects.visibility = 1 OR user_projects.user_id = ?", user.id)
-        .where_attributes_like(:name, a_query)
-        .where("projects.archived = ?", false)
+
+      if include_archived
+        new_query = Project
+                    .distinct
+                    .joins(:user_projects)
+                    .where('projects.organization_id IN (?)', org_ids)
+                    .where(
+                      'projects.visibility = 1 OR user_projects.user_id = ?',
+                      user.id
+                    )
+                    .where_attributes_like(:name, a_query)
+
+      else
+        new_query = Project
+                    .distinct
+                    .joins(:user_projects)
+                    .where('projects.organization_id IN (?)', org_ids)
+                    .where(
+                      'projects.visibility = 1 OR user_projects.user_id = ?',
+                      user.id
+                    )
+                    .where_attributes_like(:name, a_query)
+                    .where('projects.archived = ?', false)
+      end
     end
 
     # Show all results if needed

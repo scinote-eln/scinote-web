@@ -41,33 +41,53 @@ class MyModule < ActiveRecord::Base
   WIDTH = 30
   HEIGHT = 14
 
-  def self.search(user, include_archived, query = nil, page = 1)
+  def self.search(
+    user,
+    include_archived,
+    query = nil,
+    page = 1,
+    current_organization = nil
+  )
     exp_ids =
       Experiment
       .search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
       .select("id")
 
     if query
-      a_query = query.strip
-      .gsub("_","\\_")
-      .gsub("%","\\%")
-      .split(/\s+/)
-      .map {|t|  "%" + t + "%" }
+      a_query = '%' + query.strip.gsub('_', '\\_').gsub('%', '\\%') + '%'
     else
       a_query = query
     end
 
-    if include_archived
+    if current_organization
+      experiments_ids = Experiment
+                        .search(user,
+                                include_archived,
+                                nil,
+                                1,
+                                current_organization)
+                        .select('id')
       new_query = MyModule
-        .distinct
-        .where("my_modules.experiment_id IN (?)", exp_ids)
-        .where_attributes_like([:name, :description], a_query)
+                  .distinct
+                  .where('my_modules.experiment_id IN (?)', experiments_ids)
+                  .where_attributes_like([:name], a_query)
+
+      if include_archived
+        return new_query
+      else
+        return new_query.where('my_modules.archived = ?', false)
+      end
+    elsif include_archived
+      new_query = MyModule
+                  .distinct
+                  .where('my_modules.experiment_id IN (?)', exp_ids)
+                  .where_attributes_like([:name, :description], a_query)
     else
       new_query = MyModule
-        .distinct
-        .where("my_modules.experiment_id IN (?)", exp_ids)
-        .where("my_modules.archived = ?", false)
-        .where_attributes_like([:name, :description], a_query)
+                  .distinct
+                  .where('my_modules.experiment_id IN (?)', exp_ids)
+                  .where('my_modules.archived = ?', false)
+                  .where_attributes_like([:name, :description], a_query)
     end
 
     # Show all results if needed

@@ -23,8 +23,10 @@
   <div class="report-element-body">
     <div class="row">
       <div class="col-xs-12 text-container ql-editor">
-        <%= custom_auto_link(result_text.text,
-                             link: :urls, html: { target: '_blank' }) %>
+        <%= auto_link(smart_annotation_parser(simple_format(sanitize_input(result_text.text))),
+                      link: :urls,
+                      sanitize: false,
+                      html: { target: '_blank' }).html_safe %>
       </div>
     </div>
   </div>

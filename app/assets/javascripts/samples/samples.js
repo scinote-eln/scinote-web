@@ -1,5 +1,3 @@
-//= require datatables
-
 // Create import samples ajax
 $("#modal-import-samples").on("show.bs.modal", function(event) {
     formGroup = $(this).find(".form-group");

@@ -4,6 +4,9 @@ class SampleDatatable < AjaxDatatablesRails::Base
   include ActionView::Helpers::TextHelper
   include SamplesHelper
   include InputSanitizeHelper
+  include Rails.application.routes.url_helpers
+  include ActionView::Helpers::UrlHelper
+  include ApplicationHelper
 
   ASSIGNED_SORT_COL = 'assigned'
 
@@ -113,17 +116,12 @@ class SampleDatatable < AjaxDatatablesRails::Base
              else
                escape_input(record.sample_type.name)
              end,
-        '4': if record.sample_group.nil?
-               "<span class='glyphicon glyphicon-asterisk'></span> " +
-                 I18n.t('samples.table.no_group')
-             else
-               "<span class='glyphicon glyphicon-asterisk' "\
-               "style='color: #{escape_input(record.sample_group.color)}'>"\
-               "</span> " + escape_input(record.sample_group.name)
-             end,
+        '4': sample_group_cell(record),
         '5': I18n.l(record.created_at, format: :full),
         '6': escape_input(record.user.full_name),
         'sampleInfoUrl':
+          Rails.application.routes.url_helpers.sample_path(record.id),
+        'sampleEditUrl':
           Rails.application.routes.url_helpers.edit_sample_path(record.id),
         'sampleUpdateUrl':
           Rails.application.routes.url_helpers.sample_path(record.id)
@@ -131,8 +129,15 @@ class SampleDatatable < AjaxDatatablesRails::Base
 
       # Add custom attributes
       record.sample_custom_fields.each do |scf|
-        sample[@cf_mappings[scf.custom_field_id]] =
-          custom_auto_link(scf.value, link: :urls, html: { target: '_blank' })
+        sample[@cf_mappings[scf.custom_field_id]] = auto_link(
+          smart_annotation_parser(
+            simple_format(sanitize_input(scf.value)),
+            @organization
+          ),
+          link: :urls,
+          sanitize: false,
+          html: { target: '_blank' }
+        ).html_safe
       end
       sample
     end
@@ -142,6 +147,17 @@ class SampleDatatable < AjaxDatatablesRails::Base
     @assigned_samples.include?(record) ?
       "<span class='circle'>&nbsp;</span>" :
       "<span class='circle disabled'>&nbsp;</span>"
+  end
+
+  def sample_group_cell(record)
+    if record.sample_group.nil?
+      "<span class='glyphicon glyphicon-asterisk'></span> " \
+        "#{I18n.t('samples.table.no_group')}"
+    else
+      "<span class='glyphicon glyphicon-asterisk' " \
+        "style='color: #{escape_input(record.sample_group.color)}'></span> " \
+        "#{escape_input(record.sample_group.name)}"
+    end
   end
 
   # Query database for records (this will be later paginated and filtered)

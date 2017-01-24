@@ -73,9 +73,8 @@ function dataTableInit() {
     }, {
       targets: 2,
       render: function(data, type, row) {
-        return "<a href='#' data-href='" + row.sampleUpdateUrl + "'" +
-                      "class='sample_info' data-toggle='modal'" +
-                      "data-target='#modal-info-sample'>" + data + '</a>';
+        return "<a href='" + row.sampleInfoUrl + "'" +
+               "class='sample-info-link'>" + data + '</a>';
       }
     }],
     rowCallback: function(row, data) {
@@ -111,7 +110,7 @@ function dataTableInit() {
     },
     preDrawCallback: function() {
       animateSpinner(this);
-      $('.sample_info').off('click');
+      $('.sample-info-link').off('click');
     },
     stateLoadCallback: function(settings) {
       // Send an Ajax request to the server to get the data. Note that
@@ -179,8 +178,11 @@ function dataTableInit() {
   });
 
   // Handle click on table cells with checkboxes
-  $('#samples').on('click', 'tbody td, thead th:first-child', function() {
-    $(this).parent().find('input[type="checkbox"]').trigger('click');
+  $('#samples').on('click', 'tbody td, thead th:first-child', function(e) {
+    if (!$(e.target).is('.sample-info-link')) {
+      // Skip if clicking on samples info link
+      $(this).parent().find('input[type="checkbox"]').trigger('click');
+    }
   });
 
   // Handle clicks on checkbox
@@ -233,6 +235,9 @@ function dataTableInit() {
   table.on('draw', function() {
     updateDataTableSelectAllCtrl(table);
     sampleInfoListener();
+
+    // Prevent sample row toggling when selecting user smart annotation link
+    SmartAnnotation.preventPropagation('.atwho-user-popover');
   });
 
   table.on('column-reorder', function() {
@@ -411,7 +416,7 @@ function onClickEdit() {
     saveAction = "update";
 
     $.ajax({
-        url: rowData["sampleInfoUrl"],
+        url: rowData["sampleEditUrl"],
         type: "GET",
         dataType: "json",
         success: function (data) {
@@ -457,6 +462,12 @@ function onClickEdit() {
                 }
             });
 
+            // initialize smart annotation
+            _.each($('[data-object="custom_fields"]'), function(el) {
+              if(_.isUndefined($(el).data('atwho'))) {
+                SmartAnnotation.init(el);
+              }
+            });
             // Adjust columns width in table header
             adjustTableHeader();
         },
@@ -742,6 +753,12 @@ function onClickAddSample() {
             $("select[name=sample_group_id]").selectpicker();
             $("select[name=sample_type_id]").selectpicker();
 
+            // initialize smart annotation
+            _.each($('[data-object="custom_fields"]'), function(el) {
+              if(_.isUndefined($(el).data('atwho'))) {
+                SmartAnnotation.init(el);
+              }
+            });
             // Adjust columns width in table header
             adjustTableHeader();
         },

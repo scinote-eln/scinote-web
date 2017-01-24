@@ -48,6 +48,9 @@ class Constants
   # Maximum number of users that can be invited in a single action
   INVITE_USERS_LIMIT = 20
 
+  # Maximum nr. of search results for atwho (smart annotations)
+  ATWHO_SEARCH_LIMIT = 5
+
   #=============================================================================
   # File and data memory size
   #=============================================================================

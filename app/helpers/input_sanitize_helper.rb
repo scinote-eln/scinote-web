@@ -13,6 +13,6 @@ module InputSanitizeHelper
 
   def custom_auto_link(text, args)
     args[:sanitize] = false
-    sanitize_input(auto_link(text, args))
+    auto_link(sanitize_input(text), args)
   end
 end

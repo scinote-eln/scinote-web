@@ -260,5 +260,11 @@ module BootstrapFormHelper
       end
       text_area(name, opts)
     end
+
+    # Returns <textarea> helper tag for tinyMCE editor
+    def tiny_mce_editor(name, options = {})
+      options.merge!(class: 'tinymce', cols: 120, rows: 15)
+      text_area(name, options)
+    end
   end
 end

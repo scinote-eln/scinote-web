@@ -1,4 +1,4 @@
-<div>
+f<div>
   <strong>
     <%=t "protocols.steps.comment_title", user: comment.user.full_name, time: l(comment.created_at, format: :time) %>
   </strong>
@@ -40,8 +40,12 @@
   <% end %>
 </div>
 <div data-role="comment-message-container">
-  <div data-role="comment-message">
-    <%= custom_auto_link(simple_format(comment.message),
-                         link: :urls, html: { target: '_blank' }) %>
-  </div>
+  <div data-role="comment-message"><%= auto_link(
+    smart_annotation_parser(simple_format(
+      sanitize_input(comment.message)),
+    ),
+    link: :urls,
+    sanitize: false,
+    html: { target: '_blank' }
+  ).html_safe %></div>
 </div>

@@ -854,6 +854,14 @@ a[data-toggle="tooltip"] {
 
   .dataTables_paginate {
     float: right;
+
+    .pagination {
+      margin: 2px 0;
+    }
+  }
+
+  .dataTables_info {
+    padding-top: 8px;
   }
 }
 
@@ -1718,4 +1726,213 @@ th.custom-field .modal-tooltiptext {
 
 .disable-click {
   pointer-events: none;
+}
+
+// AtWho (smart annotations)
+
+// <Custom atwho style>
+.atwho-view {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: none;
+  margin-top: 18px;
+  background: $color-white;
+  color: $color-black;
+  border: 1px solid $color-emperor;
+  border-radius: 3px;
+  box-shadow: 0 0 5px $color-cloud;
+  min-width: 520px;
+  max-height: 200px;
+  overflow: auto;
+  z-index: 11110 !important;
+
+  small {
+    font-size: smaller;
+    color: $color-emperor;
+    font-weight: normal;
+  }
+
+  strong {
+    color: $color-theme-primary;
+  }
+
+  .cur {
+    background: $color-theme-primary;
+    color: $color-white;
+
+    small {
+      color: $color-white;
+    }
+
+    strong {
+      color: $color-white;
+      font: bold;
+    }
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: auto;
+
+    li {
+      display: block;
+      padding: 5px 10px;
+      border-bottom: 1px solid $color-emperor;
+      cursor: pointer;
+    }
+  }
+}
+// <End of overrides>
+
+.atwho-header-res {
+  padding-top: 3px;
+  padding-bottom: 7px;
+  height: 34px;
+  background-color: $color-gallery;
+  border-bottom: 1px solid $color-emperor;
+  clear: both;
+
+  > div {
+    display: inline;
+  }
+
+  .title {
+    float: left;
+    margin-left: 15px;
+
+    .btn {
+      border-radius: 4px;
+      margin-right: 5px;
+      padding: 3px;
+    }
+
+    .btn:last-child {
+      margin-right: 20px;
+    }
+
+    .btn-default {
+      background-color: transparent;
+    }
+  }
+
+  .title-user {
+    padding-top: 4px;
+  }
+
+  .help {
+    float: right;
+    padding-top: 4px;
+
+    div {
+      display: inline;
+      margin-right: 15px;
+      font-size: smaller;
+    }
+
+    div strong {
+      color: $color-black;
+    }
+
+    .dismiss {
+      color: $color-emperor;
+    }
+
+    .dismiss:hover {
+      color: $color-black;
+      cursor: pointer;
+    }
+  }
+}
+
+.atwho-li-user {
+
+  .avatar {
+    border-radius: 50%;
+    margin-left: 5px;
+    margin-right: 10px;
+    height: 20px;
+    width: 20px;
+  }
+}
+
+.atwho-li-res {
+
+  .glyphicon-tint {
+    margin-left: 5px;
+    margin-right: 5px;
+  }
+
+  .res-type {
+    border: 1px solid $color-black;
+    border-radius: 4px;
+    font-weight: 600;
+    margin-left: 5px;
+    margin-right: 5px;
+    padding: 0 2px;
+    text-transform: capitalize;
+  }
+
+  .res-name {
+    font-weight: 600;
+    margin-right: 5px;
+  }
+
+  .res-description {
+    color: $color-emperor;
+    font-size: 10px;
+  }
+}
+
+.sa-type {
+  border: 1px solid $color-black;
+  border-radius: 4px;
+  color: $color-black;
+  font-weight: 600;
+  padding: 0 2px;
+  text-decoration: none;
+  text-transform: capitalize;
+
+  &:hover {
+    text-decoration: none;
+  }
+}
+
+.atwho-user-popover {
+  cursor: pointer;
+  padding-left: 5px;
+}
+
+.atwho-user-img-popover {
+  cursor: not-allowed;
+}
+
+.atwho-no-results {
+  padding: 5px 10px;
+}
+
+.popover {
+  border-radius: 3px;
+  min-width: 450px;
+  padding: 15px 10px;
+  z-index: 9999;
+
+  h5 {
+    font-weight: bold;
+    line-height: 0;
+  }
+
+  .silver {
+    color: $color-silver-chalice;
+  }
+
+  p {
+    max-width: 260px;
+    word-wrap: break-word;
+  }
+}
+
+.popover-remove {
+  cursor: pointer;
 }
