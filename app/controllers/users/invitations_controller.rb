@@ -10,7 +10,7 @@ module Users
 
     def update
       # Instantialize a new team with the provided name
-      @team = Organization.new
+      @team = Team.new
       @team.name = params[:team][:name]
 
       super do |user|
@@ -18,7 +18,7 @@ module Users
           @team.created_by = user
           @team.save
 
-          UserOrganization.create(
+          UserTeam.create(
             user: user,
             team: @team,
             role: 'admin'
@@ -101,14 +101,14 @@ module Users
         end
 
         if @team.present? && result[:status] != :user_invalid
-          if UserOrganization.exists?(user: user, team: @team)
+          if UserTeam.exists?(user: user, team: @team)
             user_team =
-              UserOrganization.where(user: user, team: @team).first
+              UserTeam.where(user: user, team: @team).first
 
             result[:status] = :user_exists_and_in_team
           else
             # Also generate user team relation
-            user_team = UserOrganization.new(
+            user_team = UserTeam.new(
               user: user,
               team: @team,
               role: @role
@@ -187,12 +187,12 @@ module Users
     def check_invite_users_permission
       @user = current_user
       @emails = params[:emails]
-      @team = Organization.find_by_id(params['teamId'])
+      @team = Team.find_by_id(params['teamId'])
       @role = params['role']
 
       render_403 if @emails && @emails.empty?
       render_403 if @team && !is_admin_of_team(@team)
-      render_403 if @role && !UserOrganization.roles.keys.include?(@role)
+      render_403 if @role && !UserTeam.roles.keys.include?(@role)
     end
   end
 end

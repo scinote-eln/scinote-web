@@ -127,7 +127,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
     valid_resource = resource.valid?
 
     # Create new team for the new user
-    @team = Organization.new
+    @team = Team.new
     @team.name = params[:team][:name]
     valid_team = @team.valid?
 
@@ -146,7 +146,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
           @team.save
 
           # Add this user to the team as owner
-          UserOrganization.create(
+          UserTeam.create(
             user: resource,
             team: @team,
             role: :admin
@@ -248,7 +248,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
         self.resource = resource_class.new sign_up_params
 
         # Also validate team
-        @team = Organization.new(name: params[:team][:name])
+        @team = Team.new(name: params[:team][:name])
         @team.valid?
 
         respond_with_navigational(resource) { render :new }

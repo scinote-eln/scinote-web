@@ -1,7 +1,7 @@
 class ExperimentsController < ApplicationController
   include SampleActions
   include PermissionHelper
-  include OrganizationsHelper
+  include TeamsHelper
   include InputSanitizeHelper
 
   before_action :set_experiment,

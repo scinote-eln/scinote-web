@@ -63,7 +63,7 @@ class Users::SettingsController < ApplicationController
   end
 
   def team
-    @user_team = UserOrganization.find_by(user: @user, team: @team)
+    @user_team = UserTeam.find_by(user: @user, team: @team)
   end
 
   def update_team
@@ -117,23 +117,23 @@ class Users::SettingsController < ApplicationController
   def team_users_datatable
     respond_to do |format|
       format.json {
-        render json: ::OrganizationUsersDatatable.new(view_context, @team, @user)
+        render json: ::TeamUsersDatatable.new(view_context, @team, @user)
       }
     end
   end
 
   def new_team
-    @new_team = Organization.new
+    @new_team = Team.new
   end
 
   def create_team
-    @new_team = Organization.new(create_team_params)
+    @new_team = Team.new(create_team_params)
     @new_team.created_by = @user
 
     if @new_team.save
       # Okay, team is created, now
       # add the current user as admin
-      UserOrganization.create(
+      UserTeam.create(
         user: @user,
         team: @new_team,
         role: 2
@@ -224,7 +224,7 @@ class Users::SettingsController < ApplicationController
 
         if !invalid then
           begin
-            UserOrganization.transaction do
+            UserTeam.transaction do
               # If user leaves on his/her own accord,
               # new owner for projects is the first
               # administrator of team
@@ -350,7 +350,7 @@ class Users::SettingsController < ApplicationController
 
   def user_current_team
     @user.current_team_id = params[:user][:current_team_id]
-    @changed_team = Organization.find_by_id(@user.current_team_id)
+    @changed_team = Team.find_by_id(@user.current_team_id)
     if params[:user][:current_team_id].present? && @user.save
       flash[:success] = t('users.settings.changed_team_flash',
                           team: @changed_team.name)
@@ -368,17 +368,17 @@ class Users::SettingsController < ApplicationController
   end
 
   def check_team_permission
-    @team = Organization.find_by_id(params[:team_id])
+    @team = Team.find_by_id(params[:team_id])
     unless is_admin_of_team(@team)
       render_403
     end
   end
 
   def check_user_team_permission
-    @user_team = UserOrganization.find_by_id(params[:user_team_id])
+    @user_team = UserTeam.find_by_id(params[:user_team_id])
     @team = @user_team.team
-    # Don't allow the user to modify UserOrganization-s if he's not admin,
-    # unless he/she is modifying his/her UserOrganization
+    # Don't allow the user to modify UserTeam-s if he's not admin,
+    # unless he/she is modifying his/her UserTeam
     if current_user != @user_team.user and
       !is_admin_of_team(@user_team.team)
       render_403

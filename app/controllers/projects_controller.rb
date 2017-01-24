@@ -1,7 +1,7 @@
 class ProjectsController < ApplicationController
   include SampleActions
   include RenamingUtil
-  include OrganizationsHelper
+  include TeamsHelper
   include InputSanitizeHelper
 
   before_action :load_vars, only: [:show, :edit, :update,
@@ -26,8 +26,7 @@ class ProjectsController < ApplicationController
 
   def index
     if params[:team]
-      current_team_switch(Organization
-                                    .find_by_id(params[:team]))
+      current_team_switch(Team.find_by_id(params[:team]))
     end
 
     if current_user.teams.any?
@@ -35,10 +34,9 @@ class ProjectsController < ApplicationController
 
       @current_team_id ||= current_user.teams.first.id
       @current_sort = params[:sort].to_s
-      @projects_by_teams = current_user
-                          .projects_by_teams(@current_team_id,
-                                            @current_sort,
-                                            @filter_by_archived)
+      @projects_by_teams = current_user.projects_by_teams(@current_team_id,
+                                                          @current_sort,
+                                                          @filter_by_archived)
     end
 
     @teams = current_user.teams

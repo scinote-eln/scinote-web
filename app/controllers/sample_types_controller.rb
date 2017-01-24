@@ -124,7 +124,7 @@ class SampleTypesController < ApplicationController
   end
 
   def load_vars_nested
-    @team = Organization.find_by_id(params[:team_id])
+    @team = Team.find_by_id(params[:team_id])
 
     render_404 unless @team
   end

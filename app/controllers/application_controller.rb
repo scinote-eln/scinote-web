@@ -27,7 +27,7 @@ class ApplicationController < ActionController::Base
 
   # Sets current team for all controllers
   def current_team
-    Organization.find_by_id(current_user.current_team_id)
+    Team.find_by_id(current_user.current_team_id)
   end
 
   protected

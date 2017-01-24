@@ -1012,7 +1012,7 @@ class ProtocolsController < ApplicationController
 
   def check_import_permissions
     @protocol_json = params[:protocol]
-    @team = Organization.find(params[:team_id])
+    @team = Team.find(params[:team_id])
     @type = params[:type] ? params[:type].to_sym : nil
     if !(
       @protocol_json.present? &&

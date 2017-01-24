@@ -1,4 +1,4 @@
-class OrganizationsController < ApplicationController
+class TeamsController < ApplicationController
   before_action :load_vars, only: [:parse_sheet, :import_samples, :export_samples]
 
   before_action :check_create_sample_permissions, only: [:parse_sheet, :import_samples]
@@ -25,7 +25,7 @@ class OrganizationsController < ApplicationController
             }
 
           else
-            sheet = Organization.open_spreadsheet(params[:file])
+            sheet = Team.open_spreadsheet(params[:file])
 
             # Check if we actually have any rows (last_row > 1)
             if sheet.last_row.between?(0, 1)
@@ -122,7 +122,7 @@ class OrganizationsController < ApplicationController
           if @temp_file.session_id == session.id
             # Check if mappings exists or else we don't have anything to parse
             if params[:mappings]
-              @sheet = Organization.open_spreadsheet(@temp_file.file)
+              @sheet = Team.open_spreadsheet(@temp_file.file)
 
               # Check for duplicated values
               h1 = params[:mappings].clone.delete_if { |k, v| v.empty? }
@@ -282,7 +282,7 @@ class OrganizationsController < ApplicationController
   end
 
   def load_vars
-    @team = Organization.find_by_id(params[:id])
+    @team = Team.find_by_id(params[:id])
 
     unless @team
       render_404

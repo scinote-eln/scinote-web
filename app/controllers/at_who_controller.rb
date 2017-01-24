@@ -96,7 +96,7 @@ class AtWhoController < ApplicationController
   private
 
   def load_vars
-    @team = Organization.find_by_id(params[:id])
+    @team = Team.find_by_id(params[:id])
     @query = params[:query]
     render_404 unless @team
   end

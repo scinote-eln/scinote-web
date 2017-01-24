@@ -1,6 +1,6 @@
 class MyModulesController < ApplicationController
   include SampleActions
-  include OrganizationsHelper
+  include TeamsHelper
   include InputSanitizeHelper
 
   before_action :load_vars, only: [
