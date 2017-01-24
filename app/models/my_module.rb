@@ -46,7 +46,7 @@ class MyModule < ActiveRecord::Base
     include_archived,
     query = nil,
     page = 1,
-    current_organization = nil
+    current_team = nil
   )
     exp_ids =
       Experiment
@@ -59,13 +59,13 @@ class MyModule < ActiveRecord::Base
       a_query = query
     end
 
-    if current_organization
+    if current_team
       experiments_ids = Experiment
                         .search(user,
                                 include_archived,
                                 nil,
                                 1,
-                                current_organization)
+                                current_team)
                         .select('id')
       new_query = MyModule
                   .distinct
@@ -154,7 +154,7 @@ class MyModule < ActiveRecord::Base
   end
 
   def unassigned_samples
-    Sample.where(organization_id: experiment.project.organization).where.not(id: samples)
+    Sample.where(team_id: experiment.project.team).where.not(id: samples)
   end
 
   def unassigned_tags
@@ -186,11 +186,11 @@ class MyModule < ActiveRecord::Base
                       count = Constants::ACTIVITY_AND_NOTIF_SEARCH_LIMIT)
     last_id = Constants::INFINITY if last_id <= 1
     Activity.joins(:my_module)
-      .where(my_module_id: id)
-      .where('activities.id <  ?', last_id)
-      .order(created_at: :desc)
-      .limit(count)
-      .uniq
+            .where(my_module_id: id)
+            .where('activities.id <  ?', last_id)
+            .order(created_at: :desc)
+            .limit(count)
+            .uniq
   end
 
   def protocol

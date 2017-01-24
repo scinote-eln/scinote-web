@@ -17,7 +17,7 @@ class Protocol < ActiveRecord::Base
   # Name is required when its actually specified (i.e. :in_repository? is true)
   validates :name, length: { maximum: Constants::NAME_MAX_LENGTH }
   validates :description, length: { maximum: Constants::TEXT_MAX_LENGTH }
-  validates :organization, presence: true
+  validates :team, presence: true
   validates :protocol_type, presence: true
 
   with_options if: :in_module? do |protocol|
@@ -40,24 +40,24 @@ class Protocol < ActiveRecord::Base
     protocol.validates :parent_updated_at, absence: true
   end
   with_options if: :in_repository_public? do |protocol|
-    # Public protocol must have unique name inside its organization
-    protocol.validates_uniqueness_of :name, scope: [:organization], conditions: -> { where(protocol_type: Protocol.protocol_types[:in_repository_public]) }
+    # Public protocol must have unique name inside its team
+    protocol.validates_uniqueness_of :name, scope: [:team], conditions: -> { where(protocol_type: Protocol.protocol_types[:in_repository_public]) }
     protocol.validates :published_on, presence: true
   end
   with_options if: :in_repository_private? do |protocol|
-    # Private protocol must have unique name inside its organization & user scope
-    protocol.validates_uniqueness_of :name, scope: [:organization, :added_by], conditions: -> { where(protocol_type: Protocol.protocol_types[:in_repository_private]) }
+    # Private protocol must have unique name inside its team & user scope
+    protocol.validates_uniqueness_of :name, scope: [:team, :added_by], conditions: -> { where(protocol_type: Protocol.protocol_types[:in_repository_private]) }
   end
   with_options if: :in_repository_archived? do |protocol|
-    # Archived protocol must have unique name inside its organization & user scope
-    protocol.validates_uniqueness_of :name, scope: [:organization, :added_by], conditions: -> { where(protocol_type: Protocol.protocol_types[:in_repository_archived]) }
+    # Archived protocol must have unique name inside its team & user scope
+    protocol.validates_uniqueness_of :name, scope: [:team, :added_by], conditions: -> { where(protocol_type: Protocol.protocol_types[:in_repository_archived]) }
     protocol.validates :archived_by, presence: true
     protocol.validates :archived_on, presence: true
   end
 
   belongs_to :added_by, foreign_key: 'added_by_id', class_name: 'User', inverse_of: :added_protocols
   belongs_to :my_module, inverse_of: :protocols
-  belongs_to :organization, inverse_of: :protocols
+  belongs_to :team, inverse_of: :protocols
   belongs_to :parent, foreign_key: 'parent_id', class_name: 'Protocol'
   belongs_to :archived_by, foreign_key: 'archived_by_id', class_name: 'User', inverse_of: :archived_protocols
   belongs_to :restored_by, foreign_key: 'restored_by_id', class_name: 'User', inverse_of: :restored_protocols
@@ -67,10 +67,10 @@ class Protocol < ActiveRecord::Base
   has_many :steps, inverse_of: :protocol, dependent: :destroy
 
   def self.search(user, include_archived, query = nil, page = 1)
-    org_ids =
+    team_ids =
       Organization
-      .joins(:user_organizations)
-      .where("user_organizations.user_id = ?", user.id)
+      .joins(:user_teams)
+      .where("user_teams.user_id = ?", user.id)
       .select("id")
       .distinct
 
@@ -81,24 +81,24 @@ class Protocol < ActiveRecord::Base
 
     where_str =
       "(protocol_type IN (?) AND my_module_id IN (?)) OR " +
-      "(protocol_type = ? AND protocols.organization_id IN (?) AND added_by_id = ?) OR " +
-      "(protocol_type = ? AND protocols.organization_id IN (?))"
+      "(protocol_type = ? AND protocols.team_id IN (?) AND added_by_id = ?) OR " +
+      "(protocol_type = ? AND protocols.team_id IN (?))"
 
     if include_archived
       where_str +=
-        " OR (protocol_type = ? AND protocols.organization_id IN (?) AND added_by_id = ?)"
+        " OR (protocol_type = ? AND protocols.team_id IN (?) AND added_by_id = ?)"
       new_query = Protocol
         .where(
           where_str,
           [Protocol.protocol_types[:unlinked], Protocol.protocol_types[:linked]],
           module_ids,
           Protocol.protocol_types[:in_repository_private],
-          org_ids,
+          team_ids,
           user.id,
           Protocol.protocol_types[:in_repository_public],
-          org_ids,
+          team_ids,
           Protocol.protocol_types[:in_repository_archived],
-          org_ids,
+          team_ids,
           user.id
         )
     else
@@ -108,10 +108,10 @@ class Protocol < ActiveRecord::Base
           [Protocol.protocol_types[:unlinked], Protocol.protocol_types[:linked]],
           module_ids,
           Protocol.protocol_types[:in_repository_private],
-          org_ids,
+          team_ids,
           user.id,
           Protocol.protocol_types[:in_repository_public],
-          org_ids
+          team_ids
         )
     end
 
@@ -163,14 +163,14 @@ class Protocol < ActiveRecord::Base
 
   def self.new_blank_for_module(my_module)
     Protocol.new(
-      organization: my_module.experiment.project.organization,
+      team: my_module.experiment.project.team,
       protocol_type: :unlinked,
       my_module: my_module
     )
   end
 
   # Deep-clone given array of assets
-  def self.deep_clone_assets(assets_to_clone, org)
+  def self.deep_clone_assets(assets_to_clone, team)
     assets_to_clone.each do |src_id, dest_id|
       src = Asset.find_by_id(src_id)
       dest = Asset.find_by_id(dest_id)
@@ -195,10 +195,10 @@ class Protocol < ActiveRecord::Base
           file_present: true
         )
 
-        # Update organization's space taken
-        org.reload
-        org.take_space(dest.estimated_size)
-        org.save
+        # Update team's space taken
+        team.reload
+        team.take_space(dest.estimated_size)
+        team.save
       end
     end
   end
@@ -283,7 +283,7 @@ class Protocol < ActiveRecord::Base
     # Call clone helper
     Protocol.delay(queue: :assets).deep_clone_assets(
       assets_to_clone,
-      dest.organization
+      dest.team
     )
   end
 
@@ -429,7 +429,7 @@ class Protocol < ActiveRecord::Base
             if kw.blank?
               kw = ProtocolKeyword.create(
                 name: kw_name,
-                organization: self.organization
+                team: self.team
               )
             end
             self.protocol_keywords << kw
@@ -506,7 +506,7 @@ class Protocol < ActiveRecord::Base
       name: new_name,
       protocol_type: new_protocol_type,
       added_by: current_user,
-      organization: self.organization
+      team: self.team
     )
     if clone.in_repository_public?
       clone.published_on = Time.now
@@ -564,7 +564,7 @@ class Protocol < ActiveRecord::Base
       authors: self.authors,
       description: self.description,
       added_by: current_user,
-      organization: self.organization,
+      team: self.team,
       protocol_type: self.protocol_type,
       published_on: self.in_repository_public? ? Time.now : nil,
     )
@@ -583,8 +583,8 @@ class Protocol < ActiveRecord::Base
     end
 
     # Release space taken by the step
-    self.organization.release_space(st)
-    self.organization.save
+    self.team.release_space(st)
+    self.team.save
 
     # Reload protocol
     self.reload

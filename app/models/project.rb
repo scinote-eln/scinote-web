@@ -7,9 +7,9 @@ class Project < ActiveRecord::Base
   validates :name,
             length: { minimum: Constants::NAME_MIN_LENGTH,
                       maximum: Constants::NAME_MAX_LENGTH },
-            uniqueness: { scope: :organization, case_sensitive: false }
+            uniqueness: { scope: :team, case_sensitive: false }
   validates :visibility, presence: true
-  validates :organization, presence: true
+  validates :team, presence: true
 
   belongs_to :created_by, foreign_key: 'created_by_id', class_name: 'User'
   belongs_to :last_modified_by, foreign_key: 'last_modified_by_id', class_name: 'User'
@@ -24,14 +24,14 @@ class Project < ActiveRecord::Base
   has_many :tags, inverse_of: :project
   has_many :reports, inverse_of: :project, dependent: :destroy
   has_many :report_elements, inverse_of: :project, dependent: :destroy
-  belongs_to :organization, inverse_of: :projects
+  belongs_to :team, inverse_of: :projects
 
   def self.search(
     user,
     include_archived,
     query = nil,
     page = 1,
-    current_organization = nil
+    current_team = nil
   )
 
     if query
@@ -40,12 +40,12 @@ class Project < ActiveRecord::Base
       a_query = query
     end
 
-    if current_organization
+    if current_team
       new_query = Project
                   .distinct
                   .joins(:user_projects)
-                  .where('projects.organization_id = ?',
-                         current_organization.id)
+                  .where('projects.team_id = ?',
+                         current_team.id)
                   .where('projects.visibility = 1 OR user_projects.user_id = ?',
                          user.id)
                   .where_attributes_like(:name, a_query)
@@ -56,10 +56,10 @@ class Project < ActiveRecord::Base
         return new_query.where('projects.archived = ?', false)
       end
     else
-      org_ids =
+      team_ids =
         Organization
-        .joins(:user_organizations)
-        .where('user_organizations.user_id = ?', user.id)
+        .joins(:user_teams)
+        .where('user_teams.user_id = ?', user.id)
         .select('id')
         .distinct
 
@@ -67,7 +67,7 @@ class Project < ActiveRecord::Base
         new_query = Project
                     .distinct
                     .joins(:user_projects)
-                    .where('projects.organization_id IN (?)', org_ids)
+                    .where('projects.team_id IN (?)', team_ids)
                     .where(
                       'projects.visibility = 1 OR user_projects.user_id = ?',
                       user.id
@@ -78,7 +78,7 @@ class Project < ActiveRecord::Base
         new_query = Project
                     .distinct
                     .joins(:user_projects)
-                    .where('projects.organization_id IN (?)', org_ids)
+                    .where('projects.team_id IN (?)', team_ids)
                     .where(
                       'projects.visibility = 1 OR user_projects.user_id = ?',
                       user.id
@@ -116,8 +116,8 @@ class Project < ActiveRecord::Base
 
   def unassigned_users
     User
-      .joins('INNER JOIN user_organizations ON users.id = user_organizations.user_id')
-      .where('user_organizations.organization_id = ?', organization)
+      .joins('INNER JOIN user_teams ON users.id = user_teams.user_id')
+      .where('user_teams.team_id = ?', team)
       .where.not(confirmed_at: nil)
       .where('users.id NOT IN (?)',
              UserProject.where(project: self).select(:user_id).distinct)
@@ -160,7 +160,7 @@ class Project < ActiveRecord::Base
   # Writes to user log.
   def log(message)
     final = "[%s] %s" % [name, message]
-    organization.log(final)
+    team.log(final)
   end
 
   def assigned_samples

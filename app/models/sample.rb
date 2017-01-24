@@ -5,11 +5,11 @@ class Sample < ActiveRecord::Base
   validates :name,
             presence: true,
             length: { maximum: Constants::NAME_MAX_LENGTH }
-  validates :user, :organization, presence: true
+  validates :user, :team, presence: true
 
   belongs_to :user, inverse_of: :samples
   belongs_to :last_modified_by, foreign_key: 'last_modified_by_id', class_name: 'User'
-  belongs_to :organization, inverse_of: :samples
+  belongs_to :team, inverse_of: :samples
   belongs_to :sample_group, inverse_of: :samples
   belongs_to :sample_type, inverse_of: :samples
   has_many :sample_my_modules, inverse_of: :sample, dependent: :destroy
@@ -24,12 +24,12 @@ class Sample < ActiveRecord::Base
     include_archived,
     query = nil,
     page = 1,
-    current_organization = nil
+    current_team = nil
   )
-    org_ids =
+    team_ids =
       Organization
-      .joins(:user_organizations)
-      .where("user_organizations.user_id = ?", user.id)
+      .joins(:user_teams)
+      .where("user_teams.user_id = ?", user.id)
       .select("id")
       .distinct
 
@@ -39,10 +39,10 @@ class Sample < ActiveRecord::Base
       a_query = query
     end
 
-    if current_organization
+    if current_team
       new_query = Sample
                   .distinct
-                  .where('samples.organization_id = ?', current_organization.id)
+                  .where('samples.team_id = ?', current_team.id)
                   .where_attributes_like(['samples.name'], a_query)
 
       return new_query
@@ -56,7 +56,7 @@ class Sample < ActiveRecord::Base
                          'samples.sample_group_id = sample_groups.id')
                   .joins('LEFT OUTER JOIN sample_custom_fields ON ' \
                          'samples.id = sample_custom_fields.sample_id')
-                  .where('samples.organization_id IN (?)', org_ids)
+                  .where('samples.team_id IN (?)', team_ids)
                   .where_attributes_like(
                     [
                       'samples.name',

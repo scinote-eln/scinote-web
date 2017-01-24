@@ -1,19 +1,19 @@
-class UserOrganization < ActiveRecord::Base
+class UserTeam < ActiveRecord::Base
   enum role: { guest: 0, normal_user: 1, admin: 2 }
 
   validates :role, presence: true
   validates :user, presence: true
-  validates :organization, presence: true
+  validates :team, presence: true
 
-  belongs_to :user, inverse_of: :user_organizations
+  belongs_to :user, inverse_of: :user_teams
   belongs_to :assigned_by, foreign_key: 'assigned_by_id', class_name: 'User'
-  belongs_to :organization, inverse_of: :user_organizations
+  belongs_to :team, inverse_of: :user_teams
 
   before_destroy :destroy_associations
   after_create :create_samples_table_state
 
   def role_str
-    I18n.t("user_organizations.enums.role.#{role.to_s}")
+    I18n.t("user_teams.enums.role.#{role.to_s}")
   end
 
   def create_samples_table_state
@@ -21,8 +21,8 @@ class UserOrganization < ActiveRecord::Base
   end
 
   def destroy_associations
-    # Destroy the user from all organization's projects
-    organization.projects.each do |project|
+    # Destroy the user from all team's projects
+    team.projects.each do |project|
       up2 = (project.user_projects.select { |up| up.user == self.user }).first
       if up2.present?
         up2.destroy
@@ -30,16 +30,16 @@ class UserOrganization < ActiveRecord::Base
     end
   end
 
-  # returns user_organizations where the user is in org
-  def self.user_in_organization(user, organization)
-    where(user: user, organization: organization)
+  # returns user_teams where the user is in team
+  def self.user_in_team(user, team)
+    where(user: user, team: team)
   end
 
   def destroy(new_owner)
-    # If any project of the organization has the sole owner and that
-    # owner is the user to be removed from the organization, then we must
+    # If any project of the team has the sole owner and that
+    # owner is the user to be removed from the team, then we must
     # create a new owner of the project (the provided user).
-    organization.projects.find_each do |project|
+    team.projects.find_each do |project|
       owners = project.user_projects.where(role: 0)
       if owners.count == 1 && owners.first.user == user
         if project.users.exists?(new_owner.id)

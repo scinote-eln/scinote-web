@@ -1,4 +1,4 @@
-class Organization < ActiveRecord::Base
+class Team < ActiveRecord::Base
   include SearchableModel
 
   # Not really MVC-compliant, but we just use it for logger
@@ -14,17 +14,17 @@ class Organization < ActiveRecord::Base
 
   belongs_to :created_by, :foreign_key => 'created_by_id', :class_name => 'User'
   belongs_to :last_modified_by, foreign_key: 'last_modified_by_id', class_name: 'User'
-  has_many :user_organizations, inverse_of: :organization, dependent: :destroy
-  has_many :users, through: :user_organizations
-  has_many :samples, inverse_of: :organization
-  has_many :samples_tables, inverse_of: :organization, dependent: :destroy
-  has_many :sample_groups, inverse_of: :organization
-  has_many :sample_types, inverse_of: :organization
-  has_many :logs, inverse_of: :organization
-  has_many :projects, inverse_of: :organization
-  has_many :custom_fields, inverse_of: :organization
-  has_many :protocols, inverse_of: :organization, dependent: :destroy
-  has_many :protocol_keywords, inverse_of: :organization, dependent: :destroy
+  has_many :user_teams, inverse_of: :team, dependent: :destroy
+  has_many :users, through: :user_teams
+  has_many :samples, inverse_of: :team
+  has_many :samples_tables, inverse_of: :team, dependent: :destroy
+  has_many :sample_groups, inverse_of: :team
+  has_many :sample_types, inverse_of: :team
+  has_many :logs, inverse_of: :team
+  has_many :projects, inverse_of: :team
+  has_many :custom_fields, inverse_of: :team
+  has_many :protocols, inverse_of: :team, dependent: :destroy
+  has_many :protocol_keywords, inverse_of: :team, dependent: :destroy
 
   # Based on file's extension opens file (used for importing)
   def self.open_spreadsheet(file)
@@ -119,7 +119,7 @@ class Organization < ActiveRecord::Base
 
       sample = Sample.new(
         name: sheet.row(i)[sname_index],
-        organization_id: id,
+        team_id: id,
         user: user
       )
 
@@ -128,26 +128,26 @@ class Organization < ActiveRecord::Base
           # We need to have sample saved before messing with custom fields (they
           # need sample id)
           if index == stype_index
-            stype = SampleType.where(name: value, organization_id: id).take();
+            stype = SampleType.where(name: value, team_id: id).take();
 
             if stype
               sample.sample_type = stype
             else
               sample.create_sample_type(
                 name: value,
-                organization_id: id
+                team_id: id
               )
             end
             sample.save
           elsif index == sgroup_index
-            sgroup = SampleGroup.where(name: value, organization_id: id).take();
+            sgroup = SampleGroup.where(name: value, team_id: id).take();
 
             if sgroup
               sample.sample_group = sgroup
             else
               sample.create_sample_group(
                 name: value,
-                organization_id: id
+                team_id: id
               )
             end
             sample.save
@@ -266,14 +266,14 @@ class Organization < ActiveRecord::Base
     fields["-3"] = I18n.t("samples.table.sample_group")
 
     # Add all other custom fields
-    CustomField.where(organization_id: id).order(:created_at).each do |cf|
+    CustomField.where(team_id: id).order(:created_at).each do |cf|
       fields[cf.id] = cf.name
     end
 
     fields
   end
 
-  # (re)calculate the space taken by this organization
+  # (re)calculate the space taken by this team
   def calculate_space_taken
     st = 0
     projects.includes(
@@ -297,7 +297,7 @@ class Organization < ActiveRecord::Base
     end
     # project.experiments.each |experiment|
     self.space_taken = [st, Constants::MINIMAL_ORGANIZATION_SPACE_TAKEN].max
-    Rails::logger.info "Organization #{self.id}: " +
+    Rails::logger.info "Team #{self.id}: " +
       "space (re)calculated to: " +
       "#{self.space_taken}B (#{number_to_human_size(self.space_taken)})"
   end
@@ -306,7 +306,7 @@ class Organization < ActiveRecord::Base
   def take_space(space)
     orig_space = self.space_taken
     self.space_taken += space
-    Rails::logger.info "Organization #{self.id}: " +
+    Rails::logger.info "Team #{self.id}: " +
       "space taken: " +
       "#{orig_space}B + #{space}B = " +
       "#{self.space_taken}B (#{number_to_human_size(self.space_taken)})"
@@ -317,13 +317,13 @@ class Organization < ActiveRecord::Base
     orig_space = self.space_taken
     self.space_taken = [space_taken - space,
                         Constants::MINIMAL_ORGANIZATION_SPACE_TAKEN].max
-    Rails::logger.info "Organization #{self.id}: " +
+    Rails::logger.info "Team #{self.id}: " +
       "space released: " +
       "#{orig_space}B - #{space}B = " +
       "#{self.space_taken}B (#{number_to_human_size(self.space_taken)})"
   end
 
   def protocol_keywords_list
-    ProtocolKeyword.where(organization: self).pluck(:name)
+    ProtocolKeyword.where(team: self).pluck(:name)
   end
 end
