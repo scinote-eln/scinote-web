@@ -215,6 +215,8 @@ function dataTableInit() {
   // Handle table draw event
   table.on('draw', function() {
     updateDataTableSelectAllCtrl(table);
+    // Prevent sample row toggling when selecting user smart annotation link
+    SmartAnnotation.preventPropagation('.atwho-user-popover');
   });
 
   return table;
