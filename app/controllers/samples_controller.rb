@@ -11,12 +11,18 @@ class SamplesController < ApplicationController
     respond_to do |format|
       format.html
       if can_create_samples(@organization)
-      format.json {
-        render json: {
-          sample_groups: @organization.sample_groups.as_json(only: [:id, :name, :color]),
-          sample_types: @organization.sample_types.as_json(only: [:id, :name])
-        }
-      }
+        groups = @organization.sample_groups.map do |g|
+          { id: g.id, name: sanitize_input(g.name), color: g.color }
+        end
+        types = @organization.sample_types.map do |t|
+          { id: t.id, name: sanitize_input(t.name) }
+        end
+        format.json do
+          render json: {
+            sample_groups: groups.as_json,
+            sample_types: types.as_json
+          }
+        end
       else
         format.json { render json: {}, status: :unauthorized }
       end
