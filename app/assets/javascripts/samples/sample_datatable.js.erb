@@ -215,6 +215,8 @@ function dataTableInit() {
   // Handle table draw event
   table.on('draw', function() {
     updateDataTableSelectAllCtrl(table);
+    // Prevent sample row toggling when selecting user smart annotation link
+    SmartAnnotation.preventPropagation('.atwho-user-popover');
   });
 
   return table;
@@ -678,6 +680,12 @@ function onClickAddSample() {
             $("select[name=sample_group_id]").selectpicker();
             $("select[name=sample_type_id]").selectpicker();
 
+            // initialize smart annotation
+            _.each($('[data-object="custom_fields"]'), function(el) {
+              if(_.isUndefined($(el).data('atwho'))) {
+                SmartAnnotation.init(el);
+              }
+            });
             // Adjust columns width in table header
             table.columns.adjust();
         },
