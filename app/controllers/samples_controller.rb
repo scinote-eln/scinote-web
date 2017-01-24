@@ -128,8 +128,12 @@ class SamplesController < ApplicationController
         sample_group: @sample.sample_group.nil? ? "" : @sample.sample_group.id,
         custom_fields: {}
       },
-      sample_groups: @organization.sample_groups.as_json(only: [:id, :name, :color]),
-      sample_types: @organization.sample_types.as_json(only: [:id, :name])
+      sample_groups: @organization.sample_groups.map do |g|
+        { id: g.id, name: sanitize_input(g.name), color: g.color }
+      end,
+      sample_types: @organization.sample_types.map do |t|
+        { id: t.id, name: sanitize_input(t.name) }
+      end
     }
 
     # Add custom fields ids as key (easier lookup on js side)
