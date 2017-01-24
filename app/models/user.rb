@@ -65,8 +65,8 @@ class User < ActiveRecord::Base
   has_many :modified_my_modules, class_name: 'MyModule', foreign_key: 'last_modified_by_id'
   has_many :archived_my_modules, class_name: 'MyModule', foreign_key: 'archived_by_id'
   has_many :restored_my_modules, class_name: 'MyModule', foreign_key: 'restored_by_id'
-  has_many :created_teams, class_name: 'Organization', foreign_key: 'created_by_id'
-  has_many :modified_teams, class_name: 'Organization', foreign_key: 'last_modified_by_id'
+  has_many :created_teams, class_name: 'Team', foreign_key: 'created_by_id'
+  has_many :modified_teams, class_name: 'Team', foreign_key: 'last_modified_by_id'
   has_many :created_projects, class_name: 'Project', foreign_key: 'created_by_id'
   has_many :modified_projects, class_name: 'Project', foreign_key: 'last_modified_by_id'
   has_many :archived_projects, class_name: 'Project', foreign_key: 'archived_by_id'
@@ -87,7 +87,7 @@ class User < ActiveRecord::Base
   has_many :created_tags, class_name: 'Tag', foreign_key: 'created_by_id'
   has_many :modified_tags, class_name: 'Tag', foreign_key: 'last_modified_by_id'
   has_many :assigned_user_my_modules, class_name: 'UserMyModule', foreign_key: 'assigned_by_id'
-  has_many :assigned_user_teams, class_name: 'UserOrganization', foreign_key: 'assigned_by_id'
+  has_many :assigned_user_teams, class_name: 'UserTeam', foreign_key: 'assigned_by_id'
   has_many :assigned_user_projects, class_name: 'UserProject', foreign_key: 'assigned_by_id'
   has_many :added_protocols, class_name: 'Protocol', foreign_key: 'added_by_id', inverse_of: :added_by
   has_many :archived_protocols, class_name: 'Protocol', foreign_key: 'archived_by_id', inverse_of: :archived_by
@@ -125,7 +125,7 @@ class User < ActiveRecord::Base
 
     if team_to_ignore.present?
       ignored_ids =
-        UserOrganization
+        UserTeam
         .select(:user_id)
         .where(team_id: team_to_ignore.id)
       result =

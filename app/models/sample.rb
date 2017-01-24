@@ -27,7 +27,7 @@ class Sample < ActiveRecord::Base
     current_team = nil
   )
     team_ids =
-      Organization
+      Team
       .joins(:user_teams)
       .where("user_teams.user_id = ?", user.id)
       .select("id")

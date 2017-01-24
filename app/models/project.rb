@@ -57,7 +57,7 @@ class Project < ActiveRecord::Base
       end
     else
       team_ids =
-        Organization
+        Team
         .joins(:user_teams)
         .where('user_teams.user_id = ?', user.id)
         .select('id')

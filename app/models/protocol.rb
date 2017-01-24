@@ -68,7 +68,7 @@ class Protocol < ActiveRecord::Base
 
   def self.search(user, include_archived, query = nil, page = 1)
     team_ids =
-      Organization
+      Team
       .joins(:user_teams)
       .where("user_teams.user_id = ?", user.id)
       .select("id")
