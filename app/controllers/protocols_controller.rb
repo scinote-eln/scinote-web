@@ -74,7 +74,7 @@ class ProtocolsController < ApplicationController
       format.json {
         render json: ::ProtocolsDatatable.new(
           view_context,
-          @current_organization,
+          @current_team,
           @type,
           current_user
         )
@@ -204,7 +204,7 @@ class ProtocolsController < ApplicationController
 
   def create
     @protocol = Protocol.new(
-      organization: @current_organization,
+      team: @current_team,
       protocol_type: Protocol.protocol_types[@type == :public ? :in_repository_public : :in_repository_private],
       added_by: current_user
     )
@@ -224,7 +224,7 @@ class ProtocolsController < ApplicationController
           render json: {
             url: edit_protocol_path(
               @protocol,
-              organization: @current_organization,
+              team: @current_team,
               type: @type
             )
           }
@@ -531,7 +531,7 @@ class ProtocolsController < ApplicationController
       transaction_error = false
       Protocol.transaction do
         begin
-          protocol = import_new_protocol(@protocol_json, @organization, @type, current_user)
+          protocol = import_new_protocol(@protocol_json, @team, @type, current_user)
         rescue Exception
           transaction_error = true
           raise ActiveRecord:: Rollback
@@ -674,7 +674,7 @@ class ProtocolsController < ApplicationController
       format.json {
         render json: ::LoadFromRepositoryProtocolsDatatable.new(
           view_context,
-          @protocol.organization,
+          @protocol.team,
           @type,
           current_user
         )
@@ -769,7 +769,7 @@ class ProtocolsController < ApplicationController
           html: render_to_string({
             partial: "protocols/header/edit_keywords_modal_body.html.erb"
           }),
-          keywords: @protocol.organization.protocol_keywords_list
+          keywords: @protocol.team.protocol_keywords_list
         }
       }
     end
@@ -851,16 +851,16 @@ class ProtocolsController < ApplicationController
     end
   end
 
-  def load_organization_and_type
-    @current_organization = current_organization
+  def load_team_and_type
+    @current_team = current_team
     # :public, :private or :archive
     @type = (params[:type] || "public").to_sym
   end
 
   def check_view_all_permissions
-    load_organization_and_type
+    load_team_and_type
 
-    unless can_view_organization_protocols(@current_organization)
+    unless can_view_team_protocols(@current_team)
       render_403
     end
   end
@@ -873,15 +873,15 @@ class ProtocolsController < ApplicationController
   end
 
   def check_create_permissions
-    load_organization_and_type
+    load_team_and_type
 
-    if !can_create_new_protocol(@current_organization) || @type == :archive
+    if !can_create_new_protocol(@current_team) || @type == :archive
       render_403
     end
   end
 
   def check_clone_permissions
-    load_organization_and_type
+    load_team_and_type
     @original = Protocol.find_by_id(params[:id])
 
     if @original.blank? ||
@@ -891,7 +891,7 @@ class ProtocolsController < ApplicationController
   end
 
   def check_edit_permissions
-    load_organization_and_type
+    load_team_and_type
     @protocol = Protocol.find_by_id(params[:id])
 
     unless can_edit_protocol(@protocol)
@@ -1012,13 +1012,13 @@ class ProtocolsController < ApplicationController
 
   def check_import_permissions
     @protocol_json = params[:protocol]
-    @organization = Organization.find(params[:organization_id])
+    @team = Organization.find(params[:team_id])
     @type = params[:type] ? params[:type].to_sym : nil
     if !(
       @protocol_json.present? &&
-      @organization.present? &&
+      @team.present? &&
       (@type == :public || @type == :private) &&
-      can_import_protocols(@organization)
+      can_import_protocols(@team)
     )
       render_403
     end

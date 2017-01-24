@@ -30,7 +30,7 @@ class OrganizationsController < ApplicationController
             # Check if we actually have any rows (last_row > 1)
             if sheet.last_row.between?(0, 1)
               flash[:notice] = t(
-                "organizations.parse_sheet.errors.empty_file")
+                "teams.parse_sheet.errors.empty_file")
               redirect_to session.delete(:return_to) and return
             end
 
@@ -40,7 +40,7 @@ class OrganizationsController < ApplicationController
             @rows << Hash[[@header, sheet.row(2)].transpose]
 
             # Fill in fields for dropdown
-            @available_fields = @organization.get_available_sample_fields
+            @available_fields = @team.get_available_sample_fields
             # Truncate long fields
             @available_fields.update(@available_fields) do |_k, v|
               v.truncate(Constants::NAME_TRUNCATION_LENGTH_DROPDOWN)
@@ -62,7 +62,7 @@ class OrganizationsController < ApplicationController
                 }
               }
             else
-              error = t("organizations.parse_sheet.errors.temp_file_failure")
+              error = t("teams.parse_sheet.errors.temp_file_failure")
               format.html {
                 flash[:alert] = error
                 redirect_to session.delete(:return_to)
@@ -74,7 +74,7 @@ class OrganizationsController < ApplicationController
             end
           end
         rescue ArgumentError, CSV::MalformedCSVError
-          error = t('organizations.parse_sheet.errors.invalid_file',
+          error = t('teams.parse_sheet.errors.invalid_file',
                     encoding: ''.encoding)
           format.html {
             flash[:alert] = error
@@ -85,7 +85,7 @@ class OrganizationsController < ApplicationController
               status: :unprocessable_entity
           }
         rescue TypeError
-          error =  t("organizations.parse_sheet.errors.invalid_extension")
+          error =  t("teams.parse_sheet.errors.invalid_extension")
           format.html {
             flash[:alert] = error
             redirect_to session.delete(:return_to)
@@ -96,7 +96,7 @@ class OrganizationsController < ApplicationController
           }
         end
       else
-        error = t("organizations.parse_sheet.errors.no_file_selected")
+        error = t("teams.parse_sheet.errors.no_file_selected")
         format.html {
           flash[:alert] = error
           session[:return_to] ||= request.referer
@@ -130,7 +130,7 @@ class OrganizationsController < ApplicationController
 
                 # Check if there exist mapping for sample name (it's mandatory)
                 if params[:mappings].has_value?("-1")
-                  result = @organization.import_samples(@sheet, params[:mappings], current_user)
+                  result = @team.import_samples(@sheet, params[:mappings], current_user)
                   nr_of_added = result[:nr_of_added]
                   total_nr = result[:total_nr]
 
@@ -138,10 +138,10 @@ class OrganizationsController < ApplicationController
                     # If no errors are present, redirect back
                     # to samples table
                     flash[:success] = t(
-                      "organizations.import_samples.success_flash",
+                      "teams.import_samples.success_flash",
                       nr: nr_of_added,
                       samples: t(
-                        "organizations.import_samples.sample",
+                        "teams.import_samples.sample",
                         count: total_nr
                       )
                     )
@@ -157,10 +157,10 @@ class OrganizationsController < ApplicationController
                     # Otherwise, also redirect back,
                     # but display different message
                     flash[:alert] = t(
-                      "organizations.import_samples.partial_success_flash",
+                      "teams.import_samples.partial_success_flash",
                       nr: nr_of_added,
                       samples: t(
-                        "organizations.import_samples.sample",
+                        "teams.import_samples.sample",
                         count: total_nr
                       )
                     )
@@ -176,7 +176,7 @@ class OrganizationsController < ApplicationController
                 else
                   # This is currently the only AJAX error response
                   flash_alert = t(
-                    "organizations.import_samples.errors.no_sample_name")
+                    "teams.import_samples.errors.no_sample_name")
                   format.html {
                     flash[:alert] = flash_alert
                     redirect_to session.delete(:return_to)
@@ -195,7 +195,7 @@ class OrganizationsController < ApplicationController
                 # This code should never execute unless user tampers with
                 # JS (selects same column in more than one dropdown)
                 flash_alert = t(
-                  "organizations.import_samples.errors.duplicated_values")
+                  "teams.import_samples.errors.duplicated_values")
                 format.html {
                   flash[:alert] = flash_alert
                   redirect_to session.delete(:return_to)
@@ -213,7 +213,7 @@ class OrganizationsController < ApplicationController
             else
               @temp_file.destroy
               flash[:alert] = t(
-                "organizations.import_samples.errors.no_data_to_parse")
+                "teams.import_samples.errors.no_data_to_parse")
               format.html {
                 redirect_to session.delete(:return_to)
               }
@@ -225,7 +225,7 @@ class OrganizationsController < ApplicationController
           else
             @temp_file.destroy
             flash[:alert] = t(
-              "organizations.import_samples.errors.session_expired")
+              "teams.import_samples.errors.session_expired")
             format.html {
               redirect_to session.delete(:return_to)
             }
@@ -237,7 +237,7 @@ class OrganizationsController < ApplicationController
         else
           # No temp file to begin with, so no need to destroy it
           flash[:alert] = t(
-            "organizations.import_samples.errors.temp_file_not_found")
+            "teams.import_samples.errors.temp_file_not_found")
           format.html {
             redirect_to session.delete(:return_to)
           }
@@ -248,7 +248,7 @@ class OrganizationsController < ApplicationController
         end
       else
         flash[:alert] = t(
-          "organizations.import_samples.errors.temp_file_not_found")
+          "teams.import_samples.errors.temp_file_not_found")
         format.html {
           redirect_to session.delete(:return_to)
         }
@@ -274,7 +274,7 @@ class OrganizationsController < ApplicationController
             samples << sample
           end
         end
-        format.csv { send_data @organization.to_csv(samples, params[:header_ids]) }
+        format.csv { send_data @team.to_csv(samples, params[:header_ids]) }
       else
         format.csv { render nothing: true }
       end
@@ -282,21 +282,21 @@ class OrganizationsController < ApplicationController
   end
 
   def load_vars
-    @organization = Organization.find_by_id(params[:id])
+    @team = Organization.find_by_id(params[:id])
 
-    unless @organization
+    unless @team
       render_404
     end
   end
 
   def check_create_sample_permissions
-    unless can_create_samples(@organization)
+    unless can_create_samples(@team)
       render_403
     end
   end
 
   def check_view_samples_permission
-    unless can_view_samples(@organization)
+    unless can_view_samples(@team)
       render_403
     end
   end

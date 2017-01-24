@@ -7,9 +7,9 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
   before_action :authenticate_user!
-  helper_method :current_organization
+  helper_method :current_team
   before_action :generate_intro_tutorial, if: :is_current_page_root?
-  before_action :update_current_organization, if: :user_signed_in?
+  before_action :update_current_team, if: :user_signed_in?
   around_action :set_time_zone, if: :current_user
   layout 'main'
 
@@ -25,9 +25,9 @@ class ApplicationController < ActionController::Base
     controller_name == 'projects' && action_name == 'index'
   end
 
-  # Sets current organization for all controllers
-  def current_organization
-    Organization.find_by_id(current_user.current_organization_id)
+  # Sets current team for all controllers
+  def current_team
+    Organization.find_by_id(current_user.current_team_id)
   end
 
   protected
@@ -37,8 +37,8 @@ class ApplicationController < ActionController::Base
       @my_module.log(message)
     elsif @project
       @project.log(message)
-    elsif @organization
-      @organization.log(message)
+    elsif @team
+      @team.log(message)
     else
       logger.error(message)
     end
@@ -73,7 +73,7 @@ class ApplicationController < ActionController::Base
   def generate_intro_tutorial
     if Rails.configuration.x.enable_tutorial &&
       current_user.no_tutorial_done? &&
-      current_user.organizations.where(created_by: current_user).count > 0 then
+      current_user.teams.where(created_by: current_user).count > 0 then
       demo_cookie = seed_demo_data current_user
       cookies[:tutorial_data] = {
         value: demo_cookie,
@@ -83,11 +83,11 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def update_current_organization
-    if current_user.current_organization_id.blank? &&
-       current_user.organizations.count > 0
+  def update_current_team
+    if current_user.current_team_id.blank? &&
+       current_user.teams.count > 0
       current_user.update(
-        current_organization_id: current_user.organizations.first.id
+        current_team_id: current_user.teams.first.id
       )
     end
   end

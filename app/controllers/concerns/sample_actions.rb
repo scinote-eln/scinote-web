@@ -45,7 +45,7 @@ module SampleActions
   end
 
   def check_destroy_samples_permissions
-    unless can_delete_samples(@project.organization)
+    unless can_delete_samples(@project.team)
       render_403
     end
   end

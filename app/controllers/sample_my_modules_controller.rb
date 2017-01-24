@@ -6,10 +6,10 @@ class SampleMyModulesController < ApplicationController
     @number_of_samples = @my_module.number_of_samples
     @samples = @my_module.first_n_samples
 
-    current_organization_switch(@my_module
+    current_team_switch(@my_module
                                 .experiment
                                 .project
-                                .organization)
+                                .team)
     respond_to do |format|
       format.json {
         render :json => {

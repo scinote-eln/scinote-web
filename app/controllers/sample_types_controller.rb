@@ -7,7 +7,7 @@ class SampleTypesController < ApplicationController
 
   def create
     @sample_type = SampleType.new(sample_type_params)
-    @sample_type.organization = @organization
+    @sample_type.team = @team
     @sample_type.created_by = current_user
     @sample_type.last_modified_by = current_user
 
@@ -18,7 +18,7 @@ class SampleTypesController < ApplicationController
             html: render_to_string(
               partial: 'sample_type.html.erb',
                        locals: { sample_type: @sample_type,
-                                 organization: @organization }
+                                 team: @team }
             )
           },
           status: :ok
@@ -33,8 +33,8 @@ class SampleTypesController < ApplicationController
   end
 
   def index
-    render_404 unless current_organization
-    @sample_types = current_organization.sample_types
+    render_404 unless current_team
+    @sample_types = current_team.sample_types
   end
 
   def edit
@@ -45,7 +45,7 @@ class SampleTypesController < ApplicationController
             render_to_string(
               partial: 'edit.html.erb',
                        locals: { sample_type: @sample_type,
-                                 organization: @organization }
+                                 team: @team }
             ),
           id: @sample_type.id
         }
@@ -63,7 +63,7 @@ class SampleTypesController < ApplicationController
             html: render_to_string(
               partial: 'sample_type.html.erb',
                        locals: { sample_type: @sample_type,
-                                 organization: @organization }
+                                 team: @team }
             )
           }
         else
@@ -81,7 +81,7 @@ class SampleTypesController < ApplicationController
           html: render_to_string(
             partial: 'delete_sample_type_modal.html.erb',
                      locals: { sample_type: @sample_type,
-                               organization: @organization }
+                               team: @team }
           )
         }
       end
@@ -105,7 +105,7 @@ class SampleTypesController < ApplicationController
           html: render_to_string(
             partial: 'sample_type.html.erb',
                      locals: { sample_type: @sample_type,
-                               organization: @organization }
+                               team: @team }
           )
         }
       end
@@ -124,13 +124,13 @@ class SampleTypesController < ApplicationController
   end
 
   def load_vars_nested
-    @organization = Organization.find_by_id(params[:organization_id])
+    @team = Organization.find_by_id(params[:team_id])
 
-    render_404 unless @organization
+    render_404 unless @team
   end
 
   def check_create_permissions
-    render_403 unless can_create_sample_type_in_organization(@organization)
+    render_403 unless can_create_sample_type_in_team(@team)
   end
 
   def set_sample_type
