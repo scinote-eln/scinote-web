@@ -336,11 +336,11 @@ var SmartAnnotation = (function() {
               {query: query},
               function(data) {
                 if (data.users.length < 1) {
-                   callback([{no_results: 1}]);
-                 } else {
-                   callback(data.users);
-                 }
-                initDismissButton();
+                  callback([{no_results: 1}]);
+                } else {
+                  callback(data.users);
+                }
+                initDismissButton($('.atwho-view[style]'));
               }
             );
           },
