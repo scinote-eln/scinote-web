@@ -356,6 +356,7 @@ function initHeaderTooltip() {
   $('.modal-tooltip').hover(function() {
     var $tooltip = $(this).find('.modal-tooltiptext');
     var offsetLeft = $tooltip.offset().left;
+    (offsetLeft + 200) > $(window).width() ? offsetLeft -= 150 : offsetLeft;
     var offsetTop = $tooltip.offset().top;
     $('body').append($tooltip);
     $tooltip.css('background-color', '#d2d2d2');
@@ -1103,6 +1104,7 @@ function changeToEditMode() {
         li.removeClass('col-invisible');
         column.visible(true);
         table.setColumnSearchable(column.index(), true);
+        initHeaderTooltip();
       }
 
       // Re-filter/search if neccesary
@@ -1162,6 +1164,7 @@ function changeToEditMode() {
             .html(generateColumnNameTooltip(newName));
 
           cancelEditMode();
+          initHeaderTooltip();
         },
         error: function(xhr) {
           dropdownList.sortable('disable');
