@@ -1464,7 +1464,7 @@ en:
     res:
       archived: "(archived)"
       deleted: "(deleted)"
-    popover: "%{role} of %{organization} and member since %{time}."
+    popover_html: "<span class='silver'>Team:</span>&nbsp;%{organization} <br> <span class='silver'>Role:</span>&nbsp;%{role} <br> <span class='silver'>Joined:</span>&nbsp;%{time}"
   # This section contains general words that can be used in any parts of
   # application.
 
