@@ -57,6 +57,14 @@ module ApplicationHelper
   end
 
   def smart_annotation_parser(text, organization = nil)
+    new_text = smart_annotation_filter_resources(text)
+    new_text = smart_annotation_filter_users(new_text, organization)
+    new_text
+  end
+
+  # Check if text have smart annotations of resources
+  # and outputs a link to resource
+  def smart_annotation_filter_resources(text)
     sa_reg = /\[\#(.*?)~(prj|exp|tsk|sam)~([0-9a-zA-Z]+)\]/
     new_text = text.gsub(sa_reg) do |el|
       match = el.match(sa_reg)
@@ -112,9 +120,14 @@ module ApplicationHelper
         end
       end
     end
+    new_text
+  end
 
+  # Check if text have smart annotations of users
+  # and outputs a popover with user information
+  def smart_annotation_filter_users(text, organization)
     sa_user = /\[\@(.*?)~([0-9a-zA-Z]+)\]/
-    new_text = new_text.gsub(sa_user) do |el|
+    new_text = text.gsub(sa_user) do |el|
       match = el.match(sa_user)
       user = User.find_by_id(match[2].base62_decode)
       organization ||= current_organization
@@ -126,15 +139,15 @@ module ApplicationHelper
                    .user_organizations
                    .where('user_organizations.organization_id = ?',
                           organization).first
-        user_description = %(<div class='pull-left'>
+        user_description = %(<div class='col-xs-4'>
          <img src='#{avatar_path(user, :thumb)}' alt='thumb'>
-         </div><div class='pull-right'>
+         </div><div class='col-xs-8'>
          <div class='row'><div class='col-xs-9 text-left'><h5>
          #{user.full_name}</h5></div><div class='col-xs-3 text-right'>
          <span class='glyphicon glyphicon-remove' aria-hidden='true'></span>
          </div></div><div class='row'><div class='col-xs-12'>
-        <p class='user-email'>#{user.email}</p><p>
-        #{I18n.t('atwho.popover',
+        <p class='silver'>#{user.email}</p><p>
+        #{I18n.t('atwho.popover_html',
                  role: user_org.role.capitalize,
                  organization: user_org.organization.name,
                  time: user_org.created_at.strftime('%B %Y'))}
