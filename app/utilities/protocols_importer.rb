@@ -1,5 +1,5 @@
 module ProtocolsImporter
-  include RenamingUtil, TinyMceJsHelper
+  include RenamingUtil
 
   def import_new_protocol(protocol_json, organization, type, user)
     remove_empty_inputs(protocol_json)
@@ -52,11 +52,8 @@ module ProtocolsImporter
     if protocol_json['steps']
       protocol_json['steps'].values.each do |step_json|
       step = Step.create!(
-        name: step_json["name"],
-        description: # Sanitize description HTML
-          sanitize_tiny_mce_js_input(
-            step_json['description']
-          ),
+        name: step_json['name'],
+        description: step_json['description'],
         position: step_pos,
         completed: false,
         user: user,
