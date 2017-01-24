@@ -67,14 +67,7 @@
     </div>
     <div class="row">
       <div class="col-xs-12">
-        <%= auto_link(
-              smart_annotation_parser(
-                simple_format(experiment.description)
-              ),
-              link: :urls,
-              sanitize: false,
-              html: { target: '_blank' }
-            ).html_safe %>
+        <%= custom_auto_link(experiment.description) %>
       </div>
     </div>
   </div>

@@ -39,12 +39,5 @@
 </div>
 <strong><%= comment.user.full_name %>:</strong>
 <div data-role="comment-message-container">
-  <div data-role="comment-message"><%= auto_link(
-    smart_annotation_parser(simple_format(
-      sanitize_input(comment.message)),
-    ),
-    link: :urls,
-    sanitize: false,
-    html: { target: '_blank' }
-  ).html_safe %></div>
+  <div data-role="comment-message"><%= custom_auto_link(comment.message) %></div>
 </div>
