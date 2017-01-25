@@ -30,7 +30,7 @@ module DelayedUploaderTutorial
 
     temp_result.save
     temp_asset.save
-    temp_asset.post_process_file(my_module.experiment.project.organization)
+    temp_asset.post_process_file(my_module.experiment.project.team)
 
     # Create result activity
     Activity.new(
@@ -51,6 +51,6 @@ module DelayedUploaderTutorial
   def self.add_step_asset(step:, current_user:, file_name:)
     temp_asset = DelayedUploaderTutorial.get_asset(current_user, file_name)
     step.assets << temp_asset
-    temp_asset.post_process_file(step.my_module.experiment.project.organization)
+    temp_asset.post_process_file(step.my_module.experiment.project.team)
   end
 end

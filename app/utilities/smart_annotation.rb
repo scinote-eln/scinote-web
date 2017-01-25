@@ -2,18 +2,18 @@ class SmartAnnotation
   include ActionView::Helpers::SanitizeHelper
   include ActionView::Helpers::TextHelper
 
-  attr_writer :current_user, :current_organization, :query
+  attr_writer :current_user, :current_team, :query
 
-  def initialize(current_user, current_organization, query)
+  def initialize(current_user, current_team, query)
     @current_user = current_user
-    @current_organization = current_organization
+    @current_team = current_team
     @query = query
   end
 
   def my_modules
     # Search tasks
     res = MyModule
-          .search(@current_user, false, @query, 1, @current_organization)
+          .search(@current_user, false, @query, 1, @current_team)
           .limit(Constants::ATWHO_SEARCH_LIMIT)
 
     modules_list = []
@@ -40,7 +40,7 @@ class SmartAnnotation
   def projects
     # Search projects
     res = Project
-          .search(@current_user, false, @query, 1, @current_organization)
+          .search(@current_user, false, @query, 1, @current_team)
           .limit(Constants::ATWHO_SEARCH_LIMIT)
 
     projects_list = []
@@ -57,7 +57,7 @@ class SmartAnnotation
   def experiments
     # Search experiments
     res = Experiment
-          .search(@current_user, false, @query, 1, @current_organization)
+          .search(@current_user, false, @query, 1, @current_team)
           .limit(Constants::ATWHO_SEARCH_LIMIT)
 
     experiments_list = []
@@ -78,7 +78,7 @@ class SmartAnnotation
   def samples
     # Search samples
     res = Sample
-          .search(@current_user, false, @query, 1, @current_organization)
+          .search(@current_user, false, @query, 1, @current_team)
           .limit(Constants::ATWHO_SEARCH_LIMIT)
 
     samples_list = []

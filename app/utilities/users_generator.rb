@@ -1,5 +1,4 @@
 module UsersGenerator
-
   # Simply validate the user with the given data,
   # and return an array of errors (which is 0-length
   # if user is valid)
@@ -8,65 +7,57 @@ module UsersGenerator
     email,
     password
   )
-    nu = User.new({
-      full_name: full_name,
-      initials: get_user_initials(full_name),
-      email: email,
-      password: password
-      })
+    nu = User.new(full_name: full_name,
+                  initials: get_user_initials(full_name),
+                  email: email,
+                  password: password)
     nu.validate
     nu.errors
   end
 
   # If confirmed == true, the user is automatically confirmed;
   # otherwise, sciNote sends the "confirmation" email to the user
-  # If private_org_name == nil, private organization is not created.
-  def create_user(
-    full_name,
-    email,
-    password,
-    confirmed,
-    private_org_name,
-    org_ids)
-    nu = User.new({
-      full_name: full_name,
-      initials: get_user_initials(full_name),
-      email: email,
-      password: password,
-      password_confirmation: password
-    })
-    if confirmed then
-      nu.confirmed_at = Time.now
-    end
+  # If private_team_name == nil, private taem is not created.
+  def create_user(full_name,
+                  email,
+                  password,
+                  confirmed,
+                  private_team_name,
+                  team_ids)
+    nu = User.new(full_name: full_name,
+                  initials: get_user_initials(full_name),
+                  email: email,
+                  password: password,
+                  password_confirmation: password)
+
+    nu.confirmed_at = Time.now if confirmed
     nu.save!
 
     # TODO: If user is not confirmed, maybe additional email
     # needs to be sent with his/her password & email?
 
-    # Create user's own organization of needed
-    if private_org_name.present? then
-      create_private_user_organization(nu, private_org_name)
+    # Create user's own team of needed
+    if private_team_name.present?
+      create_private_user_team(nu, private_team_name)
     end
 
-    # Assign user to additional organizations
-    org_ids.each do |org_id|
-      org = Organization.find_by_id(org_id)
-      if org.present?
-        UserOrganization.create({ user: nu, organization: org, role: :admin })
-      end
+    # Assign user to additional teams
+    team_ids.each do |team_id|
+      team = Team.find_by_id(team_id)
+      UserTeam.create(user: nu, team: team, role: :admin) if team.present?
     end
 
-    # Assign user organization as user current organization
-    nu.current_organization_id = nu.organizations.first.id
+    # Assign user team as user current team
+    nu.current_team_id = nu.teams.first.id
     nu.save!
 
     nu.reload
-    return nu
+    nu
   end
 
-  def create_private_user_organization(user, private_org_name)
-    no = Organization.create({ name: private_org_name, created_by: user })
-    UserOrganization.create({ user: user, organization: no, role: :admin })
+  def create_private_user_team(user, private_team_name)
+    no = Team.create(name: private_team_name, created_by: user)
+    UserTeam.create(user: user, team: no, role: :admin)
   end
 
   def print_user(user, password)
@@ -76,8 +67,8 @@ module UsersGenerator
     puts "  Email: #{user.email}"
     puts "  Password: #{password}"
     puts "  Confirmed at: #{user.confirmed_at}"
-    orgs = user.organizations.collect{ |org| org.name }.join(", ")
-    puts "  Member of organizations: #{orgs}"
+    teams = user.teams.collect(&:name).join(', ')
+    puts "  Member of teams: #{teams}"
   end
 
   def generate_user_password
@@ -86,7 +77,6 @@ module UsersGenerator
   end
 
   def get_user_initials(full_name)
-    full_name.split(" ").collect{ |n| n.capitalize[0] }.join[0..3]
+    full_name.split(' ').collect { |n| n.capitalize[0] }.join[0..3]
   end
-
 end

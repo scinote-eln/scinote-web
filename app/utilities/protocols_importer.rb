@@ -1,7 +1,7 @@
 module ProtocolsImporter
   include RenamingUtil
 
-  def import_new_protocol(protocol_json, organization, type, user)
+  def import_new_protocol(protocol_json, team, type, user)
     remove_empty_inputs(protocol_json)
     protocol = Protocol.new(
       name: protocol_json["name"],
@@ -10,7 +10,7 @@ module ProtocolsImporter
       protocol_type: (type == :public ? :in_repository_public : :in_repository_private),
       published_on: (type == :public ? Time.now : nil),
       added_by: user,
-      organization: @organization
+      team: @team
     )
 
     # Try to rename record
@@ -127,7 +127,7 @@ module ProtocolsImporter
 
     # Post process assets
     asset_ids.each do |asset_id|
-      Asset.find(asset_id).post_process_file(protocol.organization)
+      Asset.find(asset_id).post_process_file(protocol.team)
     end
   end
 

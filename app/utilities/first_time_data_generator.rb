@@ -1,58 +1,61 @@
 module FirstTimeDataGenerator
-
   # Create data for tutorial for new users
-  def seed_demo_data user
+  def seed_demo_data(user)
     @user = user
 
-    # First organization that this user created
+    # First team that this user created
     # should contain the "intro" project
-    if cookies[:repeat_tutorial_org_id]
-      org = Organization.find(cookies[:repeat_tutorial_org_id])
-      cookies.delete :repeat_tutorial_org_id
+    if cookies[:repeat_tutorial_org_id] && cookies[:repeat_tutorial_team_id]
+      team = Team.find_by_id(cookies[:repeat_tutorial_org_id])
+      team ||= Team.find_by_id(cookies[:repeat_tutorial_team_id])
+      cookies.delete :repeat_tutorial_org_id if cookies[:repeat_tutorial_org_id]
+      if cookies[:repeat_tutorial_team_id]
+        cookies.delete :repeat_tutorial_team_id
+      end
     else
-      org = user
-        .organizations
-        .where(created_by: user)
-        .order(created_at: :asc)
-        .first
+      team = user
+             .teams
+             .where(created_by: user)
+             .order(created_at: :asc)
+             .first
     end
 
-    # If private private organization does not exist,
+    # If private private team does not exist,
     # there was something wrong with user creation.
     # Do nothing
-    return unless org
+    return unless team
 
     # Create sample types
     SampleType.create(
-      name: "Potato leaves",
-      organization: org
+      name: 'Potato leaves',
+      team: team
     )
 
     SampleType.create(
-      name: "Tea leaves",
-      organization: org
+      name: 'Tea leaves',
+      team: team
     )
 
     SampleType.create(
-      name: "Potato bug",
-      organization: org
+      name: 'Potato bug',
+      team: team
     )
 
     SampleGroup.create(
-      name: "Fodder",
-      organization: org,
+      name: 'Fodder',
+      team: team,
       color: Constants::TAG_COLORS[1]
     )
 
     SampleGroup.create(
-      name: "Nutrient",
-      organization: org,
+      name: 'Nutrient',
+      team: team,
       color: Constants::TAG_COLORS[0]
     )
 
     SampleGroup.create(
-      name: "Seed",
-      organization: org,
+      name: 'Seed',
+      team: team,
       color: Constants::TAG_COLORS[2]
     )
 
@@ -63,10 +66,10 @@ module FirstTimeDataGenerator
     for i in 1..5
       samples << Sample.create(
         name: sample_name + i.to_s,
-        organization: org,
+        team: team,
         user: user,
-        sample_type: rand < 0.8 ? pluck_random(org.sample_types) : nil,
-        sample_group: rand < 0.8 ? pluck_random(org.sample_groups) : nil
+        sample_type: rand < 0.8 ? pluck_random(team.sample_types) : nil,
+        sample_group: rand < 0.8 ? pluck_random(team.sample_groups) : nil
       )
     end
 
@@ -74,21 +77,22 @@ module FirstTimeDataGenerator
     for i in 1..5
       samples << Sample.create(
         name: sample_name + i.to_s,
-        organization: org,
+        team: team,
         user: user,
-        sample_type: rand < 0.8 ? pluck_random(org.sample_types) : nil,
-        sample_group: rand < 0.8 ? pluck_random(org.sample_groups) : nil
+        sample_type: rand < 0.8 ? pluck_random(team.sample_types) : nil,
+        sample_group: rand < 0.8 ? pluck_random(team.sample_groups) : nil
       )
     end
 
-    name = "Demo project - qPCR"
-    exp_name = "My first experiment"
+    name = 'Demo project - qPCR'
+    exp_name = 'My first experiment'
     # If there is an existing demo project, archive and rename it
-    if org.projects.where(name: name).present?
-      old = org.projects.where(name: "Demo project - qPCR")[0]
+    if team.projects.where(name: name).present?
+      # TODO: check if we still need this code
+      # old = team.projects.where(name: 'Demo project - qPCR')[0]
       # old.archive! user
       i = 1
-      while org.projects.where(name: name = "Demo project - qPCR (#{i})").present?
+      while team.projects.where(name: name = "Demo project - qPCR (#{i})").present?
         i += 1
       end
     end
@@ -97,7 +101,7 @@ module FirstTimeDataGenerator
       visibility: 0,
       name: name,
       due_date: nil,
-      organization: org,
+      team: team,
       created_by: user,
       created_at: generate_random_time(1.week.ago),
       last_modified_by: user,
@@ -106,7 +110,7 @@ module FirstTimeDataGenerator
 
     experiment = Experiment.create(
       name: exp_name,
-      description: "This is my very first experiment",
+      description: 'This is my very first experiment',
       project: project,
       created_by: user,
       created_at: project.created_at + 5.minutes,
@@ -127,7 +131,7 @@ module FirstTimeDataGenerator
       user: user,
       project: project,
       message: I18n.t(
-        "activities.create_project",
+        'activities.create_project',
         user: user.full_name,
         project: project.name
       ),
@@ -138,36 +142,36 @@ module FirstTimeDataGenerator
     generate_project_comment(
       project,
       user,
-      "I've created a demo project"
+      'I\'ve created a demo project'
     )
 
     # Create a module group
     my_module_group = MyModuleGroup.create(
-      name: "Potato qPCR workflow",
+      name: 'Potato qPCR workflow',
       experiment: experiment
     )
 
     # Create project modules
     my_modules = []
     my_module_names = [
-      "Experiment design",
-      "Sampling biological material",
-      "RNA isolation",
-      "RNA quality & quantity - BIOANALYSER",
-      "Reverse transcription",
-      "qPCR",
-      "Data quality control",
-      "Data analysis - ddCq"
+      'Experiment design',
+      'Sampling biological material',
+      'RNA isolation',
+      'RNA quality & quantity - BIOANALYSER',
+      'Reverse transcription',
+      'qPCR',
+      'Data quality control',
+      'Data analysis - ddCq'
     ]
 
-    qpcr_module_description = "PCR is a method where an enzyme
+    qpcr_module_description = 'PCR is a method where an enzyme
       (thermostable DNA polymerase, originally isolated in 1960s
       from bacterium Thermus aquaticus, growing in hot lakes of
       Yellowstone park, USA) amplifies a short specific part of
       the template DNA (amplicon) in cycles. In every cycle the
       number of short specific sections of DNA is doubled, leading
       to an exponential amplification of targets. More on how
-      conventional PCR works can be found here."
+      conventional PCR works can be found here.'
 
     my_module_names.each_with_index do |name, i|
       my_module = MyModule.create(
@@ -189,7 +193,7 @@ module FirstTimeDataGenerator
       if i > 0
         Connection.create(
           input_id: my_module.id,
-          output_id: my_modules[i-1].id
+          output_id: my_modules[i - 1].id
         )
       end
 
@@ -200,7 +204,7 @@ module FirstTimeDataGenerator
         project: project,
         my_module: my_module,
         message: I18n.t(
-          "activities.create_module",
+          'activities.create_module',
           user: user.full_name,
           module: my_module.name
         ),
@@ -219,7 +223,7 @@ module FirstTimeDataGenerator
         project: project,
         my_module: my_module,
         message: I18n.t(
-          "activities.assign_user_to_module",
+          'activities.assign_user_to_module',
           assigned_user: user.full_name,
           module: my_module.name,
             assigned_by_user: user.full_name
@@ -230,7 +234,7 @@ module FirstTimeDataGenerator
 
     # Create an archived module
     archived_module = MyModule.create(
-      name: "Data analysis - Pfaffl method",
+      name: 'Data analysis - Pfaffl method',
       created_by: user,
       created_at: generate_random_time(6.days.ago),
       due_date: Time.now + 1.week,
@@ -252,7 +256,7 @@ module FirstTimeDataGenerator
       project: project,
       my_module: archived_module,
       message: I18n.t(
-        "activities.create_module",
+        'activities.create_module',
         user: user.full_name,
         module: archived_module.name
       ),
@@ -266,7 +270,7 @@ module FirstTimeDataGenerator
       project: project,
       my_module: archived_module,
       message: I18n.t(
-        "activities.archive_module",
+        'activities.archive_module',
         user: user.full_name,
         module: archived_module.name
       ),
@@ -286,7 +290,7 @@ module FirstTimeDataGenerator
       project: project,
       my_module: archived_module,
       message: I18n.t(
-        "activities.assign_user_to_module",
+        'activities.assign_user_to_module',
         assigned_user: user.full_name,
         module: archived_module.name,
           assigned_by_user: user.full_name
@@ -304,7 +308,6 @@ module FirstTimeDataGenerator
       taken_sample_ids << sample.id
       samples_to_assign << sample
     end
-
 
     my_modules[1].get_downstream_modules.each do |mm|
       samples_to_assign.each do |s|
@@ -359,21 +362,21 @@ module FirstTimeDataGenerator
 
     # Create tags and add them to module
     drylab_tag = Tag.create(
-      name: "Drylab",
+      name: 'Drylab',
       color: Constants::TAG_COLORS[8],
       project: project,
       created_by: user,
       last_modified_by: user
     )
     wetlab_tag = Tag.create(
-      name: "Wetlab",
+      name: 'Wetlab',
       color: Constants::TAG_COLORS[14],
       project: project,
       created_by: user,
       last_modified_by: user
     )
     decide_tag = Tag.create(
-      name: "Decide",
+      name: 'Decide',
       color: Constants::TAG_COLORS[5],
       project: project,
       created_by: user,
@@ -396,29 +399,34 @@ module FirstTimeDataGenerator
     my_modules[7].save
 
     # Load table contents yaml file
-    tab_content = YAML.load_file("#{Rails.root}/app/assets/tutorial_files/tables_content.yaml")
+    tab_content = YAML.load_file(
+      "#{Rails.root}/app/assets/tutorial_files/tables_content.yaml"
+    )
 
     # Create module content
     # ----------------- Module 1 ------------------
     module_step_names = [
-      "Gene expression"
+      'Gene expression'
     ]
     module_step_descriptions = [
-      "Compare response of PVYNTN, cab4 and PR1 genes in mock/virus inoculated potatoes & in time"
+      'Compare response of PVYNTN, cab4 and PR1 genes in mock/virus ' \
+      'inoculated potatoes & in time'
     ]
-    generate_module_steps(my_modules[0], module_step_names, module_step_descriptions)
+    generate_module_steps(my_modules[0],
+                          module_step_names,
+                          module_step_descriptions)
 
     # Results
     DelayedUploaderTutorial.delay(queue: :tutorial).generate_result_asset(
       my_module: my_modules[0],
       current_user: user,
-      result_name: "sF",
+      result_name: 'sF',
       created_at: generate_random_time(my_modules[0].created_at, 2.days),
-      file_name: "samples.txt"
+      file_name: 'samples.txt'
     )
 
     temp_result = Result.new(
-      name: "Experimental design",
+      name: 'Experimental design',
       my_module: my_modules[0],
       created_at: generate_random_time(my_modules[0].created_at, 1.days),
       user: user
@@ -430,63 +438,70 @@ module FirstTimeDataGenerator
     )
     temp_result.table = Table.new(
       created_by: user,
-      contents: tab_content["module1"]["experimental_design"]
+      contents: tab_content['module1']['experimental_design']
     )
     temp_result.save
 
     # ----------------- Module 2 ------------------
     module_step_names = [
-      "Inoculation of potatoes",
-      "Collection of potatoes",
-      "Store samples"
+      'Inoculation of potatoes',
+      'Collection of potatoes',
+      'Store samples'
     ]
     module_step_descriptions = [
-      "50% of samples should be mock inoculated while other 50% with PVY NTN virus.",
-      "50% of PVYNTN inoculated potatos and 50% of Mock inoculated potatos collect 1 day post inocullation while other halph of samples collect 6 days post inoculation.",
-      "Collect samples in 2ml tubes and put them in liquid nitrogen and store at 80°C."
+      '50% of samples should be mock inoculated while other 50% with ' \
+      'PVY NTN virus.',
+      '50% of PVYNTN inoculated potatos and 50% of Mock inoculated potatos ' \
+      'collect 1 day post inocullation while other halph of samples collect ' \
+      '6 days post inoculation.',
+      'Collect samples in 2ml tubes and put them in liquid nitrogen '\
+      'and store at 80°C.'
     ]
-    generate_module_steps(my_modules[1], module_step_names, module_step_descriptions)
+    generate_module_steps(my_modules[1],
+                          module_step_names,
+                          module_step_descriptions)
 
     # Add file to existig step
     DelayedUploaderTutorial.delay(queue: :tutorial).add_step_asset(
-      step: my_modules[1].protocol.steps.where("position = 0").take,
+      step: my_modules[1].protocol.steps.where('position = 0').take,
       current_user: user,
-      file_name: "sample-potatoe.txt"
+      file_name: 'sample-potatoe.txt'
     )
 
     # Results
     DelayedUploaderTutorial.delay(queue: :tutorial).generate_result_asset(
       my_module: my_modules[1],
       current_user: user,
-      result_name: "PVY-inoculated plant, symptoms",
+      result_name: 'PVY-inoculated plant, symptoms',
       created_at: generate_random_time(my_modules[1].created_at, 1.days),
-      file_name: "DSCN0660.JPG"
+      file_name: 'DSCN0660.JPG'
     )
 
     DelayedUploaderTutorial.delay(queue: :tutorial).generate_result_asset(
       my_module: my_modules[1],
       current_user: user,
-      result_name: "mock-inoculated plant",
+      result_name: 'mock-inoculated plant',
       created_at: generate_random_time(my_modules[1].created_at, 2.days),
-      file_name: "DSCN0354.JPG"
+      file_name: 'DSCN0354.JPG'
     )
 
     DelayedUploaderTutorial.delay(queue: :tutorial).generate_result_asset(
       my_module: my_modules[1],
       current_user: user,
-      result_name: "Height of plants at 6dpi",
+      result_name: 'Height of plants at 6dpi',
       created_at: generate_random_time(my_modules[1].created_at, 3.days),
-      file_name: "6dpi_height.JPG"
+      file_name: '6dpi_height.JPG'
     )
 
     # Add a text result
     temp_result = Result.new(
-      name: "Number of samples",
+      name: 'Number of samples',
       my_module: my_modules[1],
       user: user,
       created_at: generate_random_time(my_modules[1].created_at, 4.days)
     )
-    temp_text = "There are many biological replicates we harvested for each type of sample (code-names):\n\n"
+    temp_text = "There are many biological replicates we harvested " \
+                "for each type of sample (code-names):\n\n"
     samples_to_assign.each do |s|
       temp_text << "* #{s.name}\n\n"
     end
@@ -504,32 +519,32 @@ module FirstTimeDataGenerator
       user: user,
       created_at: temp_result.created_at,
       message: I18n.t(
-        "activities.add_text_result",
+        'activities.add_text_result',
         user: user.full_name,
         result: temp_result.name
       )
     ).sneaky_save
     # ----------------- Module 3 ------------------
     module_step_names = [
-      "Homogenization of the material",
-      "Isolation of RNA with RNeasy plant mini kit"
+      'Homogenization of the material',
+      'Isolation of RNA with RNeasy plant mini kit'
     ]
     module_step_descriptions = [
-      " Use tissue lyser: 1 min on step 3.",
+      ' Use tissue lyser: 1 min on step 3.',
       nil
     ]
     generate_module_steps(my_modules[2], module_step_names, module_step_descriptions)
 
     # Add file to existig step
     DelayedUploaderTutorial.delay(queue: :tutorial).add_step_asset(
-      step: my_modules[2].protocol.steps.where("position = 1").take,
+      step: my_modules[2].protocol.steps.where('position = 1').take,
       current_user: user,
-      file_name: "RNeasy-Plant-Mini-Kit-EN.pdf"
+      file_name: 'RNeasy-Plant-Mini-Kit-EN.pdf'
     )
 
     # Results
     temp_result = Result.new(
-      name: "Nanodrop results",
+      name: 'Nanodrop results',
       my_module: my_modules[2],
       created_at: generate_random_time(my_modules[2].created_at, 1.days),
       user: user
@@ -542,7 +557,7 @@ module FirstTimeDataGenerator
     )
     temp_result.table = Table.new(
       created_by: user,
-      contents: tab_content["module3"]["nanodrop"]
+      contents: tab_content['module3']['nanodrop']
     )
     temp_result.save
 
@@ -554,7 +569,7 @@ module FirstTimeDataGenerator
       user: user,
       created_at: temp_result.created_at,
       message: I18n.t(
-        "activities.add_text_result",
+        'activities.add_text_result',
         user: user.full_name,
         result: temp_result.name
       )
@@ -564,14 +579,14 @@ module FirstTimeDataGenerator
     DelayedUploaderTutorial.delay(queue: :tutorial).generate_result_asset(
       my_module: my_modules[2],
       current_user: user,
-      result_name: "Agarose gel electrophoresis of totRNA samples",
+      result_name: 'Agarose gel electrophoresis of totRNA samples',
       created_at: generate_random_time(my_modules[2].created_at, 3.days),
-      file_name: "totRNA_gel.jpg"
+      file_name: 'totRNA_gel.jpg'
     )
 
     # ----------------- Module 4 ------------------
     module_step_names = [
-      "Use Nano chip for testing RNA integrity"
+      'Use Nano chip for testing RNA integrity'
     ]
     module_step_descriptions = [
       nil
@@ -580,47 +595,49 @@ module FirstTimeDataGenerator
 
     # Add file to existig step
     DelayedUploaderTutorial.delay(queue: :tutorial).add_step_asset(
-      step: my_modules[3].protocol.steps.where("position = 0").take,
+      step: my_modules[3].protocol.steps.where('position = 0').take,
       current_user: user,
-      file_name: "G2938-90034_KitRNA6000Nano_ebook.pdf"
+      file_name: 'G2938-90034_KitRNA6000Nano_ebook.pdf'
     )
 
     # Results
     DelayedUploaderTutorial.delay(queue: :tutorial).generate_result_asset(
       my_module: my_modules[3],
       current_user: user,
-      result_name: "Result of RNA integrity",
+      result_name: 'Result of RNA integrity',
       created_at: generate_random_time(my_modules[3].created_at, 2.days),
-      file_name: "Bioanalyser_result.JPG"
+      file_name: 'Bioanalyser_result.JPG'
     )
 
     # ----------------- Module 5 ------------------
     module_step_names = [
-      "RNA denaturation",
-      "Prepare mastermix for RT",
-      "RT reaction"
+      'RNA denaturation',
+      'Prepare mastermix for RT',
+      'RT reaction'
     ]
     module_step_descriptions = [
-      "1 ug of RNA denature at 80°C for 5 min --> ice",
-      "High Capacity cDNA Reverse Transcription Kit (Applied Biosystems)",
-      "25°C for 10 min 37°C for 2 h"
+      '1 ug of RNA denature at 80°C for 5 min --> ice',
+      'High Capacity cDNA Reverse Transcription Kit (Applied Biosystems)',
+      '25°C for 10 min 37°C for 2 h'
     ]
-    generate_module_steps(my_modules[4], module_step_names, module_step_descriptions)
+    generate_module_steps(my_modules[4],
+                          module_step_names,
+                          module_step_descriptions)
 
     module_checklist_items = [
-      "RT buffer",
-      "dNTP mix",
-      "Random Primers",
-      "RNase inhibitor",
-      "Reverse transcriptase",
-      "Optional: Luciferase mRNA (denatured)",
-      "H2O to 12.5 ul"
+      'RT buffer',
+      'dNTP mix',
+      'Random Primers',
+      'RNase inhibitor',
+      'Reverse transcriptase',
+      'Optional: Luciferase mRNA (denatured)',
+      'H2O to 12.5 ul'
     ]
 
     # Add checklist to step
-    step = my_modules[4].protocol.steps.where("position = 1").take
+    step = my_modules[4].protocol.steps.where('position = 1').take
     checklist = Checklist.new(
-      name: "Mastermix",
+      name: 'Mastermix',
       step: step
     )
 
@@ -633,58 +650,62 @@ module FirstTimeDataGenerator
 
     # ----------------- Module 6 ------------------
     module_step_names = [
-      "Sample preparation",
-      "Reaction setup",
-      "Use Applied Biosystem 7300 instrument for qPCR",
-      "Setup of the 96 plate"
+      'Sample preparation',
+      'Reaction setup',
+      'Use Applied Biosystem 7300 instrument for qPCR',
+      'Setup of the 96 plate'
     ]
     module_step_descriptions = [
       nil,
       nil,
-      "Use following cycling condtions:",
-      "Template of the 96-well plate"
+      'Use following cycling condtions:',
+      'Template of the 96-well plate'
     ]
-    generate_module_steps(my_modules[5], module_step_names, module_step_descriptions)
+    generate_module_steps(my_modules[5],
+                          module_step_names,
+                          module_step_descriptions)
 
     # Add file to existig steps
     DelayedUploaderTutorial.delay(queue: :tutorial).add_step_asset(
-      step: my_modules[5].protocol.steps.where("position = 0").take,
+      step: my_modules[5].protocol.steps.where('position = 0').take,
       current_user: user,
-      file_name: "sample_preparation.JPG"
+      file_name: 'sample_preparation.JPG'
     )
 
     DelayedUploaderTutorial.delay(queue: :tutorial).add_step_asset(
-      step: my_modules[5].protocol.steps.where("position = 1").take,
+      step: my_modules[5].protocol.steps.where('position = 1').take,
       current_user: user,
-      file_name: "reaction_setup.JPG"
+      file_name: 'reaction_setup.JPG'
     )
 
     DelayedUploaderTutorial.delay(queue: :tutorial).add_step_asset(
-      step: my_modules[5].protocol.steps.where("position = 2").take,
+      step: my_modules[5].protocol.steps.where('position = 2').take,
       current_user: user,
-      file_name: "cycling_conditions.JPG"
+      file_name: 'cycling_conditions.JPG'
     )
 
     DelayedUploaderTutorial.delay(queue: :tutorial).add_step_asset(
-      step: my_modules[5].protocol.steps.where("position = 3").take,
+      step: my_modules[5].protocol.steps.where('position = 3').take,
       current_user: user,
-      file_name: "96plate.doc"
+      file_name: '96plate.doc'
     )
 
     # Results
     # Add a hard-coded table result
     temp_result = Result.new(
-      name: "Sample distribution on the plate",
+      name: 'Sample distribution on the plate',
       my_module: my_modules[5],
       user: user,
       created_at: generate_random_time(my_modules[5].created_at, 1.days)
     )
     temp_result.table = Table.new(
       created_by: user,
-      contents: tab_content["module6"]["distribution"] % {sample0: samples_to_assign[0].name,
-                                                          sample1: samples_to_assign[1].name,
-                                                          sample2: samples_to_assign[2].name,
-                                                          sample3: samples_to_assign[3].name}
+      contents: tab_content['module6']['distribution'] % {
+        sample0: samples_to_assign[0].name,
+        sample1: samples_to_assign[1].name,
+        sample2: samples_to_assign[2].name,
+        sample3: samples_to_assign[3].name
+      }
     )
     temp_result.save
 
@@ -696,7 +717,7 @@ module FirstTimeDataGenerator
       user: user,
       created_at: temp_result.created_at,
       message: I18n.t(
-        "activities.add_table_result",
+        'activities.add_table_result',
         user: user.full_name,
         result: temp_result.name
       )
@@ -706,40 +727,45 @@ module FirstTimeDataGenerator
     DelayedUploaderTutorial.delay(queue: :tutorial).generate_result_asset(
       my_module: my_modules[5],
       current_user: user,
-      result_name: "Mixtures and plate setup",
+      result_name: 'Mixtures and plate setup',
       created_at: generate_random_time(my_modules[5].created_at, 2.days),
-      file_name: "Mixes_Templats.xls"
+      file_name: 'Mixes_Templats.xls'
     )
 
     DelayedUploaderTutorial.delay(queue: :tutorial).generate_result_asset(
       my_module: my_modules[5],
       current_user: user,
-      result_name: "Raw data from ABI 7300",
+      result_name: 'Raw data from ABI 7300',
       created_at: generate_random_time(my_modules[5].created_at, 3.days),
-      file_name: "BootCamp-Experiment-results-20122.sds"
+      file_name: 'BootCamp-Experiment-results-20122.sds'
     )
 
     DelayedUploaderTutorial.delay(queue: :tutorial).generate_result_asset(
       my_module: my_modules[5],
       current_user: user,
-      result_name: "All results - curves",
+      result_name: 'All results - curves',
       created_at: generate_random_time(my_modules[5].created_at, 4.days),
-      file_name: "curves.JPG"
+      file_name: 'curves.JPG'
     )
 
     # ----------------- Module 7 ------------------
     module_step_names = [
-      "Check negative controls NTC",
-      "Eliminate results that have positive NTCs"
+      'Check negative controls NTC',
+      'Eliminate results that have positive NTCs'
     ]
     module_step_descriptions = [
-      "They have to be negative when using TaqMan assays. If they are positive when using SYBR assays check also melitng curve where signal comes from. - if it is primer dimer result is negative - If it is specific signal it is positive",
-      "And repeat procedure"
+      'They have to be negative when using TaqMan assays. If they are ' \
+      'positive when using SYBR assays check also melitng curve where signal ' \
+      'comes from. - if it is primer dimer result is negative - If it is ' \
+      'specific signal it is positive',
+      'And repeat procedure'
     ]
-    generate_module_steps(my_modules[6], module_step_names, module_step_descriptions)
+    generate_module_steps(my_modules[6],
+                          module_step_names,
+                          module_step_descriptions)
 
     # Add comment to step
-    step = my_modules[6].protocol.steps.where("position = 1").take
+    step = my_modules[6].protocol.steps.where('position = 1').take
     step.save
     generate_step_comment(
       step,
@@ -749,53 +775,57 @@ module FirstTimeDataGenerator
 
     # ----------------- Module 8 ------------------
     module_step_names = [
-      "Template for ddCq analysis"
+      'Template for ddCq analysis'
     ]
     module_step_descriptions = [
       nil
     ]
-    generate_module_steps(my_modules[7], module_step_names, module_step_descriptions)
+
+    generate_module_steps(my_modules[7],
+                          module_step_names,
+                          module_step_descriptions)
 
     # Add file to existig step
     DelayedUploaderTutorial.delay(queue: :tutorial).add_step_asset(
-      step: my_modules[7].protocol.steps.where("position = 0").take,
+      step: my_modules[7].protocol.steps.where('position = 0').take,
       current_user: user,
-      file_name: "ddCq-quantification_diagnostics-template.xls"
+      file_name: 'ddCq-quantification_diagnostics-template.xls'
     )
 
     # Add result
     DelayedUploaderTutorial.delay(queue: :tutorial).generate_result_asset(
       my_module: my_modules[7],
       current_user: user,
-      result_name: "Results of ddCq method",
+      result_name: 'Results of ddCq method',
       created_at: generate_random_time(my_modules[7].created_at, 1.days),
-      file_name: "ddCq-quantification_diagnostics-results.xls"
+      file_name: 'ddCq-quantification_diagnostics-results.xls'
     )
 
     DelayedUploaderTutorial.delay(queue: :tutorial).generate_result_asset(
       my_module: my_modules[7],
       current_user: user,
-      result_name: "Dilution curve and efficiency",
+      result_name: 'Dilution curve and efficiency',
       created_at: generate_random_time(my_modules[7].created_at, 2.days),
-      file_name: "dilution_curve-efficiency.JPG"
+      file_name: 'dilution_curve-efficiency.JPG'
     )
 
     DelayedUploaderTutorial.delay(queue: :tutorial).generate_result_asset(
       my_module: my_modules[7],
       current_user: user,
-      result_name: "Relative quantification results",
+      result_name: 'Relative quantification results',
       created_at: generate_random_time(my_modules[7].created_at, 3.days),
-      file_name: "result-ddCq.JPG"
+      file_name: 'result-ddCq.JPG'
     )
 
     # Add a text result
     temp_result = Result.new(
-      name: "Markdown remarks",
+      name: 'Markdown remarks',
       my_module: my_modules[7],
       user: user,
       created_at: generate_random_time(my_modules[7].created_at, 4.days)
     )
-    temp_text = "__Bolded text__\n\ndouble Enter to go to new line\n\n- bulletpoint"
+    temp_text = "__Bolded text__\n\ndouble Enter " \
+                "to go to new line\n\n- bulletpoint"
     temp_result.result_text = ResultText.new(
       text: temp_text
     )
@@ -809,7 +839,7 @@ module FirstTimeDataGenerator
       user: user,
       created_at: temp_result.created_at,
       message: I18n.t(
-        "activities.add_text_result",
+        'activities.add_text_result',
         user: user.full_name,
         result: temp_result.name
       )
@@ -820,17 +850,14 @@ module FirstTimeDataGenerator
 
     # Lastly, create cookie with according ids
     # so tutorial steps can be properly positioned
-    JSON.generate([
-      organization: org.id,
-      project: project.id,
-      qpcr_module: my_modules[5].id
-    ])
+    JSON.generate([team: team.id,
+                   project: project.id,
+                   qpcr_module: my_modules[5].id])
   end
-
 
   # WARNING: This only works on PostgreSQL
   def pluck_random(scope)
-    scope.order("RANDOM()").first
+    scope.order('RANDOM()').first
   end
 
   def generate_random_time(*args)
@@ -844,14 +871,13 @@ module FirstTimeDataGenerator
     end
   end
 
-
   # Create steps for given module
   def generate_module_steps(my_module, step_names, step_descriptions)
     step_names.each_with_index do |name, i|
       created_at = generate_random_time(my_module.created_at, 5.hours)
       completed = rand <= 0.3
-      completed_on = completed ?
-        generate_random_time(created_at, 10.hours) : nil
+      completed_on = nil
+      completed_on = generate_random_time(created_at, 10.hours) if completed
 
       step = Step.create(
         created_at: created_at,
@@ -872,13 +898,13 @@ module FirstTimeDataGenerator
         user: step.user,
         created_at: created_at,
         message: I18n.t(
-          "activities.create_step",
+          'activities.create_step',
           user: step.user.full_name,
           step: i,
           step_name: step.name
         )
       ).sneaky_save
-      if completed then
+      if completed
         Activity.new(
           type_of: :complete_step,
           project: my_module.experiment.project,
@@ -886,22 +912,22 @@ module FirstTimeDataGenerator
           user: step.user,
           created_at: completed_on,
           message: I18n.t(
-            "activities.complete_step",
+            'activities.complete_step',
             user: step.user.full_name,
-            step: i+1,
+            step: i + 1,
             step_name: step.name,
             completed: my_module.protocol.completed_steps.count,
-            all: i+1
+            all: i + 1
           )
         ).sneaky_save
 
         # Also add random comments to completed steps
         if rand < 0.3
-          polite_comment = "This looks well."
+          polite_comment = 'This looks well.'
         elsif rand < 0.4
-          polite_comment = "Seems satisfactory."
+          polite_comment = 'Seems satisfactory.'
         elsif rand < 0.4
-          polite_comment = "Try a bit harder next time."
+          polite_comment = 'Try a bit harder next time.'
         end
         if polite_comment
           commented_on = generate_random_time(completed_on)
