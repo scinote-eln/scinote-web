@@ -51,7 +51,7 @@
             <div class="col-xs-12">
               <% step.tables.each do |table| %>
                 <strong>
-                  <%= custom_auto_link(simple_format(table.name),
+                  <%= auto_link(simple_format(table.name),
                                       link: :urls,
                                       html: { target: '_blank' }) %>
                 </strong>
