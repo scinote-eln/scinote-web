@@ -49,16 +49,7 @@
       </span>
       <% if experiment.description? %>
         <div class='experiment-description'>
-          <%= auto_link(
-                smart_annotation_parser(
-                  simple_format(
-                    sanitize_input(experiment.description)
-                  )
-                ),
-                link: :urls,
-                sanitize: false,
-                html: { target: '_blank' }
-              ).html_safe %>
+          <%= custom_auto_link(experiment.description) %>
         </div>
       <% else %>
         <span class='experiment-no-description'>

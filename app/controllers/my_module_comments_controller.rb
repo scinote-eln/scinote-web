@@ -116,14 +116,7 @@ class MyModuleCommentsController < ApplicationController
               module: @my_module.name
             )
           )
-          message = auto_link(
-            smart_annotation_parser(
-              simple_format(sanitize_input(@comment.message))
-            ),
-            link: :urls,
-            sanitize: false,
-            html: { target: '_blank' }
-          ).html_safe
+          message = custom_auto_link(@comment.message)
           render json: { comment: message }, status: :ok
         else
           render json: { errors: @comment.errors.to_hash(true) },

@@ -37,10 +37,7 @@
               <em><%= t("protocols.steps.no_description") %></em>
             <% else %>
               <div class="ql-editor">
-                <%= auto_link(smart_annotation_parser(simple_format(sanitize_input(step.description))),
-                              link: :urls,
-                              sanitize: false,
-                              html: { target: '_blank' }).html_safe %>
+                <%= custom_auto_link(step.description, false) %>
               </div>
             <% end %>
           </div>
@@ -122,15 +119,7 @@
           <% unless step.checklists.blank? then %>
             <div class="col-xs-12">
               <% step.checklists.each do |checklist| %>
-                <strong><%= auto_link(
-                              smart_annotation_parser(
-                                simple_format(
-                                  sanitize_input(checklist.name)
-                                )
-                              ),
-                              link: :urls,
-                              sanitize: false,
-                              html: { target: '_blank' }).html_safe %></strong>
+                <strong><%= custom_auto_link(checklist.name) %></strong>
                 <% if checklist.checklist_items.empty? %>
                   </br>
                   <%= t("protocols.steps.empty_checklist") %>
@@ -144,15 +133,7 @@
                         <% else %>
                           <input type="checkbox" value="" disabled="disabled" />
                         <% end %>
-                        <%= auto_link(
-                                smart_annotation_parser(
-                                  simple_format(
-                                    sanitize_input(checklist_item.text)
-                                  )
-                                ),
-                              link: :urls,
-                              sanitize: false,
-                              html: { target: '_blank' }).html_safe %>
+                        <%= custom_auto_link(checklist_item.text) %>
                       </label>
                     </div>
                   <% end %>
