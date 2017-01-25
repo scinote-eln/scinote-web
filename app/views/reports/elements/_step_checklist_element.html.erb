@@ -8,7 +8,7 @@
           <span class="glyphicon glyphicon-list"></span>
       </div>
       <div class="pull-left checklist-name">
-        <%= custom_auto_link(t 'projects.reports.elements.step_checklist.checklist_name', name: checklist.name) %>
+        <%= custom_auto_link(t('projects.reports.elements.step_checklist.checklist_name', name: checklist.name)) %>
       </div>
       <div class="pull-left user-time">
         <%=t 'projects.reports.elements.step_checklist.user_time', timestamp: l(timestamp, format: :full) %>

@@ -27,7 +27,7 @@
     <div class="row">
       <div class="col-xs-12 ql-editor">
         <% if strip_tags(step.description).present? %>
-          <%= custom_auto_link(step.description) %>
+          <%= custom_auto_link(step.description, false) %>
         <% else %>
            <em><%=t "projects.reports.elements.step.no_description" %></em>
         <% end %>
