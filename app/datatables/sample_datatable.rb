@@ -296,10 +296,10 @@ class SampleDatatable < AjaxDatatablesRails::Base
 
           # grabs the ids that are not the previous one but are still of the same team
           unassigned = Sample
-            .where('"samples"."team_id" = ?', @team.id)
-            .where('"samples"."id" NOT IN (?)', assigned)
-            .select('"samples"."id"')
-            .distinct
+                       .where('"samples"."team_id" = ?', @team.id)
+                       .where('"samples"."id" NOT IN (?)', assigned)
+                       .select('"samples"."id"')
+                       .distinct
 
           # check the input param and merge the two arrays of ids
           if params[:order].values[0]["dir"] == "asc"
@@ -321,12 +321,15 @@ class SampleDatatable < AjaxDatatablesRails::Base
           # Rails apparently forgets to join stuff in subqueries -
           # #justrailsthings
           conditions = build_conditions_for(params[:search][:value])
-          filter_query = 'SELECT "samples"."id" FROM "samples"
-          LEFT OUTER JOIN "sample_custom_fields" ON "sample_custom_fields"."sample_id" = "samples"."id"
-          LEFT OUTER JOIN "sample_types" ON "sample_types"."id" = "samples"."sample_type_id"
-          LEFT OUTER JOIN "sample_groups" ON "sample_groups"."id" = "samples"."sample_group_id"
-          LEFT OUTER JOIN "users" ON "users"."id" = "samples"."user_id"
-          WHERE "samples"."team_id" = ' + @team.id.to_s + ' AND ' + conditions.to_sql
+          filter_query = %(SELECT "samples"."id" FROM "samples"
+            LEFT OUTER JOIN "sample_custom_fields" ON
+            "sample_custom_fields"."sample_id" = "samples"."id"
+            LEFT OUTER JOIN "sample_types" ON
+            "sample_types"."id" = "samples"."sample_type_id"
+            LEFT OUTER JOIN "sample_groups"
+            ON "sample_groups"."id" = "samples"."sample_group_id"
+            LEFT OUTER JOIN "users" ON "users"."id" = "samples"."user_id"
+            WHERE "samples"."team_id" = #{@team.id} AND #{conditions.to_sql})
 
           records = records.where("samples.id IN (#{filter_query})")
         end

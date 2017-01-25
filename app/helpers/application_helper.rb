@@ -138,9 +138,10 @@ module ApplicationHelper
          team &&
          UserTeam.user_in_team(user, team).any?
         user_t, = user
-                   .user_teams
-                   .where('user_teams.team_id = ?',
-                          team).first
+                  .user_teams
+                  .where('user_teams.team_id = ?', team)
+                  .first
+
         user_description = %(<div class='col-xs-4'>
          <img src='#{avatar_path(user, :thumb)}' alt='thumb'>
          </div><div class='col-xs-8'>
