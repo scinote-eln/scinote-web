@@ -7,16 +7,16 @@ class SampleTypeTest < ActiveSupport::TestCase
 
   should validate_length_of(:name).is_at_most(Constants::NAME_MAX_LENGTH)
   should validate_presence_of(:name)
-  should validate_presence_of(:organization)
+  should validate_presence_of(:team)
 
   test 'should validate with correct data' do
     assert @sample_type.valid?
   end
 
-  test 'should not validate without organization' do
-    @sample_type.organization_id = 12321321
+  test 'should not validate without team' do
+    @sample_type.team_id = 12321321
     assert_not @sample_type.valid?
-    @sample_type.organization = nil
+    @sample_type.team = nil
     assert_not @sample_type.valid?
   end
 end

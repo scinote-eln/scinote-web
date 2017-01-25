@@ -12,10 +12,10 @@ phylos:
   created_by: steve
 
 test:
-  name: Test Organization
-  description: "Testing organization, you know"
+  name: Test Team
+  description: "Testing team, you know"
 
-steve_org:
-  name: Steve's Organization
-  description: "Private organization"
+steve_team:
+  name: Steve's Team
+  description: "Private team"
   created_by: steve

@@ -2,7 +2,7 @@ interfaces:
   name: INTERFACES
   visibility: 1
   due_date: 2015-11-02 15:30:22
-  organization: biosistemika
+  team: biosistemika
   archived: false
   archived_on:
   created_at: 2015-11-01 11:37:26
@@ -16,7 +16,7 @@ eurostars:
   name: EUROSTARS
   visibility: 1
   due_date: 2015-11-02 15:30:22
-  organization: biosistemika
+  team: biosistemika
   archived: false
   archived_on:
   created_at: 2015-11-01 12:53:07
@@ -30,7 +30,7 @@ krop:
   name: KROP 2012
   visibility: 1
   due_date: 2012-05-07 13:30:25
-  organization: biosistemika
+  team: biosistemika
   archived: true
   archived_on: 2012-05-09 16:23:33
   created_by: mark
@@ -43,7 +43,7 @@ phd:
   name: PhD Thesis
   visibility: 0
   due_date:
-  organization: nib
+  team: nib
   archived: false
   archived_on:
   created_by: mark
@@ -56,7 +56,7 @@ decathlon:
   name: DECATHLON
   visibility: 1
   due_date:
-  organization: phylos
+  team: phylos
   archived: false
   archived_on:
   created_by: jlaw
@@ -69,7 +69,7 @@ valor:
   name: VALOR 2010
   visibility: 1
   due_date: 2010-11-13 14:11:23
-  organization: nib
+  team: nib
   archived: false
   archived_on: 2012-05-09 16:33:33
   created_by: nora
@@ -82,9 +82,9 @@ secret:
   name: My Secret Life
   visibility: 0
   due_date: 2030-06-04 13:00:00
-  organization: nib
+  team: nib
   archived: false
-  archived_on: 
+  archived_on:
   created_by: mark
   last_modified_by: steve
   archived_by:
@@ -95,7 +95,7 @@ a_project:
   name: A Project
   visibility: 1
   due_date: 2018-12-02 15:30:22
-  organization: biosistemika
+  team: biosistemika
   archived: false
   archived_on:
   created_at: 2015-11-01 14:28:15
@@ -109,7 +109,7 @@ z_project:
   name: Z Project
   visibility: 1
   due_date: 2018-12-02 15:30:22
-  organization: biosistemika
+  team: biosistemika
   archived: false
   archived_on:
   created_at: 2015-11-01 16:15:37
@@ -123,7 +123,7 @@ a_archived_project:
   name: A Archived Project
   visibility: 1
   due_date: 2018-12-02 15:30:22
-  organization: biosistemika
+  team: biosistemika
   archived: true
   archived_on: 2015-11-05 08:14:56
   created_at: 2015-11-01 14:28:15
@@ -137,7 +137,7 @@ z_archived_project:
   name: Z Archived Project
   visibility: 1
   due_date: 2018-12-02 15:30:22
-  organization: biosistemika
+  team: biosistemika
   archived: true
   archived_on: 2015-11-05 08:12:56
   created_at: 2015-11-01 16:15:37
@@ -151,25 +151,25 @@ test1:
   name: Project 1
   visibility: 1
   due_date: <%= DateTime.now %>
-  organization: biosistemika
+  team: biosistemika
   archived: false
   created_by: steve
 
 test2:
   name: Project 2
   visibility: 0
-  organization: biosistemika
+  team: biosistemika
   archived: true
   archived_on: <%= DateTime.now %>
 
 test3:
   name: Project 3
   visibility: 1
-  organization: nib
+  team: nib
   archived: false
 
 dummy:
   name: Dummy project
   visibility: 1
-  organization: nib
+  team: nib
   archived: false

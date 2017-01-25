@@ -1,7 +1,7 @@
 sample1:
   name: Cow DNA
   user: steve
-  organization: biosistemika
+  team: biosistemika
   sample_type: urine
   sample_group: blood
   last_modified_by: steve
@@ -9,7 +9,7 @@ sample1:
 sample2:
   name: Bat DNA
   user: steve
-  organization: biosistemika
+  team: biosistemika
   sample_type: skin
   sample_group: noble
   last_modified_by: steve
@@ -17,15 +17,15 @@ sample2:
 sample3:
   name: Cat DNA
   user: steve
-  organization: biosistemika
+  team: biosistemika
   last_modified_by: jlaw
 
 test:
   name: Test Sample
   user: jlaw
-  organization: biosistemika
+  team: biosistemika
 
 test2:
   name: Another test sample
   user: jlaw
-  organization: biosistemika
+  team: biosistemika
