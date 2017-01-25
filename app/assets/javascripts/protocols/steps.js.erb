@@ -185,12 +185,8 @@ function formCallback($form) {
 
     setTimeout(function() {
       initStepsComments();
-<<<<<<< HEAD
-      openLinksInNewTab();
       animateSpinner(null, false);
-=======
       SmartAnnotation.preventPropagation('.atwho-user-popover');
->>>>>>> smart-annotations
     }, 1000);
     return true;
   });
@@ -281,12 +277,10 @@ function formNewAjax($form) {
     formCallback($form);
     formNewAjax($form);
     applyCancelOnNew();
-<<<<<<< HEAD
     animateSpinner(null, false);
-=======
+
     TinyMCE.destroyAll();
     SmartAnnotation.preventPropagation('.atwho-user-popover');
->>>>>>> smart-annotations
   });
 }
 
