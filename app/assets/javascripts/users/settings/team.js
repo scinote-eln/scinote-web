@@ -2,7 +2,7 @@ var usersDatatable = null;
 
 // Initialize edit name modal window
 function initEditName() {
-  var editNameModal = $("#organization-name-modal");
+  var editNameModal = $("#team-name-modal");
   var editNameModalBody = editNameModal.find(".modal-body");
   var editNameModalSubmitBtn = editNameModal.find("[data-action='submit']");
   $(".name-link")
@@ -21,7 +21,7 @@ function initEditName() {
       // Display errors if needed
       editNameModalBody
       .find("form")
-      .renderFormErrors("organization", data2.responseJSON);
+      .renderFormErrors("team", data2.responseJSON);
     });
 
     // Show modal
@@ -44,7 +44,7 @@ function initEditName() {
 
 // Initialize edit description modal window
 function initEditDescription() {
-  var editDescriptionModal = $("#organization-description-modal");
+  var editDescriptionModal = $("#team-description-modal");
   var editDescriptionModalBody = editDescriptionModal.find(".modal-body");
   var editDescriptionModalSubmitBtn = editDescriptionModal.find("[data-action='submit']");
   $(".description-link")
@@ -66,7 +66,7 @@ function initEditDescription() {
       // Display errors if needed
       editDescriptionModalBody
       .find("form")
-      .renderFormErrors("organization", data2.responseJSON);
+      .renderFormErrors("team", data2.responseJSON);
     });
 
     // Show modal
@@ -170,10 +170,10 @@ function initRemoveUsers() {
   $(document)
   .on(
     "ajax:success",
-    "[data-action='destroy-user-organization']",
+    "[data-action='destroy-user-team']",
     function (e, data, status, xhr) {
       // Populate the modal heading & body
-      var modal = $("#destroy-user-organization-modal");
+      var modal = $("#destroy-user-team-modal");
       var modalHeading = modal.find(".modal-header").find(".modal-title");
       var modalBody = modal.find(".modal-body");
       modalHeading.text(data.heading);
@@ -185,20 +185,20 @@ function initRemoveUsers() {
   )
   .on(
     "ajax:error",
-    "[data-action='destroy-user-organization']",
+    "[data-action='destroy-user-team']",
     function (e, data, status, xhr) {
       // TODO
     }
   );
 
   // Also, bind the click action on the modal
-  $("#destroy-user-organization-modal")
+  $("#destroy-user-team-modal")
   .on("click", "[data-action='submit']", function() {
     var btn = $(this);
     var form = btn
       .closest(".modal")
       .find(".modal-body")
-      .find("form[data-id='destroy-user-organization-form']");
+      .find("form[data-id='destroy-user-team-form']");
 
     // Simply submit the form!
     form.submit();
@@ -208,10 +208,10 @@ function initRemoveUsers() {
   $(document)
   .on(
     "ajax:success",
-    "[data-id='destroy-user-organization-form']",
+    "[data-id='destroy-user-team-form']",
     function (e, data, status, xhr) {
       // Hide modal & clear its contents
-      var modal = $("#destroy-user-organization-modal");
+      var modal = $("#destroy-user-team-modal");
       var modalHeading = modal.find(".modal-header").find(".modal-title");
       var modalBody = modal.find(".modal-body");
       modalHeading.text("");
@@ -226,7 +226,7 @@ function initRemoveUsers() {
   )
   .on(
     "ajax:error",
-    "[data-id='destroy-user-organization-form']",
+    "[data-id='destroy-user-team-form']",
     function (e, data, status, xhr) {
       // TODO
     }
@@ -234,7 +234,7 @@ function initRemoveUsers() {
 }
 
 function initReloadPageAfterInviteUsers() {
-  $('[data-id=org-invite-users-modal]')
+  $('[data-id=team-invite-users-modal]')
   .on('hidden.bs.modal', function() {
     if (!_.isUndefined($(this).attr('data-invited'))) {
       // Reload page

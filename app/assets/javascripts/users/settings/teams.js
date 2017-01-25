@@ -1,12 +1,12 @@
 function initLeaveOrganizations() {
-  // Bind the "leave organization" buttons in organizations table
+  // Bind the "leave team" buttons in teams table
   $(document)
   .on(
     "ajax:success",
-    "[data-action='leave-user-organization']",
+    "[data-action='leave-user-team']",
     function (e, data, status, xhr) {
       // Populate the modal heading & body
-      var modal = $("#modal-leave-user-organization");
+      var modal = $("#modal-leave-user-team");
       var modalHeading = modal.find(".modal-header").find(".modal-title");
       var modalBody = modal.find(".modal-body");
       modalHeading.text(data.heading);
@@ -18,20 +18,20 @@ function initLeaveOrganizations() {
   )
   .on(
     "ajax:error",
-    "[data-action='destroy-user-organization']",
+    "[data-action='destroy-user-team']",
     function (e, data, status, xhr) {
       // TODO
     }
   );
 
   // Also, bind the click action on the modal
-  $("#modal-leave-user-organization")
+  $("#modal-leave-user-team")
   .on("click", "[data-action='submit']", function() {
     var btn = $(this);
     var form = btn
       .closest(".modal")
       .find(".modal-body")
-      .find("form[data-id='leave-user-organization-form']");
+      .find("form[data-id='leave-user-team-form']");
 
     // Simply submit the form!
     form.submit();
@@ -41,7 +41,7 @@ function initLeaveOrganizations() {
   $(document)
   .on(
     "ajax:success",
-    "[data-id='leave-user-organization-form']",
+    "[data-id='leave-user-team-form']",
     function (e, data, status, xhr) {
       // Simply reload the page
       location.reload();
@@ -49,7 +49,7 @@ function initLeaveOrganizations() {
   )
   .on(
     "ajax:error",
-    "[data-id='destroy-user-organization-form']",
+    "[data-id='destroy-user-team-form']",
     function (e, data, status, xhr) {
       // TODO
     }

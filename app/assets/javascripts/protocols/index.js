@@ -100,19 +100,19 @@ function initProtocolsTable() {
       animateSpinner(this);
     },
     stateSaveCallback: function (settings, data) {
-      // Set a cookie with the table state using the organization id
+      // Set a cookie with the table state using the team id
       localStorage.setItem(
         "datatables_protocols_state/" +
-        protocolsTableEl.data("organization-id") +
+        protocolsTableEl.data("team-id") +
         "/" + repositoryType,
         JSON.stringify(data)
       );
     },
     stateLoadCallback: function (settings) {
-      // Load the table state for the current organization
+      // Load the table state for the current team
       var state = localStorage.getItem(
         "datatables_protocols_state/" +
-        protocolsTableEl.data("organization-id") +
+        protocolsTableEl.data("team-id") +
         "/" + repositoryType
       );
       if (state !== null) {
@@ -675,12 +675,12 @@ function initImport() {
 
   fileInput.on("change", function(ev) {
     var importUrl = fileInput.attr("data-import-url");
-    var organizationId = fileInput.attr("data-organization-id");
+    var teamId = fileInput.attr("data-team-id");
     var type = fileInput.attr("data-type");
     importProtocolFromFile(
       ev.target.files[0],
       importUrl,
-      { organization_id: organizationId, type: type },
+      { team_id: teamId, type: type },
       false,
       function(datas) {
         var nrSuccessful = 0;

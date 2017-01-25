@@ -641,7 +641,7 @@ a[data-toggle="tooltip"] {
   margin-bottom: 50px;
 }
 
-.breadcrumb-organizations {
+.breadcrumb-teams {
   background-color: $color-concrete;
   margin-bottom: 15px;
 }
@@ -733,7 +733,7 @@ a[data-toggle="tooltip"] {
 }
 
 /** Users datatable */
-.panel-organization-users .panel-body {
+.panel-team-users .panel-body {
   padding-bottom: 0;
 }
 
@@ -749,8 +749,8 @@ a[data-toggle="tooltip"] {
     float: right;
   }
 
-  .dropdown-organizations-user {
-    .dropdown-menu li.user-organization-role {
+  .dropdown-teams-user {
+    .dropdown-menu li.user-team-role {
       & > :first-child {
         padding-left: 10px;
       }
@@ -1559,7 +1559,7 @@ html.turbolinks-progress-bar::before {
     padding-right: 10px;
   }
 
-  .org-selector .heading {
+  .team-selector .heading {
     margin-top: 15px;
     margin-bottom: 5px;
 
