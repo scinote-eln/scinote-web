@@ -353,6 +353,7 @@ function appendSamplesIdToForm(form) {
 
 function initHeaderTooltip() {
   // Fix compatibility of fixed table header and column names modal-tooltip
+  $('.modal-tooltip').off();
   $('.modal-tooltip').hover(function() {
     var $tooltip = $(this).find('.modal-tooltiptext');
     var offsetLeft = $tooltip.offset().left;
