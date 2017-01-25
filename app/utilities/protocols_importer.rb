@@ -10,7 +10,7 @@ module ProtocolsImporter
       protocol_type: (type == :public ? :in_repository_public : :in_repository_private),
       published_on: (type == :public ? Time.now : nil),
       added_by: user,
-      team: @team
+      team: team
     )
 
     # Try to rename record

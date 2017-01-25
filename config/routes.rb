@@ -104,7 +104,7 @@ Rails.application.routes.draw do
       to: 'user_notifications#index',
       as: 'notifications'
 
-  resources :teams, only: [] do
+  resources :teams do
     resources :samples, only: [:new, :create]
     resources :sample_types, except: [:show, :new] do
       get 'sample_type_element', to: 'sample_types#sample_type_element'

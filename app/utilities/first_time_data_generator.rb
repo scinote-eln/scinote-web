@@ -92,7 +92,9 @@ module FirstTimeDataGenerator
       # old = team.projects.where(name: 'Demo project - qPCR')[0]
       # old.archive! user
       i = 1
-      while team.projects.where(name: name = "Demo project - qPCR (#{i})").present?
+      while team.projects.where(
+        name: name = "Demo project - qPCR (#{i})"
+      ).present?
         i += 1
       end
     end
