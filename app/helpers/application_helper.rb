@@ -77,7 +77,7 @@ module ApplicationHelper
         if project.archived?
           "<span class='sa-type'>#{sanitize(match[2])}</span> " \
           "#{link_to project.name,
-                     projects_archive_path} #{t'atwho.res.archived'}"
+                     projects_archive_path} #{I18n.t('atwho.res.archived')}"
         else
           "<span class='sa-type'>#{sanitize(match[2])}</span> " \
           "#{link_to project.name,
@@ -90,7 +90,7 @@ module ApplicationHelper
           "<span class='sa-type'>#{sanitize(match[2])}</span> " \
           "#{link_to experiment.name,
                      experiment_archive_project_path(experiment.project)} " \
-          "#{t'atwho.res.archived'}"
+          "#{I18n.t('atwho.res.archived')}"
         else
           "<span class='sa-type'>#{sanitize(match[2])}</span> " \
           "#{link_to experiment.name,
@@ -103,7 +103,7 @@ module ApplicationHelper
           "<span class='sa-type'>#{sanitize(match[2])}</span> " \
           "#{link_to my_module.name,
                      module_archive_experiment_path(my_module.experiment)} " \
-          "#{t'atwho.res.archived'}"
+          "#{I18n.t('atwho.res.archived')}"
         else
           "<span class='sa-type'>#{sanitize(match[2])}</span> " \
           "#{link_to my_module.name,
@@ -118,7 +118,7 @@ module ApplicationHelper
                      class: 'sample-info-link')}"
         else
           "<span class='glyphicon glyphicon-tint'></span> " \
-          "#{match[1]} #{t'atwho.res.deleted'}"
+          "#{match[1]} #{I18n.t('atwho.res.deleted')}"
         end
       end
     end
