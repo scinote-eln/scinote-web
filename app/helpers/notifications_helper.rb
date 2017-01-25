@@ -18,18 +18,18 @@ module NotificationsHelper
     AppMailer.delay.notification(user, notification)
   end
 
-  def generate_notification(user, target_user, org, role, project)
-    if org
-      title = I18n.t('notifications.unassign_user_from_organization',
+  def generate_notification(user, target_user, team, role, project)
+    if team
+      title = I18n.t('notifications.unassign_user_from_team',
                      unassigned_user: target_user.name,
-                     organization: org.name,
+                     team: team.name,
                      unassigned_by_user: user.name)
-      title = I18n.t('notifications.assign_user_to_organization',
+      title = I18n.t('notifications.assign_user_to_team',
                      assigned_user: target_user.name,
                      role: role,
-                     organization: org.name,
+                     team: team.name,
                      assigned_by_user: user.name) if role
-      message = "#{I18n.t('search.index.organization')} #{org.name}"
+      message = "#{I18n.t('search.index.team')} #{team.name}"
     elsif project
       title = I18n.t('activities.unassign_user_from_project',
                      unassigned_user: target_user.full_name,
