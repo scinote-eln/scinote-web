@@ -30,7 +30,7 @@ en:
         password_placeholder: "pass****"
         submit: "Log in"
       create:
-        org_name: "%{user}'s projects"
+        team_name: "%{user}'s projects"
       auth_token_create:
         wrong_credentials: "Failed to automatically sign in (wrong credentials)."
     unlocks:
@@ -48,7 +48,7 @@ en:
 
   helpers:
     label:
-      organization:
+      team:
         name: "Team name"
       user:
         full_name: "Full name"
@@ -117,7 +117,7 @@ en:
       authors: "Authors: "
       description: "Description: "
       no_description: "No description"
-      organization: "Team: "
+      team: "Team: "
       project: "Project: "
       experiment: "Experiment: "
       protocol: "Protocol: "
@@ -176,7 +176,7 @@ en:
       edit_user: "Edit role"
       delete_user: "Remove user from project"
       delete_user_confirm: "Are you sure you wish to remove user %{user} from project %{project}?"
-      organization_filter: "Show projects from"
+      team_filter: "Show projects from"
       all_filter: "All"
       sort: "Sort by"
       sort_new: "Newest first"
@@ -204,7 +204,7 @@ en:
         create: "Create project"
         name: "Project name"
         name_placeholder: "My project"
-        organization: "Team"
+        team: "Team"
         visibility: "Visibility"
         visibility_hidden: "Private"
         visibility_visible: "Public"
@@ -217,9 +217,9 @@ en:
         create: "Add"
         select_user_role: "Select Role"
         invite_users_link: "Invite users"
-        invite_users_details: "to team %{organization}."
-        contact_admins: "To invite additional users to team %{organization}, contact its administrator/s."
-      no_orgs:
+        invite_users_details: "to team %{team}."
+        contact_admins: "To invite additional users to team %{team}, contact its administrator/s."
+      no_teams:
         title: "It's empty here!"
         text: "It seems you're not a member of any team. See team management to sort it out."
         btn: "Manage teams"
@@ -409,7 +409,7 @@ en:
       created_on_title: "Experiment created on %{date} at %{time}."
       last_modified_on_title: "Experiment last modified on %{date} at %{time}."
 
-  user_organizations:
+  user_teams:
     enums:
       role:
         guest: "Guest"
@@ -716,8 +716,8 @@ en:
           user_join_full: "%{user} joined on %{date} at %{time}."
           create: "Add"
           invite_users_link: "Invite users"
-          invite_users_details: "to team %{organization}."
-          contact_admins: "To invite additional users to team %{organization}, contact its administrator/s."
+          invite_users_details: "to team %{team}."
+          contact_admins: "To invite additional users to team %{team}, contact its administrator/s."
       update:
         success_flash: "Project successfully updated."
     module_archive:
@@ -838,7 +838,7 @@ en:
       other_samples: "Only samples created by you will be deleted."
       delete: "Delete samples"
     modal_add_custom_field:
-      title_html: "Add new column to team <strong>%{organization}</strong>"
+      title_html: "Add new column to team <strong>%{team}</strong>"
       create: "Add new column"
     modal_delete_custom_field:
       title: "Delete a column"
@@ -848,10 +848,10 @@ en:
       alert_line_2: "the column will be deleted for all team members."
       delete: "Delete column"
     modal_add_new_sample_group:
-      title_html: "Add new sample group to team <strong>%{organization}</strong>"
+      title_html: "Add new sample group to team <strong>%{team}</strong>"
       create: "Add new sample group"
     modal_add_new_sample_type:
-      title_html: "Add new sample type to team <strong>%{organization}</strong>"
+      title_html: "Add new sample type to team <strong>%{team}</strong>"
       create: "Add new sample type"
     table:
       assigned: "Assigned"
@@ -865,8 +865,8 @@ en:
       add_sample_type: "Add new sample type"
       add_sample_group: "Add new sample group"
     new:
-      head_title: "%{organization} | Add new sample"
-      title: "Add new sample to team %{organization}"
+      head_title: "%{team} | Add new sample"
+      title: "Add new sample to team %{team}"
       create: "Add new sample"
       sample_type: "Sample type"
       sample_group: "Sample group"
@@ -875,14 +875,14 @@ en:
       edit_sample_type: "Edit sample type"
       edit_sample_group: "Edit sample group"
     edit:
-      head_title: "%{organization} | Edit sample"
-      title: "Edit sample %{sample} from team %{organization}"
+      head_title: "%{team} | Edit sample"
+      title: "Edit sample %{sample} from team %{team}"
       create: "Edit sample"
       scf_does_not_exist: "This field does not exists."
     create:
-      success_flash: "Successfully added sample <strong>%{sample}</strong> to team <strong>%{organization}</strong>"
+      success_flash: "Successfully added sample <strong>%{sample}</strong> to team <strong>%{team}</strong>"
     update:
-      success_flash: "Successfully updated sample <strong>%{sample}</strong> to team <strong>%{organization}</strong>"
+      success_flash: "Successfully updated sample <strong>%{sample}</strong> to team <strong>%{team}</strong>"
     destroy:
       success_flash: "%{sample_number} samples successfully deleted."
       contains_other_samples_flash: "%{sample_number} samples successfully deleted. %{other_samples_number} of the selected samples were created by other users and were not deleted."
@@ -906,15 +906,15 @@ en:
 
   custom_fields:
     new:
-      title_html: "Add new column to team <strong>%{organization}</strong>"
+      title_html: "Add new column to team <strong>%{team}</strong>"
       create: "Add new column"
     create:
-      success_flash: "Successfully added column <strong>%{custom_field}</strong> to team <strong>%{organization}</strong>."
+      success_flash: "Successfully added column <strong>%{custom_field}</strong> to team <strong>%{team}</strong>."
 
-  organizations:
+  teams:
     parse_sheet:
-      head_title: "%{organization} | Import samples"
-      title: "Import samples to team %{organization}"
+      head_title: "%{team} | Import samples"
+      title: "Import samples to team %{team}"
       help_text: "Match the columns of your uploaded file with already existing columns in database."
       scinote_columns_html: "<em>sciNote</em> columns:"
       file_columns: "Imported columns:"
@@ -931,8 +931,8 @@ en:
         list_row: "Row %{row}"
         list_error: "%{key}: %{val}"
     import_samples:
-      head_title: "%{organization} | Import samples"
-      title: "Import samples to team %{organization}"
+      head_title: "%{team} | Import samples"
+      title: "Import samples to team %{team}"
       sample:
         one: "1 sample"
         other: "%{count} samples"
@@ -955,7 +955,7 @@ en:
       destroy_flash: "\"%{name}\" sample group was successfully deleted!"
     color_label: "Sample group color"
     create:
-      success_flash: "Successfully added sample group <strong>%{sample_group}</strong> to team <strong>%{organization}</strong>."
+      success_flash: "Successfully added sample group <strong>%{sample_group}</strong> to team <strong>%{team}</strong>."
 
   activities:
     index:
@@ -1063,12 +1063,12 @@ en:
       experiment: "Experiment"
       protocol: "Protocol"
     settings:
-      changed_org_flash: "You are working on %{team} now!"
-      changed_org_error_flash: "Something went wrong! Try again later."
-      changed_org_in_search: "The searched item is not in your current team. You will be redirected to %{team} team!"
+      changed_team_flash: "You are working on %{team} now!"
+      changed_team_error_flash: "Something went wrong! Try again later."
+      changed_team_in_search: "The searched item is not in your current team. You will be redirected to %{team} team!"
       navigation:
         preferences: "My preferences"
-        organizations: "My teams"
+        teams: "My teams"
       preferences:
         head_title: "Settings | My preferences"
         edit:
@@ -1078,23 +1078,23 @@ en:
         update_flash: "Preferences successfully updated."
         tutorial:
           modal_title: "Repeat tutorial"
-          no_organizations: "Seems like you are not a member of any team. Tutorials can be run only by team members."
+          no_teams: "Seems like you are not a member of any team. Tutorials can be run only by team members."
           repeat_tutorial: "Repeat tutorial"
-          select_organization_instruction: "Select the team where you wish to create the demo project."
-          select_organization: "Select team"
+          select_team_instruction: "Select the team where you wish to create the demo project."
+          select_team: "Select team"
           tutorial_reset_flash: "Tutorial can now be repeated."
           tutorial_reset_error: "Tutorial could not be repeated."
-      organizations:
+      teams:
         head_title: "Settings | My teams"
         breadcrumbs:
           all: "All teams"
-          new_organization: "New team"
+          new_team: "New team"
         index:
           member_of:
             one: "You are member of %{count} team."
             other: "You are member of %{count} teams."
-          no_organizations: "You are not a member of any team."
-          new_organization: "New team"
+          no_teams: "You are not a member of any team."
+          new_team: "New team"
           thead_name: "Team"
           thead_role: "Role"
           thead_created_at: "Created at"
@@ -1102,14 +1102,14 @@ en:
           thead_members: "Members"
           na: "n/a"
           leave: "Leave team"
-          leave_uo_heading: "Leave team %{org}"
-          leave_uo_message: "Are you sure you wish to leave team %{org}? This action is irreversible."
+          leave_uo_heading: "Leave team %{team}"
+          leave_uo_message: "Are you sure you wish to leave team %{team}? This action is irreversible."
           leave_uo_alert_heading: "Leaving team has following consequences:"
           leave_uo_alert_line_1: "you will lose access to all content belonging to the team (including projects, tasks, protocols and activities);"
           leave_uo_alert_line_2: "all projects in the team where you were the sole <b>Owner</b> will receive a new owner from the team administrators;"
           leave_uo_alert_line_3: "all repository protocols in the team belonging to you will be reassigned onto a new owner from team administrators."
           leave_uo_confirm: "Leave"
-          leave_flash: "Successfuly left team %{org}."
+          leave_flash: "Successfuly left team %{team}."
         new:
           name_label: "Team name"
           name_placeholder: "My team"
@@ -1137,22 +1137,22 @@ en:
             btn_label: "Edit"
             role_label: "User role"
             remove_label: "Remove"
-          destroy_uo_heading: "Remove user %{user} from team %{org}"
-          destroy_uo_message: "Are you sure you wish to remove user %{user} from team %{org}?"
+          destroy_uo_heading: "Remove user %{user} from team %{team}"
+          destroy_uo_message: "Are you sure you wish to remove user %{user} from team %{team}?"
           destroy_uo_alert_heading: "Removing user from team has following consequences:"
           destroy_uo_alert_line_1: "user will lose access to all content belonging to the team (including projects, tasks, protocols and activities);"
           destroy_uo_alert_line_2: "all projects in the team where user was the sole <b>Owner</b> will be reassigned onto you as a new owner;"
           destroy_uo_alert_line_3: "all repository protocols in the team belonging to user will be reassigned onto you."
           destroy_uo_confirm: "Remove user"
-          delete_organization_heading: "Delete team"
+          delete_team_heading: "Delete team"
           can_delete_message: "This team can be deleted because it doesn't have any projects."
           delete_text: "Delete team."
           cannot_delete_message_projects: "Cannot delete this team. Only empty teams (without any projects) can be deleted."
-          modal_destroy_organization:
+          modal_destroy_team:
             title: "Delete team"
-            message: "Are you sure you wish to delete team %{org}? All of the users will be removed from the team as well. This action is irreversible."
+            message: "Are you sure you wish to delete team %{team}? All of the users will be removed from the team as well. This action is irreversible."
             confirm: "Delete team"
-            flash_success: "Team %{org} was successfully deleted."
+            flash_success: "Team %{team} was successfully deleted."
 
   protocols:
     nav:
@@ -1240,7 +1240,7 @@ en:
       archive:
         description: "Archived protocols can only be seen by you. Restoring protocols will return them to their previous location (public/private)."
       restore: "Restore"
-      no_orgs:
+      no_teams:
         title: "It's empty here!"
         text: "It seems you're not a member of any team. See team management to sort it out."
         btn: "Manage teams"
@@ -1365,14 +1365,14 @@ en:
     no_keywords: "No keywords"
 
   invite_users:
-    to_org:
-      title: "Invite users to team %{organization}"
-      heading: "Invite more people to team %{organization} and start using sciNote."
-    no_org:
+    to_team:
+      title: "Invite users to team %{team}"
+      heading: "Invite more people to team %{team} and start using sciNote."
+    no_team:
       title: "Invite users to sciNote"
       heading: "Invite more people to start using sciNote."
     input_subtitle: "Input one or multiple emails, confirm each email with ENTER key."
-    invite_to_org_heading: "Invite users to my team:"
+    invite_to_team_heading: "Invite users to my team:"
     invite_btn: "Invite user/s"
     invite_guest: "as Guest/s"
     invite_user: "as Normal user/s"
@@ -1380,11 +1380,11 @@ en:
     results:
       heading: "Invitation results:"
       user_exists: "User is already a member of sciNote."
-      user_exists_unconfirmed_invited_to_org: "User is already a member of sciNote but is not confirmed yet - successfully invited to team %{organization} as %{role}."
-      user_exists_and_in_org: "User is already a member of sciNote and team %{organization} as %{role}."
-      user_exists_invited_to_org: "User was already a member of sciNote - successfully invited to team %{organization} as %{role}."
+      user_exists_unconfirmed_invited_to_team: "User is already a member of sciNote but is not confirmed yet - successfully invited to team %{team} as %{role}."
+      user_exists_and_in_team: "User is already a member of sciNote and team %{team} as %{role}."
+      user_exists_invited_to_team: "User was already a member of sciNote - successfully invited to team %{team} as %{role}."
       user_created: "User succesfully invited to sciNote."
-      user_created_invited_to_org: "User successfully invited to sciNote and team %{organization} as %{role}."
+      user_created_invited_to_team: "User successfully invited to sciNote and team %{team} as %{role}."
       user_invalid: "Invalid email."
       too_many_emails: "Only invited first %{nr} emails. To invite more users, "
 
@@ -1429,7 +1429,7 @@ en:
     breadcrumbs_html: "You can always use these <strong>Breadcrumbs</strong> to navigate all the way back to the Dashboard. Click on the <strong>Reports</strong> tab to generate a report of your work. <strong>(Step 18/26)</strong>"
     reports_index_click_new_report_html: "Click the <strong>New report</strong> button to create a new report. <strong>(Step 19/26)</strong>"
     new_report_html: "To add report elements to the report, click on the <strong>—+—</strong> sign on the sheet. Select the report contents in the tabs and click <strong>Add to report</strong>. You can save the report as a PDF on your computer or save it within sciNote for later viewing and modification. <strong>(Step 20/26)</strong>"
-    new_report_click_org_html: "Click on <strong>%{private_org}</strong> in breadcrumbs to return to the Dashboard. <strong>(Step 21/26)</strong>"
+    new_report_click_team_html: "Click on <strong>%{private_team}</strong> in breadcrumbs to return to the Dashboard. <strong>(Step 21/26)</strong>"
     protocols_link_html: "Click on <span class='glyphicon glyphicon-list-alt'></span> to go to the Protocols repository page. <strong>(Step 22/26)</strong>"
     protocols_index_html: "View your Public and Private Protocols, which you can Edit, Create new ones or Clone them. Protocols can be archived and restored from the Archive. <strong>(Step 23/26)</strong>"
     protocols_import_export_html: "You can also Import or Export protocols to your hard drive. Return to the Dashboard. <strong>(Step 24/26)</strong>"
@@ -1452,8 +1452,8 @@ en:
       recent_changes: "Recent changes"
       system_message: "sciNote system message"
     email_title: "You've received a sciNote notification!"
-    assign_user_to_organization: "<i>%{assigned_user}</i> was added as %{role} to team <strong>%{organization}</strong> by <i>%{assigned_by_user}</i>."
-    unassign_user_from_organization: "<i>%{unassigned_user}</i> was removed from team <strong>%{organization}</strong> by <i>%{unassigned_by_user}</i>."
+    assign_user_to_team: "<i>%{assigned_user}</i> was added as %{role} to team <strong>%{team}</strong> by <i>%{assigned_by_user}</i>."
+    unassign_user_from_team: "<i>%{unassigned_user}</i> was removed from team <strong>%{team}</strong> by <i>%{unassigned_by_user}</i>."
 
   atwho:
     no_results: "No results found"
@@ -1468,7 +1468,7 @@ en:
     res:
       archived: "(archived)"
       deleted: "(deleted)"
-    popover_html: "<span class='silver'>Team:</span>&nbsp;%{organization} <br> <span class='silver'>Role:</span>&nbsp;%{role} <br> <span class='silver'>Joined:</span>&nbsp;%{time}"
+    popover_html: "<span class='silver'>Team:</span>&nbsp;%{team} <br> <span class='silver'>Role:</span>&nbsp;%{role} <br> <span class='silver'>Joined:</span>&nbsp;%{time}"
   # This section contains general words that can be used in any parts of
   # application.
 

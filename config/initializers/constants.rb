@@ -66,8 +66,8 @@ class Constants
   # Application space
   #=============================================================================
 
-  # Minimal space needed for organization (in B)
-  MINIMAL_ORGANIZATION_SPACE_TAKEN = 1.megabyte
+  # Minimal space needed for team (in B)
+  MINIMAL_TEAM_SPACE_TAKEN = 1.megabyte
   # Additional space of each file is added to its estimated size to account for
   # DB indexes size etc.
   ASSET_ESTIMATED_SIZE_FACTOR = 1.1
@@ -223,8 +223,8 @@ class Constants
   # Very basic regex to check for validity of emails
   BASIC_EMAIL_REGEX = URI::MailTo::EMAIL_REGEXP
 
-  # Organization name for default admin user
-  DEFAULT_PRIVATE_ORG_NAME = 'My projects'.freeze
+  # Team name for default admin user
+  DEFAULT_PRIVATE_TEAM_NAME = 'My projects'.freeze
 
   #                             )       \   /      (
   #                            /|\      )\_/(     /|\

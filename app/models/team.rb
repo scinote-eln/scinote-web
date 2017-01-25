@@ -296,7 +296,7 @@ class Team < ActiveRecord::Base
       end
     end
     # project.experiments.each |experiment|
-    self.space_taken = [st, Constants::MINIMAL_ORGANIZATION_SPACE_TAKEN].max
+    self.space_taken = [st, Constants::MINIMAL_TEAM_SPACE_TAKEN].max
     Rails::logger.info "Team #{self.id}: " +
       "space (re)calculated to: " +
       "#{self.space_taken}B (#{number_to_human_size(self.space_taken)})"
@@ -316,7 +316,7 @@ class Team < ActiveRecord::Base
   def release_space(space)
     orig_space = self.space_taken
     self.space_taken = [space_taken - space,
-                        Constants::MINIMAL_ORGANIZATION_SPACE_TAKEN].max
+                        Constants::MINIMAL_TEAM_SPACE_TAKEN].max
     Rails::logger.info "Team #{self.id}: " +
       "space released: " +
       "#{orig_space}B - #{space}B = " +

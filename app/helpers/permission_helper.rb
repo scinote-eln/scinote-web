@@ -6,7 +6,7 @@ module PermissionHelper
   # SOME REFLECTION MAGIC
   #######################################################
   aspector do
-    # ---- ORGANIZATION ROLES DEFINITIONS ----
+    # ---- TEAM ROLES DEFINITIONS ----
     around [
       :is_member_of_team,
       :is_admin_of_team,
@@ -177,7 +177,7 @@ module PermissionHelper
   # public method should be made. That way, we can have
   # all permissions gathered here in one place.
 
-  # ---- ORGANIZATION ROLES ----
+  # ---- TEAM ROLES ----
   def is_member_of_team(team)
     # This is already checked by aspector, so just return true
     true
