@@ -4,12 +4,15 @@
       <div>
         <ul class="breadcrumb" style="margin-left: 15px;">
           <li>
-            <% if can_view_projects(@project.organization) %>
-              <a id="organization-link" href="<%= projects_path :organization => @project.organization.id %>" data-intro="<%=t 'tutorial.new_report_click_org_html', private_org: @project.organization.name %>" data-step="21" data-position="left">
+            <% if can_view_projects(@project.team) %>
+              <a id="team-link"
+                 href="<%= projects_path :team => @project.team.id %>"
+                 data-intro="<%=t 'tutorial.new_report_click_team_html', private_team: @project.team.name %>"
+                 data-step="21" data-position="left">
             <% end %>
             <span class="hidden-sm hidden-md hidden-lg">Org</span>
-            <span class="hidden-xs"><%= @project.organization.name %></span>
-            <% if can_view_projects(@project.organization) %>
+            <span class="hidden-xs"><%= @project.team.name %></span>
+            <% if can_view_projects(@project.team) %>
               </a>
             <% end %>
           </li>

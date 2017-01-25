@@ -2,18 +2,18 @@
 <%= render partial: "shared/sidebar" %>
 <%= render partial: "shared/secondary_navigation" %>
 
-<% if current_organization %>
+<% if current_team %>
   <ul class="nav nav-tabs nav-settings" data-position="bottom">
     <li role="presentation">
       <%= link_to t('sample_types.index.sample_types'),
-                  organization_sample_types_path(current_organization,
+                  team_sample_types_path(current_team,
                     project_id: (@project.id if @project),
                     my_module_id: (@my_module.id if @my_module),
                     experiment_id: (@experiment.id if @experiment)) %>
     </li>
     <li role="presentation" class="active">
       <%= link_to t('sample_types.index.sample_groups'),
-                  organization_sample_groups_path(current_organization,
+                  team_sample_groups_path(current_team,
                     project_id: (@project.id if @project),
                     my_module_id: (@my_module.id if @my_module),
                     experiment_id: (@experiment.id if @experiment)) %>
@@ -33,7 +33,7 @@
             <%= bootstrap_form_for SampleGroup.new,
                                    remote: true,
                                    html: { class: 'form-inline' },
-                                   url: organization_sample_groups_path(current_organization) do |f| %>
+                                   url: team_sample_groups_path(current_team) do |f| %>
               <div class="col-xs-8">
               <%= f.text_field :name,
                                id: 'name-input',
@@ -52,7 +52,7 @@
         <% @sample_groups.sorted.each do |sample_group| %>
         <%= render partial: 'sample_group',
                             locals: { sample_group: sample_group,
-                                      organization: current_organization } %>
+                                      team: current_team } %>
         <% end %>
       </ul>
     </div>

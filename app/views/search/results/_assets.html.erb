@@ -55,9 +55,9 @@
       <% end %>
       <br>
       <span>
-        <%=t "search.index.organization" %>
-        <%= render partial: "search/results/partials/organization_text.html.erb",
-                   locals: { organization: asset.step.protocol.organization } %>
+        <%=t "search.index.team" %>
+        <%= render partial: "search/results/partials/team_text.html.erb",
+                   locals: { team: asset.step.protocol.team } %>
       </span>
     <% elsif asset.result %>
       <span>
@@ -85,9 +85,9 @@
       </span>
       <br>
       <span>
-        <%=t "search.index.organization" %>
-        <%= render partial: "search/results/partials/organization_text.html.erb",
-                   locals: { organization: asset.result.my_module.experiment.project.organization } %>
+        <%=t "search.index.team" %>
+        <%= render partial: "search/results/partials/team_text.html.erb",
+                   locals: { team: asset.result.my_module.experiment.project.team } %>
       </span>
     <% end %>
   </p>

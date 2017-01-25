@@ -1,17 +1,17 @@
 <% provide(:head_title, t("protocols.index.head_title")) %>
 
-<% if current_organization %>
-  <%= render partial: "protocols/breadcrumbs.html.erb", locals: { organizations: @organizations, current_organization: @current_organization, type: @type } %>
+<% if current_team %>
+  <%= render partial: "protocols/breadcrumbs.html.erb", locals: { teams: @teams, current_team: @current_team, type: @type } %>
 
   <ul class="nav nav-tabs nav-settings" data-intro="<%=t 'tutorial.protocols_index_html' %>" data-step="23" data-position="bottom">
     <li role="presentation" class="<%= "active" if @type == :public %>">
-      <%= link_to t("protocols.index.navigation.public"), protocols_path(organization: @current_organization, type: :public) %>
+      <%= link_to t("protocols.index.navigation.public"), protocols_path(team: @current_team, type: :public) %>
     </li>
     <li role="presentation" class="<%= "active" if @type == :private %>">
-      <%= link_to t("protocols.index.navigation.private"), protocols_path(organization: @current_organization, type: :private) %>
+      <%= link_to t("protocols.index.navigation.private"), protocols_path(team: @current_team, type: :private) %>
     </li>
     <li role="presentation" class="<%= "active" if @type == :archive %>">
-      <%= link_to protocols_path(organization: @current_organization, type: :archive) do %>
+      <%= link_to protocols_path(team: @current_team, type: :archive) do %>
         <span class="glyphicon glyphicon-briefcase"></span>
       <% end %>
     </li>
@@ -24,7 +24,7 @@
           <%= t(@type == :public ? "protocols.index.public_description" : "protocols.index.private_description") %>
         </div>
         <div class="btn-group" role="group">
-          <a class="btn btn-default" <%= can_create_new_protocol(@current_organization) ? "data-action=create-new" : "disabled=disabled" %> data-url="<%= create_new_modal_protocols_path(organization: @current_organization, type: @type) %>">
+          <a class="btn btn-default" <%= can_create_new_protocol(@current_team) ? "data-action=create-new" : "disabled=disabled" %> data-url="<%= create_new_modal_protocols_path(team: @current_team, type: @type) %>">
             <span class="glyphicon glyphicon-plus"></span>
             <span class="hidden-xs">&nbsp;<%= t("protocols.index.create_new") %></span>
           </a>
@@ -50,13 +50,13 @@
         </div>
 
         <div class="btn-group" role="group" data-intro="<%=t 'tutorial.protocols_import_export_html' %>" data-step="24">
-          <a class="btn btn-default btn-open-file" <%= can_import_protocols(@current_organization) ? 'data-action="import"' : 'disabled="disabled"' %>>
+          <a class="btn btn-default btn-open-file" <%= can_import_protocols(@current_team) ? 'data-action="import"' : 'disabled="disabled"' %>>
             <span class="glyphicon glyphicon-import"></span>
             <span class="hidden-xs">&nbsp;<%= t("protocols.index.import") %></span>
             <input type="file" value="" accept=".eln" data-role="import-file-input"
-            data-organization-id="<%= @current_organization.id %>"
+            data-team-id="<%= @current_team.id %>"
             data-type="<%= @type %>" data-import-url="<%= import_protocols_path %>"
-            <%= 'disabled="disabled"' unless can_import_protocols(@current_organization) %>>
+            <%= 'disabled="disabled"' unless can_import_protocols(@current_team) %>>
           </a>
           <a class="btn btn-default" data-action="export" data-export-url="<%= export_protocols_path() %>">
             <span class="glyphicon glyphicon-export"></span>
@@ -84,7 +84,7 @@
 
       <div id="protocols-datatable-spinner">
         <div class="protocols-datatable">
-          <table id="protocols-table" class="table" data-organization-id="<%= @current_organization.id %>" data-type="<%= @type %>" data-source="<%= datatable_protocols_path(organization: @current_organization, type: @type) %>">
+          <table id="protocols-table" class="table" data-team-id="<%= @current_team.id %>" data-type="<%= @type %>" data-source="<%= datatable_protocols_path(team: @current_team, type: @type) %>">
             <thead>
               <tr>
                 <th id="select-all"><input name="select_all" value="1" type="checkbox"></th>
@@ -111,13 +111,13 @@
     </div>
   </div>
 <% else %>
-    <!-- Show link to organization management if member of
-  no organizations -->
+    <!-- Show link to team management if member of
+  no teams -->
   <div class="jumbotron">
-    <h2><%= t("protocols.index.no_orgs.title") %></h2>
-    <p><%= t("protocols.index.no_orgs.text") %></p>
+    <h2><%=t 'protocols.index.no_teams.title' %></h2>
+    <p><%=t 'protocols.index.no_teams.text' %></p>
     <p>
-      <%= link_to t("protocols.index.no_orgs.btn"), organizations_path, class: "btn btn-primary" %>
+      <%= link_to t('protocols.index.no_teams.btn'), teams_path, class: 'btn btn-primary' %>
     </p>
   </div>
 <% end %>
