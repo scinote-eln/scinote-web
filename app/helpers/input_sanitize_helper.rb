@@ -1,9 +1,13 @@
 module InputSanitizeHelper
-  def sanitize_input(text)
+  def sanitize_input(
+    text,
+    tags = [],
+    attributes = []
+  )
     ActionController::Base.helpers.sanitize(
       text,
-      tags: Constants::WHITELISTED_TAGS,
-      attributes: Constants::WHITELISTED_ATTRIBUTES
+      tags: Constants::WHITELISTED_TAGS + tags,
+      attributes: Constants::WHITELISTED_ATTRIBUTES + attributes
     )
   end
 
