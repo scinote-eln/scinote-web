@@ -163,8 +163,11 @@ function processResult(ev, resultTypeEnum, editMode) {
       var nameValid = textValidator(ev, $nameInput, 0,
         <%= Constants::NAME_MAX_LENGTH %>);
       var $fileInput = $form.find("#result_asset_attributes_file");
-      var filesValid = filesValidator(ev, $fileInput, FileTypeEnum.FILE,
-        editMode);
+      var filesValid = true;
+      if ($fileInput.val()) {
+        filesValid = filesValidator(ev, $fileInput, FileTypeEnum.FILE,
+          editMode);
+      }
 
       if(nameValid && filesValid) {
         // Local file uploading

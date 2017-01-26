@@ -63,8 +63,6 @@ function formAjaxResultAsset($form) {
 
     toggleResultEditButtons(true);
     expandResult($newResult);
-    $imgs = $newResult.find("img");
-    reloadImages($imgs);
     initPreviewModal();
   })
   .on("ajax:error", function(e, data) {
