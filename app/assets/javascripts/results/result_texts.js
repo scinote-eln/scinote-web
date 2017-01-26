@@ -37,10 +37,8 @@ function applyEditResultTextCallback() {
             applyEditResultTextCallback();
             toggleResultEditButtons(true);
         });
-
-        TinyMCE.init();
         toggleResultEditButtons(false);
-
+        TinyMCE.refresh();
         $("#result_name").focus();
     });
 
