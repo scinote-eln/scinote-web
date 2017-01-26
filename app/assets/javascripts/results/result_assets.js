@@ -66,6 +66,7 @@ function formAjaxResultAsset($form) {
     $imgs = $newResult.find("img");
     reloadImages($imgs);
     initPreviewModal();
+    Comments.initialize();
   })
   .on("ajax:error", function(e, data) {
     $form.renderFormErrors("result", data.errors, true, e);
