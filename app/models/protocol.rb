@@ -262,10 +262,14 @@ class Protocol < ActiveRecord::Base
         )
         asset2.created_by = current_user
         asset2.last_modified_by = current_user
+        asset2.file_processing = true if asset.is_image?
         asset2.save
 
         step2.assets << asset2
-        asset2.file.delay.reprocess!(:medium)
+        if asset.is_image?
+          asset2.file.delay.reprocess!(:large)
+          asset2.file.delay.reprocess!(:medium)
+        end
         assets_to_clone << [asset.id, asset2.id]
       end
 
