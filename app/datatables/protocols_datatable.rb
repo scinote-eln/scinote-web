@@ -190,9 +190,11 @@ class ProtocolsDatatable < AjaxDatatablesRails::Base
       kws = record.protocol_keywords_str.split(", ")
       res = []
       kws.sort_by{ |word| word.downcase }.each do |kw|
-        res << "<a href='#' data-action='filter' data-param='#{kw}'>#{kw}</a>"
+        sanitized_kw = sanitize_input(kw)
+        res << "<a href='#' data-action='filter' " \
+          "data-param='#{sanitized_kw}'>#{sanitized_kw}</a>"
       end
-      sanitize_input(res.join(', '))
+      res.join(', ')
     end
   end
 
