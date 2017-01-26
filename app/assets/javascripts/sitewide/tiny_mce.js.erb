@@ -63,7 +63,7 @@ var TinyMCE = (function() {
             initHighlightjsIframe($(this.iframeElement).contents());
           },
           setup: function(editor) {
-            editor.on('Change', function(e) {
+            editor.on('keydown', function(e) {
               if(e.keyCode == 13 && $(editor.contentDocument.activeElement).atwho('isSelecting')) {
                 return false;
               }
