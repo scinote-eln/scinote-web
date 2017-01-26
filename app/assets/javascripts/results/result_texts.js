@@ -10,10 +10,8 @@ $("#new-result-text").on("ajax:success", function(e, data) {
         $form.remove();
         toggleResultEditButtons(true);
     });
-
-    TinyMCE.init();
     toggleResultEditButtons(false);
-
+    TinyMCE.refresh();
     $("#result_name").focus();
 });
 
