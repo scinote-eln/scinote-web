@@ -127,7 +127,7 @@ class ProtocolsDatatable < AjaxDatatablesRails::Base
     if @type == :public
       records =
         records
-        .joins('LEFT OUTER JOIN users ON users.id = protocols.added_by_id"')
+        .joins('LEFT OUTER JOIN users ON users.id = protocols.added_by_id')
         .where('protocols.protocol_type = ?',
                Protocol.protocol_types[:in_repository_public])
     elsif @type == :private

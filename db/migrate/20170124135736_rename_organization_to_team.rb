@@ -1,5 +1,9 @@
 class RenameOrganizationToTeam < ActiveRecord::Migration
   def up
+    unless ActiveRecord::Base.connection.table_exists?('organizations') &&
+           ActiveRecord::Base.connection.table_exists?('user_organizations')
+      return
+    end
     rename_table :organizations, :teams
     rename_table :user_organizations, :user_teams
 
@@ -17,6 +21,10 @@ class RenameOrganizationToTeam < ActiveRecord::Migration
   end
 
   def down
+    unless ActiveRecord::Base.connection.table_exists?('teams') &&
+           ActiveRecord::Base.connection.table_exists?('user_teams')
+      return
+    end
     rename_table :teams, :organizations
     rename_table  :user_teams, :user_organizations
 
