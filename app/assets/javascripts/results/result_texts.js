@@ -60,6 +60,7 @@ function formAjaxResultText($form) {
         toggleResultEditButtons(true);
         expandResult(newResult);
         TinyMCE.destroyAll();
+        Comments.initialize();
     });
     $form.on("ajax:error", function(e, xhr, status, error) {
         var data = xhr.responseJSON;
