@@ -35,7 +35,7 @@ class Step < ActiveRecord::Base
     reject_if: :all_blank,
     allow_destroy: true
   accepts_nested_attributes_for :tables,
-    reject_if: :all_blank,
+    reject_if: proc { |attributes| attributes['contents'].blank? },
     allow_destroy: true
 
   after_destroy :cascade_after_destroy
