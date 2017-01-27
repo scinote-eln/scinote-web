@@ -29,14 +29,16 @@ class Step < ActiveRecord::Base
     dependent: :destroy
 
   accepts_nested_attributes_for :checklists,
-    reject_if: :all_blank,
-    allow_destroy: true
+                                reject_if: :all_blank,
+                                allow_destroy: true
   accepts_nested_attributes_for :assets,
-    reject_if: :all_blank,
-    allow_destroy: true
+                                reject_if: :all_blank,
+                                allow_destroy: true
   accepts_nested_attributes_for :tables,
-    reject_if: proc { |attributes| attributes['contents'].blank? },
-    allow_destroy: true
+                                reject_if: proc { |attributes|
+                                  attributes['contents'].blank?
+                                },
+                                allow_destroy: true
 
   after_destroy :cascade_after_destroy
   before_save :set_last_modified_by
