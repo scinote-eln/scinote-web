@@ -162,6 +162,7 @@ function dataTableInit() {
       table.on('mousedown', function() {
         $('#samples-columns-dropdown').removeClass('open');
       });
+      initHeaderTooltip();
     }
   });
 
@@ -348,6 +349,34 @@ function appendSamplesIdToForm(form) {
             .val(rowId)
         );
     });
+}
+
+function initHeaderTooltip() {
+  // Fix compatibility of fixed table header and column names modal-tooltip
+  $('.modal-tooltip').off();
+  $('.modal-tooltip').hover(function() {
+    var $tooltip = $(this).find('.modal-tooltiptext');
+    var offsetLeft = $tooltip.offset().left;
+    (offsetLeft + 200) > $(window).width() ? offsetLeft -= 150 : offsetLeft;
+    var offsetTop = $tooltip.offset().top;
+    $('body').append($tooltip);
+    $tooltip.css('background-color', '#d2d2d2');
+    $tooltip.css('border-radius', '6px');
+    $tooltip.css('color', '#333');
+    $tooltip.css('display', 'block');
+    $tooltip.css('left', offsetLeft + 'px');
+    $tooltip.css('padding', '5px');
+    $tooltip.css('position', 'absolute');
+    $tooltip.css('text-align', 'center');
+    $tooltip.css('top', offsetTop + 'px');
+    $tooltip.css('visibility', 'visible');
+    $tooltip.css('width', '200px');
+    $tooltip.css('word-wrap', 'break-word');
+    $(this).data('dropdown-tooltip', $tooltip);
+  }, function() {
+    $(this).append($(this).data('dropdown-tooltip'));
+    $(this).data('dropdown-tooltip').removeAttr('style');
+  });
 }
 
 //Show sample info
@@ -1076,6 +1105,7 @@ function changeToEditMode() {
         li.removeClass('col-invisible');
         column.visible(true);
         table.setColumnSearchable(column.index(), true);
+        initHeaderTooltip();
       }
 
       // Re-filter/search if neccesary
@@ -1135,6 +1165,7 @@ function changeToEditMode() {
             .html(generateColumnNameTooltip(newName));
 
           cancelEditMode();
+          initHeaderTooltip();
         },
         error: function(xhr) {
           dropdownList.sortable('disable');

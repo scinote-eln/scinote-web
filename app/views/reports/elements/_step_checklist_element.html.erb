@@ -8,10 +8,7 @@
           <span class="glyphicon glyphicon-list"></span>
       </div>
       <div class="pull-left checklist-name">
-        <%= auto_link(smart_annotation_parser(simple_format(t 'projects.reports.elements.step_checklist.checklist_name', name: checklist.name)),
-                      link: :urls,
-                      sanitize: false,
-                      html: { target: '_blank' }).html_safe %>
+        <%= custom_auto_link(t('projects.reports.elements.step_checklist.checklist_name', name: checklist.name)) %>
       </div>
       <div class="pull-left user-time">
         <%=t 'projects.reports.elements.step_checklist.user_time', timestamp: l(timestamp, format: :full) %>
@@ -27,10 +24,8 @@
         <li>
           <input type="checkbox" disabled="disabled" <%= "checked='checked'" if item.checked %>/>
           <span class="<%= 'checked' if item.checked %>">
-            <%= auto_link(smart_annotation_parser(simple_format(sanitize_input(item.text))),
-                          link: :urls,
-                          sanitize: false,
-                          html: { target: '_blank' }).html_safe %></span>
+            <%= custom_auto_link(item.text) %>
+          </span>
         </li>
       <% end %>
     </ul>

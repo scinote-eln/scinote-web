@@ -15,8 +15,9 @@ class AtWhoController < ApplicationController
       user_obj['full_name'] =
         user_obj['full_name']
         .truncate(Constants::NAME_TRUNCATION_LENGTH_DROPDOWN)
-      user_obj['id'] = user_obj['id'].base62_encode
-      user_obj['img_url'] = avatar_path(user_obj['id'], :icon_small)
+      id = user_obj['id']
+      user_obj['id'] = id.base62_encode
+      user_obj['img_url'] = avatar_path(id, :icon_small)
     end
 
     respond_to do |format|

@@ -94,9 +94,9 @@ module ProtocolsExporter
             checklist_xml = "<checklist id=\"#{checklist.id}\" " \
                             "guid=\"#{get_guid(checklist.id)}\">\n"
             checklist_xml << "<name>#{checklist.name}</name>\n"
-            if checklist.items
+            if checklist.checklist_items
               checklist_xml << "<items>\n"
-              checklist.items.each do |item|
+              checklist.checklist_items.each do |item|
                 item_xml = "<item id=\"#{item.id}\" " \
                            "guid=\"#{get_guid(item.id)}\" " \
                            "position=\"#{item.position}\">\n"

@@ -107,7 +107,7 @@ function applyEditCallBack() {
     animateSpinner(null, false);
     initPreviewModal();
 
-    TinyMCE.init();
+    TinyMCE.refresh()
     $("#new-step-checklists fieldset.nested_step_checklists ul").each(function () {
       enableCheckboxSorting(this);
     });
@@ -254,9 +254,6 @@ function formNewAjax($form) {
     initHandsOnTable($new_step);
     expandStep($new_step);
     toggleButtons(true);
-
-    TinyMCE.init();
-    TinyMCE.highlight();
     SmartAnnotation.preventPropagation('.atwho-user-popover');
 
     //Rerender tables

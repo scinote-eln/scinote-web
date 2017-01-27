@@ -11,7 +11,7 @@ module FormTagHelper
         res << '</span>'
       end
       res << '</div>'
-      sanitize_input(res)
+      res.html_safe
     end
   end
 end

@@ -11,12 +11,18 @@ class SamplesController < ApplicationController
     respond_to do |format|
       format.html
       if can_create_samples(@team)
-      format.json {
-        render json: {
-          sample_groups: @team.sample_groups.as_json(only: [:id, :name, :color]),
-          sample_types: @team.sample_types.as_json(only: [:id, :name])
-        }
-      }
+        groups = @team.sample_groups.map do |g|
+          { id: g.id, name: sanitize_input(g.name), color: g.color }
+        end
+        types = @team.sample_types.map do |t|
+          { id: t.id, name: sanitize_input(t.name) }
+        end
+        format.json do
+          render json: {
+            sample_groups: groups.as_json,
+            sample_types: types.as_json
+          }
+        end
       else
         format.json { render json: {}, status: :unauthorized }
       end
@@ -122,8 +128,12 @@ class SamplesController < ApplicationController
         sample_group: @sample.sample_group.nil? ? "" : @sample.sample_group.id,
         custom_fields: {}
       },
-      sample_groups: @team.sample_groups.as_json(only: [:id, :name, :color]),
-      sample_types: @team.sample_types.as_json(only: [:id, :name])
+      sample_groups: @team.sample_groups.map do |g|
+        { id: g.id, name: sanitize_input(g.name), color: g.color }
+      end,
+      sample_types: @team.sample_types.map do |t|
+        { id: t.id, name: sanitize_input(t.name) }
+      end
     }
 
     # Add custom fields ids as key (easier lookup on js side)
