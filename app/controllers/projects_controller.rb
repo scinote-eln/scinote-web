@@ -37,6 +37,8 @@ class ProjectsController < ApplicationController
       @projects_by_teams = current_user.projects_by_teams(@current_team_id,
                                                           @current_sort,
                                                           @filter_by_archived)
+    else
+      @projects_by_teams = []
     end
 
     @teams = current_user.teams

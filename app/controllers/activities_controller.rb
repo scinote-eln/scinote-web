@@ -20,7 +20,7 @@ class ActivitiesController < ApplicationController
       days_since_1970(DateTime.current + 30.days)
 
     more_url = url_for(activities_url(format: :json,
-      from: @activities.last.id))
+      from: @activities.last.id)) if @overflown
     respond_to do |format|
       format.json {
         render :json => {

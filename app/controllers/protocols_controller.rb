@@ -860,7 +860,8 @@ class ProtocolsController < ApplicationController
   def check_view_all_permissions
     load_team_and_type
 
-    unless can_view_team_protocols(@current_team)
+    if @current_team &&
+       !can_view_organization_protocols(@current_organization)
       render_403
     end
   end

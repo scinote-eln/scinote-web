@@ -1,7 +1,7 @@
 <div class="row">
   <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
     <%= form.text_field :name, label: t("projects.index.modal_new_project.name"), autofocus: true, placeholder: t("projects.index.modal_new_project.name_placeholder") %>
-    <%= hidden_field :project, :team_id, value: current_team.id %>
+    <%= hidden_field :project, :team_id, value: current_team.id if current_team %>
   </div>
 </div>
 
