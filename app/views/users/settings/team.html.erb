@@ -25,27 +25,27 @@
         </div>
         <div class="well well-sm">
           <span class="hidden-xs hidden-sm"><%= t("users.settings.teams.edit.header_created_at") %></span>
-          <strong><%= l(@team.created_at, format: :full) %></strong>
+          <strong><%= l(@team.created_at, format: :full_date) %></strong>
         </div>
       </div>
 
-      <div class="col-xs-6 col-sm-3">
+      <div class="col-xs-10 col-sm-5">
         <div class="badge-icon bg-primary">
           <span class="glyphicon glyphicon-user"></span>
         </div>
         <div class="well well-sm">
-          <span class="hidden-xs hidden-sm"><%= t("users.settings.teams.edit.header_joined_on") %></span>
-            <strong><%= l(@user_team.created_at, format: :full) %></strong>
+          <span class="hidden-xs hidden-sm"><%= t("users.settings.teams.edit.header_created_by") %></span>
+          <strong><%= t("users.settings.teams.edit.header_created_by_name_email", name: team_created_by(@team).name, email: team_created_by(@team).email) %></strong>
         </div>
       </div>
 
-       <div class="col-xs-12 col-sm-6">
+      <div class="col-xs-8 col-sm-4">
         <div class="badge-icon bg-primary">
           <span class="glyphicon glyphicon-hdd"></span>
         </div>
         <div class="well well-sm">
           <span class="hidden-xs hidden-sm"><%= t("users.settings.teams.edit.header_space_taken") %></span>
-            <strong><%= "#{number_to_human_size(@team.space_taken)}" %></strong>
+          <strong><%= "#{number_to_human_size(@team.space_taken)}" %></strong>
         </div>
       </div>
     </div>
@@ -73,23 +73,25 @@
     <!-- USERS TABLE -->
     <div class="panel panel-default panel-team-users">
       <div class="panel-heading">
-        <%= t("users.settings.teams.edit.manage_users") %>
+        <%= t("users.settings.teams.edit.team_members_title") %>
       </div>
       <div class="panel-body">
-        <a href="#" class="btn btn-primary" data-trigger="invite-users" data-modal-id="team-invite-users-modal">
-          <span class="glyphicon glyphicon-plus"></span>
-          <%= t("users.settings.teams.edit.add_user") %>
-        </a>
+        <div class="col-xs-24 col-sm-12">
+          <a href="#" class="btn btn-primary pull-right row" data-trigger="invite-users" data-modal-id="team-invite-users-modal">
+            <span class="glyphicon glyphicon-plus"></span>
+            <%= t("users.settings.teams.edit.add_user") %>
+          </a>
+        </div>
         <div class="users-datatable">
           <table id="users-table" class="table" data-source="<%= team_users_datatable_path(@team, format: :json) %>">
             <thead>
               <tr>
                 <th id="user-name"><%= t("users.settings.teams.edit.thead_user_name") %></th>
                 <th id="email"><%= t("users.settings.teams.edit.thead_email") %></th>
+                <th id="user-role"><%= t("users.settings.teams.edit.thead_role") %></th>
                 <th id="joined-on"><%= t("users.settings.teams.edit.thead_joined_on") %></th>
                 <th id="status"><%= t("users.settings.teams.edit.thead_status") %></th>
-                <th id="user-role"><%= t("users.settings.teams.edit.thead_role") %></th>
-                <th id="options"></th>
+                <th id="options"><%= t("users.settings.teams.edit.thead_actions") %></th>
               </tr>
             </thead>
             <tbody></tbody>

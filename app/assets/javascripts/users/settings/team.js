@@ -104,14 +104,9 @@ function initUsersTable() {
       fixedColumnsLeft: 1000000 // Disable reordering
     },
     columnDefs: [{
-      targets: [ 0, 1, 2 ],
+      targets: [ 0, 1, 2, 3, 4 ],
       searchable: true,
       orderable: true
-    }, {
-      targets: [ 3, 4 ],
-      searchable: true,
-      orderable: true,
-      sWidth: "1%"
     }, {
       targets: 5,
       searchable: false,

@@ -1024,8 +1024,8 @@ en:
   users:
     enums:
       status:
-        active: "Active"
-        pending: "Pending"
+        active: "active"
+        pending: "pending"
     invitations:
       edit:
         head_title: "Accept invitation"
@@ -1118,23 +1118,24 @@ en:
           description_sublabel: "Describe your team."
           create: "Create team"
         edit:
-          header_created_at: "Created at:"
-          header_joined_on: "Joined on:"
-          header_space_taken: "Space taken:"
+          header_created_at: "Created on:"
+          header_created_by: "Created by:"
+          header_created_by_name_email: "%{name} (%{email})"
+          header_space_taken: "Space usage:"
           header_no_description: "No description"
           name_title: "Edit team name"
           name_label: "Name"
           description_title: "Edit team description"
           description_label: "Description"
-          manage_users: "Manage users"
-          add_user: "Invite user"
-          thead_user_name: "Member name"
-          thead_email: "Member email"
+          team_members_title: "Team members"
+          add_user: "Add team members"
+          thead_user_name: "Name"
+          thead_email: "Email"
           thead_joined_on: "Joined on"
           thead_status: "Status"
           thead_role: "Role"
+          thead_actions: "Actions"
           user_dropdown:
-            btn_label: "Edit"
             role_label: "User role"
             remove_label: "Remove"
           destroy_uo_heading: "Remove user %{user} from team %{team}"
