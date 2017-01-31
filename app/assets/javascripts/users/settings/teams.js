@@ -1,4 +1,4 @@
-function initLeaveOrganizations() {
+function initLeaveTeams() {
   // Bind the "leave team" buttons in teams table
   $(document)
   .on(
@@ -56,4 +56,4 @@ function initLeaveOrganizations() {
   );
 }
 
-initLeaveOrganizations();
+initLeaveTeams();

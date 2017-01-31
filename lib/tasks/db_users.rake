@@ -21,82 +21,78 @@ namespace :db do
     begin
       ActiveRecord::Base.transaction do
         # Parse user & team hashes from YAML
-        teams = yaml.select{ |k, v| /team_[0-9]+/ =~ k }
-        users = yaml.select{ |k, v| /user_[0-9]+/ =~ k }
+        teams = yaml.select { |k, v| /team_[0-9]+/ =~ k }
+        users = yaml.select { |k, v| /user_[0-9]+/ =~ k }
 
         # Create teams
         teams.each do |k, team_hash|
-          team = Team.order(created_at: :desc).where(name: team_hash["name"]).first
-          if team.blank?
-            team = Team.create({
-              name: team_hash["name"][0..99]
-            })
-          end
-          team_hash["id"] = team.id
+          team = Team.order(created_at: :desc)
+                     .where(name: team_hash['name'])
+                     .first
+          team = Team.create(name: team_hash['name'][0..99]) if team.blank?
+          team_hash['id'] = team.id
         end
 
         # Create users
-        puts "Created users"
+        puts 'Created users'
         users.each do |k, user_hash|
-          password = user_hash["password"]
-          if password.blank?
-            password = generate_user_password
-          end
+          password = user_hash['password']
+          password = generate_user_password if password.blank?
 
-          user_teams = user_hash["teams"]
-          if user_teams.blank?
-            user_teams = ""
-          end
+          user_teams = user_hash['teams']
+          user_teams = '' if user_teams.blank
 
           team_ids =
             user_teams
-            .split(",")
-            .collect{ |o| o.strip }
+            .split(',')
+            .collect(&:strip)
             .uniq
-            .select{ |o| teams.include? o }
-            .collect{ |o| teams[o]["id"] }
+            .select { |o| teams.include? o }
+            .collect { |o| teams[o]['id'] }
 
           user = create_user(
-            user_hash["full_name"],
-            user_hash["email"],
+            user_hash['full_name'],
+            user_hash['email'],
             password,
             true,
             create_teams ? Constants::DEFAULT_PRIVATE_ORG_NAME : nil,
             team_ids
           )
 
-          if user.id.present? then
-            puts ""
+          if user.id.present?
+            puts ''
             print_user(user, password)
           end
         end
 
-        puts ""
+        puts ''
       end
     rescue ActiveRecord::ActiveRecordError, ArgumentError
-      puts "Error creating all users, transaction reverted"
+      puts 'Error creating all users, transaction reverted'
     end
   end
 
-  desc "Add a single user to the database"
+  desc 'Add a single user to the database'
   task :add_user => :environment do
-    puts "Type in user's full name (e.g. 'Steve Johnson')"
+    puts 'Type in user\'s full name (e.g. \'Steve Johnson\')'
     full_name = $stdin.gets.to_s.strip
-    puts "Type in user's email (e.g. 'steve.johnson@gmail.com')"
+    puts 'Type in user\'s email (e.g. \'steve.johnson@gmail.com\')'
     email = $stdin.gets.to_s.strip
-    puts "Type in user's password (e.g. 'password'), or leave blank to let Rails generate password"
+    puts 'Type in user\'s password (e.g. \'password\'), or ' \
+         'leave blank to let Rails generate password'
     password = $stdin.gets.to_s.strip
     if password.empty?
       password = generate_user_password
     end
-    puts "Do you want Rails to create default user's team? (T/F)"
-    create_team = $stdin.gets.to_s.strip == "T"
-    puts "Type names of any additional teams you want the user to be admin of (delimited with ','), or leave blank"
+    puts 'Do you want Rails to create default user\'s team? (T/F)'
+    create_team = $stdin.gets.to_s.strip == 'T'
+    puts 'Type names of any additional teams you want the user ' \
+         'to be admin of (delimited with \',\'), or leave blank'
     team_names = $stdin.gets.to_s.strip
     if team_names.empty?
       team_names = []
     else
-      team_names = team_names.split(",").collect { |n| n.strip }
+      team_names = team_names.split(',').collect(&:strip)
     end
 
     begin
@@ -105,9 +101,7 @@ namespace :db do
         team_ids = []
         team_names.each do |team_name|
           team = Team.order(created_at: :desc).where(name: team_name).first
-          if team.blank? then
-            team = Team.create({ name: team_name[0..99] })
-          end
+          team = Team.create(name: team_name[0..99]) if team.blank
 
           team_ids << team.id
         end

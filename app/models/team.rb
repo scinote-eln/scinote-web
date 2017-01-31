@@ -128,7 +128,7 @@ class Team < ActiveRecord::Base
           # We need to have sample saved before messing with custom fields (they
           # need sample id)
           if index == stype_index
-            stype = SampleType.where(name: value, team_id: id).take();
+            stype = SampleType.where(name: value, team_id: id).take
 
             if stype
               sample.sample_type = stype
@@ -140,7 +140,7 @@ class Team < ActiveRecord::Base
             end
             sample.save
           elsif index == sgroup_index
-            sgroup = SampleGroup.where(name: value, team_id: id).take();
+            sgroup = SampleGroup.where(name: value, team_id: id).take
 
             if sgroup
               sample.sample_group = sgroup

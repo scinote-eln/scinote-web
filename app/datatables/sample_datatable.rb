@@ -253,12 +253,13 @@ class SampleDatatable < AjaxDatatablesRails::Base
             .select('"samples"."id"')
             .distinct
 
-          # grabs the ids that are not the previous one but are still of the same team
+          # grabs the ids that are not the previous one but are still
+          # of the same team
           unassigned = Sample
-            .where('"samples"."team_id" = ?', @team.id)
-            .where('"samples"."id" NOT IN (?)', assigned)
-            .select('"samples"."id"')
-            .distinct
+                       .where('"samples"."team_id" = ?', @team.id)
+                       .where('"samples"."id" NOT IN (?)', assigned)
+                       .select('"samples"."id"')
+                       .distinct
 
           # check the input param and merge the two arrays of ids
           if params[:order].values[0]['dir'] == 'asc'

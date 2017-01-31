@@ -41,103 +41,148 @@ class Protocol < ActiveRecord::Base
   end
   with_options if: :in_repository_public? do |protocol|
     # Public protocol must have unique name inside its team
-    protocol.validates_uniqueness_of :name, scope: [:team], conditions: -> { where(protocol_type: Protocol.protocol_types[:in_repository_public]) }
+    protocol
+      .validates_uniqueness_of :name,
+                               scope: :team,
+                               conditions: -> {
+                                 where(
+                                   protocol_type:
+                                     Protocol
+                                      .protocol_types[:in_repository_public]
+                                 )
+                               }
     protocol.validates :published_on, presence: true
   end
   with_options if: :in_repository_private? do |protocol|
     # Private protocol must have unique name inside its team & user scope
-    protocol.validates_uniqueness_of :name, scope: [:team, :added_by], conditions: -> { where(protocol_type: Protocol.protocol_types[:in_repository_private]) }
+    protocol
+      .validates_uniqueness_of :name,
+                               scope: [:team, :added_by],
+                               conditions: -> {
+                                 where(
+                                   protocol_type:
+                                     Protocol
+                                       .protocol_types[:in_repository_private]
+                                 )
+                               }
   end
   with_options if: :in_repository_archived? do |protocol|
     # Archived protocol must have unique name inside its team & user scope
-    protocol.validates_uniqueness_of :name, scope: [:team, :added_by], conditions: -> { where(protocol_type: Protocol.protocol_types[:in_repository_archived]) }
+    protocol
+      .validates_uniqueness_of :name,
+                               scope: [:team, :added_by],
+                               conditions: -> {
+                                 where(
+                                   protocol_type:
+                                    Protocol
+                                      .protocol_types[:in_repository_archived]
+                                 )
+                               }
     protocol.validates :archived_by, presence: true
     protocol.validates :archived_on, presence: true
   end
 
-  belongs_to :added_by, foreign_key: 'added_by_id', class_name: 'User', inverse_of: :added_protocols
+  belongs_to :added_by,
+             foreign_key: 'added_by_id',
+             class_name: 'User',
+             inverse_of: :added_protocols
   belongs_to :my_module, inverse_of: :protocols
   belongs_to :team, inverse_of: :protocols
   belongs_to :parent, foreign_key: 'parent_id', class_name: 'Protocol'
-  belongs_to :archived_by, foreign_key: 'archived_by_id', class_name: 'User', inverse_of: :archived_protocols
-  belongs_to :restored_by, foreign_key: 'restored_by_id', class_name: 'User', inverse_of: :restored_protocols
-  has_many :linked_children, class_name: 'Protocol', foreign_key: 'parent_id'
-  has_many :protocol_protocol_keywords, inverse_of: :protocol, dependent: :destroy
+  belongs_to :archived_by,
+             foreign_key: 'archived_by_id',
+             class_name: 'User',
+             inverse_of: :archived_protocols
+  belongs_to :restored_by,
+             foreign_key: 'restored_by_id',
+             class_name: 'User',
+             inverse_of: :restored_protocols
+  has_many :linked_children,
+           class_name: 'Protocol',
+           foreign_key: 'parent_id'
+  has_many :protocol_protocol_keywords,
+           inverse_of: :protocol,
+           dependent: :destroy
   has_many :protocol_keywords, through: :protocol_protocol_keywords
   has_many :steps, inverse_of: :protocol, dependent: :destroy
 
   def self.search(user, include_archived, query = nil, page = 1)
-    team_ids =
-      Team
-      .joins(:user_teams)
-      .where("user_teams.user_id = ?", user.id)
-      .select("id")
-      .distinct
+    team_ids = Team.joins(:user_teams)
+                   .where('user_teams.user_id = ?', user.id)
+                   .select('id')
+                   .distinct
 
-    module_ids =
-      MyModule
-      .search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
-      .select("id")
+    module_ids = MyModule.search(user,
+                                 include_archived,
+                                 nil,
+                                 Constants::SEARCH_NO_LIMIT)
+                         .select('id')
 
     where_str =
-      "(protocol_type IN (?) AND my_module_id IN (?)) OR " +
-      "(protocol_type = ? AND protocols.team_id IN (?) AND added_by_id = ?) OR " +
-      "(protocol_type = ? AND protocols.team_id IN (?))"
+      '(protocol_type IN (?) AND my_module_id IN (?)) OR ' \
+      '(protocol_type = ? AND protocols.team_id IN (?) AND ' \
+      'added_by_id = ?) OR (protocol_type = ? AND protocols.team_id IN (?))'
 
     if include_archived
       where_str +=
-        " OR (protocol_type = ? AND protocols.team_id IN (?) AND added_by_id = ?)"
+        ' OR (protocol_type = ? AND protocols.team_id IN (?) ' \
+        'AND added_by_id = ?)'
       new_query = Protocol
-        .where(
-          where_str,
-          [Protocol.protocol_types[:unlinked], Protocol.protocol_types[:linked]],
-          module_ids,
-          Protocol.protocol_types[:in_repository_private],
-          team_ids,
-          user.id,
-          Protocol.protocol_types[:in_repository_public],
-          team_ids,
-          Protocol.protocol_types[:in_repository_archived],
-          team_ids,
-          user.id
-        )
+                  .where(
+                    where_str,
+                    [Protocol.protocol_types[:unlinked],
+                     Protocol.protocol_types[:linked]],
+                    module_ids,
+                    Protocol.protocol_types[:in_repository_private],
+                    team_ids,
+                    user.id,
+                    Protocol.protocol_types[:in_repository_public],
+                    team_ids,
+                    Protocol.protocol_types[:in_repository_archived],
+                    team_ids,
+                    user.id
+                  )
     else
       new_query = Protocol
-        .where(
-          where_str,
-          [Protocol.protocol_types[:unlinked], Protocol.protocol_types[:linked]],
-          module_ids,
-          Protocol.protocol_types[:in_repository_private],
-          team_ids,
-          user.id,
-          Protocol.protocol_types[:in_repository_public],
-          team_ids
-        )
+                  .where(
+                    where_str,
+                    [Protocol.protocol_types[:unlinked],
+                     Protocol.protocol_types[:linked]],
+                    module_ids,
+                    Protocol.protocol_types[:in_repository_private],
+                    team_ids,
+                    user.id,
+                    Protocol.protocol_types[:in_repository_public],
+                    team_ids
+                  )
     end
 
     if query
       a_query = query.strip
-      .gsub("_","\\_")
-      .gsub("%","\\%")
-      .split(/\s+/)
-      .map {|t|  "%" + t + "%" }
+                     .gsub('_', '\\_')
+                     .gsub('%', '\\%')
+                     .split(/\s+/)
+                     .map { |t| '%' + t + '%' }
     else
       a_query = query
     end
 
     new_query = new_query
-      .distinct
-      .joins("LEFT JOIN protocol_protocol_keywords ON protocols.id = protocol_protocol_keywords.protocol_id")
-      .joins("LEFT JOIN protocol_keywords ON protocol_keywords.id = protocol_protocol_keywords.protocol_keyword_id")
-      .where_attributes_like(
-        [
-          "protocols.name",
-          "protocols.description",
-          "protocols.authors",
-          "protocol_keywords.name"
-        ],
-        a_query
-      )
+                .distinct
+                .joins('LEFT JOIN protocol_protocol_keywords ON ' \
+                       'protocols.id = protocol_protocol_keywords.protocol_id')
+                .joins('LEFT JOIN protocol_keywords ' \
+                       'ON protocol_keywords.id = ' \
+                       'protocol_protocol_keywords.protocol_keyword_id')
+                .where_attributes_like(
+                  [
+                    'protocols.name',
+                    'protocols.description',
+                    'protocols.authors',
+                    'protocol_keywords.name'
+                  ],
+                  a_query
+                )
 
     # Show all results if needed
     if page == Constants::SEARCH_NO_LIMIT
@@ -271,9 +316,7 @@ class Protocol < ActiveRecord::Base
 
       # Copy tables
       step.tables.each do |table|
-        table2 = Table.new(
-          name: table.name,
-          contents: table.contents)
+        table2 = Table.new(name: table.name, contents: table.contents)
         table2.created_by = current_user
         table2.last_modified_by = current_user
         step2.tables << table2
@@ -288,38 +331,38 @@ class Protocol < ActiveRecord::Base
   end
 
   def in_repository_active?
-    in_repository_private? ||
-    in_repository_public?
+    in_repository_private? || in_repository_public?
   end
 
   def in_repository?
-    in_repository_active? ||
-    in_repository_archived?
+    in_repository_active? || in_repository_archived?
   end
 
   def in_module?
-    unlinked? ||
-    linked?
+    unlinked? || linked?
   end
 
   def linked_no_diff?
-    linked? && updated_at == parent_updated_at &&
-    parent.updated_at == parent_updated_at
+    linked? &&
+      updated_at == parent_updated_at &&
+      parent.updated_at == parent_updated_at
   end
 
   def newer_than_parent?
     linked? && parent.updated_at == parent_updated_at &&
-    updated_at > parent_updated_at
+      updated_at > parent_updated_at
   end
 
   def parent_newer?
-    linked? && updated_at == parent_updated_at &&
-    parent.updated_at > parent_updated_at
+    linked? &&
+      updated_at == parent_updated_at &&
+      parent.updated_at > parent_updated_at
   end
 
   def parent_and_self_newer?
-    linked? && parent.updated_at > parent_updated_at &&
-    updated_at > parent_updated_at
+    linked? &&
+      parent.updated_at > parent_updated_at &&
+      updated_at > parent_updated_at
   end
 
   def number_of_steps
@@ -327,7 +370,7 @@ class Protocol < ActiveRecord::Base
   end
 
   def completed_steps
-    steps.select { |step| step.completed }
+    steps.select(&:completed)
   end
 
   def space_taken
@@ -602,15 +645,12 @@ class Protocol < ActiveRecord::Base
       success = clone.save
     end
 
-    unless success
-      raise ActiveRecord::RecordNotSaved
-    end
+    raise ActiveRecord::RecordNotSaved unless success
 
     Protocol.clone_contents(self, clone, current_user, true)
 
     clone.reload
-
-    return clone
+    clone
   end
 
   def update_linked_children

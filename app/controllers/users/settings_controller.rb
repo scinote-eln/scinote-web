@@ -177,36 +177,37 @@ class Users::SettingsController < ApplicationController
 
   def leave_user_team_html
     respond_to do |format|
-      format.json {
+      format.json do
         render json: {
-          html: render_to_string({
-            partial: "users/settings/teams/leave_user_team_modal_body.html.erb",
+          html: render_to_string(
+            partial: 'users/settings/teams/leave_user_team_modal_body.html.erb',
             locals: { user_team: @user_team }
-          }),
+          ),
           heading: I18n.t(
-            "users.settings.teams.index.leave_uo_heading",
+            'users.settings.teams.index.leave_uo_heading',
             team: escape_input(@user_team.team.name)
           )
         }
-      }
+      end
     end
   end
 
   def destroy_user_team_html
     respond_to do |format|
-      format.json {
+      format.json do
         render json: {
-          html: render_to_string({
-            partial: "users/settings/teams/destroy_user_team_modal_body.html.erb",
+          html: render_to_string(
+            partial: 'users/settings/teams/' \
+                     'destroy_user_team_modal_body.html.erb',
             locals: { user_team: @user_team }
-          }),
+          ),
           heading: I18n.t(
-            "users.settings.teams.edit.destroy_uo_heading",
+            'users.settings.teams.edit.destroy_uo_heading',
             user: escape_input(@user_team.user.full_name),
             team: escape_input(@user_team.team.name)
           )
         }
-      }
+      end
     end
   end
 
@@ -254,7 +255,7 @@ class Users::SettingsController < ApplicationController
       if !invalid
         if params[:leave] then
           flash[:notice] = I18n.t(
-            "users.settings.teams.index.leave_flash",
+            'users.settings.teams.index.leave_flash',
             team: @user_team.team.name
           )
           flash.keep(:notice)
@@ -285,7 +286,7 @@ class Users::SettingsController < ApplicationController
       .includes(team: :users)
       .where(role: 1..2)
       .order(created_at: :asc)
-      .map { |uo| uo.team }
+      .map(&:team)
     @member_of = @teams.count
 
     respond_to do |format|
@@ -379,8 +380,8 @@ class Users::SettingsController < ApplicationController
     @team = @user_team.team
     # Don't allow the user to modify UserTeam-s if he's not admin,
     # unless he/she is modifying his/her UserTeam
-    if current_user != @user_team.user and
-      !is_admin_of_team(@user_team.team)
+    if current_user != @user_team.user &&
+       !is_admin_of_team(@user_team.team)
       render_403
     end
   end

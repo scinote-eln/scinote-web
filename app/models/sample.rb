@@ -26,12 +26,10 @@ class Sample < ActiveRecord::Base
     page = 1,
     current_team = nil
   )
-    team_ids =
-      Team
-      .joins(:user_teams)
-      .where("user_teams.user_id = ?", user.id)
-      .select("id")
-      .distinct
+    team_ids = Team.joins(:user_teams)
+                   .where('user_teams.user_id = ?', user.id)
+                   .select('id')
+                   .distinct
 
     if query
       a_query = '%' + query.strip.gsub('_', '\\_').gsub('%', '\\%') + '%'
