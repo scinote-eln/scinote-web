@@ -178,9 +178,9 @@ class Constants
   HTTP = 'http://'.freeze
   TUTORIALS_URL = (HTTP + 'scinote.net/product/tutorials/').freeze
   FAQ_URL = (HTTP + 'scinote.net/product/faq/').freeze
-  SUPPORT_URL = (HTTP + 'scinote.net/plans/#prof-support').freeze
-  PLANS_URL = (HTTP + 'scinote.net/plans/').freeze
-  CONTACT_URL = (HTTP + 'scinote.net/about-us/').freeze
+  SUPPORT_URL = (HTTP + 'scinote.net/support').freeze
+  PREMIUM_URL = (HTTP + 'scinote.net/premium/').freeze
+  CONTACT_URL = (HTTP + 'scinote.net/story-of-scinote/#contact-scinote').freeze
   RELEASE_NOTES_URL = (HTTP + 'scinote.net/docs/release-notes/').freeze
   # Default user picture avatar
   DEFAULT_AVATAR_URL = '/images/:style/missing.png'.freeze
@@ -190,7 +190,7 @@ class Constants
   #=============================================================================
 
   # Application version
-  APP_VERSION = '1.7.1'.freeze
+  APP_VERSION = '1.7.2'.freeze
 
   TEXT_EXTRACT_FILE_TYPES = [
     'application/pdf',
