@@ -110,5 +110,6 @@ Rails.application.configure do
     ENV['ENABLE_EMAIL_CONFIRMATIONS'] == 'true'
 
   # Enable user registrations
-  config.x.enable_user_registration = ENV['ENABLE_USER_REGISTRATION'] == 'true'
+  config.x.enable_user_registration =
+    ENV['ENABLE_USER_REGISTRATION'] == 'false' ? false : true
 end
