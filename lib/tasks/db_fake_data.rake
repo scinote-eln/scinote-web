@@ -311,7 +311,10 @@ namespace :db do
           puts "Generating fake repository protocols..."
           all_teams.find_each do |team|
             for _ in 1..nr_protocols
-              protocol = generate_fake_protocol(team, nil, nr_steps, nr_comments)
+              protocol = generate_fake_protocol(team,
+                                                nil,
+                                                nr_steps,
+                                                nr_comments)
 
               if verbose then
                 puts "    Generated protocol #{protocol.name}"
@@ -682,10 +685,13 @@ namespace :db do
             end
           end
 
-          puts "Generating fake module protocols..."
+          puts 'Generating fake module protocols...'
           Experiment.find_each do |experiment|
             experiment.my_modules.find_each do |my_module|
-              generate_fake_protocol(experiment.project.team, my_module, nr_steps, nr_comments)
+              generate_fake_protocol(experiment.project.team,
+                                     my_module,
+                                     nr_steps,
+                                     nr_comments)
             end
           end
 
@@ -951,7 +957,7 @@ namespace :db do
         # asset sizes are calculated in after_commit, which is done
         # after the first transaction is completed
         ActiveRecord::Base.transaction do
-          puts "Calculating team sizes..."
+          puts 'Calculating team sizes...'
           Team.find_each do |team|
             team.calculate_space_taken
             team.save
