@@ -1,6 +1,6 @@
 class Log < ActiveRecord::Base
   validates :message, presence: true
-  validates :organization, presence: true
+  validates :team, presence: true
 
-  belongs_to :organization, inverse_of: :logs
+  belongs_to :team, inverse_of: :logs
 end

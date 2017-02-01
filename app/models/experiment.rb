@@ -38,7 +38,7 @@ class Experiment < ActiveRecord::Base
     include_archived,
     query = nil,
     page = 1,
-    current_organization = nil
+    current_team = nil
   )
     project_ids =
       Project
@@ -51,14 +51,14 @@ class Experiment < ActiveRecord::Base
       a_query = query
     end
 
-    if current_organization
+    if current_team
       projects_ids =
         Project
         .search(user,
                 include_archived,
                 nil,
                 1,
-                current_organization)
+                current_team)
         .select('id')
 
       new_query =
@@ -113,7 +113,7 @@ class Experiment < ActiveRecord::Base
   end
 
   def unassigned_samples(assigned_samples)
-    Sample.where(organization_id: organization).where.not(id: assigned_samples)
+    Sample.where(team_id: team).where.not(id: assigned_samples)
   end
 
   def update_canvas(
@@ -398,11 +398,11 @@ class Experiment < ActiveRecord::Base
     result
   end
 
-  # Get projects where user is either owner or user in the same organization
+  # Get projects where user is either owner or user in the same team
   # as this experiment
   def projects_with_role_above_user(current_user)
-    organization = project.organization
-    projects = organization.projects.where(archived: false)
+    team = project.team
+    projects = team.projects.where(archived: false)
 
     current_user.user_projects
                 .where(project: projects)
@@ -411,7 +411,7 @@ class Experiment < ActiveRecord::Base
   end
 
   # Projects to which this experiment can be moved (inside the same
-  # organization and not archived), all users assigned on experiment.project has
+  # team and not archived), all users assigned on experiment.project has
   # to be assigned on such project
   def moveable_projects(current_user)
     projects = projects_with_role_above_user(current_user)

@@ -116,12 +116,12 @@ function dataTableInit() {
       // Send an Ajax request to the server to get the data. Note that
       // this is a synchronous request since the data is expected back from the
       // function
-      var org = $('#samples').attr('data-organization-id');
+      var team = $('#samples').attr('data-team-id');
       var user = $('#samples').attr('data-user-id');
 
       $.ajax({
-        url: '/state_load/' + org + '/' + user,
-        data: {org: org},
+        url: '/state_load/' + team + '/' + user,
+        data: {team: team},
         async: false,
         dataType: 'json',
         type: 'POST',
@@ -133,7 +133,7 @@ function dataTableInit() {
     },
     stateSaveCallback: function(settings, data) {
       // Send an Ajax request to the server with the state object
-      var org = $('#samples').attr('data-organization-id');
+      var team = $('#samples').attr('data-team-id');
       var user = $('#samples').attr('data-user-id');
       // Save correct data
       if (loadFirstTime == true) {
@@ -141,8 +141,8 @@ function dataTableInit() {
       }
 
       $.ajax({
-        url: '/state_save/' + org + '/' + user,
-        data: {org: org, state: data},
+        url: '/state_save/' + team + '/' + user,
+        data: {team: team, state: data},
         dataType: 'json',
         type: 'POST'
       });

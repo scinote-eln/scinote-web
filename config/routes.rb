@@ -1,51 +1,86 @@
 Rails.application.routes.draw do
-  devise_for :users, controllers: { registrations: "users/registrations",
-    sessions: "users/sessions", invitations: "users/invitations",
-    confirmations: "users/confirmations" }
+  devise_for :users, controllers: { registrations: 'users/registrations',
+                                    sessions: 'users/sessions',
+                                    invitations: 'users/invitations',
+                                    confirmations: 'users/confirmations' }
 
   root 'projects#index'
 
   # Save sample table state
-  post '/state_save/:organization_id/:user_id',
+  post '/state_save/:team_id/:user_id',
        to: 'user_samples#save_samples_table_status',
        as: 'save_samples_table_status',
        defaults: { format: 'json' }
 
-  post '/state_load/:organization_id/:user_id',
+  post '/state_load/:team_id/:user_id',
        to: 'user_samples#load_samples_table_status',
        as: 'load_samples_table_status',
        defaults: { format: 'json' }
 
   resources :activities, only: [:index]
 
-  get "forbidden", :to => "application#forbidden", as: "forbidden"
-  get "not_found", :to => "application#not_found", as: "not_found"
+  get 'forbidden', to: 'application#forbidden', as: 'forbidden'
+  get 'not_found', to: 'application#not_found', as: 'not_found'
 
   # Settings
-  get "users/settings/preferences", to: "users/settings#preferences", as: "preferences"
-  put "users/settings/preferences", to: "users/settings#update_preferences", as: "update_preferences"
-  get "users/settings/preferences/tutorial", to: "users/settings#tutorial", as: "tutorial"
-  post "users/settings/preferences/reset_tutorial/", to: "users/settings#reset_tutorial", as: "reset_tutorial"
+  get 'users/settings/preferences',
+      to: 'users/settings#preferences',
+      as: 'preferences'
+  put 'users/settings/preferences',
+      to: 'users/settings#update_preferences',
+      as: 'update_preferences'
+  get 'users/settings/preferences/tutorial',
+      to: 'users/settings#tutorial',
+      as: 'tutorial'
+  post 'users/settings/preferences/reset_tutorial/',
+       to: 'users/settings#reset_tutorial',
+       as: 'reset_tutorial'
   post 'users/settings/preferences/notifications_settings',
        to: 'users/settings#notifications_settings',
        as: 'notifications_settings',
        defaults: { format: 'json' }
-  post 'users/settings/user_current_organization',
-       to: 'users/settings#user_current_organization',
-       as: 'user_current_organization'
-  get "users/settings/organizations", to: "users/settings#organizations", as: "organizations"
-  get "users/settings/organizations/new", to: "users/settings#new_organization", as: "new_organization"
-  post "users/settings/organizations/new", to: "users/settings#create_organization", as: "create_organization"
-  get "users/settings/organizations/:organization_id", to: "users/settings#organization", as: "organization"
-  put "users/settings/organizations/:organization_id", to: "users/settings#update_organization", as: "update_organization"
-  get "users/settings/organizations/:organization_id/name", to: "users/settings#organization_name", as: "organization_name"
-  get "users/settings/organizations/:organization_id/description", to: "users/settings#organization_description", as: "organization_description"
-  post "users/settings/organizations/:organization_id/users_datatable", to: "users/settings#organization_users_datatable", as: "organization_users_datatable"
-  delete "users/settings/organizations/:organization_id", to: "users/settings#destroy_organization", as: "destroy_organization"
-  put "users/settings/user_organizations/:user_organization_id", to: "users/settings#update_user_organization", as: "update_user_organization"
-  get "users/settings/user_organizations/:user_organization_id/leave_html", to: "users/settings#leave_user_organization_html", as: "leave_user_organization_html"
-  get "users/settings/user_organizations/:user_organization_id/destroy_html", to: "users/settings#destroy_user_organization_html", as: "destroy_user_organization_html"
-  delete "users/settings/user_organizations/:user_organization_id", to: "users/settings#destroy_user_organization", as: "destroy_user_organization"
+  post 'users/settings/user_current_team',
+       to: 'users/settings#user_current_team',
+       as: 'user_current_team'
+  get 'users/settings/teams',
+      to: 'users/settings#teams',
+      as: 'teams'
+  get 'users/settings/teams/new',
+      to: 'users/settings#new_team',
+      as: 'new_team'
+  post 'users/settings/teams/new',
+       to: 'users/settings#create_team',
+       as: 'create_team'
+  get 'users/settings/teams/:team_id',
+      to: 'users/settings#team',
+      as: 'team'
+  put 'users/settings/teams/:team_id',
+      to: 'users/settings#update_team',
+      as: 'update_team'
+  get 'users/settings/teams/:team_id/name',
+      to: 'users/settings#team_name',
+      as: 'team_name'
+  get 'users/settings/teams/:team_id/description',
+      to: 'users/settings#team_description',
+      as: 'team_description'
+  post 'users/settings/teams/:team_id/users_datatable',
+       to: 'users/settings#team_users_datatable',
+       as: 'team_users_datatable'
+  delete 'users/settings/teams/:team_id',
+         to: 'users/settings#destroy_team',
+         as: 'destroy_team'
+  put 'users/settings/user_teams/:user_team_id',
+      to: 'users/settings#update_user_team',
+      as: 'update_user_team'
+  get 'users/settings/user_teams/:user_team_id/leave_html',
+      to: 'users/settings#leave_user_team_html',
+      as: 'leave_user_team_html'
+  get 'users/settings/user_teams/:user_team_id/destroy_html',
+      to: 'users/settings#destroy_user_team_html',
+      as: 'destroy_user_team_html'
+  delete 'users/settings/user_teams/:user_team_id',
+         to: 'users/settings#destroy_user_team',
+         as: 'destroy_user_team'
 
   # Invite users
   devise_scope :user do
@@ -69,7 +104,7 @@ Rails.application.routes.draw do
       to: 'user_notifications#index',
       as: 'notifications'
 
-  resources :organizations, only: [] do
+  resources :teams do
     resources :samples, only: [:new, :create]
     resources :sample_types, except: [:show, :new] do
       get 'sample_type_element', to: 'sample_types#sample_type_element'
@@ -94,7 +129,9 @@ Rails.application.routes.draw do
       get 'atwho_my_modules', to: 'at_who#my_modules'
       get 'atwho_menu_items', to: 'at_who#menu_items'
     end
-    match '*path', :to  => 'organizations#routing_error', via: [:get, :post, :put, :patch]
+    match '*path',
+          to: 'teams#routing_error',
+          via: [:get, :post, :put, :patch]
   end
 
   get 'projects/archive', to: 'projects#archive', as: 'projects_archive'
@@ -107,9 +144,11 @@ Rails.application.routes.draw do
               only: [:create, :index, :edit, :update, :destroy]
     # Activities popup (JSON) for individual project in projects index,
     # as well as all activities page for single project (HTML)
-    resources :project_activities, path: "/activities", only: [:index]
+    resources :project_activities, path: '/activities', only: [:index]
     resources :tags, only: [:create, :update, :destroy]
-    resources :reports, path: "/reports", only: [:index, :new, :create, :edit, :update] do
+    resources :reports,
+              path: '/reports',
+              only: [:index, :new, :create, :edit, :update] do
       collection do
         # The posts following here should in theory be gets,
         # but are posts because of parameters payload
@@ -155,9 +194,11 @@ Rails.application.routes.draw do
               only: [:new, :create, :edit, :update],
               defaults: { format: 'json' }
     member do
-      get 'notifications' # Notifications popup for individual project in projects index
+      # Notifications popup for individual project in projects index
+      get 'notifications'
       get 'samples' # Samples for single project
-      post 'samples_index' # Renders sample datatable for single project (ajax action)
+      # Renders sample datatable for single project (ajax action)
+      post 'samples_index'
       get 'experiment_archive' # Experiment archive for single project
       post :delete_samples,
            constraints: CommitParamRouting.new(
@@ -166,7 +207,8 @@ Rails.application.routes.draw do
            action: :delete_samples
     end
 
-    # This route is defined outside of member block to preserve original :project_id parameter in URL.
+    # This route is defined outside of member block
+    # to preserve original :project_id parameter in URL.
     get 'users/edit', to: 'user_projects#index_edit'
   end
 
@@ -200,7 +242,7 @@ Rails.application.routes.draw do
   end
 
   # Show action is a popup (JSON) for individual module in full-zoom canvas,
-  # as well as "module info" page for single module (HTML)
+  # as well as 'module info' page for single module (HTML)
   resources :my_modules, path: '/modules', only: [:show, :update] do
     resources :my_module_tags, path: '/tags', only: [:index, :create, :destroy]
     resources :user_my_modules, path: '/users',
@@ -208,7 +250,7 @@ Rails.application.routes.draw do
     resources :my_module_comments,
               path: '/comments',
               only: [:index, :create, :edit, :update, :destroy]
-    resources :sample_my_modules, path: "/samples_index", only: [:index]
+    resources :sample_my_modules, path: '/samples_index', only: [:index]
     resources :result_texts, only: [:new, :create]
     resources :result_assets, only: [:new, :create]
     resources :result_tables, only: [:new, :create]
@@ -223,7 +265,8 @@ Rails.application.routes.draw do
       get 'results' # Results view for single module
       get 'samples' # Samples view for single module
       get 'archive' # Archive view for single module
-      post 'samples_index' # Renders sample datatable for single module (ajax action)
+      # Renders sample datatable for single module (ajax action)
+      post 'samples_index'
       post :assign_samples,
            constraints: CommitParamRouting.new(
              MyModulesController::ASSIGN_SAMPLES
@@ -241,7 +284,8 @@ Rails.application.routes.draw do
            action: :delete_samples
     end
 
-    # Those routes are defined outside of member block to preserve original id parameters in URL.
+    # Those routes are defined outside of member block
+    # to preserve original id parameters in URL.
     get 'tags/edit', to: 'my_module_tags#index_edit'
     get 'users/edit', to: 'user_my_modules#index_edit'
   end
@@ -280,42 +324,45 @@ Rails.application.routes.draw do
   resources :protocols, only: [:index, :edit, :create] do
     resources :steps, only: [:new, :create]
     member do
-      get "linked_children", to: "protocols#linked_children"
-      post "linked_children_datatable", to: "protocols#linked_children_datatable"
+      get 'linked_children', to: 'protocols#linked_children'
+      post 'linked_children_datatable',
+           to: 'protocols#linked_children_datatable'
       get 'preview', to: 'protocols#preview'
-      patch "metadata", to: "protocols#update_metadata"
-      patch "keywords", to: "protocols#update_keywords"
-      post "clone", to: "protocols#clone"
-      get "unlink_modal", to: "protocols#unlink_modal"
-      post "unlink", to: "protocols#unlink"
-      get "revert_modal", to: "protocols#revert_modal"
-      post "revert", to: "protocols#revert"
-      get "update_parent_modal", to: "protocols#update_parent_modal"
-      post "update_parent", to: "protocols#update_parent"
-      get "update_from_parent_modal", to: "protocols#update_from_parent_modal"
-      post "update_from_parent", to: "protocols#update_from_parent"
-      post "load_from_repository_datatable", to: "protocols#load_from_repository_datatable"
-      get "load_from_repository_modal", to: "protocols#load_from_repository_modal"
-      post "load_from_repository", to: "protocols#load_from_repository"
-      post "load_from_file", to: "protocols#load_from_file"
-      get "copy_to_repository_modal", to: "protocols#copy_to_repository_modal"
-      post "copy_to_repository", to: "protocols#copy_to_repository"
-      get "protocol_status_bar", to: "protocols#protocol_status_bar"
-      get "updated_at_label", to: "protocols#updated_at_label"
-      get "edit_name_modal", to: "protocols#edit_name_modal"
-      get "edit_keywords_modal", to: "protocols#edit_keywords_modal"
-      get "edit_authors_modal", to: "protocols#edit_authors_modal"
-      get "edit_description_modal", to: "protocols#edit_description_modal"
+      patch 'metadata', to: 'protocols#update_metadata'
+      patch 'keywords', to: 'protocols#update_keywords'
+      post 'clone', to: 'protocols#clone'
+      get 'unlink_modal', to: 'protocols#unlink_modal'
+      post 'unlink', to: 'protocols#unlink'
+      get 'revert_modal', to: 'protocols#revert_modal'
+      post 'revert', to: 'protocols#revert'
+      get 'update_parent_modal', to: 'protocols#update_parent_modal'
+      post 'update_parent', to: 'protocols#update_parent'
+      get 'update_from_parent_modal', to: 'protocols#update_from_parent_modal'
+      post 'update_from_parent', to: 'protocols#update_from_parent'
+      post 'load_from_repository_datatable',
+           to: 'protocols#load_from_repository_datatable'
+      get 'load_from_repository_modal',
+          to: 'protocols#load_from_repository_modal'
+      post 'load_from_repository', to: 'protocols#load_from_repository'
+      post 'load_from_file', to: 'protocols#load_from_file'
+      get 'copy_to_repository_modal', to: 'protocols#copy_to_repository_modal'
+      post 'copy_to_repository', to: 'protocols#copy_to_repository'
+      get 'protocol_status_bar', to: 'protocols#protocol_status_bar'
+      get 'updated_at_label', to: 'protocols#updated_at_label'
+      get 'edit_name_modal', to: 'protocols#edit_name_modal'
+      get 'edit_keywords_modal', to: 'protocols#edit_keywords_modal'
+      get 'edit_authors_modal', to: 'protocols#edit_authors_modal'
+      get 'edit_description_modal', to: 'protocols#edit_description_modal'
     end
     collection do
-      get "create_new_modal", to: "protocols#create_new_modal"
-      post "datatable", to: "protocols#datatable"
-      post "make_private", to: "protocols#make_private"
-      post "publish", to: "protocols#publish"
-      post "archive", to: "protocols#archive"
-      post "restore", to: "protocols#restore"
-      post "import", to: "protocols#import"
-      get "export", to: "protocols#export"
+      get 'create_new_modal', to: 'protocols#create_new_modal'
+      post 'datatable', to: 'protocols#datatable'
+      post 'make_private', to: 'protocols#make_private'
+      post 'publish', to: 'protocols#publish'
+      post 'archive', to: 'protocols#archive'
+      post 'restore', to: 'protocols#restore'
+      post 'import', to: 'protocols#import'
+      get 'export', to: 'protocols#export'
     end
   end
 
@@ -324,11 +371,11 @@ Rails.application.routes.draw do
 
   # We cannot use 'resources :assets' because assets is a reserved route
   # in Rails (assets pipeline) and causes funky behavior
-  get "files/:id/present", to: "assets#file_present", as: "file_present_asset"
+  get 'files/:id/present', to: 'assets#file_present', as: 'file_present_asset'
   get 'files/:id/large_url',
       to: 'assets#large_image_url',
       as: 'large_image_url_asset'
-  get "files/:id/download", to: "assets#download", as: "download_asset"
+  get 'files/:id/download', to: 'assets#download', as: 'download_asset'
   post 'asset_signature' => 'assets#signature'
 
   devise_scope :user do

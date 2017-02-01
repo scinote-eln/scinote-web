@@ -1,7 +1,0 @@
-<% if can_view_projects(organization) %>
-  <%= route_to_other_org projects_path(organization: organization.id),
-                         organization,
-                         organization.name %>
-<% else %>
-  <%= organization.name %>
-<% end %>

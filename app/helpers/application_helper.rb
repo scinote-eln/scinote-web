@@ -58,9 +58,9 @@ module ApplicationHelper
       !@experiment.nil?
   end
 
-  def smart_annotation_parser(text, organization = nil)
+  def smart_annotation_parser(text, team = nil)
     new_text = smart_annotation_filter_resources(text)
-    new_text = smart_annotation_filter_users(new_text, organization)
+    new_text = smart_annotation_filter_users(new_text, team)
     new_text
   end
 
@@ -127,20 +127,21 @@ module ApplicationHelper
 
   # Check if text have smart annotations of users
   # and outputs a popover with user information
-  def smart_annotation_filter_users(text, organization)
+  def smart_annotation_filter_users(text, team)
     sa_user = /\[\@(.*?)~([0-9a-zA-Z]+)\]/
     new_text = text.gsub(sa_user) do |el|
       match = el.match(sa_user)
       user = User.find_by_id(match[2].base62_decode)
-      organization ||= current_organization
+      team ||= current_team
 
       if user &&
-         organization &&
-         UserOrganization.user_in_organization(user, organization).any?
-        user_org = user
-                   .user_organizations
-                   .where('user_organizations.organization_id = ?',
-                          organization).first
+         team &&
+         UserTeam.user_in_team(user, team).any?
+        user_t, = user
+                  .user_teams
+                  .where('user_teams.team_id = ?', team)
+                  .first
+
         user_description = %(<div class='col-xs-4'>
          <img src='#{avatar_path(user, :thumb)}' alt='thumb'>
          </div><div class='col-xs-8'>
@@ -150,9 +151,9 @@ module ApplicationHelper
          </div></div><div class='row'><div class='col-xs-12'>
         <p class='silver'>#{user.email}</p><p>
         #{I18n.t('atwho.popover_html',
-                 role: user_org.role.capitalize,
-                 organization: user_org.organization.name,
-                 time: user_org.created_at.strftime('%B %Y'))}
+                 role: user_t.role.capitalize,
+                 team: user_t.team.name,
+                 time: user_t.created_at.strftime('%B %Y'))}
         </p></div></div></div>)
 
         raw(image_tag(avatar_path(user, :icon_small),

@@ -1,0 +1,98 @@
+one:
+  user: steve
+  team: biosistemika
+  role: 1
+  assigned_by: steve
+
+
+two:
+  user: steve
+  team: nib
+  role: 1
+  assigned_by: steve
+
+
+seven:
+  user: steve
+  team: phylos
+  role: 1
+  assigned_by: steve
+
+
+three:
+  user: mark
+  team: biosistemika
+  role: 1
+  assigned_by: mark
+
+
+four:
+  user: mark
+  team: nib
+  role: 2
+  assigned_by: mark
+
+
+five:
+  user: jlaw
+  team: biosistemika
+  role: 0
+  assigned_by: steve
+
+
+six:
+  user: nora
+  team: nib
+  role: 1
+  assigned_by: nora
+
+
+eight:
+  user: nora
+  team: phylos
+  role: 2
+  assigned_by: nora
+
+
+nine:
+  user: default
+  team: biosistemika
+  role: 2
+  assigned_by: default
+
+
+ten:
+  user: default
+  team: nib
+  role: 2
+  assigned_by: default
+
+without_role:
+  user: nora
+  team: nib
+  role: -1
+  assigned_by: steve
+
+without_user:
+  user: 0
+  team: nib
+  role: 1
+  assigned_by: steve
+
+without_team:
+  user: nora
+  team: 0
+  role: 1
+  assigned_by: steve
+
+with_invalid_user:
+  user_id: <%= Constants::INFINITY %>
+  team: nib
+  role: 1
+  assigned_by: steve
+
+with_invalid_team:
+  user: nora
+  team_id: <%= Constants::INFINITY %>
+  role: 1
+  assigned_by: steve

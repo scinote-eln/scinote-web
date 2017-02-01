@@ -34,13 +34,13 @@ class SampleDatatable < AjaxDatatablesRails::Base
   SAMPLES_TABLE_DEFAULT_STATE.freeze
 
   def initialize(view,
-                 organization,
+                 team,
                  project = nil,
                  my_module = nil,
                  experiment = nil,
                  user = nil)
     super(view)
-    @organization = organization
+    @team = team
     @project = project
     @my_module = my_module
     @experiment = experiment
@@ -95,7 +95,7 @@ class SampleDatatable < AjaxDatatablesRails::Base
 
   # Get array of columns to sort by (for custom fields)
   def custom_fields_sort_by
-    num_cf = CustomField.where(organization_id: @organization).count
+    num_cf = CustomField.where(team_id: @team).count
     array = []
 
     num_cf.times do
@@ -129,8 +129,9 @@ class SampleDatatable < AjaxDatatablesRails::Base
 
       # Add custom attributes
       record.sample_custom_fields.each do |scf|
-        sample[@cf_mappings[scf.custom_field_id]] =
-          custom_auto_link(scf.value, true, @organization)
+        sample[@cf_mappings[scf.custom_field_id]] = custom_auto_link(scf.value,
+                                                                     true,
+                                                                     @team)
       end
       sample
     end
@@ -170,7 +171,7 @@ class SampleDatatable < AjaxDatatablesRails::Base
       :sample_custom_fields
     )
     .where(
-      organization: @organization
+      team: @team
     )
 
     if @my_module
@@ -252,12 +253,13 @@ class SampleDatatable < AjaxDatatablesRails::Base
             .select('"samples"."id"')
             .distinct
 
-          # grabs the ids that are not the previous one but are still of the same organization
+          # grabs the ids that are not the previous one but are still
+          # of the same team
           unassigned = Sample
-            .where('"samples"."organization_id" = ?', @organization.id)
-            .where('"samples"."id" NOT IN (?)', assigned)
-            .select('"samples"."id"')
-            .distinct
+                       .where('"samples"."team_id" = ?', @team.id)
+                       .where('"samples"."id" NOT IN (?)', assigned)
+                       .select('"samples"."id"')
+                       .distinct
 
           # check the input param and merge the two arrays of ids
           if params[:order].values[0]['dir'] == 'asc'
@@ -287,12 +289,12 @@ class SampleDatatable < AjaxDatatablesRails::Base
             .select('"samples"."id"')
             .distinct
 
-          # grabs the ids that are not the previous one but are still of the same organization
+          # grabs the ids that are not the previous one but are still of the same team
           unassigned = Sample
-            .where('"samples"."organization_id" = ?', @organization.id)
-            .where('"samples"."id" NOT IN (?)', assigned)
-            .select('"samples"."id"')
-            .distinct
+                       .where('"samples"."team_id" = ?', @team.id)
+                       .where('"samples"."id" NOT IN (?)', assigned)
+                       .select('"samples"."id"')
+                       .distinct
 
           # check the input param and merge the two arrays of ids
           if params[:order].values[0]["dir"] == "asc"
@@ -314,12 +316,15 @@ class SampleDatatable < AjaxDatatablesRails::Base
           # Rails apparently forgets to join stuff in subqueries -
           # #justrailsthings
           conditions = build_conditions_for(params[:search][:value])
-          filter_query = 'SELECT "samples"."id" FROM "samples"
-          LEFT OUTER JOIN "sample_custom_fields" ON "sample_custom_fields"."sample_id" = "samples"."id"
-          LEFT OUTER JOIN "sample_types" ON "sample_types"."id" = "samples"."sample_type_id"
-          LEFT OUTER JOIN "sample_groups" ON "sample_groups"."id" = "samples"."sample_group_id"
-          LEFT OUTER JOIN "users" ON "users"."id" = "samples"."user_id"
-          WHERE "samples"."organization_id" = ' + @organization.id.to_s + ' AND ' + conditions.to_sql
+          filter_query = %(SELECT "samples"."id" FROM "samples"
+            LEFT OUTER JOIN "sample_custom_fields" ON
+            "sample_custom_fields"."sample_id" = "samples"."id"
+            LEFT OUTER JOIN "sample_types" ON
+            "sample_types"."id" = "samples"."sample_type_id"
+            LEFT OUTER JOIN "sample_groups"
+            ON "sample_groups"."id" = "samples"."sample_group_id"
+            LEFT OUTER JOIN "users" ON "users"."id" = "samples"."user_id"
+            WHERE "samples"."team_id" = #{@team.id} AND #{conditions.to_sql})
 
           records = records.where("samples.id IN (#{filter_query})")
         end
@@ -429,7 +434,7 @@ class SampleDatatable < AjaxDatatablesRails::Base
 
   def generate_sortable_displayed_columns
     sort_order = SamplesTable.where(user: @user,
-                                    organization: @organization)
+                                    team: @team)
                              .pluck(:status)
                              .first['ColReorder']
 

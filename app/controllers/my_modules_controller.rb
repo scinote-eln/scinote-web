@@ -1,6 +1,6 @@
 class MyModulesController < ApplicationController
   include SampleActions
-  include OrganizationsHelper
+  include TeamsHelper
   include InputSanitizeHelper
 
   before_action :load_vars, only: [
@@ -222,27 +222,27 @@ class MyModulesController < ApplicationController
 
   def protocols
     @protocol = @my_module.protocol
-    current_organization_switch(@protocol.organization)
+    current_team_switch(@protocol.team)
   end
 
   def results
-    current_organization_switch(@my_module
+    current_team_switch(@my_module
                                 .experiment
                                 .project
-                                .organization)
+                                .team)
   end
 
   def samples
     @samples_index_link = samples_index_my_module_path(@my_module, format: :json)
-    @organization = @my_module.experiment.project.organization
+    @team = @my_module.experiment.project.team
   end
 
   def archive
     @archived_results = @my_module.archived_results
-    current_organization_switch(@my_module
+    current_team_switch(@my_module
                                 .experiment
                                 .project
-                                .organization)
+                                .team)
   end
 
   # Submit actions
@@ -324,13 +324,13 @@ class MyModulesController < ApplicationController
 
   # AJAX actions
   def samples_index
-    @organization = @my_module.experiment.project.organization
+    @team = @my_module.experiment.project.team
 
     respond_to do |format|
       format.html
       format.json do
         render json: ::SampleDatatable.new(view_context,
-                                           @organization,
+                                           @team,
                                            nil,
                                            @my_module,
                                            nil,

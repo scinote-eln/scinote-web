@@ -16,58 +16,59 @@ class ProjectTest < ActiveSupport::TestCase
     .is_at_least(Constants::NAME_MIN_LENGTH)
     .is_at_most(Constants::NAME_MAX_LENGTH)
 
-  test "should have non-blank name" do
-    @project.name = ""
-    assert @project.invalid?, "Project with blank name returns valid? = true"
+  test 'should have non-blank name' do
+    @project.name = ''
+    assert @project.invalid?, 'Project with blank name returns valid? = true'
   end
 
-  test "should have organization-wide unique name" do
+  test 'should have team-wide unique name' do
     @project.name = @project2.name
-    assert @project.invalid?, "Project with non-unique organization-wide name returns valid? = true"
+    assert @project.invalid?,
+           'Project with non-unique team-wide name returns valid? = true'
   end
 
-  test "should not have non-organization-wide unique name" do
+  test 'should not have non-team-wide unique name' do
     @project.name = @project3.name
-    assert @project.valid?, "Project with non-unique name in different organizations returns valid? = false"
+    assert @project.valid?,
+           'Project with non-unique name in different teams ' \
+           'returns valid? = false'
   end
 
-  test "should have default visibility & archived" do
+  test 'should have default visibility & archived' do
+    project = Project.new(name: 'sample project',
+                          team_id: teams(:biosistemika).id)
+    assert project.hidden?,
+           'Project by default doesn\'t have visibility = hidden set'
+    assert_not project.archived?, 'Project has default archived = true'
+  end
+
+  test 'should belong to team' do
+    @project.team = nil
+    assert_not @project.valid?, 'Project without team returns valid? = true'
+    @project.team_id = 12321321
+    assert_not @project.valid?, 'Project with team returls valid? = false'
+  end
+
+  test 'should have archived set' do
     project = Project.new(
-      name: "sample project",
-      organization_id: organizations(:biosistemika).id)
-    assert project.hidden?, "Project by default doesn't have visibility = hidden set"
-    assert_not project.archived?, "Project has default archived = true"
-  end
-
-  test "should belong to organization" do
-    @project.organization = nil
-    assert_not @project.valid?, "Project without organization returns valid? = true"
-    @project.organization_id = 12321321
-    assert_not @project.valid?, "Project with organization returls valid? = false"
-  end
-
-  test "should have archived set" do
-    project = Project.new(
-      name: "test project",
+      name: 'test project',
       visibility: 1,
-      organization_id: organizations(:biosistemika).id
+      team_id: teams(:biosistemika).id
     )
     assert_archived_present(project)
     assert_active_is_inverse_of_archived(project)
   end
 
-  test "archiving should work" do
+  test 'archiving should work' do
     user = users(:steve)
-    project = Project.new(
-      name: "test project",
-      visibility: 1,
-      organization_id: organizations(:biosistemika).id,
-    )
+    project = Project.new(name: 'test project',
+                          visibility: 1,
+                          team_id: teams(:biosistemika).id)
     project.save
     archive_and_restore_action_test(project, user)
   end
 
-  test "where_attributes_like should work" do
-    attributes_like_test(Project, :name, "star")
+  test 'where_attributes_like should work' do
+    attributes_like_test(Project, :name, 'star')
   end
 end

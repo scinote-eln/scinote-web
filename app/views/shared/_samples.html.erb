@@ -7,8 +7,9 @@
 
 <div id="alert-container"></div>
 
-<% if can_view_samples(@organization) %>
-  <%= bootstrap_form_tag(url: export_samples_organization_path(@organization, format: :csv), html: {id: "form-export", class: "hidden"}) do |f| %>
+<% if can_view_samples(@team) %>
+  <%= bootstrap_form_tag(url: export_samples_team_path(@team, format: :csv),
+                        html: { id: 'form-export', class: 'hidden' }) do |f| %>
   <% end %>
 <% end %>
 
@@ -21,7 +22,7 @@
     data-breadcrumbs-step-text="<%=t 'tutorial.breadcrumbs_html' %>"
   <% end %>>
 
-  <% if can_create_samples(@organization) %>
+  <% if can_create_samples(@team) %>
     <button type="button" class="btn btn-default editAdd" id="addSample" onclick="onClickAddSample()">
       <span class="glyphicon glyphicon-plus"></span>
       <span class="hidden-xs"><%= t("samples.add_new_sample") %></span>
@@ -32,7 +33,7 @@
       </button>
   <% end %>
 
-  <% if can_view_samples(@organization) %>
+  <% if can_view_samples(@team) %>
     <a href="#" class="btn btn-default" id="exportSamplesButton">
       <span class="glyphicon glyphicon-cloud-download"></span>
       <span class="hidden-xs"><%= t("samples.export") %></span>
@@ -46,9 +47,9 @@
         <span class="caret"></span>
       </button>
       <ul class="dropdown-menu dropdown-menu-right smart-dropdown" id="samples-columns-list">
-        <% if can_create_custom_field_in_organization(@organization) %>
+        <% if can_create_custom_field_in_team(@team) %>
           <li class="add-new-column-form">
-            <div id="new-column-form" class="form-group" data-action="<%= organization_custom_fields_path(@organization) %>">
+            <div id="new-column-form" class="form-group" data-action="<%= team_custom_fields_path(@team) %>">
               <div class="input-group">
                 <input class="form-control" id="new-column-name" placeholder="<%= t("samples.column_new_text") %>">
                 <span class="input-group-btn">
@@ -64,10 +65,10 @@
     </div>
   </div>
 
-  <% if can_add_sample_related_things_to_organization %>
+  <% if can_add_sample_related_things_to_team %>
   <div class="dropdown pull-right" style="display: inline;">
     <%= link_to(t('samples.types_and_groups'),
-                organization_sample_types_path(@organization,
+                team_sample_types_path(@team,
                   project_id: (@project.id if @project),
                   my_module_id: (@my_module.id if @my_module),
                   experiment_id: (@experiment.id if @experiment)),
@@ -94,7 +95,7 @@
     <span class="hidden-xs-custom"><%= t("samples.edit_sample") %></span>
   </button>
 
-  <% if can_delete_samples(@organization) %>
+  <% if can_delete_samples(@team) %>
     <button type="button" class="btn btn-default"
       id="deleteSamplesButton" data-target="#deleteSamples" data-toggle="modal" disabled>
       <span class="glyphicon glyphicon-trash"></span>
@@ -124,12 +125,12 @@
 
 <div class="samples-table">
   <table id="samples" class="table"
-    data-organization-id="<%= @project.organization.id %>"
+    data-team-id="<%= @project.team.id %>"
     data-user-id="<%= @current_user.id %>"
     data-source="<%= @samples_index_link %>"
     data-num-columns="<%= num_of_columns %>"
-    data-new-sample="<%= new_organization_sample_path(organization_id: @organization) %>"
-    data-create-sample="<%= organization_samples_path(organization_id: @organization) %>">
+    data-new-sample="<%= new_team_sample_path(team_id: @team) %>"
+    data-create-sample="<%= team_samples_path(team_id: @team) %>">
     <thead>
       <tr>
         <th id="checkbox"><input name="select_all" value="1" type="checkbox"></th>
@@ -144,8 +145,8 @@
             id="<%= cf.id %>"
             <%= 'data-editable' if can_edit_custom_field(cf) %>
             <%= 'data-deletable' if can_delete_custom_field(cf) %>
-            <%= "data-edit-url='#{organization_custom_field_path(@organization, cf)}'" %>
-            <%= "data-destroy-html-url='#{organization_custom_field_destroy_html_path(@organization, cf)}'" %>
+            <%= "data-edit-url='#{team_custom_field_path(@team, cf)}'" %>
+            <%= "data-destroy-html-url='#{team_custom_field_destroy_html_path(@team, cf)}'" %>
         >
           <%= display_tooltip(cf.name) %>
         </th>

@@ -4,7 +4,7 @@ class AtWhoController < ApplicationController
 
   def users
     # Search users
-    res = @organization
+    res = @team
           .search_users(@query)
           .select(:id, :full_name, :email)
           .limit(Constants::ATWHO_SEARCH_LIMIT)
@@ -31,7 +31,7 @@ class AtWhoController < ApplicationController
   end
 
   def menu_items
-    res = SmartAnnotation.new(current_user, current_organization, @query)
+    res = SmartAnnotation.new(current_user, current_team, @query)
 
     respond_to do |format|
       format.json do
@@ -47,7 +47,7 @@ class AtWhoController < ApplicationController
   end
 
   def samples
-    res = SmartAnnotation.new(current_user, current_organization, @query)
+    res = SmartAnnotation.new(current_user, current_team, @query)
     respond_to do |format|
       format.json do
         render json: {
@@ -59,7 +59,7 @@ class AtWhoController < ApplicationController
   end
 
   def projects
-    res = SmartAnnotation.new(current_user, current_organization, @query)
+    res = SmartAnnotation.new(current_user, current_team, @query)
     respond_to do |format|
       format.json do
         render json: {
@@ -71,7 +71,7 @@ class AtWhoController < ApplicationController
   end
 
   def experiments
-    res = SmartAnnotation.new(current_user, current_organization, @query)
+    res = SmartAnnotation.new(current_user, current_team, @query)
     respond_to do |format|
       format.json do
         render json: {
@@ -83,7 +83,7 @@ class AtWhoController < ApplicationController
   end
 
   def my_modules
-    res = SmartAnnotation.new(current_user, current_organization, @query)
+    res = SmartAnnotation.new(current_user, current_team, @query)
     respond_to do |format|
       format.json do
         render json: {
@@ -97,12 +97,12 @@ class AtWhoController < ApplicationController
   private
 
   def load_vars
-    @organization = Organization.find_by_id(params[:id])
+    @team = Team.find_by_id(params[:id])
     @query = params[:query]
-    render_404 unless @organization
+    render_404 unless @team
   end
 
   def check_users_permissions
-    render_403 unless can_view_organization_users(@organization)
+    render_403 unless can_view_team_users(@team)
   end
 end

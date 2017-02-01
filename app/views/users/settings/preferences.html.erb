@@ -4,12 +4,21 @@
 <div class="tab-content">
   <div class="tab-pane tab-pane-settings active" role="tabpanel">
 
-    <%= form_for(@user, url: update_preferences_path(format: :json), remote: true, html: { method: :put, "data-for" => "time_zone" }) do |f| %>
+    <%= form_for(@user,
+                 url: update_preferences_path(format: :json),
+                 remote: true,
+                 html: { method: :put, 'data-for' => 'time_zone' }) do |f| %>
       <div data-part="view">
         <div class="form-group">
           <%= f.label t("users.settings.preferences.edit.time_zone_label") %>
           <div class="input-group" style="max-width: 500px;">
-            <input class="form-control" disabled="disabled" autocomplete="off" type="text" value="<%= @user.time_zone %>" name="fake_user[time_zone]" id="fake_user_time_zone">
+            <input class="form-control"
+                   disabled="disabled"
+                   autocomplete="off"
+                   type="text"
+                   value="<%= @user.time_zone %>"
+                   name="fake_user[time_zone]"
+                   id="fake_user_time_zone">
             <span class="input-group-btn">
               <a href="#" class="btn btn-default" data-action="edit"><%=t "general.edit" %></a>
             </span>
@@ -21,7 +30,9 @@
         <div class="well">
           <h4><%=t "users.settings.preferences.edit.time_zone_title" %></h4>
           <div class="form-group" style="max-width: 500px;">
-            <%= f.select :time_zone, ActiveSupport::TimeZone.all.collect {|tz| [tz.formatted_offset + " " + tz.name, tz.name] }, {}, {class: "form-control selectpicker", "data-role" => "clear"} %>
+            <%= f.select :time_zone, ActiveSupport::TimeZone.all.collect { |tz|
+                  [tz.formatted_offset + " " + tz.name, tz.name]
+                }, {}, {class: 'form-control selectpicker', 'ata-role' => 'clear'} %>
             <small><%= t("users.settings.preferences.edit.time_zone_sublabel") %></small>
           </div>
           <div>
@@ -34,7 +45,11 @@
     <% if Rails.configuration.x.enable_tutorial %>
     <hr>
     <strong><%= t('tutorial.title') %></strong> <br>
-      <%= link_to t('users.settings.preferences.tutorial.repeat_tutorial'), tutorial_path(format: :json), remote: true, class: "btn btn-primary", id: "reset-tutorial-btn" %>
+      <%= link_to t('users.settings.preferences.tutorial.repeat_tutorial'),
+                  tutorial_path(format: :json),
+                  remote: true,
+                  class: 'btn btn-primary',
+                  id: 'reset-tutorial-btn' %>
     <% end %>
     <hr>
     <div class="notification-settings-container">

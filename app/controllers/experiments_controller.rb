@@ -1,7 +1,7 @@
 class ExperimentsController < ApplicationController
   include SampleActions
   include PermissionHelper
-  include OrganizationsHelper
+  include TeamsHelper
   include InputSanitizeHelper
 
   before_action :set_experiment,
@@ -71,7 +71,7 @@ class ExperimentsController < ApplicationController
 
   def canvas
     @project = @experiment.project
-    current_organization_switch(@project.organization)
+    current_team_switch(@project.team)
   end
 
   def edit
@@ -267,17 +267,17 @@ class ExperimentsController < ApplicationController
   def samples
     @samples_index_link = samples_index_experiment_path(@experiment,
                                                         format: :json)
-    @organization = @experiment.project.organization
+    @team = @experiment.project.team
   end
 
   def samples_index
-    @organization = @experiment.project.organization
+    @team = @experiment.project.team
 
     respond_to do |format|
       format.html
       format.json do
         render json: ::SampleDatatable.new(view_context,
-                                           @organization,
+                                           @team,
                                            nil,
                                            nil,
                                            @experiment,

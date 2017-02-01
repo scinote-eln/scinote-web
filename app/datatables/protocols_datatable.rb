@@ -15,9 +15,9 @@ class ProtocolsDatatable < AjaxDatatablesRails::Base
   def_delegator :@view, :linked_children_protocol_path
   def_delegator :@view, :preview_protocol_path
 
-  def initialize(view, organization, type, user)
+  def initialize(view, team, type, user)
     super(view)
-    @organization = organization
+    @team = team
     # :public, :private or :archive
     @type = type
     @user = user
@@ -88,13 +88,13 @@ class ProtocolsDatatable < AjaxDatatablesRails::Base
         'DT_CanEdit': can_edit_protocol(protocol),
         'DT_EditUrl': if can_edit_protocol(protocol)
                         edit_protocol_path(protocol,
-                                           organization: @organization,
+                                           team: @team,
                                            type: @type)
                       end,
         'DT_CanClone': can_clone_protocol(protocol),
         'DT_CloneUrl': if can_clone_protocol(protocol)
                          clone_protocol_path(protocol,
-                                             organization: @organization,
+                                             team: @team,
                                              type: @type)
                        end,
         'DT_CanMakePrivate': can_make_protocol_private(protocol),
@@ -120,26 +120,29 @@ class ProtocolsDatatable < AjaxDatatablesRails::Base
   def get_raw_records_base
     records =
       Protocol
-      .where(organization: @organization)
+      .where(team: @team)
       .joins('LEFT OUTER JOIN "protocol_protocol_keywords" ON "protocol_protocol_keywords"."protocol_id" = "protocols"."id"')
       .joins('LEFT OUTER JOIN "protocol_keywords" ON "protocol_protocol_keywords"."protocol_keyword_id" = "protocol_keywords"."id"')
 
     if @type == :public
       records =
         records
-        .joins('LEFT OUTER JOIN "users" ON "users"."id" = "protocols"."added_by_id"')
-        .where("\"protocols\".\"protocol_type\" = #{Protocol.protocol_types[:in_repository_public]}")
+        .joins('LEFT OUTER JOIN users ON users.id = protocols.added_by_id')
+        .where('protocols.protocol_type = ?',
+               Protocol.protocol_types[:in_repository_public])
     elsif @type == :private
       records =
         records
-        .joins('LEFT OUTER JOIN "users" ON "users"."id" = "protocols"."added_by_id"')
-        .where("\"protocols\".\"protocol_type\" = #{Protocol.protocol_types[:in_repository_private]}")
+        .joins('LEFT OUTER JOIN users ON users.id = protocols.added_by_id')
+        .where('protocols.protocol_type = ?',
+               Protocol.protocol_types[:in_repository_private])
         .where(added_by: @user)
     else
       records =
         records
-        .joins('LEFT OUTER JOIN "users" ON "users"."id" = "protocols"."archived_by_id"')
-        .where("\"protocols\".\"protocol_type\" = #{Protocol.protocol_types[:in_repository_archived]}")
+        .joins('LEFT OUTER JOIN users ON users.id = protocols.archived_by_id')
+        .where('protocols.protocol_type = ?',
+               Protocol.protocol_types[:in_repository_archived])
         .where(added_by: @user)
     end
 

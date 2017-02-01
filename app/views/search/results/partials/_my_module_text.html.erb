@@ -3,11 +3,11 @@
 <% text = query.present? ? highlight(my_module.name, query.strip.split(/\s+/)) : my_module.name %>
 
 <% if my_module.archived? %>
-  <span class="label label-warning"><%=t "search.index.archived" %></span>
+  <span class="label label-warning"><%=t 'search.index.archived' %></span>
   <% if can_view_experiment_archive(my_module.experiment) and can_restore_module(my_module) %>
-    <%= route_to_other_org module_archive_experiment_url(my_module.experiment),
-                           my_module.experiment.project.organization,
-                           text %>
+    <%= route_to_other_team module_archive_experiment_url(my_module.experiment),
+                            my_module.experiment.project.team,
+                            text %>
   <% else %>
     <%= text %>
   <% end %>
@@ -15,21 +15,21 @@
   <% if can_view_module(my_module) %>
     <% case link_to_page %>
       <% when :samples %>
-        <%= route_to_other_org samples_my_module_path(my_module),
-                               my_module.experiment.project.organization,
-                               text %>
+        <%= route_to_other_team samples_my_module_path(my_module),
+                                my_module.experiment.project.team,
+                                text %>
       <% when :protocols %>
-        <%= route_to_other_org protocols_my_module_path(my_module),
-                               my_module.experiment.project.organization,
-                               text %>
+        <%= route_to_other_team protocols_my_module_path(my_module),
+                                my_module.experiment.project.team,
+                                text %>
       <% when :canvas %>
-        <%= route_to_other_org canvas_experiment_path(my_module.experiment),
-                               my_module.experiment.project.organization,
-                               text %>
+        <%= route_to_other_team canvas_experiment_path(my_module.experiment),
+                                my_module.experiment.project.team,
+                                text %>
       <% when :results %>
-        <%= route_to_other_org results_my_module_path(my_module),
-                               my_module.experiment.project.organization,
-                               text %>
+        <%= route_to_other_team results_my_module_path(my_module),
+                                my_module.experiment.project.team,
+                                text %>
       <% else %>
         <%= text %>
     <% end %>

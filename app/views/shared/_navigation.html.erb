@@ -63,7 +63,7 @@
       <ul class="nav navbar-nav navbar-right">
 
         <!-- Global team switch -->
-        <% if current_user.organizations.length > 0 %>
+        <% if current_user.teams.length > 0 %>
         <li class="dropdown" id="team-switch">
           <a href="#"
              class="dropdown-toggle"
@@ -73,33 +73,33 @@
              aria-expanded="false">
             <%= fa_icon 'users' %>
             <span>
-              <%= truncate_organization_name(current_organization.name) %>
+              <%= truncate_team_name(current_team.name) %>
             </span>
           </a>
 
           <ul class="dropdown-menu ">
             <%= form_for(current_user,
-                         url: user_current_organization_path,
+                         url: user_current_team_path,
                          method: :post) do |f| %>
-              <%= hidden_field(:user, :current_organization_id) %>
-              <% current_user.organizations.each do |org| %>
-                <% next unless org != current_organization %>
+              <%= hidden_field(:user, :current_team_id) %>
+              <% current_user.teams.each do |team| %>
+                <% next unless team != current_team %>
                 <li>
                   <a href="#"
-                    data-id="<%= org.id %>"
+                    data-id="<%= team.id %>"
                     class="text-center change-team">
-                    <%= org.name %>
+                    <%= team.name %>
                   </a>
                 </li>
               <% end %>
             <% end %>
-            <% if current_user.organizations.length > 1 %>
+            <% if current_user.teams.length > 1 %>
             <li role="separator" class="divider"></li>
             <% end %>
             <li>
-              <%= link_to new_organization_path do %>
+              <%= link_to new_team_path do %>
                 <span class="glyphicon glyphicon-plus"></span>
-                <%= t('users.settings.organizations.index.new_organization') %>
+                <%= t('users.settings.teams.index.new_team') %>
               <% end %>
             </li>
           </ul>

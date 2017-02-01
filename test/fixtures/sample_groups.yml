@@ -1,7 +1,7 @@
 blood:
   name: Blood
   color: "#ff0000"
-  organization: biosistemika
+  team: biosistemika
   created_by: steve
   last_modified_by: mark
 
@@ -9,6 +9,6 @@ blood:
 noble:
   name: Blue blood
   color: "#0000ff"
-  organization: biosistemika
+  team: biosistemika
   created_by: steve
   last_modified_by: steve

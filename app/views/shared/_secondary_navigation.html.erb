@@ -14,11 +14,11 @@
       <!-- Breadcrumbs, displayed on small screens -->
       <ul class="breadcrumb hidden-sm hidden-md hidden-lg">
         <li>
-          <% if can_view_projects(@project.organization) %>
-            <a href="<%= projects_path :organization => @project.organization.id %>">
+          <% if can_view_projects(@project.team) %>
+            <a href="<%= projects_path :team => @project.team.id %>">
           <% end %>
           <span class="glyphicon glyphicon-folder-open"></span>
-          <% if can_view_projects(@project.organization) %>
+          <% if can_view_projects(@project.team) %>
             </a>
           <% end %>
         </li>
@@ -198,12 +198,12 @@
       <!-- Breadcrumbs, displayed on large screens -->
       <ul class="breadcrumb hidden-xs">
         <li>
-          <% if can_view_projects(@project.organization) %>
-            <a href="<%= projects_path :organization => @project.organization.id %>">
+          <% if can_view_projects(@project.team) %>
+            <a href="<%= projects_path :team => @project.team.id %>">
           <% end %>
-          <%= truncate(@project.organization.name,
+          <%= truncate(@project.team.name,
                        length: Constants::NAME_TRUNCATION_LENGTH) %>
-          <% if can_view_projects(@project.organization) %>
+          <% if can_view_projects(@project.team) %>
             </a>
           <% end %>
         </li>

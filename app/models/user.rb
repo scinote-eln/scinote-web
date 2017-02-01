@@ -37,8 +37,8 @@ class User < ActiveRecord::Base
   validate :time_zone_check
 
   # Relations
-  has_many :user_organizations, inverse_of: :user
-  has_many :organizations, through: :user_organizations
+  has_many :user_teams, inverse_of: :user
+  has_many :teams, through: :user_teams
   has_many :user_projects, inverse_of: :user
   has_many :projects, through: :user_projects
   has_many :user_my_modules, inverse_of: :user
@@ -52,46 +52,123 @@ class User < ActiveRecord::Base
   has_many :custom_fields, inverse_of: :user
   has_many :reports, inverse_of: :user
   has_many :created_assets, class_name: 'Asset', foreign_key: 'created_by_id'
-  has_many :modified_assets, class_name: 'Asset', foreign_key: 'last_modified_by_id'
-  has_many :created_checklists, class_name: 'Checklist', foreign_key: 'created_by_id'
-  has_many :modified_checklists, class_name: 'Checklist', foreign_key: 'last_modified_by_id'
-  has_many :created_checklist_items, class_name: 'ChecklistItem', foreign_key: 'created_by_id'
-  has_many :modified_checklist_items, class_name: 'ChecklistItem', foreign_key: 'last_modified_by_id'
-  has_many :modified_comments, class_name: 'Comment', foreign_key: 'last_modified_by_id'
-  has_many :modified_custom_fields, class_name: 'CustomField', foreign_key: 'last_modified_by_id'
-  has_many :created_my_module_groups, class_name: 'MyModuleGroup', foreign_key: 'created_by_id'
-  has_many :created_my_module_tags, class_name: 'MyModuleTag', foreign_key: 'created_by_id'
-  has_many :created_my_modules, class_name: 'MyModule', foreign_key: 'created_by_id'
-  has_many :modified_my_modules, class_name: 'MyModule', foreign_key: 'last_modified_by_id'
-  has_many :archived_my_modules, class_name: 'MyModule', foreign_key: 'archived_by_id'
-  has_many :restored_my_modules, class_name: 'MyModule', foreign_key: 'restored_by_id'
-  has_many :created_organizations, class_name: 'Organization', foreign_key: 'created_by_id'
-  has_many :modified_organizations, class_name: 'Organization', foreign_key: 'last_modified_by_id'
-  has_many :created_projects, class_name: 'Project', foreign_key: 'created_by_id'
-  has_many :modified_projects, class_name: 'Project', foreign_key: 'last_modified_by_id'
-  has_many :archived_projects, class_name: 'Project', foreign_key: 'archived_by_id'
-  has_many :restored_projects, class_name: 'Project', foreign_key: 'restored_by_id'
-  has_many :modified_reports, class_name: 'Report', foreign_key: 'last_modified_by_id'
-  has_many :modified_results, class_name: 'Result', foreign_key: 'modified_by_id'
-  has_many :archived_results, class_name: 'Result', foreign_key: 'archived_by_id'
-  has_many :restored_results, class_name: 'Result', foreign_key: 'restored_by_id'
-  has_many :created_sample_groups, class_name: 'SampleGroup', foreign_key: 'created_by_id'
-  has_many :modified_sample_groups, class_name: 'SampleGroup', foreign_key: 'last_modified_by_id'
-  has_many :assigned_sample_my_modules, class_name: 'SampleMyModule', foreign_key: 'assigned_by_id'
-  has_many :created_sample_types, class_name: 'SampleType', foreign_key: 'created_by_id'
-  has_many :modified_sample_types, class_name: 'SampleType', foreign_key: 'last_modified_by_id'
-  has_many :modified_samples, class_name: 'Sample', foreign_key: 'last_modified_by_id'
+  has_many :modified_assets,
+           class_name: 'Asset',
+           foreign_key: 'last_modified_by_id'
+  has_many :created_checklists,
+           class_name: 'Checklist',
+           foreign_key: 'created_by_id'
+  has_many :modified_checklists,
+           class_name: 'Checklist',
+           foreign_key: 'last_modified_by_id'
+  has_many :created_checklist_items,
+           class_name: 'ChecklistItem',
+           foreign_key: 'created_by_id'
+  has_many :modified_checklist_items,
+           class_name: 'ChecklistItem',
+           foreign_key: 'last_modified_by_id'
+  has_many :modified_comments,
+           class_name: 'Comment',
+           foreign_key: 'last_modified_by_id'
+  has_many :modified_custom_fields,
+           class_name: 'CustomField',
+           foreign_key: 'last_modified_by_id'
+  has_many :created_my_module_groups,
+           class_name: 'MyModuleGroup',
+           foreign_key: 'created_by_id'
+  has_many :created_my_module_tags,
+           class_name: 'MyModuleTag',
+           foreign_key: 'created_by_id'
+  has_many :created_my_modules,
+           class_name: 'MyModule',
+           foreign_key: 'created_by_id'
+  has_many :modified_my_modules,
+           class_name: 'MyModule',
+           foreign_key: 'last_modified_by_id'
+  has_many :archived_my_modules,
+           class_name: 'MyModule',
+           foreign_key: 'archived_by_id'
+  has_many :restored_my_modules,
+           class_name: 'MyModule',
+           foreign_key: 'restored_by_id'
+  has_many :created_teams,
+           class_name: 'Team',
+           foreign_key: 'created_by_id'
+  has_many :modified_teams,
+           class_name: 'Team',
+           foreign_key: 'last_modified_by_id'
+  has_many :created_projects,
+           class_name: 'Project',
+           foreign_key: 'created_by_id'
+  has_many :modified_projects,
+           class_name: 'Project',
+           foreign_key: 'last_modified_by_id'
+  has_many :archived_projects,
+           class_name: 'Project',
+           foreign_key: 'archived_by_id'
+  has_many :restored_projects,
+           class_name: 'Project',
+           foreign_key: 'restored_by_id'
+  has_many :modified_reports,
+           class_name: 'Report',
+           foreign_key: 'last_modified_by_id'
+  has_many :modified_results,
+           class_name: 'Result',
+           foreign_key: 'modified_by_id'
+  has_many :archived_results,
+           class_name: 'Result',
+           foreign_key: 'archived_by_id'
+  has_many :restored_results,
+           class_name: 'Result',
+           foreign_key: 'restored_by_id'
+  has_many :created_sample_groups,
+           class_name: 'SampleGroup',
+           foreign_key: 'created_by_id'
+  has_many :modified_sample_groups,
+           class_name: 'SampleGroup',
+           foreign_key: 'last_modified_by_id'
+  has_many :assigned_sample_my_modules,
+           class_name: 'SampleMyModule',
+           foreign_key: 'assigned_by_id'
+  has_many :created_sample_types,
+           class_name: 'SampleType',
+           foreign_key: 'created_by_id'
+  has_many :modified_sample_types,
+           class_name: 'SampleType',
+           foreign_key: 'last_modified_by_id'
+  has_many :modified_samples,
+           class_name: 'Sample',
+           foreign_key: 'last_modified_by_id'
   has_many :modified_steps, class_name: 'Step', foreign_key: 'modified_by_id'
   has_many :created_tables, class_name: 'Table', foreign_key: 'created_by_id'
-  has_many :modified_tables, class_name: 'Table', foreign_key: 'last_modified_by_id'
+  has_many :modified_tables,
+           class_name: 'Table',
+           foreign_key: 'last_modified_by_id'
   has_many :created_tags, class_name: 'Tag', foreign_key: 'created_by_id'
-  has_many :modified_tags, class_name: 'Tag', foreign_key: 'last_modified_by_id'
-  has_many :assigned_user_my_modules, class_name: 'UserMyModule', foreign_key: 'assigned_by_id'
-  has_many :assigned_user_organizations, class_name: 'UserOrganization', foreign_key: 'assigned_by_id'
-  has_many :assigned_user_projects, class_name: 'UserProject', foreign_key: 'assigned_by_id'
-  has_many :added_protocols, class_name: 'Protocol', foreign_key: 'added_by_id', inverse_of: :added_by
-  has_many :archived_protocols, class_name: 'Protocol', foreign_key: 'archived_by_id', inverse_of: :archived_by
-  has_many :restored_protocols, class_name: 'Protocol', foreign_key: 'restored_by_id', inverse_of: :restored_by
+  has_many :modified_tags,
+           class_name: 'Tag',
+           foreign_key: 'last_modified_by_id'
+  has_many :assigned_user_my_modules,
+           class_name: 'UserMyModule',
+           foreign_key: 'assigned_by_id'
+  has_many :assigned_user_teams,
+           class_name: 'UserTeam',
+           foreign_key: 'assigned_by_id'
+  has_many :assigned_user_projects,
+           class_name: 'UserProject',
+           foreign_key: 'assigned_by_id'
+  has_many :added_protocols,
+           class_name: 'Protocol',
+           foreign_key: 'added_by_id',
+           inverse_of: :added_by
+  has_many :archived_protocols,
+           class_name: 'Protocol',
+           foreign_key: 'archived_by_id',
+           inverse_of: :archived_by
+  has_many :restored_protocols,
+           class_name: 'Protocol',
+           foreign_key: 'restored_by_id',
+           inverse_of: :restored_by
   has_many :user_notifications, inverse_of: :user
   has_many :notifications, through: :user_notifications
 
@@ -111,11 +188,11 @@ class User < ActiveRecord::Base
   end
 
   # Search all active users for username & email. Can
-  # also specify which organization to ignore.
+  # also specify which team to ignore.
   def self.search(
     active_only,
     query = nil,
-    organization_to_ignore = nil
+    team_to_ignore = nil
   )
     result = User.all
 
@@ -123,11 +200,11 @@ class User < ActiveRecord::Base
       result = result.where.not(confirmed_at: nil)
     end
 
-    if organization_to_ignore.present?
+    if team_to_ignore.present?
       ignored_ids =
-        UserOrganization
+        UserTeam
         .select(:user_id)
-        .where(organization_id: organization_to_ignore.id)
+        .where(team_id: team_to_ignore.id)
       result =
         result
         .where("users.id NOT IN (?)", ignored_ids)
@@ -166,19 +243,19 @@ class User < ActiveRecord::Base
 
   def active_status_str
     if active?
-      I18n.t("users.enums.status.active")
+      I18n.t('users.enums.status.active')
     else
-      I18n.t("users.enums.status.pending")
+      I18n.t('users.enums.status.pending')
     end
   end
 
-  def projects_by_orgs(org_id = 0, sort_by = nil, archived = false)
+  def projects_by_teams(team_id = 0, sort_by = nil, archived = false)
     archived = archived ? true : false
-    query = Project.all.joins(:user_projects);
-    sql = "projects.organization_id IN " +
-          "(SELECT DISTINCT organization_id FROM user_organizations WHERE user_organizations.user_id = ?) " +
-          "AND (projects.visibility=1 OR user_projects.user_id=?) " +
-          "AND projects.archived = ? ";
+    query = Project.all.joins(:user_projects)
+    sql = 'projects.team_id IN (SELECT DISTINCT team_id ' \
+          'FROM user_teams WHERE user_teams.user_id = ?) ' \
+          'AND (projects.visibility=1 OR user_projects.user_id=?) ' \
+          'AND projects.archived = ? '
 
     case sort_by
     when "old"
@@ -191,19 +268,19 @@ class User < ActiveRecord::Base
       sort = {created_at: :desc}
     end
 
-    if org_id > 0
+    if team_id > 0
       result = query
-        .where("projects.organization_id = ?", org_id)
-        .where(sql, id, id, archived)
-        .order(sort)
-        .distinct
-        .group_by { |project| project.organization }
+               .where('projects.team_id = ?', team_id)
+               .where(sql, id, id, archived)
+               .order(sort)
+               .distinct
+               .group_by(&:team)
     else
       result = query
-        .where(sql, id, id, archived)
-        .order(sort)
-        .distinct
-        .group_by { |project| project.organization }
+               .where(sql, id, id, archived)
+               .order(sort)
+               .distinct
+               .group_by(&:team)
     end
     result || []
   end
@@ -231,14 +308,14 @@ class User < ActiveRecord::Base
       .uniq
   end
 
-  def organizations_ids
-    organizations.pluck(:id)
+  def teams_ids
+    teams.pluck(:id)
   end
 
   # Returns a hash with user statistics
   def statistics
     statistics = {}
-    statistics[:number_of_teams] = organizations.count
+    statistics[:number_of_teams] = teams.count
     statistics[:number_of_projects] = projects.count
     number_of_experiments = 0
     projects.find_each do |pr|

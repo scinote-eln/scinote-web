@@ -1,19 +1,19 @@
 kw1:
   name: "qPCR"
-  organization: biosistemika
+  team: biosistemika
 
 kw2:
   name: "Lab"
-  organization: biosistemika
+  team: biosistemika
 
 kw3:
   name: "ELISA"
-  organization: biosistemika
+  team: biosistemika
 
 kw4:
   name: "Sample Prep"
-  organization: biosistemika
+  team: biosistemika
 
 kw5:
   name: "Vortexing"
-  organization: biosistemika
+  team: biosistemika

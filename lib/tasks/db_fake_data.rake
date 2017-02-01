@@ -6,8 +6,7 @@ include RenamingUtil
 include FakeTestHelper
 
 namespace :db do
-
-  NR_ORGANIZATIONS = 4
+  NR_TEAMS = 4
   NR_USERS = 100
   NR_SAMPLE_TYPES = 20
   NR_SAMPLE_GROUPS = 20
@@ -23,8 +22,8 @@ namespace :db do
   NR_RESULTS = 4
   NR_REPORTS = 4
   NR_COMMENTS = 10
-  RATIO_USER_ORGANIZATIONS = 0.5
-  NR_MAX_USER_ORGANIZATIONS = 20
+  RATIO_USER_TEAMS = 0.5
+  NR_MAX_USER_TEAMS = 20
   RATIO_CUSTOM_FIELDS = 0.7
   RATIO_SAMPLE_CUSTOM_FIELDS = 0.6
   RATIO_PROTOCOL_KEYWORDS = 0.3
@@ -113,7 +112,7 @@ namespace :db do
             factor = 100
         end
 
-        nr_org = NR_ORGANIZATIONS * factor
+        nr_team = NR_TEAMS * factor
         nr_users = NR_USERS * factor
         nr_sample_types = NR_SAMPLE_TYPES * factor
         nr_sample_groups = NR_SAMPLE_GROUPS * factor
@@ -130,26 +129,26 @@ namespace :db do
         nr_reports = NR_REPORTS * factor
         nr_comments = NR_COMMENTS * factor
       else
-        puts "Type in the number of seeded organizations"
-        nr_org = $stdin.gets.to_i
+        puts "Type in the number of seeded teams"
+        nr_team = $stdin.gets.to_i
         puts "Type in the number of seeded users"
         nr_users = $stdin.gets.to_i
         puts "Type in the number of seeded sample types " +
-             "for each organization"
+             "for each team"
         nr_sample_types = $stdin.gets.to_i
         puts "Type in the number of seeded sample groups for " +
-             "each organization"
+             "each team"
         nr_sample_groups = $stdin.gets.to_i
         puts "Type in the max. number of seeded custom fields " +
-             "for each organization"
+             "for each team"
         nr_custom_fields = $stdin.gets.to_i
-        puts "Type in the number of seeded samples for each organization"
+        puts "Type in the number of seeded samples for each team"
         nr_samples = $stdin.gets.to_i
-        puts "Type in the number of seeded protocols for each organization"
+        puts "Type in the number of seeded protocols for each team"
         nr_protocols = $stdin.gets.to_i
-        puts "Type in the number of seeded protocol keywords for each organization"
+        puts "Type in the number of seeded protocol keywords for each team"
         nr_protocol_keywords = $stdin.gets.to_i
-        puts "Type in the number of seeded projects for each organization"
+        puts "Type in the number of seeded projects for each team"
         nr_projects = $stdin.gets.to_i
         puts "Type in the number of seeded experiments for each project"
         nr_experiments = $stdin.gets.to_i
@@ -171,21 +170,21 @@ namespace :db do
       begin
         ActiveRecord::Base.transaction do
 
-          puts "Generating fake organizations..."
-          taken_org_names = []
-          for _ in 1..nr_org
+          puts "Generating fake teams..."
+          taken_team_names = []
+          for _ in 1..nr_team
             begin
               name = Faker::University.name
-            end while name.in? taken_org_names
-            taken_org_names << name
+            end while name.in? taken_team_names
+            taken_team_names << name
 
-            Organization.create(
+            Team.create(
               name: name,
               description: rand >= 0.7 ? Faker::Lorem.sentence : nil
             )
           end
 
-          all_organizations = Organization.all
+          all_teams = Team.all
 
           puts "Generating fake users..."
           taken_emails = []
@@ -218,18 +217,18 @@ namespace :db do
                    "password: #{password})"
             end
 
-            # Randomly assign user to organizations
-            taken_org_ids = []
-            for _ in 1..[NR_MAX_USER_ORGANIZATIONS, all_organizations.count].min
-              if rand <= RATIO_USER_ORGANIZATIONS then
+            # Randomly assign user to teams
+            taken_team_ids = []
+            for _ in 1..[NR_MAX_USER_TEAMS, all_teams.count].min
+              if rand <= RATIO_USER_TEAMS then
                 begin
-                  org = pluck_random(all_organizations)
-                end while org.id.in? taken_org_ids
-                taken_org_ids << org.id
+                  team = pluck_random(all_teams)
+                end while team.id.in? taken_team_ids
+                taken_team_ids << team.id
 
-                UserOrganization.create(
+                UserTeam.create(
                   user: user,
-                  organization: org,
+                  team: team,
                   role: rand(0..2)
                 )
               end
@@ -237,52 +236,52 @@ namespace :db do
           end
 
           puts "Generating fake sample types..."
-          all_organizations.find_each do |org|
+          all_teams.find_each do |team|
             for _ in 1..nr_sample_types
               SampleType.create(
                 name: Faker::Commerce.department(4),
-                organization: org
+                team: team
               )
             end
           end
 
           puts "Generating fake sample groups..."
-          all_organizations.find_each do |org|
+          all_teams.find_each do |team|
             for _ in 1..nr_sample_groups
               SampleGroup.create(
                 name: Faker::Commerce.color,
-                organization: org,
+                team: team,
                 color: generate_color
               )
             end
           end
 
           puts "Generating fake custom fields..."
-          all_organizations.find_each do |org|
+          all_teams.find_each do |team|
             for _ in 1..nr_custom_fields
               if rand <= RATIO_CUSTOM_FIELDS then
                 CustomField.create(
                   name: Faker::Team.state,
-                  organization: org,
-                  user: pluck_random(org.users)
+                  team: team,
+                  user: pluck_random(team.users)
                 )
               end
             end
           end
 
           puts "Generating fake samples..."
-          all_organizations.find_each do |org|
+          all_teams.find_each do |team|
             for _ in 1..nr_samples
               sample = Sample.create(
                 name: Faker::Book.title,
-                organization: org,
-                user: pluck_random(org.users),
-                sample_type: pluck_random(org.sample_types),
-                sample_group: pluck_random(org.sample_groups)
+                team: team,
+                user: pluck_random(team.users),
+                sample_type: pluck_random(team.sample_types),
+                sample_group: pluck_random(team.sample_groups)
               )
 
               # Add some custom fields to sample
-              org.custom_fields.find_each do |cf|
+              team.custom_fields.find_each do |cf|
                 if rand <= RATIO_SAMPLE_CUSTOM_FIELDS then
                   SampleCustomField.create(
                     sample: sample,
@@ -295,7 +294,7 @@ namespace :db do
           end
 
           puts "Generating fake protocol keywords"
-          all_organizations.find_each do |org|
+          all_teams.find_each do |team|
             taken_kw_names = []
             for _ in 1..nr_protocol_keywords
               begin
@@ -303,16 +302,19 @@ namespace :db do
               end while name.in? taken_kw_names
               taken_kw_names << name
               ProtocolKeyword.create(
-                organization: org,
+                team: team,
                 name: name
               )
             end
           end
 
           puts "Generating fake repository protocols..."
-          all_organizations.find_each do |org|
+          all_teams.find_each do |team|
             for _ in 1..nr_protocols
-              protocol = generate_fake_protocol(org, nil, nr_steps, nr_comments)
+              protocol = generate_fake_protocol(team,
+                                                nil,
+                                                nr_steps,
+                                                nr_comments)
 
               if verbose then
                 puts "    Generated protocol #{protocol.name}"
@@ -321,7 +323,7 @@ namespace :db do
           end
 
           puts "Generating fake projects..."
-          all_organizations.find_each do |org|
+          all_teams.find_each do |team|
             taken_project_names = []
             for _ in 1..nr_projects
               begin
@@ -329,12 +331,12 @@ namespace :db do
               end while name.in? taken_project_names
               taken_project_names << name
 
-              author = pluck_random(org.users)
+              author = pluck_random(team.users)
               created_at = Faker::Time.backward(500)
-              last_modified_by = pluck_random(org.users)
-              archived_by = pluck_random(org.users)
+              last_modified_by = pluck_random(team.users)
+              archived_by = pluck_random(team.users)
               archived_on = Faker::Time.between(created_at, DateTime.now)
-              restored_by = pluck_random(org.users)
+              restored_by = pluck_random(team.users)
               restored_on = Faker::Time.between(archived_on, DateTime.now)
               status = random_status
 
@@ -342,7 +344,7 @@ namespace :db do
                 visibility: rand(0..1),
                 name: name,
                 due_date: nil,
-                organization: org,
+                team: team,
                 created_by: author,
                 created_at: created_at,
                 last_modified_by: last_modified_by,
@@ -403,10 +405,10 @@ namespace :db do
 
               # Assign users onto the project
               taken_user_ids = []
-              for _ in 2..[NR_MAX_USER_PROJECTS, org.users.count].min
+              for _ in 2..[NR_MAX_USER_PROJECTS, team.users.count].min
                 if rand <= RATIO_USER_PROJECTS
                   begin
-                    user = pluck_random(org.users)
+                    user = pluck_random(team.users)
                   end while user.id.in? taken_user_ids
                   taken_user_ids << user.id
 
@@ -498,11 +500,11 @@ namespace :db do
               taken_pos << [x, y]
 
               status = random_status
-              author = pluck_random(org.users)
+              author = pluck_random(team.users)
               created_at = Faker::Time.backward(500)
-              archived_by = pluck_random(org.users)
+              archived_by = pluck_random(team.users)
               archived_on = Faker::Time.between(created_at, DateTime.now)
-              restored_by = pluck_random(org.users)
+              restored_by = pluck_random(team.users)
               restored_on = Faker::Time.between(archived_on, DateTime.now)
 
               my_module = MyModule.create(
@@ -613,11 +615,11 @@ namespace :db do
               taken_sample_ids = []
               for _ in 1..[
                 NR_MAX_SAMPLE_MODULES,
-                project.organization.samples.count
+                project.team.samples.count
               ].min
                 if rand <= RATIO_SAMPLE_MODULES then
                   begin
-                    sample = pluck_random(project.organization.samples)
+                    sample = pluck_random(project.team.samples)
                   end while sample.id.in? taken_sample_ids
                   taken_sample_ids << sample.id
 
@@ -683,10 +685,13 @@ namespace :db do
             end
           end
 
-          puts "Generating fake module protocols..."
+          puts 'Generating fake module protocols...'
           Experiment.find_each do |experiment|
             experiment.my_modules.find_each do |my_module|
-              generate_fake_protocol(experiment.project.organization, my_module, nr_steps, nr_comments)
+              generate_fake_protocol(experiment.project.team,
+                                     my_module,
+                                     nr_steps,
+                                     nr_comments)
             end
           end
 
@@ -936,11 +941,10 @@ namespace :db do
 
         end
 
-        # Now, at the end, add additional "private" organization
+        # Now, at the end, add additional "private" team
         # to each user
         User.find_each do |user|
-          create_private_user_organization(user,
-                                           Constants::DEFAULT_PRIVATE_ORG_NAME)
+          create_private_user_team(user, Constants::DEFAULT_PRIVATE_TEAM_NAME)
         end
 
         # Generate thumbnails of all experiments
@@ -948,15 +952,15 @@ namespace :db do
           experiment.generate_workflow_img
         end
 
-        # Calculate space taken by each organization; this must
+        # Calculate space taken by each team; this must
         # be done in a separate transaction because the estimated
         # asset sizes are calculated in after_commit, which is done
         # after the first transaction is completed
         ActiveRecord::Base.transaction do
-          puts "Calculating organization sizes..."
-          Organization.find_each do |org|
-            org.calculate_space_taken
-            org.save
+          puts 'Calculating team sizes...'
+          Team.find_each do |team|
+            team.calculate_space_taken
+            team.save
           end
         end
       rescue ActiveRecord::ActiveRecordError,
@@ -969,7 +973,7 @@ namespace :db do
   end
 
   def generate_fake_protocol(
-    organization,
+    team,
     my_module,
     nr_steps,
     nr_comments
@@ -981,7 +985,7 @@ namespace :db do
       author = pluck_random(users)
       if rand <= THRESHOLD_PROTOCOL_IN_MODULE_LINKED &&
         (parent = pluck_random(
-          organization.protocols.where(protocol_type: [
+          team.protocols.where(protocol_type: [
             Protocol.protocol_types[:in_repository_private],
             Protocol.protocol_types[:in_repository_public]
           ]))
@@ -996,7 +1000,7 @@ namespace :db do
       protocol.my_module = my_module
     else
       protocol = Protocol.new
-      users = organization.users
+      users = team.users
       author = pluck_random(users)
       val = rand
       if val > THRESHOLD_PROTOCOL_ARCHIVED
@@ -1016,7 +1020,7 @@ namespace :db do
       protocol.description = Faker::Lorem.paragraph(2)
     end
     protocol.name = Faker::Hacker.ingverb
-    protocol.organization = organization
+    protocol.team = team
 
     if protocol.invalid? then
       rename_record(protocol, :name)
@@ -1024,7 +1028,7 @@ namespace :db do
 
     protocol.save!
 
-    organization.protocol_keywords.find_each do |kw|
+    team.protocol_keywords.find_each do |kw|
       if rand <= RATIO_PROTOCOL_KEYWORDS
         ProtocolProtocolKeyword.create(
           protocol: protocol,

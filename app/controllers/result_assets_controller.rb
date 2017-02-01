@@ -40,7 +40,7 @@ class ResultAssetsController < ApplicationController
     respond_to do |format|
       if (@result.save and @asset.save) then
         # Post process file here
-        @asset.post_process_file(@my_module.experiment.project.organization)
+        @asset.post_process_file(@my_module.experiment.project.team)
 
         # Generate activity
         Activity.create(
@@ -129,15 +129,15 @@ class ResultAssetsController < ApplicationController
       saved = @result.save
 
       if saved then
-        # Release organization's space taken due to
+        # Release team's space taken due to
         # previous asset being removed
-        org = @result.my_module.experiment.project.organization
-        org.release_space(previous_size)
-        org.save
+        team = @result.my_module.experiment.project.team
+        team.release_space(previous_size)
+        team.save
 
         # Post process new file if neccesary
         if @result.asset.present?
-          @result.asset.post_process_file(org)
+          @result.asset.post_process_file(team)
         end
 
         Activity.create(

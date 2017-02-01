@@ -45,7 +45,7 @@ class StepsController < ApplicationController
       if @step.save
         # Post process all assets
         @step.assets.each do |asset|
-          asset.post_process_file(@protocol.organization)
+          asset.post_process_file(@protocol.team)
         end
 
         # Generate activity
@@ -63,7 +63,7 @@ class StepsController < ApplicationController
             )
           )
         else
-          # TODO: Activity for organization if step
+          # TODO: Activity for team if step
           # created in protocol management??
         end
 
@@ -136,14 +136,14 @@ class StepsController < ApplicationController
       if @step.save
         @step.reload
 
-        # Release organization's space taken
-        org = @protocol.organization
-        org.release_space(previous_size)
-        org.save
+        # Release team's space taken
+        team = @protocol.team
+        team.release_space(previous_size)
+        team.save
 
         # Post process step assets
         @step.assets.each do |asset|
-          asset.post_process_file(org)
+          asset.post_process_file(team)
         end
 
         # Generate activity
@@ -161,7 +161,7 @@ class StepsController < ApplicationController
             )
           )
         else
-          # TODO: Activity for organization if step
+          # TODO: Activity for team if step
           # updated in protocol management??
         end
 
@@ -192,15 +192,15 @@ class StepsController < ApplicationController
     end
 
     # Calculate space taken by this step
-    org = @protocol.organization
+    team = @protocol.team
     previous_size = @step.space_taken
 
     # Destroy the step
     @step.destroy(current_user)
 
     # Release space taken by the step
-    org.release_space(previous_size)
-    org.save
+    team.release_space(previous_size)
+    team.save
 
     # Update protocol timestamp
     update_protocol_ts(@step)

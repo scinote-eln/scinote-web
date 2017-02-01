@@ -3,9 +3,9 @@ class LoadFromRepositoryProtocolsDatatable < AjaxDatatablesRails::Base
   include ActiveRecord::Sanitization::ClassMethods
   include InputSanitizeHelper
 
-  def initialize(view, organization, type, user)
+  def initialize(view, team, type, user)
     super(view)
-    @organization = organization
+    @team = team
     # :public or :private
     @type = type
     @user = user
@@ -84,20 +84,22 @@ class LoadFromRepositoryProtocolsDatatable < AjaxDatatablesRails::Base
   def get_raw_records_base
     records =
       Protocol
-      .where(organization: @organization)
+      .where(team: @team)
       .joins('LEFT OUTER JOIN "protocol_protocol_keywords" ON "protocol_protocol_keywords"."protocol_id" = "protocols"."id"')
       .joins('LEFT OUTER JOIN "protocol_keywords" ON "protocol_protocol_keywords"."protocol_keyword_id" = "protocol_keywords"."id"')
 
     if @type == :public
       records =
         records
-        .joins('LEFT OUTER JOIN "users" ON "users"."id" = "protocols"."added_by_id"')
-        .where("\"protocols\".\"protocol_type\" = #{Protocol.protocol_types[:in_repository_public]}")
+        .joins('LEFT OUTER JOIN users ON users.id = protocols.added_by_id')
+        .where('protocols.protocol_type = ?',
+               Protocol.protocol_types[:in_repository_public])
     else
       records =
         records
-        .joins('LEFT OUTER JOIN "users" ON "users"."id" = "protocols"."added_by_id"')
-        .where("\"protocols\".\"protocol_type\" = #{Protocol.protocol_types[:in_repository_private]}")
+        .joins('LEFT OUTER JOIN users ON users.id = protocols.added_by_id')
+        .where('protocols.protocol_type = ?',
+               Protocol.protocol_types[:in_repository_private])
         .where(added_by: @user)
     end
 

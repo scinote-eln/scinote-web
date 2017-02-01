@@ -1,7 +1,7 @@
 class AddCreatedByToAssets < ActiveRecord::Migration
   def change
-    tables = [:assets, :checklists, :checklist_items, :my_module_groups, 
-      :my_module_tags, :my_modules, :organizations, :projects,
+    tables = [:assets, :checklists, :checklist_items, :my_module_groups,
+      :my_module_tags, :my_modules, :teams, :projects,
        :sample_groups, :sample_types, :tables, :tags]
 
     tables.each do |table_name|
@@ -9,8 +9,8 @@ class AddCreatedByToAssets < ActiveRecord::Migration
       add_index table_name, :created_by_id
     end
 
-    tables = [:assets, :checklists, :checklist_items, :comments, 
-      :custom_fields, :my_modules, :organizations, :projects, 
+    tables = [:assets, :checklists, :checklist_items, :comments,
+      :custom_fields, :my_modules, :teams, :projects,
       :reports, :results, :sample_groups, :sample_types, :samples,
       :steps, :tables, :tags]
 
@@ -29,8 +29,7 @@ class AddCreatedByToAssets < ActiveRecord::Migration
       add_column table_name, :restored_on, :datetime
     end
 
-    tables = [:sample_my_modules, :user_my_modules, 
-      :user_organizations, :user_projects]
+    tables = [:sample_my_modules, :user_my_modules, :user_teams, :user_projects]
     tables.each do |table_name|
       add_column table_name, :assigned_by_id, :integer
       add_index table_name, :assigned_by_id

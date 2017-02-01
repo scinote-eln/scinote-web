@@ -1,5 +1,5 @@
 class ReportsController < ApplicationController
-  include OrganizationsHelper
+  include TeamsHelper
   # Ignore CSRF protection just for PDF generation (because it's
   # used via target='_blank')
   protect_from_forgery with: :exception, :except => :generate
@@ -101,7 +101,7 @@ class ReportsController < ApplicationController
 
   def edit
     # cleans all the deleted report
-    current_organization_switch(@report.project.organization)
+    current_team_switch(@report.project.team)
     @report.cleanup_report
     render 'reports/new.html.erb'
   end

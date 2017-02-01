@@ -21,14 +21,14 @@ class AppMailerPreview < ActionMailer::Preview
       Notification.new(
         type_of: :assignment,
         title: I18n.t(
-          'notifications.assign_user_to_organization',
+          'notifications.assign_user_to_team',
           assigned_user: fake_user_2.full_name,
           role: 'Administrator',
-          organization: fake_org.name,
+          team: fake_team.name,
           assigned_by_user: fake_user.full_name
         ),
         message: ActionController::Base.helpers.sanitize(
-          "<a href='#' target='_blank'>#{fake_org.name}</a>"
+          "<a href='#' target='_blank'>#{fake_team.name}</a>"
         ),
         generator_user: fake_user,
         created_at: Time.now
@@ -93,8 +93,8 @@ class AppMailerPreview < ActionMailer::Preview
     )
   end
 
-  def fake_org
-    Organization.new(
+  def fake_team
+    Team.new(
       name: 'Greatest musicians of all time'
     )
   end

@@ -6,31 +6,31 @@ class Users::SettingsController < ApplicationController
   before_action :load_user, only: [
     :preferences,
     :update_preferences,
-    :organizations,
-    :organization,
-    :create_organization,
-    :organization_users_datatable,
+    :teams,
+    :team,
+    :create_team,
+    :team_users_datatable,
     :tutorial,
     :reset_tutorial,
     :notifications_settings,
-    :user_current_organization,
-    :destroy_user_organization
+    :user_current_team,
+    :destroy_user_team
   ]
 
-  before_action :check_organization_permission, only: [
-    :organization,
-    :update_organization,
-    :destroy_organization,
-    :organization_name,
-    :organization_description,
-    :organization_users_datatable
+  before_action :check_team_permission, only: [
+    :team,
+    :update_team,
+    :destroy_team,
+    :team_name,
+    :team_description,
+    :team_users_datatable
   ]
 
-  before_action :check_user_organization_permission, only: [
-    :update_user_organization,
-    :leave_user_organization_html,
-    :destroy_user_organization_html,
-    :destroy_user_organization
+  before_action :check_user_team_permission, only: [
+    :update_user_team,
+    :leave_user_team_html,
+    :destroy_user_team_html,
+    :destroy_user_team
   ]
 
   def preferences
@@ -53,114 +53,114 @@ class Users::SettingsController < ApplicationController
     end
   end
 
-  def organizations
-    @user_orgs =
+  def teams
+    @user_teams =
       @user
-      .user_organizations
-      .includes(organization: :users)
+      .user_teams
+      .includes(team: :users)
       .order(created_at: :asc)
-    @member_of = @user_orgs.count
+    @member_of = @user_teams.count
   end
 
-  def organization
-    @user_org = UserOrganization.find_by(user: @user, organization: @org)
+  def team
+    @user_team = UserTeam.find_by(user: @user, team: @team)
   end
 
-  def update_organization
+  def update_team
     respond_to do |format|
-      if @org.update(update_organization_params)
-        @org.update(last_modified_by: current_user)
+      if @team.update(update_team_params)
+        @team.update(last_modified_by: current_user)
         format.json {
           render json: {
             status: :ok,
             description_label: render_to_string(
-              partial: "users/settings/organizations/description_label.html.erb",
-              locals: { org: @org }
+              partial: "users/settings/teams/description_label.html.erb",
+              locals: { team: @team }
             )
           }
         }
       else
         format.json {
-          render json: @org.errors,
+          render json: @team.errors,
           status: :unprocessable_entity
         }
       end
     end
   end
 
-  def organization_name
+  def team_name
     respond_to do |format|
       format.json {
         render json: {
           html: render_to_string({
-            partial: "users/settings/organizations/name_modal_body.html.erb",
-            locals: { org: @org }
+            partial: "users/settings/teams/name_modal_body.html.erb",
+            locals: { team: @team }
           })
         }
       }
     end
   end
 
-  def organization_description
+  def team_description
     respond_to do |format|
       format.json {
         render json: {
           html: render_to_string({
-            partial: "users/settings/organizations/description_modal_body.html.erb",
-            locals: { org: @org }
+            partial: "users/settings/teams/description_modal_body.html.erb",
+            locals: { team: @team }
           })
         }
       }
     end
   end
 
-  def organization_users_datatable
+  def team_users_datatable
     respond_to do |format|
       format.json {
-        render json: ::OrganizationUsersDatatable.new(view_context, @org, @user)
+        render json: ::TeamUsersDatatable.new(view_context, @team, @user)
       }
     end
   end
 
-  def new_organization
-    @new_org = Organization.new
+  def new_team
+    @new_team = Team.new
   end
 
-  def create_organization
-    @new_org = Organization.new(create_organization_params)
-    @new_org.created_by = @user
+  def create_team
+    @new_team = Team.new(create_team_params)
+    @new_team.created_by = @user
 
-    if @new_org.save
-      # Okay, organization is created, now
+    if @new_team.save
+      # Okay, team is created, now
       # add the current user as admin
-      UserOrganization.create(
+      UserTeam.create(
         user: @user,
-        organization: @new_org,
+        team: @new_team,
         role: 2
       )
 
-      # Redirect to new organization page
-      redirect_to action: :organization, organization_id: @new_org.id
+      # Redirect to new team page
+      redirect_to action: :team, team_id: @new_team.id
     else
-      render :new_organization
+      render :new_team
     end
   end
 
-  def destroy_organization
-    @org.destroy
+  def destroy_team
+    @team.destroy
 
     flash[:notice] = I18n.t(
-      "users.settings.organizations.edit.modal_destroy_organization.flash_success",
-      org: @org.name
+      "users.settings.teams.edit.modal_destroy_team.flash_success",
+      team: @team.name
     )
 
-    # Redirect back to all organizations page
-    redirect_to action: :organizations
+    # Redirect back to all teams page
+    redirect_to action: :teams
   end
 
-  def update_user_organization
+  def update_user_team
     respond_to do |format|
-      if @user_org.update(update_user_organization_params)
+      if @user_team.update(update_user_team_params)
         format.json {
           render json: {
             status: :ok
@@ -168,83 +168,84 @@ class Users::SettingsController < ApplicationController
         }
       else
         format.json {
-          render json: @user_org.errors,
+          render json: @user_team.errors,
           status: :unprocessable_entity
         }
       end
     end
   end
 
-  def leave_user_organization_html
+  def leave_user_team_html
     respond_to do |format|
-      format.json {
+      format.json do
         render json: {
-          html: render_to_string({
-            partial: "users/settings/organizations/leave_user_organization_modal_body.html.erb",
-            locals: { user_organization: @user_org }
-          }),
+          html: render_to_string(
+            partial: 'users/settings/teams/leave_user_team_modal_body.html.erb',
+            locals: { user_team: @user_team }
+          ),
           heading: I18n.t(
-            "users.settings.organizations.index.leave_uo_heading",
-            org: escape_input(@user_org.organization.name)
+            'users.settings.teams.index.leave_uo_heading',
+            team: escape_input(@user_team.team.name)
           )
         }
-      }
+      end
     end
   end
 
-  def destroy_user_organization_html
+  def destroy_user_team_html
     respond_to do |format|
-      format.json {
+      format.json do
         render json: {
-          html: render_to_string({
-            partial: "users/settings/organizations/destroy_user_organization_modal_body.html.erb",
-            locals: { user_organization: @user_org }
-          }),
+          html: render_to_string(
+            partial: 'users/settings/teams/' \
+                     'destroy_user_team_modal_body.html.erb',
+            locals: { user_team: @user_team }
+          ),
           heading: I18n.t(
-            "users.settings.organizations.edit.destroy_uo_heading",
-            user: escape_input(@user_org.user.full_name),
-            org: escape_input(@user_org.organization.name)
+            'users.settings.teams.edit.destroy_uo_heading',
+            user: escape_input(@user_team.user.full_name),
+            team: escape_input(@user_team.team.name)
           )
         }
-      }
+      end
     end
   end
 
-  def destroy_user_organization
+  def destroy_user_team
     respond_to do |format|
-      # If user is last administrator of organization,
+      # If user is last administrator of team,
       # he/she cannot be deleted from it.
       invalid =
-        @user_org.admin? &&
-        @user_org
-        .organization
-        .user_organizations
+        @user_team.admin? &&
+        @user_team
+        .team
+        .user_teams
         .where(role: 2)
         .count <= 1
 
         if !invalid then
           begin
-            UserOrganization.transaction do
+            UserTeam.transaction do
               # If user leaves on his/her own accord,
               # new owner for projects is the first
-              # administrator of organization
+              # administrator of team
               if params[:leave]
                 new_owner =
-                  @user_org
-                  .organization
-                  .user_organizations
+                  @user_team
+                  .team
+                  .user_teams
                   .where(role: 2)
-                  .where.not(id: @user_org.id)
+                  .where.not(id: @user_team.id)
                   .first
                   .user
               else
                 # Otherwise, the new owner for projects is
                 # the current user (= an administrator removing
-                # the user from the organization)
+                # the user from the team)
                 new_owner = current_user
               end
-              reset_user_current_organization(@user_org)
-              @user_org.destroy(new_owner)
+              reset_user_current_team(@user_team)
+              @user_team.destroy(new_owner)
             end
           rescue Exception
             invalid = true
@@ -254,14 +255,14 @@ class Users::SettingsController < ApplicationController
       if !invalid
         if params[:leave] then
           flash[:notice] = I18n.t(
-            "users.settings.organizations.index.leave_flash",
-            org: @user_org.organization.name
+            'users.settings.teams.index.leave_flash',
+            team: @user_team.team.name
           )
           flash.keep(:notice)
         end
-        generate_notification(@user_organization.user,
-                              @user_org.user,
-                              @user_org.organization,
+        generate_notification(@user_team.user,
+                              @user_team.user,
+                              @user_team.team,
                               false,
                               false)
         format.json {
@@ -271,7 +272,7 @@ class Users::SettingsController < ApplicationController
         }
       else
         format.json {
-          render json: @user_org.errors,
+          render json: @user_team.errors,
           status: :unprocessable_entity
         }
       end
@@ -279,14 +280,14 @@ class Users::SettingsController < ApplicationController
   end
 
   def tutorial
-    @orgs =
+    @teams =
       @user
-      .user_organizations
-      .includes(organization: :users)
+      .user_teams
+      .includes(team: :users)
       .where(role: 1..2)
       .order(created_at: :asc)
-      .map { |uo| uo.organization }
-    @member_of = @orgs.count
+      .map(&:team)
+    @member_of = @teams.count
 
     respond_to do |format|
       format.json {
@@ -301,12 +302,12 @@ class Users::SettingsController < ApplicationController
   end
 
   def reset_tutorial
-    if @user.update(tutorial_status: 0) && params[:org][:id].present?
-      @user.update(current_organization_id: params[:org][:id])
+    if @user.update(tutorial_status: 0) && params[:team][:id].present?
+      @user.update(current_team_id: params[:team][:id])
       cookies.delete :tutorial_data
       cookies.delete :current_tutorial_step
-      cookies[:repeat_tutorial_org_id] = {
-        value: params[:org][:id],
+      cookies[:repeat_tutorial_team_id] = {
+        value: params[:team][:id],
         expires: 1.day.from_now
       }
 
@@ -348,15 +349,15 @@ class Users::SettingsController < ApplicationController
     end
   end
 
-  def user_current_organization
-    @user.current_organization_id = params[:user][:current_organization_id]
-    @changed_org = Organization.find_by_id(@user.current_organization_id)
-    if params[:user][:current_organization_id].present? && @user.save
-      flash[:success] = t('users.settings.changed_org_flash',
-                          team: @changed_org.name)
+  def user_current_team
+    @user.current_team_id = params[:user][:current_team_id]
+    @changed_team = Team.find_by_id(@user.current_team_id)
+    if params[:user][:current_team_id].present? && @user.save
+      flash[:success] = t('users.settings.changed_team_flash',
+                          team: @changed_team.name)
       redirect_to root_path
     else
-      flash[:alert] = t('users.settings.changed_org_error_flash')
+      flash[:alert] = t('users.settings.changed_team_error_flash')
       redirect_to :back
     end
   end
@@ -367,20 +368,20 @@ class Users::SettingsController < ApplicationController
     @user = current_user
   end
 
-  def check_organization_permission
-    @org = Organization.find_by_id(params[:organization_id])
-    unless is_admin_of_organization(@org)
+  def check_team_permission
+    @team = Team.find_by_id(params[:team_id])
+    unless is_admin_of_team(@team)
       render_403
     end
   end
 
-  def check_user_organization_permission
-    @user_org = UserOrganization.find_by_id(params[:user_organization_id])
-    @org = @user_org.organization
-    # Don't allow the user to modify UserOrganization-s if he's not admin,
-    # unless he/she is modifying his/her UserOrganization
-    if current_user != @user_org.user and
-      !is_admin_of_organization(@user_org.organization)
+  def check_user_team_permission
+    @user_team = UserTeam.find_by_id(params[:user_team_id])
+    @team = @user_team.team
+    # Don't allow the user to modify UserTeam-s if he's not admin,
+    # unless he/she is modifying his/her UserTeam
+    if current_user != @user_team.user &&
+       !is_admin_of_team(@user_team.team)
       render_403
     end
   end
@@ -391,15 +392,15 @@ class Users::SettingsController < ApplicationController
     )
   end
 
-  def create_organization_params
-    params.require(:organization).permit(
+  def create_team_params
+    params.require(:team).permit(
       :name,
       :description
     )
   end
 
-  def update_organization_params
-    params.require(:organization).permit(
+  def update_team_params
+    params.require(:team).permit(
       :name,
       :description
     )
@@ -412,16 +413,16 @@ class Users::SettingsController < ApplicationController
     )
   end
 
-  def update_user_organization_params
-    params.require(:user_organization).permit(
+  def update_user_team_params
+    params.require(:user_team).permit(
       :role
     )
   end
 
-  def reset_user_current_organization(user_org)
-    ids = user_org.user.organizations_ids
-    ids -= [user_org.organization.id]
-    user_org.user.current_organization_id = ids.first
-    user_org.user.save
+  def reset_user_current_team(user_team)
+    ids = user_team.user.teams_ids
+    ids -= [user_team.team.id]
+    user_team.user.current_team_id = ids.first
+    user_team.user.save
   end
 end

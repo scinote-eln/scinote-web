@@ -85,7 +85,7 @@
     teamSwitch
       .find('.dropdown-menu .change-team')
       .on('click', function(){
-        $('#user_current_organization_id')
+        $('#user_current_team_id')
           .val($(this).attr('data-id'));
 
         teamSwitch

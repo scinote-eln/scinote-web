@@ -24,17 +24,17 @@ namespace :data do
 
       User.transaction do
         begin
-          # Destroy user_organization, and possibly organization
-          if user.organizations.count > 0
-            oids = user.organizations.pluck(:id)
+          # Destroy user_team, and possibly team
+          if user.teams.count > 0
+            oids = user.teams.pluck(:id)
             oids.each do |oid|
-              org = Organization.find(oid)
-              user_org = user.user_organizations.where(organization: org).first
-              destroy_org = (org.users.count == 1 && org.created_by == user)
-              if !user_org.destroy(nil) then
+              team = Team.find(oid)
+              user_team = user.user_teams.where(team: team).first
+              destroy_team = (team.users.count == 1 && team.created_by == user)
+              if !user_team.destroy(nil) then
                 raise Exception
               end
-              org.destroy! if destroy_org
+              team.destroy! if destroy_team
             end
           end
 

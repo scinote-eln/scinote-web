@@ -2,9 +2,9 @@
 <% text = query.present? ? highlight(report.name, query.strip.split(/\s+/)) : report.name %>
 
 <% if can_view_reports(report.project) %>
-  <%= route_to_other_org edit_project_report_path(report.project, report),
-                         report.project.organization,
-                         text %>
+  <%= route_to_other_team edit_project_report_path(report.project, report),
+                          report.project.team,
+                          text %>
 <% else %>
   <%= text %>
 <% end %>

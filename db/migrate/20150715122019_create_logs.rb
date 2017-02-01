@@ -1,9 +1,9 @@
 class CreateLogs < ActiveRecord::Migration
   def change
     create_table :logs do |t|
-      t.integer :organization_id, null: false
-      t.string :message, null:false
+      t.integer :team_id, null: false
+      t.string :message, null: false
     end
-    add_foreign_key :logs, :organizations
+    add_foreign_key :logs, :teams
   end
 end
