@@ -1,4 +1,5 @@
-<ul class="nav nav-tabs nav-settings">
+<ul data-hook="user-settings-navigation-html"
+    class="nav nav-tabs nav-settings">
   <li role="presentation" class="<%= 'active' if action_name == 'preferences' %>">
     <%= link_to t("users.settings.navigation.preferences"), preferences_path %>
   </li>
