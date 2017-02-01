@@ -122,7 +122,13 @@ class Users::RegistrationsController < Devise::RegistrationsController
     end
   end
 
+  def new
+    render_403 && return unless Rails.configuration.x.enable_user_registration
+  end
+
   def create
+    render_403 && return unless Rails.configuration.x.enable_user_registration
+
     build_resource(sign_up_params)
     valid_resource = resource.valid?
 

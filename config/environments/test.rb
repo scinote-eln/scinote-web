@@ -74,4 +74,7 @@ Rails.application.configure do
 
   # Enable email confirmations
   config.x.enable_email_confirmations = false
+
+  # Enable user registrations
+  config.x.enable_user_registration = true
 end
