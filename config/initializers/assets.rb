@@ -16,6 +16,8 @@ Rails.application.config.assets.precompile += %w(handsontable.full.min.js)
 Rails.application.config.assets.precompile += %w(users/settings/preferences.js)
 Rails.application.config.assets.precompile += %w(users/settings/teams.js)
 Rails.application.config.assets.precompile +=
+  %w(users/settings/teams_datatable.js)
+Rails.application.config.assets.precompile +=
   %w(users/settings/teams/add_user_modal.js)
 Rails.application.config.assets.precompile += %w(users/settings/team.js)
 Rails.application.config.assets.precompile += %w(my_modules/activities.js)
