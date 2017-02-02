@@ -1,6 +1,6 @@
 <% provide(:head_title, t("users.settings.teams.head_title")) %>
 
-<div data-hook="team_beginning"></div>
+<div data-hook="team-beginning"></div>
 
 <%= render partial: "users/settings/navigation.html.erb" %>
 <div class="tab-content">
@@ -47,12 +47,12 @@
         </div>
         <div class="well well-sm">
           <span class="hidden-xs hidden-sm"><%= t("users.settings.teams.edit.header_space_taken") %></span>
-          <strong data-hook="team_space_taken"><%= "#{number_to_human_size(@team.space_taken)}" %></strong>
+          <strong data-hook="team-space-taken"><%= "#{number_to_human_size(@team.space_taken)}" %></strong>
         </div>
       </div>
     </div>
 
-    <div data-hook="team_header_second_row"></div>
+    <div data-hook="team-header-second-row"></div>
 
     <div>
       <div class="badge-icon bg-primary">
@@ -105,7 +105,7 @@
     </div>
     <!-- End of USERS TABLE -->
 
-    <div data-hook="team_the_end"></div>
+    <div data-hook="team-the-end"></div>
 
   </div>
 </div>
