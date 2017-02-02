@@ -13,12 +13,14 @@
       <% else %>
         <em><%= t("users.settings.teams.index.no_teams") %></em>
       <% end %>
-      <%= link_to new_team_path, class: "btn btn-default", style: "margin-left: 30px;" do %>
-        <span class="glyphicon glyphicon-plus"></span>
-        <span class="hidden-xs">
-          <%= t("users.settings.teams.index.new_team") %>
-        </span>
-      <% end %>
+      <span id="new-team-button">
+        <%= link_to new_team_path, class: "btn btn-default", style: "margin-left: 30px;" do %>
+          <span class="glyphicon glyphicon-plus"></span>
+          <span class="hidden-xs">
+            <%= t("users.settings.teams.index.new_team") %>
+          </span>
+        <% end %>
+      </span>
     </div>
 
     <% if @member_of > 0 %>
@@ -29,7 +31,7 @@
               <th id="team-name"><%= t("users.settings.teams.index.thead_name") %></th>
               <th id="team-role"><%= t("users.settings.teams.index.thead_role") %></th>
               <th id="team-members"><%= t("users.settings.teams.index.thead_members") %></th>
-              <th>&nbsp;</th>
+              <th id="leave-team">&nbsp;</th>
             </tr>
           </thead>
           <tbody></tbody>
