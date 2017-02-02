@@ -9,6 +9,7 @@ class Users::SettingsController < ApplicationController
     :teams,
     :team,
     :create_team,
+    :teams_datatable,
     :team_users_datatable,
     :tutorial,
     :reset_tutorial,
@@ -111,6 +112,14 @@ class Users::SettingsController < ApplicationController
           })
         }
       }
+    end
+  end
+
+  def teams_datatable
+    respond_to do |format|
+      format.json do
+        render json: ::TeamsDatatable.new(view_context, @user)
+      end
     end
   end
 

@@ -22,71 +22,19 @@
     </div>
 
     <% if @member_of > 0 %>
-      <table class="table">
-        <thead>
-          <tr>
-            <th><%=t "users.settings.teams.index.thead_name" %></th>
-            <th><%=t "users.settings.teams.index.thead_role" %></th>
-            <th class="hidden-xs"><%=t "users.settings.teams.index.thead_created_at" %></th>
-            <th class="hidden-xs"><%=t "users.settings.teams.index.thead_joined_on" %></th>
-            <th><%=t "users.settings.teams.index.thead_members" %></th>
-            <th>&nbsp;</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% @user_teams.each do |user_team| %>
-            <% team = user_team.team %>
+      <div class="teams-datatable">
+        <table id="teams-table" class="table" data-source="<%= teams_datatable_path(format: :json) %>">
+          <thead>
             <tr>
-              <td>
-                <% if user_team.admin? %>
-                  <%= link_to team.name, team_path(team) %>
-                <% else %>
-                  <%= team.name %>
-                <% end %>
-              </td>
-              <td><%= user_team.role_str %></td>
-              <td class="hidden-xs">
-                <% if user_team.guest? %>
-                  <%= t("users.settings.teams.index.na") %>
-                <% else %>
-                  <%= l(team.created_at, format: :full) %>
-                <% end %>
-              </td>
-              <td class="hidden-xs"><%= l(user_team.created_at, format: :full) %></td>
-              <td>
-                <% if user_team.guest? %>
-                  <%= t("users.settings.teams.index.na") %>
-                <% else %>
-                  <%= team.users.count %>
-                <% end %>
-              </td>
-              <td>
-                <!-- If user is last admin of team, don't allow
-                him/her to leave team -->
-                <% if user_team.admin? && team.user_teams.where(role: 2).count <= 1 %>
-                  <div class="btn btn-default btn-xs" type="button" disabled="disabled">
-                    <span class="glyphicon glyphicon-log-out"></span>
-                    <span class="hidden-xs">
-                      <%= t("users.settings.teams.index.leave") %>
-                    </span>
-                  </div>
-                <% else %>
-                  <%= link_to leave_user_team_html_path(user_team, format: :json),
-                              remote: true,
-                              class: 'btn btn-default btn-xs',
-                              type: 'button',
-                              data: { action: 'leave-user-team' } do %>
-                    <span class="glyphicon glyphicon-log-out"></span>
-                    <span class="hidden-xs">
-                      <%= t("users.settings.teams.index.leave") %>
-                    </span>
-                  <% end %>
-                <% end %>
-              </td>
+              <th id="team-name"><%= t("users.settings.teams.index.thead_name") %></th>
+              <th id="team-role"><%= t("users.settings.teams.index.thead_role") %></th>
+              <th id="team-members"><%= t("users.settings.teams.index.thead_members") %></th>
+              <th>&nbsp;</th>
             </tr>
-          <% end %>
-        </tbody>
-      </table>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
     <% else %>
       <br />
     <% end %>
@@ -94,4 +42,5 @@
 </div>
 
 <%= render partial: "users/settings/teams/leave_user_team_modal.html.erb" %>
+<%= stylesheet_link_tag 'datatables' %>
 <%= javascript_include_tag "users/settings/teams" %>

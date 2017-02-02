@@ -732,6 +732,15 @@ a[data-toggle="tooltip"] {
   text-align: center;
 }
 
+// Teams datatable
+.teams-datatable {
+  margin-bottom: 20px;
+
+  .dataTables_paginate {
+    float: right;
+  }
+}
+
 /** Users datatable */
 .panel-team-users .panel-body {
   padding-bottom: 0;
