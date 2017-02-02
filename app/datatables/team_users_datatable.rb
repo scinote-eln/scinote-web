@@ -62,9 +62,9 @@ class TeamUsersDatatable < AjaxDatatablesRails::Base
         'DT_RowId': record.id,
         '0': escape_input(record.user.full_name),
         '1': escape_input(record.user.email),
-        '2': I18n.l(record.created_at, format: :full),
-        '3': record.user.active_status_str,
-        '4': record.role_str,
+        '2': record.role_str,
+        '3': I18n.l(record.created_at, format: :full_date),
+        '4': record.user.active_status_str,
         '5': ApplicationController.new.render_to_string(
           partial: 'users/settings/teams/user_dropdown.html.erb',
           locals: {

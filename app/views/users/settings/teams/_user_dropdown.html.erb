@@ -1,7 +1,6 @@
 <% if user_team.user == user %>
   <div class="btn btn-default btn-xs" type="button" disabled="disabled">
     <span class="glyphicon glyphicon-cog"></span>
-    <%= t("users.settings.teams.edit.user_dropdown.btn_label") %>&nbsp;
     <span class="caret"></span>
   </div>
 <% else %>
@@ -14,7 +13,6 @@
          aria-haspopup="true"
          aria-expanded="true">
       <span class="glyphicon glyphicon-cog"></span>
-      <%= t("users.settings.teams.edit.user_dropdown.btn_label") %>&nbsp;
       <span class="caret"></span>
     </div>
     <ul class="dropdown-menu" aria-labelledby="<%= id %>">

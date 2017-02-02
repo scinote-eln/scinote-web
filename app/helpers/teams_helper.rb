@@ -16,4 +16,8 @@ module TeamsHelper
       name
     end
   end
+
+  def team_created_by(team)
+    User.find_by_id(team.created_by_id)
+  end
 end
