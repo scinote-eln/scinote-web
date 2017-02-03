@@ -39,16 +39,16 @@ class Users::SettingsController < ApplicationController
   def update_preferences
     respond_to do |format|
       if @user.update(update_preferences_params)
-        flash[:notice] = t("users.settings.preferences.update_flash")
-        format.json {
+        flash[:notice] = t('users.settings.preferences.update_flash')
+        format.json do
           flash.keep
           render json: { status: :ok }
-        }
+        end
       else
-        format.json {
+        format.json do
           render json: @user.errors,
           status: :unprocessable_entity
-        }
+        end
       end
     end
   end
@@ -70,55 +70,55 @@ class Users::SettingsController < ApplicationController
     respond_to do |format|
       if @team.update(update_team_params)
         @team.update(last_modified_by: current_user)
-        format.json {
+        format.json do
           render json: {
             status: :ok,
             description_label: render_to_string(
-              partial: "users/settings/teams/description_label.html.erb",
+              partial: 'users/settings/teams/description_label.html.erb',
               locals: { team: @team }
             )
           }
-        }
+        end
       else
-        format.json {
+        format.json do
           render json: @team.errors,
           status: :unprocessable_entity
-        }
+        end
       end
     end
   end
 
   def team_name
     respond_to do |format|
-      format.json {
+      format.json do
         render json: {
-          html: render_to_string({
-            partial: "users/settings/teams/name_modal_body.html.erb",
+          html: render_to_string(
+            partial: 'users/settings/teams/name_modal_body.html.erb',
             locals: { team: @team }
-          })
+          )
         }
-      }
+      end
     end
   end
 
   def team_description
     respond_to do |format|
-      format.json {
+      format.json do
         render json: {
-          html: render_to_string({
-            partial: "users/settings/teams/description_modal_body.html.erb",
+          html: render_to_string(
+            partial: 'users/settings/teams/description_modal_body.html.erb',
             locals: { team: @team }
-          })
+          )
         }
-      }
+      end
     end
   end
 
   def team_users_datatable
     respond_to do |format|
-      format.json {
+      format.json do
         render json: ::TeamUsersDatatable.new(view_context, @team, @user)
-      }
+      end
     end
   end
 
@@ -150,7 +150,7 @@ class Users::SettingsController < ApplicationController
     @team.destroy
 
     flash[:notice] = I18n.t(
-      "users.settings.teams.edit.modal_destroy_team.flash_success",
+      'users.settings.teams.edit.modal_destroy_team.flash_success',
       team: @team.name
     )
 
@@ -160,7 +160,7 @@ class Users::SettingsController < ApplicationController
 
   def update_user_team
     respond_to do |format|
-      if @user_team.update(update_user_team_params)
+      if @user_t.update(update_user_team_params)
         format.json {
           render json: {
             status: :ok
@@ -168,7 +168,7 @@ class Users::SettingsController < ApplicationController
         }
       else
         format.json {
-          render json: @user_team.errors,
+          render json: @user_t.errors,
           status: :unprocessable_entity
         }
       end
@@ -181,11 +181,11 @@ class Users::SettingsController < ApplicationController
         render json: {
           html: render_to_string(
             partial: 'users/settings/teams/leave_user_team_modal_body.html.erb',
-            locals: { user_team: @user_team }
+            locals: { user_team: @user_t }
           ),
           heading: I18n.t(
             'users.settings.teams.index.leave_uo_heading',
-            team: escape_input(@user_team.team.name)
+            team: escape_input(@user_t.team.name)
           )
         }
       end
@@ -199,12 +199,12 @@ class Users::SettingsController < ApplicationController
           html: render_to_string(
             partial: 'users/settings/teams/' \
                      'destroy_user_team_modal_body.html.erb',
-            locals: { user_team: @user_team }
+            locals: { user_team: @user_t }
           ),
           heading: I18n.t(
             'users.settings.teams.edit.destroy_uo_heading',
-            user: escape_input(@user_team.user.full_name),
-            team: escape_input(@user_team.team.name)
+            user: escape_input(@user_t.user.full_name),
+            team: escape_input(@user_t.team.name)
           )
         }
       end
@@ -216,8 +216,8 @@ class Users::SettingsController < ApplicationController
       # If user is last administrator of team,
       # he/she cannot be deleted from it.
       invalid =
-        @user_team.admin? &&
-        @user_team
+        @user_t.admin? &&
+        @user_t
         .team
         .user_teams
         .where(role: 2)
@@ -231,11 +231,11 @@ class Users::SettingsController < ApplicationController
               # administrator of team
               if params[:leave]
                 new_owner =
-                  @user_team
+                  @user_t
                   .team
                   .user_teams
                   .where(role: 2)
-                  .where.not(id: @user_team.id)
+                  .where.not(id: @user_t.id)
                   .first
                   .user
               else
@@ -244,8 +244,8 @@ class Users::SettingsController < ApplicationController
                 # the user from the team)
                 new_owner = current_user
               end
-              reset_user_current_team(@user_team)
-              @user_team.destroy(new_owner)
+              reset_user_current_team(@user_t)
+              @user_t.destroy(new_owner)
             end
           rescue Exception
             invalid = true
@@ -253,28 +253,28 @@ class Users::SettingsController < ApplicationController
         end
 
       if !invalid
-        if params[:leave] then
+        if params[:leave]
           flash[:notice] = I18n.t(
             'users.settings.teams.index.leave_flash',
-            team: @user_team.team.name
+            team: @user_.team.name
           )
           flash.keep(:notice)
         end
-        generate_notification(@user_team.user,
-                              @user_team.user,
-                              @user_team.team,
+        generate_notification(@user_t.user,
+                              @user_t.user,
+                              @user_t.team,
                               false,
                               false)
-        format.json {
+        format.json do
           render json: {
             status: :ok
           }
-        }
+        end
       else
-        format.json {
-          render json: @user_team.errors,
+        format.json do
+          render json: @user_t.errors,
           status: :unprocessable_entity
-        }
+        end
       end
     end
   end
@@ -290,14 +290,14 @@ class Users::SettingsController < ApplicationController
     @member_of = @teams.count
 
     respond_to do |format|
-      format.json {
+      format.json do
         render json: {
           status: :ok,
-          html: render_to_string({
-            partial: "users/settings/repeat_tutorial_modal_body.html.erb"
-          })
+          html: render_to_string(
+            partial: 'users/settings/repeat_tutorial_modal_body.html.erb'
+          )
         }
-      }
+      end
     end
   end
 
@@ -311,10 +311,12 @@ class Users::SettingsController < ApplicationController
         expires: 1.day.from_now
       }
 
-      flash[:notice] = t("users.settings.preferences.tutorial.tutorial_reset_flash")
+      flash[:notice] =
+        t('users.settings.preferences.tutorial.tutorial_reset_flash')
       redirect_to root_path
     else
-      flash[:alert] = t("users.settings.preferences.tutorial.tutorial_reset_error")
+      flash[:alert] =
+        t('users.settings.preferences.tutorial.tutorial_reset_error')
       redirect_to :back
     end
   end
@@ -376,12 +378,12 @@ class Users::SettingsController < ApplicationController
   end
 
   def check_user_team_permission
-    @user_team = UserTeam.find_by_id(params[:user_team_id])
-    @team = @user_team.team
+    @user_t = UserTeam.find_by_id(params[:user_team_id])
+    @team = @user_t.team
     # Don't allow the user to modify UserTeam-s if he's not admin,
     # unless he/she is modifying his/her UserTeam
-    if current_user != @user_team.user &&
-       !is_admin_of_team(@user_team.team)
+    if current_user != @user_t.user &&
+       !is_admin_of_team(@user_t.team)
       render_403
     end
   end
