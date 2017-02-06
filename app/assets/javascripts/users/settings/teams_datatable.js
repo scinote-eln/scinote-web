@@ -15,13 +15,9 @@ function initTeamsTable() {
       fixedColumnsLeft: 1000000 // Disable reordering
     },
     columnDefs: [{
-      targets: [0, 1],
+      targets: [0, 1, 2],
       orderable: true,
       searchable: false
-    }, {
-      targets: 2,
-      searchable: false,
-      orderable: true
     }, {
       targets: 3,
       searchable: false,
