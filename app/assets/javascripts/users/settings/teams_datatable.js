@@ -19,11 +19,11 @@ function initTeamsTable() {
       orderable: true,
       searchable: false
     }, {
-      targets: [2],
+      targets: 2,
       searchable: false,
       orderable: true
     }, {
-      targets: [3],
+      targets: 3,
       searchable: false,
       orderable: false,
       sWidth: '1%'
