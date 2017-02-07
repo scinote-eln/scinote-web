@@ -63,6 +63,9 @@ Rails.application.routes.draw do
   get 'users/settings/teams/:team_id/description',
       to: 'users/settings#team_description',
       as: 'team_description'
+  post 'users/settings/teams/teams_datatable',
+       to: 'users/settings#teams_datatable',
+       as: 'teams_datatable'
   post 'users/settings/teams/:team_id/users_datatable',
        to: 'users/settings#team_users_datatable',
        as: 'team_users_datatable'
