@@ -15,13 +15,17 @@ RUN wget -O- https://toolbelt.heroku.com/install-ubuntu.sh | sh
 
 # install gems
 COPY Gemfile* /tmp/
+COPY addons /tmp/addons
 WORKDIR /tmp
 RUN bundle install
+RUN rm -rf addons
 
 # create app directory
 ENV APP_HOME /usr/src/app
 RUN mkdir $APP_HOME
 WORKDIR $APP_HOME
+RUN mkdir addons
+RUN ln -s $(readlink -f addons) /tmp
 
 # container user
 RUN groupadd scinote
