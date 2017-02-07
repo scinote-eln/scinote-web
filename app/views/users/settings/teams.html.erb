@@ -38,7 +38,7 @@
             <% team = user_team.team %>
             <tr>
               <td>
-                <% if user_team.admin? %>
+                <% if is_admin_of_team(team) %>
                   <%= link_to team.name, team_path(team) %>
                 <% else %>
                   <%= team.name %>
