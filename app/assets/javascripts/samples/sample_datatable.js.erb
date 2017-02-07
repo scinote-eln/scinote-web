@@ -492,6 +492,7 @@ function onClickEdit() {
             });
 
             // initialize smart annotation
+            SmartAnnotation.init($('[data-object="sample_custom_fields"]'));
             _.each($('[data-object="custom_fields"]'), function(el) {
               if(_.isUndefined($(el).data('atwho'))) {
                 SmartAnnotation.init(el);
