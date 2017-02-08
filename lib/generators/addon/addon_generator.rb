@@ -124,11 +124,11 @@ class AddonGenerator < Rails::Generators::NamedBase
     end
 
     # lib/.../<engine>.rb
-    folders_path_2 = @folders[0..-2].join('/')
+    folders_path_n = @folders[0..-2].join('/')
     file_name = @folders[-1]
     create_file(
       "addons/#{@addon_name}/lib/" \
-      "#{folders_path_2}/#{file_name}.rb"
+      "#{folders_path_n}/#{file_name}.rb"
     ) do
       embed_into_modules { '' }
     end
