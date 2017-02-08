@@ -176,7 +176,12 @@ class AddonGenerator < Rails::Generators::NamedBase
     copy_file('.gitignore', "addons/#{@addon_name}/.gitignore")
     copy_file('Gemfile', "addons/#{@addon_name}/Gemfile")
     copy_file('LICENSE.txt', "addons/#{@addon_name}/LICENSE.txt")
-    copy_file('README.md', "addons/#{@addon_name}/README.md")
+    file_path = "addons/#{@addon_name}/README.md"
+    copy_file('README.md', file_path)
+    gsub_file(file_path, '${ADDON_NAME}', @addon_name)
+    gsub_file(file_path, '${FULL_UNDERSCORE_NAME}', @full_underscore_name)
+    gsub_file(file_path, '${NAME}', name)
+    gsub_file(file_path, '${FOLDERS_PATH}', @folders_path)
 
     # Rakefile
     file_path = "addons/#{@addon_name}/Rakefile"
