@@ -14,13 +14,13 @@ Rails.application.config.assets.precompile += %w(jsPlumb-2.0.4-min.js)
 Rails.application.config.assets.precompile += %w(jsnetworkx.js)
 Rails.application.config.assets.precompile += %w(handsontable.full.min.js)
 Rails.application.config.assets.precompile +=
-  %w(users/settings/account/preferences.js)
-Rails.application.config.assets.precompile += %w(users/settings/teams.js)
+  %w(users/settings/account/preferences/index.js)
+Rails.application.config.assets.precompile += %w(users/settings/teams/index.js)
 Rails.application.config.assets.precompile +=
-  %w(users/settings/teams_datatable.js)
+  %w(users/settings/teams/datatable.js)
 Rails.application.config.assets.precompile +=
   %w(users/settings/teams/add_user_modal.js)
-Rails.application.config.assets.precompile += %w(users/settings/team.js)
+Rails.application.config.assets.precompile += %w(users/settings/teams/show.js)
 Rails.application.config.assets.precompile += %w(my_modules/activities.js)
 Rails.application.config.assets.precompile += %w(my_modules/protocols.js)
 Rails.application.config.assets.precompile +=

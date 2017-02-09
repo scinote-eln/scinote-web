@@ -43,47 +43,49 @@ Rails.application.routes.draw do
   post 'users/settings/user_current_team',
        to: 'users/settings#user_current_team',
        as: 'user_current_team'
+
   get 'users/settings/teams',
-      to: 'users/settings#teams',
+      to: 'users/settings/teams#index',
       as: 'teams'
-  get 'users/settings/teams/new',
-      to: 'users/settings#new_team',
-      as: 'new_team'
-  post 'users/settings/teams/new',
-       to: 'users/settings#create_team',
-       as: 'create_team'
-  get 'users/settings/teams/:team_id',
-      to: 'users/settings#team',
-      as: 'team'
-  put 'users/settings/teams/:team_id',
-      to: 'users/settings#update_team',
-      as: 'update_team'
-  get 'users/settings/teams/:team_id/name',
-      to: 'users/settings#team_name',
-      as: 'team_name'
-  get 'users/settings/teams/:team_id/description',
-      to: 'users/settings#team_description',
-      as: 'team_description'
-  post 'users/settings/teams/teams_datatable',
-       to: 'users/settings#teams_datatable',
+  post 'users/settings/teams/datatable',
+       to: 'users/settings/teams#datatable',
        as: 'teams_datatable'
-  post 'users/settings/teams/:team_id/users_datatable',
-       to: 'users/settings#team_users_datatable',
+  get 'users/settings/teams/new',
+      to: 'users/settings/teams#new',
+      as: 'new_team'
+  post 'users/settings/teams',
+       to: 'users/settings/teams#create',
+       as: 'create_team'
+  get 'users/settings/teams/:id',
+      to: 'users/settings/teams#show',
+      as: 'team'
+  post 'users/settings/teams/:id/users_datatable',
+       to: 'users/settings/teams#users_datatable',
        as: 'team_users_datatable'
-  delete 'users/settings/teams/:team_id',
-         to: 'users/settings#destroy_team',
+  get 'users/settings/teams/:id/name_html',
+      to: 'users/settings/teams#name_html',
+      as: 'team_name'
+  get 'users/settings/teams/:id/description_html',
+      to: 'users/settings/teams#description_html',
+      as: 'team_description'
+  put 'users/settings/teams/:id',
+      to: 'users/settings/teams#update',
+      as: 'update_team'
+  delete 'users/settings/teams/:id',
+         to: 'users/settings/teams#destroy',
          as: 'destroy_team'
-  put 'users/settings/user_teams/:user_team_id',
-      to: 'users/settings#update_user_team',
+
+  put 'users/settings/user_teams/:id',
+      to: 'users/settings/user_teams#update',
       as: 'update_user_team'
-  get 'users/settings/user_teams/:user_team_id/leave_html',
-      to: 'users/settings#leave_user_team_html',
+  get 'users/settings/user_teams/:id/leave_html',
+      to: 'users/settings/user_teams#leave_html',
       as: 'leave_user_team_html'
-  get 'users/settings/user_teams/:user_team_id/destroy_html',
-      to: 'users/settings#destroy_user_team_html',
+  get 'users/settings/user_teams/:id/destroy_html',
+      to: 'users/settings/user_teams#destroy_html',
       as: 'destroy_user_team_html'
-  delete 'users/settings/user_teams/:user_team_id',
-         to: 'users/settings#destroy_user_team',
+  delete 'users/settings/user_teams/:id',
+         to: 'users/settings/user_teams#destroy',
          as: 'destroy_user_team'
 
   # Invite users
