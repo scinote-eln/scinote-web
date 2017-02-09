@@ -64,7 +64,6 @@ en:
     advanced_search: "Advanced search"
     title: "sciNote"
     user:
-      profile: "My profile"
       settings: "Settings"
       logout: "Log out"
     help:
@@ -1067,9 +1066,12 @@ en:
       changed_team_error_flash: "Something went wrong! Try again later."
       changed_team_in_search: "The searched item is not in your current team. You will be redirected to %{team} team!"
       navigation:
-        preferences: "My preferences"
+        account: "Account"
         teams: "Teams"
       account:
+        navigation:
+          profile: "Profile"
+          preferences: "Preferences"
         preferences:
           head_title: "Settings | My preferences"
           edit:
