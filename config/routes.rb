@@ -40,6 +40,7 @@ Rails.application.routes.draw do
        as: 'notifications_settings',
        defaults: { format: 'json' }
 
+  # Change user's current team
   post 'users/settings/user_current_team',
        to: 'users/settings#user_current_team',
        as: 'user_current_team'
