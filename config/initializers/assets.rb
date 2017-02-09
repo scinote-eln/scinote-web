@@ -13,7 +13,8 @@ Rails.application.config.assets.precompile += %w(underscore.js)
 Rails.application.config.assets.precompile += %w(jsPlumb-2.0.4-min.js)
 Rails.application.config.assets.precompile += %w(jsnetworkx.js)
 Rails.application.config.assets.precompile += %w(handsontable.full.min.js)
-Rails.application.config.assets.precompile += %w(users/settings/preferences.js)
+Rails.application.config.assets.precompile +=
+  %w(users/settings/account/preferences.js)
 Rails.application.config.assets.precompile += %w(users/settings/teams.js)
 Rails.application.config.assets.precompile +=
   %w(users/settings/teams_datatable.js)

@@ -23,22 +23,23 @@ Rails.application.routes.draw do
   get 'not_found', to: 'application#not_found', as: 'not_found'
 
   # Settings
-  get 'users/settings/preferences',
-      to: 'users/settings#preferences',
+  get 'users/settings/account/preferences',
+      to: 'users/settings/account/preferences#index',
       as: 'preferences'
-  put 'users/settings/preferences',
-      to: 'users/settings#update_preferences',
+  put 'users/settings/account/preferences',
+      to: 'users/settings/account/preferences#update',
       as: 'update_preferences'
-  get 'users/settings/preferences/tutorial',
-      to: 'users/settings#tutorial',
+  get 'users/settings/account/preferences/tutorial',
+      to: 'users/settings/account/preferences#tutorial',
       as: 'tutorial'
-  post 'users/settings/preferences/reset_tutorial/',
-       to: 'users/settings#reset_tutorial',
+  post 'users/settings/account/preferences/reset_tutorial/',
+       to: 'users/settings/account/preferences#reset_tutorial',
        as: 'reset_tutorial'
-  post 'users/settings/preferences/notifications_settings',
-       to: 'users/settings#notifications_settings',
+  post 'users/settings/account/preferences/notifications_settings',
+       to: 'users/settings/account/preferences#notifications_settings',
        as: 'notifications_settings',
        defaults: { format: 'json' }
+
   post 'users/settings/user_current_team',
        to: 'users/settings#user_current_team',
        as: 'user_current_team'

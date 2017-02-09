@@ -1,4 +1,4 @@
-<% provide(:head_title, t("users.settings.preferences.head_title")) %>
+<% provide(:head_title, t("users.settings.account.preferences.head_title")) %>
 
 <%= render partial: "users/settings/navigation.html.erb" %>
 <div class="tab-content">
@@ -10,7 +10,7 @@
                  html: { method: :put, 'data-for' => 'time_zone' }) do |f| %>
       <div data-part="view">
         <div class="form-group">
-          <%= f.label t("users.settings.preferences.edit.time_zone_label") %>
+          <%= f.label t("users.settings.account.preferences.edit.time_zone_label") %>
           <div class="input-group" style="max-width: 500px;">
             <input class="form-control"
                    disabled="disabled"
@@ -23,17 +23,17 @@
               <a href="#" class="btn btn-default" data-action="edit"><%=t "general.edit" %></a>
             </span>
           </div>
-          <small><%= t("users.settings.preferences.edit.time_zone_sublabel") %></small>
+          <small><%= t("users.settings.account.preferences.edit.time_zone_sublabel") %></small>
         </div>
       </div>
       <div data-part="edit" style="display: none;">
         <div class="well">
-          <h4><%=t "users.settings.preferences.edit.time_zone_title" %></h4>
+          <h4><%=t "users.settings.account.preferences.edit.time_zone_title" %></h4>
           <div class="form-group" style="max-width: 500px;">
             <%= f.select :time_zone, ActiveSupport::TimeZone.all.collect { |tz|
                   [tz.formatted_offset + " " + tz.name, tz.name]
                 }, {}, {class: 'form-control selectpicker', 'ata-role' => 'clear'} %>
-            <small><%= t("users.settings.preferences.edit.time_zone_sublabel") %></small>
+            <small><%= t("users.settings.account.preferences.edit.time_zone_sublabel") %></small>
           </div>
           <div>
             <a href="#" class="btn btn-default" data-action="cancel"><%=t "general.cancel" %></a>
@@ -45,7 +45,7 @@
     <% if Rails.configuration.x.enable_tutorial %>
     <hr>
     <strong><%= t('tutorial.title') %></strong> <br>
-      <%= link_to t('users.settings.preferences.tutorial.repeat_tutorial'),
+      <%= link_to t('users.settings.account.preferences.tutorial.repeat_tutorial'),
                   tutorial_path(format: :json),
                   remote: true,
                   class: 'btn btn-primary',
@@ -100,7 +100,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" ><%= t("users.settings.preferences.tutorial.modal_title") %></h4>
+        <h4 class="modal-title" ><%= t("users.settings.account.preferences.tutorial.modal_title") %></h4>
       </div>
       <div class="modal-body"></div>
       <div class="modal-footer">
@@ -112,4 +112,4 @@
 
 
 
-<%= javascript_include_tag "users/settings/preferences" %>
+<%= javascript_include_tag "users/settings/account/preferences" %>

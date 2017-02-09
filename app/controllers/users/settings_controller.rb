@@ -4,16 +4,11 @@ class Users::SettingsController < ApplicationController
   include InputSanitizeHelper
 
   before_action :load_user, only: [
-    :preferences,
-    :update_preferences,
     :teams,
     :team,
     :create_team,
     :teams_datatable,
     :team_users_datatable,
-    :tutorial,
-    :reset_tutorial,
-    :notifications_settings,
     :user_current_team,
     :destroy_user_team
   ]
@@ -33,26 +28,6 @@ class Users::SettingsController < ApplicationController
     :destroy_user_team_html,
     :destroy_user_team
   ]
-
-  def preferences
-  end
-
-  def update_preferences
-    respond_to do |format|
-      if @user.update(update_preferences_params)
-        flash[:notice] = t("users.settings.preferences.update_flash")
-        format.json {
-          flash.keep
-          render json: { status: :ok }
-        }
-      else
-        format.json {
-          render json: @user.errors,
-          status: :unprocessable_entity
-        }
-      end
-    end
-  end
 
   def teams
     @user_teams =
@@ -288,76 +263,6 @@ class Users::SettingsController < ApplicationController
     end
   end
 
-  def tutorial
-    @teams =
-      @user
-      .user_teams
-      .includes(team: :users)
-      .where(role: 1..2)
-      .order(created_at: :asc)
-      .map(&:team)
-    @member_of = @teams.count
-
-    respond_to do |format|
-      format.json {
-        render json: {
-          status: :ok,
-          html: render_to_string({
-            partial: "users/settings/repeat_tutorial_modal_body.html.erb"
-          })
-        }
-      }
-    end
-  end
-
-  def reset_tutorial
-    if @user.update(tutorial_status: 0) && params[:team][:id].present?
-      @user.update(current_team_id: params[:team][:id])
-      cookies.delete :tutorial_data
-      cookies.delete :current_tutorial_step
-      cookies[:repeat_tutorial_team_id] = {
-        value: params[:team][:id],
-        expires: 1.day.from_now
-      }
-
-      flash[:notice] = t("users.settings.preferences.tutorial.tutorial_reset_flash")
-      redirect_to root_path
-    else
-      flash[:alert] = t("users.settings.preferences.tutorial.tutorial_reset_error")
-      redirect_to :back
-    end
-  end
-
-  def notifications_settings
-    @user.assignments_notification =
-      params[:assignments_notification] ? true : false
-    @user.recent_notification = params[:recent_notification] ? true : false
-    @user.recent_notification_email =
-      params[:recent_notification_email] ? true : false
-    @user.assignments_notification_email =
-      params[:assignments_notification_email] ? true : false
-    @user.system_message_notification_email =
-      params[:system_message_notification_email] ? true : false
-
-    if @user.save
-      respond_to do |format|
-        format.json do
-          render json: {
-            status: :ok
-          }
-        end
-      end
-    else
-      respond_to do |format|
-        format.json do
-          render json: {
-            status: :unprocessable_entity
-          }
-        end
-      end
-    end
-  end
-
   def user_current_team
     team_id = params[:user][:current_team_id].to_i
     if @user.teams_ids.include?(team_id)
@@ -396,12 +301,6 @@ class Users::SettingsController < ApplicationController
        !is_admin_of_team(@user_team.team)
       render_403
     end
-  end
-
-  def update_preferences_params
-    params.require(:user).permit(
-      :time_zone
-    )
   end
 
   def create_team_params

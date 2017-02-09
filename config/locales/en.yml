@@ -1068,24 +1068,25 @@ en:
       changed_team_in_search: "The searched item is not in your current team. You will be redirected to %{team} team!"
       navigation:
         preferences: "My preferences"
-        teams: "My teams"
-      preferences:
-        head_title: "Settings | My preferences"
-        edit:
-          time_zone_label: "Time zone"
-          time_zone_sublabel: "Time zone setting affects all time & date fields throughout application."
-          time_zone_title: "Time zone"
-        update_flash: "Preferences successfully updated."
-        tutorial:
-          modal_title: "Repeat tutorial"
-          no_teams: "Seems like you are not a member of any team. Tutorials can be run only by team members."
-          repeat_tutorial: "Repeat tutorial"
-          select_team_instruction: "Select the team where you wish to create the demo project."
-          select_team: "Select team"
-          tutorial_reset_flash: "Tutorial can now be repeated."
-          tutorial_reset_error: "Tutorial could not be repeated."
+        teams: "Teams"
+      account:
+        preferences:
+          head_title: "Settings | My preferences"
+          edit:
+            time_zone_label: "Time zone"
+            time_zone_sublabel: "Time zone setting affects all time & date fields throughout application."
+            time_zone_title: "Time zone"
+          update_flash: "Preferences successfully updated."
+          tutorial:
+            modal_title: "Repeat tutorial"
+            no_teams: "Seems like you are not a member of any team. Tutorials can be run only by team members."
+            repeat_tutorial: "Repeat tutorial"
+            select_team_instruction: "Select the team where you wish to create the demo project."
+            select_team: "Select team"
+            tutorial_reset_flash: "Tutorial can now be repeated."
+            tutorial_reset_error: "Tutorial could not be repeated."
       teams:
-        head_title: "Settings | My teams"
+        head_title: "Settings | Teams"
         breadcrumbs:
           all: "All teams"
           new_team: "New team"
