@@ -1,6 +1,9 @@
 module Users
   module Settings
     class UserTeamsController < ApplicationController
+      include NotificationsHelper
+      include InputSanitizeHelper
+
       before_action :load_user, only: :destroy
 
       before_action :load_user_team, only: [
@@ -12,7 +15,7 @@ module Users
 
       def update
         respond_to do |format|
-          if @user_team.update(update_user_team_params)
+          if @user_team.update(update_params)
             format.json do
               render json: {
                 status: :ok
@@ -143,6 +146,12 @@ module Users
            !is_admin_of_team(@user_team.team)
           render_403
         end
+      end
+
+      def update_params
+        params.require(:user_team).permit(
+          :role
+        )
       end
 
       def reset_user_current_team(user_team)

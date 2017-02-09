@@ -1,7 +1,5 @@
 class Users::SettingsController < ApplicationController
   include UsersGenerator
-  include NotificationsHelper
-  include InputSanitizeHelper
 
   before_action :load_user, only: [
     :user_current_team
