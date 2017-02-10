@@ -1,7 +1,7 @@
 class Engine < ::Rails::Engine
   engine_name '${FULL_UNDERSCORE_NAME}'
   isolate_namespace ${NAME}
-  paths['app/views'] = 'app/views/${FOLDERS_PATH}'
+  paths['app/views'] << 'app/views/${FOLDERS_PATH}'
 
   # Precompile engine-specific assets
   initializer '${ADDON_NAME}.assets.precompile' do |app|
