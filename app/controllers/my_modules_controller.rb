@@ -138,6 +138,7 @@ class MyModulesController < ApplicationController
     @my_module.last_modified_by = current_user
 
     description_changed = @my_module.description_changed?
+    restored = false
 
     if @my_module.archived_changed?(from: false, to: true)
       saved = @my_module.archive(current_user)
@@ -158,6 +159,7 @@ class MyModulesController < ApplicationController
     elsif @my_module.archived_changed?(from: true, to: false)
       saved = @my_module.restore(current_user)
       if saved
+        restored = true
         Activity.create(
           type_of: :restore_module,
           project: @my_module.experiment.project,
@@ -189,7 +191,15 @@ class MyModulesController < ApplicationController
     end
 
     respond_to do |format|
-      if saved
+      if restored
+        format.html do
+          flash[:success] = t(
+            'my_modules.module_archive.restored_flash',
+            module: @my_module.name
+          )
+          redirect_to module_archive_experiment_path(@my_module.experiment)
+        end
+      elsif saved
         format.json {
           alerts = []
           alerts << "alert-red" if @my_module.is_overdue?
