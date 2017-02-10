@@ -52,7 +52,9 @@ class Activity < ActiveRecord::Base
     :delete_report,
     :edit_report,
     :assign_sample,
-    :unassign_sample
+    :unassign_sample,
+    :complete_task,
+    :uncomplete_task
   ]
 
   validates :type_of, presence: true

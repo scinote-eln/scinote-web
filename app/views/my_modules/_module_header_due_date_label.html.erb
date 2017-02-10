@@ -1,5 +1,23 @@
-<% if @my_module.due_date.blank? %>
+<% if my_module.due_date.blank? %>
   <em><%=t "experiments.canvas.full_zoom.no_due_date" %></em>
 <% else %>
-  <strong><%= l(@my_module.due_date, format: :full) %></strong>
+  <strong>
+    <% if my_module.completed? %>
+      <span class="alert-green">
+        <%= l(my_module.due_date, format: :full) %>
+      </span>
+    <% elsif my_module.is_one_day_prior? %>
+      <span class="alert-yellow">
+        <%= l(my_module.due_date, format: :full) %>
+        (<%= t('my_modules.states.due_soon') %>)
+      </span>
+    <% elsif my_module.is_overdue? %>
+      <span class="alert-red">
+        <%= l(my_module.due_date, format: :full) %>
+        (<%= t('my_modules.states.overdue') %>)
+      </span>
+    <% else %>
+      <%= l(my_module.due_date, format: :full) %>
+    <% end %>
+  </strong>
 <% end %>

@@ -4,6 +4,22 @@
 
 @import 'constants';
 
+  // Protocols index page
+.task-due-date,
+.task-state-label {
+  .alert-green {
+    color: $color-saturated-green;
+  }
+
+  .alert-yellow {
+    color: $color-candlelight;
+  }
+
+  .alert-red {
+    color: $color-milano-red;
+  }
+}
+
 /* Results index page */
 
 #results {

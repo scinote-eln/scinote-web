@@ -75,7 +75,7 @@ function bindEditDueDateAjax() {
 
   $(".due-date-link")
   .on("ajax:success", function(ev, data, status) {
-    var dueDateLink = $(".due-date-refresh");
+    var dueDateLink = $(".task-due-date");
 
     // Load contents
     editDueDateModalBody.html(data.html);

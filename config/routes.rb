@@ -268,6 +268,7 @@ Rails.application.routes.draw do
       get 'results' # Results view for single module
       get 'samples' # Samples view for single module
       get 'archive' # Archive view for single module
+      post 'toggle_task_state'
       # Renders sample datatable for single module (ajax action)
       post 'samples_index'
       post :assign_samples,

@@ -1,4 +1,7 @@
-<div class="panel panel-default module-medium<%= " alert-red" if my_module.is_overdue? %><%= " alert-yellow" if my_module.is_one_day_prior? %>"
+<div class="panel panel-default module-medium
+  <%= " alert-red" if my_module.is_overdue? && !my_module.completed? %>
+  <%= " alert-yellow" if my_module.is_one_day_prior? && !my_module.completed? %>
+  <%= " alert-green" if my_module.completed? %>"
   id="<%= my_module.id %>"
   data-module-id="<%= my_module.id %>"
   data-module-name="<%= my_module.name %>"
