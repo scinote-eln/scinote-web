@@ -1,10 +1,10 @@
 <% if @member_of == 0 %>
   <div class="row">
-    <span class="col-xs-12"><em><%=t 'users.settings.preferences.tutorial.no_teams' %></em></span>
+    <span class="col-xs-12"><em><%=t 'users.settings.account.preferences.tutorial.no_teams' %></em></span>
   </div>
 <% else %>
   <div class="row">
-    <span class="col-xs-12"><%=t 'users.settings.preferences.tutorial.select_team_instruction' %></span>
+    <span class="col-xs-12"><%=t 'users.settings.account.preferences.tutorial.select_team_instruction' %></span>
   </div>
   <hr>
   <div class="row">
@@ -14,7 +14,7 @@
       </div>
       <div class="visible-xs">&nbsp;</div>
       <div class="col-xs-4 col-sm-2">
-       <%= f.button t('users.settings.preferences.tutorial.repeat_tutorial'), class: "btn btn-primary" %>
+       <%= f.button t('users.settings.account.preferences.tutorial.repeat_tutorial'), class: "btn btn-primary" %>
       </div>
     <% end %>
   </div>

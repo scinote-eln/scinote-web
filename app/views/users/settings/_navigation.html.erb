@@ -1,9 +1,9 @@
 <ul data-hook="user-settings-navigation-html"
     class="nav nav-tabs nav-settings">
-  <li role="presentation" class="<%= 'active' if action_name == 'preferences' %>">
-    <%= link_to t("users.settings.navigation.preferences"), preferences_path %>
+  <li role="presentation" class="<%= 'active' if on_settings_account_page? %>">
+    <%= link_to t("users.settings.navigation.account"), edit_user_registration_path %>
   </li>
-  <li role="presentation" class="<%= "active" if action_name.in?(['teams', 'team', 'new_team', 'create_team']) %>">
+  <li role="presentation" class="<%= "active" if on_settings_team_page? %>">
     <%= link_to t("users.settings.navigation.teams"), teams_path %>
   </li>
 </ul>

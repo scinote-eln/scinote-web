@@ -1,5 +1,5 @@
 <ol class="breadcrumb breadcrumb-teams">
-  <% if action_name == "teams" %>
+  <% if action_name == "index" %>
     <li class="active">
       <%= t("users.settings.teams.breadcrumbs.all") %>
     </li>
@@ -9,11 +9,11 @@
     </li>
   <% end %>
 
-  <% if action_name == 'team' %>
+  <% if action_name == 'show' %>
     <li class="active">
       <%= @team.name %>
     </li>
-  <% elsif action_name == 'new_team' || action_name == 'create_team' %>
+  <% elsif action_name == 'new' || action_name == 'create' %>
     <li class="active">
       <%= t('users.settings.teams.breadcrumbs.new_team') %>
     </li>

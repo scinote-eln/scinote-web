@@ -64,7 +64,6 @@ en:
     advanced_search: "Advanced search"
     title: "sciNote"
     user:
-      profile: "My profile"
       settings: "Settings"
       logout: "Log out"
     help:
@@ -1068,25 +1067,29 @@ en:
       changed_team_error_flash: "Something went wrong! Try again later."
       changed_team_in_search: "The searched item is not in your current team. You will be redirected to %{team} team!"
       navigation:
-        preferences: "My preferences"
-        teams: "My teams"
-      preferences:
-        head_title: "Settings | My preferences"
-        edit:
-          time_zone_label: "Time zone"
-          time_zone_sublabel: "Time zone setting affects all time & date fields throughout application."
-          time_zone_title: "Time zone"
-        update_flash: "Preferences successfully updated."
-        tutorial:
-          modal_title: "Repeat tutorial"
-          no_teams: "Seems like you are not a member of any team. Tutorials can be run only by team members."
-          repeat_tutorial: "Repeat tutorial"
-          select_team_instruction: "Select the team where you wish to create the demo project."
-          select_team: "Select team"
-          tutorial_reset_flash: "Tutorial can now be repeated."
-          tutorial_reset_error: "Tutorial could not be repeated."
+        account: "Account"
+        teams: "Teams"
+      account:
+        navigation:
+          profile: "Profile"
+          preferences: "Preferences"
+        preferences:
+          head_title: "Settings | My preferences"
+          edit:
+            time_zone_label: "Time zone"
+            time_zone_sublabel: "Time zone setting affects all time & date fields throughout application."
+            time_zone_title: "Time zone"
+          update_flash: "Preferences successfully updated."
+          tutorial:
+            modal_title: "Repeat tutorial"
+            no_teams: "Seems like you are not a member of any team. Tutorials can be run only by team members."
+            repeat_tutorial: "Repeat tutorial"
+            select_team_instruction: "Select the team where you wish to create the demo project."
+            select_team: "Select team"
+            tutorial_reset_flash: "Tutorial can now be repeated."
+            tutorial_reset_error: "Tutorial could not be repeated."
       teams:
-        head_title: "Settings | My teams"
+        head_title: "Settings | Teams"
         breadcrumbs:
           all: "All teams"
           new_team: "New team"
@@ -1103,14 +1106,6 @@ en:
           thead_members: "Members"
           na: "n/a"
           leave: "Leave team"
-          leave_uo_heading: "Leave team %{team}"
-          leave_uo_message: "Are you sure you wish to leave team %{team}? This action is irreversible."
-          leave_uo_alert_heading: "Leaving team has following consequences:"
-          leave_uo_alert_line_1: "you will lose access to all content belonging to the team (including projects, tasks, protocols and activities);"
-          leave_uo_alert_line_2: "all projects in the team where you were the sole <b>Owner</b> will receive a new owner from the team administrators;"
-          leave_uo_alert_line_3: "all repository protocols in the team belonging to you will be reassigned onto a new owner from team administrators."
-          leave_uo_confirm: "Leave"
-          leave_flash: "Successfuly left team %{team}."
         new:
           name_label: "Team name"
           name_placeholder: "My team"
@@ -1139,13 +1134,6 @@ en:
           user_dropdown:
             role_label: "User role"
             remove_label: "Remove"
-          destroy_uo_heading: "Remove user %{user} from team %{team}"
-          destroy_uo_message: "Are you sure you wish to remove user %{user} from team %{team}?"
-          destroy_uo_alert_heading: "Removing user from team has following consequences:"
-          destroy_uo_alert_line_1: "user will lose access to all content belonging to the team (including projects, tasks, protocols and activities);"
-          destroy_uo_alert_line_2: "all projects in the team where user was the sole <b>Owner</b> will be reassigned onto you as a new owner;"
-          destroy_uo_alert_line_3: "all repository protocols in the team belonging to user will be reassigned onto you."
-          destroy_uo_confirm: "Remove user"
           delete_team_heading: "Delete team"
           can_delete_message: "This team can be deleted because it doesn't have any projects."
           delete_text: "Delete team."
@@ -1155,6 +1143,22 @@ en:
             message: "Are you sure you wish to delete team %{team}? All of the users will be removed from the team as well. This action is irreversible."
             confirm: "Delete team"
             flash_success: "Team %{team} was successfully deleted."
+      user_teams:
+        leave_uo_heading: "Leave team %{team}"
+        leave_uo_message: "Are you sure you wish to leave team %{team}? This action is irreversible."
+        leave_uo_alert_heading: "Leaving team has following consequences:"
+        leave_uo_alert_line_1: "you will lose access to all content belonging to the team (including projects, tasks, protocols and activities);"
+        leave_uo_alert_line_2: "all projects in the team where you were the sole <b>Owner</b> will receive a new owner from the team administrators;"
+        leave_uo_alert_line_3: "all repository protocols in the team belonging to you will be reassigned onto a new owner from team administrators."
+        leave_uo_confirm: "Leave"
+        destroy_uo_heading: "Remove user %{user} from team %{team}"
+        destroy_uo_message: "Are you sure you wish to remove user %{user} from team %{team}?"
+        destroy_uo_alert_heading: "Removing user from team has following consequences:"
+        destroy_uo_alert_line_1: "user will lose access to all content belonging to the team (including projects, tasks, protocols and activities);"
+        destroy_uo_alert_line_2: "all projects in the team where user was the sole <b>Owner</b> will be reassigned onto you as a new owner;"
+        destroy_uo_alert_line_3: "all repository protocols in the team belonging to user will be reassigned onto you."
+        destroy_uo_confirm: "Remove user"
+        leave_flash: "Successfuly left team %{team}."
 
   protocols:
     nav:

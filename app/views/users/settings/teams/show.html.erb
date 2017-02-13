@@ -122,6 +122,6 @@
     )
 %>
 <%= render partial: 'users/settings/teams/destroy_modal.html.erb', locals: { team: @team } %>
-<%= render partial: 'users/settings/teams/destroy_user_team_modal.html.erb' %>
+<%= render partial: 'users/settings/user_teams/destroy_user_team_modal.html.erb' %>
 <%= stylesheet_link_tag 'datatables' %>
-<%= javascript_include_tag 'users/settings/team' %>
+<%= javascript_include_tag 'users/settings/teams/show' %>
