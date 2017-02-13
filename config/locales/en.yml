@@ -451,6 +451,7 @@ en:
       option_download: "Download"
       no_archived_results: "No archived results!"
       archive_timelabel: "archived on %{date}"
+      restored_flash: "Task %{module} restored successfully!"
     module_header:
       start_date: "Start date:"
       due_date: "Due date:"
