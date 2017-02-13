@@ -16,5 +16,5 @@ class Extends
                           system_message: 2 }
 
   TASKS_STATES = { uncompleted: 0,
-                    completed: 1 }
+                   completed: 1 }
 end

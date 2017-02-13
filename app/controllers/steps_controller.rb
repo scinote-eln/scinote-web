@@ -337,9 +337,11 @@ class StepsController < ApplicationController
             end
 
             # Create localized title for complete/uncomplete button
-            localized_title = !completed ?
-              t("protocols.steps.options.complete_title") :
-              t("protocols.steps.options.uncomplete_title")
+            localized_title = if !completed
+                                t('protocols.steps.options.complete_title')
+                              else
+                                t('protocols.steps.options.uncomplete_title')
+                              end
             task_button_title =
               t('my_modules.buttons.uncomplete') if task_completed
             format.json do
