@@ -36,7 +36,8 @@ module Users
             render json: {
               html: render_to_string(
                 partial:
-                  'users/settings/user_teams/leave_user_team_modal_body.html.erb',
+                  'users/settings/user_teams/' \
+                  'leave_user_team_modal_body.html.erb',
                 locals: { user_team: @user_team }
               ),
               heading: I18n.t(
@@ -68,46 +69,46 @@ module Users
       end
 
       def destroy
-        respond_to do |format|
-          # If user is last administrator of team,
-          # he/she cannot be deleted from it.
-          invalid =
-            @user_team.admin? &&
-            @user_team
-            .team
-            .user_teams
-            .where(role: 2)
-            .count <= 1
+        # If user is last administrator of team,
+        # he/she cannot be deleted from it.
+        invalid =
+          @user_team.admin? &&
+          @user_team
+          .team
+          .user_teams
+          .where(role: 2)
+          .count <= 1
 
-          unless invalid
-            begin
-              UserTeam.transaction do
-                # If user leaves on his/her own accord,
-                # new owner for projects is the first
-                # administrator of team
-                if params[:leave]
-                  new_owner =
-                    @user_team
-                    .team
-                    .user_teams
-                    .where(role: 2)
-                    .where.not(id: @user_team.id)
-                    .first
-                    .user
-                else
-                  # Otherwise, the new owner for projects is
-                  # the current user (= an administrator removing
-                  # the user from the team)
-                  new_owner = current_user
-                end
-                reset_user_current_team(@user_team)
-                @user_team.destroy(new_owner)
+        unless invalid
+          begin
+            UserTeam.transaction do
+              # If user leaves on his/her own accord,
+              # new owner for projects is the first
+              # administrator of team
+              if params[:leave]
+                new_owner =
+                  @user_team
+                  .team
+                  .user_teams
+                  .where(role: 2)
+                  .where.not(id: @user_team.id)
+                  .first
+                  .user
+              else
+                # Otherwise, the new owner for projects is
+                # the current user (= an administrator removing
+                # the user from the team)
+                new_owner = current_user
               end
-            rescue Exception
-              invalid = true
+              reset_user_current_team(@user_team)
+              @user_team.destroy(new_owner)
             end
+          rescue Exception
+            invalid = true
           end
+        end
 
+        respond_to do |format|
           if !invalid
             if params[:leave]
               flash[:notice] = I18n.t(
