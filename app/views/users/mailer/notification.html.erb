@@ -4,6 +4,20 @@
 
 <p>Type: <%= I18n.t("notifications.types.#{@notification.type_of}") %></p>
 
-<p><%= sanitize_input(prepend_server_url_to_links(@notification.title)) %></p>
+<p>
+  <% if @notification.system_message? %>
+    <% # We assume the system notification is clean %>
+    <%= @notification.title.html_safe %>
+  <% else %>
+    <%= sanitize_input(prepend_server_url_to_links(@notification.title)) %>
+  <% end %>
+</p>
 
-<p><%= sanitize_input(prepend_server_url_to_links(@notification.message)) %></p>
+<p>
+  <% if @notification.system_message? %>
+    <% # We assume the system notification is clean %>
+    <%= @notification.message.html_safe %>
+  <% else %>
+    <%= sanitize_input(prepend_server_url_to_links(@notification.message)) %>
+  <% end %>
+</p>
