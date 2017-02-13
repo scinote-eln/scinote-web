@@ -254,7 +254,7 @@ class User < ActiveRecord::Base
     query = Project.all.joins(:user_projects)
     sql = 'projects.team_id IN (SELECT DISTINCT team_id ' \
           'FROM user_teams WHERE user_teams.user_id = :user_id)'
-    if team_id == 0 || !user_teams.find_by(team_id: team_id).try(:admin?)
+    if team_id.zero? || !user_teams.find_by(team_id: team_id).try(:admin?)
       # Admins see all projects of team
       sql += ' AND (projects.visibility=1 OR user_projects.user_id=:user_id)'
     end
@@ -275,13 +275,13 @@ class User < ActiveRecord::Base
     if team_id > 0
       result = query
                .where('projects.team_id = ?', team_id)
-               .where(sql,user_id: id, archived: archived)
+               .where(sql, user_id: id, archived: archived)
                .order(sort)
                .distinct
                .group_by(&:team)
     else
       result = query
-               .where(sql,user_id: id, archived: archived)
+               .where(sql, user_id: id, archived: archived)
                .order(sort)
                .distinct
                .group_by(&:team)
