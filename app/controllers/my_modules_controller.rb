@@ -370,12 +370,19 @@ class MyModulesController < ApplicationController
 
           if completed
             title = I18n.t('notifications.types.recent_changes')
-            message = I18n.t('notifications.task_completed',
-              user: current_user.name,
+            message = I18n.t(
+              'notifications.task_completed',
+              user: current_user.full_name,
               module: @my_module.name,
               date: l(@my_module.completed_on, format: :full),
-              project: @project.name,
-              experiment: @my_module.experiment.name)
+              project:
+                view_context.link_to(@project.name, project_path(@project)),
+              experiment:
+                view_context.link_to(
+                  @my_module.experiment.name,
+                  canvas_experiment_path(@my_module.experiment)
+                )
+            )
 
             notification = Notification.create(
               type_of: :recent_changes,
