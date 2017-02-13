@@ -264,7 +264,8 @@ module PermissionHelper
   # User can view project if he's assigned onto it, or if
   # a project is public/visible, and user is a member of that team
   def can_view_project(project)
-    is_member_of_project(project) or
+    is_admin_of_team(project.team) ||
+      is_member_of_project(project) ||
       (project.visible? and is_member_of_team(project.team))
   end
 

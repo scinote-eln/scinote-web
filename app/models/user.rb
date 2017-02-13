@@ -253,31 +253,35 @@ class User < ActiveRecord::Base
     archived = archived ? true : false
     query = Project.all.joins(:user_projects)
     sql = 'projects.team_id IN (SELECT DISTINCT team_id ' \
-          'FROM user_teams WHERE user_teams.user_id = ?) ' \
-          'AND (projects.visibility=1 OR user_projects.user_id=?) ' \
-          'AND projects.archived = ? '
-
-    case sort_by
-    when "old"
-      sort = {created_at: :asc}
-    when "atoz"
-      sort = {name: :asc}
-    when "ztoa"
-      sort = {name: :desc}
-    else
-      sort = {created_at: :desc}
+          'FROM user_teams WHERE user_teams.user_id = :user_id)'
+    if team_id == 0 || !user_teams.find_by(team_id: team_id).try(:admin?)
+      # Admins see all projects of team
+      sql += ' AND (projects.visibility=1 OR user_projects.user_id=:user_id)'
     end
+    sql += ' AND projects.archived = :archived '
+
+    sort =
+      case sort_by
+      when 'old'
+        { created_at: :asc }
+      when 'atoz'
+        { name: :asc }
+      when 'ztoa'
+        { name: :desc }
+      else
+        { created_at: :desc }
+      end
 
     if team_id > 0
       result = query
                .where('projects.team_id = ?', team_id)
-               .where(sql, id, id, archived)
+               .where(sql,user_id: id, archived: archived)
                .order(sort)
                .distinct
                .group_by(&:team)
     else
       result = query
-               .where(sql, id, id, archived)
+               .where(sql,user_id: id, archived: archived)
                .order(sort)
                .distinct
                .group_by(&:team)
