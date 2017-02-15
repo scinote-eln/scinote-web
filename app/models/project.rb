@@ -41,14 +41,19 @@ class Project < ActiveRecord::Base
     end
 
     if current_team
-      new_query = Project
-                  .distinct
-                  .joins(:user_projects)
-                  .where('projects.team_id = ?',
-                         current_team.id)
-                  .where('projects.visibility = 1 OR user_projects.user_id = ?',
-                         user.id)
-                  .where_attributes_like(:name, a_query)
+      new_query =
+        Project
+        .distinct
+        .joins(:user_projects)
+        .where('projects.team_id = ?', current_team.id)
+      unless user.user_teams.find_by(team: current_team).try(:admin?)
+        # Admins see all projects in the team
+        new_query = new_query.where(
+          'projects.visibility = 1 OR user_projects.user_id = ?',
+          user.id
+        )
+      end
+      new_query = new_query.where_attributes_like(:name, a_query)
 
       if include_archived
         return new_query
@@ -56,35 +61,33 @@ class Project < ActiveRecord::Base
         return new_query.where('projects.archived = ?', false)
       end
     else
-      team_ids =
-        Team
-        .joins(:user_teams)
-        .where('user_teams.user_id = ?', user.id)
-        .select('id')
-        .distinct
+      new_query = Project
+                  .distinct
+                  .joins(team: :user_teams)
+                  .where('user_teams.user_id = ?', user.id)
 
       if include_archived
-        new_query = Project
-                    .distinct
-                    .joins(:user_projects)
-                    .where('projects.team_id IN (?)', team_ids)
-                    .where(
-                      'projects.visibility = 1 OR user_projects.user_id = ?',
-                      user.id
-                    )
-                    .where_attributes_like(:name, a_query)
+        new_query =
+          new_query
+          .joins(:user_projects)
+          .where(
+            'user_teams.role = 2 OR projects.visibility = 1 OR ' \
+            'user_projects.user_id = ?',
+            user.id
+          )
+          .where_attributes_like('projects.name', a_query)
 
       else
-        new_query = Project
-                    .distinct
-                    .joins(:user_projects)
-                    .where('projects.team_id IN (?)', team_ids)
-                    .where(
-                      'projects.visibility = 1 OR user_projects.user_id = ?',
-                      user.id
-                    )
-                    .where_attributes_like(:name, a_query)
-                    .where('projects.archived = ?', false)
+        new_query =
+          new_query
+          .joins(:user_projects)
+          .where(
+            'user_teams.role = 2 OR projects.visibility = 1 OR ' \
+            'user_projects.user_id = ?',
+            user.id
+          )
+          .where_attributes_like('projects.name', a_query)
+          .where('projects.archived = ?', false)
       end
     end
 
