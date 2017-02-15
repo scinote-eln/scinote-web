@@ -15,7 +15,7 @@ module Users
 
       def update
         respond_to do |format|
-          if @user_team.update(update_params)
+          if @user_t.update(update_params)
             format.json do
               render json: {
                 status: :ok
@@ -23,7 +23,7 @@ module Users
             end
           else
             format.json do
-              render json: @user_team.errors,
+              render json: @user_t.errors,
               status: :unprocessable_entity
             end
           end
@@ -38,11 +38,11 @@ module Users
                 partial:
                   'users/settings/user_teams/' \
                   'leave_user_team_modal_body.html.erb',
-                locals: { user_team: @user_team }
+                locals: { user_team: @user_t }
               ),
               heading: I18n.t(
                 'users.settings.user_teams.leave_uo_heading',
-                team: escape_input(@user_team.team.name)
+                team: escape_input(@user_t.team.name)
               )
             }
           end
@@ -56,12 +56,12 @@ module Users
               html: render_to_string(
                 partial: 'users/settings/user_teams/' \
                          'destroy_user_team_modal_body.html.erb',
-                locals: { user_team: @user_team }
+                locals: { user_team: @user_t }
               ),
               heading: I18n.t(
                 'users.settings.user_teams.destroy_uo_heading',
-                user: escape_input(@user_team.user.full_name),
-                team: escape_input(@user_team.team.name)
+                user: escape_input(@user_t.user.full_name),
+                team: escape_input(@user_t.team.name)
               )
             }
           end
@@ -72,8 +72,8 @@ module Users
         # If user is last administrator of team,
         # he/she cannot be deleted from it.
         invalid =
-          @user_team.admin? &&
-          @user_team
+          @user_t.admin? &&
+          @user_t
           .team
           .user_teams
           .where(role: 2)
@@ -87,11 +87,11 @@ module Users
               # administrator of team
               if params[:leave]
                 new_owner =
-                  @user_team
+                  @user_t
                   .team
                   .user_teams
                   .where(role: 2)
-                  .where.not(id: @user_team.id)
+                  .where.not(id: @user_t.id)
                   .first
                   .user
               else
@@ -100,8 +100,8 @@ module Users
                 # the user from the team)
                 new_owner = current_user
               end
-              reset_user_current_team(@user_team)
-              @user_team.destroy(new_owner)
+              reset_user_current_team(@user_t)
+              @user_t.destroy(new_owner)
             end
           rescue Exception
             invalid = true
@@ -113,19 +113,19 @@ module Users
             if params[:leave]
               flash[:notice] = I18n.t(
                 'users.settings.user_teams.leave_flash',
-                team: @user_team.team.name
+                team: @user_t.team.name
               )
               flash.keep(:notice)
             end
-            generate_notification(@user_team.user,
-                                  @user_team.user,
-                                  @user_team.team,
+            generate_notification(@user_t.user,
+                                  @user_t.user,
+                                  @user_t.team,
                                   false,
                                   false)
             format.json { render json: { status: :ok } }
           else
             format.json do
-              render json: @user_team.errors,
+              render json: @user_t.errors,
               status: :unprocessable_entity
             end
           end
@@ -139,12 +139,12 @@ module Users
       end
 
       def load_user_team
-        @user_team = UserTeam.find_by_id(params[:id])
-        @team = @user_team.team
+        @user_t = UserTeam.find_by_id(params[:id])
+        @team = @user_t.team
         # Don't allow the user to modify UserTeam-s if he's not admin,
         # unless he/she is modifying his/her UserTeam
-        if current_user != @user_team.user &&
-           !is_admin_of_team(@user_team.team)
+        if current_user != @user_t.user &&
+           !is_admin_of_team(@user_t.team)
           render_403
         end
       end
