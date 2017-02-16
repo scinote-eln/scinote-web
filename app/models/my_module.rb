@@ -389,8 +389,7 @@ class MyModule < ActiveRecord::Base
         completed = false unless step.completed
       end
       if completed
-        complete
-        save!
+        update_attributes(state: 'completed', completed_on: DateTime.now)
         return true
       end
     end

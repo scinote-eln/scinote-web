@@ -19,6 +19,17 @@ module MyModulesHelper
     my_module.results.where(archived: false).order(created_at: :desc)
   end
 
+  def get_task_alert_color(my_module)
+    alert = ''
+    if !my_module.completed?
+      alert = ' alert-yellow' if my_module.is_one_day_prior?
+      alert = ' alert-red' if my_module.is_overdue?
+    elsif my_module.completed?
+      alert = ' alert-green'
+    end
+    alert
+  end
+
   def is_steps_page?
     action_name == "steps"
   end

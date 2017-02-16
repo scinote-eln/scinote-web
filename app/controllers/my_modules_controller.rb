@@ -192,12 +192,10 @@ class MyModulesController < ApplicationController
       if saved
         format.json {
           alerts = []
-          if @my_module.is_overdue? && !@my_module.completed?
-            alerts << 'alert-red'
-          elsif @my_module.is_one_day_prior? && !@my_module.completed?
-            alerts << 'alert-yellow'
-          elsif @my_module.completed?
-            alerts << 'alert-green'
+          alerts << 'alert-green' if @my_module.completed?
+          unless @my_module.completed?
+            alerts << 'alert-red' if @my_module.is_overdue?
+            alerts << 'alert-yellow' if @my_module.is_one_day_prior?
           end
           render json: {
             status: :ok,
@@ -352,11 +350,8 @@ class MyModulesController < ApplicationController
         completed = @my_module.completed?
         if @my_module.save
           # Create activity
-          str = if completed
-                  'activities.complete_module'
-                else
-                  'activities.uncomplete_module'
-                end
+          str = 'activities.uncomplete_module'
+          str = 'activities.complete_module' if completed
           message = t(str,
                       user: current_user.full_name,
                       module: @my_module.name)
@@ -398,11 +393,8 @@ class MyModulesController < ApplicationController
           end
 
           # Create localized title for complete/uncomplete button
-          button_title = if completed
-                           t('my_modules.buttons.uncomplete')
-                         else
-                           t('my_modules.buttons.complete')
-                         end
+          button_title = t('my_modules.buttons.complete')
+          button_title = t('my_modules.buttons.uncomplete') if completed
 
           format.json do
             render json: {

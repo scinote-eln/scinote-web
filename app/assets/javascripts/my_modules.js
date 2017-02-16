@@ -220,10 +220,8 @@ function bindEditTagsAjax() {
 // Sets callback for completing/uncompleting task
 function applyTaskCompletedCallBack() {
   // First, remove old event handlers, as we use turbolinks
-  $("[data-action='complete-task'], [data-action='uncomplete-task']").off();
-
   $("[data-action='complete-task'], [data-action='uncomplete-task']")
-  .on('click', function() {
+  .off().on('click', function() {
     var button = $(this);
     $.ajax({
       url: button.data('link-url'),

@@ -27,9 +27,8 @@ function applyCheckboxCallBack()  {
 // Sets callback for completing/uncompleting step
 function applyStepCompletedCallBack() {
   // First, remove old event handlers, as we use turbolinks
-  $("[data-action='complete-step'], [data-action='uncomplete-step']").off();
-
-  $("[data-action='complete-step'], [data-action='uncomplete-step']").on('click', function(e){
+  $("[data-action='complete-step'], [data-action='uncomplete-step']")
+  .off().on('click', function(e){
     var button = $(this);
     var step = $(this).parents(".step");
     var completed = !step.hasClass("completed");
