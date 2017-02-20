@@ -167,6 +167,9 @@
               </a>
             </li>
           <% end %>
+
+          <div data-hook="secondary-navigation-tabs"></div>
+
           <% if can_view_module_samples(@my_module) then %>
             <li id="module-samples-nav-tab" class="<%= "active" if is_module_samples? ||
                                                                    sample_types_page_my_module? ||
@@ -259,7 +262,6 @@
           </li>
         <% end %>
       </ul>
-
     </div>
   </div>
 </nav>
