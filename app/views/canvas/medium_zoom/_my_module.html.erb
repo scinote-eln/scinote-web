@@ -1,4 +1,5 @@
-<div class="panel panel-default module-medium<%= " alert-red" if my_module.is_overdue? %><%= " alert-yellow" if my_module.is_one_day_prior? %>"
+<div class="panel panel-default module-medium
+  <%= get_task_alert_color(my_module) %>"
   id="<%= my_module.id %>"
   data-module-id="<%= my_module.id %>"
   data-module-name="<%= my_module.name %>"

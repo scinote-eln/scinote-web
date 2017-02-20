@@ -1,8 +1,29 @@
-<% if my_module.due_date then %>
-  <%=l my_module.due_date, format: :full_date %>
-  <% if my_module.is_overdue? or my_module.is_one_day_prior? %>
+<% if my_module.completed? %>
+  <%= t("my_modules.states.completed") %>
+  <span class="due-date-label">
+    <%= l(my_module.completed_on, format: :full_date) %>
+    <span class="glyphicon glyphicon-ok"></span>
+  </span>
+<% elsif my_module.is_one_day_prior? %>
+  <%= t("my_modules.states.due_soon") %>
+  <span class="due-date-label">
+    <%=l my_module.due_date, format: :full_date %>
     <span class="glyphicon glyphicon-alert"></span>
-  <% end %>
+  </span>
+<% elsif my_module.is_overdue? %>
+  <%= t("my_modules.states.overdue") %>
+  <span class="due-date-label">
+    <%=l my_module.due_date, format: :full_date %>
+    <span class="glyphicon glyphicon-alert"></span>
+  </span>
+<% elsif my_module.due_date %>
+  <%= t("experiments.canvas.full_zoom.due_date") %>
+  <span class="due-date-label">
+      <%=l my_module.due_date, format: :full_date %>
+  </span>
 <% else %>
-  <em><%=t "experiments.canvas.full_zoom.no_due_date" %></em>
+  <%= t("experiments.canvas.full_zoom.due_date") %>
+  <span class="due-date-label">
+    <em><%=t "experiments.canvas.full_zoom.no_due_date" %></em>
+  </span>
 <% end %>

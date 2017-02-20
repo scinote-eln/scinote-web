@@ -1,6 +1,8 @@
 class MyModule < ActiveRecord::Base
   include ArchivableModel, SearchableModel
 
+  enum state: Extends::TASKS_STATES
+
   before_create :create_blank_protocol
 
   auto_strip_attributes :name, :description, nullify: false
@@ -373,6 +375,35 @@ class MyModule < ActiveRecord::Base
 
     # We lucked out, no gaps, therefore we need to add it after the last element
     { x: 0, y: positions.last[1] + HEIGHT }
+  end
+
+  def completed?
+    state == 'completed'
+  end
+
+  # Mark task completed if all steps become completed
+  def check_completness
+    if protocol && protocol.steps.count > 0
+      completed = true
+      protocol.steps.find_each do |step|
+        completed = false unless step.completed
+      end
+      if completed
+        update_attributes(state: 'completed', completed_on: DateTime.now)
+        return true
+      end
+    end
+    false
+  end
+
+  def complete
+    self.state = 'completed'
+    self.completed_on = DateTime.now
+  end
+
+  def uncomplete
+    self.state = 'uncompleted'
+    self.completed_on = nil
   end
 
   private

@@ -302,6 +302,10 @@ class StepsController < ApplicationController
           end
 
           if step.save
+            if protocol.in_module?
+              task_completed = protocol.my_module.check_completness
+            end
+
             # Create activity
             if changed
               completed_steps = protocol.steps.where(completed: true).count
@@ -333,13 +337,34 @@ class StepsController < ApplicationController
             end
 
             # Create localized title for complete/uncomplete button
-            localized_title = !completed ?
-              t("protocols.steps.options.complete_title") :
-              t("protocols.steps.options.uncomplete_title")
-
-            format.json {
-              render json: {new_title: localized_title}, status: :accepted
-            }
+            localized_title = if !completed
+                                t('protocols.steps.options.complete_title')
+                              else
+                                t('protocols.steps.options.uncomplete_title')
+                              end
+            task_button_title =
+              t('my_modules.buttons.uncomplete') if task_completed
+            format.json do
+              if task_completed
+                render json: {
+                  new_title: localized_title,
+                  task_completed: task_completed,
+                  task_button_title: task_button_title,
+                  module_header_due_date_label: render_to_string(
+                    partial: 'my_modules/module_header_due_date_label.html.erb',
+                    locals: { my_module: step.protocol.my_module }
+                  ),
+                  module_state_label: render_to_string(
+                    partial: 'my_modules/module_state_label.html.erb',
+                    locals: { my_module: step.protocol.my_module }
+                  )
+                },
+                status: :accepted
+              else
+                render json: { new_title: localized_title },
+                status: :accepted
+              end
+            end
           else
             format.json {
               render json: {}, status: :unprocessable_entity

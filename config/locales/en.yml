@@ -429,12 +429,22 @@ en:
       add_user_generic_error: "An error occured. "
 
   my_modules:
+    buttons:
+      complete: "Complete task"
+      uncomplete: "Uncomplete task"
     description:
       title: "Edit task %{module} description"
       label: "Description"
     due_date:
       title: "Edit task %{module} due date"
       label: "Due date"
+    states:
+      state_label: "Status:"
+      in_progress: "In progress"
+      completed: "Completed on"
+      completed_on: "Task completed (%{date})"
+      due_soon: "due soon"
+      overdue: "overdue"
     samples:
       head_title: "%{project} | %{module} | Sample library"
     module_archive:
@@ -979,6 +989,8 @@ en:
     archive_module: "<i>%{user}</i> moved task <strong>%{module}</strong> to archive."
     restore_module: "<i>%{user}</i> restored task <strong>%{module}</strong> from archive."
     change_module_description: "<i>%{user}</i> changed task <strong>%{module}</strong>'s description."
+    complete_module: "<i>%{user}</i> completed task <strong>%{module}</strong>."
+    uncomplete_module: "<i>%{user}</i> uncompleted task <strong>%{module}</strong>."
     create_step: "<i>%{user}</i> created Step %{step} <strong>%{step_name}</strong>."
     destroy_step: "<i>%{user}</i> deleted Step %{step} <strong>%{step_name}</strong>."
     add_comment_to_step: "<i>%{user}</i> commented on Step %{step} <strong>%{step_name}</strong>."
@@ -1460,6 +1472,7 @@ en:
     email_title: "You've received a sciNote notification!"
     assign_user_to_team: "<i>%{assigned_user}</i> was added as %{role} to team <strong>%{team}</strong> by <i>%{assigned_by_user}</i>."
     unassign_user_from_team: "<i>%{unassigned_user}</i> was removed from team <strong>%{team}</strong> by <i>%{unassigned_by_user}</i>."
+    task_completed: "%{user} completed task %{module}. %{date} | Project: %{project} | Experiment: %{experiment}"
 
   atwho:
     no_results: "No results found"

@@ -531,6 +531,10 @@ module PermissionHelper
     is_user_or_higher_of_project(my_module.experiment.project)
   end
 
+  def can_complete_module(my_module)
+    is_technician_or_higher_of_project(my_module.experiment.project)
+  end
+
   # ---- RESULTS PERMISSIONS ----
 
   def can_view_results_in_module(my_module)

@@ -8,7 +8,7 @@ class MyModulesController < ApplicationController
     :description, :due_date, :protocols, :results,
     :samples, :activities, :activities_tab,
     :assign_samples, :unassign_samples,
-    :delete_samples,
+    :delete_samples, :toggle_task_state,
     :samples_index, :archive]
   before_action :load_vars_nested, only: [:new, :create]
   before_action :check_edit_permissions, only: [
@@ -202,8 +202,11 @@ class MyModulesController < ApplicationController
       elsif saved
         format.json {
           alerts = []
-          alerts << "alert-red" if @my_module.is_overdue?
-          alerts << "alert-yellow" if @my_module.is_one_day_prior?
+          alerts << 'alert-green' if @my_module.completed?
+          unless @my_module.completed?
+            alerts << 'alert-red' if @my_module.is_overdue?
+            alerts << 'alert-yellow' if @my_module.is_one_day_prior?
+          end
           render json: {
             status: :ok,
             due_date_label: render_to_string(
@@ -349,7 +352,89 @@ class MyModulesController < ApplicationController
     end
   end
 
+  # Complete/uncomplete task
+  def toggle_task_state
+    respond_to do |format|
+      if can_complete_module(@my_module)
+        @my_module.completed? ? @my_module.uncomplete : @my_module.complete
+        completed = @my_module.completed?
+        if @my_module.save
+          task_completion_activity
+          task_completion_notification if completed
+
+          # Create localized title for complete/uncomplete button
+          button_title = t('my_modules.buttons.complete')
+          button_title = t('my_modules.buttons.uncomplete') if completed
+
+          format.json do
+            render json: {
+              new_title: button_title,
+              completed: completed,
+              module_header_due_date_label: render_to_string(
+                partial: 'my_modules/module_header_due_date_label.html.erb',
+                locals: { my_module: @my_module }
+              ),
+              module_state_label: render_to_string(
+                partial: 'my_modules/module_state_label.html.erb',
+                locals: { my_module: @my_module }
+              )
+            }
+          end
+        else
+          format.json { render json: {}, status: :unprocessable_entity }
+        end
+      else
+        format.json { render json: {}, status: :unauthorized }
+      end
+    end
+  end
+
   private
+
+  def task_completion_activity
+    completed = @my_module.completed?
+    str = 'activities.uncomplete_module'
+    str = 'activities.complete_module' if completed
+    message = t(str,
+                user: current_user.full_name,
+                module: @my_module.name)
+    Activity.create(
+      user: current_user,
+      project: @project,
+      my_module: @my_module,
+      message: message,
+      type_of: completed ? :complete_task : :uncomplete_task
+    )
+  end
+
+  def task_completion_notification
+    title = I18n.t('notifications.types.recent_changes')
+    message = I18n.t(
+      'notifications.task_completed',
+      user: current_user.full_name,
+      module: @my_module.name,
+      date: l(@my_module.completed_on, format: :full),
+      project:
+        view_context.link_to(@project.name, project_path(@project)),
+      experiment:
+        view_context.link_to(
+          @my_module.experiment.name,
+          canvas_experiment_path(@my_module.experiment)
+        )
+    )
+
+    notification = Notification.create(
+      type_of: :recent_changes,
+      title: title,
+      message: sanitize_input(message),
+      generator_user_id: current_user.id
+    )
+    if current_user.recent_notification
+      UserNotification.create(
+        notification: notification, user: current_user
+      )
+    end
+  end
 
   def load_vars
     @my_module = MyModule.find_by_id(params[:id])
