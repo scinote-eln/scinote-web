@@ -116,7 +116,7 @@
   <div class="jumbotron">
     <h2><%=t 'protocols.index.no_teams.title' %></h2>
     <p><%=t 'protocols.index.no_teams.text' %></p>
-    <p>
+    <p data-hook="protocols-manage-teams-button">
       <%= link_to t('protocols.index.no_teams.btn'), teams_path, class: 'btn btn-primary' %>
     </p>
   </div>
