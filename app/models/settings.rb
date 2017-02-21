@@ -1,3 +1,7 @@
 class Settings < ActiveRecord::Base
-  private_class_method :new
+  @instance = first
+
+  def self.instance
+    @instance ||= new
+  end
 end
