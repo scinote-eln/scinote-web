@@ -1552,6 +1552,10 @@ html.turbolinks-progress-bar::before {
   }
 }
 
+.avatar-file-upload input[type=file] {
+  max-width: 100%;
+}
+
 .modal-invite-users {
   .bootstrap-tagsinput {
     min-width: 450px;
