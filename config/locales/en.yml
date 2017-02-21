@@ -220,7 +220,8 @@ en:
         contact_admins: "To invite additional users to team %{team}, contact its administrator/s."
       no_teams:
         title: "Your dashboard is empty!"
-        text: "Currently you are not assigned to any Team. For more information please contact one of your administrators."
+        text: "It seems you're not a member of any team. See team management to sort it out."
+        btn: "Manage teams"
     create:
       success_flash: "Project <strong>%{name}</strong> successfully created."
     update:
@@ -1259,7 +1260,8 @@ en:
       restore: "Restore"
       no_teams:
         title: "Your dashboard is empty!"
-        text: "Currently you are not assigned to any Team. For more information please contact one of your administrators."
+        text: "It seems you're not a member of any team. See team management to sort it out."
+        btn: "Manage teams"
       make_private_unauthorized: "You do not have permission to make selected protocols private."
       make_private_error: "Error occured while making selected protocols private."
       publish_unauthorized: "You do not have permission to publish selected protocols."

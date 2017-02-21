@@ -99,6 +99,9 @@
   <div class="jumbotron">
   <h2><%=t 'projects.index.no_teams.title' %></h2>
   <p><%=t 'projects.index.no_teams.text' %></p>
+  <p>
+    <%= link_to t('projects.index.no_teams.btn'), teams_path, class: 'btn btn-primary' %>
+  </p>
 </div>
 <% else %>
   <h2 class="page-header"><%= current_team.name %></h2>
