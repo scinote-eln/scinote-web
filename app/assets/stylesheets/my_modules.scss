@@ -78,31 +78,37 @@
   }
 
   img {
-    left: 50%;
-    margin-right: -50%;
-    max-height: 100%;
-    position: absolute;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    width: auto;
+    height: auto;
+    max-width: 100%;
+
+    @media (max-height: 520px) {
+      height: 80%;
+      max-width: 100%;
+    }
   }
 
   .modal-header {
     background: $color-black;
     border: 0;
+    height: 60px;
   }
 
   .modal-body {
-    height: 85%;
-    position: relative;
-    width: auto;
+    align-items: center;
+    display: -moz-flex;
+    display: -webkit-flex;
+    display: flex;
+    height: calc(100% - 120px);
+    justify-content: center;
+    overflow: hidden;
   }
 
   .modal-footer {
     background: $color-black;
     border: 0;
     bottom: 0;
-    position: fixed;
+    height: 60px;
+    position: absolute;
     text-align: center;
     width: 100%;
   }
