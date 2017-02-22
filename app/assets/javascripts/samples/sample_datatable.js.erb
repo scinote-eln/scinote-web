@@ -1293,7 +1293,18 @@ function changeToEditMode() {
           modal.modal('show');
         },
         error: function(xhr) {
-          // TODO
+          dropdownList.sortable('disable');
+          $(li).clearFormErrors();
+          var msg = $.parseJSON(xhr.responseText);
+
+          renderFormError(undefined,
+                          $(li).find('.text-edit'),
+                          Object.keys(msg)[0] + ' ' + msg.name.toString());
+          var verticalHeight = $(li).offset().top;
+          dropdownList.scrollTo(verticalHeight,0);
+          setTimeout(function() {
+            $(li).clearFormErrors();
+          }, 5000);
         }
       });
     });
