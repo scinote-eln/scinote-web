@@ -224,6 +224,7 @@ en:
         btn: "Manage teams"
     create:
       success_flash: "Project <strong>%{name}</strong> successfully created."
+      name_taken: "This project name has to be unique inside a team (this includes the archive)."
     update:
       success_flash: "Project <strong>%{name}</strong> successfully updated."
       error_flash: "Project <strong>%{name}</strong> not updated."

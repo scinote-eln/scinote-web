@@ -7,7 +7,8 @@ class Project < ActiveRecord::Base
   validates :name,
             length: { minimum: Constants::NAME_MIN_LENGTH,
                       maximum: Constants::NAME_MAX_LENGTH },
-            uniqueness: { scope: :team, case_sensitive: false }
+            uniqueness: { scope: :team, case_sensitive: false,
+                          message: I18n.t('projects.create.name_taken') }
   validates :visibility, presence: true
   validates :team, presence: true
 
