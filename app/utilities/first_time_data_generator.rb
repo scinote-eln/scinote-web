@@ -5,12 +5,12 @@ module FirstTimeDataGenerator
 
     # First team that this user created
     # should contain the "intro" project
-    if cookies[:repeat_tutorial_org_id] && cookies[:repeat_tutorial_team_id]
+    if cookies[:repeat_tutorial_org_id] || cookies[:repeat_tutorial_team_id]
       team = Team.find_by_id(cookies[:repeat_tutorial_org_id])
       team ||= Team.find_by_id(cookies[:repeat_tutorial_team_id])
-      cookies.delete :repeat_tutorial_org_id if cookies[:repeat_tutorial_org_id]
-      if cookies[:repeat_tutorial_team_id]
-        cookies.delete :repeat_tutorial_team_id
+      %w(repeat_tutorial_team_id repeat_tutorial_org_id)
+        .each do |repeat_tutorial|
+        cookies.delete repeat_tutorial.to_sym if cookies[repeat_tutorial.to_sym]
       end
     else
       team = user
