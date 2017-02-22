@@ -1452,7 +1452,7 @@ en:
     protocols_index_html: "View your Public and Private Protocols, which you can Edit, Create new ones or Clone them. Protocols can be archived and restored from the Archive. <strong>(Step 23/26)</strong>"
     protocols_import_export_html: "You can also Import or Export protocols to your hard drive. Return to the Dashboard. <strong>(Step 24/26)</strong>"
     archive_project_html: "Archive Demo project - qPCR by clicking on the down arrow <span class='glyphicon glyphicon-triangle-bottom'></span>. You can always access the Archive by clicking the <span class='glyphicon glyphicon-briefcase'></span> icon on the top right side of the Dashboard and restore any item you have archived. <strong>(Step 25/26)</strong>"
-    goodbye_message: "To repeat the tutorial, go to your Settings and open <strong>My preferences</strong> tab. Click on the <strong>Repeat tutorial</strong> button and go through the tutorial as many times needed. <strong>(Step 26/26)</strong>"
+    goodbye_message: "To repeat the tutorial, go to your <strong>Settings</strong> and open <strong>Preferences</strong> tab. Click on the <strong>Repeat tutorial</strong> button and go through the tutorial as many times as needed. <strong>(Step 26/26)</strong>"
 
   notifications:
     title: "Notifications"
