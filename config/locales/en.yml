@@ -219,7 +219,7 @@ en:
         invite_users_details: "to team %{team}."
         contact_admins: "To invite additional users to team %{team}, contact its administrator/s."
       no_teams:
-        title: "It's empty here!"
+        title: "Your dashboard is empty!"
         text: "It seems you're not a member of any team. See team management to sort it out."
         btn: "Manage teams"
     create:
@@ -1259,7 +1259,7 @@ en:
         description: "Archived protocols can only be seen by you. Restoring protocols will return them to their previous location (public/private)."
       restore: "Restore"
       no_teams:
-        title: "It's empty here!"
+        title: "Your dashboard is empty!"
         text: "It seems you're not a member of any team. See team management to sort it out."
         btn: "Manage teams"
       make_private_unauthorized: "You do not have permission to make selected protocols private."
