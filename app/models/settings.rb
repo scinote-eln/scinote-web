@@ -1,7 +1,6 @@
 class Settings < ActiveRecord::Base
-  @instance = first
-
   def self.instance
+    @instance ||= first
     @instance ||= new
   end
 end
