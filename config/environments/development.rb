@@ -65,6 +65,8 @@ Rails.application.configure do
   # Raises error for missing translations
   config.action_view.raise_on_missing_translations = true
 
+  config.deface.enabled = ENV['DEFACE_ENABLED'] == 'true'
+
   # Enable first-time tutorial for users signing in the sciNote for
   # the first time.
   config.x.enable_tutorial = ENV['ENABLE_TUTORIAL'] == 'true'
