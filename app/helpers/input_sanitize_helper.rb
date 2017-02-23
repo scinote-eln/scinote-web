@@ -15,9 +15,9 @@ module InputSanitizeHelper
     ERB::Util.html_escape(text)
   end
 
-  def custom_auto_link(text, simple_format = true, org = nil)
+  def custom_auto_link(text, simple_format = true, org = nil, wrapper_tag = {})
     text = if simple_format
-             simple_format(sanitize_input(text))
+             simple_format(sanitize_input(text), {}, wrapper_tag)
            else
              sanitize_input(text)
            end
