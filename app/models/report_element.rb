@@ -1,22 +1,5 @@
 class ReportElement < ActiveRecord::Base
-  enum type_of: {
-    project_header: 0,
-    my_module: 1,
-    step: 2,
-    result_asset: 3,
-    result_table: 4,
-    result_text: 5,
-    my_module_activity: 6,
-    my_module_samples: 7,
-    step_checklist: 8,
-    step_asset: 9,
-    step_table: 10,
-    step_comments: 11,
-    result_comments: 12,
-    project_activity: 13, # TODO
-    project_samples: 14, # TODO
-    experiment: 15
-  }
+  enum type_of: Extends::REPORT_ELEMENT_TYPES
 
   # This is only used by certain elements
   enum sort_order: {
