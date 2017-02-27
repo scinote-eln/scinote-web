@@ -98,7 +98,7 @@ Rails.application.configure do
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
 
-  # Disable deface if neccesary
+  # Enable/disable Deface
   config.deface.enabled = ENV['DEFACE_ENABLED'] == 'true'
 
   # Enable first-time tutorial for users signing in the sciNote for
