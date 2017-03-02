@@ -1,16 +1,20 @@
-<div class="btn-group pull-right">
-  <% if !@my_module.completed? %>
-    <div data-action="complete-task" data-link-url="<%= toggle_task_state_my_module_path(@my_module) %>">
-      <button class="btn btn-primary">
-        <%= t("my_modules.buttons.complete") %>
-      </button>
-    </div>
-  <% else @my_module.completed? %>
-    <div data-action="uncomplete-task" data-link-url="<%= toggle_task_state_my_module_path(@my_module) %>">
-      <button class="btn btn-default">
-        <%= t("my_modules.buttons.uncomplete") %>
-      </button>
-    </div>
-  <% end %>
+<div class="pull-right">
+  <div class="btn-group">
+    <% if !@my_module.completed? %>
+      <div data-action="complete-task" data-link-url="<%= toggle_task_state_my_module_path(@my_module) %>">
+        <button class="btn btn-primary">
+          <span class="glyphicon glyphicon-ok"></span>
+          <%= t("my_modules.buttons.complete") %>
+        </button>
+      </div>
+    <% else @my_module.completed? %>
+      <div data-action="uncomplete-task" data-link-url="<%= toggle_task_state_my_module_path(@my_module) %>">
+        <button class="btn btn-greyed">
+          <span class="glyphicon glyphicon-remove"></span>
+          <%= t("my_modules.buttons.uncomplete") %>
+        </button>
+      </div>
+    <% end %>
+  </div>
+  <span data-hook="my_module-protocol-buttons"></span>
 </div>
-<span data-hook="my_module-protocol-buttons"></span>
