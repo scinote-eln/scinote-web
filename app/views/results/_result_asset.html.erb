@@ -15,7 +15,8 @@
   <% if result.asset.can_perform_action('view') %>
     <%= link_to view_asset_url(id: result.asset),
                 class: 'btn btn-default btn-sm',
-                style: 'display: inline-block'	do %>
+                target: '_blank',
+                style: 'display: inline-block' do %>
       <%= file_application_icon(result.asset) %>
       <%= wopi_button_text(result.asset, 'view') %>
     <% end %>
@@ -24,7 +25,8 @@
         result.asset.can_perform_action('edit') %>
     <%= link_to edit_asset_url(id: result.asset),
                 class: 'btn btn-default btn-sm',
-                style: 'display: inline-block'	do %>
+                target: '_blank',
+                style: 'display: inline-block' do %>
       <%= file_application_icon(result.asset) %>
       <%= wopi_button_text(result.asset, 'edit') %>
     <% end %>
