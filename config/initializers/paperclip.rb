@@ -175,10 +175,16 @@ module Paperclip
         # Types taken from: http://filext.com/faq/office_mime_types.php and
         # https://www.openoffice.org/framework/documentation/mimetypes/mimetypes.html
         #
+        # Generic application
+        (Set[content_type, content_types_from_name].subset? Set.new %w(
+          text/rtf
+          application/rtf
+        )) ||
         # Word processor application
         (Set[content_type, content_types_from_name].subset? Set.new %w(
           application/vnd.ms-office
           application/msword
+          application/msword-template
           application/vnd.openxmlformats-officedocument.wordprocessingml.document
           application/vnd.openxmlformats-officedocument.wordprocessingml.template
           application/vnd.ms-word.document.macroEnabled.12
@@ -229,6 +235,7 @@ module Paperclip
           application/vnd.stardivision.impress
           application/vnd.stardivision.impress-packed
           application/x-starimpress
+          text/x-gettext-translation-template
         )) ||
         # Graphics application
         (Set[content_type, content_types_from_name].subset? Set.new %w(
