@@ -361,13 +361,16 @@ class MyModulesController < ApplicationController
         if @my_module.save
           task_completion_activity
 
-          # Create localized title for complete/uncomplete button
-          button_title = t('my_modules.buttons.complete')
-          button_title = t('my_modules.buttons.uncomplete') if completed
+          # Render new button HTML
+          if completed
+            new_btn_partial = 'my_modules/state_button_uncomplete.html.erb'
+          else
+            new_btn_partial = 'my_modules/state_button_complete.html.erb'
+          end
 
           format.json do
             render json: {
-              new_title: button_title,
+              new_btn: render_to_string(partial: new_btn_partial),
               completed: completed,
               module_header_due_date_label: render_to_string(
                 partial: 'my_modules/module_header_due_date_label.html.erb',

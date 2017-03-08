@@ -2,17 +2,11 @@
   <div class="btn-group">
     <% if !@my_module.completed? %>
       <div data-action="complete-task" data-link-url="<%= toggle_task_state_my_module_path(@my_module) %>">
-        <button class="btn btn-primary">
-          <span class="glyphicon glyphicon-ok"></span>
-          <%= t("my_modules.buttons.complete") %>
-        </button>
+        <%= render 'my_modules/state_button_complete.html.erb' %>
       </div>
     <% else @my_module.completed? %>
       <div data-action="uncomplete-task" data-link-url="<%= toggle_task_state_my_module_path(@my_module) %>">
-        <button class="btn btn-greyed">
-          <span class="glyphicon glyphicon-remove"></span>
-          <%= t("my_modules.buttons.uncomplete") %>
-        </button>
+        <%= render 'my_modules/state_button_uncomplete.html.erb' %>
       </div>
     <% end %>
   </div>

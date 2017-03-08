@@ -239,7 +239,7 @@ function applyTaskCompletedCallBack() {
         }
         $('.task-due-date').html(data.module_header_due_date_label);
         $('.task-state-label').html(data.module_state_label);
-        button.find('button').html(data.new_title);
+        button.find('button').replaceWith(data.new_btn);
       },
       error: function() {
       }
