@@ -15,7 +15,8 @@ module ReportsHelper
       if element.has_children?
         children_html.safe_concat render_new_element(true)
         element.children.each do |child|
-          children_html.safe_concat render_report_element(child, provided_locals)
+          children_html
+            .safe_concat render_report_element(child, provided_locals)
         end
       else
         children_html.safe_concat render_new_element(false)
@@ -24,7 +25,8 @@ module ReportsHelper
       if element.has_children?
         element.children.each do |child|
           children_html.safe_concat render_new_element(false)
-          children_html.safe_concat render_report_element(child, provided_locals)
+          children_html
+            .safe_concat render_report_element(child, provided_locals)
         end
       end
       children_html.safe_concat render_new_element(false)
@@ -41,10 +43,14 @@ module ReportsHelper
     ReportElement.type_ofs.keys.each do |type|
       next unless element.send("#{type}?")
       local_sym = type.split('_').last.to_sym
-      local_sym = type.split('_').first.to_sym if type.in? ReportExtends::RESULT_ELEMENTS
+      local_sym = type
+                  .split('_')
+                  .first
+                  .to_sym if type.in? ReportExtends::RESULT_ELEMENTS
       local_sym = :my_module if type.in? ReportExtends::MY_MODULE_ELEMENTS
       locals[local_sym] = element.element_reference
-      locals[:order] = element.sort_order if type.in? ReportExtends::SORTED_ELEMENTS
+      locals[:order] = element
+                       .sort_order if type.in? ReportExtends::SORTED_ELEMENTS
     end
 
     (render partial: view, locals: locals).html_safe
@@ -52,21 +58,35 @@ module ReportsHelper
 
   # "Hack" to omit file preview URL because of WKHTML issues
   def report_image_asset_url(asset)
-    prefix = (ENV["PAPERCLIP_STORAGE"].present? && ENV["MAIL_SERVER_URL"].present? && ENV["PAPERCLIP_STORAGE"] == "filesystem") ? ENV["MAIL_SERVER_URL"] : ""
-    prefix = (!prefix.empty? && !prefix.include?("http://") && !prefix.include?("https://")) ? "http://#{prefix}" : prefix
+    prefix = ''
+    if ENV['PAPERCLIP_STORAGE'].present? &&
+       ENV['MAIL_SERVER_URL'].present? &&
+       ENV['PAPERCLIP_STORAGE'] == 'filesystem'
+      prefix = ENV['MAIL_SERVER_URL']
+    end
+    if !prefix.empty? &&
+       !prefix.include?('http://') &&
+       !prefix.include?('https://')
+      prefix = "http://#{prefix}"
+    end
     url = prefix + asset.url(:medium, timeout: Constants::URL_LONG_EXPIRE_TIME)
     image_tag(url)
   end
 
-  # "Hack" to load Glyphicons css directly from the CDN site so they work in report
+  # "Hack" to load Glyphicons css directly from the CDN
+  # site so they work in report
   def bootstrap_cdn_link_tag
-    specs = Gem.loaded_specs["bootstrap-sass"]
-    specs.present? ? stylesheet_link_tag("http://netdna.bootstrapcdn.com/bootstrap/#{specs.version.version}/css/bootstrap.min.css", media: "all") : ""
+    specs = Gem.loaded_specs['bootstrap-sass']
+    return '' unless specs.present?
+    stylesheet_link_tag("http://netdna.bootstrapcdn.com/bootstrap/" \
+                        "#{specs.version.version}/css/bootstrap.min.css",
+                        media: 'all')
   end
 
   def font_awesome_cdn_link_tag
     stylesheet_link_tag(
-      'https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css'
+      'https://maxcdn.bootstrapcdn.com/font-awesome' \
+      '/4.6.3/css/font-awesome.min.css'
     )
   end
 end
