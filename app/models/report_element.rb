@@ -42,44 +42,27 @@ class ReportElement < ActiveRecord::Base
 
   # Get the referenced element (previously, element's type_of must be set)
   def element_reference
-    if project_header? or project_activity? or project_samples?
-      return project
-    elsif experiment?
-      return experiment
-    elsif my_module? or my_module_activity? or my_module_samples?
-      return my_module
-    elsif step? or step_comments?
-      return step
-    elsif result_asset? or result_table? or result_text? or result_comments?
-      return result
-    elsif step_checklist?
-      return checklist
-    elsif step_asset?
-      return asset
-    elsif step_table?
-      return table
+    ReportExtends::ELEMENT_REFERENCES.each do |el_ref|
+      return eval(el_ref.element.gsub('_id', '')) if el_ref.check(self)
     end
   end
 
-
   # Set the element reference (previously, element's type_of must be set)
   def set_element_reference(ref_id)
-    if project_header? or project_activity? or project_samples?
-      self.project_id = ref_id
-    elsif experiment?
-      self.experiment_id = ref_id
-    elsif my_module? or my_module_activity? or my_module_samples?
-      self.my_module_id = ref_id
-    elsif step? or step_comments?
-      self.step_id = ref_id
-    elsif result_asset? or result_table? or result_text? or result_comments?
-      self.result_id = ref_id
-    elsif step_checklist?
-      self.checklist_id = ref_id
-    elsif step_asset?
-      self.asset_id = ref_id
-    elsif step_table?
-      self.table_id = ref_id
+    # check = true
+    # ReportExtends::REFERENCE_ELEMENTS_IDS.each do |element|
+    #   next unless check
+    #   ReportExtends::SET_ELEMENT_REFERENCES_LIST.each do |el_ref|
+    #     check = el_ref.check(self)
+    #     next unless check
+    #     check = false
+    #     self.send("#{element}=", ref_id)
+    #   end
+    # end
+    ReportExtends::SET_ELEMENT_REFERENCES_LIST.each do |el_ref|
+      check = el_ref.check(self)
+      next unless check
+      self.send("#{el_ref.element}=", ref_id)
     end
   end
 

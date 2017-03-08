@@ -10,7 +10,7 @@ class Extends
   # > end
   # >
 
-  # Notification types. Should not be freezed, as modules might append to this.
+  # Extends enum types. Should not be freezed, as modules might append to this.
   NOTIFICATIONS_TYPES = { assignment: 0,
                           recent_changes: 1,
                           system_message: 2 }
@@ -34,4 +34,5 @@ class Extends
                            project_activity: 13, # TODO
                            project_samples: 14, # TODO
                            experiment: 15 }
+
 end
