@@ -314,18 +314,18 @@ module PermissionHelper
   end
 
   def can_edit_project_comment(comment)
-    comment.project_comment.present? &&
+    comment.project.present? &&
       (
         comment.user == current_user ||
-        is_owner_of_project(comment.project_comment.project)
+        is_owner_of_project(comment.project)
       )
   end
 
   def can_delete_project_comment(comment)
-    comment.project_comment.present? &&
+    comment.project.present? &&
       (
         comment.user == current_user ||
-        is_owner_of_project(comment.project_comment.project)
+        is_owner_of_project(comment.project)
       )
   end
 
@@ -503,21 +503,21 @@ module PermissionHelper
   end
 
   def can_edit_module_comment(comment)
-    comment.my_module_comment.present? &&
+    comment.my_module.present? &&
       (
         comment.user == current_user ||
         is_owner_of_project(
-          comment.my_module_comment.my_module.experiment.project
+          comment.my_module.experiment.project
         )
       )
   end
 
   def can_delete_module_comment(comment)
-    comment.my_module_comment.present? &&
+    comment.my_module.present? &&
       (
         comment.user == current_user ||
         is_owner_of_project(
-          comment.my_module_comment.my_module.experiment.project
+          comment.my_module.experiment.project
         )
       )
   end
@@ -555,21 +555,21 @@ module PermissionHelper
   end
 
   def can_edit_result_comment_in_module(comment)
-    comment.result_comment.present? &&
+    comment.result.present? &&
       (
         comment.user == current_user ||
         is_owner_of_project(
-          comment.result_comment.result.my_module.experiment.project
+          comment.result.my_module.experiment.project
         )
       )
   end
 
   def can_delete_result_comment_in_module(comment)
-    comment.result_comment.present? &&
+    comment.result.present? &&
       (
         comment.user == current_user ||
         is_owner_of_project(
-          comment.result_comment.result.my_module.experiment.project
+          comment.result.my_module.experiment.project
         )
       )
   end
@@ -953,9 +953,9 @@ module PermissionHelper
   end
 
   def can_edit_step_comment_in_protocol(comment)
-    return false if comment.step_comment.blank?
+    return false if comment.step.blank?
 
-    protocol = comment.step_comment.step.protocol
+    protocol = comment.step.protocol
     if protocol.in_module?
       comment.user == current_user ||
         is_owner_of_project(
@@ -967,9 +967,9 @@ module PermissionHelper
   end
 
   def can_delete_step_comment_in_protocol(comment)
-    return false if comment.step_comment.blank?
+    return false if comment.step.blank?
 
-    protocol = comment.step_comment.step.protocol
+    protocol = comment.step.protocol
     if protocol.in_module?
       comment.user == current_user ||
         is_owner_of_project(

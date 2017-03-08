@@ -22,10 +22,7 @@ class Result < ActiveRecord::Base
   has_one :result_text,
     inverse_of: :result,
     dependent: :destroy
-  has_many :result_comments,
-    inverse_of: :result,
-    dependent: :destroy
-  has_many :comments, through: :result_comments
+  has_many :result_comments, foreign_key: :associated_id, dependent: :destroy
   has_many :report_elements, inverse_of: :result, dependent: :destroy
 
   accepts_nested_attributes_for :result_text
@@ -74,11 +71,11 @@ class Result < ActiveRecord::Base
 
   def last_comments(last_id = 1, per_page = Constants::COMMENTS_SEARCH_LIMIT)
     last_id = Constants::INFINITY if last_id <= 1
-    comments = Comment.joins(:result_comment)
-                      .where(result_comments: { result_id: id })
-                      .where('comments.id <  ?', last_id)
-                      .order(created_at: :desc)
-                      .limit(per_page)
+    comments = ResultComment.joins(:result)
+                            .where(results: { id: id })
+                            .where('comments.id <  ?', last_id)
+                            .order(created_at: :desc)
+                            .limit(per_page)
     comments.reverse
   end
 

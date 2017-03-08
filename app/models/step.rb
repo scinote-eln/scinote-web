@@ -16,9 +16,7 @@ class Step < ActiveRecord::Base
   belongs_to :protocol, inverse_of: :steps
   has_many :checklists, inverse_of: :step,
     dependent: :destroy
-  has_many :step_comments, inverse_of: :step,
-    dependent: :destroy
-  has_many :comments, through: :step_comments
+  has_many :step_comments, foreign_key: :associated_id, dependent: :destroy
   has_many :step_assets, inverse_of: :step,
     dependent: :destroy
   has_many :assets, through: :step_assets
@@ -77,9 +75,8 @@ class Step < ActiveRecord::Base
   def destroy(current_user)
     @current_user = current_user
 
-    # Store IDs of comments, assets & tables so they
+    # Store IDs of assets & tables so they
     # can be destroyed in after_destroy
-    @c_ids = self.comments.collect { |c| c.id }
     @a_ids = self.assets.collect { |a| a.id }
     @t_ids = self.tables.collect { |t| t.id }
 
@@ -92,11 +89,11 @@ class Step < ActiveRecord::Base
 
   def last_comments(last_id = 1, per_page = Constants::COMMENTS_SEARCH_LIMIT)
     last_id = Constants::INFINITY if last_id <= 1
-    comments = Comment.joins(:step_comment)
-                      .where(step_comments: { step_id: id })
-                      .where('comments.id <  ?', last_id)
-                      .order(created_at: :desc)
-                      .limit(per_page)
+    comments = StepComment.joins(:step)
+                          .where(steps: { id: id })
+                          .where('comments.id <  ?', last_id)
+                          .order(created_at: :desc)
+                          .limit(per_page)
     comments.reverse
   end
 
@@ -116,8 +113,6 @@ class Step < ActiveRecord::Base
   protected
 
   def cascade_after_destroy
-    Comment.destroy(@c_ids)
-    @c_ids = nil
     # Assets already deleted by here
     @a_ids = nil
     Table.destroy(@t_ids)

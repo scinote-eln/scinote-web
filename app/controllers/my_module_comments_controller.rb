@@ -43,12 +43,14 @@ class MyModuleCommentsController < ApplicationController
   end
 
   def create
-    @comment = Comment.new(
+    @comment = TaskComment.new(
       message: comment_params[:message],
-      user: current_user)
+      user: current_user,
+      my_module: @my_module
+    )
 
     respond_to do |format|
-      if (@comment.valid? && @my_module.comments << @comment)
+      if @comment.valid? && @comment.save
         # Generate activity
         Activity.create(
           type_of: :add_comment_to_module,
@@ -176,12 +178,12 @@ class MyModuleCommentsController < ApplicationController
   end
 
   def check_edit_permissions
-    @comment = Comment.find_by_id(params[:id])
+    @comment = TaskComment.find_by_id(params[:id])
     render_403 unless @comment.present? && can_edit_module_comment(@comment)
   end
 
   def check_destroy_permissions
-    @comment = Comment.find_by_id(params[:id])
+    @comment = TaskComment.find_by_id(params[:id])
     render_403 unless @comment.present? && can_delete_module_comment(@comment)
   end
 
