@@ -1,6 +1,7 @@
 module ReportActions
   extend ActiveSupport::Concern
 
+
   def in_params?(val)
     params.include? val and params[val] == '1'
   end

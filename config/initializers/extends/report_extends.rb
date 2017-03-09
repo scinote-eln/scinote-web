@@ -22,27 +22,21 @@ module ReportExtends
   ModuleElement = Struct.new(:element,
                              :children,
                              :locals,
-                             :coll,
-                             :options) do
-    def initialize(element, children, locals, coll = {}, options = {})
-      super(element, children, locals, coll, options)
+                             :coll) do
+    def initialize(element, children, locals, coll = nil)
+      super(element, children, locals, coll)
     end
 
     def collection(my_module)
-      coll.call(my_module)
+      coll.call(my_module) if coll
     end
 
     def parse_locals(values)
       container = {}
-      values.concat(add_local_values) unless add_local_values == :no_value
       locals.each_with_index do |local, index|
         container[local] = values[index]
       end
       container
-    end
-
-    def add_local_values
-      options.fetch(:add_values) { :no_value }
     end
   end
 
