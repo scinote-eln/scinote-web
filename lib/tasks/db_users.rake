@@ -111,7 +111,7 @@ namespace :db do
           email,
           password,
           true,
-          create_team ? Constants::DEFAULT_PRIVATE_ORG_NAME : nil,
+          create_team ? Constants::DEFAULT_PRIVATE_TEAM_NAME : nil,
           team_ids
         )
 
