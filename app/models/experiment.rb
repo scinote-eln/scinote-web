@@ -672,7 +672,7 @@ class Experiment < ActiveRecord::Base
             um.shift  # remove current module
             ums = um.map{|m| m.samples}.flatten.uniq
             s.samples.each do |sample|
-              dm.samples.delete(sample) if ums.exclude? sample
+              dm.samples.destroy(sample) if ums.exclude? sample
             end
           end
         end
