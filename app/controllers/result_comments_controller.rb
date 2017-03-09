@@ -47,7 +47,7 @@ class ResultCommentsController < ApplicationController
     )
 
     respond_to do |format|
-      if @comment.valid? && @comment.save
+      if @comment.save
 
         # Generate activity
         Activity.create(

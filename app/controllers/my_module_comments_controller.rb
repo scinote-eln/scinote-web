@@ -50,7 +50,7 @@ class MyModuleCommentsController < ApplicationController
     )
 
     respond_to do |format|
-      if @comment.valid? && @comment.save
+      if @comment.save
         # Generate activity
         Activity.create(
           type_of: :add_comment_to_module,

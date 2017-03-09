@@ -46,7 +46,7 @@ class StepCommentsController < ApplicationController
     )
 
     respond_to do |format|
-      if @comment.valid? && @comment.save
+      if @comment.save
         # Generate activity (this can only occur in module,
         # but nonetheless check if my module is not nil)
         if @protocol.in_module?
