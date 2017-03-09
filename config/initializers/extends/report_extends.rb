@@ -16,15 +16,16 @@ module ReportExtends
   # :locals => an array of names of local variables which are passed in the view
   # :coll => a prock which the my_module is passed and have to return a
   #          collection of element
-  # :options => a hash of options for now only :add_values which
-  #             will add a value to locals
+  # :singular => true by defaut change the enum type to singular
+  #              needed when querying partials by name
 
   ModuleElement = Struct.new(:element,
                              :children,
                              :locals,
-                             :coll) do
-    def initialize(element, children, locals, coll = nil)
-      super(element, children, locals, coll)
+                             :coll,
+                             :singular) do
+    def initialize(element, children, locals, coll = nil, singular = true)
+      super(element, children, locals, coll, singular)
     end
 
     def collection(my_module)
@@ -37,6 +38,11 @@ module ReportExtends
         container[local] = values[index]
       end
       container
+    end
+
+    def file_name
+      return element.to_s unless singular
+      element.to_s.singularize
     end
   end
 

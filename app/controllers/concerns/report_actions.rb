@@ -89,7 +89,7 @@ module ReportActions
           res << el
         end
       else
-        file_name = contents.element.to_s.singularize
+        file_name = contents.file_name
         file_name = contents.element if contents.element == :samples
         res << generate_el(
           "reports/elements/my_module_#{file_name}_element.html.erb",
