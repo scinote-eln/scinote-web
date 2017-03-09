@@ -78,6 +78,7 @@ module ReportExtends
   # method: render_report_element
 
   # adds :order local to listed elements views
+  # ADD REPORT ELEMENT TYPE WHICH YOU WANT TO PASS 'ORDER' LOCAL IN THE PARTIAL
   SORTED_ELEMENTS = %w(my_module_activity
                        my_module_samples
                        step_comments

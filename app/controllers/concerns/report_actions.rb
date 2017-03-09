@@ -1,7 +1,6 @@
 module ReportActions
   extend ActiveSupport::Concern
 
-
   def in_params?(val)
     params.include? val and params[val] == '1'
   end
@@ -83,7 +82,9 @@ module ReportActions
                                           .singularize}_element.html.erb",
             contents.parse_locals([report_el])
           )
-          el[:children] = generate_step_contents_json(report_el) if contents.element == :step
+          if contents.element == :step
+            el[:children] = generate_step_contents_json(report_el)
+          end
           el[:children] = generate_result_contents_json(report_el)
           res << el
         end

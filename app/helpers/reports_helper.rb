@@ -33,13 +33,16 @@ module ReportsHelper
     end
 
     file_name = element.type_of
-    file_name = "my_module_#{element.type_of}" if element.type_of.in? %w(step result_asset result_table result_text)
+    if element.type_of.in? %w(step result_asset result_table result_text)
+      file_name = "my_module_#{element.type_of.singularize}"
+    end
     view = "reports/elements/#{file_name}_element.html.erb"
 
     locals = provided_locals.nil? ? {} : provided_locals.clone
     locals[:children] = children_html
 
     # ReportExtends is located in config/initializers/extends/report_extends.rb
+
     ReportElement.type_ofs.keys.each do |type|
       next unless element.send("#{type}?")
       local_sym = type.split('_').last.to_sym

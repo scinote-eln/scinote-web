@@ -15,8 +15,12 @@ class ReportElement < ActiveRecord::Base
   belongs_to :report, inverse_of: :report_elements
 
   # Hierarchical structure representation
-  has_many :children, -> { order(:position) }, class_name: "ReportElement", foreign_key: "parent_id", dependent: :destroy
-  belongs_to :parent, class_name: "ReportElement"
+  has_many :children,
+           -> { order(:position) },
+           class_name: 'ReportElement',
+           foreign_key: 'parent_id',
+           dependent: :destroy
+  belongs_to :parent, class_name: 'ReportElement'
 
   # References to various report entities
   belongs_to :project, inverse_of: :report_elements
@@ -49,16 +53,6 @@ class ReportElement < ActiveRecord::Base
 
   # Set the element reference (previously, element's type_of must be set)
   def set_element_reference(ref_id)
-    # check = true
-    # ReportExtends::REFERENCE_ELEMENTS_IDS.each do |element|
-    #   next unless check
-    #   ReportExtends::SET_ELEMENT_REFERENCES_LIST.each do |el_ref|
-    #     check = el_ref.check(self)
-    #     next unless check
-    #     check = false
-    #     self.send("#{element}=", ref_id)
-    #   end
-    # end
     ReportExtends::SET_ELEMENT_REFERENCES_LIST.each do |el_ref|
       check = el_ref.check(self)
       next unless check
@@ -97,7 +91,8 @@ class ReportElement < ActiveRecord::Base
       table
     ].count { |r| r.present? }
     if num_of_refs != 1
-      errors.add(:base, "Report element must have exactly one element reference.")
+      errors.add(:base,
+                 'Report element must have exactly one element reference.')
     end
   end
 end
