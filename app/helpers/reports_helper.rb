@@ -49,7 +49,7 @@ module ReportsHelper
       local_sym = type
                   .split('_')
                   .first
-                  .to_sym if type.in? ReportExtends::RESULT_ELEMENTS
+                  .to_sym if type.in? ReportExtends::FIRST_PART_ELEMENTS
       local_sym = :my_module if type.in? ReportExtends::MY_MODULE_ELEMENTS
       locals[local_sym] = element.element_reference
       locals[:order] = element

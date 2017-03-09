@@ -84,8 +84,9 @@ module ReportActions
           )
           if contents.element == :step
             el[:children] = generate_step_contents_json(report_el)
+          elsif contents.element == :result
+            el[:children] = generate_result_contents_json(report_el)
           end
-          el[:children] = generate_result_contents_json(report_el)
           res << el
         end
       else
@@ -103,7 +104,7 @@ module ReportActions
 
   def generate_step_contents_json(step)
     res = []
-    if in_params? :step_checklists then
+    if in_params? :step_checklists
       step.checklists.each do |checklist|
         res << generate_new_el(false)
         res << generate_el(
@@ -112,7 +113,7 @@ module ReportActions
         )
       end
     end
-    if in_params? :step_assets then
+    if in_params? :step_assets
       step.assets.each do |asset|
         res << generate_new_el(false)
         res << generate_el(
@@ -121,7 +122,7 @@ module ReportActions
         )
       end
     end
-    if in_params? :step_tables then
+    if in_params? :step_tables
       step.tables.each do |table|
         res << generate_new_el(false)
         res << generate_el(
@@ -130,7 +131,7 @@ module ReportActions
         )
       end
     end
-    if in_params? :step_comments then
+    if in_params? :step_comments
       res << generate_new_el(false)
       res << generate_el(
         'reports/elements/step_comments_element.html.erb',

@@ -93,11 +93,12 @@ module ReportExtends
   MY_MODULE_ELEMENTS = %w(my_module my_module_activity my_module_samples)
 
   # sets local name to first element of the listed elements
-  RESULT_ELEMENTS = %w(result_comments
-                       result_text
-                       result_asset
-                       result_table
-                       project_header)
+  FIRST_PART_ELEMENTS = %w(result_comments
+                           result_text
+                           result_asset
+                           result_table
+                           project_header
+                           step_comments)
 
   # path: app/models/report_element.rb
   # method: set_element_reference

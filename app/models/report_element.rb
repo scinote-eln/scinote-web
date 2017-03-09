@@ -57,6 +57,7 @@ class ReportElement < ActiveRecord::Base
       check = el_ref.check(self)
       next unless check
       self.send("#{el_ref.element}=", ref_id)
+      break
     end
   end
 
@@ -80,16 +81,14 @@ class ReportElement < ActiveRecord::Base
   private
 
   def has_one_of_referenced_elements
-    num_of_refs = [
-      project,
-      experiment,
-      my_module,
-      step,
-      result,
-      checklist,
-      asset,
-      table
-    ].count { |r| r.present? }
+    num_of_refs = [project,
+                   experiment,
+                   my_module,
+                   step,
+                   result,
+                   checklist,
+                   asset,
+                   table].count { |r| r.present? }
     if num_of_refs != 1
       errors.add(:base,
                  'Report element must have exactly one element reference.')
