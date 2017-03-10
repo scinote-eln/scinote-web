@@ -356,7 +356,7 @@ module PermissionHelper
   # ---- EXPERIMENT PERMISSIONS ----
 
   def can_view_experiment_actions(experiment)
-    can_edit_experiment(experiment) &&
+    can_edit_experiment(experiment) ||
       can_archive_experiment(experiment)
   end
 
