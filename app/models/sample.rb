@@ -14,8 +14,6 @@ class Sample < ActiveRecord::Base
   belongs_to :sample_type, inverse_of: :samples
   has_many :sample_my_modules, inverse_of: :sample, dependent: :destroy
   has_many :my_modules, through: :sample_my_modules
-  has_many :sample_comments, inverse_of: :sample, dependent: :destroy
-  has_many :comments, through: :sample_comments, dependent: :destroy
   has_many :sample_custom_fields, inverse_of: :sample, dependent: :destroy
   has_many :custom_fields, through: :sample_custom_fields
 

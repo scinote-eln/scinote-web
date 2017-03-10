@@ -1,4 +1,4 @@
-<%= bootstrap_form_for(@comment, url: @update_url, remote: true, html: { method: :put, class: 'comment-form edit-comment-form' }, data: { role: 'edit-comment-message-form' }) do |f| %>
+<%= bootstrap_form_for(:comment, url: @update_url, remote: true, html: { method: :put, class: 'comment-form edit-comment-form' }, data: { role: 'edit-comment-message-form' }) do |f| %>
   <div class="form-group">
     <div class="input-group">
       <%= f.smart_text_area :message,

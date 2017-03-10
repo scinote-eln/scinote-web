@@ -23,8 +23,7 @@ class MyModule < ActiveRecord::Base
   has_many :results, inverse_of: :my_module, :dependent => :destroy
   has_many :my_module_tags, inverse_of: :my_module, :dependent => :destroy
   has_many :tags, through: :my_module_tags
-  has_many :my_module_comments, inverse_of: :my_module, :dependent => :destroy
-  has_many :comments, through: :my_module_comments
+  has_many :task_comments, foreign_key: :associated_id, dependent: :destroy
   has_many :inputs, :class_name => 'Connection', :foreign_key => "input_id", inverse_of: :to, :dependent => :destroy
   has_many :outputs, :class_name => 'Connection', :foreign_key => "output_id", inverse_of: :from, :dependent => :destroy
   has_many :my_modules, through: :outputs, source: :to
@@ -176,11 +175,11 @@ class MyModule < ActiveRecord::Base
   # using last comment id and per_page parameters.
   def last_comments(last_id = 1, per_page = Constants::COMMENTS_SEARCH_LIMIT)
     last_id = Constants::INFINITY if last_id <= 1
-    comments = Comment.joins(:my_module_comment)
-                      .where(my_module_comments: { my_module_id: id })
-                      .where('comments.id <  ?', last_id)
-                      .order(created_at: :desc)
-                      .limit(per_page)
+    comments = TaskComment.joins(:my_module)
+                          .where(my_modules: { id: id })
+                          .where('comments.id <  ?', last_id)
+                          .order(created_at: :desc)
+                          .limit(per_page)
     comments.reverse
   end
 

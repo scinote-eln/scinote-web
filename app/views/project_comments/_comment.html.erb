@@ -18,7 +18,7 @@
           <li>
             <a href="#"
                data-action="edit-comment"
-               data-url="<%= edit_project_project_comment_path(comment.project_comment.project, comment, format: :json) %>">
+               data-url="<%= edit_project_project_comment_path(comment.project, comment, format: :json) %>">
               <%= t('comments.options_dropdown.edit') %>
             </a>
           </li>
@@ -27,7 +27,7 @@
           <li>
             <a href="#"
                data-action="delete-comment"
-               data-url="<%= project_project_comment_path(comment.project_comment.project, comment, format: :json) %>"
+               data-url="<%= project_project_comment_path(comment.project, comment, format: :json) %>"
                data-confirm-message="<%= t('comments.delete_confirm') %>">
               <%= t('comments.options_dropdown.delete') %>
             </a>

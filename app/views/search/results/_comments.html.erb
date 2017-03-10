@@ -2,13 +2,13 @@
 
   <p>
     <span class="glyphicon glyphicon-comment"></span>
-    <% if comment.project_comment.present? %>
+    <% if comment.is_a?(ProjectComment) && comment.project.present? %>
       <%=t "search.index.comments.project" %>
-    <% elsif comment.my_module_comment.present? %>
+    <% elsif comment.is_a?(TaskComment) && comment.my_module.present? %>
       <%=t "search.index.comments.my_module" %>
-    <% elsif comment.step_comment.present? %>
+    <% elsif comment.is_a?(StepComment) && comment.step.present? %>
       <%=t "search.index.comments.step" %>
-    <% elsif comment.result_comment.present? %>
+    <% elsif comment.is_a?(ResultComment) && comment.result.present? %>
       <%=t "search.index.comments.result" %>
     <% end %>
   </p>
@@ -31,29 +31,29 @@
   </p>
 
   <p>
-    <% if comment.project_comment.present? %>
+    <% if comment.is_a?(ProjectComment) && comment.project.present? %>
       <span>
         <%=t "search.index.project" %>
         <%= render partial: "search/results/partials/project_text.html.erb",
-                    locals: { project: comment.project_comment.project, link_to_page: :root } %>
+                    locals: { project: comment.project, link_to_page: :root } %>
       </span>
-    <% elsif comment.my_module_comment.present? %>
+    <% elsif comment.is_a?(TaskComment) && comment.my_module.present? %>
       <span>
         <%=t "search.index.module" %>
         <%= render partial: "search/results/partials/my_module_text.html.erb",
-                    locals: { my_module: comment.my_module_comment.my_module, link_to_page: :canvas } %>
+                    locals: { my_module: comment.my_module, link_to_page: :canvas } %>
       </span>
-    <% elsif comment.step_comment.present? %>
+    <% elsif comment.is_a?(StepComment) && comment.step.present? %>
       <span>
         <%=t "search.index.step" %>
         <%= render partial: "search/results/partials/step_text.html.erb",
-                   locals: { step: comment.step_comment.step, target: :comment } %>
+                   locals: { step: comment.step, target: :comment } %>
       </span>
-    <% elsif comment.result_comment.present? %>
+    <% elsif comment.is_a?(ResultComment) && comment.result.present? %>
       <span>
         <%=t "search.index.result" %>
         <%= render partial: "search/results/partials/result_text.html.erb",
-                   locals: { result: comment.result_comment.result, target: :comment } %>
+                   locals: { result: comment.result, target: :comment } %>
       </span>
     <% end %>
   </p>
