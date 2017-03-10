@@ -1,10 +1,10 @@
 <ol class="breadcrumb breadcrumb-protocols-manager">
   <% if action_name == "index" %>
     <li class="active"><%= t("protocols.nav.breadcrumbs.manager") %></li>
-    <li class="disabled"><%= current_organization.name %></li>  
+    <li class="disabled"><%= current_team.name %></li>
   <% else %>
-    <li><%= link_to t("protocols.nav.breadcrumbs.manager"), protocols_path(organization: current_organization, type: type) %></li>
-    <li class="active"><%= current_organization.name %></li>
+    <li><%= link_to t("protocols.nav.breadcrumbs.manager"), protocols_path(team: current_team, type: type) %></li>
+    <li class="active"><%= current_team.name %></li>
   <% end %>
   <% if action_name == "edit" %>
     <li class="active">

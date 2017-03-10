@@ -1,0 +1,21 @@
+<ol class="breadcrumb breadcrumb-teams">
+  <% if action_name == "index" %>
+    <li class="active">
+      <%= t("users.settings.teams.breadcrumbs.all") %>
+    </li>
+  <% else %>
+    <li>
+      <%= link_to t("users.settings.teams.breadcrumbs.all"), teams_path %>
+    </li>
+  <% end %>
+
+  <% if action_name == 'show' %>
+    <li class="active">
+      <%= @team.name %>
+    </li>
+  <% elsif action_name == 'new' || action_name == 'create' %>
+    <li class="active">
+      <%= t('users.settings.teams.breadcrumbs.new_team') %>
+    </li>
+  <% end %>
+</ol>

@@ -1,10 +1,10 @@
 <!-- Modal footer for Manage users modal -->
 <span class="pull-left">
-  <% if is_admin_of_organization(@project.organization) %>
-    <%= link_to t("projects.index.modal_manage_users.invite_users_link"), organization_path(organization_id: @project.organization.id) %>
-    <span><%=t "projects.index.modal_manage_users.invite_users_details", organization: @project.organization.name %></span>
+  <% if is_admin_of_team(@project.team) %>
+    <%= link_to t('projects.index.modal_manage_users.invite_users_link'), team_path(@project.team.id) %>
+    <span><%=t 'projects.index.modal_manage_users.invite_users_details', team: @project.team.name %></span>
   <% else %>
-    <i><%=t "projects.index.modal_manage_users.contact_admins", organization: @project.organization.name %></i>
+    <i><%=t 'projects.index.modal_manage_users.contact_admins', team: @project.team.name %></i>
   <% end %>
 </span>
-<button type="button" class="btn btn-default" data-dismiss="modal"><%=t "general.close" %></button>
+<button type="button" class="btn btn-default" data-dismiss="modal"><%=t 'general.close' %></button>

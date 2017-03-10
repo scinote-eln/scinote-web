@@ -88,7 +88,7 @@ table {
     margin-left: 12px;
     padding: 1px 6px;
     position: relative;
-    z-index: $infinity;
+    z-index: 1;
   }
 }
 
@@ -641,7 +641,7 @@ a[data-toggle="tooltip"] {
   margin-bottom: 50px;
 }
 
-.breadcrumb-organizations {
+.breadcrumb-teams {
   background-color: $color-concrete;
   margin-bottom: 15px;
 }
@@ -732,8 +732,17 @@ a[data-toggle="tooltip"] {
   text-align: center;
 }
 
+// Teams datatable
+.teams-datatable {
+  margin-bottom: 20px;
+
+  .dataTables_paginate {
+    float: right;
+  }
+}
+
 /** Users datatable */
-.panel-organization-users .panel-body {
+.panel-team-users .panel-body {
   padding-bottom: 0;
 }
 
@@ -749,8 +758,8 @@ a[data-toggle="tooltip"] {
     float: right;
   }
 
-  .dropdown-organizations-user {
-    .dropdown-menu li.user-organization-role {
+  .dropdown-teams-user {
+    .dropdown-menu li.user-team-role {
       & > :first-child {
         padding-left: 10px;
       }
@@ -854,6 +863,14 @@ a[data-toggle="tooltip"] {
 
   .dataTables_paginate {
     float: right;
+
+    .pagination {
+      margin: 2px 0;
+    }
+  }
+
+  .dataTables_info {
+    padding-top: 8px;
   }
 }
 
@@ -1139,6 +1156,25 @@ ul.content-module-activities {
   }
 }
 
+// Preview protocol modal
+@media (min-width: 768px) {
+  #protocol-preview-modal .modal-dialog {
+    width: 70%;
+  }
+}
+
+#protocol-preview-modal .modal-dialog {
+  .modal-body {
+    max-height: 75vh;
+    overflow-y: auto;
+    width: 100%;
+
+    .ql-editor {
+      min-height: initial;
+    }
+  }
+}
+
 /* Import protocol/s modal */
 #import-protocol-modal .modal-dialog {
   width: 70%;
@@ -1286,6 +1322,10 @@ table.dataTable {
   tbody > tr > .selected {
     background-color: $color-alto !important;
     color: $color-emperor !important;
+
+    a {
+      color: $color-theme-primary !important;
+    }
   }
 
   .sorting_desc,
@@ -1450,14 +1490,6 @@ html.turbolinks-progress-bar::before {
   visibility: visible;
 }
 
-.asset-loading-spinner {
-  width: 20px;
-  height: 20px;
-  display: inline-block;
-  margin-right: 5px;
-}
-
-
 // Comments
 
 .comment-more {
@@ -1520,6 +1552,10 @@ html.turbolinks-progress-bar::before {
   }
 }
 
+.avatar-file-upload input[type=file] {
+  max-width: 100%;
+}
+
 .modal-invite-users {
   .bootstrap-tagsinput {
     min-width: 450px;
@@ -1536,7 +1572,7 @@ html.turbolinks-progress-bar::before {
     padding-right: 10px;
   }
 
-  .org-selector .heading {
+  .team-selector .heading {
     margin-top: 15px;
     margin-bottom: 5px;
 
@@ -1703,4 +1739,217 @@ th.custom-field .modal-tooltiptext {
 
 .disable-click {
   pointer-events: none;
+}
+
+// AtWho (smart annotations)
+
+// <Custom atwho style>
+.atwho-view {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: none;
+  margin-top: 18px;
+  background: $color-white;
+  color: $color-black;
+  border: 1px solid $color-emperor;
+  border-radius: 3px;
+  box-shadow: 0 0 5px $color-cloud;
+  min-width: 520px;
+  max-height: 200px;
+  overflow: auto;
+  z-index: 11110 !important;
+
+  small {
+    font-size: smaller;
+    color: $color-emperor;
+    font-weight: normal;
+  }
+
+  strong {
+    color: $color-theme-primary;
+  }
+
+  .cur {
+    background: $color-theme-primary;
+    color: $color-white;
+
+    small {
+      color: $color-white;
+    }
+
+    strong {
+      color: $color-white;
+      font: bold;
+    }
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: auto;
+
+    li {
+      display: block;
+      padding: 5px 10px;
+      border-bottom: 1px solid $color-emperor;
+      cursor: pointer;
+    }
+  }
+}
+// <End of overrides>
+
+.atwho-header-res {
+  padding-top: 3px;
+  padding-bottom: 7px;
+  height: 34px;
+  background-color: $color-gallery;
+  border-bottom: 1px solid $color-emperor;
+  clear: both;
+
+  > div {
+    display: inline;
+  }
+
+  .title {
+    float: left;
+    margin-left: 15px;
+
+    .btn {
+      border-radius: 4px;
+      margin-right: 5px;
+      padding: 3px;
+    }
+
+    .btn:last-child {
+      margin-right: 20px;
+    }
+
+    .btn-default {
+      background-color: transparent;
+    }
+  }
+
+  .title-user {
+    padding-top: 4px;
+  }
+
+  .help {
+    float: right;
+    padding-top: 4px;
+
+    div {
+      display: inline;
+      margin-right: 15px;
+      font-size: smaller;
+    }
+
+    div strong {
+      color: $color-black;
+    }
+
+    .dismiss {
+      color: $color-emperor;
+    }
+
+    .dismiss:hover {
+      color: $color-black;
+      cursor: pointer;
+    }
+  }
+}
+
+.atwho-li-user {
+
+  .avatar {
+    border-radius: 50%;
+    margin-left: 5px;
+    margin-right: 10px;
+    height: 20px;
+    width: 20px;
+  }
+}
+
+.atwho-li-res {
+
+  .glyphicon-tint {
+    margin-left: 5px;
+    margin-right: 5px;
+  }
+
+  .res-type {
+    border: 1px solid $color-black;
+    border-radius: 4px;
+    font-weight: 600;
+    margin-left: 5px;
+    margin-right: 5px;
+    padding: 0 2px;
+    text-transform: capitalize;
+  }
+
+  .res-name {
+    font-weight: 600;
+    margin-right: 5px;
+  }
+
+  .res-description {
+    color: $color-emperor;
+    font-size: 10px;
+  }
+}
+
+.sa-type {
+  border: 1px solid $color-black;
+  border-radius: 4px;
+  color: $color-black;
+  font-weight: 600;
+  padding: 0 2px;
+  text-decoration: none;
+  text-transform: capitalize;
+
+  &:hover {
+    text-decoration: none;
+  }
+}
+
+.atwho-user-popover {
+  cursor: pointer;
+  padding-left: 5px;
+}
+
+.atwho-user-img-popover {
+  cursor: not-allowed;
+}
+
+.atwho-no-results {
+  padding: 5px 10px;
+}
+
+.popover {
+  border-radius: 3px;
+  min-width: 450px;
+  padding: 15px 10px;
+  z-index: 9999;
+
+  h5 {
+    font-weight: bold;
+    line-height: 0;
+  }
+
+  .silver {
+    color: $color-silver-chalice;
+  }
+
+  p {
+    max-width: 260px;
+    word-wrap: break-word;
+  }
+}
+
+.popover-remove {
+  cursor: pointer;
+}
+
+.my_module-state-buttons {
+  padding-top: 6px;
 }

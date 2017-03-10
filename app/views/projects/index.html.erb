@@ -10,7 +10,7 @@
           <h4 class="modal-title" id="new-project-modal-label"><%= t("projects.index.modal_new_project.modal_title") %></h4>
         </div>
         <div class="modal-body">
-          <%= render partial: "new.html.erb", locals: { form: f, organizations: @organizations } %>
+          <%= render partial: "new.html.erb", locals: { form: f, teams: @teams } %>
         </div>
         <div class="modal-footer">
           <%= f.submit t("projects.index.modal_new_project.create"), class: "btn btn-primary" %>
@@ -64,7 +64,7 @@
       </a>
 
       <!-- new project button -->
-      <% if @organizations.length > 0 %>
+      <% if @teams.length > 0 %>
         <a class="btn btn-primary pull-right" id="new-project-btn">
           <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
           <span class="hidden-xs"><%=t "projects.index.new" %></span>
@@ -81,7 +81,7 @@
         <ul class="dropdown-menu" aria-labelledby="sortMenu">
         <% ["new", "old", "atoz", "ztoa"].each do |sort| %>
           <% if @current_sort != sort %>
-          <li><a href="?<%= {organization: @current_organization_id, sort: sort}.reject{|k,v| v.to_s == "0"}.to_query %>"><%= t('projects.index.sort_' + sort) %></a></li>
+          <li><a href="?<%= {team: @current_team_id, sort: sort}.reject{|k,v| v.to_s == "0"}.to_query %>"><%= t('projects.index.sort_' + sort) %></a></li>
           <% else %>
           <li class="disabled"><a href="#"><%= t('projects.index.sort_' + sort) %></a></li>
           <% end %>
@@ -93,21 +93,21 @@
   </form>
 </div>
 
-<% if @organizations.length == 0 %>
-  <!-- Show link to organization management if member of
-  no organizations -->
+<% if @teams.length == 0 %>
+  <!-- Show link to team management if member of
+  no teams -->
   <div class="jumbotron">
-  <h2><%= t("projects.index.no_orgs.title") %></h2>
-  <p><%= t("projects.index.no_orgs.text") %></p>
-  <p>
-    <%= link_to t("projects.index.no_orgs.btn"), organizations_path, class: "btn btn-primary" %>
+  <h2><%=t 'projects.index.no_teams.title' %></h2>
+  <p><%=t 'projects.index.no_teams.text' %></p>
+  <p data-hook="projects-manage-teams-button">
+    <%= link_to t('projects.index.no_teams.btn'), teams_path, class: 'btn btn-primary' %>
   </p>
 </div>
 <% else %>
-  <h2 class="page-header"><%= current_organization.name %></h2>
-  <% @projects_by_orgs.each do |org, projects| %>
-    <%= render partial: "projects/index/org_projects",
-               locals: {org: org, projects: projects} %>
+  <h2 class="page-header"><%= current_team.name %></h2>
+  <% @projects_by_teams.each do |team, projects| %>
+    <%= render partial: "projects/index/team_projects",
+               locals: {team: team, projects: projects} %>
   <% end %>
 
 <% end %>

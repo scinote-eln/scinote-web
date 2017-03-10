@@ -1,4 +1,6 @@
 class CustomFieldsController < ApplicationController
+  include InputSanitizeHelper
+
   before_action :load_vars, only: [:update, :destroy, :destroy_html]
   before_action :load_vars_nested, only: [:create, :destroy_html]
   before_action :check_create_permissions, only: :create
@@ -7,7 +9,7 @@ class CustomFieldsController < ApplicationController
 
   def create
     @custom_field = CustomField.new(custom_field_params)
-    @custom_field.organization = @organization
+    @custom_field.team = @team
     @custom_field.user = current_user
 
     respond_to do |format|
@@ -15,12 +17,12 @@ class CustomFieldsController < ApplicationController
         format.json do
           render json: {
             id: @custom_field.id,
-            name: @custom_field.name,
+            name: escape_input(@custom_field.name),
             edit_url:
-              organization_custom_field_path(@organization, @custom_field),
+              team_custom_field_path(@team, @custom_field),
             destroy_html_url:
-              organization_custom_field_destroy_html_path(
-                @organization, @custom_field
+              team_custom_field_destroy_html_path(
+                @team, @custom_field
               )
           },
           status: :ok
@@ -89,12 +91,12 @@ class CustomFieldsController < ApplicationController
   end
 
   def load_vars_nested
-    @organization = Organization.find_by_id(params[:organization_id])
-    render_404 unless @organization
+    @team = Team.find_by_id(params[:team_id])
+    render_404 unless @team
   end
 
   def check_create_permissions
-    render_403 unless can_create_custom_field_in_organization(@organization)
+    render_403 unless can_create_custom_field_in_team(@team)
   end
 
   def check_update_permissions

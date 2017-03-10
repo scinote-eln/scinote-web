@@ -1,6 +1,6 @@
 <% provide(:head_title, t("projects.archive.head_title")) %>
 
-<% if @projects_by_orgs.length > 0 %>
+<% if @projects_by_teams.length > 0 %>
 <div id="projects-toolbar">
 
   <form class="form-inline" action="<%= projects_archive_path %>">
@@ -16,7 +16,7 @@
         <ul class="dropdown-menu" aria-labelledby="sortMenu">
         <% ["new", "old", "atoz", "ztoa"].each do |sort| %>
           <% if @current_sort != sort %>
-          <li><a href="?<%= {organization: @current_organization_id, sort: sort}.reject{|k,v| v.to_s == "0"}.to_query %>"><%= t('projects.index.sort_' + sort) %></a></li>
+          <li><a href="?<%= {team: @current_team_id, sort: sort}.reject{|k,v| v.to_s == "0"}.to_query %>"><%= t('projects.index.sort_' + sort) %></a></li>
           <% else %>
           <li class="disabled"><a href="#"><%= t('projects.index.sort_' + sort) %></a></li>
           <% end %>
@@ -28,8 +28,9 @@
   </form>
 </div>
 
-  <% @projects_by_orgs.each do |org, projects| %>
-    <%= render partial: "projects/archive/org_projects", locals: {org: org, projects: projects} %>
+  <% @projects_by_teams.each do |team, projects| %>
+    <%= render partial: 'projects/archive/team_projects',
+               locals: {team: team, projects: projects} %>
   <% end %>
 <% else %>
   <!-- Some spacing... -->

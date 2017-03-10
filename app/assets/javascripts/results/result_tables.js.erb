@@ -100,6 +100,7 @@ function formAjaxResultTable($form) {
     initHandsOnTables($result);
     toggleResultEditButtons(true);
     expandResult($result);
+    Comments.initialize();
   });
   $form.on("ajax:error", function(e, xhr, status, error) {
     var data = xhr.responseJSON;

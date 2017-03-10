@@ -14,11 +14,11 @@
       <!-- Breadcrumbs, displayed on small screens -->
       <ul class="breadcrumb hidden-sm hidden-md hidden-lg">
         <li>
-          <% if can_view_projects(@project.organization) %>
-            <a href="<%= projects_path :organization => @project.organization.id %>">
+          <% if can_view_projects(@project.team) %>
+            <a href="<%= projects_path :team => @project.team.id %>">
           <% end %>
           <span class="glyphicon glyphicon-folder-open"></span>
-          <% if can_view_projects(@project.organization) %>
+          <% if can_view_projects(@project.team) %>
             </a>
           <% end %>
         </li>
@@ -167,6 +167,9 @@
               </a>
             </li>
           <% end %>
+
+          <span data-hook="secondary-navigation-tabs"></span>
+
           <% if can_view_module_samples(@my_module) then %>
             <li id="module-samples-nav-tab" class="<%= "active" if is_module_samples? ||
                                                                    sample_types_page_my_module? ||
@@ -198,12 +201,12 @@
       <!-- Breadcrumbs, displayed on large screens -->
       <ul class="breadcrumb hidden-xs">
         <li>
-          <% if can_view_projects(@project.organization) %>
-            <a href="<%= projects_path :organization => @project.organization.id %>">
+          <% if can_view_projects(@project.team) %>
+            <a href="<%= projects_path :team => @project.team.id %>">
           <% end %>
-          <%= truncate(@project.organization.name,
+          <%= truncate(@project.team.name,
                        length: Constants::NAME_TRUNCATION_LENGTH) %>
-          <% if can_view_projects(@project.organization) %>
+          <% if can_view_projects(@project.team) %>
             </a>
           <% end %>
         </li>
@@ -259,7 +262,6 @@
           </li>
         <% end %>
       </ul>
-
     </div>
   </div>
 </nav>

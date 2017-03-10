@@ -16,7 +16,7 @@
       <div class="modal-body">
         <%= t'sample_groups.index.destroy_modal_body' %>
       </div>
-      <%= bootstrap_form_for [organization, sample_group], html: { method: :delete } do |f| %>
+      <%= bootstrap_form_for [team, sample_group], html: { method: :delete } do |f| %>
       <div class="modal-footer">
         <input type="submit"
                class="btn btn-danger"

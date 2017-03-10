@@ -8,6 +8,10 @@ module ActivityHelper
       title = truncate(activity_title, length: len)
     end
     message = message.gsub(/#{activity_title}/, title )
-    message.html_safe if message
+    sanitize_input(message) if message
+  end
+
+  def days_since_1970(dt)
+    dt.to_i / 86400
   end
 end

@@ -1,0 +1,21 @@
+<%= bootstrap_form_for user_team,
+                       url: destroy_user_team_path(user_team, format: :json),
+                       remote: :true,
+                       method: :delete,
+                       data: { id: 'destroy-user-team-form' } do |f| %>
+  <p><%= t("users.settings.user_teams.destroy_uo_message",
+           user: user_team.user.full_name,
+           team: user_team.team.name) %></p>
+  <% if user_team.user.confirmed? %>
+    <div class="alert alert-danger" role="alert">
+      <span class="glyphicon glyphicon-exclamation-sign"></span>
+      &nbsp;
+      <%= t("users.settings.user_teams.destroy_uo_alert_heading") %>
+      <ul>
+        <li><%= t("users.settings.user_teams.destroy_uo_alert_line_1") %></li>
+        <li><%= t("users.settings.user_teams.destroy_uo_alert_line_2").html_safe %></li>
+        <li><%= t("users.settings.user_teams.destroy_uo_alert_line_3") %></li>
+      </ul>
+    </div>
+  <% end %>
+<% end %>

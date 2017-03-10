@@ -33,33 +33,50 @@ class Experiment < ActiveRecord::Base
 
   scope :is_archived, ->(is_archived) { where("archived = ?", is_archived) }
 
-  def self.search(user, include_archived, query = nil, page = 1)
+  def self.search(
+    user,
+    include_archived,
+    query = nil,
+    page = 1,
+    current_team = nil
+  )
     project_ids =
       Project
       .search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
       .select('id')
 
     if query
-      a_query = query.strip
-      .gsub("_","\\_")
-      .gsub("%","\\%")
-      .split(/\s+/)
-      .map {|t|  "%" + t + "%" }
+      a_query = '%' + query.strip.gsub('_', '\\_').gsub('%', '\\%') + '%'
     else
       a_query = query
     end
 
-    if include_archived
+    if current_team
+      projects_ids =
+        Project
+        .search(user,
+                include_archived,
+                nil,
+                1,
+                current_team)
+        .select('id')
+
       new_query =
         Experiment
-          .where(project: project_ids)
-          .where_attributes_like([:name, :description], a_query)
+        .where('experiments.project_id IN (?)', projects_ids)
+        .where_attributes_like([:name], a_query)
+      return include_archived ? new_query : new_query.is_archived(false)
+    elsif include_archived
+      new_query =
+        Experiment
+        .where(project: project_ids)
+        .where_attributes_like([:name, :description], a_query)
     else
       new_query =
         Experiment
-          .is_archived(false)
-          .where(project: project_ids)
-          .where_attributes_like([:name, :description], a_query)
+        .is_archived(false)
+        .where(project: project_ids)
+        .where_attributes_like([:name, :description], a_query)
     end
 
     # Show all results if needed
@@ -96,7 +113,7 @@ class Experiment < ActiveRecord::Base
   end
 
   def unassigned_samples(assigned_samples)
-    Sample.where(organization_id: organization).where.not(id: assigned_samples)
+    Sample.where(team_id: team).where.not(id: assigned_samples)
   end
 
   def update_canvas(
@@ -381,11 +398,11 @@ class Experiment < ActiveRecord::Base
     result
   end
 
-  # Get projects where user is either owner or user in the same organization
+  # Get projects where user is either owner or user in the same team
   # as this experiment
   def projects_with_role_above_user(current_user)
-    organization = project.organization
-    projects = organization.projects.where(archived: false)
+    team = project.team
+    projects = team.projects.where(archived: false)
 
     current_user.user_projects
                 .where(project: projects)
@@ -394,7 +411,7 @@ class Experiment < ActiveRecord::Base
   end
 
   # Projects to which this experiment can be moved (inside the same
-  # organization and not archived), all users assigned on experiment.project has
+  # team and not archived), all users assigned on experiment.project has
   # to be assigned on such project
   def moveable_projects(current_user)
     projects = projects_with_role_above_user(current_user)
@@ -655,7 +672,7 @@ class Experiment < ActiveRecord::Base
             um.shift  # remove current module
             ums = um.map{|m| m.samples}.flatten.uniq
             s.samples.each do |sample|
-              dm.samples.delete(sample) if ums.exclude? sample
+              dm.samples.destroy(sample) if ums.exclude? sample
             end
           end
         end

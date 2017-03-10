@@ -1,10 +1,11 @@
 class LoadFromRepositoryProtocolsDatatable < AjaxDatatablesRails::Base
   # Needed for sanitize_sql_like method
   include ActiveRecord::Sanitization::ClassMethods
+  include InputSanitizeHelper
 
-  def initialize(view, organization, type, user)
+  def initialize(view, team, type, user)
     super(view)
-    @organization = organization
+    @team = team
     # :public or :private
     @type = type
     @user = user
@@ -69,13 +70,13 @@ class LoadFromRepositoryProtocolsDatatable < AjaxDatatablesRails::Base
   def data
     records.map do |record|
       {
-        "DT_RowId": record.id,
-        "1": record.name,
-        "2": keywords_html(record),
-        "3": record.nr_of_linked_children,
-        "4": record.full_username_str,
-        "5": timestamp_column_html(record),
-        "6": I18n.l(record.updated_at, format: :full)
+        'DT_RowId': record.id,
+        '1': escape_input(record.name),
+        '2': keywords_html(record),
+        '3': record.nr_of_linked_children,
+        '4': escape_input(record.full_username_str),
+        '5': timestamp_column_html(record),
+        '6': I18n.l(record.updated_at, format: :full)
       }
     end
   end
@@ -83,20 +84,22 @@ class LoadFromRepositoryProtocolsDatatable < AjaxDatatablesRails::Base
   def get_raw_records_base
     records =
       Protocol
-      .where(organization: @organization)
+      .where(team: @team)
       .joins('LEFT OUTER JOIN "protocol_protocol_keywords" ON "protocol_protocol_keywords"."protocol_id" = "protocols"."id"')
       .joins('LEFT OUTER JOIN "protocol_keywords" ON "protocol_protocol_keywords"."protocol_keyword_id" = "protocol_keywords"."id"')
 
     if @type == :public
       records =
         records
-        .joins('LEFT OUTER JOIN "users" ON "users"."id" = "protocols"."added_by_id"')
-        .where("\"protocols\".\"protocol_type\" = #{Protocol.protocol_types[:in_repository_public]}")
+        .joins('LEFT OUTER JOIN users ON users.id = protocols.added_by_id')
+        .where('protocols.protocol_type = ?',
+               Protocol.protocol_types[:in_repository_public])
     else
       records =
         records
-        .joins('LEFT OUTER JOIN "users" ON "users"."id" = "protocols"."added_by_id"')
-        .where("\"protocols\".\"protocol_type\" = #{Protocol.protocol_types[:in_repository_private]}")
+        .joins('LEFT OUTER JOIN users ON users.id = protocols.added_by_id')
+        .where('protocols.protocol_type = ?',
+               Protocol.protocol_types[:in_repository_private])
         .where(added_by: @user)
     end
 
@@ -140,7 +143,7 @@ class LoadFromRepositoryProtocolsDatatable < AjaxDatatablesRails::Base
       kws.sort_by{ |word| word.downcase }.each do |kw|
         res << "<a href='#' data-action='filter' data-param='#{kw}'>#{kw}</a>"
       end
-      res.join(", ")
+      sanitize_input(res.join(', '))
     end
   end
 

@@ -124,21 +124,21 @@
 
       // Clear input fields
       newProjectModalForm.clearFormFields();
-      var orgSelect = newProjectModalForm.find('select#project_organization_id');
-      orgSelect.val(0);
-      orgSelect.selectpicker('refresh');
+      var teamSelect = newProjectModalForm.find('select#project_team_id');
+      teamSelect.val(0);
+      teamSelect.selectpicker('refresh');
 
-      var orgHidden = newProjectModalForm.find('input#project_visibility_hidden');
-      var orgVisible = newProjectModalForm.find('input#project_visibility_visible');
-      orgHidden.prop("checked", true);
-      orgHidden.attr("checked", "checked");
-      orgHidden.parent().addClass("active");
-      orgVisible.prop("checked", false);
-      orgVisible.parent().removeClass("active");
+      var teamHidden = newProjectModalForm.find('input#project_visibility_hidden');
+      var teamVisible = newProjectModalForm.find('input#project_visibility_visible');
+      teamHidden.prop("checked", true);
+      teamHidden.attr("checked", "checked");
+      teamHidden.parent().addClass("active");
+      teamVisible.prop("checked", false);
+      teamVisible.parent().removeClass("active");
     })
     .on("show.bs.modal", function() {
-      var orgSelect = newProjectModalForm.find('select#project_organization_id');
-      orgSelect.selectpicker('refresh');
+      var teamSelect = newProjectModalForm.find('select#project_team_id');
+      teamSelect.selectpicker('refresh');
     });
 
     newProjectModalForm

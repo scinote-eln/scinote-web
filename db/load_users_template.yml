@@ -1,24 +1,24 @@
-org_1:
-  name: Org1
+team_1:
+  name: Team1
 
-org_2:
-  name: Org2
+team_2:
+  name: Team2
 
 user_1:
   full_name: Usr1
   email: usr1@gmail.com
-  organizations: org_1, org_2
+  teams: team_1, team_2
   password: secretPassword
 
 user_2:
   full_name: Usr2
   email: usr2@gmail.com
-  organizations: org_1
+  teams: team_1
 
 user_3:
   full_name: Usr3
   email: usr3@gmail.com
-  organizations: org_2
+  teams: team_2
 
 user_4:
   full_name: Usr4

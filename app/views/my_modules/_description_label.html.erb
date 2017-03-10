@@ -1,7 +1,5 @@
 <% if @my_module.description.blank? %>
   <em><%=t "experiments.canvas.popups.no_description" %></em>
 <% else %>
-  <%= auto_link(simple_format(@my_module.description),
-                              link: :urls,
-                              html: { target: '_blank' }) %>
+  <%= custom_auto_link(@my_module.description) %>
 <% end %>

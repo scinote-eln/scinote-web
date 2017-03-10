@@ -310,8 +310,11 @@ var Comments = (function() {
             .on('ajax:send', function() {
               input.attr('readonly', true);
             })
-            .on('ajax:success', function() {
+            .on('ajax:success', function(ev, data) {
               var newMessage = input.val();
+              if (!_.isUndefined(data.comment)) {
+                newMessage = data.comment;
+              }
               oldMessage.html(newMessage);
 
               form.off('ajax:send ajax:success ajax:error ajax:complete');

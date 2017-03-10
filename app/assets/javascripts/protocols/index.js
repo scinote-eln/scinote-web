@@ -1,6 +1,4 @@
 //= require protocols/import_export/import
-//= require protocols/import_export/export
-//= require datatables
 
 // Global variables
 var rowsSelected = [];
@@ -16,6 +14,7 @@ function init() {
   initProtocolsTable();
   initRowSelection();
   initKeywordFiltering();
+  initProtocolPreviewModal();
   initLinkedChildrenModal();
   initCreateNewModal();
   initModals();
@@ -101,19 +100,19 @@ function initProtocolsTable() {
       animateSpinner(this);
     },
     stateSaveCallback: function (settings, data) {
-      // Set a cookie with the table state using the organization id
+      // Set a cookie with the table state using the team id
       localStorage.setItem(
         "datatables_protocols_state/" +
-        protocolsTableEl.data("organization-id") +
+        protocolsTableEl.data("team-id") +
         "/" + repositoryType,
         JSON.stringify(data)
       );
     },
     stateLoadCallback: function (settings) {
-      // Load the table state for the current organization
+      // Load the table state for the current team
       var state = localStorage.getItem(
         "datatables_protocols_state/" +
-        protocolsTableEl.data("organization-id") +
+        protocolsTableEl.data("team-id") +
         "/" + repositoryType
       );
       if (state !== null) {
@@ -185,6 +184,43 @@ function initKeywordFiltering() {
     e.stopPropagation();
     return false;
   });
+}
+
+function initProtocolPreviewModal() {
+  // Only do this if the repository is public/private
+  if (repositoryType !== "archive") {
+    // If you are in protocol repository
+    var protocolsEl = protocolsTableEl;
+    // If you are in search results
+    if (document.getElementById("search-content")) {
+      protocolsEl = $("#search-content");
+    }
+    protocolsEl.on("click", "a[data-action='protocol-preview']", function(e) {
+      var link = $(this);
+      $.ajax({
+        url: link.attr("data-url"),
+        type: "GET",
+        dataType: "json",
+        success: function (data) {
+          var modal = $("#protocol-preview-modal");
+          var modalTitle = modal.find(".modal-title");
+          var modalBody = modal.find(".modal-body");
+          var modalFooter = modal.find(".modal-footer");
+          modalTitle.html(data.title);
+          modalBody.html(data.html);
+          modalFooter.html(data.footer);
+          initHandsOnTable(modalBody);
+          modal.modal("show");
+          initHandsOnTable(modalBody);
+        },
+        error: function (error) {
+          // TODO
+        }
+      });
+      e.preventDefault();
+      return false;
+    });
+  }
 }
 
 function initLinkedChildrenModal() {
@@ -342,6 +378,13 @@ function initModals() {
     // Destroy the embedded data table
     $(this).find(".modal-body #linked-children-table").DataTable().destroy();
     $(this).find(".modal-body").html("");
+  });
+
+  // Protocol preview modal close action
+  $("#protocol-preview-modal").on("hidden.bs.modal", function(e) {
+    $(this).find(".modal-title").html("");
+    $(this).find(".modal-body").html("");
+    $(this).find(".modal-footer").html("");
   });
 }
 
@@ -502,6 +545,18 @@ function updateButtons() {
   }
 }
 
+function exportProtocols(ids) {
+  if (ids.length > 0) {
+    var params = '?protocol_ids[]=' + ids[0];
+    for (var i = 1; i < ids.length; i++) {
+      params += '&protocol_ids[]=' + ids[i];
+    }
+    params = encodeURI(params);
+    window.location.href = $("[data-action='export']")
+                             .data('export-url') + params;
+  }
+}
+
 function editSelectedProtocol() {
   if (rowsSelected.length && rowsSelected.length == 1) {
     var row = $("tr[data-row-id='" + rowsSelected[0] + "']");
@@ -620,12 +675,12 @@ function initImport() {
 
   fileInput.on("change", function(ev) {
     var importUrl = fileInput.attr("data-import-url");
-    var organizationId = fileInput.attr("data-organization-id");
+    var teamId = fileInput.attr("data-team-id");
     var type = fileInput.attr("data-type");
     importProtocolFromFile(
       ev.target.files[0],
       importUrl,
-      { organization_id: organizationId, type: type },
+      { team_id: teamId, type: type },
       false,
       function(datas) {
         var nrSuccessful = 0;

@@ -1,0 +1,182 @@
+<div class="row">
+  <div class="col-xs-6 col-sm-4 col-md-4">
+    <div class="badge-icon bg-primary">
+      <span class="glyphicon glyphicon-calendar"></span>
+    </div>
+    <div class="well well-sm">
+      <span class="hidden-xs hidden-sm hidden-md"><%=t "protocols.header.created_at" %>:</span>
+      <strong><%= l(@protocol.created_at, format: :full) %></strong>
+    </div>
+  </div>
+
+  <div class="col-xs-6 col-sm-4 col-md-4">
+    <div class="badge-icon bg-primary">
+      <span class="glyphicon glyphicon-calendar"></span>
+    </div>
+    <div class="well well-sm">
+      <span class="hidden-xs hidden-sm hidden-md"><%=t "protocols.header.updated_at" %>:</span>
+      <strong data-role="updated-at-refresh"><%= render partial: "protocols/header/updated_at_label.html.erb" %></strong>
+    </div>
+  </div>
+
+  <div class="col-xs-12 col-sm-4 col-md-4">
+    <div class="badge-icon bg-primary">
+      <span class="glyphicon glyphicon-user"></span>
+    </div>
+    <div class="well well-sm">
+      <span class="hidden-xs hidden-sm hidden-md"><%=t "protocols.header.added_by" %>:</span>
+      <strong><%= @protocol.added_by.full_name %></strong>
+    </div>
+  </div>
+
+  <div class="col-xs-12 col-sm-6 col-md-6">
+    <div class="badge-icon bg-primary">
+      <span class="glyphicon glyphicon-text-color"></span>
+    </div>
+    <div class="well well-sm">
+      <span class="hidden-xs hidden-sm hidden-md"><%=t "protocols.header.keywords" %>:</span>
+        <%= render partial: "protocols/header/keywords_label.html.erb" %>
+    </div>
+  </div>
+
+  <div class="col-xs-12 col-sm-6 col-md-6">
+    <div class="badge-icon bg-primary">
+      <span class="glyphicon glyphicon-education"></span>
+    </div>
+    <div class="well well-sm">
+      <span class="hidden-xs hidden-sm hidden-md"><%=t "protocols.header.authors" %>:</span>
+        <%= render partial: "protocols/header/authors_label.html.erb" %>
+    </div>
+  </div>
+
+  <div class="col-xs-12 col-sm-12 col-md-12">
+    <div class="badge-icon bg-primary">
+      <span class="glyphicon glyphicon-info-sign"></span>
+    </div>
+    <div class="well well-sm">
+      <span class="hidden-xs hidden-sm hidden-md"><%=t "protocols.header.description" %>:</span>
+        <%= render partial: "protocols/header/description_label.html.erb" %>
+    </div>
+  </div>
+</div>
+
+<div data-role="steps-container">
+  <div class="row">
+    <div class="col-xs-8">
+      <h2><%= t("protocols.steps.subtitle") %></h2>
+    </div>
+  </div>
+  <div id="steps">
+    <% protocol.steps.order(:position).each do |step| %>
+      <div class ="step <%= step.completed? ? "completed" : "not-completed" %>">
+        <div class="badge-num">
+          <span class="badge bg-primary size-digit-<%= (step.position + 1).to_s.length %>"><%= step.position + 1 %></span>
+        </div>
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <strong><%= step.name %></strong> |
+            <span><%= t("protocols.steps.published_on", timestamp: l(step.created_at, format: :full), user: h(step.user.full_name)).html_safe %></span>
+          </div>
+          <div class="panel-collapse collapse in" id="step-panel-<%= step.id %>" role="tabpanel" aria-expanded="true">
+            <div class="panel-body">
+              <div class="row">
+                <div class="col-xs-12">
+                  <% if strip_tags(step.description).blank? %>
+                    <em><%= t("protocols.steps.no_description") %></em>
+                  <% else %>
+                    <div class="ql-editor">
+                      <%= sanitize_input(step.description) %>
+                    </div>
+                  <% end %>
+                </div>
+              </div>
+              <div class="row">
+                <% unless step.tables.blank? then %>
+                  <hr>
+                  <div class="col-xs-12">
+                    <% step.tables.each do |table| %>
+                      <strong><%= table.name %></strong>
+                      <div data-role="hot-table" class="hot-table">
+                        <%= hidden_field(table, :contents, value: table.contents_utf_8, class: "hot-contents") %>
+                        <div data-role="step-hot-table" class="step-result-hot-table"></div>
+                      </div>
+                    <% end %>
+                  </div>
+                <% end %>
+
+                <% assets = ordered_assets(step) %>
+                <% unless assets.blank? then %>
+                  <hr>
+                  <div class="col-xs-12">
+                    <strong><%= t("protocols.steps.files") %></strong>
+                    <ul>
+                      <% assets.each do |asset| %>
+                        <li>
+                          <% if can_view_or_download_step_assets(@protocol) %>
+                            <% if asset.is_image? %>
+                              <%= link_to download_asset_path(asset),
+                                class: 'image-preview-link',
+                                id: "modal_link#{asset.id}",
+                                data: {no_turbolink: true, id: true, status: "asset-present",
+                                  description: "#{step.position + 1}. #{truncate(step.name, length: Constants::FILENAME_TRUNCATION_LENGTH)}"} do %>
+                                <%= image_tag asset.url(:medium), data: {'preview-url': large_image_url_asset_path(asset)} %>
+                                <p><%= truncate(asset.file_file_name,
+                                                length: Constants::FILENAME_TRUNCATION_LENGTH) %></p>
+                              <% end %>
+                            <% else %>
+                              <%= link_to download_asset_path(asset), data: {no_turbolink: true} do %>
+                                <p><%= truncate(asset.file_file_name,
+                                                length: Constants::FILENAME_TRUNCATION_LENGTH) %></p>
+                              <% end %>
+                            <% end %>
+                          <% else %>
+                            <%= image_tag asset.url(:medium) if asset.is_image? %>
+                            <p><%= truncate(asset.file_file_name,
+                                            length: Constants::FILENAME_TRUNCATION_LENGTH) %></p>
+                          <% end %>
+                        </li>
+                      <% end %>
+                    </ul>
+                  </div>
+                <% end %>
+
+                <% unless step.checklists.blank? then %>
+                  <div class="col-xs-12">
+                    <% step.checklists.each do |checklist| %>
+                      <strong><%= checklist.name %></strong>
+                      <% if checklist.checklist_items.empty? %>
+                        </br>
+                        <%= t("protocols.steps.empty_checklist") %>
+                        </br>
+                      <% else %>
+                        <% ordered_checklist_items(checklist).each do |checklist_item| %>
+                          <div class="checkbox">
+                            <label>
+                              <% if protocol.in_module? %>
+                                <input type="checkbox" value="" <%= "checked" if checklist_item.checked? %> disabled="disabled"/>
+                              <% else %>
+                                <input type="checkbox" value="" disabled="disabled" />
+                              <% end %>
+                              <%= checklist_item.text %>
+                            </label>
+                          </div>
+                        <% end %>
+                      <% end %>
+                    <% end %>
+                  </div>
+                <% end %>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <% if protocol.steps.count == 0 %>
+    <div data-role="no-steps-text">
+      <em><%= t("protocols.steps.no_steps") %></em>
+    </div>
+  <% end %>
+</div>

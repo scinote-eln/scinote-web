@@ -1,7 +1,7 @@
 module ProtocolsImporter
-  include RenamingUtil, QuillJsHelper
+  include RenamingUtil
 
-  def import_new_protocol(protocol_json, organization, type, user)
+  def import_new_protocol(protocol_json, team, type, user)
     remove_empty_inputs(protocol_json)
     protocol = Protocol.new(
       name: protocol_json["name"],
@@ -10,7 +10,7 @@ module ProtocolsImporter
       protocol_type: (type == :public ? :in_repository_public : :in_repository_private),
       published_on: (type == :public ? Time.now : nil),
       added_by: user,
-      organization: @organization
+      team: team
     )
 
     # Try to rename record
@@ -52,11 +52,8 @@ module ProtocolsImporter
     if protocol_json['steps']
       protocol_json['steps'].values.each do |step_json|
       step = Step.create!(
-        name: step_json["name"],
-        description: # Sanitize description HTML
-          sanitize_quill_js_input(
-            step_json['description']
-          ),
+        name: step_json['name'],
+        description: step_json['description'],
         position: step_pos,
         completed: false,
         user: user,
@@ -90,10 +87,11 @@ module ProtocolsImporter
         end
       end
 
-      if step_json["tables"]
-        step_json["tables"].values.each do |table_json|
+      if step_json['tables']
+        step_json['tables'].values.each do |table_json|
           table = Table.create!(
-            contents: Base64.decode64(table_json["contents"]),
+            name: table_json['name'],
+            contents: Base64.decode64(table_json['contents']),
             created_by: user,
             last_modified_by: user
           )
@@ -129,7 +127,7 @@ module ProtocolsImporter
 
     # Post process assets
     asset_ids.each do |asset_id|
-      Asset.find(asset_id).post_process_file(protocol.organization)
+      Asset.find(asset_id).post_process_file(protocol.team)
     end
   end
 

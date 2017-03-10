@@ -9,12 +9,12 @@
 # * modal_id: unique id so the JS works if multiple modals are present
 #   on the same page
 # * type:
-#   * 'invite_to_org' => params: organization
-#   * 'invite_to_org_with_role' => params: organization, role
+#   * 'invite_to_team' => params: team
+#   * 'invite_to_team_with_role' => params: team, role
 #   * 'invite',
-#   * 'invite_with_org_selector',
-#   * 'invite_with_org_selector_and_role' => params: role
-# * organization: invite users to the specified organization
+#   * 'invite_with_team_selector',
+#   * 'invite_with_team_selector_and_role' => params: role
+# * team: invite users to the specified team
 # * role: all users are invited as the specified role
 # * (optional) text_title: custom title text for modal
 # * (optional) text_invite_heading: custom invite heading text for modal
@@ -22,7 +22,7 @@
 <%
 text_title ||= nil
 text_invite_heading ||= nil
-invite_to_org = type.in?(%w(invite_to_org invite_to_org_with_role))
+invite_to_team = type.in?(%w(invite_to_team invite_to_team_with_role))
 %>
 <div
   class="modal modal-invite-users"
@@ -35,8 +35,8 @@ invite_to_org = type.in?(%w(invite_to_org invite_to_org_with_role))
   data-url="<%= invite_users_path %>"
   data-backdrop="static"
   data-keyboard="false"
-  <%= "data-organization-id=#{organization.id}" if invite_to_org %>
-  <%= "data-organization-role=#{role}" if type.in?(%w(invite_to_org_with_role invite_with_org_selector_and_role)) %>
+  <%= "data-team-id=#{team.id}" if invite_to_team %>
+  <%= "data-team-role=#{role}" if type.in?(%w(invite_to_team_with_role invite_with_team_selector_and_role)) %>
 >
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -47,10 +47,10 @@ invite_to_org = type.in?(%w(invite_to_org invite_to_org_with_role))
           <% if text_title %>
             <%= text_title %>
           <% else %>
-            <% if invite_to_org %>
-              <%= t('invite_users.to_org.title', organization: organization.name) %>
+            <% if invite_to_team %>
+              <%= t('invite_users.to_team.title', team: team.name) %>
             <% else %>
-              <%= t('invite_users.no_org.title') %>
+              <%= t('invite_users.no_team.title') %>
             <% end %>
           <% end %>
         </h4>
@@ -62,10 +62,10 @@ invite_to_org = type.in?(%w(invite_to_org invite_to_org_with_role))
             <% if text_invite_heading %>
               <%= text_invite_heading %>
             <% else %>
-              <% if invite_to_org %>
-                <%= t('invite_users.to_org.heading', organization: organization.name) %>
+              <% if invite_to_team %>
+                <%= t('invite_users.to_team.heading', team: team.name) %>
               <% else %>
-                <%= t('invite_users.no_org.heading') %>
+                <%= t('invite_users.no_team.heading') %>
               <% end %>
             <% end %>
           </p>
@@ -75,23 +75,23 @@ invite_to_org = type.in?(%w(invite_to_org invite_to_org_with_role))
           <br />
           <em><%= t('invite_users.input_subtitle') %></em>
 
-          <% if type.in?(['invite_with_org_selector', 'invite_with_org_selector_and_role']) %>
-            <% # Only allow inviting to organizations where user is admin %>
-            <% uos = current_user ? current_user.user_organizations.where(role: UserOrganization.roles[:admin]).joins(:organization) : [] %>
+          <% if type.in?(['invite_with_team_selector', 'invite_with_team_selector_and_role']) %>
+            <% # Only allow inviting to teams where user is admin %>
+            <% uos = current_user ? current_user.user_teams.where(role: UserTeam.roles[:admin]).joins(:team) : [] %>
             <% if uos.count > 0 %>
-              <div class="org-selector">
+              <div class="team-selector">
                 <div class="heading">
-                  <input type="checkbox" data-role="org-selector-checkbox" />
-                  <span><%= t('invite_users.invite_to_org_heading') %></span>
+                  <input type="checkbox" data-role="team-selector-checkbox" />
+                  <span><%= t('invite_users.invite_to_team_heading') %></span>
                 </div>
                 <%= select_tag(
-                  'organization-select',
+                  'team-select',
                   options_for_select(
-                    uos.pluck('organizations.name', 'organizations.id')
+                    uos.pluck('teams.name', 'teams.id')
                   ),
                   {
                     class: 'form-control selectpicker',
-                    'data-role' => 'org-selector-dropdown',
+                    'data-role' => 'team-selector-dropdown',
                     disabled: 'disabled'
                   }
                 ) %>
@@ -122,13 +122,13 @@ invite_to_org = type.in?(%w(invite_to_org invite_to_org_with_role))
             </button>
             <ul class="dropdown-menu">
               <li>
-                <%= link_to t('invite_users.invite_guest'), '#', data: { action: 'invite', 'organization-role' => 'guest' } %>
+                <%= link_to t('invite_users.invite_guest'), '#', data: { action: 'invite', 'team-role' => 'guest' } %>
               </li>
               <li>
-                <%= link_to t('invite_users.invite_user'), '#', data: { action: 'invite', 'organization-role' => 'normal_user' } %>
+                <%= link_to t('invite_users.invite_user'), '#', data: { action: 'invite', 'team-role' => 'normal_user' } %>
               </li>
               <li>
-                <%= link_to t('invite_users.invite_admin'), '#', data: { action: 'invite', 'organization-role' => 'admin' } %>
+                <%= link_to t('invite_users.invite_admin'), '#', data: { action: 'invite', 'team-role' => 'admin' } %>
               </li>
             </ul>
           </div>

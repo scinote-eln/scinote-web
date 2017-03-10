@@ -1,4 +1,8 @@
 class ProjectCommentsController < ApplicationController
+  include ActionView::Helpers::TextHelper
+  include InputSanitizeHelper
+  include ApplicationHelper
+
   before_action :load_vars
   before_action :check_view_permissions, only: :index
   before_action :check_add_permissions, only: [:create]
@@ -38,13 +42,14 @@ class ProjectCommentsController < ApplicationController
   end
 
   def create
-    @comment = Comment.new(
+    @comment = ProjectComment.new(
       message: comment_params[:message],
-      user: current_user)
+      user: current_user,
+      project: @project
+    )
 
     respond_to do |format|
-
-      if (@comment.valid? && @project.comments << @comment)
+      if @comment.save
         # Generate activity
         Activity.create(
           type_of: :add_comment_to_project,
@@ -109,7 +114,8 @@ class ProjectCommentsController < ApplicationController
               project: @project.name
             )
           )
-          render json: {}, status: :ok
+          message = custom_auto_link(@comment.message)
+          render json: { comment: message }, status: :ok
         else
           render json: { errors: @comment.errors.to_hash(true) },
                  status: :unprocessable_entity
@@ -167,12 +173,12 @@ class ProjectCommentsController < ApplicationController
   end
 
   def check_edit_permissions
-    @comment = Comment.find_by_id(params[:id])
+    @comment = ProjectComment.find_by_id(params[:id])
     render_403 unless @comment.present? && can_edit_project_comment(@comment)
   end
 
   def check_destroy_permissions
-    @comment = Comment.find_by_id(params[:id])
+    @comment = ProjectComment.find_by_id(params[:id])
     render_403 unless @comment.present? && can_delete_project_comment(@comment)
   end
 

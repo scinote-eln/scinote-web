@@ -25,14 +25,16 @@
         <% else %>
           <em><%=t "projects.reports.elements.module.no_due_date" %></em>
         <% end %>
+        <% if my_module.completed? %>
+          <%= t("my_modules.states.completed") %>
+          <%= l(my_module.completed_on, format: :full) %>
+        <% end %>
       </div>
     </div>
     <div class="row">
       <div class="col-xs-12">
         <% if my_module.description.present? %>
-          <%= auto_link(simple_format(my_module.description),
-                        link: :urls,
-                        html: { target: '_blank' }) %>
+          <%= custom_auto_link(my_module.description) %>
         <% else %>
            <em><%=t "projects.reports.elements.module.no_description" %></em>
         <% end %>

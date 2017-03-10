@@ -4,15 +4,15 @@ include UsersGenerator
 namespace :db do
 
   desc "Load users into database from the provided YAML file"
-  task :load_users, [ :file_path, :create_orgs ] => :environment do |task, args|
+  task :load_users, [ :file_path, :create_teams ] => :environment do |task, args|
     if args.blank? or args.empty? or args[:file_path].blank?
       puts "No file provided"
       return
     end
 
-    create_orgs = false
-    if args[:create_orgs].present? and args[:create_orgs].downcase == "true"
-      create_orgs = true
+    create_teams = false
+    if args[:create_teams].present? and args[:create_teams].downcase == "true"
+      create_teams = true
     end
 
     # Parse file
@@ -20,96 +20,90 @@ namespace :db do
 
     begin
       ActiveRecord::Base.transaction do
-        # Parse user & organization hashes from YAML
-        orgs = yaml.select{ |k, v| /org_[0-9]+/ =~ k }
-        users = yaml.select{ |k, v| /user_[0-9]+/ =~ k }
+        # Parse user & team hashes from YAML
+        teams = yaml.select { |k, v| /team_[0-9]+/ =~ k }
+        users = yaml.select { |k, v| /user_[0-9]+/ =~ k }
 
-        # Create organizations
-        orgs.each do |k, org_hash|
-          org = Organization.order(created_at: :desc).where(name: org_hash["name"]).first
-          if org.blank?
-            org = Organization.create({
-              name: org_hash["name"][0..99]
-            })
-          end
-          org_hash["id"] = org.id
+        # Create teams
+        teams.each do |k, team_hash|
+          team = Team.order(created_at: :desc)
+                     .where(name: team_hash['name'])
+                     .first
+          team = Team.create(name: team_hash['name'][0..99]) if team.blank?
+          team_hash['id'] = team.id
         end
 
         # Create users
-        puts "Created users"
+        puts 'Created users'
         users.each do |k, user_hash|
-          password = user_hash["password"]
-          if password.blank?
-            password = generate_user_password
-          end
+          password = user_hash['password']
+          password = generate_user_password if password.blank?
 
-          user_orgs = user_hash["organizations"]
-          if user_orgs.blank?
-            user_orgs = ""
-          end
+          user_teams = user_hash['teams']
+          user_teams = '' if user_teams.blank
 
-          org_ids =
-            user_orgs
-            .split(",")
-            .collect{ |o| o.strip }
+          team_ids =
+            user_teams
+            .split(',')
+            .collect(&:strip)
             .uniq
-            .select{ |o| orgs.include? o }
-            .collect{ |o| orgs[o]["id"] }
+            .select { |o| teams.include? o }
+            .collect { |o| teams[o]['id'] }
 
           user = create_user(
-            user_hash["full_name"],
-            user_hash["email"],
+            user_hash['full_name'],
+            user_hash['email'],
             password,
             true,
-            create_orgs ? Constants::DEFAULT_PRIVATE_ORG_NAME : nil,
-            org_ids
+            create_teams ? Constants::DEFAULT_PRIVATE_ORG_NAME : nil,
+            team_ids
           )
 
-          if user.id.present? then
-            puts ""
+          if user.id.present?
+            puts ''
             print_user(user, password)
           end
         end
 
-        puts ""
+        puts ''
       end
     rescue ActiveRecord::ActiveRecordError, ArgumentError
-      puts "Error creating all users, transaction reverted"
+      puts 'Error creating all users, transaction reverted'
     end
   end
 
-  desc "Add a single user to the database"
+  desc 'Add a single user to the database'
   task :add_user => :environment do
-    puts "Type in user's full name (e.g. 'Steve Johnson')"
+    puts 'Type in user\'s full name (e.g. \'Steve Johnson\')'
     full_name = $stdin.gets.to_s.strip
-    puts "Type in user's email (e.g. 'steve.johnson@gmail.com')"
+    puts 'Type in user\'s email (e.g. \'steve.johnson@gmail.com\')'
     email = $stdin.gets.to_s.strip
-    puts "Type in user's password (e.g. 'password'), or leave blank to let Rails generate password"
+    puts 'Type in user\'s password (e.g. \'password\'), or ' \
+         'leave blank to let Rails generate password'
     password = $stdin.gets.to_s.strip
     if password.empty?
       password = generate_user_password
     end
-    puts "Do you want Rails to create default user's organization? (T/F)"
-    create_org = $stdin.gets.to_s.strip == "T"
-    puts "Type names of any additional organizations you want the user to be admin of (delimited with ','), or leave blank"
-    org_names = $stdin.gets.to_s.strip
-    if org_names.empty?
-      org_names = []
+    puts 'Do you want Rails to create default user\'s team? (T/F)'
+    create_team = $stdin.gets.to_s.strip == 'T'
+    puts 'Type names of any additional teams you want the user ' \
+         'to be admin of (delimited with \',\'), or leave blank'
+    team_names = $stdin.gets.to_s.strip
+    if team_names.empty?
+      team_names = []
     else
-      org_names = org_names.split(",").collect { |n| n.strip }
+      team_names = team_names.split(',').collect(&:strip)
     end
 
     begin
       ActiveRecord::Base.transaction do
-        # Add/fetch organizations if needed
-        org_ids = []
-        org_names.each do |org_name|
-          org = Organization.order(created_at: :desc).where(name: org_name).first
-          if org.blank? then
-            org = Organization.create({ name: org_name[0..99] })
-          end
+        # Add/fetch teams if needed
+        team_ids = []
+        team_names.each do |team_name|
+          team = Team.order(created_at: :desc).where(name: team_name).first
+          team = Team.create(name: team_name[0..99]) if team.blank
 
-          org_ids << org.id
+          team_ids << team.id
         end
 
         user = create_user(
@@ -117,8 +111,8 @@ namespace :db do
           email,
           password,
           true,
-          create_org ? Constants::DEFAULT_PRIVATE_ORG_NAME : nil,
-          org_ids
+          create_team ? Constants::DEFAULT_PRIVATE_TEAM_NAME : nil,
+          team_ids
         )
 
         if user.id.present? then

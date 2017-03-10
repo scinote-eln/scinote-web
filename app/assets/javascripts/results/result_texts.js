@@ -10,9 +10,8 @@ $("#new-result-text").on("ajax:success", function(e, data) {
         $form.remove();
         toggleResultEditButtons(true);
     });
-
     toggleResultEditButtons(false);
-
+    TinyMCE.refresh();
     $("#result_name").focus();
 });
 
@@ -38,9 +37,8 @@ function applyEditResultTextCallback() {
             applyEditResultTextCallback();
             toggleResultEditButtons(true);
         });
-
         toggleResultEditButtons(false);
-
+        TinyMCE.refresh();
         $("#result_name").focus();
     });
 
@@ -61,12 +59,13 @@ function formAjaxResultText($form) {
         applyCollapseLinkCallBack();
         toggleResultEditButtons(true);
         expandResult(newResult);
-        initHighlightjs();
+        TinyMCE.destroyAll();
+        Comments.initialize();
     });
     $form.on("ajax:error", function(e, xhr, status, error) {
         var data = xhr.responseJSON;
         $form.renderFormErrors("result", data);
-        initHighlightjs();
+        TinyMCE.highlight();
         if (data["result_text.text"]) {
             var $el = $form.find("textarea[name=result\\[result_text_attributes\\]\\[text\\]]");
 
@@ -76,15 +75,7 @@ function formAjaxResultText($form) {
     });
 }
 
-
-function initHighlightjs() {
-  if(hljs) {
-    $('.ql-editor pre').each(function(i, block) {
-     hljs.highlightBlock(block);
-   });
-  }
-}
 $(document).ready(function() {
-  initHighlightjs();
+  TinyMCE.highlight();
 });
 applyEditResultTextCallback();

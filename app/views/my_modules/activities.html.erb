@@ -1,4 +1,4 @@
-<% provide(:head_title, raw(t("my_modules.activities.head_title", project: @my_module.experiment.project.name, module: @my_module.name))) %>
+<% provide(:head_title, t("my_modules.activities.head_title", project: h(@my_module.experiment.project.name), module: h(@my_module.name)).html_safe) %>
 <%= render partial: "shared/sidebar" %>
 <%= render partial: "shared/secondary_navigation" %>
 
@@ -23,4 +23,3 @@
 </div>
 
 <%= javascript_include_tag("my_modules/activities") %>
-

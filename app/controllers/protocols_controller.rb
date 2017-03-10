@@ -2,6 +2,7 @@ class ProtocolsController < ApplicationController
   include RenamingUtil
   include ProtocolsImporter
   include ProtocolsExporter
+  include InputSanitizeHelper
 
   before_action :check_create_permissions, only: [
     :create_new_modal,
@@ -11,6 +12,7 @@ class ProtocolsController < ApplicationController
   before_action :check_view_permissions, only: [
     :protocol_status_bar,
     :updated_at_label,
+    :preview,
     :linked_children,
     :linked_children_datatable
   ]
@@ -72,7 +74,7 @@ class ProtocolsController < ApplicationController
       format.json {
         render json: ::ProtocolsDatatable.new(
           view_context,
-          @current_organization,
+          @current_team,
           @type,
           current_user
         )
@@ -80,11 +82,31 @@ class ProtocolsController < ApplicationController
     end
   end
 
+  def preview
+    respond_to do |format|
+      format.json do
+        render json: {
+          title: I18n.t('protocols.index.preview.title',
+                        protocol: escape_input(@protocol.name)),
+          html: render_to_string(
+            partial: 'protocols/index/protocol_preview_modal_body.html.erb',
+            locals: { protocol: @protocol }
+          ),
+          footer: render_to_string(
+            partial: 'protocols/index/protocol_preview_modal_footer.html.erb',
+            locals: { protocol: @protocol }
+          )
+        }
+      end
+    end
+  end
+
   def linked_children
     respond_to do |format|
       format.json {
         render json: {
-          title: I18n.t("protocols.index.linked_children.title", protocol: @protocol.name),
+          title: I18n.t('protocols.index.linked_children.title',
+                        protocol: escape_input(@protocol.name)),
           html: render_to_string({
             partial: "protocols/index/linked_children_modal_body.html.erb",
             locals: { protocol: @protocol }
@@ -161,7 +183,7 @@ class ProtocolsController < ApplicationController
     respond_to do |format|
       # sanitize user input
       params[:keywords].collect! do |keyword|
-        ActionController::Base.helpers.sanitize(keyword)
+        escape_input(keyword)
       end
       if @protocol.update_keywords(params[:keywords])
         format.json {
@@ -182,7 +204,7 @@ class ProtocolsController < ApplicationController
 
   def create
     @protocol = Protocol.new(
-      organization: @current_organization,
+      team: @current_team,
       protocol_type: Protocol.protocol_types[@type == :public ? :in_repository_public : :in_repository_private],
       added_by: current_user
     )
@@ -202,7 +224,7 @@ class ProtocolsController < ApplicationController
           render json: {
             url: edit_protocol_path(
               @protocol,
-              organization: @current_organization,
+              team: @current_team,
               type: @type
             )
           }
@@ -545,17 +567,19 @@ class ProtocolsController < ApplicationController
       transaction_error = false
       Protocol.transaction do
         begin
-          protocol = import_new_protocol(@protocol_json, @organization, @type, current_user)
+          protocol = import_new_protocol(@protocol_json, @team, @type, current_user)
         rescue Exception
           transaction_error = true
           raise ActiveRecord:: Rollback
         end
       end
 
-      p_name = (
-        @protocol_json["name"].present? &&
-        !@protocol_json["name"].empty?
-      ) ? @protocol_json["name"] : t("protocols.index.no_protocol_name")
+      p_name =
+        if @protocol_json['name'].present? && !@protocol_json['name'].empty?
+          escape_input(@protocol_json['name'])
+        else
+          t('protocols.index.no_protocol_name')
+        end
       if transaction_error
         format.json {
           render json: { name: p_name, status: :bad_request }, status: :bad_request
@@ -572,12 +596,58 @@ class ProtocolsController < ApplicationController
   end
 
   def export
+    # Make a zip output stream and send it to the client
     respond_to do |format|
-      format.json {
-        render json: {
-            protocols: export_protocols(@protocols)
-          }, status: :ok
-      }
+      format.html do
+        z_output_stream = Zip::OutputStream.write_buffer do |ostream|
+          ostream.put_next_entry('scinote.xml')
+          ostream.print(generate_envelope_xml(@protocols))
+          ostream.put_next_entry('scinote.xsd')
+          ostream.print(generate_envelope_xsd)
+          ostream.put_next_entry('eln.xsd')
+          ostream.print(generate_eln_xsd)
+
+          # Create folder and xml file for each protocol and populate it
+          @protocols.each do |protocol|
+            protocol_dir = get_guid(protocol.id).to_s
+            ostream.put_next_entry("#{protocol_dir}/eln.xml")
+            ostream.print(generate_protocol_xml(protocol))
+            # Add assets to protocol folder
+            next if protocol.steps.count <= 0
+            protocol.steps.order(:id).each do |step|
+              step_guid = get_guid(step.id)
+              step_dir = "#{protocol_dir}/#{step_guid}"
+              next if step.assets.count <= 0
+              step.assets.order(:id).each do |asset|
+                asset_guid = get_guid(asset.id)
+                asset_file_name = asset_guid.to_s +
+                                  File.extname(asset.file_file_name).to_s
+                ostream.put_next_entry("#{step_dir}/#{asset_file_name}")
+                input_file = asset.open
+                ostream.print(input_file.read)
+                input_file.close
+              end
+            end
+          end
+        end
+        z_output_stream.rewind
+
+        protocol_name = get_protocol_name(@protocols[0])
+
+        # Now generate filename of the archive and send file to user
+        if @protocols.count == 1
+          # Try to construct an OS-safe file name
+          file_name = 'protocol.eln'
+          unless protocol_name.nil?
+            escaped_name = protocol_name.gsub(/[^0-9a-zA-Z\-.,_]/i, '_')
+                                        .downcase[0..Constants::NAME_MAX_LENGTH]
+            file_name = escaped_name + '.eln' unless escaped_name.empty?
+          end
+        elsif @protocols.length > 1
+          file_name = 'protocols.eln'
+        end
+        send_data(z_output_stream.read, filename: file_name)
+      end
     end
   end
 
@@ -640,7 +710,7 @@ class ProtocolsController < ApplicationController
       format.json {
         render json: ::LoadFromRepositoryProtocolsDatatable.new(
           view_context,
-          @protocol.organization,
+          @protocol.team,
           @type,
           current_user
         )
@@ -716,7 +786,8 @@ class ProtocolsController < ApplicationController
     respond_to do |format|
       format.json {
         render json: {
-          title: I18n.t("protocols.header.edit_name_modal.title", protocol: @protocol.name),
+          title: I18n.t('protocols.header.edit_name_modal.title',
+                        protocol: escape_input(@protocol.name)),
           html: render_to_string({
             partial: "protocols/header/edit_name_modal_body.html.erb"
           })
@@ -729,11 +800,12 @@ class ProtocolsController < ApplicationController
     respond_to do |format|
       format.json {
         render json: {
-          title: I18n.t("protocols.header.edit_keywords_modal.title", protocol: @protocol.name),
+          title: I18n.t('protocols.header.edit_keywords_modal.title',
+                        protocol: escape_input(@protocol.name)),
           html: render_to_string({
             partial: "protocols/header/edit_keywords_modal_body.html.erb"
           }),
-          keywords: @protocol.organization.protocol_keywords_list
+          keywords: @protocol.team.protocol_keywords_list
         }
       }
     end
@@ -743,7 +815,8 @@ class ProtocolsController < ApplicationController
     respond_to do |format|
       format.json {
         render json: {
-          title: I18n.t("protocols.header.edit_authors_modal.title", protocol: @protocol.name),
+          title: I18n.t('protocols.header.edit_authors_modal.title',
+                        protocol: escape_input(@protocol.name)),
           html: render_to_string({
             partial: "protocols/header/edit_authors_modal_body.html.erb"
           })
@@ -756,7 +829,8 @@ class ProtocolsController < ApplicationController
     respond_to do |format|
       format.json {
         render json: {
-          title: I18n.t("protocols.header.edit_description_modal.title", protocol: @protocol.name),
+          title: I18n.t('protocols.header.edit_description_modal.title',
+                        protocol: escape_input(@protocol.name)),
           html: render_to_string({
             partial: "protocols/header/edit_description_modal_body.html.erb"
           })
@@ -813,18 +887,16 @@ class ProtocolsController < ApplicationController
     end
   end
 
-  def load_organization_and_type
-    @current_organization = current_organization
+  def load_team_and_type
+    @current_team = current_team
     # :public, :private or :archive
     @type = (params[:type] || "public").to_sym
   end
 
   def check_view_all_permissions
-    load_organization_and_type
+    load_team_and_type
 
-    unless can_view_organization_protocols(@current_organization)
-      render_403
-    end
+    render_403 unless can_view_team_protocols(@current_team)
   end
 
   def check_view_permissions
@@ -835,15 +907,15 @@ class ProtocolsController < ApplicationController
   end
 
   def check_create_permissions
-    load_organization_and_type
+    load_team_and_type
 
-    if !can_create_new_protocol(@current_organization) || @type == :archive
+    if !can_create_new_protocol(@current_team) || @type == :archive
       render_403
     end
   end
 
   def check_clone_permissions
-    load_organization_and_type
+    load_team_and_type
     @original = Protocol.find_by_id(params[:id])
 
     if @original.blank? ||
@@ -853,7 +925,7 @@ class ProtocolsController < ApplicationController
   end
 
   def check_edit_permissions
-    load_organization_and_type
+    load_team_and_type
     @protocol = Protocol.find_by_id(params[:id])
 
     unless can_edit_protocol(@protocol)
@@ -974,13 +1046,13 @@ class ProtocolsController < ApplicationController
 
   def check_import_permissions
     @protocol_json = params[:protocol]
-    @organization = Organization.find(params[:organization_id])
+    @team = Team.find(params[:team_id])
     @type = params[:type] ? params[:type].to_sym : nil
     if !(
       @protocol_json.present? &&
-      @organization.present? &&
+      @team.present? &&
       (@type == :public || @type == :private) &&
-      can_import_protocols(@organization)
+      can_import_protocols(@team)
     )
       render_403
     end

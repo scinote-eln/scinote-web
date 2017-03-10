@@ -8,7 +8,7 @@
           <span class="glyphicon glyphicon-list"></span>
       </div>
       <div class="pull-left checklist-name">
-        <em><%=t 'projects.reports.elements.step_checklist.checklist_name', name: checklist.name %></em>
+        <%= custom_auto_link(t('projects.reports.elements.step_checklist.checklist_name', name: checklist.name)) %>
       </div>
       <div class="pull-left user-time">
         <%=t 'projects.reports.elements.step_checklist.user_time', timestamp: l(timestamp, format: :full) %>
@@ -24,10 +24,8 @@
         <li>
           <input type="checkbox" disabled="disabled" <%= "checked='checked'" if item.checked %>/>
           <span class="<%= 'checked' if item.checked %>">
-            <%= auto_link(simple_format(item.text),
-                                        link: :urls,
-                                        html: { target: '_blank' }) %></span>
-
+            <%= custom_auto_link(item.text, true, nil, {wrapper_tag: "span"}) %>
+          </span>
         </li>
       <% end %>
     </ul>

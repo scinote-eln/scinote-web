@@ -1,16 +1,14 @@
 volume:
   name: "Volume"
   user: steve
-  organization: biosistemika
+  team: biosistemika
 
 location:
   name: "Location"
   user: jlaw
-  organization: biosistemika
+  team: biosistemika
 
 description:
   name: "Description"
   user: nora
-  organization: nib
-
-
+  team: nib

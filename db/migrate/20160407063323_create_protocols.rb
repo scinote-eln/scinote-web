@@ -7,7 +7,7 @@ class CreateProtocols < ActiveRecord::Migration
       t.text :description
       t.integer :added_by_id
       t.integer :my_module_id
-      t.integer :organization_id, null: false
+      t.integer :team_id, null: false
       t.integer :protocol_type, null: false, default: 0
       t.integer :parent_id
       t.datetime :parent_updated_at
@@ -20,7 +20,7 @@ class CreateProtocols < ActiveRecord::Migration
     end
     add_foreign_key :protocols, :users, column: :added_by_id
     add_foreign_key :protocols, :my_modules, column: :my_module_id
-    add_foreign_key :protocols, :organizations, column: :organization_id
+    add_foreign_key :protocols, :teams, column: :team_id
     add_foreign_key :protocols, :protocols, column: :parent_id
     add_foreign_key :protocols, :users, column: :archived_by_id
     add_foreign_key :protocols, :users, column: :restored_by_id
@@ -29,7 +29,7 @@ class CreateProtocols < ActiveRecord::Migration
     add_index :protocols, :description
     add_index :protocols, :added_by_id
     add_index :protocols, :my_module_id
-    add_index :protocols, :organization_id
+    add_index :protocols, :team_id
     add_index :protocols, :parent_id
     add_index :protocols, :archived_by_id
     add_index :protocols, :restored_by_id
@@ -59,7 +59,7 @@ class CreateProtocols < ActiveRecord::Migration
     MyModule.find_each do |my_module|
       protocol = Protocol.new(
         my_module_id: my_module.id,
-        organization_id: my_module.project.organization.id,
+        team_id: my_module.project.team.id,
         protocol_type: 0
       )
       protocol.save(validate: false)
@@ -94,7 +94,7 @@ class CreateProtocols < ActiveRecord::Migration
     remove_column :steps, :protocol_id
 
     # Simply drop the rest of the protocols
-    # (the ones that are organization-wide)
+    # (the ones that are team-wide)
 
     remove_index :protocol_protocol_keywords, column: :protocol_id
     remove_index :protocol_protocol_keywords, column: :protocol_keyword_id
@@ -110,13 +110,13 @@ class CreateProtocols < ActiveRecord::Migration
     remove_index :protocols, column: :description
     remove_index :protocols, column: :added_by_id
     remove_index :protocols, column: :my_module_id
-    remove_index :protocols, column: :organization_id
+    remove_index :protocols, column: :team_id
     remove_index :protocols, column: :parent_id
     remove_index :protocols, column: :archived_by_id
     remove_index :protocols, column: :restored_by_id
     remove_foreign_key :protocols, column: :added_by_id
     remove_foreign_key :protocols, :my_modules
-    remove_foreign_key :protocols, :organizations
+    remove_foreign_key :protocols, :teams
     remove_foreign_key :protocols, column: :parent_id
     remove_foreign_key :protocols, column: :archived_by_id
     remove_foreign_key :protocols, column: :restored_by_id

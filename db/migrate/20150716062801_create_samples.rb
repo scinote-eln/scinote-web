@@ -5,13 +5,13 @@ class CreateSamples < ActiveRecord::Migration
 
       # Foreign keys
       t.integer :user_id, null: false
-      t.integer :organization_id, null: false
+      t.integer :team_id, null: false
 
       t.timestamps null: false
     end
     add_foreign_key :samples, :users
-    add_foreign_key :samples, :organizations
+    add_foreign_key :samples, :teams
     add_index :samples, :user_id
-    add_index :samples, :organization_id
+    add_index :samples, :team_id
   end
 end

@@ -1,3 +1,4 @@
+//= require assets
 //= require comments
 
 /**
@@ -108,6 +109,8 @@ function expandResult(result) {
     $(this).removeClass("glyphicon-collapse-down");
   });
   renderTable($(result).find("div.step-result-hot-table"));
+  animateSpinner(null, false);
+  setupAssetsLoading();
 }
 
 function renderTable(table) {
@@ -149,8 +152,8 @@ var ResultTypeEnum = Object.freeze({
   COMMENT: 3
 });
 
-function processResult(ev, resultTypeEnum, editMode, forS3) {
-  forS3 = (typeof forS3 !== 'undefined') ? forS3 : false;
+function processResult(ev, resultTypeEnum, editMode) {
+
   var $form = $(ev.target.form);
   $form.clearFormErrors();
 
@@ -160,18 +163,16 @@ function processResult(ev, resultTypeEnum, editMode, forS3) {
       var nameValid = textValidator(ev, $nameInput, 0,
         <%= Constants::NAME_MAX_LENGTH %>);
       var $fileInput = $form.find("#result_asset_attributes_file");
-      var filesValid = filesValidator(ev, $fileInput, FileTypeEnum.FILE,
-        editMode);
+      var filesValid = true;
+      if ($fileInput.val()) {
+        filesValid = filesValidator(ev, $fileInput, FileTypeEnum.FILE,
+          editMode);
+      }
 
       if(nameValid && filesValid) {
-        if(forS3) {
-          // Redirects file uploading to S3
-          var url = '/asset_signature.json';
-          directUpload(ev, url);
-        } else {
-          // Local file uploading
-          animateSpinner();
-        }
+        // Local file uploading
+        animateSpinner();
+
       }
       break;
     case ResultTypeEnum.TABLE:
@@ -183,8 +184,8 @@ function processResult(ev, resultTypeEnum, editMode, forS3) {
       var $nameInput = $form.find("#result_name");
       var nameValid = textValidator(ev, $nameInput, 0,
         <%= Constants::NAME_MAX_LENGTH %>);
-      var $textInput = $form.find("#result_result_text_attributes_text");
-      textValidator(ev, $textInput, 1, <%= Constants::TEXT_MAX_LENGTH %>);
+      var $textInput = TinyMCE.getContent();
+      textValidator(ev, $textInput, 1, <%= Constants::TEXT_MAX_LENGTH %>, false, true);
       break;
     case ResultTypeEnum.COMMENT:
       var $commentInput = $form.find("#comment_message");

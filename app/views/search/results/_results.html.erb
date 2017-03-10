@@ -17,7 +17,7 @@
   <% if result.is_text && result.result_text.text.present? && !result.result_text.text.empty? %>
     <blockquote class="search-asset-text-data">
       <p>
-        <%= highlight(result.result_text.text.html_safe, search_query.strip.split(/\s+/)) %>
+        <%= highlight(sanitize_input(result.result_text.text), search_query.strip.split(/\s+/)) %>
       </p>
     </blockquote>
   <% end %>
@@ -47,9 +47,9 @@
     </span>
     <br>
     <span>
-      <%=t "search.index.organization" %>
-      <%= render partial: "search/results/partials/organization_text.html.erb",
-                 locals: { organization: result.my_module.experiment.project.organization } %>
+      <%=t "search.index.team" %>
+      <%= render partial: "search/results/partials/team_text.html.erb",
+                 locals: { team: result.my_module.experiment.project.team } %>
     </span>
   </p>
 

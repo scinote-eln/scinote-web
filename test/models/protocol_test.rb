@@ -3,20 +3,20 @@ require 'test_helper'
 class ProtocolTest < ActiveSupport::TestCase
   def setup
     @user = users(:steve)
-    @org = organizations(:biosistemika)
+    @team = teams(:biosistemika)
     @my_module = my_modules(:sample_prep)
     @global = protocols(:rna_test_protocol_global)
 
     @p = Protocol.new(
       my_module: @my_module,
-      organization: @org
+      team: @team
     )
   end
 
   should validate_length_of(:name).is_at_most(Constants::NAME_MAX_LENGTH)
   should validate_length_of(:description).is_at_most(Constants::TEXT_MAX_LENGTH)
 
-  test "protocol_type enum works" do
+  test 'protocol_type enum works' do
     @p.protocol_type = :unlinked
     assert @p.in_module?
     @p.protocol_type = :linked
@@ -29,31 +29,31 @@ class ProtocolTest < ActiveSupport::TestCase
     assert @p.in_repository?
   end
 
-  test "should not validate without organization" do
-    @p.organization = @org
+  test 'should not validate without team' do
+    @p.team = @team
     assert @p.valid?
-    @p.organization = nil
+    @p.team = nil
     assert_not @p.valid?
   end
 
-  test "should not validate without protocol type" do
+  test 'should not validate without protocol type' do
     assert @p.valid?
     @p.protocol_type = nil
     assert_not @p.valid?
   end
 
-  test "should count steps of protocol" do
+  test 'should count steps of protocol' do
     assert_equal 0, @p.number_of_steps
   end
 
-  test "specific validations for :unlinked" do
+  test 'specific validations for :unlinked' do
     p = new_unlinked_protocol
     assert p.valid?
     p.my_module = nil
     assert_not p.valid?
   end
 
-  test "specific validations for :linked" do
+  test 'specific validations for :linked' do
     p = new_linked_protocol
     assert p.valid?
 
@@ -73,17 +73,17 @@ class ProtocolTest < ActiveSupport::TestCase
     assert_not p.valid?
   end
 
-  test "specific validations for :in_repository" do
+  test 'specific validations for :in_repository' do
     [
       :in_repository_private,
       :in_repository_public,
       :in_repository_archived
     ].each do |protocol_type|
       p = new_repository_protocol(protocol_type)
-      if protocol_type == :in_repository_archived then
+      if protocol_type == :in_repository_archived
         p.archived_by = @user
         p.archived_on = Time.now
-      elsif protocol_type == :in_repository_public then
+      elsif protocol_type == :in_repository_public
         p.published_on = Time.now
       end
       assert p.valid?
@@ -109,7 +109,7 @@ class ProtocolTest < ActiveSupport::TestCase
     end
   end
 
-  test "specific validations for :in_repository_public" do
+  test 'specific validations for :in_repository_public' do
     p = new_repository_protocol(:in_repository_public)
     p.published_on = nil
     assert_not p.valid?
@@ -118,7 +118,7 @@ class ProtocolTest < ActiveSupport::TestCase
     assert p.valid?
   end
 
-  test "specific validations for :in_repository_archived" do
+  test 'specific validations for :in_repository_archived' do
     p = new_repository_protocol(:in_repository_archived)
     p.archived_by = nil
     p.archived_on = nil
@@ -136,7 +136,7 @@ class ProtocolTest < ActiveSupport::TestCase
   def new_unlinked_protocol
     Protocol.new(
       my_module: @my_module,
-      organization: @org
+      team: @team
     )
   end
 
@@ -144,7 +144,7 @@ class ProtocolTest < ActiveSupport::TestCase
     Protocol.new(
       protocol_type: :linked,
       my_module: @my_module,
-      organization: @org,
+      team: @team,
       added_by: @user,
       parent: @global,
       parent_updated_at: @global.updated_at
@@ -153,11 +153,10 @@ class ProtocolTest < ActiveSupport::TestCase
 
   def new_repository_protocol(type)
     Protocol.new(
-      name: "Test protocol",
+      name: 'Test protocol',
       protocol_type: type,
-      organization: @org,
+      team: @team,
       added_by: @user
     )
   end
-
 end

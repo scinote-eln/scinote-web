@@ -1,5 +1,22 @@
 //= require jquery-ui
 
+// Extend datatables API with searchable options
+// (http://stackoverflow.com/questions/39912395/datatables-dynamically-set-columns-searchable)
+$.fn.dataTable.Api.register('isColumnSearchable()', function(colSelector) {
+  var idx = this.column(colSelector).index();
+  return this.settings()[0].aoColumns[idx].bSearchable;
+});
+$.fn.dataTable.Api.register('setColumnSearchable()', function(colSelector, value) {
+  if (value !== this.isColumnSearchable(colSelector)) {
+    var idx = this.column(colSelector).index();
+    this.settings()[0].aoColumns[idx].bSearchable = value;
+    if (value === true) {
+      this.rows().invalidate();
+    }
+  }
+  return value;
+});
+
 var rowsSelected = [];
 
 // Tells whether we're currently viewing or editing table
@@ -56,9 +73,8 @@ function dataTableInit() {
     }, {
       targets: 2,
       render: function(data, type, row) {
-        return "<a href='#' data-href='" + row.sampleUpdateUrl + "'" +
-                      "class='sample_info' data-toggle='modal'" +
-                      "data-target='#modal-info-sample'>" + data + '</a>';
+        return "<a href='" + row.sampleInfoUrl + "'" +
+               "class='sample-info-link'>" + data + '</a>';
       }
     }],
     rowCallback: function(row, data) {
@@ -81,7 +97,8 @@ function dataTableInit() {
         columns.push({
           data: String(i),
           defaultContent: '',
-          visible: visible
+          visible: visible,
+          searchable: visible
         });
       }
       return columns;
@@ -89,23 +106,22 @@ function dataTableInit() {
     fnDrawCallback: function() {
       animateSpinner(this, false);
       changeToViewMode();
-      sampleInfoListener();
       updateButtons();
     },
     preDrawCallback: function() {
       animateSpinner(this);
-      $('.sample_info').off('click');
+      $('.sample-info-link').off('click');
     },
     stateLoadCallback: function(settings) {
       // Send an Ajax request to the server to get the data. Note that
       // this is a synchronous request since the data is expected back from the
       // function
-      var org = $('#samples').attr('data-organization-id');
+      var team = $('#samples').attr('data-team-id');
       var user = $('#samples').attr('data-user-id');
 
       $.ajax({
-        url: '/state_load/' + org + '/' + user,
-        data: {org: org},
+        url: '/state_load/' + team + '/' + user,
+        data: {team: team},
         async: false,
         dataType: 'json',
         type: 'POST',
@@ -117,7 +133,7 @@ function dataTableInit() {
     },
     stateSaveCallback: function(settings, data) {
       // Send an Ajax request to the server with the state object
-      var org = $('#samples').attr('data-organization-id');
+      var team = $('#samples').attr('data-team-id');
       var user = $('#samples').attr('data-user-id');
       // Save correct data
       if (loadFirstTime == true) {
@@ -125,8 +141,8 @@ function dataTableInit() {
       }
 
       $.ajax({
-        url: '/state_save/' + org + '/' + user,
-        data: {org: org, state: data},
+        url: '/state_save/' + team + '/' + user,
+        data: {team: team, state: data},
         dataType: 'json',
         type: 'POST'
       });
@@ -140,12 +156,13 @@ function dataTableInit() {
           visibility = (visibility === 'true');
         }
         table.column(i).visible(visibility);
+        table.setColumnSearchable(i, visibility);
       }
       oSettings._colReorder.fnOrder(myData.ColReorder);
       table.on('mousedown', function() {
         $('#samples-columns-dropdown').removeClass('open');
       });
-      sampleInfoListener();
+      initHeaderTooltip();
     }
   });
 
@@ -162,8 +179,11 @@ function dataTableInit() {
   });
 
   // Handle click on table cells with checkboxes
-  $('#samples').on('click', 'tbody td, thead th:first-child', function() {
-    $(this).parent().find('input[type="checkbox"]').trigger('click');
+  $('#samples').on('click', 'tbody td, thead th:first-child', function(e) {
+    if (!$(e.target).is('.sample-info-link')) {
+      // Skip if clicking on samples info link
+      $(this).parent().find('input[type="checkbox"]').trigger('click');
+    }
   });
 
   // Handle clicks on checkbox
@@ -201,7 +221,7 @@ function dataTableInit() {
   });
 
   // Handle click on "Select all" control
-  $('#samples thead input[name="select_all"]').on('click', function(e) {
+  $('.dataTables_scrollHead input[name="select_all"]').on('click', function(e) {
     if (this.checked) {
       $('#samples tbody input[type="checkbox"]:not(:checked)').trigger('click');
     } else {
@@ -215,6 +235,14 @@ function dataTableInit() {
   // Handle table draw event
   table.on('draw', function() {
     updateDataTableSelectAllCtrl(table);
+    sampleInfoListener();
+
+    // Prevent sample row toggling when selecting user smart annotation link
+    SmartAnnotation.preventPropagation('.atwho-user-popover');
+  });
+
+  table.on('column-reorder', function() {
+    sampleInfoListener();
   });
 
   return table;
@@ -233,10 +261,11 @@ $.fn.dataTable.defaults.noSearchHidden = true;
 
 // Updates "Select all" control in a data table
 function updateDataTableSelectAllCtrl(table) {
-    var $table             = table.table().node();
-    var $chkbox_all        = $('tbody input[type="checkbox"]', $table);
-    var $chkbox_checked    = $('tbody input[type="checkbox"]:checked', $table);
-    var chkbox_select_all  = $('thead input[name="select_all"]', $table).get(0);
+    var $table = table.table().node();
+    var $header = table.table().header();
+    var $chkbox_all = $('tbody input[type="checkbox"]', $table);
+    var $chkbox_checked = $('tbody input[type="checkbox"]:checked', $table);
+    var chkbox_select_all = $('input[name="select_all"]', $header).get(0);
 
     // If none of the checkboxes are checked
     if($chkbox_checked.length === 0){
@@ -322,9 +351,38 @@ function appendSamplesIdToForm(form) {
     });
 }
 
+function initHeaderTooltip() {
+  // Fix compatibility of fixed table header and column names modal-tooltip
+  $('.modal-tooltip').off();
+  $('.modal-tooltip').hover(function() {
+    var $tooltip = $(this).find('.modal-tooltiptext');
+    var offsetLeft = $tooltip.offset().left;
+    (offsetLeft + 200) > $(window).width() ? offsetLeft -= 150 : offsetLeft;
+    var offsetTop = $tooltip.offset().top;
+    $('body').append($tooltip);
+    $tooltip.css('background-color', '#d2d2d2');
+    $tooltip.css('border-radius', '6px');
+    $tooltip.css('color', '#333');
+    $tooltip.css('display', 'block');
+    $tooltip.css('left', offsetLeft + 'px');
+    $tooltip.css('padding', '5px');
+    $tooltip.css('position', 'absolute');
+    $tooltip.css('text-align', 'center');
+    $tooltip.css('top', offsetTop + 'px');
+    $tooltip.css('visibility', 'visible');
+    $tooltip.css('width', '200px');
+    $tooltip.css('word-wrap', 'break-word');
+    $(this).data('dropdown-tooltip', $tooltip);
+  }, function() {
+    $(this).append($(this).data('dropdown-tooltip'));
+    $(this).data('dropdown-tooltip').removeAttr('style');
+  });
+}
+
 //Show sample info
 function sampleInfoListener() {
     $(".sample_info").on("click", function(e){
+        $("#modal-info-sample").remove();
         var that = $(this);
         $.ajax({
             method: "GET",
@@ -387,7 +445,7 @@ function onClickEdit() {
     saveAction = "update";
 
     $.ajax({
-        url: rowData["sampleInfoUrl"],
+        url: rowData["sampleEditUrl"],
         type: "GET",
         dataType: "json",
         success: function (data) {
@@ -433,8 +491,15 @@ function onClickEdit() {
                 }
             });
 
+            // initialize smart annotation
+            SmartAnnotation.init($('[data-object="sample_custom_fields"]'));
+            _.each($('[data-object="custom_fields"]'), function(el) {
+              if(_.isUndefined($(el).data('atwho'))) {
+                SmartAnnotation.init(el);
+              }
+            });
             // Adjust columns width in table header
-            table.columns.adjust();
+            adjustTableHeader();
         },
         error: function (e, data, status, xhr) {
             if (e.status == 403) {
@@ -501,13 +566,11 @@ function onClickSave() {
         data: data,
         success: function (data) {
             sampleAlertMsg(data.flash, "success");
-            HelperModule.hideFlashMsg();
             onClickCancel();
         },
         error: function (e, eData, status, xhr) {
             var data = e.responseJSON;
             clearAllErrors();
-            sampleAlertMsgHide();
 
             if (e.status == 404) {
                 sampleAlertMsg(I18n.t("samples.js.not_found_error"), "danger");
@@ -720,8 +783,14 @@ function onClickAddSample() {
             $("select[name=sample_group_id]").selectpicker();
             $("select[name=sample_type_id]").selectpicker();
 
+            // initialize smart annotation
+            _.each($('[data-object="custom_fields"]'), function(el) {
+              if(_.isUndefined($(el).data('atwho'))) {
+                SmartAnnotation.init(el);
+              }
+            });
             // Adjust columns width in table header
-            table.columns.adjust();
+            adjustTableHeader();
         },
         error: function (e, eData, status, xhr) {
             if (e.status == 403)
@@ -762,6 +831,14 @@ function createTdElement(content) {
   return td;
 }
 
+// Adjust columns width in table header
+function adjustTableHeader() {
+  table.columns.adjust();
+  $('.dropdown-menu').parent().on('shown.bs.dropdown hidden.bs.dropdown', function () {
+    table.columns.adjust();
+  });
+}
+
 /**
  * Creates select dropdown for sample type
  * @param {Object[]} data List of sample types
@@ -780,7 +857,7 @@ function createSampleTypeSelect(data, selected) {
   $.each(data, function(i, val) {
     var $option = $('<option></option>')
       .attr('value', val.id).text(val.name);
-    if((i + 1) === selected) {
+    if(val.id === selected) {
       $option.attr('selected', true);
     }
     $selectType.append($option);
@@ -809,7 +886,7 @@ function createSampleGroupSelect(data, selected) {
     var $option = $('<option></option>')
       .attr('value', val.id).text(val.name)
       .attr('data-content', $span.prop('outerHTML') + ' ' + val.name);
-    if((i + 1) === selected) {
+    if(val.id === selected) {
       $option.attr('selected', true);
     }
     $selectGroup.append($option);
@@ -980,11 +1057,11 @@ function changeToEditMode() {
           '<span class="text">' + generateColumnNameTooltip(thederName) + '</span> ' +
           '<span class="form-group"><input type="text" class="text-edit form-control" style="display: none;" />' +
           '<span class="pull-right controls">' +
-          '<span class="ok glyphicon glyphicon-ok" style="display: none;"></span>' +
-          '<span class="cancel glyphicon glyphicon-remove" style="display: none;"></span>' +
-          '<span class="vis glyphicon ' + visClass + '"></span> ' +
-          '<span class="edit glyphicon glyphicon-pencil ' + editClass + '"></span>' +
-          '<span class="del glyphicon glyphicon-trash ' + delClass + '"></span>' +
+          '<span class="ok glyphicon glyphicon-ok" style="display: none;" title="<%= I18n.t("general.save") %>"></span>' +
+          '<span class="cancel glyphicon glyphicon-remove" style="display: none;" title="<%= I18n.t("general.cancel") %>"></span>' +
+          '<span class="vis glyphicon ' + visClass + '" title="<%= I18n.t("samples.columns_visibility") %>"></span> ' +
+          '<span class="edit glyphicon glyphicon-pencil ' + editClass + '" title="<%= I18n.t("general.edit") %>"></span>' +
+          '<span class="del glyphicon glyphicon-trash ' + delClass + '" title="<%= I18n.t("samples.columns_delete") %>"></span>' +
           '</span><br></span></li>';
         dropdownList.append(html);
       }
@@ -1022,12 +1099,22 @@ function changeToEditMode() {
         self.removeClass('glyphicon-eye-open');
         li.addClass('col-invisible');
         column.visible(false);
+        table.setColumnSearchable(column.index(), false);
       } else {
         self.addClass('glyphicon-eye-open');
         self.removeClass('glyphicon-eye-close');
         li.removeClass('col-invisible');
         column.visible(true);
+        table.setColumnSearchable(column.index(), true);
+        initHeaderTooltip();
       }
+
+      // Re-filter/search if neccesary
+      var searchText = $('div.dataTables_filter input').val();
+      if (!_.isEmpty(searchText)) {
+        table.search(searchText).draw();
+      }
+      sampleInfoListener();
     });
   }
 
@@ -1079,6 +1166,7 @@ function changeToEditMode() {
             .html(generateColumnNameTooltip(newName));
 
           cancelEditMode();
+          initHeaderTooltip();
         },
         error: function(xhr) {
           dropdownList.sortable('disable');
@@ -1205,7 +1293,18 @@ function changeToEditMode() {
           modal.modal('show');
         },
         error: function(xhr) {
-          // TODO
+          dropdownList.sortable('disable');
+          $(li).clearFormErrors();
+          var msg = $.parseJSON(xhr.responseText);
+
+          renderFormError(undefined,
+                          $(li).find('.text-edit'),
+                          Object.keys(msg)[0] + ' ' + msg.name.toString());
+          var verticalHeight = $(li).offset().top;
+          dropdownList.scrollTo(verticalHeight,0);
+          setTimeout(function() {
+            $(li).clearFormErrors();
+          }, 5000);
         }
       });
     });

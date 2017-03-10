@@ -1,6 +1,9 @@
 class AssetsController < ApplicationController
   include WopiUtil
+  include ActionView::Helpers::TextHelper
 
+  before_action :load_vars
+  before_action :check_read_permission, except: :file_present
   before_action :load_vars, except: :signature
   before_action :check_read_permission, except: [:signature, :file_present]
   before_action :check_edit_permission, only: :edit
@@ -28,32 +31,46 @@ class AssetsController < ApplicationController
 
   def file_present
     respond_to do |format|
-      format.json {
-        if @asset.file_present
+      format.json do
+        if @asset.file.processing?
+          render json: {}, status: 404
+        else
           # Only if file is present,
           # check_read_permission
           check_read_permission
 
           # If check_read_permission already rendered error,
           # stop execution
-          if performed? then
-            return
-          end
+          return if performed?
 
           # If check permission passes, return :ok
-          render json: {}, status: 200
-        else
-          render json: {}, status: 404
+          render json: {
+            'asset-id' => @asset.id,
+            'image-tag-url' => @asset.url(:medium),
+            'preview-url' => large_image_url_asset_path(@asset),
+            'filename' => truncate(@asset.file_file_name,
+                                   length:
+                                     Constants::FILENAME_TRUNCATION_LENGTH),
+            'download-url' => download_asset_path(@asset),
+            'type' => (@asset.is_image? ? 'image' : 'file')
+          }, status: 200
         end
-      }
+      end
     end
   end
 
-  def preview
-    if @asset.is_image?
-      redirect_to @asset.url(:medium), status: 307
-    else
-      render_400
+  def large_image_url
+    respond_to do |format|
+      format.json do
+        render json: {
+          'large-preview-url' => @asset.url(:large),
+          'filename' => truncate(@asset.file_file_name,
+                                 length:
+                                   Constants::FILENAME_TRUNCATION_LENGTH),
+          'download-url' => download_asset_path(@asset),
+          'type' => (@asset.is_image? ? 'image' : 'file')
+        }
+      end
     end
   end
 

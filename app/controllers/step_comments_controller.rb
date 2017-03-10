@@ -1,4 +1,8 @@
 class StepCommentsController < ApplicationController
+  include ActionView::Helpers::TextHelper
+  include InputSanitizeHelper
+  include ApplicationHelper
+
   before_action :load_vars
 
   before_action :check_view_permissions, only: [:index]
@@ -35,13 +39,14 @@ class StepCommentsController < ApplicationController
   end
 
   def create
-    @comment = Comment.new(
+    @comment = StepComment.new(
       message: comment_params[:message],
-      user: current_user)
+      user: current_user,
+      step: @step
+    )
 
     respond_to do |format|
-      if (@comment.valid? && @step.comments << @comment)
-
+      if @comment.save
         # Generate activity (this can only occur in module,
         # but nonetheless check if my module is not nil)
         if @protocol.in_module?
@@ -115,7 +120,8 @@ class StepCommentsController < ApplicationController
               )
             )
           end
-          render json: {}, status: :ok
+          message = custom_auto_link(@comment.message)
+          render json: { comment: message }, status: :ok
         else
           render json: { errors: @comment.errors.to_hash(true) },
                  status: :unprocessable_entity
@@ -178,13 +184,13 @@ class StepCommentsController < ApplicationController
   end
 
   def check_edit_permissions
-    @comment = Comment.find_by_id(params[:id])
+    @comment = StepComment.find_by_id(params[:id])
     render_403 unless @comment.present? &&
                       can_edit_step_comment_in_protocol(@comment)
   end
 
   def check_destroy_permissions
-    @comment = Comment.find_by_id(params[:id])
+    @comment = StepComment.find_by_id(params[:id])
     render_403 unless @comment.present? &&
                       can_delete_step_comment_in_protocol(@comment)
   end

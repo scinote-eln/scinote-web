@@ -3,9 +3,9 @@ include DatabaseHelper
 
 class AddSearchQueryIndexes < ActiveRecord::Migration
   def up
-    add_index :projects, :organization_id
-    add_index :user_organizations, :user_id
-    add_index :user_organizations, :organization_id
+    add_index :projects, :team_id
+    add_index :user_teams, :user_id
+    add_index :user_teams, :team_id
     add_index :user_projects, :user_id
     add_index :user_projects, :project_id
     add_index :tags, :project_id
@@ -28,9 +28,9 @@ class AddSearchQueryIndexes < ActiveRecord::Migration
   end
 
   def down
-    remove_index :projects, :organization_id
-    remove_index :user_organizations, :user_id
-    remove_index :user_organizations, :organization_id
+    remove_index :projects, :team_id
+    remove_index :user_teams, :user_id
+    remove_index :user_teams, :team_id
     remove_index :user_projects, :user_id
     remove_index :user_projects, :project_id
     remove_index :tags, :project_id

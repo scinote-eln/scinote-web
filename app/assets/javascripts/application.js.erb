@@ -12,6 +12,8 @@
 //= require jquery-ui/draggable
 //= require jquery-ui/droppable
 //= require jquery.ui.touch-punch.min
+//= require jquery.caret.min
+//= require jquery.atwho.min
 //= require hammer
 //= require introjs
 //= require js.cookie
@@ -25,14 +27,16 @@
 //= require bootstrap-checkbox.min
 //= require typeahead.bundle.min
 //= require nested_form_fields
+//= require highlight.pack
+//= require tinymce-jquery
 //= require_directory ./sitewide
+//= require datatables
 //= require dataTables.noSearchHidden
 //= require bootstrap-select
 //= require underscore
 //= require i18n.js
 //= require i18n/translations
 //= require turbolinks
-//= require quill
 
 
 // Initialize links for submitting forms. This is useful for submitting
@@ -212,7 +216,9 @@ var HelperModule = (function(){
       window.setTimeout(function () {
         flash.fadeTo(500, 0).slideUp(500, function () {
           $(this).remove();
-          $('#content-wrapper').removeClass('alert-shown');
+          if($('.alert').length <= 0) {
+            $('#content-wrapper').removeClass('alert-shown');
+          }
         });
       }, 5000);
     }
@@ -224,4 +230,13 @@ var HelperModule = (function(){
   });
 
   return helpers;
+})();
+
+// initialize code markup in rich text fields
+(function() {
+  $(document).ready(function() {
+    $('[class^=language]').each(function(i, block) {
+      hljs.highlightBlock(block);
+    });
+  });
 })();

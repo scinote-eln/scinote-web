@@ -6,10 +6,10 @@ def render_new_element(hide)
 end
 
 def render_report_element(element, provided_locals = nil)
-  children_html = "".html_safe
+  children_html = ''.html_safe
 
   # First, recursively render element's children
-  if element.comments? or element.project_header?
+  if element.comments? || element.project_header?
     # Render no children
   elsif element.result?
     # Special handling for result comments

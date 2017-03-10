@@ -6,39 +6,39 @@ class MigrateOrganizationsStructure < ActiveRecord::Migration
       asset.update(file_present: true)
     end
 
-    # Calculate organizations' taken space
-    Organization.find_each do |org|
-      org.calculate_space_taken
-      org.save
+    # Calculate teams' taken space
+    Team.find_each do |team|
+      team.calculate_space_taken
+      team.save
     end
 
-    # Finally, the trickiest task: Re-define organizations
-    demo_org = Organization.find_by(name: "Demo organization")
-    if demo_org
-      demo_org.user_organizations.each do |uo|
+    # Finally, the trickiest task: Re-define teams
+    demo_team = Team.find_by(name: "Demo team")
+    if demo_team
+      demo_team.user_teams.each do |uo|
         uo.destroy
       end
     end
-    Organization.find_each do |org|
-      user = org.users.first
-      org.update(created_by: user)
+    Team.find_each do |team|
+      user = team.users.first
+      team.update(created_by: user)
     end
 
-    UserOrganization.find_each do |uo|
+    UserTeam.find_each do |uo|
       uo.update(role: 2)
     end
   end
 
   def down
-    # We cannot re-assign users to demo organization or re-update
-    # their previous user-organization roles
+    # We cannot re-assign users to demo team or re-update
+    # their previous user-team roles
 
-    # But we can remove created_by field from organizations
-    Organization.find_each do |org|
-      org.update(created_by: nil)
+    # But we can remove created_by field from teams
+    Team.find_each do |team|
+      team.update(created_by: nil)
     end
 
-    # Resetting calculated assets & organizations' space
+    # Resetting calculated assets & teams' space
     # to 0 doesn't make much sense even when downgrading migration
   end
 end

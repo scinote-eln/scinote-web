@@ -1,14 +1,13 @@
 class RenameDuplicateColumns < ActiveRecord::Migration
-
-  require 'set';
+  require 'set'
 
   def up
-    # Update duplicate or prohibited column names with extensions 
+    # Update duplicate or prohibited column names with extensions
 
-    Organization.find_each do |org|
+    Team.find_each do |team|
       names = Set.new ["Assigned", "Sample name", "Sample type", "Sample group", "Added on", "Added by"]
 
-      CustomField.where(organization: org).find_each do |column|
+      CustomField.where(team: team).find_each do |column|
         if names.include?(column.name)
           name = column.name
           i = 0
@@ -16,7 +15,7 @@ class RenameDuplicateColumns < ActiveRecord::Migration
             name = column.name
             i = i+1
             suffix = "(" + i.to_s + ")"
-            if (suffix.length + name.length > 50) 
+            if (suffix.length + name.length > 50)
               name = name[0..(49-suffix.length)]
             end
             name = name + suffix

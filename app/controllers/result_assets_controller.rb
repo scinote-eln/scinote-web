@@ -3,7 +3,6 @@ class ResultAssetsController < ApplicationController
 
   before_action :load_vars, only: [:edit, :update, :download]
   before_action :load_vars_nested, only: [:new, :create]
-  before_action :load_paperclip_vars
 
   before_action :check_create_permissions, only: [:new, :create]
   before_action :check_edit_permissions, only: [:edit, :update]
@@ -18,16 +17,11 @@ class ResultAssetsController < ApplicationController
     )
 
     respond_to do |format|
-      format.json {
+      format.json do
         render json: {
-          html: render_to_string({
-            partial: "new.html.erb",
-            locals: {
-              direct_upload: @direct_upload
-            }
-          })
+          html: render_to_string(partial: 'new.html.erb')
         }, status: :ok
-      }
+      end
     end
   end
 
@@ -46,7 +40,7 @@ class ResultAssetsController < ApplicationController
     respond_to do |format|
       if (@result.save and @asset.save) then
         # Post process file here
-        @asset.post_process_file(@my_module.experiment.project.organization)
+        @asset.post_process_file(@my_module.experiment.project.team)
 
         # Generate activity
         Activity.create(
@@ -87,16 +81,11 @@ class ResultAssetsController < ApplicationController
 
   def edit
     respond_to do |format|
-      format.json {
+      format.json do
         render json: {
-          html: render_to_string({
-            partial: "edit.html.erb",
-            locals: {
-              direct_upload: @direct_upload
-            }
-          })
+          html: render_to_string(partial: 'edit.html.erb')
         }, status: :ok
-      }
+      end
     end
   end
 
@@ -164,15 +153,15 @@ class ResultAssetsController < ApplicationController
       saved = @result.save
 
       if saved then
-        # Release organization's space taken due to
+        # Release team's space taken due to
         # previous asset being removed
-        org = @result.my_module.experiment.project.organization
-        org.release_space(previous_size)
-        org.save
+        team = @result.my_module.experiment.project.team
+        team.release_space(previous_size)
+        team.save
 
         # Post process new file if neccesary
         if @result.asset.present?
-          @result.asset.post_process_file(org)
+          @result.asset.post_process_file(team)
         end
 
         Activity.create(
@@ -211,10 +200,6 @@ class ResultAssetsController < ApplicationController
   end
 
   private
-
-  def load_paperclip_vars
-    @direct_upload = ENV['PAPERCLIP_DIRECT_UPLOAD'] == "true"
-  end
 
   def load_vars
     @result_asset = ResultAsset.find_by_id(params[:id])

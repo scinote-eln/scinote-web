@@ -15,21 +15,21 @@ class CustomFieldTest < ActiveSupport::TestCase
                'Added on',
                'Added by'])
 
-  test "should validate with correct data" do
+  test 'should validate with correct data' do
     assert @custom_field.valid?
   end
 
-  test "should not validate with non existent user" do
+  test 'should not validate with non existent user' do
     @custom_field.user_id = 11231231
     assert_not @custom_field.valid?
     @custom_field.user = nil
     assert_not @custom_field.valid?
   end
 
-  test "should not validate with non existent organization" do
-    @custom_field.organization_id = 1231231
+  test 'should not validate with non existent team' do
+    @custom_field.team_id = 1231231
     assert_not @custom_field.valid?
-    @custom_field.organization = nil
+    @custom_field.team = nil
     assert_not @custom_field.valid?
   end
 end

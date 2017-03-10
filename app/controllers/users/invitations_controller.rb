@@ -9,18 +9,18 @@ module Users
     before_filter :update_sanitized_params, only: :update
 
     def update
-      # Instantialize a new organization with the provided name
-      @org = Organization.new
-      @org.name = params[:organization][:name]
+      # Instantialize a new team with the provided name
+      @team = Team.new
+      @team.name = params[:team][:name]
 
       super do |user|
         if user.errors.empty?
-          @org.created_by = user
-          @org.save
+          @team.created_by = user
+          @team.save
 
-          UserOrganization.create(
+          UserTeam.create(
             user: user,
-            organization: @org,
+            team: @team,
             role: 'admin'
           )
         end
@@ -28,7 +28,7 @@ module Users
     end
 
     def accept_resource
-      unless @org.valid?
+      unless @team.valid?
         # Find the user being invited
         resource = User.find_by_invitation_token(
           update_resource_params[:invitation_token],
@@ -41,8 +41,8 @@ module Users
         )
         resource.valid? # Call validation to generate errors
 
-        # In any case, add the organization name error
-        resource.errors.add(:base, @org.errors.to_a.first)
+        # In any case, add the team name error
+        resource.errors.add(:base, @team.errors.to_a.first)
         return resource
       end
 
@@ -100,38 +100,38 @@ module Users
           end
         end
 
-        if @org.present? && result[:status] != :user_invalid
-          if UserOrganization.exists?(user: user, organization: @org)
-            user_org =
-              UserOrganization.where(user: user, organization: @org).first
+        if @team.present? && result[:status] != :user_invalid
+          if UserTeam.exists?(user: user, team: @team)
+            user_team =
+              UserTeam.where(user: user, team: @team).first
 
-            result[:status] = :user_exists_and_in_org
+            result[:status] = :user_exists_and_in_team
           else
-            # Also generate user organization relation
-            user_org = UserOrganization.new(
+            # Also generate user team relation
+            user_team = UserTeam.new(
               user: user,
-              organization: @org,
+              team: @team,
               role: @role
             )
-            user_org.save
+            user_team.save
 
             generate_notification(
               @user,
               user,
-              user_org.role_str,
-              user_org.organization
+              user_team.role_str,
+              user_team.team
             )
 
             if result[:status] == :user_exists && !user.confirmed?
-              result[:status] = :user_exists_unconfirmed_invited_to_org
+              result[:status] = :user_exists_unconfirmed_invited_to_team
             elsif result[:status] == :user_exists
-              result[:status] = :user_exists_invited_to_org
+              result[:status] = :user_exists_invited_to_team
             else
-              result[:status] = :user_created_invited_to_org
+              result[:status] = :user_created_invited_to_team
             end
           end
 
-          result[:user_org] = user_org
+          result[:user_team] = user_team
         end
 
         @invite_results << result
@@ -165,14 +165,14 @@ module Users
       end
     end
 
-    def generate_notification(user, target_user, role, org)
-      title = I18n.t('notifications.assign_user_to_organization',
+    def generate_notification(user, target_user, role, team)
+      title = I18n.t('notifications.assign_user_to_team',
                      assigned_user: target_user.name,
                      role: role,
-                     organization: org.name,
+                     team: team.name,
                      assigned_by_user: user.name)
 
-      message = "#{I18n.t('search.index.organization')} #{org.name}"
+      message = "#{I18n.t('search.index.team')} #{team.name}"
       notification = Notification.create(
         type_of: :assignment,
         title: ActionController::Base.helpers.sanitize(title),
@@ -187,12 +187,12 @@ module Users
     def check_invite_users_permission
       @user = current_user
       @emails = params[:emails]
-      @org = Organization.find_by_id(params['organizationId'])
+      @team = Team.find_by_id(params['teamId'])
       @role = params['role']
 
       render_403 if @emails && @emails.empty?
-      render_403 if @org && !is_admin_of_organization(@org)
-      render_403 if @role && !UserOrganization.roles.keys.include?(@role)
+      render_403 if @team && !is_admin_of_team(@team)
+      render_403 if @role && !UserTeam.roles.keys.include?(@role)
     end
   end
 end

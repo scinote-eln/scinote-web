@@ -18,7 +18,7 @@
           <li>
             <a href="#"
                data-action="edit-comment"
-               data-url="<%= edit_my_module_my_module_comment_path(comment.my_module_comment.my_module, comment, format: :json) %>">
+               data-url="<%= edit_my_module_my_module_comment_path(comment.my_module, comment, format: :json) %>">
               <%= t('comments.options_dropdown.edit') %>
             </a>
           </li>
@@ -27,7 +27,7 @@
           <li>
             <a href="#"
                data-action="delete-comment"
-               data-url="<%= my_module_my_module_comment_path(comment.my_module_comment.my_module, comment, format: :json) %>"
+               data-url="<%= my_module_my_module_comment_path(comment.my_module, comment, format: :json) %>"
                data-confirm-message="<%= t('comments.delete_confirm') %>">
               <%= t('comments.options_dropdown.delete') %>
             </a>
@@ -39,7 +39,5 @@
 </div>
 <strong><%= comment.user.full_name %>:</strong>
 <div data-role="comment-message-container">
-  <p data-role="comment-message"><%= auto_link(simple_format(comment.message),
-                                               link: :urls,
-                                               html: { target: '_blank' }) %></p>
+  <div data-role="comment-message"><%= custom_auto_link(comment.message) %></div>
 </div>

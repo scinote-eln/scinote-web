@@ -1,0 +1,6 @@
+<button type="button" class="btn btn-default" data-dismiss="modal"><%=t "general.close" %></button>
+<% if can_edit_protocol(@protocol) %>
+  <%= route_to_other_team_btn edit_protocol_path(protocol),
+                              protocol.team,
+                              t('general.edit') %>
+<% end %>

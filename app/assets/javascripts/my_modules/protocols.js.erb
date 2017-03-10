@@ -1,7 +1,5 @@
 //= require protocols/import_export/import
-//= require protocols/import_export/export
 //= require comments
-//= require datatables
 
 // Currently selected row in "load from protocol" modal
 var selectedRow = null;
@@ -17,10 +15,10 @@ function init() {
   initLoadFromRepository();
   initRefreshStatusBar();
   initImport();
-  initExport();
   Comments.bindNewElement();
   Comments.initialize();
   initTutorial();
+  setupAssetsLoading();
 }
 
 // Initialize edit description modal window
@@ -77,7 +75,7 @@ function bindEditDueDateAjax() {
 
   $(".due-date-link")
   .on("ajax:success", function(ev, data, status) {
-    var dueDateLink = $(".due-date-refresh");
+    var dueDateLink = $(".task-due-date");
 
     // Load contents
     editDueDateModalBody.html(data.html);
@@ -508,13 +506,6 @@ function initImport() {
 
     // Clear input on self
     $(this).val("");
-  });
-}
-
-function initExport() {
-  var exportBtn = $("[data-action='export']");
-  exportBtn.on("click", function() {
-    exportProtocols([ $(this).attr("data-id") ]);
   });
 }
 

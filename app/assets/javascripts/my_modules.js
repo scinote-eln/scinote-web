@@ -58,7 +58,7 @@ function bindEditDueDateAjax() {
 
   $(".due-date-link")
   .on("ajax:success", function (ev, data, status) {
-    var dueDateLink = $(".due-date-refresh");
+    var dueDateLink = $('.task-due-date');
 
     // Load contents
     editDueDateModalBody.html(data.html);
@@ -216,6 +216,40 @@ function bindEditTagsAjax() {
     initTagsModalBody(data);
   });
 }
+
+// Sets callback for completing/uncompleting task
+function applyTaskCompletedCallBack() {
+  // First, remove old event handlers, as we use turbolinks
+  $("[data-action='complete-task'], [data-action='uncomplete-task']")
+  .off().on('click', function() {
+    var button = $(this);
+    $.ajax({
+      url: button.data('link-url'),
+      type: 'POST',
+      dataType: 'json',
+      success: function(data) {
+        if (data.completed === true) {
+          button.attr('data-action', 'uncomplete-task');
+          button.find('.btn')
+            .removeClass('btn-primary').addClass('btn-default');
+        } else {
+          button.attr('data-action', 'complete-task');
+          button.find('.btn')
+            .removeClass('btn-default').addClass('btn-primary');
+        }
+        $('.task-due-date').html(data.module_header_due_date_label);
+        $('.task-state-label').html(data.module_state_label);
+        button.find('button').replaceWith(data.new_btn);
+      },
+      error: function() {
+      }
+    });
+  });
+}
+
+$(document).ready(function() {
+  applyTaskCompletedCallBack();
+});
 
 bindEditDueDateAjax();
 bindEditDescriptionAjax();

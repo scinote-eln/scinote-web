@@ -1,7 +1,8 @@
 class ProjectsController < ApplicationController
   include SampleActions
   include RenamingUtil
-  include OrganizationsHelper
+  include TeamsHelper
+  include InputSanitizeHelper
 
   before_action :load_vars, only: [:show, :edit, :update,
                                    :notifications, :reports,
@@ -21,26 +22,26 @@ class ProjectsController < ApplicationController
   layout :choose_layout
 
   # Action defined in SampleActions
-  DELETE_SAMPLES = I18n.t("samples.delete_samples")
+  DELETE_SAMPLES = 'Delete'.freeze
 
   def index
-    if params[:organization]
-      current_organization_switch(Organization
-                                    .find_by_id(params[:organization]))
+    if params[:team]
+      current_team_switch(Team.find_by_id(params[:team]))
     end
 
-    if current_user.organizations.any?
-      @current_organization_id = current_organization.id if current_organization
+    if current_user.teams.any?
+      @current_team_id = current_team.id if current_team
 
-      @current_organization_id ||= current_user.organizations.first.id
+      @current_team_id ||= current_user.teams.first.id
       @current_sort = params[:sort].to_s
-      @projects_by_orgs = current_user
-                          .projects_by_orgs(@current_organization_id,
-                                            @current_sort,
-                                            @filter_by_archived)
+      @projects_by_teams = current_user.projects_by_teams(@current_team_id,
+                                                          @current_sort,
+                                                          @filter_by_archived)
+    else
+      @projects_by_teams = []
     end
 
-    @organizations = current_user.organizations
+    @teams = current_user.teams
 
     # New project for create new project modal
     @project = Project.new
@@ -59,7 +60,7 @@ class ProjectsController < ApplicationController
     @project = Project.new(project_params)
     @project.created_by = current_user
     @project.last_modified_by = current_user
-    if current_organization.id == project_params[:organization_id].to_i &&
+    if current_team.id == project_params[:team_id].to_i &&
        @project.save
       # Create user-project association
       up = UserProject.new(
@@ -104,7 +105,8 @@ class ProjectsController < ApplicationController
             partial: "edit.html.erb",
             locals: { project: @project }
           }),
-          title: t("projects.index.modal_edit_project.modal_title", project: @project.name)
+          title: t('projects.index.modal_edit_project.modal_title',
+                   project: escape_input(@project.name))
         }
       }
     end
@@ -250,7 +252,7 @@ class ProjectsController < ApplicationController
 
   def show
     # This is the "info" view
-    current_organization_switch(@project.organization)
+    current_team_switch(@project.team)
     @current_sort = params[:sort].to_s
   end
 
@@ -272,21 +274,21 @@ class ProjectsController < ApplicationController
 
   def samples
     @samples_index_link = samples_index_project_path(@project, format: :json)
-    @organization = @project.organization
+    @team = @project.team
   end
 
   def experiment_archive
-    current_organization_switch(@project.organization)
+    current_team_switch(@project.team)
   end
 
   def samples_index
-    @organization = @project.organization
+    @team = @project.team
     @user = current_user
     respond_to do |format|
       format.html
       format.json do
         render json: ::SampleDatatable.new(view_context,
-                                           @organization,
+                                           @team,
                                            @project,
                                            nil,
                                            nil,
@@ -298,7 +300,7 @@ class ProjectsController < ApplicationController
   private
 
   def project_params
-    params.require(:project).permit(:name, :organization_id, :visibility, :archived)
+    params.require(:project).permit(:name, :team_id, :visibility, :archived)
   end
 
   def load_vars

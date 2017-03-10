@@ -9,7 +9,10 @@ class Asset < ActiveRecord::Base
   LOCK_DURATION = 60*30
 
   # Paperclip validation
-  has_attached_file :file, styles: { medium: Constants::MEDIUM_PIC_FORMAT }
+  has_attached_file :file,
+                    styles: { large: [Constants::LARGE_PIC_FORMAT, :jpg],
+                              medium: [Constants::MEDIUM_PIC_FORMAT, :jpg] },
+                    convert_options: { medium: '-quality 70 -strip' }
 
   validates_attachment :file,
                        presence: true,
@@ -22,7 +25,19 @@ class Asset < ActiveRecord::Base
   # Should be checked for any security leaks
   do_not_validate_attachment_file_type :file
 
-  before_file_post_process :is_image?
+  # adds image processing in background job
+  process_in_background :file,
+                        only_process: lambda { |a|
+                                        if a.content_type ==
+                                           %r{^image/#{ Regexp.union(
+                                             Constants::WHITELISTED_IMAGE_TYPES
+                                           ) }}
+                                          [:large, :medium]
+                                        else
+                                          {}
+                                        end
+                                      },
+                        processing_image_url: '/images/:style/processing.gif'
 
   # Asset validation
   # This could cause some problems if you create empty asset and want to
@@ -30,10 +45,12 @@ class Asset < ActiveRecord::Base
   validate :step_or_result
 
   belongs_to :created_by, foreign_key: 'created_by_id', class_name: 'User'
-  belongs_to :last_modified_by, foreign_key: 'last_modified_by_id', class_name: 'User'
+  belongs_to :last_modified_by,
+             foreign_key: 'last_modified_by_id',
+             class_name: 'User'
   has_one :step_asset,
-    inverse_of: :asset,
-    dependent: :destroy
+          inverse_of: :asset,
+          dependent: :destroy
   has_one :step, through: :step_asset,
     dependent: :nullify
 
@@ -163,7 +180,7 @@ class Asset < ActiveRecord::Base
     file.options[:storage].to_sym == :s3
   end
 
-  def post_process_file(org = nil)
+  def post_process_file(team = nil)
     # Update self.empty
     self.update(file_present: true)
 
@@ -172,14 +189,14 @@ class Asset < ActiveRecord::Base
       Rails.logger.info "Asset #{id}: Creating extract text job"
       # The extract_asset_text also includes
       # estimated size calculation
-      delay(queue: :assets).extract_asset_text(org)
+      delay(queue: :assets).extract_asset_text(team)
     else
       # Update asset's estimated size immediately
-      update_estimated_size(org)
+      update_estimated_size(team)
     end
   end
 
-  def extract_asset_text(org = nil)
+  def extract_asset_text(team = nil)
     if file.blank?
       return
     end
@@ -212,7 +229,7 @@ class Asset < ActiveRecord::Base
 
       # Finally, update asset's estimated size to include
       # the data vector
-      update_estimated_size(org)
+      update_estimated_size(team)
     rescue Exception => e
       Rails.logger.fatal "Asset #{id}: Error extracting contents from asset file #{file.path}: " + e.message
     ensure
@@ -230,9 +247,9 @@ class Asset < ActiveRecord::Base
     delete
   end
 
-  # If organization is provided, its space_taken
+  # If team is provided, its space_taken
   # is updated as well
-  def update_estimated_size(org = nil)
+  def update_estimated_size(team = nil)
     if file_file_size.blank?
       return
     end
@@ -247,10 +264,10 @@ class Asset < ActiveRecord::Base
     update(estimated_size: es)
     Rails.logger.info "Asset #{id}: Estimated size successfully calculated"
 
-    # Finally, update organization's space
-    if org.present?
-      org.take_space(es)
-      org.save
+    # Finally, update team's space
+    if team.present?
+      team.take_space(es)
+      team.save
     end
   end
 

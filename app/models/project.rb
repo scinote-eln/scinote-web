@@ -7,9 +7,10 @@ class Project < ActiveRecord::Base
   validates :name,
             length: { minimum: Constants::NAME_MIN_LENGTH,
                       maximum: Constants::NAME_MAX_LENGTH },
-            uniqueness: { scope: :organization, case_sensitive: false }
+            uniqueness: { scope: :team, case_sensitive: false,
+                          message: I18n.t('projects.create.name_taken') }
   validates :visibility, presence: true
-  validates :organization, presence: true
+  validates :team, presence: true
 
   belongs_to :created_by, foreign_key: 'created_by_id', class_name: 'User'
   belongs_to :last_modified_by, foreign_key: 'last_modified_by_id', class_name: 'User'
@@ -18,50 +19,76 @@ class Project < ActiveRecord::Base
   has_many :user_projects, inverse_of: :project
   has_many :users, through: :user_projects
   has_many :experiments, inverse_of: :project
-  has_many :project_comments, inverse_of: :project
-  has_many :comments, through: :project_comments
+  has_many :project_comments, foreign_key: :associated_id, dependent: :destroy
   has_many :activities, inverse_of: :project
   has_many :tags, inverse_of: :project
   has_many :reports, inverse_of: :project, dependent: :destroy
   has_many :report_elements, inverse_of: :project, dependent: :destroy
-  belongs_to :organization, inverse_of: :projects
+  belongs_to :team, inverse_of: :projects
 
-  def self.search(user, include_archived, query = nil, page = 1)
+  def self.search(
+    user,
+    include_archived,
+    query = nil,
+    page = 1,
+    current_team = nil
+  )
 
     if query
-      a_query = query.strip
-      .gsub("_","\\_")
-      .gsub("%","\\%")
-      .split(/\s+/)
-      .map {|t|  "%" + t + "%" }
+      a_query = '%' + query.strip.gsub('_', '\\_').gsub('%', '\\%') + '%'
     else
       a_query = query
     end
 
-
-    org_ids =
-      Organization
-      .joins(:user_organizations)
-      .where("user_organizations.user_id = ?", user.id)
-      .select("id")
-      .distinct
-
-    if include_archived
-      new_query = Project
+    if current_team
+      new_query =
+        Project
         .distinct
         .joins(:user_projects)
-        .where("projects.organization_id IN (?)", org_ids)
-        .where("projects.visibility = 1 OR user_projects.user_id = ?", user.id)
-        .where_attributes_like(:name, a_query)
+        .where('projects.team_id = ?', current_team.id)
+      unless user.user_teams.find_by(team: current_team).try(:admin?)
+        # Admins see all projects in the team
+        new_query = new_query.where(
+          'projects.visibility = 1 OR user_projects.user_id = ?',
+          user.id
+        )
+      end
+      new_query = new_query.where_attributes_like(:name, a_query)
 
+      if include_archived
+        return new_query
+      else
+        return new_query.where('projects.archived = ?', false)
+      end
     else
       new_query = Project
-        .distinct
-        .joins(:user_projects)
-        .where("projects.organization_id IN (?)", org_ids)
-        .where("projects.visibility = 1 OR user_projects.user_id = ?", user.id)
-        .where_attributes_like(:name, a_query)
-        .where("projects.archived = ?", false)
+                  .distinct
+                  .joins(team: :user_teams)
+                  .where('user_teams.user_id = ?', user.id)
+
+      if include_archived
+        new_query =
+          new_query
+          .joins(:user_projects)
+          .where(
+            'user_teams.role = 2 OR projects.visibility = 1 OR ' \
+            'user_projects.user_id = ?',
+            user.id
+          )
+          .where_attributes_like('projects.name', a_query)
+
+      else
+        new_query =
+          new_query
+          .joins(:user_projects)
+          .where(
+            'user_teams.role = 2 OR projects.visibility = 1 OR ' \
+            'user_projects.user_id = ?',
+            user.id
+          )
+          .where_attributes_like('projects.name', a_query)
+          .where('projects.archived = ?', false)
+      end
     end
 
     # Show all results if needed
@@ -82,18 +109,18 @@ class Project < ActiveRecord::Base
   # using last comment id and per_page parameters.
   def last_comments(last_id = 1, per_page = Constants::COMMENTS_SEARCH_LIMIT)
     last_id = Constants::INFINITY if last_id <= 1
-    comments = Comment.joins(:project_comment)
-                      .where(project_comments: { project_id: id })
-                      .where('comments.id <  ?', last_id)
-                      .order(created_at: :desc)
-                      .limit(per_page)
+    comments = ProjectComment.joins(:project)
+                             .where(projects: { id: id })
+                             .where('comments.id <  ?', last_id)
+                             .order(created_at: :desc)
+                             .limit(per_page)
     comments.reverse
   end
 
   def unassigned_users
     User
-      .joins('INNER JOIN user_organizations ON users.id = user_organizations.user_id')
-      .where('user_organizations.organization_id = ?', organization)
+      .joins('INNER JOIN user_teams ON users.id = user_teams.user_id')
+      .where('user_teams.team_id = ?', team)
       .where.not(confirmed_at: nil)
       .where('users.id NOT IN (?)',
              UserProject.where(project: self).select(:user_id).distinct)
@@ -136,7 +163,7 @@ class Project < ActiveRecord::Base
   # Writes to user log.
   def log(message)
     final = "[%s] %s" % [name, message]
-    organization.log(final)
+    team.log(final)
   end
 
   def assigned_samples

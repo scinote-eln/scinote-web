@@ -1,10 +1,7 @@
 <li data-id="<%= sample_type.id %>"
-    data-edit="<%=
-      edit_organization_sample_type_path(organization,
-                                         sample_type)
-      %>"
+    data-edit="<%= edit_team_sample_type_path(team, sample_type) %>"
     data-delete="<%=
-      organization_sample_type_destroy_confirmation_path(organization, sample_type)
+      team_sample_type_destroy_confirmation_path(team, sample_type)
       %>">
   <span class="sample-type-group-name"><%= sample_type.name %></span>
   <span class="pull-right">

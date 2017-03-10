@@ -43,12 +43,11 @@
     </span>
     <br>
     <span>
-      <%=t "search.index.organization" %>
-      <%= render partial: "search/results/partials/organization_text.html.erb",
-                 locals: { organization: report.project.organization } %>
+      <%=t "search.index.team" %>
+      <%= render partial: "search/results/partials/team_text.html.erb",
+                 locals: { team: report.project.team } %>
     </span>
   </p>
 
   <hr>
 <% end %>
-

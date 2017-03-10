@@ -39,12 +39,12 @@
         url: href,
         data: { id: id },
         success: function(data) {
-          $(li).replaceWith($.parseHTML(data.html));
+          var newLi = $.parseHTML(data.html);
+          $(li).replaceWith(newLi);
           editSampleTypeForm();
           destroySampleTypeGroup();
-          initSampleColorPicker(li)
+          initSampleColorPicker(newLi);
           appendCarretToColorPickerDropdown();
-          editSampleGroupColor();
           editSampleGroupForm();
         }
       });
@@ -110,19 +110,6 @@
     });
   }
 
-  function editSampleGroupColor() {
-    $(document).ready(function() {
-      $('.edit_sample_group a.color-btn').off();
-      $('.edit_sample_group a.color-btn').on('click', function() {
-        var color = $(this).attr('data-value');
-        var form = $(this).closest('form');
-        $('select[name="sample_group[color]"]')
-          .val(color);
-        form.submit();
-      });
-    });
-  }
-
   function bindNewSampleGroupAction() {
     $('#new_sample_group').off();
     $('#new_sample_group').bind('ajax:success', function(ev, data) {
@@ -132,7 +119,6 @@
       $(li).insertAfter('.new-resource-form');
       initSampleColorPicker(li);
       appendCarretToColorPickerDropdown();
-      editSampleGroupColor();
       editSampleGroupForm();
       destroySampleTypeGroup();
       $('#new_sample_group').clearFormErrors();
@@ -187,14 +173,14 @@
       $.ajax({
         url: li.attr('data-edit'),
         success: function(data) {
-          $(li).replaceWith($.parseHTML(data.html));
+          var newLi = $.parseHTML(data.html);
+          $(li).replaceWith(newLi);
 
           submitEditSampleTypeGroupForm();
           abortEditSampleTypeGroupAction();
           destroySampleTypeGroup();
-          initSampleColorPicker(li);
+          initSampleColorPicker(newLi);
           appendCarretToColorPickerDropdown();
-          editSampleGroupColor();
 
           $('#edit_sample_group_' + data.id)
             .find('[name="sample_group[name]"]')
@@ -203,12 +189,12 @@
           $('#edit_sample_group_' + data.id).off();
           $('#edit_sample_group_' + data.id)
             .bind('ajax:success', function(ev, data) {
-            $(this).closest('li').replaceWith($.parseHTML(data.html));
+            var newLi = $.parseHTML(data.html);
+            $(this).closest('li').replaceWith(newLi);
             editSampleGroupForm();
             destroySampleTypeGroup();
-            initSampleColorPicker($(this).closest('li'));
+            initSampleColorPicker(newLi);
             appendCarretToColorPickerDropdown();
-            editSampleGroupColor();
           }).bind('ajax:error', function(ev, error){
             $(this).clearFormErrors();
             var msg = $.parseJSON(error.responseText);
@@ -224,16 +210,42 @@
   function initSampleGroupColor() {
     var elements = $('.edit-sample-group-color');
     _.each(elements, function(el) {
-      var color = $(el).closest('[data-color]')
-                       .attr('data-color');
-      $(el).colorselector('setColor', color);
+      initSampleColorPicker(el);
     });
   }
 
   function initSampleColorPicker(el) {
-    var element = $(el).find('.edit-sample-group-color');
+    var element;
+    if ($(el).is('.edit-sample-group-color')) {
+      element = $(el);
+    } else {
+      element = $(el).find('.edit-sample-group-color');
+    }
     var color = $(element).closest('[data-color]').attr('data-color');
     $(element).colorselector('setColor', color);
+
+    // Bind on buttons
+    var btns = $(element).closest('.edit_sample_group').find('a.color-btn');
+    btns.off();
+    btns.on('click', function() {
+      var color = $(this).attr('data-value');
+      $('select[name="sample_group[color]"]').val(color);
+
+      var form = $(this).closest('form');
+      form
+      .off('ajax:success ajax:error')
+      .on('ajax:success', function() {
+      })
+      .on('ajax:error', function() {
+        form
+        .find('select')
+        .colorselector(
+          'setColor',
+          form.closest('[data-color]').attr('data-color')
+        );
+      });
+      form.submit();
+    });
   }
 
 /**
@@ -253,7 +265,6 @@
     editSampleTypeForm();
     destroySampleTypeGroup();
     editSampleGroupForm();
-    editSampleGroupColor();
     initSampleGroupColor();
     bindNewSampleGroupAction();
     appendCarretToColorPickerDropdown();

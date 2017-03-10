@@ -1,7 +1,6 @@
 //= require handsontable.full.min
 //= require Sortable.min
 //= require canvas-to-blob.min
-//= require direct-upload
 //= require assets
 //= require comments
 
@@ -9,7 +8,6 @@
 function applyCheckboxCallBack()  {
   $("[data-action='check-item']").on('click', function(e){
     var checkboxitem = $(this).find("input");
-
     var checked = checkboxitem.is(":checked");
     $.ajax({
       url: checkboxitem.data("link-url"),
@@ -28,7 +26,9 @@ function applyCheckboxCallBack()  {
 
 // Sets callback for completing/uncompleting step
 function applyStepCompletedCallBack() {
-  $("[data-action='complete-step'], [data-action='uncomplete-step']").on('click', function(e){
+  // First, remove old event handlers, as we use turbolinks
+  $("[data-action='complete-step'], [data-action='uncomplete-step']")
+  .off().on('click', function(e){
     var button = $(this);
     var step = $(this).parents(".step");
     var completed = !step.hasClass("completed");
@@ -46,6 +46,15 @@ function applyStepCompletedCallBack() {
           button = step.find("[data-action='complete-step']");
           button.attr("data-action", "uncomplete-step");
           button.find(".btn").removeClass("btn-primary").addClass("btn-default");
+          if (data.task_completed) {
+            task_button = $("[data-action='complete-task']");
+            task_button.attr('data-action', 'uncomplete-task');
+            task_button.find('.btn')
+              .removeClass('btn-primary').addClass('btn-default');
+            $('.task-due-date').html(data.module_header_due_date_label);
+            $('.task-state-label').html(data.module_state_label);
+            task_button.find('button').html(data.task_button_title);
+          }
         }
         else {
           step.addClass("not-completed").removeClass("completed");
@@ -80,7 +89,9 @@ function applyCancelCallBack() {
 
     setTimeout(function() {
       initStepsComments();
-      openLinksInNewTab();
+      initPreviewModal();
+      SmartAnnotation.preventPropagation('.atwho-user-popover');
+      TinyMCE.destroyAll();
     }, 1000);
 
   })
@@ -104,7 +115,10 @@ function applyEditCallBack() {
     formEditAjax($form);
     toggleButtons(false);
     initializeCheckboxSorting();
+    animateSpinner(null, false);
+    initPreviewModal();
 
+    TinyMCE.refresh()
     $("#new-step-checklists fieldset.nested_step_checklists ul").each(function () {
       enableCheckboxSorting(this);
     });
@@ -112,7 +126,6 @@ function applyEditCallBack() {
     $("#new-step-main-tab a").on("shown.bs.tab", function() {
       $("#step_name").focus();
     });
-    openLinksInNewTab();
   });
 }
 
@@ -183,7 +196,8 @@ function formCallback($form) {
 
     setTimeout(function() {
       initStepsComments();
-      openLinksInNewTab();
+      animateSpinner(null, false);
+      SmartAnnotation.preventPropagation('.atwho-user-popover');
     }, 1000);
     return true;
   });
@@ -205,7 +219,10 @@ function formEditAjax($form) {
     initCallBacks();
     initHandsOnTable($new_step);
     toggleButtons(true);
+    initPreviewModal();
 
+    TinyMCE.destroyAll();
+    SmartAnnotation.preventPropagation('.atwho-user-popover');
     // Show the edited step
     $new_step.find(".panel-collapse:first").addClass("collapse in");
 
@@ -213,6 +230,7 @@ function formEditAjax($form) {
     $new_step.find("[data-role='step-hot-table']").each(function()  {
       renderTable($(this));
     });
+    setupAssetsLoading();
   })
   .on("ajax:error", function(e, xhr, status, error) {
     $form.renderFormErrors('step', xhr.responseJSON, true, e);
@@ -220,6 +238,9 @@ function formEditAjax($form) {
     formCallback($form);
     initEditableHandsOnTable($form);
     applyCancelCallBack();
+
+    TinyMCE.refresh();
+    SmartAnnotation.preventPropagation('.atwho-user-popover');
 
     //Rerender tables
     $form.find("[data-role='step-hot-table']").each(function()  {
@@ -244,11 +265,14 @@ function formNewAjax($form) {
     initHandsOnTable($new_step);
     expandStep($new_step);
     toggleButtons(true);
+    SmartAnnotation.preventPropagation('.atwho-user-popover');
 
     //Rerender tables
     $new_step.find("div.step-result-hot-table").each(function()  {
       $(this).handsontable("render");
     });
+    animateSpinner(null, false);
+    setupAssetsLoading();
   })
   .on("ajax:error", function(e, xhr, status, error) {
     $(this).after(xhr.responseJSON.html);
@@ -261,6 +285,10 @@ function formNewAjax($form) {
     formCallback($form);
     formNewAjax($form);
     applyCancelOnNew();
+    animateSpinner(null, false);
+
+    TinyMCE.destroyAll();
+    SmartAnnotation.preventPropagation('.atwho-user-popover');
   });
 }
 
@@ -385,7 +413,7 @@ function initCallBacks() {
   applyMoveStepCallBack();
   applyCollapseLinkCallBack();
   initDeleteStep();
-  initHighlightjs();
+  TinyMCE.highlight();
 }
 
 /*
@@ -471,7 +499,6 @@ function initializeCheckboxSorting() {
     // inserted into DOM.
     setTimeout(function () {
       var list = el.parent().find("fieldset.nested_step_checklists:last ul");
-
       enableCheckboxSorting(list.get(0));
     });
   });
@@ -489,6 +516,7 @@ $("[data-action='new-step']").on("ajax:success", function(e, data) {
   applyCancelOnNew();
   toggleButtons(false);
   initializeCheckboxSorting();
+  TinyMCE.init();
 
   $("#step_name").focus();
   $("#new-step-main-tab a").on("shown.bs.tab", function() {
@@ -499,7 +527,7 @@ $("[data-action='new-step']").on("ajax:success", function(e, data) {
 // Needed because server-side validation failure clears locations of
 // files to be uploaded and checklist's items etc. Also user
 // experience is improved
-function processStep(ev, editMode, forS3) {
+function processStep(ev, editMode) {
   var $form = $(ev.target.form);
   $form.clearFormErrors();
   $form.removeBlankExcelTables(editMode);
@@ -517,14 +545,8 @@ function processStep(ev, editMode, forS3) {
     <%= Constants::TEXT_MAX_LENGTH %>);
 
   if (filesValid && checklistsValid && nameValid && descriptionValid) {
-    if (forS3) {
-      // Redirects file uploading to S3
-      var url = '/asset_signature.json';
-      directUpload(ev, url);
-    } else {
-      // Local file uploading
-      animateSpinner();
-    }
+    // Local file uploading
+    animateSpinner();
   }
 }
 
@@ -558,14 +580,6 @@ function renderTable(table) {
   }
 }
 
-function initHighlightjs() {
-  if(hljs){
-    $('.ql-editor pre').each(function(i, block) {
-     hljs.highlightBlock(block);
-   });
-  }
-}
-
 function initStepsComments() {
   Comments.initialize();
   Comments.initCommentOptions("ul.content-comments");
@@ -580,7 +594,9 @@ $(document).ready(function() {
   expandAllSteps();
   setupAssetsLoading();
   initStepsComments();
-  initHighlightjs();
+  initPreviewModal();
+  TinyMCE.highlight();
+  SmartAnnotation.preventPropagation('.atwho-user-popover');
 
   $(function () {
 

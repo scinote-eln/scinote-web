@@ -1,13 +1,14 @@
 class MyModulesController < ApplicationController
   include SampleActions
-  include OrganizationsHelper
+  include TeamsHelper
+  include InputSanitizeHelper
 
   before_action :load_vars, only: [
     :show, :update, :destroy,
     :description, :due_date, :protocols, :results,
     :samples, :activities, :activities_tab,
     :assign_samples, :unassign_samples,
-    :delete_samples,
+    :delete_samples, :toggle_task_state,
     :samples_index, :archive]
   before_action :load_vars_nested, only: [:new, :create]
   before_action :check_edit_permissions, only: [
@@ -23,14 +24,14 @@ class MyModulesController < ApplicationController
   before_action :check_assign_samples_permissions, only: [:assign_samples]
   before_action :check_unassign_samples_permissions, only: [:unassign_samples]
 
-  layout "fluid"
+  layout 'fluid'.freeze
 
   # Define submit actions constants (used in routing)
-  ASSIGN_SAMPLES = 'Assign'
-  UNASSIGN_SAMPLES = 'Unassign'
+  ASSIGN_SAMPLES = 'Assign'.freeze
+  UNASSIGN_SAMPLES = 'Unassign'.freeze
 
   # Action defined in SampleActions
-  DELETE_SAMPLES = 'Delete'
+  DELETE_SAMPLES = 'Delete'.freeze
 
   def show
     respond_to do |format|
@@ -53,7 +54,8 @@ class MyModulesController < ApplicationController
           html: render_to_string({
             partial: "description.html.erb"
           }),
-          title: t("my_modules.description.title", module: @my_module.name)
+          title: t('my_modules.description.title',
+                   module: escape_input(@my_module.name))
         }
       }
     end
@@ -124,7 +126,8 @@ class MyModulesController < ApplicationController
           html: render_to_string({
             partial: "due_date.html.erb"
           }),
-          title: t("my_modules.due_date.title", module: @my_module.name)
+          title: t('my_modules.due_date.title',
+                   module: escape_input(@my_module.name))
         }
       }
     end
@@ -135,6 +138,7 @@ class MyModulesController < ApplicationController
     @my_module.last_modified_by = current_user
 
     description_changed = @my_module.description_changed?
+    restored = false
 
     if @my_module.archived_changed?(from: false, to: true)
       saved = @my_module.archive(current_user)
@@ -155,6 +159,7 @@ class MyModulesController < ApplicationController
     elsif @my_module.archived_changed?(from: true, to: false)
       saved = @my_module.restore(current_user)
       if saved
+        restored = true
         Activity.create(
           type_of: :restore_module,
           project: @my_module.experiment.project,
@@ -186,11 +191,22 @@ class MyModulesController < ApplicationController
     end
 
     respond_to do |format|
-      if saved
+      if restored
+        format.html do
+          flash[:success] = t(
+            'my_modules.module_archive.restored_flash',
+            module: @my_module.name
+          )
+          redirect_to module_archive_experiment_path(@my_module.experiment)
+        end
+      elsif saved
         format.json {
           alerts = []
-          alerts << "alert-red" if @my_module.is_overdue?
-          alerts << "alert-yellow" if @my_module.is_one_day_prior?
+          alerts << 'alert-green' if @my_module.completed?
+          unless @my_module.completed?
+            alerts << 'alert-red' if @my_module.is_overdue?
+            alerts << 'alert-yellow' if @my_module.is_one_day_prior?
+          end
           render json: {
             status: :ok,
             due_date_label: render_to_string(
@@ -219,27 +235,27 @@ class MyModulesController < ApplicationController
 
   def protocols
     @protocol = @my_module.protocol
-    current_organization_switch(@protocol.organization)
+    current_team_switch(@protocol.team)
   end
 
   def results
-    current_organization_switch(@my_module
+    current_team_switch(@my_module
                                 .experiment
                                 .project
-                                .organization)
+                                .team)
   end
 
   def samples
     @samples_index_link = samples_index_my_module_path(@my_module, format: :json)
-    @organization = @my_module.experiment.project.organization
+    @team = @my_module.experiment.project.team
   end
 
   def archive
     @archived_results = @my_module.archived_results
-    current_organization_switch(@my_module
+    current_team_switch(@my_module
                                 .experiment
                                 .project
-                                .organization)
+                                .team)
   end
 
   # Submit actions
@@ -321,13 +337,13 @@ class MyModulesController < ApplicationController
 
   # AJAX actions
   def samples_index
-    @organization = @my_module.experiment.project.organization
+    @team = @my_module.experiment.project.team
 
     respond_to do |format|
       format.html
       format.json do
         render json: ::SampleDatatable.new(view_context,
-                                           @organization,
+                                           @team,
                                            nil,
                                            @my_module,
                                            nil,
@@ -336,10 +352,64 @@ class MyModulesController < ApplicationController
     end
   end
 
+  # Complete/uncomplete task
+  def toggle_task_state
+    respond_to do |format|
+      if can_complete_module(@my_module)
+        @my_module.completed? ? @my_module.uncomplete : @my_module.complete
+        completed = @my_module.completed?
+        if @my_module.save
+          task_completion_activity
+
+          # Render new button HTML
+          if completed
+            new_btn_partial = 'my_modules/state_button_uncomplete.html.erb'
+          else
+            new_btn_partial = 'my_modules/state_button_complete.html.erb'
+          end
+
+          format.json do
+            render json: {
+              new_btn: render_to_string(partial: new_btn_partial),
+              completed: completed,
+              module_header_due_date_label: render_to_string(
+                partial: 'my_modules/module_header_due_date_label.html.erb',
+                locals: { my_module: @my_module }
+              ),
+              module_state_label: render_to_string(
+                partial: 'my_modules/module_state_label.html.erb',
+                locals: { my_module: @my_module }
+              )
+            }
+          end
+        else
+          format.json { render json: {}, status: :unprocessable_entity }
+        end
+      else
+        format.json { render json: {}, status: :unauthorized }
+      end
+    end
+  end
+
   private
 
+  def task_completion_activity
+    completed = @my_module.completed?
+    str = 'activities.uncomplete_module'
+    str = 'activities.complete_module' if completed
+    message = t(str,
+                user: current_user.full_name,
+                module: @my_module.name)
+    Activity.create(
+      user: current_user,
+      project: @project,
+      my_module: @my_module,
+      message: message,
+      type_of: completed ? :complete_task : :uncomplete_task
+    )
+  end
+
   def load_vars
-    @direct_upload = ENV['PAPERCLIP_DIRECT_UPLOAD'] == "true"
     @my_module = MyModule.find_by_id(params[:id])
     if @my_module
       @experiment = @my_module.experiment

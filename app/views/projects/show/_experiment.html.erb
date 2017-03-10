@@ -49,9 +49,7 @@
       </span>
       <% if experiment.description? %>
         <div class='experiment-description'>
-          <%= auto_link(simple_format(experiment.description),
-                        link: :urls,
-                        html: { target: '_blank' }) %>
+          <%= custom_auto_link(experiment.description) %>
         </div>
       <% else %>
         <span class='experiment-no-description'>

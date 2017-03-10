@@ -1,0 +1,7 @@
+<% if can_view_projects(team) %>
+  <%= route_to_other_team projects_path(team: team.id),
+                          team,
+                          team.name %>
+<% else %>
+  <%= team.name %>
+<% end %>

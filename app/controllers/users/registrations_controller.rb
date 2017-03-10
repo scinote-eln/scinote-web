@@ -1,5 +1,4 @@
 class Users::RegistrationsController < Devise::RegistrationsController
-  before_action :load_paperclip_vars
   prepend_before_action :check_captcha, only: [:create]
 
   def avatar
@@ -42,15 +41,6 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   def update_resource(resource, params)
     @user_avatar_url = avatar_path(current_user, :thumb)
-
-    if @direct_upload
-      if params.include? :avatar_file_name
-        file_name = params[:avatar_file_name]
-        file_ext = file_name.split(".").last
-        params[:avatar_content_type] = Rack::Mime.mime_type(".#{file_ext}")
-        resource.avatar.destroy
-      end
-    end
 
     if params.include? :change_password
       # Special handling if changing password
@@ -132,33 +122,44 @@ class Users::RegistrationsController < Devise::RegistrationsController
     end
   end
 
+  def new
+    render_403 && return unless Rails.configuration.x.enable_user_registration
+  end
+
   def create
+    render_403 && return unless Rails.configuration.x.enable_user_registration
+
     build_resource(sign_up_params)
     valid_resource = resource.valid?
 
-    # Create new organization for the new user
-    @org = Organization.new
-    @org.name = params[:organization][:name]
-    valid_org = @org.valid?
+    # Create new team for the new user
+    @team = Team.new
+    @team.name = params[:team][:name]
+    valid_team = @team.valid?
 
-    if valid_org && valid_resource
+    if valid_team && valid_resource
 
-      # this must be called after @org variable is defined. Otherwise this
+      # this must be called after @team variable is defined. Otherwise this
       # variable won't be accessable in view.
       super do |resource|
-        if resource.valid? && resource.persisted?
-          @org.created_by = resource # set created_by for oraganization
-          @org.save
+        # Set the confirmed_at == created_at IF not using email confirmations
+        unless Rails.configuration.x.enable_email_confirmations
+          resource.update(confirmed_at: resource.created_at)
+        end
 
-          # Add this user to the organization as owner
-          UserOrganization.create(
+        if resource.valid? && resource.persisted?
+          @team.created_by = resource # set created_by for oraganization
+          @team.save
+
+          # Add this user to the team as owner
+          UserTeam.create(
             user: resource,
-            organization: @org,
+            team: @team,
             role: :admin
           )
 
-          # set current organization to new user
-          resource.current_organization_id = @org.id
+          # set current team to new user
+          resource.current_team_id = @team.id
           resource.save
         end
       end
@@ -168,10 +169,6 @@ class Users::RegistrationsController < Devise::RegistrationsController
   end
 
   protected
-
-  def load_paperclip_vars
-    @direct_upload = ENV['PAPERCLIP_DIRECT_UPLOAD'] == "true"
-  end
 
   # Called upon creating User (before .save). Permits parameters and extracts
   # initials from :full_name (takes at most 4 chars). If :full_name is empty, it
@@ -256,9 +253,9 @@ class Users::RegistrationsController < Devise::RegistrationsController
         # Construct new resource before rendering :new
         self.resource = resource_class.new sign_up_params
 
-        # Also validate organization
-        @org = Organization.new(name: params[:organization][:name])
-        @org.valid?
+        # Also validate team
+        @team = Team.new(name: params[:team][:name])
+        @team.valid?
 
         respond_with_navigational(resource) { render :new }
       end

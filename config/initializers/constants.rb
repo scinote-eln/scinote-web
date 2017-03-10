@@ -48,6 +48,9 @@ class Constants
   # Maximum number of users that can be invited in a single action
   INVITE_USERS_LIMIT = 20
 
+  # Maximum nr. of search results for atwho (smart annotations)
+  ATWHO_SEARCH_LIMIT = 5
+
   #=============================================================================
   # File and data memory size
   #=============================================================================
@@ -63,8 +66,8 @@ class Constants
   # Application space
   #=============================================================================
 
-  # Minimal space needed for organization (in B)
-  MINIMAL_ORGANIZATION_SPACE_TAKEN = 1.megabyte
+  # Minimal space needed for team (in B)
+  MINIMAL_TEAM_SPACE_TAKEN = 1.megabyte
   # Additional space of each file is added to its estimated size to account for
   # DB indexes size etc.
   ASSET_ESTIMATED_SIZE_FACTOR = 1.1
@@ -74,6 +77,7 @@ class Constants
   #=============================================================================
 
   # Picture size formats
+  LARGE_PIC_FORMAT = '800x600>'.freeze
   MEDIUM_PIC_FORMAT = '300x300>'.freeze
   THUMB_PIC_FORMAT = '100x100>'.freeze
   ICON_PIC_FORMAT = '40x40>'.freeze
@@ -174,9 +178,9 @@ class Constants
   HTTP = 'http://'.freeze
   TUTORIALS_URL = (HTTP + 'scinote.net/product/tutorials/').freeze
   FAQ_URL = (HTTP + 'scinote.net/product/faq/').freeze
-  SUPPORT_URL = (HTTP + 'scinote.net/plans/#prof-support').freeze
-  PLANS_URL = (HTTP + 'scinote.net/plans/').freeze
-  CONTACT_URL = (HTTP + 'scinote.net/about-us/').freeze
+  SUPPORT_URL = (HTTP + 'scinote.net/support').freeze
+  PREMIUM_URL = (HTTP + 'scinote.net/premium/').freeze
+  CONTACT_URL = (HTTP + 'scinote.net/story-of-scinote/#contact-scinote').freeze
   RELEASE_NOTES_URL = (HTTP + 'scinote.net/docs/release-notes/').freeze
   # Default user picture avatar
   DEFAULT_AVATAR_URL = '/images/:style/missing.png'.freeze
@@ -186,7 +190,7 @@ class Constants
   #=============================================================================
 
   # Application version
-  APP_VERSION = '1.6.0'.freeze
+  APP_VERSION = '1.8.1'.freeze
 
   TEXT_EXTRACT_FILE_TYPES = [
     'application/pdf',
@@ -204,14 +208,23 @@ class Constants
   ].freeze
 
   WHITELISTED_IMAGE_TYPES = [
-    'gif', 'jpeg', 'pjpeg', 'png', 'x-png', 'svg+xml', 'bmp'
+    'gif', 'jpeg', 'pjpeg', 'png', 'x-png', 'svg+xml', 'bmp', 'tiff'
   ].freeze
+
+  WHITELISTED_TAGS = %w(
+    a b strong i em li ul ol h1 del ins h2 h3 h4 h5 h6 br sub sup p code hr div
+    span u s blockquote pre col colgroup table thead tbody th tr td
+  ).freeze
+
+  WHITELISTED_ATTRIBUTES = %w(
+    href src width height alt cite datetime title class name xml:lang abbr style
+  ).freeze
 
   # Very basic regex to check for validity of emails
   BASIC_EMAIL_REGEX = URI::MailTo::EMAIL_REGEXP
 
-  # Organization name for default admin user
-  DEFAULT_PRIVATE_ORG_NAME = 'My projects'.freeze
+  # Team name for default admin user
+  DEFAULT_PRIVATE_TEAM_NAME = 'My projects'.freeze
 
   #                             )       \   /      (
   #                            /|\      )\_/(     /|\

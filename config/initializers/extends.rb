@@ -14,4 +14,7 @@ class Extends
   NOTIFICATIONS_TYPES = { assignment: 0,
                           recent_changes: 1,
                           system_message: 2 }
+
+  TASKS_STATES = { uncompleted: 0,
+                   completed: 1 }
 end

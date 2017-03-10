@@ -12,11 +12,11 @@
       modal.find('[data-role=invite-with-role-div]');
     var inviteWithRoleBtn =
       modal.find('[data-role=invite-with-role-btn]');
-    var orgSelectorCheckbox =
-      modal.find('[data-role=org-selector-checkbox]');
-    var orgSelectorDropdown =
-      modal.find('[data-role=org-selector-dropdown]');
-    var orgSelectorDropdown2 = $();
+    var teamSelectorCheckbox =
+      modal.find('[data-role=team-selector-checkbox]');
+    var teamSelectorDropdown =
+      modal.find('[data-role=team-selector-dropdown]');
+    var teamSelectorDropdown2 = $();
     var tagsInput = modal.find('[data-role=tags-input]');
 
     // Set max tags
@@ -28,8 +28,8 @@
     .on('show.bs.modal', function() {
       // This cannot be scoped outside this function
       // because it is generated via JS
-      orgSelectorDropdown2 =
-        orgSelectorDropdown
+      teamSelectorDropdown2 =
+        teamSelectorDropdown
         .next('.btn-group.bootstrap-select.form-control')
         .find('button.dropdown-toggle, li');
 
@@ -39,14 +39,14 @@
 
       // Show/hide buttons & other elements
       switch (type) {
-        case 'invite_to_org_with_role':
+        case 'invite_to_team_with_role':
         case 'invite':
-        case 'invite_with_org_selector':
-        case 'invite_with_org_selector_and_role':
+        case 'invite_with_team_selector':
+        case 'invite_with_team_selector_and_role':
           inviteBtn.show();
           inviteWithRoleDiv.hide();
           break;
-        case 'invite_to_org':
+        case 'invite_to_team':
           inviteBtn.hide();
           inviteWithRoleDiv.show();
           break;
@@ -56,21 +56,21 @@
 
       // Checkbox toggle event
       if (
-        type === 'invite_with_org_selector' ||
-        type === 'invite_with_org_selector_and_role'
+        type === 'invite_with_team_selector' ||
+        type === 'invite_with_team_selector_and_role'
       ) {
-        orgSelectorCheckbox.on('change', function() {
+        teamSelectorCheckbox.on('change', function() {
           if ($(this).is(':checked')) {
-            orgSelectorDropdown.removeAttr('disabled');
-            orgSelectorDropdown2.removeClass('disabled');
-            if (type === 'invite_with_org_selector') {
+            teamSelectorDropdown.removeAttr('disabled');
+            teamSelectorDropdown2.removeClass('disabled');
+            if (type === 'invite_with_team_selector') {
               inviteBtn.hide();
               inviteWithRoleDiv.show();
             }
           } else {
-            orgSelectorDropdown.attr('disabled', 'disabled');
-            orgSelectorDropdown2.addClass('disabled');
-            if (type === 'invite_with_org_selector') {
+            teamSelectorDropdown.attr('disabled', 'disabled');
+            teamSelectorDropdown2.addClass('disabled');
+            if (type === 'invite_with_team_selector') {
               inviteBtn.show();
               inviteWithRoleDiv.hide();
             }
@@ -99,26 +99,26 @@
           emails: tagsInput.val()
         };
         switch (type) {
-          case 'invite_to_org':
-            data.organizationId = modal.attr('data-organization-id');
-            data.role = $(this).attr('data-organization-role');
+          case 'invite_to_team':
+            data.teamId = modal.attr('data-team-id');
+            data.role = $(this).attr('data-team-role');
             break;
-          case 'invite_to_org_with_role':
-            data.organizationId = modal.attr('data-organization-id');
-            data.role = modal.attr('data-organization-role');
+          case 'invite_to_team_with_role':
+            data.teamId = modal.attr('data-team-id');
+            data.role = modal.attr('data-team-role');
             break;
           case 'invite':
             break;
-          case 'invite_with_org_selector':
-            if (orgSelectorCheckbox.is(':checked')) {
-              data.organizationId = orgSelectorDropdown.val();
-              data.role = $(this).attr('data-organization-role');
+          case 'invite_with_team_selector':
+            if (teamSelectorCheckbox.is(':checked')) {
+              data.teamId = teamSelectorDropdown.val();
+              data.role = $(this).attr('data-team-role');
             }
             break;
-          case 'invite_with_org_selector_and_role':
-            if (orgSelectorCheckbox.is(':checked')) {
-              data.organizationId = orgSelectorDropdown.val();
-              data.role = modal.attr('data-organization-role');
+          case 'invite_with_team_selector_and_role':
+            if (teamSelectorCheckbox.is(':checked')) {
+              data.teamId = teamSelectorDropdown.val();
+              data.role = modal.attr('data-team-role');
             }
             break;
           default:
@@ -155,14 +155,14 @@
     .on('hide.bs.modal', function() {
       // 'Reset' modal state
       tagsInput.tagsinput('removeAll');
-      orgSelectorCheckbox.prop('checked', false);
+      teamSelectorCheckbox.prop('checked', false);
       inviteBtn.attr('disabled', 'disabled');
       inviteWithRoleBtn.attr('disabled', 'disabled');
-      orgSelectorDropdown2.addClass('disabled');
+      teamSelectorDropdown2.addClass('disabled');
       animateSpinner(modalDialog, false);
 
       // Unbind event listeners
-      orgSelectorCheckbox.off('change');
+      teamSelectorCheckbox.off('change');
       tagsInput.off('itemAdded itemRemoved');
       modal.find('[data-action=invite]').off('click');
 

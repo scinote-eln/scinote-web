@@ -1,6 +1,8 @@
 class MyModule < ActiveRecord::Base
   include ArchivableModel, SearchableModel
 
+  enum state: Extends::TASKS_STATES
+
   before_create :create_blank_protocol
 
   auto_strip_attributes :name, :description, nullify: false
@@ -21,8 +23,7 @@ class MyModule < ActiveRecord::Base
   has_many :results, inverse_of: :my_module, :dependent => :destroy
   has_many :my_module_tags, inverse_of: :my_module, :dependent => :destroy
   has_many :tags, through: :my_module_tags
-  has_many :my_module_comments, inverse_of: :my_module, :dependent => :destroy
-  has_many :comments, through: :my_module_comments
+  has_many :task_comments, foreign_key: :associated_id, dependent: :destroy
   has_many :inputs, :class_name => 'Connection', :foreign_key => "input_id", inverse_of: :to, :dependent => :destroy
   has_many :outputs, :class_name => 'Connection', :foreign_key => "output_id", inverse_of: :from, :dependent => :destroy
   has_many :my_modules, through: :outputs, source: :to
@@ -41,33 +42,53 @@ class MyModule < ActiveRecord::Base
   WIDTH = 30
   HEIGHT = 14
 
-  def self.search(user, include_archived, query = nil, page = 1)
+  def self.search(
+    user,
+    include_archived,
+    query = nil,
+    page = 1,
+    current_team = nil
+  )
     exp_ids =
       Experiment
       .search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
       .select("id")
 
     if query
-      a_query = query.strip
-      .gsub("_","\\_")
-      .gsub("%","\\%")
-      .split(/\s+/)
-      .map {|t|  "%" + t + "%" }
+      a_query = '%' + query.strip.gsub('_', '\\_').gsub('%', '\\%') + '%'
     else
       a_query = query
     end
 
-    if include_archived
+    if current_team
+      experiments_ids = Experiment
+                        .search(user,
+                                include_archived,
+                                nil,
+                                1,
+                                current_team)
+                        .select('id')
       new_query = MyModule
-        .distinct
-        .where("my_modules.experiment_id IN (?)", exp_ids)
-        .where_attributes_like([:name, :description], a_query)
+                  .distinct
+                  .where('my_modules.experiment_id IN (?)', experiments_ids)
+                  .where_attributes_like([:name], a_query)
+
+      if include_archived
+        return new_query
+      else
+        return new_query.where('my_modules.archived = ?', false)
+      end
+    elsif include_archived
+      new_query = MyModule
+                  .distinct
+                  .where('my_modules.experiment_id IN (?)', exp_ids)
+                  .where_attributes_like([:name, :description], a_query)
     else
       new_query = MyModule
-        .distinct
-        .where("my_modules.experiment_id IN (?)", exp_ids)
-        .where("my_modules.archived = ?", false)
-        .where_attributes_like([:name, :description], a_query)
+                  .distinct
+                  .where('my_modules.experiment_id IN (?)', exp_ids)
+                  .where('my_modules.archived = ?', false)
+                  .where_attributes_like([:name, :description], a_query)
     end
 
     # Show all results if needed
@@ -134,7 +155,7 @@ class MyModule < ActiveRecord::Base
   end
 
   def unassigned_samples
-    Sample.where(organization_id: experiment.project.organization).where.not(id: samples)
+    Sample.where(team_id: experiment.project.team).where.not(id: samples)
   end
 
   def unassigned_tags
@@ -154,11 +175,11 @@ class MyModule < ActiveRecord::Base
   # using last comment id and per_page parameters.
   def last_comments(last_id = 1, per_page = Constants::COMMENTS_SEARCH_LIMIT)
     last_id = Constants::INFINITY if last_id <= 1
-    comments = Comment.joins(:my_module_comment)
-                      .where(my_module_comments: { my_module_id: id })
-                      .where('comments.id <  ?', last_id)
-                      .order(created_at: :desc)
-                      .limit(per_page)
+    comments = TaskComment.joins(:my_module)
+                          .where(my_modules: { id: id })
+                          .where('comments.id <  ?', last_id)
+                          .order(created_at: :desc)
+                          .limit(per_page)
     comments.reverse
   end
 
@@ -166,11 +187,11 @@ class MyModule < ActiveRecord::Base
                       count = Constants::ACTIVITY_AND_NOTIF_SEARCH_LIMIT)
     last_id = Constants::INFINITY if last_id <= 1
     Activity.joins(:my_module)
-      .where(my_module_id: id)
-      .where('activities.id <  ?', last_id)
-      .order(created_at: :desc)
-      .limit(count)
-      .uniq
+            .where(my_module_id: id)
+            .where('activities.id <  ?', last_id)
+            .order(created_at: :desc)
+            .limit(count)
+            .uniq
   end
 
   def protocol
@@ -353,6 +374,35 @@ class MyModule < ActiveRecord::Base
 
     # We lucked out, no gaps, therefore we need to add it after the last element
     { x: 0, y: positions.last[1] + HEIGHT }
+  end
+
+  def completed?
+    state == 'completed'
+  end
+
+  # Mark task completed if all steps become completed
+  def check_completness
+    if protocol && protocol.steps.count > 0
+      completed = true
+      protocol.steps.find_each do |step|
+        completed = false unless step.completed
+      end
+      if completed
+        update_attributes(state: 'completed', completed_on: DateTime.now)
+        return true
+      end
+    end
+    false
+  end
+
+  def complete
+    self.state = 'completed'
+    self.completed_on = DateTime.now
+  end
+
+  def uncomplete
+    self.state = 'uncompleted'
+    self.completed_on = nil
   end
 
   private

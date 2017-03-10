@@ -3,6 +3,10 @@ require 'active_record'
 class SampleDatatable < AjaxDatatablesRails::Base
   include ActionView::Helpers::TextHelper
   include SamplesHelper
+  include InputSanitizeHelper
+  include Rails.application.routes.url_helpers
+  include ActionView::Helpers::UrlHelper
+  include ApplicationHelper
 
   ASSIGNED_SORT_COL = 'assigned'
 
@@ -30,13 +34,13 @@ class SampleDatatable < AjaxDatatablesRails::Base
   SAMPLES_TABLE_DEFAULT_STATE.freeze
 
   def initialize(view,
-                 organization,
+                 team,
                  project = nil,
                  my_module = nil,
                  experiment = nil,
                  user = nil)
     super(view)
-    @organization = organization
+    @team = team
     @project = project
     @my_module = my_module
     @experiment = experiment
@@ -78,22 +82,23 @@ class SampleDatatable < AjaxDatatablesRails::Base
   # filters the search array by checking if the the column is visible
   def filter_search_array(input_array)
     param_index = 2
-    filtered_array =[]
+    filtered_array = []
     input_array.each do |col|
-      unless params[:columns].to_a[param_index] == nil
-        filtered_array.push(col) unless params[:columns].to_a[param_index][1]["searchable"] == "false"
-        param_index += 1
-      end
+      next if params[:columns].to_a[param_index].nil?
+      params_col =
+        params[:columns].to_a.find { |v| v[1]['data'] == param_index.to_s }
+      filtered_array.push(col) unless params_col[1]['searchable'] == 'false'
+      param_index += 1
     end
     filtered_array
   end
 
   # Get array of columns to sort by (for custom fields)
   def custom_fields_sort_by
-    num_cf = CustomField.where(organization_id: @organization).count
+    num_cf = CustomField.where(team_id: @team).count
     array = []
 
-    for _ in 0..num_cf
+    num_cf.times do
       array << 'SampleCustomField.value'
     end
     array
@@ -105,24 +110,28 @@ class SampleDatatable < AjaxDatatablesRails::Base
       sample = {
         'DT_RowId': record.id,
         '1': assigned_cell(record),
-        '2': record.name,
-        '3': record.sample_type.nil? ? I18n.t('samples.table.no_type') : record.sample_type.name,
-        '4': record.sample_group.nil? ?
-        "<span class='glyphicon glyphicon-asterisk'></span> " + I18n.t("samples.table.no_group") :
-        "<span class='glyphicon glyphicon-asterisk' style='color: #{record.sample_group.color}'></span> " + record.sample_group.name,
-        "5": I18n.l(record.created_at, format: :full),
-          "6": record.user.full_name,
-          "sampleInfoUrl": Rails.application.routes.url_helpers.edit_sample_path(record.id),
-          "sampleUpdateUrl": Rails.application.routes.url_helpers.sample_path(record.id)
+        '2': escape_input(record.name),
+        '3': if record.sample_type.nil?
+               I18n.t('samples.table.no_type')
+             else
+               escape_input(record.sample_type.name)
+             end,
+        '4': sample_group_cell(record),
+        '5': I18n.l(record.created_at, format: :full),
+        '6': escape_input(record.user.full_name),
+        'sampleInfoUrl':
+          Rails.application.routes.url_helpers.sample_path(record.id),
+        'sampleEditUrl':
+          Rails.application.routes.url_helpers.edit_sample_path(record.id),
+        'sampleUpdateUrl':
+          Rails.application.routes.url_helpers.sample_path(record.id)
       }
 
       # Add custom attributes
       record.sample_custom_fields.each do |scf|
-        sample[@cf_mappings[scf.custom_field_id]] = auto_link(scf.value,
-                                                              link: :urls,
-                                                              html: {
-                                                                target: '_blank'
-                                                              })
+        sample[@cf_mappings[scf.custom_field_id]] = custom_auto_link(scf.value,
+                                                                     true,
+                                                                     @team)
       end
       sample
     end
@@ -132,6 +141,17 @@ class SampleDatatable < AjaxDatatablesRails::Base
     @assigned_samples.include?(record) ?
       "<span class='circle'>&nbsp;</span>" :
       "<span class='circle disabled'>&nbsp;</span>"
+  end
+
+  def sample_group_cell(record)
+    if record.sample_group.nil?
+      "<span class='glyphicon glyphicon-asterisk'></span> " \
+        "#{I18n.t('samples.table.no_group')}"
+    else
+      "<span class='glyphicon glyphicon-asterisk' " \
+        "style='color: #{escape_input(record.sample_group.color)}'></span> " \
+        "#{escape_input(record.sample_group.name)}"
+    end
   end
 
   # Query database for records (this will be later paginated and filtered)
@@ -151,7 +171,7 @@ class SampleDatatable < AjaxDatatablesRails::Base
       :sample_custom_fields
     )
     .where(
-      organization: @organization
+      team: @team
     )
 
     if @my_module
@@ -233,12 +253,13 @@ class SampleDatatable < AjaxDatatablesRails::Base
             .select('"samples"."id"')
             .distinct
 
-          # grabs the ids that are not the previous one but are still of the same organization
+          # grabs the ids that are not the previous one but are still
+          # of the same team
           unassigned = Sample
-            .where('"samples"."organization_id" = ?', @organization.id)
-            .where('"samples"."id" NOT IN (?)', assigned)
-            .select('"samples"."id"')
-            .distinct
+                       .where('"samples"."team_id" = ?', @team.id)
+                       .where('"samples"."id" NOT IN (?)', assigned)
+                       .select('"samples"."id"')
+                       .distinct
 
           # check the input param and merge the two arrays of ids
           if params[:order].values[0]['dir'] == 'asc'
@@ -268,12 +289,12 @@ class SampleDatatable < AjaxDatatablesRails::Base
             .select('"samples"."id"')
             .distinct
 
-          # grabs the ids that are not the previous one but are still of the same organization
+          # grabs the ids that are not the previous one but are still of the same team
           unassigned = Sample
-            .where('"samples"."organization_id" = ?', @organization.id)
-            .where('"samples"."id" NOT IN (?)', assigned)
-            .select('"samples"."id"')
-            .distinct
+                       .where('"samples"."team_id" = ?', @team.id)
+                       .where('"samples"."id" NOT IN (?)', assigned)
+                       .select('"samples"."id"')
+                       .distinct
 
           # check the input param and merge the two arrays of ids
           if params[:order].values[0]["dir"] == "asc"
@@ -295,17 +316,23 @@ class SampleDatatable < AjaxDatatablesRails::Base
           # Rails apparently forgets to join stuff in subqueries -
           # #justrailsthings
           conditions = build_conditions_for(params[:search][:value])
-          filter_query = 'SELECT "samples"."id" FROM "samples"
-          LEFT OUTER JOIN "sample_custom_fields" ON "sample_custom_fields"."sample_id" = "samples"."id"
-          LEFT OUTER JOIN "sample_types" ON "sample_types"."id" = "samples"."sample_type_id"
-          LEFT OUTER JOIN "sample_groups" ON "sample_groups"."id" = "samples"."sample_group_id"
-          LEFT OUTER JOIN "users" ON "users"."id" = "samples"."user_id"
-          WHERE "samples"."organization_id" = ' + @organization.id.to_s + ' AND ' + conditions.to_sql
+          filter_query = %(SELECT "samples"."id" FROM "samples"
+            LEFT OUTER JOIN "sample_custom_fields" ON
+            "sample_custom_fields"."sample_id" = "samples"."id"
+            LEFT OUTER JOIN "sample_types" ON
+            "sample_types"."id" = "samples"."sample_type_id"
+            LEFT OUTER JOIN "sample_groups"
+            ON "sample_groups"."id" = "samples"."sample_group_id"
+            LEFT OUTER JOIN "users" ON "users"."id" = "samples"."user_id"
+            WHERE "samples"."team_id" = #{@team.id} AND #{conditions.to_sql})
 
           records = records.where("samples.id IN (#{filter_query})")
         end
 
-        cf_id = all_custom_fields[params[:order].values[0]["column"].to_i - 7].id
+        ci = sortable_displayed_columns[
+          params[:order].values[0][:column].to_i - 1
+        ]
+        cf_id = @cf_mappings.key((ci.to_i + 1).to_s)
         dir = sort_direction(params[:order].values[0])
 
         # Because samples can have multiple sample custom fields, we first group
@@ -336,7 +363,6 @@ class SampleDatatable < AjaxDatatablesRails::Base
     end
   end
 
-
   # A hack that overrides the new_search_contition method default behavior of the ajax-datatables-rails gem
   # now the method checks if the column is the created_at and generate a custom SQL to parse
   # it back to the caller method
@@ -344,14 +370,35 @@ class SampleDatatable < AjaxDatatablesRails::Base
     model, column = column.split('.')
     model = model.constantize
     formated_date = (I18n.t 'time.formats.datatables_date').gsub!(/^\"|\"?$/, '')
-    if column == 'created_at'
+    if model == SampleCustomField
+      # Find visible (searchable) custom field IDs, and only perform filter
+      # on those custom fields
+      searchable_cfs = params[:columns].select do |_, v|
+        v['searchable'] == 'true' && @cf_mappings.values.include?(v['data'])
+      end
+      cfmi = @cf_mappings.invert
+      cf_ids = searchable_cfs.map { |_, v| cfmi[v['data']] }
+
+      # Do an ILIKE on 'value', as well as make sure to only include
+      # custom fields that have 'custom_field_id' among visible custom fields
+      casted_column = ::Arel::Nodes::NamedFunction.new(
+        'CAST',
+        [model.arel_table[column.to_sym].as(typecast)]
+      )
+      casted_column = casted_column.matches("%#{value}%")
+      casted_column = casted_column.and(
+        model.arel_table['custom_field_id'].in(cf_ids)
+      )
+      casted_column
+    elsif column == 'created_at'
       casted_column = ::Arel::Nodes::NamedFunction.new('CAST',
                         [ Arel.sql("to_char( samples.created_at, '#{ formated_date }' ) AS VARCHAR") ] )
+      casted_column.matches("%#{value}%")
     else
       casted_column = ::Arel::Nodes::NamedFunction.new('CAST',
                         [model.arel_table[column.to_sym].as(typecast)])
+      casted_column.matches("%#{value}%")
     end
-    casted_column.matches("%#{value}%")
   end
 
   def sort_null_direction(item)
@@ -365,7 +412,7 @@ class SampleDatatable < AjaxDatatablesRails::Base
   end
 
   def sorting_by_custom_column
-    sort_column(params[:order].values[0]) == 'SampleCustomField.value'
+    sort_column(params[:order].values[0]) == 'sample_custom_fields.value'
   end
 
   # Escapes special characters in search query
@@ -387,7 +434,7 @@ class SampleDatatable < AjaxDatatablesRails::Base
 
   def generate_sortable_displayed_columns
     sort_order = SamplesTable.where(user: @user,
-                                    organization: @organization)
+                                    team: @team)
                              .pluck(:status)
                              .first['ColReorder']
 

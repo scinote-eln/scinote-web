@@ -27,8 +27,7 @@
   <div class="tab-pane active" role="tabpanel" id="new-step-main">
     <%= f.text_field :name, label: t("protocols.steps.new.name"), placeholder: t("protocols.steps.new.name_placeholder") %>
     <div class="form-group">
-      <label class="control-label" for="step_description"><%= t('protocols.steps.new.description') %></label>
-      <%= quill_editor nil, { id: 'step_description', name: 'step[description]', value: @step.description } %>
+      <%= f.tiny_mce_editor(:description) %>
     </div>
   </div>
   <div class="tab-pane" role="tabpanel" id="new-step-checklists">
@@ -42,7 +41,7 @@
   </div>
   <div class="tab-pane" role="tabpanel" id="new-step-assets">
     <%= f.nested_fields_for :assets do |ff| %>
-      <%= render "form_assets.html.erb", ff: ff %>
+      <%= render "form_assets.html.erb", ff: ff, step: step %>
     <% end %>
     <%= f.add_nested_fields_link :assets do %>
       <span class="glyphicon glyphicon-plus"></span>

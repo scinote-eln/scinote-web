@@ -14,7 +14,17 @@
 
     <%= csrf_meta_tags %>
   </head>
-  <body class="<%= yield :body_class %>">
+  <body
+    class="<%= yield :body_class %>"
+    <% if user_signed_in? && current_team.present? %>
+    data-atwho-users-url="<%= atwho_users_team_path(current_team) %>"
+    data-atwho-task-url="<%= atwho_my_modules_team_path(current_team) %>"
+    data-atwho-project-url="<%= atwho_projects_team_path(current_team) %>"
+    data-atwho-experiment-url="<%= atwho_experiments_team_path(current_team) %>"
+    data-atwho-sample-url="<%= atwho_samples_team_path(current_team) %>"
+    data-atwho-menu-items="<%= atwho_menu_items_team_path(current_team) %>"
+    <% end %>
+  >
 
     <span style="display: none;" data-hook="body-js"></span>
     <span style="display: none;" data-hook="application-body-html"></span>
@@ -43,7 +53,7 @@
         <div class="container">
           <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
           <span class="glyphicon glyphicon-ok-sign"></span>
-          <span><%= flash[:success].html_safe %></span>
+          <span><%= sanitize_input(flash[:success]) %></span>
         </div>
       </div>
       <% end %>
@@ -61,7 +71,7 @@
         <div class="container">
           <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
           <span class="glyphicon glyphicon-exclamation-sign"></span>
-          <span><%= alert || flash[:error].html_safe %></span>
+          <span><%= alert || sanitize_input(flash[:error]) %></span>
         </div>
       </div>
       <% end %>

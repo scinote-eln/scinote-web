@@ -1,0 +1,6 @@
+-------------------------
+This generator creates a new sciNote addon inside /addons folder.
+
+The NAME parameter should be a fully namespaced addon name, containing
+any potential modules (e.g. Scinote::MyOrganization::MyAddon).
+-------------------------

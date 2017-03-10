@@ -37,6 +37,7 @@ function applyEditResultAssetCallback() {
       $form.remove();
       applyEditResultAssetCallback();
       toggleResultEditButtons(true);
+      initPreviewModal();
     });
 
     toggleResultEditButtons(false);
@@ -62,8 +63,8 @@ function formAjaxResultAsset($form) {
 
     toggleResultEditButtons(true);
     expandResult($newResult);
-    $imgs = $newResult.find("img");
-    reloadImages($imgs);
+    initPreviewModal();
+    Comments.initialize();
   })
   .on("ajax:error", function(e, data) {
     // This check is here only because of remotipart bug, which returns
@@ -78,3 +79,4 @@ function formAjaxResultAsset($form) {
 }
 
 applyEditResultAssetCallback();
+initPreviewModal();

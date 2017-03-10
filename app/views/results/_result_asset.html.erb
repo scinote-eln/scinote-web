@@ -1,4 +1,5 @@
 <% if can_view_or_download_result_assets(result.my_module) %>
+<<<<<<< HEAD
   <%= link_to download_asset_path(result.asset), data: {no_turbolink: true} do %>
     <%= image_tag(preview_asset_path result.asset) if result.asset.is_image? %>
     <% if wopi_file?(result.asset) %>
@@ -37,4 +38,39 @@
     <%= file_extension_icon(result.asset) %>
     <%= truncate(result.asset.file_file_name, length: 50) %>
   </p>
+=======
+  <% if result.asset.file.processing? %>
+    <span data-status='asset-loading'
+      data-present-url='<%= file_present_asset_path(result.asset) %>'>
+      <%= image_tag 'medium/processing.gif' %>
+    </span>
+  <% else %>
+    <% if result.asset.is_image? %>
+      <%= link_to download_asset_path(result.asset),
+        class: 'image-preview-link',
+        id: "modal_link#{result.asset.id}",
+        data: {no_turbolink: true,
+          description: "#{truncate(result.name, length: Constants::FILENAME_TRUNCATION_LENGTH)}"} do %>
+        <%= image_tag result.asset.url(:medium), data: {'preview-url': large_image_url_asset_path(result.asset)} %>
+        <p><%= truncate(result.asset.file_file_name,
+        length: Constants::FILENAME_TRUNCATION_LENGTH) %></p>
+      <% end %>
+    <% else %>
+      <%= link_to download_asset_path(result.asset), data: {no_turbolink: true} do %>
+        <p><%= truncate(result.asset.file_file_name,
+        length: Constants::FILENAME_TRUNCATION_LENGTH) %></p>
+      <% end %>
+    <% end %>
+  <% end %>
+<% else %>
+  <% if result.asset.file.processing? %>
+    <span data-status='asset-loading'
+          data-present-url='<%= file_present_asset_path(result.asset) %>'>
+      <%= image_tag 'medium/processing.gif' %>
+    </span>
+  <% else %>
+    <%= image_tag result.asset.url(:medium) if result.asset.is_image? %>
+    <p><%= result.asset.file_file_name %></p>
+  <% end %>
+>>>>>>> 39e1ac4b26f8c8bfb7f5a2f020db13f07d312433
 <% end %>

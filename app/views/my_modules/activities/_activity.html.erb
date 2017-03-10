@@ -2,6 +2,6 @@
   <span class="activity-item-date">
     <%= l activity.created_at, format: :full %>
   </span>
-  <span class="activity-item-text"><%= activity.message.html_safe %>
+  <span class="activity-item-text"><%= sanitize_input(activity.message) %>
   </span>
 </li>

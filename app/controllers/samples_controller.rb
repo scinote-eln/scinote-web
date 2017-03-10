@@ -1,4 +1,6 @@
 class SamplesController < ApplicationController
+  include InputSanitizeHelper
+
   before_action :load_vars, only: [:edit, :update, :destroy, :show]
   before_action :load_vars_nested, only: [:new, :create]
 
@@ -8,13 +10,19 @@ class SamplesController < ApplicationController
   def new
     respond_to do |format|
       format.html
-      if can_create_samples(@organization)
-      format.json {
-        render json: {
-          sample_groups: @organization.sample_groups.as_json(only: [:id, :name, :color]),
-          sample_types: @organization.sample_types.as_json(only: [:id, :name])
-        }
-      }
+      if can_create_samples(@team)
+        groups = @team.sample_groups.map do |g|
+          { id: g.id, name: sanitize_input(g.name), color: g.color }
+        end
+        types = @team.sample_types.map do |t|
+          { id: t.id, name: sanitize_input(t.name) }
+        end
+        format.json do
+          render json: {
+            sample_groups: groups.as_json,
+            sample_types: types.as_json
+          }
+        end
       else
         format.json { render json: {}, status: :unauthorized }
       end
@@ -24,7 +32,7 @@ class SamplesController < ApplicationController
   def create
     sample = Sample.new(
       user: current_user,
-      organization: @organization
+      team: @team
     )
     sample.last_modified_by = current_user
     errors = {
@@ -33,7 +41,7 @@ class SamplesController < ApplicationController
     };
 
     respond_to do |format|
-      if can_create_samples(@organization)
+      if can_create_samples(@team)
         if params[:sample]
           # Sample name
           if params[:sample][:name]
@@ -85,8 +93,8 @@ class SamplesController < ApplicationController
               id: sample.id,
               flash: t(
                 'samples.create.success_flash',
-                sample: sample.name,
-                organization: @organization.name
+                sample: escape_input(sample.name),
+                team: escape_input(@team.name)
               )
             },
             status: :ok
@@ -115,20 +123,24 @@ class SamplesController < ApplicationController
   def edit
     json = {
       sample: {
-        name: @sample.name,
+        name: escape_input(@sample.name),
         sample_type: @sample.sample_type.nil? ? "" : @sample.sample_type.id,
         sample_group: @sample.sample_group.nil? ? "" : @sample.sample_group.id,
         custom_fields: {}
       },
-      sample_groups: @organization.sample_groups.as_json(only: [:id, :name, :color]),
-      sample_types: @organization.sample_types.as_json(only: [:id, :name])
+      sample_groups: @team.sample_groups.map do |g|
+        { id: g.id, name: sanitize_input(g.name), color: g.color }
+      end,
+      sample_types: @team.sample_types.map do |t|
+        { id: t.id, name: sanitize_input(t.name) }
+      end
     }
 
     # Add custom fields ids as key (easier lookup on js side)
     @sample.sample_custom_fields.each do |scf|
       json[:sample][:custom_fields][scf.custom_field_id] = {
         sample_custom_field_id: scf.id,
-        value: scf.value
+        value: escape_input(scf.value)
       }
     end
 
@@ -254,8 +266,8 @@ class SamplesController < ApplicationController
                 id: sample.id,
                 flash: t(
                   'samples.update.success_flash',
-                  sample: sample.name,
-                  organization: @organization.name
+                  sample: escape_input(sample.name),
+                  team: escape_input(@team.name)
                 )
               },
               status: :ok
@@ -279,7 +291,7 @@ class SamplesController < ApplicationController
 
   def load_vars
     @sample = Sample.find_by_id(params[:id])
-    @organization = current_organization
+    @team = current_team
 
     unless @sample
       render_404
@@ -287,15 +299,15 @@ class SamplesController < ApplicationController
   end
 
   def load_vars_nested
-    @organization = Organization.find_by_id(params[:organization_id])
+    @team = Team.find_by_id(params[:team_id])
 
-    unless @organization
+    unless @team
       render_404
     end
   end
 
   def check_create_permissions
-    unless can_create_samples(@organization)
+    unless can_create_samples(@team)
       render_403
     end
   end
@@ -307,7 +319,7 @@ class SamplesController < ApplicationController
   end
 
   def check_destroy_permissions
-    unless can_delete_samples(@organization)
+    unless can_delete_samples(@team)
       render_403
     end
   end

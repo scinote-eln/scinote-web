@@ -8,8 +8,11 @@
       <% end %>
     </div>
   </div>
-  <div data-role="editable-table" class="panel-body">
-    <%= ff.hidden_field(:contents, value: ff.object.contents_utf_8, class: "hot-contents" ) %>
-    <div class="hot"></div>
+  <div class="panel-body">
+    <%= ff.smart_text_area :name, label: t("protocols.steps.new.table_name"), class: "table_name", autofocus: true, placeholder: t("protocols.steps.new.table_name_placeholder") %>
+    <div data-role="editable-table" class="panel-body">
+      <%= ff.hidden_field(:contents, value: ff.object.contents_utf_8, class: "hot-contents" ) %>
+      <div class="hot"></div>
+    </div>
   </div>
 </div>
