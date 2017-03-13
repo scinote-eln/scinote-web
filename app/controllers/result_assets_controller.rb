@@ -55,31 +55,31 @@ class ResultAssetsController < ApplicationController
           )
         )
 
-        format.html {
+        format.html do
           flash[:success] = t(
             "result_assets.create.success_flash",
             module: @my_module.name)
           redirect_to results_my_module_path(@my_module)
-        }
-        format.json {
+        end
+        format.json do
           render json: {
             status: 'ok',
-            html: render_to_string({
-              partial: "my_modules/result.html.erb", locals: {result: @result}
-            })
+            html: render_to_string(
+              partial: 'my_modules/result.html.erb', locals: { result: @result }
+            )
           }, status: :ok
-        }
+        end
       else
         # This response is sent as 200 OK due to IE security error when
         # accessing iframe content.
-        format.json { controller
-          render json: {status: 'error', errors: @result.errors}
-        }
+        format.json do
+          render json: { status: 'error', errors: @result.errors }
+        end
       end
     end
   end
 
-  def  controller controller
+  def edit
     respond_to do |format|
       format.json do
         render json: {
