@@ -2,8 +2,11 @@ class Asset < ActiveRecord::Base
   include SearchableModel
   include DatabaseHelper
   include Encryptor
+  include WopiUtil
 
   require 'tempfile'
+  # Lock duration set to 30 minutes
+  LOCK_DURATION = 60*30
 
   # Paperclip validation
   has_attached_file :file,
@@ -305,14 +308,120 @@ class Asset < ActiveRecord::Base
     end
   end
 
-  # Preserving attachments (on client-side) between failed validations (only usable for small/few files!)
-  # Needs to be called before save method and view needs to have :file_content and :file_info hidden field
-  # If file is an image, it can be viewed on front-end using @preview_cached with image_tag tag
+  # Preserving attachments (on client-side) between failed validations
+  # (only usable for small/few files!).
+  # Needs to be called before save method and view needs to have
+  # :file_content and :file_info hidden field.
+  # If file is an image, it can be viewed on front-end
+  # using @preview_cached with image_tag tag.
   def preserve(file_data)
     if file_data[:file_content].present?
       restore_cached(file_data[:file_content], file_data[:file_info])
     end
     cache
+  end
+
+  def can_perform_action(action)
+    if ENV['WOPI_ENABLED'] == 'true'
+      file_ext = file_file_name.split('.').last
+
+      if file_ext == 'wopitest' &&
+         (!ENV['WOPI_TEST_ENABLED'] || ENV['WOPI_TEST_ENABLED'] == 'false')
+        return false
+      end
+      action = get_action(file_ext, action)
+      return false if action.nil?
+      true
+    else
+      false
+    end
+  end
+
+  def get_action_url(user, action, with_tokens = true)
+    file_ext = file_file_name.split('.').last
+    action = get_action(file_ext, action)
+    if !action.nil?
+      action_url = action.urlsrc
+      action_url = action_url.gsub(/<IsLicensedUser=BUSINESS_USER&>/,
+                                   'IsLicensedUser=0&')
+      action_url = action_url.gsub(/<IsLicensedUser=BUSINESS_USER>/,
+                                   'IsLicensedUser=0')
+      action_url = action_url.gsub(/<.*?=.*?>/, '')
+
+      rest_url = Rails.application.routes.url_helpers.wopi_rest_endpoint_url(
+        host: ENV['WOPI_ENDPOINT_URL'],
+        id: id
+      )
+      action_url += "WOPISrc=#{rest_url}"
+      if with_tokens
+      	token = user.get_wopi_token
+        action_url + "&access_token=#{token.token}"\
+        "&access_token_ttl=#{(token.ttl * 1000)}"
+      else
+        action_url
+      end
+    else
+      return nil
+    end
+  end
+
+  def favicon_url(action)
+    file_ext = file_file_name.split('.').last
+    action = get_action(file_ext, action)
+    action.wopi_app.icon if action.try(:wopi_app)
+  end
+
+  # locked?, lock_asset and refresh_lock rely on the asset
+  # being locked in the database to prevent race conditions
+  def locked?
+    !lock.nil?
+  end
+
+  def lock_asset(lock_string)
+    self.lock = lock_string
+    self.lock_ttl = Time.now.to_i + LOCK_DURATION
+    delay(queue: :assets, run_at: LOCK_DURATION.seconds.from_now).unlock_expired
+    save!
+  end
+
+  def refresh_lock
+    self.lock_ttl = Time.now.to_i + LOCK_DURATION
+    delay(queue: :assets, run_at: LOCK_DURATION.seconds.from_now).unlock_expired
+    save!
+  end
+
+  def unlock
+    self.lock = nil
+    self.lock_ttl = nil
+    save!
+  end
+
+  def unlock_expired
+    with_lock do
+      if !lock_ttl.nil? && lock_ttl >= Time.now.to_i
+        self.lock = nil
+        self.lock_ttl = nil
+        save!
+      end
+    end
+  end
+
+  def update_contents(new_file)
+    new_file.class.class_eval { attr_accessor :original_filename }
+    new_file.original_filename = file_file_name
+    self.file = new_file
+    self.version = version.nil? ? 1 : version + 1
+    save
+  end
+
+  protected
+
+  # Checks if attachments is an image (in post processing imagemagick will
+  # generate styles)
+  def allow_styles_on_images
+    if !(file.content_type =~ %r{^(image|(x-)?application)/(x-png|pjpeg|jpeg|jpg|png|gif)$})
+      return false
+    end
   end
 
   private

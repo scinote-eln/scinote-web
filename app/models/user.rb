@@ -145,6 +145,12 @@ class User < ActiveRecord::Base
            class_name: 'Table',
            foreign_key: 'last_modified_by_id'
   has_many :created_tags, class_name: 'Tag', foreign_key: 'created_by_id'
+
+  has_many :tokens,
+           class_name: 'Token',
+           foreign_key: 'user_id',
+           inverse_of: :user
+
   has_many :modified_tags,
            class_name: 'Tag',
            foreign_key: 'last_modified_by_id'
@@ -169,6 +175,7 @@ class User < ActiveRecord::Base
            class_name: 'Protocol',
            foreign_key: 'restored_by_id',
            inverse_of: :restored_by
+
   has_many :user_notifications, inverse_of: :user
   has_many :notifications, through: :user_notifications
 
@@ -211,8 +218,8 @@ class User < ActiveRecord::Base
     end
 
     result
-    .where_attributes_like([:full_name, :email], query)
-    .distinct
+      .where_attributes_like([:full_name, :email], query)
+      .distinct
   end
 
   def empty_avatar(name, size)
@@ -310,6 +317,33 @@ class User < ActiveRecord::Base
       .order(created_at: :desc)
       .limit(per_page)
       .uniq
+  end
+
+  def self.find_by_valid_wopi_token(token)
+    Rails.logger.warn "WOPI: searching by token #{token}"
+    User
+      .joins('LEFT OUTER JOIN tokens ON user_id = users.id')
+      .where(tokens: { token: token })
+      .where('tokens.ttl = 0 OR tokens.ttl > ?', Time.now.to_i)
+      .first
+  end
+
+  def get_wopi_token
+    # WOPI does not have a good way to request a new token,
+    # so a new token should be provided each time this is called,
+    # while keeping any old tokens as long as they have not yet expired
+    tokens = Token.where(user_id: id).distinct
+
+    tokens.each do |token|
+      token.delete if token.ttl < Time.now.to_i
+    end
+
+    token_string =  "#{Devise.friendly_token(20)}-#{id}"
+    # WOPI uses millisecond TTLs
+    ttl = (Time.now + 1.day).to_i
+    wopi_token = Token.create(token: token_string, ttl: ttl, user_id: id)
+    Rails.logger.warn("WOPI: generating new token #{wopi_token.token}")
+    wopi_token
   end
 
   def teams_ids

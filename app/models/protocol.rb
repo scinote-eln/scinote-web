@@ -417,6 +417,8 @@ class Protocol < ActiveRecord::Base
   end
 
   def archive(user)
+    return nil unless can_destroy?
+
     # Don't update "updated_at" timestamp
     self.record_timestamps = false
 
@@ -635,6 +637,10 @@ class Protocol < ActiveRecord::Base
 
     # Reload protocol
     self.reload
+  end
+
+  def can_destroy?
+    steps.map(&:can_destroy?).all?
   end
 
   private

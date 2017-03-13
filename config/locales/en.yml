@@ -526,12 +526,16 @@ en:
       unlink_error: "Failed to unlink protocol."
       revert_flash: "Protocol was successfully reverted to protocol version."
       revert_error: "Failed to revert protocol."
+      revert_error_locked: "Failed to revert protocol. One or more files in the protocol are currently being edited."
       update_parent_flash: "Protocol in repository was successfully updated with the version from the task."
       update_parent_error: "Failed to update repository version of the protocol."
+      update_parent_error_locked: "Failed to update repository version of the protocol. One or more files in the protocol are currently being edited."
       update_from_parent_flash: "Version in the repository was successfully updated."
       update_from_parent_error: "Failed to update the protocol with the version in the repository."
+      update_from_parent_error_locked: "Failed to update the protocol with the version in the repository. One or more files in the protocol are currently being edited."
       load_from_repository_flash: "Successfully loaded the protocol from the repository."
       load_from_repository_error: "Failed to load the protocol from the repository."
+      load_from_repository_error_locked: "Failed to load the protocol from the repository. One or more files in the protocol are currently being edited."
       load_from_repository_modal:
         title: "Load protocol from repository"
         text: "Choose the protocol to be loaded to the task."
@@ -563,6 +567,7 @@ en:
         confirm: "Copy to repository"
       load_from_file_flash: "Successfully loaded the protocol from the file."
       load_from_file_error: "Failed to load the protocol from file."
+      load_from_file_error_locked: "Failed to load the protocol from file. One or more files are currently being edited."
       load_from_file_size_error: "Failed to load the protocol from file. Limit is %{size}Mb."
     results:
       head_title: "%{project} | %{module} | Results"
@@ -787,14 +792,18 @@ en:
       title: "Edit result from task %{module}"
       uploaded_asset: "Uploaded file"
       update: "Update file result"
+      locked_file_error: 'This file is being edited by someone else.'
     create:
       success_flash: "Successfully added file result to task <strong>%{module}</strong>"
     update:
       success_flash: "Successfully updated file result in task <strong>%{module}</strong>"
     archive:
       success_flash: "Successfully archived file result in task <strong>%{module}</strong>"
+      error_flash: "Couldn't archive file result. Someone is editing that file."
     destroy:
       success_flash: "File result successfully deleted."
+    wopi_open_file: "Open in %{app}"
+    wopi_edit_file: "Edit in %{app}"
 
   result_tables:
     new:
@@ -1025,6 +1034,41 @@ en:
     delete_step_comment: "<i>%{user}</i> deleted comment on Step %{step} <strong>%{step_name}</strong>."
     edit_result_comment: "<i>%{user}</i> edited comment on result <strong>%{result}</strong>."
     delete_result_comment: "<i>%{user}</i> deleted comment on result <strong>%{result}</strong>."
+    start_edit_wopi_file_step: "<i>%{user}</i> started editing File %{file} on Step %{step} <strong>%{step_name}</strong>."
+    start_edit_wopi_file_result: "<i>%{user}</i> started editing File %{file} on Result <strong>%{result}</strong>."
+    unlock_wopi_file_step: "<i>%{user}</i>  closed File %{file} for editing on Step %{step} <strong>%{step_name}</strong>."
+    unlock_wopi_file_result: "<i>%{user}</i> started editing File %{file} on Result <strong>%{result}</strong>."
+
+  user_my_modules:
+    new:
+      head_title: "%{project} | %{module} | Add user"
+      title: "Add user to task %{module}"
+      create: "Add user to task"
+      no_users_available: "All users of the current project all already added to this task."
+      assign_user: "Add user"
+      back_button: "Back to task"
+    create:
+      success_flash: "Successfully added user %{user} to task <strong>%{module}</strong>."
+      error_flash: "User %{user} could not be added to task <strong>%{module}</strong>."
+    destroy:
+      success_flash: "Successfully removed user %{user} from task <strong>%{module}</strong>."
+      error_flash: "User %{user} could not be removed from task <strong>%{module}</strong>."
+
+  step_comments:
+    new:
+      head_title: "%{project} | %{module} | Add comment to step"
+      title: "Add comment to step %{step}"
+      create: "Add comment"
+    create:
+      success_flash: "Successfully added comment to step <strong>%{step}</strong>."
+
+  result_comments:
+    new:
+      head_title: "%{project} | %{module} | Add comment to result"
+      title: "Add comment to result"
+      create: "Add comment"
+    create:
+      success_flash: "Successfully added comment to result."
     load_protocol_from_file: "<i>%{user}</i> loaded protocol <strong>%{protocol}</strong> from file."
     load_protocol_from_repository: "<i>%{user}</i> loaded protocol <strong>%{protocol}</strong> from repository."
     revert_protocol: "<i>%{user}</i> reverted protocol <strong>%{protocol}</strong> from repository."
@@ -1379,6 +1423,7 @@ en:
       destroy:
         confirm: "Are you sure you want to delete step %{step}?"
         success_flash: "Step %{step} successfully deleted."
+        error_flash: "Step %{step} couldn't be deleted. One or more files are locked."
     edit:
       head_title: "Edit protocol"
     no_keywords: "No keywords"
@@ -1475,6 +1520,11 @@ en:
     unassign_user_from_team: "<i>%{unassigned_user}</i> was removed from team <strong>%{team}</strong> by <i>%{unassigned_by_user}</i>."
     task_completed: "%{user} completed task %{module}. %{date} | Project: %{project} | Experiment: %{experiment}"
 
+  assets:
+    head_title:
+      edit: "sciNote | %{file_name} | Edit"
+      view: "sciNote | %{file_name} | View"
+
   atwho:
     no_results: "No results found"
     users:
@@ -1489,6 +1539,7 @@ en:
       archived: "(archived)"
       deleted: "(deleted)"
     popover_html: "<span class='silver'>Team:</span>&nbsp;%{team} <br> <span class='silver'>Role:</span>&nbsp;%{role} <br> <span class='silver'>Joined:</span>&nbsp;%{time}"
+
   # This section contains general words that can be used in any parts of
   # application.
 

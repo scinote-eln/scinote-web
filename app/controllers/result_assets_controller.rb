@@ -55,26 +55,26 @@ class ResultAssetsController < ApplicationController
           )
         )
 
-        format.html {
+        format.html do
           flash[:success] = t(
             "result_assets.create.success_flash",
             module: @my_module.name)
           redirect_to results_my_module_path(@my_module)
-        }
-        format.json {
+        end
+        format.json do
           render json: {
             status: 'ok',
-            html: render_to_string({
-              partial: "my_modules/result.html.erb", locals: {result: @result}
-            })
+            html: render_to_string(
+              partial: 'my_modules/result.html.erb', locals: { result: @result }
+            )
           }, status: :ok
-        }
+        end
       else
         # This response is sent as 200 OK due to IE security error when
         # accessing iframe content.
-        format.json {
-          render json: {status: 'error', errors: @result.errors}
-        }
+        format.json do
+          render json: { status: 'error', errors: @result.errors }
+        end
       end
     end
   end
@@ -92,6 +92,7 @@ class ResultAssetsController < ApplicationController
   def update
     update_params = result_params
     previous_size = @result.space_taken
+    previous_asset = @result.asset
 
     if update_params.key? :asset_attributes
       asset = Asset.find_by_id(update_params[:asset_attributes][:id])
@@ -106,6 +107,16 @@ class ResultAssetsController < ApplicationController
             module: @my_module.name)
 
     if @result.archived_changed?(from: false, to: true)
+      if previous_asset.locked?
+        respond_to do |format|
+          format.html {
+            flash[:error] = t('result_assets.archive.error_flash')
+            redirect_to results_my_module_path(@my_module)
+            return
+          }
+        end
+      end
+
       saved = @result.archive(current_user)
       success_flash = t("result_assets.archive.success_flash",
             module: @my_module.name)
@@ -125,6 +136,19 @@ class ResultAssetsController < ApplicationController
     elsif @result.archived_changed?(from: true, to: false)
       render_403
     else
+      if previous_asset.locked?
+        @result.errors.add(:asset_attributes,
+                           t('result_assets.edit.locked_file_error'))
+        respond_to do |format|
+          format.json do
+            render json: {
+              status: 'error',
+              errors: @result.errors
+            }, status: :bad_request
+            return
+          end
+        end
+      end
       # Asset (file) and/or name has been changed
       saved = @result.save
 

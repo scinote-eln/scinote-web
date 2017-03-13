@@ -1,0 +1,17 @@
+<%= link_to download_asset_path(asset),
+            data: { no_turbolink: true,
+                    id: true,
+                    status: 'asset-present' } do %>
+  <%= image_tag preview_asset_path(asset) if asset.is_image? %>
+
+  <% if wopi_file?(asset) %>
+    <%= wopi_asset_file_name(asset) %>
+  <% else %>
+    <p><%= truncate(asset.file_file_name,
+                    length: Constants::FILENAME_TRUNCATION_LENGTH) %></p>
+  <% end %>
+<% end %>
+<%= wopi_asset_view_button(asset) %>
+<% if can_edit_step_in_protocol(@protocol) %>
+  <%= wopi_asset_edit_button(asset) %>
+<% end %>

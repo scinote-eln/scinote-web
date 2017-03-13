@@ -17,19 +17,15 @@
       <% end %>
     <% else %>
       <%= link_to download_asset_path(result.asset), data: {no_turbolink: true} do %>
-        <p><%= truncate(result.asset.file_file_name,
-        length: Constants::FILENAME_TRUNCATION_LENGTH) %></p>
+        <% if wopi_file?(result.asset) %>
+          <%= wopi_asset_file_name(result.asset) %>
+        <% else %>
+          <p><%= truncate(result.asset.file_file_name,
+                          length: Constants::FILENAME_TRUNCATION_LENGTH) %></p>
+        <% end %>
       <% end %>
+      <%= wopi_result_view_file_button(result) %>
+      <%= wopi_result_edit_file_button(result) %>
     <% end %>
-  <% end %>
-<% else %>
-  <% if result.asset.file.processing? %>
-    <span data-status='asset-loading'
-          data-present-url='<%= file_present_asset_path(result.asset) %>'>
-      <%= image_tag 'medium/processing.gif' %>
-    </span>
-  <% else %>
-    <%= image_tag result.asset.url(:medium) if result.asset.is_image? %>
-    <p><%= result.asset.file_file_name %></p>
   <% end %>
 <% end %>

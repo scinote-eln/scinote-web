@@ -83,6 +83,10 @@ class Step < ActiveRecord::Base
     super()
   end
 
+  def can_destroy?
+    !assets.map(&:locked?).any?
+  end
+
   def my_module
     protocol.present? ? protocol.my_module : nil
   end
