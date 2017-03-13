@@ -1,5 +1,4 @@
 module WopiHelper
-  #include FileIconsHelper
   def wopi_result_view_file_button(result)
     if result.asset.can_perform_action('view')
       link_to view_asset_url(id: result.asset),
@@ -57,7 +56,7 @@ module WopiHelper
     html += "#{file_extension_icon(asset)}&nbsp;"
     html += truncate(asset.file_file_name,
                      length: Constants::FILENAME_TRUNCATION_LENGTH)
-    html += '</p>'
+    html += '&nbsp;</p>'
     sanitize_input(html, %w(img))
   end
 end
