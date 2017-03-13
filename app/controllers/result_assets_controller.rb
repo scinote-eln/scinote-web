@@ -72,14 +72,14 @@ class ResultAssetsController < ApplicationController
       else
         # This response is sent as 200 OK due to IE security error when
         # accessing iframe content.
-        format.json {
+        format.json { controller
           render json: {status: 'error', errors: @result.errors}
         }
       end
     end
   end
 
-  def edit
+  def  controller controller
     respond_to do |format|
       format.json do
         render json: {

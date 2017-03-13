@@ -3,33 +3,15 @@
                     id: true,
                     status: 'asset-present' } do %>
   <%= image_tag preview_asset_path(asset) if asset.is_image? %>
+
   <% if wopi_file?(asset) %>
-    <p style='display: inline-block'>
-      <%= file_extension_icon(asset) %>
-      <%= truncate(asset.file_file_name,
-                   length: Constants::FILENAME_TRUNCATION_LENGTH) %>
-    </p>
+    <%= wopi_asset_file_name(asset) %>
   <% else %>
     <p><%= truncate(asset.file_file_name,
                     length: Constants::FILENAME_TRUNCATION_LENGTH) %></p>
   <% end %>
 <% end %>
-<% if asset.can_perform_action('view') %>
-  <%= link_to view_asset_url(id: asset),
-              class: 'btn btn-default btn-sm',
-              target: '_blank',
-              style: 'display: inline-block' do %>
-    <%= file_application_icon(asset) %>
-    <%= wopi_button_text(asset, 'view') %>
-  <% end %>
-<% end %>
-<% if can_edit_step_in_protocol(@protocol) &&
-      asset.can_perform_action('edit') %>
-  <%= link_to edit_asset_url(id: asset),
-              class: 'btn btn-default btn-sm',
-              target: '_blank',
-              style: 'display: inline-block' do %>
-    <%= file_application_icon(asset) %>
-    <%= wopi_button_text(asset, 'edit') %>
-  <% end %>
+<%= wopi_asset_view_button(asset) %>
+<% if can_edit_step_in_protocol(@protocol) %>
+  <%= wopi_asset_edit_button(asset) %>
 <% end %>

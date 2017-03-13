@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170124135736) do
+ActiveRecord::Schema.define(version: 20170306121855) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -54,11 +54,11 @@ ActiveRecord::Schema.define(version: 20170124135736) do
     t.datetime "file_updated_at"
     t.integer  "created_by_id"
     t.integer  "last_modified_by_id"
+    t.integer  "estimated_size",                   default: 0,     null: false
+    t.boolean  "file_present",                     default: false, null: false
     t.string   "lock",                limit: 1024
     t.integer  "lock_ttl"
     t.integer  "version",                          default: 1
-    t.integer  "estimated_size",      default: 0,     null: false
-    t.boolean  "file_present",        default: false, null: false
     t.boolean  "file_processing"
   end
 
@@ -100,8 +100,11 @@ ActiveRecord::Schema.define(version: 20170124135736) do
     t.datetime "created_at",          null: false
     t.datetime "updated_at",          null: false
     t.integer  "last_modified_by_id"
+    t.string   "type"
+    t.integer  "associated_id"
   end
 
+  add_index "comments", ["associated_id"], name: "index_comments_on_associated_id", using: :btree
   add_index "comments", ["created_at"], name: "index_comments_on_created_at", using: :btree
   add_index "comments", ["last_modified_by_id"], name: "index_comments_on_last_modified_by_id", using: :btree
   add_index "comments", ["user_id"], name: "index_comments_on_user_id", using: :btree
@@ -172,13 +175,6 @@ ActiveRecord::Schema.define(version: 20170124135736) do
     t.string  "message", null: false
   end
 
-  create_table "my_module_comments", force: :cascade do |t|
-    t.integer "my_module_id", null: false
-    t.integer "comment_id",   null: false
-  end
-
-  add_index "my_module_comments", ["my_module_id", "comment_id"], name: "index_my_module_comments_on_my_module_id_and_comment_id", using: :btree
-
   create_table "my_module_groups", force: :cascade do |t|
     t.string   "name",                      null: false
     t.datetime "created_at",                null: false
@@ -202,24 +198,26 @@ ActiveRecord::Schema.define(version: 20170124135736) do
   add_index "my_module_tags", ["tag_id"], name: "index_my_module_tags_on_tag_id", using: :btree
 
   create_table "my_modules", force: :cascade do |t|
-    t.string   "name",                                   null: false
+    t.string   "name",                                             null: false
     t.datetime "due_date"
     t.string   "description"
-    t.integer  "x",                      default: 0,     null: false
-    t.integer  "y",                      default: 0,     null: false
+    t.integer  "x",                                default: 0,     null: false
+    t.integer  "y",                                default: 0,     null: false
     t.integer  "my_module_group_id"
-    t.datetime "created_at",                             null: false
-    t.datetime "updated_at",                             null: false
-    t.boolean  "archived",               default: false, null: false
+    t.datetime "created_at",                                       null: false
+    t.datetime "updated_at",                                       null: false
+    t.boolean  "archived",                         default: false, null: false
     t.datetime "archived_on"
     t.integer  "created_by_id"
     t.integer  "last_modified_by_id"
     t.integer  "archived_by_id"
     t.integer  "restored_by_id"
     t.datetime "restored_on"
-    t.integer  "nr_of_assigned_samples", default: 0
-    t.integer  "workflow_order",         default: -1,    null: false
-    t.integer  "experiment_id",          default: 0,     null: false
+    t.integer  "nr_of_assigned_samples",           default: 0
+    t.integer  "workflow_order",                   default: -1,    null: false
+    t.integer  "experiment_id",                    default: 0,     null: false
+    t.integer  "state",                  limit: 2, default: 0
+    t.datetime "completed_on"
   end
 
   add_index "my_modules", ["archived_by_id"], name: "index_my_modules_on_archived_by_id", using: :btree
@@ -240,13 +238,6 @@ ActiveRecord::Schema.define(version: 20170124135736) do
   end
 
   add_index "notifications", ["created_at"], name: "index_notifications_on_created_at", using: :btree
-
-  create_table "project_comments", force: :cascade do |t|
-    t.integer "project_id", null: false
-    t.integer "comment_id", null: false
-  end
-
-  add_index "project_comments", ["project_id", "comment_id"], name: "index_project_comments_on_project_id_and_comment_id", using: :btree
 
   create_table "projects", force: :cascade do |t|
     t.string   "name",                                null: false
@@ -370,13 +361,6 @@ ActiveRecord::Schema.define(version: 20170124135736) do
 
   add_index "result_assets", ["result_id", "asset_id"], name: "index_result_assets_on_result_id_and_asset_id", using: :btree
 
-  create_table "result_comments", force: :cascade do |t|
-    t.integer "result_id",  null: false
-    t.integer "comment_id", null: false
-  end
-
-  add_index "result_comments", ["result_id", "comment_id"], name: "index_result_comments_on_result_id_and_comment_id", using: :btree
-
   create_table "result_tables", force: :cascade do |t|
     t.integer "result_id", null: false
     t.integer "table_id",  null: false
@@ -412,13 +396,6 @@ ActiveRecord::Schema.define(version: 20170124135736) do
   add_index "results", ["name"], name: "index_results_on_name", using: :gist
   add_index "results", ["restored_by_id"], name: "index_results_on_restored_by_id", using: :btree
   add_index "results", ["user_id"], name: "index_results_on_user_id", using: :btree
-
-  create_table "sample_comments", force: :cascade do |t|
-    t.integer "sample_id",  null: false
-    t.integer "comment_id", null: false
-  end
-
-  add_index "sample_comments", ["sample_id", "comment_id"], name: "index_sample_comments_on_sample_id_and_comment_id", using: :btree
 
   create_table "sample_custom_fields", force: :cascade do |t|
     t.string   "value",           null: false
@@ -498,19 +475,19 @@ ActiveRecord::Schema.define(version: 20170124135736) do
   add_index "samples_tables", ["team_id"], name: "index_samples_tables_on_team_id", using: :btree
   add_index "samples_tables", ["user_id"], name: "index_samples_tables_on_user_id", using: :btree
 
+  create_table "settings", force: :cascade do |t|
+    t.text  "type",                null: false
+    t.jsonb "values", default: {}, null: false
+  end
+
+  add_index "settings", ["type"], name: "index_settings_on_type", unique: true, using: :btree
+
   create_table "step_assets", force: :cascade do |t|
     t.integer "step_id",  null: false
     t.integer "asset_id", null: false
   end
 
   add_index "step_assets", ["step_id", "asset_id"], name: "index_step_assets_on_step_id_and_asset_id", using: :btree
-
-  create_table "step_comments", force: :cascade do |t|
-    t.integer "step_id",    null: false
-    t.integer "comment_id", null: false
-  end
-
-  add_index "step_comments", ["step_id", "comment_id"], name: "index_step_comments_on_step_id_and_comment_id", using: :btree
 
   create_table "step_tables", force: :cascade do |t|
     t.integer "step_id",  null: false
@@ -747,8 +724,6 @@ ActiveRecord::Schema.define(version: 20170124135736) do
   add_foreign_key "experiments", "users", column: "last_modified_by_id"
   add_foreign_key "experiments", "users", column: "restored_by_id"
   add_foreign_key "logs", "teams"
-  add_foreign_key "my_module_comments", "comments"
-  add_foreign_key "my_module_comments", "my_modules"
   add_foreign_key "my_module_groups", "experiments"
   add_foreign_key "my_module_groups", "users", column: "created_by_id"
   add_foreign_key "my_module_tags", "users", column: "created_by_id"
@@ -759,8 +734,6 @@ ActiveRecord::Schema.define(version: 20170124135736) do
   add_foreign_key "my_modules", "users", column: "last_modified_by_id"
   add_foreign_key "my_modules", "users", column: "restored_by_id"
   add_foreign_key "notifications", "users", column: "generator_user_id"
-  add_foreign_key "project_comments", "comments"
-  add_foreign_key "project_comments", "projects"
   add_foreign_key "projects", "teams"
   add_foreign_key "projects", "users", column: "archived_by_id"
   add_foreign_key "projects", "users", column: "created_by_id"
@@ -789,8 +762,6 @@ ActiveRecord::Schema.define(version: 20170124135736) do
   add_foreign_key "reports", "users", column: "last_modified_by_id"
   add_foreign_key "result_assets", "assets"
   add_foreign_key "result_assets", "results"
-  add_foreign_key "result_comments", "comments"
-  add_foreign_key "result_comments", "results"
   add_foreign_key "result_tables", "results"
   add_foreign_key "result_tables", "tables"
   add_foreign_key "result_texts", "results"
@@ -799,8 +770,6 @@ ActiveRecord::Schema.define(version: 20170124135736) do
   add_foreign_key "results", "users", column: "archived_by_id"
   add_foreign_key "results", "users", column: "last_modified_by_id"
   add_foreign_key "results", "users", column: "restored_by_id"
-  add_foreign_key "sample_comments", "comments"
-  add_foreign_key "sample_comments", "samples"
   add_foreign_key "sample_custom_fields", "custom_fields"
   add_foreign_key "sample_custom_fields", "samples"
   add_foreign_key "sample_groups", "teams"
@@ -819,8 +788,6 @@ ActiveRecord::Schema.define(version: 20170124135736) do
   add_foreign_key "samples", "users", column: "last_modified_by_id"
   add_foreign_key "step_assets", "assets"
   add_foreign_key "step_assets", "steps"
-  add_foreign_key "step_comments", "comments"
-  add_foreign_key "step_comments", "steps"
   add_foreign_key "step_tables", "steps"
   add_foreign_key "step_tables", "tables"
   add_foreign_key "steps", "protocols"
@@ -831,12 +798,9 @@ ActiveRecord::Schema.define(version: 20170124135736) do
   add_foreign_key "tags", "projects"
   add_foreign_key "tags", "users", column: "created_by_id"
   add_foreign_key "tags", "users", column: "last_modified_by_id"
-<<<<<<< HEAD
-  add_foreign_key "tokens", "users"
-=======
   add_foreign_key "teams", "users", column: "created_by_id"
   add_foreign_key "teams", "users", column: "last_modified_by_id"
->>>>>>> 39e1ac4b26f8c8bfb7f5a2f020db13f07d312433
+  add_foreign_key "tokens", "users"
   add_foreign_key "user_my_modules", "my_modules"
   add_foreign_key "user_my_modules", "users"
   add_foreign_key "user_my_modules", "users", column: "assigned_by_id"
@@ -845,14 +809,10 @@ ActiveRecord::Schema.define(version: 20170124135736) do
   add_foreign_key "user_projects", "projects"
   add_foreign_key "user_projects", "users"
   add_foreign_key "user_projects", "users", column: "assigned_by_id"
-<<<<<<< HEAD
-  add_foreign_key "users", "organizations", column: "current_organization_id"
-  add_foreign_key "wopi_actions", "wopi_apps"
-  add_foreign_key "wopi_apps", "wopi_discoveries"
-=======
   add_foreign_key "user_teams", "teams"
   add_foreign_key "user_teams", "users"
   add_foreign_key "user_teams", "users", column: "assigned_by_id"
   add_foreign_key "users", "teams", column: "current_team_id"
->>>>>>> 39e1ac4b26f8c8bfb7f5a2f020db13f07d312433
+  add_foreign_key "wopi_actions", "wopi_apps"
+  add_foreign_key "wopi_apps", "wopi_discoveries"
 end

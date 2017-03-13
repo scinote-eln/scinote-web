@@ -1,6 +1,13 @@
 class AssetsController < ApplicationController
   include WopiUtil
+  # include ActionView::Helpers
+  include ActionView::Helpers::AssetTagHelper
   include ActionView::Helpers::TextHelper
+  include ActionView::Helpers::UrlHelper
+  include ActionView::Context
+  include InputSanitizeHelper
+  include FileIconsHelper
+  include WopiHelper
 
   before_action :load_vars
   before_action :check_read_permission, except: :file_present
@@ -52,7 +59,10 @@ class AssetsController < ApplicationController
                                    length:
                                      Constants::FILENAME_TRUNCATION_LENGTH),
             'download-url' => download_asset_path(@asset),
-            'type' => (@asset.is_image? ? 'image' : 'file')
+            'type' => asset_data_type(@asset),
+            'wopi-file-name' => wopi_asset_file_name(@asset),
+            'wopi-edit' => (wopi_asset_edit_button(@asset) if wopi_file?(@asset)),
+            'wopi-view' => (wopi_asset_view_button(@asset) if wopi_file?(@asset))
           }, status: 200
         end
       end
@@ -202,5 +212,11 @@ class AssetsController < ApplicationController
     params.permit(
       :file
     )
+  end
+
+  def asset_data_type(asset)
+    return 'wopi' if wopi_file?(asset)
+    return 'image' if asset.is_image?
+    'file'
   end
 end
