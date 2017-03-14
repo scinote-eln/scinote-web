@@ -70,6 +70,17 @@
           });
 
           clearModal('#modal-delete');
+        },
+        error: function (e) {
+          $(li).clearFormErrors();
+          var msg = $.parseJSON(e.responseText);
+
+          renderFormError(undefined,
+                          $(li).find('.text-edit'),
+                          Object.keys(msg)[0] + ' ' + msg.name.toString());
+          setTimeout(function() {
+            $(li).clearFormErrors();
+          }, 5000);
         }
       });
     });
@@ -161,6 +172,17 @@
                             $(this).find('#sample_type_name'),
                             Object.keys(msg)[0] + ' '+ msg.name.toString());
           });
+        },
+        error: function (e) {
+          $(li).clearFormErrors();
+          var msg = $.parseJSON(e.responseText);
+
+          renderFormError(undefined,
+                          $(li).find('.text-edit'),
+                          Object.keys(msg)[0] + ' ' + msg.name.toString());
+          setTimeout(function() {
+            $(li).clearFormErrors();
+          }, 5000);
         }
       });
     });
@@ -202,6 +224,40 @@
                             $(this).find('#sample_group_name'),
                             Object.keys(msg)[0] + ' '+ msg.name.toString());
           });
+        },
+        error: function (e) {
+          $(li).clearFormErrors();
+          var msg = $.parseJSON(e.responseText);
+
+          renderFormError(undefined,
+                          $(li).find('.text-edit'),
+                          Object.keys(msg)[0] + ' ' + msg.name.toString());
+          setTimeout(function() {
+            $(li).clearFormErrors();
+          }, 5000);
+        }
+      });
+    });
+  }
+
+  function editSampleGroupColor() {
+    $('.color-picker').on('click', function() {
+      var li = $(this).closest('li');
+      $.ajax({
+        url: li.attr('data-edit'),
+        success: function(data) {
+        },
+        error: function (e) {
+          $('.dropdown-colorselector.open').removeClass('open');
+          $(li).clearFormErrors();
+          var msg = $.parseJSON(e.responseText);
+
+          renderFormError(undefined,
+                          $(li).find('.text-edit'),
+                          Object.keys(msg)[0] + ' ' + msg.name.toString());
+          setTimeout(function() {
+            $(li).clearFormErrors();
+          }, 5000);
         }
       });
     });
@@ -269,6 +325,7 @@
     bindNewSampleGroupAction();
     appendCarretToColorPickerDropdown();
     sampleTypeGroupEditMode();
+    editSampleGroupColor();
   }
 
   // initialize sample types/groups actions
