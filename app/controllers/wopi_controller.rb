@@ -199,13 +199,13 @@ class WopiController < ActionController::Base
         if @asset.lock == lock
           logger.warn 'WOPI: replacing file'
 
-          @organization.release_space(@asset.estimated_size)
+          @team.release_space(@asset.estimated_size)
           @asset.update_contents(request.body)
           @asset.last_modified_by = @user
           @asset.save
 
-          @organization.take_space(@asset.estimated_size)
-          @organization.save
+          @team.take_space(@asset.estimated_size)
+          @team.save
 
           @protocol.update(updated_at: Time.now) if @protocol
 
@@ -219,11 +219,11 @@ class WopiController < ActionController::Base
       elsif !@asset.file_file_size.nil? && @asset.file_file_size.zero?
         logger.warn 'WOPI: initializing empty file'
 
-        @organization.release_space(@asset.estimated_size)
+        @team.release_space(@asset.estimated_size)
         @asset.update_contents(request.body)
         @asset.last_modified_by = @user
         @asset.save
-        @organization.save
+        @team.save
 
         response.headers['X-WOPI-ItemVersion'] = @asset.version
         render nothing: :true, status: 200 and return
@@ -248,10 +248,10 @@ class WopiController < ActionController::Base
 
       if @assoc.class == Step
         @protocol = @asset.step.protocol
-        @organization = @protocol.organization
+        @team = @protocol.team
       else
         @my_module = @assoc.my_module
-        @organization = @my_module.experiment.project.organization
+        @team = @my_module.experiment.project.team
       end
     end
   end
