@@ -647,7 +647,7 @@ function bindFullZoomAjaxTabs() {
   function initUsersEditLink($el) {
      $el.find(".manage-users-link")
        .on("ajax:before", function () {
-          var moduleId = $(this).closest(".panel-default").attr("id");
+          var moduleId = $(this).closest(".panel-default").attr("data-module-id");
           manageUsersModal.attr("data-module-id", moduleId);
           manageUsersModal.modal('show');
        })
@@ -698,7 +698,7 @@ function bindFullZoomAjaxTabs() {
       type: "GET",
       dataType: "json",
       success: function (data) {
-        moduleEl.find("#" + moduleEl.attr("id") + "_users").html(data.html);
+        moduleEl.find("#" + moduleEl.attr("data-module-id") + "_users").html(data.html);
         initUsersEditLink(moduleEl);
       },
       error: function (data) {
@@ -965,7 +965,7 @@ function bindEditTagsAjax(elements) {
   // initialize my_module tab remote loading
   $(elements).find("a.edit-tags-link")
   .on("ajax:before", function () {
-    var moduleId = $(this).closest(".panel-default").attr("id");
+    var moduleId = $(this).closest(".panel-default").attr("data-module-id");
     manageTagsModal.attr("data-module-id", moduleId);
     manageTagsModal.modal('show');
   })
@@ -1052,7 +1052,7 @@ function initializeGraph(modulesSel) {
   var module, moduleId;
   _.each(modules, function(m) {
     module = $(m);
-    moduleId = module.attr("id");
+    moduleId = module.attr("data-module-id");
     if (!graph.hasNode(moduleId)) {
       addNode(moduleId, module);
     }
@@ -1062,10 +1062,10 @@ function initializeGraph(modulesSel) {
         return;
       }
       if (!graph.hasNode(targetId)) {
-        addNode(targetId, $(".diagram .module[id=" + targetId + "]"));
+        addNode(targetId, $(".diagram .module[data-module-id=" + targetId + "]"));
       }
 
-      graph.addEdge(module.attr("id"), targetId);
+      graph.addEdge(module.attr("data-module-id"), targetId);
     });
   });
 }
@@ -1546,11 +1546,11 @@ function initEditModules() {
       var formAddNameInput = $('#update-canvas form input#add-names');
       var formRenameInput = $("#update-canvas form input#rename");
       var addedIds = formAddInput.attr("value").split(",");
-      var existingIndex = _.indexOf(addedIds, moduleEl.attr("id"));
+      var existingIndex = _.indexOf(addedIds, moduleEl.attr("data-module-id"));
       if (existingIndex === -1) {
         // Actually rename an existing module
         var renameVal = JSON.parse(formRenameInput.attr("value"));
-        renameVal[moduleEl.attr("id")] = newName;
+        renameVal[moduleEl.attr("data-module-id")] = newName;
         formRenameInput.attr("value", JSON.stringify(renameVal));
       } else {
         // Just rename the add-name entry
@@ -1618,7 +1618,7 @@ editModuleHandler = function(ev) {
   var moduleEl = $(this).closest(".module");
 
   // Set modal's module id
-  modal.attr("data-module-id", moduleEl.attr("id"));
+  modal.attr("data-module-id", moduleEl.attr("data-module-id"));
 
   // Disable dragging & zooming events on canvas temporarily
   toggleCanvasEvents(false);
@@ -1647,7 +1647,7 @@ function initEditModuleGroups() {
       var moduleEl = $("#" + moduleId);
       // Update the module group name for all modules
       // currently in the module group
-      var ids = connectedComponents(graph, moduleEl.attr("id"));
+      var ids = connectedComponents(graph, moduleEl.attr("data-module-id"));
       _.each(ids, function(id) {
         $("#" + id).attr("data-module-group-name", newModuleGroupName);
       });
@@ -1711,7 +1711,7 @@ editModuleGroupHandler = function(ev) {
   var moduleEl = $(this).closest(".module");
 
   // Set modal's module id
-  modal.attr("data-module-id", moduleEl.attr("id"));
+  modal.attr("data-module-id", moduleEl.attr("data-module-id"));
 
   // Disable dragging & zooming events on canvas temporarily
   toggleCanvasEvents(false);
@@ -1736,13 +1736,13 @@ function initMoveModules() {
 
     // Save mapping to input
     var moveVal = JSON.parse(formMoveInput.attr("value"));
-    moveVal[moduleEl.attr("id")] = moveToExperimentId;
+    moveVal[moduleEl.attr("data-module-id")] = moveToExperimentId;
     formMoveInput.attr("value", JSON.stringify(moveVal));
 
     updateFormWithModulesData(moduleEl, '', GRID_DIST_EDIT_X, GRID_DIST_EDIT_Y);
 
     // Delete module from canvas
-    deleteModule(moduleEl.attr("id"), true);
+    deleteModule(moduleEl.attr("data-module-id"), true);
 
     // Hide modal
     modal.modal("hide");
@@ -1792,7 +1792,7 @@ moveModuleHandler = function(ev) {
   var moduleEl = $(this).closest(".module");
 
   // Set modal's module id
-  modal.attr("data-module-id", moduleEl.attr("id"));
+  modal.attr("data-module-id", moduleEl.attr("data-module-id"));
 
   // Disable dragging & zooming events on canvas temporarily
   toggleCanvasEvents(false);
@@ -1831,7 +1831,7 @@ function initMoveModuleGroups() {
 
     moveModules = [];
     _.each(group, function(m) {
-      moveModules.push(m.attr("id"));
+      moveModules.push(m.attr("data-module-id"));
     });
 
     // Put the array into input
@@ -1840,7 +1840,7 @@ function initMoveModuleGroups() {
     formMoveInput.attr("value", JSON.stringify(moveVal));
 
     _.each(group, function(m) {
-      deleteModule(m.attr("id"));
+      deleteModule(m.attr("data-module-id"));
     });
 
     // Hide modal
@@ -1891,7 +1891,7 @@ moveModuleGroupHandler = function(ev) {
   var moduleEl = $(this).closest(".module");
 
   // Set modal's module id
-  modal.attr("data-module-id", moduleEl.attr("id"));
+  modal.attr("data-module-id", moduleEl.attr("data-module-id"));
 
   // Disable dragging & zooming events on canvas temporarily
   toggleCanvasEvents(false);
@@ -2382,7 +2382,7 @@ cloneModuleGroupHandler = function(moduleId, modulesSel, gridDistX, gridDistY) {
     nm.find(".move-module-group").parents("li").show();
     nm.find(".delete-module-group").parents("li").show();
 
-    clones[m.attr("id")] = nm.attr("id");
+    clones[m.attr("data-module-id")] = nm.attr("data-module-id");
   });
 
   // Also, copy the outbound connections
@@ -2451,7 +2451,7 @@ function updateFormWithModulesData(modules, connections, gridDistX, gridDistY) {
   var module, id, x, y;
   _.each(modules, function(m) {
     module = $(m);
-    id = module.attr("id");
+    id = module.attr("data-module-id");
     x = elLeft(module) / gridDistX;
     y = elTop(module) / gridDistY;
     positionsVal += id + "," + x + "," + y + ";";
@@ -2964,8 +2964,8 @@ function initJsPlumb(containerSel, containerChildSel, modulesSel, params) {
       }
 
       // Now, check if we created a cycle
-      var srcNode = $(newConnection.source).attr("id");
-      var targetNode = $(newConnection.target).attr("id");
+      var srcNode = $(newConnection.source).attr("data-module-id");
+      var targetNode = $(newConnection.target).attr("data-module-id");
       graph.addEdge(srcNode, targetNode);
       if (!jsnx.isDirectedAcyclicGraph(graph)) {
         graph.removeEdge(srcNode, targetNode);
@@ -3043,9 +3043,9 @@ function initJsPlumb(containerSel, containerChildSel, modulesSel, params) {
       var module, outs;
       _.each(modules, function(m) {
         module = $(m);
-        outs = graph.successors(module.attr("id"));
+        outs = graph.successors(module.attr("data-module-id"));
         _.each(outs, function(out) {
-          instance.connect({source: module.attr("id"), target: out });
+          instance.connect({source: module, target: $("div[data-module-id=" + out + "]")})
         });
       });
     });

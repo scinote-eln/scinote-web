@@ -39,13 +39,14 @@ class StepCommentsController < ApplicationController
   end
 
   def create
-    @comment = Comment.new(
+    @comment = StepComment.new(
       message: comment_params[:message],
-      user: current_user)
+      user: current_user,
+      step: @step
+    )
 
     respond_to do |format|
-      if (@comment.valid? && @step.comments << @comment)
-
+      if @comment.save
         # Generate activity (this can only occur in module,
         # but nonetheless check if my module is not nil)
         if @protocol.in_module?
@@ -183,13 +184,13 @@ class StepCommentsController < ApplicationController
   end
 
   def check_edit_permissions
-    @comment = Comment.find_by_id(params[:id])
+    @comment = StepComment.find_by_id(params[:id])
     render_403 unless @comment.present? &&
                       can_edit_step_comment_in_protocol(@comment)
   end
 
   def check_destroy_permissions
-    @comment = Comment.find_by_id(params[:id])
+    @comment = StepComment.find_by_id(params[:id])
     render_403 unless @comment.present? &&
                       can_delete_step_comment_in_protocol(@comment)
   end

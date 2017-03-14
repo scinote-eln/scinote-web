@@ -339,147 +339,177 @@ class ProtocolsController < ApplicationController
 
   def revert
     respond_to do |format|
-      transaction_error = false
-      Protocol.transaction do
-        begin
-          # Revert is basically update from parent
-          @protocol.update_from_parent(current_user)
-        rescue Exception
-          transaction_error = true
-          raise ActiveRecord:: Rollback
+      if @protocol.can_destroy?
+        transaction_error = false
+        Protocol.transaction do
+          begin
+            # Revert is basically update from parent
+            @protocol.update_from_parent(current_user)
+          rescue Exception
+            transaction_error = true
+            raise ActiveRecord:: Rollback
+          end
         end
-      end
 
-      if transaction_error
-        # Bad request error
-        format.json {
-          render json: {
-            message: t("my_modules.protocols.revert_error")
-          },
-          status: :bad_request
-        }
+        if transaction_error
+          # Bad request error
+          format.json do
+            render json: {
+              message: t('my_modules.protocols.revert_error')
+            },
+            status: :bad_request
+          end
+        else
+          # Everything good, display flash & render 200
+          flash[:success] = t(
+            'my_modules.protocols.revert_flash'
+          )
+          flash.keep(:success)
+          format.json { render json: {}, status: :ok }
+        end
       else
-        # Everything good, display flash & render 200
-        flash[:success] = t(
-          "my_modules.protocols.revert_flash",
-        )
-        flash.keep(:success)
-        format.json { render json: {}, status: :ok }
+        format.json do
+          render json: {
+            message: t('my_modules.protocols.revert_error_locked')
+          }, status: :bad_request
+        end
       end
     end
   end
 
   def update_parent
     respond_to do |format|
-      transaction_error = false
-      Protocol.transaction do
-        begin
-          @protocol.update_parent(current_user)
-        rescue Exception
-          transaction_error = true
-          raise ActiveRecord:: Rollback
+      if @protocol.parent.can_destroy?
+        transaction_error = false
+        Protocol.transaction do
+          begin
+            @protocol.update_parent(current_user)
+          rescue Exception
+            transaction_error = true
+            raise ActiveRecord:: Rollback
+          end
         end
-      end
 
-      if transaction_error
-        # Bad request error
-        format.json {
-          render json: {
-            message: t("my_modules.protocols.update_parent_error")
-          },
-          status: :bad_request
-        }
-      else
-        # Everything good, record activity, display flash & render 200
-        Activity.create(
-          type_of: :revert_protocol,
-          project: @protocol.my_module.experiment.project,
-          my_module: @protocol.my_module,
-          user: current_user,
-          message: I18n.t(
-            'activities.revert_protocol',
-            user: current_user.full_name,
-            protocol: @protocol.name
+        if transaction_error
+          # Bad request error
+          format.json {
+            render json: {
+              message: t("my_modules.protocols.update_parent_error")
+            },
+            status: :bad_request
+          }
+        else
+          # Everything good, record activity, display flash & render 200
+          Activity.create(
+            type_of: :revert_protocol,
+            project: @protocol.my_module.experiment.project,
+            my_module: @protocol.my_module,
+            user: current_user,
+            message: I18n.t(
+              'activities.revert_protocol',
+              user: current_user.full_name,
+              protocol: @protocol.name
+            )
           )
-        )
-        flash[:success] = t(
-          "my_modules.protocols.update_parent_flash",
-        )
-        flash.keep(:success)
-        format.json { render json: {}, status: :ok }
+          flash[:success] = t(
+            "my_modules.protocols.update_parent_flash",
+          )
+          flash.keep(:success)
+          format.json { render json: {}, status: :ok }
+        end
+      else
+        format.json do
+          render json: {
+            message: t('my_modules.protocols.update_parent_error_locked')
+          }, status: :bad_request
+        end
       end
     end
   end
 
   def update_from_parent
     respond_to do |format|
-      transaction_error = false
-      Protocol.transaction do
-        begin
-          @protocol.update_from_parent(current_user)
-        rescue Exception
-          transaction_error = true
-          raise ActiveRecord:: Rollback
+      if @protocol.can_destroy?
+        transaction_error = false
+        Protocol.transaction do
+          begin
+            @protocol.update_from_parent(current_user)
+          rescue Exception
+            transaction_error = true
+            raise ActiveRecord:: Rollback
+          end
         end
-      end
 
-      if transaction_error
-        # Bad request error
-        format.json {
-          render json: {
-            message: t("my_modules.protocols.update_from_parent_error")
-          },
-          status: :bad_request
-        }
+        if transaction_error
+          # Bad request error
+          format.json {
+            render json: {
+              message: t("my_modules.protocols.update_from_parent_error")
+            },
+            status: :bad_request
+          }
+        else
+          # Everything good, display flash & render 200
+          flash[:success] = t(
+            "my_modules.protocols.update_from_parent_flash",
+          )
+          flash.keep(:success)
+          format.json { render json: {}, status: :ok }
+        end
       else
-        # Everything good, display flash & render 200
-        flash[:success] = t(
-          "my_modules.protocols.update_from_parent_flash",
-        )
-        flash.keep(:success)
-        format.json { render json: {}, status: :ok }
+        format.json do
+          render json: {
+            message: t('my_modules.protocols.update_from_parent_error_locked')
+          }, status: :bad_request
+        end
       end
     end
   end
 
   def load_from_repository
     respond_to do |format|
-      transaction_error = false
-      Protocol.transaction do
-        begin
-          @protocol.load_from_repository(@source, current_user)
-        rescue Exception
-          transaction_error = true
-          raise ActiveRecord:: Rollback
+      if @protocol.can_destroy?
+        transaction_error = false
+        Protocol.transaction do
+          begin
+            @protocol.load_from_repository(@source, current_user)
+          rescue Exception
+            transaction_error = true
+            raise ActiveRecord:: Rollback
+          end
         end
-      end
 
-      if transaction_error
-        # Bad request error
-        format.json {
-          render json: {
-            message: t("my_modules.protocols.load_from_repository_error")
-          },
-          status: :bad_request
-        }
-      else
-        # Everything good, record activity, display flash & render 200
-        Activity.create(
-          type_of: :load_protocol_from_repository,
-          project: @protocol.my_module.experiment.project,
-          my_module: @protocol.my_module,
-          user: current_user,
-          message: I18n.t(
-            'activities.load_protocol_from_repository',
-            user: current_user.full_name,
-            protocol: @source.name
+        if transaction_error
+          # Bad request error
+          format.json do
+            render json: {
+              message: t('my_modules.protocols.load_from_repository_error')
+            },
+            status: :bad_request
+          end
+        else
+          # Everything good, record activity, display flash & render 200
+          Activity.create(
+            type_of: :load_protocol_from_repository,
+            project: @protocol.my_module.experiment.project,
+            my_module: @protocol.my_module,
+            user: current_user,
+            message: I18n.t(
+              'activities.load_protocol_from_repository',
+              user: current_user.full_name,
+              protocol: @source.name
+            )
           )
-        )
-        flash[:success] = t(
-          "my_modules.protocols.load_from_repository_flash",
-        )
-        flash.keep(:success)
-        format.json { render json: {}, status: :ok }
+          flash[:success] = t('my_modules.protocols.load_from_repository_flash')
+          flash.keep(:success)
+          format.json { render json: {}, status: :ok }
+        end
+      else
+        format.json do
+          render json: {
+            message: t('my_modules.protocols.load_from_repository_error_locked')
+          }, status: :bad_request
+        end
       end
     end
   end
@@ -487,40 +517,46 @@ class ProtocolsController < ApplicationController
   def load_from_file
     # This is actually very similar to import
     respond_to do |format|
-      transaction_error = false
-      Protocol.transaction do
-        begin
-          import_into_existing(@protocol, @protocol_json, current_user)
-        rescue Exception
-          transaction_error = true
-          raise ActiveRecord:: Rollback
+      if @protocol.can_destroy?
+        transaction_error = false
+        Protocol.transaction do
+          begin
+            import_into_existing(@protocol, @protocol_json, current_user)
+          rescue Exception
+            transaction_error = true
+            raise ActiveRecord:: Rollback
+          end
         end
-      end
 
-      if transaction_error
-        format.json {
-          render json: { status: :error }, status: :bad_request
-        }
-      else
-        # Everything good, record activity, display flash & render 200
-        Activity.create(
-          type_of: :load_protocol_from_file,
-          project: @protocol.my_module.experiment.project,
-          my_module: @protocol.my_module,
-          user: current_user,
-          message: I18n.t(
-            'activities.load_protocol_from_file',
-            user: current_user.full_name,
-            protocol: @protocol_json[:name]
+        if transaction_error
+          format.json {
+            render json: { status: :error }, status: :bad_request
+          }
+        else
+          # Everything good, record activity, display flash & render 200
+          Activity.create(
+            type_of: :load_protocol_from_file,
+            project: @protocol.my_module.experiment.project,
+            my_module: @protocol.my_module,
+            user: current_user,
+            message: I18n.t(
+              'activities.load_protocol_from_file',
+              user: current_user.full_name,
+              protocol: @protocol_json[:name]
+            )
           )
-        )
-        flash[:success] = t(
-          "my_modules.protocols.load_from_file_flash",
-        )
-        flash.keep(:success)
-        format.json {
-          render json: { status: :ok }, status: :ok
-        }
+          flash[:success] = t(
+            'my_modules.protocols.load_from_file_flash',
+          )
+          flash.keep(:success)
+          format.json {
+            render json: { status: :ok }, status: :ok
+          }
+        end
+      else
+        format.json do
+          render json: { status: :locked }, status: :bad_request
+        end
       end
     end
   end

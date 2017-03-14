@@ -1173,10 +1173,11 @@ namespace :db do
             if rand <= RATIO_COMMENTS
               user = pluck_random(users)
               created_at = Faker::Time.backward(500)
-              step.comments << Comment.create(
+              StepComment.create(
                 user: user,
                 message: Faker::Hipster.sentence,
-                created_at: created_at
+                created_at: created_at,
+                step: step
               )
               Activity.create(
                 type_of: :add_comment_to_step,
@@ -1232,10 +1233,11 @@ namespace :db do
   def generate_fake_project_comment(project)
     user = pluck_random(project.users)
     created_at = Faker::Time.backward(500)
-    project.comments << Comment.create(
+    ProjectComment.create(
       user: user,
       message: Faker::Hipster.sentence,
-      created_at: created_at
+      created_at: created_at,
+      project: project
     )
     Activity.create(
       type_of: :add_comment_to_project,
@@ -1251,10 +1253,11 @@ namespace :db do
   def generate_fake_module_comment(my_module)
     user = pluck_random(my_module.experiment.project.users)
     created_at = Faker::Time.backward(500)
-    my_module.comments << Comment.create(
+    TaskComment.create(
       user: user,
       message: Faker::Hipster.sentence,
-      created_at: created_at
+      created_at: created_at,
+      my_module: my_module
     )
     Activity.create(
       type_of: :add_comment_to_module,
@@ -1271,10 +1274,11 @@ namespace :db do
   def generate_fake_result_comment(result)
     user = pluck_random(result.my_module.experiment.project.users)
     created_at = Faker::Time.backward(500)
-    result.comments << Comment.create(
+    ResultComment.create(
       user: user,
       message: Faker::Hipster.sentence,
-      created_at: created_at
+      created_at: created_at,
+      result: result
     )
     Activity.create(
       type_of: :add_comment_to_result,
@@ -1293,10 +1297,11 @@ namespace :db do
   def generate_fake_step_comment(step)
     user = pluck_random(step.protocol.my_module.experiment.project.users)
     created_at = Faker::Time.backward(500)
-    step.comments << Comment.create(
+    StepComment.create(
       user: user,
       message: Faker::Hipster.sentence,
-      created_at: created_at
+      created_at: created_at,
+      step: step
     )
     Activity.create(
       type_of: :add_comment_to_step,

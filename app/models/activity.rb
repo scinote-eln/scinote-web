@@ -45,6 +45,8 @@ class Activity < ActiveRecord::Base
     :edit_result_comment,
     :delete_result_comment,
     :destroy_result,
+    :start_edit_wopi_file,
+    :unlock_wopi_file,
     :load_protocol_from_file,
     :load_protocol_from_repository,
     :revert_protocol,

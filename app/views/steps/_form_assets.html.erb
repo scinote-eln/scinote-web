@@ -3,8 +3,10 @@
     <span class="glyphicon glyphicon-file"></span>
     <%= t("protocols.steps.new.asset_panel_title") %>
     <div class="pull-right">
-      <%= ff.remove_nested_fields_link do %>
-        <span class="glyphicon glyphicon-remove"></span>
+      <% unless ff.object.file.exists? && ff.object.locked? %>
+        <%= ff.remove_nested_fields_link do %>
+          <span class="glyphicon glyphicon-remove"></span>
+        <% end %>
       <% end %>
     </div>
   </div>
@@ -17,15 +19,29 @@
             id: "modal_link#{ff.object.id}",
             data: {no_turbolink: true, id: true, status: "asset-present",
               description: "#{step.position + 1}. #{truncate(step.name, length: Constants::FILENAME_TRUNCATION_LENGTH)}"} do %>
-            <%= image_tag ff.object.url(:medium), data: {'preview-url': large_image_url_asset_path(ff.object)} %>
-            <p><%= truncate(ff.object.file_file_name,
-                            length: Constants::FILENAME_TRUNCATION_LENGTH) %></p>
+              <% if ff.object.is_image? %>
+                <%= image_tag ff.object.url(:medium), data: {'preview-url': large_image_url_asset_path(ff.object)} %>
+                <p><%= truncate(ff.object.file_file_name,
+                                length: Constants::FILENAME_TRUNCATION_LENGTH) %></p>
+              <% else %>
+                <p>
+                  <%= file_extension_icon(ff.object) %>
+                  <%= ff.object.file_file_name %>
+                </p>
+              <% end %>
           <% end %>
         <% else %>
           <%= link_to download_asset_path(ff.object), data: {no_turbolink: true} do %>
-            <%= image_tag ff.object.url(:medium) if ff.object.is_image? %>
-            <p><%= truncate(ff.object.file_file_name,
-                            length: Constants::FILENAME_TRUNCATION_LENGTH) %></p>
+            <% if ff.object.is_image? %>
+              <%= image_tag ff.object.url(:medium) %>
+              <p><%= truncate(ff.object.file_file_name,
+                              length: Constants::FILENAME_TRUNCATION_LENGTH) %></p>
+            <% else %>
+              <p>
+                <%= file_extension_icon(ff.object) %>
+                <%= ff.object.file_file_name %>
+              </p>
+            <% end %>
           <% end %>
         <% end %>
       <% else %>

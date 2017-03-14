@@ -31,6 +31,9 @@ module Scinote
     end
 
     # Paperclip spoof checking
-    Paperclip.options[:content_type_mappings] = {:csv => "text/plain"}
+    Paperclip.options[:content_type_mappings] = {
+      csv: 'text/plain',
+      wopitest: ['text/plain', 'inode/x-empty']
+    }
   end
 end

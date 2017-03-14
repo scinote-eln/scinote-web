@@ -33,6 +33,10 @@ function setupAssetsLoading() {
               data['preview-url'] + "'><p>" +
               data.filename + '</p></a>'
             );
+          } else if(data.type === "wopi") {
+            $el.html(data['wopi-file-name'] +
+                     data['wopi-view'] +
+                     data['wopi-edit']);
           } else {
             $el.html(
               "<a href='" + data['download-url'] + "'><p>" +

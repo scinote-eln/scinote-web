@@ -68,9 +68,10 @@ gem 'tinymce-rails' # Rich text editor
 
 gem 'base62' # Used for smart annotations
 
+gem 'nokogiri' # XML parser
+
 group :development, :test do
   gem 'byebug'
-  gem 'web-console', '~> 2.0'
   gem 'better_errors'
   gem 'binding_of_caller'
   gem 'awesome_print'

@@ -946,10 +946,11 @@ module FirstTimeDataGenerator
 
   def generate_project_comment(project, user, message, created_at = nil)
     created_at ||= generate_random_time(project.created_at, 1.week)
-    project.comments << Comment.create(
+    ProjectComment.create(
       user: user,
       message: message,
-      created_at: created_at
+      created_at: created_at,
+      project: project
     )
     Activity.new(
       type_of: :add_comment_to_project,
@@ -964,10 +965,11 @@ module FirstTimeDataGenerator
 
   def generate_module_comment(my_module, user, message, created_at = nil)
     created_at ||= generate_random_time(my_module.created_at, 1.day)
-    my_module.comments << Comment.create(
+    TaskComment.create(
       user: user,
       message: message,
-      created_at: created_at
+      created_at: created_at,
+      my_module: my_module
     )
     Activity.new(
       type_of: :add_comment_to_module,
@@ -983,10 +985,11 @@ module FirstTimeDataGenerator
 
   def generate_result_comment(result, user, message, created_at = nil)
     created_at ||= generate_random_time(result.created_at, 1.days)
-    result.comments << Comment.new(
+    ResultComment.new(
       user: user,
       message: message,
-      created_at: created_at
+      created_at: created_at,
+      result: result
     )
     Activity.new(
       type_of: :add_comment_to_result,
@@ -1002,10 +1005,11 @@ module FirstTimeDataGenerator
 
   def generate_step_comment(step, user, message, created_at = nil)
     created_at ||= generate_random_time(step.created_at, 2.hours)
-    step.comments << Comment.new(
+    StepComment.new(
       user: user,
       message: message,
-      created_at: created_at
+      created_at: created_at,
+      step: step
     )
     Activity.new(
       type_of: :add_comment_to_step,

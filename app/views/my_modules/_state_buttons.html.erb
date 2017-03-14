@@ -1,16 +1,16 @@
-<div class="btn-group pull-right">
-  <% if !@my_module.completed? %>
-    <div data-action="complete-task" data-link-url="<%= toggle_task_state_my_module_path(@my_module) %>">
-      <button class="btn btn-primary">
-        <%= t("my_modules.buttons.complete") %>
-      </button>
-    </div>
-  <% else @my_module.completed? %>
-    <div data-action="uncomplete-task" data-link-url="<%= toggle_task_state_my_module_path(@my_module) %>">
-      <button class="btn btn-default">
-        <%= t("my_modules.buttons.uncomplete") %>
-      </button>
+<div class="pull-right my_module-state-buttons">
+  <% if can_complete_module(@my_module) %>
+    <div class="btn-group">
+      <% if !@my_module.completed? %>
+        <div data-action="complete-task" data-link-url="<%= toggle_task_state_my_module_path(@my_module) %>">
+          <%= render 'my_modules/state_button_complete.html.erb' %>
+        </div>
+      <% else @my_module.completed? %>
+        <div data-action="uncomplete-task" data-link-url="<%= toggle_task_state_my_module_path(@my_module) %>">
+          <%= render 'my_modules/state_button_uncomplete.html.erb' %>
+        </div>
+      <% end %>
     </div>
   <% end %>
+  <span data-hook="my_module-protocol-buttons"></span>
 </div>
-<span data-hook="my_module-protocol-buttons"></span>

@@ -40,12 +40,14 @@ class ResultCommentsController < ApplicationController
   end
 
   def create
-    @comment = Comment.new(
+    @comment = ResultComment.new(
       message: comment_params[:message],
-      user: current_user)
+      user: current_user,
+      result: @result
+    )
 
     respond_to do |format|
-      if (@comment.valid? && @result.comments << @comment)
+      if @comment.save
 
         # Generate activity
         Activity.create(
@@ -54,7 +56,7 @@ class ResultCommentsController < ApplicationController
           project: @result.my_module.experiment.project,
           my_module: @result.my_module,
           message: t(
-            "activities.add_comment_to_result",
+            'activities.add_comment_to_result',
             user: current_user.full_name,
             result: @result.name
           )
@@ -63,7 +65,7 @@ class ResultCommentsController < ApplicationController
         format.json {
           render json: {
             html: render_to_string(
-              partial: "comment.html.erb",
+              partial: 'comment.html.erb',
               locals: {
                 comment: @comment
               }
@@ -175,13 +177,13 @@ class ResultCommentsController < ApplicationController
   end
 
   def check_edit_permissions
-    @comment = Comment.find_by_id(params[:id])
+    @comment = ResultComment.find_by_id(params[:id])
     render_403 unless @comment.present? &&
                       can_edit_result_comment_in_module(@comment)
   end
 
   def check_destroy_permissions
-    @comment = Comment.find_by_id(params[:id])
+    @comment = ResultComment.find_by_id(params[:id])
     render_403 unless @comment.present? &&
                       can_delete_result_comment_in_module(@comment)
   end

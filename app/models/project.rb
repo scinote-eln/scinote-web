@@ -19,8 +19,7 @@ class Project < ActiveRecord::Base
   has_many :user_projects, inverse_of: :project
   has_many :users, through: :user_projects
   has_many :experiments, inverse_of: :project
-  has_many :project_comments, inverse_of: :project
-  has_many :comments, through: :project_comments
+  has_many :project_comments, foreign_key: :associated_id, dependent: :destroy
   has_many :activities, inverse_of: :project
   has_many :tags, inverse_of: :project
   has_many :reports, inverse_of: :project, dependent: :destroy
@@ -110,11 +109,11 @@ class Project < ActiveRecord::Base
   # using last comment id and per_page parameters.
   def last_comments(last_id = 1, per_page = Constants::COMMENTS_SEARCH_LIMIT)
     last_id = Constants::INFINITY if last_id <= 1
-    comments = Comment.joins(:project_comment)
-                      .where(project_comments: { project_id: id })
-                      .where('comments.id <  ?', last_id)
-                      .order(created_at: :desc)
-                      .limit(per_page)
+    comments = ProjectComment.joins(:project)
+                             .where(projects: { id: id })
+                             .where('comments.id <  ?', last_id)
+                             .order(created_at: :desc)
+                             .limit(per_page)
     comments.reverse
   end
 
