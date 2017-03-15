@@ -1,7 +1,7 @@
 class CustomFieldsController < ApplicationController
   include InputSanitizeHelper
 
-  before_action :load_vars, only: [:update, :destroy, :destroy_html]
+  before_action :load_vars, except: :create
   before_action :load_vars_nested, only: [:create, :destroy_html]
   before_action :check_create_permissions, only: :create
   before_action :check_update_permissions, only: :update

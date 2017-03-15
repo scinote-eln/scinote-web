@@ -1193,34 +1193,56 @@ function changeToEditMode() {
 
       cancelEditMode();
 
-      var self = $(this);
-      var li = self.closest('li');
-      var text = li.find('.text');
-      if ($(text).find('.modal-tooltiptext').length > 0) {
-        text = $(text).find('.modal-tooltiptext');
+      var li = $(this).closest('li');
+      var url = li.attr('data-edit-url') + "/electronic_sign_edit";
+      ajaxCallEvent();
+
+      function ajaxCallEvent(){
+        $.ajax({
+          url: url,
+          success: function() {
+            var text = li.find('.text');
+            if ($(text).find('.modal-tooltiptext').length > 0) {
+              text = $(text).find('.modal-tooltiptext');
+            }
+            var textEdit = li.find('.text-edit');
+            var controls = li.find('.controls .vis,.edit,.del');
+            var controlsEdit = li.find('.controls .ok,.cancel');
+
+            // Toggle edit mode
+            columnEditMode = true;
+            li.addClass('editing');
+
+            // Set the text-edit's value
+            textEdit.val(text.text().trim());
+
+            // Toggle elements
+            text.hide();
+            controls.hide();
+            textEdit.css('display', ''); // show() doesn't work
+            controlsEdit.css('display', ''); // show() doesn't work
+            dropdownList.sortable('disable');
+            dropdownList.on('click', function(ev) {
+              ev.stopPropagation();
+            });
+            // Focus input
+            textEdit.focus();
+          },
+          error: function(e) {
+            $(li).clearFormErrors();
+            var msg = $.parseJSON(e.responseText);
+
+            renderFormError(undefined,
+                            $(li).find('.text-edit'),
+                            Object.keys(msg)[0] + ' ' + msg.name.toString());
+            var verticalHeight = $(li).offset().top;
+            dropdownList.scrollTo(verticalHeight,0);
+            setTimeout(function() {
+              $(li).clearFormErrors();
+            }, 5000);
+          }
+        });
       }
-      var textEdit = li.find('.text-edit');
-      var controls = li.find('.controls .vis,.edit,.del');
-      var controlsEdit = li.find('.controls .ok,.cancel');
-
-      // Toggle edit mode
-      columnEditMode = true;
-      li.addClass('editing');
-
-      // Set the text-edit's value
-      textEdit.val(text.text().trim());
-
-      // Toggle elements
-      text.hide();
-      controls.hide();
-      textEdit.css('display', ''); // show() doesn't work
-      controlsEdit.css('display', ''); // show() doesn't work
-      dropdownList.sortable('disable');
-      dropdownList.on('click', function(ev) {
-        ev.stopPropagation();
-      });
-      // Focus input
-      textEdit.focus();
     });
 
     // On hiding dropdown, cancel edit mode throughout dropdown
