@@ -49,9 +49,12 @@ class WopiController < ActionController::Base
   end
 
   def check_file_info
+    asset_owner_id = @asset.id.to_s
+    asset_owner_id = @asset.created_by_id.to_s if @asset.created_by_id
+
     msg = {
       BaseFileName:                @asset.file_file_name,
-      OwnerId:                     @asset.created_by_id.to_s || @asset.id.to_s,
+      OwnerId:                     asset_owner_id,
       Size:                        @asset.file_file_size,
       UserId:                      @user.id.to_s,
       Version:                     @asset.version.to_s,
