@@ -19,6 +19,7 @@ function setupAssetsLoading() {
         type: "GET",
         dataType: "json",
         success: function (data) {
+          var wopiBtns;
           $el.attr("data-status", "asset-loaded");
           $el.find('img').hide();
           $el.next().hide();
@@ -34,9 +35,15 @@ function setupAssetsLoading() {
               data.filename + '</p></a>'
             );
           } else if(data.type === "wopi") {
-            $el.html(data['wopi-file-name'] +
-                     data['wopi-view'] +
-                     data['wopi-edit']);
+            if(data['wopi-edit']) {
+              wopiBtns = data['wopi-file-name'] +
+                         data['wopi-view'] +
+                         data['wopi-edit'];
+            } else {
+              wopiBtns = data['wopi-file-name'] +
+                         data['wopi-view'];
+            }
+            $el.html(wopiBtns);
           } else {
             $el.html(
               "<a href='" + data['download-url'] + "'><p>" +
