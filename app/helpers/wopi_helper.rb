@@ -51,18 +51,23 @@ module WopiHelper
     end
   end
 
-  def wopi_asset_file_name(asset)
+  def wopi_asset_file_name(asset, link = false)
     html = '<p style="display: inline-block">'
     html += "#{file_extension_icon(asset)}&nbsp;"
-    html += link_to download_asset_path(asset),
-                    data: { no_turbolink: true,
-                            id: true,
-                            status: 'asset-present' } do
-                              truncate(
-                                asset.file_file_name,
-                                length: Constants::FILENAME_TRUNCATION_LENGTH
-                              )
-                            end
+    if link
+      html += link_to download_asset_path(asset),
+                      data: { no_turbolink: true,
+                              id: true,
+                              status: 'asset-present' } do
+                                truncate(
+                                  asset.file_file_name,
+                                  length: Constants::FILENAME_TRUNCATION_LENGTH
+                                )
+                              end
+    else
+      html += truncate(asset.file_file_name,
+                       length: Constants::FILENAME_TRUNCATION_LENGTH)
+    end
     html += '&nbsp;</p>'
     sanitize_input(html, %w(img a))
   end
