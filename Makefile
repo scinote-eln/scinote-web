@@ -11,6 +11,9 @@ heroku:
 docker:
 	@docker-compose build
 
+docker-production:
+	@docker-compose -f docker-compose.production.yml build
+
 db-cli:
 	@$(MAKE) rails cmd="rails db"
 
@@ -21,7 +24,10 @@ database:
 	@$(MAKE) rails cmd="rake db:create db:setup db:migrate"
 
 rails:
-	@docker-compose run web $(cmd)
+	@docker-compose run --rm web $(cmd)
+
+rails-production:
+	@docker-compose -f docker-compose.production.yml run --rm web $(cmd)
 
 run:
 	rm tmp/pids/server.pid || true
@@ -40,6 +46,9 @@ worker:
 cli:
 	@$(MAKE) rails cmd="/bin/bash"
 
+cli-production:
+	@$(MAKE) rails-production cmd="/bin/bash"
+
 tests:
 	@$(MAKE) rails cmd="rake test"
 
@@ -56,4 +65,3 @@ export:
 	@git checkout-index -a -f --prefix=scinote/
 	@tar -zcvf scinote-$(shell git rev-parse --short HEAD).tar.gz scinote
 	@rm -rf scinote
-
