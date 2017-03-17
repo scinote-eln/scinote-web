@@ -1,7 +1,7 @@
 <% if result.blank? and @result.present? then result = @result end %>
 <% asset = result.asset %>
 <% is_image = result.asset.is_image? %>
-<% comments = result.comments %>
+<% comments = result.result_comments %>
 <% timestamp = asset.created_at %>
 <% name = result.name %>
 <% icon_class = is_image ? "glyphicon-picture" : "glyphicon-file" %>

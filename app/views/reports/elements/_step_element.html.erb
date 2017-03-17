@@ -3,7 +3,7 @@
 <% tables = step.tables %>
 <% assets = step.assets %>
 <% checklists = step.checklists %>
-<% comments = step.comments %>
+<% comments = step.step_comments %>
 <div class="report-element report-step-element" data-ts="<%= timestamp.to_i %>" data-type="step" data-id="<%= step.id %>" data-modal-title="<%=t "projects.reports.elements.modals.step_contents.head_title", step: step.name %>" data-name="<%=t "projects.reports.elements.step.sidebar_name", pos: (step.position + 1), name: step.name %>" data-icon-class="glyphicon-circle-arrow-right">
   <div class="report-element-header">
     <div class="row">

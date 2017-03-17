@@ -1,6 +1,6 @@
 <% if step.blank? and @step.present? then step = @step end %>
 <% if order.blank? and @order.present? then order = @order end %>
-<% comments = step.comments.order(created_at: order) %>
+<% comments = step.step_comments.order(created_at: order) %>
 <% timestamp = Time.current + 1.year %>
 <div class="report-element report-comments-element report-step-comments-element" data-ts="<%= timestamp.to_i %>" data-order="asc" data-type="step_comments" data-id="<%= step.id %>" data-name="<%=t "projects.reports.elements.step_comments.sidebar_name" %>" data-icon-class="glyphicon-comment">
   <div class="report-element-header">
