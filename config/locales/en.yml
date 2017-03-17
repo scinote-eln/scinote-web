@@ -1001,6 +1001,8 @@ en:
     change_module_description: "<i>%{user}</i> changed task <strong>%{module}</strong>'s description."
     complete_module: "<i>%{user}</i> completed task <strong>%{module}</strong>."
     uncomplete_module: "<i>%{user}</i> uncompleted task <strong>%{module}</strong>."
+    assign_sample: "<i>%{user}</i> assigned sample(s) <strong>%{samples}</strong> to task(s) <strong>%{tasks}</strong>"
+    unassign_sample: "<i>%{user}</i> unassigned sample(s) <strong>%{samples}</strong> from task(s) <strong>%{tasks}</strong>"
     create_step: "<i>%{user}</i> created Step %{step} <strong>%{step_name}</strong>."
     destroy_step: "<i>%{user}</i> deleted Step %{step} <strong>%{step_name}</strong>."
     add_comment_to_step: "<i>%{user}</i> commented on Step %{step} <strong>%{step_name}</strong>."
