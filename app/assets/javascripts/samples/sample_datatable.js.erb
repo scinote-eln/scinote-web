@@ -967,6 +967,7 @@ function changeToEditMode() {
             '<th class="custom-field" id="' + data.id + '" ' +
             'data-editable data-deletable ' +
             'data-edit-url="' + data.edit_url + '" ' +
+            'data-update-url="' + data.update_url + '" ' +
             'data-destroy-html-url="' + data.destroy_html_url + '"' +
             '>' + generateColumnNameTooltip(data.name) + '</th>');
 
@@ -1050,6 +1051,7 @@ function changeToEditMode() {
           'data-position="' + colIndex + '" ' +
           'data-id="' + $(el).attr('id') + '" ' +
           'data-edit-url=' + $(el).attr('data-edit-url') + ' ' +
+          'data-update-url=' + $(el).attr('data-update-url') + ' ' +
           'data-destroy-html-url=' + $(el).attr('data-destroy-html-url') + ' ' +
           'class="' + visLi + '"' +
           '>' +
@@ -1151,7 +1153,7 @@ function changeToEditMode() {
       var text = li.find('.text');
       var textEdit = li.find('.text-edit');
       var newName = textEdit.val().trim();
-      var url = li.attr('data-edit-url');
+      var url = li.attr('data-update-url');
 
       $.ajax({
         url: url,
@@ -1194,20 +1196,21 @@ function changeToEditMode() {
       cancelEditMode();
 
       var li = $(this).closest('li');
-      var url = li.attr('data-edit-url') + "/electronic_sign_edit";
+      var url = li.attr('data-edit-url');
       ajaxCallEvent();
 
       function ajaxCallEvent(){
         $.ajax({
           url: url,
           success: function() {
-            var text = li.find('.text');
+            var text, textEdit, controls, controlsEdit;
+            text = li.find('.text');
             if ($(text).find('.modal-tooltiptext').length > 0) {
               text = $(text).find('.modal-tooltiptext');
             }
-            var textEdit = li.find('.text-edit');
-            var controls = li.find('.controls .vis,.edit,.del');
-            var controlsEdit = li.find('.controls .ok,.cancel');
+            textEdit = li.find('.text-edit');
+            controls = li.find('.controls .vis,.edit,.del');
+            controlsEdit = li.find('.controls .ok,.cancel');
 
             // Toggle edit mode
             columnEditMode = true;
