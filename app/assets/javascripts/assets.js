@@ -34,8 +34,8 @@ function setupAssetsLoading() {
               data['preview-url'] + "'><p>" +
               data.filename + '</p></a>'
             );
-          } else if(data.type === "wopi") {
-            if(data['wopi-edit']) {
+          } else if (data.type === 'wopi') {
+            if (data['wopi-edit']) {
               wopiBtns = data['wopi-file-name'] +
                          data['wopi-view'] +
                          data['wopi-edit'];
