@@ -503,7 +503,9 @@ function onClickEdit() {
         },
         error: function (e, data, status, xhr) {
             if (e.status == 403) {
-                sampleAlertMsg(I18n.t("samples.js.permission_error"), "danger");
+                HelperModule.flashAlertMsg(
+                  I18n.t('samples.js.permission_error'), 'danger'
+                );
                 changeToViewMode();
                 updateButtons();
             }
@@ -565,7 +567,7 @@ function onClickSave() {
         dataType: "json",
         data: data,
         success: function (data) {
-            sampleAlertMsg(data.flash, "success");
+            HelperModule.flashAlertMsg(data.flash, 'success');
             onClickCancel();
         },
         error: function (e, eData, status, xhr) {
@@ -573,12 +575,16 @@ function onClickSave() {
             clearAllErrors();
 
             if (e.status == 404) {
-                sampleAlertMsg(I18n.t("samples.js.not_found_error"), "danger");
+                HelperModule.flashAlertMsg(
+                  I18n.t('samples.js.not_found_error'), 'danger'
+                );
                 changeToViewMode();
                 updateButtons();
             }
             else if (e.status == 403) {
-                sampleAlertMsg(I18n.t("samples.js.permission_error"), "danger");
+                HelperModule.flashAlertMsg(
+                  I18n.t('samples.js.permission_error'), 'danger'
+                );
                 changeToViewMode();
                 updateButtons();
             }
@@ -794,7 +800,9 @@ function onClickAddSample() {
         },
         error: function (e, eData, status, xhr) {
             if (e.status == 403)
-                sampleAlertMsg(I18n.t("samples.js.permission_error"), "danger");
+                HelperModule.flashAlertMsg(
+                  I18n.t('samples.js.permission_error'), 'danger'
+                );
             changeToViewMode();
             updateButtons();
         }
