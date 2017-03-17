@@ -60,7 +60,7 @@ class AssetsController < ApplicationController
                                      Constants::FILENAME_TRUNCATION_LENGTH),
             'download-url' => download_asset_path(@asset),
             'type' => asset_data_type(@asset),
-            'wopi-file-name' => wopi_asset_file_name(@asset),
+            'wopi-file-name' => wopi_asset_file_name(@asset, true),
             'wopi-edit' => (wopi_asset_edit_button(@asset) if wopi_file?(@asset)),
             'wopi-view' => (wopi_asset_view_button(@asset) if wopi_file?(@asset))
           }, status: 200
