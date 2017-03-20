@@ -1,6 +1,6 @@
 <% if result.blank? and @result.present? then result = @result end %>
 <% table = result.table %>
-<% comments = result.comments %>
+<% comments = result.result_comments %>
 <% timestamp = table.created_at %>
 <% name = result.name %>
 <div class="report-element report-result-element report-result-table-element" data-ts="<%= timestamp.to_i %>" data-type="result_table" data-id="<%= result.id %>" data-modal-title="<%=t "projects.reports.elements.modals.result_contents.head_title", result: result.name %>" data-name="<%= name %>" data-icon-class="glyphicon-th">
