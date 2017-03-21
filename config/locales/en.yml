@@ -1542,6 +1542,8 @@ en:
       deleted: "(deleted)"
     popover_html: "<span class='silver'>Team:</span>&nbsp;%{team} <br> <span class='silver'>Role:</span>&nbsp;%{role} <br> <span class='silver'>Joined:</span>&nbsp;%{time}"
 
+  zip_export:
+    notification_title: 'Your package is ready to be exported!'
   # This section contains general words that can be used in any parts of
   # application.
 

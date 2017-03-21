@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170306121855) do
+ActiveRecord::Schema.define(version: 20170321131116) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -700,6 +700,18 @@ ActiveRecord::Schema.define(version: 20170306121855) do
     t.string  "proof_key_old_exp", null: false
   end
 
+  create_table "zip_exports", force: :cascade do |t|
+    t.integer  "user_id"
+    t.datetime "created_at",            null: false
+    t.datetime "updated_at",            null: false
+    t.string   "zip_file_file_name"
+    t.string   "zip_file_content_type"
+    t.integer  "zip_file_file_size"
+    t.datetime "zip_file_updated_at"
+  end
+
+  add_index "zip_exports", ["user_id"], name: "index_zip_exports_on_user_id", using: :btree
+
   add_foreign_key "activities", "my_modules"
   add_foreign_key "activities", "projects"
   add_foreign_key "activities", "users"
@@ -815,4 +827,5 @@ ActiveRecord::Schema.define(version: 20170306121855) do
   add_foreign_key "users", "teams", column: "current_team_id"
   add_foreign_key "wopi_actions", "wopi_apps"
   add_foreign_key "wopi_apps", "wopi_discoveries"
+  add_foreign_key "zip_exports", "users"
 end

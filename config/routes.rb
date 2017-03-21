@@ -113,6 +113,11 @@ Rails.application.routes.draw do
         to: 'user_notifications#index',
         as: 'notifications'
 
+    # Get Zip Export
+    get 'zip_exports/download/:id',
+        to: 'zip_exports#download',
+        as: 'zip_exports_download'
+        
     resources :teams do
       resources :samples, only: [:new, :create]
       resources :sample_types, except: [:show, :new] do
