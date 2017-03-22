@@ -29,6 +29,7 @@ class ResultAssetsController < ApplicationController
     @asset = Asset.new(result_params[:asset_attributes])
     @asset.created_by = current_user
     @asset.last_modified_by = current_user
+    @asset.team = current_team
     @result = Result.new(
       user: current_user,
       my_module: @my_module,
@@ -98,6 +99,7 @@ class ResultAssetsController < ApplicationController
       asset = Asset.find_by_id(update_params[:asset_attributes][:id])
       asset.created_by = current_user
       asset.last_modified_by = current_user
+      asset.team = current_team
       @result.asset = asset
     end
 
