@@ -51,6 +51,11 @@ class UserNotification < ActiveRecord::Base
         user,
         notification
       ) if user.recent_notification_email
+    when 'deliver'
+      send_email_notification(
+        user,
+        notification
+      )
     end
   end
 end

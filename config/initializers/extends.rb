@@ -11,9 +11,11 @@ class Extends
   # >
 
   # Notification types. Should not be freezed, as modules might append to this.
+  # !!!Check all addons for the correct order!!!
   NOTIFICATIONS_TYPES = { assignment: 0,
                           recent_changes: 1,
-                          system_message: 2 }
+                          system_message: 2,
+                          deliver: 5 }
 
   TASKS_STATES = { uncompleted: 0,
                    completed: 1 }
