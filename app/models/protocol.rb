@@ -291,8 +291,6 @@ class Protocol < ActiveRecord::Base
           )
           item2.created_by = current_user
           item2.last_modified_by = current_user
-          p item
-          p item2
           item2.save
         end
 
@@ -306,6 +304,7 @@ class Protocol < ActiveRecord::Base
           asset.file_file_size
         )
         asset2.created_by = current_user
+        asset2.team = dest.team
         asset2.last_modified_by = current_user
         asset2.file_processing = true if asset.is_image?
         asset2.save
@@ -323,6 +322,7 @@ class Protocol < ActiveRecord::Base
         table2 = Table.new(name: table.name, contents: table.contents)
         table2.created_by = current_user
         table2.last_modified_by = current_user
+        table2.team = dest.team
         step2.tables << table2
       end
     end

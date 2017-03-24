@@ -33,6 +33,14 @@ class StepsController < ApplicationController
     @step.protocol = @protocol
     @step.user = current_user
     @step.last_modified_by = current_user
+    @step.assets.each do |asset|
+      asset.created_by = current_user
+      asset.team = current_team
+    end
+    @step.tables.each do |table|
+      table.created_by = current_user
+      table.team = current_team
+    end
 
     # Update default checked state
     @step.checklists.each do |checklist|
@@ -132,6 +140,18 @@ class StepsController < ApplicationController
 
       @step.assign_attributes(step_params_all)
       @step.last_modified_by = current_user
+
+      @step.assets.each do |asset|
+        asset.created_by = current_user if asset.new_record?
+        asset.last_modified_by = current_user unless asset.new_record?
+        asset.team = current_team
+      end
+
+      @step.tables.each do |table|
+        table.created_by = current_user if table.new_record?
+        table.last_modified_by = current_user unless table.new_record?
+        table.team = current_team
+      end
 
       if @step.save
         @step.reload

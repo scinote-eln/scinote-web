@@ -31,6 +31,7 @@ class ResultTablesController < ApplicationController
   def create
     @table = Table.new(result_params[:table_attributes])
     @table.created_by = current_user
+    @table.team = current_team
     @table.last_modified_by = current_user
     @result = Result.new(
       user: current_user,
@@ -92,6 +93,7 @@ class ResultTablesController < ApplicationController
     update_params = result_params
     @result.last_modified_by = current_user
     @result.table.last_modified_by = current_user
+    @result.table.team = current_team
     @result.assign_attributes(update_params)
     flash_success = t("result_tables.update.success_flash",
       module: @my_module.name)
@@ -218,6 +220,4 @@ class ResultTablesController < ApplicationController
       ]
     )
   end
-
 end
-
