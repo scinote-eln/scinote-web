@@ -105,12 +105,13 @@ class Report < ActiveRecord::Base
     el.position = index
     el.report = self
     el.parent = parent
-    el.type_of = json_element["type_of"]
-    el.sort_order = json_element["sort_order"]
-    el.set_element_reference(json_element["id"])
+    el.type_of = json_element['type_of']
+    el.sort_order = json_element['sort_order']
+    el.set_element_reference(json_element['id'])
     el.save!
-    if json_element["children"].present?
-      json_element["children"].each_with_index do |child, i|
+
+    if json_element['children'].present?
+      json_element['children'].each_with_index do |child, i|
         save_json_element(child, i, el)
       end
     end
