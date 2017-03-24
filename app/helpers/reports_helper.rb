@@ -44,7 +44,7 @@ module ReportsHelper
     # ReportExtends is located in config/initializers/extends/report_extends.rb
 
     ReportElement.type_ofs.keys.each do |type|
-      next unless element.send("#{type}?")
+      next unless element.public_send("#{type}?")
       local_sym = type.split('_').last.to_sym
       local_sym = type
                   .split('_')

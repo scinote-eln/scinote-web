@@ -56,7 +56,7 @@ class ReportElement < ActiveRecord::Base
     ReportExtends::SET_ELEMENT_REFERENCES_LIST.each do |el_ref|
       check = el_ref.check(self)
       next unless check
-      self.send("#{el_ref.element}=", ref_id)
+      public_send("#{el_ref.element}=", ref_id)
       break
     end
   end
