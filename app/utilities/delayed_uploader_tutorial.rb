@@ -1,11 +1,12 @@
 module DelayedUploaderTutorial
   # Get asset from tutorial_files folder
-  def self.get_asset(user, file_name)
+  def self.get_asset(user, team, file_name)
     Asset.new(
       file: File.open(
         "#{Rails.root}/app/assets/tutorial_files/#{file_name}", 'r'
       ),
       created_by: user,
+      team: team,
       last_modified_by: user
     )
   end
@@ -15,11 +16,12 @@ module DelayedUploaderTutorial
   def self.generate_result_asset(
     my_module:,
     current_user:,
+    current_team:,
     result_name:,
     created_at: Time.now,
     file_name:
   )
-    temp_asset = get_asset(current_user, file_name)
+    temp_asset = get_asset(current_user, current_team, file_name)
     temp_result = Result.new(
       created_at: created_at,
       user: current_user,
@@ -48,8 +50,9 @@ module DelayedUploaderTutorial
   end
 
   # Adds asset to existing step
-  def self.add_step_asset(step:, current_user:, file_name:)
-    temp_asset = DelayedUploaderTutorial.get_asset(current_user, file_name)
+  def self.add_step_asset(step:, current_user:, current_team:, file_name:)
+    temp_asset =
+      DelayedUploaderTutorial.get_asset(current_user, current_team, file_name)
     step.assets << temp_asset
     temp_asset.post_process_file(step.my_module.experiment.project.team)
   end

@@ -49,9 +49,12 @@ class WopiController < ActionController::Base
   end
 
   def check_file_info
+    asset_owner_id = @asset.id.to_s
+    asset_owner_id = @asset.created_by_id.to_s if @asset.created_by_id
+
     msg = {
       BaseFileName:                @asset.file_file_name,
-      OwnerId:                     @asset.created_by_id.to_s,
+      OwnerId:                     asset_owner_id,
       Size:                        @asset.file_file_size,
       UserId:                      @user.id.to_s,
       Version:                     @asset.version.to_s,
@@ -281,18 +284,23 @@ class WopiController < ActionController::Base
       @can_write = can_edit_step_in_protocol(@protocol)
 
       if @protocol.in_module?
-        @close_url = protocols_my_module_path(@protocol.my_module,
-                                              only_path: false)
+        @close_url = protocols_my_module_url(@protocol.my_module,
+                                             only_path: false,
+                                             host: ENV['WOPI_BREADCRUMBS_HOST'])
 
         project = @protocol.my_module.experiment.project
         @breadcrumb_brand_name  = project.name
-        @breadcrumb_brand_url   = project_path(project, only_path: false)
+        @breadcrumb_brand_url   = project_url(project,
+                                              only_path: false,
+                                              host: ENV['WOPI_BREADCRUMBS_HOST'])
         @breadcrumb_folder_name = @protocol.my_module.name
       else
-        @close_url = protocols_path(only_path: false)
+        @close_url = protocols_url(only_path: false,
+                                   host: ENV['WOPI_BREADCRUMBS_HOST'])
 
         @breadcrump_brand_name  = 'Projects'
-        @breadcrumb_brand_url   = root_path(only_path: false)
+        @breadcrumb_brand_url   = root_url(only_path: false,
+                                           host: ENV['WOPI_BREADCRUMBS_HOST'])
         @breadcrumb_folder_name = 'Protocol managament'
       end
       @breadcrumb_folder_url  = @close_url
@@ -300,11 +308,14 @@ class WopiController < ActionController::Base
       @can_read = can_view_or_download_result_assets(@my_module)
       @can_write = can_edit_result_asset_in_module(@my_module)
 
-      @close_url = results_my_module_path(@my_module, only_path: false)
+      @close_url = results_my_module_url(@my_module,
+                                         only_path: false,
+                                         host: ENV['WOPI_BREADCRUMBS_HOST'])
 
       @breadcrumb_brand_name  = @my_module.experiment.project.name
-      @breadcrumb_brand_url   = project_path(@my_module.experiment.project,
-                                             only_path: false)
+      @breadcrumb_brand_url   = project_url(@my_module.experiment.project,
+                                            only_path: false,
+                                            host: ENV['WOPI_BREADCRUMBS_HOST'])
       @breadcrumb_folder_name = @my_module.name
       @breadcrumb_folder_url  = @close_url
     end

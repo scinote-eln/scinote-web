@@ -86,7 +86,8 @@
             </span>
           </a>
 
-          <ul class="dropdown-menu ">
+          <ul class="dropdown-menu"
+              data-hook="teams-dropdown">
             <%= form_for(current_user,
                          url: user_current_team_path,
                          method: :post) do |f| %>
@@ -103,9 +104,11 @@
               <% end %>
             <% end %>
             <% if current_user.teams.length > 1 %>
-            <li role="separator" class="divider"></li>
+            <li data-hook="new-team-btn"
+                role="separator"
+                class="divider"></li>
             <% end %>
-            <li>
+            <li data-hook="new-team-btn">
               <%= link_to new_team_path do %>
                 <span class="glyphicon glyphicon-plus"></span>
                 <%= t('users.settings.teams.index.new_team') %>

@@ -1001,6 +1001,8 @@ en:
     change_module_description: "<i>%{user}</i> changed task <strong>%{module}</strong>'s description."
     complete_module: "<i>%{user}</i> completed task <strong>%{module}</strong>."
     uncomplete_module: "<i>%{user}</i> uncompleted task <strong>%{module}</strong>."
+    assign_sample: "<i>%{user}</i> assigned sample(s) <strong>%{samples}</strong> to task(s) <strong>%{tasks}</strong>"
+    unassign_sample: "<i>%{user}</i> unassigned sample(s) <strong>%{samples}</strong> from task(s) <strong>%{tasks}</strong>"
     create_step: "<i>%{user}</i> created Step %{step} <strong>%{step_name}</strong>."
     destroy_step: "<i>%{user}</i> deleted Step %{step} <strong>%{step_name}</strong>."
     add_comment_to_step: "<i>%{user}</i> commented on Step %{step} <strong>%{step_name}</strong>."
@@ -1038,6 +1040,12 @@ en:
     start_edit_wopi_file_result: "<i>%{user}</i> started editing File %{file} on Result <strong>%{result}</strong>."
     unlock_wopi_file_step: "<i>%{user}</i>  closed File %{file} for editing on Step %{step} <strong>%{step_name}</strong>."
     unlock_wopi_file_result: "<i>%{user}</i> started editing File %{file} on Result <strong>%{result}</strong>."
+    load_protocol_from_file: "<i>%{user}</i> loaded protocol <strong>%{protocol}</strong> from file."
+    load_protocol_from_repository: "<i>%{user}</i> loaded protocol <strong>%{protocol}</strong> from repository."
+    revert_protocol: "<i>%{user}</i> reverted protocol <strong>%{protocol}</strong> from repository."
+    create_report: "<i>%{user}</i> created report <strong>%{report}</strong>."
+    delete_report: "<i>%{user}</i> deleted report <strong>%{report}</strong>."
+    edit_report: "<i>%{user}</i> edited report <strong>%{report}</strong>."
 
   user_my_modules:
     new:
@@ -1069,14 +1077,6 @@ en:
       create: "Add comment"
     create:
       success_flash: "Successfully added comment to result."
-    load_protocol_from_file: "<i>%{user}</i> loaded protocol <strong>%{protocol}</strong> from file."
-    load_protocol_from_repository: "<i>%{user}</i> loaded protocol <strong>%{protocol}</strong> from repository."
-    revert_protocol: "<i>%{user}</i> reverted protocol <strong>%{protocol}</strong> from repository."
-    create_report: "<i>%{user}</i> created report <strong>%{report}</strong>."
-    delete_report: "<i>%{user}</i> deleted report <strong>%{report}</strong>."
-    edit_report: "<i>%{user}</i> edited report <strong>%{report}</strong>."
-    assign_sample: "<i>%{user}</i> assigned sample(s) <strong>%{samples}</strong> to task(s) <strong>%{tasks}</strong>."
-    unassign_sample: "<i>%{user}</i> unassigned sample(s) <strong>%{samples}</strong> from task(s) <strong>%{tasks}</strong>."
 
   users:
     enums:

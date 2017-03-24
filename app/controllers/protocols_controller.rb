@@ -521,7 +521,9 @@ class ProtocolsController < ApplicationController
         transaction_error = false
         Protocol.transaction do
           begin
-            import_into_existing(@protocol, @protocol_json, current_user)
+            import_into_existing(
+              @protocol, @protocol_json, current_user, current_team
+            )
           rescue Exception
             transaction_error = true
             raise ActiveRecord:: Rollback
