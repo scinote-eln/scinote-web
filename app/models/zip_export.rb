@@ -2,7 +2,6 @@ require 'zip'
 require 'fileutils'
 
 class ZipExport < ActiveRecord::Base
-  include Rails.application.routes.url_helpers
   belongs_to :user
   has_attached_file :zip_file
   validates_attachment :zip_file,
@@ -70,7 +69,11 @@ class ZipExport < ActiveRecord::Base
     notification = Notification.create(
       type_of: :deliver,
       title: I18n.t('zip_export.notification_title'),
-      message:  "<a href='#{zip_exports_download_path(self)}'>" \
+      message:  "<a data-id='#{id}' " \
+                "href='#{Rails.application
+                              .routes
+                              .url_helpers
+                              .zip_exports_download_path(self)}'>" \
                 "#{zip_file_file_name}</a>"
     )
     UserNotification.create(notification: notification, user: user)
@@ -84,5 +87,11 @@ class ZipExport < ActiveRecord::Base
         zipfile.add(filename, input_dir + '/' + filename)
       end
     end
+  end
+
+  protected
+
+  def default_url_options
+    Rails.application.config.active_job.default_url_options
   end
 end

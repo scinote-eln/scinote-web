@@ -1,6 +1,3 @@
-require 'zip'
-require 'fileutils'
-
 class ZipExportsController < ApplicationController
   before_action :load_var
   before_action :check_edit_permissions
