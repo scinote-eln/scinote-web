@@ -88,10 +88,4 @@ class ZipExport < ActiveRecord::Base
       end
     end
   end
-
-  protected
-
-  def default_url_options
-    Rails.application.config.active_job.default_url_options
-  end
 end
