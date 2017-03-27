@@ -503,7 +503,9 @@ function onClickEdit() {
         },
         error: function (e, data, status, xhr) {
             if (e.status == 403) {
-                sampleAlertMsg(I18n.t("samples.js.permission_error"), "danger");
+                HelperModule.flashAlertMsg(
+                  I18n.t('samples.js.permission_error'), 'danger'
+                );
                 changeToViewMode();
                 updateButtons();
             }
@@ -565,7 +567,7 @@ function onClickSave() {
         dataType: "json",
         data: data,
         success: function (data) {
-            sampleAlertMsg(data.flash, "success");
+            HelperModule.flashAlertMsg(data.flash, 'success');
             onClickCancel();
         },
         error: function (e, eData, status, xhr) {
@@ -573,12 +575,16 @@ function onClickSave() {
             clearAllErrors();
 
             if (e.status == 404) {
-                sampleAlertMsg(I18n.t("samples.js.not_found_error"), "danger");
+                HelperModule.flashAlertMsg(
+                  I18n.t('samples.js.not_found_error'), 'danger'
+                );
                 changeToViewMode();
                 updateButtons();
             }
             else if (e.status == 403) {
-                sampleAlertMsg(I18n.t("samples.js.permission_error"), "danger");
+                HelperModule.flashAlertMsg(
+                  I18n.t('samples.js.permission_error'), 'danger'
+                );
                 changeToViewMode();
                 updateButtons();
             }
@@ -794,7 +800,9 @@ function onClickAddSample() {
         },
         error: function (e, eData, status, xhr) {
             if (e.status == 403)
-                sampleAlertMsg(I18n.t("samples.js.permission_error"), "danger");
+                HelperModule.flashAlertMsg(
+                  I18n.t('samples.js.permission_error'), 'danger'
+                );
             changeToViewMode();
             updateButtons();
         }
@@ -967,6 +975,7 @@ function changeToEditMode() {
             '<th class="custom-field" id="' + data.id + '" ' +
             'data-editable data-deletable ' +
             'data-edit-url="' + data.edit_url + '" ' +
+            'data-update-url="' + data.update_url + '" ' +
             'data-destroy-html-url="' + data.destroy_html_url + '"' +
             '>' + generateColumnNameTooltip(data.name) + '</th>');
 
@@ -1050,6 +1059,7 @@ function changeToEditMode() {
           'data-position="' + colIndex + '" ' +
           'data-id="' + $(el).attr('id') + '" ' +
           'data-edit-url=' + $(el).attr('data-edit-url') + ' ' +
+          'data-update-url=' + $(el).attr('data-update-url') + ' ' +
           'data-destroy-html-url=' + $(el).attr('data-destroy-html-url') + ' ' +
           'class="' + visLi + '"' +
           '>' +
@@ -1151,7 +1161,7 @@ function changeToEditMode() {
       var text = li.find('.text');
       var textEdit = li.find('.text-edit');
       var newName = textEdit.val().trim();
-      var url = li.attr('data-edit-url');
+      var url = li.attr('data-update-url');
 
       $.ajax({
         url: url,
@@ -1193,34 +1203,57 @@ function changeToEditMode() {
 
       cancelEditMode();
 
-      var self = $(this);
-      var li = self.closest('li');
-      var text = li.find('.text');
-      if ($(text).find('.modal-tooltiptext').length > 0) {
-        text = $(text).find('.modal-tooltiptext');
+      var li = $(this).closest('li');
+      var url = li.attr('data-edit-url');
+      ajaxCallEvent();
+
+      function ajaxCallEvent(){
+        $.ajax({
+          url: url,
+          success: function() {
+            var text, textEdit, controls, controlsEdit;
+            text = li.find('.text');
+            if ($(text).find('.modal-tooltiptext').length > 0) {
+              text = $(text).find('.modal-tooltiptext');
+            }
+            textEdit = li.find('.text-edit');
+            controls = li.find('.controls .vis,.edit,.del');
+            controlsEdit = li.find('.controls .ok,.cancel');
+
+            // Toggle edit mode
+            columnEditMode = true;
+            li.addClass('editing');
+
+            // Set the text-edit's value
+            textEdit.val(text.text().trim());
+
+            // Toggle elements
+            text.hide();
+            controls.hide();
+            textEdit.css('display', ''); // show() doesn't work
+            controlsEdit.css('display', ''); // show() doesn't work
+            dropdownList.sortable('disable');
+            dropdownList.on('click', function(ev) {
+              ev.stopPropagation();
+            });
+            // Focus input
+            textEdit.focus();
+          },
+          error: function(e) {
+            $(li).clearFormErrors();
+            var msg = $.parseJSON(e.responseText);
+
+            renderFormError(undefined,
+                            $(li).find('.text-edit'),
+                            Object.keys(msg)[0] + ' ' + msg.name.toString());
+            var verticalHeight = $(li).offset().top;
+            dropdownList.scrollTo(verticalHeight,0);
+            setTimeout(function() {
+              $(li).clearFormErrors();
+            }, 5000);
+          }
+        });
       }
-      var textEdit = li.find('.text-edit');
-      var controls = li.find('.controls .vis,.edit,.del');
-      var controlsEdit = li.find('.controls .ok,.cancel');
-
-      // Toggle edit mode
-      columnEditMode = true;
-      li.addClass('editing');
-
-      // Set the text-edit's value
-      textEdit.val(text.text().trim());
-
-      // Toggle elements
-      text.hide();
-      controls.hide();
-      textEdit.css('display', ''); // show() doesn't work
-      controlsEdit.css('display', ''); // show() doesn't work
-      dropdownList.sortable('disable');
-      dropdownList.on('click', function(ev) {
-        ev.stopPropagation();
-      });
-      // Focus input
-      textEdit.focus();
     });
 
     // On hiding dropdown, cancel edit mode throughout dropdown

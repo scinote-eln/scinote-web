@@ -22,18 +22,18 @@ module ProtocolsImporter
     protocol.save!
 
     # Protocol is saved, populate it
-    populate_protocol(protocol, protocol_json, user)
+    populate_protocol(protocol, protocol_json, user, team)
 
     return protocol
   end
 
-  def import_into_existing(protocol, protocol_json, user)
+  def import_into_existing(protocol, protocol_json, user, team)
     # Firstly, destroy existing protocol's contents
     protocol.destroy_contents(user)
     protocol.reload
 
     # Alright, now populate the protocol
-    populate_protocol(protocol, protocol_json, user)
+    populate_protocol(protocol, protocol_json, user, team)
     protocol.reload
 
     # Unlink the protocol
@@ -43,7 +43,7 @@ module ProtocolsImporter
 
   private
 
-  def populate_protocol(protocol, protocol_json, user)
+  def populate_protocol(protocol, protocol_json, user, team)
     protocol.reload
 
     asset_ids = []
@@ -93,7 +93,8 @@ module ProtocolsImporter
             name: table_json['name'],
             contents: Base64.decode64(table_json['contents']),
             created_by: user,
-            last_modified_by: user
+            last_modified_by: user,
+            team: team
           )
           StepTable.create!(
             step: step,
@@ -106,7 +107,8 @@ module ProtocolsImporter
         step_json["assets"].values.each do |asset_json|
           asset = Asset.new(
             created_by: user,
-            last_modified_by: user
+            last_modified_by: user,
+            team: team
           )
 
           # Decode the file bytes

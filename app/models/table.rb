@@ -10,6 +10,7 @@ class Table < ActiveRecord::Base
 
   belongs_to :created_by, foreign_key: 'created_by_id', class_name: 'User'
   belongs_to :last_modified_by, foreign_key: 'last_modified_by_id', class_name: 'User'
+  belongs_to :team
   has_one :step_table, inverse_of: :table
   has_one :step, through: :step_table
 

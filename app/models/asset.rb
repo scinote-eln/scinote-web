@@ -48,6 +48,7 @@ class Asset < ActiveRecord::Base
   belongs_to :last_modified_by,
              foreign_key: 'last_modified_by_id',
              class_name: 'User'
+  belongs_to :team
   has_one :step_asset,
           inverse_of: :asset,
           dependent: :destroy

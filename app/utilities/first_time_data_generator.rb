@@ -422,6 +422,7 @@ module FirstTimeDataGenerator
     DelayedUploaderTutorial.delay(queue: :tutorial).generate_result_asset(
       my_module: my_modules[0],
       current_user: user,
+      current_team: team,
       result_name: 'sF',
       created_at: generate_random_time(my_modules[0].created_at, 2.days),
       file_name: 'samples.txt'
@@ -440,6 +441,7 @@ module FirstTimeDataGenerator
     )
     temp_result.table = Table.new(
       created_by: user,
+      team: team,
       contents: tab_content['module1']['experimental_design']
     )
     temp_result.save
@@ -467,6 +469,7 @@ module FirstTimeDataGenerator
     DelayedUploaderTutorial.delay(queue: :tutorial).add_step_asset(
       step: my_modules[1].protocol.steps.where('position = 0').take,
       current_user: user,
+      current_team: team,
       file_name: 'sample-potatoe.txt'
     )
 
@@ -474,6 +477,7 @@ module FirstTimeDataGenerator
     DelayedUploaderTutorial.delay(queue: :tutorial).generate_result_asset(
       my_module: my_modules[1],
       current_user: user,
+      current_team: team,
       result_name: 'PVY-inoculated plant, symptoms',
       created_at: generate_random_time(my_modules[1].created_at, 1.days),
       file_name: 'DSCN0660.JPG'
@@ -482,6 +486,7 @@ module FirstTimeDataGenerator
     DelayedUploaderTutorial.delay(queue: :tutorial).generate_result_asset(
       my_module: my_modules[1],
       current_user: user,
+      current_team: team,
       result_name: 'mock-inoculated plant',
       created_at: generate_random_time(my_modules[1].created_at, 2.days),
       file_name: 'DSCN0354.JPG'
@@ -490,6 +495,7 @@ module FirstTimeDataGenerator
     DelayedUploaderTutorial.delay(queue: :tutorial).generate_result_asset(
       my_module: my_modules[1],
       current_user: user,
+      current_team: team,
       result_name: 'Height of plants at 6dpi',
       created_at: generate_random_time(my_modules[1].created_at, 3.days),
       file_name: '6dpi_height.JPG'
@@ -541,6 +547,7 @@ module FirstTimeDataGenerator
     DelayedUploaderTutorial.delay(queue: :tutorial).add_step_asset(
       step: my_modules[2].protocol.steps.where('position = 1').take,
       current_user: user,
+      current_team: team,
       file_name: 'RNeasy-Plant-Mini-Kit-EN.pdf'
     )
 
@@ -559,6 +566,7 @@ module FirstTimeDataGenerator
     )
     temp_result.table = Table.new(
       created_by: user,
+      team: team,
       contents: tab_content['module3']['nanodrop']
     )
     temp_result.save
@@ -581,6 +589,7 @@ module FirstTimeDataGenerator
     DelayedUploaderTutorial.delay(queue: :tutorial).generate_result_asset(
       my_module: my_modules[2],
       current_user: user,
+      current_team: team,
       result_name: 'Agarose gel electrophoresis of totRNA samples',
       created_at: generate_random_time(my_modules[2].created_at, 3.days),
       file_name: 'totRNA_gel.jpg'
@@ -599,6 +608,7 @@ module FirstTimeDataGenerator
     DelayedUploaderTutorial.delay(queue: :tutorial).add_step_asset(
       step: my_modules[3].protocol.steps.where('position = 0').take,
       current_user: user,
+      current_team: team,
       file_name: 'G2938-90034_KitRNA6000Nano_ebook.pdf'
     )
 
@@ -606,6 +616,7 @@ module FirstTimeDataGenerator
     DelayedUploaderTutorial.delay(queue: :tutorial).generate_result_asset(
       my_module: my_modules[3],
       current_user: user,
+      current_team: team,
       result_name: 'Result of RNA integrity',
       created_at: generate_random_time(my_modules[3].created_at, 2.days),
       file_name: 'Bioanalyser_result.JPG'
@@ -671,24 +682,28 @@ module FirstTimeDataGenerator
     DelayedUploaderTutorial.delay(queue: :tutorial).add_step_asset(
       step: my_modules[5].protocol.steps.where('position = 0').take,
       current_user: user,
+      current_team: team,
       file_name: 'sample_preparation.JPG'
     )
 
     DelayedUploaderTutorial.delay(queue: :tutorial).add_step_asset(
       step: my_modules[5].protocol.steps.where('position = 1').take,
       current_user: user,
+      current_team: team,
       file_name: 'reaction_setup.JPG'
     )
 
     DelayedUploaderTutorial.delay(queue: :tutorial).add_step_asset(
       step: my_modules[5].protocol.steps.where('position = 2').take,
       current_user: user,
+      current_team: team,
       file_name: 'cycling_conditions.JPG'
     )
 
     DelayedUploaderTutorial.delay(queue: :tutorial).add_step_asset(
       step: my_modules[5].protocol.steps.where('position = 3').take,
       current_user: user,
+      current_team: team,
       file_name: '96plate.doc'
     )
 
@@ -702,6 +717,7 @@ module FirstTimeDataGenerator
     )
     temp_result.table = Table.new(
       created_by: user,
+      team: team,
       contents: tab_content['module6']['distribution'] % {
         sample0: samples_to_assign[0].name,
         sample1: samples_to_assign[1].name,
@@ -729,6 +745,7 @@ module FirstTimeDataGenerator
     DelayedUploaderTutorial.delay(queue: :tutorial).generate_result_asset(
       my_module: my_modules[5],
       current_user: user,
+      current_team: team,
       result_name: 'Mixtures and plate setup',
       created_at: generate_random_time(my_modules[5].created_at, 2.days),
       file_name: 'Mixes_Templats.xls'
@@ -737,6 +754,7 @@ module FirstTimeDataGenerator
     DelayedUploaderTutorial.delay(queue: :tutorial).generate_result_asset(
       my_module: my_modules[5],
       current_user: user,
+      current_team: team,
       result_name: 'Raw data from ABI 7300',
       created_at: generate_random_time(my_modules[5].created_at, 3.days),
       file_name: 'BootCamp-Experiment-results-20122.sds'
@@ -745,6 +763,7 @@ module FirstTimeDataGenerator
     DelayedUploaderTutorial.delay(queue: :tutorial).generate_result_asset(
       my_module: my_modules[5],
       current_user: user,
+      current_team: team,
       result_name: 'All results - curves',
       created_at: generate_random_time(my_modules[5].created_at, 4.days),
       file_name: 'curves.JPG'
@@ -791,6 +810,7 @@ module FirstTimeDataGenerator
     DelayedUploaderTutorial.delay(queue: :tutorial).add_step_asset(
       step: my_modules[7].protocol.steps.where('position = 0').take,
       current_user: user,
+      current_team: team,
       file_name: 'ddCq-quantification_diagnostics-template.xls'
     )
 
@@ -798,6 +818,7 @@ module FirstTimeDataGenerator
     DelayedUploaderTutorial.delay(queue: :tutorial).generate_result_asset(
       my_module: my_modules[7],
       current_user: user,
+      current_team: team,
       result_name: 'Results of ddCq method',
       created_at: generate_random_time(my_modules[7].created_at, 1.days),
       file_name: 'ddCq-quantification_diagnostics-results.xls'
@@ -806,6 +827,7 @@ module FirstTimeDataGenerator
     DelayedUploaderTutorial.delay(queue: :tutorial).generate_result_asset(
       my_module: my_modules[7],
       current_user: user,
+      current_team: team,
       result_name: 'Dilution curve and efficiency',
       created_at: generate_random_time(my_modules[7].created_at, 2.days),
       file_name: 'dilution_curve-efficiency.JPG'
@@ -814,6 +836,7 @@ module FirstTimeDataGenerator
     DelayedUploaderTutorial.delay(queue: :tutorial).generate_result_asset(
       my_module: my_modules[7],
       current_user: user,
+      current_team: team,
       result_name: 'Relative quantification results',
       created_at: generate_random_time(my_modules[7].created_at, 3.days),
       file_name: 'result-ddCq.JPG'

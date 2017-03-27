@@ -1,22 +1,5 @@
 class ReportElement < ActiveRecord::Base
-  enum type_of: {
-    project_header: 0,
-    my_module: 1,
-    step: 2,
-    result_asset: 3,
-    result_table: 4,
-    result_text: 5,
-    my_module_activity: 6,
-    my_module_samples: 7,
-    step_checklist: 8,
-    step_asset: 9,
-    step_table: 10,
-    step_comments: 11,
-    result_comments: 12,
-    project_activity: 13, # TODO
-    project_samples: 14, # TODO
-    experiment: 15
-  }
+  enum type_of: Extends::REPORT_ELEMENT_TYPES
 
   # This is only used by certain elements
   enum sort_order: {
@@ -32,8 +15,12 @@ class ReportElement < ActiveRecord::Base
   belongs_to :report, inverse_of: :report_elements
 
   # Hierarchical structure representation
-  has_many :children, -> { order(:position) }, class_name: "ReportElement", foreign_key: "parent_id", dependent: :destroy
-  belongs_to :parent, class_name: "ReportElement"
+  has_many :children,
+           -> { order(:position) },
+           class_name: 'ReportElement',
+           foreign_key: 'parent_id',
+           dependent: :destroy
+  belongs_to :parent, class_name: 'ReportElement'
 
   # References to various report entities
   belongs_to :project, inverse_of: :report_elements
@@ -59,44 +46,18 @@ class ReportElement < ActiveRecord::Base
 
   # Get the referenced element (previously, element's type_of must be set)
   def element_reference
-    if project_header? or project_activity? or project_samples?
-      return project
-    elsif experiment?
-      return experiment
-    elsif my_module? or my_module_activity? or my_module_samples?
-      return my_module
-    elsif step? or step_comments?
-      return step
-    elsif result_asset? or result_table? or result_text? or result_comments?
-      return result
-    elsif step_checklist?
-      return checklist
-    elsif step_asset?
-      return asset
-    elsif step_table?
-      return table
+    ReportExtends::ELEMENT_REFERENCES.each do |el_ref|
+      return eval(el_ref.element.gsub('_id', '')) if el_ref.check(self)
     end
   end
 
-
   # Set the element reference (previously, element's type_of must be set)
   def set_element_reference(ref_id)
-    if project_header? or project_activity? or project_samples?
-      self.project_id = ref_id
-    elsif experiment?
-      self.experiment_id = ref_id
-    elsif my_module? or my_module_activity? or my_module_samples?
-      self.my_module_id = ref_id
-    elsif step? or step_comments?
-      self.step_id = ref_id
-    elsif result_asset? or result_table? or result_text? or result_comments?
-      self.result_id = ref_id
-    elsif step_checklist?
-      self.checklist_id = ref_id
-    elsif step_asset?
-      self.asset_id = ref_id
-    elsif step_table?
-      self.table_id = ref_id
+    ReportExtends::SET_ELEMENT_REFERENCES_LIST.each do |el_ref|
+      check = el_ref.check(self)
+      next unless check
+      public_send("#{el_ref.element}=", ref_id)
+      break
     end
   end
 
@@ -120,18 +81,17 @@ class ReportElement < ActiveRecord::Base
   private
 
   def has_one_of_referenced_elements
-    num_of_refs = [
-      project,
-      experiment,
-      my_module,
-      step,
-      result,
-      checklist,
-      asset,
-      table
-    ].count { |r| r.present? }
+    num_of_refs = [project,
+                   experiment,
+                   my_module,
+                   step,
+                   result,
+                   checklist,
+                   asset,
+                   table].count { |r| r.present? }
     if num_of_refs != 1
-      errors.add(:base, "Report element must have exactly one element reference.")
+      errors.add(:base,
+                 'Report element must have exactly one element reference.')
     end
   end
 end
