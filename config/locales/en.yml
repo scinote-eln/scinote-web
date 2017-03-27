@@ -1545,6 +1545,8 @@ en:
 
   zip_export:
     notification_title: 'Your package is ready to be exported!'
+    expired_title: 'The required file was expired!'
+    expired_description: 'The downloadable file expires in 3 days after is created.'
   # This section contains general words that can be used in any parts of
   # application.
 

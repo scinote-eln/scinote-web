@@ -1,6 +1,6 @@
 class ZipExportsController < ApplicationController
-  before_action :load_var
-  before_action :check_edit_permissions
+  before_action :load_var, only: :download
+  before_action :check_edit_permissions, only: :download
 
   def download
     if @zip_export.stored_on_s3?
@@ -12,11 +12,14 @@ class ZipExportsController < ApplicationController
     end
   end
 
+  def file_expired
+  end
+
   private
 
   def load_var
     @zip_export = ZipExport.find_by_id(params[:id])
-    render_404 unless @zip_export
+    redirect_to(file_expired_url, status: 301) and return unless @zip_export
   end
 
   def check_edit_permissions

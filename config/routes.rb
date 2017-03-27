@@ -118,6 +118,10 @@ Rails.application.routes.draw do
         to: 'zip_exports#download',
         as: 'zip_exports_download'
 
+    get 'zip_exports/file_expired',
+        to: 'zip_exports#file_expired',
+        as: 'file_expired'
+
     resources :teams do
       resources :samples, only: [:new, :create]
       resources :sample_types, except: [:show, :new] do
