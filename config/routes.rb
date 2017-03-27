@@ -123,7 +123,7 @@ Rails.application.routes.draw do
         get 'sample_group_element', to: 'sample_groups#sample_group_element'
         get 'destroy_confirmation', to: 'sample_groups#destroy_confirmation'
       end
-      resources :custom_fields, only: [:create, :update, :destroy] do
+      resources :custom_fields, only: [:create, :edit, :update, :destroy] do
         get 'destroy_html'
       end
       member do

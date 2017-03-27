@@ -1,7 +1,7 @@
 class CustomFieldsController < ApplicationController
   include InputSanitizeHelper
 
-  before_action :load_vars, only: [:update, :destroy, :destroy_html]
+  before_action :load_vars, except: :create
   before_action :load_vars_nested, only: [:create, :destroy_html]
   before_action :check_create_permissions, only: :create
   before_action :check_update_permissions, only: :update
@@ -19,6 +19,8 @@ class CustomFieldsController < ApplicationController
             id: @custom_field.id,
             name: escape_input(@custom_field.name),
             edit_url:
+              edit_team_custom_field_path(@team, @custom_field),
+            update_url:
               team_custom_field_path(@team, @custom_field),
             destroy_html_url:
               team_custom_field_destroy_html_path(
@@ -32,6 +34,14 @@ class CustomFieldsController < ApplicationController
           render json: @custom_field.errors.to_json,
                  status: :unprocessable_entity
         end
+      end
+    end
+  end
+
+  def edit
+    respond_to do |format|
+      format.json do
+        render json: { status: :ok }
       end
     end
   end

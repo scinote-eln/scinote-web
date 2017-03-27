@@ -145,7 +145,8 @@
             id="<%= cf.id %>"
             <%= 'data-editable' if can_edit_custom_field(cf) %>
             <%= 'data-deletable' if can_delete_custom_field(cf) %>
-            <%= "data-edit-url='#{team_custom_field_path(@team, cf)}'" %>
+            <%= "data-edit-url='#{edit_team_custom_field_path(@team, cf)}'" %>
+            <%= "data-update-url='#{team_custom_field_path(@team, cf)}'" %>
             <%= "data-destroy-html-url='#{team_custom_field_destroy_html_path(@team, cf)}'" %>
         >
           <%= display_tooltip(cf.name) %>
