@@ -53,7 +53,8 @@
           </li>
         <% end %>
         <% if can_archive_modules(my_module.experiment) %>
-          <li <%= 'style=display:none;' if my_module.my_module_group.blank? %>>
+          <li data-hook="archive-module-group"
+              <%= 'style=display:none;' if my_module.my_module_group.blank? %>>
             <a class ="delete-module-group" href="" data-module-id="<%= my_module.id %>"><%=t "experiments.canvas.edit.delete_module_group" %></a>
           </li>
         <% end %>
