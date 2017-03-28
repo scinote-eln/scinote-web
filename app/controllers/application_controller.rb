@@ -44,16 +44,16 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def render_403
+  def render_403(style = 'danger')
     respond_to do |format|
-      format.html {
+      format.html do
         render file: 'public/403.html', status: :forbidden, layout: false
-      }
-      format.json {
-        render json: {}, status: :forbidden
-      }
+      end
+      format.json do
+        render json: { style: style }, status: :forbidden
+      end
     end
-    return true
+    true
   end
 
   def render_404
