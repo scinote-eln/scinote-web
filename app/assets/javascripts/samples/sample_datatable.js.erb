@@ -504,7 +504,7 @@ function onClickEdit() {
         error: function (e, data, status, xhr) {
             if (e.status == 403) {
                 HelperModule.flashAlertMsg(
-                  I18n.t('samples.js.permission_error'), 'danger'
+                  I18n.t('samples.js.permission_error'), e.responseJSON.style
                 );
                 changeToViewMode();
                 updateButtons();
@@ -1245,7 +1245,7 @@ function changeToEditMode() {
 
             renderFormError(undefined,
                             $(li).find('.text-edit'),
-                            Object.keys(msg)[0] + ' ' + msg.name.toString());
+                            msg.name.toString());
             var verticalHeight = $(li).offset().top;
             dropdownList.scrollTo(verticalHeight,0);
             setTimeout(function() {
@@ -1332,7 +1332,7 @@ function changeToEditMode() {
 
           renderFormError(undefined,
                           $(li).find('.text-edit'),
-                          Object.keys(msg)[0] + ' ' + msg.name.toString());
+                          msg.name.toString());
           var verticalHeight = $(li).offset().top;
           dropdownList.scrollTo(verticalHeight,0);
           setTimeout(function() {
