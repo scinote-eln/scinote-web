@@ -5,7 +5,7 @@
 <p>Type: <%= I18n.t("notifications.types.#{@notification.type_of}") %></p>
 
 <p>
-  <% if @notification.system_message? %>
+  <% if @notification.system_message? || @notification.deliver?   %>
     <% # We assume the system notification is clean %>
     <%= @notification.title.html_safe %>
   <% else %>
@@ -17,6 +17,10 @@
   <% if @notification.system_message? %>
     <% # We assume the system notification is clean %>
     <%= @notification.message.html_safe %>
+  <% elsif @notification.deliver? %>
+    <% # work around the problem with inserting the link of zipExport %>
+    <% zip_id = /data-id='(\d*)'/.match(@notification.message)[1] %>
+    <%= @notification.message.gsub(/href='.+'/, "href='#{zip_exports_download_url(zip_id)}'").html_safe %>
   <% else %>
     <%= sanitize_input(prepend_server_url_to_links(@notification.message)) %>
   <% end %>

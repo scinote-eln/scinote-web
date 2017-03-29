@@ -18,6 +18,11 @@
         <span class="system-message"><i class="glyphicon glyphicon-tower" aria-hidden="true"></i></span>
       </div>
       <% end %>
+      <% if notification.type_of == 'deliver' %>
+      <div class="text-center">
+        <span class="deliver"><%= fa_icon 'truck' %></span>
+      </div>
+      <% end %>
     </div>
 
     <div class="col-xs-10">

@@ -149,6 +149,17 @@ table {
     width: 45px;
   }
 
+  .deliver {
+    background-color: $color-orange;
+    border-radius: 50%;
+    color: $color-wild-sand;
+    display: block;
+    font-size: 23px;
+    height: 45px;
+    padding-top: 5px;
+    width: 45px;
+  }
+
   .system-message {
     background-color: $color-theme-secondary;
     border-radius: 50%;
