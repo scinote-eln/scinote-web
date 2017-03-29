@@ -1,6 +1,7 @@
 version: '2.1'
 services:
   db:
+    container_name: scinote_db_production
     image: postgres:9.4
     volumes:
       - scinote_production_postgres:/var/lib/postgresql/data
@@ -9,7 +10,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.production
-    image: scinote_web:production
+    image: scinote_web_production
+    container_name: scinote_web_production
     stdin_open: true
     env_file: ./production.env
     tty: true
@@ -24,7 +26,8 @@ services:
       - scinote_production_files:/usr/src/app/public/system
 
   jobs:
-    image: scinote_web:production
+    image: scinote_web_production
+    container_name: scinote_jobs_production
     tty: true
     depends_on:
       - db

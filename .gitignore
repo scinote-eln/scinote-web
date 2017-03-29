@@ -46,6 +46,7 @@ tags
 
 # Ignore application configuration
 /config/application.yml
+/production.env
 
 # Ignore rubocop cache files
 rubocop_cache
