@@ -12,8 +12,7 @@ class ZipExportsController < ApplicationController
     end
   end
 
-  def file_expired
-  end
+  def file_expired; end
 
   private
 
