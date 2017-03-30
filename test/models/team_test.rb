@@ -32,13 +32,6 @@ class TeamTest < ActiveSupport::TestCase
     assert_equal Constants::MINIMAL_TEAM_SPACE_TAKEN, team.space_taken
   end
 
-  test 'should save log message' do
-    message = 'This is test message'
-    @team.log(message)
-    log_message = Log.last.message[26..-1]
-    assert_equal log_message, message
-  end
-
   test 'should open spreadsheet file' do
     skip
   end

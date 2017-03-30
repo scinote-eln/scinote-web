@@ -141,11 +141,4 @@ class MyModuleTest < ActiveSupport::TestCase
   test "should deep clone module" do
     skip
   end
-
-  test "should save log message" do
-    message = "This is test message for my module"
-    @my_module.log(message)
-    log_message = Log.last.message
-    assert_equal log_message[57..-1], message
-  end
 end

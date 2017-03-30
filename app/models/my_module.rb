@@ -348,12 +348,6 @@ class MyModule < ActiveRecord::Base
     return clone
   end
 
-  # Writes to user log.
-  def log(message)
-    final = "[%s] %s" % [name, message]
-    experiment.project.log(final)
-  end
-
   # Find an empty position for the restored module. It's
   # basically a first empty row with empty space inside x=[0, 32).
   def get_new_position

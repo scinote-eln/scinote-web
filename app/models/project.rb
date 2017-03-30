@@ -160,12 +160,6 @@ class Project < ActiveRecord::Base
     st
   end
 
-  # Writes to user log.
-  def log(message)
-    final = "[%s] %s" % [name, message]
-    team.log(final)
-  end
-
   def assigned_samples
     Sample.joins(:my_modules).where(my_modules: {
                                       id: my_modules_ids.split(',')
