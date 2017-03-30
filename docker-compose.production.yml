@@ -1,0 +1,43 @@
+version: '2.1'
+services:
+  db:
+    container_name: scinote_db_production
+    image: postgres:9.4
+    volumes:
+      - scinote_production_postgres:/var/lib/postgresql/data
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.production
+    image: scinote_web_production
+    container_name: scinote_web_production
+    stdin_open: true
+    env_file: ./production.env
+    tty: true
+    depends_on:
+      - db
+    ports:
+      - "3000:3000"
+    command: bash -c "rm -f /usr/src/app/tmp/pids/server.pid && rails s -b 0.0.0.0"
+    environment:
+      - RAILS_ENV=production
+    volumes:
+      - scinote_production_files:/usr/src/app/public/system
+
+  jobs:
+    image: scinote_web_production
+    container_name: scinote_jobs_production
+    tty: true
+    depends_on:
+      - db
+    command: rake jobs:work
+    env_file: ./production.env
+    environment:
+      - RAILS_ENV=production
+    volumes:
+      - scinote_production_files:/usr/src/app/public/system
+
+volumes:
+  scinote_production_postgres:
+  scinote_production_files:
