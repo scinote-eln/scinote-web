@@ -32,18 +32,6 @@ class ApplicationController < ActionController::Base
 
   protected
 
-  def log(message)
-    if @my_module
-      @my_module.log(message)
-    elsif @project
-      @project.log(message)
-    elsif @team
-      @team.log(message)
-    else
-      logger.error(message)
-    end
-  end
-
   def render_403(style = 'danger')
     respond_to do |format|
       format.html do

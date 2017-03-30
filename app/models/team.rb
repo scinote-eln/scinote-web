@@ -20,7 +20,6 @@ class Team < ActiveRecord::Base
   has_many :samples_tables, inverse_of: :team, dependent: :destroy
   has_many :sample_groups, inverse_of: :team
   has_many :sample_types, inverse_of: :team
-  has_many :logs, inverse_of: :team
   has_many :projects, inverse_of: :team
   has_many :custom_fields, inverse_of: :team
   has_many :protocols, inverse_of: :team, dependent: :destroy
@@ -69,12 +68,6 @@ class Team < ActiveRecord::Base
     users
       .where.not(confirmed_at: nil)
       .where_attributes_like(attributes, a_query)
-  end
-
-  # Writes to user log
-  def log(message)
-    final = "[%s] %s" % [Time.current.to_s, message]
-    logs.create(message: final)
   end
 
   # Imports samples into db
