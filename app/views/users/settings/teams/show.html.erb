@@ -54,22 +54,24 @@
 
     <div data-hook="team-header-second-row"></div>
 
-    <div>
-      <div class="badge-icon bg-primary">
-        <%= link_to team_description_path(@team, format: :json),
-                    remote: true,
-                    class: 'description-link',
-                    style: 'color: inherit' do %>
-          <span class="glyphicon glyphicon-info-sign"></span>
-        <% end %>
-      </div>
-      <div class="well well-sm">
-        <%= link_to team_description_path(@team, format: :json),
-                    remote: true,
-                    class: 'description-label description-link description-refresh',
-                    style: 'color: inherit' do %>
-          <%= render partial: "users/settings/teams/description_label.html.erb", locals: { team: @team } %>
-        <% end %>
+    <div class="row">
+      <div class="col-xs-24 col-sm-12" data-hook="team-header-description">
+        <div class="badge-icon bg-primary">
+          <%= link_to team_description_path(@team, format: :json),
+                      remote: true,
+                      class: 'description-link',
+                      style: 'color: inherit' do %>
+            <span class="glyphicon glyphicon-info-sign"></span>
+          <% end %>
+        </div>
+        <div class="well well-sm">
+          <%= link_to team_description_path(@team, format: :json),
+                      remote: true,
+                      class: 'description-label description-link description-refresh',
+                      style: 'color: inherit' do %>
+            <%= render partial: "users/settings/teams/description_label.html.erb", locals: { team: @team } %>
+          <% end %>
+        </div>
       </div>
     </div>
     <!-- End of HEADER -->

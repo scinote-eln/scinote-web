@@ -161,10 +161,13 @@ class Constants
   COLOR_MINE_SHAFT = '#333333'.freeze # $color-mine-shaft
   COLOR_NERO = '#262626'.freeze # $color-nero
   COLOR_BLACK = '#000000'.freeze # $color-black
+  COLOR_GRAY_LIGHT_YADCF = '#cccccc'.freeze # $color-gray-light-yadcf
+  COLOR_GRAY_DARK_YADCF = '#a9a9a9'.freeze # $color-gray-dark-yadcf
 
   # Miscelaneous colors
   COLOR_MYSTIC = '#eaeff2'.freeze # $color-mystic
   COLOR_CANDLELIGHT = '#ffda23'.freeze # $color-candlelight
+  COLOR_BLUE_YADCF = '#337ab7'.freeze # $color-blue-yadcf
 
   # Red colors
   COLOR_MOJO = '#cf4b48'.freeze # $color-mojo
