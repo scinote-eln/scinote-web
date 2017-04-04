@@ -51,15 +51,17 @@ class ZipExport < ActiveRecord::Base
   private
 
   def fill_content(dir, data, type, options = {})
-    generate_csv(dir, data, options) if type == :csv
+    generate_papertrail_csv(dir, data, options) if type == :papertrail
   end
 
-  def generate_csv(tmp_dir, data, options = {})
+  def generate_papertrail_csv(tmp_dir, data, options = {})
     attributes = options.fetch(:attributes) { :attributes_missing }
     file = FileUtils.touch("#{tmp_dir}/export.csv").first
+    records = PaperTrail::Version.where(data)
+                                 .order(created_at: :desc)
     CSV.open(file, 'wb') do |csv|
       csv << attributes
-      data.each do |entity|
+      records.find_each do |entity|
         csv << entity.audit_record.values_at(*attributes.map(&:to_sym))
       end
     end
