@@ -2,6 +2,7 @@ class StepCommentsController < ApplicationController
   include ActionView::Helpers::TextHelper
   include InputSanitizeHelper
   include ApplicationHelper
+  include Rails.application.routes.url_helpers
 
   before_action :load_vars
 
@@ -47,6 +48,19 @@ class StepCommentsController < ApplicationController
 
     respond_to do |format|
       if @comment.save
+        smart_annotation_notification(
+          comment_params[:message],
+          t('notifications.comment_annotation_title',
+            step: @step.name,
+            user: current_user.full_name),
+          t('notifications.step_comment_annotation_message_html',
+            project: link_to(@step.my_module.experiment.project.name,
+                             project_url(@step.my_module.experiment.project)),
+            my_module: link_to(@step.my_module.name,
+                               protocols_my_module_url(@step.my_module)),
+            step: link_to(@step.name,
+                          protocols_my_module_url(@step.my_module)))
+        )
         # Generate activity (this can only occur in module,
         # but nonetheless check if my module is not nil)
         if @protocol.in_module?

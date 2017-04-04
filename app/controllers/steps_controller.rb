@@ -44,7 +44,13 @@ class StepsController < ApplicationController
 
     # Update default checked state
     @step.checklists.each do |checklist|
+      smart_annotation_notification(checklist.name,
+                                    t('notifications.checklist_title'),
+                                    t('notifications.checklist_message'))
       checklist.checklist_items.each do |checklist_item|
+        smart_annotation_notification(checklist_item.text,
+                                      t('notifications.checklist_item_title'),
+                                      t('notifications.checklist_item_message'))
         checklist_item.checked = false
       end
     end
@@ -56,6 +62,7 @@ class StepsController < ApplicationController
           asset.post_process_file(@protocol.team)
         end
 
+        create_annotation_notification(@step)
         # Generate activity
         if @protocol.in_module?
           Activity.create(
@@ -675,5 +682,30 @@ class StepsController < ApplicationController
         :_destroy
       ]
     )
+  end
+
+  # generates notification for smart annotations
+  def create_annotation_notification(step)
+    # step description
+    smart_annotation_notification(
+      step.description,
+      t('notifications.step_description_title'),
+      t('notifications.step_description_message')
+    )
+    # checklists
+    step.checklists.each do |checklist|
+      smart_annotation_notification(
+        checklist.name,
+        t('notifications.checklist_title'),
+        t('notifications.checklist_message')
+      )
+      checklist.checklist_items.each do |checklist_item|
+        smart_annotation_notification(
+          checklist_item.text,
+          t('notifications.checklist_item_title'),
+          t('notifications.checklist_item_message')
+        )
+      end
+    end
   end
 end

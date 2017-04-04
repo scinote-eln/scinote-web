@@ -58,6 +58,33 @@ module ApplicationHelper
       !@experiment.nil?
   end
 
+  def smart_annotation_notification(text, title, message)
+    sa_user = /\[\@(.*?)~([0-9a-zA-Z]+)\]/
+    annotated_users = []
+    text.gsub(sa_user) do |el|
+      match = el.match(sa_user)
+      annotated_users << match[2].base62_decode
+    end
+    annotated_users.uniq.each do |user_id|
+      target_user = User.find_by_id(user_id)
+      next unless target_user
+      generate_annotation_notification(target_user, title, message)
+    end
+  end
+
+  def generate_annotation_notification(target_user, title, message)
+    notification = Notification.create(
+      type_of: :assignment,
+      title:
+        ActionController::Base.helpers.sanitize(title),
+      message:
+        ActionController::Base.helpers.sanitize(message)
+    )
+    if target_user.assignments_notification
+      UserNotification.create(notification: notification, user: target_user)
+    end
+  end
+
   def smart_annotation_parser(text, team = nil)
     new_text = smart_annotation_filter_resources(text)
     new_text = smart_annotation_filter_users(new_text, team)
