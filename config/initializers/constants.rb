@@ -223,6 +223,8 @@ class Constants
     href src width height alt cite datetime title class name xml:lang abbr style
   ).freeze
 
+  EXPORTABLE_ZIP_EXPIRATION_DAYS = 7
+
   # Very basic regex to check for validity of emails
   BASIC_EMAIL_REGEX = URI::MailTo::EMAIL_REGEXP
 

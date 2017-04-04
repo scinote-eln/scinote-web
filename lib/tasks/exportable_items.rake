@@ -1,7 +1,9 @@
 namespace :exportable_items do
-  desc 'Removes exportable zip files if older than 7 days'
+  desc 'Removes exportable zip files'
   task cleanup: :environment do
-    ZipExport.where('created_at < ?', 7.days.ago).destroy_all
-    puts "All exportable zip files older than '#{7.days.ago}' have been removed"
+    num = Constants::EXPORTABLE_ZIP_EXPIRATION_DAYS
+    ZipExport.where('created_at < ?', num.days.ago).destroy_all
+    puts "All exportable zip files older than " \
+         "'#{num.days.ago}' have been removed"
   end
 end
