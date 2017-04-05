@@ -133,43 +133,21 @@ module ApplicationHelper
       match = el.match(sa_user)
       user = User.find_by_id(match[2].base62_decode)
       team ||= current_team
-
-      if user &&
-         team &&
-         UserTeam.user_in_team(user, team).any?
-        user_t, = user
-                  .user_teams
-                  .where('user_teams.team_id = ?', team)
-                  .first
-
-        user_description = %(<div class='col-xs-4'>
-         <img src='#{avatar_path(user, :thumb)}' alt='thumb'>
-         </div><div class='col-xs-8'>
-         <div class='row'><div class='col-xs-9 text-left'><h5>
-         #{user.full_name}</h5></div><div class='col-xs-3 text-right'>
-         <span class='glyphicon glyphicon-remove' aria-hidden='true'></span>
-         </div></div><div class='row'><div class='col-xs-12'>
-        <p class='silver'>#{user.email}</p><p>
-        #{I18n.t('atwho.popover_html',
-                 role: user_t.role.capitalize,
-                 team: user_t.team.name,
-                 time: user_t.created_at.strftime('%B %Y'))}
-        </p></div></div></div>)
-
-        raw(image_tag(avatar_path(user, :icon_small),
-                      class: 'atwho-user-img-popover')) +
-          raw('<a onClick="$(this).popover(\'show\')" ' \
-          'class="atwho-user-popover" data-container="body" ' \
-          'data-html="true" tabindex="0" data-trigger="focus" ' \
-          'data-placement="top" data-toggle="popover" data-content="') +
-          raw(user_description) + raw('" >') + user.full_name + raw('</a>')
-      end
+      popover_for_user_name(user, team)
     end
     new_text
   end
 
-  # Generate smart annotation link for one user object, without team
-  def popover_for_user_name(user)
+  # Generate smart annotation link for one user object
+  def popover_for_user_name(user, team = nil)
+    if user &&
+       team &&
+       UserTeam.user_in_team(user, team).any?
+      user_t, = user
+                .user_teams
+                .where('user_teams.team_id = ?', team)
+                .first
+    end
     user_description = %(<div class='col-xs-4'>
       <img src='#{Rails.application.routes.url_helpers
         .avatar_path(user, :thumb)}' alt='thumb'>
@@ -178,7 +156,17 @@ module ApplicationHelper
       #{user.full_name}</h5></div><div class='col-xs-3 text-right'>
       <span class='glyphicon glyphicon-remove' aria-hidden='true'></span>
       </div></div><div class='row'><div class='col-xs-12'>
-      <p class='silver'>#{user.email}</p><p></p></div></div></div>)
+      <p class='silver'>#{user.email}</p>)
+    if team.present?
+      user_description += %(<p>
+        #{I18n.t('atwho.popover_html',
+                 role: user_t.role.capitalize,
+                 team: user_t.team.name,
+                 time: user_t.created_at.strftime('%B %Y'))}
+        </p></div></div></div>)
+    else
+      user_description += %(<p></p></div></div></div>)
+    end
 
     raw(image_tag(Rails.application.routes.url_helpers
                     .avatar_path(user, :icon_small),
