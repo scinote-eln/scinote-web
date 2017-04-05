@@ -202,6 +202,7 @@ module Paperclip
         )) ||
         # Spreadsheet application
         (Set[content_type, content_types_from_name].subset? Set.new %w(
+          application/zip
           application/vnd.ms-office
           application/vnd.ms-excel
           application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
