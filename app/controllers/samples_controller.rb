@@ -202,7 +202,7 @@ class SamplesController < ApplicationController
             scf = SampleCustomField.where("custom_field_id = ? AND sample_id = ?", id, sample.id).take
 
             if scf
-              old_text = scv.value
+              old_text = scf.value
               # Well, client was naughty, no XMAS for him this year, update
               # existing SCF instead of creating new one
               scf.value = val
