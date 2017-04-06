@@ -131,6 +131,7 @@ function applyEditCallBack() {
 
 // Set callback for click on edit button
 function applyMoveStepCallBack() {
+  $("[data-action='move-step']").off("ajax:success");
   $("[data-action='move-step']")
   .on("ajax:success", function(e, data) {
     var $step = $(this).closest(".step");
