@@ -64,24 +64,24 @@ module ApplicationHelper
     new_text = options.fetch(:new_text) { :new_text_must_be_present }
     old_text = options[:old_text] || ''
     sa_user = /\[\@(.*?)~([0-9a-zA-Z]+)\]/
-
+    # fetch user ids from the previouse text
     old_user_ids = []
     old_text.gsub(sa_user) do |el|
       match = el.match(sa_user)
       old_user_ids << match[2].base62_decode
     end
-
+    # fetch user ids from the new text
     new_user_ids = []
     new_text.gsub(sa_user) do |el|
       match = el.match(sa_user)
       new_user_ids << match[2].base62_decode
     end
-
+    # check if the user has been already mentioned
     annotated_users = []
     new_user_ids.each do |el|
       annotated_users << el unless old_user_ids.include?(el)
     end
-
+    # restrict the list of ids and generate notification
     annotated_users.uniq.each do |user_id|
       target_user = User.find_by_id(user_id)
       next unless target_user

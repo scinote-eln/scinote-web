@@ -55,6 +55,8 @@ module StepsActions
     checklists
   end
 
+  # used for step update action it traverse through the input params and
+  # generates notifications
   def update_annotation_notification(step,
                                      old_description,
                                      new_checklists,
@@ -139,6 +141,7 @@ module StepsActions
       ))
   end
 
+  # temporary data containers
   PreviouseChecklistItem = Struct.new(:id, :text)
   PreviouseChecklist = Struct.new(:id, :name, :items) do
     def initialize(id, name, items = [])
