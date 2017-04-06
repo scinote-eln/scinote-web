@@ -524,6 +524,7 @@ function onClickSave() {
 
     // First fetch all the data in input fields
     data = {
+        request_url: $('#samples').data('current-uri'),
         sample_id: $(selectedSample).attr("id"),
         sample: {},
         custom_fields: {}, // These fields are not currently bound to this sample
