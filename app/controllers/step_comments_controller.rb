@@ -209,7 +209,7 @@ class StepCommentsController < ApplicationController
     smart_annotation_notification(
       old_text: (old_text if old_text),
       new_text: comment_params[:message],
-      title: t('notifications.comment_annotation_title',
+      title: t('notifications.step_comment_annotation_title',
                step: @step.name,
                user: current_user.full_name),
       message: t('notifications.step_annotation_message_html',

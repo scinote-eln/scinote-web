@@ -2,6 +2,7 @@ class MyModuleCommentsController < ApplicationController
   include ActionView::Helpers::TextHelper
   include InputSanitizeHelper
   include ApplicationHelper
+  include Rails.application.routes.url_helpers
 
   before_action :load_vars
   before_action :check_view_permissions, only: :index
@@ -51,6 +52,8 @@ class MyModuleCommentsController < ApplicationController
 
     respond_to do |format|
       if @comment.save
+
+        my_module_comment_annotation_notification
         # Generate activity
         Activity.create(
           type_of: :add_comment_to_module,
@@ -102,10 +105,13 @@ class MyModuleCommentsController < ApplicationController
   end
 
   def update
+    old_text = @comment.message
     @comment.message = comment_params[:message]
     respond_to do |format|
       format.json do
         if @comment.save
+
+          my_module_comment_annotation_notification(old_text)
           # Generate activity
           Activity.create(
             type_of: :edit_module_comment,
@@ -189,5 +195,24 @@ class MyModuleCommentsController < ApplicationController
 
   def comment_params
     params.require(:comment).permit(:message)
+  end
+
+  def my_module_comment_annotation_notification(old_text = nil)
+    smart_annotation_notification(
+      old_text: old_text,
+      new_text: @comment.message,
+      title: t('notifications.my_module_comment_annotation_title',
+               my_module: @my_module.name,
+               user: current_user.full_name),
+      message: t('notifications.my_module_annotation_message_html',
+                 project: link_to(@my_module.experiment.project.name,
+                                  project_url(@my_module
+                                              .experiment
+                                              .project)),
+                 my_module: link_to(@my_module.name,
+                                    protocols_my_module_url(
+                                      @my_module
+                                    )))
+    )
   end
 end
