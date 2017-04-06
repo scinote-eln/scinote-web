@@ -68,7 +68,7 @@ class Asset < ActiveRecord::Base
   after_validation :filter_paperclip_errors
   # Needed because Paperclip validatates on creation
   after_initialize :filter_paperclip_errors, if: :new_record?
-  before_destroy :paperlip_delete, prepend: true
+  before_destroy :paperclip_delete, prepend: true
 
   attr_accessor :file_content, :file_info, :preview_cached
 
@@ -239,13 +239,21 @@ class Asset < ActiveRecord::Base
     end
   end
 
-  # Workaround for making Paperclip work with asset deletion
-  def paperlip_delete
+  # Workaround for making Paperclip work with asset deletion (might be because
+  # of how the asset models are implemented)
+  def paperclip_delete
     report_elements.destroy_all
     asset_text_datum.destroy if asset_text_datum.present?
     # Nullify needed to force paperclip file deletion
     self.file = nil
     save
+  end
+
+  def destroy
+    super()
+    # Needed, otherwise the object isn't deleted, because of how the asset
+    # models are implemented
+    delete
   end
 
   # If team is provided, its space_taken
