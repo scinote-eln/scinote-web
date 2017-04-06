@@ -44,13 +44,7 @@ class StepsController < ApplicationController
 
     # Update default checked state
     @step.checklists.each do |checklist|
-      smart_annotation_notification(checklist.name,
-                                    t('notifications.checklist_title'),
-                                    t('notifications.checklist_message'))
       checklist.checklist_items.each do |checklist_item|
-        smart_annotation_notification(checklist_item.text,
-                                      t('notifications.checklist_item_title'),
-                                      t('notifications.checklist_item_message'))
         checklist_item.checked = false
       end
     end
@@ -136,6 +130,9 @@ class StepsController < ApplicationController
 
   def update
     respond_to do |format|
+      old_description = @step.description
+      old_checklists = fetch_old_checklists_data(@step)
+      new_checklists = fetch_new_checklists_data
       previous_size = @step.space_taken
 
       step_params_all = step_params
@@ -162,6 +159,12 @@ class StepsController < ApplicationController
 
       if @step.save
         @step.reload
+
+        # generates notification on step upadate
+        update_annotation_notification(@step,
+                                       old_description,
+                                       new_checklists,
+                                       old_checklists)
 
         # Release team's space taken
         team = @protocol.team
@@ -688,24 +691,288 @@ class StepsController < ApplicationController
   def create_annotation_notification(step)
     # step description
     smart_annotation_notification(
-      step.description,
-      t('notifications.step_description_title'),
-      t('notifications.step_description_message')
+      new_text: step.description,
+      title: t('notifications.step_description_title',
+               user: current_user.full_name,
+               step: step.name),
+      message: t('notifications.step_annotation_message_html',
+                 project: link_to(
+                   step.my_module.experiment.project.name,
+                   project_url(step.my_module.experiment.project)
+                 ),
+                 my_module: link_to(
+                   step.my_module.name,
+                   protocols_my_module_url(step.my_module)
+                 ),
+                 step: link_to(
+                   step.name,
+                   protocols_my_module_url(step.my_module)
+                 ))
     )
     # checklists
     step.checklists.each do |checklist|
       smart_annotation_notification(
-        checklist.name,
-        t('notifications.checklist_title'),
-        t('notifications.checklist_message')
+        new_text: checklist.name,
+        title: t('notifications.checklist_title',
+                 user: current_user.full_name,
+                 step: step.name),
+        message: t('notifications.step_annotation_message_html',
+                   project: link_to(
+                     step.my_module.experiment.project.name,
+                     project_url(step.my_module.experiment.project)
+                   ),
+                   my_module: link_to(
+                     step.my_module.name,
+                     protocols_my_module_url(step.my_module)
+                   ),
+                   step: link_to(
+                     step.name,
+                     protocols_my_module_url(step.my_module)
+                   ))
       )
       checklist.checklist_items.each do |checklist_item|
         smart_annotation_notification(
-          checklist_item.text,
-          t('notifications.checklist_item_title'),
-          t('notifications.checklist_item_message')
+          new_text: checklist_item.text,
+          title: t('notifications.checklist_title',
+                   user: current_user.full_name,
+                   step: step.name),
+          message: t('notifications.step_annotation_message_html',
+                     project: link_to(
+                       step.my_module.experiment.project.name,
+                       project_url(step.my_module.experiment.project)
+                     ),
+                     my_module: link_to(
+                       step.my_module.name,
+                       protocols_my_module_url(step.my_module)
+                     ),
+                     step: link_to(
+                       step.name,
+                       protocols_my_module_url(step.my_module)
+                     ))
         )
       end
     end
   end
+
+  def fetch_new_checklists_data
+    checklists = []
+    new_checklists = step_params[:checklists_attributes]
+
+    if new_checklists
+      new_checklists.each do |e|
+        list = PreviouseChecklist.new(
+          e.second[:id].to_i,
+          e.second[:name]
+        )
+        if e.second[:checklist_items_attributes]
+          e.second[:checklist_items_attributes].each do |el|
+            list.add_checklist(
+              PreviouseChecklistItem.new(el.second[:id].to_i, el.second[:text])
+            )
+          end
+        end
+        checklists << list
+      end
+    end
+    checklists
+  end
+
+  def fetch_old_checklists_data(step)
+    checklists = []
+    if step.checklists
+      step.checklists.each do |e|
+        list = PreviouseChecklist.new(
+          e.id,
+          e.name
+        )
+        e.checklist_items.each do |el|
+          list.add_checklist(
+            PreviouseChecklistItem.new(el.id, el.text)
+          )
+        end
+        checklists << list
+      end
+    end
+    checklists
+  end
+
+  def update_annotation_notification(step,
+                                     old_description,
+                                     new_checklists,
+                                     old_checklists)
+    smart_annotation_notification(
+      old_text: old_description,
+      new_text: step.description,
+      title: t('notifications.step_description_title',
+               user: current_user.full_name,
+               step: step.name),
+      message: t('notifications.step_annotation_message_html',
+                 project: link_to(
+                   step.my_module.experiment.project.name,
+                   project_url(step.my_module.experiment.project)
+                 ),
+                 my_module: link_to(
+                   step.my_module.name,
+                   protocols_my_module_url(step.my_module)
+                 ),
+                 step: link_to(
+                   step.name,
+                   protocols_my_module_url(step.my_module)
+                 ))
+    )
+
+    new_checklists.each do |e|
+      # generates smart annotaion if the checklist is new
+      add_new_checklist(step, e) if e.id.zero?
+      smart_annotation_notification(
+        new_text: e.name,
+        title: t('notifications.checklist_title',
+                 user: current_user.full_name,
+                 step: step.name),
+        message: t('notifications.step_annotation_message_html',
+                   project: link_to(
+                     step.my_module.experiment.project.name,
+                     project_url(step.my_module.experiment.project)
+                   ),
+                   my_module: link_to(
+                     step.my_module.name,
+                     protocols_my_module_url(step.my_module)
+                   ),
+                   step: link_to(
+                     step.name,
+                     protocols_my_module_url(step.my_module)
+                   ))
+      ) unless e.id
+      # else check if checklist is not deleted and generates
+      # new notifications
+      next unless old_checklists.map(&:id).include?(e.id)
+      old_checklist = old_checklists.select { |i| i.id == e.id }.first
+      smart_annotation_notification(
+        old_text: (old_checklist.name if old_checklist),
+        new_text: e.name,
+        title: t('notifications.checklist_title',
+                 user: current_user.full_name,
+                 step: step.name),
+        message: t('notifications.step_annotation_message_html',
+                   project: link_to(
+                     step.my_module.experiment.project.name,
+                     project_url(step.my_module.experiment.project)
+                   ),
+                   my_module: link_to(
+                     step.my_module.name,
+                     protocols_my_module_url(step.my_module)
+                   ),
+                   step: link_to(
+                     step.name,
+                     protocols_my_module_url(step.my_module)
+                   ))
+      )
+      e.items.each do |ci|
+        old_list = old_checklists.select { |i| i.id == e.id }.first
+        old_item = old_list.items.select { |i| i.id == ci.id }.first if old_list
+
+        smart_annotation_notification(
+          old_text: (old_item.text if old_item),
+          new_text: ci.text,
+          title: t('notifications.checklist_title',
+                   user: current_user.full_name,
+                   step: step.name),
+          message: t('notifications.step_annotation_message_html',
+                     project: link_to(
+                       step.my_module.experiment.project.name,
+                       project_url(step.my_module.experiment.project)
+                     ),
+                     my_module: link_to(
+                       step.my_module.name,
+                       protocols_my_module_url(step.my_module)
+                     ),
+                     step: link_to(
+                       step.name,
+                       protocols_my_module_url(step.my_module)
+                     ))
+        )
+      end
+    end
+  end
+
+  def add_new_checklist(step, checklist)
+    smart_annotation_notification(
+      new_text: checklist.name,
+      title: t('notifications.checklist_title',
+               user: current_user.full_name,
+               step: step.name),
+      message: t('notifications.step_annotation_message_html',
+                 project: link_to(
+                   step.my_module.experiment.project.name,
+                   project_url(step.my_module.experiment.project)
+                 ),
+                 my_module: link_to(
+                   step.my_module.name,
+                   protocols_my_module_url(step.my_module)
+                 ),
+                 step: link_to(
+                   step.name,
+                   protocols_my_module_url(step.my_module)
+                 ))
+    )
+
+    checklist.items.each do |ci|
+      smart_annotation_notification(
+        new_text: ci.text,
+        title: t('notifications.checklist_title',
+                 user: current_user.full_name,
+                 step: step.name),
+        message: t('notifications.step_annotation_message_html',
+                   project: link_to(
+                     step.my_module.experiment.project.name,
+                     project_url(step.my_module.experiment.project)
+                   ),
+                   my_module: link_to(
+                     step.my_module.name,
+                     protocols_my_module_url(step.my_module)
+                   ),
+                   step: link_to(
+                     step.name,
+                     protocols_my_module_url(step.my_module)
+                   ))
+      )
+    end
+  end
+
+  PreviouseChecklistItem = Struct.new(:id, :text)
+  PreviouseChecklist = Struct.new(:id, :name, :items) do
+    def initialize(id, name, items = [])
+      super(id, name, items)
+    end
+
+    def add_checklist(item)
+      items << item
+    end
+  end
+
+  # def update_annotation_notification(step, updated_step)
+  #   # step description
+  #   smart_annotation_notification(
+  #     old_text:
+  #     new_text: updated_step.description,
+  #     title: t('notifications.step_description_title'),
+  #     message: t('notifications.step_description_message')
+  #   )
+  #   # checklists
+  #   updated_step.checklists.each do |checklist|
+  #     smart_annotation_notification(
+  #
+  #       new_text: checklist.name,
+  #       title: t('notifications.checklist_title'),
+  #       message: t('notifications.checklist_message')
+  #     )
+  #     checklist.checklist_items.each do |checklist_item|
+  #       smart_annotation_notification(
+  #         new_text: checklist_item.text,
+  #         title: t('notifications.checklist_item_title'),
+  #         message: t('notifications.checklist_item_message')
+  #       )
+  #     end
+  #   end
+  # end
 end

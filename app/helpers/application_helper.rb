@@ -58,13 +58,30 @@ module ApplicationHelper
       !@experiment.nil?
   end
 
-  def smart_annotation_notification(text, title, message)
+  def smart_annotation_notification(options = {})
+    title = options.fetch(:title) { :title_must_be_present }
+    message = options.fetch(:message) { :message_must_be_present }
+    new_text = options.fetch(:new_text) { :new_text_must_be_present }
+    old_text = options[:old_text] || ''
     sa_user = /\[\@(.*?)~([0-9a-zA-Z]+)\]/
-    annotated_users = []
-    text.gsub(sa_user) do |el|
+
+    old_user_ids = []
+    old_text.gsub(sa_user) do |el|
       match = el.match(sa_user)
-      annotated_users << match[2].base62_decode
+      old_user_ids << match[2].base62_decode
     end
+
+    new_user_ids = []
+    new_text.gsub(sa_user) do |el|
+      match = el.match(sa_user)
+      new_user_ids << match[2].base62_decode
+    end
+
+    annotated_users = []
+    new_user_ids.each do |el|
+      annotated_users << el unless old_user_ids.include?(el)
+    end
+
     annotated_users.uniq.each do |user_id|
       target_user = User.find_by_id(user_id)
       next unless target_user
