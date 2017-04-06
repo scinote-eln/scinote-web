@@ -77,7 +77,7 @@
 
           renderFormError(undefined,
                           $(li).find('.text-edit'),
-                          Object.keys(msg)[0] + ' ' + msg.name.toString());
+                          msg.name.toString());
           setTimeout(function() {
             $(li).clearFormErrors();
           }, 5000);
@@ -107,7 +107,7 @@
       var msg = $.parseJSON(error.responseText);
       renderFormError(ev,
                       $(this).find('#name-input'),
-                      Object.keys(msg)[0] + ' '+ msg.name.toString());
+                      msg.name.toString());
     });
   }
 
@@ -138,7 +138,7 @@
       var msg = $.parseJSON(error.responseText);
       renderFormError(ev,
                       $(this).find('#name-input'),
-                      Object.keys(msg)[0] + ' '+ msg.name.toString());
+                      msg.name.toString());
     });
   }
 
@@ -170,7 +170,7 @@
             var msg = $.parseJSON(error.responseText);
             renderFormError(ev,
                             $(this).find('#sample_type_name'),
-                            Object.keys(msg)[0] + ' '+ msg.name.toString());
+                            msg.name.toString());
           });
         },
         error: function (e) {
@@ -179,7 +179,7 @@
 
           renderFormError(undefined,
                           $(li).find('.text-edit'),
-                          Object.keys(msg)[0] + ' ' + msg.name.toString());
+                          msg.name.toString());
           setTimeout(function() {
             $(li).clearFormErrors();
           }, 5000);
@@ -222,7 +222,7 @@
             var msg = $.parseJSON(error.responseText);
             renderFormError(ev,
                             $(this).find('#sample_group_name'),
-                            Object.keys(msg)[0] + ' '+ msg.name.toString());
+                            msg.name.toString());
           });
         },
         error: function (e) {
@@ -231,7 +231,7 @@
 
           renderFormError(undefined,
                           $(li).find('.text-edit'),
-                          Object.keys(msg)[0] + ' ' + msg.name.toString());
+                          msg.name.toString());
           setTimeout(function() {
             $(li).clearFormErrors();
           }, 5000);
@@ -254,7 +254,7 @@
 
           renderFormError(undefined,
                           $(li).find('.text-edit'),
-                          Object.keys(msg)[0] + ' ' + msg.name.toString());
+                          msg.name.toString());
           setTimeout(function() {
             $(li).clearFormErrors();
           }, 5000);
