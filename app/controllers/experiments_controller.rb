@@ -3,6 +3,9 @@ class ExperimentsController < ApplicationController
   include PermissionHelper
   include TeamsHelper
   include InputSanitizeHelper
+  include ActionView::Helpers::TextHelper
+  include ApplicationHelper
+  include Rails.application.routes.url_helpers
 
   before_action :set_experiment,
                 except: [:new, :create]
@@ -43,6 +46,8 @@ class ExperimentsController < ApplicationController
     @experiment.last_modified_by = current_user
     @experiment.project = @project
     if @experiment.save
+
+      experiment_annotation_notification
       Activity.create(
         type_of: :create_experiment,
         project: @experiment.project,
@@ -87,9 +92,12 @@ class ExperimentsController < ApplicationController
   end
 
   def update
+    old_text = @experiment.description
     @experiment.update_attributes(experiment_params)
     @experiment.last_modified_by = current_user
     if @experiment.save
+
+      experiment_annotation_notification(old_text)
       Activity.create(
         type_of: :edit_experiment,
         project: @experiment.project,
@@ -345,5 +353,20 @@ class ExperimentsController < ApplicationController
 
   def choose_layout
     action_name.in?(%w(index archive)) ? 'main' : 'fluid'
+  end
+
+  def experiment_annotation_notification(old_text = nil)
+    smart_annotation_notification(
+      old_text: old_text,
+      new_text: @experiment.description,
+      title: t('notifications.experiment_annotation_title',
+               experiment: @experiment.name,
+               user: current_user.full_name),
+      message: t('notifications.experiment_annotation_message_html',
+                 project: link_to(@experiment.project.name,
+                                  project_url(@experiment.project)),
+                 experiment: link_to(@experiment.name,
+                                     canvas_experiment_url(@experiment)))
+    )
   end
 end

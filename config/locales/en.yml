@@ -1516,6 +1516,8 @@ en:
       recent_changes: "Recent changes"
       system_message: "sciNote system message"
       deliver: 'Exportable content'
+    experiment_annotation_title: "%{user} mentioned you in %{experiment} experiment."
+    experiment_annotation_message_html: "Project: %{project} | Experiment: %{experiment}"
     project_comment_annotation_title: "%{user} mentioned you in %{project} project comment."
     project_annotation_message_html: "Project: %{project}"
     my_module_comment_annotation_title: "%{user} mentioned you in %{my_module} task comment."
