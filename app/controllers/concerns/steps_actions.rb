@@ -1,7 +1,7 @@
 module StepsActions
   extend ActiveSupport::Concern
   # generates notification for smart annotations
-  def create_annotation_notification(step)
+  def create_annotation_notifications(step)
     # step description
     step_description_annotation(step)
     # checklists
@@ -19,14 +19,14 @@ module StepsActions
 
     if new_checklists
       new_checklists.each do |e|
-        list = PreviouseChecklist.new(
+        list = PreviousChecklist.new(
           e.second[:id].to_i,
           e.second[:name]
         )
         if e.second[:checklist_items_attributes]
           e.second[:checklist_items_attributes].each do |el|
             list.add_checklist(
-              PreviouseChecklistItem.new(el.second[:id].to_i, el.second[:text])
+              PreviousChecklistItem.new(el.second[:id].to_i, el.second[:text])
             )
           end
         end
@@ -40,13 +40,13 @@ module StepsActions
     checklists = []
     if step.checklists
       step.checklists.each do |e|
-        list = PreviouseChecklist.new(
+        list = PreviousChecklist.new(
           e.id,
           e.name
         )
         e.checklist_items.each do |el|
           list.add_checklist(
-            PreviouseChecklistItem.new(el.id, el.text)
+            PreviousChecklistItem.new(el.id, el.text)
           )
         end
         checklists << list
@@ -57,10 +57,10 @@ module StepsActions
 
   # used for step update action it traverse through the input params and
   # generates notifications
-  def update_annotation_notification(step,
-                                     old_description,
-                                     new_checklists,
-                                     old_checklists)
+  def update_annotation_notifications(step,
+                                      old_description,
+                                      new_checklists,
+                                      old_checklists)
     step_description_annotation(step, old_description)
     new_checklists.each do |e|
       # generates smart annotaion if the checklist is new
@@ -137,13 +137,13 @@ module StepsActions
 
     t('notifications.protocol_step_annotation_message_html',
       protocol: link_to(
-        @protocol.name, protocol_steps_url(@protocol)
+        @protocol.name, edit_protocol_url(@protocol)
       ))
   end
 
   # temporary data containers
-  PreviouseChecklistItem = Struct.new(:id, :text)
-  PreviouseChecklist = Struct.new(:id, :name, :items) do
+  PreviousChecklistItem = Struct.new(:id, :text)
+  PreviousChecklist = Struct.new(:id, :name, :items) do
     def initialize(id, name, items = [])
       super(id, name, items)
     end

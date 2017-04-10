@@ -64,7 +64,7 @@ module ApplicationHelper
     new_text = options.fetch(:new_text) { :new_text_must_be_present }
     old_text = options[:old_text] || ''
     sa_user = /\[\@(.*?)~([0-9a-zA-Z]+)\]/
-    # fetch user ids from the previouse text
+    # fetch user ids from the previous text
     old_user_ids = []
     old_text.gsub(sa_user) do |el|
       match = el.match(sa_user)

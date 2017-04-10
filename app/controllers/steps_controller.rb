@@ -57,7 +57,7 @@ class StepsController < ApplicationController
           asset.post_process_file(@protocol.team)
         end
 
-        create_annotation_notification(@step)
+        create_annotation_notifications(@step)
         # Generate activity
         if @protocol.in_module?
           Activity.create(
@@ -162,10 +162,10 @@ class StepsController < ApplicationController
         @step.reload
 
         # generates notification on step upadate
-        update_annotation_notification(@step,
-                                       old_description,
-                                       new_checklists,
-                                       old_checklists)
+        update_annotation_notifications(@step,
+                                        old_description,
+                                        new_checklists,
+                                        old_checklists)
 
         # Release team's space taken
         team = @protocol.team
