@@ -1,5 +1,7 @@
 class SamplesController < ApplicationController
   include InputSanitizeHelper
+  include ActionView::Helpers::TextHelper
+  include ApplicationHelper
 
   before_action :load_vars, only: [:edit, :update, :destroy, :show]
   before_action :load_vars_nested, only: [:new, :create]
@@ -82,6 +84,8 @@ class SamplesController < ApplicationController
               errors[:custom_fields] << {
                 "#{id}": scf.errors.messages
               }
+            else
+              sample_annotation_notification(sample, scf)
             end
           end
         end
@@ -198,6 +202,7 @@ class SamplesController < ApplicationController
             scf = SampleCustomField.where("custom_field_id = ? AND sample_id = ?", id, sample.id).take
 
             if scf
+              old_text = scf.value
               # Well, client was naughty, no XMAS for him this year, update
               # existing SCF instead of creating new one
               scf.value = val
@@ -207,6 +212,8 @@ class SamplesController < ApplicationController
                 errors[:custom_fields] << {
                   "#{id}": scf.errors.messages
                 }
+              else
+                sample_annotation_notification(sample, scf, old_text)
               end
             else
               # SCF doesn't exist, create it
@@ -220,6 +227,8 @@ class SamplesController < ApplicationController
                 errors[:custom_fields] << {
                   "#{id}": scf.errors.messages
                 }
+              else
+                sample_annotation_notification(sample, scf)
               end
             end
           end
@@ -235,6 +244,7 @@ class SamplesController < ApplicationController
               if val.empty?
                 scf_to_delete << scf
               else
+                old_text = scf.value
                 # SCF exists, update away
                 scf.value = val
 
@@ -242,6 +252,8 @@ class SamplesController < ApplicationController
                   errors[:sample_custom_fields] << {
                     "#{id}": scf.errors.messages
                   }
+                else
+                  sample_annotation_notification(sample, scf, old_text)
                 end
               end
             else
@@ -329,6 +341,21 @@ class SamplesController < ApplicationController
       :name,
       :sample_type_id,
       :sample_group_id
+    )
+  end
+
+  def sample_annotation_notification(sample, scf, old_text = nil)
+    table_url = params.fetch(:request_url) { :request_url_must_be_present }
+    smart_annotation_notification(
+      old_text: (old_text if old_text),
+      new_text: scf.value,
+      title: t('notifications.sample_annotation_title',
+               user: current_user.full_name,
+               column: scf.custom_field.name,
+               sample: sample.name),
+      message: t('notifications.sample_annotation_message_html',
+                 sample: link_to(sample.name, table_url),
+                 column: link_to(scf.custom_field.name, table_url))
     )
   end
 end

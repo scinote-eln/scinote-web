@@ -49,6 +49,7 @@ class ResultCommentsController < ApplicationController
     respond_to do |format|
       if @comment.save
 
+        result_comment_annotation_notification
         # Generate activity
         Activity.create(
           type_of: :add_comment_to_result,
@@ -100,10 +101,13 @@ class ResultCommentsController < ApplicationController
   end
 
   def update
+    old_text = @comment.message
     @comment.message = comment_params[:message]
     respond_to do |format|
       format.json do
         if @comment.save
+
+          result_comment_annotation_notification(old_text)
           # Generate activity
           Activity.create(
             type_of: :edit_result_comment,
@@ -192,4 +196,22 @@ class ResultCommentsController < ApplicationController
     params.require(:comment).permit(:message)
   end
 
+  def result_comment_annotation_notification(old_text = nil)
+    smart_annotation_notification(
+      old_text: (old_text if old_text),
+      new_text: @comment.message,
+      title: t('notifications.result_comment_annotation_title',
+               result: @result.name,
+               user: current_user.full_name),
+      message: t('notifications.result_annotation_message_html',
+                 project: link_to(@result.my_module.experiment.project.name,
+                                  project_url(@result.my_module
+                                                   .experiment
+                                                   .project)),
+                 my_module: link_to(@result.my_module.name,
+                                    protocols_my_module_url(
+                                      @result.my_module
+                                    )))
+    )
+  end
 end

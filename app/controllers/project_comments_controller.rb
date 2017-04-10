@@ -2,6 +2,7 @@ class ProjectCommentsController < ApplicationController
   include ActionView::Helpers::TextHelper
   include InputSanitizeHelper
   include ApplicationHelper
+  include Rails.application.routes.url_helpers
 
   before_action :load_vars
   before_action :check_view_permissions, only: :index
@@ -50,6 +51,7 @@ class ProjectCommentsController < ApplicationController
 
     respond_to do |format|
       if @comment.save
+        project_comment_annotation_notification
         # Generate activity
         Activity.create(
           type_of: :add_comment_to_project,
@@ -99,10 +101,13 @@ class ProjectCommentsController < ApplicationController
   end
 
   def update
+    old_text = @comment.message
     @comment.message = comment_params[:message]
     respond_to do |format|
       format.json do
         if @comment.save
+
+          project_comment_annotation_notification(old_text)
           # Generate activity
           Activity.create(
             type_of: :edit_project_comment,
@@ -184,5 +189,17 @@ class ProjectCommentsController < ApplicationController
 
   def comment_params
     params.require(:comment).permit(:message)
+  end
+
+  def project_comment_annotation_notification(old_text = nil)
+    smart_annotation_notification(
+      old_text: old_text,
+      new_text: @comment.message,
+      title: t('notifications.project_comment_annotation_title',
+               project: @project.name,
+               user: current_user.full_name),
+      message: t('notifications.project_annotation_message_html',
+                 project: link_to(@project.name, project_url(@project)))
+    )
   end
 end

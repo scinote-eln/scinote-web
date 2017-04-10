@@ -1,5 +1,8 @@
 class ResultTextsController < ApplicationController
   include ResultsHelper
+  include ActionView::Helpers::UrlHelper
+  include ApplicationHelper
+  include Rails.application.routes.url_helpers
 
   before_action :load_vars, only: [:edit, :update, :download]
   before_action :load_vars_nested, only: [:new, :create]
@@ -38,6 +41,8 @@ class ResultTextsController < ApplicationController
 
     respond_to do |format|
       if (@result.save and @result_text.save) then
+
+        result_annotation_notification
         # Generate activity
         Activity.create(
           type_of: :add_result,
@@ -88,6 +93,7 @@ class ResultTextsController < ApplicationController
   end
 
   def update
+    old_text = @result_text.text
     update_params = result_params
     @result.last_modified_by = current_user
     @result.assign_attributes(update_params)
@@ -129,6 +135,9 @@ class ResultTextsController < ApplicationController
         )
       end
     end
+
+    result_annotation_notification(old_text) if saved
+
     respond_to do |format|
       if saved
         format.html {
@@ -208,5 +217,22 @@ class ResultTextsController < ApplicationController
     )
   end
 
+  def result_annotation_notification(old_text = nil)
+    smart_annotation_notification(
+      old_text: (old_text if old_text),
+      new_text: @result_text.text,
+      title: t('notifications.result_annotation_title',
+               result: @result.name,
+               user: current_user.full_name),
+      message: t('notifications.result_annotation_message_html',
+                 project: link_to(@result.my_module.experiment.project.name,
+                                  project_url(@result.my_module
+                                                   .experiment
+                                                   .project)),
+                 my_module: link_to(@result.my_module.name,
+                                    protocols_my_module_url(
+                                      @result.my_module
+                                    )))
+    )
+  end
 end
-

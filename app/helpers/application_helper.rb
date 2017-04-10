@@ -58,6 +58,50 @@ module ApplicationHelper
       !@experiment.nil?
   end
 
+  def smart_annotation_notification(options = {})
+    title = options.fetch(:title) { :title_must_be_present }
+    message = options.fetch(:message) { :message_must_be_present }
+    new_text = options.fetch(:new_text) { :new_text_must_be_present }
+    old_text = options[:old_text] || ''
+    sa_user = /\[\@(.*?)~([0-9a-zA-Z]+)\]/
+    # fetch user ids from the previous text
+    old_user_ids = []
+    old_text.gsub(sa_user) do |el|
+      match = el.match(sa_user)
+      old_user_ids << match[2].base62_decode
+    end
+    # fetch user ids from the new text
+    new_user_ids = []
+    new_text.gsub(sa_user) do |el|
+      match = el.match(sa_user)
+      new_user_ids << match[2].base62_decode
+    end
+    # check if the user has been already mentioned
+    annotated_users = []
+    new_user_ids.each do |el|
+      annotated_users << el unless old_user_ids.include?(el)
+    end
+    # restrict the list of ids and generate notification
+    annotated_users.uniq.each do |user_id|
+      target_user = User.find_by_id(user_id)
+      next unless target_user
+      generate_annotation_notification(target_user, title, message)
+    end
+  end
+
+  def generate_annotation_notification(target_user, title, message)
+    notification = Notification.create(
+      type_of: :assignment,
+      title:
+        ActionController::Base.helpers.sanitize(title),
+      message:
+        ActionController::Base.helpers.sanitize(message)
+    )
+    if target_user.assignments_notification
+      UserNotification.create(notification: notification, user: target_user)
+    end
+  end
+
   def smart_annotation_parser(text, team = nil)
     new_text = smart_annotation_filter_resources(text)
     new_text = smart_annotation_filter_users(new_text, team)

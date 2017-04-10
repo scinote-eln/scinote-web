@@ -1,6 +1,7 @@
 class StepsController < ApplicationController
   include ActionView::Helpers::TextHelper
   include ApplicationHelper
+  include StepsActions
 
   before_action :load_vars, only: [:edit, :update, :destroy, :show]
   before_action :load_vars_nested, only: [:new, :create]
@@ -56,6 +57,7 @@ class StepsController < ApplicationController
           asset.post_process_file(@protocol.team)
         end
 
+        create_annotation_notifications(@step)
         # Generate activity
         if @protocol.in_module?
           Activity.create(
@@ -129,6 +131,9 @@ class StepsController < ApplicationController
 
   def update
     respond_to do |format|
+      old_description = @step.description
+      old_checklists = fetch_old_checklists_data(@step)
+      new_checklists = fetch_new_checklists_data
       previous_size = @step.space_taken
 
       step_params_all = step_params
@@ -155,6 +160,12 @@ class StepsController < ApplicationController
 
       if @step.save
         @step.reload
+
+        # generates notification on step upadate
+        update_annotation_notifications(@step,
+                                        old_description,
+                                        new_checklists,
+                                        old_checklists)
 
         # Release team's space taken
         team = @protocol.team

@@ -2,6 +2,7 @@ class StepCommentsController < ApplicationController
   include ActionView::Helpers::TextHelper
   include InputSanitizeHelper
   include ApplicationHelper
+  include Rails.application.routes.url_helpers
 
   before_action :load_vars
 
@@ -47,6 +48,8 @@ class StepCommentsController < ApplicationController
 
     respond_to do |format|
       if @comment.save
+
+        step_comment_annotation_notification
         # Generate activity (this can only occur in module,
         # but nonetheless check if my module is not nil)
         if @protocol.in_module?
@@ -101,10 +104,13 @@ class StepCommentsController < ApplicationController
   end
 
   def update
+    old_text = @comment.message
     @comment.message = comment_params[:message]
     respond_to do |format|
       format.json do
         if @comment.save
+
+          step_comment_annotation_notification(old_text)
           # Generate activity
           if @protocol.in_module?
             Activity.create(
@@ -197,5 +203,26 @@ class StepCommentsController < ApplicationController
 
   def comment_params
     params.require(:comment).permit(:message)
+  end
+
+  def step_comment_annotation_notification(old_text = nil)
+    smart_annotation_notification(
+      old_text: (old_text if old_text),
+      new_text: comment_params[:message],
+      title: t('notifications.step_comment_annotation_title',
+               step: @step.name,
+               user: current_user.full_name),
+      message: t('notifications.step_annotation_message_html',
+                 project: link_to(@step.my_module.experiment.project.name,
+                                  project_url(@step.my_module
+                                                   .experiment
+                                                   .project)),
+                 my_module: link_to(@step.my_module.name,
+                                    protocols_my_module_url(
+                                      @step.my_module
+                                    )),
+                 step: link_to(@step.name,
+                               protocols_my_module_url(@step.my_module)))
+    )
   end
 end
