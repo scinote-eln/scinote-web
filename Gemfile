@@ -46,7 +46,8 @@ gem 'commit_param_routing' # Enables different submit actions in the same form t
 gem 'kaminari'
 gem "i18n-js", ">= 3.0.0.rc11" # Localization in javascript files
 gem 'roo', '~> 2.1.0' # Spreadsheet parser
-gem 'wicked_pdf'
+gem 'wicked_pdf', '>= 1.1'
+gem 'silencer' # Silence certain Rails logs
 gem 'wkhtmltopdf-heroku'
 gem 'remotipart', '~> 1.2' # Async file uploads
 gem 'faker' # Generate fake data
