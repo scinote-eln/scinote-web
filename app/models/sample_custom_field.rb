@@ -1,4 +1,6 @@
 class SampleCustomField < ActiveRecord::Base
+  include SearchableModel
+
   auto_strip_attributes :value, nullify: false
   validates :value,
             presence: true,

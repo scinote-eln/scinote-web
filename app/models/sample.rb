@@ -26,8 +26,8 @@ class Sample < ActiveRecord::Base
   )
     team_ids = Team.joins(:user_teams)
                    .where('user_teams.user_id = ?', user.id)
-                   .select('id')
                    .distinct
+                   .pluck(:id)
 
     if query
       a_query = '%' + query.strip.gsub('_', '\\_').gsub('%', '\\%') + '%'
@@ -43,6 +43,33 @@ class Sample < ActiveRecord::Base
 
       return new_query
     else
+      user_ids = User
+                 .joins(:user_teams)
+                 .where('user_teams.team_id IN (?)', team_ids)
+                 .where_attributes_like(['users.full_name'], a_query)
+                 .pluck(:id)
+
+      sample_ids = Sample
+                   .joins(:user)
+                   .where('team_id IN (?)', team_ids)
+                   .where_attributes_like(['name'], a_query)
+                   .pluck(:id)
+
+      sample_type_ids = SampleType
+                        .where('team_id IN (?)', team_ids)
+                        .where_attributes_like(['name'], a_query)
+                        .pluck(:id)
+
+      sample_group_ids = SampleGroup
+                         .where('team_id IN (?)', team_ids)
+                         .where_attributes_like(['name'], a_query)
+                         .pluck(:id)
+
+      sample_custom_fields = SampleCustomField
+                             .joins(:sample)
+                             .where('samples.team_id IN (?)', team_ids)
+                             .where_attributes_like(['value'], a_query)
+                             .pluck(:id)
       new_query = Sample
                   .distinct
                   .joins(:user)
@@ -52,17 +79,12 @@ class Sample < ActiveRecord::Base
                          'samples.sample_group_id = sample_groups.id')
                   .joins('LEFT OUTER JOIN sample_custom_fields ON ' \
                          'samples.id = sample_custom_fields.sample_id')
-                  .where('samples.team_id IN (?)', team_ids)
-                  .where_attributes_like(
-                    [
-                      'samples.name',
-                      'sample_types.name',
-                      'sample_groups.name',
-                      'users.full_name',
-                      'sample_custom_fields.value'
-                    ],
-                    a_query
-                  )
+                  .where('samples.user_id IN (?) OR samples.id IN (?) ' \
+                         'OR sample_types.id IN (?) ' \
+                         'OR sample_groups.id IN (?)' \
+                         'OR sample_custom_fields.id IN (?)',
+                         user_ids, sample_ids, sample_type_ids,
+                         sample_group_ids, sample_custom_fields)
     end
     # Show all results if needed
     if page == Constants::SEARCH_NO_LIMIT

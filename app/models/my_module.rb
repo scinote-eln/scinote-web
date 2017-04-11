@@ -52,7 +52,7 @@ class MyModule < ActiveRecord::Base
     exp_ids =
       Experiment
       .search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
-      .select("id")
+      .pluck(:id)
 
     if query
       a_query = '%' + query.strip.gsub('_', '\\_').gsub('%', '\\%') + '%'
@@ -71,7 +71,7 @@ class MyModule < ActiveRecord::Base
       new_query = MyModule
                   .distinct
                   .where('my_modules.experiment_id IN (?)', experiments_ids)
-                  .where_attributes_like([:name], a_query)
+                  .where_attributes_like([:name, :description], a_query)
 
       if include_archived
         return new_query

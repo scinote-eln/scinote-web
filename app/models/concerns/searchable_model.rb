@@ -22,19 +22,13 @@ module SearchableModel
 
       if query.is_a? Array
 
-        rich_text_regex = '<*strong>|<*href>|<*div>|' \
-        '<*link>|<*span>|<%class%>|<%href%>|' \
-        '<%data%>|<*sub>|<*sup>|<*blockquote>|<*li>|' \
-        '<%style%>|<*ol>|<*ul>|<*pre>'
-
-        if attrs.length > 0
+        unless attrs.empty?
           where_str =
             (attrs.map.with_index do |a, i|
-              "REGEXP_REPLACE(#{a}, E'#{rich_text_regex}','', 'g')" \
-              "ILIKE ANY (array[ :t#{i}]) OR "
+              "(trim_html_tags(#{a})) ILIKE ANY (array[ :t#{i}]) OR "
             end
             ).join[0..-5]
-          vals = (attrs.map.with_index do |a, i|
+          vals = (attrs.map.with_index do |_, i|
                     ["t#{i}".to_sym, query]
                   end
                  ).to_h
@@ -42,14 +36,14 @@ module SearchableModel
           return where(where_str, vals)
         end
       else
-        if attrs.length > 0
+        unless attrs.empty?
           where_str =
             (attrs.map.with_index do |a, i|
-              "REGEXP_REPLACE(#{a}, E'#{rich_text_regex}'," \
-              " '', 'g' ) ILIKE :t#{i} OR "
+              "(trim_html_tags(#{a})) ILIKE :t#{i} OR "
             end
             ).join[0..-5]
-          vals = (attrs.map.with_index { |a,i| [ "t#{i}".to_sym, "%#{query}%" ] }).to_h
+          vals = (attrs.map.with_index { |_, i| ["t#{i}".to_sym, query.to_s] })
+                 .to_h
 
           return where(where_str, vals)
         end

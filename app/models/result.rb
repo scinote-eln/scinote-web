@@ -33,7 +33,7 @@ class Result < ActiveRecord::Base
     module_ids =
       MyModule
       .search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
-      .select("id")
+      .pluck(:id)
 
     if query
       a_query = query.strip

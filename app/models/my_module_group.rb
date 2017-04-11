@@ -15,7 +15,7 @@ class MyModuleGroup < ActiveRecord::Base
     exp_ids =
       Experiment
       .search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
-      .select("id")
+      .pluck(:id)
 
 
     if query

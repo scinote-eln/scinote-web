@@ -1,4 +1,6 @@
 class SampleGroup < ActiveRecord::Base
+  include SearchableModel
+
   auto_strip_attributes :name, :color, nullify: false
   validates :name,
             presence: true,

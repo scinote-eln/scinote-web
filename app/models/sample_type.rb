@@ -1,4 +1,6 @@
 class SampleType < ActiveRecord::Base
+  include SearchableModel
+
   auto_strip_attributes :name, nullify: false
   validates :name,
             presence: true,

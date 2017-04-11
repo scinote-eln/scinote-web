@@ -26,6 +26,14 @@ module DatabaseHelper
     )
   end
 
+  # Create gin trigram index with filtered out html tags. PostgreSQL only!
+  def add_gin_index_without_tags(table, column)
+    ActiveRecord::Base.connection.execute(
+      "CREATE INDEX index_#{table}_on_#{column} ON " \
+      "#{table} USING gin ((trim_html_tags(#{column})) gin_trgm_ops);"
+    )
+  end
+
   # Get size of whole table & its indexes
   # (in bytes). PostgreSQL only!
   def get_table_size(table)
