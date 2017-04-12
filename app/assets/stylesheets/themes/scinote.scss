@@ -16,6 +16,7 @@ body,
 table.dataTable td {
   text-overflow: ellipsis;
   word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 // All tables are fixed, except for table of "datatables.js"
