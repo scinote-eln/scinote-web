@@ -26,15 +26,15 @@ class Table < ActiveRecord::Base
       Step
       .search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
       .joins(:step_tables)
-      .select("step_tables.id")
       .distinct
+      .pluck('step_tables.id')
 
     result_ids =
       Result
       .search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
       .joins(:result_table)
-      .select("result_tables.id")
       .distinct
+      .pluck('result_tables.id')
 
     if query
       a_query = query.strip
@@ -66,7 +66,7 @@ class Table < ActiveRecord::Base
       .joins("LEFT OUTER JOIN results ON result_tables.result_id = results.id")
       .where("step_tables.id IN (?) OR result_tables.id IN (?)", step_ids, result_ids)
       .where(
-        '(tables.name ILIKE ANY (array[?])'\
+        '(trim_html_tags(tables.name) ILIKE ANY (array[?])'\
         'OR tables.data_vector @@ to_tsquery(?))',
         a_query,
         s_query

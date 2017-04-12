@@ -97,15 +97,15 @@ class Asset < ActiveRecord::Base
       Step
       .search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
       .joins(:step_assets)
-      .select("step_assets.id")
       .distinct
+      .pluck('step_assets.id')
 
     result_ids =
       Result
       .search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
       .joins(:result_asset)
-      .select("result_assets.id")
       .distinct
+      .pluck('result_assets.id')
 
     if query
       a_query = query.strip

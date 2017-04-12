@@ -20,7 +20,7 @@ class Tag < ActiveRecord::Base
     project_ids =
       Project
       .search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
-      .select("id")
+      .pluck(:id)
 
     if query
       a_query = query.strip

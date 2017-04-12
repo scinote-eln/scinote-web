@@ -20,19 +20,19 @@ class Comment < ActiveRecord::Base
     project_ids =
       Project
       .search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
-      .select(:id)
+      .pluck(:id)
     my_module_ids =
       MyModule
       .search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
-      .select(:id)
+      .pluck(:id)
     step_ids =
       Step
       .search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
-      .select(:id)
+      .pluck(:id)
     result_ids =
       Result
       .search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
-      .select(:id)
+      .pluck(:id)
 
     if query
       a_query = query.strip
@@ -57,7 +57,7 @@ class Comment < ActiveRecord::Base
                step_ids, 'StepComment',
                result_ids, 'ResultComment'
              )
-             .where_attributes_like([:message, 'users.full_name'], a_query)
+             .where_attributes_like(['message', 'users.full_name'], a_query)
 
     # Show all results if needed
     if page == Constants::SEARCH_NO_LIMIT

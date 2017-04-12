@@ -109,14 +109,14 @@ class Protocol < ActiveRecord::Base
   def self.search(user, include_archived, query = nil, page = 1)
     team_ids = Team.joins(:user_teams)
                    .where('user_teams.user_id = ?', user.id)
-                   .select('id')
                    .distinct
+                   .pluck(:id)
 
     module_ids = MyModule.search(user,
                                  include_archived,
                                  nil,
                                  Constants::SEARCH_NO_LIMIT)
-                         .select('id')
+                         .pluck(:id)
 
     where_str =
       '(protocol_type IN (?) AND my_module_id IN (?)) OR ' \

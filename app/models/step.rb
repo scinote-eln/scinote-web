@@ -45,7 +45,7 @@ class Step < ActiveRecord::Base
     protocol_ids =
       Protocol
       .search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
-      .select("id")
+      .pluck(:id)
 
     if query
       a_query = query.strip
