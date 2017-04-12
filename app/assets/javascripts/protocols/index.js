@@ -212,6 +212,7 @@ function initProtocolPreviewModal() {
           initHandsOnTable(modalBody);
           modal.modal("show");
           initHandsOnTable(modalBody);
+          initPreviewModal();
         },
         error: function (error) {
           // TODO
