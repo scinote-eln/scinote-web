@@ -62,7 +62,8 @@ class ZipExport < ActiveRecord::Base
     CSV.open(file, 'wb') do |csv|
       csv << attributes
       records.find_each do |entity|
-        csv << entity.audit_record.values_at(*attributes.map(&:to_sym))
+        csv << entity.audit_record(formated: false)
+                     .values_at(*attributes.map(&:to_sym))
       end
     end
   end
