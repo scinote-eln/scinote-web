@@ -147,8 +147,15 @@ function initUpdateRoles() {
     "ajax:success",
     "[data-id='update-role-form']",
     function (e, data, status, xhr) {
-      // Reload the whole table
-      usersDatatable.ajax.reload();
+      // If user does'n have permission to view the team anymore
+      // he/she is redirected to teams page
+      if (data.new_path) {
+        location.replace(data.new_path);
+      }
+      else {
+        // Reload the whole table
+        usersDatatable.ajax.reload();
+      }
     }
   )
   .on(
