@@ -68,9 +68,8 @@ en:
       logout: "Log out"
     help:
       tutorials: "Tutorials"
-      faq: "FAQ"
       release_notes: "Release notes"
-      support: "Support"
+      support: "Customer support"
       premium: "Premium"
       contact: "Contact us"
     activities:

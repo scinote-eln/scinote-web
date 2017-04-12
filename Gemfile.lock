@@ -188,6 +188,7 @@ GEM
       coffee-rails (>= 3.2.1)
       jquery-rails
       rails (>= 3.2.0)
+    newrelic_rpm (4.0.0.332)
     nokogiri (1.6.8)
       mini_portile2 (~> 2.1.0)
       pkg-config (~> 1.1.7)
@@ -370,6 +371,7 @@ DEPENDENCIES
   minitest-reporters (~> 1.1)
   momentjs-rails (>= 2.9.0)
   nested_form_fields
+  newrelic_rpm
   nokogiri
   paperclip (~> 4.3)
   pg
