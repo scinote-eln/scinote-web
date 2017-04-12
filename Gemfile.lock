@@ -280,6 +280,7 @@ GEM
     shoulda-context (1.2.1)
     shoulda-matchers (3.1.1)
       activesupport (>= 4.0.0)
+    silencer (1.0.1)
     simple_token_authentication (1.14.0)
       actionmailer (>= 3.2.6, < 6)
       actionpack (>= 3.2.6, < 6)
@@ -388,6 +389,7 @@ DEPENDENCIES
   sdoc (~> 0.4.0)
   shoulda-context
   shoulda-matchers (>= 3.0.1)
+  silencer
   simple_token_authentication (~> 1.0)
   skylight
   sneaky-save!
@@ -402,5 +404,8 @@ DEPENDENCIES
   wkhtmltopdf-heroku
   yomu
 
+RUBY VERSION
+   ruby 2.3.3p222
+
 BUNDLED WITH
-   1.11.2
+   1.14.6
