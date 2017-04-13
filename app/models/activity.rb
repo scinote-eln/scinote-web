@@ -82,6 +82,13 @@ class Activity < ActiveRecord::Base
                              .url_helpers
                              .project_path(project)}'>
                   #{project.name}</a>"
+    experiment_m = "| #{I18n.t('search.index.experiment')}
+              <a href='#{Rails
+                          .application
+                          .routes
+                          .url_helpers
+                          .canvas_experiment_path(my_module.experiment)}'>
+              #{my_module.experiment.name}</a>" if my_module.experiment
     task_m = "| #{I18n.t('search.index.module')}
               <a href='#{Rails
                           .application
@@ -97,7 +104,8 @@ class Activity < ActiveRecord::Base
       message:
       ActionController::Base
         .helpers.sanitize(
-          "#{I18n.t('search.index.project')} #{project_m} #{task_m}",
+          "#{I18n.t('search.index.project')}
+          #{project_m} #{experiment_m} #{task_m}",
           tags: %w(strong a)
         ),
       generator_user_id: user.id
