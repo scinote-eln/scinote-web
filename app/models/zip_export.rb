@@ -67,7 +67,7 @@ class ZipExport < ActiveRecord::Base
   def method_missing(m, *args, &block)
     puts 'Method is missing! To use this zip_export you have to ' \
          'define a method: generate_( type )_zip.'
-    object.public_send(m, *args, &block)
+    super
   end
 
   def respond_to_missing?(method_name, include_private = false)
