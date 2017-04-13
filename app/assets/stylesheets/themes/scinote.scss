@@ -667,8 +667,31 @@ a[data-toggle="tooltip"] {
   margin-bottom: 50px;
   margin-top: 50px;
 
-  .col-md-4 {
-    margin-top: 15px;
+  h4 {
+    font-weight: 600;
+    margin-bottom: 2rem;
+  }
+
+  .col-sm-4 {
+    padding-left: 5rem;
+    padding-top: .5rem;
+    word-break: break-word;
+  }
+
+  .col-sm-2 {
+    padding-left: 3rem;
+    padding-top: .7rem;
+  }
+
+  @media (max-width: 768px) {
+    .col-sm-4 {
+      margin-bottom: 1rem;
+      padding-left: 1.8rem;
+    }
+
+    .col-sm-2 {
+      padding-left: 1.8rem;
+    }
   }
 
   .btn-group {
@@ -679,28 +702,31 @@ a[data-toggle="tooltip"] {
     background-color: $color-theme-primary;
     border-radius: 50%;
     color: $color-wild-sand;
+    display: block !important;
     font-size: 15px;
-    margin-left: 20px;
+    height: 30px;
     margin-right: 15px;
     padding: 7px;
     padding-bottom: 5px;
     padding-top: 5px;
+    width: 30px;
   }
 
   .system-message {
     background-color: $color-theme-secondary;
     border-radius: 50%;
     color: $color-wild-sand;
+    display: block !important;
     font-size: 15px;
-    margin-left: 20px;
-    margin-right: 15px;
+    height: 30px;
+    margin-right: 15px;  
     padding: 8px;
     padding-bottom: 5px;
     padding-top: 5px;
+    width: 30px;
   }
 
   .img-circle {
-    margin-left: 20px;
     margin-right: 15px;
   }
 }
