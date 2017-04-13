@@ -1,6 +1,20 @@
 require 'zip'
 require 'fileutils'
 
+# To use ZipExport you have to define the generate_( type )_zip method!
+# Example:
+#   def generate_(type)_zip(tmp_dir, data, options = {})
+#     attributes = options.fetch(:attributes) { :attributes_missing }
+#     file = FileUtils.touch("#{tmp_dir}/export.csv").first
+#     records = data
+#     CSV.open(file, 'wb') do |csv|
+#       csv << attributes
+#       records.find_each do |entity|
+#         csv << entity.values_at(*attributes.map(&:to_sym))
+#       end
+#     end
+#   end
+
 class ZipExport < ActiveRecord::Base
   belongs_to :user
   has_attached_file :zip_file
@@ -48,24 +62,16 @@ class ZipExport < ActiveRecord::Base
 
   handle_asynchronously :generate_exportable_zip
 
+  def method_missing(m, *args, &block)
+    puts 'Method is missing! To use this zip_export you have to ' \
+         'define a method: genreate_( type )_zip.'
+    object.send(m, *args, &block)
+  end
+
   private
 
   def fill_content(dir, data, type, options = {})
-    generate_papertrail_csv(dir, data, options) if type == :papertrail
-  end
-
-  def generate_papertrail_csv(tmp_dir, data, options = {})
-    attributes = options.fetch(:attributes) { :attributes_missing }
-    file = FileUtils.touch("#{tmp_dir}/export.csv").first
-    records = PaperTrail::Version.where(data)
-                                 .order(created_at: :desc)
-    CSV.open(file, 'wb') do |csv|
-      csv << attributes
-      records.find_each do |entity|
-        csv << entity.audit_record(formated: false)
-                     .values_at(*attributes.map(&:to_sym))
-      end
-    end
+    eval("generate_#{type}_zip(dir, data, options)")
   end
 
   def generate_notification(user)
