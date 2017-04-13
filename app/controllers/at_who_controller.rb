@@ -3,27 +3,10 @@ class AtWhoController < ApplicationController
   before_action :check_users_permissions
 
   def users
-    # Search users
-    res = @team
-          .search_users(@query)
-          .select(:id, :full_name, :email)
-          .limit(Constants::ATWHO_SEARCH_LIMIT)
-          .as_json
-
-    # Add avatars, Base62, convert to JSON
-    res.each do |user_obj|
-      user_obj['full_name'] =
-        user_obj['full_name']
-        .truncate(Constants::NAME_TRUNCATION_LENGTH_DROPDOWN)
-      id = user_obj['id']
-      user_obj['id'] = id.base62_encode
-      user_obj['img_url'] = avatar_path(id, :icon_small)
-    end
-
     respond_to do |format|
       format.json do
         render json: {
-          users: res,
+          users: generate_users_data,
           status: :ok
         }
       end
@@ -104,5 +87,25 @@ class AtWhoController < ApplicationController
 
   def check_users_permissions
     render_403 unless can_view_team_users(@team)
+  end
+
+  def generate_users_data
+    # Search users
+    res = @team.search_users(@query)
+               .limit(Constants::ATWHO_SEARCH_LIMIT)
+               .pluck(:id, :full_name, :email)
+
+    # Add avatars, Base62, convert to JSON
+    data = []
+    res.each do |obj|
+      tmp = {}
+      tmp['id'] = obj[0].base62_encode
+      tmp['full_name'] = obj[1]
+                           .truncate(Constants::NAME_TRUNCATION_LENGTH_DROPDOWN)
+      tmp['email'] = obj[2]
+      tmp['img_url'] =  avatar_path(obj[0], :icon_small)
+      data << tmp
+    end
+    data
   end
 end

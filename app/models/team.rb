@@ -52,22 +52,10 @@ class Team < ActiveRecord::Base
     end
   end
 
-  def search_users(
-    query = nil,
-    attributes = [:full_name, :email]
-  )
-    if query
-      a_query = query
-                .strip
-                .gsub('_', '\\_')
-                .gsub('%', '\\%')
-    else
-      a_query = query
-    end
-
-    users
-      .where.not(confirmed_at: nil)
-      .where_attributes_like(attributes, a_query)
+  def search_users(query = nil)
+    a_query = "%#{query}%"
+    users.where.not(confirmed_at: nil)
+         .where('full_name LIKE ? OR email LIKE ?', a_query, a_query)
   end
 
   # Imports samples into db
