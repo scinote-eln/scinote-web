@@ -1508,9 +1508,9 @@ en:
       notification_email: 'Notify me via email'
       assignments_description: 'Assignment notifications appear whenever you get assigned to a team, project, task.'
       recent_notification: 'Recent changes'
-      recent_notification_description: 'Recent changes notifications appear whenever there ia a change on a task you are assigned to.'
+      recent_notification_description: 'Recent changes notifications appear whenever there is a change on a task you are assigned to.'
       system_message: 'System message'
-      system_message_description: 'System message notifications appear whenever there is new release of sciNote'
+      system_message_description: 'System message notifications are specifically sent by site maintainers to notify all users about a system update.'
     show_all: "Show all notifications"
     show_more: "Show more notifications"
     no_notifications: "No notifications."
