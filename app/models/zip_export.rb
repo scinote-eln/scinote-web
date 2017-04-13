@@ -62,13 +62,17 @@ class ZipExport < ActiveRecord::Base
 
   handle_asynchronously :generate_exportable_zip
 
+  private
+
   def method_missing(m, *args, &block)
     puts 'Method is missing! To use this zip_export you have to ' \
-         'define a method: genreate_( type )_zip.'
-    object.send(m, *args, &block)
+         'define a method: generate_( type )_zip.'
+    object.public_send(m, *args, &block)
   end
 
-  private
+  def respond_to_missing?(method_name, include_private = false)
+    method_name.to_s.start_with?(' generate_') || super
+  end
 
   def fill_content(dir, data, type, options = {})
     eval("generate_#{type}_zip(dir, data, options)")
