@@ -16,9 +16,15 @@ module Users
       def update
         respond_to do |format|
           if @user_t.update(update_params)
+            # If user is administrator of team,
+            # and he/she changes his/her role
+            # he/she should be redirected to teams page
+            new_path = teams_path if @user_t.user == @current_user &&
+                                     @user_t.role != 'admin'
             format.json do
               render json: {
-                status: :ok
+                status: :ok,
+                new_path: new_path
               }
             end
           else
