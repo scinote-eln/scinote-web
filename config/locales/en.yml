@@ -624,11 +624,11 @@ en:
       error_flash: 'Could not archive the experiment.'
       label_title: 'Archive'
     clone:
-      modal_title: 'Clone experiment %{experiment}'
-      label_title: 'Copy as template (only Protocols steps cloned)'
-      modal_submit: 'Clone'
-      success_flash: "Successfully cloned experiment %{experiment}"
-      error_flash: 'Could not clone the experiment.'
+      modal_title: 'Copy experiment %{experiment} as template'
+      label_title: 'Copy as template (only Protocols steps copied)'
+      modal_submit: 'Copy as template'
+      success_flash: 'Successfully copied experiment %{experiment} as template.'
+      error_flash: 'Could not copy the experiment as template.'
       current_project: '(current project)'
     move:
       modal_title: 'Move experiment %{experiment}'
@@ -666,8 +666,8 @@ en:
         options_header: "Options"
         edit_module: "Rename task"
         edit_module_group: "Rename workflow"
-        clone_module: "Copy task as template (only Protocols steps cloned)"
-        clone_module_group: "Copy workflow as template (only Protocols steps cloned)"
+        clone_module: "Copy task as template (only Protocols steps copied)"
+        clone_module_group: "Copy workflow as template (only Protocols steps copied)"
         move_module: "Move task to another experiment"
         move_module_group: "Move workflow to another experiment"
         delete_module: "Archive task"
@@ -994,7 +994,7 @@ en:
     create_module: "<i>%{user}</i> created task <strong>%{module}</strong>."
     assign_user_to_module: "<i>%{assigned_user}</i> was added to task <strong>%{module}</strong> by <i>%{assigned_by_user}</i>."
     unassign_user_from_module: "<i>%{unassigned_user}</i> was removed from task <strong>%{module}</strong> by <i>%{unassigned_by_user}</i>."
-    clone_module: "<i>%{user}</i> cloned <strong>%{module_new}</strong> from <strong>%{module_original}</strong>."
+    clone_module: "<i>%{user}</i> copied <strong>%{module_new}</strong> from <strong>%{module_original}</strong> as template."
     archive_module: "<i>%{user}</i> moved task <strong>%{module}</strong> to archive."
     restore_module: "<i>%{user}</i> restored task <strong>%{module}</strong> from archive."
     change_module_description: "<i>%{user}</i> changed task <strong>%{module}</strong>'s description."
@@ -1023,7 +1023,7 @@ en:
     archive_experiment: "<i>%{user}</i> archived experiment <strong>%{experiment}</strong>."
     create_experiment: "<i>%{user}</i> created experiment <strong>%{experiment}</strong>."
     edit_experiment: "<i>%{user}</i> edited experiment <strong>%{experiment}</strong>."
-    clone_experiment: "<i>%{user}</i> cloned experiment <strong>%{experiment_new}</strong> from <strong>%{experiment_original}</strong>."
+    clone_experiment: "<i>%{user}</i> copied experiment <strong>%{experiment_new}</strong> from <strong>%{experiment_original}</strong> as template."
     move_experiment: "<i>%{user}</i> moved experiment  <strong>%{experiment}</strong> from project <strong>%{project_original}</strong> to project <strong>%{project_new}</strong>."
     add_comment_to_project: "<i>%{user}</i> commented on project <strong>%{project}</strong>."
     edit_project_comment: "<i>%{user}</i> edited comment on project <strong>%{project}</strong>."
@@ -1277,7 +1277,7 @@ en:
       private_description: "Private protocols are only visible to you."
       create_new: "Create new"
       edit: "Edit"
-      clone_btn: "Clone"
+      clone_btn: "Copy"
       import: "Import"
       export: "Export"
       make_private: "Make private"
@@ -1324,8 +1324,8 @@ en:
         message_private: "When you create a new private protocol, it will only be visible to you."
         submit: "Create"
       clone:
-        success_flash: "Successfully cloned protocol '%{new}' from protocol '%{original}'."
-        error_flash: "Failed to clone protocol '%{original}'."
+        success_flash: "Successfully copied protocol '%{new}' from protocol '%{original}'."
+        error_flash: "Failed to copied protocol '%{original}'."
       make_private_results:
         title: "Make private results"
         message_failed: "Failed to make %{nr} protocols private."
@@ -1476,7 +1476,7 @@ en:
     create_project_html: "Click here to create a Project and it will appear under the Team you've chosen. Choose public <span class='glyphicon glyphicon-eye-open'></span> if you want everyone from the Team to view the Project or choose private <span class='glyphicon glyphicon-eye-close'></span> so only the people who you invite to the Project can see it. <strong>(Step 2/26)</strong>"
     project_options_html: "In the bottom row of the Project card you can check the latest activity <span class='glyphicon glyphicon-equalizer'></span>, invite collaborators <span class='glyphicon glyphicon-user'></span>, see the notifications <span class='glyphicon glyphicon-bell'></span> and write comments <span class='glyphicon glyphicon-comment'></span>. You can also edit the Project's name and visibility or archive it. You can recall the Project from the Archive <span class='glyphicon glyphicon-briefcase'></span> in the top right side of the Dashboard at any time. <strong>(Step 3/26)</strong>"
     create_experiment_html: "Inside of a Project you can create Experiments. To create one click on this button and edit Experiment’s name and description. <strong>(Step 4/26)</strong>"
-    edit_experiment_html: "By clicking on the down arrow <span class='caret'></span> of an Experiment card you can choose between different actions. You can <strong>Edit details</strong> to the Experiment, such as experiment name and description, <strong>Clone</strong> it inside of a Project, where cloned Experiment is identical to the original one, <strong>Move</strong> it from one Project to another or <strong>Archive</strong> it in the Archive <span class='glyphicon glyphicon-briefcase'></span>. <strong>(Step 5/26)</strong>"
+    edit_experiment_html: "By clicking on the down arrow <span class='caret'></span> of an Experiment card you can choose between different actions. You can <strong>Edit details</strong> to the Experiment, such as experiment name and description, <strong>Copy</strong> it as template inside of a Project, where copied Experiment is identical to the original one, <strong>Move</strong> it from one Project to another or <strong>Archive</strong> it in the Archive <span class='glyphicon glyphicon-briefcase'></span>. <strong>(Step 5/26)</strong>"
     canvas_overview_html: "A Task is a basic unit of your Experiment. Within a Task, you can add Protocols, Results or Samples. You can connect Tasks into Workflows to assure traceability of your work. You can grab a Task or entire Workflow and move it in all directions on the canvas. <strong>(Step 6/26)</strong>"
     canvas_click_edit_workflow_html: " Click <strong>Edit experiment</strong> to add new Tasks or to modify an existing Experiment. <strong>(Step 7/26)</strong>"
     edit_workflow_html: "To add a new Task to the Experiment, click on <strong>New task</strong> and drag it onto canvas. <strong>(Step 8/26)</strong>"
@@ -1494,7 +1494,7 @@ en:
     new_report_html: "To add report elements to the report, click on the <strong>—+—</strong> sign on the sheet. Select the report contents in the tabs and click <strong>Add to report</strong>. You can save the report as a PDF on your computer or save it within sciNote for later viewing and modification. <strong>(Step 20/26)</strong>"
     new_report_click_team_html: "Click on <strong>%{private_team}</strong> in breadcrumbs to return to the Dashboard. <strong>(Step 21/26)</strong>"
     protocols_link_html: "Click on <span class='glyphicon glyphicon-list-alt'></span> to go to the Protocols repository page. <strong>(Step 22/26)</strong>"
-    protocols_index_html: "View your Public and Private Protocols, which you can Edit, Create new ones or Clone them. Protocols can be archived and restored from the Archive. <strong>(Step 23/26)</strong>"
+    protocols_index_html: "View your Public and Private Protocols, which you can Edit, Create new ones or Copy them. Protocols can be archived and restored from the Archive. <strong>(Step 23/26)</strong>"
     protocols_import_export_html: "You can also Import or Export protocols to your hard drive. Return to the Dashboard. <strong>(Step 24/26)</strong>"
     archive_project_html: "Archive Demo project - qPCR by clicking on the down arrow <span class='glyphicon glyphicon-triangle-bottom'></span>. You can always access the Archive by clicking the <span class='glyphicon glyphicon-briefcase'></span> icon on the top right side of the Dashboard and restore any item you have archived. <strong>(Step 25/26)</strong>"
     goodbye_message: "To repeat the tutorial, go to your <strong>Settings</strong> and open <strong>Preferences</strong> tab. Click on the <strong>Repeat tutorial</strong> button and go through the tutorial as many times as needed. <strong>(Step 26/26)</strong>"
