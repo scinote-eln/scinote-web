@@ -625,7 +625,7 @@ en:
       label_title: 'Archive'
     clone:
       modal_title: 'Clone experiment %{experiment}'
-      label_title: 'Clone (only Protocols steps cloned)'
+      label_title: 'Copy as template (only Protocols steps cloned)'
       modal_submit: 'Clone'
       success_flash: "Successfully cloned experiment %{experiment}"
       error_flash: 'Could not clone the experiment.'
@@ -666,8 +666,8 @@ en:
         options_header: "Options"
         edit_module: "Rename task"
         edit_module_group: "Rename workflow"
-        clone_module: "Clone task (only Protocols steps cloned)"
-        clone_module_group: "Clone workflow (only Protocols steps cloned)"
+        clone_module: "Copy task as template (only Protocols steps cloned)"
+        clone_module_group: "Copy workflow as template (only Protocols steps cloned)"
         move_module: "Move task to another experiment"
         move_module_group: "Move workflow to another experiment"
         delete_module: "Archive task"
