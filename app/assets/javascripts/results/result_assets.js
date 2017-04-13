@@ -17,7 +17,7 @@ $("#new-result-asset").on("ajax:success", function(e, data) {
 });
 
 $("#new-result-asset").on("ajax:error", function(e, xhr, status, error) {
-  // TODO
+  animateSpinner(null, false);
 });
 
 // Edit result asset button behaviour
@@ -46,7 +46,7 @@ function applyEditResultAssetCallback() {
   });
 
   $(".edit-result-asset").on("ajax:error", function(e, xhr, status, error) {
-  // TODO
+    animateSpinner(null, false);
   });
 }
 
@@ -75,6 +75,7 @@ function formAjaxResultAsset($form) {
     else
       errors = data.responseJSON.errors;
     $form.renderFormErrors("result", errors, true, e);
+    animateSpinner(null, false);
   });
 }
 
