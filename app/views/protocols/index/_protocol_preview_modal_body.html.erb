@@ -131,7 +131,7 @@
                                                     length: Constants::FILENAME_TRUNCATION_LENGTH) %></p>
                                   <% end %>
                                 <% else %>
-                                  <%= render partial: 'steps/wopi_controlls.html.erb', locals: { asset: asset } %>
+                                  <%= render partial: 'steps/wopi_controlls.html.erb', locals: { asset: asset, view_only: true } %>
                                 <% end %>
                               <% end %>
                             <% else %>
