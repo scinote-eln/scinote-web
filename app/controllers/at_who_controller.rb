@@ -100,10 +100,10 @@ class AtWhoController < ApplicationController
     res.each do |obj|
       tmp = {}
       tmp['id'] = obj[0].base62_encode
-      tmp['full_name'] = obj[1]
-                           .truncate(Constants::NAME_TRUNCATION_LENGTH_DROPDOWN)
+      tmp['full_name'] =
+        obj[1].truncate(Constants::NAME_TRUNCATION_LENGTH_DROPDOWN)
       tmp['email'] = obj[2]
-      tmp['img_url'] =  avatar_path(obj[0], :icon_small)
+      tmp['img_url'] = avatar_path(obj[0], :icon_small)
       data << tmp
     end
     data
