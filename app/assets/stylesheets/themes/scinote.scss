@@ -1621,6 +1621,82 @@ html.turbolinks-progress-bar::before {
   }
 }
 
+// Image preview modal
+.modal-image-preview {
+  background: transparent;
+  font-size: 16px;
+  padding-right: 0 !important;
+  z-index: 1060;
+
+  .preview-close {
+    background: transparent;
+    border: 0;
+    color: $color-white;
+    display: inline-block;
+    float: right;
+  }
+
+  .modal-dialog {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    width: auto;
+  }
+
+  .modal-content {
+    background: transparent;
+    border: 0;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    color: $color-white;
+    height: 100%;
+    width: auto;
+  }
+
+  img {
+    height: auto;
+    max-width: 100%;
+
+    @media (max-height: 520px) {
+      height: 80%;
+      max-width: 100%;
+    }
+  }
+
+  .modal-header {
+    background: $color-black;
+    border: 0;
+    height: 60px;
+  }
+
+  .modal-body {
+    align-items: center;
+    display: -moz-flex;
+    display: -webkit-flex;
+    display: flex;
+    height: calc(100% - 120px);
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .modal-footer {
+    background: $color-black;
+    border: 0;
+    bottom: 0;
+    height: 60px;
+    position: absolute;
+    text-align: center;
+    width: 100%;
+  }
+
+  .image-download-link {
+    color: $color-white;
+    display: inline-block;
+    float: right;
+    margin-right: 20px;
+  }
+}
+
 // Disable textarea resizing throughout application
 // (will be done via autosize JS plugin)
 textarea {

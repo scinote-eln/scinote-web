@@ -34,6 +34,7 @@ function openPreviewModal(name, url, downloadUrl, description) {
         modal.modal('hide');
       });
       modal.modal();
+      $('.modal-backdrop').last().css('z-index', modal.css('z-index') - 1);
     },
     error: function(ev) {
       // TODO

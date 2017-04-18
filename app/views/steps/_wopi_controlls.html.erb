@@ -12,6 +12,7 @@
   <% end %>
 <% end %>
 <%= wopi_asset_view_button(asset) %>
-<% if can_edit_step_in_protocol(@protocol) %>
+<% view_only ||= false %>
+<% if !view_only && can_edit_step_in_protocol(@protocol) %>
   <%= wopi_asset_edit_button(asset) %>
 <% end %>
