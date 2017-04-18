@@ -33,6 +33,7 @@ class ResultTablesController < ApplicationController
     @table.created_by = current_user
     @table.team = current_team
     @table.last_modified_by = current_user
+    @table.name = nil
     @result = Result.new(
       user: current_user,
       my_module: @my_module,
