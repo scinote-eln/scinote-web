@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  step_id: 
+  asset_id: 
+  edited: false
+
+two:
+  step_id: 
+  asset_id: 
+  edited: false
