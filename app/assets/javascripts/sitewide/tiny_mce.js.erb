@@ -13,14 +13,18 @@ var TinyMCE = (function() {
     });
   }
 
+  function getTinyMceAssetsUploadPath() {
+    return $('textarea.tinymce').attr('tiny_mce_upload_path');
+  }
+
   // returns a public API for TinyMCE editor
   return Object.freeze({
     init : function() {
       if (typeof tinyMCE != 'undefined') {
         tinyMCE.init({
-          selector: "textarea.tinymce",
-          toolbar: ["undo redo | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link | forecolor backcolor | codesample"],
-          plugins: "link,advlist,codesample,autolink,lists,charmap,hr,anchor,searchreplace,wordcount,visualblocks,visualchars,insertdatetime,nonbreaking,save,contextmenu,directionality,paste,textcolor,colorpicker,textpattern,imagetools",
+          selector: 'textarea.tinymce',
+          toolbar: ["undo redo | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link | forecolor backcolor | uploadimage | codesample"],
+          plugins: "uploadimage, link,advlist,codesample,autolink,lists,charmap,hr,anchor,searchreplace,wordcount,visualblocks,visualchars,insertdatetime,nonbreaking,save,contextmenu,directionality,paste,textcolor,colorpicker,textpattern,imagetools",
           codesample_languages: [{"text":"R","value":"r"},{"text":"MATLAB","value":"matlab"},{"text":"Python","value":"python"},{"text":"JSON","value":"javascript"},{"text":"HTML/XML","value":"markup"},{"text":"JavaScript","value":"javascript"},{"text":"CSS","value":"css"},{"text":"PHP","value":"php"},{"text":"Ruby","value":"ruby"},{"text":"Java","value":"java"},{"text":"C","value":"c"},{"text":"C#","value":"csharp"},{"text":"C++","value":"cpp"}],
           removed_menuitems: 'newdocument',
           elementpath: false,
@@ -80,7 +84,8 @@ var TinyMCE = (function() {
 
             });
           },
-          codesample_content_css: '<%= asset_path('highlightjs-github-theme') %>'
+          codesample_content_css: '<%= asset_path('highlightjs-github-theme') %>',
+          uploadimage_form_url: getTinyMceAssetsUploadPath()
         });
       }
     },

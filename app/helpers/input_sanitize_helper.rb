@@ -15,14 +15,18 @@ module InputSanitizeHelper
     ERB::Util.html_escape(text)
   end
 
-  def custom_auto_link(text, simple_format = true, org = nil, wrapper_tag = {})
+  def custom_auto_link(text, options = {})
+    simple_format = options.fetch(:simple_format) { true }
+    team = options[:team],
+    wrapper_tag = options.fetch(:wrapper_tag) { {} }
+    tags = options.fetch(:tags) { [] }
     text = if simple_format
              simple_format(sanitize_input(text), {}, wrapper_tag)
            else
-             sanitize_input(text)
+             sanitize_input(text, tags)
            end
     auto_link(
-      smart_annotation_parser(text, org),
+      smart_annotation_parser(text, team),
       link: :urls,
       sanitize: false,
       html: { target: '_blank' }

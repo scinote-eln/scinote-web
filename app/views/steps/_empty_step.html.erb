@@ -27,7 +27,7 @@
   <div class="tab-pane active" role="tabpanel" id="new-step-main">
     <%= f.text_field :name, label: t("protocols.steps.new.name"), placeholder: t("protocols.steps.new.name_placeholder") %>
     <div class="form-group">
-      <%= f.tiny_mce_editor(:description) %>
+      <%= f.tiny_mce_editor(:description, tiny_mce_upload_path: tiny_mce_assets_path(step: @step)  ) %>
     </div>
   </div>
   <div class="tab-pane" role="tabpanel" id="new-step-checklists">

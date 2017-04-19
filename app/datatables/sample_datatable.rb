@@ -129,9 +129,8 @@ class SampleDatatable < AjaxDatatablesRails::Base
 
       # Add custom attributes
       record.sample_custom_fields.each do |scf|
-        sample[@cf_mappings[scf.custom_field_id]] = custom_auto_link(scf.value,
-                                                                     true,
-                                                                     @team)
+        sample[@cf_mappings[scf.custom_field_id]] =
+          custom_auto_link(scf.value, simple_format: true, team: @team)
       end
       sample
     end
