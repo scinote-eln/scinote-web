@@ -186,7 +186,7 @@ module Users
 
     def check_invite_users_permission
       @user = current_user
-      @emails = params[:emails]
+      @emails = params[:emails].map(&:downcase)
       @team = Team.find_by_id(params['teamId'])
       @role = params['role']
 
