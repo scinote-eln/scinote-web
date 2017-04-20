@@ -59,6 +59,7 @@ class MyModuleCommentsController < ApplicationController
           type_of: :add_comment_to_module,
           user: current_user,
           project: @my_module.experiment.project,
+          experiment: @my_module.experiment,
           my_module: @my_module,
           message: t(
             'activities.add_comment_to_module',
@@ -117,6 +118,7 @@ class MyModuleCommentsController < ApplicationController
             type_of: :edit_module_comment,
             user: current_user,
             project: @my_module.experiment.project,
+            experiment: @my_module.experiment,
             my_module: @my_module,
             message: t(
               'activities.edit_module_comment',
@@ -143,6 +145,7 @@ class MyModuleCommentsController < ApplicationController
             type_of: :delete_module_comment,
             user: current_user,
             project: @my_module.experiment.project,
+            experiment: @my_module.experiment,
             my_module: @my_module,
             message: t(
               'activities.delete_module_comment',
@@ -209,6 +212,9 @@ class MyModuleCommentsController < ApplicationController
                                   project_url(@my_module
                                               .experiment
                                               .project)),
+                 experiment: link_to(@my_module.experiment.name,
+                                     canvas_experiment_url(@my_module
+                                                           .experiment)),
                  my_module: link_to(@my_module.name,
                                     protocols_my_module_url(
                                       @my_module

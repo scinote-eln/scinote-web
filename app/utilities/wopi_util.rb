@@ -98,6 +98,7 @@ module WopiUtil
         type_of: :start_edit_wopi_file,
         user: current_user,
         project: @my_module.experiment.project,
+        experiment: @my_module.experiment,
         my_module: @my_module,
         message: t(
           started_editing ? 'activities.start_edit_wopi_file_result' :

@@ -128,6 +128,7 @@ class Step < ActiveRecord::Base
       Activity.create(
         type_of: :destroy_step,
         project: protocol.my_module.experiment.project,
+        experiment: protocol.my_module.experiment,
         my_module: protocol.my_module,
         user: @current_user,
         message: I18n.t(

@@ -64,6 +64,7 @@ class StepsController < ApplicationController
             type_of: :create_step,
             user: current_user,
             project: @my_module.experiment.project,
+            experiment: @my_module.experiment,
             my_module: @my_module,
             message: t(
               "activities.create_step",
@@ -183,6 +184,7 @@ class StepsController < ApplicationController
             type_of: :edit_step,
             user: current_user,
             project: @my_module.experiment.project,
+            experiment: @my_module.experiment,
             my_module: @my_module,
             message: t(
               "activities.edit_step",
@@ -297,6 +299,7 @@ class StepsController < ApplicationController
                 Activity.create(
                   user: current_user,
                   project: protocol.my_module.experiment.project,
+                  experiment: protocol.my_module.experiment,
                   my_module: protocol.my_module,
                   message: message,
                   type_of: checked ? :check_step_checklist_item : :uncheck_step_checklist_item
@@ -369,6 +372,7 @@ class StepsController < ApplicationController
                 Activity.create(
                   user: current_user,
                   project: protocol.my_module.experiment.project,
+                  experiment: protocol.my_module.experiment,
                   my_module: protocol.my_module,
                   message: message,
                   type_of: completed ? :complete_step : :uncomplete_step

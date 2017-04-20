@@ -147,6 +147,7 @@ class MyModulesController < ApplicationController
         Activity.create(
           type_of: :archive_module,
           project: @my_module.experiment.project,
+          experiment: @my_module.experiment,
           my_module: @my_module,
           user: current_user,
           message: t(
@@ -163,6 +164,7 @@ class MyModulesController < ApplicationController
         Activity.create(
           type_of: :restore_module,
           project: @my_module.experiment.project,
+          experiment: @my_module.experiment,
           my_module: @my_module,
           user: current_user,
           message: t(
@@ -179,6 +181,7 @@ class MyModulesController < ApplicationController
         Activity.create(
           type_of: :change_module_description,
           project: @my_module.experiment.project,
+          experiment: @my_module.experiment,
           my_module: @my_module,
           user: current_user,
           message: t(
@@ -284,6 +287,7 @@ class MyModulesController < ApplicationController
         Activity.create(
           type_of: :assign_sample,
           project: @my_module.experiment.project,
+          experiment: @my_module.experiment,
           my_module: @my_module,
           user: current_user,
           message: I18n.t(
@@ -321,6 +325,7 @@ class MyModulesController < ApplicationController
         Activity.create(
           type_of: :unassign_sample,
           project: @my_module.experiment.project,
+          experiment: @my_module.experiment,
           my_module: @my_module,
           user: current_user,
           message: I18n.t(
@@ -403,6 +408,7 @@ class MyModulesController < ApplicationController
     Activity.create(
       user: current_user,
       project: @project,
+      experiment: @experiment,
       my_module: @my_module,
       message: message,
       type_of: completed ? :complete_task : :uncomplete_task

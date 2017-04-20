@@ -252,6 +252,7 @@ class CanvasController < ApplicationController
         Activity.create(
           type_of: :archive_module,
           project: my_module.experiment.project,
+          experiment: my_module.experiment,
           my_module: my_module,
           user: current_user,
           message: t(
