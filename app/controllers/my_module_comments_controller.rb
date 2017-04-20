@@ -212,6 +212,9 @@ class MyModuleCommentsController < ApplicationController
                                   project_url(@my_module
                                               .experiment
                                               .project)),
+                 experiment: link_to(@my_module.experiment.name,
+                                     canvas_experiment_url(@my_module
+                                                           .experiment)),
                  my_module: link_to(@my_module.name,
                                     protocols_my_module_url(
                                       @my_module

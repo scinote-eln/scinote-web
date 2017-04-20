@@ -97,7 +97,7 @@ class Activity < ActiveRecord::Base
                           .url_helpers
                           .protocols_my_module_path(my_module)}'>
               #{my_module.name}</a>" if my_module
-byebug
+
     notification = Notification.create(
       type_of: notification_type,
       title:

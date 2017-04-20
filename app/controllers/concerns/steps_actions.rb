@@ -126,6 +126,10 @@ module StepsActions
                step.my_module.experiment.project.name,
                project_url(step.my_module.experiment.project)
              ),
+             experiment: link_to(
+               step.my_module.experiment.name,
+               canvas_experiment_url(step.my_module.experiment)
+             ),
              my_module: link_to(
                step.my_module.name,
                protocols_my_module_url(step.my_module)
