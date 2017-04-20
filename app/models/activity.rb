@@ -83,20 +83,24 @@ class Activity < ActiveRecord::Base
                              .url_helpers
                              .project_path(project)}'>
                   #{project.name}</a>"
-    experiment_m = "| #{I18n.t('search.index.experiment')}
-                    <a href='#{Rails
-                                .application
-                                .routes
-                                .url_helpers
-                                .canvas_experiment_path(experiment)}'>
-                    #{experiment.name}</a>" if experiment
-    task_m = "| #{I18n.t('search.index.module')}
-              <a href='#{Rails
-                          .application
-                          .routes
-                          .url_helpers
-                          .protocols_my_module_path(my_module)}'>
-              #{my_module.name}</a>" if my_module
+    if experiment
+      experiment_m = "| #{I18n.t('search.index.experiment')}
+                      <a href='#{Rails
+                                  .application
+                                  .routes
+                                  .url_helpers
+                                  .canvas_experiment_path(experiment)}'>
+                      #{experiment.name}</a>"
+    end
+    if my_module
+      task_m = "| #{I18n.t('search.index.module')}
+                <a href='#{Rails
+                            .application
+                            .routes
+                            .url_helpers
+                            .protocols_my_module_path(my_module)}'>
+                #{my_module.name}</a>"
+    end
 
     notification = Notification.create(
       type_of: notification_type,
