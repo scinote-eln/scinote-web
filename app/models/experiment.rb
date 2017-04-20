@@ -11,6 +11,7 @@ class Experiment < ActiveRecord::Base
   has_many :my_modules, inverse_of: :experiment, dependent: :destroy
   has_many :my_module_groups, inverse_of: :experiment, dependent: :destroy
   has_many :report_elements, inverse_of: :experiment, dependent: :destroy
+  has_many :activities, inverse_of: :experiment
 
   has_attached_file :workflowimg
   validates_attachment :workflowimg,
@@ -145,6 +146,7 @@ class Experiment < ActiveRecord::Base
             type_of: :create_module,
             user: current_user,
             project: self.project,
+            experiment: m.experiment,
             my_module: m,
             message: I18n.t(
               "activities.create_module",
@@ -159,6 +161,7 @@ class Experiment < ActiveRecord::Base
           Activity.create(
             type_of: :clone_module,
             project: mn.experiment.project,
+            experiment: mn.experiment,
             my_module: mn,
             user: current_user,
             message: I18n.t(

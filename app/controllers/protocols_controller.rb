@@ -403,6 +403,7 @@ class ProtocolsController < ApplicationController
           Activity.create(
             type_of: :revert_protocol,
             project: @protocol.my_module.experiment.project,
+            experiment: @protocol.my_module.experiment,
             my_module: @protocol.my_module,
             user: current_user,
             message: I18n.t(
@@ -492,6 +493,7 @@ class ProtocolsController < ApplicationController
           Activity.create(
             type_of: :load_protocol_from_repository,
             project: @protocol.my_module.experiment.project,
+            experiment: @protocol.my_module.experiment,
             my_module: @protocol.my_module,
             user: current_user,
             message: I18n.t(
@@ -539,6 +541,7 @@ class ProtocolsController < ApplicationController
           Activity.create(
             type_of: :load_protocol_from_file,
             project: @protocol.my_module.experiment.project,
+            experiment: @protocol.my_module.experiment,
             my_module: @protocol.my_module,
             user: current_user,
             message: I18n.t(

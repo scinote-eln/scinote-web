@@ -55,6 +55,7 @@ class ResultCommentsController < ApplicationController
           type_of: :add_comment_to_result,
           user: current_user,
           project: @result.my_module.experiment.project,
+          experiment: @result.my_module.experiment,
           my_module: @result.my_module,
           message: t(
             'activities.add_comment_to_result',
@@ -113,6 +114,7 @@ class ResultCommentsController < ApplicationController
             type_of: :edit_result_comment,
             user: current_user,
             project: @result.my_module.experiment.project,
+            experiment: @result.my_module.experiment,
             my_module: @result.my_module,
             message: t(
               'activities.edit_result_comment',
@@ -139,6 +141,7 @@ class ResultCommentsController < ApplicationController
             type_of: :delete_result_comment,
             user: current_user,
             project: @result.my_module.experiment.project,
+            experiment: @result.my_module.experiment,
             my_module: @result.my_module,
             message: t(
               'activities.delete_result_comment',

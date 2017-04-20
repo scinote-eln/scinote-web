@@ -57,6 +57,7 @@ class StepCommentsController < ApplicationController
             type_of: :add_comment_to_step,
             user: current_user,
             project: @step.my_module.experiment.project,
+            experiment: @step.my_module.experiment,
             my_module: @step.my_module,
             message: t(
               "activities.add_comment_to_step",
@@ -117,6 +118,7 @@ class StepCommentsController < ApplicationController
               type_of: :edit_step_comment,
               user: current_user,
               project: @step.my_module.experiment.project,
+              experiment: @step.my_module.experiment,
               my_module: @step.my_module,
               message: t(
                 'activities.edit_step_comment',
@@ -146,6 +148,7 @@ class StepCommentsController < ApplicationController
               type_of: :delete_step_comment,
               user: current_user,
               project: @step.my_module.experiment.project,
+              experiment: @step.my_module.experiment,
               my_module: @step.my_module,
               message: t(
                 'activities.delete_step_comment',

@@ -50,6 +50,7 @@ class UserMyModulesController < ApplicationController
       Activity.create(
         user: current_user,
         project: @um.my_module.experiment.project,
+        experiment: @um.my_module.experiment,
         my_module: @um.my_module,
         message: message,
         type_of: :assign_user_to_module
@@ -84,6 +85,7 @@ class UserMyModulesController < ApplicationController
       Activity.create(
         user: current_user,
         project: @um.my_module.experiment.project,
+        experiment: @um.my_module.experiment,
         my_module: @um.my_module,
         message: message,
         type_of: :unassign_user_from_module

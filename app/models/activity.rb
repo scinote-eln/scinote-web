@@ -63,6 +63,7 @@ class Activity < ActiveRecord::Base
   validates :project, :user, presence: true
 
   belongs_to :project, inverse_of: :activities
+  belongs_to :experiment, inverse_of: :activities
   belongs_to :my_module, inverse_of: :activities
   belongs_to :user, inverse_of: :activities
 
@@ -87,8 +88,8 @@ class Activity < ActiveRecord::Base
                                 .application
                                 .routes
                                 .url_helpers
-                                .canvas_experiment_path(my_module.experiment)}'>
-                    #{my_module.experiment.name}</a>" if my_module.experiment
+                                .canvas_experiment_path(experiment)}'>
+                    #{experiment.name}</a>" if experiment
     task_m = "| #{I18n.t('search.index.module')}
               <a href='#{Rails
                           .application
@@ -96,7 +97,7 @@ class Activity < ActiveRecord::Base
                           .url_helpers
                           .protocols_my_module_path(my_module)}'>
               #{my_module.name}</a>" if my_module
-
+byebug
     notification = Notification.create(
       type_of: notification_type,
       title:
