@@ -54,7 +54,7 @@
               <em><%= t('protocols.steps.no_description') %></em>
             <% else %>
               <div class="ql-editor">
-                <%= custom_auto_link(step.description,
+                <%= custom_auto_link(generate_image_tag_from_token(step.description),
                                      simple_format: false,
                                      tags: ['img']) %>
               </div>

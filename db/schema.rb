@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170419143608) do
+ActiveRecord::Schema.define(version: 20170420075905) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -486,17 +486,6 @@ ActiveRecord::Schema.define(version: 20170419143608) do
 
   add_index "step_tables", ["step_id", "table_id"], name: "index_step_tables_on_step_id_and_table_id", unique: true, using: :btree
 
-  create_table "step_tiny_mce_assets", force: :cascade do |t|
-    t.integer  "step_id"
-    t.integer  "asset_id"
-    t.boolean  "edited",     default: false
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
-  end
-
-  add_index "step_tiny_mce_assets", ["asset_id"], name: "index_step_tiny_mce_assets_on_asset_id", using: :btree
-  add_index "step_tiny_mce_assets", ["step_id"], name: "index_step_tiny_mce_assets_on_step_id", using: :btree
-
   create_table "steps", force: :cascade do |t|
     t.string   "name"
     t.string   "description"
@@ -570,6 +559,21 @@ ActiveRecord::Schema.define(version: 20170419143608) do
     t.integer  "file_file_size"
     t.datetime "file_updated_at"
   end
+
+  create_table "tiny_mce_assets", force: :cascade do |t|
+    t.string   "image_file_name"
+    t.string   "image_content_type"
+    t.integer  "image_file_size"
+    t.datetime "image_updated_at"
+    t.boolean  "editing",            default: false
+    t.integer  "step_id"
+    t.integer  "result_text_id"
+    t.datetime "created_at",                         null: false
+    t.datetime "updated_at",                         null: false
+  end
+
+  add_index "tiny_mce_assets", ["result_text_id"], name: "index_tiny_mce_assets_on_result_text_id", using: :btree
+  add_index "tiny_mce_assets", ["step_id"], name: "index_tiny_mce_assets_on_step_id", using: :btree
 
   create_table "tokens", force: :cascade do |t|
     t.string  "token",   null: false
@@ -801,8 +805,6 @@ ActiveRecord::Schema.define(version: 20170419143608) do
   add_foreign_key "step_assets", "steps"
   add_foreign_key "step_tables", "steps"
   add_foreign_key "step_tables", "tables"
-  add_foreign_key "step_tiny_mce_assets", "assets"
-  add_foreign_key "step_tiny_mce_assets", "steps"
   add_foreign_key "steps", "protocols"
   add_foreign_key "steps", "users"
   add_foreign_key "steps", "users", column: "last_modified_by_id"

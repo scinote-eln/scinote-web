@@ -1567,7 +1567,11 @@ en:
     expired_description: 'The downloadable file expires in 3 days after its creation.'
   # This section contains general words that can be used in any parts of
   # application.
-
+  tiny_mce:
+    upload_window_title: 'Insert an image from your computer'
+    upload_window_label: 'Choose an image'
+    insert_btn: 'Insert'
+    error_message: 'You must choose a file'
   general:
     save: "Save"
     update: "Update"
