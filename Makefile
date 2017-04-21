@@ -53,7 +53,7 @@ rails-production:
 run:
 	rm tmp/pids/server.pid || true
 	@docker-compose up -d
-	@docker attach $(shell docker-compose ps web | grep "rails s" | awk '{ print $$1; }')
+	@docker attach scinote_web_development
 
 start:
 	@docker-compose start

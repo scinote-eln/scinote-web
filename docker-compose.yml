@@ -1,22 +1,35 @@
+version: '2.1'
+services:
+  db:
+    container_name: scinote_db_development
+    image: postgres:9.4
+    volumes:
+      - scinote_development_postgres:/var/lib/postgresql/data
 
-dbdata:
-  image: busybox
-  volumes:
-    - /var/lib/postgresql
-  command: "true"
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: scinote_web_development
+    container_name: scinote_web_development
+    stdin_open: true
+    tty: true
+    depends_on:
+      - db
+    ports:
+      - "3000:3000"
+    command: >
+      bash -c "rm -f /usr/src/app/tmp/pids/server.pid &&
+               (bundle check || bundle install) &&
+               bundle exec rails s -b 0.0.0.0"
+    environment:
+      - RAILS_ENV=development
+    volumes:
+      - .:/usr/src/app
+      - scinote_development_bundler:/usr/src/bundle
+      - scinote_development_files:/usr/src/app/public/system
 
-db:
-  image: postgres:9.4
-  volumes_from:
-    - dbdata
-
-web:
-  build: .
-  stdin_open: true
-  tty: true
-  ports:
-   - "3000:3000"
-  volumes:
-   - .:/usr/src/app
-  links:
-    - db
+volumes:
+  scinote_development_postgres:
+  scinote_development_bundler:
+  scinote_development_files:

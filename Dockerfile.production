@@ -9,13 +9,15 @@ RUN apt-get update -qq && \
   netcat \
   default-jre-headless \
   sudo graphviz --no-install-recommends \
-  sudo libfile-mimeinfo-perl && \
+  libfile-mimeinfo-perl && \
   rm -rf /var/lib/apt/lists/*
 
 # install gems
 COPY Gemfile* /tmp/
+COPY addons /tmp/addons
 WORKDIR /tmp
 RUN bundle install
+RUN rm -rf addons
 
 # create app directory
 ENV APP_HOME /usr/src/app
