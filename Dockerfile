@@ -15,8 +15,7 @@ RUN apt-get update -qq && \
 # heroku tools
 RUN wget -O- https://toolbelt.heroku.com/install-ubuntu.sh | sh
 
-ENV BUNDLE_PATH /usr/src/bundle
-RUN mkdir $BUNDLE_PATH
+ENV BUNDLE_PATH /usr/local/bundle/
 
 # create app directory
 ENV APP_HOME /usr/src/app

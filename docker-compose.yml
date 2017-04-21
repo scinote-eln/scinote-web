@@ -26,7 +26,7 @@ services:
       - RAILS_ENV=development
     volumes:
       - .:/usr/src/app
-      - scinote_development_bundler:/usr/src/bundle
+      - scinote_development_bundler:/usr/local/bundle/
       - scinote_development_files:/usr/src/app/public/system
 
 volumes:
