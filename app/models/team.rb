@@ -268,10 +268,13 @@ class Team < ActiveRecord::Base
       project.project_my_modules.find_each do |my_module|
         my_module.protocol.steps.find_each do |step|
           step.assets.find_each { |asset| st += asset.estimated_size }
+          step.tiny_mce_assets.find_each { |tiny| st += tiny.estimated_size }
         end
         my_module.results.find_each do |result|
-          if result.is_asset then
-            st += result.asset.estimated_size
+          st += result.asset.estimated_size if result.is_asset
+          if result.is_text
+            tiny_assets = TinyMceAsset.where(result_text: result.result_text)
+            tiny_assets.find_each { |tiny| st += tiny.estimated_size }
           end
         end
       end

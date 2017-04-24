@@ -3,7 +3,10 @@ class TinyMceAssetsController < ApplicationController
 
   def create
     image = params.fetch(:file) { render_404 }
-    tiny_img = TinyMceAsset.new(image: image, reference: @obj, editing: true)
+    tiny_img = TinyMceAsset.new(image: image,
+                                reference: @obj,
+                                editing: true,
+                                team_id: current_team.id)
     if tiny_img.save
       render json: {
           image: {

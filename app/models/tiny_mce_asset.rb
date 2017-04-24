@@ -1,9 +1,11 @@
 class TinyMceAsset < ActiveRecord::Base
   attr_accessor :reference
   before_create :set_reference
+  after_create :update_estimated_size
 
-  belongs_to :step
-  belongs_to :result_text
+  belongs_to :step, inverse_of: :tiny_mce_assets
+  belongs_to :result_text, inverse_of: :tiny_mce_assets
+  belongs_to :team
   has_attached_file :image,
                     styles: { medium: [Constants::MEDIUM_PIC_FORMAT, :jpg] },
                     convert_options: { medium: '-quality 70 -strip' }
@@ -12,6 +14,8 @@ class TinyMceAsset < ActiveRecord::Base
                                     content_type: %r{^image/#{ Regexp.union(
                                       Constants::WHITELISTED_IMAGE_TYPES
                                     ) }}
+  validates :estimated_size, presence: true
+
   # When using S3 file upload, we can limit file accessibility with url signing
   def presigned_url(style = :medium,
                     download: false,
@@ -42,6 +46,17 @@ class TinyMceAsset < ActiveRecord::Base
     else
       image.url(style)
     end
+  end
+
+  private
+
+  # If team is provided, its space_taken
+  # is updated as well
+  def update_estimated_size
+    return if image_file_size.blank?
+    es = image_file_size * Constants::ASSET_ESTIMATED_SIZE_FACTOR
+    update(estimated_size: es)
+    Rails.logger.info "Asset #{id}: Estimated size successfully calculated"
   end
 
   def set_reference

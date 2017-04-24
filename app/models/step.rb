@@ -25,7 +25,8 @@ class Step < ActiveRecord::Base
   has_many :tables, through: :step_tables
   has_many :report_elements, inverse_of: :step,
     dependent: :destroy
-
+  has_many :tiny_mce_assets, inverse_of: :step, dependent: :destroy
+  
   accepts_nested_attributes_for :checklists,
                                 reject_if: :all_blank,
                                 allow_destroy: true

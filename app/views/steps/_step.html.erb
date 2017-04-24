@@ -56,7 +56,7 @@
               <div class="ql-editor">
                 <%= custom_auto_link(generate_image_tag_from_token(step.description),
                                      simple_format: false,
-                                     tags: ['img']) %>
+                                     tags: %w(img)) %>
               </div>
             <% end %>
           </div>

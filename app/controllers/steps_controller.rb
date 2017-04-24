@@ -60,7 +60,11 @@ class StepsController < ApplicationController
           asset.post_process_file(@protocol.team)
         end
 
+        #link tiny_mce_assets to the step
+        link_tiny_mce_assets(@step.description, @step)
+
         create_annotation_notifications(@step)
+
         # Generate activity
         if @protocol.in_module?
           Activity.create(
