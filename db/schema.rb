@@ -565,18 +565,15 @@ ActiveRecord::Schema.define(version: 20170420075905) do
     t.string   "image_content_type"
     t.integer  "image_file_size"
     t.datetime "image_updated_at"
-    t.boolean  "editing",            default: false
-    t.integer  "estimated_size",     default: 0,     null: false
-    t.integer  "team_id"
+    t.integer  "estimated_size",     default: 0, null: false
     t.integer  "step_id"
     t.integer  "result_text_id"
-    t.datetime "created_at",                         null: false
-    t.datetime "updated_at",                         null: false
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
   end
 
   add_index "tiny_mce_assets", ["result_text_id"], name: "index_tiny_mce_assets_on_result_text_id", using: :btree
   add_index "tiny_mce_assets", ["step_id"], name: "index_tiny_mce_assets_on_step_id", using: :btree
-  add_index "tiny_mce_assets", ["team_id"], name: "index_tiny_mce_assets_on_team_id", using: :btree
 
   create_table "tokens", force: :cascade do |t|
     t.string  "token",   null: false

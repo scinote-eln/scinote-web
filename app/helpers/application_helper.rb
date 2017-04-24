@@ -103,6 +103,7 @@ module ApplicationHelper
   end
 
   def smart_annotation_parser(text, team = nil)
+    team = nil unless team.kind_of? Team
     new_text = smart_annotation_filter_resources(text)
     new_text = smart_annotation_filter_users(new_text, team)
     new_text
@@ -187,10 +188,9 @@ module ApplicationHelper
     if user &&
        team &&
        UserTeam.user_in_team(user, team).any?
-      user_t, = user
-                .user_teams
-                .where('user_teams.team_id = ?', team)
-                .first
+      user_t = user.user_teams
+                   .where('user_teams.team_id = ?', team)
+                   .first
     end
     user_description = %(<div class='col-xs-4'>
       <img src='#{Rails.application.routes.url_helpers

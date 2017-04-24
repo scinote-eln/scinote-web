@@ -13,10 +13,6 @@ var TinyMCE = (function() {
     });
   }
 
-  function getTinyMceAssetsUploadPath() {
-    return $('textarea.tinymce').attr('tiny_mce_upload_path');
-  }
-
   // returns a public API for TinyMCE editor
   return Object.freeze({
     init : function() {

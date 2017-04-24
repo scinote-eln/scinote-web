@@ -17,7 +17,7 @@ module InputSanitizeHelper
 
   def custom_auto_link(text, options = {})
     simple_format = options.fetch(:simple_format) { true }
-    team = options[:team],
+    team = options.fetch(:team) { nil },
     wrapper_tag = options.fetch(:wrapper_tag) { {} }
     tags = options.fetch(:tags) { [] }
     text = if simple_format

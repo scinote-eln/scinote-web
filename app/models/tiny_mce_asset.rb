@@ -5,19 +5,23 @@ class TinyMceAsset < ActiveRecord::Base
 
   belongs_to :step, inverse_of: :tiny_mce_assets
   belongs_to :result_text, inverse_of: :tiny_mce_assets
-  belongs_to :team
   has_attached_file :image,
-                    styles: { medium: [Constants::MEDIUM_PIC_FORMAT, :jpg] },
-                    convert_options: { medium: '-quality 70 -strip' }
+                    styles: { large: [Constants::LARGE_PIC_FORMAT, :jpg] },
+                    convert_options: { large: '-quality 100 -strip' }
 
   validates_attachment_content_type :image,
                                     content_type: %r{^image/#{ Regexp.union(
                                       Constants::WHITELISTED_IMAGE_TYPES
                                     ) }}
+  validates_attachment :image,
+                       presence: true,
+                       size: {
+                         less_than: Constants::FILE_MAX_SIZE_MB.megabytes
+                       }
   validates :estimated_size, presence: true
 
   # When using S3 file upload, we can limit file accessibility with url signing
-  def presigned_url(style = :medium,
+  def presigned_url(style = :large,
                     download: false,
                     timeout: Constants::URL_SHORT_EXPIRE_TIME)
     if stored_on_s3?
@@ -40,7 +44,7 @@ class TinyMceAsset < ActiveRecord::Base
     image.options[:storage].to_sym == :s3
   end
 
-  def url(style = :medium, timeout: Constants::URL_SHORT_EXPIRE_TIME)
+  def url(style = :large, timeout: Constants::URL_SHORT_EXPIRE_TIME)
     if image.is_stored_on_s3?
       presigned_url(style, timeout: timeout)
     else
@@ -50,8 +54,6 @@ class TinyMceAsset < ActiveRecord::Base
 
   private
 
-  # If team is provided, its space_taken
-  # is updated as well
   def update_estimated_size
     return if image_file_size.blank?
     es = image_file_size * Constants::ASSET_ESTIMATED_SIZE_FACTOR
@@ -61,6 +63,6 @@ class TinyMceAsset < ActiveRecord::Base
 
   def set_reference
     obj_type = "#{@reference.class.to_s.underscore}=".to_sym
-    self.public_send(obj_type, @reference) if @reference
+    public_send(obj_type, @reference) if @reference
   end
 end

@@ -30,7 +30,8 @@
             {text: "<%= I18n.t 'tiny_mce.insert_btn' %>",
              onclick: insertImage,
              subtype: 'primary'},
-            {text: "<%= I18n.t 'general.cancel' %>", onclick: ed.windowManager.close}
+            {text: "<%= I18n.t 'general.cancel' %>",
+             onclick: ed.windowManager.close}
           ],
         }, {
           plugin_url: url
@@ -42,7 +43,10 @@
         iframe = win.find('iframe')[0];
         form = createElement('form', {
           action: ed.getParam('customimageuploader_form_url',
-                              '/tinymce_assets'),
+                              '<%= Rails.application
+                                        .routes
+                                        .url_helpers
+                                        .tiny_mce_assets_path %>'),
           target: iframe._id,
           method: 'POST',
           enctype: 'multipart/form-data',
@@ -108,7 +112,7 @@
 
       function insertImage() {
         if(getInputValue('file') == '') {
-          return handleError("<%= I18n.t 'tiny_mce.error_message'");
+          return handleError("<%= I18n.t 'tiny_mce.error_message' %>");
         }
 
         throbber = new top.tinymce.ui.Throbber(win.getEl());
@@ -142,7 +146,7 @@
           var doc = target.contentDocument || target.contentWindow.document;
           handleResponse(doc.getElementsByTagName("body")[0].innerHTML);
         } else {
-          handleError("Didn't get a response from the server");
+          handleError("<%= I18n.t 'tiny_mce.server_not_respond' %>");
         }
       }
 
@@ -157,7 +161,9 @@
             ed.windowManager.close();
           }
         } catch(e) {
-          handleError('Got a bad response from the server');
+          // hack that get's the server error message
+          var error_json = JSON.parse($(ret).text());
+          handleError(error_json['error'][0]);
         }
       }
 
@@ -215,14 +221,14 @@
 
       // Add a button that opens a window
       editor.addButton('customimageuploader', {
-        tooltip: ed.translate('Insert an image from your computer'),
+        tooltip: "<%= I18n.t 'tiny_mce.upload_window_label' %>",
         icon: 'image',
         onclick: showDialog
       });
 
       // Adds a menu item to the tools menu
       editor.addMenuItem('customimageuploader', {
-        text: ed.translate('Insert an image from your computer'),
+        text: "<%= I18n.t 'tiny_mce.upload_window_label' %>",
         icon: 'image',
         context: 'insert',
         onclick: showDialog

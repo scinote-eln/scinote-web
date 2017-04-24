@@ -54,13 +54,12 @@ class StepsController < ApplicationController
 
     respond_to do |format|
       if @step.save
-
         # Post process all assets
         @step.assets.each do |asset|
           asset.post_process_file(@protocol.team)
         end
 
-        #link tiny_mce_assets to the step
+        # link tiny_mce_assets to the step
         link_tiny_mce_assets(@step.description, @step)
 
         create_annotation_notifications(@step)

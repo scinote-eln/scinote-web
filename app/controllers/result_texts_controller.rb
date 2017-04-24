@@ -43,7 +43,7 @@ class ResultTextsController < ApplicationController
 
     respond_to do |format|
       if (@result.save and @result_text.save) then
-        #link tiny_mce_assets to the result text
+        # link tiny_mce_assets to the result text
         link_tiny_mce_assets(@result_text.text, @result_text)
 
         result_annotation_notification

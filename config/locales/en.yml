@@ -1572,6 +1572,7 @@ en:
     upload_window_label: 'Choose an image'
     insert_btn: 'Insert'
     error_message: 'You must choose a file'
+    server_not_respond: "Didn't get a response from the server"
   general:
     save: "Save"
     update: "Update"
