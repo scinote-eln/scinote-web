@@ -63,7 +63,7 @@ class ExperimentsController < ApplicationController
                           experiment: @experiment.name)
       respond_to do |format|
         format.json do
-          render json: {}, status: :ok
+          render json: { path: canvas_experiment_url(@experiment) }, status: :ok
         end
       end
     else
