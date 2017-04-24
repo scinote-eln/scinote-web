@@ -10,6 +10,7 @@ ENABLE_TUTORIAL=true
 ENABLE_RECAPTCHA=false
 ENABLE_USER_CONFIRMATION=false
 ENABLE_USER_REGISTRATION=true
+DEFACE_ENABLED=false
 endef
 export PRODUCTION_CONFIG_BODY
 
@@ -43,6 +44,9 @@ database:
 
 database-production:
 	@$(MAKE) rails-production cmd="bash -c 'while ! nc -z db 5432; do sleep 1; done; rake db:create && rake db:migrate && rake db:seed'"
+
+deface:
+	@$(MAKE) rails cmd="rake deface:precompile"
 
 rails:
 	@docker-compose run --rm web $(cmd)
