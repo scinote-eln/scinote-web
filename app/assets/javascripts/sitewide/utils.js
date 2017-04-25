@@ -90,9 +90,11 @@ function initPageTutorialSteps(pageFirstStepN, pageLastStepN, nextPagePath,
     beforeCb();
 
     // Initialize tutorial for the current pages' steps
-    var doneLabel = (pageLastStepN === TUTORIAL_STEPS_CNT) ?
-     'Start using sciNote' : 'End tutorial';
+    var isLastStep = pageLastStepN == TUTORIAL_STEPS_CNT;
+    var doneLabel = isLastStep ? 'Start using sciNote' : 'End tutorial';
     if (_.isUndefined(steps)) {
+      // This approach (tutorial data separately in ERB) shouldn't be used,
+      // because it's buggy and inconvenient
       introJs()
        .setOptions({
          overlayOpacity: '0.2',
@@ -121,11 +123,13 @@ function initPageTutorialSteps(pageFirstStepN, pageLastStepN, nextPagePath,
        })
        .start();
     } else {
-      if (pageFirstStepN === pageLastStepN) {
-        // Only one page step, so add another fake one, so the back and next
-        // buttons are added to the popup
+      if (!isLastStep) {
+        // Add extra fake step, so that next button on last step of current page
+        // gets focused. Also, if current page has only one step, this adds back
+        // and next buttons to the popup.
         steps.push({});
       }
+
       introJs()
        .setOptions({
          overlayOpacity: '0.2',
@@ -142,20 +146,16 @@ function initPageTutorialSteps(pageFirstStepN, pageLastStepN, nextPagePath,
          tooltipClass: 'custom next-page-link',
          steps: steps
        })
-       .onexit(function() {
-         location.reload();
-       })
-       .oncomplete(function() {
-         location.reload();
-       })
        .goToStep(stepNum - (pageFirstStepN - 1))
        .onexit(function() {
          Cookies.remove('tutorial_data');
          Cookies.remove('current_tutorial_step');
+         location.reload();
        })
        .oncomplete(function() {
          Cookies.remove('tutorial_data');
          Cookies.remove('current_tutorial_step');
+         location.reload();
        })
        .start();
     }
