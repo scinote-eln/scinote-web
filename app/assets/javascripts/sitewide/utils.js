@@ -92,9 +92,9 @@ function initPageTutorialSteps(pageFirstStepN, pageLastStepN, nextPagePath,
 
     var doneLabel;
     if (pageLastStepN == TUTORIAL_STEPS_CNT) {
-      doneLabel = 'Start using sciNote';
+      doneLabel = I18n.t('tutorial.finish_tutorial');
     } else {
-      doneLabel = 'End tutorial';
+      doneLabel = I18n.t('tutorial.skip_tutorial');
       // Add extra fake step, so that next button on last step of current page
       // gets focused. Also, if current page has only one step, this adds back
       // and next buttons to the popup.
@@ -103,9 +103,9 @@ function initPageTutorialSteps(pageFirstStepN, pageLastStepN, nextPagePath,
     introJs()
      .setOptions({
        overlayOpacity: '0.2',
-       prevLabel: 'Back',
-       nextLabel: 'Next',
-       skipLabel: 'End tutorial',
+       prevLabel: I18n.t('tutorial.back'),
+       nextLabel: I18n.t('tutorial.next'),
+       skipLabel: I18n.t('tutorial.skip_tutorial'),
        doneLabel: doneLabel,
        showBullets: false,
        showStepNumbers: false,
