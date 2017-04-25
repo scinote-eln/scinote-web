@@ -21,18 +21,3 @@ $.fn.removeBlankFileForms = function () {
     }
   });
 }
-
-/*
- * Not the actual Excel tables, but are similar.
- */
-$.fn.removeBlankExcelTables = function (editMode) {
-  if(editMode) {
-    $tables = $(this).find("[data-role='editable-table']");
-		// In edit mode, tables can't be blank
-	  $tables.each(function () {
-	    if (!$(this).find("td:not(:empty)").length) {
-	      $(this).closest("fieldset").remove();
-	    }
-	  });
-	}
-}
