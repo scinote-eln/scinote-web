@@ -188,11 +188,9 @@ function formCallback($form) {
   $form.submit(function(){
     $(this).find("[data-role='editable-table']").each(function() {
       var hot = $(this).find(".hot").handsontable('getInstance');
-      if (hot && hot.countEmptyRows() != hot.countRows()) {
-        var contents = $(this).find('.hot-contents');
-        var data = JSON.stringify({data: hot.getData()});
-        contents.attr("value", data);
-      }
+      var contents = $(this).find('.hot-contents');
+      var data = JSON.stringify({data: hot.getData()});
+      contents.attr("value", data);
     });
 
     setTimeout(function() {
@@ -531,7 +529,6 @@ $("[data-action='new-step']").on("ajax:success", function(e, data) {
 function processStep(ev, editMode) {
   var $form = $(ev.target.form);
   $form.clearFormErrors();
-  $form.removeBlankExcelTables(editMode);
   $form.removeBlankFileForms();
 
   var $fileInputs = $form.find("input[type=file]");
