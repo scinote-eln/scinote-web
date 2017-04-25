@@ -103,7 +103,7 @@ module ApplicationHelper
   end
 
   def smart_annotation_parser(text, team = nil)
-    team = nil unless team.kind_of? Team
+    team = nil unless team.is_a? Team
     new_text = smart_annotation_filter_resources(text)
     new_text = smart_annotation_filter_users(new_text, team)
     new_text
