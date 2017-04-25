@@ -62,14 +62,14 @@ function initTutorial() {
     var nextPage = $('#reports-nav-tab a').attr('href');
     var steps = [{
       element: $('#importSamplesButton')[0],
-      intro: $('#samples-toolbar').attr('data-samples-step-text'),
+      intro: I18n.t('tutorial.samples_html'),
       position: 'right'
     }, {
       element: $('#secondary-menu')[0],
-      intro: $('#samples-toolbar').attr('data-breadcrumbs-step-text')
+      intro: I18n.t('tutorial.breadcrumbs_html')
     }];
-    initPageTutorialSteps(17, 18, nextPage,
-                          function() {}, function() {}, steps);
+    initPageTutorialSteps(17, 18, nextPage, function() {}, function() {},
+     steps);
   }
 }
 

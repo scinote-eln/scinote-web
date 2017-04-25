@@ -89,7 +89,7 @@ function initPageTutorialSteps(pageFirstStepN, pageLastStepN, nextPagePath,
     var thisPagePath = window.location.pathname;
     beforeCb();
 
-    // Initialize tutorial for the current page's steps
+    // Initialize tutorial for the current pages' steps
     var doneLabel = (pageLastStepN === TUTORIAL_STEPS_CNT) ?
      'Start using sciNote' : 'End tutorial';
     if (_.isUndefined(steps)) {

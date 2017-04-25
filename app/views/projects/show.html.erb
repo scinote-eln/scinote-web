@@ -27,15 +27,10 @@
         </div>
         <% if can_create_experiment(@project) %>
           <%= link_to new_project_experiment_url(@project),
-                        remote: true,
-                        type: "button",
-                        id: 'new-experiment',
-                        class: 'btn btn-primary pull-right',
-                        data: {
-                            intro: t('tutorial.create_experiment_html'),
-                            step: '4',
-                            position: 'left'
-                            }   do %>
+                      remote: true,
+                      type: "button",
+                      id: 'new-experiment',
+                      class: 'btn btn-primary pull-right' do %>
             <span class="glyphicon glyphicon-plus"></span>
             <span class="hidden-xs"><%=t 'experiments.new.create' %></span>
           <% end %>

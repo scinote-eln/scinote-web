@@ -169,10 +169,12 @@
   function initTutorial() {
     var stepNum = parseInt(Cookies.get('current_tutorial_step'), 10);
     if (stepNum === 19) {
-      var nextPage = $('#new-report-btn').attr('href');
+      var newReportBtn = $('#new-report-btn');
+
+      var nextPage = newReportBtn.attr('href');
       var steps = [{
-        element: $('#new-report-btn')[0],
-        intro: $('#content').attr('data-reports-click-new-report-step-text'),
+        element: newReportBtn[0],
+        intro: I18n.t('tutorial.reports_index_click_new_report_html'),
         position: 'right'
       }];
       initPageTutorialSteps(19, 19, nextPage, function() {}, function() {},

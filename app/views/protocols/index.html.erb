@@ -3,7 +3,7 @@
 <% if current_team %>
   <%= render partial: "protocols/breadcrumbs.html.erb", locals: { teams: @teams, current_team: @current_team, type: @type } %>
 
-  <ul class="nav nav-tabs nav-settings" data-intro="<%=t 'tutorial.protocols_index_html' %>" data-step="23" data-position="bottom">
+  <ul class="nav nav-tabs nav-settings">
     <li role="presentation" class="<%= "active" if @type == :public %>">
       <%= link_to t("protocols.index.navigation.public"), protocols_path(team: @current_team, type: :public) %>
     </li>
@@ -49,7 +49,7 @@
           <% end %>
         </div>
 
-        <div class="btn-group" role="group" data-intro="<%=t 'tutorial.protocols_import_export_html' %>" data-step="24">
+        <div id="import-export-protocols" class="btn-group" role="group">
           <a class="btn btn-default btn-open-file" <%= can_import_protocols(@current_team) ? 'data-action="import"' : 'disabled="disabled"' %>>
             <span class="glyphicon glyphicon-import"></span>
             <span class="hidden-xs">&nbsp;<%= t("protocols.index.import") %></span>

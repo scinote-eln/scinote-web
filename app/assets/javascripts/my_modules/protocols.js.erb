@@ -123,21 +123,18 @@ function initTutorial() {
 
     var nextPage = resultsTab.find('a').attr('href');
     var steps = [{
-      intro: $("[data-role='tutorial-data']")
-              .attr('data-module-protocols-step-text')
+      intro: I18n.t('tutorial.module_protocols_html'),
     }, {
       element: $('#protocol-copy-to-repository')[0],
-      intro: $("[data-role='tutorial-data']")
-              .attr('data-module-protocols-save-step-text'),
+      intro: I18n.t('tutorial.module_protocols_save_html'),
       position: 'right'
     }, {
       element: resultsTab[0],
-      intro: $("[data-role='tutorial-data']")
-              .attr('data-module-protocols-click-results-step-text'),
+      intro: I18n.t('tutorial.module_protocols_click_results_html'),
       position: 'right'
     }];
-    initPageTutorialSteps(12, 14, nextPage,
-                          function() {}, function() {}, steps);
+    initPageTutorialSteps(12, 14, nextPage, function() {}, function() {},
+     steps);
   }
 }
 
