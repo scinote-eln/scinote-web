@@ -70,8 +70,7 @@ var TUTORIAL_STEPS_CNT = 26;
  * @param {function} endCb Callback called after the tutorial ends. Mainly used
  *  for setting 'pointer-events: auto' on the elements the page's steps
  *  highlight.
- * @param {object} steps Optional JSON containing introJs steps. They can be
- *  specified here, or hardcoded in HTML.
+ * @param {object} steps JSON containing intro.js steps.
  */
 function initPageTutorialSteps(pageFirstStepN, pageLastStepN, nextPagePath,
                                beforeCb, endCb, steps) {
@@ -90,77 +89,47 @@ function initPageTutorialSteps(pageFirstStepN, pageLastStepN, nextPagePath,
     beforeCb();
 
     // Initialize tutorial for the current pages' steps
-    var isLastStep = pageLastStepN == TUTORIAL_STEPS_CNT;
-    var doneLabel = isLastStep ? 'Start using sciNote' : 'End tutorial';
-    if (_.isUndefined(steps)) {
-      // This approach (tutorial data separately in ERB) shouldn't be used,
-      // because it's buggy and inconvenient
-      introJs()
-       .setOptions({
-         overlayOpacity: '0.2',
-         prevLabel: 'Back',
-         nextLabel: 'Next',
-         skipLabel: 'End tutorial',
-         doneLabel: doneLabel,
-         showBullets: false,
-         showStepNumbers: false,
-         exitOnOverlayClick: false,
-         exitOnEsc: false,
-         disableInteraction: true,
-         keyboardNavigation: false,
-         tooltipClass: 'custom next-page-link'
-       })
-       .goToStep(stepNum - (pageFirstStepN - 1))
-       .onexit(function() {
-         Cookies.remove('tutorial_data');
-         Cookies.remove('current_tutorial_step');
-         location.reload();
-       })
-       .oncomplete(function() {
-         Cookies.remove('tutorial_data');
-         Cookies.remove('current_tutorial_step');
-         location.reload();
-       })
-       .start();
+
+    var doneLabel;
+    if (pageLastStepN == TUTORIAL_STEPS_CNT) {
+      doneLabel = 'Start using sciNote';
     } else {
-      if (!isLastStep) {
-        // Add extra fake step, so that next button on last step of current page
-        // gets focused. Also, if current page has only one step, this adds back
-        // and next buttons to the popup.
-        steps.push({});
-      }
-
-      introJs()
-       .setOptions({
-         overlayOpacity: '0.2',
-         prevLabel: 'Back',
-         nextLabel: 'Next',
-         skipLabel: 'End tutorial',
-         doneLabel: doneLabel,
-         showBullets: false,
-         showStepNumbers: false,
-         exitOnOverlayClick: false,
-         exitOnEsc: false,
-         disableInteraction: true,
-         keyboardNavigation: false,
-         tooltipClass: 'custom next-page-link',
-         steps: steps
-       })
-       .goToStep(stepNum - (pageFirstStepN - 1))
-       .onexit(function() {
-         Cookies.remove('tutorial_data');
-         Cookies.remove('current_tutorial_step');
-         location.reload();
-       })
-       .oncomplete(function() {
-         Cookies.remove('tutorial_data');
-         Cookies.remove('current_tutorial_step');
-         location.reload();
-       })
-       .start();
+      doneLabel = 'End tutorial';
+      // Add extra fake step, so that next button on last step of current page
+      // gets focused. Also, if current page has only one step, this adds back
+      // and next buttons to the popup.
+      steps.push({});
     }
+    introJs()
+     .setOptions({
+       overlayOpacity: '0.2',
+       prevLabel: 'Back',
+       nextLabel: 'Next',
+       skipLabel: 'End tutorial',
+       doneLabel: doneLabel,
+       showBullets: false,
+       showStepNumbers: false,
+       exitOnOverlayClick: false,
+       exitOnEsc: false,
+       disableInteraction: true,
+       keyboardNavigation: false,
+       tooltipClass: 'custom next-page-link',
+       steps: steps
+     })
+     .goToStep(stepNum - (pageFirstStepN - 1))
+     .onexit(function() {
+       Cookies.remove('tutorial_data');
+       Cookies.remove('current_tutorial_step');
+       location.reload();
+     })
+     .oncomplete(function() {
+       Cookies.remove('tutorial_data');
+       Cookies.remove('current_tutorial_step');
+       location.reload();
+     })
+     .start();
 
-    // Page navigation when coming to this page from previous/next page
+    // Page navigation when coming to this page from previous or from next page
     $(function() {
       if (stepNum === pageFirstStepN && stepNum > 1) {
         $('.introjs-prevbutton').removeClass('introjs-disabled');
@@ -172,8 +141,8 @@ function initPageTutorialSteps(pageFirstStepN, pageLastStepN, nextPagePath,
     // Page navigation when already on this page
 
     $('.introjs-skipbutton').click(function() {
-      Cookies.remove('tutorial_data');
       Cookies.remove('current_tutorial_step');
+      Cookies.remove('tutorial_data');
 
       endCb();
     });
