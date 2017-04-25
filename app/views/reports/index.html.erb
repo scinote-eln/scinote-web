@@ -2,8 +2,7 @@
 <%= render partial: "shared/sidebar" %>
 <%= render partial: "shared/secondary_navigation" %>
 
-<div id="content"
-  data-reports-click-new-report-step-text="<%=t 'tutorial.reports_index_click_new_report_html' %>">
+<div id="content">
   <div>
     <% if can_create_new_report(@project) %>
       <%= link_to new_project_reports_path(@project), class: 'btn btn-primary', id: 'new-report-btn', 'data-no-turbolink' => true do %>

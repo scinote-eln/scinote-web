@@ -10,13 +10,7 @@
               remote: true,
               type: 'button',
               id: 'edit-canvas-button',
-              class: 'ajax btn btn-default',
-              data: {
-                    action: 'edit',
-                    intro: t('tutorial.canvas_click_edit_workflow_html'),
-                    step: '7',
-                    position: 'left'
-                } do %>
+              class: 'ajax btn btn-default' do %>
                 <span class="glyphicon glyphicon-pencil"></span>
                 <span class="hidden-xs"><%=t 'experiments.canvas.canvas_edit' %></span>
               <% end %>
@@ -62,13 +56,7 @@
   </div>
 </div>
 
-<div id="canvas-container" data-project-id="<%= @project.id %>"
-  data-step="6" data-position='left'
-  data-intro="<%=t 'tutorial.canvas_overview_html' %>"
-  data-sidebar-step-text="<%=t 'tutorial.sidebar_html' %>"
-  data-sidebar-click-module-step-text="<%=t 'tutorial.sidebar_click_module_html' %>"
-  data-edit-workflow-step-text="<%=t 'tutorial.edit_workflow_html' %>"
-  data-edit-workflow-click-save-step-text="<%=t 'tutorial.edit_workflow_click_save_html' %>">
+<div id="canvas-container" data-project-id="<%= @project.id %>">
   <%= render partial: 'canvas/full_zoom', locals: { experiment: @experiment, my_modules: @experiment.active_modules } %>
 </div>
 

@@ -70,7 +70,17 @@
     var stepNum = parseInt(Cookies.get('current_tutorial_step'), 10);
     if (stepNum >= 4 && stepNum <= 5) {
       var nextPage = $('[data-canvas-link]').data('canvasLink');
-      initPageTutorialSteps(4, 5, nextPage, tutorialBeforeCb, tutorialAfterCb);
+      var steps = [{
+        element: $('#new-experiment')[0],
+        intro: I18n.t('tutorial.tutorial_welcome_title_html'),
+        position: 'left'
+      }, {
+        element: $('.experiment-panel')[0],
+        intro: I18n.t('tutorial.edit_experiment_html'),
+        position: 'right'
+      }];
+      initPageTutorialSteps(4, 5, nextPage, tutorialBeforeCb, tutorialAfterCb,
+       steps);
     }
   }
 

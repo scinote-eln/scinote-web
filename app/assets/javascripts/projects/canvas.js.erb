@@ -3137,9 +3137,19 @@ function initTutorial() {
 
     if (stepNum >= 6 && stepNum <= 7) {
       var nextPage = window.location.pathname;
-      initPageTutorialSteps(6, 7, nextPage, tutorialBeforeCb, tutorialAfterCb);
+      var steps = [{
+        element: $('#canvas-container')[0],
+        intro: I18n.t('tutorial.canvas_overview_html'),
+        position: 'left'
+      }, {
+        element: $('#edit-canvas-button')[0],
+        intro: I18n.t('tutorial.canvas_click_edit_workflow_html'),
+        position: 'left'
+      }];
+      initPageTutorialSteps(6, 7, nextPage, tutorialBeforeCb, tutorialAfterCb,
+       steps);
     } else if (stepNum >= 8 && stepNum <= 9) {
-      // Go to edit canvas mode
+      // Go into edit canvas mode
       $('.introjs-overlay').remove();
       $('.introjs-helperLayer').remove();
       $('.introjs-tooltipReferenceLayer').remove();
@@ -3148,12 +3158,11 @@ function initTutorial() {
       setTimeout(function() {
         var nextPage = window.location.pathname;
         var steps = [{
-          intro: $('#canvas-container').attr('data-edit-workflow-step-text'),
+          intro: I18n.t('tutorial.edit_workflow_html'),
           element: $('#canvas-new-module')[0],
           position: 'right'
         }, {
-          intro: $('#canvas-container')
-                  .attr('data-edit-workflow-click-save-step-text'),
+          intro: I18n.t('tutorial.edit_workflow_click_save_html'),
           element: $('#canvas-save')[0],
           position: 'right'
         }];
@@ -3171,12 +3180,11 @@ function initTutorial() {
       var nextPage = qpcrModuleLeaf.find('a.module-link').attr('href');
       var steps = [{
         element: $('#slide-panel .tree')[0],
-        intro: $('#canvas-container').attr('data-sidebar-step-text'),
+        intro: I18n.t('tutorial.sidebar_html'),
         position: 'right'
       }, {
         element: qpcrModuleLeaf[0],
-        intro: $('#canvas-container')
-                .attr('data-sidebar-click-module-step-text'),
+        intro: I18n.t('tutorial.sidebar_click_module_html'),
         position: 'right'
       }];
       initPageTutorialSteps(10, 11, nextPage, tutorialBeforeCb,

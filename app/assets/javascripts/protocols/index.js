@@ -777,7 +777,17 @@ function initTutorial() {
   var stepNum = parseInt(Cookies.get('current_tutorial_step'), 10);
   if (stepNum >= 23 && stepNum <= 24) {
     var nextPage = $('.navbar-brand').attr('href');
-    initPageTutorialSteps(23, 24, nextPage, function() {}, function() {});
+    var steps = [{
+      element: $('.nav-settings')[0],
+      intro: I18n.t('tutorial.protocols_index_html'),
+      position: 'bottom'
+    }, {
+      element: $('#import-export-protocols')[0],
+      intro: I18n.t('tutorial.protocols_import_export_html'),
+      position: 'bottom'
+    }];
+    initPageTutorialSteps(23, 24, nextPage, function() {}, function() {},
+     steps);
   }
 }
 

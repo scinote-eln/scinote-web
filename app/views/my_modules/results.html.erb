@@ -41,9 +41,7 @@
 
 <%= render partial: "shared/image_preview_modal.html.erb" %>
 
-<div id="results" data-module-id="<%= @my_module.id %>"
-  data-module-protocols-step-text="<%=t 'tutorial.module_results_html' %>"
-  data-module-protocols-click-samples-step-text="<%=t 'tutorial.module_results_click_samples_html' %>">
+<div id="results" data-module-id="<%= @my_module.id %>">
 <% ordered_result_of(@my_module).each do |result| %>
   <%= render partial: "result", locals: { result: result } %>
 <% end %>
