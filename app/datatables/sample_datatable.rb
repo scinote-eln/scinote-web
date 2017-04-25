@@ -7,6 +7,7 @@ class SampleDatatable < AjaxDatatablesRails::Base
   include Rails.application.routes.url_helpers
   include ActionView::Helpers::UrlHelper
   include ApplicationHelper
+  include ActiveRecord::Sanitization::ClassMethods
 
   ASSIGNED_SORT_COL = 'assigned'
 
@@ -393,11 +394,11 @@ class SampleDatatable < AjaxDatatablesRails::Base
     elsif column == 'created_at'
       casted_column = ::Arel::Nodes::NamedFunction.new('CAST',
                         [ Arel.sql("to_char( samples.created_at, '#{ formated_date }' ) AS VARCHAR") ] )
-      casted_column.matches("%#{value}%")
+      casted_column.matches("%#{sanitize_sql_like(value)}%")
     else
       casted_column = ::Arel::Nodes::NamedFunction.new('CAST',
                         [model.arel_table[column.to_sym].as(typecast)])
-      casted_column.matches("%#{value}%")
+      casted_column.matches("%#{sanitize_sql_like(value)}%")
     end
   end
 
