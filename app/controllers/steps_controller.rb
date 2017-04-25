@@ -164,10 +164,12 @@ class StepsController < ApplicationController
         table.last_modified_by = current_user unless table.new_record?
         table.team = current_team
       end
-
-      # gerate a tag that replaces img tag in database
-      @step.description = parse_tiny_mce_asset_to_token(@step.description,
-                                                        @step)
+      
+      # gerate a tag that replaces img tag in databases
+      @step.description = parse_tiny_mce_asset_to_token(
+        params[:step][:description],
+        @step
+      )
 
       if @step.save
         @step.reload

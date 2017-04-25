@@ -4,6 +4,7 @@ class TinyMceAsset < ActiveRecord::Base
   after_create :update_estimated_size
   after_destroy :release_team_space
 
+  belongs_to :team, inverse_of: :tiny_mce_assets
   belongs_to :step, inverse_of: :tiny_mce_assets
   belongs_to :result_text, inverse_of: :tiny_mce_assets
   has_attached_file :image,
@@ -57,19 +58,17 @@ class TinyMceAsset < ActiveRecord::Base
 
   def update_estimated_size
     return if image_file_size.blank?
-    team = Team.find_by_id(team_id)
     es = image_file_size * Constants::ASSET_ESTIMATED_SIZE_FACTOR
     update(estimated_size: es)
     Rails.logger.info "Asset #{id}: Estimated size successfully calculated"
     # update team space taken
-    team.take_space(es)
-    team.save
+    self.team.take_space(es)
+    self.team.save
   end
 
   def release_team_space
-    team = Team.find_by_id(team_id)
-    team.release_space(estimated_size)
-    team.save
+    self.team.release_space(estimated_size)
+    self.team.save
   end
 
   def set_reference
