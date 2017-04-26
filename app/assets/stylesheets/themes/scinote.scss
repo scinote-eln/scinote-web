@@ -719,7 +719,7 @@ a[data-toggle="tooltip"] {
     display: block !important;
     font-size: 15px;
     height: 30px;
-    margin-right: 15px;  
+    margin-right: 15px;
     padding: 8px;
     padding-bottom: 5px;
     padding-top: 5px;
@@ -1442,8 +1442,8 @@ table.dataTable {
   z-index: 1000000000;
 }
 
-html.turbolinks-progress-bar::before {
-  background-color: $color-mojo !important;
+.turbolinks-progress-bar::before {
+  background-color: $color-theme-primary;
 }
 
 /* Loading animation for ajax events, inspired by Codrops */
