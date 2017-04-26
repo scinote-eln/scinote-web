@@ -13,7 +13,7 @@ module UserSettingsHelper
   end
 
   def on_settings_team_page?
-    controller_name == 'teams' &&
-      action_name.in?(%w(index new create show))
+	  controller_name.in?(%w(teams audits)) &&
+	  action_name.in?(%w(index new create show audits_index))
   end
 end
