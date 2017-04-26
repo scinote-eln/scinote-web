@@ -99,7 +99,7 @@ class Constants
   DROPDOWN_TOP_OFFSET_PX = 20
 
   #=============================================================================
-  # Time
+  # Date and time
   #=============================================================================
 
   # URL expire time, used for presigned file URLs, because outsiders shouldn't
@@ -110,6 +110,8 @@ class Constants
   # report and than using same HTML code in PDF, and consequently same file
   # URL); it expires in exactly one day
   URL_LONG_EXPIRE_TIME = 86_400
+
+  DATE_FORMAT = '%d.%m.%Y %H:%M'.freeze
 
   #=============================================================================
   # Application colors
