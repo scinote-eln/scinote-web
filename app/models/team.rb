@@ -55,7 +55,7 @@ class Team < ActiveRecord::Base
   def search_users(query = nil)
     a_query = "%#{query}%"
     users.where.not(confirmed_at: nil)
-         .where('full_name LIKE ? OR email LIKE ?', a_query, a_query)
+         .where('full_name ILIKE ? OR email ILIKE ?', a_query, a_query)
   end
 
   # Imports samples into db
