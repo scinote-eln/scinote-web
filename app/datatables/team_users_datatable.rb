@@ -1,5 +1,6 @@
 class TeamUsersDatatable < AjaxDatatablesRails::Base
   include InputSanitizeHelper
+  include ActiveRecord::Sanitization::ClassMethods
 
   def_delegator :@view, :link_to
   def_delegator :@view, :update_user_team_path
@@ -50,7 +51,7 @@ class TeamUsersDatatable < AjaxDatatablesRails::Base
         [model.arel_table[column.to_sym].as(typecast)]
       )
     end
-    casted_column.matches("%#{value}%")
+    casted_column.matches("%#{sanitize_sql_like(value)}%")
   end
 
   private

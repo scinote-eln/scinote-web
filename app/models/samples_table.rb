@@ -15,7 +15,6 @@ class SamplesTable < ActiveRecord::Base
       # delete column
       team_status['columns'].delete(column_index)
       team_status['columns'].keys.each do |index|
-        p index
         if index.to_i > column_index.to_i
           team_status['columns'][(index.to_i - 1).to_s] =
             team_status['columns'].delete(index)
