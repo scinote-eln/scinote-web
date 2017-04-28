@@ -31,7 +31,7 @@ Style/BracesAroundHashParameters:
   EnforcedStyle: no_braces
 
 Style/CaseIndentation:
-  IndentWhenRelativeTo: case
+  EnforcedStyle: case
 
 Style/ClassAndModuleChildren:
   EnforcedStyle: nested
@@ -383,16 +383,16 @@ Lint/AssignmentInCondition:
   AllowSafeAssignment: true
 
 Lint/BlockAlignment:
-  AlignWith: either
+  EnforcedStyleAlignWith: either
 
 Lint/EndAlignment:
-  AlignWith: keyword
+  EnforcedStyleAlignWith: keyword
 
 Lint/DuplicateMethods:
   Enabled: false
 
 Lint/DefEndAlignment:
-  AlignWith: start_of_line
+  EnforcedStyleAlignWith: start_of_line
 
 Lint/UnusedBlockArgument:
   IgnoreEmptyBlocks: true
@@ -476,7 +476,7 @@ Rails/TimeZone:
   EnforcedStyle: flexible
 
 Rails/UniqBeforePluck:
-  EnforcedMode: conservative
+  EnforcedStyle: conservative
 
 Rails/Validation:
   Include:
