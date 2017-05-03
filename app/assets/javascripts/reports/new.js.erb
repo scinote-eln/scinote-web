@@ -479,6 +479,7 @@ function initializeUnsavedWorkDialog() {
       $(window).off('beforeunload');
       $(document).off('page:before-change');
     }
+    return exit;
   }
 
   $(window).on('beforeunload', beforeUnload);
