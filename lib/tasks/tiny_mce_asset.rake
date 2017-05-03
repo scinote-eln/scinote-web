@@ -6,5 +6,4 @@ namespace :tiny_mce_asset do
                        'result_text_id IS ? AND created_at < ?',
                        nil, nil, 7.days.ago)
   end
-
 end

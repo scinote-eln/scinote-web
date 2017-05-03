@@ -32,6 +32,7 @@ class ResultTextsController < ApplicationController
 
   def create
     @result_text = ResultText.new(result_params[:result_text_attributes])
+    # gerate a tag that replaces img tag in database
     @result_text.text = parse_tiny_mce_asset_to_token(@result_text.text)
     @result = Result.new(
       user: current_user,
@@ -42,8 +43,8 @@ class ResultTextsController < ApplicationController
     @result.last_modified_by = current_user
 
     respond_to do |format|
-      if (@result.save and @result_text.save) then
-        # link tiny_mce_assets to the result text
+      if (@result.save and @result_text.save)
+        # link tiny_mce_assets to the text result
         link_tiny_mce_assets(@result_text.text, @result_text)
 
         result_annotation_notification

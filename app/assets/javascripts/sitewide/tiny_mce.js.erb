@@ -20,11 +20,13 @@ var TinyMCE = (function() {
         tinyMCE.init({
           selector: 'textarea.tinymce',
           toolbar: ["undo redo | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link | forecolor backcolor | customimageuploader | codesample"],
-          plugins: "customimageuploader,link,advlist,codesample,autolink,lists,charmap,hr,anchor,searchreplace,wordcount,visualblocks,visualchars,insertdatetime,nonbreaking,save,contextmenu,directionality,paste,textcolor,colorpicker,textpattern,imagetools",
+          plugins: "customimageuploader,link,advlist,codesample,autolink,lists,charmap,hr,anchor,searchreplace,wordcount,visualblocks,visualchars,insertdatetime,nonbreaking,save,contextmenu,directionality,paste,textcolor,colorpicker,textpattern",
           codesample_languages: [{"text":"R","value":"r"},{"text":"MATLAB","value":"matlab"},{"text":"Python","value":"python"},{"text":"JSON","value":"javascript"},{"text":"HTML/XML","value":"markup"},{"text":"JavaScript","value":"javascript"},{"text":"CSS","value":"css"},{"text":"PHP","value":"php"},{"text":"Ruby","value":"ruby"},{"text":"Java","value":"java"},{"text":"C","value":"c"},{"text":"C#","value":"csharp"},{"text":"C++","value":"cpp"}],
           removed_menuitems: 'newdocument',
+          object_resizing: false,
           elementpath: false,
-          default_link_target: "_blank",
+          forced_root_block: false,
+          default_link_target: '_blank',
           target_list: [
             {title: 'New page', value: '_blank'},
             {title: 'Same page', value: '_self'}

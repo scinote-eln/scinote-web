@@ -31,7 +31,7 @@
              onclick: insertImage,
              subtype: 'primary'},
             {text: "<%= I18n.t 'general.cancel' %>",
-             onclick: ed.windowManager.close}
+             onclick: editor.windowManager.close}
           ],
         }, {
           plugin_url: url
@@ -42,11 +42,11 @@
 
         iframe = win.find('iframe')[0];
         form = createElement('form', {
-          action: ed.getParam('customimageuploader_form_url',
-                              '<%= Rails.application
-                                        .routes
-                                        .url_helpers
-                                        .tiny_mce_assets_path %>'),
+          action: editor.getParam('customimageuploader_form_url',
+                                  '<%= Rails.application
+                                            .routes
+                                            .url_helpers
+                                            .tiny_mce_assets_path %>'),
           target: iframe._id,
           method: 'POST',
           enctype: 'multipart/form-data',
@@ -67,17 +67,17 @@
         form.appendChild(createElement('input',
                                        {type: 'hidden',
                                         name: 'object_type',
-                                        value: $(ed.getElement())
-                                                 .data('object-type')}));
+                                        value: $(editor.getElement())
+                                                       .data('object-type')}));
         form.appendChild(createElement('input',
                                        {type: 'hidden',
                                         name: 'object_id',
-                                        value: $(ed.getElement())
-                                                 .data('object-id')}));
+                                        value: $(editor.getElement())
+                                                       .data('object-id')}));
         form.appendChild(createElement('input',
                          {type: 'hidden',
                           name: 'hint',
-                          value: ed.getParam('uploadimage_hint', '')}));
+                          value: editor.getParam('uploadimage_hint', '')}));
 
         var el = win.getEl();
         var body = document.getElementById(el.id + '-body');
@@ -157,11 +157,11 @@
           if(json['error']) {
             handleError(json['error']['message']);
           } else {
-            ed.execCommand('mceInsertContent', false, buildHTML(json));
-            ed.windowManager.close();
+            editor.execCommand('mceInsertContent', false, buildHTML(json));
+            editor.windowManager.close();
           }
         } catch(e) {
-          // hack that get's the server error message
+          // hack that gets the server error message
           var error_json = JSON.parse($(ret).text());
           handleError(error_json['error'][0]);
         }
@@ -177,8 +177,12 @@
       function handleError(error) {
         var message = win.find('.error')[0].getEl();
 
-        if(message)
-          message.getElementsByTagName('p')[0].innerHTML = ed.translate(error);
+        if(message) {
+          message
+            .getElementsByTagName('p')[0]
+            .innerHTML = editor.translate(error);
+        }
+
       }
 
       function createElement(element, attributes) {
