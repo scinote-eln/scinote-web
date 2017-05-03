@@ -193,7 +193,7 @@ module ApplicationHelper
                 .first
     end
     user_description = %(<div class='col-xs-4'>
-      <img src='#{set_avatar_absolute_url(user, :thumb)}'
+      <img src='#{user_avatar_absolute_url(user, :thumb)}'
        alt='thumb'></div><div class='col-xs-8'>
       <div class='row'><div class='col-xs-9 text-left'><h5>
       #{user.full_name}</h5></div><div class='col-xs-3 text-right'>
@@ -211,7 +211,7 @@ module ApplicationHelper
       user_description += %(<p></p></div></div></div>)
     end
 
-    raw(image_tag(set_avatar_absolute_url(user, :icon_small),
+    raw(image_tag(user_avatar_absolute_url(user, :icon_small),
                   class: 'atwho-user-img-popover')) +
       raw('<a onClick="$(this).popover(\'show\')" ' \
       'class="atwho-user-popover" data-container="body" ' \
@@ -220,7 +220,7 @@ module ApplicationHelper
       raw(user_description) + raw('" >') + user.full_name + raw('</a>')
   end
 
-  def set_avatar_absolute_url(user, style)
+  def user_avatar_absolute_url(user, style)
     unless user.avatar(style) == '/images/icon_small/missing.png'
       return user.avatar(style)
     end
