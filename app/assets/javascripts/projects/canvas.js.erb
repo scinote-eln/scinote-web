@@ -1159,7 +1159,7 @@ function updateModuleHtml(module, id, name, gridDistX, gridDistY) {
   .attr("id", id)
   .attr("data-module-id", id)
   .attr("data-module-name", name)
-  .css("z-index", "20");
+  .css("z-index", 20);
 
   var panelHeading = module.find(".panel-heading");
 
@@ -2194,14 +2194,14 @@ cloneModuleHandler = function(moduleId, modulesSel, gridDistX, gridDistY) {
   var module = modules.filter("#" + moduleId);
 
   // Position for the cloned module
-  var top = elTop(module) + 3*gridDistY;
-  var left = elLeft(module) + 3*gridDistX;
+  var top = elTop(module) + (3 * gridDistY);
+  var left = elLeft(module) + (3 * gridDistX);
 
   cloneModule(module, gridDistX, gridDistY, left, top);
 
   // Hide all open dropdowns
   $(".module-options").removeClass("open");
-  module.css("z-index", "20");
+  module.css("z-index", 20);
 };
 
 /**
@@ -2313,8 +2313,8 @@ cloneModuleGroupHandler = function(moduleId, modulesSel, gridDistX, gridDistY) {
   });
   m_width = modules.first().width();
   m_height = modules.first().height();
-  width = maxX - minX + m_width + 3*gridDistX;
-  height = maxY - minY + m_height + 3*gridDistY;
+  width = maxX - minX + m_width + (3 * gridDistX);
+  height = maxY - minY + m_height + (3 * gridDistY);
 
   // Find the appropriate "free space"
   var left = minX != Number.MAX_VALUE ? minX : 0;
@@ -2382,7 +2382,7 @@ cloneModuleGroupHandler = function(moduleId, modulesSel, gridDistX, gridDistY) {
 
   // Hide all open dropdowns
   $(".module-options").removeClass("open");
-  $("#" + moduleId.toString()).css("z-index", "20");
+  $("#" + moduleId.toString()).css("z-index", 20);
 
   // Repainting is needed twice (weird, huh)
   instance.repaintEverything();
