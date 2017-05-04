@@ -105,7 +105,7 @@ module ReportActions
   def generate_step_contents_json(step)
     res = []
     if in_params? :step_checklists
-      step.checklists.each do |checklist|
+      step.checklists.asc.each do |checklist|
         res << generate_new_el(false)
         res << generate_el(
           'reports/elements/step_checklist_element.html.erb',
