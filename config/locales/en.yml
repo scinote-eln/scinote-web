@@ -432,6 +432,9 @@ en:
     buttons:
       complete: "Complete task"
       uncomplete: "Uncomplete task"
+    complete_modal:
+      description: 'You have completed all steps in the task. Would you like to mark entire task as completed?'
+      leave_uncompleted: 'Leave task in progress'
     description:
       title: "Edit task %{module} description"
       label: "Description"

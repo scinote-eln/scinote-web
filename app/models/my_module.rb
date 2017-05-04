@@ -374,17 +374,14 @@ class MyModule < ActiveRecord::Base
     state == 'completed'
   end
 
-  # Mark task completed if all steps become completed
-  def check_completness
+  # Check if my_module is ready to become completed
+  def check_completness_status
     if protocol && protocol.steps.count > 0
       completed = true
       protocol.steps.find_each do |step|
         completed = false unless step.completed
       end
-      if completed
-        update_attributes(state: 'completed', completed_on: DateTime.now)
-        return true
-      end
+      return true if completed
     end
     false
   end
