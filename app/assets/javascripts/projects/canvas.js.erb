@@ -1159,7 +1159,7 @@ function updateModuleHtml(module, id, name, gridDistX, gridDistY) {
   .attr("id", id)
   .attr("data-module-id", id)
   .attr("data-module-name", name)
-  .css("z-index", "");
+  .css("z-index", "20");
 
   var panelHeading = module.find(".panel-heading");
 
@@ -2193,35 +2193,15 @@ cloneModuleHandler = function(moduleId, modulesSel, gridDistX, gridDistY) {
   var modules = $(modulesSel);
   var module = modules.filter("#" + moduleId);
 
-  // Figure out the free position for the cloned module
-  var top = elTop(module);
-  var left = elLeft(module);
-  var modulesInRow = [];
-  _.each(modules, function(m) {
-    if (elTop(m) === top) {
-      modulesInRow.push(m);
-    }
-  });
-  var i, free;
-  while (true) {
-    left += gridDistX;
-    free = true;
-    for (i = 0; i < modulesInRow.length; i++) {
-      if (elLeft(modulesInRow[i]) === left) {
-        free = false;
-        break;
-      }
-    }
-
-    if (free) {
-      break;
-    }
-  }
+  // Position for the cloned module
+  var top = elTop(module) + 3*gridDistY;
+  var left = elLeft(module) + 3*gridDistX;
 
   cloneModule(module, gridDistX, gridDistY, left, top);
 
   // Hide all open dropdowns
   $(".module-options").removeClass("open");
+  module.css("z-index", "20");
 };
 
 /**
@@ -2331,13 +2311,15 @@ cloneModuleGroupHandler = function(moduleId, modulesSel, gridDistX, gridDistY) {
     if (t < minY) { minY = t; }
     if (t > maxY) { maxY = t; }
   });
-  width = maxX - minX + gridDistX;
-  height = maxY - minY + gridDistY;
+  m_width = modules.first().width();
+  m_height = modules.first().height();
+  width = maxX - minX + m_width + 3*gridDistX;
+  height = maxY - minY + m_height + 3*gridDistY;
 
   // Find the appropriate "free space"
   var left = minX != Number.MAX_VALUE ? minX : 0;
   var top = maxY != -Number.MAX_VALUE ? maxY : 0;
-  var offset = height;
+  var offset = 0;
   var moduleContained;
 
   while (true) {
@@ -2400,6 +2382,7 @@ cloneModuleGroupHandler = function(moduleId, modulesSel, gridDistX, gridDistY) {
 
   // Hide all open dropdowns
   $(".module-options").removeClass("open");
+  $("#" + moduleId.toString()).css("z-index", "20");
 
   // Repainting is needed twice (weird, huh)
   instance.repaintEverything();
