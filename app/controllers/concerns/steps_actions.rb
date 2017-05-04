@@ -74,8 +74,8 @@ module StepsActions
       e.items.each do |ci|
         old_list = old_checklists.select { |i| i.id == e.id }.first
         old_item = old_list.items.select { |i| i.id == ci.id }.first if old_list
-
-        checklist_item_annotation(step, ci, old_item.text)
+        text = old_item ? old_item.text : ''
+        checklist_item_annotation(step, ci, text)
       end
     end
   end
