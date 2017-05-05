@@ -1369,6 +1369,8 @@ en:
         row_in_repository_public: "%{protocol} - <i>into public protocols</i>"
         row_in_repository_private: "%{protocol} - <i>into private protocols</i>"
     steps:
+      completed: 'Completed'
+      uncompleted: 'Uncompleted'
       expand_label: "Expand all"
       collapse_label: "Collapse all"
       new_step: "Add new"

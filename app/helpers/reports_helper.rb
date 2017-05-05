@@ -92,4 +92,15 @@ module ReportsHelper
       '/4.6.3/css/font-awesome.min.css'
     )
   end
+
+  def step_status_label(step)
+    if step.completed
+      style = 'success'
+      text = t('protocols.steps.completed')
+    else
+      style = 'default'
+      text = t('protocols.steps.uncompleted')
+    end
+    "<span class=\"label label-#{style}\">#{text}</span>".html_safe
+  end
 end
