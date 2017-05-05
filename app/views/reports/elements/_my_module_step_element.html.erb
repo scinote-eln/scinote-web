@@ -21,6 +21,7 @@
         <h5>
           <span class="glyphicon glyphicon-circle-arrow-right"></span>
           <b><%=t "projects.reports.elements.step.step_pos", pos: (step.position + 1) %></b>&nbsp;<%= step.name %>
+          <%= step_status_label(step) %>
         </h5>
       </div>
     </div>
