@@ -330,10 +330,13 @@ class StepsController < ApplicationController
 
     respond_to do |format|
       if step
-        completed = params[:completed] == "true"
+        completed = params[:completed] == 'true'
         protocol = step.protocol
 
-        authorized = ((completed and can_complete_step_in_protocol(protocol)) or (!completed and can_uncomplete_step_in_protocol(protocol)))
+        authorized = (
+          (completed and can_complete_step_in_protocol(protocol)) ||
+            (!completed and can_uncomplete_step_in_protocol(protocol))
+        )
 
         if authorized
           changed = step.completed != completed
@@ -346,15 +349,15 @@ class StepsController < ApplicationController
 
           if step.save
             if protocol.in_module?
-              task_completed = protocol.my_module.check_completness
+              ready_to_complete = protocol.my_module.check_completness_status
             end
 
             # Create activity
             if changed
               completed_steps = protocol.steps.where(completed: true).count
               all_steps = protocol.steps.count
-              str = completed ? "activities.complete_step" :
-                "activities.uncomplete_step"
+              str = 'activities.uncomplete_step'
+              str = 'activities.complete_step' if completed
 
               message = t(
                 str,
@@ -386,27 +389,14 @@ class StepsController < ApplicationController
                               else
                                 t('protocols.steps.options.uncomplete_title')
                               end
-            task_button_title =
-              t('my_modules.buttons.uncomplete') if task_completed
             format.json do
-              if task_completed
+              if ready_to_complete && protocol.my_module.uncompleted?
                 render json: {
-                  new_title: localized_title,
-                  task_completed: task_completed,
-                  task_button_title: task_button_title,
-                  module_header_due_date_label: render_to_string(
-                    partial: 'my_modules/module_header_due_date_label.html.erb',
-                    locals: { my_module: step.protocol.my_module }
-                  ),
-                  module_state_label: render_to_string(
-                    partial: 'my_modules/module_state_label.html.erb',
-                    locals: { my_module: step.protocol.my_module }
-                  )
-                },
-                status: :accepted
+                  task_ready_to_complete: true,
+                  new_title: localized_title
+                }, status: :ok
               else
-                render json: { new_title: localized_title },
-                status: :accepted
+                render json: { new_title: localized_title }, status: :ok
               end
             end
           else
