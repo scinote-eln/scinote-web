@@ -39,18 +39,13 @@ class Experiment < ActiveRecord::Base
     include_archived,
     query = nil,
     page = 1,
-    current_team = nil
+    current_team = nil,
+    options = {}
   )
     project_ids =
       Project
       .search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
       .pluck(:id)
-
-    if query
-      a_query = '%' + query.strip.gsub('_', '\\_').gsub('%', '\\%') + '%'
-    else
-      a_query = query
-    end
 
     if current_team
       projects_ids =
@@ -65,19 +60,19 @@ class Experiment < ActiveRecord::Base
       new_query =
         Experiment
         .where('experiments.project_id IN (?)', projects_ids)
-        .where_attributes_like([:name], a_query)
+        .where_attributes_like([:name, :description], query, options)
       return include_archived ? new_query : new_query.is_archived(false)
     elsif include_archived
       new_query =
         Experiment
         .where(project: project_ids)
-        .where_attributes_like([:name, :description], a_query)
+        .where_attributes_like([:name, :description], query, options)
     else
       new_query =
         Experiment
         .is_archived(false)
         .where(project: project_ids)
-        .where_attributes_like([:name, :description], a_query)
+        .where_attributes_like([:name, :description], query, options)
     end
 
     # Show all results if needed

@@ -2,9 +2,7 @@ class SearchController < ApplicationController
   before_filter :load_vars, only: :index
 
   def index
-    if not @search_query
-      redirect_to new_search_path
-    end
+    redirect_to new_search_path unless @search_query
 
     count_search_results
 
@@ -41,47 +39,60 @@ class SearchController < ApplicationController
   private
 
   def load_vars
-    @search_query = params[:q] || ''
+    query = params[:q].strip || ''
     @search_category = params[:category] || ''
     @search_category = @search_category.to_sym
     @search_page = params[:page].to_i || 1
-    @display_query = @search_query
+    @search_case = params[:match_case] == 'true'
+    @search_whole_word = params[:whole_word] == 'true'
+    @search_whole_phrase = params[:whole_phrase] == 'true'
+    @display_query = query
 
-    if @search_query.length < Constants::NAME_MIN_LENGTH
-      flash[:error] = t 'general.query.length_too_short',
-                        min_length: Constants::NAME_MIN_LENGTH
-      return redirect_to :back
-    end
-
-    # splits the search query to validate all entries
-    @splited_query = @search_query.split
-
-    if @splited_query.first.length < Constants::NAME_MIN_LENGTH
-      flash[:error] = t 'general.query.length_too_short',
-                        min_length: Constants::NAME_MIN_LENGTH
-      redirect_to :back
-    elsif @splited_query.first.length > Constants::TEXT_MAX_LENGTH
-      flash[:error] = t 'general.query.length_too_long',
-                        max_length: Constants::TEXT_MAX_LENGTH
-      redirect_to :back
-    elsif @splited_query.length > 1
-      @search_query = ''
-      @splited_query.each_with_index do |w, i|
-        if w.length >= Constants::NAME_MIN_LENGTH
-          @search_query += "#{@splited_query[i]} "
-        end
+    if @search_whole_phrase || query.count(' ').zero?
+      if query.length < Constants::NAME_MIN_LENGTH
+        flash[:error] = t('general.query.length_too_short',
+                          min_length: Constants::NAME_MIN_LENGTH)
+        redirect_to :back
+      elsif query.length > Constants::TEXT_MAX_LENGTH
+        flash[:error] = t('general.query.length_too_long',
+                          max_length: Constants::TEXT_MAX_LENGTH)
+        redirect_to :back
+      else
+        @search_query = query
       end
     else
-      @search_query = @splited_query.join(' ')
+      # splits the search query to validate all entries
+      splited_query = query.split
+      @search_query = ''
+      splited_query.each_with_index do |w, i|
+        if w.length >= Constants::NAME_MIN_LENGTH &&
+           w.length <= Constants::TEXT_MAX_LENGTH
+          @search_query += "#{splited_query[i]} "
+        end
+      end
+      if @search_query.empty?
+        flash[:error] = t('general.query.wrong_query',
+                          min_length: Constants::NAME_MIN_LENGTH,
+                          max_length: Constants::TEXT_MAX_LENGTH)
+        redirect_to :back
+      else
+        @search_query.strip!
+      end
     end
-
     @search_page = 1 if @search_page < 1
   end
 
   protected
 
   def search_by_name(model)
-    model.search(current_user, true, @search_query, @search_page)
+    model.search(current_user,
+                 true,
+                 @search_query,
+                 @search_page,
+                 nil,
+                 match_case: @search_case,
+                 whole_word: @search_whole_word,
+                 whole_phrase: @search_whole_phrase)
   end
 
   def count_by_name(model)
@@ -122,16 +133,14 @@ class SearchController < ApplicationController
 
   def search_projects
     @project_results = []
-    if @project_search_count > 0
-      @project_results = search_by_name Project
-    end
+    @project_results = search_by_name(Project) if @project_search_count > 0
     @search_count = @project_search_count
   end
 
   def search_experiments
     @experiment_results = []
     if @experiment_search_count > 0
-      @experiment_results = search_by_name Experiment
+      @experiment_results = search_by_name(Experiment)
     end
     @search_count = @experiment_search_count
   end
@@ -139,96 +148,76 @@ class SearchController < ApplicationController
   def search_workflows
     @workflow_results = []
     if @workflow_search_count > 0
-      @workflow_results = search_by_name MyModuleGroup
+      @workflow_results = search_by_name(MyModuleGroup)
     end
     @search_count = @workflow_search_count
   end
 
   def search_modules
     @module_results = []
-    if @module_search_count > 0
-      @module_results = search_by_name MyModule
-    end
+    @module_results = search_by_name(MyModule) if @module_search_count > 0
     @search_count = @module_search_count
   end
 
   def search_results
     @result_results = []
-    if @result_search_count > 0
-      @result_results = search_by_name Result
-    end
+    @result_results = search_by_name(Result) if @result_search_count > 0
     @search_count = @result_search_count
   end
 
   def search_tags
     @tag_results = []
-    if @tag_search_count > 0
-      @tag_results = search_by_name Tag
-    end
+    @tag_results = search_by_name(Tag) if @tag_search_count > 0
     @search_count = @tag_search_count
   end
 
   def search_reports
     @report_results = []
-    if @report_search_count > 0
-      @report_results = search_by_name Report
-    end
+    @report_results = search_by_name(Report) if @report_search_count > 0
     @search_count = @report_search_count
   end
 
   def search_protocols
     @protocol_results = []
-    if @protocol_search_count > 0
-      @protocol_results = search_by_name Protocol
-    end
+    @protocol_results = search_by_name(Protocol) if @protocol_search_count > 0
     @search_count = @protocol_search_count
   end
 
   def search_steps
     @step_results = []
-    if @step_search_count > 0
-      @step_results = search_by_name Step
-    end
+    @step_results = search_by_name(Step) if @step_search_count > 0
     @search_count = @step_search_count
   end
 
   def search_checklists
     @checklist_results = []
     if @checklist_search_count > 0
-      @checklist_results = search_by_name Checklist
+      @checklist_results = search_by_name(Checklist)
     end
     @search_count = @checklist_search_count
   end
 
   def search_samples
     @sample_results = []
-    if @sample_search_count > 0
-      @sample_results = search_by_name Sample
-    end
+    @sample_results = search_by_name(Sample) if @sample_search_count > 0
     @search_count = @sample_search_count
   end
 
   def search_assets
     @asset_results = []
-    if @asset_search_count > 0
-      @asset_results = search_by_name Asset
-    end
+    @asset_results = search_by_name(Asset) if @asset_search_count > 0
     @search_count = @asset_search_count
   end
 
   def search_tables
     @table_results = []
-    if @table_search_count > 0
-      @table_results = search_by_name Table
-    end
+    @table_results = search_by_name(Table) if @table_search_count > 0
     @search_count = @table_search_count
   end
 
   def search_comments
     @comment_results = []
-    if @comment_search_count > 0
-      @comment_results = search_by_name Comment
-    end
+    @comment_results = search_by_name(Comment) if @comment_search_count > 0
     @search_count = @comment_search_count
   end
 end

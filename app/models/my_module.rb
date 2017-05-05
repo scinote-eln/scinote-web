@@ -47,18 +47,13 @@ class MyModule < ActiveRecord::Base
     include_archived,
     query = nil,
     page = 1,
-    current_team = nil
+    current_team = nil,
+    options = {}
   )
     exp_ids =
       Experiment
       .search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
       .pluck(:id)
-
-    if query
-      a_query = '%' + query.strip.gsub('_', '\\_').gsub('%', '\\%') + '%'
-    else
-      a_query = query
-    end
 
     if current_team
       experiments_ids = Experiment
@@ -71,7 +66,7 @@ class MyModule < ActiveRecord::Base
       new_query = MyModule
                   .distinct
                   .where('my_modules.experiment_id IN (?)', experiments_ids)
-                  .where_attributes_like([:name, :description], a_query)
+                  .where_attributes_like([:name, :description], query, options)
 
       if include_archived
         return new_query
@@ -82,13 +77,13 @@ class MyModule < ActiveRecord::Base
       new_query = MyModule
                   .distinct
                   .where('my_modules.experiment_id IN (?)', exp_ids)
-                  .where_attributes_like([:name, :description], a_query)
+                  .where_attributes_like([:name, :description], query, options)
     else
       new_query = MyModule
                   .distinct
                   .where('my_modules.experiment_id IN (?)', exp_ids)
                   .where('my_modules.archived = ?', false)
-                  .where_attributes_like([:name, :description], a_query)
+                  .where_attributes_like([:name, :description], query, options)
     end
 
     # Show all results if needed

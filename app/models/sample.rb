@@ -19,56 +19,51 @@ class Sample < ActiveRecord::Base
 
   def self.search(
     user,
-    include_archived,
+    _include_archived,
     query = nil,
     page = 1,
-    current_team = nil
+    current_team = nil,
+    options = {}
   )
     team_ids = Team.joins(:user_teams)
                    .where('user_teams.user_id = ?', user.id)
                    .distinct
                    .pluck(:id)
 
-    if query
-      a_query = '%' + query.strip.gsub('_', '\\_').gsub('%', '\\%') + '%'
-    else
-      a_query = query
-    end
-
     if current_team
       new_query = Sample
                   .distinct
                   .where('samples.team_id = ?', current_team.id)
-                  .where_attributes_like(['samples.name'], a_query)
+                  .where_attributes_like(['samples.name'], query, options)
 
       return new_query
     else
       user_ids = User
                  .joins(:user_teams)
                  .where('user_teams.team_id IN (?)', team_ids)
-                 .where_attributes_like(['users.full_name'], a_query)
+                 .where_attributes_like(['users.full_name'], query, options)
                  .pluck(:id)
 
       sample_ids = Sample
                    .joins(:user)
                    .where('team_id IN (?)', team_ids)
-                   .where_attributes_like(['name'], a_query)
+                   .where_attributes_like(['name'], query, options)
                    .pluck(:id)
 
       sample_type_ids = SampleType
                         .where('team_id IN (?)', team_ids)
-                        .where_attributes_like(['name'], a_query)
+                        .where_attributes_like(['name'], query, options)
                         .pluck(:id)
 
       sample_group_ids = SampleGroup
                          .where('team_id IN (?)', team_ids)
-                         .where_attributes_like(['name'], a_query)
+                         .where_attributes_like(['name'], query, options)
                          .pluck(:id)
 
       sample_custom_fields = SampleCustomField
                              .joins(:sample)
                              .where('samples.team_id IN (?)', team_ids)
-                             .where_attributes_like(['value'], a_query)
+                             .where_attributes_like(['value'], query, options)
                              .pluck(:id)
       new_query = Sample
                   .distinct

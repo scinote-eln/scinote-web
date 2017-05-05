@@ -29,30 +29,27 @@ class Result < ActiveRecord::Base
   accepts_nested_attributes_for :asset
   accepts_nested_attributes_for :table
 
-  def self.search(user, include_archived, query = nil, page = 1)
+  def self.search(user,
+                  include_archived,
+                  query = nil,
+                  page = 1,
+                  _current_team = nil,
+                  options = {})
     module_ids =
       MyModule
       .search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
       .pluck(:id)
 
-    if query
-      a_query = query.strip
-      .gsub("_","\\_")
-      .gsub("%","\\%")
-      .split(/\s+/)
-      .map {|t|  "%" + t + "%" }
-    else
-      a_query = query
-    end
-
-    new_query = Result
+    new_query =
+      Result
       .distinct
-      .joins("LEFT JOIN result_texts ON results.id = result_texts.result_id")
-      .where("results.my_module_id IN (?)", module_ids)
-      .where_attributes_like(["results.name", "result_texts.text"], a_query)
+      .joins('LEFT JOIN result_texts ON results.id = result_texts.result_id')
+      .where('results.my_module_id IN (?)', module_ids)
+      .where_attributes_like(['results.name', 'result_texts.text'],
+                             query, options)
 
     unless include_archived
-      new_query = new_query.where("results.archived = ?", false)
+      new_query = new_query.where('results.archived = ?', false)
     end
 
     # Show all results if needed

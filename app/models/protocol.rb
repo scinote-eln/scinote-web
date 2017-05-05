@@ -106,7 +106,12 @@ class Protocol < ActiveRecord::Base
   has_many :protocol_keywords, through: :protocol_protocol_keywords
   has_many :steps, inverse_of: :protocol, dependent: :destroy
 
-  def self.search(user, include_archived, query = nil, page = 1)
+  def self.search(user,
+                  include_archived,
+                  query = nil,
+                  page = 1,
+                  _current_team = nil,
+                  options = {})
     team_ids = Team.joins(:user_teams)
                    .where('user_teams.user_id = ?', user.id)
                    .distinct
@@ -157,16 +162,6 @@ class Protocol < ActiveRecord::Base
                   )
     end
 
-    if query
-      a_query = query.strip
-                     .gsub('_', '\\_')
-                     .gsub('%', '\\%')
-                     .split(/\s+/)
-                     .map { |t| '%' + t + '%' }
-    else
-      a_query = query
-    end
-
     new_query = new_query
                 .distinct
                 .joins('LEFT JOIN protocol_protocol_keywords ON ' \
@@ -181,7 +176,7 @@ class Protocol < ActiveRecord::Base
                     'protocols.authors',
                     'protocol_keywords.name'
                   ],
-                  a_query
+                  query, options
                 )
 
     # Show all results if needed
