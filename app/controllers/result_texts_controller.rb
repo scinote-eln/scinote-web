@@ -43,7 +43,7 @@ class ResultTextsController < ApplicationController
     @result.last_modified_by = current_user
 
     respond_to do |format|
-      if (@result.save and @result_text.save)
+      if @result.save && @result_text.save
         # link tiny_mce_assets to the text result
         link_tiny_mce_assets(@result_text.text, @result_text)
 
