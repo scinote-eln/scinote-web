@@ -27,7 +27,7 @@ class Checklist < ActiveRecord::Base
                   query = nil,
                   page = 1,
                   _current_team = nil,
-                  options= {})
+                  options = {})
     step_ids =
       Step
       .search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
