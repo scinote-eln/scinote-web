@@ -193,9 +193,8 @@ module ApplicationHelper
                 .first
     end
     user_description = %(<div class='col-xs-4'>
-      <img src='#{Rails.application.routes.url_helpers
-        .avatar_path(user, :thumb)}' alt='thumb'>
-      </div><div class='col-xs-8'>
+      <img src='#{user_avatar_absolute_url(user, :thumb)}'
+       alt='thumb'></div><div class='col-xs-8'>
       <div class='row'><div class='col-xs-9 text-left'><h5>
       #{user.full_name}</h5></div><div class='col-xs-3 text-right'>
       <span class='glyphicon glyphicon-remove' aria-hidden='true'></span>
@@ -212,13 +211,19 @@ module ApplicationHelper
       user_description += %(<p></p></div></div></div>)
     end
 
-    raw(image_tag(Rails.application.routes.url_helpers
-                    .avatar_path(user, :icon_small),
+    raw(image_tag(user_avatar_absolute_url(user, :icon_small),
                   class: 'atwho-user-img-popover')) +
       raw('<a onClick="$(this).popover(\'show\')" ' \
       'class="atwho-user-popover" data-container="body" ' \
       'data-html="true" tabindex="0" data-trigger="focus" ' \
       'data-placement="top" data-toggle="popover" data-content="') +
       raw(user_description) + raw('" >') + user.full_name + raw('</a>')
+  end
+
+  def user_avatar_absolute_url(user, style)
+    unless user.avatar(style) == '/images/icon_small/missing.png'
+      return user.avatar(style)
+    end
+    URI.join(root_url, "/images/#{style}/missing.png").to_s
   end
 end
