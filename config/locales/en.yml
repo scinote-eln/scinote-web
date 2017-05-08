@@ -1111,7 +1111,7 @@ en:
       new:
         head_title: "Sign up"
         team_name_label: "Team name"
-        team_name_help: "Team name is required in order to create your own team."
+        team_name_help: "Team name is required in order to create your own Team. After you create your own Team, you will be able to join other Teams as well."
     statistics:
       title: "My statistics"
       team: "Team"
