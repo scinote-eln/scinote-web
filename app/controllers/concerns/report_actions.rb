@@ -82,9 +82,9 @@ module ReportActions
                                           .singularize}_element.html.erb",
             contents.parse_locals([report_el])
           )
-          if contents.element == :step
+          if contents.locals.first == :step
             el[:children] = generate_step_contents_json(report_el)
-          elsif contents.element == :result
+          elsif contents.locals.first == :result
             el[:children] = generate_result_contents_json(report_el)
           end
           res << el
