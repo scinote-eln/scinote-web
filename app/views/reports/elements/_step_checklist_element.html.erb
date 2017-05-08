@@ -24,7 +24,9 @@
         <li>
           <input type="checkbox" disabled="disabled" <%= "checked='checked'" if item.checked %>/>
           <span class="<%= 'checked' if item.checked %>">
-            <%= custom_auto_link(item.text, true, nil, {wrapper_tag: "span"}) %>
+            <%= custom_auto_link(item.text,
+                                 simple_format: true,
+                                 wrapper_tag: { wrapper_tag: 'span'}) %>
           </span>
         </li>
       <% end %>

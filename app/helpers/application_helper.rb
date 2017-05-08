@@ -103,6 +103,9 @@ module ApplicationHelper
   end
 
   def smart_annotation_parser(text, team = nil)
+    # sometimes happens that the "team" param gets wrong data: "{nil, []}"
+    # so we have to check if the "team" param is kind of Team object
+    team = nil unless team.is_a? Team
     new_text = smart_annotation_filter_resources(text)
     new_text = smart_annotation_filter_users(new_text, team)
     new_text
@@ -187,10 +190,9 @@ module ApplicationHelper
     if user &&
        team &&
        UserTeam.user_in_team(user, team).any?
-      user_t, = user
-                .user_teams
-                .where('user_teams.team_id = ?', team)
-                .first
+      user_t = user.user_teams
+                   .where('user_teams.team_id = ?', team)
+                   .first
     end
     user_description = %(<div class='col-xs-4'>
       <img src='#{user_avatar_absolute_url(user, :thumb)}'

@@ -543,12 +543,15 @@ $("[data-action='new-step']").on("ajax:success", function(e, data) {
   applyCancelOnNew();
   toggleButtons(false);
   initializeCheckboxSorting();
-  TinyMCE.init();
+
 
   $("#step_name").focus();
   $("#new-step-main-tab a").on("shown.bs.tab", function() {
     $("#step_name").focus();
   });
+
+  TinyMCE.refresh();
+
 });
 
 // Needed because server-side validation failure clears locations of

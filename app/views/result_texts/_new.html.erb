@@ -3,7 +3,8 @@
     <%= f.text_field :name, style: "margin-top: 10px;" %><br />
     <%= f.fields_for :result_text do |ff| %>
       <div class="form-group">
-        <%= ff.tiny_mce_editor(:text) %>
+        <%= ff.tiny_mce_editor(:text, data: { object_type: 'result_text',
+                                              object_id: @result.result_text.id }) %>
       </div>
     <% end %><br />
     <%= f.submit t("result_texts.new.create"), class: 'btn btn-primary save-result', onclick: "processResult(event, ResultTypeEnum.TEXT, false);" %>
