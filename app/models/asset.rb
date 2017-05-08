@@ -182,7 +182,8 @@ class Asset < ActiveRecord::Base
       .joins('LEFT JOIN asset_text_data ON ' \
              ' assets.id = asset_text_data.asset_id')
       .select('assets.*')
-      .select("ts_headline(data, to_tsquery('" + s_query +
+      .select("ts_headline(data, to_tsquery('" +
+              sanitize_sql_for_conditions(s_query) +
               "'), 'StartSel=<mark>, StopSel=</mark>') headline")
       .where('assets.id IN (?)', ids)
   end
