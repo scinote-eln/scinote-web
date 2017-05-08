@@ -690,8 +690,8 @@ function bindFullZoomAjaxTabs() {
 
   // Reload users tab HTML element when modal is closed
   manageUsersModal.on("hide.bs.modal", function () {
-    var moduleEl = $("#" + $(this).attr("data-module-id"));
-
+    var moduleEl = $("div[data-module-id='" +
+                     $(this).attr("data-module-id") + "']");
     // Load HTML to refresh users list
     $.ajax({
       url: moduleEl.attr("data-module-users-tab-url"),
@@ -699,6 +699,8 @@ function bindFullZoomAjaxTabs() {
       dataType: "json",
       success: function (data) {
         moduleEl.find("#" + moduleEl.attr("data-module-id") + "_users").html(data.html);
+        CounterBadge.updateCounterBadge(data.counter,
+                                        data.my_module_id, 'users');
         initUsersEditLink(moduleEl);
       },
       error: function (data) {

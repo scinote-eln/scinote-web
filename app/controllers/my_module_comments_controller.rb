@@ -76,7 +76,9 @@ class MyModuleCommentsController < ApplicationController
                 comment: @comment
               }
             ),
-            date: @comment.created_at.strftime('%d.%m.%Y')
+            date: @comment.created_at.strftime('%d.%m.%Y'),
+            linked_id: @my_module.id,
+            counter: @my_module.task_comments.count
           },
           status: :created
         end
@@ -153,7 +155,9 @@ class MyModuleCommentsController < ApplicationController
               module: @my_module.name
             )
           )
-          render json: {}, status: :ok
+          render json: { linked_id: @my_module.id,
+                         counter: @my_module.task_comments.count },
+                 status: :ok
         else
           render json: { message: I18n.t('comments.delete_error') },
                  status: :unprocessable_entity

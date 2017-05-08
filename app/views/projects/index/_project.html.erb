@@ -64,6 +64,10 @@ data-project-users-tab-url="<%= url_for project_user_projects_path(project_id: p
         <li role="presentation">
           <a class="btn btn-link" href="<%= url_for project_user_projects_path(project_id: project.id, format: :json) %>" aria-controls="users-<%= project.id %>" role="tab" data-remote="true">
             <span class="glyphicon glyphicon-user"></span>
+            <span class="badge badge-indicator users-badge-indicator <%= 'hidden' unless project.users.count.positive? %>"
+                  data-linked-id="<%= project.id %>">
+              <%= project.users.count %>
+            </span>
           </a>
         </li>
       <% end %>
@@ -71,9 +75,6 @@ data-project-users-tab-url="<%= url_for project_user_projects_path(project_id: p
         <li role="presentation">
           <a class="btn btn-link" href="<%= url_for notifications_project_path(id: project.id, format: :json) %>" aria-controls="notifications-<%= project.id %>" role="tab" data-remote="true">
             <span class="glyphicon glyphicon-bell"></span>
-            <!--
-            <span class="badge badge-indicator">4</span>
-            -->
           </a>
         </li>
       <% end %>
@@ -81,9 +82,10 @@ data-project-users-tab-url="<%= url_for project_user_projects_path(project_id: p
         <li role="presentation">
           <a class="btn btn-link" href="<%= url_for project_project_comments_path(project_id: project.id, format: :json) %>" aria-controls="comments-<%= project.id %>" role="tab" data-remote="true">
             <span class="glyphicon glyphicon-comment"></span>
-            <!--
-            <span class="badge badge-indicator">4</span>
-            -->
+            <span class="badge badge-indicator comments-badge-indicator <%= 'hidden' unless project.project_comments.count.positive? %>"
+                  data-linked-id="<%= project.id %>">
+              <%= project.project_comments.count %>
+            </span>
           </a>
         </li>
       <% end %>
