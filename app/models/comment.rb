@@ -15,7 +15,9 @@ class Comment < ActiveRecord::Base
     user,
     include_archived,
     query = nil,
-    page = 1
+    page = 1,
+    _current_team = nil,
+    options = {}
   )
     project_ids =
       Project
@@ -34,16 +36,6 @@ class Comment < ActiveRecord::Base
       .search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
       .pluck(:id)
 
-    if query
-      a_query = query.strip
-                     .gsub('_', '\\_')
-                     .gsub('%', '\\%')
-                     .split(/\s+/)
-                     .map { |t| '%' + t + '%' }
-    else
-      a_query = query
-    end
-
     new_query =
       Comment.distinct
              .joins(:user)
@@ -57,7 +49,8 @@ class Comment < ActiveRecord::Base
                step_ids, 'StepComment',
                result_ids, 'ResultComment'
              )
-             .where_attributes_like(['message', 'users.full_name'], a_query)
+             .where_attributes_like(['message', 'users.full_name'],
+                                    query, options)
 
     # Show all results if needed
     if page == Constants::SEARCH_NO_LIMIT

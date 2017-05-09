@@ -16,26 +16,21 @@ class Tag < ActiveRecord::Base
   has_many :my_module_tags, inverse_of: :tag, :dependent => :destroy
   has_many :my_modules, through: :my_module_tags
 
-  def self.search(user, include_archived, query = nil, page = 1)
+  def self.search(user,
+                  include_archived,
+                  query = nil,
+                  page = 1,
+                  _current_team = nil,
+                  options = {})
     project_ids =
       Project
       .search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
       .pluck(:id)
 
-    if query
-      a_query = query.strip
-      .gsub("_","\\_")
-      .gsub("%","\\%")
-      .split(/\s+/)
-      .map {|t|  "%" + t + "%" }
-    else
-      a_query = query
-    end
-
     new_query = Tag
-      .distinct
-      .where("tags.project_id IN (?)", project_ids)
-      .where_attributes_like(:name, a_query)
+                .distinct
+                .where('tags.project_id IN (?)', project_ids)
+                .where_attributes_like(:name, query, options)
 
     # Show all results if needed
     if page == Constants::SEARCH_NO_LIMIT

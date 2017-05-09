@@ -22,7 +22,9 @@ class Report < ActiveRecord::Base
     user,
     include_archived,
     query = nil,
-    page = 1
+    page = 1,
+    _current_team = nil,
+    options = {}
   )
 
     project_ids =
@@ -30,28 +32,14 @@ class Report < ActiveRecord::Base
       .search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
       .pluck(:id)
 
-    if query
-      a_query = query.strip
-      .gsub("_","\\_")
-      .gsub("%","\\%")
-      .split(/\s+/)
-      .map {|t|  "%" + t + "%" }
-    else
-      a_query = query
-    end
-
-    new_query = Report
+    new_query =
+      Report
       .distinct
-      .joins("LEFT OUTER JOIN users ON users.id = reports.user_id OR users.id = reports.last_modified_by_id")
-      .where("reports.project_id IN (?)", project_ids)
-      .where("reports.user_id = (?)", user.id)
-      .where_attributes_like(
-        [
-          :name,
-          :description
-        ],
-        a_query
-      )
+      .joins('LEFT OUTER JOIN users ON users.id = reports.user_id ' \
+             'OR users.id = reports.last_modified_by_id')
+      .where('reports.project_id IN (?)', project_ids)
+      .where('reports.user_id = (?)', user.id)
+      .where_attributes_like([:name, :description], query, options)
 
     # Show all results if needed
     if page == Constants::SEARCH_NO_LIMIT

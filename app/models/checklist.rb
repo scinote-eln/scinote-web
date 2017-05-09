@@ -22,27 +22,25 @@ class Checklist < ActiveRecord::Base
     reject_if: :all_blank,
     allow_destroy: true
 
-  def self.search(user, include_archived, query = nil, page = 1)
+  def self.search(user,
+                  include_archived,
+                  query = nil,
+                  page = 1,
+                  _current_team = nil,
+                  options = {})
     step_ids =
       Step
       .search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
       .pluck(:id)
 
-    if query
-      a_query = query.strip
-      .gsub("_","\\_")
-      .gsub("%","\\%")
-      .split(/\s+/)
-      .map {|t|  "%" + t + "%" }
-    else
-      a_query = query
-    end
-
-    new_query = Checklist
-        .distinct
-        .where("checklists.step_id IN (?)", step_ids)
-        .joins("LEFT JOIN checklist_items ON checklists.id = checklist_items.checklist_id")
-        .where_attributes_like(["checklists.name",  "checklist_items.text"], a_query)
+    new_query =
+      Checklist
+      .distinct
+      .where('checklists.step_id IN (?)', step_ids)
+      .joins('LEFT JOIN checklist_items ON ' \
+             'checklists.id = checklist_items.checklist_id')
+      .where_attributes_like(['checklists.name', 'checklist_items.text'],
+                             query, options)
 
     # Show all results if needed
     if page == Constants::SEARCH_NO_LIMIT

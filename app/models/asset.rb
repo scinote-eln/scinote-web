@@ -91,7 +91,9 @@ class Asset < ActiveRecord::Base
     user,
     include_archived,
     query = nil,
-    page = 1
+    page = 1,
+    _current_team = nil,
+    options = {}
   )
     step_ids =
       Step
@@ -107,42 +109,67 @@ class Asset < ActiveRecord::Base
       .distinct
       .pluck('result_assets.id')
 
-    if query
-      a_query = query.strip
-      .gsub("_","\\_")
-      .gsub("%","\\%")
-      .split(/\s+/)
-      .map {|t|  "%" + t + "%" }
-    else
-      a_query = query
-    end
-
-    # Trim whitespace and replace it with OR character. Make prefixed
-    # wildcard search term and escape special characters.
-    # For example, search term 'demo project' is transformed to
-    # 'demo:*|project:*' which makes word inclusive search with postfix
-    # wildcard.
-
-    s_query = query.gsub(/[!()&|:]/, " ")
-      .strip
-      .split(/\s+/)
-      .map {|t| t + ":*" }
-      .join("|")
-      .gsub('\'', '"')
-
-    ids = Asset
+    ids =
+      Asset
       .select(:id)
       .distinct
-      .joins("LEFT OUTER JOIN step_assets ON step_assets.asset_id = assets.id")
-      .joins("LEFT OUTER JOIN result_assets ON result_assets.asset_id = assets.id")
-      .joins("LEFT JOIN asset_text_data ON assets.id = asset_text_data.asset_id")
-      .where("(step_assets.id IN (?) OR result_assets.id IN (?))", step_ids, result_ids)
-      .where(
-        "(assets.file_file_name ILIKE ANY (array[?]) " +
+      .joins('LEFT OUTER JOIN step_assets ON step_assets.asset_id = assets.id')
+      .joins('LEFT OUTER JOIN result_assets ON ' \
+             'result_assets.asset_id = assets.id')
+      .joins('LEFT JOIN asset_text_data ON ' \
+             'assets.id = asset_text_data.asset_id')
+      .where('(step_assets.id IN (?) OR result_assets.id IN (?))',
+             step_ids, result_ids)
+
+    a_query = s_query = ''
+
+    if options[:whole_word].to_s == 'true' ||
+       options[:whole_phrase].to_s == 'true'
+      like = options[:match_case].to_s == 'true' ? '~' : '~*'
+      s_query = query.gsub(/[!()&|:]/, ' ')
+                     .strip
+                     .split(/\s+/)
+                     .map { |t| t + ':*' }
+      if options[:whole_word].to_s == 'true'
+        a_query = query.split
+                       .map { |a| Regexp.escape(a) }
+                       .join('|')
+        s_query = s_query.join('|')
+      else
+        a_query = Regexp.escape(query)
+        s_query = s_query.join('&')
+      end
+      a_query = '\\y(' + a_query + ')\\y'
+      s_query = s_query.tr('\'', '"')
+
+      ids = ids.where(
+        "(trim_html_tags(assets.file_file_name) #{like} ? " \
         "OR asset_text_data.data_vector @@ to_tsquery(?))",
         a_query,
         s_query
       )
+    else
+      like = options[:match_case].to_s == 'true' ? 'LIKE' : 'ILIKE'
+      a_query = query.split.map { |a| "%#{sanitize_sql_like(a)}%" }
+
+      # Trim whitespace and replace it with OR character. Make prefixed
+      # wildcard search term and escape special characters.
+      # For example, search term 'demo project' is transformed to
+      # 'demo:*|project:*' which makes word inclusive search with postfix
+      # wildcard.
+      s_query = query.gsub(/[!()&|:]/, ' ')
+                     .strip
+                     .split(/\s+/)
+                     .map { |t| t + ':*' }
+                     .join('|')
+                     .tr('\'', '"')
+      ids = ids.where(
+        "(trim_html_tags(assets.file_file_name) #{like} ANY (array[?]) " \
+        "OR asset_text_data.data_vector @@ to_tsquery(?))",
+        a_query,
+        s_query
+      )
+    end
 
     # Show all results if needed
     if page != Constants::SEARCH_NO_LIMIT
@@ -152,11 +179,13 @@ class Asset < ActiveRecord::Base
     end
 
     Asset
-      .joins("LEFT JOIN asset_text_data ON assets.id = asset_text_data.asset_id")
-      .select("assets.*")
-      .select("ts_headline(data, to_tsquery('" + s_query + "'),
-        'StartSel=<mark>, StopSel=</mark>') headline")
-      .where("assets.id IN (?)",  ids)
+      .joins('LEFT JOIN asset_text_data ON ' \
+             ' assets.id = asset_text_data.asset_id')
+      .select('assets.*')
+      .select("ts_headline(data, to_tsquery('" +
+              sanitize_sql_for_conditions(s_query) +
+              "'), 'StartSel=<mark>, StopSel=</mark>') headline")
+      .where('assets.id IN (?)', ids)
   end
 
   def is_image?
