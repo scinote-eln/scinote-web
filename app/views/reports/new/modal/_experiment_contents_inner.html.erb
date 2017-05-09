@@ -6,7 +6,7 @@
 
 <% if experiment.my_modules.count > 0 %>
   <%= form.check_box :experiment, label: experiment.name, class: "experiment-all-cb" %>
-  <ul class="no-style experiment-contents-list">
+  <ul class="experiment-contents-list">
     <% experiment.my_module_groups.each do |my_module_group| %>
       <% if my_module_group.my_modules.present? then %>
           <% my_module_group.ordered_modules.each do |my_module| %>

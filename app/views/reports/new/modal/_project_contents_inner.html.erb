@@ -4,41 +4,42 @@
   </em>
 </div>
 
-<% if project.project_my_modules.is_archived(false).count > 0 %>
-  <ul class="no-style checkbox-tree">
-    <li>
-      <%= form.check_box :project, label: project.name %>
-      <ul class="no-style project-contents-list">
-        <% project.experiments.is_archived(false).each do |experiment| %>
-          <% next unless experiment.my_modules.is_archived(false).count > 0 %>
-          <li>
-            <%= form.check_box "experiment_#{experiment.id}", label: experiment.name %>
-            <ul class="no-style experiment-contents-list">
-              <% experiment.my_module_groups.each do |my_module_group| %>
-                <% if my_module_group.my_modules.is_archived(false).present? then %>
-                    <% my_module_group.ordered_modules.is_archived(false).each do |my_module| %>
-                      <li>
-                        <%= form.check_box "modules[#{my_module.id}]", label: my_module.name %>
-                      </li>
-                    <% end %>
+<% if project.project_my_modules.is_archived(false).present? %>
+  <div class="checkbox-tree">
+    <ul>
+      <li>
+        <%= form.check_box :project, label: project.name %>
+        <ul>
+          <% project.experiments.is_archived(false).each do |experiment| %>
+            <% next unless experiment.my_modules.is_archived(false).present? %>
+            <li>
+              <%= form.check_box "experiment_#{experiment.id}", label: experiment.name %>
+              <ul>
+                <% experiment.my_module_groups.each do |my_module_group| %>
+                  <% next unless my_module_group.my_modules.is_archived(false).present? %>
+                  <% my_module_group.ordered_modules.is_archived(false).each do |my_module| %>
+                    <li>
+                      <%= form.check_box "modules[#{my_module.id}]", label: my_module.name %>
+                    </li>
+                  <% end %>
                 <% end %>
-              <% end %>
 
-              <!-- Tasks without groups -->
-              <% modules_without_group = experiment.modules_without_group %>
-              <% if modules_without_group.present? and modules_without_group.count > 0 %>
-                <% modules_without_group.each do |my_module| %>
-                  <li>
-                    <%= form.check_box "modules[#{my_module.id}]", label: my_module.name %>
-                  </li>
+                <!-- Tasks without groups -->
+                <% modules_without_group = experiment.modules_without_group %>
+                <% if modules_without_group.present? %>
+                  <% modules_without_group.each do |my_module| %>
+                    <li>
+                      <%= form.check_box "modules[#{my_module.id}]", label: my_module.name %>
+                    </li>
+                  <% end %>
                 <% end %>
-              <% end %>
-            </ul>
-          </li>
-        <% end %>
-      </ul>
-    </li>
-  </ul>
+              </ul>
+            </li>
+          <% end %>
+        </ul>
+      </li>
+    </ul>
+  </div>
 <% else %>
   <div>
     <em>

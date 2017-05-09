@@ -4,9 +4,17 @@
   </em>
 </div>
 
-<%= form.label :result_content_all, t("projects.reports.elements.modals.result_contents_inner.check_all"), class: "checkbox" %>
-<div class="no-style" style="padding-left: 15px;">
+<div class="checkbox-tree">
+  <ul>
+    <li><!-- result_content_all needed?-->
+      <%= form.label :result_content_all, t("projects.reports.elements.modals.result_contents_inner.check_all"), class: "checkbox" %>
+      <ul>
 
-  <%= form.check_box :result_comments, label: t("projects.reports.elements.modals.result_contents_inner.comments") %>
+        <li>
+          <%= form.check_box :result_comments, label: t("projects.reports.elements.modals.result_contents_inner.comments") %>
+        </li>
 
+      </ul>
+    </li>
+  </ul>
 </div>

@@ -747,6 +747,13 @@ a[data-toggle="tooltip"] {
   }
 }
 
+// Checkbox tree
+.checkbox-tree ul {
+  list-style: none;
+  margin: 0;
+  padding-left: 15px;
+}
+
 /** Add users modal  */
 .btn-group-existing-users {
   width: 100%;
