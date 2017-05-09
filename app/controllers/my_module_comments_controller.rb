@@ -77,8 +77,8 @@ class MyModuleCommentsController < ApplicationController
               }
             ),
             date: @comment.created_at.strftime('%d.%m.%Y'),
-            linked_id: @my_module.id,
-            counter: @my_module.task_comments.count
+            linked_id: @my_module.id, # Used for counter badge
+            counter: @my_module.task_comments.count # Used for counter badge
           },
           status: :created
         end
@@ -155,6 +155,7 @@ class MyModuleCommentsController < ApplicationController
               module: @my_module.name
             )
           )
+          # 'counter' and 'linked_id' are used for counter badge
           render json: { linked_id: @my_module.id,
                          counter: @my_module.task_comments.count },
                  status: :ok

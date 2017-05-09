@@ -19,7 +19,7 @@ class UserProjectsController < ApplicationController
             partial: 'index.html.erb'
           ),
           project_id: @project.id,
-          counter: @project.users.count
+          counter: @project.users.count # Used for counter badge
         }
       end
     end

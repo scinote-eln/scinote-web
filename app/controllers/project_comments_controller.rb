@@ -146,6 +146,7 @@ class ProjectCommentsController < ApplicationController
               project: @project.name
             )
           )
+          # 'counter' and 'linked_id' are used for counter badge
           render json: { linked_id: @project.id,
                          counter: @project.project_comments.count },
                  status: :ok

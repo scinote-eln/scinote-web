@@ -15,7 +15,7 @@ class UserMyModulesController < ApplicationController
             partial: 'index.html.erb'
           ),
           my_module_id: @my_module.id,
-          counter: @my_module.users.count
+          counter: @my_module.users.count # Used for counter badge
         }
       end
     end
