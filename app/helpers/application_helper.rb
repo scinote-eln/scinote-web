@@ -212,9 +212,8 @@ module ApplicationHelper
     else
       user_description += %(<p></p></div></div></div>)
     end
-
-    raw(image_tag(user_avatar_absolute_url(user, :icon_small),
-                  class: 'atwho-user-img-popover')) +
+    raw("<img src='#{user_avatar_absolute_url(user, :icon_small)}'" \
+      "alt='icon_small' class='atwho-user-img-popover'>") +
       raw('<a onClick="$(this).popover(\'show\')" ' \
       'class="atwho-user-popover" data-container="body" ' \
       'data-html="true" tabindex="0" data-trigger="focus" ' \
