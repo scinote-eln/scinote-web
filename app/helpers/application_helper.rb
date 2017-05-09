@@ -213,13 +213,13 @@ module ApplicationHelper
       user_description += %(<p></p></div></div></div>)
     end
 
-    raw(image_tag(user_avatar_absolute_url(user, :icon_small),
-                  class: 'atwho-user-img-popover')) +
-      raw('<a onClick="$(this).popover(\'show\')" ' \
-      'class="atwho-user-popover" data-container="body" ' \
-      'data-html="true" tabindex="0" data-trigger="focus" ' \
-      'data-placement="top" data-toggle="popover" data-content="') +
-      raw(user_description) + raw('" >') + user.full_name + raw('</a>')
+    raw("<img src='#{user_avatar_absolute_url(user, :icon_small)}'" \
+    "alt='avatar' class='atwho-user-img-popover'>") +
+    raw('<a onClick="$(this).popover(\'show\')" ' \
+    'class="atwho-user-popover" data-container="body" ' \
+    'data-html="true" tabindex="0" data-trigger="focus" ' \
+    'data-placement="top" data-toggle="popover" data-content="') +
+    raw(user_description) + raw('" >') + user.full_name + raw('</a>')
   end
 
   def user_avatar_absolute_url(user, style)
