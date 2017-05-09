@@ -4,28 +4,16 @@
     <!-- Nav tabs -->
     <ul class="nav nav-tabs" role="tablist">
       <li role="presentation" class="active">
-        <a href="#project-tab" aria-controls="project-tab" role="tab" data-toggle="tab">
+        <a href="#tasks-tab" aria-controls="tasks-tab" role="tab" data-toggle="tab">
           <span class="glyphicon glyphicon-credit-card visible-xs"></span>
-          <span class="hidden-xs"><%= t("projects.reports.elements.modals.project_contents.project_tab") %></span>
+          <span class="hidden-xs"><%= t("projects.reports.elements.modals.project_contents.tasks_tab") %></span>
         </a>
       </li>
       <% if project.project_my_modules.is_archived(false).count > 0 %>
       <li role="presentation">
-        <a href="#project-modules-tab" aria-controls="project-modules-tab" role="tab" data-toggle="tab">
+        <a href="#content-tab" aria-controls="content-tab" role="tab" data-toggle="tab">
           <span class="glyphicon glyphicon-link visible-xs"></span>
-          <span class="hidden-xs"><%= t("projects.reports.elements.modals.project_contents.modules_tab") %></span>
-        </a>
-      </li>
-      <li role="presentation">
-        <a href="#module-steps-tab" aria-controls="module-steps-tab" role="tab" data-toggle="tab">
-          <span class="glyphicon glyphicon-random visible-xs"></span>
-          <span class="hidden-xs"><%= t("projects.reports.elements.modals.project_contents.steps_tab") %></span>
-        </a>
-      </li>
-      <li role="presentation">
-        <a href="#step-results-tab" aria-controls="step-results-tab" role="tab" data-toggle="tab">
-          <span class="glyphicon glyphicon-th visible-xs"></span>
-          <span class="hidden-xs"><%= t("projects.reports.elements.modals.project_contents.results_tab") %></span>
+          <span class="hidden-xs"><%= t("projects.reports.elements.modals.project_contents.content_tab") %></span>
         </a>
       </li>
       <% end %>
@@ -33,21 +21,17 @@
 
     <!-- Tab panes -->
     <div class="tab-content">
-      <div role="tabpanel" class="tab-pane active" id="project-tab">
-        <h5 class="visible-xs"><%= t("projects.reports.elements.modals.project_contents.project_tab") %></h5>
+      <div role="tabpanel" class="tab-pane active" id="tasks-tab">
+        <h5 class="visible-xs"><%= t("projects.reports.elements.modals.project_contents.tasks_tab") %></h5>
         <%= render partial: "reports/new/modal/project_contents_inner.html.erb", locals: { form: f, project: project } %>
       </div>
       <% if project.project_my_modules.is_archived(false).count > 0 %>
-        <div role="tabpanel" class="tab-pane" id="project-modules-tab">
-          <h5 class="visible-xs"><%= t("projects.reports.elements.modals.project_contents.modules_tab") %></h5>
+        <div role="tabpanel" class="tab-pane" id="content-tab">
+          <h5 class="visible-xs"><%= t("projects.reports.elements.modals.project_contents.content_tab") %></h5>
           <%= render partial: "reports/new/modal/module_contents_inner.html.erb", locals: { form: f } %>
-        </div>
-        <div role="tabpanel" class="tab-pane" id="module-steps-tab">
-          <h5 class="visible-xs"><%= t("projects.reports.elements.modals.project_contents.steps_tab") %></h5>
+          <hr>
           <%= render partial: "reports/new/modal/step_contents_inner.html.erb", locals: { form: f } %>
-        </div>
-        <div role="tabpanel" class="tab-pane" id="step-results-tab">
-          <h5 class="visible-xs"><%= t("projects.reports.elements.modals.project_contents.results_tab") %></h5>
+          <hr>
           <%= render partial: "reports/new/modal/result_contents_inner.html.erb", locals: { form: f } %>
         </div>
       <% end %>
@@ -58,54 +42,64 @@
 <script type="javascript">
   $(function() {
     var form = $("#add-contents-form");
-    var projectTab = form.find("#project-tab");
-    var modulesTab = form.find("#project-modules-tab");
-    var stepsTab = form.find("#module-steps-tab");
+    var tasksTab = form.find("#tasks-tab");
+    var contentTab = form.find("#content-tab");
 
-    var projectCheckAlls = projectTab.find(".project-all-cb");
-    var projectAll = projectTab.find("input:checkbox");
-    projectCheckAlls.click(function() {
-      var nextUl = $(this).closest("div.checkbox").next();
-      if (nextUl.length && nextUl.is("ul.project-contents-list, \
-                                      ul.experiment-contents-list")) {
-        nextUl.find("input:checkbox").prop("checked", this.checked);
-      }
-    });
-    projectAll.click(function() {
-      var parentLists = $(this).parents("ul.project-contents-list, \
-                                         ul.experiment-contents-list");
-      if (parentLists.length) {
-        var prevEl = parentLists.prev();
-        if (prevEl.length && prevEl.is("div.checkbox")) {
-          prevEl.find("input:checkbox").prop("checked", false);
-        }
-      }
-    });
+    var modulesCheckAll = contentTab.find("#_module_content_all");
+    var modulesOthers = contentTab.find("input:checkbox[name^='[module']:not([name$='all]'])");
+    var modulesResultsAll = contentTab.find(".results-all");
+    var modulesResults = contentTab.find(".result-cb");
+    checkboxTree(modulesResultsAll, modulesResults);
+    checkboxTree(modulesCheckAll, modulesOthers);
 
-    var modulesCheckAll = modulesTab.find(".module-check-all");
-    var modulesOthers = modulesTab.find("input:checkbox:not(.module-check-all)");
-    var modulesResultsAll = modulesTab.find(".results-all");
-    var modulesResults = modulesTab.find(".result-cb");
-    modulesCheckAll.click(function() {
-      modulesOthers.prop("checked", this.checked);
-    });
-    modulesOthers.click(function() {
-      modulesCheckAll.prop("checked", false);
-    });
-    modulesResultsAll.click(function() {
-      modulesResults.prop("checked", this.checked);
-    });
-    modulesResults.click(function() {
-      modulesResultsAll.prop("checked", false);
-    });
-
-    var stepsCheckAll = stepsTab.find(".step-check-all");
-    var stepsOthers = stepsTab.find("input:checkbox:not(.step-check-all)");
-    stepsCheckAll.click(function() {
-      stepsOthers.prop("checked", this.checked);
-    });
-    stepsOthers.click(function() {
-      stepsCheckAll.prop("checked", false);
-    });
+    var stepsCheckAll = contentTab.find("#_step_content_all");
+    var stepsOthers = contentTab.find("input:checkbox[name^='[step']:not([name$='all]'])");
+    checkboxTree(stepsCheckAll, stepsOthers);
   });
+
+  function checkboxTree($select_all, $others) {
+    // Update child checkboxes based on the parent "select all" checkbox
+    $select_all.change(function() {
+      $others.prop('checked', $(this).prop("checked"));
+    });
+
+    $others.change(function(){
+      // Uncheck "select all" checkbox, if one of the listed checkbox item is unchecked
+      if(!$(this).prop("checked")) {
+          $select_all.prop('checked', false);
+      }
+      // Check "select all" checkbox if all checkboxes are checked
+      if ($others.filter(':checked').length == $others.length ){
+          $select_all.prop('checked', true);
+      }
+    });
+  }
+
+  function checkboxTree2() {
+    $(".checkbox-tree input:checkbox").change(function() {
+      // Update descendent checkboxes
+      var $checkbox = $(this);
+      var checkboxChecked = $checkbox.prop("checked");
+      var $childCheckboxes = $checkbox.closest("li").find("ul input:checkbox");
+      $childCheckboxes.each(function() {
+        $(this).prop('checked', checkboxChecked);
+      });
+
+      // Update ancestor checkboxes
+      var $checkboxesContainer;
+      while (!$checkboxesContainer ||
+             !$checkboxesContainer.hasClass("checkbox-tree")) {
+
+        var $checkboxesContainer = $checkbox.closest("ul");
+        var $parentCheckbox = $checkboxesContainer.siblings().find("input:checkbox");
+        var $checkboxes = $checkboxesContainer.find("input:checkbox");
+        var $checkedCheckboxes = $checkboxes.filter(':checked');
+
+        $parentCheckbox.prop('checked',
+         $checkboxes.length == $checkedCheckboxes.length);
+        $checkbox = $parentCheckbox;
+      }
+    });
+  }
+  checkboxTree2();
 </script>

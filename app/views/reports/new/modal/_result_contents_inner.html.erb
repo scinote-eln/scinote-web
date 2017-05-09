@@ -4,4 +4,9 @@
   </em>
 </div>
 
-<%= form.check_box :result_comments, label: t("projects.reports.elements.modals.result_contents_inner.comments") %>
+<%= form.label :result_content_all, t("projects.reports.elements.modals.result_contents_inner.check_all"), class: "checkbox" %>
+<div class="no-style" style="padding-left: 15px;">
+
+  <%= form.check_box :result_comments, label: t("projects.reports.elements.modals.result_contents_inner.comments") %>
+
+</div>

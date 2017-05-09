@@ -44,6 +44,15 @@
   display: inline-block;
 }
 
+// Modal for adding content
+label {
+  &[for="_module_content_all"],
+  &[for="_step_content_all"],
+  &[for="result_content_all"] {
+    font-weight: bold;
+  }
+}
+
 /* New page sidebar */
 .report-sidebar-wrapper {
   background-color: $color-white !important;

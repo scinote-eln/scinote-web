@@ -7,8 +7,8 @@
 <script type="javascript">
   $(function() {
     var form = $("#add-contents-form");
-    var checkAll = form.find(".step-check-all");
-    var others = form.find("input:checkbox:not(.step-check-all)");
+    var checkAll = form.find("#_step_content_all");
+    var others = form.find("input:checkbox:not(#_step_content_all)");
     checkAll.click(function() {
       others.prop("checked", this.checked);
     });

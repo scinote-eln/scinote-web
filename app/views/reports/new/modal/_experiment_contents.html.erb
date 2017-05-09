@@ -53,8 +53,8 @@
       }
     });
 
-    var moduleCheckAll = moduleTab.find(".module-check-all");
-    var moduleOthers = moduleTab.find("input:checkbox:not(.module-check-all)");
+    var moduleCheckAll = moduleTab.find("#_module_content_all");
+    var moduleOthers = moduleTab.find("input:checkbox:not(#_module_content_all)");
     var moduleResultsAll = moduleTab.find(".results-all");
     var moduleResults = moduleTab.find(".result-cb");
     moduleCheckAll.click(function() {
@@ -70,8 +70,8 @@
       moduleResultsAll.prop("checked", false);
     });
 
-    var stepsCheckAll = stepsTab.find(".step-check-all");
-    var stepsOthers = stepsTab.find("input:checkbox:not(.step-check-all)");
+    var stepsCheckAll = stepsTab.find("#_step_content_all");
+    var stepsOthers = stepsTab.find("input:checkbox:not(#_step_content_all)");
     stepsCheckAll.click(function() {
       stepsOthers.prop("checked", this.checked);
     });
