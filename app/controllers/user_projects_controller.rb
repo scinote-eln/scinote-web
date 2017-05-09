@@ -13,14 +13,15 @@ class UserProjectsController < ApplicationController
     @users = @project.user_projects
 
     respond_to do |format|
-      #format.html
-      format.json {
-        render :json => {
-          :html => render_to_string({
-            :partial => "index.html.erb"
-          })
+      format.json do
+        render json: {
+          html: render_to_string(
+            partial: 'index.html.erb'
+          ),
+          project_id: @project.id,
+          counter: @project.users.count # Used for counter badge
         }
-      }
+      end
     end
   end
 
@@ -30,17 +31,17 @@ class UserProjectsController < ApplicationController
     @up = UserProject.new(project: @project)
 
     respond_to do |format|
-      format.json {
-        render :json => {
-          :project => @project,
-          :html_body => render_to_string({
-            :partial => "index_edit.html.erb"
-          }),
-          :html_footer => render_to_string({
-            :partial => "index_edit_footer.html.erb"
-          })
+      format.json do
+        render json: {
+          project: @project,
+          html_body: render_to_string(
+            partial: 'index_edit.html.erb'
+          ),
+          html_footer: render_to_string(
+            partial: 'index_edit_footer.html.erb'
+          )
         }
-      }
+      end
     end
   end
 

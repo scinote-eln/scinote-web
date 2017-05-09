@@ -124,6 +124,9 @@ var Comments = (function() {
                     </li>');
         }
 
+        CounterBadge.updateCounterBadge(data.counter,
+                                        data.linked_id, 'comments');
+
         list.parent().find('.content-comments')
           .append('<li class="comment">' + data.html + '</li>')
           .scrollTop(0);
@@ -245,7 +248,7 @@ var Comments = (function() {
           url: $this.attr('data-url'),
           type: 'DELETE',
           dataType: 'json',
-          success: function() {
+          success: function(data) {
             // There are 3 possible actions:
             // - (A) comment is the last comment in project
             // - (B) comment is the last comment inside specific date
@@ -268,6 +271,9 @@ var Comments = (function() {
             }
             commentEl.remove();
 
+            CounterBadge.updateCounterBadge(data.counter,
+                                            data.linked_id,
+                                            'comments');
             scrollCommentOptions($(parent).find('.dropdown-comment'));
           },
           error: function(data) {

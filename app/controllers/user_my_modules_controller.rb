@@ -13,7 +13,9 @@ class UserMyModulesController < ApplicationController
         render json: {
           html: render_to_string(
             partial: 'index.html.erb'
-          )
+          ),
+          my_module_id: @my_module.id,
+          counter: @my_module.users.count # Used for counter badge
         }
       end
     end
@@ -25,14 +27,14 @@ class UserMyModulesController < ApplicationController
     @new_um = UserMyModule.new(my_module: @my_module)
 
     respond_to do |format|
-      format.json {
-        render :json => {
-          :my_module => @my_module,
-          :html => render_to_string({
-            :partial => "index_edit.html.erb"
-          })
+      format.json do
+        render json: {
+          my_module: @my_module,
+          html: render_to_string(
+            partial: 'index_edit.html.erb'
+          )
         }
-      }
+      end
     end
   end
 
