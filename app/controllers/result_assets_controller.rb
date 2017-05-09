@@ -72,11 +72,7 @@ class ResultAssetsController < ApplicationController
           }, status: :ok
         end
       else
-        # This response is sent as 200 OK due to IE security error when
-        # accessing iframe content.
-        format.json do
-          render json: { status: 'error', errors: @result.errors }
-        end
+        format.json { render json: @result.errors, status: :bad_request }
       end
     end
   end

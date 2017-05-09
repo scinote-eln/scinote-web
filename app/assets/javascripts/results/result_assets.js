@@ -14,6 +14,9 @@ $("#new-result-asset").on("ajax:success", function(e, data) {
   toggleResultEditButtons(false);
 
   $("#result_name").focus();
+}).on('ajax:error', function(e, xhr) {
+  $(this).renderFormErrors('result', xhr.responseJSON, true, e);
+  animateSpinner(null, false);
 });
 
 $("#new-result-asset").on("ajax:error", function(e, xhr, status, error) {
@@ -66,15 +69,8 @@ function formAjaxResultAsset($form) {
     initPreviewModal();
     Comments.initialize();
   })
-  .on("ajax:error", function(e, data) {
-    // This check is here only because of remotipart bug, which returns
-    // HTML instead of JSON, go figure
-    var errors = '';
-    if (data.errors)
-      errors = data.errors;
-    else
-      errors = data.responseJSON.errors;
-    $form.renderFormErrors("result", errors, true, e);
+  .on('ajax:error', function(e, xhr) {
+    $form.renderFormErrors('result', xhr.responseJSON, true, e);
     animateSpinner(null, false);
   });
 }

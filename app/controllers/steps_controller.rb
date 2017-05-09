@@ -97,11 +97,6 @@ class StepsController < ApplicationController
           status: :ok
         end
       else
-        # On error, delete the newly added files from S3, as they were
-        # uploaded on client-side (in case of client-side hacking of
-        # asset's signature response)
-        Asset.destroy_all(new_assets)
-
         format.json {
           render json: {
             html: render_to_string(partial: 'new.html.erb')
