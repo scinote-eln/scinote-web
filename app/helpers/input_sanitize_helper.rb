@@ -1,13 +1,15 @@
+require 'sanitize'
+
 module InputSanitizeHelper
-  def sanitize_input(
-    text,
-    tags = [],
-    attributes = []
-  )
-    ActionController::Base.helpers.sanitize(
+  # Rails default ActionController::Base.helpers.sanitize method call
+  # the ActiveRecord connecton method on the caller object which in
+  # our cases throws an error when called from not ActiveRecord objects
+  # such SamplesDatatables
+  def sanitize_input(text, tags = [], attributes = [])
+    Sanitize.fragment(
       text,
-      tags: Constants::WHITELISTED_TAGS + tags,
-      attributes: Constants::WHITELISTED_ATTRIBUTES + attributes
+      elements: tags,
+      attributes: { all: attributes }
     )
   end
 
