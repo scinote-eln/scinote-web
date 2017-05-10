@@ -56,7 +56,7 @@ function formAjaxResultText($form) {
         $(this).remove();
 
         applyEditResultTextCallback();
-        applyCollapseLinkCallBack();
+        Results.applyCollapseLinkCallBack();
         toggleResultEditButtons(true);
         expandResult(newResult);
         TinyMCE.destroyAll();

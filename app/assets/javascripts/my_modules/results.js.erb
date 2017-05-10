@@ -1,199 +1,214 @@
 //= require assets
 //= require comments
 
-/**
- * Initializes page
- */
-function init() {
-  initHandsOnTables($(document));
-  expandAllResults();
-  initTutorial();
-  applyCollapseLinkCallBack();
+(function(global) {
+  'use strict';
 
-  Comments.bindNewElement();
-  Comments.initialize();
+  global.Results = (function() {
+    var self = this;
+    var ResultTypeEnum = Object.freeze({
+      FILE: 0,
+      TABLE: 1,
+      TEXT: 2,
+      COMMENT: 3
+    });
 
-  Comments.initCommentOptions("ul.content-comments");
-  Comments.initEditComments("#results");
-  Comments.initDeleteComments("#results");
+    function init() {
+      self.initHandsOnTables($(document));
+      _expandAllResults();
+      _initTutorial();
+      self.applyCollapseLinkCallBack();
 
-  $(function () {
-    $("#results-collapse-btn").click(function () {
-      $('.result .panel-collapse').collapse('hide');
-      $(document).find("span.collapse-result-icon").each(function()  {
-        $(this).addClass("glyphicon-collapse-down");
-        $(this).removeClass("glyphicon-collapse-up");
+      Comments.bindNewElement();
+      Comments.initialize();
+
+      Comments.initCommentOptions('ul.content-comments');
+      Comments.initEditComments('#results');
+      Comments.initDeleteComments('#results');
+
+      $(function () {
+        $('#results-collapse-btn').click(function () {
+          $('.result .panel-collapse').collapse('hide');
+          $(document).find('span.collapse-result-icon').each(function()  {
+            $(this).addClass('glyphicon-collapse-down');
+            $(this).removeClass('glyphicon-collapse-up');
+          });
+        });
+
+        $('#results-expand-btn').click(_expandAllResults);
       });
+
+      // This checks if the ctarget param exist in the rendered url and opens the
+      // comment tab
+      if( getParam('ctarget') ){
+        var target = '#'+ getParam('ctarget');
+        $(target).find('a.comment-tab-link').click();
+      }
+    }
+
+    function initHandsOnTables(root) {
+      root.find('div.hot-table').each(function()  {
+        var $container = $(this).find('.step-result-hot-table');
+        var contents = $(this).find('.hot-contents');
+
+        $container.handsontable({
+          width: '100%',
+          startRows: 5,
+          startCols: 5,
+          rowHeaders: true,
+          colHeaders: true,
+          fillHandle: false,
+          formulas: true,
+          cells: function (row, col, prop) {
+            var cellProperties = {};
+
+            if (col >= 0)
+              cellProperties.readOnly = true;
+            else
+              cellProperties.readOnly = false;
+
+            return cellProperties;
+          }
+        });
+        var hot = $container.handsontable('getInstance');
+        var data = JSON.parse(contents.attr('value'));
+        hot.loadData(data.data);
+      });
+    }
+
+    function applyCollapseLinkCallBack() {
+      $('.result-panel-collapse-link')
+        .on('ajax:success', function() {
+          var collapseIcon = $(this).find('.collapse-result-icon');
+          var collapsed = $(this).hasClass('collapsed');
+          // Toggle collapse button
+          collapseIcon.toggleClass('glyphicon-collapse-up', !collapsed);
+          collapseIcon.toggleClass('glyphicon-collapse-down', collapsed);
+        });
+    }
+
+    // Toggle editing buttons
+    function toggleResultEditButtons(show) {
+      if (show) {
+        $('#results-toolbar').show();
+        $('.edit-result-button').show();
+      } else {
+        $('.edit-result-button').hide();
+        $('#results-toolbar').hide();
+      }
+    }
+
+    // Expand all results
+    function _expandAllResults() {
+      $('.result .panel-collapse').collapse('show');
+      $(document).find('span.collapse-result-icon').each(function()  {
+        $(this).addClass('glyphicon-collapse-up');
+        $(this).removeClass('glyphicon-collapse-down');
+      });
+      $(document).find('div.step-result-hot-table').each(function()  {
+        _renderTable(this);
+      });
+    }
+
+    function expandResult(result) {
+      $('.panel-collapse', result).collapse('show');
+      $(result).find('span.collapse-result-icon').each(function()  {
+        $(this).addClass('glyphicon-collapse-up');
+        $(this).removeClass('glyphicon-collapse-down');
+      });
+      _renderTable($(result).find('div.step-result-hot-table'));
+      animateSpinner(null, false);
+      setupAssetsLoading();
+    }
+
+    function _renderTable(table) {
+      $(table).handsontable('render');
+      // Yet another dirty hack to solve HandsOnTable problems
+      if (parseInt($(table).css('height'), 10) <
+            parseInt($(table).css('max-height'), 10) - 30) {
+        $(table).find('.ht_master .wtHolder').css({ 'height': '100%',
+                                                     'width': '100%' });
+      }
+    }
+
+    /**
+     * Initializes tutorial
+     */
+    function _initTutorial() {
+      var stepNum = parseInt(Cookies.get('current_tutorial_step'), 10);
+      if (stepNum >= 15 && stepNum <= 16) {
+        var samplesTab = $('#module-samples-nav-tab');
+
+        var nextPage = samplesTab.find('a').attr('href');
+        var steps = [{
+          element: $('#results-toolbar')[0],
+          intro: I18n.t('tutorial.module_results_html')
+        }, {ResultTypeEnum
+          element: samplesTab[0],
+          intro: I18n.t('tutorial.module_results_click_samples_html'),
+          position: 'left'
+        }];
+        initPageTutorialSteps(15, 16, nextPage, function() {}, function() {},
+         steps);
+      }
+    }
+
+    function processResult(ev, resultTypeEnum, editMode) {
+      var $form = $(ev.target.form);
+      $form.clearFormErrors();
+
+      switch(resultTypeEnum) {
+        case self.ResultTypeEnum.FILE:
+          var $nameInput = $form.find('#result_name');
+          var nameValid = textValidator(ev, $nameInput, 0,
+            <%= Constants::NAME_MAX_LENGTH %>);
+          var $fileInput = $form.find('#result_asset_attributes_file');
+          var filesValid = true;
+          if ($fileInput.val()) {
+            filesValid = filesValidator(ev, $fileInput, FileTypeEnum.FILE,
+              editMode);
+          }
+
+          if(nameValid && filesValid) {
+            // Local file uploading
+            animateSpinner();
+
+          }
+          break;
+        case self.ResultTypeEnum.TABLE:
+          var $nameInput = $form.find('#result_name');
+          var nameValid = textValidator(ev, $nameInput, 0,
+            <%= Constants::NAME_MAX_LENGTH %>);
+          break;
+        case self.ResultTypeEnum.TEXT:
+          var $nameInput = $form.find('#result_name');
+          var nameValid = textValidator(ev, $nameInput, 0,
+            <%= Constants::NAME_MAX_LENGTH %>);
+          var $textInput = TinyMCE.getContent();
+          textValidator(ev, $textInput, 1, <%= Constants::TEXT_MAX_LENGTH %>, false, true);
+          break;
+        case self.ResultTypeEnum.COMMENT:
+          var $commentInput = $form.find('#comment_message');
+          var commentValid = textValidator(ev, $commentInput, 1,
+            <%= Constants::TEXT_MAX_LENGTH %>);
+          break;
+      }
+    }
+
+    var publicAPI = Object.freeze({
+      init: init,
+      initHandsOnTables: initHandsOnTables,
+      applyCollapseLinkCallBack: applyCollapseLinkCallBack,
+      toggleResultEditButtons: toggleResultEditButtons,
+      expandResult: expandResult,
+      processResult: processResult,
+      ResultTypeEnum: ResultTypeEnum
     });
 
-    $("#results-expand-btn").click(expandAllResults);
+    return publicAPI;
+  })();
+
+  $(document).ready(function(){
+    Results.init();
   });
-
-  // This checks if the ctarget param exist in the rendered url and opens the
-  // comment tab
-  if( getParam('ctarget') ){
-    var target = "#"+ getParam('ctarget');
-    $(target).find('a.comment-tab-link').click();
-  }
-}
-
-function initHandsOnTables(root) {
-  root.find("div.hot-table").each(function()  {
-    var $container = $(this).find(".step-result-hot-table");
-    var contents = $(this).find('.hot-contents');
-
-    $container.handsontable({
-      width: '100%',
-      startRows: 5,
-      startCols: 5,
-      rowHeaders: true,
-      colHeaders: true,
-      fillHandle: false,
-      formulas: true,
-      cells: function (row, col, prop) {
-        var cellProperties = {};
-
-        if (col >= 0)
-          cellProperties.readOnly = true;
-        else
-          cellProperties.readOnly = false;
-
-        return cellProperties;
-      }
-    });
-    var hot = $container.handsontable('getInstance');
-    var data = JSON.parse(contents.attr("value"));
-    hot.loadData(data.data);
-
-  });
-}
-
-function applyCollapseLinkCallBack() {
-  $(".result-panel-collapse-link")
-    .on("ajax:success", function() {
-      var collapseIcon = $(this).find(".collapse-result-icon");
-      var collapsed = $(this).hasClass("collapsed");
-      // Toggle collapse button
-      collapseIcon.toggleClass("glyphicon-collapse-up", !collapsed);
-      collapseIcon.toggleClass("glyphicon-collapse-down", collapsed);
-    });
-}
-
-// Toggle editing buttons
-function toggleResultEditButtons(show) {
-  if (show) {
-    $("#results-toolbar").show();
-    $(".edit-result-button").show();
-  } else {
-    $(".edit-result-button").hide();
-    $("#results-toolbar").hide();
-  }
-}
-
-// Expand all results
-function expandAllResults() {
-  $('.result .panel-collapse').collapse('show');
-  $(document).find("span.collapse-result-icon").each(function()  {
-    $(this).addClass("glyphicon-collapse-up");
-    $(this).removeClass("glyphicon-collapse-down");
-  });
-  $(document).find("div.step-result-hot-table").each(function()  {
-    renderTable(this);
-  });
-}
-
-function expandResult(result) {
-  $('.panel-collapse', result).collapse('show');
-  $(result).find("span.collapse-result-icon").each(function()  {
-    $(this).addClass("glyphicon-collapse-up");
-    $(this).removeClass("glyphicon-collapse-down");
-  });
-  renderTable($(result).find("div.step-result-hot-table"));
-  animateSpinner(null, false);
-  setupAssetsLoading();
-}
-
-function renderTable(table) {
-  $(table).handsontable("render");
-  // Yet another dirty hack to solve HandsOnTable problems
-  if (parseInt($(table).css("height"), 10) < parseInt($(table).css("max-height"), 10) - 30) {
-    $(table).find(".ht_master .wtHolder").css({ 'height': '100%',
-                                                 'width': '100%' });
-  }
-}
-
-/**
- * Initializes tutorial
- */
-function initTutorial() {
-  var stepNum = parseInt(Cookies.get('current_tutorial_step'), 10);
-  if (stepNum >= 15 && stepNum <= 16) {
-    var samplesTab = $('#module-samples-nav-tab');
-
-    var nextPage = samplesTab.find('a').attr('href');
-    var steps = [{
-      element: $('#results-toolbar')[0],
-      intro: I18n.t('tutorial.module_results_html')
-    }, {
-      element: samplesTab[0],
-      intro: I18n.t('tutorial.module_results_click_samples_html'),
-      position: 'left'
-    }];
-    initPageTutorialSteps(15, 16, nextPage, function() {}, function() {},
-     steps);
-  }
-}
-
-var ResultTypeEnum = Object.freeze({
-  FILE: 0,
-  TABLE: 1,
-  TEXT: 2,
-  COMMENT: 3
-});
-
-function processResult(ev, resultTypeEnum, editMode) {
-
-  var $form = $(ev.target.form);
-  $form.clearFormErrors();
-
-  switch(resultTypeEnum) {
-    case ResultTypeEnum.FILE:
-      var $nameInput = $form.find("#result_name");
-      var nameValid = textValidator(ev, $nameInput, 0,
-        <%= Constants::NAME_MAX_LENGTH %>);
-      var $fileInput = $form.find("#result_asset_attributes_file");
-      var filesValid = true;
-      if ($fileInput.val()) {
-        filesValid = filesValidator(ev, $fileInput, FileTypeEnum.FILE,
-          editMode);
-      }
-
-      if(nameValid && filesValid) {
-        // Local file uploading
-        animateSpinner();
-
-      }
-      break;
-    case ResultTypeEnum.TABLE:
-      var $nameInput = $form.find("#result_name");
-      var nameValid = textValidator(ev, $nameInput, 0,
-        <%= Constants::NAME_MAX_LENGTH %>);
-      break;
-    case ResultTypeEnum.TEXT:
-      var $nameInput = $form.find("#result_name");
-      var nameValid = textValidator(ev, $nameInput, 0,
-        <%= Constants::NAME_MAX_LENGTH %>);
-      var $textInput = TinyMCE.getContent();
-      textValidator(ev, $textInput, 1, <%= Constants::TEXT_MAX_LENGTH %>, false, true);
-      break;
-    case ResultTypeEnum.COMMENT:
-      var $commentInput = $form.find("#comment_message");
-      var commentValid = textValidator(ev, $commentInput, 1,
-        <%= Constants::TEXT_MAX_LENGTH %>);
-      break;
-  }
-}
-
-$(document).ready(function(){
-  init();
-});
+})(window);

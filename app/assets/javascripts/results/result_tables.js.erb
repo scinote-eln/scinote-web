@@ -96,8 +96,8 @@ function formAjaxResultTable($form) {
     $(this).remove();
 
     applyEditResultTableCallback();
-    applyCollapseLinkCallBack();
-    initHandsOnTables($result);
+    Results.applyCollapseLinkCallBack();
+    Results.initHandsOnTables($result);
     toggleResultEditButtons(true);
     expandResult($result);
     Comments.initialize();
