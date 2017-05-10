@@ -10,11 +10,13 @@
       <li>
         <%= form.check_box :project, label: project.name %>
         <ul>
+
           <% project.experiments.is_archived(false).each do |experiment| %>
             <% next unless experiment.my_modules.is_archived(false).present? %>
             <li>
               <%= form.check_box "experiment_#{experiment.id}", label: experiment.name %>
               <ul>
+
                 <% experiment.my_module_groups.each do |my_module_group| %>
                   <% next unless my_module_group.my_modules.is_archived(false).present? %>
                   <% my_module_group.ordered_modules.is_archived(false).each do |my_module| %>
@@ -33,9 +35,11 @@
                     </li>
                   <% end %>
                 <% end %>
+
               </ul>
             </li>
           <% end %>
+
         </ul>
       </li>
     </ul>

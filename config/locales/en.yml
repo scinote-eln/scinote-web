@@ -292,7 +292,7 @@ en:
             instructions: "Choose what information from task/s to include in the report"
             check_all: "All tasks content"
             steps: "Completed protocol steps"
-            no_steps: "Task contains no protocols"
+            no_steps: "Task has no steps"
             results: "Results"
             result_assets: "Files"
             result_tables: "Tables"

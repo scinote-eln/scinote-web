@@ -9,7 +9,7 @@
           <span class="hidden-xs"><%= t("projects.reports.elements.modals.project_contents.tasks_tab") %></span>
         </a>
       </li>
-      <% if project.project_my_modules.is_archived(false).count > 0 %>
+      <% if project.project_my_modules.is_archived(false).present? %>
       <li role="presentation">
         <a href="#content-tab" aria-controls="content-tab" role="tab" data-toggle="tab">
           <span class="glyphicon glyphicon-link visible-xs"></span>
@@ -25,22 +25,20 @@
         <h5 class="visible-xs"><%= t("projects.reports.elements.modals.project_contents.tasks_tab") %></h5>
         <%= render partial: "reports/new/modal/project_contents_inner.html.erb", locals: { form: f, project: project } %>
       </div>
-      <% if project.project_my_modules.is_archived(false).count > 0 %>
-        <div role="tabpanel" class="tab-pane" id="content-tab">
-          <h5 class="visible-xs"><%= t("projects.reports.elements.modals.project_contents.content_tab") %></h5>
-          <%= render partial: "reports/new/modal/module_contents_inner.html.erb", locals: { form: f } %>
-          <hr>
-          <%= render partial: "reports/new/modal/step_contents_inner.html.erb", locals: { form: f } %>
-          <hr>
-          <%= render partial: "reports/new/modal/result_contents_inner.html.erb", locals: { form: f } %>
-        </div>
-      <% end %>
+      <div role="tabpanel" class="tab-pane" id="content-tab">
+        <h5 class="visible-xs"><%= t("projects.reports.elements.modals.project_contents.content_tab") %></h5>
+        <%= render partial: "reports/new/modal/module_contents_inner.html.erb", locals: { form: f } %>
+        <hr>
+        <%= render partial: "reports/new/modal/step_contents_inner.html.erb", locals: { form: f } %>
+        <hr>
+        <%= render partial: "reports/new/modal/result_contents_inner.html.erb", locals: { form: f } %>
+      </div>
     </div>
   </div>
 <% end %>
 
 <script type="javascript">
-  function checkboxTree2() {
+  function checkboxTree() {
     $(".checkbox-tree input:checkbox").change(function() {
       // Update descendent checkboxes
       var $checkbox = $(this);
@@ -64,5 +62,5 @@
       }
     });
   }
-  checkboxTree2();
+  checkboxTree();
 </script>
