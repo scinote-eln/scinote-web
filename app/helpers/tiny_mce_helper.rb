@@ -23,7 +23,9 @@ module TinyMceHelper
       match = el.match(regex)
       img = TinyMceAsset.find_by_id(match[1])
       next unless img
-      image_tag img.url, data: { token: Base62.encode(img.id) }
+      image_tag img.url,
+                class: 'img-responsive',
+                data: { token: Base62.encode(img.id) }
     end
   end
 
