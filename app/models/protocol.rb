@@ -268,7 +268,7 @@ class Protocol < ActiveRecord::Base
       step2.save
 
       # Copy checklists
-      step.checklists.each do |checklist|
+      step.checklists.asc.each do |checklist|
         checklist2 = Checklist.new(
           name: checklist.name,
           step: step2

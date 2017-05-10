@@ -82,9 +82,9 @@ module ReportActions
                                           .singularize}_element.html.erb",
             contents.parse_locals([report_el])
           )
-          if contents.element == :step
+          if contents.locals.first == :step
             el[:children] = generate_step_contents_json(report_el)
-          elsif contents.element == :result
+          elsif contents.locals.first == :result
             el[:children] = generate_result_contents_json(report_el)
           end
           res << el
@@ -105,7 +105,7 @@ module ReportActions
   def generate_step_contents_json(step)
     res = []
     if in_params? :step_checklists
-      step.checklists.each do |checklist|
+      step.checklists.asc.each do |checklist|
         res << generate_new_el(false)
         res << generate_el(
           'reports/elements/step_checklist_element.html.erb',
