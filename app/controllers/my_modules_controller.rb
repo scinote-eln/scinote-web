@@ -3,26 +3,27 @@ class MyModulesController < ApplicationController
   include TeamsHelper
   include InputSanitizeHelper
 
-  before_action :load_vars, only: [
-    :show, :update, :destroy,
-    :description, :due_date, :protocols, :results,
-    :samples, :activities, :activities_tab,
-    :assign_samples, :unassign_samples,
-    :delete_samples, :toggle_task_state,
-    :samples_index, :archive]
-  before_action :load_vars_nested, only: [:new, :create]
-  before_action :check_edit_permissions, only: [
-    :update, :description, :due_date
-  ]
-  before_action :check_destroy_permissions, only: [:destroy]
-  before_action :check_view_info_permissions, only: [:show]
-  before_action :check_view_activities_permissions, only: [:activities, :activities_tab]
-  before_action :check_view_protocols_permissions, only: [:protocols]
-  before_action :check_view_results_permissions, only: [:results]
-  before_action :check_view_samples_permissions, only: [:samples, :samples_index]
-  before_action :check_view_archive_permissions, only: [:archive]
-  before_action :check_assign_samples_permissions, only: [:assign_samples]
-  before_action :check_unassign_samples_permissions, only: [:unassign_samples]
+  before_action :load_vars,
+                only: %I[show update destroy description due_date protocols
+                         results samples activities activities_tab
+                         assign_samples unassign_samples delete_samples
+                         toggle_task_state samples_index archive
+                         complete_my_module]
+  before_action :load_vars_nested, only: %I[new create]
+  before_action :check_edit_permissions,
+                only: %I[update description due_date]
+  before_action :check_destroy_permissions, only: :destroy
+  before_action :check_view_info_permissions, only: :show
+  before_action :check_view_activities_permissions,
+                only: %I[activities activities_tab]
+  before_action :check_view_protocols_permissions, only: :protocols
+  before_action :check_view_results_permissions, only: :results
+  before_action :check_view_samples_permissions,
+                only: %I[samples samples_index]
+  before_action :check_view_archive_permissions, only: :archive
+  before_action :check_assign_samples_permissions, only: :assign_samples
+  before_action :check_unassign_samples_permissions, only: :unassign_samples
+  before_action :check_complete_my_module_perimission, only: :complete_my_module
 
   layout 'fluid'.freeze
 
@@ -147,6 +148,7 @@ class MyModulesController < ApplicationController
         Activity.create(
           type_of: :archive_module,
           project: @my_module.experiment.project,
+          experiment: @my_module.experiment,
           my_module: @my_module,
           user: current_user,
           message: t(
@@ -163,6 +165,7 @@ class MyModulesController < ApplicationController
         Activity.create(
           type_of: :restore_module,
           project: @my_module.experiment.project,
+          experiment: @my_module.experiment,
           my_module: @my_module,
           user: current_user,
           message: t(
@@ -179,6 +182,7 @@ class MyModulesController < ApplicationController
         Activity.create(
           type_of: :change_module_description,
           project: @my_module.experiment.project,
+          experiment: @my_module.experiment,
           my_module: @my_module,
           user: current_user,
           message: t(
@@ -284,6 +288,7 @@ class MyModulesController < ApplicationController
         Activity.create(
           type_of: :assign_sample,
           project: @my_module.experiment.project,
+          experiment: @my_module.experiment,
           my_module: @my_module,
           user: current_user,
           message: I18n.t(
@@ -321,6 +326,7 @@ class MyModulesController < ApplicationController
         Activity.create(
           type_of: :unassign_sample,
           project: @my_module.experiment.project,
+          experiment: @my_module.experiment,
           my_module: @my_module,
           user: current_user,
           message: I18n.t(
@@ -391,6 +397,31 @@ class MyModulesController < ApplicationController
     end
   end
 
+  def complete_my_module
+    respond_to do |format|
+      if @my_module.uncompleted? && @my_module.check_completness_status
+        @my_module.complete
+        @my_module.save
+        task_completion_activity
+        format.json do
+            render json: {
+              task_button_title: t('my_modules.buttons.uncomplete'),
+              module_header_due_date_label: render_to_string(
+                partial: 'my_modules/module_header_due_date_label.html.erb',
+                locals: { my_module: @my_module }
+              ),
+              module_state_label: render_to_string(
+                partial: 'my_modules/module_state_label.html.erb',
+                locals: { my_module: @my_module }
+              )
+            }, status: :ok
+          end
+      else
+        format.json { render json: {}, status: :unprocessable_entity }
+      end
+    end
+  end
+
   private
 
   def task_completion_activity
@@ -403,6 +434,7 @@ class MyModulesController < ApplicationController
     Activity.create(
       user: current_user,
       project: @project,
+      experiment: @experiment,
       my_module: @my_module,
       message: message,
       type_of: completed ? :complete_task : :uncomplete_task
@@ -477,6 +509,10 @@ class MyModulesController < ApplicationController
     unless can_delete_samples_from_module(@my_module)
       render_403
     end
+  end
+
+  def check_complete_my_module_perimission
+    render_403 unless can_complete_module(@my_module)
   end
 
   def my_module_params

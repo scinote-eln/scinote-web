@@ -2,6 +2,7 @@ class ResultTextsController < ApplicationController
   include ResultsHelper
   include ActionView::Helpers::UrlHelper
   include ApplicationHelper
+  include TinyMceHelper
   include Rails.application.routes.url_helpers
 
   before_action :load_vars, only: [:edit, :update, :download]
@@ -31,6 +32,8 @@ class ResultTextsController < ApplicationController
 
   def create
     @result_text = ResultText.new(result_params[:result_text_attributes])
+    # gerate a tag that replaces img tag in database
+    @result_text.text = parse_tiny_mce_asset_to_token(@result_text.text)
     @result = Result.new(
       user: current_user,
       my_module: @my_module,
@@ -40,7 +43,9 @@ class ResultTextsController < ApplicationController
     @result.last_modified_by = current_user
 
     respond_to do |format|
-      if (@result.save and @result_text.save) then
+      if @result.save && @result_text.save
+        # link tiny_mce_assets to the text result
+        link_tiny_mce_assets(@result_text.text, @result_text)
 
         result_annotation_notification
         # Generate activity
@@ -48,6 +53,7 @@ class ResultTextsController < ApplicationController
           type_of: :add_result,
           user: current_user,
           project: @my_module.experiment.project,
+          experiment: @my_module.experiment,
           my_module: @my_module,
           message: t(
             "activities.add_text_result",
@@ -81,6 +87,7 @@ class ResultTextsController < ApplicationController
   end
 
   def edit
+    @result_text.text = generate_image_tag_from_token(@result_text.text)
     respond_to do |format|
       format.json {
         render json: {
@@ -97,6 +104,8 @@ class ResultTextsController < ApplicationController
     update_params = result_params
     @result.last_modified_by = current_user
     @result.assign_attributes(update_params)
+    @result_text.text = parse_tiny_mce_asset_to_token(@result_text.text,
+                                                      @result_text)
     success_flash = t("result_texts.update.success_flash",
             module: @my_module.name)
     if @result.archived_changed?(from: false, to: true)
@@ -107,6 +116,7 @@ class ResultTextsController < ApplicationController
         Activity.create(
           type_of: :archive_result,
           project: @my_module.experiment.project,
+          experiment: @my_module.experiment,
           my_module: @my_module,
           user: current_user,
           message: t(
@@ -126,6 +136,7 @@ class ResultTextsController < ApplicationController
           type_of: :edit_result,
           user: current_user,
           project: @my_module.experiment.project,
+          experiment: @my_module.experiment,
           my_module: @my_module,
           message: t(
             "activities.edit_text_result",
@@ -229,6 +240,9 @@ class ResultTextsController < ApplicationController
                                   project_url(@result.my_module
                                                    .experiment
                                                    .project)),
+                 experiment: link_to(@result.my_module.experiment.name,
+                                     canvas_experiment_url(@result.my_module
+                                                                  .experiment)),
                  my_module: link_to(@result.my_module.name,
                                     protocols_my_module_url(
                                       @result.my_module

@@ -7,6 +7,7 @@ class SampleDatatable < AjaxDatatablesRails::Base
   include Rails.application.routes.url_helpers
   include ActionView::Helpers::UrlHelper
   include ApplicationHelper
+  include ActiveRecord::Sanitization::ClassMethods
 
   ASSIGNED_SORT_COL = 'assigned'
 
@@ -129,9 +130,8 @@ class SampleDatatable < AjaxDatatablesRails::Base
 
       # Add custom attributes
       record.sample_custom_fields.each do |scf|
-        sample[@cf_mappings[scf.custom_field_id]] = custom_auto_link(scf.value,
-                                                                     true,
-                                                                     @team)
+        sample[@cf_mappings[scf.custom_field_id]] =
+          custom_auto_link(scf.value, simple_format: true, team: @team)
       end
       sample
     end
@@ -393,11 +393,11 @@ class SampleDatatable < AjaxDatatablesRails::Base
     elsif column == 'created_at'
       casted_column = ::Arel::Nodes::NamedFunction.new('CAST',
                         [ Arel.sql("to_char( samples.created_at, '#{ formated_date }' ) AS VARCHAR") ] )
-      casted_column.matches("%#{value}%")
+      casted_column.matches("%#{sanitize_sql_like(value)}%")
     else
       casted_column = ::Arel::Nodes::NamedFunction.new('CAST',
                         [model.arel_table[column.to_sym].as(typecast)])
-      casted_column.matches("%#{value}%")
+      casted_column.matches("%#{sanitize_sql_like(value)}%")
     end
   end
 

@@ -65,7 +65,7 @@ gem 'aws-sdk-v1'
 gem 'delayed_job_active_record'
 gem 'devise-async'
 gem 'ruby-graphviz', '~> 1.2' # Graphviz for rails
-gem 'tinymce-rails' # Rich text editor
+gem 'tinymce-rails', '~> 4.5.7' # Rich text editor
 
 gem 'base62' # Used for smart annotations
 gem 'newrelic_rpm'

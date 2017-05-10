@@ -51,6 +51,7 @@ class ExperimentsController < ApplicationController
       Activity.create(
         type_of: :create_experiment,
         project: @experiment.project,
+        experiment: @experiment,
         user: current_user,
         message: I18n.t(
           'activities.create_experiment',
@@ -62,7 +63,7 @@ class ExperimentsController < ApplicationController
                           experiment: @experiment.name)
       respond_to do |format|
         format.json do
-          render json: {}, status: :ok
+          render json: { path: canvas_experiment_url(@experiment) }, status: :ok
         end
       end
     else
@@ -101,6 +102,7 @@ class ExperimentsController < ApplicationController
       Activity.create(
         type_of: :edit_experiment,
         project: @experiment.project,
+        experiment: @experiment,
         user: current_user,
         message: I18n.t(
           'activities.edit_experiment',
@@ -141,6 +143,7 @@ class ExperimentsController < ApplicationController
       Activity.create(
         type_of: :archive_experiment,
         project: @experiment.project,
+        experiment: @experiment,
         user: current_user,
         message: I18n.t(
           'activities.archive_experiment',
@@ -190,6 +193,7 @@ class ExperimentsController < ApplicationController
       Activity.create(
         type_of: :clone_experiment,
         project: project,
+        experiment: @experiment,
         user: current_user,
         message: I18n.t(
           'activities.clone_experiment',
@@ -240,6 +244,7 @@ class ExperimentsController < ApplicationController
       Activity.create(
         type_of: :move_experiment,
         project: project,
+        experiment: @experiment,
         user: current_user,
         message: I18n.t(
           'activities.move_experiment',

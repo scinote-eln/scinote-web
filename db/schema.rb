@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170321131116) do
+ActiveRecord::Schema.define(version: 20170420075905) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -60,12 +60,13 @@ ActiveRecord::Schema.define(version: 20170321131116) do
     t.integer  "lock_ttl"
     t.integer  "version",                          default: 1
     t.boolean  "file_processing"
+    t.integer  "team_id"
   end
 
   add_index "assets", ["created_at"], name: "index_assets_on_created_at", using: :btree
   add_index "assets", ["created_by_id"], name: "index_assets_on_created_by_id", using: :btree
-  add_index "assets", ["file_file_name"], name: "index_assets_on_file_file_name", using: :gist
   add_index "assets", ["last_modified_by_id"], name: "index_assets_on_last_modified_by_id", using: :btree
+  add_index "assets", ["team_id"], name: "index_assets_on_team_id", using: :btree
 
   create_table "checklist_items", force: :cascade do |t|
     t.string   "text",                                null: false
@@ -75,7 +76,7 @@ ActiveRecord::Schema.define(version: 20170321131116) do
     t.datetime "updated_at",                          null: false
     t.integer  "created_by_id"
     t.integer  "last_modified_by_id"
-    t.integer  "position",            default: 0,     null: false
+    t.integer  "position"
   end
 
   add_index "checklist_items", ["checklist_id"], name: "index_checklist_items_on_checklist_id", using: :btree
@@ -93,6 +94,7 @@ ActiveRecord::Schema.define(version: 20170321131116) do
 
   add_index "checklists", ["created_by_id"], name: "index_checklists_on_created_by_id", using: :btree
   add_index "checklists", ["last_modified_by_id"], name: "index_checklists_on_last_modified_by_id", using: :btree
+  add_index "checklists", ["step_id"], name: "index_checklists_on_step_id", using: :btree
 
   create_table "comments", force: :cascade do |t|
     t.string   "message",             null: false
@@ -107,6 +109,7 @@ ActiveRecord::Schema.define(version: 20170321131116) do
   add_index "comments", ["associated_id"], name: "index_comments_on_associated_id", using: :btree
   add_index "comments", ["created_at"], name: "index_comments_on_created_at", using: :btree
   add_index "comments", ["last_modified_by_id"], name: "index_comments_on_last_modified_by_id", using: :btree
+  add_index "comments", ["type"], name: "index_comments_on_type", using: :btree
   add_index "comments", ["user_id"], name: "index_comments_on_user_id", using: :btree
 
   create_table "connections", force: :cascade do |t|
@@ -170,11 +173,6 @@ ActiveRecord::Schema.define(version: 20170321131116) do
   add_index "experiments", ["project_id"], name: "index_experiments_on_project_id", using: :btree
   add_index "experiments", ["restored_by_id"], name: "index_experiments_on_restored_by_id", using: :btree
 
-  create_table "logs", force: :cascade do |t|
-    t.integer "team_id", null: false
-    t.string  "message", null: false
-  end
-
   create_table "my_module_groups", force: :cascade do |t|
     t.string   "name",                      null: false
     t.datetime "created_at",                null: false
@@ -185,7 +183,6 @@ ActiveRecord::Schema.define(version: 20170321131116) do
 
   add_index "my_module_groups", ["created_by_id"], name: "index_my_module_groups_on_created_by_id", using: :btree
   add_index "my_module_groups", ["experiment_id"], name: "index_my_module_groups_on_experiment_id", using: :btree
-  add_index "my_module_groups", ["name"], name: "index_my_module_groups_on_name", using: :gist
 
   create_table "my_module_tags", force: :cascade do |t|
     t.integer "my_module_id"
@@ -225,7 +222,6 @@ ActiveRecord::Schema.define(version: 20170321131116) do
   add_index "my_modules", ["experiment_id"], name: "index_my_modules_on_experiment_id", using: :btree
   add_index "my_modules", ["last_modified_by_id"], name: "index_my_modules_on_last_modified_by_id", using: :btree
   add_index "my_modules", ["my_module_group_id"], name: "index_my_modules_on_my_module_group_id", using: :btree
-  add_index "my_modules", ["name"], name: "index_my_modules_on_name", using: :gist
   add_index "my_modules", ["restored_by_id"], name: "index_my_modules_on_restored_by_id", using: :btree
 
   create_table "notifications", force: :cascade do |t|
@@ -258,7 +254,6 @@ ActiveRecord::Schema.define(version: 20170321131116) do
   add_index "projects", ["archived_by_id"], name: "index_projects_on_archived_by_id", using: :btree
   add_index "projects", ["created_by_id"], name: "index_projects_on_created_by_id", using: :btree
   add_index "projects", ["last_modified_by_id"], name: "index_projects_on_last_modified_by_id", using: :btree
-  add_index "projects", ["name"], name: "index_projects_on_name", using: :gist
   add_index "projects", ["restored_by_id"], name: "index_projects_on_restored_by_id", using: :btree
   add_index "projects", ["team_id"], name: "index_projects_on_team_id", using: :btree
 
@@ -270,7 +265,6 @@ ActiveRecord::Schema.define(version: 20170321131116) do
     t.integer  "team_id",                     null: false
   end
 
-  add_index "protocol_keywords", ["name"], name: "index_protocol_keywords_on_name", using: :btree
   add_index "protocol_keywords", ["team_id"], name: "index_protocol_keywords_on_team_id", using: :btree
 
   create_table "protocol_protocol_keywords", force: :cascade do |t|
@@ -303,11 +297,9 @@ ActiveRecord::Schema.define(version: 20170321131116) do
 
   add_index "protocols", ["added_by_id"], name: "index_protocols_on_added_by_id", using: :btree
   add_index "protocols", ["archived_by_id"], name: "index_protocols_on_archived_by_id", using: :btree
-  add_index "protocols", ["authors"], name: "index_protocols_on_authors", using: :btree
-  add_index "protocols", ["description"], name: "index_protocols_on_description", using: :btree
   add_index "protocols", ["my_module_id"], name: "index_protocols_on_my_module_id", using: :btree
-  add_index "protocols", ["name"], name: "index_protocols_on_name", using: :btree
   add_index "protocols", ["parent_id"], name: "index_protocols_on_parent_id", using: :btree
+  add_index "protocols", ["protocol_type"], name: "index_protocols_on_protocol_type", using: :btree
   add_index "protocols", ["restored_by_id"], name: "index_protocols_on_restored_by_id", using: :btree
   add_index "protocols", ["team_id"], name: "index_protocols_on_team_id", using: :btree
 
@@ -393,7 +385,6 @@ ActiveRecord::Schema.define(version: 20170321131116) do
   add_index "results", ["created_at"], name: "index_results_on_created_at", using: :btree
   add_index "results", ["last_modified_by_id"], name: "index_results_on_last_modified_by_id", using: :btree
   add_index "results", ["my_module_id"], name: "index_results_on_my_module_id", using: :btree
-  add_index "results", ["name"], name: "index_results_on_name", using: :gist
   add_index "results", ["restored_by_id"], name: "index_results_on_restored_by_id", using: :btree
   add_index "results", ["user_id"], name: "index_results_on_user_id", using: :btree
 
@@ -458,7 +449,6 @@ ActiveRecord::Schema.define(version: 20170321131116) do
   end
 
   add_index "samples", ["last_modified_by_id"], name: "index_samples_on_last_modified_by_id", using: :btree
-  add_index "samples", ["name"], name: "index_samples_on_name", using: :gist
   add_index "samples", ["sample_group_id"], name: "index_samples_on_sample_group_id", using: :btree
   add_index "samples", ["sample_type_id"], name: "index_samples_on_sample_type_id", using: :btree
   add_index "samples", ["team_id"], name: "index_samples_on_team_id", using: :btree
@@ -511,7 +501,6 @@ ActiveRecord::Schema.define(version: 20170321131116) do
 
   add_index "steps", ["created_at"], name: "index_steps_on_created_at", using: :btree
   add_index "steps", ["last_modified_by_id"], name: "index_steps_on_last_modified_by_id", using: :btree
-  add_index "steps", ["name"], name: "index_steps_on_name", using: :gist
   add_index "steps", ["position"], name: "index_steps_on_position", using: :btree
   add_index "steps", ["protocol_id"], name: "index_steps_on_protocol_id", using: :btree
   add_index "steps", ["user_id"], name: "index_steps_on_user_id", using: :btree
@@ -524,12 +513,14 @@ ActiveRecord::Schema.define(version: 20170321131116) do
     t.integer  "last_modified_by_id"
     t.tsvector "data_vector"
     t.string   "name",                default: ""
+    t.integer  "team_id"
   end
 
   add_index "tables", ["created_at"], name: "index_tables_on_created_at", using: :btree
   add_index "tables", ["created_by_id"], name: "index_tables_on_created_by_id", using: :btree
   add_index "tables", ["data_vector"], name: "index_tables_on_data_vector", using: :gin
   add_index "tables", ["last_modified_by_id"], name: "index_tables_on_last_modified_by_id", using: :btree
+  add_index "tables", ["team_id"], name: "index_tables_on_team_id", using: :btree
 
   create_table "tags", force: :cascade do |t|
     t.string   "name",                                    null: false
@@ -543,7 +534,6 @@ ActiveRecord::Schema.define(version: 20170321131116) do
 
   add_index "tags", ["created_by_id"], name: "index_tags_on_created_by_id", using: :btree
   add_index "tags", ["last_modified_by_id"], name: "index_tags_on_last_modified_by_id", using: :btree
-  add_index "tags", ["name"], name: "index_tags_on_name", using: :gist
   add_index "tags", ["project_id"], name: "index_tags_on_project_id", using: :btree
 
   create_table "teams", force: :cascade do |t|
@@ -569,6 +559,23 @@ ActiveRecord::Schema.define(version: 20170321131116) do
     t.integer  "file_file_size"
     t.datetime "file_updated_at"
   end
+
+  create_table "tiny_mce_assets", force: :cascade do |t|
+    t.string   "image_file_name"
+    t.string   "image_content_type"
+    t.integer  "image_file_size"
+    t.datetime "image_updated_at"
+    t.integer  "estimated_size",     default: 0, null: false
+    t.integer  "step_id"
+    t.integer  "team_id"
+    t.integer  "result_text_id"
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
+  end
+
+  add_index "tiny_mce_assets", ["result_text_id"], name: "index_tiny_mce_assets_on_result_text_id", using: :btree
+  add_index "tiny_mce_assets", ["step_id"], name: "index_tiny_mce_assets_on_step_id", using: :btree
+  add_index "tiny_mce_assets", ["team_id"], name: "index_tiny_mce_assets_on_team_id", using: :btree
 
   create_table "tokens", force: :cascade do |t|
     t.string  "token",   null: false
@@ -601,11 +608,11 @@ ActiveRecord::Schema.define(version: 20170321131116) do
   add_index "user_notifications", ["user_id"], name: "index_user_notifications_on_user_id", using: :btree
 
   create_table "user_projects", force: :cascade do |t|
-    t.integer  "role",           default: 0
-    t.integer  "user_id",                    null: false
-    t.integer  "project_id",                 null: false
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
+    t.integer  "role"
+    t.integer  "user_id",        null: false
+    t.integer  "project_id",     null: false
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
     t.integer  "assigned_by_id"
   end
 
@@ -671,7 +678,6 @@ ActiveRecord::Schema.define(version: 20170321131116) do
   add_index "users", ["authentication_token"], name: "index_users_on_authentication_token", unique: true, using: :btree
   add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
-  add_index "users", ["full_name"], name: "index_users_on_full_name", using: :btree
   add_index "users", ["invitation_token"], name: "index_users_on_invitation_token", unique: true, using: :btree
   add_index "users", ["invitations_count"], name: "index_users_on_invitations_count", using: :btree
   add_index "users", ["invited_by_id"], name: "index_users_on_invited_by_id", using: :btree
@@ -735,7 +741,6 @@ ActiveRecord::Schema.define(version: 20170321131116) do
   add_foreign_key "experiments", "users", column: "created_by_id"
   add_foreign_key "experiments", "users", column: "last_modified_by_id"
   add_foreign_key "experiments", "users", column: "restored_by_id"
-  add_foreign_key "logs", "teams"
   add_foreign_key "my_module_groups", "experiments"
   add_foreign_key "my_module_groups", "users", column: "created_by_id"
   add_foreign_key "my_module_tags", "users", column: "created_by_id"

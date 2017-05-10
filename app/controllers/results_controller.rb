@@ -20,6 +20,7 @@ class ResultsController < ApplicationController
       type_of: :destroy_result,
       user: current_user,
       project: @my_module.experiment.project,
+      experiment: @my_module.experiment,
       my_module: @my_module,
       message: act_log
     )

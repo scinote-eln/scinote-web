@@ -1,6 +1,7 @@
 class StepsController < ApplicationController
   include ActionView::Helpers::TextHelper
   include ApplicationHelper
+  include TinyMceHelper
   include StepsActions
 
   before_action :load_vars, only: [:edit, :update, :destroy, :show]
@@ -28,7 +29,8 @@ class StepsController < ApplicationController
 
   def create
     @step = Step.new(step_params)
-
+    # gerate a tag that replaces img tag in database
+    @step.description = parse_tiny_mce_asset_to_token(@step.description)
     @step.completed = false
     @step.position = @protocol.number_of_steps
     @step.protocol = @protocol
@@ -57,13 +59,18 @@ class StepsController < ApplicationController
           asset.post_process_file(@protocol.team)
         end
 
+        # link tiny_mce_assets to the step
+        link_tiny_mce_assets(@step.description, @step)
+
         create_annotation_notifications(@step)
+
         # Generate activity
         if @protocol.in_module?
           Activity.create(
             type_of: :create_step,
             user: current_user,
             project: @my_module.experiment.project,
+            experiment: @my_module.experiment,
             my_module: @my_module,
             message: t(
               "activities.create_step",
@@ -119,6 +126,7 @@ class StepsController < ApplicationController
   end
 
   def edit
+    @step.description = generate_image_tag_from_token(@step.description)
     respond_to do |format|
       format.json do
         render json: {
@@ -158,6 +166,12 @@ class StepsController < ApplicationController
         table.team = current_team
       end
 
+      # gerate a tag that replaces img tag in databases
+      @step.description = parse_tiny_mce_asset_to_token(
+        params[:step][:description],
+        @step
+      )
+
       if @step.save
         @step.reload
 
@@ -183,6 +197,7 @@ class StepsController < ApplicationController
             type_of: :edit_step,
             user: current_user,
             project: @my_module.experiment.project,
+            experiment: @my_module.experiment,
             my_module: @my_module,
             message: t(
               "activities.edit_step",
@@ -297,6 +312,7 @@ class StepsController < ApplicationController
                 Activity.create(
                   user: current_user,
                   project: protocol.my_module.experiment.project,
+                  experiment: protocol.my_module.experiment,
                   my_module: protocol.my_module,
                   message: message,
                   type_of: checked ? :check_step_checklist_item : :uncheck_step_checklist_item
@@ -327,10 +343,13 @@ class StepsController < ApplicationController
 
     respond_to do |format|
       if step
-        completed = params[:completed] == "true"
+        completed = params[:completed] == 'true'
         protocol = step.protocol
 
-        authorized = ((completed and can_complete_step_in_protocol(protocol)) or (!completed and can_uncomplete_step_in_protocol(protocol)))
+        authorized = (
+          (completed and can_complete_step_in_protocol(protocol)) ||
+            (!completed and can_uncomplete_step_in_protocol(protocol))
+        )
 
         if authorized
           changed = step.completed != completed
@@ -343,15 +362,15 @@ class StepsController < ApplicationController
 
           if step.save
             if protocol.in_module?
-              task_completed = protocol.my_module.check_completness
+              ready_to_complete = protocol.my_module.check_completness_status
             end
 
             # Create activity
             if changed
               completed_steps = protocol.steps.where(completed: true).count
               all_steps = protocol.steps.count
-              str = completed ? "activities.complete_step" :
-                "activities.uncomplete_step"
+              str = 'activities.uncomplete_step'
+              str = 'activities.complete_step' if completed
 
               message = t(
                 str,
@@ -369,6 +388,7 @@ class StepsController < ApplicationController
                 Activity.create(
                   user: current_user,
                   project: protocol.my_module.experiment.project,
+                  experiment: protocol.my_module.experiment,
                   my_module: protocol.my_module,
                   message: message,
                   type_of: completed ? :complete_step : :uncomplete_step
@@ -382,27 +402,14 @@ class StepsController < ApplicationController
                               else
                                 t('protocols.steps.options.uncomplete_title')
                               end
-            task_button_title =
-              t('my_modules.buttons.uncomplete') if task_completed
             format.json do
-              if task_completed
+              if ready_to_complete && protocol.my_module.uncompleted?
                 render json: {
-                  new_title: localized_title,
-                  task_completed: task_completed,
-                  task_button_title: task_button_title,
-                  module_header_due_date_label: render_to_string(
-                    partial: 'my_modules/module_header_due_date_label.html.erb',
-                    locals: { my_module: step.protocol.my_module }
-                  ),
-                  module_state_label: render_to_string(
-                    partial: 'my_modules/module_state_label.html.erb',
-                    locals: { my_module: step.protocol.my_module }
-                  )
-                },
-                status: :accepted
+                  task_ready_to_complete: true,
+                  new_title: localized_title
+                }, status: :ok
               else
-                render json: { new_title: localized_title },
-                status: :accepted
+                render json: { new_title: localized_title }, status: :ok
               end
             end
           else

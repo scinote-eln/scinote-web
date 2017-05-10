@@ -133,15 +133,14 @@ function initTutorial() {
     var nextPage = samplesTab.find('a').attr('href');
     var steps = [{
       element: $('#results-toolbar')[0],
-      intro: $('#results').attr('data-module-protocols-step-text')
+      intro: I18n.t('tutorial.module_results_html')
     }, {
       element: samplesTab[0],
-      intro: $('#results')
-              .attr('data-module-protocols-click-samples-step-text'),
+      intro: I18n.t('tutorial.module_results_click_samples_html'),
       position: 'left'
     }];
-    initPageTutorialSteps(15, 16, nextPage, function() {},
-                          function() {}, steps);
+    initPageTutorialSteps(15, 16, nextPage, function() {}, function() {},
+     steps);
   }
 }
 

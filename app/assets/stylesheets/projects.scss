@@ -197,10 +197,10 @@ path, ._jsPlumb_endpoint {
 
 /* FULL-ZOOM MODULE */
 .module-large {
-  width: 290px;
   cursor: pointer;
-  position: absolute;
   display: block;
+  position: absolute;
+  width: 300px;
   z-index: 5;
 
   .panel-body .due-date-link {
@@ -455,7 +455,8 @@ li.module-hover {
     border-radius: 4px;
     height: 100px;
     margin-top: 10px;
-    overflow-y: overlay;
+    overflow-x: hidden;
+    overflow-y: scroll;
     padding: 10px;
   }
 

@@ -17,7 +17,7 @@
       });
       validateMoveModal(id);
       clearModal($(id));
-      validateExperimentForm($(id));
+      validateExperimentForm(id);
     })
     .on("ajax:error", function() {
       animateSpinner(null, false);
@@ -74,30 +74,35 @@
       });
     }
   }
+
   // Reload after successfully updated experiment
   function validateExperimentForm(element){
-    if ( element ) {
-      var form = element.find("form");
+    if ( $(element) ) {
+      var form = $(element).find("form");
       form
-      .on('ajax:success' , function(){
+      .on('ajax:success' , function(e, data){
         animateSpinner(form, true);
-        location.reload();
+        if ( element.match(/#new-experiment-modal/) ) {
+          window.location.replace(data.path);
+        } else {
+          location.reload();
+        }
       })
       .on('ajax:error', function(e, error){
         var msg = JSON.parse(error.responseText);
         if ( 'name' in msg ) {
           renderFormError(e,
-                          element.find("#experiment-name"),
+                          $(element).find("#experiment-name"),
                           msg.name.toString(),
                           true);
         } else if ( 'description' in msg ) {
           renderFormError(e,
-                          element.find("#experiment-description"),
+                          $(element).find("#experiment-description"),
                           msg.description.toString(),
                           true);
         } else {
           renderFormError(e,
-                          element.find("#experiment-name"),
+                          $(element).find("#experiment-name"),
                           error.statusText,
                           true);
         }

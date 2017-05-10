@@ -690,8 +690,8 @@ function bindFullZoomAjaxTabs() {
 
   // Reload users tab HTML element when modal is closed
   manageUsersModal.on("hide.bs.modal", function () {
-    var moduleEl = $("#" + $(this).attr("data-module-id"));
-
+    var moduleEl = $("div[data-module-id='" +
+                     $(this).attr("data-module-id") + "']");
     // Load HTML to refresh users list
     $.ajax({
       url: moduleEl.attr("data-module-users-tab-url"),
@@ -699,6 +699,8 @@ function bindFullZoomAjaxTabs() {
       dataType: "json",
       success: function (data) {
         moduleEl.find("#" + moduleEl.attr("data-module-id") + "_users").html(data.html);
+        CounterBadge.updateCounterBadge(data.counter,
+                                        data.my_module_id, 'users');
         initUsersEditLink(moduleEl);
       },
       error: function (data) {
@@ -1159,7 +1161,7 @@ function updateModuleHtml(module, id, name, gridDistX, gridDistY) {
   .attr("id", id)
   .attr("data-module-id", id)
   .attr("data-module-name", name)
-  .css("z-index", "");
+  .css("z-index", 20);
 
   var panelHeading = module.find(".panel-heading");
 
@@ -2193,35 +2195,15 @@ cloneModuleHandler = function(moduleId, modulesSel, gridDistX, gridDistY) {
   var modules = $(modulesSel);
   var module = modules.filter("#" + moduleId);
 
-  // Figure out the free position for the cloned module
-  var top = elTop(module);
-  var left = elLeft(module);
-  var modulesInRow = [];
-  _.each(modules, function(m) {
-    if (elTop(m) === top) {
-      modulesInRow.push(m);
-    }
-  });
-  var i, free;
-  while (true) {
-    left += gridDistX;
-    free = true;
-    for (i = 0; i < modulesInRow.length; i++) {
-      if (elLeft(modulesInRow[i]) === left) {
-        free = false;
-        break;
-      }
-    }
-
-    if (free) {
-      break;
-    }
-  }
+  // Position for the cloned module
+  var top = elTop(module) + (3 * gridDistY);
+  var left = elLeft(module) + (3 * gridDistX);
 
   cloneModule(module, gridDistX, gridDistY, left, top);
 
   // Hide all open dropdowns
   $(".module-options").removeClass("open");
+  module.css("z-index", 20);
 };
 
 /**
@@ -2331,13 +2313,15 @@ cloneModuleGroupHandler = function(moduleId, modulesSel, gridDistX, gridDistY) {
     if (t < minY) { minY = t; }
     if (t > maxY) { maxY = t; }
   });
-  width = maxX - minX + gridDistX;
-  height = maxY - minY + gridDistY;
+  m_width = modules.first().width();
+  m_height = modules.first().height();
+  width = maxX - minX + m_width + (3 * gridDistX);
+  height = maxY - minY + m_height + (3 * gridDistY);
 
   // Find the appropriate "free space"
   var left = minX != Number.MAX_VALUE ? minX : 0;
   var top = maxY != -Number.MAX_VALUE ? maxY : 0;
-  var offset = height;
+  var offset = 0;
   var moduleContained;
 
   while (true) {
@@ -2400,6 +2384,7 @@ cloneModuleGroupHandler = function(moduleId, modulesSel, gridDistX, gridDistY) {
 
   // Hide all open dropdowns
   $(".module-options").removeClass("open");
+  $("#" + moduleId.toString()).css("z-index", 20);
 
   // Repainting is needed twice (weird, huh)
   instance.repaintEverything();
@@ -3137,9 +3122,19 @@ function initTutorial() {
 
     if (stepNum >= 6 && stepNum <= 7) {
       var nextPage = window.location.pathname;
-      initPageTutorialSteps(6, 7, nextPage, tutorialBeforeCb, tutorialAfterCb);
+      var steps = [{
+        element: $('#canvas-container')[0],
+        intro: I18n.t('tutorial.canvas_overview_html'),
+        position: 'left'
+      }, {
+        element: $('#edit-canvas-button')[0],
+        intro: I18n.t('tutorial.canvas_click_edit_workflow_html'),
+        position: 'left'
+      }];
+      initPageTutorialSteps(6, 7, nextPage, tutorialBeforeCb, tutorialAfterCb,
+       steps);
     } else if (stepNum >= 8 && stepNum <= 9) {
-      // Go to edit canvas mode
+      // Go into edit canvas mode
       $('.introjs-overlay').remove();
       $('.introjs-helperLayer').remove();
       $('.introjs-tooltipReferenceLayer').remove();
@@ -3148,12 +3143,11 @@ function initTutorial() {
       setTimeout(function() {
         var nextPage = window.location.pathname;
         var steps = [{
-          intro: $('#canvas-container').attr('data-edit-workflow-step-text'),
+          intro: I18n.t('tutorial.edit_workflow_html'),
           element: $('#canvas-new-module')[0],
           position: 'right'
         }, {
-          intro: $('#canvas-container')
-                  .attr('data-edit-workflow-click-save-step-text'),
+          intro: I18n.t('tutorial.edit_workflow_click_save_html'),
           element: $('#canvas-save')[0],
           position: 'right'
         }];
@@ -3171,12 +3165,11 @@ function initTutorial() {
       var nextPage = qpcrModuleLeaf.find('a.module-link').attr('href');
       var steps = [{
         element: $('#slide-panel .tree')[0],
-        intro: $('#canvas-container').attr('data-sidebar-step-text'),
+        intro: I18n.t('tutorial.sidebar_html'),
         position: 'right'
       }, {
         element: qpcrModuleLeaf[0],
-        intro: $('#canvas-container')
-                .attr('data-sidebar-click-module-step-text'),
+        intro: I18n.t('tutorial.sidebar_click_module_html'),
         position: 'right'
       }];
       initPageTutorialSteps(10, 11, nextPage, tutorialBeforeCb,

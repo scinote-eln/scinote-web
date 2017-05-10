@@ -21,13 +21,16 @@
         <h5>
           <span class="glyphicon glyphicon-circle-arrow-right"></span>
           <b><%=t "projects.reports.elements.step.step_pos", pos: (step.position + 1) %></b>&nbsp;<%= step.name %>
+          <%= step_status_label(step) %>
         </h5>
       </div>
     </div>
     <div class="row">
       <div class="col-xs-12 ql-editor">
         <% if strip_tags(step.description).present? %>
-          <%= custom_auto_link(step.description, false) %>
+          <%= custom_auto_link(generate_image_tag_from_token(step.description),
+                               simple_format: false,
+                               tags: %w(img)) %>
         <% else %>
            <em><%=t "projects.reports.elements.step.no_description" %></em>
         <% end %>

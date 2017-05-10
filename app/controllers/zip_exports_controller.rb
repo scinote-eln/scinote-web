@@ -8,7 +8,7 @@ class ZipExportsController < ApplicationController
     else
       send_file @zip_export.zip_file.path,
                 filename: URI.unescape(@zip_export.zip_file_file_name),
-                type: @zip_export.file_content_type
+                type: 'application/zip'
     end
   end
 

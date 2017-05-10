@@ -9,12 +9,15 @@ RUN apt-get update -qq && \
   netcat \
   default-jre-headless \
   sudo graphviz --no-install-recommends \
-  sudo libfile-mimeinfo-perl && \
+  libfile-mimeinfo-perl && \
   rm -rf /var/lib/apt/lists/*
 
+ENV RAILS_ENV production
+
 # install gems
-COPY Gemfile* /tmp/
-WORKDIR /tmp
+COPY Gemfile* /usr/src/bundle/
+COPY addons /usr/src/bundle/addons
+WORKDIR /usr/src/bundle
 RUN bundle install
 
 # create app directory
@@ -24,12 +27,10 @@ WORKDIR $APP_HOME
 COPY . .
 RUN rm -f $APP_HOME/config/application.yml $APP_HOME/production.env
 
-ENV RAILS_ENV=production \
-  DATABASE_URL=postgresql://postgres@db/scinote_production \
+RUN DATABASE_URL=postgresql://postgres@db/scinote_production \
   PAPERCLIP_HASH_SECRET=dummy \
   SECRET_KEY_BASE=dummy \
-  DEFACE_ENABLED=true
-
-RUN bash -c "rake assets:precompile && rake deface:precompile"
+  DEFACE_ENABLED=true \
+  bash -c "rake assets:precompile && rake deface:precompile"
 
 CMD rails s -b 0.0.0.0

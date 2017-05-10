@@ -25,6 +25,7 @@ class Step < ActiveRecord::Base
   has_many :tables, through: :step_tables
   has_many :report_elements, inverse_of: :step,
     dependent: :destroy
+  has_many :tiny_mce_assets, inverse_of: :step, dependent: :destroy
 
   accepts_nested_attributes_for :checklists,
                                 reject_if: :all_blank,
@@ -41,26 +42,21 @@ class Step < ActiveRecord::Base
   after_destroy :cascade_after_destroy
   before_save :set_last_modified_by
 
-  def self.search(user, include_archived, query = nil, page = 1)
+  def self.search(user,
+                  include_archived,
+                  query = nil,
+                  page = 1,
+                  _current_team = nil,
+                  options = {})
     protocol_ids =
       Protocol
       .search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
       .pluck(:id)
 
-    if query
-      a_query = query.strip
-      .gsub("_","\\_")
-      .gsub("%","\\%")
-      .split(/\s+/)
-      .map {|t|  "%" + t + "%" }
-    else
-      a_query = query
-    end
-
     new_query = Step
-      .distinct
-      .where("steps.protocol_id IN (?)", protocol_ids)
-      .where_attributes_like([:name, :description], a_query)
+                .distinct
+                .where('steps.protocol_id IN (?)', protocol_ids)
+                .where_attributes_like([:name, :description], query, options)
 
     # Show all results if needed
     if page == Constants::SEARCH_NO_LIMIT
@@ -128,6 +124,7 @@ class Step < ActiveRecord::Base
       Activity.create(
         type_of: :destroy_step,
         project: protocol.my_module.experiment.project,
+        experiment: protocol.my_module.experiment,
         my_module: protocol.my_module,
         user: @current_user,
         message: I18n.t(

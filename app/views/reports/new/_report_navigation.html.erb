@@ -6,9 +6,7 @@
           <li>
             <% if can_view_projects(@project.team) %>
               <a id="team-link"
-                 href="<%= projects_path :team => @project.team.id %>"
-                 data-intro="<%=t 'tutorial.new_report_click_team_html', private_team: @project.team.name %>"
-                 data-step="21" data-position="left">
+                 href="<%= projects_path :team => @project.team.id %>">
             <% end %>
             <span class="hidden-sm hidden-md hidden-lg">Org</span>
             <span class="hidden-xs"><%= @project.team.name %></span>

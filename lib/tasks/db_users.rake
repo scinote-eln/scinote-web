@@ -40,7 +40,7 @@ namespace :db do
           password = generate_user_password if password.blank?
 
           user_teams = user_hash['teams']
-          user_teams = '' if user_teams.blank
+          user_teams = '' if user_teams.blank?
 
           team_ids =
             user_teams
@@ -55,7 +55,7 @@ namespace :db do
             user_hash['email'],
             password,
             true,
-            create_teams ? Constants::DEFAULT_PRIVATE_ORG_NAME : nil,
+            create_teams ? Constants::DEFAULT_PRIVATE_TEAM_NAME : nil,
             team_ids
           )
 
@@ -101,7 +101,7 @@ namespace :db do
         team_ids = []
         team_names.each do |team_name|
           team = Team.order(created_at: :desc).where(name: team_name).first
-          team = Team.create(name: team_name[0..99]) if team.blank
+          team = Team.create(name: team_name[0..99]) if team.blank?
 
           team_ids << team.id
         end

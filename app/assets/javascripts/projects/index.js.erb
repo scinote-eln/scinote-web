@@ -238,6 +238,9 @@
         dataType: "json",
         success: function (data) {
           projectEl.find("#users-" + projectEl.attr("id")).html(data.html);
+          CounterBadge.updateCounterBadge(data.counter,
+                                          data.project_id,
+                                          'users');
           initUsersEditLink(projectEl);
         },
         error: function (data) {

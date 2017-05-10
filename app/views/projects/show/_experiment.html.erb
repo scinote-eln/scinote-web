@@ -1,11 +1,7 @@
 <div class="col-md-6">
   <div class="panel panel-default experiment-panel"
        data-id="<%= experiment.id %>"
-       data-intro="<%= t('tutorial.edit_experiment_html') %>"
-       data-step="5"
-       data-position="right"
        data-canvas-link="<%= canvas_experiment_url(experiment) %>"
-       disableInteraction="true"
        >
     <div class="panel-heading">
       <% if can_view_experiment_actions experiment %>

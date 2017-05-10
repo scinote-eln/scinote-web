@@ -100,6 +100,9 @@ en:
       archive: "Archive"
 
   search:
+    whole_word: "Match any whole word"
+    whole_phrase: "Match whole phrase"
+    match_case: "Match case"
     index:
       head_title: "Search"
       page_title: "Search"
@@ -432,6 +435,9 @@ en:
     buttons:
       complete: "Complete task"
       uncomplete: "Uncomplete task"
+    complete_modal:
+      description: 'You have completed all steps in the task. Would you like to mark entire task as completed?'
+      leave_uncompleted: 'Leave task in progress'
     description:
       title: "Edit task %{module} description"
       label: "Description"
@@ -740,7 +746,7 @@ en:
       no_archived_modules: "No archived tasks!"
       restore_option: "Restore"
       archived_on: "Archived on"
-      archived_on_title: "Module archived on %{date} at %{time}."
+      archived_on_title: "Task archived on %{date} at %{time}."
 
   my_module_groups:
     new:
@@ -1007,8 +1013,8 @@ en:
     add_comment_to_step: "<i>%{user}</i> commented on Step %{step} <strong>%{step_name}</strong>."
     complete_step: "<i>%{user}</i> completed Step %{step} <strong>%{step_name}</strong> (%{completed}/%{all} completed)."
     uncomplete_step: "<i>%{user}</i> uncompleted Step %{step} <strong>%{step_name}</strong> (%{completed}/%{all} completed)."
-    check_step_checklist_item: "<i>%{user}</i> completed task <strong>%{checkbox}</strong> (%{completed}/%{all} completed) in Step %{step} <strong>%{step_name}</strong>."
-    uncheck_step_checklist_item: "<i>%{user}</i> uncompleted task <strong>%{checkbox}</strong> (%{completed}/%{all} completed) in Step %{step} <strong>%{step_name}</strong>."
+    check_step_checklist_item: "<i>%{user}</i> completed checklist item <strong>%{checkbox}</strong> (%{completed}/%{all} completed) in Step %{step} <strong>%{step_name}</strong>."
+    uncheck_step_checklist_item: "<i>%{user}</i> uncompleted checklist item <strong>%{checkbox}</strong> (%{completed}/%{all} completed) in Step %{step} <strong>%{step_name}</strong>."
     edit_step: "<i>%{user}</i> edited Step %{step} <strong>%{step_name}</strong>."
     add_asset_result: "<i>%{user}</i> added file result <strong>%{result}</strong>."
     add_text_result: "<i>%{user}</i> added text result <strong>%{result}</strong>."
@@ -1028,9 +1034,9 @@ en:
     add_comment_to_project: "<i>%{user}</i> commented on project <strong>%{project}</strong>."
     edit_project_comment: "<i>%{user}</i> edited comment on project <strong>%{project}</strong>."
     delete_project_comment: "<i>%{user}</i> deleted comment on project <strong>%{project}</strong>."
-    add_comment_to_module: "<i>%{user}</i> commented on module <strong>%{module}</strong>."
-    edit_module_comment: "<i>%{user}</i> edited comment on module <strong>%{module}</strong>."
-    delete_module_comment: "<i>%{user}</i> deleted comment on module <strong>%{module}</strong>."
+    add_comment_to_module: "<i>%{user}</i> commented on task <strong>%{module}</strong>."
+    edit_module_comment: "<i>%{user}</i> edited comment on task <strong>%{module}</strong>."
+    delete_module_comment: "<i>%{user}</i> deleted comment on task <strong>%{module}</strong>."
     edit_step_comment: "<i>%{user}</i> edited comment on Step %{step} <strong>%{step_name}</strong>."
     delete_step_comment: "<i>%{user}</i> deleted comment on Step %{step} <strong>%{step_name}</strong>."
     edit_result_comment: "<i>%{user}</i> edited comment on result <strong>%{result}</strong>."
@@ -1111,7 +1117,7 @@ en:
       new:
         head_title: "Sign up"
         team_name_label: "Team name"
-        team_name_help: "Team name is required in order to create your own team."
+        team_name_help: "Team name is required in order to create your own Team. After you create your own Team, you will be able to join other Teams as well."
     statistics:
       title: "My statistics"
       team: "Team"
@@ -1369,6 +1375,8 @@ en:
         row_in_repository_public: "%{protocol} - <i>into public protocols</i>"
         row_in_repository_private: "%{protocol} - <i>into private protocols</i>"
     steps:
+      completed: 'Completed'
+      uncompleted: 'Uncompleted'
       expand_label: "Expand all"
       collapse_label: "Collapse all"
       new_step: "Add new"
@@ -1468,11 +1476,11 @@ en:
 
   tutorial:
     title: "Tutorial"
+    back: "Back"
     next: "Next"
     skip_tutorial: "Skip tutorial"
-    end_tutorial: "End tutorial"
     finish_tutorial: "Start using sciNote"
-    tutorial_welcome_title_html: "Welcome to <em>sciNote</em>, your electronic lab notebook. <em>sciNote</em> organizes your work in Projects. Click <strong>Team icon</strong> to choose Projects from which Team you want to view on your Dashboard. You can also reorder them by clicking the <strong>Sort by</strong> button. <strong>(Step 1/26)</strong>"
+    tutorial_welcome_title_html: "Welcome to <em>sciNote</em>, your electronic lab notebook. <em>sciNote</em> organizes your work in Projects. Click <strong>Team icon</strong> <span class='fa fa-users'></span> to choose Projects from which Team you want to view on your Dashboard. You can also reorder them by clicking the <strong>Sort by</strong> button. <strong>(Step 1/26)</strong>"
     create_project_html: "Click here to create a Project and it will appear under the Team you've chosen. Choose public <span class='glyphicon glyphicon-eye-open'></span> if you want everyone from the Team to view the Project or choose private <span class='glyphicon glyphicon-eye-close'></span> so only the people who you invite to the Project can see it. <strong>(Step 2/26)</strong>"
     project_options_html: "In the bottom row of the Project card you can check the latest activity <span class='glyphicon glyphicon-equalizer'></span>, invite collaborators <span class='glyphicon glyphicon-user'></span>, see the notifications <span class='glyphicon glyphicon-bell'></span> and write comments <span class='glyphicon glyphicon-comment'></span>. You can also edit the Project's name and visibility or archive it. You can recall the Project from the Archive <span class='glyphicon glyphicon-briefcase'></span> in the top right side of the Dashboard at any time. <strong>(Step 3/26)</strong>"
     create_experiment_html: "Inside of a Project you can create Experiments. To create one click on this button and edit Experiment’s name and description. <strong>(Step 4/26)</strong>"
@@ -1520,19 +1528,19 @@ en:
       recent_changes: "Recent changes"
       system_message: "sciNote system message"
       deliver: 'Exportable content'
-    experiment_annotation_title: "%{user} mentioned you in %{experiment} experiment."
+    experiment_annotation_title: "%{user} mentioned you in experiment %{experiment}."
     experiment_annotation_message_html: "Project: %{project} | Experiment: %{experiment}"
     project_comment_annotation_title: "%{user} mentioned you in a comment on project %{project}."
     project_annotation_message_html: "Project: %{project}"
     my_module_comment_annotation_title: "%{user} mentioned you in a comment on task %{my_module}."
-    my_module_annotation_message_html: "Project: %{project} | Task: %{my_module}"
+    my_module_annotation_message_html: "Project: %{project} | Experiment: %{experiment} | Task: %{my_module}"
     step_comment_annotation_title: "%{user} mentioned you in a comment on step %{step}."
     step_description_title: "%{user} mentioned you in a description on step %{step}."
     checklist_title: "%{user} mentioned you in a checklist on step %{step}."
-    step_annotation_message_html: "Project: %{project} | Task: %{my_module} | Step: %{step}"
+    step_annotation_message_html: "Project: %{project} | Experiment: %{experiment} | Task: %{my_module} | Step: %{step}"
     result_annotation_title: "%{user} mentioned you in result %{result}."
     result_comment_annotation_title: "%{user} mentioned you in a comment on result %{result}."
-    result_annotation_message_html: "Project: %{project} | Task: %{my_module}"
+    result_annotation_message_html: "Project: %{project} | Experiment: %{experiment} | Task: %{my_module}"
     sample_annotation_title: "%{user} mentioned you in Column: %{column} of Sample %{sample}"
     sample_annotation_message_html: "Sample: %{sample} | Column: %{column}"
     protocol_step_annotation_message_html: "Protocol: %{protocol}"
@@ -1564,10 +1572,15 @@ en:
   zip_export:
     notification_title: 'Your package is ready to be exported!'
     expired_title: 'The required file was expired!'
-    expired_description: 'The downloadable file expires in 3 days after its creation.'
+    expired_description: 'The downloadable file expires in 7 days after its creation.'
   # This section contains general words that can be used in any parts of
   # application.
-
+  tiny_mce:
+    upload_window_title: 'Insert an image from your computer'
+    upload_window_label: 'Choose an image'
+    insert_btn: 'Insert'
+    error_message: 'You must choose a file'
+    server_not_respond: "Didn't get a response from the server"
   general:
     save: "Save"
     update: "Update"
@@ -1597,6 +1610,7 @@ en:
       length_too_long: "is too long (maximum is %{max_length} characters)"
       length_too_short: "is too short (minimum is %{min_length} characters)"
     query:
+      wrong_query: "All words in search query are either too short (minimum is %{min_length} characters) or too long (maximum is %{max_length} characters)"
       length_too_long: "Search query is too long (maximum is %{max_length} characters)"
       length_too_short: "Search query is too short (minimum is %{min_length} characters)"
     busy: "The server is still processing your request. If you leave this page, the changes will be lost! Are you sure you want to continue?"

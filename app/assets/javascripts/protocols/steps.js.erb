@@ -24,6 +24,38 @@ function applyCheckboxCallBack()  {
   });
 }
 
+// Complete mymodule
+function complete_my_module_actions() {
+  var modal = $('#completed-task-modal');
+
+  modal.find('[data-action="complete"]')
+       .off().on().click(function(event) {
+      event.stopPropagation();
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      $.ajax({
+        url: modal.data('url'),
+        type: 'GET',
+        success: function(data) {
+          var task_button = $("[data-action='complete-task']");
+          task_button.attr('data-action', 'uncomplete-task');
+          task_button.find('.btn')
+            .removeClass('btn-primary').addClass('btn-greyed');
+          $('.task-due-date').html(data.module_header_due_date_label);
+          $('.task-state-label').html(data.module_state_label);
+          task_button
+            .find('button')
+            .html('<span class="glyphicon glyphicon-remove"></span>&nbsp;' +
+                  data.task_button_title);
+          modal.modal('hide');
+        },
+        error: function() {
+          modal.modal('hide');
+        }
+      });
+    });
+}
+
 // Sets callback for completing/uncompleting step
 function applyStepCompletedCallBack() {
   // First, remove old event handlers, as we use turbolinks
@@ -46,14 +78,10 @@ function applyStepCompletedCallBack() {
           button = step.find("[data-action='complete-step']");
           button.attr("data-action", "uncomplete-step");
           button.find(".btn").removeClass("btn-primary").addClass("btn-default");
-          if (data.task_completed) {
-            task_button = $("[data-action='complete-task']");
-            task_button.attr('data-action', 'uncomplete-task');
-            task_button.find('.btn')
-              .removeClass('btn-primary').addClass('btn-default');
-            $('.task-due-date').html(data.module_header_due_date_label);
-            $('.task-state-label').html(data.module_state_label);
-            task_button.find('button').html(data.task_button_title);
+
+          if (data.task_ready_to_complete) {
+            $('#completed-task-modal').modal('show');
+            complete_my_module_actions();
           }
         }
         else {
@@ -188,11 +216,9 @@ function formCallback($form) {
   $form.submit(function(){
     $(this).find("[data-role='editable-table']").each(function() {
       var hot = $(this).find(".hot").handsontable('getInstance');
-      if (hot && hot.countEmptyRows() != hot.countRows()) {
-        var contents = $(this).find('.hot-contents');
-        var data = JSON.stringify({data: hot.getData()});
-        contents.attr("value", data);
-      }
+      var contents = $(this).find('.hot-contents');
+      var data = JSON.stringify({data: hot.getData()});
+      contents.attr("value", data);
     });
 
     setTimeout(function() {
@@ -517,12 +543,13 @@ $("[data-action='new-step']").on("ajax:success", function(e, data) {
   applyCancelOnNew();
   toggleButtons(false);
   initializeCheckboxSorting();
-  TinyMCE.refresh();
 
   $("#step_name").focus();
   $("#new-step-main-tab a").on("shown.bs.tab", function() {
     $("#step_name").focus();
   });
+
+  TinyMCE.refresh();
 });
 
 // Needed because server-side validation failure clears locations of
@@ -531,7 +558,6 @@ $("[data-action='new-step']").on("ajax:success", function(e, data) {
 function processStep(ev, editMode) {
   var $form = $(ev.target.form);
   $form.clearFormErrors();
-  $form.removeBlankExcelTables(editMode);
   $form.removeBlankFileForms();
 
   var $fileInputs = $form.find("input[type=file]");

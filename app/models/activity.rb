@@ -63,6 +63,7 @@ class Activity < ActiveRecord::Base
   validates :project, :user, presence: true
 
   belongs_to :project, inverse_of: :activities
+  belongs_to :experiment, inverse_of: :activities
   belongs_to :my_module, inverse_of: :activities
   belongs_to :user, inverse_of: :activities
 
@@ -82,13 +83,24 @@ class Activity < ActiveRecord::Base
                              .url_helpers
                              .project_path(project)}'>
                   #{project.name}</a>"
-    task_m = "| #{I18n.t('search.index.module')}
-              <a href='#{Rails
-                          .application
-                          .routes
-                          .url_helpers
-                          .protocols_my_module_path(my_module)}'>
-              #{my_module.name}</a>" if my_module
+    if experiment
+      experiment_m = "| #{I18n.t('search.index.experiment')}
+                      <a href='#{Rails
+                                  .application
+                                  .routes
+                                  .url_helpers
+                                  .canvas_experiment_path(experiment)}'>
+                      #{experiment.name}</a>"
+    end
+    if my_module
+      task_m = "| #{I18n.t('search.index.module')}
+                <a href='#{Rails
+                            .application
+                            .routes
+                            .url_helpers
+                            .protocols_my_module_path(my_module)}'>
+                #{my_module.name}</a>"
+    end
 
     notification = Notification.create(
       type_of: notification_type,
@@ -97,7 +109,8 @@ class Activity < ActiveRecord::Base
       message:
       ActionController::Base
         .helpers.sanitize(
-          "#{I18n.t('search.index.project')} #{project_m} #{task_m}",
+          "#{I18n.t('search.index.project')}
+          #{project_m} #{experiment_m} #{task_m}",
           tags: %w(strong a)
         ),
       generator_user_id: user.id

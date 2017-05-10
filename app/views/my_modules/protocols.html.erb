@@ -17,10 +17,7 @@
 </div>
 
 <!-- Tutorial data -->
-<div class="hidden" data-role="tutorial-data" data-module-id="<%= @my_module.id %>"
-  data-module-protocols-step-text="<%=t 'tutorial.module_protocols_html' %>"
-  data-module-protocols-save-step-text="<%=t 'tutorial.module_protocols_save_html' %>"
-  data-module-protocols-click-results-step-text="<%=t 'tutorial.module_protocols_click_results_html' %>">
+<div class="hidden" data-role="tutorial-data" data-module-id="<%= @my_module.id %>">
 </div>
 
 <!-- URL for status bar refreshing -->
@@ -46,6 +43,9 @@
 
 <!-- Image preview modal -->
 <%= render partial: "shared/image_preview_modal.html.erb" %>
+
+<!-- Complete task modal -->
+<%= render partial: 'my_modules/complete_task_modal.html.erb' %>
 
 <%= stylesheet_link_tag 'datatables' %>
 <%= javascript_include_tag("my_modules/protocols") %>

@@ -11,27 +11,21 @@ class MyModuleGroup < ActiveRecord::Base
   belongs_to :created_by, foreign_key: 'created_by_id', class_name: 'User'
   has_many :my_modules, inverse_of: :my_module_group, dependent: :nullify
 
-  def self.search(user, include_archived, query = nil, page = 1)
+  def self.search(user,
+                  include_archived,
+                  query = nil,
+                  page = 1,
+                  _current_team = nil,
+                  options = {})
     exp_ids =
       Experiment
       .search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
       .pluck(:id)
 
-
-    if query
-      a_query = query.strip
-      .gsub("_","\\_")
-      .gsub("%","\\%")
-      .split(/\s+/)
-      .map {|t|  "%" + t + "%" }
-    else
-      a_query = query
-    end
-
     new_query = MyModuleGroup
-      .distinct
-      .where("my_module_groups.experiment_id IN (?)", exp_ids)
-      .where_attributes_like("my_module_groups.name", a_query)
+                .distinct
+                .where('my_module_groups.experiment_id IN (?)', exp_ids)
+                .where_attributes_like('my_module_groups.name', query, options)
 
     # Show all results if needed
     if page == Constants::SEARCH_NO_LIMIT

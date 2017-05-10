@@ -31,14 +31,9 @@ class Project < ActiveRecord::Base
     include_archived,
     query = nil,
     page = 1,
-    current_team = nil
+    current_team = nil,
+    options = {}
   )
-
-    if query
-      a_query = '%' + query.strip.gsub('_', '\\_').gsub('%', '\\%') + '%'
-    else
-      a_query = query
-    end
 
     if current_team
       new_query =
@@ -53,7 +48,7 @@ class Project < ActiveRecord::Base
           user.id
         )
       end
-      new_query = new_query.where_attributes_like(:name, a_query)
+      new_query = new_query.where_attributes_like(:name, query, options)
 
       if include_archived
         return new_query
@@ -75,7 +70,7 @@ class Project < ActiveRecord::Base
             'user_projects.user_id = ?',
             user.id
           )
-          .where_attributes_like('projects.name', a_query)
+          .where_attributes_like('projects.name', query, options)
 
       else
         new_query =
@@ -86,7 +81,7 @@ class Project < ActiveRecord::Base
             'user_projects.user_id = ?',
             user.id
           )
-          .where_attributes_like('projects.name', a_query)
+          .where_attributes_like('projects.name', query, options)
           .where('projects.archived = ?', false)
       end
     end

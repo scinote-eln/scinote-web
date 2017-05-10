@@ -21,7 +21,12 @@ class Table < ActiveRecord::Base
   after_save :update_ts_index
   #accepts_nested_attributes_for :table
 
-  def self.search(user, include_archived, query = nil, page = 1)
+  def self.search(user,
+                  include_archived,
+                  query = nil,
+                  page = 1,
+                  _current_team = nil,
+                  options = {})
     step_ids =
       Step
       .search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
@@ -36,43 +41,63 @@ class Table < ActiveRecord::Base
       .distinct
       .pluck('result_tables.id')
 
-    if query
-      a_query = query.strip
-                     .gsub('_', '\\_')
-                     .gsub('%', '\\%')
-                     .split(/\s+/)
-                     .map { |t| '%' + t + '%' }
-    else
-      a_query = query
-    end
-
-    # Trim whitespace and replace it with OR character. Make prefixed
-    # wildcard search term and escape special characters.
-    # For example, search term 'demo project' is transformed to
-    # 'demo:*|project:*' which makes word inclusive search with postfix
-    # wildcard.
-    s_query = query.gsub(/[!()&|:]/, " ")
-      .strip
-      .split(/\s+/)
-      .map {|t| t + ":*" }
-      .join("|")
-      .gsub('\'', '"')
-
     table_query =
       Table
       .distinct
-      .joins("LEFT OUTER JOIN step_tables ON step_tables.table_id = tables.id")
-      .joins("LEFT OUTER JOIN result_tables ON result_tables.table_id = tables.id")
-      .joins("LEFT OUTER JOIN results ON result_tables.result_id = results.id")
-      .where("step_tables.id IN (?) OR result_tables.id IN (?)", step_ids, result_ids)
-      .where(
-        '(trim_html_tags(tables.name) ILIKE ANY (array[?])'\
-        'OR tables.data_vector @@ to_tsquery(?))',
+      .joins('LEFT OUTER JOIN step_tables ON step_tables.table_id = tables.id')
+      .joins('LEFT OUTER JOIN result_tables ON ' \
+             'result_tables.table_id = tables.id')
+      .joins('LEFT OUTER JOIN results ON result_tables.result_id = results.id')
+      .where('step_tables.id IN (?) OR result_tables.id IN (?)',
+             step_ids, result_ids)
+
+    if options[:whole_word].to_s == 'true' ||
+       options[:whole_phrase].to_s == 'true'
+      like = options[:match_case].to_s == 'true' ? '~' : '~*'
+      s_query = query.gsub(/[!()&|:]/, ' ')
+                     .strip
+                     .split(/\s+/)
+                     .map { |t| t + ':*' }
+      if options[:whole_word].to_s == 'true'
+        a_query = query.split
+                       .map { |a| Regexp.escape(a) }
+                       .join('|')
+        s_query = s_query.join('|')
+      else
+        a_query = Regexp.escape(query)
+        s_query = s_query.join('&')
+      end
+      a_query = '\\y(' + a_query + ')\\y'
+      s_query = s_query.tr('\'', '"')
+
+      new_query = table_query.where(
+        "(trim_html_tags(tables.name) #{like} ?" \
+        "OR tables.data_vector @@ to_tsquery(?))",
         a_query,
         s_query
       )
+    else
+      like = options[:match_case].to_s == 'true' ? 'LIKE' : 'ILIKE'
+      a_query = query.split.map { |a| "%#{sanitize_sql_like(a)}%" }
 
-    new_query = table_query
+      # Trim whitespace and replace it with OR character. Make prefixed
+      # wildcard search term and escape special characters.
+      # For example, search term 'demo project' is transformed to
+      # 'demo:*|project:*' which makes word inclusive search with postfix
+      # wildcard.
+      s_query = query.gsub(/[!()&|:]/, ' ')
+                     .strip
+                     .split(/\s+/)
+                     .map { |t| t + ':*' }
+                     .join('|')
+                     .tr('\'', '"')
+      new_query = table_query.where(
+        "(trim_html_tags(tables.name) #{like} ANY (array[?])" \
+        "OR tables.data_vector @@ to_tsquery(?))",
+        a_query,
+        s_query
+      )
+    end
 
     # Show all results if needed
     if page == Constants::SEARCH_NO_LIMIT

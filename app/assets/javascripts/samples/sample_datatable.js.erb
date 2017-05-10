@@ -107,6 +107,9 @@ function dataTableInit() {
       animateSpinner(this, false);
       changeToViewMode();
       updateButtons();
+      // Show number of selected samples info
+      $('#samples_info').append('<span id="selected_info"></span>');
+      $('#selected_info').html(' ('+rowsSelected.length+' entries selected)');
     },
     preDrawCallback: function() {
       animateSpinner(this);
@@ -218,6 +221,9 @@ function dataTableInit() {
     e.stopPropagation();
 
     updateButtons();
+
+    // Update number of selected samples info
+    $('#selected_info').html(' ('+ rowsSelected.length +' entries selected)');
   });
 
   // Handle click on "Select all" control

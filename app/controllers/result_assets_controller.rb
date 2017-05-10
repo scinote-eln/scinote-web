@@ -48,6 +48,7 @@ class ResultAssetsController < ApplicationController
           type_of: :add_result,
           user: current_user,
           project: @my_module.experiment.project,
+          experiment: @my_module.experiment,
           my_module: @my_module,
           message: t(
             "activities.add_asset_result",
@@ -126,6 +127,7 @@ class ResultAssetsController < ApplicationController
         Activity.create(
           type_of: :archive_result,
           project: @my_module.experiment.project,
+          experiment: @my_module.experiment,
           my_module: @my_module,
           user: current_user,
           message: t(
@@ -170,6 +172,7 @@ class ResultAssetsController < ApplicationController
           type_of: :edit_result,
           user: current_user,
           project: @my_module.experiment.project,
+          experiment: @my_module.experiment,
           my_module: @my_module,
           message: t(
             "activities.edit_asset_result",

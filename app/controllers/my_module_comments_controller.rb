@@ -59,6 +59,7 @@ class MyModuleCommentsController < ApplicationController
           type_of: :add_comment_to_module,
           user: current_user,
           project: @my_module.experiment.project,
+          experiment: @my_module.experiment,
           my_module: @my_module,
           message: t(
             'activities.add_comment_to_module',
@@ -75,7 +76,9 @@ class MyModuleCommentsController < ApplicationController
                 comment: @comment
               }
             ),
-            date: @comment.created_at.strftime('%d.%m.%Y')
+            date: @comment.created_at.strftime('%d.%m.%Y'),
+            linked_id: @my_module.id, # Used for counter badge
+            counter: @my_module.task_comments.count # Used for counter badge
           },
           status: :created
         end
@@ -117,6 +120,7 @@ class MyModuleCommentsController < ApplicationController
             type_of: :edit_module_comment,
             user: current_user,
             project: @my_module.experiment.project,
+            experiment: @my_module.experiment,
             my_module: @my_module,
             message: t(
               'activities.edit_module_comment',
@@ -143,6 +147,7 @@ class MyModuleCommentsController < ApplicationController
             type_of: :delete_module_comment,
             user: current_user,
             project: @my_module.experiment.project,
+            experiment: @my_module.experiment,
             my_module: @my_module,
             message: t(
               'activities.delete_module_comment',
@@ -150,7 +155,10 @@ class MyModuleCommentsController < ApplicationController
               module: @my_module.name
             )
           )
-          render json: {}, status: :ok
+          # 'counter' and 'linked_id' are used for counter badge
+          render json: { linked_id: @my_module.id,
+                         counter: @my_module.task_comments.count },
+                 status: :ok
         else
           render json: { message: I18n.t('comments.delete_error') },
                  status: :unprocessable_entity
@@ -209,6 +217,9 @@ class MyModuleCommentsController < ApplicationController
                                   project_url(@my_module
                                               .experiment
                                               .project)),
+                 experiment: link_to(@my_module.experiment.name,
+                                     canvas_experiment_url(@my_module
+                                                           .experiment)),
                  my_module: link_to(@my_module.name,
                                     protocols_my_module_url(
                                       @my_module

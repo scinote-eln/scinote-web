@@ -283,6 +283,7 @@ Rails.application.routes.draw do
         get 'results' # Results view for single module
         get 'samples' # Samples view for single module
         get 'archive' # Archive view for single module
+        get 'complete_my_module'
         post 'toggle_task_state'
         # Renders sample datatable for single module (ajax action)
         post 'samples_index'
@@ -320,6 +321,9 @@ Rails.application.routes.draw do
         get 'move_up'
       end
     end
+
+    # tinyMCE image uploader endpoint
+    post '/tinymce_assets', to: 'tiny_mce_assets#create', as: :tiny_mce_assets
 
     resources :results, only: [:update, :destroy] do
       resources :result_comments,

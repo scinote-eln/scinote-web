@@ -53,6 +53,7 @@ class TeamsController < ApplicationController
             )
 
             if @temp_file.save
+              @temp_file.destroy_obsolete
               # format.html
               format.json {
                 render :json => {
