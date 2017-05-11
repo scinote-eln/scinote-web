@@ -372,7 +372,7 @@ class Protocol < ActiveRecord::Base
   end
 
   def completed_steps
-    steps.select(&:completed)
+    steps.where(completed: true)
   end
 
   def space_taken
