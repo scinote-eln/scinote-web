@@ -154,7 +154,10 @@ function dataTableInit() {
     fnInitComplete: function(oSettings, json) {
       // Reload correct column order and visibility (if you refresh page)
       for (var i = 0; i < table.columns()[0].length; i++) {
-        var visibility = myData.columns[i].visible;
+        var visibility = false;
+        if (myData.columns[i]) {
+          visibility = myData.columns[i].visible;
+        }
         if (typeof (visibility) === 'string') {
           visibility = (visibility === 'true');
         }
@@ -976,7 +979,6 @@ function changeToEditMode() {
           // Add number of columns
           $('#samples').data('num-columns',
             $('#samples').data('num-columns') + 1);
-
           // Add column to table (=table header)
           originalHeader.append(
             '<th class="custom-field" id="' + data.id + '" ' +
@@ -1181,7 +1183,7 @@ function changeToEditMode() {
           text.html(generateColumnNameTooltip(newName));
           $(table.columns().header()).filter('#' + id)
             .html(generateColumnNameTooltip(newName));
-
+          originalHeader.find('#' + id).html(newName);
           cancelEditMode();
           initHeaderTooltip();
         },
