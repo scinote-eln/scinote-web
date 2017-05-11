@@ -21,12 +21,8 @@ class ReportsController < ApplicationController
     :project_contents_modal,
     :experiment_contents_modal,
     :module_contents_modal,
-    :step_contents_modal,
-    :result_contents_modal,
     :project_contents,
-    :module_contents,
-    :step_contents,
-    :result_contents
+    :module_contents
   ]
 
   before_action :check_view_permissions, only: :index
@@ -40,12 +36,8 @@ class ReportsController < ApplicationController
     :project_contents_modal,
     :experiment_contents_modal,
     :module_contents_modal,
-    :step_contents_modal,
-    :result_contents_modal,
     :project_contents,
-    :module_contents,
-    :step_contents,
-    :result_contents
+    :module_contents
   ]
   before_action :check_destroy_permissions, only: :destroy
 
@@ -275,50 +267,6 @@ class ReportsController < ApplicationController
     end
   end
 
-  # Modal for adding contents into step element
-  def step_contents_modal
-    step = Step.find_by_id(params[:id])
-
-    respond_to do |format|
-      if step.blank?
-        format.json do
-          render json: {}, status: :not_found
-        end
-      else
-        format.json do
-          render json: {
-            html: render_to_string(
-              partial: 'reports/new/modal/step_contents.html.erb',
-              locals: { project: @project, step: step }
-            )
-          }
-        end
-      end
-    end
-  end
-
-  # Modal for adding contents into result element
-  def result_contents_modal
-    result = Result.find_by_id(params[:id])
-
-    respond_to do |format|
-      if result.blank?
-        format.json do
-          render json: {}, status: :not_found
-        end
-      else
-        format.json do
-          render json: {
-            html: render_to_string(
-              partial: 'reports/new/modal/result_contents.html.erb',
-              locals: { project: @project, result: result }
-            )
-          }
-        end
-      end
-    end
-  end
-
   def project_contents
     respond_to do |format|
       elements = generate_project_contents_json
@@ -382,51 +330,6 @@ class ReportsController < ApplicationController
               elements: elements
             }
           end
-        end
-      end
-    end
-  end
-
-  def step_contents
-    step = Step.find_by_id(params[:id])
-
-    respond_to do |format|
-      if step.blank?
-        format.json { render json: {}, status: :not_found }
-      else
-        elements = generate_step_contents_json(step)
-
-        if elements_empty? elements
-          format.json { render json: {}, status: :no_content }
-        else
-          format.json {
-            render json: {
-              status: :ok,
-              elements: elements
-            }
-          }
-        end
-      end
-    end
-  end
-
-  def result_contents
-    result = Result.find_by_id(params[:id])
-    respond_to do |format|
-      if result.blank?
-        format.json { render json: {}, status: :not_found }
-      else
-        elements = generate_result_contents_json(result)
-
-        if elements_empty? elements
-          format.json { render json: {}, status: :no_content }
-        else
-          format.json {
-            render json: {
-              status: :ok,
-              elements: elements
-            }
-          }
         end
       end
     end

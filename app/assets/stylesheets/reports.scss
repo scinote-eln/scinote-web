@@ -46,9 +46,10 @@
 
 // Modal for adding content
 label {
-  &[for="_module_content_all"],
-  &[for="_step_content_all"],
-  &[for="result_content_all"] {
+  &[for="_experiment_all"],
+  &[for="_module_all"],
+  &[for="_step_all"],
+  &[for="result_all"] {
     font-weight: bold;
   }
 }
