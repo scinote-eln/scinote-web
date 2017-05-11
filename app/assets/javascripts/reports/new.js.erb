@@ -218,8 +218,9 @@ function initializeNewElement(newEl) {
         // Open modal, set its title
         addContentsModal.find(".modal-title").text(modalTitle);
 
-        // Display module contents
+        // Display module contents and add checkbox logic
         addContentsModalBody.html(data.html);
+        addContentsModalBody.checkboxTreeLogic();
 
         // Bind to the ajax events of the modal form in its body
         $(ADD_CONTENTS_FORM_ID)

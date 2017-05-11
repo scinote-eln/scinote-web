@@ -184,3 +184,34 @@ function initPageTutorialSteps(pageFirstStepN, pageLastStepN, nextPagePath,
     });
   }
 }
+
+/**
+ * Checkbox on/off logic. Just add 'checkbox-tree' class to a 'div' surrounding
+ * the checkboxes, represented with 'ul'.
+ */
+$.fn.checkboxTreeLogic = function() {
+  $('.checkbox-tree input:checkbox').change(function() {
+    // Update descendent checkboxes
+    var $checkbox = $(this);
+    var checkboxChecked = $checkbox.prop('checked');
+    var $childCheckboxes = $checkbox.closest('li').find('ul input:checkbox');
+    $childCheckboxes.each(function() {
+      $(this).prop('checked', checkboxChecked);
+    });
+
+    // Update ancestor checkboxes
+    // Loop until topmost checkbox is reached or until there's no parent
+    // checkbox
+    while ($checkbox.length !== 0 && !$checkbox.hasClass('checkbox-tree')) {
+      var $checkboxesContainer = $checkbox.closest('ul');
+      var $parentCheckbox = $checkboxesContainer.siblings()
+                                                .find('input:checkbox');
+      var $checkboxes = $checkboxesContainer.find('input:checkbox');
+      var $checkedCheckboxes = $checkboxes.filter(':checked');
+
+      $parentCheckbox.prop('checked',
+       $checkboxes.length === $checkedCheckboxes.length);
+      $checkbox = $parentCheckbox;
+    }
+  });
+};

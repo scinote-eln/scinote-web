@@ -36,31 +36,3 @@
     </div>
   </div>
 <% end %>
-
-<script type="javascript">
-  function checkboxTree() {
-    $(".checkbox-tree input:checkbox").change(function() {
-      // Update descendent checkboxes
-      var $checkbox = $(this);
-      var checkboxChecked = $checkbox.prop("checked");
-      var $childCheckboxes = $checkbox.closest("li").find("ul input:checkbox");
-      $childCheckboxes.each(function() {
-        $(this).prop('checked', checkboxChecked);
-      });
-
-      // Update ancestor checkboxes
-      // Loop until top checkbox is reached or until parent checkbox isn't there
-      while ($checkbox.length !== 0 && !$checkbox.hasClass("checkbox-tree")) {
-        var $checkboxesContainer = $checkbox.closest("ul");
-        var $parentCheckbox = $checkboxesContainer.siblings().find("input:checkbox");
-        var $checkboxes = $checkboxesContainer.find("input:checkbox");
-        var $checkedCheckboxes = $checkboxes.filter(':checked');
-
-        $parentCheckbox.prop('checked',
-         $checkboxes.length == $checkedCheckboxes.length);
-        $checkbox = $parentCheckbox;
-      }
-    });
-  }
-  checkboxTree();
-</script>
