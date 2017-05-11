@@ -88,6 +88,7 @@ module ReportActions
             el[:children] = generate_result_contents_json(report_el)
           end
           res << el
+          res << generate_new_el(false)
         end
       else
         file_name = contents.file_name
