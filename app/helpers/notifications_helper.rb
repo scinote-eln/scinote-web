@@ -40,10 +40,8 @@ module NotificationsHelper
 
     notification = Notification.create(
       type_of: :assignment,
-      title:
-        ActionController::Base.helpers.sanitize(title),
-      message:
-        ActionController::Base.helpers.sanitize(message)
+      title: sanitize_input(title),
+      message: sanitize_input(message)
     )
 
     if target_user.assignments_notification

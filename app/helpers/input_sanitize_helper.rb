@@ -5,12 +5,13 @@ module InputSanitizeHelper
   # the ActiveRecord connecton method on the caller object which in
   # our cases throws an error when called from not ActiveRecord objects
   # such as SamplesDatatables
-  def sanitize_input(text, tags = [], attributes = [])
+  def sanitize_input(html, tags = [], attributes = [])
     Sanitize.fragment(
-      text,
+      html,
       elements: Constants::WHITELISTED_TAGS + tags,
-      attributes: { all: Constants::WHITELISTED_ATTRIBUTES + attributes }
-    )
+      attributes: { all: Constants::WHITELISTED_ATTRIBUTES + attributes },
+      css: Constants::WHITELISTED_CSS_ATTRIBUTES
+    ).html_safe
   end
 
   def escape_input(text)
@@ -22,9 +23,9 @@ module InputSanitizeHelper
     team = options.fetch(:team) { nil }
     wrapper_tag = options.fetch(:wrapper_tag) { {} }
     tags = options.fetch(:tags) { [] }
-    fromat_opt = wrapper_tag.merge(sanitize: false)
+    format_opt = wrapper_tag.merge(sanitize: false)
     text = sanitize_input(text, tags)
-    text = simple_format(sanitize_input(text), {}, fromat_opt) if simple_f
+    text = simple_format(sanitize_input(text), {}, format_opt) if simple_f
     auto_link(
       smart_annotation_parser(text, team),
       link: :urls,

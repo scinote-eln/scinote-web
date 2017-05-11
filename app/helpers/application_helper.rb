@@ -92,10 +92,8 @@ module ApplicationHelper
   def generate_annotation_notification(target_user, title, message)
     notification = Notification.create(
       type_of: :assignment,
-      title:
-        ActionController::Base.helpers.sanitize(title),
-      message:
-        ActionController::Base.helpers.sanitize(message)
+      title: sanitize_input(title),
+      message: sanitize_input(message)
     )
     if target_user.assignments_notification
       UserNotification.create(notification: notification, user: target_user)
@@ -122,11 +120,13 @@ module ApplicationHelper
         project = Project.find_by_id(match[3].base62_decode)
         next unless project
         if project.archived?
-          "<span class='sa-type'>#{sanitize(match[2])}</span> " \
+          "<span class='sa-type'>" \
+          "#{sanitize_input(match[2])}</span> " \
           "#{link_to project.name,
                      projects_archive_path} #{I18n.t('atwho.res.archived')}"
         else
-          "<span class='sa-type'>#{sanitize(match[2])}</span> " \
+          "<span class='sa-type'>" \
+          "#{sanitize_input(match[2])}</span> " \
           "#{link_to project.name,
                      project_path(project)}"
         end
@@ -134,12 +134,14 @@ module ApplicationHelper
         experiment = Experiment.find_by_id(match[3].base62_decode)
         next unless experiment
         if experiment.archived?
-          "<span class='sa-type'>#{sanitize(match[2])}</span> " \
+          "<span class='sa-type'>" \
+          "#{sanitize_input(match[2])}</span> " \
           "#{link_to experiment.name,
                      experiment_archive_project_path(experiment.project)} " \
           "#{I18n.t('atwho.res.archived')}"
         else
-          "<span class='sa-type'>#{sanitize(match[2])}</span> " \
+          "<span class='sa-type'>"\
+          "#{sanitize_input(match[2])}</span> " \
           "#{link_to experiment.name,
                      canvas_experiment_path(experiment)}"
         end
@@ -147,12 +149,14 @@ module ApplicationHelper
         my_module = MyModule.find_by_id(match[3].base62_decode)
         next unless my_module
         if my_module.archived?
-          "<span class='sa-type'>#{sanitize(match[2])}</span> " \
+          "<span class='sa-type'>" \
+          "#{sanitize_input(match[2])}</span> " \
           "#{link_to my_module.name,
                      module_archive_experiment_path(my_module.experiment)} " \
           "#{I18n.t('atwho.res.archived')}"
         else
-          "<span class='sa-type'>#{sanitize(match[2])}</span> " \
+          "<span class='sa-type'>" \
+          "#{sanitize_input(match[2])}</span> " \
           "#{link_to my_module.name,
                      protocols_my_module_path(my_module)}"
         end

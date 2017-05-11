@@ -104,15 +104,12 @@ class Activity < ActiveRecord::Base
 
     notification = Notification.create(
       type_of: notification_type,
-      title:
-        ActionController::Base.helpers.sanitize(message, tags: %w(strong a)),
-      message:
-      ActionController::Base
-        .helpers.sanitize(
-          "#{I18n.t('search.index.project')}
-          #{project_m} #{experiment_m} #{task_m}",
-          tags: %w(strong a)
-        ),
+      title: InputSanitizeHelper.sanitize_input(message, tags: %w(strong a)),
+      message: InputSanitizeHelper.sanitize_input(
+        "#{I18n.t('search.index.project')}
+        #{project_m} #{experiment_m} #{task_m}",
+        tags: %w(strong a)
+      ),
       generator_user_id: user.id
     )
 
