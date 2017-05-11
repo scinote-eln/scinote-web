@@ -226,6 +226,7 @@ module ApplicationHelper
     unless user.avatar(style) == '/images/icon_small/missing.png'
       return user.avatar(style)
     end
-    URI.join(root_url, "/images/#{style}/missing.png").to_s
+    URI.join(Rails.application.routes.url_helpers.root_url,
+             "/images/#{style}/missing.png").to_s
   end
 end

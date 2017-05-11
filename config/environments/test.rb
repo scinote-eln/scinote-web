@@ -36,6 +36,10 @@ Rails.application.configure do
   # ActionMailer::Base.deliveries array.
   config.action_mailer.delivery_method = :test
 
+  Rails.application.routes.default_url_options = {
+    host: Rails.application.secrets.mail_server_url
+  }
+
   # Don't care if the mailer can't send.
   config.action_mailer.default_url_options = { host: Rails.application.secrets.mail_server_url }
   config.action_mailer.default_options = { from: Rails.application.secrets.mail_from }
