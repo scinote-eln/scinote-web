@@ -75,6 +75,9 @@ data-project-users-tab-url="<%= url_for project_user_projects_path(project_id: p
         <li role="presentation">
           <a class="btn btn-link" href="<%= url_for notifications_project_path(id: project.id, format: :json) %>" aria-controls="notifications-<%= project.id %>" role="tab" data-remote="true">
             <span class="glyphicon glyphicon-bell"></span>
+            <% if project.notifications_count(current_user).positive? %>
+              <span class="badge badge-indicator"><%= project.notifications_count(current_user) %></span>
+            <% end %>
           </a>
         </li>
       <% end %>
