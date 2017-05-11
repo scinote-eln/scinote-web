@@ -137,7 +137,8 @@ module FirstTimeDataGenerator
         user: user.full_name,
         project: project.name
       ),
-      created_at: project.created_at
+      created_at: project.created_at,
+      updated_at: project.created_at
     ).sneaky_save
 
     # Add a comment
@@ -210,7 +211,8 @@ module FirstTimeDataGenerator
           user: user.full_name,
           module: my_module.name
         ),
-        created_at: my_module.created_at
+        created_at: my_module.created_at,
+        updated_at: my_module.created_at
       ).sneaky_save
 
       UserMyModule.create(
@@ -230,7 +232,8 @@ module FirstTimeDataGenerator
           module: my_module.name,
             assigned_by_user: user.full_name
         ),
-        created_at: generate_random_time(my_module.created_at, 2.minutes)
+        created_at: generate_random_time(my_module.created_at, 2.minutes),
+        updated_at: generate_random_time(my_module.created_at, 2.minutes)
       ).sneaky_save
     end
 
@@ -262,7 +265,8 @@ module FirstTimeDataGenerator
         user: user.full_name,
         module: archived_module.name
       ),
-      created_at: archived_module.created_at
+      created_at: archived_module.created_at,
+      updated_at: archived_module.created_at
     ).sneaky_save
 
     # Activity for archiving archived module
@@ -276,7 +280,8 @@ module FirstTimeDataGenerator
         user: user.full_name,
         module: archived_module.name
       ),
-      created_at: archived_module.archived_on
+      created_at: archived_module.archived_on,
+      updated_at: archived_module.archived_on
     ).sneaky_save
 
     # Assign new user to archived module
@@ -297,7 +302,8 @@ module FirstTimeDataGenerator
         module: archived_module.name,
           assigned_by_user: user.full_name
       ),
-      created_at: generate_random_time(archived_module.created_at, 2.minutes)
+      created_at: generate_random_time(archived_module.created_at, 2.minutes),
+      updated_at: generate_random_time(archived_module.created_at, 2.minutes)
     ).sneaky_save
 
     # Assign 4 samples to modules
@@ -526,6 +532,7 @@ module FirstTimeDataGenerator
       my_module: my_modules[1],
       user: user,
       created_at: temp_result.created_at,
+      updated_at: temp_result.created_at,
       message: I18n.t(
         'activities.add_text_result',
         user: user.full_name,
@@ -578,6 +585,7 @@ module FirstTimeDataGenerator
       my_module: my_modules[2],
       user: user,
       created_at: temp_result.created_at,
+      updated_at: temp_result.created_at,
       message: I18n.t(
         'activities.add_text_result',
         user: user.full_name,
@@ -734,6 +742,7 @@ module FirstTimeDataGenerator
       my_module: my_modules[5],
       user: user,
       created_at: temp_result.created_at,
+      updated_at: temp_result.created_at,
       message: I18n.t(
         'activities.add_table_result',
         user: user.full_name,
@@ -863,6 +872,7 @@ module FirstTimeDataGenerator
       my_module: my_modules[7],
       user: user,
       created_at: temp_result.created_at,
+      updated_at: temp_result.created_at,
       message: I18n.t(
         'activities.add_text_result',
         user: user.full_name,
@@ -922,6 +932,7 @@ module FirstTimeDataGenerator
         my_module: my_module,
         user: step.user,
         created_at: created_at,
+        updated_at: created_at,
         message: I18n.t(
           'activities.create_step',
           user: step.user.full_name,
@@ -936,6 +947,7 @@ module FirstTimeDataGenerator
           my_module: my_module,
           user: step.user,
           created_at: completed_on,
+          updated_at: completed_on,
           message: I18n.t(
             'activities.complete_step',
             user: step.user.full_name,
@@ -980,6 +992,7 @@ module FirstTimeDataGenerator
       user: user,
       project: project,
       created_at: created_at,
+      updated_at: created_at,
       message: t('activities.add_comment_to_project',
                  user: user.full_name,
                  project: project.name)
@@ -1000,6 +1013,7 @@ module FirstTimeDataGenerator
       project: my_module.experiment.project,
       my_module: my_module,
       created_at: created_at,
+      updated_at: created_at,
       message: t('activities.add_comment_to_module',
                  user: user.full_name,
                  module: my_module.name)
@@ -1020,6 +1034,7 @@ module FirstTimeDataGenerator
       project: result.my_module.experiment.project,
       my_module: result.my_module,
       created_at: created_at,
+      updated_at: created_at,
       message: t('activities.add_comment_to_result',
                  user: user.full_name,
                  result: result.name)
@@ -1040,6 +1055,7 @@ module FirstTimeDataGenerator
       project: step.protocol.my_module.experiment.project,
       my_module: step.protocol.my_module,
       created_at: created_at,
+      updated_at: created_at,
       message: t('activities.add_comment_to_step',
                  user: user.full_name,
                  step: step.position + 1,
