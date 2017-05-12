@@ -72,9 +72,9 @@ module ReportActions
     ReportExtends::MODULE_CONTENTS.each do |contents|
       protocol = contents.element == :step ? my_module.protocol.present? : true
       next unless in_params?("module_#{contents.element}".to_sym) && protocol
-      res << generate_new_el(false)
       if contents.children
         contents.collection(my_module).each do |report_el|
+          res << generate_new_el(false)
           el = generate_el(
             "reports/elements/my_module_#{contents
                                           .element
@@ -88,11 +88,11 @@ module ReportActions
             el[:children] = generate_result_contents_json(report_el)
           end
           res << el
-          res << generate_new_el(false)
         end
       else
         file_name = contents.file_name
         file_name = contents.element if contents.element == :samples
+        res << generate_new_el(false)
         res << generate_el(
           "reports/elements/my_module_#{file_name}_element.html.erb",
           contents.parse_locals([my_module, :asc])
