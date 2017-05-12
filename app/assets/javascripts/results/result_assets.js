@@ -5,6 +5,7 @@
     // New result asset behaviour
     function initNewResultAsset() {
       $('#new-result-asset').on('ajax:success', function(e, data) {
+        debugger;
         var $form = $(data.html);
         $('#results').prepend($form);
 
