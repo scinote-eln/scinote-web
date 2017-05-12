@@ -185,6 +185,8 @@ class ExperimentsController < ApplicationController
       cloned_experiment = @experiment.deep_clone_to_project(current_user,
                                                             project)
       success = cloned_experiment.valid?
+      # Create workflow image
+      cloned_experiment.delay.generate_workflow_img if success
     else
       success = false
     end

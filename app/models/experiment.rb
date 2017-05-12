@@ -1,5 +1,6 @@
 class Experiment < ActiveRecord::Base
-  include ArchivableModel, SearchableModel
+  include ArchivableModel
+  include SearchableModel
 
   belongs_to :project, inverse_of: :experiments
   belongs_to :created_by, foreign_key: :created_by_id, class_name: 'User'
@@ -354,7 +355,7 @@ class Experiment < ActiveRecord::Base
     i += 1 while experiment_names.include?(format(format, i, name))
 
     clone = Experiment.new(
-      name: format(format, i, name),
+      name: format(format, i, name).truncate(Constants::NAME_MAX_LENGTH),
       description: description,
       created_by: current_user,
       last_modified_by: current_user,
@@ -371,10 +372,6 @@ class Experiment < ActiveRecord::Base
       m.deep_clone_to_experiment(current_user, clone)
     end
     clone.save
-
-    # Create workflow image
-    clone.delay.generate_workflow_img
-
     clone
   end
 
