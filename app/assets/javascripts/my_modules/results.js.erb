@@ -88,7 +88,7 @@
 
     // Toggle editing buttons
     function toggleResultEditButtons(show) {
-      if (show) {
+      if(show) {
         $('#results-toolbar').show();
         $('.edit-result-button').show();
       } else {
@@ -194,6 +194,29 @@
       }
     }
 
+    // init cancel button
+    function initCancelFormButton(form, callback) {
+      $(form).find('.cancel-new').click(function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        event.stopImmediatePropagation();
+        $(form).remove();
+        toggleResultEditButtons(true);
+        callback();
+      });
+    }
+
+    function archive(e, element) {
+      e.preventDefault();
+      e.stopPropagation();
+      e.stopImmediatePropagation();
+      var el = $(element);
+      if(confirm(el.data('confirm-text'))) {
+        animateSpinner();
+        $('#' + el.data('form-id')).submit();
+      }
+    }
+
     var publicAPI = Object.freeze({
       init: init,
       initHandsOnTables: initHandsOnTables,
@@ -201,7 +224,9 @@
       toggleResultEditButtons: toggleResultEditButtons,
       expandResult: expandResult,
       processResult: processResult,
-      ResultTypeEnum: ResultTypeEnum
+      ResultTypeEnum: ResultTypeEnum,
+      initCancelFormButton: initCancelFormButton,
+      archive: archive
     });
 
     return publicAPI;

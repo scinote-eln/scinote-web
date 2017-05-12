@@ -4,24 +4,32 @@
   var ResutlAssets = (function() {
     // New result asset behaviour
     function initNewResultAsset() {
-      $('#new-result-asset').on('ajax:success', function(e, data) {
-        debugger;
-        var $form = $(data.html);
-        $('#results').prepend($form);
+      $('#new-result-asset').on('click', function(event) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        event.stopPropagation();
+        var $btn = $(this);
+        $btn.off();
+        animateSpinner(null, true);
 
-        _formAjaxResultAsset($form);
-
-        // Cancel button
-        $form.find('.cancel-new').click(function () {
-          $form.remove();
-          Results.toggleResultEditButtons(true);
+        // get new result form
+        $.ajax({
+          url: $btn.data('href'),
+          method: 'GET',
+          success: function(data) {
+            var $form = $(data.html);
+            animateSpinner(null, false);
+            $('#results').prepend($form);
+            _formAjaxResultAsset($form);
+            Results.initCancelFormButton($form, initNewResultAsset);
+            Results.toggleResultEditButtons(false);
+            $('#result_name').focus();
+          },
+          error: function() {
+            animateSpinner(null, false);
+            initNewResultAsset();
+          }
         });
-
-        Results.toggleResultEditButtons(false);
-
-        $('#result_name').focus();
-      }).on('ajax:error', function(e, xhr, status, error) {
-        animateSpinner(null, false);
       });
     }
 
@@ -65,6 +73,7 @@
         Results.expandResult($newResult);
         initPreviewModal();
         Comments.initialize();
+        initNewResultAsset();
       }).on('ajax:error', function(e, data) {
         // This check is here only because of remotipart bug, which returns
         // HTML instead of JSON, go figure

@@ -52,6 +52,7 @@
           Results.toggleResultEditButtons(true);
           Results.expandResult($result);
           Comments.initialize();
+          initNewResultTable();
         });
         $form.on('ajax:error', function(e, xhr, status, error) {
           var data = xhr.responseJSON;
@@ -88,23 +89,33 @@
 
       // New result text behaviour
       function initNewResultTable() {
-        $('#new-result-table').on('ajax:success', function(e, data) {
-          var $form = $(data.html);
-          $('#results').prepend($form);
-
-          _formAjaxResultTable($form);
-          _initEditableHandsOnTable($form);
-          _onSubmitExtractTable($form);
-
-          // Cancel button
-          $form.find('.cancel-new').click(function () {
-            $form.remove();
-            Results.toggleResultEditButtons(true);
+        $('#new-result-table').on('click', function(event) {
+          event.preventDefault();
+          event.stopImmediatePropagation();
+          event.stopPropagation();
+          var $btn = $(this);
+          $btn.off();
+          animateSpinner(null, true);
+          // get new result form
+          $.ajax({
+            url: $btn.data('href'),
+            method: 'GET',
+            success: function(data) {
+              var $form = $(data.html);
+              animateSpinner(null, false);
+              $('#results').prepend($form);
+              _formAjaxResultTable($form);
+              _initEditableHandsOnTable($form);
+              _onSubmitExtractTable($form);
+              Results.initCancelFormButton($form, initNewResultTable);
+              Results.toggleResultEditButtons(false);
+              $('#result_name').focus();
+            },
+            error: function() {
+              animateSpinner(null, false);
+              initNewResultTable();
+            }
           });
-
-          Results.toggleResultEditButtons(false);
-
-          $('#result_name').focus();
         });
       }
 
