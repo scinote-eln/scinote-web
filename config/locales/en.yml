@@ -850,9 +850,16 @@ en:
     add_new_sample_group: "Add sample group"
     add_new_column: "Add column"
     modal_info:
+      added_on: "Added on"
+      added_by: "Added by"
+      custom_field: "%{cf}: "
       head_title: "Information for sample '%{sample}'"
       title: "This sample is assigned to %{nr} tasks."
       no_tasks: "This sample in not assigned to any task."
+      no_group: "No sample group"
+      no_type: "No sample type"
+      sample_group: "Sample group:"
+      sample_type: "Sample type:"
     modal_import:
       title: "Import samples"
       notice: "You may upload .csv file (comma separated) or tab separated file (.txt or .tdv) or Excel file (.xls, .xlsx). First row should include header names, followed by rows with sample data."
