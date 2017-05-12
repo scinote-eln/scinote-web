@@ -176,7 +176,7 @@ module Users
       message = "#{I18n.t('search.index.team')} #{team.name}"
       notification = Notification.create(
         type_of: :assignment,
-        title: sanitize_inpute(title),
+        title: sanitize_input(title),
         message: sanitize_input(message)
       )
 
