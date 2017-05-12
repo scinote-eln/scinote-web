@@ -52,7 +52,7 @@ module ReportExtends
                       true,
                       [:step],
                       proc do |my_module|
-                        my_module.protocol.completed_steps
+                        my_module.protocol.completed_steps.order(:position)
                       end),
     ModuleElement.new(:result_assets,
                       true,

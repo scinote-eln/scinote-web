@@ -52,7 +52,7 @@ module ReportActions
 
   def generate_experiment_contents_json(experiment, selected_modules)
     res = []
-    experiment.my_modules.each do |my_module|
+    experiment.my_modules.order(:workflow_order).each do |my_module|
       next unless selected_modules.include?(my_module.id)
 
       res << generate_new_el(false)
