@@ -1,5 +1,6 @@
 class UserProjectsController < ApplicationController
   include NotificationsHelper
+  include InputSanitizeHelper
 
   before_action :load_vars
   before_action :check_view_tab_permissions, only: :index
