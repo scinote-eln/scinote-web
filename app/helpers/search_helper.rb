@@ -11,10 +11,11 @@ module SearchHelper
     if search_team != current_team
       link_to text,
               path,
-              data: { confirm: t('users.settings.changed_team_in_search',
+              data: { no_turbolink: true,
+                      confirm: t('users.settings.changed_team_in_search',
                                  team: search_team.name) }
     else
-      link_to text, path
+      link_to text, path, data: { no_turbolink: true }
     end
   end
 
