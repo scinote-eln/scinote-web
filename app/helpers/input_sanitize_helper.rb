@@ -1,14 +1,17 @@
+require 'sanitize'
+
 module InputSanitizeHelper
-  def sanitize_input(
-    text,
-    tags = [],
-    attributes = []
-  )
-    ActionController::Base.helpers.sanitize(
-      text,
-      tags: Constants::WHITELISTED_TAGS + tags,
-      attributes: Constants::WHITELISTED_ATTRIBUTES + attributes
-    )
+  # Rails default ActionController::Base.helpers.sanitize method call
+  # the ActiveRecord connecton method on the caller object which in
+  # our cases throws an error when called from not ActiveRecord objects
+  # such as SamplesDatatables
+  def sanitize_input(html, tags = [], attributes = [])
+    Sanitize.fragment(
+      html,
+      elements: Constants::WHITELISTED_TAGS + tags,
+      attributes: { all: Constants::WHITELISTED_ATTRIBUTES + attributes },
+      css: Constants::WHITELISTED_CSS_ATTRIBUTES
+    ).html_safe
   end
 
   def escape_input(text)
@@ -16,15 +19,13 @@ module InputSanitizeHelper
   end
 
   def custom_auto_link(text, options = {})
-    simple_format = options.fetch(:simple_format) { true }
-    team = options.fetch(:team) { nil },
+    simple_f = options.fetch(:simple_format) { true }
+    team = options.fetch(:team) { nil }
     wrapper_tag = options.fetch(:wrapper_tag) { {} }
     tags = options.fetch(:tags) { [] }
-    text = if simple_format
-             simple_format(sanitize_input(text), {}, wrapper_tag)
-           else
-             sanitize_input(text, tags)
-           end
+    format_opt = wrapper_tag.merge(sanitize: false)
+    text = sanitize_input(text, tags)
+    text = simple_format(sanitize_input(text), {}, format_opt) if simple_f
     auto_link(
       smart_annotation_parser(text, team),
       link: :urls,

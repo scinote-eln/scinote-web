@@ -544,14 +544,12 @@ $("[data-action='new-step']").on("ajax:success", function(e, data) {
   toggleButtons(false);
   initializeCheckboxSorting();
 
-
   $("#step_name").focus();
   $("#new-step-main-tab a").on("shown.bs.tab", function() {
     $("#step_name").focus();
   });
 
   TinyMCE.refresh();
-
 });
 
 // Needed because server-side validation failure clears locations of

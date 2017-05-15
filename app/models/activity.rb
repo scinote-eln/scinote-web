@@ -1,4 +1,6 @@
 class Activity < ActiveRecord::Base
+  include InputSanitizeHelper
+
   after_create :generate_notification
 
   enum type_of: [
@@ -104,15 +106,12 @@ class Activity < ActiveRecord::Base
 
     notification = Notification.create(
       type_of: notification_type,
-      title:
-        ActionController::Base.helpers.sanitize(message, tags: %w(strong a)),
-      message:
-      ActionController::Base
-        .helpers.sanitize(
-          "#{I18n.t('search.index.project')}
-          #{project_m} #{experiment_m} #{task_m}",
-          tags: %w(strong a)
-        ),
+      title: sanitize_input(message, %w(strong a)),
+      message: sanitize_input(
+        "#{I18n.t('search.index.project')}
+        #{project_m} #{experiment_m} #{task_m}",
+        %w(strong a)
+      ),
       generator_user_id: user.id
     )
 

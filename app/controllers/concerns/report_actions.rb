@@ -52,7 +52,7 @@ module ReportActions
 
   def generate_experiment_contents_json(experiment, selected_modules)
     res = []
-    experiment.my_modules.each do |my_module|
+    experiment.my_modules.order(:workflow_order).each do |my_module|
       next unless selected_modules.include?(my_module.id)
 
       res << generate_new_el(false)
@@ -72,9 +72,9 @@ module ReportActions
     ReportExtends::MODULE_CONTENTS.each do |contents|
       protocol = contents.element == :step ? my_module.protocol.present? : true
       next unless in_params?("module_#{contents.element}".to_sym) && protocol
-      res << generate_new_el(false)
       if contents.children
         contents.collection(my_module).each do |report_el|
+          res << generate_new_el(false)
           el = generate_el(
             "reports/elements/my_module_#{contents
                                           .element
@@ -82,9 +82,9 @@ module ReportActions
                                           .singularize}_element.html.erb",
             contents.parse_locals([report_el])
           )
-          if contents.element == :step
+          if contents.locals.first == :step
             el[:children] = generate_step_contents_json(report_el)
-          elsif contents.element == :result
+          elsif contents.locals.first == :result
             el[:children] = generate_result_contents_json(report_el)
           end
           res << el
@@ -92,6 +92,7 @@ module ReportActions
       else
         file_name = contents.file_name
         file_name = contents.element if contents.element == :samples
+        res << generate_new_el(false)
         res << generate_el(
           "reports/elements/my_module_#{file_name}_element.html.erb",
           contents.parse_locals([my_module, :asc])
@@ -105,7 +106,7 @@ module ReportActions
   def generate_step_contents_json(step)
     res = []
     if in_params? :step_checklists
-      step.checklists.each do |checklist|
+      step.checklists.asc.each do |checklist|
         res << generate_new_el(false)
         res << generate_el(
           'reports/elements/step_checklist_element.html.erb',

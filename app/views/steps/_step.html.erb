@@ -134,7 +134,7 @@
 
           <% unless step.checklists.blank? then %>
             <div class="col-xs-12">
-              <% step.checklists.each do |checklist| %>
+              <% step.checklists.asc.each do |checklist| %>
                 <strong><%= custom_auto_link(checklist.name) %></strong>
                 <% if checklist.checklist_items.empty? %>
                   </br>

@@ -22,6 +22,8 @@ class Checklist < ActiveRecord::Base
     reject_if: :all_blank,
     allow_destroy: true
 
+  scope :asc, -> { order('checklists.created_at ASC') }
+
   def self.search(user,
                   include_archived,
                   query = nil,

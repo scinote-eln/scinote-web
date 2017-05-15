@@ -14,6 +14,10 @@ Rails.application.configure do
   config.consider_all_requests_local       = false
   config.action_controller.perform_caching = true
 
+  Rails.application.routes.default_url_options = {
+    host: Rails.application.secrets.mail_server_url
+  }
+
   # Don't care if the mailer can't send.
   config.action_mailer.default_url_options = {
     host: Rails.application.secrets.mail_server_url

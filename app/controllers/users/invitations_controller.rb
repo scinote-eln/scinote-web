@@ -1,5 +1,6 @@
 module Users
   class InvitationsController < Devise::InvitationsController
+    include InputSanitizeHelper
     include UsersGenerator
 
     prepend_before_action :check_captcha, only: [:update]
@@ -175,8 +176,8 @@ module Users
       message = "#{I18n.t('search.index.team')} #{team.name}"
       notification = Notification.create(
         type_of: :assignment,
-        title: ActionController::Base.helpers.sanitize(title),
-        message: ActionController::Base.helpers.sanitize(message)
+        title: sanitize_input(title),
+        message: sanitize_input(message)
       )
 
       if target_user.assignments_notification
