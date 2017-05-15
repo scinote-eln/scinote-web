@@ -544,7 +544,7 @@ en:
       load_from_repository_modal:
         title: "Load protocol from repository"
         text: "Choose the protocol to be loaded to the task."
-        text2: "This will overwrite the current protocol!"
+        text2: "This action will overwrite the current protocol in the task and unlink it from repository. The current protocol will remain unchanged in repository."
         tab_public: "Public protocols"
         tab_private: "Private protocols"
         thead_name: "Name"
