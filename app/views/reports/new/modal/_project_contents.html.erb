@@ -9,7 +9,7 @@
           <span class="hidden-xs"><%= t("projects.reports.elements.modals.project_contents.tasks_tab") %></span>
         </a>
       </li>
-      <% if project.project_my_modules.is_archived(false).present? %>
+      <% if project.project_my_modules.is_archived(false).exists? %>
       <li role="presentation">
         <a href="#content-tab" aria-controls="content-tab" role="tab" data-toggle="tab">
           <span class="glyphicon glyphicon-link visible-xs"></span>

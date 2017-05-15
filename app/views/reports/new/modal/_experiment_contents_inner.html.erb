@@ -4,7 +4,7 @@
   </em>
 </div>
 
-<% if experiment.my_modules.present? %>
+<% if experiment.my_modules.exists? %>
   <div class="checkbox-tree">
     <ul>
       <li>
@@ -12,7 +12,7 @@
         <ul>
 
           <% experiment.my_module_groups.each do |my_module_group| %>
-            <% if my_module_group.my_modules.present? then %>
+            <% if my_module_group.my_modules.exists? then %>
                 <% my_module_group.ordered_modules.each do |my_module| %>
                   <li>
                     <%= form.check_box "modules[#{my_module.id}]", label: my_module.name %>
@@ -23,7 +23,7 @@
 
           <!-- Tasks without groups -->
           <% modules_without_group = experiment.modules_without_group %>
-          <% if modules_without_group.present? and modules_without_group.present? %>
+          <% if modules_without_group.exists? %>
             <% modules_without_group.each do |my_module| %>
               <li>
                 <%= form.check_box "modules[#{my_module.id}]", label: my_module.name %>

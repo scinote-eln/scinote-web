@@ -12,7 +12,7 @@
       <%= form.check_box :step_all, label: t("projects.reports.elements.modals.step_contents_inner.check_all") %>
       <ul>
 
-        <% if step_undefined or step.checklists.present? %>
+        <% if step_undefined or step.checklists.exists? %>
           <li>
             <%= form.check_box :step_checklists, label: t("projects.reports.elements.modals.step_contents_inner.checklists") %>
           </li>
@@ -24,7 +24,7 @@
           </div>
         <% end %>
 
-        <% if step_undefined or step.assets.present? %>
+        <% if step_undefined or step.assets.exists? %>
           <li>
             <%= form.check_box :step_assets, label: t("projects.reports.elements.modals.step_contents_inner.assets") %>
           </li>
@@ -36,7 +36,7 @@
           </div>
         <% end %>
 
-        <% if step_undefined or step.tables.present? %>
+        <% if step_undefined or step.tables.exists? %>
           <li>
             <%= form.check_box :step_tables, label: t("projects.reports.elements.modals.step_contents_inner.tables") %>
           </li>
