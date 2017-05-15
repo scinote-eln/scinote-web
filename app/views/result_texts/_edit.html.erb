@@ -9,7 +9,9 @@
                                        object_id: @result.result_text.id }) %>
       </div>
     <% end %><br />
-    <%= f.submit t("result_texts.edit.update"), class: 'btn btn-primary save-result', onclick: "processResult(event, ResultTypeEnum.TEXT, true);" %>
+    <%= f.submit t("result_texts.edit.update"),
+                 class: 'btn btn-primary save-result',
+                 onclick: "Results.processResult(event, Results.ResultTypeEnum.TEXT, true);" %>
     <button type="button" class="btn btn-default cancel-edit">
       <%= t("general.cancel")%>
     </button>

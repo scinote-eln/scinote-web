@@ -9,7 +9,9 @@
 			<% end %>
 		</div>
     <hr>
-		<%= f.submit t("result_tables.edit.update"), class: 'btn btn-primary save-result', onclick: "processResult(event, ResultTypeEnum.TABLE, true);" %>
+		<%= f.submit t("result_tables.edit.update"),
+								 class: 'btn btn-primary save-result',
+								 onclick: "Results.processResult(event, Results.ResultTypeEnum.TABLE, true);" %>
 		<button type="button" class="btn btn-default cancel-edit">
 			<%= t("general.cancel")%>
 		</button>

@@ -26,7 +26,8 @@
                               single_line: true,
                               hide_label: true,
                               placeholder: t("general.comment_placeholder"),
-                              append: f.submit("+", onclick: "processResult(event, ResultTypeEnum.COMMENT, false);"),
+                              append: f.submit("+",
+                                               onclick: "Results.processResult(event, Results.ResultTypeEnum.COMMENT, false);"),
                               help: '.',
                               data: { 'atwho-edit' => '' } %>
       <% end %>

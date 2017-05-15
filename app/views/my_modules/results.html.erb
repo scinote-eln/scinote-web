@@ -18,19 +18,28 @@
     <span class="hidden-xs"><%= t'my_modules.results.add_label' %></span>
   <% end %>
   <% if can_create_result_text_in_module(@my_module) %>
-    <a class="btn btn-primary" id="new-result-text" href="<%= new_my_module_result_text_path(my_module_id: @my_module.id) %>" data-remote="true">
+    <a class="btn btn-primary"
+       id="new-result-text"
+       data-href="<%= new_my_module_result_text_path(my_module_id: @my_module.id) %>"
+       href="#">
       <span class="glyphicon glyphicon-font"></span>
       <span class="hidden-xs"><%= t("my_modules.results.new_text_result") %></span>
     </a>
   <% end %>
   <% if can_create_result_table_in_module(@my_module) %>
-    <a class="btn btn-primary" id="new-result-table" href="<%= new_my_module_result_table_path(my_module_id: @my_module.id) %>" data-remote="true">
+    <a class="btn btn-primary"
+       id="new-result-table"
+       data-href="<%= new_my_module_result_table_path(my_module_id: @my_module.id) %>"
+       href="#">
       <span class="glyphicon glyphicon-list-alt"></span>
       <span class="hidden-xs"><%= t("my_modules.results.new_table_result") %></span>
     </a>
   <% end %>
   <% if can_create_result_asset_in_module(@my_module) %>
-    <a class="btn btn-primary" id="new-result-asset" href="<%= new_my_module_result_asset_path(my_module_id: @my_module.id) %>" data-remote="true">
+    <a class="btn btn-primary"
+       id="new-result-asset"
+       data-href="<%= new_my_module_result_asset_path(my_module_id: @my_module.id) %>"
+       href="#">
       <span class="glyphicon glyphicon-picture"></span>
       <span class="hidden-xs"><%= t("my_modules.results.new_asset_result") %></span>
     </a>
