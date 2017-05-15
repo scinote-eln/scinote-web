@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170420075905) do
+ActiveRecord::Schema.define(version: 20170515073041) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -21,14 +21,16 @@ ActiveRecord::Schema.define(version: 20170420075905) do
   create_table "activities", force: :cascade do |t|
     t.integer  "my_module_id"
     t.integer  "user_id"
-    t.integer  "type_of",      null: false
-    t.string   "message",      null: false
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
-    t.integer  "project_id",   null: false
+    t.integer  "type_of",       null: false
+    t.string   "message",       null: false
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+    t.integer  "project_id",    null: false
+    t.integer  "experiment_id"
   end
 
   add_index "activities", ["created_at"], name: "index_activities_on_created_at", using: :btree
+  add_index "activities", ["experiment_id"], name: "index_activities_on_experiment_id", using: :btree
   add_index "activities", ["my_module_id"], name: "index_activities_on_my_module_id", using: :btree
   add_index "activities", ["project_id"], name: "index_activities_on_project_id", using: :btree
   add_index "activities", ["type_of"], name: "index_activities_on_type_of", using: :btree
@@ -249,6 +251,7 @@ ActiveRecord::Schema.define(version: 20170420075905) do
     t.integer  "archived_by_id"
     t.integer  "restored_by_id"
     t.datetime "restored_on"
+    t.string   "experiments_order"
   end
 
   add_index "projects", ["archived_by_id"], name: "index_projects_on_archived_by_id", using: :btree
@@ -718,6 +721,7 @@ ActiveRecord::Schema.define(version: 20170420075905) do
 
   add_index "zip_exports", ["user_id"], name: "index_zip_exports_on_user_id", using: :btree
 
+  add_foreign_key "activities", "experiments"
   add_foreign_key "activities", "my_modules"
   add_foreign_key "activities", "projects"
   add_foreign_key "activities", "users"

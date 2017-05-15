@@ -251,9 +251,14 @@ class ProjectsController < ApplicationController
   end
 
   def show
+    # save experiments order
+    if params[:sort]
+      @project.experiments_order = params[:sort].to_s
+      @project.save
+    end
     # This is the "info" view
     current_team_switch(@project.team)
-    @current_sort = params[:sort].to_s
+    @current_sort = @project.experiments_order
   end
 
   def notifications
