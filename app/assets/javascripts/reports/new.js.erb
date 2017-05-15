@@ -215,12 +215,14 @@ function initializeNewElement(newEl) {
         id: parentElementId
       },
       success: function(data, status, jqxhr) {
-        // Open modal, set its title
+        // Open modal, set its title, and display module contents
         addContentsModal.find(".modal-title").text(modalTitle);
-
-        // Display module contents and add checkbox logic
         addContentsModalBody.html(data.html);
-        addContentsModalBody.checkboxTreeLogic();
+
+        // Add logic for checkbox hierarchies
+        var dependencies = { '_module_steps': $('#_step_all'),
+                             '_module_results': $('#_result_comments')}
+        addContentsModalBody.checkboxTreeLogic(dependencies, true);
 
         // Bind to the ajax events of the modal form in its body
         $(ADD_CONTENTS_FORM_ID)
