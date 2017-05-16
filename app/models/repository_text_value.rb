@@ -3,4 +3,7 @@ class RepositoryTextValue < ActiveRecord::Base
   accepts_nested_attributes_for :repository_cell
 
   validates :repository_cell, presence: true
+  validates :value,
+            presence: true,
+            length: { maximum: Constants::TEXT_MAX_LENGTH }
 end
