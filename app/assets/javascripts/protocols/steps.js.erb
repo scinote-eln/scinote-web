@@ -4,637 +4,673 @@
 //= require assets
 //= require comments
 
-// Sets callbacks for toggling checkboxes
-function applyCheckboxCallBack()  {
-  $("[data-action='check-item']").on('click', function(e){
-    var checkboxitem = $(this).find("input");
-    var checked = checkboxitem.is(":checked");
-    $.ajax({
-      url: checkboxitem.data("link-url"),
-      type: "POST",
-      dataType: "json",
-      data: {checklistitem_id: checkboxitem.data("id"), checked: checked},
-      success: function (data) {
-        checkboxitem.prop("checked", checked);
-      },
-      error: function (data) {
-        checkboxitem.prop("checked", !checked);
-      }
-    });
-  });
-}
+(function(global) {
+  'use strict';
 
-// Complete mymodule
-function complete_my_module_actions() {
-  var modal = $('#completed-task-modal');
-
-  modal.find('[data-action="complete"]')
-       .off().on().click(function(event) {
-      event.stopPropagation();
-      event.preventDefault();
-      event.stopImmediatePropagation();
+  // Sets callbacks for toggling checkboxes
+  function applyCheckboxCallBack()  {
+    $("[data-action='check-item']").on('click', function(e){
+      var checkboxitem = $(this).find("input");
+      var checked = checkboxitem.is(":checked");
       $.ajax({
-        url: modal.data('url'),
-        type: 'GET',
-        success: function(data) {
-          var task_button = $("[data-action='complete-task']");
-          task_button.attr('data-action', 'uncomplete-task');
-          task_button.find('.btn')
-            .removeClass('btn-primary').addClass('btn-greyed');
-          $('.task-due-date').html(data.module_header_due_date_label);
-          $('.task-state-label').html(data.module_state_label);
-          task_button
-            .find('button')
-            .html('<span class="glyphicon glyphicon-remove"></span>&nbsp;' +
-                  data.task_button_title);
-          modal.modal('hide');
+        url: checkboxitem.data("link-url"),
+        type: "POST",
+        dataType: "json",
+        data: {checklistitem_id: checkboxitem.data("id"), checked: checked},
+        success: function (data) {
+          checkboxitem.prop("checked", checked);
         },
-        error: function() {
-          modal.modal('hide');
+        error: function (data) {
+          checkboxitem.prop("checked", !checked);
         }
       });
     });
-}
+  }
 
-// Sets callback for completing/uncompleting step
-function applyStepCompletedCallBack() {
-  // First, remove old event handlers, as we use turbolinks
-  $("[data-action='complete-step'], [data-action='uncomplete-step']")
-  .off().on('click', function(e){
-    var button = $(this);
-    var step = $(this).parents(".step");
-    var completed = !step.hasClass("completed");
+  // Complete mymodule
+  function complete_my_module_actions() {
+    var modal = $('#completed-task-modal');
 
-    $.ajax({
-      url: button.data("link-url"),
-      type: "POST",
-      dataType: "json",
-      data: {completed: completed},
-      success: function (data) {
-        var button;
-        if (completed) {
-          step.addClass("completed").removeClass("not-completed");
-
-          button = step.find("[data-action='complete-step']");
-          button.attr("data-action", "uncomplete-step");
-          button.find(".btn").removeClass("btn-primary").addClass("btn-default");
-
-          if (data.task_ready_to_complete) {
-            $('#completed-task-modal').modal('show');
-            complete_my_module_actions();
+    modal.find('[data-action="complete"]')
+         .off().on().click(function(event) {
+        event.stopPropagation();
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        $.ajax({
+          url: modal.data('url'),
+          type: 'GET',
+          success: function(data) {
+            var task_button = $("[data-action='complete-task']");
+            task_button.attr('data-action', 'uncomplete-task');
+            task_button.find('.btn')
+              .removeClass('btn-primary').addClass('btn-greyed');
+            $('.task-due-date').html(data.module_header_due_date_label);
+            $('.task-state-label').html(data.module_state_label);
+            task_button
+              .find('button')
+              .html('<span class="glyphicon glyphicon-remove"></span>&nbsp;' +
+                    data.task_button_title);
+            modal.modal('hide');
+          },
+          error: function() {
+            modal.modal('hide');
           }
-        }
-        else {
-          step.addClass("not-completed").removeClass("completed");
+        });
+      });
+  }
 
-          button = step.find("[data-action='uncomplete-step']");
-          button.attr("data-action", "complete-step");
-          button.find(".btn").removeClass("btn-default").addClass("btn-primary");
-        }
+  // Sets callback for completing/uncompleting step
+  function applyStepCompletedCallBack() {
+    // First, remove old event handlers, as we use turbolinks
+    $("[data-action='complete-step'], [data-action='uncomplete-step']")
+    .off().on('click', function(e){
+      var button = $(this);
+      var step = $(this).parents(".step");
+      var completed = !step.hasClass("completed");
 
-        button.find("button").html(data.new_title);
-      },
-      error: function (data) {
-        console.log ("error");
+      $.ajax({
+        url: button.data("link-url"),
+        type: "POST",
+        dataType: "json",
+        data: {completed: completed},
+        success: function (data) {
+          var button;
+          if (completed) {
+            step.addClass("completed").removeClass("not-completed");
+
+            button = step.find("[data-action='complete-step']");
+            button.attr("data-action", "uncomplete-step");
+            button.find(".btn").removeClass("btn-primary").addClass("btn-default");
+
+            if (data.task_ready_to_complete) {
+              $('#completed-task-modal').modal('show');
+              complete_my_module_actions();
+            }
+          }
+          else {
+            step.addClass("not-completed").removeClass("completed");
+
+            button = step.find("[data-action='uncomplete-step']");
+            button.attr("data-action", "complete-step");
+            button.find(".btn").removeClass("btn-default").addClass("btn-primary");
+          }
+
+          button.find("button").html(data.new_title);
+        },
+        error: function (data) {
+          console.log ("error");
+        }
+      });
+    });
+  }
+
+  function applyCancelCallBack() {
+    //Click on cancel button
+    $("[data-action='cancel-edit']")
+    .on("ajax:success", function(e, data) {
+      var $form = $(this).closest("form");
+
+      $form.after(data.html);
+      var $new_step = $(this).next();
+      $(this).remove();
+
+      initCallBacks();
+      initHandsOnTable($new_step);
+      toggleButtons(true);
+
+      setTimeout(function() {
+        initStepsComments();
+        initPreviewModal();
+        SmartAnnotation.preventPropagation('.atwho-user-popover');
+        TinyMCE.destroyAll();
+      }, 1000);
+
+    })
+    .on("ajax:error", function(e, xhr, status, error) {
+      // TODO: error handling
+    });
+  }
+
+  // Set callback for click on edit button
+  function applyEditCallBack() {
+    $("[data-action='edit-step']")
+    .on("ajax:success", function(e, data) {
+      var $step = $(this).closest(".step");
+      var $edit_step = $step.after(data.html);
+      var $form = $step.next();
+      $step.remove();
+
+      formCallback($form);
+      initEditableHandsOnTable($form);
+      applyCancelCallBack();
+      formEditAjax($form);
+      toggleButtons(false);
+      initializeCheckboxSorting();
+      animateSpinner(null, false);
+      initPreviewModal();
+
+      TinyMCE.refresh()
+      $("#new-step-checklists fieldset.nested_step_checklists ul").each(function () {
+        enableCheckboxSorting(this);
+      });
+      $("#step_name").focus();
+      $("#new-step-main-tab a").on("shown.bs.tab", function() {
+        $("#step_name").focus();
+      });
+    });
+  }
+
+  // Set callback for click on edit button
+  function applyMoveStepCallBack() {
+    $("[data-action='move-step']").off("ajax:success");
+    $("[data-action='move-step']")
+    .on("ajax:success", function(e, data) {
+      var $step = $(this).closest(".step");
+      var stepUpPosition = data.step_up_position;
+      var stepDownPosition = data.step_down_position;
+      var $stepDown, $stepUp;
+      switch (data.move_direction) {
+        case "up":
+          $stepDown = $step.prev(".step");
+          $stepUp = $step;
+          break;
+        case "down":
+          $stepDown = $step;
+          $stepUp = $step.next(".step");
+      }
+
+      // Switch position of top and bottom steps
+      if (!_.isUndefined($stepDown) && !_.isUndefined($stepUp)) {
+        $stepDown.insertAfter($stepUp);
+        $stepDown.find(".badge").html(stepDownPosition+1);
+        $stepUp.find(".badge").html(stepUpPosition+1);
+        $("html, body").animate({ scrollTop: $step.offset().top - window.innerHeight / 2 });
       }
     });
-  });
-}
+  }
 
-function applyCancelCallBack() {
-  //Click on cancel button
-  $("[data-action='cancel-edit']")
-  .on("ajax:success", function(e, data) {
-    var $form = $(this).closest("form");
+  function applyCollapseLinkCallBack() {
+    $(".step-panel-collapse-link")
+      .on("ajax:success", function() {
+        var collapseIcon = $(this).find(".collapse-step-icon");
+        var collapsed = $(this).hasClass("collapsed");
+        // Toggle collapse button
+        collapseIcon.toggleClass("glyphicon-collapse-up", !collapsed);
+        collapseIcon.toggleClass("glyphicon-collapse-down", collapsed);
 
-    $form.after(data.html);
-    var $new_step = $(this).next();
-    $(this).remove();
+      });
+  }
 
-    initCallBacks();
-    initHandsOnTable($new_step);
-    toggleButtons(true);
+  function formCallback($form) {
+    $form
+    .on("fields_added.nested_form_fields", function(e, param) {
+      if (param.object_class == "table") {
+        initEditableHandsOnTable($form);
+      }
+    })
+    .on("fields_removed.nested_form_fields", function(e, param) {
+      if (param.object_class == "asset") {
+        // Clear file input
+        $(e.target).find("input[type='file']").val("");
+      }
+    });
 
-    setTimeout(function() {
-      initStepsComments();
+    // Add hidden fields for tables
+    $form.submit(function(){
+      $(this).find("[data-role='editable-table']").each(function() {
+        var hot = $(this).find(".hot").handsontable('getInstance');
+        var contents = $(this).find('.hot-contents');
+        var data = JSON.stringify({data: hot.getData()});
+        contents.attr("value", data);
+      });
+
+      setTimeout(function() {
+        initStepsComments();
+        animateSpinner(null, false);
+        SmartAnnotation.preventPropagation('.atwho-user-popover');
+      }, 1000);
+      return true;
+    });
+  }
+
+  // Init ajax success/error for edit form
+  function formEditAjax($form) {
+    $form
+    .on("ajax:beforeSend", function () {
+      $(".nested_step_checklists ul").each(function () {
+        reorderCheckboxData(this);
+      });
+    })
+    .on("ajax:success", function(e, data) {
+      $(this).after(data.html);
+      var $new_step = $(this).next();
+      $(this).remove();
+
+      initCallBacks();
+      initHandsOnTable($new_step);
+      toggleButtons(true);
       initPreviewModal();
-      SmartAnnotation.preventPropagation('.atwho-user-popover');
+
       TinyMCE.destroyAll();
-    }, 1000);
-
-  })
-  .on("ajax:error", function(e, xhr, status, error) {
-    // TODO: error handling
-  });
-}
-
-// Set callback for click on edit button
-function applyEditCallBack() {
-  $("[data-action='edit-step']")
-  .on("ajax:success", function(e, data) {
-    var $step = $(this).closest(".step");
-    var $edit_step = $step.after(data.html);
-    var $form = $step.next();
-    $step.remove();
-
-    formCallback($form);
-    initEditableHandsOnTable($form);
-    applyCancelCallBack();
-    formEditAjax($form);
-    toggleButtons(false);
-    initializeCheckboxSorting();
-    animateSpinner(null, false);
-    initPreviewModal();
-
-    TinyMCE.refresh()
-    $("#new-step-checklists fieldset.nested_step_checklists ul").each(function () {
-      enableCheckboxSorting(this);
-    });
-    $("#step_name").focus();
-    $("#new-step-main-tab a").on("shown.bs.tab", function() {
-      $("#step_name").focus();
-    });
-  });
-}
-
-// Set callback for click on edit button
-function applyMoveStepCallBack() {
-  $("[data-action='move-step']").off("ajax:success");
-  $("[data-action='move-step']")
-  .on("ajax:success", function(e, data) {
-    var $step = $(this).closest(".step");
-    var stepUpPosition = data.step_up_position;
-    var stepDownPosition = data.step_down_position;
-    var $stepDown, $stepUp;
-    switch (data.move_direction) {
-      case "up":
-        $stepDown = $step.prev(".step");
-        $stepUp = $step;
-        break;
-      case "down":
-        $stepDown = $step;
-        $stepUp = $step.next(".step");
-    }
-
-    // Switch position of top and bottom steps
-    if (!_.isUndefined($stepDown) && !_.isUndefined($stepUp)) {
-      $stepDown.insertAfter($stepUp);
-      $stepDown.find(".badge").html(stepDownPosition+1);
-      $stepUp.find(".badge").html(stepUpPosition+1);
-      $("html, body").animate({ scrollTop: $step.offset().top - window.innerHeight / 2 });
-    }
-  });
-}
-
-function applyCollapseLinkCallBack() {
-  $(".step-panel-collapse-link")
-    .on("ajax:success", function() {
-      var collapseIcon = $(this).find(".collapse-step-icon");
-      var collapsed = $(this).hasClass("collapsed");
-      // Toggle collapse button
-      collapseIcon.toggleClass("glyphicon-collapse-up", !collapsed);
-      collapseIcon.toggleClass("glyphicon-collapse-down", collapsed);
-
-    });
-}
-
-function formCallback($form) {
-  $form
-  .on("fields_added.nested_form_fields", function(e, param) {
-    if (param.object_class == "table") {
-      initEditableHandsOnTable($form);
-    }
-  })
-  .on("fields_removed.nested_form_fields", function(e, param) {
-    if (param.object_class == "asset") {
-      // Clear file input
-      $(e.target).find("input[type='file']").val("");
-    }
-  });
-
-  // Add hidden fields for tables
-  $form.submit(function(){
-    $(this).find("[data-role='editable-table']").each(function() {
-      var hot = $(this).find(".hot").handsontable('getInstance');
-      var contents = $(this).find('.hot-contents');
-      var data = JSON.stringify({data: hot.getData()});
-      contents.attr("value", data);
-    });
-
-    setTimeout(function() {
-      initStepsComments();
-      animateSpinner(null, false);
       SmartAnnotation.preventPropagation('.atwho-user-popover');
-    }, 1000);
-    return true;
-  });
-}
+      // Show the edited step
+      $new_step.find(".panel-collapse:first").addClass("collapse in");
 
-// Init ajax success/error for edit form
-function formEditAjax($form) {
-  $form
-  .on("ajax:beforeSend", function () {
-    $(".nested_step_checklists ul").each(function () {
-      reorderCheckboxData(this);
+      //Rerender tables
+      $new_step.find("[data-role='step-hot-table']").each(function()  {
+        renderTable($(this));
+      });
+      setupAssetsLoading();
+    })
+    .on("ajax:error", function(e, xhr, status, error) {
+      $form.renderFormErrors('step', xhr.responseJSON, true, e);
+
+      formCallback($form);
+      initEditableHandsOnTable($form);
+      applyCancelCallBack();
+
+      TinyMCE.refresh();
+      SmartAnnotation.preventPropagation('.atwho-user-popover');
+
+      //Rerender tables
+      $form.find("[data-role='step-hot-table']").each(function()  {
+        renderTable($(this));
+      });
     });
-  })
-  .on("ajax:success", function(e, data) {
-    $(this).after(data.html);
-    var $new_step = $(this).next();
-    $(this).remove();
+  }
 
-    initCallBacks();
-    initHandsOnTable($new_step);
-    toggleButtons(true);
-    initPreviewModal();
+  function formNewAjax($form) {
+    $form
+    .on("ajax:beforeSend", function () {
+      $(".nested_step_checklists ul").each(function () {
+        reorderCheckboxData(this);
+      });
+    })
+    .on("ajax:success", function(e, data) {
+      $(this).after(data.html);
+      var $new_step = $(this).next();
+      $(this).remove();
 
-    TinyMCE.destroyAll();
-    SmartAnnotation.preventPropagation('.atwho-user-popover');
-    // Show the edited step
-    $new_step.find(".panel-collapse:first").addClass("collapse in");
+      initCallBacks();
+      initHandsOnTable($new_step);
+      expandStep($new_step);
+      toggleButtons(true);
+      SmartAnnotation.preventPropagation('.atwho-user-popover');
 
-    //Rerender tables
-    $new_step.find("[data-role='step-hot-table']").each(function()  {
-      renderTable($(this));
+      //Rerender tables
+      $new_step.find("div.step-result-hot-table").each(function()  {
+        $(this).handsontable("render");
+      });
+      animateSpinner(null, false);
+      setupAssetsLoading();
+    })
+    .on("ajax:error", function(e, xhr, status, error) {
+      $(this).after(xhr.responseJSON.html);
+      var $form = $(this).next();
+      $(this).remove();
+
+      $errInput = $form.find(".form-group.has-error").first().find("input");
+      renderFormError(e, $errInput);
+
+      formCallback($form);
+      formNewAjax($form);
+      applyCancelOnNew();
+      animateSpinner(null, false);
+
+      TinyMCE.destroyAll();
+      SmartAnnotation.preventPropagation('.atwho-user-popover');
     });
-    setupAssetsLoading();
-  })
-  .on("ajax:error", function(e, xhr, status, error) {
-    $form.renderFormErrors('step', xhr.responseJSON, true, e);
+  }
 
-    formCallback($form);
-    initEditableHandsOnTable($form);
-    applyCancelCallBack();
+  function toggleButtons(show) {
+    if (show) {
+      $("[data-action='new-step']").show();
+      $("[data-action='edit-step']").show();
 
-    TinyMCE.refresh();
-    SmartAnnotation.preventPropagation('.atwho-user-popover');
+      // Also show "no steps" label if no steps are present
+      if (!$(".step").length) {
+        $("[data-role='no-steps-text']").show();
+      } else {
+        $("[data-role='no-steps-text']").hide();
+      }
 
-    //Rerender tables
-    $form.find("[data-role='step-hot-table']").each(function()  {
-      renderTable($(this));
-    });
-  });
-}
-
-function formNewAjax($form) {
-  $form
-  .on("ajax:beforeSend", function () {
-    $(".nested_step_checklists ul").each(function () {
-      reorderCheckboxData(this);
-    });
-  })
-  .on("ajax:success", function(e, data) {
-    $(this).after(data.html);
-    var $new_step = $(this).next();
-    $(this).remove();
-
-    initCallBacks();
-    initHandsOnTable($new_step);
-    expandStep($new_step);
-    toggleButtons(true);
-    SmartAnnotation.preventPropagation('.atwho-user-popover');
-
-    //Rerender tables
-    $new_step.find("div.step-result-hot-table").each(function()  {
-      $(this).handsontable("render");
-    });
-    animateSpinner(null, false);
-    setupAssetsLoading();
-  })
-  .on("ajax:error", function(e, xhr, status, error) {
-    $(this).after(xhr.responseJSON.html);
-    var $form = $(this).next();
-    $(this).remove();
-
-    $errInput = $form.find(".form-group.has-error").first().find("input");
-    renderFormError(e, $errInput);
-
-    formCallback($form);
-    formNewAjax($form);
-    applyCancelOnNew();
-    animateSpinner(null, false);
-
-    TinyMCE.destroyAll();
-    SmartAnnotation.preventPropagation('.atwho-user-popover');
-  });
-}
-
-function toggleButtons(show) {
-  if (show) {
-    $("[data-action='new-step']").show();
-    $("[data-action='edit-step']").show();
-
-    // Also show "no steps" label if no steps are present
-    if (!$(".step").length) {
-      $("[data-role='no-steps-text']").show();
     } else {
+      $("[data-action='new-step']").hide();
+      $("[data-action='edit-step']").hide();
+
+      // Also hide "no steps" label if no steps are present
       $("[data-role='no-steps-text']").hide();
     }
-
-  } else {
-    $("[data-action='new-step']").hide();
-    $("[data-action='edit-step']").hide();
-
-    // Also hide "no steps" label if no steps are present
-    $("[data-role='no-steps-text']").hide();
   }
-}
 
-// Creates handsontable where needed
-function initHandsOnTable(root) {
-  root.find("[data-role='hot-table']").each(function()  {
-    var $container = $(this).find("[data-role='step-hot-table']");
-    var contents = $(this).find('.hot-contents');
+  // Creates handsontable where needed
+  function initHandsOnTable(root) {
+    root.find("[data-role='hot-table']").each(function()  {
+      var $container = $(this).find("[data-role='step-hot-table']");
+      var contents = $(this).find('.hot-contents');
 
-    $container.handsontable({
-      startRows: <%= Constants::HANDSONTABLE_INIT_ROWS_CNT %>,
-      startCols: <%= Constants::HANDSONTABLE_INIT_COLS_CNT %>,
-      rowHeaders: true,
-      colHeaders: true,
-      fillHandle: false,
-      formulas: true,
-      cells: function (row, col, prop) {
-        var cellProperties = {};
+      $container.handsontable({
+        startRows: <%= Constants::HANDSONTABLE_INIT_ROWS_CNT %>,
+        startCols: <%= Constants::HANDSONTABLE_INIT_COLS_CNT %>,
+        rowHeaders: true,
+        colHeaders: true,
+        fillHandle: false,
+        formulas: true,
+        cells: function (row, col, prop) {
+          var cellProperties = {};
 
-        if (col >= 0)
-          cellProperties.readOnly = true;
-        else
-          cellProperties.readOnly = false;
+          if (col >= 0)
+            cellProperties.readOnly = true;
+          else
+            cellProperties.readOnly = false;
 
-        return cellProperties;
+          return cellProperties;
+        }
+      });
+      var hot = $container.handsontable('getInstance');
+
+      if (contents.attr("value")) {
+        var data = JSON.parse(contents.attr("value"));
+        hot.loadData(data.data);
       }
     });
-    var hot = $container.handsontable('getInstance');
-
-    if (contents.attr("value")) {
-      var data = JSON.parse(contents.attr("value"));
-      hot.loadData(data.data);
-    }
-  });
-}
-
-// Init handsontable which can be edited
-function initEditableHandsOnTable(root) {
-  root.find("[data-role='editable-table']").each(function() {
-    var $container = $(this).find(".hot");
-
-    if ($container.is("[initialized]")) {
-      return true;
-    }
-
-    var contents = $(this).find('.hot-contents');
-    var data = null;
-    if (contents.attr("value")) {
-      data = JSON.parse(contents.attr("value")).data;
-    }
-    if ($container.is(":visible")) {
-      $(this).css("width", $("#new-step-tables").css("width"));
-    }
-
-    $container.handsontable({
-      data: data,
-      startRows: <%= Constants::HANDSONTABLE_INIT_ROWS_CNT %>,
-      startCols: <%= Constants::HANDSONTABLE_INIT_COLS_CNT %>,
-      minRows: 1,
-      minCols: 1,
-      rowHeaders: true,
-      colHeaders: true,
-      contextMenu: true,
-      formulas: true,
-      preventOverflow: 'horizontal'
-    });
-
-    $container.attr("initialized", true);
-    renderTable($container);
-  });
-
-  $("#new-step-tables-tab a")
-  .on("shown.bs.tab", function() {
-    $(this).parents("form").find("div.hot").each(function()  {
-      $(this).parent().css("width", $("#new-step-tables").css("width"));
-      renderTable($(this));
-    });
-  });
-}
-
-function applyCancelOnNew() {
-  $("[data-action='cancel-new']").click(function() {
-    var $form = $(this).closest("form");
-    $form.parent().remove();
-    toggleButtons(true);
-  });
-}
-
-function initDeleteStep(){
-  $("[data-action='delete-step']").on("confirm:complete", function (e, answer) {
-    if (answer) {
-      animateLoading();
-    }
-  });
-}
-
-function initCallBacks() {
-  applyCheckboxCallBack();
-  applyStepCompletedCallBack();
-  applyEditCallBack();
-  applyMoveStepCallBack();
-  applyCollapseLinkCallBack();
-  initDeleteStep();
-  TinyMCE.highlight();
-}
-
-/*
- * Correction for sorting with "Sortable.min" JS library to work correctly with
- * "nested_form_fields" gem.
- */
-function reorderCheckboxData(checkboxUl) {
-  // Make sure checkbox item insertion script is always at the bottom of "ul"
-  // tag, otherwise item will not be inserted at bottom
-  if(!$(checkboxUl).children().last().is('script')) {
-    $(checkboxUl).find("script").appendTo(checkboxUl);
   }
 
-  var $checkboxes = $(checkboxUl).find(".nested_fields");
-  $checkboxes.each(function (itemPos) {
-    var $this = $(this);
+  // Init handsontable which can be edited
+  function initEditableHandsOnTable(root) {
+    root.find("[data-role='editable-table']").each(function() {
+      var $container = $(this).find(".hot");
 
-    var $formGroup = $this.find(".form-group");
-    var $label = $formGroup.find(".control-label");
-    var $textInput = $formGroup.find(".checklist-item-text");
-    var $posInput = $formGroup.parent().find(".checklist-item-pos");
-    var $destroyLink = $this.find(".remove_nested_fields_link");
+      if ($container.is("[initialized]")) {
+        return true;
+      }
 
-    var labelFor = $label.attr("for");
-    var textName = $textInput.attr("name");
-    var textId = $textInput.attr("id");
-    var posName = $posInput.attr("name");
-    var posId = $posInput.attr("id");
-    var destroyLink = $destroyLink.attr("data-delete-association-field-name");
+      var contents = $(this).find('.hot-contents');
+      var data = null;
+      if (contents.attr("value")) {
+        data = JSON.parse(contents.attr("value")).data;
+      }
+      if ($container.is(":visible")) {
+        $(this).css("width", $("#new-step-tables").css("width"));
+      }
 
-    labelFor = labelFor.replace(/\d+_text/, itemPos + "_text");
-    textName = textName.replace(/\[\d+\]\[text\]/, "[" + itemPos + "][text]");
-    textId = textId.replace(/\d+_text/, itemPos + "_text");
-    posName = posName.replace(/\[\d+\]\[position\]/, "[" + itemPos + "][position]");
-    posId = posId.replace(/\d+_position/, itemPos + "_position");
-    destroyLink = destroyLink.replace(/\[\d+\]\[_destroy\]/, "[" + itemPos + "][_destroy]");
+      $container.handsontable({
+        data: data,
+        startRows: <%= Constants::HANDSONTABLE_INIT_ROWS_CNT %>,
+        startCols: <%= Constants::HANDSONTABLE_INIT_COLS_CNT %>,
+        minRows: 1,
+        minCols: 1,
+        rowHeaders: true,
+        colHeaders: true,
+        contextMenu: true,
+        formulas: true,
+        preventOverflow: 'horizontal'
+      });
 
-    $label.attr("for", labelFor);
-    $textInput.attr("name", textName); // Actually needed for sorting to work
-    $textInput.attr("id", textId);
-    $posInput.attr("name", posName);
-    $posInput.attr("id", posId);
-    $posInput.val(itemPos);
-    $destroyLink.attr("data-delete-association-field-name", destroyLink);
-
-    var $idInput = $this.find("> input");
-    if ($idInput.length) {
-      var idName = $idInput.attr("name");
-      var idId = $idInput.attr("id");
-
-      idName = idName.replace(/\[\d+\]\[id\]/, "[" + itemPos + "][id]");
-      idId = idId.replace(/\d+_id/, itemPos + "_id");
-
-      $idInput.attr("name", idName);
-      $idInput.attr("id", idId);
-    }
-
-    if ($this.css('display') == 'none') {
-      // Actually needed for deleting to work
-      var $destroyInput = $this.prev();
-      var destroyName = $destroyInput.attr("name");
-      destroyName = destroyName.replace(/\[\d+\]\[_destroy\]/, "[" + itemPos + "][_destroy]");
-      $destroyInput.attr("name", destroyName);
-    }
-  });
-}
-
-function enableCheckboxSorting(el) {
-  Sortable.create(el, {
-    draggable: 'fieldset',
-    handle: '.glyphicon-chevron-right',
-    onUpdate: function () {
-      reorderCheckboxData(el);
-    }
-  });
-}
-
-function initializeCheckboxSorting() {
-  var el = $("#new-step-checklists a[data-association-path=step_checklists]");
-
-  el.click(function () {
-    // calling code below must be defered because at this step HTML is not
-    // inserted into DOM.
-    setTimeout(function () {
-      var list = el.parent().find("fieldset.nested_step_checklists:last ul");
-      enableCheckboxSorting(list.get(0));
+      $container.attr("initialized", true);
+      renderTable($container);
     });
-  });
-}
 
-// New step AJAX
-$("[data-action='new-step']").on("ajax:success", function(e, data) {
-  var $form = $(data.html);
-  $("#steps").append($form);
-
-  // Scroll to bottom
-  $("html, body").animate({ scrollTop: $(document).height()-$(window).height() });
-  formCallback($form);
-  formNewAjax($form);
-  applyCancelOnNew();
-  toggleButtons(false);
-  initializeCheckboxSorting();
-
-  $("#step_name").focus();
-  $("#new-step-main-tab a").on("shown.bs.tab", function() {
-    $("#step_name").focus();
-  });
-
-  TinyMCE.refresh();
-});
-
-// Needed because server-side validation failure clears locations of
-// files to be uploaded and checklist's items etc. Also user
-// experience is improved
-function processStep(ev, editMode) {
-  var $form = $(ev.target.form);
-  $form.clearFormErrors();
-  $form.removeBlankFileForms();
-
-  var $fileInputs = $form.find("input[type=file]");
-  var filesValid = filesValidator(ev, $fileInputs, FileTypeEnum.FILE);
-  var $checklists = $form.find(".nested_step_checklists");
-  var checklistsValid = checklistsValidator(ev, $checklists, editMode);
-  var $nameInput = $form.find("#step_name");
-  var nameValid = textValidator(ev, $nameInput, 1,
-    <%= Constants::NAME_MAX_LENGTH %>);
-  var $descrTextarea = $form.find("#step_description");
-  var descriptionValid = textValidator(ev, $descrTextarea, 0,
-    <%= Constants::TEXT_MAX_LENGTH %>);
-
-  if (filesValid && checklistsValid && nameValid && descriptionValid) {
-    // Local file uploading
-    animateSpinner();
-  }
-}
-
-// Expand all steps
-function expandAllSteps() {
-  $('.step .panel-collapse').collapse('show');
-  $(document).find("[data-role='step-hot-table']").each(function()  {
-    renderTable($(this));
-  });
-  $(document).find("span.collapse-step-icon").each(function()  {
-    $(this).addClass("glyphicon-collapse-up");
-    $(this).removeClass("glyphicon-collapse-down");
-  });
-}
-
-function expandStep(step) {
-  $('.panel-collapse', step).collapse('show');
-  $(step).find("span.collapse-step-icon")
-    .addClass("glyphicon-collapse-up")
-    .removeClass("glyphicon-collapse-down");
-  $(step).find("div.step-result-hot-table").each(function()  {
-    renderTable($(this));
-  });
-}
-
-function renderTable(table) {
-  $(table).handsontable("render");
-  // Yet another dirty hack to solve HandsOnTable problems
-  if (parseInt($(table).css("height"), 10) < parseInt($(table).css("max-height"), 10) - 30) {
-    $(table).find(".ht_master .wtHolder").css("height", "100%");
-  }
-}
-
-function initStepsComments() {
-  Comments.initialize();
-  Comments.initCommentOptions("ul.content-comments");
-  Comments.initEditComments("#steps");
-  Comments.initDeleteComments("#steps");
-}
-
-$(document).ready(function() {
-  // On init
-  initCallBacks();
-  initHandsOnTable($(document));
-  expandAllSteps();
-  setupAssetsLoading();
-  initStepsComments();
-  initPreviewModal();
-  TinyMCE.highlight();
-  SmartAnnotation.preventPropagation('.atwho-user-popover');
-
-  $(function () {
-
-    $("[data-action='collapse-steps']").click(function () {
-      $('.step .panel-collapse').collapse('hide');
-      $(document).find("span.collapse-step-icon").each(function()  {
-        $(this).addClass("glyphicon-collapse-down");
-        $(this).removeClass("glyphicon-collapse-up");
+    $("#new-step-tables-tab a")
+    .on("shown.bs.tab", function() {
+      $(this).parents("form").find("div.hot").each(function()  {
+        $(this).parent().css("width", $("#new-step-tables").css("width"));
+        renderTable($(this));
       });
     });
+  }
 
-    $("[data-action='expand-steps']").click(expandAllSteps);
-  });
-})
+  function applyCancelOnNew() {
+    $("[data-action='cancel-new']").click(function(event) {
+      event.preventDefault();
+      event.stopPropagation();
+      event.stopImmediatePropagation();
+
+      var $form = $(this).closest("form");
+      $form.parent().remove().promise().done(function() {
+        newStepHandler();
+      });
+      toggleButtons(true);
+    });
+  }
+
+  function initDeleteStep(){
+    $("[data-action='delete-step']").on("confirm:complete", function (e, answer) {
+      if (answer) {
+        animateLoading();
+      }
+    });
+  }
+
+  function initCallBacks() {
+    applyCheckboxCallBack();
+    applyStepCompletedCallBack();
+    applyEditCallBack();
+    applyMoveStepCallBack();
+    applyCollapseLinkCallBack();
+    initDeleteStep();
+    TinyMCE.highlight();
+  }
+
+  /*
+   * Correction for sorting with "Sortable.min" JS library to work correctly with
+   * "nested_form_fields" gem.
+   */
+  function reorderCheckboxData(checkboxUl) {
+    // Make sure checkbox item insertion script is always at the bottom of "ul"
+    // tag, otherwise item will not be inserted at bottom
+    if(!$(checkboxUl).children().last().is('script')) {
+      $(checkboxUl).find("script").appendTo(checkboxUl);
+    }
+
+    var $checkboxes = $(checkboxUl).find(".nested_fields");
+    $checkboxes.each(function (itemPos) {
+      var $this = $(this);
+
+      var $formGroup = $this.find(".form-group");
+      var $label = $formGroup.find(".control-label");
+      var $textInput = $formGroup.find(".checklist-item-text");
+      var $posInput = $formGroup.parent().find(".checklist-item-pos");
+      var $destroyLink = $this.find(".remove_nested_fields_link");
+
+      var labelFor = $label.attr("for");
+      var textName = $textInput.attr("name");
+      var textId = $textInput.attr("id");
+      var posName = $posInput.attr("name");
+      var posId = $posInput.attr("id");
+      var destroyLink = $destroyLink.attr("data-delete-association-field-name");
+
+      labelFor = labelFor.replace(/\d+_text/, itemPos + "_text");
+      textName = textName.replace(/\[\d+\]\[text\]/, "[" + itemPos + "][text]");
+      textId = textId.replace(/\d+_text/, itemPos + "_text");
+      posName = posName.replace(/\[\d+\]\[position\]/, "[" + itemPos + "][position]");
+      posId = posId.replace(/\d+_position/, itemPos + "_position");
+      destroyLink = destroyLink.replace(/\[\d+\]\[_destroy\]/, "[" + itemPos + "][_destroy]");
+
+      $label.attr("for", labelFor);
+      $textInput.attr("name", textName); // Actually needed for sorting to work
+      $textInput.attr("id", textId);
+      $posInput.attr("name", posName);
+      $posInput.attr("id", posId);
+      $posInput.val(itemPos);
+      $destroyLink.attr("data-delete-association-field-name", destroyLink);
+
+      var $idInput = $this.find("> input");
+      if ($idInput.length) {
+        var idName = $idInput.attr("name");
+        var idId = $idInput.attr("id");
+
+        idName = idName.replace(/\[\d+\]\[id\]/, "[" + itemPos + "][id]");
+        idId = idId.replace(/\d+_id/, itemPos + "_id");
+
+        $idInput.attr("name", idName);
+        $idInput.attr("id", idId);
+      }
+
+      if ($this.css('display') == 'none') {
+        // Actually needed for deleting to work
+        var $destroyInput = $this.prev();
+        var destroyName = $destroyInput.attr("name");
+        destroyName = destroyName.replace(/\[\d+\]\[_destroy\]/, "[" + itemPos + "][_destroy]");
+        $destroyInput.attr("name", destroyName);
+      }
+    });
+  }
+
+  function enableCheckboxSorting(el) {
+    Sortable.create(el, {
+      draggable: 'fieldset',
+      handle: '.glyphicon-chevron-right',
+      onUpdate: function () {
+        reorderCheckboxData(el);
+      }
+    });
+  }
+
+  function initializeCheckboxSorting() {
+    var el = $("#new-step-checklists a[data-association-path=step_checklists]");
+
+    el.click(function () {
+      // calling code below must be defered because at this step HTML is not
+      // inserted into DOM.
+      setTimeout(function () {
+        var list = el.parent().find("fieldset.nested_step_checklists:last ul");
+        enableCheckboxSorting(list.get(0));
+      });
+    });
+  }
+
+  // New step AJAX
+  function newStepHandler() {
+    $("[data-action='new-step']").off().on('click', function(event) {
+      event.preventDefault();
+      event.stopPropagation();
+      event.stopImmediatePropagation();
+      var $btn = $(this);
+      $btn.off();
+      animateSpinner(null, true);
+
+      $.ajax({
+        url: $btn.data('href'),
+        method: 'GET',
+        success: function(data) {
+          var $form = $(data.html);
+          $('#steps').append($form).promise().done(function() {
+            animateSpinner(null, false);
+            // Scroll to bottom
+            $('html, body').animate({
+              scrollTop: $(document).height() - $(window).height()
+            });
+            formCallback($form);
+            formNewAjax($form);
+            applyCancelOnNew();
+            toggleButtons(false);
+            initializeCheckboxSorting();
+
+            $('#step_name').focus();
+            $('#new-step-main-tab a').on('shown.bs.tab', function() {
+              $('#step_name').focus();
+            });
+
+            TinyMCE.refresh();
+          });
+
+        },
+        error: function() {
+          newStepHandler();
+        }
+      })
+    });
+  }
+
+  // Needed because server-side validation failure clears locations of
+  // files to be uploaded and checklist's items etc. Also user
+  // experience is improved
+  global.processStep = function processStep(ev, editMode) {
+    ev.stopPropagation();
+
+    var $form = $(ev.target.form);
+    $form.clearFormErrors();
+    $form.removeBlankFileForms();
+
+    var $fileInputs = $form.find("input[type=file]");
+    var filesValid = filesValidator(ev, $fileInputs, FileTypeEnum.FILE);
+    var $checklists = $form.find(".nested_step_checklists");
+    var checklistsValid = checklistsValidator(ev, $checklists, editMode);
+    var $nameInput = $form.find("#step_name");
+    var nameValid = textValidator(ev, $nameInput, 1,
+      <%= Constants::NAME_MAX_LENGTH %>);
+    var $descrTextarea = $form.find("#step_description");
+    var descriptionValid = textValidator(ev, $descrTextarea, 0,
+      <%= Constants::TEXT_MAX_LENGTH %>);
+
+    if (filesValid && checklistsValid && nameValid && descriptionValid) {
+      // Local file uploading
+      animateSpinner();
+      newStepHandler();
+    }
+  }
+
+  // Expand all steps
+  function expandAllSteps() {
+    $('.step .panel-collapse').collapse('show');
+    $(document).find("[data-role='step-hot-table']").each(function()  {
+      renderTable($(this));
+    });
+    $(document).find("span.collapse-step-icon").each(function()  {
+      $(this).addClass("glyphicon-collapse-up");
+      $(this).removeClass("glyphicon-collapse-down");
+    });
+  }
+
+  function expandStep(step) {
+    $('.panel-collapse', step).collapse('show');
+    $(step).find("span.collapse-step-icon")
+      .addClass("glyphicon-collapse-up")
+      .removeClass("glyphicon-collapse-down");
+    $(step).find("div.step-result-hot-table").each(function()  {
+      renderTable($(this));
+    });
+  }
+
+  function renderTable(table) {
+    $(table).handsontable("render");
+    // Yet another dirty hack to solve HandsOnTable problems
+    if (parseInt($(table).css("height"), 10) < parseInt($(table).css("max-height"), 10) - 30) {
+      $(table).find(".ht_master .wtHolder").css("height", "100%");
+    }
+  }
+
+  function initStepsComments() {
+    Comments.initialize();
+    Comments.initCommentOptions("ul.content-comments");
+    Comments.initEditComments("#steps");
+    Comments.initDeleteComments("#steps");
+  }
+
+  $(document).ready(function() {
+    // On init
+    initCallBacks();
+    initHandsOnTable($(document));
+    expandAllSteps();
+    setupAssetsLoading();
+    initStepsComments();
+    initPreviewModal();
+    TinyMCE.highlight();
+    SmartAnnotation.preventPropagation('.atwho-user-popover');
+    newStepHandler();
+    $(function () {
+
+      $("[data-action='collapse-steps']").click(function () {
+        $('.step .panel-collapse').collapse('hide');
+        $(document).find("span.collapse-step-icon").each(function()  {
+          $(this).addClass("glyphicon-collapse-down");
+          $(this).removeClass("glyphicon-collapse-up");
+        });
+      });
+
+      $("[data-action='expand-steps']").click(expandAllSteps);
+    });
+  })
+
+})(window);
