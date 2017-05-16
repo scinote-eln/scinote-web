@@ -102,7 +102,7 @@ en:
   search:
     whole_word: "Match any whole word"
     whole_phrase: "Match whole phrase"
-    match_case: "Match case"
+    match_case: "Match case sensitive"
     index:
       head_title: "Search"
       page_title: "Search"
