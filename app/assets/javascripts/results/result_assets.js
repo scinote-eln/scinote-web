@@ -75,7 +75,7 @@
         initPreviewModal();
         Comments.initialize();
         initNewResultAsset();
-      }).on('ajax:error', function(xhr, status, e) {
+      }).on('ajax:error', function(e, xhr) {
         $form.renderFormErrors('result', xhr.responseJSON, true, e);
         animateSpinner(null, false);
       });
