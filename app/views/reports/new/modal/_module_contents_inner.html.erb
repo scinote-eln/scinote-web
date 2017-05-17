@@ -15,6 +15,14 @@
         <% if my_module_undefined or my_module.protocol.steps.exists? %>
           <li>
             <%= form.check_box :module_steps, label: t("projects.reports.elements.modals.module_contents_inner.steps") %>
+            <ul>
+              <li>
+                <%= form.check_box :module_completed_steps, label: t("projects.reports.elements.modals.module_contents_inner.completed_steps") %>
+              </li>
+              <li>
+                <%= form.check_box :module_uncompleted_steps, label: t("projects.reports.elements.modals.module_contents_inner.uncompleted_steps") %>
+              </li>
+            </ul>
           </li>
         <% else %>
           <div>
@@ -34,13 +42,11 @@
                   <%= form.check_box :module_result_assets, label: t("projects.reports.elements.modals.module_contents_inner.result_assets") %>
                 </li>
               <% end %>
-
               <% if my_module_undefined or (my_module.results.select { |r| r.is_table && r.active? }).exists? %>
                 <li>
                   <%= form.check_box :module_result_tables, label: t("projects.reports.elements.modals.module_contents_inner.result_tables") %>
                 </li>
               <% end %>
-
               <% if my_module_undefined or (my_module.results.select { |r| r.is_text && r.active? }).exists? %>
                 <li>
                   <%= form.check_box :module_result_texts, label: t("projects.reports.elements.modals.module_contents_inner.result_texts") %>
@@ -60,7 +66,6 @@
         <li>
           <%= form.check_box :module_activity, label: t("projects.reports.elements.modals.module_contents_inner.activity") %>
         </li>
-
         <li>
           <%= form.check_box :module_samples, label: t("projects.reports.elements.modals.module_contents_inner.samples") %>
         </li>
