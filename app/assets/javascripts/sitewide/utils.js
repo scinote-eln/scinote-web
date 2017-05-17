@@ -228,10 +228,14 @@ $.fn.checkboxTreeLogic = function(dependencies, checkAll) {
     }
 
     // Disable/enable dependent checkboxes
-    $.each(dependencies, function(k, $v) {
-      var enable = $checkboxTree.find('#' + k).closest('li')
-                                 .find('input:checkbox:checked').length
-      $v.closest('li').find('input:checkbox').prop('disabled', !enable);
+    $.each(dependencies, function(responsibleParentID, $dependentParent) {
+      var $responsibleParent = $checkboxTree.find('#' + responsibleParentID);
+      if ($responsibleParent.length) {
+        var enable = $responsibleParent.closest('li')
+                                       .find('input:checkbox:checked').length
+        $dependentParent.closest('li').find('input:checkbox')
+                        .prop('disabled', !enable);
+      }
     });
   }).trigger('change');
 };
