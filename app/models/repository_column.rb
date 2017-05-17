@@ -1,6 +1,5 @@
 class RepositoryColumn < ActiveRecord::Base
   belongs_to :repository
-  belongs_to :team
   belongs_to :created_by, foreign_key: :created_by_id, class_name: 'User'
   has_many :repository_cells, dependent: :destroy
   has_many :repository_rows, through: :repository_cells
@@ -11,8 +10,8 @@ class RepositoryColumn < ActiveRecord::Base
   validates :name,
             presence: true,
             length: { maximum: Constants::NAME_MAX_LENGTH },
-            uniqueness: { scope: :team, case_sensitive: true }
-  validates :team, :data_type, presence: true
+            uniqueness: { scope: :repository, case_sensitive: true }
   validates :created_by, presence: true
   validates :repository, presence: true
+  validates :data_type, presence: true
 end

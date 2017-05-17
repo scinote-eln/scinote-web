@@ -7,6 +7,7 @@ class Repository < ActiveRecord::Base
   auto_strip_attributes :name, nullify: false
   validates :name,
             presence: true,
+            uniqueness: { scope: :team },
             length: { maximum: Constants::NAME_MAX_LENGTH }
   validates :team, presence: true
   validates :created_by, presence: true

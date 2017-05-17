@@ -11,7 +11,6 @@ class AddCustomRepositories < ActiveRecord::Migration
 
     create_table :repository_columns do |t|
       t.belongs_to :repository, index: true
-      t.belongs_to :team, index: true
       t.integer :created_by_id, null: false
       t.string :name
       t.integer :data_type, null: false
@@ -22,9 +21,8 @@ class AddCustomRepositories < ActiveRecord::Migration
 
     create_table :repository_rows do |t|
       t.belongs_to :repository, index: true
-      t.belongs_to :team, index: true
       t.integer :created_by_id, null: false
-      t.string :name
+      t.string :name, index: true
       t.timestamps null: true
     end
 
