@@ -28,6 +28,7 @@ $('form#form-import')
   disabledOptions = $("option[disabled='disabled']");
   disabledOptions.removeAttr('disabled');
   loadingSamples = true;
+  animateSpinner();
 })
 .on('ajax:success', function(ev, data, status) {
   // Simply reload page to show flash and updated samples list
