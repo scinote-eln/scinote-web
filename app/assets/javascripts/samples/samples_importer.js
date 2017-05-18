@@ -1,41 +1,50 @@
 var previousIndex;
 var disabledOptions;
-$("select").focus(function() {
+var loadingSamples = false;
+$('select').focus(function() {
   previousIndex = $(this)[0].selectedIndex;
-}).change(function () {
+}).change(function() {
   var currSelect = $(this);
   var currIndex = $(currSelect)[0].selectedIndex;
 
-  $("select").each(function() {
+  $('select').each(function() {
     if (currSelect !== $(this) && currIndex > 0) {
-      $(this).children().eq(currIndex).attr("disabled", "disabled");
+      $(this).children().eq(currIndex).attr('disabled', 'disabled');
     }
 
-    $(this).children().eq(previousIndex).removeAttr("disabled");
+    $(this).children().eq(previousIndex).removeAttr('disabled');
   });
 
   previousIndex = currIndex;
 });
 
 //  Create import samples ajax
-$("form#form-import")
+$('form#form-import')
 .submit(function(e) {
+  // Check if we already uploading samples
+  if (loadingSamples) {
+    return false;
+  }
   disabledOptions = $("option[disabled='disabled']");
-  disabledOptions.removeAttr("disabled");
+  disabledOptions.removeAttr('disabled');
+  loadingSamples = true;
+  animateSpinner();
 })
-.on("ajax:success", function(ev, data, status) {
+.on('ajax:success', function(ev, data, status) {
   // Simply reload page to show flash and updated samples list
+  loadingSamples = false;
   location.reload();
 })
-.on("ajax:error", function(ev, data, status) {
+.on('ajax:error', function(ev, data, status) {
+  loadingSamples = false;
   if (_.isUndefined(data.responseJSON.html)) {
     // Simply reload page to show flash
-     location.reload();
+    location.reload();
   } else {
     // Re-disable options
-    disabledOptions.attr("disabled", "disabled");
+    disabledOptions.attr('disabled', 'disabled');
 
     // Populate the errors container
-    $("#import-errors-container").html(data.responseJSON.html);
+    $('#import-errors-container').html(data.responseJSON.html);
   }
 });
