@@ -1046,4 +1046,10 @@ module PermissionHelper
       false
     end
   end
+
+  # ---- REPOSITORIES PERMISSIONS ----
+
+  def can_view_team_repositories(team)
+    is_member_of_team(team)
+  end
 end

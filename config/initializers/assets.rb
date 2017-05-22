@@ -72,6 +72,7 @@ Rails.application.config.assets.precompile += %w(users/invite_users_modal.js)
 Rails.application.config.assets.precompile += %w(samples/sample_types_groups.js)
 Rails.application.config.assets.precompile += %w(highlightjs-github-theme.css)
 Rails.application.config.assets.precompile += %w(search.js)
+Rails.application.config.assets.precompile += %w(repositories/index.js)
 
 # Libraries needed for Handsontable formulas
 Rails.application.config.assets.precompile += %w(lodash.js)

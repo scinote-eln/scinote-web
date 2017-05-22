@@ -123,6 +123,7 @@ Rails.application.routes.draw do
         as: 'file_expired'
 
     resources :teams do
+      resources :repositories, only: [:index]
       resources :samples, only: [:new, :create]
       resources :sample_types, except: [:show, :new] do
         get 'sample_type_element', to: 'sample_types#sample_type_element'

@@ -1,0 +1,40 @@
+<% provide(:head_title, t("repositories.index.head_title")) %>
+
+<% if current_team %>
+  <%= render partial: "repositories/breadcrumbs.html.erb", locals: { teams: @teams, current_team: current_team, type: @type } %>
+
+  <!-- Nav tabs -->
+  <% if @repositories.present? %>
+    <ul class="nav nav-tabs nav-settings" role="tablist" id="tabs">
+      <% @repositories.each.with_index do |repo, i| %>
+        <li role="presentation" class="<%= 'active' if i == 0 %>">
+          <a class="repository-nav-tab"
+             href="#<%= repo.name.downcase %>"
+             data-toggle="tab"
+             aria-controls="<%= repo.name.downcase %>"
+             title="<%=repo.name%>"><%= repo.name %></a>
+        </li>
+      <% end %>
+    </ul>
+    <!-- Tab panes -->
+    <div class="tab-content">
+      <% @repositories.each.with_index do |repo, i| %>
+        <div class="tab-pane tab-pane-settings <%= 'active' if i == 0 %>" id="<%= repo.name.downcase %>">
+          <!-- Tab Content -->
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <p><em><%=t 'repositories.index.no_repositories' %></em></p>
+  <% end %>
+
+<% else %>
+  <!-- If member of no teams -->
+  <div class="jumbotron">
+    <h2><%=t 'repositories.index.no_teams.title' %></h2>
+    <p><%=t 'repositories.index.no_teams.text' %></p>
+  </div>
+<% end %>
+
+<%#= render partial: "repositories/index/create_new_modal.html.erb" %>
+<%= javascript_include_tag "repositories/index" %>
