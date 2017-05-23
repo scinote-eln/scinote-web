@@ -188,7 +188,8 @@
               </a>
             </li>
           <% end %>
-          <% if can_view_repositories(@my_module.experiment.project.team) %>
+          <% if can_view_repositories(@my_module.experiment.project.team) &&
+                @my_module.experiment.project.team.repositories.exists? %>
             <li id="repositories-nav-tab" class="<%= "active" if module_repository_page? %>">
               <a href="#" id="repositoriesDropdownMenuLink" title="<%=t "nav2.modules.repositories" %>" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <span class="hidden-sm hidden-md"><%=t "nav2.modules.repositories" %></span>
