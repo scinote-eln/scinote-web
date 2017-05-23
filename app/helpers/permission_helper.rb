@@ -1051,6 +1051,7 @@ module PermissionHelper
 
   def can_view_team_repositories(team)
     is_member_of_team(team)
+  end
 
   def can_view_repositories(team)
     is_normal_user_or_admin_of_team(team)
