@@ -98,6 +98,7 @@ en:
       results: "Results"
       activities: "Activity"
       samples: "Samples"
+      repositories: "Repositories"
       archive: "Archive"
 
   search:
@@ -614,6 +615,8 @@ en:
       head_title: "%{project} | %{module} | Activity"
       no_activities: "There are no activities for this task."
       more_activities: "Load older activities"
+    repository:
+      head_title: "%{project} | %{module} | Custom repository %{repository}"
 
   experiments:
     new:
