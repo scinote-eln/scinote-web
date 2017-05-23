@@ -1,19 +1,4 @@
 <%= bootstrap_form_tag remote: true, url: step_contents_project_reports_path(project, format: :json), method: :post, html: { id: "add-contents-form" } do |f| %>
   <%= hidden_field_tag :id, step.id %>
-
   <%= render partial: "reports/new/modal/step_contents_inner.html.erb", locals: { form: f, step: step } %>
 <% end %>
-
-<script type="javascript">
-  $(function() {
-    var form = $("#add-contents-form");
-    var checkAll = form.find(".step-check-all");
-    var others = form.find("input:checkbox:not(.step-check-all)");
-    checkAll.click(function() {
-      others.prop("checked", this.checked);
-    });
-    others.click(function() {
-      checkAll.prop("checked", false);
-    });
-  });
-</script>

@@ -6,47 +6,66 @@
   </em>
 </div>
 
-<%= form.check_box :module_all, label: t("general.check_all"), class: "module-check-all" %>
+<div class="checkbox-tree">
+  <ul>
+    <li>
+      <%= form.check_box :module_all, label: t("projects.reports.elements.modals.module_contents_inner.check_all") %>
+      <ul>
 
-<%= form.label t("projects.reports.elements.modals.module_contents_inner.header") %>
+        <% if my_module_undefined or my_module.protocol.steps.exists? %>
+          <li>
+            <%= form.check_box :module_steps, label: t("projects.reports.elements.modals.module_contents_inner.steps") %>
+          </li>
+        <% else %>
+          <div>
+            <em>
+              <%= t("projects.reports.elements.modals.module_contents_inner.no_steps") %>
+            </em>
+          </div>
+        <% end %>
 
-<% if my_module_undefined or my_module.protocol.steps.count > 0 %>
-  <%= form.check_box :module_steps, label: t("projects.reports.elements.modals.module_contents_inner.steps") %>
-<% else %>
-  <div>
-    <em>
-      <%= t("projects.reports.elements.modals.module_contents_inner.no_steps") %>
-    </em>
-  </div>
-<% end %>
+        <% if my_module_undefined or (my_module.results.select { |r| r.active? }).exists? %>
+          <li>
+            <%= form.check_box :module_results, label: t("projects.reports.elements.modals.module_contents_inner.results") %>
+            <ul>
 
-<% if my_module_undefined or (my_module.results.select { |r| r.active? }).count > 0 %>
-  <%= form.check_box :module_results, label: t("projects.reports.elements.modals.module_contents_inner.results"), class: "results-all" %>
-  <ul class="no-style" style="padding-left: 15px;">
-    <% if my_module_undefined or (my_module.results.select { |r| r.is_asset && r.active? }).count > 0 %>
-      <li>
-        <%= form.check_box :module_result_assets, label: t("projects.reports.elements.modals.module_contents_inner.result_assets"), class: "result-cb" %>
-      </li>
-    <% end %>
-    <% if my_module_undefined or (my_module.results.select { |r| r.is_table && r.active? }).count > 0 %>
-      <li>
-        <%= form.check_box :module_result_tables, label: t("projects.reports.elements.modals.module_contents_inner.result_tables"), class: "result-cb" %>
-      </li>
-    <% end %>
-    <% if my_module_undefined or (my_module.results.select { |r| r.is_text && r.active? }).count > 0 %>
-      <li>
-        <%= form.check_box :module_result_texts, label: t("projects.reports.elements.modals.module_contents_inner.result_texts"), class: "result-cb" %>
-      </li>
-    <% end %>
+              <% if my_module_undefined or (my_module.results.select { |r| r.is_asset && r.active? }).exists? %>
+                <li>
+                  <%= form.check_box :module_result_assets, label: t("projects.reports.elements.modals.module_contents_inner.result_assets") %>
+                </li>
+              <% end %>
+
+              <% if my_module_undefined or (my_module.results.select { |r| r.is_table && r.active? }).exists? %>
+                <li>
+                  <%= form.check_box :module_result_tables, label: t("projects.reports.elements.modals.module_contents_inner.result_tables") %>
+                </li>
+              <% end %>
+
+              <% if my_module_undefined or (my_module.results.select { |r| r.is_text && r.active? }).exists? %>
+                <li>
+                  <%= form.check_box :module_result_texts, label: t("projects.reports.elements.modals.module_contents_inner.result_texts") %>
+                </li>
+              <% end %>
+
+            </ul>
+          </li>
+        <% else %>
+          <div>
+            <em>
+              <%= t("projects.reports.elements.modals.module_contents_inner.no_results") %>
+            </em>
+          </div>
+        <% end %>
+
+        <li>
+          <%= form.check_box :module_activity, label: t("projects.reports.elements.modals.module_contents_inner.activity") %>
+        </li>
+
+        <li>
+          <%= form.check_box :module_samples, label: t("projects.reports.elements.modals.module_contents_inner.samples") %>
+        </li>
+
+      </ul>
+    </li>
   </ul>
-<% else %>
-  <div>
-    <em>
-      <%= t("projects.reports.elements.modals.module_contents_inner.no_results") %>
-    </em>
-  </div>
-<% end %>
-
-<%= form.check_box :module_activity, label: t("projects.reports.elements.modals.module_contents_inner.activity") %>
-
-<%= form.check_box :module_samples, label: t("projects.reports.elements.modals.module_contents_inner.samples") %>
+</div>
