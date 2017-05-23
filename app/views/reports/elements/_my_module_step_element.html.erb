@@ -1,5 +1,7 @@
 <% if step.blank? and @step.present? then step = @step end %>
-<% timestamp = step.completed_on %>
+<% step_type_str = step.completed ? 'completed' : 'uncompleted' %>
+<% user = step.completed || !step.changed? ? step.user : step.last_modified_by %>
+<% timestamp = step.completed ? step.completed_on : step.updated_at %>
 <% tables = step.tables %>
 <% assets = step.assets %>
 <% checklists = step.checklists %>
@@ -8,7 +10,7 @@
   <div class="report-element-header">
     <div class="row">
       <div class="pull-left user-time">
-        <%=t "projects.reports.elements.step.user_time", user: step.user.full_name , timestamp: l(timestamp, format: :full) %>
+        <%=t "projects.reports.elements.step.#{step_type_str}.user_time", user: user.full_name , timestamp: l(timestamp, format: :full) %>
       </div>
       <div class="pull-right controls">
         <%= render partial: "reports/elements/element_controls.html.erb", locals: { show_sort: true } %>

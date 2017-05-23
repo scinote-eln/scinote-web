@@ -291,7 +291,9 @@ en:
           module_contents_inner:
             instructions: "Choose what information from task/s to include in the report"
             check_all: "All tasks content"
-            steps: "Completed protocol steps"
+            steps: "Steps"
+            completed_steps: "Completed"
+            uncompleted_steps: "Uncompleted"
             no_steps: "Task has no steps"
             results: "Results"
             result_assets: "Files"
@@ -376,9 +378,12 @@ en:
           user_time: "Created by %{user} on %{timestamp}."
         step:
           sidebar_name: "Step %{pos}: %{name}"
-          user_time: "Completed by %{user} on %{timestamp}."
           step_pos: "Step %{pos}:"
           no_description: "No description"
+          completed:
+            user_time: "Completed by %{user} on %{timestamp}."
+          uncompleted:
+            user_time: "Created by %{user} on %{timestamp}."
         step_table:
           table_name: "[ %{name} ]"
           user_time: "Table created on %{timestamp}."

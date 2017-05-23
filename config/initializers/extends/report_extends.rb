@@ -11,25 +11,27 @@ module ReportExtends
   # ModuleElement struct creates an argument objects which is needed in
   # generate_module_contents_json method. It takes 3 parameters a Proc and
   # additional options wich can be extended.
+  # :values => name of the hook/identifier for specific module element state
   # :element => name of module element in plural
   # :children => bolean if element has children elements in report
   # :locals => an array of names of local variables which are passed in the view
-  # :coll => a prock which the my_module is passed and have to return a
-  #          collection of element
-  # :singular => true by defaut change the enum type to singular
-  #              needed when querying partials by name
+  # :coll => a procedure which the my_module is passed and have to return a
+  #          collection of elements
+  # :singular => true by defaut; change the enum type to singular - needed when
+  #              querying partials by name
 
-  ModuleElement = Struct.new(:element,
+  ModuleElement = Struct.new(:values,
+                             :element,
                              :children,
                              :locals,
                              :coll,
                              :singular) do
-    def initialize(element, children, locals, coll = nil, singular = true)
-      super(element, children, locals, coll, singular)
+    def initialize(values, element, children, locals, coll = nil, singular = true)
+      super(values, element, children, locals, coll, singular)
     end
 
-    def collection(my_module)
-      coll.call(my_module) if coll
+    def collection(my_module, params2)
+      coll.call(my_module, params2) if coll
     end
 
     def parse_locals(values)
@@ -48,34 +50,43 @@ module ReportExtends
 
   # Module contents element
   MODULE_CONTENTS = [
-    ModuleElement.new(:steps,
+    ModuleElement.new(%i(completed_steps uncompleted_steps),
+                      :steps,
                       true,
                       [:step],
-                      proc do |my_module|
-                        my_module.protocol.completed_steps.order(:position)
+                      proc do |my_module, params2|
+                        steps = []
+                        steps << true if params2["module_completed_steps"] == '1'
+                        steps << false if params2["module_uncompleted_steps"] == '1'
+                        my_module.protocol.steps.where(completed: steps).order(:position)
                       end),
-    ModuleElement.new(:result_assets,
+    ModuleElement.new([:result_assets],
+                      :result_assets,
                       true,
                       [:result],
                       proc do |my_module|
                         my_module.results.select { |r| r.is_asset && r.active? }
                       end),
-    ModuleElement.new(:result_tables,
+    ModuleElement.new([:result_tables],
+                      :result_tables,
                       true,
                       [:result],
                       proc do |my_module|
                         my_module.results.select { |r| r.is_table && r.active? }
                       end),
-    ModuleElement.new(:result_texts,
+    ModuleElement.new([:result_texts],
+                      :result_texts,
                       true,
                       [:result],
                       proc do |my_module|
                         my_module.results.select { |r| r.is_text && r.active? }
                       end),
-    ModuleElement.new(:activity,
+    ModuleElement.new([:activity],
+                      :activity,
                       false,
                       [:my_module, :order]),
-    ModuleElement.new(:samples,
+    ModuleElement.new([:samples],
+                      :samples,
                       false,
                       [:my_module, :order])
   ]
