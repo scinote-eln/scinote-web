@@ -8,7 +8,7 @@ class MyModulesController < ApplicationController
                          results samples activities activities_tab
                          assign_samples unassign_samples delete_samples
                          toggle_task_state samples_index archive
-                         complete_my_module]
+                         complete_my_module repository]
   before_action :load_vars_nested, only: %I[new create]
   before_action :check_edit_permissions,
                 only: %I[update description due_date]
@@ -252,6 +252,11 @@ class MyModulesController < ApplicationController
   def samples
     @samples_index_link = samples_index_my_module_path(@my_module, format: :json)
     @team = @my_module.experiment.project.team
+  end
+
+  def repository
+    @repository = Repository.find_by_id(params[:repository_id])
+    render_403 if @repository.nil? || !can_view_repository(@repository)
   end
 
   def archive

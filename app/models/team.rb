@@ -25,6 +25,7 @@ class Team < ActiveRecord::Base
   has_many :protocols, inverse_of: :team, dependent: :destroy
   has_many :protocol_keywords, inverse_of: :team, dependent: :destroy
   has_many :tiny_mce_assets, inverse_of: :team, dependent: :destroy
+  has_many :repositories, dependent: :destroy
   # Based on file's extension opens file (used for importing)
   def self.open_spreadsheet(file)
     filename = file.original_filename

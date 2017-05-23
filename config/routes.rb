@@ -282,6 +282,10 @@ Rails.application.routes.draw do
         get 'protocols' # Protocols view for single module
         get 'results' # Results view for single module
         get 'samples' # Samples view for single module
+        # Repository view for single module
+        get 'repository/:repository_id',
+            to: 'my_modules#repository',
+            as: :repository
         get 'archive' # Archive view for single module
         get 'complete_my_module'
         post 'toggle_task_state'
