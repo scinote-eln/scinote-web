@@ -1,0 +1,3 @@
+<%= bootstrap_form_for [@team, @new_repository], remote: :true do |f| %>
+  <%= f.text_field :name, label: t("repositories.create.name_label"), placeholder: t("repositories.create.name_placeholder") %>
+<% end %>

@@ -51,6 +51,9 @@ class Constants
   # Maximum nr. of search results for atwho (smart annotations)
   ATWHO_SEARCH_LIMIT = 5
 
+  # Maximum number of repositories allowed
+  REPOSITORIES_LIMIT = 5
+
   #=============================================================================
   # File and data memory size
   #=============================================================================
