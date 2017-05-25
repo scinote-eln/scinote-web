@@ -3,6 +3,7 @@ class ResultTextsController < ApplicationController
   include ActionView::Helpers::UrlHelper
   include ApplicationHelper
   include TinyMceHelper
+  include InputSanitizeHelper
   include Rails.application.routes.url_helpers
 
   before_action :load_vars, only: [:edit, :update, :download]
