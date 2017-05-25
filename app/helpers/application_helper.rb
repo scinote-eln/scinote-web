@@ -1,6 +1,7 @@
 module ApplicationHelper
   include ActionView::Helpers::AssetTagHelper
   include ActionView::Helpers::UrlHelper
+  include InputSanitizeHelper
 
   def module_page?
     controller_name == 'my_modules'
