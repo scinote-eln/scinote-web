@@ -36,6 +36,11 @@
       <span class="glyphicon glyphicon-cloud-download"></span>
       <span class="hidden-xs"><%= t("samples.export") %></span>
     </a>
+
+    <div id="show-assigned-buttons" class="btn-group sample-assign-group" data-toggle="buttons">
+      <button type="button" class="active btn btn-primary" id="assignedSamples"><%= t("samples.view_assigned_samples") %></button>
+      <button type="button" class="btn btn-default" id="allSamples"><%= t("samples.view_all_samples") %></button>
+    </div>
   <% end %>
 
   <div id="datatables-buttons" style="display: inline;">

@@ -21,6 +21,7 @@ class SampleDatatable < AjaxDatatablesRails::Base
                   'regex' => false,
                   'caseInsensitive' => true },
     'columns' => [],
+    'assigned' => 'assigned',
     'ColReorder' => [*0..6]
   }
   7.times do
@@ -208,7 +209,21 @@ class SampleDatatable < AjaxDatatablesRails::Base
                           sample_my_modules.id IS NULL))")
                           .references(:sample_my_modules)
     end
-
+    if params[:assigned] == 'assigned'
+      if @my_module
+        samples = samples.joins('LEFT OUTER JOIN "my_modules" ON "my_modules"."id" = "sample_my_modules"."my_module_id"')
+                         .where('"my_modules"."nr_of_assigned_samples" > 0')
+      elsif @experiment
+        samples = samples.joins('LEFT OUTER JOIN "my_modules" ON "my_modules"."id" = "sample_my_modules"."my_module_id"')
+                         .where('"my_modules"."experiment_id" = ?', @experiment.id)
+                         .where('"my_modules"."nr_of_assigned_samples" > 0')
+      elsif @project
+        samples = samples.joins('LEFT OUTER JOIN "my_modules" ON "my_modules"."id" = "sample_my_modules"."my_module_id"')
+                         .joins('LEFT OUTER JOIN "experiments" ON "experiments"."id" = "my_modules"."experiment_id"')
+                         .where('"experiments"."project_id" = ?', @project.id)
+                         .where('"my_modules"."nr_of_assigned_samples" > 0')
+      end
+    end
     # Make mappings of custom fields, so we have same id for every column
     i = 7
     @cf_mappings = {}
@@ -297,9 +312,9 @@ class SampleDatatable < AjaxDatatablesRails::Base
                        .distinct
 
           # check the input param and merge the two arrays of ids
-          if params[:order].values[0]["dir"] == "asc"
+          if params[:order].values[0]['dir'] == 'asc'
             ids = assigned + unassigned
-          elsif params[:order].values[0]["dir"] == "desc"
+          elsif params[:order].values[0]['dir'] == 'desc'
             ids = unassigned + assigned
           end
           ids = ids.collect { |s| s.id }

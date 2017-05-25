@@ -853,6 +853,8 @@ en:
     add_new_sample_type: "Add sample type"
     add_new_sample_group: "Add sample group"
     add_new_column: "Add column"
+    view_all_samples: "View all samples"
+    view_assigned_samples: "View assigned samples"
     modal_info:
       added_on: "Added on"
       added_by: "Added by"
