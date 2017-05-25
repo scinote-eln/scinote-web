@@ -9,9 +9,9 @@
       <% @repositories.each.with_index do |repo, i| %>
         <li role="presentation" class="<%= 'active' if i == 0 %>">
           <a class="repository-nav-tab"
-             href="#<%= repo.name.downcase %>"
+             href="#custom_repo_<%= repo.id %>"
              data-toggle="tab"
-             aria-controls="<%= repo.name.downcase %>"
+             aria-controls="custom_repo_<%= repo.id %>"
              title="<%=repo.name%>"><%= repo.name %></a>
         </li>
       <% end %>
@@ -19,7 +19,7 @@
     <!-- Tab panes -->
     <div class="tab-content">
       <% @repositories.each.with_index do |repo, i| %>
-        <div class="tab-pane tab-pane-settings <%= 'active' if i == 0 %>" id="<%= repo.name.downcase %>">
+        <div class="tab-pane tab-pane-settings <%= 'active' if i == 0 %>" id="custom_repo_<%= repo.id %>">
           <!-- Tab Content -->
         </div>
       <% end %>
@@ -36,5 +36,4 @@
   </div>
 <% end %>
 
-<%#= render partial: "repositories/index/create_new_modal.html.erb" %>
 <%= javascript_include_tag "repositories/index" %>
