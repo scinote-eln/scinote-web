@@ -79,6 +79,7 @@ en:
       protocols: "Protocols"
       calendar: "Calendar"
       activities: "Activities"
+      repositories: "Repositories"
 
   sidebar:
     title: "Navigation"
@@ -146,6 +147,18 @@ en:
         my_module: "Task comment"
         step: "Step comment"
         result: "Result comment"
+
+  repositories:
+    index:
+      head_title: "Repositories"
+      title: "Repositories"
+      no_repositories: "No repositories"
+      no_teams:
+        title: "Your dashboard is empty!"
+        text: "It seems you're not a member of any team. See team management to sort it out."
+    nav:
+      breadcrumbs:
+        repositories: "Repositories"
 
   comments:
     options_dropdown:
