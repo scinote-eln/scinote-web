@@ -179,10 +179,14 @@ class SampleDatatable < AjaxDatatablesRails::Base
       @assigned_samples = @my_module.samples
 
       samples = samples.joins("LEFT OUTER JOIN sample_my_modules ON
-                          (samples.id = sample_my_modules.sample_id AND
-                          (sample_my_modules.my_module_id = #{@my_module.id.to_s} OR
-                          sample_my_modules.id IS NULL))")
-                          .references(:sample_my_modules)
+                              (samples.id = sample_my_modules.sample_id AND
+                              (sample_my_modules.my_module_id = #{@my_module.id.to_s} OR
+                              sample_my_modules.id IS NULL))")
+                       .references(:sample_my_modules)
+      if params[:assigned] == 'assigned'
+        samples = samples.joins('LEFT OUTER JOIN "my_modules" ON "my_modules"."id" = "sample_my_modules"."my_module_id"')
+                         .where('"my_modules"."nr_of_assigned_samples" > 0')
+      end
     elsif @project
       @assigned_samples = @project.assigned_samples
       ids = @project.my_modules_ids
@@ -199,6 +203,12 @@ class SampleDatatable < AjaxDatatablesRails::Base
                                 sample_my_modules.id IS NULL))")
                          .references(:sample_my_modules)
       end
+      if params[:assigned] == 'assigned'
+        samples = samples.joins('LEFT OUTER JOIN "my_modules" ON "my_modules"."id" = "sample_my_modules"."my_module_id"')
+                         .joins('LEFT OUTER JOIN "experiments" ON "experiments"."id" = "my_modules"."experiment_id"')
+                         .where('"experiments"."project_id" = ?', @project.id)
+                         .where('"my_modules"."nr_of_assigned_samples" > 0')
+      end
     elsif @experiment
       @assigned_samples = @experiment.assigned_samples
       ids = @experiment.my_modules.select(:id)
@@ -208,19 +218,9 @@ class SampleDatatable < AjaxDatatablesRails::Base
                           (sample_my_modules.my_module_id IN (#{ids.to_sql}) OR
                           sample_my_modules.id IS NULL))")
                           .references(:sample_my_modules)
-    end
-    if params[:assigned] == 'assigned'
-      if @my_module
-        samples = samples.joins('LEFT OUTER JOIN "my_modules" ON "my_modules"."id" = "sample_my_modules"."my_module_id"')
-                         .where('"my_modules"."nr_of_assigned_samples" > 0')
-      elsif @experiment
+      if params[:assigned] == 'assigned'
         samples = samples.joins('LEFT OUTER JOIN "my_modules" ON "my_modules"."id" = "sample_my_modules"."my_module_id"')
                          .where('"my_modules"."experiment_id" = ?', @experiment.id)
-                         .where('"my_modules"."nr_of_assigned_samples" > 0')
-      elsif @project
-        samples = samples.joins('LEFT OUTER JOIN "my_modules" ON "my_modules"."id" = "sample_my_modules"."my_module_id"')
-                         .joins('LEFT OUTER JOIN "experiments" ON "experiments"."id" = "my_modules"."experiment_id"')
-                         .where('"experiments"."project_id" = ?', @project.id)
                          .where('"my_modules"."nr_of_assigned_samples" > 0')
       end
     end
