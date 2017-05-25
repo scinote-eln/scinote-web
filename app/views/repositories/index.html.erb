@@ -12,7 +12,7 @@
              href="#custom_repo_<%= repo.id %>"
              data-toggle="tab"
              aria-controls="custom_repo_<%= repo.id %>"
-             title="<%=repo.name%>"><%= repo.name %></a>
+             title="<%=repo.name%>"><%= truncate(repo.name, length: Constants::NAME_TRUNCATION_LENGTH) %></a>
         </li>
       <% end %>
     </ul>
@@ -35,5 +35,3 @@
     <p><%=t 'repositories.index.no_teams.text' %></p>
   </div>
 <% end %>
-
-<%= javascript_include_tag "repositories/index" %>
