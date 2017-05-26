@@ -73,10 +73,10 @@ class CanvasController < ApplicationController
       poss = update_params[:positions].split(";")
       center = ""
       (poss.collect { |pos| pos.split(",") }).each_with_index do |pos, index|
-        unless (pos.length == 3 and
-          pos[0].is_a? String and
-          is_int? pos[1] and
-          is_int? pos[2])
+        unless pos.length == 3 &&
+               pos[0].is_a?(String) &&
+               float?(pos[1]) &&
+               float?(pos[2])
           error = true
           break
         end
@@ -318,4 +318,9 @@ class CanvasController < ApplicationController
     /\A[-+]?\d+\z/ === val
   end
 
+  def float?(val)
+    true if Float(val)
+  rescue ArgumentError
+    false
+  end
 end
