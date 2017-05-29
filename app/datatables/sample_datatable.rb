@@ -21,7 +21,7 @@ class SampleDatatable < AjaxDatatablesRails::Base
                   'regex' => false,
                   'caseInsensitive' => true },
     'columns' => [],
-    'assigned' => 'assigned',
+    'assigned' => 'all',
     'ColReorder' => [*0..6]
   }
   7.times do
@@ -183,7 +183,7 @@ class SampleDatatable < AjaxDatatablesRails::Base
                               (sample_my_modules.my_module_id = #{@my_module.id.to_s} OR
                               sample_my_modules.id IS NULL))")
                        .references(:sample_my_modules)
-      if params[:assigned] == 'assigned'
+      if params[:assigned].present? && params[:assigned] == 'assigned'
         samples = samples.joins('LEFT OUTER JOIN "my_modules" ON "my_modules"."id" = "sample_my_modules"."my_module_id"')
                          .where('"my_modules"."nr_of_assigned_samples" > 0')
       end
@@ -203,7 +203,7 @@ class SampleDatatable < AjaxDatatablesRails::Base
                                 sample_my_modules.id IS NULL))")
                          .references(:sample_my_modules)
       end
-      if params[:assigned] == 'assigned'
+      if params[:assigned].present? && params[:assigned] == 'assigned'
         samples = samples.joins('LEFT OUTER JOIN "my_modules" ON "my_modules"."id" = "sample_my_modules"."my_module_id"')
                          .joins('LEFT OUTER JOIN "experiments" ON "experiments"."id" = "my_modules"."experiment_id"')
                          .where('"experiments"."project_id" = ?', @project.id)
@@ -218,7 +218,7 @@ class SampleDatatable < AjaxDatatablesRails::Base
                           (sample_my_modules.my_module_id IN (#{ids.to_sql}) OR
                           sample_my_modules.id IS NULL))")
                           .references(:sample_my_modules)
-      if params[:assigned] == 'assigned'
+      if params[:assigned].present? && params[:assigned] == 'assigned'
         samples = samples.joins('LEFT OUTER JOIN "my_modules" ON "my_modules"."id" = "sample_my_modules"."my_module_id"')
                          .where('"my_modules"."experiment_id" = ?', @experiment.id)
                          .where('"my_modules"."nr_of_assigned_samples" > 0')

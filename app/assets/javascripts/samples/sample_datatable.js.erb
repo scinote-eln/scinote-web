@@ -33,11 +33,12 @@ var loadFirstTime = true;
 var table;
 var originalHeader;
 
-var view_assigned = 'assigned';
+var view_assigned;
 
 function dataTableInit() {
   // Make a copy of original samples table header
   originalHeader = $('#samples thead').children().clone();
+  view_assigned = 'assigned';
   table = $('#samples').DataTable({
     order: [[2, 'desc']],
     dom: "R<'row'<'col-sm-9-custom toolbar'l><'col-sm-3-custom'f>>tpi",
