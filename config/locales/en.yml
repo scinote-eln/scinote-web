@@ -156,6 +156,11 @@ en:
       no_teams:
         title: "Your dashboard is empty!"
         text: "It seems you're not a member of any team. See team management to sort it out."
+      options_dropdown:
+        header: "Edit repository"
+        rename: "Rename"
+        copy: "Copy"
+        delete: "Delete"
     nav:
       breadcrumbs:
         repositories: "Repositories"
