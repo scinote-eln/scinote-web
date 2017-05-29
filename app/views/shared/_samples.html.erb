@@ -9,7 +9,7 @@
 <div id="alert-container"></div>
 
 <% if can_view_samples(@team) %>
-  <%= bootstrap_form_tag(url: export_samples_team_path(@team, format: :json),
+  <%= bootstrap_form_tag(url: export_samples_team_path(@team),
                          html: { id: 'form-export', class: 'hidden' }) do |f| %>
   <% end %>
 <% end %>
