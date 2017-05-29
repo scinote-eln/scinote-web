@@ -1575,10 +1575,11 @@ en:
       confirm_2: "to confirm"
       dismiss_1: "esc"
       dismiss_2: "to dismiss"
+      popover_html: "<span class='silver'>Team:</span>&nbsp;%{team} <br> <span class='silver'>Role:</span>&nbsp;%{role} <br> <span class='silver'>Joined:</span>&nbsp;%{time}"
     res:
       archived: "(archived)"
+      removed: "(removed)"
       deleted: "(deleted)"
-    popover_html: "<span class='silver'>Team:</span>&nbsp;%{team} <br> <span class='silver'>Role:</span>&nbsp;%{role} <br> <span class='silver'>Joined:</span>&nbsp;%{time}"
 
   zip_export:
     notification_title: 'Your package is ready to be exported!'
