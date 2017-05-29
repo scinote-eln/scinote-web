@@ -559,7 +559,7 @@ en:
         thead_published_on: "Published at"
         thead_created_at: "Created at"
         thead_updated_at: "Last modified at"
-        confirm_message: "Are you sure you wish to load protocol from repository? This action will overwrite the current protocol."
+        confirm_message: "Are you sure you wish to load protocol from repository? This action will overwrite the current protocol in the task and unlink it from repository. The current protocol will remain unchanged in repository."
         import_to_linked_task_rep: "Are you sure you wish to load protocol from repository? This action will overwrite the current protocol in the task and unlink it from repository. The current protocol will remain unchanged in repository."
         load: "Load"
       copy_to_repository_modal:
