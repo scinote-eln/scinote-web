@@ -262,25 +262,19 @@ class TeamsController < ApplicationController
   end
 
   def export_samples
-    require "csv"
-
-    respond_to do |format|
-      if params[:sample_ids].present? and params[:header_ids].present?
-        samples = []
-
-        params[:sample_ids].each do |id|
-          sample = Sample.find_by_id(id)
-
-          if sample
-            samples << sample
-          end
-        end
-        format.csv { send_data @team.to_csv(samples, params[:header_ids]) }
-      else
-        format.csv { render nothing: true }
-      end
+    if params[:sample_ids] && params[:header_ids]
+      generate_zip
+    else
+      flash[:alert] = t('zip_export.export_error')
     end
+    redirect_to :back
   end
+
+  def routing_error(error = 'Routing error', status = :not_found, exception=nil)
+    redirect_to root_path
+  end
+
+  private
 
   def load_vars
     @team = Team.find_by_id(params[:id])
@@ -302,8 +296,12 @@ class TeamsController < ApplicationController
     end
   end
 
-  def routing_error(error = 'Routing error', status = :not_found, exception=nil)
-    redirect_to root_path
+  def generate_zip
+    zip = ZipExport.create(user: current_user)
+    zip.generate_exportable_zip(
+      current_user,
+      @team.to_csv(Sample.where(id: params[:sample_ids]), params[:header_ids]),
+      :samples
+    )
   end
-
 end

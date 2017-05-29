@@ -661,7 +661,14 @@ function updateButtons() {
             $("#deleteSamplesButton").removeClass("disabled");
             $("#exportSamplesButton").removeClass("disabled");
             $("#exportSamplesButton").prop("disabled",false);
-            $("#exportSamplesButton").on("click", function() { $('#form-export').submit(); });
+            $("#exportSamplesButton").on("click", function() {
+              $('#modal-export-samples-success')
+                .modal('show')
+                .on('hidden.bs.modal', function() {
+                  animateSpinner(null, true);
+                  $('#form-export').submit();
+                });
+            });
             $("#assignSamples").removeClass("disabled");
             $("#assignSamples").prop("disabled", false);
             $("#unassignSamples").removeClass("disabled");
@@ -687,7 +694,14 @@ function updateButtons() {
             $("#deleteSamplesButton").removeClass("disabled");
             $("#exportSamplesButton").removeClass("disabled");
             $("#exportSamplesButton").prop("disabled",false);
-            $("#exportSamplesButton").on("click", function() { $('#form-export').submit(); });
+            $("#exportSamplesButton").on("click", function() {
+              $('#modal-export-samples-success')
+                .modal('show')
+                .on('hidden.bs.modal', function() {
+                  animateSpinner(null, true);
+                  $('#form-export').submit();
+                });
+            });
             $("#assignSamples").removeClass("disabled");
             $("#assignSamples").prop("disabled", false);
             $("#unassignSamples").removeClass("disabled");
