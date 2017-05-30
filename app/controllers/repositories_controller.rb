@@ -6,6 +6,15 @@ class RepositoriesController < ApplicationController
     render('repositories/index')
   end
 
+  def destroy
+    @repo = Repository.find(params[:id])
+    @repo.destroy if @repo
+
+    respond_to do |format|
+      format.js { render inline: 'location.reload();' }
+    end
+  end
+
   private
 
   def load_vars

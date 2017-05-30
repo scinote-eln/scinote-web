@@ -161,6 +161,13 @@ en:
         rename: "Rename"
         copy: "Copy"
         delete: "Delete"
+      modal_delete:
+        title_html: "Delete repository <em>%{name}</em>"
+        message_html: "Are you sure you want to delete repository <em>%{name}</em>? This action is irreversible."
+        alert_heading: "Deleting repository has following consequences:"
+        alert_line_1: "all data inside the repository will be lost;"
+        alert_line_2: "all references to repository items will be rendered as invalid."
+        delete: "Delete repository"
     nav:
       breadcrumbs:
         repositories: "Repositories"
@@ -900,7 +907,7 @@ en:
     modal_delete_custom_field:
       title: "Delete a column"
       message: "Are you sure you wish to permanently delete selected column %{cf}? This action is irreversible."
-      alert_heading: "Deleting a column has following consequences:"
+      alert_heading: "Deleting column has following consequences:"
       alert_line_1: "you will lose information in this column for %{nr} samples;"
       alert_line_2: "the column will be deleted for all team members."
       delete: "Delete column"

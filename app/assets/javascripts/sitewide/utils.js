@@ -239,3 +239,15 @@ $.fn.checkboxTreeLogic = function(dependencies, checkAll) {
     });
   }).trigger('change');
 };
+
+/*
+ * Pass href attribute from clicked link to associated popup modal
+ * @param  {object} $modal Associated modal object
+ * @param  {object} fn     Link object
+ */
+$.fn.passUrlToModal = function($modal) {
+  $(this).click(function() {
+    var url = $(this).data('href');
+    $modal.attr('href', url);
+  });
+};
