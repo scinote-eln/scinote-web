@@ -6,6 +6,19 @@ class RepositoriesController < ApplicationController
     render('repositories/index')
   end
 
+  def destroy_modal
+    @repository = Repository.find(params[:repository_id])
+    respond_to do |format|
+      format.json do
+        render json: {
+          html: render_to_string(
+            partial: 'delete_repository_modal.html.erb'
+          )
+        }
+      end
+    end
+  end
+
   def destroy
     @repo = Repository.find(params[:id])
     @repo.destroy if @repo
