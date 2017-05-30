@@ -104,7 +104,7 @@ en:
   search:
     whole_word: "Match any whole word"
     whole_phrase: "Match whole phrase"
-    match_case: "Match case"
+    match_case: "Match case sensitive"
     index:
       head_title: "Search"
       page_title: "Search"
@@ -291,10 +291,8 @@ en:
         modals:
           project_contents:
             head_title: "Add contents to report"
-            project_tab: "Choose tasks"
-            modules_tab: "Tasks content"
-            steps_tab: "Protocols content"
-            results_tab: "Results content"
+            tasks_tab: "Choose tasks"
+            content_tab: "Choose content"
           project_contents_inner:
             instructions: "Select projects/experiment/tasks to include in the report"
             no_modules: "The project contains no tasks"
@@ -306,9 +304,11 @@ en:
             results_tab: "Results content"
           module_contents_inner:
             instructions: "Choose what information from task/s to include in the report"
-            header: "Report elements"
-            steps: "Completed protocol steps"
-            no_steps: "Task contains no protocols"
+            check_all: "All tasks content"
+            steps: "Steps"
+            completed_steps: "Completed"
+            uncompleted_steps: "Uncompleted"
+            no_steps: "Task has no steps"
             results: "Results"
             result_assets: "Files"
             result_tables: "Tables"
@@ -331,7 +331,7 @@ en:
             results_tab: "Results content"
           step_contents_inner:
             instructions: "Choose what information from task protocol step/s to include in the report"
-            header: "Report elements"
+            check_all: "All protocols steps content"
             tables: "Tables"
             no_tables: "Step contains no tables"
             assets: "Files"
@@ -343,6 +343,7 @@ en:
             head_title: "Add contents to result %{result}"
           result_contents_inner:
             instructions: "Include result/s comments in the report?"
+            check_all: "All results content"
             comments: "Comments"
           add: "Add to report"
           save_report:
@@ -391,9 +392,12 @@ en:
           user_time: "Created by %{user} on %{timestamp}."
         step:
           sidebar_name: "Step %{pos}: %{name}"
-          user_time: "Completed by %{user} on %{timestamp}."
           step_pos: "Step %{pos}:"
           no_description: "No description"
+          completed:
+            user_time: "Completed by %{user} on %{timestamp}."
+          uncompleted:
+            user_time: "Created by %{user} on %{timestamp}."
         step_table:
           table_name: "[ %{name} ]"
           user_time: "Table created on %{timestamp}."
@@ -558,7 +562,7 @@ en:
       load_from_repository_modal:
         title: "Load protocol from repository"
         text: "Choose the protocol to be loaded to the task."
-        text2: "This will overwrite the current protocol!"
+        text2: "This action will overwrite the current protocol in the task and unlink it from repository. The current protocol will remain unchanged in repository."
         tab_public: "Public protocols"
         tab_private: "Private protocols"
         thead_name: "Name"
@@ -569,7 +573,7 @@ en:
         thead_published_on: "Published at"
         thead_created_at: "Created at"
         thead_updated_at: "Last modified at"
-        confirm_message: "Are you sure you wish to load protocol from repository? This action will overwrite the current protocol."
+        confirm_message: "Are you sure you wish to load protocol from repository? This action will overwrite the current protocol in the task and unlink it from repository. The current protocol will remain unchanged in repository."
         import_to_linked_task_rep: "Are you sure you wish to load protocol from repository? This action will overwrite the current protocol in the task and unlink it from repository. The current protocol will remain unchanged in repository."
         load: "Load"
       copy_to_repository_modal:
@@ -1587,10 +1591,11 @@ en:
       confirm_2: "to confirm"
       dismiss_1: "esc"
       dismiss_2: "to dismiss"
+      popover_html: "<span class='silver'>Team:</span>&nbsp;%{team} <br> <span class='silver'>Role:</span>&nbsp;%{role} <br> <span class='silver'>Joined:</span>&nbsp;%{time}"
     res:
       archived: "(archived)"
+      removed: "(removed)"
       deleted: "(deleted)"
-    popover_html: "<span class='silver'>Team:</span>&nbsp;%{team} <br> <span class='silver'>Role:</span>&nbsp;%{role} <br> <span class='silver'>Joined:</span>&nbsp;%{time}"
 
   zip_export:
     notification_title: 'Your package is ready to be exported!'
@@ -1612,7 +1617,6 @@ en:
     save: "Save"
     close: "Close"
     create: 'Create'
-    check_all: "Check all"
     no_comments: "No comments!"
     more_comments: "More comments"
     comment_placeholder: "Your Message"

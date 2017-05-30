@@ -44,6 +44,16 @@
   display: inline-block;
 }
 
+// Modal for adding content
+label {
+  &[for="_experiment_all"],
+  &[for="_module_all"],
+  &[for="_step_all"],
+  &[for="_result_all"] {
+    font-weight: bold;
+  }
+}
+
 /* New page sidebar */
 .report-sidebar-wrapper {
   background-color: $color-white !important;
@@ -124,16 +134,6 @@
 @media (max-width: 720px) {
   #report-content {
     padding: 25px;
-  }
-}
-
-ul {
-  &.project-contents-list {
-    padding-left: 15px !important;
-  }
-
-  &.experiment-contents-list {
-    padding-left: 30px !important;
   }
 }
 

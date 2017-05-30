@@ -412,6 +412,7 @@ class ReportsController < ApplicationController
 
   def result_contents
     result = Result.find_by_id(params[:id])
+
     respond_to do |format|
       if result.blank?
         format.json { render json: {}, status: :not_found }

@@ -184,3 +184,58 @@ function initPageTutorialSteps(pageFirstStepN, pageLastStepN, nextPagePath,
     });
   }
 }
+
+/**
+ * Checkbox on/off logic. For each checkbox hierarchy add 'checkbox-tree' class
+ * to a parent 'div' surrounding the checkbox hierarchy, represented with 'ul',
+ * and apply this function to some ancestor tag.
+ * @param  {object} dependencies Hash of checkbox IDs (as keys), on whose
+ * children and itself the corresponding checkbox object (as value) and its'
+ * children depend on, BUT are in a seperate 'tree branch'
+ * @param {boolean} checkAll Whether to check all the checkboxes by default,
+ * otherwise leave them as is (the parameter can be left out)
+ */
+$.fn.checkboxTreeLogic = function(dependencies, checkAll) {
+  var $checkboxTree = $(this).find('.checkbox-tree').addBack('.checkbox-tree');
+  var $checkboxTreeCheckboxes = $checkboxTree.find('input:checkbox');
+
+  if (checkAll) {
+    $checkboxTreeCheckboxes.prop('checked', true);
+  }
+
+  $checkboxTreeCheckboxes.change(function() {
+    // Update descendent checkboxes
+    var $checkbox = $(this);
+    var checkboxChecked = $checkbox.prop('checked');
+    var $childCheckboxes = $checkbox.closest('li').find('ul input:checkbox');
+    $childCheckboxes.each(function() {
+      $(this).prop('checked', checkboxChecked);
+    });
+
+    // Update ancestor checkboxes
+    // Loop until topmost checkbox is reached or until there's no parent
+    // checkbox
+    while ($checkbox.length) {
+      var $checkboxesContainer = $checkbox.closest('ul');
+      var $parentCheckbox = $checkboxesContainer.siblings()
+                                                .find('input:checkbox');
+      var $checkboxes = $checkboxesContainer.find('input:checkbox');
+      var $checkedCheckboxes = $checkboxes.filter(':checked');
+
+      $parentCheckbox.prop('checked',
+       $checkboxes.length === $checkedCheckboxes.length);
+      $checkbox = $parentCheckbox;
+    }
+
+    // Disable/enable dependent checkboxes
+    $.each(dependencies, function(responsibleParentID, $dependentParent) {
+      var $responsibleParent = $checkboxTree.find('#' + responsibleParentID);
+      if ($responsibleParent.length) {
+        var enable = $responsibleParent.closest('li')
+                                       .find('input:checkbox:checked').length
+        $dependentParent.closest('li').find('input:checkbox')
+                        .prop('disabled', !enable);
+      }
+    });
+  }).trigger('change');
+};

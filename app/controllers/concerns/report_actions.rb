@@ -70,21 +70,25 @@ module ReportActions
   def generate_module_contents_json(my_module)
     res = []
     ReportExtends::MODULE_CONTENTS.each do |contents|
-      protocol = contents.element == :step ? my_module.protocol.present? : true
-      next unless in_params?("module_#{contents.element}".to_sym) && protocol
+      present = false
+      contents.values.each do |element|
+        present = in_params?("module_#{element}".to_sym) ||
+                  in_params?(element.to_sym)
+        break if present
+      end
+      next unless present
+
       if contents.children
-        contents.collection(my_module).each do |report_el|
+        contents.collection(my_module, params).each do |report_el|
           res << generate_new_el(false)
           el = generate_el(
-            "reports/elements/my_module_#{contents
-                                          .element
-                                          .to_s
-                                          .singularize}_element.html.erb",
+            "reports/elements/my_module_#{contents.element.to_s.singularize}"\
+            "_element.html.erb",
             contents.parse_locals([report_el])
           )
-          if contents.locals.first == :step
+          if :step.in? contents.locals
             el[:children] = generate_step_contents_json(report_el)
-          elsif contents.locals.first == :result
+          elsif :result.in? contents.locals
             el[:children] = generate_result_contents_json(report_el)
           end
           res << el

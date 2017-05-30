@@ -96,7 +96,14 @@ class SearchController < ApplicationController
   end
 
   def count_by_name(model)
-    search_by_name(model).limit(nil).offset(nil).size
+    model.search(current_user,
+                 true,
+                 @search_query,
+                 Constants::SEARCH_NO_LIMIT,
+                 nil,
+                 match_case: @search_case,
+                 whole_word: @search_whole_word,
+                 whole_phrase: @search_whole_phrase).size
   end
 
   def count_search_results

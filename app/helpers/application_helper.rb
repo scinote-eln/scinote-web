@@ -1,6 +1,7 @@
 module ApplicationHelper
   include ActionView::Helpers::AssetTagHelper
   include ActionView::Helpers::UrlHelper
+  include InputSanitizeHelper
 
   def module_page?
     controller_name == 'my_modules'
@@ -187,6 +188,7 @@ module ApplicationHelper
     new_text = text.gsub(sa_user) do |el|
       match = el.match(sa_user)
       user = User.find_by_id(match[2].base62_decode)
+      next unless user
       team ||= current_team
       popover_for_user_name(user, team)
     end
@@ -195,13 +197,8 @@ module ApplicationHelper
 
   # Generate smart annotation link for one user object
   def popover_for_user_name(user, team = nil)
-    if user &&
-       team &&
-       UserTeam.user_in_team(user, team).any?
-      user_t = user.user_teams
-                   .where('user_teams.team_id = ?', team)
-                   .first
-    end
+    user_still_in_team = user.teams.include?(team)
+
     user_description = %(<div class='col-xs-4'>
       <img src='#{user_avatar_absolute_url(user, :thumb)}'
        alt='thumb'></div><div class='col-xs-8'>
@@ -210,9 +207,12 @@ module ApplicationHelper
       <span class='glyphicon glyphicon-remove' aria-hidden='true'></span>
       </div></div><div class='row'><div class='col-xs-12'>
       <p class='silver'>#{user.email}</p>)
-    if team.present?
+    if user_still_in_team
+      user_t = user.user_teams
+                   .where('user_teams.team_id = ?', team)
+                   .first
       user_description += %(<p>
-        #{I18n.t('atwho.popover_html',
+        #{I18n.t('atwho.users.popover_html',
                  role: user_t.role.capitalize,
                  team: user_t.team.name,
                  time: user_t.created_at.strftime('%B %Y'))}
@@ -221,13 +221,16 @@ module ApplicationHelper
       user_description += %(<p></p></div></div></div>)
     end
 
+    user_name = user.full_name
+    user_name << ' ' + I18n.t('atwho.res.removed') if !user_still_in_team
+
     raw("<img src='#{user_avatar_absolute_url(user, :icon_small)}'" \
-    "alt='avatar' class='atwho-user-img-popover'>") +
-    raw('<a onClick="$(this).popover(\'show\')" ' \
-    'class="atwho-user-popover" data-container="body" ' \
-    'data-html="true" tabindex="0" data-trigger="focus" ' \
-    'data-placement="top" data-toggle="popover" data-content="') +
-    raw(user_description) + raw('" >') + user.full_name + raw('</a>')
+        "alt='avatar' class='atwho-user-img-popover'>") +
+      raw('<a onClick="$(this).popover(\'show\')" ' \
+          'class="atwho-user-popover" data-container="body" ' \
+          'data-html="true" tabindex="0" data-trigger="focus" ' \
+          'data-placement="top" data-toggle="popover" data-content="') +
+      raw(user_description) + raw('" >') + user_name + raw('</a>')
   end
 
   def user_avatar_absolute_url(user, style)
