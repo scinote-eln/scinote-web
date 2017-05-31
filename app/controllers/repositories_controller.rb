@@ -21,10 +21,39 @@ class RepositoriesController < ApplicationController
 
   def destroy
     @repo = Repository.find(params[:id])
-    @repo.destroy if @repo
+    flash[:success] = t('repositories.index.delete_flash', name: @repo.name)
+    @repo.destroy
+    redirect_to :back
+  end
+
+  def rename_modal
+    @repository = Repository.find(params[:repository_id])
+    respond_to do |format|
+      format.json do
+        render json: {
+          html: render_to_string(
+            partial: 'rename_repository_modal.html.erb'
+          )
+        }
+      end
+    end
+  end
+
+  def update
+    @repo = Repository.find(params[:id])
+    old_name = @repo.name
+    @repo.update_attributes(repository_params)
 
     respond_to do |format|
-      format.js { render inline: 'location.reload();' }
+      format.json do
+        if @repo.save
+          flash[:success] = t('repositories.index.rename_flash',
+                              old_name: old_name, new_name: @repo.name)
+          render json: {}, status: :ok
+        else
+          render json: @repo.errors, status: :unprocessable_entity
+        end
+      end
     end
   end
 
@@ -38,5 +67,9 @@ class RepositoriesController < ApplicationController
 
   def check_view_all_permissions
     render_403 unless can_view_team_repositories(@team)
+  end
+
+  def repository_params
+    params.require(:repository).permit(:name)
   end
 end

@@ -37,9 +37,9 @@
                   <%= t("repositories.index.options_dropdown.header") %>
                 </li>
                 <li>
-                  <a href="#">
-                    <%= t("repositories.index.options_dropdown.rename") %>
-                  </a>
+                  <%= link_to t('repositories.index.options_dropdown.rename'),
+                              team_repository_rename_modal_path(repository_id: repo),
+                              id: "rename-repo-option" %>
                 </li>
                 <li>
                   <a href="#">
@@ -50,8 +50,7 @@
                 <li>
                   <%= link_to t('repositories.index.modal_delete.delete'),
                               team_repository_destroy_modal_path(repository_id: repo),
-                              id: "delete-repo-option",
-                              remote: true %>
+                              id: "delete-repo-option" %>
                 </li>
               </ul>
             </div>

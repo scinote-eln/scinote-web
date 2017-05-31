@@ -153,6 +153,8 @@ en:
       head_title: "Repositories"
       title: "Repositories"
       no_repositories: "No repositories"
+      delete_flash: "\"%{name}\" repository was successfully deleted!"
+      rename_flash: "\"%{old_name}\" repository was successfully renamed to \"%{new_name}\"!"
       no_teams:
         title: "Your dashboard is empty!"
         text: "It seems you're not a member of any team. See team management to sort it out."
@@ -168,6 +170,11 @@ en:
         alert_line_1: "all data inside the repository will be lost;"
         alert_line_2: "all references to repository items will be rendered as invalid."
         delete: "Delete repository"
+      modal_rename:
+        title_html: "Rename repository <em>%{name}</em>"
+        name: "New repository name"
+        name_placeholder: "My repository"
+        copy: "Copy repository"
     nav:
       breadcrumbs:
         repositories: "Repositories"
