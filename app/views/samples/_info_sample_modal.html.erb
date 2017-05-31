@@ -40,7 +40,7 @@
             <br>
             <span>
               <%= t "samples.modal_info.custom_field", cf: sample_custom_field.custom_field.name %>
-              <%= sample_custom_field.value %>
+              <%= custom_auto_link(sample_custom_field.value, simple_format: false, team: @team) %>
             </span>
           <% end %>
         </p>
