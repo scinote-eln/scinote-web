@@ -1,53 +1,41 @@
 (function() {
   'use strict';
 
-  // Show modal for repository deletion
-  $(document).on('click', '#delete-repo-option', function(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    e.stopImmediatePropagation();
+  /**
+   * Show modal on link click and handle its' validation
+   * @param  {object} $linkToModals Link objects for opening the modal
+   * @param  {string} modalID       Modal ID
+   */
+  function initializeModal($linkToModal, modalID) {
+    $linkToModal
+      .on('ajax:beforeSend', function() {
+        animateSpinner();
+      })
+      .on('ajax:success', function(e, data) {
+        // Add and show modal
+        $('body').append($.parseHTML(data.html));
+        $(modalID).modal('show', {
+          backdrop: true,
+          keyboard: false
+        });
 
-    var url = $(this).attr('href');
-    $.ajax({
-      method: 'GET',
-      url: url,
-      dataType: 'json'
-    }).done(function(xhr, settings, data) {
-      $('body').append($.parseHTML(data.responseJSON.html));
-      $('#delete-repo-modal').modal('show', {
-        backdrop: true,
-        keyboard: false
+        validateRenameForm($(modalID));
+
+        // Remove modal when it gets closed
+        $(modalID).on('hidden.bs.modal', function() {
+          $(modalID).remove();
+        });
+      })
+      .on('ajax:error', function() {
+        // TODO
+      })
+      .on('ajax:complete', function() {
+        animateSpinner(null, false);
       });
-    });
-
-    return false;
-  });
-
-  // Show modal for repository renaming
-  $(document).on('click', '#rename-repo-option', function(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    e.stopImmediatePropagation();
-
-    var url = $(this).attr('href');
-    $.ajax({
-      method: 'GET',
-      url: url,
-      dataType: 'json'
-    }).done(function(xhr, settings, data) {
-      $('body').append($.parseHTML(data.responseJSON.html));
-      $('#rename-repo-modal').modal('show', {
-        backdrop: true,
-        keyboard: false
-      });
-      validateRenameForm($('#rename-repo-modal'));
-    });
-
-    return false;
-  });
+  }
 
   /**
-   * Reload after successfully updated experiment
+   * Rename form validation
    * @param  {object} $modal Modal object
    */
   function validateRenameForm($modal) {
@@ -67,11 +55,14 @@
                           true);
         } else {
           renderFormError(e,
-                          $modal.find('#experiment-name'),
+                          $modal.find('#repository_name'),
                           error.statusText,
                           true);
         }
       });
     }
   }
+
+  initializeModal($('.delete-repo-option'), '#delete-repo-modal');
+  initializeModal($('.rename-repo-option'), '#rename-repo-modal');
 })();
