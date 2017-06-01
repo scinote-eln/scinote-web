@@ -635,8 +635,9 @@
   function renderTable(table) {
     $(table).handsontable("render");
     // Yet another dirty hack to solve HandsOnTable problems
-    if (parseInt($(table).css("height"), 10) < parseInt($(table).css("max-height"), 10) - 30) {
-      $(table).find(".ht_master .wtHolder").css("height", "100%");
+    if (parseInt($(table).css('height'), 10) < parseInt($(table).css('max-height'), 10) - 30) {
+      $(table).find('.ht_master .wtHolder').css({ 'height': '100%',
+                                                  'width': '100%' });
     }
   }
 
