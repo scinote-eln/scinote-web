@@ -9,7 +9,7 @@ module ActivityHelper
       else
         title = truncate(activity_title, length: len)
       end
-      message = message.gsub(/#{activity_title}/, title )
+      message = message.gsub(/#{Regexp.escape(activity_title)}/, title )
     end
     sanitize_input(message) if message
   end
