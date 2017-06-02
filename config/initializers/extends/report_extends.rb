@@ -19,15 +19,18 @@ module ReportExtends
   #          collection of elements
   # :singular => true by defaut; change the enum type to singular - needed when
   #              querying partials by name
+  # :has_many => false by default; whether the element can have many manifestations,
+  #              and its id will be appended.
 
   ModuleElement = Struct.new(:values,
                              :element,
                              :children,
                              :locals,
                              :coll,
-                             :singular) do
-    def initialize(values, element, children, locals, coll = nil, singular = true)
-      super(values, element, children, locals, coll, singular)
+                             :singular,
+                             :has_many) do
+    def initialize(values, element, children, locals, coll = nil, singular = true, has_many = false)
+      super(values, element, children, locals, coll, singular, has_many)
     end
 
     def collection(my_module, params2)
@@ -88,7 +91,14 @@ module ReportExtends
     ModuleElement.new([:samples],
                       :samples,
                       false,
-                      [:my_module, :order])
+                      [:my_module, :order]),
+    ModuleElement.new([:repository],
+                      :repository,
+                      false,
+                      [:my_module, :order],
+                      nil,
+                      true,
+                      true)
   ]
 
   # path: app/helpers/reports_helpers.rb

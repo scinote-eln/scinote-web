@@ -313,6 +313,29 @@ class MyModule < ActiveRecord::Base
     { data: data, headers: headers }
   end
 
+  # Generate the repository rows belonging to this module
+  # in JSON form, suitable for display in handsontable.js
+  def repository_json_hot(repository_id, order)
+    data = []
+    repository_rows
+      .where(repository_id: repository_id)
+      .order(created_at: order).find_each do |row|
+      row_json = []
+      row_json << row.name
+      row_json << I18n.l(row.created_at, format: :full)
+      row_json << row.created_by.full_name
+      data << row_json
+    end
+
+    # Prepare column headers
+    headers = [
+      I18n.t('repositories.table.name'),
+      I18n.t('repositories.table.created_at'),
+      I18n.t('repositories.table.created_by')
+    ]
+    { data: data, headers: headers }
+  end
+
   def deep_clone(current_user)
     deep_clone_to_experiment(current_user, experiment)
   end

@@ -371,6 +371,9 @@ en:
           name: "Samples of task %{my_module}"
           sidebar_name: "Samples"
           no_samples: "No samples"
+        module_repository:
+          name: "%{repository} of task %{my_module}"
+          no_items: "No items"
         result_asset:
           file_name: "[ %{file} ]"
           user_time: "Uploaded by %{user} on %{timestamp}."
@@ -1026,6 +1029,12 @@ en:
       destroy_modal_body: 'This action is irreversible and makes the sample type inaccessible to all team members.'
       destroy_modal_submit: 'Permanently delete sample type'
       destroy_flash: "\"%{name}\" sample type was successfully deleted!"
+
+  repositories:
+    table:
+      name: 'Name'
+      created_at: 'Added on'
+      created_by: 'Added by'
 
   custom_fields:
     new:

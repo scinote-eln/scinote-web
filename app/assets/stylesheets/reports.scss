@@ -509,6 +509,25 @@ label {
   }
 }
 
+/** Module repository element */
+.report-module-repository-element {
+  margin-bottom: 0;
+
+  .report-element-header {
+    border-bottom: none;
+
+    .repository-name {
+      margin-left: 5px;
+    }
+  }
+
+  &:hover > .report-element-header {
+    .repository-icon,.repository-name {
+      color: $color-theme-primary;
+    }
+  }
+}
+
 /** Module activity element */
 .report-module-activity-element {
   margin-bottom: 0;

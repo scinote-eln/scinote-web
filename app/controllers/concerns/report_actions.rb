@@ -70,37 +70,54 @@ module ReportActions
   def generate_module_contents_json(my_module)
     res = []
     ReportExtends::MODULE_CONTENTS.each do |contents|
-      present = false
+      elements = []
       contents.values.each do |element|
-        present = in_params?("module_#{element}".to_sym) ||
-                  in_params?(element.to_sym)
-        break if present
-      end
-      next unless present
-
-      if contents.children
-        contents.collection(my_module, params).each do |report_el|
-          res << generate_new_el(false)
-          el = generate_el(
-            "reports/elements/my_module_#{contents.element.to_s.singularize}"\
-            "_element.html.erb",
-            contents.parse_locals([report_el])
-          )
-          if :step.in? contents.locals
-            el[:children] = generate_step_contents_json(report_el)
-          elsif :result.in? contents.locals
-            el[:children] = generate_result_contents_json(report_el)
+        if contents.has_many
+          elements = params.select{|k| k.starts_with?("module_#{element}")}
+          elements = elements.select{|_,v| v == '1'}.keys
+          elements.map!{|el| el.gsub('module_', '')}.map!{|el| el.split('_')}
+          elements.map!{|el| [el[0].to_sym, el[1].to_i]}
+          break if elements.size > 0
+        else
+          present = in_params?("module_#{element}".to_sym) ||
+                    in_params?(element.to_sym)
+          if present
+            elements << [element.to_sym, nil]
+            break
           end
-          res << el
         end
-      else
-        file_name = contents.file_name
-        file_name = contents.element if contents.element == :samples
-        res << generate_new_el(false)
-        res << generate_el(
-          "reports/elements/my_module_#{file_name}_element.html.erb",
-          contents.parse_locals([my_module, :asc])
-        )
+      end
+      next unless elements.size > 0
+
+      elements.each do |element, el_id|
+        if contents.children
+          contents.collection(my_module, params).each do |report_el|
+            res << generate_new_el(false)
+            locals = contents.parse_locals([report_el])
+            locals.merge!({ element_id: el_id }) if el_id
+            el = generate_el(
+              "reports/elements/my_module_#{contents.element.to_s.singularize}"\
+              "_element.html.erb",
+              locals
+            )
+            if :step.in? contents.locals
+              el[:children] = generate_step_contents_json(report_el)
+            elsif :result.in? contents.locals
+              el[:children] = generate_result_contents_json(report_el)
+            end
+            res << el
+          end
+        else
+          file_name = contents.file_name
+          file_name = contents.element if contents.element == :samples
+          res << generate_new_el(false)
+          locals = contents.parse_locals([my_module, :asc])
+          locals.merge!({ element_id: el_id }) if el_id
+          res << generate_el(
+            "reports/elements/my_module_#{file_name}_element.html.erb",
+            locals
+          )
+        end
       end
     end
     res << generate_new_el(false)
