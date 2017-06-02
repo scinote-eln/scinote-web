@@ -174,7 +174,7 @@ en:
         title_html: "Rename repository <em>%{name}</em>"
         name: "New repository name"
         name_placeholder: "My repository"
-        copy: "Copy repository"
+        rename: "Rename repository"
     nav:
       breadcrumbs:
         repositories: "Repositories"

@@ -22,9 +22,10 @@ class RepositoriesController < ApplicationController
   end
 
   def destroy
-    @repo = Repository.find(params[:id])
-    flash[:success] = t('repositories.index.delete_flash', name: @repo.name)
-    @repo.destroy
+    @repository = Repository.find(params[:id])
+    flash[:success] = t('repositories.index.delete_flash',
+                        name: @repository.name)
+    @repository.destroy
     redirect_to :back
   end
 
@@ -42,18 +43,18 @@ class RepositoriesController < ApplicationController
   end
 
   def update
-    @repo = Repository.find(params[:id])
-    old_name = @repo.name
-    @repo.update_attributes(repository_params)
+    @repository = Repository.find(params[:id])
+    old_name = @repository.name
+    @repository.update_attributes(repository_params)
 
     respond_to do |format|
       format.json do
-        if @repo.save
+        if @repository.save
           flash[:success] = t('repositories.index.rename_flash',
-                              old_name: old_name, new_name: @repo.name)
+                              old_name: old_name, new_name: @repository.name)
           render json: {}, status: :ok
         else
-          render json: @repo.errors, status: :unprocessable_entity
+          render json: @repository.errors, status: :unprocessable_entity
         end
       end
     end
