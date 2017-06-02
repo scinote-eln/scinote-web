@@ -42,9 +42,9 @@
     if ($modal) {
       var form = $modal.find('form');
       form
-      .on('ajax:success', function() {
+      .on('ajax:success', function(ev, data) {
         animateSpinner(form, true);
-        location.reload();
+        $(location).attr('href', data.url);
       })
       .on('ajax:error', function(e, error) {
         var msg = JSON.parse(error.responseText);

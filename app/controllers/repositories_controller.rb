@@ -52,7 +52,9 @@ class RepositoriesController < ApplicationController
         if @repository.save
           flash[:success] = t('repositories.index.rename_flash',
                               old_name: old_name, new_name: @repository.name)
-          render json: {}, status: :ok
+          render json: {
+            url: team_repositories_path(@team, repository: @repository)
+          }, status: :ok
         else
           render json: @repository.errors, status: :unprocessable_entity
         end
