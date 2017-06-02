@@ -216,21 +216,21 @@
     });
 
     // Add hidden fields for tables
-    $form.submit(function(){
-      $(this).find("[data-role='editable-table']").each(function() {
-        var hot = $(this).find(".hot").handsontable('getInstance');
-        var contents = $(this).find('.hot-contents');
-        var data = JSON.stringify({data: hot.getData()});
-        contents.attr("value", data);
-      });
-
-      setTimeout(function() {
-        initStepsComments();
-        animateSpinner(null, false);
-        SmartAnnotation.preventPropagation('.atwho-user-popover');
-      }, 1000);
-      return true;
-    });
+    // $form.submit(function(){
+    //   $(this).find("[data-role='editable-table']").each(function() {
+    //     var hot = $(this).find(".hot").handsontable('getInstance');
+    //     var contents = $(this).find('.hot-contents');
+    //     var data = JSON.stringify({data: hot.getData()});
+    //     contents.attr("value", data);
+    //   });
+    //
+    //   setTimeout(function() {
+    //     initStepsComments();
+    //     animateSpinner(null, false);
+    //     SmartAnnotation.preventPropagation('.atwho-user-popover');
+    //   }, 1000);
+    //   return true;
+    // });
   }
 
   // Init ajax success/error for edit form
@@ -276,49 +276,6 @@
       $form.find("[data-role='step-hot-table']").each(function()  {
         renderTable($(this));
       });
-    });
-  }
-
-  function formNewAjax($form) {
-    $form
-    .on("ajax:beforeSend", function () {
-      $(".nested_step_checklists ul").each(function () {
-        reorderCheckboxData(this);
-      });
-    })
-    .on("ajax:success", function(e, data) {
-      $(this).after(data.html);
-      var $new_step = $(this).next();
-      $(this).remove();
-
-      initCallBacks();
-      initHandsOnTable($new_step);
-      expandStep($new_step);
-      toggleButtons(true);
-      SmartAnnotation.preventPropagation('.atwho-user-popover');
-
-      //Rerender tables
-      $new_step.find("div.step-result-hot-table").each(function()  {
-        $(this).handsontable("render");
-      });
-      animateSpinner(null, false);
-      setupAssetsLoading();
-    })
-    .on("ajax:error", function(e, xhr, status, error) {
-      $(this).after(xhr.responseJSON.html);
-      var $form = $(this).next();
-      $(this).remove();
-
-      $errInput = $form.find(".form-group.has-error").first().find("input");
-      renderFormError(e, $errInput);
-
-      formCallback($form);
-      formNewAjax($form);
-      applyCancelOnNew();
-      animateSpinner(null, false);
-
-      TinyMCE.destroyAll();
-      SmartAnnotation.preventPropagation('.atwho-user-popover');
     });
   }
 
@@ -540,6 +497,150 @@
     });
   }
 
+  global.DroppedFiles = (function() {
+    var droppedFiles = [];
+    var filesValid = true;
+    var totalSize = 0;
+
+    function init(files, action) {
+      for(var i = 0; i < files.length; i++) {
+        droppedFiles.push(files[i]);
+      }
+      if(action === 'select') {
+        listItems();
+      }
+    }
+
+    function filesStatus() {
+      return filesValid;
+    }
+
+    function listItems() {
+      $('.panel-step-attachment-new').remove();
+      dragNdropAssetsOff();
+      for(var i = 0; i < droppedFiles.length; i++) {
+          $('#new-step-assets')
+            .append(_uploadedAseetPreview(droppedFiles[i], i))
+            .promise()
+            .done(function() {
+              _removeItemHandler(i);
+            });
+      }
+      _validateTotalSize();
+      dragNdropAssetsInit();
+    }
+
+    function appendFilesToForm(ev) {
+      var regex = /step\[assets_attributes\]\[[0-9]*\]\[id\]/;
+      var prevEls = $('input').filter(function() {
+        return this.name.match(regex);
+      });
+
+      var fd = new FormData($(ev.target).closest('form').get(0));
+      for(var i = 0; i < droppedFiles.length; i++) {
+        var index = i + prevEls.length;
+        var name = 'step[assets_attributes][' + index + '][file]';
+        fd.append(name, droppedFiles[i]);
+      }
+      droppedFiles = [];
+      filesValid = true;
+      totalSize = 0;
+      dragNdropAssetsOff();
+      return fd;
+    }
+
+    function _validateFilesSize(file) {
+      if((file.size/1048576) > <%= Constants::FILE_MAX_SIZE_MB %> && filesValid ) {
+        return "<p><%= I18n.t 'general.file.size_exceeded', file_size: Constants::FILE_MAX_SIZE_MB %></p>";
+      }
+      totalSize += parseInt(file.size/1048576);
+      return '';
+    }
+
+    function _validateTotalSize() {
+      if(totalSize > <%= Constants::FILE_MAX_SIZE_MB %>) {
+        filesValid = false;
+        $.each($('.panel-step-attachment-new'), function() {
+          $(this)
+            .find('.panel-body')
+            .append("<p class='dnd-error'><%= I18n.t('general.file.total_size', size: Constants::FILE_MAX_SIZE_MB) %></p>");
+        });
+      } else {
+        $('.dnd-error').remove();
+        filesValid = true;
+      }
+    }
+
+    function _uploadedAseetPreview(asset, i) {
+      var html = '<div class="panel panel-default panel-step-attachment-new">';
+      html += '<div class="panel-heading">';
+      html += '<span class="glyphicon glyphicon-file"></span>';
+      html += 'File';
+      html += '<div class="pull-right">';
+      html += '<a data-item-id="' + i + '" href="#">';
+      html += '<span class="glyphicon glyphicon-remove"></span></a></div></div>';
+      html += '<div class="panel-body">';
+      html += '<label class="control-label">File:</label> ';
+      html += truncateLongString(asset.name,
+                                 <%= Constants::FILENAME_TRUNCATION_LENGTH %>);
+      html += _validateFilesSize(asset);
+      html += '</div></div>';
+      return html;
+    }
+
+    function _removeItemHandler(id) {
+      $('[data-item-id="' + id +'"]').off('click').on('click', function(e) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        e.stopPropagation();
+        var $el = $(this);
+        var index = $el.data('item-id');
+        totalSize -= parseInt(droppedFiles[index]/1048576);
+        droppedFiles.splice(parseInt(index), 1);
+        $el.closest('.panel-step-attachment-new').remove();
+        _validateTotalSize();
+      });
+    }
+
+    return Object.freeze({
+      init: init,
+      appendFilesToForm: appendFilesToForm,
+      listItems: listItems,
+      filesStatus: filesStatus
+    })
+  })();
+
+  global.dragNdropAssetsInit = function() {
+    var in_window = true;
+
+    $('body').on('drag dragstart dragend dragover dragenter dragleave drop',
+             function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }).on('dragover', function() {
+      in_window = true;
+      $('.is-dragover').show();
+    }).on('dragleave', function() {
+      in_window = false;
+      setTimeout(function() {
+        if(!in_window) {
+          $('.is-dragover').hide();
+        }
+      }, 5000);
+
+    }).on('drop', function(e) {
+      $('.is-dragover').hide();
+      DroppedFiles.init(e.originalEvent.dataTransfer.files);
+      DroppedFiles.listItems();
+    });
+
+  }
+
+  global.dragNdropAssetsOff = function() {
+    $('body').off('drag dragstart dragend dragover dragenter dragleave drop');
+    $('.is-dragover').hide();
+  }
+
   // New step AJAX
   function newStepHandler() {
     $("[data-action='new-step']").off().on('click', function(event) {
@@ -562,7 +663,6 @@
               scrollTop: $(document).height() - $(window).height()
             });
             formCallback($form);
-            formNewAjax($form);
             applyCancelOnNew();
             toggleButtons(false);
             initializeCheckboxSorting();
@@ -588,13 +688,16 @@
   // experience is improved
   global.processStep = function processStep(ev, editMode) {
     ev.stopPropagation();
+    ev.preventDefault();
+    ev.stopImmediatePropagation();
 
     var $form = $(ev.target.form);
     $form.clearFormErrors();
     $form.removeBlankFileForms();
 
-    var $fileInputs = $form.find("input[type=file]");
-    var filesValid = filesValidator(ev, $fileInputs, FileTypeEnum.FILE);
+    // var $fileInputs = $form.find("input[type=file]");
+    // var filesValid = filesValidator(ev, $fileInputs, FileTypeEnum.FILE, true);
+    // debugger;
     var $checklists = $form.find(".nested_step_checklists");
     var checklistsValid = checklistsValidator(ev, $checklists, editMode);
     var $nameInput = $form.find("#step_name");
@@ -604,9 +707,76 @@
     var descriptionValid = textValidator(ev, $descrTextarea, 0,
       <%= Constants::TEXT_MAX_LENGTH %>);
 
-    if (filesValid && checklistsValid && nameValid && descriptionValid) {
-      // Local file uploading
+    if (DroppedFiles.filesStatus() &&
+        checklistsValid &&
+        nameValid &&
+        descriptionValid) {
+
+      $form.find("[data-role='editable-table']").each(function() {
+        var hot = $(this).find(".hot").handsontable('getInstance');
+        var contents = $(this).find('.hot-contents');
+        var data = JSON.stringify({data: hot.getData()});
+        contents.attr("value", data);
+      });
+
+      setTimeout(function() {
+        initStepsComments();
+        animateSpinner(null, false);
+        SmartAnnotation.preventPropagation('.atwho-user-popover');
+      }, 1000);
+
+      animateSpinner(null, true);
+      var data = DroppedFiles.appendFilesToForm(ev);
+      data.append('step[description]', TinyMCE.getContent());
+      $.ajax({
+        url: $form.attr('action'),
+        method: 'POST',
+        data: data,
+        contentType: false,
+        processData: false,
+        beforeSend: function() {
+          $(".nested_step_checklists ul").each(function () {
+            reorderCheckboxData(this);
+          });
+        },
+        success: function(data) {
+          $($form.closest('.well')).after(data.html);
+          var $new_step = $($form.closest('.well')).next();
+          $($form.closest('.well')).remove();
+
+          initCallBacks();
+          initHandsOnTable($new_step);
+          expandStep($new_step);
+          toggleButtons(true);
+          SmartAnnotation.preventPropagation('.atwho-user-popover');
+
+          //Rerender tables
+          $new_step.find("div.step-result-hot-table").each(function()  {
+            $(this).handsontable("render");
+          });
+          animateSpinner(null, false);
+          setupAssetsLoading();
+        },
+        error: function(e) {
+          $form.after(xhr.responseJSON.html);
+          var $new_form = $form.next();
+          $form.remove();
+
+          $errInput = $new_form.find(".form-group.has-error")
+                               .first()
+                               .find("input");
+          renderFormError(e, $errInput);
+
+          formCallback($form);
+          applyCancelOnNew();
+          animateSpinner(null, false);
+
+          TinyMCE.destroyAll();
+          SmartAnnotation.preventPropagation('.atwho-user-popover');
+        }
+      });
       newStepHandler();
+
     }
   }
 
