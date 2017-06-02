@@ -3,6 +3,7 @@
 <% if current_team %>
   <%= render partial: "repositories/breadcrumbs.html.erb",
              locals: { teams: @teams, current_team: current_team, type: @type } %>
+  <%= render partial: "repositories/index/create_new_modal.html.erb" %>
 
   <% active_repo = @repositories.find_by_id(params[:repository]) %>
   <% active_repo = @repositories.first if !active_repo %>
@@ -19,15 +20,13 @@
     <% end %>
     <!-- Add new repository tab -->
     <li role="presentation"
-      <% unless can_create_new_repository(current_team) &&
-                @repositories.count < Constants::REPOSITORIES_LIMIT %>
+      <% unless can_create_new_repository(current_team) %>
         class="disabled"
       <% end %>>
       <a href='#'
          data-url="<%= create_new_modal_team_repositories_path %>"
-        <% if can_create_new_repository(current_team) &&
-              @repositories.count < Constants::REPOSITORIES_LIMIT %>
-          data-action='create-new-repository'
+        <% if can_create_new_repository(current_team) %>
+          id='create-new-repository'
         <% end %>>
         <span class="glyphicon glyphicon-plus"></span>
         <span class="hidden-xs">&nbsp;<%= t('repositories.index.add_new_repository_tab') %></span>
@@ -88,4 +87,3 @@
 <% end %>
 
 <%= javascript_include_tag "repositories/index", "data-turbolinks-track" => true %>
-<%= render partial: "repositories/index/create_new_modal.html.erb" %>

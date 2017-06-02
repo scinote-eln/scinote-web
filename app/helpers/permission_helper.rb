@@ -1054,7 +1054,7 @@ module PermissionHelper
   end
 
   def can_create_new_repository(team)
-    is_admin_of_team(team)
+    is_admin_of_team(team) && team.repositories.count < Constants::REPOSITORIES_LIMIT
   end
 
   def can_view_repositories(team)

@@ -11,7 +11,7 @@ function init() {
 }
 
 function initCreateNewModal() {
-  var link = $("[data-action='create-new-repository']");
+  var link = $("#create-new-repository");
   var modal = $("#create-new-modal");
   var submitBtn = modal.find(".modal-footer [data-action='submit']");
 
@@ -25,13 +25,13 @@ function initCreateNewModal() {
         modalBody.html(data.html);
 
         modalBody.find("form")
-        .on("ajax:success", function(ev2, data2, status2) {
+        .on("ajax:success", function(ev, data, status) {
           // Redirect to index page
-          $(location).attr("href", data2.url);
+          $(location).attr("href", data.url);
         })
-        .on("ajax:error", function(ev2, data2, status2) {
+        .on("ajax:error", function(ev, data, status) {
           // Display errors if needed
-          $(this).renderFormErrors("repository", data2.responseJSON);
+          $(this).renderFormErrors("repository", data.responseJSON);
         });
 
         modal.modal("show");
