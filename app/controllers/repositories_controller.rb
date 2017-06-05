@@ -26,7 +26,7 @@ class RepositoriesController < ApplicationController
     flash[:success] = t('repositories.index.delete_flash',
                         name: @repository.name)
     @repository.destroy
-    redirect_to :back
+    redirect_to team_repositories_path
   end
 
   def rename_modal
@@ -53,7 +53,7 @@ class RepositoriesController < ApplicationController
           flash[:success] = t('repositories.index.rename_flash',
                               old_name: old_name, new_name: @repository.name)
           render json: {
-            url: team_repositories_path(@team, repository: @repository)
+            url: team_repositories_path(repository: @repository)
           }, status: :ok
         else
           render json: @repository.errors, status: :unprocessable_entity
