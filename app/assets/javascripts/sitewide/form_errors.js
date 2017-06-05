@@ -60,6 +60,7 @@ var renderFormError = function(ev, input, errMsgs, clearErr, errAttributes) {
     // Don't submit form
     ev.preventDefault();
     ev.stopPropagation();
+    ev.stopImmediatePropagation();
   }
 };
 
@@ -67,11 +68,11 @@ var renderFormError = function(ev, input, errMsgs, clearErr, errAttributes) {
  * Render errors specified in JSON format for many form elements.
  */
 $.fn.renderFormErrors = function(modelName, errors, clear, ev) {
-  clear = ((typeof clear) === 'undefined') ? true : clear;
-  if (clear || _.isUndefined(clear)) {
+  clear = _.isUndefined(clear) ? true : clear;
+  if (clear) {
     this.clearFormErrors();
   }
-  var form = $(this);
+  var $form = $(this);
   $.each(errors, function(field, messages) {
     // Special exception for file uploads in steps and results
     if (field === 'assets.file') {
@@ -80,7 +81,7 @@ $.fn.renderFormErrors = function(modelName, errors, clear, ev) {
       field = 'asset_attribute';
     }
     var types = 'input, file, select, textarea';
-    var $input = $(_.filter(form.find(types), function(el) {
+    var $input = $(_.filter($form.find(types), function(el) {
       var name = $(el).attr('name');
       if (name) {
         return name.match(new RegExp(modelName + '\\[' + field + '\\(?'));

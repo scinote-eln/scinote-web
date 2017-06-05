@@ -123,7 +123,7 @@ Rails.application.routes.draw do
         as: 'file_expired'
 
     resources :teams do
-      resources :repositories, only: [:index, :destroy, :update] do
+      resources :repositories, only: %i(index destroy update) do
         get 'destroy_modal', to: 'repositories#destroy_modal',
             defaults: { format: 'json' }
         get 'rename_modal', to: 'repositories#rename_modal',
