@@ -1061,7 +1061,7 @@ module PermissionHelper
     is_normal_user_or_admin_of_team(repository.team)
   end
 
-  def can_edit_repository(repository)
+  def can_edit_and_destroy_repository(repository)
     is_admin_of_team(repository.team)
   end
 end

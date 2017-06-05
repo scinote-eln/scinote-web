@@ -75,7 +75,7 @@ class RepositoriesController < ApplicationController
   end
 
   def check_edit_and_destroy_permissions
-    render_403 unless can_edit_repository(@repository)
+    render_403 unless can_edit_and_destroy_repository(@repository)
   end
 
   def repository_params

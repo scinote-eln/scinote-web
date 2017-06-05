@@ -33,11 +33,11 @@
                    data-toggle="dropdown"
                    aria-haspopup="true"
                    aria-expanded="true"
-                   <%= "disabled='disabled'" if !can_edit_repository repo %>>
+                   <%= "disabled='disabled'" if !can_edit_and_destroy_repository repo %>>
                 <span class="glyphicon glyphicon-cog"></span>
                 <span class="caret"></span>
               </div>
-              <% if can_edit_repository repo %>
+              <% if can_edit_and_destroy_repository repo %>
                 <ul class="dropdown-menu pull-right">
                   <li class="dropdown-header">
                     <%= t("repositories.index.options_dropdown.header") %>
