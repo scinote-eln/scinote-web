@@ -1,9 +1,6 @@
 <% provide(:head_title, t("protocols.edit.head_title")) %>
 
-<div class="is-dragover">
-  <span><%=t 'assets.drag_n_drop.drop_label' %></span>
-</div>
-
+<%= render partial: 'shared/drag_n_drop_overlay' %>
 <%= render partial: "protocols/breadcrumbs.html.erb",
             locals: { teams: @teams,
                current_team: @protocol.team,

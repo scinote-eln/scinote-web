@@ -214,23 +214,6 @@
         $(e.target).find("input[type='file']").val("");
       }
     });
-
-    // Add hidden fields for tables
-    // $form.submit(function(){
-    //   $(this).find("[data-role='editable-table']").each(function() {
-    //     var hot = $(this).find(".hot").handsontable('getInstance');
-    //     var contents = $(this).find('.hot-contents');
-    //     var data = JSON.stringify({data: hot.getData()});
-    //     contents.attr("value", data);
-    //   });
-    //
-    //   setTimeout(function() {
-    //     initStepsComments();
-    //     animateSpinner(null, false);
-    //     SmartAnnotation.preventPropagation('.atwho-user-popover');
-    //   }, 1000);
-    //   return true;
-    // });
   }
 
   // Init ajax success/error for edit form
