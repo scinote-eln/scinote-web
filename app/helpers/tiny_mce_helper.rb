@@ -18,6 +18,7 @@ module TinyMceHelper
   end
 
   def generate_image_tag_from_token(text)
+    return nil if text.nil?
     regex = /\[~tiny_mce_id:([0-9a-zA-Z]+)\]/
     text.gsub(regex) do |el|
       match = el.match(regex)
