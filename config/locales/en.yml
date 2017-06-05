@@ -1564,7 +1564,11 @@ en:
     head_title:
       edit: "sciNote | %{file_name} | Edit"
       view: "sciNote | %{file_name} | View"
-
+    drag_n_drop:
+      label_html: 'Drag &amp; drop files here or '
+      browse_label: 'Browse to add'
+      drop_label: 'Drop to add to Step'
+      file_label: 'File:'
   atwho:
     no_results: "No results found"
     users:
