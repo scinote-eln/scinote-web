@@ -1,8 +1,8 @@
 class RepositoriesController < ApplicationController
   before_action :load_vars
   before_action :check_view_all_permissions, only: :index
-  before_action :check_edit_permissions, only: %(destroy destroy_modal
-                                                 rename_modal update)
+  before_action :check_edit_and_destroy_permissions, only:
+    %(destroy destroy_modal rename_modal update)
 
   def index
     render('repositories/index')
@@ -74,7 +74,7 @@ class RepositoriesController < ApplicationController
     render_403 unless can_view_team_repositories(@team)
   end
 
-  def check_edit_permissions
+  def check_edit_and_destroy_permissions
     render_403 unless can_edit_repository(@repository)
   end
 
