@@ -2,7 +2,7 @@
 <% if order.blank? and @order.present? then order = @order end %>
 <% timestamp = Time.current + 1.year - 1.days %>
 <% samples_json = my_module.samples_json_hot(order) %>
-<div class="report-element report-module-samples-element" data-sort-hot="3" data-ts="<%= timestamp.to_i %>" data-type="my_module_samples" data-id="<%= my_module.id %>" data-order="<%= order == :asc ? "asc" : "desc" %>" data-name="<%=t "projects.reports.elements.module_samples.sidebar_name" %>" data-icon-class="glyphicon-tint">
+<div class="report-element report-module-samples-element" data-sort-hot="3" data-ts="<%= timestamp.to_i %>" data-type="my_module_samples" data-id='{ "my_module_id": <%= my_module.id %> }' data-scroll-id="<%= my_module.id %>" data-order="<%= order == :asc ? "asc" : "desc" %>" data-name="<%=t "projects.reports.elements.module_samples.sidebar_name" %>" data-icon-class="glyphicon-tint">
   <div class="report-element-header">
     <div class="row">
       <div class="pull-left samples-icon">

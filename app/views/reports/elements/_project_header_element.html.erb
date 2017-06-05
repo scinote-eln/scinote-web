@@ -1,6 +1,6 @@
 <% if project.blank? and @project.present? then project = @project end %>
 <% name = t("projects.reports.elements.project_header.title", project: project.name) %>
-<div class="report-element report-project-header-element" data-ts="ignore" data-type="project_header" data-id="<%= project.id %>" data-name="<%= name %>" data-icon-class="glyphicon-header">
+<div class="report-element report-project-header-element" data-ts="ignore" data-type="project_header" data-id='{ "project_id": <%= project.id %> }' data-scroll-id="<%= project.id %>" data-name="<%= name %>" data-icon-class="glyphicon-header">
   <div class="report-element-header">
     <div class="row">
       <div class="pull-left user-time">

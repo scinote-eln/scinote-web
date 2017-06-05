@@ -108,10 +108,11 @@ module ReportExtends
   # ADD REPORT ELEMENT TYPE WHICH YOU WANT TO PASS 'ORDER' LOCAL IN THE PARTIAL
   SORTED_ELEMENTS = %w(my_module_activity
                        my_module_samples
+                       my_module_repository
                        step_comments
                        result_comments)
   # sets local :my_module to the listed my_module child elements
-  MY_MODULE_ELEMENTS = %w(my_module my_module_activity my_module_samples)
+  MY_MODULE_ELEMENTS = %w(my_module my_module_activity my_module_samples my_module_repository)
 
   # sets local name to first element of the listed elements
   FIRST_PART_ELEMENTS = %w(result_comments
@@ -124,9 +125,9 @@ module ReportExtends
   # path: app/models/report_element.rb
   # method: set_element_reference
 
-  ElementReference = Struct.new(:checker, :element) do
-    def initialize(checker, element = :element_reference_needed!)
-      super(checker, element)
+  ElementReference = Struct.new(:checker, :elements) do
+    def initialize(checker, elements = :element_reference_needed!)
+      super(checker, elements)
     end
 
     def check(report_element)
@@ -141,22 +142,23 @@ module ReportExtends
           report_element.project_activity? ||
           report_element.project_samples?
       end,
-      'project_id'
+      ['project_id']
     ),
-    ElementReference.new(proc(&:experiment?), 'experiment_id'),
+    ElementReference.new(proc(&:experiment?), ['experiment_id']),
     ElementReference.new(
       proc do |report_element|
         report_element.my_module? ||
           report_element.my_module_activity? ||
           report_element.my_module_samples?
       end,
-      'my_module_id'
+      ['my_module_id']
     ),
+    ElementReference.new(proc(&:my_module_repository?), ['my_module_id', 'repository_id']),
     ElementReference.new(
       proc do |report_element|
         report_element.step? || report_element.step_comments?
       end,
-      'step_id'
+      ['step_id']
     ),
     ElementReference.new(
       proc do |report_element|
@@ -165,11 +167,11 @@ module ReportExtends
           report_element.result_text? ||
           report_element.result_comments?
       end,
-      'result_id'
+      ['result_id']
     ),
-    ElementReference.new(proc(&:step_checklist?), 'checklist_id'),
-    ElementReference.new(proc(&:step_asset?), 'asset_id'),
-    ElementReference.new(proc(&:step_table?), 'table_id')
+    ElementReference.new(proc(&:step_checklist?), ['checklist_id']),
+    ElementReference.new(proc(&:step_asset?), ['asset_id']),
+    ElementReference.new(proc(&:step_table?), ['table_id'])
   ]
 
   # path: app/models/report_element.rb
@@ -182,23 +184,24 @@ module ReportExtends
           report_element.project_activity? ||
           report_element.project_samples?
       end,
-      'project_id'
+      ['project_id']
     ),
-    ElementReference.new(proc(&:experiment?), 'experiment_id'),
+    ElementReference.new(proc(&:experiment?), ['experiment_id']),
     ElementReference.new(
       proc do |report_element|
         report_element.my_module? ||
           report_element.my_module_activity? ||
           report_element.my_module_samples?
       end,
-      'my_module_id'
+      ['my_module_id']
     ),
+    ElementReference.new(proc(&:my_module_repository?), ['my_module_id', 'repository_id']),
     ElementReference.new(
       proc do |report_element|
         report_element.step? ||
           report_element.step_comments?
       end,
-      'step_id'
+      ['step_id']
     ),
     ElementReference.new(
       proc do |report_element|
@@ -207,10 +210,10 @@ module ReportExtends
           report_element.result_text? ||
           report_element.result_comments?
       end,
-      'result_id'
+      ['result_id']
     ),
-    ElementReference.new(proc(&:step_checklist?), 'checklist_id'),
-    ElementReference.new(proc(&:step_asset?), 'asset_id'),
-    ElementReference.new(proc(&:step_table?), 'table_id')
+    ElementReference.new(proc(&:step_checklist?), ['checklist_id']),
+    ElementReference.new(proc(&:step_asset?), ['asset_id']),
+    ElementReference.new(proc(&:step_table?), ['table_id'])
   ]
 end
