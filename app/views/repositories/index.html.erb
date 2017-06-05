@@ -1,13 +1,17 @@
 <% provide(:head_title, t("repositories.index.head_title")) %>
 
 <% if current_team %>
-  <%= render partial: "repositories/breadcrumbs.html.erb", locals: { teams: @teams, current_team: current_team, type: @type } %>
+  <%= render partial: "repositories/breadcrumbs.html.erb",
+             locals: { teams: @teams, current_team: current_team, type: @type } %>
 
   <!-- Nav tabs -->
   <% if @repositories.present? %>
+    <% active_repo = @repositories.find_by_id(params[:repository]) %>
+    <% active_repo = @repositories.first if !active_repo %>
+
     <ul class="nav nav-tabs nav-settings" role="tablist" id="tabs">
-      <% @repositories.each.with_index do |repo, i| %>
-        <li role="presentation" class="<%= 'active' if i == 0 %>">
+      <% @repositories.each do |repo| %>
+        <li role="presentation" class="<%= 'active' if repo == active_repo %>">
           <a class="repository-nav-tab"
              href="#custom_repo_<%= repo.id %>"
              data-toggle="tab"
@@ -18,9 +22,44 @@
     </ul>
     <!-- Tab panes -->
     <div class="tab-content">
-      <% @repositories.each.with_index do |repo, i| %>
-        <div class="tab-pane tab-pane-settings <%= 'active' if i == 0 %>" id="custom_repo_<%= repo.id %>">
+      <% @repositories.each do |repo| %>
+        <div class="tab-pane tab-pane-settings <%= 'active' if repo == active_repo %>" id="custom_repo_<%= repo.id %>">
           <!-- Tab Content -->
+
+          <div id="repository-toolbar">
+            <div class="dropdown text-right">
+              <div class="btn btn-default btn-xs"
+                   type="button"
+                   data-toggle="dropdown"
+                   aria-haspopup="true"
+                   aria-expanded="true"
+                   <%= "disabled='disabled'" if !can_edit_and_destroy_repository repo %>>
+                <span class="glyphicon glyphicon-cog"></span>
+                <span class="caret"></span>
+              </div>
+              <% if can_edit_and_destroy_repository repo %>
+                <ul class="dropdown-menu pull-right">
+                  <li class="dropdown-header">
+                    <%= t("repositories.index.options_dropdown.header") %>
+                  </li>
+                  <li>
+                    <%= link_to t('repositories.index.options_dropdown.rename'),
+                                team_repository_rename_modal_path(repository_id: repo),
+                                class: "rename-repo-option",
+                                remote: true %>
+                  </li>
+                  <li role="separator" class="divider"></li>
+                  <li>
+                    <%= link_to t('repositories.index.modal_delete.delete'),
+                                team_repository_destroy_modal_path(repository_id: repo),
+                                class: "delete-repo-option",
+                                remote: true %>
+                  </li>
+                </ul>
+              <% end %>
+            </div>
+          </div>
+
         </div>
       <% end %>
     </div>
@@ -35,3 +74,5 @@
     <p><%=t 'repositories.index.no_teams.text' %></p>
   </div>
 <% end %>
+
+<%= javascript_include_tag "repositories/index", "data-turbolinks-track" => true %>

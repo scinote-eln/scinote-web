@@ -1,0 +1,33 @@
+<div class="modal fade" id="delete-repo-modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title"><%= t("repositories.index.modal_delete.title_html", name: @repository.name) %></h4>
+      </div>
+      <div class="modal-body">
+        <p><%= t("repositories.index.modal_delete.message_html", name: @repository.name) %></p>
+        <div class="alert alert-danger" role="alert">
+          <span class="glyphicon glyphicon-exclamation-sign"></span>
+          &nbsp;
+          <%= t("repositories.index.modal_delete.alert_heading") %>
+          <ul>
+            <li><%= t("repositories.index.modal_delete.alert_line_1") %></li>
+            <li><%= t("repositories.index.modal_delete.alert_line_2") %></li>
+          </ul>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <%= link_to t('repositories.index.modal_delete.delete'),
+                    team_repository_path(id: @repository),
+                    id: "confirm-repo-delete",
+                    method: :delete,
+                    type: 'button',
+                    class: 'btn btn-primary' %>
+        <button type="button" class="btn btn-default" data-dismiss="modal"><%= t("general.cancel")%></button>
+      </div>
+    </div>
+  </div>
+</div>

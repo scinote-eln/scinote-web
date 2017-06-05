@@ -153,9 +153,27 @@ en:
       head_title: "Repositories"
       title: "Repositories"
       no_repositories: "No repositories"
+      delete_flash: "\"%{name}\" repository was successfully deleted!"
+      rename_flash: "\"%{old_name}\" repository was successfully renamed to \"%{new_name}\"!"
       no_teams:
         title: "Your dashboard is empty!"
         text: "It seems you're not a member of any team. See team management to sort it out."
+      options_dropdown:
+        header: "Edit repository"
+        rename: "Rename"
+        delete: "Delete"
+      modal_delete:
+        title_html: "Delete repository <em>%{name}</em>"
+        message_html: "Are you sure you want to delete repository <em>%{name}</em>? This action is irreversible."
+        alert_heading: "Deleting repository has following consequences:"
+        alert_line_1: "all data inside the repository will be lost;"
+        alert_line_2: "all references to repository items will be rendered as invalid."
+        delete: "Delete repository"
+      modal_rename:
+        title_html: "Rename repository <em>%{name}</em>"
+        name: "New repository name"
+        name_placeholder: "My repository"
+        rename: "Rename repository"
     nav:
       breadcrumbs:
         repositories: "Repositories"
@@ -895,7 +913,7 @@ en:
     modal_delete_custom_field:
       title: "Delete a column"
       message: "Are you sure you wish to permanently delete selected column %{cf}? This action is irreversible."
-      alert_heading: "Deleting a column has following consequences:"
+      alert_heading: "Deleting column has following consequences:"
       alert_line_1: "you will lose information in this column for %{nr} samples;"
       alert_line_2: "the column will be deleted for all team members."
       delete: "Delete column"

@@ -123,7 +123,12 @@ Rails.application.routes.draw do
         as: 'file_expired'
 
     resources :teams do
-      resources :repositories, only: [:index]
+      resources :repositories, only: %i(index destroy update) do
+        get 'destroy_modal', to: 'repositories#destroy_modal',
+            defaults: { format: 'json' }
+        get 'rename_modal', to: 'repositories#rename_modal',
+            defaults: { format: 'json' }
+      end
       resources :samples, only: [:new, :create]
       resources :sample_types, except: [:show, :new] do
         get 'sample_type_element', to: 'sample_types#sample_type_element'
