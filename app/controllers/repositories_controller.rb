@@ -13,13 +13,13 @@ class RepositoriesController < ApplicationController
   def create_new_modal
     @new_repository = Repository.new
     respond_to do |format|
-      format.json {
+      format.json do
         render json: {
-          html: render_to_string({
-            partial: "create_new_repository_modal.html.erb"
-          })
+          html: render_to_string(
+            partial: 'create_new_repository_modal.html.erb'
+          )
         }
-      }
+      end
     end
   end
 
@@ -31,17 +31,16 @@ class RepositoriesController < ApplicationController
     @repository.assign_attributes(repository_params)
 
     respond_to do |format|
-      if @repository.save
-        flash[:success] = t("repositories.index.modal_create.success_flash", name: @repository.name)
-        format.json {
+      format.json do
+        if @repository.save
+          flash[:success] = t('repositories.index.modal_create.success_flash',
+                              name: @repository.name)
           render json: { url: team_repositories_path(repository: @repository) },
             status: :ok
-        }
-      else
-        format.json {
+        else
           render json: @repository.errors,
             status: :unprocessable_entity
-        }
+        end
       end
     end
   end
