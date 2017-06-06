@@ -183,9 +183,8 @@ class SampleDatatable < AjaxDatatablesRails::Base
                               (sample_my_modules.my_module_id = #{@my_module.id.to_s} OR
                               sample_my_modules.id IS NULL))")
                        .references(:sample_my_modules)
-      if params[:assigned].present? && params[:assigned] == 'assigned'
-        samples = samples.joins('LEFT OUTER JOIN "my_modules" ON "my_modules"."id" = "sample_my_modules"."my_module_id"')
-                         .where('"my_modules"."nr_of_assigned_samples" > 0')
+      if params[:assigned] == 'assigned'
+        samples = samples.where('"sample_my_modules"."id" > 0')
       end
     elsif @project
       @assigned_samples = @project.assigned_samples
@@ -218,12 +217,13 @@ class SampleDatatable < AjaxDatatablesRails::Base
                           (sample_my_modules.my_module_id IN (#{ids.to_sql}) OR
                           sample_my_modules.id IS NULL))")
                           .references(:sample_my_modules)
-      if params[:assigned].present? && params[:assigned] == 'assigned'
+      if params[:assigned] == 'assigned'
         samples = samples.joins('LEFT OUTER JOIN "my_modules" ON "my_modules"."id" = "sample_my_modules"."my_module_id"')
                          .where('"my_modules"."experiment_id" = ?', @experiment.id)
                          .where('"my_modules"."nr_of_assigned_samples" > 0')
       end
     end
+
     # Make mappings of custom fields, so we have same id for every column
     i = 7
     @cf_mappings = {}
