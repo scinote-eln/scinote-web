@@ -99,6 +99,24 @@ class RepositoriesController < ApplicationController
     end
   end
 
+  # AJAX actions
+  def repository_table_index
+    @repository = Repository.find_by_id(params[:repository_id])
+    if @repository.nil? || !can_view_repository(@repository)
+      render_403
+    else
+      respond_to do |format|
+        format.html
+        format.json do
+          render json: ::RepositoryDatatable.new(view_context,
+                                                 @repository,
+                                                 nil,
+                                                 current_user)
+        end
+      end
+    end
+  end
+
   private
 
   def load_vars

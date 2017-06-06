@@ -58,7 +58,9 @@ class Activity < ActiveRecord::Base
     :assign_sample,
     :unassign_sample,
     :complete_task,
-    :uncomplete_task
+    :uncomplete_task,
+    :assign_repository_record,
+    :unassign_repository_record
   ]
 
   validates :type_of, presence: true

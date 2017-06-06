@@ -5,6 +5,33 @@
 <%= render partial: "shared/sidebar" %>
 <%= render partial: "shared/secondary_navigation" %>
 
+<h3><%= @repository.name %></h3>
+
+<div class="toolbarButtons" style="display:none">
+  <% if can_assign_repository_records(@my_module, @repository) %>
+    <button type="button" class="btn btn-default"
+      data-assign-url="<%= assign_repository_records_my_module_path(@my_module, @repository)%>"
+      id="assignRepositoryRecords" onclick="onClickAssignRecords()" disabled>
+      <span class="glyphicon glyphicon-ok-circle"></span>
+      <span class="hidden-xs-custom"><%= t'repositories.assign_records_to_module' %></span>
+    </button>
+  <% end %>
+  <% if can_unassign_repository_records(@my_module, @repository) %>
+    <button type="button" class="btn btn-default"
+      data-unassign-url="<%= unassign_repository_records_my_module_path(@my_module, @repository)%>"
+      id="unassignRepositoryRecords" onclick="onClickUnassignRecords()" disabled>
+      <span class="glyphicon glyphicon-ban-circle"></span>
+      <span class="hidden-xs-custom"><%= t'repositories.unassign_records_from_module' %></span>
+    </button>
+  <% end %>
+</div>
+
 <div id="content">
-	<%= render partial: "shared/repository" %>
+	<%= render partial: "repositories/repository_table",
+             locals: {
+               repository: @repository,
+               my_module: @my_module,
+               repository_index_link: repository_index_my_module_path(@my_module, @repository, format: :json)
+             }
+  %>
 </div>
