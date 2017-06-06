@@ -209,9 +209,9 @@ function initProtocolPreviewModal() {
           modalTitle.html(data.title);
           modalBody.html(data.html);
           modalFooter.html(data.footer);
-          window.initHandsOnTable(modalBody);
+          initHandsOnTable(modalBody);
           modal.modal("show");
-          window.initHandsOnTable(modalBody);
+          initHandsOnTable(modalBody);
           initPreviewModal();
         },
         error: function (error) {
