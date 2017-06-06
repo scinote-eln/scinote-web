@@ -177,12 +177,12 @@ en:
         name: "New repository name"
         name_placeholder: "My repository"
         rename: "Rename repository"
-    create:
-      title: "Create new repository"
-      name_label: "Repository name"
-      name_placeholder: "My repository"
-      submit: "Create repository"
-      success_flash: "Repository <strong>%{name}</strong> successfully created."
+      modal_create:
+        title: "Create new repository"
+        name_label: "Repository name"
+        name_placeholder: "My repository"
+        submit: "Create repository"
+        success_flash: "Repository <strong>%{name}</strong> successfully created."
 
   comments:
     options_dropdown:

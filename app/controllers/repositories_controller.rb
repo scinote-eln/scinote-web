@@ -3,10 +3,8 @@ class RepositoriesController < ApplicationController
   before_action :check_view_all_permissions, only: :index
   before_action :check_edit_and_destroy_permissions, only:
     %(destroy destroy_modal rename_modal update)
-  before_action :check_create_permissions, only: [
-    :create_new_modal,
-    :create
-  ]
+  before_action :check_create_permissions, only:
+    %(create_new_modal create)
 
   def index
     render('repositories/index')
@@ -34,9 +32,9 @@ class RepositoriesController < ApplicationController
 
     respond_to do |format|
       if @repository.save
-        flash[:success] = t("repositories.create.success_flash", name: @repository.name)
+        flash[:success] = t("repositories.index.modal_create.success_flash", name: @repository.name)
         format.json {
-          render json: { url: team_repositories_path(@team, create_action: true) },
+          render json: { url: team_repositories_path(repository: @repository) },
             status: :ok
         }
       else
