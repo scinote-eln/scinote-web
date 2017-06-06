@@ -202,7 +202,7 @@ class SampleDatatable < AjaxDatatablesRails::Base
                                 sample_my_modules.id IS NULL))")
                          .references(:sample_my_modules)
       end
-      if params[:assigned].present? && params[:assigned] == 'assigned'
+      if params[:assigned] == 'assigned'
         samples = samples.joins('LEFT OUTER JOIN "my_modules" ON "my_modules"."id" = "sample_my_modules"."my_module_id"')
                          .joins('LEFT OUTER JOIN "experiments" ON "experiments"."id" = "my_modules"."experiment_id"')
                          .where('"experiments"."project_id" = ?', @project.id)
