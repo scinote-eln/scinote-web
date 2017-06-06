@@ -16,7 +16,7 @@ class RepositoriesController < ApplicationController
       format.json {
         render json: {
           html: render_to_string({
-            partial: "repositories/index/create_new_modal_body.html.erb"
+            partial: "create_new_repository_modal.html.erb"
           })
         }
       }
