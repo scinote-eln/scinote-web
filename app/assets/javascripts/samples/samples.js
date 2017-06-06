@@ -17,6 +17,12 @@ $("form#form-samples-file")
   $(this).find(".form-group").append("<span class='help-block'>" + data.responseJSON.message + "</span>");
 });
 
+$('.sample-assign-group > .btn').click(function() {
+  $('.btn-group > .btn').removeClass('active btn-primary');
+  $('.btn-group > .btn').addClass('btn-default');
+  $(this).addClass('active btn-primary');
+});
+
 // Fetch samples data and updates the select options fields for
 // sample group and sample type column
 function updateSamplesTypesandGroups() {

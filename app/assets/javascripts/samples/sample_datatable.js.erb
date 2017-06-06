@@ -33,9 +33,12 @@ var loadFirstTime = true;
 var table;
 var originalHeader;
 
+var view_assigned;
+
 function dataTableInit() {
   // Make a copy of original samples table header
   originalHeader = $('#samples thead').children().clone();
+  view_assigned = 'assigned';
   table = $('#samples').DataTable({
     order: [[2, 'desc']],
     dom: "R<'row'<'col-sm-9-custom toolbar'l><'col-sm-3-custom'f>>tpi",
@@ -53,6 +56,9 @@ function dataTableInit() {
     destroy: true,
     ajax: {
       url: $('#samples').data('source'),
+      data: function ( d ) {
+          d.assigned = view_assigned;
+      },
       global: false,
       type: 'POST'
     },
@@ -818,6 +824,15 @@ function onClickAddSample() {
         }
     });
 }
+
+$('#assignedSamples').on('click', function () {
+  view_assigned = 'assigned';
+  table.draw();
+});
+$('#allSamples').on('click', function () {
+  view_assigned = 'all';
+  table.draw();
+});
 
 // Handle enter key
 $(document).off('keypress').keypress(function(event) {
