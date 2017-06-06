@@ -3,9 +3,46 @@ class RepositoriesController < ApplicationController
   before_action :check_view_all_permissions, only: :index
   before_action :check_edit_and_destroy_permissions, only:
     %(destroy destroy_modal rename_modal update)
+  before_action :check_create_permissions, only:
+    %(create_new_modal create)
 
   def index
     render('repositories/index')
+  end
+
+  def create_modal
+    @repository = Repository.new
+    respond_to do |format|
+      format.json do
+        render json: {
+          html: render_to_string(
+            partial: 'create_repository_modal.html.erb'
+          )
+        }
+      end
+    end
+  end
+
+  def create
+    @repository = Repository.new(
+      team: @team,
+      created_by: current_user
+    )
+    @repository.assign_attributes(repository_params)
+
+    respond_to do |format|
+      format.json do
+        if @repository.save
+          flash[:success] = t('repositories.index.modal_create.success_flash',
+                              name: @repository.name)
+          render json: { url: team_repositories_path(repository: @repository) },
+            status: :ok
+        else
+          render json: @repository.errors,
+            status: :unprocessable_entity
+        end
+      end
+    end
   end
 
   def destroy_modal
@@ -72,6 +109,10 @@ class RepositoriesController < ApplicationController
 
   def check_view_all_permissions
     render_403 unless can_view_team_repositories(@team)
+  end
+
+  def check_create_permissions
+    render_403 unless can_create_repository(@team)
   end
 
   def check_edit_and_destroy_permissions

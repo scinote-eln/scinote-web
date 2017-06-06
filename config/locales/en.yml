@@ -149,10 +149,13 @@ en:
         result: "Result comment"
 
   repositories:
+    nav:
+      breadcrumbs:
+        repositories: "Repositories"
     index:
       head_title: "Repositories"
       title: "Repositories"
-      no_repositories: "No repositories"
+      add_new_repository_tab: "Create new repository"
       delete_flash: "\"%{name}\" repository was successfully deleted!"
       rename_flash: "\"%{old_name}\" repository was successfully renamed to \"%{new_name}\"!"
       no_teams:
@@ -174,9 +177,12 @@ en:
         name: "New repository name"
         name_placeholder: "My repository"
         rename: "Rename repository"
-    nav:
-      breadcrumbs:
-        repositories: "Repositories"
+      modal_create:
+        title: "Create new repository"
+        name_label: "Repository name"
+        name_placeholder: "My repository"
+        submit: "Create repository"
+        success_flash: "Repository <strong>%{name}</strong> successfully created."
 
   comments:
     options_dropdown:
