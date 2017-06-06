@@ -10,13 +10,13 @@ class RepositoriesController < ApplicationController
     render('repositories/index')
   end
 
-  def create_new_modal
-    @new_repository = Repository.new
+  def create_modal
+    @repository = Repository.new
     respond_to do |format|
       format.json do
         render json: {
           html: render_to_string(
-            partial: 'create_new_repository_modal.html.erb'
+            partial: 'create_repository_modal.html.erb'
           )
         }
       end
@@ -112,7 +112,7 @@ class RepositoriesController < ApplicationController
   end
 
   def check_create_permissions
-    render_403 unless can_create_new_repository(@team)
+    render_403 unless can_create_repository(@team)
   end
 
   def check_edit_and_destroy_permissions

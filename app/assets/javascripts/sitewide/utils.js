@@ -280,7 +280,7 @@ $.fn.initializeModal = function(modalID) {
         backdrop: true,
         keyboard: false
       });
-
+      $(".modal-body").find("input[type='text']").focus();
       modalResponse($(modalID));
 
       // Remove modal when it gets closed

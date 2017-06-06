@@ -125,7 +125,7 @@ Rails.application.routes.draw do
     resources :teams do
       resources :repositories, only: %i(index create destroy update) do
         collection do
-          get 'create_new_modal', to: 'repositories#create_new_modal',
+          get 'create_modal', to: 'repositories#create_modal',
               defaults: { format: 'json' }
         end
         get 'destroy_modal', to: 'repositories#destroy_modal',

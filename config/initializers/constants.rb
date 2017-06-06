@@ -51,7 +51,7 @@ class Constants
   # Maximum nr. of search results for atwho (smart annotations)
   ATWHO_SEARCH_LIMIT = 5
 
-  # Maximum number of repositories allowed
+  # Maximum number of repositories per team allowed
   REPOSITORIES_LIMIT = 5
 
   #=============================================================================

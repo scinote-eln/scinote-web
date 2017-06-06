@@ -1,15 +1,16 @@
-<div class="modal" id="create-new-repo-modal" tabindex="-1" role="dialog" aria-labelledby="create-new-modal-label">
-  <%= bootstrap_form_for [@team, @new_repository], remote: :true do |f| %>
+<div class="modal" id="create-repo-modal" tabindex="-1" role="dialog" aria-labelledby="create-repo-modal-label">
+  <%= bootstrap_form_for [@team, @repository], remote: :true do |f| %>
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <h4 class="modal-title" id="create-new-modal-label">
+          <h4 class="modal-title" id="create-repo-modal-label">
             <%= t("repositories.index.modal_create.title") %>
           </h4>
         </div>
         <div class="modal-body">
           <%= f.text_field :name,
+                           autofocus: true,
                            label: t("repositories.index.modal_create.name_label"),
                            placeholder: t("repositories.index.modal_create.name_placeholder") %>
         </div>

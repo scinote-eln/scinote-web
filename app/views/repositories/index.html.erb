@@ -19,13 +19,13 @@
     <% end %>
     <!-- Add new repository tab -->
     <li role="presentation"
-      <% unless can_create_new_repository(current_team) %>
+      <% unless can_create_repository(current_team) %>
         class="disabled"
       <% end %>>
       <a
-        <% if can_create_new_repository(current_team) %>
-          href="<%= create_new_modal_team_repositories_path %>"
-          class='create-new-repository'
+        <% if can_create_repository(current_team) %>
+          href="<%= create_modal_team_repositories_path %>"
+          class='create-repository'
           data-remote='true'
         <% end %>>
         <span class="glyphicon glyphicon-plus"></span>
