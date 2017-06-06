@@ -1,8 +1,8 @@
 GIT
-  remote: git://github.com/einzige/sneaky-save.git
-  revision: 03866e838f62a4b13e15784974fcc13e14cd9502
+  remote: https://github.com/einzige/sneaky-save
+  revision: e7c77674abe74d598dfd58db7c680dd85936f207
   specs:
-    sneaky-save (0.1.1)
+    sneaky-save (0.1.2)
       activerecord (>= 3.2.0)
 
 GEM

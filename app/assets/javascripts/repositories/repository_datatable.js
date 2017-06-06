@@ -214,6 +214,54 @@ setTimeout(function() {
 // Enables noSearchHidden plugin
 $.fn.dataTable.defaults.noSearchHidden = true;
 
+$('form#form-export').submit(function(e) {
+  var form = this;
+
+  if (currentMode === 'viewMode') {
+    // Remove all hidden fields
+    $('#form-export').find('input[name=row_ids\\[\\]]').remove();
+    $('#form-export').find('input[name=header_ids\\[\\]]').remove();
+
+    // Append samples
+    appendSamplesIdToForm(form);
+
+    // Append visible column information
+    $('table#repository-table thead tr').children('th').each(function(i) {
+      var th = $(this);
+      var val;
+      if ($(th).attr('id') === 'checkbox' || $(th).attr('id') === 'assigned')
+        val = -1
+      else if ($(th).attr('id') === 'row-name')
+        val = -2;
+      else if ($(th).attr('id') === 'added-by')
+        val = -3;
+      else if ($(th).attr('id') === 'added-on')
+        val = -4;
+      else
+        val = th.attr('id');
+
+      if (val)
+        $(form).append(
+            $('<input>')
+            .attr('type', 'hidden')
+            .attr('name', 'header_ids[]')
+            .val(val)
+        );
+    });
+  }
+});
+
+function appendSamplesIdToForm(form) {
+  $.each(rowsSelected, function(index, rowId) {
+    $(form).append(
+      $('<input>')
+      .attr('type', 'hidden')
+      .attr('name', 'row_ids[]')
+      .val(rowId)
+    );
+  });
+}
+
 function initRowSelection() {
   // Handle clicks on checkbox
   $('.dt-body-center .repository-row-selector').change(function(e) {
@@ -642,6 +690,16 @@ function updateButtons() {
       $('#editRepositoryRecord').removeClass('disabled');
       $('#deleteRepositoryRecordsButton').prop('disabled', false);
       $('#deleteRepositoryRecordsButton').removeClass('disabled');
+      $('#exportRepositoriesButton').removeClass('disabled');
+      $('#exportRepositoriesButton').prop('disabled', false);
+      $('#exportRepositoriesButton').on('click', function() {
+        $('#exportRepositoryModal')
+          .modal('show')
+      });
+      $('#export-repositories').on('click', function() {
+        animateSpinner(null, true);
+        $('#form-export').submit();
+      });
       $('#assignRepositoryRecords').removeClass('disabled');
       $('#assignRepositoryRecords').prop('disabled', false);
       $('#unassignRepositoryRecords').removeClass('disabled');
@@ -651,6 +709,10 @@ function updateButtons() {
       $('#editRepositoryRecord').addClass('disabled');
       $('#deleteRepositoryRecordsButton').prop('disabled', true);
       $('#deleteRepositoryRecordsButton').addClass('disabled');
+      $('#exportRepositoriesButton').addClass('disabled');
+      $('#exportRepositoriesButton').prop('disabled', true);
+      $('#exportRepositoriesButton').off('click');
+      $('#export-repositories').off('click');
       $('#assignRepositoryRecords').addClass('disabled');
       $('#assignRepositoryRecords').prop('disabled', true);
       $('#unassignRepositoryRecords').addClass('disabled');
@@ -660,6 +722,16 @@ function updateButtons() {
       $('#editRepositoryRecord').addClass('disabled');
       $('#deleteRepositoryRecordsButton').prop('disabled', false);
       $('#deleteRepositoryRecordsButton').removeClass('disabled');
+      $('#exportRepositoriesButton').removeClass('disabled');
+      $('#exportRepositoriesButton').prop('disabled', false);
+      $('#exportRepositoriesButton').on('click', function() {
+        $('#exportRepositoryModal')
+          .modal('show')
+      });
+      $('#export-repositories').on('click', function() {
+        animateSpinner(null, true);
+        $('#form-export').submit();
+      });
       $('#assignRepositoryRecords').removeClass('disabled');
       $('#assignRepositoryRecords').prop('disabled', false);
       $('#unassignRepositoryRecords').removeClass('disabled');
@@ -674,6 +746,8 @@ function updateButtons() {
     $('#addNewColumn').prop('disabled', true);
     $('#deleteRepositoryRecordsButton').addClass('disabled');
     $('#deleteRepositoryRecordsButton').prop('disabled', true);
+    $('#exportRepositoriesButton').addClass('disabled');
+    $('#exportRepositoriesButton').off('click');
     $('#assignRepositoryRecords').addClass('disabled');
     $('#assignRepositoryRecords').prop('disabled', true);
     $('#unassignRepositoryRecords').addClass('disabled');

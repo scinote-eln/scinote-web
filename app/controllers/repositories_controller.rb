@@ -1,5 +1,5 @@
 class RepositoriesController < ApplicationController
-  before_action :load_vars, except: :repository_table_index
+  before_action :load_vars, except: [:repository_table_index, :export_repository]
   before_action :check_view_all_permissions, only: :index
   before_action :check_edit_and_destroy_permissions, only:
     %(destroy destroy_modal rename_modal update)
@@ -7,6 +7,7 @@ class RepositoriesController < ApplicationController
     %(copy_modal copy)
   before_action :check_create_permissions, only:
     %(create_new_modal create)
+  before_action :generate_zip, only: :export_repository
 
   def index
     render('repositories/index')
@@ -185,6 +186,15 @@ class RepositoriesController < ApplicationController
     end
   end
 
+  def export_repository
+    if params[:row_ids] && params[:header_ids]
+      generate_zip
+    else
+      flash[:alert] = t('zip_export.export_error')
+    end
+    redirect_to :back
+  end
+
   private
 
   def load_vars
@@ -211,5 +221,69 @@ class RepositoriesController < ApplicationController
 
   def repository_params
     params.require(:repository).permit(:name)
+  end
+
+  def generate_zip
+    zip = ZipExport.create(user: current_user)
+    zip.generate_exportable_zip(
+      current_user,
+      to_csv(RepositoryRow.where(id: params[:row_ids]), params[:header_ids]),
+      :repositories
+    )
+  end
+
+  def to_csv(rows, headers)
+    require 'csv'
+
+    # Parse headers (magic numbers should be refactored - see
+    # sample-datatable.js)
+    header_names = []
+    headers.each do |header|
+      if header == '-1'
+        next
+      elsif header == '-2'
+        header_names << I18n.t('repositories.table.row_name')
+      elsif header == '-3'
+        header_names << I18n.t('repositories.table.added_by')
+      elsif header == '-4'
+        header_names << I18n.t('repositories.table.added_on')
+      else
+        rc = RepositoryColumn.find_by_id(header)
+        if rc
+          header_names << rc.name
+        else
+          header_names << nil
+        end
+      end
+    end
+
+    CSV.generate do |csv|
+      csv << header_names
+      rows.each do |row|
+        sample_row = []
+        row_record = RepositoryRow.where(repository_rows: { id: row })
+        headers.each do |header|
+          if header == '-1'
+            next
+          elsif header == '-2'
+            sample_row << row.name
+          elsif header == '-3'
+            sample_row << row.created_by.full_name
+          elsif header == '-4'
+            sample_row << I18n.l(row.created_at, format: :full)
+          else
+            record = row_record.joins(:repository_columns, :repository_cells)
+                               .where(repository_columns: { id: header })
+                               .take
+            if record
+              sample_row << record.repository_cells.take.value.data
+            else
+              sample_row << nil
+            end
+          end
+        end
+        csv << sample_row
+      end
+    end
   end
 end
