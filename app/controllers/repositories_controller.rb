@@ -1,5 +1,5 @@
 class RepositoriesController < ApplicationController
-  before_action :load_vars
+  before_action :load_vars, except: :repository_table_index
   before_action :check_view_all_permissions, only: :index
   before_action :check_edit_and_destroy_permissions, only:
     %(destroy destroy_modal rename_modal update)
