@@ -509,12 +509,12 @@ label {
   }
 }
 
-/** Module repository element */
+// Module repository element
 .report-module-repository-element {
   margin-bottom: 0;
 
   .report-element-header {
-    border-bottom: none;
+    border-bottom: 0;
 
     .repository-name {
       margin-left: 5px;
@@ -522,7 +522,8 @@ label {
   }
 
   &:hover > .report-element-header {
-    .repository-icon,.repository-name {
+    .repository-icon,
+    .repository-name {
       color: $color-theme-primary;
     }
   }

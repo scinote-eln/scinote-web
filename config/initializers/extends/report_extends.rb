@@ -97,11 +97,11 @@ module ReportExtends
     ModuleElement.new([:samples],
                       :samples,
                       false,
-                      [:my_module, :order]),
+                      %i(my_module order)),
     ModuleElement.new([:repository],
                       :repository,
                       false,
-                      [:my_module, :order],
+                      %i(my_module order),
                       nil,
                       true,
                       true)

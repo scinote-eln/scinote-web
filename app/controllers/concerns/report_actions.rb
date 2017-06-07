@@ -73,10 +73,10 @@ module ReportActions
       elements = []
       contents.values.each do |element|
         if contents.has_many
-          elements = params.select{|k| k.starts_with?("module_#{element}")}
-          elements = elements.select{|_,v| v == '1'}.keys
-          elements.map!{|el| el.gsub('module_', '')}.map!{|el| el.split('_')}
-          elements.map!{|el| [el[0].to_sym, el[1].to_i]}
+          elements = params.select { |k| k.starts_with?("module_#{element}") }
+          elements = elements.select { |_,v| v == '1' }.keys
+          elements.map! { |el| el.gsub('module_', '')}.map!{|el| el.split('_') }
+          elements.map! { |el| [el[0].to_sym, el[1].to_i] }
           break unless elements.empty?
         else
           present = in_params?("module_#{element}".to_sym) ||
