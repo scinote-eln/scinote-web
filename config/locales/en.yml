@@ -849,6 +849,7 @@ en:
       options_dropdown:
         header: "Edit repository"
         rename: "Rename"
+        copy: "Copy"
         delete: "Delete"
       modal_delete:
         title_html: "Delete repository <em>%{name}</em>"
