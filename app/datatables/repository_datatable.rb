@@ -21,6 +21,7 @@ class RepositoryDatatable < AjaxDatatablesRails::Base
                   'regex' => false,
                   'caseInsensitive' => true },
     'columns' => [],
+    'assigned' => 'assigned',
     'ColReorder' => [*0..4]
   }
   5.times do
@@ -165,6 +166,7 @@ class RepositoryDatatable < AjaxDatatablesRails::Base
   # number of samples/all samples it's dependant upon sort_record query
   def fetch_records
     records = get_raw_records
+    records = @assigned_rows if @my_module && params[:assigned] == 'assigned'
     records = sort_records(records) if params[:order].present?
     escape_special_chars
     records = filter_records(records) if params[:search].present? &&
