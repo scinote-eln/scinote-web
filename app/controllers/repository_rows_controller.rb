@@ -219,7 +219,7 @@ class RepositoryRowsController < ApplicationController
   end
 
   def check_edit_permissions
-    render_403 unless can_edit_repository_records(@repository)
+    render_403 unless can_edit_repository_record(@record)
   end
 
   def check_destroy_permissions

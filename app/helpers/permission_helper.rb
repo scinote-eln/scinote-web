@@ -1078,20 +1078,20 @@ module PermissionHelper
     is_normal_user_or_admin_of_team(repository.team)
   end
 
-  def can_delete_columns_in_repository(repository)
-    is_normal_user_or_admin_of_team(repository.team)
+  def can_delete_column_in_repository(column)
+    is_normal_user_or_admin_of_team(column.repository.team)
   end
 
-  def can_edit_columns_in_repository(repository)
-    is_normal_user_or_admin_of_team(repository.team)
+  def can_edit_column_in_repository(column)
+    is_normal_user_or_admin_of_team(column.repository.team)
   end
 
   def can_create_repository_records(repository)
     is_normal_user_or_admin_of_team(repository.team)
   end
 
-  def can_edit_repository_records(repository)
-    is_normal_user_or_admin_of_team(repository.team)
+  def can_edit_repository_record(record)
+    is_normal_user_or_admin_of_team(record.repository.team)
   end
 
   def can_delete_repository_records(repository)
@@ -1105,12 +1105,12 @@ module PermissionHelper
   end
 
   def can_assign_repository_records(my_module, repository)
-    can_edit_repository_records(repository) &&
+    can_delete_repository_records(repository) &&
       is_technician_or_higher_of_project(my_module.experiment.project)
   end
 
   def can_unassign_repository_records(my_module, repository)
-    can_edit_repository_records(repository) &&
+    can_delete_repository_records(repository) &&
       is_technician_or_higher_of_project(my_module.experiment.project)
   end
 end

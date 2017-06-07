@@ -25,8 +25,8 @@
         <th id="added-by"><%= t("repositories.table.added_by") %></th>
         <% repository.repository_columns.each do |column| %>
           <th class="repository-column" id="<%= column.id %>"
-            <%= 'data-editable' if can_edit_columns_in_repository(repository) %>
-            <%= 'data-deletable' if can_delete_columns_in_repository(repository) %>
+            <%= 'data-editable' if can_edit_column_in_repository(column) %>
+            <%= 'data-deletable' if can_delete_column_in_repository(column) %>
             <%= "data-edit-url='#{edit_repository_repository_column_path(repository, column)}'" %>
             <%= "data-update-url='#{repository_repository_column_path(repository, column)}'" %>
             <%= "data-destroy-html-url='#{repository_columns_destroy_html_path(repository, column)}'" %>

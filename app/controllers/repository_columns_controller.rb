@@ -113,11 +113,11 @@ class RepositoryColumnsController < ApplicationController
   end
 
   def check_update_permissions
-    render_403 unless can_edit_columns_in_repository(@repository)
+    render_403 unless can_edit_column_in_repository(@repository_column)
   end
 
   def check_destroy_permissions
-    render_403 unless can_delete_columns_in_repository(@repository)
+    render_403 unless can_delete_column_in_repository(@repository_column)
   end
 
   def repository_column_params
