@@ -134,6 +134,8 @@ Rails.application.routes.draw do
             defaults: { format: 'json' }
         get 'copy_modal', to: 'repositories#copy_modal',
             defaults: { format: 'json' }
+        post 'copy', to: 'repositories#copy',
+             defaults: { format: 'json' }
       end
       resources :samples, only: [:new, :create]
       resources :sample_types, except: [:show, :new] do

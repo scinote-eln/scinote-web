@@ -3,6 +3,8 @@ class RepositoriesController < ApplicationController
   before_action :check_view_all_permissions, only: :index
   before_action :check_edit_and_destroy_permissions, only:
     %(destroy destroy_modal rename_modal update)
+  before_action :check_copy_permissions, only:
+    %(copy_modal copy)
   before_action :check_create_permissions, only:
     %(create_new_modal create)
 
@@ -99,6 +101,58 @@ class RepositoriesController < ApplicationController
     end
   end
 
+  def copy_modal
+    @repository = Repository.find(params[:repository_id])
+    @tmp_repository = Repository.new(
+      team: @team,
+      created_by: current_user,
+      name: @repository.name
+    )
+    respond_to do |format|
+      format.json do
+        render json: {
+          html: render_to_string(
+            partial: 'copy_repository_modal.html.erb'
+          )
+        }
+      end
+    end
+  end
+
+  def copy
+    @repository = Repository.find(params[:repository_id])
+    @tmp_repository = Repository.new(
+      team: @team,
+      created_by: current_user
+    )
+    @tmp_repository.assign_attributes(repository_params)
+
+    respond_to do |format|
+      format.json do
+        if !@tmp_repository.valid?
+          render json: @tmp_repository.errors, status: :unprocessable_entity
+        else
+          copied_repository =
+            @repository.copy(current_user, @tmp_repository.name)
+
+          if !copied_repository
+            render json: { 'name': ['Server error'] },
+            status: :unprocessable_entity
+          else
+            flash[:success] = t(
+              'repositories.index.copy_flash',
+              old: @repository.name,
+              new: copied_repository.name
+            )
+            render json: {
+              url: team_repositories_path(repository: copied_repository)
+            }, status: :ok
+          end
+        end
+      end
+    end
+  end
+
   # AJAX actions
   def repository_table_index
     @repository = Repository.find_by_id(params[:repository_id])
@@ -135,6 +189,10 @@ class RepositoriesController < ApplicationController
 
   def check_edit_and_destroy_permissions
     render_403 unless can_edit_and_destroy_repository(@repository)
+  end
+
+  def check_copy_permissions
+    render_403 unless can_copy_repository(@repository)
   end
 
   def repository_params
