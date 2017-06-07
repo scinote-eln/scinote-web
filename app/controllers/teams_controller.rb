@@ -263,7 +263,7 @@ class TeamsController < ApplicationController
 
   def export_samples
     if params[:sample_ids] && params[:header_ids]
-      generate_zip
+      generate_samples_zip
     else
       flash[:alert] = t('zip_export.export_error')
     end
@@ -296,7 +296,7 @@ class TeamsController < ApplicationController
     end
   end
 
-  def generate_zip
+  def generate_samples_zip
     zip = ZipExport.create(user: current_user)
     zip.generate_exportable_zip(
       current_user,
