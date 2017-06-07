@@ -34,9 +34,13 @@ var loadFirstTime = true;
 var table;
 var originalHeader;
 
+// Tells whether to filter only assigned repository records
+var viewAssigned;
+
 function dataTableInit() {
   // Make a copy of original repository table header
   originalHeader = $('#repository-table thead').children().clone();
+  viewAssigned = 'assigned';
   table = $('#repository-table').DataTable({
     order: [[2, 'desc']],
     dom: "R<'row'<'col-sm-9-custom toolbar'l><'col-sm-3-custom'f>>tpi",
@@ -54,6 +58,9 @@ function dataTableInit() {
     destroy: true,
     ajax: {
       url: $('#repository-table').data('source'),
+      data: function(d) {
+        d.assigned = viewAssigned;
+      },
       global: false,
       type: 'POST'
     },
@@ -360,6 +367,27 @@ function onClickAddRecord() {
   // Adjust columns width in table header
   adjustTableHeader();
 }
+
+(function onClickToggleAssignedRecords() {
+  $('.repository-assign-group > .btn').click(function() {
+    $('.btn-group > .btn').removeClass('active btn-primary');
+    $('.btn-group > .btn').addClass('btn-default');
+    $(this).addClass('active btn-primary');
+  });
+
+  $('#assigned-repo-records').on('click', function() {
+    viewAssigned = 'assigned';
+    table.ajax.reload(function() {
+      initRowSelection();
+    }, false);
+  });
+  $('#all-repo-records').on('click', function() {
+    viewAssigned = 'all';
+    table.ajax.reload(function() {
+      initRowSelection();
+    }, false);
+  });
+})();
 
 function onClickAssignRecords() {
   animateSpinner();
