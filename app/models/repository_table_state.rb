@@ -18,6 +18,7 @@ class RepositoryTableState < ActiveRecord::Base
       user: user,
       repository: custom_column.repository
     )
+    return if table_state.empty?
     repository_state = table_state.first['state']
     if column_index
       # delete column
