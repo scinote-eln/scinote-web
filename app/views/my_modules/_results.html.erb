@@ -1,0 +1,5 @@
+<div data-container="new-reports">
+  <% results.reverse_each do |result| %>
+    <%= render partial: 'my_modules/result.html.erb', locals: { result: result } %>
+  <% end %>
+</div>

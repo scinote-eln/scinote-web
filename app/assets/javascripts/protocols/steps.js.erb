@@ -543,7 +543,7 @@
     var descriptionValid = textValidator(ev, $descrTextarea, 0,
       <%= Constants::TEXT_MAX_LENGTH %>);
 
-    if (DragNDrop.filesStatus() &&
+    if (DragNDropSteps.filesStatus() &&
         checklistsValid &&
         nameValid &&
         descriptionValid) {
@@ -561,7 +561,7 @@
       }, 1000);
 
       animateSpinner(null, true);
-      var data = DragNDrop.appendFilesToForm(ev);
+      var data = DragNDropSteps.appendFilesToForm(ev);
       data.append('step[description]', TinyMCE.getContent());
       $.ajax({
         url: $form.attr('action'),

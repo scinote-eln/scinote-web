@@ -26,53 +26,27 @@ class ResultAssetsController < ApplicationController
   end
 
   def create
-    @asset = Asset.new(result_params[:asset_attributes])
-    @asset.created_by = current_user
-    @asset.last_modified_by = current_user
-    @asset.team = current_team
-    @result = Result.new(
-      user: current_user,
-      my_module: @my_module,
-      name: result_params[:name],
-      asset: @asset
-    )
-    @result.last_modified_by = current_user
-
+    obj = create_multiple_results
     respond_to do |format|
-      if (@result.save and @asset.save) then
-        # Post process file here
-        @asset.post_process_file(@my_module.experiment.project.team)
-
-        # Generate activity
-        Activity.create(
-          type_of: :add_result,
-          user: current_user,
-          project: @my_module.experiment.project,
-          experiment: @my_module.experiment,
-          my_module: @my_module,
-          message: t(
-            "activities.add_asset_result",
-            user: current_user.full_name,
-            result: @result.name,
-          )
-        )
-
+      if obj.fetch(:status)
         format.html do
-          flash[:success] = t(
-            "result_assets.create.success_flash",
-            module: @my_module.name)
+          flash[:success] = t('result_assets.create.success_flash',
+                              module: @my_module.name)
           redirect_to results_my_module_path(@my_module)
         end
         format.json do
           render json: {
-            status: 'ok',
             html: render_to_string(
-              partial: 'my_modules/result.html.erb', locals: { result: @result }
+              partial: 'my_modules/results.html.erb',
+                       locals: { results: obj.fetch(:results) }
             )
           }, status: :ok
         end
       else
-        format.json { render json: @result.errors, status: :bad_request }
+        flash[:error] = t('result_assets.error_flash')
+        format.json do
+          render json: {}, status: :bad_request
+        end
       end
     end
   end
@@ -248,5 +222,41 @@ class ResultAssetsController < ApplicationController
         :file
       ]
     )
+  end
+
+  def create_multiple_results
+    success = true
+    results = []
+    params[:results_files].each_with_index do |file, index|
+      asset = Asset.new(file: file.second,
+                        created_by: current_user,
+                        last_modified_by: current_user,
+                        team: current_team)
+      result = Result.new(user: current_user,
+                          my_module: @my_module,
+                          name: params[:results_names][index.to_s],
+                          asset: asset,
+                          last_modified_by: current_user)
+      if result.save && asset.save
+        results << result
+        # Post process file here
+        asset.post_process_file(@my_module.experiment.project.team)
+
+        # Generate activity
+        Activity.create(
+          type_of: :add_result,
+          user: current_user,
+          project: @my_module.experiment.project,
+          experiment: @my_module.experiment,
+          my_module: @my_module,
+          message: t('activities.add_asset_result',
+                     user: current_user.full_name,
+                     result: result.name)
+        )
+      else
+        success = false
+      end
+    end
+    { status: success, results: results }
   end
 end
