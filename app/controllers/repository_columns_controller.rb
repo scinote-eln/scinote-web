@@ -81,7 +81,7 @@ class RepositoryColumnsController < ApplicationController
     respond_to do |format|
       format.json do
         if @repository_column.destroy
-          RepositoryTable.update_state(
+          RepositoryTableState.update_state(
             @del_repository_column,
             params[:repository_column][:column_index],
             current_user

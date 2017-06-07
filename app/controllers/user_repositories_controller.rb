@@ -2,14 +2,14 @@ class UserRepositoriesController < ApplicationController
   before_action :load_vars
 
   def save_table_state
-    repository_table = RepositoryTable.where(user: current_user,
+    table_state = RepositoryTableState.where(user: current_user,
                                              repository: @repository).first
-    if repository_table
-      repository_table.update(state: params[:state])
+    if table_state
+      table_state.update(state: params[:state])
     else
-      RepositoryTable.create(user: current_user,
-                             repository: @repository,
-                             state: params[:state])
+      RepositoryTableState.create(user: current_user,
+                                  repository: @repository,
+                                  state: params[:state])
     end
     respond_to do |format|
       format.json do
@@ -21,13 +21,8 @@ class UserRepositoriesController < ApplicationController
   end
 
   def load_table_state
-    table_state = RepositoryTable.load_state(current_user,
-                                             @repository).first
-    if table_state.nil?
-      RepositoryTable.create_state(current_user, @repository)
-      table_state = RepositoryTable.load_state(current_user,
-                                               @repository).first
-    end
+    table_state = RepositoryTableState.load_state(current_user,
+                                                  @repository).first
     respond_to do |format|
       if table_state
         format.json do

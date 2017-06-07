@@ -322,6 +322,9 @@ function onClickAddRecord() {
 
   saveAction = 'create';
   var tr = document.createElement('tr');
+  if (table.column(1).visible() === false) {
+    table.column(1).visible(true);
+  }
   $('table#repository-table thead tr').children('th').each(function() {
     var th = $(this);
     var td;
@@ -562,34 +565,22 @@ function onClickSave() {
         changeToViewMode();
         updateButtons();
       } else if (e.status === 400) {
-        if (data.init_fields) {
-          var init_fields = data.init_fields;
+        if (data.default_fields) {
+          var defaultFields = data.default_fields;
 
           // Validate record name
-          if (init_fields.name) {
+          if (defaultFields.name) {
             var input = $(selectedRecord).find('input[name = name]');
 
             if (input) {
               input.closest('.form-group').addClass('has-error');
               input.parent().append("<span class='help-block'>" +
-                                    init_fields.name + '<br /></span>');
+                                    defaultFields.name + '<br /></span>');
             }
           }
         }
 
-        // Validate new cells
-        $.each(data.new_repository_cells || [], function(key, val) {
-          $.each(val, function(key, val) {
-            var input = $(selectedRecord).find('input[name=' + key + ']');
-            if (input) {
-              input.closest('.form-group').addClass('has-error');
-              input.parent().append("<span class='help-block'>" +
-                                    val.value[0] + '<br /></span>');
-            }
-          });
-        });
-
-        // Validate existing cells
+        // Validate custom cells
         $.each(data.repository_cells || [], function(key, val) {
           $.each(val, function(key, val) {
             var input = $(selectedRecord).find('input[name=' + key + ']');

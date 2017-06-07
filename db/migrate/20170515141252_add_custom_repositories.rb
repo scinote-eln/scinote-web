@@ -61,7 +61,7 @@ class AddCustomRepositories < ActiveRecord::Migration
                     :users,
                     column: :last_modified_by_id
 
-    create_table :my_modules_repository_rows do |t|
+    create_table :my_module_repository_rows do |t|
       t.integer :repository_row_id, index: true, null: false
       t.integer :my_module_id, null: :false
       t.integer :assigned_by_id, null: false
@@ -70,9 +70,9 @@ class AddCustomRepositories < ActiveRecord::Migration
               name: 'index_my_module_ids_repository_row_ids'
     end
 
-    add_foreign_key :my_modules_repository_rows, :users, column: :assigned_by_id
+    add_foreign_key :my_module_repository_rows, :users, column: :assigned_by_id
 
-    create_table :repository_tables do |t|
+    create_table :repository_table_states do |t|
       t.jsonb :state, null: false
       t.references :user, index: true, null: false
       t.references :repository, index: true, null: false

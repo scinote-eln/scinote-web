@@ -397,7 +397,7 @@ class MyModulesController < ApplicationController
         record.last_modified_by = current_user
         record.save
         records_names << record.name
-        MyModulesRepositoryRow.create!(
+        MyModuleRepositoryRow.create!(
           my_module: @my_module,
           repository_row: record,
           assigned_by: current_user

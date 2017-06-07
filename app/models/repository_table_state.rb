@@ -1,19 +1,24 @@
-class RepositoryTable < ActiveRecord::Base
-  belongs_to :user, inverse_of: :repository_tables
-  belongs_to :repository, inverse_of: :repository_tables
+class RepositoryTableState < ActiveRecord::Base
+  belongs_to :user, inverse_of: :repository_table_states
+  belongs_to :repository, inverse_of: :repository_table_states
 
   validates :user, :repository, presence: true
 
-  scope :load_state, (lambda { |user, repository|
-    where(user: user, repository: repository).pluck(:state)
-  })
+  def self.load_state(user, repository)
+    table_state = where(user: user, repository: repository).pluck(:state)
+    if table_state.blank?
+      RepositoryTableState.create_state(user, repository)
+      table_state = where(user: user, repository: repository).pluck(:state)
+    end
+    table_state
+  end
 
   def self.update_state(custom_column, column_index, user)
-    repository_table = RepositoryTable.where(
+    table_state = RepositoryTableState.where(
       user: user,
       repository: custom_column.repository
     )
-    repository_state = repository_table.first['state']
+    repository_state = table_state.first['state']
     if column_index
       # delete column
       repository_state['columns'].delete(column_index)
@@ -40,7 +45,7 @@ class RepositoryTable < ActiveRecord::Base
         REPOSITORY_TABLE_DEFAULT_STATE['columns'].first
       repository_state['ColReorder'].insert(2, index)
     end
-    repository_table.first.update(state: repository_state)
+    table_state.first.update(state: repository_state)
   end
 
   def self.create_state(user, repository)
@@ -53,8 +58,8 @@ class RepositoryTable < ActiveRecord::Base
                                REPOSITORY_TABLE_DEFAULT_STATE['columns'].first
       repository_state['ColReorder'] << (default_columns_num + index)
     end
-    RepositoryTable.create(user: user,
-                           repository: repository,
-                           state: repository_state)
+    RepositoryTableState.create(user: user,
+                                repository: repository,
+                                state: repository_state)
   end
 end

@@ -18,6 +18,6 @@ class RepositoryColumn < ActiveRecord::Base
   after_create :update_repository_table_state
 
   def update_repository_table_state
-    RepositoryTable.update_state(self, nil, created_by)
+    RepositoryTableState.update_state(self, nil, created_by)
   end
 end

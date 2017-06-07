@@ -11,14 +11,14 @@ class RepositoryRowsController < ApplicationController
   before_action :check_destroy_permissions, only: :delete_records
 
   def create
-    record = RepositoryRow.new(name: record_params[:name],
-                               repository: @repository,
+    record = RepositoryRow.new(repository: @repository,
                                created_by: current_user,
                                last_modified_by: current_user)
     errors = { default_fields: [],
-               custom_cells: [] }
+               repository_cells: [] }
 
     record.transaction do
+      record.name = record_params[:name] unless record_params[:name].blank?
       unless record.save
         errors[:default_fields] = record.errors.messages
         raise ActiveRecord::RecordInvalid
@@ -38,7 +38,7 @@ class RepositoryRowsController < ApplicationController
             }
           )
           unless cell_value.save
-            errors[:custom_cells] << {
+            errors[:repository_cells] << {
               "#{cell.repository_column.id}": cell_value.errors.messages
             }
             raise ActiveRecord::RecordInvalid
@@ -56,7 +56,7 @@ class RepositoryRowsController < ApplicationController
                status: :ok
       end
     end
-  rescue ActiveRecord::RecordInvalid
+  rescue
     respond_to do |format|
       format.json { render json: errors, status: :bad_request }
     end
@@ -87,13 +87,13 @@ class RepositoryRowsController < ApplicationController
   def update
     errors = {
       default_fields: [],
-      custom_cells: []
+      repository_cells: []
     }
 
     @record.transaction do
-      @record.name = record_params[:name]
+      @record.name = record_params[:name].blank? ? nil : record_params[:name]
       unless @record.save
-        errors[:default_fields] = sample.errors.messages
+        errors[:default_fields] = @record.errors.messages
         raise ActiveRecord::RecordInvalid
       end
       if params[:repository_cells]
@@ -105,7 +105,7 @@ class RepositoryRowsController < ApplicationController
             # Cell exists and new value present, so update value
             existing.value.data = value
             unless existing.value.save
-              errors[:custom_cells] << {
+              errors[:repository_cells] << {
                 "#{cell.repository_column_id}": existing.value.errors.messages
               }
               raise ActiveRecord::RecordInvalid
@@ -127,7 +127,7 @@ class RepositoryRowsController < ApplicationController
               }
             )
             unless value.save
-              errors[:custom_cells] << {
+              errors[:repository_cells] << {
                 "#{cell.repository_column_id}": value.errors.messages
               }
               raise ActiveRecord::RecordInvalid
@@ -159,7 +159,7 @@ class RepositoryRowsController < ApplicationController
         status: :ok
       end
     end
-  rescue ActiveRecord::RecordInvalid
+  rescue
     respond_to do |format|
       format.json { render json: errors, status: :bad_request }
     end

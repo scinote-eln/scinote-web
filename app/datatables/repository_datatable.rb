@@ -146,16 +146,8 @@ class RepositoryDatatable < AjaxDatatablesRails::Base
                         :created_by
                       )
                       .where(repository: @repository)
-    if @my_module
-      @assigned_rows = @my_module.repository_rows
 
-      # repository_rows.joins(
-      #   "LEFT OUTER JOIN my_modules_repository_rows ON
-      #   (repository_row.id = my_modules_repository_rows.repository_row_id AND
-      #   (my_modules_repository_rows.my_module_id = #{@my_module.id} OR
-      #                     my_modules_repository_rows.id IS NULL))"
-      # )
-    end
+    @assigned_rows = @my_module.repository_rows if @my_module
 
     # Make mappings of custom columns, so we have same id for every column
     i = 5
@@ -193,11 +185,11 @@ class RepositoryDatatable < AjaxDatatablesRails::Base
           # nulls last on repository_cells association
           direction = sort_null_direction(params[:order].values[0])
           records.joins(
-            "LEFT OUTER JOIN my_modules_repository_rows ON
-            (repository_rows.id = my_modules_repository_rows.repository_row_id
-            AND (my_modules_repository_rows.my_module_id = #{@my_module.id} OR
-                              my_modules_repository_rows.id IS NULL))"
-          ).order("my_modules_repository_rows.id NULLS #{direction}")
+            "LEFT OUTER JOIN my_module_repository_rows ON
+            (repository_rows.id = my_module_repository_rows.repository_row_id
+            AND (my_module_repository_rows.my_module_id = #{@my_module.id} OR
+                              my_module_repository_rows.id IS NULL))"
+          ).order("my_module_repository_rows.id NULLS #{direction}")
         end
       elsif sorting_by_custom_column
         # Check if have to filter records first
@@ -330,14 +322,12 @@ class RepositoryDatatable < AjaxDatatablesRails::Base
                     .split('.')
 
     return model if model == ASSIGNED_SORT_COL
-    col = [model.constantize.table_name, column].join('.')
+    [model.constantize.table_name, column].join('.')
   end
 
   def generate_sortable_displayed_columns
-    sort_order = RepositoryTable.where(user: @user, repository: @repository)
-                                .pluck(:state)
-                                .first['ColReorder']
-
+    sort_order = RepositoryTableState.load_state(@user, @repository)
+                                     .first['ColReorder']
     sort_order.shift
     sort_order.map! { |i| (i.to_i - 1).to_s }
 
