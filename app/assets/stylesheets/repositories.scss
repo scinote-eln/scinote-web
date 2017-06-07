@@ -3,3 +3,12 @@
   max-height: 400px;
   overflow-x: hidden;
 }
+
+.repository-table {
+  margin-top: 20px;
+
+  // Datatables generated name
+  .dataTables_length {
+    display: inline-block;
+  }
+}

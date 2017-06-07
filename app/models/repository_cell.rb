@@ -3,6 +3,7 @@ class RepositoryCell < ActiveRecord::Base
   belongs_to :repository_column
   belongs_to :value, polymorphic: true, dependent: :destroy
 
+  validates :repository_column, presence: true
   validate :repository_column_data_type
   validates :repository_row, uniqueness: { scope: :repository_column }
 

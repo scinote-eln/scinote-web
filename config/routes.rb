@@ -296,6 +296,15 @@ Rails.application.routes.draw do
         get 'repository/:repository_id',
             to: 'my_modules#repository',
             as: :repository
+        post 'repository_index/:repository_id',
+             to: 'my_modules#repository_index',
+             as: :repository_index
+        post 'assign_repository_records/:repository_id',
+             to: 'my_modules#assign_repository_records',
+             as: :assign_repository_records
+        post 'unassign_repository_records/:repository_id',
+             to: 'my_modules#unassign_repository_records',
+             as: :unassign_repository_records
         get 'archive' # Archive view for single module
         get 'complete_my_module'
         post 'toggle_task_state'
@@ -401,6 +410,35 @@ Rails.application.routes.draw do
         post 'import', to: 'protocols#import'
         get 'export', to: 'protocols#export'
       end
+    end
+
+    resources :repositories do
+      post 'repository_index',
+           to: 'repositories#repository_table_index',
+           as: 'table_index',
+           defaults: { format: 'json' }
+      # Save repository table state
+      post 'state_save',
+           to: 'user_repositories#save_table_state',
+           as: 'save_table_state',
+           defaults: { format: 'json' }
+      # Load repository table state
+      post 'state_load',
+           to: 'user_repositories#load_table_state',
+           as: 'load_table_state',
+           defaults: { format: 'json' }
+      # Delete records from repository
+      post 'delete_records',
+           to: 'repository_rows#delete_records',
+           as: 'delete_records',
+           defaults: { format: 'json' }
+      post 'repository_columns/:id/destroy_html',
+           to: 'repository_columns#destroy_html',
+           as: 'columns_destroy_html'
+
+      resources :repository_columns, only: %i(create edit update destroy)
+
+      resources :repository_rows, only: %i(create edit update)
     end
 
     get 'search' => 'search#index'

@@ -1,5 +1,5 @@
 class RepositoriesController < ApplicationController
-  before_action :load_vars
+  before_action :load_vars, except: :repository_table_index
   before_action :check_view_all_permissions, only: :index
   before_action :check_edit_and_destroy_permissions, only:
     %(destroy destroy_modal rename_modal update)
@@ -94,6 +94,24 @@ class RepositoriesController < ApplicationController
           }, status: :ok
         else
           render json: @repository.errors, status: :unprocessable_entity
+        end
+      end
+    end
+  end
+
+  # AJAX actions
+  def repository_table_index
+    @repository = Repository.find_by_id(params[:repository_id])
+    if @repository.nil? || !can_view_repository(@repository)
+      render_403
+    else
+      respond_to do |format|
+        format.html
+        format.json do
+          render json: ::RepositoryDatatable.new(view_context,
+                                                 @repository,
+                                                 nil,
+                                                 current_user)
         end
       end
     end

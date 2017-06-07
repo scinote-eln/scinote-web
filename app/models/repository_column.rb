@@ -14,4 +14,10 @@ class RepositoryColumn < ActiveRecord::Base
   validates :created_by, presence: true
   validates :repository, presence: true
   validates :data_type, presence: true
+
+  after_create :update_repository_table_state
+
+  def update_repository_table_state
+    RepositoryTableState.update_state(self, nil, created_by)
+  end
 end

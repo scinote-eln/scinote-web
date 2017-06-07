@@ -1,0 +1,44 @@
+<div class="repository-table">
+  <table id="repository-table" class="table"
+    data-current-uri="<%= request.original_url %>"
+    data-repository-id="<%= repository.id %>"
+    data-source="<%= repository_index_link %>"
+    data-num-columns="<%= 5 + repository.repository_columns.count %>"
+    data-create-record="<%= repository_repository_rows_path(repository) %>"
+    data-delete-record="<%= repository_delete_records_path(repository) %>"
+    data-max-dropdown-length="<%= Constants::NAME_TRUNCATION_LENGTH_DROPDOWN %>"
+    data-save-text="<%= I18n.t('general.save') %>"
+    data-edit-text="<%= I18n.t('general.edit') %>"
+    data-cancel-text="<%= I18n.t('general.cancel') %>"
+    data-columns-visibility-text="<%= I18n.t('repositories.columns_visibility') %>"
+    data-columns-delete-text="<%= I18n.t('repositories.columns_delete') %>">
+    <thead>
+      <tr>
+        <th id="checkbox"><input name="select_all" value="1" type="checkbox"></th>
+        <% if @my_module %>
+          <th id="assigned"><%= t("repositories.table.assigned") %></th>
+        <% else %>
+          <th id="assigned"></th>
+        <% end %>
+        <th id="row-name"><%= t("repositories.table.row_name") %></th>
+        <th id="added-on"><%= t("repositories.table.added_on") %></th>
+        <th id="added-by"><%= t("repositories.table.added_by") %></th>
+        <% repository.repository_columns.each do |column| %>
+          <th class="repository-column" id="<%= column.id %>"
+            <%= 'data-editable' if can_edit_columns_in_repository(repository) %>
+            <%= 'data-deletable' if can_delete_columns_in_repository(repository) %>
+            <%= "data-edit-url='#{edit_repository_repository_column_path(repository, column)}'" %>
+            <%= "data-update-url='#{repository_repository_column_path(repository, column)}'" %>
+            <%= "data-destroy-html-url='#{repository_columns_destroy_html_path(repository, column)}'" %>
+          >
+            <%= display_tooltip(column.name) %>
+          </th>
+        <% end %>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</div>
+
+<%= stylesheet_link_tag 'datatables' %>
+<%= javascript_include_tag('repositories/repository_datatable') %>
