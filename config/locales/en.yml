@@ -1587,6 +1587,9 @@ en:
     notification_title: 'Your package is ready to be exported!'
     expired_title: 'The required file was expired!'
     expired_description: 'The downloadable file expires in 7 days after its creation.'
+    export_error: 'An error occured.'
+    modal_label: 'Export request received'
+    modal_html: "<p>Your export request is being processed.</p><p>When completed we will <strong>send an email to %{email}</strong> inbox with a link to your exported samples. Note that the link will expire in 7 days.</p>"
   # This section contains general words that can be used in any parts of
   # application.
   tiny_mce:
