@@ -19,8 +19,8 @@ module ReportExtends
   #          collection of elements
   # :singular => true by defaut; change the enum type to singular - needed when
   #              querying partials by name
-  # :has_many => false by default; whether the element can have many manifestations,
-  #              and its id will be appended.
+  # :has_many => false by default; whether the element can have many
+  #              manifestations, and its id will be appended.
 
   ModuleElement = Struct.new(:values,
                              :element,
@@ -29,7 +29,13 @@ module ReportExtends
                              :coll,
                              :singular,
                              :has_many) do
-    def initialize(values, element, children, locals, coll = nil, singular = true, has_many = false)
+    def initialize(values,
+                   element,
+                   children,
+                   locals,
+                   coll = nil,
+                   singular = true,
+                   has_many = false)
       super(values, element, children, locals, coll, singular, has_many)
     end
 
@@ -87,7 +93,7 @@ module ReportExtends
     ModuleElement.new([:activity],
                       :activity,
                       false,
-                      [:my_module, :order]),
+                      %i(my_module order)),
     ModuleElement.new([:samples],
                       :samples,
                       false,
@@ -112,7 +118,10 @@ module ReportExtends
                        step_comments
                        result_comments)
   # sets local :my_module to the listed my_module child elements
-  MY_MODULE_ELEMENTS = %w(my_module my_module_activity my_module_samples my_module_repository)
+  MY_MODULE_ELEMENTS = %w(my_module
+                          my_module_activity
+                          my_module_samples
+                          my_module_repository)
 
   # sets local name to first element of the listed elements
   FIRST_PART_ELEMENTS = %w(result_comments
@@ -153,7 +162,10 @@ module ReportExtends
       end,
       ['my_module_id']
     ),
-    ElementReference.new(proc(&:my_module_repository?), ['my_module_id', 'repository_id']),
+    ElementReference.new(
+      proc(&:my_module_repository?),
+      %w(my_module_id repository_id)
+    ),
     ElementReference.new(
       proc do |report_element|
         report_element.step? || report_element.step_comments?
@@ -195,7 +207,10 @@ module ReportExtends
       end,
       ['my_module_id']
     ),
-    ElementReference.new(proc(&:my_module_repository?), ['my_module_id', 'repository_id']),
+    ElementReference.new(
+      proc(&:my_module_repository?),
+      %w(my_module_id repository_id)
+    ),
     ElementReference.new(
       proc do |report_element|
         report_element.step? ||

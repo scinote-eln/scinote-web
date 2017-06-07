@@ -77,7 +77,7 @@ module ReportActions
           elements = elements.select{|_,v| v == '1'}.keys
           elements.map!{|el| el.gsub('module_', '')}.map!{|el| el.split('_')}
           elements.map!{|el| [el[0].to_sym, el[1].to_i]}
-          break if elements.size > 0
+          break unless elements.empty?
         else
           present = in_params?("module_#{element}".to_sym) ||
                     in_params?(element.to_sym)
@@ -87,14 +87,14 @@ module ReportActions
           end
         end
       end
-      next unless elements.size > 0
+      next if elements.empty?
 
-      elements.each do |element, el_id|
+      elements.each do |_, el_id|
         if contents.children
           contents.collection(my_module, params).each do |report_el|
             res << generate_new_el(false)
             locals = contents.parse_locals([report_el])
-            locals.merge!({ element_id: el_id }) if el_id
+            locals[:element_id] = el_id if el_id
             el = generate_el(
               "reports/elements/my_module_#{contents.element.to_s.singularize}"\
               "_element.html.erb",
@@ -112,7 +112,7 @@ module ReportActions
           file_name = contents.element if contents.element == :samples
           res << generate_new_el(false)
           locals = contents.parse_locals([my_module, :asc])
-          locals.merge!({ element_id: el_id }) if el_id
+          locals[:element_id] = el_id if el_id
           res << generate_el(
             "reports/elements/my_module_#{file_name}_element.html.erb",
             locals

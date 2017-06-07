@@ -48,7 +48,9 @@ class ReportElement < ActiveRecord::Base
   # Get the referenced elements (previously, element's type_of must be set)
   def element_references
     ReportExtends::ELEMENT_REFERENCES.each do |el_ref|
-      return el_ref.elements.map { |el| eval(el.gsub('_id', '')) } if el_ref.check(self)
+      if el_ref.check(self)
+        return el_ref.elements.map { |el| eval(el.gsub('_id', '')) }
+      end
     end
   end
 
@@ -67,7 +69,15 @@ class ReportElement < ActiveRecord::Base
   # removes element that are archived or deleted
   def clean_removed_or_archived_elements
     parent_model = ''
-    %w(project experiment my_module step result checklist asset table repository)
+    %w(project
+       experiment
+       my_module
+       step
+       result
+       checklist
+       asset
+       table
+       repository)
       .each do |el|
       parent_model = el if send el
     end
@@ -85,11 +95,10 @@ class ReportElement < ActiveRecord::Base
 
   def has_one_of_referenced_elements
     element_references.each do |el|
-      if el.nil?
-        errors.add(:base,
-                  'Report element doesn\'t have correct element references.')
-        break
-      end
+      next unless el.nil?
+      errors.add(:base,
+                 'Report element doesn\'t have correct element references.')
+      break
     end
   end
 end
