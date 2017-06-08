@@ -1039,12 +1039,6 @@ en:
       destroy_modal_submit: 'Permanently delete sample type'
       destroy_flash: "\"%{name}\" sample type was successfully deleted!"
 
-  repositories:
-    table:
-      name: 'Name'
-      created_at: 'Added on'
-      created_by: 'Added by'
-
   custom_fields:
     new:
       title_html: "Add new column to team <strong>%{team}</strong>"

@@ -329,9 +329,9 @@ class MyModule < ActiveRecord::Base
 
     # Prepare column headers
     headers = [
-      I18n.t('repositories.table.name'),
-      I18n.t('repositories.table.created_at'),
-      I18n.t('repositories.table.created_by')
+      I18n.t('repositories.table.row_name'),
+      I18n.t('repositories.table.added_on'),
+      I18n.t('repositories.table.added_by')
     ]
     { data: data, headers: headers }
   end
