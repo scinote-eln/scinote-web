@@ -4,19 +4,18 @@
   <%= render partial: "repositories/breadcrumbs.html.erb",
              locals: { teams: @teams, current_team: current_team, type: @type } %>
 
-  <% active_repo = @repositories.find_by_id(params[:repository]) %>
-  <% active_repo = @repositories.first if !active_repo %>
-
   <!-- Nav tabs -->
-  <ul class="nav nav-tabs nav-settings" role="tablist" id="tabs">
+  <ul class="nav nav-tabs nav-settings" role="tablist" id="repository-tabs">
     <% @repositories.each do |repo| %>
-      <li role="presentation" class="<%= 'active' if repo == active_repo %>">
+      <li role="presentation">
         <a href="#custom_repo_<%= repo.id %>"
            data-toggle="tab"
            aria-controls="custom_repo_<%= repo.id %>"
+           data-url="<%=team_repository_show_tab_path(current_team, repo)%>"
            title="<%=repo.name%>"><%= truncate(repo.name, length: Constants::NAME_TRUNCATION_LENGTH) %></a>
       </li>
     <% end %>
+
     <!-- Add new repository tab -->
     <li role="presentation"
       <% unless can_create_repository(current_team) %>
@@ -37,8 +36,7 @@
   <!-- Tab panes -->
   <div class="tab-content">
     <% @repositories.each do |repo| %>
-      <div class="tab-pane tab-pane-settings <%= 'active' if repo == active_repo %>" id="custom_repo_<%= repo.id %>">
-
+      <div class="tab-pane tab-pane-settings" id="custom_repo_<%= repo.id %>">
         <!-- Tab Content -->
         <div id="repository-toolbar">
           <div class="dropdown text-right">
@@ -55,7 +53,7 @@
               <li class="dropdown-header">
                 <%= t("repositories.index.options_dropdown.header") %>
               </li>
-              <% if can_edit_and_destroy_repository(repo) %>
+              <% if can_edit_and_destroy_repository repo %>
                 <li>
                   <%= link_to t('repositories.index.options_dropdown.rename'),
                               team_repository_rename_modal_path(repository_id: repo),
@@ -71,7 +69,7 @@
                               remote: true %>
                 </li>
               <% end %>
-              <% if can_edit_and_destroy_repository(repo) %>
+              <% if can_edit_and_destroy_repository repo %>
                 <li role="separator" class="divider"></li>
                 <li>
                   <%= link_to t('repositories.index.modal_delete.delete'),
@@ -83,8 +81,7 @@
             </ul>
           </div>
         </div>
-
-        <%= render partial: 'repository', locals: { repository: repo } %>
+        <div class="tab-content-body"></div>
       </div>
     <% end %>
   </div>
