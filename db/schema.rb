@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170515073041) do
+ActiveRecord::Schema.define(version: 20170515141252) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -69,67 +69,6 @@ ActiveRecord::Schema.define(version: 20170515073041) do
   add_index "assets", ["created_by_id"], name: "index_assets_on_created_by_id", using: :btree
   add_index "assets", ["last_modified_by_id"], name: "index_assets_on_last_modified_by_id", using: :btree
   add_index "assets", ["team_id"], name: "index_assets_on_team_id", using: :btree
-
-  create_table "billing_accounts", force: :cascade do |t|
-    t.string   "braintree_customer_id"
-    t.datetime "created_at",            null: false
-    t.datetime "updated_at",            null: false
-  end
-
-  add_index "billing_accounts", ["braintree_customer_id"], name: "index_billing_accounts_on_braintree_customer_id", using: :btree
-
-  create_table "billing_addons", force: :cascade do |t|
-    t.string   "braintree_addon_id"
-    t.integer  "type_of"
-    t.string   "name",                                         null: false
-    t.string   "description"
-    t.integer  "amount_cents",                 default: 0,     null: false
-    t.string   "amount_currency",              default: "USD", null: false
-    t.integer  "additional_storage", limit: 8, default: 0
-    t.datetime "created_at",                                   null: false
-    t.datetime "updated_at",                                   null: false
-  end
-
-  add_index "billing_addons", ["braintree_addon_id"], name: "index_billing_addons_on_braintree_addon_id", using: :btree
-  add_index "billing_addons", ["name"], name: "index_billing_addons_on_name", using: :btree
-  add_index "billing_addons", ["type_of"], name: "index_billing_addons_on_type_of", using: :btree
-
-  create_table "billing_plans", force: :cascade do |t|
-    t.string   "braintree_plan_id",                           null: false
-    t.string   "name",                                        null: false
-    t.string   "description"
-    t.integer  "price_cents",                 default: 0,     null: false
-    t.string   "price_currency",              default: "USD", null: false
-    t.datetime "created_at",                                  null: false
-    t.datetime "updated_at",                                  null: false
-    t.boolean  "main",                        default: false, null: false
-    t.integer  "max_storage",       limit: 8, default: 0
-    t.integer  "position",                    default: 0,     null: false
-    t.boolean  "free",                        default: false, null: false
-  end
-
-  add_index "billing_plans", ["braintree_plan_id"], name: "index_billing_plans_on_braintree_plan_id", using: :btree
-
-  create_table "billing_subscription_addons", force: :cascade do |t|
-    t.integer  "billing_subscription_id", null: false
-    t.integer  "billing_addon_id",        null: false
-    t.datetime "created_at",              null: false
-    t.datetime "updated_at",              null: false
-  end
-
-  add_index "billing_subscription_addons", ["billing_addon_id"], name: "index_billing_subscription_addons_on_billing_addon_id", using: :btree
-  add_index "billing_subscription_addons", ["billing_subscription_id"], name: "index_billing_subscription_addons_on_billing_subscription_id", using: :btree
-
-  create_table "billing_subscriptions", force: :cascade do |t|
-    t.string   "braintree_subscription_id"
-    t.integer  "billing_account_id",                        null: false
-    t.integer  "billing_plan_id",                           null: false
-    t.boolean  "active",                    default: false, null: false
-    t.datetime "created_at",                                null: false
-    t.datetime "updated_at",                                null: false
-  end
-
-  add_index "billing_subscriptions", ["braintree_subscription_id"], name: "index_billing_subscriptions_on_braintree_subscription_id", using: :btree
 
   create_table "checklist_items", force: :cascade do |t|
     t.string   "text",                                null: false
@@ -236,16 +175,6 @@ ActiveRecord::Schema.define(version: 20170515073041) do
   add_index "experiments", ["project_id"], name: "index_experiments_on_project_id", using: :btree
   add_index "experiments", ["restored_by_id"], name: "index_experiments_on_restored_by_id", using: :btree
 
-  create_table "logs", force: :cascade do |t|
-    t.integer  "action_type",              null: false
-    t.string   "user_name"
-    t.jsonb    "details",     default: {}, null: false
-    t.datetime "created_at",               null: false
-    t.datetime "updated_at",               null: false
-  end
-
-  add_index "logs", ["created_at", "action_type"], name: "index_logs_on_created_at_and_action_type", using: :btree
-
   create_table "my_module_groups", force: :cascade do |t|
     t.string   "name",                      null: false
     t.datetime "created_at",                null: false
@@ -256,6 +185,17 @@ ActiveRecord::Schema.define(version: 20170515073041) do
 
   add_index "my_module_groups", ["created_by_id"], name: "index_my_module_groups_on_created_by_id", using: :btree
   add_index "my_module_groups", ["experiment_id"], name: "index_my_module_groups_on_experiment_id", using: :btree
+
+  create_table "my_module_repository_rows", force: :cascade do |t|
+    t.integer  "repository_row_id", null: false
+    t.integer  "my_module_id"
+    t.integer  "assigned_by_id",    null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "my_module_repository_rows", ["my_module_id", "repository_row_id"], name: "index_my_module_ids_repository_row_ids", using: :btree
+  add_index "my_module_repository_rows", ["repository_row_id"], name: "index_my_module_repository_rows_on_repository_row_id", using: :btree
 
   create_table "my_module_tags", force: :cascade do |t|
     t.integer "my_module_id"
@@ -268,28 +208,26 @@ ActiveRecord::Schema.define(version: 20170515073041) do
   add_index "my_module_tags", ["tag_id"], name: "index_my_module_tags_on_tag_id", using: :btree
 
   create_table "my_modules", force: :cascade do |t|
-    t.string   "name",                                                            null: false
+    t.string   "name",                                             null: false
     t.datetime "due_date"
     t.string   "description"
-    t.integer  "x",                                               default: 0,     null: false
-    t.integer  "y",                                               default: 0,     null: false
+    t.integer  "x",                                default: 0,     null: false
+    t.integer  "y",                                default: 0,     null: false
     t.integer  "my_module_group_id"
-    t.datetime "created_at",                                                      null: false
-    t.datetime "updated_at",                                                      null: false
-    t.boolean  "archived",                                        default: false, null: false
+    t.datetime "created_at",                                       null: false
+    t.datetime "updated_at",                                       null: false
+    t.boolean  "archived",                         default: false, null: false
     t.datetime "archived_on"
     t.integer  "created_by_id"
     t.integer  "last_modified_by_id"
     t.integer  "archived_by_id"
     t.integer  "restored_by_id"
     t.datetime "restored_on"
-    t.integer  "nr_of_assigned_samples",                          default: 0
-    t.integer  "workflow_order",                                  default: -1,    null: false
-    t.integer  "experiment_id",                                   default: 0,     null: false
-    t.integer  "state",                                 limit: 2, default: 0
+    t.integer  "nr_of_assigned_samples",           default: 0
+    t.integer  "workflow_order",                   default: -1,    null: false
+    t.integer  "experiment_id",                    default: 0,     null: false
+    t.integer  "state",                  limit: 2, default: 0
     t.datetime "completed_on"
-    t.integer  "electronic_signature_status",                     default: 1
-    t.datetime "electronic_signature_status_locked_at"
   end
 
   add_index "my_modules", ["archived_by_id"], name: "index_my_modules_on_archived_by_id", using: :btree
@@ -395,6 +333,7 @@ ActiveRecord::Schema.define(version: 20170515073041) do
     t.datetime "created_at",                null: false
     t.datetime "updated_at",                null: false
     t.integer  "experiment_id"
+    t.integer  "repository_id"
   end
 
   add_index "report_elements", ["asset_id"], name: "index_report_elements_on_asset_id", using: :btree
@@ -404,6 +343,7 @@ ActiveRecord::Schema.define(version: 20170515073041) do
   add_index "report_elements", ["parent_id"], name: "index_report_elements_on_parent_id", using: :btree
   add_index "report_elements", ["project_id"], name: "index_report_elements_on_project_id", using: :btree
   add_index "report_elements", ["report_id"], name: "index_report_elements_on_report_id", using: :btree
+  add_index "report_elements", ["repository_id"], name: "index_report_elements_on_repository_id", using: :btree
   add_index "report_elements", ["result_id"], name: "index_report_elements_on_result_id", using: :btree
   add_index "report_elements", ["step_id"], name: "index_report_elements_on_step_id", using: :btree
   add_index "report_elements", ["table_id"], name: "index_report_elements_on_table_id", using: :btree
@@ -421,6 +361,79 @@ ActiveRecord::Schema.define(version: 20170515073041) do
   add_index "reports", ["last_modified_by_id"], name: "index_reports_on_last_modified_by_id", using: :btree
   add_index "reports", ["project_id"], name: "index_reports_on_project_id", using: :btree
   add_index "reports", ["user_id"], name: "index_reports_on_user_id", using: :btree
+
+  create_table "repositories", force: :cascade do |t|
+    t.integer  "team_id"
+    t.integer  "created_by_id", null: false
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "repositories", ["team_id"], name: "index_repositories_on_team_id", using: :btree
+
+  create_table "repository_cells", force: :cascade do |t|
+    t.integer  "repository_row_id"
+    t.integer  "repository_column_id"
+    t.integer  "value_id"
+    t.string   "value_type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "repository_cells", ["repository_column_id"], name: "index_repository_cells_on_repository_column_id", using: :btree
+  add_index "repository_cells", ["repository_row_id"], name: "index_repository_cells_on_repository_row_id", using: :btree
+  add_index "repository_cells", ["value_type", "value_id"], name: "index_repository_cells_on_value_type_and_value_id", using: :btree
+
+  create_table "repository_columns", force: :cascade do |t|
+    t.integer  "repository_id"
+    t.integer  "created_by_id", null: false
+    t.string   "name"
+    t.integer  "data_type",     null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "repository_columns", ["repository_id"], name: "index_repository_columns_on_repository_id", using: :btree
+
+  create_table "repository_date_values", force: :cascade do |t|
+    t.datetime "data"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "created_by_id",       null: false
+    t.integer  "last_modified_by_id", null: false
+  end
+
+  create_table "repository_rows", force: :cascade do |t|
+    t.integer  "repository_id"
+    t.integer  "created_by_id",       null: false
+    t.integer  "last_modified_by_id", null: false
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "repository_rows", ["name"], name: "index_repository_rows_on_name", using: :btree
+  add_index "repository_rows", ["repository_id"], name: "index_repository_rows_on_repository_id", using: :btree
+
+  create_table "repository_table_states", force: :cascade do |t|
+    t.jsonb    "state",         null: false
+    t.integer  "user_id",       null: false
+    t.integer  "repository_id", null: false
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+  end
+
+  add_index "repository_table_states", ["repository_id"], name: "index_repository_table_states_on_repository_id", using: :btree
+  add_index "repository_table_states", ["user_id"], name: "index_repository_table_states_on_user_id", using: :btree
+
+  create_table "repository_text_values", force: :cascade do |t|
+    t.string   "data"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "created_by_id",       null: false
+    t.integer  "last_modified_by_id", null: false
+  end
 
   create_table "result_assets", force: :cascade do |t|
     t.integer "result_id", null: false
@@ -541,37 +554,6 @@ ActiveRecord::Schema.define(version: 20170515073041) do
   add_index "samples_tables", ["team_id"], name: "index_samples_tables_on_team_id", using: :btree
   add_index "samples_tables", ["user_id"], name: "index_samples_tables_on_user_id", using: :btree
 
-  create_table "scinote_core_gamification_scores", force: :cascade do |t|
-    t.integer  "leaf_tokens", limit: 8
-    t.integer  "step",                  default: 0,     null: false
-    t.integer  "user_id"
-    t.boolean  "tutorial",              default: false
-    t.boolean  "project",               default: false
-    t.boolean  "experiment",            default: false
-    t.boolean  "task",                  default: false
-    t.datetime "created_at",                            null: false
-    t.datetime "updated_at",                            null: false
-  end
-
-  add_index "scinote_core_gamification_scores", ["user_id"], name: "index_scinote_core_gamification_scores_on_user_id", using: :btree
-
-  create_table "scinote_enterprise_electronic_signatures", force: :cascade do |t|
-    t.integer  "user_id"
-    t.string   "user_full_name",        null: false
-    t.string   "user_role",             null: false
-    t.string   "user_email",            null: false
-    t.text     "comment"
-    t.integer  "action"
-    t.integer  "type_of_signature"
-    t.integer  "reference_object_id"
-    t.integer  "reference_object_name"
-    t.datetime "created_at",            null: false
-    t.datetime "updated_at",            null: false
-  end
-
-  add_index "scinote_enterprise_electronic_signatures", ["created_at"], name: "index_scinote_enterprise_electronic_signatures_on_created_at", using: :btree
-  add_index "scinote_enterprise_electronic_signatures", ["user_id"], name: "index_scinote_enterprise_electronic_signatures_on_user_id", using: :btree
-
   create_table "settings", force: :cascade do |t|
     t.text  "type",                null: false
     t.jsonb "values", default: {}, null: false
@@ -651,11 +633,8 @@ ActiveRecord::Schema.define(version: 20170515073041) do
     t.integer  "last_modified_by_id"
     t.string   "description"
     t.integer  "space_taken",         limit: 8, default: 1048576, null: false
-    t.integer  "billing_account_id"
-    t.integer  "agile_crm_deal_id",   limit: 8
   end
 
-  add_index "teams", ["billing_account_id"], name: "index_teams_on_billing_account_id", using: :btree
   add_index "teams", ["created_by_id"], name: "index_teams_on_created_by_id", using: :btree
   add_index "teams", ["last_modified_by_id"], name: "index_teams_on_last_modified_by_id", using: :btree
   add_index "teams", ["name"], name: "index_teams_on_name", using: :btree
@@ -776,8 +755,6 @@ ActiveRecord::Schema.define(version: 20170515073041) do
     t.string   "invited_by_type"
     t.integer  "invitations_count",                            default: 0
     t.integer  "tutorial_status",                              default: 0,     null: false
-    t.datetime "last_seen_at"
-    t.integer  "agile_crm_contact_id",              limit: 8
     t.boolean  "assignments_notification",                     default: true
     t.boolean  "recent_notification",                          default: true
     t.boolean  "assignments_notification_email",               default: false
@@ -785,8 +762,6 @@ ActiveRecord::Schema.define(version: 20170515073041) do
     t.integer  "current_team_id"
     t.boolean  "system_message_notification_email",            default: false
     t.string   "authentication_token",              limit: 30
-    t.integer  "organization_role",                 limit: 2,  default: 0
-    t.datetime "password_changed_at"
   end
 
   add_index "users", ["authentication_token"], name: "index_users_on_authentication_token", unique: true, using: :btree
@@ -795,21 +770,7 @@ ActiveRecord::Schema.define(version: 20170515073041) do
   add_index "users", ["invitation_token"], name: "index_users_on_invitation_token", unique: true, using: :btree
   add_index "users", ["invitations_count"], name: "index_users_on_invitations_count", using: :btree
   add_index "users", ["invited_by_id"], name: "index_users_on_invited_by_id", using: :btree
-  add_index "users", ["password_changed_at"], name: "index_users_on_password_changed_at", using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
-
-  create_table "versions", force: :cascade do |t|
-    t.string   "item_type",      null: false
-    t.integer  "item_id",        null: false
-    t.string   "event",          null: false
-    t.string   "whodunnit"
-    t.text     "object"
-    t.text     "object_changes"
-    t.integer  "team_id"
-    t.datetime "created_at"
-  end
-
-  add_index "versions", ["item_type", "item_id", "team_id"], name: "index_versions_on_item_type_and_item_id_and_team_id", using: :btree
 
   create_table "wopi_actions", force: :cascade do |t|
     t.string  "action",      null: false
@@ -853,10 +814,6 @@ ActiveRecord::Schema.define(version: 20170515073041) do
   add_foreign_key "asset_text_data", "assets"
   add_foreign_key "assets", "users", column: "created_by_id"
   add_foreign_key "assets", "users", column: "last_modified_by_id"
-  add_foreign_key "billing_subscription_addons", "billing_addons"
-  add_foreign_key "billing_subscription_addons", "billing_subscriptions"
-  add_foreign_key "billing_subscriptions", "billing_accounts"
-  add_foreign_key "billing_subscriptions", "billing_plans"
   add_foreign_key "checklist_items", "checklists"
   add_foreign_key "checklist_items", "users", column: "created_by_id"
   add_foreign_key "checklist_items", "users", column: "last_modified_by_id"
@@ -876,6 +833,7 @@ ActiveRecord::Schema.define(version: 20170515073041) do
   add_foreign_key "experiments", "users", column: "restored_by_id"
   add_foreign_key "my_module_groups", "experiments"
   add_foreign_key "my_module_groups", "users", column: "created_by_id"
+  add_foreign_key "my_module_repository_rows", "users", column: "assigned_by_id"
   add_foreign_key "my_module_tags", "users", column: "created_by_id"
   add_foreign_key "my_modules", "experiments"
   add_foreign_key "my_modules", "my_module_groups"
@@ -910,6 +868,14 @@ ActiveRecord::Schema.define(version: 20170515073041) do
   add_foreign_key "reports", "projects"
   add_foreign_key "reports", "users"
   add_foreign_key "reports", "users", column: "last_modified_by_id"
+  add_foreign_key "repositories", "users", column: "created_by_id"
+  add_foreign_key "repository_columns", "users", column: "created_by_id"
+  add_foreign_key "repository_date_values", "users", column: "created_by_id"
+  add_foreign_key "repository_date_values", "users", column: "last_modified_by_id"
+  add_foreign_key "repository_rows", "users", column: "created_by_id"
+  add_foreign_key "repository_rows", "users", column: "last_modified_by_id"
+  add_foreign_key "repository_text_values", "users", column: "created_by_id"
+  add_foreign_key "repository_text_values", "users", column: "last_modified_by_id"
   add_foreign_key "result_assets", "assets"
   add_foreign_key "result_assets", "results"
   add_foreign_key "result_tables", "results"
@@ -936,7 +902,6 @@ ActiveRecord::Schema.define(version: 20170515073041) do
   add_foreign_key "samples", "teams"
   add_foreign_key "samples", "users"
   add_foreign_key "samples", "users", column: "last_modified_by_id"
-  add_foreign_key "scinote_core_gamification_scores", "users"
   add_foreign_key "step_assets", "assets"
   add_foreign_key "step_assets", "steps"
   add_foreign_key "step_tables", "steps"
@@ -949,7 +914,6 @@ ActiveRecord::Schema.define(version: 20170515073041) do
   add_foreign_key "tags", "projects"
   add_foreign_key "tags", "users", column: "created_by_id"
   add_foreign_key "tags", "users", column: "last_modified_by_id"
-  add_foreign_key "teams", "billing_accounts"
   add_foreign_key "teams", "users", column: "created_by_id"
   add_foreign_key "teams", "users", column: "last_modified_by_id"
   add_foreign_key "tokens", "users"

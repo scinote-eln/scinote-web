@@ -5,6 +5,7 @@ class Repository < ActiveRecord::Base
   has_many :repository_rows
   has_many :repository_table_states,
            inverse_of: :repository, dependent: :destroy
+  has_many :report_elements, inverse_of: :repository, dependent: :destroy
 
   auto_strip_attributes :name, nullify: false
   validates :name,

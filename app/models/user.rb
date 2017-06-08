@@ -177,8 +177,8 @@ class User < ActiveRecord::Base
            class_name: 'Protocol',
            foreign_key: 'restored_by_id',
            inverse_of: :restored_by
-  has_many :assigned_repository_row_my_modules,
-           class_name: 'RepositoryRowMyModules',
+  has_many :assigned_my_module_repository_rows,
+           class_name: 'MyModuleRepositoryRow',
            foreign_key: 'assigned_by_id'
 
   has_many :user_notifications, inverse_of: :user

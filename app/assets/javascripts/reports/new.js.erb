@@ -100,8 +100,8 @@ function initializeElementControls(el) {
       sortCommentsElement(el, true);
     } else if (el.hasClass("report-module-activity-element")) {
       sortModuleActivityElement(el, true);
-    } else if (el.hasClass("report-module-samples-element")) {
-      sortModuleSamplesElement(el, true);
+    } else if (el.is("[data-sort-hot]")) {
+      sortModuleHotElement(el, true);
     } else {
       sortElementChildren(el, true, false);
     }
@@ -115,8 +115,8 @@ function initializeElementControls(el) {
       sortCommentsElement(el, false);
     } else if (el.hasClass("report-module-activity-element")) {
       sortModuleActivityElement(el, false);
-    } else if (el.hasClass("report-module-samples-element")) {
-      sortModuleSamplesElement(el, false);
+    } else if (el.is("[data-sort-hot]")) {
+      sortModuleHotElement(el, false);
     } else {
       sortElementChildren(el, false, false);
     }
@@ -217,9 +217,7 @@ function initializeNewElement(newEl) {
       url: url,
       type: "GET",
       dataType: "json",
-      data: {
-        id: parentElementId
-      },
+      data: parentElementId,
       success: function(data, status, jqxhr) {
         // Open modal, set its title, and display module contents
         addContentsModal.find(".modal-title").text(modalTitle);
@@ -500,11 +498,11 @@ function initializeUnsavedWorkDialog() {
   */
 function getSidebarEl(reportEl) {
   var type = reportEl.data("type");
-  var id = reportEl.data("id");
+  var scrollId = reportEl.data("scroll-id");
   return $(SIDEBAR_PARENT_TREE).find(
     "li" +
     "[data-type='" + type + "']" +
-    "[data-id='" + id + "']"
+    "[data-scroll-id='" + scrollId + "']"
   );
 }
 
@@ -516,11 +514,11 @@ function getSidebarEl(reportEl) {
  */
 function getReportEl(sidebarEl) {
   var type = sidebarEl.data("type");
-  var id = sidebarEl.data("id");
+  var scrollId = sidebarEl.data("scroll-id");
   return $(REPORT_CONTENT).find(
     "div.report-element" +
     "[data-type='" + type + "']" +
-    "[data-id='" + id + "']"
+    "[data-scroll-id='" + scrollId + "']"
   );
 }
 
@@ -565,14 +563,14 @@ function initSidebarElement(reportEl) {
   var elChildrenContainer = reportEl.children(".report-element-children");
   var type = reportEl.data("type");
   var name = reportEl.data("name");
-  var id = reportEl.data("id");
+  var scrollId = reportEl.data("scroll-id");
   var iconClass = "glyphicon " + reportEl.data("icon-class");
 
   // Generate list element
   var newLi = $(document.createElement("li"));
   newLi
   .attr("data-type", type)
-  .attr("data-id", id);
+  .attr("data-scroll-id", scrollId);
 
   var newSpan = $(document.createElement("span"));
   newSpan.appendTo(newLi);
@@ -814,17 +812,18 @@ function sortModuleActivityElement(el, asc) {
 }
 
 /**
- * Sort the module samples element (special handling needs
+ * Sort the module HoT element (special handling needs
  * to be done in this case).
- * @param el - The module samples element in the report.
+ * @param el - The module element in the report that contains handsontables.
  * @param asc - True to sort in ascending order, false to sort
  * in descending order.
  */
-function sortModuleSamplesElement(el, asc) {
+function sortModuleHotElement(el, asc) {
   var hotEl = el.find(".report-element-body .hot-table-container");
   var hotInstance = hotEl.handsontable("getInstance");
+  var col = el.attr('data-sort-hot');
 
-  hotInstance.sort(3, asc);
+  hotInstance.sort(col, asc);
 
   // Update data attribute on sorting on the element
   el.attr("data-order", asc ? "asc" : "desc");
@@ -1024,7 +1023,7 @@ function addElement(jsonEl, prevEl) {
     .find(
       ".report-element" +
       "[data-type='" + el.attr("data-type") + "']" +
-      "[data-id='" + el.attr("data-id") + "']"
+      "[data-scroll-id='" + el.attr("data-scroll-id") + "']"
     );
     if (existing.length && existing.length > 0) {
       // TODO Remove event listeners on existing element

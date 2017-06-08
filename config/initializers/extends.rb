@@ -35,7 +35,9 @@ class Extends
                            result_comments: 12,
                            project_activity: 13, # TODO
                            project_samples: 14, # TODO
-                           experiment: 15 }
+                           experiment: 15,
+                           # Higher number because of addons
+                           my_module_repository: 17 }
 
   # Data type name should match corresponding model's name
   REPOSITORY_DATA_TYPES = { RepositoryTextValue: 0,

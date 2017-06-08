@@ -78,5 +78,8 @@ class AddCustomRepositories < ActiveRecord::Migration
       t.references :repository, index: true, null: false
       t.timestamps null: false
     end
+
+    add_column :report_elements, :repository_id, :integer
+    add_index :report_elements, :repository_id
   end
 end

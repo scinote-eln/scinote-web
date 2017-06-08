@@ -233,7 +233,7 @@ class ReportsController < ApplicationController
 
   # Experiment for adding contents into experiment element
   def experiment_contents_modal
-    experiment = Experiment.find_by_id(params[:id])
+    experiment = Experiment.find_by_id(params[:experiment_id])
 
     respond_to do |format|
       if experiment.blank?
@@ -255,7 +255,7 @@ class ReportsController < ApplicationController
 
   # Modal for adding contents into module element
   def module_contents_modal
-    my_module = MyModule.find_by_id(params[:id])
+    my_module = MyModule.find_by_id(params[:my_module_id])
 
     respond_to do |format|
       if my_module.blank?
@@ -277,7 +277,7 @@ class ReportsController < ApplicationController
 
   # Modal for adding contents into step element
   def step_contents_modal
-    step = Step.find_by_id(params[:id])
+    step = Step.find_by_id(params[:step_id])
 
     respond_to do |format|
       if step.blank?
@@ -299,7 +299,7 @@ class ReportsController < ApplicationController
 
   # Modal for adding contents into result element
   def result_contents_modal
-    result = Result.find_by_id(params[:id])
+    result = Result.find_by_id(params[:result_id])
 
     respond_to do |format|
       if result.blank?
