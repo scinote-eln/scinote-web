@@ -846,12 +846,14 @@ en:
       add_new_repository_tab: "Create new repository"
       delete_flash: "\"%{name}\" repository was successfully deleted!"
       rename_flash: "\"%{old_name}\" repository was successfully renamed to \"%{new_name}\"!"
+      copy_flash: "\"%{new}\" repository was successfully copied from \"%{old}\"!"
       no_teams:
         title: "Your dashboard is empty!"
         text: "It seems you're not a member of any team. See team management to sort it out."
       options_dropdown:
         header: "Edit repository"
         rename: "Rename"
+        copy: "Copy"
         delete: "Delete"
       modal_delete:
         title_html: "Delete repository <em>%{name}</em>"
@@ -865,6 +867,11 @@ en:
         name: "New repository name"
         name_placeholder: "My repository"
         rename: "Rename repository"
+      modal_copy:
+        title_html: "Copy repository <em>%{name}</em>"
+        name: "New repository name"
+        name_placeholder: "My repository"
+        copy: "Copy repository"
       modal_create:
         title: "Create new repository"
         name_label: "Repository name"
