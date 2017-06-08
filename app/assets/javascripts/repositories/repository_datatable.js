@@ -226,7 +226,8 @@ $('form#form-export').submit(function(e) {
     appendSamplesIdToForm(form);
 
     // Append visible column information
-    $('table#repository-table thead tr').children('th').each(function(i) {
+    $('.active table#repository-table thead tr').children('th')
+                                                .each(function(i) {
       var th = $(this);
       var val;
       if ($(th).attr('id') === 'checkbox' || $(th).attr('id') === 'assigned')
@@ -685,26 +686,7 @@ function updateButtons() {
     $('th').removeClass('disable-click');
     $('.repository-row-selector').removeClass('disabled');
     $('.repository-row-selector').prop('disabled', false);
-    if (rowsSelected.length === 1) {
-      $('#editRepositoryRecord').prop('disabled', false);
-      $('#editRepositoryRecord').removeClass('disabled');
-      $('#deleteRepositoryRecordsButton').prop('disabled', false);
-      $('#deleteRepositoryRecordsButton').removeClass('disabled');
-      $('#exportRepositoriesButton').removeClass('disabled');
-      $('#exportRepositoriesButton').prop('disabled', false);
-      $('#exportRepositoriesButton').on('click', function() {
-        $('#exportRepositoryModal')
-          .modal('show')
-      });
-      $('#export-repositories').on('click', function() {
-        animateSpinner(null, true);
-        $('#form-export').submit();
-      });
-      $('#assignRepositoryRecords').removeClass('disabled');
-      $('#assignRepositoryRecords').prop('disabled', false);
-      $('#unassignRepositoryRecords').removeClass('disabled');
-      $('#unassignRepositoryRecords').prop('disabled', false);
-    } else if (rowsSelected.length === 0) {
+    if (rowsSelected.length === 0) {
       $('#editRepositoryRecord').prop('disabled', true);
       $('#editRepositoryRecord').addClass('disabled');
       $('#deleteRepositoryRecordsButton').prop('disabled', true);
@@ -718,8 +700,13 @@ function updateButtons() {
       $('#unassignRepositoryRecords').addClass('disabled');
       $('#unassignRepositoryRecords').prop('disabled', true);
     } else {
-      $('#editRepositoryRecord').prop('disabled', true);
-      $('#editRepositoryRecord').addClass('disabled');
+      if (rowsSelected.length === 1) {
+        $('#editRepositoryRecord').prop('disabled', false);
+        $('#editRepositoryRecord').removeClass('disabled');
+      } else {
+        $('#editRepositoryRecord').prop('disabled', true);
+        $('#editRepositoryRecord').addClass('disabled');
+      }
       $('#deleteRepositoryRecordsButton').prop('disabled', false);
       $('#deleteRepositoryRecordsButton').removeClass('disabled');
       $('#exportRepositoriesButton').removeClass('disabled');
@@ -748,6 +735,7 @@ function updateButtons() {
     $('#deleteRepositoryRecordsButton').prop('disabled', true);
     $('#exportRepositoriesButton').addClass('disabled');
     $('#exportRepositoriesButton').off('click');
+    $('#export-repositories').off('click');
     $('#assignRepositoryRecords').addClass('disabled');
     $('#assignRepositoryRecords').prop('disabled', true);
     $('#unassignRepositoryRecords').addClass('disabled');
@@ -1045,6 +1033,7 @@ function changeToEditMode() {
       if (!_.isEmpty(searchText)) {
         table.search(searchText).draw();
       }
+      initRowSelection();
     });
   }
 

@@ -1,5 +1,5 @@
 class RepositoriesController < ApplicationController
-  before_action :load_vars, except: [:repository_table_index, :export_repository]
+  before_action :load_vars, except: %i(repository_table_index export_repository)
   before_action :check_view_all_permissions, only: :index
   before_action :check_edit_and_destroy_permissions, only:
     %(destroy destroy_modal rename_modal update)
@@ -7,7 +7,6 @@ class RepositoriesController < ApplicationController
     %(copy_modal copy)
   before_action :check_create_permissions, only:
     %(create_new_modal create)
-  before_action :generate_zip, only: :export_repository
 
   def index
     render('repositories/index')
@@ -273,8 +272,7 @@ class RepositoriesController < ApplicationController
             sample_row << I18n.l(row.created_at, format: :full)
           else
             record = row_record.joins(:repository_columns, :repository_cells)
-                               .where(repository_columns: { id: header })
-                               .take
+                               .where(repository_columns: { id: header }).take
             if record
               sample_row << record.repository_cells.take.value.data
             else
