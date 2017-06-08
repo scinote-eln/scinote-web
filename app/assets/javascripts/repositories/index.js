@@ -31,9 +31,8 @@ function loadRepositoryTab() {
   });
 
   // on page load
-  if( getParam('repository') ){
+  if( param = getParam('repository') ){
     // load selected tab
-    var param = getParam('repository');
     $('a[href="#custom_repo_'+param+'"]').click();
   }
   else {
