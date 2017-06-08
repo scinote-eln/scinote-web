@@ -18,7 +18,8 @@ class RepositoriesController < ApplicationController
       format.json do
         render json: {
           html: render_to_string(
-            partial: 'repositories/repository_tab_content.html.erb'
+            partial: 'repositories/repository.html.erb',
+            locals: { repository: @repository }
           )
         }
       end
