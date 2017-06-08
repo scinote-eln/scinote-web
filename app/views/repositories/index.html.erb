@@ -4,13 +4,10 @@
   <%= render partial: "repositories/breadcrumbs.html.erb",
              locals: { teams: @teams, current_team: current_team, type: @type } %>
 
-  <% active_repo = @repositories.find_by_id(params[:repository]) %>
-  <% active_repo = @repositories.first if !active_repo %>
-
   <!-- Nav tabs -->
   <ul class="nav nav-tabs nav-settings" role="tablist" id="repository-tabs">
     <% @repositories.each do |repo| %>
-      <li role="presentation" class="<%= 'active' if repo == active_repo %>">
+      <li role="presentation">
         <a href="#custom_repo_<%= repo.id %>"
            data-toggle="tab"
            aria-controls="custom_repo_<%= repo.id %>"
@@ -39,7 +36,7 @@
   <!-- Tab panes -->
   <div class="tab-content">
     <% @repositories.each do |repo| %>
-      <div class="tab-pane tab-pane-settings <%= 'active' if repo == active_repo %>" id="custom_repo_<%= repo.id %>">
+      <div class="tab-pane tab-pane-settings" id="custom_repo_<%= repo.id %>">
         <!-- Tab Content -->
         <div class="tab-content-body"></div>
       </div>

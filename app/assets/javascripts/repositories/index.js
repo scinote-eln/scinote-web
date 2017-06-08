@@ -30,8 +30,16 @@ function loadRepositoryTab() {
     });
   });
 
-  // load first tab content
-  $('#repository-tabs a:first').click();
+  // on page load
+  if( getParam('repository') ){
+    // load selected tab
+    var param = getParam('repository');
+    $('a[href="#custom_repo_'+param+'"]').click();
+  }
+  else {
+    // load first tab content
+    $('#repository-tabs a:first').click();
+  }
 
   // clean tab content
   $('a[data-toggle="tab"]').on('hide.bs.tab', function (e) {
