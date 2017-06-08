@@ -12,6 +12,19 @@ class RepositoriesController < ApplicationController
     render('repositories/index')
   end
 
+  def show_tab
+    @repository = Repository.find_by_id(params[:repository_id])
+    respond_to do |format|
+      format.json do
+        render json: {
+          html: render_to_string(
+            partial: 'repositories/repository_tab_content.html.erb'
+          )
+        }
+      end
+    end
+  end
+
   def create_modal
     @repository = Repository.new
     respond_to do |format|

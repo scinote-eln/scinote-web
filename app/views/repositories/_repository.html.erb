@@ -1,5 +1,5 @@
-<%= render partial: "repositories/delete_record_modal" %>
-<%= render partial: "repositories/delete_column_modal" %>
+<%= render partial: "repositories/delete_record_modal.html.erb" %>
+<%= render partial: "repositories/delete_column_modal.html.erb" %>
 
 <div id="alert-container"></div>
 
@@ -67,7 +67,7 @@
   <% end %>
 </div>
 
-<%= render partial: "repository_table",
+<%= render partial: "repositories/repository_table.html.erb",
            locals: {
              repository: repository,
              repository_index_link: repository_table_index_path(repository)
