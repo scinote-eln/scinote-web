@@ -19,7 +19,7 @@
           success: function(data) {
             var $form = $(data.html);
             animateSpinner(null, false);
-            $('#results').prepend($form)
+            $('#results').prepend($form);
             _formAjaxResultAsset($form);
             Results.initCancelFormButton($form, initNewResultAsset);
             Results.toggleResultEditButtons(false);

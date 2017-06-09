@@ -1268,11 +1268,11 @@ ul.content-module-activities {
 .new-asset-box {
   border: 1px solid $color-silver;
   border-radius: 2px;
+  font-size: 2rem;
   margin-bottom: 20px;
   margin-top: 20px;
   padding-bottom: 30px;
   padding-top: 30px;
-  font-size: 2rem;
 }
 
 .dnd-error {
@@ -1280,7 +1280,7 @@ ul.content-module-activities {
 }
 
 .is-dragover {
-  background: rgba(0,0,0,0.4);
+  background: $color-drag-overlay;
   bottom: 0;
   display: none;
   height: 100%;

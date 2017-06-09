@@ -1,19 +1,17 @@
 (function(global) {
   'use strict';
 
-  // Module to handle file uploading in Results
+  // Module to handle file uploading in Steps
   global.DragNDropSteps = (function() {
     var droppedFiles = [];
     var filesValid = true;
     var totalSize = 0;
 
-    function init(files, action) {
+    function init(files) {
       for(var i = 0; i < files.length; i++) {
         droppedFiles.push(files[i]);
       }
-      if(action === 'select') {
-        listItems();
-      }
+      listItems();
     }
 
     // return the status of files if they are ready to submit
@@ -38,7 +36,7 @@
       dragNdropAssetsInit('steps');
     }
 
-    // appent the files to the form before submit
+    // append the files to the form before submit
     function appendFilesToForm(ev) {
       var regex = /step\[assets_attributes\]\[[0-9]*\]\[id\]/;
       var prevEls = $('input').filter(function() {
@@ -59,10 +57,11 @@
     }
 
     function _validateFilesSize(file) {
-      if((file.size/1048576) > <%= Constants::FILE_MAX_SIZE_MB %> && filesValid) {
+      var maxSize = file.size/1048576;
+      if(maxSize > <%= Constants::FILE_MAX_SIZE_MB %> && filesValid) {
         return "<p><%= I18n.t 'general.file.size_exceeded', file_size: Constants::FILE_MAX_SIZE_MB %></p>";
       }
-      totalSize += parseInt(file.size/1048576);
+      totalSize += parseInt(maxSize);
       return '';
     }
 
@@ -178,10 +177,7 @@
         fd.append(file_name, droppedFiles[i]);
         fd.append('results_names[' + i + ']', result_names[i]);
       }
-      droppedFiles = [];
-      isValid = true;
-      totalSize = 0;
-      _dragNdropAssetsOff();
+      destroyAll();
       return fd;
     }
 
@@ -191,10 +187,11 @@
     }
 
     function _validateFilesSize(file) {
-      if((file.size/1048576) > <%= Constants::FILE_MAX_SIZE_MB %> && isValid) {
+      var maxSize = file.size/1048576;
+      if(maxSize > <%= Constants::FILE_MAX_SIZE_MB %> && isValid) {
         return "<p><%= I18n.t 'general.file.size_exceeded', file_size: Constants::FILE_MAX_SIZE_MB %></p>";
       }
-      totalSize += parseInt(file.size/1048576);
+      totalSize += parseInt(maxSize);
       return '';
     }
 
@@ -259,7 +256,7 @@
       });
     }
 
-    function uploadResultAssets(button) {
+    function processResult(button) {
       if(isValid && _filerAndCheckFiles()) {
         animateSpinner();
         $.ajax({
@@ -313,7 +310,7 @@
       destroyAll: destroyAll,
       filesStatus: filesStatus,
       validateTextSize: validateTextSize,
-      uploadResultAssets: uploadResultAssets
+      processResult: processResult
     });
   })();
 
@@ -340,7 +337,6 @@
       var files = e.originalEvent.dataTransfer.files;
       if(location === 'steps') {
         DragNDropSteps.init(files);
-        DragNDropSteps.listItems();
       } else  {
         DragNDropResults.init(files);
       }
