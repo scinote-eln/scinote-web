@@ -1046,4 +1046,71 @@ module PermissionHelper
       false
     end
   end
+
+  # ---- REPOSITORIES PERMISSIONS ----
+
+  def can_view_team_repositories(team)
+    is_member_of_team(team)
+  end
+
+  def can_create_repository(team)
+    is_admin_of_team(team) &&
+      team.repositories.count < Constants::REPOSITORIES_LIMIT
+  end
+
+  def can_view_repositories(team)
+    is_normal_user_or_admin_of_team(team)
+  end
+
+  def can_view_repository(repository)
+    is_normal_user_or_admin_of_team(repository.team)
+  end
+
+  def can_edit_and_destroy_repository(repository)
+    is_admin_of_team(repository.team)
+  end
+
+  def can_copy_repository(repository)
+    can_create_repository(repository.team)
+  end
+
+  def can_create_columns_in_repository(repository)
+    is_normal_user_or_admin_of_team(repository.team)
+  end
+
+  def can_delete_columns_in_repository(repository)
+    is_normal_user_or_admin_of_team(repository.team)
+  end
+
+  def can_edit_columns_in_repository(repository)
+    is_normal_user_or_admin_of_team(repository.team)
+  end
+
+  def can_create_repository_records(repository)
+    is_normal_user_or_admin_of_team(repository.team)
+  end
+
+  def can_edit_repository_records(repository)
+    is_normal_user_or_admin_of_team(repository.team)
+  end
+
+  def can_delete_repository_records(repository)
+    is_normal_user_or_admin_of_team(repository.team)
+  end
+
+  def can_delete_repository_record(record)
+    team = record.repository.team
+    is_admin_of_team(team) || (is_normal_user_of_team(team) &&
+                               record.created_by == current_user)
+  end
+
+  def can_assign_repository_records(my_module, repository)
+    can_edit_repository_records(repository) &&
+      is_technician_or_higher_of_project(my_module.experiment.project)
+  end
+
+  def can_unassign_repository_records(my_module, repository)
+    can_edit_repository_records(repository) &&
+      is_technician_or_higher_of_project(my_module.experiment.project)
+  end
 end

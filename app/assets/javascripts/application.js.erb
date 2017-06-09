@@ -90,8 +90,7 @@ function animateLoading(start){
  * Optional parameter options for spin.js options.
  */
 function animateSpinner(el, start, options) {
-  // If overlaying the whole page,
-  // put the spinner in the middle of the page
+  // If overlaying the whole page, put the spinner in the middle of the page
   var overlayPage = false;
   if (_.isUndefined(el) || el === null) {
     overlayPage = true;
@@ -121,6 +120,30 @@ function animateSpinner(el, start, options) {
   } else {
     $(".loading-overlay").remove();
   }
+}
+
+/**
+ * Automatic handling of show/hide spinner.
+ * @param  {boolean} redirection Whether page is refreshed/redirected on success
+ * @param  {boolean} onElement   Whether spinner is fixed on the center of fn
+ *         element or it's positions on the center of whole page
+ */
+$.fn.animateSpinner = function(redirection, onElement) {
+  redirection = _.isUndefined(redirection) ? false : redirection;
+  onElement = _.isUndefined(onElement) ? false : onElement;
+
+  $(this)
+    .on('ajax:beforeSend', function() {
+      onElement ? animateSpinner($(this)) : animateSpinner();
+    })
+    .on('ajax:error', function(e, data) {
+      animateSpinner(null, false);
+    })
+    .on('ajax:success', function(e, data) {
+      if (!redirection) {
+        animateSpinner(null, false);
+      }
+    });
 }
 
 /*

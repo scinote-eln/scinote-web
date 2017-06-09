@@ -95,7 +95,7 @@ class Report < ActiveRecord::Base
     el.parent = parent
     el.type_of = json_element['type_of']
     el.sort_order = json_element['sort_order']
-    el.set_element_reference(json_element['id'])
+    el.set_element_references(json_element['id'])
     el.save!
 
     if json_element['children'].present?

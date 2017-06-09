@@ -45,13 +45,9 @@ module ReportsHelper
 
     ReportElement.type_ofs.keys.each do |type|
       next unless element.public_send("#{type}?")
-      local_sym = type.split('_').last.to_sym
-      local_sym = type
-                  .split('_')
-                  .first
-                  .to_sym if type.in? ReportExtends::FIRST_PART_ELEMENTS
-      local_sym = :my_module if type.in? ReportExtends::MY_MODULE_ELEMENTS
-      locals[local_sym] = element.element_reference
+      element.element_references.each do |el_ref|
+        locals[el_ref.class.name.underscore.to_sym] = el_ref
+      end
       locals[:order] = element
                        .sort_order if type.in? ReportExtends::SORTED_ELEMENTS
     end

@@ -48,6 +48,8 @@ class User < ActiveRecord::Base
   has_many :results, inverse_of: :user
   has_many :samples, inverse_of: :user
   has_many :samples_tables, inverse_of: :user, dependent: :destroy
+  has_many :repositories, inverse_of: :user
+  has_many :repository_table_states, inverse_of: :user, dependent: :destroy
   has_many :steps, inverse_of: :user
   has_many :custom_fields, inverse_of: :user
   has_many :reports, inverse_of: :user
@@ -175,6 +177,9 @@ class User < ActiveRecord::Base
            class_name: 'Protocol',
            foreign_key: 'restored_by_id',
            inverse_of: :restored_by
+  has_many :assigned_my_module_repository_rows,
+           class_name: 'MyModuleRepositoryRow',
+           foreign_key: 'assigned_by_id'
 
   has_many :user_notifications, inverse_of: :user
   has_many :notifications, through: :user_notifications

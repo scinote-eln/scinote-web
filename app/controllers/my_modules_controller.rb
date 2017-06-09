@@ -8,8 +8,11 @@ class MyModulesController < ApplicationController
                          results samples activities activities_tab
                          assign_samples unassign_samples delete_samples
                          toggle_task_state samples_index archive
-                         complete_my_module]
+                         complete_my_module repository repository_index
+                         assign_repository_records unassign_repository_records]
   before_action :load_vars_nested, only: %I[new create]
+  before_action :load_repository, only: %I[assign_repository_records
+                                           unassign_repository_records]
   before_action :check_edit_permissions,
                 only: %I[update description due_date]
   before_action :check_destroy_permissions, only: :destroy
@@ -254,6 +257,11 @@ class MyModulesController < ApplicationController
     @team = @my_module.experiment.project.team
   end
 
+  def repository
+    @repository = Repository.find_by_id(params[:repository_id])
+    render_403 if @repository.nil? || !can_view_repository(@repository)
+  end
+
   def archive
     @archived_results = @my_module.archived_results
     current_team_switch(@my_module
@@ -358,6 +366,123 @@ class MyModulesController < ApplicationController
     end
   end
 
+  # AJAX actions
+  def repository_index
+    @repository = Repository.find_by_id(params[:repository_id])
+    if @repository.nil? || !can_view_repository(@repository)
+      render_403
+    else
+      respond_to do |format|
+        format.html
+        format.json do
+          render json: ::RepositoryDatatable.new(view_context,
+                                                 @repository,
+                                                 @my_module,
+                                                 current_user)
+        end
+      end
+    end
+  end
+
+  # Submit actions
+  def assign_repository_records
+    render_403 && return unless can_assign_repository_records(@my_module,
+                                                              @repository)
+    if params[:selected_rows].present? && params[:repository_id].present?
+      records_names = []
+
+      params[:selected_rows].each do |id|
+        record = RepositoryRow.find_by_id(id)
+        next if !record || @my_module.repository_rows.include?(record)
+        record.last_modified_by = current_user
+        record.save
+        records_names << record.name
+        MyModuleRepositoryRow.create!(
+          my_module: @my_module,
+          repository_row: record,
+          assigned_by: current_user
+        )
+      end
+
+      if records_names.any?
+        Activity.create(
+          type_of: :assign_repository_record,
+          project: @project,
+          experiment: @experiment,
+          my_module: @my_module,
+          user: current_user,
+          message: I18n.t(
+            'activities.assign_repository_records',
+            user: current_user.full_name,
+            task: @my_module.name,
+            repository: @repository,
+            records: records_names.join(', ')
+          )
+        )
+        flash = I18n.t('repositories.assigned_records_flash',
+                       records: records_names.join(', '))
+        respond_to do |format|
+          format.json { render json: { flash: flash }, status: :ok }
+        end
+      else
+        respond_to do |format|
+          format.json do
+            render json: {
+              flash: t('repositories.no_records_assigned_flash')
+            }, status: :bad_request
+          end
+        end
+      end
+    end
+  end
+
+  def unassign_repository_records
+    render_403 && return unless can_unassign_repository_records(@my_module,
+                                                                @repository)
+    if params[:selected_rows].present? && params[:repository_id].present?
+      records = []
+
+      params[:selected_rows].each do |id|
+        record = RepositoryRow.find_by_id(id)
+        next unless record && @my_module.repository_rows.include?(record)
+        record.last_modified_by = current_user
+        record.save
+        records << record
+      end
+
+      @my_module.repository_rows.destroy(records & @my_module.repository_rows)
+      if records.any?
+        Activity.create(
+          type_of: :unassign_repository_record,
+          project: @project,
+          experiment: @experiment,
+          my_module: @my_module,
+          user: current_user,
+          message: I18n.t(
+            'activities.unassign_repository_records',
+            user: current_user.full_name,
+            task: @my_module.name,
+            repository: @repository,
+            records: records.map(&:name).join(', ')
+          )
+        )
+        flash = I18n.t('repositories.unassigned_records_flash',
+                       records: records.map(&:name).join(', '))
+        respond_to do |format|
+          format.json { render json: { flash: flash }, status: :ok }
+        end
+      else
+        respond_to do |format|
+          format.json do
+            render json: {
+              flash: t('repositories.no_records_unassigned_flash')
+            }, status: :bad_request
+          end
+        end
+      end
+    end
+  end
+
   # Complete/uncomplete task
   def toggle_task_state
     respond_to do |format|
@@ -449,6 +574,11 @@ class MyModulesController < ApplicationController
     else
       render_404
     end
+  end
+
+  def load_repository
+    @repository = Repository.find_by_id(params[:repository_id])
+    render_404 unless @repository && can_view_repository(@repository)
   end
 
   def check_edit_permissions

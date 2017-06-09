@@ -2,7 +2,7 @@
 <% if order.blank? and @order.present? then order = @order end %>
 <% timestamp = Time.current + 1.year - 2.days %>
 <% activities = my_module.activities.order(created_at: order) %>
-<div class="report-element report-module-activity-element" data-ts="<%= timestamp.to_i %>" data-type="my_module_activity" data-id="<%= my_module.id %>" data-order="<%= order == :asc ? "asc" : "desc" %>" data-name="<%=t "projects.reports.elements.module_activity.sidebar_name" %>" data-icon-class="glyphicon glyphicon-equalizer">
+<div class="report-element report-module-activity-element" data-ts="<%= timestamp.to_i %>" data-type="my_module_activity" data-id='{ "my_module_id": <%= my_module.id %> }' data-scroll-id="<%= my_module.id %>" data-order="<%= order == :asc ? "asc" : "desc" %>" data-name="<%=t "projects.reports.elements.module_activity.sidebar_name" %>" data-icon-class="glyphicon glyphicon-equalizer">
   <div class="report-element-header">
     <div class="row">
       <div class="pull-left activity-icon">

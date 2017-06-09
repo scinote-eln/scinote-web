@@ -3,7 +3,8 @@
 <div class="report-element report-experiment-element"
   data-ts="<%= timestamp.to_i %>"
   data-type="experiment"
-  data-id="<%= experiment.id %>"
+  data-id='{ "experiment_id": <%= experiment.id %> }'
+  data-scroll-id="<%= experiment.id %>"
   data-modal-title="<%=t "projects.reports.elements.modals.experiment_contents.head_title",
     experiment: experiment.name %>" data-name="<%= name %>" data-icon-class="fa fa-flask">
   <div class="report-element-header">

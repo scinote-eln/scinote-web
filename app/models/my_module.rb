@@ -30,6 +30,9 @@ class MyModule < ActiveRecord::Base
   has_many :my_module_antecessors, through: :inputs, source: :from, class_name: 'MyModule'
   has_many :sample_my_modules, inverse_of: :my_module, :dependent => :destroy
   has_many :samples, through: :sample_my_modules
+  has_many :my_module_repository_rows,
+           inverse_of: :my_module, dependent: :destroy
+  has_many :repository_rows, through: :my_module_repository_rows
   has_many :user_my_modules, inverse_of: :my_module, :dependent => :destroy
   has_many :users, through: :user_my_modules
   has_many :activities, inverse_of: :my_module
@@ -306,6 +309,29 @@ class MyModule < ActiveRecord::Base
       I18n.t("samples.table.sample_group"),
       I18n.t("samples.table.added_on"),
       I18n.t("samples.table.added_by")
+    ]
+    { data: data, headers: headers }
+  end
+
+  # Generate the repository rows belonging to this module
+  # in JSON form, suitable for display in handsontable.js
+  def repository_json_hot(repository_id, order)
+    data = []
+    repository_rows
+      .where(repository_id: repository_id)
+      .order(created_at: order).find_each do |row|
+      row_json = []
+      row_json << row.name
+      row_json << I18n.l(row.created_at, format: :full)
+      row_json << row.created_by.full_name
+      data << row_json
+    end
+
+    # Prepare column headers
+    headers = [
+      I18n.t('repositories.table.row_name'),
+      I18n.t('repositories.table.added_on'),
+      I18n.t('repositories.table.added_by')
     ]
     { data: data, headers: headers }
   end
