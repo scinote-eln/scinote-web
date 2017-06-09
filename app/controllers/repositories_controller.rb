@@ -223,57 +223,59 @@ class RepositoriesController < ApplicationController
   end
 
   def generate_zip
+    # Fetch rows in the same order as in the currently viewed datatable
+    ordered_row_ids = params[:row_ids]
+    id_row_map = RepositoryRow.where(id: ordered_row_ids).index_by(&:id)
+    ordered_rows = ordered_row_ids.collect { |id| id_row_map[id.to_i] }
+
     zip = ZipExport.create(user: current_user)
     zip.generate_exportable_zip(
       current_user,
-      to_csv(RepositoryRow.where(id: params[:row_ids]), params[:header_ids]),
+      to_csv(ordered_rows, params[:header_ids]),
       :repositories
     )
   end
 
-  def to_csv(rows, header_ids)
+  def to_csv(rows, column_ids)
     require 'csv'
 
-    # Parse header IDs (magic numbers should be refactored - see
-    # sample-datatable.js)
-    header_names = []
-    header_ids.each do |header|
-      if header == '-1'
-        next
-      elsif header == '-2'
-        header_names << I18n.t('repositories.table.row_name')
-      elsif header == '-3'
-        header_names << I18n.t('repositories.table.added_by')
-      elsif header == '-4'
-        header_names << I18n.t('repositories.table.added_on')
-      else
-        rc = RepositoryColumn.find_by_id(header)
-        if rc
-          header_names << rc.name
-        else
-          header_names << nil
-        end
-      end
+    # Parse column names
+    csv_header = []
+    column_ids.each do |c_id|
+      csv_header << case c_id.to_i
+                    when -1
+                      next
+                    when -2
+                      I18n.t('repositories.table.row_name')
+                    when -3
+                      I18n.t('repositories.table.added_by')
+                    when -4
+                      I18n.t('repositories.table.added_on')
+                    else
+                      column = RepositoryColumn.find_by_id(c_id)
+                      column ? column.name : nil
+                    end
     end
 
     CSV.generate do |csv|
-      csv << header_names
+      csv << csv_header
       rows.each do |row|
         csv_row = []
-        header_ids.each do |header_id|
-          if header_id == '-1'
-            next
-          elsif header_id == '-2'
-            csv_row << row.name
-          elsif header_id == '-3'
-            csv_row << row.created_by.full_name
-          elsif header_id == '-4'
-            csv_row << I18n.l(row.created_at, format: :full)
-          else
-            column = row.repository_cells
-                        .find_by(repository_column_id: header_id)
-            csv_row << (column ? column.value.data : nil)
-          end
+        column_ids.each do |c_id|
+          csv_row << case c_id.to_i
+                     when -1
+                       next
+                     when -2
+                       row.name
+                     when -3
+                       row.created_by.full_name
+                     when -4
+                       I18n.l(row.created_at, format: :full)
+                     else
+                       cell = row.repository_cells
+                              .find_by(repository_column_id: c_id)
+                       cell ? cell.value.data : nil
+                     end
         end
         csv << csv_row
       end
