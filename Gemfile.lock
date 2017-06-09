@@ -248,6 +248,7 @@ GEM
       rake
     rake (12.0.0)
     rdoc (4.2.0)
+      json (~> 1.4)
     recaptcha (4.0.0)
       json
     remotipart (1.2.1)
