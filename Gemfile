@@ -55,7 +55,7 @@ gem 'faker' # Generate fake data
 gem 'auto_strip_attributes', '~> 2.1' # Removes unnecessary whitespaces from ActiveRecord or ActiveModel attributes
 gem 'deface', '~> 1.0'
 gem 'nokogiri' # HTML/XML parser
-gem 'sneaky-save', git: 'git://github.com/einzige/sneaky-save.git'
+gem 'sneaky-save', git: 'https://github.com/einzige/sneaky-save'
 gem 'rails_autolink', '~> 1.1', '>= 1.1.6'
 gem 'delayed_paperclip'
 gem 'rubyzip'
