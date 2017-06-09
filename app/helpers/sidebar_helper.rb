@@ -40,6 +40,8 @@ module SidebarHelper
       return samples_my_module_url(my_module)
     when 'archive', 'module_archive', 'experiment_archive'
       return archive_my_module_url(my_module)
+    when 'repository' && @repository
+      return repository_my_module_url(id: my_module.id, repository_id: @repository.id)
     else
       return protocols_my_module_url(my_module)
     end
