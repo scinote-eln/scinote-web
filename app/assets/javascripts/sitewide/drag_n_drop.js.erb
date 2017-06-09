@@ -1,0 +1,346 @@
+(function(global) {
+  'use strict';
+
+  // Module to handle file uploading in Steps
+  global.DragNDropSteps = (function() {
+    var droppedFiles = [];
+    var filesValid = true;
+    var totalSize = 0;
+
+    function init(files) {
+      for(var i = 0; i < files.length; i++) {
+        droppedFiles.push(files[i]);
+      }
+      listItems();
+    }
+
+    // return the status of files if they are ready to submit
+    function filesStatus() {
+      return filesValid;
+    }
+
+    // loops through a list of files and display each file in a separate panel
+    function listItems() {
+      droppedFiles = droppedFiles.filter(Boolean);
+      $('.panel-step-attachment-new').remove();
+      _dragNdropAssetsOff();
+      for(var i = 0; i < droppedFiles.length; i++) {
+        $('#new-step-assets')
+          .append(_uploadedAseetPreview(droppedFiles[i], i))
+          .promise()
+          .done(function() {
+            _removeItemHandler(i);
+          });
+      }
+      _validateTotalSize();
+      dragNdropAssetsInit('steps');
+    }
+
+    // append the files to the form before submit
+    function appendFilesToForm(ev) {
+      var regex = /step\[assets_attributes\]\[[0-9]*\]\[id\]/;
+      var prevEls = $('input').filter(function() {
+        return this.name.match(regex);
+      });
+      droppedFiles = droppedFiles.filter(Boolean);
+      var fd = new FormData($(ev.target).closest('form').get(0));
+      for(var i = 0; i < droppedFiles.length; i++) {
+        var index = i + prevEls.length;
+        var name = 'step[assets_attributes][' + index + '][file]';
+        fd.append(name, droppedFiles[i]);
+      }
+      droppedFiles = [];
+      filesValid = true;
+      totalSize = 0;
+      _dragNdropAssetsOff();
+      return fd;
+    }
+
+    function _validateFilesSize(file) {
+      var maxSize = file.size/1048576;
+      if(maxSize > <%= Constants::FILE_MAX_SIZE_MB %> && filesValid) {
+        return "<p><%= I18n.t 'general.file.size_exceeded', file_size: Constants::FILE_MAX_SIZE_MB %></p>";
+      }
+      totalSize += parseInt(maxSize);
+      return '';
+    }
+
+    function _validateTotalSize() {
+      if(totalSize > <%= Constants::FILE_MAX_SIZE_MB %>) {
+        filesValid = false;
+        $.each($('.panel-step-attachment-new'), function() {
+          $(this)
+            .find('.panel-body')
+            .append("<p class='dnd-error'><%= I18n.t('general.file.total_size', size: Constants::FILE_MAX_SIZE_MB) %></p>");
+        });
+      } else {
+        $('.dnd-error').remove();
+        filesValid = true;
+      }
+    }
+
+    function _uploadedAseetPreview(asset, i) {
+      var html = '<div class="panel panel-default panel-step-attachment-new">';
+      html += '<div class="panel-heading">';
+      html += '<span class="glyphicon glyphicon-file"></span>';
+      html += '<%= I18n.t 'assets.drag_n_drop.file_label' %>';
+      html += '<div class="pull-right">';
+      html += '<a data-item-id="' + i + '" href="#">';
+      html += '<span class="glyphicon glyphicon-remove"></span></a></div></div>';
+      html += '<div class="panel-body">';
+      html += '<label class="control-label">';
+      html += '<%= I18n.t 'assets.drag_n_drop.file_label' %>:</label> ';
+      html += truncateLongString(asset.name,
+                                 <%= Constants::FILENAME_TRUNCATION_LENGTH %>);
+      html += _validateFilesSize(asset);
+      html += '</div></div>';
+      return html;
+    }
+
+    function _removeItemHandler(id) {
+      $('[data-item-id="' + id +'"]').off('click').on('click', function(e) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        e.stopPropagation();
+        var $el = $(this);
+        var index = $el.data('item-id');
+        totalSize -= parseInt(droppedFiles[index]/1048576);
+        droppedFiles[index] = null;
+        $el.closest('.panel-step-attachment-new').remove();
+        _validateTotalSize();
+      });
+    }
+
+    function _dragNdropAssetsOff() {
+      $('body').off('drag dragstart dragend dragover dragenter dragleave drop');
+      $('.is-dragover').hide();
+    }
+
+    return Object.freeze({
+      init: init,
+      appendFilesToForm: appendFilesToForm,
+      listItems: listItems,
+      filesStatus: filesStatus
+    });
+  })();
+
+  // Module to handle file uploading in Results
+  global.DragNDropResults = (function() {
+    var droppedFiles = [];
+    var isValid = true;
+    var totalSize = 0;
+
+    function init(files) {
+      var filesPresent = droppedFiles.length;
+      for(var i = 0; i < files.length; i++) {
+        droppedFiles.push(files[i]);
+      }
+      listItems(filesPresent);
+    }
+
+    // return the status of files if they are ready to submit
+    function filesStatus() {
+      return isValid;
+    }
+
+    // loops through a list of files and display each file in a separate panel
+    function listItems(index) {
+      _dragNdropAssetsOff();
+      for(var i = index; i < droppedFiles.length; i++) {
+          $('#new-result-assets-select')
+            .after(_uploadedAseetPreview(droppedFiles[i], i))
+            .promise()
+            .done(function() {
+              _removeItemHandler(i);
+            });
+      }
+      _validateTotalSize();
+      dragNdropAssetsInit('results');
+    }
+
+    // appent the files to the form before submit
+    function _appendFilesToForm() {
+      var regex = /result\[assets_attributes\]\[[0-9]*\]\[id\]/;
+      var prevEls = $('input').filter(function() {
+        return this.name.match(regex);
+      });
+
+      var fd = new FormData();
+      var result_names = [];
+      $.each($('input[rel="results[name]"'), function() {
+        result_names.push($(this).val());
+      });
+      result_names.reverse();
+      for(var i = 0; i < droppedFiles.length; i++) {
+        var index = i + prevEls.length;
+        var file_name = 'results_files[' + index + ']';
+        fd.append(file_name, droppedFiles[i]);
+        fd.append('results_names[' + i + ']', result_names[i]);
+      }
+      destroyAll();
+      return fd;
+    }
+
+    function _filerAndCheckFiles() {
+      droppedFiles = droppedFiles.filter(Boolean);
+      return (droppedFiles.length > 0);
+    }
+
+    function _validateFilesSize(file) {
+      var maxSize = file.size/1048576;
+      if(maxSize > <%= Constants::FILE_MAX_SIZE_MB %> && isValid) {
+        return "<p><%= I18n.t 'general.file.size_exceeded', file_size: Constants::FILE_MAX_SIZE_MB %></p>";
+      }
+      totalSize += parseInt(maxSize);
+      return '';
+    }
+
+    function _validateTotalSize() {
+      if(totalSize > <%= Constants::FILE_MAX_SIZE_MB %>) {
+        isValid = false;
+        $.each($('.panel-result-attachment-new'), function() {
+          $(this)
+            .find('.panel-body')
+            .append("<p class='dnd-error'><%= I18n.t('general.file.total_size', size: Constants::FILE_MAX_SIZE_MB) %></p>");
+        });
+      } else {
+        $('.dnd-error').remove();
+        isValid = true;
+      }
+    }
+
+    function validateTextSize(input) {
+      if(input.value.length > <%= Constants::NAME_MAX_LENGTH %>) {
+        $(input).parent().find('.dnd-error').remove();
+        $(input).after("<p class='dnd-error'><%= I18n.t('general.text.length_too_long', max_length: Constants::NAME_MAX_LENGTH) %></p>");
+        isValid = false;
+      } else {
+        $(input).parent().find('.dnd-error').remove();
+        isValid = true;
+      }
+    }
+
+    function _uploadedAseetPreview(asset, i) {
+      var html = '<div class="panel panel-default panel-result-attachment-new">';
+      html += '<div class="panel-heading">';
+      html += '<span class="glyphicon glyphicon-file"></span>';
+      html += '<%= I18n.t 'assets.drag_n_drop.file_label' %>';
+      html += '<div class="pull-right">';
+      html += '<a data-item-id="' + i + '" href="#">';
+      html += '<span class="glyphicon glyphicon-remove"></span></a></div></div>';
+      html += '<div class="panel-body"><div class="form-group">';
+      html += '<label class="control-label">Name</label>';
+      html += '<input type="text" class="form-control" ';
+      html += 'onChange="DragNDropResults.validateTextSize(this)"';
+      html += ' rel="results[name]" name="results[name][' + i + ']">';
+      html += '</div><div class="form-group"><label class="control-label">';
+      html += '<%= I18n.t 'assets.drag_n_drop.file_label' %>:</label> ';
+      html += truncateLongString(asset.name,
+                                 <%= Constants::FILENAME_TRUNCATION_LENGTH %>);
+      html += _validateFilesSize(asset);
+      html += '</div></div>';
+      return html;
+    }
+
+    function _removeItemHandler(id) {
+      $('[data-item-id="' + id +'"]').off('click').on('click', function(e) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        e.stopPropagation();
+        var $el = $(this);
+        var index = $el.data('item-id');
+        totalSize -= parseInt(droppedFiles[index]/1048576);
+        droppedFiles[index] = null;
+        $el.closest('.panel-result-attachment-new').remove();
+        _validateTotalSize();
+      });
+    }
+
+    function processResult(button) {
+      if(isValid && _filerAndCheckFiles()) {
+        animateSpinner();
+        $.ajax({
+          url: $(button).attr('data-href'),
+          method: 'POST',
+          data: _appendFilesToForm(),
+          contentType: false,
+          processData: false,
+          success: function(data) {
+            animateSpinner(null, false);
+            $('#new-result-assets-select').parent().remove();
+            $(data.html).prependTo('#results').promise().done(function() {
+              $.each($('[data-container="new-reports"]').find('.result'),
+                     function() {
+                initFormSubmitLinks($(this));
+                ResutlAssets.applyEditResultAssetCallback();
+                Results.applyCollapseLinkCallBack();
+                Results.toggleResultEditButtons(true);
+                initPreviewModal();
+                Comments.initialize();
+                ResutlAssets.initNewResultAsset();
+                Results.expandResult($(this));
+              });
+
+            });
+            $('#results-toolbar').show();
+          },
+          error: function() {
+            animateSpinner();
+            location.reload();
+          }
+        })
+      }
+    }
+
+    function destroyAll() {
+      _dragNdropAssetsOff();
+      droppedFiles = [];
+      isValid = true;
+      totalSize = 0;
+    }
+
+    function _dragNdropAssetsOff() {
+      $('body').off('drag dragstart dragend dragover dragenter dragleave drop');
+      $('.is-dragover').hide();
+    }
+
+    return Object.freeze({
+      init: init,
+      listItems: listItems,
+      destroyAll: destroyAll,
+      filesStatus: filesStatus,
+      validateTextSize: validateTextSize,
+      processResult: processResult
+    });
+  })();
+
+  global.dragNdropAssetsInit = function(location) {
+    var in_window = true;
+
+    $('body').on('drag dragstart dragend dragover dragenter dragleave drop',
+             function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }).on('dragover', function() {
+      in_window = true;
+      $('.is-dragover').show();
+    }).on('dragleave', function() {
+      in_window = false;
+      setTimeout(function() {
+        if(!in_window) {
+          $('.is-dragover').hide();
+        }
+      }, 5000);
+
+    }).on('drop', function(e) {
+      $('.is-dragover').hide();
+      var files = e.originalEvent.dataTransfer.files;
+      if(location === 'steps') {
+        DragNDropSteps.init(files);
+      } else  {
+        DragNDropResults.init(files);
+      }
+    });
+  }
+
+})(window);

@@ -44,7 +44,6 @@ class StepsController < ApplicationController
       table.created_by = current_user
       table.team = current_team
     end
-
     # Update default checked state
     @step.checklists.each do |checklist|
       checklist.checklist_items.each do |checklist_item|

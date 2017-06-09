@@ -157,23 +157,6 @@
       $form.clearFormErrors();
 
       switch(resultTypeEnum) {
-        case ResultTypeEnum.FILE:
-          var $nameInput = $form.find('#result_name');
-          var nameValid = textValidator(ev, $nameInput, 0,
-            <%= Constants::NAME_MAX_LENGTH %>);
-          var $fileInput = $form.find('#result_asset_attributes_file');
-          var filesValid = true;
-          if ($fileInput.val()) {
-            filesValid = filesValidator(ev, $fileInput, FileTypeEnum.FILE,
-              editMode);
-          }
-
-          if(nameValid && filesValid) {
-            // Local file uploading
-            animateSpinner();
-
-          }
-          break;
         case ResultTypeEnum.TABLE:
           var $nameInput = $form.find('#result_name');
           var nameValid = textValidator(ev, $nameInput, 0,

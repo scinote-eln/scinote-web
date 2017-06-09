@@ -1265,6 +1265,45 @@ ul.content-module-activities {
   }
 }
 
+.new-asset-box {
+  border: 1px solid $color-silver;
+  border-radius: 2px;
+  font-size: 2rem;
+  margin-bottom: 20px;
+  margin-top: 20px;
+  padding-bottom: 30px;
+  padding-top: 30px;
+}
+
+.dnd-error {
+  color: $color-milano-red;
+}
+
+.is-dragover {
+  background: $color-drag-overlay;
+  bottom: 0;
+  display: none;
+  height: 100%;
+  left: 0;
+  min-height: 100%;
+  pointer-events: none;
+  position: fixed;
+  right: 0;
+  top: 0;
+  width: 100%;
+  z-index: 999999;
+
+  span {
+    color: $color-white;
+    display: block;
+    font-size: 4em;
+    font-weight: bold;
+    padding-top: 25%;
+    pointer-events: none;
+    text-align: center;
+  }
+}
+
 .step,
 .result {
   .panel {

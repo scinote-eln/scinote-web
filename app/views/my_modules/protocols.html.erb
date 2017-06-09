@@ -1,4 +1,6 @@
 <% provide(:head_title, t("my_modules.protocols.head_title", project: h(@project.name), module: h(@my_module.name)).html_safe) %>
+
+<%= render partial: 'shared/drag_n_drop_overlay' %>
 <%= render partial: "shared/sidebar" %>
 <%= render partial: "shared/secondary_navigation" %>
 
