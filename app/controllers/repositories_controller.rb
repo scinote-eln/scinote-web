@@ -231,13 +231,13 @@ class RepositoriesController < ApplicationController
     )
   end
 
-  def to_csv(rows, headers)
+  def to_csv(rows, header_ids)
     require 'csv'
 
-    # Parse headers (magic numbers should be refactored - see
+    # Parse header IDs (magic numbers should be refactored - see
     # sample-datatable.js)
     header_names = []
-    headers.each do |header|
+    header_ids.each do |header|
       if header == '-1'
         next
       elsif header == '-2'
@@ -259,28 +259,23 @@ class RepositoriesController < ApplicationController
     CSV.generate do |csv|
       csv << header_names
       rows.each do |row|
-        sample_row = []
-        row_record = RepositoryRow.where(repository_rows: { id: row })
-        headers.each do |header|
-          if header == '-1'
+        csv_row = []
+        header_ids.each do |header_id|
+          if header_id == '-1'
             next
-          elsif header == '-2'
-            sample_row << row.name
-          elsif header == '-3'
-            sample_row << row.created_by.full_name
-          elsif header == '-4'
-            sample_row << I18n.l(row.created_at, format: :full)
+          elsif header_id == '-2'
+            csv_row << row.name
+          elsif header_id == '-3'
+            csv_row << row.created_by.full_name
+          elsif header_id == '-4'
+            csv_row << I18n.l(row.created_at, format: :full)
           else
-            record = row_record.joins(:repository_columns, :repository_cells)
-                               .where(repository_columns: { id: header }).take
-            if record
-              sample_row << record.repository_cells.take.value.data
-            else
-              sample_row << nil
-            end
+            column = row.repository_cells
+                        .find_by(repository_column_id: header_id)
+            csv_row << (column ? column.value.data : nil)
           end
         end
-        csv << sample_row
+        csv << csv_row
       end
     end
   end
