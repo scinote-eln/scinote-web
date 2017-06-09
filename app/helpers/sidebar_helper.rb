@@ -33,17 +33,20 @@ module SidebarHelper
   def module_action_to_link_to(my_module)
     case action_name
     when 'results'
-      return results_my_module_url(my_module)
+      results_my_module_url(my_module)
     when 'activities'
-      return activities_my_module_url(my_module)
+      activities_my_module_url(my_module)
     when 'samples'
-      return samples_my_module_url(my_module)
+      samples_my_module_url(my_module)
     when 'archive', 'module_archive', 'experiment_archive'
-      return archive_my_module_url(my_module)
+      archive_my_module_url(my_module)
     when 'repository' && @repository
-      return repository_my_module_url(id: my_module.id, repository_id: @repository.id)
+      repository_my_module_url(
+        id: my_module.id,
+        repository_id: @repository.id
+      )
     else
-      return protocols_my_module_url(my_module)
+      protocols_my_module_url(my_module)
     end
   end
 end
