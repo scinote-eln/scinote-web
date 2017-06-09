@@ -222,45 +222,46 @@ $('form#form-export').submit(function(e) {
     $('#form-export').find('input[name=row_ids\\[\\]]').remove();
     $('#form-export').find('input[name=header_ids\\[\\]]').remove();
 
-    // Append samples
-    appendSamplesIdToForm(form);
-
     // Append visible column information
-    $('.active table#repository-table thead tr').children('th')
-                                                .each(function(i) {
+    $('.active table#repository-table thead tr th').each(function() {
       var th = $(this);
       var val;
-      if ($(th).attr('id') === 'checkbox' || $(th).attr('id') === 'assigned')
-        val = -1
-      else if ($(th).attr('id') === 'row-name')
-        val = -2;
-      else if ($(th).attr('id') === 'added-by')
-        val = -3;
-      else if ($(th).attr('id') === 'added-on')
-        val = -4;
-      else
-        val = th.attr('id');
+      switch ($(th).attr('id')) {
+        case 'checkbox':
+          val = -1;
+          break;
+        case 'row-name':
+          val = -2;
+          break;
+        case 'added-by':
+          val = -3;
+          break;
+        case 'added-on':
+          val = -4;
+          break;
+        default:
+          val = th.attr('id');
+      }
 
-      if (val)
-        $(form).append(
-            $('<input>')
-            .attr('type', 'hidden')
-            .attr('name', 'header_ids[]')
-            .val(val)
-        );
+      if (val) {
+        appendInput(form, val, 'header_ids[]');
+      }
+    });
+
+    // Append records
+    $.each(rowsSelected, function(index, rowId) {
+      appendInput(form, rowId, 'row_ids[]');
     });
   }
 });
 
-function appendSamplesIdToForm(form) {
-  $.each(rowsSelected, function(index, rowId) {
-    $(form).append(
-      $('<input>')
-      .attr('type', 'hidden')
-      .attr('name', 'row_ids[]')
-      .val(rowId)
-    );
-  });
+function appendInput(form, val, name) {
+  $(form).append(
+    $('<input>')
+    .attr('type', 'hidden')
+    .attr('name', name)
+    .val(val)
+  );
 }
 
 function initRowSelection() {
