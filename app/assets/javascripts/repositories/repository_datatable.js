@@ -712,8 +712,7 @@ function updateButtons() {
       $('#exportRepositoriesButton').removeClass('disabled');
       $('#exportRepositoriesButton').prop('disabled', false);
       $('#exportRepositoriesButton').on('click', function() {
-        $('#exportRepositoryModal')
-          .modal('show')
+        $('#exportRepositoryModal').modal('show');
       });
       $('#export-repositories').on('click', function() {
         animateSpinner(null, true);

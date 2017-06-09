@@ -5,12 +5,6 @@
 
 <div id="alert-container"></div>
 
-<% if can_view_repository(repository) %>
-  <%= bootstrap_form_tag(url: export_repository_team_path(repository),
-                        html: { id: 'form-export', class: 'hidden' }) do |f| %>
-  <% end %>
-<% end %>
-
 <div id="repository-toolbar">
 
   <% if can_create_repository_records(repository) %>
@@ -88,4 +82,3 @@
              repository_index_link: repository_table_index_path(repository)
            }
 %>
-
