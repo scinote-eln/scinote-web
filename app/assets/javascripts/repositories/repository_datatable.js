@@ -197,6 +197,10 @@ function dataTableInit() {
     $(this).parent().find('.repository-row-selector').trigger('click');
   });
 
+  table.on('column-reorder', function() {
+    initRowSelection();
+  });
+
   $('#assignRepositories, #unassignRepositories').click(function() {
       animateLoading();
   });
