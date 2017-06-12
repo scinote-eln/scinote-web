@@ -214,13 +214,13 @@ setTimeout(function() {
 // Enables noSearchHidden plugin
 $.fn.dataTable.defaults.noSearchHidden = true;
 
-$('form#form-export').submit(function(e) {
+$('form#form-export').submit(function() {
   var form = this;
 
   if (currentMode === 'viewMode') {
     // Remove all hidden fields
-    $('#form-export').find('input[name=row_ids\\[\\]]').remove();
-    $('#form-export').find('input[name=header_ids\\[\\]]').remove();
+    $(form).find('input[name=row_ids\\[\\]]').remove();
+    $(form).find('input[name=header_ids\\[\\]]').remove();
 
     // Append visible column information
     $('.active table#repository-table thead tr th').each(function() {

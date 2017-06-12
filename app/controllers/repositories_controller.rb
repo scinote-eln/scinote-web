@@ -1,19 +1,21 @@
 class RepositoriesController < ApplicationController
-  before_action :load_vars, except: %i(repository_table_index export_repository)
+  before_action :load_vars, except: %i(index create create_modal)
+  before_action :load_parent_vars, except:
+    %i(repository_table_index export_repository)
   before_action :check_view_all_permissions, only: :index
+  before_action :check_view_permissions, only: :export_repository
   before_action :check_edit_and_destroy_permissions, only:
-    %(destroy destroy_modal rename_modal update)
+    %i(destroy destroy_modal rename_modal update)
   before_action :check_copy_permissions, only:
-    %(copy_modal copy)
+    %i(copy_modal copy)
   before_action :check_create_permissions, only:
-    %(create_new_modal create)
+    %i(create_new_modal create)
 
   def index
     render('repositories/index')
   end
 
   def show_tab
-    @repository = Repository.find_by_id(params[:repository_id])
     respond_to do |format|
       format.json do
         render json: {
@@ -62,7 +64,6 @@ class RepositoriesController < ApplicationController
   end
 
   def destroy_modal
-    @repository = Repository.find(params[:repository_id])
     respond_to do |format|
       format.json do
         render json: {
@@ -75,7 +76,6 @@ class RepositoriesController < ApplicationController
   end
 
   def destroy
-    @repository = Repository.find(params[:id])
     flash[:success] = t('repositories.index.delete_flash',
                         name: @repository.name)
     @repository.destroy
@@ -83,7 +83,6 @@ class RepositoriesController < ApplicationController
   end
 
   def rename_modal
-    @repository = Repository.find(params[:repository_id])
     respond_to do |format|
       format.json do
         render json: {
@@ -96,7 +95,6 @@ class RepositoriesController < ApplicationController
   end
 
   def update
-    @repository = Repository.find(params[:id])
     old_name = @repository.name
     @repository.update_attributes(repository_params)
 
@@ -116,7 +114,6 @@ class RepositoriesController < ApplicationController
   end
 
   def copy_modal
-    @repository = Repository.find(params[:repository_id])
     @tmp_repository = Repository.new(
       team: @team,
       created_by: current_user,
@@ -134,7 +131,6 @@ class RepositoriesController < ApplicationController
   end
 
   def copy
-    @repository = Repository.find(params[:repository_id])
     @tmp_repository = Repository.new(
       team: @team,
       created_by: current_user
@@ -169,7 +165,6 @@ class RepositoriesController < ApplicationController
 
   # AJAX actions
   def repository_table_index
-    @repository = Repository.find_by_id(params[:repository_id])
     if @repository.nil? || !can_view_repository(@repository)
       render_403
     else
@@ -197,6 +192,12 @@ class RepositoriesController < ApplicationController
   private
 
   def load_vars
+    repository_id = params[:id] || params[:repository_id]
+    @repository = Repository.find_by_id(repository_id)
+    render_404 unless @repository
+  end
+
+  def load_parent_vars
     @team = Team.find_by_id(params[:team_id])
     render_404 unless @team
     @repositories = @team.repositories.order(created_at: :asc)
@@ -204,6 +205,10 @@ class RepositoriesController < ApplicationController
 
   def check_view_all_permissions
     render_403 unless can_view_team_repositories(@team)
+  end
+
+  def check_view_permissions
+    render_403 unless can_view_repository(@repository)
   end
 
   def check_create_permissions
@@ -225,7 +230,9 @@ class RepositoriesController < ApplicationController
   def generate_zip
     # Fetch rows in the same order as in the currently viewed datatable
     ordered_row_ids = params[:row_ids]
-    id_row_map = RepositoryRow.where(id: ordered_row_ids).index_by(&:id)
+    id_row_map = RepositoryRow.where(id: ordered_row_ids,
+                                     repository: @repository)
+                              .index_by(&:id)
     ordered_rows = ordered_row_ids.collect { |id| id_row_map[id.to_i] }
 
     zip = ZipExport.create(user: current_user)
@@ -273,7 +280,7 @@ class RepositoriesController < ApplicationController
                        I18n.l(row.created_at, format: :full)
                      else
                        cell = row.repository_cells
-                              .find_by(repository_column_id: c_id)
+                                 .find_by(repository_column_id: c_id)
                        cell ? cell.value.data : nil
                      end
         end
