@@ -200,7 +200,7 @@
                 <% @my_module.experiment.project.team.repositories.each do |repository| %>
                   <li>
                     <a class="dropdown-item" href="<%= repository_my_module_url(repository_id: repository) %>" title="<%= repository.name %>">
-                      <%= repository.name %>
+                      <%= truncate(repository.name) %>
                     </a>
                   </li>
                   <% unless @my_module.experiment.project.team.repositories.last == repository %>
