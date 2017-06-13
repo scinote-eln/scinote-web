@@ -21,6 +21,7 @@ class RepositoryRowsController < ApplicationController
       record.name = record_params[:name] unless record_params[:name].blank?
       unless record.save
         errors[:default_fields] = record.errors.messages
+        raise ActiveRecord::RecordInvalid
       end
       if params[:repository_cells]
         params[:repository_cells].each do |key, value|
@@ -36,29 +37,28 @@ class RepositoryRowsController < ApplicationController
               repository_column: column
             }
           )
-          if cell_value.save
-            record_annotation_notification(record, cell_value.repository_cell)
-          else
+          unless cell_value.save
             errors[:repository_cells] << {
               "#{column.id}": cell_value.errors.messages
             }
+            raise ActiveRecord::RecordInvalid
           end
+          record_annotation_notification(record, cell_value.repository_cell)
         end
       end
     end
     respond_to do |format|
       format.json do
-        if errors[:default_fields].empty? && errors[:repository_cells].empty?
-          render json: { id: record.id,
-                         flash: t('repositories.create.success_flash',
-                                  record: escape_input(record.name),
-                         repository: escape_input(@repository.name)) },
-                 status: :ok
-        else
-          render json: errors,
-          status: :bad_request
-        end
+        render json: { id: record.id,
+                       flash: t('repositories.create.success_flash',
+                                record: escape_input(record.name),
+                       repository: escape_input(@repository.name)) },
+               status: :ok
       end
+    end
+  rescue
+    respond_to do |format|
+      format.json { render json: errors, status: :bad_request }
     end
   end
 
@@ -94,6 +94,7 @@ class RepositoryRowsController < ApplicationController
       @record.name = record_params[:name].blank? ? nil : record_params[:name]
       unless @record.save
         errors[:default_fields] = @record.errors.messages
+        raise ActiveRecord::RecordInvalid
       end
       if params[:repository_cells]
         params[:repository_cells].each do |key, value|
@@ -103,13 +104,13 @@ class RepositoryRowsController < ApplicationController
           if existing
             # Cell exists and new value present, so update value
             existing.value.data = value
-            if existing.value.save
-              record_annotation_notification(@record, existing)
-            else
+            unless existing.value.save
               errors[:repository_cells] << {
                 "#{existing.repository_column_id}": existing.value.errors.messages
               }
+              raise ActiveRecord::RecordInvalid
             end
+            record_annotation_notification(@record, existing)
           else
             # Looks like it is a new cell, so we need to create new value, cell
             # will be created automatically
@@ -125,13 +126,13 @@ class RepositoryRowsController < ApplicationController
                 repository_column: column
               }
             )
-            if value.save
-              record_annotation_notification(@record, value.repository_cell)
-            else
+            unless value.save
               errors[:repository_cells] << {
                 "#{cell.repository_column_id}": value.errors.messages
               }
+              raise ActiveRecord::RecordInvalid
             end
+            record_annotation_notification(@record, value.repository_cell)
           end
         end
         # Clean up empty cells, not present in updated record
@@ -144,25 +145,23 @@ class RepositoryRowsController < ApplicationController
       end
     end
 
+    # Row sucessfully updated, so sending response to client
     respond_to do |format|
       format.json do
-        if errors[:default_fields].empty? && errors[:repository_cells].empty?
-          # Row sucessfully updated, so sending response to client
-          render json: {
-            id: @record.id,
-            flash: t(
-              'repositories.update.success_flash',
-              record: escape_input(@record.name),
-              repository: escape_input(@repository.name)
-            )
-          },
-          status: :ok
-        else
-          # Errors
-          render json: errors,
-          status: :bad_request
-        end
+        render json: {
+          id: @record.id,
+          flash: t(
+            'repositories.update.success_flash',
+            record: escape_input(@record.name),
+            repository: escape_input(@repository.name)
+          )
+        },
+        status: :ok
       end
+    end
+  rescue
+    respond_to do |format|
+      format.json { render json: errors, status: :bad_request }
     end
   end
 
