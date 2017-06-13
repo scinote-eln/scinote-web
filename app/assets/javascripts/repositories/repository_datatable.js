@@ -670,7 +670,7 @@ function onClickSave() {
             if (input) {
               input.closest('.form-group').addClass('has-error');
               input.parent().append("<span class='help-block'>" +
-                                    val.value[0] + '<br /></span>');
+                                    val.data[0] + '<br /></span>');
             }
           });
         });

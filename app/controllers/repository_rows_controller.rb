@@ -39,7 +39,7 @@ class RepositoryRowsController < ApplicationController
           )
           unless cell_value.save
             errors[:repository_cells] << {
-              "#{cell.repository_column.id}": cell_value.errors.messages
+              "#{column.id}": cell_value.errors.messages
             }
             raise ActiveRecord::RecordInvalid
           end
@@ -106,7 +106,8 @@ class RepositoryRowsController < ApplicationController
             existing.value.data = value
             unless existing.value.save
               errors[:repository_cells] << {
-                "#{cell.repository_column_id}": existing.value.errors.messages
+                "#{existing.repository_column_id}":
+                existing.value.errors.messages
               }
               raise ActiveRecord::RecordInvalid
             end
