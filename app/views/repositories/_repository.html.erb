@@ -1,5 +1,7 @@
 <%= render partial: "repositories/delete_record_modal.html.erb" %>
 <%= render partial: "repositories/delete_column_modal.html.erb" %>
+<%= render partial: 'repositories/export_repository_modal.html.erb',
+           locals: { repository: repository } %>
 
 <div id="alert-container"></div>
 
@@ -10,6 +12,13 @@
       <span class="glyphicon glyphicon-plus"></span>
       <span class="hidden-xs"><%= t("repositories.add_new_record") %></span>
     </button>
+  <% end %>
+
+  <% if can_view_repository(repository) %>
+    <a href="#" class="btn btn-default" id="exportRepositoriesButton">
+      <span class="glyphicon glyphicon-cloud-download"></span>
+      <span class="hidden-xs"><%= t("my_modules.repository.export") %></span>
+    </a>
   <% end %>
 
   <div id="datatables-buttons" style="display: inline;">

@@ -214,6 +214,56 @@ setTimeout(function() {
 // Enables noSearchHidden plugin
 $.fn.dataTable.defaults.noSearchHidden = true;
 
+$('form#form-export').submit(function() {
+  var form = this;
+
+  if (currentMode === 'viewMode') {
+    // Remove all hidden fields
+    $(form).find('input[name=row_ids\\[\\]]').remove();
+    $(form).find('input[name=header_ids\\[\\]]').remove();
+
+    // Append visible column information
+    $('.active table#repository-table thead tr th').each(function() {
+      var th = $(this);
+      var val;
+      switch ($(th).attr('id')) {
+        case 'checkbox':
+          val = -1;
+          break;
+        case 'row-name':
+          val = -2;
+          break;
+        case 'added-by':
+          val = -3;
+          break;
+        case 'added-on':
+          val = -4;
+          break;
+        default:
+          val = th.attr('id');
+      }
+
+      if (val) {
+        appendInput(form, val, 'header_ids[]');
+      }
+    });
+
+    // Append records
+    $.each(rowsSelected, function(index, rowId) {
+      appendInput(form, rowId, 'row_ids[]');
+    });
+  }
+});
+
+function appendInput(form, val, name) {
+  $(form).append(
+    $('<input>')
+    .attr('type', 'hidden')
+    .attr('name', name)
+    .val(val)
+  );
+}
+
 function initRowSelection() {
   // Handle clicks on checkbox
   $('.dt-body-center .repository-row-selector').change(function(e) {
@@ -637,29 +687,38 @@ function updateButtons() {
     $('th').removeClass('disable-click');
     $('.repository-row-selector').removeClass('disabled');
     $('.repository-row-selector').prop('disabled', false);
-    if (rowsSelected.length === 1) {
-      $('#editRepositoryRecord').prop('disabled', false);
-      $('#editRepositoryRecord').removeClass('disabled');
-      $('#deleteRepositoryRecordsButton').prop('disabled', false);
-      $('#deleteRepositoryRecordsButton').removeClass('disabled');
-      $('#assignRepositoryRecords').removeClass('disabled');
-      $('#assignRepositoryRecords').prop('disabled', false);
-      $('#unassignRepositoryRecords').removeClass('disabled');
-      $('#unassignRepositoryRecords').prop('disabled', false);
-    } else if (rowsSelected.length === 0) {
+    if (rowsSelected.length === 0) {
       $('#editRepositoryRecord').prop('disabled', true);
       $('#editRepositoryRecord').addClass('disabled');
       $('#deleteRepositoryRecordsButton').prop('disabled', true);
       $('#deleteRepositoryRecordsButton').addClass('disabled');
+      $('#exportRepositoriesButton').addClass('disabled');
+      $('#exportRepositoriesButton').prop('disabled', true);
+      $('#exportRepositoriesButton').off('click');
+      $('#export-repositories').off('click');
       $('#assignRepositoryRecords').addClass('disabled');
       $('#assignRepositoryRecords').prop('disabled', true);
       $('#unassignRepositoryRecords').addClass('disabled');
       $('#unassignRepositoryRecords').prop('disabled', true);
     } else {
-      $('#editRepositoryRecord').prop('disabled', true);
-      $('#editRepositoryRecord').addClass('disabled');
+      if (rowsSelected.length === 1) {
+        $('#editRepositoryRecord').prop('disabled', false);
+        $('#editRepositoryRecord').removeClass('disabled');
+      } else {
+        $('#editRepositoryRecord').prop('disabled', true);
+        $('#editRepositoryRecord').addClass('disabled');
+      }
       $('#deleteRepositoryRecordsButton').prop('disabled', false);
       $('#deleteRepositoryRecordsButton').removeClass('disabled');
+      $('#exportRepositoriesButton').removeClass('disabled');
+      $('#exportRepositoriesButton').prop('disabled', false);
+      $('#exportRepositoriesButton').on('click', function() {
+        $('#exportRepositoryModal').modal('show');
+      });
+      $('#export-repositories').on('click', function() {
+        animateSpinner(null, true);
+        $('#form-export').submit();
+      });
       $('#assignRepositoryRecords').removeClass('disabled');
       $('#assignRepositoryRecords').prop('disabled', false);
       $('#unassignRepositoryRecords').removeClass('disabled');
@@ -674,6 +733,9 @@ function updateButtons() {
     $('#addNewColumn').prop('disabled', true);
     $('#deleteRepositoryRecordsButton').addClass('disabled');
     $('#deleteRepositoryRecordsButton').prop('disabled', true);
+    $('#exportRepositoriesButton').addClass('disabled');
+    $('#exportRepositoriesButton').off('click');
+    $('#export-repositories').off('click');
     $('#assignRepositoryRecords').addClass('disabled');
     $('#assignRepositoryRecords').prop('disabled', true);
     $('#unassignRepositoryRecords').addClass('disabled');
@@ -971,6 +1033,7 @@ function changeToEditMode() {
       if (!_.isEmpty(searchText)) {
         table.search(searchText).draw();
       }
+      initRowSelection();
     });
   }
 
