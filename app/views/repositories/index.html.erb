@@ -45,40 +45,42 @@
                  data-toggle="dropdown"
                  aria-haspopup="true"
                  aria-expanded="true"
-                 <%= "disabled='disabled'" if !can_edit_and_destroy_repository repo %>>
+                 <%= "disabled='disabled'" if !can_edit_and_destroy_repository repo and !can_copy_repository repo %>>
               <span class="glyphicon glyphicon-cog"></span>
               <span class="caret"></span>
             </div>
-            <ul class="dropdown-menu pull-right">
-              <li class="dropdown-header">
-                <%= t("repositories.index.options_dropdown.header") %>
-              </li>
-              <% if can_edit_and_destroy_repository repo %>
-                <li>
-                  <%= link_to t('repositories.index.options_dropdown.rename'),
-                              team_repository_rename_modal_path(repository_id: repo),
-                              class: "rename-repo-option",
-                              remote: true %>
+            <% if can_edit_and_destroy_repository repo or can_copy_repository repo %>
+              <ul class="dropdown-menu pull-right">
+                <li class="dropdown-header">
+                  <%= t("repositories.index.options_dropdown.header") %>
                 </li>
-              <% end %>
-              <% if can_copy_repository(repo) %>
-                <li>
-                  <%= link_to t('repositories.index.options_dropdown.copy'),
-                              team_repository_copy_modal_path(repository_id: repo),
-                              class: "copy-repo-option",
-                              remote: true %>
-                </li>
-              <% end %>
-              <% if can_edit_and_destroy_repository repo %>
-                <li role="separator" class="divider"></li>
-                <li>
-                  <%= link_to t('repositories.index.modal_delete.delete'),
-                              team_repository_destroy_modal_path(repository_id: repo),
-                              class: "delete-repo-option",
-                              remote: true %>
-                </li>
-              <% end %>
-            </ul>
+                <% if can_edit_and_destroy_repository repo %>
+                  <li>
+                    <%= link_to t('repositories.index.options_dropdown.rename'),
+                                team_repository_rename_modal_path(repository_id: repo),
+                                class: "rename-repo-option",
+                                remote: true %>
+                  </li>
+                <% end %>
+                <% if can_copy_repository(repo) %>
+                  <li>
+                    <%= link_to t('repositories.index.options_dropdown.copy'),
+                                team_repository_copy_modal_path(repository_id: repo),
+                                class: "copy-repo-option",
+                                remote: true %>
+                  </li>
+                <% end %>
+                <% if can_edit_and_destroy_repository repo %>
+                  <li role="separator" class="divider"></li>
+                  <li>
+                    <%= link_to t('repositories.index.modal_delete.delete'),
+                                team_repository_destroy_modal_path(repository_id: repo),
+                                class: "delete-repo-option",
+                                remote: true %>
+                  </li>
+                <% end %>
+              </ul>
+            <% end %>
           </div>
         </div>
         <div class="tab-content-body"></div>
