@@ -845,7 +845,7 @@ en:
     index:
       head_title: "Repositories"
       title: "Repositories"
-      add_new_repository_tab: "Create new repository"
+      add_new_repository_tab: "Add repository"
       delete_flash: "\"%{name}\" repository was successfully deleted!"
       rename_flash: "\"%{old_name}\" repository was successfully renamed to \"%{new_name}\"!"
       copy_flash: "\"%{new}\" repository was successfully copied from \"%{old}\"!"
@@ -888,7 +888,7 @@ en:
       row_name: "Name"
       added_on: "Added on"
       added_by: "Added by"
-    add_new_record: "Add record"
+    add_new_record: "Add new item"
     edit_record: "Edit"
     delete_record: "Delete"
     save_record: "Save"
