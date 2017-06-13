@@ -887,6 +887,7 @@ en:
       added_on: "Added on"
       added_by: "Added by"
     add_new_record: "Add record"
+    import_records: 'Import'
     edit_record: "Edit"
     delete_record: "Delete"
     save_record: "Save"
@@ -912,6 +913,10 @@ en:
       alert_line_1: "you will lose information in this column for %{nr} records;"
       alert_line_2: "the column will be deleted for all team members."
       delete: "Delete column"
+    modal_import:
+      title: 'Import records'
+      notice: 'You may upload .csv file (comma separated) or tab separated file (.txt or .tdv) or Excel file (.xls, .xlsx). First row should include header names, followed by rows with sample data.'
+      upload: 'Upload file'
     js:
       permission_error: "You don't have permission to edit this record."
       not_found_error: "This repository record does not exist."

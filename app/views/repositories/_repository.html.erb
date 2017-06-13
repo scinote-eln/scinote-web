@@ -11,6 +11,12 @@
       <span class="hidden-xs"><%= t("repositories.add_new_record") %></span>
     </button>
   <% end %>
+  <% if can_import_repository_records(repository) %>
+    <button type="button" class="btn btn-default" id="importRecordsButton" data-toggle="modal" data-target="#modal-import-records">
+      <span class="glyphicon glyphicon-cloud-upload"></span>
+      <span class="hidden-xs"><%= t('repositories.import_records') %></span>
+    </button>
+  <% end %>
 
   <div id="datatables-buttons" style="display: inline;">
     <div id="repository-columns-dropdown" class="dropdown">
@@ -73,3 +79,5 @@
              repository_index_link: repository_table_index_path(repository)
            }
 %>
+<%= render partial: 'repositories/import_repository_records.html.erb',
+                    locals: { repository: repository } %>

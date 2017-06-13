@@ -15,6 +15,28 @@ class Repository < ActiveRecord::Base
   validates :team, presence: true
   validates :created_by, presence: true
 
+  def open_spreadsheet(file)
+    filename = file.original_filename
+    file_path = file.path
+
+    if file.class == Paperclip::Attachment && file.is_stored_on_s3?
+      fa = file.fetch
+      file_path = fa.path
+    end
+    generate_file(filename, file_path)
+  end
+
+  def available_repository_fields
+    fields = {}
+    # First and foremost add sample name
+    fields['-1'] = I18n.t('samples.table.sample_name')
+    # Add all other custom columns
+    repository_columns.order(:created_at).each do |rc|
+      fields[rc.id] = rc.name
+    end
+    fields
+  end
+
   def copy(created_by, name)
     new_repo = nil
 
@@ -40,5 +62,25 @@ class Repository < ActiveRecord::Base
 
     # If everything is okay, return new_repo
     new_repo
+  end
+
+  private
+
+  def generate_file(filename, file_path)
+    case File.extname(filename)
+    when '.csv'
+      Roo::CSV.new(file_path, extension: :csv)
+    when '.tdv'
+      Roo::CSV.new(file_path, nil, :ignore, csv_options: { col_sep: '\t' })
+    when '.txt'
+      # This assumption is based purely on biologist's habits
+      Roo::CSV.new(file_path, csv_options: { col_sep: '\t' })
+    when '.xls'
+      Roo::Excel.new(file_path)
+    when '.xlsx'
+      Roo::Excelx.new(file_path)
+    else
+      raise TypeError
+    end
   end
 end

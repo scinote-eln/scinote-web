@@ -185,6 +185,14 @@ class RepositoriesController < ApplicationController
     end
   end
 
+  def parse_sheet
+    byebug
+    # import_repository = ImportRepository.new(file: params, repository: params)
+  end
+
+  def import_repository
+  end
+  
   private
 
   def load_vars

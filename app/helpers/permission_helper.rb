@@ -1090,6 +1090,10 @@ module PermissionHelper
     is_normal_user_or_admin_of_team(repository.team)
   end
 
+  def can_import_repository_records(repository)
+    is_normal_user_or_admin_of_team(repository.team)
+  end
+
   def can_edit_repository_records(repository)
     is_normal_user_or_admin_of_team(repository.team)
   end

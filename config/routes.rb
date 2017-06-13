@@ -445,6 +445,10 @@ Rails.application.routes.draw do
       resources :repository_columns, only: %i(create edit update destroy)
 
       resources :repository_rows, only: %i(create edit update)
+      member do
+        post 'parse_sheet'
+        post 'import_records'
+      end
     end
 
     get 'search' => 'search#index'
