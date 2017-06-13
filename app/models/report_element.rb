@@ -84,8 +84,6 @@ class ReportElement < ActiveRecord::Base
 
     if parent_model == 'experiment'
       destroy unless send(parent_model).project == report.project
-    elsif parent_model == 'step'
-      destroy unless send(parent_model).completed
     else
       destroy unless (send(parent_model).active? rescue send(parent_model))
     end
