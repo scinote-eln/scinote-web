@@ -1325,7 +1325,7 @@ function changeToEditMode() {
     var maxLength = $('#repository-table').data('max-dropdown-length');
     if ($.trim(name).length > maxLength) {
       return '<div class="modal-tooltip">' +
-             maxLength +
+             truncateLongString(name, maxLength) +
              '<span class="modal-tooltiptext">' + name + '</span></div>';
     }
     return name;
