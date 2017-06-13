@@ -138,20 +138,23 @@ class RepositoryDatatable < AjaxDatatablesRails::Base
   # after that "data" function will return json
   def get_raw_records
     repository_rows = RepositoryRow
-                      .includes(
+                      .preload(
                         :repository_columns,
-                        :created_by
-                        # repository_cells: :value
-                      ).references(
-                        :repository_columns,
-                        :created_by
+                        :created_by,
+                        repository_cells: :value
                       )
+                      .joins(:created_by)
                       .where(repository: @repository)
 
     if @my_module
-      @assigned_rows = @my_module
-                       .repository_rows
-                       .where(repository: @repository)
+      @assigned_rows = @my_module.repository_rows
+                                 .preload(
+                                   :repository_columns,
+                                   :created_by,
+                                   repository_cells: :value
+                                 )
+                                 .joins(:created_by)
+                                 .where(repository: @repository)
     end
 
     # Make mappings of custom columns, so we have same id for every column
