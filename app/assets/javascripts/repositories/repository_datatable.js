@@ -453,10 +453,12 @@ function onClickAssignRecords() {
     success: function(data) {
       HelperModule.flashAlertMsg(data.flash, 'success');
       onClickCancel();
+      clearRowSelection();
     },
     error: function(data) {
       HelperModule.flashAlertMsg(data.responseJSON.flash, 'danger');
       onClickCancel();
+      clearRowSelection();
     }
   });
 }
@@ -471,10 +473,12 @@ function onClickUnassignRecords() {
     success: function(data) {
       HelperModule.flashAlertMsg(data.flash, 'success');
       onClickCancel();
+      clearRowSelection();
     },
     error: function(data) {
       HelperModule.flashAlertMsg(data.responseJSON.flash, 'danger');
       onClickCancel();
+      clearRowSelection();
     }
   });
 }
@@ -762,6 +766,13 @@ function clearAllErrors() {
   });
   // Remove any alerts
   $('#alert-container').find('div').remove();
+}
+
+function clearRowSelection() {
+  $('.dt-body-center .repository-row-selector').prop('checked', false);
+  $('.dt-body-center .repository-row-selector').closest('tr')
+                                               .removeClass('selected');
+  rowsSelected = [];
 }
 
 // Restore previous table
