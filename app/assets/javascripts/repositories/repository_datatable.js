@@ -52,7 +52,7 @@ function dataTableInit() {
     scrollY: '64vh',
     scrollCollapse: true,
     colReorder: {
-      fixedColumnsLeft: 2,
+      fixedColumnsLeft: $('#assigned').text().length === 0 ? 1 : 2,
       realtime: false
     },
     destroy: true,
