@@ -488,6 +488,7 @@ function onClickDeleteRecord() {
     data: {selected_rows: rowsSelected},
     success: function(data) {
       HelperModule.flashAlertMsg(data.flash, 'success');
+      rowsSelected = [];
       onClickCancel();
     },
     error: function(e) {
