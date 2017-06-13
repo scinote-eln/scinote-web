@@ -148,7 +148,11 @@ class RepositoryDatatable < AjaxDatatablesRails::Base
                       )
                       .where(repository: @repository)
 
-    @assigned_rows = @my_module.repository_rows if @my_module
+    if @my_module
+      @assigned_rows = @my_module
+                       .repository_rows
+                       .where(repository: @repository)
+    end
 
     # Make mappings of custom columns, so we have same id for every column
     i = 5
