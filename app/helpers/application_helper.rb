@@ -246,7 +246,11 @@ module ApplicationHelper
     if !prefix.empty? &&
        !prefix.include?('http://') &&
        !prefix.include?('https://')
-      prefix = request.ssl? ? "https://#{prefix}" : "http://#{prefix}"
+      prefix = if respond_to?(:request) && request.ssl?
+                 "https://#{prefix}"
+               else
+                 "http://#{prefix}"
+               end
     end
 
     unless user.avatar(style) == '/images/icon_small/missing.png'
