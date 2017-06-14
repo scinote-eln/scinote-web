@@ -184,14 +184,15 @@ class RepositoryDatatable < AjaxDatatablesRails::Base
     records
   end
 
-  # Overriden to make it work for custom columns, because they  are polymorphic
+  # Overriden to make it work for custom columns, because they are polymorphic
   def simple_search(records)
     return records unless params[:search].present? &&
                           params[:search][:value].present?
     search_val = params[:search][:value]
 
     filtered_ids = RepositoryRow.select do |r|
-      row_cells = [r.name, r.created_at.to_s, r.created_by.full_name]
+      row_cells = [r.name, r.created_at.strftime(Constants::DATE_FORMAT),
+                   r.created_by.full_name]
       row_cells.push(*r.repository_cells.collect { |c| c.value.data })
       row_cells.any? { |c| c.include?(search_val) }
     end
