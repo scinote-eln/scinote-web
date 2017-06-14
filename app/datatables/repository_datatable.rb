@@ -244,18 +244,14 @@ class RepositoryDatatable < AjaxDatatablesRails::Base
         #                              as sq ORDER BY CASE WHEN sq.custom_field_id = #{column_id} THEN 1 ELSE 2 END #{dir}, sq.value #{dir}
         #                              LIMIT #{per_page} OFFSET #{offset}")
 
-        RepositoryRow.find_by_sql(
-          "SELECT repository_rows.*, values.value AS value
-          FROM repository_rows
-          LEFT OUTER JOIN (SELECT repository_cells.*,
+        records.joins(
+          "LEFT OUTER JOIN (SELECT repository_cells.repository_row_id,
             repository_text_values.data AS value FROM repository_cells
 				  INNER JOIN repository_text_values
 				  ON repository_text_values.id = repository_cells.value_id
 				  WHERE repository_cells.repository_column_id = #{column_id}) AS values
-	        ON values.repository_row_id = repository_rows.id
-          WHERE repository_rows.repository_id = #{@repository.id}
-          ORDER BY value #{dir} LIMIT #{per_page} OFFSET #{offset}"
-        )
+          ON values.repository_row_id = repository_rows.id"
+        ).order("values.value #{dir}")
       else
         super(records)
       end
