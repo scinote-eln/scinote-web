@@ -10,11 +10,11 @@
       pane = $(this);
 
       $.ajax({
-        url: $(this).attr('data-url'),
+        url: pane.attr('data-url'),
         type: 'GET',
         dataType: 'json',
-        success: function (data) {
-        	var tabBody = $(pane.context.hash).find(".tab-content-body");
+        success: function(data) {
+        	var tabBody = $(pane.context.hash).find('.tab-content-body');
           tabBody.html(data.html);
           pane.tab('show');
         },
@@ -40,6 +40,12 @@
     })
   }
 
+  function showParsedRecords() {
+    $('#form-records-file').bind('ajax:success', function(evt, data, status, xhr) {
+      debugger;
+    });
+  }
+
   $('.delete-repo-option').initializeModal('#delete-repo-modal');
   $('.rename-repo-option').initializeModal('#rename-repo-modal');
   $('.copy-repo-option').initializeModal('#copy-repo-modal');
@@ -47,7 +53,7 @@
 
   $(document).ready(function() {
     loadRepositoryTab();
+    showParsedRecords();
   });
 
-  alert('Banana');
 })();

@@ -186,7 +186,6 @@ class RepositoriesController < ApplicationController
   end
 
   def parse_sheet
-    # byebug
     render_404 unless params[:team_id].to_i == current_team.id
     repository = current_team.repositories.find_by_id(params[:id])
     imported_file = ::ImportRepository.new(file: params[:file],
