@@ -42,7 +42,6 @@ function dataTableInit() {
   originalHeader = $('#repository-table thead').children().clone();
   viewAssigned = 'assigned';
   table = $('#repository-table').DataTable({
-    order: [[2, 'desc']],
     dom: "R<'row'<'col-sm-9-custom toolbar'l><'col-sm-3-custom'f>>tpi",
     stateSave: true,
     processing: true,
@@ -52,7 +51,7 @@ function dataTableInit() {
     scrollY: '64vh',
     scrollCollapse: true,
     colReorder: {
-      fixedColumnsLeft: $('#assigned').text().length === 0 ? 1 : 2,
+      fixedColumnsLeft: 2,
       realtime: false
     },
     destroy: true,
@@ -92,7 +91,6 @@ function dataTableInit() {
     columns: (function() {
       var numOfColumns = $('#repository-table').data('num-columns');
       var columns = [];
-
       for (var i = 0; i < numOfColumns; i++) {
         var visible = (i <= 4);
         var searchable = (i > 0 && i <= 4);
@@ -164,7 +162,7 @@ function dataTableInit() {
       } else {
         table.column(1).visible(true);
       }
-      for (var i = 2; i < table.columns()[0].length; i++) {
+      for (var i = 1; i < table.columns()[0].length; i++) {
         var visibility = false;
         if (myData.columns[i]) {
           visibility = myData.columns[i].visible;
