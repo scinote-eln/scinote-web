@@ -1,5 +1,5 @@
 class RepositoriesController < ApplicationController
-  before_action :load_vars, except: :repository_table_index
+  before_action :load_vars, except: [:repository_table_index, :parse_sheet]
   before_action :check_view_all_permissions, only: :index
   before_action :check_edit_and_destroy_permissions, only:
     %(destroy destroy_modal rename_modal update)
@@ -186,13 +186,49 @@ class RepositoriesController < ApplicationController
   end
 
   def parse_sheet
-    byebug
-    # import_repository = ImportRepository.new(file: params, repository: params)
+    # byebug
+    render_404 unless params[:team_id].to_i == current_team.id
+    repository = current_team.repositories.find_by_id(params[:id])
+    imported_file = ::ImportRepository.new(file: params[:file],
+                                               repository: repository,
+                                               session: session)
+
+    respond_to do |format|
+      unless params[:file]
+        repository_response(t("teams.parse_sheet.errors.no_file_selected"))
+      end
+      begin
+        if imported_file.too_large?
+          repository_response(t('general.file.size_exceeded',
+                                file_size: Constants::FILE_MAX_SIZE_MB))
+        else
+          flash[:notice] = t('teams.parse_sheet.errors.empty_file')
+          redirect_to back and return if imported_file.empty?
+          @import_data = imported_file.data
+          if imported_file.generated_temp_file?
+            format.json do
+              render json: {
+                html: render_to_string(
+                  partial: 'repositories/parse_records_modal.html.erb'
+                )
+              }
+            end
+          else
+            repository_response(t('teams.parse_sheet.errors.temp_file_failure'))
+          end
+        end
+      rescue ArgumentError, CSV::MalformedCSVError
+        repository_response(t('teams.parse_sheet.errors.invalid_file',
+                              encoding: ''.encoding))
+      rescue TypeError
+        repository_response(t('teams.parse_sheet.errors.invalid_extension'))
+      end
+    end
   end
 
   def import_repository
   end
-  
+
   private
 
   def load_vars
@@ -219,5 +255,16 @@ class RepositoriesController < ApplicationController
 
   def repository_params
     params.require(:repository).permit(:name)
+  end
+
+  def repository_response(message)
+    format.html do
+      flash[:alert] = message
+      redirect_to :back
+    end
+    format.json do
+      render json: { message: message },
+        status: :unprocessable_entity
+    end
   end
 end

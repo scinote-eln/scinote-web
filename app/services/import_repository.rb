@@ -1,9 +1,10 @@
 class ImportRepository
-
+  include ActionView::Helpers::TextHelper
   def initialize(options)
     @file = options.fetch(:file)
     @repository = options.fetch(:repository)
-    @sheet = @repository.open_spreadsheet(@file )
+    @session = options.fetch(:session)
+    @sheet = @repository.open_spreadsheet(@file)
   end
 
   def data
@@ -11,113 +12,38 @@ class ImportRepository
     header = @sheet.row(1)
     rows = []
     rows << Hash[[header, @sheet.row(2)].transpose]
-
     # Fill in fields for dropdown
     available_fields = @repository.available_repository_fields.map do |name|
-      name.truncate(Constants::NAME_TRUNCATION_LENGTH_DROPDOWN)
+      truncate(name.last, length: Constants::NAME_TRUNCATION_LENGTH_DROPDOWN)
     end
-    { header: header, rows: rows, available_fields: available_fields }
+    @temp_file = TempFile.new(session_id: @session.id, file: @file)
+    Data.new(header, rows, available_fields, @repository, @temp_file)
   end
 
-  def check_file_size
-    return unless @file.size > Constants::FILE_MAX_SIZE_MB.megabytes
-    respond_to do |format|
-      error = t('general.file.size_exceeded',
-                file_size: Constants::FILE_MAX_SIZE_MB)
-
-      format.html do
-        flash[:alert] = error
-        redirect_to session.delete(:return_to)
-      end
-      format.json do
-        render json: { message: error },
-          status: :unprocessable_entity
-      end
-    end
+  def too_large?
+    @file.size > Constants::FILE_MAX_SIZE_MB.megabytes
   end
 
-  def check_spreadsheet_rows(sheet)
-    if @sheet.last_row.between?(0, 1)
-      flash[:notice] = t('teams.parse_sheet.errors.empty_file')
-      redirect_to session.delete(:return_to) and return
-    end
+  def empty?
+    @sheet.last_row.between?(0, 1)
   end
 
-  def generate_temp_file
+  def generated_temp_file?
     # Save file for next step (importing)
     @temp_file = TempFile.new(
-      session_id: session.id,
+      session_id: @session.id,
       file: @file
     )
-    respond_to do |format|
-      if @temp_file.save
-        @temp_file.destroy_obsolete
-        # format.html
-        format.json do
-          render json: {
-            html: render_to_string({
-              partial: 'samples/parse_samples_modal.html.erb'
-            })
-          }
-        end
-      else
-        error = t('teams.parse_sheet.errors.temp_file_failure')
-        format.html do
-          flash[:alert] = error
-          redirect_to session.delete(:return_to)
-        end
-        format.json do
-          render json: { message: error },
-            status: :unprocessable_entity
-        end
-      end
+
+    if @temp_file.save
+      @temp_file.destroy_obsolete
+      return true
     end
   end
 
-  def argument_error_callback
-    error = t('teams.parse_sheet.errors.invalid_file',
-              encoding: ''.encoding)
-    respond_to do |format|
-      format.html do
-        flash[:alert] = error
-        redirect_to session.delete(:return_to)
-      end
-      format.json do
-        render json: { message: error },
-          status: :unprocessable_entity
-      end
-    end
-  end
-
-  def type_error_callback
-    error = t('teams.parse_sheet.errors.invalid_extension')
-    respond_to do |format|
-      format.html do
-        flash[:alert] = error
-        redirect_to session.delete(:return_to)
-      end
-      format.json do
-        render json: {message: error},
-          status: :unprocessable_entity
-      end
-    end
-  end
-
-  def no_file_callback
-    error = t('teams.parse_sheet.errors.no_file_selected')
-    respond_to do |format|
-      format.html do
-        flash[:alert] = error
-        session[:return_to] ||= request.referer
-        redirect_to session.delete(:return_to)
-      end
-      format.json do
-        render json: { message: error },
-          status: :unprocessable_entity
-      end
-    end
-  end
-
+  Data = Struct.new(
+    :header, :rows, :available_fields, :repository, :temp_file
+  )
   # def import_repository
   #   session[:return_to] ||= request.referer
   #
@@ -345,7 +271,67 @@ class ImportRepository
   #           flash[:alert] = error
   #           redirect_to session.delete(:return_to)
   #         }
+  #            redirect_to session.delete(:return_to)
+  #         }
+  #             redirect_to session.delete(:return_to)
+  #         }
   #         format.json {
+  #           render json: {message: error},
+  #             status: :unprocessable_entity
+  #         }
+  #       rescue TypeError
+  #         error =  t("teams.parse_sheet.errors.invalid_extension")
+  #         format.html {
+  #           flash[:alert] = error
+  #           redirect_to session.delete(:return_to)
+  #         }
+  #         format.json {
+  #           render json: {message: error},
+  #             status: :unprocessable_entity
+  #         }
+  #       end
+  #     else
+  #       error = t("teams.parse_sheet.errors.no_file_selected")
+  #       format.html {
+  #         flash[:alert] = error
+  #         session[:return_to] ||= request.referer
+  #         redirect_to session.delete(:return_to)
+  #       }
+  #       format.json {
+  #         render json: {message: error},
+  #           status: :unprocessable_entity
+  #       }
+  #     end
+  #   end
+  # end  format.json {
+  #           render json: {message: error},
+  #             status: :unprocessable_entity
+  #         }
+  #       rescue TypeError
+  #         error =  t("teams.parse_sheet.errors.invalid_extension")
+  #         format.html {
+  #           flash[:alert] = error
+  #           redirect_to session.delete(:return_to)
+  #         }
+  #         format.json {
+  #           render json: {message: error},
+  #             status: :unprocessable_entity
+  #         }
+  #       end
+  #     else
+  #       error = t("teams.parse_sheet.errors.no_file_selected")
+  #       format.html {
+  #         flash[:alert] = error
+  #         session[:return_to] ||= request.referer
+  #         redirect_to session.delete(:return_to)
+  #       }
+  #       format.json {
+  #         render json: {message: error},
+  #           status: :unprocessable_entity
+  #       }
+  #     end
+  #   end
+  # end   format.json {
   #           render json: {message: error},
   #             status: :unprocessable_entity
   #         }
