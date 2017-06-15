@@ -11,6 +11,8 @@ class Constants
   NAME_TRUNCATION_LENGTH = 25
   # Max characters for short text fields, in dropdownList
   NAME_TRUNCATION_LENGTH_DROPDOWN = 20
+  # Max characters for datatables fields
+  TABLE_FIELDS_TRUNCATION_LENGTH = 250
   # Max characters for long text fields
   TEXT_MAX_LENGTH = 10000
   # Max characters for rich text fields (in html format)
