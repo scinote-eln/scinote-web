@@ -174,14 +174,31 @@ class RepositoryDatatable < AjaxDatatablesRails::Base
   def fetch_records
     records = get_raw_records
     records = @assigned_rows if @my_module && params[:assigned] == 'assigned'
-    records = sort_records(records) if params[:order].present?
-    escape_special_chars
     records = filter_records(records) if params[:search].present? &&
                                          !sorting_by_custom_column
+    records = sort_records(records) if params[:order].present?
     records = paginate_records(records) if !(params[:length].present? &&
                                              params[:length] == '-1') &&
                                            !sorting_by_custom_column
+    escape_special_chars
     records
+  end
+
+  # Overriden to make it work for custom columns, because they are polymorphic
+  # NOTE: Function assumes the provided records/rows are only from the current
+  # repository!
+  def simple_search(repo_rows)
+    return repo_rows unless params[:search].present? &&
+                            params[:search][:value].present?
+    search_val = params[:search][:value]
+
+    filtered_rows = repo_rows.select do |r|
+      row_cells = [r.name, r.created_at.strftime(Constants::DATE_FORMAT),
+                   r.created_by.full_name]
+      row_cells.push(*r.repository_cells.collect { |c| c.value.data })
+      row_cells.any? { |c| c.include?(search_val) }
+    end
+    repo_rows.where(id: filtered_rows)
   end
 
   # Override default sort method if needed
