@@ -417,7 +417,7 @@ class MyModulesController < ApplicationController
             'activities.assign_repository_records',
             user: current_user.full_name,
             task: @my_module.name,
-            repository: @repository,
+            repository: @repository.name,
             records: records_names.join(', ')
           )
         )
@@ -462,7 +462,7 @@ class MyModulesController < ApplicationController
             'activities.unassign_repository_records',
             user: current_user.full_name,
             task: @my_module.name,
-            repository: @repository,
+            repository: @repository.name,
             records: records.map(&:name).join(', ')
           )
         )
