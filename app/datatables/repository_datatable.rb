@@ -179,12 +179,10 @@ class RepositoryDatatable < AjaxDatatablesRails::Base
   def fetch_records
     records = get_raw_records
     records = @assigned_rows if @my_module && params[:assigned] == 'assigned'
-    records = filter_records(records) if params[:search].present? &&
-                                         !sorting_by_custom_column
+    records = filter_records(records) if params[:search].present?
     records = sort_records(records) if params[:order].present?
-    records = paginate_records(records) if !(params[:length].present? &&
-                                             params[:length] == '-1') &&
-                                           !sorting_by_custom_column
+    records = paginate_records(records) unless params[:length].present? &&
+                                               params[:length] == '-1'
     escape_special_chars
     records
   end
@@ -192,17 +190,39 @@ class RepositoryDatatable < AjaxDatatablesRails::Base
   # Overriden to make it work for custom columns, because they are polymorphic
   # NOTE: Function assumes the provided records/rows are only from the current
   # repository!
-  def simple_search(repo_rows)
+  def filter_records(repo_rows)
     return repo_rows unless params[:search].present? &&
                             params[:search][:value].present?
     search_val = params[:search][:value]
 
-    filtered_rows = repo_rows.select do |r|
-      row_cells = [r.name, r.created_at.strftime(Constants::DATE_FORMAT),
-                   r.created_by.full_name]
-      row_cells.push(*r.repository_cells.collect { |c| c.value.data })
-      row_cells.any? { |c| c.include?(search_val) }
-    end
+    filtered_rows = repo_rows.find_by_sql(
+      "SELECT DISTINCT repository_rows.*
+       FROM repository_rows
+       INNER JOIN (
+         SELECT users.*
+         FROM users
+       ) AS users
+       ON users.id = repository_rows.created_by_id
+       LEFT OUTER JOIN (
+         SELECT repository_cells.repository_row_id,
+                repository_text_values.data AS text_value,
+                to_char(repository_date_values.data, 'DD.MM.YYYY HH24:MI')
+                AS date_value
+         FROM repository_cells
+         INNER JOIN repository_text_values
+         ON repository_text_values.id = repository_cells.value_id
+         FULL OUTER JOIN repository_date_values
+         ON repository_date_values.id = repository_cells.value_id
+       ) AS values
+       ON values.repository_row_id = repository_rows.id
+       WHERE repository_rows.repository_id = #{@repository.id}
+             AND (repository_rows.name ILIKE '%#{search_val}%'
+                  OR to_char(repository_rows.created_at, 'DD.MM.YYYY HH24:MI')
+                     ILIKE '%#{search_val}%'
+                  OR users.full_name ILIKE '%#{search_val}%'
+                  OR text_value ILIKE '%#{search_val}%'
+                  OR date_value ILIKE '%#{search_val}%')"
+    )
     repo_rows.where(id: filtered_rows)
   end
 
