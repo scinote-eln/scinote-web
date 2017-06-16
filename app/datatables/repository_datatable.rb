@@ -102,7 +102,7 @@ class RepositoryDatatable < AjaxDatatablesRails::Base
     records.map do |record|
       row = {
         'DT_RowId': record.id,
-        '1': @my_module ? assigned_row(record) : '',
+        '1': assigned_row(record),
         '2': escape_input(record.name),
         '3': I18n.l(record.created_at, format: :full),
         '4': escape_input(record.created_by.full_name),
@@ -155,6 +155,11 @@ class RepositoryDatatable < AjaxDatatablesRails::Base
                                  )
                                  .joins(:created_by)
                                  .where(repository: @repository)
+    else
+      @assigned_rows = repository_rows.joins(
+        'INNER JOIN my_module_repository_rows ON
+        (repository_rows.id = my_module_repository_rows.repository_row_id)'
+      )
     end
 
     # Make mappings of custom columns, so we have same id for every column
@@ -206,15 +211,20 @@ class RepositoryDatatable < AjaxDatatablesRails::Base
     if params[:order].present? && params[:order].length == 1
       if sort_column(params[:order].values[0]) == ASSIGNED_SORT_COL
         # If "assigned" column is sorted
+        direction = sort_null_direction(params[:order].values[0])
         if @my_module
           # Depending on the sort, order nulls first or
           # nulls last on repository_cells association
-          direction = sort_null_direction(params[:order].values[0])
           records.joins(
             "LEFT OUTER JOIN my_module_repository_rows ON
             (repository_rows.id = my_module_repository_rows.repository_row_id
             AND (my_module_repository_rows.my_module_id = #{@my_module.id} OR
                               my_module_repository_rows.id IS NULL))"
+          ).order("my_module_repository_rows.id NULLS #{direction}")
+        else
+          records.joins(
+            'LEFT OUTER JOIN my_module_repository_rows ON
+            (repository_rows.id = my_module_repository_rows.repository_row_id)'
           ).order("my_module_repository_rows.id NULLS #{direction}")
         end
       elsif sorting_by_custom_column
