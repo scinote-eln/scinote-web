@@ -15,11 +15,7 @@
     <thead>
       <tr>
         <th id="checkbox"><input name="select_all" value="1" type="checkbox"></th>
-        <% if @my_module %>
-          <th id="assigned"><%= t("repositories.table.assigned") %></th>
-        <% else %>
-          <th id="assigned"></th>
-        <% end %>
+        <th id="assigned"><%= t("repositories.table.assigned") %></th>
         <th id="row-name"><%= t("repositories.table.row_name") %></th>
         <th id="added-on"><%= t("repositories.table.added_on") %></th>
         <th id="added-by"><%= t("repositories.table.added_by") %></th>
