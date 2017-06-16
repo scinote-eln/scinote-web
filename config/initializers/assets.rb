@@ -73,6 +73,7 @@ Rails.application.config.assets.precompile += %w(samples/sample_types_groups.js)
 Rails.application.config.assets.precompile += %w(highlightjs-github-theme.css)
 Rails.application.config.assets.precompile += %w(search.js)
 Rails.application.config.assets.precompile += %w(repositories/index.js)
+Rails.application.config.assets.precompile += %w(repositories/edit.js)
 Rails.application.config.assets.precompile +=
   %w(repositories/repository_datatable.js)
 
