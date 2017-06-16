@@ -179,12 +179,10 @@ class RepositoryDatatable < AjaxDatatablesRails::Base
   def fetch_records
     records = get_raw_records
     records = @assigned_rows if @my_module && params[:assigned] == 'assigned'
-    records = filter_records(records) if params[:search].present? &&
-                                         !sorting_by_custom_column
+    records = filter_records(records) if params[:search].present?
     records = sort_records(records) if params[:order].present?
-    records = paginate_records(records) if !(params[:length].present? &&
-                                             params[:length] == '-1') &&
-                                           !sorting_by_custom_column
+    records = paginate_records(records) unless params[:length].present? &&
+                                               params[:length] == '-1'
     escape_special_chars
     records
   end
@@ -192,7 +190,7 @@ class RepositoryDatatable < AjaxDatatablesRails::Base
   # Overriden to make it work for custom columns, because they are polymorphic
   # NOTE: Function assumes the provided records/rows are only from the current
   # repository!
-  def simple_search(repo_rows)
+  def filter_records(repo_rows)
     return repo_rows unless params[:search].present? &&
                             params[:search][:value].present?
     search_val = params[:search][:value]
