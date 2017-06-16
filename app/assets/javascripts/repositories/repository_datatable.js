@@ -486,7 +486,7 @@ function onClickDeleteRecord() {
     dataType: 'json',
     data: {selected_rows: rowsSelected},
     success: function(data) {
-      HelperModule.flashAlertMsg(data.flash, 'success');
+      HelperModule.flashAlertMsg(data.flash, data.color);
       rowsSelected = [];
       onClickCancel();
     },

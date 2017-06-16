@@ -178,7 +178,8 @@ class RepositoryRowsController < ApplicationController
         end
       end
       if deleted_count.zero?
-        flash = t('repositories.destroy.no_deleted_records_flash')
+        flash = t('repositories.destroy.no_deleted_records_flash',
+                  other_records_number: params[:selected_rows].count)
       elsif deleted_count != params[:selected_rows].count
         not_deleted_count = params[:selected_rows].count - deleted_count
         flash = t('repositories.destroy.contains_other_records_flash',
@@ -189,7 +190,8 @@ class RepositoryRowsController < ApplicationController
                   records_number: deleted_count)
       end
       respond_to do |format|
-        format.json { render json: { flash: flash }, status: :ok }
+        color = deleted_count.zero? ? 'info' : 'success'
+        format.json { render json: { flash: flash, color: color }, status: :ok }
       end
     else
       respond_to do |format|
