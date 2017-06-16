@@ -131,7 +131,7 @@ class RepositoryRowsController < ApplicationController
               record_annotation_notification(@record, value.repository_cell)
             else
               errors[:repository_cells] << {
-                "#{cell.repository_column_id}": value.errors.messages
+                "#{column.id}": value.errors.messages
               }
             end
           end
