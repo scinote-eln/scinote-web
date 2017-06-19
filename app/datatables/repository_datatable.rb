@@ -158,6 +158,7 @@ class RepositoryDatatable < AjaxDatatablesRails::Base
                                  )
                                  .joins(:created_by)
                                  .where(repository: @repository)
+      return @assigned_rows if params[:assigned] == 'assigned'
     else
       @assigned_rows = repository_rows.joins(
         'INNER JOIN my_module_repository_rows ON
