@@ -844,6 +844,7 @@ function changeToEditMode() {
   currentMode = 'editMode';
   // Table specific stuff
   table.button(0).enable(false);
+  initHeaderTooltip();
 }
 
 /*
