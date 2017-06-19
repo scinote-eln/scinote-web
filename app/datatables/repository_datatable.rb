@@ -120,7 +120,7 @@ class RepositoryDatatable < AjaxDatatablesRails::Base
         row[@columns_mappings[cell.repository_column.id]] =
           custom_auto_link(
             display_tooltip(cell.value.data,
-                            Constants::TABLE_FIELDS_TRUNCATION_LENGTH),
+                            Constants::NAME_MAX_LENGTH),
             simple_format: true,
             team: @team
           )

@@ -117,6 +117,7 @@ function dataTableInit() {
                                rowsSelected.length +
                                ' entries selected)');
       initRowSelection();
+      initHeaderTooltip();
     },
     preDrawCallback: function() {
       animateSpinner(this);
@@ -359,7 +360,7 @@ function initHeaderTooltip() {
 
     // set tooltip params in the table body
     if ( $(this).parents('#repository-table').length ) {
-      offsetLeft -= 130;
+      offsetLeft = $('#repository-table').offset().left + 100;
       width = $('#repository-table').width() - 200;
     }
     $('body').append($tooltip);
@@ -375,6 +376,7 @@ function initHeaderTooltip() {
     $tooltip.css('visibility', 'visible');
     $tooltip.css('width', width + 'px');
     $tooltip.css('word-wrap', 'break-word');
+    $tooltip.css('z-index', '4');
     $(this).data('dropdown-tooltip', $tooltip);
   }, function() {
     $(this).append($(this).data('dropdown-tooltip'));
@@ -438,14 +440,12 @@ function onClickAddRecord() {
     viewAssigned = 'assigned';
     table.ajax.reload(function() {
       initRowSelection();
-      initHeaderTooltip();
     }, false);
   });
   $('#all-repo-records').on('click', function() {
     viewAssigned = 'all';
     table.ajax.reload(function() {
       initRowSelection();
-      initHeaderTooltip();
     }, false);
   });
 })();
