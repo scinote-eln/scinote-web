@@ -21,6 +21,52 @@
     </a>
   <% end %>
 
+  <div class="repository-cog">
+    <div class="dropdown">
+      <div class="btn btn-default"
+           type="button"
+           data-toggle="dropdown"
+           aria-haspopup="true"
+           aria-expanded="true"
+           <%= "disabled='disabled'" if !can_edit_and_destroy_repository repository and !can_copy_repository repository %>>
+        <span class="glyphicon glyphicon-cog"></span>
+        <span class="caret"></span>
+      </div>
+      <% if can_edit_and_destroy_repository repository or can_copy_repository repository %>
+        <ul class="dropdown-menu pull-right">
+          <li class="dropdown-header">
+            <%= t("repositories.index.options_dropdown.header") %>
+          </li>
+          <% if can_edit_and_destroy_repository repository %>
+            <li>
+              <%= link_to t('repositories.index.options_dropdown.rename'),
+                          team_repository_rename_modal_path(repository_id: repository),
+                          class: "rename-repo-option",
+                          remote: true %>
+            </li>
+          <% end %>
+          <% if can_copy_repository(repository) %>
+            <li>
+              <%= link_to t('repositories.index.options_dropdown.copy'),
+                          team_repository_copy_modal_path(repository_id: repository),
+                          class: "copy-repo-option",
+                          remote: true %>
+            </li>
+          <% end %>
+          <% if can_edit_and_destroy_repository repository %>
+            <li role="separator" class="divider"></li>
+            <li>
+              <%= link_to t('repositories.index.modal_delete.delete'),
+                          team_repository_destroy_modal_path(repository_id: repository),
+                          class: "delete-repo-option",
+                          remote: true %>
+            </li>
+          <% end %>
+        </ul>
+      <% end %>
+    </div>
+  </div>
+
   <div id="datatables-buttons" style="display: inline;">
     <div id="repository-columns-dropdown" class="dropdown">
       <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
@@ -82,3 +128,5 @@
              repository_index_link: repository_table_index_path(repository)
            }
 %>
+
+<%= javascript_include_tag "repositories/edit", "data-turbolinks-track" => true %>
