@@ -1,12 +1,14 @@
 class RepositoriesController < ApplicationController
-  before_action :load_vars, except: [:repository_table_index, :parse_sheet]
+  before_action :load_vars,
+                except: %i(repository_table_index parse_sheet import_records)
+  before_action :check_team, only: %i(parse_sheet import_records)
   before_action :check_view_all_permissions, only: :index
-  before_action :check_edit_and_destroy_permissions, only:
-    %(destroy destroy_modal rename_modal update)
-  before_action :check_copy_permissions, only:
-    %(copy_modal copy)
-  before_action :check_create_permissions, only:
-    %(create_new_modal create)
+  before_action :check_edit_and_destroy_permissions,
+                only: %i(destroy destroy_modal rename_modal update)
+  before_action :check_copy_permissions,
+                only: %i(copy_modal copy)
+  before_action :check_create_permissions,
+                only: %i(create_new_modal create)
 
   def index
     render('repositories/index')
@@ -186,25 +188,27 @@ class RepositoriesController < ApplicationController
   end
 
   def parse_sheet
-    render_404 unless params[:team_id].to_i == current_team.id
     repository = current_team.repositories.find_by_id(params[:id])
-    imported_file = ::ImportRepository.new(file: params[:file],
-                                               repository: repository,
-                                               session: session)
+    parsed_file = ImportRepository::ParseRepository.new(
+      file: params[:file],
+      repository: repository,
+      session: session
+    )
 
     respond_to do |format|
       unless params[:file]
         repository_response(t("teams.parse_sheet.errors.no_file_selected"))
+        return
       end
       begin
-        if imported_file.too_large?
+        if parsed_file.too_large?
           repository_response(t('general.file.size_exceeded',
                                 file_size: Constants::FILE_MAX_SIZE_MB))
         else
           flash[:notice] = t('teams.parse_sheet.errors.empty_file')
-          redirect_to back and return if imported_file.empty?
-          @import_data = imported_file.data
-          if imported_file.generated_temp_file?
+          redirect_to back and return if parsed_file.empty?
+          @import_data = parsed_file.data
+          if parsed_file.generated_temp_file?
             format.json do
               render json: {
                 html: render_to_string(
@@ -225,7 +229,16 @@ class RepositoriesController < ApplicationController
     end
   end
 
-  def import_repository
+  def import_records
+    # byebug
+    import_records = ImportRepository::ImportRecords.new(
+      temp_file: TempFile.find_by_id(params[:file_id]),
+      repository: current_team.repositories.find_by_id(params[:id]),
+      mappings: params[:mappings],
+      session: session,
+      user: current_user
+    )
+    import_records.import!
   end
 
   private
@@ -234,6 +247,10 @@ class RepositoriesController < ApplicationController
     @team = Team.find_by_id(params[:team_id])
     render_404 unless @team
     @repositories = @team.repositories.order(created_at: :asc)
+  end
+
+  def check_team
+    render_404 unless params[:team_id].to_i == current_team.id
   end
 
   def check_view_all_permissions

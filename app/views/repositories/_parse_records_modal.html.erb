@@ -1,66 +1,72 @@
-<div class="modal-dialog modal-lg" role="document">
-  <div class="modal-content">
-    <div class="modal-header">
-      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-      <h4 class="modal-title"><%= t('samples.modal_import.title') %></h4>
-    </div>
-    <%= bootstrap_form_tag(url: import_records_repository_path(@import_data.repository, format: :json),
-                           html: {'data-type' => 'json', id: 'form-import'},
-                           remote: true) do |f|%>
-    <div class="modal-body">
-      <h4><%= t("teams.parse_sheet.help_text") %></h4>
-      <div style="overflow-x: scroll">
-        <table class="table" style="display: block">
-          <thead>
-            <th style="min-width: 100px">
-              <p><%= t("teams.parse_sheet.scinote_columns_html") %></p>
-              <p style="margin-bottom: 0px"><%= t("teams.parse_sheet.file_columns") %></p>
-            </th>
-            <% @import_data.header.each.with_index do |th, index| %>
-              <th style="min-width: 150px" title="<%= th %>">
-                <%= f.select("mappings[#{index.to_s}]",
-                             options_from_collection_for_select(@import_data.available_fields,
-                                                                :first,
-                                                                :last),
-                             include_blank: t('teams.parse_sheet.do_not_include_column'),
-                             hide_label: true) %>
-                <br />
-                <% if th.length > Constants::NAME_TRUNCATION_LENGTH_DROPDOWN %>
-                  <div class="modal-tooltip">
-                    <%= truncate(th, length: Constants::NAME_TRUNCATION_LENGTH_DROPDOWN) %>
-                  </div>
-                <% else %>
-                  <%= th %>
-                <% end %>
+<div class="modal fade"
+     id="parse-records_modal"
+     aria-labelledby="parse-modal-title"
+     role="dialog">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="parse-modal-title"><%= t('samples.modal_import.title') %></h4>
+      </div>
+      <%= bootstrap_form_tag(url: import_records_repository_path(@import_data.repository, format: :json),
+                             html: {'data-type' => 'json', id: 'form-import'},
+                             remote: true) do |f|%>
+      <%= f.hidden_field :team_id, value: current_team.id %>
+      <div class="modal-body">
+        <h4><%= t("teams.parse_sheet.help_text") %></h4>
+        <div style="overflow-x: scroll">
+          <table class="table" style="display: block">
+            <thead>
+              <th style="min-width: 100px">
+                <p><%= t("teams.parse_sheet.scinote_columns_html") %></p>
+                <p style="margin-bottom: 0px"><%= t("teams.parse_sheet.file_columns") %></p>
               </th>
-            <% end %>
-          </thead>
-          <tbody>
-            <%  @import_data.rows.each do |row| %>
-              <tr>
-                <td>
-                  <p><%= t('teams.parse_sheet.example_value') %></p>
-                </td>
-                <% row.each do |td| %>
+              <% @import_data.header.each.with_index do |th, index| %>
+                <th style="min-width: 150px" title="<%= th %>">
+                  <%= f.select("mappings[#{index.to_s}]",
+                               options_from_collection_for_select(@import_data.available_fields,
+                                                                  :first,
+                                                                  :last),
+                               include_blank: t('teams.parse_sheet.do_not_include_column'),
+                               hide_label: true) %>
+                  <br />
+                  <% if th.length > Constants::NAME_TRUNCATION_LENGTH_DROPDOWN %>
+                    <div class="modal-tooltip">
+                      <%= truncate(th, length: Constants::NAME_TRUNCATION_LENGTH_DROPDOWN) %>
+                    </div>
+                  <% else %>
+                    <%= th %>
+                  <% end %>
+                </th>
+              <% end %>
+            </thead>
+            <tbody>
+              <%  @import_data.rows.each do |row| %>
+                <tr>
                   <td>
-                    <%= td[1] %>
+                    <p><%= t('teams.parse_sheet.example_value') %></p>
                   </td>
-                <% end %>
-              </tr>
-            <% end %>
-          </tbody>
-        </table>
-      </div>
-      <%= hidden_field_tag 'file_id', @import_data.temp_file.id %>
+                  <% row.each do |td| %>
+                    <td>
+                      <%= td[1] %>
+                    </td>
+                  <% end %>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+        <%= hidden_field_tag 'file_id', @import_data.temp_file.id %>
 
-      <div id="import-errors-container">
+        <div id="import-errors-container">
+        </div>
       </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal"><%= t('general.cancel')%></button>
+        <input type="submit" class="btn btn-primary" value="<%= t('teams.parse_sheet.import_samples') %>"</input>
+      </div>
+      <% end %>
     </div>
-    <div class="modal-footer">
-      <button type="button" class="btn btn-default" data-dismiss="modal"><%= t('general.cancel')%></button>
-      <input type="submit" class="btn btn-primary" value="<%= t('teams.parse_sheet.import_samples') %>"</input>
-    </div>
-    <% end %>
   </div>
 </div>
 

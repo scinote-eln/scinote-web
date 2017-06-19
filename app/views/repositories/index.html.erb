@@ -25,7 +25,6 @@
         <% if can_create_repository(current_team) %>
           href="<%= create_modal_team_repositories_path %>"
           class='create-repository'
-          data-remote='true'
         <% end %>>
         <span class="glyphicon glyphicon-plus"></span>
         <span class="hidden-xs">&nbsp;<%= t('repositories.index.add_new_repository_tab') %></span>
