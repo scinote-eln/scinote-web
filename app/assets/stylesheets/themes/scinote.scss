@@ -1576,6 +1576,11 @@ table.dataTable {
   visibility: visible;
 }
 
+// don't display tooltip, it's handeled with js
+.repository-table .modal-tooltip:hover .modal-tooltiptext {
+  visibility: hidden;
+}
+
 // Comments
 
 .comment-more {

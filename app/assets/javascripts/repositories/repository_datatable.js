@@ -118,6 +118,7 @@ function dataTableInit() {
                                rowsSelected.length +
                                ' entries selected)');
       initRowSelection();
+      initHeaderTooltip();
     },
     preDrawCallback: function() {
       animateSpinner(this);
@@ -352,6 +353,13 @@ function initHeaderTooltip() {
       offsetLeft -= 150;
     }
     var offsetTop = $tooltip.offset().top;
+    var width = 200;
+
+    // set tooltip params in the table body
+    if ( $(this).parents('#repository-table').length ) {
+      offsetLeft = $('#repository-table').offset().left + 100;
+      width = $('#repository-table').width() - 200;
+    }
     $('body').append($tooltip);
     $tooltip.css('background-color', '#d2d2d2');
     $tooltip.css('border-radius', '6px');
@@ -363,8 +371,9 @@ function initHeaderTooltip() {
     $tooltip.css('text-align', 'center');
     $tooltip.css('top', offsetTop + 'px');
     $tooltip.css('visibility', 'visible');
-    $tooltip.css('width', '200px');
+    $tooltip.css('width', width + 'px');
     $tooltip.css('word-wrap', 'break-word');
+    $tooltip.css('z-index', '4');
     $(this).data('dropdown-tooltip', $tooltip);
   }, function() {
     $(this).append($(this).data('dropdown-tooltip'));
@@ -832,6 +841,7 @@ function changeToEditMode() {
   currentMode = 'editMode';
   // Table specific stuff
   table.button(0).enable(false);
+  initHeaderTooltip();
 }
 
 /*

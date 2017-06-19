@@ -118,9 +118,12 @@ class RepositoryDatatable < AjaxDatatablesRails::Base
       # Add custom columns
       record.repository_cells.each do |cell|
         row[@columns_mappings[cell.repository_column.id]] =
-          custom_auto_link(cell.value.data,
-                           simple_format: true,
-                           team: @team)
+          custom_auto_link(
+            display_tooltip(cell.value.data,
+                            Constants::NAME_MAX_LENGTH),
+            simple_format: true,
+            team: @team
+          )
       end
       row
     end
