@@ -149,6 +149,14 @@ class RepositoryDatatable < AjaxDatatablesRails::Base
                       .joins(:created_by)
                       .where(repository: @repository)
 
+    # Make mappings of custom columns, so we have same id for every column
+    i = 5
+    @columns_mappings = {}
+    @repository.repository_columns.each do |column|
+      @columns_mappings[column.id] = i.to_s
+      i += 1
+    end
+
     if @my_module
       @assigned_rows = @my_module.repository_rows
                                  .preload(
@@ -158,6 +166,7 @@ class RepositoryDatatable < AjaxDatatablesRails::Base
                                  )
                                  .joins(:created_by)
                                  .where(repository: @repository)
+      return @assigned_rows if params[:assigned] == 'assigned'
     else
       @assigned_rows = repository_rows.joins(
         'INNER JOIN my_module_repository_rows ON
@@ -165,13 +174,6 @@ class RepositoryDatatable < AjaxDatatablesRails::Base
       )
     end
 
-    # Make mappings of custom columns, so we have same id for every column
-    i = 5
-    @columns_mappings = {}
-    @repository.repository_columns.each do |column|
-      @columns_mappings[column.id] = i.to_s
-      i += 1
-    end
     repository_rows
   end
 
@@ -181,7 +183,6 @@ class RepositoryDatatable < AjaxDatatablesRails::Base
   # number of samples/all samples it's dependant upon sort_record query
   def fetch_records
     records = get_raw_records
-    records = @assigned_rows if @my_module && params[:assigned] == 'assigned'
     records = filter_records(records) if params[:search].present?
     records = sort_records(records) if params[:order].present?
     records = paginate_records(records) unless params[:length].present? &&
