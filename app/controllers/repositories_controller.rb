@@ -245,18 +245,18 @@ class RepositoriesController < ApplicationController
 
   def to_csv(rows, column_ids)
     require 'csv'
-
+byebug
     # Parse column names
     csv_header = []
     column_ids.each do |c_id|
       csv_header << case c_id.to_i
-                    when -1
+                    when -1, -2
                       next
-                    when -2
-                      I18n.t('repositories.table.row_name')
                     when -3
-                      I18n.t('repositories.table.added_by')
+                      I18n.t('repositories.table.row_name')
                     when -4
+                      I18n.t('repositories.table.added_by')
+                    when -5
                       I18n.t('repositories.table.added_on')
                     else
                       column = RepositoryColumn.find_by_id(c_id)
@@ -265,18 +265,19 @@ class RepositoriesController < ApplicationController
     end
 
     CSV.generate do |csv|
+      byebug
       csv << csv_header
       rows.each do |row|
         csv_row = []
         column_ids.each do |c_id|
           csv_row << case c_id.to_i
-                     when -1
+                     when -1, -2
                        next
-                     when -2
-                       row.name
                      when -3
-                       row.created_by.full_name
+                       row.name
                      when -4
+                       row.created_by.full_name
+                     when -5
                        I18n.l(row.created_at, format: :full)
                      else
                        cell = row.repository_cells
