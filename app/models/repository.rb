@@ -15,6 +15,28 @@ class Repository < ActiveRecord::Base
   validates :team, presence: true
   validates :created_by, presence: true
 
+  def open_spreadsheet(file)
+    filename = file.original_filename
+    file_path = file.path
+
+    if file.class == Paperclip::Attachment && file.is_stored_on_s3?
+      fa = file.fetch
+      file_path = fa.path
+    end
+    generate_file(filename, file_path)
+  end
+
+  def available_repository_fields
+    fields = {}
+    # First and foremost add record name
+    fields['-1'] = I18n.t('repositories.default_column')
+    # Add all other custom columns
+    repository_columns.order(:created_at).each do |rc|
+      fields[rc.id] = rc.name
+    end
+    fields
+  end
+
   def copy(created_by, name)
     new_repo = nil
 
@@ -40,5 +62,79 @@ class Repository < ActiveRecord::Base
 
     # If everything is okay, return new_repo
     new_repo
+  end
+
+  # Imports records
+  def import_records(sheet, mappings, user)
+    errors = []
+    custom_fields = []
+    name_index = -1
+    nr_of_added = 0
+
+    mappings.each.with_index do |(_k, value), index|
+      if value == '-1'
+        # Fill blank space, so our indices stay the same
+        custom_fields << nil
+        name_index = index
+      else
+        cf = repository_columns.find_by_id(value)
+        custom_fields << cf
+      end
+    end
+
+    # Now we can iterate through record data and save stuff into db
+    (2..sheet.last_row).each do |i|
+      error = []
+      record_row = RepositoryRow.new(name: sheet.row(i)[name_index],
+                                 repository: self,
+                                 created_by: user,
+                                 last_modified_by: user)
+
+      next unless record_row.save
+      nr_of_added += 1
+      sheet.row(i).each.with_index do |value, index|
+        if custom_fields[index]
+          # we're working with CustomField
+          rep_column = RepositoryTextValue.new(
+            data: value,
+            created_by: user,
+            last_modified_by: user,
+            repository_cell_attributes: {
+              repository_row: record_row,
+              repository_column: custom_fields[index]
+            }
+          )
+          error << rep_column.errors.messages unless rep_column.save
+        else
+          # This custom_field does not exist
+          error << { '#{mappings[index]}': 'Does not exists' }
+        end
+      end
+    end
+
+    if errors.count > 0
+      return { status: :error, errors: errors, nr_of_added: nr_of_added }
+    end
+    { status: :ok, nr_of_added: nr_of_added }
+  end
+
+  private
+
+  def generate_file(filename, file_path)
+    case File.extname(filename)
+    when '.csv'
+      Roo::CSV.new(file_path, extension: :csv)
+    when '.tdv'
+      Roo::CSV.new(file_path, nil, :ignore, csv_options: { col_sep: '\t' })
+    when '.txt'
+      # This assumption is based purely on biologist's habits
+      Roo::CSV.new(file_path, csv_options: { col_sep: '\t' })
+    when '.xls'
+      Roo::Excel.new(file_path)
+    when '.xlsx'
+      Roo::Excelx.new(file_path)
+    else
+      raise TypeError
+    end
   end
 end

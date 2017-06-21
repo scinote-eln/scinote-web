@@ -1,7 +1,9 @@
 class RepositoriesController < ApplicationController
-  before_action :load_vars, except: %i(index create create_modal)
+  before_action :load_vars,
+                except: %i(index create create_modal parse_sheet import_records)
   before_action :load_parent_vars, except:
-    %i(repository_table_index export_repository)
+    %i(repository_table_index export_repository parse_sheet import_records)
+  before_action :check_team, only: %i(parse_sheet import_records)
   before_action :check_view_all_permissions, only: :index
   before_action :check_view_permissions, only: :export_repository
   before_action :check_edit_and_destroy_permissions, only:
@@ -180,6 +182,67 @@ class RepositoriesController < ApplicationController
     end
   end
 
+  def parse_sheet
+    repository = current_team.repositories.find_by_id(params[:id])
+    parsed_file = ImportRepository::ParseRepository.new(
+      file: params[:file],
+      repository: repository,
+      session: session
+    )
+
+    respond_to do |format|
+      unless params[:file]
+        repository_response(t('teams.parse_sheet.errors.no_file_selected'))
+        return
+      end
+      begin
+        if parsed_file.too_large?
+          repository_response(t('general.file.size_exceeded',
+                                file_size: Constants::FILE_MAX_SIZE_MB))
+        elsif parsed_file.empty?
+          flash[:notice] = t('teams.parse_sheet.errors.empty_file')
+          redirect_to back and return
+        else
+          @import_data = parsed_file.data
+          if parsed_file.generated_temp_file?
+            format.json do
+              render json: {
+                html: render_to_string(
+                  partial: 'repositories/parse_records_modal.html.erb'
+                )
+              }
+            end
+          else
+            repository_response(t('teams.parse_sheet.errors.temp_file_failure'))
+          end
+        end
+      rescue ArgumentError, CSV::MalformedCSVError
+        repository_response(t('teams.parse_sheet.errors.invalid_file',
+                              encoding: ''.encoding))
+      rescue TypeError
+        repository_response(t('teams.parse_sheet.errors.invalid_extension'))
+      end
+    end
+  end
+
+  def import_records
+    import_records = repostiory_import_actions
+    status = import_records.import!
+    respond_to do |format|
+      format.json do
+        if status[:status] == :ok
+          flash[:success] = t('repositories.import_records.success_flash',
+                              number_of_rows: status[:nr_of_added])
+          render json: {}, status: :ok
+        else
+          flash[:alert] = t('repositories.import_records.error_flash',
+                            message: status[:errors])
+          render json: {}, status: :unprocessable_entity
+        end
+      end
+    end
+  end
+
   def export_repository
     if params[:row_ids] && params[:header_ids]
       generate_zip
@@ -191,6 +254,16 @@ class RepositoriesController < ApplicationController
 
   private
 
+  def repostiory_import_actions
+    ImportRepository::ImportRecords.new(
+      temp_file: TempFile.find_by_id(params[:file_id]),
+      repository: current_team.repositories.find_by_id(params[:id]),
+      mappings: params[:mappings],
+      session: session,
+      user: current_user
+    )
+  end
+
   def load_vars
     repository_id = params[:id] || params[:repository_id]
     @repository = Repository.find_by_id(repository_id)
@@ -201,6 +274,10 @@ class RepositoriesController < ApplicationController
     @team = Team.find_by_id(params[:team_id])
     render_404 unless @team
     @repositories = @team.repositories.order(created_at: :asc)
+  end
+
+  def check_team
+    render_404 unless params[:team_id].to_i == current_team.id
   end
 
   def check_view_all_permissions
@@ -225,6 +302,17 @@ class RepositoriesController < ApplicationController
 
   def repository_params
     params.require(:repository).permit(:name)
+  end
+
+  def repository_response(message)
+    format.html do
+      flash[:alert] = message
+      redirect_to :back
+    end
+    format.json do
+      render json: { message: message },
+        status: :unprocessable_entity
+    end
   end
 
   def generate_zip

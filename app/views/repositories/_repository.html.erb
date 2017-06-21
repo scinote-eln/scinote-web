@@ -13,6 +13,12 @@
       <span class="hidden-xs"><%= t("repositories.add_new_record") %></span>
     </button>
   <% end %>
+  <% if can_import_repository_records(repository) %>
+    <button type="button" class="btn btn-default" id="importRecordsButton">
+      <span class="glyphicon glyphicon-cloud-upload"></span>
+      <span class="hidden-xs"><%= t('repositories.import_records.import') %></span>
+    </button>
+  <% end %>
 
   <% if can_view_repository(repository) %>
     <a href="#" class="btn btn-default" id="exportRepositoriesButton">
@@ -128,5 +134,6 @@
              repository_index_link: repository_table_index_path(repository)
            }
 %>
-
-<%= javascript_include_tag "repositories/edit", "data-turbolinks-track" => true %>
+<%= render partial: 'repositories/import_repository_records_modal.html.erb',
+                    locals: { repository: repository } %>
+<%= javascript_include_tag 'repositories/edit', 'data-turbolinks-track' => true %>
