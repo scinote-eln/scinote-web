@@ -1,6 +1,7 @@
 <%= render partial: "samples/import_samples_modal" %>
 <%= render partial: "samples/delete_samples_modal" %>
 <%= render partial: "samples/delete_custom_field_modal" %>
+<%= render partial: 'samples/export_samples_modal' %>
 
 <!-- Modal for parsing sample sheets should be empty at first -->
 <div class="modal fade" id="modal-parse-samples" tabindex="-1" role="dialog" aria-labelledby=="modal-parse-samples-label"></div>
@@ -8,8 +9,8 @@
 <div id="alert-container"></div>
 
 <% if can_view_samples(@team) %>
-  <%= bootstrap_form_tag(url: export_samples_team_path(@team, format: :csv),
-                        html: { id: 'form-export', class: 'hidden' }) do |f| %>
+  <%= bootstrap_form_tag(url: export_samples_team_path(@team),
+                         html: { id: 'form-export', class: 'hidden' }) do |f| %>
   <% end %>
 <% end %>
 
@@ -36,6 +37,11 @@
       <span class="glyphicon glyphicon-cloud-download"></span>
       <span class="hidden-xs"><%= t("samples.export") %></span>
     </a>
+
+    <div id="show-assigned-buttons" class="btn-group sample-assign-group" data-toggle="buttons">
+      <button type="button" class="active btn btn-primary" id="assignedSamples"><%= t("samples.view_assigned_samples") %></button>
+      <button type="button" class="btn btn-default" id="allSamples"><%= t("samples.view_all_samples") %></button>
+    </div>
   <% end %>
 
   <div id="datatables-buttons" style="display: inline;">

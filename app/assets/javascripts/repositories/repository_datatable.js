@@ -92,7 +92,6 @@ function dataTableInit() {
     columns: (function() {
       var numOfColumns = $('#repository-table').data('num-columns');
       var columns = [];
-
       for (var i = 0; i < numOfColumns; i++) {
         var visible = (i <= 4);
         var searchable = (i > 0 && i <= 4);
@@ -119,6 +118,7 @@ function dataTableInit() {
                                rowsSelected.length +
                                ' entries selected)');
       initRowSelection();
+      initHeaderTooltip();
     },
     preDrawCallback: function() {
       animateSpinner(this);
@@ -154,16 +154,13 @@ function dataTableInit() {
         type: 'POST'
       });
       loadFirstTime = false;
+      initHeaderTooltip();
     },
     fnInitComplete: function(oSettings) {
       // Reload correct column order and visibility (if you refresh page)
       // First two columns are fixed
       table.column(0).visible(true);
-      if ($('#assigned').text().length === 0) {
-        table.column(1).visible(false);
-      } else {
-        table.column(1).visible(true);
-      }
+      table.column(1).visible(true);
       for (var i = 2; i < table.columns()[0].length; i++) {
         var visibility = false;
         if (myData.columns[i]) {
@@ -197,6 +194,10 @@ function dataTableInit() {
     $(this).parent().find('.repository-row-selector').trigger('click');
   });
 
+  table.on('column-reorder', function() {
+    initRowSelection();
+  });
+
   $('#assignRepositories, #unassignRepositories').click(function() {
       animateLoading();
   });
@@ -213,6 +214,59 @@ setTimeout(function() {
 
 // Enables noSearchHidden plugin
 $.fn.dataTable.defaults.noSearchHidden = true;
+
+$('form#form-export').submit(function() {
+  var form = this;
+
+  if (currentMode === 'viewMode') {
+    // Remove all hidden fields
+    $(form).find('input[name=row_ids\\[\\]]').remove();
+    $(form).find('input[name=header_ids\\[\\]]').remove();
+
+    // Append visible column information
+    $('.active table#repository-table thead tr th').each(function() {
+      var th = $(this);
+      var val;
+      switch ($(th).attr('id')) {
+        case 'checkbox':
+          val = -1;
+          break;
+        case 'assigned':
+          val = -2;
+          break;
+        case 'row-name':
+          val = -3;
+          break;
+        case 'added-by':
+          val = -4;
+          break;
+        case 'added-on':
+          val = -5;
+          break;
+        default:
+          val = th.attr('id');
+      }
+
+      if (val) {
+        appendInput(form, val, 'header_ids[]');
+      }
+    });
+
+    // Append records
+    $.each(rowsSelected, function(index, rowId) {
+      appendInput(form, rowId, 'row_ids[]');
+    });
+  }
+});
+
+function appendInput(form, val, name) {
+  $(form).append(
+    $('<input>')
+    .attr('type', 'hidden')
+    .attr('name', name)
+    .val(val)
+  );
+}
 
 function initRowSelection() {
   // Handle clicks on checkbox
@@ -303,6 +357,13 @@ function initHeaderTooltip() {
       offsetLeft -= 150;
     }
     var offsetTop = $tooltip.offset().top;
+    var width = 200;
+
+    // set tooltip params in the table body
+    if ( $(this).parents('#repository-table').length ) {
+      offsetLeft = $('#repository-table').offset().left + 100;
+      width = $('#repository-table').width() - 200;
+    }
     $('body').append($tooltip);
     $tooltip.css('background-color', '#d2d2d2');
     $tooltip.css('border-radius', '6px');
@@ -314,8 +375,9 @@ function initHeaderTooltip() {
     $tooltip.css('text-align', 'center');
     $tooltip.css('top', offsetTop + 'px');
     $tooltip.css('visibility', 'visible');
-    $tooltip.css('width', '200px');
+    $tooltip.css('width', width + 'px');
     $tooltip.css('word-wrap', 'break-word');
+    $tooltip.css('z-index', '4');
     $(this).data('dropdown-tooltip', $tooltip);
   }, function() {
     $(this).append($(this).data('dropdown-tooltip'));
@@ -399,10 +461,12 @@ function onClickAssignRecords() {
     success: function(data) {
       HelperModule.flashAlertMsg(data.flash, 'success');
       onClickCancel();
+      clearRowSelection();
     },
     error: function(data) {
       HelperModule.flashAlertMsg(data.responseJSON.flash, 'danger');
       onClickCancel();
+      clearRowSelection();
     }
   });
 }
@@ -417,10 +481,12 @@ function onClickUnassignRecords() {
     success: function(data) {
       HelperModule.flashAlertMsg(data.flash, 'success');
       onClickCancel();
+      clearRowSelection();
     },
     error: function(data) {
       HelperModule.flashAlertMsg(data.responseJSON.flash, 'danger');
       onClickCancel();
+      clearRowSelection();
     }
   });
 }
@@ -433,7 +499,8 @@ function onClickDeleteRecord() {
     dataType: 'json',
     data: {selected_rows: rowsSelected},
     success: function(data) {
-      HelperModule.flashAlertMsg(data.flash, 'success');
+      HelperModule.flashAlertMsg(data.flash, data.color);
+      rowsSelected = [];
       onClickCancel();
     },
     error: function(e) {
@@ -615,7 +682,7 @@ function onClickSave() {
             if (input) {
               input.closest('.form-group').addClass('has-error');
               input.parent().append("<span class='help-block'>" +
-                                    val.value[0] + '<br /></span>');
+                                    val.data[0] + '<br /></span>');
             }
           });
         });
@@ -637,29 +704,38 @@ function updateButtons() {
     $('th').removeClass('disable-click');
     $('.repository-row-selector').removeClass('disabled');
     $('.repository-row-selector').prop('disabled', false);
-    if (rowsSelected.length === 1) {
-      $('#editRepositoryRecord').prop('disabled', false);
-      $('#editRepositoryRecord').removeClass('disabled');
-      $('#deleteRepositoryRecordsButton').prop('disabled', false);
-      $('#deleteRepositoryRecordsButton').removeClass('disabled');
-      $('#assignRepositoryRecords').removeClass('disabled');
-      $('#assignRepositoryRecords').prop('disabled', false);
-      $('#unassignRepositoryRecords').removeClass('disabled');
-      $('#unassignRepositoryRecords').prop('disabled', false);
-    } else if (rowsSelected.length === 0) {
+    if (rowsSelected.length === 0) {
       $('#editRepositoryRecord').prop('disabled', true);
       $('#editRepositoryRecord').addClass('disabled');
       $('#deleteRepositoryRecordsButton').prop('disabled', true);
       $('#deleteRepositoryRecordsButton').addClass('disabled');
+      $('#exportRepositoriesButton').addClass('disabled');
+      $('#exportRepositoriesButton').prop('disabled', true);
+      $('#exportRepositoriesButton').off('click');
+      $('#export-repositories').off('click');
       $('#assignRepositoryRecords').addClass('disabled');
       $('#assignRepositoryRecords').prop('disabled', true);
       $('#unassignRepositoryRecords').addClass('disabled');
       $('#unassignRepositoryRecords').prop('disabled', true);
     } else {
-      $('#editRepositoryRecord').prop('disabled', true);
-      $('#editRepositoryRecord').addClass('disabled');
+      if (rowsSelected.length === 1) {
+        $('#editRepositoryRecord').prop('disabled', false);
+        $('#editRepositoryRecord').removeClass('disabled');
+      } else {
+        $('#editRepositoryRecord').prop('disabled', true);
+        $('#editRepositoryRecord').addClass('disabled');
+      }
       $('#deleteRepositoryRecordsButton').prop('disabled', false);
       $('#deleteRepositoryRecordsButton').removeClass('disabled');
+      $('#exportRepositoriesButton').removeClass('disabled');
+      $('#exportRepositoriesButton').prop('disabled', false);
+      $('#exportRepositoriesButton').on('click', function() {
+        $('#exportRepositoryModal').modal('show');
+      });
+      $('#export-repositories').on('click', function() {
+        animateSpinner(null, true);
+        $('#form-export').submit();
+      });
       $('#assignRepositoryRecords').removeClass('disabled');
       $('#assignRepositoryRecords').prop('disabled', false);
       $('#unassignRepositoryRecords').removeClass('disabled');
@@ -674,6 +750,9 @@ function updateButtons() {
     $('#addNewColumn').prop('disabled', true);
     $('#deleteRepositoryRecordsButton').addClass('disabled');
     $('#deleteRepositoryRecordsButton').prop('disabled', true);
+    $('#exportRepositoriesButton').addClass('disabled');
+    $('#exportRepositoriesButton').off('click');
+    $('#export-repositories').off('click');
     $('#assignRepositoryRecords').addClass('disabled');
     $('#assignRepositoryRecords').prop('disabled', true);
     $('#unassignRepositoryRecords').addClass('disabled');
@@ -695,6 +774,13 @@ function clearAllErrors() {
   });
   // Remove any alerts
   $('#alert-container').find('div').remove();
+}
+
+function clearRowSelection() {
+  $('.dt-body-center .repository-row-selector').prop('checked', false);
+  $('.dt-body-center .repository-row-selector').closest('tr')
+                                               .removeClass('selected');
+  rowsSelected = [];
 }
 
 // Restore previous table
@@ -759,6 +845,7 @@ function changeToEditMode() {
   currentMode = 'editMode';
   // Table specific stuff
   table.button(0).enable(false);
+  initHeaderTooltip();
 }
 
 /*
@@ -971,6 +1058,7 @@ function changeToEditMode() {
       if (!_.isEmpty(searchText)) {
         table.search(searchText).draw();
       }
+      initRowSelection();
     });
   }
 
@@ -1257,7 +1345,7 @@ function changeToEditMode() {
     var maxLength = $('#repository-table').data('max-dropdown-length');
     if ($.trim(name).length > maxLength) {
       return '<div class="modal-tooltip">' +
-             maxLength +
+             truncateLongString(name, maxLength) +
              '<span class="modal-tooltiptext">' + name + '</span></div>';
     }
     return name;

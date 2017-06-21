@@ -1,7 +1,7 @@
 (function(global) {
   'use strict';
 
-  var ResutlAssets = (function() {
+  global.ResutlAssets = (function() {
     // New result asset behaviour
     function initNewResultAsset() {
       $('#new-result-asset').on('click', function(event) {
@@ -23,7 +23,7 @@
             _formAjaxResultAsset($form);
             Results.initCancelFormButton($form, initNewResultAsset);
             Results.toggleResultEditButtons(false);
-            $('#result_name').focus();
+            dragNdropAssetsInit('results');
           },
           error: function(xhr, status, e) {
             $(this).renderFormErrors('result', xhr.responseJSON, true, e);

@@ -1,5 +1,5 @@
 APP_HOME="/usr/src/app"
-DB_IP=$(shell docker inspect web_db_1 | grep -m 1 "\"IPAddress\": " | awk '{ match($$0, /"IPAddress": "([0-9\.]*)",/, a); print a[1] }')
+DB_IP=$(shell docker inspect scinote_db_development | grep "\"IPAddress\": " | awk '{ match($$0, /"IPAddress": "([0-9\.]*)",/, a); print a[1] }')
 
 define PRODUCTION_CONFIG_BODY
 SECRET_KEY_BASE=$(shell openssl rand -hex 64)

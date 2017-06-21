@@ -214,23 +214,6 @@
         $(e.target).find("input[type='file']").val("");
       }
     });
-
-    // Add hidden fields for tables
-    $form.submit(function(){
-      $(this).find("[data-role='editable-table']").each(function() {
-        var hot = $(this).find(".hot").handsontable('getInstance');
-        var contents = $(this).find('.hot-contents');
-        var data = JSON.stringify({data: hot.getData()});
-        contents.attr("value", data);
-      });
-
-      setTimeout(function() {
-        initStepsComments();
-        animateSpinner(null, false);
-        SmartAnnotation.preventPropagation('.atwho-user-popover');
-      }, 1000);
-      return true;
-    });
   }
 
   // Init ajax success/error for edit form
@@ -276,49 +259,6 @@
       $form.find("[data-role='step-hot-table']").each(function()  {
         renderTable($(this));
       });
-    });
-  }
-
-  function formNewAjax($form) {
-    $form
-    .on("ajax:beforeSend", function () {
-      $(".nested_step_checklists ul").each(function () {
-        reorderCheckboxData(this);
-      });
-    })
-    .on("ajax:success", function(e, data) {
-      $(this).after(data.html);
-      var $new_step = $(this).next();
-      $(this).remove();
-
-      initCallBacks();
-      initHandsOnTable($new_step);
-      expandStep($new_step);
-      toggleButtons(true);
-      SmartAnnotation.preventPropagation('.atwho-user-popover');
-
-      //Rerender tables
-      $new_step.find("div.step-result-hot-table").each(function()  {
-        $(this).handsontable("render");
-      });
-      animateSpinner(null, false);
-      setupAssetsLoading();
-    })
-    .on("ajax:error", function(e, xhr, status, error) {
-      $(this).after(xhr.responseJSON.html);
-      var $form = $(this).next();
-      $(this).remove();
-
-      $errInput = $form.find(".form-group.has-error").first().find("input");
-      renderFormError(e, $errInput);
-
-      formCallback($form);
-      formNewAjax($form);
-      applyCancelOnNew();
-      animateSpinner(null, false);
-
-      TinyMCE.destroyAll();
-      SmartAnnotation.preventPropagation('.atwho-user-popover');
     });
   }
 
@@ -562,7 +502,6 @@
               scrollTop: $(document).height() - $(window).height()
             });
             formCallback($form);
-            formNewAjax($form);
             applyCancelOnNew();
             toggleButtons(false);
             initializeCheckboxSorting();
@@ -588,13 +527,13 @@
   // experience is improved
   global.processStep = function processStep(ev, editMode) {
     ev.stopPropagation();
+    ev.preventDefault();
+    ev.stopImmediatePropagation();
 
     var $form = $(ev.target.form);
     $form.clearFormErrors();
     $form.removeBlankFileForms();
 
-    var $fileInputs = $form.find("input[type=file]");
-    var filesValid = filesValidator(ev, $fileInputs, FileTypeEnum.FILE);
     var $checklists = $form.find(".nested_step_checklists");
     var checklistsValid = checklistsValidator(ev, $checklists, editMode);
     var $nameInput = $form.find("#step_name");
@@ -604,8 +543,73 @@
     var descriptionValid = textValidator(ev, $descrTextarea, 0,
       <%= Constants::TEXT_MAX_LENGTH %>);
 
-    if (filesValid && checklistsValid && nameValid && descriptionValid) {
-      // Local file uploading
+    if (DragNDropSteps.filesStatus() &&
+        checklistsValid &&
+        nameValid &&
+        descriptionValid) {
+
+      $form.find("[data-role='editable-table']").each(function() {
+        var hot = $(this).find(".hot").handsontable('getInstance');
+        var contents = $(this).find('.hot-contents');
+        var data = JSON.stringify({data: hot.getData()});
+        contents.attr("value", data);
+      });
+
+      setTimeout(function() {
+        initStepsComments();
+        SmartAnnotation.preventPropagation('.atwho-user-popover');
+      }, 1000);
+
+      animateSpinner(null, true);
+      var data = DragNDropSteps.appendFilesToForm(ev);
+      data.append('step[description]', TinyMCE.getContent());
+      $.ajax({
+        url: $form.attr('action'),
+        method: 'POST',
+        data: data,
+        contentType: false,
+        processData: false,
+        beforeSend: function() {
+          $(".nested_step_checklists ul").each(function () {
+            reorderCheckboxData(this);
+          });
+        },
+        success: function(data) {
+          $($form.closest('.well')).after(data.html);
+          var $new_step = $($form.closest('.well')).next();
+          $($form.closest('.well')).remove();
+
+          initCallBacks();
+          initHandsOnTable($new_step);
+          expandStep($new_step);
+          toggleButtons(true);
+          SmartAnnotation.preventPropagation('.atwho-user-popover');
+
+          //Rerender tables
+          $new_step.find("div.step-result-hot-table").each(function()  {
+            $(this).handsontable("render");
+          });
+          animateSpinner(null, false);
+          setupAssetsLoading();
+        },
+        error: function(e) {
+          $form.after(xhr.responseJSON.html);
+          var $new_form = $form.next();
+          $form.remove();
+
+          $errInput = $new_form.find(".form-group.has-error")
+                               .first()
+                               .find("input");
+          renderFormError(e, $errInput);
+
+          formCallback($form);
+          applyCancelOnNew();
+          animateSpinner(null, false);
+
+          TinyMCE.destroyAll();
+          SmartAnnotation.preventPropagation('.atwho-user-popover');
+        }
+      });
       newStepHandler();
     }
   }
@@ -635,8 +639,9 @@
   function renderTable(table) {
     $(table).handsontable("render");
     // Yet another dirty hack to solve HandsOnTable problems
-    if (parseInt($(table).css("height"), 10) < parseInt($(table).css("max-height"), 10) - 30) {
-      $(table).find(".ht_master .wtHolder").css("height", "100%");
+    if (parseInt($(table).css('height'), 10) < parseInt($(table).css('max-height'), 10) - 30) {
+      $(table).find('.ht_master .wtHolder').css({ 'height': '100%',
+                                                  'width': '100%' });
     }
   }
 
@@ -672,4 +677,5 @@
     });
   })
 
+  global.initHandsOnTable = initHandsOnTable;
 })(window);

@@ -612,6 +612,7 @@ en:
       more_activities: "Load older activities"
     repository:
       head_title: "%{project} | %{module} | Custom repository %{repository}"
+      export: 'Export'
 
   experiments:
     new:
@@ -820,6 +821,7 @@ en:
       success_flash: "File result successfully deleted."
     wopi_open_file: "Open in %{app}"
     wopi_edit_file: "Edit in %{app}"
+    error_flash: 'Something went wrong! Please try again later.'
 
   result_tables:
     new:
@@ -843,7 +845,7 @@ en:
     index:
       head_title: "Repositories"
       title: "Repositories"
-      add_new_repository_tab: "Create new repository"
+      add_new_repository_tab: "Add repository"
       delete_flash: "\"%{name}\" repository was successfully deleted!"
       rename_flash: "\"%{old_name}\" repository was successfully renamed to \"%{new_name}\"!"
       copy_flash: "\"%{new}\" repository was successfully copied from \"%{old}\"!"
@@ -886,7 +888,7 @@ en:
       row_name: "Name"
       added_on: "Added on"
       added_by: "Added by"
-    add_new_record: "Add record"
+    add_new_record: "Add new item"
     import_records:
       import: 'Import'
       success_flash: "%{number_of_rows} new record(s) successfully imported."
@@ -947,7 +949,7 @@ en:
     no_records_assigned_flash: "No records were assigned to task"
     no_records_unassigned_flash: "No records were unassigned from task"
     default_column: 'Name'
-    
+
   samples:
     columns: "Columns"
     columns_visibility: "Toggle visibility"
@@ -969,6 +971,8 @@ en:
     add_new_sample_type: "Add sample type"
     add_new_sample_group: "Add sample group"
     add_new_column: "Add column"
+    view_all_samples: "View all samples"
+    view_assigned_samples: "View assigned samples"
     modal_info:
       added_on: "Added on"
       added_by: "Added by"
@@ -1135,8 +1139,8 @@ en:
     uncomplete_module: "<i>%{user}</i> uncompleted task <strong>%{module}</strong>."
     assign_sample: "<i>%{user}</i> assigned sample(s) <strong>%{samples}</strong> to task(s) <strong>%{tasks}</strong>"
     unassign_sample: "<i>%{user}</i> unassigned sample(s) <strong>%{samples}</strong> from task(s) <strong>%{tasks}</strong>"
-    assign_repository_records: "<i>%{user}</i> assigned <strong>%{repository}</strong> repository records(s) <strong>%{records}</strong> to task <strong>%{task}</strong>"
-    unassign_repository_records: "<i>%{user}</i> unassigned <strong>%{repository}</strong> repository records(s) <strong>%{records}</strong> from task <strong>%{task}</strong>"
+    assign_repository_records: "<i>%{user}</i> assigned record(s) <strong>%{records}</strong> from <strong>%{repository}</strong> repository to task <strong>%{task}</strong>"
+    unassign_repository_records: "<i>%{user}</i> unassigned record(s) <strong>%{records}</strong> from <strong>%{repository}</strong> repository from task <strong>%{task}</strong>"
     create_step: "<i>%{user}</i> created Step %{step} <strong>%{step_name}</strong>."
     destroy_step: "<i>%{user}</i> deleted Step %{step} <strong>%{step_name}</strong>."
     add_comment_to_step: "<i>%{user}</i> commented on Step %{step} <strong>%{step_name}</strong>."
@@ -1684,7 +1688,11 @@ en:
     head_title:
       edit: "sciNote | %{file_name} | Edit"
       view: "sciNote | %{file_name} | View"
-
+    drag_n_drop:
+      label_html: 'Drag &amp; drop files here or '
+      browse_label: 'Browse to add'
+      drop_label: 'Drop to add to Step'
+      file_label: 'File'
   atwho:
     no_results: "No results found"
     users:
@@ -1702,9 +1710,15 @@ en:
       deleted: "(deleted)"
 
   zip_export:
+    modal_label: 'Export repository'
     notification_title: 'Your package is ready to be exported!'
     expired_title: 'The required file was expired!'
     expired_description: 'The downloadable file expires in 7 days after its creation.'
+    modal_label: 'Export request received'
+    modal_html: "<p>Your export request is being processed.</p><p>When completed we will <strong>send an email to %{email}</strong> inbox with a link to your exported samples. Note that the link will expire in 7 days.</p>"
+    repository_html: '<p>You are about to export selected items in repository %{repository}</p> <br> Repository will be exported in a .csv file format. You will receive <strong>email with a link</strong> where you can download it.'
+    export_error: "Error when creating zip export."
+
   # This section contains general words that can be used in any parts of
   # application.
   tiny_mce:

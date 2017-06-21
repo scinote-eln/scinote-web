@@ -25,6 +25,7 @@
         <% if can_create_repository(current_team) %>
           href="<%= create_modal_team_repositories_path %>"
           class='create-repository'
+          data-remote='true'
         <% end %>>
         <span class="glyphicon glyphicon-plus"></span>
         <span class="hidden-xs">&nbsp;<%= t('repositories.index.add_new_repository_tab') %></span>
@@ -37,50 +38,9 @@
     <% @repositories.each do |repo| %>
       <div class="tab-pane tab-pane-settings" id="custom_repo_<%= repo.id %>">
         <!-- Tab Content -->
-        <div id="repository-toolbar">
-          <div class="dropdown text-right">
-            <div class="btn btn-default btn-xs"
-                 type="button"
-                 data-toggle="dropdown"
-                 aria-haspopup="true"
-                 aria-expanded="true"
-                 <%= "disabled='disabled'" if !can_edit_and_destroy_repository repo %>>
-              <span class="glyphicon glyphicon-cog"></span>
-              <span class="caret"></span>
-            </div>
-            <ul class="dropdown-menu pull-right">
-              <li class="dropdown-header">
-                <%= t("repositories.index.options_dropdown.header") %>
-              </li>
-              <% if can_edit_and_destroy_repository repo %>
-                <li>
-                  <%= link_to t('repositories.index.options_dropdown.rename'),
-                              team_repository_rename_modal_path(repository_id: repo),
-                              class: "rename-repo-option",
-                              remote: true %>
-                </li>
-              <% end %>
-              <% if can_copy_repository(repo) %>
-                <li>
-                  <%= link_to t('repositories.index.options_dropdown.copy'),
-                              team_repository_copy_modal_path(repository_id: repo),
-                              class: "copy-repo-option",
-                              remote: true %>
-                </li>
-              <% end %>
-              <% if can_edit_and_destroy_repository repo %>
-                <li role="separator" class="divider"></li>
-                <li>
-                  <%= link_to t('repositories.index.modal_delete.delete'),
-                              team_repository_destroy_modal_path(repository_id: repo),
-                              class: "delete-repo-option",
-                              remote: true %>
-                </li>
-              <% end %>
-            </ul>
-          </div>
+        <div class="container-fluid">
+          <div class="tab-content-body"></div>
         </div>
-        <div class="tab-content-body"></div>
       </div>
     <% end %>
   </div>

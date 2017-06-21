@@ -102,7 +102,7 @@ class RepositoryDatatable < AjaxDatatablesRails::Base
     records.map do |record|
       row = {
         'DT_RowId': record.id,
-        '1': @my_module ? assigned_row(record) : '',
+        '1': assigned_row(record),
         '2': escape_input(record.name),
         '3': I18n.l(record.created_at, format: :full),
         '4': escape_input(record.created_by.full_name),
@@ -118,9 +118,12 @@ class RepositoryDatatable < AjaxDatatablesRails::Base
       # Add custom columns
       record.repository_cells.each do |cell|
         row[@columns_mappings[cell.repository_column.id]] =
-          custom_auto_link(cell.value.data,
-                           simple_format: true,
-                           team: @team)
+          custom_auto_link(
+            display_tooltip(cell.value.data,
+                            Constants::NAME_MAX_LENGTH),
+            simple_format: true,
+            team: @team
+          )
       end
       row
     end
@@ -138,17 +141,13 @@ class RepositoryDatatable < AjaxDatatablesRails::Base
   # after that "data" function will return json
   def get_raw_records
     repository_rows = RepositoryRow
-                      .includes(
+                      .preload(
                         :repository_columns,
-                        :created_by
-                        # repository_cells: :value
-                      ).references(
-                        :repository_columns,
-                        :created_by
+                        :created_by,
+                        repository_cells: :value
                       )
+                      .joins(:created_by)
                       .where(repository: @repository)
-
-    @assigned_rows = @my_module.repository_rows if @my_module
 
     # Make mappings of custom columns, so we have same id for every column
     i = 5
@@ -157,6 +156,24 @@ class RepositoryDatatable < AjaxDatatablesRails::Base
       @columns_mappings[column.id] = i.to_s
       i += 1
     end
+
+    if @my_module
+      @assigned_rows = @my_module.repository_rows
+                                 .preload(
+                                   :repository_columns,
+                                   :created_by,
+                                   repository_cells: :value
+                                 )
+                                 .joins(:created_by)
+                                 .where(repository: @repository)
+      return @assigned_rows if params[:assigned] == 'assigned'
+    else
+      @assigned_rows = repository_rows.joins(
+        'INNER JOIN my_module_repository_rows ON
+        (repository_rows.id = my_module_repository_rows.repository_row_id)'
+      )
+    end
+
     repository_rows
   end
 
@@ -166,15 +183,51 @@ class RepositoryDatatable < AjaxDatatablesRails::Base
   # number of samples/all samples it's dependant upon sort_record query
   def fetch_records
     records = get_raw_records
-    records = @assigned_rows if @my_module && params[:assigned] == 'assigned'
+    records = filter_records(records) if params[:search].present?
     records = sort_records(records) if params[:order].present?
+    records = paginate_records(records) unless params[:length].present? &&
+                                               params[:length] == '-1'
     escape_special_chars
-    records = filter_records(records) if params[:search].present? &&
-                                         !sorting_by_custom_column
-    records = paginate_records(records) if !(params[:length].present? &&
-                                             params[:length] == '-1') &&
-                                           !sorting_by_custom_column
     records
+  end
+
+  # Overriden to make it work for custom columns, because they are polymorphic
+  # NOTE: Function assumes the provided records/rows are only from the current
+  # repository!
+  def filter_records(repo_rows)
+    return repo_rows unless params[:search].present? &&
+                            params[:search][:value].present?
+    search_val = params[:search][:value]
+
+    filtered_rows = repo_rows.find_by_sql(
+      "SELECT DISTINCT repository_rows.*
+       FROM repository_rows
+       INNER JOIN (
+         SELECT users.*
+         FROM users
+       ) AS users
+       ON users.id = repository_rows.created_by_id
+       LEFT OUTER JOIN (
+         SELECT repository_cells.repository_row_id,
+                repository_text_values.data AS text_value,
+                to_char(repository_date_values.data, 'DD.MM.YYYY HH24:MI')
+                AS date_value
+         FROM repository_cells
+         INNER JOIN repository_text_values
+         ON repository_text_values.id = repository_cells.value_id
+         FULL OUTER JOIN repository_date_values
+         ON repository_date_values.id = repository_cells.value_id
+       ) AS values
+       ON values.repository_row_id = repository_rows.id
+       WHERE repository_rows.repository_id = #{@repository.id}
+             AND (repository_rows.name ILIKE '%#{search_val}%'
+                  OR to_char(repository_rows.created_at, 'DD.MM.YYYY HH24:MI')
+                     ILIKE '%#{search_val}%'
+                  OR users.full_name ILIKE '%#{search_val}%'
+                  OR text_value ILIKE '%#{search_val}%'
+                  OR date_value ILIKE '%#{search_val}%')"
+    )
+    repo_rows.where(id: filtered_rows)
   end
 
   # Override default sort method if needed
@@ -182,15 +235,20 @@ class RepositoryDatatable < AjaxDatatablesRails::Base
     if params[:order].present? && params[:order].length == 1
       if sort_column(params[:order].values[0]) == ASSIGNED_SORT_COL
         # If "assigned" column is sorted
+        direction = sort_null_direction(params[:order].values[0])
         if @my_module
           # Depending on the sort, order nulls first or
           # nulls last on repository_cells association
-          direction = sort_null_direction(params[:order].values[0])
           records.joins(
             "LEFT OUTER JOIN my_module_repository_rows ON
             (repository_rows.id = my_module_repository_rows.repository_row_id
             AND (my_module_repository_rows.my_module_id = #{@my_module.id} OR
                               my_module_repository_rows.id IS NULL))"
+          ).order("my_module_repository_rows.id NULLS #{direction}")
+        else
+          records.joins(
+            'LEFT OUTER JOIN my_module_repository_rows ON
+            (repository_rows.id = my_module_repository_rows.repository_row_id)'
           ).order("my_module_repository_rows.id NULLS #{direction}")
         end
       elsif sorting_by_custom_column
@@ -237,18 +295,14 @@ class RepositoryDatatable < AjaxDatatablesRails::Base
         #                              as sq ORDER BY CASE WHEN sq.custom_field_id = #{column_id} THEN 1 ELSE 2 END #{dir}, sq.value #{dir}
         #                              LIMIT #{per_page} OFFSET #{offset}")
 
-        RepositoryRow.find_by_sql(
-          "SELECT repository_rows.*, values.value AS value
-          FROM repository_rows
-          LEFT OUTER JOIN (SELECT repository_cells.*,
+        records.joins(
+          "LEFT OUTER JOIN (SELECT repository_cells.repository_row_id,
             repository_text_values.data AS value FROM repository_cells
 				  INNER JOIN repository_text_values
 				  ON repository_text_values.id = repository_cells.value_id
 				  WHERE repository_cells.repository_column_id = #{column_id}) AS values
-	        ON values.repository_row_id = repository_rows.id
-          WHERE repository_rows.repository_id = #{@repository.id}
-          ORDER BY value #{dir} LIMIT #{per_page} OFFSET #{offset}"
-        )
+          ON values.repository_row_id = repository_rows.id"
+        ).order("values.value #{dir}")
       else
         super(records)
       end

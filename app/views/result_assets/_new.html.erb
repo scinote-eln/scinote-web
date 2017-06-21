@@ -1,14 +1,22 @@
 <div class="well">
-  <%= bootstrap_form_for(@result, url: my_module_result_assets_path(format: :json), remote: true, multipart: true, data: { type: :json }) do |f| %>
-    <%= f.text_field :name, style: "margin-top: 10px;" %><br />
-    <%= f.fields_for :asset do |ff| %>
-      <%= ff.file_field :file %>
-    <% end %>
-    <%= f.submit t("result_assets.new.create"),
-                 class: 'btn btn-primary save-result',
-                 onclick: "Results.processResult(event, Results.ResultTypeEnum.FILE, false);" %>
-    <button type="button" class="btn btn-default cancel-new">
+  <div id="new-result-assets-select"
+       class="text-center new-asset-box">
+      <%=t 'assets.drag_n_drop.label_html' %> <label><span class="btn btn-primary"><%=t 'assets.drag_n_drop.browse_label' %></span>
+        <input type="file"
+               onchange="DragNDropResults.init(this.files, 'select')"
+               id="drag-n-drop-assets"
+               style="display: none" multiple>
+      </label>
+  </div>
+  <br />
+    <button type="button"
+            class="btn btn-primary save-result"
+            data-href="<%= my_module_result_assets_path(format: :json) %>"
+            onClick="DragNDropResults.processResult(this)"><%=t 'result_assets.new.create' %></button>
+    <button type="button"
+            class="btn btn-default cancel-new"
+            onClick="DragNDropResults.destroyAll()">
       <%= t("general.cancel")%>
     </button>
-  <% end %>
+  <%# end %>
 </div>

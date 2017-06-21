@@ -17,7 +17,7 @@ module ApplicationHelper
   end
 
   def display_tooltip(message, len = Constants::NAME_TRUNCATION_LENGTH)
-    if message.strip.length > Constants::NAME_TRUNCATION_LENGTH
+    if message.strip.length > len
       sanitize_input("<div class='modal-tooltip'> \
       #{truncate(message.strip, length: len)} \
       <span class='modal-tooltiptext'> \
@@ -233,11 +233,29 @@ module ApplicationHelper
       raw(user_description) + raw('" >') + user_name + raw('</a>')
   end
 
+  # Dirty, dirty hack for displaying images in reports
   def user_avatar_absolute_url(user, style)
-    unless user.avatar(style) == '/images/icon_small/missing.png'
-      return user.avatar(style)
+    prefix = ''
+    if ENV['PAPERCLIP_STORAGE'].present? &&
+       ENV['MAIL_SERVER_URL'].present? &&
+       ENV['PAPERCLIP_STORAGE'] != 'filesystem'
+      prefix = ENV['MAIL_SERVER_URL']
     end
-    URI.join(Rails.application.routes.url_helpers.root_url,
-             "/images/#{style}/missing.png").to_s
+    # for development
+    prefix = 'localhost:3000' if ENV['MAIL_SERVER_URL'] == 'localhost'
+    if !prefix.empty? &&
+       !prefix.include?('http://') &&
+       !prefix.include?('https://')
+      prefix = if respond_to?(:request) && request.ssl?
+                 "https://#{prefix}"
+               else
+                 "http://#{prefix}"
+               end
+    end
+
+    unless user.avatar(style) == '/images/icon_small/missing.png'
+      return user.avatar(style, timeout: Constants::URL_LONG_EXPIRE_TIME)
+    end
+    url_for(prefix + "/images/#{style}/missing.png")
   end
 end

@@ -2,6 +2,7 @@
   height: auto;
   max-height: 400px;
   overflow-x: hidden;
+  text-transform: initial;
 }
 
 .repository-table {
@@ -11,4 +12,10 @@
   .dataTables_length {
     display: inline-block;
   }
+}
+
+.repository-cog {
+  display: inline-block;
+  float: right;
+  padding-left: 4px;
 }

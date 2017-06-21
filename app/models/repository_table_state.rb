@@ -14,39 +14,41 @@ class RepositoryTableState < ActiveRecord::Base
   end
 
   def self.update_state(custom_column, column_index, user)
-    table_state = RepositoryTableState.where(
-      user: user,
+    # table state of every user having access to this repository needs udpating
+    table_states = RepositoryTableState.where(
       repository: custom_column.repository
     )
-    return if table_state.empty?
-    repository_state = table_state.first['state']
-    if column_index
-      # delete column
-      repository_state['columns'].delete(column_index)
-      repository_state['columns'].keys.each do |index|
-        if index.to_i > column_index.to_i
-          repository_state['columns'][(index.to_i - 1).to_s] =
-            repository_state['columns'].delete(index)
-        else
-          index
+    table_states.each do |table_state|
+      repository_state = table_state['state']
+      if column_index
+        # delete column
+        repository_state['columns'].delete(column_index)
+        repository_state['columns'].keys.each do |index|
+          if index.to_i > column_index.to_i
+            repository_state['columns'][(index.to_i - 1).to_s] =
+              repository_state['columns'].delete(index)
+          else
+            index
+          end
         end
-      end
-      repository_state['ColReorder'].delete(column_index)
-      repository_state['ColReorder'].map! do |index|
-        if index.to_i > column_index.to_i
-          (index.to_i - 1).to_s
-        else
-          index
+
+        repository_state['ColReorder'].delete(column_index)
+        repository_state['ColReorder'].map! do |index|
+          if index.to_i > column_index.to_i
+            (index.to_i - 1).to_s
+          else
+            index
+          end
         end
+      else
+        # add column
+        index = repository_state['columns'].count
+        repository_state['columns'][index] = RepositoryDatatable::
+          REPOSITORY_TABLE_DEFAULT_STATE['columns'].first
+        repository_state['ColReorder'].insert(2, index)
       end
-    else
-      # add column
-      index = repository_state['columns'].count
-      repository_state['columns'][index] = RepositoryDatatable::
-        REPOSITORY_TABLE_DEFAULT_STATE['columns'].first
-      repository_state['ColReorder'].insert(2, index)
+      table_state.update(state: repository_state)
     end
-    table_state.first.update(state: repository_state)
   end
 
   def self.create_state(user, repository)

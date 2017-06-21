@@ -31,17 +31,21 @@ module SidebarHelper
   end
 
   def module_action_to_link_to(my_module)
-    case action_name
-    when 'results'
-      return results_my_module_url(my_module)
-    when 'activities'
-      return activities_my_module_url(my_module)
-    when 'samples'
-      return samples_my_module_url(my_module)
-    when 'archive', 'module_archive', 'experiment_archive'
-      return archive_my_module_url(my_module)
+    if action_name == 'results'
+      results_my_module_url(my_module)
+    elsif action_name == 'activities'
+      activities_my_module_url(my_module)
+    elsif action_name == 'samples'
+      samples_my_module_url(my_module)
+    elsif action_name.in?(%w(archive module_archive experiment_archive))
+      archive_my_module_url(my_module)
+    elsif action_name == 'repository' && @repository
+      repository_my_module_url(
+        id: my_module.id,
+        repository_id: @repository.id
+      )
     else
-      return protocols_my_module_url(my_module)
+      protocols_my_module_url(my_module)
     end
   end
 end

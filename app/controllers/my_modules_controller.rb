@@ -27,6 +27,10 @@ class MyModulesController < ApplicationController
   before_action :check_assign_samples_permissions, only: :assign_samples
   before_action :check_unassign_samples_permissions, only: :unassign_samples
   before_action :check_complete_my_module_perimission, only: :complete_my_module
+  before_action :check_assign_repository_records_permissions,
+                only: :assign_repository_records
+  before_action :check_unassign_repository_records_permissions,
+                only: :unassign_repository_records
 
   layout 'fluid'.freeze
 
@@ -386,8 +390,6 @@ class MyModulesController < ApplicationController
 
   # Submit actions
   def assign_repository_records
-    render_403 && return unless can_assign_repository_records(@my_module,
-                                                              @repository)
     if params[:selected_rows].present? && params[:repository_id].present?
       records_names = []
 
@@ -415,7 +417,7 @@ class MyModulesController < ApplicationController
             'activities.assign_repository_records',
             user: current_user.full_name,
             task: @my_module.name,
-            repository: @repository,
+            repository: @repository.name,
             records: records_names.join(', ')
           )
         )
@@ -437,8 +439,6 @@ class MyModulesController < ApplicationController
   end
 
   def unassign_repository_records
-    render_403 && return unless can_unassign_repository_records(@my_module,
-                                                                @repository)
     if params[:selected_rows].present? && params[:repository_id].present?
       records = []
 
@@ -462,7 +462,7 @@ class MyModulesController < ApplicationController
             'activities.unassign_repository_records',
             user: current_user.full_name,
             task: @my_module.name,
-            repository: @repository,
+            repository: @repository.name,
             records: records.map(&:name).join(', ')
           )
         )
@@ -641,12 +641,20 @@ class MyModulesController < ApplicationController
     end
   end
 
+  def check_assign_repository_records_permissions
+    render_403 unless can_assign_repository_records(@my_module, @repository)
+  end
+
+  def check_unassign_repository_records_permissions
+    render_403 unless can_unassign_repository_records(@my_module, @repository)
+  end
+
   def check_complete_my_module_perimission
     render_403 unless can_complete_module(@my_module)
   end
 
   def my_module_params
     params.require(:my_module).permit(:name, :description, :due_date,
-      :archived)
+                                      :archived)
   end
 end

@@ -564,7 +564,7 @@ function initSidebarElement(reportEl) {
   var type = reportEl.data("type");
   var name = reportEl.data("name");
   var scrollId = reportEl.data("scroll-id");
-  var iconClass = "glyphicon " + reportEl.data("icon-class");
+  var iconClass = reportEl.data("icon-class");
 
   // Generate list element
   var newLi = $(document.createElement("li"));
