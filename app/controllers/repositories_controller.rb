@@ -232,15 +232,19 @@ class RepositoriesController < ApplicationController
   def import_records
     import_records = repostiory_import_actions
     status = import_records.import!
+    respond_to do |format|
+      format.json do
+        if status[:status] == :ok
+          flash[:success] = t('repositories.import_records.success_flash',
+                              number_of_rows: status[:nr_of_added])
+          render json: {}, status: :ok
+        else
+          flash[:alert] = t('repositories.import_records.error_flash',
+                             message: status[:errors])
+          render json: {}, status: :unprocessable_entity
+        end
+      end
 
-    if status[:status] == :ok
-      flash[:success] = t('repositories.import_records.success_flash',
-                          number_of_rows: status[:nr_of_added])
-      head :ok
-    else
-      flash[:alert] = t('repositories.import_records.error_flash',
-                         message: status[:errors])
-      head :unprocessable_entity
     end
   end
 

@@ -9,7 +9,6 @@ module ImportRepository
     end
 
     def import!
-
       status = run_import_actions
       @temp_file.destroy
       status

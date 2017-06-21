@@ -29,7 +29,7 @@ class Repository < ActiveRecord::Base
   def available_repository_fields
     fields = {}
     # First and foremost add sample name
-    fields['-1'] = I18n.t('samples.table.sample_name')
+    fields['-1'] = I18n.t('repositories.default_column')
     # Add all other custom columns
     repository_columns.order(:created_at).each do |rc|
       fields[rc.id] = rc.name
@@ -69,10 +69,7 @@ class Repository < ActiveRecord::Base
     errors = []
     custom_fields = []
     name_index = -1
-    total_nr = 0
     nr_of_added = 0
-    header = sheet.row(1)
-    generate_new_columns(header)
 
     mappings.each.with_index do |(k, v), i|
       if v == '-1'
@@ -80,8 +77,7 @@ class Repository < ActiveRecord::Base
         custom_fields << nil
         name_index = i
       else
-        cf = repository_columns.find_by_name(header[i])
-
+        cf = repository_columns.find_by_id(v)
         custom_fields << cf
       end
     end
@@ -89,19 +85,15 @@ class Repository < ActiveRecord::Base
     # Now we can iterate through sample data and save stuff into db
     (2..sheet.last_row).each do |i|
       error = []
-      total_nr += 1
+      nr_of_added += 1
       record_row = RepositoryRow.new(name: sheet.row(i)[name_index],
                                  repository: self,
                                  created_by: user,
                                  last_modified_by: user)
 
-
       if record_row.save
         sheet.row(i).each.with_index do |value, index|
-          # We need to have sample saved before messing with custom fields (they
-          # need sample id)
           if custom_fields[index]
-            nr_of_added += 1
             # we're working with CustomField
             rep_column = RepositoryTextValue.new(
               data: value,
@@ -125,30 +117,20 @@ class Repository < ActiveRecord::Base
     end
 
     if errors.count > 0
-      return {
-        status: :error,
-        errors: errors,
-        nr_of_added: nr_of_added,
-        total_nr: total_nr
-      }
-    else
-      return {
-        status: :ok,
-        nr_of_added: nr_of_added,
-        total_nr: total_nr
-      }
+      return { status: :error, errors: errors, nr_of_added: nr_of_added }
     end
+    { status: :ok, nr_of_added: nr_of_added }
   end
 
   private
 
-  def generate_new_columns(header)
-    rep_columns_names = self.repository_columns.pluck(:name).push('Name')
-    header.each do |cname|
-      next if rep_columns_names.include? cname
-      RepositoryColumn.create(repository: self, name: cname, data_type: 0)
-    end
-  end
+  # def generate_new_columns(header)
+  #   rep_columns_names = self.repository_columns.pluck(:name).push('Name')
+  #   header.each do |cname|
+  #     next if rep_columns_names.include? cname
+  #     RepositoryColumn.create(repository: self, name: cname, data_type: 0)
+  #   end
+  # end
 
   def generate_file(filename, file_path)
     case File.extname(filename)

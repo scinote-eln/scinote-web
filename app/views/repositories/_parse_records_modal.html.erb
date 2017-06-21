@@ -6,7 +6,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="parse-modal-title"><%= t('samples.modal_import.title') %></h4>
+        <h4 class="modal-title" id="parse-modal-title"><%= t('repositories.modal_parse.title') %></h4>
       </div>
       <%= bootstrap_form_tag(url: import_records_repository_path(@import_data.repository, format: :json),
                              html: {'data-type' => 'json', id: 'form-import'},
@@ -63,7 +63,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal"><%= t('general.cancel')%></button>
-        <input type="submit" class="btn btn-primary" value="<%= t('teams.parse_sheet.import_samples') %>"</input>
+        <input type="submit" class="btn btn-primary" value="<%= t('repositories.modal_parse.title') %>"</input>
       </div>
       <% end %>
     </div>
