@@ -245,7 +245,7 @@ class RepositoriesController < ApplicationController
 
   def to_csv(rows, column_ids)
     require 'csv'
-byebug
+
     # Parse column names
     csv_header = []
     column_ids.each do |c_id|
@@ -265,7 +265,6 @@ byebug
     end
 
     CSV.generate do |csv|
-      byebug
       csv << csv_header
       rows.each do |row|
         csv_row = []
