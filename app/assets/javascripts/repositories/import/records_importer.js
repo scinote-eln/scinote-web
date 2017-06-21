@@ -2,8 +2,8 @@
   'use strict';
 
   global.repositoryRecordsImporter = function() {
-    var previousIndex, disabledOptions, loadingSamples;
-    loadingSamples = false;
+    var previousIndex, disabledOptions, loadingRecords;
+    loadingRecords = false;
     $('select').focus(function() {
       previousIndex = $(this)[0].selectedIndex;
     }).change(function() {
@@ -22,22 +22,22 @@
       previousIndex = currIndex;
     });
 
-    //  Create import samples ajax
+    //  Create import repository records ajax
     $('form#form-import').submit(function(e) {
-      // Check if we already uploading samples
-      if (loadingSamples) {
+      // Check if we already uploading repository records
+      if (loadingRecords) {
         return false;
       }
       disabledOptions = $("option[disabled='disabled']");
       disabledOptions.removeAttr('disabled');
-      loadingSamples = true;
+      loadingRecords = true;
       animateSpinner();
     }).on('ajax:success', function(ev, data, status) {
-      // Simply reload page to show flash and updated samples list
-      loadingSamples = false;
+      // Simply reload page to show flash and updated repository records list
+      loadingRecords = false;
       location.reload();
     }).on('ajax:error', function(ev, data, status) {
-      loadingSamples = false;
+      loadingRecords = false;
       if (_.isUndefined(data.responseJSON.html)) {
         // Simply reload page to show flash
         location.reload();

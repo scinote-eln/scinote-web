@@ -199,9 +199,10 @@ class RepositoriesController < ApplicationController
         if parsed_file.too_large?
           repository_response(t('general.file.size_exceeded',
                                 file_size: Constants::FILE_MAX_SIZE_MB))
-        else
+        elsif parsed_file.empty?
           flash[:notice] = t('teams.parse_sheet.errors.empty_file')
-          redirect_to back and return if parsed_file.empty?
+          redirect_to back and return
+        else
           @import_data = parsed_file.data
           if parsed_file.generated_temp_file?
             format.json do

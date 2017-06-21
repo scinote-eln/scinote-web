@@ -28,7 +28,7 @@ class Repository < ActiveRecord::Base
 
   def available_repository_fields
     fields = {}
-    # First and foremost add sample name
+    # First and foremost add record name
     fields['-1'] = I18n.t('repositories.default_column')
     # Add all other custom columns
     repository_columns.order(:created_at).each do |rc|
@@ -82,16 +82,16 @@ class Repository < ActiveRecord::Base
       end
     end
 
-    # Now we can iterate through sample data and save stuff into db
+    # Now we can iterate through record data and save stuff into db
     (2..sheet.last_row).each do |i|
       error = []
-      nr_of_added += 1
       record_row = RepositoryRow.new(name: sheet.row(i)[name_index],
                                  repository: self,
                                  created_by: user,
                                  last_modified_by: user)
 
       next unless record_row.save
+      nr_of_added += 1
       sheet.row(i).each.with_index do |value, index|
         if custom_fields[index]
           # we're working with CustomField
@@ -119,14 +119,6 @@ class Repository < ActiveRecord::Base
   end
 
   private
-
-  # def generate_new_columns(header)
-  #   rep_columns_names = self.repository_columns.pluck(:name).push('Name')
-  #   header.each do |cname|
-  #     next if rep_columns_names.include? cname
-  #     RepositoryColumn.create(repository: self, name: cname, data_type: 0)
-  #   end
-  # end
 
   def generate_file(filename, file_path)
     case File.extname(filename)
