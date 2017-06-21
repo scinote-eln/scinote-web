@@ -71,13 +71,13 @@ class Repository < ActiveRecord::Base
     name_index = -1
     nr_of_added = 0
 
-    mappings.each.with_index do |(k, v), i|
-      if v == '-1'
+    mappings.each.with_index do |(_k, value), index|
+      if value == '-1'
         # Fill blank space, so our indices stay the same
         custom_fields << nil
-        name_index = i
+        name_index = index
       else
-        cf = repository_columns.find_by_id(v)
+        cf = repository_columns.find_by_id(value)
         custom_fields << cf
       end
     end
@@ -91,27 +91,23 @@ class Repository < ActiveRecord::Base
                                  created_by: user,
                                  last_modified_by: user)
 
-      if record_row.save
-        sheet.row(i).each.with_index do |value, index|
-          if custom_fields[index]
-            # we're working with CustomField
-            rep_column = RepositoryTextValue.new(
-              data: value,
-              created_by: user,
-              last_modified_by: user,
-              repository_cell_attributes: {
-                repository_row: record_row,
-                repository_column: custom_fields[index]
-              }
-            )
-
-            if !rep_column.save
-              error << rep_column.errors.messages
-            end
-          else
-            # This custom_field does not exist
-            error << { '#{mappings[index]}': 'Does not exists' }
-          end
+      next unless record_row.save
+      sheet.row(i).each.with_index do |value, index|
+        if custom_fields[index]
+          # we're working with CustomField
+          rep_column = RepositoryTextValue.new(
+            data: value,
+            created_by: user,
+            last_modified_by: user,
+            repository_cell_attributes: {
+              repository_row: record_row,
+              repository_column: custom_fields[index]
+            }
+          )
+          error << rep_column.errors.messages unless rep_column.save
+        else
+          # This custom_field does not exist
+          error << { '#{mappings[index]}': 'Does not exists' }
         end
       end
     end

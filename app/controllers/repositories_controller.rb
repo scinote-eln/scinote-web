@@ -197,7 +197,7 @@ class RepositoriesController < ApplicationController
 
     respond_to do |format|
       unless params[:file]
-        repository_response(t("teams.parse_sheet.errors.no_file_selected"))
+        repository_response(t('teams.parse_sheet.errors.no_file_selected'))
         return
       end
       begin
@@ -240,11 +240,10 @@ class RepositoriesController < ApplicationController
           render json: {}, status: :ok
         else
           flash[:alert] = t('repositories.import_records.error_flash',
-                             message: status[:errors])
+                            message: status[:errors])
           render json: {}, status: :unprocessable_entity
         end
       end
-
     end
   end
 

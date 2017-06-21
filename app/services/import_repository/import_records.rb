@@ -17,11 +17,9 @@ module ImportRepository
     private
 
     def run_import_actions
-      @repository.import_records(
-       @repository.open_spreadsheet(@temp_file.file),
-       @mappings,
-       @user
-     )
+      @repository.import_records(@repository.open_spreadsheet(@temp_file.file),
+                                 @mappings,
+                                 @user)
     end
 
     def run_checks
@@ -32,7 +30,7 @@ module ImportRepository
             I18n.t('repositories.import_records.error_message.no_data_to_parse')
         }
       end
-      unless @mappings.has_value?('-1')
+      unless @mappings.value?('-1')
         return {
           status: :error,
           errors:
