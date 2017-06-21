@@ -887,7 +887,16 @@ en:
       added_on: "Added on"
       added_by: "Added by"
     add_new_record: "Add record"
-    import_records: 'Import'
+    import_records:
+      import: 'Import'
+      success_flash: "%{number_of_rows} new record(s) successfully imported."
+      error_flash: "Something went wrong: %{message}"
+      error_message:
+        temp_file_not_found: 'This file could not be found. Your session might expire.'
+        session_expired: 'Your session expired. Please try again.'
+        no_data_to_parse: 'There's nothing to be parsed.'
+        no_column_name: 'Name column is required!'
+        duplicated_values: 'Two or more columns have the same mapping.'
     edit_record: "Edit"
     delete_record: "Delete"
     save_record: "Save"

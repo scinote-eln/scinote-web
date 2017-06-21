@@ -230,18 +230,31 @@ class RepositoriesController < ApplicationController
   end
 
   def import_records
-    # byebug
-    import_records = ImportRepository::ImportRecords.new(
+    import_records = repostiory_import_actions
+    status = import_records.import!
+
+    if status[:status] == :ok
+      flash[:success] = t('repositories.import_records.success_flash',
+                          number_of_rows: status[:nr_of_added])
+      head :ok
+    else
+      flash[:alert] = t('repositories.import_records.error_flash',
+                         message: status[:errors])
+      head :unprocessable_entity
+    end
+  end
+
+  private
+
+  def repostiory_import_actions
+    ImportRepository::ImportRecords.new(
       temp_file: TempFile.find_by_id(params[:file_id]),
       repository: current_team.repositories.find_by_id(params[:id]),
       mappings: params[:mappings],
       session: session,
       user: current_user
     )
-    import_records.import!
   end
-
-  private
 
   def load_vars
     @team = Team.find_by_id(params[:team_id])

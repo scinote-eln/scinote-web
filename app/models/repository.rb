@@ -69,6 +69,8 @@ class Repository < ActiveRecord::Base
     errors = []
     custom_fields = []
     name_index = -1
+    total_nr = 0
+    nr_of_added = 0
     header = sheet.row(1)
     generate_new_columns(header)
 
@@ -83,68 +85,45 @@ class Repository < ActiveRecord::Base
         custom_fields << cf
       end
     end
-    # byebug
+
     # Now we can iterate through sample data and save stuff into db
     (2..sheet.last_row).each do |i|
-      byebug
       error = []
       total_nr += 1
-      byebug
       record_row = RepositoryRow.new(name: sheet.row(i)[name_index],
                                  repository: self,
                                  created_by: user,
                                  last_modified_by: user)
 
 
-      if record.save
+      if record_row.save
         sheet.row(i).each.with_index do |value, index|
           # We need to have sample saved before messing with custom fields (they
           # need sample id)
           if custom_fields[index]
+            nr_of_added += 1
             # we're working with CustomField
             rep_column = RepositoryTextValue.new(
               data: value,
-              created_by:
-              last_modified_by:
+              created_by: user,
+              last_modified_by: user,
               repository_cell_attributes: {
-                repository_row: record,
-                repository_column: column
+                repository_row: record_row,
+                repository_column: custom_fields[index]
               }
             )
 
-            if scf.save
-
-              error << scf.errors.messages
+            if !rep_column.save
+              error << rep_column.errors.messages
             end
           else
             # This custom_field does not exist
-            error << {"#{mappings[index]}": "Does not exists"}
+            error << { '#{mappings[index]}': 'Does not exists' }
           end
         end
       end
     end
-#
-# params[:repository_cells].each do |key, value|
-#   column = @repository.repository_columns.detect do |c|
-#     c.id == key.to_i
-#   end
-#   cell_value = RepositoryTextValue.new(
-#     data: value,
-#     created_by: current_user,
-#     last_modified_by: current_user,
-#     repository_cell_attributes: {
-#       repository_row: record,
-#       repository_column: column
-#     }
-#   )
-#   unless cell_value.save
-#     errors[:repository_cells] << {
-#       "#{cell.repository_column.id}": cell_value.errors.messages
-#     }
-#     raise ActiveRecord::RecordInvalid
-#   end
-#   record_annotation_notification(record, cell_value.repository_cell)
-# end
+
     if errors.count > 0
       return {
         status: :error,
