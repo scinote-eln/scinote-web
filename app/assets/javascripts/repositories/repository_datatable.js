@@ -154,6 +154,7 @@ function dataTableInit() {
         type: 'POST'
       });
       loadFirstTime = false;
+      initHeaderTooltip();
     },
     fnInitComplete: function(oSettings) {
       // Reload correct column order and visibility (if you refresh page)
