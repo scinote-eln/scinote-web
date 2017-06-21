@@ -1,6 +1,6 @@
 <% if table.blank? and @table.present? then table = @table end %>
 <% timestamp = table.created_at %>
-<div class="report-element report-step-attachment-element report-step-table-element" data-ts="<%= timestamp.to_i %>" data-type="step_table" data-id='{ "table_id": <%= table.id %> }' data-scroll-id="<%= table.id %>" data-name="<%= table.name %>" data-icon-class="glyphicon-th">
+<div class="report-element report-step-attachment-element report-step-table-element" data-ts="<%= timestamp.to_i %>" data-type="step_table" data-id='{ "table_id": <%= table.id %> }' data-scroll-id="<%= table.id %>" data-name="<%= table.name %>" data-icon-class="glyphicon glyphicon-th">
   <div class="report-element-header">
     <div class="row">
       <div class="pull-left attachment-icon">

@@ -2,7 +2,7 @@
 <% if order.blank? and @order.present? then order = @order end %>
 <% comments = step.step_comments.order(created_at: order) %>
 <% timestamp = Time.current + 1.year %>
-<div class="report-element report-comments-element report-step-comments-element" data-ts="<%= timestamp.to_i %>" data-order="asc" data-type="step_comments" data-id='{ "step_id": <%= step.id %> }' data-scroll-id="<%= step.id %>" data-name="<%=t "projects.reports.elements.step_comments.sidebar_name" %>" data-icon-class="glyphicon-comment">
+<div class="report-element report-comments-element report-step-comments-element" data-ts="<%= timestamp.to_i %>" data-order="asc" data-type="step_comments" data-id='{ "step_id": <%= step.id %> }' data-scroll-id="<%= step.id %>" data-name="<%=t "projects.reports.elements.step_comments.sidebar_name" %>" data-icon-class="glyphicon glyphicon-comment">
   <div class="report-element-header">
     <div class="row">
       <div class="pull-left comments-icon">
