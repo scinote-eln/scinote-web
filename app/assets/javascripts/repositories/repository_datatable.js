@@ -231,14 +231,17 @@ $('form#form-export').submit(function() {
         case 'checkbox':
           val = -1;
           break;
-        case 'row-name':
+        case 'assigned':
           val = -2;
           break;
-        case 'added-by':
+        case 'row-name':
           val = -3;
           break;
-        case 'added-on':
+        case 'added-by':
           val = -4;
+          break;
+        case 'added-on':
+          val = -5;
           break;
         default:
           val = th.attr('id');
