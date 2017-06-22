@@ -7,14 +7,6 @@
     location.reload();
   }
 
-  function reloadOnHidden() {
-    $('#modal-import-records')
-      .on('hidden.bs.modal', function() {
-        animateSpinner();
-        location.reload();
-      });
-  }
-
   function initImportRecordsModal() {
     $('#importRecordsButton').off().on('click', function() {
       $('#modal-import-records').modal('show');
@@ -52,7 +44,6 @@
           pane.tab('show').promise().done(function() {
             initImportRecordsModal();
           });
-          reloadOnHidden()
         },
         error: function (error) {
           // TODO
