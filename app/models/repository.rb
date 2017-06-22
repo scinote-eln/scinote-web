@@ -90,11 +90,9 @@ class Repository < ActiveRecord::Base
                                  created_by: user,
                                  last_modified_by: user)
 
-      next unless record_row.save
-      nr_of_added += 1
+      next unless record_row.valid?
       sheet.row(i).each.with_index do |value, index|
-        if custom_fields[index]
-          # we're working with CustomField
+        if custom_fields[index] && value
           rep_column = RepositoryTextValue.new(
             data: value,
             created_by: user,
@@ -105,10 +103,13 @@ class Repository < ActiveRecord::Base
             }
           )
           error << rep_column.errors.messages unless rep_column.save
-        else
-          # This custom_field does not exist
-          error << { '#{mappings[index]}': 'Does not exists' }
         end
+      end
+      if error.any?
+        record_row.destroy
+      else
+        nr_of_added += 1
+        record_row.save
       end
     end
 
