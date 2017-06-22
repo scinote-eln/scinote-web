@@ -99,4 +99,12 @@ module ReportsHelper
     end
     "<span class=\"label label-#{style}\">#{text}</span>".html_safe
   end
+
+  def sanitize_report_pdf(text, tags = [], attributes = [])
+    ActionController::Base.helpers.sanitize(
+      text,
+      tags: Constants::WHITELISTED_TAGS + tags,
+      attributes: Constants::WHITELISTED_ATTRIBUTES + attributes
+    )
+  end
 end
