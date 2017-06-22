@@ -45,6 +45,7 @@ class RepositoryRowsController < ApplicationController
           end
         end
       end
+      raise ActiveRecord::Rollback if errors[:repository_cells].any?
     end
 
     respond_to do |format|
@@ -135,6 +136,7 @@ class RepositoryRowsController < ApplicationController
               }
             end
           end
+          raise ActiveRecord::Rollback if errors[:repository_cells].any?
         end
         # Clean up empty cells, not present in updated record
         @record.repository_cells.each do |cell|
@@ -144,6 +146,7 @@ class RepositoryRowsController < ApplicationController
       else
         @record.repository_cells.each { |c| c.value.destroy }
       end
+      raise ActiveRecord::Rollback if errors[:repository_cells].any?
     end
 
     respond_to do |format|
