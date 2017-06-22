@@ -1,6 +1,19 @@
 //= require repositories/import/records_importer.js
-(function() {
+(function(global) {
   'use strict';
+
+  global.pageReload = function() {
+    animateSpinner();
+    location.reload();
+  }
+
+  function reloadOnHidden() {
+    $('#modal-import-records')
+      .on('hidden.bs.modal', function() {
+        animateSpinner();
+        location.reload();
+      });
+  }
 
   function initImportRecordsModal() {
     $('#importRecordsButton').off().on('click', function() {
@@ -13,7 +26,12 @@
     $('#form-records-file').on('ajax:success', function(ev, data) {
       $('#modal-import-records').modal('hide');
       $(data.html).appendTo('body').promise().done(function() {
-        $('#parse-records_modal').modal('show');
+        $('#parse-records_modal')
+          .modal('show')
+          .on('hidden.bs.modal', function() {
+            animateSpinner();
+            location.reload();
+          });
         repositoryRecordsImporter();
       });
     });
@@ -34,6 +52,7 @@
           pane.tab('show').promise().done(function() {
             initImportRecordsModal();
           });
+          reloadOnHidden()
         },
         error: function (error) {
           // TODO
@@ -63,4 +82,4 @@
     loadRepositoryTab();
     initImportRecordsModal();
   });
-})();
+})(window);
