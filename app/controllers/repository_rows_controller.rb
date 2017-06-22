@@ -46,7 +46,7 @@ class RepositoryRowsController < ApplicationController
         end
       end
     end
-
+    record.destroy if errors[:repository_cells].any?
     respond_to do |format|
       format.json do
         if errors[:default_fields].empty? && errors[:repository_cells].empty?
