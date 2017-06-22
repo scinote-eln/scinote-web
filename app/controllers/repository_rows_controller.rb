@@ -145,6 +145,7 @@ class RepositoryRowsController < ApplicationController
       else
         @record.repository_cells.each { |c| c.value.destroy }
       end
+      raise ActiveRecord::Rollback if errors[:repository_cells].any?
     end
 
     respond_to do |format|
