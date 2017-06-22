@@ -10,7 +10,7 @@
   <body class="print-report-body">
     <div class="print-report">
       <% # Also whitelist <img> and <input type="checkbox"> tags %>
-      <%= sanitize_input(@html, ['img', 'input'], ['type', 'disabled', 'checked']) %>
+      <%= sanitize_report_pdf(@html, ['img', 'input'], ['type', 'disabled', 'checked']) %>
     </div>
   </body>
 </html>
