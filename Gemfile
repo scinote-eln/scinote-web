@@ -2,7 +2,7 @@ source 'http://rubygems.org'
 
 ruby '2.3.3'
 
-gem 'rails', '4.2.5'
+gem 'rails', '4.2.9'
 gem 'figaro'
 gem 'pg'
 gem 'devise', '3.5.6'
