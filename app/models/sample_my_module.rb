@@ -1,4 +1,4 @@
-class SampleMyModule < ActiveRecord::Base
+class SampleMyModule < ApplicationRecord
   after_create :increment_nr_of_module_samples
   after_destroy :decrement_nr_of_module_samples
 

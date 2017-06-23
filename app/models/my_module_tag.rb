@@ -1,4 +1,4 @@
-class MyModuleTag < ActiveRecord::Base
+class MyModuleTag < ApplicationRecord
   validates :my_module, :tag, presence: true
   validates :tag_id, uniqueness: { scope: :my_module_id }
 

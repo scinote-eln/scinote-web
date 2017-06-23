@@ -1,4 +1,4 @@
-class Project < ActiveRecord::Base
+class Project < ApplicationRecord
   include ArchivableModel, SearchableModel
 
   enum visibility: { hidden: 0, visible: 1 }

@@ -1,4 +1,4 @@
-class Asset < ActiveRecord::Base
+class Asset < ApplicationRecord
   include SearchableModel
   include DatabaseHelper
   include Encryptor

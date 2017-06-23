@@ -1,4 +1,4 @@
-class Table < ActiveRecord::Base
+class Table < ApplicationRecord
   include SearchableModel
 
   auto_strip_attributes :name, nullify: false

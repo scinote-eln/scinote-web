@@ -1,4 +1,4 @@
-class UserProject < ActiveRecord::Base
+class UserProject < ApplicationRecord
   enum role: { owner: 0, normal_user: 1, technician: 2, viewer: 3 }
 
   validates :role, presence: true

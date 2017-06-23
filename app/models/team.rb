@@ -1,4 +1,4 @@
-class Team < ActiveRecord::Base
+class Team < ApplicationRecord
   include SearchableModel
 
   # Not really MVC-compliant, but we just use it for logger

@@ -1,4 +1,4 @@
-class Report < ActiveRecord::Base
+class Report < ApplicationRecord
   include SearchableModel
 
   auto_strip_attributes :name, :description, nullify: false

@@ -1,4 +1,4 @@
-class RepositoryCell < ActiveRecord::Base
+class RepositoryCell < ApplicationRecord
   belongs_to :repository_row
   belongs_to :repository_column
   belongs_to :value, polymorphic: true, dependent: :destroy

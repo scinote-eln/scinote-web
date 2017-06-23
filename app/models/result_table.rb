@@ -1,4 +1,4 @@
-class ResultTable < ActiveRecord::Base
+class ResultTable < ApplicationRecord
   validates :result, :table, presence: true
 
   belongs_to :result, inverse_of: :result_table

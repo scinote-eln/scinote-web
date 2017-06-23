@@ -1,4 +1,4 @@
-class ResultText < ActiveRecord::Base
+class ResultText < ApplicationRecord
   auto_strip_attributes :text, nullify: false
   validates :text,
             presence: true,

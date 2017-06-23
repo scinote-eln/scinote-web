@@ -1,4 +1,4 @@
-class SampleType < ActiveRecord::Base
+class SampleType < ApplicationRecord
   include SearchableModel
 
   auto_strip_attributes :name, nullify: false

@@ -43,7 +43,7 @@ gem 'logging', '~> 2.0.0'
 gem 'aspector' # Aspect-oriented programming for Rails
 gem 'rgl' # Graph framework for project diagram calculations
 gem 'nested_form_fields'
-gem 'ajax-datatables-rails', '~> 0.4.0'
+gem 'ajax-datatables-rails', '~> 0.3.1'
 gem 'commit_param_routing' # Enables different submit actions in the same form to route to different actions in controller
 gem 'kaminari'
 gem "i18n-js", ">= 3.0.0.rc11" # Localization in javascript files
@@ -73,6 +73,7 @@ gem 'base62' # Used for smart annotations
 gem 'newrelic_rpm'
 
 group :development, :test do
+  gem 'listen', '~> 3.0'
   gem 'byebug'
   gem 'better_errors'
   gem 'binding_of_caller'

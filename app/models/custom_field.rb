@@ -1,4 +1,4 @@
-class CustomField < ActiveRecord::Base
+class CustomField < ApplicationRecord
   auto_strip_attributes :name, nullify: false
   validates :name,
             presence: true,

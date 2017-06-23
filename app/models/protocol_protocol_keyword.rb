@@ -1,4 +1,4 @@
-class ProtocolProtocolKeyword < ActiveRecord::Base
+class ProtocolProtocolKeyword < ApplicationRecord
   after_create :increment_protocols_count
   after_destroy :decrement_protocols_count
 

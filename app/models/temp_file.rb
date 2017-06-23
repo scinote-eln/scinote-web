@@ -1,4 +1,4 @@
-class TempFile < ActiveRecord::Base
+class TempFile < ApplicationRecord
   validates :session_id, presence: true
 
   has_attached_file :file

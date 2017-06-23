@@ -1,4 +1,4 @@
-class ResultAsset < ActiveRecord::Base
+class ResultAsset < ApplicationRecord
   validates :result, :asset, presence: true
 
   belongs_to :result, inverse_of: :result_asset

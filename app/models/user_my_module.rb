@@ -1,4 +1,4 @@
-class UserMyModule < ActiveRecord::Base
+class UserMyModule < ApplicationRecord
   validates :user, :my_module, presence: true
 
   belongs_to :user, inverse_of: :user_my_modules
