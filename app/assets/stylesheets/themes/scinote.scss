@@ -586,7 +586,7 @@ a[data-toggle="tooltip"] {
 
   }
 
-  li.repositories-team {
+  .repositories-team {
     padding: 10px 15px;
 
     &.active {
@@ -594,7 +594,7 @@ a[data-toggle="tooltip"] {
     }
   }
 
-  li.repository-search {
+  .repository-search {
     padding-left: 15px;
   }
 }
