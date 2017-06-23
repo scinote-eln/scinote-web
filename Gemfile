@@ -1,23 +1,23 @@
 source 'http://rubygems.org'
 
-ruby '2.3.3'
+ruby '2.4.1'
 
-gem 'rails', '4.2.9'
+gem 'rails', '5.0.0'
 gem 'figaro'
 gem 'pg'
-gem 'devise', '3.5.6'
-gem 'devise_invitable'
-gem 'simple_token_authentication', '~> 1.0' # Token authentication for Devise
+#gem 'devise'
+#gem 'devise_invitable'
+#gem 'simple_token_authentication' #, '~> 1.0' # Token authentication for Devise
 gem 'bootstrap-sass', '~> 3.3.5'
-gem 'sass-rails', '~> 5.0'
+gem 'sass-rails'#, '~> 5.0'
 gem 'bootstrap_form'
 gem 'yomu'
-gem 'font-awesome-rails', '~> 4.6'
+gem 'font-awesome-rails' #, '~> 4.6'
 gem 'recaptcha', require: 'recaptcha/rails'
 gem 'sanitize', '~> 4.4'
 
 # JS datetime library, requirement of datetime picker
-gem 'momentjs-rails', '>= 2.9.0'
+gem 'momentjs-rails' #, '>= 2.9.0'
 # JS datetime picker
 gem 'bootstrap3-datetimepicker-rails', '~> 4.15.35'
 # Select elements for Bootstrap
@@ -42,7 +42,7 @@ gem 'logging', '~> 2.0.0'
 gem 'aspector' # Aspect-oriented programming for Rails
 gem 'rgl' # Graph framework for project diagram calculations
 gem 'nested_form_fields'
-gem 'ajax-datatables-rails', '~> 0.3.1'
+gem 'ajax-datatables-rails' #, '~> 0.3.1'
 gem 'commit_param_routing' # Enables different submit actions in the same form to route to different actions in controller
 gem 'kaminari'
 gem "i18n-js", ">= 3.0.0.rc11" # Localization in javascript files
@@ -66,7 +66,7 @@ gem 'aws-sdk-v1'
 gem 'delayed_job_active_record'
 gem 'devise-async'
 gem 'ruby-graphviz', '~> 1.2' # Graphviz for rails
-gem 'tinymce-rails', '~> 4.5.7' # Rich text editor
+gem 'tinymce-rails' #, '~> 4.5.7' # Rich text editor
 
 gem 'base62' # Used for smart annotations
 gem 'newrelic_rpm'
