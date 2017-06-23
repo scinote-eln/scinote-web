@@ -583,6 +583,19 @@ a[data-toggle="tooltip"] {
       background-color: $color-emperor;
       opacity: 0.8;
     }
+
+  }
+
+  li.repositories-team {
+    padding: 10px 15px;
+
+    &.active {
+      color: $color-theme-primary;
+    }
+  }
+
+  li.repository-search {
+    padding-left: 15px;
   }
 }
 

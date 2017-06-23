@@ -43,7 +43,7 @@
 
   <div class="row">
     <div class="col-xs-12 col-sm-3 col-md-3" id="search-menu">
-      <ul class="nav nav-pills nav-stacked nav-stacked-arrow">
+      <ul class="nav nav-pills nav-stacked nav-stacked-arrow nav-search">
         <li role="presentation"
           class="
           <%= "active" if @search_category.present? and @search_category == :projects %>
@@ -187,6 +187,29 @@
             <%= t'Samples' %>
           </a>
         </li>
+
+        <% @repository_search_count.each do |team, results| %>
+          <li class="repositories-team <%= 'active' if results[:count] > 0 %>">
+            <span class="fa fa-cubes"></span>
+            <%= t('Repositories_team', team: team) %>
+          </li>
+          <% results[:repositories].each do |repository, values| %>
+            <li role="presentation"
+                class="
+                <%= "active" if @search_category.present? and @search_category == :repositories and @repository.id == values[:id] %>
+                <%= "disabled" if values[:count] == 0 %> repository-search"
+            >
+              <a href="?<%= {category: 'repositories',
+                      repository: values[:id], q: @search_query,
+                      whole_word: @search_whole_word, whole_phrase: @search_whole_phrase,
+                      match_case: @search_case, utf8: '✓'}.to_query %>">
+                <span class="badge pull-right"><%= values[:count] %></span>
+                <%= repository %>
+              </a>
+            </li>
+          <% end %>
+        <% end %>
+
         <li role="presentation"
           class="
           <%= "active" if @search_category.present? and @search_category == :assets %>
@@ -271,6 +294,9 @@
       <% end %>
       <% if @search_category == :samples and @sample_search_count > 0 %>
         <%= render 'search/results/samples', search_query: @search_query, results: @sample_results %>
+      <% end %>
+      <% if @search_category == :repositories and @repository_search_count_total > 0 %>
+        <%= render 'search/results/repositories', search_query: @search_query, results: @repository_results, repository: @repository %>
       <% end %>
       <% if @search_category == :assets and @asset_search_count > 0 %>
         <%= render 'search/results/assets', search_query: @search_query, results: @asset_results %>
