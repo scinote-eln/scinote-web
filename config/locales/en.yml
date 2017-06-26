@@ -899,6 +899,8 @@ en:
         no_data_to_parse: "There's nothing to be parsed."
         no_column_name: "Name column is required!"
         duplicated_values: "Two or more columns have the same mapping."
+        errors_list_title: "Items were not imported because one or more errors were found:"
+        no_repository_name: "Item name is required!"
     edit_record: "Edit"
     delete_record: "Delete"
     save_record: "Save"
@@ -1083,7 +1085,7 @@ en:
         empty_file: "You've selected empty file. There's not much to import."
         temp_file_failure: "We couldn't create temporary file. Please contact administrator."
         no_file_selected: "You didn't select any file."
-        errors_list_title: "Samples were not imported because one or more errors was found:"
+        errors_list_title: "Samples were not imported because one or more errors were found:"
         list_row: "Row %{row}"
         list_error: "%{key}: %{val}"
     import_samples:
