@@ -891,7 +891,7 @@ en:
     add_new_record: "Add new item"
     import_records:
       import: 'Import'
-      success_flash: "%{number_of_rows} new record(s) successfully imported."
+      success_flash: "%{number_of_rows} new item(s) successfully imported."
       error_flash: "Something went wrong: %{message}"
       error_message:
         temp_file_not_found: "This file could not be found. Your session might expire."
@@ -913,41 +913,41 @@ en:
     view_all_records: "View all items"
     view_assigned_records: "View assigned items"
     modal_delete_record:
-      title: "Delete record"
-      notice: "Are you sure you want to delete the selected records?"
-      other_samples: "Only records created by you will be deleted."
-      delete: "Delete records"
+      title: "Delete items"
+      notice: "Are you sure you want to delete the selected item(s)?"
+      other_records: "Only items created by you will be deleted."
+      delete: "Delete item(s)"
     modal_delete_column:
       title: "Delete a column"
       message: "Are you sure you wish to permanently delete selected column %{column}? This action is irreversible."
       alert_heading: "Deleting a column has following consequences:"
-      alert_line_1: "you will lose information in this column for %{nr} records;"
+      alert_line_1: "you will lose information in this column for %{nr} item(s);"
       alert_line_2: "the column will be deleted for all team members."
       delete: "Delete column"
     modal_parse:
-      title: 'Import records'
+      title: 'Import items'
     modal_import:
-      title: 'Import records'
+      title: 'Import items'
       notice: 'You may upload .csv file (comma separated) or tab separated file (.txt or .tdv) or Excel file (.xls, .xlsx). First row should include header names, followed by rows with sample data.'
       upload: 'Upload file'
     js:
-      permission_error: "You don't have permission to edit this record."
-      not_found_error: "This repository record does not exist."
+      permission_error: "You don't have permission to edit this item."
+      not_found_error: "This repository item does not exist."
       column_added: "New column was sucessfully created."
       empty_column_name: "Please enter column name."
     create:
-      success_flash: "Successfully added record <strong>%{record}</strong> to repository <strong>%{repository}</strong>"
+      success_flash: "Successfully added item <strong>%{record}</strong> to repository <strong>%{repository}</strong>"
     update:
-      success_flash: "Successfully updated record <strong>%{record}</strong> in repository <strong>%{repository}</strong>"
+      success_flash: "Successfully updated item <strong>%{record}</strong> in repository <strong>%{repository}</strong>"
     destroy:
-      success_flash: "%{records_number} record(s) successfully deleted."
-      contains_other_records_flash: "%{records_number} record(s) successfully deleted. %{other_records_number} of the selected record(s) were created by other users and were not deleted."
-      no_records_selected_flash: "There were no selected records."
-      no_deleted_records_flash: "No records were deleted. %{other_records_number} of the selected records were created by other users and were not deleted."
-    assigned_records_flash: "Successfully assigned record(s) <strong>%{records}</strong> to task"
-    unassigned_records_flash: "Successfully unassigned record(s) <strong>%{records}</strong> from task"
-    no_records_assigned_flash: "No records were assigned to task"
-    no_records_unassigned_flash: "No records were unassigned from task"
+      success_flash: "%{records_number} item(s) successfully deleted."
+      contains_other_records_flash: "%{records_number} item(s) successfully deleted. %{other_records_number} of the selected item(s) were created by other users and were not deleted."
+      no_records_selected_flash: "There were no selected items."
+      no_deleted_records_flash: "No items were deleted. %{other_records_number} of the selected items were created by other users and were not deleted."
+    assigned_records_flash: "Successfully assigned item(s) <strong>%{records}</strong> to task"
+    unassigned_records_flash: "Successfully unassigned item(s) <strong>%{records}</strong> from task"
+    no_records_assigned_flash: "No items were assigned to task"
+    no_records_unassigned_flash: "No items were unassigned from task"
     default_column: 'Name'
 
   samples:
@@ -1139,8 +1139,8 @@ en:
     uncomplete_module: "<i>%{user}</i> uncompleted task <strong>%{module}</strong>."
     assign_sample: "<i>%{user}</i> assigned sample(s) <strong>%{samples}</strong> to task(s) <strong>%{tasks}</strong>"
     unassign_sample: "<i>%{user}</i> unassigned sample(s) <strong>%{samples}</strong> from task(s) <strong>%{tasks}</strong>"
-    assign_repository_records: "<i>%{user}</i> assigned record(s) <strong>%{records}</strong> from <strong>%{repository}</strong> repository to task <strong>%{task}</strong>"
-    unassign_repository_records: "<i>%{user}</i> unassigned record(s) <strong>%{records}</strong> from <strong>%{repository}</strong> repository from task <strong>%{task}</strong>"
+    assign_repository_records: "<i>%{user}</i> assigned item(s) <strong>%{records}</strong> from <strong>%{repository}</strong> repository to task <strong>%{task}</strong>"
+    unassign_repository_records: "<i>%{user}</i> unassigned item(s) <strong>%{records}</strong> from <strong>%{repository}</strong> repository from task <strong>%{task}</strong>"
     create_step: "<i>%{user}</i> created Step %{step} <strong>%{step_name}</strong>."
     destroy_step: "<i>%{user}</i> deleted Step %{step} <strong>%{step_name}</strong>."
     add_comment_to_step: "<i>%{user}</i> commented on Step %{step} <strong>%{step_name}</strong>."
@@ -1677,7 +1677,7 @@ en:
     sample_annotation_title: "%{user} mentioned you in Column: %{column} of Sample %{sample}"
     sample_annotation_message_html: "Sample: %{sample} | Column: %{column}"
     repository_annotation_title: "%{user} mentioned you in Column: %{column} of Record %{record} in Repository %{repository}"
-    repository_annotation_message_html: "Record: %{record} | Column: %{column}"
+    repository_annotation_message_html: "Item: %{record} | Column: %{column}"
     protocol_step_annotation_message_html: "Protocol: %{protocol}"
     email_title: "You've received a sciNote notification!"
     assign_user_to_team: "<i>%{assigned_user}</i> was added as %{role} to team <strong>%{team}</strong> by <i>%{assigned_by_user}</i>."
