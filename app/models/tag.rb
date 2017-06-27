@@ -1,4 +1,4 @@
-class Tag <ApplicationRecord
+class Tag < ApplicationRecord
   include SearchableModel
 
   auto_strip_attributes :name, :color, nullify: false

@@ -71,9 +71,6 @@ GEM
       jmespath (~> 1.0)
     aws-sdk-resources (2.2.37)
       aws-sdk-core (= 2.2.37)
-    aws-sdk-v1 (1.67.0)
-      json (~> 1.4)
-      nokogiri (~> 1)
     babel-source (5.8.35)
     babel-transpiler (0.7.0)
       babel-source (>= 4.0, < 6)
@@ -193,7 +190,7 @@ GEM
       mime-types (>= 1.16, < 4)
     method_source (0.8.2)
     mime-types (1.25.1)
-    mimemagic (0.3.0)
+    mimemagic (0.3.2)
     mini_portile2 (2.2.0)
     minitest (5.10.2)
     minitest-reporters (1.1.14)
@@ -216,12 +213,12 @@ GEM
       nokogiri
     oj (2.18.5)
     orm_adapter (0.5.0)
-    paperclip (4.3.7)
-      activemodel (>= 3.2.0)
-      activesupport (>= 3.2.0)
+    paperclip (5.1.0)
+      activemodel (>= 4.2.0)
+      activesupport (>= 4.2.0)
       cocaine (~> 0.5.5)
       mime-types
-      mimemagic (= 0.3.0)
+      mimemagic (~> 0.3.0)
     parallel (1.11.2)
     parser (2.4.0.0)
       ast (~> 2.2)
@@ -372,8 +369,7 @@ DEPENDENCIES
   auto_strip_attributes (~> 2.1)
   autosize-rails
   awesome_print
-  aws-sdk (~> 2.2.8)
-  aws-sdk-v1
+  aws-sdk (~> 2)
   base62
   bcrypt (~> 3.1.10)
   better_errors
@@ -409,7 +405,7 @@ DEPENDENCIES
   nested_form_fields
   newrelic_rpm
   nokogiri
-  paperclip (~> 4.3)
+  paperclip (~> 5.1)
   pg
   puma
   rails (= 5.1.1)
