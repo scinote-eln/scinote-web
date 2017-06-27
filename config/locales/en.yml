@@ -75,11 +75,17 @@ en:
     activities:
       none: "No activities!"
     label:
-      projects: "Projects"
+      scinote: "sciNote"
+      projects: "Home"
       protocols: "Protocols"
       calendar: "Calendar"
       activities: "Activities"
       repositories: "Repositories"
+      teams: "Teams"
+      search: "Search"
+      notifications: "Notifications"
+      info: "Info"
+      account: "Account"
 
   sidebar:
     title: "Navigation"
@@ -91,6 +97,7 @@ en:
       samples: "Samples"
       activities: "Activity"
       reports: "Reports"
+      archive: "Archive"
     experiments:
       canvas: "Overview"
     modules:
@@ -165,6 +172,7 @@ en:
   projects:
     index:
       head_title: "Home"
+      archive: "Archive"
       new: "New project"
       visibility_private: "Project is private. Only invited users can see it."
       visibility_public: "Project is public. Everybody from the team can see it."
@@ -1420,6 +1428,7 @@ en:
       navigation:
         public: "Public protocols"
         private: "Private protocols"
+        archive: "Archive"
       public_description: "Public protocols are visible and can be used by everyone from the team."
       private_description: "Private protocols are only visible to you."
       create_new: "Create new"
