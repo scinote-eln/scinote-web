@@ -1,4 +1,6 @@
 class Repository < ActiveRecord::Base
+  include SearchableModel
+
   belongs_to :team
   belongs_to :created_by, foreign_key: :created_by_id, class_name: 'User'
   has_many :repository_columns
@@ -14,6 +16,47 @@ class Repository < ActiveRecord::Base
             length: { maximum: Constants::NAME_MAX_LENGTH }
   validates :team, presence: true
   validates :created_by, presence: true
+
+  def self.search(
+    user,
+    _include_archived,
+    query = nil,
+    page = 1,
+    current_team = nil,
+    options = {}
+  )
+    team_ids =
+      if current_team
+        current_team.id
+      else
+        Team.joins(:user_teams)
+            .where('user_teams.user_id = ?', user.id)
+            .distinct
+            .pluck(:id)
+      end
+
+    row_ids = RepositoryRow
+              .search(nil, query, Constants::SEARCH_NO_LIMIT, options)
+              .select(:id)
+
+    new_query = Repository
+                .select('repositories.*, COUNT(repository_rows.id) AS counter')
+                .joins(:team)
+                .joins('LEFT OUTER JOIN repository_rows ON ' \
+                       'repositories.id = repository_rows.repository_id')
+                .where(team: team_ids)
+                .where('repository_rows.id IN (?)', row_ids)
+                .group('repositories.id')
+
+    # Show all results if needed
+    if page == Constants::SEARCH_NO_LIMIT
+      new_query
+    else
+      new_query
+        .limit(Constants::SEARCH_LIMIT)
+        .offset((page - 1) * Constants::SEARCH_LIMIT)
+    end
+  end
 
   def open_spreadsheet(file)
     filename = file.original_filename

@@ -142,6 +142,12 @@ en:
         added_on: "Added on: "
         added_by: "Added by: "
         custom_field: "%{cf}: "
+      repositories:
+        repository_row: "Repository item: "
+        added_on: "Added on: "
+        added_by: "Added by: "
+        custom_column: "%{column}: "
+        no_modules: "not assigned to any task"
       comments:
         project: "Project comment"
         my_module: "Task comment"
@@ -1782,6 +1788,7 @@ en:
   Tables: "Tables"
   Sample: "Sample"
   Samples: "Samples"
+  Repositories_team: "Repositories - %{team}"
   Reports: "Reports"
   Comments: "Comments"
   Step: "Step"
