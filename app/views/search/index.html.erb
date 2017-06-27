@@ -188,28 +188,6 @@
           </a>
         </li>
 
-        <% @repository_search_count.each do |team, results| %>
-          <li class="repositories-team <%= 'active' if results[:count] > 0 %>">
-            <span class="fa fa-cubes"></span>
-            <%= t('Repositories_team', team: team) %>
-          </li>
-          <% results[:repositories].each do |repository, values| %>
-            <li role="presentation"
-                class="
-                <%= "active" if @search_category.present? and @search_category == :repositories and @repository.id == values[:id] %>
-                <%= "disabled" if values[:count] == 0 %> repository-search"
-            >
-              <a href="?<%= {category: 'repositories',
-                      repository: values[:id], q: @search_query,
-                      whole_word: @search_whole_word, whole_phrase: @search_whole_phrase,
-                      match_case: @search_case, utf8: '✓'}.to_query %>">
-                <span class="badge pull-right"><%= values[:count] %></span>
-                <%= repository %>
-              </a>
-            </li>
-          <% end %>
-        <% end %>
-
         <li role="presentation"
           class="
           <%= "active" if @search_category.present? and @search_category == :assets %>
@@ -249,6 +227,28 @@
             <%= t'Comments' %>
           </a>
         </li>
+
+        <% @repository_search_count.each do |team, results| %>
+          <li class="repositories-team <%= 'active' if results[:count] > 0 %>">
+            <span class="fa fa-cubes"></span>
+            <%= t('Repositories_team', team: team) %>
+          </li>
+          <% results[:repositories].each do |repository, values| %>
+            <li role="presentation"
+                class="
+                <%= "active" if @search_category == :repositories && @repository.id == values[:id] %>
+                <%= "disabled" if values[:count] == 0 %> repository-search"
+            >
+              <a href="?<%= {category: 'repositories',
+                             repository: values[:id], q: @search_query,
+                             whole_word: @search_whole_word, whole_phrase: @search_whole_phrase,
+                             match_case: @search_case, utf8: '✓'}.to_query %>">
+                <span class="badge pull-right"><%= values[:count] %></span>
+                <%= repository %>
+              </a>
+            </li>
+          <% end %>
+        <% end %>
       </ul>
     </div>
 

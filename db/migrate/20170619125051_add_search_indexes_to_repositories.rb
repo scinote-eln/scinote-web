@@ -14,7 +14,7 @@ class AddSearchIndexesToRepositories < ActiveRecord::Migration
 
   def down
     if db_adapter_is? 'PostgreSQL'
-      remove_index :repositorepository_rows, :name
+      remove_index :repository_rows, :name
       remove_index :repository_text_values, :data
     end
   end

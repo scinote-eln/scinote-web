@@ -110,7 +110,7 @@ class SearchController < ApplicationController
   end
 
   def count_by_repository
-    @repository_search_count_total = 0
+    count_total = 0
     search_results = Repository.search(current_user,
                                        true,
                                        @search_query,
@@ -119,7 +119,7 @@ class SearchController < ApplicationController
                                        match_case: @search_case,
                                        whole_word: @search_whole_word,
                                        whole_phrase: @search_whole_phrase)
-    matches_count = {}
+    @repository_search_count = {}
     current_user.teams.includes(:repositories).each do |team|
       team_results = {}
       team_results[:count] = 0
@@ -130,16 +130,16 @@ class SearchController < ApplicationController
         repository_results[:count] = 0
         search_results.each do |result|
           if repository.id == result.id
-            @repository_search_count_total += result.counter
+            count_total += result.counter
             repository_results[:count] += result.counter
           end
         end
         team_results[:repositories][repository.name] = repository_results
         team_results[:count] += repository_results[:count]
       end
-      matches_count[team.name] = team_results
+      @repository_search_count[team.name] = team_results
     end
-    matches_count
+    count_total
   end
 
   def count_search_results
@@ -154,7 +154,7 @@ class SearchController < ApplicationController
     @step_search_count = count_by_name Step
     @checklist_search_count = count_by_name Checklist
     @sample_search_count = count_by_name Sample
-    @repository_search_count = count_by_repository
+    @repository_search_count_total = count_by_repository
     @asset_search_count = count_by_name Asset
     @table_search_count = count_by_name Table
     @comment_search_count = count_by_name Comment
