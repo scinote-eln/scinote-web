@@ -27,7 +27,7 @@
   <p>
     <span>
       <%=t "search.index.modules" %>
-      <% if repository_row.my_modules.count > 0 %>
+      <% if repository_row.my_modules.any? %>
         <% repository_row.my_modules.each_with_index do |mod, i|  %>
           <%= render partial: "search/results/partials/my_module_text.html.erb",
                      locals: { my_module: mod, link_to_page: :repositories, repository: repository } %>
