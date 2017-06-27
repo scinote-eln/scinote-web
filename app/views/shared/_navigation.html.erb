@@ -32,34 +32,34 @@
       <!-- links -->
       <ul class="nav navbar-nav">
         <li>
-          <a href="<%= projects_path %>">
-            <span class="glyphicon glyphicon-home" title="<%= t('nav.label.projects') %>"></span>
+          <a title="<%= t('nav.label.projects') %>" href="<%= projects_path %>">
+            <span class="glyphicon glyphicon-home"></span>
             <span class="visible-xs-inline visible-sm-inline"><%= t('nav.label.projects') %></span>
           </a>
         </li>
         <% if current_team %>
         <li>
-          <a id="protocol-link" href="<%= protocols_path %>">
-            <span class="glyphicon glyphicon-list-alt" title="<%= t('nav.label.protocols') %>"></span>
+          <a id="protocol-link" title="<%= t('nav.label.protocols') %>" href="<%= protocols_path %>">
+            <span class="glyphicon glyphicon-list-alt"></span>
             <span class="visible-xs-inline visible-sm-inline"><%= t('nav.label.protocols') %></span>
           </a>
         </li>
         <li>
-          <a id="repositories-link" href="<%= team_repositories_path(current_team) %>">
-            <i class="fa fa-cubes" aria-hidden="true" title="<%= t('nav.label.repositories') %>"></i>
+          <a id="repositories-link" title="<%= t('nav.label.repositories') %>" href="<%= team_repositories_path(current_team) %>">
+            <i class="fa fa-cubes" aria-hidden="true"></i>
             <span class="visible-xs-inline visible-sm-inline"><%= t('nav.label.repositories') %></span>
           </a>
         </li>
         <% else %>
         <li class="disabled">
-          <a id="protocol-link" href="#">
-            <span class="glyphicon glyphicon-list-alt" title="<%= t('nav.label.protocols') %>"></span>
+          <a id="protocol-link" title="<%= t('nav.label.protocols') %>" href="#">
+            <span class="glyphicon glyphicon-list-alt"></span>
             <span class="visible-xs-inline visible-sm-inline"><%= t('nav.label.protocols') %></span>
           </a>
         </li>
         <li class="disabled">
-          <a id="repositories-link" href="#">
-            <span class="fa fa-cubes" title="<%= t('nav.label.repositories') %>"></span>
+          <a id="repositories-link" title="<%= t('nav.label.repositories') %>" href="#">
+            <span class="fa fa-cubes"></span>
             <span class="visible-xs-inline visible-sm-inline"><%= t('nav.label.repositories') %></span>
           </a>
         </li>
@@ -73,8 +73,8 @@
         </li>
 <% end %>
         <li>
-          <a class="btn-activity" href="<%= activities_path(format: :json) %>" role="button" data-remote="true">
-            <span class="glyphicon glyphicon-equalizer" title="<%= t('nav.label.activities') %>"></span>
+          <a class="btn-activity" title="<%= t('nav.label.activities') %>" href="<%= activities_path(format: :json) %>" role="button" data-remote="true">
+            <span class="glyphicon glyphicon-equalizer"></span>
             <span class="visible-xs-inline visible-sm-inline"><%= t('nav.label.activities') %></span>
           </a>
         </li>
@@ -133,10 +133,10 @@
 
         <!-- search -->
         <li class="dropdown"
-            title="<%= t('nav.label.search') %>"
             id="search-ico">
           <a href="#"
              class="dropdown-toggle"
+             title="<%= t('nav.label.search') %>"
              data-toggle="dropdown"
              role="button"
              aria-haspopup="true"
