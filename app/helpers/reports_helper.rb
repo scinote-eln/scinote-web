@@ -100,11 +100,17 @@ module ReportsHelper
     "<span class=\"label label-#{style}\">#{text}</span>".html_safe
   end
 
-  def sanitize_report_pdf(text, tags = [], attributes = [])
-    ActionController::Base.helpers.sanitize(
-      text,
-      tags: Constants::WHITELISTED_TAGS + tags,
-      attributes: Constants::WHITELISTED_ATTRIBUTES + attributes
-    )
+  # Fixes issues with avatar images in reports
+  def fix_smart_annotation_image(html)
+    html_doc = Nokogiri::HTML(html)
+    html_doc.search('.atwho-user-popover').each do |el|
+      text = el.content
+      el.replace("<a href='#' style='margin-left: 5px'>#{text}</a>")
+    end
+    html_doc.search('[ref="missing-img"]').each do |el|
+      tag = wicked_pdf_image_tag('icon_small/missing.png')
+      el.replace(tag)
+    end
+    html_doc.to_s
   end
 end
