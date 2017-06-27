@@ -1,4 +1,4 @@
-class Token < ActiveRecord::Base
+class Token < ApplicationRecord
 
 	validates :token, presence: true
 	validates :ttl, presence: true

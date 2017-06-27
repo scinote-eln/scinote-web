@@ -1,4 +1,4 @@
-class AssetTextDatum < ActiveRecord::Base
+class AssetTextDatum < ApplicationRecord
   include SearchableModel
 
   validates :data, presence: true

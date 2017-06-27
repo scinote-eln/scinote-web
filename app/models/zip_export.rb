@@ -15,7 +15,7 @@ require 'fileutils'
 #     end
 #   end
 
-class ZipExport < ActiveRecord::Base
+class ZipExport < ApplicationRecord
   belongs_to :user
   has_attached_file :zip_file
   validates_attachment :zip_file,

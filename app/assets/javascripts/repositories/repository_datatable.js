@@ -1,4 +1,4 @@
-//= require jquery-ui/sortable
+//= require jquery-ui/widgets/sortable
 
 // Extend datatables API with searchable options
 // (http://stackoverflow.com/questions/39912395/datatables-dynamically-set-columns-searchable)

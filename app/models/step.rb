@@ -1,4 +1,4 @@
-class Step < ActiveRecord::Base
+class Step < ApplicationRecord
   include SearchableModel
 
   auto_strip_attributes :name, :description, nullify: false

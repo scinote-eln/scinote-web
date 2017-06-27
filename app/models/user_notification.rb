@@ -1,4 +1,4 @@
-class UserNotification < ActiveRecord::Base
+class UserNotification < ApplicationRecord
   include NotificationsHelper
 
   belongs_to :user

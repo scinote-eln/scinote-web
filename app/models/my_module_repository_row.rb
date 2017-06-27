@@ -1,4 +1,4 @@
-class MyModuleRepositoryRow < ActiveRecord::Base
+class MyModuleRepositoryRow < ApplicationRecord
   belongs_to :assigned_by, foreign_key: 'assigned_by_id', class_name: 'User'
   belongs_to :repository_row
   belongs_to :my_module

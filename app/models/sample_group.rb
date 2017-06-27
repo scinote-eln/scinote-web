@@ -1,4 +1,4 @@
-class SampleGroup < ActiveRecord::Base
+class SampleGroup < ApplicationRecord
   include SearchableModel
 
   auto_strip_attributes :name, :color, nullify: false

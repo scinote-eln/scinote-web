@@ -1,4 +1,4 @@
-class ReportElement < ActiveRecord::Base
+class ReportElement < ApplicationRecord
   enum type_of: Extends::REPORT_ELEMENT_TYPES
 
   # This is only used by certain elements

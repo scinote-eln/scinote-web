@@ -910,8 +910,8 @@ en:
     column_create: "Create"
     columns_delete: "Delete"
     columns_visibility: "Visible columns"
-    view_all_records: "View all records"
-    view_assigned_records: "View assigned records"
+    view_all_records: "View all items"
+    view_assigned_records: "View assigned items"
     modal_delete_record:
       title: "Delete record"
       notice: "Are you sure you want to delete the selected records?"

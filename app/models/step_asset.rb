@@ -1,4 +1,4 @@
-class StepAsset < ActiveRecord::Base
+class StepAsset < ApplicationRecord
   validates :step, :asset, presence: true
 
   belongs_to :step, inverse_of: :step_assets

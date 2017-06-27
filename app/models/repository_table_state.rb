@@ -1,4 +1,4 @@
-class RepositoryTableState < ActiveRecord::Base
+class RepositoryTableState < ApplicationRecord
   belongs_to :user, inverse_of: :repository_table_states
   belongs_to :repository, inverse_of: :repository_table_states
 

@@ -1,4 +1,4 @@
-class Notification < ActiveRecord::Base
+class Notification < ApplicationRecord
   has_many :user_notifications, inverse_of: :notification, dependent: :destroy
   has_many :users, through: :user_notifications
   belongs_to :generator_user, class_name: 'User'

@@ -1,4 +1,4 @@
-class ChecklistItem < ActiveRecord::Base
+class ChecklistItem < ApplicationRecord
   auto_strip_attributes :text, nullify: false
   validates :text,
             presence: true,

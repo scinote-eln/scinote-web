@@ -1,4 +1,4 @@
-class MyModuleGroup < ActiveRecord::Base
+class MyModuleGroup < ApplicationRecord
   include SearchableModel
 
   auto_strip_attributes :name, nullify: false

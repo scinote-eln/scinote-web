@@ -1,4 +1,4 @@
-class Activity < ActiveRecord::Base
+class Activity < ApplicationRecord
   include InputSanitizeHelper
 
   after_create :generate_notification

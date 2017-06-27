@@ -1,4 +1,4 @@
-class SamplesTable < ActiveRecord::Base
+class SamplesTable < ApplicationRecord
   validates :user, :team, presence: true
 
   belongs_to :user, inverse_of: :samples_tables

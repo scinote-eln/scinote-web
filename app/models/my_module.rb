@@ -1,4 +1,4 @@
-class MyModule < ActiveRecord::Base
+class MyModule < ApplicationRecord
   include ArchivableModel, SearchableModel
 
   enum state: Extends::TASKS_STATES

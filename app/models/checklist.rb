@@ -1,4 +1,4 @@
-class Checklist < ActiveRecord::Base
+class Checklist < ApplicationRecord
   include SearchableModel
 
   auto_strip_attributes :name, nullify: false

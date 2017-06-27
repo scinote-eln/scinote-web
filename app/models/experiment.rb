@@ -1,4 +1,4 @@
-class Experiment < ActiveRecord::Base
+class Experiment < ApplicationRecord
   include ArchivableModel
   include SearchableModel
 

@@ -5,7 +5,7 @@ class ApplicationController < ActionController::Base
   acts_as_token_authentication_handler_for User
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
-  protect_from_forgery with: :exception
+  protect_from_forgery with: :exception, prepend: true
   before_action :authenticate_user!
   helper_method :current_team
   before_action :generate_intro_tutorial, if: :is_current_page_root?

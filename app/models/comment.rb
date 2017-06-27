@@ -1,4 +1,4 @@
-class Comment < ActiveRecord::Base
+class Comment < ApplicationRecord
   include SearchableModel
 
   auto_strip_attributes :message, nullify: false

@@ -1,4 +1,4 @@
-class Result < ActiveRecord::Base
+class Result < ApplicationRecord
   include ArchivableModel, SearchableModel
 
   auto_strip_attributes :name, nullify: false

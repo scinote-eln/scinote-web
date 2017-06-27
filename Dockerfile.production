@@ -1,4 +1,4 @@
-FROM ruby:2.3.3
+FROM ruby:2.4.1
 MAINTAINER BioSistemika <info@biosistemika.com>
 
 # additional dependecies

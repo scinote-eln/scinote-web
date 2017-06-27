@@ -1,4 +1,4 @@
-class RepositoryColumn < ActiveRecord::Base
+class RepositoryColumn < ApplicationRecord
   belongs_to :repository
   belongs_to :created_by, foreign_key: :created_by_id, class_name: 'User'
   has_many :repository_cells, dependent: :destroy

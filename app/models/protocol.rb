@@ -1,4 +1,4 @@
-class Protocol < ActiveRecord::Base
+class Protocol < ApplicationRecord
   include SearchableModel
   include RenamingUtil
 

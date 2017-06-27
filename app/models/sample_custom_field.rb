@@ -1,4 +1,4 @@
-class SampleCustomField < ActiveRecord::Base
+class SampleCustomField < ApplicationRecord
   include SearchableModel
 
   auto_strip_attributes :value, nullify: false

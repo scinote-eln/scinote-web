@@ -1,4 +1,4 @@
-class TinyMceAsset < ActiveRecord::Base
+class TinyMceAsset < ApplicationRecord
   attr_accessor :reference
   before_create :set_reference
   after_create :update_estimated_size

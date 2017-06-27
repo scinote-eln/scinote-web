@@ -1,4 +1,4 @@
-class ProtocolKeyword < ActiveRecord::Base
+class ProtocolKeyword < ApplicationRecord
   auto_strip_attributes :name, nullify: false
   validates :name,
             length: { minimum: Constants::NAME_MIN_LENGTH,

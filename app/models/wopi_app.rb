@@ -1,4 +1,4 @@
-class WopiApp < ActiveRecord::Base
+class WopiApp < ApplicationRecord
   belongs_to :wopi_discovery,
              foreign_key: 'wopi_discovery_id',
              class_name: 'WopiDiscovery'
