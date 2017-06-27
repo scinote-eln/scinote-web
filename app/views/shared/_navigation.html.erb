@@ -9,7 +9,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <%= link_to(root_path, class: 'navbar-brand') do %>
+      <%= link_to(root_path, class: 'navbar-brand', title: t('nav.label.scinote')) do %>
         <%
         show_version = !Rails.env.production?
         if ENV['NAVBAR_SHOW_VERSION'].present?
@@ -33,33 +33,33 @@
       <ul class="nav navbar-nav">
         <li>
           <a href="<%= projects_path %>">
-            <span class="glyphicon glyphicon-home"></span>
+            <span class="glyphicon glyphicon-home" title="<%= t('nav.label.projects') %>"></span>
             <span class="visible-xs-inline visible-sm-inline"><%= t('nav.label.projects') %></span>
           </a>
         </li>
         <% if current_team %>
         <li>
           <a id="protocol-link" href="<%= protocols_path %>">
-            <span class="glyphicon glyphicon-list-alt"></span>
+            <span class="glyphicon glyphicon-list-alt" title="<%= t('nav.label.protocols') %>"></span>
             <span class="visible-xs-inline visible-sm-inline"><%= t('nav.label.protocols') %></span>
           </a>
         </li>
         <li>
           <a id="repositories-link" href="<%= team_repositories_path(current_team) %>">
-            <i class="fa fa-cubes" aria-hidden="true"></i>
+            <i class="fa fa-cubes" aria-hidden="true" title="<%= t('nav.label.repositories') %>"></i>
             <span class="visible-xs-inline visible-sm-inline"><%= t('nav.label.repositories') %></span>
           </a>
         </li>
         <% else %>
         <li class="disabled">
           <a id="protocol-link" href="#">
-            <span class="glyphicon glyphicon-list-alt"></span>
+            <span class="glyphicon glyphicon-list-alt" title="<%= t('nav.label.protocols') %>"></span>
             <span class="visible-xs-inline visible-sm-inline"><%= t('nav.label.protocols') %></span>
           </a>
         </li>
         <li class="disabled">
           <a id="repositories-link" href="#">
-            <span class="fa fa-cubes"></span>
+            <span class="fa fa-cubes" title="<%= t('nav.label.repositories') %>"></span>
             <span class="visible-xs-inline visible-sm-inline"><%= t('nav.label.repositories') %></span>
           </a>
         </li>
@@ -74,7 +74,7 @@
 <% end %>
         <li>
           <a class="btn-activity" href="<%= activities_path(format: :json) %>" role="button" data-remote="true">
-            <span class="glyphicon glyphicon-equalizer"></span>
+            <span class="glyphicon glyphicon-equalizer" title="<%= t('nav.label.activities') %>"></span>
             <span class="visible-xs-inline visible-sm-inline"><%= t('nav.label.activities') %></span>
           </a>
         </li>
@@ -88,6 +88,7 @@
         <li class="dropdown" id="team-switch">
           <a href="#"
              class="dropdown-toggle"
+             title="<%= t('nav.label.teams') %>"
              data-toggle="dropdown"
              role="button"
              aria-haspopup="true"
@@ -132,6 +133,7 @@
 
         <!-- search -->
         <li class="dropdown"
+            title="<%= t('nav.label.search') %>"
             id="search-ico">
           <a href="#"
              class="dropdown-toggle"
@@ -140,6 +142,7 @@
              aria-haspopup="true"
              aria-expanded="false">
             <span class="glyphicon glyphicon-search"></span>
+            <span class="visible-xs-inline visible-sm-inline"><%= t('nav.label.search') %></span>
           </a>
           <ul class="dropdown-menu search-dropdown">
             <li>
@@ -174,12 +177,14 @@
           <a href="#"
              id="notifications-dropdown"
              class="dropdown-toggle"
+             title="<%= t('nav.label.notifications') %>"
              data-toggle="dropdown"
              role="button"
              aria-haspopup="true"
              aria-expanded="false"
              data-href="<%= recent_notifications_url(current_user) %>">
             <%= fa_icon 'bell'%>
+            <span class="visible-xs-inline visible-sm-inline"><%= t('nav.label.notifications') %></span>
             <span id="count-notifications"
                   data-href="<%= unseen_notification_url(current_user) %>">
             </span>
@@ -205,11 +210,13 @@
           <a href="#"
              id="help-link"
              class="dropdown-toggle"
+             title="<%= t('nav.label.info') %>"
              data-toggle="dropdown"
              role="button"
              aria-haspopup="true"
              aria-expanded="false">
             <span class="glyphicon glyphicon-info-sign"></span>
+            <span class="visible-xs-inline visible-sm-inline"><%= t('nav.label.info') %></span>
           </a>
           <ul class="dropdown-menu" data-hook="navigation-help-menu">
             <li><%= link_to t('nav.help.support'),
@@ -234,6 +241,7 @@
         <li class="dropdown">
           <a href="#"
              class="dropdown-toggle"
+             title="<%= t('nav.label.account') %>"
              data-toggle="dropdown"
              role="button"
              aria-haspopup="true"
