@@ -5,7 +5,7 @@ class ProtocolKeyword < ApplicationRecord
                       maximum: Constants::NAME_MAX_LENGTH }
   validates :team, presence: true
 
-  belongs_to :team, inverse_of: :protocol_keywords
+  belongs_to :team, inverse_of: :protocol_keywords, optional: true
 
   has_many :protocol_protocol_keywords,
            inverse_of: :protocol_keyword,

@@ -23,6 +23,7 @@ if ENV['PAPERCLIP_STORAGE'] == "s3"
     url: ':s3_domain_url',
     path: '/:class/:attachment/:id_partition/:hash/:style/:filename',
     storage: :s3,
+    s3_region: ENV['AWS_REGION'],
     s3_host_name: "s3.#{ENV['AWS_REGION']}.amazonaws.com",
     s3_protocol: 'https',
     s3_credentials: {

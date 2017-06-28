@@ -12,8 +12,14 @@ class Team < ApplicationRecord
   validates :description, length: { maximum: Constants::TEXT_MAX_LENGTH }
   validates :space_taken, presence: true
 
-  belongs_to :created_by, :foreign_key => 'created_by_id', :class_name => 'User'
-  belongs_to :last_modified_by, foreign_key: 'last_modified_by_id', class_name: 'User'
+  belongs_to :created_by,
+             foreign_key: 'created_by_id',
+             class_name: 'User',
+             optional: true
+  belongs_to :last_modified_by,
+             foreign_key: 'last_modified_by_id',
+             class_name: 'User',
+             optional: true
   has_many :user_teams, inverse_of: :team, dependent: :destroy
   has_many :users, through: :user_teams
   has_many :samples, inverse_of: :team

@@ -1,7 +1,8 @@
 class WopiApp < ApplicationRecord
   belongs_to :wopi_discovery,
              foreign_key: 'wopi_discovery_id',
-             class_name: 'WopiDiscovery'
+             class_name: 'WopiDiscovery',
+             optional: true
   has_many :wopi_actions,
            class_name: 'WopiAction',
            foreign_key: 'wopi_app_id',

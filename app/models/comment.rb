@@ -7,9 +7,11 @@ class Comment < ApplicationRecord
             length: { maximum: Constants::TEXT_MAX_LENGTH }
   validates :user, presence: true
 
-  belongs_to :user, inverse_of: :comments
-  belongs_to :last_modified_by, foreign_key: 'last_modified_by_id',
-             class_name: 'User'
+  belongs_to :user, inverse_of: :comments, optional: true
+  belongs_to :last_modified_by,
+             foreign_key: 'last_modified_by_id',
+             class_name: 'User',
+             optional: true
 
   def self.search(
     user,

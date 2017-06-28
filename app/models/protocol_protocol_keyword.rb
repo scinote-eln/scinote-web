@@ -5,8 +5,10 @@ class ProtocolProtocolKeyword < ApplicationRecord
   validates :protocol, presence: true
   validates :protocol_keyword, presence: true
 
-  belongs_to :protocol, inverse_of: :protocol_protocol_keywords
-  belongs_to :protocol_keyword, inverse_of: :protocol_protocol_keywords
+  belongs_to :protocol, inverse_of: :protocol_protocol_keywords, optional: true
+  belongs_to :protocol_keyword,
+             inverse_of: :protocol_protocol_keywords,
+             optional: true
 
   private
 

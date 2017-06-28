@@ -85,18 +85,24 @@ class Protocol < ApplicationRecord
   belongs_to :added_by,
              foreign_key: 'added_by_id',
              class_name: 'User',
-             inverse_of: :added_protocols
-  belongs_to :my_module, inverse_of: :protocols
-  belongs_to :team, inverse_of: :protocols
-  belongs_to :parent, foreign_key: 'parent_id', class_name: 'Protocol'
+             inverse_of: :added_protocols,
+             optional: true
+  belongs_to :my_module,
+             inverse_of: :protocols,
+             optional: true
+  belongs_to :team, inverse_of: :protocols, optional: true
+  belongs_to :parent,
+             foreign_key: 'parent_id',
+             class_name: 'Protocol',
+             optional: true
   belongs_to :archived_by,
              foreign_key: 'archived_by_id',
              class_name: 'User',
-             inverse_of: :archived_protocols
+             inverse_of: :archived_protocols, optional: true
   belongs_to :restored_by,
              foreign_key: 'restored_by_id',
              class_name: 'User',
-             inverse_of: :restored_protocols
+             inverse_of: :restored_protocols, optional: true
   has_many :linked_children,
            class_name: 'Protocol',
            foreign_key: 'parent_id'

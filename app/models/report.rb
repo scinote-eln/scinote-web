@@ -10,9 +10,12 @@ class Report < ApplicationRecord
   validates :project, presence: true
   validates :user, presence: true
 
-  belongs_to :project, inverse_of: :reports
-  belongs_to :user, inverse_of: :reports
-  belongs_to :last_modified_by, foreign_key: 'last_modified_by_id', class_name: 'User'
+  belongs_to :project, inverse_of: :reports, optional: true
+  belongs_to :user, inverse_of: :reports, optional: true
+  belongs_to :last_modified_by,
+             foreign_key: 'last_modified_by_id',
+             class_name: 'User',
+             optional: true
 
   # Report either has many report elements (if grouped by timestamp),
   # or many module elements (if grouped by module)

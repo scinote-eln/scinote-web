@@ -1,7 +1,7 @@
 class RepositoryCell < ApplicationRecord
-  belongs_to :repository_row
-  belongs_to :repository_column
-  belongs_to :value, polymorphic: true, dependent: :destroy
+  belongs_to :repository_row, optional: true
+  belongs_to :repository_column, optional: true
+  belongs_to :value, polymorphic: true, dependent: :destroy, optional: true
 
   validates :repository_column, presence: true
   validate :repository_column_data_type
