@@ -374,7 +374,7 @@ class MyModule < ApplicationRecord
       x: self.x,
       y: self.y)
     clone.save
-    
+
     # Remove the automatically generated protocol,
     # & clone the protocol instead
     clone.protocol.destroy

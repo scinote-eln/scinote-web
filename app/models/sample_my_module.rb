@@ -11,13 +11,9 @@ class SampleMyModule < ApplicationRecord
              foreign_key: 'assigned_by_id',
              class_name: 'User',
              optional: true
-  belongs_to :sample,
-    inverse_of: :sample_my_modules,
-    optional: true
-  belongs_to :my_module,
-    inverse_of: :sample_my_modules,
-    optional: true
-    
+  belongs_to :sample, inverse_of: :sample_my_modules, optional: true
+  belongs_to :my_module, inverse_of: :sample_my_modules, optional: true
+
   def increment_nr_of_module_samples
     my_module.increment!(:nr_of_assigned_samples)
     sample.increment!(:nr_of_modules_assigned_to)
