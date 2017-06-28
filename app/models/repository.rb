@@ -1,6 +1,9 @@
 class Repository < ApplicationRecord
-  belongs_to :team
-  belongs_to :created_by, foreign_key: :created_by_id, class_name: 'User'
+  belongs_to :team, optional: true
+  belongs_to :created_by,
+             foreign_key: :created_by_id,
+             class_name: 'User',
+             optional: true
   has_many :repository_columns
   has_many :repository_rows
   has_many :repository_table_states,

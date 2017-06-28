@@ -7,6 +7,6 @@ class SampleCustomField < ApplicationRecord
             length: { maximum: Constants::NAME_MAX_LENGTH }
   validates :custom_field, :sample, presence: true
 
-  belongs_to :custom_field, inverse_of: :sample_custom_fields
-  belongs_to :sample, inverse_of: :sample_custom_fields
+  belongs_to :custom_field, inverse_of: :sample_custom_fields, optional: true
+  belongs_to :sample, inverse_of: :sample_custom_fields, optional: true
 end

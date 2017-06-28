@@ -16,7 +16,7 @@ require 'fileutils'
 #   end
 
 class ZipExport < ApplicationRecord
-  belongs_to :user
+  belongs_to :user, optional: true
   has_attached_file :zip_file
   validates_attachment :zip_file,
                        content_type: { content_type: 'application/zip' }

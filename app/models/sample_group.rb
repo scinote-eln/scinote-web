@@ -11,11 +11,15 @@ class SampleGroup < ApplicationRecord
             length: { maximum: Constants::COLOR_MAX_LENGTH }
   validates :team, presence: true
 
-  belongs_to :created_by, foreign_key: 'created_by_id', class_name: 'User'
+  belongs_to :created_by,
+             foreign_key: 'created_by_id',
+             class_name: 'User',
+             optional: true
   belongs_to :last_modified_by,
              foreign_key: 'last_modified_by_id',
-             class_name: 'User'
-  belongs_to :team, inverse_of: :sample_groups
+             class_name: 'User',
+             optional: true
+  belongs_to :team, inverse_of: :sample_groups, optional: true
   has_many :samples, inverse_of: :sample_groups
 
   scope :sorted, -> { order(name: :asc) }

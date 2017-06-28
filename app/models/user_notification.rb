@@ -1,8 +1,8 @@
 class UserNotification < ApplicationRecord
   include NotificationsHelper
 
-  belongs_to :user
-  belongs_to :notification
+  belongs_to :user, optional: true
+  belongs_to :notification, optional: true
 
   after_save :send_email
 

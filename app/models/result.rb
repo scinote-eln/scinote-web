@@ -6,11 +6,20 @@ class Result < ApplicationRecord
   validates :name, length: { maximum: Constants::NAME_MAX_LENGTH }
   validate :text_or_asset_or_table
 
-  belongs_to :user, inverse_of: :results
-  belongs_to :last_modified_by, foreign_key: 'last_modified_by_id', class_name: 'User'
-  belongs_to :archived_by, foreign_key: 'archived_by_id', class_name: 'User'
-  belongs_to :restored_by, foreign_key: 'restored_by_id', class_name: 'User'
-  belongs_to :my_module, inverse_of: :results
+  belongs_to :user, inverse_of: :results, optional: true
+  belongs_to :last_modified_by,
+             foreign_key: 'last_modified_by_id',
+             class_name: 'User',
+             optional: true
+  belongs_to :archived_by,
+             foreign_key: 'archived_by_id',
+             class_name: 'User',
+             optional: true
+  belongs_to :restored_by,
+             foreign_key: 'restored_by_id',
+             class_name: 'User',
+             optional: true
+  belongs_to :my_module, inverse_of: :results, optional: true
   has_one :result_asset,
     inverse_of: :result,
     dependent: :destroy

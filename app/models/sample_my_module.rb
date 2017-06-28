@@ -5,13 +5,14 @@ class SampleMyModule < ApplicationRecord
   validates :sample, :my_module, presence: true
 
   # One sample can only be assigned once to a specific module
-  validates_uniqueness_of :sample_id, :scope => :my_module_id
+  validates_uniqueness_of :sample_id, scope: :my_module_id
 
-  belongs_to :assigned_by, foreign_key: 'assigned_by_id', class_name: 'User'
-  belongs_to :sample,
-    inverse_of: :sample_my_modules
-  belongs_to :my_module,
-    inverse_of: :sample_my_modules
+  belongs_to :assigned_by,
+             foreign_key: 'assigned_by_id',
+             class_name: 'User',
+             optional: true
+  belongs_to :sample, inverse_of: :sample_my_modules, optional: true
+  belongs_to :my_module, inverse_of: :sample_my_modules, optional: true
 
   def increment_nr_of_module_samples
     my_module.increment!(:nr_of_assigned_samples)
