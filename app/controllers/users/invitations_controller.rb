@@ -7,7 +7,7 @@ module Users
 
     before_action :check_invite_users_permission, only: :invite_users
 
-    before_filter :update_sanitized_params, only: :update
+    before_action :update_sanitized_params, only: :update
 
     def update
       # Instantialize a new team with the provided name

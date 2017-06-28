@@ -35,6 +35,7 @@ if ENV['PAPERCLIP_STORAGE'] == "s3"
       original: :private,
       medium: :private
     },
+    s3_region: ENV['AWS_REGION'],
     s3_storage_class: {
       medium: :reduced_redundancy,
       thumb: :reduced_redundancy,
