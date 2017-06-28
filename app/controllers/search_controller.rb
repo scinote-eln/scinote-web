@@ -1,5 +1,5 @@
 class SearchController < ApplicationController
-  before_filter :load_vars, only: :index
+  before_action :load_vars, only: :index
 
   def index
     redirect_to new_search_path unless @search_query
