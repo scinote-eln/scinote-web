@@ -135,10 +135,10 @@ class MyModule < ApplicationRecord
     MyModule.transaction do
       archived = super
       # Unassociate all samples from module.
-      archived = SampleMyModule.destroy_all(:my_module => self) if archived
+      archived = SampleMyModule.where(my_module: self).destroy_all if archived
       # Remove all connection between modules.
-      archived = Connection.delete_all(:input_id => id) if archived
-      archived = Connection.delete_all(:output_id => id) if archived
+      archived = Connection.where(input_id: id).delete_all if archived
+      archived = Connection.where(output_id: id).delete_all if archived
       unless archived
         raise ActiveRecord::Rollback
       end
@@ -285,7 +285,7 @@ class MyModule < ApplicationRecord
       if !final.include?(my_module)
         final << my_module
       end
-      modules.push(*my_module.my_modules.flatten)
+      modules.push(*my_module.my_modules)
     end
     final
   end
@@ -299,7 +299,7 @@ class MyModule < ApplicationRecord
       if !final.include?(my_module)
         final << my_module
       end
-      modules.push(*my_module.my_module_antecessors.flatten)
+      modules.push(*my_module.my_module_antecessors)
     end
     final
   end

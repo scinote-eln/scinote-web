@@ -762,7 +762,7 @@ class Experiment < ApplicationRecord
     dg.to_undirected.each_connected_component { |w| workflows <<  w }
 
     # Retrieve maximum allowed module group name
-    max_length = (MyModuleGroup.validators_on(:name).select { |v| v.class == ActiveModel::Validations::LengthValidator }).first.options[:maximum]
+    max_length = Constants::NAME_MAX_LENGTH
     # For each workflow, generate new names
     new_index = 1
     wf_names = []
@@ -797,7 +797,7 @@ class Experiment < ApplicationRecord
     end
 
     # Remove any existing module groups from modules
-    unless MyModuleGroup.destroy_all(:id => group_ids.to_a)
+    unless MyModuleGroup.where(id: group_ids.to_a).destroy_all
       raise ActiveRecord::ActiveRecordError
     end
 
