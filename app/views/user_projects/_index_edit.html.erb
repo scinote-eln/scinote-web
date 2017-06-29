@@ -3,21 +3,21 @@
 <% if @users.size == 0 then %>
   <li><em><%= t 'projects.index.modal_manage_users.no_users' %></em></li>
 <% else %>
-  <% @users.each_with_index do |user_proj, i| %>
+  <% @users.each_with_index do |user_proj, i| user = user_proj.user %>
   <li>
   <% if i > 0 %><hr><% end %>
     <div class="row">
 
       <div class="col-xs-2">
-        <%= image_tag avatar_path(user_proj.user, :icon_small), class: 'img-circle pull-left' %>
+        <%= image_tag avatar_path(user, :icon_small), class: 'img-circle pull-left' %>
       </div>
 
       <div class="col-xs-10 col-sm-4">
-        <span><%= user_proj.user.full_name %></span>
+        <span><%= user.full_name %></span>
         <br><span class="text-muted"><%= t('user_projects.enums.role.'<< user_proj.role) %></span>
       </div>
 
-      <% unless user_proj.user.id == current_user.id %>
+      <% unless user.id == current_user.id %>
       <div class="visible-xs">&nbsp;</div>
       <div class="col-xs-7 col-xs-offset-2 col-sm-4 col-sm-offset-0">
         <%= form_for @up, url: project_user_project_path(@project, user_proj.id, method: :put, format: :json), format: :json, method: 'put', remote: true, html: { class: 'update-user-form' } do |f| %>

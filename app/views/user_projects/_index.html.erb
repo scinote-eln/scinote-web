@@ -4,16 +4,15 @@
   <% if @users.size == 0 then %>
     <li><em><%= t 'projects.index.no_users' %></em></li>
   <% else %>
-
-    <% @users.each_with_index do |user_proj, i| %>
+    <% @users.each_with_index do |user_proj, i| user = user_proj.user %>
       <li>
         <% if i > 0 %><hr><% end %>
         <div class="row">
           <div class="col-xs-2">
-            <%= image_tag avatar_path(user_proj.user, :icon_small), class: 'img-circle pull-left' %>
+            <%= image_tag avatar_path(user, :icon_small), class: 'img-circle pull-left' %>
           </div>
           <div class="col-xs-10">
-            <span><%= user_proj.user.full_name %></span>
+            <span><%= user.full_name %></span>
             <br><span class="text-muted"><%= t('user_projects.enums.role.'<< user_proj.role.to_s) %></span>
           </div>
         </div>  
