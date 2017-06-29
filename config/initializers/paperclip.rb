@@ -36,10 +36,10 @@ if ENV['PAPERCLIP_STORAGE'] == "s3"
       medium: :private
     },
     s3_storage_class: {
-      medium: :reduced_redundancy,
-      thumb: :reduced_redundancy,
-      icon: :reduced_redundancy,
-      icon_small: :reduced_redundancy
+      medium: :REDUCED_REDUNDANCY,
+      thumb: :REDUCED_REDUNDANCY,
+      icon: :REDUCED_REDUNDANCY,
+      icon_small: :REDUCED_REDUNDANCY
     }
   })
 elsif ENV['PAPERCLIP_STORAGE'] == "filesystem"
