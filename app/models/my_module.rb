@@ -285,7 +285,7 @@ class MyModule < ApplicationRecord
       if !final.include?(my_module)
         final << my_module
       end
-      modules.push(*my_module.my_modules.flatten)
+      modules.push(*my_module.my_modules)
     end
     final
   end
