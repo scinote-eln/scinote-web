@@ -1,4 +1,4 @@
-class AddCustomRepositories < ActiveRecord::Migration
+class AddCustomRepositories < ActiveRecord::Migration[4.2]
   def change
     create_table :repositories do |t|
       t.belongs_to :team, index: true

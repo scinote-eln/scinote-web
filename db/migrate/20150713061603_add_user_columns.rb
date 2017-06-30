@@ -1,4 +1,4 @@
-class AddUserColumns < ActiveRecord::Migration
+class AddUserColumns < ActiveRecord::Migration[4.2]
   def up
     add_attachment :users, :avatar
   end

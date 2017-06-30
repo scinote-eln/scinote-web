@@ -1,7 +1,7 @@
 require File.expand_path('app/helpers/database_helper')
 include DatabaseHelper
 
-class UpdateIndexesForFasterSearch < ActiveRecord::Migration
+class UpdateIndexesForFasterSearch < ActiveRecord::Migration[4.2]
   def up
     if db_adapter_is? 'PostgreSQL'
       # Removing old indexes
@@ -61,7 +61,7 @@ class UpdateIndexesForFasterSearch < ActiveRecord::Migration
           'g');
         $$ LANGUAGE SQL;"
       )
-
+      byebug
       add_gin_index_without_tags :projects, :name
       add_gin_index_without_tags :my_modules, :name
       add_gin_index_without_tags :my_module_groups, :name

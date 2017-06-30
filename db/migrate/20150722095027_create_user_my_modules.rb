@@ -1,4 +1,4 @@
-class CreateUserMyModules < ActiveRecord::Migration
+class CreateUserMyModules < ActiveRecord::Migration[4.2]
   def change
     create_table :user_my_modules do |t|
       t.integer :user_id, null: false

@@ -1,4 +1,4 @@
-class RefreshAssignedSamplesCounters < ActiveRecord::Migration
+class RefreshAssignedSamplesCounters < ActiveRecord::Migration[4.2]
   def up
     # Reset the counters for assigned samples
     Sample.find_each do |sample|

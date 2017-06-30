@@ -1,4 +1,4 @@
-class AddAttachmentImageToTinyMceAssets < ActiveRecord::Migration
+class AddAttachmentImageToTinyMceAssets < ActiveRecord::Migration[4.2]
   def change
     create_table :tiny_mce_assets do |t|
       t.attachment :image

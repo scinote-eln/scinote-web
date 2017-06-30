@@ -1,4 +1,4 @@
-class MigrateOrganizationsStructure < ActiveRecord::Migration
+class MigrateOrganizationsStructure < ActiveRecord::Migration[4.2]
   def up
     # Update estimated size of all assets
     Asset.includes(:asset_text_datum).find_each do |asset|

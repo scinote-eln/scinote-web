@@ -1,4 +1,4 @@
-class CreateProtocols < ActiveRecord::Migration
+class CreateProtocols < ActiveRecord::Migration[4.2]
   def up
     # First, create protocol table
     create_table :protocols do |t|

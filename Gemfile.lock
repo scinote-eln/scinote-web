@@ -12,6 +12,15 @@ GIT
     sneaky-save (0.1.2)
       activerecord (>= 3.2.0)
 
+GIT
+  remote: https://github.com/phatworx/devise_security_extension.git
+  revision: b2ee978af7d49f0fb0e7271c6ac074dfb4d39353
+  ref: b2ee978
+  specs:
+    devise_security_extension (0.10.0)
+      devise (>= 3.0.0, < 5.0)
+      railties (>= 3.2.6, < 6.0)
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -386,6 +395,7 @@ DEPENDENCIES
   devise (~> 4.3.0)
   devise-async
   devise_invitable
+  devise_security_extension!
   faker
   figaro
   font-awesome-rails (~> 4.7.0.2)

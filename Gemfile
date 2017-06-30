@@ -71,6 +71,9 @@ gem 'tinymce-rails', '~> 4.6.4' # Rich text editor
 
 gem 'base62' # Used for smart annotations
 gem 'newrelic_rpm'
+gem 'devise_security_extension',
+    git: 'https://github.com/phatworx/devise_security_extension.git',
+    ref: 'b2ee978'
 
 group :development, :test do
   gem 'listen', '~> 3.0'
