@@ -1,4 +1,4 @@
-class ProtocolLinkedChildrenDatatable < AjaxDatatablesRails::Base
+class ProtocolLinkedChildrenDatatable < CustomDatatable
   def_delegator :@view, :link_to
   def_delegator :@view, :protocols_my_module_path
 

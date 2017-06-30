@@ -199,7 +199,7 @@
               <ul class="dropdown-menu repositories-dropdown-menu" aria-labelledby="repositoriesDropdownMenuLink">
                 <% @my_module.experiment.project.team.repositories.order(created_at: :asc).each do |repository| %>
                   <li>
-                    <a class="dropdown-item" href="<%= repository_my_module_url(repository_id: repository) %>" title="<%= repository.name %>">
+                    <a class="dropdown-item" href="<%= repository_my_module_url(id: @my_module, repository_id: repository) %>" title="<%= repository.name %>">
                       <%= truncate(repository.name) %>
                     </a>
                   </li>

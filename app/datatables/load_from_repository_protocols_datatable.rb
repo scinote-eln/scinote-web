@@ -1,4 +1,4 @@
-class LoadFromRepositoryProtocolsDatatable < AjaxDatatablesRails::Base
+class LoadFromRepositoryProtocolsDatatable < CustomDatatable
   # Needed for sanitize_sql_like method
   include ActiveRecord::Sanitization::ClassMethods
   include InputSanitizeHelper
@@ -57,10 +57,10 @@ class LoadFromRepositoryProtocolsDatatable < AjaxDatatablesRails::Base
   # See https://github.com/antillas21/ajax-datatables-rails/issues/112
   def as_json(options = {})
     {
-      :draw => params[:draw].to_i,
-      :recordsTotal =>  get_raw_records.length,
-      :recordsFiltered => filter_records(get_raw_records).length,
-      :data => data
+      draw: dt_params[:draw].to_i,
+      recordsTotal: get_raw_records.length,
+      recordsFiltered: filter_records(get_raw_records).length,
+      data: data
     }
   end
 
@@ -166,7 +166,7 @@ class LoadFromRepositoryProtocolsDatatable < AjaxDatatablesRails::Base
   def build_conditions_for(query)
     # Inner query to retrieve list of protocol IDs where concatenated
     # protocol keywords string, or user's full_name contains searched query
-    search_val = params[:search][:value]
+    search_val = dt_params[:search][:value]
     records_having = get_raw_records_base.having(
       ::Arel::Nodes::NamedFunction.new(
         'CAST',
