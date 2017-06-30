@@ -2,8 +2,8 @@
 
 <div class="center-block center-block-narrow">
   <h2>Sign up</h2>
-
-  <%= form_for(:user, as: resource_name, url: registration_path(resource_name)) do |f| %>
+  <div data-hook="ga-form-data-hook">
+  <%= form_for(:user, as: resource_name, url: registration_path(resource_name), html: { id: "sign-up-form-ga" }) do |f| %>
 
     <div class="form-group">
       <%= f.label :full_name %>
@@ -44,7 +44,7 @@
       <%= f.submit 'Sign up', class: 'btn btn-primary' %>
     </div>
   <% end %>
-
+  </div>
   <%= render 'users/shared/links' %>
 </div>
 
