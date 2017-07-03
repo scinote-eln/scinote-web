@@ -2,8 +2,8 @@
 
 <div class="center-block center-block-narrow">
   <h2>Sign up</h2>
-  <div data-hook="ga-form-data-hook">
-  <%= form_for(:user, as: resource_name, url: registration_path(resource_name), html: { id: "sign-up-form-ga" }) do |f| %>
+  <div data-hook="sign-up-form-hook">
+  <%= form_for(:user, as: resource_name, url: registration_path(resource_name), html: { id: "sign-up-form" } ) do |f| %>
 
     <div class="form-group">
       <%= f.label :full_name %>
