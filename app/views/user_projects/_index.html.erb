@@ -4,7 +4,7 @@
   <% if @users.size == 0 then %>
     <li><em><%= t 'projects.index.no_users' %></em></li>
   <% else %>
-    <% @users.each_index do |i| user = @users[i].user %>
+    <% @users.each_with_index do |user_proj, i| user = user_proj.user %>
       <li>
         <% if i > 0 %><hr><% end %>
         <div class="row">
@@ -13,9 +13,9 @@
           </div>
           <div class="col-xs-10">
             <span><%= user.full_name %></span>
-            <br><span class="text-muted"><%= t('user_projects.enums.role.'<<@users[i].role.to_s) %></span>
+            <br><span class="text-muted"><%= t('user_projects.enums.role.'<< user_proj.role.to_s) %></span>
           </div>
-        </div>
+        </div>  
       </li>
     <% end %>
   <% end %>
