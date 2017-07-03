@@ -5,52 +5,92 @@ class UpdateIndexesForFasterSearch < ActiveRecord::Migration[4.2]
   def up
     if db_adapter_is? 'PostgreSQL'
       # Removing old indexes
-      remove_index :projects, :name if index_exists?(:projects, :name)
-      remove_index :my_modules, :name if index_exists?(:my_modules, :name)
-      if index_exists?(:my_modules, :description)
-        remove_index :my_modules, :description
+      if index_name_exists? :projects, :index_projects_on_name
+        remove_index :projects, name: :index_projects_on_name
       end
-      remove_index :protocols, :name if index_exists?(:protocols, :name)
-      if index_exists?(:protocols, :description)
-        remove_index :protocols, :description
+      if index_name_exists? :my_modules, :index_my_modules_on_name
+        remove_index :my_modules, name: :index_my_modules_on_name
       end
-      remove_index :protocols, :authors if index_exists?(:protocols, :authors)
-      if index_exists?(:protocol_keywords, :name)
-        remove_index :protocol_keywords, :name
+      if index_name_exists? :my_modules, :index_my_modules_on_description
+        remove_index :my_modules, name: :index_my_modules_on_description
       end
-      if index_exists?(:my_module_groups, :name)
-        remove_index :my_module_groups, :name
+      if index_name_exists? :protocols, :index_protocols_on_name
+        remove_index :protocols, name: :index_protocols_on_name
       end
-      remove_index :tags, :name if index_exists?(:tags, :name)
-      remove_index :results, :name if index_exists?(:results, :name)
-      remove_index :result_texts, :text if index_exists?(:result_texts, :text)
-      remove_index :reports, :name if index_exists?(:reports, :name)
-      if index_exists?(:reports, :description)
-        remove_index :reports, :description
+      if index_name_exists? :protocols, :index_protocols_on_description
+        remove_index :protocols, name: :index_protocols_on_description
       end
-      if index_exists?(:assets, :file_file_name)
-        remove_index :assets, :file_file_name
+      if index_name_exists? :protocols, :index_protocols_on_authors
+        remove_index :protocols, name: :index_protocols_on_authors
       end
-      remove_index :samples, :name if index_exists?(:samples, :name)
-      remove_index :sample_types, :name if index_exists?(:sample_types, :name)
-      remove_index :sample_groups, :name if index_exists?(:sample_groups, :name)
-      if index_exists?(:sample_custom_fields, :value)
-        remove_index :sample_custom_fields, :value
+      if index_name_exists? :protocol_keywords, :index_protocol_keywords_on_name
+        remove_index :protocol_keywords, name: :index_protocol_keywords_on_name
       end
-      remove_index :steps, :name if index_exists?(:steps, :name)
-      remove_index :steps, :description if index_exists?(:steps, :description)
-      remove_index :checklists, :name if index_exists?(:checklists, :name)
-      if index_exists?(:checklist_items, :text)
-        remove_index :checklist_items, :text
+      if index_name_exists? :my_module_groups, :index_my_module_groups_on_name
+        remove_index :my_module_groups, name: :index_my_module_groups_on_name
       end
-      remove_index :tables, :name if index_exists?(:tables, :name)
-      remove_index :users, :full_name if index_exists?(:users, :full_name)
-      remove_index :comments, :message if index_exists?(:comments, :message)
-      remove_index :comments, :type if index_exists?(:comments, :type)
-      if index_exists?(:protocols, :protocol_type)
-        remove_index :protocols, :protocol_type
+      if index_name_exists? :tags, :index_tags_on_name
+        remove_index :tags, name: :index_tags_on_name
       end
-      remove_index :checklists, :step_id if index_exists?(:checklists, :step_id)
+      if index_name_exists? :results, :index_results_on_name
+        remove_index :results, name: :index_results_on_name
+      end
+      if index_name_exists? :result_texts, :index_result_texts_on_text
+        remove_index :result_texts, name: :index_result_texts_on_text
+      end
+      if index_name_exists? :reports, :index_reports_on_name
+        remove_index :reports, name: :index_reports_on_name
+      end
+      if index_name_exists? :reports, :index_reports_on_description
+        remove_index :reports, name: :index_reports_on_description
+      end
+      if index_name_exists?(:assets, :index_assets_on_file_file_name)
+        remove_index :assets, name: :index_assets_on_file_file_name
+      end
+      if index_name_exists? :samples, :index_samples_on_name
+        remove_index :samples, name: :index_samples_on_name
+      end
+      if index_name_exists? :sample_types, :index_sample_types_on_name
+        remove_index :sample_types, name: :index_sample_types_on_name
+      end
+      if index_name_exists? :sample_groups, :index_sample_groups_on_name
+        remove_index :sample_groups, name: :index_sample_groups_on_name
+      end
+      if index_name_exists? :sample_custom_fields,
+                            :index_sample_custom_fields_on_value
+        remove_index :sample_custom_fields,
+                     name: :index_sample_custom_fields_on_value
+      end
+      if index_name_exists? :steps, :index_steps_on_name
+        remove_index :steps, name: :index_steps_on_name
+      end
+      if index_name_exists? :steps, :index_steps_on_description
+        remove_index :steps, name: :index_steps_on_description
+      end
+      if index_name_exists? :checklists, :index_checklists_on_name
+        remove_index :checklists, name: :index_checklists_on_name
+      end
+      if index_name_exists? :checklist_items, :index_checklist_items_on_text
+        remove_index :checklist_items, name: :index_checklist_items_on_text
+      end
+      if index_name_exists? :tables, :index_tables_on_name
+        remove_index :tables, name: :index_tables_on_name
+      end
+      if index_name_exists? :users, :index_users_on_full_name
+        remove_index :users, name: :index_users_on_full_name
+      end
+      if index_name_exists? :comments, :index_comments_on_message
+        remove_index :comments, name: :index_comments_on_message
+      end
+      if index_name_exists? :comments, :index_comments_on_type
+        remove_index :comments, name: :index_comments_on_type
+      end
+      if index_name_exists? :protocols, :index_protocols_on_protocol_type
+        remove_index :protocols, name: :index_protocols_on_protocol_type
+      end
+      if index_name_exists? :checklists, :index_checklists_on_step_id
+        remove_index :checklists, name: :index_checklists_on_step_id
+      end
 
       execute(
         "CREATE OR REPLACE FUNCTION
@@ -61,7 +101,7 @@ class UpdateIndexesForFasterSearch < ActiveRecord::Migration[4.2]
           'g');
         $$ LANGUAGE SQL;"
       )
-      byebug
+
       add_gin_index_without_tags :projects, :name
       add_gin_index_without_tags :my_modules, :name
       add_gin_index_without_tags :my_module_groups, :name
