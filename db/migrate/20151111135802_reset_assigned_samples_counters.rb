@@ -1,4 +1,4 @@
-class ResetAssignedSamplesCounters < ActiveRecord::Migration
+class ResetAssignedSamplesCounters < ActiveRecord::Migration[4.2]
   def change
     Sample.find_each do |sample|
       Sample.reset_counters(sample.id, :sample_my_modules)

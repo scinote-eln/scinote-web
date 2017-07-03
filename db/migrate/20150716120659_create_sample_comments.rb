@@ -1,4 +1,4 @@
-class CreateSampleComments < ActiveRecord::Migration
+class CreateSampleComments < ActiveRecord::Migration[4.2]
   def change
     create_table :sample_comments do |t|
       t.integer :sample_id, null: false

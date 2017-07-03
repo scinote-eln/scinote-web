@@ -1,4 +1,4 @@
-class AddProjectReferenceToActivity < ActiveRecord::Migration
+class AddProjectReferenceToActivity < ActiveRecord::Migration[4.2]
   def up
     # Make my module reference nullable
     change_column_null :activities, :my_module_id, true

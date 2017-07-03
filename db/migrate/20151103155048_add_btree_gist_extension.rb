@@ -1,7 +1,7 @@
 require File.expand_path('app/helpers/database_helper')
 include DatabaseHelper
 
-class AddBtreeGistExtension < ActiveRecord::Migration
+class AddBtreeGistExtension < ActiveRecord::Migration[4.2]
   def up
     if db_adapter_is? "PostgreSQL" then
       create_extension :btree_gist

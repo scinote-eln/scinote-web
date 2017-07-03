@@ -1,4 +1,4 @@
-class CreateSampleCustomFields < ActiveRecord::Migration
+class CreateSampleCustomFields < ActiveRecord::Migration[4.2]
   def change
     create_table :sample_custom_fields do |t|
       t.string :value, null: false

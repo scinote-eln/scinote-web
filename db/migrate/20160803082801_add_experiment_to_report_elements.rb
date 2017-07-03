@@ -1,4 +1,4 @@
-class AddExperimentToReportElements < ActiveRecord::Migration
+class AddExperimentToReportElements < ActiveRecord::Migration[4.2]
   def up
     add_column :report_elements, :experiment_id, :integer
     add_foreign_key :report_elements, :experiments
