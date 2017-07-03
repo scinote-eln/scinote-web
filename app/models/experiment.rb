@@ -761,8 +761,6 @@ class Experiment < ApplicationRecord
     workflows = []
     dg.to_undirected.each_connected_component { |w| workflows <<  w }
 
-    # Retrieve maximum allowed module group name
-    max_length = Constants::NAME_MAX_LENGTH
     # For each workflow, generate new names
     new_index = 1
     wf_names = []
@@ -788,9 +786,9 @@ class Experiment < ApplicationRecord
           name = I18n.t("my_module_groups.new.name", index: new_index)
           new_index += 1
         end
-      elsif name.length > max_length
+      elsif name.length > Constants::NAME_MAX_LENGTH
         # If length is too long, shorten it
-        name = name[0..(max_length + cut_index)] + suffix
+        name = name[0..(Constants::NAME_MAX_LENGTH + cut_index)] + suffix
       end
 
       wf_names << name
