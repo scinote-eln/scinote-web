@@ -197,7 +197,7 @@ class Constants
   #=============================================================================
 
   # Application version
-  APP_VERSION = '1.12.0'.freeze
+  APP_VERSION = '1.12.1'.freeze
 
   TEXT_EXTRACT_FILE_TYPES = [
     'application/pdf',
