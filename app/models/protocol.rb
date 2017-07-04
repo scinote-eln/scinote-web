@@ -669,9 +669,9 @@ class Protocol < ApplicationRecord
 
   def update_linked_children
     # Increment/decrement the parent's nr of linked children
-    if self.parent_id_changed?
-      if self.parent_id_was != nil
-        p = Protocol.find_by_id(self.parent_id_was)
+    if self.saved_change_to_parent_id?
+      if self.parent_id_before_last_save != nil
+        p = Protocol.find_by_id(self.parent_id_before_last_save)
         p.record_timestamps = false
         p.decrement!(:nr_of_linked_children)
       end

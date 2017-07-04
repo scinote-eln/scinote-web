@@ -12,7 +12,8 @@ class MyModule < ApplicationRecord
   validates :description, length: { maximum: Constants::TEXT_MAX_LENGTH }
   validates :x, :y, :workflow_order, presence: true
   validates :experiment, presence: true
-  validates :my_module_group, presence: true, if: "!my_module_group_id.nil?"
+  validates :my_module_group, presence: true,
+            if: proc { |mm| !mm.my_module_group_id.nil? }
 
   belongs_to :created_by,
              foreign_key: 'created_by_id',
