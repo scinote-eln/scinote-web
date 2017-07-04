@@ -93,8 +93,9 @@ Rails.application.configure do
   # routes, locales, etc. This feature depends on the listen gem.
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker
 
-  # Suppress logger output for asset requests.
-  config.assets.quiet = true
+  # Suppress logger output for asset requests. By default logger output is
+  # enabled.
+  # config.assets.quiet = true
 
   # Enable/disable caching. By default caching is disabled.
   if Rails.root.join('tmp/caching-dev.txt').exist?
