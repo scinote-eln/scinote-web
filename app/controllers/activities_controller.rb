@@ -1,7 +1,7 @@
 class ActivitiesController < ApplicationController
   include ActivityHelper
 
-  before_filter :load_vars
+  before_action :load_vars
 
   def index
     @per_page = Constants::ACTIVITY_AND_NOTIF_SEARCH_LIMIT

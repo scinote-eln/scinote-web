@@ -177,49 +177,6 @@ $(window).unload(function () {
   $(window).unbind('unload');
 });
 
-$(document.body).ready(function () {
-  // Activity feed modal in main navigation menu
-  var activityModal = $('#activity-modal');
-  var activityModalBody = activityModal.find('.modal-body');
-
-  var initMoreBtn = function () {
-    activityModalBody.find('.btn-more-activities')
-      .on('ajax:success', function (e, data) {
-        $(data.html).insertBefore($(this).parents('li'));
-        $(this).attr('href', data.next_url);
-        if (data.activities_number < data.per_page) {
-          $(this).remove();
-        }
-      });
-  };
-
-  notificationAlertClose();
-
-  $('#main-menu .btn-activity')
-    .on('ajax:before', function () {
-      activityModal.modal('show');
-    })
-    .on('ajax:success', function (e, data) {
-      activityModalBody.html(data.html);
-      initMoreBtn();
-    });
-
-  activityModal.on('hidden.bs.modal', function () {
-    activityModalBody.html('');
-  });
-});
-
-$(document).ajaxComplete(function(){
-  notificationAlertClose();
-});
-
-function notificationAlertClose(){
-  $("#notifications .alert").on("closed.bs.alert", function () {
-    $("#content-wrapper")
-      .addClass("alert-hidden")
-      .removeClass("alert-shown");
-  });
-}
 var HelperModule = (function(){
 
   var helpers = {};
