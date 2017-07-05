@@ -9,7 +9,7 @@ class Step < ApplicationRecord
   validates :position, presence: true
   validates :completed, inclusion: { in: [true, false] }
   validates :user, :protocol, presence: true
-  validates :completed_on, presence: true, if: "completed?"
+  validates :completed_on, presence: true, if: proc { |s| s.completed? }
 
   belongs_to :user, inverse_of: :steps, optional: true
   belongs_to :last_modified_by,

@@ -120,7 +120,7 @@ class Table < ApplicationRecord
   end
 
   def update_ts_index
-    if contents_changed?
+    if saved_change_to_contents?
       sql = "UPDATE tables " +
             "SET data_vector = " +
             "to_tsvector(substring(encode(contents::bytea, 'escape'), 9)) " +

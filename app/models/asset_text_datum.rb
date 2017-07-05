@@ -8,7 +8,7 @@ class AssetTextDatum < ApplicationRecord
   after_save :update_ts_index
 
   def update_ts_index
-    if data_changed?
+    if saved_change_to_data?
       sql = "UPDATE asset_text_data " +
             "SET data_vector = to_tsvector(data) " +
             "WHERE id = " + Integer(id).to_s
