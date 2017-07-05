@@ -380,7 +380,7 @@ class Asset < ActiveRecord::Base
     action = get_action(file_ext, action)
     if !action.nil?
       action_url = action.urlsrc
-      if (ENV['WOPI_BUSINESS_USERS'])
+      if (ENV['WOPI_BUSINESS_USERS'] && ENV['WOPI_BUSINESS_USERS']=='true' )
         action_url = action_url.gsub(/<IsLicensedUser=BUSINESS_USER&>/,
                                      'IsLicensedUser=1&')
         action_url = action_url.gsub(/<IsLicensedUser=BUSINESS_USER>/,
