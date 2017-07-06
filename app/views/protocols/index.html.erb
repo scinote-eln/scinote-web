@@ -12,7 +12,7 @@
     </li>
     <li role="presentation" class="<%= "active" if @type == :archive %>">
       <%= link_to protocols_path(team: @current_team, type: :archive) do %>
-        <span class="glyphicon glyphicon-briefcase"></span>
+        <span class="glyphicon glyphicon-briefcase" title="<%= t'protocols.index.navigation.archive' %>"></span>
       <% end %>
     </li>
   </ul>

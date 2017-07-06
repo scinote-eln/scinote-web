@@ -225,7 +225,8 @@ module ApplicationHelper
     user_name << ' ' + I18n.t('atwho.res.removed') if !user_still_in_team
 
     raw("<img src='#{user_avatar_absolute_url(user, :icon_small)}'" \
-        "alt='avatar' class='atwho-user-img-popover'>") +
+        "alt='avatar' class='atwho-user-img-popover'" \
+        " ref='#{'missing-img' if missing_avatar(user, :icon_small)}'>") +
       raw('<a onClick="$(this).popover(\'show\')" ' \
           'class="atwho-user-popover" data-container="body" ' \
           'data-html="true" tabindex="0" data-trigger="focus" ' \
@@ -253,9 +254,14 @@ module ApplicationHelper
                end
     end
 
-    unless user.avatar(style) == '/images/icon_small/missing.png'
+    unless missing_avatar(user, style)
       return user.avatar(style, timeout: Constants::URL_LONG_EXPIRE_TIME)
     end
     url_for(prefix + "/images/#{style}/missing.png")
+  end
+
+  def missing_avatar(user, style)
+    user.avatar(style) == '/images/icon_small/missing.png' ||
+      user.avatar(style) == '/images/thumb/missing.png'
   end
 end

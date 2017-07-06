@@ -226,18 +226,33 @@ class RepositoriesController < ApplicationController
   end
 
   def import_records
-    import_records = repostiory_import_actions
-    status = import_records.import!
     respond_to do |format|
       format.json do
-        if status[:status] == :ok
-          flash[:success] = t('repositories.import_records.success_flash',
-                              number_of_rows: status[:nr_of_added])
-          render json: {}, status: :ok
+        # Check if there exist mapping for repository record (it's mandatory)
+        if params[:mappings].value?('-1')
+          import_records = repostiory_import_actions
+          status = import_records.import!
+
+          if status[:status] == :ok
+            flash[:success] = t('repositories.import_records.success_flash',
+                                number_of_rows: status[:nr_of_added])
+            render json: {}, status: :ok
+          else
+            flash[:alert] = t('repositories.import_records.error_flash',
+                              message: status[:errors])
+            render json: {}, status: :unprocessable_entity
+          end
         else
-          flash[:alert] = t('repositories.import_records.error_flash',
-                            message: status[:errors])
-          render json: {}, status: :unprocessable_entity
+          render json: {
+            html: render_to_string(
+              partial: 'shared/flash_errors.html.erb',
+              locals: { error_title: t('repositories.import_records'\
+                                       '.error_message.errors_list_title'),
+                        error: t('repositories.import_records.error_message'\
+                                 '.no_repository_name') }
+            )
+          },
+          status: :unprocessable_entity
         end
       end
     end

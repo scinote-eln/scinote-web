@@ -18,6 +18,10 @@
         <%= route_to_other_team samples_my_module_path(my_module),
                                 my_module.experiment.project.team,
                                 text %>
+      <% when :repositories %>
+        <%= route_to_other_team repository_my_module_path(my_module, repository),
+                                my_module.experiment.project.team,
+                                text %>
       <% when :protocols %>
         <%= route_to_other_team protocols_my_module_path(my_module),
                                 my_module.experiment.project.team,

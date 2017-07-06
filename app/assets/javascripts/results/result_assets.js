@@ -76,7 +76,14 @@
         Comments.initialize();
         initNewResultAsset();
       }).on('ajax:error', function(e, xhr) {
-        $form.renderFormErrors('result', xhr.responseJSON, true, e);
+        var errors = xhr.responseJSON.errors;
+        var formInput = $form.find('#result_asset_attributes_file');
+        $('[data-status="error"]').remove();
+        $.each(errors, function(key, value) {
+          var message = '<span data-status="error" style="color: #a94442">';
+          message += value + '</span>';
+          formInput.after(message);
+        })
         animateSpinner(null, false);
       });
     }

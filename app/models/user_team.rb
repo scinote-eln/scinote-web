@@ -62,8 +62,8 @@ class UserTeam < ApplicationRecord
     end
 
     # Also, make new owner author of all protocols that belong
-    # to the departing user.
-    p_ids = user.added_protocols.pluck(:id)
+    # to the departing user and belong to this team.
+    p_ids = user.added_protocols.where(team: team).pluck(:id)
     Protocol.find(p_ids).each do |protocol|
       protocol.record_timestamps = false
       protocol.added_by = new_owner
