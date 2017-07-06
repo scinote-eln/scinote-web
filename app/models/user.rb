@@ -197,7 +197,7 @@ class User < ApplicationRecord
   end
 
   def name=(name)
-    full_name = name
+    self.full_name = name
   end
 
   # Search all active users for username & email. Can

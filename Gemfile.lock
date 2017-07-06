@@ -61,6 +61,8 @@ GEM
       i18n (~> 0.7)
       minitest (~> 5.1)
       tzinfo (~> 1.1)
+    addressable (2.5.1)
+      public_suffix (~> 2.0, >= 2.0.2)
     ajax-datatables-rails (0.3.1)
       railties (>= 3.1)
     ansi (1.5.0)
@@ -101,7 +103,15 @@ GEM
     bootstrap_form (2.7.0)
     builder (3.2.3)
     byebug (9.0.6)
+    capybara (2.14.4)
+      addressable
+      mime-types (>= 1.16)
+      nokogiri (>= 1.3.3)
+      rack (>= 1.0.0)
+      rack-test (>= 0.5.4)
+      xpath (~> 2.0)
     climate_control (0.2.0)
+    cliver (0.3.2)
     cocaine (0.5.8)
       climate_control (>= 0.0.3, < 1.0)
     coderay (1.1.1)
@@ -115,6 +125,24 @@ GEM
     commit_param_routing (0.0.1)
     concurrent-ruby (1.0.5)
     crass (1.0.2)
+    cucumber (2.4.0)
+      builder (>= 2.1.2)
+      cucumber-core (~> 1.5.0)
+      cucumber-wire (~> 0.0.1)
+      diff-lcs (>= 1.1.3)
+      gherkin (~> 4.0)
+      multi_json (>= 1.7.5, < 2.0)
+      multi_test (>= 0.1.2)
+    cucumber-core (1.5.0)
+      gherkin (~> 4.0)
+    cucumber-rails (1.5.0)
+      capybara (>= 1.1.2, < 3)
+      cucumber (>= 1.3.8, < 4)
+      mime-types (>= 1.17, < 4)
+      nokogiri (~> 1.5)
+      railties (>= 4, < 5.2)
+    cucumber-wire (0.0.1)
+    database_cleaner (1.6.1)
     debug_inspector (0.0.3)
     deface (1.2.0)
       nokogiri (~> 1.6)
@@ -140,9 +168,16 @@ GEM
     devise_invitable (1.7.2)
       actionmailer (>= 4.1.0)
       devise (>= 4.0.0)
+    diff-lcs (1.3)
+    docile (1.1.5)
     erubi (1.6.0)
     erubis (2.7.0)
     execjs (2.7.0)
+    factory_girl (4.8.0)
+      activesupport (>= 3.0.0)
+    factory_girl_rails (4.8.0)
+      factory_girl (~> 4.8.0)
+      railties (>= 3.0.0)
     faker (1.7.3)
       i18n (~> 0.5)
     ffi (1.9.18)
@@ -150,6 +185,7 @@ GEM
       thor (~> 0.14)
     font-awesome-rails (4.7.0.2)
       railties (>= 3.2, < 5.2)
+    gherkin (4.1.3)
     globalid (0.4.0)
       activesupport (>= 4.2.0)
     hammerjs-rails (2.0.4)
@@ -210,6 +246,7 @@ GEM
     momentjs-rails (2.17.1)
       railties (>= 3.1)
     multi_json (1.12.1)
+    multi_test (0.1.2)
     nested_form_fields (0.8)
       coffee-rails (>= 3.2.1)
       jquery-rails
@@ -232,8 +269,23 @@ GEM
     parser (2.4.0.0)
       ast (~> 2.2)
     pg (0.21.0)
+    phantomjs (2.1.1.0)
+    poltergeist (1.15.0)
+      capybara (~> 2.1)
+      cliver (~> 0.3.1)
+      websocket-driver (>= 0.2.0)
     polyglot (0.3.5)
     powerpack (0.1.1)
+    pry (0.10.4)
+      coderay (~> 1.1.0)
+      method_source (~> 0.8.1)
+      slop (~> 3.4)
+    pry-byebug (3.4.2)
+      byebug (~> 9.0)
+      pry (~> 0.10)
+    pry-rails (0.3.6)
+      pry (>= 0.10.4)
+    public_suffix (2.0.5)
     puma (3.9.1)
     rack (2.0.3)
     rack-test (0.6.3)
@@ -288,6 +340,23 @@ GEM
     roo (2.1.1)
       nokogiri (~> 1)
       rubyzip (~> 1.1, < 2.0.0)
+    rspec-core (3.6.0)
+      rspec-support (~> 3.6.0)
+    rspec-expectations (3.6.0)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.6.0)
+    rspec-mocks (3.6.0)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.6.0)
+    rspec-rails (3.6.0)
+      actionpack (>= 3.0)
+      activesupport (>= 3.0)
+      railties (>= 3.0)
+      rspec-core (~> 3.6.0)
+      rspec-expectations (~> 3.6.0)
+      rspec-mocks (~> 3.6.0)
+      rspec-support (~> 3.6.0)
+    rspec-support (3.6.0)
     rubocop (0.49.1)
       parallel (~> 1.10)
       parser (>= 2.3.3.1, < 3.0)
@@ -324,8 +393,14 @@ GEM
       actionmailer (>= 3.2.6, < 6)
       actionpack (>= 3.2.6, < 6)
       devise (>= 3.2, < 6)
+    simplecov (0.14.1)
+      docile (~> 1.1.0)
+      json (>= 1.8, < 3)
+      simplecov-html (~> 0.10.0)
+    simplecov-html (0.10.1)
     skylight (1.3.1)
       activesupport (>= 3.0.0)
+    slop (3.6.0)
     sourcemap (0.1.1)
     spinjs-rails (1.4)
       rails (>= 3.1)
@@ -365,6 +440,8 @@ GEM
     websocket-extensions (0.1.2)
     wicked_pdf (1.1.0)
     wkhtmltopdf-heroku (2.12.4.0)
+    xpath (2.1.0)
+      nokogiri (~> 1.3)
     yomu (0.2.4)
       json (~> 1.8)
       mime-types (~> 1.23)
@@ -388,7 +465,10 @@ DEPENDENCIES
   bootstrap3-datetimepicker-rails (~> 4.15.35)
   bootstrap_form
   byebug
+  capybara
   commit_param_routing
+  cucumber-rails
+  database_cleaner
   deface (~> 1.0)
   delayed_job_active_record
   delayed_paperclip
@@ -396,6 +476,7 @@ DEPENDENCIES
   devise-async
   devise_invitable
   devise_security_extension!
+  factory_girl_rails
   faker
   figaro
   font-awesome-rails (~> 4.7.0.2)
@@ -410,13 +491,18 @@ DEPENDENCIES
   kaminari
   listen (~> 3.0)
   logging (~> 2.0.0)
-  minitest-reporters (~> 1.1)
+  minitest-reporters
   momentjs-rails (~> 2.17.1)
   nested_form_fields
   newrelic_rpm
   nokogiri
   paperclip (~> 5.1)
   pg
+  phantomjs
+  poltergeist
+  pry
+  pry-byebug
+  pry-rails
   puma
   rails (= 5.1.1)
   rails_12factor
@@ -425,6 +511,7 @@ DEPENDENCIES
   remotipart (~> 1.2)
   rgl
   roo (~> 2.1.0)
+  rspec-rails
   rubocop
   ruby-graphviz (~> 1.2)
   rubyzip
@@ -433,9 +520,10 @@ DEPENDENCIES
   scss_lint
   sdoc (~> 0.4.0)
   shoulda-context
-  shoulda-matchers (>= 3.0.1)
+  shoulda-matchers
   silencer
   simple_token_authentication (~> 1.15.1)
+  simplecov
   skylight
   sneaky-save!
   spinjs-rails
