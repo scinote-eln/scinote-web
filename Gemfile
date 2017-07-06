@@ -92,7 +92,6 @@ group :development, :test do
 end
 
 group :test do
-  gem 'minitest-reporters'
   gem "shoulda-context"
   gem 'shoulda-matchers'
   gem 'cucumber-rails', require: false
@@ -106,7 +105,6 @@ end
 group :production do
   gem 'puma'
   gem 'rails_12factor'
-  gem 'skylight'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
