@@ -1,8 +1,10 @@
 development:
-  adapter: postgresql
+  adapter: async
 
 test:
-  adapter: postgresql
+  adapter: async
 
 production:
-  adapter: postgresql
+  adapter: redis
+  url: redis://localhost:6379/1
+  channel_prefix: scinote_production
