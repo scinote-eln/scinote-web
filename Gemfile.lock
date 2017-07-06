@@ -379,7 +379,6 @@ GEM
     sdoc (0.4.2)
       json (~> 1.7, >= 1.7.7)
       rdoc (~> 4.0)
-    shoulda-context (1.2.2)
     shoulda-matchers (3.1.1)
       activesupport (>= 4.0.0)
     silencer (1.0.1)
@@ -510,7 +509,6 @@ DEPENDENCIES
   sass-rails (~> 5.0.6)
   scss_lint
   sdoc (~> 0.4.0)
-  shoulda-context
   shoulda-matchers
   silencer
   simple_token_authentication (~> 1.15.1)

@@ -47,11 +47,75 @@ describe User, type: :model do
     it { is_expected.to have_db_column :authentication_token }
   end
 
+  describe 'Relations' do
+    it { is_expected.to have_many :user_teams }
+    it { is_expected.to have_many :teams }
+    it { is_expected.to have_many :user_projects }
+    it { is_expected.to have_many :projects }
+    it { is_expected.to have_many :user_my_modules }
+    it { is_expected.to have_many :comments }
+    it { is_expected.to have_many :activities }
+    it { is_expected.to have_many :results }
+    it { is_expected.to have_many :samples }
+    it { is_expected.to have_many :samples_tables }
+    it { is_expected.to have_many :repositories }
+    it { is_expected.to have_many :repository_table_states }
+    it { is_expected.to have_many :steps }
+    it { is_expected.to have_many :custom_fields }
+    it { is_expected.to have_many :reports }
+    it { is_expected.to have_many :created_assets }
+    it { is_expected.to have_many :modified_assets }
+    it { is_expected.to have_many :created_checklists }
+    it { is_expected.to have_many :modified_checklists }
+    it { is_expected.to have_many :created_checklist_items }
+    it { is_expected.to have_many :modified_checklist_items }
+    it { is_expected.to have_many :modified_comments }
+    it { is_expected.to have_many :modified_custom_fields }
+    it { is_expected.to have_many :created_my_module_groups }
+    it { is_expected.to have_many :created_my_module_tags }
+    it { is_expected.to have_many :created_my_modules }
+    it { is_expected.to have_many :modified_my_modules }
+    it { is_expected.to have_many :archived_my_modules }
+    it { is_expected.to have_many :restored_my_modules }
+    it { is_expected.to have_many :created_teams }
+    it { is_expected.to have_many :modified_teams }
+    it { is_expected.to have_many :created_projects }
+    it { is_expected.to have_many :modified_projects }
+    it { is_expected.to have_many :archived_projects }
+    it { is_expected.to have_many :restored_projects }
+    it { is_expected.to have_many :modified_reports }
+    it { is_expected.to have_many :modified_results }
+    it { is_expected.to have_many :archived_results }
+    it { is_expected.to have_many :restored_results }
+    it { is_expected.to have_many :created_sample_groups }
+    it { is_expected.to have_many :modified_sample_groups }
+    it { is_expected.to have_many :assigned_sample_my_modules }
+    it { is_expected.to have_many :created_sample_types }
+    it { is_expected.to have_many :modified_sample_types }
+    it { is_expected.to have_many :modified_samples }
+    it { is_expected.to have_many :modified_steps }
+    it { is_expected.to have_many :created_tables }
+    it { is_expected.to have_many :modified_tables }
+    it { is_expected.to have_many :created_tags }
+    it { is_expected.to have_many :tokens }
+    it { is_expected.to have_many :modified_tags }
+    it { is_expected.to have_many :assigned_user_my_modules }
+    it { is_expected.to have_many :assigned_user_teams }
+    it { is_expected.to have_many :assigned_user_projects }
+    it { is_expected.to have_many :added_protocols }
+    it { is_expected.to have_many :archived_protocols }
+    it { is_expected.to have_many :restored_protocols }
+    it { is_expected.to have_many :assigned_my_module_repository_rows }
+    it { is_expected.to have_many :user_notifications }
+    it { is_expected.to have_many :notifications }
+    it { is_expected.to have_many :zip_exports }
+  end
+
   describe 'Should be a valid object' do
-    it { should validate_presence_of(:full_name) }
-    it { should validate_presence_of(:initials) }
-    it { should validate_presence_of(:email) }
-    it { should validate_presence_of(:time_zone) }
+    it { should validate_presence_of :full_name }
+    it { should validate_presence_of :initials  }
+    it { should validate_presence_of :email }
+    it { should validate_presence_of :time_zone }
 
     it do
       should validate_length_of(:full_name).is_at_most(
