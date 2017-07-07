@@ -30,7 +30,7 @@
                 </span>
                 <span class="activity-message">
                   &nbsp;
-                  <%= sanitize_input(activity.message) %>
+                  <%= sanitize_input(smart_annotation_parser(activity.message)) %>
                 </span>
               </li>
             <% end %>
