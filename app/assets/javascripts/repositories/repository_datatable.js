@@ -148,7 +148,6 @@ function dataTableInit() {
         data = myData;
       }
       $.ajax({
-        async: false,
         url: '/repositories/' + repositoryId + '/state_save',
         data: {state: data},
         dataType: 'json',
