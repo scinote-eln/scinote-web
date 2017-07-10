@@ -82,7 +82,7 @@ class WopiController < ActionController::Base
     }
     response.headers['X-WOPI-HostEndpoint'] = ENV['WOPI_ENDPOINT_URL']
     response.headers['X-WOPI-MachineName'] = ENV['WOPI_ENDPOINT_URL']
-    response.headers['X-WOPI-ServerVersion'] = Constants::APP_VERSION
+    response.headers['X-WOPI-ServerVersion'] = Scinote::Application::VERSION
     render json: msg and return
   end
 

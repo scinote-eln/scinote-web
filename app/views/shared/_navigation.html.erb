@@ -19,7 +19,7 @@
         <% if show_version %>
           <%= image_tag('/images/logo.png', class: 'with-version', id: 'logo') %>
           <span class="version">
-            <%= Constants::APP_VERSION %>
+            <%= Scinote::Application::VERSION %>
           </span>
         <% else %>
           <%= image_tag('/images/logo.png', id: 'logo') %>
