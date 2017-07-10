@@ -27,6 +27,6 @@ describe SampleType, type: :model do
     it do
       should validate_length_of(:name).is_at_most(Constants::NAME_MAX_LENGTH)
     end
-    it { should validate_uniqueness_of(:name).scoped_to(:team) }
+    it { should validate_uniqueness_of(:name).scoped_to(:team).case_insensitive }
   end
 end
