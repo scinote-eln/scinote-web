@@ -424,6 +424,11 @@ var SmartAnnotation = (function() {
       init: init
     };
   }
+  // Closes the atwho popup * needed in repositories to close the popup
+  // if nothing is selected and the user leaves the form *
+  function closePopup() {
+    $('.atwho-header-res').find('.glyphicon-remove').click();
+  }
 
   function initialize(field) {
     var atWho = new setAtWho(field);
@@ -432,7 +437,8 @@ var SmartAnnotation = (function() {
 
   var publicApi = Object.freeze({
     init: initialize,
-    preventPropagation: atwhoStopPropagation
+    preventPropagation: atwhoStopPropagation,
+    closePopup: closePopup
   });
 
   return publicApi;
