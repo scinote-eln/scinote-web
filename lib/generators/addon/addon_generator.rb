@@ -114,12 +114,16 @@ class AddonGenerator < Rails::Generators::NamedBase
     gsub_file(file_path, '${ADDON_NAME}', @addon_name)
 
     # lib/.../version.rb
+    dots = @modules.map { '/..' }.join
     create_file(
       "addons/#{@addon_name}/lib/" \
       "#{@folders_path}/version.rb"
     ) do
       embed_into_modules do
-        "VERSION = '0.0.1'.freeze\n"
+        "VERSION =\n" \
+        "  File.read(\n" \
+        "    \"\#{File.dirname(__FILE__)}#{dots}/../VERSION\"\n" \
+        "  ).strip.freeze\n"
       end
     end
 
@@ -182,6 +186,7 @@ class AddonGenerator < Rails::Generators::NamedBase
     gsub_file(file_path, '${FULL_UNDERSCORE_NAME}', @full_underscore_name)
     gsub_file(file_path, '${NAME}', name)
     gsub_file(file_path, '${FOLDERS_PATH}', @folders_path)
+    create_file("addons/#{@addon_name}/VERSION") { '0.0.1' }
 
     # Rakefile
     file_path = "addons/#{@addon_name}/Rakefile"

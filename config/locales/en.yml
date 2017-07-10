@@ -72,6 +72,7 @@ en:
       support: "Customer support"
       premium: "Premium"
       contact: "Contact us"
+      about: "About sciNote"
     activities:
       none: "No activities!"
     label:
@@ -86,6 +87,11 @@ en:
       notifications: "Notifications"
       info: "Info"
       account: "Account"
+
+  about:
+    modal_title: "About sciNote"
+    core_version: "sciNote core version"
+    addon_versions: "Addon versions"
 
   sidebar:
     title: "Navigation"
