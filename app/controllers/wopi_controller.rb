@@ -70,11 +70,11 @@ class WopiController < ActionController::Base
       UserCanNotWriteRelative:       true,
       CloseUrl:                      @close_url,
       DownloadUrl: url_for(controller: 'assets', action: 'download',
-                           id: @asset.id),
+                           id: @asset.id, host: ENV['WOPI_USER_HOST']),
       HostEditUrl: url_for(controller: 'assets', action: 'edit',
-                           id: @asset.id),
+                           id: @asset.id, host: ENV['WOPI_USER_HOST']),
       HostViewUrl: url_for(controller: 'assets', action: 'view',
-                           id: @asset.id),
+                           id: @asset.id, host: ENV['WOPI_USER_HOST']),
       BreadcrumbBrandName:  @breadcrumb_brand_name,
       BreadcrumbBrandUrl:   @breadcrumb_brand_url,
       BreadcrumbFolderName: @breadcrumb_folder_name,
@@ -286,21 +286,21 @@ class WopiController < ActionController::Base
       if @protocol.in_module?
         @close_url = protocols_my_module_url(@protocol.my_module,
                                              only_path: false,
-                                             host: ENV['WOPI_BREADCRUMBS_HOST'])
+                                             host: ENV['WOPI_USER_HOST'])
 
         project = @protocol.my_module.experiment.project
         @breadcrumb_brand_name  = project.name
         @breadcrumb_brand_url   = project_url(project,
                                               only_path: false,
-                                              host: ENV['WOPI_BREADCRUMBS_HOST'])
+                                              host: ENV['WOPI_USER_HOST'])
         @breadcrumb_folder_name = @protocol.my_module.name
       else
         @close_url = protocols_url(only_path: false,
-                                   host: ENV['WOPI_BREADCRUMBS_HOST'])
+                                   host: ENV['WOPI_USER_HOST'])
 
         @breadcrump_brand_name  = 'Projects'
         @breadcrumb_brand_url   = root_url(only_path: false,
-                                           host: ENV['WOPI_BREADCRUMBS_HOST'])
+                                           host: ENV['WOPI_USER_HOST'])
         @breadcrumb_folder_name = 'Protocol managament'
       end
       @breadcrumb_folder_url  = @close_url
@@ -310,12 +310,12 @@ class WopiController < ActionController::Base
 
       @close_url = results_my_module_url(@my_module,
                                          only_path: false,
-                                         host: ENV['WOPI_BREADCRUMBS_HOST'])
+                                         host: ENV['WOPI_USER_HOST'])
 
       @breadcrumb_brand_name  = @my_module.experiment.project.name
       @breadcrumb_brand_url   = project_url(@my_module.experiment.project,
                                             only_path: false,
-                                            host: ENV['WOPI_BREADCRUMBS_HOST'])
+                                            host: ENV['WOPI_USER_HOST'])
       @breadcrumb_folder_name = @my_module.name
       @breadcrumb_folder_url  = @close_url
     end
