@@ -572,7 +572,6 @@ function onClickEdit() {
       });
 
       // initialize smart annotation
-      SmartAnnotation.init($('[data-object="repository_cell"]'));
       _.each($('[data-object="repository_cell"]'), function(el) {
         if (_.isUndefined($(el).data('atwho'))) {
                 SmartAnnotation.init(el);
@@ -641,9 +640,11 @@ function onClickSave() {
     data: data,
     success: function(data) {
       HelperModule.flashAlertMsg(data.flash, 'success');
+      SmartAnnotation.closePopup();
       onClickCancel();
     },
     error: function(e) {
+      SmartAnnotation.closePopup();
       var data = e.responseJSON;
       clearAllErrors();
 
@@ -793,6 +794,7 @@ function onClickCancel() {
   }, false);
   changeToViewMode();
   updateButtons();
+  SmartAnnotation.closePopup();
   animateSpinner(null, false);
 }
 
