@@ -3,6 +3,7 @@ source 'http://rubygems.org'
 ruby '2.4.1'
 
 gem 'rails', '5.1.1'
+gem 'webpacker', '~> 2.0'
 gem 'figaro'
 gem 'pg'
 gem 'devise', '~> 4.3.0'
