@@ -11,7 +11,8 @@
         "useBuiltIns": true
       }
     ],
-    "react"
+    "react",
+    "es2015"
   ],
   "plugins": [
     "syntax-dynamic-import",
@@ -21,5 +22,10 @@
         "spec": true
       }
     ]
-  ]
+  ],
+  "env": {
+    "test": {
+      "plugins": ["transform-es2015-modules-commonjs"]
+    }
+  }
 }

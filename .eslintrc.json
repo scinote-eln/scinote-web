@@ -1,8 +1,19 @@
 {
-  "extends": "google",
   "env": {
     "browser": true,
     "jquery": true
+  },
+  "plugins": [
+    "react"
+  ],
+  "extends": ["eslint:recommended", "plugin:react/recommended"],
+  "parserOptions": {
+    "sourceType": "module",
+    "ecmaVersion": 6,
+    "ecmaFeatures": {
+      "impliedStrict": true,
+      "jsx": true
+    }
   },
   "rules": {
     "spaced-comment": [
