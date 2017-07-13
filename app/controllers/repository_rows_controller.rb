@@ -136,7 +136,6 @@ class RepositoryRowsController < ApplicationController
               }
             end
           end
-          raise ActiveRecord::Rollback if errors[:repository_cells].any?
         end
         # Clean up empty cells, not present in updated record
         @record.repository_cells.each do |cell|
