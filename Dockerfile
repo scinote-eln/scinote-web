@@ -2,7 +2,8 @@ FROM ruby:2.4.1
 MAINTAINER BioSistemika <info@biosistemika.com>
 
 # additional dependecies
-RUN apt-get update -qq && \
+RUN curl -sL https://deb.nodesource.com/setup_8.x | bash - && \
+  apt-get update -qq && \
   apt-get install -y \
   nodejs \
   postgresql-client \
@@ -10,6 +11,7 @@ RUN apt-get update -qq && \
   unison \
   sudo graphviz --no-install-recommends \
   libfile-mimeinfo-perl && \
+  npm install -g yarn && \
   rm -rf /var/lib/apt/lists/*
 
 # heroku tools

@@ -53,3 +53,7 @@ rubocop_cache
 
 # Ignore ESLint local instalation
 node_modules
+
+# Added during webpacker install
+/public/packs
+/node_modules
