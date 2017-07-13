@@ -234,6 +234,8 @@ class RepositoryDatatable < AjaxDatatablesRails::Base
   def sort_records(records)
     if params[:order].present? && params[:order].length == 1
       if sort_column(params[:order].values[0]) == ASSIGNED_SORT_COL
+        # If "assigned" column is sorted when viewing assigned items
+        return records if @my_module && params[:assigned] == 'assigned'
         # If "assigned" column is sorted
         direction = sort_null_direction(params[:order].values[0])
         if @my_module
