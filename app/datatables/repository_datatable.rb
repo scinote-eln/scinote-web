@@ -248,10 +248,7 @@ class RepositoryDatatable < AjaxDatatablesRails::Base
                               my_module_repository_rows.id IS NULL))"
           ).order("my_module_repository_rows.id NULLS #{direction}")
         else
-          records.joins(
-            'LEFT OUTER JOIN my_module_repository_rows ON
-            (repository_rows.id = my_module_repository_rows.repository_row_id)'
-          ).order("my_module_repository_rows.id NULLS #{direction}")
+          sort_assigned_records(records, params[:order].values[0]['dir'])
         end
       elsif sorting_by_custom_column
         # Check if have to filter records first
@@ -390,5 +387,22 @@ class RepositoryDatatable < AjaxDatatablesRails::Base
     sort_order.map! { |i| (i.to_i - 1).to_s }
 
     @sortable_displayed_columns = sort_order
+  end
+
+  def sort_assigned_records(records, direction)
+    assigned = records.joins(:my_module_repository_rows).distinct.pluck(:id)
+    unassigned = records.where.not(id: assigned).pluck(:id)
+    if direction == 'asc'
+      ids = assigned + unassigned
+    elsif direction == 'desc'
+      ids = unassigned + assigned
+    end
+
+    order_by_index = ActiveRecord::Base.send(
+      :sanitize_sql_array,
+      ["position((',' || repository_rows.id || ',') in ?)",
+      ids.join(',') + ',']
+    )
+    records.order(order_by_index)
   end
 end
