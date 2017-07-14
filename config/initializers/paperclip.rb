@@ -80,7 +80,7 @@ module Paperclip
     # Determine file content type from its name
     def content_types_from_name
       @content_types_from_name ||=
-        Paperclip.run('mimetype', '-b :file_name', file_name: @name).chomp
+        Paperclip.run('mimetype', '-b -- :file_name', file_name: @name).chomp
     end
 
     # Determine file media type from its name
@@ -91,7 +91,7 @@ module Paperclip
     # Determine file content type from mimetype command
     def type_from_mimetype_command
       @type_from_mimetype_command ||=
-        Paperclip.run('mimetype', '-b :file', file: @file.path).chomp
+        Paperclip.run('mimetype', '-b -- :file', file: @file.path).chomp
     end
 
     # Determine file media type from mimetype command
@@ -104,7 +104,7 @@ module Paperclip
     def type_from_file_command
       unless defined? @type_from_file_command
         @type_from_file_command =
-          Paperclip.run('file', '-b --mime :file', file: @file.path)
+          Paperclip.run('file', '-b --mime -- :file', file: @file.path)
                    .split(/[:;]\s+/).first
 
         if allowed_spoof_exception?(@type_from_file_command,

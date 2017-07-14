@@ -26,6 +26,11 @@
           });
         repositoryRecordsImporter();
       });
+    }).on('ajax:error', function(ev, data) {
+      $(this).find('.form-group').addClass('has-error');
+      $(this).find('.form-group').find('.help-block').remove();
+      $(this).find('.form-group').append("<span class='help-block'>" +
+                                         data.responseJSON.message + '</span>');
     });
   }
 
