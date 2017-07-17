@@ -1,5 +1,5 @@
 <div class="repository-table">
-  <table id="repository-table" class="table"
+  <table id="repository-table-<%= repository.id %>" class="table"
     data-current-uri="<%= request.original_url %>"
     data-repository-id="<%= repository.id %>"
     data-source="<%= repository_index_link %>"
@@ -35,6 +35,3 @@
     <tbody></tbody>
   </table>
 </div>
-
-<%= stylesheet_link_tag 'datatables' %>
-<%= javascript_include_tag('repositories/repository_datatable') %>

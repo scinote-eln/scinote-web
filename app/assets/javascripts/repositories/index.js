@@ -41,8 +41,10 @@
         success: function (data) {
         	var tabBody = $(pane.context.hash).find(".tab-content-body");
           tabBody.html(data.html);
-          pane.tab('show').promise().done(function() {
+          pane.tab('show').promise().done(function(el) {
             initImportRecordsModal();
+            RepositoryDatatable.destroy()
+            RepositoryDatatable.init(el.attr('data-repo-table'));
           });
         },
         error: function (error) {
