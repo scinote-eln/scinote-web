@@ -11,15 +11,14 @@ module ImportRepository
     def data
       # Get data (it will trigger any errors as well)
       header = @sheet.row(1)
-      rows = []
-      rows << Hash[[header, @sheet.row(2)].transpose]
+      columns = @sheet.row(2)
       # Fill in fields for dropdown
       @repository.available_repository_fields.transform_values! do |name|
         truncate(name, length: Constants::NAME_TRUNCATION_LENGTH_DROPDOWN)
       end
       @temp_file = TempFile.create(session_id: @session.id, file: @file)
       Data.new(header,
-               rows,
+               columns,
                @repository.available_repository_fields,
                @repository,
                @temp_file)
@@ -47,7 +46,7 @@ module ImportRepository
     end
 
     Data = Struct.new(
-      :header, :rows, :available_fields, :repository, :temp_file
+      :header, :columns, :available_fields, :repository, :temp_file
     )
   end
 end
