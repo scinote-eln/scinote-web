@@ -190,9 +190,8 @@ GEM
       jquery-rails
       rails (>= 3.2.0)
     newrelic_rpm (4.0.0.332)
-    nokogiri (1.6.8)
+    nokogiri (1.6.8.1)
       mini_portile2 (~> 2.1.0)
-      pkg-config (~> 1.1.7)
     nokogumbo (1.4.10)
       nokogiri
     oj (2.17.4)
@@ -206,7 +205,6 @@ GEM
     parser (2.4.0.0)
       ast (~> 2.2)
     pg (0.18.4)
-    pkg-config (1.1.7)
     polyglot (0.3.5)
     powerpack (0.1.1)
     puma (2.15.3)
@@ -257,7 +255,7 @@ GEM
       algorithms (~> 0.6.1)
       stream (~> 0.5.0)
     rkelly-remix (0.0.7)
-    roo (2.1.1)
+    roo (2.7.1)
       nokogiri (~> 1)
       rubyzip (~> 1.1, < 2.0.0)
     rubocop (0.48.1)
@@ -268,7 +266,7 @@ GEM
       unicode-display_width (~> 1.0, >= 1.0.1)
     ruby-graphviz (1.2.2)
     ruby-progressbar (1.8.1)
-    rubyzip (1.1.7)
+    rubyzip (1.2.1)
     sanitize (4.4.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.4.4)
@@ -390,7 +388,7 @@ DEPENDENCIES
   recaptcha
   remotipart (~> 1.2)
   rgl
-  roo (~> 2.1.0)
+  roo (~> 2.7.1)
   rubocop
   ruby-graphviz (~> 1.2)
   rubyzip

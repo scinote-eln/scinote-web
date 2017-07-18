@@ -911,8 +911,9 @@ en:
     add_new_record: "Add new item"
     import_records:
       import: 'Import'
+      no_header_name: 'No column name'
       success_flash: "%{number_of_rows} new item(s) successfully imported."
-      error_flash: "Something went wrong: %{message}"
+      partial_success_flash: "%{nr} of %{total_nr} successfully imported. Other rows contained errors."
       error_message:
         temp_file_not_found: "This file could not be found. Your session might expire."
         session_expired: "Your session expired. Please try again."
@@ -1009,6 +1010,7 @@ en:
     modal_import:
       title: "Import samples"
       notice: "You may upload .csv file (comma separated) or tab separated file (.txt or .tdv) or Excel file (.xls, .xlsx). First row should include header names, followed by rows with sample data."
+      no_header_name: 'No column name'
       upload: "Upload file"
     modal_delete:
       title: "Delete samples"

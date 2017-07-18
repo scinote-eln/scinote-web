@@ -238,8 +238,9 @@ class RepositoriesController < ApplicationController
                                 number_of_rows: status[:nr_of_added])
             render json: {}, status: :ok
           else
-            flash[:alert] = t('repositories.import_records.error_flash',
-                              message: status[:errors])
+            flash[:alert] =
+              t('repositories.import_records.partial_success_flash',
+                nr: status[:nr_of_added], total_nr: status[:total_nr])
             render json: {}, status: :unprocessable_entity
           end
         else

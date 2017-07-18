@@ -109,9 +109,10 @@ class Repository < ActiveRecord::Base
 
   # Imports records
   def import_records(sheet, mappings, user)
-    errors = []
+    errors = false
     custom_fields = []
     name_index = -1
+    total_nr = 0
     nr_of_added = 0
 
     mappings.each.with_index do |(_k, value), index|
@@ -127,13 +128,17 @@ class Repository < ActiveRecord::Base
 
     # Now we can iterate through record data and save stuff into db
     (2..sheet.last_row).each do |i|
-      error = []
+      total_nr += 1
+      cell_error = false
       record_row = RepositoryRow.new(name: sheet.row(i)[name_index],
                                  repository: self,
                                  created_by: user,
                                  last_modified_by: user)
 
-      next unless record_row.valid?
+      unless record_row.valid?
+        errors = true
+        next
+      end
       sheet.row(i).each.with_index do |value, index|
         if custom_fields[index] && value
           rep_column = RepositoryTextValue.new(
@@ -145,10 +150,11 @@ class Repository < ActiveRecord::Base
               repository_column: custom_fields[index]
             }
           )
-          error << rep_column.errors.messages unless rep_column.save
+          cell_error = true unless rep_column.save
         end
       end
-      if error.any?
+      if cell_error
+        errors = true
         record_row.destroy
       else
         nr_of_added += 1
@@ -156,10 +162,12 @@ class Repository < ActiveRecord::Base
       end
     end
 
-    if errors.count > 0
-      return { status: :error, errors: errors, nr_of_added: nr_of_added }
+    if errors
+      return { status: :error,
+               nr_of_added: nr_of_added,
+               total_nr: total_nr }
     end
-    { status: :ok, nr_of_added: nr_of_added }
+    { status: :ok, nr_of_added: nr_of_added, total_nr: total_nr }
   end
 
   private
