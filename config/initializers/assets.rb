@@ -76,6 +76,8 @@ Rails.application.config.assets.precompile += %w(repositories/index.js)
 Rails.application.config.assets.precompile += %w(repositories/edit.js)
 Rails.application.config.assets.precompile +=
   %w(repositories/repository_datatable.js)
+Rails.application.config.assets.precompile +=
+  %w(repositories/my_module_repository.js)
 
 # Libraries needed for Handsontable formulas
 Rails.application.config.assets.precompile += %w(lodash.js)
