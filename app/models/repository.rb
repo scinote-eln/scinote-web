@@ -132,7 +132,7 @@ class Repository < ActiveRecord::Base
     end
 
     # Now we can iterate through record data and save stuff into db
-    self.transaction do
+    transaction do
       (2..sheet.last_row).each do |i|
         total_nr += 1
         record_row = RepositoryRow.new(name: sheet.row(i)[name_index],
