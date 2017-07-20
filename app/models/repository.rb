@@ -110,7 +110,7 @@ class Repository < ActiveRecord::Base
   # Imports records
   def import_records(sheet, mappings, user)
     errors = false
-    custom_fields = []
+    columns = []
     name_index = -1
     total_nr = 0
     nr_of_added = 0
@@ -118,54 +118,71 @@ class Repository < ActiveRecord::Base
     mappings.each.with_index do |(_k, value), index|
       if value == '-1'
         # Fill blank space, so our indices stay the same
-        custom_fields << nil
+        columns << nil
         name_index = index
       else
-        cf = repository_columns.find_by_id(value)
-        custom_fields << cf
+        columns << repository_columns.find_by_id(value)
       end
     end
 
-    # Now we can iterate through record data and save stuff into db
-    (2..sheet.last_row).each do |i|
-      total_nr += 1
-      cell_error = false
-      record_row = RepositoryRow.new(name: sheet.row(i)[name_index],
-                                 repository: self,
-                                 created_by: user,
-                                 last_modified_by: user)
+    # Check for duplicate columns
+    col_compact = columns.compact
+    unless col_compact.map(&:id).uniq.length == col_compact.length
+      return { status: :error, nr_of_added: nr_of_added, total_nr: total_nr }
+    end
 
-      unless record_row.valid?
-        errors = true
-        next
-      end
-      sheet.row(i).each.with_index do |value, index|
-        if custom_fields[index] && value
-          rep_column = RepositoryTextValue.new(
-            data: value,
-            created_by: user,
-            last_modified_by: user,
-            repository_cell_attributes: {
-              repository_row: record_row,
-              repository_column: custom_fields[index]
-            }
-          )
-          cell_error = true unless rep_column.save
+    # Now we can iterate through record data and save stuff into db
+    self.transaction do
+      (2..sheet.last_row).each do |i|
+        total_nr += 1
+        record_row = RepositoryRow.new(name: sheet.row(i)[name_index],
+                                   repository: self,
+                                   created_by: user,
+                                   last_modified_by: user)
+        record_row.transaction(requires_new: true) do
+          unless record_row.save
+            errors = true
+            raise ActiveRecord::Rollback
+          end
+
+          row_cell_values = []
+
+          sheet.row(i).each.with_index do |value, index|
+            if columns[index] && value
+              cell_value = RepositoryTextValue.new(
+                data: value,
+                created_by: user,
+                last_modified_by: user,
+                repository_cell_attributes: {
+                  repository_row: record_row,
+                  repository_column: columns[index]
+                }
+              )
+              cell = RepositoryCell.new(repository_row: record_row,
+                                        repository_column: columns[index],
+                                        value: cell_value)
+              cell.skip_on_import = true
+              cell_value.repository_cell = cell
+              unless cell.valid? && cell_value.valid?
+                errors = true
+                raise ActiveRecord::Rollback
+              end
+              row_cell_values << cell_value
+            end
+          end
+          if RepositoryTextValue.import(row_cell_values,
+                                        recursive: true,
+                                        validate: false).failed_instances.any?
+            errors = true
+            raise ActiveRecord::Rollback
+          end
+          nr_of_added += 1
         end
-      end
-      if cell_error
-        errors = true
-        record_row.destroy
-      else
-        nr_of_added += 1
-        record_row.save
       end
     end
 
     if errors
-      return { status: :error,
-               nr_of_added: nr_of_added,
-               total_nr: total_nr }
+      return { status: :error, nr_of_added: nr_of_added, total_nr: total_nr }
     end
     { status: :ok, nr_of_added: nr_of_added, total_nr: total_nr }
   end
@@ -176,13 +193,11 @@ class Repository < ActiveRecord::Base
     case File.extname(filename)
     when '.csv'
       Roo::CSV.new(file_path, extension: :csv)
-    when '.tdv'
-      Roo::CSV.new(file_path, nil, :ignore, csv_options: { col_sep: '\t' })
+    when '.tsv'
+      Roo::CSV.new(file_path, csv_options: { col_sep: "\t" })
     when '.txt'
       # This assumption is based purely on biologist's habits
-      Roo::CSV.new(file_path, csv_options: { col_sep: '\t' })
-    when '.xls'
-      Roo::Excel.new(file_path)
+      Roo::CSV.new(file_path, csv_options: { col_sep: "\t" })
     when '.xlsx'
       Roo::Excelx.new(file_path)
     else

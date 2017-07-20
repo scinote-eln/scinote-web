@@ -1,11 +1,16 @@
 class RepositoryCell < ActiveRecord::Base
+  attr_accessor :skip_on_import
+
   belongs_to :repository_row
   belongs_to :repository_column
   belongs_to :value, polymorphic: true, dependent: :destroy
 
   validates :repository_column, presence: true
+  validates :value, presence: true
   validate :repository_column_data_type
-  validates :repository_row, uniqueness: { scope: :repository_column }
+  validates :repository_row,
+            uniqueness: { scope: :repository_column },
+            unless: :skip_on_import
 
   private
 

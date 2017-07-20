@@ -951,7 +951,7 @@ en:
       title: 'Import items'
     modal_import:
       title: 'Import items'
-      notice: 'You may upload .csv file (comma separated) or tab separated file (.txt or .tdv) or Excel file (.xls, .xlsx). First row should include header names, followed by rows with sample data.'
+      notice: 'You may upload .csv file (comma separated) or tab separated file (.txt or .tsv) or Excel file (.xlsx). First row should include header names, followed by rows with sample data.'
       upload: 'Upload file'
     js:
       permission_error: "You don't have permission to edit this item."
@@ -1009,7 +1009,7 @@ en:
       sample_type: "Sample type:"
     modal_import:
       title: "Import samples"
-      notice: "You may upload .csv file (comma separated) or tab separated file (.txt or .tdv) or Excel file (.xls, .xlsx). First row should include header names, followed by rows with sample data."
+      notice: "You may upload .csv file (comma separated) or tab separated file (.txt or .tsv) or Excel file (.xlsx). First row should include header names, followed by rows with sample data."
       no_header_name: 'No column name'
       upload: "Upload file"
     modal_delete:
