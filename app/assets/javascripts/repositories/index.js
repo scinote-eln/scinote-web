@@ -18,7 +18,7 @@
     $('#form-records-file').on('ajax:success', function(ev, data) {
       $('#modal-import-records').modal('hide');
       $(data.html).appendTo('body').promise().done(function() {
-        $('#parse-records_modal')
+        $('#parse-records-modal')
           .modal('show')
           .on('hidden.bs.modal', function() {
             animateSpinner();

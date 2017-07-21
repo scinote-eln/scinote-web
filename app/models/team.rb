@@ -37,16 +37,14 @@ class Team < ActiveRecord::Base
     end
 
     case File.extname(filename)
-    when ".csv" then
+    when '.csv' then
       Roo::CSV.new(file_path, extension: :csv)
-    when ".tdv" then
-      Roo::CSV.new(file_path, nil, :ignore, csv_options: {col_sep: "\t"})
-    when ".txt" then
+    when '.tsv' then
+      Roo::CSV.new(file_path, csv_options: { col_sep: "\t" })
+    when '.txt' then
       # This assumption is based purely on biologist's habits
-      Roo::CSV.new(file_path, csv_options: {col_sep: "\t"})
-    when ".xls" then
-      Roo::Excel.new(file_path)
-    when ".xlsx" then
+      Roo::CSV.new(file_path, csv_options: { col_sep: "\t" })
+    when '.xlsx' then
       Roo::Excelx.new(file_path)
     else
       raise TypeError
