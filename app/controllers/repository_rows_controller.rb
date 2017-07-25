@@ -119,7 +119,7 @@ class RepositoryRowsController < ApplicationController
             column = @repository.repository_columns.detect do |c|
               c.id == key.to_i
             end
-            value = RepositoryTextValue.new(
+            cell_value = RepositoryTextValue.new(
               data: value,
               created_by: current_user,
               last_modified_by: current_user,
@@ -128,11 +128,15 @@ class RepositoryRowsController < ApplicationController
                 repository_column: column
               }
             )
-            if value.save
-              record_annotation_notification(@record, value.repository_cell)
+            cell = RepositoryCell.new(repository_row: @record,
+                                      repository_column: column,
+                                      value: cell_value)
+            cell_value.repository_cell = cell
+            if cell.save
+              record_annotation_notification(@record, cell)
             else
               errors[:repository_cells] << {
-                "#{column.id}": value.errors.messages
+                "#{column.id}": cell.errors.messages
               }
             end
           end
