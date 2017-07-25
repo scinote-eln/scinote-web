@@ -91,73 +91,63 @@ class Team < ActiveRecord::Base
         custom_fields << cf
       end
     end
-
     # Now we can iterate through sample data and save stuff into db
-    transaction do
-      (2..sheet.last_row).each do |i|
-        total_nr += 1
+    (2..sheet.last_row).each do |i|
+      total_nr += 1
+      sample = Sample.new(name: sheet.row(i)[sname_index],
+                          team: self,
+                          user: user)
 
-        sample = Sample.new(name: sheet.row(i)[sname_index],
-                            team: self,
-                            user: user)
-
-        sample.transaction(requires_new: true) do
-          unless sample.save
-            errors = true
-            raise ActiveRecord::Rollback
-          end
-
-          custom_field_values = []
-
-          sheet.row(i).each.with_index do |value, index|
-            # We need to have sample saved before messing with custom fields
-            # (they need sample id)
-            if index == stype_index
-              stype = SampleType.where(name: value, team: self).take
-
-              if stype
-                sample.sample_type = stype
-              else
-                sample.create_sample_type(name: value, team: self)
-              end
-              unless sample.save
-                errors = true
-                raise ActiveRecord::Rollback
-              end
-            elsif index == sgroup_index
-              sgroup = SampleGroup.where(name: value, team: self).take
-
-              if sgroup
-                sample.sample_group = sgroup
-              else
-                sample.create_sample_group(name: value, team: self)
-              end
-              unless sample.save
-                errors = true
-                raise ActiveRecord::Rollback
-              end
-            elsif value && custom_fields[index]
-              # we're working with CustomField
-              scf = SampleCustomField.new(
-                sample: sample,
-                custom_field: custom_fields[index],
-                value: value
-              )
-              unless scf.valid?
-                errors = true
-                raise ActiveRecord::Rollback
-              end
-              custom_field_values << scf
-            end
-          end
-          if SampleCustomField.import(custom_field_values,
-                                      recursive: true,
-                                      validate: false).failed_instances.any?
-            errors = true
-            raise ActiveRecord::Rollback
-          end
-          nr_of_added += 1
+      sample.transaction do
+        unless sample.valid?
+          errors = true
+          raise ActiveRecord::Rollback
         end
+
+        sheet.row(i).each.with_index do |value, index|
+          if index == stype_index
+            stype = SampleType.where(name: value, team: self).take
+
+            unless stype
+              stype = SampleType.new(name: value, team: self)
+              unless stype.save
+                errors = true
+                raise ActiveRecord::Rollback
+              end
+            end
+            sample.sample_type = stype
+          elsif index == sgroup_index
+            sgroup = SampleGroup.where(name: value, team: self).take
+
+            unless sgroup
+              sgroup = SampleGroup.new(name: value, team: self)
+              unless sgroup.save
+                errors = true
+                raise ActiveRecord::Rollback
+              end
+            end
+            sample.sample_group = sgroup
+          elsif value && custom_fields[index]
+            # we're working with CustomField
+            scf = SampleCustomField.new(
+              sample: sample,
+              custom_field: custom_fields[index],
+              value: value
+            )
+            unless scf.valid?
+              errors = true
+              raise ActiveRecord::Rollback
+            end
+            sample.sample_custom_fields << scf
+          end
+        end
+        if Sample.import([sample],
+                         recursive: true,
+                         validate: false).failed_instances.any?
+          errors = true
+          raise ActiveRecord::Rollback
+        end
+        nr_of_added += 1
       end
     end
 
