@@ -31,7 +31,6 @@
       disabledOptions = $("option[disabled='disabled']");
       disabledOptions.removeAttr('disabled');
       loadingRecords = true;
-      $('#parse-records-modal').modal('hide');
       animateSpinner();
     }).on('ajax:success', function(ev, data, status) {
       // Simply reload page to show flash and updated repository records list
