@@ -22,11 +22,23 @@ describe SampleType, type: :model do
   end
 
   describe 'Should be a valid object' do
+    let(:team) { create :team }
+    let!(:test_type) { create :sample_type, name: 'Sample one', team: team }
+
     it { should validate_presence_of :name }
     it { should validate_presence_of :team }
     it do
       should validate_length_of(:name).is_at_most(Constants::NAME_MAX_LENGTH)
     end
-    it { should validate_uniqueness_of(:name).scoped_to(:team).case_insensitive }
+
+    it 'should have uniq name scoped to team' do
+      new_type = build :sample_type, name: 'Sample one', team: team
+      expect(new_type).to_not be_valid
+    end
+
+    it 'should not be case sensitive' do
+      new_type = build :sample_type, name: 'SAMPLE ONE', team: team
+      expect(new_type).to be_valid
+    end
   end
 end
