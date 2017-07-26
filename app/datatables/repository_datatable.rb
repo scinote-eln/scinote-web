@@ -152,7 +152,7 @@ class RepositoryDatatable < AjaxDatatablesRails::Base
     # Make mappings of custom columns, so we have same id for every column
     i = 5
     @columns_mappings = {}
-    @repository.repository_columns.each do |column|
+    @repository.repository_columns.order(:id).each do |column|
       @columns_mappings[column.id] = i.to_s
       i += 1
     end
