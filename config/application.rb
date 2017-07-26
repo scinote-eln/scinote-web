@@ -19,9 +19,6 @@ module Scinote
 
     config.active_job.queue_adapter = :delayed_job
 
-    # Do not swallow errors in after_commit/after_rollback callbacks.
-    #  config.active_record.raise_in_transactional_callbacks = true
-
     # Logging
     config.log_formatter = proc do |severity, datetime, progname, msg|
       "[#{datetime}] #{severity}: #{msg}\n"

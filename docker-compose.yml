@@ -29,6 +29,23 @@ services:
       - scinote_development_bundler:/usr/local/bundle/
       - scinote_development_files:/usr/src/app/public/system
 
+  webpack:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: scinote_web_development
+    container_name: scinote_webpack_development
+    stdin_open: true
+    tty: true
+    ports:
+      - "8080:8080"
+    command: >
+      bash -c "./bin/webpack-dev-server"
+    environment:
+      - RAILS_ENV=development
+    volumes:
+      - .:/usr/src/app
+
 volumes:
   scinote_development_postgres:
   scinote_development_bundler:

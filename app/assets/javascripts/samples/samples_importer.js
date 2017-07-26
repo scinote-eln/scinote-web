@@ -46,5 +46,6 @@ $('form#form-import')
 
     // Populate the errors container
     $('#import-errors-container').html(data.responseJSON.html);
+    animateSpinner(null, false);
   }
 });
