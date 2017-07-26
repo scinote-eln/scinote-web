@@ -472,7 +472,7 @@ class Asset < ApplicationRecord
     if errors.size > 1
       temp_errors = errors[:file]
       errors.clear
-      errors.set(:file, temp_errors)
+      errors.add(:file, temp_errors)
     end
   end
 
