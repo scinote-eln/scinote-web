@@ -19,9 +19,7 @@ class RepositoryRowsController < ApplicationController
 
     record.transaction do
       record.name = record_params[:name] unless record_params[:name].blank?
-      unless record.save
-        errors[:default_fields] = record.errors.messages
-      end
+      errors[:default_fields] = record.errors.messages unless record.save
       if params[:repository_cells]
         params[:repository_cells].each do |key, value|
           column = @repository.repository_columns.detect do |c|
@@ -94,9 +92,7 @@ class RepositoryRowsController < ApplicationController
 
     @record.transaction do
       @record.name = record_params[:name].blank? ? nil : record_params[:name]
-      unless @record.save
-        errors[:default_fields] = @record.errors.messages
-      end
+      errors[:default_fields] = @record.errors.messages unless @record.save
       if params[:repository_cells]
         params[:repository_cells].each do |key, value|
           existing = @record.repository_cells.detect do |c|
@@ -128,15 +124,12 @@ class RepositoryRowsController < ApplicationController
                 repository_column: column
               }
             )
-            cell = RepositoryCell.new(repository_row: @record,
-                                      repository_column: column,
-                                      value: cell_value)
-            cell_value.repository_cell = cell
-            if cell.save
-              record_annotation_notification(@record, cell)
+            if cell_value.save
+              record_annotation_notification(@record,
+                                             cell_value.repository_cell)
             else
               errors[:repository_cells] << {
-                "#{column.id}": cell.errors.messages
+                "#{column.id}": cell_value.errors.messages
               }
             end
           end
