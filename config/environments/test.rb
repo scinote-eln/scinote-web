@@ -90,4 +90,7 @@ Rails.application.configure do
 
   # Enable user registrations
   config.x.enable_user_registration = true
+
+  # prevents compile assets
+  config.assets.compile = false
 end

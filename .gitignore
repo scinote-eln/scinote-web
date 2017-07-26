@@ -54,6 +54,9 @@ rubocop_cache
 # Ignore ESLint local instalation
 node_modules
 
+# Ignore Coverage output
+coverage
+
 # Added during webpacker install
 /public/packs
 /node_modules
