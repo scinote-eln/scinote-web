@@ -36,11 +36,15 @@ class RepositoryRowsController < ApplicationController
               repository_column: column
             }
           )
-          if cell_value.save
-            record_annotation_notification(record, cell_value.repository_cell)
+          cell = RepositoryCell.new(repository_row: record,
+                                    repository_column: column,
+                                    value: cell_value)
+          cell_value.repository_cell = cell
+          if cell.save
+            record_annotation_notification(record, cell)
           else
             errors[:repository_cells] << {
-              "#{column.id}": cell_value.errors.messages
+              "#{column.id}": cell.errors.messages
             }
           end
         end
