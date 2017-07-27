@@ -8,11 +8,11 @@
           "browsers": "> 1%",
           "uglify": true
         },
-        "useBuiltIns": true
+        "useBuiltIns": true,
+        "loose": true
       }
     ],
-    "react",
-    "es2015"
+    "react"
   ],
   "plugins": [
     "syntax-dynamic-import",
