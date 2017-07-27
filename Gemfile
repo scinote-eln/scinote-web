@@ -85,7 +85,6 @@ end
 group :production do
   gem 'puma'
   gem 'rails_12factor'
-  gem 'skylight'
 end
 
 group :test do

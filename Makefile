@@ -19,7 +19,7 @@ all: docker database
 heroku:
 	@heroku buildpacks:remove https://github.com/ddollar/heroku-buildpack-multi.git
 	@heroku buildpacks:set https://github.com/ddollar/heroku-buildpack-multi.git
-	@echo "Set environment variables, DATABASE_URL, RAILS_SERVE_STATIC_FILES, RAKE_ENV, RAILS_ENV, SECRET_KEY_BASE, SKYLIGHT_AUTHENTICATION"
+	@echo "Set environment variables, DATABASE_URL, RAILS_SERVE_STATIC_FILES, RAKE_ENV, RAILS_ENV, SECRET_KEY_BASE"
 
 docker:
 	@docker-compose build
