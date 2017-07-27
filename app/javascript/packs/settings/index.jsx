@@ -4,19 +4,10 @@
 
 import React from 'react'
 import ReactDOM from 'react-dom'
-// import PropTypes from 'prop-types'
 
 const Settings = () => (
   <div>Settings page</div>
 )
-
-// Settings.defaultProps = {
-//   name: 'David'
-// }
-
-// Settings.propTypes = {
-//   name: PropTypes.string
-// }
 
 document.addEventListener('DOMContentLoaded', () => {
   ReactDOM.render(
