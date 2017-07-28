@@ -44,15 +44,13 @@ describe Experiment, type: :model do
     it { should validate_presence_of :last_modified_by }
     it do
       should validate_length_of(:name)
-              .is_at_least(Constants::NAME_MIN_LENGTH)
-              .is_at_most(Constants::NAME_MAX_LENGTH)
+        .is_at_least(Constants::NAME_MIN_LENGTH)
+        .is_at_most(Constants::NAME_MAX_LENGTH)
     end
-    # it do
-    #   should validate_uniqueness_of(:name).scoped_to(:project).case_insensitive
-    # end
+
     it do
       should validate_length_of(:description)
-              .is_at_most(Constants::TEXT_MAX_LENGTH)
+        .is_at_most(Constants::TEXT_MAX_LENGTH)
     end
 
     it 'should have uniq name scoped on project' do
@@ -66,6 +64,5 @@ describe Experiment, type: :model do
                                            last_modified_by: project.created_by
       expect(new_exp).to_not be_valid
     end
-
   end
 end

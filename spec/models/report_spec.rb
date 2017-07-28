@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 describe Report, type: :model do
-
   it 'should be of class Report' do
     expect(subject.class).to eq Report
   end
@@ -28,12 +27,12 @@ describe Report, type: :model do
     it { should validate_presence_of :user }
     it do
       should validate_length_of(:description)
-              .is_at_most(Constants::TEXT_MAX_LENGTH)
+        .is_at_most(Constants::TEXT_MAX_LENGTH)
     end
     it do
       should validate_length_of(:name)
-              .is_at_least(Constants::NAME_MIN_LENGTH)
-              .is_at_most(Constants::NAME_MAX_LENGTH)
+        .is_at_least(Constants::NAME_MIN_LENGTH)
+        .is_at_most(Constants::NAME_MAX_LENGTH)
     end
 
     it 'should have uniq name scoped to user, project' do

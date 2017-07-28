@@ -24,7 +24,6 @@ describe CustomField, type: :model do
   end
 
   describe 'Should be a valid object' do
-
     before do
       @user = create :user, email: 'example_one@adsf.com'
       @team = create :team

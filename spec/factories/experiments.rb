@@ -14,7 +14,6 @@ FactoryGirl.define do
                 email: Faker::Internet.email
   end
 
-
   factory :experiment_two, class: Experiment do
     name Faker::Name.name
     description 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit.'

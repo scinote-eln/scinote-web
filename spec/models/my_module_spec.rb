@@ -62,12 +62,12 @@ describe MyModule, type: :model do
     it { should validate_presence_of :experiment }
     it do
       should validate_length_of(:name)
-               .is_at_least(Constants::NAME_MIN_LENGTH)
-               .is_at_most(Constants::NAME_MAX_LENGTH)
+        .is_at_least(Constants::NAME_MIN_LENGTH)
+        .is_at_most(Constants::NAME_MAX_LENGTH)
     end
     it do
       should validate_length_of(:description)
-              .is_at_most(Constants::TEXT_MAX_LENGTH)
+        .is_at_most(Constants::TEXT_MAX_LENGTH)
     end
   end
 end
