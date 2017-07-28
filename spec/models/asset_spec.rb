@@ -38,7 +38,11 @@ describe Asset, type: :model do
 
   describe 'Should be a valid object' do
     it { should validate_presence_of :file }
-    it { should validate_presence_of :estimated_size }
+    it 'should validate the presence of estimated size' do
+      asset = build :asset, estimated_size: nil
+      expect(asset).to_not be_valid
+    end
+    #  should validate_presence_of :estimated_size }
     it { should validate_inclusion_of(:file_present).in_array([true, false]) }
   end
 end

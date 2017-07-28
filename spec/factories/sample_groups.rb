@@ -1,7 +1,7 @@
 FactoryGirl.define do
-  factory :sample do
+  factory :sample_group do
     name 'Sample'
-    user { User.first || create(:user) }
+    color '#ff00ff'
     team { Team.first || create(:team) }
   end
 end

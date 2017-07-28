@@ -18,8 +18,16 @@ describe AssetTextDatum, type: :model do
   end
 
   describe 'Should be a valid object' do
+    let(:asset) { create :asset }
+
     it { should validate_presence_of :data }
     it { should validate_presence_of :asset }
-    it { should validate_uniqueness_of :asset }
+
+    it 'should have uniq asset' do
+      create :asset_text_datum, asset: asset
+      new_atd = build :asset_text_datum, asset: asset
+      # binding.pry
+      expect(new_atd).to_not be_valid
+    end
   end
 end

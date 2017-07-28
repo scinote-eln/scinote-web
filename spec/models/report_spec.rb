@@ -27,17 +27,18 @@ describe Report, type: :model do
     it { should validate_presence_of :user }
     it do
       should validate_length_of(:description)
-              .is_at_most(Constants::TEXT_MAX_LENGTH)
+        .is_at_most(Constants::TEXT_MAX_LENGTH)
     end
     it do
       should validate_length_of(:name)
-              .is_at_least(Constants::NAME_MIN_LENGTH)
-              .is_at_most(Constants::NAME_MAX_LENGTH)
+        .is_at_least(Constants::NAME_MIN_LENGTH)
+        .is_at_most(Constants::NAME_MAX_LENGTH)
     end
-    it do
-      should validate_uniqueness_of(:name)
-               .scoped_to([:user, :project])
-               .case_insensitive
+
+    it 'should have uniq name scoped to user, project' do
+      create :report, name: 'Same Name'
+      new_rep = build :report, name: 'Same Name'
+      expect(new_rep).to_not be_valid
     end
   end
 end

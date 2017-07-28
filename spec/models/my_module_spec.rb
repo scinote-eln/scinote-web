@@ -56,21 +56,18 @@ describe MyModule, type: :model do
   end
 
   describe 'Should be a valid object' do
-    it { should validate_presence_of :name }
     it { should validate_presence_of :x }
     it { should validate_presence_of :y }
     it { should validate_presence_of :workflow_order }
     it { should validate_presence_of :experiment }
-    it { should validate_presence_of :my_module_group }
     it do
       should validate_length_of(:name)
-              .is_at_least(Constants::NAME_MIN_LENGTH)
-              .is_at_most(Constants::NAME_MAX_LENGTH)
+        .is_at_least(Constants::NAME_MIN_LENGTH)
+        .is_at_most(Constants::NAME_MAX_LENGTH)
     end
     it do
       should validate_length_of(:description)
-              .is_at_most(Constants::TEXT_MAX_LENGTH)
+        .is_at_most(Constants::TEXT_MAX_LENGTH)
     end
-
   end
 end

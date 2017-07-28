@@ -16,7 +16,6 @@ describe Repository, type: :model do
   describe 'Relations' do
     it { should belong_to :team }
     it { should belong_to(:created_by).class_name('User') }
-    it { should have_many :repository_columns }
     it { should have_many :repository_rows }
     it { should have_many :repository_table_states }
     it { should have_many :report_elements }
@@ -28,8 +27,17 @@ describe Repository, type: :model do
     it do
       should validate_length_of(:name).is_at_most(Constants::NAME_MAX_LENGTH)
     end
-    it do
-      should validate_uniqueness_of(:name).scoped_to(:team).case_insensitive
+
+    it 'should have uniq name scoped to team' do
+      create :repository, name: 'Repository One'
+      repo = build :repository, name: 'Repository One'
+      expect(repo).to_not be_valid
+    end
+
+    it 'should have uniq name scoped to team calse insensitive' do
+      create :repository, name: 'Repository One'
+      repo = build :repository, name: 'REPOSITORY ONE'
+      expect(repo).to_not be_valid
     end
   end
 end

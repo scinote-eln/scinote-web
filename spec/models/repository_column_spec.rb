@@ -29,9 +29,11 @@ describe RepositoryColumn, type: :model do
     it do
       should validate_length_of(:name).is_at_most(Constants::NAME_MAX_LENGTH)
     end
-    it do
-      should validate_uniqueness_of(:name)
-               .scoped_to(:repository)
+    it 'have uniq name scoped to repository' do
+      create :repository_column, name: 'Repo One'
+      column_two = build :repository_column, name: 'Repo One'
+
+      expect(column_two).to_not be_valid
     end
   end
 end
