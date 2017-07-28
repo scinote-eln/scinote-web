@@ -23,6 +23,5 @@ describe MyModuleRepositoryRow, type: :model do
   describe 'Should be a valid object' do
     it { should validate_presence_of :repository_row }
     it { should validate_presence_of :my_module }
-    it { should validate_uniqueness_of(:repository_row).scoped_to(:my_module) }
   end
 end

@@ -38,6 +38,7 @@ describe Experiment, type: :model do
   end
 
   describe 'Should be a valid object' do
+    let(:project) { create :project }
     it { should validate_presence_of :project }
     it { should validate_presence_of :created_by }
     it { should validate_presence_of :last_modified_by }
@@ -46,12 +47,24 @@ describe Experiment, type: :model do
               .is_at_least(Constants::NAME_MIN_LENGTH)
               .is_at_most(Constants::NAME_MAX_LENGTH)
     end
-    it do
-      should validate_uniqueness_of(:name).scoped_to(:project).case_insensitive
-    end
+    # it do
+    #   should validate_uniqueness_of(:name).scoped_to(:project).case_insensitive
+    # end
     it do
       should validate_length_of(:description)
               .is_at_most(Constants::TEXT_MAX_LENGTH)
+    end
+
+    it 'should have uniq name scoped on project' do
+      create :experiment, name: 'experiment',
+                          project: project,
+                          created_by: project.created_by,
+                          last_modified_by: project.created_by
+      new_exp = build_stubbed :experiment, name: 'experiment',
+                                           project: project,
+                                           created_by: project.created_by,
+                                           last_modified_by: project.created_by
+      expect(new_exp).to_not be_valid
     end
 
   end

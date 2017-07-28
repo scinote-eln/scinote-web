@@ -23,7 +23,6 @@ describe SampleType, type: :model do
 
   describe 'Should be a valid object' do
     let(:team) { create :team }
-    let!(:test_type) { create :sample_type, name: 'Sample one', team: team }
 
     it { should validate_presence_of :name }
     it { should validate_presence_of :team }
@@ -32,13 +31,15 @@ describe SampleType, type: :model do
     end
 
     it 'should have uniq name scoped to team' do
+      create :sample_type, name: 'Sample one', team: team
       new_type = build :sample_type, name: 'Sample one', team: team
       expect(new_type).to_not be_valid
     end
 
     it 'should not be case sensitive' do
-      new_type = build :sample_type, name: 'SAMPLE ONE', team: team
-      expect(new_type).to be_valid
+      create :sample_type, name: 'Sample T', team: team
+      new_type = build :sample_type, name: 'SAMPLE T', team: team
+      expect(new_type).to_not be_valid
     end
   end
 end

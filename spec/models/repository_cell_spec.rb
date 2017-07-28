@@ -18,12 +18,4 @@ describe RepositoryCell, type: :model do
     it { should belong_to :repository_row }
     it { should belong_to :repository_column }
   end
-
-  describe 'Should be a valid object' do
-    it { should validate_presence_of :repository_column }
-    it do
-      should validate_uniqueness_of(:repository_row)
-              .scoped_to(:repository_column)
-    end
-  end
 end

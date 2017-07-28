@@ -21,6 +21,13 @@ describe SampleMyModule, type: :model do
   describe 'Should be a valid object' do
     it { should validate_presence_of :sample }
     it { should validate_presence_of :my_module }
-    it { should validate_uniqueness_of(:sample_id).scoped_to(:my_module_id) }
+
+    it 'should have one sample assigned per model' do
+      sample = create :sample
+      my_module = create :my_module, name: 'Module one'
+      create :sample_my_module, sample: sample, my_module: my_module
+      new_smm = build :sample_my_module, sample: sample, my_module: my_module
+      expect(new_smm).to_not be_valid
+    end
   end
 end

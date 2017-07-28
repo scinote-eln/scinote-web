@@ -1,6 +1,7 @@
 require 'rails_helper'
 
 describe Report, type: :model do
+
   it 'should be of class Report' do
     expect(subject.class).to eq Report
   end
@@ -34,10 +35,11 @@ describe Report, type: :model do
               .is_at_least(Constants::NAME_MIN_LENGTH)
               .is_at_most(Constants::NAME_MAX_LENGTH)
     end
-    it do
-      should validate_uniqueness_of(:name)
-               .scoped_to([:user, :project])
-               .case_insensitive
+
+    it 'should have uniq name scoped to user, project' do
+      create :report, name: 'Same Name'
+      new_rep = build :report, name: 'Same Name'
+      expect(new_rep).to_not be_valid
     end
   end
 end

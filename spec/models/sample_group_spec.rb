@@ -32,8 +32,11 @@ describe SampleGroup, type: :model do
     it do
       should validate_length_of(:color).is_at_most(Constants::COLOR_MAX_LENGTH)
     end
-    it do
-      should validate_uniqueness_of(:name).scoped_to(:team)
+    it 'should have uniq name scoped to team' do
+      create :sample_group, name: 'My Group'
+      new_group = build :sample_group, name: 'My Group'
+
+      expect(new_group).to_not be_valid
     end
   end
 end
