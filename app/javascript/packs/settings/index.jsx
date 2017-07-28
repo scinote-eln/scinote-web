@@ -12,6 +12,6 @@ const Settings = () => (
 document.addEventListener('DOMContentLoaded', () => {
   ReactDOM.render(
     <Settings />,
-    document.body.appendChild(document.createElement('div'))
+    document.getElementById('root')
   )
 })
