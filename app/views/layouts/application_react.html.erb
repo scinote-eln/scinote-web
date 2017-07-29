@@ -1,0 +1,21 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta data-hook="head-js">
+    <title>React App</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track' => true %>
+    <%= favicon_link_tag "favicon.ico" %>
+    <%= favicon_link_tag "favicon-16.png", type: "image/png", size: "16x16" %>
+    <%= favicon_link_tag "favicon-32.png", type: "image/png", size: "32x32" %>
+    <%= favicon_link_tag "favicon-48.png", type: "image/png", size: "48x48" %>
+  </head>
+  <body>
+    <noscript>
+      You need to enable JavaScript to run this app.
+    </noscript>
+    <div id="root"></div>
+    <%= javascript_pack_tag 'settings/index' %>
+  </body>
+</html>
