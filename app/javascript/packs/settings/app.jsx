@@ -2,16 +2,21 @@
 // like app/views/layouts/application.html.erb. All it does is render <div>Hello React</div> at the bottom
 // of the page.
 
-import React from 'react'
-import ReactDOM from 'react-dom'
+import React from 'react';
+import ReactDOM from 'react-dom';
+import Navigation from '../shared/navigation';
+import messages from '../locales/messages';
 
-const Settings = () => (
-  <div>Settings page</div>
+const App = () => (
+  <div>
+    <Navigation page='Settings'/>
+    ....
+  </div>
 )
 
 document.addEventListener('DOMContentLoaded', () => {
   ReactDOM.render(
-    <Settings />,
+    <App />,
     document.getElementById('root')
   )
 })

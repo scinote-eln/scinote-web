@@ -8,8 +8,10 @@ Rails.application.routes.draw do
 
     root 'projects#index'
 
-    # React Frontend-Framework
-    get '/react/settings', to: 'react/settings#index'
+    # Client APP endpoints
+    namespace :client_api do
+      get '/settings', to: 'settings#index'
+    end
 
     # Save sample table state
     post '/state_save/:team_id/:user_id',

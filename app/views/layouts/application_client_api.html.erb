@@ -1,11 +1,10 @@
-
 <!DOCTYPE html>
 <html>
   <head>
     <meta data-hook="head-js">
-    <title>React App</title>
+    <title><%= t('nav.title') %></title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track' => true %>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/latest/css/bootstrap.min.css">
     <%= favicon_link_tag "favicon.ico" %>
     <%= favicon_link_tag "favicon-16.png", type: "image/png", size: "16x16" %>
     <%= favicon_link_tag "favicon-32.png", type: "image/png", size: "32x32" %>
@@ -13,9 +12,9 @@
   </head>
   <body>
     <noscript>
-      You need to enable JavaScript to run this app.
+      <%= t('body.notice') %>
     </noscript>
     <div id="root"></div>
-    <%= javascript_pack_tag 'settings/index' %>
+    <%= yield %>
   </body>
 </html>

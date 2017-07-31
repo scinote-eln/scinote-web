@@ -1,6 +1,6 @@
-module React
+module ClientApi
   class SettingsController < ApplicationController
-    layout 'application_react'
+    layout 'application_client_api'
 
     def index; end
   end
