@@ -1,22 +1,33 @@
-// Run this example by adding <%= javascript_pack_tag 'hello_react' %> to the head of your layout file,
-// like app/views/layouts/application.html.erb. All it does is render <div>Hello React</div> at the bottom
-// of the page.
+import React from "react";
+import ReactDOM from "react-dom";
+import Navigation from "../shared/navigation";
+import { Provider } from "react-redux";
+import { IntlProvider } from "react-intl";
+import { addLocaleData } from "react-intl";
+import enLocaleData from "react-intl/locale-data/en";
+import { flattenMessages } from "../locales/utils";
+import store from "../app/store";
+import messages from "../locales/messages";
 
-import React from 'react';
-import ReactDOM from 'react-dom';
-import Navigation from '../shared/navigation';
-import messages from '../locales/messages';
+addLocaleData([...enLocaleData]);
+let locale = "en-US";
 
-const App = () => (
+const SettingsPage = () =>
   <div>
-    <Navigation page='Settings'/>
+    <Navigation page="Settings" />
     ....
-  </div>
-)
+  </div>;
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener("DOMContentLoaded", () => {
   ReactDOM.render(
-    <App />,
-    document.getElementById('root')
-  )
-})
+    <Provider store={store}>
+      <IntlProvider
+        locale={locale}
+        messages={flattenMessages(messages[locale])}
+      >
+        <SettingsPage />
+      </IntlProvider>
+    </Provider>,
+    document.getElementById("root")
+  );
+});

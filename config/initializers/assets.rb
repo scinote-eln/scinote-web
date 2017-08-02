@@ -81,6 +81,10 @@ Rails.application.config.assets.precompile += %w(repositories/edit.js)
 Rails.application.config.assets.precompile +=
   %w(repositories/repository_datatable.js)
 
+# Libraries needed for SPA
+Rails.application.config.assets.precompile += %w(bootstrap/css/bootstrap.min.css)
+Rails.application.config.assets.precompile += %w(font-awesome/css/font-awesome.min.css)
+
 # Libraries needed for Handsontable formulas
 Rails.application.config.assets.precompile += %w(lodash.js)
 Rails.application.config.assets.precompile += %w(numeral.js)

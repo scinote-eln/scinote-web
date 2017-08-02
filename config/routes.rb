@@ -11,6 +11,7 @@ Rails.application.routes.draw do
     # Client APP endpoints
     namespace :client_api do
       get '/settings', to: 'settings#index'
+      get '/activities', to: 'activities#index', defaults: { format: 'json' }
     end
 
     # Save sample table state
