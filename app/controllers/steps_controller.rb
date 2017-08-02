@@ -290,7 +290,8 @@ class StepsController < ApplicationController
                 "activities.uncheck_step_checklist_item"
               completed_items = chkItem.checklist.checklist_items.where(checked: true).count
               all_items = chkItem.checklist.checklist_items.count
-              text_activity = chkItem.text.gsub(/\s+/, ' ')
+              text_activity = smart_annotation_parser(chkItem.text)
+                              .gsub(/\s+/, ' ')
               message = t(
                 str,
                 user: current_user.full_name,

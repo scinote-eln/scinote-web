@@ -1,31 +1,42 @@
 module ActivityHelper
+  TAGS_LENGTH = 4
+  TRUNCATE_OFFSET = 3
   def activity_truncate(message, len = Constants::NAME_TRUNCATION_LENGTH)
     activity_titles = message.scan(/<strong>(.*?)<\/strong>/)
     activity_titles.each do |activity_title|
       activity_title = activity_title[0]
-      unless activity_title.length == smart_annotation_parser(activity_title)
-             .length
-        temp = activity_title.index('[')
-        while  !temp.nil? && temp < len
-          if activity_title[temp + 1] == '#' || activity_title[temp + 1] == '@'
-            last_sa = activity_title.index(']', temp)
-          end
-          temp = activity_title.index('[', last_sa)
-          len = last_sa if last_sa > len
-        end
-        len += 4
+      closing = activity_title.index('</a>')
+      unless closing.nil?
+        ind = activity_title.index('<img')
+        ind_temp = activity_title.index('<span')
+        ind = ind_temp if ind.nil? || ind > ind_temp
       end
+      temp = len
+      while !ind.nil? && !closing.nil? && ind < temp
+        stripped = strip_tags(activity_title[ind...closing]).length
+        temp += (activity_title[ind...closing + TAGS_LENGTH]).length - stripped
+        len = temp + TRUNCATE_OFFSET + TAGS_LENGTH if len <= closing
+        closing_temp = closing + 1
+        closing = activity_title.index('</a>', closing_temp)
+        unless closing.nil?
+          ind = activity_title.index('<img', closing_temp)
+          ind_temp = activity_title.index('<span', closing_temp)
+          ind = ind_temp if ind.nil? || ind > ind_temp
+        end
+      end
+      len = activity_title.length if len > activity_title.length &&
+                                     len != Constants::NAME_TRUNCATION_LENGTH
       if activity_title.length > len
         title = "<div class='modal-tooltip'>
-                   #{truncate(activity_title, length: len)}
+                   #{truncate(activity_title, length: len, escape: false)}
                    <span class='modal-tooltiptext'>
                      #{activity_title}
                    </span>
                  </div>"
       else
-        title = truncate(activity_title, length: len)
+        title = truncate(activity_title, length: len, escape: false)
       end
-      message = smart_annotation_parser(message.gsub(/#{Regexp.escape(activity_title)}/, title))
+      message = message.gsub(/#{Regexp.escape(activity_title)}/, title)
     end
     sanitize_input(message) if message
   end
