@@ -17,6 +17,9 @@ gem 'font-awesome-rails', '~> 4.7.0.2'
 gem 'recaptcha', require: 'recaptcha/rails'
 gem 'sanitize', '~> 4.4'
 
+# Gems for API implementation
+gem 'jwt'
+
 # JS datetime library, requirement of datetime picker
 gem 'momentjs-rails', '~> 2.17.1'
 # JS datetime picker
