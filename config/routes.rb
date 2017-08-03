@@ -8,10 +8,14 @@ Rails.application.routes.draw do
 
     root 'projects#index'
 
+    # Settings root
+    get '/settings', to: 'client_api/settings#index'
+
     # Client APP endpoints
-    namespace :client_api do
-      get '/settings', to: 'settings#index'
-      get '/activities', to: 'activities#index', defaults: { format: 'json' }
+    namespace :client_api, defaults: { format: 'json' } do
+      get '/activities', to: 'activities#index'
+      get '/teams', to: 'teams#index'
+      post '/change_team', to: 'teams#change_team'
     end
 
     # Save sample table state

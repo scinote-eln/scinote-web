@@ -2,7 +2,7 @@ import axios from "axios";
 import { ACTIVITIES_PATH } from "../../app/routes";
 import { GLOBAL_ACTIVITIES_DATA } from "./types";
 
-export function addActivitiesData(data) {
+function addActivitiesData(data) {
   return {
     type: GLOBAL_ACTIVITIES_DATA,
     payload: data
