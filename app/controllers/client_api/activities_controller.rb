@@ -1,27 +1,24 @@
 module ClientApi
   class ActivitiesController < ApplicationController
-    include ActivityHelper
-    before_action :load_vars
 
     def index
-      @per_page =
-      @activities = current_user.last_activities(@last_activity_id,
-        Constants::ACTIVITY_AND_NOTIF_SEARCH_LIMIT)
-
       respond_to do |format|
         format.json do
           render template: '/client_api/activities/index',
                  status: :ok,
-                 locals: { activities: @activities }
+                 locals: activities_vars
         end
       end
     end
 
     private
 
-    def load_vars
-      @last_activity_id = params[:from].to_i || 0
-      @last_activity = Activity.find_by_id(@last_activity_id)
+    def activities_vars
+      last_activity_id = params[:from].to_i || 0
+      per_page = Constants::ACTIVITY_AND_NOTIF_SEARCH_LIMIT
+      activities = current_user.last_activities(last_activity_id, per_page + 1)
+      more = activities.length > per_page
+      { activities: activities, more: more }
     end
   end
 end

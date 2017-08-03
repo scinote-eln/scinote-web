@@ -3,11 +3,19 @@ import {
   MORE_GLOBAL_ACTIVITIES
 } from "../actions/types";
 
-export function globalActivities(state = [], action) {
+export function globalActivities(
+  state = { more: true, activities: [] },
+  action
+) {
   if (action.type === GLOBAL_ACTIVITIES_DATA) {
-    return Object.assign([], state, action.payload, {
-      last_payload: () => action.payload.lenght < 10
-    });
+    return {
+      ...state,
+      activities: [
+        ...state.activities,
+        ...action.payload.global_activities.activities
+      ],
+      more: action.payload.global_activities.more
+    };
   }
   return state;
 }

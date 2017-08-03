@@ -17,15 +17,14 @@ class GlobalActivitiesModal extends Component {
   }
 
   displayActivities() {
-    console.log(this.props.global_activities);
-    if (this.props.global_activities.length === 0) {
+    if (this.props.activities.length === 0) {
       return (
         <li>
           <FormattedMessage id="activities.no_data" />
         </li>
       );
     }
-    return this.props.global_activities.map((activity, i, arr) => {
+    return this.props.activities.map((activity, i, arr) => {
       let newDate = new Date(activity.created_at);
       if (i > 0) {
         let prevDate = new Date(arr[i - 1].created_at);
@@ -46,13 +45,12 @@ class GlobalActivitiesModal extends Component {
   }
 
   addMoreActivities() {
-    let last_id = _.last(this.props.global_activities).id;
+    let last_id = _.last(this.props.activities).id;
     this.props.fetchActivities(last_id);
   }
 
   addMoreButton() {
-    console.log(this.props.more_global_activities);
-    if(this.props.more_global_activities) {
+    if (this.props.more) {
       return (
         <li>
           <Button onClick={this.addMoreActivities}>
@@ -91,8 +89,8 @@ GlobalActivitiesModal.propTypes = {
   showModal: PropTypes.bool.isRequired,
   onCloseModal: PropTypes.func.isRequired,
   fetchActivities: PropTypes.func.isRequired,
-  more_global_activities: PropTypes.bool.isRequired,
-  global_activities: PropTypes.arrayOf(
+  more: PropTypes.bool.isRequired,
+  activities: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.number.isRequired,
       message: PropTypes.string.isRequired,
@@ -101,8 +99,9 @@ GlobalActivitiesModal.propTypes = {
   ).isRequired
 };
 
-const mapStateToProps = ({ global_activities, more_global_activities }) => {
-  return { global_activities, more_global_activities };
+const mapStateToProps = ({ global_activities }) => {
+  let { activities, more } = global_activities;
+  return { activities, more };
 };
 
 const mapDispatchToProps = dispatch => ({
