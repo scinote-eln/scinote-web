@@ -1,19 +1,23 @@
 import React, { Component } from "react";
-import { NavDropdown, MenuItem } from "react-bootstrap";
+import { NavDropdown, FormControl } from "react-bootstrap";
 
 class SearchDropdown extends Component {
   constructor(props) {
     super(props);
     this.state = { searchTerm: "" };
     this.handleSearchTermChange = this.handleSearchTermChange.bind(this);
+    this.handleSelect = this.handleSelect.bind(this);
   }
 
   handleSearchTermChange(ev) {
     ev.preventDefault();
+    console.log("change");
     this.setState({ searchTerm: ev.target.value });
   }
 
-  handleRootClose(ev) {
+  handleSelect(ev) {
+    console.log(ev);
+    ev.preventDefault();
   }
 
   render() {
@@ -21,14 +25,16 @@ class SearchDropdown extends Component {
       <NavDropdown
         noCaret
         title={<span className="glyphicon glyphicon-search" />}
-        id="team-switch"
+        id="search-dropdown"
       >
-        <MenuItem
-          onSelect={this.triggerSearch}
-          eventKey="search"
-          key="navSearchInput"
-        >
-        </MenuItem>
+        <li role="presentation" onClick={ev => ev.preventDefault()}>
+          <FormControl
+              ref={c => { this.input = c; }}
+              type="text"
+              placeholder="Search"
+              onChange={this.handleSearchTermChange}
+              value={this.state.searchTerm} />
+        </li>
       </NavDropdown>
     );
   }

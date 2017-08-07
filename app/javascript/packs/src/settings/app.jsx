@@ -11,7 +11,7 @@ import messages from "../../locales/messages";
 import Navigation from "../../shared/navigation";
 
 addLocaleData([...enLocaleData]);
-let locale = "en-US";
+const locale = "en-US";
 
 const SettingsPage = () =>
   <div>

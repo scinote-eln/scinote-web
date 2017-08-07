@@ -10,7 +10,7 @@ export const setCurrentTeam = (state = initial_state, action) => {
 
 export const getListOfTeams = (state = [initial_state], action) => {
   if (action.type === GET_LIST_OF_TEAMS) {
-    return  Object.assign([], state, action.payload);
+    return [...state, ...action.payload]
   }
   return state;
 };

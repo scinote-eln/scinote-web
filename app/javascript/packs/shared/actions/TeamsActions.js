@@ -12,8 +12,8 @@ function addTeamsData(data) {
 
 export function setCurrentUser(user) {
   return {
-    type: SET_CURRENT_TEAM,
-    user: user
+    user,
+    type: SET_CURRENT_TEAM
   };
 }
 
@@ -34,7 +34,6 @@ export function getTeamsList() {
 }
 
 export function changeTeam(team_id) {
-  console.log("in banana");
   return dispatch => {
     axios
       .post(CHANGE_TEAM_PATH, { team_id }, { withCredentials: true })
