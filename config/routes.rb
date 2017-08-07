@@ -8,9 +8,6 @@ Rails.application.routes.draw do
 
     root 'projects#index'
 
-    # React Frontend-Framework
-    get '/react/settings', to: 'react/settings#index'
-
     # Save sample table state
     post '/state_save/:team_id/:user_id',
          to: 'user_samples#save_samples_table_status',
