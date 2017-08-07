@@ -8,6 +8,16 @@ Rails.application.routes.draw do
 
     root 'projects#index'
 
+    # Settings root
+    get '/settings', to: 'client_api/settings#index'
+
+    # Client APP endpoints
+    namespace :client_api, defaults: { format: 'json' } do
+      get '/activities', to: 'activities#index'
+      get '/teams', to: 'teams#index'
+      post '/change_team', to: 'teams#change_team'
+    end
+
     # Save sample table state
     post '/state_save/:team_id/:user_id',
          to: 'user_samples#save_samples_table_status',

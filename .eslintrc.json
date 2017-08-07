@@ -5,13 +5,16 @@
     "es6": true,
     "node": true
   },
-  "plugins": [
-    "react"
+  "plugins": ["react", "prettier"],
+  "extends": [
+    "airbnb",
+    "prettier",
+    "prettier/react"
   ],
-  "extends": ["eslint:recommended", "plugin:react/recommended"],
+  "parser": "babel-eslint",
   "parserOptions": {
     "sourceType": "module",
-    "ecmaVersion": 6,
+    "ecmaVersion": 2016,
     "ecmaFeatures": {
       "impliedStrict": true,
       "jsx": true
@@ -22,22 +25,13 @@
       "error",
       "always",
       {
-        "markers": [
-          "="
-        ]
+        "markers": ["="]
       }
     ],
     "lines-around-comment": [
       "warn",
       {
         "beforeLineComment": false
-      }
-    ],
-    "quotes": [
-      "error",
-      "single",
-      {
-        "avoidEscape": true
       }
     ]
   },

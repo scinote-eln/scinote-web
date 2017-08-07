@@ -58,6 +58,8 @@ en:
   head:
     title: "sciNote | %{title}"
 
+  body:
+    notice: "You need to enable JavaScript to run this app."
   nav:
     search: "Search"
     user_greeting: "Hi, %{full_name}"

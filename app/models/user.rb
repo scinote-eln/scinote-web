@@ -200,6 +200,10 @@ class User < ApplicationRecord
     self.full_name = name
   end
 
+  def current_team
+    Team.find_by_id(self.current_team_id)
+  end
+
   # Search all active users for username & email. Can
   # also specify which team to ignore.
   def self.search(

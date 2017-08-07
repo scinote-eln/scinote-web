@@ -8,13 +8,14 @@
           "browsers": "> 1%",
           "uglify": true
         },
-        "useBuiltIns": true
+        "useBuiltIns": true,
+        "loose": true
       }
     ],
-    "react",
-    "es2015"
+    "react"
   ],
   "plugins": [
+    "transform-object-rest-spread",
     "syntax-dynamic-import",
     [
       "transform-class-properties",

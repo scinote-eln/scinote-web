@@ -61,6 +61,7 @@ gem 'sneaky-save', git: 'https://github.com/einzige/sneaky-save'
 gem 'rails_autolink', '~> 1.1', '>= 1.1.6'
 gem 'delayed_paperclip'
 gem 'rubyzip'
+gem 'jbuilder' # JSON structures via a Builder-style DSL
 
 gem 'paperclip', '~> 5.1' # File attachment, image attachment library
 gem 'aws-sdk', '~> 2'
