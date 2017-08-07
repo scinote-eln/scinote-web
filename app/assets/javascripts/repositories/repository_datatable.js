@@ -734,10 +734,10 @@ var RepositoryDatatable = (function(global) {
           if (!events || !events.click) {
             $('#exportRepositoriesButton').removeClass('disabled');
             $('#exportRepositoriesButton').prop('disabled', false);
-            $('#exportRepositoriesButton').on('click', function() {
+            $('#exportRepositoriesButton').off('click').on('click', function() {
               $('#exportRepositoryModal').modal('show');
             });
-            $('#export-repositories').on('click', function() {
+            $('#export-repositories').off('click').on('click', function() {
               animateSpinner(null, true);
               $('#form-export').submit();
             });
