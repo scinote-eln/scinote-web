@@ -42,7 +42,4 @@ class Extends
   # Data type name should match corresponding model's name
   REPOSITORY_DATA_TYPES = { RepositoryTextValue: 0,
                             RepositoryDateValue: 1 }
-
-  # List of implemented core API versions
-  API_VERSIONS = ['20170715']
 end
