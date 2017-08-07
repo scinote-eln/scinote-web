@@ -20,6 +20,7 @@
     "lint": "eslint ."
   },
   "devDependencies": {
+    "babel-eslint": "^7.2.3",
     "eslint": "^3.7.1",
     "eslint-config-airbnb": "^15.1.0",
     "eslint-config-google": "^0.5.0",
@@ -62,6 +63,7 @@
     "react": "^15.6.1",
     "react-bootstrap": "^0.31.1",
     "react-dom": "^15.6.1",
+    "react-dropdown-input": "^0.1.11",
     "react-intl": "^2.3.0",
     "react-intl-redux": "^0.6.0",
     "react-redux": "^5.0.5",

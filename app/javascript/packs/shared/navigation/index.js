@@ -8,6 +8,7 @@ import { getActivities } from "../actions/ActivitiesActions";
 import { getTeamsList } from "../actions/TeamsActions";
 import TeamSwitch from "./components/TeamSwitch";
 import GlobalActivitiesModal from "./components/GlobalActivitiesModal";
+import SearchDropdown from "./components/SearchDropdown";
 
 const StyledBrand = styled.a`
   background-color: ${MAIN_COLOR_BLUE};
@@ -93,9 +94,7 @@ class Navigation extends Component {
           </Nav>
           <Nav pullRight>
             <TeamSwitch eventKey={5} />
-            <NavItem eventKey={6} href="#">
-              Link Right
-            </NavItem>
+            <SearchDropdown />
             <NavItem eventKey={7} href="#">
               Link Right
             </NavItem>
@@ -112,8 +111,8 @@ class Navigation extends Component {
 
 Navigation.propTypes = {
   fetchActivities: PropTypes.func.isRequired,
-  getTeamsList: PropTypes.func.isRequired,
-}
+  getTeamsList: PropTypes.func.isRequired
+};
 
 // Map the fetch activity action to component
 const mapDispatchToProps = dispatch => ({

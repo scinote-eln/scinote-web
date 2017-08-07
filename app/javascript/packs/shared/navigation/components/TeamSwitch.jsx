@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
+import { FormattedMessage } from "react-intl";
 import { NavDropdown, MenuItem } from "react-bootstrap";
 
 import { setCurrentUser, changeTeam } from "../../actions/TeamsActions";
@@ -9,12 +10,10 @@ class TeamSwitch extends Component {
   constructor(props) {
     super(props);
     this.displayTeams = this.displayTeams.bind(this);
-
   }
 
-  changeTeam(team_id) {
-    console.log("clicked");
-    this.props.changeTeam(team_id);
+  changeTeam(teamId) {
+    this.props.changeTeam(teamId);
   }
 
   displayTeams() {
@@ -25,14 +24,25 @@ class TeamSwitch extends Component {
     );
   }
 
+  newTeamLink() {
+    return (
+      <MenuItem href="/users/settings/teams/new" key="addNewTeam">
+        <span className="glyphicon glyphicon-plus" />
+        <FormattedMessage id="global_team_switch.new_team" />
+      </MenuItem>
+    );
+  }
+
   render() {
     return (
       <NavDropdown
+        noCaret
         eventKey={this.props.eventKey}
         title={this.props.current_team.name}
         id="team-switch"
       >
         {this.displayTeams()}
+        {this.newTeamLink()}
       </NavDropdown>
     );
   }
@@ -40,7 +50,7 @@ class TeamSwitch extends Component {
 
 TeamSwitch.propTypes = {
   eventKey: PropTypes.number.isRequired,
-  setCurrentUser: PropTypes.func.isRequired,
+  changeTeam: PropTypes.func.isRequired,
   all_teams: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.number.isRequired,
