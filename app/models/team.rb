@@ -43,16 +43,14 @@ class Team < ApplicationRecord
     end
 
     case File.extname(filename)
-    when ".csv" then
+    when '.csv' then
       Roo::CSV.new(file_path, extension: :csv)
-    when ".tdv" then
-      Roo::CSV.new(file_path, nil, :ignore, csv_options: {col_sep: "\t"})
-    when ".txt" then
+    when '.tsv' then
+      Roo::CSV.new(file_path, csv_options: { col_sep: "\t" })
+    when '.txt' then
       # This assumption is based purely on biologist's habits
-      Roo::CSV.new(file_path, csv_options: {col_sep: "\t"})
-    when ".xls" then
-      Roo::Excel.new(file_path)
-    when ".xlsx" then
+      Roo::CSV.new(file_path, csv_options: { col_sep: "\t" })
+    when '.xlsx' then
       Roo::Excelx.new(file_path)
     else
       raise TypeError
@@ -71,7 +69,7 @@ class Team < ApplicationRecord
   # -3 == sample_group
   # TODO: use constants
   def import_samples(sheet, mappings, user)
-    errors = []
+    errors = false
     nr_of_added = 0
     total_nr = 0
 
@@ -80,17 +78,17 @@ class Team < ApplicationRecord
     sname_index = -1
     stype_index = -1
     sgroup_index = -1
-    mappings.each.with_index do |(k, v), i|
-      if v == "-1"
+    mappings.each.with_index do |(_, v), i|
+      if v == '-1'
         # Fill blank space, so our indices stay the same
         custom_fields << nil
         sname_index = i
-      elsif v == "-2"
+      elsif v == '-2'
         custom_fields << nil
         stype_index = i
-      elsif v == "-3"
+      elsif v == '-3'
         custom_fields << nil
-        sgroup_index =  i
+        sgroup_index = i
       else
         cf = CustomField.find_by_id(v)
 
@@ -99,87 +97,70 @@ class Team < ApplicationRecord
         custom_fields << cf
       end
     end
-
     # Now we can iterate through sample data and save stuff into db
     (2..sheet.last_row).each do |i|
-      error = []
       total_nr += 1
+      sample = Sample.new(name: sheet.row(i)[sname_index],
+                          team: self,
+                          user: user)
 
-      sample = Sample.new(
-        name: sheet.row(i)[sname_index],
-        team_id: id,
-        user: user
-      )
+      sample.transaction do
+        unless sample.valid?
+          errors = true
+          raise ActiveRecord::Rollback
+        end
 
-      if sample.save
         sheet.row(i).each.with_index do |value, index|
-          # We need to have sample saved before messing with custom fields (they
-          # need sample id)
           if index == stype_index
-            stype = SampleType.where(name: value, team_id: id).take
+            stype = SampleType.where(name: value, team: self).take
 
-            if stype
-              sample.sample_type = stype
-            else
-              sample.create_sample_type(
-                name: value,
-                team_id: id
-              )
-            end
-            sample.save
-          elsif index == sgroup_index
-            sgroup = SampleGroup.where(name: value, team_id: id).take
-
-            if sgroup
-              sample.sample_group = sgroup
-            else
-              sample.create_sample_group(
-                name: value,
-                team_id: id
-              )
-            end
-            sample.save
-          elsif value and mappings[index.to_s].strip.present? and index != sname_index
-            if custom_fields[index]
-              # we're working with CustomField
-              scf = SampleCustomField.new(
-                sample_id: sample.id,
-                custom_field_id: custom_fields[index].id,
-                value: value
-              )
-
-              if !scf.save
-                error << scf.errors.messages
+            unless stype
+              stype = SampleType.new(name: value, team: self)
+              unless stype.save
+                errors = true
+                raise ActiveRecord::Rollback
               end
-            else
-              # This custom_field does not exist
-              error << {"#{mappings[index]}": "Does not exists"}
             end
+            sample.sample_type = stype
+          elsif index == sgroup_index
+            sgroup = SampleGroup.where(name: value, team: self).take
+
+            unless sgroup
+              sgroup = SampleGroup.new(name: value, team: self)
+              unless sgroup.save
+                errors = true
+                raise ActiveRecord::Rollback
+              end
+            end
+            sample.sample_group = sgroup
+          elsif value && custom_fields[index]
+            # we're working with CustomField
+            scf = SampleCustomField.new(
+              sample: sample,
+              custom_field: custom_fields[index],
+              value: value
+            )
+            unless scf.valid?
+              errors = true
+              raise ActiveRecord::Rollback
+            end
+            sample.sample_custom_fields << scf
           end
         end
-      else
-        error << sample.errors.messages
-      end
-      if error.present?
-        errors << { "#{i}": error}
-      else
+        if Sample.import([sample],
+                         recursive: true,
+                         validate: false).failed_instances.any?
+          errors = true
+          raise ActiveRecord::Rollback
+        end
         nr_of_added += 1
       end
     end
 
-    if errors.count > 0 then
-      return {
-        status: :error,
-        errors: errors,
-        nr_of_added: nr_of_added,
-        total_nr: total_nr
-      }
+    if errors
+      return { status: :error, nr_of_added: nr_of_added, total_nr: total_nr }
     else
-      return {
-        status: :ok,
-        nr_of_added: nr_of_added,
-        total_nr: total_nr
-      }
+      return { status: :ok, nr_of_added: nr_of_added, total_nr: total_nr }
     end
   end
 

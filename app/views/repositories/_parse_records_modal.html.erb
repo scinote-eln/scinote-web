@@ -1,5 +1,5 @@
 <div class="modal fade"
-     id="parse-records_modal"
+     id="parse-records-modal"
      aria-labelledby="parse-modal-title"
      role="dialog">
   <div class="modal-dialog modal-lg">
@@ -30,29 +30,31 @@
                                include_blank: t('teams.parse_sheet.do_not_include_column'),
                                hide_label: true) %>
                   <br />
-                  <% if th.length > Constants::NAME_TRUNCATION_LENGTH_DROPDOWN %>
-                    <div class="modal-tooltip">
-                      <%= truncate(th, length: Constants::NAME_TRUNCATION_LENGTH_DROPDOWN) %>
-                    </div>
+                  <% if th.nil? %>
+                    <i><%= t('repositories.import_records.no_header_name') %></i>
                   <% else %>
-                    <%= th %>
+                    <% if th.length > Constants::NAME_TRUNCATION_LENGTH_DROPDOWN %>
+                      <div class="modal-tooltip">
+                        <%= truncate(th, length: Constants::NAME_TRUNCATION_LENGTH_DROPDOWN) %>
+                      </div>
+                    <% else %>
+                      <%= th %>
+                    <% end %>
                   <% end %>
                 </th>
               <% end %>
             </thead>
             <tbody>
-              <%  @import_data.rows.each do |row| %>
-                <tr>
+              <tr>
+                <td>
+                  <p><%= t('teams.parse_sheet.example_value') %></p>
+                </td>
+                <% @import_data.columns.each do |td| %>
                   <td>
-                    <p><%= t('teams.parse_sheet.example_value') %></p>
+                    <%= td %>
                   </td>
-                  <% row.each do |td| %>
-                    <td>
-                      <%= td[1] %>
-                    </td>
-                  <% end %>
-                </tr>
-              <% end %>
+                <% end %>
+              </tr>
             </tbody>
           </table>
         </div>

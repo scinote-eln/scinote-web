@@ -51,7 +51,7 @@ gem 'ajax-datatables-rails', '~> 0.3.1'
 gem 'commit_param_routing' # Enables different submit actions in the same form to route to different actions in controller
 gem 'kaminari'
 gem "i18n-js", ">= 3.0.0.rc11" # Localization in javascript files
-gem 'roo', '~> 2.1.0' # Spreadsheet parser
+gem 'roo', '~> 2.7.1' # Spreadsheet parser
 gem 'wicked_pdf'
 gem 'silencer' # Silence certain Rails logs
 gem 'wkhtmltopdf-heroku'
@@ -64,6 +64,7 @@ gem 'sneaky-save', git: 'https://github.com/einzige/sneaky-save'
 gem 'rails_autolink', '~> 1.1', '>= 1.1.6'
 gem 'delayed_paperclip'
 gem 'rubyzip'
+gem 'activerecord-import'
 
 gem 'paperclip', '~> 5.1' # File attachment, image attachment library
 gem 'aws-sdk', '~> 2'
