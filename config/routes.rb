@@ -472,15 +472,6 @@ Rails.application.routes.draw do
       post 'avatar_signature' => 'users/registrations#signature'
       get 'users/auth_token_sign_in' => 'users/sessions#auth_token_create'
     end
-
-    namespace :api, defaults: { format: 'json' } do
-      get 'status', to: 'api#status'
-      post 'auth/token', to: 'api#authenticate'
-      scope '20170715', module: 'v20170715' do
-        get 'tasks/tree', to: 'core_api#tasks_tree'
-        get 'tasks/:task_id/samples', to: 'core_api#task_samples'
-      end
-    end
   end
 
   constraints WopiSubdomain do
