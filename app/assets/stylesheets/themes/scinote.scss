@@ -338,6 +338,28 @@ a {
   }
 }
 
+.btn-omniauth-login {
+  background-color: $color-theme-primary;
+  color: $color-white;
+
+  &:active,
+  &:focus,
+  &:active:focus {
+    background-color: darken($color-theme-primary, 5%);
+    color: $color-white;
+
+    &:hover {
+      background-color: darken($color-theme-primary, 10%);
+      color: $color-white;
+    }
+  }
+
+  &:hover {
+    background-color: darken($color-theme-primary, 5%);
+    color: $color-white;
+  }
+}
+
 .btn-open-file {
   position: relative;
   overflow: hidden;

@@ -191,6 +191,7 @@ GEM
     globalid (0.4.0)
       activesupport (>= 4.2.0)
     hammerjs-rails (2.0.4)
+    hashie (3.5.6)
     i18n (0.8.6)
     i18n-js (3.0.1)
       i18n (~> 0.6, >= 0.6.6)
@@ -257,6 +258,9 @@ GEM
     nokogumbo (1.4.13)
       nokogiri
     oj (2.18.5)
+    omniauth (1.6.1)
+      hashie (>= 3.4.6, < 3.6.0)
+      rack (>= 1.6.2, < 3)
     orm_adapter (0.5.0)
     paperclip (5.1.0)
       activemodel (>= 4.2.0)
@@ -497,6 +501,7 @@ DEPENDENCIES
   nested_form_fields
   newrelic_rpm
   nokogiri
+  omniauth
   paperclip (~> 5.1)
   pg
   phantomjs
