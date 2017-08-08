@@ -13,9 +13,16 @@ Rails.application.routes.draw do
 
     # Client APP endpoints
     namespace :client_api, defaults: { format: 'json' } do
+      # activities
       get '/activities', to: 'activities#index'
+
+      # teams
       get '/teams', to: 'teams#index'
       post '/change_team', to: 'teams#change_team'
+
+      # notifications
+      get '/recent_notifications', to: 'notifications#recent_notifications'
+
     end
 
     # Save sample table state

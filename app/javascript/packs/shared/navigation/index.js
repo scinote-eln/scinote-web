@@ -9,6 +9,7 @@ import { getTeamsList } from "../actions/TeamsActions";
 import TeamSwitch from "./components/TeamSwitch";
 import GlobalActivitiesModal from "./components/GlobalActivitiesModal";
 import SearchDropdown from "./components/SearchDropdown";
+import NotificationsDropdown from "./components/NotificationsDropdown"
 
 const StyledBrand = styled.a`
   background-color: ${MAIN_COLOR_BLUE};
@@ -95,6 +96,7 @@ class Navigation extends Component {
           <Nav pullRight>
             <TeamSwitch eventKey={5} />
             <SearchDropdown />
+            <NotificationsDropdown />
             <NavItem eventKey={7} href="#">
               Link Right
             </NavItem>

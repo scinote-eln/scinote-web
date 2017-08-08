@@ -13,6 +13,11 @@ export default {
     },
     global_team_switch: {
       new_team: "New team"
+    },
+    notifications: {
+      dropdown_title: "Notifications",
+      dropdown_settings_link: "Settings",
+      dropdown_show_all: "Show all notifications"
     }
   }
 };
