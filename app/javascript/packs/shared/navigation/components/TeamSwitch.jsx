@@ -6,7 +6,7 @@ import { NavDropdown, MenuItem, Glyphicon } from "react-bootstrap";
 import styled from "styled-components";
 import _ from "lodash";
 
-import { BORDER_GRAY_COLOR } from "../../constants/colors";
+import { BORDER_GRAY_COLOR } from "../../../app/constants/colors";
 import { setCurrentUser, changeTeam } from "../../actions/TeamsActions";
 import { getTeamsList } from "../../actions/TeamsActions";
 

@@ -1,7 +1,7 @@
 import axios from "axios";
 import _ from "lodash";
 import { TEAMS_PATH, CHANGE_TEAM_PATH } from "../../app/routes";
-import { GET_LIST_OF_TEAMS, SET_CURRENT_TEAM } from "./types";
+import { GET_LIST_OF_TEAMS, SET_CURRENT_TEAM } from "../../app/action_types";
 
 function addTeamsData(data) {
   return {

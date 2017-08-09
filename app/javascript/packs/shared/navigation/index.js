@@ -7,7 +7,7 @@ import {
   MAIN_COLOR_BLUE,
   WHITE_COLOR,
   BORDER_GRAY_COLOR
-} from "../constants/colors";
+} from "../../app/constants/colors";
 import { getActivities } from "../actions/ActivitiesActions";
 import TeamSwitch from "./components/TeamSwitch";
 import GlobalActivitiesModal from "./components/GlobalActivitiesModal";

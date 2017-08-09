@@ -5,6 +5,7 @@ import { FormattedTime } from "react-intl";
 import styled from "styled-components";
 
 import CustomNavItem from "./CustomNavItem";
+import NotificationImage from "./NotificationImage";
 
 const StyledListItem = styled(CustomNavItem)`
   border-bottom: 1px solid #d2d2d2;
@@ -19,11 +20,7 @@ const NotificationItem = ({ notification }) => {
     <StyledListItem>
       <Row>
         <Col xs={2}>
-          <div className="text-center">
-            <span className="assignment">
-              <i className="fa fa-newspaper-o" />
-            </span>
-          </div>
+          <NotificationImage type={type_of} />
         </Col>
 
         <Col xs={10}>

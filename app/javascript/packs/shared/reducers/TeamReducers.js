@@ -1,4 +1,4 @@
-import { SET_CURRENT_TEAM, GET_LIST_OF_TEAMS } from "../actions/types";
+import { SET_CURRENT_TEAM, GET_LIST_OF_TEAMS } from "../../app/action_types";
 
 const initialState = { name: "", id: 0, current_team: true };
 export const setCurrentTeam = (state = initialState, action) => {

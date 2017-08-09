@@ -1,6 +1,6 @@
 import axios from "axios";
 import { CURRENT_USER_PATH } from "../../app/routes";
-import { SET_CURRENT_USER } from "./types";
+import { SET_CURRENT_USER } from "../../app/action_types";
 
 function addCurrentUser(data) {
   return {

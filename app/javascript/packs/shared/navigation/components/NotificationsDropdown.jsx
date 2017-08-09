@@ -9,7 +9,7 @@ import {
   MAIN_COLOR_BLUE,
   WILD_SAND_COLOR,
   MYSTIC_COLOR
-} from "../../constants/colors";
+} from "../../../app/constants/colors";
 
 import NotificationItem from "./NotificationItem";
 import Spinner from "../../Spinner";
