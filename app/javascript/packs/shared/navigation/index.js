@@ -3,13 +3,24 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Navbar, Nav, NavItem } from "react-bootstrap";
 import styled from "styled-components";
-import { MAIN_COLOR_BLUE } from "../constants/colors";
+import {
+  MAIN_COLOR_BLUE,
+  WHITE_COLOR,
+  BORDER_GRAY_COLOR
+} from "../constants/colors";
 import { getActivities } from "../actions/ActivitiesActions";
 import { getTeamsList } from "../actions/TeamsActions";
 import TeamSwitch from "./components/TeamSwitch";
 import GlobalActivitiesModal from "./components/GlobalActivitiesModal";
 import SearchDropdown from "./components/SearchDropdown";
-import NotificationsDropdown from "./components/NotificationsDropdown"
+import NotificationsDropdown from "./components/NotificationsDropdown";
+import InfoDropdown from "./components/InfoDropdown";
+import UserAccountDropdown from "./components/UserAccountDropdown";
+
+const StyledNavbar = styled(Navbar)`
+  background-color: ${WHITE_COLOR};
+  border-color: ${BORDER_GRAY_COLOR};
+`;
 
 const StyledBrand = styled.a`
   background-color: ${MAIN_COLOR_BLUE};
@@ -21,7 +32,9 @@ const StyledBrand = styled.a`
   }
 
   & > img {
-    height: 20px;
+    margin-top: -4px;
+    max-width: 132px;
+    max-height: 26px;
   }
 `;
 
@@ -38,7 +51,6 @@ class Navigation extends Component {
   }
 
   componentDidMount() {
-    console.log("runned");
     this.props.getTeamsList();
   }
 
@@ -58,7 +70,7 @@ class Navigation extends Component {
   render() {
     return (
       <div>
-        <Navbar onSelect={this.selectItemCallback}>
+        <StyledNavbar onSelect={this.selectItemCallback}>
           <Navbar.Header>
             <Navbar.Brand>
               <StyledBrand href="/" title="sciNote">
@@ -97,11 +109,10 @@ class Navigation extends Component {
             <TeamSwitch eventKey={5} />
             <SearchDropdown />
             <NotificationsDropdown />
-            <NavItem eventKey={7} href="#">
-              Link Right
-            </NavItem>
+            <InfoDropdown />
+            <UserAccountDropdown />
           </Nav>
-        </Navbar>
+        </StyledNavbar>
         <GlobalActivitiesModal
           showModal={this.state.showActivitesModal}
           onCloseModal={this.closeModalCallback}
