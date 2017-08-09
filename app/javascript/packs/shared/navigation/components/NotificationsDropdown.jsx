@@ -6,7 +6,7 @@ import axios from "axios";
 import { RECENT_NOTIFICATIONS_PATH } from "../../../app/routes";
 
 import NotificationItem from "./NotificationItem";
-import Spinner from "../../spinner";
+import Spinner from "../../Spinner";
 import CustomNavItem from "./CustomNavItem";
 
 class NotificationsDropdown extends Component {

@@ -2,9 +2,18 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { FormattedMessage } from "react-intl";
-import { NavDropdown, MenuItem } from "react-bootstrap";
+import { NavDropdown, MenuItem, Glyphicon } from "react-bootstrap";
+import styled from "styled-components";
+import _ from "lodash";
 
+import { BORDER_GRAY_COLOR } from "../../constants/colors";
 import { setCurrentUser, changeTeam } from "../../actions/TeamsActions";
+import { getTeamsList } from "../../actions/TeamsActions";
+
+const StyledNavDropdown = styled(NavDropdown)`
+  border-left: 1px solid ${BORDER_GRAY_COLOR};
+  border-right: 1px solid ${BORDER_GRAY_COLOR};
+`;
 
 class TeamSwitch extends Component {
   constructor(props) {
@@ -12,22 +21,28 @@ class TeamSwitch extends Component {
     this.displayTeams = this.displayTeams.bind(this);
   }
 
+  componentDidMount() {
+    this.props.getTeamsList();
+  }
+
   changeTeam(teamId) {
     this.props.changeTeam(teamId);
   }
 
   displayTeams() {
-    return this.props.all_teams.filter(team => !team.current_team).map(team =>
-      <MenuItem onSelect={() => this.changeTeam(team.id)} key={team.id}>
-        {team.name}
-      </MenuItem>
-    );
+    if (!_.isEmpty(this.props.all_teams)) {
+      return this.props.all_teams.filter(team => !team.current_team).map(team =>
+        <MenuItem onSelect={() => this.changeTeam(team.id)} key={team.id}>
+          {team.name}
+        </MenuItem>
+      );
+    }
   }
 
   newTeamLink() {
     return (
       <MenuItem href="/users/settings/teams/new" key="addNewTeam">
-        <span className="glyphicon glyphicon-plus" />
+        <Glyphicon glyph="plus" />&nbsp;
         <FormattedMessage id="global_team_switch.new_team" />
       </MenuItem>
     );
@@ -35,20 +50,26 @@ class TeamSwitch extends Component {
 
   render() {
     return (
-      <NavDropdown
+      <StyledNavDropdown
         noCaret
         eventKey={this.props.eventKey}
-        title={this.props.current_team.name}
+        title={
+          <span>
+            <i className="fa fa-users" />&nbsp;{this.props.current_team.name}
+          </span>
+        }
         id="team-switch"
       >
         {this.displayTeams()}
+        <MenuItem key="divider" divider />
         {this.newTeamLink()}
-      </NavDropdown>
+      </StyledNavDropdown>
     );
   }
 }
 
 TeamSwitch.propTypes = {
+  getTeamsList: PropTypes.func.isRequired,
   eventKey: PropTypes.number.isRequired,
   changeTeam: PropTypes.func.isRequired,
   all_teams: PropTypes.arrayOf(
@@ -56,27 +77,31 @@ TeamSwitch.propTypes = {
       id: PropTypes.number.isRequired,
       name: PropTypes.string.isRequired,
       current_team: PropTypes.bool.isRequired
-    })
+    }).isRequired
   ),
   current_team: PropTypes.shape({
     id: PropTypes.number.isRequired,
     name: PropTypes.string.isRequired,
     current_team: PropTypes.bool.isRequired
-  })
+  }).isRequired
 };
 
 // Map the states from store to component
-const mapStateToProps = ({ all_teams, current_team }) => {
-  return { all_teams, current_team };
-};
+const mapStateToProps = ({ all_teams, current_team }) => ({
+  current_team,
+  all_teams: _.values(all_teams)
+});
 
 // Map the fetch activity action to component
 const mapDispatchToProps = dispatch => ({
   setCurrentUser() {
     dispatch(setCurrentUser());
   },
-  changeTeam(team_id) {
-    dispatch(changeTeam(team_id));
+  changeTeam(teamId) {
+    dispatch(changeTeam(teamId));
+  },
+  getTeamsList() {
+    dispatch(getTeamsList());
   }
 });
 

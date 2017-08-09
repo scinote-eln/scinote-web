@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { NavDropdown, MenuItem } from "react-bootstrap";
+import { NavDropdown, MenuItem, Image } from "react-bootstrap";
 import styled from "styled-components";
 import { FormattedMessage } from "react-intl";
 
@@ -31,10 +31,10 @@ class UserAccountDropdown extends Component {
               id="user_account_dropdown.greeting"
               values={{ name: this.props.current_user.fullName }}
             />&nbsp;
-            <img
+            <Image
               src={this.props.current_user.avatarPath}
               alt={this.props.current_user.fullName}
-              className="img-circle"
+              circle
             />
           </span>
         }

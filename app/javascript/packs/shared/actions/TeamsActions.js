@@ -22,7 +22,7 @@ export function getTeamsList() {
     axios
       .get(TEAMS_PATH, { withCredentials: true })
       .then(response => {
-        let teams = response.data;
+        let teams = _.values(response.data);
         dispatch(addTeamsData(teams));
         let current_team = _.find(teams, team => team.current_team);
         dispatch(setCurrentUser(current_team));
@@ -38,7 +38,7 @@ export function changeTeam(team_id) {
     axios
       .post(CHANGE_TEAM_PATH, { team_id }, { withCredentials: true })
       .then(response => {
-        let teams = response.data;
+        let teams = _.values(response.data);
         dispatch(addTeamsData(teams));
         let current_team = _.find(teams, team => team.current_team);
         dispatch(setCurrentUser(current_team));

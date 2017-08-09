@@ -9,7 +9,6 @@ import {
   BORDER_GRAY_COLOR
 } from "../constants/colors";
 import { getActivities } from "../actions/ActivitiesActions";
-import { getTeamsList } from "../actions/TeamsActions";
 import TeamSwitch from "./components/TeamSwitch";
 import GlobalActivitiesModal from "./components/GlobalActivitiesModal";
 import SearchDropdown from "./components/SearchDropdown";
@@ -48,10 +47,6 @@ class Navigation extends Component {
     };
     this.selectItemCallback = this.selectItemCallback.bind(this);
     this.closeModalCallback = this.closeModalCallback.bind(this);
-  }
-
-  componentDidMount() {
-    this.props.getTeamsList();
   }
 
   selectItemCallback(key, ev) {
@@ -123,17 +118,13 @@ class Navigation extends Component {
 }
 
 Navigation.propTypes = {
-  fetchActivities: PropTypes.func.isRequired,
-  getTeamsList: PropTypes.func.isRequired
+  fetchActivities: PropTypes.func.isRequired
 };
 
 // Map the fetch activity action to component
 const mapDispatchToProps = dispatch => ({
   fetchActivities() {
     dispatch(getActivities());
-  },
-  getTeamsList() {
-    dispatch(getTeamsList());
   }
 });
 
