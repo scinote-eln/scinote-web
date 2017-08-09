@@ -2,14 +2,21 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Col, Row } from "react-bootstrap";
 import { FormattedTime } from "react-intl";
+import styled from "styled-components";
 
 import CustomNavItem from "./CustomNavItem";
+
+const StyledListItem = styled(CustomNavItem)`
+  border-bottom: 1px solid #d2d2d2;
+  padding-bottom: 10px;
+  padding-top: 10px;
+`;
 
 const NotificationItem = ({ notification }) => {
   const { title, message, created_at, type_of } = notification;
 
   return (
-    <CustomNavItem>
+    <StyledListItem>
       <Row>
         <Col xs={2}>
           <div className="text-center">
@@ -20,7 +27,7 @@ const NotificationItem = ({ notification }) => {
         </Col>
 
         <Col xs={10}>
-          <span dangerouslySetInnerHTML={{ __html: title }} />
+          <strong dangerouslySetInnerHTML={{ __html: title }} />
           <br />
           <FormattedTime
             value={created_at}
@@ -29,11 +36,10 @@ const NotificationItem = ({ notification }) => {
             year="numeric"
             hour="numeric"
             minute="numeric"
-          />
-          | <span dangerouslySetInnerHTML={{ __html: message }} />
+          />&nbsp;|&nbsp;<span dangerouslySetInnerHTML={{ __html: message }} />
         </Col>
       </Row>
-    </CustomNavItem>
+    </StyledListItem>
   );
 };
 

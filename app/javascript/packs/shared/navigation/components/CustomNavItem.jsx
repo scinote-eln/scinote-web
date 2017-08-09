@@ -1,6 +1,6 @@
 import React from "react";
 
-export default props =>
-  <li role="presentation">
-    {props.children}
+export default ({ className, children }) =>
+  <li className={className} role="presentation">
+    {children}
   </li>;

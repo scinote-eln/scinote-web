@@ -2,12 +2,47 @@ import React, { Component } from "react";
 import { NavDropdown } from "react-bootstrap";
 import { FormattedMessage } from "react-intl";
 import axios from "axios";
+import styled from "styled-components";
 
 import { RECENT_NOTIFICATIONS_PATH } from "../../../app/routes";
+import {
+  MAIN_COLOR_BLUE,
+  WILD_SAND_COLOR,
+  MYSTIC_COLOR
+} from "../../constants/colors";
 
 import NotificationItem from "./NotificationItem";
 import Spinner from "../../Spinner";
 import CustomNavItem from "./CustomNavItem";
+
+const StyledListHeader = styled(CustomNavItem)`
+  background-color: ${MAIN_COLOR_BLUE};
+  color: ${WILD_SAND_COLOR};
+  font-weight: bold;
+  padding: 8px;
+
+  & a, a:hover, a:active {
+    color: ${WILD_SAND_COLOR};
+  }
+`;
+
+const StyledListFooter = styled(CustomNavItem)`
+  background-color: ${MYSTIC_COLOR};
+  padding: 8px;
+  text-align: center;
+`;
+
+const StyledNavDropdown = styled(NavDropdown)`
+  & > .dropdown-menu {
+    max-height: 500px;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    padding-bottom: 0;
+    padding-top: 0;
+    width: 450px;
+    word-wrap: break-word;
+  }
+`;
 
 class NotificationsDropdown extends Component {
   constructor(props) {
@@ -45,13 +80,13 @@ class NotificationsDropdown extends Component {
 
   render() {
     return (
-      <NavDropdown
+      <StyledNavDropdown
         noCaret
         id="notifications-dropdown"
         title={<i className="fa fa-bell" />}
         onClick={this.getRecentNotifications}
       >
-        <CustomNavItem>
+        <StyledListHeader>
           <span>
             <FormattedMessage id="notifications.dropdown_title" />
           </span>
@@ -60,14 +95,14 @@ class NotificationsDropdown extends Component {
               <FormattedMessage id="notifications.dropdown_settings_link" />
             </a>
           </span>
-        </CustomNavItem>
+        </StyledListHeader>
         {this.renderNotifications()}
-        <CustomNavItem>
+        <StyledListFooter>
           <a href="/users/notifications">
             <FormattedMessage id="notifications.dropdown_show_all" />
           </a>
-        </CustomNavItem>
-      </NavDropdown>
+        </StyledListFooter>
+      </StyledNavDropdown>
     );
   }
 }
