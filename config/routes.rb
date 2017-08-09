@@ -9,6 +9,7 @@ Rails.application.routes.draw do
     root 'projects#index'
 
     # Settings root
+    get '/settings', to: 'client_api/settings#index'
     get '/settings/*params', to: 'client_api/settings#index'
 
     # Client APP endpoints

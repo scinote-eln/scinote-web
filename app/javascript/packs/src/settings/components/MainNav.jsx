@@ -23,8 +23,7 @@ export default class MainNav extends Component {
         <Nav bsStyle="tabs" activeKey="1" onSelect={this.handleSelect}>
           <LinkContainer
             active={this.state.active === "1"}
-            to="/settings/account"
-            activeClassName="selected"
+            to="/settings/account/profile"
           >
             <NavItem eventKey="1">Account</NavItem>
           </LinkContainer>
