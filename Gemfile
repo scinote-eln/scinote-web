@@ -16,6 +16,7 @@ gem 'yomu'
 gem 'font-awesome-rails', '~> 4.7.0.2'
 gem 'recaptcha', require: 'recaptcha/rails'
 gem 'sanitize', '~> 4.4'
+gem 'omniauth'
 
 # Gems for API implementation
 gem 'jwt'

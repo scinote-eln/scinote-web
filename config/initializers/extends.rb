@@ -45,4 +45,6 @@ class Extends
 
   # List of implemented core API versions
   API_VERSIONS = ['20170715']
+
+  OMNIAUTH_PROVIDERS = []
 end

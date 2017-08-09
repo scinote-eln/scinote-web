@@ -1,10 +1,12 @@
 Rails.application.routes.draw do
   require 'subdomain'
   constraints UserSubdomain do
-    devise_for :users, controllers: { registrations: 'users/registrations',
-                                      sessions: 'users/sessions',
-                                      invitations: 'users/invitations',
-                                      confirmations: 'users/confirmations' }
+    devise_for :users,
+               controllers: { registrations: 'users/registrations',
+                              sessions: 'users/sessions',
+                              invitations: 'users/invitations',
+                              confirmations: 'users/confirmations',
+                              omniauth_callbacks: 'users/omniauth_callbacks' }
 
     root 'projects#index'
 

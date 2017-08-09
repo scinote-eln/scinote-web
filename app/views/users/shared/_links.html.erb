@@ -18,8 +18,7 @@
   <%= link_to t("devise.links.not_receive_unlock"), new_unlock_path(resource_name) %><br />
 <% end -%>
 
-<%- if devise_mapping.omniauthable? %>
-  <%- resource_class.omniauth_providers.each do |provider| %>
-    <%= link_to t("devise.links.sign_in_provider", provider: "#{provider.to_s.titleize}"), omniauth_authorize_path(resource_name, provider) %><br />
-  <% end -%>
+<%- if devise_mapping.omniauthable? && resource_class.omniauth_providers.any? %>
+  <br><strong><p><%= t("devise.links.more_sign_in_options") %></p></strong>
+  <div data-hook="omniauth-sign-in-links"></div>
 <% end -%>
