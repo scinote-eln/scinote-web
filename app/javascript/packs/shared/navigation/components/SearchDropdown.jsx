@@ -8,6 +8,7 @@ import {
 } from "react-bootstrap";
 import styled from "styled-components";
 import { SEARCH_PATH } from "../../../app/routes";
+import { ENTER_KEY_CODE } from "../../../app/constants/numeric";
 
 const StyledFormGroup = styled(FormGroup)`
   margin-bottom: 0px;
@@ -41,7 +42,7 @@ class SearchDropdown extends Component {
   }
 
   handleKeyPress(ev) {
-    if (ev.charCode === 13) {
+    if (ev.charCode === ENTER_KEY_CODE) {
       this.submitSearch();
     }
   }
