@@ -210,7 +210,7 @@ class User < ApplicationRecord
         auth.uid
       )
       .references(:user_identities)
-      .first
+      .take
   end
 
   # Search all active users for username & email. Can
