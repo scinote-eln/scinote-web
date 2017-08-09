@@ -1,41 +1,93 @@
 import React, { Component } from "react";
-import { NavDropdown, FormControl } from "react-bootstrap";
+import {
+  NavDropdown,
+  MenuItem,
+  FormGroup,
+  InputGroup,
+  Glyphicon
+} from "react-bootstrap";
+import styled from "styled-components";
+import { SEARCH_PATH } from "../../../app/routes";
+import { ENTER_KEY_CODE } from "../../../app/constants/numeric";
+
+const StyledFormGroup = styled(FormGroup)`
+  margin-bottom: 0px;
+`;
+
+const StyledMenuItem = styled(MenuItem)`
+  padding-top: 10px;
+  padding-bottom: 10px;
+`;
+
+const StyledNavDropdown = styled(NavDropdown)`
+  & > .dropdown-menu {
+    width: 250px;
+  }
+`;
 
 class SearchDropdown extends Component {
   constructor(props) {
     super(props);
     this.state = { searchTerm: "" };
     this.handleSearchTermChange = this.handleSearchTermChange.bind(this);
-    this.handleSelect = this.handleSelect.bind(this);
+    this.handleKeyPress = this.handleKeyPress.bind(this);
+    this.setFocusToInput = this.setFocusToInput.bind(this);
+    this.submitSearch = this.submitSearch.bind(this);
+  }
+
+  setFocusToInput(ev) {
+    this.navSearchInput.focus();
+    ev.stopPropagation();
+    ev.nativeEvent.stopImmediatePropagation();
+  }
+
+  handleKeyPress(ev) {
+    if (ev.charCode === ENTER_KEY_CODE) {
+      this.submitSearch();
+    }
   }
 
   handleSearchTermChange(ev) {
-    ev.preventDefault();
-    console.log("change");
     this.setState({ searchTerm: ev.target.value });
   }
 
-  handleSelect(ev) {
-    console.log(ev);
-    ev.preventDefault();
+  submitSearch() {
+    window.location = `${SEARCH_PATH}?q=${this.state.searchTerm}`;
+    this.setState({ searchTerm: "" });
   }
 
   render() {
     return (
-      <NavDropdown
+      <StyledNavDropdown
         noCaret
         title={<span className="glyphicon glyphicon-search" />}
+        onClick={this.setFocusToInput}
         id="search-dropdown"
       >
-        <li role="presentation" onClick={ev => ev.preventDefault()}>
-          <FormControl
-              ref={c => { this.input = c; }}
-              type="text"
-              placeholder="Search"
-              onChange={this.handleSearchTermChange}
-              value={this.state.searchTerm} />
-        </li>
-      </NavDropdown>
+        <StyledMenuItem>
+          <StyledFormGroup>
+            <InputGroup>
+              <input
+                onChange={this.handleSearchTermChange}
+                onClick={this.setFocusToInput}
+                onKeyPress={this.handleKeyPress}
+                ref={el => {
+                  this.navSearchInput = el;
+                }}
+                type="text"
+                placeholder="Search"
+                className="form-control"
+              />
+              <InputGroup.Addon
+                onClick={this.submitSearch}
+                className="visible-xs visible-sm"
+              >
+                <Glyphicon glyph="menu-right" />
+              </InputGroup.Addon>
+            </InputGroup>
+          </StyledFormGroup>
+        </StyledMenuItem>
+      </StyledNavDropdown>
     );
   }
 }
