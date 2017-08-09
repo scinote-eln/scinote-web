@@ -6,11 +6,7 @@
     "node": true
   },
   "plugins": ["react", "prettier"],
-  "extends": [
-    "airbnb",
-    "prettier",
-    "prettier/react"
-  ],
+  "extends": ["airbnb", "prettier", "prettier/react"],
   "parser": "babel-eslint",
   "parserOptions": {
     "sourceType": "module",
@@ -21,6 +17,13 @@
     }
   },
   "rules": {
+    "import/no-unresolved": [
+      "error",
+      {
+        "ignore": ["app/javascript/"]
+      }
+    ],
+    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
     "spaced-comment": [
       "error",
       "always",
