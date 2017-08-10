@@ -397,7 +397,8 @@ class User < ApplicationRecord
   end
 
   def time_zone_check
-    if settings[:time_zone].nil? or ActiveSupport::TimeZone.new(settings[:time_zone]).nil?
+    if time_zone.nil? ||
+       ActiveSupport::TimeZone.new(time_zone).nil?
       errors.add(:time_zone)
     end
   end
