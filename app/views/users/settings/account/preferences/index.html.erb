@@ -12,7 +12,7 @@
         <%= form_for(@user,
                      url: update_preferences_path(format: :json),
                      remote: true,
-                     html: { method: :put, 'data-for' => 'time_zone' }) do |f| %>
+                     html: { method: :put, 'data-for' => 'settings[time_zone]' }) do |f| %>
           <div data-part="view">
             <div class="form-group">
               <%= f.label t("users.settings.account.preferences.edit.time_zone_label") %>
@@ -21,9 +21,9 @@
                        disabled="disabled"
                        autocomplete="off"
                        type="text"
-                       value="<%= @user.time_zone %>"
-                       name="fake_user[time_zone]"
-                       id="fake_user_time_zone">
+                       value="<%= @user.settings[:time_zone] %>"
+                       name="fake_user[settings][time_zone]"
+                       id="fake_user_settings_time_zone">
                 <span class="input-group-btn">
                   <a href="#" class="btn btn-default" data-action="edit"><%=t "general.edit" %></a>
                 </span>

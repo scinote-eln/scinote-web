@@ -115,7 +115,7 @@ module Users
 
         def update_params
           params.require(:user).permit(
-            :time_zone
+            settings: :time_zone
           )
         end
       end

@@ -1,5 +1,6 @@
 class User < ApplicationRecord
   include SearchableModel
+  include SettingsModel
 
   acts_as_token_authenticatable
   devise :invitable, :confirmable, :database_authenticatable, :registerable,
@@ -33,8 +34,18 @@ class User < ApplicationRecord
   validates_attachment :avatar,
     :content_type => { :content_type => ["image/jpeg", "image/png"] },
     size: { less_than: Constants::AVATAR_MAX_SIZE_MB.megabytes }
-  validates :time_zone, presence: true
   validate :time_zone_check
+
+  default_settings(
+    time_zone: 'UTC',
+    notifications: {
+      assignments: true,
+      assignments_email: false,
+      recent: true,
+      recent_email: false,
+      system_message_email: false
+    }
+  )
 
   # Relations
   has_many :user_teams, inverse_of: :user
@@ -384,7 +395,7 @@ class User < ApplicationRecord
   end
 
   def time_zone_check
-    if time_zone.nil? or ActiveSupport::TimeZone.new(time_zone).nil?
+    if settings[:time_zone].nil? or ActiveSupport::TimeZone.new(settings[:time_zone]).nil?
       errors.add(:time_zone)
     end
   end
