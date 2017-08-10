@@ -1,9 +1,10 @@
-import React, { Component } from "react";
+import React from "react";
+import { string } from "prop-types";
 
-class Avatar extends Component {
-  render() {
-    return <img src="" alt="default avatar" />;
-  }
-}
+const Avatar = props => <img src={props.imgSource} alt="default avatar" />;
+
+Avatar.propTypes = {
+  imgSource: string.isRequired
+};
 
 export default Avatar;
