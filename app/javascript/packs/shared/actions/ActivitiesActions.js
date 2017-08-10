@@ -1,6 +1,6 @@
 import axios from "axios";
 import { ACTIVITIES_PATH } from "../../app/routes";
-import { GLOBAL_ACTIVITIES_DATA } from "./types";
+import { GLOBAL_ACTIVITIES_DATA } from "../../app/action_types";
 
 function addActivitiesData(data) {
   return {

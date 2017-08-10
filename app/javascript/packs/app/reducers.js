@@ -4,9 +4,11 @@ import {
   getListOfTeams
 } from "../shared/reducers/TeamReducers";
 import { globalActivities } from "../shared/reducers/ActivitiesReducers";
+import { currentUser } from "../shared/reducers/UsersReducer";
 
 export default combineReducers({
   current_team: setCurrentTeam,
   all_teams: getListOfTeams,
-  global_activities: globalActivities
+  global_activities: globalActivities,
+  current_user: currentUser
 });

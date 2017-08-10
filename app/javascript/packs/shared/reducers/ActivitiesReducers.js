@@ -1,7 +1,7 @@
 import {
   GLOBAL_ACTIVITIES_DATA,
   MORE_GLOBAL_ACTIVITIES
-} from "../actions/types";
+} from "../../app/action_types";
 
 export function globalActivities(
   state = { more: true, activities: [] },
