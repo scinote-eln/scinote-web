@@ -36,6 +36,8 @@ class User < ApplicationRecord
     size: { less_than: Constants::AVATAR_MAX_SIZE_MB.megabytes }
   validate :time_zone_check
 
+  store_accessor :settings, :time_zone
+
   default_settings(
     time_zone: 'UTC',
     notifications: {
