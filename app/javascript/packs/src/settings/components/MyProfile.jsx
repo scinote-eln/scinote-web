@@ -1,77 +1,102 @@
 import React, { Component } from "react";
-import axios from "axios";
-import _ from "lodash";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
 
 import Avatar from "./Avatar";
 import InputDisabled from "./InputDisabled";
 import InputEnabled from "./InputEnabled";
 
-import { CURRENT_USER_PATH } from "../../../app/routes";
+import {
+  changeFullName,
+  changeInitials,
+  changeEmail
+} from "../../../shared/actions/UsersActions";
 
 class MyProfile extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      avatar: "",
-      inputs: {
-        fullName: {
-          label: "Full name",
-          value: "",
-          isEditable: false
-        }
-      }
+      isFullNameEditable: false,
+      areInitialsEditable: false,
+      isEmailEditable: false
     };
 
     this.toggleIsEditable = this.toggleIsEditable.bind(this);
   }
 
-  componentDidMount() {
-    axios.get(CURRENT_USER_PATH, { withCredentials: true }).then(data => {
-      const userData = data.data.user;
-      this.setState(previousState =>
-        _.merge({}, previousState, {
-          avatar: userData.avatarThumbPath,
-          inputs: {
-            fullName: {
-              value: userData.fullName
-            }
-          }
-        })
-      );
-    });
-  }
-
-  toggleIsEditable(e) {
-    const currEditableState = this.state.inputs.fullName.isEditable;
-    e.preventDefault();
-    this.setState(previousState =>
-      _.merge({}, previousState, {
-        inputs: { fullName: { isEditable: !currEditableState } }
-      })
-    );
+  toggleIsEditable(fieldNameEnabled) {
+    const editableState = this.state[fieldNameEnabled];
+    this.setState({ [fieldNameEnabled]: !editableState });
   }
 
   render() {
+    const areInitialsEditable = "areInitialsEditable";
+    const isFullNameEditable = "isFullNameEditable";
+    const isEmailEditable = "isEmailEditable";
     let fullNameField;
-    const fullNameState = this.state.inputs.fullName;
+    let initialsField;
+    let emailField;
 
-    if (this.state.inputs.fullName.isEditable) {
+    if (this.state.isEmailEditable) {
+      emailField = (
+        <InputEnabled
+          labelValue="New email"
+          inputType="email"
+          inputValue={this.props.email}
+          disableEdit={() => this.toggleIsEditable(isEmailEditable)}
+          saveData={newEmail => this.props.changeEmail(newEmail)}
+        />
+      );
+    } else {
+      emailField = (
+        <InputDisabled
+          labelValue="New email"
+          inputValue={this.props.email}
+          inputType="email"
+          enableEdit={() => this.toggleIsEditable(isEmailEditable)}
+        />
+      );
+    }
+
+    if (this.state.areInitialsEditable) {
+      initialsField = (
+        <InputEnabled
+          labelValue="Initials"
+          inputType="text"
+          inputValue={this.props.initials}
+          disableEdit={() => this.toggleIsEditable(areInitialsEditable)}
+          saveData={newName => this.props.changeInitials(newName)}
+        />
+      );
+    } else {
+      initialsField = (
+        <InputDisabled
+          labelValue="Initials"
+          inputValue={this.props.initials}
+          inputType="text"
+          enableEdit={() => this.toggleIsEditable(areInitialsEditable)}
+        />
+      );
+    }
+
+    if (this.state.isFullNameEditable) {
       fullNameField = (
         <InputEnabled
-          labelValue={fullNameState.label}
-          inputValue={fullNameState.value}
+          labelValue="Full name"
           inputType="text"
-          disableEdit={this.toggleIsEditable}
+          inputValue={this.props.fullName}
+          disableEdit={() => this.toggleIsEditable(isFullNameEditable)}
+          saveData={newName => this.props.changeFullName(newName)}
         />
       );
     } else {
       fullNameField = (
         <InputDisabled
-          labelValue={fullNameState.label}
-          inputValue={fullNameState.value}
+          labelValue="Full name"
+          inputValue={this.props.fullName}
           inputType="text"
-          enableEdit={this.toggleIsEditable}
+          enableEdit={() => this.toggleIsEditable(isFullNameEditable)}
         />
       );
     }
@@ -80,11 +105,36 @@ class MyProfile extends Component {
       <div>
         <h2>My Profile</h2>
         <h4>Avatar</h4>
-        <Avatar imgSource={this.state.avatar} />
+        <Avatar imgSource={this.props.avatarThumbPath} />
         {fullNameField}
+        {initialsField}
+        {emailField}
       </div>
     );
   }
 }
 
-export default MyProfile;
+MyProfile.propTypes = {
+  fullName: PropTypes.string.isRequired,
+  avatarThumbPath: PropTypes.string.isRequired,
+  initials: PropTypes.string.isRequired,
+  email: PropTypes.string.isRequired,
+  changeFullName: PropTypes.func.isRequired,
+  changeInitials: PropTypes.func.isRequired,
+  changeEmail: PropTypes.func.isRequired
+};
+
+const mapStateToProps = state => state.current_user;
+const mapDispatchToProps = dispatch => ({
+  changeFullName(name) {
+    dispatch(changeFullName(name));
+  },
+  changeInitials(initials) {
+    dispatch(changeInitials(initials));
+  },
+  changeEmail(email) {
+    dispatch(changeEmail(email));
+  }
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(MyProfile);

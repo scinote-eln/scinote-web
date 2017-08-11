@@ -11,16 +11,26 @@ class InputEnabled extends Component {
     };
 
     this.handleChange = this.handleChange.bind(this);
+    this.handleUpdate = this.handleUpdate.bind(this);
   }
 
   handleChange(event) {
     this.setState({ value: event.target.value });
   }
 
+  handleSubmit(event) {
+    event.preventDefault();
+  }
+
+  handleUpdate() {
+    this.props.saveData(this.state.value);
+    this.props.disableEdit();
+  }
+
   render() {
     return (
       <div>
-        <form>
+        <form onSubmit={this.handleSubmit}>
           <FormGroup>
             <ControlLabel>
               {this.props.labelValue}
@@ -33,7 +43,9 @@ class InputEnabled extends Component {
             <Button bsStyle="primary" onClick={this.props.disableEdit}>
               Cancel
             </Button>
-            <Button bsStyle="default">Update</Button>
+            <Button bsStyle="default" onClick={this.handleUpdate}>
+              Update
+            </Button>
           </FormGroup>
         </form>
       </div>
@@ -42,10 +54,11 @@ class InputEnabled extends Component {
 }
 
 InputEnabled.propTypes = {
-  labelValue: PropTypes.string.isRequired,
   inputType: PropTypes.string.isRequired,
+  labelValue: PropTypes.string.isRequired,
   inputValue: PropTypes.string.isRequired,
-  disableEdit: PropTypes.func.isRequired
+  disableEdit: PropTypes.func.isRequired,
+  saveData: PropTypes.func.isRequired
 };
 
 export default InputEnabled;
