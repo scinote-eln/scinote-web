@@ -21,3 +21,8 @@ export const RELEASE_NOTES_LINK = "http://scinote.net/docs/release-notes/";
 export const PREMIUM_LINK = "http://scinote.net/premium/";
 export const CONTACT_US_LINK =
   "http://scinote.net/story-of-scinote/#contact-scinote";
+
+// settings
+export const SETTINGS_ACCOUNT_PROFILE = "/settings/account/profile";
+export const SETTINGS_ACCOUNT_PREFERENCES = "/settings/account/preferences";
+export const SETTINGS_TEAMS = "/settings/teams";

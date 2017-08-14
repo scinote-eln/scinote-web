@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import { LinkContainer } from "react-router-bootstrap";
 import { Nav, NavItem } from "react-bootstrap";
 
+import { SETTINGS_ACCOUNT_PROFILE, SETTINGS_TEAMS } from "../../../app/routes";
+
 export default class MainNav extends Component {
   constructor(props) {
     super(props);
@@ -23,14 +25,11 @@ export default class MainNav extends Component {
         <Nav bsStyle="tabs" activeKey="1" onSelect={this.handleSelect}>
           <LinkContainer
             active={this.state.active === "1"}
-            to="/settings/account/profile"
+            to={SETTINGS_ACCOUNT_PROFILE}
           >
             <NavItem eventKey="1">Account</NavItem>
           </LinkContainer>
-          <LinkContainer
-            to="/settings/teams"
-            active={this.state.active === "2"}
-          >
+          <LinkContainer to={SETTINGS_TEAMS} active={this.state.active === "2"}>
             <NavItem eventKey="2">Team</NavItem>
           </LinkContainer>
         </Nav>

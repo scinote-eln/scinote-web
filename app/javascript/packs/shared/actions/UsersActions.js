@@ -4,7 +4,9 @@ import {
   SET_CURRENT_USER,
   CHANGE_CURRENT_USER_FULL_NAME,
   CHANGE_CURRENT_USER_INITIALS,
-  CHANGE_CURRENT_USER_EMAIL
+  CHANGE_CURRENT_USER_EMAIL,
+  CHANGE_CURRENT_USER_PASSWORD,
+  CHANGE_CURRENT_USER_AVATAR
 } from "../../app/action_types";
 
 function addCurrentUser(data) {
@@ -45,5 +47,19 @@ export function changeEmail(email) {
   return {
     type: CHANGE_CURRENT_USER_EMAIL,
     payload: email
+  };
+}
+
+export function changePassword(password) {
+  return {
+    type: CHANGE_CURRENT_USER_PASSWORD,
+    payload: password
+  };
+}
+
+export function changeAvatar(avatarSrc) {
+  return {
+    type: CHANGE_CURRENT_USER_AVATAR,
+    payload: avatarSrc
   };
 }
