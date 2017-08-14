@@ -5,4 +5,5 @@ json.user do
   json.email user.email
   json.avatarPath avatar_path(user, :icon_small)
   json.avatarThumbPath avatar_path(user, :thumb)
+  json.statistics user.statistics
 end
