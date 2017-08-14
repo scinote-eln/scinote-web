@@ -9,7 +9,9 @@ import InputEnabled from "./InputEnabled";
 import {
   changeFullName,
   changeInitials,
-  changeEmail
+  changeEmail,
+  changePassword,
+  changeAvatar
 } from "../../../shared/actions/UsersActions";
 
 class MyProfile extends Component {
@@ -19,7 +21,9 @@ class MyProfile extends Component {
     this.state = {
       isFullNameEditable: false,
       areInitialsEditable: false,
-      isEmailEditable: false
+      isEmailEditable: false,
+      isPasswordEditable: false,
+      isAvatarEditable: false
     };
 
     this.toggleIsEditable = this.toggleIsEditable.bind(this);
@@ -34,9 +38,53 @@ class MyProfile extends Component {
     const areInitialsEditable = "areInitialsEditable";
     const isFullNameEditable = "isFullNameEditable";
     const isEmailEditable = "isEmailEditable";
+    const isPasswordEditable = "isPasswordEditable";
+    const isAvatarEditable = "isAvatarEditable";
     let fullNameField;
     let initialsField;
     let emailField;
+    let passwordField;
+    let avatarField;
+
+    if (this.state.isAvatarEditable) {
+      avatarField = (
+        <InputEnabled
+          labelValue="Avatar"
+          inputType="file"
+          inputValue=""
+          disableEdit={() => this.toggleIsEditable(isAvatarEditable)}
+          saveData={avatarSrc => this.props.changeAvatar(avatarSrc)}
+        />
+      );
+    } else {
+      avatarField = (
+        <Avatar
+          imgSource={this.props.avatarThumbPath}
+          enableEdit={() => this.toggleIsEditable(isAvatarEditable)}
+        />
+      );
+    }
+
+    if (this.state.isPasswordEditable) {
+      passwordField = (
+        <InputEnabled
+          labelValue="Change password"
+          inputType="password"
+          inputValue=""
+          disableEdit={() => this.toggleIsEditable(isPasswordEditable)}
+          saveData={newPassword => this.props.changePassword(newPassword)}
+        />
+      );
+    } else {
+      passwordField = (
+        <InputDisabled
+          labelValue="Change password"
+          inputType="password"
+          inputValue=""
+          enableEdit={() => this.toggleIsEditable(isPasswordEditable)}
+        />
+      );
+    }
 
     if (this.state.isEmailEditable) {
       emailField = (
@@ -105,10 +153,11 @@ class MyProfile extends Component {
       <div>
         <h2>My Profile</h2>
         <h4>Avatar</h4>
-        <Avatar imgSource={this.props.avatarThumbPath} />
+        {avatarField}
         {fullNameField}
         {initialsField}
         {emailField}
+        {passwordField}
       </div>
     );
   }
@@ -121,7 +170,9 @@ MyProfile.propTypes = {
   email: PropTypes.string.isRequired,
   changeFullName: PropTypes.func.isRequired,
   changeInitials: PropTypes.func.isRequired,
-  changeEmail: PropTypes.func.isRequired
+  changeEmail: PropTypes.func.isRequired,
+  changePassword: PropTypes.func.isRequired,
+  changeAvatar: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => state.current_user;
@@ -134,6 +185,12 @@ const mapDispatchToProps = dispatch => ({
   },
   changeEmail(email) {
     dispatch(changeEmail(email));
+  },
+  changePassword(password) {
+    dispatch(changePassword(password));
+  },
+  changeAvatar(avatarSrc) {
+    dispatch(changeAvatar(avatarSrc));
   }
 });
 
