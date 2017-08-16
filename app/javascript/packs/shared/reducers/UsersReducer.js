@@ -4,7 +4,8 @@ import {
   CHANGE_CURRENT_USER_INITIALS,
   CHANGE_CURRENT_USER_EMAIL,
   CHANGE_CURRENT_USER_PASSWORD,
-  CHANGE_CURRENT_USER_AVATAR
+  CHANGE_CURRENT_USER_AVATAR,
+  CHANGE_CURRENT_USER_TIMEZONE
 } from "../../app/action_types";
 
 export function currentUser(
@@ -14,7 +15,8 @@ export function currentUser(
     initials: "",
     email: "",
     avatarPath: "",
-    avatarThumbPath: ""
+    avatarThumbPath: "",
+    timezone: ""
   },
   action
 ) {
@@ -33,6 +35,8 @@ export function currentUser(
       return state;
     case CHANGE_CURRENT_USER_AVATAR:
       return Object.assign({}, state, { avatar: action.payload });
+    case CHANGE_CURRENT_USER_TIMEZONE:
+      return Object.assign({}, state, { timezone: action.payload });
     default:
       return state;
   }

@@ -6,4 +6,5 @@ json.user do
   json.avatarPath avatar_path(user, :icon_small)
   json.avatarThumbPath avatar_path(user, :thumb)
   json.statistics user.statistics
+  json.timezone user.time_zone
 end
