@@ -6,13 +6,14 @@ import InputDisabled from "./InputDisabled";
 import InputTimezone from "./InputTimezone";
 
 import { changeTimezone } from "../../../shared/actions/UsersActions";
+import NotificationsGroup from "./NotificationsGroup";
 
 class SettingsPreferences extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      isTimeZoneEditable: true
+      isTimeZoneEditable: false
     };
   }
 
@@ -52,6 +53,14 @@ class SettingsPreferences extends Component {
           Time zone setting affects all time & date fields throughout
           application.
         </small>
+
+        <h3>Notifications</h3>
+        <NotificationsGroup
+          type="assignement"
+          title="Assignement"
+          subtitle="Assignment notifications appear whenever you get assigned to a team, project, task."
+          imageUrl={this.props.avatarPath}
+        />
       </div>
     );
   }
@@ -59,7 +68,8 @@ class SettingsPreferences extends Component {
 
 SettingsPreferences.propTypes = {
   timezone: PropTypes.string.isRequired,
-  changeTimezone: PropTypes.func.isRequired
+  changeTimezone: PropTypes.func.isRequired,
+  avatarPath: PropTypes.string.isRequired
 };
 
 const mapStateToProps = state => state.current_user;
