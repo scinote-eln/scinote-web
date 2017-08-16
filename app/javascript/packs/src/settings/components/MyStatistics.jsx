@@ -15,7 +15,7 @@ class MyStatistics extends Component {
           <div>
             <MyStatisticsBox
               typeLength={stats.number_of_teams}
-              typeText="Team"
+              typeText="Teams"
             />
             <MyStatisticsBox
               typeLength={stats.number_of_projects}

@@ -6,6 +6,7 @@ const AvatarWrapper = styled.div`
   width: 100px;
   height: 100px;
   position: relative;
+  cursor: pointer;
 `;
 const EditAvatar = styled.span`
   position: absolute;

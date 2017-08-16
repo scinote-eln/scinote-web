@@ -6,7 +6,8 @@ import {
   CHANGE_CURRENT_USER_INITIALS,
   CHANGE_CURRENT_USER_EMAIL,
   CHANGE_CURRENT_USER_PASSWORD,
-  CHANGE_CURRENT_USER_AVATAR
+  CHANGE_CURRENT_USER_AVATAR,
+  CHANGE_CURRENT_USER_TIMEZONE
 } from "../../app/action_types";
 
 function addCurrentUser(data) {
@@ -61,5 +62,12 @@ export function changeAvatar(avatarSrc) {
   return {
     type: CHANGE_CURRENT_USER_AVATAR,
     payload: avatarSrc
+  };
+}
+
+export function changeTimezone(timezone) {
+  return {
+    type: CHANGE_CURRENT_USER_TIMEZONE,
+    payload: timezone
   };
 }
