@@ -7,7 +7,10 @@ import {
   CHANGE_CURRENT_USER_EMAIL,
   CHANGE_CURRENT_USER_PASSWORD,
   CHANGE_CURRENT_USER_AVATAR,
-  CHANGE_CURRENT_USER_TIMEZONE
+  CHANGE_CURRENT_USER_TIMEZONE,
+  CHANGE_CURRENT_USER_SYSTEM_NOTIFICATION,
+  CHANGE_CURRENT_USER_CHANGES_NOTIFICATION,
+  CHANGE_CURRENT_USER_ASSIGNEMENT_NOTIFICATION
 } from "../../app/action_types";
 
 function addCurrentUser(data) {
@@ -69,5 +72,38 @@ export function changeTimezone(timezone) {
   return {
     type: CHANGE_CURRENT_USER_TIMEZONE,
     payload: timezone
+  };
+}
+
+export function changeAssignmentsNotification(status) {
+  return {
+    type: CHANGE_CURRENT_USER_ASSIGNEMENT_NOTIFICATION,
+    payload: status
+  };
+}
+export function changeAssignmentsNotificationEmail(status) {
+  return {
+    type: CHANGE_CURRENT_USER_CHANGES_NOTIFICATION,
+    payload: status
+  };
+}
+export function changeRecentNotification(status) {
+  return {
+    type: CHANGE_CURRENT_USER_SYSTEM_NOTIFICATION,
+    payload: status
+  };
+}
+
+export function changeRecentNotificationEmail(status) {
+  return {
+    type: CHANGE_CURRENT_USER_SYSTEM_NOTIFICATION,
+    payload: status
+  };
+}
+
+export function changeSystemMessageNotificationEmail(status) {
+  return {
+    type: CHANGE_CURRENT_USER_SYSTEM_NOTIFICATION,
+    payload: status
   };
 }
