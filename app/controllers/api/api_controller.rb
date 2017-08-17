@@ -1,6 +1,5 @@
 module Api
   class ApiController < ActionController::API
-    attr_reader :authorized
     attr_reader :iss
     attr_reader :token
     attr_reader :current_user
@@ -21,7 +20,6 @@ module Api
     def initialize
       super
       @iss = nil
-      @authorized = false
     end
 
     def status
@@ -56,7 +54,10 @@ module Api
     end
 
     def authenticate_request!
-      return true if authorized
+      Extends::API_PLUGABLE_AUTH_METHODS.each do |auth_method|
+        method(auth_method).call
+        return true if current_user
+      end
       # Check request header for proper auth token
       payload = CoreJwt.decode(token)
       @current_user = User.find_by_id(payload['user_id'])

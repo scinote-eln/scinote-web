@@ -20,7 +20,9 @@ module Api
     end
 
     def self.read_iss(token)
-      JWT.decode(token, nil, false)[0][:iss].to_s
+      HashWithIndifferentAccess.new(
+        JWT.decode(token, nil, false)[0]
+      )[:iss].to_s
     end
 
     def self.refresh_needed?(payload)
