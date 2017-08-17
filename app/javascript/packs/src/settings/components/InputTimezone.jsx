@@ -1,8 +1,38 @@
 import React, { Component } from "react";
 import PropType from "prop-types";
 import { Button } from "react-bootstrap";
+import styled from "styled-components";
 import TimezonePicker from "react-bootstrap-timezone-picker";
 import "react-bootstrap-timezone-picker/dist/react-bootstrap-timezone-picker.min.css";
+
+import {
+  BORDER_LIGHT_COLOR,
+  PRIMARY_GREEN_COLOR,
+  PRIMARY_HOVER_COLOR
+} from "../../../app/constants/colors";
+
+const Wrapper = styled.div`
+  border: 1px solid ${BORDER_LIGHT_COLOR};
+  padding: 19px;
+  margin: 20px 0;
+
+  input {
+    margin-bottom: 3px;
+  }
+
+  .settings-warning {
+    margin-bottom: 15px;
+  }
+
+  .btn-primary {
+    background-color: ${PRIMARY_GREEN_COLOR};
+    border-color: ${PRIMARY_HOVER_COLOR};
+    margin-right: 7px;
+    &:hover {
+      background-color: ${PRIMARY_HOVER_COLOR};
+    }
+  }
+`;
 
 class InputTimezone extends Component {
   constructor(props) {
@@ -28,7 +58,7 @@ class InputTimezone extends Component {
   }
   render() {
     return (
-      <div>
+      <Wrapper>
         <h4>
           {this.props.labelValue}
         </h4>
@@ -40,13 +70,19 @@ class InputTimezone extends Component {
           onChange={this.handleChange}
           className="time-zone-container"
         />
+        <div className="settings-warning">
+          <small>
+            Time zone setting affects all time & date fields throughout
+            application.
+          </small>
+        </div>
         <Button bsStyle="primary" onClick={this.props.disableEdit}>
           Cancel
         </Button>
         <Button bsStyle="default" onClick={this.handleUpdate}>
           Update
         </Button>
-      </div>
+      </Wrapper>
     );
   }
 }

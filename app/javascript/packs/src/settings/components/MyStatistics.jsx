@@ -1,8 +1,14 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
+import styled from "styled-components";
 
 import MyStatisticsBox from "./MyStatisticsBox";
+
+const Wrapper = styled.div`
+  margin-left: -15px;
+  width: 260px;
+`;
 
 class MyStatistics extends Component {
   render() {
@@ -12,7 +18,7 @@ class MyStatistics extends Component {
       let boxes = <div>Loading...</div>;
       if (stats) {
         boxes = (
-          <div>
+          <Wrapper>
             <MyStatisticsBox
               typeLength={stats.number_of_teams}
               typeText="Teams"
@@ -29,7 +35,7 @@ class MyStatistics extends Component {
               typeLength={stats.number_of_protocols}
               typeText="Protocols"
             />
-          </div>
+          </Wrapper>
         );
       }
 

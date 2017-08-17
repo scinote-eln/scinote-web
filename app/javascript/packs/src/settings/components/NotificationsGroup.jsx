@@ -5,6 +5,11 @@ import styled from "styled-components";
 import NotificationsSwitchGroup from "./NotificationsSwitchGroup";
 import { WHITE_COLOR } from "../../../app/constants/colors";
 
+const IconWrapper = styled.div`
+  margin-top: 12px;
+  margin-left: 7px;
+`;
+
 const Icon = styled.span`
   border-radius: 50%;
   color: ${WHITE_COLOR};
@@ -54,12 +59,14 @@ class NotificationsGroup extends Component {
     return (
       <div>
         <div className="row">
-          <div className="col-sm-2">
+          <IconWrapper className="col-sm-1">
             {imgOrIcon}
-          </div>
+          </IconWrapper>
           <div className="col-sm-10">
             <h5>
-              {this.props.title}
+              <strong>
+                {this.props.title}
+              </strong>
             </h5>
             <p>
               {this.props.subtitle}
