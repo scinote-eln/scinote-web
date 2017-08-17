@@ -3,3 +3,4 @@ export const WHITE_COLOR = "#fff";
 export const BORDER_GRAY_COLOR = "#d2d2d2";
 export const WILD_SAND_COLOR = "#f5f5f5";
 export const MYSTIC_COLOR = "#eaeff2";
+export const ICON_GREEN_COLOR = "#8fd13f";
