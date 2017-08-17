@@ -4,9 +4,13 @@ import PropTypes from "prop-types";
 
 import InputDisabled from "./InputDisabled";
 import InputTimezone from "./InputTimezone";
-
 import { changeTimezone } from "../../../shared/actions/UsersActions";
 import NotificationsGroup from "./NotificationsGroup";
+import {
+  ASSIGNMENT_NOTIFICATION,
+  RECENT_NOTIFICATION,
+  SYSTEM_NOTIFICATION
+} from "./constants";
 
 class SettingsPreferences extends Component {
   constructor(props) {
@@ -56,9 +60,21 @@ class SettingsPreferences extends Component {
 
         <h3>Notifications</h3>
         <NotificationsGroup
-          type="assignement"
+          type={ASSIGNMENT_NOTIFICATION}
           title="Assignement"
           subtitle="Assignment notifications appear whenever you get assigned to a team, project, task."
+          imageUrl={this.props.avatarPath}
+        />
+        <NotificationsGroup
+          type={RECENT_NOTIFICATION}
+          title="Recent changes"
+          subtitle="Recent changes notifications appear whenever there is a change on a task you are assigned to."
+          imageUrl={this.props.avatarPath}
+        />
+        <NotificationsGroup
+          type={SYSTEM_NOTIFICATION}
+          title="System message"
+          subtitle="System message notifications are specifically sent by site maintainers to notify all users about a system update."
           imageUrl={this.props.avatarPath}
         />
       </div>
