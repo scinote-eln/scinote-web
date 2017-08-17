@@ -76,6 +76,8 @@
     "styled-components": "^2.1.1",
     "webpack": "^3.2.0",
     "webpack-manifest-plugin": "^1.1.2",
-    "webpack-merge": "^4.1.0"
+    "webpack-merge": "^4.1.0",
+    "react-bootstrap-table": "^4.0.0",
+    "react-data-grid": "^2.0.2"
   }
 }
