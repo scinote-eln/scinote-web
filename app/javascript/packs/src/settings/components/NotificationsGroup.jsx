@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 
-import NotificationsBtnGroup from "./NotificationsBtnGroup";
+import NotificationsSwitchGroup from "./NotificationsSwitchGroup";
 
 const Icon = styled.span`
   background-color: silver;
@@ -39,10 +39,9 @@ class NotificationsGroup extends Component {
             <p>
               {this.props.subtitle}
             </p>
+            <NotificationsSwitchGroup type={this.props.type} />
           </div>
         </div>
-
-        <NotificationsBtnGroup type={this.props.type} />
       </div>
     );
   }

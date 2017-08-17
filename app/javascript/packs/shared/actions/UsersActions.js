@@ -8,9 +8,11 @@ import {
   CHANGE_CURRENT_USER_PASSWORD,
   CHANGE_CURRENT_USER_AVATAR,
   CHANGE_CURRENT_USER_TIMEZONE,
-  CHANGE_CURRENT_USER_SYSTEM_NOTIFICATION,
-  CHANGE_CURRENT_USER_CHANGES_NOTIFICATION,
-  CHANGE_CURRENT_USER_ASSIGNEMENT_NOTIFICATION
+  CHANGE_ASSIGNMENTS_NOTIFICATION,
+  CHANGE_ASSIGNMENTS_NOTIFICATION_EMAIL,
+  CHANGE_RECENT_NOTIFICATION,
+  CHANGE_RECENT_NOTIFICATION_EMAIL,
+  CHANGE_SYSTEM_MESSAGE_NOTIFICATION_EMAIL
 } from "../../app/action_types";
 
 function addCurrentUser(data) {
@@ -77,33 +79,33 @@ export function changeTimezone(timezone) {
 
 export function changeAssignmentsNotification(status) {
   return {
-    type: CHANGE_CURRENT_USER_ASSIGNEMENT_NOTIFICATION,
+    type: CHANGE_ASSIGNMENTS_NOTIFICATION,
     payload: status
   };
 }
 export function changeAssignmentsNotificationEmail(status) {
   return {
-    type: CHANGE_CURRENT_USER_CHANGES_NOTIFICATION,
+    type: CHANGE_ASSIGNMENTS_NOTIFICATION_EMAIL,
     payload: status
   };
 }
 export function changeRecentNotification(status) {
   return {
-    type: CHANGE_CURRENT_USER_SYSTEM_NOTIFICATION,
+    type: CHANGE_RECENT_NOTIFICATION,
     payload: status
   };
 }
 
 export function changeRecentNotificationEmail(status) {
   return {
-    type: CHANGE_CURRENT_USER_SYSTEM_NOTIFICATION,
+    type: CHANGE_RECENT_NOTIFICATION_EMAIL,
     payload: status
   };
 }
 
 export function changeSystemMessageNotificationEmail(status) {
   return {
-    type: CHANGE_CURRENT_USER_SYSTEM_NOTIFICATION,
+    type: CHANGE_SYSTEM_MESSAGE_NOTIFICATION_EMAIL,
     payload: status
   };
 }
