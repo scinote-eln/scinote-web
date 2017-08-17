@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
+import styled from "styled-components";
 
 import Avatar from "./Avatar";
 import InputDisabled from "./InputDisabled";
@@ -13,6 +14,12 @@ import {
   changePassword,
   changeAvatar
 } from "../../../shared/actions/UsersActions";
+
+const AvatarLabel = styled.h4`
+  margin-top: 15px;
+  font-size: 13px;
+  font-weight: 700;
+`;
 
 class MyProfile extends Component {
   constructor(props) {
@@ -152,7 +159,7 @@ class MyProfile extends Component {
     return (
       <div>
         <h2>My Profile</h2>
-        <h4>Avatar</h4>
+        <AvatarLabel>Avatar</AvatarLabel>
         {avatarField}
         {fullNameField}
         {initialsField}

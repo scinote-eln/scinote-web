@@ -3,9 +3,29 @@ import PropTypes from "prop-types";
 import styled from "styled-components";
 import { FormGroup, FormControl, ControlLabel, Button } from "react-bootstrap";
 
+import {
+  BORDER_LIGHT_COLOR,
+  PRIMARY_GREEN_COLOR,
+  PRIMARY_HOVER_COLOR
+} from "../../../app/constants/colors";
+
 const StyledInputEnabled = styled.div`
-  border: 1px solid black;
-  padding: 10px;
+  border: 1px solid ${BORDER_LIGHT_COLOR};
+  padding: 19px;
+  margin: 20px 0;
+
+  input {
+    margin-bottom: 15px;
+  }
+
+  .btn-primary {
+    background-color: ${PRIMARY_GREEN_COLOR};
+    border-color: ${PRIMARY_HOVER_COLOR};
+    margin-right: 7px;
+    &:hover {
+      background-color: ${PRIMARY_HOVER_COLOR};
+    }
+  }
 `;
 
 const ErrorMsg = styled.div`color: red;`;
@@ -111,6 +131,9 @@ class InputEnabled extends Component {
         <form onSubmit={this.handleSubmit}>
           <FormGroup>
             {this.confirmationField()}
+            <h4>
+              Change {this.props.labelValue.toLowerCase()}
+            </h4>
             <ControlLabel>
               {this.props.labelValue}
             </ControlLabel>

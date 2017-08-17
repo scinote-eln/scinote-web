@@ -1,20 +1,34 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
+import styled from "styled-components";
 
 import InputDisabled from "./InputDisabled";
 import InputTimezone from "./InputTimezone";
 import { changeTimezone } from "../../../shared/actions/UsersActions";
 import NotificationsGroup from "./NotificationsGroup";
+
 import {
   ASSIGNMENT_NOTIFICATION,
   RECENT_NOTIFICATION,
   SYSTEM_NOTIFICATION
 } from "./constants";
+
 import {
   MAIN_COLOR_BLUE,
-  ICON_GREEN_COLOR
+  ICON_GREEN_COLOR,
+  BORDER_LIGHT_COLOR
 } from "../../../app/constants/colors";
+
+const WrapperInputDisabled = styled.div`
+  margin: 20px 0;
+  padding-bottom: 15px;
+  border-bottom: 1px solid ${BORDER_LIGHT_COLOR};
+
+  .settings-warning {
+    margin-top: -5px;
+  }
+`;
 
 class SettingsPreferences extends Component {
   constructor(props) {
@@ -45,22 +59,26 @@ class SettingsPreferences extends Component {
       );
     } else {
       timezoneField = (
-        <InputDisabled
-          labelValue="Time zone"
-          inputValue={this.props.timezone}
-          inputType="text"
-          enableEdit={() => this.toggleIsEditable(isTimeZoneEditable)}
-        />
+        <WrapperInputDisabled>
+          <InputDisabled
+            labelValue="Time zone"
+            inputValue={this.props.timezone}
+            inputType="text"
+            enableEdit={() => this.toggleIsEditable(isTimeZoneEditable)}
+          />
+          <div className="settings-warning">
+            <small>
+              Time zone setting affects all time & date fields throughout
+              application.
+            </small>
+          </div>
+        </WrapperInputDisabled>
       );
     }
 
     return (
-      <div className="col-xs-12 col-sm-7">
+      <div className="col-xs-12 col-sm-9">
         {timezoneField}
-        <small>
-          Time zone setting affects all time & date fields throughout
-          application.
-        </small>
 
         <h3>Notifications</h3>
         <NotificationsGroup

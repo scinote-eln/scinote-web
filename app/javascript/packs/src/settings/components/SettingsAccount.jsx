@@ -1,18 +1,26 @@
 import React, { Component } from "react";
 import { Route, Switch } from "react-router-dom";
+import styled from "styled-components";
 
 import SettingsLeftTab from "./SettingsLeftTab";
 import SettingsProfile from "./SettingsProfile";
 import SettingsPreferences from "./SettingsPreferences";
 
-class SettingsAccount extends Component {
-  constructor(props) {
-    super(props);
-  }
+import { BORDER_LIGHT_COLOR } from "../../../app/constants/colors";
 
+const Wrapper = styled.div`
+  background: white;
+  box-sizing: border-box;
+  border: 1px solid ${BORDER_LIGHT_COLOR};
+  border-top: none;
+  margin: 0;
+  padding: 16px 0 50px 0;
+`;
+
+class SettingsAccount extends Component {
   render() {
     return (
-      <div className="row">
+      <Wrapper className="row">
         <div className="col-xs-12 col-sm-3">
           <SettingsLeftTab />
         </div>
@@ -23,7 +31,7 @@ class SettingsAccount extends Component {
             component={SettingsPreferences}
           />
         </Switch>
-      </div>
+      </Wrapper>
     );
   }
 }
