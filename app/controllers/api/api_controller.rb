@@ -14,7 +14,7 @@ module Api
 
     rescue_from JWT::InvalidPayload, JWT::DecodeError do
       render json: { message: I18n.t('api.core.invalid_token') },
-             status: :forbidden
+             status: :unauthorized
     end
 
     def initialize

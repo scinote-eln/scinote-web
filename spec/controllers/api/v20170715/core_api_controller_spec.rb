@@ -42,8 +42,8 @@ describe Api::V20170715::CoreApiController, type: :controller do
           get :task_samples, params: { task_id: task.id }
         end
 
-        it 'Returns HTTP access denied' do
-          expect(response).to have_http_status(403)
+        it 'Returns HTTP unauthorized' do
+          expect(response).to have_http_status(401)
         end
       end
 
@@ -120,8 +120,8 @@ describe Api::V20170715::CoreApiController, type: :controller do
           get :tasks_tree
         end
 
-        it 'Returns HTTP access denied' do
-          expect(response).to have_http_status(403)
+        it 'Returns HTTP unauthorized' do
+          expect(response).to have_http_status(401)
         end
       end
     end
