@@ -11,6 +11,10 @@ import {
   RECENT_NOTIFICATION,
   SYSTEM_NOTIFICATION
 } from "./constants";
+import {
+  MAIN_COLOR_BLUE,
+  ICON_GREEN_COLOR
+} from "../../../app/constants/colors";
 
 class SettingsPreferences extends Component {
   constructor(props) {
@@ -63,19 +67,25 @@ class SettingsPreferences extends Component {
           type={ASSIGNMENT_NOTIFICATION}
           title="Assignement"
           subtitle="Assignment notifications appear whenever you get assigned to a team, project, task."
-          imageUrl={this.props.avatarPath}
+          imgUrl=""
+          iconClasses="fa fa-newspaper-o"
+          iconBackground={MAIN_COLOR_BLUE}
         />
         <NotificationsGroup
           type={RECENT_NOTIFICATION}
           title="Recent changes"
           subtitle="Recent changes notifications appear whenever there is a change on a task you are assigned to."
-          imageUrl={this.props.avatarPath}
+          imgUrl={this.props.avatarPath}
+          iconClasses=""
+          iconBackground=""
         />
         <NotificationsGroup
           type={SYSTEM_NOTIFICATION}
           title="System message"
           subtitle="System message notifications are specifically sent by site maintainers to notify all users about a system update."
-          imageUrl={this.props.avatarPath}
+          imgUrl=""
+          iconClasses="glyphicon glyphicon-tower"
+          iconBackground={ICON_GREEN_COLOR}
         />
       </div>
     );
