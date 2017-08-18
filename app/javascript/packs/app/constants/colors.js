@@ -11,3 +11,4 @@ export const PRIMARY_GREEN_COLOR = "#8fd13f";
 export const PRIMARY_HOVER_COLOR = "#75b22b";
 export const NOTIFICATION_YES = "#5a8921";
 export const NOTIFICATION_YES_BORDER = "#4d751c";
+export const SIDEBAR_HOVER_GRAY_COLOR = "#D2D2D2";

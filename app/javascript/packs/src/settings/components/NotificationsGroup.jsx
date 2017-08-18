@@ -5,6 +5,8 @@ import styled from "styled-components";
 import NotificationsSwitchGroup from "./NotificationsSwitchGroup";
 import { WHITE_COLOR } from "../../../app/constants/colors";
 
+const Wrapper = styled.div`margin-bottom: 6px;`;
+
 const IconWrapper = styled.div`
   margin-top: 12px;
   margin-left: 7px;
@@ -57,24 +59,22 @@ class NotificationsGroup extends Component {
     }
 
     return (
-      <div>
-        <div className="row">
-          <IconWrapper className="col-sm-1">
-            {imgOrIcon}
-          </IconWrapper>
-          <div className="col-sm-10">
-            <h5>
-              <strong>
-                {this.props.title}
-              </strong>
-            </h5>
-            <p>
-              {this.props.subtitle}
-            </p>
-            <NotificationsSwitchGroup type={this.props.type} />
-          </div>
+      <Wrapper className="row">
+        <IconWrapper className="col-sm-1">
+          {imgOrIcon}
+        </IconWrapper>
+        <div className="col-sm-10">
+          <h5>
+            <strong>
+              {this.props.title}
+            </strong>
+          </h5>
+          <p>
+            {this.props.subtitle}
+          </p>
+          <NotificationsSwitchGroup type={this.props.type} />
         </div>
-      </div>
+      </Wrapper>
     );
   }
 }

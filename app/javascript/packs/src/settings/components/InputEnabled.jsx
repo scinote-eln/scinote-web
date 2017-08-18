@@ -130,10 +130,10 @@ class InputEnabled extends Component {
       <StyledInputEnabled>
         <form onSubmit={this.handleSubmit}>
           <FormGroup>
-            {this.confirmationField()}
             <h4>
               Change {this.props.labelValue.toLowerCase()}
             </h4>
+            {this.confirmationField()}
             <ControlLabel>
               {this.props.labelValue}
             </ControlLabel>
