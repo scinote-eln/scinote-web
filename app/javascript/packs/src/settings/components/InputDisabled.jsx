@@ -6,7 +6,7 @@ import styled from "styled-components";
 const Wrapper = styled.div`margin-top: 19px;`;
 
 const MyFormControl = styled(FormControl)`
-  width: 150px;
+  width: 160px;
   display: inline;
 `;
 
