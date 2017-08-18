@@ -1075,11 +1075,13 @@ module PermissionHelper
   end
 
   def can_delete_column_in_repository(column)
-    is_normal_user_or_admin_of_team(column.repository.team)
+    column.created_by == current_user ||
+      is_admin_of_team(column.repository.team)
   end
 
   def can_edit_column_in_repository(column)
-    is_normal_user_or_admin_of_team(column.repository.team)
+    column.created_by == current_user ||
+      is_admin_of_team(column.repository.team)
   end
 
   def can_create_repository_records(repository)

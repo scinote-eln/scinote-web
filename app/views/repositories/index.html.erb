@@ -10,6 +10,7 @@
       <li role="presentation">
         <a href="#custom_repo_<%= repo.id %>"
            data-toggle="tab"
+           data-repo-table="#repository-table-<%= repo.id %>"
            aria-controls="custom_repo_<%= repo.id %>"
            data-url="<%=team_repository_show_tab_path(current_team, repo)%>"
            title="<%=repo.name%>"><%= truncate(repo.name, length: Constants::NAME_TRUNCATION_LENGTH) %></a>
@@ -53,4 +54,6 @@
   </div>
 <% end %>
 
+<%= stylesheet_link_tag 'datatables' %>
+<%= javascript_include_tag 'repositories/repository_datatable' %>
 <%= javascript_include_tag "repositories/index", "data-turbolinks-track" => true %>
