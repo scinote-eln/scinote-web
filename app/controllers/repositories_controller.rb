@@ -184,27 +184,27 @@ class RepositoriesController < ApplicationController
 
   def parse_sheet
     repository = current_team.repositories.find_by_id(params[:id])
-    parsed_file = ImportRepository::ParseRepository.new(
-      file: params[:file],
-      repository: repository,
-      session: session
-    )
 
-    respond_to do |format|
-      unless params[:file]
-        repository_response(t('teams.parse_sheet.errors.no_file_selected'))
-        return
-      end
-      begin
-        if parsed_file.too_large?
-          repository_response(t('general.file.size_exceeded',
-                                file_size: Constants::FILE_MAX_SIZE_MB))
-        elsif parsed_file.empty?
-          flash[:notice] = t('teams.parse_sheet.errors.empty_file')
-          redirect_to back and return
-        else
-          @import_data = parsed_file.data
-          if parsed_file.generated_temp_file?
+    unless params[:file]
+      repository_response(t('teams.parse_sheet.errors.no_file_selected'))
+      return
+    end
+    begin
+      parsed_file = ImportRepository::ParseRepository.new(
+        file: params[:file],
+        repository: repository,
+        session: session
+      )
+      if parsed_file.too_large?
+        repository_response(t('general.file.size_exceeded',
+                              file_size: Constants::FILE_MAX_SIZE_MB))
+      elsif parsed_file.empty?
+        flash[:notice] = t('teams.parse_sheet.errors.empty_file')
+        redirect_to back and return
+      else
+        @import_data = parsed_file.data
+        if parsed_file.generated_temp_file?
+          respond_to do |format|
             format.json do
               render json: {
                 html: render_to_string(
@@ -212,16 +212,16 @@ class RepositoriesController < ApplicationController
                 )
               }
             end
-          else
-            repository_response(t('teams.parse_sheet.errors.temp_file_failure'))
           end
+        else
+          repository_response(t('teams.parse_sheet.errors.temp_file_failure'))
         end
-      rescue ArgumentError, CSV::MalformedCSVError
-        repository_response(t('teams.parse_sheet.errors.invalid_file',
-                              encoding: ''.encoding))
-      rescue TypeError
-        repository_response(t('teams.parse_sheet.errors.invalid_extension'))
       end
+    rescue ArgumentError, CSV::MalformedCSVError
+      repository_response(t('teams.parse_sheet.errors.invalid_file',
+                            encoding: ''.encoding))
+    rescue TypeError
+      repository_response(t('teams.parse_sheet.errors.invalid_extension'))
     end
   end
 
@@ -238,8 +238,9 @@ class RepositoriesController < ApplicationController
                                 number_of_rows: status[:nr_of_added])
             render json: {}, status: :ok
           else
-            flash[:alert] = t('repositories.import_records.error_flash',
-                              message: status[:errors])
+            flash[:alert] =
+              t('repositories.import_records.partial_success_flash',
+                nr: status[:nr_of_added], total_nr: status[:total_nr])
             render json: {}, status: :unprocessable_entity
           end
         else
@@ -320,13 +321,15 @@ class RepositoriesController < ApplicationController
   end
 
   def repository_response(message)
-    format.html do
-      flash[:alert] = message
-      redirect_to :back
-    end
-    format.json do
-      render json: { message: message },
-        status: :unprocessable_entity
+    respond_to do |format|
+      format.html do
+        flash[:alert] = message
+        redirect_to :back
+      end
+      format.json do
+        render json: { message: message },
+          status: :unprocessable_entity
+      end
     end
   end
 

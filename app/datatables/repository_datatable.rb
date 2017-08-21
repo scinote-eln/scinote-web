@@ -152,7 +152,7 @@ class RepositoryDatatable < CustomDatatable
     # Make mappings of custom columns, so we have same id for every column
     i = 5
     @columns_mappings = {}
-    @repository.repository_columns.each do |column|
+    @repository.repository_columns.order(:id).each do |column|
       @columns_mappings[column.id] = i.to_s
       i += 1
     end
@@ -230,13 +230,31 @@ class RepositoryDatatable < CustomDatatable
 
   # Override default sort method if needed
   def sort_records(records)
-    if sort_column(order_params) == ASSIGNED_SORT_COL
-      # If "assigned" column is sorted
-      direction = sort_null_direction(order_params)
-      if @my_module
-        # Depending on the sort, order nulls first or
-        # nulls last on repository_cells association
-        return records if dt_params[:assigned] == 'assigned'
+    if params[:order].present? && params[:order].length == 1
+      if sort_column(params[:order].values[0]) == ASSIGNED_SORT_COL
+        # If "assigned" column is sorted when viewing assigned items
+        return records if @my_module && params[:assigned] == 'assigned'
+        # If "assigned" column is sorted
+        direction = sort_null_direction(params[:order].values[0])
+        if @my_module
+          # Depending on the sort, order nulls first or
+          # nulls last on repository_cells association
+          records.joins(
+            "LEFT OUTER JOIN my_module_repository_rows ON
+            (repository_rows.id = my_module_repository_rows.repository_row_id
+            AND (my_module_repository_rows.my_module_id = #{@my_module.id} OR
+                              my_module_repository_rows.id IS NULL))"
+          ).order("my_module_repository_rows.id NULLS #{direction}")
+        else
+          sort_assigned_records(records, params[:order].values[0]['dir'])
+        end
+      elsif sorting_by_custom_column
+        ci = sortable_displayed_columns[
+          params[:order].values[0][:column].to_i - 1
+        ]
+        column_id = @columns_mappings.key((ci.to_i + 1).to_s)
+        dir = sort_direction(params[:order].values[0])
+
         records.joins(
           "LEFT OUTER JOIN my_module_repository_rows ON
           (repository_rows.id = my_module_repository_rows.repository_row_id
@@ -306,5 +324,22 @@ class RepositoryDatatable < CustomDatatable
     sort_order.map! { |i| (i.to_i - 1).to_s }
 
     @sortable_displayed_columns = sort_order
+  end
+
+  def sort_assigned_records(records, direction)
+    assigned = records.joins(:my_module_repository_rows).distinct.pluck(:id)
+    unassigned = records.where.not(id: assigned).pluck(:id)
+    if direction == 'asc'
+      ids = assigned + unassigned
+    elsif direction == 'desc'
+      ids = unassigned + assigned
+    end
+
+    order_by_index = ActiveRecord::Base.send(
+      :sanitize_sql_array,
+      ["position((',' || repository_rows.id || ',') in ?)",
+      ids.join(',') + ',']
+    )
+    records.order(order_by_index)
   end
 end
