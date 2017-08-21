@@ -1,5 +1,5 @@
 <div class="repository-table">
-  <table id="repository-table" class="table"
+  <table id="repository-table-<%= repository.id %>" class="table"
     data-current-uri="<%= request.original_url %>"
     data-repository-id="<%= repository.id %>"
     data-source="<%= repository_index_link %>"
@@ -19,7 +19,7 @@
         <th id="row-name"><%= t("repositories.table.row_name") %></th>
         <th id="added-on"><%= t("repositories.table.added_on") %></th>
         <th id="added-by"><%= t("repositories.table.added_by") %></th>
-        <% repository.repository_columns.each do |column| %>
+        <% repository.repository_columns.order(:id).each do |column| %>
           <th class="repository-column" id="<%= column.id %>"
             <%= 'data-editable' if can_edit_column_in_repository(column) %>
             <%= 'data-deletable' if can_delete_column_in_repository(column) %>
@@ -35,6 +35,3 @@
     <tbody></tbody>
   </table>
 </div>
-
-<%= stylesheet_link_tag 'datatables' %>
-<%= javascript_include_tag('repositories/repository_datatable') %>

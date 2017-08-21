@@ -36,8 +36,7 @@ class TeamsController < ApplicationController
 
             # Get data (it will trigger any errors as well)
             @header = sheet.row(1)
-            @rows = [];
-            @rows << Hash[[@header, sheet.row(2)].transpose]
+            @columns = sheet.row(2)
 
             # Fill in fields for dropdown
             @available_fields = @team.get_available_sample_fields

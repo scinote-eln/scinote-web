@@ -31,7 +31,8 @@
   <% end %>
 </div>
 
-<div id="content">
+<div id="content"
+     data-repo-id="#repository-table-<%= @repository.id %>">
 	<%= render partial: "repositories/repository_table",
              locals: {
                repository: @repository,
@@ -40,3 +41,7 @@
              }
   %>
 </div>
+
+<%= stylesheet_link_tag 'datatables' %>
+<%= javascript_include_tag 'repositories/repository_datatable' %>
+<%= javascript_include_tag 'repositories/my_module_repository' %>

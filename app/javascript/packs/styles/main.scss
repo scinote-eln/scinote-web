@@ -3,6 +3,31 @@
 body {
   background-color: $color-concrete;
   color: $color-emperor;
-  font-family: "Open Sans",Arial,Helvetica,sans-serif;
+  font-family: "Open Sans", Arial, Helvetica, sans-serif;
   font-size: 13px;
+}
+
+.time-zone-container {
+  background: $color-white;
+  position: relative;
+  ul {
+    width: 99%;
+    height: 70vh;
+    overflow: auto;
+    position: absolute;
+    top: 35px;
+    padding-left: 5px;
+    background: $color-white;
+    z-index: 9999;
+  }
+
+  li {
+    list-style-type: none;
+    line-height: 1.4 em;
+    font-size: 1.5 em;
+    cursor: pointer;
+    &:hover {
+      background: $color-gainsboro;
+    }
+  }
 }

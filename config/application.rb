@@ -29,5 +29,8 @@ module Scinote
       csv: 'text/plain',
       wopitest: ['text/plain', 'inode/x-empty']
     }
+
+    # sciNote Core Application version
+    VERSION = File.read(Rails.root.join('VERSION')).strip.freeze
   end
 end
