@@ -1,0 +1,28 @@
+<div class="modal" id="aboutModal" tabindex="-1" role="dialog" aria-labelledby="aboutModal" data-role="about-modal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title"><%= t('about.modal_title') %></h4>
+      </div>
+      <div class="modal-body">
+        <strong><%= t('about.core_version') %></strong>
+        <br />
+        <%= Scinote::Application::VERSION %>
+        <br />
+        <br />
+        <div data-hook="about-modal-addon-versions">
+          <strong><%= t('about.addon_versions') %></strong>
+          <br />
+          <% list_all_addons.each do |addon| %>
+            <%= "#{addon.name}:" %>
+            <br />
+            <%= addon::VERSION %>
+            <br />
+            <br />
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
