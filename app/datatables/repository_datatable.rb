@@ -249,48 +249,11 @@ class RepositoryDatatable < CustomDatatable
           sort_assigned_records(records, params[:order].values[0]['dir'])
         end
       elsif sorting_by_custom_column
-        # Check if have to filter records first
-        # if params[:search].present? && params[:search][:value].present?
-        #   # Couldn't force ActiveRecord to yield the same query as below because
-        #   # Rails apparently forgets to join stuff in subqueries -
-        #   # #justrailsthings
-        #   conditions = build_conditions_for(params[:search][:value])
-        #
-        #   filter_query = %(SELECT "samples"."id" FROM "samples"
-        #     LEFT OUTER JOIN "sample_custom_fields" ON
-        #     "sample_custom_fields"."sample_id" = "samples"."id"
-        #     LEFT OUTER JOIN "users" ON "users"."id" = "repository_row"."user_id"
-        #     WHERE "samples"."team_id" = #{@team.id} AND #{conditions.to_sql})
-        #
-        #   records = records.where("samples.id IN (#{filter_query})")
-        # end
-
         ci = sortable_displayed_columns[
           params[:order].values[0][:column].to_i - 1
         ]
         column_id = @columns_mappings.key((ci.to_i + 1).to_s)
         dir = sort_direction(params[:order].values[0])
-
-        # Because repository records can have multiple custom cells,
-        # we first group them by samples.id and inside that group we sort them by column_id. Because
-        # we sort them ASC, sorted columns will be on top. Distinct then only
-        # takes the first row and cuts the rest of every group and voila we have
-        # 1 row for every sample, which are not sorted yet ...
-        # records = records.select('DISTINCT ON (repository_rows.id) *')
-        # .order("repository_rows.id, CASE WHEN repository_cells.repository_column_id = #{column_id} THEN 1 ELSE 2 END ASC")
-
-        # ... this little gem (pun intended) then takes the records query, sorts it again
-        # and paginates it. sq.t0_* are determined empirically and are crucial -
-        # imagine A -> B -> C transitive relation but where A and C are the
-        # same. Useless right? But not when you acknowledge that find_by_sql
-        # method does some funky stuff when your query spans multiple queries -
-        # Sample object might have id from SampleType, name from
-        # User ... chaos ensues basically. If something changes in db this might
-        # change.
-        # formated_date = (I18n.t 'time.formats.datatables_date').gsub!(/^\"|\"?$/, '')
-        # Sample.find_by_sql("SELECT sq.t0_r0 as id, sq.t0_r1 as name, to_char( sq.t0_r4, '#{ formated_date }' ) as created_at, sq.t0_r5, s, sq.t0_r2 as user_id, sq.custom_field_id FROM (#{records.to_sql})
-        #                              as sq ORDER BY CASE WHEN sq.custom_field_id = #{column_id} THEN 1 ELSE 2 END #{dir}, sq.value #{dir}
-        #                              LIMIT #{per_page} OFFSET #{offset}")
 
         records.joins(
           "LEFT OUTER JOIN my_module_repository_rows ON
