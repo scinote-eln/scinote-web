@@ -41,6 +41,8 @@ Rails.application.routes.draw do
     get 'not_found', to: 'application#not_found', as: 'not_found'
 
     # Settings
+    resources :users, only: :index # needed for testing signup
+
     get 'users/settings/account/preferences',
         to: 'users/settings/account/preferences#index',
         as: 'preferences'

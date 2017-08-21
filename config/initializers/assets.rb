@@ -80,6 +80,8 @@ Rails.application.config.assets.precompile += %w(repositories/index.js)
 Rails.application.config.assets.precompile += %w(repositories/edit.js)
 Rails.application.config.assets.precompile +=
   %w(repositories/repository_datatable.js)
+Rails.application.config.assets.precompile +=
+  %w(repositories/my_module_repository.js)
 
 # Libraries needed for SPA
 Rails.application.config.assets.precompile += %w(bootstrap/css/bootstrap.min.css)

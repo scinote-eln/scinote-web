@@ -19,9 +19,7 @@ class RepositoryRowsController < ApplicationController
 
     record.transaction do
       record.name = record_params[:name] unless record_params[:name].blank?
-      unless record.save
-        errors[:default_fields] = record.errors.messages
-      end
+      errors[:default_fields] = record.errors.messages unless record.save
       if params[:repository_cells]
         params[:repository_cells].each do |key, value|
           column = @repository.repository_columns.detect do |c|
@@ -94,9 +92,7 @@ class RepositoryRowsController < ApplicationController
 
     @record.transaction do
       @record.name = record_params[:name].blank? ? nil : record_params[:name]
-      unless @record.save
-        errors[:default_fields] = @record.errors.messages
-      end
+      errors[:default_fields] = @record.errors.messages unless @record.save
       if params[:repository_cells]
         params[:repository_cells].each do |key, value|
           existing = @record.repository_cells.detect do |c|
@@ -119,7 +115,7 @@ class RepositoryRowsController < ApplicationController
             column = @repository.repository_columns.detect do |c|
               c.id == key.to_i
             end
-            value = RepositoryTextValue.new(
+            cell_value = RepositoryTextValue.new(
               data: value,
               created_by: current_user,
               last_modified_by: current_user,
@@ -128,15 +124,15 @@ class RepositoryRowsController < ApplicationController
                 repository_column: column
               }
             )
-            if value.save
-              record_annotation_notification(@record, value.repository_cell)
+            if cell_value.save
+              record_annotation_notification(@record,
+                                             cell_value.repository_cell)
             else
               errors[:repository_cells] << {
-                "#{column.id}": value.errors.messages
+                "#{column.id}": cell_value.errors.messages
               }
             end
           end
-          raise ActiveRecord::Rollback if errors[:repository_cells].any?
         end
         # Clean up empty cells, not present in updated record
         @record.repository_cells.each do |cell|

@@ -18,7 +18,7 @@
     $('#form-records-file').on('ajax:success', function(ev, data) {
       $('#modal-import-records').modal('hide');
       $(data.html).appendTo('body').promise().done(function() {
-        $('#parse-records_modal')
+        $('#parse-records-modal')
           .modal('show')
           .on('hidden.bs.modal', function() {
             animateSpinner();
@@ -26,6 +26,11 @@
           });
         repositoryRecordsImporter();
       });
+    }).on('ajax:error', function(ev, data) {
+      $(this).find('.form-group').addClass('has-error');
+      $(this).find('.form-group').find('.help-block').remove();
+      $(this).find('.form-group').append("<span class='help-block'>" +
+                                         data.responseJSON.message + '</span>');
     });
   }
 
@@ -41,8 +46,10 @@
         success: function (data) {
         	var tabBody = $(pane.context.hash).find(".tab-content-body");
           tabBody.html(data.html);
-          pane.tab('show').promise().done(function() {
+          pane.tab('show').promise().done(function(el) {
             initImportRecordsModal();
+            RepositoryDatatable.destroy()
+            RepositoryDatatable.init(el.attr('data-repo-table'));
           });
         },
         error: function (error) {

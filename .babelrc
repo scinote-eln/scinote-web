@@ -8,11 +8,11 @@
           "browsers": "> 1%",
           "uglify": true
         },
-        "useBuiltIns": true,
-        "loose": true
+        "useBuiltIns": true
       }
     ],
-    "react"
+    "react",
+    "es2015"
   ],
   "plugins": [
     "transform-object-rest-spread",

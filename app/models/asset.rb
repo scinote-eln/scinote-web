@@ -384,10 +384,17 @@ class Asset < ApplicationRecord
     action = get_action(file_ext, action)
     if !action.nil?
       action_url = action.urlsrc
-      action_url = action_url.gsub(/<IsLicensedUser=BUSINESS_USER&>/,
-                                   'IsLicensedUser=0&')
-      action_url = action_url.gsub(/<IsLicensedUser=BUSINESS_USER>/,
-                                   'IsLicensedUser=0')
+      if ENV['WOPI_BUSINESS_USERS'] && ENV['WOPI_BUSINESS_USERS']=='true'
+        action_url = action_url.gsub(/<IsLicensedUser=BUSINESS_USER&>/,
+                                     'IsLicensedUser=1&')
+        action_url = action_url.gsub(/<IsLicensedUser=BUSINESS_USER>/,
+                                     'IsLicensedUser=1')
+      else
+        action_url = action_url.gsub(/<IsLicensedUser=BUSINESS_USER&>/,
+                                     'IsLicensedUser=0&')
+        action_url = action_url.gsub(/<IsLicensedUser=BUSINESS_USER>/,
+                                     'IsLicensedUser=0')
+      end
       action_url = action_url.gsub(/<.*?=.*?>/, '')
 
       rest_url = Rails.application.routes.url_helpers.wopi_rest_endpoint_url(
