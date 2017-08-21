@@ -7,3 +7,44 @@ body {
   font-family: "Open Sans",Arial,Helvetica,sans-serif;
   font-size: 13px;
 }
+
+.react-bs-table {
+  thead {
+    background-color: #909088;
+
+    > tr > th,
+    >tr > td {
+      padding: 6px;
+      padding-right: 30px;
+    }
+
+    > tr > th {
+      border-bottom: 2px solid #ddd;
+      border-bottom-width: 0;
+      border-left: 2px solid #fcfcfc;
+      color: #fff;
+      font-weight: normal;
+      vertical-align: bottom;
+
+      &:first-child {
+        border-left: none;
+      }
+    }
+  }
+
+  td, th {
+    box-sizing: content-box;
+  }
+
+  td {
+    overflow-wrap: break-word;
+    text-overflow: ellipsis;
+    word-break: break-word;
+  }
+
+  .sorting_desc,
+  .sorting_asc {
+    background-color: #37a0d9;
+  }
+}
+
