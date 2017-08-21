@@ -25,9 +25,9 @@ class GlobalActivitiesModal extends Component {
       );
     }
     return this.props.activities.map((activity, i, arr) => {
-      let newDate = new Date(activity.created_at);
+      const newDate = new Date(activity.created_at);
       if (i > 0) {
-        let prevDate = new Date(arr[i - 1].created_at);
+        const prevDate = new Date(arr[i - 1].created_at);
         if (prevDate < newDate) {
           return [
             <ActivityDateElement key={newDate} date={newDate} />,
@@ -45,8 +45,8 @@ class GlobalActivitiesModal extends Component {
   }
 
   addMoreActivities() {
-    let last_id = _.last(this.props.activities).id;
-    this.props.fetchActivities(last_id);
+    const lastId = _.last(this.props.activities).id;
+    this.props.fetchActivities(lastId);
   }
 
   addMoreButton() {
@@ -100,13 +100,13 @@ GlobalActivitiesModal.propTypes = {
 };
 
 const mapStateToProps = ({ global_activities }) => {
-  let { activities, more } = global_activities;
+  const { activities, more } = global_activities;
   return { activities, more };
 };
 
 const mapDispatchToProps = dispatch => ({
-  fetchActivities(last_id) {
-    dispatch(getActivities(last_id));
+  fetchActivities(lastId) {
+    dispatch(getActivities(lastId));
   }
 });
 

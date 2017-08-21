@@ -43,7 +43,7 @@ class Navigation extends Component {
     this.state = {
       showActivitesModal: false,
       page: "",
-      currentTeam: { id: 0 }
+      current_team: { id: 0 }
     };
     this.selectItemCallback = this.selectItemCallback.bind(this);
     this.closeModalCallback = this.closeModalCallback.bind(this);
@@ -74,10 +74,10 @@ class Navigation extends Component {
             </Navbar.Brand>
           </Navbar.Header>
           <Nav>
-            <NavItem eventKey={1} href="/">
+            <NavItem onClick={() => (window.location = "/")}>
               <span className="glyphicon glyphicon-home" title="Home" />
             </NavItem>
-            <NavItem eventKey={2} href="/protocols">
+            <NavItem onClick={() => (window.location = "/protocols")}>
               <span
                 className="glyphicon glyphicon-list-alt"
                 title="Protocol repositories"
@@ -85,7 +85,9 @@ class Navigation extends Component {
             </NavItem>
             <NavItem
               eventKey={3}
-              href={`/teams/${this.state.currentTeam.id}/repositories`}
+              onClick={() =>
+                (window.location = `/teams/${this.props.current_team
+                  .id}/repositories`)}
             >
               <i
                 className="fa fa-cubes"
@@ -118,14 +120,22 @@ class Navigation extends Component {
 }
 
 Navigation.propTypes = {
-  fetchActivities: PropTypes.func.isRequired
+  fetchActivities: PropTypes.func.isRequired,
+  current_team: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    name: PropTypes.string.isRequired,
+    current_team: PropTypes.bool.isRequired
+  }).isRequired
 };
 
-// Map the fetch activity action to component
+// Map the states from store to component props
+const mapStateToProps = ({ current_team }) => ({ current_team });
+
+// Map the fetch activity action to component props
 const mapDispatchToProps = dispatch => ({
   fetchActivities() {
     dispatch(getActivities());
   }
 });
 
-export default connect(null, mapDispatchToProps)(Navigation);
+export default connect(mapStateToProps, mapDispatchToProps)(Navigation);

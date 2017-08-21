@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "../../app/axios";
 import { CURRENT_USER_PATH } from "../../app/routes";
 import { SET_CURRENT_USER } from "../../app/action_types";
 

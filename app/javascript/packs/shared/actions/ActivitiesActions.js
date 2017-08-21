@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "../../app/axios";
 import { ACTIVITIES_PATH } from "../../app/routes";
 import { GLOBAL_ACTIVITIES_DATA } from "../../app/action_types";
 
