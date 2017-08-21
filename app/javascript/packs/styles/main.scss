@@ -41,10 +41,30 @@ body {
     text-overflow: ellipsis;
     word-break: break-word;
   }
-
-  .sorting_desc,
-  .sorting_asc {
-    background-color: #37a0d9;
-  }
 }
 
+.react-grid-Main {
+  background-color: inherit;
+
+  .react-grid-Grid {
+    background-color: inherit;
+  }
+
+  .react-grid-Header {
+    .react-grid-HeaderCell {
+      background-color: #909088;
+
+      color: #fff;
+      font-weight: normal;
+      vertical-align: bottom;
+
+      &:first-child {
+        border-left: none;
+      }
+    }
+  }
+
+  .react-grid-Canvas {
+    background-color: inherit;
+  }
+}
