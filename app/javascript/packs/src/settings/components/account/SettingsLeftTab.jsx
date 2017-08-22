@@ -6,12 +6,12 @@ import styled from "styled-components";
 import {
   SETTINGS_ACCOUNT_PROFILE,
   SETTINGS_ACCOUNT_PREFERENCES
-} from "../../../app/routes";
+} from "../../../../app/routes";
 
 import {
   SIDEBAR_HOVER_GRAY_COLOR,
   LIGHT_BLUE_COLOR
-} from "../../../app/constants/colors";
+} from "../../../../app/constants/colors";
 
 const MyLinkContainer = styled(LinkContainer)`
   a {
@@ -43,7 +43,7 @@ const MyLinkContainer = styled(LinkContainer)`
   }
 `;
 
-const SettingsAccountLeftTab = () =>
+const SettingsLeftTab = () =>
   <Nav bsStyle="pills" stacked activeKey={1}>
     <MyLinkContainer to={SETTINGS_ACCOUNT_PROFILE}>
       <NavItem eventKey={1}>Profile</NavItem>
@@ -53,4 +53,4 @@ const SettingsAccountLeftTab = () =>
     </MyLinkContainer>
   </Nav>;
 
-export default SettingsAccountLeftTab;
+export default SettingsLeftTab;

@@ -8,7 +8,7 @@ import {
   ASSIGNMENT_NOTIFICATION,
   RECENT_NOTIFICATION,
   SYSTEM_NOTIFICATION
-} from "./constants";
+} from "../constants";
 
 import {
   changeAssignmentsNotification,
@@ -16,7 +16,7 @@ import {
   changeRecentNotification,
   changeRecentNotificationEmail,
   changeSystemMessageNotificationEmail
-} from "../../../shared/actions/UsersActions";
+} from "../../../../../shared/actions/UsersActions";
 
 class NotificationsSwitchGroup extends Component {
   constructor(props) {

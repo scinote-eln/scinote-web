@@ -12,8 +12,8 @@ import messages from "../../locales/messages";
 import Navigation from "../../shared/navigation";
 import NotFound from "../../shared/404/NotFound";
 import MainNav from "./components/MainNav";
-import SettingsAccount from "./components/SettingsAccount";
-import SettingsTeams from "./components/SettingsTeams";
+import SettingsAccount from "./components/account/SettingsAccount";
+import SettingsTeams from "./components/team/SettingsTeams";
 
 addLocaleData([...enLocaleData]);
 const locale = "en-US";

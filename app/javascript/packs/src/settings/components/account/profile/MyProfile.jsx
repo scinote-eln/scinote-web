@@ -4,8 +4,8 @@ import PropTypes from "prop-types";
 import styled from "styled-components";
 
 import Avatar from "./Avatar";
-import InputDisabled from "./InputDisabled";
-import InputEnabled from "./InputEnabled";
+import InputDisabled from "../InputDisabled";
+import InputEnabled from "../InputEnabled";
 
 import {
   changeFullName,
@@ -13,7 +13,7 @@ import {
   changeEmail,
   changePassword,
   changeAvatar
-} from "../../../shared/actions/UsersActions";
+} from "../../../../../shared/actions/UsersActions";
 
 const AvatarLabel = styled.h4`
   margin-top: 15px;

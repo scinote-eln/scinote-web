@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-import { BORDER_LIGHT_COLOR } from "../../../app/constants/colors";
+import { BORDER_LIGHT_COLOR } from "../../../../app/constants/colors";
 
 const Wrapper = styled.div`
   background: white;

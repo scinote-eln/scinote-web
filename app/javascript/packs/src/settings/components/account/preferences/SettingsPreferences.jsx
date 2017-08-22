@@ -3,22 +3,22 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 
-import InputDisabled from "./InputDisabled";
+import InputDisabled from "../InputDisabled";
 import InputTimezone from "./InputTimezone";
-import { changeTimezone } from "../../../shared/actions/UsersActions";
+import { changeTimezone } from "../../../../../shared/actions/UsersActions";
 import NotificationsGroup from "./NotificationsGroup";
 
 import {
   ASSIGNMENT_NOTIFICATION,
   RECENT_NOTIFICATION,
   SYSTEM_NOTIFICATION
-} from "./constants";
+} from "../constants";
 
 import {
   MAIN_COLOR_BLUE,
   ICON_GREEN_COLOR,
   BORDER_LIGHT_COLOR
-} from "../../../app/constants/colors";
+} from "../../../../../app/constants/colors";
 
 const WrapperInputDisabled = styled.div`
   margin: 20px 0;

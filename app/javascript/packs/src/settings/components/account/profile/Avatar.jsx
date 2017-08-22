@@ -2,7 +2,10 @@ import React from "react";
 import PropTypes, { string } from "prop-types";
 import styled from "styled-components";
 
-import { WHITE_COLOR, DARK_GRAY_COLOR } from "../../../app/constants/colors";
+import {
+  WHITE_COLOR,
+  DARK_GRAY_COLOR
+} from "../../../../../app/constants/colors";
 
 const AvatarWrapper = styled.div`
   width: 100px;

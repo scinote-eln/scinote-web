@@ -6,7 +6,7 @@ import {
   WHITE_COLOR,
   NOTIFICATION_YES,
   NOTIFICATION_YES_BORDER
-} from "../../../app/constants/colors";
+} from "../../../../../app/constants/colors";
 
 const Wrapper = styled.div`margin-top: 13px;`;
 

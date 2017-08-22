@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import styled from "styled-components";
 
 import NotificationsSwitchGroup from "./NotificationsSwitchGroup";
-import { WHITE_COLOR } from "../../../app/constants/colors";
+import { WHITE_COLOR } from "../../../../../app/constants/colors";
 
 const Wrapper = styled.div`margin-bottom: 6px;`;
 

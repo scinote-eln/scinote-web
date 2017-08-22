@@ -3,10 +3,10 @@ import { Route, Switch } from "react-router-dom";
 import styled from "styled-components";
 
 import SettingsLeftTab from "./SettingsLeftTab";
-import SettingsProfile from "./SettingsProfile";
-import SettingsPreferences from "./SettingsPreferences";
+import SettingsProfile from "./profile/SettingsProfile";
+import SettingsPreferences from "./preferences/SettingsPreferences";
 
-import { BORDER_LIGHT_COLOR } from "../../../app/constants/colors";
+import { BORDER_LIGHT_COLOR } from "../../../../app/constants/colors";
 
 const Wrapper = styled.div`
   background: white;

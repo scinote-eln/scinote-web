@@ -7,7 +7,7 @@ import {
   BORDER_LIGHT_COLOR,
   PRIMARY_GREEN_COLOR,
   PRIMARY_HOVER_COLOR
-} from "../../../app/constants/colors";
+} from "../../../../app/constants/colors";
 
 const StyledInputEnabled = styled.div`
   border: 1px solid ${BORDER_LIGHT_COLOR};
