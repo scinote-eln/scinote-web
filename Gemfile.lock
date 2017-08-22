@@ -300,8 +300,6 @@ GEM
       actionmailer (>= 3.2.6, < 6)
       actionpack (>= 3.2.6, < 6)
       devise (>= 3.2, < 6)
-    skylight (0.10.0)
-      activesupport (>= 3.0.0)
     sourcemap (0.1.1)
     spinjs-rails (1.4)
       rails (>= 3.1)
@@ -409,7 +407,6 @@ DEPENDENCIES
   shoulda-matchers (>= 3.0.1)
   silencer
   simple_token_authentication (~> 1.0)
-  skylight
   sneaky-save!
   spinjs-rails
   starscope
