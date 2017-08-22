@@ -12,7 +12,14 @@ import {
 const InfoDropdown = () =>
   <NavDropdown
     noCaret
-    title={<span className="glyphicon glyphicon-info-sign" />}
+    title={
+      <span>
+        <span className="glyphicon glyphicon-info-sign" />&nbsp;
+        <span className="visible-xs-inline visible-sm-inline">
+          <FormattedMessage id="navbar.info_label" />
+        </span>
+      </span>
+    }
     id="nav-info-dropdown"
   >
     <MenuItem href={CUSTOMER_SUPPORT_LINK} target="_blank">

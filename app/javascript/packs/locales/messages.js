@@ -4,7 +4,14 @@ export default {
       close: "Close"
     },
     navbar: {
-      page_title: "sciNote"
+      page_title: "sciNote",
+      home_label: "Home",
+      protocols_label: "Protocols",
+      repositories_label: "Repositories",
+      activities_label: "Activities",
+      search_label: "Search",
+      notifications_label: "Notifications",
+      info_label: "Info"
     },
     activities: {
       modal_title: "Activities",

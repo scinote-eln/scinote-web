@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Navbar, Nav, NavItem } from "react-bootstrap";
+import { FormattedMessage } from "react-intl";
 import styled from "styled-components";
 import {
   MAIN_COLOR_BLUE,
@@ -88,26 +89,38 @@ class Navigation extends Component {
           </Navbar.Header>
           <Nav>
             <NavItem eventKey={1}>
-              <span className="glyphicon glyphicon-home" title="Home" />
+              <span className="glyphicon glyphicon-home" title="Home" />&nbsp;
+              <span className="visible-xs-inline visible-sm-inline">
+                <FormattedMessage id="navbar.home_label" />
+              </span>
             </NavItem>
             <NavItem eventKey={2}>
               <span
                 className="glyphicon glyphicon-list-alt"
                 title="Protocol repositories"
-              />
+              />&nbsp;
+              <span className="visible-xs-inline visible-sm-inline">
+                <FormattedMessage id="navbar.protocols_label" />
+              </span>
             </NavItem>
             <NavItem eventKey={3}>
               <i
                 className="fa fa-cubes"
                 aria-hidden="true"
                 title="Repositories"
-              />
+              />&nbsp;
+              <span className="visible-xs-inline visible-sm-inline">
+                <FormattedMessage id="navbar.repositories_label" />
+              </span>
             </NavItem>
             <NavItem eventKey={4}>
               <span
                 className="glyphicon glyphicon-equalizer"
                 title="Activities"
-              />
+              />&nbsp;
+              <span className="visible-xs-inline visible-sm-inline">
+                <FormattedMessage id="navbar.activities_label" />
+              </span>
             </NavItem>
           </Nav>
           <Nav pullRight>
