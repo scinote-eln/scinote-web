@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
+import { FormattedMessage } from "react-intl";
 
 import {
   WHITE_COLOR,
@@ -47,14 +48,14 @@ class NotificationsSwitch extends Component {
             disabled={this.props.isDisabled}
             onClick={this.handleClick}
           >
-            No
+            <FormattedMessage id="settings_page.no" />
           </LeftButton>
           <RightButton
             className="btn btn-primary"
             disabled={this.props.isDisabled}
             onClick={this.handleClick}
           >
-            Yes
+            <FormattedMessage id="settings_page.yes" />
           </RightButton>
         </div>
       );
@@ -66,14 +67,14 @@ class NotificationsSwitch extends Component {
             disabled={this.props.isDisabled}
             onClick={this.handleClick}
           >
-            No
+            <FormattedMessage id="settings_page.no" />
           </LeftButton>
           <RightButton
             className="btn btn-default"
             disabled={this.props.isDisabled}
             onClick={this.handleClick}
           >
-            Yes
+            <FormattedMessage id="settings_page.yes" />
           </RightButton>
         </div>
       );
@@ -82,7 +83,7 @@ class NotificationsSwitch extends Component {
     return (
       <Wrapper className="row">
         <div className="col-sm-4 col-sm-offset-1">
-          {this.props.title}
+          <FormattedMessage id={this.props.title} />
         </div>
         <div className="col-sm-7">
           {switchBtn}

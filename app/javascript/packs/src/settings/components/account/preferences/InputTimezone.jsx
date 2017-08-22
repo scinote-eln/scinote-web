@@ -4,6 +4,7 @@ import { Button } from "react-bootstrap";
 import styled from "styled-components";
 import TimezonePicker from "react-bootstrap-timezone-picker";
 import "react-bootstrap-timezone-picker/dist/react-bootstrap-timezone-picker.min.css";
+import { FormattedMessage } from "react-intl";
 
 import {
   BORDER_LIGHT_COLOR,
@@ -72,8 +73,7 @@ class InputTimezone extends Component {
         />
         <div className="settings-warning">
           <small>
-            Time zone setting affects all time & date fields throughout
-            application.
+            <FormattedMessage id="settings_page.time_zone_warning" />
           </small>
         </div>
         <Button bsStyle="primary" onClick={this.props.disableEdit}>

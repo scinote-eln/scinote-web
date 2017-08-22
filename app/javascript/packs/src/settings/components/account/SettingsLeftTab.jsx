@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Nav, NavItem } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import styled from "styled-components";
+import { FormattedMessage } from "react-intl";
 
 import {
   SETTINGS_ACCOUNT_PROFILE,
@@ -46,10 +47,14 @@ const MyLinkContainer = styled(LinkContainer)`
 const SettingsLeftTab = () =>
   <Nav bsStyle="pills" stacked activeKey={1}>
     <MyLinkContainer to={SETTINGS_ACCOUNT_PROFILE}>
-      <NavItem eventKey={1}>Profile</NavItem>
+      <NavItem eventKey={1}>
+        <FormattedMessage id="settings_page.profile" />
+      </NavItem>
     </MyLinkContainer>
     <MyLinkContainer to={SETTINGS_ACCOUNT_PREFERENCES}>
-      <NavItem eventKey={2}>Preferences</NavItem>
+      <NavItem eventKey={2}>
+        <FormattedMessage id="settings_page.preferences" />
+      </NavItem>
     </MyLinkContainer>
   </Nav>;
 

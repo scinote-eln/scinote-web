@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes, { string } from "prop-types";
 import styled from "styled-components";
+import { FormattedMessage } from "react-intl";
 
 import {
   WHITE_COLOR,
@@ -28,7 +29,8 @@ const Avatar = props =>
   <AvatarWrapper onClick={props.enableEdit}>
     <img src={props.imgSource} alt="default avatar" />
     <EditAvatar className="text-center">
-      <span className="glyphicon glyphicon-pencil" /> Edit Avatar
+      <span className="glyphicon glyphicon-pencil" />
+      <FormattedMessage id="settings_page.edit_avatar" />
     </EditAvatar>
   </AvatarWrapper>;
 

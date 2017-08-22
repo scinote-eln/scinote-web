@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import styled from "styled-components";
+import { FormattedMessage } from "react-intl";
 
 import MyStatisticsBox from "./MyStatisticsBox";
 
@@ -15,25 +16,33 @@ class MyStatistics extends Component {
     const stats = this.props.statistics;
 
     const statBoxes = () => {
-      let boxes = <div>Loading...</div>;
+      let boxes = (
+        <div>
+          <FormattedMessage id="general.loading" />
+        </div>
+      );
       if (stats) {
         boxes = (
           <Wrapper>
             <MyStatisticsBox
               typeLength={stats.number_of_teams}
-              typeText="Teams"
+              plural="settings_page.teams"
+              singular="settings_page.team"
             />
             <MyStatisticsBox
               typeLength={stats.number_of_projects}
-              typeText="Projects"
+              plural="settings_page.projects"
+              singular="settings_page.project"
             />
             <MyStatisticsBox
               typeLength={stats.number_of_experiments}
-              typeText="Experiments"
+              plural="settings_page.experiments"
+              singular="settings_page.experiment"
             />
             <MyStatisticsBox
               typeLength={stats.number_of_protocols}
-              typeText="Protocols"
+              plural="settings_page.protocols"
+              singular="settings_page.protocol"
             />
           </Wrapper>
         );
@@ -44,7 +53,9 @@ class MyStatistics extends Component {
 
     return (
       <div>
-        <h2>My Statistics</h2>
+        <h2>
+          <FormattedMessage id="settings_page.my_statistics" />
+        </h2>
 
         {statBoxes()}
       </div>

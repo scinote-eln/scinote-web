@@ -103,13 +103,13 @@ class NotificationsSwitchGroup extends Component {
     return (
       <div>
         <NotificationsSwitch
-          title="Show in sciNote"
+          title="settings_page.show_in_scinote"
           isSwitchOn={this.state.isSciNoteSwitchOn}
           toggleSwitch={this.toggleFirstSwitch}
           isDisabled={this.isSwitchDisabled()}
         />
         <NotificationsSwitch
-          title="Notify me via email"
+          title="settings_page.notify_me_via_email"
           isSwitchOn={this.state.isEmailSwitchOn}
           toggleSwitch={this.toggleSecondSwitch}
           isDisabled={!this.state.isSciNoteSwitchOn}

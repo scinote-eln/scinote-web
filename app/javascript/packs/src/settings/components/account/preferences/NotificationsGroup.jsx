@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
+import { FormattedMessage } from "react-intl";
 
 import NotificationsSwitchGroup from "./NotificationsSwitchGroup";
 import { WHITE_COLOR } from "../../../../../app/constants/colors";
@@ -66,11 +67,11 @@ class NotificationsGroup extends Component {
         <div className="col-sm-10">
           <h5>
             <strong>
-              {this.props.title}
+              <FormattedMessage id={this.props.title} />
             </strong>
           </h5>
           <p>
-            {this.props.subtitle}
+            <FormattedMessage id={this.props.subtitle} />
           </p>
           <NotificationsSwitchGroup type={this.props.type} />
         </div>

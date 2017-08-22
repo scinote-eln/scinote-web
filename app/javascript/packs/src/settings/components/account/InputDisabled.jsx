@@ -2,6 +2,7 @@ import React from "react";
 import { string, func } from "prop-types";
 import { FormGroup, FormControl, ControlLabel, Button } from "react-bootstrap";
 import styled from "styled-components";
+import { FormattedMessage } from "react-intl";
 
 const Wrapper = styled.div`margin-top: 19px;`;
 
@@ -21,7 +22,7 @@ const InputDisabled = props =>
     <form>
       <FormGroup>
         <ControlLabel>
-          {props.labelValue}
+          <FormattedMessage id={props.labelTitle} />
         </ControlLabel>
         <FormGroup>
           <MyFormControl
@@ -30,7 +31,7 @@ const InputDisabled = props =>
             disabled
           />
           <MyButton bsStyle="default" onClick={props.enableEdit}>
-            Edit
+            <FormattedMessage id="general.edit" />
           </MyButton>
         </FormGroup>
       </FormGroup>
@@ -38,7 +39,7 @@ const InputDisabled = props =>
   </Wrapper>;
 
 InputDisabled.propTypes = {
-  labelValue: string.isRequired,
+  labelTitle: string.isRequired,
   inputType: string.isRequired,
   inputValue: string.isRequired,
   enableEdit: func.isRequired

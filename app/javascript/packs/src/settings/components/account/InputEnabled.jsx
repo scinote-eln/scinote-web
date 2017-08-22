@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
+import { FormattedMessage } from "react-intl";
 import { FormGroup, FormControl, ControlLabel, Button } from "react-bootstrap";
 
 import {
@@ -131,7 +132,8 @@ class InputEnabled extends Component {
         <form onSubmit={this.handleSubmit}>
           <FormGroup>
             <h4>
-              Change {this.props.labelValue.toLowerCase()}
+              <FormattedMessage id="settings_page.change" />{" "}
+              <FormattedMessage id={this.props.labelTitle} />
             </h4>
             {this.confirmationField()}
             <ControlLabel>
@@ -139,10 +141,10 @@ class InputEnabled extends Component {
             </ControlLabel>
             {this.inputField()}
             <Button bsStyle="primary" onClick={this.props.disableEdit}>
-              Cancel
+              <FormattedMessage id="general.cancel" />
             </Button>
             <Button bsStyle="default" onClick={this.handleUpdate}>
-              Update
+              <FormattedMessage id="general.update" />
             </Button>
           </FormGroup>
         </form>
@@ -156,7 +158,8 @@ InputEnabled.propTypes = {
   labelValue: PropTypes.string.isRequired,
   inputValue: PropTypes.string.isRequired,
   disableEdit: PropTypes.func.isRequired,
-  saveData: PropTypes.func.isRequired
+  saveData: PropTypes.func.isRequired,
+  labelTitle: PropTypes.string.isRequired
 };
 
 export default InputEnabled;

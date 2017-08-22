@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import styled from "styled-components";
+import { FormattedMessage } from "react-intl";
 
 import Avatar from "./Avatar";
 import InputDisabled from "../InputDisabled";
@@ -56,6 +57,7 @@ class MyProfile extends Component {
     if (this.state.isAvatarEditable) {
       avatarField = (
         <InputEnabled
+          labelTitle="settings_page.avatar"
           labelValue="Avatar"
           inputType="file"
           inputValue=""
@@ -75,6 +77,7 @@ class MyProfile extends Component {
     if (this.state.isPasswordEditable) {
       passwordField = (
         <InputEnabled
+          labelTitle="settings_page.change_password"
           labelValue="Change password"
           inputType="password"
           inputValue=""
@@ -85,7 +88,7 @@ class MyProfile extends Component {
     } else {
       passwordField = (
         <InputDisabled
-          labelValue="Change password"
+          labelTitle="settings_page.change_password"
           inputType="password"
           inputValue=""
           enableEdit={() => this.toggleIsEditable(isPasswordEditable)}
@@ -96,6 +99,7 @@ class MyProfile extends Component {
     if (this.state.isEmailEditable) {
       emailField = (
         <InputEnabled
+          labelTitle="settings_page.new_email"
           labelValue="New email"
           inputType="email"
           inputValue={this.props.email}
@@ -106,7 +110,7 @@ class MyProfile extends Component {
     } else {
       emailField = (
         <InputDisabled
-          labelValue="New email"
+          labelTitle="settings_page.new_email"
           inputValue={this.props.email}
           inputType="email"
           enableEdit={() => this.toggleIsEditable(isEmailEditable)}
@@ -117,6 +121,7 @@ class MyProfile extends Component {
     if (this.state.areInitialsEditable) {
       initialsField = (
         <InputEnabled
+          labelTitle="settings_page.initials"
           labelValue="Initials"
           inputType="text"
           inputValue={this.props.initials}
@@ -127,7 +132,7 @@ class MyProfile extends Component {
     } else {
       initialsField = (
         <InputDisabled
-          labelValue="Initials"
+          labelTitle="settings_page.initials"
           inputValue={this.props.initials}
           inputType="text"
           enableEdit={() => this.toggleIsEditable(areInitialsEditable)}
@@ -138,6 +143,7 @@ class MyProfile extends Component {
     if (this.state.isFullNameEditable) {
       fullNameField = (
         <InputEnabled
+          labelTitle="settings_page.full_name"
           labelValue="Full name"
           inputType="text"
           inputValue={this.props.fullName}
@@ -148,7 +154,7 @@ class MyProfile extends Component {
     } else {
       fullNameField = (
         <InputDisabled
-          labelValue="Full name"
+          labelTitle="settings_page.full_name"
           inputValue={this.props.fullName}
           inputType="text"
           enableEdit={() => this.toggleIsEditable(isFullNameEditable)}
@@ -158,8 +164,12 @@ class MyProfile extends Component {
 
     return (
       <div>
-        <h2>My Profile</h2>
-        <AvatarLabel>Avatar</AvatarLabel>
+        <h2>
+          <FormattedMessage id="settings_page.my_profile" />
+        </h2>
+        <AvatarLabel>
+          <FormattedMessage id="settings_page.avatar" />
+        </AvatarLabel>
         {avatarField}
         {fullNameField}
         {initialsField}
