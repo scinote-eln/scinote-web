@@ -57,7 +57,9 @@ gem 'deface', '~> 1.0'
 gem 'nokogiri' # HTML/XML parser
 gem 'sneaky-save', git: 'https://github.com/einzige/sneaky-save'
 gem 'rails_autolink', '~> 1.1', '>= 1.1.6'
-gem 'delayed_paperclip'
+gem 'delayed_paperclip',
+    git: 'https://github.com/jrgifford/delayed_paperclip.git',
+    ref: 'fcf574c'
 gem 'rubyzip'
 gem 'activerecord-import'
 
