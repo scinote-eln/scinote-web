@@ -8,7 +8,7 @@ import {
   WHITE_COLOR,
   BORDER_GRAY_COLOR
 } from "../../app/constants/colors";
-import { getActivities } from "../actions/ActivitiesActions";
+import { getActivities, destroyActivities } from "../actions/ActivitiesActions";
 import TeamSwitch from "./components/TeamSwitch";
 import GlobalActivitiesModal from "./components/GlobalActivitiesModal";
 import SearchDropdown from "./components/SearchDropdown";
@@ -50,16 +50,29 @@ class Navigation extends Component {
   }
 
   selectItemCallback(key, ev) {
-    if (key === 4) {
-      ev.preventDefault();
-      this.setState({ showActivitesModal: !this.state.showActivitesModal });
-      // Call action creator to fetch activities from the server
-      this.props.fetchActivities();
+    switch (key) {
+      case 1:
+        window.location = "/";
+        break;
+      case 2:
+        window.location = "/protocols";
+        break;
+      case 3:
+        window.location = `/teams/${this.props.current_team.id}/repositories`;
+        break;
+      case 4:
+        ev.preventDefault();
+        this.setState({ showActivitesModal: !this.state.showActivitesModal });
+        // Call action creator to fetch activities from the server
+        this.props.fetchActivities();
+        break;
+      default:
     }
   }
 
   closeModalCallback() {
     this.setState({ showActivitesModal: false });
+    this.props.destroyActivities();
   }
 
   render() {
@@ -74,21 +87,16 @@ class Navigation extends Component {
             </Navbar.Brand>
           </Navbar.Header>
           <Nav>
-            <NavItem onClick={() => (window.location = "/")}>
+            <NavItem eventKey={1}>
               <span className="glyphicon glyphicon-home" title="Home" />
             </NavItem>
-            <NavItem onClick={() => (window.location = "/protocols")}>
+            <NavItem eventKey={2}>
               <span
                 className="glyphicon glyphicon-list-alt"
                 title="Protocol repositories"
               />
             </NavItem>
-            <NavItem
-              eventKey={3}
-              onClick={() =>
-                (window.location = `/teams/${this.props.current_team
-                  .id}/repositories`)}
-            >
+            <NavItem eventKey={3}>
               <i
                 className="fa fa-cubes"
                 aria-hidden="true"
@@ -121,6 +129,7 @@ class Navigation extends Component {
 
 Navigation.propTypes = {
   fetchActivities: PropTypes.func.isRequired,
+  destroyActivities: PropTypes.func.isRequired,
   current_team: PropTypes.shape({
     id: PropTypes.number.isRequired,
     name: PropTypes.string.isRequired,
@@ -135,6 +144,9 @@ const mapStateToProps = ({ current_team }) => ({ current_team });
 const mapDispatchToProps = dispatch => ({
   fetchActivities() {
     dispatch(getActivities());
+  },
+  destroyActivities() {
+    dispatch(destroyActivities());
   }
 });
 

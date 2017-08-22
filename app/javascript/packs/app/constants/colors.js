@@ -3,3 +3,7 @@ export const WHITE_COLOR = "#fff";
 export const BORDER_GRAY_COLOR = "#d2d2d2";
 export const WILD_SAND_COLOR = "#f5f5f5";
 export const MYSTIC_COLOR = "#eaeff2";
+export const COLOR_CONCRETE = "#f2f2f2";
+export const COLOR_MINE_SHAFT = "#333"
+export const COLOR_BLACK = "#000";
+export const COLOR_GRAY_LIGHT_YADCF = "#ccc";

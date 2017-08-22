@@ -1,6 +1,9 @@
 import axios from "../../app/axios";
 import { ACTIVITIES_PATH } from "../../app/routes";
-import { GLOBAL_ACTIVITIES_DATA } from "../../app/action_types";
+import {
+  GLOBAL_ACTIVITIES_DATA,
+  DESTROY_GLOBAL_ACTIVITIES_DATA
+} from "../../app/action_types";
 
 function addActivitiesData(data) {
   return {
@@ -9,9 +12,15 @@ function addActivitiesData(data) {
   };
 }
 
-export function getActivities(last_id = 0) {
+export function destroyActivities() {
+  return {
+    type: DESTROY_GLOBAL_ACTIVITIES_DATA
+  };
+}
+
+export function getActivities(lastId = 0) {
   return dispatch => {
-    let path = `${ACTIVITIES_PATH}?from=${last_id}`;
+    const path = `${ACTIVITIES_PATH}?from=${lastId}`;
     axios
       .get(path, { withCredentials: true })
       .then(response => {
