@@ -66,7 +66,7 @@ stop:
 	@docker-compose stop
 
 worker:
-	@$(MAKE) rails cmd="rake jobs:work"
+	@$(MAKE) rails cmd="rake jobs:work export WORKER=1"
 
 cli:
 	@$(MAKE) rails cmd="/bin/bash"
