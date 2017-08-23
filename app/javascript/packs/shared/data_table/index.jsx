@@ -1,6 +1,48 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
+import styled from "styled-components";
+import {
+  WHITE_COLOR,
+  COLOR_GRAY,
+  COLOR_ALTO,
+  COLOR_ALABASTER
+} from "../../app/constants/colors";
+
+const StyledBootstrapTable = styled(BootstrapTable)`
+  thead {
+    background-color: ${COLOR_GRAY};
+
+    > tr > th,
+    >tr > td {
+      padding: 6px;
+      padding-right: 30px;
+    }
+
+    > tr > th {
+      border-bottom: 2px solid ${COLOR_ALTO};
+      border-bottom-width: 0;
+      border-left: 2px solid ${COLOR_ALABASTER};
+      color: ${WHITE_COLOR};
+      font-weight: normal;
+      vertical-align: bottom;
+
+      &:first-child {
+        border-left: none;
+      }
+    }
+  }
+
+  td, th {
+    box-sizing: content-box;
+  }
+
+  td {
+    overflow-wrap: break-word;
+    text-overflow: ellipsis;
+    word-break: break-word;
+  }
+`;
 
 class DataTable extends Component {
   static cleanColumnAttributes(col) {
@@ -26,7 +68,7 @@ class DataTable extends Component {
 
 
   displayHeader() {
-    const orderedCols = [...this.props.columns].sort((a, b) => a.position - b.position);
+    const orderedCols = this.props.columns.sort((a, b) => a.position - b.position);
     return orderedCols.map((col) =>
       <TableHeaderColumn
         key={col.id}
@@ -43,9 +85,9 @@ class DataTable extends Component {
 
   render() {
     return (
-      <BootstrapTable {...this.cleanProps()}>
+      <StyledBootstrapTable {...this.cleanProps()}>
         {this.displayHeader()}
-      </BootstrapTable>
+      </StyledBootstrapTable>
     );
   }
 }

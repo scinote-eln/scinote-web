@@ -1,6 +1,37 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import ReactDataGrid from 'react-data-grid';
+import styled from "styled-components";
+import {
+  WHITE_COLOR,
+  COLOR_GRAY
+} from "../../app/constants/colors";
+
+const StyledReactDataGrid = styled(ReactDataGrid)`
+  background-color: inherit;
+
+  .react-grid-Grid {
+    background-color: inherit;
+  }
+
+  .react-grid-Header {
+    .react-grid-HeaderCell {
+      background-color: ${COLOR_GRAY};
+
+      color: ${WHITE_COLOR};
+      font-weight: normal;
+      vertical-align: bottom;
+
+      &:first-child {
+        border-left: none;
+      }
+    }
+  }
+
+  .react-grid-Canvas {
+    background-color: inherit;
+  }
+`;
 
 class DataGrid extends Component {
   constructor(props) {
@@ -85,7 +116,7 @@ class DataGrid extends Component {
 
   render() {
     return (
-      <ReactDataGrid
+      <StyledReactDataGrid
         columns={this._columns}
         rowGetter={this._rowGetter}
         rowsCount={this._rowsCount}
