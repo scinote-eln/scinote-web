@@ -1,0 +1,54 @@
+{
+  "a":
+    ["Louis Agassiz", "Maria Gaetana Agnesi", "Al-Battani", "Abu Nasr Al-Farabi", "Jim Al-Khalili", "Muhammad ibn Musa al-Khwarizmi", "Mihailo Petrovic Alas", "Angel Alcala", "Salim Ali", "Luis Alvarez", "Andre Marie Ampère", "Anaximander", "Mary Anning", "Virginia Apgar", "Archimedes", "Agnes Arber", "Aristarchus", "Aristotle", "Svante Arrhenius", "Oswald Avery", "Amedeo Avogadro", "Avicenna"],
+  "b":
+    ["Charles Babbage", "Francis Bacon", "Alexander Bain", "John Logie Baird", "Joseph Banks", "Ramon Barba", "John Bardeen", "Ibn Battuta", "William Bayliss", "George Beadle", "Arnold Orville Beckman", "Henri Becquerel", "Emil Adolf Behring", "Alexander Graham Bell", "Emile Berliner", "Claude Bernard", "Timothy John Berners-Lee", "Daniel Bernoulli", "Jacob Berzelius", "Henry Bessemer", "Hans Bethe", "Homi Jehangir Bhabha", "Alfred Binet", "Clarence Birdseye", "Kristian Birkeland", "Elizabeth Blackwell", "Alfred Blalock", "Katharine Burr Blodgett", "Franz Boas", "David Bohm", "Aage Bohr", "Niels Bohr", "Ludwig Boltzmann", "Max Born", "Carl Bosch", "Robert Bosch", "Jagadish Chandra Bose", "Satyendra Nath Bose", "Walther Wilhelm Georg Bothe", "Robert Boyle", "Lawrence Bragg", "Tycho Brahe", "Brahmagupta", "Georg Brandt", "Wernher Von Braun", "Louis de Broglie", "Alexander Brongniart", "Robert Brown", "Michael E. Brown", "Lester R. Brown", "Eduard Buchner", "William Buckland", "Georges-Louis Leclerc, Comte de Buffon", "Robert Bunsen", "Luther Burbank", "Jocelyn Bell Burnell", "Thomas Burnet"],
+  "c":
+    ["Benjamin Cabrera", "Santiago Ramon y Cajal", "Rachel Carson", "George Washington Carver", "Henry Cavendish", "Anders Celsius", "James Chadwick", "Subrahmanyan Chandrasekhar", "Erwin Chargaff", "Noam Chomsky", "Steven Chu", "Leland Clark", "Arthur Compton", "Nicolaus Copernicus", "Gerty Theresa Cori", "Charles-Augustin de Coulomb", "Jacques Cousteau", "Brian Cox", "Francis Crick", "Nicholas Culpeper", "Marie Curie", "Pierre Curie", "Georges Cuvier", "Adalbert Czerny"],
+  "d":
+    ["Gottlieb Daimler", "John Dalton", "James Dwight Dana", "Charles Darwin", "Humphry Davy", "Peter Debye", "Max Delbruck", "Jean Andre Deluc", "René Descartes", "Rudolf Christian Karl Diesel", "Paul Dirac", "Prokop Divis", "Theodosius Dobzhansky", "Frank Drake", "K. Eric Drexler"],
+  "e":
+    ["Arthur Eddington", "Thomas Edison", "Paul Ehrlich", "Albert Einstein", "Gertrude Elion", "Empedocles", "Eratosthenes", "Euclid", "Leonhard Euler"],
+  "f":
+    ["Michael Faraday", "Pierre de Fermat", "Enrico Fermi", "Richard Feynman", "Fibonacci – Leonardo of Pisa", "Emil Fischer", "Ronald Fisher", "Alexander Fleming", "Henry Ford", "Lee De Forest", "Dian Fossey", "Leon Foucault", "Benjamin Franklin", "Rosalind Franklin", "Sigmund Freud"],
+  "g":
+    ["Galen", "Galileo Galilei", "Francis Galton", "Luigi Galvani", "George Gamow", "Carl Friedrich Gauss", "Murray Gell-Mann", "Sophie Germain", "Willard Gibbs", "William Gilbert", "Sheldon Lee Glashow", "Robert Goddard", "Maria Goeppert-Mayer", "Jane Goodall", "Stephen Jay Gould"],
+  "h":
+    ["Fritz Haber", "Ernst Haeckel", "Otto Hahn", "Albrecht von Haller", "Edmund Halley", "Thomas Harriot", "William Harvey", "Stephen Hawking", "Otto Haxel", "Werner Heisenberg", "Hermann von Helmholtz", "Jan Baptist von Helmont", "Joseph Henry", "William Herschel", "Gustav Ludwig Hertz", "Heinrich Hertz", "Karl F. Herzfeld", "Antony Hewish", "David Hilbert", "Maurice Hilleman", "Hipparchus", "Hippocrates", "Shintaro Hirase", "Dorothy Hodgkin", "Robert Hooke", "Frederick Gowland Hopkins", "William Hopkins", "Grace Murray Hopper", "Frank Hornby", "Jack Horner", "Bernardo Houssay", "Fred Hoyle", "Edwin Hubble", "Alexander von Humboldt", "Zora Neale Hurston", "James Hutton", "Christiaan Huygens"],
+  "i":
+    ["Ernesto Illy", "Ernst Ising", "Keisuke Ito"],
+  "j":
+    ["Mae Carol Jemison", "Edward Jenner", "J. Hans D. Jensen", "Irene Joliot-Curie", "James Prescott Joule", "Percy Lavon Julian"],
+  "k":
+    ["Michio Kaku", "Heike Kamerlingh Onnes", "Friedrich August Kekulé", "Frances Kelsey", "Pearl Kendrick", "Johannes Kepler", "Abdul Qadeer Khan", "Omar Khayyam", "Alfred Kinsey", "Gustav Kirchoff", "Robert Koch", "Emil Kraepelin", "Thomas Kuhn", "Stephanie Kwolek"],
+  "l":
+    ["Jean-Baptiste Lamarck", "Hedy Lamarr", "Edwin Herbert Land", "Karl Landsteiner", "Pierre-Simon Laplace", "Max von Laue", "Antoine Lavoisier", "Ernest Lawrence", "Henrietta Leavitt", "Antonie van Leeuwenhoek", "Inge Lehmann", "Gottfried Leibniz", "Georges Lemaître", "Leonardo da Vinci", "Niccolo Leoniceno", "Aldo Leopold", "Rita Levi-Montalcini", "Claude Levi-Strauss", "Willard Frank Libby", "Justus von Liebig", "Carolus Linnaeus", "Joseph Lister", "John Locke", "Hendrik Antoon Lorentz", "Konrad Lorenz", "Ada Lovelace", "Lucretius", "Charles Lyell", "Trofim Lysenko"],
+  "m":
+    ["Ernst Mach", "Marcello Malpighi", "Jane Marcet", "Guglielmo Marconi", "Lynn Margulis", "James Clerk Maxwell", "Ernst Mayr", "Barbara McClintock", "Lise Meitner", "Gregor Mendel", "Dmitri Mendeleev", "Franz Mesmer", "Antonio Meucci", "Albert Abraham Michelson", "Thomas Midgeley Jr.", "Maria Mitchell", "Mario Molina", "Thomas Hunt Morgan", "Henry Moseley"],
+  "n":
+    ["Ukichiro Nakaya", "John Napier", "John Needham", "John von Neumann", "Thomas Newcomen", "Isaac Newton", "Florence Nightingale", "Tim Noakes", "Alfred Nobel", "Emmy Noether", "Christiane Nusslein-Volhard", "Bill Nye"],
+  "o":
+    ["Hans Christian Oersted", "Georg Ohm", "J. Robert Oppenheimer", "Wilhelm Ostwald"],
+  "p":
+    ["Blaise Pascal", "Louis Pasteur", "Wolfgang Ernst Pauli", "Linus Pauling", "Randy Pausch", "Ivan Pavlov", "Marguerite Perey", "Jean Piaget", "Philippe Pinel", "Max Planck", "Pliny the Elder", "Karl Popper", "Beatrix Potter", "Joseph Priestley", "Claudius Ptolemy", "Pythagoras"],
+  "q":
+    ["Harriet Quimby", "Thabit ibn Qurra"],
+  "r":
+    ["C. V. Raman", "Srinivasa Ramanujan", "William Ramsay", "John Ray", "Prafulla Chandra Ray", "Francesco Redi", "Sally Ride", "Bernhard Riemann", "Wilhelm Röntgen", "Hermann Rorschach", "Ronald Ross", "Ibn Rushd", "Ernest Rutherford"],
+  "s":
+    ["Carl Sagan", "Mohammad Abdus Salam", "Jonas Salk", "Frederick Sanger", "Alberto Santos-Dumont", "Walter Schottky", "Erwin Schrödinger", "Theodor Schwann", "Glenn Seaborg", "Hans Selye", "Charles Sherrington", "Gene Shoemaker", "Ernst Werner von Siemens", "George Gaylord Simpson", "B. F. Skinner", "William Smith", "Frederick Soddy", "Arnold Sommerfeld", "Nettie Stevens", "William John Swainson", "Leo Szilard"],
+  "t":
+    ["Niccolo Tartaglia", "Edward Teller", "Nikola Tesla", "Thales of Miletus", "Benjamin Thompson", "J. J. Thomson", "William Thomson", "Henry David Thoreau", "Kip S. Thorne", "Clyde Tombaugh", "Evangelista Torricelli", "Charles Townes", "Alan Turing", "Neil deGrasse Tyson"],
+  "u":
+    ["Harold Urey"],
+  "v":
+    ["Craig Venter", "Vladimir Vernadsky", "Andreas Vesalius", "Rudolf Virchow", "Artturi Virtanen", "Alessandro Volta"],
+  "w":
+    ["George Wald", "Alfred Russel Wallace", "James Watson", "James Watt", "Alfred Wegener", "John Archibald Wheeler", "Maurice Wilkins", "Thomas Willis", "E. O. Wilson", "Sven Wingqvist", "Sergei Winogradsky", "Friedrich Wöhler", "Wilbur and Orville Wright", "Wilhelm Wundt"],
+  "x":
+    [],
+  "y":
+    ["Chen-Ning Yang"],
+  "z":
+    ["Ahmed Zewail"]
+}
