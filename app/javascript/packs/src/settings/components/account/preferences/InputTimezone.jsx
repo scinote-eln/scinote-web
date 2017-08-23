@@ -6,11 +6,7 @@ import TimezonePicker from "react-bootstrap-timezone-picker";
 import "react-bootstrap-timezone-picker/dist/react-bootstrap-timezone-picker.min.css";
 import { FormattedMessage } from "react-intl";
 
-import {
-  BORDER_LIGHT_COLOR,
-  PRIMARY_GREEN_COLOR,
-  PRIMARY_HOVER_COLOR
-} from "../../../../../app/constants/colors";
+import { BORDER_LIGHT_COLOR } from "../../../../../app/constants/colors";
 
 const Wrapper = styled.div`
   border: 1px solid ${BORDER_LIGHT_COLOR};
@@ -23,15 +19,6 @@ const Wrapper = styled.div`
 
   .settings-warning {
     margin-bottom: 15px;
-  }
-
-  .btn-primary {
-    background-color: ${PRIMARY_GREEN_COLOR};
-    border-color: ${PRIMARY_HOVER_COLOR};
-    margin-right: 7px;
-    &:hover {
-      background-color: ${PRIMARY_HOVER_COLOR};
-    }
   }
 `;
 

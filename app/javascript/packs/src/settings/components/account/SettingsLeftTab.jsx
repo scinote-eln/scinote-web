@@ -47,12 +47,12 @@ const MyLinkContainer = styled(LinkContainer)`
 const SettingsLeftTab = () =>
   <Nav bsStyle="pills" stacked activeKey={1}>
     <MyLinkContainer to={SETTINGS_ACCOUNT_PROFILE}>
-      <NavItem eventKey={1}>
+      <NavItem>
         <FormattedMessage id="settings_page.profile" />
       </NavItem>
     </MyLinkContainer>
     <MyLinkContainer to={SETTINGS_ACCOUNT_PREFERENCES}>
-      <NavItem eventKey={2}>
+      <NavItem>
         <FormattedMessage id="settings_page.preferences" />
       </NavItem>
     </MyLinkContainer>

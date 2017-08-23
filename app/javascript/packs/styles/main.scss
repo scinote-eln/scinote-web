@@ -7,6 +7,15 @@ body {
   font-size: 13px;
 }
 
+.btn-primary {
+  background-color: $color-theme-secondary;
+  border-color: $primary-hover-color;
+  margin-right: 7px;
+  &:hover {
+    background-color: $primary-hover-color;
+  }
+}
+
 .time-zone-container {
   background: $color-white;
   position: relative;

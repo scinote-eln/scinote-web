@@ -83,12 +83,14 @@ export function changeAssignmentsNotification(status) {
     payload: status
   };
 }
+
 export function changeAssignmentsNotificationEmail(status) {
   return {
     type: CHANGE_ASSIGNMENTS_NOTIFICATION_EMAIL,
     payload: status
   };
 }
+
 export function changeRecentNotification(status) {
   return {
     type: CHANGE_RECENT_NOTIFICATION,

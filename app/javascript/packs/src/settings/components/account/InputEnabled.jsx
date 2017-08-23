@@ -4,11 +4,7 @@ import styled from "styled-components";
 import { FormattedMessage } from "react-intl";
 import { FormGroup, FormControl, ControlLabel, Button } from "react-bootstrap";
 
-import {
-  BORDER_LIGHT_COLOR,
-  PRIMARY_GREEN_COLOR,
-  PRIMARY_HOVER_COLOR
-} from "../../../../app/constants/colors";
+import { BORDER_LIGHT_COLOR } from "../../../../app/constants/colors";
 
 const StyledInputEnabled = styled.div`
   border: 1px solid ${BORDER_LIGHT_COLOR};
@@ -17,15 +13,6 @@ const StyledInputEnabled = styled.div`
 
   input {
     margin-bottom: 15px;
-  }
-
-  .btn-primary {
-    background-color: ${PRIMARY_GREEN_COLOR};
-    border-color: ${PRIMARY_HOVER_COLOR};
-    margin-right: 7px;
-    &:hover {
-      background-color: ${PRIMARY_HOVER_COLOR};
-    }
   }
 `;
 
