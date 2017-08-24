@@ -30,7 +30,7 @@ export default class MainNav extends Component {
     return (
       <div>
         <Navigation page="Settings" />
-        <div>
+        <div className="container">
           <Nav bsStyle="tabs" activeKey="1" onSelect={this.handleSelect}>
             <LinkContainer
               active={this.state.active === "1"}
@@ -49,18 +49,18 @@ export default class MainNav extends Component {
               </NavItem>
             </LinkContainer>
           </Nav>
+          <Switch>
+            <Route exact path="/" component={SettingsAccount} />
+            <Route
+              exact
+              path="/settings"
+              render={() => <Redirect to="/settings/account/profile" />}
+            />
+            <Route path="/settings/account" component={SettingsAccount} />
+            <Route path="/settings/teams" component={SettingsTeams} />
+            <Route component={NotFound} />
+          </Switch>
         </div>
-        <Switch>
-          <Route exact path="/" component={SettingsAccount} />
-          <Route
-            exact
-            path="/settings"
-            render={() => <Redirect to="/settings/account/profile" />}
-          />
-          <Route path="/settings/account" component={SettingsAccount} />
-          <Route path="/settings/teams" component={SettingsTeams} />
-          <Route component={NotFound} />
-        </Switch>
       </div>
     );
   }

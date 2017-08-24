@@ -15,7 +15,7 @@ addLocaleData([...enLocaleData]);
 const locale = "en-US";
 
 const SettingsPage = () =>
-  <div className="container">
+  <div>
     <MainNav />
   </div>;
 
