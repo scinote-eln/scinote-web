@@ -10,3 +10,7 @@ export const ICON_GREEN_COLOR = "#8fd13f";
 export const NOTIFICATION_YES = "#5a8921";
 export const NOTIFICATION_YES_BORDER = "#4d751c";
 export const SIDEBAR_HOVER_GRAY_COLOR = "#D2D2D2";
+
+export const COLOR_ALTO = "#dddddd";
+export const COLOR_GRAY = "#909088";
+export const COLOR_ALABASTER = "#fcfcfc";
