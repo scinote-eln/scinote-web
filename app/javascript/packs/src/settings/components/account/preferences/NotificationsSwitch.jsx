@@ -52,7 +52,7 @@ class NotificationsSwitch extends Component {
           </LeftButton>
           <RightButton
             className="btn btn-primary"
-            disabled={this.props.isDisabled || true}
+            disabled
             onClick={this.handleClick}
           >
             <FormattedMessage id="settings_page.yes" />
@@ -64,7 +64,7 @@ class NotificationsSwitch extends Component {
         <div className="btn-group">
           <LeftButton
             className="btn btn-danger"
-            disabled={this.props.isDisabled || true}
+            disabled
             onClick={this.handleClick}
           >
             <FormattedMessage id="settings_page.no" />
