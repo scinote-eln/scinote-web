@@ -51,12 +51,11 @@ class InputTimezone extends Component {
           {this.props.labelValue}
         </h4>
         <TimezonePicker
-          absolute={false}
+          absolute
           defaultValue="Europe/London"
           value={this.props.inputValue}
           placeholder="Select timezone..."
           onChange={this.handleChange}
-          className="time-zone-container"
         />
         <div className="settings-warning">
           <small>
