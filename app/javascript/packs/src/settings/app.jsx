@@ -1,22 +1,22 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import { BrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
-import { IntlProvider } from "react-intl";
-import { addLocaleData } from "react-intl";
+import { IntlProvider, addLocaleData } from "react-intl";
 import enLocaleData from "react-intl/locale-data/en";
+
 import { flattenMessages } from "../../locales/utils";
 import store from "../../app/store";
 import messages from "../../locales/messages";
 
-import Navigation from "../../shared/navigation";
+import MainNav from "./components/MainNav";
 
 addLocaleData([...enLocaleData]);
 const locale = "en-US";
 
 const SettingsPage = () =>
   <div>
-    <Navigation page="Settings" />
-    ....
+    <MainNav />
   </div>;
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -26,7 +26,11 @@ document.addEventListener("DOMContentLoaded", () => {
         locale={locale}
         messages={flattenMessages(messages[locale])}
       >
-        <SettingsPage />
+        <div>
+          <BrowserRouter>
+            <SettingsPage />
+          </BrowserRouter>
+        </div>
       </IntlProvider>
     </Provider>,
     document.getElementById("root")

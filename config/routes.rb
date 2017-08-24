@@ -10,6 +10,7 @@ Rails.application.routes.draw do
 
     # Settings root
     get '/settings', to: 'client_api/settings#index'
+    get '/settings/*all', to: 'client_api/settings#index'
 
     # Client APP endpoints
     namespace :client_api, defaults: { format: 'json' } do
