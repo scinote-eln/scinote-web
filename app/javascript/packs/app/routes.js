@@ -22,6 +22,9 @@ export const PREMIUM_LINK = "http://scinote.net/premium/";
 export const CONTACT_US_LINK =
   "http://scinote.net/story-of-scinote/#contact-scinote";
 
+// user teams
+export const LEAVE_TEAM_PATH = "/client_api/users/leave_team"
+
 // settings
 export const SETTINGS_ACCOUNT_PROFILE = "/settings/account/profile";
 export const SETTINGS_ACCOUNT_PREFERENCES = "/settings/account/preferences";

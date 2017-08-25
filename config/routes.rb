@@ -23,6 +23,10 @@ Rails.application.routes.draw do
       get '/recent_notifications', to: 'notifications#recent_notifications'
       # users
       get '/current_user_info', to: 'users#current_user_info'
+
+      namespace :users do
+        delete '/leave_team', to: 'user_teams#leave_team'
+      end
     end
 
     # Save sample table state

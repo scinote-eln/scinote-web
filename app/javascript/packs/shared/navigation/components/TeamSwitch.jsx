@@ -89,7 +89,7 @@ TeamSwitch.propTypes = {
 // Map the states from store to component
 const mapStateToProps = ({ all_teams, current_team }) => ({
   current_team,
-  all_teams: _.values(all_teams)
+  all_teams: all_teams.collection
 });
 
 // Map the fetch activity action to component

@@ -22,10 +22,10 @@ export function getTeamsList() {
     axios
       .get(TEAMS_PATH, { withCredentials: true })
       .then(response => {
-        let teams = _.values(response.data);
+        const teams = response.data.teams.collection;
         dispatch(addTeamsData(teams));
-        let current_team = _.find(teams, team => team.current_team);
-        dispatch(setCurrentUser(current_team));
+        const currentTeam = _.find(teams, team => team.current_team);
+        dispatch(setCurrentUser(currentTeam));
       })
       .catch(error => {
         console.log("get Teams Error: ", error);

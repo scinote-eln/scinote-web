@@ -8,9 +8,12 @@ export const setCurrentTeam = (state = initialState, action) => {
   return state;
 };
 
-export const getListOfTeams = (state = [], action) => {
+export const getListOfTeams = (state = { collection: [] }, action) => {
   if (action.type === GET_LIST_OF_TEAMS) {
-    return Object.assign({}, state, action.payload);
+    return {
+      ...state,
+      collection: action.payload
+    };
   }
   return state;
 };

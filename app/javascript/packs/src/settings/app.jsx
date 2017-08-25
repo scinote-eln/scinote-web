@@ -10,6 +10,7 @@ import store from "../../app/store";
 import messages from "../../locales/messages";
 
 import MainNav from "./components/MainNav";
+import ModalsContainer from "../../shared/modals_container";
 
 addLocaleData([...enLocaleData]);
 const locale = "en-US";
@@ -17,6 +18,7 @@ const locale = "en-US";
 const SettingsPage = () =>
   <div>
     <MainNav />
+    <ModalsContainer />
   </div>;
 
 document.addEventListener("DOMContentLoaded", () => {
