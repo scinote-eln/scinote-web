@@ -14,6 +14,9 @@ export default {
       all_teams: "All teams",
       in_team: "You are member of {num} team",
       in_teams: "You are member of {num} team",
+      leave_team_modal: {
+        title: "Leave team {teamName}"
+      },
       account: "Account",
       team: "Team",
       avatar: "Avatar",

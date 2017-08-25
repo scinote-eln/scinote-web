@@ -1,5 +1,5 @@
 import React from "react";
-import PropTypes from "prop-types";
+import PropTypes, { number, string, bool } from "prop-types";
 import styled from "styled-components";
 import { connect } from "react-redux";
 import { FormattedMessage } from "react-intl";
@@ -38,9 +38,11 @@ const SettingsTeams = ({ teams }) =>
 SettingsTeams.propTypes = {
   teams: PropTypes.arrayOf(
     PropTypes.shape({
-      id: PropTypes.number.isRequired,
-      name: PropTypes.string.isRequired,
-      current_team: PropTypes.bool.isRequired
+      id: number.isRequired,
+      name: string.isRequired,
+      current_team: bool.isRequired,
+      role: string.isRequired,
+      members: number.isRequired,
     }).isRequired
   )
 };
