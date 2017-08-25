@@ -17,12 +17,7 @@
     }
   },
   "rules": {
-    "import/no-unresolved": [
-      "error",
-      {
-        "ignore": ["app/javascript/"]
-      }
-    ],
+    "import/no-unresolved": [2, {"commonjs": true, "amd": true}],
     "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
     "spaced-comment": [
       "error",

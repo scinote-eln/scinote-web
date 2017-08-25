@@ -1,12 +1,23 @@
 @import 'constants';
+@import 'react-bootstrap-timezone-picker/dist/react-bootstrap-timezone-picker.min.css';
+@import '~react-bootstrap-table/dist/react-bootstrap-table.min';
 
 body {
   background-color: $color-concrete;
   color: $color-emperor;
-  font-family: "Open Sans",Arial,Helvetica,sans-serif;
+  font-family: "Open Sans", Arial, Helvetica, sans-serif;
   font-size: 13px;
 }
 
 .label-primary {
   background-color: $color-theme-primary;
+}
+
+.btn-primary {
+  background-color: $color-theme-secondary;
+  border-color: $primary-hover-color;
+  margin-right: 7px;
+  &:hover {
+    background-color: $primary-hover-color;
+  }
 }

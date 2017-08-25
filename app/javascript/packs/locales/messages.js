@@ -1,7 +1,11 @@
 export default {
   "en-US": {
     general: {
-      close: "Close"
+      close: "Close",
+      cancel: "Cancel",
+      update: "Update",
+      edit: "Edit",
+      loading: "Loading ..."
     },
     navbar: {
       page_title: "sciNote",
@@ -12,6 +16,44 @@ export default {
       search_label: "Search",
       notifications_label: "Notifications",
       info_label: "Info"
+    },
+    settings_page: {
+      account: "Account",
+      team: "Team",
+      avatar: "Avatar",
+      edit_avatar: "Edit Avatar",
+      change: "Change",
+      change_password: "Change Password",
+      new_email: "New email",
+      initials: "Initials",
+      full_name: "Full name",
+      my_profile: "My Profile",
+      my_statistics: "My Statistics",
+      teams: "Teams",
+      project: "Project",
+      projects: "Projects",
+      experiment: "Experiment",
+      experiments: "Experiments",
+      protocol: "Protocol",
+      protocols: "Protocols",
+      time_zone: "Time zone",
+      time_zone_warning:
+        "Time zone setting affects all time & date fields throughout application.",
+      profile: "Profile",
+      preferences: "Preferences",
+      assignement: "Assignement",
+      assignement_msg:
+        "Assignment notifications appear whenever you get assigned to a team, project, task.",
+      recent_changes: "Recent changes",
+      recent_changes_msg:
+        "Recent changes notifications appear whenever there is a change on a task you are assigned to.",
+      system_message: "System message",
+      system_message_msg:
+        "System message notifications are specifically sent by site maintainers to notify all users about a system update.",
+      show_in_scinote: "Show in sciNote",
+      notify_me_via_email: "Notify me via email",
+      no: "No",
+      yes: "Yes"
     },
     activities: {
       modal_title: "Activities",
