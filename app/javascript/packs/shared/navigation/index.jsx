@@ -2,13 +2,14 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Navbar, Nav, NavItem } from "react-bootstrap";
+import { FormattedMessage } from "react-intl";
 import styled from "styled-components";
 import {
   MAIN_COLOR_BLUE,
   WHITE_COLOR,
   BORDER_GRAY_COLOR
 } from "../../app/constants/colors";
-import { getActivities } from "../actions/ActivitiesActions";
+import { getActivities, destroyActivities } from "../actions/ActivitiesActions";
 import TeamSwitch from "./components/TeamSwitch";
 import GlobalActivitiesModal from "./components/GlobalActivitiesModal";
 import SearchDropdown from "./components/SearchDropdown";
@@ -43,23 +44,36 @@ class Navigation extends Component {
     this.state = {
       showActivitesModal: false,
       page: "",
-      currentTeam: { id: 0 }
+      current_team: { id: 0 }
     };
     this.selectItemCallback = this.selectItemCallback.bind(this);
     this.closeModalCallback = this.closeModalCallback.bind(this);
   }
 
   selectItemCallback(key, ev) {
-    if (key === 4) {
-      ev.preventDefault();
-      this.setState({ showActivitesModal: !this.state.showActivitesModal });
-      // Call action creator to fetch activities from the server
-      this.props.fetchActivities();
+    switch (key) {
+      case 1:
+        window.location = "/";
+        break;
+      case 2:
+        window.location = "/protocols";
+        break;
+      case 3:
+        window.location = `/teams/${this.props.current_team.id}/repositories`;
+        break;
+      case 4:
+        ev.preventDefault();
+        this.setState({ showActivitesModal: !this.state.showActivitesModal });
+        // Call action creator to fetch activities from the server
+        this.props.fetchActivities();
+        break;
+      default:
     }
   }
 
   closeModalCallback() {
     this.setState({ showActivitesModal: false });
+    this.props.destroyActivities();
   }
 
   render() {
@@ -74,30 +88,39 @@ class Navigation extends Component {
             </Navbar.Brand>
           </Navbar.Header>
           <Nav>
-            <NavItem eventKey={1} href="/">
-              <span className="glyphicon glyphicon-home" title="Home" />
+            <NavItem eventKey={1}>
+              <span className="glyphicon glyphicon-home" title="Home" />&nbsp;
+              <span className="visible-xs-inline visible-sm-inline">
+                <FormattedMessage id="navbar.home_label" />
+              </span>
             </NavItem>
-            <NavItem eventKey={2} href="/protocols">
+            <NavItem eventKey={2}>
               <span
                 className="glyphicon glyphicon-list-alt"
                 title="Protocol repositories"
-              />
+              />&nbsp;
+              <span className="visible-xs-inline visible-sm-inline">
+                <FormattedMessage id="navbar.protocols_label" />
+              </span>
             </NavItem>
-            <NavItem
-              eventKey={3}
-              href={`/teams/${this.state.currentTeam.id}/repositories`}
-            >
+            <NavItem eventKey={3}>
               <i
                 className="fa fa-cubes"
                 aria-hidden="true"
                 title="Repositories"
-              />
+              />&nbsp;
+              <span className="visible-xs-inline visible-sm-inline">
+                <FormattedMessage id="navbar.repositories_label" />
+              </span>
             </NavItem>
             <NavItem eventKey={4}>
               <span
                 className="glyphicon glyphicon-equalizer"
                 title="Activities"
-              />
+              />&nbsp;
+              <span className="visible-xs-inline visible-sm-inline">
+                <FormattedMessage id="navbar.activities_label" />
+              </span>
             </NavItem>
           </Nav>
           <Nav pullRight>
@@ -118,14 +141,26 @@ class Navigation extends Component {
 }
 
 Navigation.propTypes = {
-  fetchActivities: PropTypes.func.isRequired
+  fetchActivities: PropTypes.func.isRequired,
+  destroyActivities: PropTypes.func.isRequired,
+  current_team: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    name: PropTypes.string.isRequired,
+    current_team: PropTypes.bool.isRequired
+  }).isRequired
 };
 
-// Map the fetch activity action to component
+// Map the states from store to component props
+const mapStateToProps = ({ current_team }) => ({ current_team });
+
+// Map the fetch activity action to component props
 const mapDispatchToProps = dispatch => ({
   fetchActivities() {
     dispatch(getActivities());
+  },
+  destroyActivities() {
+    dispatch(destroyActivities());
   }
 });
 
-export default connect(null, mapDispatchToProps)(Navigation);
+export default connect(mapStateToProps, mapDispatchToProps)(Navigation);

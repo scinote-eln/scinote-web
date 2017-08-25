@@ -83,7 +83,14 @@ class NotificationsDropdown extends Component {
       <StyledNavDropdown
         noCaret
         id="notifications-dropdown"
-        title={<i className="fa fa-bell" />}
+        title={
+          <span>
+            <i className="fa fa-bell" />&nbsp;
+            <span className="visible-xs-inline visible-sm-inline">
+              <FormattedMessage id="navbar.notifications_label" />
+            </span>
+          </span>
+        }
         onClick={this.getRecentNotifications}
       >
         <StyledListHeader>

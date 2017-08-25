@@ -4,10 +4,46 @@ import PropTypes from "prop-types";
 import { FormattedMessage } from "react-intl";
 import { Modal, Button } from "react-bootstrap";
 import _ from "lodash";
+import styled from "styled-components";
 
 import { getActivities } from "../../actions/ActivitiesActions";
 import ActivityElement from "./ActivityElement";
 import ActivityDateElement from "./ActivityDateElement";
+import {
+  WHITE_COLOR,
+  COLOR_CONCRETE,
+  COLOR_MINE_SHAFT,
+  COLOR_GRAY_LIGHT_YADCF
+} from "../../../app/constants/colors";
+
+const StyledBottom = styled(Button)`
+  display: inline-block;
+  margin-bottom: 0;
+  font-weight: normal;
+  text-align: center;
+  vertical-align: middle;
+  touch-action: manipulation;
+  cursor: pointer;
+  background-image: none;
+  border: 1px solid transparent;
+  white-space: nowrap;
+  padding: 6px 12px;
+  font-size: 14px;
+  line-height: 1.42857143;
+  border-radius: 4px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  color: ${COLOR_MINE_SHAFT};
+  background-color: ${WHITE_COLOR};
+  border-color: ${COLOR_GRAY_LIGHT_YADCF};
+`;
+
+const StyledModalBody = styled(Modal.Body)`
+  background-color: ${COLOR_CONCRETE};
+  color: ${COLOR_MINE_SHAFT};;
+`;
 
 class GlobalActivitiesModal extends Component {
   constructor(props) {
@@ -25,9 +61,9 @@ class GlobalActivitiesModal extends Component {
       );
     }
     return this.props.activities.map((activity, i, arr) => {
-      let newDate = new Date(activity.created_at);
+      const newDate = new Date(activity.created_at);
       if (i > 0) {
-        let prevDate = new Date(arr[i - 1].created_at);
+        const prevDate = new Date(arr[i - 1].created_at);
         if (prevDate < newDate) {
           return [
             <ActivityDateElement key={newDate} date={newDate} />,
@@ -45,20 +81,21 @@ class GlobalActivitiesModal extends Component {
   }
 
   addMoreActivities() {
-    let last_id = _.last(this.props.activities).id;
-    this.props.fetchActivities(last_id);
+    const lastId = _.last(this.props.activities).id;
+    this.props.fetchActivities(lastId);
   }
 
   addMoreButton() {
     if (this.props.more) {
       return (
-        <li>
-          <Button onClick={this.addMoreActivities}>
+        <li className="text-center">
+          <StyledBottom onClick={this.addMoreActivities}>
             <FormattedMessage id="activities.more_activities" />
-          </Button>
+          </StyledBottom>
         </li>
       );
     }
+    return "";
   }
 
   render() {
@@ -69,12 +106,12 @@ class GlobalActivitiesModal extends Component {
             <FormattedMessage id="activities.modal_title" />
           </Modal.Title>
         </Modal.Header>
-        <Modal.Body>
-          <ul>
+        <StyledModalBody>
+          <ul className="list-unstyled">
             {this.displayActivities()}
             {this.addMoreButton()}
           </ul>
-        </Modal.Body>
+        </StyledModalBody>
         <Modal.Footer>
           <Button onClick={this.props.onCloseModal}>
             <FormattedMessage id="general.close" />
@@ -100,13 +137,13 @@ GlobalActivitiesModal.propTypes = {
 };
 
 const mapStateToProps = ({ global_activities }) => {
-  let { activities, more } = global_activities;
+  const { activities, more } = global_activities;
   return { activities, more };
 };
 
 const mapDispatchToProps = dispatch => ({
-  fetchActivities(last_id) {
-    dispatch(getActivities(last_id));
+  fetchActivities(lastId) {
+    dispatch(getActivities(lastId));
   }
 });
 
