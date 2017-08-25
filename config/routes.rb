@@ -8,11 +8,10 @@ Rails.application.routes.draw do
 
     root 'projects#index'
 
-    # Settings root
+    # Client APP endpoints
     get '/settings', to: 'client_api/settings#index'
     get '/settings/*all', to: 'client_api/settings#index'
 
-    # Client APP endpoints
     namespace :client_api, defaults: { format: 'json' } do
       # activities
       get '/activities', to: 'activities#index'
@@ -22,7 +21,7 @@ Rails.application.routes.draw do
       # notifications
       get '/recent_notifications', to: 'notifications#recent_notifications'
       # users
-      get '/current_user_info', to: 'users#current_user_info'
+      get '/current_user_info', to: 'users/users#current_user_info'
     end
 
     # Save sample table state
