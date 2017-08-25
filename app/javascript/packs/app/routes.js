@@ -1,5 +1,15 @@
+export const ROOT_PATH = "/";
+
 // activities
 export const ACTIVITIES_PATH = "/client_api/activities";
+
+// settings
+export const SETTINGS_PATH = "/settings";
+export const SETTINGS_ACCOUNT_PATH = "/settings/account";
+export const SETTINGS_TEAMS_PATH = "/settings/teams";
+export const SETTINGS_ACCOUNT_PROFILE_PATH = "/settings/account/profile";
+export const SETTINGS_ACCOUNT_PREFERENCES_PATH =
+  "/settings/account/preferences";
 
 // teams
 export const TEAMS_PATH = "/client_api/teams";

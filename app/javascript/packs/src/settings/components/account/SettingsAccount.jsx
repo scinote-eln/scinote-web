@@ -7,6 +7,10 @@ import SettingsProfile from "./profile/SettingsProfile";
 import SettingsPreferences from "./preferences/SettingsPreferences";
 
 import { BORDER_LIGHT_COLOR } from "../../../../app/constants/colors";
+import {
+  SETTINGS_ACCOUNT_PREFERENCES_PATH,
+  SETTINGS_ACCOUNT_PROFILE_PATH
+} from "../../../../app/routes";
 
 const Wrapper = styled.div`
   background: white;
@@ -25,9 +29,12 @@ class SettingsAccount extends Component {
           <SettingsLeftTab />
         </div>
         <Switch>
-          <Route path="/settings/account/profile" component={SettingsProfile} />
           <Route
-            path="/settings/account/preferences"
+            path={SETTINGS_ACCOUNT_PROFILE_PATH}
+            component={SettingsProfile}
+          />
+          <Route
+            path={SETTINGS_ACCOUNT_PREFERENCES_PATH}
             component={SettingsPreferences}
           />
         </Switch>
