@@ -11,6 +11,34 @@ module ClientApi
           end
         end
       end
+
+      def change_full_name
+        user = current_user
+        user.name = params['fullName']
+        saved_name = if user.save
+          user.name
+        else
+          user.reload.name
+        end
+
+        respond_to do |format|
+          format.json { render json: { fullName: saved_name } }
+        end
+      end
+
+      def change_initials
+        user = current_user
+        user.initials = params['initials']
+        saved_initials = if user.save
+          user.initials
+        else
+          user.reload.initials
+        end
+
+        respond_to do |format|
+          format.json { render json: { initials: saved_initials } }
+        end
+      end
     end
   end
 end

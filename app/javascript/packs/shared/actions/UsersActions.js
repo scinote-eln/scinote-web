@@ -1,5 +1,11 @@
 import axios from "../../app/axios";
-import { CURRENT_USER_PATH } from "../../app/routes";
+
+import {
+  CHANGE_USER_FULL_NAME_PATH,
+  CURRENT_USER_PATH,
+  CHANGE_USER_INITIALS_PATH
+} from "../../app/routes";
+
 import {
   SET_CURRENT_USER,
   CHANGE_CURRENT_USER_FULL_NAME,
@@ -35,17 +41,45 @@ export function getCurrentUser() {
   };
 }
 
-export function changeFullName(name) {
+export function savedChangedFullName({ fullName }) {
   return {
     type: CHANGE_CURRENT_USER_FULL_NAME,
-    payload: name
+    payload: fullName
+  };
+}
+
+export function changeFullName(name) {
+  return dispatch => {
+    axios
+      .post(CHANGE_USER_FULL_NAME_PATH, {
+        withCredentials: true,
+        fullName: name
+      })
+      .then(({ data }) => {
+        dispatch(savedChangedFullName(data));
+      })
+      .catch(err => console.log(err));
+  };
+}
+
+export function savedChangeInitials({ initials }) {
+  return {
+    type: CHANGE_CURRENT_USER_INITIALS,
+    payload: initials
   };
 }
 
 export function changeInitials(initials) {
-  return {
-    type: CHANGE_CURRENT_USER_INITIALS,
-    payload: initials
+  return dispatch => {
+    axios
+      .post(CHANGE_USER_INITIALS_PATH, {
+        withCredentials: true,
+        initials
+      })
+      .then(({ data }) => {
+        dispatch(savedChangeInitials(data));
+      })
+      .catch(err => console.log(err));
   };
 }
 
