@@ -3,7 +3,9 @@ import axios from "../../app/axios";
 import {
   CHANGE_USER_FULL_NAME_PATH,
   CURRENT_USER_PATH,
-  CHANGE_USER_INITIALS_PATH
+  CHANGE_USER_INITIALS_PATH,
+  CHANGE_USER_EMAIL_PATH,
+  CHANGE_USER_PASSWORD_PATH
 } from "../../app/routes";
 
 import {
@@ -41,7 +43,7 @@ export function getCurrentUser() {
   };
 }
 
-export function savedChangedFullName({ fullName }) {
+export function saveFullName({ fullName }) {
   return {
     type: CHANGE_CURRENT_USER_FULL_NAME,
     payload: fullName
@@ -56,13 +58,13 @@ export function changeFullName(name) {
         fullName: name
       })
       .then(({ data }) => {
-        dispatch(savedChangedFullName(data));
+        dispatch(saveFullName(data));
       })
       .catch(err => console.log(err));
   };
 }
 
-export function savedChangeInitials({ initials }) {
+export function saveInitials({ initials }) {
   return {
     type: CHANGE_CURRENT_USER_INITIALS,
     payload: initials
@@ -77,23 +79,51 @@ export function changeInitials(initials) {
         initials
       })
       .then(({ data }) => {
-        dispatch(savedChangeInitials(data));
+        dispatch(saveInitials(data));
       })
       .catch(err => console.log(err));
   };
 }
 
-export function changeEmail(email) {
+export function saveEmail({ email }) {
   return {
     type: CHANGE_CURRENT_USER_EMAIL,
     payload: email
   };
 }
 
-export function changePassword(password) {
+export function changeEmail(email) {
+  return dispatch => {
+    axios
+      .post(CHANGE_USER_EMAIL_PATH, {
+        withCredentials: true,
+        email
+      })
+      .then(({ data }) => {
+        dispatch(saveEmail(data));
+      })
+      .catch(err => console.log(err));
+  };
+}
+
+export function savePassword(password) {
   return {
     type: CHANGE_CURRENT_USER_PASSWORD,
     payload: password
+  };
+}
+
+export function changePassword(passwrd) {
+  return dispatch => {
+    axios
+      .post(CHANGE_USER_PASSWORD_PATH, {
+        withCredentials: true,
+        passwrd
+      })
+      .then(({ data }) => {
+        dispatch(savePassword(data));
+      })
+      .catch(err => console.log(err));
   };
 }
 

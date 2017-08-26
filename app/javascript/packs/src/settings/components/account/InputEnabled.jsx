@@ -98,6 +98,7 @@ class InputEnabled extends Component {
           <FormControl
             type={this.props.inputType}
             value={this.state.value}
+            onChange={this.handleChange}
             onKeyPress={this.handleKeyPress}
             autoFocus
           />

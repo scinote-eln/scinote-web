@@ -25,6 +25,8 @@ export const RECENT_NOTIFICATIONS_PATH = "/client_api/recent_notifications";
 export const CURRENT_USER_PATH = "/client_api/current_user_info";
 export const CHANGE_USER_FULL_NAME_PATH = "/client_api/user/change_full_name";
 export const CHANGE_USER_INITIALS_PATH = "/client_api/user/change_initials";
+export const CHANGE_USER_EMAIL_PATH = "/client_api/user/change_email";
+export const CHANGE_USER_PASSWORD_PATH = "/client_api/user/change_password";
 
 // info dropdown_title
 export const CUSTOMER_SUPPORT_LINK = "http://scinote.net/support";

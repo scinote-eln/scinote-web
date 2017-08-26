@@ -27,6 +27,8 @@ Rails.application.routes.draw do
       get '/current_user_info', to: 'users/users#current_user_info'
       post '/user/change_full_name', to: 'users/users#change_full_name'
       post '/user/change_initials', to: 'users/users#change_initials'
+      post '/user/change_email', to: 'users/users#change_email'
+      post '/user/change_password', to: 'users/users#change_password'
     end
 
     # Save sample table state

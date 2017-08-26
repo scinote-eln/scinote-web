@@ -12,6 +12,24 @@ module ClientApi
         end
       end
 
+      def change_password
+        binding.pry
+      end
+
+      def change_email
+        user = current_user
+        user.email = params['email']
+        saved_email = if user.save
+          user.email
+        else
+          user.reload.email
+        end
+
+        respond_to do |format|
+          format.json { render json: { email: saved_email } }
+        end
+      end
+
       def change_full_name
         user = current_user
         user.name = params['fullName']
