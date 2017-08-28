@@ -3,6 +3,7 @@ import PropTypes, { bool, number, string, func } from "prop-types";
 import { Modal, Button, Alert, Glyphicon } from "react-bootstrap";
 import { FormattedMessage, FormattedHTMLMessage } from "react-intl";
 import { connect } from "react-redux";
+import axios from '../../../app/axios';
 
 import { leaveTeamModalShow } from "../../actions/LeaveTeamActions";
 
@@ -10,10 +11,15 @@ class LeaveTeamModal extends Component {
   constructor(props) {
     super(props);
     this.onCloseModal = this.onCloseModal.bind(this);
+    this.leaveTeam = this.leaveTeam.bind(this);
   }
 
   onCloseModal() {
     this.props.leaveTeamModalShow(false);
+  }
+
+  leaveTeam() {
+
   }
 
   render() {
@@ -32,7 +38,7 @@ class LeaveTeamModal extends Component {
             <FormattedMessage id="settings_page.leave_team_modal.subtitle" />
           </p>
           <Alert bsStyle="danger">
-            <Glyphicon glyph="exclamation-sign" />{" "}
+            <Glyphicon glyph="exclamation-sign" />&nbsp;
             <FormattedMessage id="settings_page.leave_team_modal.warnings" />
             <ul>
               <li>
@@ -50,6 +56,9 @@ class LeaveTeamModal extends Component {
         <Modal.Footer>
           <Button onClick={this.onCloseModal}>
             <FormattedMessage id="general.close" />
+          </Button>
+          <Button bsStyle="success" onClick={this.leaveTeam}>
+            <FormattedMessage id="settings_page.leave_team_modal.leave" />
           </Button>
         </Modal.Footer>
       </Modal>

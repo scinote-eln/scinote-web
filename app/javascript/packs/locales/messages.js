@@ -20,7 +20,8 @@ export default {
         warnings: "Leaving team has following consequences:",
         warning_message_one: "you will lose access to all content belonging to the team (including projects, tasks, protocols and activities);",
         warning_message_two: "all projects in the team where you were the sole <b>Owner</b> will receive a new owner from the team administrators;",
-        warning_message_three: "all repository protocols in the team belonging to you will be reassigned onto a new owner from team administrators."
+        warning_message_three: "all repository protocols in the team belonging to you will be reassigned onto a new owner from team administrators.",
+        leave_team: "Leave"
       },
       account: "Account",
       team: "Team",
