@@ -7,6 +7,7 @@ import {
   Glyphicon
 } from "react-bootstrap";
 import styled from "styled-components";
+import { FormattedMessage } from "react-intl";
 import { SEARCH_PATH } from "../../../app/routes";
 import { ENTER_KEY_CODE } from "../../../app/constants/numeric";
 
@@ -60,7 +61,14 @@ class SearchDropdown extends Component {
     return (
       <StyledNavDropdown
         noCaret
-        title={<span className="glyphicon glyphicon-search" />}
+        title={
+          <span>
+            <span className="glyphicon glyphicon-search" />&nbsp;
+            <span className="visible-xs-inline visible-sm-inline">
+              <FormattedMessage id="navbar.search_label" />
+            </span>
+          </span>
+        }
         onClick={this.setFocusToInput}
         id="search-dropdown"
       >

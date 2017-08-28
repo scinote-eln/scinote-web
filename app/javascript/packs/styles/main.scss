@@ -9,6 +9,10 @@ body {
   font-size: 13px;
 }
 
+.label-primary {
+  background-color: $color-theme-primary;
+}
+
 .btn-primary {
   background-color: $color-theme-secondary;
   border-color: $primary-hover-color;

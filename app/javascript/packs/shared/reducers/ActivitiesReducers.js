@@ -1,21 +1,27 @@
 import {
   GLOBAL_ACTIVITIES_DATA,
-  MORE_GLOBAL_ACTIVITIES
+  DESTROY_GLOBAL_ACTIVITIES_DATA
 } from "../../app/action_types";
 
-export function globalActivities(
-  state = { more: true, activities: [] },
-  action
-) {
-  if (action.type === GLOBAL_ACTIVITIES_DATA) {
-    return {
-      ...state,
-      activities: [
-        ...state.activities,
-        ...action.payload.global_activities.activities
-      ],
-      more: action.payload.global_activities.more
-    };
+const initialStateu = { more: true, activities: [] };
+
+export function globalActivities(state = initialStateu, action) {
+  switch (action.type) {
+    case GLOBAL_ACTIVITIES_DATA:
+      return {
+        ...state,
+        activities: [
+          ...state.activities,
+          ...action.payload.global_activities.activities
+        ],
+        more: action.payload.global_activities.more
+      };
+    case DESTROY_GLOBAL_ACTIVITIES_DATA:
+      return {
+        ...state,
+        ...initialStateu
+      };
+    default:
+      return state;
   }
-  return state;
 }

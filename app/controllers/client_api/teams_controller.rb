@@ -2,9 +2,6 @@ module ClientApi
   class TeamsController < ApplicationController
     MissingTeamError = Class.new(StandardError)
 
-    # TODO  remove this when the user authentication will be implemented
-    skip_before_action :verify_authenticity_token
-
     def index
       success_response
     end
