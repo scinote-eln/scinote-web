@@ -3,9 +3,11 @@ import PropTypes, { bool, number, string, func } from "prop-types";
 import { Modal, Button, Alert, Glyphicon } from "react-bootstrap";
 import { FormattedMessage, FormattedHTMLMessage } from "react-intl";
 import { connect } from "react-redux";
-import axios from '../../../app/axios';
+import axios from "../../../app/axios";
 
+import { LEAVE_TEAM_PATH } from "../../../app/routes";
 import { leaveTeamModalShow } from "../../actions/LeaveTeamActions";
+import { addTeamsData, setCurrentTeam } from "../../actions/TeamsActions";
 
 class LeaveTeamModal extends Component {
   constructor(props) {
@@ -19,7 +21,22 @@ class LeaveTeamModal extends Component {
   }
 
   leaveTeam() {
-
+    const teamUrl = `${LEAVE_TEAM_PATH}?team=${this.props.teamId}`;
+    axios
+      .delete(teamUrl, {
+        withCredentials: true
+      })
+      .then(response => {
+        console.log(response);
+        const teams = response.data.teams.collection;
+        this.props.addTeamsData(teams);
+        const currentTeam = _.find(teams, team => team.current_team);
+        this.props.setCurrentTeam(currentTeam);
+      })
+      .catch(error => {
+        console.log("error: ", error.response.data.message);
+      });
+    this.props.leaveTeamModalShow(false);
   }
 
   render() {
@@ -58,7 +75,7 @@ class LeaveTeamModal extends Component {
             <FormattedMessage id="general.close" />
           </Button>
           <Button bsStyle="success" onClick={this.leaveTeam}>
-            <FormattedMessage id="settings_page.leave_team_modal.leave" />
+            <FormattedMessage id="settings_page.leave_team_modal.leave_team" />
           </Button>
         </Modal.Footer>
       </Modal>
@@ -70,16 +87,8 @@ LeaveTeamModal.propTypes = {
   showModal: bool.isRequired,
   teamId: number.isRequired,
   teamName: string.isRequired,
-  leaveTeamModalShow: func.isRequired,
-  teams: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: number.isRequired,
-      name: string.isRequired,
-      current_team: bool.isRequired,
-      role: string.isRequired,
-      members: number.isRequired
-    }).isRequired
-  )
+  addTeamsData: func.isRequired,
+  leaveTeamModalShow: func.isRequired
 };
 const mapStateToProps = ({ showLeaveTeamModal }) => ({
   showModal: showLeaveTeamModal.show,
@@ -87,4 +96,8 @@ const mapStateToProps = ({ showLeaveTeamModal }) => ({
   teamName: showLeaveTeamModal.teamName
 });
 
-export default connect(mapStateToProps, { leaveTeamModalShow })(LeaveTeamModal);
+export default connect(mapStateToProps, {
+  leaveTeamModalShow,
+  addTeamsData,
+  setCurrentTeam
+})(LeaveTeamModal);

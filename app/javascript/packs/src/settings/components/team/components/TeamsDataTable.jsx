@@ -1,6 +1,9 @@
 import React, { Component } from "react";
+import PropTypes, { func, number, string, bool } from "prop-types";
 import { connect } from "react-redux";
 import { Button } from "react-bootstrap";
+import _ from "lodash";
+import { FormattedMessage } from "react-intl";
 import { leaveTeamModalShow } from "../../../../../shared/actions/LeaveTeamActions";
 import DataTable from "../../../../../shared/data_table";
 
@@ -18,24 +21,57 @@ class TeamsDataTable extends Component {
   }
 
   leaveTeamButton(id) {
+    const team = _.find(this.props.teams, el => el.id === id);
+    if (team.can_be_leaved) {
+      return (
+        <Button onClick={e => this.leaveTeamModal(e, id)}>
+          <FormattedMessage id="settings_page.leave_team" />
+        </Button>
+      );
+    }
     return (
-      <Button onClick={e => this.leaveTeamModal(e, id)}>Leave team</Button>
+      <Button disabled>
+        <FormattedMessage id="settings_page.leave_team" />
+      </Button>
     );
   }
 
   render() {
+    const options = {
+      defaultSortName: "name", // default sort column name
+      defaultSortOrder: "desc", // default sort order
+      sizePerPageList: [10, 25, 50, 100],
+      paginationPosition: "top",
+      alwaysShowAllBtns: false,
+      ignoreSinglePage: true
+    };
     const columns = [
-      { id: "name", name: "Name", isKey: false, textId: "name", position: 0 },
-      { id: "role", name: "Role", isKey: false, textId: "role", position: 1 },
       {
-        id: "members",
+        id: 1,
+        name: "Name",
+        isKey: false,
+        textId: "name",
+        position: 0,
+        dataSort: true
+      },
+      {
+        id: 2,
+        name: "Role",
+        isKey: false,
+        textId: "role",
+        position: 1,
+        dataSort: true
+      },
+      {
+        id: 3,
         name: "Members",
         isKey: false,
         textId: "members",
-        position: 2
+        position: 2,
+        dataSort: true
       },
       {
-        id: "id",
+        id: 4,
         name: "",
         isKey: true,
         textId: "id",
@@ -43,14 +79,29 @@ class TeamsDataTable extends Component {
         position: 3
       }
     ];
-    return <DataTable data={this.props.teams} columns={columns} />;
+    return (
+      <DataTable
+        data={this.props.teams}
+        columns={columns}
+        pagination={true}
+        options={options}
+      />
+    );
   }
 }
-//
-// const mapDispatchToProps = dispatch => ({
-//   leaveTeamModalShow(show, id) {
-//     dispatch(leaveTeamModalShow(show, id));
-//   }
-// });
+
+TeamsDataTable.propTypes = {
+  leaveTeamModalShow: func.isRequired,
+  teams: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: number.isRequired,
+      name: string.isRequired,
+      current_team: bool.isRequired,
+      role: string.isRequired,
+      members: number.isRequired,
+      can_be_leaved: bool.isRequired
+    }).isRequired
+  )
+};
 
 export default connect(null, { leaveTeamModalShow })(TeamsDataTable);

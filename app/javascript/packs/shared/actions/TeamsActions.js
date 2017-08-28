@@ -3,16 +3,16 @@ import _ from "lodash";
 import { TEAMS_PATH, CHANGE_TEAM_PATH } from "../../app/routes";
 import { GET_LIST_OF_TEAMS, SET_CURRENT_TEAM } from "../../app/action_types";
 
-function addTeamsData(data) {
+export function addTeamsData(data) {
   return {
     type: GET_LIST_OF_TEAMS,
     payload: data
   };
 }
 
-export function setCurrentUser(user) {
+export function setCurrentTeam(team) {
   return {
-    user,
+    team,
     type: SET_CURRENT_TEAM
   };
 }
@@ -25,7 +25,7 @@ export function getTeamsList() {
         const teams = response.data.teams.collection;
         dispatch(addTeamsData(teams));
         const currentTeam = _.find(teams, team => team.current_team);
-        dispatch(setCurrentUser(currentTeam));
+        dispatch(setCurrentTeam(currentTeam));
       })
       .catch(error => {
         console.log("get Teams Error: ", error);
@@ -33,15 +33,15 @@ export function getTeamsList() {
   };
 }
 
-export function changeTeam(team_id) {
+export function changeTeam(teamId) {
   return dispatch => {
     axios
-      .post(CHANGE_TEAM_PATH, { team_id }, { withCredentials: true })
+      .post(CHANGE_TEAM_PATH, { teamId }, { withCredentials: true })
       .then(response => {
-        let teams = _.values(response.data);
+        const teams = response.data.teams.collection;
         dispatch(addTeamsData(teams));
-        let current_team = _.find(teams, team => team.current_team);
-        dispatch(setCurrentUser(current_team));
+        const currentTeam = _.find(teams, team => team.current_team);
+        dispatch(setCurrentTeam(currentTeam));
       })
       .catch(error => {
         console.log("get Teams Error: ", error);

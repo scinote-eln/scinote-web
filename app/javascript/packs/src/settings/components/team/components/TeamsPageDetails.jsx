@@ -1,12 +1,10 @@
 import React from "react";
-import PropTypes from "prop-types";
-import styled from "styled-components"
+import PropTypes, { number, string, bool } from "prop-types";
+import styled from "styled-components";
 import { FormattedMessage, FormattedPlural } from "react-intl";
-import { Button } from "react-bootstrap";
+import { Button, Glyphicon } from "react-bootstrap";
 
-const Wrapper = styled.div`
-  margin: 15px 0;
-`
+const Wrapper = styled.div`margin: 15px 0;`;
 const TeamsPageDetails = ({ teams }) => {
   const teamsNumber = teams.length;
   return (
@@ -29,8 +27,14 @@ const TeamsPageDetails = ({ teams }) => {
             }}
           />
         }
-      />
-      <Button>New team</Button>
+      />&nbsp;
+      <Button
+        onClick={() => {
+          window.location = "/users/settings/teams/new";
+        }}
+      >
+        <Glyphicon glyph="plus" />&nbsp;<FormattedMessage id="global_team_switch.new_team" />
+      </Button>
     </Wrapper>
   );
 };
@@ -38,9 +42,12 @@ const TeamsPageDetails = ({ teams }) => {
 TeamsPageDetails.propTypes = {
   teams: PropTypes.arrayOf(
     PropTypes.shape({
-      id: PropTypes.number.isRequired,
-      name: PropTypes.string.isRequired,
-      current_team: PropTypes.bool.isRequired
+      id: number.isRequired,
+      name: string.isRequired,
+      current_team: bool.isRequired,
+      role: string.isRequired,
+      members: number.isRequired,
+      can_be_leaved: bool.isRequired
     })
   )
 };

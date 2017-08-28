@@ -43,6 +43,7 @@ SettingsTeams.propTypes = {
       current_team: bool.isRequired,
       role: string.isRequired,
       members: number.isRequired,
+      can_be_leaved: bool.isRequired
     }).isRequired
   )
 };

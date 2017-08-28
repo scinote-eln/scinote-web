@@ -1,5 +1,6 @@
 module ClientApi
   class TeamsController < ApplicationController
+    include ClientApi::Users::UserTeamsHelper
     MissingTeamError = Class.new(StandardError)
 
     def index
