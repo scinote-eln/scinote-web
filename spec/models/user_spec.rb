@@ -165,7 +165,8 @@ describe User, type: :model do
         name: team.name,
         members: 1,
         role: 2,
-        current_team: true
+        current_team: true,
+        can_be_leaved: false
       }
 
       user_one.teams_data.first.each do |k, v|
@@ -181,7 +182,8 @@ describe User, type: :model do
         name: team.name,
         members: 2,
         role: 2,
-        current_team: true
+        current_team: true,
+        can_be_leaved: true
       }
 
       user_one.teams_data.first.each do |k, v|

@@ -38,12 +38,11 @@ class TeamsDataTable extends Component {
 
   render() {
     const options = {
-      defaultSortName: "name", // default sort column name
-      defaultSortOrder: "desc", // default sort order
+      defaultSortName: "name",
+      defaultSortOrder: "desc",
       sizePerPageList: [10, 25, 50, 100],
       paginationPosition: "top",
-      alwaysShowAllBtns: false,
-      ignoreSinglePage: true
+      alwaysShowAllBtns: false
     };
     const columns = [
       {

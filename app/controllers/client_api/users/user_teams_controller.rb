@@ -29,6 +29,7 @@ module ClientApi
       end
 
       def user_cant_leave
+        return unless @user_team && @team
         @user_team.admin? &&
           @team.user_teams.where(role: 2).count <= 1
       end
