@@ -158,7 +158,8 @@ describe User, type: :model do
     end
     let(:user_two) { create :user, email: 'user2@asdf.com' }
 
-    it 'in a specific format' do
+    it 'in a specific format: {id: .., name: .., members: .., role: ' \
+       '.., current_team: .., can_be_leaved: ..}' do
       create :user_team, team: team, user: user_one
       expected_result = {
         id: team.id,

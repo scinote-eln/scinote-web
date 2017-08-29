@@ -8,7 +8,7 @@ module ClientApi
       before_action :find_user_team, only: :leave_team
 
       def leave_team
-        if user_cant_leave
+        if user_cant_leave?
           unsuccess_response
         else
           begin
@@ -28,7 +28,7 @@ module ClientApi
         @user_team = UserTeam.where(team: @team, user: current_user).first
       end
 
-      def user_cant_leave
+      def user_cant_leave?
         return unless @user_team && @team
         @user_team.admin? &&
           @team.user_teams.where(role: 2).count <= 1
