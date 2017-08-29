@@ -13,20 +13,30 @@ module ClientApi
       end
 
       def change_password
-        binding.pry
+        user = current_user
+        user.password = params['passwrd']
+        user.save
+        ""
       end
 
       def change_email
         user = current_user
-        user.email = params['email']
-        saved_email = if user.save
-          user.email
+        current_email = current_user.email
+        errors = { current_password_email_field: []} 
+
+        if user.valid_password? params['passwrd']
+          user.email = params['email']
+          saved_email = if user.save
+            user.email
+          else
+            user.reload.email
+          end
         else
-          user.reload.email
+         errors[:current_password_email_field] << 'Wrong password.'
         end
 
         respond_to do |format|
-          format.json { render json: { email: saved_email } }
+          format.json { render json: { email: saved_email || current_email, errors: errors } }
         end
       end
 
@@ -40,7 +50,7 @@ module ClientApi
         end
 
         respond_to do |format|
-          format.json { render json: { fullName: saved_name } }
+          format.json { render json: { fullName: saved_name, errors: user.errors.messages } }
         end
       end
 
