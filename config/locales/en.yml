@@ -44,6 +44,7 @@ en:
       forgot: "Forgot your password?"
       not_receive_confirmation: "Didn't receive confirmation instructions?"
       not_receive_unlock: "Didn't receive unlock instructions?"
+      more_sign_in_options: "You can also:"
       sign_in_provider: "Sign in with %{provider}"
 
   helpers:
@@ -1785,6 +1786,12 @@ en:
       length_too_short: "Search query is too short (minimum is %{min_length} characters)"
     busy: "The server is still processing your request. If you leave this page, the changes will be lost! Are you sure you want to continue?"
     no_name: "(no name)"
+
+  api:
+    core:
+      status_ok: "Ok"
+      expired_token: "Token is expired"
+      invalid_token: "Token is invalid"
 
   Add: "Add"
   Asset: "File"

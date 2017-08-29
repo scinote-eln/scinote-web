@@ -1,0 +1,18 @@
+require 'rails_helper'
+
+describe Connection, type: :model do
+  it 'should be of class Connection' do
+    expect(subject.class).to eq Connection
+  end
+
+  describe 'Database table' do
+    it { should have_db_column :id }
+    it { should have_db_column :input_id }
+    it { should have_db_column :output_id }
+  end
+
+  describe 'Relations' do
+    it { should belong_to(:to).class_name('MyModule') }
+    it { should belong_to(:from).class_name('MyModule') }
+  end
+end
