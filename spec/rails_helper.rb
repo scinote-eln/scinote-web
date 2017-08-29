@@ -2,6 +2,8 @@
 require 'spec_helper'
 require 'shoulda-matchers'
 require 'database_cleaner'
+require 'devise'
+require_relative 'support/controller_macros'
 ENV['RAILS_ENV'] = 'test'
 require File.expand_path('../../config/environment', __FILE__)
 # Prevent database truncation if the environment is production
@@ -78,6 +80,9 @@ RSpec.configure do |config|
 
   # includes FactoryGirl in rspec
   config.include FactoryGirl::Syntax::Methods
+  # Devise
+  config.include Devise::Test::ControllerHelpers, type: :controller
+  config.extend ControllerMacros, type: :controller
 end
 
 # config shoulda matchers to work with rspec

@@ -1819,3 +1819,8 @@ en:
   More: "More"
   Added: 'Added'
   by: 'by'
+
+  client_api:
+    user_teams:
+      leave_team_error: "An error occured."
+      leave_flash: "Successfuly left team %{team}."
