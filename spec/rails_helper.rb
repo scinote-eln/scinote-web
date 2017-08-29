@@ -82,7 +82,7 @@ RSpec.configure do |config|
   config.include FactoryGirl::Syntax::Methods
   # Devise
   config.include Devise::Test::ControllerHelpers, type: :controller
-  config.extend ControllerMacros, :type => :controller
+  config.extend ControllerMacros, type: :controller
 end
 
 # config shoulda matchers to work with rspec
