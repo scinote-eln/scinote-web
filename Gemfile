@@ -15,6 +15,10 @@ gem 'yomu'
 gem 'font-awesome-rails', '~> 4.6'
 gem 'recaptcha', require: 'recaptcha/rails'
 gem 'sanitize', '~> 4.4'
+gem 'omniauth'
+
+# Gems for API implementation
+gem 'jwt'
 
 # JS datetime library, requirement of datetime picker
 gem 'momentjs-rails', '>= 2.9.0'
@@ -51,7 +55,7 @@ gem 'wicked_pdf'
 gem 'silencer' # Silence certain Rails logs
 gem 'wkhtmltopdf-heroku'
 gem 'remotipart', '~> 1.2' # Async file uploads
-gem 'faker' # Generate fake data
+gem 'faker', '~> 1.7.3' # Generate fake data
 gem 'auto_strip_attributes', '~> 2.1' # Removes unnecessary whitespaces from ActiveRecord or ActiveModel attributes
 gem 'deface', '~> 1.0'
 gem 'nokogiri' # HTML/XML parser
@@ -75,7 +79,13 @@ gem 'base62' # Used for smart annotations
 gem 'newrelic_rpm'
 
 group :development, :test do
+  gem 'listen', '~> 3.0'
   gem 'byebug'
+  gem 'pry'
+  gem 'pry-byebug'
+  gem 'pry-rails'
+  gem 'factory_girl_rails'
+  gem 'rspec-rails'
   gem 'better_errors'
   gem 'binding_of_caller'
   gem 'awesome_print'
@@ -90,9 +100,13 @@ group :production do
 end
 
 group :test do
-  gem 'minitest-reporters', '~> 1.1'
-  gem "shoulda-context"
-  gem "shoulda-matchers", ">= 3.0.1"
+  gem 'shoulda-matchers'
+  gem 'cucumber-rails', require: false
+  gem 'database_cleaner'
+  gem 'capybara'
+  gem 'poltergeist'
+  gem 'phantomjs', :require => 'phantomjs/poltergeist'
+  gem 'simplecov', require: false
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
