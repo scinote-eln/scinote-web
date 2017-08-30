@@ -17,8 +17,11 @@ Rails.application.routes.draw do
       # activities
       get '/activities', to: 'activities#index'
       # teams
-      get '/teams', to: 'teams#index'
-      post '/change_team', to: 'teams#change_team'
+      get '/teams', to: 'teams/teams#index'
+      namespace :teams do
+        get '/:team_id/details', to: 'teams#details'
+        post '/change_team', to: 'teams#change_team'
+      end
       # notifications
       get '/recent_notifications', to: 'notifications#recent_notifications'
       # users

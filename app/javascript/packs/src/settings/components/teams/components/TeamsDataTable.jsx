@@ -3,9 +3,11 @@ import PropTypes, { func, number, string, bool } from "prop-types";
 import { connect } from "react-redux";
 import { Button } from "react-bootstrap";
 import _ from "lodash";
+import { Link } from "react-router-dom";
 import { FormattedMessage } from "react-intl";
 import { leaveTeamModalShow } from "../../../../../shared/actions/LeaveTeamActions";
 import DataTable from "../../../../../shared/data_table";
+import { SETTINGS_TEAMS_ROUTE } from "../../../../../app/dom_routes";
 
 class TeamsDataTable extends Component {
   constructor(props) {
@@ -13,6 +15,7 @@ class TeamsDataTable extends Component {
 
     this.leaveTeamModal = this.leaveTeamModal.bind(this);
     this.leaveTeamButton = this.leaveTeamButton.bind(this);
+    this.linkToTeam = this.linkToTeam.bind(this);
   }
 
   leaveTeamModal(e, id) {
@@ -36,6 +39,14 @@ class TeamsDataTable extends Component {
     );
   }
 
+  linkToTeam(name, col) {
+    return (
+      <Link to={`${SETTINGS_TEAMS_ROUTE}/${col.id}`}>
+        {name}
+      </Link>
+    );
+  }
+
   render() {
     const options = {
       defaultSortName: "name",
@@ -50,6 +61,7 @@ class TeamsDataTable extends Component {
         name: "Name",
         isKey: false,
         textId: "name",
+        dataFormat: this.linkToTeam,
         position: 0,
         dataSort: true
       },
