@@ -5,7 +5,8 @@ import {
   CURRENT_USER_PATH,
   CHANGE_USER_INITIALS_PATH,
   CHANGE_USER_EMAIL_PATH,
-  CHANGE_USER_PASSWORD_PATH
+  CHANGE_USER_PASSWORD_PATH,
+  CHANGE_USER_TIMEZONE_PATH
 } from "../../app/routes";
 
 import {
@@ -134,10 +135,21 @@ export function changeAvatar(avatarSrc) {
   };
 }
 
-export function changeTimezone(timezone) {
+export function saveTimezone({ timezone }) {
   return {
     type: CHANGE_CURRENT_USER_TIMEZONE,
     payload: timezone
+  };
+}
+
+export function changeTimezone(timezone) {
+  return dispatch => {
+    axios
+      .post(CHANGE_USER_TIMEZONE_PATH, { withCredentials: true, timezone })
+      .then(({ data }) => {
+        dispatch(saveTimezone(data));
+      })
+      .catch(err => console.log(err));
   };
 }
 

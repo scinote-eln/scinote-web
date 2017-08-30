@@ -19,6 +19,23 @@ module ClientApi
         ""
       end
 
+      def change_timezone
+        user = current_user
+        errors = { timezone_errors: [] }
+        user.time_zone = params['timezone']
+        
+        timezone = if user.save
+          user.time_zone
+        else
+          user.reload.time_zone
+          errors[:timezone_errors] << 'You nedd to select valid TimeZone.'
+        end
+
+        respond_to do |format|
+          format.json { render json: { timezone: timezone, errors: errors}}
+        end
+      end
+
       def change_email
         user = current_user
         current_email = current_user.email

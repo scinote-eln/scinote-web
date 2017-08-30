@@ -29,6 +29,7 @@ Rails.application.routes.draw do
       post '/user/change_initials', to: 'users/users#change_initials'
       post '/user/change_email', to: 'users/users#change_email'
       post '/user/change_password', to: 'users/users#change_password'
+      post '/user/change_timezone', to: 'users/users#change_timezone'
     end
 
     # Save sample table state

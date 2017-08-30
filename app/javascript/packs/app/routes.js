@@ -27,6 +27,7 @@ export const CHANGE_USER_FULL_NAME_PATH = "/client_api/user/change_full_name";
 export const CHANGE_USER_INITIALS_PATH = "/client_api/user/change_initials";
 export const CHANGE_USER_EMAIL_PATH = "/client_api/user/change_email";
 export const CHANGE_USER_PASSWORD_PATH = "/client_api/user/change_password";
+export const CHANGE_USER_TIMEZONE_PATH = "/client_api/user/change_timezone";
 
 // info dropdown_title
 export const CUSTOMER_SUPPORT_LINK = "http://scinote.net/support";
