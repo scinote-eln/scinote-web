@@ -9,20 +9,20 @@ module ClientApi
       end
 
       def details
-        team_service = ClientApi::TeamsService.new(id: params[:team_id],
+        team_service = ClientApi::TeamsService.new(team_id: params[:team_id],
                                                    current_user: current_user)
         success_response('/client_api/teams/details',
                          team_service.team_page_details_data)
-      rescue MissingTeamError
+      rescue ClientApi::CustomTeamError
         error_response
       end
 
       def change_team
-        team_service = ClientApi::TeamsService.new(id: params[:team_id],
+        team_service = ClientApi::TeamsService.new(team_id: params[:team_id],
                                                    current_user: current_user)
         team_service.change_current_team!
         success_response('/client_api/teams/index', team_service.teams_data)
-      rescue MissingTeamError
+      rescue ClientApi::CustomTeamError
         error_response
       end
 
@@ -41,7 +41,7 @@ module ClientApi
       def error_response
         respond_to do |format|
           format.json do
-            render json: { message: 'Bad boy!' }, status: :bad_request
+            render json: { message: 'Bad boy!' }, status: :unprocessable_entity
           end
         end
       end

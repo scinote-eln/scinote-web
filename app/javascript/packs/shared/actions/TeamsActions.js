@@ -36,7 +36,7 @@ export function getTeamsList() {
 export function changeTeam(teamId) {
   return dispatch => {
     axios
-      .post(CHANGE_TEAM_PATH, { teamId }, { withCredentials: true })
+      .post(CHANGE_TEAM_PATH, { team_id: 44 }, { withCredentials: true })
       .then(response => {
         const teams = response.data.teams.collection;
         dispatch(addTeamsData(teams));

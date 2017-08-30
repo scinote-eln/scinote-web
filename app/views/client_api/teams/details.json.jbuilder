@@ -1,15 +1,18 @@
 json.team_details do
   json.id team.id
   json.created_at team.created_at
-  json.created_by team.created_by
+  json.created_by "#{team.created_by.full_name} (#{team.created_by.email})"
   json.space_taken team.space_taken
   json.description team.description
-  json.users users do |user|
-    # json.id team.fetch('id')
-    # json.name team.fetch('name')
-    # json.members team.fetch('members')
-    # json.role retrive_role_name(team.fetch('role') { nil })
-    # json.current_team team.fetch('current_team')
-    # json.can_be_leaved team.fetch('can_be_leaved')
+  json.users team_users do |team_user|
+    json.id team_user.user.id
+    json.email team_user.user.full_name
+    json.role team_user.role_str
+    json.created_at I18n.l(team_user.created_at, format: :full_date)
+    json.status team_user.user.active_status_str
+    json.actions do
+      json.current_role team_user.role_str
+      json.team_user_id team_user.id
+    end
   end
 end
