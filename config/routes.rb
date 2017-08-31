@@ -33,11 +33,15 @@ Rails.application.routes.draw do
         post '/change_email', to: 'users#change_email'
         post '/change_password', to: 'users#change_password'
         post '/change_timezone', to: 'users#change_timezone'
-        post '/change_assignements_notification', to: 'users#change_assignements_notification'
-        post '/change_assignements_notification_email', to: 'users#change_assignements_notification_email'
+        post '/change_assignements_notification',
+          to: 'users#change_assignements_notification'
+        post '/change_assignements_notification_email',
+          to: 'users#change_assignements_notification_email'
         post '/change_recent_notification', to: 'users#change_recent_notification'
-        post '/change_recent_notification_email', to: 'users#change_recent_notification_email'
-        post '/change_system_notification_email', to: 'users#change_system_notification_email'
+        post '/change_recent_notification_email',
+          to: 'users#change_recent_notification_email'
+        post '/change_system_notification_email',
+          to: 'users#change_system_notification_email'
       end
     end
 
