@@ -30,6 +30,11 @@ Rails.application.routes.draw do
       post '/user/change_email', to: 'users/users#change_email'
       post '/user/change_password', to: 'users/users#change_password'
       post '/user/change_timezone', to: 'users/users#change_timezone'
+      post '/user/change_assignements_notification', to: 'users/users#change_assignements_notification'
+      post '/user/change_assignements_notification_email', to: 'users/users#change_assignements_notification_email'
+      post '/user/change_recent_notification', to: 'users/users#change_recent_notification'
+      post '/user/change_recent_notification_email', to: 'users/users#change_recent_notification_email'
+      post '/user/change_system_notification_email', to: 'users/users#change_system_notification_email'
     end
 
     # Save sample table state

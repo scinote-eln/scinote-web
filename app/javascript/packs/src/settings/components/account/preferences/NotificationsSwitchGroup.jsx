@@ -64,7 +64,7 @@ class NotificationsSwitchGroup extends Component {
         break;
       default:
         this.setState({
-          isSciNoteSwitchOn: true,
+          isSciNoteSwitchOn: false,
           isEmailSwitchOn: false
         });
     }

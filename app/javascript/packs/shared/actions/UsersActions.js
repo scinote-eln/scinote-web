@@ -6,7 +6,12 @@ import {
   CHANGE_USER_INITIALS_PATH,
   CHANGE_USER_EMAIL_PATH,
   CHANGE_USER_PASSWORD_PATH,
-  CHANGE_USER_TIMEZONE_PATH
+  CHANGE_USER_TIMEZONE_PATH,
+  CHANGE_USER_ASSIGNEMENTS_NOTIFICATION_PATH,
+  CHANGE_USER_ASSIGNMENTS_NOTIFICATION_EMAIL_PATH,
+  CHANGE_USER_RECENT_NOTIFICATION_PATH,
+  CHANGE_USER_RECENT_NOTIFICATION_EMAIL_PATH,
+  CHANGE_USER_SYSTEM_MESSAGE_NOTIFICATION_EMAIL_PATH
 } from "../../app/routes";
 
 import {
@@ -153,37 +158,107 @@ export function changeTimezone(timezone) {
   };
 }
 
-export function changeAssignmentsNotification(status) {
+export function saveAssignmentsNotification({ status }) {
   return {
     type: CHANGE_ASSIGNMENTS_NOTIFICATION,
     payload: status
   };
 }
 
-export function changeAssignmentsNotificationEmail(status) {
+export function changeAssignmentsNotification(status) {
+  return dispatch => {
+    axios
+      .post(CHANGE_USER_ASSIGNEMENTS_NOTIFICATION_PATH, {
+        withCredentials: true,
+        status
+      })
+      .then(({ data }) => {
+        dispatch(saveAssignmentsNotification(data));
+      })
+      .catch(err => console.log(err));
+  };
+}
+
+export function saveAssignmentsNotificationEmail({ status }) {
   return {
     type: CHANGE_ASSIGNMENTS_NOTIFICATION_EMAIL,
     payload: status
   };
 }
 
-export function changeRecentNotification(status) {
+export function changeAssignmentsNotificationEmail(status) {
+  return dispatch => {
+    axios
+      .post(CHANGE_USER_ASSIGNMENTS_NOTIFICATION_EMAIL_PATH, {
+        withCredentials: true,
+        status
+      })
+      .then(({ data }) => {
+        dispatch(saveAssignmentsNotificationEmail(data));
+      })
+      .catch(err => console.log(err));
+  };
+}
+
+export function saveRecentNotification({ status }) {
   return {
     type: CHANGE_RECENT_NOTIFICATION,
     payload: status
   };
 }
 
-export function changeRecentNotificationEmail(status) {
+export function changeRecentNotification(status) {
+  return dispatch => {
+    axios
+      .post(CHANGE_USER_RECENT_NOTIFICATION_PATH, {
+        withCredentials: true,
+        status
+      })
+      .then(({ data }) => {
+        dispatch(saveRecentNotification(data));
+      })
+      .catch(err => console.log(err));
+  };
+}
+
+export function saveRecentNotificationEmail({ status }) {
   return {
     type: CHANGE_RECENT_NOTIFICATION_EMAIL,
     payload: status
   };
 }
 
-export function changeSystemMessageNotificationEmail(status) {
+export function changeRecentNotificationEmail(status) {
+  return dispatch => {
+    axios
+      .post(CHANGE_USER_RECENT_NOTIFICATION_EMAIL_PATH, {
+        withCredentials: true,
+        status
+      })
+      .then(({ data }) => {
+        dispatch(saveRecentNotificationEmail(data));
+      })
+      .catch(err => console.log(err));
+  };
+}
+
+export function saveSystemMessageNotificationEmail({ status }) {
   return {
     type: CHANGE_SYSTEM_MESSAGE_NOTIFICATION_EMAIL,
     payload: status
+  };
+}
+
+export function changeSystemMessageNotificationEmail(status) {
+  return dispatch => {
+    axios
+      .post(CHANGE_USER_SYSTEM_MESSAGE_NOTIFICATION_EMAIL_PATH, {
+        withCredentials: true,
+        status
+      })
+      .then(({ data }) => {
+        dispatch(saveSystemMessageNotificationEmail(data));
+      })
+      .catch(err => console.log(err));
   };
 }

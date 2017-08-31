@@ -19,11 +19,86 @@ module ClientApi
         ""
       end
 
+      def change_assignements_notification
+        user = current_user
+        user.assignments_notification = params['status']
+
+        status = if user.save
+          user.assignments_notification
+        else
+          user.reload.assignments_notification
+        end
+
+        respond_to do |format|
+          format.json { render json: { status: status }}
+        end
+      end
+
+      def change_assignements_notification_email
+        user = current_user
+        user.assignments_notification_email = params['status']
+
+        status = if user.save
+          user.assignments_notification_email
+        else
+          user.reload.assignments_notification_email
+        end
+
+        respond_to do |format|
+          format.json { render json: { status: status }}
+        end
+      end
+
+      def change_recent_notification
+        user = current_user
+        user.recent_notification = params['status']
+
+        status = if user.save
+          user.recent_notification
+        else
+          user.reload.recent_notification
+        end
+
+        respond_to do |format|
+          format.json { render json: { status: status }}
+        end
+      end
+
+      def change_recent_notification_email
+        user = current_user
+        user.recent_notification_email = params['status']
+
+        status = if user.save
+          user.recent_notification_email
+        else
+          user.reload.recent_notification_email
+        end
+
+        respond_to do |format|
+          format.json { render json: { status: status }}
+        end
+      end
+
+      def change_system_notification_email
+        user = current_user
+        user.system_message_notification_email = params['status']
+
+        status = if user.save
+          user.system_message_notification_email
+        else
+          user.reload.system_message_notification_email
+        end
+
+        respond_to do |format|
+          format.json { render json: { status: status }}
+        end
+      end
+
       def change_timezone
         user = current_user
         errors = { timezone_errors: [] }
         user.time_zone = params['timezone']
-        
+
         timezone = if user.save
           user.time_zone
         else
@@ -39,7 +114,7 @@ module ClientApi
       def change_email
         user = current_user
         current_email = current_user.email
-        errors = { current_password_email_field: []} 
+        errors = { current_password_email_field: []}
 
         if user.valid_password? params['passwrd']
           user.email = params['email']

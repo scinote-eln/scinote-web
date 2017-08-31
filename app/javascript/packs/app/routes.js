@@ -28,6 +28,16 @@ export const CHANGE_USER_INITIALS_PATH = "/client_api/user/change_initials";
 export const CHANGE_USER_EMAIL_PATH = "/client_api/user/change_email";
 export const CHANGE_USER_PASSWORD_PATH = "/client_api/user/change_password";
 export const CHANGE_USER_TIMEZONE_PATH = "/client_api/user/change_timezone";
+export const CHANGE_USER_ASSIGNEMENTS_NOTIFICATION_PATH =
+  "/client_api/user/change_assignements_notification";
+export const CHANGE_USER_ASSIGNMENTS_NOTIFICATION_EMAIL_PATH =
+  "/client_api/user/change_assignements_notification_email";
+export const CHANGE_USER_RECENT_NOTIFICATION_PATH =
+  "/client_api/user/change_recent_notification";
+export const CHANGE_USER_RECENT_NOTIFICATION_EMAIL_PATH =
+  "/client_api/user/change_recent_notification_email";
+export const CHANGE_USER_SYSTEM_MESSAGE_NOTIFICATION_EMAIL_PATH =
+  "/client_api/user/change_system_notification_email";
 
 // info dropdown_title
 export const CUSTOMER_SUPPORT_LINK = "http://scinote.net/support";
