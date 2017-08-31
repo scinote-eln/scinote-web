@@ -7,7 +7,7 @@ import styled from "styled-components";
 import _ from "lodash";
 
 import { BORDER_GRAY_COLOR } from "../../../app/constants/colors";
-import { setCurrentUser, changeTeam } from "../../actions/TeamsActions";
+import { changeTeam } from "../../actions/TeamsActions";
 import { getTeamsList } from "../../actions/TeamsActions";
 
 const StyledNavDropdown = styled(NavDropdown)`
@@ -89,14 +89,11 @@ TeamSwitch.propTypes = {
 // Map the states from store to component
 const mapStateToProps = ({ all_teams, current_team }) => ({
   current_team,
-  all_teams: _.values(all_teams)
+  all_teams: all_teams.collection
 });
 
 // Map the fetch activity action to component
 const mapDispatchToProps = dispatch => ({
-  setCurrentUser() {
-    dispatch(setCurrentUser());
-  },
   changeTeam(teamId) {
     dispatch(changeTeam(teamId));
   },

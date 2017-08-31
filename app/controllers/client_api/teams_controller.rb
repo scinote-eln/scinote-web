@@ -1,5 +1,6 @@
 module ClientApi
   class TeamsController < ApplicationController
+    include ClientApi::Users::UserTeamsHelper
     MissingTeamError = Class.new(StandardError)
 
     def index
@@ -34,11 +35,11 @@ module ClientApi
     end
 
     def teams
-      { teams: current_user.teams }
+      { teams: current_user.teams_data }
     end
 
     def change_current_team
-      team_id = params.fetch(:team_id) { raise  MissingTeamError }
+      team_id = params.fetch(:team_id) { raise MissingTeamError }
       unless current_user.teams.pluck(:id).include? team_id
         raise MissingTeamError
       end

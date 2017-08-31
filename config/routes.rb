@@ -24,17 +24,21 @@ Rails.application.routes.draw do
       get '/recent_notifications', to: 'notifications#recent_notifications'
 
       # users
-      get '/current_user_info', to: 'users/users#current_user_info'
-      post '/user/change_full_name', to: 'users/users#change_full_name'
-      post '/user/change_initials', to: 'users/users#change_initials'
-      post '/user/change_email', to: 'users/users#change_email'
-      post '/user/change_password', to: 'users/users#change_password'
-      post '/user/change_timezone', to: 'users/users#change_timezone'
-      post '/user/change_assignements_notification', to: 'users/users#change_assignements_notification'
-      post '/user/change_assignements_notification_email', to: 'users/users#change_assignements_notification_email'
-      post '/user/change_recent_notification', to: 'users/users#change_recent_notification'
-      post '/user/change_recent_notification_email', to: 'users/users#change_recent_notification_email'
-      post '/user/change_system_notification_email', to: 'users/users#change_system_notification_email'
+      get '/current_user_info', to: 'users#current_user_info'
+
+      namespace :users do
+        delete '/leave_team', to: 'user_teams#leave_team'
+        post '/change_full_name', to: 'users#change_full_name'
+        post '/change_initials', to: 'users#change_initials'
+        post '/change_email', to: 'users#change_email'
+        post '/change_password', to: 'users#change_password'
+        post '/change_timezone', to: 'users#change_timezone'
+        post '/change_assignements_notification', to: 'users#change_assignements_notification'
+        post '/change_assignements_notification_email', to: 'users#change_assignements_notification_email'
+        post '/change_recent_notification', to: 'users#change_recent_notification'
+        post '/change_recent_notification_email', to: 'users#change_recent_notification_email'
+        post '/change_system_notification_email', to: 'users#change_system_notification_email'
+      end
     end
 
     # Save sample table state
