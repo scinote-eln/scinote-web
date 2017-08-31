@@ -21,3 +21,11 @@ body {
     background-color: $primary-hover-color;
   }
 }
+
+// // fixes issue with dropdown in datatable
+.react-bootstrap-table-dropdown-fix {
+  overflow: inherit !important;
+  & .open > .dropdown-menu {
+    position: relative !important;
+  }
+}

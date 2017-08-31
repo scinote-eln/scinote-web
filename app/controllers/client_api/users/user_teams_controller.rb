@@ -1,50 +1,31 @@
 module ClientApi
   module Users
     class UserTeamsController < ApplicationController
-      include NotificationsHelper
-      include InputSanitizeHelper
       include ClientApi::Users::UserTeamsHelper
 
       before_action :find_user_team, only: :leave_team
 
       def leave_team
-        if user_cant_leave?
-          unsuccess_response
-        else
-          begin
-            assign_new_team_owner
-            generate_new_notification
-            success_response
-          rescue
-            unsuccess_response
-          end
-        end
+        user_team_service = ClientApi::UserTeamService.new(user: current_user)
+        user_team_service.destroy_user_team_and_assign_new_team_owner!
+        success_response(user_team_service.teams_data)
+      rescue
+        unsuccess_response
+      end
+
+      def update_role
+
       end
 
       private
 
-      def find_user_team
-        @team = Team.find_by_id(params[:team])
-        @user_team = UserTeam.where(team: @team, user: current_user).first
-      end
-
-      def user_cant_leave?
-        return unless @user_team && @team
-        @user_team.admin? &&
-          @team.user_teams.where(role: 2).count <= 1
-      end
-
-      def success_response
+      def success_response(locals)
         respond_to do |format|
           # return a list of teams
           format.json do
             render template: '/client_api/teams/index',
                    status: :ok,
-                   locals: {
-                     teams: current_user.teams_data,
-                     flash_message: t('client_api.user_teams.leave_flash',
-                                      team: @team.name)
-                   }
+                   locals: locals
           end
         end
       end
@@ -60,27 +41,7 @@ module ClientApi
         end
       end
 
-      def assign_new_team_owner
-        new_owner = @team.user_teams
-                         .where(role: 2)
-                         .where.not(id: @user_team.id)
-                         .first.user
-        new_owner ||= current_user
-        reset_user_current_team(@user_team)
-        @user_team.destroy(new_owner)
-      end
 
-      def reset_user_current_team(user_team)
-        ids = user_team.user.teams_ids
-        ids -= [user_team.team.id]
-        user_team.user.current_team_id = ids.first
-        user_team.user.save
-      end
-
-      def generate_new_notification
-        generate_notification(@user_team.user, @user_team.user, @user_team.team,
-                              false, false)
-      end
     end
   end
 end

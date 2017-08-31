@@ -22,15 +22,6 @@ export default {
       in_team: "You are member of {num} team",
       in_teams: "You are member of {num} team",
       leave_team: "Leave team",
-      leave_team_modal: {
-        title: "Leave team {teamName}",
-        subtitle: "Are you sure you wish to leave team My projects? This action is irreversible.",
-        warnings: "Leaving team has following consequences:",
-        warning_message_one: "you will lose access to all content belonging to the team (including projects, tasks, protocols and activities);",
-        warning_message_two: "all projects in the team where you were the sole <b>Owner</b> will receive a new owner from the team administrators;",
-        warning_message_three: "all repository protocols in the team belonging to you will be reassigned onto a new owner from team administrators.",
-        leave_team: "Leave"
-      },
       account: "Account",
       team: "Team",
       avatar: "Avatar",
@@ -66,7 +57,31 @@ export default {
       show_in_scinote: "Show in sciNote",
       notify_me_via_email: "Notify me via email",
       no: "No",
-      yes: "Yes"
+      yes: "Yes",
+      leave_team_modal: {
+        title: "Leave team {teamName}",
+        subtitle: "Are you sure you wish to leave team My projects? This action is irreversible.",
+        warnings: "Leaving team has following consequences:",
+        warning_message_one: "you will lose access to all content belonging to the team (including projects, tasks, protocols and activities);",
+        warning_message_two: "all projects in the team where you were the sole <b>Owner</b> will receive a new owner from the team administrators;",
+        warning_message_three: "all repository protocols in the team belonging to you will be reassigned onto a new owner from team administrators.",
+        leave_team: "Leave"
+      },
+      single_team: {
+        created_on: "Created on: <strong>{created_at}</strong>",
+        created_by: "Created by: <strong>{created_by}</strong>",
+        space_usage: "Space usage: <strong>{space_usage}</strong>",
+        no_description: "<i>No description</i>",
+        members_panel_title: "Team members",
+        add_members: "Add team members",
+        actions: {
+          user_role: "User role",
+          guest: "Guest",
+          normal_user: "Normal user",
+          administrator: "Administrator",
+          remove_user: "Remove"
+        }
+      }
     },
     activities: {
       modal_title: "Activities",

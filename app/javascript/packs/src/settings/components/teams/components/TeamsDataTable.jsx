@@ -39,9 +39,9 @@ class TeamsDataTable extends Component {
     );
   }
 
-  linkToTeam(name, col) {
+  linkToTeam(name, row) {
     return (
-      <Link to={`${SETTINGS_TEAMS_ROUTE}/${col.id}`}>
+      <Link to={`${SETTINGS_TEAMS_ROUTE}/${row.id}`}>
         {name}
       </Link>
     );

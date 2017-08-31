@@ -1,7 +1,10 @@
 import React, { Component } from "react";
-import PropTypes, { number, string, bool } from "prop-types";
+import ReactRouterPropTypes from "react-router-prop-types";
 import styled from "styled-components";
-import { FormattedMessage } from "react-intl";
+import { Row, Col, Glyphicon, Well } from "react-bootstrap";
+import { FormattedHTMLMessage, FormattedMessage } from "react-intl";
+import moment from "moment";
+import prettysize from "prettysize";
 import axios from "../../../../app/axios";
 
 import { TEAM_DETAILS_PATH } from "../../../../app/routes";
@@ -9,6 +12,8 @@ import {
   BORDER_LIGHT_COLOR,
   COLOR_CONCRETE
 } from "../../../../app/constants/colors";
+
+import TeamsMembers from "./components/TeamsMembers";
 
 const Wrapper = styled.div`
   background: white;
@@ -24,6 +29,21 @@ const TabTitle = styled.div`
   padding: 15px;
 `;
 
+const BadgeWrapper = styled.div`
+  font-size: 1.4em;
+  float: left;
+  padding: 6px 10px;
+  background-color: #37a0d9;
+  color: #fff;
+`;
+
+const StyledWell = styled.div`
+  &:hover {
+    text-decoration: underline;
+    cursor: pointer;
+  }
+`;
+
 class SettingsTeamPageContainer extends Component {
   constructor(props) {
     super(props);
@@ -31,13 +51,34 @@ class SettingsTeamPageContainer extends Component {
       team: {},
       users: []
     };
+    this.updateDescription = this.updateDescription.bind(this);
+    this.updateRole = this.updateRole.bind(this)
   }
 
   componentDidMount() {
-    const path = TEAM_DETAILS_PATH.replace(":team_id", this.props.params.id);
+    const { id } = this.props.match.params;
+    const path = TEAM_DETAILS_PATH.replace(":team_id", id);
     axios.get(path).then(response => {
-
+      const { team, users } = response.data.team_details;
+      this.setState({ team, users });
     });
+  }
+
+  updateDescription() {
+    console.log("banana");
+  }
+
+  updateRole(userId) {
+
+  }
+
+  renderDescription() {
+    if (this.state.team.description) {
+      return this.state.team.description;
+    }
+    return (
+      <FormattedHTMLMessage id="settings_page.single_team.no_description" />
+    );
   }
 
   render() {
@@ -45,10 +86,67 @@ class SettingsTeamPageContainer extends Component {
       <Wrapper>
         <TabTitle>
           <FormattedMessage id="settings_page.all_teams" />
+          {` / ${this.state.team.name}`}
         </TabTitle>
+        <Row>
+          <Col xs={6} sm={3}>
+            <BadgeWrapper>
+              <Glyphicon glyph="calendar" />
+            </BadgeWrapper>
+            <Well>
+              <FormattedHTMLMessage
+                id="settings_page.single_team.created_on"
+                values={{
+                  created_at: moment(this.state.team.created_at).format(
+                    "DD.MM.YYYY"
+                  )
+                }}
+              />
+            </Well>
+          </Col>
+          <Col xs={10} sm={5}>
+            <BadgeWrapper>
+              <Glyphicon glyph="user" />
+            </BadgeWrapper>
+            <Well>
+              <FormattedHTMLMessage
+                id="settings_page.single_team.created_by"
+                values={{ created_by: this.state.team.created_by }}
+              />
+            </Well>
+          </Col>
+          <Col xs={8} sm={4}>
+            <BadgeWrapper>
+              <Glyphicon glyph="hdd" />
+            </BadgeWrapper>
+            <Well>
+              <FormattedHTMLMessage
+                id="settings_page.single_team.space_usage"
+                values={{
+                  space_usage: prettysize(this.state.team.space_taken)
+                }}
+              />
+            </Well>
+          </Col>
+        </Row>
+        <Row>
+          <Col sm={12} onClick={this.updateDescription}>
+            <BadgeWrapper>
+              <Glyphicon glyph="info-sign" />
+            </BadgeWrapper>
+            <StyledWell>
+              {this.renderDescription()}
+            </StyledWell>
+          </Col>
+        </Row>
+        <TeamsMembers members={this.state.users} updateRole={this.updateRole} />
       </Wrapper>
     );
   }
 }
+
+SettingsTeamPageContainer.PropTypes = {
+  match: ReactRouterPropTypes.match.isRequired
+};
 
 export default SettingsTeamPageContainer;

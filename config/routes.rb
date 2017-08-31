@@ -29,6 +29,7 @@ Rails.application.routes.draw do
 
       namespace :users do
         delete '/leave_team', to: 'user_teams#leave_team'
+        put '/update_role', to: 'user_teams#update_role'
       end
     end
 
