@@ -18,16 +18,14 @@ class TeamsDataTable extends Component {
     this.linkToTeam = this.linkToTeam.bind(this);
   }
 
-  leaveTeamModal(e, id) {
-    const team = _.find(this.props.teams, el => el.id === id);
-    this.props.leaveTeamModalShow(true, id, team.name);
+  leaveTeamModal(e, team) {
+    this.props.leaveTeamModalShow(true, team);
   }
 
-  leaveTeamButton(id) {
-    const team = _.find(this.props.teams, el => el.id === id);
+  leaveTeamButton(id, team) {
     if (team.can_be_leaved) {
       return (
-        <Button onClick={e => this.leaveTeamModal(e, id)}>
+        <Button onClick={e => this.leaveTeamModal(e, team)}>
           <FormattedMessage id="settings_page.leave_team" />
         </Button>
       );

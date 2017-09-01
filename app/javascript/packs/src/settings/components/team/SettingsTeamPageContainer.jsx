@@ -52,7 +52,7 @@ class SettingsTeamPageContainer extends Component {
       users: []
     };
     this.updateDescription = this.updateDescription.bind(this);
-    this.updateRole = this.updateRole.bind(this)
+    this.updateRole = this.updateRole.bind(this);
   }
 
   componentDidMount() {
@@ -68,7 +68,11 @@ class SettingsTeamPageContainer extends Component {
     console.log("banana");
   }
 
-  updateRole(userId) {
+  updateRole(userTeamId, role) {
+
+  }
+
+  removeUser(userTeamId) {
 
   }
 
@@ -139,7 +143,7 @@ class SettingsTeamPageContainer extends Component {
             </StyledWell>
           </Col>
         </Row>
-        <TeamsMembers members={this.state.users} updateRole={this.updateRole} />
+        <TeamsMembers members={this.state.users} updateRole={this.updateRole} removeUser={removeUser} />
       </Wrapper>
     );
   }

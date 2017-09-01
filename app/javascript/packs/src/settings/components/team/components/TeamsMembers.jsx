@@ -20,27 +20,43 @@ class TeamsMembers extends Component {
     return memberRole === role ? <Glyphicon glyph="ok" /> : "  ";
   }
 
-
   memberAction(data, row) {
     return (
       <DropdownButton bsStyle="default" title={"banana"} id="actions-dropdown">
         <MenuItem className="dropdown-header" disabled>
           <FormattedMessage id="settings_page.single_team.actions.user_role" />
         </MenuItem>
-        <MenuItem >
+        <MenuItem
+          onSelect={() => {
+            this.props.updateRole(data.team_user_id, "Guest");
+          }}
+        >
           {this.currentRole(data.current_role, "Guest")}
           <FormattedMessage id="settings_page.single_team.actions.guest" />
         </MenuItem>
-        <MenuItem >
+        <MenuItem
+          onSelect={() => {
+            this.props.updateRole(data.team_user_id, "Normal user");
+          }}
+        >
           {this.currentRole(data.current_role, "Normal user")}
           <FormattedMessage id="settings_page.single_team.actions.normal_user" />
         </MenuItem>
-        <MenuItem >
+        <MenuItem
+          onSelect={() => {
+            this.props.updateRole(data.team_user_id, "Administrator");
+          }}
+        >
           {this.currentRole(data.current_role, "Administrator")}
           <FormattedMessage id="settings_page.single_team.actions.administrator" />
         </MenuItem>
         <MenuItem divider />
-        <MenuItem>
+        <MenuItem
+          onSelect={() => {
+            this.props.removeUser;
+            data.team_user_id;
+          }}
+        >
           <FormattedMessage id="settings_page.single_team.actions.remove_user" />
         </MenuItem>
       </DropdownButton>

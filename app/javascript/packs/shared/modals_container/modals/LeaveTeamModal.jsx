@@ -21,13 +21,13 @@ class LeaveTeamModal extends Component {
   }
 
   leaveTeam() {
-    const teamUrl = `${LEAVE_TEAM_PATH}?team=${this.props.teamId}`;
+    const teamUrl = `${LEAVE_TEAM_PATH}?team=${this.props.team
+      .id}&user_team=${this.props.team.user_team_id}`;
     axios
       .delete(teamUrl, {
         withCredentials: true
       })
       .then(response => {
-        console.log(response);
         const teams = response.data.teams.collection;
         this.props.addTeamsData(teams);
         const currentTeam = _.find(teams, team => team.current_team);
@@ -46,7 +46,7 @@ class LeaveTeamModal extends Component {
           <Modal.Title>
             <FormattedMessage
               id="settings_page.leave_team_modal.title"
-              values={{ teamName: this.props.teamName }}
+              values={{ teamName: this.props.team.name }}
             />
           </Modal.Title>
         </Modal.Header>
@@ -85,15 +85,23 @@ class LeaveTeamModal extends Component {
 
 LeaveTeamModal.propTypes = {
   showModal: bool.isRequired,
-  teamId: number.isRequired,
-  teamName: string.isRequired,
+  team: PropTypes.shape({
+    id: number.isRequired,
+    can_be_leaved: bool.isRequired,
+    current_team: bool.isRequired,
+    members: number.isRequired,
+    name: string.isRequired,
+    role: string.isRequired,
+    user_team_id: number.isRequired
+  }).isRequired,
   addTeamsData: func.isRequired,
-  leaveTeamModalShow: func.isRequired
+  leaveTeamModalShow: func.isRequired,
+  setCurrentTeam: func.isRequired
 };
+
 const mapStateToProps = ({ showLeaveTeamModal }) => ({
   showModal: showLeaveTeamModal.show,
-  teamId: showLeaveTeamModal.id,
-  teamName: showLeaveTeamModal.teamName
+  team: showLeaveTeamModal.team
 });
 
 export default connect(mapStateToProps, {

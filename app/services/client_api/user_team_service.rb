@@ -3,12 +3,12 @@ module ClientApi
     include NotificationsHelper
     include InputSanitizeHelper
 
-    def initialize(arg)
+    def initialize(args)
       parsed_args = validate_params(args)
       @team = Team.find_by_id(parsed_args.fetch(:team_id))
       @user = parsed_args.fetch(:user)
-      @user_team = UserTeam.find_by_id(parsed_args.fetch(:user_team_id))
-      raise ClientApi::CustomUserTeamError unless @user_team.team == @team
+      @user_team = UserTeam.find_by_id(parsed_args.fetch(:user_team_id).to_i)
+      raise ClientApi::CustomUserTeamError unless @user_team && @user && @team
     end
 
     def destroy_user_team_and_assign_new_team_owner!
@@ -26,9 +26,10 @@ module ClientApi
     def teams_data
       {
         teams: @user.teams_data,
-        flash_message: t('client_api.user_teams.leave_flash', team: @team.name)
+        flash_message: I18n.t('client_api.user_teams.leave_flash', team: @team.name)
       }
     end
+
     private
 
     def reset_user_current_team(user_team)
@@ -39,7 +40,9 @@ module ClientApi
     end
 
     def user_cant_leave?
-     @user_team.admin? && @team.user_teams.where(role: 2).count <= 1
+      @user.teams.includes @team &&
+        @user_team.admin? &&
+        @team.user_teams.where(role: 2).count <= 1
     end
 
     def generate_new_notification
@@ -52,10 +55,12 @@ module ClientApi
     end
 
     def validate_params(args)
-      team_id = args.fetch(:team_id) { raise ClientApi::CustomUserTeamError }
-      user_team_id = args.fetch(:user_team_id) { raise ClientApi::CustomUserTeamError }
-      user = args.fetch(:user) { raise ClientApi::CustomUserTeamError }
-      {user: user, user_team_id: user_team_id, team_id: team_id }
+      params = %i(team_id user_team_id user)
+      raise ClientApi::CustomUserTeamError unless params.all? { |s| args.key? s }
+      team_id = args.fetch(:team_id)
+      user_team_id = args.fetch(:user_team_id)
+      user = args.fetch(:user)
+      { user: user, user_team_id: user_team_id, team_id: team_id }
     end
   end
   CustomUserTeamError = Class.new(StandardError)

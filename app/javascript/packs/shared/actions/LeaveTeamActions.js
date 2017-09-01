@@ -1,8 +1,8 @@
 import { SHOW_LEAVE_TEAM_MODAL } from "../../app/action_types";
 
-export function leaveTeamModalShow(show = false, id = 0, teamName = "") {
+export function leaveTeamModalShow(show = false, team = {}) {
   return {
-    payload: { show, id, teamName },
+    payload: { team, show },
     type: SHOW_LEAVE_TEAM_MODAL
   };
 }

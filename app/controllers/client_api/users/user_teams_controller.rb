@@ -3,13 +3,13 @@ module ClientApi
     class UserTeamsController < ApplicationController
       include ClientApi::Users::UserTeamsHelper
 
-      before_action :find_user_team, only: :leave_team
-
       def leave_team
-        user_team_service = ClientApi::UserTeamService.new(user: current_user)
-        user_team_service.destroy_user_team_and_assign_new_team_owner!
-        success_response(user_team_service.teams_data)
-      rescue
+        ut_service = ClientApi::UserTeamService.new(user: current_user,
+                                                    team_id: params[:team],
+                                                    user_team_id: params[:user_team])
+        ut_service.destroy_user_team_and_assign_new_team_owner!
+        success_response(ut_service.teams_data)
+      rescue ClientApi::CustomUserTeamError
         unsuccess_response
       end
 
@@ -40,8 +40,6 @@ module ClientApi
           end
         end
       end
-
-
     end
   end
 end
