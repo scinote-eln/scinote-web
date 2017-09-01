@@ -8,11 +8,13 @@ module Api
     before_action :load_iss, except: %i(authenticate status)
     before_action :authenticate_request!, except: %i(authenticate status)
 
-    rescue_from StandardError do
+    rescue_from StandardError do |e|
+      logger.error e.message
       render json: {}, status: :bad_request
     end
 
-    rescue_from JWT::InvalidPayload, JWT::DecodeError do
+    rescue_from JWT::InvalidPayload, JWT::DecodeError do |e|
+      logger.error e.message
       render json: { message: I18n.t('api.core.invalid_token') },
              status: :unauthorized
     end
@@ -35,22 +37,25 @@ module Api
     def authenticate
       if auth_params[:grant_type] == 'password'
         user = User.find_by_email(auth_params[:email])
-        raise StandardError unless user &&
-                                   user.valid_password?(auth_params[:password])
+        unless user && user.valid_password?(auth_params[:password])
+          raise StandardError, 'Wrong user password'
+        end
         payload = { user_id: user.id }
         token = CoreJwt.encode(payload)
         render json: { token_type: 'bearer', access_token: token }
       else
-        raise StandardError
+        raise StandardError, 'Wrong grant type in request'
       end
     end
 
     private
 
     def load_token
-      @token =
-        request.headers['Authorization'].scan(/Bearer (.*)$/).flatten.last
-      raise StandardError unless @token
+      if request.headers['Authorization']
+        @token =
+          request.headers['Authorization'].scan(/Bearer (.*)$/).flatten.last
+      end
+      raise StandardError, 'No token in the header' unless @token
     end
 
     def authenticate_request!
@@ -75,7 +80,7 @@ module Api
 
     def load_iss
       @iss = CoreJwt.read_iss(token)
-      raise JWT::InvalidPayload unless @iss
+      raise JWT::InvalidPayload, 'Wrong ISS in the token' unless @iss
     end
 
     def auth_params
