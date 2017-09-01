@@ -30,7 +30,7 @@ gem 'uglifier', '>= 1.3.0'
 # jQuery & plugins
 gem 'jquery-turbolinks'
 gem 'jquery-rails'
-gem 'jquery-ui-rails'
+gem 'jquery-ui-rails', '~> 5.0'
 gem 'jquery-scrollto-rails'
 gem 'hammerjs-rails'
 gem 'introjs-rails' # Create quick tutorials
