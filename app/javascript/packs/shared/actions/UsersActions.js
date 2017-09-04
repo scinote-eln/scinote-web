@@ -119,12 +119,14 @@ export function savePassword(password) {
   };
 }
 
-export function changePassword(passwrd) {
+export function changePassword(password) {
   return dispatch => {
     axios
       .post(CHANGE_USER_PASSWORD_PATH, {
-        withCredentials: true,
-        passwrd
+        user: {
+          withCredentials: true,
+          password
+        }
       })
       .then(({ data }) => {
         dispatch(savePassword(data));

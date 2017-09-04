@@ -13,85 +13,43 @@ module ClientApi
       end
 
       def change_password
-        user = current_user
-        user.password = params['passwrd']
-        user.save
-        ""
+        user = User.find(current_user.id)
+        is_saved = user.update(user_params)
+
+        if is_saved
+          bypass_sign_in(user)
+          res = "success"
+        else
+          res = "could not change password"
+        end
+
+        respond_to do |format|
+          if is_saved
+            format.json { render json: { msg: res} }
+          else
+            format.json { render json: { msg: res}, status: 422 }
+          end
+        end
       end
 
       def change_assignements_notification
-        user = current_user
-        user.assignments_notification = params['status']
-
-        status = if user.save
-          user.assignments_notification
-        else
-          user.reload.assignments_notification
-        end
-
-        respond_to do |format|
-          format.json { render json: { status: status }}
-        end
+        change_notification(:assignments_notification, params)
       end
 
       def change_assignements_notification_email
-        user = current_user
-        user.assignments_notification_email = params['status']
-
-        status = if user.save
-          user.assignments_notification_email
-        else
-          user.reload.assignments_notification_email
-        end
-
-        respond_to do |format|
-          format.json { render json: { status: status }}
-        end
+        change_notification(:assignments_notification_email, params)
       end
 
       def change_recent_notification
-        user = current_user
-        user.recent_notification = params['status']
-
-        status = if user.save
-          user.recent_notification
-        else
-          user.reload.recent_notification
-        end
-
-        respond_to do |format|
-          format.json { render json: { status: status }}
-        end
+        change_notification(:recent_notification, params)
       end
 
       def change_recent_notification_email
-        user = current_user
-        user.recent_notification_email = params['status']
-
-        status = if user.save
-          user.recent_notification_email
-        else
-          user.reload.recent_notification_email
-        end
-
-        respond_to do |format|
-          format.json { render json: { status: status }}
-        end
+        change_notification(:recent_notification_email, params)
       end
 
       def change_system_notification_email
-        user = current_user
-        user.system_message_notification_email = params['status']
-
-        status = if user.save
-          user.system_message_notification_email
-        else
-          user.reload.system_message_notification_email
-        end
-
-        respond_to do |format|
-          format.json { render json: { status: status }}
-        end
+        change_notification(:system_message_notification_email, params)
       end
 
       def change_timezone
@@ -103,7 +61,7 @@ module ClientApi
           user.time_zone
         else
           user.reload.time_zone
-          errors[:timezone_errors] << 'You nedd to select valid TimeZone.'
+          errors[:timezone_errors] << 'You need to select valid TimeZone.'
         end
 
         respond_to do |format|
@@ -157,6 +115,28 @@ module ClientApi
 
         respond_to do |format|
           format.json { render json: { initials: saved_initials } }
+        end
+      end
+
+      private
+
+      def user_params
+        params.require(:user).permit(:password)
+      end
+
+      def change_notification(dinamic_param, params)
+        user = current_user
+        user[dinamic_param] = params['status']
+
+        status =
+          if user.save
+            user[dinamic_param]
+          else
+            user.reload[dinamic_param]
+          end
+
+        respond_to do |format|
+          format.json { render json: { status: status } }
         end
       end
     end
