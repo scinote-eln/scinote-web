@@ -106,7 +106,7 @@ class Team < ActiveRecord::Base
 
         sheet.row(i).each.with_index do |value, index|
           if index == stype_index
-            stype = SampleType.where(name: value, team: self).take
+            stype = SampleType.where(name: value.strip, team: self).take
 
             unless stype
               stype = SampleType.new(name: value, team: self)
@@ -117,7 +117,7 @@ class Team < ActiveRecord::Base
             end
             sample.sample_type = stype
           elsif index == sgroup_index
-            sgroup = SampleGroup.where(name: value, team: self).take
+            sgroup = SampleGroup.where(name: value.strip, team: self).take
 
             unless sgroup
               sgroup = SampleGroup.new(name: value, team: self)
