@@ -58,11 +58,12 @@ module ClientApi
         user.time_zone = params['timezone']
 
         timezone = if user.save
-          user.time_zone
-        else
-          user.reload.time_zone
-          errors[:timezone_errors] << 'You need to select valid TimeZone.'
-        end
+                     user.time_zone
+                   else
+                     msg = 'You need to select valid TimeZone.'
+                     user.reload.time_zone
+                     errors[:timezone_errors] << msg
+                   end
 
         respond_to do |format|
           format.json { render json: { timezone: timezone, errors: errors}}
@@ -77,16 +78,17 @@ module ClientApi
         if user.valid_password? params['passwrd']
           user.email = params['email']
           saved_email = if user.save
-            user.email
-          else
-            user.reload.email
-          end
+                          user.email
+                        else
+                          user.reload.email
+                        end
         else
          errors[:current_password_email_field] << 'Wrong password.'
         end
 
         respond_to do |format|
-          format.json { render json: { email: saved_email || current_email, errors: errors } }
+          resp = { email: saved_email || current_email, errors: errors }
+          format.json { render json: resp }
         end
       end
 
@@ -94,24 +96,25 @@ module ClientApi
         user = current_user
         user.name = params['fullName']
         saved_name = if user.save
-          user.name
-        else
-          user.reload.name
-        end
+                       user.name
+                     else
+                       user.reload.name
+                     end
 
         respond_to do |format|
-          format.json { render json: { fullName: saved_name, errors: user.errors.messages } }
+          resp = { fullName: saved_name, errors: user.errors.messages }
+          format.json { render json: resp }
         end
       end
 
       def change_initials
         user = current_user
         user.initials = params['initials']
-        saved_initials = if user.save
-          user.initials
-        else
-          user.reload.initials
-        end
+          saved_initials = if user.save
+                             user.initials
+                           else
+                             user.reload.initials
+                           end
 
         respond_to do |format|
           format.json { render json: { initials: saved_initials } }

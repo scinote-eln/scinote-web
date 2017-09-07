@@ -46,28 +46,28 @@ describe ClientApi::Users::UsersController, type: :controller do
     it 'responds successfully' do
       user = User.first
       expect(user.time_zone).to eq('UTC')
-      post :change_timezone, params: { timezone: 'Pacific/Fiji'}, format: :json
+      post :change_timezone, params: { timezone: 'Pacific/Fiji' }, format: :json
       expect(response).to have_http_status(:ok)
     end
 
     it 'changes timezone' do
       user = User.first
       expect(user.time_zone).to eq('UTC')
-      post :change_timezone, params: { timezone: 'Pacific/Fiji'}, format: :json
+      post :change_timezone, params: { timezone: 'Pacific/Fiji' }, format: :json
       expect(user.reload.time_zone).to eq('Pacific/Fiji')
     end
   end
 
   describe 'POST change_initials' do
     it 'responds successfully' do
-      post :change_initials, params: { initials: 'TD'}, format: :json
+      post :change_initials, params: { initials: 'TD' }, format: :json
       expect(response).to have_http_status(:ok)
     end
 
     it 'responds successfully' do
       user = User.first
       expect(user.initials).not_to eq('TD')
-      post :change_initials, params: { initials: 'TD'}, format: :json
+      post :change_initials, params: { initials: 'TD' }, format: :json
       expect(user.reload.initials).to eq('TD')
     end
   end
