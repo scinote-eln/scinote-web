@@ -3,7 +3,9 @@ import { Route, Switch, Redirect } from "react-router-dom";
 import { LinkContainer } from "react-router-bootstrap";
 import { Nav, NavItem } from "react-bootstrap";
 import { FormattedMessage } from "react-intl";
+
 import Navigation from "../../../shared/navigation";
+import GeneralFlashMsg from "../../../shared/general_flash_msg";
 
 import {
   ROOT_PATH,
@@ -38,6 +40,7 @@ export default class MainNav extends Component {
     return (
       <div>
         <Navigation page="Settings" />
+        <GeneralFlashMsg />
         <div className="container">
           <Nav bsStyle="tabs" activeKey="1" onSelect={this.handleSelect}>
             <LinkContainer
