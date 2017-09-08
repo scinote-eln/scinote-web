@@ -1,9 +1,14 @@
 import {
   GLOBAL_ACTIVITIES_DATA,
-  DESTROY_GLOBAL_ACTIVITIES_DATA
+  DESTROY_GLOBAL_ACTIVITIES_DATA,
+  GLOBAL_FLASH_MSG
 } from "../../app/action_types";
 
-const initialStateu = { more: true, activities: [] };
+const initialStateu = {
+  more: true,
+  activities: [],
+  flash_msg: { text: "default msg", type: "success", isEnabled: false }
+};
 
 export function globalActivities(state = initialStateu, action) {
   switch (action.type) {
@@ -21,6 +26,11 @@ export function globalActivities(state = initialStateu, action) {
         ...state,
         ...initialStateu
       };
+    case GLOBAL_FLASH_MSG:
+      const msg = Object.assign({}, state.flash_msg, action.payload);
+      const newState = Object.assign({}, state, { flash_msg: msg });
+
+      return newState;
     default:
       return state;
   }

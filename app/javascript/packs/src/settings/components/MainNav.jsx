@@ -3,9 +3,19 @@ import { Route, Switch, Redirect } from "react-router-dom";
 import { LinkContainer } from "react-router-bootstrap";
 import { Nav, NavItem } from "react-bootstrap";
 import { FormattedMessage } from "react-intl";
-import Navigation from "../../../shared/navigation";
 
-import { SETTINGS_ACCOUNT_PROFILE, SETTINGS_TEAMS } from "../../../app/routes";
+import Navigation from "../../../shared/navigation";
+import GeneralFlashMsg from "../../../shared/general_flash_msg";
+
+import {
+  ROOT_PATH,
+  SETTINGS_PATH,
+  SETTINGS_ACCOUNT_PATH,
+  SETTINGS_TEAMS_PATH,
+  SETTINGS_ACCOUNT_PROFILE,
+  SETTINGS_TEAMS,
+  SETTINGS_ACCOUNT_PROFILE_PATH
+} from "../../../app/routes";
 
 import NotFound from "../../../shared/404/NotFound";
 import SettingsAccount from ".././components/account/SettingsAccount";
@@ -30,6 +40,7 @@ export default class MainNav extends Component {
     return (
       <div>
         <Navigation page="Settings" />
+        <GeneralFlashMsg />
         <div className="container">
           <Nav bsStyle="tabs" activeKey="1" onSelect={this.handleSelect}>
             <LinkContainer
@@ -50,14 +61,14 @@ export default class MainNav extends Component {
             </LinkContainer>
           </Nav>
           <Switch>
-            <Route exact path="/" component={SettingsAccount} />
+            <Route exact path={ROOT_PATH} component={SettingsAccount} />
             <Route
               exact
-              path="/settings"
-              render={() => <Redirect to="/settings/account/profile" />}
+              path={SETTINGS_PATH}
+              render={() => <Redirect to={SETTINGS_ACCOUNT_PROFILE_PATH} />}
             />
-            <Route path="/settings/account" component={SettingsAccount} />
-            <Route path="/settings/teams" component={SettingsTeams} />
+            <Route path={SETTINGS_ACCOUNT_PATH} component={SettingsAccount} />
+            <Route path={SETTINGS_TEAMS_PATH} component={SettingsTeams} />
             <Route component={NotFound} />
           </Switch>
         </div>
