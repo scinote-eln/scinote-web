@@ -62,16 +62,25 @@
             <span class="glyphicon glyphicon-export"></span>
             <span class="hidden-xs">&nbsp;<%= t("protocols.index.export") %></span>
           </a>
-        </div>
-        <div class="btn-group">
-        <a class="btn btn-default btn-open-file" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="#"><span class="glyphicon glyphicon-import"></span><span class="hidden-xs">&nbsp;<%= t("protocols.index.import") %></span></a>
+      <!--    </div>  -->
+
+        <!--<div class="btn-group"> -->
+        <a class="btn btn-default btn-open-file" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="#"><span class="glyphicon glyphicon-import"></span><span class="hidden-xs">&nbsp;<%= "Import protocol" %></span></a>
         <ul class="dropdown-menu">
-          <li>1
+          <li>
+            <%= link_to import_protocols_path(@protocol, format: :json), remote: true, data: { action: "import"} do %>
+            <span class="glyphicon glyphicon-file"></span>&nbsp;<%= "from SciNote protocol file(.eln)" %></a>
+            <% end %>
           </li>
-          <li>2
+          <li>
+            <%= link_to import_protocols_path(@protocol, format: :json), remote: true, data: { action: "import"} do %>
+            <span class="glyphicon glyphicon-file"></span>&nbsp;<%= "from protocols.io file(.json)" %></a>
+            <% end %>
           </li>
+
         </ul>
       </div>
+
         <div class="btn-group" role="group">
           <a class="btn btn-default" data-action="archive" data-url="<%= archive_protocols_path %>">
             <span class="glyphicon glyphicon-trash"></span>
