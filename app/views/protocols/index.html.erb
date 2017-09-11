@@ -63,7 +63,15 @@
             <span class="hidden-xs">&nbsp;<%= t("protocols.index.export") %></span>
           </a>
         </div>
-
+        <div class="btn-group">
+        <a class="btn btn-default btn-open-file" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="#"><span class="glyphicon glyphicon-import"></span><span class="hidden-xs">&nbsp;<%= t("protocols.index.import") %></span></a>
+        <ul class="dropdown-menu">
+          <li>1
+          </li>
+          <li>2
+          </li>
+        </ul>
+      </div>
         <div class="btn-group" role="group">
           <a class="btn btn-default" data-action="archive" data-url="<%= archive_protocols_path %>">
             <span class="glyphicon glyphicon-trash"></span>
