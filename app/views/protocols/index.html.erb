@@ -68,10 +68,18 @@
         <a class="btn btn-default btn-open-file" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="#"><span class="glyphicon glyphicon-import"></span><span class="hidden-xs">&nbsp;<%= "Import protocol" %></span></a>
         <ul class="dropdown-menu">
           <li>
-            <%= link_to import_protocols_path(@protocol, format: :json), remote: true, data: { action: "import"} do %>
-            <span class="glyphicon glyphicon-file"></span>&nbsp;<%= "from SciNote protocol file(.eln)" %></a>
-            <% end %>
+
+            <a class="btn btn-default-link btn-open-file" <%= can_import_protocols(@current_team) ? 'data-action="import"' : 'disabled="disabled"' %>>
+              <span class="glyphicon glyphicon-file"></span>
+              <span class="hidden-xs">&nbsp;<%= t("protocols.index.import_alt") %></span>
+              <input type="file" value="" accept=".eln" data-role="import-file-input"
+              data-team-id="<%= @current_team.id %>"
+              data-type="<%= @type %>" data-import-url="<%= import_protocols_path %>"
+              <%= 'disabled="disabled"' unless can_import_protocols(@current_team) %>>
+            </a>
+
           </li>
+
           <li>
             <%= link_to import_protocols_path(@protocol, format: :json), remote: true, data: { action: "import"} do %>
             <span class="glyphicon glyphicon-file"></span>&nbsp;<%= "from protocols.io file(.json)" %></a>
