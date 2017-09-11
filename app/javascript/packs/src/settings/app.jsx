@@ -5,6 +5,7 @@ import { Provider } from "react-redux";
 import { IntlProvider, addLocaleData } from "react-intl";
 import enLocaleData from "react-intl/locale-data/en";
 
+import Spinner from "../../shared/Spinner";
 import { flattenMessages } from "../../locales/utils";
 import store from "../../app/store";
 import messages from "../../locales/messages";
@@ -19,6 +20,7 @@ const SettingsPage = () =>
   <div>
     <MainNav />
     <ModalsContainer />
+    <Spinner />
   </div>;
 
 document.addEventListener("DOMContentLoaded", () => {

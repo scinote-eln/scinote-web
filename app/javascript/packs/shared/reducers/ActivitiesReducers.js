@@ -1,9 +1,11 @@
 import {
   GLOBAL_ACTIVITIES_DATA,
-  DESTROY_GLOBAL_ACTIVITIES_DATA
+  DESTROY_GLOBAL_ACTIVITIES_DATA,
+  SPINNER_OFF,
+  SPINNER_ON
 } from "../../app/action_types";
 
-const initialStateu = { more: true, activities: [] };
+const initialStateu = { more: true, activities: [], spinner_on: false };
 
 export function globalActivities(state = initialStateu, action) {
   switch (action.type) {
@@ -21,6 +23,10 @@ export function globalActivities(state = initialStateu, action) {
         ...state,
         ...initialStateu
       };
+    case SPINNER_OFF:
+      return Object.assign({}, state, { spinner_on: false });
+    case SPINNER_ON:
+      return Object.assign({}, state, { spinner_on: true });
     default:
       return state;
   }
