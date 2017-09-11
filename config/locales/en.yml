@@ -1443,6 +1443,7 @@ en:
       edit: "Edit"
       clone_btn: "Copy"
       import: "Import"
+      import_alt: "from SciNote protocol file(.eln)"
       export: "Export"
       make_private: "Make private"
       publish: "Publish"
