@@ -1,7 +1,18 @@
 import axios from "../../app/axios";
 import _ from "lodash";
 import { TEAMS_PATH, CHANGE_TEAM_PATH } from "../../app/routes";
-import { GET_LIST_OF_TEAMS, SET_CURRENT_TEAM } from "../../app/action_types";
+import {
+  GET_LIST_OF_TEAMS,
+  SET_CURRENT_TEAM,
+  SHOW_LEAVE_TEAM_MODAL
+} from "../../app/action_types";
+
+export function leaveTeamModalShow(show = false, team = {}) {
+  return {
+    payload: { team, show },
+    type: SHOW_LEAVE_TEAM_MODAL
+  };
+}
 
 export function addTeamsData(data) {
   return {

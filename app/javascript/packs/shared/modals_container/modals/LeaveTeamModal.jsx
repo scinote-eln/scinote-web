@@ -6,8 +6,7 @@ import { connect } from "react-redux";
 import axios from "../../../app/axios";
 
 import { LEAVE_TEAM_PATH } from "../../../app/routes";
-import { leaveTeamModalShow } from "../../actions/LeaveTeamActions";
-import { addTeamsData, setCurrentTeam } from "../../actions/TeamsActions";
+import { addTeamsData, setCurrentTeam, leaveTeamModalShow } from "../../actions/TeamsActions";
 
 class LeaveTeamModal extends Component {
   constructor(props) {
@@ -87,11 +86,7 @@ LeaveTeamModal.propTypes = {
   showModal: bool.isRequired,
   team: PropTypes.shape({
     id: number.isRequired,
-    can_be_leaved: bool.isRequired,
-    current_team: bool.isRequired,
-    members: number.isRequired,
     name: string.isRequired,
-    role: string.isRequired,
     user_team_id: number.isRequired
   }).isRequired,
   addTeamsData: func.isRequired,

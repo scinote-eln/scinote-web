@@ -61,4 +61,49 @@ describe ClientApi::TeamsService do
       expect(data.first.fetch('name')).to eq team_one.name
     end
   end
+
+  describe '#update_team!' do
+    let(:team_two) { create :team, name: 'Banana', created_by: user_one }
+
+    it 'should raise an error if input invalid' do
+      create :user_team, user: user_one, team: team_one
+      team_service = ClientApi::TeamsService.new(
+        current_user: user_one,
+        team_id: team_one.id,
+        params: {
+          description: "super long: #{'a' * Constants::TEXT_MAX_LENGTH}"
+        }
+      )
+      expect {
+        team_service.update_team!
+      }.to raise_error(ClientApi::CustomTeamError)
+    end
+
+    it 'should update the team description if the input is valid' do
+      create :user_team, user: user_one, team: team_two
+      desc = 'Banana Team description'
+      team_service = ClientApi::TeamsService.new(
+        current_user: user_one,
+        team_id: team_two.id,
+        params: {
+          description: desc
+        }
+      )
+      team_service.update_team!
+      # load values from db
+      team_two.reload
+      expect(team_two.description).to eq desc
+    end
+  end
+
+  describe '#single_team_details_data' do
+    let(:team_service) do
+      ClientApi::TeamsService.new(current_user: user_one, team_id: team_one.id)
+    end
+
+    it 'should return a team object' do
+      create :user_team, user: user_one, team: team_one
+      expect(team_service.single_team_details_data.fetch(:team)).to eq team_one
+    end
+  end
 end

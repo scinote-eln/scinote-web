@@ -17,6 +17,7 @@ json.team_details do
     json.actions do
       json.current_role team_user.role_str
       json.team_user_id team_user.id
+      json.disable team_user.user == current_user
     end
   end
 end

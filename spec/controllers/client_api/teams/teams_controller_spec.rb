@@ -59,4 +59,27 @@ describe ClientApi::Teams::TeamsController, type: :controller do
       expect(response).to have_http_status(:unprocessable_entity)
     end
   end
+
+  describe 'POST #update' do
+    let(:user_team) do
+      create :user_team, team: @team_two, user: @user_one, role: 2
+    end
+
+    it 'should return HTTP success response' do
+      post :change_team,
+           params: { team_id: @team_two.id, description: 'My description' },
+           as: :json
+      expect(response).to have_http_status(:ok)
+    end
+
+    it 'should return HTTP unprocessable_entity response iput not valid' do
+      post :change_team,
+           params: {
+             team_id: @team_two.id,
+             description: "super long: #{'a' * Constants::TEXT_MAX_LENGTH}"
+           },
+           as: :json
+      expect(response).to have_http_status(:unprocessable_entity)
+    end
+  end
 end

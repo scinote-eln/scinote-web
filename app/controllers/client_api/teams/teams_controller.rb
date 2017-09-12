@@ -26,7 +26,23 @@ module ClientApi
         error_response
       end
 
+      def update
+        team_service = ClientApi::TeamsService.new(team_id: params[:team_id],
+                                                   current_user: current_user,
+                                                   params: team_params)
+        team_service.update_team!
+
+        success_response('/client_api/teams/update_details',
+                         team_service.single_team_details_data)
+      rescue ClientApi::CustomTeamError => error
+        error_response(error.to_s)
+      end
+
       private
+
+      def team_params
+        params.require(:team).permit(:description)
+      end
 
       def success_response(template, locals)
         respond_to do |format|
@@ -38,10 +54,10 @@ module ClientApi
         end
       end
 
-      def error_response
+      def error_response(message = t('client_api.generic_error_message'))
         respond_to do |format|
           format.json do
-            render json: { message: 'Bad boy!' }, status: :unprocessable_entity
+            render json: { message: message }, status: :unprocessable_entity
           end
         end
       end

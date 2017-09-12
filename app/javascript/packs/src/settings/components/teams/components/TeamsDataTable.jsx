@@ -2,10 +2,9 @@ import React, { Component } from "react";
 import PropTypes, { func, number, string, bool } from "prop-types";
 import { connect } from "react-redux";
 import { Button } from "react-bootstrap";
-import _ from "lodash";
 import { Link } from "react-router-dom";
 import { FormattedMessage } from "react-intl";
-import { leaveTeamModalShow } from "../../../../../shared/actions/LeaveTeamActions";
+import { leaveTeamModalShow } from "../../../../../shared/actions/TeamsActions";
 import DataTable from "../../../../../shared/data_table";
 import { SETTINGS_TEAMS_ROUTE } from "../../../../../app/dom_routes";
 

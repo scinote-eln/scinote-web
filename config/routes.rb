@@ -21,6 +21,7 @@ Rails.application.routes.draw do
       namespace :teams do
         get '/:team_id/details', to: 'teams#details'
         post '/change_team', to: 'teams#change_team'
+        post '/update', to: 'teams#update'
       end
       # notifications
       get '/recent_notifications', to: 'notifications#recent_notifications'

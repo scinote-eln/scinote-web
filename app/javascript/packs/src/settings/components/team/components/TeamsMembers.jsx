@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import PropTypes from "prop-types";
+import PropTypes, { number, func, string, bool } from "prop-types";
 import {
   Panel,
   Button,
@@ -8,7 +8,10 @@ import {
   MenuItem
 } from "react-bootstrap";
 import { FormattedMessage } from "react-intl";
+import axios from "../../../../../app/axios";
+
 import DataTable from "../../../../../shared/data_table";
+import { UPDATE_USER_TEAM_ROLE_PATH } from "../../../../../app/routes";
 
 class TeamsMembers extends Component {
   constructor(params) {
@@ -20,15 +23,40 @@ class TeamsMembers extends Component {
     return memberRole === role ? <Glyphicon glyph="ok" /> : "  ";
   }
 
+  updateRole(userTeamId, role) {
+    axios
+      .put(UPDATE_USER_TEAM_ROLE_PATH, {
+        team: this.props.teamId,
+        user_team: userTeamId,
+        role
+      })
+      .then(response => {
+        this.props.updateUsersCallback(response.data.team_users);
+      })
+      .catch(error => console.log(error));
+  }
+
+  removeUser(userTeamId) {}
+
   memberAction(data, row) {
     return (
-      <DropdownButton bsStyle="default" title={"banana"} id="actions-dropdown">
-        <MenuItem className="dropdown-header" disabled>
+      <DropdownButton
+        bsStyle="default"
+        disabled={data.disable}
+        title={
+          <span>
+            <Glyphicon glyph="cog" />
+          </span>
+        }
+        id="actions-dropdown"
+      >
+        <MenuItem header>
           <FormattedMessage id="settings_page.single_team.actions.user_role" />
         </MenuItem>
         <MenuItem
           onSelect={() => {
-            this.props.updateRole(data.team_user_id, "Guest");
+            // 0 => Guest
+            this.updateRole(data.team_user_id, 0);
           }}
         >
           {this.currentRole(data.current_role, "Guest")}
@@ -36,7 +64,8 @@ class TeamsMembers extends Component {
         </MenuItem>
         <MenuItem
           onSelect={() => {
-            this.props.updateRole(data.team_user_id, "Normal user");
+            // 1 => Normal user
+            this.updateRole(data.team_user_id, 1);
           }}
         >
           {this.currentRole(data.current_role, "Normal user")}
@@ -44,7 +73,8 @@ class TeamsMembers extends Component {
         </MenuItem>
         <MenuItem
           onSelect={() => {
-            this.props.updateRole(data.team_user_id, "Administrator");
+            // 2 => Administrator
+            this.updateRole(data.team_user_id, 2);
           }}
         >
           {this.currentRole(data.current_role, "Administrator")}
@@ -52,9 +82,8 @@ class TeamsMembers extends Component {
         </MenuItem>
         <MenuItem divider />
         <MenuItem
-          onSelect={() => {
-            this.props.removeUser;
-            data.team_user_id;
+          onClick={() => {
+            this.removeUser(data.team_user_id);
           }}
         >
           <FormattedMessage id="settings_page.single_team.actions.remove_user" />
@@ -130,5 +159,25 @@ class TeamsMembers extends Component {
     );
   }
 }
+
+TeamsMembers.propTypes = {
+  updateUsersCallback: func.isRequired,
+  teamId: number.isRequired,
+  members: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: number.isRequired,
+      name: string.isRequired,
+      email: string.isRequired,
+      role: string.isRequired,
+      created_at: string.isRequired,
+      status: string.isRequired,
+      actions: PropTypes.shape({
+        current_role: string.isRequired,
+        team_user_id: number.isRequired,
+        disable: bool.isRequired
+      })
+    }).isRequired
+  ).isRequired
+};
 
 export default TeamsMembers;

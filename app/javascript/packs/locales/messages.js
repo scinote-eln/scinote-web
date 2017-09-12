@@ -7,6 +7,9 @@ export default {
       edit: "Edit",
       loading: "Loading ..."
     },
+    error_messages: {
+      text_too_long: "is too long (maximum is {max_length} characters)"
+    },
     navbar: {
       page_title: "sciNote",
       home_label: "Home",
@@ -66,6 +69,10 @@ export default {
         warning_message_two: "all projects in the team where you were the sole <b>Owner</b> will receive a new owner from the team administrators;",
         warning_message_three: "all repository protocols in the team belonging to you will be reassigned onto a new owner from team administrators.",
         leave_team: "Leave"
+      },
+      update_team_description_modal: {
+        title: "Edit team description",
+        label: "Description"
       },
       single_team: {
         created_on: "Created on: <strong>{created_at}</strong>",

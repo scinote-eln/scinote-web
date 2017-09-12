@@ -8,6 +8,7 @@ module ClientApi
       @team = Team.find_by_id(parsed_args.fetch(:team_id))
       @user = parsed_args.fetch(:user)
       @user_team = UserTeam.find_by_id(parsed_args.fetch(:user_team_id).to_i)
+      @role = args.fetch(:role) { false }
       raise ClientApi::CustomUserTeamError unless @user_team && @user && @team
     end
 
@@ -23,10 +24,28 @@ module ClientApi
       generate_new_notification
     end
 
+    def update_role!
+      unless @role
+        raise ClientApi::CustomUserTeamError,
+              I18n.t('client_api.generic_error_message')
+      end
+      return if @user_team.update_attribute(:role, @role)
+      raise ClientApi::CustomUserTeamError, @user_team.errors.full_messages
+    end
+
+    def team_users_data
+      team_users = UserTeam.includes(:user)
+                           .references(:user)
+                           .where(team: @team)
+                           .distinct
+      { team_users: team_users }
+    end
+
     def teams_data
       {
         teams: @user.teams_data,
-        flash_message: I18n.t('client_api.user_teams.leave_flash', team: @team.name)
+        flash_message: I18n.t('client_api.user_teams.leave_flash',
+                              team: @team.name)
       }
     end
 

@@ -14,6 +14,7 @@ import {
 } from "../../../../app/constants/colors";
 
 import TeamsMembers from "./components/TeamsMembers";
+import UpdateTeamDescriptionModal from "./components/UpdateTeamDescriptionModal";
 
 const Wrapper = styled.div`
   background: white;
@@ -37,7 +38,7 @@ const BadgeWrapper = styled.div`
   color: #fff;
 `;
 
-const StyledWell = styled.div`
+const StyledWell = styled(Well)`
   &:hover {
     text-decoration: underline;
     cursor: pointer;
@@ -48,11 +49,23 @@ class SettingsTeamPageContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      team: {},
-      users: []
+      showModal: false,
+      users: [],
+      team: {
+        id: 0,
+        name: "",
+        description: "",
+        created_by: "",
+        created_at: "",
+        space_taken: 0
+      }
     };
-    this.updateDescription = this.updateDescription.bind(this);
-    this.updateRole = this.updateRole.bind(this);
+    this.showDescriptionModal = this.showDescriptionModal.bind(this);
+    this.hideDescriptionModalCallback = this.hideDescriptionModalCallback.bind(
+      this
+    );
+    this.updateTeamCallback = this.updateTeamCallback.bind(this);
+    this.updateUsersCallback = this.updateUsersCallback.bind(this);
   }
 
   componentDidMount() {
@@ -60,20 +73,24 @@ class SettingsTeamPageContainer extends Component {
     const path = TEAM_DETAILS_PATH.replace(":team_id", id);
     axios.get(path).then(response => {
       const { team, users } = response.data.team_details;
-      this.setState({ team, users });
+      this.setState({ users, team });
     });
   }
 
-  updateDescription() {
-    console.log("banana");
+  showDescriptionModal() {
+    this.setState({ showModal: true });
   }
 
-  updateRole(userTeamId, role) {
-
+  hideDescriptionModalCallback() {
+    this.setState({ showModal: false });
   }
 
-  removeUser(userTeamId) {
+  updateTeamCallback(team) {
+    this.setState({ team });
+  }
 
+  updateUsersCallback(users) {
+    this.setState({ users });
   }
 
   renderDescription() {
@@ -134,7 +151,7 @@ class SettingsTeamPageContainer extends Component {
           </Col>
         </Row>
         <Row>
-          <Col sm={12} onClick={this.updateDescription}>
+          <Col sm={12} onClick={this.showDescriptionModal}>
             <BadgeWrapper>
               <Glyphicon glyph="info-sign" />
             </BadgeWrapper>
@@ -143,7 +160,17 @@ class SettingsTeamPageContainer extends Component {
             </StyledWell>
           </Col>
         </Row>
-        <TeamsMembers members={this.state.users} updateRole={this.updateRole} removeUser={removeUser} />
+        <TeamsMembers
+          members={this.state.users}
+          updateUsersCallback={this.updateUsersCallback}
+          teamId={this.state.team.id}
+        />
+        <UpdateTeamDescriptionModal
+          showModal={this.state.showModal}
+          hideModal={this.hideDescriptionModalCallback}
+          team={this.state.team}
+          updateTeamCallback={this.updateTeamCallback}
+        />
       </Wrapper>
     );
   }
