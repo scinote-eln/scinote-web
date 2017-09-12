@@ -1444,6 +1444,7 @@ en:
       clone_btn: "Copy"
       import: "Import"
       import_alt: "from SciNote protocol file(.eln)"
+      import_json: "from protocols.io file(.json)"
       export: "Export"
       make_private: "Make private"
       publish: "Publish"
