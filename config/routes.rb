@@ -29,6 +29,7 @@ Rails.application.routes.draw do
       get '/current_user_info', to: 'users#current_user_info'
 
       namespace :users do
+        delete '/remove_user', to: 'user_teams#remove_user'
         delete '/leave_team', to: 'user_teams#leave_team'
         put '/update_role', to: 'user_teams#update_role'
       end

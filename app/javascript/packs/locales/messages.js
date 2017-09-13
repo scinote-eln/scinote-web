@@ -70,6 +70,15 @@ export default {
         warning_message_three: "all repository protocols in the team belonging to you will be reassigned onto a new owner from team administrators.",
         leave_team: "Leave"
       },
+      remove_user_modal: {
+        title: "Remove user {user} from team {team}",
+        subtitle: "Are you sure you wish to remove user {user} from team {team}?",
+        warnings: "Removing user from team has following consequences:",
+        warning_message_one: "user will lose access to all content belonging to the team (including projects, tasks, protocols and activities);",
+        warning_message_two: "all projects in the team where user was the sole <b>Owner</b> will be reassigned onto you as a new owner;",
+        warning_message_three: "all repository protocols in the team belonging to user will be reassigned onto you.",
+        remove_user: "Remove user"
+      },
       update_team_description_modal: {
         title: "Edit team description",
         label: "Description"

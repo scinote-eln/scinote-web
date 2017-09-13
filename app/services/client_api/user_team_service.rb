@@ -9,10 +9,10 @@ module ClientApi
       @user = parsed_args.fetch(:user)
       @user_team = UserTeam.find_by_id(parsed_args.fetch(:user_team_id).to_i)
       @role = args.fetch(:role) { false }
-      raise ClientApi::CustomUserTeamError unless @user_team && @user && @team
     end
 
     def destroy_user_team_and_assign_new_team_owner!
+      binding.pry
       raise ClientApi::CustomUserTeamError unless user_cant_leave?
       new_owner = @team.user_teams
                        .where(role: 2)
@@ -59,7 +59,7 @@ module ClientApi
     end
 
     def user_cant_leave?
-      @user.teams.includes @team &&
+      @user.teams.includes(@team) &&
         @user_team.admin? &&
         @team.user_teams.where(role: 2).count <= 1
     end

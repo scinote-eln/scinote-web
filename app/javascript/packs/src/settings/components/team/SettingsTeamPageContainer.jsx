@@ -163,7 +163,7 @@ class SettingsTeamPageContainer extends Component {
         <TeamsMembers
           members={this.state.users}
           updateUsersCallback={this.updateUsersCallback}
-          teamId={this.state.team.id}
+          team={this.state.team}
         />
         <UpdateTeamDescriptionModal
           showModal={this.state.showModal}

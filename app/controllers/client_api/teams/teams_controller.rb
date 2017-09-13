@@ -31,7 +31,6 @@ module ClientApi
                                                    current_user: current_user,
                                                    params: team_params)
         team_service.update_team!
-
         success_response('/client_api/teams/update_details',
                          team_service.single_team_details_data)
       rescue ClientApi::CustomTeamError => error

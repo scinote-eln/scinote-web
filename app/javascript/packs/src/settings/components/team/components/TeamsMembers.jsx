@@ -10,13 +10,22 @@ import {
 import { FormattedMessage } from "react-intl";
 import axios from "../../../../../app/axios";
 
+import RemoveUserModal from "./RemoveUserModal";
 import DataTable from "../../../../../shared/data_table";
 import { UPDATE_USER_TEAM_ROLE_PATH } from "../../../../../app/routes";
 
+const initalUserToRemove = {
+  userName: "",
+  team_user_id: 0,
+  teamName: "",
+  team_id: 0
+};
 class TeamsMembers extends Component {
   constructor(params) {
     super(params);
+    this.state = { showModal: false, userToRemove: initalUserToRemove };
     this.memberAction = this.memberAction.bind(this);
+    this.hideModal = this.hideModal.bind(this);
   }
 
   currentRole(memberRole, role) {
@@ -26,7 +35,7 @@ class TeamsMembers extends Component {
   updateRole(userTeamId, role) {
     axios
       .put(UPDATE_USER_TEAM_ROLE_PATH, {
-        team: this.props.teamId,
+        team: this.props.team.id,
         user_team: userTeamId,
         role
       })
@@ -36,7 +45,13 @@ class TeamsMembers extends Component {
       .catch(error => console.log(error));
   }
 
-  removeUser(userTeamId) {}
+  hideModal() {
+    this.setState({ showModal: false, userToRemove: initalUserToRemove });
+  }
+
+  userToRemove(userToRemove) {
+    this.setState({ showModal: true, userToRemove });
+  }
 
   memberAction(data, row) {
     return (
@@ -83,7 +98,12 @@ class TeamsMembers extends Component {
         <MenuItem divider />
         <MenuItem
           onClick={() => {
-            this.removeUser(data.team_user_id);
+            this.userToRemove({
+              userName: row.name,
+              team_user_id: data.team_user_id,
+              teamName: this.props.team.name,
+              team_id: this.props.team.id
+            });
           }}
         >
           <FormattedMessage id="settings_page.single_team.actions.remove_user" />
@@ -155,6 +175,12 @@ class TeamsMembers extends Component {
         </Button>
 
         <DataTable data={this.props.members} columns={columns} />
+        <RemoveUserModal
+          showModal={this.state.showModal}
+          hideModal={this.hideModal}
+          updateUsersCallback={this.props.updateUsersCallback}
+          userToRemove={this.state.userToRemove}
+        />
       </Panel>
     );
   }
@@ -162,7 +188,10 @@ class TeamsMembers extends Component {
 
 TeamsMembers.propTypes = {
   updateUsersCallback: func.isRequired,
-  teamId: number.isRequired,
+  team: PropTypes.shape({
+    id: number.isRequired,
+    name: string.isRequired
+  }).isRequired,
   members: PropTypes.arrayOf(
     PropTypes.shape({
       id: number.isRequired,

@@ -29,6 +29,19 @@ module ClientApi
         unsuccess_response(error.to_s)
       end
 
+      def remove_user
+        ut_service = ClientApi::UserTeamService.new(
+          user: current_user,
+          team_id: params[:team],
+          user_team_id: params[:user_team]
+        )
+        ut_service.destroy_user_team_and_assign_new_team_owner!
+        success_response('/client_api/teams/team_users',
+                         ut_service.team_users_data)
+      rescue ClientApi::CustomUserTeamError => error
+        unsuccess_response(error.to_s)
+      end
+
       private
 
       def success_response(template, locals)
