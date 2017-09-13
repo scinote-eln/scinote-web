@@ -398,6 +398,10 @@ Rails.application.routes.draw do
             to: 'protocols#load_from_repository_modal'
         post 'load_from_repository', to: 'protocols#load_from_repository'
         post 'load_from_file', to: 'protocols#load_from_file'
+        ##
+        ##-tule gre tvoje json_import match 'admin_login' => 'user#admin_login',
+        post 'protocolsio_import_create', to: 'protocols#protocolsio_import_create'
+        ##
         get 'copy_to_repository_modal', to: 'protocols#copy_to_repository_modal'
         post 'copy_to_repository', to: 'protocols#copy_to_repository'
         get 'protocol_status_bar', to: 'protocols#protocol_status_bar'
@@ -406,6 +410,7 @@ Rails.application.routes.draw do
         get 'edit_keywords_modal', to: 'protocols#edit_keywords_modal'
         get 'edit_authors_modal', to: 'protocols#edit_authors_modal'
         get 'edit_description_modal', to: 'protocols#edit_description_modal'
+
       end
       collection do
         get 'create_new_modal', to: 'protocols#create_new_modal'
@@ -415,6 +420,10 @@ Rails.application.routes.draw do
         post 'archive', to: 'protocols#archive'
         post 'restore', to: 'protocols#restore'
         post 'import', to: 'protocols#import'
+        ##
+        ##-tule gre tvoje json_import match 'admin_login' => 'user#admin_login',
+        post 'protocolsio_import_create', to: 'protocols#protocolsio_import_create'
+        ##
         get 'export', to: 'protocols#export'
       end
     end
@@ -481,4 +490,5 @@ Rails.application.routes.draw do
     get 'wopi/files/:id', to: 'wopi#file_get_endpoint', as: 'wopi_rest_endpoint'
     post 'wopi/files/:id', to: 'wopi#post_file_endpoint'
   end
+
 end

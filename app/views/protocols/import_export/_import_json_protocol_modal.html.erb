@@ -1,0 +1,23 @@
+<div class="modal fade" id="modal-import-json-protocol" tabindex="-1" role="dialog" aria-labelledby="modal-import-json-protocol-label">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title"><%= t('protocols.index.modal_import_json_title') %></h4>
+        <%= t("protocols.index.modal_import_json_notice") %>
+      </div>
+                             <%= form_tag({ action: "protocolsio_import_create"}, format: "json", multipart: true,remote: true,:method => "post", html: {'data-type' => 'json'}) do %>
+
+      <div class="modal-body">
+
+           <%= file_field_tag 'json_file', accept: '.txt' %>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal"><%= t('general.cancel')%></button>
+        <%= submit_tag t("protocols.index.modal_import_json_submit"), class: "btn btn-default" %>
+      </div>
+      <% end %>
+    </div>
+  </div>
+</div>

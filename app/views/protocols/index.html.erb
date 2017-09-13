@@ -1,3 +1,4 @@
+<%= render partial: "protocols/import_export/import_json_protocol_modal" %>
 <% provide(:head_title, t("protocols.index.head_title")) %>
 
 <% if current_team %>
@@ -48,9 +49,8 @@
             </a>
           <% end %>
         </div>
-
-        <div id="import-export-protocols" class="btn-group" role="group">
-          <a class="btn btn-default btn-open-file" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="#"><span class="glyphicon glyphicon-import"></span><span class="hidden-xs">&nbsp;<%= "Import protocol" %></span></a>
+<div id="import-export-protocols" class="btn-group" role="group">
+        <a class="btn btn-default btn-open-file" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="#"><span class="glyphicon glyphicon-import"></span><span class="hidden-xs">&nbsp;<%= "Import protocol" %></span></a>
 
           <ul class="dropdown-menu">
             <li>
@@ -68,15 +68,14 @@
             </li>
 
             <li>
-              <a class="btn-link btn-default-link btn-open-file" <%= can_import_protocols(@current_team) ? 'data-action="import"' : 'disabled="disabled"' %>>
-                <span class="glyphicon glyphicon-file"></span>
-                <span class="hidden-xs"><%= t("protocols.index.import_json") %></span>
-                <input type="file" value="" accept=".txt" data-role="import-json-file-input"
-                data-team-id="<%= @current_team.id %>"
-                data-type="<%= @type %>" data-import-url="<%= import_protocols_path %>"
-                <%= 'disabled="disabled"' unless can_import_protocols(@current_team) %>>
 
-              </a>
+
+            <%= link_to "#modal-import-json-protocol", "data-toggle" => "modal" do %>
+            <span class="glyphicon glyphicon-file"></span>
+            <span class="hidden-xs"><%= t("protocols.index.import_json") %></span>
+            <% end %>
+
+
             </li>
 
           </ul>
@@ -84,11 +83,7 @@
             <span class="glyphicon glyphicon-export"></span>
             <span class="hidden-xs">&nbsp;<%= t("protocols.index.export") %></span>
           </a>
-      <!--    </div>  -->
-
-        <!--<div class="btn-group"> -->
-
-      </div>
+        </div>
 
         <div class="btn-group" role="group">
           <a class="btn btn-default" data-action="archive" data-url="<%= archive_protocols_path %>">

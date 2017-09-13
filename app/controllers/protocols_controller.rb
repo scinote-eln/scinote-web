@@ -599,7 +599,23 @@ class ProtocolsController < ApplicationController
       end
     end
   end
+#
+#tule
+def protocolsio_import_new
+  #@temp_json=JsonTemp.new
+end
+def protocolsio_import_create
 
+
+  json_file_contents=File.read(params[:json_file].path)
+  json_object=JSON.parse(json_file_contents)
+  byebug
+end
+
+def protocolsio_temp_params
+  params.require(:json_file)
+end
+#
   def export
     # Make a zip output stream and send it to the client
     respond_to do |format|

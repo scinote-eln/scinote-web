@@ -337,7 +337,18 @@ a {
     border-color: darken($color-theme-secondary, 10%);
   }
 }
-
+.btn-link-alt {
+  border-radius: 4px;
+  margin-right: 5px;
+  padding: 3px;
+  cursor:pointer;
+}
+.btn-invis-file{
+  opacity: 0;
+  position: absolute;
+  z-index: -1;
+  display: none;
+}
 .btn-open-file {
   position: relative;
   overflow: hidden;
@@ -1803,6 +1814,7 @@ textarea.textarea-sm {
       -webkit-padding-before: 0;
       -webkit-padding-after: 0;
     }
+
   }
 }
 
@@ -2008,12 +2020,7 @@ th.custom-field .modal-tooltiptext {
       margin-right: 5px;
       padding: 3px;
     }
-    .btn-link {
-      border-radius: 4px;
-      margin-right: 5px;
-      padding: 3px;
-      cursor:pointer;
-    }
+
 
     .btn:last-child {
       margin-right: 20px;
