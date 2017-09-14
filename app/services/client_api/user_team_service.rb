@@ -12,8 +12,7 @@ module ClientApi
     end
 
     def destroy_user_team_and_assign_new_team_owner!
-      binding.pry
-      raise ClientApi::CustomUserTeamError unless user_cant_leave?
+      raise ClientApi::CustomUserTeamError if user_cant_leave?
       new_owner = @team.user_teams
                        .where(role: 2)
                        .where.not(id: @user_team.id)
@@ -25,6 +24,7 @@ module ClientApi
     end
 
     def update_role!
+      raise ClientApi::CustomUserTeamError if user_cant_leave?
       unless @role
         raise ClientApi::CustomUserTeamError,
               I18n.t('client_api.generic_error_message')
@@ -59,7 +59,7 @@ module ClientApi
     end
 
     def user_cant_leave?
-      @user.teams.includes(@team) &&
+      @user.teams.include?(@team) &&
         @user_team.admin? &&
         @team.user_teams.where(role: 2).count <= 1
     end
@@ -74,8 +74,9 @@ module ClientApi
     end
 
     def validate_params(args)
-      params = %i(team_id user_team_id user)
-      raise ClientApi::CustomUserTeamError unless params.all? { |s| args.key? s }
+      keys = %i(team_id user_team_id user)
+      raise ClientApi::CustomUserTeamError unless keys.all? { |s| args.key? s }
+      raise ClientApi::CustomUserTeamError if args.values.any? &:nil?
       team_id = args.fetch(:team_id)
       user_team_id = args.fetch(:user_team_id)
       user = args.fetch(:user)
