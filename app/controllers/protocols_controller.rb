@@ -609,7 +609,12 @@ def protocolsio_import_create
 
   json_file_contents=File.read(params[:json_file].path)
   @json_object=JSON.parse(json_file_contents)
-  render :partial => "/protocols/import_json_protocol_preview_modal"
+  
+  respond_to do |format|
+    format.html
+    format.js
+  end
+
 end
 
 def protocolsio_temp_params

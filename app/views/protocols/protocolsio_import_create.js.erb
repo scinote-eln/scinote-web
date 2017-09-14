@@ -1,0 +1,3 @@
+$('#modal-import-json-protocol').modal('hide');
+$('#import-export-protocols').append("<%= j render(:partial => "protocols/import_export/import_json_protocol_preview_modal", :locals => {:json_object => @json_object}) %>")
+$('#modal-import-json-protocol-preview').modal('show');

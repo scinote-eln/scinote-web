@@ -1,11 +1,8 @@
-<%= render partial: "protocols/import_export/import_json_protocol_modal" %>
-<%= render partial: "protocols/import_export/import_json_protocol_preview_modal" %>
 
 <% provide(:head_title, t("protocols.index.head_title")) %>
 
 <% if current_team %>
   <%= render partial: "protocols/breadcrumbs.html.erb", locals: { teams: @teams, current_team: @current_team, type: @type } %>
-
   <ul class="nav nav-tabs nav-settings">
     <li role="presentation" class="<%= "active" if @type == :public %>">
       <%= link_to t("protocols.index.navigation.public"), protocols_path(team: @current_team, type: :public) %>
@@ -145,6 +142,8 @@
   </div>
 <% end %>
 
+<%= render partial: "protocols/import_export/import_json_protocol_modal" %>
+<%#= render partial: "protocols/import_export/import_json_protocol_preview_modal" %>
 <%= render partial: "protocols/index/create_new_modal.html.erb" %>
 <%= render partial: "protocols/index/make_private_results_modal.html.erb" %>
 <%= render partial: "protocols/index/publish_results_modal.html.erb" %>
