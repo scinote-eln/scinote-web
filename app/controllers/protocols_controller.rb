@@ -606,13 +606,14 @@ def protocolsio_import_new
 end
 def protocolsio_import_create
 
-
+  
   json_file_contents=File.read(params[:json_file].path)
   @json_object=JSON.parse(json_file_contents)
-  
+  @protocol=Protocol.new
+
   respond_to do |format|
     format.html
-    format.js
+    format.js {}
   end
 
 end
