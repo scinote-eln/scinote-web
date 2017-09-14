@@ -2,14 +2,18 @@ import React, { Component } from "react";
 import ReactRouterPropTypes from "react-router-prop-types";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import { Row, Col, Glyphicon, Well } from "react-bootstrap";
+import { Breadcrumb, Row, Col, Glyphicon, Well } from "react-bootstrap";
+import { LinkContainer } from "react-router-bootstrap";
 import { FormattedHTMLMessage, FormattedMessage } from "react-intl";
 import moment from "moment";
 import prettysize from "prettysize";
 import axios from "../../../../config/axios";
 
+import { SETTINGS_TEAMS_ROUTE } from "../../../../config/routes";
 import { TEAM_DETAILS_PATH, SETTINGS_TEAMS } from "../../../../config/api_endpoints";
 import { BORDER_LIGHT_COLOR } from "../../../../config/constants/colors";
+import { SETTINGS_TEAMS_ROUTE } from "../../../../app/dom_routes";
+import { TEAM_DETAILS_PATH } from "../../../../app/routes";
 
 import TeamsMembers from "./components/TeamsMembers";
 import UpdateTeamDescriptionModal from "./components/UpdateTeamDescriptionModal";
@@ -145,16 +149,16 @@ class SettingsTeam extends Component {
   render() {
     return (
       <Wrapper>
-        <StyledOl className="breadcrumb">
-          <li>
-            <Link to={SETTINGS_TEAMS}>
+        <Breadcrumb>
+          <LinkContainer to={SETTINGS_TEAMS_ROUTE}>
+            <Breadcrumb.Item>
               <FormattedMessage id="settings_page.all_teams" />
-            </Link>
-          </li>
-          <li className="active">
+            </Breadcrumb.Item>
+          </LinkContainer>
+          <Breadcrumb.Item active={true}>
             {this.state.team.name}
-          </li>
-        </StyledOl>
+          </Breadcrumb.Item>
+        </Breadcrumb>
         <TabTitle>
           <StyledH3 onClick={this.showNameModal}>
             {this.state.team.name}

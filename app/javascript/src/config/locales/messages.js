@@ -22,6 +22,7 @@ export default {
     },
     settings_page: {
       all_teams: "All teams",
+      new_team: "New team",
       in_team: "You are member of {num} team",
       in_teams: "You are member of {num} team",
       leave_team: "Leave team",
