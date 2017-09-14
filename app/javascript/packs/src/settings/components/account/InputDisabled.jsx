@@ -38,6 +38,10 @@ const InputDisabled = props =>
     </form>
   </Wrapper>;
 
+InputDisabled.defaultProps = {
+  inputValue: ""
+};
+
 InputDisabled.propTypes = {
   labelTitle: string.isRequired,
   inputType: string.isRequired,

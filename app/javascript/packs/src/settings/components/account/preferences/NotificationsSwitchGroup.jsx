@@ -119,6 +119,7 @@ class NotificationsSwitchGroup extends Component {
   }
 }
 
+// TODO get rid of unnecesary proptypes
 NotificationsSwitchGroup.propTypes = {
   type: string.isRequired,
   assignmentsNotification: bool.isRequired,

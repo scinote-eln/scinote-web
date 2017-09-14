@@ -27,6 +27,9 @@ Rails.application.routes.draw do
       get '/current_user_info', to: 'users/users#current_user_info'
 
       namespace :users do
+        get '/profile_info', to: 'users#profile_info'
+        get '/statistics_info', to: 'users#statistics_info'
+        get '/preferences_info', to: 'users#preferences_info'
         delete '/leave_team', to: 'user_teams#leave_team'
         post '/change_full_name', to: 'users#change_full_name'
         post '/change_initials', to: 'users#change_initials'

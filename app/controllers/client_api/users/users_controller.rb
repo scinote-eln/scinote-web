@@ -2,12 +2,42 @@ module ClientApi
   module Users
     class UsersController < ApplicationController
 
+      def preferences_info
+        respond_to do |format|
+          format.json do
+            render template: 'client_api/users/preferences',
+                   status: :ok,
+                   locals: { user: current_user}
+          end
+        end
+      end
+
+      def profile_info
+        respond_to do |format|
+          format.json do
+            render template: '/client_api/users/profile',
+                   status: :ok,
+                   locals: { user: current_user }
+          end
+        end
+      end
+
+      def statistics_info
+        respond_to do |format|
+          format.json do
+            render template: '/client_api/users/statistics',
+                   status: :ok,
+                   locals: { user: current_user }
+          end
+        end
+      end
+
       def current_user_info
         respond_to do |format|
           format.json do
             render template: '/client_api/users/show',
-                  status: :ok,
-                  locals: { user: current_user }
+                   status: :ok,
+                   locals: { user: current_user }
           end
         end
       end
