@@ -39,7 +39,7 @@
             <div class="col-xs-4">
               <label for="protocol_created_at"><%= t("protocols.import_export.import_modal.created_at_label") %></label>
           <!--   <input type="text" class="form-control" id="protocol_created_at" disabled>  -->
-            <%= f.text_field :doesnt_exist, :value => json_object['created_on']+" (Protocols.io value)", class: "form-control"  %> 
+            <%= f.text_field :doesnt_exist, :value => json_object['created_on']+" (Protocols.io value)", class: "form-control"  %>
             </div>
             <div class="col-xs-4">
               <label for="protocol_updated_at"><%= t("protocols.import_export.import_modal.updated_at_label") %></label>
@@ -58,16 +58,179 @@
         <!-- Preview scroller -->
         <div>
           <div class="import-protocols-modal-preview-container" data-role="preview-container">
+
+            <table border=1>
+
+
+                  <% counter=0
+                  whitelist_simple=["1","6","17"]
+                  whitelist_complex=["8","9","15","18","19","20"]%>
+                  <% #byebug %>
+
+            <% json_object["steps"].each do |step| %>
+
+                  <tr>
+                    <td> Step <%= (counter+=1).to_s %> </td>
+                    <td> Step guid (Protocols.io) :<%= step["guid"] %>
+                      <% #byebug %>
+                      <% if counter>1 %>
+                      <br>Guid of previous step (Protocols.io) :<%= step["previous_guid"] %>
+                       <% end  #counter, prvi step nima previous guid%>
+              <% step["components"].each do |key,value|  %>
+                      <% #byebug %>
+
+                  <% if counter>1 #nevem zaka ampak v vseh njihovih izvoženih jsonih ima prvi korak čudno strukturo
+                      #elementov, v kateri so shranjeni kot hash, katerega ključ je "0", vrednost pa komponenta, to zruši iteriranje v enem stavku
+                      #trenutno sem porabil {5} ur da bi našel rešitev, tako da bi ena zanka naredila oboje.
+                      # to je samo v  prvem koraku, naprej so vsi shranjeni brez tega arraya, in se po njih da normalno iterirat
+                      %>
+                      <% #byebug %>
+                      <% if whitelist_simple.include?(key["component_type_id"]) && key["data"]!="" && key["name"] && key["data"]%>
+                      <br>
+                      <%= key["name"]+" : "+key["data"] %>
+                      <% #byebug
+                      #debug
+                      #comp[counter];counter;@json.file_contents["steps"][3]["components"][0]["name"]
+                      #@json.file_contents["steps"][0]["components"]
+                      %>
+
+                      <% elsif key && whitelist_complex.include?(key["component_type_id"]) %>
+                      <% case key["component_type_id"]%>
+                      <% when "8"%>
+                      <br>
+                      <%= "-"+key["name"]+" : "+key["source_data"]["name"] %>
+                      <br>
+                      Developer : <%= key["source_data"]["developer"] %>
+                      <br>
+                      Version : <%= key["source_data"]["version"] %>
+                      <br>
+                      Link : <%= key["source_data"]["link"] %>
+                      <br>
+                      Repository : <%= key["source_data"]["repository"] %>
+                      <br>
+                      OS name , OS version : <%= key["source_data"]["os_name"]+" , "+key["source_data"]["os_version"] %>
+
+                      <% when "9"%>
+                      <br>
+                      <%= "-"+key["name"]+" : "+key["source_data"]["name"] %>
+                      <br>
+                      Link : <%= key["source_data"]["link"] %>
+
+
+                      <% when "15"%>
+                      <br>
+                      <%= "-"+key["name"]+" : "+key["source_data"]["name"] %>
+                      <br>
+                      Description : <%= key["source_data"]["description"] %>
+                      <br>
+                      OS name , OS version : <%= key["source_data"]["os_name"]+" , "+key["source_data"]["os_version"] %>
+
+                      <% when "18"%>
+
+                      <% when "19"%>
+                      <br>
+                      <%= "-"+key["name"]+" : "+key["source_data"]["body"] %>
+                      <br>
+                      Link : <%= key["source_data"]["link"] %>
+
+
+                      <% when "20"%>
+
+                      <% else %>
+
+                      <% end %>
+
+
+                      <% end #notranji if št 1%>
+
+
+                  <% else #če ni prvi korak %>
+
+                    <% unless value %>
+                    <% value=key #json format ima random arraye namest hashov, ta problem je opisan pri if counter > 1 stavku %>
+                    <% end %>
+                    <% #byebug %>
+                      <% if whitelist_simple.include?(value["component_type_id"])&& value["data"]!="" && value["name"] && value["data"]  %>
+                      <br>
+                      <%= value["name"]+" : "+value["data"] %>
+                      <% #byebug
+                      #debug
+                      #comp[counter];counter;@json.file_contents["steps"][3]["components"][0]["name"]
+                      #@json.file_contents["steps"][0]["components"]
+                      %>
+
+                      <% elsif value && whitelist_complex.include?(value["component_type_id"]) %>
+                      <% case value["component_type_id"]%>
+                      <% when "8"%>
+                      <br>
+                      <%= "-"+value["name"]+" : "+value["source_data"]["name"] %>
+                      <br>
+                      Developer : <%= value["source_data"]["developer"] %>
+                      <br>
+                      Version : <%= value["source_data"]["version"] %>
+                      <br>
+                      Link : <%= value["source_data"]["link"] %>
+                      <br>
+                      Repository : <%= value["source_data"]["repository"] %>
+                      <br>
+                      OS name , OS version : <%= value["source_data"]["os_name"]+" , "+value["source_data"]["os_version"] %>
+
+                      <% when "9"%>
+                      <br>
+                      <%= "-"+value["name"]+" : "+value["source_data"]["name"] %>
+                      <br>
+                      Link : <%= value["source_data"]["link"] %>
+
+
+                      <% when "15"%>
+                      <br>
+                      <%= "-"+value["name"]+" : "+value["source_data"]["name"] %>
+                      <br>
+                      Description : <%= value["source_data"]["description"] %>
+                      <br>
+                      OS name , OS version : <%= value["source_data"]["os_name"]+" , "+value["source_data"]["os_version"] %>
+
+                      <% when "18"%>
+
+                      <% when "19"%>
+                      <br>
+                      <%= "-"+value["name"]+" : "+value["source_data"]["body"] %>
+                      <br>
+                      Link : <%= value["source_data"]["link"] %>
+
+
+                      <% when "20"%>
+
+                      <% else %>
+
+                      <% end %>
+
+                      <% end #notranji if št 2%>
+
+                  <% end #zunanji if %>
+
+
+              <% end #komponente koraka %>
+                    </td>
+                    <td> WIP</td>
+                  </tr>
+
+            <% end  #posamezni koraki%>
+
+</table>
+
+
           </div>
         </div>
-        <% end %>
+
       </div>
       <div class="modal-footer">
 
         <div data-role="single-protocol-buttons">
           <button type="button" class="btn btn-default" data-dismiss="modal"><%= t("general.cancel") %></button>
           <div class="btn-group" role="group">
-            <button type="submit" class="btn btn-primary" data-action="import-current"><%= t("protocols.import_export.import_modal.import") %></button>
+          <!--  <button type="submit" class="btn btn-primary" data-action="import-current"><%= t("protocols.import_export.import_modal.import") %></button> -->
+            <%= f.submit t("protocols.import_export.import_modal.import"),class: "btn btn-primary" %>  <% end %>
           </div>
         </div>
       </div>
