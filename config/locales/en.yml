@@ -1389,6 +1389,7 @@ en:
       import_modal:
         title_import: "Import protocol/s"
         title_import_into_protocol: "Load protocol from file"
+        title_import_into_protocol_protocols_io: "Load protocol from protocols.io file"
         import_into_protocol_message: "This will overwrite the current protocol!"
         import_into_protocol_confirm: "Are you sure you wish to load protocol from file? This action will overwrite the current protocol."
         import_to_linked_task_file: "Are you sure you wish to load protocol from file? This action will overwrite the current protocol in the task and unlink it from repository. The current protocol will remain unchanged in repository."
