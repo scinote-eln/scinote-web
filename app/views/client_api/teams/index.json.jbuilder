@@ -6,5 +6,6 @@ json.teams do
     json.role retrive_role_name(team.fetch('role') { nil })
     json.current_team team.fetch('current_team')
     json.can_be_leaved team.fetch('can_be_leaved')
+    json.user_team_id team.fetch('user_team_id')
   end
 end

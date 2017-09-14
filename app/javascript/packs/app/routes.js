@@ -3,7 +3,9 @@ export const ACTIVITIES_PATH = "/client_api/activities";
 
 // teams
 export const TEAMS_PATH = "/client_api/teams";
-export const CHANGE_TEAM_PATH = "/client_api/change_team";
+export const CHANGE_TEAM_PATH = "/client_api/teams/change_team";
+export const TEAM_DETAILS_PATH = "/client_api/teams/:team_id/details";
+export const TEAM_UPDATE_PATH = "/client_api/teams/update";
 
 // search
 export const SEARCH_PATH = "/search";
@@ -23,7 +25,9 @@ export const CONTACT_US_LINK =
   "http://scinote.net/story-of-scinote/#contact-scinote";
 
 // user teams
-export const LEAVE_TEAM_PATH = "/client_api/users/leave_team"
+export const LEAVE_TEAM_PATH = "/client_api/users/leave_team";
+export const UPDATE_USER_TEAM_ROLE_PATH = "/client_api/users/update_role";
+export const REMOVE_USER_FROM_TEAM_PATH = "/client_api/users/remove_user";
 
 // settings
 export const SETTINGS_ACCOUNT_PROFILE = "/settings/account/profile";

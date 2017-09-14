@@ -92,6 +92,7 @@ group :development, :test do
   gem 'rubocop', require: false
   gem 'scss_lint', require: false
   gem 'starscope', require: false
+  gem 'bullet'
 end
 
 group :test do
