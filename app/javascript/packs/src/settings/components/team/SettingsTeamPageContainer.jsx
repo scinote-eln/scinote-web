@@ -1,17 +1,16 @@
 import React, { Component } from "react";
 import ReactRouterPropTypes from "react-router-prop-types";
 import styled from "styled-components";
-import { Row, Col, Glyphicon, Well } from "react-bootstrap";
+import { Breadcrumb, Row, Col, Glyphicon, Well } from "react-bootstrap";
+import { LinkContainer } from "react-router-bootstrap";
 import { FormattedHTMLMessage, FormattedMessage } from "react-intl";
 import moment from "moment";
 import prettysize from "prettysize";
 import axios from "../../../../app/axios";
 
+import { SETTINGS_TEAMS_ROUTE } from "../../../../app/dom_routes";
 import { TEAM_DETAILS_PATH } from "../../../../app/routes";
-import {
-  BORDER_LIGHT_COLOR,
-  COLOR_CONCRETE
-} from "../../../../app/constants/colors";
+import { BORDER_LIGHT_COLOR } from "../../../../app/constants/colors";
 
 import TeamsMembers from "./components/TeamsMembers";
 import UpdateTeamDescriptionModal from "./components/UpdateTeamDescriptionModal";
@@ -23,11 +22,6 @@ const Wrapper = styled.div`
   border-top: none;
   margin: 0;
   padding: 16px 15px 50px 15px;
-`;
-
-const TabTitle = styled.div`
-  background-color: ${COLOR_CONCRETE};
-  padding: 15px;
 `;
 
 const BadgeWrapper = styled.div`
@@ -105,10 +99,16 @@ class SettingsTeamPageContainer extends Component {
   render() {
     return (
       <Wrapper>
-        <TabTitle>
-          <FormattedMessage id="settings_page.all_teams" />
-          {` / ${this.state.team.name}`}
-        </TabTitle>
+        <Breadcrumb>
+          <LinkContainer to={SETTINGS_TEAMS_ROUTE}>
+            <Breadcrumb.Item>
+              <FormattedMessage id="settings_page.all_teams" />
+            </Breadcrumb.Item>
+          </LinkContainer>
+          <Breadcrumb.Item active={true}>
+            {this.state.team.name}
+          </Breadcrumb.Item>
+        </Breadcrumb>
         <Row>
           <Col xs={6} sm={3}>
             <BadgeWrapper>
