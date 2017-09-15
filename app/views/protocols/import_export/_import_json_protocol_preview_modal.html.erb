@@ -1,3 +1,4 @@
+<%= form_for(protocol, :url => "protocols/protocolsio_import_save",method: :post) do |f| %>
 <div id="modal-import-json-protocol-preview" class="modal fade" role="dialog">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -15,13 +16,13 @@
 
         <!-- General protocol info -->
         <div class="form-group">
-        <%= form_for(protocol, :remote => true) do |f| %>
-          <label for="import_protocol_name"><%= t("protocols.import_export.import_modal.name_label") %></label>
+
+          <label><%= t("protocols.import_export.import_modal.name_label") %></label>
         <!--  <input type="text" class="form-control" id="import_protocol_name" value="<%= json_object['protocol_name'] %>"> -->
        <%= f.text_field :name, :value => json_object['protocol_name'], class: "form-control"  %>
         </div>
         <div class="form-group">
-          <label for="protocol_authors">
+          <label>
             <span class="glyphicon glyphicon-user"></span>&nbsp;<%= t("protocols.import_export.import_modal.authors_label") %>
           </label>
           <%= f.text_field :authors, :value => json_object['full_name'], class: "form-control"  %>
@@ -29,20 +30,20 @@
 
         </div>
         <div class="form-group">
-          <label for="import_protocol_description"><%= t("protocols.import_export.import_modal.description_label") %></label>
+          <label><%= t("protocols.import_export.import_modal.description_label") %></label>
   <!--   <textarea class="form-control" id="import_protocol_description" rows="2"></textarea>  -->
       <%= f.text_area :description, :value => json_object['description'], class: "form-control"  %>
         </div>
         <div class="form-group">
           <div class="row">
             <div class="col-xs-4">
-              <label for="protocol_created_at"><%= t("protocols.import_export.import_modal.created_at_label") %></label>
+              <label><%= t("protocols.import_export.import_modal.created_at_label") %></label>
           <!--   <input type="text" class="form-control" id="protocol_created_at" disabled>  -->
           <% display_created_at=Time.at(json_object['created_on'].to_i) %>
             <%= f.text_field :doesnt_exist, :value => display_created_at.to_s+" (Protocols.io value)", class: "form-control"  %>
             </div>
             <div class="col-xs-4">
-              <label for="protocol_updated_at"><%= t("protocols.import_export.import_modal.updated_at_label") %></label>
+              <label><%= t("protocols.import_export.import_modal.updated_at_label") %></label>
       <!--         <input type="text" class="form-control" id="protocol_updated_at" disabled>  -->
               <% display_last_modified=Time.at(json_object['last_modified'].to_i) %>
             <%= f.text_field :doesnt_exist, :value => display_last_modified.to_s+" (Protocols.io value)", class: "form-control"  %>
@@ -57,6 +58,7 @@
         </div>
 
         <!-- Preview scroller -->
+
         <div>
           <div class="import-protocols-modal-preview-container-json" data-role="preview-container">
             <table>
@@ -97,6 +99,8 @@
               </tr>
 
               <% end %>
+              <tr><td><br><br><div style="border-bottom-style:solid">
+              </div></td></tr>
 
                   <% counter=0
                   whitelist_simple=["1","6","17"]
@@ -268,7 +272,8 @@
                   </tr>
 
             <% end  #posamezni koraki%>
-        
+          <tr><td><br><br><div style="border-bottom-style:solid">
+          </div></td></tr>
 
             <% if json_object["manuscript_citation"]&&json_object["manuscript_citation"]!="" %>
 
@@ -347,14 +352,13 @@
 
       </div>
       <div class="modal-footer">
-
-        <div data-role="single-protocol-buttons">
           <button type="button" class="btn btn-default" data-dismiss="modal"><%= t("general.cancel") %></button>
-          <div class="btn-group" role="group">
+
           <!--  <button type="submit" class="btn btn-primary" data-action="import-current"><%= t("protocols.import_export.import_modal.import") %></button> -->
-            <%= f.submit t("protocols.import_export.import_modal.import"),class: "btn btn-primary" %>  <% end %>
-          </div>
-        </div>
+            <%= f.submit t("protocols.import_export.import_modal.import"),class: "btn btn-primary" %>
+            <% end %>
+
+
       </div>
     </div>
   </div>

@@ -601,21 +601,27 @@ class ProtocolsController < ApplicationController
   end
 #
 #tule
-def protocolsio_import_new
-  #@temp_json=JsonTemp.new
-end
 def protocolsio_import_create
 
-  
+
   json_file_contents=File.read(params[:json_file].path)
   @json_object=JSON.parse(json_file_contents)
   @protocol=Protocol.new
 
   respond_to do |format|
-    format.html
+    format.html {}
     format.js {}
   end
 
+end
+
+def protocolsio_import_save
+  #@temp_json=JsonTemp.new
+  respond_to do |format|
+    format.html {render protocols}
+    format.js    {render nothing}
+
+  end
 end
 
 def protocolsio_temp_params
