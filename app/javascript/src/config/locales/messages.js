@@ -22,7 +22,6 @@ export default {
     },
     settings_page: {
       all_teams: "All teams",
-      new_team: "New team",
       in_team: "You are member of {num} team",
       in_teams: "You are member of {num} team",
       leave_team: "Leave team",
@@ -102,6 +101,15 @@ export default {
           administrator: "Administrator",
           remove_user: "Remove"
         }
+      },
+      new_team: {
+        title: "New team",
+        name_label: "Team name",
+        name_placeholder: "My team",
+        name_sublabel: "Pick a name that would best describe your team (e.g. 'University of ..., Department of ...').",
+        description_label: "Description",
+        description_sublabel: "Describe your team.",
+        create: "Create team"
       }
     },
     activities: {
