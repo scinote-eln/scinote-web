@@ -13,7 +13,7 @@ import _ from "lodash";
 import styled from "styled-components";
 import axios from "../../../../../app/axios";
 
-import { TEXT_MAX_LENGTH } from "../../../../../app/constants/numeric";
+import { NAME_MAX_LENGTH } from "../../../../../app/constants/numeric";
 import { TEAM_UPDATE_PATH } from "../../../../../app/routes";
 import { COLOR_APPLE_BLOSSOM } from "../../../../../app/constants/colors";
 
@@ -21,18 +21,22 @@ const StyledHelpBlock = styled(HelpBlock)`
   color: ${COLOR_APPLE_BLOSSOM}
 `;
 
-class UpdateTeamDescriptionModal extends Component {
+class UpdateTeamNameModal extends Component {
   constructor(props) {
     super(props);
-    this.state = { errorMessage: "", description: "" };
+    this.state = { errorMessage: "", name: "" };
     this.onCloseModal = this.onCloseModal.bind(this);
-    this.updateDescription = this.updateDescription.bind(this);
-    this.handleDescription = this.handleDescription.bind(this);
+    this.updateName = this.updateName.bind(this);
+    this.handleName = this.handleName.bind(this);
     this.getValidationState = this.getValidationState.bind(this);
   }
 
+  componentDidMount() {
+    this.setState({ name: this.props.team.name });
+  }
+
   onCloseModal() {
-    this.setState({ errorMessage: "", description: "" });
+    this.setState({ errorMessage: "", name: "" });
     this.props.hideModal();
   }
 
@@ -43,30 +47,30 @@ class UpdateTeamDescriptionModal extends Component {
     return null;
   }
 
-  handleDescription(el) {
+  handleName(el) {
     const { value } = el.target;
-    if (value.length > TEXT_MAX_LENGTH) {
+    if (value.length > NAME_MAX_LENGTH) {
       this.setState({
         errorMessage: (
           <FormattedMessage
             id="error_messages.text_too_long"
-            values={{ max_length: TEXT_MAX_LENGTH }}
+            values={{ max_length: NAME_MAX_LENGTH }}
           />
         )
       });
     } else {
-      this.setState({ errorMessage: "", description: value });
+      this.setState({ errorMessage: "", name: value });
     }
   }
 
-  updateDescription() {
+  updateName() {
     axios({
       method: "post",
       url: TEAM_UPDATE_PATH,
       withCredentials: true,
       data: {
         team_id: this.props.team.id,
-        team: { description: this.state.description }
+        team: { name: this.state.name }
       }
     })
       .then(response => {
@@ -81,21 +85,21 @@ class UpdateTeamDescriptionModal extends Component {
       <Modal show={this.props.showModal} onHide={this.onCloseModal}>
         <Modal.Header closeButton>
           <Modal.Title>
-            <FormattedMessage id="settings_page.update_team_description_modal.title" />
+            <FormattedMessage id="settings_page.update_team_name_modal.title" />
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <FormGroup
-            controlId="teamDescription"
+            controlId="teamName"
             validationState={this.getValidationState()}
           >
             <ControlLabel>
-              <FormattedMessage id="settings_page.update_team_description_modal.label" />
+              <FormattedMessage id="settings_page.update_team_name_modal.label" />
             </ControlLabel>
             <FormControl
-              componentClass="textarea"
-              defaultValue={this.props.team.description}
-              onChange={this.handleDescription}
+              type="text"
+              onChange={this.handleName}
+              value={this.state.name}
             />
             <FormControl.Feedback />
             <StyledHelpBlock>
@@ -109,7 +113,7 @@ class UpdateTeamDescriptionModal extends Component {
           </Button>
           <Button
             bsStyle="success"
-            onClick={this.updateDescription}
+            onClick={this.updateName}
             disabled={!_.isEmpty(this.state.errorMessage)}
           >
             <FormattedMessage id="general.update" />
@@ -120,14 +124,14 @@ class UpdateTeamDescriptionModal extends Component {
   }
 }
 
-UpdateTeamDescriptionModal.propTypes = {
+UpdateTeamNameModal.propTypes = {
   showModal: bool.isRequired,
   hideModal: func.isRequired,
   team: PropTypes.shape({
     id: number.isRequired,
-    description: string
+    name: string
   }).isRequired,
   updateTeamCallback: func.isRequired
 };
 
-export default UpdateTeamDescriptionModal;
+export default UpdateTeamNameModal;

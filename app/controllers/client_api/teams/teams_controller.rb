@@ -40,7 +40,7 @@ module ClientApi
       private
 
       def team_params
-        params.require(:team).permit(:description)
+        params.require(:team).permit(:description, :name)
       end
 
       def success_response(template, locals)

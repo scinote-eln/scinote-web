@@ -83,6 +83,10 @@ export default {
         title: "Edit team description",
         label: "Description"
       },
+      update_team_name_modal: {
+        title: "Edit team name",
+        label: "Name"
+      },
       single_team: {
         created_on: "Created on: <strong>{created_at}</strong>",
         created_by: "Created by: <strong>{created_by}</strong>",

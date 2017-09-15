@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import ReactRouterPropTypes from "react-router-prop-types";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { Row, Col, Glyphicon, Well } from "react-bootstrap";
 import { FormattedHTMLMessage, FormattedMessage } from "react-intl";
@@ -7,7 +8,7 @@ import moment from "moment";
 import prettysize from "prettysize";
 import axios from "../../../../app/axios";
 
-import { TEAM_DETAILS_PATH } from "../../../../app/routes";
+import { TEAM_DETAILS_PATH, SETTINGS_TEAMS } from "../../../../app/routes";
 import {
   BORDER_LIGHT_COLOR,
   COLOR_CONCRETE
@@ -15,6 +16,7 @@ import {
 
 import TeamsMembers from "./components/TeamsMembers";
 import UpdateTeamDescriptionModal from "./components/UpdateTeamDescriptionModal";
+import UpdateTeamNameModal from "./components/UpdateTeamNameModal";
 
 const Wrapper = styled.div`
   background: white;
@@ -25,10 +27,7 @@ const Wrapper = styled.div`
   padding: 16px 15px 50px 15px;
 `;
 
-const TabTitle = styled.div`
-  background-color: ${COLOR_CONCRETE};
-  padding: 15px;
-`;
+const TabTitle = styled.div`padding: 15px;`;
 
 const BadgeWrapper = styled.div`
   font-size: 1.4em;
@@ -45,11 +44,21 @@ const StyledWell = styled(Well)`
   }
 `;
 
+const StyledH3 = styled.h3`
+  &:hover {
+    text-decoration: underline;
+    cursor: pointer;
+  }
+`;
+
+const StyledOl = styled.ol`padding: 15px;`;
+
 class SettingsTeamPageContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      showModal: false,
+      showDescriptionModal: false,
+      showNameModal: false,
       users: [],
       team: {
         id: 0,
@@ -66,6 +75,8 @@ class SettingsTeamPageContainer extends Component {
     );
     this.updateTeamCallback = this.updateTeamCallback.bind(this);
     this.updateUsersCallback = this.updateUsersCallback.bind(this);
+    this.showNameModal = this.showNameModal.bind(this);
+    this.hideNameModalCallback = this.hideNameModalCallback.bind(this);
   }
 
   componentDidMount() {
@@ -78,11 +89,19 @@ class SettingsTeamPageContainer extends Component {
   }
 
   showDescriptionModal() {
-    this.setState({ showModal: true });
+    this.setState({ showDescriptionModal: true });
   }
 
   hideDescriptionModalCallback() {
-    this.setState({ showModal: false });
+    this.setState({ showDescriptionModal: false });
+  }
+
+  showNameModal() {
+    this.setState({ showNameModal: true });
+  }
+
+  hideNameModalCallback() {
+    this.setState({ showNameModal: false });
   }
 
   updateTeamCallback(team) {
@@ -105,9 +124,20 @@ class SettingsTeamPageContainer extends Component {
   render() {
     return (
       <Wrapper>
+        <StyledOl className="breadcrumb">
+          <li>
+            <Link to={SETTINGS_TEAMS}>
+              <FormattedMessage id="settings_page.all_teams" />
+            </Link>
+          </li>
+          <li className="active">
+            {this.state.team.name}
+          </li>
+        </StyledOl>
         <TabTitle>
-          <FormattedMessage id="settings_page.all_teams" />
-          {` / ${this.state.team.name}`}
+          <StyledH3 onClick={this.showNameModal}>
+            {this.state.team.name}
+          </StyledH3>
         </TabTitle>
         <Row>
           <Col xs={6} sm={3}>
@@ -166,8 +196,14 @@ class SettingsTeamPageContainer extends Component {
           team={this.state.team}
         />
         <UpdateTeamDescriptionModal
-          showModal={this.state.showModal}
+          showModal={this.state.showDescriptionModal}
           hideModal={this.hideDescriptionModalCallback}
+          team={this.state.team}
+          updateTeamCallback={this.updateTeamCallback}
+        />
+        <UpdateTeamNameModal
+          showModal={this.state.showNameModal}
+          hideModal={this.hideNameModalCallback}
           team={this.state.team}
           updateTeamCallback={this.updateTeamCallback}
         />
