@@ -7,11 +7,12 @@ const messages = defineMessages({
     placeholder: { id: "settings_page.new_team.name_placeholder" }
 });
 
-const NameFormControl = ({intl}) =>
+const NameFormControl = ({ intl, ...props }) =>
   <FormControl
     type="text"
     placeholder={intl.formatMessage(messages.placeholder)}
     autoFocus={true}
+    {...props}
   />;
 
 NameFormControl.PropTypes = {

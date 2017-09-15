@@ -8,6 +8,7 @@ export default {
       loading: "Loading ..."
     },
     error_messages: {
+      text_too_short: "is too short (minimum is {min_length} characters)",
       text_too_long: "is too long (maximum is {max_length} characters)"
     },
     navbar: {
