@@ -9,10 +9,7 @@ import prettysize from "prettysize";
 import axios from "../../../../app/axios";
 
 import { TEAM_DETAILS_PATH, SETTINGS_TEAMS } from "../../../../app/routes";
-import {
-  BORDER_LIGHT_COLOR,
-  COLOR_CONCRETE
-} from "../../../../app/constants/colors";
+import { BORDER_LIGHT_COLOR } from "../../../../app/constants/colors";
 
 import TeamsMembers from "./components/TeamsMembers";
 import UpdateTeamDescriptionModal from "./components/UpdateTeamDescriptionModal";
@@ -38,6 +35,16 @@ const BadgeWrapper = styled.div`
 `;
 
 const StyledWell = styled(Well)`
+  padding: 9px;
+  & > span {
+    padding-left: 5px;
+  }`;
+
+const StyledDescriptionWell = styled(Well)`
+  padding: 9px;
+  & > span {
+    padding-left: 5px;
+  }
   &:hover {
     text-decoration: underline;
     cursor: pointer;
@@ -77,6 +84,7 @@ class SettingsTeamPageContainer extends Component {
     this.updateUsersCallback = this.updateUsersCallback.bind(this);
     this.showNameModal = this.showNameModal.bind(this);
     this.hideNameModalCallback = this.hideNameModalCallback.bind(this);
+    this.renderEditNameModel = this.renderEditNameModel.bind(this);
   }
 
   componentDidMount() {
@@ -121,6 +129,19 @@ class SettingsTeamPageContainer extends Component {
     );
   }
 
+  renderEditNameModel() {
+    if (this.state.showNameModal) {
+      return(
+        <UpdateTeamNameModal
+          showModal={this.state.showNameModal}
+          hideModal={this.hideNameModalCallback}
+          team={this.state.team}
+          updateTeamCallback={this.updateTeamCallback}
+        />
+      );
+    }
+  }
+
   render() {
     return (
       <Wrapper>
@@ -144,7 +165,7 @@ class SettingsTeamPageContainer extends Component {
             <BadgeWrapper>
               <Glyphicon glyph="calendar" />
             </BadgeWrapper>
-            <Well>
+            <StyledWell>
               <FormattedHTMLMessage
                 id="settings_page.single_team.created_on"
                 values={{
@@ -153,31 +174,31 @@ class SettingsTeamPageContainer extends Component {
                   )
                 }}
               />
-            </Well>
+            </StyledWell>
           </Col>
           <Col xs={10} sm={5}>
             <BadgeWrapper>
               <Glyphicon glyph="user" />
             </BadgeWrapper>
-            <Well>
+            <StyledWell>
               <FormattedHTMLMessage
                 id="settings_page.single_team.created_by"
                 values={{ created_by: this.state.team.created_by }}
               />
-            </Well>
+            </StyledWell>
           </Col>
           <Col xs={8} sm={4}>
             <BadgeWrapper>
               <Glyphicon glyph="hdd" />
             </BadgeWrapper>
-            <Well>
+            <StyledWell>
               <FormattedHTMLMessage
                 id="settings_page.single_team.space_usage"
                 values={{
                   space_usage: prettysize(this.state.team.space_taken)
                 }}
               />
-            </Well>
+            </StyledWell>
           </Col>
         </Row>
         <Row>
@@ -185,9 +206,11 @@ class SettingsTeamPageContainer extends Component {
             <BadgeWrapper>
               <Glyphicon glyph="info-sign" />
             </BadgeWrapper>
-            <StyledWell>
-              {this.renderDescription()}
-            </StyledWell>
+            <StyledDescriptionWell>
+              <span>
+                {this.renderDescription()}
+              </span>
+            </StyledDescriptionWell>
           </Col>
         </Row>
         <TeamsMembers
@@ -201,12 +224,7 @@ class SettingsTeamPageContainer extends Component {
           team={this.state.team}
           updateTeamCallback={this.updateTeamCallback}
         />
-        <UpdateTeamNameModal
-          showModal={this.state.showNameModal}
-          hideModal={this.hideNameModalCallback}
-          team={this.state.team}
-          updateTeamCallback={this.updateTeamCallback}
-        />
+        {this.renderEditNameModel()}
       </Wrapper>
     );
   }

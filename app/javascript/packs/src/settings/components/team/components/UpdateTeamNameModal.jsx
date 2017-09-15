@@ -24,15 +24,11 @@ const StyledHelpBlock = styled(HelpBlock)`
 class UpdateTeamNameModal extends Component {
   constructor(props) {
     super(props);
-    this.state = { errorMessage: "", name: "" };
+    this.state = { errorMessage: "", name: props.team.name};
     this.onCloseModal = this.onCloseModal.bind(this);
     this.updateName = this.updateName.bind(this);
     this.handleName = this.handleName.bind(this);
     this.getValidationState = this.getValidationState.bind(this);
-  }
-
-  componentDidMount() {
-    this.setState({ name: this.props.team.name });
   }
 
   onCloseModal() {
