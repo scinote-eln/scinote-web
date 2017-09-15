@@ -1270,8 +1270,35 @@ ul.content-module-activities {
     position: relative;
     top: -10px;
   }
+
+}
+/* Import json protocols.io protocol modal */
+#modal-import-json-protocol-preview .modal-dialog {
+  width: 70%;
 }
 
+.import-protocols-modal-preview-container-json {
+  height: 300px;
+  overflow-y: scroll;
+  overflow-x: scroll;
+  width: 100%;
+
+  .eln-table {
+    text-align: center;
+    height: 21px;
+  }
+
+  .badge-preview {
+    background-color: $color-silver;
+    border-radius: 2em;
+    float: left;
+    font-size: 20px;
+    padding: 5px 14px;
+    position: relative;
+    top: -10px;
+  }
+
+}
 /* Steps and Results */
 #steps {
   background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAABCAYAAACsXeyTAAAAIUlEQVQImWNgoD5gZGBgMILSjKRo/P//vwiSGQwMDAwMAEnaA0jgHoquAAAAAElFTkSuQmCC");
