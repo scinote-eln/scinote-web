@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import PropTypes, { bool, number, string, func } from "prop-types";
+import { bool, number, string, func, shape } from "prop-types";
 import { Modal, Button, Alert, Glyphicon } from "react-bootstrap";
 import { FormattedMessage, FormattedHTMLMessage } from "react-intl";
 
@@ -87,7 +87,7 @@ class RemoveUserModal extends Component {
 RemoveUserModal.propTypes = {
   showModal: bool.isRequired,
   hideModal: func.isRequired,
-  userToRemove: PropTypes.shape({
+  userToRemove: shape({
     userName: string.isRequired,
     team_user_id: number.isRequired,
     teamName: string.isRequired,

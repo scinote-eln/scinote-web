@@ -5,7 +5,7 @@ describe ClientApi::Teams::TeamsController, type: :controller do
 
   before do
     @user_one = User.first
-    @user_two = FactoryGirl.create(:user, email: 'sec_user@asdf.com')
+    @user_two = FactoryGirl.create :user, email: 'sec_user@asdf.com'
     @team_one = FactoryGirl.create :team
     @team_two = FactoryGirl.create :team, name: 'Team two'
     FactoryGirl.create :user_team, team: @team_one, user: @user_one, role: 2

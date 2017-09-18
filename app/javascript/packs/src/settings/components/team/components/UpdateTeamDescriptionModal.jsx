@@ -37,10 +37,7 @@ class UpdateTeamDescriptionModal extends Component {
   }
 
   getValidationState() {
-    if (this.state.errorMessage.length > 0) {
-      return "error";
-    }
-    return null;
+    return this.state.errorMessage.length > 0 ? "error" : null;
   }
 
   handleDescription(el) {
