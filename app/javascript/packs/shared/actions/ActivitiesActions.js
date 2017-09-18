@@ -2,7 +2,9 @@ import axios from "../../app/axios";
 import { ACTIVITIES_PATH } from "../../app/routes";
 import {
   GLOBAL_ACTIVITIES_DATA,
-  DESTROY_GLOBAL_ACTIVITIES_DATA
+  DESTROY_GLOBAL_ACTIVITIES_DATA,
+  SPINNER_ON,
+  SPINNER_OFF
 } from "../../app/action_types";
 
 function addActivitiesData(data) {
@@ -29,5 +31,17 @@ export function getActivities(lastId = 0) {
       .catch(error => {
         console.log("get Activites Error: ", error);
       });
+  };
+}
+
+export function spinnerOn() {
+  return {
+    type: SPINNER_ON
+  };
+}
+
+export function spinnerOff() {
+  return {
+    type: SPINNER_OFF
   };
 }
