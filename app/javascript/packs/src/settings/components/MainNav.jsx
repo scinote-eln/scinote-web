@@ -70,8 +70,11 @@ export default class MainNav extends Component {
               path={SETTINGS_PATH}
               render={() => <Redirect to={SETTINGS_ACCOUNT_PROFILE_PATH} />}
             />
-            <Route path={SETTINGS_ACCOUNT_PATH} component={SettingsAccount} />
-            <Route path={SETTINGS_TEAMS_PATH} component={SettingsTeams} />
+            <Route
+              path={SETTINGS_TEAM_ROUTE}
+              component={SettingsTeamPageContainer}
+            />
+            <Route path={SETTINGS_TEAMS_ROUTE} component={SettingsTeams} />
             <Route component={NotFound} />
           </Switch>
         </div>
