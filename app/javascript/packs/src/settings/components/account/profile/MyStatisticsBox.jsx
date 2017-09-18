@@ -28,6 +28,10 @@ const MyStatisticsBox = props =>
     </h5>
   </Box>;
 
+MyStatisticsBox.defaultProps = {
+  typeLength: 0
+};
+
 MyStatisticsBox.propTypes = {
   typeLength: PropTypes.number.isRequired,
   plural: PropTypes.string.isRequired,

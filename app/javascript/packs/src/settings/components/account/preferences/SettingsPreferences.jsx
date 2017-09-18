@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import styled from "styled-components";
 import { FormattedMessage } from "react-intl";
 
+import axios from "../../../../../app/axios";
 import InputDisabled from "../InputDisabled";
 import InputTimezone from "./InputTimezone";
 import { changeTimezone } from "../../../../../shared/actions/UsersActions";
@@ -36,13 +37,53 @@ class SettingsPreferences extends Component {
     super(props);
 
     this.state = {
-      isTimeZoneEditable: false
+      isTimeZoneEditable: false,
+      email: "",
+      notifications: {
+        assignmentsNotification: false,
+        assignmentsNotificationEmail: false,
+        recentNotification: false,
+        recentNotificationEmail: false,
+        systemMessageNofificationEmail: false
+      }
     };
+
+    this.setData = this.setData.bind(this);
+  }
+
+  componentDidMount() {
+    this.getPreferencesInfo();
   }
 
   toggleIsEditable(fieldNameEnabled) {
     const editableState = this.state[fieldNameEnabled];
     this.setState({ [fieldNameEnabled]: !editableState });
+  }
+
+  setData({ data }) {
+    const user = data.user;
+
+    const newData = {
+      timeZone: user.timeZone,
+      notifications: {
+        assignmentsNotification: user.notifications.assignmentsNotification,
+        assignmentsNotificationEmail:
+          user.notifications.assignmentsNotificationEmail,
+        recentNotification: user.notifications.recentNotification,
+        recentNotificationEmail: user.notifications.recentNotificationEmail,
+        systemMessageNofificationEmail:
+          user.notifications.systemMessageNofificationEmail
+      }
+    };
+
+    this.setState(Object.assign({}, this.state, newData));
+  }
+
+  getPreferencesInfo() {
+    axios
+      .get("/client_api/users/preferences_info")
+      .then(response => this.setData(response))
+      .catch(error => console.log(error));
   }
 
   render() {
@@ -53,7 +94,7 @@ class SettingsPreferences extends Component {
       timezoneField = (
         <InputTimezone
           labelValue="Time zone"
-          inputValue={this.props.timezone}
+          inputValue={this.state.timeZone}
           disableEdit={() => this.toggleIsEditable(isTimeZoneEditable)}
           saveData={timeZone => this.props.changeTimezone(timeZone)}
         />
@@ -63,7 +104,7 @@ class SettingsPreferences extends Component {
         <WrapperInputDisabled>
           <InputDisabled
             labelTitle="settings_page.time_zone"
-            inputValue={this.props.timezone}
+            inputValue={this.state.timeZone}
             inputType="text"
             enableEdit={() => this.toggleIsEditable(isTimeZoneEditable)}
           />
@@ -111,7 +152,6 @@ class SettingsPreferences extends Component {
 }
 
 SettingsPreferences.propTypes = {
-  timezone: PropTypes.string.isRequired,
   changeTimezone: PropTypes.func.isRequired,
   avatarPath: PropTypes.string.isRequired
 };

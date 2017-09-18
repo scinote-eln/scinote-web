@@ -23,7 +23,7 @@ class NotificationsSwitchGroup extends Component {
     super(props);
 
     this.state = {
-      isSciNoteSwitchOn: false,
+      isSwitchOn: false,
       isEmailSwitchOn: false
     };
 
@@ -36,7 +36,7 @@ class NotificationsSwitchGroup extends Component {
     switch (this.props.type) {
       case ASSIGNMENT_NOTIFICATION:
         this.setState({
-          isSciNoteSwitchOn: this.props.assignmentsNotification,
+          isSwitchOn: this.props.assignmentsNotification,
           isEmailSwitchOn: this.props.assignmentsNotificationEmail,
           sciNoteDispatch: state =>
             this.props.changeAssignmentsNotification(state),
@@ -46,7 +46,7 @@ class NotificationsSwitchGroup extends Component {
         break;
       case RECENT_NOTIFICATION:
         this.setState({
-          isSciNoteSwitchOn: this.props.recentNotification,
+          isSwitchOn: this.props.recentNotification,
           isEmailSwitchOn: this.props.recentNotificationEmail,
           sciNoteDispatch: state => this.props.changeRecentNotification(state),
           emailDispatch: state =>
@@ -55,7 +55,7 @@ class NotificationsSwitchGroup extends Component {
         break;
       case SYSTEM_NOTIFICATION:
         this.setState({
-          isSciNoteSwitchOn: true,
+          isSwitchOn: true,
           isEmailSwitchOn: this.props.systemMessageNotificationEmail,
           sciNoteDispatch: state => `${state}: Do Nothing`,
           emailDispatch: state =>
@@ -64,19 +64,19 @@ class NotificationsSwitchGroup extends Component {
         break;
       default:
         this.setState({
-          isSciNoteSwitchOn: true,
+          isSwitchOn: false,
           isEmailSwitchOn: false
         });
     }
   }
 
   toggleFirstSwitch() {
-    if (this.state.isSciNoteSwitchOn) {
-      this.setState({ isSciNoteSwitchOn: false, isEmailSwitchOn: false });
+    if (this.state.isSwitchOn) {
+      this.setState({ isSwitchOn: false, isEmailSwitchOn: false });
       this.state.sciNoteDispatch(false);
       this.state.emailDispatch(false);
     } else {
-      this.setState({ isSciNoteSwitchOn: true });
+      this.setState({ isSwitchOn: true });
       this.state.sciNoteDispatch(true);
     }
   }
@@ -104,7 +104,7 @@ class NotificationsSwitchGroup extends Component {
       <div>
         <NotificationsSwitch
           title="settings_page.show_in_scinote"
-          isSwitchOn={this.state.isSciNoteSwitchOn}
+          isSwitchOn={this.state.isSwitchOn}
           toggleSwitch={this.toggleFirstSwitch}
           isDisabled={this.isSwitchDisabled()}
         />
@@ -112,13 +112,14 @@ class NotificationsSwitchGroup extends Component {
           title="settings_page.notify_me_via_email"
           isSwitchOn={this.state.isEmailSwitchOn}
           toggleSwitch={this.toggleSecondSwitch}
-          isDisabled={!this.state.isSciNoteSwitchOn}
+          isDisabled={!this.state.isSwitchOn}
         />
       </div>
     );
   }
 }
 
+// TODO get rid of unnecesary proptypes
 NotificationsSwitchGroup.propTypes = {
   type: string.isRequired,
   assignmentsNotification: bool.isRequired,

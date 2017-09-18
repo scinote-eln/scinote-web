@@ -5,6 +5,7 @@ import { FormattedMessage } from "react-intl";
 import { FormGroup, FormControl, ControlLabel, Button } from "react-bootstrap";
 
 import { BORDER_LIGHT_COLOR } from "../../../../app/constants/colors";
+import { ENTER_KEY_CODE } from "../../../../app/constants/numeric";
 
 const StyledInputEnabled = styled.div`
   border: 1px solid ${BORDER_LIGHT_COLOR};
@@ -36,6 +37,14 @@ class InputEnabled extends Component {
     this.handleChange = this.handleChange.bind(this);
     this.handleChange2 = this.handleChange2.bind(this);
     this.handleUpdate = this.handleUpdate.bind(this);
+    this.handleKeyPress = this.handleKeyPress.bind(this);
+  }
+
+  handleKeyPress(event) {
+    if (event.charCode === ENTER_KEY_CODE) {
+      event.preventDefault();
+      this.handleUpdate();
+    }
   }
 
   handleChange(event) {
@@ -90,6 +99,8 @@ class InputEnabled extends Component {
             type={this.props.inputType}
             value={this.state.value}
             onChange={this.handleChange}
+            onKeyPress={this.handleKeyPress}
+            autoFocus
           />
           <p>New password confirmation</p>
           <FormControl
@@ -106,6 +117,8 @@ class InputEnabled extends Component {
           type={this.props.inputType}
           value={this.state.value}
           onChange={this.handleChange}
+          onKeyPress={this.handleKeyPress}
+          autoFocus
         />
       );
     }
