@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import styled from "styled-components";
 import { FormattedMessage } from "react-intl";
 
+import axios from "../../../../../app/axios";
 import Avatar from "./Avatar";
 import InputDisabled from "../InputDisabled";
 import InputEnabled from "../InputEnabled";
@@ -27,6 +28,12 @@ class MyProfile extends Component {
     super(props);
 
     this.state = {
+      fullName: "",
+      avatarThumb: "",
+      initials: "",
+      email: "",
+      timeZone: "",
+      newEmail: "",
       isFullNameEditable: false,
       areInitialsEditable: false,
       isEmailEditable: false,
@@ -35,6 +42,35 @@ class MyProfile extends Component {
     };
 
     this.toggleIsEditable = this.toggleIsEditable.bind(this);
+    this.getProfileInfo = this.getProfileInfo.bind(this);
+    this.setData = this.setData.bind(this);
+  }
+
+  componentDidMount() {
+    this.getProfileInfo();
+  }
+
+  setData({ data }) {
+    const user = data.user;
+
+    // TODO move this transformation to seperate method
+
+    const newData = {
+      fullName: user.full_name,
+      initials: user.initials,
+      email: user.email,
+      avatarThumb: user.avatar_thumb_path,
+      timeZone: user.time_zone
+    };
+
+    this.setState(Object.assign({}, this.state, newData));
+  }
+
+  getProfileInfo() {
+    axios
+      .get("/client_api/users/profile_info")
+      .then(response => this.setData(response))
+      .catch(error => console.log(error));
   }
 
   toggleIsEditable(fieldNameEnabled) {
@@ -68,7 +104,7 @@ class MyProfile extends Component {
     } else {
       avatarField = (
         <Avatar
-          imgSource={this.props.avatarThumbPath}
+          imgSource={this.state.avatarThumb}
           enableEdit={() => this.toggleIsEditable(isAvatarEditable)}
         />
       );
@@ -102,7 +138,7 @@ class MyProfile extends Component {
           labelTitle="settings_page.new_email"
           labelValue="New email"
           inputType="email"
-          inputValue={this.props.email}
+          inputValue={this.state.email}
           disableEdit={() => this.toggleIsEditable(isEmailEditable)}
           saveData={newEmail => this.props.changeEmail(newEmail)}
         />
@@ -111,7 +147,7 @@ class MyProfile extends Component {
       emailField = (
         <InputDisabled
           labelTitle="settings_page.new_email"
-          inputValue={this.props.email}
+          inputValue={this.state.email}
           inputType="email"
           enableEdit={() => this.toggleIsEditable(isEmailEditable)}
         />
@@ -124,7 +160,7 @@ class MyProfile extends Component {
           labelTitle="settings_page.initials"
           labelValue="Initials"
           inputType="text"
-          inputValue={this.props.initials}
+          inputValue={this.state.initials}
           disableEdit={() => this.toggleIsEditable(areInitialsEditable)}
           saveData={newName => this.props.changeInitials(newName)}
         />
@@ -133,7 +169,7 @@ class MyProfile extends Component {
       initialsField = (
         <InputDisabled
           labelTitle="settings_page.initials"
-          inputValue={this.props.initials}
+          inputValue={this.state.initials}
           inputType="text"
           enableEdit={() => this.toggleIsEditable(areInitialsEditable)}
         />
@@ -146,7 +182,7 @@ class MyProfile extends Component {
           labelTitle="settings_page.full_name"
           labelValue="Full name"
           inputType="text"
-          inputValue={this.props.fullName}
+          inputValue={this.state.fullName}
           disableEdit={() => this.toggleIsEditable(isFullNameEditable)}
           saveData={newName => this.props.changeFullName(newName)}
         />
@@ -155,7 +191,7 @@ class MyProfile extends Component {
       fullNameField = (
         <InputDisabled
           labelTitle="settings_page.full_name"
-          inputValue={this.props.fullName}
+          inputValue={this.state.fullName}
           inputType="text"
           enableEdit={() => this.toggleIsEditable(isFullNameEditable)}
         />
@@ -181,9 +217,6 @@ class MyProfile extends Component {
 }
 
 MyProfile.propTypes = {
-  fullName: PropTypes.string.isRequired,
-  avatarThumbPath: PropTypes.string.isRequired,
-  initials: PropTypes.string.isRequired,
   email: PropTypes.string.isRequired,
   changeFullName: PropTypes.func.isRequired,
   changeInitials: PropTypes.func.isRequired,

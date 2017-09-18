@@ -5,11 +5,20 @@ import { Nav, NavItem } from "react-bootstrap";
 import { FormattedMessage } from "react-intl";
 import Navigation from "../../../shared/navigation";
 
-import { SETTINGS_ACCOUNT_PROFILE, SETTINGS_TEAMS } from "../../../app/routes";
 import {
   SETTINGS_TEAMS_ROUTE,
   SETTINGS_TEAM_ROUTE
 } from "../../../app/dom_routes";
+
+import {
+  ROOT_PATH,
+  SETTINGS_PATH,
+  SETTINGS_ACCOUNT_PATH,
+  SETTINGS_TEAMS_PATH,
+  SETTINGS_ACCOUNT_PROFILE,
+  SETTINGS_TEAMS,
+  SETTINGS_ACCOUNT_PROFILE_PATH
+} from "../../../app/routes";
 
 import NotFound from "../../../shared/404/NotFound";
 import SettingsAccount from "./account/SettingsAccount";
@@ -55,18 +64,14 @@ export default class MainNav extends Component {
             </LinkContainer>
           </Nav>
           <Switch>
-            <Route exact path="/" component={SettingsAccount} />
+            <Route exact path={ROOT_PATH} component={SettingsAccount} />
             <Route
               exact
-              path="/settings"
-              render={() => <Redirect to="/settings/account/profile" />}
+              path={SETTINGS_PATH}
+              render={() => <Redirect to={SETTINGS_ACCOUNT_PROFILE_PATH} />}
             />
-            <Route path="/settings/account" component={SettingsAccount} />
-            <Route
-              path={SETTINGS_TEAM_ROUTE}
-              component={SettingsTeamPageContainer}
-            />
-            <Route path={SETTINGS_TEAMS_ROUTE} component={SettingsTeams} />
+            <Route path={SETTINGS_ACCOUNT_PATH} component={SettingsAccount} />
+            <Route path={SETTINGS_TEAMS_PATH} component={SettingsTeams} />
             <Route component={NotFound} />
           </Switch>
         </div>
