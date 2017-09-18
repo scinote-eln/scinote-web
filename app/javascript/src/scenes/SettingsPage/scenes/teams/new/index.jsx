@@ -1,10 +1,11 @@
 import React, { Component } from "react";
-import update from "immutability-helper";
-import styled from "styled-components";
-import axios from "../../../../../app/axios";
 import { Breadcrumb, FormGroup, FormControl, ControlLabel, HelpBlock, Button } from "react-bootstrap";
+import { Redirect } from "react-router";
 import { LinkContainer } from "react-router-bootstrap";
 import { FormattedMessage } from "react-intl";
+import update from "immutability-helper";
+import styled from "styled-components";
+import axios from "../../../../../config/axios";
 import { SETTINGS_TEAMS_ROUTE } from "../../../../../config/routes";
 import { TEAMS_NEW_PATH } from "../../../../../config/api_endpoints";
 import {
@@ -31,15 +32,14 @@ class SettingsNewTeam extends Component {
     super(props);
     this.state = {
       team: {
-        name: {
-          value: "",
-          errorMessage: "",
-        },
-        description: {
-          value: "",
-          errorMessage: "",
-        }
-      }
+        name: "",
+        description: "",
+      },
+      errorMessages: {
+        name: "",
+        description: ""
+      },
+      formSuccess: false
     };
 
     this.getValidationState = this.getValidationState.bind(this);
@@ -48,8 +48,27 @@ class SettingsNewTeam extends Component {
     this.onSubmit = this.onSubmit.bind(this);
   }
 
+  onSubmit() {
+    axios({
+      method: "post",
+      url: TEAMS_NEW_PATH,
+      withCredentials: true,
+      data: { team: this.state.team }
+    })
+      .then(response => {
+        // Redirect back to teams page
+        this.newState = { ...this.state };
+        this.newState = update(
+          this.newState,
+          { formSuccess: { $set: true } }
+        );
+        this.setState(this.newState);
+      })
+      .catch(error => this.setState({ errorMessage: error.message })); // TODO: Generic error message
+  }
+
   getValidationState(attr) {
-    if (this.state.team[attr].errorMessage.length > 0) {
+    if (this.state.errorMessages[attr].length > 0) {
       return "error";
     }
     return null;
@@ -68,7 +87,7 @@ class SettingsNewTeam extends Component {
 
       this.newState = update(
         this.newState,
-        { team: { name: { errorMessage: { $set: errorMessage } } } }
+        { errorMessages: { name: { $set: errorMessage } } }
       );
     } else if (key === "description") {
       errorMessage = "";
@@ -79,7 +98,7 @@ class SettingsNewTeam extends Component {
 
       this.newState = update(
         this.newState,
-        { team: { description: { errorMessage: { $set: errorMessage } } } }
+        { errorMessages: { description: { $set: errorMessage } } }
       );
     }
   }
@@ -93,7 +112,7 @@ class SettingsNewTeam extends Component {
     // Update value in the state
     this.newState = update(
       this.newState,
-      { team: { [key]: { value: { $set: value } } } }
+      { team: { [key]: { $set: value } } }
     );
 
     // Validate the input
@@ -103,20 +122,11 @@ class SettingsNewTeam extends Component {
     this.setState(this.newState);
   }
 
-  onSubmit() {
-    axios({
-      method: "post",
-      url: TEAMS_NEW_PATH,
-      withCredentials: true,
-      data: { team: this.state.team }
-    })
-      .then(response => {
-        // TODO: Redirect to team page
-      })
-      .catch(error => this.setState({ errorMessage: error.message }));
-  }
-
   render() {
+    if (this.state.formSuccess) {
+      return <Redirect to={SETTINGS_TEAMS_ROUTE} />;
+    }
+
     return (
       <Wrapper>
         <Breadcrumb>
@@ -140,12 +150,12 @@ class SettingsNewTeam extends Component {
               <FormattedMessage id="settings_page.new_team.name_label" />
             </ControlLabel>
             <NameFormControl
-              value={this.state.team.name.value}
+              value={this.state.team.name}
               onChange={this.handleChange}
               name="name"
             />
             <FormControl.Feedback />
-            <HelpBlock>{this.state.team.name.errorMessage}</HelpBlock>
+            <HelpBlock>{this.state.errorMessages.name}</HelpBlock>
           </FormGroup>
           <small>
             <FormattedMessage id="settings_page.new_team.name_sublabel" />
@@ -162,12 +172,12 @@ class SettingsNewTeam extends Component {
             </ControlLabel>
             <FormControl
               componentClass="textarea"
-              value={this.state.team.description.value}
+              value={this.state.team.description}
               onChange={this.handleChange}
               name="description"
             />
             <FormControl.Feedback />
-            <HelpBlock>{this.state.team.description.errorMessage}</HelpBlock>
+            <HelpBlock>{this.state.errorMessages.description}</HelpBlock>
           </FormGroup>
           <small>
             <FormattedMessage id="settings_page.new_team.description_sublabel" />

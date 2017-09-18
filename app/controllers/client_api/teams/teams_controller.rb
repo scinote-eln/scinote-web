@@ -8,31 +8,42 @@ module ClientApi
                          teams: current_user.teams_data)
       end
 
+      def new; end
+
+      def create
+        teams_service = ClientApi::TeamsService.new(current_user: current_user,
+                                                   params: team_params)
+        teams_service.create_team!
+        success_response('/client_api/teams/index', teams_service.teams_data)
+      rescue ClientApi::CustomTeamError => error
+        error_response(error.to_s)
+      end
+
       def details
-        team_service = ClientApi::TeamsService.new(team_id: params[:team_id],
+        teams_service = ClientApi::TeamsService.new(team_id: params[:team_id],
                                                    current_user: current_user)
         success_response('/client_api/teams/details',
-                         team_service.team_page_details_data)
+                         teams_service.team_page_details_data)
       rescue ClientApi::CustomTeamError
         error_response
       end
 
       def change_team
-        team_service = ClientApi::TeamsService.new(team_id: params[:team_id],
+        teams_service = ClientApi::TeamsService.new(team_id: params[:team_id],
                                                    current_user: current_user)
-        team_service.change_current_team!
-        success_response('/client_api/teams/index', team_service.teams_data)
+        teams_service.change_current_team!
+        success_response('/client_api/teams/index', teams_service.teams_data)
       rescue ClientApi::CustomTeamError
         error_response
       end
 
       def update
-        team_service = ClientApi::TeamsService.new(team_id: params[:team_id],
+        teams_service = ClientApi::TeamsService.new(team_id: params[:team_id],
                                                    current_user: current_user,
                                                    params: team_params)
-        team_service.update_team!
+        teams_service.update_team!
         success_response('/client_api/teams/update_details',
-                         team_service.single_team_details_data)
+                         teams_service.single_team_details_data)
       rescue ClientApi::CustomTeamError => error
         error_response(error.to_s)
       end
@@ -40,7 +51,7 @@ module ClientApi
       private
 
       def team_params
-        params.require(:team).permit(:description, :name)
+        params.require(:team).permit(:name, :description)
       end
 
       def success_response(template, locals)
