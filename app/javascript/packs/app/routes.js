@@ -3,7 +3,7 @@ export const ACTIVITIES_PATH = "/client_api/activities";
 
 // teams
 export const TEAMS_PATH = "/client_api/teams";
-export const TEAMS_NEW_PATH = "/client_api/teams/new";
+export const TEAMS_NEW_PATH = "/client_api/teams";
 export const CHANGE_TEAM_PATH = "/client_api/teams/change_team";
 export const TEAM_DETAILS_PATH = "/client_api/teams/:team_id/details";
 export const TEAM_UPDATE_PATH = "/client_api/teams/update";
