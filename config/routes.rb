@@ -17,9 +17,12 @@ Rails.application.routes.draw do
       get '/activities', to: 'activities#index'
 
       # teams
-      get '/teams', to: 'teams#index'
-      post '/change_team', to: 'teams#change_team'
-
+      get '/teams', to: 'teams/teams#index'
+      namespace :teams do
+        get '/:team_id/details', to: 'teams#details'
+        post '/change_team', to: 'teams#change_team'
+        post '/update', to: 'teams#update'
+      end
       # notifications
       get '/recent_notifications', to: 'notifications#recent_notifications'
 
@@ -27,6 +30,9 @@ Rails.application.routes.draw do
       get '/current_user_info', to: 'users/users#current_user_info'
 
       namespace :users do
+        delete '/remove_user', to: 'user_teams#remove_user'
+        delete '/leave_team', to: 'user_teams#leave_team'
+        put '/update_role', to: 'user_teams#update_role'
         get '/profile_info', to: 'users#profile_info'
         get '/statistics_info', to: 'users#statistics_info'
         get '/preferences_info', to: 'users#preferences_info'

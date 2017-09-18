@@ -215,7 +215,8 @@ class User < ApplicationRecord
          'CASE WHEN teams.id=? THEN true ELSE false END AS current_team, ' \
          'CASE WHEN (SELECT COUNT(*) FROM user_teams WHERE ' \
          'user_teams.team_id=teams.id AND role=2) >= 2 THEN true ELSE false ' \
-         'END AS can_be_leaved FROM teams INNER JOIN user_teams ON ' \
+         'END AS can_be_leaved, user_teams.id AS user_team_id ' \
+         'FROM teams INNER JOIN user_teams ON ' \
          'teams.id=user_teams.team_id WHERE user_teams.user_id=?',
          self.current_team_id, self.id]
       )

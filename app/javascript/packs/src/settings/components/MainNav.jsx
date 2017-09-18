@@ -6,6 +6,11 @@ import { FormattedMessage } from "react-intl";
 import Navigation from "../../../shared/navigation";
 
 import {
+  SETTINGS_TEAMS_ROUTE,
+  SETTINGS_TEAM_ROUTE
+} from "../../../app/dom_routes";
+
+import {
   ROOT_PATH,
   SETTINGS_PATH,
   SETTINGS_ACCOUNT_PATH,
@@ -16,8 +21,9 @@ import {
 } from "../../../app/routes";
 
 import NotFound from "../../../shared/404/NotFound";
-import SettingsAccount from ".././components/account/SettingsAccount";
-import SettingsTeams from ".././components/team/SettingsTeams";
+import SettingsAccount from "./account/SettingsAccount";
+import SettingsTeams from "./teams/SettingsTeams";
+import SettingsTeamPageContainer from "./team/SettingsTeamPageContainer";
 
 export default class MainNav extends Component {
   constructor(props) {
@@ -64,8 +70,11 @@ export default class MainNav extends Component {
               path={SETTINGS_PATH}
               render={() => <Redirect to={SETTINGS_ACCOUNT_PROFILE_PATH} />}
             />
-            <Route path={SETTINGS_ACCOUNT_PATH} component={SettingsAccount} />
-            <Route path={SETTINGS_TEAMS_PATH} component={SettingsTeams} />
+            <Route
+              path={SETTINGS_TEAM_ROUTE}
+              component={SettingsTeamPageContainer}
+            />
+            <Route path={SETTINGS_TEAMS_ROUTE} component={SettingsTeams} />
             <Route component={NotFound} />
           </Switch>
         </div>
