@@ -2,10 +2,11 @@ import React, { Component } from "react";
 import PropTypes, { func, number, string, bool } from "prop-types";
 import { connect } from "react-redux";
 import { Button } from "react-bootstrap";
-import _ from "lodash";
+import { Link } from "react-router-dom";
 import { FormattedMessage } from "react-intl";
-import { leaveTeamModalShow } from "../../../../../shared/actions/LeaveTeamActions";
+import { leaveTeamModalShow } from "../../../../../shared/actions/TeamsActions";
 import DataTable from "../../../../../shared/data_table";
+import { SETTINGS_TEAMS_ROUTE } from "../../../../../app/dom_routes";
 
 class TeamsDataTable extends Component {
   constructor(props) {
@@ -13,18 +14,17 @@ class TeamsDataTable extends Component {
 
     this.leaveTeamModal = this.leaveTeamModal.bind(this);
     this.leaveTeamButton = this.leaveTeamButton.bind(this);
+    this.linkToTeam = this.linkToTeam.bind(this);
   }
 
-  leaveTeamModal(e, id) {
-    const team = _.find(this.props.teams, el => el.id === id);
-    this.props.leaveTeamModalShow(true, id, team.name);
+  leaveTeamModal(e, team) {
+    this.props.leaveTeamModalShow(true, team);
   }
 
-  leaveTeamButton(id) {
-    const team = _.find(this.props.teams, el => el.id === id);
+  leaveTeamButton(id, team) {
     if (team.can_be_leaved) {
       return (
-        <Button onClick={e => this.leaveTeamModal(e, id)}>
+        <Button onClick={e => this.leaveTeamModal(e, team)}>
           <FormattedMessage id="settings_page.leave_team" />
         </Button>
       );
@@ -33,6 +33,14 @@ class TeamsDataTable extends Component {
       <Button disabled>
         <FormattedMessage id="settings_page.leave_team" />
       </Button>
+    );
+  }
+
+  linkToTeam(name, row) {
+    return (
+      <Link to={`${SETTINGS_TEAMS_ROUTE}/${row.id}`}>
+        {name}
+      </Link>
     );
   }
 
@@ -50,6 +58,7 @@ class TeamsDataTable extends Component {
         name: "Name",
         isKey: false,
         textId: "name",
+        dataFormat: this.linkToTeam,
         position: 0,
         dataSort: true
       },
