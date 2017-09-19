@@ -5,8 +5,8 @@ import { LinkContainer } from "react-router-bootstrap";
 import { FormattedMessage } from "react-intl";
 import update from "immutability-helper";
 import styled from "styled-components";
-import axios from "../../../../../config/axios";
 import _ from "lodash";
+import axios from "../../../../../config/axios";
 import {
   SETTINGS_TEAMS_ROUTE,
   SETTINGS_TEAM_ROUTE
