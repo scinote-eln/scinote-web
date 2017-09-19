@@ -421,6 +421,7 @@ Rails.application.routes.draw do
         ##-tule gre tvoje json_import match
         post 'protocolsio_import_create', to: 'protocols#protocolsio_import_create'
         post 'protocolsio_import_save', to: 'protocols#protocolsio_import_save'
+        #get 'testcontroller', to: 'protocols#testcontroller'
         ##
         get 'export', to: 'protocols#export'
       end

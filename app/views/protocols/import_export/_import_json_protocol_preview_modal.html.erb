@@ -1,5 +1,18 @@
-<%= form_for(protocol, :url => "protocols/protocolsio_import_save",method: :post) do |f| %>
-<div id="modal-import-json-protocol-preview" class="modal fade" role="dialog">
+<%= form_for(@protocol, :url => url_for(:controller => 'protocols', :action => 'protocolsio_import_save'),method: :post,format: :json,remote: true) do |f| %>
+  <%#= fields_for :steps do |g| %>
+  <% #json_string= JSON.parse(json_string)%>
+  <% #json_string = JSON.generate(json_string['steps'])
+#json_object['steps'][0]['components'][0]['data']
+#Sanitize, sanitize_input, CGI.escape ,
+  #byebug
+  #kaj dela: .remove("\"") na stringih, sanitize_input ampak pokvari stran
+   %>
+
+  <%= hidden_field_tag :banana, (@json_object['steps'][0]['components'][0]) %>
+
+
+  <%# end %>
+<div id="modal-import-json-protocol-preview" class="modal fade" role="dialog" tabindex="-1">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -18,34 +31,34 @@
         <div class="form-group">
 
           <label><%= t("protocols.import_export.import_modal.name_label") %></label>
-        <!--  <input type="text" class="form-control" id="import_protocol_name" value="<%= json_object['protocol_name'] %>"> -->
-       <%= f.text_field :name, :value => json_object['protocol_name'], class: "form-control"  %>
+
+       <%= f.text_field :name, :value => @json_object['protocol_name'], class: "form-control"  %>
         </div>
         <div class="form-group">
           <label>
             <span class="glyphicon glyphicon-user"></span>&nbsp;<%= t("protocols.import_export.import_modal.authors_label") %>
           </label>
-          <%= f.text_field :authors, :value => json_object['full_name'], class: "form-control"  %>
-        <!--  <input type="text" class="form-control" id="protocol_authors"> -->
+          <%= f.text_field :authors, :value => @json_object['full_name'], class: "form-control"  %>
+
 
         </div>
         <div class="form-group">
           <label><%= t("protocols.import_export.import_modal.description_label") %></label>
-  <!--   <textarea class="form-control" id="import_protocol_description" rows="2"></textarea>  -->
-      <%= f.text_area :description, :value => json_object['description'], class: "form-control"  %>
+
+      <%= f.text_area :description, :value => @json_object['description'], class: "form-control"  %>
         </div>
         <div class="form-group">
           <div class="row">
             <div class="col-xs-4">
               <label><%= t("protocols.import_export.import_modal.created_at_label") %></label>
-          <!--   <input type="text" class="form-control" id="protocol_created_at" disabled>  -->
-          <% display_created_at=Time.at(json_object['created_on'].to_i) %>
+
+          <% display_created_at=Time.at(@json_object['created_on'].to_i) %>
             <%= f.text_field :doesnt_exist, :value => display_created_at.to_s+" (Protocols.io value)", class: "form-control"  %>
             </div>
             <div class="col-xs-4">
               <label><%= t("protocols.import_export.import_modal.updated_at_label") %></label>
-      <!--         <input type="text" class="form-control" id="protocol_updated_at" disabled>  -->
-              <% display_last_modified=Time.at(json_object['last_modified'].to_i) %>
+
+              <% display_last_modified=Time.at(@json_object['last_modified'].to_i) %>
             <%= f.text_field :doesnt_exist, :value => display_last_modified.to_s+" (Protocols.io value)", class: "form-control"  %>
             </div>
           </div>
@@ -63,23 +76,23 @@
           <div class="import-protocols-modal-preview-container-json" data-role="preview-container">
             <table>
 
-              <% if json_object["before_start"]&&json_object["before_start"]!="" %>
+              <% if @json_object["before_start"]&&@json_object["before_start"]!="" %>
 
                 <tr>
                   <td>
                     <h2>Before starting protocol information</h2>
-                    <%= strip_tags(json_object["before_start"].remove("\"")) %>
+                    <%= strip_tags(@json_object["before_start"].remove("\"")) %>
 
                 </td>
               </tr>
 
                 <% end %>
-              <% if json_object["warning"]&&json_object["warning"]!="" %>
+              <% if @json_object["warning"]&&@json_object["warning"]!="" %>
 
                 <tr>
                   <td>
                     <h2>Protocol warning</h2>
-                    <%= strip_tags(json_object["warning"].remove("\"")) %>
+                    <%= strip_tags(@json_object["warning"].remove("\"")) %>
 
                 </td>
               </tr>
@@ -88,12 +101,12 @@
               <% end %>
 
 
-              <% if json_object["guidelines"]&&json_object["guidelines"]!="" %>
+              <% if @json_object["guidelines"]&&@json_object["guidelines"]!="" %>
 
                 <tr>
                   <td>
                     <h2>Guidelines</h2>
-                    <%= strip_tags(json_object["guidelines"].remove("\"")) %>
+                    <%= strip_tags(@json_object["guidelines"].remove("\"")) %>
 
                 </td>
               </tr>
@@ -106,7 +119,7 @@
                   whitelist_simple=["1","6","17"]
                   whitelist_complex=["8","9","15","18","19","20"]%>
 
-            <% json_object["steps"].each do |step| %>
+            <% @json_object["steps"].each do |step| %>
 
                   <tr>
                     <td> <h3>Step <%= (counter+=1).to_s %> </h3><br>
@@ -275,69 +288,69 @@
           <tr><td><br><br><div style="border-bottom-style:solid">
           </div></td></tr>
 
-            <% if json_object["manuscript_citation"]&&json_object["manuscript_citation"]!="" %>
+            <% if @json_object["manuscript_citation"]&&@json_object["manuscript_citation"]!="" %>
 
               <tr>
                 <td>
                   <h4>Manuscript citation</h4>
-                  <%= strip_tags(json_object["manuscript_citation"].remove("\"")) %>
+                  <%= strip_tags(@json_object["manuscript_citation"].remove("\"")) %>
 
               </td>
             </tr>
 
             <% end %>
 
-            <% if json_object["publish_date"]&&json_object["publish_date"]!="" %>
+            <% if @json_object["publish_date"]&&@json_object["publish_date"]!="" %>
 
               <tr>
                 <td>
                   <h4>Publish date</h4>
-                  <%= strip_tags(json_object["publish_date"].remove("\"")) %>
+                  <%= strip_tags(@json_object["publish_date"].remove("\"")) %>
 
               </td>
             </tr>
 
             <% end %>
 
-            <% if json_object["vendor_name"]&&json_object["vendor_name"]!="" %>
+            <% if @json_object["vendor_name"]&&@json_object["vendor_name"]!="" %>
 
               <tr>
                 <td>
                   <h4>Vendor name</h4>
-                  <%= strip_tags(json_object["vendor_name"].remove("\"")) %>
+                  <%= strip_tags(@json_object["vendor_name"].remove("\"")) %>
 
               </td>
             </tr>
 
             <% end %>
-            <% if json_object["vendor_link"]&&json_object["vendor_link"]!="" %>
+            <% if @json_object["vendor_link"]&&@json_object["vendor_link"]!="" %>
 
               <tr>
                 <td>
                   <h4>Vendor link</h4>
-                  <%= strip_tags(json_object["vendor_link"].remove("\"")) %>
+                  <%= strip_tags(@json_object["vendor_link"].remove("\"")) %>
 
               </td>
             </tr>
 
             <% end %>
-            <% if json_object["keywords"]&&json_object["keywords"]!="" %>
+            <% if @json_object["keywords"]&&@json_object["keywords"]!="" %>
 
               <tr>
                 <td>
                   <h4>Keywords</h4>
-                  <%= strip_tags(json_object["keywords"].remove("\"")) %>
+                  <%= strip_tags(@json_object["keywords"].remove("\"")) %>
 
               </td>
             </tr>
 
             <% end %>
-            <% if json_object["tags"]&&json_object["tags"]!="" %>
+            <% if @json_object["tags"]&&@json_object["tags"]!="" %>
 
               <tr>
                 <td>
                   <h4>Tags</h4>
-                  <%  json_object["tags"].each do |tag| %>
+                  <%  @json_object["tags"].each do |tag| %>
                  <%= strip_tags(tag["tag_name"].remove("\""))+" , " %>
                  <% end %>
               </td>
@@ -354,7 +367,11 @@
       <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal"><%= t("general.cancel") %></button>
 
-          <!--  <button type="submit" class="btn btn-primary" data-action="import-current"><%= t("protocols.import_export.import_modal.import") %></button> -->
+
+
+
+
+
             <%= f.submit t("protocols.import_export.import_modal.import"),class: "btn btn-primary" %>
             <% end %>
 

@@ -468,6 +468,7 @@ class ProtocolsController < ApplicationController
   end
 
   def load_from_repository
+
     respond_to do |format|
       if @protocol.can_destroy?
         transaction_error = false
@@ -518,6 +519,7 @@ class ProtocolsController < ApplicationController
 
   def load_from_file
     # This is actually very similar to import
+
     respond_to do |format|
       if @protocol.can_destroy?
         transaction_error = false
@@ -566,7 +568,8 @@ class ProtocolsController < ApplicationController
     end
   end
 
-  def import
+  def import #tega uporabi .eln import
+
     protocol = nil
     respond_to do |format|
       transaction_error = false
@@ -605,7 +608,10 @@ def protocolsio_import_create
 
 
   json_file_contents=File.read(params[:json_file].path)
-  @json_object=JSON.parse(json_file_contents)
+  json_file_contents.gsub! '\"', "'"
+  #byebug
+
+  @json_object=JSON.parse((json_file_contents))
   @protocol=Protocol.new
 
   respond_to do |format|
@@ -615,12 +621,44 @@ def protocolsio_import_create
 
 end
 
+
 def protocolsio_import_save
   #@temp_json=JsonTemp.new
+  byebug
+  protocol = nil
   respond_to do |format|
-    format.html {render protocols}
-    format.js    {render nothing}
+    transaction_error = false
+    @steps_object=JSON.parse(params["steps"]["steps_object"])
+    byebug
+    Protocol.transaction do
+      begin
 
+
+        protocol = import_new_protocol(@protocol_json, @team, @type, current_user)
+      rescue Exception
+        transaction_error = true
+        raise ActiveRecord:: Rollback
+      end
+    end
+
+    p_name =
+      if @protocol_json['name'].present? && !@protocol_json['name'].empty?
+        escape_input(@protocol_json['name'])
+      else
+        t('protocols.index.no_protocol_name')
+      end
+    if transaction_error
+      format.json {
+        render json: { name: p_name, status: :bad_request }, status: :bad_request
+      }
+    else
+      format.json {
+        render json: {
+          name: p_name, new_name: protocol.name, status: :ok
+        },
+        status: :ok
+      }
+    end
   end
 end
 
