@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import ReactRouterPropTypes from "react-router-prop-types";
-import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { Breadcrumb, Row, Col, Glyphicon, Well } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
@@ -10,10 +9,8 @@ import prettysize from "prettysize";
 import axios from "../../../../config/axios";
 
 import { SETTINGS_TEAMS_ROUTE } from "../../../../config/routes";
-import { TEAM_DETAILS_PATH, SETTINGS_TEAMS } from "../../../../config/api_endpoints";
+import { TEAM_DETAILS_PATH } from "../../../../config/api_endpoints";
 import { BORDER_LIGHT_COLOR } from "../../../../config/constants/colors";
-import { SETTINGS_TEAMS_ROUTE } from "../../../../app/dom_routes";
-import { TEAM_DETAILS_PATH } from "../../../../app/routes";
 
 import TeamsMembers from "./components/TeamsMembers";
 import UpdateTeamDescriptionModal from "./components/UpdateTeamDescriptionModal";

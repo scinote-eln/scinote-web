@@ -4,7 +4,7 @@ import PropTypes, { number, string, bool } from "prop-types";
 import styled from "styled-components";
 import { FormattedMessage, FormattedPlural } from "react-intl";
 import { Button, Glyphicon } from "react-bootstrap";
-import { SETTINGS_NEW_TEAM_ROUTE } from "../../../../../app/dom_routes";
+import { SETTINGS_NEW_TEAM_ROUTE } from "../../../../../config/routes";
 
 const Wrapper = styled.div`margin: 15px 0;`;
 const TeamsPageDetails = ({ teams }) => {
