@@ -17,7 +17,8 @@
     }
   },
   "rules": {
-    "import/no-unresolved": [2, {"commonjs": true, "amd": true}],
+    "import/extensions": "off",
+    "import/no-unresolved": "off",
     "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
     "spaced-comment": [
       "error",

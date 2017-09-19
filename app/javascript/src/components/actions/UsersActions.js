@@ -108,7 +108,7 @@ export function changeEmail(email) {
       .then(({ data }) => {
         dispatch(saveEmail(data));
       })
-      .catch(err => console.log(err));app
+      .catch(err => console.log(err));
   };
 }
 
