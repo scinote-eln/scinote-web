@@ -1,6 +1,6 @@
 import React from "react";
 
-export default ({ type_of }) =>
+export default () =>
   <div className="text-center">
     <span className="assignment">
       <i className="fa fa-newspaper-o" />
