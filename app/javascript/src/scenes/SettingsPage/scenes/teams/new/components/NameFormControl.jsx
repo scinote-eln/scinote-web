@@ -15,7 +15,7 @@ const NameFormControl = ({ intl, ...props }) =>
   />;
 
 NameFormControl.propTypes = {
-    intl: intlShape.isRequired
+  intl: intlShape.isRequired
 };
 
 export default injectIntl(NameFormControl);
