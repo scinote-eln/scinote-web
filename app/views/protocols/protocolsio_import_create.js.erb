@@ -1,6 +1,9 @@
 
 $('#modal-import-json-protocol').modal('hide');
-
-$('#protocolsio-preview-modal-target').html("<%= j(render(:partial => 'protocols/import_export/import_json_protocol_preview_modal')) %>")
+<% if remotipart_submitted? %>
+    $('#protocolsio-preview-modal-target').html("<%= j "#{render(:partial => 'protocols/import_export/import_json_protocol_preview_modal')}" %>");
+<% else %>
+    $('#protocolsio-preview-modal-target').html("<%= j render(:partial => 'protocols/import_export/import_json_protocol_preview_modal') %>");
+<% end %>
 
 $('#modal-import-json-protocol-preview').modal('show');

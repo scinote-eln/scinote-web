@@ -8,7 +8,7 @@
   #kaj dela: .remove("\"") na stringih, sanitize_input ampak pokvari stran
    %>
 
-  <%= hidden_field_tag :banana, (@json_object['steps'][0]['components'][0]) %>
+  <%= hidden_field_tag :banana, (@json_object['steps']) %>
 
 
   <%# end %>
