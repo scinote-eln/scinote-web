@@ -10,6 +10,7 @@ import {
 import { FormattedMessage } from "react-intl";
 import axios from "../../../../../config/axios";
 
+import InviteUsersModal from '../../../../../components/InviteUsersModal';
 import RemoveUserModal from "./RemoveUserModal";
 import DataTable from "../../../../../components/data_table";
 import { UPDATE_USER_TEAM_ROLE_PATH } from "../../../../../config/api_endpoints";
@@ -23,8 +24,14 @@ const initalUserToRemove = {
 class TeamsMembers extends Component {
   constructor(params) {
     super(params);
-    this.state = { showModal: false, userToRemove: initalUserToRemove };
+    this.state = {
+      showModal: false,
+      showInviteUsersModal: false,
+      userToRemove: initalUserToRemove
+    };
     this.memberAction = this.memberAction.bind(this);
+    this.showInviteUsersModalCallback = this.showInviteUsersModalCallback.bind(this);
+    this.closeInviteUsersModalCallback = this.closeInviteUsersModalCallback.bind(this);
     this.hideModal = this.hideModal.bind(this);
   }
 
@@ -43,6 +50,14 @@ class TeamsMembers extends Component {
         this.props.updateUsersCallback(response.data.team_users);
       })
       .catch(error => console.log(error));
+  }
+
+  showInviteUsersModalCallback() {
+    this.setState({ showInviteUsersModal: true });
+  }
+
+  closeInviteUsersModalCallback() {
+    this.setState({ showInviteUsersModal: false });
   }
 
   hideModal() {
@@ -169,7 +184,7 @@ class TeamsMembers extends Component {
           <FormattedMessage id="settings_page.single_team.members_panel_title" />
         }
       >
-        <Button>
+        <Button bsStyle='primary' onClick={this.showInviteUsersModalCallback}>
           <Glyphicon glyph="plus" />
           <FormattedMessage id="settings_page.single_team.add_members" />
         </Button>
@@ -180,6 +195,12 @@ class TeamsMembers extends Component {
           hideModal={this.hideModal}
           updateUsersCallback={this.props.updateUsersCallback}
           userToRemove={this.state.userToRemove}
+        />
+        <InviteUsersModal
+          showModal={this.state.showInviteUsersModal}
+          onCloseModal={this.closeInviteUsersModalCallback}
+          team={this.props.team}
+          updateUsersCallback={this.props.updateUsersCallback}
         />
       </Panel>
     );

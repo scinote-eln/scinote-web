@@ -68,6 +68,7 @@
     "react-bootstrap-table": "^4.0.0",
     "react-bootstrap-timezone-picker": "^1.0.11",
     "react-data-grid": "^2.0.2",
+    "react-tagsinput": "^3.17.0",
     "react-dom": "^15.6.1",
     "react-intl": "^2.3.0",
     "react-intl-redux": "^0.6.0",
