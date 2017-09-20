@@ -81,7 +81,7 @@ module ClientApi
         end
       end
 
-      def error_response(args)
+      def error_response(args = {})
         message = args.fetch(:message) { t('client_api.generic_error_message') }
         details = args.fetch(:details) { {} }
         status = args.fetch(:status) { :unprocessable_entity }
