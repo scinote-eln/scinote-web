@@ -625,6 +625,16 @@ end
 def protocolsio_import_save
   #@temp_json=JsonTemp.new
   @json_object=JSON.parse(params["json_object"])
+  @import_object=Hash.new
+  @import_object["name"]=params["protocol"]["name"]
+
+  @import_object["description"]=params["protocol"]["description"]
+  #v description bo treba velik drugih stvari še spravit
+
+  @import_object["authors"]=params["protocol"]["authors"]
+  @import_object["created_at"]=params["protocol"]["created_at"]
+  @import_object["updated_at"]=params["protocol"]["last_modified"]
+  @import_object["steps"]
   byebug
   protocol = nil
   respond_to do |format|

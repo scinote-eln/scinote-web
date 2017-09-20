@@ -3,6 +3,7 @@ module ProtocolsImporter
 
   def import_new_protocol(protocol_json, team, type, user) # .eln import
     remove_empty_inputs(protocol_json)
+    byebug
     protocol = Protocol.new(
       name: protocol_json["name"],
       description: protocol_json["description"],

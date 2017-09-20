@@ -53,13 +53,13 @@
               <label><%= t("protocols.import_export.import_modal.created_at_label") %></label>
 
           <% display_created_at=Time.at(@json_object['created_on'].to_i) %>
-            <%= f.text_field :doesnt_exist, :value => display_created_at.to_s+" (Protocols.io value)", class: "form-control"  %>
+            <%= f.text_field :created_at, :value => display_created_at.to_s+" (Protocols.io value)", class: "form-control"  %>
             </div>
             <div class="col-xs-4">
               <label><%= t("protocols.import_export.import_modal.updated_at_label") %></label>
 
               <% display_last_modified=Time.at(@json_object['last_modified'].to_i) %>
-            <%= f.text_field :doesnt_exist, :value => display_last_modified.to_s+" (Protocols.io value)", class: "form-control"  %>
+            <%= f.text_field :last_modified, :value => display_last_modified.to_s+" (Protocols.io value)", class: "form-control"  %>
             </div>
           </div>
         </div>
@@ -380,3 +380,10 @@
     </div>
   </div>
 </div>
+
+
+<script>
+ $('#modal-import-json-protocol-preview').on('hide.bs.modal',function(){
+   $('#protocols_io_form').trigger("reset");
+ })
+</script>
