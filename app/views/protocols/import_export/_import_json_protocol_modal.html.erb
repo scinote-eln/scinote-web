@@ -22,29 +22,3 @@
     </div>
   </div>
 </div>
-<% if false %>
-<script>
-$(document).ready(function() {
-    $('#protocols_io_form').submit(function() {
-        $("#ajax").after(status);
-        $.ajax({
-            type: 'POST',
-            url: $(this).attr('action'),
-            data: $(this).serialize(),
-            dataType: 'json',
-            success: function(json) {
-                if(json.type == 'success') {
-                    $('#msg').css("color","green").html(json.message);
-                } else if(json.type == 'warning'){
-                    $('#msg').css("color","yellow").html(json.message);
-                } else if(json.type == 'error'){
-                    $('#msg').css("color","red").html(json.message);
-                }
-                $('.loading').remove();
-            }
-        })
-        return false;
-    });
-});
-</script>
-<% end %>

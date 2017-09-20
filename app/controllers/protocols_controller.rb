@@ -609,13 +609,13 @@ def protocolsio_import_create
 
   json_file_contents=File.read(params[:json_file].path)
   json_file_contents.gsub! '\"', "'"
-  
 
-  @json_object=JSON.parse((json_file_contents))
+
+  @json_object=JSON.parse(json_file_contents)
   @protocol=Protocol.new
 
   respond_to do |format|
-    format.html {}
+    #format.html {}
     format.js {}
   end
 
@@ -624,6 +624,7 @@ end
 
 def protocolsio_import_save
   #@temp_json=JsonTemp.new
+  @json_object=JSON.parse(params["json_object"])
   byebug
   protocol = nil
   respond_to do |format|
