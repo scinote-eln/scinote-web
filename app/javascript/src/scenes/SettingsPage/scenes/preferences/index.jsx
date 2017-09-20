@@ -4,23 +4,22 @@ import PropTypes from "prop-types";
 import styled from "styled-components";
 import { FormattedMessage } from "react-intl";
 
-import axios from "../../../../../config/axios";
-import InputDisabled from "../InputDisabled";
-import InputTimezone from "./InputTimezone";
-import { changeTimezone } from "../../../../../components/actions/UsersActions";
-import NotificationsGroup from "./NotificationsGroup";
+import InputDisabled from "../../components/InputDisabled";
+import SettingsAccountWrapper from "../../components/SettingsAccountWrapper";
+import InputTimezone from "./components/InputTimezone";
+import NotificationsGroup from "./components/NotificationsGroup";
 
 import {
   ASSIGNMENT_NOTIFICATION,
   RECENT_NOTIFICATION,
   SYSTEM_NOTIFICATION
-} from "../constants";
+} from "../../../../config/constants/strings";
 
 import {
   MAIN_COLOR_BLUE,
   ICON_GREEN_COLOR,
   BORDER_LIGHT_COLOR
-} from "../../../../../config/constants/colors";
+} from "../../../../config/constants/colors";
 
 const WrapperInputDisabled = styled.div`
   margin: 20px 0;
@@ -80,10 +79,10 @@ class SettingsPreferences extends Component {
   }
 
   getPreferencesInfo() {
-    axios
-      .get("/client_api/users/preferences_info")
-      .then(response => this.setData(response))
-      .catch(error => console.log(error));
+    // axios
+    //   .get("/client_api/users/preferences_info")
+    //   .then(response => this.setData(response))
+    //   .catch(error => console.log(error));
   }
 
   render() {
@@ -118,35 +117,37 @@ class SettingsPreferences extends Component {
     }
 
     return (
-      <div className="col-xs-12 col-sm-9">
-        {timezoneField}
+      <SettingsAccountWrapper>
+        <div className="col-xs-12 col-sm-9">
+          {timezoneField}
 
-        <h3>Notifications</h3>
-        <NotificationsGroup
-          type={ASSIGNMENT_NOTIFICATION}
-          title="settings_page.assignement"
-          subtitle="settings_page.assignement_msg"
-          imgUrl=""
-          iconClasses="fa fa-newspaper-o"
-          iconBackground={MAIN_COLOR_BLUE}
-        />
-        <NotificationsGroup
-          type={RECENT_NOTIFICATION}
-          title="settings_page.recent_changes"
-          subtitle="settings_page.recent_changes_msg"
-          imgUrl={this.props.avatarPath}
-          iconClasses=""
-          iconBackground=""
-        />
-        <NotificationsGroup
-          type={SYSTEM_NOTIFICATION}
-          title="settings_page.system_message"
-          subtitle="settings_page.system_message_msg"
-          imgUrl=""
-          iconClasses="glyphicon glyphicon-tower"
-          iconBackground={ICON_GREEN_COLOR}
-        />
-      </div>
+          <h3>Notifications</h3>
+          <NotificationsGroup
+            type={ASSIGNMENT_NOTIFICATION}
+            title="settings_page.assignement"
+            subtitle="settings_page.assignement_msg"
+            imgUrl=""
+            iconClasses="fa fa-newspaper-o"
+            iconBackground={MAIN_COLOR_BLUE}
+          />
+          <NotificationsGroup
+            type={RECENT_NOTIFICATION}
+            title="settings_page.recent_changes"
+            subtitle="settings_page.recent_changes_msg"
+            imgUrl={this.props.avatarPath}
+            iconClasses=""
+            iconBackground=""
+          />
+          <NotificationsGroup
+            type={SYSTEM_NOTIFICATION}
+            title="settings_page.system_message"
+            subtitle="settings_page.system_message_msg"
+            imgUrl=""
+            iconClasses="glyphicon glyphicon-tower"
+            iconBackground={ICON_GREEN_COLOR}
+          />
+        </div>
+      </SettingsAccountWrapper>
     );
   }
 }
@@ -157,12 +158,5 @@ SettingsPreferences.propTypes = {
 };
 
 const mapStateToProps = state => state.current_user;
-const mapDispatchToProps = dispatch => ({
-  changeTimezone(timezone) {
-    dispatch(changeTimezone(timezone));
-  }
-});
 
-export default connect(mapStateToProps, mapDispatchToProps)(
-  SettingsPreferences
-);
+export default connect(mapStateToProps)(SettingsPreferences);

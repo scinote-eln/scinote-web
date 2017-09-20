@@ -4,10 +4,9 @@ import PropTypes from "prop-types";
 import styled from "styled-components";
 import { FormattedMessage } from "react-intl";
 
-import axios from "../../../../../config/axios";
 import Avatar from "./Avatar";
-import InputDisabled from "../InputDisabled";
-import InputEnabled from "../InputEnabled";
+import InputDisabled from "../../../components/InputDisabled";
+import InputEnabled from "../../../components/InputEnabled";
 
 import {
   changeFullName,
@@ -67,10 +66,10 @@ class MyProfile extends Component {
   }
 
   getProfileInfo() {
-    axios
-      .get("/client_api/users/profile_info")
-      .then(response => this.setData(response))
-      .catch(error => console.log(error));
+    // axios
+    //   .get("/client_api/users/profile_info")
+    //   .then(response => this.setData(response))
+    //   .catch(error => console.log(error));
   }
 
   toggleIsEditable(fieldNameEnabled) {

@@ -4,7 +4,6 @@ import PropTypes from "prop-types";
 import styled from "styled-components";
 import { FormattedMessage } from "react-intl";
 
-import axios from "../../../../../config/axios";
 import MyStatisticsBox from "./MyStatisticsBox";
 
 const Wrapper = styled.div`
@@ -48,10 +47,10 @@ class MyStatistics extends Component {
   }
 
   getStatisticsInfo() {
-    axios
-      .get("/client_api/users/statistics_info")
-      .then(response => this.setData(response))
-      .catch(error => console.log(error));
+    // axios
+    //   .get("/client_api/users/statistics_info")
+    //   .then(response => this.setData(response))
+    //   .catch(error => console.log(error));
   }
 
   render() {

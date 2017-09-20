@@ -4,8 +4,8 @@ import styled from "styled-components";
 import { FormattedMessage } from "react-intl";
 import { FormGroup, FormControl, ControlLabel, Button } from "react-bootstrap";
 
-import { BORDER_LIGHT_COLOR } from "../../../../config/constants/colors";
-import { ENTER_KEY_CODE } from "../../../../config/constants/numeric";
+import { BORDER_LIGHT_COLOR } from "../../../config/constants/colors";
+import { ENTER_KEY_CODE } from "../../../config/constants/numeric";
 
 const StyledInputEnabled = styled.div`
   border: 1px solid ${BORDER_LIGHT_COLOR};
