@@ -3,7 +3,7 @@ module ProtocolsImporter
 
   def import_new_protocol(protocol_json, team, type, user) # .eln import
     remove_empty_inputs(protocol_json)
-    byebug
+
     protocol = Protocol.new(
       name: protocol_json["name"],
       description: protocol_json["description"],
@@ -42,18 +42,12 @@ module ProtocolsImporter
     protocol
   end
 
-  def import_new_protocols_io_json()
 
-
-
-
-  end
   private
 
 
   def populate_protocol(protocol, protocol_json, user, team)
     protocol.reload
-
     asset_ids = []
     step_pos = 0
     # Check if protocol has steps

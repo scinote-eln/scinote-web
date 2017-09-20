@@ -9,9 +9,9 @@
    %>
 
   <%= hidden_field_tag :json_object, JSON.generate(@json_object) %>
+  <%= hidden_field_tag :type, CGI.parse(URI.parse(request.referrer).query).fetch("type") %>
 
-
-  <%# end %>
+  <%# #CGI.parse(URI.parse(request.referrer).query).fetch("type") %>
 <div id="modal-import-json-protocol-preview" class="modal fade" role="dialog" tabindex="-1">
   <div class="modal-dialog">
     <div class="modal-content">

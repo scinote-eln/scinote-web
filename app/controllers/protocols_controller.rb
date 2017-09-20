@@ -66,6 +66,7 @@ class ProtocolsController < ApplicationController
   before_action :check_import_permissions, only: [ :import ]
   before_action :check_export_permissions, only: [ :export ]
 
+
   def index
   end
 
@@ -629,53 +630,224 @@ def protocolsio_import_save
   @import_object["name"]=params["protocol"]["name"]
 
   @import_object["description"]=params["protocol"]["description"]
-  #v description bo treba velik drugih stvari še spravit
+  # will have to fit various things in here (guidelines, manuscript citations etc etc)
 
   @import_object["authors"]=params["protocol"]["authors"]
   @import_object["created_at"]=params["protocol"]["created_at"]
   @import_object["updated_at"]=params["protocol"]["last_modified"]
-  @import_object["steps"]
-  byebug
+  #@import_object["steps"]
+
+
+  @import_object["steps"]=Hash.new
+  counter=0
+  step_pos=-1
+  #these whitelists are there to not let some useless step components true, that always have data set to null (data doesnt get imported over to json)
+  whitelist_simple=["1","6","17"] #(simple to map) id 1= step description, id 6= section (title), id 17= expected result
+  whitelist_complex=["8","9","15","18","19","20"] #(complex mapping with nested hashes) id 8 = software package, id 9 = dataset, id 15 = command, id 18 = attached sub protocol
+  # id 19= safety information ,id 20= regents (materials, like scinote samples kind of)
+  @json_object["steps"].each do |step|
+    #@import_object["steps"][step_pos.to_s]=step
+        step_pos+=1
+        counter+=1
+
+        @import_object["steps"][step_pos.to_s]=Hash.new
+        @import_object["steps"][step_pos.to_s]["position"]=step_pos
+
+
+        step["components"].each do |key,value|
+
+          if counter>1 #here i made an if to distinguish the first step from the others, because the first step
+         #sometimes has weird nesting that requires different handling
+
+
+
+
+       if whitelist_simple.include?(key["component_type_id"])
+
+         case key["component_type_id"]
+         when "1"
+           if !key["data"].nil? && key["data"]!=""
+             @import_object["steps"][step_pos.to_s]["description"]=key["data"]
+            else
+              @import_object["steps"][step_pos.to_s]["description"]="Description missing!"
+            end
+         when "6"
+           if !key["data"].nil? && key["data"]!=""
+          @import_object["steps"][step_pos.to_s]["name"]=key["data"]
+          else
+          @import_object["steps"][step_pos.to_s]["name"]="Protocols.io"
+        end
+         when "17"
+
+        else
+
+
+        end
+
+         elsif key && whitelist_complex.include?(key["component_type_id"])
+         case key["component_type_id"]
+         when "8"
+
+        # "-"+(key["name"])+" : "+(key["source_data"]["name"])
+        #Developer : <%= (key["source_data"]["developer"])
+        #Version : (key["source_data"]["version"])
+        #Link :  (key["source_data"]["link"])
+        # Repository : (key["source_data"]["repository"])
+        #OS name , OS version : (key["source_data"]["os_name"])+" , "+(key["source_data"]["os_version"])
+
+      when "9"
+
+        # "-"+(key["name"])+" : "+(key["source_data"]["name"])
+        # Link :  (key["source_data"]["link"])
+
+         when "15"
+
+        # "-"+(key["name"])+" : "+(key["source_data"]["name"])
+        # Description :  (key["source_data"]["description"])
+        # OS name , OS version :  (key["source_data"]["os_name"])+" , "+(key["source_data"]["os_version"])
+
+         when "18"
+
+        #-This protocol also contains an attached sub-protocol:  (key["source_data"]["protocol_name"])
+        #Author: (key["source_data"]["full_name"])
+
+         if key["source_data"]["link"]&&key["source_data"]["link"]!=""
+        #Link:  (key["source_data"]["link"])
+         end
+         when "19"
+
+        # "-"+(key["name"])+" : "+(key["source_data"]["body"])
+        #Link :  (key["source_data"]["link"])
+
+         when "20"
+
+         else
+
+         end
+
+       end #finished step component loop
+
+     else #it is first step
+
+       unless value
+       value=key #some json files have random empty arrays in beggining of step components
+       end
+
+         if whitelist_simple.include?(value["component_type_id"])
+
+           case value["component_type_id"]
+           when "1"
+             if !value["data"].nil? && value["data"]!=""
+               @import_object["steps"][step_pos.to_s]["description"]=value["data"]
+              else
+                @import_object["steps"][step_pos.to_s]["description"]="Description missing!"
+              end
+           when "6"
+             if !value["data"].nil? && value["data"]!=""
+            @import_object["steps"][step_pos.to_s]["name"]=value["data"]
+            else
+            @import_object["steps"][step_pos.to_s]["name"]="Protocols.io"
+          end
+           when "17"
+
+          else
+
+          end
+
+         elsif value && whitelist_complex.include?(value["component_type_id"])
+         case value["component_type_id"]
+         when "8"
+
+        # "-"+(value["name"])+" : "+(value["source_data"]["name"])
+        # Developer :  (value["source_data"]["developer"])
+        # Version :  (value["source_data"]["version"])
+        # Link :  (value["source_data"]["link"])
+        # Repository :  (value["source_data"]["repository"])
+        # OS name , OS version :  (value["source_data"]["os_name"])+" , "+(value["source_data"]["os_version"])
+
+         when "9"
+
+        # "-"+(value["name"])+" : "+(value["source_data"]["name"])
+        #Link :  (value["source_data"]["link"])
+
+         when "15"
+
+        # "-"+(value["name"])+" : "+(value["source_data"]["name"])
+        # Description :  (value["source_data"]["description"])
+        # OS name , OS version :  (value["source_data"]["os_name"])+" , "+(value["source_data"]["os_version"])
+
+         when "18"
+
+        # -This protocol also contains an attached sub-protocol:  (value["source_data"]["protocol_name"])
+        # Author:  (value["source_data"]["full_name"])
+
+         if value["source_data"]["link"]&&value["source_data"]["link"]!=""
+
+        #Link:  (value["source_data"]["link"])
+         end
+         when "19"
+
+        # "-"+(value["name"])+" : "+(value["source_data"]["body"])
+        # Link :  (value["source_data"]["link"])
+
+         when "20"
+
+         else
+
+          end
+
+        end #if statement to check if its first step or not
+
+      end #finished step component looping, onto next step component
+
+
+    end #finished looping over step components
+
+
+
+  end #steps
+
   protocol = nil
   respond_to do |format|
     transaction_error = false
-    @steps_object=JSON.parse(params["steps"]["steps_object"])
-    byebug
+    #@steps_object=JSON.parse(params["steps"]["steps_object"])
+
     Protocol.transaction do
       begin
+        #byebug
+        protocol = import_new_protocol(@import_object, current_team, params[:type].to_sym, current_user)
 
-
-        protocol = import_new_protocol(@protocol_json, @team, @type, current_user)
       rescue Exception
+
         transaction_error = true
         raise ActiveRecord:: Rollback
       end
     end
 
     p_name =
-      if @protocol_json['name'].present? && !@protocol_json['name'].empty?
-        escape_input(@protocol_json['name'])
+      if @import_object['name'].present? && !@import_object['name'].empty?
+        escape_input(@import_object['name'])
       else
         t('protocols.index.no_protocol_name')
       end
+
     if transaction_error
       format.json {
         render json: { name: p_name, status: :bad_request }, status: :bad_request
       }
+      #:location => root_url
     else
       format.json {
         render json: {
           name: p_name, new_name: protocol.name, status: :ok
-        },
+        },redirect_to: @protocol,
         status: :ok
       }
     end
   end
 end
 
-def protocolsio_temp_params
-  params.require(:json_file)
-end
+
 #
   def export
     # Make a zip output stream and send it to the client

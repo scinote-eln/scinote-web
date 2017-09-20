@@ -54,7 +54,7 @@
           <ul class="dropdown-menu">
             <li>
 
-              <a class="btn-link btn-default-link btn-open-file" <%= can_import_protocols(@current_team) ? 'data-action="import"' : 'disabled="disabled"' %>>
+              <a class="btn-link-alt btn-default-link btn-open-file" <%= can_import_protocols(@current_team) ? 'data-action="import"' : 'disabled="disabled"' %>>
                 <span class="glyphicon glyphicon-file"></span>
                 <span class="hidden-xs"><%= t("protocols.index.import_alt") %></span>
                 <input type="file" value="" accept=".eln" data-role="import-file-input"
