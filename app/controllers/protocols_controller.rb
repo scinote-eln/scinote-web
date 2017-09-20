@@ -835,12 +835,15 @@ def protocolsio_import_save
       format.json {
         render json: { name: p_name, status: :bad_request }, status: :bad_request
       }
+
       #:location => root_url
+        #  protocolsDatatable.ajax.reload();
+        #  $('#modal-import-json-protocol-preview').modal('hide');
     else
       format.json {
         render json: {
           name: p_name, new_name: protocol.name, status: :ok
-        },redirect_to: @protocol,
+        },
         status: :ok
       }
     end

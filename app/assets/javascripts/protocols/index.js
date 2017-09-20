@@ -335,8 +335,10 @@ function initModals() {
     modal.find(".modal-body").html("");
 
     // Simply re-render table
-    protocolsDatatable.ajax.reload();
+
   }
+
+
 
   // Make private modal hidden action
   $("#make-private-results-modal").on("hidden.bs.modal", function(e) {
