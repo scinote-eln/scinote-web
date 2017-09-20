@@ -8,7 +8,7 @@
   #kaj dela: .remove("\"") na stringih, sanitize_input ampak pokvari stran
    %>
 
-  <%= hidden_field_tag :banana, (@json_object['steps']) %>
+  <%= hidden_field_tag :json_object, JSON.generate(@json_object) %>
 
 
   <%# end %>
@@ -81,7 +81,7 @@
                 <tr>
                   <td>
                     <h2>Before starting protocol information</h2>
-                    <%= strip_tags(@json_object["before_start"].remove("\"")) %>
+                    <%= (@json_object["before_start"]) %>
 
                 </td>
               </tr>
@@ -92,7 +92,7 @@
                 <tr>
                   <td>
                     <h2>Protocol warning</h2>
-                    <%= strip_tags(@json_object["warning"].remove("\"")) %>
+                    <%= (@json_object["warning"]) %>
 
                 </td>
               </tr>
@@ -106,7 +106,7 @@
                 <tr>
                   <td>
                     <h2>Guidelines</h2>
-                    <%= strip_tags(@json_object["guidelines"].remove("\"")) %>
+                    <%= (@json_object["guidelines"]) %>
 
                 </td>
               </tr>
@@ -138,7 +138,7 @@
 
                       <% if whitelist_simple.include?(key["component_type_id"]) && key["data"]!="" && key["name"] && key["data"]%>
                       <br>
-                      <%= strip_tags(key["name"].remove("\""))+" : "+ strip_tags(key["data"].remove("\"")) %>
+                      <%= (key["name"])+" : "+ (key["data"]) %>
                       <% #byebug
                       #debug
                       #comp[counter];counter;@json.file_contents["steps"][3]["components"][0]["name"]
@@ -150,47 +150,47 @@
                       <% case key["component_type_id"]%>
                       <% when "8"%>
                       <br>
-                      <%= "-"+strip_tags(key["name"].remove("\""))+" : "+strip_tags(key["source_data"]["name"].remove("\"")) %>
+                      <%= "-"+(key["name"])+" : "+(key["source_data"]["name"]) %>
                       <br>
-                      Developer : <%= strip_tags(key["source_data"]["developer"].remove("\"")) %>
+                      Developer : <%= (key["source_data"]["developer"]) %>
                       <br>
-                      Version : <%= strip_tags(key["source_data"]["version"].remove("\"")) %>
+                      Version : <%= (key["source_data"]["version"]) %>
                       <br>
-                      Link : <%= strip_tags(key["source_data"]["link"].remove("\"")) %>
+                      Link : <%= (key["source_data"]["link"]) %>
                       <br>
-                      Repository : <%= strip_tags(key["source_data"]["repository"].remove("\"")) %>
+                      Repository : <%= (key["source_data"]["repository"]) %>
                       <br>
-                      OS name , OS version : <%= strip_tags(key["source_data"]["os_name"].remove("\""))+" , "+strip_tags(key["source_data"]["os_version"].remove("\"")) %>
+                      OS name , OS version : <%= (key["source_data"]["os_name"])+" , "+(key["source_data"]["os_version"]) %>
 
                       <% when "9"%>
                       <br>
-                      <%= "-"+strip_tags(key["name"].remove("\""))+" : "+strip_tags(key["source_data"]["name"].remove("\"")) %>
+                      <%= "-"+(key["name"])+" : "+(key["source_data"]["name"]) %>
                       <br>
-                      Link : <%= strip_tags(key["source_data"]["link"].remove("\"")) %>
+                      Link : <%= (key["source_data"]["link"]) %>
 
 
                       <% when "15"%>
                       <br>
-                      <%= "-"+strip_tags(key["name"].remove("\""))+" : "+strip_tags(key["source_data"]["name"].remove("\"")) %>
+                      <%= "-"+(key["name"])+" : "+(key["source_data"]["name"]) %>
                       <br>
-                      Description : <%= strip_tags(key["source_data"]["description"].remove("\"")) %>
+                      Description : <%= (key["source_data"]["description"]) %>
                       <br>
-                      OS name , OS version : <%= strip_tags(key["source_data"]["os_name"].remove("\""))+" , "+strip_tags(key["source_data"]["os_version"].remove("\"")) %>
+                      OS name , OS version : <%= (key["source_data"]["os_name"])+" , "+(key["source_data"]["os_version"]) %>
 
                       <% when "18"%>
                       <br>
-                      -This protocol also contains an attached sub-protocol: <%= strip_tags(key["source_data"]["protocol_name"].remove("\"")) %>
+                      -This protocol also contains an attached sub-protocol: <%= (key["source_data"]["protocol_name"]) %>
                       <br>
-                      Author: <%= strip_tags(key["source_data"]["full_name"].remove("\"")) %>
+                      Author: <%= (key["source_data"]["full_name"]) %>
                       <br>
                       <% if key["source_data"]["link"]&&key["source_data"]["link"]!="" %>
-                      Link: <%= strip_tags(key["source_data"]["link"].remove("\"")) %>
+                      Link: <%= (key["source_data"]["link"]) %>
                       <% end %>
                       <% when "19"%>
                       <br>
-                      <%= "-"+strip_tags(key["name"].remove("\""))+" : "+strip_tags(key["source_data"]["body"].remove("\"")) %>
+                      <%= "-"+(key["name"])+" : "+(key["source_data"]["body"]) %>
                       <br>
-                      Link : <%= strip_tags(key["source_data"]["link"].remove("\"")) %>
+                      Link : <%= (key["source_data"]["link"]) %>
 
 
                       <% when "20"%>
@@ -212,7 +212,7 @@
 
                       <% if whitelist_simple.include?(value["component_type_id"])&& value["data"]!="" && value["name"] && value["data"]  %>
                       <br>
-                      <%= strip_tags(value["name"].remove("\""))+" : "+strip_tags(value["data"].remove("\"")) %>
+                      <%= (value["name"])+" : "+(value["data"]) %>
                       <%
                       #debug
                       #comp[counter];counter;@json.file_contents["steps"][3]["components"][0]["name"]
@@ -223,48 +223,48 @@
                       <% case value["component_type_id"]%>
                       <% when "8"%>
                       <br>
-                      <%= "-"+strip_tags(value["name"].remove("\""))+" : "+strip_tags(value["source_data"]["name"].remove("\"")) %>
+                      <%= "-"+(value["name"])+" : "+(value["source_data"]["name"]) %>
                       <br>
-                      Developer : <%= strip_tags(value["source_data"]["developer"].remove("\"")) %>
+                      Developer : <%= (value["source_data"]["developer"]) %>
                       <br>
-                      Version : <%= strip_tags(value["source_data"]["version"].remove("\"")) %>
+                      Version : <%= (value["source_data"]["version"]) %>
                       <br>
-                      Link : <%= strip_tags(value["source_data"]["link"].remove("\"")) %>
+                      Link : <%= (value["source_data"]["link"]) %>
                       <br>
-                      Repository : <%= strip_tags(value["source_data"]["repository"].remove("\"")) %>
+                      Repository : <%= (value["source_data"]["repository"]) %>
                       <br>
-                      OS name , OS version : <%= strip_tags(value["source_data"]["os_name"].remove("\""))+" , "+strip_tags(value["source_data"]["os_version"].remove("\"")) %>
+                      OS name , OS version : <%= (value["source_data"]["os_name"])+" , "+(value["source_data"]["os_version"]) %>
 
                       <% when "9"%>
                       <br>
-                      <%= "-"+strip_tags(value["name"].remove("\""))+" : "+strip_tags(value["source_data"]["name"].remove("\"")) %>
+                      <%= "-"+(value["name"])+" : "+(value["source_data"]["name"]) %>
                       <br>
-                      Link : <%= strip_tags(value["source_data"]["link"].remove("\"")) %>
+                      Link : <%= (value["source_data"]["link"]) %>
 
 
                       <% when "15"%>
                       <br>
-                      <%= "-"+strip_tags(value["name"].remove("\""))+" : "+strip_tags(value["source_data"]["name"].remove("\"")) %>
+                      <%= "-"+(value["name"])+" : "+(value["source_data"]["name"]) %>
                       <br>
-                      Description : <%= strip_tags(value["source_data"]["description"].remove("\"")) %>
+                      Description : <%= (value["source_data"]["description"]) %>
                       <br>
-                      OS name , OS version : <%= strip_tags(value["source_data"]["os_name"].remove("\""))+" , "+strip_tags(value["source_data"]["os_version"].remove("\"")) %>
+                      OS name , OS version : <%= (value["source_data"]["os_name"])+" , "+(value["source_data"]["os_version"]) %>
 
                       <% when "18"%>
                       <br>
-                      -This protocol also contains an attached sub-protocol: <%= strip_tags(value["source_data"]["protocol_name"].remove("\"")) %>
+                      -This protocol also contains an attached sub-protocol: <%= (value["source_data"]["protocol_name"]) %>
                       <br>
-                      Author: <%= strip_tags(value["source_data"]["full_name"].remove("\"")) %>
+                      Author: <%= (value["source_data"]["full_name"]) %>
 
                       <% if value["source_data"]["link"]&&value["source_data"]["link"]!="" %>
                       <br>
-                      Link: <%= strip_tags(value["source_data"]["link"].remove("\"")) %>
+                      Link: <%= (value["source_data"]["link"]) %>
                       <% end %>
                       <% when "19"%>
                       <br>
-                      <%= "-"+strip_tags(value["name"])+" : "+strip_tags(value["source_data"]["body"].remove("\"")) %>
+                      <%= "-"+(value["name"])+" : "+(value["source_data"]["body"]) %>
                       <br>
-                      Link : <%= strip_tags(value["source_data"]["link"].remove("\"")) %>
+                      Link : <%= (value["source_data"]["link"]) %>
 
 
                       <% when "20"%>
@@ -293,7 +293,7 @@
               <tr>
                 <td>
                   <h4>Manuscript citation</h4>
-                  <%= strip_tags(@json_object["manuscript_citation"].remove("\"")) %>
+                  <%= (@json_object["manuscript_citation"]) %>
 
               </td>
             </tr>
@@ -305,7 +305,7 @@
               <tr>
                 <td>
                   <h4>Publish date</h4>
-                  <%= strip_tags(@json_object["publish_date"].remove("\"")) %>
+                  <%= (@json_object["publish_date"]) %>
 
               </td>
             </tr>
@@ -317,7 +317,7 @@
               <tr>
                 <td>
                   <h4>Vendor name</h4>
-                  <%= strip_tags(@json_object["vendor_name"].remove("\"")) %>
+                  <%= (@json_object["vendor_name"]) %>
 
               </td>
             </tr>
@@ -328,7 +328,7 @@
               <tr>
                 <td>
                   <h4>Vendor link</h4>
-                  <%= strip_tags(@json_object["vendor_link"].remove("\"")) %>
+                  <%= (@json_object["vendor_link"]) %>
 
               </td>
             </tr>
@@ -339,7 +339,7 @@
               <tr>
                 <td>
                   <h4>Keywords</h4>
-                  <%= strip_tags(@json_object["keywords"].remove("\"")) %>
+                  <%= (@json_object["keywords"]) %>
 
               </td>
             </tr>
@@ -351,7 +351,7 @@
                 <td>
                   <h4>Tags</h4>
                   <%  @json_object["tags"].each do |tag| %>
-                 <%= strip_tags(tag["tag_name"].remove("\""))+" , " %>
+                 <%= (tag["tag_name"])+" , " %>
                  <% end %>
               </td>
             </tr>

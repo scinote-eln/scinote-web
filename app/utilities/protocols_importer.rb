@@ -41,7 +41,14 @@ module ProtocolsImporter
     protocol
   end
 
+  def import_new_protocols_io_json()
+
+
+
+
+  end
   private
+
 
   def populate_protocol(protocol, protocol_json, user, team)
     protocol.reload

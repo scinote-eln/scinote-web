@@ -609,7 +609,7 @@ def protocolsio_import_create
 
   json_file_contents=File.read(params[:json_file].path)
   json_file_contents.gsub! '\"', "'"
-  #byebug
+  
 
   @json_object=JSON.parse((json_file_contents))
   @protocol=Protocol.new
