@@ -5,7 +5,7 @@ include ClientApi::Teams
 describe ClientApi::Teams::CreateService do
   let(:user) { create :user, email: 'user@asdf.com' }
   let(:team) do
-    build :team, name: 'My Team',  description: 'My Description'
+    build :team, name: 'My Team', description: 'My Description'
   end
 
   it 'should raise a StandardError if current_user is not assigned' do
