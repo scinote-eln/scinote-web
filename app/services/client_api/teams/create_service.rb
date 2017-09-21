@@ -5,13 +5,13 @@ module ClientApi
 
       def execute
         @team = Team.new(@params)
-        @team.created_by = @user
+        @team.created_by = @current_user
 
         if @team.save
           # Okay, team is created, now
           # add the current user as admin
           UserTeam.create(
-            user: @user,
+            user: @current_user,
             team: @team,
             role: 2
           )

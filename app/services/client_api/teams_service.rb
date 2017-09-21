@@ -3,7 +3,6 @@ module ClientApi
     def initialize(arg)
       @params = arg.fetch(:params) { false }
       @user = arg.fetch(:current_user) { raise ClientApi::CustomTeamError }
-
       team_id = arg.fetch(:team_id) { raise ClientApi::CustomTeamError }
       @team = Team.find_by_id(team_id)
       raise ClientApi::CustomTeamError unless @user.teams.include? @team

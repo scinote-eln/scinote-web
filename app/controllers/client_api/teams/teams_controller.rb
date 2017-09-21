@@ -8,8 +8,6 @@ module ClientApi
                          locals: { teams: current_user.teams_data })
       end
 
-      def new; end
-
       def create
         service = ClientApi::Teams::CreateService.new(
           current_user: current_user,

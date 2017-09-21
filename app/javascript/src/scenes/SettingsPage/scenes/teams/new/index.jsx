@@ -31,6 +31,10 @@ const Wrapper = styled.div`
   padding: 16px 15px 50px 15px;
 `;
 
+const MyFormGroupDiv = styled.div`
+  margin-bottom: 15px;
+`;
+
 class SettingsNewTeam extends Component {
   constructor(props) {
     super(props);
@@ -208,19 +212,19 @@ class SettingsNewTeam extends Component {
 
         <form onSubmit={this.onSubmit} style={{ maxWidth: "500px" }}>
 
-          {this.renderTeamNameFormGroup()}
-          <small>
-            <FormattedMessage id="settings_page.new_team.name_sublabel" />
-          </small>
-          <br />
-          <br />
+          <MyFormGroupDiv>
+            {this.renderTeamNameFormGroup()}
+            <small>
+              <FormattedMessage id="settings_page.new_team.name_sublabel" />
+            </small>
+          </MyFormGroupDiv>
 
-          {this.renderTeamDescriptionFormGroup()}
-          <small>
-            <FormattedMessage id="settings_page.new_team.description_sublabel" />
-          </small>
-          <br />
-          <br />
+          <MyFormGroupDiv>
+            {this.renderTeamDescriptionFormGroup()}
+            <small>
+              <FormattedMessage id="settings_page.new_team.description_sublabel" />
+            </small>
+          </MyFormGroupDiv>
 
           <LinkContainer to={SETTINGS_TEAMS_ROUTE}>
             <Button>
