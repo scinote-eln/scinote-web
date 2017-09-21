@@ -39,7 +39,7 @@ export const CHANGE_USER_RECENT_NOTIFICATION_EMAIL_PATH =
   "/client_api/users/change_recent_notification_email";
 export const CHANGE_USER_SYSTEM_MESSAGE_NOTIFICATION_EMAIL_PATH =
   "/client_api/users/change_system_notification_email";
-export const INVITE_USERS_PATH = '/client_api/users/invite_users';
+export const INVITE_USERS_PATH = "/client_api/users/invite_users";
 
 // info dropdown_title
 export const CUSTOMER_SUPPORT_LINK = "http://scinote.net/support";

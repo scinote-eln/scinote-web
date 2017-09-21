@@ -1,25 +1,25 @@
 export default {
-  'en-US': {
+  "en-US": {
     general: {
-      close: 'Close',
-      cancel: 'Cancel',
-      update: 'Update',
-      edit: 'Edit',
-      loading: 'Loading ...'
+      close: "Close",
+      cancel: "Cancel",
+      update: "Update",
+      edit: "Edit",
+      loading: "Loading ..."
     },
     error_messages: {
       text_too_short: "is too short (minimum is {min_length} characters)",
       text_too_long: "is too long (maximum is {max_length} characters)"
     },
     navbar: {
-      page_title: 'sciNote',
-      home_label: 'Home',
-      protocols_label: 'Protocols',
-      repositories_label: 'Repositories',
-      activities_label: 'Activities',
-      search_label: 'Search',
-      notifications_label: 'Notifications',
-      info_label: 'Info'
+      page_title: "sciNote",
+      home_label: "Home",
+      protocols_label: "Protocols",
+      repositories_label: "Repositories",
+      activities_label: "Activities",
+      search_label: "Search",
+      notifications_label: "Notifications",
+      info_label: "Info"
     },
     settings_page: {
       all_teams: "All teams",
@@ -54,8 +54,8 @@ export default {
         "Assignment notifications appear whenever you get assigned to a team, project, task.",
       recent_changes: "Recent changes",
       recent_changes_msg:
-        'Recent changes notifications appear whenever there is a change on a task you are assigned to.',
-      system_message: 'System message',
+        "Recent changes notifications appear whenever there is a change on a task you are assigned to.",
+      system_message: "System message",
       system_message_msg:
         "System message notifications are specifically sent by site maintainers to notify all users about a system update.",
       show_in_scinote: "Show in sciNote",
@@ -64,20 +64,28 @@ export default {
       yes: "Yes",
       leave_team_modal: {
         title: "Leave team {teamName}",
-        subtitle: "Are you sure you wish to leave team My projects? This action is irreversible.",
+        subtitle:
+          "Are you sure you wish to leave team My projects? This action is irreversible.",
         warnings: "Leaving team has following consequences:",
-        warning_message_one: "you will lose access to all content belonging to the team (including projects, tasks, protocols and activities);",
-        warning_message_two: "all projects in the team where you were the sole <b>Owner</b> will receive a new owner from the team administrators;",
-        warning_message_three: "all repository protocols in the team belonging to you will be reassigned onto a new owner from team administrators.",
+        warning_message_one:
+          "you will lose access to all content belonging to the team (including projects, tasks, protocols and activities);",
+        warning_message_two:
+          "all projects in the team where you were the sole <b>Owner</b> will receive a new owner from the team administrators;",
+        warning_message_three:
+          "all repository protocols in the team belonging to you will be reassigned onto a new owner from team administrators.",
         leave_team: "Leave"
       },
       remove_user_modal: {
         title: "Remove user {user} from team {team}",
-        subtitle: "Are you sure you wish to remove user {user} from team {team}?",
+        subtitle:
+          "Are you sure you wish to remove user {user} from team {team}?",
         warnings: "Removing user from team has following consequences:",
-        warning_message_one: "user will lose access to all content belonging to the team (including projects, tasks, protocols and activities);",
-        warning_message_two: "all projects in the team where user was the sole <b>Owner</b> will be reassigned onto you as a new owner;",
-        warning_message_three: "all repository protocols in the team belonging to user will be reassigned onto you.",
+        warning_message_one:
+          "user will lose access to all content belonging to the team (including projects, tasks, protocols and activities);",
+        warning_message_two:
+          "all projects in the team where user was the sole <b>Owner</b> will be reassigned onto you as a new owner;",
+        warning_message_three:
+          "all repository protocols in the team belonging to user will be reassigned onto you.",
         remove_user: "Remove user"
       },
       update_team_description_modal: {
@@ -114,61 +122,65 @@ export default {
       }
     },
     activities: {
-      modal_title: 'Activities',
-      no_data: 'No Data',
-      more_activities: 'More Activities'
+      modal_title: "Activities",
+      no_data: "No Data",
+      more_activities: "More Activities"
     },
     global_team_switch: {
-      new_team: 'New team'
+      new_team: "New team"
     },
     notifications: {
-      dropdown_title: 'Notifications',
-      dropdown_settings_link: 'Settings',
-      dropdown_show_all: 'Show all notifications'
+      dropdown_title: "Notifications",
+      dropdown_settings_link: "Settings",
+      dropdown_show_all: "Show all notifications"
     },
     info_dropdown: {
-      customer_support: 'Customer support',
-      tutorials: 'Tutorials',
-      release_notes: 'Release notes',
-      premium: 'Premium',
-      contact_us: 'Contact us'
+      customer_support: "Customer support",
+      tutorials: "Tutorials",
+      release_notes: "Release notes",
+      premium: "Premium",
+      contact_us: "Contact us"
     },
     user_account_dropdown: {
-      greeting: 'Hi, {name}',
-      settings: 'Settings',
-      log_out: 'Log out'
+      greeting: "Hi, {name}",
+      settings: "Settings",
+      log_out: "Log out"
     },
     invite_users: {
-      modal_title: 'Invite users to team {team}',
-      input_text: 'Invite more people to team {team} and start using sciNote.',
-      input_help: 'Input one or multiple emails, confirm each email with ENTER key.',
+      modal_title: "Invite users to team {team}",
+      input_text: "Invite more people to team {team} and start using sciNote.",
+      input_help:
+        "Input one or multiple emails, confirm each email with ENTER key.",
       dropdown_button: {
-        invite: 'Invite user/s',
-        guest: 'as Guest/s',
-        normal_user: 'as Normal user/s',
-        admin: 'as Administrator/s'
+        invite: "Invite user/s",
+        guest: "as Guest/s",
+        normal_user: "as Normal user/s",
+        admin: "as Administrator/s"
       },
-      results_title: 'Invitation results:',
+      results_title: "Invitation results:",
       roles: {
-        guest: 'Guest',
-        normal_user: 'Normal user',
-        admin: 'Administrator'
+        guest: "Guest",
+        normal_user: "Normal user",
+        admin: "Administrator"
       },
       results_msg: {
-        user_exists: 'User is already a member of sciNote.',
+        user_exists: "User is already a member of sciNote.",
         user_exists_unconfirmed:
-          'User is already a member of sciNote but is not confirmed yet.',
+          "User is already a member of sciNote but is not confirmed yet.",
         user_exists_and_in_team_unconfirmed:
-          'User is already a member of sciNote and team {team} as {role} but is not confirmed yet.',
+          "User is already a member of sciNote and team {team} as {role} but is not confirmed yet.",
         user_exists_invited_to_team_unconfirmed:
-          'User is already a member of sciNote but is not confirmed yet - successfully invited to team {team} as {role}.',
-        user_exists_and_in_team: 'User is already a member of sciNote and team {team} as {role}.',
+          "User is already a member of sciNote but is not confirmed yet - successfully invited to team {team} as {role}.",
+        user_exists_and_in_team:
+          "User is already a member of sciNote and team {team} as {role}.",
         user_exists_invited_to_team:
-          'User was already a member of sciNote - successfully invited to team {team} as {role}.',
-        user_created: 'User succesfully invited to sciNote.',
-        user_created_invited_to_team: 'User successfully invited to sciNote and team {team} as {role}.',
-        user_invalid: 'Invalid email.',
-        too_many_emails: 'Only invited first {nr} emails. To invite more users, fill in another invitation form.'
+          "User was already a member of sciNote - successfully invited to team {team} as {role}.",
+        user_created: "User succesfully invited to sciNote.",
+        user_created_invited_to_team:
+          "User successfully invited to sciNote and team {team} as {role}.",
+        user_invalid: "Invalid email.",
+        too_many_emails:
+          "Only invited first {nr} emails. To invite more users, fill in another invitation form."
       }
     }
   }

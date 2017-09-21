@@ -11,12 +11,14 @@ module ClientApi
 
       raise ClientApi::CustomInvitationsError unless @emails && @team && @role
       @emails && @emails.empty? { raise ClientApi::CustomInvitationsError }
-      @role && !UserTeam.roles.keys.include?(@role) { raise ClientApi::CustomInvitationsError }
+      if @role && !UserTeam.roles.keys.include?(@role)
+        raise ClientApi::CustomInvitationsError
+      end
     end
 
     def invitation
       invite_results = []
-      
+
       @emails.each_with_index do |email, index|
         result = {}
         # Check invite users limit
@@ -33,58 +35,74 @@ module ClientApi
         # Check if user already exists
         user = User.find_by_email(email) if User.exists?(email: email)
 
-        # User does not exist
-        if user.blank?
-          password = generate_user_password
-          # Validate the user data
-          error = !(Constants::BASIC_EMAIL_REGEX === email)
-          error = validate_user(email, email, password).count > 0 unless error
-
-          if !error
-            user = invite_new_user(email)
-
-            result[:status] = :user_created
-            result[:alert] = :success
-            result[:user] = user
-
-            # Invitation to team
-            if @team.present?
-              user_team = create_user_team_relation_and_notification(user)
-              result[:status] = :user_created_invited_to_team
-              result[:user_team] = user_team
-            end
-          else
-            # Return invalid status
-            result[:status] = :user_invalid
-            result[:alert] = :danger
-          end
-        # User exists
-        else
-          result[:status] = :"#{:user_exists}#{:_unconfirmed if !user.confirmed?}"
-          result[:alert] = :info
-          result[:user] = user
-
-          # Invitation to team
-          if @team.present?
-            user_team =
-              UserTeam.where(user: user, team: @team).first if UserTeam.exists?(user: user, team: @team)
-            
-            if user_team.present?
-              result[:status] = :"#{:user_exists_and_in_team}#{:_unconfirmed if !user.confirmed?}"
-
-            else
-              user_team = create_user_team_relation_and_notification(user)
-              result[:status] = :"#{:user_exists_invited_to_team}#{:_unconfirmed if !user.confirmed?}"
-            end
-            result[:user_team] = user_team
-          end
-        end
+        result = if user.blank?
+                   # User does not exist
+                   handle_new_user(result, email, user)
+                 else
+                   # User exists
+                   handle_existing_user(result, user)
+                 end
         invite_results << result
       end
       invite_results
     end
 
     private
+
+    def handle_new_user(result, email, user)
+      password = generate_user_password
+      # Validate the user data
+      error = (Constants::BASIC_EMAIL_REGEX !~ email)
+      error = validate_user(email, email, password).count > 0 unless error
+
+      if !error
+        # Invite new user
+        user = invite_new_user(email)
+
+        result[:status] = :user_created
+        result[:alert] = :success
+        result[:user] = user
+
+        # Invitation to team
+        if @team.present?
+          user_team = create_user_team_relation_and_notification(user)
+          result[:status] = :user_created_invited_to_team
+          result[:user_team] = user_team
+        end
+      else
+        # Return invalid status
+        result[:status] = :user_invalid
+        result[:alert] = :danger
+      end
+      result
+    end
+
+    def handle_existing_user(result, user)
+      result[:status] =
+        :"#{:user_exists}#{:_unconfirmed unless user.confirmed?}"
+      result[:alert] = :info
+      result[:user] = user
+
+      # Invitation to team
+      if @team.present?
+        if UserTeam.exists?(user: user, team: @team)
+          user_team = UserTeam.where(user: user, team: @team).first
+        end
+
+        if user_team.present?
+          result[:status] =
+            :"#{:user_exists_and_in_team}#{:_unconfirmed unless user
+              .confirmed?}"
+        else
+          user_team = create_user_team_relation_and_notification(user)
+          result[:status] =
+            :"#{:user_exists_invited_to_team}#{:_unconfirmed unless user
+              .confirmed?}"
+        end
+        result[:user_team] = user_team
+      end
+      result
+    end
 
     def invite_new_user(email)
       user = User.invite!(
