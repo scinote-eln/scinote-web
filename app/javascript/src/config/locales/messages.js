@@ -21,6 +21,43 @@ export default {
       notifications_label: "Notifications",
       info_label: "Info"
     },
+    invite_users: {
+      modal_title: "Invite users to team {team}",
+      input_text: "Invite more people to team {team} and start using sciNote.",
+      input_help:
+        "Input one or multiple emails, confirm each email with ENTER key.",
+      dropdown_button: {
+        invite: "Invite user/s",
+        guest: "as Guest/s",
+        normal_user: "as Normal user/s",
+        admin: "as Administrator/s"
+      },
+      results_title: "Invitation results:",
+      roles: {
+        guest: "Guest",
+        normal_user: "Normal user",
+        admin: "Administrator"
+      },
+      results_msg: {
+        user_exists: "User is already a member of sciNote.",
+        user_exists_unconfirmed:
+          "User is already a member of sciNote but is not confirmed yet.",
+        user_exists_and_in_team_unconfirmed:
+          "User is already a member of sciNote and team {team} as {role} but is not confirmed yet.",
+        user_exists_invited_to_team_unconfirmed:
+          "User is already a member of sciNote but is not confirmed yet - successfully invited to team {team} as {role}.",
+        user_exists_and_in_team:
+          "User is already a member of sciNote and team {team} as {role}.",
+        user_exists_invited_to_team:
+          "User was already a member of sciNote - successfully invited to team {team} as {role}.",
+        user_created: "User succesfully invited to sciNote.",
+        user_created_invited_to_team:
+          "User successfully invited to sciNote and team {team} as {role}.",
+        user_invalid: "Invalid email.",
+        too_many_emails:
+          "Only invited first {nr} emails. To invite more users, fill in another invitation form."
+      }
+    },
     settings_page: {
       all_teams: "All teams",
       in_team: "You are member of {num} team",
@@ -145,43 +182,6 @@ export default {
       greeting: "Hi, {name}",
       settings: "Settings",
       log_out: "Log out"
-    },
-    invite_users: {
-      modal_title: "Invite users to team {team}",
-      input_text: "Invite more people to team {team} and start using sciNote.",
-      input_help:
-        "Input one or multiple emails, confirm each email with ENTER key.",
-      dropdown_button: {
-        invite: "Invite user/s",
-        guest: "as Guest/s",
-        normal_user: "as Normal user/s",
-        admin: "as Administrator/s"
-      },
-      results_title: "Invitation results:",
-      roles: {
-        guest: "Guest",
-        normal_user: "Normal user",
-        admin: "Administrator"
-      },
-      results_msg: {
-        user_exists: "User is already a member of sciNote.",
-        user_exists_unconfirmed:
-          "User is already a member of sciNote but is not confirmed yet.",
-        user_exists_and_in_team_unconfirmed:
-          "User is already a member of sciNote and team {team} as {role} but is not confirmed yet.",
-        user_exists_invited_to_team_unconfirmed:
-          "User is already a member of sciNote but is not confirmed yet - successfully invited to team {team} as {role}.",
-        user_exists_and_in_team:
-          "User is already a member of sciNote and team {team} as {role}.",
-        user_exists_invited_to_team:
-          "User was already a member of sciNote - successfully invited to team {team} as {role}.",
-        user_created: "User succesfully invited to sciNote.",
-        user_created_invited_to_team:
-          "User successfully invited to sciNote and team {team} as {role}.",
-        user_invalid: "Invalid email.",
-        too_many_emails:
-          "Only invited first {nr} emails. To invite more users, fill in another invitation form."
-      }
     }
   }
 };

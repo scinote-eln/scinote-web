@@ -55,10 +55,15 @@ class InviteUsersModal extends Component {
         team_id: this.props.team.id
       })
       .then(({ data }) => {
-        this.setState({ inviteResults: data });
-        this.setState({ showInviteUsersResults: true });
+        this.setState({ inviteResults: data, showInviteUsersResults: true});
       })
-      .catch(error => {});
+      .catch(error => {
+        console.log("Invite As Error: ", error);
+        if (error.response) {
+          console.log("Error message:", error.response.data);
+          // TO DO: put this error in flash msg
+        }
+      });
   }
 
   render() {

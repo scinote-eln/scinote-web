@@ -34,20 +34,19 @@ module ClientApi
 
         # Check if user already exists
         user = User.find_by_email(email) if User.exists?(email: email)
-
-        result = if user.blank?
-                   # User does not exist
-                   handle_new_user(result, email, user)
-                 else
-                   # User exists
-                   handle_existing_user(result, user)
-                 end
+        # Handle user invitation
+        result = handle_user(result, email, user)
         invite_results << result
       end
       invite_results
     end
 
     private
+
+    def handle_user(result, email, user)
+      return handle_new_user(result, email, user) if user.blank?
+      handle_existing_user(result, user)
+    end
 
     def handle_new_user(result, email, user)
       password = generate_user_password
@@ -151,7 +150,7 @@ module ClientApi
         message: sanitize_input(message)
       )
 
-      if target_user.assignments_notification
+      if target_user.settings[:notifications][:assignments]
         UserNotification.create(notification: notification, user: target_user)
       end
     end
