@@ -1,8 +1,9 @@
 import React, { Component } from "react";
-import PropTypes from "prop-types";
+import { string, func } from "prop-types";
 import styled from "styled-components";
 import { FormattedMessage } from "react-intl";
 import { FormGroup, FormControl, ControlLabel, Button } from "react-bootstrap";
+import { updateUser } from "../../../services/api/users_api";
 
 import { BORDER_LIGHT_COLOR } from "../../../config/constants/colors";
 import { ENTER_KEY_CODE } from "../../../config/constants/numeric";
@@ -30,20 +31,21 @@ class InputEnabled extends Component {
       };
     } else {
       this.state = {
-        value: this.props.inputValue
+        value: this.props.inputValue,
+        errorMessage: ""
       };
     }
 
     this.handleChange = this.handleChange.bind(this);
     this.handleChange2 = this.handleChange2.bind(this);
-    this.handleUpdate = this.handleUpdate.bind(this);
     this.handleKeyPress = this.handleKeyPress.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   handleKeyPress(event) {
     if (event.charCode === ENTER_KEY_CODE) {
       event.preventDefault();
-      this.handleUpdate();
+      this.handleSubmit(event)
     }
   }
 
@@ -57,11 +59,14 @@ class InputEnabled extends Component {
 
   handleSubmit(event) {
     event.preventDefault();
-  }
-
-  handleUpdate() {
-    this.props.saveData(this.state.value);
-    this.props.disableEdit();
+    updateUser({[this.props.dataField]: this.state.value })
+      .then(() => {
+        this.props.reloadInfo();
+        this.props.disableEdit();
+      })
+      .catch(error => {
+        console.log(error);
+      });
   }
 
   confirmationField() {
@@ -84,9 +89,11 @@ class InputEnabled extends Component {
   }
 
   errorMsg() {
-    return this.state.value !== this.state.value2
-      ? <ErrorMsg>Passwords do not match!</ErrorMsg>
-      : "";
+    return this.state.value !== this.state.value2 ? (
+      <ErrorMsg>Passwords do not match!</ErrorMsg>
+    ) : (
+      ""
+    );
   }
 
   inputField() {
@@ -136,14 +143,12 @@ class InputEnabled extends Component {
               <FormattedMessage id={this.props.labelTitle} />
             </h4>
             {this.confirmationField()}
-            <ControlLabel>
-              {this.props.labelValue}
-            </ControlLabel>
+            <ControlLabel>{this.props.labelValue}</ControlLabel>
             {this.inputField()}
             <Button bsStyle="primary" onClick={this.props.disableEdit}>
               <FormattedMessage id="general.cancel" />
             </Button>
-            <Button bsStyle="default" onClick={this.handleUpdate}>
+            <Button bsStyle="default" type="submit">
               <FormattedMessage id="general.update" />
             </Button>
           </FormGroup>
@@ -154,12 +159,13 @@ class InputEnabled extends Component {
 }
 
 InputEnabled.propTypes = {
-  inputType: PropTypes.string.isRequired,
-  labelValue: PropTypes.string.isRequired,
-  inputValue: PropTypes.string.isRequired,
-  disableEdit: PropTypes.func.isRequired,
-  saveData: PropTypes.func.isRequired,
-  labelTitle: PropTypes.string.isRequired
+  inputType: string.isRequired,
+  labelValue: string.isRequired,
+  inputValue: string.isRequired,
+  disableEdit: func.isRequired,
+  reloadInfo: func.isRequired,
+  labelTitle: string.isRequired,
+  dataField: string.isRequired
 };
 
 export default InputEnabled;

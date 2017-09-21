@@ -62,11 +62,12 @@ export default class SettingsPage extends Component {
             <Route
               exact
               path={SETTINGS_PATH}
-              render={() =>
+              render={() => (
                 <Redirect
                   to={SETTINGS_ACCOUNT_PROFILE}
                   component={SettingsPreferences}
-                />}
+                />
+              )}
             />
 
             <Route path={SETTINGS_TEAM_ROUTE} component={SettingsTeam} />
