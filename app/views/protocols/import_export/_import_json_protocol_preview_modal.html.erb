@@ -44,13 +44,13 @@
               <label><%= t("protocols.import_export.import_modal.created_at_label") %></label>
 
           <% display_created_at=Time.at(@json_object['created_on'].to_i) %>
-            <%= f.text_field :created_at, :value => display_created_at.to_s+" (Protocols.io value)", class: "form-control"  %>
+            <%= f.text_field :created_at, :value => display_created_at.to_s+" (Protocols.io value)",readonly: true, class: "form-control"  %>
             </div>
             <div class="col-xs-4">
               <label><%= t("protocols.import_export.import_modal.updated_at_label") %></label>
 
               <% display_last_modified=Time.at(@json_object['last_modified'].to_i) %>
-            <%= f.text_field :last_modified, :value => display_last_modified.to_s+" (Protocols.io value)", class: "form-control"  %>
+            <%= f.text_field :last_modified, :value => display_last_modified.to_s+" (Protocols.io value)",readonly: true, class: "form-control"  %>
             </div>
           </div>
         </div>
@@ -65,26 +65,26 @@
 
 
           <div class="import-protocols-modal-preview-container-json" data-role="preview-container">
-
+            <hr>
 
               <% if @json_object["before_start"]&&@json_object["before_start"]!="" %>
 
-                    <br><strong>Before starting protocol information:</strong><br>
-                    <%= (@json_object["before_start"]) %>
+                    <strong>Before starting protocol information:</strong><br>
+                    <%= (@json_object["before_start"]) %><br>
 
 
                 <% end %>
               <% if @json_object["warning"]&&@json_object["warning"]!="" %>
 
-                    <br><strong>Protocol warning:</strong><br>
-                    <%= (@json_object["warning"]) %>
+                    <strong>Protocol warning:</strong><br>
+                    <%= (@json_object["warning"]) %><br>
 
 
               <% end %>
               <% if @json_object["guidelines"]&&@json_object["guidelines"]!="" %>
 
-                    <br><strong>Guidelines:</strong><br>
-                    <%= (@json_object["guidelines"]) %>
+                    <strong>Guidelines:</strong><br>
+                    <%= (@json_object["guidelines"]) %><br>
 
               <% end %>
 
@@ -150,7 +150,6 @@
                   <% if counter>1 #here i made an if to distinguish the first step from the others, because the first step
                     #sometimes has weird nesting that makes the below outputs not work
                     %>
-                    <% #byebug %>
                     <% if whitelist_simple.include?(key["component_type_id"]) && key["data"]!="" && key["data"] %>
                     <br>
                     <% case key["component_type_id"]%>
@@ -169,15 +168,15 @@
                       <br>
                       <strong><%= key["name"]+": " %></strong>  <%= (key["source_data"]["name"]) %>
                       <br>
-                      Developer : <%= (key["source_data"]["developer"]) %>
+                      Developer: <%= (key["source_data"]["developer"]) %>
                       <br>
-                      Version : <%= (key["source_data"]["version"]) %>
+                      Version: <%= (key["source_data"]["version"]) %>
                       <br>
-                      Link : <%= (key["source_data"]["link"]) %>
+                      Link: <%= (key["source_data"]["link"]) %>
                       <br>
-                      Repository : <%= (key["source_data"]["repository"]) %>
+                      Repository: <%= (key["source_data"]["repository"]) %>
                       <br>
-                      OS name , OS version : <%= (key["source_data"]["os_name"])+" , "+(key["source_data"]["os_version"]) %>
+                      OS name , OS version: <%= (key["source_data"]["os_name"])+" , "+(key["source_data"]["os_version"]) %>
 
                       <% when "9"%>
                       <br>
@@ -190,9 +189,9 @@
                       <br>
                       <strong><%= key["name"]+": " %></strong> <%=  key["source_data"]["name"] %>
                       <br>
-                      Description : <%= (key["source_data"]["description"]) %>
+                      Description: <%= (key["source_data"]["description"]) %>
                       <br>
-                      OS name , OS version : <%= (key["source_data"]["os_name"])+" , "+(key["source_data"]["os_version"]) %>
+                      OS name , OS version: <%= (key["source_data"]["os_name"])+" , "+(key["source_data"]["os_version"]) %>
 
                       <% when "18"%>
                       <br>
@@ -207,7 +206,7 @@
                       <br>
                       <strong><%= key["name"]+": " %></strong>  <%= key["source_data"]["body"] %>
                       <br>
-                      Link : <%= (key["source_data"]["link"]) %>
+                      Link: <%= (key["source_data"]["link"]) %>
 
 
                       <% when "20"%>
@@ -354,7 +353,7 @@
                  <% end %>
 
             <% end %>
-
+            <hr>
           </div>
 
 
