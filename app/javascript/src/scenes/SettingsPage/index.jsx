@@ -8,7 +8,8 @@ import {
   ROOT_PATH,
   SETTINGS_TEAMS_ROUTE,
   SETTINGS_TEAM_ROUTE,
-  SETTINGS_ACCOUNT_PROFILE
+  SETTINGS_ACCOUNT_PROFILE,
+  SETTINGS_NEW_TEAM_ROUTE
 } from "../../config/routes";
 
 import {
@@ -21,6 +22,7 @@ import NotFound from "../../components/404/NotFound";
 import SettingsAccount from "./scenes/account/SettingsAccount";
 import SettingsTeams from "./scenes/teams";
 import SettingsTeam from "./scenes/team";
+import SettingsNewTeam from "./scenes/teams/new";
 
 export default class SettingsPage extends Component {
   constructor(props) {
@@ -70,6 +72,7 @@ export default class SettingsPage extends Component {
                   component={SettingsAccount}
                 />}
             />
+            <Route path={SETTINGS_NEW_TEAM_ROUTE} component={SettingsNewTeam} />
             <Route path={SETTINGS_TEAM_ROUTE} component={SettingsTeam} />
             <Route path={SETTINGS_TEAMS_ROUTE} component={SettingsTeams} />
             <Route

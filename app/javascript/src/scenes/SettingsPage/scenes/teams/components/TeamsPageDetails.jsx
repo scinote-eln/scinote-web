@@ -1,8 +1,10 @@
 import React from "react";
+import { LinkContainer } from "react-router-bootstrap";
 import PropTypes, { number, string, bool } from "prop-types";
 import styled from "styled-components";
 import { FormattedMessage, FormattedPlural } from "react-intl";
 import { Button, Glyphicon } from "react-bootstrap";
+import { SETTINGS_NEW_TEAM_ROUTE } from "../../../../../config/routes";
 
 const Wrapper = styled.div`margin: 15px 0;`;
 const TeamsPageDetails = ({ teams }) => {
@@ -28,13 +30,11 @@ const TeamsPageDetails = ({ teams }) => {
           />
         }
       />&nbsp;
-      <Button
-        onClick={() => {
-          window.location = "/users/settings/teams/new";
-        }}
-      >
-        <Glyphicon glyph="plus" />&nbsp;<FormattedMessage id="global_team_switch.new_team" />
-      </Button>
+      <LinkContainer to={SETTINGS_NEW_TEAM_ROUTE}>
+        <Button>
+          <Glyphicon glyph="plus" />&nbsp;<FormattedMessage id="global_team_switch.new_team" />
+        </Button>
+      </LinkContainer>
     </Wrapper>
   );
 };

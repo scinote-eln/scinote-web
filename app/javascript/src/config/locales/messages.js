@@ -8,6 +8,7 @@ export default {
       loading: "Loading ..."
     },
     error_messages: {
+      text_too_short: "is too short (minimum is {min_length} characters)",
       text_too_long: "is too long (maximum is {max_length} characters)"
     },
     navbar: {
@@ -101,6 +102,15 @@ export default {
           administrator: "Administrator",
           remove_user: "Remove"
         }
+      },
+      new_team: {
+        title: "New team",
+        name_label: "Team name",
+        name_placeholder: "My team",
+        name_sublabel: "Pick a name that would best describe your team (e.g. 'University of ..., Department of ...').",
+        description_label: "Description",
+        description_sublabel: "Describe your team.",
+        create: "Create team"
       }
     },
     activities: {
