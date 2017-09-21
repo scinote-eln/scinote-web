@@ -1,17 +1,8 @@
 <%= form_for(@protocol, :url => url_for(:controller => 'protocols', :action => 'protocolsio_import_save'),method: :post,format: :javascript,remote: true,:html => { :id => "protocolsio-import-form" }) do |f| %>
-  <%#= fields_for :steps do |g| %>
-  <% #json_string= JSON.parse(json_string)%>
-  <% #json_string = JSON.generate(json_string['steps'])
-#json_object['steps'][0]['components'][0]['data']
-#Sanitize, sanitize_input, CGI.escape ,
-  #byebug
-  #kaj dela: .remove("\"") na stringih, sanitize_input ampak pokvari stran
-   %>
 
   <%= hidden_field_tag :json_object, JSON.generate(@json_object) %>
   <%= hidden_field_tag :type, CGI.parse(URI.parse(request.referrer).query).fetch("type") %>
 
-  <%# #CGI.parse(URI.parse(request.referrer).query).fetch("type") %>
 <div id="modal-import-json-protocol-preview" class="modal fade" role="dialog" tabindex="-1">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -77,18 +68,15 @@
             <table>
 
               <% if @json_object["before_start"]&&@json_object["before_start"]!="" %>
-
                 <tr>
                   <td>
                     <h2>Before starting protocol information</h2>
                     <%= (@json_object["before_start"]) %>
-
-                </td>
-              </tr>
+                  </td>
+               </tr>
 
                 <% end %>
               <% if @json_object["warning"]&&@json_object["warning"]!="" %>
-
                 <tr>
                   <td>
                     <h2>Protocol warning</h2>
@@ -96,57 +84,37 @@
 
                 </td>
               </tr>
-
-
               <% end %>
-
-
               <% if @json_object["guidelines"]&&@json_object["guidelines"]!="" %>
-
                 <tr>
                   <td>
                     <h2>Guidelines</h2>
                     <%= (@json_object["guidelines"]) %>
-
                 </td>
               </tr>
-
               <% end %>
               <tr><td><br><br><div style="border-bottom-style:solid">
               </div></td></tr>
-
-                  <% counter=0
-                  whitelist_simple=["1","6","17"]
-                  whitelist_complex=["8","9","15","18","19","20"]%>
-
+                <%  counter=0 %>
+                <%  whitelist_simple=["1","6","17"] %>
+                <%  whitelist_complex=["8","9","15","18","19","20"]%>
             <% @json_object["steps"].each do |step| %>
-
                   <tr>
                     <td> <h3>Step <%= (counter+=1).to_s %> </h3><br>
                        Step guid (Protocols.io) :<%= step["guid"] %>
-                      <% #byebug %>
-                      <% if counter>1 %>
+                      <% if counter>1  #only steps after the first one have previous step guid field valid%>
                       <br>Guid of previous step (Protocols.io) :<%= step["previous_guid"] %>
-                       <% end  #counter, prvi step nima previous guid%>
+                       <% end %>
               <% step["components"].each do |key,value|  %>
-                      <% #byebug %>
 
                   <% if counter>1 #here i made an if to distinguish the first step from the others, because the first step
                     #sometimes has weird nesting that makes the below outputs not work
                       %>
-                     <% #if false %>
-
-                      <% if whitelist_simple.include?(key["component_type_id"]) && key["data"]!="" && key["name"] && key["data"]%>
+                    <% if whitelist_simple.include?(key["component_type_id"]) && key["data"]!="" && key["name"] && key["data"]%>
                       <br>
                       <%= (key["name"])+" : "+ (key["data"]) %>
-                      <% #byebug
-                      #debug
-                      #comp[counter];counter;@json.file_contents["steps"][3]["components"][0]["name"]
-                      #@json.file_contents["steps"][0]["components"]
-                      %>
 
-                      <% #end %>
-                      <% elsif key && whitelist_complex.include?(key["component_type_id"]) %>
+                    <% elsif key && whitelist_complex.include?(key["component_type_id"]) %>
                       <% case key["component_type_id"]%>
                       <% when "8"%>
                       <br>
@@ -201,7 +169,7 @@
 
 
 
-                      <% end #notranji if št 1%>
+                    <% end #notranji if št 1%>
 
 
                   <% else #če ni prvi korak %>
@@ -210,7 +178,7 @@
                     <% value=key #json format ima random arraye namest hashov, ta problem je opisan pri if counter > 1 stavku %>
                     <% end %>
 
-                      <% if whitelist_simple.include?(value["component_type_id"])&& value["data"]!="" && value["name"] && value["data"]  %>
+                    <% if whitelist_simple.include?(value["component_type_id"])&& value["data"]!="" && value["name"] && value["data"]  %>
                       <br>
                       <%= (value["name"])+" : "+(value["data"]) %>
                       <%
@@ -219,7 +187,7 @@
                       #@json.file_contents["steps"][0]["components"]
                       %>
 
-                      <% elsif value && whitelist_complex.include?(value["component_type_id"]) %>
+                    <% elsif value && whitelist_complex.include?(value["component_type_id"]) %>
                       <% case value["component_type_id"]%>
                       <% when "8"%>
                       <br>
@@ -273,80 +241,55 @@
 
                       <% end %>
 
-                      <% end #notranji if št 2%>
-
-                  <% end #zunanji if %>
-
-
-              <% end #komponente koraka %>
-
+                    <% end #inner whitelist if%>
+                  <% end #first step if %>
+              <% end #step component loop %>
                     </td>
-
                   </tr>
-
-            <% end  #posamezni koraki%>
+            <% end  #step loop%>
           <tr><td><br><br><div style="border-bottom-style:solid">
           </div></td></tr>
-
             <% if @json_object["manuscript_citation"]&&@json_object["manuscript_citation"]!="" %>
-
               <tr>
                 <td>
                   <h4>Manuscript citation</h4>
                   <%= (@json_object["manuscript_citation"]) %>
-
               </td>
             </tr>
-
             <% end %>
-
             <% if @json_object["publish_date"]&&@json_object["publish_date"]!="" %>
-
               <tr>
                 <td>
                   <h4>Publish date</h4>
                   <%= (@json_object["publish_date"]) %>
-
               </td>
             </tr>
-
             <% end %>
-
             <% if @json_object["vendor_name"]&&@json_object["vendor_name"]!="" %>
-
               <tr>
                 <td>
                   <h4>Vendor name</h4>
                   <%= (@json_object["vendor_name"]) %>
-
               </td>
             </tr>
-
             <% end %>
             <% if @json_object["vendor_link"]&&@json_object["vendor_link"]!="" %>
-
               <tr>
                 <td>
                   <h4>Vendor link</h4>
                   <%= (@json_object["vendor_link"]) %>
-
               </td>
             </tr>
-
             <% end %>
             <% if @json_object["keywords"]&&@json_object["keywords"]!="" %>
-
               <tr>
                 <td>
                   <h4>Keywords</h4>
                   <%= (@json_object["keywords"]) %>
-
               </td>
             </tr>
-
             <% end %>
             <% if @json_object["tags"]&&@json_object["tags"]!="" %>
-
               <tr>
                 <td>
                   <h4>Tags</h4>
@@ -355,11 +298,8 @@
                  <% end %>
               </td>
             </tr>
-
             <% end %>
 </table>
-
-
           </div>
         </div>
 
@@ -367,14 +307,8 @@
       <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal"><%= t("general.cancel") %></button>
 
-
-
-
-
-
             <%= f.submit t("protocols.import_export.import_modal.import"),class: "btn btn-primary" %>
             <% end %>
-
 
       </div>
     </div>
