@@ -7,7 +7,9 @@ describe ClientApi::Teams::TeamsController, type: :controller do
     @user_one = User.first
     @user_two = FactoryGirl.create :user, email: 'sec_user@asdf.com'
     @team_one = FactoryGirl.create :team, created_by: @user_one
-    @team_two = FactoryGirl.create :team, name: 'Team two', created_by: @user_two
+    @team_two = FactoryGirl.create :team,
+                                   name: 'Team two',
+                                   created_by: @user_two
     FactoryGirl.create :user_team, team: @team_one, user: @user_one, role: 2
   end
 
@@ -33,7 +35,7 @@ describe ClientApi::Teams::TeamsController, type: :controller do
     it 'should return HTTP unprocessable_entity response if name too short' do
       @team_one.update_attribute(
         :name,
-        "#{'a' * (Constants::NAME_MIN_LENGTH - 1)}"
+        ('a' * (Constants::NAME_MIN_LENGTH - 1)).to_s
       )
       post :create, params: { team: @team_one }, as: :json
       expect(response).to have_http_status(:unprocessable_entity)
@@ -42,7 +44,7 @@ describe ClientApi::Teams::TeamsController, type: :controller do
     it 'should return HTTP unprocessable_entity response if name too long' do
       @team_one.update_attribute(
         :name,
-        "#{'a' * (Constants::NAME_MAX_LENGTH + 1)}"
+        ('a' * (Constants::NAME_MAX_LENGTH + 1)).to_s
       )
       post :create, params: { team: @team_one }, as: :json
       expect(response).to have_http_status(:unprocessable_entity)
@@ -51,7 +53,7 @@ describe ClientApi::Teams::TeamsController, type: :controller do
     it 'should return HTTP unprocessable_entity response if description too long' do
       @team_one.update_attribute(
         :description,
-        "#{'a' * (Constants::TEXT_MAX_LENGTH + 1)}"
+        ('a' * (Constants::TEXT_MAX_LENGTH + 1)).to_s
       )
       post :create, params: { team: @team_one }, as: :json
       expect(response).to have_http_status(:unprocessable_entity)
