@@ -10,6 +10,7 @@ import {
   SETTINGS_TEAM_ROUTE,
   SETTINGS_ACCOUNT_PROFILE,
   SETTINGS_ACCOUNT_PREFERENCES
+  SETTINGS_NEW_TEAM_ROUTE
 } from "../../config/routes";
 
 import { SETTINGS_PATH, SETTINGS_TEAMS } from "../../config/api_endpoints";
@@ -19,6 +20,7 @@ import SettingsProfile from "./scenes/profile";
 import SettingsPreferences from "./scenes/preferences";
 import SettingsTeams from "./scenes/teams";
 import SettingsTeam from "./scenes/team";
+import SettingsNewTeam from "./scenes/teams/new";
 
 export default class SettingsPage extends Component {
   constructor(props) {
@@ -69,7 +71,7 @@ export default class SettingsPage extends Component {
                 />
               )}
             />
-
+            <Route path={SETTINGS_NEW_TEAM_ROUTE} component={SettingsNewTeam} />
             <Route path={SETTINGS_TEAM_ROUTE} component={SettingsTeam} />
             <Route path={SETTINGS_TEAMS_ROUTE} component={SettingsTeams} />
             <Route
@@ -87,5 +89,3 @@ export default class SettingsPage extends Component {
     );
   }
 }
-
-<Switch />;

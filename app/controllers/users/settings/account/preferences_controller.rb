@@ -77,15 +77,15 @@ module Users
         end
 
         def notifications_settings
-          @user.assignments_notification =
+          @user.settings[:notifications][:assignments] =
             params[:assignments_notification] ? true : false
-          @user.recent_notification =
+          @user.settings[:notifications][:recent] =
             params[:recent_notification] ? true : false
-          @user.recent_notification_email =
+          @user.settings[:notifications][:recent_email] =
             params[:recent_notification_email] ? true : false
-          @user.assignments_notification_email =
+          @user.settings[:notifications][:assignments_email] =
             params[:assignments_notification_email] ? true : false
-          @user.system_message_notification_email =
+          @user.settings[:notifications][:system_message_email] =
             params[:system_message_notification_email] ? true : false
 
           if @user.save

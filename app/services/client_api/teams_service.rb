@@ -1,10 +1,10 @@
 module ClientApi
   class TeamsService
     def initialize(arg)
-      team_id = arg.fetch(:team_id) { raise ClientApi::CustomTeamError }
       @params = arg.fetch(:params) { false }
-      @team = Team.find_by_id(team_id)
       @user = arg.fetch(:current_user) { raise ClientApi::CustomTeamError }
+      team_id = arg.fetch(:team_id) { raise ClientApi::CustomTeamError }
+      @team = Team.find_by_id(team_id)
       raise ClientApi::CustomTeamError unless @user.teams.include? @team
     end
 
@@ -34,5 +34,6 @@ module ClientApi
       { teams: @user.teams_data }
     end
   end
+
   CustomTeamError = Class.new(StandardError)
 end

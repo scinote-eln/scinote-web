@@ -40,17 +40,17 @@ class UserNotification < ApplicationRecord
       send_email_notification(
         user,
         notification
-      ) if user.system_message_notification_email
+      ) if user.settings[:notifications][:system_message_email]
     when 'assignment'
       send_email_notification(
         user,
         notification
-      ) if user.assignments_notification_email
+      ) if user.settings[:notifications][:assignments_email]
     when 'recent_changes'
       send_email_notification(
         user,
         notification
-      ) if user.recent_notification_email
+      ) if user.settings[:notifications][:recent_email]
     when 'deliver'
       send_email_notification(
         user,
