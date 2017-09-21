@@ -652,16 +652,11 @@ def protocolsio_import_save
 
         @import_object["steps"][step_pos.to_s]=Hash.new
         @import_object["steps"][step_pos.to_s]["position"]=step_pos
-
-
+        
         step["components"].each do |key,value|
 
           if counter>1 #here i made an if to distinguish the first step from the others, because the first step
          #sometimes has weird nesting that requires different handling
-
-
-
-
        if whitelist_simple.include?(key["component_type_id"])
 
          case key["component_type_id"]
@@ -681,50 +676,28 @@ def protocolsio_import_save
 
         else
 
-
         end
 
-         elsif key && whitelist_complex.include?(key["component_type_id"])
-         case key["component_type_id"]
-         when "8"
+      elsif key && whitelist_complex.include?(key["component_type_id"])
+        case key["component_type_id"]
+        when "8"
 
-        # "-"+(key["name"])+" : "+(key["source_data"]["name"])
-        #Developer : <%= (key["source_data"]["developer"])
-        #Version : (key["source_data"]["version"])
-        #Link :  (key["source_data"]["link"])
-        # Repository : (key["source_data"]["repository"])
-        #OS name , OS version : (key["source_data"]["os_name"])+" , "+(key["source_data"]["os_version"])
-
-      when "9"
-
-        # "-"+(key["name"])+" : "+(key["source_data"]["name"])
-        # Link :  (key["source_data"]["link"])
+        when "9"
 
          when "15"
 
-        # "-"+(key["name"])+" : "+(key["source_data"]["name"])
-        # Description :  (key["source_data"]["description"])
-        # OS name , OS version :  (key["source_data"]["os_name"])+" , "+(key["source_data"]["os_version"])
-
          when "18"
 
-        #-This protocol also contains an attached sub-protocol:  (key["source_data"]["protocol_name"])
-        #Author: (key["source_data"]["full_name"])
-
          if key["source_data"]["link"]&&key["source_data"]["link"]!=""
-        #Link:  (key["source_data"]["link"])
+
          end
          when "19"
-
-        # "-"+(key["name"])+" : "+(key["source_data"]["body"])
-        #Link :  (key["source_data"]["link"])
 
          when "20"
 
          else
 
          end
-
        end #finished step component loop
 
      else #it is first step
@@ -755,56 +728,29 @@ def protocolsio_import_save
           end
 
          elsif value && whitelist_complex.include?(value["component_type_id"])
+
          case value["component_type_id"]
          when "8"
 
-        # "-"+(value["name"])+" : "+(value["source_data"]["name"])
-        # Developer :  (value["source_data"]["developer"])
-        # Version :  (value["source_data"]["version"])
-        # Link :  (value["source_data"]["link"])
-        # Repository :  (value["source_data"]["repository"])
-        # OS name , OS version :  (value["source_data"]["os_name"])+" , "+(value["source_data"]["os_version"])
-
          when "9"
-
-        # "-"+(value["name"])+" : "+(value["source_data"]["name"])
-        #Link :  (value["source_data"]["link"])
 
          when "15"
 
-        # "-"+(value["name"])+" : "+(value["source_data"]["name"])
-        # Description :  (value["source_data"]["description"])
-        # OS name , OS version :  (value["source_data"]["os_name"])+" , "+(value["source_data"]["os_version"])
-
          when "18"
-
-        # -This protocol also contains an attached sub-protocol:  (value["source_data"]["protocol_name"])
-        # Author:  (value["source_data"]["full_name"])
 
          if value["source_data"]["link"]&&value["source_data"]["link"]!=""
 
-        #Link:  (value["source_data"]["link"])
          end
          when "19"
-
-        # "-"+(value["name"])+" : "+(value["source_data"]["body"])
-        # Link :  (value["source_data"]["link"])
 
          when "20"
 
          else
 
           end
-
         end #if statement to check if its first step or not
-
       end #finished step component looping, onto next step component
-
-
     end #finished looping over step components
-
-
-
   end #steps
 
   protocol = nil
@@ -832,9 +778,11 @@ def protocolsio_import_save
       end
 
     if transaction_error
+
       format.json {
         render json: { name: p_name, status: :bad_request }, status: :bad_request
       }
+      format.js{}
 
       #:location => root_url
         #  protocolsDatatable.ajax.reload();
@@ -846,6 +794,7 @@ def protocolsio_import_save
         },
         status: :ok
       }
+      format.js{}
     end
   end
 end
