@@ -118,9 +118,9 @@ class Activity < ApplicationRecord
 
     project.users.each do |project_user|
       next if project_user == user
-      next if !project_user.assignments_notification &&
+      next if !project_user.settings[:notifications][:assignments] &&
               notification.type_of == 'assignment'
-      next if !project_user.recent_notification &&
+      next if !project_user.settings[:notifications][:recent] &&
               notification.type_of == 'recent_changes'
       UserNotification.create(notification: notification, user: project_user)
     end

@@ -28,7 +28,6 @@ describe User, type: :model do
     it { should have_db_column :confirmed_at }
     it { should have_db_column :confirmation_sent_at }
     it { should have_db_column :unconfirmed_email }
-    it { should have_db_column :time_zone }
     it { should have_db_column :invitation_token }
     it { should have_db_column :invitation_created_at }
     it { should have_db_column :invitation_sent_at }
@@ -38,12 +37,8 @@ describe User, type: :model do
     it { should have_db_column :invited_by_type }
     it { should have_db_column :invitations_count }
     it { should have_db_column :tutorial_status }
-    it { should have_db_column :assignments_notification }
-    it { should have_db_column :recent_notification }
-    it { should have_db_column :assignments_notification_email }
-    it { should have_db_column :recent_notification_email }
+    it { should have_db_column :settings }
     it { should have_db_column :current_team_id }
-    it { should have_db_column :system_message_notification_email }
     it { should have_db_column :authentication_token }
   end
 
@@ -115,7 +110,7 @@ describe User, type: :model do
     it { should validate_presence_of :full_name }
     it { should validate_presence_of :initials  }
     it { should validate_presence_of :email }
-    it { should validate_presence_of :time_zone }
+    it { should validate_presence_of :settings }
 
     it do
       should validate_length_of(:full_name).is_at_most(

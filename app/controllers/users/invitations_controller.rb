@@ -180,7 +180,7 @@ module Users
         message: sanitize_input(message)
       )
 
-      if target_user.assignments_notification
+      if target_user.settings[:notifications][:assignments]
         UserNotification.create(notification: notification, user: target_user)
       end
     end

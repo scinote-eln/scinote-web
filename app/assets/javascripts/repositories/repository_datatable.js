@@ -728,21 +728,26 @@ var RepositoryDatatable = (function(global) {
         if (rowsSelected.length === 1) {
           $('#editRepositoryRecord').prop('disabled', false);
           $('#editRepositoryRecord').removeClass('disabled');
+
+          // If we switched from 2 selections to 1, then this is not needed
+          var events = $._data($('#exportRepositoriesButton').get(0), 'events');
+          if (!events || !events.click) {
+            $('#exportRepositoriesButton').removeClass('disabled');
+            $('#exportRepositoriesButton').prop('disabled', false);
+            $('#exportRepositoriesButton').off('click').on('click', function() {
+              $('#exportRepositoryModal').modal('show');
+            });
+            $('#export-repositories').off('click').on('click', function() {
+              animateSpinner(null, true);
+              $('#form-export').submit();
+            });
+          }
         } else {
           $('#editRepositoryRecord').prop('disabled', true);
           $('#editRepositoryRecord').addClass('disabled');
         }
         $('#deleteRepositoryRecordsButton').prop('disabled', false);
         $('#deleteRepositoryRecordsButton').removeClass('disabled');
-        $('#exportRepositoriesButton').removeClass('disabled');
-        $('#exportRepositoriesButton').prop('disabled', false);
-        $('#exportRepositoriesButton').on('click', function() {
-          $('#exportRepositoryModal').modal('show');
-        });
-        $('#export-repositories').on('click', function() {
-          animateSpinner(null, true);
-          $('#form-export').submit();
-        });
         $('#assignRepositoryRecords').removeClass('disabled');
         $('#assignRepositoryRecords').prop('disabled', false);
         $('#unassignRepositoryRecords').removeClass('disabled');

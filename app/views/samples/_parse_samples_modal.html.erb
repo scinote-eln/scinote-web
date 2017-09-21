@@ -28,7 +28,7 @@
                 <% if th.nil? %>
                   <i><%= t('samples.modal_import.no_header_name') %></i>
                 <% else %>
-                  <% if th.length > Constants::NAME_TRUNCATION_LENGTH_DROPDOWN %>
+                  <% if th.to_s.length > Constants::NAME_TRUNCATION_LENGTH_DROPDOWN %>
                     <div class="modal-tooltip">
                       <%= truncate(th, length: Constants::NAME_TRUNCATION_LENGTH_DROPDOWN) %>
                     </div>
