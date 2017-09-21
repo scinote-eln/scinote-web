@@ -6,8 +6,8 @@ describe ClientApi::Teams::TeamsController, type: :controller do
   before do
     @user_one = User.first
     @user_two = FactoryGirl.create :user, email: 'sec_user@asdf.com'
-    @team_one = FactoryGirl.create :team
-    @team_two = FactoryGirl.create :team, name: 'Team two'
+    @team_one = FactoryGirl.create :team, created_by: @user_one
+    @team_two = FactoryGirl.create :team, name: 'Team two', created_by: @user_two
     FactoryGirl.create :user_team, team: @team_one, user: @user_one, role: 2
   end
 
@@ -16,6 +16,45 @@ describe ClientApi::Teams::TeamsController, type: :controller do
       get :index, format: :json
       expect(response).to be_success
       expect(response).to have_http_status(:ok)
+    end
+  end
+
+  describe 'POST #create' do
+    before do
+      @team_one.update_attribute(:name, 'My Team')
+      @team_one.update_attribute(:description, 'Lorem ipsum ipsum')
+    end
+
+    it 'should return HTTP success response' do
+      post :create, params: { team: @team_one }, as: :json
+      expect(response).to have_http_status(:ok)
+    end
+
+    it 'should return HTTP unprocessable_entity response if name too short' do
+      @team_one.update_attribute(
+        :name,
+        "#{'a' * (Constants::NAME_MIN_LENGTH - 1)}"
+      )
+      post :create, params: { team: @team_one }, as: :json
+      expect(response).to have_http_status(:unprocessable_entity)
+    end
+
+    it 'should return HTTP unprocessable_entity response if name too long' do
+      @team_one.update_attribute(
+        :name,
+        "#{'a' * (Constants::NAME_MAX_LENGTH + 1)}"
+      )
+      post :create, params: { team: @team_one }, as: :json
+      expect(response).to have_http_status(:unprocessable_entity)
+    end
+
+    it 'should return HTTP unprocessable_entity response if description too long' do
+      @team_one.update_attribute(
+        :description,
+        "#{'a' * (Constants::TEXT_MAX_LENGTH + 1)}"
+      )
+      post :create, params: { team: @team_one }, as: :json
+      expect(response).to have_http_status(:unprocessable_entity)
     end
   end
 
