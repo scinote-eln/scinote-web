@@ -63,62 +63,111 @@
 
         <!-- Preview scroller -->
 
-        <div>
+
           <div class="import-protocols-modal-preview-container-json" data-role="preview-container">
-            <table>
+
 
               <% if @json_object["before_start"]&&@json_object["before_start"]!="" %>
-                <tr>
-                  <td>
-                    <h2>Before starting protocol information</h2>
+
+                    <br><strong>Before starting protocol information:</strong><br>
                     <%= (@json_object["before_start"]) %>
-                  </td>
-               </tr>
+
 
                 <% end %>
               <% if @json_object["warning"]&&@json_object["warning"]!="" %>
-                <tr>
-                  <td>
-                    <h2>Protocol warning</h2>
+
+                    <br><strong>Protocol warning:</strong><br>
                     <%= (@json_object["warning"]) %>
 
-                </td>
-              </tr>
+
               <% end %>
               <% if @json_object["guidelines"]&&@json_object["guidelines"]!="" %>
-                <tr>
-                  <td>
-                    <h2>Guidelines</h2>
+
+                    <br><strong>Guidelines:</strong><br>
                     <%= (@json_object["guidelines"]) %>
-                </td>
-              </tr>
+
               <% end %>
-              <tr><td><br><br><div style="border-bottom-style:solid">
-              </div></td></tr>
+
                 <%  counter=0 %>
                 <%  whitelist_simple=["1","6","17"] %>
                 <%  whitelist_complex=["8","9","15","18","19","20"]%>
             <% @json_object["steps"].each do |step| %>
-                  <tr>
-                    <td> <h3>Step <%= (counter+=1).to_s %> </h3><br>
-                       Step guid (Protocols.io) :<%= step["guid"] %>
-                      <% if counter>1  #only steps after the first one have previous step guid field valid%>
-                      <br>Guid of previous step (Protocols.io) :<%= step["previous_guid"] %>
-                       <% end %>
-              <% step["components"].each do |key,value|  %>
+                  <div style="display: block;">
+                    <hr>
+                    <td>
+                      <div class="badge-num">
+                        <span class="badge-preview bg-primary size-digit-1">
+                          <b data-val="position"><%= (counter+=1) %></b>
+                        </span>
+                        &nbsp;
+                        &nbsp;
+                        <span class="step-panel-collapse-link" data-toggle="collapse">
+                          <span class="glyphicon collapse-step-icon glyphicon-collapse-up"></span>
+
+
+                    <%#=   Step guid (Protocols.io) :%><%#= step["guid"] %>
+                      <%# if counter>1  #only steps after the first one have previous step guid field valid%>
+                      <%#=Guid of previous step (Protocols.io) :%><%#= step["previous_guid"] %>
+                       <%# end %>
+                       <% title=nil %>
+            <% step["components"].each do |key1,value1| #finding section (title of step) %>
+
+                  <% if counter >1 %>
+                    <%  if(key1["component_type_id"]=="6") %>
+                      <% if(!key1["data"].nil? && key1["data"]!="") %>
+                      <%# byebug %>
+                        <% title ||=key1["data"] %>
+                      <% end %>
+                    <% end %>
+                <% else %>
+                  <% unless value1 %>
+                    <% value1=key1 %>
+                  <% end %>
+                  <%  if(value1["component_type_id"]=="6") %>
+                    <% if(!value1["data"].nil? && value1["data"]!="") %>
+                      <% #byebug %>
+                      <% title ||=value1["data"] %>
+                    <% end %>
+                  <% end %>
+              <% end %>
+          <% end %>
+          <% if title.nil? %>
+          <%# byebug %>
+          <% title ="Protocols.io" %>
+          <% end %>
+                <strong data-val="name"><%= title %></strong>
+                </span>
+              </div>
+              <br>
+
+              <div class="tab-content">
+    <div class="tab-pane active" role="tabpanel">
+      <div data-val="description" class="ql-editor">
+
+
+            <% step["components"].each do |key,value|  %>
 
                   <% if counter>1 #here i made an if to distinguish the first step from the others, because the first step
                     #sometimes has weird nesting that makes the below outputs not work
-                      %>
-                    <% if whitelist_simple.include?(key["component_type_id"]) && key["data"]!="" && key["name"] && key["data"]%>
-                      <br>
-                      <%= (key["name"])+" : "+ (key["data"]) %>
+                    %>
+                    <% #byebug %>
+                    <% if whitelist_simple.include?(key["component_type_id"]) && key["data"]!="" && key["data"] %>
+                    <br>
+                    <% case key["component_type_id"]%>
+                  <%  when "6" %>
 
+                  <% when "1" %>
+                <br><strong>Description: </strong> <%=key["data"]%><br>
+                    <% when "17" %>
+                  <br><strong>Expected result: </strong> <%=key["data"]%><br>
+                    <% else %>
+                    <% end %>
                     <% elsif key && whitelist_complex.include?(key["component_type_id"]) %>
+
                       <% case key["component_type_id"]%>
                       <% when "8"%>
                       <br>
-                      <%= "-"+(key["name"])+" : "+(key["source_data"]["name"]) %>
+                      <strong><%= key["name"]+": " %></strong>  <%= (key["source_data"]["name"]) %>
                       <br>
                       Developer : <%= (key["source_data"]["developer"]) %>
                       <br>
@@ -132,14 +181,14 @@
 
                       <% when "9"%>
                       <br>
-                      <%= "-"+(key["name"])+" : "+(key["source_data"]["name"]) %>
+                      <strong><%= key["name"]+": " %></strong>    <%= key["source_data"]["name"] %>
                       <br>
                       Link : <%= (key["source_data"]["link"]) %>
 
 
                       <% when "15"%>
                       <br>
-                      <%= "-"+(key["name"])+" : "+(key["source_data"]["name"]) %>
+                      <strong><%= key["name"]+": " %></strong> <%=  key["source_data"]["name"] %>
                       <br>
                       Description : <%= (key["source_data"]["description"]) %>
                       <br>
@@ -147,7 +196,7 @@
 
                       <% when "18"%>
                       <br>
-                      -This protocol also contains an attached sub-protocol: <%= (key["source_data"]["protocol_name"]) %>
+                      <strong>This protocol also contains an attached sub-protocol: </strong> <%= (key["source_data"]["protocol_name"]) %>
                       <br>
                       Author: <%= (key["source_data"]["full_name"]) %>
                       <br>
@@ -156,7 +205,7 @@
                       <% end %>
                       <% when "19"%>
                       <br>
-                      <%= "-"+(key["name"])+" : "+(key["source_data"]["body"]) %>
+                      <strong><%= key["name"]+": " %></strong>  <%= key["source_data"]["body"] %>
                       <br>
                       Link : <%= (key["source_data"]["link"]) %>
 
@@ -167,31 +216,31 @@
 
                       <% end %>
 
-
-
                     <% end #notranji if št 1%>
 
-
-                  <% else #če ni prvi korak %>
+                  <% else #if first step %>
 
                     <% unless value %>
-                    <% value=key #json format ima random arraye namest hashov, ta problem je opisan pri if counter > 1 stavku %>
+                    <% value=key #protocols io first step json formating is sometimes broken, this is a workaround%>
                     <% end %>
+                    <% #byebug %>
+                    <% if whitelist_simple.include?(value["component_type_id"]) && value["data"] && value["data"]!=""  %>
+                    <br>
+                    <% case value["component_type_id"]%>
+                  <%  when "6" %>
 
-                    <% if whitelist_simple.include?(value["component_type_id"])&& value["data"]!="" && value["name"] && value["data"]  %>
-                      <br>
-                      <%= (value["name"])+" : "+(value["data"]) %>
-                      <%
-                      #debug
-                      #comp[counter];counter;@json.file_contents["steps"][3]["components"][0]["name"]
-                      #@json.file_contents["steps"][0]["components"]
-                      %>
+                  <% when "1" %>
+                    <br><strong>Description: </strong> <%=value["data"]%><br>
+                  <% when "17" %>
+                    <br><strong>Expected result: </strong> <%=value["data"]%><br>
+                    <% else %>
+                    <% end %>
 
                     <% elsif value && whitelist_complex.include?(value["component_type_id"]) %>
                       <% case value["component_type_id"]%>
                       <% when "8"%>
                       <br>
-                      <%= "-"+(value["name"])+" : "+(value["source_data"]["name"]) %>
+                      <strong><%= value["name"]+": " %></strong>  <%= (value["source_data"]["name"]) %>
                       <br>
                       Developer : <%= (value["source_data"]["developer"]) %>
                       <br>
@@ -205,14 +254,14 @@
 
                       <% when "9"%>
                       <br>
-                      <%= "-"+(value["name"])+" : "+(value["source_data"]["name"]) %>
+                      <strong><%= value["name"]+": " %></strong>    <%= value["source_data"]["name"] %>
                       <br>
                       Link : <%= (value["source_data"]["link"]) %>
 
 
                       <% when "15"%>
                       <br>
-                      <%= "-"+(value["name"])+" : "+(value["source_data"]["name"]) %>
+                      <strong><%= value["name"]+": " %></strong> <%=  value["source_data"]["name"] %>
                       <br>
                       Description : <%= (value["source_data"]["description"]) %>
                       <br>
@@ -220,17 +269,16 @@
 
                       <% when "18"%>
                       <br>
-                      -This protocol also contains an attached sub-protocol: <%= (value["source_data"]["protocol_name"]) %>
+                      <strong>This protocol also contains an attached sub-protocol: </strong> <%= (value["source_data"]["protocol_name"]) %>
                       <br>
                       Author: <%= (value["source_data"]["full_name"]) %>
-
-                      <% if value["source_data"]["link"]&&value["source_data"]["link"]!="" %>
                       <br>
+                      <% if value["source_data"]["link"]&&value["source_data"]["link"]!="" %>
                       Link: <%= (value["source_data"]["link"]) %>
                       <% end %>
                       <% when "19"%>
                       <br>
-                      <%= "-"+(value["name"])+" : "+(value["source_data"]["body"]) %>
+                      <strong><%= value["name"]+": " %></strong>  <%= value["source_data"]["body"] %>
                       <br>
                       Link : <%= (value["source_data"]["link"]) %>
 
@@ -244,64 +292,71 @@
                     <% end #inner whitelist if%>
                   <% end #first step if %>
               <% end #step component loop %>
-                    </td>
-                  </tr>
+
+            </div>
+            <hr>
+        <!--    <div class="row">
+              <div data-toggle="tables" class="col-xs-12" style="display: none;">
+                <div data-hold="tables"> </div>
+              </div>
+              <div data-toggle="assets" class="col-xs-12" style="display: none;">
+                <strong>Files</strong>
+                <ul data-hold="assets">
+                </ul>
+              </div>
+              <div class="col-xs-12">
+                <div data-hold="checklists"></div>
+              </div>
+            </div> -->
+          </div>
+        </div>
+
+              </div> <%# div od blocka %>
             <% end  #step loop%>
-          <tr><td><br><br><div style="border-bottom-style:solid">
-          </div></td></tr>
+
+
+
             <% if @json_object["manuscript_citation"]&&@json_object["manuscript_citation"]!="" %>
-              <tr>
-                <td>
-                  <h4>Manuscript citation</h4>
+
+                  <br><strong>Manuscript citation</strong><br>
                   <%= (@json_object["manuscript_citation"]) %>
-              </td>
-            </tr>
+
             <% end %>
             <% if @json_object["publish_date"]&&@json_object["publish_date"]!="" %>
-              <tr>
-                <td>
-                  <h4>Publish date</h4>
+
+                  <br><strong>Publish date</strong><br>
                   <%= (@json_object["publish_date"]) %>
-              </td>
-            </tr>
+
             <% end %>
             <% if @json_object["vendor_name"]&&@json_object["vendor_name"]!="" %>
-              <tr>
-                <td>
-                  <h4>Vendor name</h4>
+
+                  <br><strong>Vendor name</strong><br>
                   <%= (@json_object["vendor_name"]) %>
-              </td>
-            </tr>
+
             <% end %>
             <% if @json_object["vendor_link"]&&@json_object["vendor_link"]!="" %>
-              <tr>
-                <td>
-                  <h4>Vendor link</h4>
+
+                  <br><strong>Vendor link</strong><br>
                   <%= (@json_object["vendor_link"]) %>
-              </td>
-            </tr>
+
             <% end %>
             <% if @json_object["keywords"]&&@json_object["keywords"]!="" %>
-              <tr>
-                <td>
-                  <h4>Keywords</h4>
+
+                  <br><strong>Keywords</strong><br>
                   <%= (@json_object["keywords"]) %>
-              </td>
-            </tr>
+
             <% end %>
             <% if @json_object["tags"]&&@json_object["tags"]!="" %>
-              <tr>
-                <td>
-                  <h4>Tags</h4>
+
+                  <br><strong>Tags</strong><br>
                   <%  @json_object["tags"].each do |tag| %>
                  <%= (tag["tag_name"])+" , " %>
                  <% end %>
-              </td>
-            </tr>
+
             <% end %>
-</table>
+
           </div>
-        </div>
+
 
       </div>
       <div class="modal-footer">
