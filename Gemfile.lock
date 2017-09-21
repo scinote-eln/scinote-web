@@ -13,6 +13,15 @@ GIT
       activerecord (>= 3.2.0)
 
 GIT
+  remote: https://github.com/jrgifford/delayed_paperclip.git
+  revision: fcf574c1188213d3c8fce934fd52861a8ba080cb
+  ref: fcf574c
+  specs:
+    delayed_paperclip (3.0.1)
+      activejob (>= 4.2)
+      paperclip (>= 3.3)
+
+GIT
   remote: https://github.com/phatworx/devise_security_extension.git
   revision: b2ee978af7d49f0fb0e7271c6ac074dfb4d39353
   ref: b2ee978
@@ -157,9 +166,6 @@ GEM
     delayed_job_active_record (4.1.2)
       activerecord (>= 3.0, < 5.2)
       delayed_job (>= 3.0, < 5)
-    delayed_paperclip (3.0.1)
-      activejob (>= 4.2)
-      paperclip (>= 3.3)
     devise (4.3.0)
       bcrypt (~> 3.0)
       orm_adapter (~> 0.1)
@@ -471,7 +477,7 @@ DEPENDENCIES
   database_cleaner
   deface (~> 1.0)
   delayed_job_active_record
-  delayed_paperclip
+  delayed_paperclip!
   devise (~> 4.3.0)
   devise-async
   devise_invitable
@@ -539,4 +545,4 @@ RUBY VERSION
    ruby 2.4.1p111
 
 BUNDLED WITH
-   1.15.3
+   1.15.4
