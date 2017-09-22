@@ -41,6 +41,7 @@ module DelayedUploaderTutorial
       my_module: my_module,
       user: current_user,
       created_at: temp_result.created_at,
+      updated_at: temp_result.created_at,
       message: I18n.t(
         'activities.add_asset_result',
         user: current_user.full_name,
