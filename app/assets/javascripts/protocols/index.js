@@ -335,7 +335,7 @@ function initModals() {
     modal.find(".modal-body").html("");
 
     // Simply re-render table
-
+    protocolsDatatable.ajax.reload();
   }
 
 
