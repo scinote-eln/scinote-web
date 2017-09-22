@@ -603,6 +603,7 @@ en:
       load_from_file_error: "Failed to load the protocol from file."
       load_from_file_error_locked: "Failed to load the protocol from file. One or more files are currently being edited."
       load_from_file_size_error: "Failed to load the protocol from file. Limit is %{size}Mb."
+      load_from_file_protocol_general_error: "Failed to load the protocol from file. It is likely that certain fields (protocol and individual step titles and names) contain too many or too few characters.(max is %{max} and min is %{min})"
     results:
       head_title: "%{project} | %{module} | Results"
       add_label: "Add new result:"

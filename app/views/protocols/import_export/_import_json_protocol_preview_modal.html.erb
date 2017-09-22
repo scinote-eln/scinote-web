@@ -88,6 +88,13 @@
 
               <% end %>
 
+              <% if @json_object["link"]&&@json_object["link"]!="" %>
+
+                    <br><strong>Supplied link:</strong><br>
+                    <%= (@json_object["link"]) %>
+
+              <% end %>
+
                 <%  counter=0 %>
                 <%  whitelist_simple=["1","6","17"] %>
                 <%  whitelist_complex=["8","9","15","18","19","20"]%>
@@ -317,37 +324,37 @@
 
             <% if @json_object["manuscript_citation"]&&@json_object["manuscript_citation"]!="" %>
 
-                  <br><strong>Manuscript citation</strong><br>
+                  <br><strong>Manuscript citation:</strong><br>
                   <%= (@json_object["manuscript_citation"]) %>
 
             <% end %>
             <% if @json_object["publish_date"]&&@json_object["publish_date"]!="" %>
 
-                  <br><strong>Publish date</strong><br>
+                  <br><strong>Publish date:</strong><br>
                   <%= (@json_object["publish_date"]) %>
 
             <% end %>
             <% if @json_object["vendor_name"]&&@json_object["vendor_name"]!="" %>
 
-                  <br><strong>Vendor name</strong><br>
+                  <br><strong>Vendor name:</strong><br>
                   <%= (@json_object["vendor_name"]) %>
 
             <% end %>
             <% if @json_object["vendor_link"]&&@json_object["vendor_link"]!="" %>
 
-                  <br><strong>Vendor link</strong><br>
+                  <br><strong>Vendor link:</strong><br>
                   <%= (@json_object["vendor_link"]) %>
 
             <% end %>
             <% if @json_object["keywords"]&&@json_object["keywords"]!="" %>
 
-                  <br><strong>Keywords</strong><br>
+                  <br><strong>Keywords:</strong><br>
                   <%= (@json_object["keywords"]) %>
 
             <% end %>
             <% if @json_object["tags"]&&@json_object["tags"]!="" %>
 
-                  <br><strong>Tags</strong><br>
+                  <br><strong>Tags:</strong><br>
                   <%  @json_object["tags"].each do |tag| %>
                  <%= (tag["tag_name"])+" , " %>
                  <% end %>

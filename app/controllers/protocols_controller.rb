@@ -606,9 +606,20 @@ class ProtocolsController < ApplicationController
 #
 #tule
 def protocolsio_import_create
-
+  @protocolsio_too_big=false
+  file_size=(File.size(params[:json_file].path))
+  
+  if(file_size/1000>Constants::FILE_MAX_SIZE_MB)
+    @protocolsio_too_big=true
+    respond_to do |format|
+      format.js {}
+    end
+  else
+    @protocolsio_too_big=false
+  end
 
   json_file_contents=File.read(params[:json_file].path)
+
   json_file_contents.gsub! '\"', "'"
 
 
@@ -632,7 +643,7 @@ def protocolsio_import_save
   # will have to fit various things in here (guidelines, manuscript citations etc etc)
   #"before_start","warning","guidelines","manuscript_citation","publish_date","created_on"
   #"vendor_name","vendor_link","keywords","tags"
-  description_array = [ "before_start","warning","guidelines","manuscript_citation","publish_date","created_on","vendor_name","vendor_link","keywords","tags" ]
+  description_array = [ "before_start","warning","guidelines","manuscript_citation","publish_date","created_on","vendor_name","vendor_link","keywords","tags","link" ]
   description_string=params["protocol"]["description"]
   #@import_object["description"]=params["protocol"]["description"]
   description_array.each do |element|
@@ -640,16 +651,16 @@ def protocolsio_import_save
       if(@json_object[element]&&@json_object[element]!="")
         new_element = element.slice(0,1).capitalize + element.slice(1..-1)
         new_element= new_element.gsub("_"," ")
-        description_string=description_string+new_element.to_s+":  "+params["protocol"]["created_at"].to_s+"\n"
+        description_string=description_string+new_element.to_s+":  "+Sanitize.clean(params["protocol"]["created_at"].to_s)+"\n"
       end
     else
       if(element=="tags")
-        if(@json_object[element]&&@json_object[element]!="")
+        if(@json_object[element].any?&&@json_object[element]!="")
           new_element = element.slice(0,1).capitalize + element.slice(1..-1)
           new_element= new_element.gsub("_"," ")
           description_string=description_string+new_element.to_s+": "
           @json_object[element].each do |tag|
-            description_string=description_string+tag["tag_name"]+" , "
+            description_string=description_string+Sanitize.clean(tag["tag_name"])+" , "
           end
           description_string=description_string+"\n"
         end
@@ -658,7 +669,7 @@ def protocolsio_import_save
         if(@json_object[element]&&@json_object[element]!="")
           new_element = element.slice(0,1).capitalize + element.slice(1..-1)
           new_element= new_element.gsub("_"," ")
-          description_string=description_string+new_element.to_s+":  "+@json_object[element].to_s+"\n"
+          description_string=description_string+new_element.to_s+":  "+Sanitize.clean(@json_object[element].to_s)+"\n"
         end
       end
     end
@@ -696,7 +707,7 @@ def protocolsio_import_save
          when "1"
            if !key["data"].nil? && key["data"]!=""
 
-             element_string="<br>"+key["data"]+"<br>"
+             element_string="<br>"+(key["data"])+"<br>"
               if(@import_object["steps"][step_pos.to_s]["description"])
                 @import_object["steps"][step_pos.to_s]["description"]<<element_string
               else
@@ -714,7 +725,7 @@ def protocolsio_import_save
          when "17"
            if !key["data"].nil? && key["data"]!=""
 
-             element_string="<br><strong>Expected result: </strong>"+key["data"]+"<br>"
+             element_string="<br><strong>Expected result: </strong>"+(key["data"])+"<br>"
              @import_object["steps"][step_pos.to_s]["description"]<<element_string
           end
         else
@@ -726,22 +737,33 @@ def protocolsio_import_save
       elsif key && whitelist_complex.include?(key["component_type_id"])
         case key["component_type_id"]
         when "8"
-          element_string="<br><strong>Software package: </strong>"+key["source_data"]["name"]+"<br>Developer: "+key["source_data"]["developer"]+"<br>Version: "+key["source_data"]["version"]+"<br>Link: "+key["source_data"]["link"]+"<br>Repository: "+key["source_data"]["repository"]+"<br> OS name , OS version: "+key["source_data"]["os_name"]+" , "+key["source_data"]["os_version"]
+          if(key["source_data"]["name"]&&key["source_data"]["developer"]&&key["source_data"]["version"]&&key["source_data"]["link"]&&key["source_data"]["repository"]&&key["source_data"]["os_name"]&&key["source_data"]["os_version"])
+          element_string="<br><strong>Software package: </strong>"+(key["source_data"]["name"])+"<br>Developer: "+(key["source_data"]["developer"])+"<br>Version: "+(key["source_data"]["version"])+"<br>Link: "+(key["source_data"]["link"])+"<br>Repository: "+(key["source_data"]["repository"])+"<br> OS name , OS version: "+(key["source_data"]["os_name"])+" , "+(key["source_data"]["os_version"])
           @import_object["steps"][step_pos.to_s]["description"]<<element_string
+          end
         when "9"
-          element_string="<br><strong>Dataset: </strong>"+key["source_data"]["name"]+"<br>Link: "+key["source_data"]["link"]
+          if(key["source_data"]["name"]&&key["source_data"]["link"])
+          element_string="<br><strong>Dataset: </strong>"+(key["source_data"]["name"])+"<br>Link: "+(key["source_data"]["link"])
           @import_object["steps"][step_pos.to_s]["description"]<<element_string
+          end
          when "15"
-           element_string="<br><strong>Command: </strong>"+key["source_data"]["name"]+"<br>Description: "+key["source_data"]["description"]+"<br>OS name , OS version: "+key["source_data"]["os_name"]+" , "+key["source_data"]["os_version"]
+           if(key["source_data"]["name"]&&key["source_data"]["description"]&&key["source_data"]["os_name"]&&key["source_data"]["os_version"])
+           element_string="<br><strong>Command: </strong>"+(key["source_data"]["name"])+"<br>Description: "+(key["source_data"]["description"])+"<br>OS name , OS version: "+(key["source_data"]["os_name"])+" , "+(key["source_data"]["os_version"])
            @import_object["steps"][step_pos.to_s]["description"]<<element_string
+          end
          when "18"
-           element_string="<br><strong>This protocol also contains an attached sub-protocol: </strong>"+key["source_data"]["protocol_name"]+"<br>Author: "+key["source_data"]["full_name"]+"<br>Link: "+key["source_data"]["link"]
+           if(key["source_data"]["protocol_name"]&&key["source_data"]["full_name"]&&key["source_data"]["link"])
+           element_string="<br><strong>This protocol also contains an attached sub-protocol: </strong>"+(key["source_data"]["protocol_name"])+"<br>Author: "+(key["source_data"]["full_name"])+"<br>Link: "+(key["source_data"]["link"])
+           @import_object["steps"][step_pos.to_s]["description"]<<element_string
 
+          end
          #if key["source_data"]["link"]&&key["source_data"]["link"]!=""
          #end
          when "19"
-           element_string="<br><strong>Safety information</strong>"+key["source_data"]["body"]+"<br>Link: "+key["source_data"]["link"]
+           if(key["source_data"]["body"]&&key["source_data"]["link"])
+           element_string="<br><strong>Safety information: </strong>"+(key["source_data"]["body"])+"<br>Link: "+(key["source_data"]["link"])
            @import_object["steps"][step_pos.to_s]["description"]<<element_string
+         end
          when "20"
          else
 
@@ -759,7 +781,7 @@ def protocolsio_import_save
          when "1"
            if !value["data"].nil? && value["data"]!=""
 
-             element_string="<br>"+value["data"]+"<br>"
+             element_string="<br>"+(value["data"].to_s)+"<br>"
               if(@import_object["steps"][step_pos.to_s]["description"])
                 @import_object["steps"][step_pos.to_s]["description"]<<element_string
               else
@@ -777,7 +799,7 @@ def protocolsio_import_save
          when "17"
            if !value["data"].nil? && value["data"]!=""
 
-             element_string="<br><strong>Expected result: </strong>"+value["data"]+"<br>"
+             element_string="<br><strong>Expected result: </strong>"+(value["data"])+"<br>"
              @import_object["steps"][step_pos.to_s]["description"]<<element_string
           end
         else
@@ -789,22 +811,37 @@ def protocolsio_import_save
       elsif value && whitelist_complex.include?(value["component_type_id"])
         case value["component_type_id"]
         when "8"
-          element_string="<br><strong>Software package: </strong>"+value["source_data"]["name"]+"<br>Developer: "+value["source_data"]["developer"]+"<br>Version: "+value["source_data"]["version"]+"<br>Link: "+value["source_data"]["link"]+"<br>Repository: "+value["source_data"]["repository"]+"<br> OS name , OS version: "+value["source_data"]["os_name"]+" , "+value["source_data"]["os_version"]
-          @import_object["steps"][step_pos.to_s]["description"]<<element_string
-        when "9"
-          element_string="<br><strong>Dataset: </strong>"+value["source_data"]["name"]+"<br>Link: "+value["source_data"]["link"]
-          @import_object["steps"][step_pos.to_s]["description"]<<element_string
-         when "15"
-           element_string="<br><strong>Command: </strong>"+value["source_data"]["name"]+"<br>Description: "+value["source_data"]["description"]+"<br>OS name , OS version: "+value["source_data"]["os_name"]+" , "+value["source_data"]["os_version"]
-           @import_object["steps"][step_pos.to_s]["description"]<<element_string
-         when "18"
-           element_string="<br><strong>This protocol also contains an attached sub-protocol: </strong>"+value["source_data"]["protocol_name"]+"<br>Author: "+value["source_data"]["full_name"]+"<br>Link: "+value["source_data"]["link"]
+          if(value["source_data"]["name"]&&value["source_data"]["developer"]&&value["source_data"]["version"]&&value["source_data"]["link"]&&value["source_data"]["repository"]&&value["source_data"]["os_name"]&&value["source_data"]["os_version"])
 
+          element_string="<br><strong>Software package: </strong>"+(value["source_data"]["name"])+"<br>Developer: "+(value["source_data"]["developer"])+"<br>Version: "+(value["source_data"]["version"])+"<br>Link: "+(value["source_data"]["link"])+"<br>Repository: "+(value["source_data"]["repository"])+"<br> OS name , OS version: "+(value["source_data"]["os_name"])+" , "+(value["source_data"]["os_version"])
+          @import_object["steps"][step_pos.to_s]["description"]<<element_string
+          end
+        when "9"
+          if(value["source_data"]["name"]&&value["source_data"]["link"])
+
+          element_string="<br><strong>Dataset: </strong>"+(value["source_data"]["name"])+"<br>Link: "+(value["source_data"]["link"])
+          @import_object["steps"][step_pos.to_s]["description"]<<element_string
+          end
+         when "15"
+           if(value["source_data"]["name"]&&value["source_data"]["description"]&&value["source_data"]["os_name"]&&value["source_data"]["os_version"])
+
+           element_string="<br><strong>Command: </strong>"+(value["source_data"]["name"])+"<br>Description: "+(value["source_data"]["description"])+"<br>OS name , OS version: "+(value["source_data"]["os_name"])+" , "+(value["source_data"]["os_version"])
+           @import_object["steps"][step_pos.to_s]["description"]<<element_string
+          end
+         when "18"
+           if(value["source_data"]["protocol_name"]&&value["source_data"]["full_name"]&&value["source_data"]["link"])
+
+           element_string="<br><strong>This protocol also contains an attached sub-protocol: </strong>"+(value["source_data"]["protocol_name"])+"<br>Author: "+(value["source_data"]["full_name"])+"<br>Link: "+(value["source_data"]["link"])
+           @import_object["steps"][step_pos.to_s]["description"]<<element_string
+          end
          #if key["source_data"]["link"]&&key["source_data"]["link"]!=""
          #end
          when "19"
-           element_string="<br><strong>Safety information</strong>"+value["source_data"]["body"]+"<br>Link: "+value["source_data"]["link"]
+           if(value["source_data"]["body"]&&value["source_data"]["link"])
+
+           element_string="<br><strong>Safety information: </strong>"+(value["source_data"]["body"])+"<br>Link: "+(value["source_data"]["link"])
            @import_object["steps"][step_pos.to_s]["description"]<<element_string
+          end
          when "20"
          else
 
@@ -819,10 +856,10 @@ def protocolsio_import_save
   respond_to do |format|
     transaction_error = false
     #@steps_object=JSON.parse(params["steps"]["steps_object"])
-
+    @protocolsio_general_error=false
     Protocol.transaction do
       begin
-        #byebug
+
         protocol = import_new_protocol(@import_object, current_team, params[:type].to_sym, current_user)
 
       rescue Exception
@@ -841,15 +878,17 @@ def protocolsio_import_save
 
     if transaction_error
 
-      format.json {
-        render json: { name: p_name, status: :bad_request }, status: :bad_request
-      }
+      @protocolsio_general_error=true
+    #  format.json {
+    #    render json: { name: p_name, status: :bad_request }, status: :bad_request
+    #  }
       format.js{}
 
       #:location => root_url
         #  protocolsDatatable.ajax.reload();
         #  $('#modal-import-json-protocol-preview').modal('hide');
     else
+      @protocolsio_general_error=false
       format.json {
         render json: {
           name: p_name, new_name: protocol.name, status: :ok
