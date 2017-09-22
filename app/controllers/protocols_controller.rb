@@ -66,7 +66,6 @@ class ProtocolsController < ApplicationController
   before_action :check_import_permissions, only: [ :import ]
   before_action :check_export_permissions, only: [ :export ]
 
-
   def index
   end
 
@@ -469,7 +468,6 @@ class ProtocolsController < ApplicationController
   end
 
   def load_from_repository
-
     respond_to do |format|
       if @protocol.can_destroy?
         transaction_error = false
@@ -520,7 +518,6 @@ class ProtocolsController < ApplicationController
 
   def load_from_file
     # This is actually very similar to import
-
     respond_to do |format|
       if @protocol.can_destroy?
         transaction_error = false
@@ -569,8 +566,7 @@ class ProtocolsController < ApplicationController
     end
   end
 
-  def import #tega uporabi .eln import
-
+  def import
     protocol = nil
     respond_to do |format|
       transaction_error = false
@@ -603,8 +599,7 @@ class ProtocolsController < ApplicationController
       end
     end
   end
-#
-#tule
+
 def protocolsio_import_create
   @protocolsio_too_big=false
   file_size=(File.size(params[:json_file].path))
@@ -612,40 +607,30 @@ def protocolsio_import_create
   if(file_size/1000>Constants::FILE_MAX_SIZE_MB)
     @protocolsio_too_big=true
     respond_to do |format|
-      format.js {}
+      format.js {} #if file is too big, default to the js.erb file named the same as this controller
+      # where a javascript alert is called
     end
-  else
-    @protocolsio_too_big=false
   end
-
   json_file_contents=File.read(params[:json_file].path)
-
-  json_file_contents.gsub! '\"', "'"
-
-
+  json_file_contents.gsub! '\"', "'" #escaped double quotes too stressfull, html works with single quotes too
+  #json double quotes dont get escaped since they dont match \", they are just "
   @json_object=JSON.parse(json_file_contents)
   @protocol=Protocol.new
-
   respond_to do |format|
-    #format.html {}
-    format.js {}
+    format.js {}  # go to the js.erb file named the same as this controller, where a preview modal is rendered, and
+    # some modals get closed and opened
   end
-
 end
 
 
 def protocolsio_import_save
-  #@temp_json=JsonTemp.new
   @json_object=JSON.parse(params["json_object"])
   @import_object=Hash.new
   @import_object["name"]=params["protocol"]["name"]
-
-  # will have to fit various things in here (guidelines, manuscript citations etc etc)
-  #"before_start","warning","guidelines","manuscript_citation","publish_date","created_on"
-  #"vendor_name","vendor_link","keywords","tags"
+  # since scinote only has description field, while protocols.io has many many others, here i am basically
+  #putting everything important from protocols.io into description
   description_array = [ "before_start","warning","guidelines","manuscript_citation","publish_date","created_on","vendor_name","vendor_link","keywords","tags","link" ]
   description_string=params["protocol"]["description"]
-  #@import_object["description"]=params["protocol"]["description"]
   description_array.each do |element|
     if(element=="created_on")
       if(@json_object[element]&&@json_object[element]!="")
@@ -664,7 +649,8 @@ def protocolsio_import_save
           end
           description_string=description_string+"\n"
         end
-
+      #Since protocols description field doesnt show html, i just remove it here because its even messier Otherwise
+      #what this does is basically appends "FIELD NAME: "+" FIELD VALUE" to description for various fields
       else
         if(@json_object[element]&&@json_object[element]!="")
           new_element = element.slice(0,1).capitalize + element.slice(1..-1)
@@ -674,33 +660,27 @@ def protocolsio_import_save
       end
     end
   end
-
   @import_object["authors"]=params["protocol"]["authors"]
   @import_object["created_at"]=params["protocol"]["created_at"]
   @import_object["updated_at"]=params["protocol"]["last_modified"]
   @import_object["description"]=description_string
-  #@import_object["steps"]
-
-
   @import_object["steps"]=Hash.new
   counter=0
   step_pos=-1
-  #these whitelists are there to not let some useless step components true, that always have data set to null (data doesnt get imported over to json)
+  #these whitelists are there to not let some useless step components trough, that always have data set to null (data doesnt get imported over to json)
   whitelist_simple=["1","6","17"] #(simple to map) id 1= step description, id 6= section (title), id 17= expected result
   whitelist_complex=["8","9","15","18","19","20"] #(complex mapping with nested hashes) id 8 = software package, id 9 = dataset, id 15 = command, id 18 = attached sub protocol
   # id 19= safety information ,id 20= regents (materials, like scinote samples kind of)
   @json_object["steps"].each do |step|
-    #@import_object["steps"][step_pos.to_s]=step
         step_pos+=1
         counter+=1
-
         @import_object["steps"][step_pos.to_s]=Hash.new
         @import_object["steps"][step_pos.to_s]["position"]=step_pos
 
         step["components"].each do |key,value|
           element_string=nil
           if counter<=1 #here i made an if to distinguish the first step from the others, because the first step
-            #sometimes has index values as keys instead of hashes
+            #sometimes has index values as keys instead of hashes, for no good reason
              if value.class==Hash
              key=value
              end
@@ -724,7 +704,7 @@ def protocolsio_import_save
            if !key["data"].nil? && key["data"]!=""
           @import_object["steps"][step_pos.to_s]["name"]=key["data"]
           else
-          @import_object["steps"][step_pos.to_s]["name"]="Protocols.io"
+          @import_object["steps"][step_pos.to_s]["name"]="Step"
         end
          when "17"
            if !key["data"].nil? && key["data"]!=""

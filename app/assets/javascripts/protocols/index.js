@@ -338,8 +338,6 @@ function initModals() {
     protocolsDatatable.ajax.reload();
   }
 
-
-
   // Make private modal hidden action
   $("#make-private-results-modal").on("hidden.bs.modal", function(e) {
     refresh($(this));
