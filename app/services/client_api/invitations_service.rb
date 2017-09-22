@@ -9,8 +9,8 @@ module ClientApi
       @team = args[:team]
       @role = args[:role]
 
-      raise ClientApi::CustomInvitationsError unless @emails && @team && @role
-      @emails && @emails.empty? { raise ClientApi::CustomInvitationsError }
+      raise ClientApi::CustomInvitationsError unless @team && @role &&
+                                                     @emails && @emails.present?
       if @role && !UserTeam.roles.keys.include?(@role)
         raise ClientApi::CustomInvitationsError
       end
