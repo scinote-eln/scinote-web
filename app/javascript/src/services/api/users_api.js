@@ -1,4 +1,4 @@
-import { axiosInstance, ResponseError } from "./config";
+import { axiosInstance } from "./config";
 import { USER_PROFILE_INFO, UPDATE_USER_PATH } from "./endpoints";
 
 export const getUserProfileInfo = () => {
@@ -8,5 +8,5 @@ export const getUserProfileInfo = () => {
 export const updateUser = data => {
   return axiosInstance
     .post(UPDATE_USER_PATH, { user: data })
-    .then(({ data }) => data.user);
+    .then(({ data }) => data.user)
 };
