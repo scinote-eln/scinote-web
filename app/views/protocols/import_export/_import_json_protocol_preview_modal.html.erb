@@ -119,25 +119,19 @@
                        <% title=nil %>
             <% step["components"].each do |key1,value1| #finding section (title of step) %>
 
-                  <% if counter >1 %>
+                  <% if counter <=1 %>
+                    <% if value1.class==Hash %>
+                    <% key1=value1 %>
+                    <% end %>
+                    <% end %>
                     <%  if(key1["component_type_id"]=="6") %>
                       <% if(!key1["data"].nil? && key1["data"]!="") %>
                       <%# byebug %>
                         <% title ||=key1["data"] %>
                       <% end %>
                     <% end %>
-                <% else %>
-                  <% unless value1 %>
-                    <% value1=key1 %>
-                  <% end %>
-                  <%  if(value1["component_type_id"]=="6") %>
-                    <% if(!value1["data"].nil? && value1["data"]!="") %>
-                      <% #byebug %>
-                      <% title ||=value1["data"] %>
+
                     <% end %>
-                  <% end %>
-              <% end %>
-          <% end %>
           <% if title.nil? %>
           <%# byebug %>
           <% title ="Protocols.io" %>
@@ -153,16 +147,19 @@
 
 
             <% step["components"].each do |key,value|  %>
-
-                  <% if counter>1 #here i made an if to distinguish the first step from the others, because the first step
-                    #sometimes has weird nesting that makes the below outputs not work
+                  <% if counter<=1 #here i made an if to distinguish the first step from the others, because the first step
+                    #sometimes has index values as keys instead of hashes
                     %>
+                    <% if value.class==Hash %>
+                    <% key=value %>
+                    <% end %>
+                  <% end %>
+
+
                     <% if whitelist_simple.include?(key["component_type_id"]) && key["data"]!="" && key["data"] %>
                     <br>
                     <% case key["component_type_id"]%>
-                  <%  when "6" %>
-
-                  <% when "1" %>
+                    <% when "1" %>
                 <br><strong>Description: </strong> <%=key["data"]%><br>
                     <% when "17" %>
                   <br><strong>Expected result: </strong> <%=key["data"]%><br>
@@ -220,83 +217,11 @@
 
                       <% else %>
 
-                      <% end %>
+                      <% end #case if%>
 
-                    <% end #notranji if št 1%>
-
-                  <% else #if first step %>
-
-                    <% unless value %>
-                    <% value=key #protocols io first step json formating is sometimes broken, this is a workaround%>
-                    <% end %>
-                    <% #byebug %>
-                    <% if whitelist_simple.include?(value["component_type_id"]) && value["data"] && value["data"]!=""  %>
-                    <br>
-                    <% case value["component_type_id"]%>
-                  <%  when "6" %>
-
-                  <% when "1" %>
-                    <br><strong>Description: </strong> <%=value["data"]%><br>
-                  <% when "17" %>
-                    <br><strong>Expected result: </strong> <%=value["data"]%><br>
-                    <% else %>
-                    <% end %>
-
-                    <% elsif value && whitelist_complex.include?(value["component_type_id"]) %>
-                      <% case value["component_type_id"]%>
-                      <% when "8"%>
-                      <br>
-                      <strong><%= value["name"]+": " %></strong>  <%= (value["source_data"]["name"]) %>
-                      <br>
-                      Developer : <%= (value["source_data"]["developer"]) %>
-                      <br>
-                      Version : <%= (value["source_data"]["version"]) %>
-                      <br>
-                      Link : <%= (value["source_data"]["link"]) %>
-                      <br>
-                      Repository : <%= (value["source_data"]["repository"]) %>
-                      <br>
-                      OS name , OS version : <%= (value["source_data"]["os_name"])+" , "+(value["source_data"]["os_version"]) %>
-
-                      <% when "9"%>
-                      <br>
-                      <strong><%= value["name"]+": " %></strong>    <%= value["source_data"]["name"] %>
-                      <br>
-                      Link : <%= (value["source_data"]["link"]) %>
+                    <% end #inner if%>
 
 
-                      <% when "15"%>
-                      <br>
-                      <strong><%= value["name"]+": " %></strong> <%=  value["source_data"]["name"] %>
-                      <br>
-                      Description : <%= (value["source_data"]["description"]) %>
-                      <br>
-                      OS name , OS version : <%= (value["source_data"]["os_name"])+" , "+(value["source_data"]["os_version"]) %>
-
-                      <% when "18"%>
-                      <br>
-                      <strong>This protocol also contains an attached sub-protocol: </strong> <%= (value["source_data"]["protocol_name"]) %>
-                      <br>
-                      Author: <%= (value["source_data"]["full_name"]) %>
-                      <br>
-                      <% if value["source_data"]["link"]&&value["source_data"]["link"]!="" %>
-                      Link: <%= (value["source_data"]["link"]) %>
-                      <% end %>
-                      <% when "19"%>
-                      <br>
-                      <strong><%= value["name"]+": " %></strong>  <%= value["source_data"]["body"] %>
-                      <br>
-                      Link : <%= (value["source_data"]["link"]) %>
-
-
-                      <% when "20"%>
-
-                      <% else %>
-
-                      <% end %>
-
-                    <% end #inner whitelist if%>
-                  <% end #first step if %>
               <% end #step component loop %>
 
             </div>
@@ -317,7 +242,7 @@
           </div>
         </div>
 
-              </div> <%# div od blocka %>
+      </div> <%# block div%>
             <% end  #step loop%>
 
 

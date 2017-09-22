@@ -608,7 +608,7 @@ class ProtocolsController < ApplicationController
 def protocolsio_import_create
   @protocolsio_too_big=false
   file_size=(File.size(params[:json_file].path))
-  
+
   if(file_size/1000>Constants::FILE_MAX_SIZE_MB)
     @protocolsio_too_big=true
     respond_to do |format|
@@ -699,8 +699,12 @@ def protocolsio_import_save
 
         step["components"].each do |key,value|
           element_string=nil
-          if counter>1 #here i made an if to distinguish the first step from the others, because the first step
-         #sometimes has weird nesting that requires different handling
+          if counter<=1 #here i made an if to distinguish the first step from the others, because the first step
+            #sometimes has index values as keys instead of hashes
+             if value.class==Hash
+             key=value
+             end
+           end
        if whitelist_simple.include?(key["component_type_id"])
 
          case key["component_type_id"]
@@ -770,85 +774,7 @@ def protocolsio_import_save
          end
        end #finished step component iteration
 
-     else #it is first step
 
-       unless value
-       value=key #some json files have random empty arrays in beggining of step components
-       end
-       if whitelist_simple.include?(value["component_type_id"])
-
-         case value["component_type_id"]
-         when "1"
-           if !value["data"].nil? && value["data"]!=""
-
-             element_string="<br>"+(value["data"].to_s)+"<br>"
-              if(@import_object["steps"][step_pos.to_s]["description"])
-                @import_object["steps"][step_pos.to_s]["description"]<<element_string
-              else
-                @import_object["steps"][step_pos.to_s]["description"]=element_string
-              end
-            else
-              @import_object["steps"][step_pos.to_s]["description"]||="Description missing!"
-            end
-         when "6"
-           if !value["data"].nil? && value["data"]!=""
-          @import_object["steps"][step_pos.to_s]["name"]=value["data"]
-          else
-          @import_object["steps"][step_pos.to_s]["name"]="Protocols.io"
-        end
-         when "17"
-           if !value["data"].nil? && value["data"]!=""
-
-             element_string="<br><strong>Expected result: </strong>"+(value["data"])+"<br>"
-             @import_object["steps"][step_pos.to_s]["description"]<<element_string
-          end
-        else
-
-        end#(complex mapping with nested hashes) id 8 = software package, id 9 = dataset,
-        #id 15 = command, id 18 = attached sub protocol
-        # id 19= safety information ,id 20= regents (materials, like scinote samples kind of)
-
-      elsif value && whitelist_complex.include?(value["component_type_id"])
-        case value["component_type_id"]
-        when "8"
-          if(value["source_data"]["name"]&&value["source_data"]["developer"]&&value["source_data"]["version"]&&value["source_data"]["link"]&&value["source_data"]["repository"]&&value["source_data"]["os_name"]&&value["source_data"]["os_version"])
-
-          element_string="<br><strong>Software package: </strong>"+(value["source_data"]["name"])+"<br>Developer: "+(value["source_data"]["developer"])+"<br>Version: "+(value["source_data"]["version"])+"<br>Link: "+(value["source_data"]["link"])+"<br>Repository: "+(value["source_data"]["repository"])+"<br> OS name , OS version: "+(value["source_data"]["os_name"])+" , "+(value["source_data"]["os_version"])
-          @import_object["steps"][step_pos.to_s]["description"]<<element_string
-          end
-        when "9"
-          if(value["source_data"]["name"]&&value["source_data"]["link"])
-
-          element_string="<br><strong>Dataset: </strong>"+(value["source_data"]["name"])+"<br>Link: "+(value["source_data"]["link"])
-          @import_object["steps"][step_pos.to_s]["description"]<<element_string
-          end
-         when "15"
-           if(value["source_data"]["name"]&&value["source_data"]["description"]&&value["source_data"]["os_name"]&&value["source_data"]["os_version"])
-
-           element_string="<br><strong>Command: </strong>"+(value["source_data"]["name"])+"<br>Description: "+(value["source_data"]["description"])+"<br>OS name , OS version: "+(value["source_data"]["os_name"])+" , "+(value["source_data"]["os_version"])
-           @import_object["steps"][step_pos.to_s]["description"]<<element_string
-          end
-         when "18"
-           if(value["source_data"]["protocol_name"]&&value["source_data"]["full_name"]&&value["source_data"]["link"])
-
-           element_string="<br><strong>This protocol also contains an attached sub-protocol: </strong>"+(value["source_data"]["protocol_name"])+"<br>Author: "+(value["source_data"]["full_name"])+"<br>Link: "+(value["source_data"]["link"])
-           @import_object["steps"][step_pos.to_s]["description"]<<element_string
-          end
-         #if key["source_data"]["link"]&&key["source_data"]["link"]!=""
-         #end
-         when "19"
-           if(value["source_data"]["body"]&&value["source_data"]["link"])
-
-           element_string="<br><strong>Safety information: </strong>"+(value["source_data"]["body"])+"<br>Link: "+(value["source_data"]["link"])
-           @import_object["steps"][step_pos.to_s]["description"]<<element_string
-          end
-         when "20"
-         else
-
-         end
-       end #finished step component iteration
-
-      end #if statement to check if its first step or not
     end #finished looping over step components
   end #steps
 
