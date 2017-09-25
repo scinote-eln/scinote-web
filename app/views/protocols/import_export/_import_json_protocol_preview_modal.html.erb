@@ -146,14 +146,14 @@ CGI.parse(URI.parse(request.referrer).query).fetch("type") %>
                   <div data-val="description" class="ql-editor">
 
                     <% step["components"].each do |key,value|  %>
-
+                    
                     <%#here i made an if to distinguish the first step from the
                     others, because the first step #sometimes has index values as keys instead of
                     hashes, you might see this elsewhere %>
                     <% if value.class==Hash %>
                     <% key=value %>
-                    <% end %>
 
+                    <% end %>
                     <% # the below blocks of code output the various attributes if they exist and arent null or "" from the json object %>
                     <% if whitelist_simple.include?(key["component_type_id"]) && key["data"]!="" && key["data"] %>
                     <br>

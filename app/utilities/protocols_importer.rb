@@ -1,7 +1,7 @@
 module ProtocolsImporter
   include RenamingUtil
 
-  def import_new_protocol(protocol_json, team, type, user) # .eln import
+  def import_new_protocol(protocol_json, team, type, user)
     remove_empty_inputs(protocol_json)
 
     protocol = Protocol.new(
