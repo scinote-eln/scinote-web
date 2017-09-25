@@ -700,16 +700,17 @@ class ProtocolsController < ApplicationController
 
     step['components'].each do |key,value|
     element_string = nil
-    if counter <= 1
-      # here i made an if to distinguish the first step from the others,
-      # because the first step
-      # sometimes has index values as keys instead of hashes, for no good reason
-      key = value if value.class == Hash
-    end
+
+
+    # sometimes there are random index values as keys
+    # instead of hashes, this is a workaround to that buggy json format
+    key = value if value.class == Hash
+
     if whitelist_simple.include?(key['component_type_id'])
 
       case key['component_type_id']
       when '1'
+
         if !key['data'].nil? && key['data'] != ''
           element_string = '<br>' + (key['data']) + '<br>'
           if @import_object['steps'][step_pos.to_s]['description']
@@ -718,7 +719,8 @@ class ProtocolsController < ApplicationController
             @import_object['steps'][step_pos.to_s]['description'] = element_string
           end
         else
-          @import_object['steps'][step_pos.to_s]['description'] ||= 'Description missing!'
+
+          @import_object['steps'][step_pos.to_s]['description'] = 'Description missing!'
         end
       when '6'
         if !key['data'].nil? && key['data'] != ''
