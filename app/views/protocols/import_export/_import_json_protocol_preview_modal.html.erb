@@ -145,32 +145,31 @@ CGI.parse(URI.parse(request.referrer).query).fetch("type") %>
                 <div class="tab-pane active" role="tabpanel">
                   <div data-val="description" class="ql-editor">
 
-                    <% step["components"].each do |key,value|  %>
-                    
+                <% step["components"].each do |key,value|  %>
                     <%#here i made an if to distinguish the first step from the
                     others, because the first step #sometimes has index values as keys instead of
                     hashes, you might see this elsewhere %>
-                    <% if value.class==Hash %>
+                  <% if value.class==Hash %>
                     <% key=value %>
+                  <% end %>
 
-                    <% end %>
-                    <% # the below blocks of code output the various attributes if they exist and arent null or "" from the json object %>
-                    <% if whitelist_simple.include?(key["component_type_id"]) && key["data"]!="" && key["data"] %>
+                  <% if whitelist_simple.include?(key["component_type_id"]) && key["data"]!="" && key["data"] %>
                     <br>
                     <% case key["component_type_id"]%>
                     <% when "1" %>
-                    <br>
-                    <strong>Description:
-                    </strong>
-                    <%=key["data"]%><br>
+                      <br>
+                      <strong>
+                        Description:
+                      </strong>
+                      <%=key["data"]%><br>
                     <% when "17" %>
-                    <br>
-                    <strong>Expected result:
-                    </strong>
-                    <%=key["data"]%><br>
-                  <% else %>
+                      <br>
+                      <strong>Expected result:
+                      </strong>
+                      <%=key["data"]%>
+                      <br>
                     <% end %>
-                    <% elsif key && whitelist_complex.include?(key["component_type_id"]) %>
+                  <% elsif key && whitelist_complex.include?(key["component_type_id"]) %>
 
                     <% case key["component_type_id"]%>
                     <% when "8"%>
@@ -198,7 +197,7 @@ CGI.parse(URI.parse(request.referrer).query).fetch("type") %>
                     <strong><%= key["name"]+": " %></strong>
                     <%= key["source_data"]["name"] %>
                     <br>
-                    Link :
+                    Link:
                     <%= (key["source_data"]["link"]) %>
 
                     <% when "15"%>
@@ -328,7 +327,7 @@ CGI.parse(URI.parse(request.referrer).query).fetch("type") %>
       </div>
     </div>
   </div>
-<% # the below script resets all the fields after you decide not to import the file (cancel (modal hide)) %>
+<%# the below script resets all the fields after you decide not to import the file (cancel (modal hide)) %>
   <script>
     $('#modal-import-json-protocol-preview').on('hide.bs.modal', function () {
       $('#protocols_io_form').trigger("reset");

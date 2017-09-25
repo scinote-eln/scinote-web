@@ -638,7 +638,7 @@ class ProtocolsController < ApplicationController
     ]
     description_string = Sanitize.clean(params['protocol']['description'])
     description_array.each do |element|
-    if element == 'created_on'
+    if element == 'created_on' #združ
       if @json_object[element] && @json_object[element] != ''
         new_element = element.slice(0, 1).capitalize + element.slice(1..-1)
         new_element = new_element.tr('_', ' ')
@@ -648,7 +648,7 @@ class ProtocolsController < ApplicationController
           Sanitize.clean(params['protocol']['created_at'].to_s) + "\n"
       end
     else
-      if element == 'tags'
+      if element == 'tags' #združ
         if @json_object[element].any? && @json_object[element] != ''
           new_element = element.slice(0, 1).capitalize + element.slice(1..-1)
           new_element = new_element.tr('_', ' ')
