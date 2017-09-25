@@ -600,176 +600,189 @@ class ProtocolsController < ApplicationController
     end
   end
 
-def protocolsio_import_create
-  @protocolsio_too_big=false
-  file_size=(File.size(params[:json_file].path))
+  def protocolsio_import_create
+    @protocolsio_too_big = false
+    file_size = File.size(params[:json_file].path)
 
-  if(file_size/1000>Constants::FILE_MAX_SIZE_MB)
-    @protocolsio_too_big=true
+    if file_size / 1000 > Constants::FILE_MAX_SIZE_MB
+      @protocolsio_too_big = true
+      respond_to do |format|
+        format.js {}
+        # if file is too big, default to the js.erb file,
+        # named the same as this controller
+        # where a javascript alert is called
+      end
+    end
+    json_file_contents = File.read(params[:json_file].path)
+    json_file_contents.gsub! '\"', "'"
+    # escaped double quotes too stressfull, html works with single quotes too
+    # json double quotes dont get escaped since they dont match \"
+    @json_object = JSON.parse(json_file_contents)
+    @protocol = Protocol.new
     respond_to do |format|
-      format.js {} #if file is too big, default to the js.erb file named the same as this controller
-      # where a javascript alert is called
+      format.js {} # go to the js.erb file named the same as this controller,
+      # where a preview modal is rendered,
+      # and some modals get closed and opened
     end
   end
-  json_file_contents=File.read(params[:json_file].path)
-  json_file_contents.gsub! '\"', "'" #escaped double quotes too stressfull, html works with single quotes too
-  #json double quotes dont get escaped since they dont match \", they are just "
-  @json_object=JSON.parse(json_file_contents)
-  @protocol=Protocol.new
-  respond_to do |format|
-    format.js {}  # go to the js.erb file named the same as this controller, where a preview modal is rendered, and
-    # some modals get closed and opened
-  end
-end
 
-
-def protocolsio_import_save
-  @json_object=JSON.parse(params["json_object"])
-  @import_object=Hash.new
-  @import_object["name"]=params["protocol"]["name"]
-  # since scinote only has description field, while protocols.io has many many others, here i am basically
-  #putting everything important from protocols.io into description
-  description_array = [ "before_start","warning","guidelines","manuscript_citation","publish_date","created_on","vendor_name","vendor_link","keywords","tags","link" ]
-  description_string=params["protocol"]["description"]
-  description_array.each do |element|
-    if(element=="created_on")
-      if(@json_object[element]&&@json_object[element]!="")
-        new_element = element.slice(0,1).capitalize + element.slice(1..-1)
-        new_element= new_element.gsub("_"," ")
-        description_string=description_string+new_element.to_s+":  "+Sanitize.clean(params["protocol"]["created_at"].to_s)+"\n"
+  def protocolsio_import_save
+    @json_object = JSON.parse(params['json_object'])
+    @import_object = {}
+    @import_object['name'] = params['protocol']['name']
+    # since scinote only has description field, and protocols.io has many others
+    # ,here i am putting everything important from protocols.io into description
+    description_array = %w[
+      (before_start warning guidelines manuscript_citation publish_date
+      created_on vendor_name vendor_link keywords tags link)
+    ]
+    description_string = Sanitize.clean(params['protocol']['description'])
+    description_array.each do |element|
+    if element == 'created_on'
+      if @json_object[element] && @json_object[element] != ''
+        new_element = element.slice(0, 1).capitalize + element.slice(1..-1)
+        new_element = new_element.tr('_', ' ')
+        description_string =
+          description_string +
+          new_element.to_s + ':  ' +
+          Sanitize.clean(params['protocol']['created_at'].to_s) + "\n"
       end
     else
-      if(element=="tags")
-        if(@json_object[element].any?&&@json_object[element]!="")
-          new_element = element.slice(0,1).capitalize + element.slice(1..-1)
-          new_element= new_element.gsub("_"," ")
-          description_string=description_string+new_element.to_s+": "
+      if element == 'tags'
+        if @json_object[element].any? && @json_object[element] != ''
+          new_element = element.slice(0, 1).capitalize + element.slice(1..-1)
+          new_element = new_element.tr('_', ' ')
+          description_string = description_string + new_element.to_s + ': '
           @json_object[element].each do |tag|
-            description_string=description_string+Sanitize.clean(tag["tag_name"])+" , "
+            description_string =
+              description_string +
+              Sanitize.clean(tag['tag_name']) + ' , '
           end
-          description_string=description_string+"\n"
+          description_string += "\n"
         end
-      #Since protocols description field doesnt show html, i just remove it here because its even messier Otherwise
-      #what this does is basically appends "FIELD NAME: "+" FIELD VALUE" to description for various fields
+      # Since protocols description field doesnt show html,i just remove it here
+      # because its even messier Otherwise
+      # what this does is basically appends "FIELD NAME: "+" FIELD VALUE"
+      # to description for various fields
       else
-        if(@json_object[element]&&@json_object[element]!="")
-          new_element = element.slice(0,1).capitalize + element.slice(1..-1)
-          new_element= new_element.gsub("_"," ")
-          description_string=description_string+new_element.to_s+":  "+Sanitize.clean(@json_object[element].to_s)+"\n"
+        if @json_object[element] && @json_object[element] != ''
+          new_element = element.slice(0, 1).capitalize + element.slice(1..-1)
+          new_element = new_element.tr('_', ' ')
+          description_string +=
+            new_element.to_s + ':  ' +
+            Sanitize.clean(@json_object[element].to_s) + "\n"
         end
       end
     end
-  end
-  @import_object["authors"]=params["protocol"]["authors"]
-  @import_object["created_at"]=params["protocol"]["created_at"]
-  @import_object["updated_at"]=params["protocol"]["last_modified"]
-  @import_object["description"]=description_string
-  @import_object["steps"]=Hash.new
-  counter=0
-  step_pos=-1
-  #these whitelists are there to not let some useless step components trough, that always have data set to null (data doesnt get imported over to json)
-  whitelist_simple=["1","6","17"] #(simple to map) id 1= step description, id 6= section (title), id 17= expected result
-  whitelist_complex=["8","9","15","18","19","20"] #(complex mapping with nested hashes) id 8 = software package, id 9 = dataset, id 15 = command, id 18 = attached sub protocol
-  # id 19= safety information ,id 20= regents (materials, like scinote samples kind of)
-  @json_object["steps"].each do |step|
-        step_pos+=1
-        counter+=1
-        @import_object["steps"][step_pos.to_s]=Hash.new
-        @import_object["steps"][step_pos.to_s]["position"]=step_pos
+    end
+    @import_object['authors'] = params['protocol']['authors']
+    @import_object['created_at'] = params['protocol']['created_at']
+    @import_object['updated_at'] = params['protocol']['last_modified']
+    @import_object['description'] = description_string
+    @import_object['steps'] = {}
+    counter = 0
+    step_pos = -1
+    # these whitelists are there to not let some useless step components trough,
+    # that always have data set to null (data doesnt get imported over to json)
+    whitelist_simple = %w(1 6 17)
+    # (simple to map) id 1= step description, id 6= section (title),
+    # id 17= expected result
+    whitelist_complex = %w(8 9 15 18 19 20)
+    # (complex mapping with nested hashes) id 8 = software package,
+    # id 9 = dataset, id 15 = command, id 18 = attached sub protocol
+    # id 19= safety information ,
+    # id 20= regents (materials, like scinote samples kind of)
+    @json_object['steps'].each do |step|
+    step_pos += 1
+    counter += 1
+    @import_object['steps'][step_pos.to_s] = {}
+    @import_object['steps'][step_pos.to_s]['position'] = step_pos
 
-        step["components"].each do |key,value|
-          element_string=nil
-          if counter<=1 #here i made an if to distinguish the first step from the others, because the first step
-            #sometimes has index values as keys instead of hashes, for no good reason
-             if value.class==Hash
-             key=value
-             end
-           end
-       if whitelist_simple.include?(key["component_type_id"])
+    step['components'].each do |key,value|
+    element_string = nil
+    if counter <= 1
+      # here i made an if to distinguish the first step from the others,
+      # because the first step
+      # sometimes has index values as keys instead of hashes, for no good reason
+      key = value if value.class == Hash
+    end
+    if whitelist_simple.include?(key['component_type_id'])
 
-         case key["component_type_id"]
-         when "1"
-           if !key["data"].nil? && key["data"]!=""
-
-             element_string="<br>"+(key["data"])+"<br>"
-              if(@import_object["steps"][step_pos.to_s]["description"])
-                @import_object["steps"][step_pos.to_s]["description"]<<element_string
-              else
-                @import_object["steps"][step_pos.to_s]["description"]=element_string
-              end
-            else
-              @import_object["steps"][step_pos.to_s]["description"]||="Description missing!"
-            end
-         when "6"
-           if !key["data"].nil? && key["data"]!=""
-          @import_object["steps"][step_pos.to_s]["name"]=key["data"]
+      case key['component_type_id']
+      when '1'
+        if !key['data'].nil? && key['data'] != ''
+          element_string = '<br>' + (key['data']) + '<br>'
+          if @import_object['steps'][step_pos.to_s]['description']
+            @import_object['steps'][step_pos.to_s]['description'] << element_string
           else
-          @import_object["steps"][step_pos.to_s]["name"]="Step"
-        end
-         when "17"
-           if !key["data"].nil? && key["data"]!=""
-
-             element_string="<br><strong>Expected result: </strong>"+(key["data"])+"<br>"
-             @import_object["steps"][step_pos.to_s]["description"]<<element_string
+            @import_object['steps'][step_pos.to_s]['description'] = element_string
           end
         else
+          @import_object['steps'][step_pos.to_s]['description'] ||= 'Description missing!'
+        end
+      when '6'
+        if !key['data'].nil? && key['data'] != ''
+          @import_object['steps'][step_pos.to_s]['name'] = key['data']
+        else
+          @import_object['steps'][step_pos.to_s]['name'] = 'Step'
+        end
+      when '17'
+        if !key['data'].nil? && key['data'] != ''
+          element_string = '<br><strong>Expected result: </strong>' + (key['data']) + '<br>'
+          @import_object['steps'][step_pos.to_s]['description'] << element_string
 
-        end#(complex mapping with nested hashes) id 8 = software package, id 9 = dataset,
-        #id 15 = command, id 18 = attached sub protocol
-        # id 19= safety information ,id 20= regents (materials, like scinote samples kind of)
+        end
+      end
+      # (complex mapping with nested hashes)
+      # id 8 = software package, id 9 = dataset,
+      # id 15 = command, id 18 = attached sub protocol
+      # id 19= safety information ,
+      # id 20= regents (materials, like scinote samples kind of)
 
-      elsif key && whitelist_complex.include?(key["component_type_id"])
-        case key["component_type_id"]
-        when "8"
-          if(key["source_data"]["name"]&&key["source_data"]["developer"]&&key["source_data"]["version"]&&key["source_data"]["link"]&&key["source_data"]["repository"]&&key["source_data"]["os_name"]&&key["source_data"]["os_version"])
-          element_string="<br><strong>Software package: </strong>"+(key["source_data"]["name"])+"<br>Developer: "+(key["source_data"]["developer"])+"<br>Version: "+(key["source_data"]["version"])+"<br>Link: "+(key["source_data"]["link"])+"<br>Repository: "+(key["source_data"]["repository"])+"<br> OS name , OS version: "+(key["source_data"]["os_name"])+" , "+(key["source_data"]["os_version"])
-          @import_object["steps"][step_pos.to_s]["description"]<<element_string
-          end
-        when "9"
-          if(key["source_data"]["name"]&&key["source_data"]["link"])
-          element_string="<br><strong>Dataset: </strong>"+(key["source_data"]["name"])+"<br>Link: "+(key["source_data"]["link"])
-          @import_object["steps"][step_pos.to_s]["description"]<<element_string
-          end
-         when "15"
-           if(key["source_data"]["name"]&&key["source_data"]["description"]&&key["source_data"]["os_name"]&&key["source_data"]["os_version"])
-           element_string="<br><strong>Command: </strong>"+(key["source_data"]["name"])+"<br>Description: "+(key["source_data"]["description"])+"<br>OS name , OS version: "+(key["source_data"]["os_name"])+" , "+(key["source_data"]["os_version"])
-           @import_object["steps"][step_pos.to_s]["description"]<<element_string
-          end
-         when "18"
-           if(key["source_data"]["protocol_name"]&&key["source_data"]["full_name"]&&key["source_data"]["link"])
-           element_string="<br><strong>This protocol also contains an attached sub-protocol: </strong>"+(key["source_data"]["protocol_name"])+"<br>Author: "+(key["source_data"]["full_name"])+"<br>Link: "+(key["source_data"]["link"])
-           @import_object["steps"][step_pos.to_s]["description"]<<element_string
+    elsif key && whitelist_complex.include?(key['component_type_id'])
+      case key['component_type_id']
+      when '8'
+        if key['source_data']['name'] && key['source_data']['developer'] && key['source_data']['version'] && key['source_data']['link'] && key['source_data']['repository'] && key['source_data']['os_name'] && key['source_data']['os_version']
+          element_string = '<br><strong>Software package: </strong>' + (key['source_data']['name']) + '<br>Developer: ' + (key['source_data']['developer']) + '<br>Version: ' + (key['source_data']['version']) + '<br>Link: ' + (key['source_data']['link']) + '<br>Repository: ' + (key['source_data']['repository']) + '<br> OS name , OS version: ' + (key['source_data']['os_name']) + ' , ' + (key['source_data']['os_version'])
+          @import_object['steps'][step_pos.to_s]['description'] << element_string
+        end
+      when '9'
+        if key['source_data']['name'] && key['source_data']['link']
+          element_string='<br><strong>Dataset: </strong>' + (key['source_data']['name']) + '<br>Link: ' + (key['source_data']['link'])
+          @import_object['steps'][step_pos.to_s]['description'] << element_string
+        end
+      when '15'
+        if key['source_data']['name'] && key['source_data']['description'] && key['source_data']['os_name'] && key['source_data']['os_version']
+          element_string = '<br><strong>Command: </strong>' + (key['source_data']['name']) + '<br>Description: ' + (key['source_data']['description']) + '<br>OS name , OS version: ' + (key['source_data']['os_name']) + ' , ' + (key['source_data']['os_version'])
+          @import_object['steps'][step_pos.to_s]['description'] << element_string
+        end
+      when '18'
+        if key['source_data']['protocol_name'] && key['source_data']['full_name'] && key['source_data']['link']
+          element_string = '<br><strong>This protocol also contains an attached sub-protocol: </strong>' + (key['source_data']['protocol_name']) + '<br>Author: ' + (key['source_data']['full_name']) + '<br>Link: ' + (key['source_data']['link'])
+          @import_object['steps'][step_pos.to_s]['description'] << element_string
 
-          end
-         #if key["source_data"]["link"]&&key["source_data"]["link"]!=""
-         #end
-         when "19"
-           if(key["source_data"]["body"]&&key["source_data"]["link"])
-           element_string="<br><strong>Safety information: </strong>"+(key["source_data"]["body"])+"<br>Link: "+(key["source_data"]["link"])
-           @import_object["steps"][step_pos.to_s]["description"]<<element_string
-         end
-         when "20"
-         else
+        end
+      when '19'
+        if key['source_data']['body'] && key['source_data']['link']
+          element_string = '<br><strong>Safety information: </strong>' + (key['source_data']['body'])+'<br>Link: '+(key['source_data']['link'])
+          @import_object['steps'][step_pos.to_s]['description'] << element_string
+        end
+        # when '20' placeholder za materiale
+      end
+    end # finished step component iteration
+    end # finished looping over step components
+    end # steps
 
-         end
-       end #finished step component iteration
-
-
-    end #finished looping over step components
-  end #steps
-
-  protocol = nil
-  respond_to do |format|
+    protocol = nil
+    respond_to do |format|
     transaction_error = false
-    #@steps_object=JSON.parse(params["steps"]["steps_object"])
-    @protocolsio_general_error=false
+    @protocolsio_general_error = false
     Protocol.transaction do
       begin
-
+        # pass the import_object we made, current team,user
+        # and the type (private,public)
         protocol = import_new_protocol(@import_object, current_team, params[:type].to_sym, current_user)
-
       rescue Exception
-
         transaction_error = true
         raise ActiveRecord:: Rollback
       end
@@ -783,31 +796,25 @@ def protocolsio_import_save
       end
 
     if transaction_error
+      @protocolsio_general_error = true
+      #  format.json {
+      #    render json: { name: p_name, status: :bad_request },
+      # status: :bad_request
+      #  }
 
-      @protocolsio_general_error=true
-    #  format.json {
-    #    render json: { name: p_name, status: :bad_request }, status: :bad_request
-    #  }
-      format.js{}
-
-      #:location => root_url
-        #  protocolsDatatable.ajax.reload();
-        #  $('#modal-import-json-protocol-preview').modal('hide');
     else
-      @protocolsio_general_error=false
+      # General something went wrong, upload to db failed error
+      @protocolsio_general_error = false
       format.json {
-        render json: {
-          name: p_name, new_name: protocol.name, status: :ok
-        },
+        render json:
+       { name: p_name, new_name: protocol.name, status: :ok },
         status: :ok
       }
-      format.js{}
+    end
+    format.js {}
     end
   end
-end
 
-
-#
   def export
     # Make a zip output stream and send it to the client
     respond_to do |format|

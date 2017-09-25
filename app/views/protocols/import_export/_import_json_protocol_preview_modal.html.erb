@@ -1,52 +1,59 @@
-<%= form_for(@protocol, :url => url_for(:controller => 'protocols', :action => 'protocolsio_import_save'),method: :post,format: :javascript,remote: true,:html => { :id => "protocolsio-import-form" }) do |f| %>
+<%= form_for(@protocol, :url => url_for(:controller => 'protocols', :action =>'protocolsio_import_save'),method: :post,format: :javascript,remote: true,:html=> { :id => "protocolsio-import-form" }) do |f| %>
 
-  <%= hidden_field_tag :json_object, JSON.generate(@json_object) %>
-  <%= hidden_field_tag :type, CGI.parse(URI.parse(request.referrer).query).fetch("type") %>
-
-<div id="modal-import-json-protocol-preview" class="modal fade" role="dialog" tabindex="-1">
+<%= hidden_field_tag :json_object, JSON.generate(@json_object) %>
+<%= hidden_field_tag :type,
+CGI.parse(URI.parse(request.referrer).query).fetch("type") %>
+<!--Get the type of protocol to import (private, public) from the url -->
+<div
+  id="modal-import-json-protocol-preview"
+  class="modal fade"
+  role="dialog"
+  tabindex="-1">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title" data-role="header-import-into-protocol_protocols_io"><%= t("protocols.import_export.import_modal.title_import_into_protocol_protocols_io") %></h4>
+        <h4 class="modal-title" data-role="header-import-into-protocol_protocols_io"><%=
+          t("protocols.import_export.import_modal.title_import_into_protocol_protocols_io")
+          %></h4>
       </div>
       <div class="modal-body">
-        
-
 
         <!-- General protocol info -->
         <div class="form-group">
 
           <label><%= t("protocols.import_export.import_modal.name_label") %></label>
 
-       <%= f.text_field :name, :value => @json_object['protocol_name'], class: "form-control"  %>
+          <%= f.text_field :name, :value => @json_object['protocol_name'], class:
+          "form-control" %>
         </div>
         <div class="form-group">
           <label>
             <span class="glyphicon glyphicon-user"></span>&nbsp;<%= t("protocols.import_export.import_modal.authors_label") %>
           </label>
-          <%= f.text_field :authors, :value => @json_object['full_name'], class: "form-control"  %>
-
+          <%= f.text_field :authors, :value => @json_object['full_name'], class:
+          "form-control" %>
 
         </div>
         <div class="form-group">
           <label><%= t("protocols.import_export.import_modal.description_label") %></label>
 
-      <%= f.text_area :description, :value => @json_object['description'], class: "form-control"  %>
+          <%= f.text_area :description, :value => @json_object['description'], class:
+          "form-control" %>
         </div>
         <div class="form-group">
           <div class="row">
             <div class="col-xs-4">
               <label><%= t("protocols.import_export.import_modal.created_at_label") %></label>
 
-          <% display_created_at=Time.at(@json_object['created_on'].to_i) %>
-            <%= f.text_field :created_at, :value => display_created_at.to_s+" (Protocols.io value)",readonly: true, class: "form-control"  %>
+              <% display_created_at=Time.at(@json_object['created_on'].to_i) %>
+              <%= f.text_field :created_at, :value => display_created_at.to_s+"(Protocols.io value)",readonly: true, class: "form-control" %>
             </div>
             <div class="col-xs-4">
               <label><%= t("protocols.import_export.import_modal.updated_at_label") %></label>
 
               <% display_last_modified=Time.at(@json_object['last_modified'].to_i) %>
-            <%= f.text_field :last_modified, :value => display_last_modified.to_s+" (Protocols.io value)",readonly: true, class: "form-control"  %>
+              <%= f.text_field :last_modified, :value => display_last_modified.to_s+"(Protocols.io value)",readonly: true, class: "form-control" %>
             </div>
           </div>
         </div>
@@ -59,170 +66,189 @@
 
         <!-- Preview scroller -->
 
+        <div
+          class="import-protocols-modal-preview-container-json"
+          data-role="preview-container">
+          <hr>
 
-          <div class="import-protocols-modal-preview-container-json" data-role="preview-container">
+          <% if @json_object["before_start"]&&@json_object["before_start"]!="" %>
+
+          <strong>Before starting protocol information:</strong><br>
+          <%= (@json_object["before_start"]) %><br>
+
+          <% end %>
+          <% if @json_object["warning"]&&@json_object["warning"]!="" %>
+
+          <strong>Protocol warning:</strong><br>
+          <%= (@json_object["warning"]) %><br>
+
+          <% end %>
+          <% if @json_object["guidelines"]&&@json_object["guidelines"]!="" %>
+
+          <strong>Guidelines:</strong><br>
+          <%= (@json_object["guidelines"]) %><br>
+
+          <% end %>
+
+          <% if @json_object["link"]&&@json_object["link"]!="" %>
+
+          <br>
+          <strong>Supplied link:</strong><br>
+          <%= (@json_object["link"]) %>
+
+          <% end %>
+
+          <%  counter=0 %>
+          <%  whitelist_simple=["1","6","17"] %>
+          <%  whitelist_complex=["8","9","15","18","19","20"]%>
+          <% @json_object["steps"].each do |step| %>
+          <div style="display: block;">
             <hr>
-
-              <% if @json_object["before_start"]&&@json_object["before_start"]!="" %>
-
-                    <strong>Before starting protocol information:</strong><br>
-                    <%= (@json_object["before_start"]) %><br>
-
-
-                <% end %>
-              <% if @json_object["warning"]&&@json_object["warning"]!="" %>
-
-                    <strong>Protocol warning:</strong><br>
-                    <%= (@json_object["warning"]) %><br>
-
-
-              <% end %>
-              <% if @json_object["guidelines"]&&@json_object["guidelines"]!="" %>
-
-                    <strong>Guidelines:</strong><br>
-                    <%= (@json_object["guidelines"]) %><br>
-
-              <% end %>
-
-              <% if @json_object["link"]&&@json_object["link"]!="" %>
-
-                    <br><strong>Supplied link:</strong><br>
-                    <%= (@json_object["link"]) %>
-
-              <% end %>
-
-                <%  counter=0 %>
-                <%  whitelist_simple=["1","6","17"] %>
-                <%  whitelist_complex=["8","9","15","18","19","20"]%>
-            <% @json_object["steps"].each do |step| %>
-                  <div style="display: block;">
-                    <hr>
-                    <td>
-                      <div class="badge-num">
-                        <span class="badge-preview bg-primary size-digit-1">
-                          <b data-val="position"><%= (counter+=1) %></b>
-                        </span>
-                        &nbsp;
-                        &nbsp;
-                        <span class="step-panel-collapse-link" data-toggle="collapse">
-                          <span class="glyphicon collapse-step-icon glyphicon-collapse-up"></span>
-
-
-                    <%#=   Step guid (Protocols.io) :%><%#= step["guid"] %>
-                      <%# if counter>1  #only steps after the first one have previous step guid field valid%>
-                      <%#=Guid of previous step (Protocols.io) :%><%#= step["previous_guid"] %>
-                       <%# end %>
-                       <% title=nil %>
-            <% step["components"].each do |key1,value1| #finding section (title of step) %>
+            <td>
+              <div class="badge-num">
+                <span class="badge-preview bg-primary size-digit-1">
+                  <b data-val="position"><%= (counter+=1) %></b>
+                </span>
+                &nbsp; &nbsp;
+                <span class="step-panel-collapse-link" data-toggle="collapse">
+                  <span class="glyphicon collapse-step-icon glyphicon-collapse-up"></span>
+                  <%# this guid attributes were ommited because they didnt seem relevenat %>
+                  <%#=   Step guid (Protocols.io) :%><%#= step["guid"] %>
+                  <%# if counter>1 #only steps after the first one have previous step guid field
+                  valid%>
+                  <%#=Guid of previous step (Protocols.io) :%><%#= step["previous_guid"] %>
+                  <%# end %>
+                  <% title=nil %>
+                  <% step["components"].each do |key1,value1| #finding section (title of step) %>
 
                   <% if counter <=1 %>
-                    <% if value1.class==Hash %>
-                    <% key1=value1 %>
-                    <% end %>
-                    <% end %>
-                    <%  if(key1["component_type_id"]=="6") %>
-                      <% if(!key1["data"].nil? && key1["data"]!="") %>
-                      <%# byebug %>
-                        <% title ||=key1["data"] %>
-                      <% end %>
-                    <% end %>
+                  <% if value1.class==Hash %>
+                  <% key1=value1 %>
+                  <% end %>
+                  <% end %>
+                  <%  if(key1["component_type_id"]=="6") %>
+                  <% if(!key1["data"].nil? && key1["data"]!="") %>
+                  <% title ||=key1["data"] %>
+                  <% end %>
+                  <% end %>
 
-                    <% end %>
-          <% if title.nil? %>
-          <%# byebug %>
-          <% title ="Step" %>
-          <% end %>
-                <strong data-val="name"><%= title %></strong>
+                  <% end %>
+                  <% if title.nil? %>
+                  <% title ="Step" %>
+                  <% end %>
+                  <strong data-val="name"><%= title %></strong>
                 </span>
               </div>
               <br>
 
               <div class="tab-content">
-    <div class="tab-pane active" role="tabpanel">
-      <div data-val="description" class="ql-editor">
+                <div class="tab-pane active" role="tabpanel">
+                  <div data-val="description" class="ql-editor">
 
-
-            <% step["components"].each do |key,value|  %>
-                  <% if counter<=1 #here i made an if to distinguish the first step from the others, because the first step
-                    #sometimes has index values as keys instead of hashes
-                    %>
+                    <% step["components"].each do |key,value|  %>
+                    <% if counter<=1 %>
+                    <%#here i made an if to distinguish the first step from the
+                    others, because the first step #sometimes has index values as keys instead of
+                    hashes, you might see this elsewhere %>
                     <% if value.class==Hash %>
                     <% key=value %>
                     <% end %>
-                  <% end %>
-
-
+                    <% end %>
+                    <% # the below blocks of code output the various attributes if they exist and arent null or "" from the json object %>
                     <% if whitelist_simple.include?(key["component_type_id"]) && key["data"]!="" && key["data"] %>
                     <br>
                     <% case key["component_type_id"]%>
                     <% when "1" %>
-                <br><strong>Description: </strong> <%=key["data"]%><br>
+                    <br>
+                    <strong>Description:
+                    </strong>
+                    <%=key["data"]%><br>
                     <% when "17" %>
-                  <br><strong>Expected result: </strong> <%=key["data"]%><br>
-                    <% else %>
+                    <br>
+                    <strong>Expected result:
+                    </strong>
+                    <%=key["data"]%><br>
+                  <% else %>
                     <% end %>
                     <% elsif key && whitelist_complex.include?(key["component_type_id"]) %>
 
-                      <% case key["component_type_id"]%>
-                      <% when "8"%>
-                      <br>
-                      <strong><%= key["name"]+": " %></strong>  <%= (key["source_data"]["name"]) %>
-                      <br>
-                      Developer: <%= (key["source_data"]["developer"]) %>
-                      <br>
-                      Version: <%= (key["source_data"]["version"]) %>
-                      <br>
-                      Link: <%= (key["source_data"]["link"]) %>
-                      <br>
-                      Repository: <%= (key["source_data"]["repository"]) %>
-                      <br>
-                      OS name , OS version: <%= (key["source_data"]["os_name"])+" , "+(key["source_data"]["os_version"]) %>
+                    <% case key["component_type_id"]%>
+                    <% when "8"%>
+                    <br>
+                    <strong><%= key["name"]+": " %></strong>
+                    <%= (key["source_data"]["name"]) %>
+                    <br>
+                    Developer:
+                    <%= (key["source_data"]["developer"]) %>
+                    <br>
+                    Version:
+                    <%= (key["source_data"]["version"]) %>
+                    <br>
+                    Link:
+                    <%= (key["source_data"]["link"]) %>
+                    <br>
+                    Repository:
+                    <%= (key["source_data"]["repository"]) %>
+                    <br>
+                    OS name , OS version:
+                    <%= (key["source_data"]["os_name"])+" , "+(key["source_data"]["os_version"]) %>
 
-                      <% when "9"%>
-                      <br>
-                      <strong><%= key["name"]+": " %></strong>    <%= key["source_data"]["name"] %>
-                      <br>
-                      Link : <%= (key["source_data"]["link"]) %>
+                    <% when "9"%>
+                    <br>
+                    <strong><%= key["name"]+": " %></strong>
+                    <%= key["source_data"]["name"] %>
+                    <br>
+                    Link :
+                    <%= (key["source_data"]["link"]) %>
 
+                    <% when "15"%>
+                    <br>
+                    <strong><%= key["name"]+": " %></strong>
+                    <%=  key["source_data"]["name"] %>
+                    <br>
+                    Description:
+                    <%= (key["source_data"]["description"]) %>
+                    <br>
+                    OS name , OS version:
+                    <%= (key["source_data"]["os_name"])+" , "+(key["source_data"]["os_version"]) %>
 
-                      <% when "15"%>
-                      <br>
-                      <strong><%= key["name"]+": " %></strong> <%=  key["source_data"]["name"] %>
-                      <br>
-                      Description: <%= (key["source_data"]["description"]) %>
-                      <br>
-                      OS name , OS version: <%= (key["source_data"]["os_name"])+" , "+(key["source_data"]["os_version"]) %>
+                    <% when "18"%>
+                    <br>
+                    <strong>This protocol also contains an attached sub-protocol:
+                    </strong>
+                    <%= (key["source_data"]["protocol_name"]) %>
+                    <br>
+                    Author:
+                    <%= (key["source_data"]["full_name"]) %>
+                    <br>
+                    <% if key["source_data"]["link"]&&key["source_data"]["link"]!="" %>
+                    Link:
+                    <%= (key["source_data"]["link"]) %>
+                    <% end %>
+                    <% when "19"%>
+                    <br>
+                    <strong><%= key["name"]+": " %></strong>
+                    <%= key["source_data"]["body"] %>
+                    <br>
+                    Link:
+                    <%= (key["source_data"]["link"]) %>
 
-                      <% when "18"%>
-                      <br>
-                      <strong>This protocol also contains an attached sub-protocol: </strong> <%= (key["source_data"]["protocol_name"]) %>
-                      <br>
-                      Author: <%= (key["source_data"]["full_name"]) %>
-                      <br>
-                      <% if key["source_data"]["link"]&&key["source_data"]["link"]!="" %>
-                      Link: <%= (key["source_data"]["link"]) %>
-                      <% end %>
-                      <% when "19"%>
-                      <br>
-                      <strong><%= key["name"]+": " %></strong>  <%= key["source_data"]["body"] %>
-                      <br>
-                      Link: <%= (key["source_data"]["link"]) %>
+                    <% when "20"%>
 
+                  <% else %>
 
-                      <% when "20"%>
-
-                      <% else %>
-
-                      <% end #case if%>
+                    <% end #case if%>
 
                     <% end #inner if%>
 
+                    <% end #step component loop %>
 
-              <% end #step component loop %>
+                  </div>
+                  <hr>
+                  <!-- This could be implemented later maybe,i believe this is different styling
+                  for scinotes own rich text format tables
 
-            </div>
-            <hr>
-        <!--    <div class="row">
+                     <div class="row">
               <div data-toggle="tables" class="col-xs-12" style="display: none;">
                 <div data-hold="tables"> </div>
               </div>
@@ -235,71 +261,76 @@
                 <div data-hold="checklists"></div>
               </div>
             </div> -->
-          </div>
-        </div>
+                </div>
+              </div>
 
-      </div> <%# block div%>
+            </div>
+
             <% end  #step loop%>
 
+            <% if
+            @json_object["manuscript_citation"]&&@json_object["manuscript_citation"]!="" %>
 
-
-            <% if @json_object["manuscript_citation"]&&@json_object["manuscript_citation"]!="" %>
-
-                  <br><strong>Manuscript citation:</strong><br>
-                  <%= (@json_object["manuscript_citation"]) %>
+            <br>
+            <strong>Manuscript citation:</strong><br>
+            <%= (@json_object["manuscript_citation"]) %>
 
             <% end %>
             <% if @json_object["publish_date"]&&@json_object["publish_date"]!="" %>
 
-                  <br><strong>Publish date:</strong><br>
-                  <%= (@json_object["publish_date"]) %>
+            <br>
+            <strong>Publish date:</strong><br>
+            <%= (@json_object["publish_date"]) %>
 
             <% end %>
             <% if @json_object["vendor_name"]&&@json_object["vendor_name"]!="" %>
 
-                  <br><strong>Vendor name:</strong><br>
-                  <%= (@json_object["vendor_name"]) %>
+            <br>
+            <strong>Vendor name:</strong><br>
+            <%= (@json_object["vendor_name"]) %>
 
             <% end %>
             <% if @json_object["vendor_link"]&&@json_object["vendor_link"]!="" %>
 
-                  <br><strong>Vendor link:</strong><br>
-                  <%= (@json_object["vendor_link"]) %>
+            <br>
+            <strong>Vendor link:</strong><br>
+            <%= (@json_object["vendor_link"]) %>
 
             <% end %>
             <% if @json_object["keywords"]&&@json_object["keywords"]!="" %>
 
-                  <br><strong>Keywords:</strong><br>
-                  <%= (@json_object["keywords"]) %>
+            <br>
+            <strong>Keywords:</strong><br>
+            <%= (@json_object["keywords"]) %>
 
             <% end %>
             <% if @json_object["tags"]&&@json_object["tags"]!="" %>
 
-                  <br><strong>Tags:</strong><br>
-                  <%  @json_object["tags"].each do |tag| %>
-                 <%= (tag["tag_name"])+" , " %>
-                 <% end %>
+            <br>
+            <strong>Tags:</strong><br>
+            <%  @json_object["tags"].each do |tag| %>
+            <%= (tag["tag_name"])+" , " %>
+            <% end %>
 
             <% end %>
             <hr>
           </div>
 
-
-      </div>
-      <div class="modal-footer">
+        </div>
+        <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal"><%= t("general.cancel") %></button>
 
-            <%= f.submit t("protocols.import_export.import_modal.import"),class: "btn btn-primary" %>
-            <% end %>
+          <%= f.submit t("protocols.import_export.import_modal.import"),class: "btn
+          btn-primary" %>
+          <% end %>
 
+        </div>
       </div>
     </div>
   </div>
-</div>
-
-
-<script>
- $('#modal-import-json-protocol-preview').on('hide.bs.modal',function(){
-   $('#protocols_io_form').trigger("reset");
- })
-</script>
+<% # the below script resets all the fields after you decide not to import the file (cancel (modal hide)) %>
+  <script>
+    $('#modal-import-json-protocol-preview').on('hide.bs.modal', function () {
+      $('#protocols_io_form').trigger("reset");
+    })
+  </script>
