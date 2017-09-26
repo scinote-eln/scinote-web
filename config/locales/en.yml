@@ -1825,3 +1825,6 @@ en:
     user_teams:
       leave_team_error: "An error occured."
       leave_flash: "Successfuly left team %{team}."
+    user:
+      blank_password_error: "Password can't be blank!"
+      passwords_dont_match: "Passwords don't match"

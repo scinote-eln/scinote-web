@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import PropTypes, { string } from "prop-types";
+import { string, func } from "prop-types";
 import styled from "styled-components";
 import { FormattedMessage } from "react-intl";
 
@@ -8,7 +8,7 @@ import {
   DARK_GRAY_COLOR
 } from "../../../../../config/constants/colors";
 
-import InputEnabled from "../../../components/InputEnabled";
+import InputEnabled from "./InputEnabled";
 
 const AvatarWrapper = styled.div`
   width: 100px;
@@ -16,6 +16,7 @@ const AvatarWrapper = styled.div`
   position: relative;
   cursor: pointer;
 `;
+
 const EditAvatar = styled.span`
   color: ${WHITE_COLOR};
   background-color: ${DARK_GRAY_COLOR};
@@ -30,19 +31,32 @@ const EditAvatar = styled.span`
 class AvatarInputField extends Component {
   constructor(props) {
     super(props);
-    this.state = { disabled: true };
+    this.state = { disabled: true, timestamp: "" };
     this.enableEdit = this.enableEdit.bind(this);
+    this.disableEdit = this.disableEdit.bind(this);
+    this.rerender = this.rerender.bind(this);
   }
 
   enableEdit() {
     this.setState({ disabled: false });
   }
 
+  disableEdit() {
+    this.setState({ disabled: true });
+  }
+
+  rerender() {
+    this.setState({ timestamp: `?${new Date().getTime()}` });
+  }
+
   render() {
     if (this.state.disabled) {
       return (
-        <AvatarWrapper onClick={this.props.enableEdit}>
-          <img src={this.props.imgSource} alt="default avatar" />
+        <AvatarWrapper onClick={this.enableEdit}>
+          <img
+            src={this.props.imgSource + this.state.timestamp}
+            alt="default avatar"
+          />
           <EditAvatar className="text-center">
             <span className="glyphicon glyphicon-pencil" />
             <FormattedMessage id="settings_page.edit_avatar" />
@@ -52,10 +66,14 @@ class AvatarInputField extends Component {
     }
     return (
       <InputEnabled
+        forceRerender={this.rerender}
         labelTitle="settings_page.avatar"
-        labelValue="Avatar"
+        labelValue="Upload new avatar file"
         inputType="file"
         inputValue=""
+        dataField="avatar"
+        disableEdit={this.disableEdit}
+        reloadInfo={this.props.reloadInfo}
       />
     );
   }
@@ -63,7 +81,7 @@ class AvatarInputField extends Component {
 
 AvatarInputField.propTypes = {
   imgSource: string.isRequired,
-  enableEdit: PropTypes.func.isRequired
+  reloadInfo: func.isRequired
 };
 
 export default AvatarInputField;

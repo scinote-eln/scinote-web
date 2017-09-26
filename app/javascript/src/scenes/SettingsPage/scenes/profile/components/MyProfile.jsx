@@ -52,7 +52,8 @@ class MyProfile extends Component {
         <AvatarLabel>
           <FormattedMessage id="settings_page.avatar" />
         </AvatarLabel>
-        <AvatarInputField imgSource={this.state.avatarThumb} />
+        <AvatarInputField reloadInfo={this.loadInfo}
+                          imgSource={this.state.avatarThumb} />
 
         <ProfileInputField
           value={this.state.fullName}
@@ -84,7 +85,7 @@ class MyProfile extends Component {
           value="********"
           inputType="password"
           labelTitle="settings_page.change_password"
-          labelValue="password"
+          labelValue="Current password"
           reloadInfo={this.loadInfo}
           dataField="password"
         />

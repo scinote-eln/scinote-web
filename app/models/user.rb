@@ -281,7 +281,7 @@ class User < ApplicationRecord
         end
       end
       errors.clear
-      errors.set(:avatar, messages)
+      errors.add(:avatar, messages.join(','))
     end
   end
 

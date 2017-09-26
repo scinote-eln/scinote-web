@@ -9,7 +9,10 @@ export default {
     },
     error_messages: {
       text_too_short: "is too short (minimum is {min_length} characters)",
-      text_too_long: "is too long (maximum is {max_length} characters)"
+      text_too_long: "is too long (maximum is {max_length} characters)",
+      cant_be_blank: "can't be blank",
+      invalid_email: "Invalid email.",
+      passwords_dont_match: "Passwords don't match"
     },
     navbar: {
       page_title: "sciNote",
@@ -31,7 +34,11 @@ export default {
       avatar: "Avatar",
       edit_avatar: "Edit Avatar",
       change: "Change",
-      change_password: "Change Password",
+      change_password: "Password",
+      new_password: "New password",
+      password_confirmation:
+        "Current password (we need your current password to confirm your changes)",
+      new_password_confirmation: "New password confirmation",
       new_email: "New email",
       initials: "Initials",
       full_name: "Full name",
@@ -64,20 +71,28 @@ export default {
       yes: "Yes",
       leave_team_modal: {
         title: "Leave team {teamName}",
-        subtitle: "Are you sure you wish to leave team My projects? This action is irreversible.",
+        subtitle:
+          "Are you sure you wish to leave team My projects? This action is irreversible.",
         warnings: "Leaving team has following consequences:",
-        warning_message_one: "you will lose access to all content belonging to the team (including projects, tasks, protocols and activities);",
-        warning_message_two: "all projects in the team where you were the sole <b>Owner</b> will receive a new owner from the team administrators;",
-        warning_message_three: "all repository protocols in the team belonging to you will be reassigned onto a new owner from team administrators.",
+        warning_message_one:
+          "you will lose access to all content belonging to the team (including projects, tasks, protocols and activities);",
+        warning_message_two:
+          "all projects in the team where you were the sole <b>Owner</b> will receive a new owner from the team administrators;",
+        warning_message_three:
+          "all repository protocols in the team belonging to you will be reassigned onto a new owner from team administrators.",
         leave_team: "Leave"
       },
       remove_user_modal: {
         title: "Remove user {user} from team {team}",
-        subtitle: "Are you sure you wish to remove user {user} from team {team}?",
+        subtitle:
+          "Are you sure you wish to remove user {user} from team {team}?",
         warnings: "Removing user from team has following consequences:",
-        warning_message_one: "user will lose access to all content belonging to the team (including projects, tasks, protocols and activities);",
-        warning_message_two: "all projects in the team where user was the sole <b>Owner</b> will be reassigned onto you as a new owner;",
-        warning_message_three: "all repository protocols in the team belonging to user will be reassigned onto you.",
+        warning_message_one:
+          "user will lose access to all content belonging to the team (including projects, tasks, protocols and activities);",
+        warning_message_two:
+          "all projects in the team where user was the sole <b>Owner</b> will be reassigned onto you as a new owner;",
+        warning_message_three:
+          "all repository protocols in the team belonging to user will be reassigned onto you.",
         remove_user: "Remove user"
       },
       update_team_description_modal: {
@@ -107,7 +122,8 @@ export default {
         title: "New team",
         name_label: "Team name",
         name_placeholder: "My team",
-        name_sublabel: "Pick a name that would best describe your team (e.g. 'University of ..., Department of ...').",
+        name_sublabel:
+          "Pick a name that would best describe your team (e.g. 'University of ..., Department of ...').",
         description_label: "Description",
         description_sublabel: "Describe your team.",
         create: "Create team"

@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { string, func } from "prop-types";
 
 import InputDisabled from "../../../components/InputDisabled";
-import InputEnabled from "../../../components/InputEnabled";
+import InputEnabled from "./InputEnabled";
 
 class ProfileInputField extends Component {
   constructor(props) {
