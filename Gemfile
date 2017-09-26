@@ -64,7 +64,7 @@ gem 'rubyzip'
 gem 'activerecord-import'
 
 gem 'paperclip', '~> 4.3' # File attachment, image attachment library
-gem 'aws-sdk', '~> 2.2.8'
+gem 'aws-sdk', '~> 2'
 gem 'aws-sdk-v1'
 gem 'delayed_job_active_record'
 gem 'devise-async'
