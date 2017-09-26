@@ -158,7 +158,8 @@ CGI.parse(URI.parse(request.referrer).query).fetch("type") %>
                     <% if whitelist_simple.include?(key["component_type_id"]) && key["data"]!="" &&
                     key["data"] %>
                     <br>
-                    <% case key["component_type_id"]%><% when "1" %>
+                    <% case key["component_type_id"]
+                    when "1" %>
                     <br>
                     <strong>
                       Description:
@@ -173,7 +174,8 @@ CGI.parse(URI.parse(request.referrer).query).fetch("type") %>
                     <% end %>
                     <% elsif key && whitelist_complex.include?(key["component_type_id"]) %>
 
-                    <% case key["component_type_id"]%><% when "8"%>
+                    <% case key["component_type_id"]
+                     when "8"%>
                     <br>
                     <strong><%= key["name"]+": " %></strong>
                     <%= (key["source_data"]["name"]) %>
