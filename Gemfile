@@ -63,9 +63,8 @@ gem 'delayed_paperclip',
 gem 'rubyzip'
 gem 'activerecord-import'
 
-gem 'paperclip', '~> 4.3' # File attachment, image attachment library
-gem 'aws-sdk', '~> 2.2.8'
-gem 'aws-sdk-v1'
+gem 'paperclip', '~> 5.1' # File attachment, image attachment library
+gem 'aws-sdk', '~> 2'
 gem 'delayed_job_active_record'
 gem 'devise-async'
 gem 'ruby-graphviz', '~> 1.2' # Graphviz for rails

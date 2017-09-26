@@ -23,6 +23,7 @@ if ENV['PAPERCLIP_STORAGE'] == "s3"
     url: ':s3_domain_url',
     path: '/:class/:attachment/:id_partition/:hash/:style/:filename',
     storage: :s3,
+    s3_region: ENV['AWS_REGION'],
     s3_host_name: "s3.#{ENV['AWS_REGION']}.amazonaws.com",
     s3_protocol: 'https',
     s3_credentials: {
@@ -35,10 +36,10 @@ if ENV['PAPERCLIP_STORAGE'] == "s3"
       medium: :private
     },
     s3_storage_class: {
-      medium: :reduced_redundancy,
-      thumb: :reduced_redundancy,
-      icon: :reduced_redundancy,
-      icon_small: :reduced_redundancy
+      medium: :REDUCED_REDUNDANCY,
+      thumb: :REDUCED_REDUNDANCY,
+      icon: :REDUCED_REDUNDANCY,
+      icon_small: :REDUCED_REDUNDANCY
     }
   })
 elsif ENV['PAPERCLIP_STORAGE'] == "filesystem"
