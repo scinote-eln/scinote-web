@@ -763,15 +763,7 @@ class ProtocolsController < ApplicationController
       format.js {}
     end
   end
-  # epic posodob, success window, upload window
-  # validacije (protocols.io file test), mogoc lahk kdo kej zrusi
-  # excel posodob v epicu in napis da datumi ne grejo
-  # bug no description report
-  # epic napis da datumi grejo v description, datumi pr scinotu so generirani
-  # sortiri buge problem etc da se ve kaj je kaj v dokumentaciji
-  # v excel napis kaj vse od atributov in rtf formata od protocols.io se ne mapira
-  # opis dummy info v protocols io
-  # vse v svoj epik dej
+
   def export
     # Make a zip output stream and send it to the client
     respond_to do |format|
