@@ -1,84 +1,85 @@
+# encoding: utf-8
+
 class ProtocolsController < ApplicationController
   include RenamingUtil
   include ProtocolsImporter
   include ProtocolsExporter
   include InputSanitizeHelper
 
-  before_action :check_create_permissions, only: [
-    :create_new_modal,
-    :create
-  ]
-  before_action :check_clone_permissions, only: [ :clone ]
-  before_action :check_view_permissions, only: [
-    :protocol_status_bar,
-    :updated_at_label,
-    :preview,
-    :linked_children,
-    :linked_children_datatable
-  ]
-  before_action :check_edit_permissions, only: [
-    :edit,
-    :update_metadata,
-    :update_keywords,
-    :edit_name_modal,
-    :edit_keywords_modal,
-    :edit_authors_modal,
-    :edit_description_modal
-  ]
-  before_action :check_view_all_permissions, only: [
-    :index,
-    :datatable
-  ]
-  before_action :check_unlink_permissions, only: [
-    :unlink,
-    :unlink_modal
-  ]
-  before_action :check_revert_permissions, only: [
-    :revert,
-    :revert_modal
-  ]
-  before_action :check_update_parent_permissions, only: [
-    :update_parent,
-    :update_parent_modal
-  ]
-  before_action :check_update_from_parent_permissions, only: [
-    :update_from_parent,
-    :update_from_parent_modal
-  ]
-  before_action :check_load_from_repository_views_permissions, only: [
-    :load_from_repository_modal,
-    :load_from_repository_datatable
-  ]
+  before_action :check_create_permissions, only: %i(
+    create_new_modal
+    create
+  )
+  before_action :check_clone_permissions, only: [:clone]
+  before_action :check_view_permissions, only: %i(
+    protocol_status_bar
+    updated_at_label
+    preview
+    linked_children
+    linked_children_datatable
+  )
+  before_action :check_edit_permissions, only: %i(
+    edit
+    update_metadata
+    update_keywords
+    edit_name_modal
+    edit_keywords_modal
+    edit_authors_modal
+    edit_description_modal
+  )
+  before_action :check_view_all_permissions, only: %i(
+    index
+    datatable
+  )
+  before_action :check_unlink_permissions, only: %i(
+    unlink
+    unlink_modal
+  )
+  before_action :check_revert_permissions, only: %i(
+    revert
+    revert_modal
+  )
+  before_action :check_update_parent_permissions, only: %i(
+    update_parent
+    update_parent_modal
+  )
+  before_action :check_update_from_parent_permissions, only: %i(
+    update_from_parent
+    update_from_parent_modal
+  )
+  before_action :check_load_from_repository_views_permissions, only: %i(
+    load_from_repository_modal
+    load_from_repository_datatable
+  )
   before_action :check_load_from_repository_permissions, only: [
     :load_from_repository
   ]
   before_action :check_load_from_file_permissions, only: [
     :load_from_file
   ]
-  before_action :check_copy_to_repository_permissions, only: [
-    :copy_to_repository,
-    :copy_to_repository_modal
-  ]
-  before_action :check_make_private_permissions, only: [ :make_private ]
-  before_action :check_publish_permissions, only: [ :publish ]
-  before_action :check_archive_permissions, only: [ :archive ]
-  before_action :check_restore_permissions, only: [ :restore ]
-  before_action :check_import_permissions, only: [ :import ]
-  before_action :check_export_permissions, only: [ :export ]
+  before_action :check_copy_to_repository_permissions, only: %i(
+    copy_to_repository
+    copy_to_repository_modal
+  )
+  before_action :check_make_private_permissions, only: [:make_private]
+  before_action :check_publish_permissions, only: [:publish]
+  before_action :check_archive_permissions, only: [:archive]
+  before_action :check_restore_permissions, only: [:restore]
+  before_action :check_import_permissions, only: [:import]
+  before_action :check_export_permissions, only: [:export]
 
-  def index
-  end
+  def index; end
 
   def datatable
     respond_to do |format|
-      format.json {
+      format.json do
         render json: ::ProtocolsDatatable.new(
           view_context,
           @current_team,
           @type,
           current_user
         )
-      }
+      end
     end
   end
 
@@ -103,50 +104,47 @@ class ProtocolsController < ApplicationController
 
   def linked_children
     respond_to do |format|
-      format.json {
+      format.json do
         render json: {
           title: I18n.t('protocols.index.linked_children.title',
                         protocol: escape_input(@protocol.name)),
-          html: render_to_string({
-            partial: "protocols/index/linked_children_modal_body.html.erb",
-            locals: { protocol: @protocol }
-          })
+          html: render_to_string(partial: 'protocols/index/linked_children_modal_body.html.erb',
+                                   locals: { protocol: @protocol })
         }
-      }
+      end
     end
   end
 
   def linked_children_datatable
     respond_to do |format|
-      format.json {
+      format.json do
         render json: ::ProtocolLinkedChildrenDatatable.new(
           view_context,
           @protocol,
           current_user,
           self
         )
-      }
+      end
     end
   end
 
   def make_private
-    move_protocol("make_private")
+    move_protocol('make_private')
   end
 
   def publish
-    move_protocol("publish")
+    move_protocol('publish')
   end
 
   def archive
-    move_protocol("archive")
+    move_protocol('archive')
   end
 
   def restore
-    move_protocol("restore")
+    move_protocol('restore')
   end
 
-  def edit
-  end
+  def edit; end
 
   def update_metadata
     @protocol.record_timestamps = false
@@ -154,27 +152,27 @@ class ProtocolsController < ApplicationController
 
     respond_to do |format|
       if @protocol.save
-        format.json {
+        format.json do
           render json: {
             updated_at_label: render_to_string(
-              partial: "protocols/header/updated_at_label.html.erb"
+              partial: 'protocols/header/updated_at_label.html.erb'
             ),
             name_label: render_to_string(
-              partial: "protocols/header/name_label.html.erb"
+              partial: 'protocols/header/name_label.html.erb'
             ),
             authors_label: render_to_string(
-              partial: "protocols/header/authors_label.html.erb"
+              partial: 'protocols/header/authors_label.html.erb'
             ),
             description_label: render_to_string(
-              partial: "protocols/header/description_label.html.erb"
+              partial: 'protocols/header/description_label.html.erb'
             )
           }
-        }
+        end
       else
-        format.json {
+        format.json do
           render json: @protocol.errors,
             status: :unprocessable_entity
-        }
+        end
       end
     end
   end
@@ -186,16 +184,16 @@ class ProtocolsController < ApplicationController
         escape_input(keyword)
       end
       if @protocol.update_keywords(params[:keywords])
-        format.json {
+        format.json do
           render json: {
             updated_at_label: render_to_string(
-              partial: "protocols/header/updated_at_label.html.erb"
+              partial: 'protocols/header/updated_at_label.html.erb'
             ),
             keywords_label: render_to_string(
-              partial: "protocols/header/keywords_label.html.erb"
+              partial: 'protocols/header/keywords_label.html.erb'
             )
           }
-        }
+        end
       else
         format.json { render json: {}, status: :unprocessable_entity }
       end
@@ -214,13 +212,11 @@ class ProtocolsController < ApplicationController
     @protocol.record_timestamps = false
     @protocol.created_at = ts
     @protocol.updated_at = ts
-    if @type == :public
-      @protocol.published_on = ts
-    end
+    @protocol.published_on = ts if @type == :public
 
     respond_to do |format|
       if @protocol.save
-        format.json {
+        format.json do
           render json: {
             url: edit_protocol_path(
               @protocol,
@@ -228,12 +224,12 @@ class ProtocolsController < ApplicationController
               type: @type
             )
           }
-        }
+        end
       else
-        format.json {
+        format.json do
           render json: @protocol.errors,
             status: :unprocessable_entity
-        }
+        end
       end
     end
   end
@@ -248,9 +244,9 @@ class ProtocolsController < ApplicationController
       end
     end
     respond_to do |format|
-      if cloned != nil
+      if !cloned.nil?
         flash[:success] = t(
-          "protocols.index.clone.success_flash",
+          'protocols.index.clone.success_flash',
           original: @original.name,
           new: cloned.name
         )
@@ -258,7 +254,7 @@ class ProtocolsController < ApplicationController
         format.json { render json: {}, status: :ok }
       else
         flash[:error] = t(
-          "protocols.index.clone.error_flash",
+          'protocols.index.clone.error_flash',
           original: @original.name
         )
         flash.keep(:error)
@@ -287,18 +283,18 @@ class ProtocolsController < ApplicationController
 
       if transaction_error
         # Bad request error
-        format.json {
+        format.json do
           render json: {
-            message: t("my_modules.protocols.copy_to_repository_modal.error_400")
+            message: t('my_modules.protocols.copy_to_repository_modal.error_400')
           },
           status: :bad_request
-        }
+        end
       elsif @new.invalid?
         # Render errors
-        format.json {
+        format.json do
           render json: @new.errors,
           status: :unprocessable_entity
-        }
+        end
       else
         # Everything good, render 200
         format.json { render json: { refresh: link_protocols }, status: :ok }
@@ -320,16 +316,16 @@ class ProtocolsController < ApplicationController
 
       if transaction_error
         # Bad request error
-        format.json {
+        format.json do
           render json: {
-            message: t("my_modules.protocols.unlink_error")
+            message: t('my_modules.protocols.unlink_error')
           },
           status: :bad_request
-        }
+        end
       else
         # Everything good, display flash & render 200
         flash[:success] = t(
-          "my_modules.protocols.unlink_flash",
+          'my_modules.protocols.unlink_flash'
         )
         flash.keep(:success)
         format.json { render json: {}, status: :ok }
@@ -392,12 +388,12 @@ class ProtocolsController < ApplicationController
 
         if transaction_error
           # Bad request error
-          format.json {
+          format.json do
             render json: {
-              message: t("my_modules.protocols.update_parent_error")
+              message: t('my_modules.protocols.update_parent_error')
             },
             status: :bad_request
-          }
+          end
         else
           # Everything good, record activity, display flash & render 200
           Activity.create(
@@ -413,7 +409,7 @@ class ProtocolsController < ApplicationController
             )
           )
           flash[:success] = t(
-            "my_modules.protocols.update_parent_flash",
+            'my_modules.protocols.update_parent_flash'
           )
           flash.keep(:success)
           format.json { render json: {}, status: :ok }
@@ -443,16 +439,16 @@ class ProtocolsController < ApplicationController
 
         if transaction_error
           # Bad request error
-          format.json {
+          format.json do
             render json: {
-              message: t("my_modules.protocols.update_from_parent_error")
+              message: t('my_modules.protocols.update_from_parent_error')
             },
             status: :bad_request
-          }
+          end
         else
           # Everything good, display flash & render 200
           flash[:success] = t(
-            "my_modules.protocols.update_from_parent_flash",
+            'my_modules.protocols.update_from_parent_flash'
           )
           flash.keep(:success)
           format.json { render json: {}, status: :ok }
@@ -533,9 +529,9 @@ class ProtocolsController < ApplicationController
         end
 
         if transaction_error
-          format.json {
+          format.json do
             render json: { status: :error }, status: :bad_request
-          }
+          end
         else
           # Everything good, record activity, display flash & render 200
           Activity.create(
@@ -551,12 +547,12 @@ class ProtocolsController < ApplicationController
             )
           )
           flash[:success] = t(
-            'my_modules.protocols.load_from_file_flash',
+            'my_modules.protocols.load_from_file_flash'
           )
           flash.keep(:success)
-          format.json {
+          format.json do
             render json: { status: :ok }, status: :ok
-          }
+          end
         end
       else
         format.json do
@@ -586,16 +582,16 @@ class ProtocolsController < ApplicationController
           t('protocols.index.no_protocol_name')
         end
       if transaction_error
-        format.json {
+        format.json do
           render json: { name: p_name, status: :bad_request }, status: :bad_request
-        }
+        end
       else
-        format.json {
+        format.json do
           render json: {
             name: p_name, new_name: protocol.name, status: :ok
           },
           status: :ok
-        }
+        end
       end
     end
   end
@@ -628,8 +624,8 @@ class ProtocolsController < ApplicationController
 
   def protocolsio_import_save
     @json_object = JSON.parse(params['json_object'])
-    @import_object = {}
-    @import_object['name'] = params['protocol']['name']
+    @db_json = {}
+    @db_json['name'] = params['protocol']['name']
     # since scinote only has description field, and protocols.io has many others
     # ,here i am putting everything important from protocols.io into description
     description_array = %w[
@@ -637,51 +633,41 @@ class ProtocolsController < ApplicationController
       created_on vendor_name vendor_link keywords tags link)
     ]
     description_string = Sanitize.clean(params['protocol']['description'])
-    description_array.each do |element|
-    if element == 'created_on' #združ
-      if @json_object[element] && @json_object[element] != ''
-        new_element = element.slice(0, 1).capitalize + element.slice(1..-1)
-        new_element = new_element.tr('_', ' ')
+    description_array.each do |e|
+      if e == 'created_on' && @json_object[e] && @json_object[e] != ''
+        new_e = e.slice(0, 1).capitalize + e.slice(1..-1)
+        new_e = new_e.tr('_', ' ')
         description_string =
-          description_string +
-          new_element.to_s + ':  ' +
+          description_string + new_e.to_s + ':  ' +
           Sanitize.clean(params['protocol']['created_at'].to_s) + "\n"
-      end
-    else
-      if element == 'tags' #združ
-        if @json_object[element].any? && @json_object[element] != ''
-          new_element = element.slice(0, 1).capitalize + element.slice(1..-1)
-          new_element = new_element.tr('_', ' ')
-          description_string = description_string + new_element.to_s + ': '
-          @json_object[element].each do |tag|
-            description_string =
-              description_string +
-              Sanitize.clean(tag['tag_name']) + ' , '
-          end
-          description_string += "\n"
+      elsif e == 'tags' && @json_object[e].any? && @json_object[e] != ''
+        new_e = e.slice(0, 1).capitalize + e.slice(1..-1)
+        new_e = new_e.tr('_', ' ')
+        description_string = description_string + new_e.to_s + ': '
+        @json_object[e].each do |tag|
+          description_string =
+            description_string +
+            Sanitize.clean(tag['tag_name']) + ' , '
         end
-      # Since protocols description field doesnt show html,i just remove it here
-      # because its even messier Otherwise
-      # what this does is basically appends "FIELD NAME: "+" FIELD VALUE"
-      # to description for various fields
-      else
-        if @json_object[element] && @json_object[element] != ''
-          new_element = element.slice(0, 1).capitalize + element.slice(1..-1)
-          new_element = new_element.tr('_', ' ')
-          description_string +=
-            new_element.to_s + ':  ' +
-            Sanitize.clean(@json_object[element].to_s) + "\n"
-        end
+        description_string += "\n"
+        # Since protocols description field doesnt show html,i just remove it
+        # because its even messier
+        # what this does is basically appends "FIELD NAME: "+" FIELD VALUE"
+        # to description for various fields
+      elsif @json_object[e] && @json_object[e] != ''
+        new_e = e.slice(0, 1).capitalize + e.slice(1..-1)
+        new_e = new_e.tr('_', ' ')
+        description_string +=
+          new_e.to_s + ':  ' +
+          Sanitize.clean(@json_object[e].to_s) + "\n"
       end
     end
-    end
-    @import_object['authors'] = params['protocol']['authors']
-    @import_object['created_at'] = params['protocol']['created_at']
-    @import_object['updated_at'] = params['protocol']['last_modified']
-    @import_object['description'] = description_string
-    @import_object['steps'] = {}
-    counter = 0
-    step_pos = -1
+    @db_json['authors'] = params['protocol']['authors']
+    @db_json['created_at'] = params['protocol']['created_at']
+    @db_json['updated_at'] = params['protocol']['last_modified']
+    @db_json['description'] = description_string
+    @db_json['steps'] = {}
+    pos = -1
     # these whitelists are there to not let some useless step components trough,
     # that always have data set to null (data doesnt get imported over to json)
     whitelist_simple = %w(1 6 17)
@@ -692,128 +678,151 @@ class ProtocolsController < ApplicationController
     # id 9 = dataset, id 15 = command, id 18 = attached sub protocol
     # id 19= safety information ,
     # id 20= regents (materials, like scinote samples kind of)
-    @json_object['steps'].each do |step|
-    step_pos += 1
-    counter += 1
-    @import_object['steps'][step_pos.to_s] = {}
-    @import_object['steps'][step_pos.to_s]['position'] = step_pos
+    @json_object['steps'].each do |step| # loop over steps
+      pos += 1 # position of step (first, second.... etc),
+      # started at -1 so index is 0
+      @db_json['steps'][pos.to_s] = {} # the json we will insert into db
+      @db_json['steps'][pos.to_s]['position'] = pos
+      step['components'].each do |key, value|
+        # sometimes there are random index values as keys
+        # instead of hashes, this is a workaround to that buggy json format
+        key = value if value.class == Hash
+        if whitelist_simple.include?(key['component_type_id'])
+          # append is the string that we append values into for description
+          case key['component_type_id']
+          when '1'
+            if !key['data'].nil? && key['data'] != '' &&
+               @db_json['steps'][pos.to_s]['description']
+              append = '<br>' + (key['data']) + '<br>'
+              @db_json['steps'][pos.to_s]['description'] << append
+            elsif !@db_json['steps'][pos.to_s]['description']
+              append = '<br>' + (key['data']) + '<br>'
+              @db_json['steps'][pos.to_s]['description'] = append
+            else
+              @db_json['steps'][pos.to_s]['description'] = 'Description missing'
+            end
+          when '6'
+            if !key['data'].nil? && key['data'] != ''
+              @db_json['steps'][pos.to_s]['name'] = key['data']
+            else
+              @db_json['steps'][pos.to_s]['name'] = 'Step'
+            end
+          when '17'
+            if !key['data'].nil? && key['data'] != ''
+              append = '<br><strong>Expected result: </strong>'
+              + key['data'] + '<br>'
+              @db_json['steps'][pos.to_s]['description'] << append
 
-    step['components'].each do |key,value|
-    element_string = nil
-
-
-    # sometimes there are random index values as keys
-    # instead of hashes, this is a workaround to that buggy json format
-    key = value if value.class == Hash
-
-    if whitelist_simple.include?(key['component_type_id'])
-
-      case key['component_type_id']
-      when '1'
-
-        if !key['data'].nil? && key['data'] != ''
-          element_string = '<br>' + (key['data']) + '<br>'
-          if @import_object['steps'][step_pos.to_s]['description']
-            @import_object['steps'][step_pos.to_s]['description'] << element_string
-          else
-            @import_object['steps'][step_pos.to_s]['description'] = element_string
+            end
           end
-        else
+          # (complex mapping with nested hashes)
+          # id 8 = software package, id 9 = dataset,
+          # id 15 = command, id 18 = attached sub protocol
+          # id 19= safety information ,
+          # id 20= regents (materials, like scinote samples kind of)
 
-          @import_object['steps'][step_pos.to_s]['description'] = 'Description missing!'
-        end
-      when '6'
-        if !key['data'].nil? && key['data'] != ''
-          @import_object['steps'][step_pos.to_s]['name'] = key['data']
-        else
-          @import_object['steps'][step_pos.to_s]['name'] = 'Step'
-        end
-      when '17'
-        if !key['data'].nil? && key['data'] != ''
-          element_string = '<br><strong>Expected result: </strong>' + (key['data']) + '<br>'
-          @import_object['steps'][step_pos.to_s]['description'] << element_string
+        elsif key && whitelist_complex.include?(key['component_type_id'])
+          case key['component_type_id']
+          when '8'
+            if key['source_data']['name'] && key['source_data']['developer'] &&
+               key['source_data']['version'] && key['source_data']['link'] &&
+               key['source_data']['repository'] &&
+               key['source_data']['os_name'] && key['source_data']['os_version']
+              append = '<br><strong>Software package: </strong>' +
+                       key['source_data']['name'] + '<br>Developer: ' +
+                       key['source_data']['developer'] + '<br>Version: ' +
+                       key['source_data']['version'] + '<br>Link: ' +
+                       key['source_data']['link'] + '<br>Repository: ' +
+                       key['source_data']['repository'] +
+                       '<br>OS name , OS version: ' +
+                       key['source_data']['os_name'] + ' , ' +
+                       key['source_data']['os_version']
+              @db_json['steps'][pos.to_s]['description'] << append
+            end
+          when '9'
+            if key['source_data']['name'] && key['source_data']['link']
+              append = '<br><strong>Dataset: </strong>' +
+                       key['source_data']['name'] + '<br>Link: ' +
+                       key['source_data']['link']
+              @db_json['steps'][pos.to_s]['description'] << append
+            end
+          when '15'
+            if key['source_data']['name'] &&
+               key['source_data']['description'] &&
+               key['source_data']['os_name'] &&
+               key['source_data']['os_version']
+              append = '<br><strong>Command: </strong>' +
+                       key['source_data']['name'] +
+                       '<br>Description: ' + key['source_data']['description'] +
+                       '<br>OS name , OS version: ' +
+                       key['source_data']['os_name'] +
+                       ' , ' + key['source_data']['os_version']
+              @db_json['steps'][pos.to_s]['description'] << append
+            end
+          when '18'
+            if key['source_data']['protocol_name'] &&
+               key['source_data']['full_name'] &&
+               key['source_data']['link']
+              append = '<br><strong>This protocol also contains an' +
+                       ' attached sub-protocol: </strong>' +
+                       key['source_data']['protocol_name'] + '<br>Author: ' +
+                       key['source_data']['full_name'] + '<br>Link: ' +
+                       key['source_data']['link']
+              @db_json['steps'][pos.to_s]['description'] << append
 
-        end
-      end
-      # (complex mapping with nested hashes)
-      # id 8 = software package, id 9 = dataset,
-      # id 15 = command, id 18 = attached sub protocol
-      # id 19= safety information ,
-      # id 20= regents (materials, like scinote samples kind of)
-
-    elsif key && whitelist_complex.include?(key['component_type_id'])
-      case key['component_type_id']
-      when '8'
-        if key['source_data']['name'] && key['source_data']['developer'] && key['source_data']['version'] && key['source_data']['link'] && key['source_data']['repository'] && key['source_data']['os_name'] && key['source_data']['os_version']
-          element_string = '<br><strong>Software package: </strong>' + (key['source_data']['name']) + '<br>Developer: ' + (key['source_data']['developer']) + '<br>Version: ' + (key['source_data']['version']) + '<br>Link: ' + (key['source_data']['link']) + '<br>Repository: ' + (key['source_data']['repository']) + '<br> OS name , OS version: ' + (key['source_data']['os_name']) + ' , ' + (key['source_data']['os_version'])
-          @import_object['steps'][step_pos.to_s]['description'] << element_string
-        end
-      when '9'
-        if key['source_data']['name'] && key['source_data']['link']
-          element_string='<br><strong>Dataset: </strong>' + (key['source_data']['name']) + '<br>Link: ' + (key['source_data']['link'])
-          @import_object['steps'][step_pos.to_s]['description'] << element_string
-        end
-      when '15'
-        if key['source_data']['name'] && key['source_data']['description'] && key['source_data']['os_name'] && key['source_data']['os_version']
-          element_string = '<br><strong>Command: </strong>' + (key['source_data']['name']) + '<br>Description: ' + (key['source_data']['description']) + '<br>OS name , OS version: ' + (key['source_data']['os_name']) + ' , ' + (key['source_data']['os_version'])
-          @import_object['steps'][step_pos.to_s]['description'] << element_string
-        end
-      when '18'
-        if key['source_data']['protocol_name'] && key['source_data']['full_name'] && key['source_data']['link']
-          element_string = '<br><strong>This protocol also contains an attached sub-protocol: </strong>' + (key['source_data']['protocol_name']) + '<br>Author: ' + (key['source_data']['full_name']) + '<br>Link: ' + (key['source_data']['link'])
-          @import_object['steps'][step_pos.to_s]['description'] << element_string
-
-        end
-      when '19'
-        if key['source_data']['body'] && key['source_data']['link']
-          element_string = '<br><strong>Safety information: </strong>' + (key['source_data']['body'])+'<br>Link: '+(key['source_data']['link'])
-          @import_object['steps'][step_pos.to_s]['description'] << element_string
-        end
-        # when '20' placeholder za materiale
-      end
-    end # finished step component iteration
-    end # finished looping over step components
+            end
+          when '19'
+            if key['source_data']['body'] && key['source_data']['link']
+              append = '<br><strong>Safety information: </strong>' +
+                       key['source_data']['body'] +
+                       '<br>Link: ' + key['source_data']['link']
+              @db_json['steps'][pos.to_s]['description'] << append
+            end
+            # when '20' placeholder za materiale
+          end
+        end # finished step component iteration
+      end # finished looping over step components
     end # steps
 
     protocol = nil
     respond_to do |format|
-    transaction_error = false
-    @protocolsio_general_error = false
-    Protocol.transaction do
-      begin
-        # pass the import_object we made, current team,user
-        # and the type (private,public)
-        protocol = import_new_protocol(@import_object, current_team, params[:type].to_sym, current_user)
-      rescue Exception
-        transaction_error = true
-        raise ActiveRecord:: Rollback
-      end
-    end
-
-    p_name =
-      if @import_object['name'].present? && !@import_object['name'].empty?
-        escape_input(@import_object['name'])
-      else
-        t('protocols.index.no_protocol_name')
-      end
-
-    if transaction_error
-      @protocolsio_general_error = true
-      #  format.json {
-      #    render json: { name: p_name, status: :bad_request },
-      # status: :bad_request
-      #  }
-
-    else
-      # General something went wrong, upload to db failed error
+      transaction_error = false
       @protocolsio_general_error = false
-      format.json {
-        render json:
-       { name: p_name, new_name: protocol.name, status: :ok },
-        status: :ok
-      }
-    end
-    format.js {}
+      Protocol.transaction do
+        begin
+          protocol = import_new_protocol(
+            @db_json, current_team, params[:type].to_sym, current_user
+          )
+        rescue Exception
+          transaction_error = true
+          raise ActiveRecord:: Rollback
+        end
+      end
+
+      p_name =
+        if @db_json['name'].present? && !@db_json['name'].empty?
+          escape_input(@db_json['name'])
+        else
+          t('protocols.index.no_protocol_name')
+        end
+
+      if transaction_error
+        @protocolsio_general_error = true
+        #  format.json {
+        #    render json: { name: p_name, status: :bad_request },
+        # status: :bad_request
+        #  }
+
+      else
+        # General something went wrong, upload to db failed error
+        @protocolsio_general_error = false
+        format.json do
+          render json:
+         { name: p_name, new_name: protocol.name, status: :ok },
+          status: :ok
+        end
+      end
+      format.js {}
     end
   end
 
@@ -875,81 +884,79 @@ class ProtocolsController < ApplicationController
 
   def unlink_modal
     respond_to do |format|
-      format.json {
+      format.json do
         render json: {
-          title: t("my_modules.protocols.confirm_link_update_modal.unlink_title"),
-          message: t("my_modules.protocols.confirm_link_update_modal.unlink_message"),
-          btn_text: t("my_modules.protocols.confirm_link_update_modal.unlink_btn_text"),
+          title: t('my_modules.protocols.confirm_link_update_modal.unlink_title'),
+          message: t('my_modules.protocols.confirm_link_update_modal.unlink_message'),
+          btn_text: t('my_modules.protocols.confirm_link_update_modal.unlink_btn_text'),
           url: unlink_protocol_path(@protocol)
         }
-      }
+      end
     end
   end
 
   def revert_modal
     respond_to do |format|
-      format.json {
+      format.json do
         render json: {
-          title: t("my_modules.protocols.confirm_link_update_modal.revert_title"),
-          message: t("my_modules.protocols.confirm_link_update_modal.revert_message"),
-          btn_text: t("my_modules.protocols.confirm_link_update_modal.revert_btn_text"),
+          title: t('my_modules.protocols.confirm_link_update_modal.revert_title'),
+          message: t('my_modules.protocols.confirm_link_update_modal.revert_message'),
+          btn_text: t('my_modules.protocols.confirm_link_update_modal.revert_btn_text'),
           url: revert_protocol_path(@protocol)
         }
-      }
+      end
     end
   end
 
   def update_parent_modal
     respond_to do |format|
-      format.json {
+      format.json do
         render json: {
-          title: t("my_modules.protocols.confirm_link_update_modal.update_parent_title"),
-          message: t("my_modules.protocols.confirm_link_update_modal.update_parent_message"),
-          btn_text: t("general.update"),
+          title: t('my_modules.protocols.confirm_link_update_modal.update_parent_title'),
+          message: t('my_modules.protocols.confirm_link_update_modal.update_parent_message'),
+          btn_text: t('general.update'),
           url: update_parent_protocol_path(@protocol)
         }
-      }
+      end
     end
   end
 
   def update_from_parent_modal
     respond_to do |format|
-      format.json {
+      format.json do
         render json: {
-          title: t("my_modules.protocols.confirm_link_update_modal.update_self_title"),
-          message: t("my_modules.protocols.confirm_link_update_modal.update_self_message"),
-          btn_text: t("general.update"),
+          title: t('my_modules.protocols.confirm_link_update_modal.update_self_title'),
+          message: t('my_modules.protocols.confirm_link_update_modal.update_self_message'),
+          btn_text: t('general.update'),
           url: update_from_parent_protocol_path(@protocol)
         }
-      }
+      end
     end
   end
 
   def load_from_repository_datatable
     @protocol = Protocol.find_by_id(params[:id])
-    @type = (params[:type] || "public").to_sym
+    @type = (params[:type] || 'public').to_sym
     respond_to do |format|
-      format.json {
+      format.json do
         render json: ::LoadFromRepositoryProtocolsDatatable.new(
           view_context,
           @protocol.team,
           @type,
           current_user
         )
-      }
+      end
     end
   end
 
   def load_from_repository_modal
     @protocol = Protocol.find_by_id(params[:id])
     respond_to do |format|
-      format.json {
+      format.json do
         render json: {
-          html: render_to_string({
-            partial: "my_modules/protocols/load_from_repository_modal_body.html.erb"
-          })
+          html: render_to_string(partial: 'my_modules/protocols/load_from_repository_modal_body.html.erb')
         }
-      }
+      end
     end
   end
 
@@ -957,107 +964,91 @@ class ProtocolsController < ApplicationController
     @new = Protocol.new
     @original = Protocol.find(params[:id])
     respond_to do |format|
-      format.json {
+      format.json do
         render json: {
-          html: render_to_string({
-            partial: "my_modules/protocols/copy_to_repository_modal_body.html.erb"
-          })
+          html: render_to_string(partial: 'my_modules/protocols/copy_to_repository_modal_body.html.erb')
         }
-      }
+      end
     end
   end
 
   def protocol_status_bar
     respond_to do |format|
-      format.json {
+      format.json do
         render json: {
-          html: render_to_string({
-            partial: "my_modules/protocols/protocol_status_bar.html.erb"
-          })
+          html: render_to_string(partial: 'my_modules/protocols/protocol_status_bar.html.erb')
         }
-      }
+      end
     end
   end
 
   def updated_at_label
     respond_to do |format|
-      format.json {
+      format.json do
         render json: {
-          html: render_to_string({
-            partial: "protocols/header/updated_at_label.html.erb"
-          })
+          html: render_to_string(partial: 'protocols/header/updated_at_label.html.erb')
         }
-      }
+      end
     end
   end
 
   def create_new_modal
     @new_protocol = Protocol.new
     respond_to do |format|
-      format.json {
+      format.json do
         render json: {
-          html: render_to_string({
-            partial: "protocols/index/create_new_modal_body.html.erb"
-          })
+          html: render_to_string(partial: 'protocols/index/create_new_modal_body.html.erb')
         }
-      }
+      end
     end
   end
 
   def edit_name_modal
     respond_to do |format|
-      format.json {
+      format.json do
         render json: {
           title: I18n.t('protocols.header.edit_name_modal.title',
                         protocol: escape_input(@protocol.name)),
-          html: render_to_string({
-            partial: "protocols/header/edit_name_modal_body.html.erb"
-          })
+          html: render_to_string(partial: 'protocols/header/edit_name_modal_body.html.erb')
         }
-      }
+      end
     end
   end
 
   def edit_keywords_modal
     respond_to do |format|
-      format.json {
+      format.json do
         render json: {
           title: I18n.t('protocols.header.edit_keywords_modal.title',
                         protocol: escape_input(@protocol.name)),
-          html: render_to_string({
-            partial: "protocols/header/edit_keywords_modal_body.html.erb"
-          }),
+          html: render_to_string(partial: 'protocols/header/edit_keywords_modal_body.html.erb'),
           keywords: @protocol.team.protocol_keywords_list
         }
-      }
+      end
     end
   end
 
   def edit_authors_modal
     respond_to do |format|
-      format.json {
+      format.json do
         render json: {
           title: I18n.t('protocols.header.edit_authors_modal.title',
                         protocol: escape_input(@protocol.name)),
-          html: render_to_string({
-            partial: "protocols/header/edit_authors_modal_body.html.erb"
-          })
+          html: render_to_string(partial: 'protocols/header/edit_authors_modal_body.html.erb')
         }
-      }
+      end
     end
   end
 
   def edit_description_modal
     respond_to do |format|
-      format.json {
+      format.json do
         render json: {
           title: I18n.t('protocols.header.edit_description_modal.title',
                         protocol: escape_input(@protocol.name)),
-          html: render_to_string({
-            partial: "protocols/header/edit_description_modal_body.html.erb"
-          })
+          html: render_to_string(partial: 'protocols/header/edit_description_modal_body.html.erb')
         }
-      }
+      end
     end
   end
 
@@ -1092,19 +1083,17 @@ class ProtocolsController < ApplicationController
     end
 
     respond_to do |format|
-      unless rollbacked
-        format.json {
-          render json: {
-            html: render_to_string({
-              partial: "protocols/index/results_modal_body.html.erb",
-              locals: { results: results, en_action: "#{action}_results" }
-            })
-          }
-        }
-      else
-        format.json {
+      if rollbacked
+        format.json do
           render json: {}, status: :bad_request
-        }
+        end
+      else
+        format.json do
+          render json: {
+            html: render_to_string(partial: 'protocols/index/results_modal_body.html.erb',
+                                     locals: { results: results, en_action: "#{action}_results" })
+          }
+        end
       end
     end
   end
@@ -1112,7 +1101,7 @@ class ProtocolsController < ApplicationController
   def load_team_and_type
     @current_team = current_team
     # :public, :private or :archive
-    @type = (params[:type] || "public").to_sym
+    @type = (params[:type] || 'public').to_sym
   end
 
   def check_view_all_permissions
@@ -1131,9 +1120,7 @@ class ProtocolsController < ApplicationController
   def check_create_permissions
     load_team_and_type
 
-    if !can_create_new_protocol(@current_team) || @type == :archive
-      render_403
-    end
+    render_403 if !can_create_new_protocol(@current_team) || @type == :archive
   end
 
   def check_clone_permissions
@@ -1141,7 +1128,7 @@ class ProtocolsController < ApplicationController
     @original = Protocol.find_by_id(params[:id])
 
     if @original.blank? ||
-      !can_clone_protocol(@original) || @type == :archive
+       !can_clone_protocol(@original) || @type == :archive
       render_403
     end
   end
@@ -1150,33 +1137,25 @@ class ProtocolsController < ApplicationController
     load_team_and_type
     @protocol = Protocol.find_by_id(params[:id])
 
-    unless can_edit_protocol(@protocol)
-      render_403
-    end
+    render_403 unless can_edit_protocol(@protocol)
   end
 
   def check_unlink_permissions
     @protocol = Protocol.find_by_id(params[:id])
 
-    if @protocol.blank? || !can_unlink_protocol(@protocol)
-      render_403
-    end
+    render_403 if @protocol.blank? || !can_unlink_protocol(@protocol)
   end
 
   def check_revert_permissions
     @protocol = Protocol.find_by_id(params[:id])
 
-    if @protocol.blank? || !can_revert_protocol(@protocol)
-      render_403
-    end
+    render_403 if @protocol.blank? || !can_revert_protocol(@protocol)
   end
 
   def check_update_parent_permissions
     @protocol = Protocol.find_by_id(params[:id])
 
-    if @protocol.blank? || !can_update_parent_protocol(@protocol)
-      render_403
-    end
+    render_403 if @protocol.blank? || !can_update_parent_protocol(@protocol)
   end
 
   def check_update_from_parent_permissions
@@ -1190,9 +1169,7 @@ class ProtocolsController < ApplicationController
   def check_load_from_repository_views_permissions
     @protocol = Protocol.find_by_id(params[:id])
 
-    if @protocol.blank? || !can_view_protocol(@protocol)
-      render_403
-    end
+    render_403 if @protocol.blank? || !can_view_protocol(@protocol)
   end
 
   def check_load_from_repository_permissions
@@ -1210,9 +1187,9 @@ class ProtocolsController < ApplicationController
     @my_module = @protocol.my_module
 
     if @protocol_json.blank? ||
-      @protocol.blank? ||
-      @my_module.blank? ||
-      !can_load_protocol_into_module(@my_module)
+       @protocol.blank? ||
+       @my_module.blank? ||
+       !can_load_protocol_into_module(@my_module)
       render_403
     end
   end
@@ -1221,7 +1198,7 @@ class ProtocolsController < ApplicationController
     @protocol = Protocol.find_by_id(params[:id])
     @my_module = @protocol.my_module
 
-    if @my_module.blank? or !can_copy_protocol_to_repository(@my_module)
+    if @my_module.blank? || !can_copy_protocol_to_repository(@my_module)
       render_403
     end
   end
@@ -1229,7 +1206,7 @@ class ProtocolsController < ApplicationController
   def check_make_private_permissions
     @protocols = Protocol.where(id: params[:protocol_ids])
     @protocols.find_each do |protocol|
-      unless can_make_protocol_private(protocol) then
+      unless can_make_protocol_private(protocol)
         respond_to { |f| f.json { render json: {}, status: :unauthorized } }
         return
       end
@@ -1239,7 +1216,7 @@ class ProtocolsController < ApplicationController
   def check_publish_permissions
     @protocols = Protocol.where(id: params[:protocol_ids])
     @protocols.find_each do |protocol|
-      unless can_publish_protocol(protocol) then
+      unless can_publish_protocol(protocol)
         respond_to { |f| f.json { render json: {}, status: :unauthorized } }
         return
       end
@@ -1249,7 +1226,7 @@ class ProtocolsController < ApplicationController
   def check_archive_permissions
     @protocols = Protocol.where(id: params[:protocol_ids])
     @protocols.find_each do |protocol|
-      unless can_archive_protocol(protocol) then
+      unless can_archive_protocol(protocol)
         respond_to { |f| f.json { render json: {}, status: :unauthorized } }
         return
       end
@@ -1259,7 +1236,7 @@ class ProtocolsController < ApplicationController
   def check_restore_permissions
     @protocols = Protocol.where(id: params[:protocol_ids])
     @protocols.find_each do |protocol|
-      unless can_restore_protocol(protocol) then
+      unless can_restore_protocol(protocol)
         respond_to { |f| f.json { render json: {}, status: :unauthorized } }
         return
       end
@@ -1270,12 +1247,12 @@ class ProtocolsController < ApplicationController
     @protocol_json = params[:protocol]
     @team = Team.find(params[:team_id])
     @type = params[:type] ? params[:type].to_sym : nil
-    if !(
+    unless
       @protocol_json.present? &&
       @team.present? &&
       (@type == :public || @type == :private) &&
       can_import_protocols(@team)
-    )
+
       render_403
     end
   end
@@ -1298,5 +1275,4 @@ class ProtocolsController < ApplicationController
   def metadata_params
     params.require(:protocol).permit(:name, :authors, :description)
   end
-
 end
