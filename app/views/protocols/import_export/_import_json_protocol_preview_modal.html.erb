@@ -1,4 +1,4 @@
-<%= form_for(@protocol, :url => url_for(:controller => 'protocols', :action =>'protocolsio_import_save'),method: :post,format: :javascript,remote: true,:html=> { :id => "protocolsio-import-form" }) do |f| %>
+<%= form_for(@protocol, :url => url_for(:controller => 'protocols', :action=>'protocolsio_import_save'),method: :post,format: :javascript,remote: true,:html=> { :id => "protocolsio-import-form" }) do |f| %>
 
 <%= hidden_field_tag :json_object, JSON.generate(@json_object) %>
 <%= hidden_field_tag :type,
@@ -47,13 +47,16 @@ CGI.parse(URI.parse(request.referrer).query).fetch("type") %>
               <label><%= t("protocols.import_export.import_modal.created_at_label") %></label>
 
               <% display_created_at=Time.at(@json_object['created_on'].to_i) %>
-              <%= f.text_field :created_at, :value => display_created_at.to_s+"(Protocols.io value)",readonly: true, class: "form-control" %>
+              <%= f.text_field :created_at, :value => display_created_at.to_s+"(Protocols.io
+              value)",readonly: true, class: "form-control" %>
             </div>
             <div class="col-xs-4">
               <label><%= t("protocols.import_export.import_modal.updated_at_label") %></label>
 
               <% display_last_modified=Time.at(@json_object['last_modified'].to_i) %>
-              <%= f.text_field :last_modified, :value => display_last_modified.to_s+"(Protocols.io value)",readonly: true, class: "form-control" %>
+              <%= f.text_field :last_modified, :value =>
+              display_last_modified.to_s+"(Protocols.io value)",readonly: true, class:
+              "form-control" %>
             </div>
           </div>
         </div>
@@ -121,7 +124,6 @@ CGI.parse(URI.parse(request.referrer).query).fetch("type") %>
                   <% title=nil %>
                   <% step["components"].each do |key1,value1| #finding section (title of step) %>
 
-
                   <% if value1.class==Hash %>
                   <% key1=value1 %>
                   <% end %>
@@ -145,34 +147,33 @@ CGI.parse(URI.parse(request.referrer).query).fetch("type") %>
                 <div class="tab-pane active" role="tabpanel">
                   <div data-val="description" class="ql-editor">
 
-                <% step["components"].each do |key,value|  %>
-                    <%#here i made an if to distinguish the first step from the
+                    <% step["components"].each do |key,value|  %>
+                  <%#here i made an if to distinguish the first step from the
                     others, because the first step #sometimes has index values as keys instead of
                     hashes, you might see this elsewhere %>
-                  <% if value.class==Hash %>
+                    <% if value.class==Hash %>
                     <% key=value %>
-                  <% end %>
-
-                  <% if whitelist_simple.include?(key["component_type_id"]) && key["data"]!="" && key["data"] %>
-                    <br>
-                    <% case key["component_type_id"]%>
-                    <% when "1" %>
-                      <br>
-                      <strong>
-                        Description:
-                      </strong>
-                      <%=key["data"]%><br>
-                    <% when "17" %>
-                      <br>
-                      <strong>Expected result:
-                      </strong>
-                      <%=key["data"]%>
-                      <br>
                     <% end %>
-                  <% elsif key && whitelist_complex.include?(key["component_type_id"]) %>
 
-                    <% case key["component_type_id"]%>
-                    <% when "8"%>
+                    <% if whitelist_simple.include?(key["component_type_id"]) && key["data"]!="" &&
+                    key["data"] %>
+                    <br>
+                    <% case key["component_type_id"]%><% when "1" %>
+                    <br>
+                    <strong>
+                      Description:
+                    </strong>
+                    <%=key["data"]%><br>
+                    <% when "17" %>
+                    <br>
+                    <strong>Expected result:
+                    </strong>
+                    <%=key["data"]%>
+                    <br>
+                    <% end %>
+                    <% elsif key && whitelist_complex.include?(key["component_type_id"]) %>
+
+                    <% case key["component_type_id"]%><% when "8"%>
                     <br>
                     <strong><%= key["name"]+": " %></strong>
                     <%= (key["source_data"]["name"]) %>
@@ -327,7 +328,8 @@ CGI.parse(URI.parse(request.referrer).query).fetch("type") %>
       </div>
     </div>
   </div>
-<%# the below script resets all the fields after you decide not to import the file (cancel (modal hide)) %>
+  <%# the below script resets all the fields after you decide not to import the
+  file (cancel (modal hide)) %>
   <script>
     $('#modal-import-json-protocol-preview').on('hide.bs.modal', function () {
       $('#protocols_io_form').trigger("reset");
