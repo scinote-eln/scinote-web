@@ -651,7 +651,7 @@ class ProtocolsController < ApplicationController
         end
         description_string += "\n"
         # Since protocols description field doesnt show html,i just remove it
-        # because its even messier
+        # because its even messier (using Sanitize)
         # what this does is basically appends "FIELD NAME: "+" FIELD VALUE"
         # to description for various fields
       elsif @json_object[e] && @json_object[e] != ''
@@ -680,7 +680,6 @@ class ProtocolsController < ApplicationController
     # id 20= regents (materials, like scinote samples kind of)
     @json_object['steps'].each do |step| # loop over steps
       pos += 1 # position of step (first, second.... etc),
-      # started at -1 so index is 0
       @db_json['steps'][pos.to_s] = {} # the json we will insert into db
       @db_json['steps'][pos.to_s]['position'] = pos
       step['components'].each do |key, value|
@@ -691,99 +690,41 @@ class ProtocolsController < ApplicationController
           # append is the string that we append values into for description
           case key['component_type_id']
           when '1'
-            if !key['data'].nil? && key['data'] != '' &&
-               @db_json['steps'][pos.to_s]['description']
-              append = '<br>' + (key['data']) + '<br>'
-              @db_json['steps'][pos.to_s]['description'] << append
-            elsif !@db_json['steps'][pos.to_s]['description']
-              append = '<br>' + (key['data']) + '<br>'
-              @db_json['steps'][pos.to_s]['description'] = append
-            else
-              @db_json['steps'][pos.to_s]['description'] = 'Description missing'
-            end
+            @db_json = protocolsio_step_description_populate(@db_json, key, pos)
           when '6'
-            if !key['data'].nil? && key['data'] != ''
-              @db_json['steps'][pos.to_s]['name'] = key['data']
-            else
-              @db_json['steps'][pos.to_s]['name'] = 'Step'
-            end
+            @db_json = protocolsio_step_title_populate(@db_json, key, pos)
           when '17'
-            if !key['data'].nil? && key['data'] != ''
-              append = '<br><strong>Expected result: </strong>'
-              + key['data'] + '<br>'
-              @db_json['steps'][pos.to_s]['description'] << append
-
-            end
+            @db_json = protocolsio_step_expected_result_populate(
+              @db_json, key, pos
+            )
           end
           # (complex mapping with nested hashes)
           # id 8 = software package, id 9 = dataset,
           # id 15 = command, id 18 = attached sub protocol
           # id 19= safety information ,
           # id 20= regents (materials, like scinote samples kind of)
-
         elsif key && whitelist_complex.include?(key['component_type_id'])
           case key['component_type_id']
           when '8'
-            if key['source_data']['name'] && key['source_data']['developer'] &&
-               key['source_data']['version'] && key['source_data']['link'] &&
-               key['source_data']['repository'] &&
-               key['source_data']['os_name'] && key['source_data']['os_version']
-              append = '<br><strong>Software package: </strong>' +
-                       key['source_data']['name'] + '<br>Developer: ' +
-                       key['source_data']['developer'] + '<br>Version: ' +
-                       key['source_data']['version'] + '<br>Link: ' +
-                       key['source_data']['link'] + '<br>Repository: ' +
-                       key['source_data']['repository'] +
-                       '<br>OS name , OS version: ' +
-                       key['source_data']['os_name'] + ' , ' +
-                       key['source_data']['os_version']
-              @db_json['steps'][pos.to_s]['description'] << append
-            end
+            @db_json = protocolsio_step_software_package_populate(
+              @db_json, key, pos
+            )
           when '9'
-            if key['source_data']['name'] && key['source_data']['link']
-              append = '<br><strong>Dataset: </strong>' +
-                       key['source_data']['name'] + '<br>Link: ' +
-                       key['source_data']['link']
-              @db_json['steps'][pos.to_s]['description'] << append
-            end
+            @db_json = protocolsio_step_dataset_populate(@db_json, key, pos)
           when '15'
-            if key['source_data']['name'] &&
-               key['source_data']['description'] &&
-               key['source_data']['os_name'] &&
-               key['source_data']['os_version']
-              append = '<br><strong>Command: </strong>' +
-                       key['source_data']['name'] +
-                       '<br>Description: ' + key['source_data']['description'] +
-                       '<br>OS name , OS version: ' +
-                       key['source_data']['os_name'] +
-                       ' , ' + key['source_data']['os_version']
-              @db_json['steps'][pos.to_s]['description'] << append
-            end
+            @db_json = protocolsio_step_command_populate(@db_json, key, pos)
           when '18'
-            if key['source_data']['protocol_name'] &&
-               key['source_data']['full_name'] &&
-               key['source_data']['link']
-              append = '<br><strong>This protocol also contains an' +
-                       ' attached sub-protocol: </strong>' +
-                       key['source_data']['protocol_name'] + '<br>Author: ' +
-                       key['source_data']['full_name'] + '<br>Link: ' +
-                       key['source_data']['link']
-              @db_json['steps'][pos.to_s]['description'] << append
-
-            end
+            @db_json = protocolsio_step_attached_sub_protocol_populate(
+              @db_json, key, pos
+            )
           when '19'
-            if key['source_data']['body'] && key['source_data']['link']
-              append = '<br><strong>Safety information: </strong>' +
-                       key['source_data']['body'] +
-                       '<br>Link: ' + key['source_data']['link']
-              @db_json['steps'][pos.to_s]['description'] << append
-            end
-            # when '20' placeholder za materiale
+            @db_json = protocolsio_step_safety_information_populate(
+              @db_json, key, pos
+            )
           end
-        end # finished step component iteration
+        end # finished step component case iteration
       end # finished looping over step components
     end # steps
-
     protocol = nil
     respond_to do |format|
       transaction_error = false
@@ -798,21 +739,18 @@ class ProtocolsController < ApplicationController
           raise ActiveRecord:: Rollback
         end
       end
-
       p_name =
         if @db_json['name'].present? && !@db_json['name'].empty?
           escape_input(@db_json['name'])
         else
           t('protocols.index.no_protocol_name')
         end
-
       if transaction_error
         @protocolsio_general_error = true
         #  format.json {
         #    render json: { name: p_name, status: :bad_request },
         # status: :bad_request
         #  }
-
       else
         # General something went wrong, upload to db failed error
         @protocolsio_general_error = false
@@ -825,7 +763,15 @@ class ProtocolsController < ApplicationController
       format.js {}
     end
   end
-
+  # epic posodob, success window, upload window
+  # validacije (protocols.io file test), mogoc lahk kdo kej zrusi
+  # excel posodob v epicu in napis da datumi ne grejo
+  # bug no description report
+  # epic napis da datumi grejo v description, datumi pr scinotu so generirani
+  # sortiri buge problem etc da se ve kaj je kaj v dokumentaciji
+  # v excel napis kaj vse od atributov in rtf formata od protocols.io se ne mapira
+  # opis dummy info v protocols io
+  # vse v svoj epik dej
   def export
     # Make a zip output stream and send it to the client
     respond_to do |format|
@@ -1053,6 +999,116 @@ class ProtocolsController < ApplicationController
   end
 
   private
+
+  def protocolsio_step_description_populate(result, iterating_key, pos2)
+    if !iterating_key['data'].nil? && iterating_key['data'] != '' &&
+       result['steps'][pos2.to_s]['description']
+      append = '<br>' + iterating_key['data'] + '<br>'
+      result['steps'][pos2.to_s]['description'] << append
+    elsif !result['steps'][pos2.to_s]['description']
+      append = '<br>' + iterating_key['data'] + '<br>'
+      result['steps'][pos2.to_s]['description'] = append
+    else
+      result['steps'][pos2.to_s]['description'] = 'Description missing'
+    end
+    result
+  end
+
+  def protocolsio_step_title_populate(result, iterating_key, pos2)
+    result['steps'][pos2.to_s]['name'] =
+      if !iterating_key['data'].nil? && iterating_key['data'] != ''
+        iterating_key['data']
+      else
+        'Step'
+      end
+    result
+  end
+
+  def protocolsio_step_expected_result_populate(result, iterating_key, pos2)
+    if !iterating_key['data'].nil? && iterating_key['data'] != ''
+      append = '<br><strong>Expected result: </strong>'
+      + iterating_key['data'] + '<br>'
+      result['steps'][pos2.to_s]['description'] << append
+    end
+    result
+  end
+
+  def protocolsio_step_software_package_populate(result, iterating_key, pos2)
+    if iterating_key['source_data']['name'] &&
+       iterating_key['source_data']['developer'] &&
+       iterating_key['source_data']['version'] &&
+       iterating_key['source_data']['link'] &&
+       iterating_key['source_data']['repository'] &&
+       iterating_key['source_data']['os_name'] &&
+       iterating_key['source_data']['os_version']
+      append = '<br><strong>Software package: </strong>' +
+               iterating_key['source_data']['name'] + '<br>Developer: ' +
+               iterating_key['source_data']['developer'] + '<br>Version: ' +
+               iterating_key['source_data']['version'] + '<br>Link: ' +
+               iterating_key['source_data']['link'] + '<br>Repository: ' +
+               iterating_key['source_data']['repository'] +
+               '<br>OS name , OS version: ' +
+               iterating_key['source_data']['os_name'] + ' , ' +
+               iterating_key['source_data']['os_version']
+      result['steps'][pos2.to_s]['description'] << append
+    end
+    result
+  end
+
+  def protocolsio_step_dataset_populate(result, iterating_key, pos2)
+    if iterating_key['source_data']['name'] &&
+       iterating_key['source_data']['link']
+      append = '<br><strong>Dataset: </strong>' +
+               iterating_key['source_data']['name'] + '<br>Link: ' +
+               iterating_key['source_data']['link']
+      result['steps'][pos2.to_s]['description'] << append
+    end
+    result
+  end
+
+  def protocolsio_step_command_populate(result, iterating_key, pos2)
+    if iterating_key['source_data']['name'] &&
+       iterating_key['source_data']['description'] &&
+       iterating_key['source_data']['os_name'] &&
+       iterating_key['source_data']['os_version']
+      append = '<br><strong>Command: </strong>' +
+               iterating_key['source_data']['name'] +
+               '<br>Description: ' +
+               iterating_key['source_data']['description'] +
+               '<br>OS name , OS version: ' +
+               iterating_key['source_data']['os_name'] +
+               ' , ' + iterating_key['source_data']['os_version']
+      result['steps'][pos2.to_s]['description'] << append
+    end
+    result
+  end
+
+  def protocolsio_step_attached_sub_protocol_populate(
+    result, iterating_key, pos2
+  )
+    if iterating_key['source_data']['protocol_name'] &&
+       iterating_key['source_data']['full_name'] &&
+       iterating_key['source_data']['link']
+      append = '<br><strong>This protocol also contains an' +
+               ' attached sub-protocol: </strong>' +
+               iterating_key['source_data']['protocol_name'] + '<br>Author: ' +
+               iterating_key['source_data']['full_name'] + '<br>Link: ' +
+               iterating_key['source_data']['link']
+      result['steps'][pos2.to_s]['description'] << append
+    end
+    result
+  end
+
+  def protocolsio_step_safety_information_populate(result, iterating_key, pos2)
+    if iterating_key['source_data']['body'] &&
+       iterating_key['source_data']['link']
+      append = '<br><strong>Safety information: </strong>' +
+               iterating_key['source_data']['body'] +
+               '<br>Link: ' + iterating_key['source_data']['link']
+      result['steps'][pos2.to_s]['description'] << append
+    end
+    result
+  end
 
   def move_protocol(action)
     rollbacked = false

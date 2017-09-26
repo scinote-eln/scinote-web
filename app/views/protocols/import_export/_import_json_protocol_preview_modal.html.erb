@@ -47,8 +47,7 @@ CGI.parse(URI.parse(request.referrer).query).fetch("type") %>
               <label><%= t("protocols.import_export.import_modal.created_at_label") %></label>
 
               <% display_created_at=Time.at(@json_object['created_on'].to_i) %>
-              <%= f.text_field :created_at, :value => display_created_at.to_s+"(Protocols.io
-              value)",readonly: true, class: "form-control" %>
+              <%= f.text_field :created_at, :value => display_created_at.to_s+"(Protocols.io value)",readonly: true, class: "form-control" %>
             </div>
             <div class="col-xs-4">
               <label><%= t("protocols.import_export.import_modal.updated_at_label") %></label>
@@ -159,7 +158,7 @@ CGI.parse(URI.parse(request.referrer).query).fetch("type") %>
                     key["data"] %>
                     <br>
                     <% case key["component_type_id"]
-                    when "1" %>
+                     when "1" %>
                     <br>
                     <strong>
                       Description:
