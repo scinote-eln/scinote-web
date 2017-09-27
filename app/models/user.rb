@@ -36,7 +36,7 @@ class User < ApplicationRecord
     size: { less_than: Constants::AVATAR_MAX_SIZE_MB.megabytes }
   validate :time_zone_check
 
-  store_accessor :settings, :time_zone
+  store_accessor :settings, :time_zone, :notifications
 
   default_settings(
     time_zone: 'UTC',
@@ -48,7 +48,31 @@ class User < ApplicationRecord
       system_message_email: false
     }
   )
+  # json.assignmentsNotification notifications['assignments']
+  # json.assignmentsEmailNotification notifications['assignments_email']
+  # json.recentNotification notifications['recent']
+  # json.recentEmailNotification notifications['recent_email']
+  # json.systemMessageEmailNofification notifications['system_message_email']
+  # joson friendly attributes
+  NOTIFICATIONS_TYPES = %w(assignmentsNotification assignmentsEmailNotification
+                           recentNotification recentEmailNotification
+                           systemMessageEmailNofification)
+  # declare notifications getters
+  NOTIFICATIONS_TYPES.each do |name|
+    define_method(name) do
+      attr_name = name.slice!('Notification').underscore
+      self.notifications.fetch(attr_name.to_sym)
+    end
+  end
 
+  # declare notifications setters
+  NOTIFICATIONS_TYPES.each do |name|
+    define_method("#{name}=") do |value|
+      attr_name = name.slice!('Notification').underscore
+      self.notifications[attr_name.to_sym] = value
+      save
+    end
+  end
   # Relations
   has_many :user_teams, inverse_of: :user
   has_many :teams, through: :user_teams

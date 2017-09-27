@@ -3,11 +3,15 @@ module ClientApi
     class UsersController < ApplicationController
 
       def preferences_info
+        settings = current_user.settings
         respond_to do |format|
           format.json do
             render template: 'client_api/users/preferences',
                    status: :ok,
-                   locals: { user: current_user}
+                   locals: {
+                     timeZone: settings['time_zone'],
+                     notifications: settings['notifications']
+                   }
           end
         end
       end
@@ -67,7 +71,9 @@ module ClientApi
                       :full_name,
                       :password_confirmation,
                       :current_password,
-                      :avatar)
+                      :avatar,
+                      :assignments,
+                      :time_zone)
       end
 
       def change_notification(dinamic_param, params)

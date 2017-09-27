@@ -1,10 +1,9 @@
 import React, { Component } from "react";
-import { connect } from "react-redux";
-import PropTypes from "prop-types";
-import styled from "styled-components";
 import { FormattedMessage } from "react-intl";
+import { Button } from "react-bootstrap";
+import styled from "styled-components";
 
-import InputDisabled from "../../components/InputDisabled";
+import { getUserPreferencesInfo } from "../../../../services/api/users_api";
 import SettingsAccountWrapper from "../../components/SettingsAccountWrapper";
 import InputTimezone from "./components/InputTimezone";
 import NotificationsGroup from "./components/NotificationsGroup";
@@ -21,106 +20,50 @@ import {
   BORDER_LIGHT_COLOR
 } from "../../../../config/constants/colors";
 
-const WrapperInputDisabled = styled.div`
+const TutorialWrapper = styled.div`
   margin: 20px 0;
   padding-bottom: 15px;
   border-bottom: 1px solid ${BORDER_LIGHT_COLOR};
-
-  .settings-warning {
-    margin-top: -5px;
-  }
-`;
-
+`
 class SettingsPreferences extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      isTimeZoneEditable: false,
-      email: "",
-      notifications: {
-        assignmentsNotification: false,
-        assignmentsNotificationEmail: false,
-        recentNotification: false,
-        recentNotificationEmail: false,
-        systemMessageNofificationEmail: false
-      }
+      timeZone: "",
+      assignmentsNotification: false,
+      assignmentsEmailNotification: false,
+      recentNotification: false,
+      recentEmailNotification: false,
+      systemMessageEmailNofification: false
     };
 
-    this.setData = this.setData.bind(this);
+    this.getPreferencesInfo = this.getPreferencesInfo.bind(this)
   }
 
   componentDidMount() {
     this.getPreferencesInfo();
   }
 
-  toggleIsEditable(fieldNameEnabled) {
-    const editableState = this.state[fieldNameEnabled];
-    this.setState({ [fieldNameEnabled]: !editableState });
-  }
-
-  setData({ data }) {
-    const user = data.user;
-
-    const newData = {
-      timeZone: user.timeZone,
-      notifications: {
-        assignmentsNotification: user.notifications.assignmentsNotification,
-        assignmentsNotificationEmail:
-          user.notifications.assignmentsNotificationEmail,
-        recentNotification: user.notifications.recentNotification,
-        recentNotificationEmail: user.notifications.recentNotificationEmail,
-        systemMessageNofificationEmail:
-          user.notifications.systemMessageNofificationEmail
-      }
-    };
-
-    this.setState(Object.assign({}, this.state, newData));
-  }
-
   getPreferencesInfo() {
-    // axios
-    //   .get("/client_api/users/preferences_info")
-    //   .then(response => this.setData(response))
-    //   .catch(error => console.log(error));
+    getUserPreferencesInfo().then(data => {
+      this.setState(data);
+    });
   }
 
   render() {
-    const isTimeZoneEditable = "isTimeZoneEditable";
-    let timezoneField;
-
-    if (this.state.isTimeZoneEditable) {
-      timezoneField = (
-        <InputTimezone
-          labelValue="Time zone"
-          inputValue={this.state.timeZone}
-          disableEdit={() => this.toggleIsEditable(isTimeZoneEditable)}
-          saveData={timeZone => this.props.changeTimezone(timeZone)}
-        />
-      );
-    } else {
-      timezoneField = (
-        <WrapperInputDisabled>
-          <InputDisabled
-            labelTitle="settings_page.time_zone"
-            inputValue={this.state.timeZone}
-            inputType="text"
-            enableEdit={() => this.toggleIsEditable(isTimeZoneEditable)}
-          />
-          <div className="settings-warning">
-            <small>
-              <FormattedMessage id="settings_page.time_zone_warning" />
-            </small>
-          </div>
-        </WrapperInputDisabled>
-      );
-    }
-
     return (
       <SettingsAccountWrapper>
         <div className="col-xs-12 col-sm-9">
-          {timezoneField}
-
+          <InputTimezone
+            value={this.state.timeZone}
+            loadPreferences={this.getPreferencesInfo}
+          />
+          <TutorialWrapper>
+          <Button bsStyle="success">
+            <FormattedMessage id="settings_page.repeat_tutorial" />
+          </Button>
+          </TutorialWrapper>
           <h3>Notifications</h3>
           <NotificationsGroup
             type={ASSIGNMENT_NOTIFICATION}
@@ -152,11 +95,4 @@ class SettingsPreferences extends Component {
   }
 }
 
-SettingsPreferences.propTypes = {
-  changeTimezone: PropTypes.func.isRequired,
-  avatarPath: PropTypes.string.isRequired
-};
-
-const mapStateToProps = state => state.current_user;
-
-export default connect(mapStateToProps)(SettingsPreferences);
+export default SettingsPreferences;

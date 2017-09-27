@@ -1,10 +1,6 @@
-json.user do
-  json.timeZone user.time_zone
-  json.notifications do
-    json.assignmentsNotification user.assignments_notification
-    json.assignmentsNotificationEmail user.assignments_notification_email
-    json.recentNotification user.recent_notification
-    json.recentNotificationEmail user.recent_notification_email
-    json.systemMessageNofificationEmail user.system_message_notification_email
-  end
-end
+json.timeZone timeZone
+json.assignmentsNotification notifications['assignments']
+json.assignmentsEmailNotification notifications['assignments_email']
+json.recentNotification notifications['recent']
+json.recentEmailNotification notifications['recent_email']
+json.systemMessageEmailNofification notifications['system_message_email']

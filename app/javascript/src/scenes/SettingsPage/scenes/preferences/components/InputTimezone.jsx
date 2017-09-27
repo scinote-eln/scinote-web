@@ -1,11 +1,13 @@
 import React, { Component } from "react";
-import PropType from "prop-types";
+import { string, func } from "prop-types";
 import { Button } from "react-bootstrap";
 import styled from "styled-components";
 import TimezonePicker from "react-bootstrap-timezone-picker";
 import "react-bootstrap-timezone-picker/dist/react-bootstrap-timezone-picker.min.css";
 import { FormattedMessage } from "react-intl";
 
+import { updateUser } from "../../../../../services/api/users_api";
+import InputDisabled from "../../../components/InputDisabled";
 import { BORDER_LIGHT_COLOR } from "../../../../../config/constants/colors";
 
 const Wrapper = styled.div`
@@ -22,16 +24,29 @@ const Wrapper = styled.div`
   }
 `;
 
+const WrapperInputDisabled = styled.div`
+  margin: 20px 0;
+  padding-bottom: 15px;
+  border-bottom: 1px solid ${BORDER_LIGHT_COLOR};
+
+  .settings-warning {
+    margin-top: -5px;
+  }
+`;
+
 class InputTimezone extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      value: props.inputValue
+      value: "",
+      disabled: true
     };
 
     this.handleChange = this.handleChange.bind(this);
     this.handleUpdate = this.handleUpdate.bind(this);
+    this.enableEdit = this.enableEdit.bind(this);
+    this.disableEdit = this.disableEdit.bind(this);
   }
 
   handleChange(timezone) {
@@ -40,20 +55,49 @@ class InputTimezone extends Component {
 
   handleUpdate() {
     if (this.state.value !== "") {
-      this.props.saveData(this.state.value);
+      updateUser({ time_zone: this.state.value }).then(() => {
+        this.disableEdit();
+      });
     }
-    this.props.disableEdit();
   }
+
+  enableEdit() {
+    this.setState({ disabled: false, value: this.props.value });
+  }
+
+  disableEdit() {
+    this.setState({ disabled: true });
+    this.props.loadPreferences();
+  }
+
   render() {
+    if (this.state.disabled) {
+      return (
+        <WrapperInputDisabled>
+          <InputDisabled
+            labelTitle="settings_page.time_zone"
+            inputValue={this.props.value}
+            inputType="text"
+            enableEdit={this.enableEdit}
+          />
+          <div className="settings-warning">
+            <small>
+              <FormattedMessage id="settings_page.time_zone_warning" />
+            </small>
+          </div>
+        </WrapperInputDisabled>
+      );
+    }
+
     return (
       <Wrapper>
         <h4>
-          {this.props.labelValue}
+          <FormattedMessage id="settings_page.time_zone" />
         </h4>
         <TimezonePicker
           absolute
           defaultValue="Europe/London"
-          value={this.props.inputValue}
+          value={this.state.value}
           placeholder="Select timezone..."
           onChange={this.handleChange}
         />
@@ -62,11 +106,11 @@ class InputTimezone extends Component {
             <FormattedMessage id="settings_page.time_zone_warning" />
           </small>
         </div>
-        <Button bsStyle="primary" onClick={this.props.disableEdit}>
-          Cancel
+        <Button bsStyle="primary" onClick={this.disableEdit}>
+          <FormattedMessage id="general.cancel" />
         </Button>
         <Button bsStyle="default" onClick={this.handleUpdate}>
-          Update
+          <FormattedMessage id="general.update" />
         </Button>
       </Wrapper>
     );
@@ -74,10 +118,8 @@ class InputTimezone extends Component {
 }
 
 InputTimezone.propTypes = {
-  labelValue: PropType.string.isRequired,
-  inputValue: PropType.string.isRequired,
-  disableEdit: PropType.func.isRequired,
-  saveData: PropType.func.isRequired
+  value: string.isRequired,
+  loadPreferences: func.isRequired
 };
 
 export default InputTimezone;

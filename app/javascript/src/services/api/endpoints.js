@@ -9,6 +9,7 @@ export const TEAMS_PATH = "/client_api/teams";
 export const CHANGE_TEAM_PATH = "/client_api/teams/change_team";
 export const TEAM_DETAILS_PATH = "/client_api/teams/:team_id/details";
 export const TEAM_UPDATE_PATH = "/client_api/teams/update";
+export const CURRENT_USER_PATH = "/client_api/current_user_info"
 
 // search
 export const SEARCH_PATH = "/search";
@@ -19,6 +20,7 @@ export const RECENT_NOTIFICATIONS_PATH = "/client_api/recent_notifications";
 // users
 export const USER_PROFILE_INFO = "/client_api/users/profile_info";
 export const UPDATE_USER_PATH = "/client_api/users/update";
+export const PREFERENCES_INFO_PATH = "/client_api/users/preferences_info"
 
 // info dropdown_title
 export const CUSTOMER_SUPPORT_LINK = "http://scinote.net/support";
