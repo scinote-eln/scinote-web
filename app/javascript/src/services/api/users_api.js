@@ -1,5 +1,9 @@
 import { axiosInstance } from "./config";
-import { USER_PROFILE_INFO, UPDATE_USER_PATH } from "./endpoints";
+import {
+  USER_PROFILE_INFO,
+  UPDATE_USER_PATH,
+  CURRENT_USER_PATH
+} from "./endpoints";
 
 export const getUserProfileInfo = () => {
   return axiosInstance.get(USER_PROFILE_INFO).then(({ data }) => data.user);
@@ -15,3 +19,6 @@ export const updateUser = (params, formObj = false) => {
     .post(UPDATE_USER_PATH, { user: params })
     .then(({ data }) => data.user);
 };
+
+export const getCurrentUser = () =>
+  axiosInstance.get(CURRENT_USER_PATH).then(({ data }) => data.user);

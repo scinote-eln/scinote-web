@@ -51,7 +51,7 @@ module ClientApi
           bypass_sign_in(current_user)
           success_response
         else
-          unsuccess_response(current_user.errors.full_messages)
+          unsuccess_response(current_user.errors.full_messages, :unauthorized)
         end
       rescue CustomUserError => error
         unsuccess_response(error.to_s)
@@ -97,11 +97,11 @@ module ClientApi
         end
       end
 
-      def unsuccess_response(message)
+      def unsuccess_response(message, status = :unprocessable_entity)
         respond_to do |format|
           format.json do
             render json: { message: message },
-            status: :unprocessable_entity
+            status: status
           end
         end
       end

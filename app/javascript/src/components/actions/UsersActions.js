@@ -1,7 +1,6 @@
 import axios from "../../config/axios";
 
 import {
-  CURRENT_USER_PATH,
   CHANGE_USER_TIMEZONE_PATH,
   CHANGE_USER_ASSIGNEMENTS_NOTIFICATION_PATH,
   CHANGE_USER_ASSIGNMENTS_NOTIFICATION_EMAIL_PATH,
@@ -20,23 +19,10 @@ import {
   CHANGE_SYSTEM_MESSAGE_NOTIFICATION_EMAIL
 } from "../../config/action_types";
 
-function addCurrentUser(data) {
+export function addCurrentUser(data) {
   return {
     type: SET_CURRENT_USER,
     payload: data
-  };
-}
-
-export function getCurrentUser() {
-  return dispatch => {
-    axios
-      .get(CURRENT_USER_PATH, { withCredentials: true })
-      .then(({ data }) => {
-        dispatch(addCurrentUser(data.user));
-      })
-      .catch(error => {
-        console.log("get Current User Error: ", error);
-      });
   };
 }
 

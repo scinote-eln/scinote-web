@@ -1,8 +1,10 @@
 import React, { Component } from "react";
 import { func } from "prop-types";
+import { connect } from "react-redux";
 import styled from "styled-components";
 import { FormattedMessage } from "react-intl";
 import { getUserProfileInfo } from "../../../../../services/api/users_api";
+import { addCurrentUser } from "../../../../../components/actions/UsersActions";
 
 import AvatarInputField from "./AvatarInputField";
 import ProfileInputField from "./ProfileInputField";
@@ -25,7 +27,7 @@ class MyProfile extends Component {
       timeZone: "",
       newEmail: ""
     };
-    this.loadInfo = this.loadInfo.bind(this)
+    this.loadInfo = this.loadInfo.bind(this);
   }
 
   componentDidMount() {
@@ -37,6 +39,7 @@ class MyProfile extends Component {
       .then(data => {
         const { fullName, initials, email, avatarThumb, timeZone } = data;
         this.setState({ fullName, initials, email, avatarThumb, timeZone });
+        this.props.addCurrentUser(data);
       })
       .catch(error => {
         console.log(error);
@@ -52,8 +55,10 @@ class MyProfile extends Component {
         <AvatarLabel>
           <FormattedMessage id="settings_page.avatar" />
         </AvatarLabel>
-        <AvatarInputField reloadInfo={this.loadInfo}
-                          imgSource={this.state.avatarThumb} />
+        <AvatarInputField
+          reloadInfo={this.loadInfo}
+          imgSource={this.state.avatarThumb}
+        />
 
         <ProfileInputField
           value={this.state.fullName}
@@ -94,4 +99,4 @@ class MyProfile extends Component {
   }
 }
 
-export default MyProfile;
+export default connect(null, { addCurrentUser })(MyProfile);

@@ -299,7 +299,7 @@ class InputEnabled extends Component {
           <FormControl
             type="password"
             value={this.state.current_password}
-            onChange={this.handlePasswordConfirmation}
+            onChange={this.handleCurrentPassword}
           />
         </div>
       );
@@ -400,7 +400,7 @@ InputEnabled.propTypes = {
 };
 
 InputEnabled.defaultProps = {
-  forceRerender: false
+  forceRerender: () => (false)
 }
 
 export default InputEnabled;
