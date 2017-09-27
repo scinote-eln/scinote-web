@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 
 class Alert extends Component {
 
-  static alertClass (type) {
+  static alertClass(type) {
     const classes = {
       error: "alert-danger",
       alert: "alert-warning",
@@ -13,7 +13,7 @@ class Alert extends Component {
     return classes[type] || classes.success;
   }
 
-  static glyphiconClass (type) {
+  static glyphiconClass(type) {
     const classes = {
       error: "glyphicon-exclamation-sign",
       alert: "glyphicon-exclamation-sign",
@@ -38,13 +38,13 @@ class Alert extends Component {
     const message = this.props.message;
     const alertClassName =
       `alert
-       ${this.alertClass(message.type)}
+       ${Alert.alertClass(message.type)}
        alert-dismissable
        alert-floating
        fade in`;
     const glyphiconClassName =
       `glyphicon
-       ${this.glyphiconClass(message.type)}`;
+       ${Alert.glyphiconClass(message.type)}`;
 
     return(
       <div className={alertClassName}>
@@ -58,7 +58,7 @@ class Alert extends Component {
             <span aria-hidden="true">×</span>
           </button>
           <span className={glyphiconClassName} />
-          <span>{message.text}</span>
+          <span>&nbsp;{message.text}</span>
         </div>
       </div>
     );
@@ -69,7 +69,6 @@ Alert.propTypes = {
   onClose: PropTypes.func,
   timeout: PropTypes.number,
   message: PropTypes.shape({
-    id: PropTypes.number,
     type: PropTypes.string.isRequired,
     text: PropTypes.string.isRequired
   }).isRequired
