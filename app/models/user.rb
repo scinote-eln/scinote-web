@@ -49,27 +49,6 @@ class User < ApplicationRecord
     }
   )
 
-  # json friendly attributes
-  NOTIFICATIONS_TYPES = %w(assignmentsNotification assignmentsEmailNotification
-                           recentNotification recentEmailNotification
-                           systemMessageEmailNofification)
-  # declare notifications getters
-  NOTIFICATIONS_TYPES.each do |name|
-    define_method(name) do
-      attr_name = name.slice!('Notification').underscore
-      self.notifications.fetch(attr_name.to_sym)
-    end
-  end
-
-  # declare notifications setters
-  NOTIFICATIONS_TYPES.each do |name|
-    next if name == 'systemMessageEmailNofification'
-    define_method("#{name}=") do |value|
-      attr_name = name.slice!('Notification').underscore
-      self.notifications[attr_name.to_sym] = value
-      save
-    end
-  end
   # Relations
   has_many :user_teams, inverse_of: :user
   has_many :teams, through: :user_teams
@@ -432,6 +411,27 @@ class User < ApplicationRecord
         ).values
       ).count
     statistics
+  end
+
+  # json friendly attributes
+  NOTIFICATIONS_TYPES = %w(assignmentsNotification assignmentsEmailNotification
+                           recentNotification recentEmailNotification
+                           systemMessageEmailNotification)
+  # declare notifications getters
+  NOTIFICATIONS_TYPES.each do |name|
+    define_method(name) do
+      attr_name = name.gsub('Notification', '').underscore
+      self.notifications.fetch(attr_name.to_sym)
+    end
+  end
+
+  # declare notifications setters
+  NOTIFICATIONS_TYPES.each do |name|
+    define_method("#{name}=") do |value|
+      attr_name = name.gsub('Notification', '').underscore.to_sym
+      self.notifications[attr_name] = value
+      save
+    end
   end
 
   protected

@@ -51,6 +51,7 @@ class NotificationsGroup extends Component {
     this.inAppNotificationField = this.inAppNotificationField.bind(this);
     this.emailNotificationField = this.emailNotificationField.bind(this);
     this.updateStatus = this.updateStatus.bind(this);
+    this.buttonGroupStatus = this.buttonGroupStatus.bind(this);
   }
 
   notificationImage() {
@@ -68,17 +69,25 @@ class NotificationsGroup extends Component {
     );
   }
 
-  inAppNotificationField() {
+  inAppNotificationField(value) {
+    let params = {};
     switch (this.props.type) {
       case ASSIGNMENT_NOTIFICATION:
-        return "assignmentsNotification";
+        params.assignmentsNotification = value;
+        if(!value) {
+          params.assignmentsEmailNotification = false;
+        }
+        break;
       case RECENT_NOTIFICATION:
-        return "recentNotification";
-      case SYSTEM_NOTIFICATION:
-        return "systemMessageEmailNofification";
+        params.recentNotification = value;
+        if(!value) {
+          params.recentEmailNotification = false;
+        }
+        break;
       default:
-        return "";
+        params = {}
     }
+    return params
   }
 
   emailNotificationField() {
@@ -87,6 +96,8 @@ class NotificationsGroup extends Component {
         return "assignmentsEmailNotification";
       case RECENT_NOTIFICATION:
         return "recentEmailNotification";
+      case SYSTEM_NOTIFICATION:
+        return "systemMessageEmailNotification"
       default:
         return "";
     }
@@ -94,12 +105,19 @@ class NotificationsGroup extends Component {
 
   updateStatus(actionType, value) {
     if (actionType === "inAppNotification") {
-      const inAppField = this.inAppNotificationField();
-      updateUser({ [inAppField]: value }).then(() => this.props.reloadInfo());
+      const params = this.inAppNotificationField(value);
+      updateUser(params).then(() => this.props.reloadInfo());
     } else if (actionType === "emailNotification") {
       const emailField = this.emailNotificationField();
       updateUser({ [emailField]: value }).then(() => this.props.reloadInfo());
     }
+  }
+
+  // check if the in sciNote notification is disabled
+  buttonGroupStatus() {
+    return (
+      this.props.type !== SYSTEM_NOTIFICATION && !this.props.inAppNotification
+    );
   }
 
   render() {
@@ -123,14 +141,15 @@ class NotificationsGroup extends Component {
               status={this.props.inAppNotification}
               updateStatus={value =>
                 this.updateStatus("inAppNotification", value)}
-              isDisabled={false}
+              isDisabled={this.props.type === SYSTEM_NOTIFICATION}
             />
             <NotificationsSwitch
               title="settings_page.notify_me_via_email"
               status={this.props.emailNotification}
               updateStatus={value =>
                 this.updateStatus("emailNotification", value)}
-              isDisabled={this.props.type === SYSTEM_NOTIFICATION}
+              isDisabled={false}
+              isTemporarilyDisabled={this.buttonGroupStatus()}
             />
           </div>
         </div>

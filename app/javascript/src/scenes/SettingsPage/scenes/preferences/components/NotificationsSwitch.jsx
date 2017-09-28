@@ -1,10 +1,5 @@
 import React, { Component } from "react";
 import { string, bool, func } from "prop-types";
-import {
-  ButtonToolbar,
-  ToggleButtonGroup,
-  ToggleButton
-} from "react-bootstrap";
 import styled from "styled-components";
 import { FormattedMessage } from "react-intl";
 
@@ -44,37 +39,73 @@ class NotificationsSwitch extends Component {
   }
 
   disabledButton() {
-    if (this.props.isDisabled) {
+    if(this.props.isTemporarilyDisabled) {
       return (
-        <ToggleButtonGroup
-          type="radio"
-          name={this.props.title}
-          defaultValue={this.state.status}
-          disabled
-        >
-          <ToggleButton disabled value={false}>
-            No
-          </ToggleButton>
-          <ToggleButton disabled value={true}>
-            Yes
-          </ToggleButton>
-        </ToggleButtonGroup>
+        <div className="btn-group">
+          <LeftButton
+            className="btn btn-danger"
+            disabled
+          >
+            <FormattedMessage id="settings_page.no" />
+          </LeftButton>
+          <RightButton
+            className="btn btn-default"
+            disabled
+          >
+            <FormattedMessage id="settings_page.yes" />
+          </RightButton>
+        </div>
+      );
+    } else if(this.props.isDisabled) {
+      return (
+        <div className="btn-group">
+          <LeftButton
+            className="btn btn-default"
+            disabled
+          >
+            <FormattedMessage id="settings_page.no" />
+          </LeftButton>
+          <RightButton
+            className="btn btn-primary"
+            disabled
+          >
+            <FormattedMessage id="settings_page.yes" />
+          </RightButton>
+        </div>
+      );
+    } else if(this.props.status) {
+      return (
+        <div className="btn-group">
+          <LeftButton
+            className="btn btn-default"
+            onClick={() => this.handleClick(false)}
+          >
+            <FormattedMessage id="settings_page.no" />
+          </LeftButton>
+          <RightButton
+            className="btn btn-primary"
+            onClick={() => this.handleClick(true)}
+          >
+            <FormattedMessage id="settings_page.yes" />
+          </RightButton>
+        </div>
       );
     }
     return (
-      <ToggleButtonGroup
-        type="radio"
-        name={this.props.title}
-        onChange={this.handleClick}
-        defaultValue={this.state.status}
-      >
-        <ToggleButton value={false}>
-          No
-        </ToggleButton>
-        <ToggleButton value={true}>
-          Yes
-        </ToggleButton>
-      </ToggleButtonGroup>
+      <div className="btn-group">
+        <LeftButton
+          className="btn btn-danger"
+          onClick={() => this.handleClick(false)}
+        >
+          <FormattedMessage id="settings_page.no" />
+        </LeftButton>
+        <RightButton
+          className="btn btn-default"
+          onClick={() => this.handleClick(true)}
+        >
+          <FormattedMessage id="settings_page.yes" />
+        </RightButton>
+      </div>
     );
   }
   render() {
@@ -84,7 +115,7 @@ class NotificationsSwitch extends Component {
           <FormattedMessage id={this.props.title} />
         </div>
         <div className="col-sm-7">
-          <ButtonToolbar>{this.disabledButton()}</ButtonToolbar>
+          {this.disabledButton()}
         </div>
       </Wrapper>
     );
@@ -95,7 +126,12 @@ NotificationsSwitch.propTypes = {
   title: string.isRequired,
   status: bool.isRequired,
   isDisabled: bool.isRequired,
-  updateStatus: func.isRequired
+  updateStatus: func.isRequired,
+  isTemporarilyDisabled: bool
 };
+
+NotificationsSwitch.defaultProps = {
+  isTemporarilyDisabled: false
+}
 
 export default NotificationsSwitch;

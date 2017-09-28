@@ -27,7 +27,7 @@ class SettingsPreferences extends Component {
       assignmentsEmailNotification: false,
       recentNotification: false,
       recentEmailNotification: false,
-      systemMessageEmailNofification: false
+      systemMessageEmailNotification: false
     };
 
     this.getPreferencesInfo = this.getPreferencesInfo.bind(this);
@@ -78,8 +78,8 @@ class SettingsPreferences extends Component {
             type={SYSTEM_NOTIFICATION}
             title="settings_page.system_message"
             subtitle="settings_page.system_message_msg"
-            inAppNotification={
-              this.state.systemMessageEmailNofification
+            emailNotification={
+              this.state.systemMessageEmailNotification
             }
             iconClasses="glyphicon glyphicon-tower"
             iconBackground={ICON_GREEN_COLOR}
