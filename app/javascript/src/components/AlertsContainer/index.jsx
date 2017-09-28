@@ -21,6 +21,7 @@ class AlertsContainer extends Component {
 
     this.add = this.add.bind(this);
     this.clearAll = this.clearAll.bind(this);
+    this.clear = this.clear.bind(this);
     this.renderAlert = this.renderAlert.bind(this);
 
     // Bind self to global namespace
@@ -31,9 +32,7 @@ class AlertsContainer extends Component {
     this.setState(
       update(
         this.state,
-        {
-          alerts: { $push: [{ message, type, timeout }] }
-        }
+        { alerts: { $push: [{ message, type, timeout }] } }
       )
     );
   }
@@ -65,8 +64,7 @@ class AlertsContainer extends Component {
           {this.state.alerts.map((alert, index) =>
             <CSSTransition key={`alert-${index}`}
                            timeout={500}
-                           classNames="alert-animated"
-            >
+                           classNames="alert-animated">
               {this.renderAlert(alert, index)}
             </CSSTransition>
           )}

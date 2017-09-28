@@ -24,8 +24,7 @@ const ContentWrapper = styled.div`
 const ScinoteApp = () =>
   <Provider store={store}>
     <IntlProvider locale={locale}
-                  messages={flattenMessages(messages[locale])}
-    >
+                  messages={flattenMessages(messages[locale])}>
       <div>
         <BrowserRouter>
           <div>

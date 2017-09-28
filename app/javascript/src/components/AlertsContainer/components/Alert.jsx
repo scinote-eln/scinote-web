@@ -49,20 +49,23 @@ class Alert extends Component {
       `glyphicon
        ${Alert.glyphiconClass(this.props.type)}`;
 
-    return(
+    return (
       <Wrapper className={alertClassName}>
-        <Grid><Row><Col>
-          <button type="button"
-                  className="close"
-                  data-dismiss="alert"
-                  aria-label="Close"
-                  onClick={this.props.onClose}
-          >
-            <span aria-hidden="true">×</span>
-          </button>
-          <span className={glyphiconClassName} />
-          <span>&nbsp;{this.props.message}</span>
-        </Col></Row></Grid>
+        <Grid>
+          <Row>
+            <Col>
+              <button type="button"
+                      className="close"
+                      data-dismiss="alert"
+                      aria-label="Close"
+                      onClick={this.props.onClose}>
+                <span aria-hidden="true">×</span>
+              </button>
+              <span className={glyphiconClassName} />
+              <span>&nbsp;{this.props.message}</span>
+            </Col>
+          </Row>
+        </Grid>
       </Wrapper>
     );
   }
