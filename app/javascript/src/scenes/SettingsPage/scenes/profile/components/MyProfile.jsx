@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import { func } from "prop-types";
 import { connect } from "react-redux";
+import { func } from "prop-types";
 import styled from "styled-components";
 import { FormattedMessage } from "react-intl";
 import { getUserProfileInfo } from "../../../../../services/api/users_api";
@@ -98,5 +98,9 @@ class MyProfile extends Component {
     );
   }
 }
+
+MyProfile.propTypes = {
+  addCurrentUser: func.isRequired
+};
 
 export default connect(null, { addCurrentUser })(MyProfile);

@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { string, func } from "prop-types";
-import _ from "lodash";
 import styled from "styled-components";
 import { FormattedMessage } from "react-intl";
 import {
