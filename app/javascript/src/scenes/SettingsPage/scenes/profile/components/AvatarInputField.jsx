@@ -15,9 +15,13 @@ const AvatarWrapper = styled.div`
   height: 100px;
   position: relative;
   cursor: pointer;
+  &:hover > span {
+    display: block;
+  }
 `;
 
 const EditAvatar = styled.span`
+  display: none;
   color: ${WHITE_COLOR};
   background-color: ${DARK_GRAY_COLOR};
   position: absolute;
