@@ -44,7 +44,7 @@ class AlertsContainer extends Component {
   clear(alert) {
     const index = this.state.alerts.indexOf(alert);
     const alerts = update(this.state.alerts, { $splice: [[index, 1]] });
-    this.setState({ alerts: alerts });
+    this.setState({ alerts });
   }
 
   renderAlert(alert) {
