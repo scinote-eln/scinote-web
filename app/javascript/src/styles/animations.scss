@@ -1,0 +1,27 @@
+.alert-animated-enter {
+  opacity: 0.01;
+}
+.alert-animated-enter.alert-animated-enter-active {
+  opacity: 1;
+  transition: opacity 150ms ease-in;
+}
+.alert-animated-exit {
+  opacity: 1;
+  padding-bottom: 15px;
+  padding-top: 15px;
+  margin-bottom: 20px;
+  height: 50px;
+}
+.alert-animated-exit.alert-animated-exit-active {
+  overflow: hidden;
+  opacity: 0.01;
+  padding-top: 0px;
+  padding-bottom: 0px;
+  margin-bottom: 0px;
+  height: 0px;
+  transition: opacity 300ms ease-in,
+              padding-top 500ms ease-in,
+              padding-bottom 500ms ease-in,
+              margin-bottom 500ms ease-in,
+              height 500ms ease-in;
+}
