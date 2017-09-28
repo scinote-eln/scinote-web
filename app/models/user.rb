@@ -48,12 +48,8 @@ class User < ApplicationRecord
       system_message_email: false
     }
   )
-  # json.assignmentsNotification notifications['assignments']
-  # json.assignmentsEmailNotification notifications['assignments_email']
-  # json.recentNotification notifications['recent']
-  # json.recentEmailNotification notifications['recent_email']
-  # json.systemMessageEmailNofification notifications['system_message_email']
-  # joson friendly attributes
+
+  # json friendly attributes
   NOTIFICATIONS_TYPES = %w(assignmentsNotification assignmentsEmailNotification
                            recentNotification recentEmailNotification
                            systemMessageEmailNofification)
@@ -67,6 +63,7 @@ class User < ApplicationRecord
 
   # declare notifications setters
   NOTIFICATIONS_TYPES.each do |name|
+    next if name == 'systemMessageEmailNofification'
     define_method("#{name}=") do |value|
       attr_name = name.slice!('Notification').underscore
       self.notifications[attr_name.to_sym] = value

@@ -1,7 +1,5 @@
 import React, { Component } from "react";
 import { FormattedMessage } from "react-intl";
-import { Button } from "react-bootstrap";
-import styled from "styled-components";
 
 import { getUserPreferencesInfo } from "../../../../services/api/users_api";
 import SettingsAccountWrapper from "../../components/SettingsAccountWrapper";
@@ -16,15 +14,9 @@ import {
 
 import {
   MAIN_COLOR_BLUE,
-  ICON_GREEN_COLOR,
-  BORDER_LIGHT_COLOR
+  ICON_GREEN_COLOR
 } from "../../../../config/constants/colors";
 
-const TutorialWrapper = styled.div`
-  margin: 20px 0;
-  padding-bottom: 15px;
-  border-bottom: 1px solid ${BORDER_LIGHT_COLOR};
-`
 class SettingsPreferences extends Component {
   constructor(props) {
     super(props);
@@ -38,7 +30,7 @@ class SettingsPreferences extends Component {
       systemMessageEmailNofification: false
     };
 
-    this.getPreferencesInfo = this.getPreferencesInfo.bind(this)
+    this.getPreferencesInfo = this.getPreferencesInfo.bind(this);
   }
 
   componentDidMount() {
@@ -59,35 +51,39 @@ class SettingsPreferences extends Component {
             value={this.state.timeZone}
             loadPreferences={this.getPreferencesInfo}
           />
-          <TutorialWrapper>
-          <Button bsStyle="success">
-            <FormattedMessage id="settings_page.repeat_tutorial" />
-          </Button>
-          </TutorialWrapper>
-          <h3>Notifications</h3>
+          <h3>
+            <FormattedMessage id="settings_page.notifications" />
+          </h3>
           <NotificationsGroup
             type={ASSIGNMENT_NOTIFICATION}
             title="settings_page.assignement"
             subtitle="settings_page.assignement_msg"
-            imgUrl=""
             iconClasses="fa fa-newspaper-o"
+            inAppNotification={this.state.assignmentsNotification}
+            emailNotification={
+              this.state.assignmentsEmailNotification
+            }
             iconBackground={MAIN_COLOR_BLUE}
+            reloadInfo={this.getPreferencesInfo}
           />
           <NotificationsGroup
             type={RECENT_NOTIFICATION}
             title="settings_page.recent_changes"
             subtitle="settings_page.recent_changes_msg"
-            imgUrl={this.props.avatarPath}
-            iconClasses=""
-            iconBackground=""
+            inAppNotification={this.state.recentNotification}
+            emailNotification={this.state.recentEmailNotification}
+            reloadInfo={this.getPreferencesInfo}
           />
           <NotificationsGroup
             type={SYSTEM_NOTIFICATION}
             title="settings_page.system_message"
             subtitle="settings_page.system_message_msg"
-            imgUrl=""
+            inAppNotification={
+              this.state.systemMessageEmailNofification
+            }
             iconClasses="glyphicon glyphicon-tower"
             iconBackground={ICON_GREEN_COLOR}
+            reloadInfo={this.getPreferencesInfo}
           />
         </div>
       </SettingsAccountWrapper>

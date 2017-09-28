@@ -55,6 +55,7 @@ export default {
       time_zone_warning:
         "Time zone setting affects all time & date fields throughout application.",
       repeat_tutorial: "Repeat tutorial",
+      notifications: "Notifications",
       profile: "Profile",
       preferences: "Preferences",
       assignement: "Assignement",

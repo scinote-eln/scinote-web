@@ -1,5 +1,10 @@
 import React, { Component } from "react";
-import PropTypes from "prop-types";
+import { string, bool, func } from "prop-types";
+import {
+  ButtonToolbar,
+  ToggleButtonGroup,
+  ToggleButton
+} from "react-bootstrap";
 import styled from "styled-components";
 import { FormattedMessage } from "react-intl";
 
@@ -27,66 +32,59 @@ const RightButton = styled.button`
 class NotificationsSwitch extends Component {
   constructor(props) {
     super(props);
-
+    this.state = { status: this.props.status };
     this.handleClick = this.handleClick.bind(this);
+    this.disabledButton = this.disabledButton.bind(this);
   }
 
-  handleClick() {
+  handleClick(value) {
     if (!this.props.isDisabled) {
-      this.props.toggleSwitch();
+      this.props.updateStatus(value);
     }
   }
 
-  render() {
-    let switchBtn;
-
-    if (this.props.isSwitchOn) {
-      switchBtn = (
-        <div className="btn-group">
-          <LeftButton
-            className="btn btn-default"
-            disabled={this.props.isDisabled}
-            onClick={this.handleClick}
-          >
-            <FormattedMessage id="settings_page.no" />
-          </LeftButton>
-          <RightButton
-            className="btn btn-primary"
-            disabled
-            onClick={this.handleClick}
-          >
-            <FormattedMessage id="settings_page.yes" />
-          </RightButton>
-        </div>
-      );
-    } else {
-      switchBtn = (
-        <div className="btn-group">
-          <LeftButton
-            className="btn btn-danger"
-            disabled
-            onClick={this.handleClick}
-          >
-            <FormattedMessage id="settings_page.no" />
-          </LeftButton>
-          <RightButton
-            className="btn btn-default"
-            disabled={this.props.isDisabled}
-            onClick={this.handleClick}
-          >
-            <FormattedMessage id="settings_page.yes" />
-          </RightButton>
-        </div>
+  disabledButton() {
+    if (this.props.isDisabled) {
+      return (
+        <ToggleButtonGroup
+          type="radio"
+          name={this.props.title}
+          defaultValue={this.state.status}
+          disabled
+        >
+          <ToggleButton disabled value={false}>
+            No
+          </ToggleButton>
+          <ToggleButton disabled value={true}>
+            Yes
+          </ToggleButton>
+        </ToggleButtonGroup>
       );
     }
-
+    return (
+      <ToggleButtonGroup
+        type="radio"
+        name={this.props.title}
+        onChange={this.handleClick}
+        defaultValue={this.state.status}
+      >
+        <ToggleButton value={false}>
+          No
+        </ToggleButton>
+        <ToggleButton value={true}>
+          Yes
+        </ToggleButton>
+      </ToggleButtonGroup>
+    );
+  }
+  render() {
     return (
       <Wrapper className="row">
         <div className="col-sm-4 col-sm-offset-1">
           <FormattedMessage id={this.props.title} />
         </div>
         <div className="col-sm-7">
-          {switchBtn}
+          <ButtonToolbar>{this.disabledButton()}</ButtonToolbar>
         </div>
       </Wrapper>
     );
@@ -94,10 +92,10 @@ class NotificationsSwitch extends Component {
 }
 
 NotificationsSwitch.propTypes = {
-  title: PropTypes.string.isRequired,
-  isSwitchOn: PropTypes.bool.isRequired,
-  isDisabled: PropTypes.bool.isRequired,
-  toggleSwitch: PropTypes.func.isRequired
+  title: string.isRequired,
+  status: bool.isRequired,
+  isDisabled: bool.isRequired,
+  updateStatus: func.isRequired
 };
 
 export default NotificationsSwitch;

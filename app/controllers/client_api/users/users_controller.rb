@@ -76,21 +76,6 @@ module ClientApi
                       :time_zone)
       end
 
-      def change_notification(dinamic_param, params)
-        user = current_user
-        user[dinamic_param] = params['status']
-        status =
-          if user.save
-            user[dinamic_param]
-          else
-            user.reload[dinamic_param]
-          end
-
-        respond_to do |format|
-          format.json { render json: { status: status } }
-        end
-      end
-
       def success_response(template = nil, locals = nil)
         respond_to do |format|
           format.json do
