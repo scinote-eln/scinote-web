@@ -290,10 +290,41 @@ class StepsController < ApplicationController
                 "activities.uncheck_step_checklist_item"
               completed_items = chkItem.checklist.checklist_items.where(checked: true).count
               all_items = chkItem.checklist.checklist_items.count
+
+              # truncate checklist item in activity
+              splitAr = (chkItem.text).split(' ')
+              if splitAr.length > 1
+                len1 = smart_annotation_parser(splitAr[0]).length
+                len2 = smart_annotation_parser(splitAr[1]).length
+                # check if first 2 words are smart annotations
+                if splitAr[0].length != len1 && splitAr[1].length != len2
+                  text_activity = smart_annotation_parser(chkItem.text.truncate(splitAr[0].length + 4))
+                # only first word is a smart annotation
+                elsif splitAr[0].length != len1 && splitAr[1].length == len2
+                  if splitAr[0].length > Constants::NAME_TRUNCATION_LENGTH
+                    text_activity = smart_annotation_parser(chkItem.text.truncate(splitAr[0].length + 4))
+                  else
+                    text_activity = smart_annotation_parser(chkItem.text.truncate(Constants::NAME_TRUNCATION_LENGTH + 4))
+                  end
+                # only second word is a smart annotation
+                elsif splitAr[0].length == len1 && splitAr[1].length != len2
+                  text_activity = smart_annotation_parser(chkItem.text.truncate(splitAr[0].length + splitAr[1].length + 5))
+                else
+                  text_activity = chkItem.text.truncate(Constants::NAME_TRUNCATION_LENGTH)
+                end
+              else
+                text_activity = chkItem.text.truncate(Constants::NAME_TRUNCATION_LENGTH)
+              end
+
+              unless chkItem.text.length < Constants::NAME_TRUNCATION_LENGTH
+                text_activity = "<div class='modal-tooltip'>#{text_activity}
+		                         <span class='modal-tooltiptext'>#{smart_annotation_parser(chkItem.text)}</span></div>"
+              end
+              
               message = t(
                 str,
                 user: current_user.full_name,
-                checkbox: smart_annotation_parser(simple_format(chkItem.text)),
+                checkbox: text_activity,
                 step: chkItem.checklist.step.position + 1,
                 step_name: chkItem.checklist.step.name,
                 completed: completed_items,
