@@ -13,6 +13,8 @@ module ClientApi
         success_response(invite_results)
       end
 
+      private
+
       def success_response(invite_results)
         respond_to do |format|
           format.json do
@@ -22,8 +24,6 @@ module ClientApi
           end
         end
       end
-
-      private
 
       def check_invite_users_permission
         @team = Team.find_by_id(params[:team_id])

@@ -5,15 +5,15 @@ module ClientApi
 
     def initialize(args)
       @user = args[:user]
-      @emails = args[:emails].map(&:downcase)
+      @emails = args[:emails]
       @team = args[:team]
       @role = args[:role]
 
-      raise ClientApi::CustomInvitationsError unless @team && @role &&
-                                                     @emails && @emails.present?
-      if @role && !UserTeam.roles.keys.include?(@role)
+      unless @role && UserTeam.roles.keys.include?(@role) &&
+             @emails && @emails.present?
         raise ClientApi::CustomInvitationsError
       end
+      @emails = @emails.map(&:downcase)
     end
 
     def invitation

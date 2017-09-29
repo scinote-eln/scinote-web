@@ -90,6 +90,7 @@ group :development, :test do
   gem 'pry-byebug'
   gem 'pry-rails'
   gem 'factory_girl_rails'
+  gem 'rails-controller-testing'
   gem 'rspec-rails'
   gem 'better_errors'
   gem 'binding_of_caller'
