@@ -49,9 +49,9 @@ const StyledNavDropdown = styled(NavDropdown)`
 `;
 
 const StyledSpan = styled.span`
-  background-color: #37a0d9;
+  background-color: ${MAIN_COLOR_BLUE};
   border-radius: 5px;
-  color: #f5f5f5;
+  color: ${WILD_SAND_COLOR};
   font-size: 11px;
   font-weight: bold;
   margin-left: 12px;
