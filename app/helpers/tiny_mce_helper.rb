@@ -10,7 +10,7 @@ module TinyMceHelper
       img.replace(token)
       next unless obj
       tiny_img = TinyMceAsset.find_by_id(img_id)
-      next if check_parse_token_permissions(obj, tiny_img)
+      # next if check_parse_token_permissions(obj, tiny_img)
       tiny_img.reference = obj unless tiny_img.step || tiny_img.result_text
       tiny_img.save
     end
@@ -52,9 +52,9 @@ module TinyMceHelper
 
   def check_image_permissions(obj, img)
     if obj.class == Step
-      return img.step == obj
+      img.step == obj
     elsif obj.class == ResultText
-      return img.result_text == obj
+      img.result_text == obj
     end
   end
 
