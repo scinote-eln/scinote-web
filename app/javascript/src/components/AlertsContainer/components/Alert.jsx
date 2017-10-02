@@ -74,13 +74,8 @@ class Alert extends Component {
 Alert.propTypes = {
   message: PropTypes.string.isRequired,
   type: PropTypes.string.isRequired,
-  timeout: PropTypes.number,
-  onClose: PropTypes.func
-};
-
-Alert.defaultProps = {
-  timeout: 5000,
-  onClose: undefined
+  timeout: PropTypes.number.isRequired,
+  onClose: PropTypes.func.isRequired
 };
 
 export default Alert;

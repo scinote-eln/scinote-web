@@ -1,8 +1,10 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
 import styled from "styled-components";
-import update from "immutability-helper";
 import TransitionGroup from 'react-transition-group/TransitionGroup';
 import CSSTransition from 'react-transition-group/CSSTransition';
+import PropTypes from "prop-types";
+import { clearAlert } from "../actions/AlertsActions";
 import Alert from "./components/Alert";
 
 const Wrapper = styled.div`
@@ -15,36 +17,7 @@ class AlertsContainer extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      alerts: []
-    };
-
-    this.add = this.add.bind(this);
-    this.clearAll = this.clearAll.bind(this);
-    this.clear = this.clear.bind(this);
     this.renderAlert = this.renderAlert.bind(this);
-
-    // Bind self to global namespace
-    window.alerts = this;
-  }
-
-  add(message, type, timeout) {
-    this.setState(
-      update(
-        this.state,
-        { alerts: { $push: [{ message, type, timeout }] } }
-      )
-    );
-  }
-
-  clearAll() {
-    this.setState({ alerts: [] });
-  }
-
-  clear(alert) {
-    const index = this.state.alerts.indexOf(alert);
-    const alerts = update(this.state.alerts, { $splice: [[index, 1]] });
-    this.setState({ alerts });
   }
 
   renderAlert(alert) {
@@ -52,7 +25,7 @@ class AlertsContainer extends Component {
       <Alert message={alert.message}
              type={alert.type}
              timeout={alert.timeout}
-             onClose={() => this.clear(alert)}
+             onClose={() => this.props.onAlertClose(alert.id)}
       />
     );
   }
@@ -61,11 +34,11 @@ class AlertsContainer extends Component {
     return (
       <Wrapper>
         <TransitionGroup>
-          {this.state.alerts.map((alert, index) =>
-            <CSSTransition key={`alert-${index}`}
+          {this.props.alerts.map((alert) =>
+            <CSSTransition key={alert.id}
                            timeout={500}
                            classNames="alert-animated">
-              {this.renderAlert(alert, index)}
+              {this.renderAlert(alert)}
             </CSSTransition>
           )}
         </TransitionGroup>
@@ -74,4 +47,25 @@ class AlertsContainer extends Component {
   }
 }
 
-export default AlertsContainer;
+AlertsContainer.propTypes = {
+  alerts: PropTypes.arrayOf(
+    PropTypes.shape({
+      message: PropTypes.string.isRequired,
+      type: PropTypes.string.isRequired,
+      id: PropTypes.string.isRequired,
+      timeout: PropTypes.number,
+      onClose: PropTypes.func
+    }).isRequired
+  ).isRequired,
+  onAlertClose: PropTypes.func.isRequired
+}
+
+const mapStateToProps = ({ alerts }) => ({ alerts });
+
+const mapDispatchToProps = dispatch => ({
+  onAlertClose(id) {
+    dispatch(clearAlert(id));
+  }
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(AlertsContainer);
