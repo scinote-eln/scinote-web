@@ -28,11 +28,13 @@ describe ClientApi::Teams::CreateService do
     expect(team_n.users.take).to eq user
   end
 
-  it 'should return error response if not all params are present' do
+  it 'should return error response if params = {}' do
     service = CreateService.new(current_user: user, params: {})
     result = service.execute
     expect(result[:status]).to eq :error
+  end
 
+  it 'should return error response if params are missing :name attribute' do
     service = CreateService.new(
       current_user: user,
       params: { description: team.description }
