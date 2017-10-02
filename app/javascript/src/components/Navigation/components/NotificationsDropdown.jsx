@@ -1,10 +1,12 @@
 import React, { Component } from "react";
 import { NavDropdown } from "react-bootstrap";
 import { FormattedMessage } from "react-intl";
-import axios from "axios";
 import styled from "styled-components";
 
-import { RECENT_NOTIFICATIONS_PATH } from "../../../config/routes";
+import {
+  getRecentNotifications,
+  getUnreadedNotificationsNumber
+} from "../../../services/api/notifications_api";
 import {
   MAIN_COLOR_BLUE,
   WILD_SAND_COLOR,
@@ -21,7 +23,9 @@ const StyledListHeader = styled(CustomNavItem)`
   font-weight: bold;
   padding: 8px;
 
-  & a, a:hover, a:active {
+  & a,
+  a:hover,
+  a:active {
     color: ${WILD_SAND_COLOR};
   }
 `;
@@ -44,38 +48,79 @@ const StyledNavDropdown = styled(NavDropdown)`
   }
 `;
 
+const StyledSpan = styled.span`
+  background-color: #37a0d9;
+  border-radius: 5px;
+  color: #f5f5f5;
+  font-size: 11px;
+  font-weight: bold;
+  margin-left: 12px;
+  padding: 1px 6px;
+  right: 19px;
+  top: 3px;
+  position: relative;
+`;
+
 class NotificationsDropdown extends Component {
   constructor(props) {
     super(props);
-    this.state = { notifications: [] };
+    this.state = {
+      notifications: [],
+      notificationsCount: 0
+    };
     this.getRecentNotifications = this.getRecentNotifications.bind(this);
     this.renderNotifications = this.renderNotifications.bind(this);
+    this.renderNotificationStatus = this.renderNotificationStatus.bind(this);
+    this.loadStatus = this.loadStatus.bind(this);
+  }
+
+  componentWillMount() {
+    this.loadStatus();
+  }
+
+  componentDidMount() {
+    const minutes = 60 * 1000;
+    setInterval(this.loadStatus, minutes);
   }
 
   getRecentNotifications(e) {
     e.preventDefault();
-    axios
-      .get(RECENT_NOTIFICATIONS_PATH, { withCredentials: true })
-      .then(({ data }) => {
-        this.setState({ notifications: data });
-      })
+    getRecentNotifications()
+      .then(response =>
+        this.setState({ notifications: response, notificationsCount: 0 })
+      )
       .catch(error => {
         console.log("get Notifications Error: ", error); // TODO change this
       });
   }
 
+  loadStatus() {
+    getUnreadedNotificationsNumber().then(response => {
+      this.setState({ notificationsCount: parseInt(response.count, 10) });
+    });
+  }
+
   renderNotifications() {
-    const list = this.state.notifications.map(notification =>
+    const list = this.state.notifications.map(notification => (
       <NotificationItem key={notification.id} notification={notification} />
-    );
+    ));
 
     const items =
-      this.state.notifications.length > 0
-        ? list
-        : <CustomNavItem>
-            <Spinner />
-          </CustomNavItem>;
+      this.state.notifications.length > 0 ? (
+        list
+      ) : (
+        <CustomNavItem>
+          <Spinner />
+        </CustomNavItem>
+      );
     return items;
+  }
+
+  renderNotificationStatus() {
+    if (this.state.notificationsCount > 0) {
+      return <StyledSpan>{this.state.notificationsCount}</StyledSpan>;
+    }
+    return <span />;
   }
 
   render() {
@@ -89,6 +134,7 @@ class NotificationsDropdown extends Component {
             <span className="visible-xs-inline visible-sm-inline">
               <FormattedMessage id="navbar.notifications_label" />
             </span>
+            {this.renderNotificationStatus()}
           </span>
         }
         onClick={this.getRecentNotifications}
