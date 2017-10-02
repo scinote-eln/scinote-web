@@ -54,6 +54,9 @@ Rails.application.routes.draw do
              to: 'users#change_recent_notification_email'
         post '/change_system_notification_email',
              to: 'users#change_system_notification_email'
+        devise_scope :user do
+          put '/invite_users', to: 'invitations#invite_users'
+        end
       end
     end
 

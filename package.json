@@ -29,7 +29,7 @@
     "eslint-plugin-jsx-a11y": "^6.0.2",
     "eslint-plugin-prettier": "^2.1.2",
     "eslint-plugin-react": "^7.1.0",
-    "prettier": "^1.5.3",
+    "prettier": "^1.7.0",
     "webpack-dev-server": "^2.5.1"
   },
   "dependencies": {
@@ -68,6 +68,7 @@
     "react-bootstrap-table": "^4.0.0",
     "react-bootstrap-timezone-picker": "^1.0.11",
     "react-data-grid": "^2.0.2",
+    "react-tagsinput": "^3.17.0",
     "react-dom": "^15.6.1",
     "react-intl": "^2.3.0",
     "react-intl-redux": "^0.6.0",

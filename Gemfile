@@ -73,6 +73,7 @@ gem 'delayed_job_active_record'
 gem 'devise-async',
   git: 'https://github.com/mhfs/devise-async.git',
   branch: 'devise-4.x'
+
 gem 'ruby-graphviz', '~> 1.2' # Graphviz for rails
 gem 'tinymce-rails', '~> 4.6.4' # Rich text editor
 
@@ -89,6 +90,7 @@ group :development, :test do
   gem 'pry-byebug'
   gem 'pry-rails'
   gem 'factory_girl_rails'
+  gem 'rails-controller-testing'
   gem 'rspec-rails'
   gem 'better_errors'
   gem 'binding_of_caller'

@@ -1825,3 +1825,5 @@ en:
     user_teams:
       leave_team_error: "An error occured."
       leave_flash: "Successfuly left team %{team}."
+    invite_users:
+      permission_error: "You don't have permission to invite additional users to team. Contact its administrator/s."
