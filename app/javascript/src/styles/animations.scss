@@ -1,5 +1,5 @@
 .alert-animated-enter {
-  opacity: 0.01;
+  opacity: .01;
 
   &.alert-animated-enter-active {
     opacity: 1;
@@ -16,7 +16,7 @@
 
   &.alert-animated-exit-active {
     overflow: hidden;
-    opacity: 0.01;
+    opacity: .01;
     padding-top: 0;
     padding-bottom: 0;
     margin-bottom: 0;

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import styled from "styled-components";
-import PropTypes from "prop-types";
+import { string, number, func } from "prop-types";
 import { Grid, Row, Col } from "react-bootstrap";
 
 const Wrapper = styled.div`
@@ -72,10 +72,10 @@ class Alert extends Component {
 }
 
 Alert.propTypes = {
-  message: PropTypes.string.isRequired,
-  type: PropTypes.string.isRequired,
-  timeout: PropTypes.number.isRequired,
-  onClose: PropTypes.func.isRequired
+  message: string.isRequired,
+  type: string.isRequired,
+  timeout: number.isRequired,
+  onClose: func.isRequired
 };
 
 export default Alert;

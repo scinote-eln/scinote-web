@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import styled from "styled-components";
 import TransitionGroup from 'react-transition-group/TransitionGroup';
 import CSSTransition from 'react-transition-group/CSSTransition';
-import PropTypes from "prop-types";
+import { shape, arrayOf, string, number, func } from "prop-types";
 import { clearAlert } from "../actions/AlertsActions";
 import Alert from "./components/Alert";
 
@@ -25,7 +25,7 @@ class AlertsContainer extends Component {
       <Alert message={alert.message}
              type={alert.type}
              timeout={alert.timeout}
-             onClose={() => this.props.onAlertClose(alert.id)}
+             onClose={() => this.props.clearAlert(alert.id)}
       />
     );
   }
@@ -48,24 +48,18 @@ class AlertsContainer extends Component {
 }
 
 AlertsContainer.propTypes = {
-  alerts: PropTypes.arrayOf(
-    PropTypes.shape({
-      message: PropTypes.string.isRequired,
-      type: PropTypes.string.isRequired,
-      id: PropTypes.string.isRequired,
-      timeout: PropTypes.number,
-      onClose: PropTypes.func
+  alerts: arrayOf(
+    shape({
+      message: string.isRequired,
+      type: string.isRequired,
+      id: string.isRequired,
+      timeout: number,
+      onClose: func
     }).isRequired
   ).isRequired,
-  onAlertClose: PropTypes.func.isRequired
+  clearAlert: func.isRequired
 }
 
 const mapStateToProps = ({ alerts }) => ({ alerts });
 
-const mapDispatchToProps = dispatch => ({
-  onAlertClose(id) {
-    dispatch(clearAlert(id));
-  }
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(AlertsContainer);
+export default connect(mapStateToProps, { clearAlert })(AlertsContainer);
