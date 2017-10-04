@@ -9,7 +9,6 @@ import {
   WHITE_COLOR,
   BORDER_GRAY_COLOR
 } from "../../config/constants/colors";
-import { getActivities } from "../../services/api/activities_api";
 
 import TeamSwitch from "./components/TeamSwitch";
 import GlobalActivitiesModal from "./components/GlobalActivitiesModal";
@@ -45,8 +44,6 @@ class Navigation extends Component {
     super(props);
     this.state = {
       showActivitesModal: false,
-      activities: [],
-      more: false,
       current_team: { id: 0 }
     };
     this.selectItemCallback = this.selectItemCallback.bind(this);
@@ -67,15 +64,6 @@ class Navigation extends Component {
       case 4:
         ev.preventDefault();
         this.setState({ showActivitesModal: !this.state.showActivitesModal });
-        // load activites if modal is shown
-        if (this.state.showActivitesModal) {
-          getActivities().then(response => {
-            this.setState({
-              activities: response.activities,
-              more: response.more
-            });
-          });
-        }
         break;
       default:
     }
@@ -141,8 +129,6 @@ class Navigation extends Component {
           </Nav>
         </StyledNavbar>
         <GlobalActivitiesModal
-          activities={this.state.activites}
-          more={this.state.more}
           showModal={this.state.showActivitesModal}
           onCloseModal={this.closeModalCallback}
         />

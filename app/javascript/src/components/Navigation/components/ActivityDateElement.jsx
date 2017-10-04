@@ -1,13 +1,13 @@
+// @flow
+
 import React from "react";
-import PropTypes from "prop-types";
 import Moment from "react-moment";
+import { FormattedMessage } from "react-intl";
 import styled from "styled-components";
 
-import { WHITE_COLOR } from "../../../config/constants/colors"
+import { WHITE_COLOR } from "../../../config/constants/colors";
 
-const StyledLi = styled.li`
-  margin-bottom: 1em;
-`
+const StyledLi = styled.li`margin-bottom: 1em;`;
 
 const StyledSpan = styled.span`
   display: inline;
@@ -18,20 +18,20 @@ const StyledSpan = styled.span`
   color: ${WHITE_COLOR};
   white-space: nowrap;
   vertical-align: baseline;
-  border-radius: .25em;
+  border-radius: 0.25em;
 `;
 
-const ActivityDateElement = ({ date }) =>
-  <StyledLi className="text-center">
-    <StyledSpan className="label label-primary">
-      <Moment format="DD.MM.YYYY">
-        {date}
-      </Moment>
-    </StyledSpan>
-  </StyledLi>;
-
-ActivityDateElement.propTypes = {
-  date: PropTypes.instanceOf(Date).isRequired
+const ActivityDateElement = (props: { date: Date, today?: boolean }) => {
+  const label = props.today ? (
+    <FormattedMessage id="activities.today"/>
+  ) : (
+    <Moment format="DD.MM.YYYY">{props.date}</Moment>
+  );
+  return (
+    <StyledLi className="text-center">
+      <StyledSpan className="label label-primary">{label}</StyledSpan>
+    </StyledLi>
+  );
 };
 
 export default ActivityDateElement;

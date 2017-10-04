@@ -28,10 +28,6 @@ export const LEAVE_TEAM = "LEAVE_TEAM";
 export const SHOW_LEAVE_TEAM_MODAL = "SHOW_LEAVE_TEAM_MODAL";
 export const UPDATE_TEAM_DESCRIPTION_MODAL = "UPDATE_TEAM_DESCRIPTION_MODAL";
 
-// spinner
-export const SPINNER_ON = "SPINNER_ON";
-export const SPINNER_OFF = "SPINNER_OFF";
-
 // alerts
 export const ADD_ALERT = "ADD_ALERT";
 export const CLEAR_ALERT = "CLEAR_ALERT";

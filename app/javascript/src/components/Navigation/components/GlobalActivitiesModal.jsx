@@ -60,16 +60,38 @@ type State = {
 class GlobalActivitiesModal extends Component<Props, State> {
   displayActivities: Function;
   addMoreActivities: Function;
+  loadData: Function;
+  onCloseModalActions: Function;
 
   constructor(props: Props) {
     super(props);
-    this.state = { activities: this.props.activites, more: this.props.more };
+    this.state = { activities: [], more: false };
     this.displayActivities = this.displayActivities.bind(this);
     this.addMoreActivities = this.addMoreActivities.bind(this);
+    this.onCloseModalActions = this.onCloseModalActions.bind(this);
+    this.loadData = this.loadData.bind(this);
+  }
+
+  loadData() {
+    getActivities().then(response => {
+      this.setState({
+        activities: response.activities,
+        more: response.more
+      });
+    });
+  }
+
+  onCloseModalActions() {
+    this.setState({ activities: [], more: false });
+    this.props.onCloseModal();
   }
 
   displayActivities() {
     if (this.state.activities.length === 0) {
+      if (this.props.showModal) {
+        this.loadData();
+      }
+
       return (
         <li>
           <FormattedMessage id="activities.no_data" />
@@ -77,22 +99,34 @@ class GlobalActivitiesModal extends Component<Props, State> {
       );
     }
     return this.state.activities.map((activity, i, arr) => {
+      const dateNow = new Date();
       const newDate = new Date(activity.created_at);
       if (i > 0) {
         const prevDate = new Date(arr[i - 1].created_at);
-        if (prevDate < newDate) {
+        if (prevDate.getDate() > newDate.getDate()) {
           return [
             <ActivityDateElement key={newDate} date={newDate} />,
-            <ActivityElement key={activity.id} activity={activity} />
+            <ActivityElement key={i} activity={activity} />
           ];
         }
       } else {
+        if (
+          newDate.getDate() === dateNow.getDate() &&
+          newDate.getMonth() === dateNow.getMonth() &&
+          newDate.getFullYear() === dateNow.getFullYear()
+        ) {
+          return [
+            <ActivityDateElement key={newDate} date={newDate} today />,
+            <ActivityElement key={i} activity={activity} />
+          ];
+        }
         return [
           <ActivityDateElement key={newDate} date={newDate} />,
-          <ActivityElement key={activity.id} activity={activity} />
+          <ActivityElement key={i} activity={activity} />
         ];
       }
-      return <ActivityElement key={activity.id} activity={activity} />;
+      console.log("banana");
+      return <ActivityElement key={i} activity={activity} />;
     });
   }
 
@@ -109,7 +143,7 @@ class GlobalActivitiesModal extends Component<Props, State> {
   }
 
   addMoreButton() {
-    if (this.props.more) {
+    if (this.state.more) {
       return (
         <li className="text-center">
           <StyledBottom onClick={this.addMoreActivities}>
@@ -123,7 +157,7 @@ class GlobalActivitiesModal extends Component<Props, State> {
 
   render() {
     return (
-      <Modal show={this.props.showModal} onHide={this.props.onCloseModal}>
+      <Modal show={this.props.showModal} onHide={this.onCloseModalActions}>
         <Modal.Header closeButton>
           <Modal.Title>
             <FormattedMessage id="activities.modal_title" />
@@ -136,7 +170,7 @@ class GlobalActivitiesModal extends Component<Props, State> {
           </ul>
         </StyledModalBody>
         <Modal.Footer>
-          <Button onClick={this.props.onCloseModal}>
+          <Button onClick={this.onCloseModalActions}>
             <FormattedMessage id="general.close" />
           </Button>
         </Modal.Footer>

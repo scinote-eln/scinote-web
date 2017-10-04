@@ -6,5 +6,5 @@ export function getActivities(
   lastId: number = 0
 ): Promise<*> {
   const path = `${ACTIVITIES_PATH}?from=${lastId}`;
-  return axiosInstance.get(path).then(({ data }) => data);
+  return axiosInstance.get(path).then(({ data }) => data.global_activities);
 }
