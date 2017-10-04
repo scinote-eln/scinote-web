@@ -1,7 +1,10 @@
+// @flow
 import { axiosInstance } from "./config";
 import { ACTIVITIES_PATH } from "./endpoints";
 
-export function getActivities(lastId = 0) {
+export function getActivities(
+  lastId: number = 0
+): Promise<*> {
   const path = `${ACTIVITIES_PATH}?from=${lastId}`;
-  axiosInstance.get(path).then(({ data }) => data);
+  return axiosInstance.get(path).then(({ data }) => data);
 }

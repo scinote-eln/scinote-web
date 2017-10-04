@@ -1,5 +1,6 @@
+// @flow
+
 import React, { Component } from "react";
-import { string, number, func, shape, bool, arrayOf } from "prop-types";
 import { FormattedMessage } from "react-intl";
 import { Modal, Button } from "react-bootstrap";
 import _ from "lodash";
@@ -44,8 +45,23 @@ const StyledModalBody = styled(Modal.Body)`
   color: ${COLOR_MINE_SHAFT};
 `;
 
-class GlobalActivitiesModal extends Component {
-  constructor(props) {
+type Props = {
+  more: boolean,
+  showModal: boolean,
+  onCloseModal: Function,
+  activites: Array<Activity>
+};
+
+type State = {
+  activities: Array<Activity>,
+  more: boolean
+};
+
+class GlobalActivitiesModal extends Component<Props, State> {
+  displayActivities: Function;
+  addMoreActivities: Function;
+
+  constructor(props: Props) {
     super(props);
     this.state = { activities: this.props.activites, more: this.props.more };
     this.displayActivities = this.displayActivities.bind(this);
@@ -82,7 +98,9 @@ class GlobalActivitiesModal extends Component {
 
   addMoreActivities() {
     const lastId = _.last(this.state.activities).id;
-    getActivities(lastId).then(response => {
+    getActivities(
+      lastId
+    ).then((response: { activities: Array<Activity>, more: boolean }) => {
       this.setState({
         activities: [...this.state.activities, ...response.activities],
         more: response.more
@@ -126,18 +144,5 @@ class GlobalActivitiesModal extends Component {
     );
   }
 }
-
-GlobalActivitiesModal.propTypes = {
-  showModal: bool.isRequired,
-  more: bool.isRequired,
-  activites: arrayOf(
-    shape({
-      id: number.isRequired,
-      message: string.isRequired,
-      created_at: string.isRequired
-    })
-  ).isRequired,
-  onCloseModal: func.isRequired
-};
 
 export default GlobalActivitiesModal;
