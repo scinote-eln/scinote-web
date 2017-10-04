@@ -1,12 +1,11 @@
 import React, { Component } from "react";
-import { connect } from "react-redux";
-import PropTypes from "prop-types";
+import { string, number, func, shape, bool, arrayOf } from "prop-types";
 import { FormattedMessage } from "react-intl";
 import { Modal, Button } from "react-bootstrap";
 import _ from "lodash";
 import styled from "styled-components";
 
-import { getActivities } from "../../actions/ActivitiesActions";
+import { getActivities } from "../../../services/api/activities_api";
 import ActivityElement from "./ActivityElement";
 import ActivityDateElement from "./ActivityDateElement";
 import {
@@ -42,25 +41,26 @@ const StyledBottom = styled(Button)`
 
 const StyledModalBody = styled(Modal.Body)`
   background-color: ${COLOR_CONCRETE};
-  color: ${COLOR_MINE_SHAFT};;
+  color: ${COLOR_MINE_SHAFT};
 `;
 
 class GlobalActivitiesModal extends Component {
   constructor(props) {
     super(props);
+    this.state = { activities: this.props.activites, more: this.props.more };
     this.displayActivities = this.displayActivities.bind(this);
     this.addMoreActivities = this.addMoreActivities.bind(this);
   }
 
   displayActivities() {
-    if (this.props.activities.length === 0) {
+    if (this.state.activities.length === 0) {
       return (
         <li>
           <FormattedMessage id="activities.no_data" />
         </li>
       );
     }
-    return this.props.activities.map((activity, i, arr) => {
+    return this.state.activities.map((activity, i, arr) => {
       const newDate = new Date(activity.created_at);
       if (i > 0) {
         const prevDate = new Date(arr[i - 1].created_at);
@@ -81,8 +81,13 @@ class GlobalActivitiesModal extends Component {
   }
 
   addMoreActivities() {
-    const lastId = _.last(this.props.activities).id;
-    this.props.fetchActivities(lastId);
+    const lastId = _.last(this.state.activities).id;
+    getActivities(lastId).then(response => {
+      this.setState({
+        activities: [...this.state.activities, ...response.activities],
+        more: response.more
+      });
+    });
   }
 
   addMoreButton() {
@@ -123,30 +128,16 @@ class GlobalActivitiesModal extends Component {
 }
 
 GlobalActivitiesModal.propTypes = {
-  showModal: PropTypes.bool.isRequired,
-  onCloseModal: PropTypes.func.isRequired,
-  fetchActivities: PropTypes.func.isRequired,
-  more: PropTypes.bool.isRequired,
-  activities: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.number.isRequired,
-      message: PropTypes.string.isRequired,
-      created_at: PropTypes.string.isRequired
+  showModal: bool.isRequired,
+  more: bool.isRequired,
+  activites: arrayOf(
+    shape({
+      id: number.isRequired,
+      message: string.isRequired,
+      created_at: string.isRequired
     })
-  ).isRequired
+  ).isRequired,
+  onCloseModal: func.isRequired
 };
 
-const mapStateToProps = ({ global_activities }) => {
-  const { activities, more } = global_activities;
-  return { activities, more };
-};
-
-const mapDispatchToProps = dispatch => ({
-  fetchActivities(lastId) {
-    dispatch(getActivities(lastId));
-  }
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(
-  GlobalActivitiesModal
-);
+export default GlobalActivitiesModal;

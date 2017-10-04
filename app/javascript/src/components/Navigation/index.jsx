@@ -9,7 +9,8 @@ import {
   WHITE_COLOR,
   BORDER_GRAY_COLOR
 } from "../../config/constants/colors";
-import { getActivities, destroyActivities } from "../actions/ActivitiesActions";
+import { getActivities } from "../../services/api/activities_api";
+
 import TeamSwitch from "./components/TeamSwitch";
 import GlobalActivitiesModal from "./components/GlobalActivitiesModal";
 import SearchDropdown from "./components/SearchDropdown";
@@ -44,6 +45,8 @@ class Navigation extends Component {
     super(props);
     this.state = {
       showActivitesModal: false,
+      activities: [],
+      more: false,
       current_team: { id: 0 }
     };
     this.selectItemCallback = this.selectItemCallback.bind(this);
@@ -64,8 +67,15 @@ class Navigation extends Component {
       case 4:
         ev.preventDefault();
         this.setState({ showActivitesModal: !this.state.showActivitesModal });
-        // Call action creator to fetch activities from the server
-        this.props.fetchActivities();
+        // load activites if modal is shown
+        if (this.state.showActivitesModal) {
+          getActivities().then(response => {
+            this.setState({
+              activities: response.activities,
+              more: response.more
+            });
+          });
+        }
         break;
       default:
     }
@@ -73,7 +83,6 @@ class Navigation extends Component {
 
   closeModalCallback() {
     this.setState({ showActivitesModal: false });
-    this.props.destroyActivities();
   }
 
   render() {
@@ -132,6 +141,8 @@ class Navigation extends Component {
           </Nav>
         </StyledNavbar>
         <GlobalActivitiesModal
+          activities={this.state.activites}
+          more={this.state.more}
           showModal={this.state.showActivitesModal}
           onCloseModal={this.closeModalCallback}
         />
@@ -141,8 +152,6 @@ class Navigation extends Component {
 }
 
 Navigation.propTypes = {
-  fetchActivities: PropTypes.func.isRequired,
-  destroyActivities: PropTypes.func.isRequired,
   current_team: PropTypes.shape({
     id: PropTypes.number.isRequired,
     name: PropTypes.string.isRequired,
@@ -153,14 +162,4 @@ Navigation.propTypes = {
 // Map the states from store to component props
 const mapStateToProps = ({ current_team }) => ({ current_team });
 
-// Map the fetch activity action to component props
-const mapDispatchToProps = dispatch => ({
-  fetchActivities() {
-    dispatch(getActivities());
-  },
-  destroyActivities() {
-    dispatch(destroyActivities());
-  }
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(Navigation);
+export default connect(mapStateToProps)(Navigation);

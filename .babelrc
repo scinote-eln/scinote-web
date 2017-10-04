@@ -12,7 +12,8 @@
       }
     ],
     "react",
-    "es2015"
+    "es2015",
+    "flow"
   ],
   "plugins": [
     "transform-object-rest-spread",
