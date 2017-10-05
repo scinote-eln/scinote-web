@@ -7,6 +7,20 @@ describe ClientApi::Users::UsersController, type: :controller do
     @user = User.first
   end
 
+  describe '#sign_out_user' do
+    it 'returns unauthorized response' do
+      sign_out @user
+      get :sign_out_user, format: :json
+      expect(response).to have_http_status(:unauthorized)
+    end
+
+    it 'responds successfully if the user is signed out' do
+      get :sign_out_user, format: :json
+      expect(response).to have_http_status(:ok)
+      expect(subject.current_user).to eq(nil)
+    end
+  end
+
   describe 'GET current_user_info' do
     it 'responds successfully' do
       get :current_user_info, format: :json
