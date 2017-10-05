@@ -1,8 +1,12 @@
 <%= form_for(@protocol, :url => url_for(:controller => 'protocols', :action=>'protocolsio_import_save'),method: :post,format: :javascript,remote: true,:html=> { :id => "protocolsio-import-form" }) do |f| %>
 
 <%= hidden_field_tag :json_object, JSON.generate(@json_object) %>
-<%= hidden_field_tag :type,
-CGI.parse(URI.parse(request.referrer).query).fetch("type") %>
+
+<% if URI.parse(request.referrer).query %>
+<%= hidden_field_tag :type,CGI.parse(URI.parse(request.referrer).query).fetch("type") %>
+<% else %>
+<%= hidden_field_tag :type,"public" %>
+<% end %>
 <!--Get the type of protocol to import (private, public) from the url -->
 <div
   id="modal-import-json-protocol-preview"
