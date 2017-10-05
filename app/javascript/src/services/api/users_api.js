@@ -3,7 +3,8 @@ import {
   USER_PROFILE_INFO,
   UPDATE_USER_PATH,
   CURRENT_USER_PATH,
-  PREFERENCES_INFO_PATH
+  PREFERENCES_INFO_PATH,
+  STATISTICS_INFO_PATH
 } from "./endpoints";
 
 export const getUserProfileInfo = () =>
@@ -25,3 +26,6 @@ export const updateUser = (params, formObj = false) => {
 
 export const getCurrentUser = () =>
   axiosInstance.get(CURRENT_USER_PATH).then(({ data }) => data.user);
+
+export const getStatisticsInfo = () =>
+  axiosInstance.get(STATISTICS_INFO_PATH).then(({ data }) => data.user);

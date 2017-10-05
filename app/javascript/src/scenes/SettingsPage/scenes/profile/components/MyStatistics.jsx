@@ -1,9 +1,8 @@
 import React, { Component } from "react";
-import { connect } from "react-redux";
-import PropTypes from "prop-types";
 import styled from "styled-components";
 import { FormattedMessage } from "react-intl";
 
+import { getStatisticsInfo } from "../../../../../services/api/users_api";
 import MyStatisticsBox from "./MyStatisticsBox";
 
 const Wrapper = styled.div`
@@ -16,103 +15,76 @@ class MyStatistics extends Component {
     super(props);
 
     this.state = {
-      statistics: {
-        teamSum: 0,
-        projectsSum: 0,
-        experimentsSum: 0,
-        protocolsSum: 0
-      }
+      stats: false,
+      number_of_teams: 0,
+      number_of_projects: 0,
+      number_of_experiments: 0,
+      number_of_protocols: 0
     };
 
-    this.setData = this.setData.bind(this);
+    this.getStatisticsInfo = this.getStatisticsInfo.bind(this);
   }
 
   componentDidMount() {
     this.getStatisticsInfo();
   }
 
-  setData({ data }) {
-    const user = data.user;
-
-    const newData = {
-      statistics: {
-        teamsSum: user.statistics.number_of_teams,
-        projectsSum: user.statistics.number_of_projects,
-        experimentsSum: user.statistics.number_of_experiments,
-        protocolsSum: user.statistics.number_of_protocols
-      }
-    };
-
-    this.setState(Object.assign({}, this.state, newData));
+  getStatisticsInfo() {
+    getStatisticsInfo()
+      .then(response => {
+        this.setState(Object.assign({}, response.statistics, { stats: true }));
+      })
+      .catch(error => {
+        this.setState({ stats: false });
+        console.log(error);
+      });
   }
 
-  getStatisticsInfo() {
-    // axios
-    //   .get("/client_api/users/statistics_info")
-    //   .then(response => this.setData(response))
-    //   .catch(error => console.log(error));
+  renderStatBoxes() {
+    if (this.state.stats) {
+      return (
+        <Wrapper>
+          <MyStatisticsBox
+            typeLength={this.state.number_of_teams}
+            plural="settings_page.teams"
+            singular="settings_page.team"
+          />
+          <MyStatisticsBox
+            typeLength={this.state.number_of_projects}
+            plural="settings_page.projects"
+            singular="settings_page.project"
+          />
+          <MyStatisticsBox
+            typeLength={this.state.number_of_experiments}
+            plural="settings_page.experiments"
+            singular="settings_page.experiment"
+          />
+          <MyStatisticsBox
+            typeLength={this.state.number_of_protocols}
+            plural="settings_page.protocols"
+            singular="settings_page.protocol"
+          />
+        </Wrapper>
+      );
+    }
+
+    return (
+      <div>
+        <FormattedMessage id="general.loading" />
+      </div>
+    );
   }
 
   render() {
-    const stats = this.state.statistics;
-
-    const statBoxes = () => {
-      let boxes = (
-        <div>
-          <FormattedMessage id="general.loading" />
-        </div>
-      );
-      if (stats) {
-        boxes = (
-          <Wrapper>
-            <MyStatisticsBox
-              typeLength={stats.teamsSum}
-              plural="settings_page.teams"
-              singular="settings_page.team"
-            />
-            <MyStatisticsBox
-              typeLength={stats.projectsSum}
-              plural="settings_page.projects"
-              singular="settings_page.project"
-            />
-            <MyStatisticsBox
-              typeLength={stats.experimentsSum}
-              plural="settings_page.experiments"
-              singular="settings_page.experiment"
-            />
-            <MyStatisticsBox
-              typeLength={stats.protocolsSum}
-              plural="settings_page.protocols"
-              singular="settings_page.protocol"
-            />
-          </Wrapper>
-        );
-      }
-
-      return boxes;
-    };
-
     return (
       <div>
         <h2>
           <FormattedMessage id="settings_page.my_statistics" />
         </h2>
-
-        {statBoxes()}
+        {this.renderStatBoxes()}
       </div>
     );
   }
 }
 
-MyStatistics.propTypes = {
-  statistics: PropTypes.shape({
-    teamsSum: PropTypes.number.isRequired,
-    projectsSum: PropTypes.number.isRequired,
-    experimentsSum: PropTypes.number.isRequired,
-    protocolsSum: PropTypes.number.isRequired
-  })
-};
-
-const mapStateToProps = state => state.current_user;
-
-export default connect(mapStateToProps, {})(MyStatistics);
+export default MyStatistics;

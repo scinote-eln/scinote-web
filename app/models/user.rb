@@ -414,8 +414,9 @@ class User < ApplicationRecord
   end
 
   # json friendly attributes
-  NOTIFICATIONS_TYPES = %w(assignments_notification assignments_email_notification
-                           recent_notification recent_email_notification
+  NOTIFICATIONS_TYPES = %w(assignments_notification recent_notification
+                           assignments_email_notification
+                           recent_email_notification
                            system_message_email_notification)
   # declare notifications getters
   NOTIFICATIONS_TYPES.each do |name|
