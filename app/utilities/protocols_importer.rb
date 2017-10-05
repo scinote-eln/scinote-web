@@ -43,9 +43,9 @@ module ProtocolsImporter
 
   private
 
-
   def populate_protocol(protocol, protocol_json, user, team)
     protocol.reload
+    
     asset_ids = []
     step_pos = 0
     # Check if protocol has steps
