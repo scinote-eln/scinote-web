@@ -60,8 +60,8 @@ export default {
     },
     settings_page: {
       all_teams: "All teams",
-      in_team: "You are member of {num} team",
-      in_teams: "You are member of {num} team",
+      in_team: "You are member of {num} team.",
+      in_teams: "You are member of {num} teams.",
       leave_team: "Leave team",
       account: "Account",
       team: "Team",
