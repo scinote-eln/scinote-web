@@ -1,22 +1,33 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import PropTypes from "prop-types";
+import { func, shape, string, number } from "prop-types";
 import { NavDropdown, MenuItem, Image } from "react-bootstrap";
 import styled from "styled-components";
 import { FormattedMessage } from "react-intl";
+import { SIGN_IN_PATH } from "../../../config/routes";
 
-import { getCurrentUser } from "../../actions/UsersActions";
+import { getCurrentUser, destroyState } from "../../actions/UsersActions";
+import { signOutUser } from "../../../services/api/users_api";
 
 const StyledNavDropdown = styled(NavDropdown)`
-& #user-account-dropdown {
-  padding-top: 10px;
-  padding-bottom: 10px;
-}
+  & #user-account-dropdown {
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
 `;
 
 class UserAccountDropdown extends Component {
   componentDidMount() {
     this.props.getCurrentUser();
+    this.signOut = this.signOut.bind(this);
+  }
+
+  signOut() {
+    document.querySelector('meta[name="csrf-token"]').remove();
+    signOutUser().then(() => {
+      this.props.destroyState();
+      window.location = SIGN_IN_PATH;
+    });
   }
 
   render() {
@@ -43,7 +54,7 @@ class UserAccountDropdown extends Component {
           <FormattedMessage id="user_account_dropdown.settings" />
         </MenuItem>
         <MenuItem divider />
-        <MenuItem href="/users/sign_out">
+        <MenuItem onClick={this.signOut}>
           <FormattedMessage id="user_account_dropdown.log_out" />
         </MenuItem>
       </StyledNavDropdown>
@@ -52,24 +63,18 @@ class UserAccountDropdown extends Component {
 }
 
 UserAccountDropdown.propTypes = {
-  getCurrentUser: PropTypes.func.isRequired,
-  current_user: PropTypes.shape({
-    id: PropTypes.number.isRequired,
-    fullName: PropTypes.string.isRequired,
-    avatarPath: PropTypes.string.isRequired
+  getCurrentUser: func.isRequired,
+  destroyState: func.isRequired,
+  current_user: shape({
+    id: number.isRequired,
+    fullName: string.isRequired,
+    avatarPath: string.isRequired
   }).isRequired
 };
 
 // Map the states from store to component
 const mapStateToProps = ({ current_user }) => ({ current_user });
 
-// Map the fetch activity action to component
-const mapDispatchToProps = dispatch => ({
-  getCurrentUser() {
-    dispatch(getCurrentUser());
-  }
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(
+export default connect(mapStateToProps, { destroyState, getCurrentUser })(
   UserAccountDropdown
 );

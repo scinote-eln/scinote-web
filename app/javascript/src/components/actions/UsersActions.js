@@ -15,6 +15,7 @@ import {
 } from "../../config/api_endpoints";
 
 import {
+  USER_LOGOUT,
   SET_CURRENT_USER,
   CHANGE_CURRENT_USER_FULL_NAME,
   CHANGE_CURRENT_USER_INITIALS,
@@ -28,6 +29,10 @@ import {
   CHANGE_RECENT_NOTIFICATION_EMAIL,
   CHANGE_SYSTEM_MESSAGE_NOTIFICATION_EMAIL
 } from "../../config/action_types";
+
+export function destroyState() {
+  return { type: USER_LOGOUT };
+}
 
 function addCurrentUser(data) {
   return {

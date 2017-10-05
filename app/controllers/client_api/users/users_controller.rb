@@ -2,6 +2,16 @@ module ClientApi
   module Users
     class UsersController < ApplicationController
 
+      def sign_out_user
+        respond_to do |format|
+          if sign_out current_user
+            format.json { render json: {}, status: :ok }
+          else
+            format.json { render json: {}, status: :unauthorized }
+          end
+        end
+      end
+
       def preferences_info
         respond_to do |format|
           format.json do
