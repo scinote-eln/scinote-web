@@ -6,7 +6,11 @@ import { connect } from "react-redux";
 import axios from "../../../config/axios";
 
 import { LEAVE_TEAM_PATH } from "../../../config/api_endpoints";
-import { addTeamsData, setCurrentTeam, leaveTeamModalShow } from "../../actions/TeamsActions";
+import {
+  addTeamsData,
+  setCurrentTeam,
+  leaveTeamModalShow
+} from "../../actions/TeamsActions";
 
 class LeaveTeamModal extends Component {
   constructor(props) {
@@ -51,7 +55,10 @@ class LeaveTeamModal extends Component {
         </Modal.Header>
         <Modal.Body>
           <p>
-            <FormattedMessage id="settings_page.leave_team_modal.subtitle" />
+            <FormattedMessage
+              id="settings_page.leave_team_modal.subtitle"
+              values={{ teamName: this.props.team.name }}
+            />
           </p>
           <Alert bsStyle="danger">
             <Glyphicon glyph="exclamation-sign" />&nbsp;

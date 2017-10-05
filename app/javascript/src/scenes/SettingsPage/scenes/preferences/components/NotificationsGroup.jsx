@@ -73,15 +73,15 @@ class NotificationsGroup extends Component {
     let params = {};
     switch (this.props.type) {
       case ASSIGNMENT_NOTIFICATION:
-        params.assignmentsNotification = value;
+        params.assignments_notification = value;
         if(!value) {
-          params.assignmentsEmailNotification = false;
+          params.assignments_email_notification = false;
         }
         break;
       case RECENT_NOTIFICATION:
-        params.recentNotification = value;
+        params.recent_notification = value;
         if(!value) {
-          params.recentEmailNotification = false;
+          params.recent_email_notification = false;
         }
         break;
       default:
@@ -93,11 +93,11 @@ class NotificationsGroup extends Component {
   emailNotificationField() {
     switch (this.props.type) {
       case ASSIGNMENT_NOTIFICATION:
-        return "assignmentsEmailNotification";
+        return "assignments_email_notification";
       case RECENT_NOTIFICATION:
-        return "recentEmailNotification";
+        return "recent_email_notification";
       case SYSTEM_NOTIFICATION:
-        return "systemMessageEmailNotification"
+        return "system_message_email_notification"
       default:
         return "";
     }

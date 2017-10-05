@@ -67,9 +67,10 @@ module ClientApi
         params.require(:user)
               .permit(:password, :initials, :email, :full_name,
                       :password_confirmation, :current_password, :avatar,
-                      :assignments, :time_zone, :assignmentsNotification,
-                      :assignmentsEmailNotification, :recentNotification,
-                      :recentEmailNotification, :systemMessageEmailNotification)
+                      :time_zone, :assignments_notification,
+                      :assignments_email_notification, :recent_notification,
+                      :recent_email_notification,
+                      :system_message_email_notification)
       end
 
       def success_response(template = nil, locals = nil)

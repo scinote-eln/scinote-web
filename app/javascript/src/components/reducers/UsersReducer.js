@@ -5,8 +5,7 @@ const initialState = {
   fullName: "",
   initials: "",
   email: "",
-  avatarPath: "",
-  avatarThumbPath: ""
+  avatarThumb: ""
 };
 
 export function currentUser(state = initialState, action) {

@@ -11,7 +11,7 @@ export default {
       text_too_short: "is too short (minimum is {min_length} characters)",
       text_too_long: "is too long (maximum is {max_length} characters)",
       cant_be_blank: "can't be blank",
-      invalid_email: "Invalid email.",
+      invalid_email: "invalid email",
       passwords_dont_match: "Passwords don't match"
     },
     navbar: {
@@ -91,7 +91,6 @@ export default {
       time_zone: "Time zone",
       time_zone_warning:
         "Time zone setting affects all time & date fields throughout application.",
-      repeat_tutorial: "Repeat tutorial",
       notifications: "Notifications",
       profile: "Profile",
       preferences: "Preferences",
@@ -111,7 +110,7 @@ export default {
       leave_team_modal: {
         title: "Leave team {teamName}",
         subtitle:
-          "Are you sure you wish to leave team My projects? This action is irreversible.",
+          "Are you sure you wish to leave team {teamName}? This action is irreversible.",
         warnings: "Leaving team has following consequences:",
         warning_message_one:
           "you will lose access to all content belonging to the team (including projects, tasks, protocols and activities);",

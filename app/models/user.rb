@@ -414,13 +414,13 @@ class User < ApplicationRecord
   end
 
   # json friendly attributes
-  NOTIFICATIONS_TYPES = %w(assignmentsNotification assignmentsEmailNotification
-                           recentNotification recentEmailNotification
-                           systemMessageEmailNotification)
+  NOTIFICATIONS_TYPES = %w(assignments_notification assignments_email_notification
+                           recent_notification recent_email_notification
+                           system_message_email_notification)
   # declare notifications getters
   NOTIFICATIONS_TYPES.each do |name|
     define_method(name) do
-      attr_name = name.gsub('Notification', '').underscore
+      attr_name = name.gsub('_notification', '')
       self.notifications.fetch(attr_name.to_sym)
     end
   end
@@ -428,7 +428,7 @@ class User < ApplicationRecord
   # declare notifications setters
   NOTIFICATIONS_TYPES.each do |name|
     define_method("#{name}=") do |value|
-      attr_name = name.gsub('Notification', '').underscore.to_sym
+      attr_name = name.gsub('_notification', '').to_sym
       self.notifications[attr_name] = value
       save
     end

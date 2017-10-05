@@ -23,11 +23,11 @@ class SettingsPreferences extends Component {
 
     this.state = {
       timeZone: "",
-      assignmentsNotification: false,
-      assignmentsEmailNotification: false,
-      recentNotification: false,
-      recentEmailNotification: false,
-      systemMessageEmailNotification: false
+      assignments_notification: false,
+      assignments_email_notification: false,
+      recent_notification: false,
+      recent_email_motification: false,
+      system_message_email_notification: false
     };
 
     this.getPreferencesInfo = this.getPreferencesInfo.bind(this);
@@ -59,9 +59,9 @@ class SettingsPreferences extends Component {
             title="settings_page.assignement"
             subtitle="settings_page.assignement_msg"
             iconClasses="fa fa-newspaper-o"
-            inAppNotification={this.state.assignmentsNotification}
+            inAppNotification={this.state.assignments_notification}
             emailNotification={
-              this.state.assignmentsEmailNotification
+              this.state.assignments_email_notification
             }
             iconBackground={MAIN_COLOR_BLUE}
             reloadInfo={this.getPreferencesInfo}
@@ -70,8 +70,8 @@ class SettingsPreferences extends Component {
             type={RECENT_NOTIFICATION}
             title="settings_page.recent_changes"
             subtitle="settings_page.recent_changes_msg"
-            inAppNotification={this.state.recentNotification}
-            emailNotification={this.state.recentEmailNotification}
+            inAppNotification={this.state.recent_notification}
+            emailNotification={this.state.recent_email_notification}
             reloadInfo={this.getPreferencesInfo}
           />
           <NotificationsGroup
@@ -79,7 +79,7 @@ class SettingsPreferences extends Component {
             title="settings_page.system_message"
             subtitle="settings_page.system_message_msg"
             emailNotification={
-              this.state.systemMessageEmailNotification
+              this.state.system_message_email_notification
             }
             iconClasses="glyphicon glyphicon-tower"
             iconBackground={ICON_GREEN_COLOR}
