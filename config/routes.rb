@@ -38,6 +38,9 @@ Rails.application.routes.draw do
         get '/profile_info', to: 'users#profile_info'
         get '/preferences_info', to: 'users#preferences_info'
         post '/update', to: 'users#update'
+        devise_scope :user do
+          put '/invite_users', to: 'invitations#invite_users'
+        end
       end
     end
 

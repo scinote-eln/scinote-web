@@ -20,3 +20,8 @@ export const UPDATE_TEAM_DESCRIPTION_MODAL = "UPDATE_TEAM_DESCRIPTION_MODAL";
 // spinner
 export const SPINNER_ON = "SPINNER_ON";
 export const SPINNER_OFF = "SPINNER_OFF";
+
+// alerts
+export const ADD_ALERT = "ADD_ALERT";
+export const CLEAR_ALERT = "CLEAR_ALERT";
+export const CLEAR_ALL_ALERTS = "CLEAR_ALL_ALERTS";

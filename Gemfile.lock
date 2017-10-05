@@ -22,6 +22,14 @@ GIT
       paperclip (>= 3.3)
 
 GIT
+  remote: https://github.com/mhfs/devise-async.git
+  revision: 177f6363a002f7ff28f1d289c8cab7ad8d9cb8c5
+  branch: devise-4.x
+  specs:
+    devise-async (0.10.2)
+      devise (>= 4.0)
+
+GIT
   remote: https://github.com/phatworx/devise_security_extension.git
   revision: b2ee978af7d49f0fb0e7271c6ac074dfb4d39353
   ref: b2ee978
@@ -175,8 +183,6 @@ GEM
       railties (>= 4.1.0, < 5.2)
       responders
       warden (~> 1.2.3)
-    devise-async (0.7.0)
-      devise (>= 2.2)
     devise_invitable (1.7.2)
       actionmailer (>= 4.1.0)
       devise (>= 4.0.0)
@@ -312,6 +318,10 @@ GEM
       bundler (>= 1.3.0, < 2.0)
       railties (= 5.1.1)
       sprockets-rails (>= 2.0.0)
+    rails-controller-testing (1.0.2)
+      actionpack (~> 5.x, >= 5.0.1)
+      actionview (~> 5.x, >= 5.0.1)
+      activesupport (~> 5.x)
     rails-dom-testing (2.0.3)
       activesupport (>= 4.2.0)
       nokogiri (>= 1.6)
@@ -487,7 +497,7 @@ DEPENDENCIES
   delayed_job_active_record
   delayed_paperclip!
   devise (~> 4.3.0)
-  devise-async
+  devise-async!
   devise_invitable
   devise_security_extension!
   factory_girl_rails
@@ -519,6 +529,7 @@ DEPENDENCIES
   pry-rails
   puma
   rails (= 5.1.1)
+  rails-controller-testing
   rails_12factor
   rails_autolink (~> 1.1, >= 1.1.6)
   recaptcha

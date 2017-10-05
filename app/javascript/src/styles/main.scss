@@ -1,6 +1,8 @@
 @import 'constants';
+@import 'animations';
 @import 'react-bootstrap-timezone-picker/dist/react-bootstrap-timezone-picker.min.css';
 @import '~react-bootstrap-table/dist/react-bootstrap-table.min';
+@import 'react-tagsinput/react-tagsinput.css';
 
 body {
   background-color: $color-concrete;
@@ -11,6 +13,10 @@ body {
 
 .label-primary {
   background-color: $color-theme-primary;
+}
+
+.btn {
+  border-radius: 1.5em;
 }
 
 .btn-primary {
@@ -28,4 +34,24 @@ body {
   & .open > .dropdown-menu {
     position: relative !important;
   }
+}
+
+// tags input
+.react-tagsinput--focused {
+  border-color: $color-theme-primary;
+}
+
+.react-tagsinput-input {
+  width: 100%;
+}
+
+.react-tagsinput-tag {
+  background-color: $color-theme-primary;
+  border: 0;
+  color: $color-white;
+  font-weight: bold;
+}
+
+.react-tagsinput-remove {
+  color: $color-white;
 }
