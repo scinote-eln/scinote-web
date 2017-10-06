@@ -46,10 +46,8 @@ const StyledModalBody = styled(Modal.Body)`
 `;
 
 type Props = {
-  more: boolean,
   showModal: boolean,
-  onCloseModal: Function,
-  activites: Array<Activity>
+  onCloseModal: Function
 };
 
 type State = {
@@ -58,18 +56,30 @@ type State = {
 };
 
 class GlobalActivitiesModal extends Component<Props, State> {
-  displayActivities: Function;
-  addMoreActivities: Function;
-  loadData: Function;
-  onCloseModalActions: Function;
+  static renderActivityDateElement(
+    key: number,
+    activity: Activity,
+    date: Date
+  ) {
+    return [
+      <ActivityDateElement key={date} date={date} />,
+      <ActivityElement key={key} activity={activity} />
+    ];
+  }
 
   constructor(props: Props) {
     super(props);
     this.state = { activities: [], more: false };
-    this.displayActivities = this.displayActivities.bind(this);
-    this.addMoreActivities = this.addMoreActivities.bind(this);
-    this.onCloseModalActions = this.onCloseModalActions.bind(this);
-    this.loadData = this.loadData.bind(this);
+    (this: any).displayActivities = this.displayActivities.bind(this);
+    (this: any).addMoreActivities = this.addMoreActivities.bind(this);
+    (this: any).onCloseModalActions = this.onCloseModalActions.bind(this);
+    (this: any).loadData = this.loadData.bind(this);
+    (this: any).mapActivities = this.mapActivities.bind(this)
+  }
+
+  onCloseModalActions() {
+    this.setState({ activities: [], more: false });
+    this.props.onCloseModal();
   }
 
   loadData() {
@@ -81,9 +91,32 @@ class GlobalActivitiesModal extends Component<Props, State> {
     });
   }
 
-  onCloseModalActions() {
-    this.setState({ activities: [], more: false });
-    this.props.onCloseModal();
+  mapActivities() {
+    return this.state.activities.map((activity, i, arr) => {
+      // @todo replace key={i} with key={activity.id} !!!!!!!!!!!!!!
+      // when the backend bug will be fixed
+      const newDate = new Date(activity.created_at);
+      // returns a label with "today" if the date of the activity is today
+      if (i === 0) {
+        return GlobalActivitiesModal.renderActivityDateElement(
+          i,
+          activity,
+          newDate
+        );
+      }
+      // else checks if the previous activity is newer than current
+      // and displays a label with the date
+      const prevDate = new Date(arr[i - 1].created_at);
+      if (prevDate.getDate() > newDate.getDate()) {
+        return GlobalActivitiesModal.renderActivityDateElement(
+          i,
+          activity,
+          newDate
+        );
+      }
+      // returns the default activity element
+      return <ActivityElement key={i} activity={activity} />;
+    });
   }
 
   displayActivities() {
@@ -98,36 +131,7 @@ class GlobalActivitiesModal extends Component<Props, State> {
         </li>
       );
     }
-    return this.state.activities.map((activity, i, arr) => {
-      const dateNow = new Date();
-      const newDate = new Date(activity.created_at);
-      if (i > 0) {
-        const prevDate = new Date(arr[i - 1].created_at);
-        if (prevDate.getDate() > newDate.getDate()) {
-          return [
-            <ActivityDateElement key={newDate} date={newDate} />,
-            <ActivityElement key={i} activity={activity} />
-          ];
-        }
-      } else {
-        if (
-          newDate.getDate() === dateNow.getDate() &&
-          newDate.getMonth() === dateNow.getMonth() &&
-          newDate.getFullYear() === dateNow.getFullYear()
-        ) {
-          return [
-            <ActivityDateElement key={newDate} date={newDate} today />,
-            <ActivityElement key={i} activity={activity} />
-          ];
-        }
-        return [
-          <ActivityDateElement key={newDate} date={newDate} />,
-          <ActivityElement key={i} activity={activity} />
-        ];
-      }
-      console.log("banana");
-      return <ActivityElement key={i} activity={activity} />;
-    });
+    return this.mapActivities();
   }
 
   addMoreActivities() {
