@@ -9,17 +9,15 @@ import {
   SETTINGS_TEAMS_ROUTE,
   SETTINGS_TEAM_ROUTE,
   SETTINGS_ACCOUNT_PROFILE,
+  SETTINGS_ACCOUNT_PREFERENCES,
   SETTINGS_NEW_TEAM_ROUTE
 } from "../../config/routes";
 
-import {
-  SETTINGS_PATH,
-  SETTINGS_TEAMS,
-  SETTINGS_ACCOUNT_PROFILE_PATH
-} from "../../config/api_endpoints";
+import { SETTINGS_PATH, SETTINGS_TEAMS } from "../../config/api_endpoints";
 
 import NotFound from "../../components/404/NotFound";
-import SettingsAccount from "./scenes/account/SettingsAccount";
+import SettingsProfile from "./scenes/profile";
+import SettingsPreferences from "./scenes/preferences";
 import SettingsTeams from "./scenes/teams";
 import SettingsTeam from "./scenes/team";
 import SettingsNewTeam from "./scenes/teams/new";
@@ -62,22 +60,27 @@ export default class SettingsPage extends Component {
             </LinkContainer>
           </Nav>
           <Switch>
-            <Route exact path={ROOT_PATH} component={SettingsAccount} />
+            <Route exact path={ROOT_PATH} component={SettingsPreferences} />
             <Route
               exact
               path={SETTINGS_PATH}
-              render={() =>
+              render={() => (
                 <Redirect
-                  to={SETTINGS_ACCOUNT_PROFILE_PATH}
-                  component={SettingsAccount}
-                />}
+                  to={SETTINGS_ACCOUNT_PROFILE}
+                  component={SettingsPreferences}
+                />
+              )}
             />
             <Route path={SETTINGS_NEW_TEAM_ROUTE} component={SettingsNewTeam} />
             <Route path={SETTINGS_TEAM_ROUTE} component={SettingsTeam} />
             <Route path={SETTINGS_TEAMS_ROUTE} component={SettingsTeams} />
             <Route
-              to={SETTINGS_ACCOUNT_PROFILE_PATH}
-              component={SettingsAccount}
+              path={SETTINGS_ACCOUNT_PROFILE}
+              component={SettingsProfile}
+            />
+            <Route
+              path={SETTINGS_ACCOUNT_PREFERENCES}
+              component={SettingsPreferences}
             />
             <Route component={NotFound} />
           </Switch>

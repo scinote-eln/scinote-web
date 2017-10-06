@@ -9,7 +9,10 @@ export default {
     },
     error_messages: {
       text_too_short: "is too short (minimum is {min_length} characters)",
-      text_too_long: "is too long (maximum is {max_length} characters)"
+      text_too_long: "is too long (maximum is {max_length} characters)",
+      cant_be_blank: "can't be blank",
+      invalid_email: "invalid email",
+      passwords_dont_match: "Passwords don't match"
     },
     navbar: {
       page_title: "sciNote",
@@ -68,7 +71,11 @@ export default {
       avatar: "Avatar",
       edit_avatar: "Edit Avatar",
       change: "Change",
-      change_password: "Change Password",
+      change_password: "Password",
+      new_password: "New password",
+      password_confirmation:
+        "Current password (we need your current password to confirm your changes)",
+      new_password_confirmation: "New password confirmation",
       new_email: "New email",
       initials: "Initials",
       full_name: "Full name",
@@ -84,6 +91,7 @@ export default {
       time_zone: "Time zone",
       time_zone_warning:
         "Time zone setting affects all time & date fields throughout application.",
+      notifications: "Notifications",
       profile: "Profile",
       preferences: "Preferences",
       assignement: "Assignement",
@@ -102,7 +110,7 @@ export default {
       leave_team_modal: {
         title: "Leave team {teamName}",
         subtitle:
-          "Are you sure you wish to leave team My projects? This action is irreversible.",
+          "Are you sure you wish to leave team {teamName}? This action is irreversible.",
         warnings: "Leaving team has following consequences:",
         warning_message_one:
           "you will lose access to all content belonging to the team (including projects, tasks, protocols and activities);",
@@ -152,7 +160,8 @@ export default {
         title: "New team",
         name_label: "Team name",
         name_placeholder: "My team",
-        name_sublabel: "Pick a name that would best describe your team (e.g. 'University of ..., Department of ...').",
+        name_sublabel:
+          "Pick a name that would best describe your team (e.g. 'University of ..., Department of ...').",
         description_label: "Description",
         description_sublabel: "Describe your team.",
         create: "Create team"
