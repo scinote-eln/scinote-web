@@ -5,21 +5,30 @@ import { NavDropdown, MenuItem, Image } from "react-bootstrap";
 import styled from "styled-components";
 import { FormattedMessage } from "react-intl";
 
-import { getCurrentUser } from "../../actions/UsersActions";
+import { getCurrentUser } from "../../../services/api/users_api";
+import { addCurrentUser } from "../../actions/UsersActions";
 
 const StyledNavDropdown = styled(NavDropdown)`
-& #user-account-dropdown {
-  padding-top: 10px;
-  padding-bottom: 10px;
-}
+  & #user-account-dropdown {
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+`;
+
+const StyledAvatar = styled(Image)`
+  max-width: 30px;
+  max-height: 30px;
 `;
 
 class UserAccountDropdown extends Component {
   componentDidMount() {
-    this.props.getCurrentUser();
+    getCurrentUser().then(data => {
+      this.props.addCurrentUser(data);
+    });
   }
 
   render() {
+    const { fullName, avatarThumb } = this.props.current_user;
     return (
       <StyledNavDropdown
         id="user-account-dropdown"
@@ -29,11 +38,11 @@ class UserAccountDropdown extends Component {
           <span>
             <FormattedMessage
               id="user_account_dropdown.greeting"
-              values={{ name: this.props.current_user.fullName }}
+              values={{ name: fullName }}
             />&nbsp;
-            <Image
-              src={this.props.current_user.avatarPath}
-              alt={this.props.current_user.fullName}
+            <StyledAvatar
+              src={`${avatarThumb }?${new Date().getTime()}`}
+              alt={fullName}
               circle
             />
           </span>
@@ -52,24 +61,17 @@ class UserAccountDropdown extends Component {
 }
 
 UserAccountDropdown.propTypes = {
-  getCurrentUser: PropTypes.func.isRequired,
+  addCurrentUser: PropTypes.func.isRequired,
   current_user: PropTypes.shape({
     id: PropTypes.number.isRequired,
     fullName: PropTypes.string.isRequired,
-    avatarPath: PropTypes.string.isRequired
+    avatarThumb: PropTypes.string.isRequired
   }).isRequired
 };
 
 // Map the states from store to component
 const mapStateToProps = ({ current_user }) => ({ current_user });
 
-// Map the fetch activity action to component
-const mapDispatchToProps = dispatch => ({
-  getCurrentUser() {
-    dispatch(getCurrentUser());
-  }
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(
+export default connect(mapStateToProps, { addCurrentUser })(
   UserAccountDropdown
 );

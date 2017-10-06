@@ -36,7 +36,7 @@ class User < ApplicationRecord
     size: { less_than: Constants::AVATAR_MAX_SIZE_MB.megabytes }
   validate :time_zone_check
 
-  store_accessor :settings, :time_zone
+  store_accessor :settings, :time_zone, :notifications
 
   default_settings(
     time_zone: 'UTC',
@@ -281,7 +281,7 @@ class User < ApplicationRecord
         end
       end
       errors.clear
-      errors.set(:avatar, messages)
+      errors.add(:avatar, messages.join(','))
     end
   end
 
@@ -411,6 +411,28 @@ class User < ApplicationRecord
         ).values
       ).count
     statistics
+  end
+
+  # json friendly attributes
+  NOTIFICATIONS_TYPES = %w(assignments_notification recent_notification
+                           assignments_email_notification
+                           recent_email_notification
+                           system_message_email_notification)
+  # declare notifications getters
+  NOTIFICATIONS_TYPES.each do |name|
+    define_method(name) do
+      attr_name = name.gsub('_notification', '')
+      self.notifications.fetch(attr_name.to_sym)
+    end
+  end
+
+  # declare notifications setters
+  NOTIFICATIONS_TYPES.each do |name|
+    define_method("#{name}=") do |value|
+      attr_name = name.gsub('_notification', '').to_sym
+      self.notifications[attr_name] = value
+      save
+    end
   end
 
   protected

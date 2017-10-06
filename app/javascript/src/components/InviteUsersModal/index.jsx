@@ -55,7 +55,7 @@ class InviteUsersModal extends Component {
         team_id: this.props.team.id
       })
       .then(({ data }) => {
-        this.setState({ inviteResults: data, showInviteUsersResults: true});
+        this.setState({ inviteResults: data, showInviteUsersResults: true });
       })
       .catch(error => {
         console.log("Invite As Error: ", error);
@@ -89,17 +89,23 @@ class InviteUsersModal extends Component {
           <Modal.Title>
             <FormattedMessage
               id="invite_users.modal_title"
-              values={{ team: this.props.team.name }}
+              values={{
+                team: this.props.team.name
+              }}
             />
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>{modalBody}</Modal.Body>
         <Modal.Footer>
           <StyledButtonToolbar>
-            <Button onClick={this.handleCloseModal}>
-              <FormattedMessage id="general.cancel" />
-            </Button>
             {inviteButton}
+            <Button onClick={this.handleCloseModal}>
+              <FormattedMessage
+                id={`general.${this.state.showInviteUsersResults
+                  ? "close"
+                  : "cancel"}`}
+              />
+            </Button>
           </StyledButtonToolbar>
         </Modal.Footer>
       </Modal>
@@ -110,10 +116,7 @@ class InviteUsersModal extends Component {
 InviteUsersModal.propTypes = {
   showModal: bool.isRequired,
   onCloseModal: func.isRequired,
-  team: shape({
-    id: number.isRequired,
-    name: string.isRequired
-  }).isRequired,
+  team: shape({ id: number.isRequired, name: string.isRequired }).isRequired,
   updateUsersCallback: func.isRequired
 };
 
