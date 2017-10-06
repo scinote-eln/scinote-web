@@ -1,4 +1,4 @@
-// flow-typed signature: a9383fa5501824f9b5e2f8158f537809
+// flow-typed signature: 79b97b5ddc1ea02b9cc38f72bf165b17
 // flow-typed version: <<STUB>>/webpack-dev-server_v^2.5.1/flow_v0.56.0
 
 /**
@@ -78,6 +78,10 @@ declare module 'webpack-dev-server/lib/OptionsValidationError' {
   declare module.exports: any;
 }
 
+declare module 'webpack-dev-server/lib/polyfills' {
+  declare module.exports: any;
+}
+
 declare module 'webpack-dev-server/lib/Server' {
   declare module.exports: any;
 }
@@ -132,6 +136,9 @@ declare module 'webpack-dev-server/client/webpack.sockjs.config.js' {
 }
 declare module 'webpack-dev-server/lib/OptionsValidationError.js' {
   declare module.exports: $Exports<'webpack-dev-server/lib/OptionsValidationError'>;
+}
+declare module 'webpack-dev-server/lib/polyfills.js' {
+  declare module.exports: $Exports<'webpack-dev-server/lib/polyfills'>;
 }
 declare module 'webpack-dev-server/lib/Server.js' {
   declare module.exports: $Exports<'webpack-dev-server/lib/Server'>;

@@ -2,7 +2,7 @@
 
 import React, { Component } from "react";
 import { FormattedMessage } from "react-intl";
-import { Modal, Button } from "react-bootstrap";
+import { Button, Modal } from "react-bootstrap";
 import _ from "lodash";
 import styled from "styled-components";
 
