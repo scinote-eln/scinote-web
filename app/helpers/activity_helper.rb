@@ -1,29 +1,41 @@
 module ActivityHelper
+  # constants for correct truncation length
   TAGS_LENGTH = 4
   TRUNCATE_OFFSET = 3
   def activity_truncate(message, len = Constants::NAME_TRUNCATION_LENGTH)
     activity_titles = message.scan(/<strong>(.*?)<\/strong>/)
     activity_titles.each do |activity_title|
       activity_title = activity_title[0]
-      closing = activity_title.index('</a>')
-      unless closing.nil?
-        ind = activity_title.index('<img')
-        ind_temp = activity_title.index('<span')
-        ind = ind_temp if ind.nil? || ind > ind_temp
+      # find first closing tag of smart annotation
+      closing_tag_sa = activity_title.index('</a>')
+      unless closing_tag_sa.nil?
+        opening_tag_sa = activity_title.index('<img')
+        opening_temp = activity_title.index('<span')
+        # depending on user/experiment set the first opening tag
+        opening_tag_sa = opening_temp if opening_tag_sa.nil? ||
+                                         opening_tag_sa > opening_temp
       end
-      temp = len
-      while !ind.nil? && !closing.nil? && ind < temp
-        stripped = strip_tags(activity_title[ind...closing]).length
-        temp += (activity_title[ind...closing + TAGS_LENGTH]).length - stripped
-        len = temp + TRUNCATE_OFFSET + TAGS_LENGTH if len <= closing
-        closing_temp = closing + 1
-        closing = activity_title.index('</a>', closing_temp)
-        unless closing.nil?
-          ind = activity_title.index('<img', closing_temp)
-          ind_temp = activity_title.index('<span', closing_temp)
-          ind = ind_temp if ind.nil? || ind > ind_temp
+      len_temp = len
+      # check until we run out of smart annotations in message
+      while !opening_tag_sa.nil? && !closing_tag_sa.nil? &&
+            opening_tag_sa < len_temp
+        stripped = strip_tags(activity_title[opening_tag_sa...closing_tag_sa])
+                   .length
+        len_temp += (activity_title[opening_tag_sa...closing_tag_sa +
+                    TAGS_LENGTH]).length - stripped
+        len = len_temp + TRUNCATE_OFFSET + TAGS_LENGTH if len <= closing_tag_sa
+        closing_temp = closing_tag_sa + 1
+        closing_tag_sa = activity_title.index('</a>', closing_temp)
+        unless closing_tag_sa.nil?
+          # find next smart annotation
+          opening_tag_sa = activity_title.index('<img', closing_temp)
+          opening_temp = activity_title.index('<span', closing_temp)
+          # depending on user/experiment set the next opening tag
+          opening_tag_sa = opening_temp if opening_tag_sa.nil? ||
+                                           opening_tag_sa > opening_temp
         end
       end
+      # adjust truncation length according to smart annotations length
       len = activity_title.length if len > activity_title.length &&
                                      len != Constants::NAME_TRUNCATION_LENGTH
       if activity_title.length > len
