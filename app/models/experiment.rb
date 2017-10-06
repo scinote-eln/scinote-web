@@ -208,7 +208,8 @@ class Experiment < ActiveRecord::Base
       end
     rescue ActiveRecord::ActiveRecordError,
            ArgumentError,
-           ActiveRecord::RecordNotSaved
+           ActiveRecord::RecordNotSaved => ex
+      logger.error ex.message
       return false
     end
     true
