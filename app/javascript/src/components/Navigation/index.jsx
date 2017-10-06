@@ -20,6 +20,7 @@ import UserAccountDropdown from "./components/UserAccountDropdown";
 const StyledNavbar = styled(Navbar)`
   background-color: ${WHITE_COLOR};
   border-color: ${BORDER_GRAY_COLOR};
+  margin-bottom: 0;
 `;
 
 const StyledBrand = styled.a`
