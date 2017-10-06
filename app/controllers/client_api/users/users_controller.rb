@@ -3,11 +3,15 @@ module ClientApi
     class UsersController < ApplicationController
 
       def preferences_info
+        settings = current_user.settings
         respond_to do |format|
           format.json do
             render template: 'client_api/users/preferences',
                    status: :ok,
-                   locals: { user: current_user}
+                   locals: {
+                     timeZone: settings['time_zone'],
+                     notifications: settings['notifications']
+                   }
           end
         end
       end
@@ -42,134 +46,52 @@ module ClientApi
         end
       end
 
-      def change_password
-        user = User.find(current_user.id)
-        is_saved = user.update(user_params)
-
-        if is_saved
-          bypass_sign_in(user)
-          res = "success"
+      def update
+        user_service = ClientApi::UserService.new(
+          current_user: current_user,
+          params: user_params
+        )
+        if user_service.update_user!
+          bypass_sign_in(current_user)
+          success_response
         else
-          res = "could not change password"
+          unsuccess_response(current_user.errors.full_messages,
+                             :unprocessable_entity)
         end
-
-        respond_to do |format|
-          if is_saved
-            format.json { render json: { msg: res} }
-          else
-            format.json { render json: { msg: res}, status: 422 }
-          end
-        end
-      end
-
-      def change_assignements_notification
-        change_notification(:assignments_notification, params)
-      end
-
-      def change_assignements_notification_email
-        change_notification(:assignments_notification_email, params)
-      end
-
-      def change_recent_notification
-        change_notification(:recent_notification, params)
-      end
-
-      def change_recent_notification_email
-        change_notification(:recent_notification_email, params)
-      end
-
-      def change_system_notification_email
-        change_notification(:system_message_notification_email, params)
-      end
-
-      def change_timezone
-        user = current_user
-        errors = { timezone_errors: [] }
-        user.time_zone = params['timezone']
-
-        timezone = if user.save
-                     user.time_zone
-                   else
-                     msg = 'You need to select valid TimeZone.'
-                     user.reload.time_zone
-                     errors[:timezone_errors] << msg
-                   end
-
-        respond_to do |format|
-          format.json { render json: { timezone: timezone, errors: errors}}
-        end
-      end
-
-      def change_email
-        user = current_user
-        current_email = current_user.email
-        errors = { current_password_email_field: []}
-
-        if user.valid_password? params['passwrd']
-          user.email = params['email']
-          saved_email = if user.save
-                          user.email
-                        else
-                          user.reload.email
-                        end
-        else
-         errors[:current_password_email_field] << 'Wrong password.'
-        end
-
-        respond_to do |format|
-          resp = { email: saved_email || current_email, errors: errors }
-          format.json { render json: resp }
-        end
-      end
-
-      def change_full_name
-        user = current_user
-        user.name = params['fullName']
-        saved_name = if user.save
-                       user.name
-                     else
-                       user.reload.name
-                     end
-
-        respond_to do |format|
-          resp = { fullName: saved_name, errors: user.errors.messages }
-          format.json { render json: resp }
-        end
-      end
-
-      def change_initials
-        user = current_user
-        user.initials = params['initials']
-          saved_initials = if user.save
-                             user.initials
-                           else
-                             user.reload.initials
-                           end
-
-        respond_to do |format|
-          format.json { render json: { initials: saved_initials } }
-        end
+      rescue CustomUserError => error
+        unsuccess_response(error.to_s)
       end
 
       private
 
       def user_params
-        params.require(:user).permit(:password)
+        params.require(:user)
+              .permit(:password, :initials, :email, :full_name,
+                      :password_confirmation, :current_password, :avatar,
+                      :time_zone, :assignments_notification,
+                      :assignments_email_notification, :recent_notification,
+                      :recent_email_notification,
+                      :system_message_email_notification)
       end
 
-      def change_notification(dinamic_param, params)
-        user = current_user
-        user[dinamic_param] = params['status']
-
-        status =
-          if user.save
-            user[dinamic_param]
-          else
-            user.reload[dinamic_param]
-          end
-
+      def success_response(template = nil, locals = nil)
         respond_to do |format|
-          format.json { render json: { status: status } }
+          format.json do
+            if template && locals
+              render template: template, status: :ok, locals: locals
+            else
+              render json: {}, status: :ok
+            end
+          end
+        end
+      end
+
+      def unsuccess_response(message, status = :unprocessable_entity)
+        respond_to do |format|
+          format.json do
+            render json: { message: message },
+            status: status
+          end
         end
       end
     end
