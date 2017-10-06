@@ -19,7 +19,7 @@ describe ClientApi::NotificationsController, type: :controller do
 
   describe '#unreaded_notifications_number' do
     it 'returns a number of unreaded notifications' do
-      get :unreaded_notifications_number, format: :json
+      get :unread_notifications_count, format: :json
       expect(response).to be_success
       expect(response.body).to include('count')
     end

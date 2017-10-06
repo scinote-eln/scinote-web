@@ -1,17 +1,21 @@
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
 import { NavDropdown } from "react-bootstrap";
 import { FormattedMessage } from "react-intl";
 import styled from "styled-components";
 
 import {
   getRecentNotifications,
-  getUnreadedNotificationsNumber
+  getUnreadNotificationsCount
 } from "../../../services/api/notifications_api";
 import {
   MAIN_COLOR_BLUE,
   WILD_SAND_COLOR,
   MYSTIC_COLOR
 } from "../../../config/constants/colors";
+import {
+  SETTINGS_ACCOUNT_PREFERENCES
+} from "../../../config/routes"
 
 import NotificationItem from "./NotificationItem";
 import Spinner from "../../Spinner";
@@ -95,7 +99,7 @@ class NotificationsDropdown extends Component {
   }
 
   loadStatus() {
-    getUnreadedNotificationsNumber().then(response => {
+    getUnreadNotificationsCount().then(response => {
       this.setState({ notificationsCount: parseInt(response.count, 10) });
     });
   }
@@ -144,9 +148,9 @@ class NotificationsDropdown extends Component {
             <FormattedMessage id="notifications.dropdown_title" />
           </span>
           <span className="pull-right">
-            <a href="/users/settings/account/preferences">
+            <Link to={SETTINGS_ACCOUNT_PREFERENCES}>
               <FormattedMessage id="notifications.dropdown_settings_link" />
-            </a>
+            </Link>
           </span>
         </StyledListHeader>
         {this.renderNotifications()}

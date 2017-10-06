@@ -15,7 +15,7 @@ module ClientApi
       UserNotification.seen_by_user(current_user)
     end
 
-    def unreaded_notifications_number
+    def unread_notifications_count
       respond_to do |format|
         format.json do
           render json: {

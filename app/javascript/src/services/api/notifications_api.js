@@ -8,7 +8,7 @@ export const getRecentNotifications = () => {
   return axiosInstance.get(RECENT_NOTIFICATIONS_PATH).then(({ data }) => data);
 };
 
-export const getUnreadedNotificationsNumber = () => {
+export const getUnreadNotificationsCount = () => {
   return axiosInstance
     .get(UNREADED_NOTIFICATIONS_PATH)
     .then(({ data }) => data);
