@@ -55,7 +55,8 @@ module ClientApi
           bypass_sign_in(current_user)
           success_response
         else
-          unsuccess_response(current_user.errors.full_messages, :unauthorized)
+          unsuccess_response(current_user.errors.full_messages,
+                             :unprocessable_entity)
         end
       rescue CustomUserError => error
         unsuccess_response(error.to_s)

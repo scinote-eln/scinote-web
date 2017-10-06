@@ -17,6 +17,7 @@ describe ClientApi::Users::UsersController, type: :controller do
 
   describe 'POST update' do
     let(:new_password) { 'secretPassword' }
+    let(:new_email) { 'banana@fruit.com' }
 
     it 'responds successfully if all password params are set' do
       post :update,
@@ -50,6 +51,29 @@ describe ClientApi::Users::UsersController, type: :controller do
       post :update, params: { user: { time_zone: 'Pacific/Fiji' } },
                              format: :json
       expect(response).to have_http_status(:ok)
+    end
+
+    it 'responds successfully if email is updated' do
+      post :update, params: { user: { email: new_email,
+                                      current_password: 'asdf1243' } },
+                              format: :json
+      expect(response).to have_http_status(:ok)
+      expect(@user.reload.email).to eq(new_email)
+    end
+
+    it 'responds unsuccessfully if email is updated without password' do
+      post :update, params: { user: { email: new_email } },
+                              format: :json
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(@user.reload.email).to_not eq(new_email)
+    end
+
+    it 'responds unsuccessfully if email is updated with invalid email' do
+      post :update, params: { user: { email: 'bananafruit.com',
+                                      current_password: 'asdf1243' } },
+                              format: :json
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(@user.reload.email).to_not eq(new_email)
     end
 
     it 'changes timezone' do

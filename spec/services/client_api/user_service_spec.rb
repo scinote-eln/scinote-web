@@ -59,8 +59,10 @@ describe ClientApi::UserService do
                   password_confirmation: 'hello1234567890',
                   current_password: 'asdf1234' }
       )
-      user_service.update_user!
-      expect(user).to_not be_valid
+
+      expect {
+        user_service.update_user!
+      }.to raise_error(ClientApi::CustomUserError, 'Passwords don\'t match')
     end
 
     it 'should update the password' do
