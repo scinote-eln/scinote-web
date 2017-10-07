@@ -1,4 +1,6 @@
-<%= form_for(@protocol, :url => url_for(:controller => 'protocols', :action=>'protocolsio_import_save'),method: :post,format: :javascript,remote: true,:html=> { :id => "protocolsio-import-form" }) do |f| %>
+<%= form_for(@protocol, :url => url_for(:controller => 'protocols',
+  :action=>'protocolsio_import_save'),method: :post,format: :javascript,
+  remote: true, :html=> { :id => "protocolsio-import-form" }) do |f| %>
 
 <%= hidden_field_tag :json_object, JSON.generate(@json_object) %>
 

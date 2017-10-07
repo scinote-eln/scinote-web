@@ -1022,8 +1022,7 @@ class ProtocolsController < ApplicationController
       append = I18n.t('protocols.protocols_io_import.comp_append.expected_result') +
       iterating_key['data'] + '<br>'
       result['steps'][pos2.to_s]['description'] << append
-      byebug
-    end #dbg
+    end 
     result
   end
 
