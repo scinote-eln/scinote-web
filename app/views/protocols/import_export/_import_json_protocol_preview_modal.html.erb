@@ -105,26 +105,20 @@
 
           <% end %>
 
-          <%  counter=0 %>
           <%  whitelist_simple=["1","6","17"] %>
           <%  whitelist_complex=["8","9","15","18","19","20"]%>
-          <% @json_object["steps"].each do |step| %>
+          <% @json_object["steps"].each_with_index do |step,counter| %>
           <div style="display: block;">
             <hr>
             <td>
               <div class="badge-num">
                 <span class="badge-preview bg-primary size-digit-1">
-                  <b data-val="position"><%= (counter+=1) %></b>
+                  <b data-val="position"><%= (counter+1) %></b>
                 </span>
                 &nbsp; &nbsp;
                 <span class="step-panel-collapse-link" data-toggle="collapse">
                   <span class="glyphicon collapse-step-icon glyphicon-collapse-up"></span>
-                  <%# this guid attributes were ommited because they didnt seem relevenat %>
-                  <%#=   Step guid (Protocols.io) :%><%#= step["guid"] %>
-                  <%# if counter>1 #only steps after the first one have previous step guid field
-                  valid%>
-                  <%#=Guid of previous step (Protocols.io) :%><%#= step["previous_guid"] %>
-                  <%# end %>
+                  
                   <% title=nil %>
                   <% step["components"].each do |key1,value1| #finding section (title of step) %>
 
