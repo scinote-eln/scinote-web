@@ -625,7 +625,7 @@ class ProtocolsController < ApplicationController
   def protocolsio_import_save
     @json_object = JSON.parse(params['json_object'])
     @db_json = {}
-    @db_json['name'] = params['protocol']['name']
+    @db_json['name'] = sanitize_input(params['protocol']['name'])
     # since scinote only has description field, and protocols.io has many others
     # ,here i am putting everything important from protocols.io into description
     description_array = %w[
@@ -659,10 +659,10 @@ class ProtocolsController < ApplicationController
           sanitize_input(@json_object[e].to_s) + "\n"
       end
     end
-    @db_json['authors'] = params['protocol']['authors']
-    @db_json['created_at'] = params['protocol']['created_at']
-    @db_json['updated_at'] = params['protocol']['last_modified']
-    @db_json['description'] = description_string
+    @db_json['authors'] = sanitize_input(params['protocol']['authors'])
+    @db_json['created_at'] = sanitize_input(params['protocol']['created_at'])
+    @db_json['updated_at'] = sanitize_input(params['protocol']['last_modified'])
+    @db_json['description'] = sanitize_input(description_string)
     @db_json['steps'] = {}
 
     # these whitelists are there to not let some useless step components trough,
@@ -991,10 +991,10 @@ class ProtocolsController < ApplicationController
 
   def protocolsio_step_description_populate(result, iterating_key, pos2)
     if iterating_key['data'].present? && result['steps'][pos2.to_s]['description']
-      append = '<br>' + iterating_key['data'] + '<br>'
+      append = '<br>' + sanitize_input(iterating_key['data']) + '<br>'
       result['steps'][pos2.to_s]['description'] << append
     elsif !result['steps'][pos2.to_s]['description']
-      append = '<br>' + iterating_key['data'] + '<br>'
+      append = '<br>' + sanitize_input(iterating_key['data']) + '<br>'
       result['steps'][pos2.to_s]['description'] = append
     else
       result['steps'][pos2.to_s]['description'] =
@@ -1006,7 +1006,7 @@ class ProtocolsController < ApplicationController
   def protocolsio_step_title_populate(result, iterating_key, pos2)
     result['steps'][pos2.to_s]['name'] =
       if iterating_key['data'].present?
-        iterating_key['data']
+        sanitize_input(iterating_key['data'])
       else
         I18n.t('protocols.protocols_io_import.comp_append.missing_step')
       end
@@ -1015,8 +1015,9 @@ class ProtocolsController < ApplicationController
 
   def protocolsio_step_expected_result_populate(result, iterating_key, pos2)
     if iterating_key['data'].present?
-      append = I18n.t('protocols.protocols_io_import.comp_append.expected_result') +
-      iterating_key['data'] + '<br>'
+      append =
+        I18n.t('protocols.protocols_io_import.comp_append.expected_result') +
+        sanitize_input(iterating_key['data']) + '<br>'
       result['steps'][pos2.to_s]['description'] << append
     end
     result
@@ -1031,18 +1032,18 @@ class ProtocolsController < ApplicationController
        iterating_key['source_data']['os_name'] &&
        iterating_key['source_data']['os_version']
       append = I18n.t('protocols.protocols_io_import.comp_append.soft_packg.title') +
-               iterating_key['source_data']['name'] +
+               sanitize_input(iterating_key['source_data']['name']) +
                I18n.t('protocols.protocols_io_import.comp_append.soft_packg.dev') +
-               iterating_key['source_data']['developer'] +
+               sanitize_input(iterating_key['source_data']['developer']) +
                I18n.t('protocols.protocols_io_import.comp_append.soft_packg.vers') +
-               iterating_key['source_data']['version'] +
+               sanitize_input(iterating_key['source_data']['version']) +
                I18n.t('protocols.protocols_io_import.comp_append.general_link') +
-               iterating_key['source_data']['link'] +
+               sanitize_input(iterating_key['source_data']['link']) +
                I18n.t('protocols.protocols_io_import.comp_append.soft_packg.repo') +
-               iterating_key['source_data']['repository'] +
+               sanitize_input(iterating_key['source_data']['repository']) +
                I18n.t('protocols.protocols_io_import.comp_append.soft_packg.os') +
-               iterating_key['source_data']['os_name'] + ' , ' +
-               iterating_key['source_data']['os_version']
+               sanitize_input(iterating_key['source_data']['os_name']) + ' , ' +
+               sanitize_input(iterating_key['source_data']['os_version'])
       result['steps'][pos2.to_s]['description'] << append
     end
     result
@@ -1052,9 +1053,9 @@ class ProtocolsController < ApplicationController
     if iterating_key['source_data']['name'] &&
        iterating_key['source_data']['link']
       append = I18n.t('protocols.protocols_io_import.comp_append.dataset.title') +
-               iterating_key['source_data']['name'] +
+               sanitize_input(iterating_key['source_data']['name']) +
                I18n.t('protocols.protocols_io_import.comp_append.general_link') +
-               iterating_key['source_data']['link']
+               sanitize_input(iterating_key['source_data']['link'])
       result['steps'][pos2.to_s]['description'] << append
     end
     result
@@ -1066,11 +1067,11 @@ class ProtocolsController < ApplicationController
        iterating_key['source_data']['os_name'] &&
        iterating_key['source_data']['os_version']
       append = I18n.t('protocols.protocols_io_import.comp_append.command.title') +
-               iterating_key['source_data']['name'] +
+               sanitize_input(iterating_key['source_data']['name']) +
                I18n.t('protocols.protocols_io_import.comp_append.command.desc') +
-               iterating_key['source_data']['description'] +
+               sanitize_input(iterating_key['source_data']['description']) +
                I18n.t('protocols.protocols_io_import.comp_append.command.os') +
-               iterating_key['source_data']['os_name'] +
+               sanitize_input(iterating_key['source_data']['os_name']) +
                ' , ' + iterating_key['source_data']['os_version']
       result['steps'][pos2.to_s]['description'] << append
     end
@@ -1084,11 +1085,11 @@ class ProtocolsController < ApplicationController
        iterating_key['source_data']['full_name'] &&
        iterating_key['source_data']['link']
       append = I18n.t('protocols.protocols_io_import.comp_append.sub_protocol.title') +
-               iterating_key['source_data']['protocol_name'] +
+               sanitize_input(iterating_key['source_data']['protocol_name']) +
                I18n.t('protocols.protocols_io_import.comp_append.sub_protocol.author') +
-               iterating_key['source_data']['full_name'] +
+               sanitize_input(iterating_key['source_data']['full_name']) +
                I18n.t('protocols.protocols_io_import.comp_append.general_link') +
-               iterating_key['source_data']['link']
+               sanitize_input(iterating_key['source_data']['link'])
       result['steps'][pos2.to_s]['description'] << append
     end
     result
@@ -1098,9 +1099,9 @@ class ProtocolsController < ApplicationController
     if iterating_key['source_data']['body'] &&
        iterating_key['source_data']['link']
       append = I18n.t('protocols.protocols_io_import.comp_append.safety_infor.title') +
-               iterating_key['source_data']['body'] +
+               sanitize_input(iterating_key['source_data']['body']) +
                I18n.t('protocols.protocols_io_import.comp_append.general_link') +
-               iterating_key['source_data']['link']
+               sanitize_input(iterating_key['source_data']['link'])
       result['steps'][pos2.to_s]['description'] << append
     end
     result
