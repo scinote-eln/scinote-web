@@ -81,27 +81,26 @@
 
           <% if @json_object["before_start"]&&@json_object["before_start"]!="" %>
 
-          <strong>Before starting protocol information:</strong><br>
+          <strong><%= t("protocols.protocols_io_import.preview.b_s_p") %></strong><br>
           <%= (@json_object["before_start"]) %><br>
 
           <% end %>
           <% if @json_object["warning"]&&@json_object["warning"]!="" %>
 
-          <strong>Protocol warning:</strong><br>
+          <strong><%= t("protocols.protocols_io_import.preview.warn") %></strong><br>
           <%= (@json_object["warning"]) %><br>
 
           <% end %>
           <% if @json_object["guidelines"]&&@json_object["guidelines"]!="" %>
 
-          <strong>Guidelines:</strong><br>
+          <strong><%= t("protocols.protocols_io_import.preview.guideln") %></strong><br>
           <%= (@json_object["guidelines"]) %><br>
 
           <% end %>
 
           <% if @json_object["link"]&&@json_object["link"]!="" %>
 
-          <br>
-          <strong>Supplied link:</strong><br>
+          <br><strong><%= t("protocols.protocols_io_import.preview.p_link") %></strong><br>
           <%= (@json_object["link"]) %>
 
           <% end %>
@@ -141,7 +140,7 @@
 
                   <% end %>
                   <% if title.nil? %>
-                  <% title ="Step" %>
+                  <% title =t('protocols.protocols_io_import.comp_append.missing_step') %>
                   <% end %>
                   <strong data-val="name"><%= title %></strong>
                 </span>
@@ -165,15 +164,10 @@
                     <br>
                     <% case key["component_type_id"]
                      when "1" %>
-                    <br>
-                    <strong>
-                      Description:
-                    </strong>
+                    <br><strong><%= t("protocols.protocols_io_import.preview.strng_s_desc") %></strong>
                     <%=key["data"]%><br>
                     <% when "17" %>
-                    <br>
-                    <strong>Expected result:
-                    </strong>
+                    <br><strong><%= t("protocols.protocols_io_import.preview.s_exp_res") %></strong>
                     <%=key["data"]%>
                     <br>
                     <% end %>
@@ -184,60 +178,48 @@
                     <br>
                     <strong><%= key["name"]+": " %></strong>
                     <%= (key["source_data"]["name"]) %>
-                    <br>
-                    Developer:
+                    <br><%= t("protocols.protocols_io_import.preview.dev") %>
                     <%= (key["source_data"]["developer"]) %>
-                    <br>
-                    Version:
+                    <br><%= t("protocols.protocols_io_import.preview.vers") %>
                     <%= (key["source_data"]["version"]) %>
-                    <br>
-                    Link:
+                    <br><%= t("protocols.protocols_io_import.preview.s_link") %>
                     <%= (key["source_data"]["link"]) %>
-                    <br>
-                    Repository:
+                    <br><%= t("protocols.protocols_io_import.preview.repo") %>
                     <%= (key["source_data"]["repository"]) %>
-                    <br>
-                    OS name , OS version:
+                    <br><%= t("protocols.protocols_io_import.preview.os") %>
                     <%= (key["source_data"]["os_name"])+" , "+(key["source_data"]["os_version"]) %>
 
                     <% when "9"%>
                     <br>
                     <strong><%= key["name"]+": " %></strong>
                     <%= key["source_data"]["name"] %>
-                    <br>
-                    Link:
+                    <br><%= t("protocols.protocols_io_import.preview.s_link") %>
                     <%= (key["source_data"]["link"]) %>
 
                     <% when "15"%>
                     <br>
                     <strong><%= key["name"]+": " %></strong>
                     <%=  key["source_data"]["name"] %>
-                    <br>
-                    Description:
+                    <br><%= t("protocols.protocols_io_import.preview.s_desc") %>
                     <%= (key["source_data"]["description"]) %>
-                    <br>
-                    OS name , OS version:
+                    <br><%= t("protocols.protocols_io_import.preview.os") %>
                     <%= (key["source_data"]["os_name"])+" , "+(key["source_data"]["os_version"]) %>
 
                     <% when "18"%>
-                    <br>
-                    <strong>This protocol also contains an attached sub-protocol:
-                    </strong>
+                    <br><strong><%= t("protocols.protocols_io_import.preview.sub_prot") %></strong>
                     <%= (key["source_data"]["protocol_name"]) %>
-                    <br>
-                    Author:
+                    <br><%= t("protocols.protocols_io_import.preview.auth") %>
                     <%= (key["source_data"]["full_name"]) %>
                     <br>
                     <% if key["source_data"]["link"]&&key["source_data"]["link"]!="" %>
-                    Link:
+                    <%= t("protocols.protocols_io_import.preview.s_nobr_link") %>
                     <%= (key["source_data"]["link"]) %>
                     <% end %>
                     <% when "19"%>
                     <br>
                     <strong><%= key["name"]+": " %></strong>
                     <%= key["source_data"]["body"] %>
-                    <br>
-                    Link:
+                    <br><%= t("protocols.protocols_io_import.preview.s_link") %>
                     <%= (key["source_data"]["link"]) %>
 
                     <% when "20"%>
@@ -278,43 +260,37 @@
             <% if
             @json_object["manuscript_citation"]&&@json_object["manuscript_citation"]!="" %>
 
-            <br>
-            <strong>Manuscript citation:</strong><br>
+            <br><strong><%= t("protocols.protocols_io_import.preview.manu_cit") %></strong><br>
             <%= (@json_object["manuscript_citation"]) %>
 
             <% end %>
             <% if @json_object["publish_date"]&&@json_object["publish_date"]!="" %>
 
-            <br>
-            <strong>Publish date:</strong><br>
+            <br><strong><%= t("protocols.protocols_io_import.preview.pbl_date") %></strong><br>
             <%= (@json_object["publish_date"]) %>
 
             <% end %>
             <% if @json_object["vendor_name"]&&@json_object["vendor_name"]!="" %>
 
-            <br>
-            <strong>Vendor name:</strong><br>
+            <br><strong><%= t("protocols.protocols_io_import.preview.vnd_name") %></strong><br>
             <%= (@json_object["vendor_name"]) %>
 
             <% end %>
             <% if @json_object["vendor_link"]&&@json_object["vendor_link"]!="" %>
 
-            <br>
-            <strong>Vendor link:</strong><br>
+            <br><strong><%= t("protocols.protocols_io_import.preview.vnd_link") %></strong><br>
             <%= (@json_object["vendor_link"]) %>
 
             <% end %>
             <% if @json_object["keywords"]&&@json_object["keywords"]!="" %>
 
-            <br>
-            <strong>Keywords:</strong><br>
+            <br><strong><%= t("protocols.protocols_io_import.preview.key_wrd") %></strong><br>
             <%= (@json_object["keywords"]) %>
 
             <% end %>
             <% if @json_object["tags"]&&@json_object["tags"]!="" %>
 
-            <br>
-            <strong>Tags:</strong><br>
+            <br><strong><%= t("protocols.protocols_io_import.preview.tags") %></strong><br>
             <%  @json_object["tags"].each do |tag| %>
             <%= (tag["tag_name"])+" , " %>
             <% end %>
