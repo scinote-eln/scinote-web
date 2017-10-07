@@ -634,7 +634,7 @@ class ProtocolsController < ApplicationController
     ]
     description_string = Sanitize.clean(params['protocol']['description'])
     description_array.each do |e|
-      if e == 'created_on' && @json_object[e] && @json_object[e] != ''
+      if e == 'created_on' && @json_object[e].present?
         new_e = e.slice(0, 1).capitalize + e.slice(1..-1)
         new_e = new_e.tr('_', ' ')
         description_string =
@@ -654,7 +654,7 @@ class ProtocolsController < ApplicationController
         # because its even messier (using Sanitize)
         # what this does is basically appends "FIELD NAME: "+" FIELD VALUE"
         # to description for various fields
-      elsif @json_object[e] && @json_object[e] != ''
+      elsif @json_object[e].present?
         new_e = e.slice(0, 1).capitalize + e.slice(1..-1)
         new_e = new_e.tr('_', ' ')
         description_string +=
@@ -993,8 +993,7 @@ class ProtocolsController < ApplicationController
   private
 
   def protocolsio_step_description_populate(result, iterating_key, pos2)
-    if !iterating_key['data'].nil? && iterating_key['data'] != '' &&
-       result['steps'][pos2.to_s]['description']
+    if iterating_key['data'].present? && result['steps'][pos2.to_s]['description']
       append = '<br>' + iterating_key['data'] + '<br>'
       result['steps'][pos2.to_s]['description'] << append
     elsif !result['steps'][pos2.to_s]['description']
@@ -1009,7 +1008,7 @@ class ProtocolsController < ApplicationController
 
   def protocolsio_step_title_populate(result, iterating_key, pos2)
     result['steps'][pos2.to_s]['name'] =
-      if !iterating_key['data'].nil? && iterating_key['data'] != ''
+      if iterating_key['data'].present?
         iterating_key['data']
       else
         I18n.t('protocols.protocols_io_import.comp_append.missing_step')
@@ -1018,11 +1017,11 @@ class ProtocolsController < ApplicationController
   end
 
   def protocolsio_step_expected_result_populate(result, iterating_key, pos2)
-    if !iterating_key['data'].nil? && iterating_key['data'] != ''
+    if iterating_key['data'].present?
       append = I18n.t('protocols.protocols_io_import.comp_append.expected_result') +
       iterating_key['data'] + '<br>'
       result['steps'][pos2.to_s]['description'] << append
-    end 
+    end
     result
   end
 

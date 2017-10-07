@@ -1,5 +1,6 @@
 <% if @protocolsio_general_error %>
-  alert('<%= I18n.t('my_modules.protocols.load_from_file_protocol_general_error', max: Constants::NAME_MAX_LENGTH, min: Constants::NAME_MIN_LENGTH) %>');
+  alert('<%= I18n.t('my_modules.protocols.load_from_file_protocol_general_error',
+   max: Constants::NAME_MAX_LENGTH, min: Constants::NAME_MIN_LENGTH) %>');
 <% else %>
   $('#modal-import-json-protocol-preview').modal('hide');
   protocolsDatatable.ajax.reload();

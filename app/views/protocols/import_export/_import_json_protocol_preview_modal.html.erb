@@ -118,18 +118,13 @@
                 &nbsp; &nbsp;
                 <span class="step-panel-collapse-link" data-toggle="collapse">
                   <span class="glyphicon collapse-step-icon glyphicon-collapse-up"></span>
-                  
+
                   <% title=nil %>
                   <% step["components"].each do |key1,value1| #finding section (title of step) %>
-
-                  <% if value1.class==Hash %>
-                  <% key1=value1 %>
-                  <% end %>
+                  <% key1 = value1 if value1.class == Hash %>
 
                   <%  if(key1["component_type_id"]=="6") %>
-                  <% if(key1["data"].present?) %>
-                  <% title ||=key1["data"] %>
-                  <% end %>
+                  <% title = key1["data"] if key1["data"].present? %>
                   <% end %>
 
                   <% end %>
@@ -149,78 +144,76 @@
                   <%#here i made an if to distinguish the first step from the
                     others, because the first step #sometimes has index values as keys instead of
                     hashes, you might see this elsewhere %>
-                    <% if value.class==Hash %>
-                    <% key=value %>
-                    <% end %>
+                    <% key = value if value.class == Hash %>
 
                     <% if whitelist_simple.include?(key["component_type_id"]) &&
-                    key["data"].present? %>
-                    <br>
-                    <% case key["component_type_id"]
-                     when "1" %>
-                    <br><strong><%= t("protocols.protocols_io_import.preview.strng_s_desc") %></strong>
-                    <%=key["data"]%><br>
-                    <% when "17" %>
-                    <br><strong><%= t("protocols.protocols_io_import.preview.s_exp_res") %></strong>
-                    <%=key["data"]%>
-                    <br>
-                    <% end %>
+                      key["data"].present? %>
+                      <br>
+                      <% case key["component_type_id"]
+                      when "1" %>
+                        <br><strong><%= t("protocols.protocols_io_import.preview.strng_s_desc") %></strong>
+                        <%=key["data"]%><br>
+                      <% when "17" %>
+                        <br><strong><%= t("protocols.protocols_io_import.preview.s_exp_res") %></strong>
+                        <%=key["data"]%>
+                        <br>
+                      <% end %>
                     <% elsif key && whitelist_complex.include?(key["component_type_id"]) %>
 
-                    <% case key["component_type_id"]
-                     when "8"%>
-                    <br>
-                    <strong><%= key["name"]+": " %></strong>
-                    <%= (key["source_data"]["name"]) %>
-                    <br><%= t("protocols.protocols_io_import.preview.dev") %>
-                    <%= (key["source_data"]["developer"]) %>
-                    <br><%= t("protocols.protocols_io_import.preview.vers") %>
-                    <%= (key["source_data"]["version"]) %>
-                    <br><%= t("protocols.protocols_io_import.preview.s_link") %>
-                    <%= (key["source_data"]["link"]) %>
-                    <br><%= t("protocols.protocols_io_import.preview.repo") %>
-                    <%= (key["source_data"]["repository"]) %>
-                    <br><%= t("protocols.protocols_io_import.preview.os") %>
-                    <%= (key["source_data"]["os_name"])+" , "+(key["source_data"]["os_version"]) %>
+                      <% case key["component_type_id"]
+                      when "8"%>
+                        <br>
+                        <strong><%= key["name"]+": " %></strong>
+                        <%= (key["source_data"]["name"]) %>
+                        <br><%= t("protocols.protocols_io_import.preview.dev") %>
+                        <%= (key["source_data"]["developer"]) %>
+                        <br><%= t("protocols.protocols_io_import.preview.vers") %>
+                        <%= (key["source_data"]["version"]) %>
+                        <br><%= t("protocols.protocols_io_import.preview.s_link") %>
+                        <%= (key["source_data"]["link"]) %>
+                        <br><%= t("protocols.protocols_io_import.preview.repo") %>
+                        <%= (key["source_data"]["repository"]) %>
+                        <br><%= t("protocols.protocols_io_import.preview.os") %>
+                        <%= (key["source_data"]["os_name"])+" , "+(key["source_data"]["os_version"]) %>
 
-                    <% when "9"%>
-                    <br>
-                    <strong><%= key["name"]+": " %></strong>
-                    <%= key["source_data"]["name"] %>
-                    <br><%= t("protocols.protocols_io_import.preview.s_link") %>
-                    <%= (key["source_data"]["link"]) %>
+                      <% when "9"%>
+                        <br>
+                        <strong><%= key["name"]+": " %></strong>
+                        <%= key["source_data"]["name"] %>
+                        <br><%= t("protocols.protocols_io_import.preview.s_link") %>
+                        <%= (key["source_data"]["link"]) %>
 
-                    <% when "15"%>
-                    <br>
-                    <strong><%= key["name"]+": " %></strong>
-                    <%=  key["source_data"]["name"] %>
-                    <br><%= t("protocols.protocols_io_import.preview.s_desc") %>
-                    <%= (key["source_data"]["description"]) %>
-                    <br><%= t("protocols.protocols_io_import.preview.os") %>
-                    <%= (key["source_data"]["os_name"])+" , "+(key["source_data"]["os_version"]) %>
+                      <% when "15"%>
+                        <br>
+                        <strong><%= key["name"]+": " %></strong>
+                        <%=  key["source_data"]["name"] %>
+                        <br><%= t("protocols.protocols_io_import.preview.s_desc") %>
+                        <%= (key["source_data"]["description"]) %>
+                        <br><%= t("protocols.protocols_io_import.preview.os") %>
+                        <%= (key["source_data"]["os_name"])+" , "+(key["source_data"]["os_version"]) %>
 
-                    <% when "18"%>
-                    <br><strong><%= t("protocols.protocols_io_import.preview.sub_prot") %></strong>
-                    <%= (key["source_data"]["protocol_name"]) %>
-                    <br><%= t("protocols.protocols_io_import.preview.auth") %>
-                    <%= (key["source_data"]["full_name"]) %>
-                    <br>
-                    <% if key["source_data"]["link"].present? %>
-                    <%= t("protocols.protocols_io_import.preview.s_nobr_link") %>
-                    <%= (key["source_data"]["link"]) %>
-                    <% end %>
-                    <% when "19"%>
-                    <br>
-                    <strong><%= key["name"]+": " %></strong>
-                    <%= key["source_data"]["body"] %>
-                    <br><%= t("protocols.protocols_io_import.preview.s_link") %>
-                    <%= (key["source_data"]["link"]) %>
+                      <% when "18"%>
+                        <br><strong><%= t("protocols.protocols_io_import.preview.sub_prot") %></strong>
+                        <%= (key["source_data"]["protocol_name"]) %>
+                        <br><%= t("protocols.protocols_io_import.preview.auth") %>
+                        <%= (key["source_data"]["full_name"]) %>
+                        <br>
+                        <% if key["source_data"]["link"].present? %>
+                          <%= t("protocols.protocols_io_import.preview.s_nobr_link") %>
+                          <%= (key["source_data"]["link"]) %>
+                        <% end %>
+                      <% when "19"%>
+                        <br>
+                        <strong><%= key["name"]+": " %></strong>
+                        <%= key["source_data"]["body"] %>
+                        <br><%= t("protocols.protocols_io_import.preview.s_link") %>
+                        <%= (key["source_data"]["link"]) %>
 
-                    <% when "20"%>
+                      <% when "20"%>
 
-                  <% else %>
+                      <% else %>
 
-                    <% end #case if%>
+                      <% end #case if%>
 
                     <% end #inner if%>
 
