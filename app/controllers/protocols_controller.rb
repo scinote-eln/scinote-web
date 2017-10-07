@@ -1001,7 +1001,8 @@ class ProtocolsController < ApplicationController
       append = '<br>' + iterating_key['data'] + '<br>'
       result['steps'][pos2.to_s]['description'] = append
     else
-      result['steps'][pos2.to_s]['description'] = 'Description missing'
+      result['steps'][pos2.to_s]['description'] =
+        I18n.t('protocols.protocols_io_import.comp_append.missing_desc')
     end
     result
   end
@@ -1011,17 +1012,18 @@ class ProtocolsController < ApplicationController
       if !iterating_key['data'].nil? && iterating_key['data'] != ''
         iterating_key['data']
       else
-        'Step'
+        I18n.t('protocols.protocols_io_import.comp_append.missing_step')
       end
     result
   end
 
   def protocolsio_step_expected_result_populate(result, iterating_key, pos2)
     if !iterating_key['data'].nil? && iterating_key['data'] != ''
-      append = '<br><strong>Expected result: </strong>'
-      + iterating_key['data'] + '<br>'
+      append = I18n.t('protocols.protocols_io_import.comp_append.expected_result') +
+      iterating_key['data'] + '<br>'
       result['steps'][pos2.to_s]['description'] << append
-    end
+      byebug
+    end #dbg
     result
   end
 
@@ -1033,13 +1035,17 @@ class ProtocolsController < ApplicationController
        iterating_key['source_data']['repository'] &&
        iterating_key['source_data']['os_name'] &&
        iterating_key['source_data']['os_version']
-      append = '<br><strong>Software package: </strong>' +
-               iterating_key['source_data']['name'] + '<br>Developer: ' +
-               iterating_key['source_data']['developer'] + '<br>Version: ' +
-               iterating_key['source_data']['version'] + '<br>Link: ' +
-               iterating_key['source_data']['link'] + '<br>Repository: ' +
+      append = I18n.t('protocols.protocols_io_import.comp_append.soft_packg.title') +
+               iterating_key['source_data']['name'] +
+               I18n.t('protocols.protocols_io_import.comp_append.soft_packg.dev') +
+               iterating_key['source_data']['developer'] +
+               I18n.t('protocols.protocols_io_import.comp_append.soft_packg.vers') +
+               iterating_key['source_data']['version'] +
+               I18n.t('protocols.protocols_io_import.comp_append.general_link') +
+               iterating_key['source_data']['link'] +
+               I18n.t('protocols.protocols_io_import.comp_append.soft_packg.repo') +
                iterating_key['source_data']['repository'] +
-               '<br>OS name , OS version: ' +
+               I18n.t('protocols.protocols_io_import.comp_append.soft_packg.os') +
                iterating_key['source_data']['os_name'] + ' , ' +
                iterating_key['source_data']['os_version']
       result['steps'][pos2.to_s]['description'] << append
@@ -1050,8 +1056,9 @@ class ProtocolsController < ApplicationController
   def protocolsio_step_dataset_populate(result, iterating_key, pos2)
     if iterating_key['source_data']['name'] &&
        iterating_key['source_data']['link']
-      append = '<br><strong>Dataset: </strong>' +
-               iterating_key['source_data']['name'] + '<br>Link: ' +
+      append = I18n.t('protocols.protocols_io_import.comp_append.dataset.title') +
+               iterating_key['source_data']['name'] +
+               I18n.t('protocols.protocols_io_import.comp_append.general_link') +
                iterating_key['source_data']['link']
       result['steps'][pos2.to_s]['description'] << append
     end
@@ -1063,11 +1070,11 @@ class ProtocolsController < ApplicationController
        iterating_key['source_data']['description'] &&
        iterating_key['source_data']['os_name'] &&
        iterating_key['source_data']['os_version']
-      append = '<br><strong>Command: </strong>' +
+      append = I18n.t('protocols.protocols_io_import.comp_append.command.title') +
                iterating_key['source_data']['name'] +
-               '<br>Description: ' +
+               I18n.t('protocols.protocols_io_import.comp_append.command.desc') +
                iterating_key['source_data']['description'] +
-               '<br>OS name , OS version: ' +
+               I18n.t('protocols.protocols_io_import.comp_append.command.os') +
                iterating_key['source_data']['os_name'] +
                ' , ' + iterating_key['source_data']['os_version']
       result['steps'][pos2.to_s]['description'] << append
@@ -1081,10 +1088,11 @@ class ProtocolsController < ApplicationController
     if iterating_key['source_data']['protocol_name'] &&
        iterating_key['source_data']['full_name'] &&
        iterating_key['source_data']['link']
-      append = '<br><strong>This protocol also contains an' +
-               ' attached sub-protocol: </strong>' +
-               iterating_key['source_data']['protocol_name'] + '<br>Author: ' +
-               iterating_key['source_data']['full_name'] + '<br>Link: ' +
+      append = I18n.t('protocols.protocols_io_import.comp_append.sub_protocol.title') +
+               iterating_key['source_data']['protocol_name'] +
+               I18n.t('protocols.protocols_io_import.comp_append.sub_protocol.author') +
+               iterating_key['source_data']['full_name'] +
+               I18n.t('protocols.protocols_io_import.comp_append.general_link') +
                iterating_key['source_data']['link']
       result['steps'][pos2.to_s]['description'] << append
     end
@@ -1094,9 +1102,10 @@ class ProtocolsController < ApplicationController
   def protocolsio_step_safety_information_populate(result, iterating_key, pos2)
     if iterating_key['source_data']['body'] &&
        iterating_key['source_data']['link']
-      append = '<br><strong>Safety information: </strong>' +
+      append = I18n.t('protocols.protocols_io_import.comp_append.safety_infor.title') +
                iterating_key['source_data']['body'] +
-               '<br>Link: ' + iterating_key['source_data']['link']
+               I18n.t('protocols.protocols_io_import.comp_append.general_link') +
+               iterating_key['source_data']['link']
       result['steps'][pos2.to_s]['description'] << append
     end
     result

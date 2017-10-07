@@ -407,7 +407,6 @@ Rails.application.routes.draw do
         get 'edit_keywords_modal', to: 'protocols#edit_keywords_modal'
         get 'edit_authors_modal', to: 'protocols#edit_authors_modal'
         get 'edit_description_modal', to: 'protocols#edit_description_modal'
-
       end
       collection do
         get 'create_new_modal', to: 'protocols#create_new_modal'
@@ -485,5 +484,4 @@ Rails.application.routes.draw do
     get 'wopi/files/:id', to: 'wopi#file_get_endpoint', as: 'wopi_rest_endpoint'
     post 'wopi/files/:id', to: 'wopi#post_file_endpoint'
   end
-
 end
