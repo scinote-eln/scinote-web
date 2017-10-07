@@ -35,7 +35,8 @@
         </div>
         <div class="form-group">
           <label>
-            <span class="glyphicon glyphicon-user"></span>&nbsp;<%= t("protocols.import_export.import_modal.authors_label") %>
+            <span class="glyphicon glyphicon-user">
+            </span>&nbsp;<%= t("protocols.import_export.import_modal.authors_label") %>
           </label>
           <%= f.text_field :authors, :value => @json_object['full_name'], class:
           "form-control" %>
@@ -53,14 +54,15 @@
               <label><%= t("protocols.import_export.import_modal.created_at_label") %></label>
 
               <% display_created_at=Time.at(@json_object['created_on'].to_i) %>
-              <%= f.text_field :created_at, :value => display_created_at.to_s+"(Protocols.io value)",readonly: true, class: "form-control" %>
+              <%= f.text_field :created_at, :value => display_created_at.to_s,
+              readonly: true, class: "form-control" %>
             </div>
             <div class="col-xs-4">
               <label><%= t("protocols.import_export.import_modal.updated_at_label") %></label>
 
               <% display_last_modified=Time.at(@json_object['last_modified'].to_i) %>
               <%= f.text_field :last_modified, :value =>
-              display_last_modified.to_s+"(Protocols.io value)",readonly: true, class:
+              display_last_modified.to_s,readonly: true, class:
               "form-control" %>
             </div>
           </div>
@@ -119,18 +121,14 @@
                 <span class="step-panel-collapse-link" data-toggle="collapse">
                   <span class="glyphicon collapse-step-icon glyphicon-collapse-up"></span>
 
-                  <% title=nil %>
+                  <% title = nil %>
                   <% step["components"].each do |key1,value1| #finding section (title of step) %>
                   <% key1 = value1 if value1.class == Hash %>
-
                   <%  if(key1["component_type_id"]=="6") %>
                   <% title = key1["data"] if key1["data"].present? %>
                   <% end %>
-
                   <% end %>
-                  <% if title.nil? %>
-                  <% title =t('protocols.protocols_io_import.comp_append.missing_step') %>
-                  <% end %>
+                  <% title ||=t('protocols.protocols_io_import.comp_append.missing_step') %>
                   <strong data-val="name"><%= title %></strong>
                 </span>
               </div>
@@ -140,7 +138,7 @@
                 <div class="tab-pane active" role="tabpanel">
                   <div data-val="description" class="ql-editor">
 
-                    <% step["components"].each do |key,value|  %>
+                  <% step["components"].each do |key,value|  %>
                   <%#here i made an if to distinguish the first step from the
                     others, because the first step #sometimes has index values as keys instead of
                     hashes, you might see this elsewhere %>
@@ -217,7 +215,7 @@
 
                     <% end #inner if%>
 
-                    <% end #step component loop %>
+                  <% end #step component loop %>
 
                   </div>
                   <hr>

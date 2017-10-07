@@ -1389,7 +1389,7 @@ en:
       preview:
         b_s_p: "Before starting protocol information:"
         warn: "Protocol warning:"
-        guideln: "<strong>Guidelines:"
+        guideln: "Guidelines:"
         p_link: "Supplied link:"
         s_nobr_link: "Link:"
         s_link: "Link:"

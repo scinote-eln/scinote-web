@@ -632,22 +632,20 @@ class ProtocolsController < ApplicationController
       (before_start warning guidelines manuscript_citation publish_date
       created_on vendor_name vendor_link keywords tags link)
     ]
-    description_string = Sanitize.clean(params['protocol']['description'])
+    description_string = sanitize_input(params['protocol']['description'])
     description_array.each do |e|
       if e == 'created_on' && @json_object[e].present?
-        new_e = e.slice(0, 1).capitalize + e.slice(1..-1)
-        new_e = new_e.tr('_', ' ')
-        description_string =
-          description_string + new_e.to_s + ':  ' +
-          Sanitize.clean(params['protocol']['created_at'].to_s) + "\n"
+        new_e = e.humanize
+        description_string +=
+          new_e.to_s + ':  ' +
+          sanitize_input(params['protocol']['created_at'].to_s) + "\n"
       elsif e == 'tags' && @json_object[e].any? && @json_object[e] != ''
-        new_e = e.slice(0, 1).capitalize + e.slice(1..-1)
-        new_e = new_e.tr('_', ' ')
-        description_string = description_string + new_e.to_s + ': '
+        new_e = e.humanize
+        description_string +=
+          new_e.to_s + ': '
         @json_object[e].each do |tag|
-          description_string =
-            description_string +
-            Sanitize.clean(tag['tag_name']) + ' , '
+          description_string +=
+            sanitize_input(tag['tag_name']) + ' , '
         end
         description_string += "\n"
         # Since protocols description field doesnt show html,i just remove it
@@ -655,11 +653,10 @@ class ProtocolsController < ApplicationController
         # what this does is basically appends "FIELD NAME: "+" FIELD VALUE"
         # to description for various fields
       elsif @json_object[e].present?
-        new_e = e.slice(0, 1).capitalize + e.slice(1..-1)
-        new_e = new_e.tr('_', ' ')
+        new_e = e.humanize
         description_string +=
           new_e.to_s + ':  ' +
-          Sanitize.clean(@json_object[e].to_s) + "\n"
+          sanitize_input(@json_object[e].to_s) + "\n"
       end
     end
     @db_json['authors'] = params['protocol']['authors']
@@ -667,7 +664,7 @@ class ProtocolsController < ApplicationController
     @db_json['updated_at'] = params['protocol']['last_modified']
     @db_json['description'] = description_string
     @db_json['steps'] = {}
-    pos = -1
+
     # these whitelists are there to not let some useless step components trough,
     # that always have data set to null (data doesnt get imported over to json)
     whitelist_simple = %w(1 6 17)
@@ -678,8 +675,8 @@ class ProtocolsController < ApplicationController
     # id 9 = dataset, id 15 = command, id 18 = attached sub protocol
     # id 19= safety information ,
     # id 20= regents (materials, like scinote samples kind of)
-    @json_object['steps'].each do |step| # loop over steps
-      pos += 1 # position of step (first, second.... etc),
+    @json_object['steps'].each_with_index do |step,pos| # loop over steps
+      # position of step (first, second.... etc),
       @db_json['steps'][pos.to_s] = {} # the json we will insert into db
       @db_json['steps'][pos.to_s]['position'] = pos
       step['components'].each do |key, value|
@@ -740,19 +737,19 @@ class ProtocolsController < ApplicationController
         end
       end
       p_name =
-        if @db_json['name'].present? && !@db_json['name'].empty?
+        if @db_json['name'].present?
           escape_input(@db_json['name'])
         else
           t('protocols.index.no_protocol_name')
         end
       if transaction_error
         @protocolsio_general_error = true
+        # General something went wrong, upload to db failed error
         #  format.json {
         #    render json: { name: p_name, status: :bad_request },
         # status: :bad_request
         #  }
       else
-        # General something went wrong, upload to db failed error
         @protocolsio_general_error = false
         format.json do
           render json:
