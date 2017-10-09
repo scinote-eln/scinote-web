@@ -62,6 +62,7 @@ export default {
       all_teams: "All teams",
       in_team: "You are member of {num} team.",
       in_teams: "You are member of {num} teams.",
+      shows_total_entries: "Showing {start} to {to} of {total} entries.",
       leave_team: "Leave team",
       account: "Account",
       team: "Team",
@@ -152,7 +153,8 @@ export default {
         title: "New team",
         name_label: "Team name",
         name_placeholder: "My team",
-        name_sublabel: "Pick a name that would best describe your team (e.g. 'University of ..., Department of ...').",
+        name_sublabel:
+          "Pick a name that would best describe your team (e.g. 'University of ..., Department of ...').",
         description_label: "Description",
         description_sublabel: "Describe your team.",
         create: "Create team"
