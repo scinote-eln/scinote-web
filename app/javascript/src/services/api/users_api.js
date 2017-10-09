@@ -4,7 +4,8 @@ import {
   UPDATE_USER_PATH,
   CURRENT_USER_PATH,
   PREFERENCES_INFO_PATH,
-  STATISTICS_INFO_PATH
+  STATISTICS_INFO_PATH,
+  SIGN_OUT_PATH
 } from "./endpoints";
 
 export const getUserProfileInfo = () =>
@@ -29,3 +30,5 @@ export const getCurrentUser = () =>
 
 export const getStatisticsInfo = () =>
   axiosInstance.get(STATISTICS_INFO_PATH).then(({ data }) => data.user);
+
+export const signOutUser = () => axiosInstance.get(SIGN_OUT_PATH);

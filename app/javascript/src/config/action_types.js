@@ -4,6 +4,7 @@ export const GET_LIST_OF_TEAMS = "GET_LIST_OF_TEAMS";
 export const SET_TEAM_DETAILS = "SET_TEAM_DETAILS";
 
 // users
+export const USER_LOGOUT = "USER_LOGOUT";
 export const SET_CURRENT_USER = "SET_CURRENT_USER";
 
 // user teams

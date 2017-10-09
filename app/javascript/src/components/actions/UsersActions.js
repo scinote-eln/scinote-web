@@ -1,8 +1,8 @@
-import axios from "../../config/axios";
+import { USER_LOGOUT, SET_CURRENT_USER } from "../../config/action_types";
 
-import {
-  SET_CURRENT_USER,
-} from "../../config/action_types";
+export function destroyState() {
+  return { type: USER_LOGOUT };
+}
 
 export function addCurrentUser(data) {
   return {

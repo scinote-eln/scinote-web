@@ -6,6 +6,7 @@ import { NavDropdown, MenuItem, Glyphicon } from "react-bootstrap";
 import styled from "styled-components";
 import _ from "lodash";
 
+import { ROOT_PATH } from "../../../config/routes";
 import { BORDER_GRAY_COLOR } from "../../../config/constants/colors";
 import { changeTeam } from "../../actions/TeamsActions";
 import { getTeamsList } from "../../actions/TeamsActions";
@@ -27,15 +28,18 @@ class TeamSwitch extends Component {
 
   changeTeam(teamId) {
     this.props.changeTeam(teamId);
+    window.location = ROOT_PATH;
   }
 
   displayTeams() {
     if (!_.isEmpty(this.props.all_teams)) {
-      return this.props.all_teams.filter(team => !team.current_team).map(team =>
-        <MenuItem onSelect={() => this.changeTeam(team.id)} key={team.id}>
-          {team.name}
-        </MenuItem>
-      );
+      return this.props.all_teams
+        .filter(team => !team.current_team)
+        .map(team => (
+          <MenuItem onSelect={() => this.changeTeam(team.id)} key={team.id}>
+            {team.name}
+          </MenuItem>
+        ));
     }
   }
 
