@@ -110,7 +110,6 @@ describe User, type: :model do
     it { should validate_presence_of :full_name }
     it { should validate_presence_of :initials  }
     it { should validate_presence_of :email }
-    it { should validate_presence_of :settings }
 
     it do
       should validate_length_of(:full_name).is_at_most(
@@ -188,5 +187,14 @@ describe User, type: :model do
         expect(v).to eq(expected_result.fetch(k.to_sym))
       end
     end
+  end
+
+  describe 'user settings' do
+    it { is_expected.to respond_to(:time_zone) }
+    it { is_expected.to respond_to(:assignments_notification) }
+    it { is_expected.to respond_to(:assignments_email_notification) }
+    it { is_expected.to respond_to(:recent_notification) }
+    it { is_expected.to respond_to(:recent_email_notification) }
+    it { is_expected.to respond_to(:system_message_email_notification) }
   end
 end
