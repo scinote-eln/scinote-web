@@ -1,5 +1,4 @@
 import { USER_LOGOUT, SET_CURRENT_USER } from "../../config/action_types";
-import { getCurrentUser } from "../../services/api/users_api";
 
 export function destroyState() {
   return { type: USER_LOGOUT };
