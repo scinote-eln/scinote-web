@@ -44,7 +44,6 @@ en:
       forgot: "Forgot your password?"
       not_receive_confirmation: "Didn't receive confirmation instructions?"
       not_receive_unlock: "Didn't receive unlock instructions?"
-      more_sign_in_options: "You can also:"
       sign_in_provider: "Sign in with %{provider}"
 
   helpers:
