@@ -1,4 +1,5 @@
 export const ROOT_PATH = "/";
+export const SIGN_IN_PATH = "/users/sign_in";
 
 // Settings page
 export const SETTINGS_TEAMS_ROUTE = "/settings/teams";

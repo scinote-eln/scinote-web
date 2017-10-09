@@ -17,6 +17,7 @@
   "plugins": [
     "transform-object-rest-spread",
     "syntax-dynamic-import",
+    "transform-react-jsx-source",
     [
       "transform-class-properties",
       {
