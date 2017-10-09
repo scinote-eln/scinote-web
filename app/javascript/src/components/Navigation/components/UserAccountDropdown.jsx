@@ -6,8 +6,8 @@ import styled from "styled-components";
 import { FormattedMessage } from "react-intl";
 import { SIGN_IN_PATH } from "../../../config/routes";
 
-import { getCurrentUser, destroyState } from "../../actions/UsersActions";
-import { signOutUser } from "../../../services/api/users_api";
+import { addCurrentUser, destroyState } from "../../actions/UsersActions";
+import { signOutUser, getCurrentUser } from "../../../services/api/users_api";
 
 const StyledNavDropdown = styled(NavDropdown)`
   & #user-account-dropdown {
@@ -16,9 +16,16 @@ const StyledNavDropdown = styled(NavDropdown)`
   }
 `;
 
+const StyledAvatar = styled(Image)`
+  max-width: 30px;
+  max-height: 30px;
+`;
+
 class UserAccountDropdown extends Component {
   componentDidMount() {
-    this.props.getCurrentUser();
+    getCurrentUser().then(data => {
+      this.props.addCurrentUser(data);
+    });
     this.signOut = this.signOut.bind(this);
   }
 
@@ -31,6 +38,7 @@ class UserAccountDropdown extends Component {
   }
 
   render() {
+    const { fullName, avatarThumb } = this.props.current_user;
     return (
       <StyledNavDropdown
         id="user-account-dropdown"
@@ -40,11 +48,11 @@ class UserAccountDropdown extends Component {
           <span>
             <FormattedMessage
               id="user_account_dropdown.greeting"
-              values={{ name: this.props.current_user.fullName }}
+              values={{ name: fullName }}
             />&nbsp;
-            <Image
-              src={this.props.current_user.avatarPath}
-              alt={this.props.current_user.fullName}
+            <StyledAvatar
+              src={`${avatarThumb }?${new Date().getTime()}`}
+              alt={fullName}
               circle
             />
           </span>
@@ -63,18 +71,18 @@ class UserAccountDropdown extends Component {
 }
 
 UserAccountDropdown.propTypes = {
-  getCurrentUser: func.isRequired,
+  addCurrentUser: func.isRequired,
   destroyState: func.isRequired,
   current_user: shape({
     id: number.isRequired,
     fullName: string.isRequired,
-    avatarPath: string.isRequired
+    avatarThumb: string.isRequired
   }).isRequired
 };
 
 // Map the states from store to component
 const mapStateToProps = ({ current_user }) => ({ current_user });
 
-export default connect(mapStateToProps, { destroyState, getCurrentUser })(
+export default connect(mapStateToProps, { destroyState, addCurrentUser })(
   UserAccountDropdown
 );

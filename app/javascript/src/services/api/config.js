@@ -1,5 +1,4 @@
 import axios from "axios";
-// import { dispatch } from "redux";
 import store from "../../config/store";
 import { SIGN_IN_PATH } from "../../config/routes";
 import { destroyState } from "../../components/actions/UsersActions";
