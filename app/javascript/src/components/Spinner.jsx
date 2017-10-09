@@ -1,6 +1,6 @@
-import React, { Component } from "react";
-import { bool } from "prop-types";
-import { connect } from "react-redux";
+// @flow
+
+import React from "react";
 import styled from "styled-components";
 
 const Wrapper = styled.div`
@@ -18,27 +18,16 @@ const Wrapper = styled.div`
   }
 `;
 
-class Spinner extends Component {
-  render() {
-    let spinner = <div />;
-    if (this.props.spinner_on) {
-      spinner = (
-        <Wrapper>
-          <div className="center-box">
-            <i className="fa fa-spinner fa-spin fa-3x" aria-hidden="true" />
-          </div>
-        </Wrapper>
-      );
-    }
-
-    return spinner;
+export default (props: { spinner_on: boolean }) => {
+  let spinner = <div />;
+  if (props.spinner_on) {
+    spinner = (
+      <Wrapper>
+        <div className="center-box">
+          <i className="fa fa-spinner fa-spin fa-3x" aria-hidden="true" />
+        </div>
+      </Wrapper>
+    );
   }
-}
-
-Spinner.propTypes = {
-  spinner_on: bool.isRequired
+  return spinner;
 };
-
-const mapStateToProps = state => state.global_activities;
-
-export default connect(mapStateToProps, {})(Spinner);

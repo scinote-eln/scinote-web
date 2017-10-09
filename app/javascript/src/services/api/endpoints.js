@@ -19,9 +19,6 @@ export const CURRENT_USER_PATH = "/client_api/current_user_info"
 // search
 export const SEARCH_PATH = "/search";
 
-// notifications
-export const RECENT_NOTIFICATIONS_PATH = "/client_api/recent_notifications";
-
 // users
 export const USER_PROFILE_INFO = "/client_api/users/profile_info";
 export const UPDATE_USER_PATH = "/client_api/users/update";

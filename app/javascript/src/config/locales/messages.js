@@ -170,7 +170,8 @@ export default {
     activities: {
       modal_title: "Activities",
       no_data: "No Data",
-      more_activities: "More Activities"
+      more_activities: "More Activities",
+      today: "Today"
     },
     global_team_switch: {
       new_team: "New team"

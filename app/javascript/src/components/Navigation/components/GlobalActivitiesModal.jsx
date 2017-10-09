@@ -1,12 +1,12 @@
+// @flow
+
 import React, { Component } from "react";
-import { connect } from "react-redux";
-import PropTypes from "prop-types";
 import { FormattedMessage } from "react-intl";
-import { Modal, Button } from "react-bootstrap";
+import { Button, Modal } from "react-bootstrap";
 import _ from "lodash";
 import styled from "styled-components";
 
-import { getActivities } from "../../actions/ActivitiesActions";
+import { getActivities } from "../../../services/api/activities_api";
 import ActivityElement from "./ActivityElement";
 import ActivityDateElement from "./ActivityDateElement";
 import {
@@ -42,51 +42,120 @@ const StyledBottom = styled(Button)`
 
 const StyledModalBody = styled(Modal.Body)`
   background-color: ${COLOR_CONCRETE};
-  color: ${COLOR_MINE_SHAFT};;
+  color: ${COLOR_MINE_SHAFT};
 `;
 
-class GlobalActivitiesModal extends Component {
-  constructor(props) {
+type Props = {
+  showModal: boolean,
+  onCloseModal: Function
+};
+
+type State = {
+  activities: Array<Activity>,
+  more: boolean
+};
+
+class GlobalActivitiesModal extends Component<Props, State> {
+  static renderActivityDateElement(
+    key: number,
+    activity: Activity,
+    date: Date
+  ) {
+    return [
+      <ActivityDateElement key={date} date={date} />,
+      <ActivityElement key={key} activity={activity} />
+    ];
+  }
+
+  constructor(props: Props) {
     super(props);
-    this.displayActivities = this.displayActivities.bind(this);
-    this.addMoreActivities = this.addMoreActivities.bind(this);
+    this.state = { activities: [], more: false };
+    (this: Class<
+      GlobalActivitiesModal
+    >).displayActivities = this.displayActivities.bind(this);
+    (this: Class<
+      GlobalActivitiesModal
+    >).addMoreActivities = this.addMoreActivities.bind(this);
+    (this: Class<
+      GlobalActivitiesModal
+    >).onCloseModalActions = this.onCloseModalActions.bind(this);
+    (this: Class<GlobalActivitiesModal>).loadData = this.loadData.bind(this);
+    (this: Class<
+      GlobalActivitiesModal
+    >).mapActivities = this.mapActivities.bind(this);
+  }
+
+  onCloseModalActions() {
+    this.setState({ activities: [], more: false });
+    this.props.onCloseModal();
+  }
+
+  loadData() {
+    getActivities().then(response => {
+      this.setState({
+        activities: response.activities,
+        more: response.more
+      });
+    });
+  }
+
+  mapActivities() {
+    return this.state.activities.map((activity, i, arr) => {
+      // @todo replace key={i} with key={activity.id} !!!!!!!!!!!!!!
+      // when the backend bug will be fixed
+      const newDate = new Date(activity.created_at);
+      // returns a label with "today" if the date of the activity is today
+      if (i === 0) {
+        return GlobalActivitiesModal.renderActivityDateElement(
+          i,
+          activity,
+          newDate
+        );
+      }
+      // else checks if the previous activity is newer than current
+      // and displays a label with the date
+      const prevDate = new Date(arr[i - 1].created_at);
+      if (prevDate.getDate() > newDate.getDate()) {
+        return GlobalActivitiesModal.renderActivityDateElement(
+          i,
+          activity,
+          newDate
+        );
+      }
+      // returns the default activity element
+      return <ActivityElement key={i} activity={activity} />;
+    });
   }
 
   displayActivities() {
-    if (this.props.activities.length === 0) {
+    if (this.state.activities.length === 0) {
+      if (this.props.showModal) {
+        this.loadData();
+      }
+
       return (
         <li>
           <FormattedMessage id="activities.no_data" />
         </li>
       );
     }
-    return this.props.activities.map((activity, i, arr) => {
-      const newDate = new Date(activity.created_at);
-      if (i > 0) {
-        const prevDate = new Date(arr[i - 1].created_at);
-        if (prevDate < newDate) {
-          return [
-            <ActivityDateElement key={newDate} date={newDate} />,
-            <ActivityElement key={activity.id} activity={activity} />
-          ];
-        }
-      } else {
-        return [
-          <ActivityDateElement key={newDate} date={newDate} />,
-          <ActivityElement key={activity.id} activity={activity} />
-        ];
-      }
-      return <ActivityElement key={activity.id} activity={activity} />;
-    });
+    return this.mapActivities();
   }
 
   addMoreActivities() {
-    const lastId = _.last(this.props.activities).id;
-    this.props.fetchActivities(lastId);
+    const lastId = _.last(this.state.activities).id;
+    getActivities(
+      lastId
+    ).then((response: { activities: Array<Activity>, more: boolean }) => {
+      this.setState({
+        activities: [...this.state.activities, ...response.activities],
+        more: response.more
+      });
+    });
   }
 
   addMoreButton() {
-    if (this.props.more) {
+    if (this.state.more) {
       return (
         <li className="text-center">
           <StyledBottom onClick={this.addMoreActivities}>
@@ -100,7 +169,7 @@ class GlobalActivitiesModal extends Component {
 
   render() {
     return (
-      <Modal show={this.props.showModal} onHide={this.props.onCloseModal}>
+      <Modal show={this.props.showModal} onHide={this.onCloseModalActions}>
         <Modal.Header closeButton>
           <Modal.Title>
             <FormattedMessage id="activities.modal_title" />
@@ -113,7 +182,7 @@ class GlobalActivitiesModal extends Component {
           </ul>
         </StyledModalBody>
         <Modal.Footer>
-          <Button onClick={this.props.onCloseModal}>
+          <Button onClick={this.onCloseModalActions}>
             <FormattedMessage id="general.close" />
           </Button>
         </Modal.Footer>
@@ -122,31 +191,4 @@ class GlobalActivitiesModal extends Component {
   }
 }
 
-GlobalActivitiesModal.propTypes = {
-  showModal: PropTypes.bool.isRequired,
-  onCloseModal: PropTypes.func.isRequired,
-  fetchActivities: PropTypes.func.isRequired,
-  more: PropTypes.bool.isRequired,
-  activities: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.number.isRequired,
-      message: PropTypes.string.isRequired,
-      created_at: PropTypes.string.isRequired
-    })
-  ).isRequired
-};
-
-const mapStateToProps = ({ global_activities }) => {
-  const { activities, more } = global_activities;
-  return { activities, more };
-};
-
-const mapDispatchToProps = dispatch => ({
-  fetchActivities(lastId) {
-    dispatch(getActivities(lastId));
-  }
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(
-  GlobalActivitiesModal
-);
+export default GlobalActivitiesModal;

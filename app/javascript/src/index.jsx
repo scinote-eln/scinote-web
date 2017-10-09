@@ -8,7 +8,6 @@ import { flattenMessages } from "./config/locales/utils";
 import messages from "./config/locales/messages";
 import store from "./config/store";
 
-import Spinner from "./components/Spinner";
 import AlertsContainer from "./components/AlertsContainer";
 import ModalsContainer from "./components/ModalsContainer";
 import SettingsPage from "./scenes/SettingsPage";
@@ -35,9 +34,7 @@ const ScinoteApp = () =>
             </ContentWrapper>
           </div>
         </BrowserRouter>
-
         <ModalsContainer />
-        <Spinner />
       </div>
     </IntlProvider>
   </Provider>;

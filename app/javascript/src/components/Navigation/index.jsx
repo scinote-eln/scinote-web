@@ -9,7 +9,7 @@ import {
   WHITE_COLOR,
   BORDER_GRAY_COLOR
 } from "../../config/constants/colors";
-import { getActivities, destroyActivities } from "../actions/ActivitiesActions";
+
 import TeamSwitch from "./components/TeamSwitch";
 import GlobalActivitiesModal from "./components/GlobalActivitiesModal";
 import SearchDropdown from "./components/SearchDropdown";
@@ -64,8 +64,6 @@ class Navigation extends Component {
       case 4:
         ev.preventDefault();
         this.setState({ showActivitesModal: !this.state.showActivitesModal });
-        // Call action creator to fetch activities from the server
-        this.props.fetchActivities();
         break;
       default:
     }
@@ -73,7 +71,6 @@ class Navigation extends Component {
 
   closeModalCallback() {
     this.setState({ showActivitesModal: false });
-    this.props.destroyActivities();
   }
 
   render() {
@@ -141,8 +138,6 @@ class Navigation extends Component {
 }
 
 Navigation.propTypes = {
-  fetchActivities: PropTypes.func.isRequired,
-  destroyActivities: PropTypes.func.isRequired,
   current_team: PropTypes.shape({
     id: PropTypes.number.isRequired,
     name: PropTypes.string.isRequired,
@@ -153,14 +148,4 @@ Navigation.propTypes = {
 // Map the states from store to component props
 const mapStateToProps = ({ current_team }) => ({ current_team });
 
-// Map the fetch activity action to component props
-const mapDispatchToProps = dispatch => ({
-  fetchActivities() {
-    dispatch(getActivities());
-  },
-  destroyActivities() {
-    dispatch(destroyActivities());
-  }
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(Navigation);
+export default connect(mapStateToProps)(Navigation);

@@ -1,5 +1,10 @@
 Rails.application.routes.draw do
   require 'subdomain'
+
+  def draw(routes_name)
+    instance_eval(File.read(Rails.root.join("config/routes/#{routes_name}.rb")))
+  end
+
   constraints UserSubdomain do
     devise_for :users, controllers: { registrations: 'users/registrations',
                                       sessions: 'users/sessions',
@@ -13,38 +18,8 @@ Rails.application.routes.draw do
     get '/settings/*all', to: 'client_api/settings#index'
 
     namespace :client_api, defaults: { format: 'json' } do
-      # activities
-      get '/activities', to: 'activities#index'
-
-      # teams
-      get '/teams', to: 'teams/teams#index'
-      namespace :teams do
-        get '/new', to: 'teams#new'
-        get '/:team_id/details', to: 'teams#details'
-        post '/', to: 'teams#create'
-        post '/change_team', to: 'teams#change_team'
-        post '/update', to: 'teams#update'
-      end
-      # notifications
-      get '/recent_notifications', to: 'notifications#recent_notifications'
-      get '/unread_notifications_count',
-          to: 'notifications#unread_notifications_count'
-
-      # users
-      get '/current_user_info', to: 'users/users#current_user_info'
-
-      namespace :users do
-        get '/sign_out_user', to: 'users#sign_out_user'
-        delete '/remove_user', to: 'user_teams#remove_user'
-        delete '/leave_team', to: 'user_teams#leave_team'
-        put '/update_role', to: 'user_teams#update_role'
-        get '/profile_info', to: 'users#profile_info'
-        get '/preferences_info', to: 'users#preferences_info'
-        get '/statistics_info', to: 'users#statistics_info'
-        post '/update', to: 'users#update'
-        devise_scope :user do
-          put '/invite_users', to: 'invitations#invite_users'
-        end
+      %i(activities teams notifications users).each do |path|
+        draw path
       end
     end
 
