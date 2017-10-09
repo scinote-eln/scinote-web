@@ -12,6 +12,10 @@ body {
   background-color: $color-theme-primary;
 }
 
+.btn {
+  border-radius: 1.5em;
+}
+
 .btn-primary {
   background-color: $color-theme-secondary;
   border-color: $primary-hover-color;
@@ -27,4 +31,24 @@ body {
   & .open > .dropdown-menu {
     position: relative !important;
   }
+}
+
+// tags input
+.react-tagsinput--focused {
+  border-color: $color-theme-primary;
+}
+
+.react-tagsinput-input {
+  width: 100%;
+}
+
+.react-tagsinput-tag {
+  background-color: $color-theme-primary;
+  border: 0;
+  color: $color-white;
+  font-weight: bold;
+}
+
+.react-tagsinput-remove {
+  color: $color-white;
 }
