@@ -70,11 +70,19 @@ class GlobalActivitiesModal extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = { activities: [], more: false };
-    (this: any).displayActivities = this.displayActivities.bind(this);
-    (this: any).addMoreActivities = this.addMoreActivities.bind(this);
-    (this: any).onCloseModalActions = this.onCloseModalActions.bind(this);
-    (this: any).loadData = this.loadData.bind(this);
-    (this: any).mapActivities = this.mapActivities.bind(this)
+    (this: Class<
+      GlobalActivitiesModal
+    >).displayActivities = this.displayActivities.bind(this);
+    (this: Class<
+      GlobalActivitiesModal
+    >).addMoreActivities = this.addMoreActivities.bind(this);
+    (this: Class<
+      GlobalActivitiesModal
+    >).onCloseModalActions = this.onCloseModalActions.bind(this);
+    (this: Class<GlobalActivitiesModal>).loadData = this.loadData.bind(this);
+    (this: Class<
+      GlobalActivitiesModal
+    >).mapActivities = this.mapActivities.bind(this);
   }
 
   onCloseModalActions() {
