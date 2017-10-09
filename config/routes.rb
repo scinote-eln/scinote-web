@@ -27,6 +27,8 @@ Rails.application.routes.draw do
       end
       # notifications
       get '/recent_notifications', to: 'notifications#recent_notifications'
+      get '/unread_notifications_count',
+          to: 'notifications#unread_notifications_count'
 
       # users
       get '/current_user_info', to: 'users/users#current_user_info'
