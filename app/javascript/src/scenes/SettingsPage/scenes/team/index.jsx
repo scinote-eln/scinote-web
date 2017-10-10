@@ -62,10 +62,6 @@ const StyledH3 = styled.h3`
   }
 `;
 
-const StyledOl = styled.ol`
-  padding: 15px;
-`;
-
 class SettingsTeam extends Component {
   constructor(props) {
     super(props);
