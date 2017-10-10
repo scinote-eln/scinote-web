@@ -1,22 +1,21 @@
-# feature/profile.feature
 Feature: Settings
-  I want to Change Profile data for my account: Avatar, Full name, Initials, Email and Password
+  As a user
+  I want to be able to change Profile data for my account
+  So that I have a my prefered settings
 
 Background:
- Given the following users is registered:
-  | email                   | password           | full name   | Initials  |
-  | nonadmin@myorg.com      | mypassword1234     | Karli Novak | KN        |
-And the following file:
- | file          | size     |
- | Moon.png      | 0.5 MB   |
- | Star.png      | 0.2 MB   |
- | File.txt      | 0.2 MB   |
+ Given the "BioSistemika Process" team exists
+ Given the following users are registered
+  | email                   | password           | password_confirmation | full_name   | initials  |
+  | nonadmin@myorg.com      | mypassword1234     | mypassword1234        | Karli Novak | KN        |
+ And "nonadmin@myorg.com" is in "BioSistemika Process" team as a "normal_user"
+ And is signed in with "nonadmin@myorg.com", "mypassword1234"
 
  Scenario: Successful navigate to profile page
-   Given home page of BioSistemika Process team of a Karli Novak user
-   Then I click to Avatar
-   Then I click to Settings in avatar drop down menu
-   Then I should  see "My profile page" of a Karli Novak user
+   Given I'm on the home page of "BioSistemika Process" team
+   And I click to Avatar
+   And I click "Settings" link
+   Then I should see "My profile"
 
 Scenario: Unsuccessful add avatar, file is too big
   Given My profile page of a Karli Novak user
