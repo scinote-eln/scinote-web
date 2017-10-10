@@ -1,6 +1,6 @@
 // @flow
 
-export function formatBytes(bytes: number) {
+export function formatBytes(bytes: number): string {
   if (bytes === 0) return "0 Bytes";
   const k = 1024;
   const sizes = ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];

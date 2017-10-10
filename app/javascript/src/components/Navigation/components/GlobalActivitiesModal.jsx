@@ -1,6 +1,7 @@
 // @flow
 
 import React, { Component } from "react";
+import type { Element } from "react";
 import { FormattedMessage } from "react-intl";
 import { Button, Modal } from "react-bootstrap";
 import _ from "lodash";
@@ -70,27 +71,19 @@ class GlobalActivitiesModal extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = { activities: [], more: false };
-    (this: Class<
-      GlobalActivitiesModal
-    >).displayActivities = this.displayActivities.bind(this);
-    (this: Class<
-      GlobalActivitiesModal
-    >).addMoreActivities = this.addMoreActivities.bind(this);
-    (this: Class<
-      GlobalActivitiesModal
-    >).onCloseModalActions = this.onCloseModalActions.bind(this);
-    (this: Class<GlobalActivitiesModal>).loadData = this.loadData.bind(this);
-    (this: Class<
-      GlobalActivitiesModal
-    >).mapActivities = this.mapActivities.bind(this);
+    (this: any).displayActivities = this.displayActivities.bind(this);
+    (this: any).addMoreActivities = this.addMoreActivities.bind(this);
+    (this: any).onCloseModalActions = this.onCloseModalActions.bind(this);
+    (this: any).loadData = this.loadData.bind(this);
+    (this: any).mapActivities = this.mapActivities.bind(this);
   }
 
-  onCloseModalActions() {
+  onCloseModalActions(): void {
     this.setState({ activities: [], more: false });
     this.props.onCloseModal();
   }
 
-  loadData() {
+  loadData(): void {
     getActivities().then(response => {
       this.setState({
         activities: response.activities,
@@ -99,7 +92,7 @@ class GlobalActivitiesModal extends Component<Props, State> {
     });
   }
 
-  mapActivities() {
+  mapActivities(): Array<*> {
     return this.state.activities.map((activity, i, arr) => {
       // @todo replace key={i} with key={activity.id} !!!!!!!!!!!!!!
       // when the backend bug will be fixed
@@ -142,7 +135,7 @@ class GlobalActivitiesModal extends Component<Props, State> {
     return this.mapActivities();
   }
 
-  addMoreActivities() {
+  addMoreActivities(): void {
     const lastId = _.last(this.state.activities).id;
     getActivities(
       lastId
@@ -154,7 +147,7 @@ class GlobalActivitiesModal extends Component<Props, State> {
     });
   }
 
-  addMoreButton() {
+  addMoreButton(): Element<*> {
     if (this.state.more) {
       return (
         <li className="text-center">
@@ -164,7 +157,7 @@ class GlobalActivitiesModal extends Component<Props, State> {
         </li>
       );
     }
-    return "";
+    return <span />;
   }
 
   render() {
