@@ -9,21 +9,6 @@ import DataTable from "../../../../../components/data_table";
 import { SETTINGS_TEAMS_ROUTE } from "../../../../../config/routes";
 
 class TeamsDataTable extends Component {
-  static renderShowsTotal(start, to, total) {
-    return (
-      <span>
-        <FormattedMessage
-          id="settings_page.shows_total_entries"
-          values={{
-            start,
-            to,
-            total
-          }}
-        />
-      </span>
-    );
-  }
-
   constructor(props) {
     super(props);
 
@@ -62,7 +47,7 @@ class TeamsDataTable extends Component {
       sizePerPageList: [10, 25, 50, 100],
       prePage: "Prev", // Previous page button text
       nextPage: "Next", // Next page button textu
-      paginationShowsTotal: TeamsDataTable.renderShowsTotal,
+      paginationShowsTotal: DataTable.renderShowsTotal,
       alwaysShowAllBtns: true
     };
     const columns = [
@@ -108,7 +93,7 @@ class TeamsDataTable extends Component {
       <DataTable
         data={this.props.teams}
         columns={columns}
-        pagination={true}
+        pagination
         options={options}
       />
     );

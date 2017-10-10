@@ -72,11 +72,11 @@ class RemoveUserModal extends Component {
           </Alert>
         </Modal.Body>
         <Modal.Footer>
+          <Button bsStyle="primary" onClick={this.removeUser}>
+            <FormattedMessage id="settings_page.remove_user_modal.remove_user" />
+          </Button>
           <Button onClick={this.onCloseModal}>
             <FormattedMessage id="general.close" />
-          </Button>
-          <Button bsStyle="success" onClick={this.removeUser}>
-            <FormattedMessage id="settings_page.remove_user_modal.remove_user" />
           </Button>
         </Modal.Footer>
       </Modal>

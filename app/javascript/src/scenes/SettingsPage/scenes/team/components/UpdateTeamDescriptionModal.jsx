@@ -17,9 +17,7 @@ import { TEXT_MAX_LENGTH } from "../../../../../config/constants/numeric";
 import { TEAM_UPDATE_PATH } from "../../../../../config/api_endpoints";
 import { COLOR_APPLE_BLOSSOM } from "../../../../../config/constants/colors";
 
-const StyledHelpBlock = styled(HelpBlock)`
-  color: ${COLOR_APPLE_BLOSSOM}
-`;
+const StyledHelpBlock = styled(HelpBlock)`color: ${COLOR_APPLE_BLOSSOM};`;
 
 class UpdateTeamDescriptionModal extends Component {
   constructor(props) {
@@ -95,21 +93,19 @@ class UpdateTeamDescriptionModal extends Component {
               onChange={this.handleDescription}
             />
             <FormControl.Feedback />
-            <StyledHelpBlock>
-              {this.state.errorMessage}
-            </StyledHelpBlock>
+            <StyledHelpBlock>{this.state.errorMessage}</StyledHelpBlock>
           </FormGroup>
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={this.onCloseModal}>
-            <FormattedMessage id="general.close" />
-          </Button>
           <Button
-            bsStyle="success"
+            bsStyle="primary"
             onClick={this.updateDescription}
             disabled={!_.isEmpty(this.state.errorMessage)}
           >
             <FormattedMessage id="general.update" />
+          </Button>
+          <Button onClick={this.onCloseModal}>
+            <FormattedMessage id="general.close" />
           </Button>
         </Modal.Footer>
       </Modal>

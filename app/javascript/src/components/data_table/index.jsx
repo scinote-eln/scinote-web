@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { BootstrapTable, TableHeaderColumn } from "react-bootstrap-table";
 import styled from "styled-components";
+import { FormattedMessage } from "react-intl";
 import {
   WHITE_COLOR,
   COLOR_GRAY,
@@ -56,6 +57,21 @@ const StyledBootstrapTable = styled(BootstrapTable)`
 `;
 
 class DataTable extends Component {
+  static renderShowsTotal(start, to, total) {
+    return (
+      <span>
+        <FormattedMessage
+          id="settings_page.shows_total_entries"
+          values={{
+            start,
+            to,
+            total
+          }}
+        />
+      </span>
+    );
+  }
+
   static cleanColumnAttributes(col) {
     // Remove additional attributes from the columns
     const {
