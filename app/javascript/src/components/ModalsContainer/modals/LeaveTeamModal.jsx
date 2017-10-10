@@ -77,11 +77,11 @@ class LeaveTeamModal extends Component {
           </Alert>
         </Modal.Body>
         <Modal.Footer>
+          <Button bsStyle="primary" onClick={this.leaveTeam}>
+            <FormattedMessage id="settings_page.leave_team_modal.leave_team" />
+          </Button>
           <Button onClick={this.onCloseModal}>
             <FormattedMessage id="general.close" />
-          </Button>
-          <Button bsStyle="success" onClick={this.leaveTeam}>
-            <FormattedMessage id="settings_page.leave_team_modal.leave_team" />
           </Button>
         </Modal.Footer>
       </Modal>

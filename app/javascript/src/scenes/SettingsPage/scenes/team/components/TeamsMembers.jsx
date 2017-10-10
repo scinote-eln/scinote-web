@@ -1,12 +1,14 @@
 import React, { Component } from "react";
 import PropTypes, { number, func, string, bool } from "prop-types";
 import {
+  Row,
   Panel,
   Button,
   Glyphicon,
   DropdownButton,
   MenuItem
 } from "react-bootstrap";
+import styled from "styled-components";
 import { FormattedMessage } from "react-intl";
 import axios from "../../../../../config/axios";
 
@@ -14,6 +16,11 @@ import InviteUsersModal from "../../../../../components/InviteUsersModal";
 import RemoveUserModal from "./RemoveUserModal";
 import DataTable from "../../../../../components/data_table";
 import { UPDATE_USER_TEAM_ROLE_PATH } from "../../../../../config/api_endpoints";
+
+const StyledButton = styled(Button)`
+  margin-bottom: 10px;
+  margin-right: 15px;
+`;
 
 const initalUserToRemove = {
   userName: "",
@@ -132,6 +139,14 @@ class TeamsMembers extends Component {
   }
 
   render() {
+    const options = {
+      sizePerPageList: [10, 25, 50, 100],
+      prePage: "Prev", // Previous page button text
+      nextPage: "Next", // Next page button textu
+      paginationShowsTotal: DataTable.renderShowsTotal,
+      alwaysShowAllBtns: true
+    };
+
     const columns = [
       {
         id: 1,
@@ -139,7 +154,8 @@ class TeamsMembers extends Component {
         isKey: false,
         textId: "name",
         position: 0,
-        dataSort: true
+        dataSort: true,
+        width: "25%"
       },
       {
         id: 2,
@@ -147,7 +163,8 @@ class TeamsMembers extends Component {
         isKey: true,
         textId: "email",
         position: 1,
-        dataSort: true
+        dataSort: true,
+        width: "30%"
       },
       {
         id: 3,
@@ -162,14 +179,16 @@ class TeamsMembers extends Component {
         name: "Joined on",
         isKey: false,
         textId: "created_at",
-        position: 3
+        position: 3,
+        dataSort: true
       },
       {
         id: 5,
         name: "Status",
         isKey: false,
         textId: "status",
-        position: 3
+        position: 3,
+        dataSort: true
       },
       {
         id: 6,
@@ -178,7 +197,8 @@ class TeamsMembers extends Component {
         textId: "actions",
         columnClassName: "react-bootstrap-table-dropdown-fix",
         dataFormat: this.memberAction,
-        position: 3
+        position: 3,
+        width: "80px"
       }
     ];
 
@@ -188,12 +208,23 @@ class TeamsMembers extends Component {
           <FormattedMessage id="settings_page.single_team.members_panel_title" />
         }
       >
-        <Button bsStyle="primary" onClick={this.showInviteUsersModalCallback}>
-          <Glyphicon glyph="plus" />
-          <FormattedMessage id="settings_page.single_team.add_members" />
-        </Button>
+        <Row>
+          <StyledButton
+            bsStyle="primary"
+            className="pull-right"
+            onClick={this.showInviteUsersModalCallback}
+          >
+            <Glyphicon glyph="plus" />
+            <FormattedMessage id="settings_page.single_team.add_members" />
+          </StyledButton>
+        </Row>
 
-        <DataTable data={this.props.members} columns={columns} />
+        <DataTable
+          data={this.props.members}
+          columns={columns}
+          pagination
+          options={options}
+        />
         <RemoveUserModal
           showModal={this.state.showModal}
           hideModal={this.hideModal}
