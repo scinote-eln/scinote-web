@@ -5,7 +5,7 @@ import { Breadcrumb, Row, Col, Glyphicon, Well } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { FormattedHTMLMessage, FormattedMessage } from "react-intl";
 import moment from "moment";
-import prettysize from "prettysize";
+import { formatBytes } from "../../../../services/helpers/units_converter_helper";
 import axios from "../../../../config/axios";
 
 import { SETTINGS_TEAMS_ROUTE } from "../../../../config/routes";
@@ -25,7 +25,9 @@ const Wrapper = styled.div`
   padding: 16px 15px 50px 15px;
 `;
 
-const TabTitle = styled.div`padding: 15px;`;
+const TabTitle = styled.div`
+  padding: 15px;
+`;
 
 const BadgeWrapper = styled.div`
   font-size: 1.4em;
@@ -39,7 +41,8 @@ const StyledWell = styled(Well)`
   padding: 9px;
   & > span {
     padding-left: 5px;
-  }`;
+  }
+`;
 
 const StyledDescriptionWell = styled(Well)`
   padding: 9px;
@@ -58,8 +61,6 @@ const StyledH3 = styled.h3`
     cursor: pointer;
   }
 `;
-
-const StyledOl = styled.ol`padding: 15px;`;
 
 class SettingsTeam extends Component {
   constructor(props) {
@@ -132,7 +133,7 @@ class SettingsTeam extends Component {
 
   renderEditNameModel() {
     if (this.state.showNameModal) {
-      return(
+      return (
         <UpdateTeamNameModal
           showModal={this.state.showNameModal}
           hideModal={this.hideNameModalCallback}
@@ -196,7 +197,7 @@ class SettingsTeam extends Component {
               <FormattedHTMLMessage
                 id="settings_page.single_team.space_usage"
                 values={{
-                  space_usage: prettysize(this.state.team.space_taken)
+                  space_usage: formatBytes(this.state.team.space_taken)
                 }}
               />
             </StyledWell>
@@ -208,9 +209,7 @@ class SettingsTeam extends Component {
               <Glyphicon glyph="info-sign" />
             </BadgeWrapper>
             <StyledDescriptionWell>
-              <span>
-                {this.renderDescription()}
-              </span>
+              <span>{this.renderDescription()}</span>
             </StyledDescriptionWell>
           </Col>
         </Row>
