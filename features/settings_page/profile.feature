@@ -11,20 +11,20 @@ Background:
  And "nonadmin@myorg.com" is in "BioSistemika Process" team as a "normal_user"
  And is signed in with "nonadmin@myorg.com", "mypassword1234"
 
+ @javascript
  Scenario: Successful navigate to profile page
    Given I'm on the home page of "BioSistemika Process" team
-   And I click to Avatar
-   And I click "Settings" link
+   And I click on Avatar
+   And I click "Settings" link within "user-account-dropdown"
    Then I should see "My profile"
 
+@javascript
 Scenario: Unsuccessful add avatar, file is too big
-  Given My profile page of a Karli Novak user
-  Then I click to Avatar
-  Then I click to Browse button
-  And I select a Moon.png file
-  Then I click to Open button
-  Then I click to Upload button
-  And I should see "You can upload max 0.2 MB of files at one time. Please remove one or more files and try to submit again" error message under "Avatar" field
+  Given I'm on the profile page
+  Then I click on image within ".avatar-container" element
+  And I attach a "Moon.png" file to "input#user_avatar" field
+  Then I click "Upload" button
+  And I should see "You can upload max 0.2 MB of files at one time. Please remove one or more files and try to submit again" error message under "input#user_avatar" field
 
 Scenario: Unsuccessful add avatar, file is invalid
   Given My profile page of a Karli Novak user

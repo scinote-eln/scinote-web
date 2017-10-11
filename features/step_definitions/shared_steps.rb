@@ -10,6 +10,12 @@ Given(/^I click "(.+)" link$/) do |link|
   click_link link
 end
 
+Given(/^I click "(.+)" link within "(.+)"$/) do |link, element|
+  within("##{element}") do
+    click_link link
+  end
+end
+
 Then(/^I should see "(.+)"$/) do |text|
   expect(page).to have_content(text)
 end
@@ -31,40 +37,28 @@ end
 Given(/^"([^"]*)" is in "([^"]*)" team as a "([^"]*)"$/) do |user_email, team_name, role|
   team = Team.find_by_name(team_name)
   user = User.find_by_email(user_email)
-  FactoryGirl.create( :user_team, user: user, team: team, role: UserTeam.roles.fetch(role))
+  FactoryGirl.create( :user_team, user: user,
+                                  team: team,
+                                  role: UserTeam.roles.fetch(role))
 end
 
-
-Then(/^I should  see "([^"]*)" of a Karli Novak user$/) do |arg1|
-  pending # Write code here that turns the phrase above into concrete actions
+Then(/^I attach a "([^"]*)" file to "([^"]*)" field$/) do |file, field|
+  attach_file(field, Rails.root.join('features', 'assets', file))
 end
 
-Given(/^My profile page of a Karli Novak user$/) do
-  pending # Write code here that turns the phrase above into concrete actions
+Then(/^I should see "([^"]*)" error message under "([^"]*)" field$/) do |message, field|
+  parent = find(field).first(:xpath, './/..')
+  expect(parent).to have_content(message)
 end
 
-Then(/^I click to Browse button$/) do
-  pending # Write code here that turns the phrase above into concrete actions
+Then(/^I click on "([^"]*)"$/) do |button|
+  click_on button
 end
 
-Then(/^I select a Moon\.png file$/) do
-  pending # Write code here that turns the phrase above into concrete actions
-end
-
-Then(/^I click to Open button$/) do
-  pending # Write code here that turns the phrase above into concrete actions
-end
-
-Then(/^I click to Upload button$/) do
-  pending # Write code here that turns the phrase above into concrete actions
-end
-
-Then(/^I should see "([^"]*)" error message under "([^"]*)" field$/) do |arg1, arg2|
-  pending # Write code here that turns the phrase above into concrete actions
-end
-
-Then(/^I select a File\.txt file$/) do
-  pending # Write code here that turns the phrase above into concrete actions
+Then(/^I click on image within "([^"]*)" element$/) do |container|
+  within(container) do
+    find('img').click
+  end
 end
 
 Then(/^I select a Star\.png file$/) do

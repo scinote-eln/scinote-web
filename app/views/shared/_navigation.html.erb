@@ -244,7 +244,7 @@
         </li>
 
         <!-- greetings -->
-        <li class="dropdown">
+        <li id="user-account-dropdown" class="dropdown">
           <a href="#"
              class="dropdown-toggle"
              title="<%= t('nav.label.account') %>"
@@ -260,7 +260,9 @@
           </a>
           <ul class="dropdown-menu" data-hook="navigation-user-menu">
             <li>
-              <%= link_to t('nav.user.settings'), edit_user_registration_path %>
+              <%= link_to t('nav.user.settings'),
+                          '/settings',
+                          data: { turbolinks: false } %>
             </li>
             <li role="separator" class="divider"></li>
             <li>
