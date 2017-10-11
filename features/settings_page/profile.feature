@@ -16,7 +16,7 @@ Background:
    Given I'm on the home page of "BioSistemika Process" team
    And I click on Avatar
    And I click "Settings" link within "user-account-dropdown"
-   Then I should see "My profile"
+   Then I should see "My Profile"
 
 @javascript
 Scenario: Unsuccessful add avatar, file is too big
