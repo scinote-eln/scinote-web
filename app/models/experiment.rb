@@ -647,7 +647,7 @@ class Experiment < ActiveRecord::Base
           um = dm.upstream_modules
           um.shift # remove current module
           ums = um.map(&:samples).flatten.uniq
-          src.samples.each do |sample|
+          src.samples.find_each do |sample|
             dm.samples.destroy(sample) if ums.exclude? sample
           end
         end
@@ -693,8 +693,8 @@ class Experiment < ActiveRecord::Base
   def normalize_module_positions
     # This method normalizes module positions so x-s and y-s
     # are all positive
-    x_diff = my_modules.collect(&:x).min
-    y_diff = my_modules.collect(&:y).min
+    x_diff = my_modules.pluck(:x).min
+    y_diff = my_modules.pluck(:y).min
 
     my_modules.each do |m|
       m.update_columns(x: m.x - x_diff, y: m.y - y_diff)
