@@ -628,37 +628,7 @@ class ProtocolsController < ApplicationController
     @db_json['name'] = sanitize_input(params['protocol']['name'])
     # since scinote only has description field, and protocols.io has many others
     # ,here i am putting everything important from protocols.io into description
-    description_array = %w[
-      (before_start warning guidelines manuscript_citation publish_date
-      created_on vendor_name vendor_link keywords tags link)
-    ]
-    description_string = sanitize_input(params['protocol']['description'])
-    description_array.each do |e|
-      if e == 'created_on' && @json_object[e].present?
-        new_e = e.humanize
-        description_string +=
-          new_e.to_s + ':  ' +
-          sanitize_input(params['protocol']['created_at'].to_s) + "\n"
-      elsif e == 'tags' && @json_object[e].any? && @json_object[e] != ''
-        new_e = e.humanize
-        description_string +=
-          new_e.to_s + ': '
-        @json_object[e].each do |tag|
-          description_string +=
-            sanitize_input(tag['tag_name']) + ' , '
-        end
-        description_string += "\n"
-        # Since protocols description field doesnt show html,i just remove it
-        # because its even messier (using Sanitize)
-        # what this does is basically appends "FIELD NAME: "+" FIELD VALUE"
-        # to description for various fields
-      elsif @json_object[e].present?
-        new_e = e.humanize
-        description_string +=
-          new_e.to_s + ':  ' +
-          sanitize_input(@json_object[e].to_s) + "\n"
-      end
-    end
+    description_string = protocols_io_fill_desc(@json_object)
     @db_json['authors'] = sanitize_input(params['protocol']['authors'])
     @db_json['created_at'] = sanitize_input(params['protocol']['created_at'])
     @db_json['updated_at'] = sanitize_input(params['protocol']['last_modified'])
@@ -1050,7 +1020,7 @@ class ProtocolsController < ApplicationController
   end
 
   def protocolsio_step_dataset_populate(result, iterating_key, pos2)
-    if iterating_key['source_data']['name'] &&
+    if iterating_key['source_data']['name'].present? &&
        iterating_key['source_data']['link']
       append = I18n.t('protocols.protocols_io_import.comp_append.dataset.title') +
                sanitize_input(iterating_key['source_data']['name']) +
@@ -1062,7 +1032,7 @@ class ProtocolsController < ApplicationController
   end
 
   def protocolsio_step_command_populate(result, iterating_key, pos2)
-    if iterating_key['source_data']['name'] &&
+    if iterating_key['source_data']['name'].present? &&
        iterating_key['source_data']['description'] &&
        iterating_key['source_data']['os_name'] &&
        iterating_key['source_data']['os_version']
@@ -1081,7 +1051,7 @@ class ProtocolsController < ApplicationController
   def protocolsio_step_attached_sub_protocol_populate(
     result, iterating_key, pos2
   )
-    if iterating_key['source_data']['protocol_name'] &&
+    if iterating_key['source_data']['protocol_name'].present? &&
        iterating_key['source_data']['full_name'] &&
        iterating_key['source_data']['link']
       append = I18n.t('protocols.protocols_io_import.comp_append.sub_protocol.title') +
@@ -1096,7 +1066,7 @@ class ProtocolsController < ApplicationController
   end
 
   def protocolsio_step_safety_information_populate(result, iterating_key, pos2)
-    if iterating_key['source_data']['body'] &&
+    if iterating_key['source_data']['body'].present? &&
        iterating_key['source_data']['link']
       append = I18n.t('protocols.protocols_io_import.comp_append.safety_infor.title') +
                sanitize_input(iterating_key['source_data']['body']) +
@@ -1105,6 +1075,41 @@ class ProtocolsController < ApplicationController
       result['steps'][pos2.to_s]['description'] << append
     end
     result
+  end
+
+  def protocols_io_fill_desc(json_hash)
+    description_array = %w[
+      (before_start warning guidelines manuscript_citation publish_date
+      created_on vendor_name vendor_link keywords tags link)
+    ]
+    description_string = sanitize_input(params['protocol']['description'])
+    description_array.each do |e|
+      if e == 'created_on' && json_hash[e].present?
+        new_e = e.humanize
+        description_string +=
+          new_e.to_s + ':  ' +
+          sanitize_input(params['protocol']['created_at'].to_s) + "\n"
+      elsif e == 'tags' && json_hash[e].any? && json_hash[e] != ''
+        new_e = e.humanize
+        description_string +=
+          new_e.to_s + ': '
+        json_hash[e].each do |tag|
+          description_string +=
+            sanitize_input(tag['tag_name']) + ' , '
+        end
+        description_string += "\n"
+        # Since protocols description field doesnt show html,i just remove it
+        # because its even messier (using Sanitize)
+        # what this does is basically appends "FIELD NAME: "+" FIELD VALUE"
+        # to description for various fields
+      elsif json_hash[e].present?
+        new_e = e.humanize
+        description_string +=
+          new_e.to_s + ':  ' +
+          sanitize_input(json_hash[e].to_s) + "\n"
+      end
+    end
+    return description_string
   end
 
   def move_protocol(action)

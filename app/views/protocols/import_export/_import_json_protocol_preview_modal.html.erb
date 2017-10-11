@@ -296,10 +296,3 @@
       </div>
     </div>
   </div>
-  <%# the below script resets all the fields after you decide not to import the
-  file (cancel (modal hide)) %>
-  <script>
-    $('#modal-import-json-protocol-preview').on('hide.bs.modal', function () {
-      $('#protocols_io_form').trigger("reset");
-    })
-  </script>

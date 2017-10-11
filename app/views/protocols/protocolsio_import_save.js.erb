@@ -3,5 +3,6 @@
    max: Constants::NAME_MAX_LENGTH, min: Constants::NAME_MIN_LENGTH) %>');
 <% else %>
   $('#modal-import-json-protocol-preview').modal('hide');
+  $('#protocols_io_form').trigger("reset");
   protocolsDatatable.ajax.reload();
 <% end %>
