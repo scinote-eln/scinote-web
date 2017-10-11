@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
+import { BootstrapTable, TableHeaderColumn } from "react-bootstrap-table";
 import styled from "styled-components";
+import { FormattedMessage } from "react-intl";
 import {
   WHITE_COLOR,
   COLOR_GRAY,
@@ -14,7 +15,7 @@ const StyledBootstrapTable = styled(BootstrapTable)`
     background-color: ${COLOR_GRAY};
 
     > tr > th,
-    >tr > td {
+    > tr > td {
       padding: 6px;
       padding-right: 30px;
     }
@@ -33,7 +34,8 @@ const StyledBootstrapTable = styled(BootstrapTable)`
     }
   }
 
-  td, th {
+  td,
+  th {
     box-sizing: content-box;
   }
 
@@ -42,14 +44,47 @@ const StyledBootstrapTable = styled(BootstrapTable)`
     text-overflow: ellipsis;
     word-break: break-word;
   }
+
+  .react-bs-table-pagination {
+    .btn {
+      border-radius: 4px;
+      margin-left: 10px;
+    }
+    .dropdown.show {
+      display: inline-block !important;
+    }
+  }
 `;
 
 class DataTable extends Component {
+  static renderShowsTotal(start, to, total) {
+    return (
+      <span>
+        <FormattedMessage
+          id="settings_page.shows_total_entries"
+          values={{
+            start,
+            to,
+            total
+          }}
+        />
+      </span>
+    );
+  }
+
   static cleanColumnAttributes(col) {
     // Remove additional attributes from the columns
     const {
-      id, isKey, textId, name, position, visible,
-      sortable, locked, ...cleanCol
+      id,
+      isKey,
+      textId,
+      name,
+      position,
+      visible,
+      sortable,
+      locked,
+      width,
+      ...cleanCol
     } = col;
     return cleanCol;
   }
@@ -62,25 +97,27 @@ class DataTable extends Component {
 
   cleanProps() {
     // Remove additional props from the props value
-    const {columns, ...cleanProps} = this.props;
+    const { columns, ...cleanProps } = this.props;
     return cleanProps;
   }
 
-
   displayHeader() {
-    const orderedCols = this.props.columns.sort((a, b) => a.position - b.position);
-    return orderedCols.map((col) =>
+    const orderedCols = this.props.columns.sort(
+      (a, b) => a.position - b.position
+    );
+    return orderedCols.map(col => (
       <TableHeaderColumn
         key={col.id}
         dataField={col.textId}
         isKey={col.isKey}
-        hidden={('visible' in col) && !col.visible}
+        hidden={"visible" in col && !col.visible}
         dataSort={col.sortable}
+        width={col.width}
         {...DataTable.cleanColumnAttributes(col)}
       >
         {col.name}
       </TableHeaderColumn>
-    );
+    ));
   }
 
   render() {
@@ -102,7 +139,8 @@ DataTable.propTypes = {
       position: PropTypes.number.isRequired,
       visible: PropTypes.bool,
       sortable: PropTypes.bool,
-      locked: PropTypes.bool
+      locked: PropTypes.bool,
+      width: PropTypes.string
     })
   ).isRequired,
   data: PropTypes.arrayOf(PropTypes.object).isRequired

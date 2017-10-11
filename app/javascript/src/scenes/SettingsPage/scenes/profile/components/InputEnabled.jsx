@@ -7,6 +7,7 @@ import {
   FormControl,
   ControlLabel,
   Button,
+  ButtonToolbar,
   HelpBlock
 } from "react-bootstrap";
 import { updateUser } from "../../../../../services/api/users_api";
@@ -277,7 +278,7 @@ class InputEnabled extends Component {
       .then(() => {
         this.props.reloadInfo();
         this.props.disableEdit();
-        if(this.props.forceRerender) {
+        if (this.props.forceRerender) {
           this.props.forceRerender();
         }
       })
@@ -375,12 +376,14 @@ class InputEnabled extends Component {
             {this.inputField()}
             {this.confirmationField()}
             <StyledHelpBlock>{this.state.errorMessage}</StyledHelpBlock>
-            <Button bsStyle="default" onClick={this.props.disableEdit}>
-              <FormattedMessage id="general.cancel" />
-            </Button>&nbsp;
-            <Button bsStyle="primary" type="submit">
-              <FormattedMessage id="general.update" />
-            </Button>
+            <ButtonToolbar>
+              <Button bsStyle="primary" type="submit">
+                <FormattedMessage id="general.update" />
+              </Button>
+              <Button bsStyle="default" onClick={this.props.disableEdit}>
+                <FormattedMessage id="general.cancel" />
+              </Button>
+            </ButtonToolbar>
           </FormGroup>
         </form>
       </StyledInputEnabled>
@@ -400,7 +403,7 @@ InputEnabled.propTypes = {
 };
 
 InputEnabled.defaultProps = {
-  forceRerender: () => (false)
-}
+  forceRerender: () => false
+};
 
 export default InputEnabled;

@@ -1,5 +1,13 @@
 import React, { Component } from "react";
-import { Breadcrumb, FormGroup, FormControl, ControlLabel, HelpBlock, Button } from "react-bootstrap";
+import {
+  Breadcrumb,
+  FormGroup,
+  FormControl,
+  ControlLabel,
+  HelpBlock,
+  Button,
+  ButtonToolbar
+} from "react-bootstrap";
 import { Redirect } from "react-router";
 import { LinkContainer } from "react-router-bootstrap";
 import { FormattedMessage } from "react-intl";
@@ -31,9 +39,7 @@ const Wrapper = styled.div`
   padding: 16px 15px 50px 15px;
 `;
 
-const MyFormGroupDiv = styled.div`
-  margin-bottom: 15px;
-`;
+const MyFormGroupDiv = styled.div`margin-bottom: 15px;`;
 
 class SettingsNewTeam extends Component {
   constructor(props) {
@@ -41,7 +47,7 @@ class SettingsNewTeam extends Component {
     this.state = {
       team: {
         name: "",
-        description: "",
+        description: ""
       },
       formErrors: {
         name: "",
@@ -54,7 +60,9 @@ class SettingsNewTeam extends Component {
     this.validateField = this.validateField.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.renderTeamNameFormGroup = this.renderTeamNameFormGroup.bind(this);
-    this.renderTeamDescriptionFormGroup = this.renderTeamDescriptionFormGroup.bind(this);
+    this.renderTeamDescriptionFormGroup = this.renderTeamDescriptionFormGroup.bind(
+      this
+    );
   }
 
   onSubmit(e) {
@@ -69,24 +77,23 @@ class SettingsNewTeam extends Component {
       .then(sr => {
         // Redirect to the new team page
         this.newState = { ...this.state };
-        this.newState = update(
-          this.newState,
-          { redirectTo: {
-              $set: SETTINGS_TEAM_ROUTE.replace(':id', sr.data.details.id)
-            }
+        this.newState = update(this.newState, {
+          redirectTo: {
+            $set: SETTINGS_TEAM_ROUTE.replace(":id", sr.data.details.id)
           }
-        );
+        });
         this.setState(this.newState);
       })
       .catch(er => {
         // Display errors
         this.newState = { ...this.state };
-        ['name', 'description'].forEach((el) => {
+        ["name", "description"].forEach(el => {
           if (er.response.data.details[el]) {
-            this.newState = update(
-              this.newState,
-              { formErrors: { name: { $set: <span>{er.response.data.details[el]}</span> } } }
-            );
+            this.newState = update(this.newState, {
+              formErrors: {
+                name: { $set: <span>{er.response.data.details[el]}</span> }
+              }
+            });
           }
         });
         this.setState(this.newState);
@@ -99,26 +106,39 @@ class SettingsNewTeam extends Component {
       errorMessage = "";
 
       if (value.length < NAME_MIN_LENGTH) {
-        errorMessage = <FormattedMessage id="error_messages.text_too_short" values={{ min_length: NAME_MIN_LENGTH }} />;
+        errorMessage = (
+          <FormattedMessage
+            id="error_messages.text_too_short"
+            values={{ min_length: NAME_MIN_LENGTH }}
+          />
+        );
       } else if (value.length > NAME_MAX_LENGTH) {
-        errorMessage = <FormattedMessage id="error_messages.text_too_long" values={{ max_length: NAME_MAX_LENGTH }} />;
+        errorMessage = (
+          <FormattedMessage
+            id="error_messages.text_too_long"
+            values={{ max_length: NAME_MAX_LENGTH }}
+          />
+        );
       }
 
-      this.newState = update(
-        this.newState,
-        { formErrors: { name: { $set: errorMessage } } }
-      );
+      this.newState = update(this.newState, {
+        formErrors: { name: { $set: errorMessage } }
+      });
     } else if (key === "description") {
       errorMessage = "";
 
       if (value.length > TEXT_MAX_LENGTH) {
-        errorMessage = <FormattedMessage id="error_messages.text_too_long" values={{ max_length: TEXT_MAX_LENGTH }} />;
+        errorMessage = (
+          <FormattedMessage
+            id="error_messages.text_too_long"
+            values={{ max_length: TEXT_MAX_LENGTH }}
+          />
+        );
       }
 
-      this.newState = update(
-        this.newState,
-        { formErrors: { description: { $set: errorMessage } } }
-      );
+      this.newState = update(this.newState, {
+        formErrors: { description: { $set: errorMessage } }
+      });
     }
   }
 
@@ -129,10 +149,7 @@ class SettingsNewTeam extends Component {
     this.newState = { ...this.state };
 
     // Update value in the state
-    this.newState = update(
-      this.newState,
-      { team: { [key]: { $set: value } } }
-    );
+    this.newState = update(this.newState, { team: { [key]: { $set: value } } });
 
     // Validate the input
     this.validateField(key, value);
@@ -142,7 +159,9 @@ class SettingsNewTeam extends Component {
   }
 
   renderTeamNameFormGroup() {
-    const formGroupClass = this.state.formErrors.name ? "form-group has-error" : "form-group";
+    const formGroupClass = this.state.formErrors.name
+      ? "form-group has-error"
+      : "form-group";
     const validationState = this.state.formErrors.name ? "error" : null;
     return (
       <FormGroup
@@ -165,7 +184,9 @@ class SettingsNewTeam extends Component {
   }
 
   renderTeamDescriptionFormGroup() {
-    const formGroupClass = this.state.formErrors.description ? "form-group has-error" : "form-group";
+    const formGroupClass = this.state.formErrors.description
+      ? "form-group has-error"
+      : "form-group";
     const validationState = this.state.formErrors.description ? "error" : null;
     return (
       <FormGroup
@@ -194,8 +215,9 @@ class SettingsNewTeam extends Component {
       return <Redirect to={this.state.redirectTo} />;
     }
 
-    const btnDisabled = !_.isEmpty(this.state.formErrors.name) ||
-                        !_.isEmpty(this.state.formErrors.description);
+    const btnDisabled =
+      !_.isEmpty(this.state.formErrors.name) ||
+      !_.isEmpty(this.state.formErrors.description);
 
     return (
       <Wrapper>
@@ -211,7 +233,6 @@ class SettingsNewTeam extends Component {
         </Breadcrumb>
 
         <form onSubmit={this.onSubmit} style={{ maxWidth: "500px" }}>
-
           <MyFormGroupDiv>
             {this.renderTeamNameFormGroup()}
             <small>
@@ -225,16 +246,20 @@ class SettingsNewTeam extends Component {
               <FormattedMessage id="settings_page.new_team.description_sublabel" />
             </small>
           </MyFormGroupDiv>
-
-          <LinkContainer to={SETTINGS_TEAMS_ROUTE}>
-            <Button>
-              <FormattedMessage id="general.cancel" />
+          <ButtonToolbar>
+            <Button
+              type="submit"
+              className="btn-primary"
+              disabled={btnDisabled}
+            >
+              <FormattedMessage id="settings_page.new_team.create" />
             </Button>
-          </LinkContainer>
-          <Button type="submit" className="btn-primary" disabled={btnDisabled}>
-            <FormattedMessage id="settings_page.new_team.create" />
-          </Button>
-
+            <LinkContainer to={SETTINGS_TEAMS_ROUTE}>
+              <Button>
+                <FormattedMessage id="general.cancel" />
+              </Button>
+            </LinkContainer>
+          </ButtonToolbar>
         </form>
       </Wrapper>
     );

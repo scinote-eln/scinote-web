@@ -22,7 +22,7 @@ const Wrapper = styled.div`
 const SettingsTeams = ({ teams }) =>
   <Wrapper>
     <Breadcrumb>
-      <Breadcrumb.Item active={false}>
+      <Breadcrumb.Item active>
         <FormattedMessage id="settings_page.all_teams" />
       </Breadcrumb.Item>
     </Breadcrumb>

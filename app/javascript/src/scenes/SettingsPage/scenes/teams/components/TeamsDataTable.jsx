@@ -37,11 +37,7 @@ class TeamsDataTable extends Component {
   }
 
   linkToTeam(name, row) {
-    return (
-      <Link to={`${SETTINGS_TEAMS_ROUTE}/${row.id}`}>
-        {name}
-      </Link>
-    );
+    return <Link to={`${SETTINGS_TEAMS_ROUTE}/${row.id}`}>{name}</Link>;
   }
 
   render() {
@@ -49,18 +45,21 @@ class TeamsDataTable extends Component {
       defaultSortName: "name",
       defaultSortOrder: "desc",
       sizePerPageList: [10, 25, 50, 100],
-      paginationPosition: "top",
-      alwaysShowAllBtns: false
+      prePage: "Prev", // Previous page button text
+      nextPage: "Next", // Next page button textu
+      paginationShowsTotal: DataTable.renderShowsTotal,
+      alwaysShowAllBtns: true
     };
     const columns = [
       {
         id: 1,
-        name: "Name",
+        name: "Team",
         isKey: false,
         textId: "name",
         dataFormat: this.linkToTeam,
         position: 0,
-        dataSort: true
+        dataSort: true,
+        width: "50%"
       },
       {
         id: 2,
@@ -68,7 +67,8 @@ class TeamsDataTable extends Component {
         isKey: false,
         textId: "role",
         position: 1,
-        dataSort: true
+        dataSort: true,
+        width: "35%"
       },
       {
         id: 3,
@@ -76,7 +76,8 @@ class TeamsDataTable extends Component {
         isKey: false,
         textId: "members",
         position: 2,
-        dataSort: true
+        dataSort: true,
+        width: "15%"
       },
       {
         id: 4,
@@ -84,14 +85,15 @@ class TeamsDataTable extends Component {
         isKey: true,
         textId: "id",
         dataFormat: this.leaveTeamButton,
-        position: 3
+        position: 3,
+        width: "116px"
       }
     ];
     return (
       <DataTable
         data={this.props.teams}
         columns={columns}
-        pagination={true}
+        pagination
         options={options}
       />
     );

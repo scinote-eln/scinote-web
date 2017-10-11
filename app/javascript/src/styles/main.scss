@@ -1,8 +1,5 @@
-@import 'constants';
-@import 'animations';
-@import 'react-bootstrap-timezone-picker/dist/react-bootstrap-timezone-picker.min.css';
-@import '~react-bootstrap-table/dist/react-bootstrap-table.min';
-@import 'react-tagsinput/react-tagsinput.css';
+@import "constants";
+@import "animations";
 
 body {
   background-color: $color-concrete;
@@ -21,19 +18,43 @@ body {
 
 .btn-primary {
   background-color: $color-theme-secondary;
-  border-color: $primary-hover-color;
-  margin-right: 7px;
+  border-color: darken($color-theme-secondary, 5%);
+
+  &.active,
+  &.focus,
+  &.active.focus {
+    background-color: darken($color-theme-secondary, 20%);
+    border-color: darken($color-theme-secondary, 25%);
+
+    &:hover {
+      background-color: darken($color-theme-secondary, 25%);
+      border-color: darken($color-theme-secondary, 30%);
+    }
+  }
+
+  &:active,
+  &:focus,
+  &:active:focus,
+  &:active:hover,
+  &:focus:hover,
+  &:active:focus:hover {
+    background-color: darken($color-theme-secondary, 20%);
+    border-color: darken($color-theme-secondary, 25%);
+  }
+
   &:hover {
-    background-color: $primary-hover-color;
+    background-color: darken($color-theme-secondary, 5%);
+    border-color: darken($color-theme-secondary, 10%);
   }
 }
 
 // // fixes issue with dropdown in datatable
 .react-bootstrap-table-dropdown-fix {
   overflow: inherit !important;
-  & .open > .dropdown-menu {
-    position: relative !important;
-  }
+}
+
+.react-bs-container-body {
+  overflow: inherit !important;
 }
 
 // tags input
