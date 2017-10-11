@@ -10,13 +10,20 @@ require 'capybara/poltergeist'
 require 'simplecov'
 
 Capybara.register_driver :poltergeist do |app|
-  Capybara::Poltergeist::Driver.new(app,
-                                    js_errors: true,
-                                    phantomjs: Phantomjs.path)
+  Capybara::Poltergeist::Driver.new(
+    app,
+    js_errors: true,
+    phantomjs_options: ['--ignore-ssl-errors=yes', '--ssl-protocol=any'],
+    debug: true,
+    timeout: 500,
+    phantomjs: File.absolute_path(Phantomjs.path)
+  )
 end
 
 Capybara.javascript_driver = :poltergeist
-Capybara.default_max_wait_time = 5
+
+Capybara.server_port = 3001
+
 # Capybara defaults to CSS3 selectors rather than XPath.
 # If you'd prefer to use XPath, just uncomment this line and adjust any
 # selectors in your step definitions to use the XPath syntax.

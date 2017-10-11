@@ -5,7 +5,7 @@
       {
         "modules": false,
         "targets": {
-          "browsers": "last 2 versions",
+          "browsers": ["last 2 versions"],
           "uglify": true
         },
         "useBuiltIns": true
@@ -28,9 +28,6 @@
   ],
   "env": {
     "test": {
-      "plugins": ["transform-es2015-modules-commonjs"]
-    },
-    "development": {
       "plugins": ["transform-es2015-modules-commonjs"]
     }
   }

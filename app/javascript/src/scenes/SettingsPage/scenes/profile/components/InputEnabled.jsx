@@ -343,6 +343,7 @@ class InputEnabled extends Component {
     if (inputType === "file") {
       return (
         <FormControl
+          id="user_avatar"
           type={this.props.inputType}
           onChange={this.handleChange}
           onKeyPress={this.handleKeyPress}
