@@ -633,65 +633,8 @@ class ProtocolsController < ApplicationController
     @db_json['created_at'] = sanitize_input(params['protocol']['created_at'])
     @db_json['updated_at'] = sanitize_input(params['protocol']['last_modified'])
     @db_json['description'] = sanitize_input(description_string)
-    @db_json['steps'] = {}
-
-    # these whitelists are there to not let some useless step components trough,
-    # that always have data set to null (data doesnt get imported over to json)
-    whitelist_simple = %w(1 6 17)
-    # (simple to map) id 1= step description, id 6= section (title),
-    # id 17= expected result
-    whitelist_complex = %w(8 9 15 18 19 20)
-    # (complex mapping with nested hashes) id 8 = software package,
-    # id 9 = dataset, id 15 = command, id 18 = attached sub protocol
-    # id 19= safety information ,
-    # id 20= regents (materials, like scinote samples kind of)
-    @json_object['steps'].each_with_index do |step,pos| # loop over steps
-      # position of step (first, second.... etc),
-      @db_json['steps'][pos.to_s] = {} # the json we will insert into db
-      @db_json['steps'][pos.to_s]['position'] = pos
-      step['components'].each do |key, value|
-        # sometimes there are random index values as keys
-        # instead of hashes, this is a workaround to that buggy json format
-        key = value if value.class == Hash
-        if whitelist_simple.include?(key['component_type_id'])
-          # append is the string that we append values into for description
-          case key['component_type_id']
-          when '1'
-            @db_json = protocolsio_step_description_populate(@db_json, key, pos)
-          when '6'
-            @db_json = protocolsio_step_title_populate(@db_json, key, pos)
-          when '17'
-            @db_json = protocolsio_step_expected_result_populate(
-              @db_json, key, pos
-            )
-          end
-          # (complex mapping with nested hashes)
-          # id 8 = software package, id 9 = dataset,
-          # id 15 = command, id 18 = attached sub protocol
-          # id 19= safety information ,
-          # id 20= regents (materials, like scinote samples kind of)
-        elsif key && whitelist_complex.include?(key['component_type_id'])
-          case key['component_type_id']
-          when '8'
-            @db_json = protocolsio_step_software_package_populate(
-              @db_json, key, pos
-            )
-          when '9'
-            @db_json = protocolsio_step_dataset_populate(@db_json, key, pos)
-          when '15'
-            @db_json = protocolsio_step_command_populate(@db_json, key, pos)
-          when '18'
-            @db_json = protocolsio_step_attached_sub_protocol_populate(
-              @db_json, key, pos
-            )
-          when '19'
-            @db_json = protocolsio_step_safety_information_populate(
-              @db_json, key, pos
-            )
-          end
-        end # finished step component case iteration
-      end # finished looping over step components
-    end # steps
+    @db_json['steps'] = protocols_io_fill_step(@json_object, @db_json)
+    # skok
     protocol = nil
     respond_to do |format|
       transaction_error = false
@@ -1109,7 +1052,70 @@ class ProtocolsController < ApplicationController
           sanitize_input(json_hash[e].to_s) + "\n"
       end
     end
-    return description_string
+    return description_string # it does not work without return
+  end
+  #skok
+  def protocols_io_fill_step(original_json, create_json)
+    # these whitelists are there to not let some useless step components trough,
+    # that always have data set to null (data doesnt get imported over to json)
+    whitelist_simple = %w(1 6 17)
+    # (simple to map) id 1= step description, id 6= section (title),
+    # id 17= expected result
+    whitelist_complex = %w(8 9 15 18 19 20)
+    # (complex mapping with nested hashes) id 8 = software package,
+    # id 9 = dataset, id 15 = command, id 18 = attached sub protocol
+    # id 19= safety information ,
+    # id 20= regents (materials, like scinote samples kind of)
+    create_json['steps'] = {}
+    original_json['steps'].each_with_index do |step,pos| # loop over steps
+      # position of step (first, second.... etc),
+      create_json['steps'][pos.to_s] = {} # the json we will insert into db
+      create_json['steps'][pos.to_s]['position'] = pos
+      step['components'].each do |key, value|
+        # sometimes there are random index values as keys
+        # instead of hashes, this is a workaround to that buggy json format
+        key = value if value.class == Hash
+        if whitelist_simple.include?(key['component_type_id'])
+          # append is the string that we append values into for description
+          case key['component_type_id']
+          when '1'
+            create_json = protocolsio_step_description_populate(create_json, key, pos)
+          when '6'
+            create_json = protocolsio_step_title_populate(create_json, key, pos)
+          when '17'
+            create_json = protocolsio_step_expected_result_populate(
+              create_json, key, pos
+            )
+          end
+          # (complex mapping with nested hashes)
+          # id 8 = software package, id 9 = dataset,
+          # id 15 = command, id 18 = attached sub protocol
+          # id 19= safety information ,
+          # id 20= regents (materials, like scinote samples kind of)
+        elsif key && whitelist_complex.include?(key['component_type_id'])
+          case key['component_type_id']
+          when '8'
+            create_json = protocolsio_step_software_package_populate(
+              create_json, key, pos
+            )
+          when '9'
+            create_json = protocolsio_step_dataset_populate(create_json, key, pos)
+          when '15'
+            create_json = protocolsio_step_command_populate(create_json, key, pos)
+          when '18'
+            create_json = protocolsio_step_attached_sub_protocol_populate(
+              create_json, key, pos
+            )
+          when '19'
+            create_json = protocolsio_step_safety_information_populate(
+              create_json, key, pos
+            )
+          end
+        end # finished step component case iteration
+      end # finished looping over step components
+    end # steps
+    return create_json['steps'] # not actually redundant
+    # implicit return doesnt work here
   end
 
   def move_protocol(action)
