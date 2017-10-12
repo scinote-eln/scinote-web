@@ -599,7 +599,6 @@ class ProtocolsController < ApplicationController
   def protocolsio_import_create
     @protocolsio_too_big = false
     file_size = File.size(params[:json_file].path)
-
     if file_size / 1000 > Constants::FILE_MAX_SIZE_MB
       @protocolsio_too_big = true
       respond_to do |format|
@@ -901,7 +900,6 @@ class ProtocolsController < ApplicationController
 
   private
 
-  # skok
   def protocolsio_step_description_populate(iterating_key)
     append = '<br>' + sanitize_input(iterating_key) + '<br>' if iterating_key.present?
     append = I18n.t('protocols.protocols_io_import.comp_append.missing_desc') if iterating_key.blank?
@@ -1038,7 +1036,7 @@ class ProtocolsController < ApplicationController
     end
     description_string
   end
-  # skok
+
   def protocols_io_fill_step(original_json, create_json)
     # (simple to map) id 1= step description, id 6= section (title),
     # id 17= expected result
