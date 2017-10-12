@@ -1075,43 +1075,38 @@ class ProtocolsController < ApplicationController
         # sometimes there are random index values as keys
         # instead of hashes, this is a workaround to that buggy json format
         key = value if value.class == Hash
-        if whitelist_simple.include?(key['component_type_id'])
           # append is the string that we append values into for description
-          case key['component_type_id']
-          when '1'
-            create_json = protocolsio_step_description_populate(create_json, key, pos)
-          when '6'
-            create_json = protocolsio_step_title_populate(create_json, key, pos)
-          when '17'
-            create_json = protocolsio_step_expected_result_populate(
-              create_json, key, pos
-            )
-          end
+        case key['component_type_id']
+        when '1'
+          create_json = protocolsio_step_description_populate(create_json, key, pos)
+        when '6'
+          create_json = protocolsio_step_title_populate(create_json, key, pos)
+        when '17'
+          create_json = protocolsio_step_expected_result_populate(
+            create_json, key, pos
+          )
           # (complex mapping with nested hashes)
           # id 8 = software package, id 9 = dataset,
           # id 15 = command, id 18 = attached sub protocol
           # id 19= safety information ,
           # id 20= regents (materials, like scinote samples kind of)
-        elsif key && whitelist_complex.include?(key['component_type_id'])
-          case key['component_type_id']
-          when '8'
-            create_json = protocolsio_step_software_package_populate(
-              create_json, key, pos
-            )
-          when '9'
-            create_json = protocolsio_step_dataset_populate(create_json, key, pos)
-          when '15'
-            create_json = protocolsio_step_command_populate(create_json, key, pos)
-          when '18'
-            create_json = protocolsio_step_attached_sub_protocol_populate(
-              create_json, key, pos
-            )
-          when '19'
-            create_json = protocolsio_step_safety_information_populate(
-              create_json, key, pos
-            )
-          end
-        end # finished step component case iteration
+        when '8'
+          create_json = protocolsio_step_software_package_populate(
+            create_json, key, pos
+          )
+        when '9'
+          create_json = protocolsio_step_dataset_populate(create_json, key, pos)
+        when '15'
+          create_json = protocolsio_step_command_populate(create_json, key, pos)
+        when '18'
+          create_json = protocolsio_step_attached_sub_protocol_populate(
+            create_json, key, pos
+          )
+        when '19'
+          create_json = protocolsio_step_safety_information_populate(
+            create_json, key, pos
+          )
+        end
       end # finished looping over step components
     end # steps
     return create_json['steps'] # not actually redundant
