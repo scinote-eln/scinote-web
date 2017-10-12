@@ -1,3 +1,4 @@
+import "babel-polyfill";
 import "intl";
 import "intl/locale-data/jsonp/en-US.js"
 import React from "react";

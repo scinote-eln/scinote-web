@@ -9,16 +9,9 @@ require 'capybara/cucumber'
 require 'capybara-webkit'
 require 'simplecov'
 require 'headless'
-require 'selenium-webdriver'
 
-
-Capybara.default_driver = :selenium
-if Capybara.current_driver == :selenium
-  require 'headless'
-
-  headless = Headless.new
-  headless.start
-end
+headless = Headless.new
+headless.start
 
 Capybara::Webkit.configure do |config|
   # Enable debug mode. Prints a log of everything the driver is doing.
