@@ -54,6 +54,15 @@ const StyledBootstrapTable = styled(BootstrapTable)`
       display: inline-block !important;
     }
   }
+
+  // fixes issue with dropdown in datatable
+  .react-bootstrap-table-dropdown-fix {
+    overflow: inherit !important;
+  }
+
+  .react-bs-container-body {
+    overflow: inherit !important;
+  }
 `;
 
 class DataTable extends Component {
