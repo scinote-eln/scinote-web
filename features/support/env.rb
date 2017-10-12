@@ -5,24 +5,49 @@
 # files.
 
 require 'cucumber/rails'
-require 'phantomjs'
-require 'capybara/poltergeist'
+require 'capybara/cucumber'
+require 'capybara-webkit'
 require 'simplecov'
+require 'headless'
+require 'selenium-webdriver'
 
-Capybara.register_driver :poltergeist do |app|
-  Capybara::Poltergeist::Driver.new(
-    app,
-    js_errors: true,
-    phantomjs_options: ['--ignore-ssl-errors=yes', '--ssl-protocol=any'],
-    debug: true,
-    timeout: 500,
-    phantomjs: File.absolute_path(Phantomjs.path)
-  )
+
+Capybara.default_driver = :selenium
+if Capybara.current_driver == :selenium
+  require 'headless'
+
+  headless = Headless.new
+  headless.start
 end
 
-Capybara.javascript_driver = :poltergeist
+Capybara::Webkit.configure do |config|
+  # Enable debug mode. Prints a log of everything the driver is doing.
+  config.debug = true
 
-Capybara.server_port = 3001
+  # By default, requests to outside domains (anything besides localhost) will
+  # result in a warning. Several methods allow you to change this behavior.
+
+  # Silently return an empty 200 response for any requests to unknown URLs.
+  config.block_unknown_urls
+
+  # Allow pages to make requests to any URL without issuing a warning.
+  config.allow_unknown_urls
+
+  # Timeout if requests take longer than 5 seconds
+  config.timeout = 15
+
+  # Don't raise errors when SSL certificates can't be validated
+  config.ignore_ssl_errors
+
+  # Raise JavaScript errors as exceptions
+  config.raise_javascript_errors = true
+end
+
+Capybara.javascript_driver = :webkit
+
+Before do
+  `bundle exec rails webpacker:compile`
+end
 
 # Capybara defaults to CSS3 selectors rather than XPath.
 # If you'd prefer to use XPath, just uncomment this line and adjust any

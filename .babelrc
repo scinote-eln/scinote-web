@@ -5,7 +5,7 @@
       {
         "modules": false,
         "targets": {
-          "browsers": ["last 2 versions"],
+          "browsers": ["last 2 versions", "ie 10"],
           "uglify": true
         },
         "useBuiltIns": true

@@ -3,7 +3,7 @@
 # newer version of cucumber-rails. Consider adding your own code to a new file
 # instead of editing this one. Cucumber will automatically load all features/**/*.rb
 # files.
-
+ENV["RAILS_ENV"] ||= 'test'
 # Don't load anything when running the gems:* tasks
 unless ARGV.any? { |a| a =~ /^gems/ }
 
