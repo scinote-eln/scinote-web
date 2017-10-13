@@ -1311,7 +1311,7 @@ en:
         addons:
           head_title: "Settings | Add-ons"
           title: "Add-ons"
-          no_addons: "You have no add-ons."
+          no_addons: "You have no sciNote Add-ons."
       teams:
         head_title: "Settings | Teams"
         breadcrumbs:
