@@ -13,9 +13,7 @@ import {
   WILD_SAND_COLOR,
   MYSTIC_COLOR
 } from "../../../config/constants/colors";
-import {
-  SETTINGS_ACCOUNT_PREFERENCES
-} from "../../../config/routes"
+import { SETTINGS_ACCOUNT_PREFERENCES } from "../../../config/routes";
 
 import NotificationItem from "./NotificationItem";
 import Spinner from "../../Spinner";
@@ -104,6 +102,10 @@ class NotificationsDropdown extends Component {
     });
   }
 
+  closeDropdown() {
+    this.dropdown.click();
+  }
+
   renderNotifications() {
     const list = this.state.notifications.map(notification => (
       <NotificationItem key={notification.id} notification={notification} />
@@ -133,7 +135,11 @@ class NotificationsDropdown extends Component {
         noCaret
         id="notifications-dropdown"
         title={
-          <span>
+          <span
+            ref={el => {
+              this.dropdown = el;
+            }}
+          >
             <i className="fa fa-bell" />&nbsp;
             <span className="visible-xs-inline visible-sm-inline">
               <FormattedMessage id="navbar.notifications_label" />
@@ -148,7 +154,10 @@ class NotificationsDropdown extends Component {
             <FormattedMessage id="notifications.dropdown_title" />
           </span>
           <span className="pull-right">
-            <Link to={SETTINGS_ACCOUNT_PREFERENCES}>
+            <Link
+              to={SETTINGS_ACCOUNT_PREFERENCES}
+              onClick={this.closeDropdown}
+            >
               <FormattedMessage id="notifications.dropdown_settings_link" />
             </Link>
           </span>
