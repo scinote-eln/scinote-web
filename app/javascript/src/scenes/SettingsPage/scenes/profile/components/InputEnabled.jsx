@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
 import { string, func } from "prop-types";
 import styled from "styled-components";
 import { FormattedMessage } from "react-intl";
@@ -11,6 +12,8 @@ import {
   HelpBlock
 } from "react-bootstrap";
 import { updateUser } from "../../../../../services/api/users_api";
+import { transformName } from "../../../../../services/helpers/string_helper";
+import { addAlert } from "../../../../../components/actions/AlertsActions";
 
 import {
   BORDER_LIGHT_COLOR,
@@ -35,7 +38,9 @@ const StyledInputEnabled = styled.div`
   }
 `;
 
-const StyledHelpBlock = styled(HelpBlock)`color: ${COLOR_APPLE_BLOSSOM};`;
+const StyledHelpBlock = styled(HelpBlock)`
+  color: ${COLOR_APPLE_BLOSSOM};
+`;
 
 class InputEnabled extends Component {
   constructor(props) {
@@ -278,6 +283,10 @@ class InputEnabled extends Component {
       .then(() => {
         this.props.reloadInfo();
         this.props.disableEdit();
+        this.props.addAlert(
+          <FormattedMessage id="settings_page.success_update_flash" />,
+          "success"
+        );
         if (this.props.forceRerender) {
           this.props.forceRerender();
         }
@@ -297,6 +306,7 @@ class InputEnabled extends Component {
             <FormattedMessage id="settings_page.password_confirmation" />
           </p>
           <FormControl
+            id="settings_page.current_password"
             type="password"
             value={this.state.current_password}
             onChange={this.handleCurrentPassword}
@@ -316,6 +326,7 @@ class InputEnabled extends Component {
             <FormattedMessage id="settings_page.password_confirmation" />
           </i>
           <FormControl
+            id="settings_page.current_password"
             type={inputType}
             value={this.state.current_password}
             onChange={this.handleCurrentPassword}
@@ -325,6 +336,7 @@ class InputEnabled extends Component {
             <FormattedMessage id="settings_page.new_password" />
           </ControlLabel>
           <FormControl
+            id="settings_page.new_password"
             type={inputType}
             value={this.state.value}
             onChange={this.handleChange}
@@ -334,6 +346,7 @@ class InputEnabled extends Component {
             <FormattedMessage id="settings_page.new_password_confirmation" />
           </ControlLabel>
           <FormControl
+            id="settings_page.new_password_confirmation"
             type={inputType}
             value={this.state.password_confirmation}
             onChange={this.handlePasswordConfirmationValidation}
@@ -344,7 +357,7 @@ class InputEnabled extends Component {
     if (inputType === "file") {
       return (
         <FormControl
-          id="user_avatar"
+          id="user_avatar_input"
           type={this.props.inputType}
           onChange={this.handleChange}
           onKeyPress={this.handleKeyPress}
@@ -365,7 +378,7 @@ class InputEnabled extends Component {
 
   render() {
     return (
-      <StyledInputEnabled>
+      <StyledInputEnabled id={transformName(this.props.labelTitle)}>
         <form onSubmit={this.handleSubmit}>
           <FormGroup validationState={this.getValidationState()}>
             <h4>
@@ -392,6 +405,7 @@ class InputEnabled extends Component {
 }
 
 InputEnabled.propTypes = {
+  addAlert: func.isRequired,
   inputType: string.isRequired,
   labelValue: string.isRequired,
   inputValue: string.isRequired,
@@ -406,4 +420,4 @@ InputEnabled.defaultProps = {
   forceRerender: () => false
 };
 
-export default InputEnabled;
+export default connect(null, { addAlert })(InputEnabled);

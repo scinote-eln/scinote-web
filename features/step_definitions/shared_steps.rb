@@ -2,6 +2,10 @@ When(/^I click "(.+)" button$/) do |button|
   click_on button
 end
 
+Given(/^Show me the page$/) do
+  save_and_open_page
+end
+
 Then(/^I should be redirected to the homepage$/) do
   current_path.should =~ /^\/$/
 end
@@ -42,12 +46,12 @@ Given(/^"([^"]*)" is in "([^"]*)" team as a "([^"]*)"$/) do |user_email, team_na
                                   role: UserTeam.roles.fetch(role))
 end
 
-Then(/^I attach a "([^"]*)" file to "([^"]*)" field$/) do |file, field|
-  attach_file(field, Rails.root.join('features', 'assets', file))
+Then(/^I attach a "([^"]*)" file to "([^"]*)" field$/) do |file, field_id|
+  attach_file(field_id, Rails.root.join('features', 'assets', file))
 end
 
-Then(/^I should see "([^"]*)" error message under "([^"]*)" field$/) do |message, field|
-  parent = find(field).first(:xpath, './/..')
+Then(/^I should see "([^"]*)" error message under "([^"]*)" field$/) do |message, field_id|
+  parent = find_by_id(field_id).first(:xpath, './/..')
   expect(parent).to have_content(message)
 end
 
@@ -61,74 +65,23 @@ Then(/^I click on image within "([^"]*)" element$/) do |container|
   end
 end
 
-Then(/^I select a Star\.png file$/) do
-  pending # Write code here that turns the phrase above into concrete actions
+Then(/^I should see "([^"]*)" flash message$/) do |message|
+  expect(find_by_id('alert-flash')).to have_content(message)
 end
 
-Then(/^I should see "([^"]*)" flash message$/) do |arg1|
-  pending # Write code here that turns the phrase above into concrete actions
+Then(/^I click on Edit on "([^"]*)" input field$/) do |container_id|
+  container = page.find_by_id(container_id)
+  within(container) do
+    find('button').click
+  end
 end
 
-Then(/^I click to Edit button under Full name field$/) do
-  pending # Write code here that turns the phrase above into concrete actions
+Then(/^I fill in "([^"]*)" in "([^"]*)" input field$/) do |text, container_id|
+  container = page.find_by_id(container_id)
+  container.find('input').set(text)
 end
 
-Then(/^I fill in "([^"]*)"$/) do |arg1|
-  pending # Write code here that turns the phrase above into concrete actions
-end
-
-Then(/^I click to Update button$/) do
-  pending # Write code here that turns the phrase above into concrete actions
-end
-
-Then(/^I should see "([^"]*)" in Full name field$/) do |arg1|
-  pending # Write code here that turns the phrase above into concrete actions
-end
-
-Then(/^I click to Edit button under Initials field$/) do
-  pending # Write code here that turns the phrase above into concrete actions
-end
-
-Then(/^I click to Edit button under Email field$/) do
-  pending # Write code here that turns the phrase above into concrete actions
-end
-
-Then(/^I Change "([^"]*)" with "([^"]*)"$/) do |arg1, arg2|
-  pending # Write code here that turns the phrase above into concrete actions
-end
-
-Then(/^I fill in "([^"]*)" in Current password field$/) do |arg1|
-  pending # Write code here that turns the phrase above into concrete actions
-end
-
-Then(/^I should see "([^"]*)" in Email field$/) do |arg1|
-  pending # Write code here that turns the phrase above into concrete actions
-end
-
-Then(/^I click to Edit button under Password field$/) do
-  pending # Write code here that turns the phrase above into concrete actions
-end
-
-Then(/^I fill in "([^"]*)" in Current pasword field$/) do |arg1|
-  pending # Write code here that turns the phrase above into concrete actions
-end
-
-Then(/^I fill in "([^"]*)" in New pasword field$/) do |arg1|
-  pending # Write code here that turns the phrase above into concrete actions
-end
-
-Then(/^I fill in "([^"]*)" in New pasword confiramtion field$/) do |arg1|
-  pending # Write code here that turns the phrase above into concrete actions
-end
-
-Then(/^I should see "([^"]*)" flash message under New password field$/) do |arg1|
-  pending # Write code here that turns the phrase above into concrete actions
-end
-
-Then(/^I should see "([^"]*)" flash message under New password confiramtion field$/) do |arg1|
-  pending # Write code here that turns the phrase above into concrete actions
-end
-
-Then(/^I should see "([^"]*)" flash message under Current password field$/) do |arg1|
-  pending # Write code here that turns the phrase above into concrete actions
+Then(/^I should see "([^"]*)" in "([^"]*)" input field$/) do |text, container_id|
+  container = page.find_by_id(container_id)
+  expect(container).to have_xpath("//input[@value='#{text}']")
 end

@@ -3,8 +3,11 @@ import { string, func } from "prop-types";
 import { FormGroup, FormControl, ControlLabel, Button } from "react-bootstrap";
 import styled from "styled-components";
 import { FormattedMessage } from "react-intl";
+import { transformName } from "../../../services/helpers/string_helper";
 
-const Wrapper = styled.div`margin-top: 19px;`;
+const Wrapper = styled.div`
+  margin-top: 19px;
+`;
 
 const MyFormControl = styled(FormControl)`
   width: 160px;
@@ -17,10 +20,10 @@ const MyButton = styled(Button)`
   margin-left: -3px;
 `;
 
-const InputDisabled = props =>
+const InputDisabled = props => (
   <Wrapper>
     <form>
-      <FormGroup>
+      <FormGroup id={transformName(props.labelTitle)}>
         <ControlLabel>
           <FormattedMessage id={props.labelTitle} />
         </ControlLabel>
@@ -36,7 +39,8 @@ const InputDisabled = props =>
         </FormGroup>
       </FormGroup>
     </form>
-  </Wrapper>;
+  </Wrapper>
+);
 
 InputDisabled.defaultProps = {
   inputValue: ""

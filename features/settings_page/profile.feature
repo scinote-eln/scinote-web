@@ -19,93 +19,98 @@ Background:
    Then I should see "My Profile"
 
 @javascript
-Scenario: Unsuccessful add avatar, file is too big
+Scenario: Unsuccessful avatar image upload, file is too big
   Given I'm on the profile page
   Then I click on image within ".avatar-container" element
-  And I attach a "Moon.png" file to "input#user_avatar" field
-  Then I click "Upload" button
-  And I should see "You can upload max 0.2 MB of files at one time. Please remove one or more files and try to submit again" error message under "input#user_avatar" field
+  And I attach a "Moon.png" file to "user_avatar_input" field
+  Then I click "Update" button
+  And I should see "Avatar file size must be less than 0.2 MB" error message under "user_avatar_input" field
 
-Scenario: Unsuccessful add avatar, file is invalid
-  Given My profile page of a Karli Novak user
-  Then I click to Avatar
-  Then I click to Browse button
-  And I select a File.txt file
-  Then I click to Open button
-  Then I click to Upload button
-  And I should see "Avatar content type is invalid" error message under "Avatar" field
+@javascript
+Scenario: Unsuccessful avatar image upload, file is invalid
+  Given I'm on the profile page
+  Then I click on image within ".avatar-container" element
+  And I attach a "File.txt" file to "user_avatar_input" field
+  Then I click "Update" button
+  And I should see "Avatar content type is invalid" error message under "user_avatar_input" field
 
-Scenario: Successful add avatar
-  Given My profile page of a Karli Novak user
-  Then I click to Avatar
-  Then I click to Browse button
-  And I select a Star.png file
-  Then I click to Open button
-  Then I click to Upload button
+@javascript
+Scenario: Successful upload avatar image
+  Given I'm on the profile page
+  Then I click on image within ".avatar-container" element
+  And I attach a "Star.png" file to "user_avatar_input" field
+  Then I click "Update" button
   And I should see "Your account has been updated successfully" flash message
 
-Scenario: Successful Full name Change
-  Given My profile page of a Karli Novak user
-  Then I click to Edit button under Full name field
-  And I fill in "Novakovic"
-  Then I click to Update button
-  And I should see "Karli Novak Novakovic" in Full name field
+@javascript
+Scenario: Successfully changes user full name
+  Given I'm on the profile page
+  Then I click on Edit on "settings_page.full_name" input field
+  And I fill in "Karli Novak Novakovic" in "settings_page.full_name" input field
+  Then I click "Update" button
+  And I should see "Karli Novak Novakovic" in "settings_page.full_name" input field
 
-Scenario: Unsuccessful Initials Change, is too long
-  Given My profile page of a Karli Novak user
-  Then I click to Edit button under Initials field
-  And I fill in "KNOCK"
-  Then I click to Update button
-  And I should see "is too long (maximum is 4 characters)" flash message
+@javascript
+Scenario: Unsuccessfully changes user initials, text is too long
+  Given I'm on the profile page
+  Then I click on Edit on "settings_page.initials" input field
+  And I fill in "KNOCK" in "settings_page.initials" input field
+  Then I click "Update" button
+  And I should see "is too long (maximum is 4 characters)" error message under "settings_page.initials" field
 
-Scenario: Successful Initials Change
-  Given My profile page of a Karli Novak user
-  Then I click to Edit button under Initials field
-  And I fill in "KN"
-  Then I click to Update button
-  And I should see "KNKN" in Full name field
+@javascript
+Scenario: Successfully changes user initials
+  Given I'm on the profile page
+  Then I click on Edit on "settings_page.initials" input field
+  And I fill in "KN" in "settings_page.initials" input field
+  Then I click "Update" button
+  And I should see "KN" in "settings_page.initials" input field
 
-Scenario: Successful Email Change
-  Given My profile page of a Karli Novak user
-  Then I click to Edit button under Email field
-  And I Change "nonadmin@myorg.com" with "user@myorg.com"
+@javascript
+Scenario: Successfully changes user email
+  Given I'm on the profile page
+  Then I click on Edit on "settings_page.new_email" input field
+  And I change "nonadmin@myorg.com" with "user@myorg.com" email
   And I fill in "mypassword1234" in Current password field
-  Then I click to Update button
-  And I should see "user@myorg.com" in Email field
+  Then I click "Update" button
+  And I should see "user@myorg.com" in "settings_page.new_email" input field
 
-Scenario: Unsuccessful Password Change, is too short
-  Given My profile page of a Karli Novak user
-  Then I click to Edit button under Password field
-  And I fill in "mypassword1234" in Current pasword field
-  And I fill in "mypass" in New pasword field
-  And I fill in "mypass" in New pasword confiramtion field
-  Then I click to Update button
-  And I should see "is too short (minimum is 8 characters)" flash message under New password field
-  And I should see "is too short (minimum is 8 characters)" flash message under New password confiramtion field
+@javascript
+Scenario: Unsuccessful Password Change, password is too short
+  Given I'm on the profile page
+  Then I click on Edit on "settings_page.change_password" input field
+  And I fill in "mypassword1234" in Current password field
+  And I fill in "mypass" in New password field
+  And I fill in "mypass" in New password confirmation field
+  Then I click "Update" button
+  And I should see "is too short (minimum is 8 characters)"
 
-Scenario: Unsuccessful Password Change, does not match
-  Given My profile page of a Karli Novak user
-  Then I click to Edit button under Password field
-  And I fill in "mypassword1234" in Current pasword field
-  And I fill in "mypassword5678" in New pasword field
-  And I fill in "mypassword56788" in New pasword confiramtion field
-  Then I click to Update button
-  And I should see "doesn't match Password" flash message under New password confiramtion field
+@javascript
+Scenario: Unsuccessful Password Change, passwords does not match
+  Given I'm on the profile page
+  Then I click on Edit on "settings_page.change_password" input field
+  And I fill in "mypassword1234" in Current password field
+  And I fill in "mypassword5678" in New password field
+  And I fill in "mypassword56788" in New password confirmation field
+  Then I click "Update" button
+  And I should see "Passwords don't match"
 
+@javascript
 Scenario: Unsuccessful Password Change, current password is invalid
-  Given My profile page of a Karli Novak user
-  Then I click to Edit button under Password field
-  And I fill in "mypassword123" in Current pasword field
-  And I fill in "mypassword5678" in New pasword field
-  And I fill in "mypassword5678" in New pasword confiramtion field
-  Then I click to Update button
-  And I should see "is invalid" flash message under Current password field
+  Given I'm on the profile page
+  Then I click on Edit on "settings_page.change_password" input field
+  And I fill in "mypassword123" in Current password field
+  And I fill in "mypassword5678" in New password field
+  And I fill in "mypassword5678" in New password confirmation field
+  Then I click "Update" button
+  And I should see "Password is invalid!"
 
+@javascript
 Scenario: Successful Password Change
-  Given My profile page of a Karli Novak user
-  Then I click to Edit button under Password field
-  And I fill in "mypassword1234" in Current pasword field
-  And I fill in "mypassword5678" in New pasword field
-  And I fill in "mypassword5678" in New pasword confiramtion field
-  Then I click to Update button
-  And I should see "XXXXX"
+  Given I'm on the profile page
+  Then I click on Edit on "settings_page.change_password" input field
+  And I fill in "mypassword1234" in Current password field
+  And I fill in "mypassword5678" in New password field
+  And I fill in "mypassword5678" in New password confirmation field
+  Then I click "Update" button
+  And I should see "Your account has been updated successfully" flash message

@@ -68,6 +68,7 @@ export default {
       shows_total_entries: "Showing {start} to {to} of {total} entries.",
       leave_team: "Leave team",
       account: "Account",
+      success_update_flash: "Your account has been updated successfully",
       team: "Team",
       avatar: "Avatar",
       edit_avatar: "Edit Avatar",
