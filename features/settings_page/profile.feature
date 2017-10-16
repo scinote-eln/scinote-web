@@ -11,7 +11,7 @@ Background:
  And "nonadmin@myorg.com" is in "BioSistemika Process" team as a "normal_user"
  And is signed in with "nonadmin@myorg.com", "mypassword1234"
 
- @javascript
+ @compile @javascript
  Scenario: Successful navigate to profile page
    Given I'm on the home page of "BioSistemika Process" team
    And I click on Avatar

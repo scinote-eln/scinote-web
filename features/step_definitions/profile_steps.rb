@@ -3,10 +3,7 @@ Then(/^I click on Avatar$/) do
 end
 
 Given(/^I'm on the profile page$/) do
-  # visit '/settings/account/profile' randomly rises an EOFError
-  visit root_path
-  find('img.avatar').click
-  within('#user-account-dropdown') { click_link('Settings') }
+  visit '/settings/account/profile'
 end
 
 Then(/^I click on Browse button$/) do

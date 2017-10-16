@@ -1829,5 +1829,6 @@ en:
       blank_password_error: "Password can't be blank!"
       passwords_dont_match: "Passwords don't match"
       password_invalid: "Password is invalid!"
+      avatar_too_big: "Avatar file size must be less than 0.2 MB"
     invite_users:
       permission_error: "You don't have permission to invite additional users to team. Contact its administrator/s."

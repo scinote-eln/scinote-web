@@ -33,6 +33,11 @@ end
 Capybara.javascript_driver = :webkit
 Capybara.default_max_wait_time = 30
 
+# Precompile webpacker to avoid render bugs in capybara webkit
+# global hook throws an error :( https://github.com/cucumber/cucumber/wiki/Hooks
+Before('@compile') do
+  system('NODE_ENV=production bundle exec rails webpacker:compile')
+end
 
 # Capybara defaults to CSS3 selectors rather than XPath.
 # If you'd prefer to use XPath, just uncomment this line and adjust any

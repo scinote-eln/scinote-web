@@ -33,7 +33,8 @@ class User < ApplicationRecord
 
   validates_attachment :avatar,
     :content_type => { :content_type => ["image/jpeg", "image/png"] },
-    size: { less_than: Constants::AVATAR_MAX_SIZE_MB.megabyte, message: "Avatar file size must be less than 0.2 MB" }
+    size: { less_than: Constants::AVATAR_MAX_SIZE_MB.megabyte,
+            message: I18n.t('client_api.user.avatar_too_big') }
   validate :time_zone_check
 
   store_accessor :settings, :time_zone, :notifications
