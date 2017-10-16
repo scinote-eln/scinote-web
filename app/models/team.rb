@@ -106,10 +106,12 @@ class Team < ActiveRecord::Base
 
         sheet.row(i).each.with_index do |value, index|
           if index == stype_index
-            stype = SampleType.where(name: value.strip, team: self).take
+            stype = SampleType.where(team: self)
+                              .where('name ILIKE ?', value.strip)
+                              .take
 
             unless stype
-              stype = SampleType.new(name: value, team: self)
+              stype = SampleType.new(name: value.strip, team: self)
               unless stype.save
                 errors = true
                 raise ActiveRecord::Rollback
@@ -117,10 +119,12 @@ class Team < ActiveRecord::Base
             end
             sample.sample_type = stype
           elsif index == sgroup_index
-            sgroup = SampleGroup.where(name: value.strip, team: self).take
+            sgroup = SampleGroup.where(team: self)
+                                .where('name ILIKE ?', value.strip)
+                                .take
 
             unless sgroup
-              sgroup = SampleGroup.new(name: value, team: self)
+              sgroup = SampleGroup.new(name: value.strip, team: self)
               unless sgroup.save
                 errors = true
                 raise ActiveRecord::Rollback
