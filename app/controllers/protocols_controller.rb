@@ -901,10 +901,13 @@ class ProtocolsController < ApplicationController
 
   # pio_stp_x means protocols io step (id of component) parser
   def pio_stp_1(iterating_key) # protocols io description parser
-    append = '<br>' + sanitize_input(iterating_key) + '<br>' if iterating_key.present?
-    append = t('protocols.protocols_io_import.comp_append.missing_desc') if iterating_key.blank?
-    return append if append.present?
-    ''
+    br = '<br>'
+    append = br + sanitize_input(iterating_key) + br if iterating_key.present?
+    if iterating_key.blank?
+      append = t('protocols.protocols_io_import.comp_append.missing_desc')
+      return append
+    end
+    append
   end
 
   def pio_stp_6(iterating_key) # protocols io section(title) parser
@@ -1056,12 +1059,15 @@ class ProtocolsController < ApplicationController
     # id 19= safety information ,
     # id 20= regents (materials, like scinote samples kind of)
     newj['steps'] = {}
+    # I use these 2 variables below to avoid rubocop errors
+    desc = 'description'
+    name = 'name'
     original_json['steps'].each_with_index do |step, i| # loop over steps
       # position of step (first, second.... etc),
       newj['steps'][i.to_s] = {} # the json we will insert into db
       newj['steps'][i.to_s]['position'] = i
-      newj['steps'][i.to_s]['description'] = '' unless newj['steps'][i.to_s].key?('description')
-      newj['steps'][i.to_s]['name'] = '' unless newj['steps'][i.to_s].key?('name')
+      newj['steps'][i.to_s][desc] = '' unless newj['steps'][i.to_s].key?(desc)
+      newj['steps'][i.to_s][name] = '' unless newj['steps'][i.to_s].key?(name)
       step['components'].each do |key, value|
         # sometimes there are random index values as keys
         # instead of hashes, this is a workaround to that buggy json format
