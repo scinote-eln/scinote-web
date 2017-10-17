@@ -1287,7 +1287,6 @@ en:
         navigation:
           profile: "Profile"
           preferences: "Preferences"
-          addons: "Add-ons"
         preferences:
           head_title: "Settings | My preferences"
           edit:
@@ -1303,10 +1302,6 @@ en:
             select_team: "Select team"
             tutorial_reset_flash: "Tutorial can now be repeated."
             tutorial_reset_error: "Tutorial could not be repeated."
-        addons:
-          head_title: "Settings | Add-ons"
-          title: "Add-ons"
-          no_addons: "You have no sciNote Add-ons."
       teams:
         head_title: "Settings | Teams"
         breadcrumbs:
