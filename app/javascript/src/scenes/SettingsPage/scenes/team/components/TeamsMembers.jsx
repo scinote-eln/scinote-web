@@ -223,6 +223,7 @@ class TeamsMembers extends Component {
           data={this.props.members}
           columns={columns}
           pagination
+          search
           options={options}
         />
         <RemoveUserModal
