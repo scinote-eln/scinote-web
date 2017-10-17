@@ -1,0 +1,41 @@
+# Secrets
+SECRET_KEY_BASE: "<<secret_key_base>>"
+PAPERCLIP_HASH_SECRET: "<<paperclip_hash_secret>>"
+
+# Mailer settings
+MAIL_FROM: "Example sciNote Assistant <assistant@yourdomain.com>"
+MAIL_REPLYTO: "Example sciNote Assistant <assistant@yourdomain.com>"
+SMTP_ADDRESS: "your.yoursmtp.com"
+SMTP_PORT: "25"
+SMTP_DOMAIN: "yoursmtp.com"
+SMTP_USERNAME: "user@yoursmtp.com"
+SMTP_PASSWORD: "<<smtp_password>>"
+MAIL_SERVER_URL: "scinote.yourdomain.com"
+
+# File storage
+
+# For local file storage
+PAPERCLIP_STORAGE: "filesystem"
+
+# For S3 file storage
+#PAPERCLIP_STORAGE: "s3"
+#AWS_ACCESS_KEY_ID: ""
+#AWS_REGION: ""
+#AWS_SECRET_ACCESS_KEY: ""
+#S3_BUCKET: ""
+#S3_HOST_NAME: ""
+
+# This is needed for 'better errors' gem in development mode
+TRUSTED_IP: "172.17.0.1"
+
+# Various settings
+ENABLE_TUTORIAL: "true"
+
+ENABLE_EMAIL_CONFIRMATIONS: "false"
+
+ENABLE_RECAPTCHA: "true"
+ENABLE_USER_REGISTRATION: "true"
+RECAPTCHA_SITE_KEY: "<<recaptcha_site_key>>"
+RECAPTCHA_SECRET_KEY: "<<recaptcha_secret_key>>"
+
+NAVBAR_SHOW_VERSION: "false"
