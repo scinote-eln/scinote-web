@@ -16,6 +16,13 @@ import TeamsMembers from "./components/TeamsMembers";
 import UpdateTeamDescriptionModal from "./components/UpdateTeamDescriptionModal";
 import UpdateTeamNameModal from "./components/UpdateTeamNameModal";
 
+export type TeamMemeber = {
+  userName: string,
+  team_user_id: number,
+  teamName: string,
+  team_id: number
+}
+
 const Wrapper = styled.div`
   background: white;
   box-sizing: border-box;

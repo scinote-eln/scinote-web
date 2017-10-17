@@ -1,36 +1,34 @@
+// @flow
+
 import React, { Component } from "react";
-import { bool, number, string, func, shape } from "prop-types";
 import { Modal, Button, Alert, Glyphicon } from "react-bootstrap";
 import { FormattedMessage, FormattedHTMLMessage } from "react-intl";
+import { removeUserFromTeam } from "../../../../../services/api/user_team_api";
+import type { TeamMemeber } from "../"
 
-import axios from "../../../../../config/axios";
+type Props = {
+  showModal: boolean,
+  hideModal: Function,
+  updateUsersCallback: Function,
+  userToRemove: TeamMemeber
+};
 
-import { REMOVE_USER_FROM_TEAM_PATH } from "../../../../../config/routes";
-
-class RemoveUserModal extends Component {
-  constructor(props) {
+class RemoveUserModal extends Component<Props> {
+  constructor(props: Props) {
     super(props);
-    this.onCloseModal = this.onCloseModal.bind(this);
-    this.removeUser = this.removeUser.bind(this);
+    (this: any).onCloseModal = this.onCloseModal.bind(this);
+    (this: any).removeUser = this.removeUser.bind(this);
   }
 
-  onCloseModal() {
+  onCloseModal(): void {
     this.props.hideModal();
   }
 
-  removeUser() {
+  removeUser(): void {
     const { team_id, team_user_id } = this.props.userToRemove;
-    axios({
-      method: "DELETE",
-      url: REMOVE_USER_FROM_TEAM_PATH,
-      withCredentials: true,
-      data: {
-        team: team_id,
-        user_team: team_user_id
-      }
-    })
+    removeUserFromTeam(team_id, team_user_id)
       .then(response => {
-        this.props.updateUsersCallback(response.data.team_users);
+        this.props.updateUsersCallback(response);
         this.props.hideModal();
       })
       .catch(error => console.log(error));
@@ -83,17 +81,5 @@ class RemoveUserModal extends Component {
     );
   }
 }
-
-RemoveUserModal.propTypes = {
-  showModal: bool.isRequired,
-  hideModal: func.isRequired,
-  userToRemove: shape({
-    userName: string.isRequired,
-    team_user_id: number.isRequired,
-    teamName: string.isRequired,
-    team_id: number.isRequired
-  }).isRequired,
-  updateUsersCallback: func.isRequired
-};
 
 export default RemoveUserModal;

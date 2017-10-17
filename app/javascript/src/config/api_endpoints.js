@@ -27,7 +27,6 @@ export const CONTACT_US_LINK =
 // user teams
 export const LEAVE_TEAM_PATH = "/client_api/users/leave_team";
 export const UPDATE_USER_TEAM_ROLE_PATH = "/client_api/users/update_role";
-export const REMOVE_USER_FROM_TEAM_PATH = "/client_api/users/remove_user";
 
 // settings
 export const SETTINGS_TEAMS = "/settings/teams";
