@@ -1,4 +1,4 @@
-class AddForeignKeys < ActiveRecord::Migration[4.2]
+class AddForeignKeys < ActiveRecord::Migration
   def change
     add_foreign_key :my_modules, :my_module_groups
     add_foreign_key :project_comments, :comments

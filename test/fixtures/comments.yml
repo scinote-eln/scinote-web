@@ -1,0 +1,89 @@
+one:
+  message: "Good job, JLaw, very comprehensive results!"
+  user: steve
+
+two:
+  message: "This doesn't look so good, please repeat the experiment."
+  user: steve
+
+three:
+  message: "Consider it done!"
+  user: nora
+
+four:
+  message: "I still have to write abstract."
+  user: mark
+
+five:
+  message: "Ok, I will do it tomorrow."
+  user: mark
+
+six:
+  message: "Ok"
+  user: jlaw
+
+seven:
+  message: "Nah, I don't feel like it."
+  user: jlaw
+
+eight:
+  message: "I don't have time now, maybe tomorrow."
+  user: jlaw
+
+nine:
+  message: "This is project comment."
+  user: mark
+
+ten:
+  message: "This is module comment."
+  user: mark
+
+eleven:
+  message: "This is module comment 2."
+  user: nora
+
+twelve:
+  message: "This is project comment 2."
+  user: nora
+
+thirteen:
+  message: "Random comment 1"
+  user: john
+
+fourteen:
+  message: "Random comment 2"
+  user: john
+
+fifteen:
+  message: "Random comment 3"
+  user: john
+
+sixteen:
+  message: "Congrats!"
+  user: jlaw
+
+seventeen:
+  message: "Congrats, aswell!"
+  user: nora
+
+test:
+  message: "This is test message"
+  user: nora
+
+<% 25.times do |n| %>
+test_step_comment_<%= n %>:
+  message: "This is test message #<%= n %>"
+  user: steve
+  created_at: "2015-11-06 11:<%= n.to_s.rjust(2, '0') %>:00"
+<% end %>
+
+<% 25.times do |n| %>
+test_result_comment_<%= n %>:
+  message: "This is test message #<%= n %>"
+  user: steve
+  created_at: "2015-11-06 11:<%= n.to_s.rjust(2, '0') %>:00"
+<% end %>
+
+unassociated:
+  message: This message is not associated with any entity
+  user: nora

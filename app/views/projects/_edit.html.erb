@@ -1,0 +1,9 @@
+<%= bootstrap_form_for @project, url: project_path(@project ,format: :json), method: :put, remote: true do |f| %>
+  <div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+      <%= f.text_field :name, label: t("projects.index.modal_new_project.name"), autofocus: true, placeholder: t("projects.index.modal_new_project.name_placeholder") %>
+    </div>
+  </div>
+
+  <%= f.enum_btn_group :visibility, label: t("projects.index.modal_new_project.visibility"), btn_names: { hidden: t("projects.index.modal_new_project.visibility_hidden"), visible: t("projects.index.modal_new_project.visibility_visible") } %>
+<% end %>

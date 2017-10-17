@@ -1,16 +1,18 @@
 <% results.each do |repository_row| %>
   <h5>
-    <i class="fas fa-list-alt"></i>
+    <span class="fa fa-cubes"></span>
     <%=t "search.index.repositories.repository_row" %>
     <%= highlight repository_row.name, search_query.strip.split(/\s+/) %>
   </h5>
 
   <p>
-    <span>
-      <%=t 'repository_row.modal_info.ID' %>
-      <%= repository_row.code %>
-    </span>
-    <br />
+    <% repository_row.repository_cells.each do |cell| %>
+      <span>
+        <%=t "search.index.repositories.custom_column", column: cell.repository_column.name %>
+        <%= highlight cell.value.data, search_query.strip.split(/\s+/) %>
+      </span>
+      <br>
+    <% end %>
     <span>
       <%=t "search.index.repositories.added_on" %>
       <%=l repository_row.created_at, format: :full %>
@@ -20,14 +22,6 @@
       <%=t "search.index.repositories.added_by" %>
       <%= highlight repository_row.created_by.full_name, search_query.strip.split(/\s+/) %>
     </span>
-    <br>
-    <% repository_row.repository_cells.each do |cell| %>
-      <span>
-        <%=t "search.index.repositories.custom_column", column: cell.repository_column.name %>
-        <%= highlight cell.value.formatted, search_query.strip.split(/\s+/) %>
-      </span>
-      <br>
-    <% end %>
   </p>
 
   <p>

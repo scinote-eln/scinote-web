@@ -3,20 +3,18 @@
 @import 'constants';
 
 /* navbar avatar image */
-.navbar-nav .dropdown-toggle[title="Account"] {
-  align-items: center;
-  display: inline-flex;
-  height: 50px;
-  padding: 10px 15px;
-
-  .global-avatar-container {
-    margin-left: 5px;
-  }
+.navbar-nav .avatar {
+  border-radius: 30px;
+  height: 30px;
+  margin-top: -14px;
+  position: relative;
+  width: 30px;
+  top: 5px;
 }
 
 // Active tab with error should retain error color if clicked on again
 .nav-tabs > li.active.has-error > a {
-  color: $brand-danger;
+  color: $color-apple-blossom;
 }
 
 @media (max-width: 886px) {
@@ -60,7 +58,7 @@
   float: none;
 }
 
-@media (max-width: 1188px) {
+@media (max-width: 1000px) {
   .navbar-header {
     float: none;
   }
@@ -113,35 +111,7 @@
   }
 }
 
-.btn {
-  .fas {
-    margin-right: 5px;
-  }
-}
-
-.modal-content {
-  .modal-header {
-    padding: 10px 15px;
-
-    .modal-title {
-      line-height: 25px;
-    }
-
-    .close {
-      line-height: 25px;
-      margin: 0;
-
-      &:active {
-        border: 0;
-        outline: 0;
-      }
-    }
-  }
-}
-
-
-.bootstrap-datetimepicker-widget {
-  .dow {
-    @include font-button;
-  }
+#samples .dropdown-menu {
+  float: none;
+  position: relative;
 }

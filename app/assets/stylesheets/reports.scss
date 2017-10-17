@@ -4,36 +4,30 @@
 /* Index page */
 .report-table {
   margin-top: 20px;
-
-  .report-row.selected {
-    background: $color-alto;
-  }
 }
 
 /* New page navbar */
 .navbar-report {
-  background: $color-white;
-  border-bottom: 1px solid $color-gainsboro;
-  border-left: 0;
-  border-right: 0;
-  margin-bottom: 15px;
+  border-left: none;
+  border-top: none;
+  border-right: none;
+  border-bottom: 4px solid $color-silver;
+  background: $color-concrete !important;
+  margin-bottom: 0;
   min-width: 320px;
-  padding: 25px 20px;
-  position: sticky;
-  top: 50px;
+  padding: 0 15px;
   z-index: 500;
+  position: fixed;
+  width: 100%;
 
   div.row {
     margin-right: 0;
   }
 
   #report-menu {
+
     form {
       display: inline-block;
-    }
-
-    .form-group {
-      margin-bottom: 0;
     }
   }
 
@@ -46,7 +40,7 @@
   display: inline-block;
 }
 
-#download-report {
+.get-report-pdf-form {
   display: inline-block;
 }
 
@@ -60,6 +54,43 @@ label {
   }
 }
 
+/* New page sidebar */
+.report-sidebar-wrapper {
+  background-color: $color-white !important;
+}
+
+// Some additional styling on the treeview
+.report-tree {
+  li {
+    padding: 0 0 0 15px;
+
+    a.report-nav-link:visited {
+      text-decoration: none;
+    }
+    a.report-nav-link:hover {
+      text-decoration: none;
+    }
+    [data-type='step']:not(.parent_li) {
+      padding-left: 27px;
+    }
+  }
+}
+.report-sidebar-panel-description {
+  margin: 10px 10px 0 10px;
+}
+
+.report-item-elements {
+  margin-top: 10px !important;
+  margin-left: 15px !important;
+
+  li {
+    margin: 5px 5px 5px 15px;
+  }
+
+  ul {
+    padding-left: 15px !important;
+  }
+}
 
 /**
  * Global fix for handsontable
@@ -69,61 +100,34 @@ label {
     height: auto !important;
     width: auto !important;
   }
-}
 
-.report-common-table-format {
-  page-break-inside: avoid;
-  width: 100%;
-
-  tr {
-
-    td,
-    th {
-      border: 1px solid $color-silver;
-      padding: 5px;
-
-      span {
-        display: inline-block;
-        min-height: 19px;
-      }
-    }
-
-    th {
-      background: $color-concrete;
-    }
+  .ht_clone_top,.ht_clone_left,.ht_clone_corner {
+  display: none !important;
   }
 }
 
 
 /* New page content */
-#report-new {
-  margin-top: -15px;
-}
-
 .report-body {
-  background: $color-silver;
+  background: $color-dove-gray;
 }
 
 .report-container {
-  background: $color-silver;
-  box-shadow: 0 0 2px 1px $color-silver;
   overflow-x: auto;
   overflow-y: auto;
-  padding: 30px;
-  padding-left: 0;
-  width: auto;
+  padding-top: 30px;
+  padding-bottom: 30px;
 }
 
 #report-content {
-  @include box-shadow(0 0 58px -10px $color-black);
-  background: $color-white;
   color: $color-black;
+  background: $color-white;
+  @include box-shadow(0px 0px 58px -10px $color-black);
+  max-width: 800px;
+  min-width: 230px;
+  min-height: 1200px;
   margin-left: auto;
   margin-right: auto;
-  margin-top: -15px;
-  max-width: 800px;
-  min-height: 1200px;
-  min-width: 230px;
   padding: 45px;
 }
 
@@ -144,7 +148,7 @@ label {
     opacity: 0.7;
     padding: 15px;
     border-radius: 5px;
-    border: 4px $brand-primary solid;
+    border: 4px $color-theme-primary solid;
 
     .plus-icon {
       bottom: 16px !important;
@@ -162,7 +166,7 @@ label {
       .filler {
         display: block;
         height: 4px;
-        background-color: $brand-primary;
+        background-color: $color-theme-primary;
         border-radius: 1px;
         margin-top: 8px;
         margin-bottom: 8px;
@@ -179,7 +183,7 @@ label {
   }
 
   .plus-icon {
-    color: $brand-primary;
+    color: $color-theme-primary;
     display: block;
     text-align: center;
     width: 40px;
@@ -197,7 +201,7 @@ label {
   opacity: 1.0;
 
   .filler {
-    background-color: $brand-primary;
+    background-color: $color-theme-primary;
 
     .plus-icon span {
       font-weight: bold;
@@ -216,11 +220,10 @@ label {
     .user-time {
       color: $color-emperor;
       margin-left: 15px;
-      white-space: nowrap;
     }
     .controls {
       margin-right: 15px;
-      font-size: $font-size-h6;
+      font-size: 12pt;
       opacity: 0.05;
     }
   }
@@ -229,11 +232,6 @@ label {
     padding-top: 10px;
     padding-left: 15px;
     padding-right: 15px;
-
-    .report-export-img {
-      max-height: 300px;
-      max-width: 300px;
-    }
   }
 
   .report-element-children {
@@ -242,8 +240,8 @@ label {
   }
 
   &:hover {
-    background-color: $color-gainsboro;
-    @include box-shadow(0 0 2px 15px $color-gainsboro);
+    background-color: $color-mystic;
+    @include box-shadow(0 0 2px 15px $color-mystic);
 
     & > .report-element-header {
 
@@ -268,7 +266,7 @@ label {
   }
 
   &:hover > .report-element-body .project-name {
-    color: $brand-primary;
+    color: $color-theme-primary;
   }
 }
 
@@ -281,20 +279,6 @@ label {
     .module-name {
       margin-left: 15px;
     }
-
-    .module-start-date,
-    .module-due-date {
-      white-space: nowrap;
-    }
-
-    .module-status {
-      .status-block {
-        border-radius: $border-radius-tag;
-        color: $color-white;
-        padding: 2px 4px;
-      }
-    }
-
     .module-tags {
       margin-left: 0;
       margin-top: 10px;
@@ -308,19 +292,12 @@ label {
         border-radius: 4px;
         padding: 2px 4px;
         color: $color-white;
-        white-space: nowrap;
       }
     }
   }
 
-  .module-protocol-description {
-    margin-left: 0;
-    margin-right: 0;
-    margin-top: 10px;
-  }
-
   &:hover > .report-element-body .module-name {
-    color: $brand-primary;
+    color: $color-theme-primary;
   }
 }
 
@@ -348,12 +325,11 @@ label {
 
     .user-time {
       display: inline-block;
-      white-space: nowrap;
     }
   }
 
   &:hover > .report-element-header {
-    color: $brand-primary;
+    color: $color-theme-primary;
   }
 
   .report-element-body {
@@ -368,27 +344,13 @@ label {
     .file-name {
       margin-left: 15px;
     }
-
-    .image-icon.report {
-      display: none;
-    }
-  }
-
-  img {
-    max-width: 100%;
   }
 }
 
 // Result table element style
 .report-result-table-element {
-  .report-element-header {
-    .table-name {
-      margin-left: 15px;
-    }
-  }
-
   .report-element-body {
-    padding-top: 15px;
+    padding-top: 30px;
   }
 }
 
@@ -406,17 +368,7 @@ label {
 /** Step element style  */
 .report-step-element {
   &:hover > .report-element-body .step-name {
-    color: $brand-primary;
-  }
-
-  .step-label-default {
-    @include font-h3;
-    color: $color-alto;
-  }
-
-  .step-label-success {
-    @include font-h3;
-    color: $brand-success;
+    color: $color-theme-primary;
   }
 }
 
@@ -430,18 +382,13 @@ label {
     }
   }
 
-
-  img {
-    max-width: 100%;
-  }
-
   .report-element-children {
     height: 0;
   }
 
   &:hover > .report-element-header {
     .attachment-icon {
-      color: $brand-primary;
+      color: $color-theme-primary;
     }
   }
 }
@@ -456,7 +403,7 @@ label {
 
   &:hover > .report-element-header {
     .table-name {
-      color: $brand-primary;
+      color: $color-theme-primary;
     }
   }
 }
@@ -466,16 +413,11 @@ label {
   .report-element-header {
     .file-name {
       margin-left: 5px;
-      white-space: nowrap;
-    }
-
-    .image-icon.report {
-      display: none;
     }
   }
 
   &:hover > .report-element-header .file-name {
-    color: $brand-primary;
+    color: $color-theme-primary;
   }
 }
 
@@ -496,7 +438,7 @@ label {
   }
 
   &:hover > .report-element-header .checklist-name {
-    color: $brand-primary;
+    color: $color-theme-primary;
   }
 }
 
@@ -533,7 +475,7 @@ label {
 
   &:hover > .report-element-header {
     .comments-icon,.comments-name {
-      color: $brand-primary;
+      color: $color-theme-primary;
     }
   }
 }
@@ -548,6 +490,25 @@ label {
 
 }
 
+/** Module samples element */
+.report-module-samples-element {
+  margin-bottom: 0;
+
+  .report-element-header {
+    border-bottom: none;
+
+    .samples-name {
+      margin-left: 5px;
+    }
+  }
+
+  &:hover > .report-element-header {
+    .samples-icon,.samples-name {
+      color: $color-theme-primary;
+    }
+  }
+}
+
 // Module repository element
 .report-module-repository-element {
   margin-bottom: 0;
@@ -558,20 +519,12 @@ label {
     .repository-name {
       margin-left: 5px;
     }
-
-    .table-name {
-      margin-left: 15px;
-    }
-  }
-
-  .report-element-body {
-    padding-top: 15px;
   }
 
   &:hover > .report-element-header {
     .repository-icon,
     .repository-name {
-      color: $brand-primary;
+      color: $color-theme-primary;
     }
   }
 }
@@ -606,17 +559,7 @@ label {
 
   &:hover > .report-element-header {
     .activity-icon,.activity-name {
-      color: $brand-primary;
+      color: $color-theme-primary;
     }
-  }
-}
-
-#save-PDF-to-inventory-warnings {
-  margin-top: 30px;
-}
-
-.save-PDF-to-inventory-alerts {
-  .danger {
-    color: $brand-danger;
   }
 }

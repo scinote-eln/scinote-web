@@ -21,18 +21,6 @@ module Users
             # he/she should be redirected to teams page
             new_path = teams_path if @user_t.user == @current_user &&
                                      @user_t.role != 'admin'
-
-            Activities::CreateActivityService
-              .call(activity_type: :change_users_role_on_team,
-                    owner: current_user,
-                    subject: @user_t.team,
-                    team: @user_t.team,
-                    message_items: {
-                      team: @user_t.team.id,
-                      user_changed: @user_t.user.id,
-                      role: @user_t.role_str
-                    })
-
             format.json do
               render json: {
                 status: :ok,
@@ -112,35 +100,16 @@ module Users
                   .where.not(id: @user_t.id)
                   .first
                   .user
-                Activities::CreateActivityService
-                  .call(activity_type: :user_leave_team,
-                        owner: current_user,
-                        subject: @user_t.team,
-                        team: @user_t.team,
-                        message_items: {
-                          team: @user_t.team.id
-                        })
               else
                 # Otherwise, the new owner for projects is
                 # the current user (= an administrator removing
                 # the user from the team)
                 new_owner = current_user
-                Activities::CreateActivityService
-                .call(activity_type: :remove_user_from_team,
-                      owner: current_user,
-                      subject: @user_t.team,
-                      team: @user_t.team,
-                      message_items: {
-                        team: @user_t.team.id,
-                        user_removed: @user_t.user.id
-                      })
               end
               reset_user_current_team(@user_t)
-
               @user_t.destroy(new_owner)
             end
-          rescue StandardError => e
-            Rails.logger.error e.message
+          rescue Exception
             invalid = true
           end
         end
@@ -154,9 +123,10 @@ module Users
               )
               flash.keep(:notice)
             end
-            generate_notification(current_user,
+            generate_notification(@user_t.user,
                                   @user_t.user,
                                   @user_t.team,
+                                  false,
                                   false)
             format.json { render json: { status: :ok } }
           else
@@ -180,7 +150,7 @@ module Users
         # Don't allow the user to modify UserTeam-s if he's not admin,
         # unless he/she is modifying his/her UserTeam
         if current_user != @user_t.user &&
-           !can_manage_team_users?(@user_t.team)
+           !is_admin_of_team(@user_t.team)
           render_403
         end
       end

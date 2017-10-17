@@ -1,10 +1,5 @@
-class Step < ApplicationRecord
+class Step < ActiveRecord::Base
   include SearchableModel
-  include SearchableByNameModel
-  include TinyMceImages
-  include ViewableModel
-
-  enum assets_view_mode: { thumbnail: 0, list: 1, inline: 2 }
 
   auto_strip_attributes :name, :description, nullify: false
   validates :name,
@@ -14,24 +9,23 @@ class Step < ApplicationRecord
   validates :position, presence: true
   validates :completed, inclusion: { in: [true, false] }
   validates :user, :protocol, presence: true
-  validates :completed_on, presence: true, if: proc { |s| s.completed? }
-  validates :position, uniqueness: { scope: :protocol }, if: :position_changed?
-
-  before_validation :set_completed_on, if: :completed_changed?
-  before_save :set_last_modified_by
-  before_destroy :cascade_before_destroy
-  after_destroy :adjust_positions_after_destroy
+  validates :completed_on, presence: true, if: "completed?"
 
   belongs_to :user, inverse_of: :steps
-  belongs_to :last_modified_by, foreign_key: 'last_modified_by_id', class_name: 'User', optional: true
-  belongs_to :protocol, inverse_of: :steps, touch: true
-  has_many :checklists, inverse_of: :step, dependent: :destroy
+  belongs_to :last_modified_by, foreign_key: 'last_modified_by_id', class_name: 'User'
+  belongs_to :protocol, inverse_of: :steps
+  has_many :checklists, inverse_of: :step,
+    dependent: :destroy
   has_many :step_comments, foreign_key: :associated_id, dependent: :destroy
-  has_many :step_assets, inverse_of: :step, dependent: :destroy
+  has_many :step_assets, inverse_of: :step,
+    dependent: :destroy
   has_many :assets, through: :step_assets
-  has_many :step_tables, inverse_of: :step, dependent: :destroy
+  has_many :step_tables, inverse_of: :step,
+    dependent: :destroy
   has_many :tables, through: :step_tables
-  has_many :report_elements, inverse_of: :step, dependent: :destroy
+  has_many :report_elements, inverse_of: :step,
+    dependent: :destroy
+  has_many :tiny_mce_assets, inverse_of: :step, dependent: :destroy
 
   accepts_nested_attributes_for :checklists,
                                 reject_if: :all_blank,
@@ -45,39 +39,44 @@ class Step < ApplicationRecord
                                 },
                                 allow_destroy: true
 
+  after_destroy :cascade_after_destroy
+  before_save :set_last_modified_by
+
   def self.search(user,
                   include_archived,
                   query = nil,
                   page = 1,
                   _current_team = nil,
                   options = {})
-    protocol_ids = Protocol.search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
-                           .pluck(:id)
+    protocol_ids =
+      Protocol
+      .search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
+      .pluck(:id)
 
-    new_query = Step.distinct
-                    .where(steps: { protocol_id: protocol_ids })
-                    .where_attributes_like(%i(name description), query, options)
+    new_query = Step
+                .distinct
+                .where('steps.protocol_id IN (?)', protocol_ids)
+                .where_attributes_like([:name, :description], query, options)
 
     # Show all results if needed
     if page == Constants::SEARCH_NO_LIMIT
       new_query
     else
-      new_query.limit(Constants::SEARCH_LIMIT).offset((page - 1) * Constants::SEARCH_LIMIT)
+      new_query
+        .limit(Constants::SEARCH_LIMIT)
+        .offset((page - 1) * Constants::SEARCH_LIMIT)
     end
   end
 
-  def default_view_state
-    { 'assets' => { 'sort' => 'new' } }
-  end
+  def destroy(current_user)
+    @current_user = current_user
 
-  def validate_view_state(view_state)
-    unless %w(new old atoz ztoa).include?(view_state.state.dig('assets', 'sort'))
-      view_state.errors.add(:state, :wrong_state)
-    end
-  end
+    # Store IDs of assets & tables so they
+    # can be destroyed in after_destroy
+    @a_ids = self.assets.collect { |a| a.id }
+    @t_ids = self.tables.collect { |t| t.id }
 
-  def self.viewable_by_user(user, teams)
-    where(protocol: Protocol.viewable_by_user(user, teams))
+    super()
   end
 
   def can_destroy?
@@ -88,10 +87,6 @@ class Step < ApplicationRecord
     protocol.present? ? protocol.my_module : nil
   end
 
-  def position_plus_one
-    position + 1
-  end
-
   def last_comments(last_id = 1, per_page = Constants::COMMENTS_SEARCH_LIMIT)
     last_id = Constants::INFINITY if last_id <= 1
     comments = StepComment.joins(:step)
@@ -99,7 +94,12 @@ class Step < ApplicationRecord
                           .where('comments.id <  ?', last_id)
                           .order(created_at: :desc)
                           .limit(per_page)
-    StepComment.from(comments, :comments).order(created_at: :asc)
+    comments.reverse
+  end
+
+  def save(current_user=nil)
+    @current_user = current_user
+    super()
   end
 
   def space_taken
@@ -110,88 +110,51 @@ class Step < ApplicationRecord
     st
   end
 
-  def asset_position(asset)
-    assets.order(:updated_at).each_with_index do |step_asset, i|
-      return { count: assets.count, pos: i } if asset.id == step_asset.id
+  protected
+
+  def cascade_after_destroy
+    # Assets already deleted by here
+    @a_ids = nil
+    Table.destroy(@t_ids)
+    @t_ids = nil
+
+    # Generate "delete" activity, but only if protocol is
+    # located inside module
+    if (protocol.my_module.present?) then
+      Activity.create(
+        type_of: :destroy_step,
+        project: protocol.my_module.experiment.project,
+        experiment: protocol.my_module.experiment,
+        my_module: protocol.my_module,
+        user: @current_user,
+        message: I18n.t(
+          "activities.destroy_step",
+          user: @current_user.full_name,
+          step: position + 1,
+          step_name: name
+        )
+      )
     end
-  end
-
-  def move_up
-    return if position.zero?
-
-    move_in_protocol(:up)
-  end
-
-  def move_down
-    return if position == protocol.steps.count - 1
-
-    move_in_protocol(:down)
-  end
-
-  def comments
-    step_comments
-  end
-
-  private
-
-  def move_in_protocol(direction)
-    transaction do
-      re_index_following_steps
-
-      case direction
-      when :up
-        new_position = position - 1
-      when :down
-        new_position = position + 1
-      else
-        return
-      end
-
-      step_to_swap = protocol.steps.find_by(position: new_position)
-      position_to_swap = position
-
-      if step_to_swap
-        step_to_swap.update!(position: -1)
-        update!(position: new_position)
-        step_to_swap.update!(position: position_to_swap)
-      else
-        update!(position: new_position)
-      end
-    end
-  end
-
-  def adjust_positions_after_destroy
-    re_index_following_steps
-    protocol.steps.where('position > ?', position).order(:position).each do |step|
-      step.update!(position: step.position - 1)
-    end
-  end
-
-  def re_index_following_steps
-    steps = protocol.steps.where(position: position..).order(:position).where.not(id: id)
-    i = position
-    steps.each do |step|
-      i += 1
-      step.position = i
-    end
-
-    steps.reverse_each do |step|
-      step.save! if step.position_changed?
-    end
-  end
-
-  def cascade_before_destroy
-    assets.each(&:destroy)
-    tables.each(&:destroy)
-  end
-
-  def set_completed_on
-    return if completed? && completed_on.present?
-
-    self.completed_on = completed? ? DateTime.now : nil
   end
 
   def set_last_modified_by
-    self.last_modified_by_id ||= user_id
+    if @current_user
+      self.tables.each do |t|
+        t.created_by ||= @current_user
+        t.last_modified_by = @current_user if t.changed?
+      end
+      self.assets.each do |a|
+        a.created_by ||= @current_user
+        a.last_modified_by = @current_user if a.changed?
+      end
+      self.checklists.each do |checklist|
+        checklist.created_by ||= @current_user
+        checklist.last_modified_by = @current_user if checklist.changed?
+        checklist.checklist_items.each do |checklist_item|
+          checklist_item.created_by ||= @current_user
+          checklist_item.last_modified_by = @current_user if checklist_item.changed?
+        end
+      end
+    end
   end
 end

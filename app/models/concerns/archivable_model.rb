@@ -5,47 +5,64 @@ module ArchivableModel
     validates :archived, inclusion: { in: [true, false] }
     before_save :set_archive_timestamp
     before_save :set_restore_timestamp
-
-    scope :active, -> { where(archived: false) }
-    scope :archived, -> { where(archived: true) }
   end
 
   # Not archived
   def active?
-    !archived?
+    not archived?
+  end
+
+  # Helper for archiving project. Timestamp of archiving is handler by
+  # before_save callback.
+  def archive
+    self.archived = true
+    save
   end
 
   # Helper for archiving project. Timestamp of archiving is handler by
   # before_save callback.
   # Sets the archived_by value to the current user.
-  def archive(current_user)
+  def archive (current_user)
     self.archived = true
     self.archived_by = current_user
     save
   end
 
   # Same as archive but raises exception if archive fails.
+  def archive!
+    archive || raise(RecordNotSaved)
+  end
+
+  # Same as archive but raises exception if archive fails.
   # Sets the archived_by value to the current user.
   def archive!(current_user)
-    self.archived = true
-    self.archived_by = current_user
-    save!
+    archive(current_user) || raise(RecordNotSaved)
+  end
+
+  # Helper for restoring project from archive.
+  def restore
+    self.archived = false
+    save
   end
 
   # Helper for restoring project from archive.
   # Sets the restored_by value to the current user.
-  def restore(current_user)
+  def restore (current_user)
     self.archived = false
     self.restored_by = current_user
     save
   end
 
   # Same as restore but raises exception if restore fails.
+  def restore!
+    restore || raise(RecordNotSaved)
+  end
+
+
+  # Same as restore but raises exception if restore fails.
   # Sets the restored_by value to the current user.
   def restore!(current_user)
-    self.archived = false
-    self.restored_by = current_user
-    save!
+    restore(current_user) || raise(RecordNotSaved)
   end
 
   protected

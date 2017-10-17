@@ -1,12 +1,10 @@
-# frozen_string_literal: true
-
-class UserNotification < ApplicationRecord
+class UserNotification < ActiveRecord::Base
   include NotificationsHelper
 
-  belongs_to :user, optional: true
-  belongs_to :notification, optional: true
+  belongs_to :user
+  belongs_to :notification
 
-  after_create :send_email
+  after_save :send_email
 
   def self.last_notifications(
     user,
@@ -37,6 +35,27 @@ class UserNotification < ApplicationRecord
   end
 
   def send_email
-    send_email_notification(user, notification) if user.enabled_notifications_for?(notification.type_of.to_sym, :email)
+    case notification.type_of
+    when 'system_message'
+      send_email_notification(
+        user,
+        notification
+      ) if user.system_message_notification_email
+    when 'assignment'
+      send_email_notification(
+        user,
+        notification
+      ) if user.assignments_notification_email
+    when 'recent_changes'
+      send_email_notification(
+        user,
+        notification
+      ) if user.recent_notification_email
+    when 'deliver'
+      send_email_notification(
+        user,
+        notification
+      )
+    end
   end
 end

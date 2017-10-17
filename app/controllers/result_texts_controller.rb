@@ -2,16 +2,16 @@ class ResultTextsController < ApplicationController
   include ResultsHelper
   include ActionView::Helpers::UrlHelper
   include ApplicationHelper
+  include TinyMceHelper
   include InputSanitizeHelper
   include Rails.application.routes.url_helpers
 
   before_action :load_vars, only: [:edit, :update, :download]
   before_action :load_vars_nested, only: [:new, :create]
 
-  before_action :check_manage_permissions, only: %i(edit update)
-  before_action :check_create_permissions, only: %i(new create)
+  before_action :check_create_permissions, only: [:new, :create]
+  before_action :check_edit_permissions, only: [:edit, :update]
   before_action :check_archive_permissions, only: [:update]
-  before_action :check_view_permissions, except: %i(new create edit update)
 
   def new
     @result = Result.new(
@@ -33,6 +33,8 @@ class ResultTextsController < ApplicationController
 
   def create
     @result_text = ResultText.new(result_params[:result_text_attributes])
+    # gerate a tag that replaces img tag in database
+    @result_text.text = parse_tiny_mce_asset_to_token(@result_text.text)
     @result = Result.new(
       user: current_user,
       my_module: @my_module,
@@ -41,20 +43,52 @@ class ResultTextsController < ApplicationController
     )
     @result.last_modified_by = current_user
 
-    if @result.save && @result_text.save
-      # link tiny_mce_assets to the text result
-      TinyMceAsset.update_images(@result_text, params[:tiny_mce_images], current_user)
+    respond_to do |format|
+      if @result.save && @result_text.save
+        # link tiny_mce_assets to the text result
+        link_tiny_mce_assets(@result_text.text, @result_text)
 
-      result_annotation_notification
-      log_activity(:add_result)
-      flash[:success] = t('result_texts.create.success_flash', module: @my_module.name)
-      redirect_to results_my_module_path(@my_module, page: params[:page], order: params[:order])
-    else
-      render json: @result.errors, status: :bad_request
+        result_annotation_notification
+        # Generate activity
+        Activity.create(
+          type_of: :add_result,
+          user: current_user,
+          project: @my_module.experiment.project,
+          experiment: @my_module.experiment,
+          my_module: @my_module,
+          message: t(
+            "activities.add_text_result",
+            user: current_user.full_name,
+            result: @result.name
+          )
+        )
+
+        format.html {
+          flash[:success] = t(
+            "result_texts.create.success_flash",
+            module: @my_module.name)
+          redirect_to results_my_module_path(@my_module)
+        }
+        format.json {
+          render json: {
+            html: render_to_string({
+              partial: "my_modules/result.html.erb",
+              locals: {
+                result: @result
+              }
+            })
+          }, status: :ok
+        }
+      else
+        format.json {
+          render json: @result.errors, status: :bad_request
+        }
+      end
     end
   end
 
   def edit
+    @result_text.text = generate_image_tag_from_token(@result_text.text)
     respond_to do |format|
       format.json {
         render json: {
@@ -71,7 +105,8 @@ class ResultTextsController < ApplicationController
     update_params = result_params
     @result.last_modified_by = current_user
     @result.assign_attributes(update_params)
-
+    @result_text.text = parse_tiny_mce_asset_to_token(@result_text.text,
+                                                      @result_text)
     success_flash = t("result_texts.update.success_flash",
             module: @my_module.name)
     if @result.archived_changed?(from: false, to: true)
@@ -79,11 +114,18 @@ class ResultTextsController < ApplicationController
       success_flash = t("result_texts.archive.success_flash",
             module: @my_module.name)
       if saved
-
-        log_activity(:archive_result)
-
-        TinyMceAsset.update_images(@result_text, params[:tiny_mce_images], current_user)
-
+        Activity.create(
+          type_of: :archive_result,
+          project: @my_module.experiment.project,
+          experiment: @my_module.experiment,
+          my_module: @my_module,
+          user: current_user,
+          message: t(
+            'activities.archive_text_result',
+            user: current_user.full_name,
+            result: @result.name
+          )
+        )
       end
     elsif @result.archived_changed?(from: true, to: false)
       render_403
@@ -91,11 +133,18 @@ class ResultTextsController < ApplicationController
       saved = @result.save
 
       if saved then
-
-        log_activity(:edit_result)
-
-        TinyMceAsset.update_images(@result_text, params[:tiny_mce_images], current_user)
-
+        Activity.create(
+          type_of: :edit_result,
+          user: current_user,
+          project: @my_module.experiment.project,
+          experiment: @my_module.experiment,
+          my_module: @my_module,
+          message: t(
+            "activities.edit_text_result",
+            user: current_user.full_name,
+            result: @result.name
+          )
+        )
       end
     end
 
@@ -152,21 +201,22 @@ class ResultTextsController < ApplicationController
   end
 
   def check_create_permissions
-    render_403 unless can_create_results?(@my_module)
-  end
-
-  def check_manage_permissions
-    render_403 unless can_manage_result?(@result)
-  end
-
-  def check_archive_permissions
-    if result_params[:archived].to_s != '' && !can_manage_result?(@result)
+    unless can_create_result_text_in_module(@my_module)
       render_403
     end
   end
 
-  def check_view_permissions
-    render_403 unless can_read_result?(@result)
+  def check_edit_permissions
+    unless can_edit_result_text_in_module(@my_module)
+      render_403
+    end
+  end
+
+  def check_archive_permissions
+    if result_params[:archived].to_s != '' and
+      not can_archive_result(@result)
+      render_403
+    end
   end
 
   def result_params
@@ -199,18 +249,5 @@ class ResultTextsController < ApplicationController
                                       @result.my_module
                                     )))
     )
-  end
-
-  def log_activity(type_of)
-    Activities::CreateActivityService
-      .call(activity_type: type_of,
-            owner: current_user,
-            subject: @result,
-            team: @my_module.experiment.project.team,
-            project: @my_module.experiment.project,
-            message_items: {
-              result: @result.id,
-              type_of_result: t('activities.result_type.text')
-            })
   end
 end

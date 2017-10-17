@@ -1,4 +1,4 @@
-class TeamUsersDatatable < CustomDatatable
+class TeamUsersDatatable < AjaxDatatablesRails::Base
   include InputSanitizeHelper
   include ActiveRecord::Sanitization::ClassMethods
 
@@ -16,9 +16,9 @@ class TeamUsersDatatable < CustomDatatable
     @sortable_columns ||= [
       'User.full_name',
       'User.email',
-      'UserTeam.role',
       'UserTeam.created_at',
-      'User.status'
+      'User.confirmed_at',
+      'UserTeam.role'
     ]
   end
 
@@ -36,6 +36,8 @@ class TeamUsersDatatable < CustomDatatable
   def new_search_condition(column, value)
     model, column = column.split('.')
     model = model.constantize
+    formated_date = (I18n.t 'time.formats.datatables_date')
+                    .gsub!(/^\"|\"?$/, '')
     if column == 'created_at'
       casted_column = ::Arel::Nodes::NamedFunction.new(
         'CAST',
@@ -54,7 +56,7 @@ class TeamUsersDatatable < CustomDatatable
 
   private
 
-  # Returns json of current items (already paginated)
+  # Returns json of current samples (already paginated)
   def data
     records.map do |record|
       {
@@ -82,16 +84,6 @@ class TeamUsersDatatable < CustomDatatable
     end
   end
 
-  # Overwrite default pagination method as here
-  # we need to be able work also with arrays
-  def paginate_records(records)
-    records.to_a.drop(offset).first(per_page)
-  end
-
-  def load_paginator
-    self
-  end
-
   # Query database for records (this will be later paginated and filtered)
   # after that "data" function will return json
   def get_raw_records
@@ -100,17 +92,5 @@ class TeamUsersDatatable < CustomDatatable
       .references(:user)
       .where(team: @team)
       .distinct
-  end
-
-  def sort_records(records)
-    if sort_column(order_params) == 'users.status'
-      records = records.sort_by { |record| record.user.active_status_str }
-      order_params['dir'] == 'asc' ? records : records.reverse
-    elsif sort_column(order_params) == 'user_teams.role'
-      records = records.sort_by(&:role_str)
-      order_params['dir'] == 'asc' ? records : records.reverse
-    else
-      super(records)
-    end
   end
 end

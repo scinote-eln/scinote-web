@@ -6,9 +6,7 @@ Devise.setup do |config|
   # confirmation, reset password and unlock tokens in the database.
   # Devise will use the `secret_key_base` on Rails 4+ applications as its `secret_key`
   # by default. You can change it below and use your own secret key.
-  # config.secret_key = '8d3a7b1acfb05057553abeb1ee4709f9f2d7e2fa1e5e60e7f45ab2e9244c301adcf0d146ae7cf74ba03c39c5bf895f08606a9f98051478ac4c6a695cafb4007a'
-
-  Devise::Models::Authenticatable::BLACKLIST_FOR_SERIALIZATION.concat(%i(otp otp_recovery_codes otp_secret))
+  # config.secret_key = '541693b548daa586c6f7d4d4ac38de22e7d46b64ff85492ca05bb176b3b18249d6dbcf74b419a7d680146c6f6173b9c780d77e10580d98b0dc7f8f0c18efae9a'
 
   # ==> Mailer Configuration
   # Configure the e-mail address which will be shown in Devise::Mailer,
@@ -178,7 +176,7 @@ Devise.setup do |config|
 
   # ==> Configuration for :rememberable
   # The time the user will be remembered without asking for credentials again.
-  config.remember_for = 1.weeks
+  # config.remember_for = 2.weeks
 
   # Invalidates all the remember me tokens when the user signs out.
   config.expire_all_remember_me_on_sign_out = true
@@ -202,7 +200,7 @@ Devise.setup do |config|
   # ==> Configuration for :timeoutable
   # The time you want to timeout the user session without activity. After this
   # time the user will be asked for credentials again. Default is 30 minutes.
-  config.timeout_in = 3.hours
+  # config.timeout_in = 30.minutes
 
   # If true, expires auth token on session timeout.
   # config.expire_auth_token_on_timeout = false
@@ -211,27 +209,27 @@ Devise.setup do |config|
   # Defines which strategy will be used to lock an account.
   # :failed_attempts = Locks an account after a number of failed attempts to sign in.
   # :none            = No lock strategy. You should handle locking by yourself.
-  config.lock_strategy = :failed_attempts
+  # config.lock_strategy = :failed_attempts
 
   # Defines which key will be used when locking and unlocking an account
-  config.unlock_keys = [:email]
+  # config.unlock_keys = [:email]
 
   # Defines which strategy will be used to unlock an account.
   # :email = Sends an unlock link to the user email
   # :time  = Re-enables login after a certain amount of time (see :unlock_in below)
   # :both  = Enables both strategies
   # :none  = No unlock strategy. You should handle unlocking by yourself.
-  config.unlock_strategy = :both
+  # config.unlock_strategy = :both
 
   # Number of authentication tries before locking an account if lock_strategy
   # is failed attempts.
-  config.maximum_attempts = 10
+  # config.maximum_attempts = 20
 
   # Time interval to unlock the account if :time is enabled as unlock_strategy.
-  config.unlock_in = 1.hour
+  # config.unlock_in = 1.hour
 
   # Warn on the last attempt before the account is locked.
-  config.last_attempt_warning = true
+  # config.last_attempt_warning = true
 
   # ==> Configuration for :recoverable
   #
@@ -245,9 +243,7 @@ Devise.setup do |config|
 
   # When set to false, does not sign a user in automatically after their password is
   # reset. Defaults to true, so a user is signed in automatically after a reset.
-  #
-  # This setting has no effect, controller has been overriden at controllers/users/passwords_controller.rb
-  # config.sign_in_after_reset_password = false
+  # config.sign_in_after_reset_password = true
 
   # ==> Configuration for :encryptable
   # Allow you to use another encryption algorithm besides bcrypt (default). You can use
@@ -291,26 +287,6 @@ Devise.setup do |config|
   # Add a new OmniAuth provider. Check the wiki for more information on setting
   # up on your models and hooks.
   # config.omniauth :github, 'APP_ID', 'APP_SECRET', scope: 'user,public_repo'
-  if Rails.configuration.x.enable_user_registration
-    config.omniauth :linkedin, ENV['LINKEDIN_KEY'], ENV['LINKEDIN_SECRET'], scope: 'r_liteprofile r_emailaddress'
-  end
-
-  if [ENV['OKTA_CLIENT_ID'], ENV['OKTA_CLIENT_SECRET'], ENV['OKTA_DOMAIN'], ENV['OKTA_AUTH_SERVER_ID']].all?(&:present?)
-    config.omniauth(
-      :okta,
-      ENV['OKTA_CLIENT_ID'],
-      ENV['OKTA_CLIENT_SECRET'],
-      scope: 'openid profile email',
-      fields: %w(profile email),
-      client_options: {
-        site: "https://#{ENV['OKTA_DOMAIN']}",
-        authorize_url: "https://#{ENV['OKTA_DOMAIN']}/oauth2/#{ENV['OKTA_AUTH_SERVER_ID']}/v1/authorize",
-        token_url: "https://#{ENV['OKTA_DOMAIN']}/oauth2/#{ENV['OKTA_AUTH_SERVER_ID']}/v1/token",
-        user_info_url: "https://#{ENV['OKTA_DOMAIN']}/oauth2/#{ENV['OKTA_AUTH_SERVER_ID']}/v1/userinfo"
-      },
-      strategy_class: OmniAuth::Strategies::Okta
-    )
-  end
 
   # ==> Warden configuration
   # If you want to use other strategies, that are not supported by Devise, or
@@ -334,20 +310,4 @@ Devise.setup do |config|
   # When using OmniAuth, Devise cannot automatically set OmniAuth path,
   # so you need to do it manually. For the users scope, it would be:
   # config.omniauth_path_prefix = '/my_engine/users/auth'
-
-  # If user acesses authorizations/new (Doorkeeper endpoint to authorize an
-  # OAuth client), and user is not logged in yet, we want to hide the 3rd party
-  # OAuth signup buttons on login page (to prevent multiple OAuth loops); so
-  # a boolean is stored in the session, before 302 redirection to login page is
-  # performed.
-  Warden::Manager.before_failure do |env, _opts|
-    if env.key?('action_controller.instance') &&
-       (cont = env['action_controller.instance'])
-       .instance_of?(Doorkeeper::AuthorizationsController) &&
-       cont.action_name == 'new'
-      # pass oauth_authorize param
-      env['rack.session'] ||= {}
-      env['rack.session']['oauth_authorize'] = true
-    end
-  end
 end

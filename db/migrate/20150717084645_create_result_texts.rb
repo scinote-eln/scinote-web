@@ -1,4 +1,4 @@
-class CreateResultTexts < ActiveRecord::Migration[4.2]
+class CreateResultTexts < ActiveRecord::Migration
   def change
     create_table :result_texts do |t|
       t.string :text, null: false

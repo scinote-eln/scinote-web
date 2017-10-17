@@ -1,4 +1,4 @@
-class RemoveDefaultChecklistItemPositionValue < ActiveRecord::Migration[4.2]
+class RemoveDefaultChecklistItemPositionValue < ActiveRecord::Migration
   def up
     change_column :checklist_items,
                   :position,

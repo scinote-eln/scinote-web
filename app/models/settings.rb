@@ -1,6 +1,4 @@
-# frozen_string_literal: true
-
-class Settings < ApplicationRecord
+class Settings < ActiveRecord::Base
   def self.instance
     @instance ||= first
     @instance ||= new

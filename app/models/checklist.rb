@@ -1,4 +1,4 @@
-class Checklist < ApplicationRecord
+class Checklist < ActiveRecord::Base
   include SearchableModel
 
   auto_strip_attributes :name, nullify: false
@@ -7,15 +7,9 @@ class Checklist < ApplicationRecord
             length: { maximum: Constants::TEXT_MAX_LENGTH }
   validates :step, presence: true
 
-  belongs_to :step, inverse_of: :checklists, touch: true
-  belongs_to :created_by,
-             foreign_key: 'created_by_id',
-             class_name: 'User',
-             optional: true
-  belongs_to :last_modified_by,
-             foreign_key: 'last_modified_by_id',
-             class_name: 'User',
-             optional: true
+  belongs_to :step, inverse_of: :checklists
+  belongs_to :created_by, foreign_key: 'created_by_id', class_name: 'User'
+  belongs_to :last_modified_by, foreign_key: 'last_modified_by_id', class_name: 'User'
   has_many :checklist_items,
     -> { order(:position) },
     inverse_of: :checklist,
@@ -36,19 +30,27 @@ class Checklist < ApplicationRecord
                   page = 1,
                   _current_team = nil,
                   options = {})
-    step_ids = Step.search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
-                   .pluck(:id)
+    step_ids =
+      Step
+      .search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
+      .pluck(:id)
 
-    new_query = Checklist.distinct
-                         .where(checklists: { step_id: step_ids })
-                         .left_outer_joins(:checklist_items)
-                         .where_attributes_like(['checklists.name', 'checklist_items.text'], query, options)
+    new_query =
+      Checklist
+      .distinct
+      .where('checklists.step_id IN (?)', step_ids)
+      .joins('LEFT JOIN checklist_items ON ' \
+             'checklists.id = checklist_items.checklist_id')
+      .where_attributes_like(['checklists.name', 'checklist_items.text'],
+                             query, options)
 
     # Show all results if needed
     if page == Constants::SEARCH_NO_LIMIT
       new_query
     else
-      new_query.limit(Constants::SEARCH_LIMIT).offset((page - 1) * Constants::SEARCH_LIMIT)
+      new_query
+        .limit(Constants::SEARCH_LIMIT)
+        .offset((page - 1) * Constants::SEARCH_LIMIT)
     end
   end
 end

@@ -1,63 +1,8 @@
-version: '2'
+version: '2.1'
+
 services:
-  db:
-    container_name: scinote_db_development
-    image: postgres:11
-    volumes:
-      - scinote_development_postgres:/var/lib/postgresql/data
+  scinote-web:
+    image: scinote-web
+    build: .
     ports:
-      - "5432:5432"
-    environment:
-      - "POSTGRES_USER=postgres"
-      - "POSTGRES_PASSWORD=mysecretpassword"
-
-  web:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    image: scinote_web_development
-    container_name: scinote_web_development
-    stdin_open: true
-    tty: true
-    depends_on:
-      - db
-    ports:
-      - "3000:3000"
-    command: >
-      bash -c "rm -f /usr/src/app/tmp/pids/server.pid &&
-               (bundle check || bundle install) &&
-               bundle exec rails s -b 0.0.0.0"
-    environment:
-      - RAILS_ENV=development
-      - WEBPACKER_DEV_SERVER_HOST=webpack
-    volumes:
-      - .:/usr/src/app
-      - scinote_development_bundler:/usr/local/bundle/
-      - scinote_development_files:/usr/src/app/public/system
-      - scinote_development_storage:/usr/src/app/storage
-
-  webpack:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    image: scinote_web_development
-    container_name: scinote_webpack_development
-    stdin_open: true
-    tty: true
-    ports:
-      - "3035:3035"
-    command: >
-      bash -c "./bin/webpack-dev-server"
-    environment:
-      - RAILS_ENV=development
-      - WORKER=true
-    volumes:
-      - .:/usr/src/app
-      - scinote_development_bundler:/usr/local/bundle/
-      - scinote_development_files:/usr/src/app/public/system
-
-volumes:
-  scinote_development_postgres:
-  scinote_development_bundler:
-  scinote_development_files:
-  scinote_development_storage:
+      - 3000:3000

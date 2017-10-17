@@ -1,4 +1,4 @@
-class ProtocolLinkedChildrenDatatable < CustomDatatable
+class ProtocolLinkedChildrenDatatable < AjaxDatatablesRails::Base
   def_delegator :@view, :link_to
   def_delegator :@view, :protocols_my_module_path
 
@@ -55,19 +55,19 @@ class ProtocolLinkedChildrenDatatable < CustomDatatable
   def record_html(record)
     res = ''
     res += "<ol class='breadcrumb'>"
-    res += "<li><span class='fas fa-folder'></span>&nbsp;"
+    res += "<li><span class='glyphicon glyphicon-blackboard'></span>&nbsp;"
     res += @controller.render_to_string(
       partial: 'search/results/partials/project_text.html.erb',
       locals: { project: record.my_module.experiment.project }
     )
     res += '</li>'
-    res += "<li><i class='fas fa-flask'></i>&nbsp;"
+    res += "<li><i class='fa fa-flask'></i>&nbsp;"
     res += @controller.render_to_string(
       partial: 'search/results/partials/experiment_text.html.erb',
       locals: { experiment: record.my_module.experiment }
     )
     res += '</li>'
-    res += "<li><span class='fas fa-credit-card'></span>&nbsp;"
+    res += "<li><span class='glyphicon glyphicon-credit-card'></span>&nbsp;"
     res += @controller.render_to_string(
       partial: 'search/results/partials/my_module_text.html.erb',
       locals: { my_module: record.my_module, link_to_page: :protocols }

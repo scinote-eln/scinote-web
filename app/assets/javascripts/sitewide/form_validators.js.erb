@@ -22,11 +22,11 @@ $.fn.onSubmitValidator = function(validatorCb) {
  * @param {boolean} clearErr Set clearErr to true if this is the only
  * error that can happen/show.
  */
-function textValidator(ev, textInput, textLimitMin, textLimitMax, clearErr, tinyMCEInput) {
+function textValidator(ev, textInput, textLimitMin, textLimitMax, clearErr, tinyMCE) {
   clearErr = _.isUndefined(clearErr) ? false : clearErr;
 
-  if(tinyMCEInput){
-    var text = tinyMCEInput;
+  if(tinyMCE){
+    var text = textInput.length;
   } else {
     var text = $(textInput).val().trim();
     $(textInput).val(text);
@@ -45,11 +45,7 @@ function textValidator(ev, textInput, textLimitMin, textLimitMax, clearErr, tiny
       errMsg = I18n.t("general.text.length_too_short", { min_length: textLimitMin });
     }
   } else if (nameTooLong) {
-    if(tinyMCEInput){
-      errMsg = I18n.t("general.text.length_too_long_general");
-    } else {
-      errMsg = I18n.t("general.text.length_too_long", { max_length: textLimitMax });
-    }
+    errMsg = I18n.t("general.text.length_too_long", { max_length: textLimitMax });
   }
 
   var noErrors = _.isUndefined(errMsg);
@@ -87,7 +83,7 @@ function checklistsValidator(ev, checklists, editMode) {
         }
       })
 
-      var $checklistInput = $checklist.find(".checklist-name");
+      var $checklistInput = $checklist.find(".checklist_name");
       // In edit mode, checklist's name can't be blank if any items present
       var allowBlankChklstName = !(anyChecklistItemFilled || editMode);
       var textLimitMin = allowBlankChklstName ? 0 : 1;
@@ -106,7 +102,7 @@ function checklistsValidator(ev, checklists, editMode) {
 }
 
 var FileTypeEnum = Object.freeze({
-  FILE: GLOBAL_CONSTANTS.FILE_MAX_SIZE_MB * 1024 * 1024,
+  FILE: <%= Constants::FILE_MAX_SIZE_MB.megabytes %>,
   AVATAR: <%= Constants::AVATAR_MAX_SIZE_MB.megabytes %>
 });
 
@@ -115,10 +111,8 @@ function filesValidator(ev, fileInputs, fileTypeEnum, canBeEmpty) {
   var filesValid = true;
   if (fileInputs.length) {
     var filesPresentValid = canBeEmpty || filesPresentValidator(ev, fileInputs);
-    var filesSizeValid = false;
-    if (filesPresentValid) {
-      filesSizeValid = filesSizeValidator(ev, fileInputs, fileTypeEnum);
-    }
+    var filesSizeValid = filesSizeValidator(ev, fileInputs, fileTypeEnum);
+
     // File spoof check is done on server-side only
     filesValid = filesPresentValid && filesSizeValid;
   }
@@ -146,7 +140,7 @@ function filesSizeValidator(ev, fileInputs, fileTypeEnum) {
     if (file.size > fileTypeEnum) {
       switch (fileTypeEnum) {
         case FileTypeEnum.FILE:
-         return I18n.t('general.file.size_exceeded', { file_size: GLOBAL_CONSTANTS.FILE_MAX_SIZE_MB }).strToErrorFormat();
+         return "<%= I18n.t 'general.file.size_exceeded', file_size: Constants::FILE_MAX_SIZE_MB %>".strToErrorFormat();
         case FileTypeEnum.AVATAR:
           return "<%= I18n.t 'general.file.size_exceeded', file_size: Constants::AVATAR_MAX_SIZE_MB %>".strToErrorFormat();
       }
@@ -167,9 +161,9 @@ function filesSizeValidator(ev, fileInputs, fileTypeEnum) {
     if (size > fileTypeEnum) {
       switch (fileTypeEnum) {
         case FileTypeEnum.FILE:
-          return I18n.t('general.file.total_size', { size: GLOBAL_CONSTANTS.FILE_MAX_SIZE_MB }).strToErrorFormat();
+          return "<%= I18n.t('general.file.total_size', size: Constants::FILE_MAX_SIZE_MB) %>".strToErrorFormat();
         case FileTypeEnum.AVATAR:
-          return "<%= I18n.t('users.registrations.edit.avatar_total_size', size: Constants::AVATAR_MAX_SIZE_MB) %>".strToErrorFormat();
+          return "<%= I18n.t('general.file.total_size', size: Constants::AVATAR_MAX_SIZE_MB) %>".strToErrorFormat();
       }
     }
   }
@@ -194,14 +188,6 @@ function filesSizeValidator(ev, fileInputs, fileTypeEnum) {
     filesSizeValid = enoughSpaceValidator(ev, fileInputs);
   }
   return filesSizeValid;
-}
-
-function numberMinMaxValidator(value, min, max) {
-  if(parseInt(value) < min || isNaN(value))
-    return min;
-  else if(parseInt(value) > max)
-    return max;
-  else return value;
 }
 
 /*

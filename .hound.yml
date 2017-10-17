@@ -1,10 +1,9 @@
 ruby:
   config_file: .rubocop.yml
-  version: 0.83.0
 
 eslint:
   enabled: true
-  config_file: app/assets/.eslintrc.json
+  config_file: .eslintrc.json
 
 scss:
   config_file: .scss-lint.yml

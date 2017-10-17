@@ -1,42 +1,28 @@
 <% provide(:head_title, t("experiments.module_archive.head_title", experiment: h(@experiment.name)).html_safe) %>
-<% provide(:sidebar_title, t("sidebar.my_modules.sidebar_title_archived")) %>
-<% provide(:sidebar_url, sidebar_experiment_path(@experiment)) %>
+<%= render partial: "shared/sidebar" %>
+<%= render partial: "shared/secondary_navigation" %>
 
-<%= content_for :sidebar do %>
-  <%= render partial: 'shared/sidebar/archived_my_modules.html.erb', locals: { experiment: @experiment, my_modules: @my_modules } %>
-<% end %>
-<%= render partial: 'shared/secondary_navigation', locals: { render_breadcrumbs: true, project: @experiment.project } %>
-
-<div class="content-pane" id="module-archive">
-  <% if @my_modules.present? %>
-    <% if can_manage_experiment?(@experiment) %>
-      <div class="restore-button-container collapse">
-        <%= button_to restore_my_modules_experiment_path(@experiment), class: 'btn btn-light', method: :post do %>
-          <span class="fas fa-undo"></span>
-          <%= t('experiments.module_archive.restore_option') %>
-        <% end %>
+<% if @experiment.archived_modules.count > 0 %>
+  <div class="row">
+    <% @experiment.archived_modules.each_with_index do |my_module, i| %>
+      <div class="col-lg-2 col-md-3 col-sm-4 col-xs-6">
+        <%= render partial: "experiments/module_archive/my_module.html.erb", locals: { my_module: my_module} %>
       </div>
-    <% end %>
-
-    <div class="row" style="margin-top: 10px;">
-      <% @my_modules.each_with_index do |my_module, i| %>
-        <div class="module-container col-lg-3 col-md-4 col-sm-12">
-          <%= render partial: 'canvas/full_zoom/my_module', locals: {experiment: @experiment, my_module: my_module} %>
-        </div>
+      <% if (i+1) % 6 == 0 %>
+      <div class="clearfix visible-lg-block"></div>
       <% end %>
+      <% if (i+1) % 4 == 0 %>
+      <div class="clearfix visible-md-block"></div>
+      <% end %>
+      <% if (i+1) % 3 == 0 %>
+      <div class="clearfix visible-sm-block"></div>
+      <% end %>
+    <% end %>
+  </div>
+<% else %>
+  <div class="row">
+    <div class="col-xs-12">
+      <em><%=t "experiments.module_archive.no_archived_modules" %></em>
     </div>
-  <% else %>
-    <div class="row">
-      <div class="col-xs-12">
-        <em><%= t('experiments.module_archive.no_archived_modules') %></em>
-      </div>
-    </div>
-  <% end %>
-
-  <!-- Manage tags modal -->
-  <%= render partial: 'my_modules/modals/manage_module_tags_modal', locals: { my_module: nil } %>
-
-</div>
-
-<%= javascript_include_tag('projects/canvas') %>
-<%= javascript_include_tag('my_modules/archived') %>
+  </div>
+<% end %>

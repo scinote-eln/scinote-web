@@ -1,32 +1,19 @@
 <% provide(:head_title, t("my_modules.module_archive.head_title", project: h(@my_module.experiment.project.name), module: h(@my_module.name)).html_safe) %>
-<% provide(:sidebar_title, t("sidebar.my_module.sidebar_title")) %>
-
-<%= content_for :sidebar do %>
-  <%= render partial: 'shared/sidebar/my_module.html.erb',
-    locals: {
-      my_modules: @experiment_my_modules,
-      experiment: @experiment,
-      current_my_module: @my_module
-    }
-  %>
-<% end %>
+<%= render partial: "shared/sidebar" %>
 <%= render partial: "shared/secondary_navigation" %>
 
-<div class="content-pane" id="result-archive">
-  <div class="row">
-    <% if @archived_results.any? %>
-      <% @archived_results.each do |result| %>
-        <div class="col-xs-3">
-          <%= render partial: "my_modules/archive/result.html.erb", locals: { result: result } %>
-        </div>
-      <% end %>
-    <% else %>
-      <div class="col-xs-12">
-        <em><%=t "my_modules.module_archive.no_archived_results" %></em>
-      </div>
+<div clas="row">
+  <div class="col-xs-3">
+    <% i = 0 %>
+    <% @archived_results.each do |result| %>
+
+      <%= render partial: "my_modules/archive/result.html.erb", locals: { result: result } %>
+
+      <% i = i + 1 %>
+    <% end %>
+
+    <% if i == 0 %>
+      <em><%=t "my_modules.module_archive.no_archived_results" %></em>
     <% end %>
   </div>
 </div>
-
-<%= javascript_pack_tag 'pdfjs/pdf_js' %>
-<%= stylesheet_pack_tag 'pdfjs/pdf_js_styles' %>

@@ -1,10 +1,24 @@
 module NotificationsHelper
+  def create_system_notification(title, message)
+    notification = Notification.new
+    notification.title = title
+    notification.message = message
+    notification.type_of = :system_message
+    notification.transaction do
+      User.where.not(confirmed_at: nil).find_each do |u|
+        UserNotification
+          .new(user: u, notification: notification, checked: false)
+          .save!
+      end
+      notification.save!
+    end
+  end
+
   def send_email_notification(user, notification)
     AppMailer.delay.notification(user, notification)
   end
 
-  # generate assignment notification
-  def generate_notification(user, target_user, team, role)
+  def generate_notification(user, target_user, team, role, project)
     if team
       title = I18n.t('notifications.unassign_user_from_team',
                      unassigned_user: target_user.name,
@@ -16,6 +30,12 @@ module NotificationsHelper
                      team: team.name,
                      assigned_by_user: user.name) if role
       message = "#{I18n.t('search.index.team')} #{team.name}"
+    elsif project
+      title = I18n.t('activities.unassign_user_from_project',
+                     unassigned_user: target_user.full_name,
+                     project: project.name,
+                     unassigned_by_user: user.full_name)
+      message = "#{I18n.t('search.index.project')} #{@project.name}"
     end
 
     notification = Notification.create(
@@ -25,7 +45,7 @@ module NotificationsHelper
     )
 
     if target_user.assignments_notification
-      notification.create_user_notification(target_user)
+      UserNotification.create(notification: notification, user: target_user)
     end
   end
 end

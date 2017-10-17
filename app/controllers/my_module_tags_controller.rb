@@ -1,12 +1,11 @@
 class MyModuleTagsController < ApplicationController
-  include InputSanitizeHelper
-
-  before_action :load_vars, except: :canvas_index
-  before_action :check_view_permissions, except: %i(canvas_index create destroy destroy_by_tag_id)
-  before_action :check_manage_permissions, only: %i(create destroy destroy_by_tag_id)
+  before_action :load_vars
+  before_action :check_view_permissions, only: [:index_edit, :index]
+  before_action :check_create_permissions, only: [:create]
+  before_action :check_destroy_permissions, only: [:destroy]
 
   def index_edit
-    @my_module_tags = @my_module.my_module_tags.order(:id)
+    @my_module_tags = @my_module.my_module_tags
     @unassigned_tags = @my_module.unassigned_tags
     @new_mmt = MyModuleTag.new(my_module: @my_module)
     @new_tag = Tag.new(project: @my_module.experiment.project)
@@ -27,60 +26,27 @@ class MyModuleTagsController < ApplicationController
     respond_to do |format|
       format.json do
         render json: {
+          html_canvas: render_to_string(
+            partial: 'canvas/tags.html.erb',
+            locals: { my_module: @my_module }
+          ),
           html_module_header: render_to_string(
             partial: 'my_modules/tags.html.erb',
-            locals: { my_module: @my_module, editable: can_manage_my_module?(@my_module) }
+            locals: { my_module: @my_module }
           )
         }
       end
     end
   end
 
-  def canvas_index
-    experiment = Experiment.find(params[:id])
-    return render_403 unless can_read_experiment?(experiment)
-
-    res = []
-    experiment.my_modules.active.each do |my_module|
-      res << {
-        id: my_module.id,
-        tags_html: render_to_string(
-          partial: 'canvas/tags.html.erb',
-          locals: { my_module: my_module }
-        )
-      }
-    end
-    respond_to do |format|
-      format.json do
-        render json: { my_modules: res }
-      end
-    end
-  end
-
   def create
-    return render_403 unless params[:my_module_tag] && mt_params[:tag_id]
-
     @mt = MyModuleTag.new(mt_params.merge(my_module: @my_module))
     @mt.created_by = current_user
     @mt.save
 
-    my_module = @mt.my_module
-
-    Activities::CreateActivityService
-      .call(activity_type: :add_task_tag,
-            owner: current_user,
-            subject: my_module,
-            project:
-              my_module.experiment.project,
-            team: current_team,
-            message_items: {
-              my_module: my_module.id,
-              tag: @mt.tag.id
-            })
-
     respond_to do |format|
       format.json do
-        redirect_to my_module_tags_edit_path(format: :json), turbolinks: false,
+        redirect_to my_module_tags_edit_path(format: :json),
                     status: 303
       end
     end
@@ -88,69 +54,14 @@ class MyModuleTagsController < ApplicationController
 
   def destroy
     @mt = MyModuleTag.find_by_id(params[:id])
-
-    return render_404 unless @mt
-
-    Activities::CreateActivityService
-      .call(activity_type: :remove_task_tag,
-            owner: current_user,
-            subject: @mt.my_module,
-            project:
-              @mt.my_module.experiment.project,
-            team: current_team,
-            message_items: {
-              my_module: @mt.my_module.id,
-              tag: @mt.tag.id
-            })
-
     @mt.destroy
 
     respond_to do |format|
       format.json do
-        redirect_to my_module_tags_edit_path(format: :json), turbolinks: false,
+        redirect_to my_module_tags_edit_path(format: :json),
                     status: 303
       end
     end
-  end
-
-  def search_tags
-    assigned_tags = @my_module.my_module_tags.select(:tag_id)
-    all_tags = @my_module.experiment.project.tags
-    tags = all_tags.where.not(id: assigned_tags)
-                   .where_attributes_like(:name, params[:query])
-                   .select(:id, :name, :color)
-                   .limit(6)
-
-    tags = tags.map do |tag|
-      { value: tag.id, label: sanitize_input(tag.name), params: { color: sanitize_input(tag.color) } }
-    end
-
-    if params[:query].present? && tags.select { |tag| tag[:label] == params[:query] }.blank?
-      tags << { value: 0, label: sanitize_input(params[:query]), params: { color: nil } }
-    end
-
-    render json: tags
-  end
-
-  def destroy_by_tag_id
-    tag = @my_module.my_module_tags.find_by_tag_id(params[:id])
-
-    Activities::CreateActivityService
-      .call(activity_type: :remove_task_tag,
-            owner: current_user,
-            subject: tag.my_module,
-            project:
-              tag.my_module.experiment.project,
-            team: current_team,
-            message_items: {
-              my_module: tag.my_module.id,
-              tag: tag.tag.id
-            })
-
-    return render_404 unless tag
-
-    tag.destroy
-    render json: { result: tag }
   end
 
   private
@@ -158,15 +69,31 @@ class MyModuleTagsController < ApplicationController
   def load_vars
     @my_module = MyModule.find_by_id(params[:my_module_id])
 
-    render_404 if @my_module.blank?
+    unless @my_module
+      render_404
+    end
   end
 
   def check_view_permissions
-    render_403 unless can_read_my_module?(@my_module)
+    unless can_edit_tags_for_module(@my_module)
+      render_403
+    end
   end
 
-  def check_manage_permissions
-    render_403 unless can_manage_my_module_tags?(@my_module)
+  def check_create_permissions
+    unless can_add_tag_to_module(@my_module)
+      render_403
+    end
+  end
+
+  def check_destroy_permissions
+    unless can_remove_tag_from_module(@my_module)
+      render_403
+    end
+  end
+
+  def init_gui
+    @tags = @my_module.unassigned_tags
   end
 
   def mt_params

@@ -1,18 +1,21 @@
+// jquery.turbolinks MUST IMMEDIATELY FOLLOW jquery inclusion
 // turbolinks MUST BE THE LAST inclusion
 //= require jquery
+//= require jquery.turbolinks
 //= require jquery_ujs
+//= require jquery.remotipart
 //= require jquery.mousewheel.min
 //= require jquery.scrollTo
 //= require jquery.autosize
 //= require jquery-ui/widget
-//= require jquery-ui/widgets/mouse
-//= require jquery-ui/widgets/draggable
-//= require jquery-ui/widgets/droppable
+//= require jquery-ui/mouse
+//= require jquery-ui/draggable
+//= require jquery-ui/droppable
 //= require jquery.ui.touch-punch.min
-//= require jquery-ui/effects/effect-slide
 //= require jquery.caret.min
 //= require jquery.atwho.min
 //= require hammer
+//= require introjs
 //= require js.cookie
 //= require spin
 //= require jquery.spin
@@ -26,41 +29,20 @@
 //= require nested_form_fields
 //= require highlight.pack
 //= require tinymce-jquery
-//= require_tree ./tinymce/plugins
-//= require jsPlumb-2.0.4-min
-//= require jsnetworkx
-//= require bootstrap-select
-//= require_directory ./repository_columns/columns_initializers
+//= require_directory ./sitewide
+//= require jquery.dataTables.yadcf
 //= require datatables
-//= require clndr.min
-//= require ajax-bootstrap-select.min
+//= require dataTables.noSearchHidden
+//= require bootstrap-select
 //= require underscore
 //= require i18n.js
 //= require i18n/translations
-//= require users/settings/teams/invite_users_modal
-//= require repository_columns/index
-//= require perfect-scrollbar.min
-//= require shared/inline_editing
-//= require shared/barcode_search
-//= require activestorage
-//= require global_activities/side_pane
-//= require protocols/header
-//= require protocols/print
-//= require marvinjslauncher
-//= require jstree.min
-//= require_tree ./repositories/renderers
-//= require_directory ./shared
-//= require_directory ./repositories/validators
-//= require_directory ./dashboard
-//= require_directory ./sitewide
-//= require_directory ./access_permissions
-//= require sidebar
 //= require turbolinks
+
 
 // Initialize links for submitting forms. This is useful for submitting
 // forms with clicking on links outside form in cases when other than
 // GET method is used.
-
 function initFormSubmitLinks(el) {
 
   el = el || $(document.body);
@@ -78,6 +60,7 @@ function initFormSubmitLinks(el) {
 }
 
 /* Enable loading bars */
+Turbolinks.enableProgressBar();
 $(document)
   .bind("ajaxSend", function(){
     animateLoading();
@@ -106,11 +89,27 @@ function animateLoading(start){
  * Shows spinner if start is true or not given, hides it if false.
  * Optional parameter options for spin.js options.
  */
-function animateSpinner(el, start) {
+function animateSpinner(el, start, options) {
   // If overlaying the whole page, put the spinner in the middle of the page
-  var overlayPage = _.isUndefined(el) || el === null;
+  var overlayPage = false;
+  if (_.isUndefined(el) || el === null) {
+    overlayPage = true;
+    if ($(document.body).has('.loading-overlay-center').length === 0) {
+      $(document.body).append('<div class="loading-overlay-center" />');
+    }
+    el = $(document.body).find('.loading-overlay-center');
+  }
 
-  if (_.isUndefined(start)) start = true;
+  if (_.isUndefined(start)) {
+    start = true;
+  }
+
+  if (start && options) {
+    $(el).spin(options);
+  }
+  else {
+    $(el).spin(start);
+  }
 
   if (start) {
     if (overlayPage) {
@@ -179,9 +178,61 @@ $(window).unload(function () {
   $(window).unbind('unload');
 });
 
+$(document.body).ready(function () {
+  // Activity feed modal in main navigation menu
+  var activityModal = $('#activity-modal');
+  var activityModalBody = activityModal.find('.modal-body');
+
+  var initMoreBtn = function () {
+    activityModalBody.find('.btn-more-activities')
+      .on('ajax:success', function (e, data) {
+        $(data.html).insertBefore($(this).parents('li'));
+        $(this).attr('href', data.next_url);
+        if (data.activities_number < data.per_page) {
+          $(this).remove();
+        }
+      });
+  };
+
+  notificationAlertClose();
+
+  $('#main-menu .btn-activity')
+    .on('ajax:before', function () {
+      activityModal.modal('show');
+    })
+    .on('ajax:success', function (e, data) {
+      activityModalBody.html(data.html);
+      initMoreBtn();
+    });
+
+  activityModal.on('hidden.bs.modal', function () {
+    activityModalBody.html('');
+  });
+});
+
+$(document).ajaxComplete(function(){
+  notificationAlertClose();
+});
+
+function notificationAlertClose(){
+  $("#notifications .alert").on("closed.bs.alert", function () {
+    $("#content-wrapper")
+      .addClass("alert-hidden")
+      .removeClass("alert-shown");
+  });
+}
 var HelperModule = (function(){
 
   var helpers = {};
+
+  helpers.treeLinkTruncation = function() {
+    $('.tree-link a').each( function(){
+      truncateLongString( $(this), <%= Constants::NAME_TRUNCATION_LENGTH %>);
+    });
+    $(".tree-link span").each( function(){
+      truncateLongString( $(this), <%= Constants::NAME_TRUNCATION_LENGTH %>);
+    });
+  }
 
   helpers.hideFlashMsg =  function() {
     var flash = $('.alert');
@@ -189,102 +240,56 @@ var HelperModule = (function(){
       window.setTimeout(function () {
         flash.fadeTo(500, 0).slideUp(500, function () {
           $(this).remove();
+          if($('.alert').length <= 0) {
+            $('#content-wrapper').removeClass('alert-shown');
+          }
         });
-      }, 3000);
+      }, 5000);
     }
-  }
-
-  helpers.dismissAlert = function() {
-    $('#alert-flash').on('click', function() {
-      $('#alert-flash').alert('close');
-    })
   }
 
   helpers.flashAlertMsg = function(message, type) {
-    var alertType, fasSign;
-
+    var alertType;
+    var glyphSign;
     $('#notifications').html('');
     if (type === 'success') {
       alertType = ' alert-success ';
-      fasSign = ' fa-check-circle ';
+      glyphSign = ' glyphicon-ok-sign ';
     } else if (type === 'danger') {
       alertType = ' alert-danger ';
-      fasSign = ' fa-exclamation-triangle ';
+      glyphSign = ' glyphicon-exclamation-sign ';
     } else if (type === 'info') {
       alertType = ' alert-info ';
-      fasSign = ' fa-info-circle ';
-    } else if (type === 'warning') {
-      alertType = ' alert-warning ';
-      fasSign = ' fa-exclamation-triangle ';
+      glyphSign = ' glyphicon-exclamation-sign ';
     }
-    var htmlSnippet = '<div id="alert-flash" class="alert alert' + alertType +
+    var htmlSnippet = '<div class="alert alert' + alertType +
                       'alert-dismissable alert-floating">' +
-                        '<span class="fas' + fasSign + '"></span>&nbsp;' +
-                        '<span class="message">' + message + '</span>' +
-                        '<button type="button" class="close" ' +
+                        '<div class="container">' +
+                          '<button type="button" class="close" ' +
                           'data-dismiss="alert" aria-label="Close">' +
                           '<span aria-hidden="true">×</span></button>' +
-                      '</div>';
+                            '<span class="glyphicon' + glyphSign + '"></span>' +
+                            '<span>' + message + '</span>' +
+                          '</div>' +
+                        '</div>';
     $('#notifications').html(htmlSnippet);
+    $('#content-wrapper').addClass('alert-shown');
     helpers.hideFlashMsg();
-    helpers.dismissAlert();
   }
 
-  $(document).on('turbolinks:load', function() {
+  $( document ).ready(function() {
+    helpers.treeLinkTruncation();
     helpers.hideFlashMsg();
-    helpers.dismissAlert();
   });
 
   return helpers;
 })();
 
+// initialize code markup in rich text fields
 (function() {
-  $(document).on('turbolinks:load', function() {
-    // initialize code markup in rich text fields
+  $(document).ready(function() {
     $('[class^=language]').each(function(i, block) {
       hljs.highlightBlock(block);
     });
-
-    // fix dropdown-menu style throughout the app
-    $('.dropdown-header').parent('ul').addClass('custom-dropdown-menu');
   });
-
-  // Close all open modals before caching
-  $(document).on('turbolinks:before-cache', function() {
-    $('.modal').off().modal('hide');
-  });
-
-  $(document).on('turbolinks:load', function() {
-    /* Fix .selectpicker (bootstrap-select) to work with Turbolinks 5.x */
-    $(window).trigger('load.bs.select.data-api');
-
-    /* Clean up TinyMCE */
-    tinymce.remove();
-  });
-
-  // Show warning if page has unsaved data
-  $(document).on('turbolinks:before-visit', () => {
-    let exit = true;
-    let editing = $(`.${GLOBAL_CONSTANTS.HAS_UNSAVED_DATA_CLASS_NAME}`).length > 0;
-
-    if (editing) {
-      exit = confirm(I18n.t('general.leaving_unsaved_warning'));
-    }
-
-    return exit;
-  });
-}());
-
-// Check that loaded page, not turbolinks preview
-function notTurbolinksPreview() {
-  return !document.documentElement.hasAttribute("data-turbolinks-preview");
-}
-
-const windowScrollEvents = {};
-$(window).scroll(function() {
-  $.each(windowScrollEvents, function(key, scroll_function){
-    scroll_function();
-  })
-})
-
-window.I18n = I18n
+})();

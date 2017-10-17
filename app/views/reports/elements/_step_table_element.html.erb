@@ -1,40 +1,29 @@
-<% table ||= report_element.table %>
+<% if table.blank? and @table.present? then table = @table end %>
 <% timestamp = table.created_at %>
-<div class="report-element report-step-attachment-element report-step-table-element">
+<div class="report-element report-step-attachment-element report-step-table-element" data-ts="<%= timestamp.to_i %>" data-type="step_table" data-id='{ "table_id": <%= table.id %> }' data-scroll-id="<%= table.id %>" data-name="<%= table.name %>" data-icon-class="glyphicon glyphicon-th">
   <div class="report-element-header">
     <div class="row">
       <div class="pull-left attachment-icon">
-        <span class="fas fa-table"></span>
+          <span class="glyphicon glyphicon-th"></span>
       </div>
-      <div class="pull-left table-name">
-        <% if defined? export_all and export_all %>
-          <% file_link = @obj_filenames.dig(:tables, table.id, :file) %>
-          <a href="<%= file_link %>">
-            <em>
-              <%= t('projects.reports.elements.step_table.table_name', name: file_link&.split('/')&.last) %>
-            </em>
-          </a>
-        <% else %>
-          <% if table.try(:name) %>
-            <em>
-              <%= t('projects.reports.elements.step_table.table_name', name: truncate(table.name, length: Constants::FILENAME_TRUNCATION_LENGTH)) %>
-            </em>
-          <% end %>
-        <% end %>
-      </div>
+      <% unless table.name.empty? then %>
+        <div class="pull-left table-name">
+          <em><%=t 'projects.reports.elements.step_table.table_name', name: table.name %></em>
+        </div>
+      <% end %>
       <div class="pull-left user-time">
-        <%= t('projects.reports.elements.step_table.user_time', timestamp: l(timestamp, format: :full)) %>
+        <%=t 'projects.reports.elements.step_table.user_time', timestamp: l(timestamp, format: :full) %>
+      </div>
+      <div class="pull-right controls">
+        <%= render partial: 'reports/elements/element_controls.html.erb' %>
       </div>
     </div>
   </div>
   <div class="report-element-body">
     <input type="hidden" class="hot-table-contents" value="<%= table.contents_utf_8 %>" />
     <div class="hot-table-container"></div>
-    <table class="report-common-table-format"></table>
   </div>
-  <% if defined?(children) %>
-    <div class="report-element-children">
-      <%= children %>
-    </div>
-  <% end %>
+  <div class="report-element-children">
+    <%= children if (defined? children and children.present?) %>
+  </div>
 </div>

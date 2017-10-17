@@ -1,28 +1,33 @@
-<ul class="sidebar-branch">
-  <li class="sidebar-leaf">
-    <% if @project.archived? %>
-      <%= link_to t('sidebar.experiments.back_archived_projects'), projects_path(view_mode: :archived), class: 'sidebar-link back-button' %>
-    <% elsif view_mode == 'archived' %>
-      <%= link_to t('sidebar.experiments.back_active_experiments'), project_url(@project), class: 'sidebar-link back-button' %>
-    <% else %>
-      <%= link_to t('sidebar.experiments.back_button'), projects_path, class: 'sidebar-link back-button' %>
-    <% end %>
-  </li>
-  <% project.sorted_experiments(current_user, @current_sort, view_mode == 'archived').each do |experiment| %>
-    <li class="sidebar-leaf">
-      <% if view_mode == 'archived'  %>
-        <%= link_to experiment.name, module_archive_experiment_path(experiment), title: experiment.name, class: 'sidebar-link' %>
+<ul>
+  <% if project.active_experiments.present? then %>
+    <% project.active_experiments.each do |experiment| %>
+      <% if (experiment_page? ||
+             sample_groups_page_experiment? ||
+             sample_types_page_expermient?) && experiment == @experiment %>
+        <li class="active" data-parent="candidate">
+          <span class="tree-link line-wrap">
+            <i></i>
+            <span title="<%= @experiment.name %>"><%= @experiment.name %></span>
+          </span>
+          <%= render partial: 'shared/sidebar/my_modules', locals: { experiment: @experiment } %>
+        </li>
       <% else %>
-        <%= link_to experiment.name, canvas_experiment_path(experiment), title: experiment.name, class: 'sidebar-link' %>
+        <li data-parent="candidate">
+          <span class="tree-link line-wrap">
+            <i></i>
+            <% if can_view_experiment(experiment) %>
+              <%= link_to experiment.name,
+                          experiment_action_to_link_to(experiment),
+                          title: experiment.name,
+                          class: 'overview_exp_label'
+                          %>
+            <% else %>
+              <%= experiment.name %>
+            <% end %>
+          </span>
+          <%= render partial: 'shared/sidebar/my_modules', locals: { experiment: experiment } %>
+        </li>
       <% end %>
-    </li>
-  <% end %>
-  <% if view_mode == 'active' %>
-    <li class="sidebar-leaf">
-      <%= link_to project_path(@project, view_mode: 'archived'), class: 'sidebar-link' do %>
-        <i class="fas fa-archive"></i>
-        <%= t('sidebar.experiments.archived_experiments') %>
-      <% end %>
-    </li>
+    <% end %>
   <% end %>
 </ul>

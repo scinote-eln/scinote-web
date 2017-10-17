@@ -4,7 +4,9 @@ namespace :sign_up_constraint do
   task :email_domain, [:domain] => :environment do |_, args|
     include DatabaseHelper
 
-    if args.blank? || args[:domain].blank?
+    if args.blank? ||
+       args.empty? ||
+       args[:domain].blank?
       puts 'Please add the email domain'
       return
     end

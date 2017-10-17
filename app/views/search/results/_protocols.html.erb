@@ -1,10 +1,12 @@
+<%= render partial: "protocols/index/protocol_preview_modal.html.erb" %>
+
 <% results.each do |protocol| %>
-  <% has_description = protocol.description.present? %>
-  <% has_authors = protocol.authors.present? %>
+  <% has_description = protocol.description.present? && !protocol.description.empty? %>
+  <% has_authors = protocol.authors.present? && !protocol.authors.empty? %>
   <% has_keywords = protocol.in_repository? && protocol.protocol_keywords.count > 0 %>
 
   <h5>
-    <span class="fas fa-edit"></span>
+    <span class="glyphicon glyphicon-list-alt"></span>
     <%= render partial: "search/results/partials/protocol_text.html.erb", locals: { protocol: protocol, query: search_query } %>
   </h5>
 
@@ -13,10 +15,7 @@
       <% if has_description %>
         <span>
           <%=t "search.index.description" %>
-          <%= highlight custom_auto_link(protocol.tinymce_render(:description),
-                               simple_format: false,
-                               tags: %w(img),
-                               team: current_team), search_query.strip.split(/\s+/) %>
+          <%= highlight protocol.description, search_query.strip.split(/\s+/) %>
         </span>
         <% if has_authors || has_keywords %>
           <br>
@@ -108,7 +107,7 @@
       <span>
         <%=t "search.index.project" %>
         <%= render partial: "search/results/partials/project_text.html.erb",
-                   locals: { project: protocol.my_module.experiment.project, link_to_page: :show } %>
+                   locals: { project: protocol.my_module.experiment.project } %>
       </span>
       <br>
     <% end %>
@@ -122,3 +121,20 @@
   <hr>
 
 <% end %>
+
+<%= stylesheet_link_tag 'datatables' %>
+<%= javascript_include_tag "protocols/index" %>
+<%= javascript_include_tag "protocols/steps" %>
+
+<!-- Libraries for formulas -->
+<%= javascript_include_tag "lodash" %>
+<%= javascript_include_tag "numeral" %>
+<%= javascript_include_tag "numeric" %>
+<%= javascript_include_tag "md5" %>
+<%= javascript_include_tag "jstat" %>
+<%= javascript_include_tag "formula" %>
+<%= javascript_include_tag "parser" %>
+<%= javascript_include_tag "ruleJS" %>
+<%= javascript_include_tag "handsontable.formula" %>
+<%= javascript_include_tag "big.min" %>
+<%= stylesheet_link_tag "handsontable.formula" %>

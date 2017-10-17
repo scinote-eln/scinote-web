@@ -1,4 +1,4 @@
-class CreateResultAssets < ActiveRecord::Migration[4.2]
+class CreateResultAssets < ActiveRecord::Migration
   def change
     create_table :result_assets do |t|
       t.integer :result_id, null: false

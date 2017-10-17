@@ -7,17 +7,15 @@ module SearchHelper
     experiments.uniq
   end
 
-  def route_to_other_team(path, search_team, text, html = {})
+  def route_to_other_team(path, search_team, text)
     if search_team != current_team
       link_to text,
               path,
-              html.merge(
-                data: { turbolinks: false,
-                        confirm: t('users.settings.changed_team_in_search',
-                                   team: search_team.name) }
-              )
+              data: { no_turbolink: true,
+                      confirm: t('users.settings.changed_team_in_search',
+                                 team: search_team.name) }
     else
-      link_to text, path, html.merge(data: { turbolinks: false })
+      link_to text, path, data: { no_turbolink: true }
     end
   end
 

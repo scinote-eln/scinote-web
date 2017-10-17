@@ -1,36 +1,62 @@
-class MyModuleGroup < ApplicationRecord
+class MyModuleGroup < ActiveRecord::Base
   include SearchableModel
 
+  auto_strip_attributes :name, nullify: false
+  validates :name,
+            presence: true,
+            length: { maximum: Constants::NAME_MAX_LENGTH }
   validates :experiment, presence: true
 
   belongs_to :experiment, inverse_of: :my_module_groups
-  belongs_to :created_by,
-             foreign_key: 'created_by_id',
-             class_name: 'User',
-             optional: true
+  belongs_to :created_by, foreign_key: 'created_by_id', class_name: 'User'
   has_many :my_modules, inverse_of: :my_module_group, dependent: :nullify
 
-  scope :without_archived_modules, (lambda do
-    joins(:my_modules).where('my_modules.archived = ?', false).distinct
-  end)
+  def self.search(user,
+                  include_archived,
+                  query = nil,
+                  page = 1,
+                  _current_team = nil,
+                  options = {})
+    exp_ids =
+      Experiment
+      .search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
+      .pluck(:id)
+
+    new_query = MyModuleGroup
+                .distinct
+                .where('my_module_groups.experiment_id IN (?)', exp_ids)
+                .where_attributes_like('my_module_groups.name', query, options)
+
+    # Show all results if needed
+    if page == Constants::SEARCH_NO_LIMIT
+      new_query
+    else
+      new_query
+        .limit(Constants::SEARCH_LIMIT)
+        .offset((page - 1) * Constants::SEARCH_LIMIT)
+    end
+  end
+
+  def ordered_modules
+    my_modules.order(workflow_order: :asc)
+  end
 
   def deep_clone_to_experiment(current_user, experiment)
     clone = MyModuleGroup.new(
+      name: name,
       created_by: created_by,
       experiment: experiment
     )
 
     # Get clones of modules from this group, save them as hash
-    cloned_modules = my_modules.readable_by_user(current_user).workflow_ordered.each_with_object({}) do |m, h|
-      h[m.id] = m.deep_clone_to_experiment(current_user, experiment)
-      h
+    cloned_modules = ordered_modules.each_with_object({}) do |m, hash|
+      hash[m.id] = m.deep_clone_to_experiment(current_user, experiment)
+      hash
     end
 
-    my_modules.readable_by_user(current_user).workflow_ordered.each do |m|
+    ordered_modules.each do |m|
       # Copy connections
       m.inputs.each do |inp|
-        next if cloned_modules[inp[:input_id]].nil? || cloned_modules[inp[:output_id]].nil?
-
         Connection.create(
           input_id: cloned_modules[inp[:input_id]].id,
           output_id: cloned_modules[inp[:output_id]].id

@@ -1,4 +1,4 @@
-class CreateSampleMyModules < ActiveRecord::Migration[4.2]
+class CreateSampleMyModules < ActiveRecord::Migration
   def change
     create_table :sample_my_modules do |t|
       t.integer :sample_id, null: false

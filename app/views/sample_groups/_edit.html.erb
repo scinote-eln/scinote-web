@@ -1,0 +1,25 @@
+<li data-id="<%= sample_group.id %>"
+    data-delete="<%=
+      team_sample_group_destroy_confirmation_path(team, sample_group)%>"
+    data-color="<%= sample_group.color %>">
+  <div class="row">
+  <%= form_for [team, sample_group], html: { class: 'form-inline' }, remote: true do |f| %>
+    <div class="col-xs-8">
+      <div class="form-group">
+        <%= f.text_field :name, value: sample_group.name , class: 'form-control' %>
+      </div>
+    </div>
+    <div class="col-xs-4 text-right">
+      <button type="button"
+              class="edit-confirm btn btn-primary"><%= t('general.save') %></button>
+      <button type="button"
+              class="abort btn btn-default"
+              data-element="<%=
+                team_sample_group_sample_group_element_path(team,
+                                                            sample_group) %>">
+        <%= t('general.cancel') %></button>
+    </div>
+  <% end %>
+    </div>
+  </div>
+</li>

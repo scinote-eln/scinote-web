@@ -1,4 +1,4 @@
-class DeviseCreateUsers < ActiveRecord::Migration[4.2]
+class DeviseCreateUsers < ActiveRecord::Migration
   def change
     create_table(:users) do |t|
       ## General user data

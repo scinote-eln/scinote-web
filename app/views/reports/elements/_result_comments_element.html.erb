@@ -1,36 +1,46 @@
-<% result ||= report_element.result %>
-<% comments = result.result_comments.order(created_at: :desc) %>
-<% export_all = defined?(export_all) && export_all %>
-<div class="report-element report-comments-element report-result-comments-element">
+<% if result.blank? and @result.present? then result = @result end %>
+<% if order.blank? and @order.present? then order = @order end %>
+<% comments = result.result_comments.order(created_at: order) %>
+<% timestamp = Time.current + 1.year %>
+<div class="report-element report-comments-element report-result-comments-element" data-ts="<%= timestamp.to_i %>" data-order="<%= order == :asc ? "asc" : "desc" %>" data-type="result_comments" data-id='{ "result_id": <%= result.id %> }' data-scroll-id="<%= result.id %>" data-name="<%=t "projects.reports.elements.result_comments.sidebar_name" %>" data-icon-class="glyphicon glyphicon-comment">
   <div class="report-element-header">
     <div class="row">
       <div class="pull-left comments-icon">
-          <span class="fas fa-comment"></span>
+          <span class="glyphicon glyphicon-comment"></span>
       </div>
       <div class="pull-left comments-name">
-        <%= t('projects.reports.elements.result_comments.name', result: result.name) %>
+        <%=t "projects.reports.elements.result_comments.name", result: result.name %>
+      </div>
+      <div class="pull-right controls">
+        <%= render partial: "reports/elements/element_controls.html.erb", locals: { show_sort: true, show_move_up: false, show_move_down: false } %>
       </div>
     </div>
   </div>
   <div class="report-element-body">
     <div class="row">
-      <div class="col-xs-12  comments-container simple">
-        <% if comments.present? %>
-          <ul class="no-style content-comments">
+      <div class="col-xs-12 comments-container">
+        <% if comments.count == 0 %>
+          <em><%=t "projects.reports.elements.result_comments.no_comments" %></em>
+        <% else %>
+          <ul class="no-style comments-list">
             <% comments.each do |comment| %>
-              <%= render partial: 'shared/comments/item.html.erb',
-                         locals: { comment: comment, readonly: true, report: true, export_all: export_all } %>
+              <% comment_ts = comment.created_at %>
+              <li class="comment" data-ts="<%= comment_ts.to_i %>">
+                <span class="comment-prefix">
+                  <em><%=t "projects.reports.elements.result_comments.comment_prefix", user: comment.user.full_name, date: l(comment_ts, format: :full_date), time: l(comment_ts, format: :time) %></em>
+                </span>
+                <span class="comment-message">
+                  &nbsp;
+                  <%= custom_auto_link(comment.message) %>
+                </span>
+              </li>
             <% end %>
           </ul>
-        <% else %>
-          <em><%= t('projects.reports.elements.result_comments.no_comments') %></em>
         <% end %>
       </div>
     </div>
   </div>
-  <% if defined?(children) %>
-    <div class="report-element-children">
-      <%= children %>
-    </div>
-  <% end %>
+  <div class="report-element-children">
+    <%= children if (defined? children and children.present?) %>
+  </div>
 </div>

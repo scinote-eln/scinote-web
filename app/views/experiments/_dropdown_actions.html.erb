@@ -2,56 +2,32 @@
   aria-labelledby="exActionsMenu-<%= experiment.id %>"
   data-id="<%= experiment.id %>">
 
-  <% if can_manage_experiment?(experiment) %>
+  <% if can_edit_experiment(experiment) %>
   <li><%= link_to t('experiments.edit.label_title'),
-                edit_experiment_url(experiment),
+                edit_project_experiment_url(project, experiment),
                 remote: true,
                 type: 'button',
                 data: { id: experiment.id },
                 class: 'edit-experiment' %></li>
   <% end %>
-  <li data-hook="experiment-actions-second-child"></li>
-  <% if can_clone_experiment?(experiment) %>
+  <% if can_clone_experiment(experiment) %>
     <li><%= link_to t('experiments.clone.label_title'),
-                    clone_modal_experiment_url(experiment),
-                    remote: true, type: 'button',
-                    class: 'clone-experiment' %>
-    </li>
-  <% end %>
-  <% if can_move_experiment?(experiment) %>
-    <li><%= link_to t('experiments.move.label_title'),
-                    move_modal_experiment_url(experiment),
-                    remote: true, type: 'button',
-                    class: 'move-experiment'%>
-    </li>
-  <% end %>
-  <!-- Set or view user experiment assignments -->
-  <% if can_manage_experiment_users?(experiment) %>
-    <li>
-      <%= link_to edit_access_permissions_project_experiment_path(project, experiment), data: { action: 'remote-modal'} do %>
-        <span><%= t('experiments.index.experiment_access') %></span>
-      <% end %>
-    </li>
-  <% else %>
-    <li>
-      <%= link_to access_permissions_project_experiment_path(project, experiment), data: { action: 'remote-modal'} do %>
-        <span><%= t('experiments.index.experiment_access') %></span>
-      <% end %>
-    </li>
-  <% end %>
-  <% if can_archive_experiment?(experiment) %>
-    <li><%= link_to t('experiments.archive.label_title'),
-                  archive_experiment_url(experiment),
+                  clone_modal_experiment_url(experiment),
+                  remote: true,
                   type: 'button',
-                  method: :post,
-                  data: { confirm: t('experiments.canvas.archive_confirm') } %></li>
+                  class: 'clone-experiment' %></li>
   <% end %>
-  <% if can_restore_experiment?(experiment) %>
-    <% experiment_form = nil %>
-    <%= form_for experiment, method: :patch, format: :html do |f| %>
-      <% experiment_form = f %>
-      <%= f.hidden_field :archived, value: false %>
-    <% end %>
-    <li><a href="#" class="form-submit-link" data-turbolinks="false" data-submit-form="<%= experiment_form.options[:html][:id] %>"><%= t "projects.experiment_archive.restore_option" %></a></li>
+  <% if can_move_experiment(experiment) %>
+    <li><%= link_to t('experiments.move.label_title'),
+                  move_modal_experiment_url(experiment),
+                  remote: true,
+                  type: 'button',
+                  class: 'move-experiment' %></li>
+  <% end %>
+  <% if can_archive_experiment(experiment) %>
+  <li><%= link_to t('experiments.archive.label_title'),
+                archive_experiment_url(experiment),
+                type: 'button',
+                data: { confirm: t('experiments.canvas.archive_confirm') } %></li>
   <% end %>
 </ul>

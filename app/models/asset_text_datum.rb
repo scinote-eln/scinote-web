@@ -1,6 +1,4 @@
-# frozen_string_literal: true
-
-class AssetTextDatum < ApplicationRecord
+class AssetTextDatum < ActiveRecord::Base
   include SearchableModel
 
   validates :data, presence: true
@@ -10,7 +8,7 @@ class AssetTextDatum < ApplicationRecord
   after_save :update_ts_index
 
   def update_ts_index
-    if saved_change_to_data?
+    if data_changed?
       sql = "UPDATE asset_text_data " +
             "SET data_vector = to_tsvector(data) " +
             "WHERE id = " + Integer(id).to_s

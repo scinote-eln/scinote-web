@@ -1,0 +1,25 @@
+one:
+  result: one
+  comment: three
+
+two:
+  result: one
+  comment: four
+
+three:
+  result: two
+  comment: five
+
+four:
+  result: three
+  comment: six
+
+test:
+  result: test
+  comment: test
+
+<% 25.times do |n| %>
+test_<%= n %>:
+  result: test2
+  comment: test_result_comment_<%= n %>
+<% end %>

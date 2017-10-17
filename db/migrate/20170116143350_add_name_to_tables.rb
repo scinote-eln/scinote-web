@@ -1,4 +1,4 @@
-class AddNameToTables < ActiveRecord::Migration[4.2]
+class AddNameToTables < ActiveRecord::Migration
   def change
     add_column :tables, :name, :string, default: '', index: true
   end

@@ -1,4 +1,4 @@
-class AddExperimentsOrderToProjects < ActiveRecord::Migration[4.2]
+class AddExperimentsOrderToProjects < ActiveRecord::Migration
   def change
     add_column :projects, :experiments_order, :string
   end

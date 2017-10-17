@@ -1,7 +1,6 @@
-class ProtocolKeyword < ApplicationRecord
+class ProtocolKeyword < ActiveRecord::Base
   auto_strip_attributes :name, nullify: false
   validates :name,
-            uniqueness: { scope: :team },
             length: { minimum: Constants::NAME_MIN_LENGTH,
                       maximum: Constants::NAME_MAX_LENGTH }
   validates :team, presence: true

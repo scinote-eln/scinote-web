@@ -1,6 +1,6 @@
 <% results.each do |project| %>
   <h5>
-    <span class="fas fa-folder"></span>
+    <span class="glyphicon glyphicon-blackboard"></span>
     <%= render partial: 'search/results/partials/project_text.html.erb',
                locals: { project: project, query: search_query, link_to_page: :show } %>
   </h5>
@@ -11,20 +11,11 @@
       <%=l project.created_at, format: :full %>
     </span>
     <br>
-    <% if project.project_folder %>
-      <span>
-        <%=t "search.index.folder" %>
-        <%= render partial: "search/results/partials/project_folders_text.html.erb",
-                   locals: { folder: project.project_folder } %>
-      </span>
-      <br>
-    <% end %>
     <span>
       <%=t 'search.index.team' %>
       <%= render partial: 'search/results/partials/team_text.html.erb',
                  locals: { team: project.team } %>
     </span>
-    <span data-hook="search-result-project"></span>
   </p>
 
   <hr>

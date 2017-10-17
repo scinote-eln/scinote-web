@@ -1,4 +1,4 @@
-class AddExperimentLevel < ActiveRecord::Migration[4.2]
+class AddExperimentLevel < ActiveRecord::Migration
   def up
     # Create experiments table
     create_table :experiments do |t|

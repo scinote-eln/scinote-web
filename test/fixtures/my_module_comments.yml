@@ -1,0 +1,23 @@
+one:
+  my_module: list_of_samples
+  comment: thirteen
+
+two:
+  my_module: sample_prep
+  comment: fourteen
+
+three:
+  my_module: sample_prep
+  comment: fifteen
+
+four:
+  my_module: qpcr
+  comment: sixteen
+
+five:
+  my_module: quantification
+  comment: seventeen
+
+test:
+  my_module: qpcr
+  comment: eleven

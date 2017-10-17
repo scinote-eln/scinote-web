@@ -1,0 +1,8 @@
+<%= t('my_modules.states.state_label') %>
+<% if my_module.completed? %>
+  <strong class="alert-green">
+    <%= t('my_modules.states.completed_on', date: l(my_module.completed_on, format: :full_date)) %>
+  </strong>
+<% else %>
+  <strong><%= t('my_modules.states.in_progress') %></strong>
+<% end %>

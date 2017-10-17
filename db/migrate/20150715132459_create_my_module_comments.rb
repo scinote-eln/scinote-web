@@ -1,4 +1,4 @@
-class CreateMyModuleComments < ActiveRecord::Migration[4.2]
+class CreateMyModuleComments < ActiveRecord::Migration
   def change
     create_table :my_module_comments do |t|
       t.integer :my_module_id, null: false

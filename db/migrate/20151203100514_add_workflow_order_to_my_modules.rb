@@ -1,4 +1,4 @@
-class AddWorkflowOrderToMyModules < ActiveRecord::Migration[4.2]
+class AddWorkflowOrderToMyModules < ActiveRecord::Migration
   def up
     add_column :my_modules, :workflow_order, :integer, { null: false, default: -1}
   end

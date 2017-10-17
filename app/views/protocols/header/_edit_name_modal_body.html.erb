@@ -1,0 +1,3 @@
+<%= bootstrap_form_for @protocol, url: metadata_protocol_path(@protocol, format: :json), remote: :true do |f| %>
+  <%= f.text_field :name, label: t("protocols.header.edit_name_modal.label") %>
+<% end %>

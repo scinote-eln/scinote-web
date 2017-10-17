@@ -9,30 +9,18 @@ class Constants
   NAME_MAX_LENGTH = 255
   # Max characters for short text fields, after which they get truncated
   NAME_TRUNCATION_LENGTH = 25
-  # Max edge length
-  MAX_EDGE_LENGTH = 75
-  # Max character for listing projects in dropdown
-  MAX_NAME_TRUNCATION = 150
   # Max characters for short text fields, in dropdownList
   NAME_TRUNCATION_LENGTH_DROPDOWN = 20
   # Max characters for long text fields
   TEXT_MAX_LENGTH = 10000
   # Max characters for rich text fields (in html format)
-  RICH_TEXT_MAX_LENGTH = 100000
+  RICH_TEXT_MAX_LENGTH = 50000
   # Max characters for color field (given in HEX format)
   COLOR_MAX_LENGTH = 7
   # Max characters for text in dropdown list element
   DROPDOWN_TEXT_MAX_LENGTH = 15
-  # Max characters for text in modal list element
-  MODAL_TEXT_MAX_LENGTH = 55
-  # Max characters limit for (on most operating systems, it's ~255 characters,
-  # but this is with a bit more safety margin)
-  FILENAME_MAX_LENGTH = 100
   # Max characters for filenames, after which they get truncated
   FILENAME_TRUNCATION_LENGTH = 50
-  # Max characters for names of exported files and folders, after which they get
-  # truncated
-  EXPORTED_FILENAME_TRUNCATION_LENGTH = 20
 
   USER_INITIALS_MAX_LENGTH = 4
   # Password 'key stretching' factor
@@ -55,19 +43,16 @@ class Constants
   # Comments limited query/display elements for pages
   COMMENTS_SEARCH_LIMIT = 10
   # Activity limited query/display elements for pages
-  ACTIVITY_AND_NOTIF_SEARCH_LIMIT = 20
-  # Infinite Scroll load limit (elements per page)
-  INFINITE_SCROLL_LIMIT = 20
+  ACTIVITY_AND_NOTIF_SEARCH_LIMIT = 10
+
   # Maximum number of users that can be invited in a single action
   INVITE_USERS_LIMIT = 20
+
   # Maximum nr. of search results for atwho (smart annotations)
-  ATWHO_SEARCH_LIMIT = 10
-  # Max characters for repository name in Atwho modal
-  ATWHO_REP_NAME_LIMIT = 16
-  # Results limited query/display elements for pages
-  RESULTS_PER_PAGE_LIMIT = 10
-  #Experiments more button appears
-  EXPERIMENT_LONG_DESCRIPTION = 80
+  ATWHO_SEARCH_LIMIT = 5
+
+  # Maximum number of repositories per team allowed
+  REPOSITORIES_LIMIT = 5
 
   #=============================================================================
   # File and data memory size
@@ -75,11 +60,10 @@ class Constants
 
   # Max table JSON size in MB
   TABLE_JSON_MAX_SIZE_MB = 20
+  # Max uploaded file size in MB
+  FILE_MAX_SIZE_MB = 50
   # Max uploaded user picture avatar size in MB
   AVATAR_MAX_SIZE_MB = 0.2
-  # PDF preview file limit in MB
-  PDF_PREVIEW_MAX_SIZE_MB = 10
-
 
   #=============================================================================
   # Application space
@@ -96,35 +80,19 @@ class Constants
   #=============================================================================
 
   # Picture size formats
-  LARGE_PIC_FORMAT = [800, 600].freeze
-  MEDIUM_PIC_FORMAT = [300, 300].freeze
-  THUMB_PIC_FORMAT = [100, 100].freeze
-  ICON_PIC_FORMAT = [40, 40].freeze
-  ICON_SMALL_PIC_FORMAT = [30, 30].freeze
+  LARGE_PIC_FORMAT = '800x600>'.freeze
+  MEDIUM_PIC_FORMAT = '300x300>'.freeze
+  THUMB_PIC_FORMAT = '100x100>'.freeze
+  ICON_PIC_FORMAT = '40x40>'.freeze
+  ICON_SMALL_PIC_FORMAT = '30x30>'.freeze
 
   # Hands-on-table number of starting columns and rows
   HANDSONTABLE_INIT_COLS_CNT = 5
   HANDSONTABLE_INIT_ROWS_CNT = 5
 
-  # Word reports format. All units in Twips.
-  # A twip is 1/20 of a point. Word documents are printed at 72dpi. 1in == 72pt == 1440 twips.
-  # Here is default A4
-  REPORT_DOCX_WIDTH = 12240
-  REPORT_DOCX_HEIGHT = 15840
-  REPORT_DOCX_MARGIN_TOP = 720
-  REPORT_DOCX_MARGIN_RIGHT = 720
-  REPORT_DOCX_MARGIN_BOTTOM = 720
-  REPORT_DOCX_MARGIN_LEFT = 720
-
-  # Word borders in eighth point units.
-  # A eighth point is 1/8 of a point. A border size of 4 is equivalent to 0.5pt.
-  REPORT_DOCX_TABLE_BORDER_SIZE = 4
-
-  # All font size in half points
-  REPORT_DOCX_EXPERIMENT_TITLE_SIZE = 28
-  REPORT_DOCX_MY_MODULE_TITLE_SIZE = 24
-  REPORT_DOCX_STEP_TITLE_SIZE = 22
-  REPORT_DOCX_STEP_ELEMENTS_TITLE_SIZE = 20
+  # Screen width which is still suitable for sidebar to be shown, otherwise
+  # hidden
+  SCREEN_WIDTH_LARGE = 928
 
   #=============================================================================
   # Styling
@@ -146,18 +114,7 @@ class Constants
   # URL); it expires in exactly one day
   URL_LONG_EXPIRE_TIME = 86_400
 
-  DEFAULT_DATE_FORMAT = '%m/%d/%Y'.freeze
-
-  SUPPORTED_DATE_FORMATS = [
-    # US formats
-    '%m/%d/%Y', '%m.%d.%Y', '%m. %d. %Y', '%m-%d-%Y', '%-m/%-d/%Y',
-    '%-m.%-d.%Y', '%-m. %-d. %Y', '%-m-%-d-%Y',
-    # European formats
-    '%d/%m/%Y', '%d.%m.%Y', '%d. %m. %Y', '%d-%b-%Y', '%Y-%m-%d',
-    '%d.%b.%Y', '%Y/%b/%d', '%d, %B, %Y', '%B, %d, %Y', '%-d/%-m/%Y',
-    '%-d.%-m.%Y', '%-d. %-m. %Y', '%d-%m-%Y', '%Y-%-m-%-d', '%-d-%b-%Y',
-    '%Y-%b-%-d', '%-d, %B, %Y', '%B, %-d, %Y'
-  ].freeze
+  DATE_FORMAT = '%d.%m.%Y %H:%M'.freeze
 
   #=============================================================================
   # Application colors
@@ -172,13 +129,13 @@ class Constants
     '#FF4500',
     '#008B8B',
     '#757575',
-    '#2CB72C',
-    '#F5AD00',
-    '#0ECDC0',
+    '#32CD32',
+    '#FFD700',
+    '#48D1CC',
     '#15369E',
     '#FF69B4',
     '#CD5C5C',
-    '#ADADAD',
+    '#C9C9C9',
     '#6495ED',
     '#DC143C',
     '#FF8C00',
@@ -187,115 +144,59 @@ class Constants
   ].freeze
 
   # Theme colors
-  BRAND_PRIMARY = '#104da9'.freeze # $brand-primary
+  COLOR_THEME_PRIMARY = '#37a0d9'.freeze # $color-theme-primary
+  COLOR_THEME_SECONDARY = '#8fd13f'.freeze # $color-theme-secondary
+  COLOR_THEME_DARK = '#6d6e71'.freeze # $color-theme-dark
 
   # Grayscale colors
   COLOR_WHITE = '#ffffff'.freeze # $color-white
-  COLOR_CONCRETE = '#f0f0f6'.freeze # $color-concrete
-  COLOR_ALTO = '#d0d0d8'.freeze # $color-alto
-  COLOR_SILVER_CHALICE = '#a0a0a8'.freeze # $color-silver-chalice
-  COLOR_VOLCANO = '#404048'.freeze # $color-volcano
-  COLOR_BLACK = '#231f20'.freeze # $color-black
+  COLOR_ALABASTER = '#fcfcfc'.freeze # $color-alabaster
+  COLOR_SNOW = '#f9f9f9'.freeze # $color-snow
+  COLOR_WILD_SAND = '#f5f5f5'.freeze # $color-wild-sand
+  COLOR_CONCRETE = '#f2f2f2'.freeze # $color-concrete
+  COLOR_GALLERY = '#eeeeee'.freeze # $color-gallery
+  COLOR_GAINSBORO = '#e3e3e3'.freeze # $color-gainsboro
+  COLOR_ALTO = '#d2d2d2'.freeze # $color-alto
+  COLOR_SILVER = '#c5c5c5'.freeze # $color-silver
+  COLOR_DARK_GRAY = '#adadad'.freeze # $color-dark-gray
+  COLOR_SILVER_CHALICE = '#a0a0a0'.freeze # $color-silver-chalice
+  COLOR_GRAY = '#909088'.freeze # $color-gray
+  COLOR_DOVE_GRAY = '#666666'.freeze # $color-dove-gray
+  COLOR_EMPEROR = '#555555'.freeze # $color-emperor
+  COLOR_MINE_SHAFT = '#333333'.freeze # $color-mine-shaft
+  COLOR_NERO = '#262626'.freeze # $color-nero
+  COLOR_BLACK = '#000000'.freeze # $color-black
+  COLOR_GRAY_LIGHT_YADCF = '#cccccc'.freeze # $color-gray-light-yadcf
+  COLOR_GRAY_DARK_YADCF = '#a9a9a9'.freeze # $color-gray-dark-yadcf
 
-  # Fonts
-  FONT_FAMILY_BASE = 'Lato,"Open Sans",Arial,Helvetica,sans-serif;'.freeze # $font-family-base
+  # Miscelaneous colors
+  COLOR_MYSTIC = '#eaeff2'.freeze # $color-mystic
+  COLOR_CANDLELIGHT = '#ffda23'.freeze # $color-candlelight
+  COLOR_BLUE_YADCF = '#337ab7'.freeze # $color-blue-yadcf
+
+  # Red colors
+  COLOR_MOJO = '#cf4b48'.freeze # $color-mojo
+  COLOR_APPLE_BLOSSOM = '#a94442'.freeze # $color-apple-blossom
+  COLOR_MILANO_RED = '#a70b05'.freeze # $color-milano-red
 
   #=============================================================================
   # External URLs
   #=============================================================================
 
   HTTP = 'http://'.freeze
-  TUTORIALS_URL = (HTTP + 'goo.gl/YH3fXA').freeze
-  SUPPORT_URL = 'https://scinote-3850750.hs-sites.com/en/knowledge'.freeze
+  TUTORIALS_URL = (HTTP + 'scinote.net/product/tutorials/').freeze
+  SUPPORT_URL = (HTTP + 'scinote.net/support').freeze
+  PREMIUM_URL = (HTTP + 'scinote.net/premium/').freeze
+  CONTACT_URL = (HTTP + 'scinote.net/story-of-scinote/#contact-scinote').freeze
+  RELEASE_NOTES_URL = (HTTP + 'scinote.net/docs/release-notes/').freeze
   # Default user picture avatar
   DEFAULT_AVATAR_URL = '/images/:style/missing.png'.freeze
-
-  ACADEMY_BL_LINK = 'https://scinote.net/academy/?utm_source=SciNote%20software%20BL&utm_medium=SciNote%20software%20BL'.freeze
-
-  PWA_URL = 'https://:pwa_domain/teams/:team_id/projects/:project_id/experiments/:experiment_id/tasks/:task_id/protocol/:protocol_id/:step_id?domain=:domain'.freeze
-
-  TWO_FACTOR_URL = {
-    google: {
-      android: 'https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2',
-      ios: 'https://apps.apple.com/us/app/google-authenticator/id388497605'
-    },
-    microsoft: {
-      android: 'https://play.google.com/store/apps/details?id=com.azure.authenticator',
-      ios: 'https://apps.apple.com/us/app/microsoft-authenticator/id983156458'
-    },
-    two_fa: {
-      android: 'https://play.google.com/store/apps/details?id=com.twofasapp',
-      ios: 'https://apps.apple.com/us/app/2fa-authenticator-2fas/id1217793794'
-    },
-  }
-
-  SCINOTE_FLUICS_URL = 'https://www.scinote.net/fluics/'.freeze
-  TWO_FACTOR_RECOVERY_CODE_COUNT = 6
-  TWO_FACTOR_RECOVERY_CODE_LENGTH = 12
-
-  #=============================================================================
-  # Protocol importers
-  #=============================================================================
-
-  PROTOCOLS_ENDPOINTS = {
-    protocolsio: {
-      v3: 'ProtocolsIo::V3'
-    }
-  }.freeze
-
-  PROTOCOLS_IO_URL = 'https://www.protocols.io/'.freeze
-
-  PROTOCOLS_IO_V3_API = {
-    base_uri: 'https://www.protocols.io/api/v3/',
-    default_timeout: 10,
-    debug_level: :debug,
-    sort_mappings: {
-      alpha_asc: { order_field: :name, order_dir: :asc },
-      alpha_desc: { order_field: :name, order_dir: :desc },
-      newest: { order_field: :date, order_dir: :desc },
-      oldest: { order_field: :date, order_dir: :asc }
-    },
-    endpoints: {
-      protocols: {
-        default_query_params: {
-          filter: :public,
-          key: '',
-          order_field: :activity,
-          order_dir: :desc,
-          page_size: 50,
-          page_id: 1,
-          fields: 'id,title,authors,created_on,uri,stats,published_on'
-        }
-      },
-      publications: {
-        default_query_params: {
-          latest: 50
-        }
-      }
-    },
-    source_id: 'protocolsio/v3'
-  }.freeze
-
-  PROTOCOLS_DESC_TAGS = %w(a img i br).freeze
 
   #=============================================================================
   # Other
   #=============================================================================
 
-  FILE_TEXT_FORMATS = %w(doc docm docx dot dotm dotx odt rtf).freeze
-
-  FILE_TABLE_FORMATS = %w(csv ods xls xlsb xlsm xlsx).freeze
-
-  FILE_PRESENTATION_FORMATS =
-    %w(odp pot potm potx pps ppsm ppsx ppt pptm pptx).freeze
-
-  WOPI_EDITABLE_FORMATS = %w(
-    docx docm odt xlsx xlsm xlsb ods pptx ppsx odp
-  ).freeze
-
   TEXT_EXTRACT_FILE_TYPES = [
-    'application/msword',
-    'application/vnd.openxmlformats-officedocument.wordprocessingml.template',
     'application/pdf',
     'application/rtf',
     'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
@@ -310,26 +211,19 @@ class Constants
     'text/plain'
   ].freeze
 
-  PREVIEWABLE_FILE_TYPES = TEXT_EXTRACT_FILE_TYPES
-
   WHITELISTED_IMAGE_TYPES = [
-    'gif', 'jpeg', 'pjpeg', 'png', 'x-png', 'svg+xml', 'bmp', 'tiff', 'jpg'
+    'gif', 'jpeg', 'pjpeg', 'png', 'x-png', 'svg+xml', 'bmp', 'tiff'
   ].freeze
-
-  WHITELISTED_IMAGE_TYPES_EDITABLE = %w(
-    jpeg pjpeg png
-  ).freeze
 
   WHITELISTED_TAGS = %w(
     a b strong i em li ul ol h1 del ins h2 h3 h4 h5 h6 br sub sup p code hr div
-    span u s blockquote pre col colgroup table thead tbody th tr td img
+    span u s blockquote pre col colgroup table thead tbody th tr td
   ).freeze
 
-  WHITELISTED_ATTRIBUTES = [
-    'href', 'src', 'width', 'height', 'alt', 'cite', 'datetime', 'title',
-    'class', 'name', 'xml:lang', 'abbr', 'style', 'target', :data, 'border', 'contenteditable',
-    'colspan', 'rowspan'
-  ].freeze
+  WHITELISTED_ATTRIBUTES = %w(
+    href src width height alt cite datetime title class name xml:lang abbr style
+    target data-*
+  ).freeze
 
   WHITELISTED_CSS_ATTRIBUTES = {
     allow_comments: false,
@@ -965,85 +859,13 @@ class Constants
     ]
   }.freeze
 
-  REPOSITORY_DEFAULT_PAGE_SIZE = 10
-  REPOSITORY_LIST_ITEMS_PER_COLUMN = 500
-  REPOSITORY_CHECKLIST_ITEMS_PER_COLUMN = 50
-  REPOSITORY_NUMBER_TYPE_DEFAULT_DECIMALS = 2
-  REPOSITORY_NUMBER_TYPE_MAX_DECIMALS = 10
-
-  # Repository default table state
-  REPOSITORY_TABLE_DEFAULT_STATE = {
-    'time' => 0,
-    'start' => 0,
-    'length' => REPOSITORY_DEFAULT_PAGE_SIZE,
-    'order' => [[2, 'asc']], # Default sorting by 'ID' column
-    'columns' => [],
-    'assigned' => 'assigned',
-    'ColReorder' => [*0..7]
-  }
-  8.times do |i|
-    REPOSITORY_TABLE_DEFAULT_STATE['columns'] << {
-      'visible' => (i < 6),
-      'searchable' => (i >= 1), # Checkboxes column is not searchable
-      'search' => { 'search' => '',
-                    'smart' => true,
-                    'regex' => false,
-                    'caseInsensitive' => true }
-    }
-  end
-  REPOSITORY_TABLE_DEFAULT_STATE.freeze
-
-  # Repository default table state
-  REPOSITORY_SNAPSHOT_TABLE_DEFAULT_STATE = {
-    'time' => 0,
-    'start' => 0,
-    'length' => REPOSITORY_DEFAULT_PAGE_SIZE,
-    'order' => [[1, 'asc']], # Default sorting by 'ID' column
-    'columns' => [],
-    'assigned' => 'assigned',
-    'ColReorder' => [*0..4]
-  }
-
-  REPOSITORY_SNAPSHOT_TABLE_DEFAULT_STATE['columns'] = REPOSITORY_TABLE_DEFAULT_STATE['columns'][0..4]
-
-  REPOSITORY_SNAPSHOT_TABLE_DEFAULT_STATE.freeze
-
-  # For default custom column template, any searchable default
-  # column can be reused
-  REPOSITORY_TABLE_STATE_CUSTOM_COLUMN_TEMPLATE =
-    REPOSITORY_TABLE_DEFAULT_STATE['columns'][1].deep_dup
-                                                .freeze
-
   EXPORTABLE_ZIP_EXPIRATION_DAYS = 7
-
-  REPOSITORY_LIST_ITEMS_DELIMITERS_MAP = {
-    return: "\n",
-    comma: ',',
-    semicolon: ';',
-    space: ' '
-  }.freeze
-
-  REPOSITORY_LIST_ITEMS_DELIMITERS_ICON_MAP = {
-    auto: "＊",
-    return: "↵",
-    comma: ',',
-    semicolon: ';',
-    space: '⎵'
-  }.freeze
-
-  IMPORT_REPOSITORY_ITEMS_LIMIT = 2000
-
-  DEFAULT_TEAM_REPOSITORIES_LIMIT = 6
 
   # Very basic regex to check for validity of emails
   BASIC_EMAIL_REGEX = URI::MailTo::EMAIL_REGEXP
 
-  TINY_MCE_ASSET_REGEX = /data-mce-token="(\w+)"/
-
   # Team name for default admin user
   DEFAULT_PRIVATE_TEAM_NAME = 'My projects'.freeze
-
-  TEMPLATES_PROJECT_NAME = 'Templates'.freeze
 
   #                             )       \   /      (
   #                            /|\      )\_/(     /|\
@@ -1058,7 +880,7 @@ class Constants
   #   |        |_| |_| |_|\__,_|_| |_|_|\_\   \__, |\___/ \_,|_|   _        |
   #   |                                       |___/               (_)       |
   #   |                                                                     |
-  #   |   Special Thank You for supporting SciNote on Kicstarter goes       |
+  #   |   Special Thank You for supporting sciNote on Kicstarter goes       |
   #   |   to the following supporters                                       |
   #   | ._________________________________________________________________. |
   #   |'               l    /\ /     \\            \ /\   l                `|

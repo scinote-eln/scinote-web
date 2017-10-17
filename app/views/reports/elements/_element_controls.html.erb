@@ -1,0 +1,18 @@
+<% if !defined? show_sort then show_sort = false end %>
+<% if !defined? show_move_up then show_move_up = true end %>
+<% if !defined? show_move_down then show_move_down = true end %>
+<% if !defined? show_remove then show_remove = true end %>
+
+<%if show_sort %>
+  <a href="" data-action="sort-asc" title="<%=t "projects.reports.elements.all.sort_asc" %>"><span class="glyphicon glyphicon-sort-by-attributes"></span></a>
+  <a href="" data-action="sort-desc" title="<%=t "projects.reports.elements.all.sort_desc" %>"><span class="glyphicon glyphicon-sort-by-attributes-alt"></span></a>
+<% end %>
+<% if show_move_up %>
+  <a href="" data-action="move-up" title="<%=t "projects.reports.elements.all.move_up" %>"><span class="glyphicon glyphicon-chevron-up"></span></a>
+<% end %>
+<% if show_move_down %>
+  <a href="" data-action="move-down" title="<%=t "projects.reports.elements.all.move_down" %>"><span class="glyphicon glyphicon-chevron-down"></span></a>
+<% end %>
+<% if show_remove %>
+  <a href="" data-action="remove" title="<%=t "projects.reports.elements.all.remove" %>"><span class="glyphicon glyphicon-remove"></span></a>
+<% end %>

@@ -1,7 +1,97 @@
-/* global dropdownSelector */
-
-(function() {
+(function(){
   'use strict';
+  /**
+   * Toggle the view/edit form visibility.
+   * @param form - The jQuery form selector.
+   * @param edit - True to set form to edit mode;
+   * false to set form to view mode.
+   */
+  function toggleFormVisibility(form, edit) {
+    if (edit) {
+      form.find("[data-part='view']").hide();
+      form.find("[data-part='edit']").show();
+      form.find("[data-part='edit'] input:not([type='file']):not([type='submit']):first").focus();
+    } else {
+      form.find("[data-part='view']").show();
+      form.find("[data-part='edit'] input").blur();
+      form.find("[data-part='edit']").hide();
+
+      // Clear all errors on the parent form
+      form.clearFormErrors();
+
+      // Clear any neccesary fields
+      form.find("input[data-role='clear']").val("");
+
+      // Copy field data
+      var val = form.find("input[data-role='src']").val();
+      form.find("input[data-role='edit']").val(val);
+    }
+  }
+
+  var forms = $("form[data-for]");
+
+  // Add "edit form" listeners
+  forms
+  .find("[data-action='edit']").click(function() {
+    var form = $(this).closest("form");
+
+    // First, hide all form edits
+    _.each(forms, function(form) {
+      toggleFormVisibility($(form), false);
+    });
+
+    // Then, edit the current form
+    toggleFormVisibility(form, true);
+  });
+
+  // Add "cancel form" listeners
+  forms
+  .find("[data-action='cancel']").click(function() {
+    var form = $(this).closest("form");
+
+    // Hide the edit portion of the form
+    toggleFormVisibility(form, false);
+  });
+
+  // Add form submit listeners
+  forms
+  .on("ajax:success", function(ev, data, status) {
+    // Simply reload the page
+    location.reload();
+  })
+  .on("ajax:error", function(ev, data, status) {
+    // Render form errors
+    $(this).renderFormErrors("user", data.responseJSON);
+  });
+
+  var repeatTutorialModal = $("#repeat-tutorial-modal");
+  var repeatTutorialModalBody = repeatTutorialModal.find(".modal-body");
+  initRepeatTutorialModal();
+  notificationsSettings();
+  initNotificationSettingsForm();
+
+  $("#reset-tutorial-btn")
+    .on("ajax:before", function () {
+      repeatTutorialModal.modal('show');
+    })
+
+    .on("ajax:success", function (e, data) {
+      initRepeatTutorialModalBody(data);
+    });
+
+  function initRepeatTutorialModal() {
+  // Remove modal content when modal window is closed.
+    repeatTutorialModal.on("hidden.bs.modal", function () {
+      repeatTutorialModalBody.html("");
+    });
+  }
+
+  // Initialize ajax listeners and elements style on modal body. This
+  // function must be called when modal body is changed.
+  function initRepeatTutorialModalBody(data) {
+    repeatTutorialModalBody.html(data.html);
+    repeatTutorialModalBody.find(".selectpicker").selectpicker();
+  }
 
   // Setup notification checkbox buttons
   function notificationsSettings() {
@@ -11,10 +101,10 @@
     for (var i = 0; i < notification_settings.length; i++ ) {
       var setting = $('[name="' + notification_settings[i] + '"]');
       var dependant = $('[name="' + notification_settings[i] + '_email"]');
-      dependant.checkboxpicker({ onActiveCls: 'btn-toggle', offActiveCls: 'btn-toggle' });
+      dependant.checkboxpicker({ onActiveCls: 'btn-primary' });
       setting
         .checkboxpicker({
-          onActiveCls: 'btn-toggle', offActiveCls: 'btn-toggle'
+          onActiveCls: 'btn-primary'
         }).change(function() {
           if ( $(this).prop('checked') ) {
             enableDependant($('[name="' + $(this).attr('name') + '_email"]'));
@@ -36,7 +126,7 @@
     function setEmailSwitch(setting) {
       setting
         .checkboxpicker({
-          onActiveCls: 'btn-toggle', offActiveCls: 'btn-toggle'
+          onActiveCls: 'btn-primary'
         });
       if ( setting.attr('value') === 'true' ) {
         setting.prop('checked', true);
@@ -59,7 +149,7 @@
     var system_message_notification = $('[name="system_message_notification"]');
     system_message_notification
       .checkboxpicker({
-        onActiveCls: 'btn-toggle', offActiveCls: 'btn-toggle'
+        onActiveCls: 'btn-primary'
       });
     system_message_notification.prop('checked', true);
     system_message_notification.prop('disabled', true);
@@ -68,7 +158,7 @@
     var system_message_notification_mail = $('[name="system_message_notification_email"]');
     system_message_notification_mail
       .checkboxpicker({
-        onActiveCls: 'btn-toggle', offActiveCls: 'btn-toggle'
+        onActiveCls: 'btn-primary'
       });
     system_message_notification_mail.prop(
       'checked',
@@ -77,63 +167,11 @@
   }
 
   // triggers submit action when the user clicks
-  function initTogglableSettingsForm() {
-    $('#togglable-settings-panel')
+  function initNotificationSettingsForm() {
+    $('#notifications-settings-panel')
       .find('.btn-group')
       .on('click', function() {
         $(this).submit();
       });
   }
-
-  function initTimeZoneSelector() {
-    dropdownSelector.init('#time-zone-input-field', {
-      noEmptyOption: true,
-      singleSelect: true,
-      closeOnSelect: true,
-      selectAppearance: 'simple',
-      onClose: function() {
-        $.ajax({
-          url: $('#time-zone-input-field').data('path-to-update'),
-          type: 'PUT',
-          dataType: 'json',
-          data: { user: { time_zone: dropdownSelector.getValues('#time-zone-input-field') } },
-          success: function() {
-            dropdownSelector.highlightSuccess('#time-zone-input-field');
-          },
-          error: function() {
-            dropdownSelector.highlightError('#time-zone-input-field');
-          }
-        });
-      }
-    });
-  }
-
-  function initDateFormatSelector() {
-    dropdownSelector.init('#date-format-input-field', {
-      noEmptyOption: true,
-      singleSelect: true,
-      closeOnSelect: true,
-      selectAppearance: 'simple',
-      onClose: function() {
-        $.ajax({
-          url: $('#date-format-input-field').data('path-to-update'),
-          type: 'PUT',
-          dataType: 'json',
-          data: { user: { date_format: dropdownSelector.getValues('#date-format-input-field') } },
-          success: function() {
-            dropdownSelector.highlightSuccess('#date-format-input-field');
-          },
-          error: function() {
-            dropdownSelector.highlightError('#date-format-input-field');
-          }
-
-        });
-      }
-    });
-  }
-
-  initTimeZoneSelector();
-  initDateFormatSelector();
-  notificationsSettings();
-  initTogglableSettingsForm();
 })();

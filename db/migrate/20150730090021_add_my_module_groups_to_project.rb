@@ -1,4 +1,4 @@
-class AddMyModuleGroupsToProject < ActiveRecord::Migration[4.2]
+class AddMyModuleGroupsToProject < ActiveRecord::Migration
   def change
     add_column :my_module_groups, :project_id, :integer
 

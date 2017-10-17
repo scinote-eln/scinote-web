@@ -1,81 +1,33 @@
-# frozen_string_literal: true
-
 class RepositoriesController < ApplicationController
-  include InventoriesHelper
-  include ActionView::Helpers::TagHelper
-  include ActionView::Context
-  include IconsHelper
-  include TeamsHelper
-  include RepositoriesDatatableHelper
-  include MyModulesHelper
-
-  before_action :switch_team_with_param, only: :show
-  before_action :load_repository, except: %i(index create create_modal sidebar archive restore)
-  before_action :load_repositories, only: %i(index show sidebar)
-  before_action :load_repositories_for_archiving, only: :archive
-  before_action :load_repositories_for_restoring, only: :restore
-  before_action :check_view_all_permissions, only: %i(index sidebar)
-  before_action :check_view_permissions, except: %i(index create_modal create update destroy parse_sheet import_records sidebar archive restore)
-  before_action :check_manage_permissions, only: %i(rename_modal update)
-  before_action :check_delete_permissions, only: %i(destroy destroy_modal)
-  before_action :check_archive_permissions, only: %i(archive restore)
-  before_action :check_share_permissions, only: :share_modal
-  before_action :check_create_permissions, only: %i(create_modal create)
-  before_action :check_copy_permissions, only: %i(copy_modal copy)
-  before_action :set_inline_name_editing, only: %i(show)
-
-  layout 'fluid'
+  before_action :load_vars,
+                except: %i(index create create_modal parse_sheet import_records)
+  before_action :load_parent_vars, except:
+    %i(repository_table_index export_repository parse_sheet import_records)
+  before_action :check_team, only: %i(parse_sheet import_records)
+  before_action :check_view_all_permissions, only: :index
+  before_action :check_view_permissions, only: :export_repository
+  before_action :check_edit_and_destroy_permissions, only:
+    %i(destroy destroy_modal rename_modal update)
+  before_action :check_copy_permissions, only:
+    %i(copy_modal copy)
+  before_action :check_create_permissions, only:
+    %i(create_new_modal create)
 
   def index
+    render('repositories/index')
+  end
+
+  def show_tab
     respond_to do |format|
-      format.html do
-        render 'empty_index' if @repositories.blank?
-      end
       format.json do
-        render json: prepare_repositories_datatable(@repositories, current_team, params)
+        render json: {
+          html: render_to_string(
+            partial: 'repositories/repository.html.erb',
+            locals: { repository: @repository }
+          )
+        }
       end
     end
-  end
-
-  def sidebar
-    render json: {
-      html: render_to_string(partial: 'repositories/sidebar.html.erb', locals: {
-                               repositories: @repositories,
-                               archived: params[:archived] == 'true'
-                             })
-    }
-  end
-
-  def show
-    @display_edit_button = can_create_repository_rows?(@repository)
-    @display_delete_button = can_delete_repository_rows?(@repository)
-    @display_duplicate_button = can_create_repository_rows?(@repository)
-    @snapshot_provisioning = @repository.repository_snapshots.provisioning.any?
-
-    @busy_printer = LabelPrinter.where.not(current_print_job_ids: []).first
-  end
-
-  def table_toolbar
-    render json: {
-      html: render_to_string(partial: 'repositories/toolbar_buttons.html.erb')
-    }
-  end
-
-  def status
-    render json: {
-      editable: can_manage_repository_rows?(@repository),
-      snapshot_provisioning: @repository.repository_snapshots.provisioning.any?
-    }
-  end
-
-  def load_table
-    render json: {
-      html: render_to_string(partial: 'repositories/repository_table.html.erb',
-                             locals: {
-                               repository: @repository,
-                               repository_index_link: repository_table_index_path(@repository)
-                             })
-    }
   end
 
   def create_modal
@@ -91,17 +43,9 @@ class RepositoriesController < ApplicationController
     end
   end
 
-  def share_modal
-    respond_to do |format|
-      format.json do
-        render json: { html: render_to_string(partial: 'share_repository_modal.html.erb') }
-      end
-    end
-  end
-
   def create
     @repository = Repository.new(
-      team: current_team,
+      team: @team,
       created_by: current_user
     )
     @repository.assign_attributes(repository_params)
@@ -109,11 +53,9 @@ class RepositoriesController < ApplicationController
     respond_to do |format|
       format.json do
         if @repository.save
-          log_activity(:create_inventory)
-
           flash[:success] = t('repositories.index.modal_create.success_flash',
                               name: @repository.name)
-          render json: { url: repository_path(@repository) },
+          render json: { url: team_repositories_path(repository: @repository) },
             status: :ok
         else
           render json: @repository.errors,
@@ -135,37 +77,11 @@ class RepositoriesController < ApplicationController
     end
   end
 
-  def archive
-    service = Repositories::ArchiveRepositoryService.call(repositories: @repositories,
-                                                          user: current_user,
-                                                          team: current_team)
-    if service.succeed?
-      render json: { flash: t('repositories.archive_inventories.success_flash') }, status: :ok
-    else
-      render json: { error: service.error_message }, status: :unprocessable_entity
-    end
-  end
-
-  def restore
-    service = Repositories::RestoreRepositoryService.call(repositories: @repositories,
-                                                          user: current_user,
-                                                          team: current_team)
-    if service.succeed?
-      render json: { flash: t('repositories.restore_inventories.success_flash') }, status: :ok
-    else
-      render json: { error: service.error_message }, status: :unprocessable_entity
-    end
-  end
-
   def destroy
     flash[:success] = t('repositories.index.delete_flash',
                         name: @repository.name)
-
-    log_activity(:delete_inventory) # Log before delete id
-
-    @repository.discard
-    @repository.destroy_discarded(current_user.id)
-    redirect_to team_repositories_path(archived: true)
+    @repository.destroy
+    redirect_to team_repositories_path
   end
 
   def rename_modal
@@ -181,15 +97,16 @@ class RepositoriesController < ApplicationController
   end
 
   def update
-    @repository.update(repository_params)
+    old_name = @repository.name
+    @repository.update_attributes(repository_params)
 
     respond_to do |format|
       format.json do
         if @repository.save
-          log_activity(:rename_inventory) # Acton only for renaming
-
+          flash[:success] = t('repositories.index.rename_flash',
+                              old_name: old_name, new_name: @repository.name)
           render json: {
-            url: team_repositories_path
+            url: team_repositories_path(repository: @repository)
           }, status: :ok
         else
           render json: @repository.errors, status: :unprocessable_entity
@@ -200,7 +117,7 @@ class RepositoriesController < ApplicationController
 
   def copy_modal
     @tmp_repository = Repository.new(
-      team: current_team,
+      team: @team,
       created_by: current_user,
       name: @repository.name
     )
@@ -217,7 +134,7 @@ class RepositoriesController < ApplicationController
 
   def copy
     @tmp_repository = Repository.new(
-      team: current_team,
+      team: @team,
       created_by: current_user
     )
     @tmp_repository.assign_attributes(repository_params)
@@ -240,7 +157,7 @@ class RepositoriesController < ApplicationController
               new: copied_repository.name
             )
             render json: {
-              url: repository_path(copied_repository)
+              url: team_repositories_path(repository: copied_repository)
             }, status: :ok
           end
         end
@@ -250,42 +167,43 @@ class RepositoriesController < ApplicationController
 
   # AJAX actions
   def repository_table_index
-    respond_to do |format|
-      format.json do
-        render json: ::RepositoryDatatable.new(view_context, @repository, nil, current_user)
+    if @repository.nil? || !can_view_repository(@repository)
+      render_403
+    else
+      respond_to do |format|
+        format.html
+        format.json do
+          render json: ::RepositoryDatatable.new(view_context,
+                                                 @repository,
+                                                 nil,
+                                                 current_user)
+        end
       end
     end
   end
 
   def parse_sheet
-    render_403 unless can_create_repository_rows?(@repository)
+    repository = current_team.repositories.find_by_id(params[:id])
 
-    unless import_params[:file]
-      repository_response(t('repositories.parse_sheet.errors.no_file_selected'))
+    unless params[:file]
+      repository_response(t('teams.parse_sheet.errors.no_file_selected'))
       return
     end
     begin
       parsed_file = ImportRepository::ParseRepository.new(
-        file: import_params[:file],
-        repository: @repository,
+        file: params[:file],
+        repository: repository,
         session: session
       )
       if parsed_file.too_large?
         repository_response(t('general.file.size_exceeded',
-                              file_size: Rails.configuration.x.file_max_size_mb))
-      elsif parsed_file.has_too_many_rows?
-        repository_response(
-          t('repositories.import_records.error_message.items_limit',
-            items_size: Constants::IMPORT_REPOSITORY_ITEMS_LIMIT)
-        )
+                              file_size: Constants::FILE_MAX_SIZE_MB))
+      elsif parsed_file.empty?
+        flash[:notice] = t('teams.parse_sheet.errors.empty_file')
+        redirect_to back and return
       else
         @import_data = parsed_file.data
-
-        if @import_data.header.blank? || @import_data.columns.blank?
-          return repository_response(t('repositories.parse_sheet.errors.empty_file'))
-        end
-
-        if (@temp_file = parsed_file.generate_temp_file)
+        if parsed_file.generated_temp_file?
           respond_to do |format|
             format.json do
               render json: {
@@ -296,35 +214,28 @@ class RepositoriesController < ApplicationController
             end
           end
         else
-          repository_response(t('repositories.parse_sheet.errors.temp_file_failure'))
+          repository_response(t('teams.parse_sheet.errors.temp_file_failure'))
         end
       end
     rescue ArgumentError, CSV::MalformedCSVError
-      repository_response(t('repositories.parse_sheet.errors.invalid_file',
+      repository_response(t('teams.parse_sheet.errors.invalid_file',
                             encoding: ''.encoding))
     rescue TypeError
-      repository_response(t('repositories.parse_sheet.errors.invalid_extension'))
+      repository_response(t('teams.parse_sheet.errors.invalid_extension'))
     end
   end
 
   def import_records
-    render_403 unless can_create_repository_rows?(Repository.accessible_by_teams(current_team)
-                                                            .find_by_id(import_params[:id]))
-
     respond_to do |format|
       format.json do
         # Check if there exist mapping for repository record (it's mandatory)
-        if import_params[:mappings].value?('-1')
+        if params[:mappings].value?('-1')
           import_records = repostiory_import_actions
           status = import_records.import!
 
           if status[:status] == :ok
-            log_activity(:import_inventory_items,
-                         num_of_items: status[:nr_of_added])
-
             flash[:success] = t('repositories.import_records.success_flash',
-                                number_of_rows: status[:nr_of_added],
-                                total_nr: status[:total_nr])
+                                number_of_rows: status[:nr_of_added])
             render json: {}, status: :ok
           else
             flash[:alert] =
@@ -349,143 +260,71 @@ class RepositoriesController < ApplicationController
   end
 
   def export_repository
-    respond_to do |format|
-      format.json do
-        if params[:row_ids] && params[:header_ids]
-          RepositoryZipExport.generate_zip(params, @repository, current_user)
-          log_activity(:export_inventory_items)
-          render json: { message: t('zip_export.export_request_success') }, status: :ok
-        else
-          render json: { message: t('zip_export.export_error') }, status: :unprocessable_entity
-        end
-      end
+    if params[:row_ids] && params[:header_ids]
+      generate_zip
+    else
+      flash[:alert] = t('zip_export.export_error')
     end
-  end
-
-  def assigned_my_modules
-    my_modules = MyModule.joins(:repository_rows).where(repository_rows: { repository: @repository })
-                         .readable_by_user(current_user).distinct
-    render json: {data: grouped_by_prj_exp(my_modules).map { |g|
-                          {
-                            label: "#{g[:project_name]} / #{g[:experiment_name]}", options: g[:tasks].map do |t|
-                              { label: t.name, value: t.id }
-                            end
-                          }
-                        } }
-  end
-
-  def repository_users
-    rows_type = params[:archived_by].present? ? :archived_repository_rows : :created_repository_rows
-    users = User.joins(rows_type)
-                .where(rows_type => { repository: @repository })
-                .group(:id)
-
-    render json: { users: users.map do |u|
-                            {
-                              label: u.full_name,
-                              value: u.id,
-                              params: {
-                                email: u.email, avatar_url: u.avatar_url('icon_small')
-                              }
-                            }
-                          end }
+    redirect_to :back
   end
 
   private
 
   def repostiory_import_actions
     ImportRepository::ImportRecords.new(
-      temp_file: TempFile.find_by_id(import_params[:file_id]),
-      repository: Repository.accessible_by_teams(current_team).find_by_id(import_params[:id]),
-      mappings: import_params[:mappings],
+      temp_file: TempFile.find_by_id(params[:file_id]),
+      repository: current_team.repositories.find_by_id(params[:id]),
+      mappings: params[:mappings],
       session: session,
       user: current_user
     )
   end
 
-  def load_repository
+  def load_vars
     repository_id = params[:id] || params[:repository_id]
-    @repository = Repository.accessible_by_teams(current_team).find_by(id: repository_id)
+    @repository = Repository.find_by_id(repository_id)
     render_404 unless @repository
   end
 
-  def load_repositories
-    @repositories = Repository.accessible_by_teams(current_team).order('repositories.created_at ASC')
-    @repositories = if params[:archived] == 'true' || @repository&.archived?
-                      @repositories.archived
-                    else
-                      @repositories.active
-                    end
+  def load_parent_vars
+    @team = Team.find_by_id(params[:team_id])
+    render_404 unless @team
+    @repositories = @team.repositories.order(created_at: :asc)
   end
 
-  def load_repositories_for_archiving
-    @repositories = current_team.repositories.active.where(id: params[:repository_ids])
-  end
-
-  def load_repositories_for_restoring
-    @repositories = current_team.repositories.archived.where(id: params[:repository_ids])
-  end
-
-  def set_inline_name_editing
-    return unless can_manage_repository?(@repository)
-
-    @inline_editable_title_config = {
-      name: 'title',
-      params_group: 'repository',
-      item_id: @repository.id,
-      field_to_udpate: 'name',
-      path_to_update: team_repository_path(@repository),
-      label_after: "<span class=\"repository-share-icon\">#{inventory_shared_status_icon(@repository, current_team)}</span>"
-    }
+  def check_team
+    render_404 unless params[:team_id].to_i == current_team.id
   end
 
   def check_view_all_permissions
-    render_403 unless can_read_team?(current_team)
+    render_403 unless can_view_team_repositories(@team)
   end
 
   def check_view_permissions
-    render_403 unless can_read_repository?(@repository)
+    render_403 unless can_view_repository(@repository)
   end
 
   def check_create_permissions
-    render_403 unless can_create_repositories?(current_team)
+    render_403 unless can_create_repository(@team)
+  end
+
+  def check_edit_and_destroy_permissions
+    render_403 unless can_edit_and_destroy_repository(@repository)
   end
 
   def check_copy_permissions
-    render_403 if !can_create_repositories?(current_team) || @repository.shared_with?(current_team)
-  end
-
-  def check_manage_permissions
-    render_403 unless can_manage_repository?(@repository)
-  end
-
-  def check_archive_permissions
-    @repositories.each do |repository|
-      return render_403 unless can_archive_repository?(repository)
-    end
-  end
-
-  def check_delete_permissions
-    render_403 unless can_delete_repository?(@repository)
-  end
-
-  def check_share_permissions
-    render_403 if !can_share_repository?(@repository) || current_user.teams.count <= 1
+    render_403 unless can_copy_repository(@repository)
   end
 
   def repository_params
     params.require(:repository).permit(:name)
   end
 
-  def import_params
-    params.permit(:id, :file, :file_id, mappings: {}).to_h
-  end
-
   def repository_response(message)
     respond_to do |format|
       format.html do
         flash[:alert] = message
-        redirect_back(fallback_location: root_path)
+        redirect_to :back
       end
       format.json do
         render json: { message: message },
@@ -494,14 +333,65 @@ class RepositoriesController < ApplicationController
     end
   end
 
-  def log_activity(type_of, message_items = {})
-    message_items = { repository: @repository.id }.merge(message_items)
+  def generate_zip
+    # Fetch rows in the same order as in the currently viewed datatable
+    ordered_row_ids = params[:row_ids]
+    id_row_map = RepositoryRow.where(id: ordered_row_ids,
+                                     repository: @repository)
+                              .index_by(&:id)
+    ordered_rows = ordered_row_ids.collect { |id| id_row_map[id.to_i] }
 
-    Activities::CreateActivityService
-      .call(activity_type: type_of,
-            owner: current_user,
-            subject: @repository,
-            team: current_team,
-            message_items: message_items)
+    zip = ZipExport.create(user: current_user)
+    zip.generate_exportable_zip(
+      current_user,
+      to_csv(ordered_rows, params[:header_ids]),
+      :repositories
+    )
+  end
+
+  def to_csv(rows, column_ids)
+    require 'csv'
+
+    # Parse column names
+    csv_header = []
+    column_ids.each do |c_id|
+      csv_header << case c_id.to_i
+                    when -1, -2
+                      next
+                    when -3
+                      I18n.t('repositories.table.row_name')
+                    when -4
+                      I18n.t('repositories.table.added_by')
+                    when -5
+                      I18n.t('repositories.table.added_on')
+                    else
+                      column = RepositoryColumn.find_by_id(c_id)
+                      column ? column.name : nil
+                    end
+    end
+
+    CSV.generate do |csv|
+      csv << csv_header
+      rows.each do |row|
+        csv_row = []
+        column_ids.each do |c_id|
+          csv_row << case c_id.to_i
+                     when -1, -2
+                       next
+                     when -3
+                       row.name
+                     when -4
+                       row.created_by.full_name
+                     when -5
+                       I18n.l(row.created_at, format: :full)
+                     else
+                       cell = row.repository_cells
+                                 .find_by(repository_column_id: c_id)
+                       cell ? cell.value.data : nil
+                     end
+        end
+        csv << csv_row
+      end
+    end
   end
 end

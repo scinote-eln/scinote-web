@@ -1,0 +1,14 @@
+version: '2.1'
+
+services:
+  scinote-web:
+    image: scinote-web
+    build: .
+    environment:
+      NODE_ENV: development
+    ports:
+      - 3000:3000
+      - 9229:9229
+    volumes:
+      - .:/usr/src/app
+    command: node --inspect application.js

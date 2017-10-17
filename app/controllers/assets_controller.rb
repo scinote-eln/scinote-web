@@ -1,96 +1,115 @@
-# frozen_string_literal: true
-
 class AssetsController < ApplicationController
   include WopiUtil
-  include AssetsActions
-  include ActiveStorage::SetCurrent
+  # include ActionView::Helpers
   include ActionView::Helpers::AssetTagHelper
   include ActionView::Helpers::TextHelper
   include ActionView::Helpers::UrlHelper
   include ActionView::Context
-  include ActiveStorageFileUtil
-  include ApplicationHelper
   include InputSanitizeHelper
   include FileIconsHelper
-  include MyModulesHelper
+  include WopiHelper
 
-  helper_method :wopi_file_edit_button_status
+  before_action :load_vars
+  before_action :check_read_permission, except: :file_present
+  before_action :load_vars, except: :signature
+  before_action :check_read_permission, except: [:signature, :file_present]
+  before_action :check_edit_permission, only: :edit
 
-  before_action :load_vars, except: :create_wopi_file
-  before_action :check_read_permission, except: %i(edit destroy create_wopi_file toggle_view_mode)
-  before_action :check_edit_permission, only: %i(edit destroy toggle_view_mode)
-
-  def file_preview
-    render json: { html: render_to_string(
-      partial: 'shared/file_preview/content.html.erb',
-      locals: {
-        asset: @asset,
-        can_edit: can_manage_asset?(@asset),
-        gallery: params[:gallery],
-        preview: params[:preview]
+  # Validates asset and then generates S3 upload posts, because
+  # otherwise untracked files could be uploaded to S3
+  def signature
+    respond_to do |format|
+      format.json {
+        asset = Asset.new(asset_params)
+        if asset.valid?
+          posts = generate_upload_posts asset
+          render json: {
+            posts: posts
+          }
+        else
+          render json: {
+            status: 'error',
+            errors: asset.errors
+          }, status: :bad_request
+        end
       }
-    ) }
+    end
   end
 
-  def toggle_view_mode
-    @asset.view_mode = toggle_view_mode_params[:view_mode]
-    if @asset.save(touch: false)
-      gallery_view_id = if @assoc.is_a?(Step)
-                          @assoc.id
-                        elsif @assoc.is_a?(Result)
-                          @assoc.my_module.id
-                        end
-      html = render_to_string(partial: 'assets/asset.html.erb', locals: {
-                                asset: @asset,
-                                gallery_view_id: gallery_view_id
-                              })
-      respond_to do |format|
-        format.json do
-          render json: { html: html }, status: :ok
+  def file_present
+    respond_to do |format|
+      format.json do
+        if @asset.file.processing?
+          render json: {}, status: 404
+        else
+          # Only if file is present,
+          # check_read_permission
+          check_read_permission
+
+          # If check_read_permission already rendered error,
+          # stop execution
+          return if performed?
+
+          # If check permission passes, return :ok
+          render json: {
+            'asset-id' => @asset.id,
+            'image-tag-url' => @asset.url(:medium),
+            'preview-url' => large_image_url_asset_path(@asset),
+            'filename' => truncate(@asset.file_file_name,
+                                   length:
+                                     Constants::FILENAME_TRUNCATION_LENGTH),
+            'download-url' => download_asset_path(@asset),
+            'type' => asset_data_type(@asset),
+            'wopi-file-name' => wopi_asset_file_name(@asset, true),
+            'wopi-edit' => (wopi_asset_edit_button(@asset) if wopi_file?(@asset)),
+            'wopi-view' => (wopi_asset_view_button(@asset) if wopi_file?(@asset))
+          }, status: 200
         end
       end
     end
   end
 
-  def load_asset
-    gallery_view_id = if @assoc.is_a?(Step)
-                        @assoc.id
-                      elsif @assoc.is_a?(Result)
-                        @assoc.my_module.id
-                      end
-    render json: { html: render_to_string(partial: 'assets/asset.html.erb',
-                                          locals: {
-                                            asset: @asset,
-                                            gallery_view_id: gallery_view_id
-                                          }) }
-  end
-
-  def file_url
-    return render_404 unless @asset.file.attached?
-
-    render plain: @asset.file.blob.service_url
+  def large_image_url
+    respond_to do |format|
+      format.json do
+        render json: {
+          'large-preview-url' => @asset.url(:large),
+          'filename' => truncate(@asset.file_file_name,
+                                 length:
+                                   Constants::FILENAME_TRUNCATION_LENGTH),
+          'download-url' => download_asset_path(@asset),
+          'type' => (@asset.is_image? ? 'image' : 'file')
+        }
+      end
+    end
   end
 
   def download
-    redirect_to rails_blob_path(@asset.file, disposition: 'attachment')
+    if !@asset.file_present
+      render_404 and return
+    elsif @asset.file.is_stored_on_s3?
+      redirect_to @asset.presigned_url(download: true), status: 307
+    else
+      send_file @asset.file.path, filename: URI.unescape(@asset.file_file_name),
+        type: @asset.file_content_type
+    end
   end
 
   def edit
-    action = @asset.file_size.zero? && !@asset.locked? ? 'editnew' : 'edit'
-    @action_url = append_wd_params(@asset.get_action_url(current_user, action, false))
+    @action_url = append_wd_params(@asset
+                                   .get_action_url(current_user, 'edit', false))
     @favicon_url = @asset.favicon_url('edit')
     tkn = current_user.get_wopi_token
     @token = tkn.token
     @ttl = (tkn.ttl * 1000).to_s
-    @asset.step&.protocol&.update(updated_at: Time.zone.now)
-
     create_wopi_file_activity(current_user, true)
 
     render layout: false
   end
 
   def view
-    @action_url = append_wd_params(@asset.get_action_url(current_user, 'view', false))
+    @action_url = append_wd_params(@asset
+                                   .get_action_url(current_user, 'view', false))
     @favicon_url = @asset.favicon_url('view')
     tkn = current_user.get_wopi_token
     @token = tkn.token
@@ -99,213 +118,105 @@ class AssetsController < ApplicationController
     render layout: false
   end
 
-  def pdf_preview
-    return render plain: '', status: :not_acceptable unless previewable_document?(@asset.blob)
-    return render plain: '', status: :accepted unless @asset.pdf_preview_ready?
-
-    redirect_to @asset.file_pdf_preview.service_url
-  end
-
-  def create_start_edit_image_activity
-    create_edit_image_activity(@asset, current_user, :start_editing)
-  end
-
-  def update_image
-    @asset = Asset.find(params[:id])
-    orig_file_size = @asset.file_size
-    orig_file_name = @asset.file_name
-    return render_403 unless can_read_team?(@asset.team)
-
-    @asset.file.attach(io: params.require(:image), filename: orig_file_name)
-    @asset.save!
-    create_edit_image_activity(@asset, current_user, :finish_editing)
-    # release previous image space
-    @asset.team.release_space(orig_file_size)
-    # Post process file here
-    @asset.post_process_file(@asset.team)
-    @asset.step&.protocol&.update(updated_at: Time.zone.now)
-
-    render_html = if [Result, Step].include?(@assoc.class)
-                    gallery_view_id = if @assoc.is_a?(Step)
-                                        @assoc.id
-                                      elsif @assoc.is_a?(Result)
-                                        @assoc.my_module.id
-                                      end
-
-                    render_to_string(
-                      partial: 'assets/asset.html.erb',
-                      locals: {
-                        asset: @asset,
-                        gallery_view_id: gallery_view_id
-                      },
-                      formats: :html
-                    )
-                  else
-                    render_to_string(
-                      partial: 'assets/asset_link.html.erb',
-                      locals: { asset: @asset, display_image_tag: true },
-                      formats: :html
-                    )
-                  end
-
-    respond_to do |format|
-      format.json do
-        render json: { html: render_html }
-      end
-    end
-  end
-
-  # POST: create_wopi_file_path
-  def create_wopi_file
-    # Presence validation
-    params.require(%i(element_type element_id file_type))
-
-    # File type validation
-    render_403 && return unless %w(docx xlsx pptx).include?(params[:file_type])
-
-    # Asset validation
-    asset = Asset.new(created_by: current_user, team: current_team)
-    asset.file.attach(io: StringIO.new,
-                      filename: "#{params[:file_name]}.#{params[:file_type]}",
-                      content_type: wopi_content_type(params[:file_type]))
-
-    unless asset.valid?(:wopi_file_creation)
-      render json: {
-        message: asset.errors
-      }, status: :bad_request and return
-    end
-
-    # Create file depending on the type
-    if params[:element_type] == 'Step'
-      step = Step.find(params[:element_id].to_i)
-      render_403 && return unless can_manage_step?(step)
-
-      step_asset = StepAsset.create!(step: step, asset: asset)
-      asset.update!(view_mode: step.assets_view_mode)
-      step.protocol&.update(updated_at: Time.zone.now)
-
-      edit_url = edit_asset_url(step_asset.asset_id)
-    elsif params[:element_type] == 'Result'
-      my_module = MyModule.find(params[:element_id].to_i)
-      render_403 and return unless can_manage_my_module?(my_module)
-
-      # First create result and then the asset
-      result = Result.create(name: asset.file_name,
-                             my_module: my_module,
-                             user: current_user)
-      result_asset = ResultAsset.create!(result: result, asset: asset)
-
-      edit_url = edit_asset_url(result_asset.asset_id)
-    else
-      render_404 and return
-    end
-
-    # Prepare file preview in advance
-    asset.medium_preview.processed && asset.large_preview.processed
-
-    # Return edit url
-    render json: {
-      success: true,
-      edit_url: edit_url
-    }, status: :ok
-  end
-
-  def destroy
-    if @asset.destroy
-      case @assoc
-      when Step
-        if @assoc.protocol.in_module?
-          log_step_activity(:edit_step, @assoc, @assoc.my_module.experiment.project, my_module: @assoc.my_module.id)
-        else
-          log_step_activity(
-            :edit_step_in_protocol_repository,
-            @assoc,
-            nil,
-            protocol: @assoc.protocol.id
-          )
-        end
-      when Result
-        log_result_activity(:edit_result, @assoc)
-      end
-
-      render json: { flash: I18n.t('assets.file_deleted', file_name: @asset.file_name) }
-    else
-      render json: {}, status: :unprocessable_entity
-    end
-  end
-
   private
 
   def load_vars
-    @asset = Asset.find_by(id: params[:id])
-    return render_404 unless @asset
+    @asset = Asset.find_by_id(params[:id])
+    render_404 unless @asset
 
-    @assoc ||= @asset.step
-    @assoc ||= @asset.result
-    @assoc ||= @asset.repository_cell
+    step_assoc = @asset.step
+    result_assoc = @asset.result
+    @assoc = step_assoc unless step_assoc.nil?
+    @assoc = result_assoc unless result_assoc.nil?
 
     if @assoc.class == Step
       @protocol = @asset.step.protocol
-    elsif @assoc.class == Result
+    else
       @my_module = @assoc.my_module
-    elsif @assoc.class == RepositoryCell
-      @repository = @assoc.repository_column.repository
     end
   end
 
   def check_read_permission
-    render_403 and return unless can_read_asset?(@asset)
+    if @assoc.class == Step
+      unless can_view_or_download_step_assets(@protocol)
+        render_403 and return
+      end
+    elsif @assoc.class == Result
+      unless can_view_or_download_result_assets(@my_module)
+        render_403 and return
+      end
+    end
   end
 
   def check_edit_permission
-    render_403 and return unless can_manage_asset?(@asset)
+    if @assoc.class == Step
+      unless can_edit_step_in_protocol(@protocol)
+        render_403 and return
+      end
+    elsif @assoc.class == Result
+      unless can_edit_result_asset_in_module(@my_module)
+        render_403 and return
+      end
+    end
+  end
+
+  def generate_upload_posts(asset)
+    posts = []
+    s3_post = S3_BUCKET.presigned_post(
+      key: asset.file.path[1..-1],
+      success_action_status: '201',
+      acl: 'private',
+      storage_class: "STANDARD",
+      content_length_range: 1..Constants::FILE_MAX_SIZE_MB.megabytes,
+      content_type: asset.file_content_type
+    )
+    posts.push({
+      url: s3_post.url,
+      fields: s3_post.fields
+    })
+
+    condition = %r{^image/#{Regexp.union(Constants::WHITELISTED_IMAGE_TYPES)}}
+
+    if condition === asset.file_content_type
+      asset.file.options[:styles].each do |style, option|
+        s3_post = S3_BUCKET.presigned_post(
+          key: asset.file.path(style)[1..-1],
+          success_action_status: '201',
+          acl: 'public-read',
+          storage_class: "REDUCED_REDUNDANCY",
+          content_length_range: 1..Constants::FILE_MAX_SIZE_MB.megabytes,
+          content_type: asset.file_content_type
+        )
+        posts.push({
+          url: s3_post.url,
+          fields: s3_post.fields,
+          style_option: option,
+          mime_type: asset.file_content_type
+        })
+      end
+    end
+
+    posts
   end
 
   def append_wd_params(url)
-    exclude_params = %w(wdPreviousSession wdPreviousCorrelation)
-    wd_params = params.as_json.select { |key, _value| key[/^wd.*/] && !(exclude_params.include? key) }.to_query
-    url + '&' + wd_params
+    wd_params = ''
+    params.keys.select { |i| i[/^wd.*/] }.each do |wd|
+      next if wd == 'wdPreviousSession' || wd == 'wdPreviousCorrelation'
+      wd_params += "&#{wd}=#{params[wd]}"
+    end
+    url + wd_params
   end
 
   def asset_params
-    params.permit(:file)
-  end
-
-  def toggle_view_mode_params
-    params.require(:asset).permit(:view_mode)
+    params.permit(
+      :file
+    )
   end
 
   def asset_data_type(asset)
     return 'wopi' if wopi_file?(asset)
-    return 'image' if asset.image?
-
+    return 'image' if asset.is_image?
     'file'
-  end
-
-  def log_step_activity(type_of, step, project = nil, message_items = {})
-    default_items = { step: step.id,
-                      step_position: { id: step.id, value_for: 'position_plus_one' } }
-    message_items = default_items.merge(message_items)
-
-    Activities::CreateActivityService
-      .call(activity_type: type_of,
-            owner: current_user,
-            subject: step.protocol,
-            team: current_team,
-            project: project,
-            message_items: message_items)
-  end
-
-  def log_result_activity(type_of, result)
-    Activities::CreateActivityService
-      .call(activity_type: type_of,
-            owner: current_user,
-            subject: result,
-            team: result.my_module.experiment.project.team,
-            project: result.my_module.experiment.project,
-            message_items: {
-              result: result.id,
-              type_of_result: t('activities.result_type.text')
-            })
   end
 end

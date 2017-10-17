@@ -1,4 +1,4 @@
-class AddIndexToSampleName < ActiveRecord::Migration[4.2]
+class AddIndexToSampleName < ActiveRecord::Migration
   def change
     add_index :samples, :name
   end

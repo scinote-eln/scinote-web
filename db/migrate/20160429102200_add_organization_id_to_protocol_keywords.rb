@@ -1,4 +1,4 @@
-class AddOrganizationIdToProtocolKeywords < ActiveRecord::Migration[4.2]
+class AddOrganizationIdToProtocolKeywords < ActiveRecord::Migration
   def up
     add_column :protocol_keywords, :team_id, :integer
     add_foreign_key :protocol_keywords, :teams, column: :team_id

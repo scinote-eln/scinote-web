@@ -1,7 +1,7 @@
 (function(global) {
   'use strict';
 
-  global.ResultAssets = (function() {
+  global.ResutlAssets = (function() {
     // New result asset behaviour
     function initNewResultAsset() {
       $('#new-result-asset').on('click', function(event) {
@@ -35,21 +35,22 @@
     }
 
     function applyEditResultAssetCallback() {
-      $('.edit-result-asset').off('ajax:success ajax:error').on('ajax:success', function(e, data) {
+      $('.edit-result-asset').on('ajax:success', function(e, data) {
         var $result = $(this).closest('.result');
         var $form = $(data.html);
         var $prevResult = $result;
         $result.after($form);
-        $prevResult.hide();
+        $result.remove();
 
-        _formAjaxResultAsset($form, $prevResult);
+        _formAjaxResultAsset($form);
 
         // Cancel button
         $form.find('.cancel-edit').click(function () {
-          $prevResult.show();
+          $form.after($prevResult);
           $form.remove();
           applyEditResultAssetCallback();
           Results.toggleResultEditButtons(true);
+          initPreviewModal();
         });
 
         Results.toggleResultEditButtons(false);
@@ -60,18 +61,19 @@
       });
     }
 
-    function _formAjaxResultAsset($form, $prevResult) {
+    function _formAjaxResultAsset($form) {
       $form.on('ajax:success', function(e, data) {
-        if ($prevResult) $prevResult.remove();
         $form.after(data.html);
         var $newResult = $form.next();
         initFormSubmitLinks($newResult);
         $(this).remove();
         applyEditResultAssetCallback();
+        Results.applyCollapseLinkCallBack();
 
         Results.toggleResultEditButtons(true);
         Results.expandResult($newResult);
-        Comments.init();
+        initPreviewModal();
+        Comments.initialize();
         initNewResultAsset();
       }).on('ajax:error', function(e, xhr) {
         var errors = xhr.responseJSON.errors;
@@ -94,6 +96,9 @@
     return publicAPI;
   })();
 
-  ResultAssets.initNewResultAsset();
-  ResultAssets.applyEditResultAssetCallback();
-}(window));
+  $(document).ready(function() {
+    ResutlAssets.initNewResultAsset();
+    ResutlAssets.applyEditResultAssetCallback();
+    global.initPreviewModal();
+  });
+})(window);

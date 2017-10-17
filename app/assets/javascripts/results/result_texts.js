@@ -1,18 +1,14 @@
-/* global TinyMCE Results Comments animateSpinner initFormSubmitLinks */
-
 (function() {
   'use strict';
 
   var ResultText = (function() {
-    var publicAPI;
-
     // New result text behaviour
     function initNewReslutText() {
       $('#new-result-text').on('click', function(event) {
-        var $btn = $(this);
         event.preventDefault();
         event.stopImmediatePropagation();
         event.stopPropagation();
+        var $btn = $(this);
         $btn.off();
         animateSpinner(null, true);
 
@@ -24,85 +20,87 @@
             var $form = $(data.html);
             animateSpinner(null, false);
             $('#results').prepend($form);
-            formAjaxResultText($form);
+            _formAjaxResultText($form);
             Results.initCancelFormButton($form, initNewReslutText);
             Results.toggleResultEditButtons(false);
-            TinyMCE.init('#result_text_attributes_textarea');
+            TinyMCE.refresh();
+            TinyMCE.highlight();
             $('#result_name').focus();
           },
           error: function() {
             animateSpinner(null, false);
             initNewReslutText();
           }
-        });
+        })
       });
     }
 
     // Edit result text button behaviour
     function applyEditResultTextCallback() {
-      $('.edit-result-text').off('ajax:success ajax:error').on('ajax:success', function(e, data) {
+      $('.edit-result-text').on('ajax:success', function(e, data) {
         var $result = $(this).closest('.result');
         var $form = $(data.html);
         var $prevResult = $result;
         $result.after($form);
-        $prevResult.hide();
+        $result.remove();
 
-        formAjaxResultText($form, $prevResult);
+        _formAjaxResultText($form);
 
         // Cancel button
         $form.find('.cancel-edit').click(function() {
-          $prevResult.show();
+          $form.after($prevResult);
           $form.remove();
           applyEditResultTextCallback();
-          TinyMCE.destroyAll();
           Results.toggleResultEditButtons(true);
         });
         Results.toggleResultEditButtons(false);
-        TinyMCE.init('#result_text_attributes_textarea');
+        TinyMCE.refresh();
         $('#result_name').focus();
       });
     }
 
     // Apply ajax callback to form
-    function formAjaxResultText($form, $prevResult) {
+    function _formAjaxResultText($form) {
       $form.on('ajax:success', function(e, data) {
-        var newResult;
-        if ($prevResult) $prevResult.remove();
         $form.after(data.html);
-        newResult = $form.next();
+        var newResult = $form.next();
         initFormSubmitLinks(newResult);
         $(this).remove();
+
         applyEditResultTextCallback();
+        Results.applyCollapseLinkCallBack();
         Results.toggleResultEditButtons(true);
         Results.expandResult(newResult);
         TinyMCE.destroyAll();
-        Comments.init();
+        Comments.initialize();
         initNewReslutText();
       });
-      $form.on('ajax:error', function(e, xhr) {
+      $form.on('ajax:error', function(e, xhr, status, error) {
         var data = xhr.responseJSON;
-        var $el;
         $form.renderFormErrors('result', data);
         TinyMCE.highlight();
         if (data['result_text.text']) {
-          $el = $form.find(
+          var $el = $form.find(
             'textarea[name=result\\[result_text_attributes\\]\\[text\\]]'
           );
+
           $el.closest('.form-group').addClass('has-error');
-          $el.parent().append('<span class=\'help-block\'>'
-            + data['result_text.text'] + '</span>');
+          $el.parent().append('<span class=\'help-block\'>' +
+            data['result_text.text'] + '</span>');
         }
       });
     }
 
-    publicAPI = Object.freeze({
+    var publicAPI = Object.freeze({
       initNewReslutText: initNewReslutText,
       applyEditResultTextCallback: applyEditResultTextCallback
     });
 
     return publicAPI;
-  }());
+  })();
 
-  ResultText.initNewReslutText();
-  ResultText.applyEditResultTextCallback();
-}());
+  $(document).ready(function() {
+    ResultText.initNewReslutText();
+    ResultText.applyEditResultTextCallback();
+  });
+})();

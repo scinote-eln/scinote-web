@@ -1,27 +1,21 @@
-require:
-  - rubocop-performance
-  - rubocop-rails
-
 AllCops:
   Exclude:
     - "vendor/**/*"
     - "db/schema.rb"
-    - "spec/**/*"
-  NewCops: enable
   UseCache: false
-  TargetRubyVersion: 2.6
+  TargetRubyVersion: 2.2
 
 ##################### Style ####################################
 
-Layout/AccessModifierIndentation:
+Style/AccessModifierIndentation:
   EnforcedStyle: indent
 
-Layout/HashAlignment:
+Style/AlignHash:
   EnforcedHashRocketStyle: key
   EnforcedColonStyle: key
   EnforcedLastArgumentHashStyle: ignore_implicit
 
-Layout/ParameterAlignment:
+Style/AlignParameters:
   EnforcedStyle: with_first_parameter
 
 Style/AndOr:
@@ -33,7 +27,10 @@ Style/BarePercentLiterals:
 Style/BlockDelimiters:
   EnforcedStyle: line_count_based
 
-Layout/CaseIndentation:
+Style/BracesAroundHashParameters:
+  EnforcedStyle: no_braces
+
+Style/CaseIndentation:
   EnforcedStyle: case
 
 Style/ClassAndModuleChildren:
@@ -56,34 +53,37 @@ Style/CommandLiteral:
 Style/DocumentationMethod:
   RequireForNonPublicMethods: false
 
-Layout/DotPosition:
+Style/DotPosition:
   EnforcedStyle: leading
 
 Style/EmptyElse:
   EnforcedStyle: both
 
-Layout/EmptyLineBetweenDefs:
+Style/EmptyLineBetweenDefs:
   AllowAdjacentOneLineDefs: false
 
-Layout/EmptyLinesAroundBlockBody:
+Style/EmptyLinesAroundBlockBody:
   EnforcedStyle: no_empty_lines
 
-Layout/EmptyLinesAroundClassBody:
+Style/EmptyLinesAroundClassBody:
   EnforcedStyle: no_empty_lines
 
-Layout/EmptyLinesAroundModuleBody:
+Style/EmptyLinesAroundModuleBody:
   EnforcedStyle: no_empty_lines
 
-Layout/ExtraSpacing:
+Style/Encoding:
+  EnforcedStyle: always
+
+Style/ExtraSpacing:
   AllowForAlignment: true
   ForceEqualSignAlignment: false
 
-Naming/FileName:
+Style/FileName:
   Enabled: false
   Exclude: []
 
-Layout/FirstArgumentIndentation:
-  EnforcedStyle: consistent
+Style/FirstParameterIndentation:
+  EnforcedStyle: special_for_inner_method_call_in_parentheses
 
 Style/For:
   EnforcedStyle: each
@@ -92,7 +92,7 @@ Style/FormatString:
   EnforcedStyle: format
 
 Style/FrozenStringLiteralComment:
-  EnforcedStyle: always
+  EnforcedStyle: when_needed
 
 Style/GuardClause:
   Enabled: false
@@ -103,17 +103,18 @@ Style/HashSyntax:
 
 Style/IfUnlessModifier:
   Enabled: true
+  MaxLineLength: 80
 
-Layout/IndentationConsistency:
+Style/IndentationConsistency:
   EnforcedStyle: normal
 
-Layout/IndentationWidth:
+Style/IndentationWidth:
   Width: 2
 
-Layout/FirstArrayElementIndentation:
+Style/IndentArray:
   EnforcedStyle: special_inside_parentheses
 
-Layout/FirstHashElementIndentation:
+Style/IndentHash:
   EnforcedStyle: special_inside_parentheses
 
 Style/Next:
@@ -125,13 +126,16 @@ Style/NonNilCheck:
 Style/MethodDefParentheses:
   EnforcedStyle: require_parentheses
 
-Naming/MethodName:
+Style/MethodName:
   EnforcedStyle: snake_case
 
-Layout/MultilineArrayBraceLayout:
+Style/ModuleFunction:
+  EnforcedStyle: module_function
+
+Style/MultilineArrayBraceLayout:
   EnforcedStyle: symmetrical
 
-Layout/MultilineAssignmentLayout:
+Style/MultilineAssignmentLayout:
   SupportedTypes:
     - block
     - case
@@ -141,19 +145,19 @@ Layout/MultilineAssignmentLayout:
     - module
   EnforcedStyle: new_line
 
-Layout/MultilineHashBraceLayout:
+Style/MultilineHashBraceLayout:
   EnforcedStyle: symmetrical
 
-Layout/MultilineMethodCallBraceLayout:
+Style/MultilineMethodCallBraceLayout:
   EnforcedStyle: symmetrical
 
-Layout/MultilineMethodCallIndentation:
+Style/MultilineMethodCallIndentation:
   EnforcedStyle: aligned
 
-Layout/MultilineMethodDefinitionBraceLayout:
+Style/MultilineMethodDefinitionBraceLayout:
   EnforcedStyle: symmetrical
 
-Layout/MultilineOperationIndentation:
+Style/MultilineOperationIndentation:
   EnforcedStyle: aligned
 
 Style/NumericLiterals:
@@ -188,7 +192,7 @@ Style/PercentLiteralDelimiters:
 Style/PercentQLiterals:
   EnforcedStyle: lower_case_q
 
-Naming/PredicateName:
+Style/PredicateName:
   Description: Check the names of predicate methods.
   StyleGuide: https://github.com/bbatsov/ruby-style-guide#bool-methods-qmark
   Enabled: true
@@ -196,9 +200,9 @@ Naming/PredicateName:
   - is_
   - has_
   - have_
-  ForbiddenPrefixes:
+  NamePrefixBlacklist:
   - is_
-  AllowedMethods:
+  NameWhitelist:
     - is_a?
   Exclude:
   - spec/**/*
@@ -230,7 +234,7 @@ Style/SingleLineBlockParams:
 Style/SingleLineMethods:
   Enabled: false
 
-Layout/SpaceBeforeFirstArg:
+Style/SpaceBeforeFirstArg:
   AllowForAlignment: true
 
 Style/StringLiterals:
@@ -245,28 +249,28 @@ Style/StringMethods:
   PreferredMethods:
     intern: to_sym
 
-Layout/SpaceAroundBlockParameters:
+Style/SpaceAroundBlockParameters:
   EnforcedStyleInsidePipes: no_space
 
-Layout/SpaceAroundEqualsInParameterDefault:
+Style/SpaceAroundEqualsInParameterDefault:
   EnforcedStyle: space
 
-Layout/SpaceAroundOperators:
+Style/SpaceAroundOperators:
   AllowForAlignment: true
 
-Layout/SpaceBeforeBlockBraces:
+Style/SpaceBeforeBlockBraces:
   EnforcedStyle: space
 
-Layout/SpaceInsideBlockBraces:
+Style/SpaceInsideBlockBraces:
   EnforcedStyle: space
   EnforcedStyleForEmptyBraces: no_space
   SpaceBeforeBlockParameters: true
 
-Layout/SpaceInsideHashLiteralBraces:
+Style/SpaceInsideHashLiteralBraces:
   EnforcedStyle: space
   EnforcedStyleForEmptyBraces: no_space
 
-Layout/SpaceInsideStringInterpolation:
+Style/SpaceInsideStringInterpolation:
   EnforcedStyle: no_space
 
 Style/SymbolArray:
@@ -281,22 +285,19 @@ Style/TernaryParentheses:
   EnforcedStyle: require_no_parentheses
   AllowSafeAssignment: true
 
-Layout/TrailingEmptyLines:
+Style/TrailingBlankLines:
   EnforcedStyle: final_newline
 
 Style/TrailingCommaInArguments:
   EnforcedStyleForMultiline: no_comma
 
-Style/TrailingCommaInArrayLiteral:
+Style/TrailingCommaInLiteral:
   EnforcedStyleForMultiline: no_comma
 
-Style/TrailingCommaInHashLiteral:
-  EnforcedStyleForMultiline: no_comma
-
-Naming/VariableName:
+Style/VariableName:
   EnforcedStyle: snake_case
 
-Naming/VariableNumber:
+Style/VariableNumber:
   EnforcedStyle: normalcase
 
 Style/WordArray:
@@ -306,7 +307,7 @@ Style/WordArray:
 Style/InlineComment:
   Enabled: false
 
-Naming/AccessorMethodName:
+Style/AccessorMethodName:
   Enabled: true
 
 Style/Alias:
@@ -326,7 +327,6 @@ Style/EmptyLiteral:
 
 Style/ModuleFunction:
   Enabled: true
-  EnforcedStyle: module_function
 
 Style/OneLineConditional:
   Enabled: true
@@ -351,9 +351,6 @@ Style/WhenThen:
 Metrics/AbcSize:
   Enabled: false
 
-Metrics/BlockLength:
-  IgnoredMethods: ['describe', 'context']
-
 Metrics/ClassLength:
   Enabled: false
 
@@ -362,6 +359,14 @@ Metrics/ModuleLength:
 
 Metrics/CyclomaticComplexity:
   Enabled: false
+
+Metrics/LineLength:
+  Max: 80
+  AllowHeredoc: true
+  AllowURI: true
+  URISchemes:
+    - http
+    - https
 
 Metrics/MethodLength:
   Enabled: false
@@ -372,32 +377,22 @@ Metrics/ParameterLists:
 Metrics/PerceivedComplexity:
   Enabled: false
 
-##################### Layout ###################################
-
-Layout/BlockAlignment:
-  EnforcedStyleAlignWith: either
-
-Layout/EndAlignment:
-  EnforcedStyleAlignWith: keyword
-
-Layout/DefEndAlignment:
-  EnforcedStyleAlignWith: start_of_line
-
-Layout/LineLength:
-  Max: 120
-  AllowHeredoc: true
-  AllowURI: true
-  URISchemes:
-    - http
-    - https
-
 ##################### Lint #####################################
 
 Lint/AssignmentInCondition:
   AllowSafeAssignment: true
 
+Lint/BlockAlignment:
+  EnforcedStyleAlignWith: either
+
+Lint/EndAlignment:
+  EnforcedStyleAlignWith: keyword
+
 Lint/DuplicateMethods:
   Enabled: false
+
+Lint/DefEndAlignment:
+  EnforcedStyleAlignWith: start_of_line
 
 Lint/UnusedBlockArgument:
   IgnoreEmptyBlocks: true
@@ -410,10 +405,10 @@ Lint/UnusedMethodArgument:
 Lint/EachWithObjectArgument:
   Enabled: true
 
-Lint/SuppressedException:
+Lint/HandleExceptions:
   Enabled: false
 
-Lint/LiteralAsCondition:
+Lint/LiteralInCondition:
   Enabled: true
 
 Lint/EmptyInterpolation:
@@ -476,11 +471,6 @@ Rails/SafeNavigation:
 Rails/ScopeArgs:
   Include:
     - app/models/**/*.rb
-
-Rails/SkipsModelValidations:
-  Exclude:
-    - spec/**/*_spec.rb
-    - spec/factories/*.rb
 
 Rails/TimeZone:
   EnforcedStyle: flexible

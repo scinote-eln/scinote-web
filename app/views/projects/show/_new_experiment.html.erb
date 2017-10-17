@@ -1,17 +1,16 @@
 <div class="col-md-6">
   <div class="panel panel-default experiment-panel">
     <div class="panel-heading">
-      <%= link_to t('experiments.new.modal_title'),
-                  new_project_experiment_url(@project),
-                  remote: true,
-                  class: 'panel-title new-exp-title' %>
+
+      <h3 class="panel-title"><%= t('experiments.new.modal_title') %></h3>
+
     </div>
     <div class="panel-body">
-      <%= link_to new_project_experiment_url(@project),
-                  remote: true,
-                  class: 'big-plus' do %>
-        <i class="fas fa-plus"></i>
-      <% end %>
+      <%= link_to fa_icon('plus'),
+                    new_project_experiment_url(@project),
+                    remote: true,
+                    class: 'big-plus' %>
+
     </div>
   </div>
 </div>

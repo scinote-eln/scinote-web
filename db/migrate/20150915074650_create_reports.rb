@@ -1,4 +1,4 @@
-class CreateReports < ActiveRecord::Migration[4.2]
+class CreateReports < ActiveRecord::Migration
   def change
     create_table :reports do |t|
       t.string :name, null: false

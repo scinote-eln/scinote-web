@@ -1,4 +1,4 @@
-class AddPublishedOnToProtocols < ActiveRecord::Migration[4.2]
+class AddPublishedOnToProtocols < ActiveRecord::Migration
   def up
     add_column :protocols, :published_on, :datetime
 

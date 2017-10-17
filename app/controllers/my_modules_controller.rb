@@ -1,20 +1,45 @@
 class MyModulesController < ApplicationController
+  include SampleActions
   include TeamsHelper
-  include ActionView::Helpers::TextHelper
   include InputSanitizeHelper
-  include Rails.application.routes.url_helpers
-  include ActionView::Helpers::UrlHelper
-  include ApplicationHelper
 
-  before_action :load_vars, except: %i(restore_group)
-  before_action :check_archive_permissions, only: %i(update)
-  before_action :check_manage_permissions, only: %i(description due_date update_description update_protocol_description)
-  before_action :check_read_permissions, except: %i(update update_description update_protocol_description restore_group)
-  before_action :check_update_state_permissions, only: :update_state
-  before_action :set_inline_name_editing, only: %i(protocols results activities archive)
-  before_action :load_experiment_my_modules, only: %i(protocols results activities archive)
+  before_action :load_vars,
+                only: %I[show update destroy description due_date protocols
+                         results samples activities activities_tab
+                         assign_samples unassign_samples delete_samples
+                         toggle_task_state samples_index archive
+                         complete_my_module repository repository_index
+                         assign_repository_records unassign_repository_records]
+  before_action :load_vars_nested, only: %I[new create]
+  before_action :load_repository, only: %I[assign_repository_records
+                                           unassign_repository_records]
+  before_action :check_edit_permissions,
+                only: %I[update description due_date]
+  before_action :check_destroy_permissions, only: :destroy
+  before_action :check_view_info_permissions, only: :show
+  before_action :check_view_activities_permissions,
+                only: %I[activities activities_tab]
+  before_action :check_view_protocols_permissions, only: :protocols
+  before_action :check_view_results_permissions, only: :results
+  before_action :check_view_samples_permissions,
+                only: %I[samples samples_index]
+  before_action :check_view_archive_permissions, only: :archive
+  before_action :check_assign_samples_permissions, only: :assign_samples
+  before_action :check_unassign_samples_permissions, only: :unassign_samples
+  before_action :check_complete_my_module_perimission, only: :complete_my_module
+  before_action :check_assign_repository_records_permissions,
+                only: :assign_repository_records
+  before_action :check_unassign_repository_records_permissions,
+                only: :unassign_repository_records
 
   layout 'fluid'.freeze
+
+  # Define submit actions constants (used in routing)
+  ASSIGN_SAMPLES = 'Assign'.freeze
+  UNASSIGN_SAMPLES = 'Unassign'.freeze
+
+  # Action defined in SampleActions
+  DELETE_SAMPLES = 'Delete'.freeze
 
   def show
     respond_to do |format|
@@ -44,43 +69,43 @@ class MyModulesController < ApplicationController
     end
   end
 
-  def status_state
-    respond_to do |format|
-      format.json do
-        render json: { status_changing: @my_module.status_changing? }
-      end
-    end
-  end
-
   def activities
-    params[:subjects] = {
-      MyModule: [@my_module.id]
-    }
-    @activity_types = Activity.activity_types_list
-    @user_list = User.where(id: UserTeam.where(team: current_user.teams).select(:user_id))
-                     .distinct
-                     .pluck(:full_name, :id)
-    activities = ActivitiesService.load_activities(current_user, current_team, activity_filters)
+    @last_activity_id = params[:from].to_i || 0
+    @per_page = 10
 
-    @grouped_activities = activities.group_by do |activity|
-      Time.zone.at(activity.created_at).to_date.to_s
+    @activities = @my_module.last_activities(@last_activity_id, @per_page +1 )
+    @more_activities_url = ""
+
+    @overflown = @activities.length > @per_page
+
+    @activities = @my_module.last_activities(@last_activity_id, @per_page)
+
+    if @activities.count > 0
+      @more_activities_url = url_for(
+        controller: 'my_modules',
+        action: 'activities',
+        format: :json,
+        from: @activities.last.id)
     end
 
-    @next_page = activities.next_page
-    @starting_timestamp = activities.first&.created_at.to_i
-
     respond_to do |format|
-      format.json do
-        render json: {
-          activities_html: render_to_string(
-            partial: 'global_activities/activity_list.html.erb'
-          ),
-          next_page: @next_page,
-          starting_timestamp: @starting_timestamp
+      format.html
+      format.json {
+        # 'activites' partial includes header and form for adding older
+        # activities. 'list' partial is used for showing more activities.
+        partial = "activities.html.erb"
+        if @activities.last.id > 0
+          partial = "my_modules/activities/list_activities.html.erb"
+        end
+        render :json => {
+          :per_page => @per_page,
+          :results_number => @activities.length,
+          :more_url => @more_activities_url,
+          :html => render_to_string({
+            :partial => partial
+          })
         }
-      end
-      format.html do
-      end
+      }
     end
   end
 
@@ -119,47 +144,74 @@ class MyModulesController < ApplicationController
   def update
     @my_module.assign_attributes(my_module_params)
     @my_module.last_modified_by = current_user
-    name_changed = @my_module.name_changed?
+
     description_changed = @my_module.description_changed?
-    start_date_changes = @my_module.changes[:started_on]
-    due_date_changes = @my_module.changes[:due_date]
-
-    if @my_module.completed_on_changed? && !can_complete_my_module?(@my_module)
-      render_403 && return
-    end
-
-    if description_changed && !can_update_my_module_description?(@my_module)
-      render_403 && return
-    end
-
-    if start_date_changes.present? && !can_update_my_module_start_date?(@my_module)
-      render_403 && return
-    end
-
-    if due_date_changes.present? && !can_update_my_module_start_date?(@my_module)
-      render_403 && return
-    end
+    restored = false
 
     if @my_module.archived_changed?(from: false, to: true)
       saved = @my_module.archive(current_user)
-    else
-      render_403 && return unless can_manage_my_module?(@my_module)
-
-      saved = @my_module.save
       if saved
-        if description_changed
-          log_activity(:change_module_description)
-          TinyMceAsset.update_images(@my_module, params[:tiny_mce_images], current_user)
-        end
+        # Currently not in use
+        Activity.create(
+          type_of: :archive_module,
+          project: @my_module.experiment.project,
+          experiment: @my_module.experiment,
+          my_module: @my_module,
+          user: current_user,
+          message: t(
+            'activities.archive_module',
+            user: current_user.full_name,
+            module: @my_module.name
+          )
+        )
+      end
+    elsif @my_module.archived_changed?(from: true, to: false)
+      saved = @my_module.restore(current_user)
+      if saved
+        restored = true
+        Activity.create(
+          type_of: :restore_module,
+          project: @my_module.experiment.project,
+          experiment: @my_module.experiment,
+          my_module: @my_module,
+          user: current_user,
+          message: t(
+            'activities.restore_module',
+            user: current_user.full_name,
+            module: @my_module.name
+          )
+        )
+      end
+    else
+      saved = @my_module.save
 
-        log_activity(:rename_task) if name_changed
-        log_start_date_change_activity(start_date_changes) if start_date_changes.present?
-        log_due_date_change_activity(due_date_changes) if due_date_changes.present?
+      if saved and description_changed then
+        Activity.create(
+          type_of: :change_module_description,
+          project: @my_module.experiment.project,
+          experiment: @my_module.experiment,
+          my_module: @my_module,
+          user: current_user,
+          message: t(
+            "activities.change_module_description",
+            user: current_user.full_name,
+            module: @my_module.name
+          )
+        )
       end
     end
+
     respond_to do |format|
-      if saved
-        format.json do
+      if restored
+        format.html do
+          flash[:success] = t(
+            'my_modules.module_archive.restored_flash',
+            module: @my_module.name
+          )
+          redirect_to module_archive_experiment_path(@my_module.experiment)
+        end
+      elsif saved
+        format.json {
           alerts = []
           alerts << 'alert-green' if @my_module.completed?
           unless @my_module.completed?
@@ -168,91 +220,32 @@ class MyModulesController < ApplicationController
           end
           render json: {
             status: :ok,
-            start_date_label: render_to_string(
-              partial: 'my_modules/start_date_label.html.erb',
-              locals: { my_module: @my_module, start_date_editable: true }
-            ),
             due_date_label: render_to_string(
-              partial: 'my_modules/due_date_label.html.erb',
-              locals: { my_module: @my_module, due_date_editable: true }
-            ),
-            card_due_date_label: render_to_string(
-              partial: 'my_modules/card_due_date_label.html.erb',
+              partial: "my_modules/due_date_label.html.erb",
               locals: { my_module: @my_module }
             ),
-            module_header_due_date: render_to_string(
-              partial: 'my_modules/module_header_due_date.html.erb',
+            module_header_due_date_label: render_to_string(
+              partial: "my_modules/module_header_due_date_label.html.erb",
               locals: { my_module: @my_module }
             ),
             description_label: render_to_string(
-              partial: 'my_modules/description_label.html.erb',
+              partial: "my_modules/description_label.html.erb",
               locals: { my_module: @my_module }
             ),
             alerts: alerts
           }
-        end
+        }
       else
-        format.json do
+        format.json {
           render json: @my_module.errors,
             status: :unprocessable_entity
-        end
-      end
-    end
-  end
-
-  def update_description
-    render_403 && return unless can_update_my_module_description?(@my_module)
-    old_description = @my_module.description
-    respond_to do |format|
-      format.json do
-        if @my_module.update(description: params.require(:my_module)[:description])
-          log_activity(:change_module_description)
-          TinyMceAsset.update_images(@my_module, params[:tiny_mce_images], current_user)
-          my_module_annotation_notification(old_description)
-          render json: {
-            html: custom_auto_link(
-              @my_module.tinymce_render(:description),
-              simple_format: false,
-              tags: %w(img),
-              team: current_team
-            )
-          }
-        else
-          render json: @my_module.errors, status: :unprocessable_entity
-        end
-      end
-    end
-  end
-
-  def update_protocol_description
-    protocol = @my_module.protocol
-    old_description = protocol.description
-    return render_404 unless protocol
-
-    respond_to do |format|
-      format.json do
-        if protocol.update(description: params.require(:protocol)[:description])
-          log_activity(:protocol_description_in_task_edited)
-          TinyMceAsset.update_images(protocol, params[:tiny_mce_images], current_user)
-          protocol_annotation_notification(old_description)
-          render json: {
-            html: custom_auto_link(
-              protocol.tinymce_render(:description),
-              simple_format: false,
-              tags: %w(img),
-              team: current_team
-            )
-          }
-        else
-          render json: protocol.errors, status: :unprocessable_entity
-        end
+        }
       end
     end
   end
 
   def protocols
     @protocol = @my_module.protocol
-    @assigned_repositories = @my_module.live_and_snapshot_repositories_list
     current_team_switch(@protocol.team)
   end
 
@@ -261,66 +254,317 @@ class MyModulesController < ApplicationController
                                 .experiment
                                 .project
                                 .team)
+  end
 
-    @results_order = params[:order] || 'new'
+  def samples
+    @samples_index_link = samples_index_my_module_path(@my_module, format: :json)
+    @team = @my_module.experiment.project.team
+  end
 
-    @results = @my_module.archived_branch? ? @my_module.results : @my_module.results.active
-    @results = @results.page(params[:page]).per(Constants::RESULTS_PER_PAGE_LIMIT)
-
-    @results = case @results_order
-               when 'old' then @results.order(updated_at: :asc)
-               when 'atoz' then @results.order(name: :asc)
-               when 'ztoa' then @results.order(name: :desc)
-               else @results.order(updated_at: :desc)
-               end
+  def repository
+    @repository = Repository.find_by_id(params[:repository_id])
+    render_403 if @repository.nil? || !can_view_repository(@repository)
   end
 
   def archive
     @archived_results = @my_module.archived_results
-    current_team_switch(@my_module.experiment.project.team)
+    current_team_switch(@my_module
+                                .experiment
+                                .project
+                                .team)
   end
 
-  def restore_group
-    experiment = Experiment.find(params[:id])
-    return render_403 unless can_read_experiment?(experiment)
+  # Submit actions
+  def assign_samples
+    if params[:sample_ids].present?
+      samples = []
 
-    my_modules = experiment.my_modules.archived.where(id: params[:my_modules_ids])
-    counter = 0
-    my_modules.each do |my_module|
-      next unless can_restore_my_module?(my_module)
+      params[:sample_ids].each do |id|
+        sample = Sample.find_by_id(id)
+        sample.last_modified_by = current_user
+        sample.save
 
-      my_module.transaction do
-        my_module.restore!(current_user)
-        log_activity(:restore_module, my_module)
-        counter += 1
-      rescue StandardError => e
-        Rails.logger.error e.message
-        raise ActiveRecord::Rollback
+        if sample
+          samples << sample
+        end
+      end
+
+      task_names = []
+      new_samples = []
+      @my_module.get_downstream_modules.each do |my_module|
+        new_samples = samples.select { |el| my_module.samples.exclude?(el) }
+        my_module.samples.push(*new_samples)
+        task_names << my_module.name
+      end
+      if new_samples.any?
+        Activity.create(
+          type_of: :assign_sample,
+          project: @my_module.experiment.project,
+          experiment: @my_module.experiment,
+          my_module: @my_module,
+          user: current_user,
+          message: I18n.t(
+            'activities.assign_sample',
+            user: current_user.full_name,
+            tasks: task_names.join(', '),
+            samples: new_samples.map(&:name).join(', ')
+          )
+        )
       end
     end
-    if counter == my_modules.size
-      flash[:success] = t('my_modules.restore_group.success_flash_html', number: counter)
-    elsif counter.positive?
-      flash[:warning] = t('my_modules.restore_group.partial_success_flash_html', number: counter)
-    else
-      flash[:error] = t('my_modules.restore_group.error_flash')
-    end
-    redirect_to module_archive_experiment_path(experiment)
+    redirect_to samples_my_module_path(@my_module)
   end
 
-  def update_state
-    old_status_id = @my_module.my_module_status_id
-    if @my_module.update(my_module_status_id: update_status_params[:status_id])
-      log_activity(:change_status_on_task_flow, @my_module, my_module_status_old: old_status_id,
-                   my_module_status_new: @my_module.my_module_status.id)
+  def unassign_samples
+    if params[:sample_ids].present?
+      samples = []
 
-      return redirect_to protocols_my_module_path(@my_module)
+      params[:sample_ids].each do |id|
+        sample = Sample.find_by_id(id)
+        sample.last_modified_by = current_user
+        sample.save
+
+        if sample && @my_module.samples.include?(sample)
+          samples << sample
+        end
+      end
+
+      task_names = []
+      @my_module.get_downstream_modules.each do |my_module|
+        task_names << my_module.name
+        my_module.samples.destroy(samples & my_module.samples)
+      end
+      if samples.any?
+        Activity.create(
+          type_of: :unassign_sample,
+          project: @my_module.experiment.project,
+          experiment: @my_module.experiment,
+          my_module: @my_module,
+          user: current_user,
+          message: I18n.t(
+            'activities.unassign_sample',
+            user: current_user.full_name,
+            tasks: task_names.join(', '),
+            samples: samples.map(&:name).join(', ')
+          )
+        )
+      end
+    end
+    redirect_to samples_my_module_path(@my_module)
+  end
+
+  # AJAX actions
+  def samples_index
+    @team = @my_module.experiment.project.team
+
+    respond_to do |format|
+      format.html
+      format.json do
+        render json: ::SampleDatatable.new(view_context,
+                                           @team,
+                                           nil,
+                                           @my_module,
+                                           nil,
+                                           current_user)
+      end
+    end
+  end
+
+  # AJAX actions
+  def repository_index
+    @repository = Repository.find_by_id(params[:repository_id])
+    if @repository.nil? || !can_view_repository(@repository)
+      render_403
     else
-      render json: { errors: @my_module.errors.messages.values.flatten.join('\n') }, status: :unprocessable_entity
+      respond_to do |format|
+        format.html
+        format.json do
+          render json: ::RepositoryDatatable.new(view_context,
+                                                 @repository,
+                                                 @my_module,
+                                                 current_user)
+        end
+      end
+    end
+  end
+
+  # Submit actions
+  def assign_repository_records
+    if params[:selected_rows].present? && params[:repository_id].present?
+      records_names = []
+
+      params[:selected_rows].each do |id|
+        record = RepositoryRow.find_by_id(id)
+        next if !record || @my_module.repository_rows.include?(record)
+        record.last_modified_by = current_user
+        record.save
+        records_names << record.name
+        MyModuleRepositoryRow.create!(
+          my_module: @my_module,
+          repository_row: record,
+          assigned_by: current_user
+        )
+      end
+
+      if records_names.any?
+        Activity.create(
+          type_of: :assign_repository_record,
+          project: @project,
+          experiment: @experiment,
+          my_module: @my_module,
+          user: current_user,
+          message: I18n.t(
+            'activities.assign_repository_records',
+            user: current_user.full_name,
+            task: @my_module.name,
+            repository: @repository.name,
+            records: records_names.join(', ')
+          )
+        )
+        flash = I18n.t('repositories.assigned_records_flash',
+                       records: records_names.join(', '))
+        respond_to do |format|
+          format.json { render json: { flash: flash }, status: :ok }
+        end
+      else
+        respond_to do |format|
+          format.json do
+            render json: {
+              flash: t('repositories.no_records_assigned_flash')
+            }, status: :bad_request
+          end
+        end
+      end
+    end
+  end
+
+  def unassign_repository_records
+    if params[:selected_rows].present? && params[:repository_id].present?
+      records = []
+
+      params[:selected_rows].each do |id|
+        record = RepositoryRow.find_by_id(id)
+        next unless record && @my_module.repository_rows.include?(record)
+        record.last_modified_by = current_user
+        record.save
+        records << record
+      end
+
+      @my_module.repository_rows.destroy(records & @my_module.repository_rows)
+      if records.any?
+        Activity.create(
+          type_of: :unassign_repository_record,
+          project: @project,
+          experiment: @experiment,
+          my_module: @my_module,
+          user: current_user,
+          message: I18n.t(
+            'activities.unassign_repository_records',
+            user: current_user.full_name,
+            task: @my_module.name,
+            repository: @repository.name,
+            records: records.map(&:name).join(', ')
+          )
+        )
+        flash = I18n.t('repositories.unassigned_records_flash',
+                       records: records.map(&:name).join(', '))
+        respond_to do |format|
+          format.json { render json: { flash: flash }, status: :ok }
+        end
+      else
+        respond_to do |format|
+          format.json do
+            render json: {
+              flash: t('repositories.no_records_unassigned_flash')
+            }, status: :bad_request
+          end
+        end
+      end
+    end
+  end
+
+  # Complete/uncomplete task
+  def toggle_task_state
+    respond_to do |format|
+      if can_complete_module(@my_module)
+        @my_module.completed? ? @my_module.uncomplete : @my_module.complete
+        completed = @my_module.completed?
+        if @my_module.save
+          task_completion_activity
+
+          # Render new button HTML
+          if completed
+            new_btn_partial = 'my_modules/state_button_uncomplete.html.erb'
+          else
+            new_btn_partial = 'my_modules/state_button_complete.html.erb'
+          end
+
+          format.json do
+            render json: {
+              new_btn: render_to_string(partial: new_btn_partial),
+              completed: completed,
+              module_header_due_date_label: render_to_string(
+                partial: 'my_modules/module_header_due_date_label.html.erb',
+                locals: { my_module: @my_module }
+              ),
+              module_state_label: render_to_string(
+                partial: 'my_modules/module_state_label.html.erb',
+                locals: { my_module: @my_module }
+              )
+            }
+          end
+        else
+          format.json { render json: {}, status: :unprocessable_entity }
+        end
+      else
+        format.json { render json: {}, status: :unauthorized }
+      end
+    end
+  end
+
+  def complete_my_module
+    respond_to do |format|
+      if @my_module.uncompleted? && @my_module.check_completness_status
+        @my_module.complete
+        @my_module.save
+        task_completion_activity
+        format.json do
+            render json: {
+              task_button_title: t('my_modules.buttons.uncomplete'),
+              module_header_due_date_label: render_to_string(
+                partial: 'my_modules/module_header_due_date_label.html.erb',
+                locals: { my_module: @my_module }
+              ),
+              module_state_label: render_to_string(
+                partial: 'my_modules/module_state_label.html.erb',
+                locals: { my_module: @my_module }
+              )
+            }, status: :ok
+          end
+      else
+        format.json { render json: {}, status: :unprocessable_entity }
+      end
     end
   end
 
   private
+
+  def task_completion_activity
+    completed = @my_module.completed?
+    str = 'activities.uncomplete_module'
+    str = 'activities.complete_module' if completed
+    message = t(str,
+                user: current_user.full_name,
+                module: @my_module.name)
+    Activity.create(
+      user: current_user,
+      project: @project,
+      experiment: @experiment,
+      my_module: @my_module,
+      message: message,
+      type_of: completed ? :complete_task : :uncomplete_task
+    )
+  end
 
   def load_vars
     @my_module = MyModule.find_by_id(params[:id])
@@ -332,135 +576,85 @@ class MyModulesController < ApplicationController
     end
   end
 
-  def load_experiment_my_modules
-    @experiment_my_modules = if @my_module.experiment.archived_branch?
-                               @my_module.experiment.my_modules.order(:name)
-                             else
-                               @my_module.experiment.my_modules.where(archived: @my_module.archived?).order(:name)
-                             end
+  def load_repository
+    @repository = Repository.find_by_id(params[:repository_id])
+    render_404 unless @repository && can_view_repository(@repository)
   end
 
-  def check_manage_permissions
-    render_403 && return unless can_manage_my_module?(@my_module)
+  def check_edit_permissions
+    unless can_edit_module(@my_module)
+      render_403
+    end
   end
 
-  def check_archive_permissions
-    return render_403 if my_module_params[:archived] == 'true' && !can_archive_my_module?(@my_module)
+  def check_destroy_permissions
+    unless can_archive_module(@my_module)
+      render_403
+    end
   end
 
-  def check_read_permissions
-    render_403 unless can_read_my_module?(@my_module)
+  def check_view_info_permissions
+    unless can_view_module_info(@my_module)
+      render_403
+    end
   end
 
-  def check_update_state_permissions
-    return render_403 unless can_update_my_module_status?(@my_module)
-
-    render_404 unless @my_module.my_module_status
+  def check_view_activities_permissions
+    unless can_view_module_activities(@my_module)
+      render_403
+    end
   end
 
-  def set_inline_name_editing
-    return unless can_manage_my_module?(@my_module)
+  def check_view_protocols_permissions
+    unless can_view_module_protocols(@my_module)
+      render_403
+    end
+  end
 
-    @inline_editable_title_config = {
-      name: 'title',
-      params_group: 'my_module',
-      item_id: @my_module.id,
-      field_to_udpate: 'name',
-      path_to_update: my_module_path(@my_module)
-    }
+  def check_view_results_permissions
+    unless can_view_results_in_module(@my_module)
+      render_403
+    end
+  end
+
+  def check_view_samples_permissions
+    unless can_view_module_samples(@my_module)
+      render_403
+    end
+  end
+
+  def check_view_archive_permissions
+    unless can_view_module_archive(@my_module)
+      render_403
+    end
+  end
+
+  def check_assign_samples_permissions
+    unless can_add_samples_to_module(@my_module)
+      render_403
+    end
+  end
+
+  def check_unassign_samples_permissions
+    unless can_delete_samples_from_module(@my_module)
+      render_403
+    end
+  end
+
+  def check_assign_repository_records_permissions
+    render_403 unless can_assign_repository_records(@my_module, @repository)
+  end
+
+  def check_unassign_repository_records_permissions
+    render_403 unless can_unassign_repository_records(@my_module, @repository)
+  end
+
+  def check_complete_my_module_perimission
+    render_403 unless can_complete_module(@my_module)
   end
 
   def my_module_params
-    update_params = params.require(:my_module).permit(:name, :description, :started_on, :due_date, :archived)
-
-    if update_params[:started_on].present?
-      update_params[:started_on] =
-        Time.zone.strptime(update_params[:started_on], I18n.backend.date_format.dup.gsub(/%-/, '%') + ' %H:%M')
-    end
-    if update_params[:due_date].present?
-      update_params[:due_date] =
-        Time.zone.strptime(update_params[:due_date], I18n.backend.date_format.dup.gsub(/%-/, '%') + ' %H:%M')
-    end
-
-    update_params
-  end
-
-  def update_status_params
-    params.require(:my_module).permit(:status_id)
-  end
-
-  def log_start_date_change_activity(start_date_changes)
-    type_of = if start_date_changes[0].nil?     # set started_on
-                message_items = { my_module_started_on: @my_module.started_on }
-                :set_task_start_date
-              elsif start_date_changes[1].nil?  # remove started_on
-                message_items = { my_module_started_on: start_date_changes[0] }
-                :remove_task_start_date
-              else                              # change started_on
-                message_items = { my_module_started_on: @my_module.started_on }
-                :change_task_start_date
-              end
-    log_activity(type_of, @my_module, message_items)
-  end
-
-  def log_due_date_change_activity(due_date_changes)
-    type_of = if due_date_changes[0].nil?     # set due_date
-                message_items = { my_module_duedate: @my_module.due_date }
-                :set_task_due_date
-              elsif due_date_changes[1].nil?  # remove due_date
-                message_items = { my_module_duedate: due_date_changes[0] }
-                :remove_task_due_date
-              else                            # change due_date
-                message_items = { my_module_duedate: @my_module.due_date }
-                :change_task_due_date
-              end
-    log_activity(type_of, @my_module, message_items)
-  end
-
-  def log_activity(type_of, my_module = nil, message_items = {})
-    my_module ||= @my_module
-    message_items = { my_module: my_module.id }.merge(message_items)
-
-    Activities::CreateActivityService
-      .call(activity_type: type_of,
-            owner: current_user,
-            team: my_module.experiment.project.team,
-            project: my_module.experiment.project,
-            subject: my_module,
-            message_items: message_items)
-  end
-
-  def activity_filters
-    params.permit(
-      :page, :starting_timestamp, :from_date, :to_date, types: [], users: [], subjects: {}
-    )
-  end
-
-  def my_module_annotation_notification(old_text = nil)
-    smart_annotation_notification(
-      old_text: old_text,
-      new_text: @my_module.description,
-      title: t('notifications.my_module_description_annotation_title',
-               my_module: @my_module.name,
-               user: current_user.full_name),
-      message: t('notifications.my_module_description_annotation_message_html',
-                 project: link_to(@my_module.experiment.project.name, project_url(@my_module.experiment.project)),
-                 experiment: link_to(@my_module.experiment.name, canvas_experiment_url(@my_module.experiment)),
-                 my_module: link_to(@my_module.name, protocols_my_module_url(@my_module)))
-    )
-  end
-
-  def protocol_annotation_notification(old_text = nil)
-    smart_annotation_notification(
-      old_text: old_text,
-      new_text: @my_module.protocol.description,
-      title: t('notifications.my_module_protocol_annotation_title',
-               my_module: @my_module.name,
-               user: current_user.full_name),
-      message: t('notifications.my_module_protocol_annotation_message_html',
-                 project: link_to(@my_module.experiment.project.name, project_url(@my_module.experiment.project)),
-                 experiment: link_to(@my_module.experiment.name, canvas_experiment_url(@my_module.experiment)),
-                 my_module: link_to(@my_module.name, protocols_my_module_url(@my_module)))
-    )
+    params.require(:my_module).permit(:name, :description, :due_date,
+                                      :archived)
   end
 end

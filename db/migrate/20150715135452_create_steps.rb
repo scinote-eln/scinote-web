@@ -1,4 +1,4 @@
-class CreateSteps < ActiveRecord::Migration[4.2]
+class CreateSteps < ActiveRecord::Migration
   def change
     create_table :steps do |t|
       t.string :name

@@ -1,4 +1,4 @@
-class TeamsDatatable < CustomDatatable
+class TeamsDatatable < AjaxDatatablesRails::Base
   include InputSanitizeHelper
 
   def_delegator :@view, :link_to
@@ -22,7 +22,7 @@ class TeamsDatatable < CustomDatatable
 
   private
 
-  # Returns json of current items (already paginated)
+  # Returns json of current samples (already paginated)
   def data
     records.map do |record|
       {
@@ -56,21 +56,16 @@ class TeamsDatatable < CustomDatatable
   # Overwrite default sort method to handle custom members column
   # which is calculated in code and not present in DB
   def sort_records(records)
-    if sort_column(order_params) == MEMEBERS_SORT_COL
-      records = records.sort_by(&proc { |ut| ut.team.users.count })
-      if order_params['dir'] == 'asc'
-        return records
-      elsif order_params['dir'] == 'desc'
-        return records.reverse
-      end
-    elsif sort_column(order_params) == 'user_teams.role'
-      records_with_role = records.where(user: @user).order(role: :asc)
-      records_with_no_role = records.where.not(user: @user)
-      records = records_with_no_role + records_with_role
-      if order_params['dir'] == 'asc'
-        records
+    if params[:order].present? && params[:order].length == 1
+      if sort_column(params[:order].values[0]) == MEMEBERS_SORT_COL
+        records = records.sort_by(&proc { |ut| ut.team.users.count })
+        if params[:order].values[0]['dir'] == 'asc'
+          return records
+        elsif params[:order].values[0]['dir'] == 'desc'
+          return records.reverse
+        end
       else
-        records.reverse
+        super(records)
       end
     else
       super(records)
@@ -80,7 +75,7 @@ class TeamsDatatable < CustomDatatable
   # If user is last admin of team, don't allow
   # him/her to leave team
   def leave_team_button(user_team)
-    button = "<span class=\"fas fa-sign-out-alt\"></span>
+    button = "<span class=\"glyphicon glyphicon-log-out\"></span>
               <span class=\"hidden-xs\">
                 #{I18n.t('users.settings.teams.index.leave')}
               </span>"

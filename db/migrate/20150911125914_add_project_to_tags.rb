@@ -1,4 +1,4 @@
-class AddProjectToTags < ActiveRecord::Migration[4.2]
+class AddProjectToTags < ActiveRecord::Migration
   def change
     # Add project ID reference, make it nullable at first
     add_column :tags, :project_id, :integer, { null: true }

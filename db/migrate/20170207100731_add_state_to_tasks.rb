@@ -1,4 +1,4 @@
-class AddStateToTasks < ActiveRecord::Migration[4.2]
+class AddStateToTasks < ActiveRecord::Migration
   def up
     add_column :my_modules,
                :state,

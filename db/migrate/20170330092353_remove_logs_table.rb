@@ -1,4 +1,4 @@
-class RemoveLogsTable < ActiveRecord::Migration[4.2]
+class RemoveLogsTable < ActiveRecord::Migration
   def change
     drop_table :logs
   end

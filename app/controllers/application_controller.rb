@@ -1,26 +1,17 @@
 class ApplicationController < ActionController::Base
+  include PermissionHelper
+  include FirstTimeDataGenerator
+
+  acts_as_token_authentication_handler_for User
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
-  protect_from_forgery with: :exception, prepend: true
+  protect_from_forgery with: :exception
   before_action :authenticate_user!
   helper_method :current_team
+  before_action :generate_intro_tutorial, if: :is_current_page_root?
   before_action :update_current_team, if: :user_signed_in?
-  around_action :set_date_format, if: :user_signed_in?
   around_action :set_time_zone, if: :current_user
   layout 'main'
-
-  rescue_from ActionController::InvalidAuthenticityToken do
-    redirect_to root_path
-  end
-
-  def respond_422(message = t('client_api.permission_error'))
-    respond_to do |format|
-      format.json do
-        render json: { message: message },
-               status: 422
-      end
-    end
-  end
 
   def forbidden
     render_403
@@ -36,17 +27,7 @@ class ApplicationController < ActionController::Base
 
   # Sets current team for all controllers
   def current_team
-    @current_team ||= current_user.teams.find_by(id: current_user.current_team_id)
-  end
-
-  def to_user_date_format
-    ts = I18n.l(Time.parse(params[:timestamp]),
-                format: params[:ts_format].to_sym)
-    respond_to do |format|
-      format.json do
-        render json: { ts: ts }, status: :ok
-      end
-    end
+    Team.find_by_id(current_user.current_team_id)
   end
 
   protected
@@ -59,35 +40,43 @@ class ApplicationController < ActionController::Base
       format.json do
         render json: { style: style }, status: :forbidden
       end
-      format.any do
-        render plain: 'FORBIDDEN', status: :forbidden
-      end
     end
+    true
   end
 
   def render_404
     respond_to do |format|
-      format.html do
-        render file: 'public/404.html', status: :not_found, layout: false
-      end
-      format.json do
+      format.html {
+        render :file => 'public/404.html', :status => :not_found, :layout => false
+      }
+      format.json {
         render json: {}, status: :not_found
-      end
-      format.any do
-        render plain: 'NOT FOUND', status: :not_found
-      end
+      }
     end
+    return true
   end
 
   private
 
-  def update_current_team
-    return if current_team.present? && current_team.id == current_user.current_team_id
+  def generate_intro_tutorial
+    if Rails.configuration.x.enable_tutorial &&
+      current_user.no_tutorial_done? &&
+      current_user.teams.where(created_by: current_user).count > 0 then
+      demo_cookie = seed_demo_data current_user
+      cookies[:tutorial_data] = {
+        value: demo_cookie,
+        expires: 1.week.from_now
+      }
+      current_user.update(tutorial_status: 1)
+    end
+  end
 
-    if current_user.current_team_id
-      @current_team = current_user.teams.find_by(id: current_user.current_team_id)
-    elsif current_user.teams.any?
-      current_user.update(current_team_id: current_user.teams.first.id)
+  def update_current_team
+    if current_user.current_team_id.blank? &&
+       current_user.teams.count > 0
+      current_user.update(
+        current_team_id: current_user.teams.first.id
+      )
     end
   end
 
@@ -98,13 +87,6 @@ class ApplicationController < ActionController::Base
   end
 
   def set_time_zone(&block)
-    Time.use_zone(current_user.settings[:time_zone], &block)
-  end
-
-  def set_date_format
-    I18n.backend.date_format = current_user.settings[:date_format]
-    yield
-  ensure
-    I18n.backend.date_format = nil
+    Time.use_zone(current_user.time_zone, &block)
   end
 end

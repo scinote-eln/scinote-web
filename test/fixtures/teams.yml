@@ -1,0 +1,21 @@
+biosistemika:
+  name: BioSistemika
+  created_by: steve
+  description: "The best company in the world!"
+
+nib:
+  name: nib
+  created_by: steve
+
+phylos:
+  name: Phylos Bioscience
+  created_by: steve
+
+test:
+  name: Test Team
+  description: "Testing team, you know"
+
+steve_team:
+  name: Steve's Team
+  description: "Private team"
+  created_by: steve

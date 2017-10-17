@@ -1,4 +1,4 @@
-class CreateReportElements < ActiveRecord::Migration[4.2]
+class CreateReportElements < ActiveRecord::Migration
   def change
     create_table :report_elements do |t|
       t.integer :position, null: false

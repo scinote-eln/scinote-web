@@ -1,26 +1,23 @@
 <% results.each do |result| %>
   <h5>
     <% if result.is_text %>
-      <span class="fas fa-asterisk"></span>
+      <span class="glyphicon glyphicon-asterisk"></span>
     <% elsif result.is_table %>
-      <span class="fas fa-table"></span>
+      <span class="glyphicon glyphicon-th"></span>
     <% else %>
-      <% if result.asset.image? %>
-        <span class="fas fa-paperclip"></span>
+      <% if result.asset.is_image? %>
+        <span class="glyphicon glyphicon-picture"></span>
       <% else %>
-        <span class="fas fa-paperclip"></span>
+        <span class="glyphicon glyphicon-file"></span>
       <% end %>
     <% end %>
     <%= render partial: "search/results/partials/result_text.html.erb", locals: { result: result, query: search_query, target: nil } %>
   </h5>
 
-  <% if result.is_text && result.result_text.text.present? %>
+  <% if result.is_text && result.result_text.text.present? && !result.result_text.text.empty? %>
     <blockquote class="search-asset-text-data">
       <p>
-        <%= highlight custom_auto_link(result.result_text.tinymce_render(:text),
-                             simple_format: false,
-                             tags: %w(img),
-                             team: current_team), search_query.strip.split(/\s+/) %>
+        <%= highlight(sanitize_input(result.result_text.text), search_query.strip.split(/\s+/)) %>
       </p>
     </blockquote>
   <% end %>
@@ -49,14 +46,6 @@
                  locals: { project: result.my_module.experiment.project, link_to_page: :show } %>
     </span>
     <br>
-    <% if result.my_module.experiment.project.project_folder %>
-      <span>
-        <%=t "search.index.folder" %>
-        <%= render partial: "search/results/partials/project_folders_text.html.erb",
-                   locals: { folder: result.my_module.experiment.project.project_folder } %>
-      </span>
-      <br>
-    <% end %>
     <span>
       <%=t "search.index.team" %>
       <%= render partial: "search/results/partials/team_text.html.erb",

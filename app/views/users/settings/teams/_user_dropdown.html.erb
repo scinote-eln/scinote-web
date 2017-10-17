@@ -1,6 +1,6 @@
 <% if user_team.user == user %>
   <div class="btn btn-default btn-xs" type="button" disabled="disabled">
-    <span class="fas fa-user-cog"></span>
+    <span class="glyphicon glyphicon-cog"></span>
     <span class="caret"></span>
   </div>
 <% else %>
@@ -12,10 +12,10 @@
          data-toggle="dropdown"
          aria-haspopup="true"
          aria-expanded="true">
-      <span class="fas fa-user-cog"></span>
+      <span class="glyphicon glyphicon-cog"></span>
       <span class="caret"></span>
     </div>
-    <ul class="dropdown-menu custom-dropdown-menu dropdown-menu-right" aria-labelledby="<%= id %>">
+    <ul class="dropdown-menu" aria-labelledby="<%= id %>">
       <li class="dropdown-header">
         <%= t("users.settings.teams.edit.user_dropdown.role_label") %>
       </li>
@@ -28,33 +28,33 @@
       <% end %>
       <li class="user-team-role <%= 'disabled' if user_team.guest? %>">
         <% if user_team.guest? %>
-          <span class="fas fa-check"></span>
+          <span class="glyphicon glyphicon-ok"></span>
           <%= UserTeam.new(role: 0).role_str %>
         <% else %>
           <a href="#" data-action="submit-role" data-value="guest">
-            <span class="fas fa-check"></span>
+            <span class="glyphicon glyphicon-ok"></span>
             <%= UserTeam.new(role: 0).role_str %>
           </a>
         <% end %>
       </li>
       <li class="user-team-role <%= 'disabled' if user_team.normal_user? %>">
         <% if user_team.normal_user? %>
-          <span class="fas fa-check"></span>
+          <span class="glyphicon glyphicon-ok"></span>
           <%= UserTeam.new(role: 1).role_str %>
         <% else %>
           <a href="#" data-action="submit-role" data-value="normal_user">
-            <span class="fas fa-check"></span>
+            <span class="glyphicon glyphicon-ok"></span>
             <%= UserTeam.new(role: 1).role_str %>
           </a>
         <% end %>
       </li>
       <li class="user-team-role <%= 'disabled' if user_team.admin? %>">
         <% if user_team.admin? %>
-          <span class="fas fa-check"></span>
+          <span class="glyphicon glyphicon-ok"></span>
           <%= UserTeam.new(role: 2).role_str %>
         <% else %>
           <a href="#" data-action="submit-role" data-value="admin">
-            <span class="fas fa-check"></span>
+            <span class="glyphicon glyphicon-ok"></span>
             <%= UserTeam.new(role: 2).role_str %>
           </a>
         <% end %>

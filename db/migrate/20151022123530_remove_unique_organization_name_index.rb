@@ -1,4 +1,4 @@
-class RemoveUniqueOrganizationNameIndex < ActiveRecord::Migration[4.2]
+class RemoveUniqueOrganizationNameIndex < ActiveRecord::Migration
   def up
     remove_index :teams, :name
     add_index :teams, :name

@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 namespace :exportable_items do
   desc 'Removes exportable zip files'
   task cleanup: :environment do

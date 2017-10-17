@@ -1,5 +1,4 @@
 //= require protocols/import_export/import
-/* global ProtocolRepositoryHeader PdfPreview */
 
 // Global variables
 var rowsSelected = [];
@@ -13,12 +12,14 @@ var repositoryType;
 function init() {
   updateButtons();
   initProtocolsTable();
+  initRowSelection();
   initKeywordFiltering();
   initProtocolPreviewModal();
   initLinkedChildrenModal();
   initCreateNewModal();
   initModals();
   initImport();
+  initTutorial();
 }
 
 // Initialize protocols DataTable
@@ -28,10 +29,8 @@ function initProtocolsTable() {
 
   protocolsDatatable = protocolsTableEl.DataTable({
     order: [[1, "asc"]],
-    dom: "RB<'main-actions'lf>t<'pagination-row'ip>",
+    dom: "RBfltpi",
     stateSave: true,
-    sScrollX: '100%',
-    sScrollXInner: '100%',
     buttons: [],
     processing: true,
     serverSide: true,
@@ -48,10 +47,7 @@ function initProtocolsTable() {
       orderable: false,
       sWidth: "1%",
       render: function (data, type, full, meta) {
-        return `<div class="sci-checkbox-container">
-                  <input type="checkbox" class="sci-checkbox">
-                  <span class="sci-checkbox-label"></span>
-                </div>`;
+        return "<input type='checkbox'>";
       }
     }, {
       targets: [ 1, 2, 3, 4, 5 ],
@@ -70,9 +66,6 @@ function initProtocolsTable() {
       { data: "5" },
       { data: "6" }
     ],
-    oLanguage: {
-      sSearch: I18n.t('general.filter')
-    },
     rowCallback: function(row, data, dataIndex) {
       // Get row ID
       var rowId = data["DT_RowId"];
@@ -102,7 +95,6 @@ function initProtocolsTable() {
     },
     fnDrawCallback: function(settings, json) {
       animateSpinner(this, false);
-      initRowSelection();
     },
     preDrawCallback: function(settings) {
       animateSpinner(this);
@@ -132,8 +124,6 @@ function initProtocolsTable() {
 }
 
 function initRowSelection() {
-  let protocolsTableScrollHead = protocolsTableEl.closest('.dataTables_scroll').find('.dataTables_scrollHead');
-
   // Handle click on table cells with checkboxes
   protocolsTableEl.on("click", "tbody td, thead th:first-child", function(e) {
     $(this).parent().find("input[type='checkbox']").trigger("click");
@@ -169,11 +159,11 @@ function initRowSelection() {
   });
 
   // Handle click on "Select all" control
-  protocolsTableScrollHead.find("thead input[name='select_all']").on('click', function(e) {
+  protocolsTableEl.find("thead input[name='select_all']").on("click", function(e) {
     if (this.checked) {
-      protocolsTableEl.find("tbody input[type='checkbox']:not(:checked)").trigger('click');
+      protocolsTableEl.find("tbody input[type='checkbox']:not(:checked)").trigger("click");
     } else {
-      protocolsTableEl.find("tbody input[type='checkbox']:checked").trigger('click');
+      protocolsTableEl.find("tbody input[type='checkbox']:checked").trigger("click");
     }
 
     // Prevent click event from propagating to parent
@@ -221,9 +211,8 @@ function initProtocolPreviewModal() {
           modalFooter.html(data.footer);
           initHandsOnTable(modalBody);
           modal.modal("show");
-          ProtocolRepositoryHeader.init();
           initHandsOnTable(modalBody);
-          PdfPreview.initCanvas();
+          initPreviewModal();
         },
         error: function (error) {
           // TODO
@@ -257,7 +246,6 @@ function initLinkedChildrenModal() {
           if (childrenTableEl) {
             // Only initialize table if it's present
             var childrenDatatable = childrenTableEl.DataTable({
-              autoWidth: false,
               dom: "RBltpi",
               stateSave: false,
               buttons: [],
@@ -302,7 +290,6 @@ function initCreateNewModal() {
   var link = $("[data-action='create-new']");
   var modal = $("#create-new-modal");
   var submitBtn = modal.find(".modal-footer [data-action='submit']");
-  var newProtocol = parseInt(sessionStorage.getItem('scinote-dashboard-new-protocol'), 10);
 
   link.on("click", function() {
     $.ajax({
@@ -331,11 +318,6 @@ function initCreateNewModal() {
       }
     });
   });
-
-  if (Math.floor(Date.now() / 1000) - newProtocol < 15) {
-    link.click();
-    sessionStorage.removeItem('scinote-dashboard-new-protocol');
-  }
 
   submitBtn.on("click", function() {
     // Submit the form inside modal
@@ -442,78 +424,79 @@ function updateButtons() {
   var archiveBtn = $("[data-action='archive']");
   var restoreBtn = $("[data-action='restore']");
   var exportBtn = $("[data-action='export']");
-  var row = $("tr[data-row-id='" + rowsSelected[0] + "']");
-  var rows = [];
 
-  if (rowsSelected.length === 1) {
+  if (rowsSelected.length == 1) {
     // 1 ROW SELECTED
-    if (row.is('[data-can-edit]')) {
-      editBtn.removeClass('disabled hidden');
-      editBtn.off('click').on('click', function() { editSelectedProtocol(); });
+    var row = $("tr[data-row-id='" + rowsSelected[0] + "']");
+
+    if (row.is("[data-can-edit]")) {
+      editBtn.removeAttr("disabled");
+      editBtn.off("click").on("click", function() { editSelectedProtocol(); });
     } else {
-      editBtn.removeClass('hidden').addClass('disabled');
-      editBtn.off('click');
+      editBtn.attr("disabled", "disabled");
+      editBtn.off("click");
     }
-    if (row.is('[data-can-clone]')) {
-      cloneBtn.removeClass('disabled hidden');
-      cloneBtn.off('click').on('click', function() { cloneSelectedProtocol(); });
+    if (row.is("[data-can-clone]")) {
+      cloneBtn.removeAttr("disabled");
+      cloneBtn.off("click").on("click", function() { cloneSelectedProtocol(); });
     } else {
-      cloneBtn.removeClass('hidden').addClass('disabled');
-      cloneBtn.off('click');
+      cloneBtn.attr("disabled", "disabled");
+      cloneBtn.off("click");
     }
-    if (row.is('[data-can-make-private]')) {
-      makePrivateBtn.removeClass('disabled hidden');
-      makePrivateBtn.off('click').on('click', function() { processMoveButtonClick($(this)); });
+    if (row.is("[data-can-make-private]")) {
+      makePrivateBtn.removeAttr("disabled");
+      makePrivateBtn.off("click").on("click", function() { processMoveButtonClick($(this)); });
     } else {
-      makePrivateBtn.removeClass('hidden').addClass('disabled');
-      makePrivateBtn.off('click');
+      makePrivateBtn.attr("disabled", "disabled");
+      makePrivateBtn.off("click");
     }
-    if (row.is('[data-can-publish]')) {
-      publishBtn.removeClass('disabled hidden');
-      publishBtn.off('click').on('click', function() { processMoveButtonClick($(this)); });
+    if (row.is("[data-can-publish]")) {
+      publishBtn.removeAttr("disabled");
+      publishBtn.off("click").on("click", function() { processMoveButtonClick($(this)); });
     } else {
-      publishBtn.removeClass('hidden').addClass('disabled');
-      publishBtn.off('click');
+      publishBtn.attr("disabled", "disabled");
+      publishBtn.off("click");
     }
-    if (row.is('[data-can-archive]')) {
-      archiveBtn.removeClass('disabled hidden');
-      archiveBtn.off('click').on('click', function() { processMoveButtonClick($(this)); });
+    if (row.is("[data-can-archive]")) {
+      archiveBtn.removeAttr("disabled");
+      archiveBtn.off("click").on("click", function() { processMoveButtonClick($(this)); });
     } else {
-      archiveBtn.removeClass('hidden').addClass('disabled');
-      archiveBtn.off('click');
+      archiveBtn.attr("disabled", "disabled");
+      archiveBtn.off("click");
     }
-    if (row.is('[data-can-restore]')) {
-      restoreBtn.removeClass('disabled hidden');
-      restoreBtn.off('click').on('click', function() { processMoveButtonClick($(this)); });
+    if (row.is("[data-can-restore]")) {
+      restoreBtn.removeAttr("disabled");
+      restoreBtn.off("click").on("click", function() { processMoveButtonClick($(this)); });
     } else {
-      restoreBtn.removeClass('hidden').addClass('disabled');
-      restoreBtn.off('click');
+      restoreBtn.attr("disabled", "disabled");
+      restoreBtn.off("click");
     }
-    if (row.is('[data-can-export]')) {
-      exportBtn.removeClass('disabled hidden');
-      exportBtn.off('click').on('click', function() { exportProtocols(rowsSelected); });
+    if (row.is("[data-can-export]")) {
+      exportBtn.removeAttr("disabled");
+      exportBtn.off("click").on("click", function() { exportProtocols(rowsSelected); });
     } else {
-      exportBtn.removeClass('hidden').addClass('disabled');
-      exportBtn.off('click');
+      exportBtn.attr("disabled", "disabled");
+      exportBtn.off("click");
     }
   } else if (rowsSelected.length === 0) {
     // 0 ROWS SELECTED
-    editBtn.addClass('disabled hidden');
-    editBtn.off('click');
-    cloneBtn.addClass('disabled hidden');
-    cloneBtn.off('click');
-    makePrivateBtn.addClass('disabled hidden');
-    makePrivateBtn.off('click');
-    publishBtn.addClass('disabled hidden');
-    publishBtn.off('click');
-    archiveBtn.addClass('disabled hidden');
-    archiveBtn.off('click');
-    restoreBtn.addClass('disabled hidden');
-    restoreBtn.off('click');
-    exportBtn.addClass('disabled hidden');
-    exportBtn.off('click');
+    editBtn.attr("disabled", "disabled");
+    editBtn.off("click");
+    cloneBtn.attr("disabled", "disabled");
+    cloneBtn.off("click");
+    makePrivateBtn.attr("disabled", "disabled");
+    makePrivateBtn.off("click");
+    publishBtn.attr("disabled", "disabled");
+    publishBtn.off("click");
+    archiveBtn.attr("disabled", "disabled");
+    archiveBtn.off("click");
+    restoreBtn.attr("disabled", "disabled");
+    restoreBtn.off("click");
+    exportBtn.attr("disabled", "disabled");
+    exportBtn.off("click");
   } else {
     // > 1 ROWS SELECTED
+    var rows = [];
     _.each(rowsSelected, function(rowId) {
       rows.push($("tr[data-row-id='" + rowId + "']")[0]);
     });
@@ -521,44 +504,44 @@ function updateButtons() {
 
     // Only enable button if all selected rows can
     // be published/archived/restored/exported
-    editBtn.removeClass('hidden').addClass('disabled');
-    editBtn.off('click');
-    cloneBtn.removeClass('hidden').addClass('disabled');
-    cloneBtn.off('click');
-    if (!rows.is(':not([data-can-make-private])')) {
-      makePrivateBtn.removeClass('disabled hidden');
-      makePrivateBtn.off('click').on('click', function() { processMoveButtonClick($(this)); });
+    editBtn.attr("disabled", "disabled");
+    editBtn.off("click");
+    cloneBtn.attr("disabled", "disabled");
+    cloneBtn.off("click");
+    if (!rows.is(":not([data-can-make-private])")) {
+      makePrivateBtn.removeAttr("disabled");
+      makePrivateBtn.off("click").on("click", function() { processMoveButtonClick($(this)); });
     } else {
-      makePrivateBtn.removeClass('hidden').addClass('disabled');
-      makePrivateBtn.off('click');
+      makePrivateBtn.attr("disabled", "disabled");
+      makePrivateBtn.off("click");
     }
-    if (!rows.is(':not([data-can-publish])')) {
-      publishBtn.removeClass('disabled hidden');
-      publishBtn.off('click').on('click', function() { processMoveButtonClick($(this)); });
+    if (!rows.is(":not([data-can-publish])")) {
+      publishBtn.removeAttr("disabled");
+      publishBtn.off("click").on("click", function() { processMoveButtonClick($(this)); });
     } else {
-      publishBtn.removeClass('hidden').addClass('disabled');
-      publishBtn.off('click');
+      publishBtn.attr("disabled", "disabled");
+      publishBtn.off("click");
     }
-    if (!rows.is(':not([data-can-archive])')) {
-      archiveBtn.removeClass('disabled hidden');
-      archiveBtn.off('click').on('click', function() { processMoveButtonClick($(this)); });
+    if (!rows.is(":not([data-can-archive])")) {
+      archiveBtn.removeAttr("disabled");
+      archiveBtn.off("click").on("click", function() { processMoveButtonClick($(this)); });
     } else {
-      archiveBtn.removeClass('hidden').addClass('disabled');
-      archiveBtn.off('click');
+      archiveBtn.attr("disabled", "disabled");
+      archiveBtn.off("click");
     }
-    if (!rows.is(':not([data-can-restore])')) {
-      restoreBtn.removeClass('disabled hidden');
-      restoreBtn.off('click').on('click', function() { processMoveButtonClick($(this)); });
+    if (!rows.is(":not([data-can-restore])")) {
+      restoreBtn.removeAttr("disabled");
+      restoreBtn.off("click").on("click", function() { processMoveButtonClick($(this)); });
     } else {
-      restoreBtn.removeClass('hidden').addClass('disabled');
-      restoreBtn.off('click');
+      restoreBtn.attr("disabled", "disabled");
+      restoreBtn.off("click");
     }
-    if (!rows.is(':not([data-can-export])')) {
-      exportBtn.removeClass('disabled hidden');
-      exportBtn.off('click').on('click', function() { exportProtocols(rowsSelected); });
+    if (!rows.is(":not([data-can-export])")) {
+      exportBtn.removeAttr("disabled");
+      exportBtn.off("click").on("click", function() { exportProtocols(rowsSelected); });
     } else {
-      exportBtn.removeClass('hidden').addClass('disabled');
-      exportBtn.off('click');
+      exportBtn.attr("disabled", "disabled");
+      exportBtn.off("click");
     }
   }
 }
@@ -785,6 +768,27 @@ function initImport() {
     // Also reload table
     protocolsDatatable.ajax.reload();
   });
+}
+
+/**
+ * Initializes tutorial
+ */
+function initTutorial() {
+  var stepNum = parseInt(Cookies.get('current_tutorial_step'), 10);
+  if (stepNum >= 23 && stepNum <= 24) {
+    var nextPage = $('.navbar-brand').attr('href');
+    var steps = [{
+      element: $('.nav-settings')[0],
+      intro: I18n.t('tutorial.protocols_index_html'),
+      position: 'bottom'
+    }, {
+      element: $('#import-export-protocols')[0],
+      intro: I18n.t('tutorial.protocols_import_export_html'),
+      position: 'bottom'
+    }];
+    initPageTutorialSteps(23, 24, nextPage, function() {}, function() {},
+     steps);
+  }
 }
 
 init();

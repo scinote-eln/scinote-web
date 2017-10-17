@@ -1,11 +1,6 @@
 module Users
   module Settings
     class TeamsController < ApplicationController
-      include ActionView::Helpers::TextHelper
-      include ActionView::Helpers::UrlHelper
-      include ApplicationHelper
-      include InputSanitizeHelper
-
       before_action :load_user, only: [
         :index,
         :datatable,
@@ -23,11 +18,6 @@ module Users
         :update,
         :destroy
       ]
-
-      before_action :check_create_team_permission,
-                    only: %i(new create)
-
-      layout 'fluid'
 
       def index
         @user_teams =
@@ -64,7 +54,7 @@ module Users
           )
 
           # Redirect to new team page
-          redirect_to team_path(@new_team)
+          redirect_to action: :show, id: @new_team.id
         else
           render :new
         end
@@ -115,11 +105,9 @@ module Users
             format.json do
               render json: {
                 status: :ok,
-                html: custom_auto_link(
-                  @team.tinymce_render(:description),
-                  simple_format: false,
-                  tags: %w(img),
-                  team: current_team
+                description_label: render_to_string(
+                  partial: 'users/settings/teams/description_label.html.erb',
+                  locals: { team: @team }
                 )
               }
             end
@@ -146,17 +134,13 @@ module Users
 
       private
 
-      def check_create_team_permission
-        render_403 unless can_create_teams?
-      end
-
       def load_user
         @user = current_user
       end
 
       def load_team
         @team = Team.find_by_id(params[:id])
-        render_403 unless can_update_team?(@team)
+        render_403 unless is_admin_of_team(@team)
       end
 
       def create_params

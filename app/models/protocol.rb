@@ -1,10 +1,6 @@
-# frozen_string_literal: true
-
-class Protocol < ApplicationRecord
+class Protocol < ActiveRecord::Base
   include SearchableModel
   include RenamingUtil
-  include SearchableByNameModel
-  include TinyMceImages
 
   after_save :update_linked_children
   after_destroy :decrement_linked_children
@@ -20,7 +16,7 @@ class Protocol < ApplicationRecord
   auto_strip_attributes :name, :description, nullify: false
   # Name is required when its actually specified (i.e. :in_repository? is true)
   validates :name, length: { maximum: Constants::NAME_MAX_LENGTH }
-  validates :description, length: { maximum: Constants::RICH_TEXT_MAX_LENGTH }
+  validates :description, length: { maximum: Constants::TEXT_MAX_LENGTH }
   validates :team, presence: true
   validates :protocol_type, presence: true
 
@@ -46,9 +42,9 @@ class Protocol < ApplicationRecord
   with_options if: :in_repository_public? do |protocol|
     # Public protocol must have unique name inside its team
     protocol
-      .validates_uniqueness_of :name, case_sensitive: false,
+      .validates_uniqueness_of :name,
                                scope: :team,
-                               conditions: lambda {
+                               conditions: -> {
                                  where(
                                    protocol_type:
                                      Protocol
@@ -60,9 +56,9 @@ class Protocol < ApplicationRecord
   with_options if: :in_repository_private? do |protocol|
     # Private protocol must have unique name inside its team & user scope
     protocol
-      .validates_uniqueness_of :name, case_sensitive: false,
-                               scope: %i(team added_by),
-                               conditions: lambda {
+      .validates_uniqueness_of :name,
+                               scope: [:team, :added_by],
+                               conditions: -> {
                                  where(
                                    protocol_type:
                                      Protocol
@@ -73,9 +69,9 @@ class Protocol < ApplicationRecord
   with_options if: :in_repository_archived? do |protocol|
     # Archived protocol must have unique name inside its team & user scope
     protocol
-      .validates_uniqueness_of :name, case_sensitive: false,
-                               scope: %i(team added_by),
-                               conditions: lambda {
+      .validates_uniqueness_of :name,
+                               scope: [:team, :added_by],
+                               conditions: -> {
                                  where(
                                    protocol_type:
                                     Protocol
@@ -89,24 +85,18 @@ class Protocol < ApplicationRecord
   belongs_to :added_by,
              foreign_key: 'added_by_id',
              class_name: 'User',
-             inverse_of: :added_protocols,
-             optional: true
-  belongs_to :my_module,
-             inverse_of: :protocols,
-             optional: true
+             inverse_of: :added_protocols
+  belongs_to :my_module, inverse_of: :protocols
   belongs_to :team, inverse_of: :protocols
-  belongs_to :parent,
-             foreign_key: 'parent_id',
-             class_name: 'Protocol',
-             optional: true
+  belongs_to :parent, foreign_key: 'parent_id', class_name: 'Protocol'
   belongs_to :archived_by,
              foreign_key: 'archived_by_id',
              class_name: 'User',
-             inverse_of: :archived_protocols, optional: true
+             inverse_of: :archived_protocols
   belongs_to :restored_by,
              foreign_key: 'restored_by_id',
              class_name: 'User',
-             inverse_of: :restored_protocols, optional: true
+             inverse_of: :restored_protocols
   has_many :linked_children,
            class_name: 'Protocol',
            foreign_key: 'parent_id'
@@ -123,11 +113,14 @@ class Protocol < ApplicationRecord
                   _current_team = nil,
                   options = {})
     team_ids = Team.joins(:user_teams)
-                   .where(user_teams: { user_id: user.id })
+                   .where('user_teams.user_id = ?', user.id)
                    .distinct
                    .pluck(:id)
 
-    module_ids = MyModule.search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
+    module_ids = MyModule.search(user,
+                                 include_archived,
+                                 nil,
+                                 Constants::SEARCH_NO_LIMIT)
                          .pluck(:id)
 
     where_str =
@@ -190,16 +183,10 @@ class Protocol < ApplicationRecord
     if page == Constants::SEARCH_NO_LIMIT
       new_query
     else
-      new_query.limit(Constants::SEARCH_LIMIT).offset((page - 1) * Constants::SEARCH_LIMIT)
+      new_query
+        .limit(Constants::SEARCH_LIMIT)
+        .offset((page - 1) * Constants::SEARCH_LIMIT)
     end
-  end
-
-  def self.viewable_by_user(user, teams)
-    where(my_module: MyModule.viewable_by_user(user, teams))
-      .or(where(team: teams)
-            .where('protocol_type = 3 OR '\
-                   '(protocol_type = 2 AND added_by_id = :user_id)',
-                   user_id: user.id))
   end
 
   def linked_modules
@@ -223,27 +210,44 @@ class Protocol < ApplicationRecord
   end
 
   # Deep-clone given array of assets
-  def self.deep_clone_assets(assets_to_clone)
-    ActiveRecord::Base.no_touching do
-      assets_to_clone.each do |src_id, dest_id|
-        src = Asset.find_by(id: src_id)
-        dest = Asset.find_by(id: dest_id)
-        dest.destroy! if src.blank? && dest.present?
-        next unless src.present? && dest.present?
-
+  def self.deep_clone_assets(assets_to_clone, team)
+    assets_to_clone.each do |src_id, dest_id|
+      src = Asset.find_by_id(src_id)
+      dest = Asset.find_by_id(dest_id)
+      if src.present? and dest.present? then
         # Clone file
-        src.duplicate_file(dest)
+        dest.file = src.file
+        dest.save
+
+        # Clone extracted text data if it exists
+        if (atd = src.asset_text_datum).present? then
+          atd2 = AssetTextDatum.new(
+            data: atd.data,
+            asset: dest
+          )
+          atd2.save
+        end
+
+        # Update estimated size of cloned asset
+        # (& file_present flag)
+        dest.update(
+          estimated_size: src.estimated_size,
+          file_present: true
+        )
+
+        # Update team's space taken
+        team.reload
+        team.take_space(dest.estimated_size)
+        team.save
       end
     end
   end
 
   def self.clone_contents(src, dest, current_user, clone_keywords)
     assets_to_clone = []
-    dest.update(description: src.description)
-    src.clone_tinymce_assets(dest, dest.team)
 
     # Update keywords
-    if clone_keywords
+    if clone_keywords then
       src.protocol_keywords.each do |keyword|
         ProtocolProtocolKeyword.create(
           protocol: dest,
@@ -260,19 +264,18 @@ class Protocol < ApplicationRecord
         position: step.position,
         completed: false,
         user: current_user,
-        protocol: dest
-      )
-      step2.save!
+        protocol: dest)
+      step2.save
 
       # Copy checklists
       step.checklists.asc.each do |checklist|
         checklist2 = Checklist.new(
           name: checklist.name,
           step: step2
-        )
+          )
         checklist2.created_by = current_user
         checklist2.last_modified_by = current_user
-        checklist2.save!
+        checklist2.save
 
         checklist.checklist_items.each do |item|
           item2 = ChecklistItem.new(
@@ -283,7 +286,7 @@ class Protocol < ApplicationRecord
           )
           item2.created_by = current_user
           item2.last_modified_by = current_user
-          item2.save!
+          item2.save
         end
 
         step2.checklists << checklist2
@@ -291,9 +294,21 @@ class Protocol < ApplicationRecord
 
       # "Shallow" Copy assets
       step.assets.each do |asset|
-        asset2 = asset.dup
-        asset2.save!
+        asset2 = Asset.new_empty(
+          asset.file_file_name,
+          asset.file_file_size
+        )
+        asset2.created_by = current_user
+        asset2.team = dest.team
+        asset2.last_modified_by = current_user
+        asset2.file_processing = true if asset.is_image?
+        asset2.save
+
         step2.assets << asset2
+        if asset.is_image?
+          asset2.file.delay.reprocess!(:large)
+          asset2.file.delay.reprocess!(:medium)
+        end
         assets_to_clone << [asset.id, asset2.id]
       end
 
@@ -308,12 +323,13 @@ class Protocol < ApplicationRecord
         table2.team = dest.team
         step2.tables << table2
       end
-
-      # Copy steps tinyMce assets
-      step.clone_tinymce_assets(step2, dest.team)
     end
+
     # Call clone helper
-    Protocol.delay(queue: :assets).deep_clone_assets(assets_to_clone)
+    Protocol.delay(queue: :assets).deep_clone_assets(
+      assets_to_clone,
+      dest.team
+    )
   end
 
   def in_repository_active?
@@ -359,13 +375,9 @@ class Protocol < ApplicationRecord
     steps.where(completed: true)
   end
 
-  def first_step_id
-    steps.find_by(position: 0)&.id
-  end
-
   def space_taken
     st = 0
-    steps.find_each do |step|
+    self.steps.find_each do |step|
       st += step.space_taken
     end
     st
@@ -382,20 +394,7 @@ class Protocol < ApplicationRecord
     self.restored_by = nil
     self.restored_on = nil
     self.protocol_type = Protocol.protocol_types[:in_repository_private]
-    result = save
-
-    if result
-      Activities::CreateActivityService
-        .call(activity_type: :move_protocol_in_repository,
-              owner: user,
-              subject: self,
-              team: team,
-              message_items: {
-                protocol: id,
-                storage: I18n.t('activities.protocols.team_to_my_message')
-              })
-    end
-    result
+    save
   end
 
   # This publish action simply moves the protocol from
@@ -412,20 +411,7 @@ class Protocol < ApplicationRecord
     self.restored_by = nil
     self.restored_on = nil
     self.protocol_type = Protocol.protocol_types[:in_repository_public]
-    result = save
-
-    if result
-      Activities::CreateActivityService
-        .call(activity_type: :move_protocol_in_repository,
-              owner: user,
-              subject: self,
-              team: team,
-              message_items: {
-                protocol: id,
-                storage: I18n.t('activities.protocols.my_to_team_message')
-              })
-    end
-    result
+    save
   end
 
   def archive(user)
@@ -446,7 +432,7 @@ class Protocol < ApplicationRecord
 
     # Update all module protocols that had
     # parent set to this protocol
-    if result
+    if result then
       Protocol.where(parent: self).find_each do |p|
         p.update(
           parent: nil,
@@ -454,16 +440,8 @@ class Protocol < ApplicationRecord
           protocol_type: :unlinked
         )
       end
-
-      Activities::CreateActivityService
-        .call(activity_type: :archive_protocol_in_repository,
-              owner: user,
-              subject: self,
-              team: team,
-              message_items: {
-                protocol: id
-              })
     end
+
     result
   end
 
@@ -475,25 +453,13 @@ class Protocol < ApplicationRecord
     self.archived_on = nil
     self.restored_by = user
     self.restored_on = Time.now
-    if published_on.present?
+    if self.published_on.present?
       self.published_on = Time.now
       self.protocol_type = Protocol.protocol_types[:in_repository_public]
     else
       self.protocol_type = Protocol.protocol_types[:in_repository_private]
     end
-    result = save
-
-    if result
-      Activities::CreateActivityService
-        .call(activity_type: :restore_protocol_in_repository,
-              owner: user,
-              subject: self,
-              team: team,
-              message_items: {
-                protocol: id
-              })
-    end
-    result
+    save
   end
 
   def update_keywords(keywords)
@@ -503,15 +469,21 @@ class Protocol < ApplicationRecord
         self.record_timestamps = false
 
         # First, destroy all keywords
-        protocol_protocol_keywords.destroy_all
+        self.protocol_protocol_keywords.destroy_all
         if keywords.present?
           keywords.each do |kw_name|
-            kw = ProtocolKeyword.find_or_create_by(name: kw_name, team: team)
-            protocol_keywords << kw
+            kw = ProtocolKeyword.find_by(name: kw_name)
+            if kw.blank?
+              kw = ProtocolKeyword.create(
+                name: kw_name,
+                team: self.team
+              )
+            end
+            self.protocol_keywords << kw
           end
         end
       end
-    rescue StandardError
+    rescue
       result = false
     end
     result
@@ -521,92 +493,89 @@ class Protocol < ApplicationRecord
     self.parent = nil
     self.parent_updated_at = nil
     self.protocol_type = Protocol.protocol_types[:unlinked]
-    save!
+    self.save!
   end
 
   def update_parent(current_user)
-    ActiveRecord::Base.no_touching do
-      # First, destroy parent's step contents
-      parent.destroy_contents
-      parent.reload
+    # First, destroy parent's step contents
+    parent.destroy_contents(current_user)
+    parent.reload
 
-      # Now, clone step contents
-      Protocol.clone_contents(self, parent, current_user, false)
-    end
+    # Now, clone step contents
+    Protocol.clone_contents(self, self.parent, current_user, false)
 
     # Lastly, update the metadata
     parent.reload
     parent.record_timestamps = false
-    parent.updated_at = updated_at
+    parent.updated_at = self.updated_at
     parent.save!
     self.record_timestamps = false
-    self.parent_updated_at = updated_at
-    save!
+    self.parent_updated_at = self.updated_at
+    self.save!
   end
 
   def update_from_parent(current_user)
-    ActiveRecord::Base.no_touching do
-      # First, destroy step contents
-      destroy_contents
+    # First, destroy step contents
+    destroy_contents(current_user)
 
-      # Now, clone parent's step contents
-      Protocol.clone_contents(parent, self, current_user, false)
-    end
+    # Now, clone parent's step contents
+    Protocol.clone_contents(self.parent, self, current_user, false)
 
     # Lastly, update the metadata
-    reload
+    self.reload
     self.record_timestamps = false
-    self.updated_at = parent.updated_at
-    self.parent_updated_at = parent.updated_at
+    self.updated_at = self.parent.updated_at
+    self.parent_updated_at = self.parent.updated_at
     self.added_by = current_user
-    save!
+    self.save!
   end
 
   def load_from_repository(source, current_user)
-    ActiveRecord::Base.no_touching do
-      # First, destroy step contents
-      destroy_contents
+    # First, destroy step contents
+    destroy_contents(current_user)
 
-      # Now, clone source's step contents
-      Protocol.clone_contents(source, self, current_user, false)
-    end
+    # Now, clone source's step contents
+    Protocol.clone_contents(source, self, current_user, false)
 
     # Lastly, update the metadata
-    reload
+    self.reload
     self.record_timestamps = false
     self.updated_at = source.updated_at
     self.parent = source
     self.parent_updated_at = source.updated_at
     self.added_by = current_user
     self.protocol_type = Protocol.protocol_types[:linked]
-    save!
+    self.save!
   end
 
   def copy_to_repository(new_name, new_protocol_type, link_protocols, current_user)
     clone = Protocol.new(
       name: new_name,
-      description: description,
       protocol_type: new_protocol_type,
       added_by: current_user,
-      team: team
+      team: self.team
     )
-    clone.published_on = Time.now if clone.in_repository_public?
+    if clone.in_repository_public?
+      clone.published_on = Time.now
+    end
 
     # Don't proceed further if clone is invalid
-    return clone if clone.invalid?
+    if clone.invalid?
+      return clone
+    end
 
-    ActiveRecord::Base.no_touching do
-      # Okay, clone seems to be valid: let's clone it
-      clone = deep_clone(clone, current_user)
+    # Okay, clone seems to be valid: let's clone it
+    clone = deep_clone(clone, current_user)
 
-      # If the above operation went well, update published_on
-      # timestamp
-      clone.update(published_on: Time.zone.now) if clone.in_repository_public?
+    # If the above operation went well, update published_on
+    # timestamp
+    if clone.in_repository_public?
+      clone.update(published_on: Time.now)
     end
 
     # Link protocols if neccesary
-    if link_protocols
-      reload
+    if link_protocols then
+      self.reload
       self.record_timestamps = false
       self.added_by = current_user
       self.parent = clone
@@ -614,23 +583,23 @@ class Protocol < ApplicationRecord
       self.parent_updated_at = ts
       self.updated_at = ts
       self.protocol_type = Protocol.protocol_types[:linked]
-      save!
+      self.save!
     end
 
-    clone
+    return clone
   end
 
   def deep_clone_my_module(my_module, current_user)
     clone = Protocol.new_blank_for_module(my_module)
-    clone.name = name
-    clone.authors = authors
-    clone.description = description
-    clone.protocol_type = protocol_type
+    clone.name = self.name
+    clone.authors = self.authors
+    clone.description = self.description
+    clone.protocol_type = self.protocol_type
 
-    if linked?
+    if self.linked?
       clone.added_by = current_user
-      clone.parent = parent
-      clone.parent_updated_at = parent_updated_at
+      clone.parent = self.parent
+      clone.parent_updated_at = self.parent_updated_at
     end
 
     deep_clone(clone, current_user)
@@ -638,44 +607,34 @@ class Protocol < ApplicationRecord
 
   def deep_clone_repository(current_user)
     clone = Protocol.new(
-      name: name,
-      authors: authors,
-      description: description,
+      name: self.name,
+      authors: self.authors,
+      description: self.description,
       added_by: current_user,
-      team: team,
-      protocol_type: protocol_type,
-      published_on: in_repository_public? ? Time.now : nil
+      team: self.team,
+      protocol_type: self.protocol_type,
+      published_on: self.in_repository_public? ? Time.now : nil,
     )
 
-    cloned = deep_clone(clone, current_user)
-
-    if cloned
-      Activities::CreateActivityService
-        .call(activity_type: :copy_protocol_in_repository,
-             owner: current_user,
-             subject: self,
-             team: team,
-             project: nil,
-             message_items: {
-               protocol_new: clone.id,
-               protocol_original: id
-             })
-    end
-
-    cloned
+    deep_clone(clone, current_user)
   end
 
-  def destroy_contents
+  def destroy_contents(current_user)
     # Calculate total space taken by the protocol
-    st = space_taken
-    steps.order(position: :desc).destroy_all
+    st = self.space_taken
+
+    self.steps.find_each do |step|
+      unless step.destroy(current_user) then
+        raise ActiveRecord::RecordNotDestroyed
+      end
+    end
 
     # Release space taken by the step
-    team.release_space(st)
-    team.save
+    self.team.release_space(st)
+    self.team.save
 
     # Reload protocol
-    reload
+    self.reload
   end
 
   def can_destroy?
@@ -704,20 +663,21 @@ class Protocol < ApplicationRecord
 
   def update_linked_children
     # Increment/decrement the parent's nr of linked children
-    if saved_change_to_parent_id?
-      unless parent_id_before_last_save.nil?
-        p = Protocol.find_by_id(parent_id_before_last_save)
+    if self.parent_id_changed?
+      if self.parent_id_was != nil
+        p = Protocol.find_by_id(self.parent_id_was)
         p.record_timestamps = false
         p.decrement!(:nr_of_linked_children)
       end
-      unless parent_id.nil?
-        parent.record_timestamps = false
-        parent.increment!(:nr_of_linked_children)
+      if self.parent_id != nil
+        self.parent.record_timestamps = false
+        self.parent.increment!(:nr_of_linked_children)
       end
     end
   end
 
   def decrement_linked_children
-    parent.decrement!(:nr_of_linked_children) if parent.present?
+    self.parent.decrement!(:nr_of_linked_children) if self.parent.present?
   end
+
 end

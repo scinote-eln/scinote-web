@@ -1,56 +1,92 @@
-# frozen_string_literal: true
-
 module ReportsHelper
-  include StringUtility
-  include Canaid::Helpers::PermissionsHelper
+  def render_new_element(hide)
+    render partial: 'reports/elements/new_element.html.erb',
+          locals: { hide: hide }
+  end
 
   def render_report_element(element, provided_locals = nil)
-    case element.type_of
-    when 'experiment'
-      return unless can_read_experiment?(element.report.user, element.experiment)
-    when 'my_module'
-      return unless can_read_my_module?(element.report.user, element.my_module)
-    end
-
-    # Determine partial
-    view = "reports/elements/#{element.type_of}_element.html.erb"
-
-    # Set locals
-    locals = provided_locals.nil? ? {} : provided_locals.clone
-
     children_html = ''.html_safe
+
     # First, recursively render element's children
-    if element.children.active.present?
-      element.children.active.each do |child|
-        children_html.safe_concat render_report_element(child, provided_locals)
+    if element.comments? || element.project_header?
+      # Render no children
+    elsif element.result?
+      # Special handling for result comments
+      if element.has_children?
+        children_html.safe_concat render_new_element(true)
+        element.children.each do |child|
+          children_html
+            .safe_concat render_report_element(child, provided_locals)
+        end
+      else
+        children_html.safe_concat render_new_element(false)
       end
+    else
+      if element.has_children?
+        element.children.each do |child|
+          children_html.safe_concat render_new_element(false)
+          children_html
+            .safe_concat render_report_element(child, provided_locals)
+        end
+      end
+      children_html.safe_concat render_new_element(false)
     end
-    locals[:report_element] = element
+
+    file_name = element.type_of
+    if element.type_of.in? %w(step result_asset result_table result_text)
+      file_name = "my_module_#{element.type_of.singularize}"
+    end
+    view = "reports/elements/#{file_name}_element.html.erb"
+
+    locals = provided_locals.nil? ? {} : provided_locals.clone
     locals[:children] = children_html
 
-    render partial: view, locals: locals
+    # ReportExtends is located in config/initializers/extends/report_extends.rb
+
+    ReportElement.type_ofs.keys.each do |type|
+      next unless element.public_send("#{type}?")
+      element.element_references.each do |el_ref|
+        locals[el_ref.class.name.underscore.to_sym] = el_ref
+      end
+      locals[:order] = element
+                       .sort_order if type.in? ReportExtends::SORTED_ELEMENTS
+    end
+
+    (render partial: view, locals: locals).html_safe
   end
 
   # "Hack" to omit file preview URL because of WKHTML issues
   def report_image_asset_url(asset)
-    preview = asset.inline? ? asset.large_preview : asset.medium_preview
-    image_tag(preview.processed.service_url(expires_in: Constants::URL_LONG_EXPIRE_TIME))
-  rescue ActiveStorage::FileNotFoundError
-    image_tag('icon_small/missing.png')
-  rescue StandardError => e
-    Rails.logger.error e.message
-    tag.i(I18n.t('projects.reports.index.generation.file_preview_generation_error'))
+    prefix = ''
+    if ENV['PAPERCLIP_STORAGE'].present? &&
+       ENV['MAIL_SERVER_URL'].present? &&
+       ENV['PAPERCLIP_STORAGE'] == 'filesystem'
+      prefix = ENV['MAIL_SERVER_URL']
+    end
+    if !prefix.empty? &&
+       !prefix.include?('http://') &&
+       !prefix.include?('https://')
+      prefix = "http://#{prefix}"
+    end
+    url = prefix + asset.url(:medium, timeout: Constants::URL_LONG_EXPIRE_TIME)
+    image_tag(url)
   end
 
-  def assigned_repository_or_snapshot(my_module, repository)
-    if repository.is_a?(RepositorySnapshot)
-      return my_module.repository_snapshots.find_by(parent_id: repository.parent_id, selected: true)
-    end
+  # "Hack" to load Glyphicons css directly from the CDN
+  # site so they work in report
+  def bootstrap_cdn_link_tag
+    specs = Gem.loaded_specs['bootstrap-sass']
+    return '' unless specs.present?
+    stylesheet_link_tag("http://netdna.bootstrapcdn.com/bootstrap/" \
+                        "#{specs.version.version}/css/bootstrap.min.css",
+                        media: 'all')
+  end
 
-    return nil unless my_module.assigned_repositories.exists?(id: repository.id)
-
-    selected_snapshot = repository.repository_snapshots.find_by(my_module: my_module, selected: true)
-    selected_snapshot || repository
+  def font_awesome_cdn_link_tag
+    stylesheet_link_tag(
+      'https://maxcdn.bootstrapcdn.com/font-awesome' \
+      '/4.6.3/css/font-awesome.min.css'
+    )
   end
 
   def step_status_label(step)
@@ -61,57 +97,20 @@ module ReportsHelper
       style = 'default'
       text = t('protocols.steps.uncompleted')
     end
-    "<span class=\"label step-label-#{style}\">[#{text}]</span>".html_safe
+    "<span class=\"label label-#{style}\">#{text}</span>".html_safe
   end
 
-  def font_awesome_cdn_link_tag
-    stylesheet_link_tag(
-      'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/fontawesome.min.css',
-      'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/regular.min.css',
-      'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/solid.min.css'
-    )
-  end
-
-  def filter_steps_for_report(steps, settings)
-    include_completed_steps = settings.dig('task', 'protocol', 'completed_steps')
-    include_uncompleted_steps = settings.dig('task', 'protocol', 'uncompleted_steps')
-    if include_completed_steps && include_uncompleted_steps
-      steps
-    elsif include_completed_steps
-      steps.where(completed: true)
-    elsif include_uncompleted_steps
-      steps.where(completed: false)
-    else
-      steps.none
+  # Fixes issues with avatar images in reports
+  def fix_smart_annotation_image(html)
+    html_doc = Nokogiri::HTML(html)
+    html_doc.search('.atwho-user-popover').each do |el|
+      text = el.content
+      el.replace("<a href='#' style='margin-left: 5px'>#{text}</a>")
     end
-  end
-
-  def order_results_for_report(results, order)
-    case order
-    when 'atoz'
-      results.order(name: :asc)
-    when 'ztoa'
-      results.order(name: :desc)
-    when 'new'
-      results.order(updated_at: :desc)
-    else
-      results.order(updated_at: :asc)
+    html_doc.search('[ref="missing-img"]').each do |el|
+      tag = wicked_pdf_image_tag('icon_small/missing.png')
+      el.replace(tag)
     end
-  end
-
-  def report_experiment_descriptions(report)
-    report.report_elements.experiment.map do |experiment_element|
-      experiment_element.experiment.description
-    end
-  end
-
-  def assigned_to_report_repository_items(report, repository_name)
-    repository = Repository.accessible_by_teams(report.team).where(name: repository_name).take
-    return RepositoryRow.none if repository.blank?
-
-    my_modules = MyModule.joins(:experiment)
-                         .where(experiment: { project: report.project })
-                         .where(id: report.report_elements.my_module.select(:my_module_id))
-    repository.repository_rows.joins(:my_modules).where(my_modules: my_modules)
+    html_doc.to_s
   end
 end

@@ -1,4 +1,4 @@
-class CreateResultTables < ActiveRecord::Migration[4.2]
+class CreateResultTables < ActiveRecord::Migration
   def change
     create_table :result_tables do |t|
       t.integer :result_id, null: false

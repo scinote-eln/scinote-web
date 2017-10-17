@@ -1,4 +1,4 @@
-class CreateTables < ActiveRecord::Migration[4.2]
+class CreateTables < ActiveRecord::Migration
   def change
     create_table :tables do |t|
       t.binary :contents, null: false, limit: 20.megabyte

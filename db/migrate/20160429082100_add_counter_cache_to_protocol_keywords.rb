@@ -1,4 +1,4 @@
-class AddCounterCacheToProtocolKeywords < ActiveRecord::Migration[4.2]
+class AddCounterCacheToProtocolKeywords < ActiveRecord::Migration
   def up
     add_column :protocol_keywords, :nr_of_protocols, :integer, default: 0
 

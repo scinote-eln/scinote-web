@@ -1,64 +1,53 @@
-# frozen_string_literal: true
-
-class Team < ApplicationRecord
+class Team < ActiveRecord::Base
   include SearchableModel
-  include ViewableModel
-  include TeamBySubjectModel
-  include TinyMceImages
 
   # Not really MVC-compliant, but we just use it for logger
   # output in space_taken related functions
   include ActionView::Helpers::NumberHelper
-
-  after_create :generate_template_project
-  scope :teams_select, -> { select(:id, :name).order(name: :asc) }
-  scope :ordered, -> { order('LOWER(name)') }
 
   auto_strip_attributes :name, :description, nullify: false
   validates :name,
             length: { minimum: Constants::NAME_MIN_LENGTH,
                       maximum: Constants::NAME_MAX_LENGTH }
   validates :description, length: { maximum: Constants::TEXT_MAX_LENGTH }
+  validates :space_taken, presence: true
 
-  belongs_to :created_by,
-             foreign_key: 'created_by_id',
-             class_name: 'User',
-             optional: true
-  belongs_to :last_modified_by,
-             foreign_key: 'last_modified_by_id',
-             class_name: 'User',
-             optional: true
+  belongs_to :created_by, :foreign_key => 'created_by_id', :class_name => 'User'
+  belongs_to :last_modified_by, foreign_key: 'last_modified_by_id', class_name: 'User'
   has_many :user_teams, inverse_of: :team, dependent: :destroy
   has_many :users, through: :user_teams
+  has_many :samples, inverse_of: :team
+  has_many :samples_tables, inverse_of: :team, dependent: :destroy
+  has_many :sample_groups, inverse_of: :team
+  has_many :sample_types, inverse_of: :team
   has_many :projects, inverse_of: :team
-  has_many :project_folders, inverse_of: :team, dependent: :destroy
+  has_many :custom_fields, inverse_of: :team
   has_many :protocols, inverse_of: :team, dependent: :destroy
   has_many :protocol_keywords, inverse_of: :team, dependent: :destroy
   has_many :tiny_mce_assets, inverse_of: :team, dependent: :destroy
   has_many :repositories, dependent: :destroy
-  has_many :reports, inverse_of: :team, dependent: :destroy
-  has_many :activities, inverse_of: :team, dependent: :destroy
-  has_many :assets, inverse_of: :team, dependent: :destroy
-  has_many :team_repositories, inverse_of: :team, dependent: :destroy
-  has_many :shared_repositories, through: :team_repositories, source: :repository
+  # Based on file's extension opens file (used for importing)
+  def self.open_spreadsheet(file)
+    filename = file.original_filename
+    file_path = file.path
 
-  attr_accessor :without_templates
+    if file.class == Paperclip::Attachment and file.is_stored_on_s3?
+      fa = file.fetch
+      file_path = fa.path
+    end
 
-  def default_view_state
-    {
-      projects: {
-        active: { sort: 'new' },
-        archived: { sort: 'new' },
-        view_type: 'cards'
-      }
-    }
-  end
-
-  def validate_view_state(view_state)
-    if %w(new old atoz ztoa).exclude?(view_state.state.dig('projects', 'active', 'sort')) ||
-       %w(new old atoz ztoa archived_new archived_old).exclude?(view_state.state.dig('projects', 'archived', 'sort')) ||
-       %w(cards table).exclude?(view_state.state.dig('projects', 'view_type'))
-      view_state.errors.add(:state, :wrong_state)
+    case File.extname(filename)
+    when '.csv' then
+      Roo::CSV.new(file_path, extension: :csv)
+    when '.tsv' then
+      Roo::CSV.new(file_path, csv_options: { col_sep: "\t" })
+    when '.txt' then
+      # This assumption is based purely on biologist's habits
+      Roo::CSV.new(file_path, csv_options: { col_sep: "\t" })
+    when '.xlsx' then
+      Roo::Excelx.new(file_path)
+    else
+      raise TypeError
     end
   end
 
@@ -68,18 +57,183 @@ class Team < ApplicationRecord
          .where('full_name ILIKE ? OR email ILIKE ?', a_query, a_query)
   end
 
-  def storage_used
-    by_assets = Asset.joins(:file_blob)
-                     .where(assets: { team_id: id })
-                     .select('active_storage_blobs.byte_size')
+  # Imports samples into db
+  # -1 == sample_name,
+  # -2 == sample_type,
+  # -3 == sample_group
+  # TODO: use constants
+  def import_samples(sheet, mappings, user)
+    errors = false
+    nr_of_added = 0
+    total_nr = 0
 
-    by_tiny_mce_assets = TinyMceAsset.joins(:image_blob)
-                                     .where(tiny_mce_assets: { team_id: id })
-                                     .select('active_storage_blobs.byte_size')
+    # First let's query for all custom_fields we're refering to
+    custom_fields = []
+    sname_index = -1
+    stype_index = -1
+    sgroup_index = -1
+    mappings.each.with_index do |(_, v), i|
+      if v == '-1'
+        # Fill blank space, so our indices stay the same
+        custom_fields << nil
+        sname_index = i
+      elsif v == '-2'
+        custom_fields << nil
+        stype_index = i
+      elsif v == '-3'
+        custom_fields << nil
+        sgroup_index = i
+      else
+        cf = CustomField.find_by_id(v)
 
-    ActiveStorage::Blob
-      .from("((#{by_assets.to_sql}) UNION ALL (#{by_tiny_mce_assets.to_sql})) AS active_storage_blobs")
-      .sum(:byte_size)
+        # Even if doesn't exist we add nil value in order not to destroy our
+        # indices
+        custom_fields << cf
+      end
+    end
+    # Now we can iterate through sample data and save stuff into db
+    (2..sheet.last_row).each do |i|
+      total_nr += 1
+      sample = Sample.new(name: sheet.row(i)[sname_index],
+                          team: self,
+                          user: user)
+
+      sample.transaction do
+        unless sample.valid?
+          errors = true
+          raise ActiveRecord::Rollback
+        end
+
+        sheet.row(i).each.with_index do |value, index|
+          if index == stype_index
+            stype = SampleType.where(name: value.strip, team: self).take
+
+            unless stype
+              stype = SampleType.new(name: value, team: self)
+              unless stype.save
+                errors = true
+                raise ActiveRecord::Rollback
+              end
+            end
+            sample.sample_type = stype
+          elsif index == sgroup_index
+            sgroup = SampleGroup.where(name: value.strip, team: self).take
+
+            unless sgroup
+              sgroup = SampleGroup.new(name: value, team: self)
+              unless sgroup.save
+                errors = true
+                raise ActiveRecord::Rollback
+              end
+            end
+            sample.sample_group = sgroup
+          elsif value && custom_fields[index]
+            # we're working with CustomField
+            scf = SampleCustomField.new(
+              sample: sample,
+              custom_field: custom_fields[index],
+              value: value
+            )
+            unless scf.valid?
+              errors = true
+              raise ActiveRecord::Rollback
+            end
+            sample.sample_custom_fields << scf
+          end
+        end
+        if Sample.import([sample],
+                         recursive: true,
+                         validate: false).failed_instances.any?
+          errors = true
+          raise ActiveRecord::Rollback
+        end
+        nr_of_added += 1
+      end
+    end
+
+    if errors
+      return { status: :error, nr_of_added: nr_of_added, total_nr: total_nr }
+    else
+      return { status: :ok, nr_of_added: nr_of_added, total_nr: total_nr }
+    end
+  end
+
+  def to_csv(samples, headers)
+    require "csv"
+
+    # Parse headers (magic numbers should be refactored - see
+    # sample-datatable.js)
+    header_names = []
+    headers.each do |header|
+      if header == "-1"
+        header_names << I18n.t("samples.table.sample_name")
+      elsif header == "-2"
+        header_names << I18n.t("samples.table.sample_type")
+      elsif header == "-3"
+        header_names << I18n.t("samples.table.sample_group")
+      elsif header == "-4"
+        header_names << I18n.t("samples.table.added_by")
+      elsif header == "-5"
+        header_names << I18n.t("samples.table.added_on")
+      else
+        cf = CustomField.find_by_id(header)
+
+        if cf
+          header_names << cf.name
+        else
+          header_names << nil
+        end
+      end
+    end
+
+    CSV.generate do |csv|
+      csv << header_names
+      samples.each do |sample|
+        sample_row = []
+        headers.each do |header|
+          if header == "-1"
+            sample_row << sample.name
+          elsif header == "-2"
+            sample_row << (sample.sample_type.nil? ? I18n.t("samples.table.no_type") : sample.sample_type.name)
+          elsif header == "-3"
+            sample_row << (sample.sample_group.nil? ? I18n.t("samples.table.no_group") : sample.sample_group.name)
+          elsif header == "-4"
+            sample_row << sample.user.full_name
+          elsif header == "-5"
+            sample_row << I18n.l(sample.created_at, format: :full)
+          else
+            scf = SampleCustomField.where(
+              custom_field_id: header,
+              sample_id: sample.id
+            ).take
+
+            if scf
+              sample_row << scf.value
+            else
+              sample_row << nil
+            end
+          end
+        end
+        csv << sample_row
+      end
+    end
+  end
+
+  # Get all header fields for samples (used in importing for mappings - dropdowns)
+  def get_available_sample_fields
+    fields = {};
+
+    # First and foremost add sample name
+    fields["-1"] = I18n.t("samples.table.sample_name")
+    fields["-2"] = I18n.t("samples.table.sample_type")
+    fields["-3"] = I18n.t("samples.table.sample_group")
+
+    # Add all other custom fields
+    CustomField.where(team_id: id).order(:created_at).each do |cf|
+      fields[cf.id] = cf.name
+    end
+
+    fields
   end
 
   # (re)calculate the space taken by this team
@@ -137,35 +291,5 @@ class Team < ApplicationRecord
 
   def protocol_keywords_list
     ProtocolKeyword.where(team: self).pluck(:name)
-  end
-
-  def self.global_activity_filter(filters, search_query)
-    query = where('name ILIKE ?', "%#{search_query}%")
-    if filters[:users]
-      users_team = User.where(id: filters[:users]).joins(:user_teams).group(:team_id).pluck(:team_id)
-      query = query.where(id: users_team)
-    end
-    query = query.where(id: team_by_subject(filters[:subjects])) if filters[:subjects]
-    query.select(:id, :name).map { |i| { value: i[:id], label: ApplicationController.helpers.escape_input(i[:name]) } }
-  end
-
-  def self.search_by_object(obj)
-    find(
-      case obj.class.name
-      when 'Protocol'
-        obj.team_id
-      when 'MyModule', 'Step'
-        obj.protocol.team_id
-      when 'ResultText'
-        obj.result.my_module.protocol.team_id
-      end
-    )
-  end
-
-  private
-
-  def generate_template_project
-    return if without_templates
-    TemplatesService.new.delay(queue: :templates).update_team(self)
   end
 end

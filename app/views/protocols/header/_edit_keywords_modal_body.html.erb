@@ -1,0 +1,7 @@
+<%= bootstrap_form_for @protocol, url: keywords_protocol_path(@protocol, format: :json), remote: :true do |f| %>
+  <select multiple data-role="tagsinput" name="keywords[]">
+    <% @protocol.protocol_keywords.each do |kw| %>
+      <option value="<%= kw.name %>"><%= kw.name %></option>
+    <% end %>
+  </select>
+<% end %>

@@ -1,3 +1,23 @@
-<% activities.each_with_index do |activity, index| %>
-  <%= render 'activity.html.erb', activity: activity %>
+<%
+  current_day = days_since_1970(DateTime.current)
+%>
+<% if !hide_today && activities.count > 0 && days_since_1970(activities[0].created_at) == current_day %>
+  <li class="text-center activity-date-item">
+    <span class="label label-primary">
+      <%=t "activities.index.today" %>
+    </span>
+  </li>
+<% end %>
+<% activities.each do |activity| %>
+  <% activity_day = days_since_1970(activity.created_at) %>
+
+  <% if activity_day < current_day and activity_day < day %>
+    <% day = days_since_1970(activity.created_at) %>
+    <li class="text-center activity-date-item">
+      <span class="label label-primary">
+        <%= activity.created_at.strftime('%d.%m.%Y') %>
+      </span>
+    </li>
+  <% end %>
+  <%= render 'activities/activity.html.erb', activity: activity %>
 <% end %>

@@ -1,10 +1,13 @@
 <div id="diagram-container">
   <div id="diagram" class="diagram">
     <% my_modules.each do |my_module| %>
-      <%= render partial: "canvas/full_zoom/my_module#{('_hidden' unless can_read_my_module?(my_module))}", locals: {experiment: experiment, my_module: my_module} %>
+      <%= render partial: "canvas/full_zoom/my_module", locals: {experiment: experiment, my_module: my_module} %>
     <% end %>
   </div>
 </div>
+
+<!-- Edit description modal -->
+<%= render partial: "my_modules/modals/manage_description_modal" %>
 
 <!-- Edit due date modal -->
 <%= render partial: "my_modules/modals/manage_due_date_modal" %>

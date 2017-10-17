@@ -1,0 +1,18 @@
+<div>
+  <em>
+    <%= t("projects.reports.elements.modals.result_contents_inner.instructions") %>
+  </em>
+</div>
+
+<div class="checkbox-tree">
+  <ul>
+    <li>
+      <%= form.label :result_all, t("projects.reports.elements.modals.result_contents_inner.check_all"), class: "checkbox" %>
+      <ul>
+        <li>
+          <%= form.check_box :result_comments, label: t("projects.reports.elements.modals.result_contents_inner.comments") %>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>

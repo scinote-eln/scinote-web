@@ -1,4 +1,4 @@
-class ConvertCommentsToStiModel < ActiveRecord::Migration[4.2]
+class ConvertCommentsToStiModel < ActiveRecord::Migration
   def change
     add_column :comments, :type, :string
     add_column :comments, :associated_id, :integer

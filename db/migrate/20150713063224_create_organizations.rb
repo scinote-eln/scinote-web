@@ -1,4 +1,4 @@
-class CreateOrganizations < ActiveRecord::Migration[4.2]
+class CreateOrganizations < ActiveRecord::Migration
   def change
     create_table :teams do |t|
       ## General info

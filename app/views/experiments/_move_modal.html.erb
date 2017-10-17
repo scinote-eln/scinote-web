@@ -1,13 +1,12 @@
-<div class="modal move-experiment-modal"
+<!-- Move experiment modal -->
+<div class="modal"
      id="move-experiment-modal-<%= @experiment.id %>"
      tabindex="-1"
      role="dialog"
      aria-labelledby="move-experiment-modal-label">
-     <%= bootstrap_form_for @experiment,
-                            url: move_experiment_path(@experiment),
+     <%= bootstrap_form_for @experiment, url: move_experiment_path(),
                             method: :post,
-                            remote: true,
-                            html: { class: 'experiment-action-form' } do |f| %>
+                            remote: true do |f| %>
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -15,26 +14,23 @@
           <h4 class="modal-title" id="move-experiment-modal-label"><%= t("experiments.move.modal_title", experiment: @experiment.name ) %></h5>
         </div>
         <div class="modal-body">
-          <p><small><%= t("experiments.move.notice") %></small></p>
-          <% if @projects.any? && can_manage_all_experiment_my_modules?(@experiment) %>
+          <% if !@projects.blank? %>
             <%= f.select :project_id, options_for_select(@projects.collect { |p| [ p.name, p.id ] }),
-                        { label: t("experiments.move.target_project") }, { class: "form-control selectpicker", "data-role" => "clear" } %>
+                        {}, { class: "form-control selectpicker", "data-role" => "clear" } %>
           <% else %>
-            <div class="warning-message">
-              <i class="fas fa-exclamation-triangle"></i>
-              <% if @projects.blank? %>
+            <div>
+              <em>
                 <%= t("experiments.move.no_projects") %>
-              <% elsif !can_manage_all_experiment_my_modules?(@experiment) %>
-                <%= t("experiments.move.task_permission") %>
-              <% end %>
+              </em>
             </div>
           <% end %>
+          <%= t("experiments.move.notice") %>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal"><%=t "general.cancel" %></button>
-          <% if @projects.any? && can_manage_all_experiment_my_modules?(@experiment) %>
+          <% if !@projects.blank? %>
             <%= f.submit t("experiments.move.modal_submit"), class: "btn btn-primary" %>
           <% end %>
+          <button type="button" class="btn btn-default" data-dismiss="modal"><%=t "general.cancel" %></button>
         </div>
       </div>
     </div>

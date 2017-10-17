@@ -1,141 +1,65 @@
-// scss-lint:disable SelectorDepth
-// scss-lint:disable NestingDepth
-
-@import "constants";
+@import 'constants';
 @import "mixins";
 
 .tree {
-  height: calc(100% - 30px);
+  height: 100%;
   padding-bottom: 30px;
+}
+.tree > ul {
+  margin-bottom: 0;
+}
+.tree ul {
+  padding-left: 0;
+}
+.tree li {
+  list-style-type: none;
+  margin: 0;
+  padding: 5px 5px 5px 15px;
+  position: relative;
 
-  .sidebar-root {
-    padding-left: 0;
+  &.active > span {
+    background-color: $color-white;
+    border: 1px solid $color-white;
+    border-radius: 4px;
+    font-weight: bold;
   }
 
-  .branch,
-  .leaf {
-    list-style-type: none;
-    margin: 0;
-    position: relative;
+  &.active:not span.tree-link:hover {
+    text-decoration: underline;
+  }
 
-    .tree-link {
-      align-items: center;
-      display: flex;
-      height: 50px;
-      position: relative;
-
-      .btn-secondary {
-        background: transparent;
-        margin-left: 20px;
-      }
-
-      .tree-toggle {
-        cursor: pointer;
-        display: inline-block;
-        line-height: 30px;
-        position: absolute;
-        text-align: center;
-        top: 10px;
-        width: 30px;
-        z-index: 2;
-      }
-
-      .line-wrap {
-        animation-timing-function: $timing-function-sharp;
-        color: $color-volcano;
-        flex-grow: 1;
-        height: 100%;
-        line-height: 50px;
-        padding: 0 10px 0 30px;
-        transition: .2s;
-
-        &.disabled {
-          color: $brand-primary;
-          pointer-events: none;
-        }
-      }
-
-      .canvas-center-on {
-        animation-timing-function: $timing-function-sharp;
-        color: $color-volcano;
-        display: none;
-        flex-basis: 36px;
-        flex-shrink: 0;
-        line-height: 50px;
-        padding-right: 16px;
-        text-align: center;
-        transition: .2s;
-      }
-
-      &.active {
-        .line-wrap {
-          font-weight: bold;
-        }
-      }
-
-      &:hover {
-        .line-wrap {
-          background-color: $color-alto;
-          text-decoration: none;
-        }
-
-        .canvas-center-on {
-          background-color: $color-alto;
-        }
-      }
-    }
-
-    &.active > .tree-link {
-      background-color: $color-white;
-      color: $brand-primary;
-      font-weight: bold;
-
-      .line-wrap {
-        background-color: $color-white;
-        color: $brand-primary;
-        text-decoration: none;
-      }
-
-      .canvas-center-on {
-        background-color: $color-white;
-        color: $brand-primary;
-      }
-    }
-
-    &.show-canvas-handler {
-      .canvas-center-on {
-        display: inline-block;
-      }
+  &.leaf {
+    padding-left: 10px;
+    .tree-link::before {
+      content: "\25B8";
     }
   }
 
-  .leaf {
-    .tree-link {
-      .line-wrap {
-        padding-left: 10px;
-      }
+  & i.glyphicon {
+    font-size: 9pt;
+
+    &.expanded {
+      @include rotate(45deg);
     }
+  }
+
+  /* Links are recolored */
+  a {
+    color: $color-emperor;
+
+    &:hover {
+      color: $color-theme-primary;
+    }
+  }
+
+  span {
+    display:inline-block;
+    padding:3px 8px;
   }
 }
-
-#repo-tree {
-  height: calc(100% - 50px);
-
-  .line-wrap {
-    padding-right: 3em;
-  }
-
-  .fas-custom {
-    flex-shrink: 0;
-    margin-right: 1em;
-    position: absolute;
-    right: 0;
-    top: 17px;
-  }
-
-  .active {
-    .fas-custom {
-      fill: $brand-primary;
-    }
-  }
+.tree li.parent_li>span {
+  display: block;
+}
+.tree li:last-child::before {
+  height:30px;
 }

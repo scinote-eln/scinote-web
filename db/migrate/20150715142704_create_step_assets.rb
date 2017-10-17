@@ -1,4 +1,4 @@
-class CreateStepAssets < ActiveRecord::Migration[4.2]
+class CreateStepAssets < ActiveRecord::Migration
   def change
     create_table :step_assets do |t|
       t.integer :step_id, null: false

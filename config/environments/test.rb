@@ -1,14 +1,5 @@
 Rails.application.configure do
-  # Verifies that versions and hashed value of the package contents in the project's package.json
-  config.webpacker.check_yarn_integrity = false
-
   # Settings specified here will take precedence over those in config/application.rb.
-
-  # Configure public file server for tests with Cache-Control for performance.
-  config.public_file_server.enabled = true
-  config.public_file_server.headers = {
-    'Cache-Control' => "public, max-age=#{1.hour.seconds.to_i}"
-  }
 
   # Enable this to be able to output stuff to STDOUT during tests
   # via Rails::logger.info "..."
@@ -20,7 +11,6 @@ Rails.application.configure do
   # your test database is "scratch space" for the test suite and is wiped
   # and recreated between test runs. Don't rely on the data there!
   config.cache_classes = true
-  config.cache_store = :null_store
 
   # Do not eager load code on boot. This avoids loading your whole application
   # just for the purpose of running a single test. If you are using a tool that
@@ -41,30 +31,31 @@ Rails.application.configure do
   # Disable request forgery protection in test environment.
   config.action_controller.allow_forgery_protection = false
 
-  # Store uploaded files on the local file system in a temporary directory
-  config.active_storage.service = :test
-
-  # Log disallowed deprecations.
-  config.active_support.disallowed_deprecation = :log
-
-  # Tell Active Support which deprecation messages to disallow.
-  config.active_support.disallowed_deprecation_warnings = []
-
-  config.action_mailer.perform_caching = false
-
   # Tell Action Mailer not to deliver emails to the real world.
   # The :test delivery method accumulates sent emails in the
   # ActionMailer::Base.deliveries array.
   config.action_mailer.delivery_method = :test
-
-  config.action_mailer.perform_deliveries = true
 
   Rails.application.routes.default_url_options = {
     host: Rails.application.secrets.mail_server_url
   }
 
   # Don't care if the mailer can't send.
-  config.action_mailer.raise_delivery_errors = true
+  config.action_mailer.default_url_options = { host: Rails.application.secrets.mail_server_url }
+  config.action_mailer.default_options = { from: Rails.application.secrets.mail_from }
+  config.action_mailer.raise_delivery_errors = false
+  config.action_mailer.delivery_method = :smtp
+
+  config.action_mailer.smtp_settings = {
+    address: Rails.application.secrets.mailer_address,
+    port: Rails.application.secrets.mailer_port,
+    domain: Rails.application.secrets.mailer_domain,
+    authentication: "plain",
+    enable_starttls_auto: true,
+    user_name: Rails.application.secrets.mailer_user_name,
+    password: Rails.application.secrets.mailer_password
+  }
+  #config.action_mailer.perform_deliveries = false
 
   # Randomize the order test cases are executed.
   config.active_support.test_order = :random
@@ -78,11 +69,12 @@ Rails.application.configure do
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
 
-  # Annotate rendered view with file names.
-  # config.action_view.annotate_rendered_view_with_filenames = true
-
   # Enable/disable Deface
   config.deface.enabled = ENV['DEFACE_ENABLED'] != 'false'
+
+  # Enable first-time tutorial for users signing in the sciNote for
+  # the first time.
+  config.x.enable_tutorial = false
 
   # Enable reCAPTCHA
   config.x.enable_recaptcha = false
@@ -92,10 +84,4 @@ Rails.application.configure do
 
   # Enable user registrations
   config.x.enable_user_registration = true
-
-  # disable sign in with LinkedIn account
-  config.x.linkedin_signin_enabled = false
-
-  # enable assets compiling
-  config.assets.compile = true
 end

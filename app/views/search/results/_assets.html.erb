@@ -1,16 +1,23 @@
 <% @asset_results.each do |asset| %>
   <h5>
-    <% if asset.blob.metadata["asset_type"] == 'marvinjs' %>
-      <span class="mce-i-marvinjs"></span>
+    <% if asset.is_image? %>
+      <span class="glyphicon glyphicon-picture"></span>
     <% else %>
       <% if wopi_file?(asset) %>
         <%= file_extension_icon(asset) %>
       <% else %>
-        <span class="fas fa-paperclip"></span>
+        <span class="glyphicon glyphicon-file"></span>
       <% end %>
     <% end %>
     <%= render partial: "search/results/partials/asset_text.html.erb", locals: { asset: asset, query: search_query } %>
   </h5>
+
+  <!-- Display asset contents if it exists -->
+  <% if asset.headline.present? && !asset.headline.empty? && asset.headline.include?("<mark>") %>
+    <blockquote class="blockquote-search">
+      <p><%= highlight(sanitize_input(asset.headline), search_query.strip.split(/\s+/)) %></p>
+    </blockquote>
+  <% end %>
 
   <p>
     <span>
@@ -43,14 +50,6 @@
           <%= render partial: "search/results/partials/project_text.html.erb",
                      locals: { project: asset.step.protocol.my_module.experiment.project, link_to_page: :show } %>
         </span>
-        <% if asset.step.protocol.my_module.experiment.project.project_folder %>
-          <br>
-          <span>
-            <%=t "search.index.folder" %>
-            <%= render partial: "search/results/partials/project_folders_text.html.erb",
-                       locals: { folder: asset.step.protocol.my_module.experiment.project.project_folder } %>
-          </span>
-        <% end %>
       <% else %>
         <span>
           <%=t "search.index.protocol" %>
@@ -88,37 +87,11 @@
         <%= render partial: "search/results/partials/project_text.html.erb",
                    locals: { project: asset.result.my_module.experiment.project, link_to_page: :show } %>
       </span>
-      <% if asset.result.my_module.experiment.project.project_folder %>
-        <br>
-        <span>
-          <%=t "search.index.folder" %>
-          <%= render partial: "search/results/partials/project_folders_text.html.erb",
-                     locals: { folder: asset.result.my_module.experiment.project.project_folder } %>
-        </span>
-      <% end %>
       <br>
       <span>
         <%=t "search.index.team" %>
         <%= render partial: "search/results/partials/team_text.html.erb",
                    locals: { team: asset.result.my_module.experiment.project.team } %>
-      </span>
-    <% elsif asset.repository_asset_value %>
-      <span>
-        <%=t "search.index.repository_row" %>
-        <%= render partial: "search/results/partials/repository_row_text.html.erb",
-                   locals: { repository_row: asset.repository_asset_value.repository_cell.repository_row } %>
-      </span>
-      <br>
-      <span>
-        <%=t "search.index.repository" %>
-        <%= render partial: "search/results/partials/repository_text.html.erb",
-                   locals: { repository: asset.repository_asset_value.repository_cell.repository_row.repository } %>
-      </span>
-      <br>
-      <span>
-        <%=t "search.index.team" %>
-        <%= render partial: "search/results/partials/team_text.html.erb",
-                   locals: { team: asset.team } %>
       </span>
     <% end %>
   </p>

@@ -10,7 +10,7 @@ function truncateLongString( el, chars ) {
 
   var html = "";
   if( $.type(el) !== 'string' &&
-      el.children().hasClass('fas')) {
+      el.children().hasClass("glyphicon")) {
     html = el.children()[0];
   }
 
@@ -28,12 +28,12 @@ function truncateLongString( el, chars ) {
     }
 
     if ( html ) {
-      el.text(html.outerHTML + newText + '...' );
+      el.html(html.outerHTML + newText + '...' );
     } else {
       if($.type(el) === 'string'){
         return newText + '...';
       } else {
-      el.text(newText + '...' );
+      el.html(newText + '...' );
       }
     }
   } else {

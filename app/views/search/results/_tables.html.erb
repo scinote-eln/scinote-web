@@ -1,6 +1,6 @@
 <% results.each do |table| %>
   <h5>
-    <span class="fas fa-table"></span>
+    <span class="glyphicon glyphicon-th"></span>
     <%= highlight search_query, search_query.strip.split(/\s+/) %>
   </h5>
 
@@ -37,14 +37,6 @@
           <%= render partial: "search/results/partials/project_text.html.erb",
                      locals: { project: table.step.protocol.my_module.experiment.project, link_to_page: :show } %>
         </span>
-        <% if table.step.protocol.my_module.experiment.project.project_folder %>
-          <br>
-          <span>
-            <%=t "search.index.folder" %>
-            <%= render partial: "search/results/partials/project_folders_text.html.erb",
-                       locals: { folder: table.step.protocol.my_module.experiment.project.project_folder } %>
-          </span>
-        <% end %>
       <% else %>
         <span>
           <%=t "search.index.protocol" %>
@@ -71,25 +63,17 @@
                    locals: { my_module: table.result.my_module, link_to_page: :results } %>
       </span>
       <br>
-      <span>
-        <%=t "search.index.experiment" %>
-        <%= render partial: "search/results/partials/experiment_text.html.erb",
-                   locals: { experiment: table.result.my_module.experiment } %>
-      </span>
+        <span>
+          <%=t "search.index.experiment" %>
+          <%= render partial: "search/results/partials/experiment_text.html.erb",
+                     locals: { experiment: table.result.my_module.experiment } %>
+        </span>
       <br>
       <span>
         <%=t "search.index.project" %>
         <%= render partial: "search/results/partials/project_text.html.erb",
                    locals: { project: table.result.my_module.experiment.project, link_to_page: :show } %>
       </span>
-      <% if table.result.my_module.experiment.project.project_folder %>
-        <br>
-        <span>
-          <%=t "search.index.folder" %>
-          <%= render partial: "search/results/partials/project_folders_text.html.erb",
-                     locals: { folder: table.result.my_module.experiment.project.project_folder } %>
-        </span>
-      <% end %>
       <br>
       <span>
         <%=t "search.index.team" %>

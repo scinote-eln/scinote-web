@@ -1,6 +1,6 @@
 <% results.each do |checklist| %>
   <h5>
-    <span class="fas fa-check-square"></span>
+    <span class="glyphicon glyphicon-check"></span>
     <%= highlight checklist.name, search_query.strip.split(/\s+/) %>
   </h5>
 
@@ -42,14 +42,6 @@
                    locals: { experiment: checklist.step.protocol.my_module.experiment } %>
       </span>
       <br>
-      <% if checklist.step.protocol.my_module.experiment.project.project_folder %>
-        <span>
-          <%=t "search.index.folder" %>
-          <%= render partial: "search/results/partials/project_folders_text.html.erb",
-                     locals: { folder: checklist.step.protocol.my_module.experiment.project.project_folder } %>
-        </span>
-        <br>
-      <% end %>
       <span>
         <%=t "search.index.project" %>
         <%= render partial: "search/results/partials/project_text.html.erb",

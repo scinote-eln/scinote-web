@@ -1,8 +1,9 @@
 class TagsController < ApplicationController
   before_action :load_vars, only: [:create, :update, :destroy]
   before_action :load_vars_nested, only: [:update, :destroy]
-  before_action :check_manage_permissions, only: %i(create update destroy)
-  before_action :check_manage_my_module_permissions, only: %i(create)
+  before_action :check_create_permissions, only: [:create]
+  before_action :check_update_permissions, only: [:update]
+  before_action :check_destroy_permissions, only: [:destroy]
 
   def create
     @tag = Tag.new(tag_params)
@@ -14,44 +15,29 @@ class TagsController < ApplicationController
     end
 
     if @tag.color.blank?
-      @tag.color = Constants::TAG_COLORS.sample
+      @tag.color = Constants::TAG_COLORS[0]
     end
 
     if @tag.save
-      log_activity(:create_tag, @tag.project, tag: @tag.id, project: @tag.project.id)
       if params.include? "my_module_id"
         # Assign the tag to the specified module
         new_mmt = MyModuleTag.new(
           my_module_id: params[:my_module_id],
           tag_id: @tag.id)
         new_mmt.save
-
-        my_module = new_mmt.my_module
-
-        log_activity(:add_task_tag, my_module, tag: @tag.id, my_module: my_module.id)
       end
 
       flash_success = t(
         "tags.create.success_flash",
         tag: @tag.name)
-
-      if params[:simple_creation] == 'true'
-        render json: {tag: @tag}
-        return true
-      end
-
       respond_to do |format|
         format.html {
           flash[:success] = flash_success
           redirect_to session.delete(:return_to)
         }
-        format.json do
-          redirect_to my_module_tags_edit_path(params[:my_module_id],
-                                               @tag,
-                                               format: :json),
-                      turbolinks: false,
-                      status: 303
-        end
+        format.json {
+          redirect_to my_module_tags_edit_path(params[:my_module_id], @tag, format: :json), :status => 303
+        }
       end
     else
       flash_error = t("tags.create.error_flash")
@@ -60,31 +46,22 @@ class TagsController < ApplicationController
           flash[:error] = flash_error
           render :new
         }
-        format.json do
+        format.json {
           # TODO
-          redirect_to my_module_tags_edit_path(params[:my_module_id],
-                                               @tag,
-                                               format: :json),
-                      turbolinks: false,
-                      status: 303
-        end
+          redirect_to my_module_tags_edit_path(params[:my_module_id], @tag, format: :json), :status => 303
+        }
       end
     end
   end
 
   def update
     @tag.last_modified_by = current_user
-    if @tag.update(tag_params)
-      log_activity(:edit_tag, @tag.project, tag: @tag.id, project: @tag.project.id)
+    if @tag.update_attributes(tag_params)
       respond_to do |format|
         format.html
-        format.json do
-          redirect_to my_module_tags_edit_path(params[:my_module_id],
-                                               @tag,
-                                               format: :json),
-                      turbolinks: false,
-                      status: 303
-        end
+        format.json {
+          redirect_to my_module_tags_edit_path(params[:my_module_id], @tag, format: :json), :status => 303
+        }
       end
     else
       respond_to do |format|
@@ -97,7 +74,6 @@ class TagsController < ApplicationController
   end
 
   def destroy
-    log_activity(:delete_tag, @tag.project, tag: @tag.id, project: @tag.project.id)
     if @tag.destroy
       flash_success = t(
         "tags.destroy.success_flash",
@@ -108,13 +84,9 @@ class TagsController < ApplicationController
           flash[:success] = flash_success
           redirect_to root_path
         }
-        format.json do
-          redirect_to my_module_tags_edit_path(params[:my_module_id],
-                                               @tag,
-                                               format: :json),
-                      turbolinks: false,
-                      status: 303
-        end
+        format.json {
+          redirect_to my_module_tags_edit_path(params[:my_module_id], @tag, format: :json), :status => 303
+        }
       end
     else
       flash_error = t(
@@ -126,12 +98,10 @@ class TagsController < ApplicationController
           flash[:error] = flash_error
           redirect_to root_path
         }
-        format.json do
+        format.json {
           # TODO
-          redirect_to my_module_tags_edit_path(format: :json),
-                      turbolinks: false,
-                      status: 303
-        end
+          redirect_to my_module_tags_edit_path(format: :json), :status => 303
+        }
       end
     end
   end
@@ -154,27 +124,26 @@ class TagsController < ApplicationController
     end
   end
 
-  def check_manage_my_module_permissions
-    my_module = MyModule.find_by id: params[:my_module_id]
-
-    render_403 if my_module && !can_manage_my_module_tags?(my_module)
+  # Currently unimplemented
+  def check_create_permissions
+    unless can_create_new_tag(@project)
+      render_403
+    end
   end
 
-  def check_manage_permissions
-    render_403 unless can_manage_project_tags?(@project)
+  def check_update_permissions
+    unless can_edit_tag(@project)
+      render_403
+    end
+  end
+
+  def check_destroy_permissions
+    unless can_delete_tag(@project)
+      render_403
+    end
   end
 
   def tag_params
     params.require(:tag).permit(:name, :color, :project_id)
-  end
-
-  def log_activity(type_of, subject = nil, message_items = {})
-    Activities::CreateActivityService
-      .call(activity_type: type_of,
-            owner: current_user,
-            subject: subject,
-            team: current_team,
-            project: @tag.project,
-            message_items: message_items)
   end
 end

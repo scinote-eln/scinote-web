@@ -2,8 +2,8 @@
  * Additional rules when generating PDF from the reports.
  */
 
-// Hide all fas icons
-.fas {
+// Hide all glyphicons
+.glyphicon {
   display: none;
 }
 
@@ -21,4 +21,3 @@ tr {
 thead {
   display: table-row-group;
 }
-

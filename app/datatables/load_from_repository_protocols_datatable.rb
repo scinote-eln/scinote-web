@@ -1,4 +1,4 @@
-class LoadFromRepositoryProtocolsDatatable < CustomDatatable
+class LoadFromRepositoryProtocolsDatatable < AjaxDatatablesRails::Base
   # Needed for sanitize_sql_like method
   include ActiveRecord::Sanitization::ClassMethods
   include InputSanitizeHelper
@@ -36,6 +36,7 @@ class LoadFromRepositoryProtocolsDatatable < CustomDatatable
   def new_search_condition(column, value)
     model, column = column.split('.')
     model = model.constantize
+    formated_date = (I18n.t 'time.formats.datatables_date').gsub!(/^\"|\"?$/, '')
     case column
     when 'published_on'
       casted_column = ::Arel::Nodes::NamedFunction.new('CAST',
@@ -56,10 +57,10 @@ class LoadFromRepositoryProtocolsDatatable < CustomDatatable
   # See https://github.com/antillas21/ajax-datatables-rails/issues/112
   def as_json(options = {})
     {
-      draw: dt_params[:draw].to_i,
-      recordsTotal: get_raw_records.length,
-      recordsFiltered: filter_records(get_raw_records).length,
-      data: data
+      :draw => params[:draw].to_i,
+      :recordsTotal =>  get_raw_records.length,
+      :recordsFiltered => filter_records(get_raw_records).length,
+      :data => data
     }
   end
 
@@ -93,21 +94,13 @@ class LoadFromRepositoryProtocolsDatatable < CustomDatatable
         .joins('LEFT OUTER JOIN users ON users.id = protocols.added_by_id')
         .where('protocols.protocol_type = ?',
                Protocol.protocol_types[:in_repository_public])
-    elsif @type == :private
+    else
       records =
         records
         .joins('LEFT OUTER JOIN users ON users.id = protocols.added_by_id')
         .where('protocols.protocol_type = ?',
                Protocol.protocol_types[:in_repository_private])
         .where(added_by: @user)
-    else
-      records =
-        records
-        .joins('LEFT OUTER JOIN users ON users.id = protocols.added_by_id')
-        .where('(protocols.protocol_type = ? OR (protocols.protocol_type = ? AND added_by_id = ?))',
-               Protocol.protocol_types[:in_repository_public],
-               Protocol.protocol_types[:in_repository_private],
-               @user.id)
     end
 
     records.group('"protocols"."id"')
@@ -142,7 +135,7 @@ class LoadFromRepositoryProtocolsDatatable < CustomDatatable
   end
 
   def keywords_html(record)
-    if record.protocol_keywords_str.blank?
+    if !record.protocol_keywords_str || record.protocol_keywords_str.empty?
       "<i>#{I18n.t("protocols.no_keywords")}</i>"
     else
       kws = record.protocol_keywords_str.split(", ")
@@ -173,7 +166,7 @@ class LoadFromRepositoryProtocolsDatatable < CustomDatatable
   def build_conditions_for(query)
     # Inner query to retrieve list of protocol IDs where concatenated
     # protocol keywords string, or user's full_name contains searched query
-    search_val = dt_params[:search][:value]
+    search_val = params[:search][:value]
     records_having = get_raw_records_base.having(
       ::Arel::Nodes::NamedFunction.new(
         'CAST',

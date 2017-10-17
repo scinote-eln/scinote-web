@@ -1,4 +1,4 @@
-class UpdateMyModuleCoordinate < ActiveRecord::Migration[4.2]
+class UpdateMyModuleCoordinate < ActiveRecord::Migration
   def change
     MyModule.find_each do |my_module|
       x = my_module.x

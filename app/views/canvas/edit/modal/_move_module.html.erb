@@ -6,29 +6,27 @@
         <h4 class="modal-title" id="modal-move-module-label"><%=t "experiments.canvas.edit.modal_move_module.title" %></h4>
       </div>
       <div class="modal-body">
-        <% experiments = @experiment.project.experiments.managable_by_user(current_user).order(name: :asc).active %>
+        <% experiments = @experiment.project.experiments.is_archived(false) %>
         <% if experiments.count > 1 %>
           <%= bootstrap_form_tag do |f| %>
             <%= f.select :experiment_id, experiments
-                                        .select { |e| e != @experiment && can_manage_experiment?(e) }
+                                        .select { |e| e != @experiment }
                                         .collect { |e| [ e.name, e.id ] }, {},
                 {class: "form-control selectpicker", "data-role" => "clear"} %>
           <% end %>
-        <% else %>
-          <div>
-            <em>
-              <%= t("experiments.canvas.edit.modal_move_module.no_experiments") %>
-            </em>
-          </div>
-        <% end %>
+      <% else %>
+        <div>
+          <em>
+            <%= t("experiments.canvas.edit.modal_move_module.no_experiments") %>
+          </em>
+        </div>
+      <% end %>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal"><%=t "general.cancel" %></button>
-        <% if experiments.count > 1 %>
-          <button type="button" class="btn btn-primary" data-action="confirm">
-            <%=t "experiments.canvas.edit.modal_move_module.confirm" %>
-          </button>
-        <% end %>
+      <% if experiments.count > 1 %>
+        <button type="button" class="btn btn-primary" data-action="confirm"><%=t "experiments.canvas.edit.modal_move_module.confirm" %></button>
+      <% end %>
+      <button type="button" class="btn btn-default" data-dismiss="modal"><%=t "general.cancel" %></button>
       </div>
     </div>
   </div>

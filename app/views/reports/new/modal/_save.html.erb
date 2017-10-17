@@ -1,0 +1,5 @@
+<%= bootstrap_form_for [@project, @report], remote: true, url: @url, method: @method, html: { id: "save-report-form" } do |f| %>
+  <%= f.text_field :name, label: t("projects.reports.elements.modals.save_report.name"), placeholder: t("projects.reports.elements.modals.save_report.name_placeholder") %>
+  <%= f.smart_text_area :description, label: t("projects.reports.elements.modals.save_report.description"), placeholder: t("projects.reports.elements.modals.save_report.description_placeholder") %>
+  <%= hidden_field_tag :report_contents, @report_contents %>
+<% end %>

@@ -1,176 +1,129 @@
-# frozen_string_literal: true
+class Activity < ActiveRecord::Base
+  include InputSanitizeHelper
 
-class Activity < ApplicationRecord
-  ASSIGNMENT_TYPES = %w(
-    assign_user_to_project
-    change_user_role_on_project
-    unassign_user_from_project
-    designate_user_to_my_module
-    undesignate_user_from_my_module
-    invite_user_to_team
-    remove_user_from_team
-    change_users_role_on_team
-    change_user_role_on_experiment
-    change_user_role_on_my_module
-  ).freeze
+  after_create :generate_notification
 
-  include ActivityValuesModel
-  include GenerateNotificationModel
+  enum type_of: [
+    :create_project,
+    :rename_project,
+    :change_project_visibility,
+    :archive_project,
+    :restore_project,
+    :assign_user_to_project,
+    :change_user_role_on_project,
+    :unassign_user_from_project,
+    :create_module,
+    :clone_module,
+    :archive_module,
+    :restore_module,
+    :change_module_description,
+    :assign_user_to_module,
+    :unassign_user_from_module,
+    :create_step,
+    :destroy_step,
+    :add_comment_to_step,
+    :complete_step,
+    :uncomplete_step,
+    :check_step_checklist_item,
+    :uncheck_step_checklist_item,
+    :edit_step,
+    :add_result,
+    :add_comment_to_result,
+    :archive_result,
+    :edit_result,
+    :create_experiment,
+    :edit_experiment,
+    :archive_experiment,
+    :clone_experiment,
+    :move_experiment,
+    :add_comment_to_project,
+    :edit_project_comment,
+    :delete_project_comment,
+    :add_comment_to_module,
+    :edit_module_comment,
+    :delete_module_comment,
+    :edit_step_comment,
+    :delete_step_comment,
+    :edit_result_comment,
+    :delete_result_comment,
+    :destroy_result,
+    :start_edit_wopi_file,
+    :unlock_wopi_file,
+    :load_protocol_from_file,
+    :load_protocol_from_repository,
+    :revert_protocol,
+    :create_report,
+    :delete_report,
+    :edit_report,
+    :assign_sample,
+    :unassign_sample,
+    :complete_task,
+    :uncomplete_task,
+    :assign_repository_record,
+    :unassign_repository_record
+  ]
 
-  enum type_of: Extends::ACTIVITY_TYPES
+  validates :type_of, presence: true
+  validates :project, :user, presence: true
 
-  belongs_to :owner, inverse_of: :activities, class_name: 'User'
-  belongs_to :subject, polymorphic: true, optional: true
-
-  # For permissions check
-  belongs_to :project, inverse_of: :activities, optional: true
-  belongs_to :team, inverse_of: :activities
-
-  # Associations for old activity type
-  belongs_to :experiment, inverse_of: :activities, optional: true
-  belongs_to :my_module, inverse_of: :activities, optional: true
-
-  validate :activity_version
-  validates :type_of, :owner, presence: true
-  validates :subject_type, inclusion: { in: Extends::ACTIVITY_SUBJECT_TYPES,
-                                        allow_blank: true }
-
-  scope :results_joins, lambda {
-    joins("LEFT JOIN results ON subject_type = 'Result' AND subject_id = results.id")
-  }
-
-  scope :protocols_joins, lambda {
-    joins("LEFT JOIN protocols ON subject_type = 'Protocol' AND subject_id = protocols.id")
-  }
-
-  scope :my_modules_joins, lambda { |*params|
-    joins_query = "LEFT JOIN my_modules ON (subject_type = 'MyModule' AND subject_id = my_modules.id)"
-    joins_query += ' OR protocols.my_module_id = my_modules.id' if params.include? :from_protocols
-    joins_query += ' OR results.my_module_id = my_modules.id' if params.include? :from_results
-    joins(joins_query)
-  }
-  scope :experiments_joins, lambda { |*params|
-    joins_query = "LEFT JOIN experiments ON (subject_type = 'Experiment' AND subject_id = experiments.id)"
-    joins_query += ' OR experiments.id = my_modules.experiment_id' if params.include? :from_my_modules
-    joins(joins_query)
-  }
-
-  scope :projects_joins, lambda { |*params|
-    joins_query = "LEFT JOIN projects ON (subject_type = 'Project' AND subject_id = projects.id)"
-    joins_query += ' OR projects.id = experiments.project_id' if params.include? :from_experiments
-    joins(joins_query)
-  }
-
-  scope :repositories_joins, lambda {
-    joins("LEFT JOIN repositories ON subject_type = 'RepositoryBase' AND subject_id = repositories.id")
-  }
-
-  scope :reports_joins, lambda {
-    joins("LEFT JOIN reports ON subject_type = 'Report' AND subject_id = reports.id")
-  }
-
-  store_accessor :values, :message_items, :breadcrumbs
-
-  default_values(
-    message_items: {},
-    breadcrumbs: {}
-  )
-
-  after_create ->(activity) { Activities::DispatchWebhooksJob.perform_later(activity) },
-               if: -> { Rails.application.config.x.webhooks_enabled }
-
-  def self.activity_types_list
-    activity_list = type_ofs.map do |key, value|
-      [
-        I18n.t("global_activities.activity_name.#{key}"),
-        value
-      ]
-    end.sort_by { |a| a[0] }
-    activity_groups = Extends::ACTIVITY_GROUPS
-
-    result = {}
-
-    activity_groups.each do |key, activities|
-      group_name = I18n.t("global_activities.activity_group.#{key}")
-      result[group_name] = []
-      activities.each do |activity_id|
-        activity_hash = activity_list.select { |activity| activity[1] == activity_id }[0]
-        result[group_name].push(activity_hash) if activity_hash
-      end
-    end
-    result
-  end
-
-  def old_activity?
-    subject_id.nil?
-  end
-
-  def generate_breadcrumbs
-    generate_breadcrumb subject if subject
-  end
-
-  def self.url_search_query(filters)
-    result = []
-    filters.each do |filter, values|
-      result.push(values.map { |k, v| { k => v.collect(&:id) } }.to_query(filter))
-    end
-    if filters[:subjects]
-      subject_labels = []
-      filters[:subjects].each do |object, values|
-        values.each do |value|
-          label = value.name
-          subject_labels.push({ value: value.id, label: label, object: object.downcase, group: '' }.as_json)
-        end
-      end
-      result.push(subject_labels.to_query('subject_labels'))
-    end
-    result.join('&')
-  end
+  belongs_to :project, inverse_of: :activities
+  belongs_to :experiment, inverse_of: :activities
+  belongs_to :my_module, inverse_of: :activities
+  belongs_to :user, inverse_of: :activities
 
   private
 
-  def generate_breadcrumb(subject)
-    case subject
-    when Protocol
-      breadcrumbs[:protocol] = subject.name
-      if subject.in_repository?
-        generate_breadcrumb(subject.team)
-      else
-        generate_breadcrumb(subject.my_module)
-      end
-    when MyModule
-      breadcrumbs[:my_module] = subject.name
-      generate_breadcrumb(subject.experiment)
-    when Experiment
-      breadcrumbs[:experiment] = subject.name
-      generate_breadcrumb(subject.project)
-    when Project
-      breadcrumbs[:project] = subject.name
-      generate_breadcrumb(subject.team)
-    when Repository
-      breadcrumbs[:repository] = subject.name
-      generate_breadcrumb(subject.team)
-    when Result
-      breadcrumbs[:result] = subject.name
-      generate_breadcrumb(subject.my_module)
-    when Team
-      breadcrumbs[:team] = subject.name
-    when Report
-      breadcrumbs[:report] = subject.name
-      generate_breadcrumb(subject.team) if subject.team
-    when ProjectFolder
-      breadcrumbs[:project_folder] = subject.name
-      generate_breadcrumb(subject.team)
-    when Step
-      breadcrumbs[:step] = subject.name
-      generate_breadcrumb(subject.protocol)
-    when Asset
-      breadcrumbs[:asset] = subject.blob.filename.to_s
-      generate_breadcrumb(subject.result || subject.step || subject.repository_cell.repository_row.repository)
+  def generate_notification
+    if %w(assign_user_to_project
+          assign_user_to_module unassign_user_from_module).include? type_of
+      notification_type = :assignment
+    else
+      notification_type = :recent_changes
     end
-  end
 
-  def activity_version
-    errors.add(:activity, 'wrong combination of associations') if (experiment_id || my_module_id) && subject
+    project_m = "<a href='#{Rails
+                             .application
+                             .routes
+                             .url_helpers
+                             .project_path(project)}'>
+                  #{project.name}</a>"
+    if experiment
+      experiment_m = "| #{I18n.t('search.index.experiment')}
+                      <a href='#{Rails
+                                  .application
+                                  .routes
+                                  .url_helpers
+                                  .canvas_experiment_path(experiment)}'>
+                      #{experiment.name}</a>"
+    end
+    if my_module
+      task_m = "| #{I18n.t('search.index.module')}
+                <a href='#{Rails
+                            .application
+                            .routes
+                            .url_helpers
+                            .protocols_my_module_path(my_module)}'>
+                #{my_module.name}</a>"
+    end
+
+    notification = Notification.create(
+      type_of: notification_type,
+      title: sanitize_input(message, %w(strong a)),
+      message: sanitize_input(
+        "#{I18n.t('search.index.project')}
+        #{project_m} #{experiment_m} #{task_m}",
+        %w(strong a)
+      ),
+      generator_user_id: user.id
+    )
+
+    project.users.each do |project_user|
+      next if project_user == user
+      next if !project_user.assignments_notification &&
+              notification.type_of == 'assignment'
+      next if !project_user.recent_notification &&
+              notification.type_of == 'recent_changes'
+      UserNotification.create(notification: notification, user: project_user)
+    end
   end
 end

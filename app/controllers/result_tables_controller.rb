@@ -5,10 +5,9 @@ class ResultTablesController < ApplicationController
   before_action :load_vars_nested, only: [:new, :create]
   before_action :convert_contents_to_utf8, only: [:create, :update]
 
-  before_action :check_manage_permissions, only: %i(edit update)
-  before_action :check_create_permissions, only: %i(new create)
+  before_action :check_create_permissions, only: [:new, :create]
+  before_action :check_edit_permissions, only: [:edit, :update]
   before_action :check_archive_permissions, only: [:update]
-  before_action :check_view_permissions, except: %i(new create edit update)
 
   def new
     @table = Table.new
@@ -43,12 +42,40 @@ class ResultTablesController < ApplicationController
     )
     @result.last_modified_by = current_user
 
-    if @result.save && @table.save
-      log_activity(:add_result)
-      flash[:success] = t('result_tables.create.success_flash', module: @my_module.name)
-      redirect_to results_my_module_path(@my_module, page: params[:page], order: params[:order])
-    else
-      render json: @result.errors, status: :bad_request
+    respond_to do |format|
+      if (@result.save and @table.save) then
+        # Generate activity
+        Activity.create(
+          type_of: :add_result,
+          user: current_user,
+          project: @my_module.experiment.project,
+          experiment: @my_module.experiment,
+          my_module: @my_module,
+          message: t(
+            "activities.add_table_result",
+            user: current_user.full_name,
+            result: @result.name
+          )
+        )
+
+        format.html {
+          flash[:success] = t(
+            "result_tables.create.success_flash",
+            module: @my_module.name)
+          redirect_to results_my_module_path(@my_module)
+        }
+        format.json {
+          render json: {
+            html: render_to_string({
+              partial: "my_modules/result.html.erb", locals: {result: @result}
+            })
+          }, status: :ok
+        }
+      else
+        format.json {
+          render json: @result.errors, status: :bad_request
+        }
+      end
     end
   end
 
@@ -77,7 +104,18 @@ class ResultTablesController < ApplicationController
       flash_success = t("result_tables.archive.success_flash",
         module: @my_module.name)
       if saved
-        log_activity(:archive_result)
+        Activity.create(
+          type_of: :archive_result,
+          project: @my_module.experiment.project,
+          experiment: @my_module.experiment,
+          my_module: @my_module,
+          user: current_user,
+          message: t(
+            'activities.archive_table_result',
+            user: current_user.full_name,
+            result: @result.name
+          )
+        )
       end
     elsif @result.archived_changed?(from: true, to: false)
       render_403
@@ -85,7 +123,18 @@ class ResultTablesController < ApplicationController
       saved = @result.save
 
       if saved then
-        log_activity(:edit_result)
+        Activity.create(
+          type_of: :edit_result,
+          user: current_user,
+          project: @my_module.experiment.project,
+          experiment: @my_module.experiment,
+          my_module: @my_module,
+          message: t(
+            "activities.edit_table_result",
+            user: current_user.full_name,
+            result: @result.name
+          )
+        )
       end
     end
     respond_to do |format|
@@ -148,21 +197,22 @@ class ResultTablesController < ApplicationController
   end
 
   def check_create_permissions
-    render_403 unless can_create_results?(@my_module)
-  end
-
-  def check_manage_permissions
-    render_403 unless can_manage_result?(@result)
-  end
-
-  def check_archive_permissions
-    if result_params[:archived].to_s != '' && !can_manage_result?(@result)
+    unless can_create_result_table_in_module(@my_module)
       render_403
     end
   end
 
-  def check_view_permissions
-    render_403 unless can_read_result?(@result)
+  def check_edit_permissions
+    unless can_edit_result_table_in_module(@my_module)
+      render_403
+    end
+  end
+
+  def check_archive_permissions
+    if result_params[:archived].to_s != '' and
+      not can_archive_result(@result)
+      render_403
+    end
   end
 
   def result_params
@@ -173,18 +223,5 @@ class ResultTablesController < ApplicationController
         :contents
       ]
     )
-  end
-
-  def log_activity(type_of)
-    Activities::CreateActivityService
-      .call(activity_type: type_of,
-            owner: current_user,
-            subject: @result,
-            team: @my_module.experiment.project.team,
-            project: @my_module.experiment.project,
-            message_items: {
-              result: @result.id,
-              type_of_result: t('activities.result_type.table')
-            })
   end
 end

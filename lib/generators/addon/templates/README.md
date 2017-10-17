@@ -1,6 +1,6 @@
-# SciNote addon - `${ADDON_NAME}`
+# sciNote addon - `${ADDON_NAME}`
 
-## How to include this addon inside main SciNote application
+## How to include this addon inside main sciNote application
 
 * Inside `Gemfile`, add the following reference:
 

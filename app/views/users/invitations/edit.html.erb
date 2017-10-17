@@ -29,7 +29,6 @@
     <%= f.password_field :password_confirmation, autocomplete: "off", class: "form-control" %>
   </div>
 
-  <% if Rails.configuration.x.new_team_on_signup %>
   <div class="form-group"
        data-hook="confirm-invitation-team-name">
     <%= label :team, :name, t('users.registrations.new.team_name_label') %>
@@ -41,8 +40,9 @@
                    class: 'form-control',
                    value: (params[:team] ? params[:team][:name] : '') %>
     <% end %>
+    <span><small><%= t 'users.registrations.new.team_name_help' %></small></span>
   </div>
-  <% end %>
+
   <%= recaptcha_input_tag %>
 
   <div class="form-group" data-hook="confirm-invitation-form-submit">
@@ -52,16 +52,13 @@
 <% end %>
 </div>
 
-<% if resource && resource.errors.present? %>
+<% if resource and not resource.errors.empty? %>
 <script>
 (function () {
   var formErrors = {};
 
-  <% resource.errors.as_json.each do |err, messages| %>
-  formErrors["<%= err %>"]=[]
-    <% messages.each do |message| %>
-      formErrors["<%= err %>"].push('<%= message %>');
-    <% end %>
+  <% resource.errors.each do |err, m| %>
+  formErrors["<%= err %>"] =["<%= m %>"];
   <% end %>
 
   $("form").renderFormErrors("user", formErrors, false);
@@ -69,16 +66,13 @@
 </script>
 <% end %>
 
-<% if @team && @team.errors.present? %>
+<% if @team and not @team.errors.empty? %>
 <script>
 (function () {
   var formErrors = {};
 
-  <% @team.errors.as_json.each do |err, messages| %>
-  formErrors["<%= err %>"]=[]
-    <% messages.each do |message| %>
-      formErrors["<%= err %>"].push('<%= message %>');
-    <% end %>
+  <% @team.errors.each do |err, m| %>
+  formErrors["<%= err %>"] =["<%= m %>"];
   <% end %>
 
   $("form").renderFormErrors("team", formErrors, false);

@@ -1,52 +1,39 @@
-// scss-lint:disable SelectorDepth
-// scss-lint:disable NestingDepth
-// scss-lint:disable IdSelector
-@import "constants";
+@import 'constants';
 @import "mixins";
 
 // Some color definitions
-$color-group-hover: $color-alabaster;
-$color-module-hover: $brand-primary;
+$color-group-hover: $color-theme-primary;
+$color-module-hover: $color-theme-secondary;
 
 /* Canvas index page */
 
 #canvas-container:not(.canvas-container-edit-mode) {
-  margin-top: 5px;
+  margin-top: 20px;
 }
 
 /**********************************
  * jsPlumb CANVAS RELATED STYLING *
  *********************************/
 #diagram-buttons {
-  align-items: center;
-  display: flex;
-
-  #edit-canvas-button {
-    margin-right: 5px;
-  }
-
-  .actions-button {
-    margin-right: 15px;
-  }
-
-  .toolbarButtons {
-    align-items: center;
-    display: flex;
-
-    .zoom-text {
-      margin-right: 5px;
-    }
-  }
+  margin-bottom: 10px;
 }
 
 #update-canvas {
-
-  .canvas-header {
-    margin-bottom: 5px;
+  #canvas-new-module {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+  .btn-group > .btn:first-child {
+    border-bottom-left-radius: 0;
+  }
+  .btn-group > .btn:last-child {
+    border-bottom-right-radius: 0;
   }
 }
 
 #canvas-new-module {
+  margin-left: 10px;
+
   .hbtn-default {
     opacity: 1;
     width: 0;
@@ -74,13 +61,14 @@ $color-module-hover: $brand-primary;
 }
 
 #diagram-container {
-  @include box-shadow(0 0 2px 1px $color-silver);
-  background: $color-silver;
-  cursor: move;
-  height: 650px;
-  overflow: hidden;
-  // for IE10+ touch devices
+  /* for IE10+ touch devices */
   touch-action: none;
+
+  height: 650px;
+  background: $color-dove-gray;
+  @include box-shadow(0px 0px 2px 1px $color-dove-gray);
+  overflow: hidden;
+  cursor: move;
 }
 
 .diagram {
@@ -124,7 +112,7 @@ $color-module-hover: $brand-primary;
     cursor: pointer;
 
     &:hover {
-      color: $brand-primary;
+      color: $color-theme-primary;
       padding: 2px 9px 4px 9px;
     }
   }
@@ -134,7 +122,7 @@ $color-module-hover: $brand-primary;
   border: 2px solid green;
 }
 .jsplumb-drag .title {
-  background-color: $brand-primary !important;
+  background-color: $color-theme-primary !important;
   color: $color-white !important;
 }
 path, ._jsPlumb_endpoint {
@@ -144,7 +132,7 @@ path, ._jsPlumb_endpoint {
   fill: $color-white;
 }
 .ep-hover svg * {
-  fill: $brand-primary;
+  fill: $color-theme-primary;
 }
 
 /* EDIT MODE MODULE */
@@ -152,16 +140,16 @@ path, ._jsPlumb_endpoint {
   opacity: 0.7;
 }
 .module.dragged > .panel-heading {
-  background-color: $brand-primary;
+  background-color: $color-theme-primary;
   color: $color-white;
 }
 .module.collided {
   .overlay {
     display: block;
     z-index: 21;
-    background-color: $brand-danger;
-    border: 1px solid $brand-danger;
-    @include box-shadow(0 0 0 1pt $brand-danger);
+    background-color: $color-milano-red;
+    border: 1px solid $color-milano-red;
+    @include box-shadow(0 0 0 1pt $color-milano-red);
     border-radius: 4px;
     position: absolute;
     top: 0;
@@ -217,27 +205,14 @@ path, ._jsPlumb_endpoint {
 
   .panel-body .due-date-link {
     color: $color-emperor;
-    display: block;
-
-    &:hover {
-      text-decoration: none;
-    }
   }
 
   .panel-body .due-date-label {
-    margin-left: .5em;
-
-    &.empty-label {
-      color: $color-alto;
-    }
+    margin-left: 30px;
   }
 
   &.expanded {
     z-index: 30;
-  }
-
-  .my-module-title {
-    color: $color-black;
   }
 
   &.group-hover {
@@ -248,69 +223,28 @@ path, ._jsPlumb_endpoint {
   }
 
   &.alert-green .panel-body {
-    color: $brand-success;
+    color: $color-saturated-green;
     font-weight: bold;
 
     .due-date-link {
-      color: $brand-success;
+      color: $color-saturated-green;
     }
   }
 
   &.alert-yellow .panel-body {
-    color: $brand-warning;
+    color: $color-candlelight;
     font-weight: bold;
 
     .due-date-link {
-      color: $brand-warning;
+      color: $color-candlelight;
     }
   }
   &.alert-red .panel-body {
-    color: $brand-danger;
+    color: $color-milano-red;
     font-weight: bold;
 
     .due-date-link {
-      color: $brand-danger;
-    }
-  }
-
-  .nav-tabs {
-    border-bottom: 0;
-  }
-
-  .designated-users-task-title {
-    padding-left: 15px;
-  }
-
-  .user-role {
-    @include font-small;
-  }
-
-  &.private {
-    @include font-main;
-    color: $color-silver-chalice;
-    height: 136px;
-    padding: 1.5em 2em;
-
-    .panel-body {
-      align-items: center;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .fas {
-      flex-grow: 1;
-      font-size: 24px;
-    }
-
-    .description {
-      margin-top: .5em;
-      text-align: center;
-    }
-  }
-
-  .panel-footer {
-    .btn-link {
-      display: flex;
+      color: $color-milano-red;
     }
   }
 }
@@ -331,43 +265,34 @@ path, ._jsPlumb_endpoint {
   }
 
   &.alert-green {
-    border-color: $brand-success;
+    border-color: $color-saturated-green;
     border-radius: 8px;
     border-width: 4px;
   }
 
   &.alert-yellow {
-    border-color: $brand-warning;
+    border-color: $color-candlelight;
     border-width: 4px;
     border-radius: 8px;
   }
   &.alert-red {
-    border-color: $brand-danger;
+    border-color: $color-milano-red;
     border-width: 4px;
     border-radius: 8px;
-  }
-
-  &.private {
-    @include font-main;
-    color: $color-silver-chalice;
-
-    .fas {
-      margin-right: .25em;
-    }
   }
 }
 
 .module-large .tags-container,
 .module-medium .tags-container {
-  padding-top: 4px;
+  padding-top: 2px;
 
   div {
-    font-size: 20px;
+    font-size: 22pt;
     width: 4px;
     height: 0px;
     display: inline-block;
 
-    & .fas {
+    & .glyphicon {
       position: inherit;
     }
 
@@ -378,9 +303,9 @@ path, ._jsPlumb_endpoint {
   }
 
   & span.badge {
-    margin-left: -12px;
+    margin-left: -8px;
+    margin-top: -10px;
     margin-right: 4px;
-    margin-top: -7px;
   }
 }
 
@@ -401,13 +326,13 @@ path, ._jsPlumb_endpoint {
 
   span {
     font-weight: bold;
-    font-size: $font-size-large;
+    font-size: 16px;
     text-transform: uppercase;
     display: block;
     margin-top: 20%;
 
     a {
-      color: $color-emperor;
+      color: $color-mine-shaft;
     }
   }
 
@@ -419,24 +344,14 @@ path, ._jsPlumb_endpoint {
   }
 
   &.alert-green {
-    border-color: $brand-success;
+    border-color: $color-saturated-green;
   }
 
   &.alert-yellow {
-    border-color: $brand-warning;
+    border-color: $color-candlelight;
   }
   &.alert-red {
-    border-color: $brand-danger;
-  }
-
-  &.private {
-    @include font-main;
-    align-items: center;
-    background: $color-white;
-    box-shadow: none;
-    color: $color-silver-chalice;
-    display: flex;
-    justify-content: center;
+  border-color: $color-milano-red;
   }
 }
 
@@ -447,18 +362,13 @@ li.group-hover {
 }
 li.module-hover {
   a {
-    color: $brand-primary;
+    color: $color-theme-primary;
     text-decoration: underline;
   }
 }
 
 /* Edit module tags modal window */
 #manage-module-tags-modal {
-  .add-tag-form {
-    display: inline-block;
-    margin-left: 15px;
-  }
-
   .modal-body ul.list-group > li {
     padding-top: 2px;
     padding-bottom: 2px;
@@ -490,7 +400,7 @@ li.module-hover {
           margin-top: 5px;
           font-family: 'Glyphicons Halflings';
           color: $color-white;
-          font-size: $font-size-large;
+          font-size: 12pt;
 
           &:before {
             content: "\e221";
@@ -500,9 +410,9 @@ li.module-hover {
       }
     }
 
-    .fas {
+    .glyphicon {
       color: $color-white;
-      font-size: $font-size-h6;
+      font-size: 12pt;
     }
 
     a.btn-link {
@@ -520,448 +430,95 @@ li.module-hover {
 
   .create-new-tag-btn {
     margin-right: 15px;
+  }
+}
+
+// EXPERIMENT PANEL
+.experiment-panel {
+  @include box-shadow(0 4px 8px 0 $color-dove-gray);
+  height: 550px;
+  margin: 0 auto;
+  margin-bottom: 35px;
+  margin-top: 45px;
+  max-width: 700px;
+  display: flex;
+  flex-direction: column;
+
+  .panel-body {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+  }
+
+  .experiment-description {
+    border: 1px solid $color-alto;
+    border-radius: 4px;
+    height: 100px;
     margin-top: 10px;
-  }
-}
-
-
-// New projects page
-
-#breadcrumbsWrapper {
-  background: $color-white;
-  height: 1em;
-  margin-left: -2em;
-  padding: 0 2em;
-  width: calc(100% + 4em);
-
-  .projects-breadcrumbs {
-    padding: .75em 0;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    padding: 10px;
   }
 
-  &.breadcrumbs-in-secondary-navigation {
-    .projects-breadcrumbs {
-      margin-left: 3em;
-      padding-bottom: 0;
+  .experiment-no-description {
+    color: $color-alto;
+    display: block;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+
+    a {
+      color: $color-alto;
+      text-decoration: none;
+    }
+  }
+
+  .no-workflowimg {
+    color: $color-alto;
+    display: block;
+    font-size: 26px;
+    font-weight: bold;
+    height: 300px;
+    margin: 15px 0;
+    padding-top: 150px;
+    text-align: center;
+
+    a {
+      color: $color-alto;
+      text-decoration: none;
     }
   }
 }
 
-.projects-index {
-  .project-users-list {
-    hr {
-      margin: .5em 0;
-    }
-  }
-
-  .projects-title {
-    flex-grow: 1;
-  }
-
-  .delete-folders-form,
-  .delete-folders-btn {
-    display: inline-block;
-  }
-
-  .filter-container {
-    .projects-filters {
-      .select-block {
-        &.folders {
-          align-items: center;
-          display: flex;
-
-          .folder-search-label {
-            @include font-button;
-            margin: 0 .3em;
-          }
-
-          .fas {
-            color: inherit;
-            cursor: pointer;
-            text-decoration: none;
-          }
-
-          .folder-search-popover {
-            @include font-button;
-            left: -140px;
-            padding: 1.25em;
-            width: 220px;
-          }
-        }
-      }
-    }
-
-    .dropdown-option.users-dropdown-list {
-      padding: 8px 10px;
-
-      .item-avatar {
-        border-radius: 50%;
-        height: 32px;
-        margin: 0 16px 0 0;
-        width: 32px;
-      }
-    }
-  }
-
-  .projects-toolbar {
-    .form-group {
-      width: 100%;
-    }
-
-    .archive-projects-form {
-      display: inline-block;
-    }
-
-    .restore-projects-form {
-      display: inline-block;
-    }
-  }
-
-  .projects-container {
-    margin: 1.5em 0;
-
-    .cards-wrapper {
-      --card-min-width: 291px;
-      --list-columns-number: 6;
-
-      .projects-group {
-        grid-column: 1/-1;
-        margin: 0;
-      }
-
-      .card {
-        .project-users-link {
-          align-items: center;
-          color: $color-silver-chalice;
-          display: flex;
-
-          &:hover {
-            text-decoration: none;
-          }
-        }
-
-        &.folder-card {
-          text-align: center;
-
-          .icon-folder {
-            color: $brand-primary-light;
-            font-size: 5em;
-            width: 100%;
-          }
-
-          .name {
-            color: $color-volcano;
-            font-weight: bold;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            width: 100%;
-          }
-
-          .description {
-            color: $color-volcano;
-            width: 100%;
-          }
-
-          .project-folder-link {
-            color: $color-volcano;
-            display: contents;
-            text-decoration: none;
-          }
-        }
-
-        &.project-card {
-          border-radius: 4px;
-          box-shadow: $flyout-shadow;
-
-          .project-name-cell {
-            align-items: center;
-            display: flex;
-            height: 2em;
-            margin: 0 1.75em;
-            overflow: hidden;
-
-            a {
-              color: inherit;
-              overflow: hidden;
-              white-space: nowrap;
-            }
-
-            .name {
-              line-height: 2em;
-              margin: 0;
-              overflow: hidden;
-              text-overflow: ellipsis;
-            }
-          }
-
-          .actions {
-            position: absolute;
-            right: .2em;
-            top: .2em;
-
-            .project-actions-menu {
-              a {
-                @include font-button;
-                padding: .5em 1em;
-
-                .fas {
-                  margin-right: .4em;
-                }
-              }
-
-              &.new-comments::after {
-                @include red-dot;
-                right: .4em;
-                top: .4em;
-              }
-
-              &.new-comments {
-                .fa-comment {
-                  position: relative;
-
-                  &::after {
-                    @include red-dot;
-                    right: -.4em;
-                    top: -.3em;
-                  }
-                }
-              }
-            }
-          }
-
-          .data-row {
-            @include font-button;
-            align-items: center;
-            color: $color-black;
-            display: flex;
-            flex-basis: 100%;
-            font-weight: bold;
-            line-height: 2em;
-
-            .card-label {
-              color: $color-volcano;
-              font-weight: normal;
-              width: 5.5em;
-            }
-
-            .cell-value {
-              display: none;
-            }
-
-            &.user-cell {
-              a:hover {
-                text-decoration: none;
-              }
-
-              .value {
-                display: flex;
-                flex-wrap: wrap;
-              }
-
-              .global-avatar-container {
-                height: 2em;
-                line-height: 2em;
-                margin-right: .25em;
-                width: 2em;
-              }
-
-              .more-users {
-                background: $color-volcano;
-                border-radius: 50%;
-                color: $color-white;
-                height: 2em;
-                line-height: 2em;
-                margin-right: .25em;
-                text-align: center;
-                text-decoration: none;
-                width: 2em;
-              }
-
-              .new-user {
-                background: $color-concrete;
-                text-align: center;
-              }
-            }
-          }
-        }
-      }
-
-      &.list {
-        grid-template-columns: max-content repeat(calc(var(--list-columns-number) - 3), minmax(100px, auto)) max-content max-content;
-
-        .projects-group {
-          display: contents;
-
-          .projects-breadcrumbs {
-            grid-column: inherit;
-          }
-
-          &::after {
-            background: $color-concrete;
-            content: "";
-            display: inline-block;
-            grid-column: inherit;
-            height: 1px;
-          }
-        }
-
-        .card {
-          .data-row {
-            font-weight: normal;
-            line-height: 1.25em;
-          }
-
-          .card-label {
-            display: none;
-          }
-
-          .cell-value {
-            display: block !important;
-          }
-
-          .name {
-            @include font-button;
-            color: $brand-primary;
-            font-weight: normal;
-          }
-
-          &.folder-card {
-            text-align: left;
-
-            .icon-folder {
-              display: none;
-              font-size: 2em;
-              margin: 0;
-            }
-
-            .name {
-              grid-column: 5 span;
-              line-height: 3em;
-
-              &:before {
-                @include font-awesome;
-                content: "\f07b";
-                margin-right: .25em;
-              }
-            }
-
-            .description {
-              display: none;
-            }
-          }
-
-          &.project-card {
-            .card-value {
-              display: none;
-            }
-
-            .project-name-cell {
-              grid-column: 2;
-              height: 100%;
-              margin: 0;
-
-              a:hover {
-                color: $brand-primary-light;
-              }
-            }
-
-            .start-date-cell {
-              grid-column: 3;
-            }
-
-            .visibility-cell {
-              grid-column: 4;
-            }
-
-            .user-cell {
-              grid-column: 5;
-            }
-
-            .actions-cell {
-              align-items: center;
-              display: flex;
-              grid-column: 6;
-              position: initial;
-            }
-          }
-        }
-      }
-    }
-  }
-
-  &.active {
-    [data-view-mode="archived"] {
-      display: none !important;
-    }
-  }
-
-  &.archived {
-    [data-view-mode="active"] {
-      display: none !important;
-    }
-
-    .projects-container {
-      .project-actions-menu {
-        .btn-light:hover {
-          background: $color-alto;
-        }
-      }
-
-      .cards-wrapper {
-        grid-auto-rows: 2.5em;
-
-        .card.project-card {
-          .data-row {
-            color: $color-silver-chalice;
-
-            .card-label {
-              color: $color-silver-chalice;
-            }
-
-            &.archived-date-cell {
-              color: $color-volcano;
-
-              .card-label {
-                color: $color-volcano;
-              }
-            }
-          }
-        }
-
-        &.list {
-          --list-columns-number: 7;
-          grid-auto-rows: 3em 1px;
-          grid-template-columns: max-content repeat(calc(var(--list-columns-number) - 2), minmax(100px, auto)) max-content;
-
-          .card {
-            &.folder-card {
-              .name {
-                grid-column: 6 span;
-              }
-            }
-
-            .archived-date-cell {
-              grid-column: 6;
-            }
-
-            .actions-cell {
-              grid-column: 7;
-              position: initial;
-            }
-          }
-        }
-      }
-    }
+.workflowimg-container {
+  height: 300px;
+  margin: 15px 0;
+
+  img {
+    max-height: 300px;
+    max-width: 100%;
   }
 }
 
-#move-to-modal {
-  .button-to-inline-form {
-    display: inline;
-    position: relative;
+// SHOW
+.center-btn {
+  display: block;
+  margin: 0 auto;
+  max-width: 200px;
+}
+
+.big-plus {
+  color: $color-mystic;
+  display: block;
+  font-size: 250px;
+  margin: 20px 0;
+  text-align: center;
+
+  &:hover {
+    color: $color-alto;
   }
 
-  .sci-input-container.left-icon {
-    margin: 1em 0;
+  &:focus {
+    color: $color-alto;
   }
 }

@@ -1,6 +1,4 @@
-# frozen_string_literal: true
-
-class Table < ApplicationRecord
+class Table < ActiveRecord::Base
   include SearchableModel
 
   auto_strip_attributes :name, nullify: false
@@ -10,16 +8,10 @@ class Table < ApplicationRecord
             presence: true,
             length: { maximum: Constants::TABLE_JSON_MAX_SIZE_MB.megabytes }
 
-  belongs_to :created_by,
-             foreign_key: 'created_by_id',
-             class_name: 'User',
-             optional: true
-  belongs_to :last_modified_by,
-             foreign_key: 'last_modified_by_id',
-             class_name: 'User',
-             optional: true
-  belongs_to :team, optional: true
-  has_one :step_table, inverse_of: :table, dependent: :destroy
+  belongs_to :created_by, foreign_key: 'created_by_id', class_name: 'User'
+  belongs_to :last_modified_by, foreign_key: 'last_modified_by_id', class_name: 'User'
+  belongs_to :team
+  has_one :step_table, inverse_of: :table
   has_one :step, through: :step_table
 
   has_one :result_table, inverse_of: :table
@@ -27,7 +19,7 @@ class Table < ApplicationRecord
   has_many :report_elements, inverse_of: :table, dependent: :destroy
 
   after_save :update_ts_index
-  after_save { result&.touch; step&.touch }
+  #accepts_nested_attributes_for :table
 
   def self.search(user,
                   include_archived,
@@ -35,19 +27,29 @@ class Table < ApplicationRecord
                   page = 1,
                   _current_team = nil,
                   options = {})
-    step_ids = Step.search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
-                   .joins(:step_tables)
-                   .distinct
-                   .pluck('step_tables.id')
+    step_ids =
+      Step
+      .search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
+      .joins(:step_tables)
+      .distinct
+      .pluck('step_tables.id')
 
-    result_ids = Result.search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
-                       .joins(:result_table)
-                       .distinct
-                       .pluck('result_tables.id')
+    result_ids =
+      Result
+      .search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
+      .joins(:result_table)
+      .distinct
+      .pluck('result_tables.id')
 
-    table_query = Table.distinct
-                       .left_outer_joins(:step_table, :result_table, :result)
-                       .where('step_tables.id IN (?) OR result_tables.id IN (?)', step_ids, result_ids)
+    table_query =
+      Table
+      .distinct
+      .joins('LEFT OUTER JOIN step_tables ON step_tables.table_id = tables.id')
+      .joins('LEFT OUTER JOIN result_tables ON ' \
+             'result_tables.table_id = tables.id')
+      .joins('LEFT OUTER JOIN results ON result_tables.result_id = results.id')
+      .where('step_tables.id IN (?) OR result_tables.id IN (?)',
+             step_ids, result_ids)
 
     if options[:whole_word].to_s == 'true' ||
        options[:whole_phrase].to_s == 'true'
@@ -101,7 +103,9 @@ class Table < ApplicationRecord
     if page == Constants::SEARCH_NO_LIMIT
       new_query
     else
-      new_query.limit(Constants::SEARCH_LIMIT).offset((page - 1) * Constants::SEARCH_LIMIT)
+      new_query
+        .limit(Constants::SEARCH_LIMIT)
+        .offset((page - 1) * Constants::SEARCH_LIMIT)
     end
   end
 
@@ -110,23 +114,12 @@ class Table < ApplicationRecord
   end
 
   def update_ts_index
-    if saved_change_to_contents?
+    if contents_changed?
       sql = "UPDATE tables " +
             "SET data_vector = " +
             "to_tsvector(substring(encode(contents::bytea, 'escape'), 9)) " +
             "WHERE id = " + Integer(id).to_s
       Table.connection.execute(sql)
-    end
-  end
-
-  def to_csv
-    require 'csv'
-
-    data = JSON.parse(contents)['data']
-    CSV.generate do |csv|
-     data.each do |row|
-       csv << row
-     end
     end
   end
 end

@@ -8,14 +8,13 @@
            team: user_team.team.name) %></p>
   <% if user_team.user.confirmed? %>
     <div class="alert alert-danger" role="alert">
-      <span class="fas fa-exclamation-triangle"></span>
+      <span class="glyphicon glyphicon-exclamation-sign"></span>
       &nbsp;
       <%= t("users.settings.user_teams.destroy_uo_alert_heading") %>
       <ul>
         <li><%= t("users.settings.user_teams.destroy_uo_alert_line_1") %></li>
         <li><%= t("users.settings.user_teams.destroy_uo_alert_line_2").html_safe %></li>
         <li><%= t("users.settings.user_teams.destroy_uo_alert_line_3") %></li>
-        <li><%= t("users.settings.user_teams.destroy_uo_alert_line_4") %></li>
       </ul>
     </div>
   <% end %>

@@ -1,154 +1,99 @@
-# frozen_string_literal: true
-
 source 'http://rubygems.org'
 
-ruby '2.7.5'
+ruby '2.3.3'
 
-gem 'bootsnap', require: false
-gem 'bootstrap-sass', '~> 3.4.1'
-gem 'bootstrap_form', '~> 2.7.0'
-gem 'devise', '~> 4.7.1'
-gem 'devise_invitable'
+gem 'rails', '4.2.5'
 gem 'figaro'
-gem 'pg', '~> 1.1'
-gem 'pg_search' # PostgreSQL full text search
-gem 'rails', '~> 6.1.4'
-gem 'psych', '< 4.0'
-gem 'view_component', require: 'view_component/engine'
+gem 'pg'
+gem 'devise', '3.5.6'
+gem 'devise_invitable'
+gem 'simple_token_authentication', '~> 1.0' # Token authentication for Devise
+gem 'bootstrap-sass', '~> 3.3.5'
+gem 'sass-rails', '~> 5.0'
+gem 'bootstrap_form'
+gem 'yomu'
+gem 'font-awesome-rails', '~> 4.6'
 gem 'recaptcha', require: 'recaptcha/rails'
-gem 'sanitize', '~> 5.2'
-gem 'sassc-rails'
-gem 'webpacker', '~> 4.0.0'
-gem 'yomu', git: 'https://github.com/biosistemika/yomu', branch: 'master'
-
-# Gems for OAuth2 subsystem
-gem 'doorkeeper', '>= 4.6'
-gem 'omniauth'
-gem 'omniauth-azure-activedirectory'
-gem 'omniauth-linkedin-oauth2'
-gem 'omniauth-okta'
-
-# TODO: remove this when omniauth gem resolves CVE issues
-# Prevents CVE-2015-9284 (https://github.com/omniauth/omniauth/wiki/FAQ#cve-2015-9284-warnings)
-gem 'omniauth-rails_csrf_protection', '~> 0.1'
-
-# Gems for API implementation
-gem 'active_model_serializers', '~> 0.10.7'
-gem 'json-jwt'
-gem 'jsonapi-renderer', '~> 0.2.2'
-gem 'jwt', '~> 1.5'
-gem 'kaminari'
-gem 'rack-attack'
-gem 'rack-cors'
+gem 'sanitize', '~> 4.4'
 
 # JS datetime library, requirement of datetime picker
-gem 'momentjs-rails', '~> 2.17.1'
+gem 'momentjs-rails', '>= 2.9.0'
 # JS datetime picker
-gem 'bootstrap3-datetimepicker-rails', '~> 4.17'
+gem 'bootstrap3-datetimepicker-rails', '~> 4.15.35'
 # Select elements for Bootstrap
-gem 'bootstrap-select-rails', '~> 1.12.4'
+gem 'bootstrap-select-rails'
 gem 'uglifier', '>= 1.3.0'
 # jQuery & plugins
-gem 'autosize-rails' # jQuery autosize plugin
-gem 'hammerjs-rails'
+gem 'jquery-turbolinks'
 gem 'jquery-rails'
-gem 'jquery-scrollto-rails',
-    git: 'https://github.com/biosistemika/jquery-scrollto-rails'
 gem 'jquery-ui-rails'
+gem 'jquery-scrollto-rails'
+gem 'hammerjs-rails'
+gem 'introjs-rails' # Create quick tutorials
 gem 'js_cookie_rails' # Simple JS API for cookies
 gem 'spinjs-rails'
+gem 'autosize-rails' # jQuery autosize plugin
 
-gem 'activerecord-import'
-gem 'ajax-datatables-rails', '~> 0.3.1'
-gem 'aspector' # Aspect-oriented programming for Rails
-gem 'auto_strip_attributes', '~> 2.1' # Removes unnecessary whitespaces AR
-gem 'bcrypt', '~> 3.1.10'
-gem 'caracal' # Build docx report
-gem 'deface', '~> 1.0'
-gem 'down', '~> 5.0'
-gem 'faker' # Generate fake data
-gem 'fastimage' # Light gem to get image resolution
-gem 'httparty', '~> 0.17.3'
-gem 'i18n-js', '~> 3.6' # Localization in javascript files
-gem 'jbuilder' # JSON structures via a Builder-style DSL
-gem 'logging', '~> 2.0.0'
-gem 'nested_form_fields'
-gem 'nokogiri', '~> 1.13.2' # HTML/XML parser
-gem 'rails_autolink', '~> 1.1', '>= 1.1.6'
-gem 'rgl' # Graph framework for project diagram calculations
-gem 'roo', '~> 2.8.2' # Spreadsheet parser
-gem 'rotp'
-gem 'rqrcode' # QR code generator
-gem 'rubyzip'
-gem 'scenic', '~> 1.4'
-gem 'sdoc', '~> 1.0', group: :doc
-gem 'silencer' # Silence certain Rails logs
-gem 'sneaky-save', git: 'https://github.com/einzige/sneaky-save'
-gem 'turbolinks', '~> 5.1.1'
 gem 'underscore-rails'
+gem 'turbolinks'
+gem 'sdoc', '~> 0.4.0', group: :doc
+gem 'bcrypt', '~> 3.1.10'
+gem 'logging', '~> 2.0.0'
+gem 'aspector' # Aspect-oriented programming for Rails
+gem 'rgl' # Graph framework for project diagram calculations
+gem 'nested_form_fields'
+gem 'ajax-datatables-rails', '~> 0.3.1'
+gem 'commit_param_routing' # Enables different submit actions in the same form to route to different actions in controller
+gem 'kaminari'
+gem "i18n-js", ">= 3.0.0.rc11" # Localization in javascript files
+gem 'roo', '~> 2.7.1' # Spreadsheet parser
 gem 'wicked_pdf'
-gem 'wkhtmltopdf-heroku', '2.12.5'
+gem 'silencer' # Silence certain Rails logs
+gem 'wkhtmltopdf-heroku'
+gem 'remotipart', '~> 1.2' # Async file uploads
+gem 'faker' # Generate fake data
+gem 'auto_strip_attributes', '~> 2.1' # Removes unnecessary whitespaces from ActiveRecord or ActiveModel attributes
+gem 'deface', '~> 1.0'
+gem 'nokogiri' # HTML/XML parser
+gem 'sneaky-save', git: 'https://github.com/einzige/sneaky-save'
+gem 'rails_autolink', '~> 1.1', '>= 1.1.6'
+gem 'delayed_paperclip',
+    git: 'https://github.com/jrgifford/delayed_paperclip.git',
+    ref: 'fcf574c'
+gem 'rubyzip'
+gem 'activerecord-import'
 
-gem 'aws-sdk-rails'
-gem 'aws-sdk-s3'
+gem 'paperclip', '~> 4.3' # File attachment, image attachment library
+gem 'aws-sdk', '~> 2'
+gem 'aws-sdk-v1'
 gem 'delayed_job_active_record'
-gem 'devise-async',
-    git: 'https://github.com/mhfs/devise-async.git',
-    branch: 'devise-4.x'
-gem 'image_processing', '~> 1.12'
-gem 'rufus-scheduler', '~> 3.5'
-
-gem 'discard', '~> 1.0'
-
-gem 'graphviz'
-gem 'tinymce-rails', '~> 4.9.10' # Rich text editor - SEE BELOW
-# Any time you update tinymce-rails Gem, also update the cache_suffix parameter
-# in sitewide/tiny_mce.js - to prevent browsers from loading old, cached .js
-# TinyMCE files which might cause errors
+gem 'devise-async'
+gem 'ruby-graphviz', '~> 1.2' # Graphviz for rails
+gem 'tinymce-rails', '~> 4.5.7' # Rich text editor
 
 gem 'base62' # Used for smart annotations
 gem 'newrelic_rpm'
 
-# Permission helper Gem
-gem 'canaid', git: 'https://github.com/biosistemika/canaid', branch: 'rails_6'
-
 group :development, :test do
-  gem 'awesome_print'
+  gem 'byebug'
   gem 'better_errors'
   gem 'binding_of_caller'
-  gem 'bullet'
-  gem 'byebug'
-  gem 'factory_bot_rails'
-  gem 'listen', '~> 3.0'
-  gem 'overcommit'
-  gem 'pry'
-  gem 'pry-byebug'
-  gem 'pry-rails'
-  gem 'rails-controller-testing'
-  gem 'rspec-rails', '>= 4.0.0.beta2'
-  gem 'rubocop', '= 0.83.0', require: false
-  gem 'rubocop-performance'
-  gem 'rubocop-rails'
-  gem 'timecop'
-end
-
-group :test do
-  gem 'capybara'
-  gem 'capybara-email'
-  gem 'cucumber-rails', '~> 1.8', require: false
-  gem 'database_cleaner'
-  gem 'json_matchers'
-  gem 'selenium-webdriver'
-  gem 'shoulda-matchers'
-  gem 'simplecov', require: false
-  gem 'webmock'
+  gem 'awesome_print'
+  gem 'rubocop', require: false
+  gem 'scss_lint', require: false
+  gem 'starscope', require: false
 end
 
 group :production do
   gem 'puma'
   gem 'rails_12factor'
-  gem 'whacamole'
+end
+
+group :test do
+  gem 'minitest-reporters', '~> 1.1'
+  gem "shoulda-context"
+  gem "shoulda-matchers", ">= 3.0.1"
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
-gem 'tzinfo-data', platforms: %i(mingw mswin x64_mingw jruby)
+gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]

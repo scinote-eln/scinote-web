@@ -1,4 +1,4 @@
-class CreateConnections < ActiveRecord::Migration[4.2]
+class CreateConnections < ActiveRecord::Migration
   def change
     create_table :connections do |t|
       t.integer :input_id, null: false

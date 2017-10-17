@@ -31,7 +31,7 @@
     padding-top: 10px;
 
     &:hover {
-      background-color: $color-gainsboro;
+      background-color: $color-mystic;
     }
 
     &.no-notifications {
@@ -40,7 +40,7 @@
   }
 
   .unseen {
-    border-left: 4px solid $brand-primary;
+    border-left: 4px solid $color-theme-primary;
   }
 
   .text-center {
@@ -49,50 +49,54 @@
   }
 
   .assignment {
-    background-color: $brand-primary;
+    background-color: $color-theme-primary;
     border-radius: 50%;
-    color: $color-concrete;
+    color: $color-wild-sand;
     display: inline-block;
-    font-size: $font-size-small;
+    font-size: 13px;
     height: 30px;
     padding-top: 5px;
     width: 30px;
   }
 
   .system-message {
-    background-color: $brand-success;
+    background-color: $color-theme-secondary;
     border-radius: 50%;
-    color: $color-concrete;
+    color: $color-wild-sand;
     display: inline-block;
-    font-size: $font-size-small;
+    font-size: 13px;
     height: 30px;
     padding-top: 5px;
     width: 30px;
   }
 
   .deliver {
-    background-color: $brand-warning;
+    background-color: $color-orange;
     border-radius: 50%;
-    color: $color-concrete;
+    color: $color-wild-sand;
     display: inline-block;
-    font-size: $font-size-small;
-    height: 30px;
-    padding-top: 5px;
-    width: 30px;
-  }
-
-  .deliver-error {
-    background-color: $brand-danger;
-    border-radius: 50%;
-    color: $color-concrete;
-    display: inline-block;
-    font-size: $font-size-small;
+    font-size: 13px;
     height: 30px;
     padding-top: 5px;
     width: 30px;
   }
 }
 
-.btn-more-notifications {
-  margin-top: 15px;
+
+.notifications-footer {
+
+  background-color: $color-mystic;
+
+  .btn-more-notifications {
+    border-bottom: 1px solid $color-alto;
+    border-left: 1px solid $color-alto;
+    border-right: 1px solid $color-alto;
+    margin: 0;
+    padding: 8px;
+    text-align: center;
+
+    &:hover {
+      background-color: $color-mystic;
+    }
+  }
 }

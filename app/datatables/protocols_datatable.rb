@@ -1,14 +1,17 @@
-class ProtocolsDatatable < CustomDatatable
+class ProtocolsDatatable < AjaxDatatablesRails::Base
   # Needed for sanitize_sql_like method
   include ActiveRecord::Sanitization::ClassMethods
   include InputSanitizeHelper
 
-  def_delegator :@view, :can_read_protocol_in_repository?
-  def_delegator :@view, :can_manage_protocol_in_repository?
+  def_delegator :@view, :can_edit_protocol
   def_delegator :@view, :edit_protocol_path
-  def_delegator :@view, :can_restore_protocol_in_repository?
-  def_delegator :@view, :can_clone_protocol_in_repository?
+  def_delegator :@view, :can_clone_protocol
   def_delegator :@view, :clone_protocol_path
+  def_delegator :@view, :can_make_protocol_private
+  def_delegator :@view, :can_publish_protocol
+  def_delegator :@view, :can_archive_protocol
+  def_delegator :@view, :can_restore_protocol
+  def_delegator :@view, :can_export_protocol
   def_delegator :@view, :linked_children_protocol_path
   def_delegator :@view, :preview_protocol_path
 
@@ -45,10 +48,10 @@ class ProtocolsDatatable < CustomDatatable
   # See https://github.com/antillas21/ajax-datatables-rails/issues/112
   def as_json(options = {})
     {
-      draw: dt_params[:draw].to_i,
-      recordsTotal: get_raw_records.length,
-      recordsFiltered: filter_records(get_raw_records).length,
-      data: data
+      :draw => params[:draw].to_i,
+      :recordsTotal =>  get_raw_records.length,
+      :recordsFiltered => filter_records(get_raw_records).length,
+      :data => data
     }
   end
 
@@ -58,6 +61,7 @@ class ProtocolsDatatable < CustomDatatable
   def new_search_condition(column, value)
     model, column = column.split('.')
     model = model.constantize
+    formated_date = (I18n.t 'time.formats.datatables_date').gsub!(/^\"|\"?$/, '')
     case column
     when 'published_on'
       casted_column = ::Arel::Nodes::NamedFunction.new('CAST',
@@ -81,23 +85,23 @@ class ProtocolsDatatable < CustomDatatable
       protocol = Protocol.find(record.id)
       result_data << {
         'DT_RowId': record.id,
-        'DT_CanEdit': can_manage_protocol_in_repository?(protocol),
-        'DT_EditUrl': if can_manage_protocol_in_repository?(protocol)
+        'DT_CanEdit': can_edit_protocol(protocol),
+        'DT_EditUrl': if can_edit_protocol(protocol)
                         edit_protocol_path(protocol,
                                            team: @team,
                                            type: @type)
                       end,
-        'DT_CanClone': can_clone_protocol_in_repository?(protocol),
-        'DT_CloneUrl': if can_clone_protocol_in_repository?(protocol)
+        'DT_CanClone': can_clone_protocol(protocol),
+        'DT_CloneUrl': if can_clone_protocol(protocol)
                          clone_protocol_path(protocol,
                                              team: @team,
                                              type: @type)
                        end,
-        'DT_CanMakePrivate': can_manage_protocol_in_repository?(protocol),
-        'DT_CanPublish': can_manage_protocol_in_repository?(protocol),
-        'DT_CanArchive': can_manage_protocol_in_repository?(protocol),
-        'DT_CanRestore': can_restore_protocol_in_repository?(protocol),
-        'DT_CanExport': can_read_protocol_in_repository?(protocol),
+        'DT_CanMakePrivate': can_make_protocol_private(protocol),
+        'DT_CanPublish': can_publish_protocol(protocol),
+        'DT_CanArchive': can_archive_protocol(protocol),
+        'DT_CanRestore': can_restore_protocol(protocol),
+        'DT_CanExport': can_export_protocol(protocol),
         '1': if protocol.in_repository_archived?
                escape_input(record.name)
              else
@@ -183,7 +187,7 @@ class ProtocolsDatatable < CustomDatatable
   end
 
   def keywords_html(record)
-    if !record.protocol_keywords_str || record.protocol_keywords_str.blank?
+    if !record.protocol_keywords_str || record.protocol_keywords_str.empty?
       "<i>#{I18n.t("protocols.no_keywords")}</i>"
     else
       kws = record.protocol_keywords_str.split(", ")
@@ -198,10 +202,10 @@ class ProtocolsDatatable < CustomDatatable
   end
 
   def modules_html(record)
-    "<a href='#' data-action='load-linked-children'" \
-      "data-url='#{linked_children_protocol_path(record)}'>" \
-      "#{record.nr_of_linked_children}"  \
-      "</a>"
+    "<a href='#' data-action='load-linked-children'" +
+    " data-url='#{linked_children_protocol_path(record)}'>" +
+    "#{record.nr_of_linked_children}" +
+    "</a>"
   end
 
   def timestamp_column_html(record)
@@ -225,7 +229,7 @@ class ProtocolsDatatable < CustomDatatable
   def build_conditions_for(query)
     # Inner query to retrieve list of protocol IDs where concatenated
     # protocol keywords string, or user's full_name contains searched query
-    search_val = dt_params[:search][:value]
+    search_val = params[:search][:value]
     records_having = get_raw_records_base.having(
       ::Arel::Nodes::NamedFunction.new(
         'CAST',

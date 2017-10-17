@@ -1,8 +1,5 @@
-# frozen_string_literal: true
-
 require 'zip'
 require 'fileutils'
-require 'csv'
 
 # To use ZipExport you have to define the generate_( type )_zip method!
 # Example:
@@ -18,47 +15,54 @@ require 'csv'
 #     end
 #   end
 
-class ZipExport < ApplicationRecord
-  belongs_to :user, optional: true
+class ZipExport < ActiveRecord::Base
+  belongs_to :user
+  has_attached_file :zip_file
+  validates_attachment :zip_file,
+                       content_type: { content_type: 'application/zip' }
 
-  has_one_attached :zip_file
+  # When using S3 file upload, we can limit file accessibility with url signing
+  def presigned_url(style = :original,
+                    download: false,
+                    timeout: Constants::URL_SHORT_EXPIRE_TIME)
+    if stored_on_s3?
+      if download
+        download_arg = 'attachment; filename=' + URI.escape(zip_file_file_name)
+      else
+        download_arg = nil
+      end
 
-  after_create :self_destruct
-
-  def self.delete_expired_export(id)
-    export = find_by_id(id)
-    export&.destroy
+      signer = Aws::S3::Presigner.new(client: S3_BUCKET.client)
+      signer.presigned_url(:get_object,
+                           bucket: S3_BUCKET.name,
+                           key: zip_file.path(style)[1..-1],
+                           expires_in: timeout,
+                           response_content_disposition: download_arg)
+    end
   end
 
-  def zip_file_name
-    return '' unless zip_file.attached?
-
-    zip_file.blob&.filename&.to_s
+  def stored_on_s3?
+    zip_file.options[:storage].to_sym == :s3
   end
 
   def generate_exportable_zip(user, data, type, options = {})
-    I18n.backend.date_format = user.settings[:date_format] || Constants::DEFAULT_DATE_FORMAT
-    zip_input_dir = FileUtils.mkdir_p(File.join(Rails.root, "tmp/temp_zip_#{Time.now.to_i}")).first
-    tmp_zip_dir = FileUtils.mkdir_p(File.join(Rails.root, 'tmp/zip-ready')).first
-    tmp_zip_name = "export_#{Time.now.strftime('%F %H-%M-%S_UTC')}.zip"
-    tmp_zip_file = File.new(File.join(tmp_zip_dir, tmp_zip_name), 'w+')
-
-    fill_content(zip_input_dir, data, type, options)
-    zip!(zip_input_dir, tmp_zip_file)
-    zip_file.attach(io: File.open(tmp_zip_file), filename: tmp_zip_name)
+    FileUtils.mkdir_p(File.join(Rails.root, 'tmp/zip-ready'))
+    dir_to_zip = FileUtils.mkdir_p(
+      File.join(Rails.root, "tmp/temp-zip-#{Time.now.to_i}")
+    ).first
+    output_file = File.new(
+      File.join(Rails.root, "tmp/zip-ready/export-#{Time.now.to_i}.zip"),
+      'w+'
+    )
+    fill_content(dir_to_zip, data, type, options)
+    zip!(dir_to_zip, output_file.path)
+    self.zip_file = File.open(output_file)
     generate_notification(user) if save
-  ensure
-    FileUtils.rm_rf([zip_input_dir, tmp_zip_file], secure: true)
   end
 
   handle_asynchronously :generate_exportable_zip
 
   private
-
-  def self_destruct
-    ZipExport.delay(run_at: Constants::EXPORTABLE_ZIP_EXPIRATION_DAYS.days.from_now)
-             .delete_expired_export(id)
-  end
 
   def method_missing(m, *args, &block)
     puts 'Method is missing! To use this zip_export you have to ' \
@@ -79,12 +83,11 @@ class ZipExport < ApplicationRecord
       type_of: :deliver,
       title: I18n.t('zip_export.notification_title'),
       message:  "<a data-id='#{id}' " \
-                "data-turbolinks='false' " \
                 "href='#{Rails.application
                               .routes
                               .url_helpers
                               .zip_exports_download_path(self)}'>" \
-                "#{zip_file_name}</a>"
+                "#{zip_file_file_name}</a>"
     )
     UserNotification.create(notification: notification, user: user)
   end
@@ -92,11 +95,16 @@ class ZipExport < ApplicationRecord
   def zip!(input_dir, output_file)
     files = Dir.entries(input_dir)
     files.delete_if { |el| el == '..' || el == '.' }
-    Zip::File.open(output_file.path, Zip::File::CREATE) do |zipfile|
+    Zip::File.open(output_file, Zip::File::CREATE) do |zipfile|
       files.each do |filename|
         zipfile.add(filename, input_dir + '/' + filename)
       end
     end
+  end
+
+  def generate_samples_zip(tmp_dir, data, _options = {})
+    file = FileUtils.touch("#{tmp_dir}/export.csv").first
+    File.open(file, 'wb') { |f| f.write(data) }
   end
 
   def generate_repositories_zip(tmp_dir, data, _options = {})

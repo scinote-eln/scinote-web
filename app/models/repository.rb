@@ -1,173 +1,80 @@
-# frozen_string_literal: true
-
-class Repository < RepositoryBase
+class Repository < ActiveRecord::Base
   include SearchableModel
-  include SearchableByNameModel
-  include RepositoryImportParser
-  include ArchivableModel
 
-  enum permission_level: Extends::SHARED_INVENTORIES_PERMISSION_LEVELS
+  belongs_to :team
+  belongs_to :created_by, foreign_key: :created_by_id, class_name: 'User'
+  has_many :repository_columns
+  has_many :repository_rows
+  has_many :repository_table_states,
+           inverse_of: :repository, dependent: :destroy
+  has_many :report_elements, inverse_of: :repository, dependent: :destroy
 
-  belongs_to :archived_by,
-             foreign_key: :archived_by_id,
-             class_name: 'User',
-             inverse_of: :archived_repositories,
-             optional: true
-  belongs_to :restored_by,
-             foreign_key: :restored_by_id,
-             class_name: 'User',
-             inverse_of: :restored_repositories,
-             optional: true
-  has_many :team_repositories, inverse_of: :repository, dependent: :destroy
-  has_many :teams_shared_with, through: :team_repositories, source: :team
-  has_many :repository_snapshots,
-           class_name: 'RepositorySnapshot',
-           foreign_key: :parent_id,
-           inverse_of: :original_repository
-  has_many :repository_table_filters, dependent: :destroy
-
-  before_save :sync_name_with_snapshots, if: :name_changed?
-  after_save :unassign_unshared_items, if: :saved_change_to_permission_level
-  before_destroy :refresh_report_references_on_destroy, prepend: true
-
+  auto_strip_attributes :name, nullify: false
   validates :name,
             presence: true,
-            uniqueness: { scope: :team_id, case_sensitive: false },
+            uniqueness: { scope: :team, case_sensitive: false },
             length: { maximum: Constants::NAME_MAX_LENGTH }
-
-  scope :active, -> { where(archived: false) }
-  scope :archived, -> { where(archived: true) }
-
-  scope :accessible_by_teams, lambda { |teams|
-    accessible_repositories = left_outer_joins(:team_repositories)
-    accessible_repositories =
-      accessible_repositories
-      .where(team: teams)
-      .or(accessible_repositories.where(team_repositories: { team: teams }))
-      .or(accessible_repositories
-            .where(permission_level: [Extends::SHARED_INVENTORIES_PERMISSION_LEVELS[:shared_read],
-                                      Extends::SHARED_INVENTORIES_PERMISSION_LEVELS[:shared_write]]))
-    accessible_repositories.distinct
-  }
-
-  scope :assigned_to_project, lambda { |project|
-    accessible_by_teams(project.team)
-      .joins(repository_rows: { my_module_repository_rows: { my_module: { experiment: :project } } })
-      .where(repository_rows: { my_module_repository_rows: { my_module: { experiments: { project: project } } } })
-  }
-
-  def self.within_global_limits?
-    return true unless Rails.configuration.x.global_repositories_limit.positive?
-
-    count < Rails.configuration.x.global_repositories_limit
-  end
-
-  def self.within_team_limits?(team)
-    return true unless Rails.configuration.x.team_repositories_limit.positive?
-
-    team.repositories.count < Rails.configuration.x.team_repositories_limit
-  end
+  validates :team, presence: true
+  validates :created_by, presence: true
 
   def self.search(
     user,
+    _include_archived,
     query = nil,
     page = 1,
-    repository = nil,
+    current_team = nil,
     options = {}
   )
-    serchable_row_fields = [RepositoryRow::PREFIXED_ID_SQL, 'repository_rows.name', 'users.full_name']
+    team_ids =
+      if current_team
+        current_team.id
+      else
+        Team.joins(:user_teams)
+            .where('user_teams.user_id = ?', user.id)
+            .distinct
+            .pluck(:id)
+      end
 
-    repositories = repository&.id || Repository.accessible_by_teams(user.teams).pluck(:id)
+    row_ids = RepositoryRow
+              .search(nil, query, Constants::SEARCH_NO_LIMIT, options)
+              .select(:id)
 
-    readable_rows = RepositoryRow.joins(:repository, :created_by).where(repository_id: repositories)
-
-    repository_rows = readable_rows.where_attributes_like(serchable_row_fields, query, options)
-
-    Extends::REPOSITORY_EXTRA_SEARCH_ATTR.each do |_data_type, config|
-      custom_cell_matches = readable_rows.joins(config[:includes])
-                                         .where_attributes_like(config[:field], query, options)
-      repository_rows = repository_rows.or(readable_rows.where(id: custom_cell_matches))
-    end
+    new_query = Repository
+                .select('repositories.*, COUNT(repository_rows.id) AS counter')
+                .joins(:team)
+                .joins('LEFT OUTER JOIN repository_rows ON ' \
+                       'repositories.id = repository_rows.repository_id')
+                .where(team: team_ids)
+                .where('repository_rows.id IN (?)', row_ids)
+                .group('repositories.id')
 
     # Show all results if needed
     if page == Constants::SEARCH_NO_LIMIT
-      repository_rows.select('repositories.id AS id, COUNT(DISTINCT repository_rows.id) AS counter')
-                     .group('repositories.id')
+      new_query
     else
-      repository_rows.limit(Constants::SEARCH_LIMIT).offset((page - 1) * Constants::SEARCH_LIMIT)
+      new_query
+        .limit(Constants::SEARCH_LIMIT)
+        .offset((page - 1) * Constants::SEARCH_LIMIT)
     end
   end
 
-  def default_table_state
-    Constants::REPOSITORY_TABLE_DEFAULT_STATE
+  def open_spreadsheet(file)
+    filename = file.original_filename
+    file_path = file.path
+
+    if file.class == Paperclip::Attachment && file.is_stored_on_s3?
+      fa = file.fetch
+      file_path = fa.path
+    end
+    generate_file(filename, file_path)
   end
 
-  def default_sortable_columns
-    [
-      'assigned',
-      'repository_rows.id',
-      'repository_rows.name',
-      'repository_rows.created_at',
-      'users.full_name',
-      'repository_rows.archived_on',
-      'archived_bies_repository_rows.full_name'
-    ]
-  end
-
-  def default_search_fileds
-    ['repository_rows.name', RepositoryRow::PREFIXED_ID_SQL, 'users.full_name']
-  end
-
-  def i_shared?(team)
-    shared_with_anybody? && self.team == team
-  end
-
-  def shared_with_anybody?
-    (!not_shared? || team_repositories.any?)
-  end
-
-  def shared_with?(team)
-    return false if self.team == team
-
-    !not_shared? || private_shared_with?(team)
-  end
-
-  def shared_with_write?(team)
-    return false if self.team == team
-
-    shared_write? || private_shared_with_write?(team)
-  end
-
-  def shared_with_read?(team)
-    return false if self.team == team
-
-    shared_read? || team_repositories.where(team: team, permission_level: :shared_read).any?
-  end
-
-  def private_shared_with?(team)
-    team_repositories.where(team: team).any?
-  end
-
-  def private_shared_with_write?(team)
-    team_repositories.where(team: team, permission_level: :shared_write).any?
-  end
-
-  def self.viewable_by_user(_user, teams)
-    accessible_by_teams(teams)
-  end
-
-  def self.name_like(query)
-    where('repositories.name ILIKE ?', "%#{query}%")
-  end
-
-  def importable_repository_fields
+  def available_repository_fields
     fields = {}
     # First and foremost add record name
     fields['-1'] = I18n.t('repositories.default_column')
     # Add all other custom columns
     repository_columns.order(:created_at).each do |rc|
-      next unless rc.importable?
-
       fields[rc.id] = rc.name
     end
     fields
@@ -197,50 +104,104 @@ class Repository < RepositoryBase
     end
 
     # If everything is okay, return new_repo
-    Activities::CreateActivityService
-      .call(activity_type: :copy_inventory,
-            owner: created_by,
-            subject: new_repo,
-            team: new_repo.team,
-            message_items: { repository_new: new_repo.id, repository_original: id })
-
     new_repo
   end
 
+  # Imports records
   def import_records(sheet, mappings, user)
-    importer = RepositoryImportParser::Importer.new(sheet, mappings, user, self)
-    importer.run
-  end
+    errors = false
+    columns = []
+    name_index = -1
+    total_nr = 0
+    nr_of_added = 0
 
-  def assigned_rows(my_module)
-    repository_rows.joins(:my_module_repository_rows).where(my_module_repository_rows: { my_module_id: my_module.id })
-  end
+    mappings.each.with_index do |(_k, value), index|
+      if value == '-1'
+        # Fill blank space, so our indices stay the same
+        columns << nil
+        name_index = index
+      else
+        columns << repository_columns.find_by_id(value)
+      end
+    end
 
-  def unassign_unshared_items
-    return if shared_read? || shared_write?
+    # Check for duplicate columns
+    col_compact = columns.compact
+    unless col_compact.map(&:id).uniq.length == col_compact.length
+      return { status: :error, nr_of_added: nr_of_added, total_nr: total_nr }
+    end
 
-    MyModuleRepositoryRow.joins(my_module: { experiment: { project: :team } })
-                         .joins(repository_row: :repository)
-                         .where(repository_rows: { repository: self })
-                         .where.not(my_module: { experiment: { projects: { team: team } } })
-                         .where.not(my_module: { experiment: { projects: { team: teams_shared_with } } })
-                         .destroy_all
+    # Now we can iterate through record data and save stuff into db
+    transaction do
+      (2..sheet.last_row).each do |i|
+        total_nr += 1
+        record_row = RepositoryRow.new(name: sheet.row(i)[name_index],
+                                   repository: self,
+                                   created_by: user,
+                                   last_modified_by: user)
+        record_row.transaction(requires_new: true) do
+          unless record_row.save
+            errors = true
+            raise ActiveRecord::Rollback
+          end
+
+          row_cell_values = []
+
+          sheet.row(i).each.with_index do |value, index|
+            if columns[index] && value
+              cell_value = RepositoryTextValue.new(
+                data: value,
+                created_by: user,
+                last_modified_by: user,
+                repository_cell_attributes: {
+                  repository_row: record_row,
+                  repository_column: columns[index]
+                }
+              )
+              cell = RepositoryCell.new(repository_row: record_row,
+                                        repository_column: columns[index],
+                                        value: cell_value)
+              cell.skip_on_import = true
+              cell_value.repository_cell = cell
+              unless cell.valid? && cell_value.valid?
+                errors = true
+                raise ActiveRecord::Rollback
+              end
+              row_cell_values << cell_value
+            end
+          end
+          if RepositoryTextValue.import(row_cell_values,
+                                        recursive: true,
+                                        validate: false).failed_instances.any?
+            errors = true
+            raise ActiveRecord::Rollback
+          end
+          nr_of_added += 1
+        end
+      end
+    end
+
+    if errors
+      return { status: :error, nr_of_added: nr_of_added, total_nr: total_nr }
+    end
+    { status: :ok, nr_of_added: nr_of_added, total_nr: total_nr }
   end
 
   private
 
-  def sync_name_with_snapshots
-    repository_snapshots.update(name: name)
-  end
-
-  def refresh_report_references_on_destroy
-    report_elements.find_each do |report_element|
-      repository_snapshot = report_element.my_module
-                                          .repository_snapshots
-                                          .where(original_repository: self)
-                                          .order(:selected, created_at: :desc)
-                                          .first
-      report_element.update(repository: repository_snapshot) if repository_snapshot
+  def generate_file(filename, file_path)
+    case File.extname(filename)
+    when '.csv'
+      Roo::CSV.new(file_path, extension: :csv)
+    when '.tsv'
+      Roo::CSV.new(file_path, csv_options: { col_sep: "\t" })
+    when '.txt'
+      # This assumption is based purely on biologist's habits
+      Roo::CSV.new(file_path, csv_options: { col_sep: "\t" })
+    when '.xlsx'
+      Roo::Excelx.new(file_path)
+    else
+      raise TypeError
     end
   end
 end

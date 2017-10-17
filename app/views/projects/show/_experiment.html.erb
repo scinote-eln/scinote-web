@@ -4,81 +4,61 @@
        data-canvas-link="<%= canvas_experiment_url(experiment) %>"
        >
     <div class="panel-heading">
-      <div class="actions actions-cell table-cell pull-right">
-        <%= render partial: 'projects/show/experiment_actions_dropdown.html.erb', locals: { experiment: experiment, view: 'cards', project: project } %>
-      </div>
-      <div class="panel-title">
-        <% if experiment.archived_branch? %>
-          <%= link_to experiment.name, module_archive_experiment_path(experiment) %>
-        <% else %>
-          <%= link_to experiment.name, canvas_experiment_path(experiment) %>
-        <% end %>
-      </div>
-
-      <% if experiment.archived_branch? %>
-        <div class="panel-date">
-          <span class="fas fa-archive" aria-hidden="true"></span>
-          <%= l(experiment_archived_on(experiment), format: :full_date) %>
+      <% if can_view_experiment_actions experiment %>
+        <div class="dropdown pull-right">
+          <button class="btn btn-link dropdown-toggle"
+                  type="button"
+                  id="exActionsMenu-<%= experiment.id %>"
+                  data-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="true">
+            <span class="caret"></span>
+          </button>
+          <%= render partial: 'experiments/dropdown_actions.html.erb',
+                              locals: { project: @project, experiment: experiment } %>
         </div>
       <% end %>
+      <h3 class="panel-title"><%= link_to experiment.name, canvas_experiment_path(experiment) %></h3>
 
-      <div class="panel-date">
-        <span class="fas fa-calendar-alt" aria-hidden="true"></span>
-        <%= l(experiment.created_at, format: :full_date) %> - <%= l(experiment.updated_at, format: :full_date) %>
-      </div>
-
-      <div data-hook="experiment-card-description">
-        <% if experiment.description? %>
-          <div class='experiment-description'>
-            <%= custom_auto_link(experiment.description, team: current_team) %>
-          </div>
-        <% else %>
-          <% if can_manage_experiment?(experiment) %>
-            <%= link_to t('experiments.edit.add-description'),
-                        edit_experiment_url(experiment),
-                        remote: true,
-                        data: { id: experiment.id },
-                        class: 'experiment-no-description' %>
-          <% else %>
-            <p class='experiment-no-description'><%= t('experiments.edit.no-description') %></p>
-          <% end %>
-        <% end %>
-      </div>
     </div>
-
     <div class="panel-body">
-      <% if experiment.my_modules.active.exists? %>
-        <%= link_to canvas_experiment_path(experiment), class: 'no-workflowimg' do %>
-          <% if experiment.workflowimg.attached? %>
-            <div class="workflowimg-container" data-workflowimg-present="true">
-              <%= render partial: 'projects/show/workflow_img.html.erb', locals: { experiment: experiment } %>
-            </div>
-          <% else %>
-            <div class="workflowimg-container"
-                 data-workflowimg-present="false"
-                 data-workflowimg-url="<%= fetch_workflow_img_experiment_url(experiment) %>" >
-              <i class="fas fa-spinner fa-spin fa-3x workflowimg-spinner hidden" aria-hidden="true"></i>
-            </div>
-          <% end %>
-        <% end %>
+      <% if experiment.workflowimg? && experiment.active_modules.length > 0 %>
+        <div class="workflowimg-container"
+             data-check-img="<%= updated_img_experiment_url(experiment) %>"
+             data-updated-img="<%= fetch_workflow_img_experiment_url(experiment) %>"
+             data-timestamp="<%= experiment.updated_at %>" >
+        </div>
       <% else %>
-        <% if can_manage_experiment?(experiment) %>
-          <%= link_to( t('experiments.edit.add_task'),
-                       canvas_experiment_path(experiment, editMode: true),
-                       class: 'no-tasks') %>
-        <% else %>
-          <div class="no-workflowimg">
+        <div class="no-workflowimg">
+          <% if can_edit_experiment(experiment) %>
+            <p><%= link_to( t('experiments.edit.add_task'),
+                            canvas_experiment_path(experiment,
+                                                   editMode: true)) %></p>
+          <% else %>
             <p><%= t('experiments.edit.no_workflowimg') %></p>
-          </div>
-        <% end %>
-
+          <% end %>
+        </div>
       <% end %>
-      <div>
-        <%= link_to t('experiments.index.more_link'),
-                    experiment_path(experiment),
-                    class: 'experiment-action-link pull-right',
-                    remote: true %>
-      </div>
+      <span>
+        <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
+        <%= localize(experiment.created_at, format: t('time.formats.full_date')) %> - <%= localize(experiment.updated_at, format: t('time.formats.full_date')) %>
+      </span>
+      <% if experiment.description? %>
+        <div class='experiment-description'>
+          <%= custom_auto_link(experiment.description) %>
+        </div>
+      <% else %>
+        <span class='experiment-no-description'>
+          <% if can_edit_experiment(experiment) %>
+            <%= link_to t('experiments.edit.add-description'),
+                        edit_project_experiment_url(@project, experiment),
+                        remote: true,
+                        data: { id: experiment.id } %>
+          <% else %>
+            <p><%= t('experiments.edit.no-description') %></p>
+          <% end %>
+        </span>
+      <% end %>
     </div>
   </div>
 </div>

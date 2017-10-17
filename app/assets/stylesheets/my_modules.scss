@@ -1,30 +1,22 @@
 // Place all the styles related to the MyModules controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
-// scss-lint:disable SelectorDepth SelectorFormat
-// scss-lint:disable NestingDepth QualifyingElement
 
-@import "constants";
-
-.protocol-description-content {
-  margin: 20px 0 20px 10px;
-}
+@import 'constants';
 
   // Protocols index page
 .task-due-date,
 .task-state-label {
-  font-size: 14px;
-
   .alert-green {
-    color: $brand-success;
+    color: $color-saturated-green;
   }
 
   .alert-yellow {
-    color: $brand-warning;
+    color: $color-candlelight;
   }
 
   .alert-red {
-    color: $brand-danger;
+    color: $color-milano-red;
   }
 }
 
@@ -52,219 +44,5 @@
   .comment {
     word-break: break-all;
     word-wrap: break-word;
-  }
-}
-
-// Create wopi file
-.create-wopi-file-btn {
-  cursor: pointer;
-
-  img {
-    height: 1.5em;
-    width: 1.5em;
-  }
-}
-
-#new-office-file-modal {
-  .modal-header {
-    border-bottom: 0;
-  }
-
-  .modal-body {
-    margin-bottom: 80px;
-  }
-
-  .modal-footer {
-    border-top: 0;
-  }
-
-  label.btn {
-    background-color: $color-white;
-    color: $color-emperor;
-
-    padding-left: 15px;
-    text-align: left;
-
-    &#word-btn.active {
-      background-color: $office-ms-word;
-      color: $color-white;
-    }
-
-    &#excel-btn.active {
-      background-color: $office-ms-excel;
-      color: $color-white;
-    }
-
-    &#powerpoint-btn.active {
-      background-color: $office-ms-powerpoint;
-      color: $color-white;
-    }
-
-    span {
-      display: inline-block;
-      margin-left: 15px;
-      text-align: left;
-      vertical-align: middle;
-    }
-  }
-
-  #submit-btn-cont {
-    padding: 0;
-
-    // Stretch button
-    .btn {
-      width: 100%;
-    }
-  }
-}
-
-// Mobile view
-@media (max-width: 700px) {
-  .task-section {
-    border-left: 0;
-    padding-left: 0;
-
-    .task-section-header {
-      .actions-block {
-        flex-wrap: wrap;
-        justify-content: flex-start;
-        margin-bottom: 5px;
-        width: 100%;
-
-        .dropdown {
-          margin-bottom: 5px;
-          min-width: 100%;
-        }
-      }
-    }
-  }
-
-  .task-details {
-    .module-tags {
-      .dropdown-selector-container {
-        .input-field {
-          padding-right: 36px;
-        }
-      }
-    }
-
-    .datetime-container {
-      .date-text {
-        margin-right: 0;
-      }
-
-      .dropdown-menu {
-        left: -50px !important;
-      }
-    }
-  }
-
-  #steps {
-    .panel-heading {
-      flex-wrap: wrap;
-    }
-
-    .panel-options {
-      display: flex;
-      flex-wrap: wrap;
-      max-width: 100%;
-    }
-  }
-
-  .attachments {
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)) !important;
-
-    .attachment-placeholder {
-      margin: 4px 0 16px;
-      width: 200px;
-    }
-  }
-
-  #filePreviewModal {
-    .modal-body {
-      width: 100%;
-
-      .file-preview-container {
-        width: 90%;
-      }
-    }
-  }
-}
-
-
-#experiment-canvas {
-  [data-view-mode="archived"] {
-    display: none;
-  }
-}
-
-#module-archive {
-  [data-view-mode="active"] {
-    display: none;
-  }
-
-  .module-container {
-    min-width: 220px;
-
-    &.active-card {
-      z-index: 1000;
-    }
-  }
-
-  .panel-default {
-    border: 0;
-    box-shadow: unset;
-    position: unset;
-    width: unset;
-
-    .task-selector-container {
-      padding: .75em .75em 0 1em;
-    }
-
-    .panel-heading {
-      background-color: $color-concrete;
-      border-color: $color-white;
-
-      .panel-title {
-        color: $color-volcano;
-      }
-    }
-
-    .panel-body {
-      background-color: $color-concrete;
-      font-weight: normal;
-
-      .archived-overdue-date {
-        .date-label {
-          color: $color-volcano;
-          display: inline-block;
-          font-weight: normal;
-          width: 90px;
-        }
-
-        .date-value {
-          color: $color-black;
-        }
-      }
-    }
-
-    .panel-footer-scinote {
-      background: $color-concrete;
-      border-color: $color-white;
-      height: 2.5em;
-
-      .nav {
-        border: 0;
-      }
-
-      .tab-content {
-        background-color: $color-concrete;
-        box-shadow: $flyout-shadow;
-
-        .tab-pane > .text-center {
-          margin-top: .3em;
-        }
-      }
-    }
   }
 }

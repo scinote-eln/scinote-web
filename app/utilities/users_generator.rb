@@ -16,20 +16,19 @@ module UsersGenerator
   end
 
   # If confirmed == true, the user is automatically confirmed;
-  # otherwise, SciNote sends the "confirmation" email to the user
+  # otherwise, sciNote sends the "confirmation" email to the user
   # If private_team_name == nil, private taem is not created.
   def create_user(full_name,
                   email,
                   password,
                   confirmed,
                   private_team_name,
-                  team_ids,
-                  options = {})
-    nu = User.new({ full_name: full_name,
-                    initials: get_user_initials(full_name),
-                    email: email,
-                    password: password,
-                    password_confirmation: password }.merge(options))
+                  team_ids)
+    nu = User.new(full_name: full_name,
+                  initials: get_user_initials(full_name),
+                  email: email,
+                  password: password,
+                  password_confirmation: password)
 
     nu.confirmed_at = Time.now if confirmed
     nu.save!
@@ -49,7 +48,7 @@ module UsersGenerator
     end
 
     # Assign user team as user current team
-    nu.current_team_id = nu.teams.first.id unless nu.teams.blank?
+    nu.current_team_id = nu.teams.first.id unless nu.teams.empty?
     nu.save!
 
     nu.reload

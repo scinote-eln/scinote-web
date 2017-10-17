@@ -10,7 +10,7 @@
       <div class="modal-body">
         <p><%= t("repositories.index.modal_delete.message_html", name: @repository.name) %></p>
         <div class="alert alert-danger" role="alert">
-          <span class="fas fa-exclamation-triangle"></span>
+          <span class="glyphicon glyphicon-exclamation-sign"></span>
           &nbsp;
           <%= t("repositories.index.modal_delete.alert_heading") %>
           <ul>
@@ -20,13 +20,13 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal"><%= t("general.cancel")%></button>
         <%= link_to t('repositories.index.modal_delete.delete'),
                     team_repository_path(id: @repository),
                     id: "confirm-repo-delete",
                     method: :delete,
                     type: 'button',
-                    class: 'btn btn-danger' %>
+                    class: 'btn btn-primary' %>
+        <button type="button" class="btn btn-default" data-dismiss="modal"><%= t("general.cancel")%></button>
       </div>
     </div>
   </div>

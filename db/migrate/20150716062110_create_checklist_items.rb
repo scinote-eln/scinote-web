@@ -1,4 +1,4 @@
-class CreateChecklistItems < ActiveRecord::Migration[4.2]
+class CreateChecklistItems < ActiveRecord::Migration
   def change
     create_table :checklist_items do |t|
       t.string :text, null: false

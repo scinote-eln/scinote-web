@@ -1,24 +1,22 @@
 <div class="modal" id="create-repo-modal" tabindex="-1" role="dialog" aria-labelledby="create-repo-modal-label">
-  <%= bootstrap_form_for [current_team, @repository], remote: :true do |f| %>
+  <%= bootstrap_form_for [@team, @repository], remote: :true do |f| %>
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <h3 class="modal-title" id="create-repo-modal-label">
+          <h4 class="modal-title" id="create-repo-modal-label">
             <%= t("repositories.index.modal_create.title") %>
-          </h3>
+          </h4>
         </div>
         <div class="modal-body">
-          <div class="form-group sci-input-container">
-            <%= f.text_field :name,
-                             autofocus: true,
-                             label: t("repositories.index.modal_create.name_label"),
-                             class: "sci-input-field",
-                             placeholder: t("repositories.index.modal_create.name_placeholder") %>
-          </div>
+          <%= f.text_field :name,
+                           autofocus: true,
+                           label: t("repositories.index.modal_create.name_label"),
+                           placeholder: t("repositories.index.modal_create.name_placeholder") %>
         </div>
         <div class="modal-footer">
-          <%= f.submit t("repositories.index.modal_create.submit"), class: "btn btn-success" %>
+          <%= f.submit t("repositories.index.modal_create.submit"), class: "btn btn-primary" %>
+          <button type="button" class="btn btn-default" data-dismiss="modal"><%= t("general.cancel") %></button>
         </div>
       </div>
     </div>

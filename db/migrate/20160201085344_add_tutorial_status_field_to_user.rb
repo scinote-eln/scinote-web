@@ -1,4 +1,4 @@
-class AddTutorialStatusFieldToUser < ActiveRecord::Migration[4.2]
+class AddTutorialStatusFieldToUser < ActiveRecord::Migration
   def up
     add_column :users, :tutorial_status, :integer, default: 0
 

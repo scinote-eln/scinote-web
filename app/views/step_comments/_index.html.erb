@@ -1,0 +1,35 @@
+<hr>
+<div class="col-xs-12">
+  <strong><%= t('protocols.steps.comments_tab') %></strong>
+</div>
+<hr>
+<ul class="no-style double-line content-comments">
+  <% if @comments.length == @per_page %>
+  <li class="comment-more text-center">
+    <a class="btn btn-default btn-more-comments" href="<%= more_comments_url %>" data-remote="true">
+      <%=t "general.more_comments" %>
+    </a>
+  </li>
+  <% end %>
+  <% if @comments.size == 0 then %>
+    <li class="no-comments"><em><%= t 'general.no_comments' %></em></li>
+  <% else %>
+    <%= render 'step_comments/list.html.erb', comments: @comments %>
+  <% end %>
+</ul>
+<% if can_add_step_comment_in_protocol(@protocol) %>
+  <ul class="no-style double-line">
+    <li>
+      <hr>
+      <%= bootstrap_form_for :comment, url: { format: :json }, html: { class: 'comment-form', id: "step-comment-#{@step.id}" }, method: :post, remote: true do |f| %>
+        <%= f.smart_text_area :message,
+                              single_line: true,
+                              hide_label: true,
+                              placeholder: t("general.comment_placeholder"),
+                              append: f.submit("+"),
+                              help: '.',
+                              data: { 'atwho-edit' => '' } %>
+      <% end %>
+    </li>
+  </ul>
+<% end %>

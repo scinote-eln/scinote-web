@@ -1,12 +1,14 @@
-<% my_module ||= report_element.my_module %>
+<% if my_module.blank? and @my_module.present? then my_module = @my_module end %>
 <% timestamp = my_module.created_at %>
-<% export_all = defined?(export_all) && export_all %>
-<div class="report-element report-module-element">
+<% name = my_module.name %>
+<div class="report-element report-module-element" data-ts="<%= timestamp.to_i %>" data-type="my_module" data-id='{ "my_module_id": <%= my_module.id %> }' data-scroll-id="<%= my_module.id %>" data-modal-title="<%=t "projects.reports.elements.modals.module_contents.head_title", module: my_module.name %>" data-name="<%= name %>" data-icon-class="glyphicon glyphicon-credit-card">
   <div class="report-element-header">
     <div class="row">
       <div class="pull-left user-time">
-        <%= t('projects.reports.elements.module.user_time', timestamp: l(timestamp, format: :full)) %>
-        <b><%= link_to t('projects.reports.elements.all.scinote_link'), protocols_my_module_url(my_module), target: :_blank %></b>
+        <%=t "projects.reports.elements.module.user_time", timestamp: l(timestamp, format: :full) %>
+      </div>
+      <div class="pull-right controls">
+        <%= render partial: "reports/elements/element_controls.html.erb", locals: { show_sort: true } %>
       </div>
     </div>
   </div>
@@ -14,46 +16,35 @@
     <div class="row">
       <div class="pull-left module-name">
         <h4>
-          <span class="fas fa-credit-card"></span>
-          <%= my_module.name %>
-          <% if my_module.archived? %>
-            <span class="label label-warning"><%= t('search.index.archived') %></span>
-          <% end %>
-        </h4>
+          <span class="glyphicon glyphicon-credit-card"></span>
+          <%= name %></h4>
+      </div>
+      <div class="pull-right module-due-date">
+        <% if my_module.due_date.present? %>
+          <%=t "projects.reports.elements.module.due_date", due_date: l(my_module.due_date, format: :full) %>
+        <% else %>
+          <em><%=t "projects.reports.elements.module.no_due_date" %></em>
+        <% end %>
+        <% if my_module.completed? %>
+          <%= t("my_modules.states.completed") %>
+          <%= l(my_module.completed_on, format: :full) %>
+        <% end %>
       </div>
     </div>
-    <p class="module-start-date">
-      <% if my_module.started_on.present? %>
-        <%= t('projects.reports.elements.module.started_on', started_on: l(my_module.started_on, format: :full)) %>
-      <% else %>
-        <em><%= t('projects.reports.elements.module.no_start_date') %></em>
-      <% end %>
-    </p>
-    <p class="module-due-date">
-      <% if my_module.due_date.present? %>
-        <%= t('projects.reports.elements.module.due_date', due_date: l(my_module.due_date, format: :full)) %>
-      <% else %>
-        <em><%= t('projects.reports.elements.module.no_due_date') %></em>
-      <% end %>
-    </p>
-    <p class="module-status">
-      <% status = my_module.my_module_status %>
-      <%= t('projects.reports.elements.module.status') %>
-      <span class="status-block" style="background: <%= status.color %>">
-        <%= status.name %>
-      </span>
-      <% if my_module.completed? %>
-        <span style="margin-left: 10px;">
-          <%= t('my_modules.states.completed') %>
-          <%= l(my_module.completed_on, format: :full) %>
-        </span>
-      <% end %>
-    </p>
+    <div class="row">
+      <div class="col-xs-12">
+        <% if my_module.description.present? %>
+          <%= custom_auto_link(my_module.description) %>
+        <% else %>
+           <em><%=t "projects.reports.elements.module.no_description" %></em>
+        <% end %>
+      </div>
+    </div>
     <div class="row module-tags">
       <div class="pull-left">
-        <%= t('projects.reports.elements.module.tags_header') %>
+        <%=t "projects.reports.elements.module.tags_header" %>
       </div>
-      <% if my_module.tags.present? %>
+      <% if my_module.tags.count > 0 %>
         <% my_module.tags.each do |tag| %>
           <div class="pull-left module-tag" style="background-color: <%= tag.color %>;">
             <%= tag.name %>
@@ -61,52 +52,12 @@
         <% end %>
       <% else %>
         <div class="pull-left module-no-tag">
-          <em><%= t('projects.reports.elements.module.no_tags') %></em>
+          <em><%=t "projects.reports.elements.module.no_tags" %></em>
         </div>
       <% end %>
     </div>
-    <div class="row">
-      <div class="col-xs-12">
-        <% if my_module.description.present? %>
-          <%= custom_auto_link(my_module.prepare_for_report(:description, export_all),
-                               team: current_team,
-                               simple_format: false,
-                               base64_encoded_imgs: export_all) %>
-        <% else %>
-          <em><%= t('projects.reports.elements.module.no_description') %></em>
-        <% end %>
-      </div>
-    </div>
   </div>
   <div class="report-element-children">
-    <% if @settings.dig('task', 'protocol', 'description') %>
-      <%= render partial: 'reports/elements/my_module_protocol_element.html.erb', locals: { protocol: my_module.protocol } %>
-    <% end %>
-
-    <% filter_steps_for_report(my_module.protocol.steps, @settings).order(:position).each do |step| %>
-      <%= render partial: 'reports/elements/my_module_step_element.html.erb', locals: { step: step, export_all: export_all } %>
-    <% end %>
-
-    <% order_results_for_report(my_module.results, @settings.dig('task', 'result_order')).each do |result| %>
-      <% if result.is_asset && @settings.dig('task', 'file_results') %>
-        <%= render partial: 'reports/elements/my_module_result_asset_element.html.erb', locals: { result: result, report: report, export_all: export_all } %>
-      <% elsif result.is_table && @settings.dig('task', 'table_results') %>
-        <%= render partial: 'reports/elements/my_module_result_table_element.html.erb', locals: { result: result, export_all: export_all } %>
-      <% elsif result.is_text && @settings.dig('task', 'text_results') %>
-        <%= render partial: 'reports/elements/my_module_result_text_element.html.erb', locals: { result: result, export_all: export_all } %>
-      <% end %>
-    <% end %>
+    <%= children if (defined? children and children.present?) %>
   </div>
-
-  <% if defined?(children) %>
-    <div class="report-element-children">
-      <%= children %>
-    </div>
-  <% end %>
-
-  <% if @settings.dig('task', 'activities') %>
-    <div class="report-element-children">
-      <%= render partial: 'reports/elements/my_module_activity_element.html.erb', locals: { my_module: my_module, export_all: export_all } %>
-    </div>
-  <% end %>
 </div>

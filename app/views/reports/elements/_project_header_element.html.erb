@@ -1,27 +1,21 @@
-<% project ||= report_element.project %>
-<div class="report-element report-project-header-element">
+<% if project.blank? and @project.present? then project = @project end %>
+<% name = t("projects.reports.elements.project_header.title", project: project.name) %>
+<div class="report-element report-project-header-element" data-ts="ignore" data-type="project_header" data-id='{ "project_id": <%= project.id %> }' data-scroll-id="<%= project.id %>" data-name="<%= name %>" data-icon-class="glyphicon glyphicon-header">
   <div class="report-element-header">
     <div class="row">
       <div class="pull-left user-time">
-        <%= t('projects.reports.elements.project_header.user_time', timestamp: l(project.created_at, format: :full)) %>
+        <%=t "projects.reports.elements.project_header.user_time", timestamp: l(project.created_at, format: :full) %>
       </div>
     </div>
   </div>
-  <div class="report-element-body" data-hook="report-project-header-element">
+  <div class="report-element-body">
     <div class="row">
       <div class="col-xs-12 project-name">
-        <h2>
-          <%= t('projects.reports.elements.project_header.title', project: project.name) %>
-          <% if project.archived? %>
-            <span class="label label-warning"><%= t('search.index.archived') %></span>
-          <% end %>
-        </h2>
+        <h2><%= name %></h2>
       </div>
     </div>
   </div>
-  <% if defined?(children) %>
-    <div class="report-element-children">
-      <%= children %>
-    </div>
-  <% end %>
+  <div class="report-element-children">
+    <%= children if (defined? children and children.present?) %>
+  </div>
 </div>

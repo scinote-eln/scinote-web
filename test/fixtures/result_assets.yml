@@ -1,0 +1,7 @@
+one:
+  result: two
+  asset: one
+
+test:
+  result: test_result
+  asset: test_result

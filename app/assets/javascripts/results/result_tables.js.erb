@@ -22,10 +22,7 @@
             colHeaders: true,
             contextMenu: true,
             formulas: true,
-            preventOverflow: 'horizontal',
-            afterChange: function() {
-              $container.addClass(GLOBAL_CONSTANTS.HAS_UNSAVED_DATA_CLASS_NAME);
-            }
+            preventOverflow: 'horizontal'
           });
         });
       }
@@ -41,20 +38,20 @@
       }
 
       // Apply ajax callback to form
-      function _formAjaxResultTable($form, $prevResult) {
+      function _formAjaxResultTable($form) {
         $form.on('ajax:success', function(e, data) {
           var $result;
-          if ($prevResult) $prevResult.remove();
           $form.after(data.html);
           $result = $(this).next();
           initFormSubmitLinks($result);
           $(this).remove();
 
           applyEditResultTableCallback();
+          Results.applyCollapseLinkCallBack();
           Results.initHandsOnTables($result);
           Results.toggleResultEditButtons(true);
           Results.expandResult($result);
-          Comments.init();
+          Comments.initialize();
           initNewResultTable();
         });
         $form.on('ajax:error', function(e, xhr, status, error) {
@@ -65,20 +62,20 @@
 
       // Edit result table button behaviour
       function applyEditResultTableCallback() {
-        $('.edit-result-table').off('ajax:success ajax:error').on('ajax:success', function(e, data) {
+        $('.edit-result-table').on('ajax:success', function(e, data) {
           var $result = $(this).closest('.result');
           var $form = $(data.html);
           var $prevResult = $result;
           $result.after($form);
-          $prevResult.hide();
+          $result.remove();
 
-          _formAjaxResultTable($form, $prevResult);
+          _formAjaxResultTable($form);
           _initEditableHandsOnTable($form);
           _onSubmitExtractTable($form);
 
           // Cancel button
           $form.find('.cancel-edit').click(function () {
-            $prevResult.show();
+            $form.after($prevResult);
             $form.remove();
             applyEditResultTableCallback();
             Results.toggleResultEditButtons(true);
@@ -130,6 +127,9 @@
       return publicAPI;
     })();
 
-    ResultTables.initNewResultTable();
-    ResultTables.applyEditResultTableCallback();
+    $(document).ready(function() {
+      ResultTables.initNewResultTable();
+      ResultTables.applyEditResultTableCallback();
+    });
+
 })();

@@ -1,143 +1,306 @@
-# frozen_string_literal: true
-
 class TeamsController < ApplicationController
-  include ProjectsHelper
-  include CardsViewHelper
-  attr_reader :current_folder
-  helper_method :current_folder
+  before_action :load_vars, only: [:parse_sheet, :import_samples, :export_samples]
 
-  before_action :load_vars, only: %i(sidebar export_projects export_projects_modal)
-  before_action :load_current_folder, only: :sidebar
-  before_action :check_read_permissions, except: :view_type
-  before_action :check_export_projects_permissions, only: %i(export_projects_modal export_projects)
+  before_action :check_create_sample_permissions, only: [:parse_sheet, :import_samples]
+  before_action :check_view_samples_permission, only: [:export_samples]
 
-  def sidebar
+  def parse_sheet
+    session[:return_to] ||= request.referer
+
     respond_to do |format|
-      format.json do
-        render json: {
-          html: render_to_string(
-            partial: 'shared/sidebar/projects.html.erb',
-            locals: { team: current_team, sort: params[:sort] }
-          )
-        }
-      end
-    end
-  end
+      if params[:file]
+        begin
 
-  def export_projects
-    if current_user.has_available_exports?
-      current_user.increase_daily_exports_counter!
+          if params[:file].size > Constants::FILE_MAX_SIZE_MB.megabytes
+            error = t 'general.file.size_exceeded',
+                      file_size: Constants::FILE_MAX_SIZE_MB
 
-      generate_export_projects_zip
+            format.html {
+              flash[:alert] = error
+              redirect_to session.delete(:return_to)
+            }
+            format.json {
+              render json: {message: error},
+                status: :unprocessable_entity
+            }
 
-      Activities::CreateActivityService
-        .call(activity_type: :export_projects,
-              owner: current_user,
-              subject: @team,
-              team: @team,
-              message_items: {
-                team: @team.id,
-                projects: @exp_projects.map(&:name).join(', ')
-              })
+          else
+            sheet = Team.open_spreadsheet(params[:file])
 
-      render json: {
-        flash: t('projects.export_projects.success_flash')
-      }, status: :ok
-    end
-  end
+            # Check if we actually have any rows (last_row > 1)
+            if sheet.last_row.between?(0, 1)
+              flash[:notice] = t(
+                "teams.parse_sheet.errors.empty_file")
+              redirect_to session.delete(:return_to) and return
+            end
 
-  def export_projects_modal
-    if @exp_projects.present?
-      if current_user.has_available_exports?
-        render json: {
-          html: render_to_string(
-            partial: 'projects/export/modal.html.erb',
-            locals: { num_projects: @exp_projects.size,
-                      limit: TeamZipExport.exports_limit,
-                      num_of_requests_left: current_user.exports_left - 1 }
-          ),
-          title: t('projects.export_projects.modal_title')
-        }
+            # Get data (it will trigger any errors as well)
+            @header = sheet.row(1)
+            @columns = sheet.row(2)
+
+            # Fill in fields for dropdown
+            @available_fields = @team.get_available_sample_fields
+            # Truncate long fields
+            @available_fields.update(@available_fields) do |_k, v|
+              v.truncate(Constants::NAME_TRUNCATION_LENGTH_DROPDOWN)
+            end
+
+            # Save file for next step (importing)
+            @temp_file = TempFile.new(
+              session_id: session.id,
+              file: params[:file]
+            )
+
+            if @temp_file.save
+              @temp_file.destroy_obsolete
+              # format.html
+              format.json {
+                render :json => {
+                  :html => render_to_string({
+                    :partial => "samples/parse_samples_modal.html.erb"
+                  })
+                }
+              }
+            else
+              error = t("teams.parse_sheet.errors.temp_file_failure")
+              format.html {
+                flash[:alert] = error
+                redirect_to session.delete(:return_to)
+              }
+              format.json {
+                render json: {message: error},
+                  status: :unprocessable_entity
+              }
+            end
+          end
+        rescue ArgumentError, CSV::MalformedCSVError
+          error = t('teams.parse_sheet.errors.invalid_file',
+                    encoding: ''.encoding)
+          format.html {
+            flash[:alert] = error
+            redirect_to session.delete(:return_to)
+          }
+          format.json {
+            render json: {message: error},
+              status: :unprocessable_entity
+          }
+        rescue TypeError
+          error =  t("teams.parse_sheet.errors.invalid_extension")
+          format.html {
+            flash[:alert] = error
+            redirect_to session.delete(:return_to)
+          }
+          format.json {
+            render json: {message: error},
+              status: :unprocessable_entity
+          }
+        end
       else
-        render json: {
-          html: render_to_string(
-            partial: 'projects/export/error.html.erb',
-            locals: { limit: TeamZipExport.exports_limit }
-          ),
-          title: t('projects.export_projects.error_title'),
-          status: 'error'
+        error = t("teams.parse_sheet.errors.no_file_selected")
+        format.html {
+          flash[:alert] = error
+          session[:return_to] ||= request.referer
+          redirect_to session.delete(:return_to)
+        }
+        format.json {
+          render json: {message: error},
+            status: :unprocessable_entity
         }
       end
-    else
-      render json: { flash: I18n.t('projects.export_projects.zero_projects_flash') }, status: :unprocessable_entity
     end
+  end
+
+  def import_samples
+    session[:return_to] ||= request.referer
+
+    respond_to do |format|
+      if params[:file_id]
+        @temp_file = TempFile.find_by_id(params[:file_id])
+
+        if @temp_file
+          # Check if session_id is equal to prevent file stealing
+          if @temp_file.session_id == session.id
+            # Check if mappings exists or else we don't have anything to parse
+            if params[:mappings]
+              @sheet = Team.open_spreadsheet(@temp_file.file)
+
+              # Check for duplicated values
+              h1 = params[:mappings].clone.delete_if { |k, v| v.empty? }
+              if h1.length == h1.invert.length
+
+                # Check if there exist mapping for sample name (it's mandatory)
+                if params[:mappings].has_value?("-1")
+                  result = @team.import_samples(@sheet, params[:mappings], current_user)
+                  nr_of_added = result[:nr_of_added]
+                  total_nr = result[:total_nr]
+
+                  if result[:status] == :ok
+                    # If no errors are present, redirect back
+                    # to samples table
+                    flash[:success] = t(
+                      "teams.import_samples.success_flash",
+                      nr: nr_of_added,
+                      samples: t(
+                        "teams.import_samples.sample",
+                        count: total_nr
+                      )
+                    )
+                    @temp_file.destroy
+                    format.html {
+                      redirect_to session.delete(:return_to)
+                    }
+                    format.json {
+                      flash.keep(:success)
+                      render json: { status: :ok }
+                    }
+                  else
+                    # Otherwise, also redirect back,
+                    # but display different message
+                    flash[:alert] = t(
+                      "teams.import_samples.partial_success_flash",
+                      nr: nr_of_added,
+                      samples: t(
+                        "teams.import_samples.sample",
+                        count: total_nr
+                      )
+                    )
+                    @temp_file.destroy
+                    format.html {
+                      redirect_to session.delete(:return_to)
+                    }
+                    format.json {
+                      flash.keep(:alert)
+                      render json: { status: :unprocessable_entity }
+                    }
+                  end
+                else
+                  # This is currently the only AJAX error response
+                  flash_alert = t(
+                    "teams.import_samples.errors.no_sample_name")
+                  format.html {
+                    flash[:alert] = flash_alert
+                    redirect_to session.delete(:return_to)
+                  }
+                  format.json {
+                    render json: {
+                      html: render_to_string({
+                        partial: "parse_error.html.erb",
+                        locals: { error: flash_alert }
+                      })
+                    },
+                    status: :unprocessable_entity
+                  }
+                end
+              else
+                # This code should never execute unless user tampers with
+                # JS (selects same column in more than one dropdown)
+                flash_alert = t(
+                  "teams.import_samples.errors.duplicated_values")
+                format.html {
+                  flash[:alert] = flash_alert
+                  redirect_to session.delete(:return_to)
+                }
+                format.json {
+                  render json: {
+                    html: render_to_string({
+                      partial: "parse_error.html.erb",
+                      locals: { error: flash_alert }
+                    })
+                  },
+                  status: :unprocessable_entity
+                }
+              end
+            else
+              @temp_file.destroy
+              flash[:alert] = t(
+                "teams.import_samples.errors.no_data_to_parse")
+              format.html {
+                redirect_to session.delete(:return_to)
+              }
+              format.json {
+                flash.keep(:alert)
+                render json: { status: :unprocessable_entity }
+              }
+            end
+          else
+            @temp_file.destroy
+            flash[:alert] = t(
+              "teams.import_samples.errors.session_expired")
+            format.html {
+              redirect_to session.delete(:return_to)
+            }
+            format.json {
+              flash.keep(:alert)
+              render json: { status: :unprocessable_entity }
+            }
+          end
+        else
+          # No temp file to begin with, so no need to destroy it
+          flash[:alert] = t(
+            "teams.import_samples.errors.temp_file_not_found")
+          format.html {
+            redirect_to session.delete(:return_to)
+          }
+          format.json {
+            flash.keep(:alert)
+            render json: { status: :unprocessable_entity }
+          }
+        end
+      else
+        flash[:alert] = t(
+          "teams.import_samples.errors.temp_file_not_found")
+        format.html {
+          redirect_to session.delete(:return_to)
+        }
+        format.json {
+          flash.keep(:alert)
+          render json: { status: :unprocessable_entity }
+        }
+      end
+    end
+  end
+
+  def export_samples
+    if params[:sample_ids] && params[:header_ids]
+      generate_samples_zip
+    else
+      flash[:alert] = t('zip_export.export_error')
+    end
+    redirect_to :back
   end
 
   def routing_error(error = 'Routing error', status = :not_found, exception=nil)
     redirect_to root_path
   end
 
-  def view_type
-    view_state = current_team.current_view_state(current_user)
-    view_state.state['projects']['view_type'] = view_type_params
-    view_state.save!
-
-    render json: { cards_view_type_class: cards_view_type_class(view_type_params) }, status: :ok
-  end
-
   private
 
   def load_vars
-    @team = current_user.teams.find_by(id: params[:id])
-    render_404 unless @team
-  end
+    @team = Team.find_by_id(params[:id])
 
-  def export_projects_params
-    params.permit(:id, project_ids: [], project_folder_ids: [])
-  end
-
-  def view_type_params
-    params.require(:projects).require(:view_type)
-  end
-
-  def check_read_permissions
-    render_403 unless can_read_team?(@team)
-  end
-
-  def load_current_folder
-    if current_team && params[:project_folder_id].present?
-      @current_folder = current_team.project_folders.find_by(id: params[:project_folder_id])
+    unless @team
+      render_404
     end
   end
 
-  def check_export_projects_permissions
-    @exp_projects = []
-    if export_projects_params[:project_ids]
-      @exp_projects = @team.projects.where(id: export_projects_params[:project_ids]).to_a
-    end
-    if export_projects_params[:project_folder_ids]
-      folders = @team.project_folders.where(id: export_projects_params[:project_folder_ids])
-      folders.each do |folder|
-        @exp_projects += folder.inner_projects.visible_to(current_user, @team)
-      end
-    end
-
-    @exp_projects.each do |project|
-      return render_403 unless can_export_project?(current_user, project)
+  def check_create_sample_permissions
+    unless can_create_samples(@team)
+      render_403
     end
   end
 
-  def generate_export_projects_zip
-    ids = @exp_projects.index_by(&:id)
+  def check_view_samples_permission
+    unless can_view_samples(@team)
+      render_403
+    end
+  end
 
-    options = { team: @team }
-    zip = TeamZipExport.create(user: current_user)
+  def generate_samples_zip
+    zip = ZipExport.create(user: current_user)
     zip.generate_exportable_zip(
       current_user,
-      ids,
-      :teams,
-      options
+      @team.to_csv(Sample.where(id: params[:sample_ids]), params[:header_ids]),
+      :samples
     )
-    ids
   end
 end

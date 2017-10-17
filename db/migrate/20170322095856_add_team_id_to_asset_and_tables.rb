@@ -1,4 +1,4 @@
-class AddTeamIdToAssetAndTables < ActiveRecord::Migration[4.2]
+class AddTeamIdToAssetAndTables < ActiveRecord::Migration
   def change
     add_column :assets, :team_id, :integer
     add_index :assets, :team_id

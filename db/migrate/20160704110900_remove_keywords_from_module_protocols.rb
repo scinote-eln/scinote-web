@@ -1,4 +1,4 @@
-class RemoveKeywordsFromModuleProtocols < ActiveRecord::Migration[4.2]
+class RemoveKeywordsFromModuleProtocols < ActiveRecord::Migration
   def up
     Protocol.find_each do |p|
       if p.in_module? then

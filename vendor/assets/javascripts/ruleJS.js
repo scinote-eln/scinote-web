@@ -1,6 +1,3 @@
-// * Licensed under the MIT license
-// * Copyright (c) 2012-2014 Marcin Warpechowski <hello@handsontable.com>
-
 var ruleJS = (function (root) {
   'use strict';
 
@@ -1038,44 +1035,13 @@ var ruleJS = (function (root) {
 
       switch (type) {
         case '+':
-          //(sci-2587) MODIFICATION TO AVOID JAVASCRIPT IEEE MANTISSA&EXPONENT FLOATS INNACURACY
-          try{
-            var number1_big = new Big(number1);
-            var result_big = number1_big.plus(number2);
-            result = parseFloat(result_big);
-          } catch(e) {
-            result = number1 + number2;
-          }
-          //MODIFICATION END
-
-          //ORIGINAL: result = number1 + number2;
+          result = number1 + number2;
           break;
         case '-':
-          //(sci-2587) MODIFICATION TO AVOID JAVASCRIPT IEEE MANTISSA&EXPONENT FLOATS INNACURACY
-          try{
-            var number1_big = new Big(number1);
-            var result_big = number1_big.minus(number2);
-            result = parseFloat(result_big);
-          } catch(e) {
-            result = number1 - number2;
-          }
-          //MODIFICATION END
-
-          //ORIGINAL: result = number1 - number2;
+          result = number1 - number2;
           break;
         case '/':
-          //(sci-2587) MODIFICATION TO AVOID JAVASCRIPT IEEE MANTISSA&EXPONENT FLOATS INNACURACY
-          try{
-            var number1_big = new Big(number1);
-            var result_big = number1_big.div(number2);
-            result = parseFloat(result_big);
-          } catch(e){
-            result = number1 / number2;
-          }
-          //MODIFICATION END
-
-          //ORIGINAL: result = number1 / number2;
-
+          result = number1 / number2;
           if (result == Infinity) {
             throw Error('DIV_ZERO');
           } else if (isNaN(result)) {
@@ -1083,17 +1049,7 @@ var ruleJS = (function (root) {
           }
           break;
         case '*':
-          //(sci-2587) MODIFICATION TO AVOID JAVASCRIPT IEEE MANTISSA&EXPONENT FLOATS INNACURACY
-          try{
-            var number1_big = new Big(number1);
-            var result_big = number1_big.times(number2);
-            result = parseFloat(result_big);
-          } catch(e) {
-            result = number1 * number2;
-          }
-          //MODIFICATION END
-
-          //ORIGINAL: result = number1 * number2;
+          result = number1 * number2;
           break;
         case '^':
           result = Math.pow(number1, number2);
