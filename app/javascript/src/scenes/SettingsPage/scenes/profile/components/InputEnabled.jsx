@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { string, func } from "prop-types";
 import styled from "styled-components";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage, FormattedHTMLMessage } from "react-intl";
 import {
   FormGroup,
   FormControl,
@@ -35,15 +35,17 @@ const StyledInputEnabled = styled.div`
   }
 `;
 
-const StyledHelpBlock = styled(HelpBlock)`color: ${COLOR_APPLE_BLOSSOM};`;
+const StyledHelpBlock = styled(HelpBlock)`
+  color: ${COLOR_APPLE_BLOSSOM};
+`;
 
 class InputEnabled extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      value: this.props.inputValue,
-      current_password: "**********",
+      value: this.props.inputValue === "********" ? "" : this.props.inputValue,
+      current_password: "",
       password_confirmation: "",
       errorMessage: ""
     };
@@ -293,9 +295,7 @@ class InputEnabled extends Component {
     if (type === "email") {
       return (
         <div>
-          <p>
-            <FormattedMessage id="settings_page.password_confirmation" />
-          </p>
+          <FormattedHTMLMessage id="settings_page.password_confirmation" />
           <FormControl
             type="password"
             value={this.state.current_password}
@@ -312,9 +312,7 @@ class InputEnabled extends Component {
     if (inputType === "password") {
       return (
         <div>
-          <i>
-            <FormattedMessage id="settings_page.password_confirmation" />
-          </i>
+          <FormattedHTMLMessage id="settings_page.password_confirmation" />
           <FormControl
             type={inputType}
             value={this.state.current_password}
@@ -371,13 +369,21 @@ class InputEnabled extends Component {
               <FormattedMessage id="settings_page.change" />&nbsp;
               <FormattedMessage id={this.props.labelTitle} />
             </h4>
-            <ControlLabel>{this.props.labelValue}</ControlLabel>
+            {this.props.labelValue !== "none" && (
+              <ControlLabel>
+                <FormattedMessage id={this.props.labelValue} />
+              </ControlLabel>
+            )}
             {this.inputField()}
             {this.confirmationField()}
             <StyledHelpBlock>{this.state.errorMessage}</StyledHelpBlock>
             <ButtonToolbar>
               <Button bsStyle="primary" type="submit">
-                <FormattedMessage id="general.update" />
+                <FormattedMessage
+                  id={`general.${this.props.dataField === "avatar"
+                    ? "upload"
+                    : "update"}`}
+                />
               </Button>
               <Button bsStyle="default" onClick={this.props.disableEdit}>
                 <FormattedMessage id="general.cancel" />

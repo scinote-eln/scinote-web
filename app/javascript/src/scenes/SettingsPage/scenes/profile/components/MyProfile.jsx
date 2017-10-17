@@ -64,7 +64,7 @@ class MyProfile extends Component {
           value={this.state.fullName}
           inputType="text"
           labelTitle="settings_page.full_name"
-          labelValue="Full name"
+          labelValue="settings_page.full_name"
           reloadInfo={this.loadInfo}
           dataField="full_name"
         />
@@ -73,15 +73,15 @@ class MyProfile extends Component {
           value={this.state.initials}
           inputType="text"
           labelTitle="settings_page.initials"
-          labelValue="Initials"
+          labelValue="settings_page.initials"
           reloadInfo={this.loadInfo}
           dataField="initials"
         />
         <ProfileInputField
           value={this.state.email}
           inputType="email"
-          labelTitle="settings_page.new_email"
-          labelValue="New email"
+          labelTitle="settings_page.email"
+          labelValue="settings_page.new_email"
           reloadInfo={this.loadInfo}
           dataField="email"
         />
@@ -90,7 +90,7 @@ class MyProfile extends Component {
           value="********"
           inputType="password"
           labelTitle="settings_page.change_password"
-          labelValue="Current password"
+          labelValue="none"
           reloadInfo={this.loadInfo}
           dataField="password"
         />
