@@ -1414,6 +1414,7 @@ en:
       no_authors: "No authors"
       description: "Description"
       no_description: "No description"
+      keywords_modal: "Input one or multiple keywords, confirm each keyword with ENTER key"
       edit_name_modal:
         title: "Edit name of protocol %{protocol}"
         label: "Name"
