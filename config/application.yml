@@ -3,14 +3,14 @@ SECRET_KEY_BASE: "<<secret_key_base>>"
 PAPERCLIP_HASH_SECRET: "<<paperclip_hash_secret>>"
 
 # Mailer settings
-MAIL_FROM: "Example sciNote Assistant <assistant@yourdomain.com>"
-MAIL_REPLYTO: "Example sciNote Assistant <assistant@yourdomain.com>"
-SMTP_ADDRESS: "your.yoursmtp.com"
-SMTP_PORT: "25"
-SMTP_DOMAIN: "yoursmtp.com"
-SMTP_USERNAME: "user@yoursmtp.com"
-SMTP_PASSWORD: "<<smtp_password>>"
-MAIL_SERVER_URL: "scinote.yourdomain.com"
+MAIL_FROM: <Scinote@epa.gov>
+MAIL_REPLYTO: <Scinote@epa.gov>
+SMTP_ADDRESS: localhost
+SMTP_PORT: 25
+SMTP_DOMAIN: epa.gov
+SMTP_USERNAME: gemm
+SMTP_PASSWORD: gemm.gemm
+MAIL_SERVER_URL: ordscinote.epa.gov
 
 # File storage
 
