@@ -20,6 +20,10 @@ See [Wiki/Contributing & Collaboration](https://github.com/biosistemika/scinote-
 
 ## License
 
+<<<<<<< HEAD
 SciNote is developed and maintained by BioSistemika USA, LLC, under [Mozilla Public License Version 2.0](LICENSE.txt).
+=======
+sciNote is developed and maintained by BioSistemika USA, LLC, under [Mozilla Public License Version 2.0](LICENSE.txt).
+>>>>>>> Initial readme file created
 
 See [LICENSE-3RD-PARTY.txt](LICENSE-3RD-PARTY.txt) for licenses of included third-party libraries.
