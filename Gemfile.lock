@@ -117,6 +117,9 @@ GEM
     commit_param_routing (0.0.1)
     concurrent-ruby (1.0.0)
     crass (1.0.2)
+    creek (1.1.2)
+      nokogiri (~> 1.6.0)
+      rubyzip (>= 1.0.0)
     debug_inspector (0.0.2)
     deface (1.0.2)
       colorize (>= 0.5.8)
@@ -364,6 +367,7 @@ DEPENDENCIES
   bootstrap_form
   byebug
   commit_param_routing
+  creek
   deface (~> 1.0)
   delayed_job_active_record
   delayed_paperclip!
