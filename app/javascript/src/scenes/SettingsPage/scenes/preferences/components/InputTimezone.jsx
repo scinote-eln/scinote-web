@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { string, func } from "prop-types";
-import { Button } from "react-bootstrap";
+import { Button, ButtonToolbar } from "react-bootstrap";
 import styled from "styled-components";
 import TimezonePicker from "react-bootstrap-timezone-picker";
 import "react-bootstrap-timezone-picker/dist/react-bootstrap-timezone-picker.min.css";
@@ -22,6 +22,10 @@ const Wrapper = styled.div`
   .settings-warning {
     margin-bottom: 15px;
   }
+
+  .timezone-picker {
+    display: block;
+  }
 `;
 
 const WrapperInputDisabled = styled.div`
@@ -31,6 +35,13 @@ const WrapperInputDisabled = styled.div`
 
   .settings-warning {
     margin-top: -5px;
+  }
+`;
+
+const StyledTimezonePicker = styled(TimezonePicker)`
+  .timezone-picker-list {
+    max-height: 400px;
+    overflow-y: auto;
   }
 `;
 
@@ -94,7 +105,7 @@ class InputTimezone extends Component {
         <h4>
           <FormattedMessage id="settings_page.time_zone" />
         </h4>
-        <TimezonePicker
+        <StyledTimezonePicker
           absolute
           defaultValue="Europe/London"
           value={this.state.value}
@@ -106,12 +117,14 @@ class InputTimezone extends Component {
             <FormattedMessage id="settings_page.time_zone_warning" />
           </small>
         </div>
-        <Button bsStyle="primary" onClick={this.disableEdit}>
-          <FormattedMessage id="general.cancel" />
-        </Button>
-        <Button bsStyle="default" onClick={this.handleUpdate}>
-          <FormattedMessage id="general.update" />
-        </Button>
+        <ButtonToolbar>
+          <Button bsStyle="primary" onClick={this.handleUpdate}>
+            <FormattedMessage id="general.update" />
+          </Button>
+          <Button bsStyle="default" onClick={this.disableEdit}>
+            <FormattedMessage id="general.cancel" />
+          </Button>
+        </ButtonToolbar>
       </Wrapper>
     );
   }

@@ -48,15 +48,6 @@ body {
   }
 }
 
-// // fixes issue with dropdown in datatable
-.react-bootstrap-table-dropdown-fix {
-  overflow: inherit !important;
-}
-
-.react-bs-container-body {
-  overflow: inherit !important;
-}
-
 // tags input
 .react-tagsinput--focused {
   border-color: $color-theme-primary;
