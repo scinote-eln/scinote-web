@@ -13,7 +13,9 @@ import InviteUsersForm from "./components/InviteUsersForm";
 import InviteUsersResults from "./components/InviteUsersResults";
 import InviteUsersButton from "./components/InviteUsersButton";
 
-const StyledButtonToolbar = styled(ButtonToolbar)`float: right;`;
+const StyledButtonToolbar = styled(ButtonToolbar)`
+  float: right;
+`;
 
 class InviteUsersModal extends Component {
   constructor(props) {
@@ -84,7 +86,11 @@ class InviteUsersModal extends Component {
     }
 
     return (
-      <Modal show={this.props.showModal} onHide={this.handleCloseModal}>
+      <Modal
+        show={this.props.showModal}
+        onHide={this.handleCloseModal}
+        restoreFocus={false}
+      >
         <Modal.Header closeButton>
           <Modal.Title>
             <FormattedMessage
