@@ -73,6 +73,7 @@ gem 'ruby-graphviz', '~> 1.2' # Graphviz for rails
 gem 'tinymce-rails', '~> 4.5.7' # Rich text editor
 
 gem 'base62' # Used for smart annotations
+gem 'newrelic_rpm'
 
 group :development, :test do
   gem 'byebug'
@@ -85,7 +86,6 @@ group :development, :test do
 end
 
 group :production do
-  gem 'newrelic_rpm'
   gem 'puma'
   gem 'rails_12factor'
 end

@@ -17,30 +17,10 @@ class TeamsController < ApplicationController
     end
 
     begin
-      sheet = Team.open_spreadsheet(params[:file])
-      # Get data (it will trigger any errors as well)
-      if sheet.is_a?(Roo::CSV)
-        @header = sheet.row(1)
-        @columns = sheet.row(2)
-      elsif sheet.is_a?(Roo::Excelx)
-        i = 1
-        sheet.each_row_streaming do |row|
-          @header = row.map(&:cell_value) if i == 1
-          @columns = row.map(&:cell_value) if i == 2
-          i += 1
-          break if i > 2
-        end
-      else
-        i = 1
-        sheet.rows.each do |row|
-          @header = row.values if i == 1
-          @columns = row.values if i == 2
-          i += 1
-          break if i > 2
-        end
-      end
+      sheet = SpreadsheetParser.open_spreadsheet(params[:file])
+      @header, @columns = SpreadsheetParser.first_two_rows(sheet)
 
-      unless @header && @header.any? && @columns && @columns.any?
+      unless @header.any? && @columns.any?
         return parse_sheet_error(t('teams.parse_sheet.errors.empty_file'))
       end
 
@@ -93,7 +73,7 @@ class TeamsController < ApplicationController
           if @temp_file.session_id == session.id
             # Check if mappings exists or else we don't have anything to parse
             if params[:mappings]
-              @sheet = Team.open_spreadsheet(@temp_file.file)
+              @sheet = SpreadsheetParser.open_spreadsheet(@temp_file.file)
 
               # Check for duplicated values
               h1 = params[:mappings].clone.delete_if { |k, v| v.empty? }

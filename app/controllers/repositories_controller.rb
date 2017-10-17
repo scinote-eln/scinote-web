@@ -205,8 +205,7 @@ class RepositoriesController < ApplicationController
           return repository_response(t('teams.parse_sheet.errors.empty_file'))
         end
 
-        @temp_file = parsed_file.generate_temp_file
-        if @temp_file
+        if (@temp_file = parsed_file.generate_temp_file)
           respond_to do |format|
             format.json do
               render json: {

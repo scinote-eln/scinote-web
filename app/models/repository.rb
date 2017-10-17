@@ -58,17 +58,6 @@ class Repository < ActiveRecord::Base
     end
   end
 
-  def open_spreadsheet(file)
-    filename = file.original_filename
-    file_path = file.path
-
-    if file.class == Paperclip::Attachment && file.is_stored_on_s3?
-      fa = file.fetch
-      file_path = fa.path
-    end
-    generate_file(filename, file_path)
-  end
-
   def available_repository_fields
     fields = {}
     # First and foremost add record name
@@ -131,13 +120,7 @@ class Repository < ActiveRecord::Base
     unless col_compact.map(&:id).uniq.length == col_compact.length
       return { status: :error, nr_of_added: nr_of_added, total_nr: total_nr }
     end
-    rows = if sheet.is_a?(Roo::CSV)
-             sheet
-           elsif sheet.is_a?(Roo::Excelx)
-             sheet.each_row_streaming
-           else
-             sheet.rows
-           end
+    rows = SpreadsheetParser.spreadsheet_enumerator(sheet)
 
     # Now we can iterate through record data and save stuff into db
     rows.each do |row|
@@ -201,26 +184,5 @@ class Repository < ActiveRecord::Base
       return { status: :error, nr_of_added: nr_of_added, total_nr: total_nr }
     end
     { status: :ok, nr_of_added: nr_of_added, total_nr: total_nr }
-  end
-
-  private
-
-  def generate_file(filename, file_path)
-    case File.extname(filename)
-    when '.csv'
-      Roo::CSV.new(file_path, extension: :csv)
-    when '.tsv'
-      Roo::CSV.new(file_path, csv_options: { col_sep: "\t" })
-    when '.txt'
-      # This assumption is based purely on biologist's habits
-      Roo::CSV.new(file_path, csv_options: { col_sep: "\t" })
-    when '.xlsx'
-      # Roo Excel parcel was replaced with Creek, but it can be enabled back,
-      # just swap lines below. But only one can be enabled at the same time.
-      # Roo::Excelx.new(file_path)
-      Creek::Book.new(file_path).sheets[0]
-    else
-      raise TypeError
-    end
   end
 end

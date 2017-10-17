@@ -26,33 +26,6 @@ class Team < ActiveRecord::Base
   has_many :protocol_keywords, inverse_of: :team, dependent: :destroy
   has_many :tiny_mce_assets, inverse_of: :team, dependent: :destroy
   has_many :repositories, dependent: :destroy
-  # Based on file's extension opens file (used for importing)
-  def self.open_spreadsheet(file)
-    filename = file.original_filename
-    file_path = file.path
-
-    if file.class == Paperclip::Attachment and file.is_stored_on_s3?
-      fa = file.fetch
-      file_path = fa.path
-    end
-
-    case File.extname(filename)
-    when '.csv' then
-      Roo::CSV.new(file_path, extension: :csv)
-    when '.tsv' then
-      Roo::CSV.new(file_path, csv_options: { col_sep: "\t" })
-    when '.txt' then
-      # This assumption is based purely on biologist's habits
-      Roo::CSV.new(file_path, csv_options: { col_sep: "\t" })
-    when '.xlsx' then
-      # Roo Excel parcel was replaced with Creek, but it can be enabled back,
-      # just swap lines below. But only one can be enabled at the same time.
-      # Roo::Excelx.new(file_path)
-      Creek::Book.new(file_path).sheets[0]
-    else
-      raise TypeError
-    end
-  end
 
   def search_users(query = nil)
     a_query = "%#{query}%"
@@ -96,13 +69,7 @@ class Team < ActiveRecord::Base
       end
     end
 
-    rows = if sheet.is_a?(Roo::CSV)
-             sheet
-           elsif sheet.is_a?(Roo::Excelx)
-             sheet.each_row_streaming
-           else
-             sheet.rows
-           end
+    rows = SpreadsheetParser.spreadsheet_enumerator(sheet)
 
     # Now we can iterate through sample data and save stuff into db
     rows.each do |row|
