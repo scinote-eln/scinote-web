@@ -1494,7 +1494,6 @@ en:
       import_json: "from protocols.io file(.txt)"
       modal_import_json_title: "Import protocols.io file"
       modal_import_json_notice: "Upload your protocols.io .txt json protocol file"
-      modal_import_json_submit: "Upload file"
       export: "Export"
       make_private: "Make private"
       publish: "Publish"

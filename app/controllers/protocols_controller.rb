@@ -1,4 +1,3 @@
-# encoding: utf-8
 
 class ProtocolsController < ApplicationController
   include RenamingUtil
@@ -900,32 +899,30 @@ class ProtocolsController < ApplicationController
 
   private
 
-  def protocolsio_step_description_populate(iterating_key)
+  # pio_stp_x means protocols io step (id of component) parser
+  def pio_stp_1(iterating_key) # protocols io description parser
     append = '<br>' + sanitize_input(iterating_key) + '<br>' if iterating_key.present?
-    append = I18n.t('protocols.protocols_io_import.comp_append.missing_desc') if iterating_key.blank?
-    append
+    append = t('protocols.protocols_io_import.comp_append.missing_desc') if iterating_key.blank?
+    return append if append.present?
+    ''
   end
 
-  def protocolsio_step_title_populate(iterating_key)
-    append =
-      if iterating_key.present?
-        sanitize_input(iterating_key)
-      else
-        I18n.t('protocols.protocols_io_import.comp_append.missing_step')
-      end
-    append
+  def pio_stp_6(iterating_key) # protocols io section(title) parser
+    return sanitize_input(iterating_key) if iterating_key.present?
+    t('protocols.protocols_io_import.comp_append.missing_step')
   end
 
-  def protocolsio_step_expected_result_populate(iterating_key)
+  def pio_stp_17(iterating_key) # protocols io expected result parser
     if iterating_key.present?
       append =
-        I18n.t('protocols.protocols_io_import.comp_append.expected_result') +
+        t('protocols.protocols_io_import.comp_append.expected_result') +
         sanitize_input(iterating_key) + '<br>'
+      return append
     end
-    append
+    ''
   end
 
-  def protocolsio_step_software_package_populate(iterating_key)
+  def pio_stp_8(iterating_key) # protocols io software package parser
     if iterating_key['name'] &&
        iterating_key['developer'] &&
        iterating_key['version'] &&
@@ -933,73 +930,86 @@ class ProtocolsController < ApplicationController
        iterating_key['repository'] &&
        iterating_key['os_name'] &&
        iterating_key['os_version']
-      append = I18n.t('protocols.protocols_io_import.comp_append.soft_packg.title') +
+      append = t('protocols.protocols_io_import.comp_append.soft_packg.title') +
                sanitize_input(iterating_key['name']) +
-               I18n.t('protocols.protocols_io_import.comp_append.soft_packg.dev') +
+               t('protocols.protocols_io_import.comp_append.soft_packg.dev') +
                sanitize_input(iterating_key['developer']) +
-               I18n.t('protocols.protocols_io_import.comp_append.soft_packg.vers') +
+               t('protocols.protocols_io_import.comp_append.soft_packg.vers') +
                sanitize_input(iterating_key['version']) +
-               I18n.t('protocols.protocols_io_import.comp_append.general_link') +
+               t('protocols.protocols_io_import.comp_append.general_link') +
                sanitize_input(iterating_key['link']) +
-               I18n.t('protocols.protocols_io_import.comp_append.soft_packg.repo') +
+               t('protocols.protocols_io_import.comp_append.soft_packg.repo') +
                sanitize_input(iterating_key['repository']) +
-               I18n.t('protocols.protocols_io_import.comp_append.soft_packg.os') +
+               t('protocols.protocols_io_import.comp_append.soft_packg.os') +
                sanitize_input(iterating_key['os_name']) + ' , ' +
                sanitize_input(iterating_key['os_version'])
+      return append
     end
-    append
+    ''
   end
 
-  def protocolsio_step_dataset_populate(iterating_key)
+  def pio_stp_9(iterating_key) # protocols io dataset parser
     if iterating_key['name'].present? &&
        iterating_key['link']
-      append = I18n.t('protocols.protocols_io_import.comp_append.dataset.title') +
+      append = t('protocols.protocols_io_import.comp_append.dataset.title') +
                sanitize_input(iterating_key['name']) +
-               I18n.t('protocols.protocols_io_import.comp_append.general_link') +
+               t('protocols.protocols_io_import.comp_append.general_link') +
                sanitize_input(iterating_key['link'])
+      return append
     end
-    append
+    ''
   end
 
-  def protocolsio_step_command_populate(iterating_key)
+  def pio_stp_15(iterating_key) # protocols io commands parser
     if iterating_key['name'].present? &&
        iterating_key['description'] &&
        iterating_key['os_name'] &&
        iterating_key['os_version']
-      append = I18n.t('protocols.protocols_io_import.comp_append.command.title') +
+      append = t('protocols.protocols_io_import.comp_append.command.title') +
                sanitize_input(iterating_key['name']) +
-               I18n.t('protocols.protocols_io_import.comp_append.command.desc') +
+               t('protocols.protocols_io_import.comp_append.command.desc') +
                sanitize_input(iterating_key['description']) +
-               I18n.t('protocols.protocols_io_import.comp_append.command.os') +
+               t('protocols.protocols_io_import.comp_append.command.os') +
                sanitize_input(iterating_key['os_name']) +
                ' , ' + iterating_key['os_version']
+      return append
     end
-    append
+    ''
   end
 
-  def protocolsio_step_attached_sub_protocol_populate(iterating_key)
+  def pio_stp_18(iterating_key) # protocols io sub protocol parser
     if iterating_key['protocol_name'].present? &&
        iterating_key['full_name'] &&
        iterating_key['link']
-      append = I18n.t('protocols.protocols_io_import.comp_append.sub_protocol.title') +
-               sanitize_input(iterating_key['protocol_name']) +
-               I18n.t('protocols.protocols_io_import.comp_append.sub_protocol.author') +
-               sanitize_input(iterating_key['full_name']) +
-               I18n.t('protocols.protocols_io_import.comp_append.general_link') +
-               sanitize_input(iterating_key['link'])
+      append =
+        t(
+          'protocols.protocols_io_import.comp_append.sub_protocol.title'
+        ) +
+        sanitize_input(iterating_key['protocol_name']) +
+        t(
+          'protocols.protocols_io_import.comp_append.sub_protocol.author'
+        ) +
+        sanitize_input(iterating_key['full_name']) +
+        t('protocols.protocols_io_import.comp_append.general_link') +
+        sanitize_input(iterating_key['link'])
+      return append
     end
-    append
+    ''
   end
 
-  def protocolsio_step_safety_information_populate(iterating_key)
+  def pio_stp_19(iterating_key) # protocols io safety information parser
     if iterating_key['body'].present? &&
        iterating_key['link']
-      append = I18n.t('protocols.protocols_io_import.comp_append.safety_infor.title') +
-               sanitize_input(iterating_key['body']) +
-               I18n.t('protocols.protocols_io_import.comp_append.general_link') +
-               sanitize_input(iterating_key['link'])
+      append =
+        t(
+          'protocols.protocols_io_import.comp_append.safety_infor.title'
+        ) +
+        sanitize_input(iterating_key['body']) +
+        t('protocols.protocols_io_import.comp_append.general_link') +
+        sanitize_input(iterating_key['link'])
+      return append
     end
-    append
+    ''
   end
 
   def protocols_io_fill_desc(json_hash)
@@ -1037,58 +1047,48 @@ class ProtocolsController < ApplicationController
     description_string
   end
 
-  def protocols_io_fill_step(original_json, create_json)
+  def protocols_io_fill_step(original_json, newj)
+    # newj = new json
     # (simple to map) id 1= step description, id 6= section (title),
     # id 17= expected result
     # (complex mapping with nested hashes) id 8 = software package,
     # id 9 = dataset, id 15 = command, id 18 = attached sub protocol
     # id 19= safety information ,
     # id 20= regents (materials, like scinote samples kind of)
-    create_json['steps'] = {}
-    original_json['steps'].each_with_index do |step,pos| # loop over steps
+    newj['steps'] = {}
+    original_json['steps'].each_with_index do |step, i| # loop over steps
       # position of step (first, second.... etc),
-      create_json['steps'][pos.to_s] = {} # the json we will insert into db
-      create_json['steps'][pos.to_s]['position'] = pos
-      unless create_json['steps'][pos.to_s].key?('description')
-        create_json['steps'][pos.to_s]['description'] = ''
-      end
-      unless create_json['steps'][pos.to_s].key?('name')
-        create_json['steps'][pos.to_s]['name'] = ''
-      end
+      newj['steps'][i.to_s] = {} # the json we will insert into db
+      newj['steps'][i.to_s]['position'] = i
+      newj['steps'][i.to_s]['description'] = '' unless newj['steps'][i.to_s].key?('description')
+      newj['steps'][i.to_s]['name'] = '' unless newj['steps'][i.to_s].key?('name')
       step['components'].each do |key, value|
         # sometimes there are random index values as keys
         # instead of hashes, this is a workaround to that buggy json format
         key = value if value.class == Hash
         # append is the string that we append values into for description
+        # pio_stp_x means protocols io step (id of component) parser
         case key['component_type_id']
         when '1'
-          create_json['steps'][pos.to_s]['description'] +=
-            protocolsio_step_description_populate(key['data'])
+          newj['steps'][i.to_s]['description'] += pio_stp_1(key['data'])
         when '6'
-          create_json['steps'][pos.to_s]['name'] =
-            protocolsio_step_title_populate(key['data'])
+          newj['steps'][i.to_s]['name'] = pio_stp_6(key['data'])
         when '17'
-          create_json['steps'][pos.to_s]['description'] +=
-            protocolsio_step_expected_result_populate(key['data'])
+          newj['steps'][i.to_s]['description'] += pio_stp_17(key['data'])
         when '8'
-          create_json['steps'][pos.to_s]['description'] +=
-            protocolsio_step_software_package_populate(key['source_data'])
+          newj['steps'][i.to_s]['description'] += pio_stp_8(key['source_data'])
         when '9'
-          create_json['steps'][pos.to_s]['description'] +=
-            protocolsio_step_dataset_populate(key['source_data'])
+          newj['steps'][i.to_s]['description'] += pio_stp_9(key['source_data'])
         when '15'
-          create_json['steps'][pos.to_s]['description'] +=
-            protocolsio_step_command_populate(key['source_data'])
+          newj['steps'][i.to_s]['description'] += pio_stp_15(key['source_data'])
         when '18'
-          create_json['steps'][pos.to_s]['description'] +=
-            protocolsio_step_attached_sub_protocol_populate(key['source_data'])
+          newj['steps'][i.to_s]['description'] += pio_stp_18(key['source_data'])
         when '19'
-          create_json['steps'][pos.to_s]['description'] +=
-            protocolsio_step_safety_information_populate(key['source_data'])
+          newj['steps'][i.to_s]['description'] += pio_stp_19(key['source_data'])
         end # case end
       end # finished looping over step components
     end # steps
-    create_json['steps']
+    newj['steps']
   end
 
   def move_protocol(action)
