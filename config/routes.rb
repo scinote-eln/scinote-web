@@ -28,6 +28,9 @@ Rails.application.routes.draw do
     get 'users/settings/account/preferences',
         to: 'users/settings/account/preferences#index',
         as: 'preferences'
+    get 'users/settings/account/addons',
+        to: 'users/settings/account/addons#index',
+        as: 'addons'
     put 'users/settings/account/preferences',
         to: 'users/settings/account/preferences#update',
         as: 'update_preferences'
