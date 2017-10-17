@@ -20,7 +20,7 @@ class TeamsController < ApplicationController
       sheet = SpreadsheetParser.open_spreadsheet(params[:file])
       @header, @columns = SpreadsheetParser.first_two_rows(sheet)
 
-      unless @header.any? && @columns.any?
+      if @header.empty? || @columns.empty?
         return parse_sheet_error(t('teams.parse_sheet.errors.empty_file'))
       end
 

@@ -201,7 +201,7 @@ class RepositoriesController < ApplicationController
       else
         @import_data = parsed_file.data
 
-        unless @import_data.header.any? && @import_data.columns.any?
+        if @import_data.header.empty? || @import_data.columns.empty?
           return repository_response(t('teams.parse_sheet.errors.empty_file'))
         end
 
