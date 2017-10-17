@@ -1,8 +1,7 @@
 module UserSettingsHelper
   def on_settings_account_page?
     controller_name == 'registrations' && action_name == 'edit' ||
-      controller_name == 'preferences' && action_name == 'index' ||
-      controller_name == 'addons' && action_name == 'index'
+      controller_name == 'preferences' && action_name == 'index'
   end
 
   def on_settings_account_profile_page?
@@ -11,10 +10,6 @@ module UserSettingsHelper
 
   def on_settings_account_preferences_page?
     controller_name == 'preferences'
-  end
-
-  def on_settings_account_addons_page?
-    controller_name == 'addons'
   end
 
   def on_settings_team_page?
