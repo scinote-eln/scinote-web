@@ -72,7 +72,7 @@ class AvatarInputField extends Component {
       <InputEnabled
         forceRerender={this.rerender}
         labelTitle="settings_page.avatar"
-        labelValue="Upload new avatar file"
+        labelValue="settings_page.upload_new_avatar"
         inputType="file"
         inputValue=""
         dataField="avatar"

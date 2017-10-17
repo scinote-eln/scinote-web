@@ -5,7 +5,8 @@ export default {
       cancel: "Cancel",
       update: "Update",
       edit: "Edit",
-      loading: "Loading ..."
+      loading: "Loading ...",
+      upload: "Upload"
     },
     error_messages: {
       text_too_short: "is too short (minimum is {min_length} characters)",
@@ -71,12 +72,14 @@ export default {
       team: "Team",
       avatar: "Avatar",
       edit_avatar: "Edit Avatar",
+      upload_new_avatar: "Upload new avatar file",
       change: "Change",
       change_password: "Password",
       new_password: "New password",
       password_confirmation:
-        "Current password (we need your current password to confirm your changes)",
+        "<strong>Current password</strong> <i>(we need your current password to confirm your changes)</i>",
       new_password_confirmation: "New password confirmation",
+      email: "Email",
       new_email: "New email",
       initials: "Initials",
       full_name: "Full name",
