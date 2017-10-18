@@ -153,7 +153,7 @@ module Users
 
     def update_sanitized_params
       # Solution for Devise < 4.0.0
-      devise_parameter_sanitizer.for(:accept_invitation) << :full_name
+      devise_parameter_sanitizer.permit(:sign_up, keys: [:full_name])
     end
 
     def check_captcha
