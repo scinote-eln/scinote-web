@@ -24,7 +24,7 @@ const Wrapper = styled.div`
 
 type Props = {
   tabState: Function,
-  teams: Array<Team>
+  teams: Array<Teams$Team>
 }
 
 class SettingsTeams extends Component<Props> {

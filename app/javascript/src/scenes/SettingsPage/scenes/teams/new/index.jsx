@@ -16,7 +16,7 @@ import { FormattedMessage } from "react-intl";
 import update from "immutability-helper";
 import styled from "styled-components";
 import _ from "lodash";
-import type { NewTeam } from "flow-typed";
+import type { Teams$NewTeam } from "flow-typed";
 import { createNewTeam } from "../../../../../services/api/teams_api";
 import {
   SETTINGS_TEAMS_ROUTE,
@@ -48,7 +48,8 @@ const MyFormGroupDiv = styled.div`
 `;
 
 type Props = {
-  tabState: Function
+  tabState: Function,
+  getTeamsList: Function
 };
 
 type FormErrors = {
@@ -57,7 +58,7 @@ type FormErrors = {
 };
 
 type State = {
-  team: NewTeam,
+  team: Teams$NewTeam,
   formErrors: FormErrors,
   redirectTo: string
 };

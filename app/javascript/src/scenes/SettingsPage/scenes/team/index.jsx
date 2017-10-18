@@ -7,7 +7,7 @@ import { LinkContainer } from "react-router-bootstrap";
 import { FormattedHTMLMessage, FormattedMessage } from "react-intl";
 import moment from "moment";
 import type { Match } from "react-router-dom";
-import type { Team } from "flow-typed";
+import type { Teams$Team, Team$TeamMemeber } from "flow-typed";
 
 import { formatBytes } from "../../../../services/helpers/units_converter_helper";
 import { getTeamDetails } from "../../../../services/api/teams_api";
@@ -18,13 +18,6 @@ import { BORDER_LIGHT_COLOR } from "../../../../config/constants/colors";
 import TeamsMembers from "./components/TeamsMembers";
 import UpdateTeamDescriptionModal from "./components/UpdateTeamDescriptionModal";
 import UpdateTeamNameModal from "./components/UpdateTeamNameModal";
-
-export type TeamMemeber = {
-  userName: string,
-  team_user_id: number,
-  teamName: string,
-  team_id: number
-};
 
 const Wrapper = styled.div`
   background: white;
@@ -80,8 +73,8 @@ type Props = {
 type State = {
   showDescriptionModal: boolean,
   showNameModal: boolean,
-  users: Array<TeamMember>,
-  team: Team
+  users: Array<Team$TeamMemeber>,
+  team: Teams$Team
 };
 
 class SettingsTeam extends Component<Props, State> {
@@ -139,11 +132,11 @@ class SettingsTeam extends Component<Props, State> {
     (this: any).setState({ showNameModal: false });
   }
 
-  updateTeamCallback(team: Team): void {
+  updateTeamCallback(team: Teams$Team): void {
     (this: any).setState({ team });
   }
 
-  updateUsersCallback(users: Array<TeamMember>): void {
+  updateUsersCallback(users: Array<Team$TeamMemeber>): void {
     (this: any).setState({ users });
   }
 
