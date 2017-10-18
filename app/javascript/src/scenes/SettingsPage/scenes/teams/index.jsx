@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes, { number, string, bool } from "prop-types";
+import DocumentTitle from "react-document-title";
 import styled from "styled-components";
 import { Breadcrumb } from "react-bootstrap";
 import { connect } from "react-redux";
@@ -19,16 +20,19 @@ const Wrapper = styled.div`
   padding: 16px 15px 50px 15px;
 `;
 
-const SettingsTeams = ({ teams }) =>
-  <Wrapper>
-    <Breadcrumb>
-      <Breadcrumb.Item active>
-        <FormattedMessage id="settings_page.all_teams" />
-      </Breadcrumb.Item>
-    </Breadcrumb>
-    <TeamsPageDetails teams={teams} />
-    <TeamsDataTable teams={teams} />
-  </Wrapper>;
+const SettingsTeams = ({ teams }) => (
+  <DocumentTitle title="SciNote | Teams">
+    <Wrapper>
+      <Breadcrumb>
+        <Breadcrumb.Item active>
+          <FormattedMessage id="settings_page.all_teams" />
+        </Breadcrumb.Item>
+      </Breadcrumb>
+      <TeamsPageDetails teams={teams} />
+      <TeamsDataTable teams={teams} />
+    </Wrapper>
+  </DocumentTitle>
+);
 
 SettingsTeams.propTypes = {
   teams: PropTypes.arrayOf(
@@ -44,7 +48,7 @@ SettingsTeams.propTypes = {
 };
 
 SettingsTeams.defaultProps = {
-  teams: [{id: 0, name: "", current_team: "", role: "", members: 0}]
+  teams: [{ id: 0, name: "", current_team: "", role: "", members: 0 }]
 };
 
 const mapStateToProps = ({ all_teams }) => ({

@@ -3,6 +3,7 @@ import { Route, Switch, Redirect } from "react-router-dom";
 import { LinkContainer } from "react-router-bootstrap";
 import { Nav, NavItem } from "react-bootstrap";
 import { FormattedMessage } from "react-intl";
+import DocumentTitle from "react-document-title";
 
 import {
   ROOT_PATH,
@@ -39,7 +40,7 @@ export default class SettingsPage extends Component {
 
   render() {
     return (
-      <div>
+      <DocumentTitle title="SciNote">
         <div className="container">
           <Nav bsStyle="tabs" activeKey="1" onSelect={this.handleSelect}>
             <LinkContainer
@@ -85,7 +86,7 @@ export default class SettingsPage extends Component {
             <Route component={NotFound} />
           </Switch>
         </div>
-      </div>
+      </DocumentTitle>
     );
   }
 }

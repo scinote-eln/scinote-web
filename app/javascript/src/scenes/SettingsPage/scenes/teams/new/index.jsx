@@ -12,6 +12,7 @@ import {
 import { Redirect } from "react-router";
 import { LinkContainer } from "react-router-bootstrap";
 import { FormattedMessage } from "react-intl";
+import DocumentTitle from "react-document-title";
 import update from "immutability-helper";
 import styled from "styled-components";
 import _ from "lodash";
@@ -225,48 +226,50 @@ class SettingsNewTeam extends Component {
       !_.isEmpty(this.state.formErrors.description);
 
     return (
-      <Wrapper>
-        <Breadcrumb>
-          <LinkContainer to={SETTINGS_TEAMS_ROUTE}>
-            <Breadcrumb.Item>
-              <FormattedMessage id="settings_page.all_teams" />
-            </Breadcrumb.Item>
-          </LinkContainer>
-          <Breadcrumb.Item active={true}>
-            <FormattedMessage id="settings_page.new_team.title" />
-          </Breadcrumb.Item>
-        </Breadcrumb>
-
-        <form onSubmit={this.onSubmit} style={{ maxWidth: "500px" }}>
-          <MyFormGroupDiv>
-            {this.renderTeamNameFormGroup()}
-            <small>
-              <FormattedMessage id="settings_page.new_team.name_sublabel" />
-            </small>
-          </MyFormGroupDiv>
-
-          <MyFormGroupDiv>
-            {this.renderTeamDescriptionFormGroup()}
-            <small>
-              <FormattedMessage id="settings_page.new_team.description_sublabel" />
-            </small>
-          </MyFormGroupDiv>
-          <ButtonToolbar>
-            <Button
-              type="submit"
-              className="btn-primary"
-              disabled={btnDisabled}
-            >
-              <FormattedMessage id="settings_page.new_team.create" />
-            </Button>
+      <DocumentTitle title="SciNote | Team | New">
+        <Wrapper>
+          <Breadcrumb>
             <LinkContainer to={SETTINGS_TEAMS_ROUTE}>
-              <Button>
-                <FormattedMessage id="general.cancel" />
-              </Button>
+              <Breadcrumb.Item>
+                <FormattedMessage id="settings_page.all_teams" />
+              </Breadcrumb.Item>
             </LinkContainer>
-          </ButtonToolbar>
-        </form>
-      </Wrapper>
+            <Breadcrumb.Item active={true}>
+              <FormattedMessage id="settings_page.new_team.title" />
+            </Breadcrumb.Item>
+          </Breadcrumb>
+
+          <form onSubmit={this.onSubmit} style={{ maxWidth: "500px" }}>
+            <MyFormGroupDiv>
+              {this.renderTeamNameFormGroup()}
+              <small>
+                <FormattedMessage id="settings_page.new_team.name_sublabel" />
+              </small>
+            </MyFormGroupDiv>
+
+            <MyFormGroupDiv>
+              {this.renderTeamDescriptionFormGroup()}
+              <small>
+                <FormattedMessage id="settings_page.new_team.description_sublabel" />
+              </small>
+            </MyFormGroupDiv>
+            <ButtonToolbar>
+              <Button
+                type="submit"
+                className="btn-primary"
+                disabled={btnDisabled}
+              >
+                <FormattedMessage id="settings_page.new_team.create" />
+              </Button>
+              <LinkContainer to={SETTINGS_TEAMS_ROUTE}>
+                <Button>
+                  <FormattedMessage id="general.cancel" />
+                </Button>
+              </LinkContainer>
+            </ButtonToolbar>
+          </form>
+        </Wrapper>
+      </DocumentTitle>
     );
   }
 }

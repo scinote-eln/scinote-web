@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { FormattedMessage } from "react-intl";
+import DocumentTitle from "react-document-title";
 
 import { getUserPreferencesInfo } from "../../../../services/api/users_api";
 import SettingsAccountWrapper from "../../components/SettingsAccountWrapper";
@@ -45,48 +46,46 @@ class SettingsPreferences extends Component {
 
   render() {
     return (
-      <SettingsAccountWrapper>
-        <div className="col-xs-12 col-sm-9">
-          <InputTimezone
-            value={this.state.timeZone}
-            loadPreferences={this.getPreferencesInfo}
-          />
-          <h3>
-            <FormattedMessage id="settings_page.notifications" />
-          </h3>
-          <NotificationsGroup
-            type={ASSIGNMENT_NOTIFICATION}
-            title="settings_page.assignement"
-            subtitle="settings_page.assignement_msg"
-            iconClasses="fa fa-newspaper-o"
-            inAppNotification={this.state.assignments_notification}
-            emailNotification={
-              this.state.assignments_email_notification
-            }
-            iconBackground={MAIN_COLOR_BLUE}
-            reloadInfo={this.getPreferencesInfo}
-          />
-          <NotificationsGroup
-            type={RECENT_NOTIFICATION}
-            title="settings_page.recent_changes"
-            subtitle="settings_page.recent_changes_msg"
-            inAppNotification={this.state.recent_notification}
-            emailNotification={this.state.recent_email_notification}
-            reloadInfo={this.getPreferencesInfo}
-          />
-          <NotificationsGroup
-            type={SYSTEM_NOTIFICATION}
-            title="settings_page.system_message"
-            subtitle="settings_page.system_message_msg"
-            emailNotification={
-              this.state.system_message_email_notification
-            }
-            iconClasses="glyphicon glyphicon-tower"
-            iconBackground={ICON_GREEN_COLOR}
-            reloadInfo={this.getPreferencesInfo}
-          />
-        </div>
-      </SettingsAccountWrapper>
+      <DocumentTitle title="SciNote | Preferences">
+        <SettingsAccountWrapper>
+          <div className="col-xs-12 col-sm-9">
+            <InputTimezone
+              value={this.state.timeZone}
+              loadPreferences={this.getPreferencesInfo}
+            />
+            <h3>
+              <FormattedMessage id="settings_page.notifications" />
+            </h3>
+            <NotificationsGroup
+              type={ASSIGNMENT_NOTIFICATION}
+              title="settings_page.assignement"
+              subtitle="settings_page.assignement_msg"
+              iconClasses="fa fa-newspaper-o"
+              inAppNotification={this.state.assignments_notification}
+              emailNotification={this.state.assignments_email_notification}
+              iconBackground={MAIN_COLOR_BLUE}
+              reloadInfo={this.getPreferencesInfo}
+            />
+            <NotificationsGroup
+              type={RECENT_NOTIFICATION}
+              title="settings_page.recent_changes"
+              subtitle="settings_page.recent_changes_msg"
+              inAppNotification={this.state.recent_notification}
+              emailNotification={this.state.recent_email_notification}
+              reloadInfo={this.getPreferencesInfo}
+            />
+            <NotificationsGroup
+              type={SYSTEM_NOTIFICATION}
+              title="settings_page.system_message"
+              subtitle="settings_page.system_message_msg"
+              emailNotification={this.state.system_message_email_notification}
+              iconClasses="glyphicon glyphicon-tower"
+              iconBackground={ICON_GREEN_COLOR}
+              reloadInfo={this.getPreferencesInfo}
+            />
+          </div>
+        </SettingsAccountWrapper>
+      </DocumentTitle>
     );
   }
 }
