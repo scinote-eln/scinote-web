@@ -109,7 +109,7 @@ class SettingsTeam extends Component<Props, State> {
     (this: any).props.tabState("2");
     const { id } = this.props.match.params;
     if(id) {
-      getTeamDetails(id).then(response => {
+      getTeamDetails(parseInt(id)).then(response => {
         const { team, users } = response;
         (this: any).setState({ users, team });
       });
