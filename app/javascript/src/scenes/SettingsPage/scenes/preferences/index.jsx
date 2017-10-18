@@ -1,3 +1,4 @@
+// @flow
 import React, { Component } from "react";
 import { FormattedMessage } from "react-intl";
 
@@ -17,8 +18,21 @@ import {
   ICON_GREEN_COLOR
 } from "../../../../config/constants/colors";
 
-class SettingsPreferences extends Component {
-  constructor(props) {
+type Props = {
+  tabState: Function
+}
+
+type State = {
+  timeZone: string,
+  assignments_notification: boolean,
+  assignments_email_notification: boolean,
+  recent_notification: boolean,
+  recent_email_notification: boolean,
+  system_message_email_notification: boolean
+}
+
+class SettingsPreferences extends Component<Props, State> {
+  constructor(props: Props) {
     super(props);
 
     this.state = {
@@ -26,20 +40,21 @@ class SettingsPreferences extends Component {
       assignments_notification: false,
       assignments_email_notification: false,
       recent_notification: false,
-      recent_email_motification: false,
+      recent_email_notification: false,
       system_message_email_notification: false
     };
 
-    this.getPreferencesInfo = this.getPreferencesInfo.bind(this);
+    (this: any).getPreferencesInfo = this.getPreferencesInfo.bind(this);
   }
 
-  componentDidMount() {
+  componentDidMount(): void {
     this.getPreferencesInfo();
+    this.props.tabState("1")
   }
 
-  getPreferencesInfo() {
+  getPreferencesInfo(): void {
     getUserPreferencesInfo().then(data => {
-      this.setState(data);
+      (this: any).setState(data);
     });
   }
 

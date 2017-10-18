@@ -1,15 +1,17 @@
+// @flow
+
 import React, { Component } from "react";
-import ReactRouterPropTypes from "react-router-prop-types";
 import styled from "styled-components";
 import { Breadcrumb, Row, Col, Glyphicon, Well } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { FormattedHTMLMessage, FormattedMessage } from "react-intl";
 import moment from "moment";
 import { formatBytes } from "../../../../services/helpers/units_converter_helper";
-import axios from "../../../../config/axios";
+import type { Match } from "react-router-dom";
+import type { Team } from "flow-typed";
+import { getTeamDetails } from "../../../../services/api/teams_api";
 
 import { SETTINGS_TEAMS_ROUTE } from "../../../../config/routes";
-import { TEAM_DETAILS_PATH } from "../../../../config/api_endpoints";
 import { BORDER_LIGHT_COLOR } from "../../../../config/constants/colors";
 
 import TeamsMembers from "./components/TeamsMembers";
@@ -21,7 +23,7 @@ export type TeamMemeber = {
   team_user_id: number,
   teamName: string,
   team_id: number
-}
+};
 
 const Wrapper = styled.div`
   background: white;
@@ -69,8 +71,20 @@ const StyledH3 = styled.h3`
   }
 `;
 
-class SettingsTeam extends Component {
-  constructor(props) {
+type Props = {
+  tabState: Function,
+  match: Match
+};
+
+type State = {
+  showDescriptionModal: boolean,
+  showNameModal: boolean,
+  users: Array<TeamMember>,
+  team: Team
+};
+
+class SettingsTeam extends Component<Props, State> {
+  constructor(props: Props) {
     super(props);
     this.state = {
       showDescriptionModal: false,
@@ -85,48 +99,51 @@ class SettingsTeam extends Component {
         space_taken: 0
       }
     };
-    this.showDescriptionModal = this.showDescriptionModal.bind(this);
-    this.hideDescriptionModalCallback = this.hideDescriptionModalCallback.bind(
+    (this: any).showDescriptionModal = this.showDescriptionModal.bind(this);
+    (this: any).hideDescriptionModalCallback = this.hideDescriptionModalCallback.bind(
       this
     );
-    this.updateTeamCallback = this.updateTeamCallback.bind(this);
-    this.updateUsersCallback = this.updateUsersCallback.bind(this);
-    this.showNameModal = this.showNameModal.bind(this);
-    this.hideNameModalCallback = this.hideNameModalCallback.bind(this);
-    this.renderEditNameModel = this.renderEditNameModel.bind(this);
+    (this: any).updateTeamCallback = this.updateTeamCallback.bind(this);
+    (this: any).updateUsersCallback = this.updateUsersCallback.bind(this);
+    (this: any).showNameModal = this.showNameModal.bind(this);
+    (this: any).hideNameModalCallback = this.hideNameModalCallback.bind(this);
+    (this: any).renderEditNameModel = this.renderEditNameModel.bind(this);
   }
 
-  componentDidMount() {
+  componentDidMount(): void {
+    // set team tab on active
+    (this: any).props.tabState("2");
     const { id } = this.props.match.params;
-    const path = TEAM_DETAILS_PATH.replace(":team_id", id);
-    axios.get(path).then(response => {
-      const { team, users } = response.data.team_details;
-      this.setState({ users, team });
-    });
+    if(id) {
+      getTeamDetails(id).then(response => {
+        const { team, users } = response;
+        (this: any).setState({ users, team });
+      });
+    }
   }
 
-  showDescriptionModal() {
-    this.setState({ showDescriptionModal: true });
+  showDescriptionModal(): void {
+    (this: any).setState({ showDescriptionModal: true });
   }
 
-  hideDescriptionModalCallback() {
-    this.setState({ showDescriptionModal: false });
+  hideDescriptionModalCallback(): void {
+    (this: any).setState({ showDescriptionModal: false });
   }
 
-  showNameModal() {
-    this.setState({ showNameModal: true });
+  showNameModal(): void {
+    (this: any).setState({ showNameModal: true });
   }
 
-  hideNameModalCallback() {
-    this.setState({ showNameModal: false });
+  hideNameModalCallback(): void {
+    (this: any).setState({ showNameModal: false });
   }
 
-  updateTeamCallback(team) {
-    this.setState({ team });
+  updateTeamCallback(team: Team): void {
+    (this: any).setState({ team });
   }
 
-  updateUsersCallback(users) {
-    this.setState({ users });
+  updateUsersCallback(users: Array<TeamMember>): void {
+    (this: any).setState({ users });
   }
 
   renderDescription() {
@@ -149,6 +166,7 @@ class SettingsTeam extends Component {
         />
       );
     }
+    return <span />;
   }
 
   render() {
@@ -236,9 +254,5 @@ class SettingsTeam extends Component {
     );
   }
 }
-
-SettingsTeam.PropTypes = {
-  match: ReactRouterPropTypes.match.isRequired
-};
 
 export default SettingsTeam;

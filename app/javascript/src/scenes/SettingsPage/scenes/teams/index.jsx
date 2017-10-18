@@ -1,9 +1,12 @@
-import React from "react";
-import PropTypes, { number, string, bool } from "prop-types";
+// @flow
+
+import React, { Component } from "react";
 import styled from "styled-components";
 import { Breadcrumb } from "react-bootstrap";
 import { connect } from "react-redux";
 import { FormattedMessage } from "react-intl";
+import type { State } from "flow-typed";
+import type { MapStateToProps } from "react-redux"
 
 import { BORDER_LIGHT_COLOR } from "../../../../config/constants/colors";
 
@@ -19,36 +22,39 @@ const Wrapper = styled.div`
   padding: 16px 15px 50px 15px;
 `;
 
-const SettingsTeams = ({ teams }) =>
-  <Wrapper>
-    <Breadcrumb>
-      <Breadcrumb.Item active>
-        <FormattedMessage id="settings_page.all_teams" />
-      </Breadcrumb.Item>
-    </Breadcrumb>
-    <TeamsPageDetails teams={teams} />
-    <TeamsDataTable teams={teams} />
-  </Wrapper>;
+type Props = {
+  tabState: Function,
+  teams: Array<Team>
+}
 
-SettingsTeams.propTypes = {
-  teams: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: number.isRequired,
-      name: string.isRequired,
-      current_team: bool.isRequired,
-      role: string.isRequired,
-      members: number.isRequired,
-      can_be_leaved: bool.isRequired
-    }).isRequired
-  )
-};
+class SettingsTeams extends Component<Props> {
+  static defaultProps = {
+    teams: [{ id: 0, name: "", current_team: "", role: "", members: 0 }]
+  }
 
-SettingsTeams.defaultProps = {
-  teams: [{id: 0, name: "", current_team: "", role: "", members: 0}]
-};
+  componentDidMount() {
+    // set team tab on active
+    this.props.tabState("2");
+  }
 
-const mapStateToProps = ({ all_teams }) => ({
-  teams: all_teams.collection
+  render() {
+    const { teams } = this.props;
+    return (
+      <Wrapper>
+        <Breadcrumb>
+          <Breadcrumb.Item active>
+            <FormattedMessage id="settings_page.all_teams" />
+          </Breadcrumb.Item>
+        </Breadcrumb>
+        <TeamsPageDetails teams={teams} />
+        <TeamsDataTable teams={teams} />
+      </Wrapper>
+    );
+  }
+}
+
+const mapStateToProps: MapStateToProps<*, *, *> = (state: State) => ({
+  teams: state.all_teams.collection
 });
 
 export default connect(mapStateToProps)(SettingsTeams);
