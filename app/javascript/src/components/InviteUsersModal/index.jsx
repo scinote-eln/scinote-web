@@ -61,16 +61,15 @@ class InviteUsersModal extends Component<Props, State> {
 
   handleInputChange(inputTags: Array<string>): void {
     if (inputTags.length > 0) {
-      (this: any).setState({ inputTags: inputTags, inviteUserButtonDisabled: false });
+      (this: any).setState({ inputTags, inviteUserButtonDisabled: false });
     } else {
-      (this: any).setState({ inputTags: inputTags, inviteUserButtonDisabled: true });
+      (this: any).setState({ inputTags, inviteUserButtonDisabled: true });
     }
   }
 
   inviteAs(role: number): void {
     inviteUsersToTeam(role, this.state.inputTags, this.props.team.id)
       .then(response => {
-        console.log(response);
         (this: any).setState({
           inviteResults: response,
           showInviteUsersResults: true
