@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
 import {
   Breadcrumb,
   FormGroup,
@@ -25,6 +26,7 @@ import {
   NAME_MAX_LENGTH,
   TEXT_MAX_LENGTH
 } from "../../../../../config/constants/numeric";
+import { getTeamsList } from "../../../../../components/actions/TeamsActions";
 
 import { BORDER_LIGHT_COLOR } from "../../../../../config/constants/colors";
 
@@ -39,7 +41,9 @@ const Wrapper = styled.div`
   padding: 16px 15px 50px 15px;
 `;
 
-const MyFormGroupDiv = styled.div`margin-bottom: 15px;`;
+const MyFormGroupDiv = styled.div`
+  margin-bottom: 15px;
+`;
 
 class SettingsNewTeam extends Component {
   constructor(props) {
@@ -76,6 +80,7 @@ class SettingsNewTeam extends Component {
     })
       .then(sr => {
         // Redirect to the new team page
+        this.props.getTeamsList();
         this.newState = { ...this.state };
         this.newState = update(this.newState, {
           redirectTo: {
@@ -266,4 +271,4 @@ class SettingsNewTeam extends Component {
   }
 }
 
-export default SettingsNewTeam;
+export default connect(null, { getTeamsList })(SettingsNewTeam);
