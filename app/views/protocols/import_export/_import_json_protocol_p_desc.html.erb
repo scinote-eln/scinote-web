@@ -1,0 +1,66 @@
+
+<div style="display: block;">
+    <hr>
+    <td>
+      <div class="badge-num">
+        <span class="badge-preview bg-primary size-digit-1">
+          <b data-val="position"><%= 1 %></b>
+        </span>
+        &nbsp; &nbsp;
+        <span class="step-panel-collapse-link" data-toggle="collapse">
+          <span class="glyphicon collapse-step-icon glyphicon-collapse-up"></span>
+          <strong data-val="name"><%= 'Protocol info' %></strong>
+        </span>
+      </div>
+      <br>
+
+<div class="tab-content">
+<div class="tab-pane active" role="tabpanel">
+<div data-val="description" class="ql-editor">
+  <br>
+  <% if json_object['before_start'].present? %>
+  <strong><%= t('protocols.protocols_io_import.preview.b_s_p') %></strong>
+  <%= sanitize_input(json_object['before_start'].html_safe) %><br>
+  <% end %>
+  <% if json_object['warning'].present? %>
+  <strong><%= t('protocols.protocols_io_import.preview.warn') %></strong>
+  <%= sanitize_input(json_object['warning'].html_safe) %><br>
+  <% end %>
+  <% if json_object['guidelines'].present? %>
+  <strong><%= t('protocols.protocols_io_import.preview.guideln') %></strong>
+  <%= sanitize_input(json_object['guidelines'].html_safe) %><br>
+  <% end %>
+  <% if json_object['link'].present? %>
+  <strong><%= t('protocols.protocols_io_import.preview.p_link') %></strong>
+  <%= sanitize_input(json_object['link'].html_safe) %><br>
+  <% end %>
+  <% if json_object['manuscript_citation'].present? %>
+  <strong><%= t('protocols.protocols_io_import.preview.manu_cit') %></strong>
+  <%= sanitize_input(json_object['manuscript_citation'].html_safe) %><br>
+  <% end %>
+  <% if json_object['publish_date'].present? %>
+  <strong><%= t('protocols.protocols_io_import.preview.pbl_date') %></strong>
+  <%= sanitize_input(json_object['publish_date']) %><br>
+  <% end %>
+  <% if json_object['vendor_name'].present? %>
+  <strong><%= t('protocols.protocols_io_import.preview.vnd_name') %></strong>
+  <%= sanitize_input(json_object['vendor_name']) %><br>
+  <% end %>
+  <% if json_object['vendor_link'].present? %>
+  <strong><%= t('protocols.protocols_io_import.preview.vnd_link') %></strong>
+  <%= sanitize_input(json_object['vendor_link'].html_safe) %><br>
+  <% end %>
+  <% if json_object['keywords'].present? %>
+  <strong><%= t('protocols.protocols_io_import.preview.key_wrd') %></strong>
+  <%= sanitize_input(json_object['keywords']) %><br>
+  <% end %>
+  <% if json_object['tags'].present? %>
+  <strong><%= t('protocols.protocols_io_import.preview.tags') %></strong>
+  <%  json_object['tags'].each do |tag| %>
+  <%= sanitize_input(tag['tag_name'])+' , ' %><br>
+  <% end %>
+  <% end %>
+</div>
+</div>
+</div>
+</div>
