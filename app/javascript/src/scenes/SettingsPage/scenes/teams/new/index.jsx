@@ -1,5 +1,6 @@
 // @flow
 import React, { Component } from "react";
+import { connect } from "react-redux";
 import {
   Breadcrumb,
   FormGroup,
@@ -27,6 +28,7 @@ import {
   NAME_MAX_LENGTH,
   TEXT_MAX_LENGTH
 } from "../../../../../config/constants/numeric";
+import { getTeamsList } from "../../../../../components/actions/TeamsActions";
 
 import { BORDER_LIGHT_COLOR } from "../../../../../config/constants/colors";
 
@@ -95,6 +97,7 @@ class SettingsNewTeam extends Component<Props, State> {
     createNewTeam(this.state.team)
       .then(response => {
         // Redirect to the new team page
+        this.props.getTeamsList();
         (this: any).newState = { ...this.state };
         (this: any).newState = update((this: any).newState, {
           redirectTo: {
@@ -287,4 +290,4 @@ class SettingsNewTeam extends Component<Props, State> {
   }
 }
 
-export default SettingsNewTeam;
+export default connect(null, { getTeamsList })(SettingsNewTeam);
