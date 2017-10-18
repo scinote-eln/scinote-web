@@ -1,14 +1,14 @@
+// @flow
+
 import React, { Component } from "react";
-import { bool, func, shape, number, string } from "prop-types";
 import { FormattedMessage } from "react-intl";
 import { Modal, ButtonToolbar, Button } from "react-bootstrap";
 import styled from "styled-components";
-import axios from "../../config/axios";
+import type { Team } from "flow-typed";
 
-import {
-  INVITE_USERS_PATH,
-  TEAM_DETAILS_PATH
-} from "../../config/api_endpoints";
+import { inviteUsersToTeam } from "../../services/api/user_team_api";
+import { getTeamDetails } from "../../services/api/teams_api";
+
 import InviteUsersForm from "./components/InviteUsersForm";
 import InviteUsersResults from "./components/InviteUsersResults";
 import InviteUsersButton from "./components/InviteUsersButton";
@@ -17,52 +17,68 @@ const StyledButtonToolbar = styled(ButtonToolbar)`
   float: right;
 `;
 
-class InviteUsersModal extends Component {
-  constructor(props) {
+type Props = {
+  showModal: boolean,
+  onCloseModal: Function,
+  team: Team,
+  updateUsersCallback: Function
+};
+
+type State = {
+  inviteUserButtonDisabled: boolean,
+  showInviteUsersResults: boolean,
+  inputTags: Array<string>,
+  inviteResults: Array<string>
+};
+
+class InviteUsersModal extends Component<Props, State> {
+  constructor(props: Props) {
     super(props);
-    this.state = {
+    (this: any).state = {
+      inviteUserButtonDisabled: true,
       showInviteUsersResults: false,
       inputTags: [],
       inviteResults: []
     };
-    this.handleInputChange = this.handleInputChange.bind(this);
-    this.inviteAs = this.inviteAs.bind(this);
-    this.handleCloseModal = this.handleCloseModal.bind(this);
+    (this: any).handleInputChange = this.handleInputChange.bind(this);
+    (this: any).inviteAs = this.inviteAs.bind(this);
+    (this: any).handleCloseModal = this.handleCloseModal.bind(this);
   }
 
-  handleCloseModal() {
-    const path = TEAM_DETAILS_PATH.replace(":team_id", this.props.team.id);
+  handleCloseModal(): void {
     this.props.onCloseModal();
-    this.setState({
+    (this: any).setState({
       showInviteUsersResults: false,
       inputTags: [],
       inviteResults: []
     });
     // Update team members table
-    axios.get(path).then(response => {
-      const { users } = response.data.team_details;
+    getTeamDetails(this.props.team.id).then(response => {
+      const { users } = response;
       this.props.updateUsersCallback(users);
     });
   }
 
-  handleInputChange(inputTags) {
-    this.setState({ inputTags });
+  handleInputChange(inputTags: Array<string>): void {
+    if (inputTags.length > 0) {
+      (this: any).setState({ inputTags, inviteUserButtonDisabled: false });
+    } else {
+      (this: any).setState({ inputTags, inviteUserButtonDisabled: true });
+    }
   }
 
-  inviteAs(role) {
-    axios
-      .put(INVITE_USERS_PATH, {
-        user_role: role,
-        emails: this.state.inputTags,
-        team_id: this.props.team.id
-      })
-      .then(({ data }) => {
-        this.setState({ inviteResults: data, showInviteUsersResults: true });
+  inviteAs(role: number): void {
+    inviteUsersToTeam(role, this.state.inputTags, this.props.team.id)
+      .then(response => {
+        (this: any).setState({
+          inviteResults: response,
+          showInviteUsersResults: true
+        });
       })
       .catch(error => {
         console.log("Invite As Error: ", error);
         if (error.response) {
-          console.log("Error message:", error.response.data);
+          console.log("Error message: ", error.response.data);
           // TO DO: put this error in flash msg
         }
       });
@@ -82,7 +98,12 @@ class InviteUsersModal extends Component {
           teamName={this.props.team.name}
         />
       );
-      inviteButton = <InviteUsersButton handleClick={this.inviteAs} />;
+      inviteButton = (
+        <InviteUsersButton
+          handleClick={this.inviteAs}
+          status={this.state.inviteUserButtonDisabled}
+        />
+      );
     }
 
     return (
@@ -118,12 +139,5 @@ class InviteUsersModal extends Component {
     );
   }
 }
-
-InviteUsersModal.propTypes = {
-  showModal: bool.isRequired,
-  onCloseModal: func.isRequired,
-  team: shape({ id: number.isRequired, name: string.isRequired }).isRequired,
-  updateUsersCallback: func.isRequired
-};
 
 export default InviteUsersModal;

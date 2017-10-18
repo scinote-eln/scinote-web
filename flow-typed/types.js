@@ -5,3 +5,8 @@ export type Activity = {
   message: string,
   created_at :string
 }
+
+export type Team = {
+  id: number,
+  name: string
+}
