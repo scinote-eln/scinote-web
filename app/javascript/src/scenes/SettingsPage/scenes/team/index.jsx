@@ -6,9 +6,10 @@ import { Breadcrumb, Row, Col, Glyphicon, Well } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { FormattedHTMLMessage, FormattedMessage } from "react-intl";
 import moment from "moment";
-import { formatBytes } from "../../../../services/helpers/units_converter_helper";
 import type { Match } from "react-router-dom";
 import type { Team } from "flow-typed";
+
+import { formatBytes } from "../../../../services/helpers/units_converter_helper";
 import { getTeamDetails } from "../../../../services/api/teams_api";
 
 import { SETTINGS_TEAMS_ROUTE } from "../../../../config/routes";

@@ -1,7 +1,7 @@
 //  @flow
+import type { NewTeam } from "flow-typed";
 import { axiosInstance } from "./config";
 import { TEAM_DETAILS_PATH, TEAMS_PATH } from "./endpoints";
-import type { NewTeam } from "flow-typed";
 
 export const getTeamDetails = (teamID: string): Promise<*> => {
   const path = TEAM_DETAILS_PATH.replace(":team_id", teamID);

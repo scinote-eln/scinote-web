@@ -67,7 +67,7 @@ export default class SettingsPage extends Component<*, State> {
               active={this.state.active === "2"}
             >
               <NavItem eventKey="2">
-                <FormattedMessage id="settings_page.team" />
+                <FormattedMessage id="settings_page.teams" />
               </NavItem>
             </LinkContainer>
           </Nav>
