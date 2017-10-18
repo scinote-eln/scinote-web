@@ -1,6 +1,7 @@
 //  @flow
+
 import { axiosInstance } from "./config";
-import { REMOVE_USER_FROM_TEAM_PATH } from "./endpoints";
+import { REMOVE_USER_FROM_TEAM_PATH, INVITE_USERS_PATH } from "./endpoints";
 
 export const removeUserFromTeam = (
   teamId: number,
@@ -14,4 +15,18 @@ export const removeUserFromTeam = (
       user_team: teamUserId
     }
   }).then(({ data }) => data.team_users);
+};
+
+export const inviteUsersToTeam = (
+  role: number,
+  emails: Array<string>,
+  teamID: number
+): Promise<*> => {
+  return axiosInstance
+    .put(INVITE_USERS_PATH, {
+      user_role: role,
+      team_id: teamID,
+      emails
+    })
+    .then(({ data }) => data);
 };

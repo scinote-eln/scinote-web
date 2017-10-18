@@ -14,8 +14,6 @@ export const SEARCH_PATH = "/search";
 
 // notifications
 export const RECENT_NOTIFICATIONS_PATH = "/client_api/recent_notifications";
-
-export const INVITE_USERS_PATH = "/client_api/users/invite_users";
 // info dropdown_title
 export const CUSTOMER_SUPPORT_LINK = "http://scinote.net/support";
 export const TUTORIALS_LINK = "http://scinote.net/product/tutorials/";
