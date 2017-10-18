@@ -74,6 +74,7 @@ class NotificationsDropdown extends Component {
     this.renderNotifications = this.renderNotifications.bind(this);
     this.renderNotificationStatus = this.renderNotificationStatus.bind(this);
     this.loadStatus = this.loadStatus.bind(this);
+    this.closeDropdown = this.closeDropdown.bind(this);
   }
 
   componentWillMount() {
