@@ -26,8 +26,8 @@ class RemoveUserModal extends Component<Props> {
   }
 
   removeUser(): void {
-    const { team_id, team_user_id } = this.props.userToRemove;
-    removeUserFromTeam(team_id, team_user_id)
+    const { teamId, teamUserId } = this.props.userToRemove;
+    removeUserFromTeam(teamId, teamUserId)
       .then(response => {
         this.props.updateUsersCallback(response);
         this.props.hideModal();

@@ -10,7 +10,7 @@ import {
   MenuItem
 } from "react-bootstrap";
 import styled from "styled-components";
-import type { Teams$TeamMember, Teams$TeamMemberActions } from "flow-typed";
+import type { Teams$TeamMember, Team$TeamMemeber, Teams$TeamMemberActions } from "flow-typed";
 
 import { FormattedMessage } from "react-intl";
 import { updateUserTeamRole } from "../../../../../services/api/user_team_api";
@@ -25,21 +25,14 @@ const StyledButton = styled(Button)`
 
 const initalUserToRemove = {
   userName: "",
-  team_user_id: 0,
+  teamUserId: 0,
   teamName: "",
-  team_id: 0
+  teamId: 0
 };
 
 type Team = {
   id: number,
   name: string
-};
-
-type UserToRemove = {
-  userName: string,
-  team_user_id: number,
-  teamName: string,
-  team_id: number
 };
 
 type TableColumns = {
@@ -60,7 +53,7 @@ type Props = {
 type State = {
   showModal: boolean,
   showInviteUsersModal: boolean,
-  userToRemove: UserToRemove
+  userToRemove: Team$TeamMemeber
 };
 
 class TeamsMembers extends Component<Props, State> {
@@ -159,9 +152,9 @@ class TeamsMembers extends Component<Props, State> {
           onClick={() => {
             this.userToRemove({
               userName: row.name,
-              team_user_id: data.teamUserId,
+              teamUserId: data.teamUserId,
               teamName: this.props.team.name,
-              team_id: this.props.team.id
+              teamId: this.props.team.id
             });
           }}
         >

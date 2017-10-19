@@ -2,7 +2,7 @@
 
 export type Team$TeamMemeber = {
   userName: string,
-  team_user_id: number,
+  teamUserId: number,
   teamName: string,
-  team_id: number
+  teamId: number
 };

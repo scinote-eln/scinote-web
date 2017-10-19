@@ -27,6 +27,8 @@ type State = {
   active: string
 }
 
+let componentMounted = false;
+
 export default class SettingsPage extends Component<*, State> {
   constructor(props: *) {
     super(props);
@@ -38,8 +40,16 @@ export default class SettingsPage extends Component<*, State> {
     (this: any).setTabState = this.setTabState.bind(this);
   }
 
+  componentDidMount(): void {
+    componentMounted = true;
+  }
+
+  componentWillUnmount(): void {
+    componentMounted = false;
+  }
+
   setTabState(tab: string): void {
-    if (tab !== this.state.active) {
+    if (tab !== this.state.active && componentMounted) {
       (this: any).setState({ active: tab });
     }
   }

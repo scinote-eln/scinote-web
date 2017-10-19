@@ -101,7 +101,7 @@ class SettingsTeam extends Component<Props, State> {
     (this: any).updateUsersCallback = this.updateUsersCallback.bind(this);
     (this: any).showNameModal = this.showNameModal.bind(this);
     (this: any).hideNameModalCallback = this.hideNameModalCallback.bind(this);
-    (this: any).renderEditNameModel = this.renderEditNameModel.bind(this);
+    (this: any).renderEditNameModal = this.renderEditNameModal.bind(this);
   }
 
   componentDidMount(): void {
@@ -149,7 +149,7 @@ class SettingsTeam extends Component<Props, State> {
     );
   }
 
-  renderEditNameModel() {
+  renderEditNameModal() {
     if (this.state.showNameModal) {
       return (
         <UpdateTeamNameModal
@@ -243,7 +243,7 @@ class SettingsTeam extends Component<Props, State> {
           team={this.state.team}
           updateTeamCallback={this.updateTeamCallback}
         />
-        {this.renderEditNameModel()}
+        {this.renderEditNameModal()}
       </Wrapper>
     );
   }
