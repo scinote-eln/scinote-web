@@ -8,6 +8,12 @@ export default {
       loading: "Loading ...",
       upload: "Upload"
     },
+    page_title: {
+      root: "SciNote",
+      settings_preference: "SciNote | Settings | Preferences",
+      settings_profile: "SciNote | Settings | Profile",
+      team_page: "SciNote | Settings | Teams | {name}"
+    },
     error_messages: {
       text_too_short: "is too short (minimum is {min_length} characters)",
       text_too_long: "is too long (maximum is {max_length} characters)",

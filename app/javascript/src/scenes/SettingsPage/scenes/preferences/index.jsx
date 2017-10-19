@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import { FormattedMessage } from "react-intl";
-import DocumentTitle from "react-document-title";
 
 import { getUserPreferencesInfo } from "../../../../services/api/users_api";
+import PageTitle from "../../../../components/PageTitle";
 import SettingsAccountWrapper from "../../components/SettingsAccountWrapper";
 import InputTimezone from "./components/InputTimezone";
 import NotificationsGroup from "./components/NotificationsGroup";
@@ -46,7 +46,7 @@ class SettingsPreferences extends Component {
 
   render() {
     return (
-      <DocumentTitle title="SciNote | Preferences">
+      <PageTitle localeID="page_title.settings_preference">
         <SettingsAccountWrapper>
           <div className="col-xs-12 col-sm-9">
             <InputTimezone
@@ -85,7 +85,7 @@ class SettingsPreferences extends Component {
             />
           </div>
         </SettingsAccountWrapper>
-      </DocumentTitle>
+      </PageTitle>
     );
   }
 }
