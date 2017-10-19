@@ -1,7 +1,13 @@
 // @flow
 
+export type Teams$TeamMemberActions = {
+   currentRole: string,
+   teamUserId: number,
+   disable: boolean
+}
+
 export type Teams$TeamMember = {
-  actions: { current_role: string, team_user_id: number, disable: boolean },
+  actions: Teams$TeamMemberActions,
   created_at: string,
   email: string,
   id: number,
