@@ -1492,6 +1492,7 @@ en:
       import: "Import"
       import_alt: "from SciNote protocol file(.eln)"
       import_json: "from protocols.io file(.txt)"
+      modal_import_json_upload: "Upload file"
       modal_import_json_title: "Import protocols.io file"
       modal_import_json_notice: "Upload your protocols.io .txt json protocol file"
       export: "Export"
