@@ -46,7 +46,7 @@ class SettingsPreferences extends Component {
 
   render() {
     return (
-      <PageTitle localeID="page_title.settings_preference">
+      <PageTitle localeID="page_title.settings_preference_page">
         <SettingsAccountWrapper>
           <div className="col-xs-12 col-sm-9">
             <InputTimezone

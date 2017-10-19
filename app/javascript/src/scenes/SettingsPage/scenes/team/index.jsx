@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import ReactRouterPropTypes from "react-router-prop-types";
 import styled from "styled-components";
-import DocumentTitle from "react-document-title";
 import { Breadcrumb, Row, Col, Glyphicon, Well } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { FormattedHTMLMessage, FormattedMessage } from "react-intl";
@@ -13,6 +12,7 @@ import { SETTINGS_TEAMS_ROUTE } from "../../../../config/routes";
 import { TEAM_DETAILS_PATH } from "../../../../config/api_endpoints";
 import { BORDER_LIGHT_COLOR } from "../../../../config/constants/colors";
 
+import PageTitle from "../../../../components/PageTitle";
 import TeamsMembers from "./components/TeamsMembers";
 import UpdateTeamDescriptionModal from "./components/UpdateTeamDescriptionModal";
 import UpdateTeamNameModal from "./components/UpdateTeamNameModal";
@@ -154,7 +154,10 @@ class SettingsTeam extends Component {
 
   render() {
     return (
-      <DocumentTitle title={`SciNote | Team | ${this.state.team.name}`}>
+      <PageTitle
+        localeID="page_title.team_page"
+        values={{ name: this.state.team.name }}
+      >
         <Wrapper>
           <Breadcrumb>
             <LinkContainer to={SETTINGS_TEAMS_ROUTE}>
@@ -235,7 +238,7 @@ class SettingsTeam extends Component {
           />
           {this.renderEditNameModel()}
         </Wrapper>
-      </DocumentTitle>
+      </PageTitle>
     );
   }
 }

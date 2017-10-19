@@ -12,7 +12,6 @@ import {
 import { Redirect } from "react-router";
 import { LinkContainer } from "react-router-bootstrap";
 import { FormattedMessage } from "react-intl";
-import DocumentTitle from "react-document-title";
 import update from "immutability-helper";
 import styled from "styled-components";
 import _ from "lodash";
@@ -31,6 +30,7 @@ import { getTeamsList } from "../../../../../components/actions/TeamsActions";
 
 import { BORDER_LIGHT_COLOR } from "../../../../../config/constants/colors";
 
+import PageTitle from "../../../../../components/PageTitle";
 import NameFormControl from "./components/NameFormControl";
 
 const Wrapper = styled.div`
@@ -226,7 +226,7 @@ class SettingsNewTeam extends Component {
       !_.isEmpty(this.state.formErrors.description);
 
     return (
-      <DocumentTitle title="SciNote | Team | New">
+      <PageTitle localeID="page_title.new_team_page">
         <Wrapper>
           <Breadcrumb>
             <LinkContainer to={SETTINGS_TEAMS_ROUTE}>
@@ -269,7 +269,7 @@ class SettingsNewTeam extends Component {
             </ButtonToolbar>
           </form>
         </Wrapper>
-      </DocumentTitle>
+      </PageTitle>
     );
   }
 }

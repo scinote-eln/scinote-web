@@ -14,14 +14,14 @@ type Props = {
 
 const PageTitle = (props: Props): Node => {
   const message = defineMessages({
-    placeholder: { id: props.localeID, values: props.values }
+    placeholder: { id: props.localeID }
   });
-  const title = props.intl.formatMessage(message.placeholder);
+  const title = props.intl.formatMessage(message.placeholder, props.values);
   return <DocumentTitle title={title}>{props.children}</DocumentTitle>;
 };
 
 PageTitle.defaultProps = {
-  values: null
+  values: {}
 };
 
 export default injectIntl(PageTitle);

@@ -10,9 +10,11 @@ export default {
     },
     page_title: {
       root: "SciNote",
-      settings_preference: "SciNote | Settings | Preferences",
-      settings_profile: "SciNote | Settings | Profile",
-      team_page: "SciNote | Settings | Teams | {name}"
+      settings_preference_page: "SciNote | Settings | Preferences",
+      settings_profile_page: "SciNote | Settings | Profile",
+      team_page: "SciNote | Settings | Teams | {name}",
+      all_teams_page: "SciNote | Settings | Teams",
+      new_team_page: "SciNote | Settings | Teams | New"
     },
     error_messages: {
       text_too_short: "is too short (minimum is {min_length} characters)",
