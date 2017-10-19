@@ -82,7 +82,7 @@ class NotificationsDropdown extends Component {
   }
 
   componentDidMount() {
-    const minutes = 60 * 1000;
+    const minutes = 120 * 1000;
     setInterval(this.loadStatus, minutes);
   }
 
