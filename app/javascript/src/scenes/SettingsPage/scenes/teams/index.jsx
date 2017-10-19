@@ -7,6 +7,7 @@ import { FormattedMessage } from "react-intl";
 
 import { BORDER_LIGHT_COLOR } from "../../../../config/constants/colors";
 
+import PageTitle from "../../../../components/PageTitle";
 import TeamsPageDetails from "./components/TeamsPageDetails";
 import TeamsDataTable from "./components/TeamsDataTable";
 
@@ -19,16 +20,19 @@ const Wrapper = styled.div`
   padding: 16px 15px 50px 15px;
 `;
 
-const SettingsTeams = ({ teams }) =>
-  <Wrapper>
-    <Breadcrumb>
-      <Breadcrumb.Item active>
-        <FormattedMessage id="settings_page.all_teams" />
-      </Breadcrumb.Item>
-    </Breadcrumb>
-    <TeamsPageDetails teams={teams} />
-    <TeamsDataTable teams={teams} />
-  </Wrapper>;
+const SettingsTeams = ({ teams }) => (
+  <PageTitle localeID="page_title.all_teams_page">
+    <Wrapper>
+      <Breadcrumb>
+        <Breadcrumb.Item active>
+          <FormattedMessage id="settings_page.all_teams" />
+        </Breadcrumb.Item>
+      </Breadcrumb>
+      <TeamsPageDetails teams={teams} />
+      <TeamsDataTable teams={teams} />
+    </Wrapper>
+  </PageTitle>
+);
 
 SettingsTeams.propTypes = {
   teams: PropTypes.arrayOf(
@@ -44,7 +48,7 @@ SettingsTeams.propTypes = {
 };
 
 SettingsTeams.defaultProps = {
-  teams: [{id: 0, name: "", current_team: "", role: "", members: 0}]
+  teams: [{ id: 0, name: "", current_team: "", role: "", members: 0 }]
 };
 
 const mapStateToProps = ({ all_teams }) => ({

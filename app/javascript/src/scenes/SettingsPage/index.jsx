@@ -15,6 +15,7 @@ import {
 
 import { SETTINGS_PATH, SETTINGS_TEAMS } from "../../config/api_endpoints";
 
+import PageTitle from "../../components/PageTitle";
 import NotFound from "../../components/404/NotFound";
 import SettingsProfile from "./scenes/profile";
 import SettingsPreferences from "./scenes/preferences";
@@ -39,7 +40,7 @@ export default class SettingsPage extends Component {
 
   render() {
     return (
-      <div>
+      <PageTitle localeID="page_title.root">
         <div className="container">
           <Nav bsStyle="tabs" activeKey="1" onSelect={this.handleSelect}>
             <LinkContainer
@@ -85,7 +86,7 @@ export default class SettingsPage extends Component {
             <Route component={NotFound} />
           </Switch>
         </div>
-      </div>
+      </PageTitle>
     );
   }
 }

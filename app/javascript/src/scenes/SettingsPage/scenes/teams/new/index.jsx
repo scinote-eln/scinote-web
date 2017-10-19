@@ -30,6 +30,7 @@ import { getTeamsList } from "../../../../../components/actions/TeamsActions";
 
 import { BORDER_LIGHT_COLOR } from "../../../../../config/constants/colors";
 
+import PageTitle from "../../../../../components/PageTitle";
 import NameFormControl from "./components/NameFormControl";
 
 const Wrapper = styled.div`
@@ -225,48 +226,50 @@ class SettingsNewTeam extends Component {
       !_.isEmpty(this.state.formErrors.description);
 
     return (
-      <Wrapper>
-        <Breadcrumb>
-          <LinkContainer to={SETTINGS_TEAMS_ROUTE}>
-            <Breadcrumb.Item>
-              <FormattedMessage id="settings_page.all_teams" />
-            </Breadcrumb.Item>
-          </LinkContainer>
-          <Breadcrumb.Item active={true}>
-            <FormattedMessage id="settings_page.new_team.title" />
-          </Breadcrumb.Item>
-        </Breadcrumb>
-
-        <form onSubmit={this.onSubmit} style={{ maxWidth: "500px" }}>
-          <MyFormGroupDiv>
-            {this.renderTeamNameFormGroup()}
-            <small>
-              <FormattedMessage id="settings_page.new_team.name_sublabel" />
-            </small>
-          </MyFormGroupDiv>
-
-          <MyFormGroupDiv>
-            {this.renderTeamDescriptionFormGroup()}
-            <small>
-              <FormattedMessage id="settings_page.new_team.description_sublabel" />
-            </small>
-          </MyFormGroupDiv>
-          <ButtonToolbar>
-            <Button
-              type="submit"
-              className="btn-primary"
-              disabled={btnDisabled}
-            >
-              <FormattedMessage id="settings_page.new_team.create" />
-            </Button>
+      <PageTitle localeID="page_title.new_team_page">
+        <Wrapper>
+          <Breadcrumb>
             <LinkContainer to={SETTINGS_TEAMS_ROUTE}>
-              <Button>
-                <FormattedMessage id="general.cancel" />
-              </Button>
+              <Breadcrumb.Item>
+                <FormattedMessage id="settings_page.all_teams" />
+              </Breadcrumb.Item>
             </LinkContainer>
-          </ButtonToolbar>
-        </form>
-      </Wrapper>
+            <Breadcrumb.Item active={true}>
+              <FormattedMessage id="settings_page.new_team.title" />
+            </Breadcrumb.Item>
+          </Breadcrumb>
+
+          <form onSubmit={this.onSubmit} style={{ maxWidth: "500px" }}>
+            <MyFormGroupDiv>
+              {this.renderTeamNameFormGroup()}
+              <small>
+                <FormattedMessage id="settings_page.new_team.name_sublabel" />
+              </small>
+            </MyFormGroupDiv>
+
+            <MyFormGroupDiv>
+              {this.renderTeamDescriptionFormGroup()}
+              <small>
+                <FormattedMessage id="settings_page.new_team.description_sublabel" />
+              </small>
+            </MyFormGroupDiv>
+            <ButtonToolbar>
+              <Button
+                type="submit"
+                className="btn-primary"
+                disabled={btnDisabled}
+              >
+                <FormattedMessage id="settings_page.new_team.create" />
+              </Button>
+              <LinkContainer to={SETTINGS_TEAMS_ROUTE}>
+                <Button>
+                  <FormattedMessage id="general.cancel" />
+                </Button>
+              </LinkContainer>
+            </ButtonToolbar>
+          </form>
+        </Wrapper>
+      </PageTitle>
     );
   }
 }
