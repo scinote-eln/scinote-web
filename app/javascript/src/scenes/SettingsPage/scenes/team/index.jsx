@@ -15,6 +15,7 @@ import { getTeamDetails } from "../../../../services/api/teams_api";
 import { SETTINGS_TEAMS_ROUTE } from "../../../../config/routes";
 import { BORDER_LIGHT_COLOR } from "../../../../config/constants/colors";
 
+import PageTitle from "../../../../components/PageTitle";
 import TeamsMembers from "./components/TeamsMembers";
 import UpdateTeamDescriptionModal from "./components/UpdateTeamDescriptionModal";
 import UpdateTeamNameModal from "./components/UpdateTeamNameModal";
@@ -108,7 +109,7 @@ class SettingsTeam extends Component<Props, State> {
     // set team tab on active
     (this: any).props.tabState("2");
     const { id } = this.props.match.params;
-    if(id) {
+    if (id) {
       getTeamDetails(parseInt(id)).then(response => {
         const { team, users } = response;
         (this: any).setState({ users, team });
@@ -165,86 +166,91 @@ class SettingsTeam extends Component<Props, State> {
 
   render() {
     return (
-      <Wrapper>
-        <Breadcrumb>
-          <LinkContainer to={SETTINGS_TEAMS_ROUTE}>
-            <Breadcrumb.Item>
-              <FormattedMessage id="settings_page.all_teams" />
+      <PageTitle
+        localeID="page_title.team_page"
+        values={{ name: this.state.team.name }}
+      >
+        <Wrapper>
+          <Breadcrumb>
+            <LinkContainer to={SETTINGS_TEAMS_ROUTE}>
+              <Breadcrumb.Item>
+                <FormattedMessage id="settings_page.all_teams" />
+              </Breadcrumb.Item>
+            </LinkContainer>
+            <Breadcrumb.Item active={true}>
+              {this.state.team.name}
             </Breadcrumb.Item>
-          </LinkContainer>
-          <Breadcrumb.Item active={true}>
-            {this.state.team.name}
-          </Breadcrumb.Item>
-        </Breadcrumb>
-        <TabTitle>
-          <StyledH3 onClick={this.showNameModal}>
-            {this.state.team.name}
-          </StyledH3>
-        </TabTitle>
-        <Row>
-          <Col xs={6} sm={3}>
-            <BadgeWrapper>
-              <Glyphicon glyph="calendar" />
-            </BadgeWrapper>
-            <StyledWell>
-              <FormattedHTMLMessage
-                id="settings_page.single_team.created_on"
-                values={{
-                  created_at: moment(this.state.team.created_at).format(
-                    "DD.MM.YYYY"
-                  )
-                }}
-              />
-            </StyledWell>
-          </Col>
-          <Col xs={10} sm={5}>
-            <BadgeWrapper>
-              <Glyphicon glyph="user" />
-            </BadgeWrapper>
-            <StyledWell>
-              <FormattedHTMLMessage
-                id="settings_page.single_team.created_by"
-                values={{ created_by: this.state.team.created_by }}
-              />
-            </StyledWell>
-          </Col>
-          <Col xs={8} sm={4}>
-            <BadgeWrapper>
-              <Glyphicon glyph="hdd" />
-            </BadgeWrapper>
-            <StyledWell>
-              <FormattedHTMLMessage
-                id="settings_page.single_team.space_usage"
-                values={{
-                  space_usage: formatBytes(this.state.team.space_taken)
-                }}
-              />
-            </StyledWell>
-          </Col>
-        </Row>
-        <Row>
-          <Col sm={12} onClick={this.showDescriptionModal}>
-            <BadgeWrapper>
-              <Glyphicon glyph="info-sign" />
-            </BadgeWrapper>
-            <StyledDescriptionWell>
-              <span>{this.renderDescription()}</span>
-            </StyledDescriptionWell>
-          </Col>
-        </Row>
-        <TeamsMembers
-          members={this.state.users}
-          updateUsersCallback={this.updateUsersCallback}
-          team={this.state.team}
-        />
-        <UpdateTeamDescriptionModal
-          showModal={this.state.showDescriptionModal}
-          hideModal={this.hideDescriptionModalCallback}
-          team={this.state.team}
-          updateTeamCallback={this.updateTeamCallback}
-        />
-        {this.renderEditNameModal()}
-      </Wrapper>
+          </Breadcrumb>
+          <TabTitle>
+            <StyledH3 onClick={this.showNameModal}>
+              {this.state.team.name}
+            </StyledH3>
+          </TabTitle>
+          <Row>
+            <Col xs={6} sm={3}>
+              <BadgeWrapper>
+                <Glyphicon glyph="calendar" />
+              </BadgeWrapper>
+              <StyledWell>
+                <FormattedHTMLMessage
+                  id="settings_page.single_team.created_on"
+                  values={{
+                    created_at: moment(this.state.team.created_at).format(
+                      "DD.MM.YYYY"
+                    )
+                  }}
+                />
+              </StyledWell>
+            </Col>
+            <Col xs={10} sm={5}>
+              <BadgeWrapper>
+                <Glyphicon glyph="user" />
+              </BadgeWrapper>
+              <StyledWell>
+                <FormattedHTMLMessage
+                  id="settings_page.single_team.created_by"
+                  values={{ created_by: this.state.team.created_by }}
+                />
+              </StyledWell>
+            </Col>
+            <Col xs={8} sm={4}>
+              <BadgeWrapper>
+                <Glyphicon glyph="hdd" />
+              </BadgeWrapper>
+              <StyledWell>
+                <FormattedHTMLMessage
+                  id="settings_page.single_team.space_usage"
+                  values={{
+                    space_usage: formatBytes(this.state.team.space_taken)
+                  }}
+                />
+              </StyledWell>
+            </Col>
+          </Row>
+          <Row>
+            <Col sm={12} onClick={this.showDescriptionModal}>
+              <BadgeWrapper>
+                <Glyphicon glyph="info-sign" />
+              </BadgeWrapper>
+              <StyledDescriptionWell>
+                <span>{this.renderDescription()}</span>
+              </StyledDescriptionWell>
+            </Col>
+          </Row>
+          <TeamsMembers
+            members={this.state.users}
+            updateUsersCallback={this.updateUsersCallback}
+            team={this.state.team}
+          />
+          <UpdateTeamDescriptionModal
+            showModal={this.state.showDescriptionModal}
+            hideModal={this.hideDescriptionModalCallback}
+            team={this.state.team}
+            updateTeamCallback={this.updateTeamCallback}
+          />
+          {this.renderEditNameModal()}
+        </Wrapper>
+      </PageTitle>
     );
   }
 }

@@ -6,10 +6,11 @@ import { Breadcrumb } from "react-bootstrap";
 import { connect } from "react-redux";
 import { FormattedMessage } from "react-intl";
 import type { State } from "flow-typed";
-import type { MapStateToProps } from "react-redux"
+import type { MapStateToProps } from "react-redux";
 
 import { BORDER_LIGHT_COLOR } from "../../../../config/constants/colors";
 
+import PageTitle from "../../../../components/PageTitle";
 import TeamsPageDetails from "./components/TeamsPageDetails";
 import TeamsDataTable from "./components/TeamsDataTable";
 
@@ -25,12 +26,12 @@ const Wrapper = styled.div`
 type Props = {
   tabState: Function,
   teams: Array<Teams$Team>
-}
+};
 
 class SettingsTeams extends Component<Props> {
   static defaultProps = {
     teams: [{ id: 0, name: "", current_team: "", role: "", members: 0 }]
-  }
+  };
 
   componentDidMount() {
     // set team tab on active
@@ -40,15 +41,17 @@ class SettingsTeams extends Component<Props> {
   render() {
     const { teams } = this.props;
     return (
-      <Wrapper>
-        <Breadcrumb>
-          <Breadcrumb.Item active>
-            <FormattedMessage id="settings_page.all_teams" />
-          </Breadcrumb.Item>
-        </Breadcrumb>
-        <TeamsPageDetails teams={teams} />
-        <TeamsDataTable teams={teams} />
-      </Wrapper>
+      <PageTitle localeID="page_title.all_teams_page">
+        <Wrapper>
+          <Breadcrumb>
+            <Breadcrumb.Item active>
+              <FormattedMessage id="settings_page.all_teams" />
+            </Breadcrumb.Item>
+          </Breadcrumb>
+          <TeamsPageDetails teams={teams} />
+          <TeamsDataTable teams={teams} />
+        </Wrapper>
+      </PageTitle>
     );
   }
 }
