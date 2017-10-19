@@ -21,12 +21,13 @@
 
     // loops through a list of files and display each file in a separate panel
     function listItems() {
-      droppedFiles = droppedFiles.filter(Boolean);
+      totalSize = 0;
+      _enableSubmitButton();
       $('.panel-step-attachment-new').remove();
       _dragNdropAssetsOff();
       for(var i = 0; i < droppedFiles.length; i++) {
         $('#new-step-assets')
-          .append(_uploadedAseetPreview(droppedFiles[i], i))
+          .append(_uploadedAssetPreview(droppedFiles[i], i))
           .promise()
           .done(function() {
             _removeItemHandler(i);
@@ -42,7 +43,6 @@
       var prevEls = $('input').filter(function() {
         return this.name.match(regex);
       });
-      droppedFiles = droppedFiles.filter(Boolean);
       var fd = new FormData($(ev.target).closest('form').get(0));
       for(var i = 0; i < droppedFiles.length; i++) {
         var index = i + prevEls.length;
@@ -56,30 +56,55 @@
       return fd;
     }
 
-    function _validateFilesSize(file) {
-      var maxSize = file.size/1048576;
-      if(maxSize > <%= Constants::FILE_MAX_SIZE_MB %> && filesValid) {
-        return "<p><%= I18n.t 'general.file.size_exceeded', file_size: Constants::FILE_MAX_SIZE_MB %></p>";
+    function _disableSubmitButton() {
+      $('.step-save').prop('disabled', true);
+    }
+
+    function _enableSubmitButton() {
+      $('.step-save').prop('disabled', false);
+    }
+
+    function _filerAndCheckFiles() {
+      for(var i = 0; i < droppedFiles.length; i++) {
+        if(droppedFiles[i].isValid == false) {
+          return false;
+        }
       }
-      totalSize += parseInt(maxSize);
+      return (droppedFiles.length > 0);
+    }
+
+    function _validateFilesSize(file) {
+      var fileSize = file.size;
+      totalSize += parseInt(fileSize);
+      if(fileSize > <%= Constants::FILE_MAX_SIZE_MB.megabyte %>) {
+        file.isValid = false;
+        _disableSubmitButton();
+        return "<p class='dnd-error'><%= I18n.t 'general.file.size_exceeded', file_size: Constants::FILE_MAX_SIZE_MB %></p>";
+      }
       return '';
     }
 
     function _validateTotalSize() {
-      if(totalSize > <%= Constants::FILE_MAX_SIZE_MB %>) {
+      if(totalSize > <%= Constants::FILE_MAX_SIZE_MB.megabyte %>) {
         filesValid = false;
+        _disableSubmitButton();
         $.each($('.panel-step-attachment-new'), function() {
-          $(this)
-            .find('.panel-body')
-            .append("<p class='dnd-error'><%= I18n.t('general.file.total_size', size: Constants::FILE_MAX_SIZE_MB) %></p>");
+          if(!$(this).find('p').hasClass('dnd-total-error')) {
+            $(this)
+              .find('.panel-body')
+              .append("<p class='dnd-total-error'><%= I18n.t('general.file.total_size', size: Constants::FILE_MAX_SIZE_MB) %></p>");
+          }
         });
       } else {
-        $('.dnd-error').remove();
-        filesValid = true;
+        $('.dnd-total-error').remove();
+        if(_filerAndCheckFiles()) {
+          filesValid = true;
+          _enableSubmitButton();
+        }
       }
     }
 
-    function _uploadedAseetPreview(asset, i) {
+    function _uploadedAssetPreview(asset, i) {
       var html = '<div class="panel panel-default panel-step-attachment-new">';
       html += '<div class="panel-heading">';
       html += '<span class="glyphicon glyphicon-file"></span>';
@@ -104,10 +129,9 @@
         e.stopPropagation();
         var $el = $(this);
         var index = $el.data('item-id');
-        totalSize -= parseInt(droppedFiles[index]/1048576);
-        droppedFiles[index] = null;
-        $el.closest('.panel-step-attachment-new').remove();
-        _validateTotalSize();
+        totalSize -= parseInt(droppedFiles[index].size);
+        droppedFiles.splice(index, 1);
+        listItems();
       });
     }
 
@@ -131,11 +155,10 @@
     var totalSize = 0;
 
     function init(files) {
-      var filesPresent = droppedFiles.length;
       for(var i = 0; i < files.length; i++) {
         droppedFiles.push(files[i]);
       }
-      listItems(filesPresent);
+      listItems();
     }
 
     // return the status of files if they are ready to submit
@@ -144,18 +167,24 @@
     }
 
     // loops through a list of files and display each file in a separate panel
-    function listItems(index) {
-      _dragNdropAssetsOff();
-      for(var i = index; i < droppedFiles.length; i++) {
-          $('#new-result-assets-select')
-            .after(_uploadedAseetPreview(droppedFiles[i], i))
-            .promise()
-            .done(function() {
-              _removeItemHandler(i);
-            });
+    function listItems() {
+      totalSize = 0;
+      $('.panel-result-attachment-new').remove();
+      if(droppedFiles.length < 1) {
+        _disableSubmitButton();
+      } else {
+        _dragNdropAssetsOff();
+        for(var i = 0; i < droppedFiles.length; i++) {
+            $('#new-result-assets-select')
+              .after(_uploadedAssetPreview(droppedFiles[i], i))
+              .promise()
+              .done(function() {
+                _removeItemHandler(i);
+              });
+        }
+        _validateTotalSize();
+        dragNdropAssetsInit('results');
       }
-      _validateTotalSize();
-      dragNdropAssetsInit('results');
     }
 
     // appent the files to the form before submit
@@ -181,31 +210,51 @@
       return fd;
     }
 
+    function _disableSubmitButton() {
+      $('.save-result').prop('disabled', true);
+    }
+
+    function _enableSubmitButton() {
+      $('.save-result').prop('disabled', false);
+    }
+
     function _filerAndCheckFiles() {
-      droppedFiles = droppedFiles.filter(Boolean);
+      for(var i = 0; i < droppedFiles.length; i++) {
+        if(droppedFiles[i].isValid == false) {
+          return false;
+        }
+      }
       return (droppedFiles.length > 0);
     }
 
     function _validateFilesSize(file) {
-      var maxSize = file.size/1048576;
-      if(maxSize > <%= Constants::FILE_MAX_SIZE_MB %> && isValid) {
-        return "<p><%= I18n.t 'general.file.size_exceeded', file_size: Constants::FILE_MAX_SIZE_MB %></p>";
+      var fileSize = file.size;
+      totalSize += parseInt(fileSize);
+      if(fileSize > <%= Constants::FILE_MAX_SIZE_MB.megabyte %>) {
+        file.isValid = false;
+        _disableSubmitButton();
+        return "<p class='dnd-error'><%= I18n.t 'general.file.size_exceeded', file_size: Constants::FILE_MAX_SIZE_MB %></p>";
       }
-      totalSize += parseInt(maxSize);
       return '';
     }
 
     function _validateTotalSize() {
-      if(totalSize > <%= Constants::FILE_MAX_SIZE_MB %>) {
+      if(totalSize > <%= Constants::FILE_MAX_SIZE_MB.megabyte %>) {
         isValid = false;
+        _disableSubmitButton();
         $.each($('.panel-result-attachment-new'), function() {
-          $(this)
-            .find('.panel-body')
-            .append("<p class='dnd-error'><%= I18n.t('general.file.total_size', size: Constants::FILE_MAX_SIZE_MB) %></p>");
+          if(!$(this).find('p').hasClass('dnd-total-error')) {
+            $(this)
+              .find('.panel-body')
+              .append("<p class='dnd-total-error'><%= I18n.t('general.file.total_size', size: Constants::FILE_MAX_SIZE_MB) %></p>");
+            }
         });
       } else {
-        $('.dnd-error').remove();
-        isValid = true;
+        $('.dnd-total-error').remove();
+        if(_filerAndCheckFiles()) {
+          isValid = true;
+          _enableSubmitButton();
+        }
       }
     }
 
@@ -220,7 +269,7 @@
       }
     }
 
-    function _uploadedAseetPreview(asset, i) {
+    function _uploadedAssetPreview(asset, i) {
       var html = '<div class="panel panel-default panel-result-attachment-new">';
       html += '<div class="panel-heading">';
       html += '<span class="glyphicon glyphicon-file"></span>';
@@ -249,10 +298,9 @@
         e.stopPropagation();
         var $el = $(this);
         var index = $el.data('item-id');
-        totalSize -= parseInt(droppedFiles[index]/1048576);
-        droppedFiles[index] = null;
-        $el.closest('.panel-result-attachment-new').remove();
-        _validateTotalSize();
+        totalSize -= parseInt(droppedFiles[index].size);
+        droppedFiles.splice(index, 1);
+        listItems();
       });
     }
 
