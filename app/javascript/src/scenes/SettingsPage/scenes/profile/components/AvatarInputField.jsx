@@ -56,7 +56,7 @@ class AvatarInputField extends Component {
   render() {
     if (this.state.disabled) {
       return (
-        <AvatarWrapper onClick={this.enableEdit}>
+        <AvatarWrapper onClick={this.enableEdit} className="avatar-container">
           <img
             src={this.props.imgSource + this.state.timestamp}
             alt="default avatar"

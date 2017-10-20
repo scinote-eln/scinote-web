@@ -1,7 +1,7 @@
 module ClientApi
   class UserService < BaseService
     def update_user!
-      error = I18n.t('client_api.user.passwords_dont_match')
+      error = I18n.t('client_api.user.password_invalid')
       raise CustomUserError, error unless check_current_password
       @params.delete(:current_password) # removes unneeded element
       @current_user.update(@params)

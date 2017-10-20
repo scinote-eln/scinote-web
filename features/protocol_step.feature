@@ -40,7 +40,7 @@ And the following file:
    Given TASK page of a "Control" task of "qPCR" experiment of a "Protein" project of a Karli Novak user
    And I click to "Add new" button
    Then I fill in "PES" to Step name field
-   Then I fill in "Živali pa so se odpravile dalje po svetu." to Description field
+   Then I fill in "zivali pa so se odpravile dalje po svetu." to Description field
    And I click on "Files" tab
    And I click to "Browse to add" button
    Then "Open" window is opened
@@ -65,7 +65,7 @@ And the following file:
  Scenario: Successful edit Step
    Given TASK page of a "Control" task of "qPCR" experiment of a "Protein" project of a Karli Novak user
    And I click to "Edit step" icon of a "PES" Step
-   Then I change "Živali pa so se odpravile dalje po svetu." Description field with "Vse to pa zaradi botra petelina!" Description field
+   Then I change "zivali pa so se odpravile dalje po svetu." Description field with "Vse to pa zaradi botra petelina!" Description field
    And I click on "Files" tab
    And I click to "Browse to add" button
    Then "Open" window is opened
@@ -75,7 +75,7 @@ And the following file:
    Then I click on "Tables" tab
    And I fill in "Seznam pasem" to Table title field
    Then I change "Labradorec" cell content with "Bobtail" cell content to "A1" Table field
-   And I fill in "Kraški ovèar" to "D2" Table field
+   And I fill in "Kraski ovcar" to "D2" Table field
    Then I click on "Checklist" tab
    And I click on "+Add checklist" link
    And I click on "+Add item" link
@@ -157,7 +157,7 @@ And the following file:
  Scenario: Successful edit completed Step
    Given TASK page of a "Control" task of "qPCR" experiment of a "Protein" project of a Karli Novak user
    And I click to "Edit step" icon of a "PES" Step
-   Then I change "Vse to pa zaradi botra petelina!" Description field with "Bežimo, da se nam še kaj ne zgodi!" Description field
+   Then I change "Vse to pa zaradi botra petelina!" Description field with "Bezimo, da se nam se kaj ne zgodi!" Description field
    And I click on "Add" button
    Then I should see "PES" edited step
 

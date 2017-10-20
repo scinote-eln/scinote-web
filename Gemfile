@@ -103,11 +103,12 @@ end
 
 group :test do
   gem 'shoulda-matchers'
-  gem 'cucumber-rails', require: false
+  gem 'cucumber-rails', '~> 1.5'
   gem 'database_cleaner'
   gem 'capybara'
-  gem 'poltergeist'
-  gem 'phantomjs', :require => 'phantomjs/poltergeist'
+  gem 'headless'
+  gem 'capybara-webkit', '~> 1.14'
+  gem 'selenium-webdriver'
   gem 'simplecov', require: false
 end
 

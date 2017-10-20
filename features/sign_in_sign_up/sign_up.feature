@@ -16,14 +16,14 @@ Feature: Sign up
     Then I fill the sign up form with
     | Full name | Email          | Password | Password confirmation | Team name   |
     | Magnus    | tusk@gmail.com | asdf1234 | asdf1234              | SpliceGirls |
-    And I click 'Sign up' button
-    Then I should see 'has already been taken'
+    And I click "Sign up" button
+    Then I should see "has already been taken"
 
   Scenario: Sign up for an non-existent user
     Given I visit the sign up page
     Then I fill the sign up form with
     | Full name | Email          | Password | Password confirmation | Team name   |
     | Magnus    | magnus@gmail.com | asdf1234 | asdf1234            | SpliceGirls |
-    And I click 'Sign up' button
-    Then I should see 'SpliceGirls'
+    And I click "Sign up" button
+    Then I should see "SpliceGirls"
     And I should be on homepage

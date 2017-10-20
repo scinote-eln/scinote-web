@@ -5,18 +5,40 @@
 # files.
 
 require 'cucumber/rails'
-require 'phantomjs'
-require 'capybara/poltergeist'
+require 'capybara/cucumber'
+require 'capybara-webkit'
 require 'simplecov'
+require 'headless'
 
-Capybara.register_driver :poltergeist do |app|
-  Capybara::Poltergeist::Driver.new(app,
-                                    js_errors: true,
-                                    phantomjs: Phantomjs.path)
+headless = Headless.new
+headless.start
+
+Capybara::Webkit.configure do |config|
+  # Enable debug mode. Prints a log of everything the driver is doing.
+  config.debug = false
+
+  # Allow pages to make requests to any URL without issuing a warning.
+  config.allow_unknown_urls
+
+  # Timeout if requests take longer than 5 seconds
+  config.timeout = 30
+
+  # Don't raise errors when SSL certificates can't be validated
+  config.ignore_ssl_errors
+
+  # Raise JavaScript errors as exceptions
+  config.raise_javascript_errors = false
 end
 
-Capybara.javascript_driver = :poltergeist
-Capybara.default_max_wait_time = 5
+Capybara.javascript_driver = :webkit
+Capybara.default_max_wait_time = 30
+
+# Precompile webpacker to avoid render bugs in capybara webkit
+# global hook throws an error :( https://github.com/cucumber/cucumber/wiki/Hooks
+Before('@compile') do
+  system('NODE_ENV=production bundle exec rails webpacker:compile')
+end
+
 # Capybara defaults to CSS3 selectors rather than XPath.
 # If you'd prefer to use XPath, just uncomment this line and adjust any
 # selectors in your step definitions to use the XPath syntax.
