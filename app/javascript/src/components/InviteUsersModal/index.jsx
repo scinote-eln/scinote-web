@@ -4,7 +4,6 @@ import React, { Component } from "react";
 import { FormattedMessage } from "react-intl";
 import { Modal, ButtonToolbar, Button } from "react-bootstrap";
 import styled from "styled-components";
-import type { Team } from "flow-typed";
 
 import { inviteUsersToTeam } from "../../services/api/user_team_api";
 import { getTeamDetails } from "../../services/api/teams_api";
@@ -16,6 +15,12 @@ import InviteUsersButton from "./components/InviteUsersButton";
 const StyledButtonToolbar = styled(ButtonToolbar)`
   float: right;
 `;
+
+
+type Team = {
+  id: number,
+  name: string
+}
 
 type Props = {
   showModal: boolean,

@@ -1,3 +1,4 @@
+// @flow
 import React, { Component } from "react";
 import { Route, Switch, Redirect } from "react-router-dom";
 import { LinkContainer } from "react-router-bootstrap";
@@ -23,19 +24,40 @@ import SettingsTeams from "./scenes/teams";
 import SettingsTeam from "./scenes/team";
 import SettingsNewTeam from "./scenes/teams/new";
 
-export default class SettingsPage extends Component {
-  constructor(props) {
+type State = {
+  active: string
+}
+
+let componentMounted = false;
+
+export default class SettingsPage extends Component<*, State> {
+  constructor(props: *) {
     super(props);
 
     this.state = {
       active: "1"
     };
-    this.handleSelect = this.handleSelect.bind(this);
+    (this: any).handleSelect = this.handleSelect.bind(this);
+    (this: any).setTabState = this.setTabState.bind(this);
   }
 
-  handleSelect(eventKey) {
+  componentDidMount(): void {
+    componentMounted = true;
+  }
+
+  componentWillUnmount(): void {
+    componentMounted = false;
+  }
+
+  setTabState(tab: string): void {
+    if (tab !== this.state.active && componentMounted) {
+      (this: any).setState({ active: tab });
+    }
+  }
+
+  handleSelect(eventKey: string): void {
     event.preventDefault();
-    this.setState({ active: eventKey });
+    (this: any).setState({ active: eventKey });
   }
 
   render() {
@@ -56,7 +78,7 @@ export default class SettingsPage extends Component {
               active={this.state.active === "2"}
             >
               <NavItem eventKey="2">
-                <FormattedMessage id="settings_page.team" />
+                <FormattedMessage id="settings_page.teams" />
               </NavItem>
             </LinkContainer>
           </Nav>
@@ -72,16 +94,35 @@ export default class SettingsPage extends Component {
                 />
               )}
             />
-            <Route path={SETTINGS_NEW_TEAM_ROUTE} component={SettingsNewTeam} />
-            <Route path={SETTINGS_TEAM_ROUTE} component={SettingsTeam} />
-            <Route path={SETTINGS_TEAMS_ROUTE} component={SettingsTeams} />
+            <Route
+              path={SETTINGS_NEW_TEAM_ROUTE}
+              component={props => (
+                <SettingsNewTeam {...props} tabState={this.setTabState} />
+              )}
+            />
+            <Route
+              path={SETTINGS_TEAM_ROUTE}
+              component={props => (
+                <SettingsTeam {...props} tabState={this.setTabState} />
+              )}
+            />
+            <Route
+              path={SETTINGS_TEAMS_ROUTE}
+              component={props => (
+                <SettingsTeams {...props} tabState={this.setTabState} />
+              )}
+            />
             <Route
               path={SETTINGS_ACCOUNT_PROFILE}
-              component={SettingsProfile}
+              component={props => (
+                <SettingsProfile {...props} tabState={this.setTabState} />
+              )}
             />
             <Route
               path={SETTINGS_ACCOUNT_PREFERENCES}
-              component={SettingsPreferences}
+              component={props => (
+                <SettingsPreferences {...props} tabState={this.setTabState} />
+              )}
             />
             <Route component={NotFound} />
           </Switch>

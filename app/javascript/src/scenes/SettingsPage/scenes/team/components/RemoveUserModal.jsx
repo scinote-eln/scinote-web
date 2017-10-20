@@ -3,14 +3,15 @@
 import React, { Component } from "react";
 import { Modal, Button, Alert, Glyphicon } from "react-bootstrap";
 import { FormattedMessage, FormattedHTMLMessage } from "react-intl";
+import type { Team$TeamMemeber } from "flow-typed";
 import { removeUserFromTeam } from "../../../../../services/api/user_team_api";
-import type { TeamMemeber } from "../"
+
 
 type Props = {
   showModal: boolean,
   hideModal: Function,
   updateUsersCallback: Function,
-  userToRemove: TeamMemeber
+  userToRemove: Team$TeamMemeber
 };
 
 class RemoveUserModal extends Component<Props> {
@@ -25,8 +26,8 @@ class RemoveUserModal extends Component<Props> {
   }
 
   removeUser(): void {
-    const { team_id, team_user_id } = this.props.userToRemove;
-    removeUserFromTeam(team_id, team_user_id)
+    const { teamId, teamUserId } = this.props.userToRemove;
+    removeUserFromTeam(teamId, teamUserId)
       .then(response => {
         this.props.updateUsersCallback(response);
         this.props.hideModal();

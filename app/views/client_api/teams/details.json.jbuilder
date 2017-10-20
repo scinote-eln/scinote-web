@@ -15,8 +15,8 @@ json.team_details do
     json.created_at I18n.l(team_user.created_at, format: :full_date)
     json.status team_user.user.active_status_str
     json.actions do
-      json.current_role team_user.role_str
-      json.team_user_id team_user.id
+      json.currentRole team_user.role_str
+      json.teamUserId team_user.id
       json.disable team_user.user == current_user
     end
   end

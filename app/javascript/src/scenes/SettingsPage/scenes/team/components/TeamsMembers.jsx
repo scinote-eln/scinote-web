@@ -1,5 +1,6 @@
+// @flow
 import React, { Component } from "react";
-import PropTypes, { number, func, string, bool } from "prop-types";
+import type { Node } from "react";
 import {
   Row,
   Panel,
@@ -9,13 +10,13 @@ import {
   MenuItem
 } from "react-bootstrap";
 import styled from "styled-components";
-import { FormattedMessage } from "react-intl";
-import axios from "../../../../../config/axios";
+import type { Teams$TeamMember, Team$TeamMemeber, Teams$TeamMemberActions } from "flow-typed";
 
+import { FormattedMessage } from "react-intl";
+import { updateUserTeamRole } from "../../../../../services/api/user_team_api";
 import InviteUsersModal from "../../../../../components/InviteUsersModal";
 import RemoveUserModal from "./RemoveUserModal";
 import DataTable from "../../../../../components/data_table";
-import { UPDATE_USER_TEAM_ROLE_PATH } from "../../../../../config/api_endpoints";
 
 const StyledButton = styled(Button)`
   margin-bottom: 10px;
@@ -24,62 +25,87 @@ const StyledButton = styled(Button)`
 
 const initalUserToRemove = {
   userName: "",
-  team_user_id: 0,
+  teamUserId: 0,
   teamName: "",
-  team_id: 0
+  teamId: 0
 };
-class TeamsMembers extends Component {
-  constructor(params) {
-    super(params);
+
+type Team = {
+  id: number,
+  name: string
+};
+
+type TableColumns = {
+  name: string,
+  email: string,
+  role: number,
+  created_at: string,
+  status: string,
+  actuons: Teams$TeamMemberActions
+}
+
+type Props = {
+  updateUsersCallback: Function,
+  team: Team,
+  members: Array<Teams$TeamMember>
+};
+
+type State = {
+  showModal: boolean,
+  showInviteUsersModal: boolean,
+  userToRemove: Team$TeamMemeber
+};
+
+class TeamsMembers extends Component<Props, State> {
+  constructor(props: Props) {
+    super(props);
     this.state = {
       showModal: false,
       showInviteUsersModal: false,
       userToRemove: initalUserToRemove
     };
-    this.memberAction = this.memberAction.bind(this);
-    this.showInviteUsersModalCallback = this.showInviteUsersModalCallback.bind(
+    (this: any).memberAction = this.memberAction.bind(this);
+    (this: any).showInviteUsersModalCallback = this.showInviteUsersModalCallback.bind(
       this
     );
-    this.closeInviteUsersModalCallback = this.closeInviteUsersModalCallback.bind(
+    (this: any).closeInviteUsersModalCallback = this.closeInviteUsersModalCallback.bind(
       this
     );
-    this.hideModal = this.hideModal.bind(this);
+    (this: any).hideModal = this.hideModal.bind(this);
   }
 
-  currentRole(memberRole, role) {
-    return memberRole === role ? <Glyphicon glyph="ok" /> : "  ";
+  currentRole(memberRole: string, role: string): Node {
+    return memberRole === role ? <Glyphicon glyph="ok" /> : <span />;
   }
 
-  updateRole(userTeamId, role) {
-    axios
-      .put(UPDATE_USER_TEAM_ROLE_PATH, {
-        team: this.props.team.id,
-        user_team: userTeamId,
-        role
-      })
+  updateRole(userTeamId: number, role: number): void {
+    updateUserTeamRole(this.props.team.id, userTeamId, role)
       .then(response => {
-        this.props.updateUsersCallback(response.data.team_users);
+        this.props.updateUsersCallback(response);
       })
       .catch(error => console.log(error));
   }
 
-  showInviteUsersModalCallback() {
-    this.setState({ showInviteUsersModal: true });
+  showInviteUsersModalCallback(): void {
+    (this: any).setState({ showInviteUsersModal: true });
   }
 
-  closeInviteUsersModalCallback() {
-    this.setState({ showInviteUsersModal: false });
+  closeInviteUsersModalCallback(): void {
+    (this: any).setState({ showInviteUsersModal: false });
   }
 
-  hideModal() {
-    this.setState({ showModal: false, userToRemove: initalUserToRemove });
+  hideModal(): void {
+    (this: any).setState({
+      showModal: false,
+      userToRemove: initalUserToRemove
+    });
   }
 
-  userToRemove(userToRemove) {
-    this.setState({ showModal: true, userToRemove });
+  userToRemove(userToRemove: Teams$TeamMemberActions): void {
+    (this: any).setState({ showModal: true, userToRemove });
   }
 
-  memberAction(data, row) {
+  memberAction(data: Teams$TeamMemberActions, row: TableColumns): Node {
     return (
       <DropdownButton
         bsStyle="default"
@@ -97,28 +123,28 @@ class TeamsMembers extends Component {
         <MenuItem
           onSelect={() => {
             // 0 => Guest
-            this.updateRole(data.team_user_id, 0);
+            this.updateRole(data.teamUserId, 0);
           }}
         >
-          {this.currentRole(data.current_role, "Guest")}
+          {this.currentRole(data.currentRole, "Guest")}
           <FormattedMessage id="settings_page.single_team.actions.guest" />
         </MenuItem>
         <MenuItem
           onSelect={() => {
             // 1 => Normal user
-            this.updateRole(data.team_user_id, 1);
+            this.updateRole(data.teamUserId, 1);
           }}
         >
-          {this.currentRole(data.current_role, "Normal user")}
+          {this.currentRole(data.currentRole, "Normal user")}
           <FormattedMessage id="settings_page.single_team.actions.normal_user" />
         </MenuItem>
         <MenuItem
           onSelect={() => {
             // 2 => Administrator
-            this.updateRole(data.team_user_id, 2);
+            this.updateRole(data.teamUserId, 2);
           }}
         >
-          {this.currentRole(data.current_role, "Administrator")}
+          {this.currentRole(data.currentRole, "Administrator")}
           <FormattedMessage id="settings_page.single_team.actions.administrator" />
         </MenuItem>
         <MenuItem divider />
@@ -126,9 +152,9 @@ class TeamsMembers extends Component {
           onClick={() => {
             this.userToRemove({
               userName: row.name,
-              team_user_id: data.team_user_id,
+              teamUserId: data.teamUserId,
               teamName: this.props.team.name,
-              team_id: this.props.team.id
+              teamId: this.props.team.id
             });
           }}
         >
@@ -242,28 +268,5 @@ class TeamsMembers extends Component {
     );
   }
 }
-
-TeamsMembers.propTypes = {
-  updateUsersCallback: func.isRequired,
-  team: PropTypes.shape({
-    id: number.isRequired,
-    name: string.isRequired
-  }).isRequired,
-  members: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: number.isRequired,
-      name: string.isRequired,
-      email: string.isRequired,
-      role: string.isRequired,
-      created_at: string.isRequired,
-      status: string.isRequired,
-      actions: PropTypes.shape({
-        current_role: string.isRequired,
-        team_user_id: number.isRequired,
-        disable: bool.isRequired
-      })
-    }).isRequired
-  ).isRequired
-};
 
 export default TeamsMembers;

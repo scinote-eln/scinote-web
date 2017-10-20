@@ -1,3 +1,4 @@
+// @flow
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import {
@@ -9,18 +10,19 @@ import {
   Button,
   ButtonToolbar
 } from "react-bootstrap";
-import { Redirect } from "react-router";
+import { Redirect } from "react-router-dom";
 import { LinkContainer } from "react-router-bootstrap";
 import { FormattedMessage } from "react-intl";
 import update from "immutability-helper";
 import styled from "styled-components";
 import _ from "lodash";
-import axios from "../../../../../config/axios";
+import type { Teams$NewTeam } from "flow-typed";
+import { createNewTeam } from "../../../../../services/api/teams_api";
 import {
   SETTINGS_TEAMS_ROUTE,
   SETTINGS_TEAM_ROUTE
 } from "../../../../../config/routes";
-import { TEAMS_NEW_PATH } from "../../../../../config/api_endpoints";
+
 import {
   NAME_MIN_LENGTH,
   NAME_MAX_LENGTH,
@@ -46,8 +48,24 @@ const MyFormGroupDiv = styled.div`
   margin-bottom: 15px;
 `;
 
-class SettingsNewTeam extends Component {
-  constructor(props) {
+type Props = {
+  tabState: Function,
+  getTeamsList: Function
+};
+
+type FormErrors = {
+  name: string,
+  description: string
+};
+
+type State = {
+  team: Teams$NewTeam,
+  formErrors: FormErrors,
+  redirectTo: string
+};
+
+class SettingsNewTeam extends Component<Props, State> {
+  constructor(props: Props) {
     super(props);
     this.state = {
       team: {
@@ -61,52 +79,52 @@ class SettingsNewTeam extends Component {
       redirectTo: ""
     };
 
-    this.onSubmit = this.onSubmit.bind(this);
-    this.validateField = this.validateField.bind(this);
-    this.handleChange = this.handleChange.bind(this);
-    this.renderTeamNameFormGroup = this.renderTeamNameFormGroup.bind(this);
-    this.renderTeamDescriptionFormGroup = this.renderTeamDescriptionFormGroup.bind(
+    (this: any).onSubmit = this.onSubmit.bind(this);
+    (this: any).validateField = this.validateField.bind(this);
+    (this: any).handleChange = this.handleChange.bind(this);
+    (this: any).renderTeamNameFormGroup = this.renderTeamNameFormGroup.bind(
+      this
+    );
+    (this: any).renderTeamDescriptionFormGroup = this.renderTeamDescriptionFormGroup.bind(
       this
     );
   }
 
-  onSubmit(e) {
-    e.preventDefault();
+  componentDidMount(): void {
+    this.props.tabState("2");
+  }
 
-    axios({
-      method: "post",
-      url: TEAMS_NEW_PATH,
-      withCredentials: true,
-      data: { team: this.state.team }
-    })
-      .then(sr => {
+  onSubmit(e: SyntheticEvent<HTMLInputElement>): void {
+    e.preventDefault();
+    createNewTeam(this.state.team)
+      .then(response => {
         // Redirect to the new team page
         this.props.getTeamsList();
-        this.newState = { ...this.state };
-        this.newState = update(this.newState, {
+        (this: any).newState = { ...this.state };
+        (this: any).newState = update((this: any).newState, {
           redirectTo: {
-            $set: SETTINGS_TEAM_ROUTE.replace(":id", sr.data.details.id)
+            $set: SETTINGS_TEAM_ROUTE.replace(":id", response.details.id)
           }
         });
-        this.setState(this.newState);
+        (this: any).setState((this: any).newState);
       })
       .catch(er => {
         // Display errors
-        this.newState = { ...this.state };
+        (this: any).newState = { ...this.state };
         ["name", "description"].forEach(el => {
           if (er.response.data.details[el]) {
-            this.newState = update(this.newState, {
+            (this: any).newState = update((this: any).newState, {
               formErrors: {
                 name: { $set: <span>{er.response.data.details[el]}</span> }
               }
             });
           }
         });
-        this.setState(this.newState);
+        (this: any).setState((this: any).newState);
       });
   }
 
-  validateField(key, value) {
+  validateField(key: string, value: string) {
     let errorMessage;
     if (key === "name") {
       errorMessage = "";
@@ -127,7 +145,7 @@ class SettingsNewTeam extends Component {
         );
       }
 
-      this.newState = update(this.newState, {
+      (this: any).newState = update((this: any).newState, {
         formErrors: { name: { $set: errorMessage } }
       });
     } else if (key === "description") {
@@ -142,26 +160,28 @@ class SettingsNewTeam extends Component {
         );
       }
 
-      this.newState = update(this.newState, {
+      (this: any).newState = update((this: any).newState, {
         formErrors: { description: { $set: errorMessage } }
       });
     }
   }
 
-  handleChange(e) {
+  handleChange(e: SyntheticInputEvent<HTMLInputElement>): void {
     const key = e.target.name;
     const value = e.target.value;
 
-    this.newState = { ...this.state };
+    (this: any).newState = { ...this.state };
 
     // Update value in the state
-    this.newState = update(this.newState, { team: { [key]: { $set: value } } });
+    (this: any).newState = update((this: any).newState, {
+      team: { [key]: { $set: value } }
+    });
 
     // Validate the input
-    this.validateField(key, value);
+    (this: any).validateField(key, value);
 
     // Refresh state
-    this.setState(this.newState);
+    (this: any).setState((this: any).newState);
   }
 
   renderTeamNameFormGroup() {

@@ -1,28 +1,24 @@
+// @flow
+
 import React, { Component } from "react";
-import ReactRouterPropTypes from "react-router-prop-types";
 import styled from "styled-components";
 import { Breadcrumb, Row, Col, Glyphicon, Well } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { FormattedHTMLMessage, FormattedMessage } from "react-intl";
 import moment from "moment";
+import type { Match } from "react-router-dom";
+import type { Teams$Team, Team$TeamMemeber } from "flow-typed";
+
 import { formatBytes } from "../../../../services/helpers/units_converter_helper";
-import axios from "../../../../config/axios";
+import { getTeamDetails } from "../../../../services/api/teams_api";
 
 import { SETTINGS_TEAMS_ROUTE } from "../../../../config/routes";
-import { TEAM_DETAILS_PATH } from "../../../../config/api_endpoints";
 import { BORDER_LIGHT_COLOR } from "../../../../config/constants/colors";
 
 import PageTitle from "../../../../components/PageTitle";
 import TeamsMembers from "./components/TeamsMembers";
 import UpdateTeamDescriptionModal from "./components/UpdateTeamDescriptionModal";
 import UpdateTeamNameModal from "./components/UpdateTeamNameModal";
-
-export type TeamMemeber = {
-  userName: string,
-  team_user_id: number,
-  teamName: string,
-  team_id: number
-};
 
 const Wrapper = styled.div`
   background: white;
@@ -70,8 +66,20 @@ const StyledH3 = styled.h3`
   }
 `;
 
-class SettingsTeam extends Component {
-  constructor(props) {
+type Props = {
+  tabState: Function,
+  match: Match
+};
+
+type State = {
+  showDescriptionModal: boolean,
+  showNameModal: boolean,
+  users: Array<Team$TeamMemeber>,
+  team: Teams$Team
+};
+
+class SettingsTeam extends Component<Props, State> {
+  constructor(props: Props) {
     super(props);
     this.state = {
       showDescriptionModal: false,
@@ -86,48 +94,51 @@ class SettingsTeam extends Component {
         space_taken: 0
       }
     };
-    this.showDescriptionModal = this.showDescriptionModal.bind(this);
-    this.hideDescriptionModalCallback = this.hideDescriptionModalCallback.bind(
+    (this: any).showDescriptionModal = this.showDescriptionModal.bind(this);
+    (this: any).hideDescriptionModalCallback = this.hideDescriptionModalCallback.bind(
       this
     );
-    this.updateTeamCallback = this.updateTeamCallback.bind(this);
-    this.updateUsersCallback = this.updateUsersCallback.bind(this);
-    this.showNameModal = this.showNameModal.bind(this);
-    this.hideNameModalCallback = this.hideNameModalCallback.bind(this);
-    this.renderEditNameModel = this.renderEditNameModel.bind(this);
+    (this: any).updateTeamCallback = this.updateTeamCallback.bind(this);
+    (this: any).updateUsersCallback = this.updateUsersCallback.bind(this);
+    (this: any).showNameModal = this.showNameModal.bind(this);
+    (this: any).hideNameModalCallback = this.hideNameModalCallback.bind(this);
+    (this: any).renderEditNameModal = this.renderEditNameModal.bind(this);
   }
 
-  componentDidMount() {
+  componentDidMount(): void {
+    // set team tab on active
+    (this: any).props.tabState("2");
     const { id } = this.props.match.params;
-    const path = TEAM_DETAILS_PATH.replace(":team_id", id);
-    axios.get(path).then(response => {
-      const { team, users } = response.data.team_details;
-      this.setState({ users, team });
-    });
+    if (id) {
+      getTeamDetails(parseInt(id)).then(response => {
+        const { team, users } = response;
+        (this: any).setState({ users, team });
+      });
+    }
   }
 
-  showDescriptionModal() {
-    this.setState({ showDescriptionModal: true });
+  showDescriptionModal(): void {
+    (this: any).setState({ showDescriptionModal: true });
   }
 
-  hideDescriptionModalCallback() {
-    this.setState({ showDescriptionModal: false });
+  hideDescriptionModalCallback(): void {
+    (this: any).setState({ showDescriptionModal: false });
   }
 
-  showNameModal() {
-    this.setState({ showNameModal: true });
+  showNameModal(): void {
+    (this: any).setState({ showNameModal: true });
   }
 
-  hideNameModalCallback() {
-    this.setState({ showNameModal: false });
+  hideNameModalCallback(): void {
+    (this: any).setState({ showNameModal: false });
   }
 
-  updateTeamCallback(team) {
-    this.setState({ team });
+  updateTeamCallback(team: Teams$Team): void {
+    (this: any).setState({ team });
   }
 
-  updateUsersCallback(users) {
-    this.setState({ users });
+  updateUsersCallback(users: Array<Team$TeamMemeber>): void {
+    (this: any).setState({ users });
   }
 
   renderDescription() {
@@ -139,7 +150,7 @@ class SettingsTeam extends Component {
     );
   }
 
-  renderEditNameModel() {
+  renderEditNameModal() {
     if (this.state.showNameModal) {
       return (
         <UpdateTeamNameModal
@@ -150,6 +161,7 @@ class SettingsTeam extends Component {
         />
       );
     }
+    return <span />;
   }
 
   render() {
@@ -236,15 +248,11 @@ class SettingsTeam extends Component {
             team={this.state.team}
             updateTeamCallback={this.updateTeamCallback}
           />
-          {this.renderEditNameModel()}
+          {this.renderEditNameModal()}
         </Wrapper>
       </PageTitle>
     );
   }
 }
-
-SettingsTeam.PropTypes = {
-  match: ReactRouterPropTypes.match.isRequired
-};
 
 export default SettingsTeam;
