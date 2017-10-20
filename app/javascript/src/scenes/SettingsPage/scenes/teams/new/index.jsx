@@ -3,10 +3,8 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import {
   Breadcrumb,
-  FormGroup,
   FormControl,
   ControlLabel,
-  HelpBlock,
   Button,
   ButtonToolbar
 } from "react-bootstrap";
@@ -22,13 +20,20 @@ import {
   SETTINGS_TEAMS_ROUTE,
   SETTINGS_TEAM_ROUTE
 } from "../../../../../config/routes";
-
-import {
-  NAME_MIN_LENGTH,
-  NAME_MAX_LENGTH,
-  TEXT_MAX_LENGTH
-} from "../../../../../config/constants/numeric";
+import { TEAMS_NEW_PATH } from "../../../../../config/api_endpoints";
 import { getTeamsList } from "../../../../../components/actions/TeamsActions";
+import {
+  ValidatedForm,
+  ValidatedFormGroup,
+  ValidatedFormControl,
+  ValidatedErrorHelpBlock,
+  ValidatedSubmitButton
+} from "../../../../../components/validation";
+import {
+  nameLengthValidator,
+  textMaxLengthValidator
+
+} from "../../../../../components/validation/validators/text_validators";
 
 import { BORDER_LIGHT_COLOR } from "../../../../../config/constants/colors";
 
@@ -53,14 +58,8 @@ type Props = {
   getTeamsList: Function
 };
 
-type FormErrors = {
-  name: string,
-  description: string
-};
-
 type State = {
   team: Teams$NewTeam,
-  formErrors: FormErrors,
   redirectTo: string
 };
 
@@ -72,15 +71,10 @@ class SettingsNewTeam extends Component<Props, State> {
         name: "",
         description: ""
       },
-      formErrors: {
-        name: "",
-        description: ""
-      },
       redirectTo: ""
     };
 
     (this: any).onSubmit = this.onSubmit.bind(this);
-    (this: any).validateField = this.validateField.bind(this);
     (this: any).handleChange = this.handleChange.bind(this);
     (this: any).renderTeamNameFormGroup = this.renderTeamNameFormGroup.bind(
       this
@@ -100,138 +94,62 @@ class SettingsNewTeam extends Component<Props, State> {
       .then(response => {
         // Redirect to the new team page
         this.props.getTeamsList();
-        (this: any).newState = { ...this.state };
-        (this: any).newState = update((this: any).newState, {
+
+        const newState = update((this: any).state, {
           redirectTo: {
             $set: SETTINGS_TEAM_ROUTE.replace(":id", response.details.id)
           }
         });
-        (this: any).setState((this: any).newState);
+        (this: any).setState(newState);
       })
       .catch(er => {
         // Display errors
-        (this: any).newState = { ...this.state };
-        ["name", "description"].forEach(el => {
-          if (er.response.data.details[el]) {
-            (this: any).newState = update((this: any).newState, {
-              formErrors: {
-                name: { $set: <span>{er.response.data.details[el]}</span> }
-              }
-            });
-          }
-        });
-        (this: any).setState((this: any).newState);
+        (this: any).newTeamForm.setErrors(er.response.data.details);
       });
   }
 
-  validateField(key: string, value: string) {
-    let errorMessage;
-    if (key === "name") {
-      errorMessage = "";
-
-      if (value.length < NAME_MIN_LENGTH) {
-        errorMessage = (
-          <FormattedMessage
-            id="error_messages.text_too_short"
-            values={{ min_length: NAME_MIN_LENGTH }}
-          />
-        );
-      } else if (value.length > NAME_MAX_LENGTH) {
-        errorMessage = (
-          <FormattedMessage
-            id="error_messages.text_too_long"
-            values={{ max_length: NAME_MAX_LENGTH }}
-          />
-        );
-      }
-
-      (this: any).newState = update((this: any).newState, {
-        formErrors: { name: { $set: errorMessage } }
-      });
-    } else if (key === "description") {
-      errorMessage = "";
-
-      if (value.length > TEXT_MAX_LENGTH) {
-        errorMessage = (
-          <FormattedMessage
-            id="error_messages.text_too_long"
-            values={{ max_length: TEXT_MAX_LENGTH }}
-          />
-        );
-      }
-
-      (this: any).newState = update((this: any).newState, {
-        formErrors: { description: { $set: errorMessage } }
-      });
-    }
-  }
-
-  handleChange(e: SyntheticInputEvent<HTMLInputElement>): void {
-    const key = e.target.name;
+  handleChange(e: SyntheticInputEvent<HTMLInputElement>, tag: string): void {
     const value = e.target.value;
 
-    (this: any).newState = { ...this.state };
-
-    // Update value in the state
-    (this: any).newState = update((this: any).newState, {
-      team: { [key]: { $set: value } }
+    const newState = update((this: any).state, {
+      team: { [tag]: { $set: value } }
     });
-
-    // Validate the input
-    (this: any).validateField(key, value);
-
-    // Refresh state
-    (this: any).setState((this: any).newState);
+    (this: any).setState(newState);
   }
 
   renderTeamNameFormGroup() {
-    const formGroupClass = this.state.formErrors.name
-      ? "form-group has-error"
-      : "form-group";
-    const validationState = this.state.formErrors.name ? "error" : null;
     return (
-      <FormGroup
-        controlId="formTeamName"
-        className={formGroupClass}
-        validationState={validationState}
-      >
+      <ValidatedFormGroup tag="name">
         <ControlLabel>
           <FormattedMessage id="settings_page.new_team.name_label" />
         </ControlLabel>
         <NameFormControl
           value={this.state.team.name}
-          onChange={this.handleChange}
-          name="name"
+          tag="name"
+          validatorsOnChange={[nameLengthValidator]}
+          onChange={(e) => this.handleChange(e, "name")}
         />
         <FormControl.Feedback />
-        <HelpBlock>{this.state.formErrors.name}</HelpBlock>
-      </FormGroup>
+        <ValidatedErrorHelpBlock tag="name" />
+      </ValidatedFormGroup>
     );
   }
 
   renderTeamDescriptionFormGroup() {
-    const formGroupClass = this.state.formErrors.description
-      ? "form-group has-error"
-      : "form-group";
-    const validationState = this.state.formErrors.description ? "error" : null;
     return (
-      <FormGroup
-        controlId="formTeamDescription"
-        className={formGroupClass}
-        validationState={validationState}
-      >
+      <ValidatedFormGroup tag="description">
         <ControlLabel>
           <FormattedMessage id="settings_page.new_team.description_label" />
         </ControlLabel>
-        <FormControl
+        <ValidatedFormControl
           componentClass="textarea"
           value={this.state.team.description}
-          onChange={this.handleChange}
-          name="description"
+          tag="description"
+          validatorsOnChange={[textMaxLengthValidator]}
+          onChange={(e) => this.handleChange(e, "description")}
         />
-        <FormControl.Feedback />
-        <HelpBlock>{this.state.formErrors.description}</HelpBlock>
-      </FormGroup>
+        <ValidatedErrorHelpBlock tag="description" />
+      </ValidatedFormGroup>
     );
   }
 
@@ -240,10 +158,6 @@ class SettingsNewTeam extends Component<Props, State> {
     if (!_.isEmpty(this.state.redirectTo)) {
       return <Redirect to={this.state.redirectTo} />;
     }
-
-    const btnDisabled =
-      !_.isEmpty(this.state.formErrors.name) ||
-      !_.isEmpty(this.state.formErrors.description);
 
     return (
       <PageTitle localeID="page_title.new_team_page">
@@ -259,7 +173,11 @@ class SettingsNewTeam extends Component<Props, State> {
             </Breadcrumb.Item>
           </Breadcrumb>
 
-          <form onSubmit={this.onSubmit} style={{ maxWidth: "500px" }}>
+          <ValidatedForm
+            onSubmit={this.onSubmit}
+            ref={(f) => { (this: any).newTeamForm = f; }}
+            style={{ maxWidth: "500px" }}
+          >
             <MyFormGroupDiv>
               {this.renderTeamNameFormGroup()}
               <small>
@@ -274,20 +192,19 @@ class SettingsNewTeam extends Component<Props, State> {
               </small>
             </MyFormGroupDiv>
             <ButtonToolbar>
-              <Button
+              <ValidatedSubmitButton
                 type="submit"
                 className="btn-primary"
-                disabled={btnDisabled}
               >
                 <FormattedMessage id="settings_page.new_team.create" />
-              </Button>
+              </ValidatedSubmitButton>
               <LinkContainer to={SETTINGS_TEAMS_ROUTE}>
                 <Button>
                   <FormattedMessage id="general.cancel" />
                 </Button>
               </LinkContainer>
             </ButtonToolbar>
-          </form>
+          </ValidatedForm>
         </Wrapper>
       </PageTitle>
     );

@@ -16,6 +16,12 @@ export default {
       all_teams_page: "SciNote | Settings | Teams",
       new_team_page: "SciNote | Settings | Teams | New"
     },
+    validators: {
+      text_validators: {
+        text_too_short: "is too short (minimum is {min_length} characters)",
+        text_too_long: "is too long (maximum is {max_length} characters)"
+      }
+    },
     error_messages: {
       text_too_short: "is too short (minimum is {min_length} characters)",
       text_too_long: "is too long (maximum is {max_length} characters)",
