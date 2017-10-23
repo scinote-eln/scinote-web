@@ -775,11 +775,6 @@ en:
       archived_on: "Archived on"
       archived_on_title: "Task archived on %{date} at %{time}."
 
-  my_module_groups:
-    new:
-      name: "Workflow %{index}"
-      suffix: "..."
-
   tags:
     new:
       head_title: "Create tag"
