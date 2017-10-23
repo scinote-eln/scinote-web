@@ -1,10 +1,6 @@
 class MyModuleGroup < ApplicationRecord
   include SearchableModel
 
-  auto_strip_attributes :name, nullify: false
-  validates :name,
-            presence: true,
-            length: { maximum: Constants::NAME_MAX_LENGTH }
   validates :experiment, presence: true
 
   belongs_to :experiment, inverse_of: :my_module_groups, optional: true
@@ -14,39 +10,12 @@ class MyModuleGroup < ApplicationRecord
              optional: true
   has_many :my_modules, inverse_of: :my_module_group, dependent: :nullify
 
-  def self.search(user,
-                  include_archived,
-                  query = nil,
-                  page = 1,
-                  _current_team = nil,
-                  options = {})
-    exp_ids =
-      Experiment
-      .search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
-      .pluck(:id)
-
-    new_query = MyModuleGroup
-                .distinct
-                .where('my_module_groups.experiment_id IN (?)', exp_ids)
-                .where_attributes_like('my_module_groups.name', query, options)
-
-    # Show all results if needed
-    if page == Constants::SEARCH_NO_LIMIT
-      new_query
-    else
-      new_query
-        .limit(Constants::SEARCH_LIMIT)
-        .offset((page - 1) * Constants::SEARCH_LIMIT)
-    end
-  end
-
   def ordered_modules
     my_modules.order(workflow_order: :asc)
   end
 
   def deep_clone_to_experiment(current_user, experiment)
     clone = MyModuleGroup.new(
-      name: name,
       created_by: created_by,
       experiment: experiment
     )

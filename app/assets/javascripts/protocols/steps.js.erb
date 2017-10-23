@@ -540,8 +540,9 @@
     var nameValid = textValidator(ev, $nameInput, 1,
       <%= Constants::NAME_MAX_LENGTH %>);
     var $descrTextarea = $form.find("#step_description");
+    var $tinyMCEInput = TinyMCE.getContent();
     var descriptionValid = textValidator(ev, $descrTextarea, 0,
-      <%= Constants::TEXT_MAX_LENGTH %>);
+      <%= Constants::TEXT_MAX_LENGTH %>, false, $tinyMCEInput);
 
     if (DragNDropSteps.filesStatus() &&
         checklistsValid &&

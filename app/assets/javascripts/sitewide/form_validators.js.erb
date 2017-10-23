@@ -22,11 +22,11 @@ $.fn.onSubmitValidator = function(validatorCb) {
  * @param {boolean} clearErr Set clearErr to true if this is the only
  * error that can happen/show.
  */
-function textValidator(ev, textInput, textLimitMin, textLimitMax, clearErr, tinyMCE) {
+function textValidator(ev, textInput, textLimitMin, textLimitMax, clearErr, tinyMCEInput) {
   clearErr = _.isUndefined(clearErr) ? false : clearErr;
 
-  if(tinyMCE){
-    var text = textInput.length;
+  if(tinyMCEInput){
+    var text = tinyMCEInput;
   } else {
     var text = $(textInput).val().trim();
     $(textInput).val(text);

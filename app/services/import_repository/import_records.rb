@@ -17,9 +17,11 @@ module ImportRepository
     private
 
     def run_import_actions
-      @repository.import_records(@repository.open_spreadsheet(@temp_file.file),
-                                 @mappings,
-                                 @user)
+      @repository.import_records(
+        SpreadsheetParser.open_spreadsheet(@temp_file.file),
+        @mappings,
+        @user
+      )
     end
 
     def run_checks

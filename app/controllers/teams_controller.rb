@@ -7,106 +7,57 @@ class TeamsController < ApplicationController
   def parse_sheet
     session[:return_to] ||= request.referer
 
-    respond_to do |format|
-      if params[:file]
-        begin
+    unless params[:file]
+      return parse_sheet_error(t('teams.parse_sheet.errors.no_file_selected'))
+    end
+    if params[:file].size > Constants::FILE_MAX_SIZE_MB.megabytes
+      error = t('general.file.size_exceeded',
+                file_size: Constants::FILE_MAX_SIZE_MB)
+      return parse_sheet_error(error)
+    end
 
-          if params[:file].size > Constants::FILE_MAX_SIZE_MB.megabytes
-            error = t 'general.file.size_exceeded',
-                      file_size: Constants::FILE_MAX_SIZE_MB
+    begin
+      sheet = SpreadsheetParser.open_spreadsheet(params[:file])
+      @header, @columns = SpreadsheetParser.first_two_rows(sheet)
 
-            format.html {
-              flash[:alert] = error
-              redirect_to session.delete(:return_to)
+      if @header.empty? || @columns.empty?
+        return parse_sheet_error(t('teams.parse_sheet.errors.empty_file'))
+      end
+
+      # Fill in fields for dropdown
+      @available_fields = @team.get_available_sample_fields
+      # Truncate long fields
+      @available_fields.update(@available_fields) do |_k, v|
+        v.truncate(Constants::NAME_TRUNCATION_LENGTH_DROPDOWN)
+      end
+
+      # Save file for next step (importing)
+      @temp_file = TempFile.new(
+        session_id: session.id,
+        file: params[:file]
+      )
+
+      if @temp_file.save
+        @temp_file.destroy_obsolete
+        respond_to do |format|
+          format.json do
+            render json: {
+              html: render_to_string(
+                partial: 'samples/parse_samples_modal.html.erb'
+              )
             }
-            format.json {
-              render json: {message: error},
-                status: :unprocessable_entity
-            }
-
-          else
-            sheet = Team.open_spreadsheet(params[:file])
-
-            # Check if we actually have any rows (last_row > 1)
-            if sheet.last_row.between?(0, 1)
-              flash[:notice] = t(
-                "teams.parse_sheet.errors.empty_file")
-              redirect_to session.delete(:return_to) and return
-            end
-
-            # Get data (it will trigger any errors as well)
-            @header = sheet.row(1)
-            @columns = sheet.row(2)
-
-            # Fill in fields for dropdown
-            @available_fields = @team.get_available_sample_fields
-            # Truncate long fields
-            @available_fields.update(@available_fields) do |_k, v|
-              v.truncate(Constants::NAME_TRUNCATION_LENGTH_DROPDOWN)
-            end
-
-            # Save file for next step (importing)
-            @temp_file = TempFile.new(
-              session_id: session.id,
-              file: params[:file]
-            )
-
-            if @temp_file.save
-              @temp_file.destroy_obsolete
-              # format.html
-              format.json {
-                render :json => {
-                  :html => render_to_string({
-                    :partial => "samples/parse_samples_modal.html.erb"
-                  })
-                }
-              }
-            else
-              error = t("teams.parse_sheet.errors.temp_file_failure")
-              format.html {
-                flash[:alert] = error
-                redirect_to session.delete(:return_to)
-              }
-              format.json {
-                render json: {message: error},
-                  status: :unprocessable_entity
-              }
-            end
           end
-        rescue ArgumentError, CSV::MalformedCSVError
-          error = t('teams.parse_sheet.errors.invalid_file',
-                    encoding: ''.encoding)
-          format.html {
-            flash[:alert] = error
-            redirect_to session.delete(:return_to)
-          }
-          format.json {
-            render json: {message: error},
-              status: :unprocessable_entity
-          }
-        rescue TypeError
-          error =  t("teams.parse_sheet.errors.invalid_extension")
-          format.html {
-            flash[:alert] = error
-            redirect_to session.delete(:return_to)
-          }
-          format.json {
-            render json: {message: error},
-              status: :unprocessable_entity
-          }
         end
       else
-        error = t("teams.parse_sheet.errors.no_file_selected")
-        format.html {
-          flash[:alert] = error
-          session[:return_to] ||= request.referer
-          redirect_to session.delete(:return_to)
-        }
-        format.json {
-          render json: {message: error},
-            status: :unprocessable_entity
-        }
+        return parse_sheet_error(
+          t('teams.parse_sheet.errors.temp_file_failure')
+        )
       end
+    rescue ArgumentError, CSV::MalformedCSVError
+      return parse_sheet_error(t('teams.parse_sheet.errors.invalid_file',
+                                 encoding: ''.encoding))
+    rescue TypeError
+      return parse_sheet_error(t('teams.parse_sheet.errors.invalid_extension'))
     end
   end
 
@@ -122,7 +73,7 @@ class TeamsController < ApplicationController
           if @temp_file.session_id == session.id
             # Check if mappings exists or else we don't have anything to parse
             if params[:mappings]
-              @sheet = Team.open_spreadsheet(@temp_file.file)
+              @sheet = SpreadsheetParser.open_spreadsheet(@temp_file.file)
 
               # Check for duplicated values
               h1 = params[:mappings].clone.delete_if { |k, v| v.empty? }
@@ -274,6 +225,20 @@ class TeamsController < ApplicationController
   end
 
   private
+
+  def parse_sheet_error(error)
+    respond_to do |format|
+      format.html do
+        flash[:alert] = error
+        session[:return_to] ||= request.referer
+        redirect_to session.delete(:return_to)
+      end
+      format.json do
+        render json: { message: error },
+          status: :unprocessable_entity
+      end
+    end
+  end
 
   def load_vars
     @team = Team.find_by_id(params[:id])
