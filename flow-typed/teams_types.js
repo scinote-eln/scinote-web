@@ -21,7 +21,6 @@ export type Teams$NewTeam = {
   description: string
 };
 
-
 export type Teams$Team = {
   id: number,
   name: string,

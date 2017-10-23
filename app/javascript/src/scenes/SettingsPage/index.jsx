@@ -7,14 +7,13 @@ import { FormattedMessage } from "react-intl";
 
 import {
   ROOT_PATH,
+  SETTINGS_PATH,
   SETTINGS_TEAMS_ROUTE,
   SETTINGS_TEAM_ROUTE,
   SETTINGS_ACCOUNT_PROFILE,
   SETTINGS_ACCOUNT_PREFERENCES,
   SETTINGS_NEW_TEAM_ROUTE
 } from "../../config/routes";
-
-import { SETTINGS_PATH, SETTINGS_TEAMS } from "../../config/api_endpoints";
 
 import PageTitle from "../../components/PageTitle";
 import NotFound from "../../components/404/NotFound";
@@ -74,7 +73,7 @@ export default class SettingsPage extends Component<*, State> {
               </NavItem>
             </LinkContainer>
             <LinkContainer
-              to={SETTINGS_TEAMS}
+              to={SETTINGS_TEAMS_ROUTE}
               active={this.state.active === "2"}
             >
               <NavItem eventKey="2">

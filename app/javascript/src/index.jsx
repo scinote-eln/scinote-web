@@ -9,7 +9,6 @@ import messages from "./config/locales/messages";
 import store from "./config/store";
 
 import AlertsContainer from "./components/AlertsContainer";
-import ModalsContainer from "./components/ModalsContainer";
 import SettingsPage from "./scenes/SettingsPage";
 import Navigation from "./components/Navigation";
 
@@ -34,7 +33,6 @@ const ScinoteApp = () =>
             </ContentWrapper>
           </div>
         </BrowserRouter>
-        <ModalsContainer />
       </div>
     </IntlProvider>
   </Provider>;

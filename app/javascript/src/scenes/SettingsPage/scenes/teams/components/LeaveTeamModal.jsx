@@ -3,14 +3,12 @@ import PropTypes, { bool, number, string, func } from "prop-types";
 import { Modal, Button, Alert, Glyphicon } from "react-bootstrap";
 import { FormattedMessage, FormattedHTMLMessage } from "react-intl";
 import { connect } from "react-redux";
-import axios from "../../../config/axios";
+import { leaveTeam } from "../../../../../services/api/teams_api";
 
-import { LEAVE_TEAM_PATH } from "../../../config/api_endpoints";
 import {
   addTeamsData,
-  setCurrentTeam,
-  leaveTeamModalShow
-} from "../../actions/TeamsActions";
+  setCurrentTeam
+} from "../../../../../components/actions/TeamsActions";
 
 class LeaveTeamModal extends Component {
   constructor(props) {
@@ -20,26 +18,22 @@ class LeaveTeamModal extends Component {
   }
 
   onCloseModal() {
-    this.props.leaveTeamModalShow(false);
+    this.props.hideLeaveTeamModel();
   }
 
   leaveTeam() {
-    const teamUrl = `${LEAVE_TEAM_PATH}?team=${this.props.team
-      .id}&user_team=${this.props.team.user_team_id}`;
-    axios
-      .delete(teamUrl, {
-        withCredentials: true
-      })
+    const { id, user_team_id } = this.props.team;
+    leaveTeam(id, user_team_id)
       .then(response => {
-        const teams = response.data.teams.collection;
+        const { teams, currentTeam } = response;
+        this.props.updateTeamsState(teams);
         this.props.addTeamsData(teams);
-        const currentTeam = _.find(teams, team => team.current_team);
         this.props.setCurrentTeam(currentTeam);
       })
       .catch(error => {
         console.log("error: ", error.response.data.message);
       });
-    this.props.leaveTeamModalShow(false);
+    this.props.hideLeaveTeamModel();
   }
 
   render() {
@@ -90,6 +84,7 @@ class LeaveTeamModal extends Component {
 }
 
 LeaveTeamModal.propTypes = {
+  updateTeamsState: func.isRequired,
   showModal: bool.isRequired,
   team: PropTypes.shape({
     id: number.isRequired,
@@ -97,17 +92,11 @@ LeaveTeamModal.propTypes = {
     user_team_id: number.isRequired
   }).isRequired,
   addTeamsData: func.isRequired,
-  leaveTeamModalShow: func.isRequired,
+  hideLeaveTeamModel: func.isRequired,
   setCurrentTeam: func.isRequired
 };
 
-const mapStateToProps = ({ showLeaveTeamModal }) => ({
-  showModal: showLeaveTeamModal.show,
-  team: showLeaveTeamModal.team
-});
-
-export default connect(mapStateToProps, {
-  leaveTeamModalShow,
+export default connect(null, {
   addTeamsData,
   setCurrentTeam
 })(LeaveTeamModal);

@@ -1,24 +1,40 @@
 import React, { Component } from "react";
 import PropTypes, { func, number, string, bool } from "prop-types";
-import { connect } from "react-redux";
 import { Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { FormattedMessage } from "react-intl";
-import { leaveTeamModalShow } from "../../../../../components/actions/TeamsActions";
 import DataTable from "../../../../../components/data_table";
 import { SETTINGS_TEAMS_ROUTE } from "../../../../../config/routes";
+import LeaveTeamModal from "./LeaveTeamModal";
 
+const DefaultTeam = {
+  id: 0,
+  name: "",
+  current_team: false,
+  user_team_id: 0,
+  role: "",
+  members: 0,
+  can_be_leaved: false
+};
 class TeamsDataTable extends Component {
   constructor(props) {
     super(props);
-
+    this.state = {
+      leaveTeamModalShow: false,
+      team: DefaultTeam
+    };
     this.leaveTeamModal = this.leaveTeamModal.bind(this);
     this.leaveTeamButton = this.leaveTeamButton.bind(this);
     this.linkToTeam = this.linkToTeam.bind(this);
+    this.hideLeaveTeamModel = this.hideLeaveTeamModel.bind(this);
   }
 
   leaveTeamModal(e, team) {
-    this.props.leaveTeamModalShow(true, team);
+    this.setState({ leaveTeamModalShow: true, team });
+  }
+
+  hideLeaveTeamModel() {
+    this.setState({ leaveTeamModalShow: false, team: DefaultTeam });
   }
 
   leaveTeamButton(id, team) {
@@ -90,18 +106,26 @@ class TeamsDataTable extends Component {
       }
     ];
     return (
-      <DataTable
-        data={this.props.teams}
-        columns={columns}
-        pagination
-        options={options}
-      />
+      <div>
+        <DataTable
+          data={this.props.teams}
+          columns={columns}
+          pagination
+          options={options}
+        />
+        <LeaveTeamModal
+          updateTeamsState={this.props.updateTeamsState}
+          showModal={this.state.leaveTeamModalShow}
+          team={this.state.team}
+          hideLeaveTeamModel={this.hideLeaveTeamModel}
+        />
+      </div>
     );
   }
 }
 
 TeamsDataTable.propTypes = {
-  leaveTeamModalShow: func.isRequired,
+  updateTeamsState: func.isRequired,
   teams: PropTypes.arrayOf(
     PropTypes.shape({
       id: number.isRequired,
@@ -114,4 +138,4 @@ TeamsDataTable.propTypes = {
   )
 };
 
-export default connect(null, { leaveTeamModalShow })(TeamsDataTable);
+export default TeamsDataTable;
