@@ -30,7 +30,6 @@ class ValidatedErrorHelpBlock extends Component {
     super(props);
 
     this.cleanProps = this.cleanProps.bind(this);
-    this.cleanProps = this.cleanProps.bind(this);
   }
 
   cleanProps() {

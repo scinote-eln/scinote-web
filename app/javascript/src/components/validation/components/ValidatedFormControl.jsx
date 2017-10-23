@@ -16,7 +16,7 @@ class ValidatedFormControl extends Component {
     const value = e.target.value;
 
     // Pass-through "original" onChange
-    if (_.has(this.props, "onChange")) {
+    if (_.has(this.props, "onChange") && this.props.onChange !== undefined) {
       this.props.onChange(e);
     }
 

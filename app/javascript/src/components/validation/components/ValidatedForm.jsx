@@ -4,6 +4,14 @@ import PropTypes from "prop-types";
 import _ from "lodash";
 
 class ValidatedForm extends Component {
+  static parseErrors(errors) {
+    // This method is quite smart, in the sense that accepts either
+    // errors in 3 shapes: localized error messages ({}),
+    // unlocalized error messages ({}), or mere strings (unlocalized)
+    const arr = _.isString(errors) ? [errors] : errors;
+    return arr.map((el) => _.isString(el) ? { message: el } : el);
+  }
+
   constructor(props) {
     super(props);
 
@@ -34,19 +42,17 @@ class ValidatedForm extends Component {
   }
 
   setErrors(errors) {
-    // This method is quite smart, in the sense that accepts either
-    // errors in 3 shapes: localized error messages ({}),
-    // unlocalized error messages ({}), or mere strings (unlocalized)
     const newState = {};
     _.entries(errors).forEach(([key, value]) => {
-      const arr = _.isString(value) ? [value] : value;
-      newState[key] = arr.map((el) => _.isString(el) ? { message: el } : el);
+      newState[key] = ValidatedForm.parseErrors(value);
     });
     this.setState(newState);
   }
 
   setErrorsForTag(tag, errors) {
-    const newState = update(this.state, { [tag]: { $set: errors } });
+    const newState = update(this.state, {
+      [tag]: { $set: ValidatedForm.parseErrors(errors) }
+    });
     this.setState(newState);
   }
 

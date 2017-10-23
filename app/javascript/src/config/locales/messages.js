@@ -19,7 +19,9 @@ export default {
     validators: {
       text_validators: {
         text_too_short: "is too short (minimum is {min_length} characters)",
-        text_too_long: "is too long (maximum is {max_length} characters)"
+        text_too_long: "is too long (maximum is {max_length} characters)",
+        text_blank: "can't be blank",
+        invalid_email: "invalid email"
       }
     },
     error_messages: {

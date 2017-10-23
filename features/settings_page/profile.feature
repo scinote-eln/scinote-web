@@ -103,7 +103,7 @@ Scenario: Unsuccessful Password Change, current password is invalid
   And I fill in "mypassword5678" in New password field
   And I fill in "mypassword5678" in New password confirmation field
   Then I click "Update" button
-  And I should see "Password is invalid!"
+  And I should see "incorrect password"
 
 @javascript
 Scenario: Successful Password Change
