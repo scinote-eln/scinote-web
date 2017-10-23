@@ -1,5 +1,6 @@
+//  @flow
 import React, { Component } from "react";
-import PropTypes, { bool, number, string, func } from "prop-types";
+import type { Node } from "react";
 import { Modal, Button, Alert, Glyphicon } from "react-bootstrap";
 import { FormattedMessage, FormattedHTMLMessage } from "react-intl";
 import { connect } from "react-redux";
@@ -10,18 +11,33 @@ import {
   setCurrentTeam
 } from "../../../../../components/actions/TeamsActions";
 
-class LeaveTeamModal extends Component {
-  constructor(props) {
+type Team = {
+  id: number,
+  name: string,
+  user_team_id: number
+};
+
+type Props = {
+  updateTeamsState: Function,
+  showModal: boolean,
+  team: Team,
+  addTeamsData: Function,
+  hideLeaveTeamModel: Function,
+  setCurrentTeam: Function
+};
+
+class LeaveTeamModal extends Component<Props> {
+  constructor(props: Props) {
     super(props);
-    this.onCloseModal = this.onCloseModal.bind(this);
-    this.leaveTeam = this.leaveTeam.bind(this);
+    (this: any).onCloseModal = this.onCloseModal.bind(this);
+    (this: any).leaveTeam = this.leaveTeam.bind(this);
   }
 
-  onCloseModal() {
+  onCloseModal(): void {
     this.props.hideLeaveTeamModel();
   }
 
-  leaveTeam() {
+  leaveTeam(): void {
     const { id, user_team_id } = this.props.team;
     leaveTeam(id, user_team_id)
       .then(response => {
@@ -36,7 +52,7 @@ class LeaveTeamModal extends Component {
     this.props.hideLeaveTeamModel();
   }
 
-  render() {
+  render(): Node {
     return (
       <Modal show={this.props.showModal} onHide={this.onCloseModal}>
         <Modal.Header closeButton>
@@ -82,19 +98,6 @@ class LeaveTeamModal extends Component {
     );
   }
 }
-
-LeaveTeamModal.propTypes = {
-  updateTeamsState: func.isRequired,
-  showModal: bool.isRequired,
-  team: PropTypes.shape({
-    id: number.isRequired,
-    name: string.isRequired,
-    user_team_id: number.isRequired
-  }).isRequired,
-  addTeamsData: func.isRequired,
-  hideLeaveTeamModel: func.isRequired,
-  setCurrentTeam: func.isRequired
-};
 
 export default connect(null, {
   addTeamsData,

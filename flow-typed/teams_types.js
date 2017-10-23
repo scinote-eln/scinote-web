@@ -27,5 +27,6 @@ export type Teams$Team = {
   current_team: boolean,
   role: string,
   members: number,
-  can_be_leaved: boolean
+  can_be_leaved: boolean,
+  user_team_id: number
 };

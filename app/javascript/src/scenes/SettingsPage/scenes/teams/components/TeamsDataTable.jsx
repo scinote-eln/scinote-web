@@ -1,5 +1,7 @@
+// @flow
 import React, { Component } from "react";
-import PropTypes, { func, number, string, bool } from "prop-types";
+import type { Node } from "react";
+import type { Teams$Team } from "flow-typed";
 import { Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { FormattedMessage } from "react-intl";
@@ -16,28 +18,43 @@ const DefaultTeam = {
   members: 0,
   can_be_leaved: false
 };
-class TeamsDataTable extends Component {
-  constructor(props) {
+
+type Props = {
+  updateTeamsState: Function,
+  teams: Array<Teams$Team>
+}
+
+type State = {
+  leaveTeamModalShow: boolean,
+  team: Teams$Team
+}
+
+class TeamsDataTable extends Component<Props, State> {
+  constructor(props: Props) {
     super(props);
     this.state = {
       leaveTeamModalShow: false,
       team: DefaultTeam
     };
-    this.leaveTeamModal = this.leaveTeamModal.bind(this);
-    this.leaveTeamButton = this.leaveTeamButton.bind(this);
-    this.linkToTeam = this.linkToTeam.bind(this);
-    this.hideLeaveTeamModel = this.hideLeaveTeamModel.bind(this);
+    (this: any).leaveTeamModal = this.leaveTeamModal.bind(this);
+    (this: any).leaveTeamButton = this.leaveTeamButton.bind(this);
+    (this: any).linkToTeam = this.linkToTeam.bind(this);
+    (this: any).hideLeaveTeamModel = this.hideLeaveTeamModel.bind(this);
   }
 
-  leaveTeamModal(e, team) {
-    this.setState({ leaveTeamModalShow: true, team });
+  leaveTeamModal(e: string, team: Teams$Team): void {
+    (this: any).setState({ leaveTeamModalShow: true, team });
   }
 
-  hideLeaveTeamModel() {
-    this.setState({ leaveTeamModalShow: false, team: DefaultTeam });
+  hideLeaveTeamModel(): void {
+    (this: any).setState({ leaveTeamModalShow: false, team: DefaultTeam });
   }
 
-  leaveTeamButton(id, team) {
+  linkToTeam(name: string, team: Teams$Team): Node {
+    return <Link to={`${SETTINGS_TEAMS_ROUTE}/${team.id}`}>{name}</Link>;
+  }
+
+  leaveTeamButton(id: string, team: Teams$Team): Node {
     if (team.can_be_leaved) {
       return (
         <Button onClick={e => this.leaveTeamModal(e, team)}>
@@ -52,11 +69,7 @@ class TeamsDataTable extends Component {
     );
   }
 
-  linkToTeam(name, row) {
-    return <Link to={`${SETTINGS_TEAMS_ROUTE}/${row.id}`}>{name}</Link>;
-  }
-
-  render() {
+  render(): Node {
     const options = {
       defaultSortName: "name",
       defaultSortOrder: "desc",
@@ -123,19 +136,5 @@ class TeamsDataTable extends Component {
     );
   }
 }
-
-TeamsDataTable.propTypes = {
-  updateTeamsState: func.isRequired,
-  teams: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: number.isRequired,
-      name: string.isRequired,
-      current_team: bool.isRequired,
-      role: string.isRequired,
-      members: number.isRequired,
-      can_be_leaved: bool.isRequired
-    }).isRequired
-  )
-};
 
 export default TeamsDataTable;
