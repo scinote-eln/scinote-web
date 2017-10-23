@@ -32,30 +32,6 @@ class Team < ApplicationRecord
   has_many :protocol_keywords, inverse_of: :team, dependent: :destroy
   has_many :tiny_mce_assets, inverse_of: :team, dependent: :destroy
   has_many :repositories, dependent: :destroy
-  # Based on file's extension opens file (used for importing)
-  def self.open_spreadsheet(file)
-    filename = file.original_filename
-    file_path = file.path
-
-    if file.class == Paperclip::Attachment and file.is_stored_on_s3?
-      fa = file.fetch
-      file_path = fa.path
-    end
-
-    case File.extname(filename)
-    when '.csv' then
-      Roo::CSV.new(file_path, extension: :csv)
-    when '.tsv' then
-      Roo::CSV.new(file_path, csv_options: { col_sep: "\t" })
-    when '.txt' then
-      # This assumption is based purely on biologist's habits
-      Roo::CSV.new(file_path, csv_options: { col_sep: "\t" })
-    when '.xlsx' then
-      Roo::Excelx.new(file_path)
-    else
-      raise TypeError
-    end
-  end
 
   def search_users(query = nil)
     a_query = "%#{query}%"
@@ -72,6 +48,7 @@ class Team < ApplicationRecord
     errors = false
     nr_of_added = 0
     total_nr = 0
+    header_skipped = false
 
     # First let's query for all custom_fields we're refering to
     custom_fields = []
@@ -97,10 +74,22 @@ class Team < ApplicationRecord
         custom_fields << cf
       end
     end
+
+    rows = SpreadsheetParser.spreadsheet_enumerator(sheet)
+
     # Now we can iterate through sample data and save stuff into db
-    (2..sheet.last_row).each do |i|
+    rows.each do |row|
+      # Skip empty rows
+      next if row.empty?
+      unless header_skipped
+        header_skipped = true
+        next
+      end
       total_nr += 1
-      sample = Sample.new(name: sheet.row(i)[sname_index],
+      # Creek XLSX parser returns Hash of the row, Roo - Array
+      row = row.is_a?(Hash) ? row.values.map(&:to_s) : row.map(&:to_s)
+
+      sample = Sample.new(name: row[sname_index],
                           team: self,
                           user: user)
 
@@ -110,12 +99,14 @@ class Team < ApplicationRecord
           raise ActiveRecord::Rollback
         end
 
-        sheet.row(i).each.with_index do |value, index|
+        row.each.with_index do |value, index|
           if index == stype_index
-            stype = SampleType.where(name: value.strip, team: self).take
+            stype = SampleType.where(team: self)
+                              .where('name ILIKE ?', value.strip)
+                              .take
 
             unless stype
-              stype = SampleType.new(name: value, team: self)
+              stype = SampleType.new(name: value.strip, team: self)
               unless stype.save
                 errors = true
                 raise ActiveRecord::Rollback
@@ -123,10 +114,12 @@ class Team < ApplicationRecord
             end
             sample.sample_type = stype
           elsif index == sgroup_index
-            sgroup = SampleGroup.where(name: value.strip, team: self).take
+            sgroup = SampleGroup.where(team: self)
+                                .where('name ILIKE ?', value.strip)
+                                .take
 
             unless sgroup
-              sgroup = SampleGroup.new(name: value, team: self)
+              sgroup = SampleGroup.new(name: value.strip, team: self)
               unless sgroup.save
                 errors = true
                 raise ActiveRecord::Rollback

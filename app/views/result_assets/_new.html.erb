@@ -11,6 +11,7 @@
   <br />
     <button type="button"
             class="btn btn-primary save-result"
+            disabled="true"
             data-href="<%= my_module_result_assets_path(format: :json) %>"
             onClick="DragNDropResults.processResult(this)"><%=t 'result_assets.new.create' %></button>
     <button type="button"
@@ -18,5 +19,4 @@
             onClick="DragNDropResults.destroyAll()">
       <%= t("general.cancel")%>
     </button>
-  <%# end %>
 </div>

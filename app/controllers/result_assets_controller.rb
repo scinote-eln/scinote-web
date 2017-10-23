@@ -76,23 +76,23 @@ class ResultAssetsController < ApplicationController
 
     @result.last_modified_by = current_user
     @result.assign_attributes(update_params)
-    success_flash = t("result_assets.update.success_flash",
-            module: @my_module.name)
+    success_flash = t('result_assets.update.success_flash',
+                      module: @my_module.name)
 
     if @result.archived_changed?(from: false, to: true)
       if previous_asset.locked?
         respond_to do |format|
-          format.html {
+          format.html do
             flash[:error] = t('result_assets.archive.error_flash')
             redirect_to results_my_module_path(@my_module)
             return
-          }
+          end
         end
       end
 
       saved = @result.archive(current_user)
-      success_flash = t("result_assets.archive.success_flash",
-            module: @my_module.name)
+      success_flash = t('result_assets.archive.success_flash',
+                        module: @my_module.name)
       if saved
         Activity.create(
           type_of: :archive_result,
@@ -126,7 +126,7 @@ class ResultAssetsController < ApplicationController
       # Asset (file) and/or name has been changed
       saved = @result.save
 
-      if saved then
+      if saved
         # Release team's space taken due to
         # previous asset being removed
         team = @result.my_module.experiment.project.team
@@ -134,9 +134,7 @@ class ResultAssetsController < ApplicationController
         team.save
 
         # Post process new file if neccesary
-        if @result.asset.present?
-          @result.asset.post_process_file(team)
-        end
+        @result.asset.post_process_file(team) if @result.asset.present?
 
         Activity.create(
           type_of: :edit_result,
@@ -144,32 +142,33 @@ class ResultAssetsController < ApplicationController
           project: @my_module.experiment.project,
           experiment: @my_module.experiment,
           my_module: @my_module,
-          message: t(
-            "activities.edit_asset_result",
-            user: current_user.full_name,
-            result: @result.name
-          )
+          message: t('activities.edit_asset_result',
+                     user: current_user.full_name,
+                     result: @result.name)
         )
       end
     end
 
     respond_to do |format|
       if saved
-        format.html {
+        format.html do
           flash[:success] = success_flash
           redirect_to results_my_module_path(@my_module)
-        }
-        format.json {
+        end
+        format.json do
           render json: {
-            html: render_to_string({
-              partial: "my_modules/result.html.erb", locals: {result: @result}
-            })
+            html: render_to_string(
+              partial: 'my_modules/result.html.erb', locals: { result: @result }
+            )
           }, status: :ok
-        }
+        end
       else
-        format.json {
-          render json: @result.errors, status: :bad_request
-        }
+        format.json do
+          render json: {
+            status: :error,
+            errors: @result.errors
+          }, status: :bad_request
+        end
       end
     end
   end
@@ -189,22 +188,15 @@ class ResultAssetsController < ApplicationController
 
   def load_vars_nested
     @my_module = MyModule.find_by_id(params[:my_module_id])
-
-    unless @my_module
-      render_404
-    end
+    render_404 unless @my_module
   end
 
   def check_create_permissions
-    unless can_create_result_asset_in_module(@my_module)
-      render_403
-    end
+    render_403 unless can_create_result_asset_in_module(@my_module)
   end
 
   def check_edit_permissions
-    unless can_edit_result_asset_in_module(@my_module)
-      render_403
-    end
+    render_403 unless can_edit_result_asset_in_module(@my_module)
   end
 
   def check_archive_permissions

@@ -64,7 +64,6 @@ module PermissionHelper
       :can_edit_connections,
       :can_create_modules,
       :can_edit_modules,
-      :can_edit_module_groups,
       :can_clone_modules,
       :can_archive_modules,
       :can_view_reports,
@@ -149,7 +148,6 @@ module PermissionHelper
       :can_edit_connections,
       :can_create_modules,
       :can_edit_modules,
-      :can_edit_module_groups,
       :can_clone_modules,
       :can_archive_modules
     ] do |proxy, *args, &block|
@@ -418,10 +416,6 @@ module PermissionHelper
   end
 
   def can_edit_modules(experiment)
-    is_user_or_higher_of_project(experiment.project)
-  end
-
-  def can_edit_module_groups(experiment)
     is_user_or_higher_of_project(experiment.project)
   end
 
