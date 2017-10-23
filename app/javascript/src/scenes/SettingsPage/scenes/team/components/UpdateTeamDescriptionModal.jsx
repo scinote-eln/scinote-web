@@ -1,5 +1,7 @@
+// @flow
+
 import React, { Component } from "react";
-import PropTypes, { bool, number, string, func } from "prop-types";
+import type { Node } from "react";
 import {
   Modal,
   Button,
@@ -11,35 +13,52 @@ import {
 import { FormattedMessage } from "react-intl";
 import _ from "lodash";
 import styled from "styled-components";
-import axios from "../../../../../config/axios";
-
+import { updateTeam } from "../../../../../services/api/teams_api";
 import { TEXT_MAX_LENGTH } from "../../../../../config/constants/numeric";
-import { TEAM_UPDATE_PATH } from "../../../../../config/api_endpoints";
 import { COLOR_APPLE_BLOSSOM } from "../../../../../config/constants/colors";
 
-const StyledHelpBlock = styled(HelpBlock)`color: ${COLOR_APPLE_BLOSSOM};`;
+const StyledHelpBlock = styled(HelpBlock)`
+  color: ${COLOR_APPLE_BLOSSOM};
+`;
 
-class UpdateTeamDescriptionModal extends Component {
-  constructor(props) {
+type Team = {
+  id: number,
+  description: string
+};
+
+type Props = {
+  showModal: boolean,
+  hideModal: Function,
+  team: Team,
+  updateTeamCallback: Function
+};
+
+type State = {
+  errorMessage: Node,
+  description: string
+};
+
+class UpdateTeamDescriptionModal extends Component<Props, State> {
+  constructor(props: Props) {
     super(props);
-    this.state = { errorMessage: "", description: "" };
-    this.onCloseModal = this.onCloseModal.bind(this);
-    this.updateDescription = this.updateDescription.bind(this);
-    this.handleDescription = this.handleDescription.bind(this);
-    this.getValidationState = this.getValidationState.bind(this);
+    (this: any).state = { errorMessage: "", description: "" };
+    (this: any).onCloseModal = this.onCloseModal.bind(this);
+    (this: any).updateDescription = this.updateDescription.bind(this);
+    (this: any).handleDescription = this.handleDescription.bind(this);
+    (this: any).getValidationState = this.getValidationState.bind(this);
   }
 
-  onCloseModal() {
-    this.setState({ errorMessage: "", description: "" });
+  onCloseModal(): void {
+    (this: any).setState({ errorMessage: "", description: "" });
     this.props.hideModal();
   }
 
-  getValidationState() {
-    return this.state.errorMessage.length > 0 ? "error" : null;
+  getValidationState(): string | null {
+    return String(this.state.errorMessage).length > 0 ? "error" : null;
   }
 
-  handleDescription(el) {
-    const { value } = el.target;
+  handleDescription(el: SyntheticEvent<HTMLButtonElement>): void {
+    const { value } = el.currentTarget;
     if (value.length > TEXT_MAX_LENGTH) {
       this.setState({
         errorMessage: (
@@ -50,28 +69,20 @@ class UpdateTeamDescriptionModal extends Component {
         )
       });
     } else {
-      this.setState({ errorMessage: "", description: value });
+      (this: any).setState({ errorMessage: "", description: value });
     }
   }
 
-  updateDescription() {
-    axios({
-      method: "post",
-      url: TEAM_UPDATE_PATH,
-      withCredentials: true,
-      data: {
-        team_id: this.props.team.id,
-        team: { description: this.state.description }
-      }
-    })
+  updateDescription(): void {
+    updateTeam(this.props.team.id, { description: this.state.description })
       .then(response => {
-        this.props.updateTeamCallback(response.data.team);
+        this.props.updateTeamCallback(response);
         this.onCloseModal();
       })
       .catch(error => this.setState({ errorMessage: error.message }));
   }
 
-  render() {
+  render(): Node {
     return (
       <Modal show={this.props.showModal} onHide={this.onCloseModal}>
         <Modal.Header closeButton>
@@ -112,15 +123,5 @@ class UpdateTeamDescriptionModal extends Component {
     );
   }
 }
-
-UpdateTeamDescriptionModal.propTypes = {
-  showModal: bool.isRequired,
-  hideModal: func.isRequired,
-  team: PropTypes.shape({
-    id: number.isRequired,
-    description: string
-  }).isRequired,
-  updateTeamCallback: func.isRequired
-};
 
 export default UpdateTeamDescriptionModal;

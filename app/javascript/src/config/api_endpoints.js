@@ -5,7 +5,6 @@ export const SETTINGS_ACCOUNT_PATH = "/settings/account";
 export const TEAMS_PATH = "/client_api/teams";
 export const CHANGE_TEAM_PATH = "/client_api/teams/change_team";
 export const TEAM_DETAILS_PATH = "/client_api/teams/:team_id/details";
-export const TEAM_UPDATE_PATH = "/client_api/teams/update";
 
 // search
 export const SEARCH_PATH = "/search";
