@@ -284,7 +284,7 @@ class MyModule < ApplicationRecord
     until modules.empty?
       my_module = modules.shift
       final << my_module unless final.include?(my_module)
-      modules.push(*my_module.my_modules.flatten)
+      modules.push(*my_module.my_modules)
     end
     final
   end
@@ -296,7 +296,7 @@ class MyModule < ApplicationRecord
     until modules.empty?
       my_module = modules.shift
       final << my_module unless final.include?(my_module)
-      modules.push(*my_module.my_module_antecessors.flatten)
+      modules.push(*my_module.my_module_antecessors)
     end
     final
   end
