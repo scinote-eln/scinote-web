@@ -1,5 +1,6 @@
+// @flow
 import React, { Component } from "react";
-import PropTypes, { bool, number, string, func } from "prop-types";
+import type { Node } from "react";
 import {
   Modal,
   Button,
@@ -11,37 +12,55 @@ import {
 import { FormattedMessage } from "react-intl";
 import _ from "lodash";
 import styled from "styled-components";
-import axios from "../../../../../config/axios";
+import { updateTeam } from "../../../../../services/api/teams_api";
 
 import { NAME_MAX_LENGTH } from "../../../../../config/constants/numeric";
-import { TEAM_UPDATE_PATH } from "../../../../../config/api_endpoints";
 import { COLOR_APPLE_BLOSSOM } from "../../../../../config/constants/colors";
 
-const StyledHelpBlock = styled(HelpBlock)`color: ${COLOR_APPLE_BLOSSOM};`;
+const StyledHelpBlock = styled(HelpBlock)`
+  color: ${COLOR_APPLE_BLOSSOM};
+`;
 
-class UpdateTeamNameModal extends Component {
-  constructor(props) {
+type Team = {
+  id: number,
+  name: string
+};
+
+type State = {
+  errorMessage: Node,
+  name: string
+}
+
+type Props = {
+  showModal: boolean,
+  hideModal: Function,
+  team: Team,
+  updateTeamCallback: Function
+};
+
+class UpdateTeamNameModal extends Component<Props, State> {
+  constructor(props: Props) {
     super(props);
-    this.state = { errorMessage: "", name: props.team.name };
-    this.onCloseModal = this.onCloseModal.bind(this);
-    this.updateName = this.updateName.bind(this);
-    this.handleName = this.handleName.bind(this);
-    this.getValidationState = this.getValidationState.bind(this);
+    (this: any).state = { errorMessage: "", name: props.team.name };
+    (this: any).onCloseModal = this.onCloseModal.bind(this);
+    (this: any).updateName = this.updateName.bind(this);
+    (this: any).handleName = this.handleName.bind(this);
+    (this: any).getValidationState = this.getValidationState.bind(this);
   }
 
-  onCloseModal() {
-    this.setState({ errorMessage: "", name: "" });
+  onCloseModal(): void {
+    (this: any).setState({ errorMessage: "", name: "" });
     this.props.hideModal();
   }
 
-  getValidationState() {
-    return this.state.errorMessage.length > 0 ? "error" : null;
+  getValidationState(): string | null {
+    return String(this.state.errorMessage).length > 0 ? "error" : null;
   }
 
-  handleName(el) {
-    const { value } = el.target;
+  handleName(el: SyntheticEvent<HTMLButtonElement>): void {
+    const { value } = el.currentTarget;
     if (value.length > NAME_MAX_LENGTH) {
-      this.setState({
+      (this: any).setState({
         errorMessage: (
           <FormattedMessage
             id="error_messages.text_too_long"
@@ -54,24 +73,16 @@ class UpdateTeamNameModal extends Component {
     }
   }
 
-  updateName() {
-    axios({
-      method: "post",
-      url: TEAM_UPDATE_PATH,
-      withCredentials: true,
-      data: {
-        team_id: this.props.team.id,
-        team: { name: this.state.name }
-      }
-    })
+  updateName(): void {
+    updateTeam(this.props.team.id, { name: this.state.name })
       .then(response => {
-        this.props.updateTeamCallback(response.data.team);
+        this.props.updateTeamCallback(response);
         this.onCloseModal();
       })
       .catch(error => this.setState({ errorMessage: error.message }));
   }
 
-  render() {
+  render(): Node {
     return (
       <Modal show={this.props.showModal} onHide={this.onCloseModal}>
         <Modal.Header closeButton>
@@ -112,15 +123,5 @@ class UpdateTeamNameModal extends Component {
     );
   }
 }
-
-UpdateTeamNameModal.propTypes = {
-  showModal: bool.isRequired,
-  hideModal: func.isRequired,
-  team: PropTypes.shape({
-    id: number.isRequired,
-    name: string
-  }).isRequired,
-  updateTeamCallback: func.isRequired
-};
 
 export default UpdateTeamNameModal;
