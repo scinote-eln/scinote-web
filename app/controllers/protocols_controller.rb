@@ -1060,7 +1060,6 @@ class ProtocolsController < ApplicationController
     # id 9 = dataset, id 15 = command, id 18 = attached sub protocol
     # id 19= safety information ,
     # id 20= regents (materials, like scinote samples kind of)
-    # I use these 2 variables below to avoid rubocop errors
     original_json['steps'].each_with_index do |step, i| # loop over steps
       # position of step (first, second.... etc),
       newj[i.to_s] = {} # the json we will insert into db
