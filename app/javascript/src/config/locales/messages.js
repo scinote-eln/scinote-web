@@ -28,13 +28,6 @@ export default {
         file_too_large: "file too large (maximum size is {max_size} MB)"
       }
     },
-    error_messages: {
-      text_too_short: "is too short (minimum is {min_length} characters)",
-      text_too_long: "is too long (maximum is {max_length} characters)",
-      cant_be_blank: "can't be blank",
-      invalid_email: "invalid email",
-      passwords_dont_match: "Passwords don't match"
-    },
     navbar: {
       page_title: "sciNote",
       home_label: "Home",
