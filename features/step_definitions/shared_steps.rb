@@ -51,6 +51,7 @@ Then(/^I attach a "([^"]*)" file to "([^"]*)" field$/) do |file, field_id|
 end
 
 Then(/^I should see "([^"]*)" error message under "([^"]*)" field$/) do |message, field_id|
+  wait_for_ajax
   parent = find_by_id(field_id).first(:xpath, './/..')
   expect(parent).to have_content(message)
 end

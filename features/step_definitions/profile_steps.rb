@@ -11,6 +11,7 @@ Then(/^I click on Browse button$/) do
 end
 
 Then(/^I change "([^"]*)" with "([^"]*)" email$/) do |prev_email, new_email|
+  wait_for_ajax
   find(:xpath, "//input[@value='#{prev_email}']").set(new_email)
 end
 

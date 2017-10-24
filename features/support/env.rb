@@ -4,6 +4,8 @@
 # instead of editing this one. Cucumber will automatically load all features/**/*.rb
 # files.
 
+ENV['CUCUMBER'] = 'cucumber'
+
 require 'cucumber/rails'
 require 'capybara/cucumber'
 require 'capybara-webkit'
@@ -32,7 +34,7 @@ end
 
 Capybara.javascript_driver = :webkit
 Capybara.default_max_wait_time = 30
-
+Capybara.asset_host = 'http://localhost:3000'
 # Precompile webpacker to avoid render bugs in capybara webkit
 # global hook throws an error :( https://github.com/cucumber/cucumber/wiki/Hooks
 Before('@compile') do
