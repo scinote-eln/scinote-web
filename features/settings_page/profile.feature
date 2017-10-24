@@ -24,7 +24,7 @@ Scenario: Unsuccessful avatar image upload, file is too big
   Then I click on image within ".avatar-container" element
   And I attach a "Moon.png" file to "user_avatar_input" field
   Then I click "Update" button
-  And I should see "Avatar file size must be less than 0.2 MB" error message under "user_avatar_input" field
+  And I should see "file too large (maximum size is 0.2 MB)" error message under "user_avatar_input" field
 
 @javascript
 Scenario: Unsuccessful avatar image upload, file is invalid
@@ -32,7 +32,7 @@ Scenario: Unsuccessful avatar image upload, file is invalid
   Then I click on image within ".avatar-container" element
   And I attach a "File.txt" file to "user_avatar_input" field
   Then I click "Update" button
-  And I should see "Avatar content type is invalid" error message under "user_avatar_input" field
+  And I should see "invalid file extension" error message under "user_avatar_input" field
 
 @javascript
 Scenario: Successful upload avatar image
@@ -93,7 +93,7 @@ Scenario: Unsuccessful Password Change, passwords does not match
   And I fill in "mypassword5678" in New password field
   And I fill in "mypassword56788" in New password confirmation field
   Then I click "Update" button
-  And I should see "Passwords don't match"
+  And I should see "doesn't match"
 
 @javascript
 Scenario: Unsuccessful Password Change, current password is invalid

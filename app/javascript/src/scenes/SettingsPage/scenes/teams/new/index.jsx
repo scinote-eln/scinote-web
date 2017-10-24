@@ -20,7 +20,6 @@ import {
   SETTINGS_TEAMS_ROUTE,
   SETTINGS_TEAM_ROUTE
 } from "../../../../../config/routes";
-import { TEAMS_NEW_PATH } from "../../../../../config/api_endpoints";
 import { getTeamsList } from "../../../../../components/actions/TeamsActions";
 import {
   ValidatedForm,

@@ -3,20 +3,11 @@ import { FormGroup } from "react-bootstrap";
 import PropTypes from "prop-types";
 
 class ValidatedFormGroup extends Component {
-  constructor(props) {
-    super(props);
-
-    this.cleanProps = this.cleanProps.bind(this);
-  }
-
-  cleanProps() {
+  render() {
     // Remove additional props from the props
     const { tag, ...cleanProps } = this.props;
-    return cleanProps;
-  }
 
-  render() {
-    const hasError = this.context.hasErrorForTag(this.props.tag);
+    const hasError = this.context.hasErrorForTag(tag);
     const formGroupClass = `form-group ${hasError ? " has-error" : ""}`;
     const validationState = hasError ? "error" : null;
 
@@ -24,7 +15,7 @@ class ValidatedFormGroup extends Component {
       <FormGroup
         className={formGroupClass}
         validationState={validationState}
-        {...this.cleanProps()}
+        {...cleanProps}
       />
     );
   }

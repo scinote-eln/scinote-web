@@ -26,12 +26,6 @@ class ValidatedErrorHelpBlock extends Component {
     return <span key={key}>{error.message}</span>;
   }
 
-  constructor(props) {
-    super(props);
-
-    this.cleanProps = this.cleanProps.bind(this);
-  }
-
   cleanProps() {
     // Remove additional props from the props
     const { tag, ...cleanProps } = this.props;
@@ -39,9 +33,12 @@ class ValidatedErrorHelpBlock extends Component {
   }
 
   render() {
-    const errors = this.context.errors(this.props.tag) || [];
+    // Remove additional props from the props
+    const { tag, ...cleanProps } = this.props;
+
+    const errors = this.context.errors(tag) || [];
     return (
-      <MyHelpBlock {...this.cleanProps()}>
+      <MyHelpBlock {...cleanProps}>
         {errors.map((error) => ValidatedErrorHelpBlock.renderErrorMessage(error))}
       </MyHelpBlock>
     );
