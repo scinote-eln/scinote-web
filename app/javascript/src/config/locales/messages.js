@@ -17,11 +17,15 @@ export default {
       new_team_page: "SciNote | Settings | Teams | New"
     },
     validators: {
-      text_validators: {
+      text: {
         text_too_short: "is too short (minimum is {min_length} characters)",
         text_too_long: "is too long (maximum is {max_length} characters)",
         text_blank: "can't be blank",
         invalid_email: "invalid email"
+      },
+      file: {
+        invalid_file_extension: "invalid file extension (valid extensions are {valid_extensions})",
+        file_too_large: "file too large (maximum size is {max_size} MB)"
       }
     },
     error_messages: {

@@ -32,7 +32,11 @@ import {
   passwordLengthValidator,
   userInitialsMaxLengthValidator,
   emailValidator
-} from "../../../../../components/validation/validators/text_validators";
+} from "../../../../../components/validation/validators/text";
+import {
+  avatarExtensionValidator,
+  avatarSizeValidator
+} from "../../../../../components/validation/validators/file";
 
 const StyledInputEnabled = styled.div`
   border: 1px solid ${BORDER_LIGHT_COLOR};
@@ -179,6 +183,8 @@ class InputEnabled extends Component {
       validatorsOnChange = [textBlankValidator, userInitialsMaxLengthValidator];
     } else if (dataField === "email") {
       validatorsOnChange = [emailValidator];
+    } else if (dataField === "avatar") {
+      validatorsOnChange = [avatarExtensionValidator, avatarSizeValidator];
     }
 
     if (inputType === "password") {

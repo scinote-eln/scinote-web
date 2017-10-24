@@ -33,7 +33,7 @@ import {
   nameLengthValidator,
   textMaxLengthValidator
 
-} from "../../../../../components/validation/validators/text_validators";
+} from "../../../../../components/validation/validators/text";
 
 import { BORDER_LIGHT_COLOR } from "../../../../../config/constants/colors";
 

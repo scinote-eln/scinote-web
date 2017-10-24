@@ -13,7 +13,7 @@ class ValidatedFormControl extends Component {
   handleChange(e) {
     const tag = this.props.tag;
     const messageIds = this.props.messageIds;
-    const value = e.target.value;
+    const target = e.target;
 
     // Pass-through "original" onChange
     if (_.has(this.props, "onChange") && this.props.onChange !== undefined) {
@@ -23,7 +23,7 @@ class ValidatedFormControl extends Component {
     // Validate the field
     let errors = [];
     this.props.validatorsOnChange.forEach((validator) => {
-      errors = errors.concat(validator(value, messageIds));
+      errors = errors.concat(validator(target, messageIds));
     });
     this.context.setErrorsForTag(tag, errors);
   }

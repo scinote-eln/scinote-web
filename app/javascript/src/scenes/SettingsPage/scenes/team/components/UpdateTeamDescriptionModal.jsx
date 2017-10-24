@@ -17,7 +17,7 @@ import {
 } from "../../../../../components/validation";
 import {
   textMaxLengthValidator
-} from "../../../../../components/validation/validators/text_validators";
+} from "../../../../../components/validation/validators/text";
 
 import { TEAM_UPDATE_PATH } from "../../../../../config/api_endpoints";
 

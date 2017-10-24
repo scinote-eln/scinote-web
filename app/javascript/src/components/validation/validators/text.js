@@ -9,10 +9,11 @@ import {
 } from "../../../config/constants/numeric";
 import { EMAIL_REGEX } from "../../../config/constants/strings";
 
-export const nameMinLengthValidator = (value, messageIds = {}) => {
+export const nameMinLengthValidator = (target, messageIds = {}) => {
   const messageId = _.has(messageIds, "text_too_short") ?
     messageIds.text_too_short :
-    "validators.text_validators.text_too_short";
+    "validators.text.text_too_short";
+  const value = target.value;
 
   if (value.length < NAME_MIN_LENGTH) {
     return [{
@@ -24,10 +25,11 @@ export const nameMinLengthValidator = (value, messageIds = {}) => {
   return [];
 };
 
-export const nameMaxLengthValidator = (value, messageIds = {}) => {
-    const messageId = _.has(messageIds, "text_too_long") ?
-    messageIds.text_too_long :
-    "validators.text_validators.text_too_long";
+export const nameMaxLengthValidator = (target, messageIds = {}) => {
+  const messageId = _.has(messageIds, "text_too_long") ?
+  messageIds.text_too_long :
+  "validators.text.text_too_long";
+  const value = target.value;
 
   if (value.length > NAME_MAX_LENGTH) {
     return [{
@@ -39,18 +41,19 @@ export const nameMaxLengthValidator = (value, messageIds = {}) => {
   return [];
 };
 
-export const nameLengthValidator = (value, messageIds = {}) => {
-  const res = nameMinLengthValidator(value, messageIds);
+export const nameLengthValidator = (target, messageIds = {}) => {
+  const res = nameMinLengthValidator(target, messageIds);
   if (res.length > 0) {
     return res;
   }
-  return nameMaxLengthValidator(value, messageIds);
+  return nameMaxLengthValidator(target, messageIds);
 };
 
-export const textBlankValidator = (value, messageIds = {}) => {
+export const textBlankValidator = (target, messageIds = {}) => {
   const messageId = _.has(messageIds, "text_blank") ?
     messageIds.text_blank :
-    "validators.text_validators.text_blank";
+    "validators.text.text_blank";
+  const value = target.value;
 
     if (value.length === 0) {
     return [{
@@ -61,10 +64,11 @@ export const textBlankValidator = (value, messageIds = {}) => {
   return [];
 }
 
-export const textMaxLengthValidator = (value, messageIds = {}) => {
+export const textMaxLengthValidator = (target, messageIds = {}) => {
   const messageId = _.has(messageIds, "text_too_long") ?
     messageIds.text_too_long :
-    "validators.text_validators.text_too_long";
+    "validators.text.text_too_long";
+  const value = target.value;
 
   if (value.length > TEXT_MAX_LENGTH) {
     return [{
@@ -76,13 +80,14 @@ export const textMaxLengthValidator = (value, messageIds = {}) => {
   return [];
 };
 
-export const passwordLengthValidator = (value, messageIds = {}) => {
+export const passwordLengthValidator = (target, messageIds = {}) => {
   const messageIdTooShort = _.has(messageIds, "text_too_short") ?
     messageIds.text_too_short :
-    "validators.text_validators.text_too_short";
+    "validators.text.text_too_short";
   const messageIdTooLong = _.has(messageIds, "text_too_long") ?
     messageIds.text_too_long :
-    "validators.text_validators.text_too_long";
+    "validators.text.text_too_long";
+  const value = target.value;
 
   if (value.length < PASSWORD_MIN_LENGTH) {
     return [{
@@ -100,10 +105,11 @@ export const passwordLengthValidator = (value, messageIds = {}) => {
   return [];
 };
 
-export const userInitialsMaxLengthValidator = (value, messageIds = {}) => {
+export const userInitialsMaxLengthValidator = (target, messageIds = {}) => {
   const messageId = _.has(messageIds, "text_too_long") ?
     messageIds.text_too_long :
-    "validators.text_validators.text_too_long";
+    "validators.text.text_too_long";
+  const value = target.value;
 
   if (value.length > USER_INITIALS_MAX_LENGTH) {
     return [{
@@ -115,15 +121,16 @@ export const userInitialsMaxLengthValidator = (value, messageIds = {}) => {
   return [];
 };
 
-export const emailValidator = (value, messageIds = {}) => {
-  const res = textBlankValidator(value, messageIds);
+export const emailValidator = (target, messageIds = {}) => {
+  const res = textBlankValidator(target, messageIds);
   if (res.length > 0) {
     return res;
   }
 
   const messageId = _.has(messageIds, "invalid_email") ?
     messageIds.invalid_email :
-    "validators.text_validators.invalid_email";
+    "validators.text.invalid_email";
+  const value = target.value;
 
   if (!EMAIL_REGEX.test(value)) {
     return [{ intl: true, messageId }];
