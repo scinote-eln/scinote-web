@@ -631,7 +631,8 @@ class ProtocolsController < ApplicationController
     @db_json['created_at'] = sanitize_input(params['protocol']['created_at'])
     @db_json['updated_at'] = sanitize_input(params['protocol']['last_modified'])
     @db_json['description'] = sanitize_input(description_string)
-    @db_json['steps'] = protocols_io_fill_step(@json_object, @db_json)
+    @db_json['steps'] = {}
+    @db_json['steps'] = protocols_io_fill_step(@json_object, @db_json['steps'])
     protocol = nil
     respond_to do |format|
       transaction_error = false
@@ -891,7 +892,9 @@ class ProtocolsController < ApplicationController
         render json: {
           title: I18n.t('protocols.header.edit_description_modal.title',
                         protocol: escape_input(@protocol.name)),
-          html: render_to_string(partial: 'protocols/header/edit_description_modal_body.html.erb')
+          html: render_to_string({
+            partial: "protocols/header/edit_description_modal_body.html.erb"
+          })
         }
       end
     end
@@ -905,7 +908,6 @@ class ProtocolsController < ApplicationController
     append = br + sanitize_input(iterating_key) + br if iterating_key.present?
     if iterating_key.blank?
       append = t('protocols.protocols_io_import.comp_append.missing_desc')
-      return append
     end
     append
   end
@@ -1058,16 +1060,13 @@ class ProtocolsController < ApplicationController
     # id 9 = dataset, id 15 = command, id 18 = attached sub protocol
     # id 19= safety information ,
     # id 20= regents (materials, like scinote samples kind of)
-    newj['steps'] = {}
     # I use these 2 variables below to avoid rubocop errors
-    desc = 'description'
-    name = 'name'
     original_json['steps'].each_with_index do |step, i| # loop over steps
       # position of step (first, second.... etc),
-      newj['steps'][i.to_s] = {} # the json we will insert into db
-      newj['steps'][i.to_s]['position'] = i
-      newj['steps'][i.to_s][desc] = '' unless newj['steps'][i.to_s].key?(desc)
-      newj['steps'][i.to_s][name] = '' unless newj['steps'][i.to_s].key?(name)
+      newj[i.to_s] = {} # the json we will insert into db
+      newj[i.to_s]['position'] = i
+      newj[i.to_s]['description'] = '' unless newj[i.to_s].key?('description')
+      newj[i.to_s]['name'] = '' unless newj[i.to_s].key?('name')
       step['components'].each do |key, value|
         # sometimes there are random index values as keys
         # instead of hashes, this is a workaround to that buggy json format
@@ -1076,25 +1075,25 @@ class ProtocolsController < ApplicationController
         # pio_stp_x means protocols io step (id of component) parser
         case key['component_type_id']
         when '1'
-          newj['steps'][i.to_s]['description'] += pio_stp_1(key['data'])
+          newj[i.to_s]['description'] += pio_stp_1(key['data'])
         when '6'
-          newj['steps'][i.to_s]['name'] = pio_stp_6(key['data'])
+          newj[i.to_s]['name'] = pio_stp_6(key['data'])
         when '17'
-          newj['steps'][i.to_s]['description'] += pio_stp_17(key['data'])
+          newj[i.to_s]['description'] += pio_stp_17(key['data'])
         when '8'
-          newj['steps'][i.to_s]['description'] += pio_stp_8(key['source_data'])
+          newj[i.to_s]['description'] += pio_stp_8(key['source_data'])
         when '9'
-          newj['steps'][i.to_s]['description'] += pio_stp_9(key['source_data'])
+          newj[i.to_s]['description'] += pio_stp_9(key['source_data'])
         when '15'
-          newj['steps'][i.to_s]['description'] += pio_stp_15(key['source_data'])
+          newj[i.to_s]['description'] += pio_stp_15(key['source_data'])
         when '18'
-          newj['steps'][i.to_s]['description'] += pio_stp_18(key['source_data'])
+          newj[i.to_s]['description'] += pio_stp_18(key['source_data'])
         when '19'
-          newj['steps'][i.to_s]['description'] += pio_stp_19(key['source_data'])
+          newj[i.to_s]['description'] += pio_stp_19(key['source_data'])
         end # case end
       end # finished looping over step components
     end # steps
-    newj['steps']
+    newj
   end
 
   def move_protocol(action)

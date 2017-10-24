@@ -25,17 +25,14 @@
       </span>
     </div>
     <br>
-
     <div class="tab-content">
       <div class="tab-pane active" role="tabpanel">
         <div data-val="description" class="ql-editor">
-
         <% step['components'].each do |key,value|  %>
         <%#here i made an if to distinguish the first step from the
           others, because the first step #sometimes has index values as keys instead of
           hashes, you might see this elsewhere %>
           <% key = value if value.class == Hash %>
-
           <% if whitelist_simple.include?(key['component_type_id']) &&
             key['data'].present? %>
             <br>
@@ -49,7 +46,6 @@
               <br>
             <% end %>
           <% elsif key && whitelist_complex.include?(key['component_type_id']) %>
-
             <% case key['component_type_id']
             when '8'%>
               <br>
@@ -66,14 +62,12 @@
               <br><%= t('protocols.protocols_io_import.preview.os') %>
               <%= sanitize_input(key['source_data']['os_name'].html_safe)+
               ' , '+sanitize_input(key['source_data']['os_version'].html_safe) %>
-
             <% when '9'%>
               <br>
               <strong><%= key['name']+': ' %></strong>
               <%= sanitize_input(key['source_data']['name'].html_safe) %>
               <br><%= t('protocols.protocols_io_import.preview.s_link') %>
               <%= sanitize_input(key['source_data']['link'].html_safe) %>
-
             <% when '15'%>
               <br>
               <strong><%= key['name']+': ' %></strong>
@@ -83,7 +77,6 @@
               <br><%= t('protocols.protocols_io_import.preview.os') %>
               <%= sanitize_input(key['source_data']['os_name'].html_safe)+
               ' , '+sanitize_input(key['source_data']['os_version'].html_safe) %>
-
             <% when '18'%>
               <br><strong><%= t('protocols.protocols_io_import.preview.sub_prot') %></strong>
               <%= sanitize_input(key['source_data']['protocol_name'].html_safe) %>
@@ -100,22 +93,14 @@
               <%= sanitize_input(key['source_data']['body'].html_safe) %>
               <br><%= t('protocols.protocols_io_import.preview.s_link') %>
               <%= sanitize_input(key['source_data']['link'].html_safe) %>
-
             <% when '20'%>
-
             <% else %>
-
             <% end #case if%>
-
           <% end #inner if%>
         <% end #step component loop %>
-
         </div>
-
       </div>
     </div>
-
   </div>
-
   <% end  #step loop%>
   <br>

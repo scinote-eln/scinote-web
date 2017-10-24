@@ -413,6 +413,7 @@ ActiveRecord::Schema.define(version: 20170619125051) do
     t.datetime "updated_at"
   end
 
+  add_index "repository_rows", ["name"], name: "index_repository_rows_on_name", using: :btree
   add_index "repository_rows", ["repository_id"], name: "index_repository_rows_on_repository_id", using: :btree
 
   create_table "repository_table_states", force: :cascade do |t|
