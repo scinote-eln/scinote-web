@@ -17,7 +17,7 @@
         <% step['components'].each do |key1,value1| #finding section (title of step) %>
           <% key1 = value1 if value1.class == Hash %>
           <%  if(key1['component_type_id']=='6') %>
-            <% title = sanitize_input(key1["data"]) if key1["data"].present? %>
+            <% title = sanitize_input(key1['data']) if key1['data'].present? %>
             <% end %>
         <% end %>
         <% title ||=t('protocols.protocols_io_import.comp_append.missing_step') %>
