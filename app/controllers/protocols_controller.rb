@@ -1019,8 +1019,8 @@ class ProtocolsController < ApplicationController
 
   def protocols_io_fill_desc(json_hash)
     description_array = %w[
-      (before_start warning guidelines manuscript_citation publish_date
-      created_on vendor_name vendor_link keywords tags link)
+      ( before_start warning guidelines manuscript_citation publish_date
+      created_on vendor_name vendor_link keywords tags link )
     ]
     description_string = sanitize_input(params['protocol']['description'])
     description_array.each do |e|
