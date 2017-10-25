@@ -128,43 +128,51 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   def create
     render_403 && return unless Rails.configuration.x.enable_user_registration
-
     build_resource(sign_up_params)
     valid_resource = resource.valid?
+    # ugly checking if new team on sign up is enabled :(
+    if Rails.configuration.x.new_team_on_signup
+      # Create new team for the new user
+      @team = Team.new
+      @team.name = params[:team][:name]
+      valid_team = @team.valid?
 
-    # Create new team for the new user
-    @team = Team.new
-    @team.name = params[:team][:name]
-    valid_team = @team.valid?
+      if valid_team && valid_resource
+        # this must be called after @team variable is defined. Otherwise this
+        # variable won't be accessable in view.
+        super do |resource|
+          # Set the confirmed_at == created_at IF not using email confirmations
+          unless Rails.configuration.x.enable_email_confirmations
+            resource.update(confirmed_at: resource.created_at)
+          end
 
-    if valid_team && valid_resource
+          if resource.valid? && resource.persisted?
+            @team.created_by = resource # set created_by for oraganization
+            @team.save
 
-      # this must be called after @team variable is defined. Otherwise this
-      # variable won't be accessable in view.
-      super do |resource|
-        # Set the confirmed_at == created_at IF not using email confirmations
-        unless Rails.configuration.x.enable_email_confirmations
-          resource.update(confirmed_at: resource.created_at)
+            # Add this user to the team as owner
+            UserTeam.create(user: resource, team: @team, role: :admin)
+
+            # set current team to new user
+            resource.current_team_id = @team.id
+            resource.save
+          end
         end
-
-        if resource.valid? && resource.persisted?
-          @team.created_by = resource # set created_by for oraganization
-          @team.save
-
-          # Add this user to the team as owner
-          UserTeam.create(
-            user: resource,
-            team: @team,
-            role: :admin
-          )
-
-          # set current team to new user
-          resource.current_team_id = @team.id
-          resource.save
-        end
+      else
+        render :new
       end
     else
-      render :new
+      if valid_resource
+        super do |resource|
+          # Set the confirmed_at == created_at IF not using email confirmations
+          unless Rails.configuration.x.enable_email_confirmations
+            resource.update(confirmed_at: resource.created_at)
+            resource.save
+          end
+        end
+      else
+        render :new
+      end
     end
   end
 
