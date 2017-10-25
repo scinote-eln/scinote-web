@@ -1817,6 +1817,7 @@ en:
   by: 'by'
 
   client_api:
+    invalid_arguments: "Invalid arguments"
     generic_error_message: "Something went wrong! Please try again later."
     user_teams:
       leave_team_error: "An error occured."

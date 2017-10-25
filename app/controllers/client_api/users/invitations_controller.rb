@@ -11,6 +11,12 @@ module ClientApi
                                             emails: params[:emails])
         invite_results = invite_service.invitation
         success_response(invite_results)
+      rescue => error
+        respond_to do |format|
+          format.json do
+            render json: { message: error }, status: :unprocessable_entity
+          end
+        end
       end
 
       private
