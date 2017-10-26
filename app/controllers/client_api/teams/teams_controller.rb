@@ -4,8 +4,9 @@ module ClientApi
       include ClientApi::Users::UserTeamsHelper
 
       def index
+        teams = current_user.datatables_teams
         success_response(template: '/client_api/teams/index',
-                         locals: { teams: current_user.teams_data })
+                         locals: { teams: teams })
       end
 
       def create

@@ -18,6 +18,7 @@ require 'simplecov'
 require 'faker'
 require 'active_record'
 require 'bullet'
+require 'json_matchers/rspec'
 
 RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate

@@ -66,6 +66,7 @@ gem 'delayed_paperclip',
 gem 'rubyzip'
 gem 'jbuilder' # JSON structures via a Builder-style DSL
 gem 'activerecord-import'
+gem 'scenic', '~> 1.4'
 
 gem 'paperclip', '~> 5.1' # File attachment, image attachment library
 gem 'aws-sdk', '~> 2'
