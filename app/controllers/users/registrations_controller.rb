@@ -161,18 +161,16 @@ class Users::RegistrationsController < Devise::RegistrationsController
       else
         render :new
       end
-    else
-      if valid_resource
-        super do |resource|
-          # Set the confirmed_at == created_at IF not using email confirmations
-          unless Rails.configuration.x.enable_email_confirmations
-            resource.update(confirmed_at: resource.created_at)
-            resource.save
-          end
+    elsif valid_resource
+      super do |resource|
+        # Set the confirmed_at == created_at IF not using email confirmations
+        unless Rails.configuration.x.enable_email_confirmations
+          resource.update(confirmed_at: resource.created_at)
+          resource.save
         end
-      else
-        render :new
       end
+    else
+      render :new
     end
   end
 
