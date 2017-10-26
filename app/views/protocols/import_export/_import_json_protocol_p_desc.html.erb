@@ -28,10 +28,6 @@
   <strong><%= t('protocols.protocols_io_import.preview.guideln') %></strong>
   <%= sanitize_input(json_object['guidelines'].html_safe) %><br>
   <% end %>
-  <% if json_object['link'].present? %>
-  <strong><%= t('protocols.protocols_io_import.preview.p_link') %></strong>
-  <%= sanitize_input(json_object['link'].html_safe) %><br>
-  <% end %>
   <% if json_object['manuscript_citation'].present? %>
   <strong><%= t('protocols.protocols_io_import.preview.manu_cit') %></strong>
   <%= sanitize_input(json_object['manuscript_citation'].html_safe) %><br>
@@ -57,6 +53,10 @@
   <%  json_object['tags'].each do |tag| %>
   <%= sanitize_input(tag['tag_name'])+' , ' %><br>
   <% end %>
+  <% end %>
+  <% if json_object['link'].present? %>
+  <strong><%= t('protocols.protocols_io_import.preview.p_link') %></strong>
+  <%= sanitize_input(json_object['link'].html_safe) %><br>
   <% end %>
 </div>
 </div>
