@@ -1,4 +1,4 @@
-import { axiosInstance } from "./config";
+import axiosInstance from "./config";
 import {
   USER_PROFILE_INFO,
   UPDATE_USER_PATH,

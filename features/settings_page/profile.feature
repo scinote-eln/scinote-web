@@ -11,7 +11,7 @@ Background:
  And "nonadmin@myorg.com" is in "BioSistemika Process" team as a "normal_user"
  And is signed in with "nonadmin@myorg.com", "mypassword1234"
 
- @compile @javascript
+ @javascript
  Scenario: Successful navigate to profile page
    Given I'm on the home page of "BioSistemika Process" team
    And I click on Avatar
@@ -23,7 +23,7 @@ Scenario: Unsuccessful avatar image upload, file is too big
   Given I'm on the profile page
   Then I click on image within ".avatar-container" element
   And I attach a "Moon.png" file to "user_avatar_input" field
-  Then I click "Update" button
+  Then I click "Upload" button
   And I should see "file too large (maximum size is 0.2 MB)" error message under "user_avatar_input" field
 
 @javascript
@@ -31,7 +31,7 @@ Scenario: Unsuccessful avatar image upload, file is invalid
   Given I'm on the profile page
   Then I click on image within ".avatar-container" element
   And I attach a "File.txt" file to "user_avatar_input" field
-  Then I click "Update" button
+  Then I click "Upload" button
   And I should see "invalid file extension" error message under "user_avatar_input" field
 
 @javascript
@@ -39,7 +39,7 @@ Scenario: Successful upload avatar image
   Given I'm on the profile page
   Then I click on image within ".avatar-container" element
   And I attach a "Star.png" file to "user_avatar_input" field
-  Then I click "Update" button
+  Then I click "Upload" button
   And I should see "Your account has been updated successfully" flash message
 
 @javascript
@@ -69,11 +69,11 @@ Scenario: Successfully changes user initials
 @javascript
 Scenario: Successfully changes user email
   Given I'm on the profile page
-  Then I click on Edit on "settings_page.new_email" input field
+  Then I click on Edit on "settings_page.email" input field
   And I change "nonadmin@myorg.com" with "user@myorg.com" email
   And I fill in "mypassword1234" in Current password field
   Then I click "Update" button
-  And I should see "user@myorg.com" in "settings_page.new_email" input field
+  And I should see "user@myorg.com" in "settings_page.email" input field
 
 @javascript
 Scenario: Unsuccessful Password Change, password is too short
