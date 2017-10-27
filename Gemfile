@@ -113,6 +113,7 @@ group :test do
   gem 'capybara-webkit', '~> 1.14'
   gem 'selenium-webdriver'
   gem 'simplecov', require: false
+  gem 'json_matchers'
 end
 
 group :production do

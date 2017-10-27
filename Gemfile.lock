@@ -249,6 +249,10 @@ GEM
     js_cookie_rails (2.1.4)
       railties (>= 3.1)
     json (1.8.6)
+    json-schema (2.8.0)
+      addressable (>= 2.4)
+    json_matchers (0.7.2)
+      json-schema (~> 2.7)
     kaminari (1.1.1)
       activesupport (>= 4.1.0)
       kaminari-actionview (= 1.1.1)
@@ -538,6 +542,7 @@ DEPENDENCIES
   jquery-turbolinks
   jquery-ui-rails
   js_cookie_rails
+  json_matchers
   kaminari
   listen (~> 3.0)
   logging (~> 2.0.0)

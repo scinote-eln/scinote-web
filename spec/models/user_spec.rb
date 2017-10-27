@@ -152,40 +152,10 @@ describe User, type: :model do
     end
     let(:user_two) { create :user, email: 'user2@asdf.com' }
 
-    it 'in a specific format: {id: .., name: .., members: .., role: ' \
-       '.., current_team: .., can_be_leaved: ..}' do
-      user_team = create :user_team, team: team, user: user_one
-      expected_result = {
-        id: team.id,
-        name: team.name,
-        members: 1,
-        role: 2,
-        current_team: true,
-        can_be_leaved: false,
-        user_team_id: user_team.id
-      }
-
-      user_one.teams_data.first.each do |k, v|
-        expect(v).to eq(expected_result.fetch(k.to_sym))
-      end
-    end
-
     it 'should return correct number of team members' do
-      user_team = create :user_team, team: team, user: user_one
+      create :user_team, team: team, user: user_one
       create :user_team, team: team, user: user_two
-      expected_result = {
-        id: team.id,
-        name: team.name,
-        members: 2,
-        role: 2,
-        current_team: true,
-        can_be_leaved: true,
-        user_team_id: user_team.id
-      }
-
-      user_one.teams_data.first.each do |k, v|
-        expect(v).to eq(expected_result.fetch(k.to_sym))
-      end
+      expect(user_one.datatables_teams.first.members).to eq 2
     end
   end
 

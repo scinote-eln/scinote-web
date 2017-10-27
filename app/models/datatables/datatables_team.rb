@@ -1,6 +1,8 @@
 module Datatables
   class DatatablesTeam < ApplicationRecord
     belongs_to :user
+    default_scope { order(name: :asc) }
+
     private
 
     # this isn't strictly necessary, but it will prevent
