@@ -23,5 +23,6 @@ Then(/^I fill in "([^"]*)" in New password field$/) do |password|
 end
 
 Then(/^I fill in "([^"]*)" in New password confirmation field$/) do |password|
-  find(:css, 'input[id="settings_page.new_password_confirmation"]').set(password)
+  find(:css,
+       'input[id="settings_page.new_password_confirmation"]').set(password)
 end
