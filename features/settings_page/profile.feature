@@ -15,7 +15,7 @@ Background:
  Scenario: Successful navigate to profile page
    Given I'm on the home page of "BioSistemika Process" team
    And I click on Avatar
-   And I click "Settings" link within "user-account-dropdown"
+   And I click "Settings" link within "#user-account-dropdown"
    Then I should see "My Profile"
 
 @javascript

@@ -204,7 +204,8 @@ export default {
       tutorials: "Tutorials",
       release_notes: "Release notes",
       premium: "Premium",
-      contact_us: "Contact us"
+      contact_us: "Contact us",
+      about_scinote: "About sciNote"
     },
     user_account_dropdown: {
       greeting: "Hi, {name}",
