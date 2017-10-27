@@ -57,19 +57,21 @@ module ClientApi
       end
 
       def update
-        user_service = ClientApi::UserService.new(
+        service = ClientApi::Users::UpdateService.new(
           current_user: current_user,
           params: user_params
         )
-        if user_service.update_user!
+        result = service.execute
+
+        if result[:status] == :success
           bypass_sign_in(current_user)
           success_response
         else
-          unsuccess_response(current_user.errors.full_messages,
-                             :unprocessable_entity)
+          error_response(
+            message: result[:message],
+            details: service.user.errors
+          )
         end
-      rescue CustomUserError => error
-        unsuccess_response(error.to_s)
       end
 
       private
@@ -84,22 +86,35 @@ module ClientApi
                       :system_message_email_notification)
       end
 
-      def success_response(template = nil, locals = nil)
+      def success_response(args = {})
+        template = args.fetch(:template) { nil }
+        locals = args.fetch(:locals) { {} }
+        details = args.fetch(:details) { {} }
+
         respond_to do |format|
           format.json do
-            if template && locals
-              render template: template, status: :ok, locals: locals
+            if template
+              render template: template,
+                     status: :ok,
+                     locals: locals
             else
-              render json: {}, status: :ok
+              render json: { details: details }, status: :ok
             end
           end
         end
       end
 
-      def unsuccess_response(message, status = :unprocessable_entity)
+      def error_response(args = {})
+        message = args.fetch(:message) { t('client_api.generic_error_message') }
+        details = args.fetch(:details) { {} }
+        status = args.fetch(:status) { :unprocessable_entity }
+
         respond_to do |format|
           format.json do
-            render json: { message: message },
+            render json: {
+              message: message,
+              details: details
+            },
             status: status
           end
         end
