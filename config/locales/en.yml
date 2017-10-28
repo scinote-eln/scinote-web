@@ -1409,7 +1409,7 @@ en:
         key_wrd: "Keywords:"
         tags: "Tags:"
       comp_append:
-        table_moved: "<br><strong>There was a table here, it was moved to the end of this step. </strong>"
+        table_moved: "<br><strong><i>There was a table here, it was moved to the end of this step. </i></strong>"
         missing_step: "Step"
         missing_desc: "Description missing"
         general_link: "<br>Link: "

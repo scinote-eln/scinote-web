@@ -1100,22 +1100,10 @@ class ProtocolsController < ApplicationController
   end
 
   def protocolsio_string_to_table_element(description_string)
-    description_string.delete! "\n"
-    description_string.delete! "\t"
-    description_string.delete! "\r"
-    description_string.delete! "\f"
-    table_whole_regex = %r{(<table\b[^>]*>.*?<\/table>)}m
+    string_without_tables = string_html_table_remove(description_string)
     table_regex = %r{<table\b[^>]*>(.*?)<\/table>}m
     tr_regex = %r{<tr\b[^>]*>(.*?)<\/tr>}m
     td_regex = %r{<td\b[^>]*>(.*?)<\/td>}m
-    table_pattern_array = description_string.scan(table_whole_regex)
-    string_without_tables = description_string
-    table_pattern_array.each do |table_pattern|
-      string_without_tables = string_without_tables.gsub(
-        table_pattern[0],
-        t('protocols.protocols_io_import.comp_append.table_moved').html_safe
-      )
-    end
     tables = {}
     table_counter = 0
     table_strings = description_string.scan(table_regex)
@@ -1146,6 +1134,24 @@ class ProtocolsController < ApplicationController
     return tables, string_without_tables
   end
   helper_method :protocolsio_string_to_table_element
+
+  def string_html_table_remove(description_string)
+    description_string.delete! "\n"
+    description_string.delete! "\t"
+    description_string.delete! "\r"
+    description_string.delete! "\f"
+    table_whole_regex = %r{(<table\b[^>]*>.*?<\/table>)}m
+    table_pattern_array = description_string.scan(table_whole_regex)
+    string_without_tables = description_string
+    table_pattern_array.each do |table_pattern|
+      string_without_tables = string_without_tables.gsub(
+        table_pattern[0],
+        t('protocols.protocols_io_import.comp_append.table_moved').html_safe
+      )
+    end
+    string_without_tables
+  end
+  helper_method :string_html_table_remove
 
   def move_protocol(action)
     rollbacked = false
