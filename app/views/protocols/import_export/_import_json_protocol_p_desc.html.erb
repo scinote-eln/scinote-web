@@ -16,21 +16,26 @@
 <div class="tab-pane active" role="tabpanel">
 <div data-val="description" class="ql-editor">
   <br>
+  <% prot_info_string = '' %>
   <% if json_object['before_start'].present? %>
   <strong><%= t('protocols.protocols_io_import.preview.b_s_p') %></strong>
   <%= sanitize_input(json_object['before_start'].html_safe) %><br>
+  <% prot_info_string += (json_object['before_start']) %>
   <% end %>
   <% if json_object['warning'].present? %>
   <strong><%= t('protocols.protocols_io_import.preview.warn') %></strong>
   <%= sanitize_input(json_object['warning'].html_safe) %><br>
+  <% prot_info_string += (json_object['warning']) %>
   <% end %>
   <% if json_object['guidelines'].present? %>
   <strong><%= t('protocols.protocols_io_import.preview.guideln') %></strong>
   <%= sanitize_input(json_object['guidelines'].html_safe) %><br>
+  <% prot_info_string += (json_object['guidelines']) %>
   <% end %>
   <% if json_object['manuscript_citation'].present? %>
   <strong><%= t('protocols.protocols_io_import.preview.manu_cit') %></strong>
   <%= sanitize_input(json_object['manuscript_citation'].html_safe) %><br>
+  <% prot_info_string += (json_object['manuscript_citation']) %>
   <% end %>
   <% if json_object['publish_date'].present? %>
   <strong><%= t('protocols.protocols_io_import.preview.pbl_date') %></strong>
@@ -57,6 +62,12 @@
   <% if json_object['link'].present? %>
   <strong><%= t('protocols.protocols_io_import.preview.p_link') %></strong>
   <%= sanitize_input(json_object['link'].html_safe) %><br>
+  <% end %>
+  <% tables, garbage = protocolsio_string_to_table_element(prot_info_string) %>
+  <% tables.each do |index, table| %>
+  <%   table_hash = JSON.parse(Base64.decode64(table['contents'])) %>
+  <%   byebug %>
+  <hot-table datarows="{{ <%= table_hash['data'] %> }}"></hot-table>
   <% end %>
 </div>
 </div>

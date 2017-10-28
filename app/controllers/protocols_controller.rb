@@ -1145,6 +1145,7 @@ class ProtocolsController < ApplicationController
     # return string_without_tables, tables
     return tables, string_without_tables
   end
+  helper_method :protocolsio_string_to_table_element
 
   def move_protocol(action)
     rollbacked = false
