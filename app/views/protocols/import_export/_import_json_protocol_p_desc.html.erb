@@ -64,18 +64,20 @@
   <%= sanitize_input(json_object['link'].html_safe) %><br>
   <% end %>
   <% tables, garbage = protocolsio_string_to_table_element(prot_info_string) %>
+  <%#= sanitize_input(garbage.html_safe) %>
   <% table_count = 0 %>
   <% tables.each do |index, table| %>
-  <%   table_hash = JSON.parse(Base64.decode64(table['contents'])) %>
+  <%   table_hash = JSON.parse((Base64.decode64(table['contents']))) %>
   <%   pio_table_id = "pio_table_prot_info_"+table_count.to_s %>
-  <%#   byebug %>
+  <%   byebug %>
        <div id="<%=pio_table_id%>" >
          </div>
          <script type="text/javascript" charset="utf-8">
-    
+         //alert([<%=raw table_hash['data']%>])
          var target = document.getElementById('<%= j pio_table_id%>');
          var hot = new Handsontable(target, {
-           data: [["", "Ford", "Tesla", "Toyota", "Honda"],["2017", 10, 11, 12, 13],["2018", 20, 11, 14, 13],["2019", 30, 15, 12, 13]],
+           //"<%=raw j table_hash['data'].to_json%>"
+           data: [<%=raw sanitize_input(table_hash['data'])%>],
            startRows: <%= Constants::HANDSONTABLE_INIT_ROWS_CNT %>,
            startCols: <%= Constants::HANDSONTABLE_INIT_COLS_CNT %>,
            rowHeaders: true,
@@ -85,8 +87,7 @@
            readOnly: true,
            renderAllRows: true
          });
-         hot.loadData([["", "Ford", "Tesla", "Toyota", "Honda"],["2017", 10, 11, 12, 13]]);
-         hot.render();
+         //hot.render();
 
          </script>
   <%   table_count += 1 %>
