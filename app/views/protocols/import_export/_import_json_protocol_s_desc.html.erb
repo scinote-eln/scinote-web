@@ -1,5 +1,6 @@
 <%  whitelist_simple=['1','6','17'] %>
 <%  whitelist_complex=['8','9','15','18','19','20']%>
+<%  step_table_elements_array = [] %>
 <% json_object['steps'].each_with_index do |step,counter_orig| %>
 <% counter = counter_orig + 2 %>
 <div style="display: block;">
@@ -113,6 +114,7 @@
         <% tables.each do |index, table| %>
         <%   table_hash = JSON.parse((Base64.decode64(table['contents']))) %>
         <%   pio_table_id = "pio_table_step_"+counter.to_s+"_info_"+table_count.to_s %>
+        <%   step_table_elements_array.push([pio_table_id,table_hash]) %>
         <div class="col-xs-12">
         <div data-role="hot-table" class="hot-table">
         <div id="<%=pio_table_id%>" ></div>
