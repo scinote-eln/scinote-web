@@ -6,7 +6,10 @@ export default {
       update: "Update",
       edit: "Edit",
       loading: "Loading ...",
-      upload: "Upload"
+      upload: "Upload",
+      about_scinote: "About sciNote",
+      core_version: "sciNote core version",
+      addon_versions: "Addon versions"
     },
     page_title: {
       root: "SciNote",

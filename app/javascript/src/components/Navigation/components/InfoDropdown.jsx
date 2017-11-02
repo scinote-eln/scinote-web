@@ -11,6 +11,8 @@ import {
 } from "../../../config/routes";
 import { getSciNoteInfo } from "../../../services/api/configurations_api";
 
+import AboutScinoteModal from "./AboutScinoteModal";
+
 type State = {
   modalOpen: boolean,
   scinoteVersion: string,
@@ -20,19 +22,24 @@ type State = {
 class InfoDropdown extends Component<*, State> {
   constructor(props: any) {
     super(props);
-    this.state = { modalOpen: false, scinoteVersion: "", addons: [] };
-    (this: any).showAboutUsModal = this.showAboutUsModal.bind(this);
+    this.state = { showModal: false, scinoteVersion: "", addons: [] };
+    (this: any).showAboutSciNoteModal = this.showAboutSciNoteModal.bind(this);
+    (this: any).closeModal = this.closeModal.bind(this);
   }
 
-  showAboutUsModal(): void {
+  showAboutSciNoteModal(): void {
     getSciNoteInfo().then(response => {
       const { scinoteVersion, addons } = response;
       (this: any).setState({
         scinoteVersion,
         addons,
-        modalOpen: true
+        showModal: true
       });
     });
+  }
+
+  closeModal(): void {
+    (this: any).setState({ showModal: false });
   }
 
   render() {
@@ -65,8 +72,14 @@ class InfoDropdown extends Component<*, State> {
           <FormattedMessage id="info_dropdown.contact_us" />
         </MenuItem>
         <MenuItem divider />
-        <MenuItem>
+        <MenuItem onClick={this.showAboutSciNoteModal}>
           <FormattedMessage id="info_dropdown.about_scinote" />
+          <AboutScinoteModal
+            showModal={this.state.showModal}
+            scinoteVersion={this.state.scinoteVersion}
+            addons={this.state.addons}
+            onModalClose={this.closeModal}
+          />
         </MenuItem>
       </NavDropdown>
     );
