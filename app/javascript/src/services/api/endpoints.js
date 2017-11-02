@@ -6,9 +6,6 @@ export const UNREADED_NOTIFICATIONS_PATH =
 // activities
 export const ACTIVITIES_PATH = "/client_api/activities";
 
-// settings
-export const SETTINGS_PATH = "/settings";
-
 // teams
 export const TEAMS_PATH = "/client_api/teams";
 export const CHANGE_TEAM_PATH = "/client_api/teams/change_team";

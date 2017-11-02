@@ -39,7 +39,7 @@ class SettingsTeams extends Component<Props, State> {
           current_team: true,
           role: "",
           members: 0,
-          can_be_leaved: false
+          can_be_left: false
         }
       ]
     };

@@ -1,16 +1,12 @@
 // @flow
 import type {
   Teams$Team,
-  Action$LeaveTeam,
   Action$AddTeamData,
   Actopm$SetCurrentTeam
 } from "flow-typed";
 import type { Dispatch } from "redux-thunk";
 import { getTeams, changeCurrentTeam } from "../../services/api/teams_api";
-import {
-  GET_LIST_OF_TEAMS,
-  SET_CURRENT_TEAM
-} from "../../config/action_types";
+import { GET_LIST_OF_TEAMS, SET_CURRENT_TEAM } from "../../config/action_types";
 
 export function addTeamsData(data: Array<Teams$Team>): Action$AddTeamData {
   return {

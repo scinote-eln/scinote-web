@@ -16,7 +16,7 @@ const DefaultTeam = {
   user_team_id: 0,
   role: "",
   members: 0,
-  can_be_leaved: false
+  can_be_left: false
 };
 
 type Props = {
@@ -39,14 +39,14 @@ class TeamsDataTable extends Component<Props, State> {
     (this: any).leaveTeamModal = this.leaveTeamModal.bind(this);
     (this: any).leaveTeamButton = this.leaveTeamButton.bind(this);
     (this: any).linkToTeam = this.linkToTeam.bind(this);
-    (this: any).hideLeaveTeamModel = this.hideLeaveTeamModel.bind(this);
+    (this: any).hideLeaveTeamModal = this.hideLeaveTeamModal.bind(this);
   }
 
   leaveTeamModal(e: string, team: Teams$Team): void {
     (this: any).setState({ leaveTeamModalShow: true, team });
   }
 
-  hideLeaveTeamModel(): void {
+  hideLeaveTeamModal(): void {
     (this: any).setState({ leaveTeamModalShow: false, team: DefaultTeam });
   }
 
@@ -55,7 +55,7 @@ class TeamsDataTable extends Component<Props, State> {
   }
 
   leaveTeamButton(id: string, team: Teams$Team): Node {
-    if (team.can_be_leaved) {
+    if (team.can_be_left) {
       return (
         <Button onClick={e => this.leaveTeamModal(e, team)}>
           <FormattedMessage id="settings_page.leave_team" />
@@ -130,7 +130,7 @@ class TeamsDataTable extends Component<Props, State> {
           updateTeamsState={this.props.updateTeamsState}
           showModal={this.state.leaveTeamModalShow}
           team={this.state.team}
-          hideLeaveTeamModel={this.hideLeaveTeamModel}
+          hideLeaveTeamModal={this.hideLeaveTeamModal}
         />
       </div>
     );

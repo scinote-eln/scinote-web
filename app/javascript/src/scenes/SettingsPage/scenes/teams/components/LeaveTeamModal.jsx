@@ -22,7 +22,7 @@ type Props = {
   showModal: boolean,
   team: Team,
   addTeamsData: Function,
-  hideLeaveTeamModel: Function,
+  hideLeaveTeamModal: Function,
   setCurrentTeam: Function
 };
 
@@ -34,7 +34,7 @@ class LeaveTeamModal extends Component<Props> {
   }
 
   onCloseModal(): void {
-    this.props.hideLeaveTeamModel();
+    this.props.hideLeaveTeamModal();
   }
 
   leaveTeam(): void {
@@ -49,7 +49,7 @@ class LeaveTeamModal extends Component<Props> {
       .catch(error => {
         console.log("error: ", error.response.data.message);
       });
-    this.props.hideLeaveTeamModel();
+    this.props.hideLeaveTeamModal();
   }
 
   render(): Node {

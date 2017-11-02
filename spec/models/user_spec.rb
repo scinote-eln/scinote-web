@@ -153,7 +153,7 @@ describe User, type: :model do
     let(:user_two) { create :user, email: 'user2@asdf.com' }
 
     it 'in a specific format: {id: .., name: .., members: .., role: ' \
-       '.., current_team: .., can_be_leaved: ..}' do
+       '.., current_team: .., can_be_left: ..}' do
       user_team = create :user_team, team: team, user: user_one
       expected_result = {
         id: team.id,
@@ -161,7 +161,7 @@ describe User, type: :model do
         members: 1,
         role: 2,
         current_team: true,
-        can_be_leaved: false,
+        can_be_left: false,
         user_team_id: user_team.id
       }
 
@@ -179,7 +179,7 @@ describe User, type: :model do
         members: 2,
         role: 2,
         current_team: true,
-        can_be_leaved: true,
+        can_be_left: true,
         user_team_id: user_team.id
       }
 
