@@ -43,7 +43,7 @@ class UpdateTeamNameModal extends Component<Props, State> {
     this.props.hideModal();
   }
 
-  handleName(e: SyntheticEvent<HTMLButtonElement>): void {
+  handleName(e: SyntheticInputEvent<HTMLInputElement>): void {
     (this: any).setState({ name: e.target.value });
   }
 
@@ -54,7 +54,7 @@ class UpdateTeamNameModal extends Component<Props, State> {
         this.onCloseModal();
       })
       .catch(error => {
-        this.form.setErrorsForTag("name", [error.message]);
+        (this: any).form.setErrorsForTag("name", [error.message]);
       });
   }
 
@@ -63,7 +63,7 @@ class UpdateTeamNameModal extends Component<Props, State> {
       <Modal show={this.props.showModal} onHide={this.onCloseModal}>
         <ValidatedForm
           ref={f => {
-            this.form = f;
+            (this: any).form = f;
           }}
         >
           <Modal.Header closeButton>

@@ -26,7 +26,6 @@ type Props = {
 };
 
 type State = {
-  errorMessage: Node,
   description: string
 };
 
@@ -34,18 +33,18 @@ class UpdateTeamDescriptionModal extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = { description: "" };
-    this.onCloseModal = this.onCloseModal.bind(this);
-    this.updateDescription = this.updateDescription.bind(this);
-    this.handleDescription = this.handleDescription.bind(this);
+    (this: any).onCloseModal = this.onCloseModal.bind(this);
+    (this: any).updateDescription = this.updateDescription.bind(this);
+    (this: any).handleDescription = this.handleDescription.bind(this);
   }
 
-  onCloseModal() {
-    this.setState({ description: "" });
+  onCloseModal(): void {
+    (this: any).setState({ description: "" });
     this.props.hideModal();
   }
 
-  handleDescription(el) {
-    this.setState({ description: el.target.value });
+  handleDescription(e: SyntheticInputEvent<HTMLInputElement>): void {
+    (this: any).setState({ description: e.target.value });
   }
 
   updateDescription(): void {
@@ -54,7 +53,9 @@ class UpdateTeamDescriptionModal extends Component<Props, State> {
         this.props.updateTeamCallback(response);
         this.onCloseModal();
       })
-      .catch(error => this.setState({ errorMessage: error.message }));
+      .catch(error => {
+        (this: any).form.setErrorsForTag('description', [error.message])
+      });
   }
 
   render(): Node {
@@ -62,7 +63,7 @@ class UpdateTeamDescriptionModal extends Component<Props, State> {
       <Modal show={this.props.showModal} onHide={this.onCloseModal}>
         <ValidatedForm
           ref={f => {
-            this.form = f;
+            (this: any).form = f;
           }}
         >
           <Modal.Header closeButton>

@@ -1,7 +1,7 @@
 //  @flow
 import type { Teams$NewTeam, Team$Update } from "flow-typed";
 import _ from "lodash";
-import { axiosInstance } from "./config";
+import axiosInstance from "./config";
 import {
   TEAM_DETAILS_PATH,
   TEAM_UPDATE_PATH,
