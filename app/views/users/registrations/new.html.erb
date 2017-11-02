@@ -23,12 +23,12 @@
       <%= f.password_field :password, autocomplete: 'off', class: 'form-control' %>
     </div>
 
-    <div class="form-group">
+    <div class="form-group" id="password_confirmation_form">
       <%= f.label :password_confirmation %>
       <%= f.password_field :password_confirmation, autocomplete: 'off', class: 'form-control' %>
     </div>
 
-    <div class="form-group">
+    <div class="form-group" id="team_name_form">
       <%= label :team, :name, t('users.registrations.new.team_name_label') %>
       <% if @team %>
       <%= text_field :team, :name, class: 'form-control', value: @team.name %>

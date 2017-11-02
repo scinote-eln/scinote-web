@@ -12,18 +12,18 @@ end
 
 Then(/^I change "([^"]*)" with "([^"]*)" email$/) do |prev_email, new_email|
   wait_for_ajax
-  find(:xpath, "//input[@value='#{prev_email}']").set(new_email)
+  find(:css, "input[value='#{prev_email}']").set(new_email)
 end
 
 Then(/^I fill in "([^"]*)" in Current password field$/) do |password|
-  find(:xpath, '//input[@id="settings_page.current_password"]').set(password)
+  find(:css, 'input[id="settings_page.current_password"]').set(password)
 end
 
 Then(/^I fill in "([^"]*)" in New password field$/) do |password|
-  find(:xpath, '//input[@id="settings_page.new_password"]').set(password)
+  find(:css, 'input[id="settings_page.new_password"]').set(password)
 end
 
 Then(/^I fill in "([^"]*)" in New password confirmation field$/) do |password|
-  find(:xpath,
-       '//input[@id="settings_page.new_password_confirmation"]').set(password)
+  find(:css,
+       'input[id="settings_page.new_password_confirmation"]').set(password)
 end

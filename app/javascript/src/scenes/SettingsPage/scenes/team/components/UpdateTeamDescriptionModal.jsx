@@ -1,25 +1,17 @@
 // @flow
-
 import React, { Component } from "react";
 import type { Node } from "react";
-import {
-  Modal,
-  Button,
-  FormGroup,
-  ControlLabel,
-  FormControl,
-  HelpBlock
-} from "react-bootstrap";
+import { Modal, Button, ControlLabel, FormControl } from "react-bootstrap";
 import { FormattedMessage } from "react-intl";
-import _ from "lodash";
-import styled from "styled-components";
+import {
+  ValidatedForm,
+  ValidatedFormGroup,
+  ValidatedFormControl,
+  ValidatedErrorHelpBlock,
+  ValidatedSubmitButton
+} from "../../../../../components/validation";
+import { textMaxLengthValidator } from "../../../../../components/validation/validators/text";
 import { updateTeam } from "../../../../../services/api/teams_api";
-import { TEXT_MAX_LENGTH } from "../../../../../config/constants/numeric";
-import { COLOR_APPLE_BLOSSOM } from "../../../../../config/constants/colors";
-
-const StyledHelpBlock = styled(HelpBlock)`
-  color: ${COLOR_APPLE_BLOSSOM};
-`;
 
 type Team = {
   id: number,
@@ -41,36 +33,19 @@ type State = {
 class UpdateTeamDescriptionModal extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
-    (this: any).state = { errorMessage: "", description: "" };
-    (this: any).onCloseModal = this.onCloseModal.bind(this);
-    (this: any).updateDescription = this.updateDescription.bind(this);
-    (this: any).handleDescription = this.handleDescription.bind(this);
-    (this: any).getValidationState = this.getValidationState.bind(this);
+    this.state = { description: "" };
+    this.onCloseModal = this.onCloseModal.bind(this);
+    this.updateDescription = this.updateDescription.bind(this);
+    this.handleDescription = this.handleDescription.bind(this);
   }
 
-  onCloseModal(): void {
-    (this: any).setState({ errorMessage: "", description: "" });
+  onCloseModal() {
+    this.setState({ description: "" });
     this.props.hideModal();
   }
 
-  getValidationState(): string | null {
-    return String(this.state.errorMessage).length > 0 ? "error" : null;
-  }
-
-  handleDescription(el: SyntheticEvent<HTMLButtonElement>): void {
-    const { value } = el.currentTarget;
-    if (value.length > TEXT_MAX_LENGTH) {
-      this.setState({
-        errorMessage: (
-          <FormattedMessage
-            id="error_messages.text_too_long"
-            values={{ max_length: TEXT_MAX_LENGTH }}
-          />
-        )
-      });
-    } else {
-      (this: any).setState({ errorMessage: "", description: value });
-    }
+  handleDescription(el) {
+    this.setState({ description: el.target.value });
   }
 
   updateDescription(): void {
@@ -85,40 +60,44 @@ class UpdateTeamDescriptionModal extends Component<Props, State> {
   render(): Node {
     return (
       <Modal show={this.props.showModal} onHide={this.onCloseModal}>
-        <Modal.Header closeButton>
-          <Modal.Title>
-            <FormattedMessage id="settings_page.update_team_description_modal.title" />
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <FormGroup
-            controlId="teamDescription"
-            validationState={this.getValidationState()}
-          >
-            <ControlLabel>
-              <FormattedMessage id="settings_page.update_team_description_modal.label" />
-            </ControlLabel>
-            <FormControl
-              componentClass="textarea"
-              defaultValue={this.props.team.description}
-              onChange={this.handleDescription}
-            />
-            <FormControl.Feedback />
-            <StyledHelpBlock>{this.state.errorMessage}</StyledHelpBlock>
-          </FormGroup>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button
-            bsStyle="primary"
-            onClick={this.updateDescription}
-            disabled={!_.isEmpty(this.state.errorMessage)}
-          >
-            <FormattedMessage id="general.update" />
-          </Button>
-          <Button onClick={this.onCloseModal}>
-            <FormattedMessage id="general.close" />
-          </Button>
-        </Modal.Footer>
+        <ValidatedForm
+          ref={f => {
+            this.form = f;
+          }}
+        >
+          <Modal.Header closeButton>
+            <Modal.Title>
+              <FormattedMessage id="settings_page.update_team_description_modal.title" />
+            </Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <ValidatedFormGroup tag="description">
+              <ControlLabel>
+                <FormattedMessage id="settings_page.update_team_description_modal.label" />
+              </ControlLabel>
+              <ValidatedFormControl
+                componentClass="textarea"
+                tag="description"
+                defaultValue={this.props.team.description}
+                onChange={this.handleDescription}
+                validatorsOnChange={[textMaxLengthValidator]}
+              />
+              <FormControl.Feedback />
+              <ValidatedErrorHelpBlock tag="description" />
+            </ValidatedFormGroup>
+          </Modal.Body>
+          <Modal.Footer>
+            <ValidatedSubmitButton
+              bsStyle="primary"
+              onClick={this.updateDescription}
+            >
+              <FormattedMessage id="general.update" />
+            </ValidatedSubmitButton>
+            <Button onClick={this.onCloseModal}>
+              <FormattedMessage id="general.close" />
+            </Button>
+          </Modal.Footer>
+        </ValidatedForm>
       </Modal>
     );
   }

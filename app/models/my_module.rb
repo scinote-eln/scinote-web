@@ -278,28 +278,24 @@ class MyModule < ApplicationRecord
   end
 
   # Treat this module as root, get all modules of that subtree
-  def get_downstream_modules
+  def downstream_modules
     final = []
     modules = [self]
-    while !modules.empty?
+    until modules.empty?
       my_module = modules.shift
-      if !final.include?(my_module)
-        final << my_module
-      end
+      final << my_module unless final.include?(my_module)
       modules.push(*my_module.my_modules)
     end
     final
   end
 
   # Treat this module as inversed root, get all modules of that inversed subtree
-  def get_upstream_modules
+  def upstream_modules
     final = []
     modules = [self]
-    while !modules.empty?
+    until modules.empty?
       my_module = modules.shift
-      if !final.include?(my_module)
-        final << my_module
-      end
+      final << my_module unless final.include?(my_module)
       modules.push(*my_module.my_module_antecessors)
     end
     final

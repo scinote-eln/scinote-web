@@ -1,6 +1,6 @@
 //  @flow
 
-import { axiosInstance } from "./config";
+import axiosInstance from "./config";
 import {
   REMOVE_USER_FROM_TEAM_PATH,
   INVITE_USERS_PATH,

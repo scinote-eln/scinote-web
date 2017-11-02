@@ -58,7 +58,7 @@
 </div>
 
 <div id="canvas-container" data-project-id="<%= @project.id %>">
-  <%= render partial: 'canvas/full_zoom', locals: { experiment: @experiment, my_modules: @experiment.active_modules } %>
+  <%= render partial: 'canvas/full_zoom', locals: { experiment: @experiment, my_modules: @active_modules } %>
 </div>
 
 <!-- Manage tags modal -->

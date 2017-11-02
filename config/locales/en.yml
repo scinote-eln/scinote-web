@@ -705,7 +705,6 @@ en:
         drag_connections: "Drag connection/s from here"
         options_header: "Options"
         edit_module: "Rename task"
-        edit_module_group: "Rename workflow"
         clone_module: "Copy task as template (only Protocols steps copied)"
         clone_module_group: "Copy workflow as template (only Protocols steps copied)"
         move_module: "Move task to another experiment"
@@ -721,10 +720,6 @@ en:
           title: "Rename task"
           name: "Task name"
           confirm: "Rename task"
-        modal_edit_module_group:
-          title: "Rename workflow"
-          name: "Workflow name"
-          confirm: "Rename workflow"
         modal_move_module:
           title: "Move task to experiment"
           confirm: "Move task"
@@ -1421,6 +1416,7 @@ en:
       no_authors: "No authors"
       description: "Description"
       no_description: "No description"
+      keywords_modal: "Input one or multiple keywords, confirm each keyword with ENTER key"
       edit_name_modal:
         title: "Edit name of protocol %{protocol}"
         label: "Name"
@@ -1826,9 +1822,7 @@ en:
       leave_team_error: "An error occured."
       leave_flash: "Successfuly left team %{team}."
     user:
-      blank_password_error: "Password can't be blank!"
-      passwords_dont_match: "Passwords don't match"
-      password_invalid: "Password is invalid!"
-      avatar_too_big: "Avatar file size must be less than 0.2 MB"
+      current_password_invalid: "incorrect password"
+      password_confirmation_not_match: "doesn't match"
     invite_users:
       permission_error: "You don't have permission to invite additional users to team. Contact its administrator/s."

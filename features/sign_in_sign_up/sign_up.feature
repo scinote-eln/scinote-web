@@ -27,3 +27,21 @@ Feature: Sign up
     And I click "Sign up" button
     Then I should see "SpliceGirls"
     And I should be on homepage
+
+  @javascript
+  Scenario: Unsuccessful sign up, password confirmation does not match
+    Given I visit the sign up page
+    Then I fill the sign up form with
+    | Full name | Email          | Password | Password confirmation | Team name   |
+    | Magnus    | magnus@gmail.com | asdf1234 | asdf1234567         | SpliceGirls |
+    And I click "Sign up" button
+    Then I should see "doesn't match Password" error message under "password_confirmation_form" field
+
+  @javascript
+  Scenario: Unsuccessful sign up, team name is missing
+    Given I visit the sign up page
+    Then I fill the sign up form with
+    | Full name | Email          | Password | Password confirmation |
+    | Magnus    | magnus@gmail.com | asdf1234 | asdf1234            |
+    And I click "Sign up" button
+    Then I should see "is too short (minimum is 2 characters)" error message under "team_name_form" field

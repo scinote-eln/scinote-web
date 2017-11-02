@@ -1,5 +1,5 @@
 When(/^I click "(.+)" button$/) do |button|
-  click_on button
+  click_on(button)
 end
 
 Given(/^Show me the page$/) do
@@ -21,6 +21,7 @@ Given(/^I click "(.+)" link within "(.+)"$/) do |link, element|
 end
 
 Then(/^I should see "(.+)"$/) do |text|
+  wait_for_ajax
   expect(page).to have_content(text)
 end
 
@@ -47,7 +48,10 @@ Given(/^"([^"]*)" is in "([^"]*)" team as a "([^"]*)"$/) do |user_email, team_na
 end
 
 Then(/^I attach a "([^"]*)" file to "([^"]*)" field$/) do |file, field_id|
+  wait_for_ajax
   attach_file(field_id, Rails.root.join('features', 'assets', file))
+  # "expensive" operation needs some time :=)
+  sleep(0.3)
 end
 
 Then(/^I should see "([^"]*)" error message under "([^"]*)" field$/) do |message, field_id|
@@ -64,13 +68,16 @@ Then(/^I click on image within "([^"]*)" element$/) do |container|
   within(container) do
     find('img').click
   end
+  wait_for_ajax
 end
 
 Then(/^I should see "([^"]*)" flash message$/) do |message|
+  wait_for_ajax
   expect(find_by_id('alert-flash')).to have_content(message)
 end
 
 Then(/^I click on Edit on "([^"]*)" input field$/) do |container_id|
+  wait_for_ajax
   container = page.find_by_id(container_id)
   within(container) do
     find('button').click
