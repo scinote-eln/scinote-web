@@ -1,5 +1,4 @@
 // @flow
-
 import React from "react";
 import { FormattedMessage } from "react-intl";
 import { DropdownButton, MenuItem } from "react-bootstrap";
@@ -10,10 +9,9 @@ type Props = {
 };
 
 const InviteUsersButton = ({ handleClick, status }: Props) => {
-  console.log(status);
   return (
     <DropdownButton
-      bsStyle={"primary"}
+      bsStyle="primary"
       title={<FormattedMessage id="invite_users.dropdown_button.invite" />}
       id="invite_users.submit_button"
       disabled={status}
