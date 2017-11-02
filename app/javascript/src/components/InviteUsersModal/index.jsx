@@ -77,7 +77,8 @@ class InviteUsersModal extends Component<Props, State> {
       .then(response => {
         (this: any).setState({
           inviteResults: response,
-          showInviteUsersResults: true
+          showInviteUsersResults: true,
+          inviteUserButtonDisabled: true
         });
       })
       .catch(error => {
