@@ -74,9 +74,9 @@
   <%   pio_table_id = "pio_table_prot_info_"+table_count.to_s %>
   <%   protocol_table_elements_array.push([pio_table_id,table_hash['data']]) %>
 
-  <div data-role="hot-table" class="hot-table">
+
   <div id="<%=pio_table_id%>" ></div>
-  </div>
+  
 
   <%   table_count += 1 %>
   <% end %>
@@ -90,7 +90,7 @@ $('#modal-import-json-protocol-preview').on('shown.bs.modal', function (e) {
   var javascript_table_elements_p = <%=raw sanitize_input(protocol_table_elements_array.to_json) %>
   for(var j=0;j<javascript_table_elements_p.length;j++)
   {
-  
+
   var target = document.getElementById(javascript_table_elements_p[j][0]);
   var hot = new Handsontable(target, {
     data: javascript_table_elements_p[j][1],

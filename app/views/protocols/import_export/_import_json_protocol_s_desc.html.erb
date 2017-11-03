@@ -116,9 +116,9 @@
         <%   pio_table_id = "pio_table_step_"+counter.to_s+"_info_"+table_count.to_s %>
         <%   step_table_elements_array.push([pio_table_id,table_hash['data']]) %>
 
-        <div data-role="hot-table" class="hot-table">
+        
         <div id="<%=pio_table_id%>" ></div>
-        </div>
+
 
         <%   table_count += 1 %>
         <% end %>
@@ -135,7 +135,7 @@
 
     for(var j=0;j<javascript_table_elements_s.length;j++)
     {
-    
+
     var target = document.getElementById(javascript_table_elements_s[j][0]);
     var hot = new Handsontable(target, {
       data: javascript_table_elements_s[j][1],
