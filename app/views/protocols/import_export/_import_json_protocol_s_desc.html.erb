@@ -114,31 +114,40 @@
         <% tables.each do |index, table| %>
         <%   table_hash = JSON.parse((Base64.decode64(table['contents']))) %>
         <%   pio_table_id = "pio_table_step_"+counter.to_s+"_info_"+table_count.to_s %>
-        <%   step_table_elements_array.push([pio_table_id,table_hash]) %>
-        <div class="col-xs-12">
+        <%   step_table_elements_array.push([pio_table_id,table_hash['data']]) %>
+
         <div data-role="hot-table" class="hot-table">
         <div id="<%=pio_table_id%>" ></div>
         </div>
-        </div>
-        <script type="text/javascript" charset="utf-8">
-         var target = document.getElementById('<%= j pio_table_id%>');
-         //alert(JSON.stringify(<%=raw sanitize_input(table_hash['data'].to_json)%>))
-         var hot = new Handsontable(target, {
-           data: <%=raw sanitize_input(table_hash['data'].to_json)%>,
-           startRows: <%= Constants::HANDSONTABLE_INIT_ROWS_CNT %>,
-           startCols: <%= Constants::HANDSONTABLE_INIT_COLS_CNT %>,
-           rowHeaders: true,
-           colHeaders: true,
-           fillHandle: false,
-           formulas: true,
-           readOnly: true
-          });
-        </script>
+
         <%   table_count += 1 %>
         <% end %>
+
         </div>
       </div>
     </div>
   </div>
   <% end  #step loop%>
   <br>
+  <script type="text/javascript">
+  $('#modal-import-json-protocol-preview').on('shown.bs.modal', function (e) {
+    var javascript_table_elements_s = <%=raw sanitize_input(step_table_elements_array.to_json) %>
+
+    for(var j=0;j<javascript_table_elements_s.length;j++)
+    {
+    
+    var target = document.getElementById(javascript_table_elements_s[j][0]);
+    var hot = new Handsontable(target, {
+      data: javascript_table_elements_s[j][1],
+      startRows: <%= Constants::HANDSONTABLE_INIT_ROWS_CNT %>,
+      startCols: <%= Constants::HANDSONTABLE_INIT_COLS_CNT %>,
+      rowHeaders: true,
+      colHeaders: true,
+      fillHandle: false,
+      formulas: true,
+      readOnly: true
+    });
+  }
+  })
+
+  </script>
