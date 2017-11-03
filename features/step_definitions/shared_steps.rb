@@ -2,6 +2,12 @@ When(/^I click "(.+)" button$/) do |button|
   click_on(button)
 end
 
+When(/^I click "(.+)" button within "(.+)"$/) do |button, container|
+  within(find(container)) do
+    click_on button
+  end
+end
+
 Given(/^Show me the page$/) do
   save_and_open_page
 end
@@ -92,4 +98,29 @@ end
 Then(/^I should see "([^"]*)" in "([^"]*)" input field$/) do |text, container_id|
   container = page.find_by_id(container_id)
   expect(container).to have_xpath("//input[@value='#{text}']")
+end
+
+Then(/^(?:|I )click on "([^"]*)" element$/) do |selector|
+  find(selector).click
+end
+
+Then(/^I change "([^"]*)" with "([^"]*)" in "([^"]*)" input field$/) do |old_text, new_text, container_id|
+  container = page.find_by_id(container_id)
+  expect(container).to have_xpath("//input[@value='#{old_text}']")
+  container.find('input').set(new_text)
+end
+
+Then(/^I fill in "([^"]*)" in "([^"]*)" textarea field$/) do |text, textarea_id|
+  textarea = page.find_by_id(textarea_id)
+  textarea.set(text)
+end
+
+Then(/^I change "([^"]*)" with "([^"]*)" in "([^"]*)" textarea field$/) do |old_text, new_text, textarea_id|
+  textarea = page.find_by_id(textarea_id)
+  expect(textarea).to have_content(old_text)
+  textarea.set(new_text)
+end
+
+Then(/^I should see "([^"]*)" on "([^"]*)" element$/) do |text, element|
+  expect(find(element)).to have_content(text)
 end
