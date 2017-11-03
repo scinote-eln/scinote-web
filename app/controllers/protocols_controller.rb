@@ -800,7 +800,9 @@ class ProtocolsController < ApplicationController
     respond_to do |format|
       format.json do
         render json: {
-          html: render_to_string(partial: 'my_modules/protocols/load_from_repository_modal_body.html.erb')
+          html: render_to_string({
+            partial: "my_modules/protocols/load_from_repository_modal_body.html.erb"
+          })
         }
       end
     end
@@ -812,7 +814,9 @@ class ProtocolsController < ApplicationController
     respond_to do |format|
       format.json do
         render json: {
-          html: render_to_string(partial: 'my_modules/protocols/copy_to_repository_modal_body.html.erb')
+          html: render_to_string({
+            partial: "my_modules/protocols/copy_to_repository_modal_body.html.erb"
+          })
         }
       end
     end
@@ -822,7 +826,9 @@ class ProtocolsController < ApplicationController
     respond_to do |format|
       format.json do
         render json: {
-          html: render_to_string(partial: 'my_modules/protocols/protocol_status_bar.html.erb')
+          html: render_to_string({
+            partial: "my_modules/protocols/protocol_status_bar.html.erb"
+          })
         }
       end
     end
@@ -832,7 +838,9 @@ class ProtocolsController < ApplicationController
     respond_to do |format|
       format.json do
         render json: {
-          html: render_to_string(partial: 'protocols/header/updated_at_label.html.erb')
+          html: render_to_string({
+            partial: "protocols/header/updated_at_label.html.erb"
+          })
         }
       end
     end
@@ -843,7 +851,9 @@ class ProtocolsController < ApplicationController
     respond_to do |format|
       format.json do
         render json: {
-          html: render_to_string(partial: 'protocols/index/create_new_modal_body.html.erb')
+          html: render_to_string({
+            partial: "protocols/index/create_new_modal_body.html.erb"
+          })
         }
       end
     end
@@ -855,7 +865,9 @@ class ProtocolsController < ApplicationController
         render json: {
           title: I18n.t('protocols.header.edit_name_modal.title',
                         protocol: escape_input(@protocol.name)),
-          html: render_to_string(partial: 'protocols/header/edit_name_modal_body.html.erb')
+                        html: render_to_string({
+                          partial: "protocols/header/edit_name_modal_body.html.erb"
+                        })
         }
       end
     end
@@ -867,7 +879,9 @@ class ProtocolsController < ApplicationController
         render json: {
           title: I18n.t('protocols.header.edit_keywords_modal.title',
                         protocol: escape_input(@protocol.name)),
-          html: render_to_string(partial: 'protocols/header/edit_keywords_modal_body.html.erb'),
+                        html: render_to_string({
+                          partial: "protocols/header/edit_keywords_modal_body.html.erb"
+                        }),
           keywords: @protocol.team.protocol_keywords_list
         }
       end
@@ -880,7 +894,9 @@ class ProtocolsController < ApplicationController
         render json: {
           title: I18n.t('protocols.header.edit_authors_modal.title',
                         protocol: escape_input(@protocol.name)),
-          html: render_to_string(partial: 'protocols/header/edit_authors_modal_body.html.erb')
+                        html: render_to_string({
+                          partial: "protocols/header/edit_authors_modal_body.html.erb"
+                        })
         }
       end
     end
@@ -1131,8 +1147,10 @@ class ProtocolsController < ApplicationController
       else
         format.json do
           render json: {
-            html: render_to_string(partial: 'protocols/index/results_modal_body.html.erb',
-                                     locals: { results: results, en_action: "#{action}_results" })
+            html: render_to_string({
+              partial: "protocols/index/results_modal_body.html.erb",
+              locals: { results: results, en_action: "#{action}_results" }
+            })
           }
         end
       end
