@@ -914,7 +914,7 @@ ActiveRecord::Schema.define(version: 20171026090804) do
           CASE
               WHEN (teams.created_by_id = user_teams.user_id) THEN false
               ELSE true
-          END AS can_be_leaved,
+          END AS can_be_left,
       user_teams.id AS user_team_id,
       user_teams.user_id
      FROM (teams

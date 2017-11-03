@@ -8,6 +8,7 @@ RSpec.describe Datatables::DatatablesTeam, type: :model do
     it { should have_db_column :role }
     it { should have_db_column :user_team_id }
     it { should have_db_column :user_id }
+    it { should have_db_column :can_be_left }
   end
 
   describe 'is readonly' do

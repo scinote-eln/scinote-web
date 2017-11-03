@@ -5,13 +5,13 @@
     "teams": {
       "type": "array",
       "items":{
-        "required": ["id", "name", "members", "role", "can_be_leaved", "user_team_id"],
+        "required": ["id", "name", "members", "role", "can_be_left", "user_team_id"],
         "properties": {
           "id": { "type": "integer" },
           "name": { "type": "string" },
           "members": { "type": "integer" },
           "role": { "type": "integer" },
-          "can_be_leaved": { "type": "boolean" },
+          "can_be_left": { "type": "boolean" },
           "user_team_id": { "type": "integer" },
           "user_id": { "type": "integer" }
         }
