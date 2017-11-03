@@ -4,7 +4,7 @@ json.teams do
     json.name team.name
     json.members team.members
     json.role retrive_role_name(team.role)
-    json.can_be_leaved team.can_be_leaved
+    json.can_be_left team.can_be_left
     json.user_team_id team.user_team_id
   end
 end

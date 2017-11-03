@@ -21,12 +21,12 @@ export type Teams$NewTeam = {
   description: string
 };
 
-
 export type Teams$Team = {
   id: number,
   name: string,
   current_team: boolean,
   role: string,
   members: number,
-  can_be_leaved: boolean
+  can_be_left: boolean,
+  user_team_id: number
 };

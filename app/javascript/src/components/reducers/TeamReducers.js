@@ -1,7 +1,6 @@
 import {
   SET_CURRENT_TEAM,
-  GET_LIST_OF_TEAMS,
-  SHOW_LEAVE_TEAM_MODAL
+  GET_LIST_OF_TEAMS
 } from "../../config/action_types";
 
 export const setCurrentTeam = (
@@ -20,16 +19,6 @@ export const getListOfTeams = (state = { collection: [] }, action) => {
       ...state,
       collection: action.payload
     };
-  }
-  return state;
-};
-
-export const showLeaveTeamModal = (
-  state = { show: false, team: { id: 0, name: "", user_team_id: 0 } },
-  action
-) => {
-  if (action.type === SHOW_LEAVE_TEAM_MODAL) {
-    return { ...state, ...action.payload };
   }
   return state;
 };

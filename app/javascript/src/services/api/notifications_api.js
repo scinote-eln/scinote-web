@@ -1,4 +1,4 @@
-import { axiosInstance } from "./config";
+import axiosInstance from "./config";
 import {
   RECENT_NOTIFICATIONS_PATH,
   UNREADED_NOTIFICATIONS_PATH

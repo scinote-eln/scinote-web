@@ -11,7 +11,8 @@ module ClientApi
 
       unless @role && UserTeam.roles.keys.include?(@role) &&
              @emails && @emails.present?
-        raise ClientApi::CustomInvitationsError
+        raise ClientApi::CustomInvitationsError,
+              I18n.t('client_api.invalid_arguments')
       end
       @emails = @emails.map(&:downcase)
     end

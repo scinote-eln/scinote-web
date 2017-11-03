@@ -1,5 +1,5 @@
 // @flow
-import { axiosInstance } from "./config";
+import axiosInstance from "./config";
 import { ACTIVITIES_PATH } from "./endpoints";
 
 export function getActivities(

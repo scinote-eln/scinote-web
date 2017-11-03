@@ -3,6 +3,7 @@
 # newer version of cucumber-rails. Consider adding your own code to a new file
 # instead of editing this one. Cucumber will automatically load all features/**/*.rb
 # files.
+ENV['CUCUMBER'] = 'cucumber'
 
 require 'cucumber/rails'
 require 'capybara/cucumber'
@@ -20,7 +21,7 @@ Capybara::Webkit.configure do |config|
   # Allow pages to make requests to any URL without issuing a warning.
   config.allow_unknown_urls
 
-  # Timeout if requests take longer than 5 seconds
+  # Timeout if requests take longer than 30 seconds
   config.timeout = 30
 
   # Don't raise errors when SSL certificates can't be validated
@@ -32,11 +33,18 @@ end
 
 Capybara.javascript_driver = :webkit
 Capybara.default_max_wait_time = 30
+Capybara.asset_host = 'http://localhost:3001'
+Capybara.server_port = 3001
 
 # Precompile webpacker to avoid render bugs in capybara webkit
 # global hook throws an error :( https://github.com/cucumber/cucumber/wiki/Hooks
-Before('@compile') do
-  system('NODE_ENV=production bundle exec rails webpacker:compile')
+
+compiled = false
+Before do
+  unless compiled
+    system('NODE_ENV=production bundle exec rails webpacker:compile')
+    compiled = true
+  end
 end
 
 # Capybara defaults to CSS3 selectors rather than XPath.
@@ -64,6 +72,8 @@ ActionController::Base.allow_rescue = false
 # Remove/comment out the lines below if your app doesn't have a database.
 # For some databases (like MongoDB and CouchDB) you may need to use :truncation instead.
 begin
+  require 'database_cleaner'
+  require 'database_cleaner/cucumber'
   DatabaseCleaner.strategy = :truncation
 rescue NameError
   raise "You need to add database_cleaner to your Gemfile (in the :test group) if you wish to use it."

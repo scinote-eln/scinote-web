@@ -1,41 +1,33 @@
-import axios from "../../config/axios";
-import _ from "lodash";
-import { TEAMS_PATH, CHANGE_TEAM_PATH } from "../../config/api_endpoints";
-import {
-  GET_LIST_OF_TEAMS,
-  SET_CURRENT_TEAM,
-  SHOW_LEAVE_TEAM_MODAL
-} from "../../config/action_types";
+// @flow
+import type {
+  Teams$Team,
+  Action$AddTeamData,
+  Actopm$SetCurrentTeam
+} from "flow-typed";
+import type { Dispatch } from "redux-thunk";
+import { getTeams, changeCurrentTeam } from "../../services/api/teams_api";
+import { GET_LIST_OF_TEAMS, SET_CURRENT_TEAM } from "../../config/action_types";
 
-export function leaveTeamModalShow(show = false, team = {}) {
-  return {
-    payload: { team, show },
-    type: SHOW_LEAVE_TEAM_MODAL
-  };
-}
-
-export function addTeamsData(data) {
+export function addTeamsData(data: Array<Teams$Team>): Action$AddTeamData {
   return {
     type: GET_LIST_OF_TEAMS,
     payload: data
   };
 }
 
-export function setCurrentTeam(team) {
+export function setCurrentTeam(team: Teams$Team): Actopm$SetCurrentTeam {
   return {
     team,
     type: SET_CURRENT_TEAM
   };
 }
 
-export function getTeamsList() {
+export function getTeamsList(): Dispatch {
   return dispatch => {
-    axios
-      .get(TEAMS_PATH, { withCredentials: true })
+    getTeams()
       .then(response => {
-        const teams = response.data.teams.collection;
+        const { teams, currentTeam } = response;
         dispatch(addTeamsData(teams));
-        const currentTeam = _.find(teams, team => team.current_team);
         dispatch(setCurrentTeam(currentTeam));
       })
       .catch(error => {
@@ -44,14 +36,12 @@ export function getTeamsList() {
   };
 }
 
-export function changeTeam(team_id) {
+export function changeTeam(teamID: number): Dispatch {
   return dispatch => {
-    axios
-      .post(CHANGE_TEAM_PATH, { team_id }, { withCredentials: true })
+    changeCurrentTeam(teamID)
       .then(response => {
-        const teams = response.data.teams.collection;
+        const { teams, currentTeam } = response;
         dispatch(addTeamsData(teams));
-        const currentTeam = _.find(teams, team => team.current_team);
         dispatch(setCurrentTeam(currentTeam));
       })
       .catch(error => {
