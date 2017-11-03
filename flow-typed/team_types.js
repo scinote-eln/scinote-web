@@ -6,3 +6,7 @@ export type Team$TeamMemeber = {
   teamName: string,
   teamId: number
 };
+
+export type Team$Update = {
+  description?: string
+}

@@ -3,11 +3,8 @@
 import React, { Component } from "react";
 import styled from "styled-components";
 import { Breadcrumb } from "react-bootstrap";
-import { connect } from "react-redux";
 import { FormattedMessage } from "react-intl";
-import type { State } from "flow-typed";
-import type { MapStateToProps } from "react-redux";
-
+import { getTeams } from "../../../../services/api/teams_api";
 import { BORDER_LIGHT_COLOR } from "../../../../config/constants/colors";
 
 import PageTitle from "../../../../components/PageTitle";
@@ -24,22 +21,44 @@ const Wrapper = styled.div`
 `;
 
 type Props = {
-  tabState: Function,
+  tabState: Function
+};
+
+type State = {
   teams: Array<Teams$Team>
 };
 
-class SettingsTeams extends Component<Props> {
-  static defaultProps = {
-    teams: [{ id: 0, name: "", current_team: "", role: "", members: 0 }]
-  };
+class SettingsTeams extends Component<Props, State> {
+  constructor(props: Props) {
+    super(props);
+    this.state = {
+      teams: [
+        {
+          id: 0,
+          name: "",
+          current_team: true,
+          role: "",
+          members: 0,
+          can_be_left: false
+        }
+      ]
+    };
+    (this: any).updateTeamsState = this.updateTeamsState.bind(this);
+  }
 
   componentDidMount() {
+    getTeams().then(({ teams }) => {
+      this.updateTeamsState(teams);
+    });
     // set team tab on active
     this.props.tabState("2");
   }
 
+  updateTeamsState(teams: Array<Teams$Team>): void {
+    this.setState({ teams });
+  }
+
   render() {
-    const { teams } = this.props;
     return (
       <PageTitle localeID="page_title.all_teams_page">
         <Wrapper>
@@ -48,16 +67,15 @@ class SettingsTeams extends Component<Props> {
               <FormattedMessage id="settings_page.all_teams" />
             </Breadcrumb.Item>
           </Breadcrumb>
-          <TeamsPageDetails teams={teams} />
-          <TeamsDataTable teams={teams} />
+          <TeamsPageDetails teams={this.state.teams} />
+          <TeamsDataTable
+            teams={this.state.teams}
+            updateTeamsState={this.updateTeamsState}
+          />
         </Wrapper>
       </PageTitle>
     );
   }
 }
 
-const mapStateToProps: MapStateToProps<*, *, *> = (state: State) => ({
-  teams: state.all_teams.collection
-});
-
-export default connect(mapStateToProps)(SettingsTeams);
+export default SettingsTeams;

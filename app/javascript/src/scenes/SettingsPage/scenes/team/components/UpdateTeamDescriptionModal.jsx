@@ -1,13 +1,8 @@
+// @flow
 import React, { Component } from "react";
-import PropTypes, { bool, number, string, func } from "prop-types";
-import {
-  Modal,
-  Button,
-  ControlLabel,
-  FormControl,
-} from "react-bootstrap";
+import type { Node } from "react";
+import { Modal, Button, ControlLabel, FormControl } from "react-bootstrap";
 import { FormattedMessage } from "react-intl";
-import axios from "../../../../../config/axios";
 import {
   ValidatedForm,
   ValidatedFormGroup,
@@ -15,51 +10,62 @@ import {
   ValidatedErrorHelpBlock,
   ValidatedSubmitButton
 } from "../../../../../components/validation";
-import {
-  textMaxLengthValidator
-} from "../../../../../components/validation/validators/text";
+import { textMaxLengthValidator } from "../../../../../components/validation/validators/text";
+import { updateTeam } from "../../../../../services/api/teams_api";
 
-import { TEAM_UPDATE_PATH } from "../../../../../config/api_endpoints";
+type Team = {
+  id: number,
+  description: string
+};
 
-class UpdateTeamDescriptionModal extends Component {
-  constructor(props) {
+type Props = {
+  showModal: boolean,
+  hideModal: Function,
+  team: Team,
+  updateTeamCallback: Function
+};
+
+type State = {
+  description: string
+};
+
+class UpdateTeamDescriptionModal extends Component<Props, State> {
+  constructor(props: Props) {
     super(props);
     this.state = { description: "" };
-    this.onCloseModal = this.onCloseModal.bind(this);
-    this.updateDescription = this.updateDescription.bind(this);
-    this.handleDescription = this.handleDescription.bind(this);
+    (this: any).onCloseModal = this.onCloseModal.bind(this);
+    (this: any).updateDescription = this.updateDescription.bind(this);
+    (this: any).handleDescription = this.handleDescription.bind(this);
   }
 
-  onCloseModal() {
-    this.setState({ description: "" });
+  onCloseModal(): void {
+    (this: any).setState({ description: "" });
     this.props.hideModal();
   }
 
-  handleDescription(el) {
-    this.setState({ description: el.target.value });
+  handleDescription(e: SyntheticInputEvent<HTMLInputElement>): void {
+    (this: any).setState({ description: e.target.value });
   }
 
-  updateDescription() {
-    axios({
-      method: "post",
-      url: TEAM_UPDATE_PATH,
-      withCredentials: true,
-      data: {
-        team_id: this.props.team.id,
-        team: { description: this.state.description }
-      }
-    })
+  updateDescription(): void {
+    updateTeam(this.props.team.id, { description: this.state.description })
       .then(response => {
-        this.props.updateTeamCallback(response.data.team);
+        this.props.updateTeamCallback(response);
         this.onCloseModal();
       })
-      .catch(error => this.setState({ errorMessage: error.message }));
+      .catch(error => {
+        (this: any).form.setErrorsForTag('description', [error.message])
+      });
   }
 
-  render() {
+  render(): Node {
     return (
       <Modal show={this.props.showModal} onHide={this.onCloseModal}>
-        <ValidatedForm ref={(f) => { this.form = f; }}>
+        <ValidatedForm
+          ref={f => {
+            (this: any).form = f;
+          }}
+        >
           <Modal.Header closeButton>
             <Modal.Title>
               <FormattedMessage id="settings_page.update_team_description_modal.title" />
@@ -97,15 +103,5 @@ class UpdateTeamDescriptionModal extends Component {
     );
   }
 }
-
-UpdateTeamDescriptionModal.propTypes = {
-  showModal: bool.isRequired,
-  hideModal: func.isRequired,
-  team: PropTypes.shape({
-    id: number.isRequired,
-    description: string
-  }).isRequired,
-  updateTeamCallback: func.isRequired
-};
 
 export default UpdateTeamDescriptionModal;

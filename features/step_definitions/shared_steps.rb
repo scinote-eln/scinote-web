@@ -51,10 +51,11 @@ Then(/^I attach a "([^"]*)" file to "([^"]*)" field$/) do |file, field_id|
   wait_for_ajax
   attach_file(field_id, Rails.root.join('features', 'assets', file))
   # "expensive" operation needs some time :=)
-  sleep(0.3)
+  sleep(0.5)
 end
 
 Then(/^I should see "([^"]*)" error message under "([^"]*)" field$/) do |message, field_id|
+  wait_for_ajax
   parent = find_by_id(field_id).first(:xpath, './/..')
   expect(parent).to have_content(message)
 end
@@ -64,6 +65,7 @@ Then(/^I click on "([^"]*)"$/) do |button|
 end
 
 Then(/^I click on image within "([^"]*)" element$/) do |container|
+  sleep 0.5
   within(container) do
     find('img').click
   end
@@ -83,9 +85,8 @@ Then(/^I click on Edit on "([^"]*)" input field$/) do |container_id|
   end
 end
 
-Then(/^I fill in "([^"]*)" in "([^"]*)" input field$/) do |text, container_id|
-  container = page.find_by_id(container_id)
-  container.find('input').set(text)
+Then(/^I fill in "([^"]*)" in "([^"]*)" input field$/) do |text, input_id|
+  page.find_by_id(input_id).set(text)
 end
 
 Then(/^I should see "([^"]*)" in "([^"]*)" input field$/) do |text, container_id|

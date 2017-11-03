@@ -9,8 +9,8 @@ import {
   ButtonToolbar,
 } from "react-bootstrap";
 import update from "immutability-helper";
-import { updateUser } from "../../../../../services/api/users_api";
 import { transformName } from "../../../../../services/helpers/string_helper";
+import { updateUser } from "../../../../../services/api/users_api";
 import { addAlert } from "../../../../../components/actions/AlertsActions";
 
 import {
@@ -259,6 +259,7 @@ class InputEnabled extends Component {
     return (
       <ValidatedFormGroup tag={dataField}>
         <ValidatedFormControl
+          id={transformName(this.props.labelTitle)}
           tag={dataField}
           type={this.props.inputType}
           onChange={this.handleChange}
