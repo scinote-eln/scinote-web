@@ -4,12 +4,12 @@ if ENV['PAPERCLIP_HASH_SECRET'].nil?
   exit 1
 end
 
-Paperclip::Attachment.default_options.merge!({
+Paperclip::Attachment.default_options.merge!(
   hash_data: ':class/:attachment/:id/:style',
   hash_secret: ENV['PAPERCLIP_HASH_SECRET'],
-  preserve_files: false,
+  preserve_files: true,
   url: '/system/:class/:attachment/:id_partition/:hash/:style/:filename'
-})
+)
 
 if ENV['PAPERCLIP_STORAGE'] == "s3"
 
