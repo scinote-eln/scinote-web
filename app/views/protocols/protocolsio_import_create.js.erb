@@ -1,0 +1,17 @@
+
+<% if @protocolsio_too_big %>
+alert('<%= I18n.t('my_modules.protocols.load_from_file_size_error',
+                 size: Constants::FILE_MAX_SIZE_MB ) %>');
+<% else %>
+  $('#modal-import-json-protocol').modal('hide');
+      <% if remotipart_submitted? %> <%# a workaround to a bug with remotipart, that caused alot of headache, courtesy of github.com/dhampik %>
+        $('#protocolsio-preview-modal-target').html(
+          "<%= j "#{render(:partial => 'protocols/import_export/import_json_protocol_preview_modal')}" %>"
+        );
+      <% else %>
+        $('#protocolsio-preview-modal-target').html(
+          "<%= j render(:partial => 'protocols/import_export/import_json_protocol_preview_modal') %>"
+        );
+      <% end %>
+      $('#modal-import-json-protocol-preview').modal('show');
+<% end %>

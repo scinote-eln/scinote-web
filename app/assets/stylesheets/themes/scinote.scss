@@ -337,6 +337,19 @@ a {
     border-color: darken($color-theme-secondary, 10%);
   }
 }
+.btn-link-alt {
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 5px;
+  padding: 3px;
+}
+
+.btn-invis-file {
+  display: none;
+  opacity: 0;
+  position: absolute;
+  z-index: -1;
+}
 
 .btn-open-file {
   position: relative;
@@ -1259,8 +1272,35 @@ ul.content-module-activities {
     position: relative;
     top: -10px;
   }
+
+}
+// Import json protocols.io protocol modal
+#modal-import-json-protocol-preview .modal-dialog {
+  width: 70%;
 }
 
+.import-protocols-modal-preview-container-json {
+  height: 300px;
+  overflow-x: scroll;
+  overflow-y: scroll;
+  width: 100%;
+
+  .eln-table {
+    height: 21px;
+    text-align: center;
+  }
+
+  .badge-preview {
+    background-color: $color-silver;
+    border-radius: 2em;
+    float: left;
+    font-size: 20px;
+    padding: 5px 14px;
+    position: relative;
+    top: -10px;
+  }
+
+}
 /* Steps and Results */
 #steps {
   background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAABCAYAAACsXeyTAAAAIUlEQVQImWNgoD5gZGBgMILSjKRo/P//vwiSGQwMDAwMAEnaA0jgHoquAAAAAElFTkSuQmCC");
@@ -1795,6 +1835,15 @@ textarea.textarea-sm {
       -webkit-padding-before: 0;
       -webkit-padding-after: 0;
     }
+    .btn.btn-default-link {
+      border: 0;
+      height: 100%;
+      min-height: 34px;
+      padding: 0;
+      -webkit-padding-after: 0;
+      -webkit-padding-before: 0;
+    }
+
   }
 }
 
@@ -2000,6 +2049,7 @@ th.custom-field .modal-tooltiptext {
       margin-right: 5px;
       padding: 3px;
     }
+
 
     .btn:last-child {
       margin-right: 20px;
