@@ -10,8 +10,8 @@ import {
 export const removeUserFromTeam = (
   teamId: number,
   teamUserId: number
-): Promise<*> => {
-  return axiosInstance({
+): Promise<*> =>
+ axiosInstance({
     method: "DELETE",
     url: REMOVE_USER_FROM_TEAM_PATH,
     data: {
@@ -19,7 +19,6 @@ export const removeUserFromTeam = (
       user_team: teamUserId
     }
   }).then(({ data }) => data.team_users);
-};
 
 export const inviteUsersToTeam = (
   role: number,
