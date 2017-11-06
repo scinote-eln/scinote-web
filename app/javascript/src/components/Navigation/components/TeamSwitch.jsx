@@ -45,7 +45,9 @@ class TeamSwitch extends Component<Props, State> {
 
   changeTeam(teamId) {
     this.props.changeTeam(teamId);
-    window.location = ROOT_PATH;
+    setTimeout(() => {
+      window.location = ROOT_PATH;
+    }, 1500);
   }
 
   displayTeams() {

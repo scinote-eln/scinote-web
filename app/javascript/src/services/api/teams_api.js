@@ -27,17 +27,13 @@ export const getTeams = (): Promise<*> =>
   axiosInstance.get(TEAMS_PATH).then(({ data }) => data.teams);
 
 export const changeCurrentTeam = (teamID: number): Promise<*> =>
-  axiosInstance.post(CHANGE_TEAM_PATH, { team_id: teamID }).then(({ data }) => {
-    const teams = data.teams;
-    return { teams };
-  });
+  axiosInstance
+    .post(CHANGE_TEAM_PATH, { team_id: teamID })
+    .then(({ data }) => data.teams);
 
 export const leaveTeam = (teamID: number, userTeamID: number): Promise<*> => {
   const teamUrl = `${LEAVE_TEAM_PATH}?team=${teamID}&user_team=${userTeamID}`;
-  return axiosInstance.delete(teamUrl).then(({ data }) => {
-    const teams = data.teams;
-    return { teams };
-  });
+  return axiosInstance.delete(teamUrl).then(({ data }) => data.teams);
 };
 
 export const fetchCurrentTeam = (): Promise<*> =>

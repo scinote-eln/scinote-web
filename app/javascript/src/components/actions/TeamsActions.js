@@ -5,7 +5,11 @@ import type {
   Actopm$SetCurrentTeam
 } from "flow-typed";
 import type { Dispatch } from "redux-thunk";
-import { getTeams, changeCurrentTeam, fetchCurrentTeam } from "../../services/api/teams_api";
+import {
+  getTeams,
+  changeCurrentTeam,
+  fetchCurrentTeam
+} from "../../services/api/teams_api";
 import { GET_LIST_OF_TEAMS, SET_CURRENT_TEAM } from "../../config/action_types";
 
 export function addTeamsData(data: Array<Teams$Team>): Action$AddTeamData {
@@ -43,10 +47,7 @@ export function getCurrentTeam(): Dispatch {
 export function changeTeam(teamID: number): Dispatch {
   return dispatch => {
     changeCurrentTeam(teamID)
-      .then(response => {
-        const { teams } = response;
-        dispatch(addTeamsData(teams));
-      })
+      .then(response => dispatch(addTeamsData(response)))
       .catch(error => {
         console.log("get Teams Error: ", error);
       });
