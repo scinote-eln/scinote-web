@@ -18,6 +18,7 @@ Then(/^I click "(.+)" link within "(.+)" actions dropdown within Team members ta
 end
 
 Then(/^I should see "(.+)" in Role column of "(.+)" within Team members table$/) do |role, email|
+  wait_for_ajax
   mail_td = find('td', text: /\A#{email}\z/)
   parent = mail_td.first(:xpath, './/..')
   expect(parent).to have_css('td', text: /\A#{role}\z/)
