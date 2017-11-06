@@ -1,5 +1,4 @@
 // @flow
-
 import React, { Component } from "react";
 import styled from "styled-components";
 import { Breadcrumb } from "react-bootstrap";
@@ -36,7 +35,7 @@ class SettingsTeams extends Component<Props, State> {
         {
           id: 0,
           name: "",
-          current_team: true,
+          user_team_id: 0,
           role: "",
           members: 0,
           can_be_left: false
@@ -47,8 +46,8 @@ class SettingsTeams extends Component<Props, State> {
   }
 
   componentDidMount() {
-    getTeams().then(({ teams }) => {
-      this.updateTeamsState(teams);
+    getTeams().then(response => {
+      this.updateTeamsState(response);
     });
     // set team tab on active
     this.props.tabState("2");

@@ -44,10 +44,10 @@ TeamsPageDetails.propTypes = {
     PropTypes.shape({
       id: number.isRequired,
       name: string.isRequired,
-      current_team: bool.isRequired,
       role: string.isRequired,
       members: number.isRequired,
-      can_be_left: bool.isRequired
+      can_be_left: bool.isRequired,
+      user_team_id: number.isRequired
     })
   )
 };

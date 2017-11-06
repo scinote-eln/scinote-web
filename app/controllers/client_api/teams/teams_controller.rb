@@ -56,6 +56,11 @@ module ClientApi
         error_response(message: error.to_s)
       end
 
+      def current_team
+        success_response(template: '/client_api/teams/current_team',
+                         locals: { team: current_user.current_team })
+      end
+
       private
 
       def team_params

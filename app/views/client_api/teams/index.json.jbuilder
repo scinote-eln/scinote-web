@@ -1,5 +1,5 @@
 json.teams do
-  json.array teams do |team|
+  json.array! teams do |team|
     json.id team.id
     json.name team.name
     json.members team.members
