@@ -17,10 +17,19 @@ Then(/^I fill the sign up form with$/) do |table|
   end
 end
 
-Given(/^is signed in with "([^"]*)", "([^"]*)"$/) do |email, password|
+Given(/^"([^"]*)" is signed in with "([^"]*)"$/) do |email, password|
   visit '/users/sign_in'
   fill_in 'user_email', with: email
   fill_in 'user_password', with: password
   click_button 'Log in'
   @current_user = User.find_by_email(email)
+end
+
+Given(/^I am on Log in page$/) do
+  visit '/users/sign_in'
+end
+
+Then(/^I fill in Email "([^"]*)" and Password "([^"]*)"$/) do |email, password|
+  fill_in 'user_email', with: email
+  fill_in 'user_password', with: password
 end

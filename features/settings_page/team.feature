@@ -13,7 +13,7 @@ Feature: Team settings
     And "karli@myorg.com" is in "BioSistemika Process" team as a "admin"
     And "marija@myorg.com" is in "BioSistemika Process" team as a "normal_user"
     And "suazana@myorg.com" is in "BioSistemika Process" team as a "guest"
-    And is signed in with "karli@myorg.com", "mypassword1234"
+    And "karli@myorg.com" is signed in with "mypassword1234"
 
   @javascript
   Scenario: Successfully changes team name

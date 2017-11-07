@@ -20,6 +20,12 @@ Given(/^I click "(.+)" link within "(.+)"$/) do |link, element|
   end
 end
 
+Then(/^I click "(.+)" link within dropdown menu$/) do |link|
+  within('.dropdown-menu') do
+    click_link link
+  end
+end
+
 Then(/^I should see "(.+)"$/) do |text|
   wait_for_ajax
   expect(page).to have_content(text)
@@ -74,7 +80,7 @@ end
 
 Then(/^I should see "([^"]*)" flash message$/) do |message|
   wait_for_ajax
-  expect(find_by_id('alert-flash')).to have_content(message)
+  expect(find('.alert')).to have_content(message)
 end
 
 Then(/^I click on Edit on "([^"]*)" input field$/) do |container_id|

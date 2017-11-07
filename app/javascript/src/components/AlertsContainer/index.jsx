@@ -32,7 +32,7 @@ class AlertsContainer extends Component {
 
   render() {
     return (
-      <Wrapper id="alert-flash">
+      <Wrapper>
         <TransitionGroup>
           {this.props.alerts.map((alert) =>
             <CSSTransition key={alert.id}
