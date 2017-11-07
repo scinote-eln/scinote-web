@@ -60,7 +60,11 @@ class UpdateTeamNameModal extends Component<Props, State> {
 
   render(): Node {
     return (
-      <Modal show={this.props.showModal} onHide={this.onCloseModal}>
+      <Modal
+        id="settings_page.update_team_name_modal"
+        show={this.props.showModal}
+        onHide={this.onCloseModal}
+      >
         <ValidatedForm
           ref={f => {
             (this: any).form = f;

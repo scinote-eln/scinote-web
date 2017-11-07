@@ -7,31 +7,24 @@ ENV['CUCUMBER'] = 'cucumber'
 
 require 'cucumber/rails'
 require 'capybara/cucumber'
-require 'capybara-webkit'
 require 'simplecov'
-require 'headless'
+require 'capybara/poltergeist'
+require 'phantomjs'
 
-headless = Headless.new
-headless.start
-
-Capybara::Webkit.configure do |config|
-  # Enable debug mode. Prints a log of everything the driver is doing.
-  config.debug = false
-
-  # Allow pages to make requests to any URL without issuing a warning.
-  config.allow_unknown_urls
-
-  # Timeout if requests take longer than 30 seconds
-  config.timeout = 30
-
-  # Don't raise errors when SSL certificates can't be validated
-  config.ignore_ssl_errors
-
-  # Raise JavaScript errors as exceptions
-  config.raise_javascript_errors = false
+Capybara.register_driver :poltergeist do |app|
+  options = {
+    # inspector: true,
+    screen_size: [1600, 1200],
+    js_errors: false,
+    phantomjs: Phantomjs.path,
+    phantomjs_options: [
+      '--ignore-ssl-errors=yes'
+    ]
+  }
+  Capybara::Poltergeist::Driver.new(app, options)
 end
 
-Capybara.javascript_driver = :webkit
+Capybara.javascript_driver = :poltergeist
 Capybara.default_max_wait_time = 30
 Capybara.asset_host = 'http://localhost:3001'
 Capybara.server_port = 3001

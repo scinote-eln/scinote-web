@@ -77,6 +77,7 @@ class UpdateTeamDescriptionModal extends Component<Props, State> {
                 <FormattedMessage id="settings_page.update_team_description_modal.label" />
               </ControlLabel>
               <ValidatedFormControl
+                id="teamDescription"
                 componentClass="textarea"
                 tag="description"
                 defaultValue={this.props.team.description}

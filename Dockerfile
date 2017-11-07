@@ -6,8 +6,6 @@ RUN curl -sL https://deb.nodesource.com/setup_8.x | bash - && \
   apt-get update -qq && \
   apt-get install -y \
   nodejs \
-  qt5-default libqt5webkit5-dev gstreamer1.0-plugins-base gstreamer1.0-tools gstreamer1.0-x \
-  xvfb \
   postgresql-client \
   default-jre-headless \
   unison \

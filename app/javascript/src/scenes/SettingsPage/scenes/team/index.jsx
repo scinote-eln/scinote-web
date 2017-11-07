@@ -177,12 +177,12 @@ class SettingsTeam extends Component<Props, State> {
                 <FormattedMessage id="settings_page.all_teams" />
               </Breadcrumb.Item>
             </LinkContainer>
-            <Breadcrumb.Item active={true}>
+            <Breadcrumb.Item active>
               {this.state.team.name}
             </Breadcrumb.Item>
           </Breadcrumb>
           <TabTitle>
-            <StyledH3 onClick={this.showNameModal}>
+            <StyledH3 className="team-name-title" onClick={this.showNameModal}>
               {this.state.team.name}
             </StyledH3>
           </TabTitle>
@@ -228,7 +228,7 @@ class SettingsTeam extends Component<Props, State> {
             </Col>
           </Row>
           <Row>
-            <Col sm={12} onClick={this.showDescriptionModal}>
+            <Col className="team-description" sm={12} onClick={this.showDescriptionModal}>
               <BadgeWrapper>
                 <Glyphicon glyph="info-sign" />
               </BadgeWrapper>
