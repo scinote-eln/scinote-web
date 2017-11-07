@@ -4,6 +4,7 @@ import * as React from "react";
 import { FormControl } from "react-bootstrap";
 import type { ValidationError } from "flow-typed";
 import PropTypes from "prop-types";
+import _ from "lodash";
 
 type Props = {
   tag: string,
