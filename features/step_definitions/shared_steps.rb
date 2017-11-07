@@ -2,12 +2,6 @@ When(/^I click "(.+)" button$/) do |button|
   click_on(button)
 end
 
-When(/^I click "(.+)" button within "(.+)"$/) do |button, container|
-  within(find(container)) do
-    click_on button
-  end
-end
-
 Given(/^Show me the page$/) do
   save_and_open_page
 end

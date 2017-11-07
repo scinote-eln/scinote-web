@@ -19,6 +19,7 @@ end
 
 Then(/^I should see "(.+)" in Role column of "(.+)" within Team members table$/) do |role, email|
   wait_for_ajax
+  sleep 0.3
   mail_td = find('td', text: /\A#{email}\z/)
   parent = mail_td.first(:xpath, './/..')
   expect(parent).to have_css('td', text: /\A#{role}\z/)
