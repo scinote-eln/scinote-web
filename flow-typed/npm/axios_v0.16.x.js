@@ -1,5 +1,5 @@
-// flow-typed signature: c788eedb73f0df0fed02bf99c0b49bcc
-// flow-typed version: 2adcdf60cc/axios_v0.16.x/flow_>=v0.25.x
+// flow-typed signature: 783541c5bb930cc2cb39610705a4adc1
+// flow-typed version: d84de54b07/axios_v0.16.x/flow_>=v0.25.x
 
 declare module 'axios' {
   declare interface ProxyConfig {
@@ -60,7 +60,7 @@ declare module 'axios' {
   declare class AxiosXHR<T> {
     config: AxiosXHRConfig<T>;
     data: T;
-    headers: Object;
+    headers?: Object;
     status: number;
     statusText: string,
     request: http$ClientRequest | XMLHttpRequest
