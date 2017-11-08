@@ -38,11 +38,11 @@ Given("I click on Reset Password link in the reset password email for user {stri
   visit new_user_password_path
   fill_in 'user_email', with: email
   click_button 'Send me reset password instruction'
-  binding.pry
+  Delayed::Worker.new.work_off
   open_email(email)
   current_email.click_link 'Change my password'
 end
 
 Then("I should be on Change your password page") do
-  expect(page).to have_current_path(edit_user_password_path)
+  expect(page).to have_current_path(edit_user_password_path, only_path: true)
 end
