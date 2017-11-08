@@ -16,6 +16,20 @@ export type Alert = {
   timeout: number
 };
 
+export type ValidationErrorSimple = {|
+  message: string
+|};
+
+export type ValidationErrorIntl = {|
+  intl: boolean,
+  messageId: string,
+  values: string
+|};
+
+export type ValidationError = ValidationErrorSimple | ValidationErrorIntl;
+
+export type ValidationErrors = string | Array<string> | Array<ValidationError>;
+
 export type Activity = {
   id: number,
   message: string,

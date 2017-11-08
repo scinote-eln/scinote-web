@@ -1,16 +1,19 @@
+// @flow
+
 import React from "react";
 import { Button } from "react-bootstrap";
 import PropTypes from "prop-types";
+import type { Node } from 'react';
 
-const ValidatedSubmitButton = (props, context) =>
+type Props = {
+  children?: Node
+};
+
+const ValidatedSubmitButton = (props: Props, context: any) =>
   <Button {...props} disabled={context.hasAnyError()}>
     {props.children}
   </Button>
 ;
-
-ValidatedSubmitButton.propTypes = {
-  children: PropTypes.node
-}
 
 ValidatedSubmitButton.defaultProps = {
   children: undefined
