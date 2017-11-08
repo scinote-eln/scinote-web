@@ -19,6 +19,7 @@ Feature: Sign up
     And I click "Sign up" button
     Then I should see "has already been taken"
 
+  @javascript
   Scenario: Sign up for an non-existent user
     Given I visit the sign up page
     Then I fill the sign up form with
