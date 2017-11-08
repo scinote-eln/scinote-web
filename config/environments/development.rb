@@ -39,6 +39,7 @@ Rails.application.configure do
     user_name: Rails.application.secrets.mailer_user_name,
     password: Rails.application.secrets.mailer_password
   }
+
   #config.action_mailer.perform_deliveries = false
 
   # Print deprecation notices to the Rails logger.
