@@ -1,8 +1,14 @@
-import React from "react";
+// @flow
+
+import * as React from "react";
 import { FormGroup } from "react-bootstrap";
 import PropTypes from "prop-types";
 
-const ValidatedFormGroup = (props, context) => {
+type Props = {
+  tag: string
+};
+
+const ValidatedFormGroup = (props: Props, context: any) => {
   // Remove additional props from the props
   const { tag, ...cleanProps } = props;
 
@@ -18,10 +24,6 @@ const ValidatedFormGroup = (props, context) => {
     />
   );
 };
-
-ValidatedFormGroup.propTypes = {
-  tag: PropTypes.string.isRequired
-}
 
 ValidatedFormGroup.contextTypes = {
   hasErrorForTag: PropTypes.func

@@ -1,6 +1,9 @@
-import React, { Component } from "react";
+// @flow
+
+import * as React from "react";
 import { HelpBlock } from "react-bootstrap";
 import { FormattedMessage } from "react-intl";
+import type { ValidationError } from "flow-typed";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 import shortid from "shortid";
@@ -11,8 +14,12 @@ const MyHelpBlock = styled(HelpBlock)`
   }
 `;
 
-class ValidatedErrorHelpBlock extends Component {
-  static renderErrorMessage(error) {
+type Props = {
+  tag: string
+};
+
+class ValidatedErrorHelpBlock extends React.Component<Props> {
+  static renderErrorMessage(error: ValidationError): React.Node {
     const key = shortid.generate();
     if (error.intl) {
       return (
@@ -39,15 +46,13 @@ class ValidatedErrorHelpBlock extends Component {
     const errors = this.context.errors(tag) || [];
     return (
       <MyHelpBlock {...cleanProps}>
-        {errors.map((error) => ValidatedErrorHelpBlock.renderErrorMessage(error))}
+        {errors.map(
+          (error: ValidationError) => ValidatedErrorHelpBlock.renderErrorMessage(error)
+        )}
       </MyHelpBlock>
     );
   }
 }
-
-ValidatedErrorHelpBlock.propTypes = {
-  tag: PropTypes.string.isRequired
-};
 
 ValidatedErrorHelpBlock.contextTypes = {
   errors: PropTypes.func
