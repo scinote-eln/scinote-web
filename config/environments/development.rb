@@ -17,22 +17,30 @@ Rails.application.configure do
     host: Rails.application.secrets.mail_server_url
   }
 
-  # Don't care if the mailer can't send.
-  config.action_mailer.default_url_options = {
-    host: Rails.application.secrets.mail_server_url,
-    port: 3001
-  }
   config.action_mailer.default_options = {
     from: Rails.application.secrets.mailer_from,
     reply_to: Rails.application.secrets.mailer_reply_to
   }
   config.action_mailer.raise_delivery_errors = false
   config.action_mailer.perform_caching = false
+
   if ENV['CUCUMBER'] == 'cucumber'
     config.action_mailer.delivery_method = :test
+    # Don't care if the mailer can't send.
+    config.action_mailer.default_url_options = {
+      host: Rails.application.secrets.mail_server_url,
+      port: 3001
+    }
+    config.action_mailer.perform_deliveries = true
   else
     config.action_mailer.delivery_method = :smtp
+    # Don't care if the mailer can't send.
+    config.action_mailer.default_url_options = {
+      host: Rails.application.secrets.mail_server_url
+    }
+    config.action_mailer.perform_deliveries = false
   end
+
   config.action_mailer.smtp_settings = {
     address: Rails.application.secrets.mailer_address,
     port: Rails.application.secrets.mailer_port,
@@ -42,8 +50,6 @@ Rails.application.configure do
     user_name: Rails.application.secrets.mailer_user_name,
     password: Rails.application.secrets.mailer_password
   }
-
-  config.action_mailer.perform_deliveries = true
 
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
