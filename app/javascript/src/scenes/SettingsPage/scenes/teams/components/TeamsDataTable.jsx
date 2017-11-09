@@ -12,7 +12,6 @@ import LeaveTeamModal from "./LeaveTeamModal";
 const DefaultTeam = {
   id: 0,
   name: "",
-  current_team: false,
   user_team_id: 0,
   role: "",
   members: 0,

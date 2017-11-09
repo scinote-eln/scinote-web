@@ -43,7 +43,7 @@ module ClientApi
 
     def teams_data
       {
-        teams: @user.teams_data,
+        teams: @user.datatables_teams,
         flash_message: I18n.t('client_api.user_teams.leave_flash',
                               team: @team.name)
       }

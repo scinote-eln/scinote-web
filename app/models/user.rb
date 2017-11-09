@@ -198,6 +198,7 @@ class User < ApplicationRecord
   has_many :user_notifications, inverse_of: :user
   has_many :notifications, through: :user_notifications
   has_many :zip_exports, inverse_of: :user, dependent: :destroy
+  has_many :datatables_teams, class_name: '::Views::Datatables::DatatablesTeam'
 
   # If other errors besides parameter "avatar" exist,
   # they will propagate to "avatar" also, so remove them
@@ -216,25 +217,6 @@ class User < ApplicationRecord
 
   def current_team
     Team.find_by_id(self.current_team_id)
-  end
-
-  # Retrieves the data needed in all teams page
-  def teams_data
-    ActiveRecord::Base.connection.execute(
-      ActiveRecord::Base.send(
-        :sanitize_sql_array,
-        ['SELECT teams.id AS id, teams.name AS name, user_teams.role ' \
-         'AS role, (SELECT COUNT(*) FROM user_teams WHERE ' \
-         'user_teams.team_id = teams.id) AS members, ' \
-         'CASE WHEN teams.id=? THEN true ELSE false END AS current_team, ' \
-         'CASE WHEN (SELECT COUNT(*) FROM user_teams WHERE ' \
-         'user_teams.team_id=teams.id AND role=2) >= 2 THEN true ELSE false ' \
-         'END AS can_be_left, user_teams.id AS user_team_id ' \
-         'FROM teams INNER JOIN user_teams ON ' \
-         'teams.id=user_teams.team_id WHERE user_teams.user_id=?',
-         self.current_team_id, self.id]
-      )
-    )
   end
 
   # Search all active users for username & email. Can
