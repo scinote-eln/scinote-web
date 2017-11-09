@@ -137,6 +137,9 @@ GEM
       rack (>= 1.0.0)
       rack-test (>= 0.5.4)
       xpath (~> 2.0)
+    capybara-email (2.5.0)
+      capybara (~> 2.4)
+      mail
     climate_control (0.2.0)
     cliver (0.3.2)
     cocaine (0.5.8)
@@ -513,6 +516,7 @@ DEPENDENCIES
   bullet
   byebug
   capybara
+  capybara-email
   commit_param_routing
   creek
   cucumber-rails (~> 1.5)

@@ -109,6 +109,7 @@ group :test do
   gem 'cucumber-rails', '~> 1.5'
   gem 'database_cleaner'
   gem 'capybara'
+  gem 'capybara-email'
   gem 'poltergeist'
   gem 'phantomjs', :require => 'phantomjs/poltergeist'
   gem 'simplecov', require: false

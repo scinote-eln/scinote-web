@@ -41,6 +41,8 @@ Rails.application.routes.draw do
 
     # Settings
     resources :users, only: :index # needed for testing signup
+    # needed for testing edit passowrd
+    get '/users/password', to: 'devise_password#edit'
 
     get 'users/settings/account/preferences',
         to: 'users/settings/account/preferences#index',

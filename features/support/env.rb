@@ -10,6 +10,7 @@ require 'capybara/cucumber'
 require 'simplecov'
 require 'capybara/poltergeist'
 require 'phantomjs'
+require 'capybara/email'
 
 Capybara.register_driver :poltergeist do |app|
   options = {
@@ -28,6 +29,9 @@ Capybara.javascript_driver = :poltergeist
 Capybara.default_max_wait_time = 30
 Capybara.asset_host = 'http://localhost:3001'
 Capybara.server_port = 3001
+
+# enables email helper methods
+World(Capybara::Email::DSL)
 
 # Precompile webpacker to avoid render bugs in capybara webkit
 # global hook throws an error :( https://github.com/cucumber/cucumber/wiki/Hooks
