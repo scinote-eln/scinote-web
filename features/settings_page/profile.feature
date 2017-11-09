@@ -9,7 +9,7 @@ Background:
   | email                   | password           | password_confirmation | full_name   | initials  |
   | nonadmin@myorg.com      | mypassword1234     | mypassword1234        | Karli Novak | KN        |
  And "nonadmin@myorg.com" is in "BioSistemika Process" team as a "normal_user"
- And is signed in with "nonadmin@myorg.com", "mypassword1234"
+ And "nonadmin@myorg.com" is signed in with "mypassword1234"
 
  @javascript
  Scenario: Successful navigate to profile page
