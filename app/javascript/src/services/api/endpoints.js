@@ -37,3 +37,6 @@ export const INVITE_USERS_PATH = "/client_api/users/invite_users";
 
 // settings
 export const SETTINGS_TEAMS = "/settings/teams";
+
+// scinote configurations
+export const ABOUT_SCINOTE_PATH =  "/client_api/about_scinote";

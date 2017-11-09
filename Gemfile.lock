@@ -137,12 +137,8 @@ GEM
       rack (>= 1.0.0)
       rack-test (>= 0.5.4)
       xpath (~> 2.0)
-    capybara-webkit (1.14.0)
-      capybara (>= 2.3.0, < 2.14.0)
-      json
-    childprocess (0.8.0)
-      ffi (~> 1.0, >= 1.0.11)
     climate_control (0.2.0)
+    cliver (0.3.2)
     cocaine (0.5.8)
       climate_control (>= 0.0.3, < 1.0)
     coderay (1.1.2)
@@ -223,7 +219,6 @@ GEM
     globalid (0.4.0)
       activesupport (>= 4.2.0)
     hammerjs-rails (2.0.8)
-    headless (2.3.1)
     httparty (0.15.6)
       multi_xml (>= 0.5.2)
     i18n (0.9.0)
@@ -311,6 +306,11 @@ GEM
     parser (2.4.0.0)
       ast (~> 2.2)
     pg (0.21.0)
+    phantomjs (2.1.1.0)
+    poltergeist (1.16.0)
+      capybara (~> 2.1)
+      cliver (~> 0.3.1)
+      websocket-driver (>= 0.2.0)
     polyglot (0.3.5)
     powerpack (0.1.1)
     pry (0.11.2)
@@ -428,9 +428,6 @@ GEM
     sdoc (0.4.2)
       json (~> 1.7, >= 1.7.7)
       rdoc (~> 4.0)
-    selenium-webdriver (3.6.0)
-      childprocess (~> 0.5)
-      rubyzip (~> 1.0)
     shoulda-matchers (3.1.2)
       activesupport (>= 4.0.0)
     silencer (1.0.1)
@@ -516,7 +513,6 @@ DEPENDENCIES
   bullet
   byebug
   capybara
-  capybara-webkit (~> 1.14)
   commit_param_routing
   creek
   cucumber-rails (~> 1.5)
@@ -533,7 +529,6 @@ DEPENDENCIES
   figaro
   font-awesome-rails (~> 4.7.0.2)
   hammerjs-rails
-  headless
   i18n-js (>= 3.0.0.rc11)
   introjs-rails
   jbuilder
@@ -552,6 +547,8 @@ DEPENDENCIES
   nokogiri
   paperclip (~> 5.1)
   pg
+  phantomjs
+  poltergeist
   pry
   pry-byebug
   pry-rails
@@ -573,7 +570,6 @@ DEPENDENCIES
   scenic (~> 1.4)
   scss_lint
   sdoc (~> 0.4.0)
-  selenium-webdriver
   shoulda-matchers
   silencer
   simple_token_authentication (~> 1.15.1)

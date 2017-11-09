@@ -33,6 +33,7 @@
     "flow-bin": "^0.56.0",
     "flow-typed": "^2.1.5",
     "prettier": "^1.7.0",
+    "prettier-eslint": "^8.2.1",
     "webpack-dev-server": "^2.5.1"
   },
   "dependencies": {

@@ -109,9 +109,8 @@ group :test do
   gem 'cucumber-rails', '~> 1.5'
   gem 'database_cleaner'
   gem 'capybara'
-  gem 'headless'
-  gem 'capybara-webkit', '~> 1.14'
-  gem 'selenium-webdriver'
+  gem 'poltergeist'
+  gem 'phantomjs', :require => 'phantomjs/poltergeist'
   gem 'simplecov', require: false
   gem 'json_matchers'
 end
