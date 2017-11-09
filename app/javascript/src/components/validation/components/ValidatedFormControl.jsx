@@ -1,16 +1,33 @@
-import React, { Component } from "react";
+// @flow
+
+import * as React from "react";
 import { FormControl } from "react-bootstrap";
+import type { ValidationError } from "flow-typed";
 import PropTypes from "prop-types";
+import _ from "lodash";
 
-class ValidatedFormControl extends Component {
-  constructor(props) {
-    super(props);
+type Props = {
+  tag: string,
+  messageIds: {[string]: Array<string>},
+  onChange?: Function,
+  validatorsOnChange: Array<Function>,
+  children?: React.Node
+};
 
-    this.handleChange = this.handleChange.bind(this);
-    this.cleanProps = this.cleanProps.bind(this);
+class ValidatedFormControl extends React.Component<Props> {
+  static defaultProps = {
+    onChange: undefined,
+    children: undefined
   }
 
-  handleChange(e) {
+  constructor(props: Props) {
+    super(props);
+
+    (this: any).handleChange = this.handleChange.bind(this);
+    (this: any).cleanProps = this.cleanProps.bind(this);
+  }
+
+  handleChange(e: SyntheticEvent<HTMLInputElement>): void {
     const tag = this.props.tag;
     const messageIds = this.props.messageIds;
     const target = e.target;
@@ -21,8 +38,8 @@ class ValidatedFormControl extends Component {
     }
 
     // Validate the field
-    let errors = [];
-    this.props.validatorsOnChange.forEach((validator) => {
+    let errors: Array<ValidationError> = [];
+    this.props.validatorsOnChange.forEach((validator: Function) => {
       errors = errors.concat(validator(target, messageIds));
     });
     this.context.setErrorsForTag(tag, errors);
@@ -48,19 +65,6 @@ class ValidatedFormControl extends Component {
       />
     );
   }
-}
-
-ValidatedFormControl.propTypes = {
-  tag: PropTypes.string.isRequired,
-  messageIds: PropTypes.objectOf(PropTypes.string),
-  validatorsOnChange: PropTypes.arrayOf(PropTypes.func),
-  onChange: PropTypes.func
-}
-
-ValidatedFormControl.defaultProps = {
-  messageIds: {},
-  validatorsOnChange: [],
-  onChange: undefined
 }
 
 ValidatedFormControl.contextTypes = {

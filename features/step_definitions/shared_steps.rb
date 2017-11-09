@@ -42,19 +42,20 @@ end
 Given(/^"([^"]*)" is in "([^"]*)" team as a "([^"]*)"$/) do |user_email, team_name, role|
   team = Team.find_by_name(team_name)
   user = User.find_by_email(user_email)
-  FactoryGirl.create( :user_team, user: user,
-                                  team: team,
-                                  role: UserTeam.roles.fetch(role))
+  FactoryGirl.create(:user_team, user: user,
+                                 team: team,
+                                 role: UserTeam.roles.fetch(role))
 end
 
 Then(/^I attach a "([^"]*)" file to "([^"]*)" field$/) do |file, field_id|
   wait_for_ajax
   attach_file(field_id, Rails.root.join('features', 'assets', file))
   # "expensive" operation needs some time :=)
-  sleep(0.3)
+  sleep(0.5)
 end
 
 Then(/^I should see "([^"]*)" error message under "([^"]*)" field$/) do |message, field_id|
+  wait_for_ajax
   parent = find_by_id(field_id).first(:xpath, './/..')
   expect(parent).to have_content(message)
 end
@@ -64,6 +65,7 @@ Then(/^I click on "([^"]*)"$/) do |button|
 end
 
 Then(/^I click on image within "([^"]*)" element$/) do |container|
+  sleep 0.5
   within(container) do
     find('img').click
   end
@@ -83,9 +85,8 @@ Then(/^I click on Edit on "([^"]*)" input field$/) do |container_id|
   end
 end
 
-Then(/^I fill in "([^"]*)" in "([^"]*)" input field$/) do |text, container_id|
-  container = page.find_by_id(container_id)
-  container.find('input').set(text)
+Then(/^I fill in "([^"]*)" in "([^"]*)" input field$/) do |text, input_id|
+  page.find_by_id(input_id).set(text)
 end
 
 Then(/^I should see "([^"]*)" in "([^"]*)" input field$/) do |text, container_id|
@@ -95,4 +96,29 @@ end
 
 Given("I click {string} icon") do |id|
   find(:css, id).click
+end
+
+Then(/^(?:|I )click on "([^"]*)" element$/) do |selector|
+  find(selector).click
+end
+
+Then(/^I change "([^"]*)" with "([^"]*)" in "([^"]*)" input field$/) do |old_text, new_text, container_id|
+  container = page.find_by_id(container_id)
+  expect(container).to have_xpath("//input[@value='#{old_text}']")
+  container.find('input').set(new_text)
+end
+
+Then(/^I fill in "([^"]*)" in "([^"]*)" textarea field$/) do |text, textarea_id|
+  textarea = page.find_by_id(textarea_id)
+  textarea.set(text)
+end
+
+Then(/^I change "([^"]*)" with "([^"]*)" in "([^"]*)" textarea field$/) do |old_text, new_text, textarea_id|
+  textarea = page.find_by_id(textarea_id)
+  expect(textarea).to have_content(old_text)
+  textarea.set(new_text)
+end
+
+Then(/^I should see "([^"]*)" on "([^"]*)" element$/) do |text, element|
+  expect(find(element)).to have_content(text)
 end

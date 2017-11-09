@@ -47,7 +47,7 @@ class RemoveUserModal extends Component<Props> {
             />
           </Modal.Title>
         </Modal.Header>
-        <Modal.Body>
+        <Modal.Body className="remove-user-modal-body">
           <p>
             <FormattedMessage
               id="settings_page.remove_user_modal.subtitle"

@@ -19,6 +19,8 @@
   "rules": {
     "import/extensions": "off",
     "import/no-unresolved": "off",
+    // Because of flow-typed & flow-bin
+    "import/no-extraneous-dependencies": ["error", { "devDependencies": true }],
     "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
     "spaced-comment": [
       "error",

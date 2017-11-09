@@ -1,13 +1,8 @@
+// @flow
 import React, { Component } from "react";
-import PropTypes, { bool, number, string, func } from "prop-types";
-import {
-  Modal,
-  Button,
-  ControlLabel,
-  FormControl,
-} from "react-bootstrap";
+import type { Node } from "react";
+import { Modal, Button, ControlLabel, FormControl } from "react-bootstrap";
 import { FormattedMessage } from "react-intl";
-import axios from "../../../../../config/axios";
 import {
   ValidatedForm,
   ValidatedFormGroup,
@@ -15,53 +10,66 @@ import {
   ValidatedErrorHelpBlock,
   ValidatedSubmitButton
 } from "../../../../../components/validation";
-import {
-  nameLengthValidator
-} from "../../../../../components/validation/validators/text";
+import { nameLengthValidator } from "../../../../../components/validation/validators/text";
+import { updateTeam } from "../../../../../services/api/teams_api";
 
-import { TEAM_UPDATE_PATH } from "../../../../../config/api_endpoints";
+type Team = {
+  id: number,
+  name: string
+};
 
-class UpdateTeamNameModal extends Component {
-  constructor(props) {
+type State = {
+  name: string
+};
+
+type Props = {
+  showModal: boolean,
+  hideModal: Function,
+  team: Team,
+  updateTeamCallback: Function
+};
+
+class UpdateTeamNameModal extends Component<Props, State> {
+  constructor(props: Props) {
     super(props);
     this.state = { name: props.team.name };
-    this.onCloseModal = this.onCloseModal.bind(this);
-    this.updateName = this.updateName.bind(this);
-    this.handleName = this.handleName.bind(this);
+    (this: any).onCloseModal = this.onCloseModal.bind(this);
+    (this: any).updateName = this.updateName.bind(this);
+    (this: any).handleName = this.handleName.bind(this);
   }
 
-  onCloseModal() {
-    this.setState({ name: "" });
+  onCloseModal(): void {
+    (this: any).setState({ name: "" });
     this.props.hideModal();
   }
 
-  handleName(e) {
-    this.setState({ name: e.target.value });
+  handleName(e: SyntheticInputEvent<HTMLInputElement>): void {
+    (this: any).setState({ name: e.target.value });
   }
 
-  updateName() {
-    axios({
-      method: "post",
-      url: TEAM_UPDATE_PATH,
-      withCredentials: true,
-      data: {
-        team_id: this.props.team.id,
-        team: { name: this.state.name }
-      }
-    })
+  updateName(): void {
+    updateTeam(this.props.team.id, { name: this.state.name })
       .then(response => {
-        this.props.updateTeamCallback(response.data.team);
+        this.props.updateTeamCallback(response);
         this.onCloseModal();
       })
       .catch(error => {
-        this.form.setErrorsForTag("name", [error.message]);
+        (this: any).form.setErrorsForTag("name", [error.message]);
       });
   }
 
-  render() {
+  render(): Node {
     return (
-      <Modal show={this.props.showModal} onHide={this.onCloseModal}>
-        <ValidatedForm ref={(f) => { this.form = f; }}>
+      <Modal
+        id="settings_page.update_team_name_modal"
+        show={this.props.showModal}
+        onHide={this.onCloseModal}
+      >
+        <ValidatedForm
+          ref={f => {
+            (this: any).form = f;
+          }}
+        >
           <Modal.Header closeButton>
             <Modal.Title>
               <FormattedMessage id="settings_page.update_team_name_modal.title" />
@@ -84,10 +92,7 @@ class UpdateTeamNameModal extends Component {
             </ValidatedFormGroup>
           </Modal.Body>
           <Modal.Footer>
-            <ValidatedSubmitButton
-              onClick={this.updateName}
-              bsStyle="primary"
-            >
+            <ValidatedSubmitButton onClick={this.updateName} bsStyle="primary">
               <FormattedMessage id="general.update" />
             </ValidatedSubmitButton>
             <Button onClick={this.onCloseModal}>
@@ -99,15 +104,5 @@ class UpdateTeamNameModal extends Component {
     );
   }
 }
-
-UpdateTeamNameModal.propTypes = {
-  showModal: bool.isRequired,
-  hideModal: func.isRequired,
-  team: PropTypes.shape({
-    id: number.isRequired,
-    name: string
-  }).isRequired,
-  updateTeamCallback: func.isRequired
-};
 
 export default UpdateTeamNameModal;

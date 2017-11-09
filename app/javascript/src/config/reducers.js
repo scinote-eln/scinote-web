@@ -2,8 +2,7 @@ import { combineReducers } from "redux";
 import { USER_LOGOUT } from "./action_types";
 import {
   setCurrentTeam,
-  getListOfTeams,
-  showLeaveTeamModal
+  getListOfTeams
 } from "../components/reducers/TeamReducers";
 import { currentUser } from "../components/reducers/UsersReducer";
 import { alerts } from "../components/reducers/AlertsReducers";
@@ -12,7 +11,6 @@ const appReducer = combineReducers({
   current_team: setCurrentTeam,
   all_teams: getListOfTeams,
   current_user: currentUser,
-  showLeaveTeamModal,
   alerts
 });
 
