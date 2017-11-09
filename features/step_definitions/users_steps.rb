@@ -17,7 +17,7 @@ Then(/^I fill the sign up form with$/) do |table|
   end
 end
 
-Given(/^is signed in with "([^"]*)", "([^"]*)"$/) do |email, password|
+Given(/^"([^"]*)" is signed in with "([^"]*)"$/) do |email, password|
   visit '/users/sign_in'
   fill_in 'user_email', with: email
   fill_in 'user_password', with: password
@@ -45,4 +45,13 @@ end
 
 Then("I should be on Change your password page") do
   expect(page).to have_current_path(edit_user_password_path, only_path: true)
+end
+
+Given(/^I am on Log in page$/) do
+  visit '/users/sign_in'
+end
+
+Then(/^I fill in Email "([^"]*)" and Password "([^"]*)"$/) do |email, password|
+  fill_in 'user_email', with: email
+  fill_in 'user_password', with: password
 end

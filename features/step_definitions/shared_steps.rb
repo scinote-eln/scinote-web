@@ -15,7 +15,13 @@ Given(/^I click "(.+)" link$/) do |link|
 end
 
 Given(/^I click "(.+)" link within "(.+)"$/) do |link, element|
-  within("##{element}") do
+  within(element) do
+    click_link link
+  end
+end
+
+Then(/^I click "(.+)" link within dropdown menu$/) do |link|
+  within('.dropdown-menu') do
     click_link link
   end
 end
@@ -74,7 +80,7 @@ end
 
 Then(/^I should see "([^"]*)" flash message$/) do |message|
   wait_for_ajax
-  expect(find_by_id('alert-flash')).to have_content(message)
+  expect(find('.alert')).to have_content(message)
 end
 
 Then(/^I click on Edit on "([^"]*)" input field$/) do |container_id|
@@ -92,6 +98,10 @@ end
 Then(/^I should see "([^"]*)" in "([^"]*)" input field$/) do |text, container_id|
   container = page.find_by_id(container_id)
   expect(container).to have_xpath("//input[@value='#{text}']")
+end
+
+Given("I click {string} icon") do |id|
+  find(:css, id).click
 end
 
 Then(/^(?:|I )click on "([^"]*)" element$/) do |selector|
@@ -116,5 +126,6 @@ Then(/^I change "([^"]*)" with "([^"]*)" in "([^"]*)" textarea field$/) do |old_
 end
 
 Then(/^I should see "([^"]*)" on "([^"]*)" element$/) do |text, element|
+  wait_for_ajax
   expect(find(element)).to have_content(text)
 end

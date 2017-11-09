@@ -128,4 +128,9 @@ describe ClientApi::Teams::TeamsController, type: :controller do
       expect(response).to have_http_status(:unprocessable_entity)
     end
   end
+
+  describe 'GET #current_team' do
+    let(:subject) { get :current_team, as: :json }
+    it { is_expected.to have_http_status(:ok) }
+  end
 end

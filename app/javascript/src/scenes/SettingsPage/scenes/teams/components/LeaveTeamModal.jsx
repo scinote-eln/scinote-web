@@ -8,7 +8,7 @@ import { leaveTeam } from "../../../../../services/api/teams_api";
 
 import {
   addTeamsData,
-  setCurrentTeam
+  getCurrentTeam
 } from "../../../../../components/actions/TeamsActions";
 
 type Team = {
@@ -23,7 +23,7 @@ type Props = {
   team: Team,
   addTeamsData: Function,
   hideLeaveTeamModal: Function,
-  setCurrentTeam: Function
+  getCurrentTeam: Function
 };
 
 class LeaveTeamModal extends Component<Props> {
@@ -41,10 +41,9 @@ class LeaveTeamModal extends Component<Props> {
     const { id, user_team_id } = this.props.team;
     leaveTeam(id, user_team_id)
       .then(response => {
-        const { teams, currentTeam } = response;
-        this.props.updateTeamsState(teams);
-        this.props.addTeamsData(teams);
-        this.props.setCurrentTeam(currentTeam);
+        this.props.updateTeamsState(response);
+        this.props.addTeamsData(response);
+        this.props.getCurrentTeam();
       })
       .catch(error => {
         console.log("error: ", error.response.data.message);
@@ -101,5 +100,5 @@ class LeaveTeamModal extends Component<Props> {
 
 export default connect(null, {
   addTeamsData,
-  setCurrentTeam
+  getCurrentTeam
 })(LeaveTeamModal);

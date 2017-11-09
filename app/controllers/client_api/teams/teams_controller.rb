@@ -4,8 +4,9 @@ module ClientApi
       include ClientApi::Users::UserTeamsHelper
 
       def index
+        teams = current_user.datatables_teams
         success_response(template: '/client_api/teams/index',
-                         locals: { teams: current_user.teams_data })
+                         locals: { teams: teams })
       end
 
       def create
@@ -53,6 +54,11 @@ module ClientApi
                          locals: teams_service.single_team_details_data)
       rescue ClientApi::CustomTeamError => error
         error_response(message: error.to_s)
+      end
+
+      def current_team
+        success_response(template: '/client_api/teams/current_team',
+                         locals: { team: current_user.current_team })
       end
 
       private

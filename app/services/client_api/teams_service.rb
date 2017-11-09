@@ -31,7 +31,7 @@ module ClientApi
     end
 
     def teams_data
-      { teams: @user.teams_data }
+      { teams: @user.datatables_teams }
     end
   end
 

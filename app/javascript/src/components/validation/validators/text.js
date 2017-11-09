@@ -1,4 +1,7 @@
+// @flow
+
 import _ from "lodash";
+import type { ValidationError } from "flow-typed";
 import {
   NAME_MIN_LENGTH,
   NAME_MAX_LENGTH,
@@ -9,7 +12,9 @@ import {
 } from "../../../config/constants/numeric";
 import { EMAIL_REGEX } from "../../../config/constants/strings";
 
-export const nameMinLengthValidator = (target, messageIds = {}) => {
+export const nameMinLengthValidator = (
+  target: HTMLInputElement,
+  messageIds: { [string]: string } = {}): Array<ValidationError> => {
   const messageId = _.has(messageIds, "text_too_short") ?
     messageIds.text_too_short :
     "validators.text.text_too_short";
@@ -25,7 +30,9 @@ export const nameMinLengthValidator = (target, messageIds = {}) => {
   return [];
 };
 
-export const nameMaxLengthValidator = (target, messageIds = {}) => {
+export const nameMaxLengthValidator = (
+  target: HTMLInputElement,
+  messageIds: { [string]: string } = {}): Array<ValidationError> => {
   const messageId = _.has(messageIds, "text_too_long") ?
   messageIds.text_too_long :
   "validators.text.text_too_long";
@@ -41,7 +48,9 @@ export const nameMaxLengthValidator = (target, messageIds = {}) => {
   return [];
 };
 
-export const nameLengthValidator = (target, messageIds = {}) => {
+export const nameLengthValidator = (
+  target: HTMLInputElement,
+  messageIds: { [string]: string } = {}): Array<ValidationError> => {
   const res = nameMinLengthValidator(target, messageIds);
   if (res.length > 0) {
     return res;
@@ -49,7 +58,9 @@ export const nameLengthValidator = (target, messageIds = {}) => {
   return nameMaxLengthValidator(target, messageIds);
 };
 
-export const textBlankValidator = (target, messageIds = {}) => {
+export const textBlankValidator = (
+  target: HTMLInputElement,
+  messageIds: { [string]: string } = {}): Array<ValidationError> => {
   const messageId = _.has(messageIds, "text_blank") ?
     messageIds.text_blank :
     "validators.text.text_blank";
@@ -64,7 +75,9 @@ export const textBlankValidator = (target, messageIds = {}) => {
   return [];
 }
 
-export const textMaxLengthValidator = (target, messageIds = {}) => {
+export const textMaxLengthValidator = (
+  target: HTMLInputElement,
+  messageIds: { [string]: string } = {}): Array<ValidationError> => {
   const messageId = _.has(messageIds, "text_too_long") ?
     messageIds.text_too_long :
     "validators.text.text_too_long";
@@ -80,7 +93,9 @@ export const textMaxLengthValidator = (target, messageIds = {}) => {
   return [];
 };
 
-export const passwordLengthValidator = (target, messageIds = {}) => {
+export const passwordLengthValidator = (
+  target: HTMLInputElement,
+  messageIds: { [string]: string } = {}): Array<ValidationError> => {
   const messageIdTooShort = _.has(messageIds, "text_too_short") ?
     messageIds.text_too_short :
     "validators.text.text_too_short";
@@ -105,7 +120,9 @@ export const passwordLengthValidator = (target, messageIds = {}) => {
   return [];
 };
 
-export const userInitialsMaxLengthValidator = (target, messageIds = {}) => {
+export const userInitialsMaxLengthValidator = (
+  target: HTMLInputElement,
+  messageIds: { [string]: string } = {}): Array<ValidationError> => {
   const messageId = _.has(messageIds, "text_too_long") ?
     messageIds.text_too_long :
     "validators.text.text_too_long";
@@ -121,7 +138,9 @@ export const userInitialsMaxLengthValidator = (target, messageIds = {}) => {
   return [];
 };
 
-export const emailValidator = (target, messageIds = {}) => {
+export const emailValidator = (
+  target: HTMLInputElement,
+  messageIds: { [string]: string } = {}): Array<ValidationError> => {
   const res = textBlankValidator(target, messageIds);
   if (res.length > 0) {
     return res;

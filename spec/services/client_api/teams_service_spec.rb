@@ -55,10 +55,11 @@ describe ClientApi::TeamsService do
       ClientApi::TeamsService.new(current_user: user_one, team_id: team_one.id)
     end
 
-    it 'should return user teams' do
+    it 'should return an array of valid teams' do
       create :user_team, user: user_one, team: team_one
-      data = team_service.teams_data.fetch(:teams)
-      expect(data.first.fetch('name')).to eq team_one.name
+      expect(team_service.teams_data).to(
+        match_response_schema('datatables_teams')
+      )
     end
   end
 

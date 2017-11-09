@@ -24,9 +24,13 @@ export type Teams$NewTeam = {
 export type Teams$Team = {
   id: number,
   name: string,
-  current_team: boolean,
   role: string,
   members: number,
   can_be_left: boolean,
   user_team_id: number
 };
+
+export type Teams$CurrentTeam = {
+  id: number,
+  name: string
+}

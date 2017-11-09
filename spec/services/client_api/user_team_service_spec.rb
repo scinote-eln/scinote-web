@@ -130,7 +130,7 @@ describe ClientApi::UserTeamService do
         user_team_id: user_team.id,
         role: 1
       )
-      team_id = ut_service.teams_data[:teams].first.fetch('id')
+      team_id = ut_service.teams_data[:teams].first.id
       expect(team_id).to eq team_one.id
     end
   end
