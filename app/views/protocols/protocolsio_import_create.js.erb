@@ -1,7 +1,8 @@
 
 <% if @protocolsio_too_big %>
-alert('<%= I18n.t('my_modules.protocols.load_from_file_size_error',
-                 size: Constants::FILE_MAX_SIZE_MB ) %>');
+$('#modal-import-json-protocol').modal('hide');
+HelperModule.flashAlertMsg(' <%= t('my_modules.protocols.load_from_file_size_error',
+                 size: Constants::FILE_MAX_SIZE_MB ) %>','danger');
 <% else %>
   $('#modal-import-json-protocol').modal('hide');
       <% if remotipart_submitted? %> <%# a workaround to a bug with remotipart, that caused alot of headache, courtesy of github.com/dhampik %>
