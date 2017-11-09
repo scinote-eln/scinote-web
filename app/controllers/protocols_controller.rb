@@ -1107,9 +1107,67 @@ class ProtocolsController < ApplicationController
           newj[i.to_s]['description'] += pio_stp_19(key['source_data'])
         end # case end
       end # finished looping over step components
+      newj[i.to_s]['tables'], table_str = protocolsio_string_to_table_element(
+        newj[i.to_s]['description']
+      )
+      newj[i.to_s]['description'] = table_str
     end # steps
     newj
   end
+
+  def protocolsio_string_to_table_element(description_string)
+    string_without_tables = string_html_table_remove(description_string)
+    table_regex = %r{<table\b[^>]*>(.*?)<\/table>}m
+    tr_regex = %r{<tr\b[^>]*>(.*?)<\/tr>}m
+    td_regex = %r{<td\b[^>]*>(.*?)<\/td>}m
+    tables = {}
+    table_counter = 0
+    table_strings = description_string.scan(table_regex)
+    table_strings.each do |table|
+      tables[table_counter.to_s] = {}
+      tr_counter = 0
+      tr_strings = table[0].scan(tr_regex)
+      contents = {}
+      contents['data'] = []
+      tr_strings.each do |tr|
+        td_counter = 0
+        td_strings = tr[0].scan(td_regex)
+        contents['data'][tr_counter] = []
+        td_strings.each do |td|
+          contents['data'][tr_counter].push(td[0])
+          td_counter += 1
+          break if td_counter >= 5
+        end
+        tr_counter += 1
+      end
+      tables[table_counter.to_s]['contents'] = Base64.encode64(
+        contents.to_s.sub('=>', ':')
+      )
+      tables[table_counter.to_s]['name'] = nil
+      table_counter += 1
+    end
+    # return string_without_tables, tables
+    return tables, string_without_tables
+  end
+  helper_method :protocolsio_string_to_table_element
+
+  def string_html_table_remove(description_string)
+    description_string.delete! "\n"
+    description_string.delete! "\t"
+    description_string.delete! "\r"
+    description_string.delete! "\f"
+    table_whole_regex = %r{(<table\b[^>]*>.*?<\/table>)}m
+    table_pattern_array = description_string.scan(table_whole_regex)
+    string_without_tables = description_string
+    table_pattern_array.each do |table_pattern|
+      string_without_tables = string_without_tables.gsub(
+        table_pattern[0],
+        t('protocols.protocols_io_import.comp_append.table_moved').html_safe
+      )
+    end
+    string_without_tables
+  end
+  helper_method :string_html_table_remove
 
   def move_protocol(action)
     rollbacked = false
