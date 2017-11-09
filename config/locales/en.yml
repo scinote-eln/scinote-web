@@ -682,6 +682,7 @@ en:
       head_title: "%{project} | Overview"
       canvas_edit: "Edit experiment"
       zoom: "Zoom: "
+      reload_on_submit: "Save action is running. Reloading this page may cause unexpected behavior."
       modal_manage_tags:
         head_title: "Manage tags for"
         subtitle: "Showing tags of task %{module}"
