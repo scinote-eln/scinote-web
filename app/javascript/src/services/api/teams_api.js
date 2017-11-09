@@ -36,5 +36,5 @@ export const leaveTeam = (teamID: number, userTeamID: number): Promise<*> => {
   return axiosInstance.delete(teamUrl).then(({ data }) => data.teams);
 };
 
-export const fetchCurrentTeam = (): Promise<*> =>
+export const getCurrentTeam = (): Promise<*> =>
   axiosInstance.get(CURRENT_TEAM_PATH).then(({ data }) => data.team);

@@ -57,7 +57,9 @@ describe ClientApi::TeamsService do
 
     it 'should return an array of valid teams' do
       create :user_team, user: user_one, team: team_one
-      expect(team_service.teams_data).to match_response_schema('teams')
+      expect(team_service.teams_data).to(
+        match_response_schema('datatables_teams')
+      )
     end
   end
 

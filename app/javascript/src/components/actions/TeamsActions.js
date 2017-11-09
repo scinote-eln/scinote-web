@@ -8,7 +8,7 @@ import type { Dispatch } from "redux-thunk";
 import {
   getTeams,
   changeCurrentTeam,
-  fetchCurrentTeam
+  getCurrentTeam as fetchCurrentTeam
 } from "../../services/api/teams_api";
 import { GET_LIST_OF_TEAMS, SET_CURRENT_TEAM } from "../../config/action_types";
 
