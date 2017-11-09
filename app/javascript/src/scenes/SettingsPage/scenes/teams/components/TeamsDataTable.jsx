@@ -20,15 +20,21 @@ const DefaultTeam = {
 
 type Props = {
   updateTeamsState: Function,
-  teams: Array<Teams$Team>
-}
+  teams: Array<Teams$Team>,
+  sizePerPage: number,
+  onSizePerPageList: Function
+};
 
 type State = {
   leaveTeamModalShow: boolean,
   team: Teams$Team
-}
+};
 
 class TeamsDataTable extends Component<Props, State> {
+  static linkToTeam(name: string, team: Teams$Team): Node {
+    return <Link to={`${SETTINGS_TEAMS_ROUTE}/${team.id}`}>{name}</Link>;
+  }
+
   constructor(props: Props) {
     super(props);
     this.state = {
@@ -37,7 +43,6 @@ class TeamsDataTable extends Component<Props, State> {
     };
     (this: any).leaveTeamModal = this.leaveTeamModal.bind(this);
     (this: any).leaveTeamButton = this.leaveTeamButton.bind(this);
-    (this: any).linkToTeam = this.linkToTeam.bind(this);
     (this: any).hideLeaveTeamModal = this.hideLeaveTeamModal.bind(this);
   }
 
@@ -47,10 +52,6 @@ class TeamsDataTable extends Component<Props, State> {
 
   hideLeaveTeamModal(): void {
     (this: any).setState({ leaveTeamModalShow: false, team: DefaultTeam });
-  }
-
-  linkToTeam(name: string, team: Teams$Team): Node {
-    return <Link to={`${SETTINGS_TEAMS_ROUTE}/${team.id}`}>{name}</Link>;
   }
 
   leaveTeamButton(id: string, team: Teams$Team): Node {
@@ -73,6 +74,8 @@ class TeamsDataTable extends Component<Props, State> {
       defaultSortName: "name",
       defaultSortOrder: "desc",
       sizePerPageList: [10, 25, 50, 100],
+      sizePerPage: this.props.sizePerPage,
+      onSizePerPageList: this.props.onSizePerPageList,
       prePage: "Prev", // Previous page button text
       nextPage: "Next", // Next page button textu
       paginationShowsTotal: DataTable.renderShowsTotal,
@@ -84,7 +87,7 @@ class TeamsDataTable extends Component<Props, State> {
         name: "Team",
         isKey: false,
         textId: "name",
-        dataFormat: this.linkToTeam,
+        dataFormat: TeamsDataTable.linkToTeam,
         position: 0,
         dataSort: true,
         width: "50%"
