@@ -24,8 +24,9 @@ import SettingsTeam from "./scenes/team";
 import SettingsNewTeam from "./scenes/teams/new";
 
 type State = {
-  active: string
-}
+  active: string,
+  teamsTableSizePerPage: number
+};
 
 let componentMounted = false;
 
@@ -34,10 +35,12 @@ export default class SettingsPage extends Component<*, State> {
     super(props);
 
     this.state = {
-      active: "1"
+      active: "1",
+      teamsTableSizePerPage: 10
     };
     (this: any).handleSelect = this.handleSelect.bind(this);
     (this: any).setTabState = this.setTabState.bind(this);
+    (this: any).teamsTableOnSizePerPageList = this.teamsTableOnSizePerPageList.bind(this);
   }
 
   componentDidMount(): void {
@@ -52,6 +55,10 @@ export default class SettingsPage extends Component<*, State> {
     if (tab !== this.state.active && componentMounted) {
       (this: any).setState({ active: tab });
     }
+  }
+
+  teamsTableOnSizePerPageList(teamsTableSizePerPage: number): void {
+    (this: any).setState({ teamsTableSizePerPage });
   }
 
   handleSelect(eventKey: string): void {
@@ -108,7 +115,12 @@ export default class SettingsPage extends Component<*, State> {
             <Route
               path={SETTINGS_TEAMS_ROUTE}
               component={props => (
-                <SettingsTeams {...props} tabState={this.setTabState} />
+                <SettingsTeams
+                  {...props}
+                  tabState={this.setTabState}
+                  sizePerPage={this.state.teamsTableSizePerPage}
+                  onSizePerPageList={this.teamsTableOnSizePerPageList}
+                />
               )}
             />
             <Route

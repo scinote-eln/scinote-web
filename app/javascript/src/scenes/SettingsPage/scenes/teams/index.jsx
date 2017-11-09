@@ -20,7 +20,9 @@ const Wrapper = styled.div`
 `;
 
 type Props = {
-  tabState: Function
+  tabState: Function,
+  sizePerPage: number,
+  onSizePerPageList: Function
 };
 
 type State = {
@@ -70,6 +72,8 @@ class SettingsTeams extends Component<Props, State> {
           <TeamsDataTable
             teams={this.state.teams}
             updateTeamsState={this.updateTeamsState}
+            sizePerPage={this.props.sizePerPage}
+            onSizePerPageList={this.props.onSizePerPageList}
           />
         </Wrapper>
       </PageTitle>
