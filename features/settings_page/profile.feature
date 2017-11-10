@@ -88,6 +88,7 @@ Scenario: Unsuccessful Password Change, passwords does not match
   And I fill in "mypassword1234" in Current password field
   And I fill in "mypassword5678" in New password field
   And I fill in "mypassword56788" in New password confirmation field
+  Then I click "Update" button
   And I should see "doesn't match"
 
 @javascript
