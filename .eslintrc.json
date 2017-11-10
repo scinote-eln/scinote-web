@@ -5,7 +5,7 @@
     "es6": true,
     "node": true
   },
-  "plugins": ["react", "prettier"],
+  "plugins": ["flowtype", "react", "prettier"],
   "extends": ["airbnb", "prettier", "prettier/react"],
   "parser": "babel-eslint",
   "parserOptions": {

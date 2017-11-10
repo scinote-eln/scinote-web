@@ -61,7 +61,7 @@ export default class SettingsPage extends Component<*, State> {
     (this: any).setState({ teamsTableSizePerPage });
   }
 
-  handleSelect(eventKey: string): void {
+  handleSelect(eventKey: string, event: SyntheticEvent<*>): void {
     event.preventDefault();
     (this: any).setState({ active: eventKey });
   }
