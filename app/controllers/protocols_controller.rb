@@ -626,11 +626,9 @@ class ProtocolsController < ApplicationController
     @db_json['name'] = sanitize_input(params['protocol']['name'])
     # since scinote only has description field, and protocols.io has many others
     # ,here i am putting everything important from protocols.io into description
-    # description_string = protocols_io_fill_desc(@json_object)
     @db_json['authors'] = sanitize_input(params['protocol']['authors'])
     @db_json['created_at'] = sanitize_input(params['protocol']['created_at'])
     @db_json['updated_at'] = sanitize_input(params['protocol']['last_modified'])
-    # @db_json['description'] = sanitize_input(description_string)
     @db_json['steps'] = {}
     @db_json['steps'] = protocols_io_fill_step(@json_object, @db_json['steps'])
     protocol = nil
@@ -1038,7 +1036,6 @@ class ProtocolsController < ApplicationController
       ( before_start warning guidelines manuscript_citation publish_date
       created_on vendor_name vendor_link keywords tags link )
     ]
-    # description_string = sanitize_input(params['protocol']['description'])
     description_string =
       if json_hash['description'].present?
         '<strong>' + t('protocols.protocols_io_import.preview.prot_desc') +
