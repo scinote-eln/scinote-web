@@ -1,7 +1,4 @@
-require 'sanitize'
-
 module ProtocolsIoTableHelper
-
   def protocolsio_string_to_table_element(description_string)
     string_without_tables = string_html_table_remove(description_string)
     table_regex = %r{<table\b[^>]*>(.*?)<\/table>}m
