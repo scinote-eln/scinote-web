@@ -1404,6 +1404,7 @@ en:
         key_wrd: "Keywords:"
         tags: "Tags:"
       comp_append:
+        table_moved: "<br><strong><i>There was a table here, it was moved to the end of this step. </i></strong>"
         missing_step: "Step"
         missing_desc: "Description missing"
         general_link: "<br>Link: "
@@ -1421,7 +1422,7 @@ en:
           desc: "<br>Description: "
           os: "<br>OS name , OS version: "
         sub_protocol:
-          title: "<br><strong>This protocol also contains an attached sub-protocol: </strong>"
+          title: "<br><strong>This step also contains an attached sub-protocol: </strong>"
           author: "<br>Author: "
         safety_infor:
           title: "<br><strong>Safety information: </strong>"

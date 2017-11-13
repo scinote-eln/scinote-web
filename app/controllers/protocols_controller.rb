@@ -4,6 +4,7 @@ class ProtocolsController < ApplicationController
   include ProtocolsImporter
   include ProtocolsExporter
   include InputSanitizeHelper
+  include ProtocolsIoTableHelper
 
   before_action :check_create_permissions, only: %i(
     create_new_modal
@@ -1107,6 +1108,10 @@ class ProtocolsController < ApplicationController
           newj[i.to_s]['description'] += pio_stp_19(key['source_data'])
         end # case end
       end # finished looping over step components
+      newj[i.to_s]['tables'], table_str = protocolsio_string_to_table_element(
+        newj[i.to_s]['description']
+      )
+      newj[i.to_s]['description'] = table_str
     end # steps
     newj
   end
