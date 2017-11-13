@@ -884,6 +884,7 @@ en:
       modal_copy:
         title_html: "Copy repository <em>%{name}</em>"
         name: "New repository name"
+        description: "Only the structure of the repository is going to be copied."
         name_placeholder: "My repository"
         copy: "Copy repository"
       modal_create:
