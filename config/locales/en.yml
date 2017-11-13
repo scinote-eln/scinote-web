@@ -1381,7 +1381,9 @@ en:
         manager: "Protocol management"
         edit: "Edit protocol"
     protocols_io_import:
+      import_description_notice: "The protocols description is listed below under \"Protocol info\"."
       preview:
+        prot_desc: "Protocol Description: "
         b_s_p: "Before starting protocol information:"
         warn: "Protocol warning:"
         guideln: "Guidelines:"
