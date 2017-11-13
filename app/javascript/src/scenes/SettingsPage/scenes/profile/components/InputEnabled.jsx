@@ -222,7 +222,7 @@ class InputEnabled extends Component {
             />
             <ValidatedErrorHelpBlock tag="new_password" />
           </ValidatedFormGroup>
-          <ValidatedFormGroup tag="new_password_confirmation">
+          <ValidatedFormGroup tag="password_confirmation">
             <ControlLabel>
               <FormattedMessage id="settings_page.new_password_confirmation" />
             </ControlLabel>
@@ -232,10 +232,10 @@ class InputEnabled extends Component {
               value={this.state.password_confirmation}
               onChange={this.handlePasswordConfirmation}
               onKeyPress={this.handleKeyPress}
-              tag="new_password_confirmation"
+              tag="password_confirmation"
               validatorsOnChange={[passwordLengthValidator]}
             />
-            <ValidatedErrorHelpBlock tag="new_password_confirmation" />
+            <ValidatedErrorHelpBlock tag="password_confirmation" />
           </ValidatedFormGroup>
         </div>
       );
