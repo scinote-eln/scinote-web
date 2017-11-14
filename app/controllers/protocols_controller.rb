@@ -598,7 +598,16 @@ class ProtocolsController < ApplicationController
 
   def protocolsio_import_create
     @protocolsio_too_big = false
+    @protocolsio_invalid_file = false
+    extension = File.extname(params[:json_file].path)
     file_size = File.size(params[:json_file].path)
+    if extension != '.txt' && extension != '.json'
+      @protocolsio_invalid_file = true
+      respond_to do |format|
+        format.js {}
+      end
+      return 0 # return 0 stops the rest of the controller code from executing
+    end
     if file_size / 1000 > Constants::FILE_MAX_SIZE_MB
       @protocolsio_too_big = true
       respond_to do |format|
@@ -607,11 +616,19 @@ class ProtocolsController < ApplicationController
         # named the same as this controller
         # where a javascript alert is called
       end
+      return 0 # return 0 stops the rest of the controller code from executing
     end
     json_file_contents = File.read(params[:json_file].path)
     json_file_contents.gsub! '\"', "'"
     # escaped double quotes too stressfull, html works with single quotes too
     # json double quotes dont get escaped since they dont match \"
+    unless valid_protocol_json(json_file_contents)
+      @protocolsio_invalid_file = true
+      respond_to do |format|
+        format.js {}
+      end
+      return 0 # return 0 stops the rest of the controller code from executing
+    end
     @json_object = JSON.parse(json_file_contents)
     @protocol = Protocol.new
     respond_to do |format|
@@ -916,6 +933,13 @@ class ProtocolsController < ApplicationController
   end
 
   private
+
+  def valid_protocol_json(json)
+    JSON.parse(json)
+    return true
+  rescue JSON::ParserError => e
+    return false
+  end
 
   # pio_stp_x means protocols io step (id of component) parser
   def pio_stp_1(iterating_key) # protocols io description parser
