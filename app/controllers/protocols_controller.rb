@@ -1086,9 +1086,10 @@ class ProtocolsController < ApplicationController
     newj['0'] = {}
     newj['0']['position'] = 0
     newj['0']['name'] = 'Protocol info'
-    newj['0']['description'] = sanitize_input(
-      protocols_io_fill_desc(original_json).html_safe
+    newj['0']['tables'], table_str = protocolsio_string_to_table_element(
+      sanitize_input(protocols_io_fill_desc(original_json).html_safe)
     )
+    newj['0']['description'] = table_str
     original_json['steps'].each_with_index do |step, pos_orig| # loop over steps
       i = pos_orig + 1
       # position of step (first, second.... etc),
