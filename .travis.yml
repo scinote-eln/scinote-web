@@ -13,3 +13,6 @@ before_script:
 script:
   - bundle exec rspec
   - bundle exec cucumber
+env:
+  global:
+    - PAPERCLIP_HASH_SECRET=abcasdfasdfasdf235423542354asdefasdfasdf
