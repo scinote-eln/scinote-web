@@ -1,13 +1,11 @@
 dist: trusty
-sudo: true
+sudo: required
 language: ruby
 rvm:
 - 2.4.1
-cache:
-  yarn: true
-  directories:
-  - node_modules
 before_script:
+- npm install -g yarn
+- yarn install
 - bundle exec rake db:create:all
 - bundle exec rake db:migrate
 script:
