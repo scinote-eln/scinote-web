@@ -17,13 +17,13 @@
 
       <div class="modal-body">
 
-        <%= file_field_tag 'json_file', accept: '.txt' %>
+        <%= file_field_tag 'json_file', accept: '.txt,.json' %>
 
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal"><%= t('general.cancel')%></button>
         <%= submit_tag t('protocols.index.modal_import_json_upload'), class: "btn
-        btn-default" %>
+        btn-primary" %>
       </div>
       <% end %>
 
