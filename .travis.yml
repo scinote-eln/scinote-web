@@ -1,10 +1,8 @@
 dist: trusty
-sudo: required
+sudo: false
 language: ruby
-rvm:
-- 2.4.1
 before_script:
-- npm install -g yarn
+- npm install yarn
 - yarn install
 - bundle exec rake db:create:all
 - bundle exec rake db:migrate
@@ -12,5 +10,4 @@ script:
 - bundle exec rspec
 - bundle exec cucumber
 env:
-  global:
-    secure: Ld4jZEay5Lv10lgf/hvbH+WZzat5aIKEGl6HT4aXLL6TULZD/4hmfgvv0yCGRqiMYUdjUs/iQXxze+sBm2SoiMiPqbd2AzybLwjLpJCLGMuNM+SdwJuiBNXN5sUW5chfIHHPH6c5lsonOoStORSlXk5nndx/tm4wkHue/IDbDGHJTGfTFXgW9mNH3brCDSeTXFROysNywdmYcCO4rQPxXATaTCuqTFWTjgzdiPXzQDhiGTmh7rLLmItJrB63qyUZI+mE2qDcL97k7S8TNPv+IaX0CovCidDAz1enRD6QjHrwki2E3OAgLyykaWc/AEWfHZNvlhc+aqe4syIguBgVUrrDkUrVAHEF7nAGr3ic514KEmSeQUhJdYFcOSVm1wfLl4v8z1ZfPuFzX/bD1/13/r3RaPWqSotOr5/Me3AhKNQl0ea/RQGjlSd9et6/flWUIVJjKH3bmTRbgf5LElP22XN2tWSjdjR4bgkwpYnJgRiYCOjtPr2DzydEO6OfVSbpXLjNdx8C5pJ+xFLx/laYsIp7SjUAn1EfJqv7xHA5PqRJl/3MUIQgP6qS6FMFbxVNp8GdYqcejffWZ2jnChFCDCP2k56EJY7zrlGqAr8e0dp+i/PjSxwL97udA/Qh8WtN1JQSTx+dci/pxRA9C/e2VYKvWzEt0QiRA04sGeNHmuY=
+  PAPERCLIP_HASH_SECRET: $PAPERCLIP_HASH_SECRET
