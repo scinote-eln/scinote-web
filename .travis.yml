@@ -3,8 +3,6 @@ sudo: false
 language: ruby
 rvm:
   - 2.4.1
-addons:
-  postgresql: 9.6
 before_script:
  - yarn install
  - bundle install
