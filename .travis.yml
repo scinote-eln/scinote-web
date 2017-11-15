@@ -6,7 +6,6 @@ rvm:
 addons:
   postgresql: 9.6
 before_script:
- - /bin/cp $TRAVIS_BUILD_DIR/config/database.sample.yml $TRAVIS_BUILD_DIR/config/database.yml
  - yarn install
  - bundle install
  - bundle exec rake db:create:all
