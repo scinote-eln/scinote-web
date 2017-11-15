@@ -4,6 +4,7 @@ language: ruby
 before_script:
 - npm install yarn
 - yarn install
+- bundle install
 - bundle exec rake db:create:all
 - bundle exec rake db:migrate
 script:
