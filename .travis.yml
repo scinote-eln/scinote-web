@@ -1,14 +1,24 @@
-sudo: required
+dist: trusty
+sudo: false
 language: ruby
-services:
-  - docker
+rvm:
+  - 2.4.1
+addons:
+  postgresql: 9.6
+before_script:
+ - /bin/cp $TRAVIS_BUILD_DIR/config/database.sample.yml $TRAVIS_BUILD_DIR/config/database.yml
+ - yarn install
+ - bundle install
+ - bundle exec rake db:create:all
+ - bundle exec rake db:migrate
 script:
-- bundle exec rspec
-- bundle exec cucumber
+ - bundle exec rspec
+ - bundle exec cucumber
 env:
-  PAPERCLIP_HASH_SECRET: $PAPERCLIP_HASH_SECRET
-  SECRET_KEY_BASE: $SECRET_KEY_BASE
-  DEVELOPMENT_KEY_BASE: $DEVELOPMENT_KEY_BASE
+  PAPERCLIP_HASH_SECRET: "$(bundle exec rake secret)"
+  SECRET_KEY_BASE: "$(bundle exec rake secret)"
+  DEVELOPMENT_KEY_BASE: "$(bundle exec rake secret)"
+  TEST_KEY_BASE: "$(bundle exec rake secret)"
   ENABLE_EMAIL_CONFIRMATIONS: $ENABLE_EMAIL_CONFIRMATIONS
   NEW_TEAM_ON_SIGNUP: $NEW_TEAM_ON_SIGNUP
   ENABLE_RECAPTCHA: $ENABLE_RECAPTCHA
@@ -22,5 +32,4 @@ env:
   SMTP_DOMAIN: $SMTP_DOMAIN
   SMTP_PASSWORD: $SMTP_PASSWORD
   SMTP_USERNAME: $SMTP_USERNAME
-  TEST_KEY_BASE: $TEST_KEY_BASE
   WOPI_ENABLED: $WOPI_ENABLED
