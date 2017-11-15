@@ -8,8 +8,7 @@ services:
   - postgresql
 before_script:
  - cp config/database.yml.travis config/database.yml
- - psql -c 'create database scinote_test;' -U postgres
- - psql -c 'create database scinote_development;' -U postgres
+ - psql -c 'create database travis_ci_test;' -U postgres
  - yarn install
  - bundle install
  - bundle exec rake db:create
