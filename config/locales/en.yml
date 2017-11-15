@@ -1251,6 +1251,7 @@ en:
         avatar_title: "Change avatar"
         avatar_edit_label: "Upload new avatar file"
         avatar_submit: "Upload"
+        avatar_total_size: "Your avatar file cannot be larger than 0.2 MB. (Please try again with a smaller file.)"
         name_label: "Full name"
         name_title: "Change name"
         initials_label: "Initials"
