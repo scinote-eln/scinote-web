@@ -51,6 +51,7 @@ gem 'commit_param_routing' # Enables different submit actions in the same form t
 gem 'kaminari'
 gem "i18n-js", ">= 3.0.0.rc11" # Localization in javascript files
 gem 'roo', '~> 2.7.1' # Spreadsheet parser
+gem 'creek'
 gem 'wicked_pdf'
 gem 'silencer' # Silence certain Rails logs
 gem 'wkhtmltopdf-heroku'
@@ -68,7 +69,7 @@ gem 'rubyzip'
 gem 'activerecord-import'
 
 gem 'paperclip', '~> 4.3' # File attachment, image attachment library
-gem 'aws-sdk', '~> 2.2.8'
+gem 'aws-sdk', '~> 2'
 gem 'aws-sdk-v1'
 gem 'delayed_job_active_record'
 gem 'devise-async'
@@ -97,6 +98,7 @@ end
 group :production do
   gem 'puma'
   gem 'rails_12factor'
+  gem 'whacamole'
 end
 
 group :test do

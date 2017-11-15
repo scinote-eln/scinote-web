@@ -12,8 +12,8 @@ class Asset < ActiveRecord::Base
   has_attached_file :file,
                     styles: { large: [Constants::LARGE_PIC_FORMAT, :jpg],
                               medium: [Constants::MEDIUM_PIC_FORMAT, :jpg] },
-                    convert_options: { medium: '-quality 70 -strip' }
-
+                    convert_options: { medium: '-quality 70 -strip',
+                                       all: '-alpha remove' }
   validates_attachment :file,
                        presence: true,
                        size: {

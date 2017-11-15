@@ -1,0 +1,96 @@
+<%= form_for(@protocol, :url => url_for(:controller => 'protocols',
+  :action=>'protocolsio_import_save'),method: :post,format: :javascript,
+  remote: true, :html=> { :id => "protocolsio-import-form" }) do |f| %>
+
+<%= hidden_field_tag :json_object, JSON.generate(@json_object) %>
+
+<% if URI.parse(request.referrer).query %>
+<%= hidden_field_tag :type,CGI.parse(URI.parse(request.referrer).query).fetch('type') %>
+<% else %>
+<%= hidden_field_tag :type,'public' %>
+<% end %>
+<!--Get the type of protocol to import (private, public) from the url -->
+<div
+  id="modal-import-json-protocol-preview"
+  class="modal fade"
+  role="dialog"
+  tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title" data-role="header-import-into-protocol_protocols_io"><%=
+          t('protocols.import_export.import_modal.title_import_into_protocol_protocols_io')
+          %></h4>
+      </div>
+      <div class="modal-body">
+
+        <!-- General protocol info -->
+        <div class="form-group">
+
+          <label><%= t('protocols.import_export.import_modal.name_label') %></label>
+
+          <%= f.text_field :name, :value => @json_object['protocol_name'], class:
+          "form-control" %>
+        </div>
+        <div class="form-group">
+          <label>
+            <span class="glyphicon glyphicon-user">
+            </span>&nbsp;<%= t('protocols.import_export.import_modal.authors_label') %>
+          </label>
+          <%= f.text_field :authors, :value => @json_object['full_name'], class:
+          "form-control" %>
+
+        </div>
+        <div class="form-group">
+          <label><%= t('protocols.import_export.import_modal.description_label') %></label>
+          <%= f.text_area :description_notice, :value => t('protocols.protocols_io_import.import_description_notice'), class:
+          "form-control",readonly: true %>
+        </div>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-xs-4">
+              <label><%= t('protocols.import_export.import_modal.created_at_label') %></label>
+
+              <% display_created_at=Time.at(@json_object['created_on'].to_i) %>
+              <%= f.text_field :created_at, :value => display_created_at.to_s,
+              readonly: true, class: "form-control" %>
+            </div>
+            <div class="col-xs-4">
+              <label><%= t('protocols.import_export.import_modal.updated_at_label') %></label>
+
+              <% display_last_modified=Time.at(@json_object['last_modified'].to_i) %>
+              <%= f.text_field :last_modified, :value =>
+              display_last_modified.to_s,readonly: true, class:
+              "form-control" %>
+            </div>
+          </div>
+        </div>
+
+        <!-- Preview title -->
+        <div>
+          <h2 style="display: inline;"><%= t('protocols.import_export.import_modal.preview_title') %></h2>
+          <h3 style="display: none;" data-role="title-position"></h3>
+        </div>
+
+        <!-- Preview scroller -->
+        <div
+          class="import-protocols-modal-preview-container-json"
+          data-role="preview-container">
+
+        <!-- Partial -->
+        <%= render partial: "protocols/import_export/import_json_protocol_p_desc.html.erb", locals: {json_object: @json_object} %>
+        <%= render partial: "protocols/import_export/import_json_protocol_s_desc.html.erb", locals: {json_object: @json_object} %>
+        </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal"><%= t('general.cancel') %></button>
+
+          <%= f.submit t('protocols.import_export.import_modal.import'),class: "btn
+          btn-primary" %>
+          <% end %>
+
+        </div>
+      </div>
+    </div>
+  </div>

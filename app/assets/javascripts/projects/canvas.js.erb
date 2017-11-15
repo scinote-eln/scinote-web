@@ -163,7 +163,6 @@ function initializeEdit() {
 
   // Read permissions from the data attributes of the form
   var canEditModules = _.isEqual($("#update-canvas").data("can-edit-modules"), "yes");
-  var canEditModuleGroups = _.isEqual($("#update-canvas").data("can-edit-module-groups"), "yes");
   var canCreateModules = _.isEqual($("#update-canvas").data("can-create-modules"), "yes");
   var canCloneModules = _.isEqual($("#update-canvas").data("can-clone-modules"), "yes");
   var canMoveModules = _.isEqual($("#update-canvas").data("can-move-modules"), "yes");
@@ -211,11 +210,6 @@ function initializeEdit() {
     $(".edit-module").on("click touchstart", editModuleHandler);
   }
 
-  if (canEditModuleGroups) {
-    initEditModuleGroups();
-    $(".edit-module-group").on("click touchstart", editModuleGroupHandler);
-  }
-
   if (canCloneModules) {
     bindCloneModuleAction(
       $(".module-options a.clone-module"),
@@ -246,6 +240,7 @@ function initializeEdit() {
   // Restore draggable position
   restoreDraggablePosition($("#diagram"), $("#canvas-container"));
 
+  preventCanvasReloadOnSave();
   $("#canvas-container").submit(function (){
     animateSpinner(
       this,
@@ -1220,22 +1215,6 @@ function updateModuleHtml(module, id, name, gridDistX, gridDistY) {
     // Add click handler for the edit module
     $(editModuleLink).on("click touchstart", editModuleHandler);
   }
-  if (_.isEqual($("#update-canvas").data("can-edit-module-groups"), "yes")) {
-    var editModuleGroupItem = document.createElement("li");
-    $(editModuleGroupItem).appendTo(dropdownMenu);
-    $(editModuleGroupItem).hide();
-
-    var editModuleGroupLink = document.createElement("a");
-    $(editModuleGroupLink)
-    .attr("href", "")
-    .attr("data-module-id", id)
-    .addClass("edit-module-group")
-    .html($("#edit-group-link-placeholder").text().trim())
-    .appendTo(editModuleGroupItem);
-
-    // Add click handler for the edit module group
-    $(editModuleGroupLink).on("click touchstart", editModuleGroupHandler);
-  }
 
   // Add clone links if neccesary
   if (_.isEqual($("#update-canvas").data("can-clone-modules"), "yes")) {
@@ -1636,95 +1615,11 @@ editModuleHandler = function(ev) {
 /**
  * Initialize editing of module groups.
  */
-function initEditModuleGroups() {
 
-  function handleRenameConfirm(modal, ev) {
-    var input = modal.find("#edit-module-group-name-input");
-    // Validate module group name
-    var moduleNameValid = textValidator(ev, input, 1,
-      <%= Constants::NAME_MAX_LENGTH %>, true);
-    if (moduleNameValid) {
-      var newModuleGroupName = input.val();
-      var moduleId = modal.attr("data-module-id");
-      var moduleEl = $("#" + moduleId);
-      // Update the module group name for all modules
-      // currently in the module group
-      var ids = connectedComponents(graph, moduleEl.attr("data-module-id"));
-      _.each(ids, function(id) {
-        $("#" + id).attr("data-module-group-name", newModuleGroupName);
-      });
-
-      // Hide modal
-      modal.modal("hide");
-    }
-  }
-
-  $("#modal-edit-module-group")
-  .on("show.bs.modal", function (event) {
-    var modal = $(this);
-    var moduleId = modal.attr("data-module-id");
-    var moduleEl = $("#" + moduleId);
-    var input = modal.find("#edit-module-group-name-input");
-
-    // Set the input to the current module's name
-    input
-    .attr("value", moduleEl.attr("data-module-group-name"));
-    input.val(moduleEl.attr("data-module-group-name"));
-
-    // Bind on enter button
-    input.keydown(function(ev) {
-      if (ev.keyCode == 13) {
-        // "Submit" modal
-        handleRenameConfirm(modal, ev);
-
-        // In any case, prevent form submission
-        ev.preventDefault();
-        ev.stopPropagation();
-        return false;
-      }
-    });
-  })
-  .on("shown.bs.modal", function (event) {
-    $(this).find("#edit-module-group-name-input").focus();
-  })
-  .on("hide.bs.modal", function (event) {
-    // Remove potential error classes
-    $(this).find("#edit-module-group-name-input").parent().removeClass("has-error");
-    $(this).find("span.help-block").remove();
-
-    $(this).find("#edit-module-group-name-input").off("keydown");
-
-    // When hiding modal, re-enable events
-    toggleCanvasEvents(true);
-  });
-
-  // Bind the confirm button on modal
-  $("#modal-edit-module-group").find("button[data-action='confirm']").on("click", function(ev) {
-    var modal = $(this).closest(".modal");
-    handleRenameConfirm(modal, ev);
-  });
-}
 
 /**
  * Handler when editing a module group.
  */
-editModuleGroupHandler = function(ev) {
-  var modal = $("#modal-edit-module-group");
-  var moduleEl = $(this).closest(".module");
-
-  // Set modal's module id
-  modal.attr("data-module-id", moduleEl.attr("data-module-id"));
-
-  // Disable dragging & zooming events on canvas temporarily
-  toggleCanvasEvents(false);
-
-  // Show modal
-  modal.modal("show");
-
-  ev.preventDefault();
-  ev.stopPropagation();
-  return false;
-};
 
 function initMoveModules() {
   function handleMoveConfirm(modal) {
@@ -1978,7 +1873,6 @@ function deleteModule(id, linkConnections) {
       _.each (ins, function(inEdge) {
         if (graph.degree(inEdge[0]) === 0) {
           tempModuleEl = $("#" + inEdge[0]);
-          tempModuleEl.find(".edit-module-group").parents("li").hide();
           tempModuleEl.find(".clone-module-group").parents("li").hide();
           tempModuleEl.find(".move-module-group").parents("li").hide();
           tempModuleEl.find(".delete-module-group").parents("li").hide();
@@ -1989,7 +1883,6 @@ function deleteModule(id, linkConnections) {
       _.each (outs, function(outEdge) {
         if (graph.degree(outEdge[1]) === 0) {
           tempModuleEl = $("#" + outEdge[1]);
-          tempModuleEl.find(".edit-module-group").parents("li").hide();
           tempModuleEl.find(".clone-module-group").parents("li").hide();
           tempModuleEl.find(".move-module-group").parents("li").hide();
           tempModuleEl.find(".delete-module-group").parents("li").hide();
@@ -2361,7 +2254,6 @@ cloneModuleGroupHandler = function(moduleId, modulesSel, gridDistX, gridDistY) {
     var nm = cloneModule(m, gridDistX, gridDistY, elLeft(m), elTop(m) + height + offset - gridDistY);
 
     //Show module group options
-    nm.find(".edit-module-group").parents("li").show();
     nm.find(".clone-module-group").parents("li").show();
     nm.find(".move-module-group").parents("li").show();
     nm.find(".delete-module-group").parents("li").show();
@@ -2963,12 +2855,10 @@ function initJsPlumb(containerSel, containerChildSel, modulesSel, params) {
       //Modules should belong to module group now
       //Show module group options for target and source
 
-      srcModuleEl.find(".edit-module-group").parents("li").show();
       srcModuleEl.find(".clone-module-group").parents("li").show();
       srcModuleEl.find(".move-module-group").parents("li").show();
       srcModuleEl.find(".delete-module-group").parents("li").show();
 
-      targetModuleEl.find(".edit-module-group").parents("li").show();
       targetModuleEl.find(".clone-module-group").parents("li").show();
       targetModuleEl.find(".move-module-group").parents("li").show();
       targetModuleEl.find(".delete-module-group").parents("li").show();
@@ -3001,13 +2891,11 @@ function initJsPlumb(containerSel, containerChildSel, modulesSel, params) {
       var targetModuleEl = $("#" + c.targetId);
       //First source
       if (graph.degree(c.sourceId) === 0) {
-        srcModuleEl.find(".edit-module-group").parents("li").hide();
         srcModuleEl.find(".clone-module-group").parents("li").hide();
         srcModuleEl.find(".move-module-group").parents("li").hide();
         srcModuleEl.find(".delete-module-group").parents("li").hide();
       }
       if (graph.degree(c.targetId) === 0) {
-        targetModuleEl.find(".edit-module-group").parents("li").hide();
         targetModuleEl.find(".clone-module-group").parents("li").hide();
         targetModuleEl.find(".move-module-group").parents("li").hide();
         targetModuleEl.find(".delete-module-group").parents("li").hide();
@@ -3221,3 +3109,39 @@ function tutorialAfterCb() {
     .css({'pointer-events': 'auto'});
   });
 }
+
+/** prevent reload page */
+var preventCanvasReloadOnSave = (function() {
+  'use strict';
+
+  function confirmReload() {
+    if( confirm(I18n.t('experiments.canvas.reload_on_submit')) ) {
+      return true;
+    } else {
+      return false
+    }
+  }
+
+  function preventCanvasReload() {
+    document.onkeydown = function(){
+      switch (event.keyCode){
+        case 116:
+          event.returnValue = false;
+          return confirmReload();
+        case 82:
+          if (event.ctrlKey){
+            event.returnValue = false;
+            return confirmReload();
+          }
+        }
+    }
+  }
+
+  function bindToCanvasSave(fun) {
+    $('#canvas-save').on('click', function() {
+      fun();
+    })
+  }
+
+  return function() { bindToCanvasSave(preventCanvasReload) };
+})();

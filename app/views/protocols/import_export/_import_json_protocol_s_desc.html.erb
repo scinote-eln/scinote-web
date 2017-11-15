@@ -1,0 +1,148 @@
+<%  whitelist_simple=['1','6','17'] %>
+<%  whitelist_complex=['8','9','15','18','19','20']%>
+<%  step_table_elements_array = [] %>
+<% json_object['steps'].each_with_index do |step,counter_orig| %>
+<% counter = counter_orig + 2 %>
+<div style="display: block;">
+  <hr>
+  <td>
+    <div class="badge-num">
+      <span class="badge-preview bg-primary size-digit-1">
+        <b data-val="position"><%= (counter) %></b>
+      </span>
+      &nbsp; &nbsp;
+      <span class="step-panel-collapse-link" data-toggle="collapse">
+        <span class="glyphicon collapse-step-icon glyphicon-collapse-up"></span>
+
+        <% title = nil %>
+        <% step['components'].each do |key1,value1| #finding section (title of step) %>
+          <% key1 = value1 if value1.class == Hash %>
+          <%  if(key1['component_type_id']=='6') %>
+            <% title = sanitize_input(key1['data']) if key1['data'].present? %>
+            <% end %>
+        <% end %>
+        <% title ||=t('protocols.protocols_io_import.comp_append.missing_step') %>
+        <strong data-val="name"><%= title %></strong>
+      </span>
+    </div>
+    <br>
+    <div class="tab-content">
+      <div class="tab-pane active" role="tabpanel">
+        <div data-val="description" class="ql-editor">
+        <% step_info_string = '' %>
+        <% step['components'].each do |key,value|  %>
+        <%#here i made an if to distinguish the first step from the
+          others, because the first step #sometimes has index values as keys instead of
+          hashes, you might see this elsewhere %>
+          <% key = value if value.class == Hash %>
+          <% if whitelist_simple.include?(key['component_type_id']) &&
+            key['data'].present? %>
+            <br>
+            <% case key['component_type_id']
+            when '1' %>
+              <% step_info_string += (key['data']) %>
+              <br><strong><%= t('protocols.protocols_io_import.preview.strng_s_desc') %></strong>
+              <%=sanitize_input(string_html_table_remove(key['data']).html_safe)%><br>
+            <% when '17' %>
+              <% step_info_string += (key['data']) %>
+              <br><strong><%= t('protocols.protocols_io_import.preview.s_exp_res') %></strong>
+              <%=sanitize_input(string_html_table_remove(key['data']).html_safe)%>
+              <br>
+            <% end %>
+          <% elsif key && whitelist_complex.include?(key['component_type_id']) %>
+            <% case key['component_type_id']
+            when '8'%>
+              <% step_info_string += key['source_data']['name'] %>
+              <br>
+              <strong><%= key['name']+': ' %></strong>
+              <%= sanitize_input(string_html_table_remove(key['source_data']['name']).html_safe) %>
+              <br><%= t('protocols.protocols_io_import.preview.dev') %>
+              <%= sanitize_input(key['source_data']['developer'].html_safe) %>
+              <br><%= t('protocols.protocols_io_import.preview.vers') %>
+              <%= sanitize_input(key['source_data']['version'].html_safe) %>
+              <br><%= t('protocols.protocols_io_import.preview.s_link') %>
+              <%= sanitize_input(key['source_data']['link'].html_safe) %>
+              <br><%= t('protocols.protocols_io_import.preview.repo') %>
+              <%= sanitize_input(key['source_data']['repository'].html_safe) %>
+              <br><%= t('protocols.protocols_io_import.preview.os') %>
+              <%= sanitize_input(key['source_data']['os_name'].html_safe)+
+              ' , '+sanitize_input(key['source_data']['os_version'].html_safe) %>
+            <% when '9'%>
+              <% step_info_string += key['source_data']['name'] %>
+              <br>
+              <strong><%= key['name']+': ' %></strong>
+              <%= sanitize_input(string_html_table_remove(key['source_data']['name']).html_safe) %>
+              <br><%= t('protocols.protocols_io_import.preview.s_link') %>
+              <%= sanitize_input(key['source_data']['link'].html_safe) %>
+            <% when '15'%>
+              <% step_info_string += key['source_data']['description'] %>
+              <br>
+              <strong><%= key['name']+': ' %></strong>
+              <%=  sanitize_input(key['source_data']['name'].html_safe) %>
+              <br><%= t('protocols.protocols_io_import.preview.s_desc') %>
+              <%= sanitize_input(string_html_table_remove(key['source_data']['description']).html_safe) %>
+              <br><%= t('protocols.protocols_io_import.preview.os') %>
+              <%= sanitize_input(key['source_data']['os_name'].html_safe)+
+              ' , '+sanitize_input(key['source_data']['os_version'].html_safe) %>
+            <% when '18'%>
+              <br><strong><%= t('protocols.protocols_io_import.preview.sub_prot') %></strong>
+              <%= sanitize_input(key['source_data']['protocol_name'].html_safe) %>
+              <br><%= t('protocols.protocols_io_import.preview.auth') %>
+              <%= sanitize_input(key['source_data']['full_name'].html_safe) %>
+              <br>
+              <% if key['source_data']['link'].present? %>
+                <%= t('protocols.protocols_io_import.preview.s_nobr_link') %>
+                <%= sanitize_input(key['source_data']['link'].html_safe) %>
+              <% end %>
+            <% when '19'%>
+              <% step_info_string += key['source_data']['body'] %>
+              <br>
+              <strong><%= key['name']+': ' %></strong>
+              <%= sanitize_input(string_html_table_remove(key['source_data']['body']).html_safe) %>
+              <br><%= t('protocols.protocols_io_import.preview.s_link') %>
+              <%= sanitize_input(key['source_data']['link'].html_safe) %>
+            <% when '20'%>
+            <% else %>
+            <% end #case if%>
+          <% end #inner if%>
+        <% end #step component loop %>
+        <% tables, garbage = protocolsio_string_to_table_element(step_info_string) %>
+        <% if tables.present? %>
+          <br><hr><br>
+          <% end %>
+          <% table_count = 0 %>
+          <% tables.each do |index, table| %>
+          <%   table_hash = JSON.parse((Base64.decode64(table['contents']))) %>
+          <%   pio_table_id = "pio_table_step_"+counter.to_s+"_info_"+table_count.to_s %>
+          <%   step_table_elements_array.push([pio_table_id,table_hash['data']]) %>
+          <div id="<%=pio_table_id%>" ></div>
+          <%   table_count += 1 %>
+        <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+  <% end  #step loop%>
+  <br>
+  <script type="text/javascript">
+  $('#modal-import-json-protocol-preview').on('shown.bs.modal', function (e) {
+    var javascript_table_elements_s = <%=raw sanitize_input(step_table_elements_array.to_json) %>
+
+    for(var j=0;j<javascript_table_elements_s.length;j++)
+    {
+
+    var target = document.getElementById(javascript_table_elements_s[j][0]);
+    var hot = new Handsontable(target, {
+      data: javascript_table_elements_s[j][1],
+      startRows: <%= Constants::HANDSONTABLE_INIT_ROWS_CNT %>,
+      startCols: <%= Constants::HANDSONTABLE_INIT_COLS_CNT %>,
+      rowHeaders: true,
+      colHeaders: true,
+      fillHandle: false,
+      formulas: true,
+      readOnly: true
+    });
+  }
+  })
+
+  </script>

@@ -77,6 +77,8 @@ class ExperimentsController < ApplicationController
 
   def canvas
     @project = @experiment.project
+    @active_modules = @experiment.active_modules
+                                 .includes(:tags, :inputs, :outputs)
     current_team_switch(@project.team)
   end
 

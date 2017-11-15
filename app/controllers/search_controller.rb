@@ -8,7 +8,6 @@ class SearchController < ApplicationController
 
     search_projects if @search_category == :projects
     search_experiments if @search_category == :experiments
-    search_workflows if @search_category == :workflows
     search_modules if @search_category == :modules
     search_results if @search_category == :results
     search_tags if @search_category == :tags
@@ -145,7 +144,6 @@ class SearchController < ApplicationController
   def count_search_results
     @project_search_count = count_by_name Project
     @experiment_search_count = count_by_name Experiment
-    @workflow_search_count = count_by_name MyModuleGroup
     @module_search_count = count_by_name MyModule
     @result_search_count = count_by_name Result
     @tag_search_count = count_by_name Tag
@@ -161,7 +159,6 @@ class SearchController < ApplicationController
 
     @search_results_count = @project_search_count
     @search_results_count += @experiment_search_count
-    @search_results_count += @workflow_search_count
     @search_results_count += @module_search_count
     @search_results_count += @result_search_count
     @search_results_count += @tag_search_count
@@ -188,14 +185,6 @@ class SearchController < ApplicationController
       @experiment_results = search_by_name(Experiment)
     end
     @search_count = @experiment_search_count
-  end
-
-  def search_workflows
-    @workflow_results = []
-    if @workflow_search_count > 0
-      @workflow_results = search_by_name(MyModuleGroup)
-    end
-    @search_count = @workflow_search_count
   end
 
   def search_modules

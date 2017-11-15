@@ -166,8 +166,9 @@
           var $nameInput = $form.find('#result_name');
           var nameValid = textValidator(ev, $nameInput, 0,
             <%= Constants::NAME_MAX_LENGTH %>);
-          var $textInput = TinyMCE.getContent();
-          textValidator(ev, $textInput, 1, <%= Constants::TEXT_MAX_LENGTH %>, false, true);
+          var $descrTextarea = $form.find("#result_result_text_attributes_text");
+          var $tinyMCEInput = TinyMCE.getContent();
+          textValidator(ev, $descrTextarea, 1, <%= Constants::TEXT_MAX_LENGTH %>, false, $tinyMCEInput);
           break;
         case ResultTypeEnum.COMMENT:
           var $commentInput = $form.find('#comment_message');

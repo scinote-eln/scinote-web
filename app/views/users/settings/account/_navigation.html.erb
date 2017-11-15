@@ -5,4 +5,7 @@
   <li role="presentation" class="<%= 'active' if on_settings_account_preferences_page? %>">
     <%= link_to t('users.settings.account.navigation.preferences'), preferences_path %>
   </li>
+  <li role="presentation" class="<%= 'active' if on_settings_account_addons_page? %>">
+    <%= link_to t('users.settings.account.navigation.addons'), addons_path %>
+  </li>
 </ul>
