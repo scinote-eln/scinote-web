@@ -2,12 +2,6 @@ sudo: required
 language: ruby
 services:
   - docker
-
-before_script:
-- bundle install
-- yarn install
-- bundle exec rake db:create:all
-- bundle exec rake db:migrate
 script:
 - bundle exec rspec
 - bundle exec cucumber
