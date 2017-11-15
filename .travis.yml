@@ -1,8 +1,15 @@
-sudo: false
+sudo: required
 language: ruby
 rvm:
   - 2.4.1
+addons:
+  postgresql: "9.6"
+services:
+  - postgresql
 before_script:
+ - cp config/database.yml.travis config/database.yml
+ - psql -c 'create database scinote_test;' -U postgres
+ - psql -c 'create database scinote_development;' -U postgres
  - yarn install
  - bundle install
  - bundle exec rake db:create
