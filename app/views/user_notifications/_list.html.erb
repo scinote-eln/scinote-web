@@ -3,26 +3,9 @@
     <div class="row">
       <div class="col-xs-3 col-md-1">
         <span style="display: none;" data-hook="user-notification-list-item"></span>
-        <% if notification.type_of == 'recent_changes' %>
-        <div class="text-center">
-          <%= image_tag avatar_path(notification.generator_user, :icon_small), class: 'avatar img-circle' %>
-        </div>
-        <% end %>
-        <% if notification.type_of == 'assignment' %>
-        <div class="text-center">
-          <span class="assignment"><%= fa_icon 'newspaper-o' %></span>
-        </div>
-        <% end %>
-        <% if notification.type_of == 'system_message' %>
-        <div class="text-center">
-          <span class="system-message"><i class="glyphicon glyphicon-tower" aria-hidden="true"></i></span>
-        </div>
-        <% end %>
-        <% if notification.type_of == 'deliver' %>
-        <div class="text-center">
-          <span class="deliver"><%= fa_icon 'truck' %></span>
-        </div>
-        <% end %>
+        <%= render partial: "user_notifications/icons/#{notification.type_of}",
+                   locals: {notification: notification},
+                   formats: [:html] %>
       </div>
       <div class="col-xs-9 col-md-11">
         <strong><%= sanitize_input(notification.title) %></strong> <br>
