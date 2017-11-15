@@ -1,10 +1,11 @@
-dist: trusty
-sudo: false
+sudo: required
 language: ruby
+services:
+  - docker
+
 before_script:
-- npm install yarn
-- yarn install
 - bundle install
+- yarn install
 - bundle exec rake db:create:all
 - bundle exec rake db:migrate
 script:
