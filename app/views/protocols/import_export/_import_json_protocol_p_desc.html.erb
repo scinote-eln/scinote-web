@@ -18,6 +18,11 @@
         <br>
         <% prot_info_string = '' %>
         <% protocol_table_elements_array = [] %>
+        <% if json_object['description'].present? %>
+          <% prot_info_string += (json_object['description']) %>
+          <strong><%= t('protocols.protocols_io_import.preview.prot_desc') %></strong>
+          <%= sanitize_input(string_html_table_remove(json_object['description']).html_safe) %><br>
+        <% end %>
         <% if json_object['before_start'].present? %>
           <% prot_info_string += (json_object['before_start']) %>
           <strong><%= t('protocols.protocols_io_import.preview.b_s_p') %></strong>
