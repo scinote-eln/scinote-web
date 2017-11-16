@@ -120,4 +120,7 @@ Rails.application.configure do
 
     config.cache_store = :null_store
   end
+
+  # set token
+  config.secret_key_base = ENV['DEVELOPMENT_KEY_BASE']
 end
