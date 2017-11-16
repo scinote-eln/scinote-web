@@ -89,6 +89,8 @@ cli-production:
 
 tests:
 	@echo "$$TEST_CONFIG_BODY" > test.env ;
+	@$(MAKE) rails cmd="bundle install"
+	@$(MAKE) rails cmd="yarn install"
 	@$(MAKE) rails cmd="bundle exec rspec"
 
 console:
