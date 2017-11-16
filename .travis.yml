@@ -1,19 +1,12 @@
-sudo: false
-language: ruby
-rvm:
-  - 2.4.1
-addons:
-  postgresql: "9.6"
+sudo: required
+
 services:
-  - postgresql
+  - docker
 before_script:
-  - cp config/database.yml.travis config/database.yml
-  - psql -c "create database travis_ci_test;" -U postgres
+  - make docker
+  - make database
 script:
-  - yarn install
-  - bundle exec bin/rails db:migrate RAILS_ENV=test
-  - bundle exec rspec
-  - bundle exec cucumber
+  - make test
 env:
   global:
     - SECRET_KEY_BASE=$SECRET_KEY_BASE

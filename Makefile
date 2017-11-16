@@ -14,6 +14,19 @@ DEFACE_ENABLED=false
 endef
 export PRODUCTION_CONFIG_BODY
 
+define TEST_CONFIG_BODY
+SECRET_KEY_BASE=$(shell openssl rand -hex 64)
+PAPERCLIP_HASH_SECRET=$(shell openssl rand -base64 128 | tr -d '\n')
+DATABASE_URL=postgresql://postgres@db/scinote_test
+PAPERCLIP_STORAGE=filesystem
+ENABLE_TUTORIAL=false
+ENABLE_RECAPTCHA=false
+ENABLE_USER_CONFIRMATION=false
+ENABLE_USER_REGISTRATION=true
+DEFACE_ENABLED=false
+endef
+export TEST_CONFIG_BODY
+
 all: docker database
 
 heroku:
@@ -75,7 +88,8 @@ cli-production:
 	@$(MAKE) rails-production cmd="/bin/bash"
 
 tests:
-	@$(MAKE) rails cmd="rake test"
+	@echo "$$TEST_CONFIG_BODY" > test.env ;
+	@$(MAKE) rails cmd="bundle exec rspec"
 
 console:
 	@$(MAKE) rails cmd="rails console"
