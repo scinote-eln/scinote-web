@@ -8,12 +8,11 @@ services:
   - postgresql
 before_script:
  - export SECRET_KEY_BASE="$(bundle exec rake secret)"
- - export RAILS_ENV=test
  - cp config/database.yml.travis config/database.yml
  - psql -c "create database travis_ci_test;" -U postgres
  - yarn install
  - bundle install
- - bin/rake db:migrate
+ - bundle exec rake db:migrate
 script:
  - bundle exec rspec
  - bundle exec cucumber
