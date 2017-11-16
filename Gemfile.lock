@@ -1,4 +1,13 @@
 GIT
+  remote: https://github.com/biosistemika/canaid
+  revision: a3dd029bf993767a1e11e2e3f71aea2e6d427476
+  branch: master
+  specs:
+    canaid (0.0.1)
+      devise (>= 3.4.1)
+      rails (>= 4)
+
+GIT
   remote: https://github.com/biosistemika/jquery-scrollto-rails
   revision: d1d40d5334e0bccfc64208ba81b9a7792f6cb591
   specs:
@@ -515,6 +524,7 @@ DEPENDENCIES
   bootstrap_form
   bullet
   byebug
+  canaid!
   capybara
   capybara-email
   commit_param_routing
