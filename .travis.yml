@@ -13,7 +13,7 @@ before_script:
  - psql -c "create database travis_ci_test;" -U postgres
  - yarn install
  - bundle install
- - bundle exec rake db:migrate
+ - bin/rake db:migrate
 script:
  - bundle exec rspec
  - bundle exec cucumber
