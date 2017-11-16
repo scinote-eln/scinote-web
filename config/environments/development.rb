@@ -120,7 +120,4 @@ Rails.application.configure do
 
     config.cache_store = :null_store
   end
-
-  # set token
-  config.secret_token = SecureRandom.hex(64)
 end

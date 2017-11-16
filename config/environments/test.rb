@@ -99,7 +99,4 @@ Rails.application.configure do
 
   # prevents compile assets
   config.assets.compile = false
-
-  # set token
-  config.secret_token = SecureRandom.hex(64)
 end
