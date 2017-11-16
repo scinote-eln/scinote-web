@@ -14,7 +14,6 @@ before_script:
  - yarn install
  - bundle install
  - bundle exec rake db:schema:load
- - bundle exec rake db:test:prepare
 script:
  - bundle exec rspec
  - bundle exec cucumber
