@@ -7,20 +7,19 @@ addons:
 services:
   - postgresql
 before_script:
+ - export SECRET_KEY_BASE="$(bundle exec rake secret)"
+ - export RAILS_ENV=test
  - cp config/database.yml.travis config/database.yml
  - psql -c 'create database travis_ci_test;' -U postgres
  - yarn install
  - bundle install
- - bundle exec rake db:create
- - bundle exec rake db:migrate
- - bundle exec rake db:migrate RAILS_ENV=test
+ - bundle exec rake db:schema:load db:test:prepare
 script:
  - bundle exec rspec
  - bundle exec cucumber
 env:
   global:
     PAPERCLIP_HASH_SECRET=$PAPERCLIP_HASH_SECRET
-    SECRET_KEY_BASE=$SECRET_KEY_BASE
     DEVELOPMENT_KEY_BASE=$DEVELOPMENT_KEY_BASE
     TEST_KEY_BASE=$TEST_KEY_BASE
     ENABLE_EMAIL_CONFIRMATIONS=$ENABLE_EMAIL_CONFIRMATIONS
