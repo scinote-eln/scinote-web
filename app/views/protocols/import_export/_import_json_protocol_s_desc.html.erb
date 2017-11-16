@@ -13,12 +13,11 @@
       &nbsp; &nbsp;
       <span class="step-panel-collapse-link" data-toggle="collapse">
         <span class="glyphicon collapse-step-icon glyphicon-collapse-up"></span>
-
         <% title = nil %>
         <% step['components'].each do |key1,value1| #finding section (title of step) %>
           <% key1 = value1 if value1.class == Hash %>
           <%  if(key1['component_type_id']=='6') %>
-            <% title = sanitize_input(key1['data']) if key1['data'].present? %>
+            <% title = pio_eval_title_len(sanitize_input(key1['data'])) if key1['data'].present? %>
             <% end %>
         <% end %>
         <% title ||=t('protocols.protocols_io_import.comp_append.missing_step') %>
@@ -42,11 +41,11 @@
             when '1' %>
               <% step_info_string += (key['data']) %>
               <br><strong><%= t('protocols.protocols_io_import.preview.strng_s_desc') %></strong>
-              <%=sanitize_input(string_html_table_remove(key['data']).html_safe)%><br>
+              <%=pio_eval_s_desc_len(sanitize_input(string_html_table_remove(key['data'])).html_safe)%><br>
             <% when '17' %>
               <% step_info_string += (key['data']) %>
               <br><strong><%= t('protocols.protocols_io_import.preview.s_exp_res') %></strong>
-              <%=sanitize_input(string_html_table_remove(key['data']).html_safe)%>
+              <%=pio_eval_s_safe_expctres_len(sanitize_input(string_html_table_remove(key['data'])).html_safe)%>
               <br>
             <% end %>
           <% elsif key && whitelist_complex.include?(key['component_type_id']) %>
@@ -75,12 +74,12 @@
               <br><%= t('protocols.protocols_io_import.preview.s_link') %>
               <%= sanitize_input(key['source_data']['link'].html_safe) %>
             <% when '15'%>
-              <% step_info_string += key['source_data']['description'] %>
+              <% step_info_string += (key['source_data']['description']) %>
               <br>
               <strong><%= key['name']+': ' %></strong>
-              <%=  sanitize_input(key['source_data']['name'].html_safe) %>
+              <%=  pio_eval_s_cmd_len(sanitize_input(key['source_data']['name']).html_safe) %>
               <br><%= t('protocols.protocols_io_import.preview.s_desc') %>
-              <%= sanitize_input(string_html_table_remove(key['source_data']['description']).html_safe) %>
+              <%= pio_eval_s_cmd_desc_len(sanitize_input(string_html_table_remove(key['source_data']['description'])).html_safe) %>
               <br><%= t('protocols.protocols_io_import.preview.os') %>
               <%= sanitize_input(key['source_data']['os_name'].html_safe)+
               ' , '+sanitize_input(key['source_data']['os_version'].html_safe) %>
@@ -98,7 +97,7 @@
               <% step_info_string += key['source_data']['body'] %>
               <br>
               <strong><%= key['name']+': ' %></strong>
-              <%= sanitize_input(string_html_table_remove(key['source_data']['body']).html_safe) %>
+              <%= pio_eval_s_safe_expctres_len(sanitize_input(string_html_table_remove(key['source_data']['body'])).html_safe) %>
               <br><%= t('protocols.protocols_io_import.preview.s_link') %>
               <%= sanitize_input(key['source_data']['link'].html_safe) %>
             <% when '20'%>

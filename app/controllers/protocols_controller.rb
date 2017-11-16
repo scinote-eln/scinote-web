@@ -4,7 +4,7 @@ class ProtocolsController < ApplicationController
   include ProtocolsImporter
   include ProtocolsExporter
   include InputSanitizeHelper
-  include ProtocolsIoTableHelper
+  include ProtocolsIoHelper
 
   before_action :check_create_permissions, only: %i(
     create_new_modal
