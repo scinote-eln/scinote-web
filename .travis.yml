@@ -10,7 +10,6 @@ before_script:
   - cp config/database.yml.travis config/database.yml
   - psql -c "create database travis_ci_test;" -U postgres
 script:
-  - export SECRET_KEY_BASE="#{bundle exec rake secret}"
   - yarn install
   - bundle exec bin/rails db:migrate RAILS_ENV=test
   - bundle exec rspec
