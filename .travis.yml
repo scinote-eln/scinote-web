@@ -1,5 +1,4 @@
-sudo: required
-dist: precise
+sudo: false
 language: ruby
 rvm:
   - 2.4.1
