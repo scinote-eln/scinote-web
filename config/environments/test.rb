@@ -101,5 +101,5 @@ Rails.application.configure do
   config.assets.compile = false
 
   # set token
-  config.secret_key_base = ENV['TEST_KEY_BASE']
+  config.secret_key_base = SecureRandom.hex(64)
 end

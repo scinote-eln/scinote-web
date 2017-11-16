@@ -122,5 +122,5 @@ Rails.application.configure do
   end
 
   # set token
-  config.secret_key_base = ENV['DEVELOPMENT_KEY_BASE']
+  config.secret_key_base = SecureRandom.hex(64)
 end
