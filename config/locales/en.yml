@@ -1251,6 +1251,7 @@ en:
         avatar_title: "Change avatar"
         avatar_edit_label: "Upload new avatar file"
         avatar_submit: "Upload"
+        avatar_total_size: "Your avatar file cannot be larger than 0.2 MB. (Please try again with a smaller file.)"
         name_label: "Full name"
         name_title: "Change name"
         initials_label: "Initials"
@@ -1792,8 +1793,8 @@ en:
   zip_export:
     modal_label: 'Export repository'
     notification_title: 'Your package is ready to be exported!'
-    expired_title: 'The required file was expired!'
-    expired_description: 'The downloadable file expires in 7 days after its creation.'
+    expired_title: 'Looks like your link has expired.'
+    expired_description: 'Please export the data again in order to receive a new link.'
     modal_label: 'Export request received'
     modal_html: "<p>Your export request is being processed.</p><p>When completed we will <strong>send an email to %{email}</strong> inbox with a link to your exported samples. Note that the link will expire in 7 days.</p>"
     repository_html: '<p>You are about to export selected items in repository %{repository}</p> <br> Repository will be exported in a .csv file format. You will receive <strong>email with a link</strong> where you can download it.'

@@ -94,6 +94,7 @@ class Team < ActiveRecord::Base
         end
 
         row.each.with_index do |value, index|
+          next unless value.present?
           if index == stype_index
             stype = SampleType.where(team: self)
                               .where('name ILIKE ?', value.strip)

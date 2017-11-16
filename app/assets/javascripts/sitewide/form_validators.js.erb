@@ -163,7 +163,7 @@ function filesSizeValidator(ev, fileInputs, fileTypeEnum) {
         case FileTypeEnum.FILE:
           return "<%= I18n.t('general.file.total_size', size: Constants::FILE_MAX_SIZE_MB) %>".strToErrorFormat();
         case FileTypeEnum.AVATAR:
-          return "<%= I18n.t('general.file.total_size', size: Constants::AVATAR_MAX_SIZE_MB) %>".strToErrorFormat();
+          return "<%= I18n.t('users.registrations.edit.avatar_total_size', size: Constants::AVATAR_MAX_SIZE_MB) %>".strToErrorFormat();
       }
     }
   }
