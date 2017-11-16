@@ -7,14 +7,14 @@ addons:
 services:
   - postgresql
 before_script:
- - cp config/database.yml.travis config/database.yml
- - psql -c "create database travis_ci_test;" -U postgres
- - yarn install
- - bundle install
- - bundle exec rake db:migrate
+  - cp config/database.yml.travis config/database.yml
+  - psql -c "create database travis_ci_test;" -U postgres
 script:
- - bundle exec rspec
- - bundle exec cucumber
+  - export SECRET_KEY_BASE="efefeefefegefefe2342342352352354582435709843743207643209874307583047532407523984"
+  - yarn install
+  - rake db:test:prepare
+  - bundle exec rspec
+  - bundle exec cucumber
 env:
   global:
     - SECRET_KEY_BASE=$SECRET_KEY_BASE
