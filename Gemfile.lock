@@ -155,9 +155,8 @@ GEM
     commit_param_routing (0.0.1)
     concurrent-ruby (1.0.5)
     crass (1.0.2)
-    creek (2.0)
-      httparty (~> 0.15.5)
-      nokogiri (~> 1.7.0)
+    creek (1.1.2)
+      nokogiri (~> 1.6.0)
       rubyzip (>= 1.0.0)
     cucumber (3.0.1)
       builder (>= 2.1.2)
@@ -222,8 +221,6 @@ GEM
     globalid (0.4.0)
       activesupport (>= 4.2.0)
     hammerjs-rails (2.0.8)
-    httparty (0.15.6)
-      multi_xml (>= 0.5.2)
     i18n (0.9.0)
       concurrent-ruby (~> 1.0)
     i18n-js (3.0.1)
@@ -286,14 +283,13 @@ GEM
       railties (>= 3.1)
     multi_json (1.12.2)
     multi_test (0.1.2)
-    multi_xml (0.6.0)
     nested_form_fields (0.8.2)
       coffee-rails (>= 3.2.1)
       jquery-rails
       rails (>= 3.2.0)
     newrelic_rpm (4.5.0.337)
     nio4r (2.1.0)
-    nokogiri (1.7.2)
+    nokogiri (1.6.8.1)
       mini_portile2 (~> 2.1.0)
     nokogumbo (1.4.13)
       nokogiri
@@ -595,4 +591,4 @@ RUBY VERSION
    ruby 2.4.1p111
 
 BUNDLED WITH
-   1.15.4
+   1.16.0
