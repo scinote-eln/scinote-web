@@ -88,13 +88,13 @@ cli-production:
 	@$(MAKE) rails-production cmd="/bin/bash"
 
 tests:
-	@echo "$$TEST_CONFIG_BODY" > test.env ;
 	@$(MAKE) rails cmd="yarn install"
 	@$(MAKE) rails cmd="bundle exec rspec"
 
 bundle:
+	@echo "$$TEST_CONFIG_BODY" > config/application.yml ;
 	@$(MAKE) rails cmd="bundle install"
-	
+
 console:
 	@$(MAKE) rails cmd="rails console"
 
