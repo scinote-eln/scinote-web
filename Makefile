@@ -88,7 +88,7 @@ cli-production:
 	@$(MAKE) rails-production cmd="/bin/bash"
 
 tests:
-	@echo "$$TEST_CONFIG_BODY" > config/application.yml ;
+	@$(MAKE) rails cmd="export SECRET_KEY_BASE='134143eefasdfdasfefw' PAPERCLIP_HASH_SECRET='asdfgsdgkewhgasdlghdsf'"
 	@$(MAKE) rails cmd="rake db:create"
 	@$(MAKE) rails cmd="rake db:migrate RAILS_ENV=test"
 	@$(MAKE) rails cmd="yarn install"

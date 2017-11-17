@@ -1,5 +1,5 @@
 sudo: required
-install: false
+install: true
 services:
   - docker
 before_script:
