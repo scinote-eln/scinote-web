@@ -17,6 +17,7 @@ module ProtocolsImporter
     if protocol.invalid? then
       rename_record(protocol, :name)
     end
+
     # Okay, now save the protocol
     protocol.save!
 

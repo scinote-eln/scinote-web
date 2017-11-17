@@ -4,6 +4,8 @@
    max: Constants::NAME_MAX_LENGTH, min: Constants::NAME_MIN_LENGTH) %>');
 <% elsif @toolong%>
   $('#modal-import-json-protocol-preview').modal('hide');
+  $('#protocols_io_form').trigger("reset");
+  protocolsDatatable.ajax.reload();
   HelperModule.flashAlertMsg(' <%= t('protocols.index.import_results.message_warn_truncated')%>', 'success');
 <% else %>
   $('#modal-import-json-protocol-preview').modal('hide');
