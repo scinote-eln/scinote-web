@@ -83,24 +83,33 @@ module ProtocolsIoHelper
   # These can easily be adjusted if more room for an attribute is needed.
   # (Subtract from one, add to another)
   def pio_eval_p_desc_len(tekst)
-    if tekst.length - 4000 > 10000
-      tekst = tekst[0..13940] + t('protocols.protocols_io_import.too_long')
+    max = 10000
+    allowed_max_attr = max * 0.26
+    text_end = allowed_max_attr - 60
+    if tekst.length > allowed_max_attr
+      tekst = tekst[0..text_end] + t('protocols.protocols_io_import.too_long')
       @toolong = true
     end
     tekst
   end
 
   def pio_eval_p_guid_len(tekst)
-    if tekst.length - 2000 > 10000
-      tekst = tekst[0..11940] + t('protocols.protocols_io_import.too_long')
+    max = 10000
+    allowed_max_attr = max * 0.24
+    text_end = allowed_max_attr - 60
+    if tekst.length > allowed_max_attr
+      tekst = tekst[0..text_end] + t('protocols.protocols_io_import.too_long')
       @toolong = true
     end
     tekst
   end
 
   def pio_eval_p_bfrandsafe_len(tekst)
-    if tekst.length - 2000 > 7000
-      tekst = tekst[0..8940] + t('protocols.protocols_io_import.too_long')
+    max = 10000
+    allowed_max_attr = max * 0.18
+    text_end = allowed_max_attr - 60
+    if tekst.length > allowed_max_attr
+      tekst = tekst[0..text_end] + t('protocols.protocols_io_import.too_long')
       @toolong = true
     end
     tekst
@@ -109,56 +118,77 @@ module ProtocolsIoHelper
   # I am almost certain the 2 methods below this comment will never get called
   # But just incase someon adds huge urls or weird date format, i added them
   def pio_eval_p_misc_vnd_link_len(tekst)
-    if tekst.length > 250
-      tekst = tekst[0..190] + t('protocols.protocols_io_import.too_long')
+    max = 10000
+    allowed_max_attr = max * 0.015
+    text_end = allowed_max_attr - 60
+    if tekst.length > allowed_max_attr
+      tekst = tekst[0..text_end] + t('protocols.protocols_io_import.too_long')
       @toolong = true
     end
     tekst
   end
 
   def pio_eval_p_pbldate_len(tekst)
-    if tekst.length > 120
-      tekst = tekst[0..120]
+    max = 10000
+    allowed_max_attr = max * 0.0025
+    text_end = allowed_max_attr - 60
+    if tekst.length > allowed_max_attr
+      tekst = tekst[0..text_end]
       @toolong = true
     end
     tekst
   end
 
   def pio_eval_p_keywords_tags_len(tekst)
-    if tekst.length > 1000
-      tekst = tekst[0..940] + t('protocols.protocols_io_import.too_long')
+    max = 10000
+    allowed_max_attr = max * 0.02
+    text_end = allowed_max_attr - 60
+    if tekst.length > allowed_max_attr
+      tekst = tekst[0..text_end] + t('protocols.protocols_io_import.too_long')
       @toolong = true
     end
     tekst
   end
 
   def pio_eval_s_desc_len(tekst)
-    if tekst.length - 4000 > 20000
-      tekst = tekst[0..23940] + t('protocols.protocols_io_import.too_long')
+    max = 10000
+    allowed_max_attr = max * 0.48
+    text_end = allowed_max_attr - 60
+    if tekst.length > allowed_max_attr
+      tekst = tekst[0..text_end] + t('protocols.protocols_io_import.too_long')
       @toolong = true
     end
     tekst
   end
 
   def pio_eval_s_cmd_desc_len(tekst)
-    if tekst.length - 1000 > 2500
-      tekst = tekst[0..3440] + t('protocols.protocols_io_import.too_long')
+    max = 10000
+    allowed_max_attr = max * 0.07
+    text_end = allowed_max_attr - 60
+    if tekst.length > allowed_max_attr
+      tekst = tekst[0..text_end] + t('protocols.protocols_io_import.too_long')
       @toolong = true
     end
     tekst
   end
 
   def pio_eval_s_cmd_len(tekst)
-    if tekst.length - 1000 > 3000
-      tekst = tekst[0..3940] + t('protocols.protocols_io_import.too_long')
+    max = 10000
+    allowed_max_attr = max * 0.08
+    text_end = allowed_max_attr - 60
+    if tekst.length > allowed_max_attr
+      tekst = tekst[0..text_end] + t('protocols.protocols_io_import.too_long')
       @toolong = true
     end
     tekst
   end
 
   def pio_eval_s_safe_expctres_len(tekst)
-    if tekst.length - 2000 > 5000
-      tekst = tekst[0..6940] + t('protocols.protocols_io_import.too_long')
+    max = 10000
+    allowed_max_attr = max * 0.14
+    text_end = allowed_max_attr - 60
+    if tekst.length > allowed_max_attr
+      tekst = tekst[0..text_end] + t('protocols.protocols_io_import.too_long')
       @toolong = true
     end
     tekst
