@@ -94,9 +94,7 @@ tests:
 		ENABLE_RECAPTCHA=$ENABLE_RECAPTCHA \
  		ENABLE_USER_CONFIRMATION=$ENABLE_USER_CONFIRMATION \
 		ENABLE_USER_REGISTRATION=$ENABLE_USER_REGISTRATION \
-		DEFACE_ENABLED=$DEFACE_ENABLED \
-	 	rails cmd="export SECRET_KEY_BASE='134143eefasdfdasfefw' PAPERCLIP_HASH_SECRET='asdfgsdgkewhgasdlghdsf'"
-	@$(MAKE) rails cmd="rake db:create"
+		DEFACE_ENABLED=$DEFACE_ENABLED rails cmd="rake db:create"
 	@$(MAKE) rails cmd="rake db:migrate RAILS_ENV=test"
 	@$(MAKE) rails cmd="yarn install"
 	@$(MAKE) railenvironments cmd="bundle exec rspec"
