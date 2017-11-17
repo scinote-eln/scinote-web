@@ -41,11 +41,13 @@
             when '1' %>
               <% step_info_string += (key['data']) %>
               <br><strong><%= t('protocols.protocols_io_import.preview.strng_s_desc') %></strong>
-              <%=pio_eval_s_desc_len(sanitize_input(string_html_table_remove(key['data'])).html_safe)%><br>
+              <% s_desc = pio_eval_s_desc_len(sanitize_input(string_html_table_remove(key['data'])))%>
+              <%= s_desc.html_safe %><br>
             <% when '17' %>
               <% step_info_string += (key['data']) %>
               <br><strong><%= t('protocols.protocols_io_import.preview.s_exp_res') %></strong>
-              <%=pio_eval_s_safe_expctres_len(sanitize_input(string_html_table_remove(key['data'])).html_safe)%>
+              <% s_exp_res = pio_eval_s_safe_expctres_len(sanitize_input(string_html_table_remove(key['data'])))%>
+              <%= s_exp_res.html_safe %>
               <br>
             <% end %>
           <% elsif key && whitelist_complex.include?(key['component_type_id']) %>
@@ -77,9 +79,11 @@
               <% step_info_string += (key['source_data']['description']) %>
               <br>
               <strong><%= key['name']+': ' %></strong>
-              <%=  pio_eval_s_cmd_len(sanitize_input(key['source_data']['name']).html_safe) %>
+              <% s_cmd = pio_eval_s_cmd_len(sanitize_input(key['source_data']['name'])) %>
+              <%= s_cmd.html_safe %>
               <br><%= t('protocols.protocols_io_import.preview.s_desc') %>
-              <%= pio_eval_s_cmd_desc_len(sanitize_input(string_html_table_remove(key['source_data']['description'])).html_safe) %>
+              <% s_cmd_desc = pio_eval_s_cmd_desc_len(sanitize_input(string_html_table_remove(key['source_data']['description']))) %>
+              <% s_cmd_desc.html_safe %>
               <br><%= t('protocols.protocols_io_import.preview.os') %>
               <%= sanitize_input(key['source_data']['os_name'].html_safe)+
               ' , '+sanitize_input(key['source_data']['os_version'].html_safe) %>
@@ -97,7 +101,8 @@
               <% step_info_string += key['source_data']['body'] %>
               <br>
               <strong><%= key['name']+': ' %></strong>
-              <%= pio_eval_s_safe_expctres_len(sanitize_input(string_html_table_remove(key['source_data']['body'])).html_safe) %>
+              <% s_safety = pio_eval_s_safe_expctres_len(sanitize_input(string_html_table_remove(key['source_data']['body']))) %>
+              <%= s_safety.html_safe %>
               <br><%= t('protocols.protocols_io_import.preview.s_link') %>
               <%= sanitize_input(key['source_data']['link'].html_safe) %>
             <% when '20'%>

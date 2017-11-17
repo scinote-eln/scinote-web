@@ -1385,7 +1385,7 @@ en:
         manager: "Protocol management"
         edit: "Edit protocol"
     protocols_io_import:
-      too_long: "... Your text is too long. Please shorten it to 300 words."
+      too_long: "... Your text is too long. Please shorten it."
       import_description_notice: "The protocols description is listed below under \"Protocol info\"."
       preview:
         prot_desc: "Protocol Description: "
@@ -1565,6 +1565,7 @@ en:
         message_failed: "Failed to import %{nr} protocol/s."
         message_ok: "Successfully imported %{nr} protocol/s."
         message_ok_pio: "Successfully imported protocol from protocols.io file."
+        message_warn_truncated: "Some fields have been shortened due to being too long."
         row_success: "Imported"
         row_renamed: "Imported & renamed"
         row_failed: "Failed"

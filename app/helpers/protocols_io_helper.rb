@@ -42,10 +42,36 @@ module ProtocolsIoHelper
     string_without_tables
   end
 
+  def eval_prot_desc(text, attribute_name)
+  case attribute_name
+  when 'before_start'
+    pio_eval_p_bfrandsafe_len(text)
+  when 'warning'
+    pio_eval_p_bfrandsafe_len(text)
+  when 'guidelines'
+    pio_eval_p_guid_len(text)
+  when 'publish_date'
+    pio_eval_p_pbldate_len(text)
+  when 'vendor_name'
+    pio_eval_p_misc_vnd_link_len(text)
+  when 'vendor_link'
+    pio_eval_p_misc_vnd_link_len(text)
+  when 'keywords'
+    pio_eval_p_keywords_tags_len(text)
+  when 'link'
+    pio_eval_p_misc_vnd_link_len(text)
+  else
+    ''
+  end
+    # ( before_start warning guidelines publish_date
+    # vendor_name vendor_link keywords link )
+  end
+
   def pio_eval_title_len(tekst)
     tekst += ' ' if tekst.length <= 1
     if tekst.length > 250
       tekst = tekst[0..195] + t('protocols.protocols_io_import.too_long')
+      @toolong = true
     end
     tekst
   end
@@ -59,6 +85,7 @@ module ProtocolsIoHelper
   def pio_eval_p_desc_len(tekst)
     if tekst.length - 4000 > 10000
       tekst = tekst[0..13940] + t('protocols.protocols_io_import.too_long')
+      @toolong = true
     end
     tekst
   end
@@ -66,6 +93,7 @@ module ProtocolsIoHelper
   def pio_eval_p_guid_len(tekst)
     if tekst.length - 2000 > 10000
       tekst = tekst[0..11940] + t('protocols.protocols_io_import.too_long')
+      @toolong = true
     end
     tekst
   end
@@ -73,6 +101,7 @@ module ProtocolsIoHelper
   def pio_eval_p_bfrandsafe_len(tekst)
     if tekst.length - 2000 > 7000
       tekst = tekst[0..8940] + t('protocols.protocols_io_import.too_long')
+      @toolong = true
     end
     tekst
   end
@@ -82,18 +111,23 @@ module ProtocolsIoHelper
   def pio_eval_p_misc_vnd_link_len(tekst)
     if tekst.length > 250
       tekst = tekst[0..190] + t('protocols.protocols_io_import.too_long')
+      @toolong = true
     end
     tekst
   end
 
   def pio_eval_p_pbldate_len(tekst)
-    tekst = tekst[0..120] if tekst.length > 120
+    if tekst.length > 120
+      tekst = tekst[0..120]
+      @toolong = true
+    end
     tekst
   end
 
   def pio_eval_p_keywords_tags_len(tekst)
     if tekst.length > 1000
       tekst = tekst[0..940] + t('protocols.protocols_io_import.too_long')
+      @toolong = true
     end
     tekst
   end
@@ -101,6 +135,7 @@ module ProtocolsIoHelper
   def pio_eval_s_desc_len(tekst)
     if tekst.length - 4000 > 20000
       tekst = tekst[0..23940] + t('protocols.protocols_io_import.too_long')
+      @toolong = true
     end
     tekst
   end
@@ -108,6 +143,7 @@ module ProtocolsIoHelper
   def pio_eval_s_cmd_desc_len(tekst)
     if tekst.length - 1000 > 2500
       tekst = tekst[0..3440] + t('protocols.protocols_io_import.too_long')
+      @toolong = true
     end
     tekst
   end
@@ -115,6 +151,7 @@ module ProtocolsIoHelper
   def pio_eval_s_cmd_len(tekst)
     if tekst.length - 1000 > 3000
       tekst = tekst[0..3940] + t('protocols.protocols_io_import.too_long')
+      @toolong = true
     end
     tekst
   end
@@ -122,8 +159,8 @@ module ProtocolsIoHelper
   def pio_eval_s_safe_expctres_len(tekst)
     if tekst.length - 2000 > 5000
       tekst = tekst[0..6940] + t('protocols.protocols_io_import.too_long')
+      @toolong = true
     end
     tekst
   end
-
 end

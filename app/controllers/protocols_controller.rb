@@ -643,14 +643,25 @@ class ProtocolsController < ApplicationController
   def protocolsio_import_save
     @json_object = JSON.parse(params['json_object'])
     @db_json = {}
-    @db_json['name'] = sanitize_input(params['protocol']['name'])
+    @toolong = false
+    @db_json['name'] = pio_eval_title_len(
+      sanitize_input(params['protocol']['name'])
+    )
     # since scinote only has description field, and protocols.io has many others
     # ,here i am putting everything important from protocols.io into description
-    @db_json['authors'] = sanitize_input(params['protocol']['authors'])
-    @db_json['created_at'] = sanitize_input(params['protocol']['created_at'])
-    @db_json['updated_at'] = sanitize_input(params['protocol']['last_modified'])
+    @db_json['authors'] = pio_eval_title_len(
+      sanitize_input(params['protocol']['authors'])
+    )
+    @db_json['created_at'] = pio_eval_title_len(
+      sanitize_input(params['protocol']['created_at'])
+    )
+    @db_json['updated_at'] = pio_eval_title_len(
+      sanitize_input(params['protocol']['last_modified'])
+    )
     @db_json['steps'] = {}
-    @db_json['steps'] = protocols_io_fill_step(@json_object, @db_json['steps'])
+    @db_json['steps'] = protocols_io_fill_step(
+      @json_object, @db_json['steps']
+    )
     protocol = nil
     respond_to do |format|
       transaction_error = false
@@ -682,7 +693,7 @@ class ProtocolsController < ApplicationController
         @protocolsio_general_error = false
         format.json do
           render json:
-         { name: p_name, new_name: protocol.name, status: :ok },
+         { name: @db_json['name'], new_name: @db_json['name'], status: :ok },
           status: :ok
         end
       end
@@ -946,7 +957,7 @@ class ProtocolsController < ApplicationController
   # pio_stp_x means protocols io step (id of component) parser
   def pio_stp_1(iterating_key) # protocols io description parser
     br = '<br>'
-    append = br + sanitize_input(iterating_key) + br if iterating_key.present?
+    append = br + pio_eval_s_desc_len(sanitize_input(iterating_key)) + br if iterating_key.present?
     if iterating_key.blank?
       append = t('protocols.protocols_io_import.comp_append.missing_desc')
     end
@@ -954,7 +965,7 @@ class ProtocolsController < ApplicationController
   end
 
   def pio_stp_6(iterating_key) # protocols io section(title) parser
-    return sanitize_input(iterating_key) if iterating_key.present?
+    return pio_eval_title_len(sanitize_input(iterating_key)) if iterating_key.present?
     t('protocols.protocols_io_import.comp_append.missing_step')
   end
 
@@ -962,7 +973,7 @@ class ProtocolsController < ApplicationController
     if iterating_key.present?
       append =
         t('protocols.protocols_io_import.comp_append.expected_result') +
-        sanitize_input(iterating_key) + '<br>'
+        pio_eval_s_safe_expctres_len(sanitize_input(iterating_key)) + '<br>'
       return append
     end
     ''
@@ -1012,9 +1023,9 @@ class ProtocolsController < ApplicationController
        iterating_key['os_name'] &&
        iterating_key['os_version']
       append = t('protocols.protocols_io_import.comp_append.command.title') +
-               sanitize_input(iterating_key['name']) +
+               pio_eval_s_cmd_len(sanitize_input(iterating_key['name'])) +
                t('protocols.protocols_io_import.comp_append.command.desc') +
-               sanitize_input(iterating_key['description']) +
+               pio_eval_s_cmd_desc_len(sanitize_input(iterating_key['description'])) +
                t('protocols.protocols_io_import.comp_append.command.os') +
                sanitize_input(iterating_key['os_name']) +
                ' , ' + iterating_key['os_version']
@@ -1050,7 +1061,7 @@ class ProtocolsController < ApplicationController
         t(
           'protocols.protocols_io_import.comp_append.safety_infor.title'
         ) +
-        sanitize_input(iterating_key['body']) +
+        pio_eval_s_safe_expctres_len(sanitize_input(iterating_key['body'])) +
         t('protocols.protocols_io_import.comp_append.general_link') +
         sanitize_input(iterating_key['link'])
       return append
@@ -1066,7 +1077,9 @@ class ProtocolsController < ApplicationController
     description_string =
       if json_hash['description'].present?
         '<strong>' + t('protocols.protocols_io_import.preview.prot_desc') +
-          '</strong>' + sanitize_input(json_hash['description'].html_safe)
+          '</strong>' + pio_eval_p_desc_len(
+            sanitize_input(json_hash['description']).html_safe
+          )
       else
         '<strong>' + t('protocols.protocols_io_import.preview.prot_desc') +
           '</strong>' + t('protocols.protocols_io_import.comp_append.missing_desc')
@@ -1076,26 +1089,25 @@ class ProtocolsController < ApplicationController
       if e == 'created_on' && json_hash[e].present?
         new_e = '<strong>' + e.humanize + '</strong>'
         description_string +=
-          new_e.to_s + ':  ' +
-          sanitize_input(params['protocol']['created_at'].to_s) + '<br>'
+          new_e.to_s + ':  ' + pio_eval_p_pbldate_len(
+            sanitize_input(params['protocol']['created_at'].to_s) + '<br>'
+          )
       elsif e == 'tags' && json_hash[e].any? && json_hash[e] != ''
         new_e = '<strong>' + e.humanize + '</strong>'
         description_string +=
           new_e.to_s + ': '
+        tags_length_checker = ''
         json_hash[e].each do |tag|
-          description_string +=
+          tags_length_checker +=
             sanitize_input(tag['tag_name']) + ' , '
         end
+        description_string += pio_eval_p_keywords_tags_len(tags_length_checker)
         description_string += '<br>'
-        # Since protocols description field doesnt show html,i just remove it
-        # because its even messier (using Sanitize)
-        # what this does is basically appends "FIELD NAME: "+" FIELD VALUE"
-        # to description for various fields
       elsif json_hash[e].present?
         new_e = '<strong>' + e.humanize + '</strong>'
         description_string +=
           new_e.to_s + ':  ' +
-          sanitize_input(json_hash[e].html_safe) + '<br>'
+          eval_prot_desc(sanitize_input(json_hash[e]).html_safe, e) + '<br>'
       end
     end
     description_string
