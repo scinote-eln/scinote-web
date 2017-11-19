@@ -957,10 +957,17 @@ class ProtocolsController < ApplicationController
   # pio_stp_x means protocols io step (id of component) parser
   def pio_stp_1(iterating_key) # protocols io description parser
     br = '<br>'
-    append = br + pio_eval_s_desc_len(sanitize_input(iterating_key)) + br if iterating_key.present?
-    if iterating_key.blank?
-      append = t('protocols.protocols_io_import.comp_append.missing_desc')
-    end
+    append =
+      if iterating_key.present?
+        br +
+          pio_eval_len(
+            sanitize_input(iterating_key),
+            ProtocolsIoHelper::PIO_S_DESC_RESERVED_LENGTH
+          ) +
+          br
+      else
+        t('protocols.protocols_io_import.comp_append.missing_desc')
+      end
     append
   end
 
@@ -973,7 +980,11 @@ class ProtocolsController < ApplicationController
     if iterating_key.present?
       append =
         t('protocols.protocols_io_import.comp_append.expected_result') +
-        pio_eval_s_safe_expctres_len(sanitize_input(iterating_key)) + '<br>'
+        pio_eval_len(
+          sanitize_input(iterating_key),
+          ProtocolsIoHelper::PIO_S_EXPECTEDRESULT_RESERVED_LENGTH
+        ) +
+        '<br>'
       return append
     end
     ''
@@ -988,18 +999,39 @@ class ProtocolsController < ApplicationController
        iterating_key['os_name'] &&
        iterating_key['os_version']
       append = t('protocols.protocols_io_import.comp_append.soft_packg.title') +
-               sanitize_input(iterating_key['name']) +
+               pio_eval_len(
+                 sanitize_input(iterating_key['name']),
+                 ProtocolsIoHelper::PIO_S_SOFT_NAME_RESERVED_LENGTH
+               ) +
                t('protocols.protocols_io_import.comp_append.soft_packg.dev') +
-               sanitize_input(iterating_key['developer']) +
+               pio_eval_len(
+                 sanitize_input(iterating_key['developer']),
+                 ProtocolsIoHelper::PIO_S_SOFT_DEV_RESERVED_LENGTH
+               ) +
                t('protocols.protocols_io_import.comp_append.soft_packg.vers') +
-               sanitize_input(iterating_key['version']) +
+               pio_eval_len(
+                 sanitize_input(iterating_key['version']),
+                 ProtocolsIoHelper::PIO_S_SOFT_VERSION_RESERVED_LENGTH
+               ) +
                t('protocols.protocols_io_import.comp_append.general_link') +
-               sanitize_input(iterating_key['link']) +
+               pio_eval_len(
+                 sanitize_input(iterating_key['link']),
+                 ProtocolsIoHelper::PIO_S_SOFT_LINK_RESERVED_LENGTH
+               ) +
                t('protocols.protocols_io_import.comp_append.soft_packg.repo') +
-               sanitize_input(iterating_key['repository']) +
+               pio_eval_len(
+                 sanitize_input(iterating_key['repository']),
+                 ProtocolsIoHelper::PIO_S_SOFT_REPLINK_RESERVED_LENGTH
+               ) +
                t('protocols.protocols_io_import.comp_append.soft_packg.os') +
-               sanitize_input(iterating_key['os_name']) + ' , ' +
-               sanitize_input(iterating_key['os_version'])
+               pio_eval_len(
+                 sanitize_input(iterating_key['os_name']),
+                 ProtocolsIoHelper::PIO_S_SOFT_OSNAME_RESERVED_LENGTH
+               ) + ' , ' +
+               pio_eval_len(
+                 sanitize_input(iterating_key['os_version']),
+                 ProtocolsIoHelper::PIO_S_SOFT_OSVERSION_RESERVED_LENGTH
+               )
       return append
     end
     ''
@@ -1009,9 +1041,15 @@ class ProtocolsController < ApplicationController
     if iterating_key['name'].present? &&
        iterating_key['link']
       append = t('protocols.protocols_io_import.comp_append.dataset.title') +
-               sanitize_input(iterating_key['name']) +
+               pio_eval_len(
+                 sanitize_input(iterating_key['name']),
+                 ProtocolsIoHelper::PIO_S_DATA_NAME_RESERVED_LENGTH
+               ) +
                t('protocols.protocols_io_import.comp_append.general_link') +
-               sanitize_input(iterating_key['link'])
+               pio_eval_len(
+                 sanitize_input(iterating_key['link']),
+                 ProtocolsIoHelper::PIO_S_DATA_LINK_RESERVED_LENGTH
+               )
       return append
     end
     ''
@@ -1023,12 +1061,25 @@ class ProtocolsController < ApplicationController
        iterating_key['os_name'] &&
        iterating_key['os_version']
       append = t('protocols.protocols_io_import.comp_append.command.title') +
-               pio_eval_s_cmd_len(sanitize_input(iterating_key['name'])) +
+               pio_eval_len(
+                 sanitize_input(iterating_key['name']),
+                 ProtocolsIoHelper::PIO_S_COM_OSNAME_RESERVED_LENGTH
+               ) +
                t('protocols.protocols_io_import.comp_append.command.desc') +
-               pio_eval_s_cmd_desc_len(sanitize_input(iterating_key['description'])) +
+               pio_eval_len(
+                 sanitize_input(iterating_key['description']),
+                 ProtocolsIoHelper::PIO_S_COM_COMMAND_RESERVED_LENGTH
+               ) +
                t('protocols.protocols_io_import.comp_append.command.os') +
-               sanitize_input(iterating_key['os_name']) +
-               ' , ' + iterating_key['os_version']
+               pio_eval_len(
+                 sanitize_input(iterating_key['os_name']),
+                 ProtocolsIoHelper::PIO_S_COM_OSNAME_RESERVED_LENGTH
+               ) +
+               ' , ' +
+               pio_eval_len(
+                 sanitize_input(iterating_key['os_version']),
+                 ProtocolsIoHelper::PIO_S_COM_OSVERSION_RESERVED_LENGTH
+               )
       return append
     end
     ''
@@ -1042,13 +1093,22 @@ class ProtocolsController < ApplicationController
         t(
           'protocols.protocols_io_import.comp_append.sub_protocol.title'
         ) +
-        sanitize_input(iterating_key['protocol_name']) +
+        pio_eval_len(
+          sanitize_input(iterating_key['protocol_name']),
+          ProtocolsIoHelper::PIO_S_SUBPROT_NAME_RESERVED_LENGTH
+        ) +
         t(
           'protocols.protocols_io_import.comp_append.sub_protocol.author'
         ) +
-        sanitize_input(iterating_key['full_name']) +
+        pio_eval_len(
+          sanitize_input(iterating_key['full_name']),
+          ProtocolsIoHelper::PIO_S_SUBPROT_NAME_RESERVED_LENGTH
+        ) +
         t('protocols.protocols_io_import.comp_append.general_link') +
-        sanitize_input(iterating_key['link'])
+        pio_eval_len(
+          sanitize_input(iterating_key['link']),
+          ProtocolsIoHelper::PIO_S_SUBPROT_LINK_RESERVED_LENGTH
+        )
       return append
     end
     ''
@@ -1061,9 +1121,15 @@ class ProtocolsController < ApplicationController
         t(
           'protocols.protocols_io_import.comp_append.safety_infor.title'
         ) +
-        pio_eval_s_safe_expctres_len(sanitize_input(iterating_key['body'])) +
+        pio_eval_len(
+          sanitize_input(iterating_key['body']),
+          ProtocolsIoHelper::PIO_S_SAFETY_INFO_RESERVED_LENGTH
+        ) +
         t('protocols.protocols_io_import.comp_append.general_link') +
-        sanitize_input(iterating_key['link'])
+        pio_eval_len(
+          sanitize_input(iterating_key['link']),
+          ProtocolsIoHelper::PIO_S_SAFETY_LINK_RESERVED_LENGTH
+        )
       return append
     end
     ''
@@ -1077,8 +1143,9 @@ class ProtocolsController < ApplicationController
     description_string =
       if json_hash['description'].present?
         '<strong>' + t('protocols.protocols_io_import.preview.prot_desc') +
-          '</strong>' + pio_eval_p_desc_len(
-            sanitize_input(json_hash['description']).html_safe
+          '</strong>' + pio_eval_len(
+            sanitize_input(json_hash['description']).html_safe,
+            ProtocolsIoHelper::PIO_P_DESC_RESERVED_LENGTH
           )
       else
         '<strong>' + t('protocols.protocols_io_import.preview.prot_desc') +
@@ -1089,9 +1156,10 @@ class ProtocolsController < ApplicationController
       if e == 'created_on' && json_hash[e].present?
         new_e = '<strong>' + e.humanize + '</strong>'
         description_string +=
-          new_e.to_s + ':  ' + pio_eval_p_pbldate_len(
-            sanitize_input(params['protocol']['created_at'].to_s) + '<br>'
-          )
+          new_e.to_s + ':  ' + pio_eval_len(
+            sanitize_input(params['protocol']['created_at'].to_s),
+            ProtocolsIoHelper::PIO_P_CREATEDON_RESERVED_LENGTH
+          ) + '<br>'
       elsif e == 'tags' && json_hash[e].any? && json_hash[e] != ''
         new_e = '<strong>' + e.humanize + '</strong>'
         description_string +=
@@ -1101,13 +1169,19 @@ class ProtocolsController < ApplicationController
           tags_length_checker +=
             sanitize_input(tag['tag_name']) + ' , '
         end
-        description_string += pio_eval_p_keywords_tags_len(tags_length_checker)
+        description_string += pio_eval_len(
+          tags_length_checker,
+          ProtocolsIoHelper::PIO_P_TAGS_RESERVED_LENGTH
+        )
         description_string += '<br>'
       elsif json_hash[e].present?
         new_e = '<strong>' + e.humanize + '</strong>'
         description_string +=
           new_e.to_s + ':  ' +
-          eval_prot_desc(sanitize_input(json_hash[e]).html_safe, e) + '<br>'
+          pio_eval_prot_desc(
+            sanitize_input(json_hash[e]).html_safe,
+            e
+          ) + '<br>'
       end
     end
     description_string
@@ -1124,12 +1198,14 @@ class ProtocolsController < ApplicationController
     newj['0'] = {}
     newj['0']['position'] = 0
     newj['0']['name'] = 'Protocol info'
+    @remaining = 5700
     newj['0']['tables'], table_str = protocolsio_string_to_table_element(
       sanitize_input(protocols_io_fill_desc(original_json).html_safe)
     )
     newj['0']['description'] = table_str
     original_json['steps'].each_with_index do |step, pos_orig| # loop over steps
       i = pos_orig + 1
+      @remaining = 3850
       # position of step (first, second.... etc),
       newj[i.to_s] = {} # the json we will insert into db
       newj[i.to_s]['position'] = i

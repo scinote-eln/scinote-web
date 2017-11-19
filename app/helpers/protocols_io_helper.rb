@@ -1,4 +1,89 @@
 module ProtocolsIoHelper
+  #=============================================================================
+  # Protocols.io limits
+  #=============================================================================
+  TEXT_MAX_LENGTH = Constants::TEXT_MAX_LENGTH
+  # PROTOCOLS.IO PROTOCOL ATTRIBUTES
+
+  # Protocols io protocol description reserved length
+  PIO_P_DESC_RESERVED_LENGTH = TEXT_MAX_LENGTH * 0.06
+  # Protocols io protocol guidelines attribute reserved length
+  PIO_P_GUIDELINES_RESERVED_LENGTH = TEXT_MAX_LENGTH * 0.04
+  # Protocols io protocol before starting attribute reserved length
+  PIO_P_BEFORESTART_RESERVED_LENGTH = TEXT_MAX_LENGTH * 0.04
+  # Protocols io protocol safety warnings attribute reserved length
+  PIO_P_SAFETYWARNING_RESERVED_LENGTH = TEXT_MAX_LENGTH * 0.04
+  # Protocols io protocol manuscript citation attribute reserved length
+  PIO_P_MANUCIT_RESERVED_LENGTH = TEXT_MAX_LENGTH * 0.04
+  # Protocols io protocol keywords attribute reserved length
+  PIO_P_KEYWORDS_RESERVED_LENGTH = TEXT_MAX_LENGTH * 0.02
+  # Protocols io protocol tags attribute reserved length
+  PIO_P_TAGS_RESERVED_LENGTH = TEXT_MAX_LENGTH * 0.02
+  # Protocols io protocol vendor link attribute reserved length
+  PIO_P_VNDLINK_RESERVED_LENGTH = TEXT_MAX_LENGTH * 0.05
+  # Protocols io protocol external link attribute reserved length
+  PIO_P_EXTLINK_RESERVED_LENGTH = TEXT_MAX_LENGTH * 0.05
+  # Protocols io protocol vendor name attribute reserved length
+  PIO_P_VNDNAME_RESERVED_LENGTH = TEXT_MAX_LENGTH * 0.015
+  # Protocols io protocol publish date attribute reserved length
+  PIO_P_PBLDATE_RESERVED_LENGTH = TEXT_MAX_LENGTH * 0.005
+  # Protocols io protocol created on date attribute reserved length
+  PIO_P_CREATEDON_RESERVED_LENGTH = TEXT_MAX_LENGTH * 0.005
+
+  # Total reserved percent for protocol desc:
+  # 39% (actual 38.5%) + 4%(400) (actual 388) extra = 43% reserved
+  # PROTOCOLS.IO STEP ATTRIBUTES
+
+  # Protocols io step PIO_S_DESC_RESERVED_LENGTH attribute reserve
+  PIO_S_DESC_RESERVED_LENGTH = TEXT_MAX_LENGTH * 0.08
+
+  # Protocols io step PIO_S_SOFT_NAME_RESERVED_LENGTH attribute reserve
+  PIO_S_SOFT_NAME_RESERVED_LENGTH = TEXT_MAX_LENGTH * 0.0064
+  # Protocols io step PIO_S_SOFT_DEVELOPER_RESERVED_LENGTH attribute reserve
+  PIO_S_SOFT_DEV_RESERVED_LENGTH = TEXT_MAX_LENGTH * 0.0128
+  # Protocols io step PIO_S_SOFT_VERSION_RESERVED_LENGTH attribute reserve
+  PIO_S_SOFT_VERSION_RESERVED_LENGTH = TEXT_MAX_LENGTH * 0.0016
+  # Protocols io step PIO_S_SOFT_LINK_RESERVED_LENGTH attribute reserve
+  PIO_S_SOFT_LINK_RESERVED_LENGTH = TEXT_MAX_LENGTH * 0.0512
+  # Protocols io step PIO_S_SOFT_REPLINK_RESERVED_LENGTH attribute reserve
+  PIO_S_SOFT_REPLINK_RESERVED_LENGTH = TEXT_MAX_LENGTH * 0.0512
+  # Protocols io step PIO_S_SOFT_OSNAME_RESERVED_LENGTH attribute reserve
+  PIO_S_SOFT_OSNAME_RESERVED_LENGTH = TEXT_MAX_LENGTH * 0.0128
+  # Protocols io step PIO_S_SOFT_OSVERSION_RESERVED_LENGTH attribute reserve
+  PIO_S_SOFT_OSVERSION_RESERVED_LENGTH = TEXT_MAX_LENGTH * 0.0032
+
+  # Protocols io step PIO_S_DATA_NAME_RESERVED_LENGTH attribute reserve
+  PIO_S_DATA_NAME_RESERVED_LENGTH = TEXT_MAX_LENGTH * 0.0064
+  # Protocols io step PIO_S_DATA_LINK_RESERVED_LENGTH attribute reserve
+  PIO_S_DATA_LINK_RESERVED_LENGTH = TEXT_MAX_LENGTH * 0.0512
+
+  # Protocols io step PIO_S_COM_OSNAME_RESERVED_LENGTH attribute reserve
+  PIO_S_COM_OSNAME_RESERVED_LENGTH = TEXT_MAX_LENGTH * 0.0128
+  # Protocols io step PIO_S_COM_OSVERSION_RESERVED_LENGTH attribute reserve
+  PIO_S_COM_OSVERSION_RESERVED_LENGTH = TEXT_MAX_LENGTH * 0.0032
+  # Protocols io step PIO_S_COM_DESCRIPTION_RESERVED_LENGTH attribute reserve
+  PIO_S_COM_DESCRIPTION_RESERVED_LENGTH = TEXT_MAX_LENGTH * 0.0200
+  # Protocols io step PIO_S_COM_COMMAND_RESERVED_LENGTH attribute reserve
+  PIO_S_COM_COMMAND_RESERVED_LENGTH = TEXT_MAX_LENGTH * 0.0200
+
+  # Protocols io step PIO_S_SUBPROT_AUTHOR_RESERVED_LENGTH attribute reserve
+  PIO_S_SUBPROT_AUTHOR_RESERVED_LENGTH = TEXT_MAX_LENGTH * 0.0128
+  # Protocols io step PIO_S_SUBPROT_NAME_RESERVED_LENGTH attribute reserve
+  PIO_S_SUBPROT_NAME_RESERVED_LENGTH = TEXT_MAX_LENGTH * 0.0256
+  # Protocols io step PIO_S_SUBPROT_LINK_RESERVED_LENGTH attribute reserve
+  PIO_S_SUBPROT_LINK_RESERVED_LENGTH = TEXT_MAX_LENGTH * 0.0512
+
+  # Protocols io step PIO_S_SAFETY_INFO_RESERVED_LENGTH attribute reserve
+  PIO_S_SAFETY_INFO_RESERVED_LENGTH = TEXT_MAX_LENGTH * 0.0400
+  # Protocols io step PIO_S_SAFETY_LINK_RESERVED_LENGTH attribute reserve
+  PIO_S_SAFETY_LINK_RESERVED_LENGTH = TEXT_MAX_LENGTH * 0.0512
+
+  # Protocols io step PIO_S_EXPECTEDRESULT_RESERVED_LENGTH attribute reserve
+  PIO_S_EXPECTEDRESULT_RESERVED_LENGTH = TEXT_MAX_LENGTH * 0.0400
+
+  # Total reserved percent for step desc:
+  # 56% (actual 55.36%) + 5.5%(550) (actual 548) = 61.5% reserved
+
   def protocolsio_string_to_table_element(description_string)
     string_without_tables = string_html_table_remove(description_string)
     table_regex = %r{<table\b[^>]*>(.*?)<\/table>}m
@@ -42,155 +127,45 @@ module ProtocolsIoHelper
     string_without_tables
   end
 
-  def eval_prot_desc(text, attribute_name)
-  case attribute_name
-  when 'before_start'
-    pio_eval_p_bfrandsafe_len(text)
-  when 'warning'
-    pio_eval_p_bfrandsafe_len(text)
-  when 'guidelines'
-    pio_eval_p_guid_len(text)
-  when 'publish_date'
-    pio_eval_p_pbldate_len(text)
-  when 'vendor_name'
-    pio_eval_p_misc_vnd_link_len(text)
-  when 'vendor_link'
-    pio_eval_p_misc_vnd_link_len(text)
-  when 'keywords'
-    pio_eval_p_keywords_tags_len(text)
-  when 'link'
-    pio_eval_p_misc_vnd_link_len(text)
-  else
-    ''
-  end
-    # ( before_start warning guidelines publish_date
-    # vendor_name vendor_link keywords link )
+  def pio_eval_prot_desc(text, attribute_name)
+    case attribute_name
+    when 'before_start'
+      pio_eval_len(text, ProtocolsIoHelper::PIO_P_BEFORESTART_RESERVED_LENGTH)
+    when 'warning'
+      pio_eval_len(text, ProtocolsIoHelper::PIO_P_SAFETYWARNING_RESERVED_LENGTH)
+    when 'guidelines'
+      pio_eval_len(text, ProtocolsIoHelper::PIO_P_GUIDELINES_RESERVED_LENGTH)
+    when 'publish_date'
+      pio_eval_len(text, ProtocolsIoHelper::PIO_P_PBLDATE_RESERVED_LENGTH)
+    when 'vendor_name'
+      pio_eval_len(text, ProtocolsIoHelper::PIO_P_VNDNAME_RESERVED_LENGTH)
+    when 'vendor_link'
+      pio_eval_len(text, ProtocolsIoHelper::PIO_P_VNDLINK_RESERVED_LENGTH)
+    when 'keywords'
+      pio_eval_len(text, ProtocolsIoHelper::PIO_P_KEYWORDS_RESERVED_LENGTH)
+    when 'link'
+      pio_eval_len(text, ProtocolsIoHelper::PIO_P_EXTLINK_RESERVED_LENGTH)
+    else
+      ''
+    end
   end
 
   def pio_eval_title_len(tekst)
-    tekst += ' ' if tekst.length <= 1
-    if tekst.length > 250
-      tekst = tekst[0..195] + t('protocols.protocols_io_import.too_long')
+    tekst += ' ' if tekst.length < Constants::NAME_MIN_LENGTH
+    if tekst.length > Constants::NAME_MAX_LENGTH
+      tekst = tekst[0..(Constants::NAME_MAX_LENGTH - 60)] + t('protocols.protocols_io_import.too_long')
       @toolong = true
     end
     tekst
   end
-  # I put .length - number there instead of just adding it to right number
-  # so that later if i need to change this implementation, i can use it as
-  # a refference to what will always be allowed and where it can get cut
-  # (in pio_eval_p_desc_len, it could get cut from indexes 4000 to 10000)
 
-  # These can easily be adjusted if more room for an attribute is needed.
-  # (Subtract from one, add to another)
-  def pio_eval_p_desc_len(tekst)
-    max = 10000
-    allowed_max_attr = max * 0.26
-    text_end = allowed_max_attr - 60
-    if tekst.length > allowed_max_attr
+  def pio_eval_len(tekst, reserved)
+    text_end = reserved + @remaining - 60
+    if tekst.length - reserved > @remaining
       tekst = tekst[0..text_end] + t('protocols.protocols_io_import.too_long')
       @toolong = true
     end
-    tekst
-  end
-
-  def pio_eval_p_guid_len(tekst)
-    max = 10000
-    allowed_max_attr = max * 0.24
-    text_end = allowed_max_attr - 60
-    if tekst.length > allowed_max_attr
-      tekst = tekst[0..text_end] + t('protocols.protocols_io_import.too_long')
-      @toolong = true
-    end
-    tekst
-  end
-
-  def pio_eval_p_bfrandsafe_len(tekst)
-    max = 10000
-    allowed_max_attr = max * 0.18
-    text_end = allowed_max_attr - 60
-    if tekst.length > allowed_max_attr
-      tekst = tekst[0..text_end] + t('protocols.protocols_io_import.too_long')
-      @toolong = true
-    end
-    tekst
-  end
-
-  # I am almost certain the 2 methods below this comment will never get called
-  # But just incase someon adds huge urls or weird date format, i added them
-  def pio_eval_p_misc_vnd_link_len(tekst)
-    max = 10000
-    allowed_max_attr = max * 0.015
-    text_end = allowed_max_attr - 60
-    if tekst.length > allowed_max_attr
-      tekst = tekst[0..text_end] + t('protocols.protocols_io_import.too_long')
-      @toolong = true
-    end
-    tekst
-  end
-
-  def pio_eval_p_pbldate_len(tekst)
-    max = 10000
-    allowed_max_attr = max * 0.0025
-    text_end = allowed_max_attr - 60
-    if tekst.length > allowed_max_attr
-      tekst = tekst[0..text_end]
-      @toolong = true
-    end
-    tekst
-  end
-
-  def pio_eval_p_keywords_tags_len(tekst)
-    max = 10000
-    allowed_max_attr = max * 0.02
-    text_end = allowed_max_attr - 60
-    if tekst.length > allowed_max_attr
-      tekst = tekst[0..text_end] + t('protocols.protocols_io_import.too_long')
-      @toolong = true
-    end
-    tekst
-  end
-
-  def pio_eval_s_desc_len(tekst)
-    max = 10000
-    allowed_max_attr = max * 0.48
-    text_end = allowed_max_attr - 60
-    if tekst.length > allowed_max_attr
-      tekst = tekst[0..text_end] + t('protocols.protocols_io_import.too_long')
-      @toolong = true
-    end
-    tekst
-  end
-
-  def pio_eval_s_cmd_desc_len(tekst)
-    max = 10000
-    allowed_max_attr = max * 0.07
-    text_end = allowed_max_attr - 60
-    if tekst.length > allowed_max_attr
-      tekst = tekst[0..text_end] + t('protocols.protocols_io_import.too_long')
-      @toolong = true
-    end
-    tekst
-  end
-
-  def pio_eval_s_cmd_len(tekst)
-    max = 10000
-    allowed_max_attr = max * 0.08
-    text_end = allowed_max_attr - 60
-    if tekst.length > allowed_max_attr
-      tekst = tekst[0..text_end] + t('protocols.protocols_io_import.too_long')
-      @toolong = true
-    end
-    tekst
-  end
-
-  def pio_eval_s_safe_expctres_len(tekst)
-    max = 10000
-    allowed_max_attr = max * 0.14
-    text_end = allowed_max_attr - 60
-    if tekst.length > allowed_max_attr
-      tekst = tekst[0..text_end] + t('protocols.protocols_io_import.too_long')
-      @toolong = true
-    end
+    @remaining -= (tekst.length - reserved)
     tekst
   end
 end
