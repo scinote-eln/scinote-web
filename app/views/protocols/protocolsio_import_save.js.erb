@@ -6,7 +6,7 @@
   $('#modal-import-json-protocol-preview').modal('hide');
   $('#protocols_io_form').trigger("reset");
   protocolsDatatable.ajax.reload();
-  HelperModule.flashAlertMsg(' <%= t('protocols.index.import_results.message_warn_truncated')%>', 'success');
+  HelperModule.flashAlertMsg(' <%= t('protocols.index.import_results.message_warn_truncated')%>', 'warning');
 <% else %>
   $('#modal-import-json-protocol-preview').modal('hide');
   $('#protocols_io_form').trigger("reset");

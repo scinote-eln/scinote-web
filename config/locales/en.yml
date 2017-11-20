@@ -1385,7 +1385,8 @@ en:
         manager: "Protocol management"
         edit: "Edit protocol"
     protocols_io_import:
-      too_long: "... Text is too long so we had to cut it off."
+      title_too_long: "... Text is too long so we had to cut it off."
+      too_long: "<span class='label label-warning'>... Text is too long so we had to cut it off.</span>"
       import_description_notice: "The protocols description is listed below under \"Protocol info\"."
       preview:
         prot_desc: "Protocol Description: "

@@ -17,7 +17,7 @@
       <div data-val="description" class="ql-editor">
         <br>
         <% prot_info_string = '' %>
-        <% @remaining = 5700 %>
+        <% @remaining = ProtocolsIoHelper::PIO_P_AVAILABLE_LENGTH %>
         <% protocol_table_elements_array = [] %>
         <% if json_object['description'].present? %>
           <% prot_info_string += (json_object['description']) %>

@@ -959,12 +959,12 @@ class ProtocolsController < ApplicationController
     br = '<br>'
     append =
       if iterating_key.present?
-        br +
-          pio_eval_len(
-            sanitize_input(iterating_key),
-            ProtocolsIoHelper::PIO_S_DESC_RESERVED_LENGTH
-          ) +
-          br
+        br + # Not sure why rubocop doesnt like this
+        pio_eval_len(
+          sanitize_input(iterating_key),
+          ProtocolsIoHelper::PIO_S_DESC_RESERVED_LENGTH
+        ) +
+        br
       else
         t('protocols.protocols_io_import.comp_append.missing_desc')
       end
@@ -1138,15 +1138,15 @@ class ProtocolsController < ApplicationController
   def protocols_io_fill_desc(json_hash)
     description_array = %w[
       ( before_start warning guidelines manuscript_citation publish_date
-      created_on vendor_name vendor_link keywords tags link )
+      vendor_name vendor_link keywords tags link created_on )
     ]
     description_string =
       if json_hash['description'].present?
         '<strong>' + t('protocols.protocols_io_import.preview.prot_desc') +
           '</strong>' + pio_eval_len(
-            sanitize_input(json_hash['description']).html_safe,
+            sanitize_input(json_hash['description']),
             ProtocolsIoHelper::PIO_P_DESC_RESERVED_LENGTH
-          )
+          ).html_safe
       else
         '<strong>' + t('protocols.protocols_io_import.preview.prot_desc') +
           '</strong>' + t('protocols.protocols_io_import.comp_append.missing_desc')
@@ -1179,9 +1179,9 @@ class ProtocolsController < ApplicationController
         description_string +=
           new_e.to_s + ':  ' +
           pio_eval_prot_desc(
-            sanitize_input(json_hash[e]).html_safe,
+            sanitize_input(json_hash[e]),
             e
-          ) + '<br>'
+          ).html_safe + '<br>'
       end
     end
     description_string
@@ -1198,14 +1198,14 @@ class ProtocolsController < ApplicationController
     newj['0'] = {}
     newj['0']['position'] = 0
     newj['0']['name'] = 'Protocol info'
-    @remaining = 5700
+    @remaining = ProtocolsIoHelper::PIO_P_AVAILABLE_LENGTH
     newj['0']['tables'], table_str = protocolsio_string_to_table_element(
       sanitize_input(protocols_io_fill_desc(original_json).html_safe)
     )
     newj['0']['description'] = table_str
     original_json['steps'].each_with_index do |step, pos_orig| # loop over steps
       i = pos_orig + 1
-      @remaining = 3850
+      @remaining = ProtocolsIoHelper::PIO_S_AVAILABLE_LENGTH
       # position of step (first, second.... etc),
       newj[i.to_s] = {} # the json we will insert into db
       newj[i.to_s]['position'] = i
