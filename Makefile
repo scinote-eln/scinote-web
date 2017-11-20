@@ -1,5 +1,7 @@
 APP_HOME="/usr/src/app"
 DB_IP=$(shell docker inspect scinote_db_development | grep "\"IPAddress\": " | awk '{ match($$0, /"IPAddress": "([0-9\.]*)",/, a); print a[1] }')
+SECRET_KEY_BASE=$(shell openssl rand -hex 64)
+PAPERCLIP_HASH_SECRET=$(shell openssl rand -base64 128 | tr -d '\n')
 
 define PRODUCTION_CONFIG_BODY
 SECRET_KEY_BASE=$(shell openssl rand -hex 64)
@@ -14,17 +16,6 @@ DEFACE_ENABLED=false
 endef
 export PRODUCTION_CONFIG_BODY
 
-define TEST_CONFIG_BODY
-SECRET_KEY_BASE=$(shell openssl rand -hex 64)
-PAPERCLIP_HASH_SECRET=$(shell openssl rand -base64 128 | tr -d '\n')
-PAPERCLIP_STORAGE=filesystem
-ENABLE_TUTORIAL=true
-ENABLE_RECAPTCHA=false
-ENABLE_USER_CONFIRMATION=false
-ENABLE_USER_REGISTRATION=true
-DEFACE_ENABLED=false
-endef
-export TEST_CONFIG_BODY
 
 all: docker database
 
@@ -86,12 +77,9 @@ cli:
 cli-production:
 	@$(MAKE) rails-production cmd="/bin/bash"
 
-tests:
-	@echo "$$TEST_CONFIG_BODY" > .env ;
-	@$(MAKE) rails cmd="rake db:create"
-	@$(MAKE) rails cmd="rake db:migrate RAILS_ENV=test"
-	@$(MAKE) rails cmd="yarn install"
-	@$(MAKE) railenvironments cmd="bundle exec rspec"
+tests-travis:
+	@echo "$$TEST_CONFIG_BODY" > test.yml ;
+	@docker-compose -f docker-compose.test.yml run -e SECRET_KEY_BASE=SECRET_KEY_BASE -e PAPERCLIP_HASH_SECRET=PAPERCLIP_HASH_SECRET -e PAPERCLIP_STORAGE=PAPERCLIP_STORAGE -e ENABLE_TUTORIAL=false -e ENABLE_RECAPTCHA=false -e ENABLE_USER_CONFIRMATION=false -e ENABLE_USER_REGISTRATION=true web "rake db:create && rake db:migrate && rake db:migrate RAILS_ENV=test && yarn install && bundle exec rspec && bundle exec cucumber"
 
 bundle:
 	@$(MAKE) rails cmd="bundle install"
