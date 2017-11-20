@@ -153,7 +153,9 @@ module ProtocolsIoHelper
   def pio_eval_title_len(tekst)
     tekst += ' ' if tekst.length < Constants::NAME_MIN_LENGTH
     if tekst.length > Constants::NAME_MAX_LENGTH
-      tekst = tekst[0..(Constants::NAME_MAX_LENGTH - 60)] + t('protocols.protocols_io_import.too_long')
+      tekst =
+        tekst[0..(Constants::NAME_MAX_LENGTH - 60)] +
+        t('protocols.protocols_io_import.too_long')
       @toolong = true
     end
     tekst
