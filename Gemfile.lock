@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/biosistemika/canaid
-  revision: a3dd029bf993767a1e11e2e3f71aea2e6d427476
+  revision: 8014ee3f017fe2446b74121fdbd3253aec645932
   branch: master
   specs:
     canaid (0.0.1)
