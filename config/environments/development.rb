@@ -120,4 +120,6 @@ Rails.application.configure do
 
     config.cache_store = :null_store
   end
+  # travis needs it
+  config.secret_key_base = ENV['SECRET_KEY_BASE']
 end
