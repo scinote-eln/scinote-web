@@ -53,7 +53,6 @@ describe User, type: :model do
     it { should have_many :results }
     it { should have_many :samples }
     it { should have_many :samples_tables }
-    it { should have_many :repositories }
     it { should have_many :repository_table_states }
     it { should have_many :steps }
     it { should have_many :custom_fields }
@@ -79,7 +78,6 @@ describe User, type: :model do
     it { should have_many :archived_projects }
     it { should have_many :restored_projects }
     it { should have_many :modified_reports }
-    it { should have_many :modified_results }
     it { should have_many :archived_results }
     it { should have_many :restored_results }
     it { should have_many :created_sample_groups }
@@ -88,7 +86,6 @@ describe User, type: :model do
     it { should have_many :created_sample_types }
     it { should have_many :modified_sample_types }
     it { should have_many :modified_samples }
-    it { should have_many :modified_steps }
     it { should have_many :created_tables }
     it { should have_many :modified_tables }
     it { should have_many :created_tags }
@@ -104,6 +101,21 @@ describe User, type: :model do
     it { should have_many :user_notifications }
     it { should have_many :notifications }
     it { should have_many :zip_exports }
+
+    it 'have many repositories' do
+      table = User.reflect_on_association(:repositories)
+      expect(table.macro).to eq(:has_many)
+    end
+
+    it 'have many repositories' do
+      table = User.reflect_on_association(:modified_results)
+      expect(table.macro).to eq(:has_many)
+    end
+
+    it 'have many repositories' do
+      table = User.reflect_on_association(:modified_steps)
+      expect(table.macro).to eq(:has_many)
+    end
   end
 
   describe 'Should be a valid object' do

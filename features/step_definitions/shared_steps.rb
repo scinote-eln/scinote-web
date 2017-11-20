@@ -129,3 +129,7 @@ Then(/^I should see "([^"]*)" on "([^"]*)" element$/) do |text, element|
   wait_for_ajax
   expect(find(element)).to have_content(text)
 end
+
+Then("I wait for {int} sec") do |sec|
+  sleep sec
+end
