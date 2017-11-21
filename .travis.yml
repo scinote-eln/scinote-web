@@ -4,6 +4,5 @@ services:
   - docker
 before_script:
   - make docker
-  - make bundle
 script:
   - make tests-ci

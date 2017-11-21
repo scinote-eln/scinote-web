@@ -83,10 +83,7 @@ integration-tests:
 	@$(MAKE) rails cmd="bundle exec cucumber"
 
 tests-ci:
-	@docker-compose run -e PAPERCLIP_HASH_SECRET=PAPERCLIP_HASH_SECRET -e PAPERCLIP_STORAGE=filesystem -e ENABLE_TUTORIAL=false -e ENABLE_RECAPTCHA=false -e ENABLE_USER_CONFIRMATION=false -e ENABLE_USER_REGISTRATION=true --rm web bash -c "rake db:create db:migrate && rake db:migrate RAILS_ENV=test && yarn install && bundle exec rspec && bundle exec cucumber"
-
-bundle:
-	@$(MAKE) rails cmd="bundle install"
+	@docker-compose run -e PAPERCLIP_HASH_SECRET=PAPERCLIP_HASH_SECRET -e PAPERCLIP_STORAGE=filesystem -e ENABLE_TUTORIAL=false -e ENABLE_RECAPTCHA=false -e ENABLE_USER_CONFIRMATION=false -e ENABLE_USER_REGISTRATION=true --rm web bash -c "bundle install && rake db:create db:migrate && rake db:migrate RAILS_ENV=test && yarn install && bundle exec rspec && bundle exec cucumber"
 
 console:
 	@$(MAKE) rails cmd="rails console"
