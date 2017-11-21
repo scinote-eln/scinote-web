@@ -195,8 +195,8 @@ module ProtocolsIoHelper
           t('protocols.protocols_io_import.too_long')
         @toolong = true
       end
-      @remaining -= (text.length - reserved)
-      text
+      @remaining -= (close_tags(text).length - reserved)
+      close_tags(text)
     end
   end
 
@@ -208,5 +208,9 @@ module ProtocolsIoHelper
     else
       ''
     end
+  end
+
+  def close_tags(text)
+    Nokogiri::HTML::DocumentFragment.parse(text).to_html
   end
 end
