@@ -44,7 +44,7 @@
               <br><strong><%= t('protocols.protocols_io_import.preview.strng_s_desc') %></strong>
               <% s_desc = pio_eval_len(
                 sanitize_input(string_html_table_remove(key['data'])),
-                ProtocolsIoHelper::PIO_S_DESC_RESERVED_LENGTH
+                ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_MEDIUM
               )%>
               <%= s_desc.html_safe %><br>
             <% when '17' %>
@@ -52,7 +52,7 @@
               <br><strong><%= t('protocols.protocols_io_import.preview.s_exp_res') %></strong>
               <% s_exp_res = pio_eval_len(
                 sanitize_input(string_html_table_remove(key['data'])),
-                ProtocolsIoHelper::PIO_S_EXPECTEDRESULT_RESERVED_LENGTH
+                ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_MEDIUM
               )%>
               <%= s_exp_res.html_safe %>
               <br>
@@ -65,37 +65,37 @@
               <strong><%= not_null(key['name'])+': ' %></strong>
               <%= pio_eval_len(
                 sanitize_input(string_html_table_remove(not_null(key['source_data']['name'])).html_safe),
-                ProtocolsIoHelper::PIO_S_SOFT_NAME_RESERVED_LENGTH
+                ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_MEDIUM
               ).html_safe %>
               <br><%= t('protocols.protocols_io_import.preview.dev') %>
               <%= pio_eval_len(
                 sanitize_input(not_null(key['source_data']['developer']).html_safe),
-                ProtocolsIoHelper::PIO_S_SOFT_DEV_RESERVED_LENGTH
+                ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_MEDIUM
               ).html_safe %>
               <br><%= t('protocols.protocols_io_import.preview.vers') %>
               <%= pio_eval_len(
                 sanitize_input(not_null(key['source_data']['version']).html_safe),
-                ProtocolsIoHelper::PIO_S_SOFT_VERSION_RESERVED_LENGTH
+                ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL
               ).html_safe %>
               <br><%= t('protocols.protocols_io_import.preview.s_link') %>
               <%= pio_eval_len(
                 sanitize_input(not_null(key['source_data']['link']).html_safe),
-                ProtocolsIoHelper::PIO_S_SOFT_LINK_RESERVED_LENGTH
+                ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_BIG
               ).html_safe %>
               <br><%= t('protocols.protocols_io_import.preview.repo') %>
               <%= pio_eval_len(
                 sanitize_input(not_null(key['source_data']['repository']).html_safe),
-                ProtocolsIoHelper::PIO_S_SOFT_REPLINK_RESERVED_LENGTH
+                ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_BIG
               ).html_safe %>
               <br><%= t('protocols.protocols_io_import.preview.os') %>
               <%= pio_eval_len(
                 sanitize_input(not_null(key['source_data']['os_name']).html_safe),
-                ProtocolsIoHelper::PIO_S_SOFT_OSNAME_RESERVED_LENGTH
+                ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL
               ).html_safe+
               ' , '+
               pio_eval_len(
                 sanitize_input(not_null(key['source_data']['os_version']).html_safe),
-                ProtocolsIoHelper::PIO_S_SOFT_OSVERSION_RESERVED_LENGTH
+                ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL
               ).html_safe %>
             <% when '9'%>
               <% step_info_string += not_null(key['source_data']['name']) %>
@@ -103,12 +103,12 @@
               <strong><%= not_null(key['name'])+': ' %></strong>
               <%= pio_eval_len(
                 sanitize_input(string_html_table_remove(not_null(key['source_data']['name'])).html_safe),
-                ProtocolsIoHelper::PIO_S_DATA_NAME_RESERVED_LENGTH
+                ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_MEDIUM
               ).html_safe %>
               <br><%= t('protocols.protocols_io_import.preview.s_link') %>
               <%= pio_eval_len(
                 sanitize_input(not_null(key['source_data']['link']).html_safe),
-                ProtocolsIoHelper::PIO_S_DATA_LINK_RESERVED_LENGTH
+                ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_BIG
               ).html_safe %>
             <% when '15'%>
               <% step_info_string += not_null(key['source_data']['description']) %>
@@ -116,42 +116,42 @@
               <strong><%= key['name']+': ' %></strong>
               <% s_cmd = pio_eval_len(
                 sanitize_input(not_null(key['source_data']['name'])),
-                ProtocolsIoHelper::PIO_S_COM_COMMAND_RESERVED_LENGTH
+                ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_MEDIUM
               ) %>
               <%= s_cmd.html_safe %>
               <br><%= t('protocols.protocols_io_import.preview.s_desc') %>
               <% s_cmd_desc = pio_eval_len(
                 sanitize_input(string_html_table_remove(not_null(key['source_data']['description']))),
-                ProtocolsIoHelper::PIO_S_COM_DESCRIPTION_RESERVED_LENGTH
+                ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_MEDIUM
               ) %>
               <% s_cmd_desc.html_safe %>
               <br><%= t('protocols.protocols_io_import.preview.os') %>
               <%= pio_eval_len(
                 sanitize_input(not_null(key['source_data']['os_name']).html_safe),
-                ProtocolsIoHelper::PIO_S_COM_OSNAME_RESERVED_LENGTH
+                ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_MEDIUM
               ).html_safe +
               ' , '+
               pio_eval_len(
                 sanitize_input(not_null(key['source_data']['os_version']).html_safe),
-                ProtocolsIoHelper::PIO_S_COM_OSVERSION_RESERVED_LENGTH
+                ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL
               ).html_safe %>
             <% when '18'%>
               <br><strong><%= t('protocols.protocols_io_import.preview.sub_prot') %></strong>
               <%= pio_eval_len(
                 sanitize_input(not_null(key['source_data']['protocol_name']).html_safe),
-                ProtocolsIoHelper::PIO_S_SUBPROT_NAME_RESERVED_LENGTH
+                ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_MEDIUM
               ).html_safe %>
               <br><%= t('protocols.protocols_io_import.preview.auth') %>
               <%= pio_eval_len(
                 sanitize_input(not_null(key['source_data']['full_name']).html_safe),
-                ProtocolsIoHelper::PIO_S_SUBPROT_AUTHOR_RESERVED_LENGTH
+                ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_MEDIUM
               ).html_safe %>
               <br>
               <% if key['source_data']['link'].present? %>
                 <%= t('protocols.protocols_io_import.preview.s_nobr_link') %>
                 <%= pio_eval_len(
                   sanitize_input(key['source_data']['link'].html_safe),
-                  ProtocolsIoHelper::PIO_S_SUBPROT_LINK_RESERVED_LENGTH
+                  ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_BIG
                 ).html_safe %>
               <% end %>
             <% when '19'%>
@@ -160,13 +160,13 @@
               <strong><%= key['name']+': ' %></strong>
               <% s_safety = pio_eval_len(
                 sanitize_input(string_html_table_remove(not_null(key['source_data']['body']))),
-                ProtocolsIoHelper::PIO_S_SAFETY_INFO_RESERVED_LENGTH
+                ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_MEDIUM
               ) %>
               <%= s_safety.html_safe %>
               <br><%= t('protocols.protocols_io_import.preview.s_link') %>
               <%= pio_eval_len(
                 sanitize_input(not_null(key['source_data']['link']).html_safe),
-                ProtocolsIoHelper::PIO_S_SAFETY_LINK_RESERVED_LENGTH
+                ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_BIG
               ).html_safe %>
             <% when '20'%>
             <% else %>

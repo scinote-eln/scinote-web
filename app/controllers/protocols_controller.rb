@@ -959,10 +959,10 @@ class ProtocolsController < ApplicationController
     br = '<br>'
     append =
       if iterating_key.present?
-        br + # Not sure why rubocop doesnt like this
+        br +
         pio_eval_len(
           sanitize_input(iterating_key),
-          ProtocolsIoHelper::PIO_S_DESC_RESERVED_LENGTH
+          ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_MEDIUM
         ) +
         br
       else
@@ -982,7 +982,7 @@ class ProtocolsController < ApplicationController
         t('protocols.protocols_io_import.comp_append.expected_result') +
         pio_eval_len(
           sanitize_input(iterating_key),
-          ProtocolsIoHelper::PIO_S_EXPECTEDRESULT_RESERVED_LENGTH
+          ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_MEDIUM
         ) +
         '<br>'
       return append
@@ -1001,36 +1001,36 @@ class ProtocolsController < ApplicationController
       append = t('protocols.protocols_io_import.comp_append.soft_packg.title') +
                pio_eval_len(
                  sanitize_input(iterating_key['name']),
-                 ProtocolsIoHelper::PIO_S_SOFT_NAME_RESERVED_LENGTH
+                 ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_MEDIUM
                ) +
                t('protocols.protocols_io_import.comp_append.soft_packg.dev') +
                pio_eval_len(
                  sanitize_input(iterating_key['developer']),
-                 ProtocolsIoHelper::PIO_S_SOFT_DEV_RESERVED_LENGTH
+                 ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_MEDIUM
                ) +
                t('protocols.protocols_io_import.comp_append.soft_packg.vers') +
                pio_eval_len(
                  sanitize_input(iterating_key['version']),
-                 ProtocolsIoHelper::PIO_S_SOFT_VERSION_RESERVED_LENGTH
+                 ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL
                ) +
                t('protocols.protocols_io_import.comp_append.general_link') +
                pio_eval_len(
                  sanitize_input(iterating_key['link']),
-                 ProtocolsIoHelper::PIO_S_SOFT_LINK_RESERVED_LENGTH
+                 ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_BIG
                ) +
                t('protocols.protocols_io_import.comp_append.soft_packg.repo') +
                pio_eval_len(
                  sanitize_input(iterating_key['repository']),
-                 ProtocolsIoHelper::PIO_S_SOFT_REPLINK_RESERVED_LENGTH
+                 ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_BIG
                ) +
                t('protocols.protocols_io_import.comp_append.soft_packg.os') +
                pio_eval_len(
                  sanitize_input(iterating_key['os_name']),
-                 ProtocolsIoHelper::PIO_S_SOFT_OSNAME_RESERVED_LENGTH
+                 ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL
                ) + ' , ' +
                pio_eval_len(
                  sanitize_input(iterating_key['os_version']),
-                 ProtocolsIoHelper::PIO_S_SOFT_OSVERSION_RESERVED_LENGTH
+                 ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL
                )
       return append
     end
@@ -1043,12 +1043,12 @@ class ProtocolsController < ApplicationController
       append = t('protocols.protocols_io_import.comp_append.dataset.title') +
                pio_eval_len(
                  sanitize_input(iterating_key['name']),
-                 ProtocolsIoHelper::PIO_S_DATA_NAME_RESERVED_LENGTH
+                 ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_MEDIUM
                ) +
                t('protocols.protocols_io_import.comp_append.general_link') +
                pio_eval_len(
                  sanitize_input(iterating_key['link']),
-                 ProtocolsIoHelper::PIO_S_DATA_LINK_RESERVED_LENGTH
+                 ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_BIG
                )
       return append
     end
@@ -1063,22 +1063,22 @@ class ProtocolsController < ApplicationController
       append = t('protocols.protocols_io_import.comp_append.command.title') +
                pio_eval_len(
                  sanitize_input(iterating_key['name']),
-                 ProtocolsIoHelper::PIO_S_COM_OSNAME_RESERVED_LENGTH
+                 ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_MEDIUM
                ) +
                t('protocols.protocols_io_import.comp_append.command.desc') +
                pio_eval_len(
                  sanitize_input(iterating_key['description']),
-                 ProtocolsIoHelper::PIO_S_COM_COMMAND_RESERVED_LENGTH
+                 ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_MEDIUM
                ) +
                t('protocols.protocols_io_import.comp_append.command.os') +
                pio_eval_len(
                  sanitize_input(iterating_key['os_name']),
-                 ProtocolsIoHelper::PIO_S_COM_OSNAME_RESERVED_LENGTH
+                 ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_MEDIUM
                ) +
                ' , ' +
                pio_eval_len(
                  sanitize_input(iterating_key['os_version']),
-                 ProtocolsIoHelper::PIO_S_COM_OSVERSION_RESERVED_LENGTH
+                 ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL
                )
       return append
     end
@@ -1095,19 +1095,19 @@ class ProtocolsController < ApplicationController
         ) +
         pio_eval_len(
           sanitize_input(iterating_key['protocol_name']),
-          ProtocolsIoHelper::PIO_S_SUBPROT_NAME_RESERVED_LENGTH
+          ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_MEDIUM
         ) +
         t(
           'protocols.protocols_io_import.comp_append.sub_protocol.author'
         ) +
         pio_eval_len(
           sanitize_input(iterating_key['full_name']),
-          ProtocolsIoHelper::PIO_S_SUBPROT_NAME_RESERVED_LENGTH
+          ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_MEDIUM
         ) +
         t('protocols.protocols_io_import.comp_append.general_link') +
         pio_eval_len(
           sanitize_input(iterating_key['link']),
-          ProtocolsIoHelper::PIO_S_SUBPROT_LINK_RESERVED_LENGTH
+          ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_BIG
         )
       return append
     end
@@ -1123,12 +1123,12 @@ class ProtocolsController < ApplicationController
         ) +
         pio_eval_len(
           sanitize_input(iterating_key['body']),
-          ProtocolsIoHelper::PIO_S_SAFETY_INFO_RESERVED_LENGTH
+          ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_MEDIUM
         ) +
         t('protocols.protocols_io_import.comp_append.general_link') +
         pio_eval_len(
           sanitize_input(iterating_key['link']),
-          ProtocolsIoHelper::PIO_S_SAFETY_LINK_RESERVED_LENGTH
+          ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_BIG
         )
       return append
     end
@@ -1145,7 +1145,7 @@ class ProtocolsController < ApplicationController
         '<strong>' + t('protocols.protocols_io_import.preview.prot_desc') +
           '</strong>' + pio_eval_len(
             sanitize_input(json_hash['description']),
-            ProtocolsIoHelper::PIO_P_DESC_RESERVED_LENGTH
+            ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_MEDIUM
           ).html_safe
       else
         '<strong>' + t('protocols.protocols_io_import.preview.prot_desc') +
@@ -1158,7 +1158,7 @@ class ProtocolsController < ApplicationController
         description_string +=
           new_e.to_s + ':  ' + pio_eval_len(
             sanitize_input(params['protocol']['created_at'].to_s),
-            ProtocolsIoHelper::PIO_P_CREATEDON_RESERVED_LENGTH
+            ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL
           ) + '<br>'
       elsif e == 'tags' && json_hash[e].any? && json_hash[e] != ''
         new_e = '<strong>' + e.humanize + '</strong>'
@@ -1171,7 +1171,7 @@ class ProtocolsController < ApplicationController
         end
         description_string += pio_eval_len(
           tags_length_checker,
-          ProtocolsIoHelper::PIO_P_TAGS_RESERVED_LENGTH
+          ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_MEDIUM
         )
         description_string += '<br>'
       elsif json_hash[e].present?

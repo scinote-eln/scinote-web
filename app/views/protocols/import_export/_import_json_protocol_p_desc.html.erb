@@ -24,7 +24,7 @@
           <strong><%= t('protocols.protocols_io_import.preview.prot_desc') %></strong>
           <% description = pio_eval_len(
               sanitize_input(string_html_table_remove(json_object['description'])),
-              ProtocolsIoHelper::PIO_P_DESC_RESERVED_LENGTH) %>
+              ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_MEDIUM) %>
           <%= description.html_safe %><br>
         <% end %>
         <% if json_object['before_start'].present? %>
@@ -32,7 +32,7 @@
           <strong><%= t('protocols.protocols_io_import.preview.b_s_p') %></strong>
           <% before_start = pio_eval_len(
               sanitize_input(string_html_table_remove(json_object['before_start'])),
-              ProtocolsIoHelper::PIO_P_BEFORESTART_RESERVED_LENGTH
+              ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_MEDIUM
             ) %>
           <%= before_start.html_safe %><br>
         <% end %>
@@ -41,7 +41,7 @@
           <strong><%= t('protocols.protocols_io_import.preview.warn') %></strong>
           <% sft_warning = pio_eval_len(
               sanitize_input(string_html_table_remove(json_object['warning'])),
-              ProtocolsIoHelper::PIO_P_SAFETYWARNING_RESERVED_LENGTH
+              ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_MEDIUM
             ) %>
           <%= sft_warning.html_safe%><br>
         <% end %>
@@ -50,7 +50,7 @@
           <strong><%= t('protocols.protocols_io_import.preview.guideln') %></strong>
           <% guidelines = pio_eval_len(
               sanitize_input(string_html_table_remove(json_object['guidelines'])),
-              ProtocolsIoHelper::PIO_P_GUIDELINES_RESERVED_LENGTH
+              ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_MEDIUM
             ) %>
           <%= guidelines.html_safe %><br>
         <% end %>
@@ -59,7 +59,7 @@
           <strong><%= t('protocols.protocols_io_import.preview.manu_cit') %></strong>
           <% manu_cit = pio_eval_len(
               sanitize_input(string_html_table_remove(json_object['manuscript_citation'])),
-              ProtocolsIoHelper::PIO_P_MANUCIT_RESERVED_LENGTH
+              ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_MEDIUM
             ) %>
           <%= manu_cit.html_safe %><br>
         <% end %>
@@ -67,7 +67,7 @@
           <strong><%= t('protocols.protocols_io_import.preview.pbl_date') %></strong>
           <% pbl_date = pio_eval_len(
               sanitize_input(json_object['publish_date']),
-              ProtocolsIoHelper::PIO_P_PBLDATE_RESERVED_LENGTH
+              ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL
             ) %>
           <%= pbl_date.html_safe %><br>
         <% end %>
@@ -75,7 +75,7 @@
           <strong><%= t('protocols.protocols_io_import.preview.vnd_name') %></strong>
           <% vnd_name = pio_eval_len(
               sanitize_input(json_object['vendor_name']),
-              ProtocolsIoHelper::PIO_P_VNDNAME_RESERVED_LENGTH
+              ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_MEDIUM
             ) %>
           <%= vnd_name.html_safe %><br>
         <% end %>
@@ -83,7 +83,7 @@
           <strong><%= t('protocols.protocols_io_import.preview.vnd_link') %></strong>
           <% vnd_link = pio_eval_len(
               sanitize_input(json_object['vendor_link']),
-              ProtocolsIoHelper::PIO_P_VNDLINK_RESERVED_LENGTH
+              ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_BIG
             ) %>
           <%= vnd_link.html_safe %><br>
         <% end %>
@@ -91,7 +91,7 @@
           <strong><%= t('protocols.protocols_io_import.preview.key_wrd') %></strong>
           <% keywords = pio_eval_len(
               sanitize_input(json_object['keywords']),
-              ProtocolsIoHelper::PIO_P_KEYWORDS_RESERVED_LENGTH
+              ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_MEDIUM
             ) %>
           <%= keywords.html_safe %><br>
         <% end %>
@@ -103,7 +103,7 @@
           <% end %>
           <% tags = pio_eval_len(
               sanitize_input(string_of_tags),
-              ProtocolsIoHelper::PIO_P_TAGS_RESERVED_LENGTH
+              ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_MEDIUM
             )%>
           <%= tags.html_safe %>
         <% end %>
@@ -111,7 +111,7 @@
           <strong><%= t('protocols.protocols_io_import.preview.p_link') %></strong>
           <% link = pio_eval_len(
               sanitize_input(json_object['link']).html_safe,
-              ProtocolsIoHelper::PIO_P_EXTLINK_RESERVED_LENGTH
+              ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_BIG
             ) %>
           <%= link.html_safe %><br>
         <% end %>

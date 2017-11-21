@@ -261,6 +261,9 @@ var HelperModule = (function(){
     } else if (type === 'info') {
       alertType = ' alert-info ';
       glyphSign = ' glyphicon-exclamation-sign ';
+    } else if (type === 'warning') {
+      alertType = ' alert-warning ';
+      glyphSign = ' glyphicon-exclamation-sign ';
     }
     var htmlSnippet = '<div class="alert alert' + alertType +
                       'alert-dismissable alert-floating">' +

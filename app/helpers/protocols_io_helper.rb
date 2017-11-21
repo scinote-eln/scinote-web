@@ -3,105 +3,26 @@ module ProtocolsIoHelper
   # Protocols.io limits
   #=============================================================================
   TEXT_MAX_LENGTH = Constants::TEXT_MAX_LENGTH
+
+  PIO_ELEMENT_RESERVED_LENGTH_BIG = TEXT_MAX_LENGTH * 0.015
+  PIO_ELEMENT_RESERVED_LENGTH_MEDIUM = TEXT_MAX_LENGTH * 0.01
+  PIO_ELEMENT_RESERVED_LENGTH_SMALL = TEXT_MAX_LENGTH * 0.005
+
   # PROTOCOLS.IO PROTOCOL ATTRIBUTES
-
-  # Protocols io protocol description reserved length
-  PIO_P_DESC_RESERVED_LENGTH = TEXT_MAX_LENGTH * 0.01
-  # Protocols io protocol guidelines attribute reserved length
-  PIO_P_GUIDELINES_RESERVED_LENGTH = TEXT_MAX_LENGTH * 0.01
-  # Protocols io protocol before starting attribute reserved length
-  PIO_P_BEFORESTART_RESERVED_LENGTH = TEXT_MAX_LENGTH * 0.01
-  # Protocols io protocol safety warnings attribute reserved length
-  PIO_P_SAFETYWARNING_RESERVED_LENGTH = TEXT_MAX_LENGTH * 0.01
-  # Protocols io protocol manuscript citation attribute reserved length
-  PIO_P_MANUCIT_RESERVED_LENGTH = TEXT_MAX_LENGTH * 0.01
-  # Protocols io protocol keywords attribute reserved length
-  PIO_P_KEYWORDS_RESERVED_LENGTH = TEXT_MAX_LENGTH * 0.01
-  # Protocols io protocol tags attribute reserved length
-  PIO_P_TAGS_RESERVED_LENGTH = TEXT_MAX_LENGTH * 0.01
-  # Protocols io protocol vendor link attribute reserved length
-  PIO_P_VNDLINK_RESERVED_LENGTH = TEXT_MAX_LENGTH * 0.015
-  # Protocols io protocol external link attribute reserved length
-  PIO_P_EXTLINK_RESERVED_LENGTH = TEXT_MAX_LENGTH * 0.015
-  # Protocols io protocol vendor name attribute reserved length
-  PIO_P_VNDNAME_RESERVED_LENGTH = TEXT_MAX_LENGTH * 0.01
-  # Protocols io protocol publish date attribute reserved length
-  PIO_P_PBLDATE_RESERVED_LENGTH = TEXT_MAX_LENGTH * 0.005
-  # Protocols io protocol created on date attribute reserved length
-  PIO_P_CREATEDON_RESERVED_LENGTH = TEXT_MAX_LENGTH * 0.005
-
   PIO_P_AVAILABLE_LENGTH =
     TEXT_MAX_LENGTH -
-    (PIO_P_DESC_RESERVED_LENGTH + PIO_P_GUIDELINES_RESERVED_LENGTH +
-    PIO_P_BEFORESTART_RESERVED_LENGTH + PIO_P_SAFETYWARNING_RESERVED_LENGTH +
-    PIO_P_MANUCIT_RESERVED_LENGTH + PIO_P_KEYWORDS_RESERVED_LENGTH +
-    PIO_P_TAGS_RESERVED_LENGTH + PIO_P_VNDLINK_RESERVED_LENGTH +
-    PIO_P_EXTLINK_RESERVED_LENGTH + PIO_P_VNDNAME_RESERVED_LENGTH +
-    PIO_P_PBLDATE_RESERVED_LENGTH + PIO_P_CREATEDON_RESERVED_LENGTH +
+    (PIO_ELEMENT_RESERVED_LENGTH_SMALL * 2 +
+    PIO_ELEMENT_RESERVED_LENGTH_MEDIUM * 8 +
+    PIO_ELEMENT_RESERVED_LENGTH_BIG * 2 +
     400)
   # 400 is for en.yml text
 
   # PROTOCOLS.IO STEP ATTRIBUTES
-
-  # Protocols io step PIO_S_DESC_RESERVED_LENGTH attribute reserve
-  PIO_S_DESC_RESERVED_LENGTH = TEXT_MAX_LENGTH * 0.01
-
-  # Protocols io step PIO_S_SOFT_NAME_RESERVED_LENGTH attribute reserve
-  PIO_S_SOFT_NAME_RESERVED_LENGTH = TEXT_MAX_LENGTH * 0.0064
-  # Protocols io step PIO_S_SOFT_DEVELOPER_RESERVED_LENGTH attribute reserve
-  PIO_S_SOFT_DEV_RESERVED_LENGTH = TEXT_MAX_LENGTH * 0.0128
-  # Protocols io step PIO_S_SOFT_VERSION_RESERVED_LENGTH attribute reserve
-  PIO_S_SOFT_VERSION_RESERVED_LENGTH = TEXT_MAX_LENGTH * 0.0016
-  # Protocols io step PIO_S_SOFT_LINK_RESERVED_LENGTH attribute reserve
-  PIO_S_SOFT_LINK_RESERVED_LENGTH = TEXT_MAX_LENGTH * 0.015
-  # Protocols io step PIO_S_SOFT_REPLINK_RESERVED_LENGTH attribute reserve
-  PIO_S_SOFT_REPLINK_RESERVED_LENGTH = TEXT_MAX_LENGTH * 0.015
-  # Protocols io step PIO_S_SOFT_OSNAME_RESERVED_LENGTH attribute reserve
-  PIO_S_SOFT_OSNAME_RESERVED_LENGTH = TEXT_MAX_LENGTH * 0.0128
-  # Protocols io step PIO_S_SOFT_OSVERSION_RESERVED_LENGTH attribute reserve
-  PIO_S_SOFT_OSVERSION_RESERVED_LENGTH = TEXT_MAX_LENGTH * 0.0032
-
-  # Protocols io step PIO_S_DATA_NAME_RESERVED_LENGTH attribute reserve
-  PIO_S_DATA_NAME_RESERVED_LENGTH = TEXT_MAX_LENGTH * 0.0064
-  # Protocols io step PIO_S_DATA_LINK_RESERVED_LENGTH attribute reserve
-  PIO_S_DATA_LINK_RESERVED_LENGTH = TEXT_MAX_LENGTH * 0.015
-
-  # Protocols io step PIO_S_COM_OSNAME_RESERVED_LENGTH attribute reserve
-  PIO_S_COM_OSNAME_RESERVED_LENGTH = TEXT_MAX_LENGTH * 0.0128
-  # Protocols io step PIO_S_COM_OSVERSION_RESERVED_LENGTH attribute reserve
-  PIO_S_COM_OSVERSION_RESERVED_LENGTH = TEXT_MAX_LENGTH * 0.0032
-  # Protocols io step PIO_S_COM_DESCRIPTION_RESERVED_LENGTH attribute reserve
-  PIO_S_COM_DESCRIPTION_RESERVED_LENGTH = TEXT_MAX_LENGTH * 0.0100
-  # Protocols io step PIO_S_COM_COMMAND_RESERVED_LENGTH attribute reserve
-  PIO_S_COM_COMMAND_RESERVED_LENGTH = TEXT_MAX_LENGTH * 0.0100
-
-  # Protocols io step PIO_S_SUBPROT_AUTHOR_RESERVED_LENGTH attribute reserve
-  PIO_S_SUBPROT_AUTHOR_RESERVED_LENGTH = TEXT_MAX_LENGTH * 0.0128
-  # Protocols io step PIO_S_SUBPROT_NAME_RESERVED_LENGTH attribute reserve
-  PIO_S_SUBPROT_NAME_RESERVED_LENGTH = TEXT_MAX_LENGTH * 0.01
-  # Protocols io step PIO_S_SUBPROT_LINK_RESERVED_LENGTH attribute reserve
-  PIO_S_SUBPROT_LINK_RESERVED_LENGTH = TEXT_MAX_LENGTH * 0.015
-
-  # Protocols io step PIO_S_SAFETY_INFO_RESERVED_LENGTH attribute reserve
-  PIO_S_SAFETY_INFO_RESERVED_LENGTH = TEXT_MAX_LENGTH * 0.01
-  # Protocols io step PIO_S_SAFETY_LINK_RESERVED_LENGTH attribute reserve
-  PIO_S_SAFETY_LINK_RESERVED_LENGTH = TEXT_MAX_LENGTH * 0.015
-
-  # Protocols io step PIO_S_EXPECTEDRESULT_RESERVED_LENGTH attribute reserve
-  PIO_S_EXPECTEDRESULT_RESERVED_LENGTH = TEXT_MAX_LENGTH * 0.01
-
   PIO_S_AVAILABLE_LENGTH =
     TEXT_MAX_LENGTH -
-    (PIO_S_DESC_RESERVED_LENGTH + PIO_S_SOFT_NAME_RESERVED_LENGTH +
-    PIO_S_SOFT_DEV_RESERVED_LENGTH + PIO_S_SOFT_VERSION_RESERVED_LENGTH +
-    PIO_S_SOFT_LINK_RESERVED_LENGTH + PIO_S_SOFT_REPLINK_RESERVED_LENGTH +
-    PIO_S_SOFT_OSNAME_RESERVED_LENGTH + PIO_S_SOFT_OSVERSION_RESERVED_LENGTH +
-    PIO_S_DATA_NAME_RESERVED_LENGTH + PIO_S_DATA_LINK_RESERVED_LENGTH +
-    PIO_S_COM_OSNAME_RESERVED_LENGTH + PIO_S_COM_OSVERSION_RESERVED_LENGTH +
-    PIO_S_COM_DESCRIPTION_RESERVED_LENGTH + PIO_S_COM_COMMAND_RESERVED_LENGTH +
-    PIO_S_SUBPROT_AUTHOR_RESERVED_LENGTH + PIO_S_SUBPROT_NAME_RESERVED_LENGTH +
-    PIO_S_SUBPROT_LINK_RESERVED_LENGTH + PIO_S_SAFETY_INFO_RESERVED_LENGTH +
-    PIO_S_SAFETY_LINK_RESERVED_LENGTH + PIO_S_EXPECTEDRESULT_RESERVED_LENGTH +
+    (PIO_ELEMENT_RESERVED_LENGTH_SMALL * 4 +
+    PIO_ELEMENT_RESERVED_LENGTH_MEDIUM * 11 +
+    PIO_ELEMENT_RESERVED_LENGTH_BIG * 5 +
     550)
   # 550 reserved for en.yml translations
 
@@ -155,21 +76,23 @@ module ProtocolsIoHelper
   def pio_eval_prot_desc(text, attribute_name)
     case attribute_name
     when 'before_start'
-      pio_eval_len(text, ProtocolsIoHelper::PIO_P_BEFORESTART_RESERVED_LENGTH)
+      pio_eval_len(text, ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_MEDIUM)
     when 'warning'
-      pio_eval_len(text, ProtocolsIoHelper::PIO_P_SAFETYWARNING_RESERVED_LENGTH)
+      pio_eval_len(text, ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_MEDIUM)
     when 'guidelines'
-      pio_eval_len(text, ProtocolsIoHelper::PIO_P_GUIDELINES_RESERVED_LENGTH)
+      pio_eval_len(text, ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_MEDIUM)
     when 'publish_date'
-      pio_eval_len(text, ProtocolsIoHelper::PIO_P_PBLDATE_RESERVED_LENGTH)
+      pio_eval_len(text, ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL)
     when 'vendor_name'
-      pio_eval_len(text, ProtocolsIoHelper::PIO_P_VNDNAME_RESERVED_LENGTH)
+      pio_eval_len(text, ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_MEDIUM)
     when 'vendor_link'
-      pio_eval_len(text, ProtocolsIoHelper::PIO_P_VNDLINK_RESERVED_LENGTH)
+      pio_eval_len(text, ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_BIG)
     when 'keywords'
-      pio_eval_len(text, ProtocolsIoHelper::PIO_P_KEYWORDS_RESERVED_LENGTH)
+      pio_eval_len(text, ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_MEDIUM)
+    when 'manuscript_citation'
+      pio_eval_len(text, ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_MEDIUM)
     when 'link'
-      pio_eval_len(text, ProtocolsIoHelper::PIO_P_EXTLINK_RESERVED_LENGTH)
+      pio_eval_len(text, ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_BIG)
     else
       ''
     end
@@ -191,11 +114,13 @@ module ProtocolsIoHelper
       text_end = reserved + @remaining - PIO_STEP_TOOLONG_LEN
       if text.length - reserved > @remaining
         text =
-          close_tags(text[0..text_end]) +
+          close_open_html_tags(text[0..text_end]) +
           t('protocols.protocols_io_import.too_long')
         @toolong = true
+        @remaining = 0
+      else
+        @remaining -= (text.length - reserved)
       end
-      @remaining -= (text.length - reserved)
       text
     end
   end
@@ -210,7 +135,7 @@ module ProtocolsIoHelper
     end
   end
 
-  def close_tags(text)
+  def close_open_html_tags(text)
     Nokogiri::HTML::DocumentFragment.parse(text).to_html
   end
 end
