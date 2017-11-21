@@ -217,6 +217,7 @@ module Paperclip
           application/vnd.sun.xml.calc.template
           application/vnd.stardivision.calc
           application/x-starcalc
+          application/CDFV2-encrypted
         )) ||
         # Presentation application
         (Set[content_type, content_types_from_name].subset? Set.new %w(

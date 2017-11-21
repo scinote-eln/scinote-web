@@ -50,9 +50,11 @@
                style="display: none" multiple>
       </label>
     </div>
-    <%= f.nested_fields_for :assets do |ff| %>
-      <%= render "form_assets.html.erb", ff: ff, step: step %>
-    <% end %>
+    <div id="new-step-assets-group" class="form-group">
+      <%= f.nested_fields_for :assets do |ff| %>
+        <%= render "form_assets.html.erb", ff: ff, step: step %>
+      <% end %>
+    </div>
   </div>
   <div class="tab-pane" role="tabpanel" id="new-step-tables">
     <%= f.nested_fields_for :tables do |ff| %>

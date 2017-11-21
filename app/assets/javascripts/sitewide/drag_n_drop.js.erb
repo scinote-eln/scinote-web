@@ -26,7 +26,7 @@
       $('.panel-step-attachment-new').remove();
       _dragNdropAssetsOff();
       for(var i = 0; i < droppedFiles.length; i++) {
-        $('#new-step-assets')
+        $('#new-step-assets-group')
           .append(_uploadedAssetPreview(droppedFiles[i], i))
           .promise()
           .done(function() {
@@ -49,7 +49,6 @@
         var name = 'step[assets_attributes][' + index + '][file]';
         fd.append(name, droppedFiles[i]);
       }
-      droppedFiles = [];
       filesValid = true;
       totalSize = 0;
       _dragNdropAssetsOff();

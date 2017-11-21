@@ -593,21 +593,15 @@
           animateSpinner(null, false);
           setupAssetsLoading();
         },
-        error: function(e) {
-          $form.after(xhr.responseJSON.html);
-          var $new_form = $form.next();
-          $form.remove();
-
-          $errInput = $new_form.find(".form-group.has-error")
-                               .first()
-                               .find("input");
-          renderFormError(e, $errInput);
-
-          formCallback($form);
-          applyCancelOnNew();
+        error: function(xhr) {
+          if (xhr.responseJSON['assets.file'] != null) {
+            $('#new-step-assets-group').addClass('has-error');
+            $('#new-step-assets-tab').addClass('has-error');
+            $.each(xhr.responseJSON['assets.file'], function(_, value) {
+               $('#new-step-assets-group').prepend('<span class="help-block">' + value + '</span>');
+            });
+          }
           animateSpinner(null, false);
-
-          TinyMCE.destroyAll();
           SmartAnnotation.preventPropagation('.atwho-user-popover');
         }
       });
