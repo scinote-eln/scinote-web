@@ -54,6 +54,14 @@ class TinyMceAsset < ActiveRecord::Base
     end
   end
 
+  def open
+    if image.is_stored_on_s3?
+      Kernel.open(presigned_url, 'rb')
+    else
+      File.open(file.path, 'rb')
+    end
+  end
+
   private
 
   def update_estimated_size

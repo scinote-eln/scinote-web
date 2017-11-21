@@ -35,6 +35,32 @@ module ProtocolsExporter
     envelope_xml
   end
 
+  def tiny_mce_asset_present?(step)
+    step.tiny_mce_assets.exists?
+  end
+
+  def get_tiny_mce_assets(text)
+    return unless text
+    regex = /\[~tiny_mce_id:([0-9a-zA-Z]+)\]/
+    tiny_assets_xml = "<descriptionAssets>\n"
+    text.gsub(regex) do |el|
+      match = el.match(regex)
+      img = TinyMceAsset.find_by_id(match[1])
+      next unless img
+      img_guid = get_guid(img.id)
+      asset_file_name = "rte-#{img_guid}" \
+                        "#{File.extname(img.image_file_name)}"
+      asset_xml = "<tinyMceAsset id=\"#{img.id}\" guid=\"#{img_guid}\" " \
+                  "fileRef=\"#{asset_file_name}\">\n"
+      asset_xml << "<fileName>#{img.image_file_name}</fileName>\n"
+      asset_xml << "<fileType>#{img.image_content_type}</fileType>\n"
+      asset_xml << "</tinyMceAsset>\n"
+      tiny_assets_xml << asset_xml
+    end
+    tiny_assets_xml << "</descriptionAssets>\n"
+    tiny_assets_xml
+  end
+
   def generate_protocol_xml(protocol)
     protocol_name = get_protocol_name(protocol)
     protocol_xml = "<eln xmlns=\"http://www.scinote.net\" version=\"1.0\">\n"
@@ -56,6 +82,9 @@ module ProtocolsExporter
         step_xml << "<name>#{step.name}</name>\n"
         step_xml << "<description>#{step.description}</description>\n"
 
+        if tiny_mce_asset_present?(step)
+          step_xml << get_tiny_mce_assets(step.description)
+        end
         # Assets
         if step.assets.count > 0
           step_xml << "<assets>\n"
@@ -211,6 +240,28 @@ module ProtocolsExporter
     eln_xsd << "<xs:attribute name=\"id\" type=\"xs:int\" " \
                "use=\"required\"></xs:attribute>\n"
     eln_xsd << "<xs:attribute name=\"guid\" type=\"xs:string\" " \
+               "use=\"required\"></xs:attribute>\n"
+    eln_xsd << "</xs:complexType>\n"
+    eln_xsd << "</xs:element>\n"
+    eln_xsd << "</xs:sequence>\n"
+    eln_xsd << "</xs:complexType>\n"
+    eln_xsd << "</xs:element>\n"
+    eln_xsd << "<xs:element name=\"descriptionAssets\" minOccurs=\"0\">\n"
+    eln_xsd << "<xs:complexType>\n"
+    eln_xsd << "<xs:sequence>\n"
+    eln_xsd << "<xs:element name=\"tinyMceAsset\" maxOccurs=\"unbounded\">\n"
+    eln_xsd << "<xs:complexType>\n"
+    eln_xsd << "<xs:all>\n"
+    eln_xsd << "<xs:element name=\"fileName\" " \
+               "type=\"xs:string\"></xs:element>\n"
+    eln_xsd << "<xs:element name=\"fileType\" " \
+               "type=\"xs:string\"></xs:element>\n"
+    eln_xsd << "</xs:all>\n"
+    eln_xsd << "<xs:attribute name=\"id\" type=\"xs:int\" " \
+               "use=\"required\"></xs:attribute>\n"
+    eln_xsd << "<xs:attribute name=\"guid\" type=\"xs:string\" " \
+               "use=\"required\"></xs:attribute>\n"
+    eln_xsd << "<xs:attribute name=\"fileRef\" type=\"xs:string\" " \
                "use=\"required\"></xs:attribute>\n"
     eln_xsd << "</xs:complexType>\n"
     eln_xsd << "</xs:element>\n"
