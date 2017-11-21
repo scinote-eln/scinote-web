@@ -6,4 +6,4 @@ before_script:
   - make docker
   - make bundle
 script:
-  - make tests-travis
+  - make tests-ci

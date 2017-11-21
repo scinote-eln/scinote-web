@@ -77,8 +77,14 @@ cli:
 cli-production:
 	@$(MAKE) rails-production cmd="/bin/bash"
 
-tests-travis:
-	@docker-compose run -e SECRET_KEY_BASE=SECRET_KEY_BASE -e PAPERCLIP_HASH_SECRET=PAPERCLIP_HASH_SECRET -e PAPERCLIP_STORAGE=PAPERCLIP_STORAGE -e ENABLE_TUTORIAL=false -e ENABLE_RECAPTCHA=false -e ENABLE_USER_CONFIRMATION=false -e ENABLE_USER_REGISTRATION=true --rm web bash -c "rake db:create db:migrate && rake db:migrate RAILS_ENV=test && yarn install && bundle exec rspec && bundle exec cucumber"   
+unit-tests:
+	@$(MAKE) rails cmd="bundle exec rspec"
+
+integration-tests:
+	@$(MAKE) rails cmd="bundle exec cucumber"
+
+tests-ci:
+	@docker-compose run -e SECRET_KEY_BASE=SECRET_KEY_BASE -e PAPERCLIP_HASH_SECRET=PAPERCLIP_HASH_SECRET -e PAPERCLIP_STORAGE=PAPERCLIP_STORAGE -e ENABLE_TUTORIAL=false -e ENABLE_RECAPTCHA=false -e ENABLE_USER_CONFIRMATION=false -e ENABLE_USER_REGISTRATION=true --rm web bash -c "rake db:create db:migrate && rake db:migrate RAILS_ENV=test && yarn install && bundle exec rspec && bundle exec cucumber"
 
 bundle:
 	@$(MAKE) rails cmd="bundle install"
