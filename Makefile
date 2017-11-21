@@ -1,6 +1,5 @@
 APP_HOME="/usr/src/app"
 DB_IP=$(shell docker inspect scinote_db_development | grep "\"IPAddress\": " | awk '{ match($$0, /"IPAddress": "([0-9\.]*)",/, a); print a[1] }')
-SECRET_KEY_BASE=$(shell openssl rand -hex 64)
 PAPERCLIP_HASH_SECRET=$(shell openssl rand -base64 128 | tr -d '\n')
 
 define PRODUCTION_CONFIG_BODY
@@ -84,7 +83,7 @@ integration-tests:
 	@$(MAKE) rails cmd="bundle exec cucumber"
 
 tests-ci:
-	@docker-compose run -e SECRET_KEY_BASE=SECRET_KEY_BASE -e PAPERCLIP_HASH_SECRET=PAPERCLIP_HASH_SECRET -e PAPERCLIP_STORAGE=PAPERCLIP_STORAGE -e ENABLE_TUTORIAL=false -e ENABLE_RECAPTCHA=false -e ENABLE_USER_CONFIRMATION=false -e ENABLE_USER_REGISTRATION=true --rm web bash -c "rake db:create db:migrate && rake db:migrate RAILS_ENV=test && yarn install && bundle exec rspec && bundle exec cucumber"
+	@docker-compose run -e -e PAPERCLIP_HASH_SECRET=PAPERCLIP_HASH_SECRET -e PAPERCLIP_STORAGE=filesystem -e ENABLE_TUTORIAL=false -e ENABLE_RECAPTCHA=false -e ENABLE_USER_CONFIRMATION=false -e ENABLE_USER_REGISTRATION=true --rm web bash -c "rake db:create db:migrate && rake db:migrate RAILS_ENV=test && yarn install && bundle exec rspec && bundle exec cucumber"
 
 bundle:
 	@$(MAKE) rails cmd="bundle install"
