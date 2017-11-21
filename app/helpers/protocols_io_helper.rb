@@ -191,12 +191,12 @@ module ProtocolsIoHelper
       text_end = reserved + @remaining - PIO_STEP_TOOLONG_LEN
       if text.length - reserved > @remaining
         text =
-          text[0..text_end] +
+          close_tags(text[0..text_end]) +
           t('protocols.protocols_io_import.too_long')
         @toolong = true
       end
-      @remaining -= (close_tags(text).length - reserved)
-      close_tags(text)
+      @remaining -= (text.length - reserved)
+      text
     end
   end
 
