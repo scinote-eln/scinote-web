@@ -99,13 +99,13 @@
           <strong><%= t('protocols.protocols_io_import.preview.tags') %></strong>
           <% string_of_tags='' %>
           <%  json_object['tags'].each do |tag| %>
-            <% string_of_tags += tag['tag_name']+' , ' %><br>
+            <% string_of_tags += tag['tag_name']+' , ' %>
           <% end %>
           <% tags = pio_eval_len(
               sanitize_input(string_of_tags),
               ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_MEDIUM
             )%>
-          <%= tags.html_safe %>
+          <%= tags.html_safe %><br>
         <% end %>
         <% if json_object['link'].present? %>
           <strong><%= t('protocols.protocols_io_import.preview.p_link') %></strong>

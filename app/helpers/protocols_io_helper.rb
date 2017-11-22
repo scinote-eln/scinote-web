@@ -16,6 +16,10 @@ module ProtocolsIoHelper
     PIO_ELEMENT_RESERVED_LENGTH_BIG * 2 +
     400)
   # 400 is for en.yml text
+  # -- 2 small = created at , publish date PROTOCOL ATTRIBUTES
+  # -- 8 medium = description,tags,before_start,warning,guidelines,
+  # manuscript_citation,keywords,vendor_name PROTOCOL ATTRIBUTES
+  # -- 2 big = vendor_link, link PROTOCOL ATTRIBUTES
 
   # PROTOCOLS.IO STEP ATTRIBUTES
   PIO_S_AVAILABLE_LENGTH =
@@ -25,6 +29,14 @@ module ProtocolsIoHelper
     PIO_ELEMENT_RESERVED_LENGTH_BIG * 5 +
     550)
   # 550 reserved for en.yml translations
+  # -- 4 small = software_package version, software_package os_name,
+  # software_package os_version, commands os_version
+  # -- 11 medium = description,expected_result,software_package name,
+  # software_package developer,dataset name,commands name,commands description,
+  # commands os_name, sub protocol name, sub protocol full name (author),
+  # safety_information,
+  # -- 5 big = software_package link, software_package repository,
+  # dataset link, sub protocol link, safety_information link
 
   PIO_TITLE_TOOLONG_LEN =
     I18n.t('protocols.protocols_io_import.title_too_long').length + 5
@@ -77,9 +89,7 @@ module ProtocolsIoHelper
     case attribute_name
     when 'publish_date'
       pio_eval_len(text, ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL)
-    when 'vendor_link'
-      pio_eval_len(text, ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_BIG)
-    when 'link'
+    when 'vendor_link', 'link'
       pio_eval_len(text, ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_BIG)
     else
       pio_eval_len(text, ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_MEDIUM)
@@ -102,8 +112,9 @@ module ProtocolsIoHelper
       text_end = reserved + @remaining - PIO_STEP_TOOLONG_LEN
       if text.length - reserved > @remaining
         text =
-          close_open_html_tags(text[0..text_end]) +
-          t('protocols.protocols_io_import.too_long')
+          close_open_html_tags(
+            text[0..text_end] + t('protocols.protocols_io_import.too_long')
+          )
         @toolong = true
         @remaining = 0
       else
