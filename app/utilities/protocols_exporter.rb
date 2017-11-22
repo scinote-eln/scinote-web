@@ -50,7 +50,7 @@ module ProtocolsExporter
       img_guid = get_guid(img.id)
       asset_file_name = "rte-#{img_guid}" \
                         "#{File.extname(img.image_file_name)}"
-      asset_xml = "<tinyMceAsset id=\"#{img.id}\" guid=\"#{img_guid}\" " \
+      asset_xml = "<tinyMceAsset token_id=\"#{match[1]}\" id=\"#{img.id}\" guid=\"#{img_guid}\" " \
                   "fileRef=\"#{asset_file_name}\">\n"
       asset_xml << "<fileName>#{img.image_file_name}</fileName>\n"
       asset_xml << "<fileType>#{img.image_content_type}</fileType>\n"
@@ -80,7 +80,9 @@ module ProtocolsExporter
         step_xml = "<step id=\"#{step.id}\" guid=\"#{step_guid}\" " \
                    "position=\"#{step.position}\">\n"
         step_xml << "<name>#{step.name}</name>\n"
-        step_xml << "<description>#{step.description}</description>\n"
+        step_xml << "<description><![CDATA[#{
+        Nokogiri::HTML::DocumentFragment.parse(step.description).to_s
+        }]]></description>\n"
 
         if tiny_mce_asset_present?(step)
           step_xml << get_tiny_mce_assets(step.description)
