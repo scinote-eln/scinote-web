@@ -44,6 +44,15 @@ module TinyMceHelper
     destroy_removed_tiny_mce_assets(ids, ref)
   end
 
+  def replace_tiny_mce_assets(text, img_ids)
+    img_ids.each do |src_id, dest_id|
+      regex = /\[~tiny_mce_id:#{src_id}\]/
+      new_token = "[~tiny_mce_id:#{dest_id}]"
+      text.sub!(regex, new_token)
+    end
+    text
+  end
+
   def destroy_removed_tiny_mce_assets(ids, ref)
     ref.tiny_mce_assets.where.not('id IN (?)', ids).destroy_all
   end
