@@ -5,15 +5,15 @@ module User::ProjectRoles
 
   aspector do
     # Check if user is member of project
-    around [
-      :is_member_of_project?,
-      :is_owner_of_project?,
-      :is_user_of_project?,
-      :is_user_or_higher_of_project?,
-      :is_technician_of_project?,
-      :is_technician_or_higher_of_project?,
-      :is_viewer_of_project?
-    ] do |proxy, *args, &block|
+    around %i(
+      is_member_of_project?
+      is_owner_of_project?
+      is_user_of_project?
+      is_user_or_higher_of_project?
+      is_technician_of_project?
+      is_technician_or_higher_of_project?
+      is_viewer_of_project?
+    ) do |proxy, *args, &block|
       if args[0]
         @user_project = user_projects.where(project: args[0]).take
         @user_project ? proxy.call(*args, &block) : false

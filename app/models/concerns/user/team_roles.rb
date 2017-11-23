@@ -5,13 +5,13 @@ module User::TeamRoles
 
   aspector do
     # Check if user is member of team
-    around [
-      :is_member_of_team?,
-      :is_admin_of_team?,
-      :is_normal_user_of_team?,
-      :is_normal_user_or_admin_of_team?,
-      :is_guest_of_team?
-    ] do |proxy, *args, &block|
+    around %i(
+      is_member_of_team?
+      is_admin_of_team?
+      is_normal_user_of_team?
+      is_normal_user_or_admin_of_team?
+      is_guest_of_team?
+    ) do |proxy, *args, &block|
       if args[0]
         @user_team = user_teams.where(team: args[0]).take
         @user_team ? proxy.call(*args, &block) : false
