@@ -4,6 +4,5 @@ services:
   - docker
 before_script:
   - make docker
-  - make worker
 script:
   - make tests-ci
