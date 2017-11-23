@@ -86,6 +86,9 @@ gem 'devise_security_extension',
     git: 'https://github.com/phatworx/devise_security_extension.git',
     ref: 'b2ee978'
 
+# Permission helper Gem
+gem 'canaid', git: 'https://github.com/biosistemika/canaid', branch: 'master'
+
 group :development, :test do
   gem 'listen', '~> 3.0'
   gem 'byebug'
@@ -106,7 +109,7 @@ end
 
 group :test do
   gem 'shoulda-matchers'
-  gem 'cucumber-rails', '~> 1.5'
+  gem 'cucumber-rails', '~> 1.5', require: false
   gem 'database_cleaner'
   gem 'capybara'
   gem 'capybara-email'
