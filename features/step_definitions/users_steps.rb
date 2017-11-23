@@ -34,18 +34,16 @@ Given("I am on reset password page") do
 end
 
 Given("I click on Reset Password link in the reset password email for user {string}") do |email|
-  clear_emails
   visit new_user_password_path
   fill_in 'user_email', with: email
   click_button 'Send me reset password instruction'
   Delayed::Worker.new.work_off
-  sleep 1
   open_email(email)
   current_email.click_link 'Change my password'
 end
 
 Then("I should be on Change your password page") do
-  expect(page).to have_current_path(edit_user_password_path, only_path: true)
+  expect(page).to have_current_path(edit_user_password_path, ignore_query: true)
 end
 
 Given(/^I am on Log in page$/) do

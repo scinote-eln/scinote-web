@@ -24,6 +24,7 @@ Scenario: User forgot their password and enters non valid email
   And I click "Send me reset password instruction" button
   Then I should see "Email not found"
 
+@javascript
 Scenario: User has got Reset Your Password email and click to link
   Given I click on Reset Password link in the reset password email for user "nonadmin@myorg.com"
   Then I should be on Change your password page
