@@ -30,7 +30,7 @@
 
           <label><%= t('protocols.import_export.import_modal.name_label') %></label>
 
-          <%= f.text_field :name, :value => @json_object['protocol_name'], class:
+          <%= f.text_field :name, :value => pio_eval_title_len(sanitize_input(@json_object['protocol_name'])), class:
           "form-control" %>
         </div>
         <div class="form-group">
@@ -38,7 +38,7 @@
             <span class="glyphicon glyphicon-user">
             </span>&nbsp;<%= t('protocols.import_export.import_modal.authors_label') %>
           </label>
-          <%= f.text_field :authors, :value => @json_object['full_name'], class:
+          <%= f.text_field :authors, :value => pio_eval_title_len(sanitize_input(@json_object['full_name'])), class:
           "form-control" %>
 
         </div>

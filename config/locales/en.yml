@@ -1385,6 +1385,8 @@ en:
         manager: "Protocol management"
         edit: "Edit protocol"
     protocols_io_import:
+      title_too_long: "... Text is too long so we had to cut it off."
+      too_long: "... <span class='label label-warning'>Text is too long so we had to cut it off.</span>"
       import_description_notice: "The protocols description is listed below under \"Protocol info\"."
       preview:
         prot_desc: "Protocol Description: "
@@ -1564,6 +1566,7 @@ en:
         message_failed: "Failed to import %{nr} protocol/s."
         message_ok: "Successfully imported %{nr} protocol/s."
         message_ok_pio: "Successfully imported protocol from protocols.io file."
+        message_warn_truncated: "Successfully imported protocol from protocols.io file. However, text in some fields was too long so we had to cut it off."
         row_success: "Imported"
         row_renamed: "Imported & renamed"
         row_failed: "Failed"
