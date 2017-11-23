@@ -9,7 +9,7 @@ Feature: Addon versions
      | email                   | password           | password_confirmation | full_name   | initials  |
      | admin@myorg.com         | mypassword1234     | mypassword1234        | Karli Novak | KN        |
     And "admin@myorg.com" is in "BioSistemika Process" team as a "admin"
-    And is signed in with "admin@myorg.com", "mypassword1234"
+    And "admin@myorg.com" is signed in with "mypassword1234"
 
   @javascript
   Scenario: Open the sciNote addons modal

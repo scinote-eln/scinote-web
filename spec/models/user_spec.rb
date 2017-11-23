@@ -107,12 +107,12 @@ describe User, type: :model do
       expect(table.macro).to eq(:has_many)
     end
 
-    it 'have many repositories' do
+    it 'have many modified results' do
       table = User.reflect_on_association(:modified_results)
       expect(table.macro).to eq(:has_many)
     end
 
-    it 'have many repositories' do
+    it 'have many modified steps' do
       table = User.reflect_on_association(:modified_steps)
       expect(table.macro).to eq(:has_many)
     end
