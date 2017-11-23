@@ -106,7 +106,7 @@ end
 
 group :test do
   gem 'shoulda-matchers'
-  gem 'cucumber-rails', '~> 1.5'
+  gem 'cucumber-rails', '~> 1.5', require: false
   gem 'database_cleaner'
   gem 'capybara'
   gem 'capybara-email'
