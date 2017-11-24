@@ -24,24 +24,25 @@ module ProtocolsIoHelper
   # PROTOCOLS.IO STEP ATTRIBUTES
   PIO_S_AVAILABLE_LENGTH =
     TEXT_MAX_LENGTH -
-    (PIO_ELEMENT_RESERVED_LENGTH_SMALL * 4 +
-    PIO_ELEMENT_RESERVED_LENGTH_MEDIUM * 11 +
-    PIO_ELEMENT_RESERVED_LENGTH_BIG * 5 +
-    550)
-  # 550 reserved for en.yml translations
-  # -- 4 small = software_package version, software_package os_name,
-  # software_package os_version, commands os_version
-  # -- 11 medium = description,expected_result,software_package name,
-  # software_package developer,dataset name,commands name,commands description,
-  # commands os_name, sub protocol name, sub protocol full name (author),
-  # safety_information,
-  # -- 5 big = software_package link, software_package repository,
-  # dataset link, sub protocol link, safety_information link
+    (PIO_ELEMENT_RESERVED_LENGTH_SMALL * 20 +
+    400)
+  # 400 reserved for en.yml translations
+  # -- 20 small = description,expected_result,safety_information
+  # software_package version, software_package os_name,
+  # software_package os_version,software_package link,
+  # software_package repository,software_package developer,software_package name
+  # commands os_version,commands os_name, commands name,commands description,
+  # sub protocol full name (author), sub protocol name, sub protocol link,
+  # dataset link,dataset name, safety_information link,
+  # -- 0 medium =
+  # -- 0 big =
 
   PIO_TITLE_TOOLONG_LEN =
-    I18n.t('protocols.protocols_io_import.title_too_long').length + 5
+    I18n.t('protocols.protocols_io_import.title_too_long').length + 2
   PIO_STEP_TOOLONG_LEN =
-    I18n.t('protocols.protocols_io_import.too_long').length + 5
+    I18n.t('protocols.protocols_io_import.too_long').length + 2
+  # The + 2 above is there because if the length was excactly the limit,
+  # the cutter method had issues, this gives it some space
   def protocolsio_string_to_table_element(description_string)
     string_without_tables = string_html_table_remove(description_string)
     table_regex = %r{<table\b[^>]*>(.*?)<\/table>}m
@@ -97,19 +98,30 @@ module ProtocolsIoHelper
   end
 
   def pio_eval_title_len(text)
-    text += ' ' if text.length < Constants::NAME_MIN_LENGTH
-    if text.length > Constants::NAME_MAX_LENGTH
-      text =
-        text[0..(Constants::NAME_MAX_LENGTH - PIO_TITLE_TOOLONG_LEN)] +
-        t('protocols.protocols_io_import.title_too_long')
-      @toolong = true
+    if text
+      text += ' ' if text.length < Constants::NAME_MIN_LENGTH
+      if text.length > Constants::NAME_MAX_LENGTH
+        text =
+          text[0..(Constants::NAME_MAX_LENGTH - PIO_TITLE_TOOLONG_LEN)] +
+          t('protocols.protocols_io_import.title_too_long')
+        @toolong = true
+      end
+      text
     end
-    text
   end
 
   def pio_eval_len(text, reserved)
     if text
       text_end = reserved + @remaining - PIO_STEP_TOOLONG_LEN
+      text_end = 1 if text_end < 1
+      # Since steps have very low reserved values now (below 100),
+      # the above sets their index to 1 if its negative
+      # (length of toolong text is about 90 chars, and if remaining is 0,
+      # then the negative index just gets set to 1. this is a workaround
+
+      # it would also be possible to not count the length of the "too long" text
+      # or setting the import reserved value to 95,but then available characters
+      # will be like before (around 7600)
       if text.length - reserved > @remaining
         text =
           close_open_html_tags(
@@ -117,8 +129,8 @@ module ProtocolsIoHelper
           )
         @toolong = true
         @remaining = 0
-      else
-        @remaining -= (text.length - reserved)
+      elsif (text.length - reserved) > 0
+        @remaining -= text.length - reserved
       end
       text
     end
