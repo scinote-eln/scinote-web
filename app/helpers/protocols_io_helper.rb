@@ -40,8 +40,8 @@ module ProtocolsIoHelper
   PIO_TITLE_TOOLONG_LEN =
     I18n.t('protocols.protocols_io_import.title_too_long').length + 2
   PIO_STEP_TOOLONG_LEN =
-    I18n.t('protocols.protocols_io_import.too_long').length + 2
-  # The + 2 above is there because if the length was excactly the limit,
+    I18n.t('protocols.protocols_io_import.too_long').length
+  # The + 2 above (in title) is there because if the length was at the limit,
   # the cutter method had issues, this gives it some space
   def protocolsio_string_to_table_element(description_string)
     string_without_tables = string_html_table_remove(description_string)
@@ -113,7 +113,7 @@ module ProtocolsIoHelper
   def pio_eval_len(text, reserved)
     if text
       text_end = reserved + @remaining - PIO_STEP_TOOLONG_LEN
-      text_end = 1 if text_end < 1
+      text_end = 2 if text_end < 2
       # Since steps have very low reserved values now (below 100),
       # the above sets their index to 1 if its negative
       # (length of toolong text is about 90 chars, and if remaining is 0,
