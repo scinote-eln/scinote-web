@@ -114,7 +114,7 @@ group :test do
   gem 'capybara'
   gem 'capybara-email'
   gem 'poltergeist'
-  gem 'phantomjs', :require => 'phantomjs/poltergeist'
+  gem 'phantomjs', require: 'phantomjs/poltergeist'
   gem 'simplecov', require: false
   gem 'json_matchers'
 end

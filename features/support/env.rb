@@ -15,11 +15,13 @@ require 'capybara/email'
 Capybara.register_driver :poltergeist do |app|
   options = {
     # inspector: true,
-    screen_size: [1600, 1200],
+    screen_size: [1200, 900],
     js_errors: false,
+    timeout: 30,
     phantomjs: Phantomjs.path,
     phantomjs_options: [
-      '--ignore-ssl-errors=yes'
+      '--ignore-ssl-errors=yes',
+      '--output-encoding=utf8'
     ]
   }
   Capybara::Poltergeist::Driver.new(app, options)
@@ -86,9 +88,6 @@ end
 #     DatabaseCleaner.strategy = :truncation
 #   end
 #
-#   Before('~@no-txn', '~@selenium', '~@culerity', '~@celerity', '~@javascript') do
-#     DatabaseCleaner.strategy = :transaction
-#   end
 #
 
 # Possible values are :truncation and :transaction

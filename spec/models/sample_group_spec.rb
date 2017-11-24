@@ -19,7 +19,11 @@ describe SampleGroup, type: :model do
     it { should belong_to :team }
     it { should belong_to(:created_by).class_name('User') }
     it { should belong_to(:last_modified_by).class_name('User') }
-    it { should have_many :samples }
+
+    it 'have many samples' do
+      table = SampleGroup.reflect_on_association(:samples)
+      expect(table.macro).to eq(:has_many)
+    end
   end
 
   describe 'Should be a valid object' do
