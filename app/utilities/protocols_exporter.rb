@@ -259,7 +259,9 @@ module ProtocolsExporter
     eln_xsd << "<xs:element name=\"fileType\" " \
                "type=\"xs:string\"></xs:element>\n"
     eln_xsd << "</xs:all>\n"
-    eln_xsd << "<xs:attribute tokenId=\"xs:string\" name=\"id\" type=\"xs:int\" " \
+    eln_xsd << "<xs:attribute name=\"id\" type=\"xs:int\" " \
+               "use=\"required\"></xs:attribute>\n"
+    eln_xsd << "<xs:attribute name=\"tokenId\" type=\"xs:string\" " \
                "use=\"required\"></xs:attribute>\n"
     eln_xsd << "<xs:attribute name=\"guid\" type=\"xs:string\" " \
                "use=\"required\"></xs:attribute>\n"
