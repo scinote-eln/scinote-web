@@ -13,9 +13,7 @@ module ProtocolsIoHelper
     TEXT_MAX_LENGTH -
     (PIO_ELEMENT_RESERVED_LENGTH_SMALL * 2 +
     PIO_ELEMENT_RESERVED_LENGTH_MEDIUM * 8 +
-    PIO_ELEMENT_RESERVED_LENGTH_BIG * 2 +
-    400)
-  # 400 is for en.yml text
+    PIO_ELEMENT_RESERVED_LENGTH_BIG * 2)
   # -- 2 small = created at , publish date PROTOCOL ATTRIBUTES
   # -- 8 medium = description,tags,before_start,warning,guidelines,
   # manuscript_citation,keywords,vendor_name PROTOCOL ATTRIBUTES
@@ -24,9 +22,7 @@ module ProtocolsIoHelper
   # PROTOCOLS.IO STEP ATTRIBUTES
   PIO_S_AVAILABLE_LENGTH =
     TEXT_MAX_LENGTH -
-    (PIO_ELEMENT_RESERVED_LENGTH_SMALL * 20 +
-    400)
-  # 400 reserved for en.yml translations
+    (PIO_ELEMENT_RESERVED_LENGTH_SMALL * 20)
   # -- 20 small = description,expected_result,safety_information
   # software_package version, software_package os_name,
   # software_package os_version,software_package link,
