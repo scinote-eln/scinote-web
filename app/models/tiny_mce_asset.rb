@@ -58,7 +58,7 @@ class TinyMceAsset < ActiveRecord::Base
     if image.is_stored_on_s3?
       Kernel.open(presigned_url, 'rb')
     else
-      File.open(file.path, 'rb')
+      File.open(image.path, 'rb')
     end
   end
 
