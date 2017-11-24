@@ -976,7 +976,7 @@ class ProtocolsController < ApplicationController
         br +
         pio_eval_len(
           sanitize_input(iterating_key),
-          ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_MEDIUM
+          ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL
         ) +
         br
       else
@@ -996,7 +996,7 @@ class ProtocolsController < ApplicationController
         t('protocols.protocols_io_import.comp_append.expected_result') +
         pio_eval_len(
           sanitize_input(iterating_key),
-          ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_MEDIUM
+          ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL
         ) +
         '<br>'
       return append
@@ -1015,12 +1015,12 @@ class ProtocolsController < ApplicationController
       append = t('protocols.protocols_io_import.comp_append.soft_packg.title') +
                pio_eval_len(
                  sanitize_input(iterating_key['name']),
-                 ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_MEDIUM
+                 ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL
                ) +
                t('protocols.protocols_io_import.comp_append.soft_packg.dev') +
                pio_eval_len(
                  sanitize_input(iterating_key['developer']),
-                 ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_MEDIUM
+                 ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL
                ) +
                t('protocols.protocols_io_import.comp_append.soft_packg.vers') +
                pio_eval_len(
@@ -1030,12 +1030,12 @@ class ProtocolsController < ApplicationController
                t('protocols.protocols_io_import.comp_append.general_link') +
                pio_eval_len(
                  sanitize_input(iterating_key['link']),
-                 ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_BIG
+                 ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL
                ) +
                t('protocols.protocols_io_import.comp_append.soft_packg.repo') +
                pio_eval_len(
                  sanitize_input(iterating_key['repository']),
-                 ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_BIG
+                 ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL
                ) +
                t('protocols.protocols_io_import.comp_append.soft_packg.os') +
                pio_eval_len(
@@ -1057,12 +1057,12 @@ class ProtocolsController < ApplicationController
       append = t('protocols.protocols_io_import.comp_append.dataset.title') +
                pio_eval_len(
                  sanitize_input(iterating_key['name']),
-                 ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_MEDIUM
+                 ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL
                ) +
                t('protocols.protocols_io_import.comp_append.general_link') +
                pio_eval_len(
                  sanitize_input(iterating_key['link']),
-                 ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_BIG
+                 ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL
                )
       return append
     end
@@ -1077,17 +1077,17 @@ class ProtocolsController < ApplicationController
       append = t('protocols.protocols_io_import.comp_append.command.title') +
                pio_eval_len(
                  sanitize_input(iterating_key['name']),
-                 ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_MEDIUM
+                 ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL
                ) +
                t('protocols.protocols_io_import.comp_append.command.desc') +
                pio_eval_len(
                  sanitize_input(iterating_key['description']),
-                 ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_MEDIUM
+                 ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL
                ) +
                t('protocols.protocols_io_import.comp_append.command.os') +
                pio_eval_len(
                  sanitize_input(iterating_key['os_name']),
-                 ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_MEDIUM
+                 ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL
                ) +
                ' , ' +
                pio_eval_len(
@@ -1109,19 +1109,19 @@ class ProtocolsController < ApplicationController
         ) +
         pio_eval_len(
           sanitize_input(iterating_key['protocol_name']),
-          ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_MEDIUM
+          ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL
         ) +
         t(
           'protocols.protocols_io_import.comp_append.sub_protocol.author'
         ) +
         pio_eval_len(
           sanitize_input(iterating_key['full_name']),
-          ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_MEDIUM
+          ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL
         ) +
         t('protocols.protocols_io_import.comp_append.general_link') +
         pio_eval_len(
           sanitize_input(iterating_key['link']),
-          ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_BIG
+          ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL
         )
       return append
     end
@@ -1137,12 +1137,12 @@ class ProtocolsController < ApplicationController
         ) +
         pio_eval_len(
           sanitize_input(iterating_key['body']),
-          ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_MEDIUM
+          ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL
         ) +
         t('protocols.protocols_io_import.comp_append.general_link') +
         pio_eval_len(
           sanitize_input(iterating_key['link']),
-          ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_BIG
+          ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL
         )
       return append
     end
