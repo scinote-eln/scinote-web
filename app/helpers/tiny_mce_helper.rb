@@ -10,7 +10,6 @@ module TinyMceHelper
       img.replace(token)
       next unless obj
       tiny_img = TinyMceAsset.find_by_id(img_id)
-      # next if check_parse_token_permissions(obj, tiny_img)
       tiny_img.reference = obj unless tiny_img.step || tiny_img.result_text
       tiny_img.save
     end
@@ -20,7 +19,7 @@ module TinyMceHelper
 
   def generate_image_tag_from_token(text, obj)
     return unless text
-    regex = /\[~tiny_mce_id:([0-9a-zA-Z]+)\]/
+    regex = Constants::TINY_MCE_ASSET_REGEX
     text.gsub(regex) do |el|
       match = el.match(regex)
       img = TinyMceAsset.find_by_id(match[1])
@@ -34,7 +33,7 @@ module TinyMceHelper
 
   def link_tiny_mce_assets(text, ref)
     ids = []
-    regex = /\[~tiny_mce_id:([0-9a-zA-Z]+)\]/
+    regex = Constants::TINY_MCE_ASSET_REGEX
     text.gsub(regex) do |img|
       match = img.match(regex)
       tiny_img = TinyMceAsset.find_by_id(match[1])

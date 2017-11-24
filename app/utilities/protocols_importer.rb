@@ -170,6 +170,6 @@ module ProtocolsImporter
   # handle import from legacy exports
   def populate_rte_legacy(step_json)
     return unless step_json['description'] && step_json['description'].present?
-    step_json['description'].gsub(/\[~tiny_mce_id:([0-9a-zA-Z]+)\]/, '')
+    step_json['description'].gsub(Constants::TINY_MCE_ASSET_REGEX, '')
   end
 end
