@@ -723,15 +723,29 @@ class ProtocolsController < ApplicationController
             protocol.steps.order(:id).each do |step|
               step_guid = get_guid(step.id)
               step_dir = "#{protocol_dir}/#{step_guid}"
-              next if step.assets.count <= 0
-              step.assets.order(:id).each do |asset|
-                asset_guid = get_guid(asset.id)
-                asset_file_name = asset_guid.to_s +
-                                  File.extname(asset.file_file_name).to_s
-                ostream.put_next_entry("#{step_dir}/#{asset_file_name}")
-                input_file = asset.open
-                ostream.print(input_file.read)
-                input_file.close
+              if step.assets.exists?
+                step.assets.order(:id).each do |asset|
+                  asset_guid = get_guid(asset.id)
+                  asset_file_name = asset_guid.to_s +
+                                    File.extname(asset.file_file_name).to_s
+                  ostream.put_next_entry("#{step_dir}/#{asset_file_name}")
+                  input_file = asset.open
+                  ostream.print(input_file.read)
+                  input_file.close
+                end
+              end
+              if step.tiny_mce_assets.exists?
+                step.tiny_mce_assets.order(:id).each do |tiny_mce_asset|
+                  asset_guid = get_guid(tiny_mce_asset.id)
+                  asset_file_name =
+                  "rte-#{asset_guid.to_s +
+                         File.extname(tiny_mce_asset.image_file_name).to_s}"
+
+                  ostream.put_next_entry("#{step_dir}/#{asset_file_name}")
+                  input_file = tiny_mce_asset.open
+                  ostream.print(input_file.read)
+                  input_file.close
+                end
               end
             end
           end

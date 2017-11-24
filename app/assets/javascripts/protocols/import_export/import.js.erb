@@ -134,8 +134,11 @@ function importProtocolFromFile(
       var stepGuid = node.attr("guid");
       var stepPosition = String(Number.parseInt(node.attr("position")) + 1);
       var stepName = node.children("name").text();
-      var stepDescription = $(node.children("description")).html();
-
+      var stepDescription = displayTinyMceAssetInDescription(
+                              node,
+                              protocolFolders[position],
+                              stepGuid
+                            );
       // Generate step element
       var stepEl = newPreviewElement(
         "step",
@@ -223,6 +226,24 @@ function importProtocolFromFile(
       // Append step element to preview container
       previewContainer.append(stepEl);
     });
+  }
+
+  // display tiny_mce_assets in step description
+  function displayTinyMceAssetInDescription(node, folder, stepGuid) {
+    if (node.children('descriptionAssets').length === 0) {
+      var description = node.children('description').html();
+      return description.replace(/\[~tiny_mce_id:([0-9a-zA-Z]+)\]/,
+                                 '<strong>Can\'t import image</strong>');
+    }
+    var description = node.children('description').html();
+    node.find('descriptionAssets > tinyMceAsset').each(function(i, element) {
+      var match = '[~tiny_mce_id:' + element.getAttribute('tokenId') + ']';
+      var assetBytes = getAssetBytes(folder, stepGuid, element.getAttribute('fileref'));
+      var image_tag = "<img style='max-width:300px; max-height:300px;' src='data:" + element.children[1].innerHTML + ";base64," + assetBytes + "' />"
+      description = description.replace(match, image_tag); // replace the token with image
+    }).bind(this);
+    // I know is crazy but is the only way I found to pass valid HTML
+    return $('<div></div>').html(description.replace('<!--[CDATA[', '').replace(']]&gt;', '')).html();
   }
 
   /* Navigation functions */
@@ -435,7 +456,28 @@ function importProtocolFromFile(
       stepJson.id = stepId;
       stepJson.position = $(this).attr("position");
       stepJson.name = $(this).children("name").text();
-      stepJson.description = $(this).children("description").html();
+      // I know is crazy but is the only way I found to pass valid HTML
+      stepJson.description = $('<div></div>').html($(this)
+                                             .children("description")
+                                             .html()
+                                             .replace('<!--[CDATA[', '')
+                                             .replace(']]&gt;', ''))
+                                             .html();
+      // Iterage throug tiny_mce_assets
+      var descriptionAssetsJson = [];
+      $(this).find("descriptionAssets > tinyMceAsset").each(function() {
+        var tinyMceAsset = {};
+        var fileRef = $(this).attr("fileRef");
+        tinyMceAsset.tokenId = $(this).attr('tokenId');
+        tinyMceAsset.fileType= $(this).children("fileType").text();
+        tinyMceAsset.bytes = getAssetBytes(
+          protocolFolders[index],
+          stepGuid,
+          fileRef
+        )
+        descriptionAssetsJson.push(tinyMceAsset);
+      });
+      stepJson.descriptionAssets = descriptionAssetsJson;
 
       // Iterate through assets
       var stepAssetsJson = [];
