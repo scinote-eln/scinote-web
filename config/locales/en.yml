@@ -603,6 +603,8 @@ en:
       load_from_file_error: "Failed to load the protocol from file."
       load_from_file_error_locked: "Failed to load the protocol from file. One or more files are currently being edited."
       load_from_file_size_error: "Failed to load the protocol from file. Limit is %{size}Mb."
+      load_from_file_invalid_error: "The file you provided is invalid or has an invalid extension."
+      load_from_file_protocol_general_error: "Failed to load the protocol from file. It is likely that certain fields (protocol and individual step titles and names) contain too many or too few characters.(max is %{max} and min is %{min})"
     results:
       head_title: "%{project} | %{module} | Results"
       add_label: "Add new result:"
@@ -682,6 +684,7 @@ en:
       head_title: "%{project} | Overview"
       canvas_edit: "Edit experiment"
       zoom: "Zoom: "
+      reload_on_submit: "Save action is running. Reloading this page may cause unexpected behavior."
       modal_manage_tags:
         head_title: "Manage tags for"
         subtitle: "Showing tags of task %{module}"
@@ -703,7 +706,6 @@ en:
         drag_connections: "Drag connection/s from here"
         options_header: "Options"
         edit_module: "Rename task"
-        edit_module_group: "Rename workflow"
         clone_module: "Copy task as template (only Protocols steps copied)"
         clone_module_group: "Copy workflow as template (only Protocols steps copied)"
         move_module: "Move task to another experiment"
@@ -719,10 +721,6 @@ en:
           title: "Rename task"
           name: "Task name"
           confirm: "Rename task"
-        modal_edit_module_group:
-          title: "Rename workflow"
-          name: "Workflow name"
-          confirm: "Rename workflow"
         modal_move_module:
           title: "Move task to experiment"
           confirm: "Move task"
@@ -779,11 +777,6 @@ en:
       restore_option: "Restore"
       archived_on: "Archived on"
       archived_on_title: "Task archived on %{date} at %{time}."
-
-  my_module_groups:
-    new:
-      name: "Workflow %{index}"
-      suffix: "..."
 
   tags:
     new:
@@ -892,6 +885,7 @@ en:
       modal_copy:
         title_html: "Copy repository <em>%{name}</em>"
         name: "New repository name"
+        description: "Only the structure of the repository is going to be copied."
         name_placeholder: "My repository"
         copy: "Copy repository"
       modal_create:
@@ -1257,6 +1251,7 @@ en:
         avatar_title: "Change avatar"
         avatar_edit_label: "Upload new avatar file"
         avatar_submit: "Upload"
+        avatar_total_size: "Your avatar file cannot be larger than 0.2 MB. (Please try again with a smaller file.)"
         name_label: "Full name"
         name_title: "Change name"
         initials_label: "Initials"
@@ -1292,6 +1287,7 @@ en:
         navigation:
           profile: "Profile"
           preferences: "Preferences"
+          addons: "Add-ons"
         preferences:
           head_title: "Settings | My preferences"
           edit:
@@ -1307,6 +1303,10 @@ en:
             select_team: "Select team"
             tutorial_reset_flash: "Tutorial can now be repeated."
             tutorial_reset_error: "Tutorial could not be repeated."
+        addons:
+          head_title: "Settings | Add-ons"
+          title: "Add-ons"
+          no_addons: "You have no sciNote Add-ons."
       teams:
         head_title: "Settings | Teams"
         breadcrumbs:
@@ -1384,11 +1384,62 @@ en:
       breadcrumbs:
         manager: "Protocol management"
         edit: "Edit protocol"
+    protocols_io_import:
+      title_too_long: "... Text is too long so we had to cut it off."
+      too_long: "... <span class='label label-warning'>Text is too long so we had to cut it off.</span>"
+      import_description_notice: "The protocols description is listed below under \"Protocol info\"."
+      preview:
+        prot_desc: "Protocol Description: "
+        b_s_p: "Before starting protocol information:"
+        warn: "Protocol warning:"
+        guideln: "Guidelines:"
+        p_link: "Link:"
+        s_nobr_link: "Link:"
+        s_link: "Link:"
+        s_desc: "Description:"
+        strng_s_desc: "Description:"
+        s_exp_res: "Expected result:"
+        dev: "Developer:"
+        vers: "Version:"
+        repo: "Repository:"
+        os: "OS name , OS version:"
+        sub_prot: "This protocol also contains an attached sub-protocol:"
+        auth: "Author:"
+        manu_cit: "Manuscript citation:"
+        pbl_date: "Publish date:"
+        vnd_name: "Vendor name:"
+        vnd_link: "Vendor link:"
+        key_wrd: "Keywords:"
+        tags: "Tags:"
+      comp_append:
+        table_moved: "<br><strong><i>There was a table here, it was moved to the end of this step. </i></strong>"
+        missing_step: "Step"
+        missing_desc: "Description missing"
+        general_link: "<br>Link: "
+        expected_result: "<br><strong>Expected result: </strong>"
+        soft_packg:
+          title: "<br><strong>Software package: </strong>"
+          dev: "<br>Developer: "
+          vers: "<br>Version: "
+          repo: "<br>Repository: "
+          os: "<br>OS name , OS version: "
+        dataset:
+          title: "<br><strong>Dataset: </strong>"
+        command:
+          title: "<br><strong>Command: </strong>"
+          desc: "<br>Description: "
+          os: "<br>OS name , OS version: "
+        sub_protocol:
+          title: "<br><strong>This step also contains an attached sub-protocol: </strong>"
+          author: "<br>Author: "
+        safety_infor:
+          title: "<br><strong>Safety information: </strong>"
     import_export:
       load_file_error: "Failed to load the protocol file."
       import_modal:
         title_import: "Import protocol/s"
         title_import_into_protocol: "Load protocol from file"
+        title_import_into_protocol_protocols_io: "Load protocol from protocols.io file"
         import_into_protocol_message: "This will overwrite the current protocol!"
         import_into_protocol_confirm: "Are you sure you wish to load protocol from file? This action will overwrite the current protocol."
         import_to_linked_task_file: "Are you sure you wish to load protocol from file? This action will overwrite the current protocol in the task and unlink it from repository. The current protocol will remain unchanged in repository."
@@ -1419,6 +1470,7 @@ en:
       no_authors: "No authors"
       description: "Description"
       no_description: "No description"
+      keywords_modal: "Input one or multiple keywords, confirm each keyword with ENTER key"
       edit_name_modal:
         title: "Edit name of protocol %{protocol}"
         label: "Name"
@@ -1443,6 +1495,11 @@ en:
       edit: "Edit"
       clone_btn: "Copy"
       import: "Import"
+      import_alt: "from SciNote protocol file(.eln)"
+      import_json: "from protocols.io file"
+      modal_import_json_upload: "Upload file"
+      modal_import_json_title: "Import protocols.io file"
+      modal_import_json_notice: "Upload your protocols.io protocol file"
       export: "Export"
       make_private: "Make private"
       publish: "Publish"
@@ -1508,6 +1565,8 @@ en:
         title: "Import results"
         message_failed: "Failed to import %{nr} protocol/s."
         message_ok: "Successfully imported %{nr} protocol/s."
+        message_ok_pio: "Successfully imported protocol from protocols.io file."
+        message_warn_truncated: "Successfully imported protocol from protocols.io file. However, text in some fields was too long so we had to cut it off."
         row_success: "Imported"
         row_renamed: "Imported & renamed"
         row_failed: "Failed"
@@ -1737,8 +1796,8 @@ en:
   zip_export:
     modal_label: 'Export repository'
     notification_title: 'Your package is ready to be exported!'
-    expired_title: 'The required file was expired!'
-    expired_description: 'The downloadable file expires in 7 days after its creation.'
+    expired_title: 'Looks like your link has expired.'
+    expired_description: 'Please export the data again in order to receive a new link.'
     modal_label: 'Export request received'
     modal_html: "<p>Your export request is being processed.</p><p>When completed we will <strong>send an email to %{email}</strong> inbox with a link to your exported samples. Note that the link will expire in 7 days.</p>"
     repository_html: '<p>You are about to export selected items in repository %{repository}</p> <br> Repository will be exported in a .csv file format. You will receive <strong>email with a link</strong> where you can download it.'

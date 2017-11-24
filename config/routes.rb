@@ -28,6 +28,9 @@ Rails.application.routes.draw do
     get 'users/settings/account/preferences',
         to: 'users/settings/account/preferences#index',
         as: 'preferences'
+    get 'users/settings/account/addons',
+        to: 'users/settings/account/addons#index',
+        as: 'addons'
     put 'users/settings/account/preferences',
         to: 'users/settings/account/preferences#update',
         as: 'update_preferences'
@@ -398,6 +401,7 @@ Rails.application.routes.draw do
             to: 'protocols#load_from_repository_modal'
         post 'load_from_repository', to: 'protocols#load_from_repository'
         post 'load_from_file', to: 'protocols#load_from_file'
+
         get 'copy_to_repository_modal', to: 'protocols#copy_to_repository_modal'
         post 'copy_to_repository', to: 'protocols#copy_to_repository'
         get 'protocol_status_bar', to: 'protocols#protocol_status_bar'
@@ -415,6 +419,8 @@ Rails.application.routes.draw do
         post 'archive', to: 'protocols#archive'
         post 'restore', to: 'protocols#restore'
         post 'import', to: 'protocols#import'
+        post 'protocolsio_import_create', to: 'protocols#protocolsio_import_create'
+        post 'protocolsio_import_save', to: 'protocols#protocolsio_import_save'
         get 'export', to: 'protocols#export'
       end
     end

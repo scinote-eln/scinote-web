@@ -45,86 +45,87 @@ module ProtocolsImporter
 
   def populate_protocol(protocol, protocol_json, user, team)
     protocol.reload
-
     asset_ids = []
     step_pos = 0
     # Check if protocol has steps
     if protocol_json['steps']
       protocol_json['steps'].values.each do |step_json|
-      step = Step.create!(
-        name: step_json['name'],
-        description: step_json['description'],
-        position: step_pos,
-        completed: false,
-        user: user,
-        last_modified_by: user,
-        protocol: protocol
-      )
-      step_pos += 1
+        step = Step.create!(
+          name: step_json['name'],
+          position: step_pos,
+          completed: false,
+          user: user,
+          last_modified_by: user,
+          protocol: protocol
+        )
+        # need step id to link image to step
+        step.description = populate_rte(step_json, step, team)
+        step.save!
+        step_pos += 1
 
-      if step_json["checklists"]
-        step_json["checklists"].values.each do |checklist_json|
-          checklist = Checklist.create!(
-            name: checklist_json["name"],
-            step: step,
-            created_by: user,
-            last_modified_by: user
-          )
-          if checklist_json["items"]
-            item_pos = 0
-            checklist_json["items"].values.each do |item_json|
-              item = ChecklistItem.create!(
-                text: item_json["text"],
-                checked: false,
-                position: item_pos,
-                created_by: user,
-                last_modified_by: user,
-                checklist: checklist
-              )
-              item_pos += 1
+        if step_json["checklists"]
+          step_json["checklists"].values.each do |checklist_json|
+            checklist = Checklist.create!(
+              name: checklist_json["name"],
+              step: step,
+              created_by: user,
+              last_modified_by: user
+            )
+            if checklist_json["items"]
+              item_pos = 0
+              checklist_json["items"].values.each do |item_json|
+                item = ChecklistItem.create!(
+                  text: item_json["text"],
+                  checked: false,
+                  position: item_pos,
+                  created_by: user,
+                  last_modified_by: user,
+                  checklist: checklist
+                )
+                item_pos += 1
+              end
             end
           end
         end
-      end
 
-      if step_json['tables']
-        step_json['tables'].values.each do |table_json|
-          table = Table.create!(
-            name: table_json['name'],
-            contents: Base64.decode64(table_json['contents']),
-            created_by: user,
-            last_modified_by: user,
-            team: team
-          )
-          StepTable.create!(
-            step: step,
-            table: table
-          )
+        if step_json['tables']
+          step_json['tables'].values.each do |table_json|
+            table = Table.create!(
+              name: table_json['name'],
+              contents: Base64.decode64(table_json['contents']),
+              created_by: user,
+              last_modified_by: user,
+              team: team
+            )
+            StepTable.create!(
+              step: step,
+              table: table
+            )
+          end
+        end
+
+        if step_json["assets"]
+          step_json["assets"].values.each do |asset_json|
+            asset = Asset.new(
+              created_by: user,
+              last_modified_by: user,
+              team: team
+            )
+
+            # Decode the file bytes
+            asset.file = StringIO.new(Base64.decode64(asset_json["bytes"]))
+            asset.file_file_name = asset_json["fileName"]
+            asset.file_content_type = asset_json["fileType"]
+            asset.save!
+            asset_ids << asset.id
+
+            StepAsset.create!(
+              step: step,
+              asset: asset
+            )
+          end
         end
       end
-
-      if step_json["assets"]
-        step_json["assets"].values.each do |asset_json|
-          asset = Asset.new(
-            created_by: user,
-            last_modified_by: user,
-            team: team
-          )
-
-          # Decode the file bytes
-          asset.file = StringIO.new(Base64.decode64(asset_json["bytes"]))
-          asset.file_file_name = asset_json["fileName"]
-          asset.file_content_type = asset_json["fileType"]
-          asset.save!
-          asset_ids << asset.id
-
-          StepAsset.create!(
-            step: step,
-            asset: asset
-          )
-        end
-      end
-    end
     end
 
     # Post process assets
@@ -144,4 +145,31 @@ module ProtocolsImporter
     end
   end
 
+  # create tiny_mce assets and change the inport tokens
+  def populate_rte(step_json, step, team)
+    return populate_rte_legacy(step_json) unless step_json['descriptionAssets']
+    description = step_json['description']
+    step_json['descriptionAssets'].values.each do |tiny_mce_img_json|
+      tiny_mce_img = TinyMceAsset.new(
+        reference: step,
+        team_id: team.id
+      )
+      # Decode the file bytes
+      tiny_mce_img.image = StringIO.new(
+        Base64.decode64(tiny_mce_img_json['bytes'])
+      )
+      tiny_mce_img.image_content_type = tiny_mce_img_json['fileType']
+      tiny_mce_img.save!
+      description.gsub!("[~tiny_mce_id:#{tiny_mce_img_json['tokenId']}]",
+                        "[~tiny_mce_id:#{tiny_mce_img.id}]")
+
+    end
+    description
+  end
+
+  # handle import from legacy exports
+  def populate_rte_legacy(step_json)
+    return unless step_json['description'] && step_json['description'].present?
+    step_json['description'].gsub(/\[~tiny_mce_id:([0-9a-zA-Z]+)\]/, '')
+  end
 end

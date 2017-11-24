@@ -1,0 +1,15 @@
+<% if @protocolsio_general_error %>
+  $('#modal-import-json-protocol-preview').modal('hide');
+  alert(' <%= t('my_modules.protocols.load_from_file_protocol_general_error',
+   max: Constants::NAME_MAX_LENGTH, min: Constants::NAME_MIN_LENGTH) %>');
+<% elsif @toolong%>
+  $('#modal-import-json-protocol-preview').modal('hide');
+  $('#protocols_io_form').trigger("reset");
+  protocolsDatatable.ajax.reload();
+  HelperModule.flashAlertMsg(' <%= t('protocols.index.import_results.message_warn_truncated')%>', 'warning');
+<% else %>
+  $('#modal-import-json-protocol-preview').modal('hide');
+  $('#protocols_io_form').trigger("reset");
+  protocolsDatatable.ajax.reload();
+  HelperModule.flashAlertMsg(' <%= t('protocols.index.import_results.message_ok_pio')%>', 'success');
+<% end %>

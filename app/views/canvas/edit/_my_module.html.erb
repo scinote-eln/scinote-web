@@ -2,11 +2,6 @@
   id="<%= my_module.id %>"
   data-module-id="<%= my_module.id %>"
   data-module-name="<%= my_module.name %>"
-  <% if my_module.my_module_group.present? %>
-  data-module-group-name="<%= my_module.my_module_group.name %>"
-  <% else %>
-  data-module-group-name=""
-  <% end %>
   data-module-x="<%= my_module.x %>"
   data-module-y="<%= my_module.y %>"
   data-module-conns="<%= construct_module_connections(my_module) %>">
@@ -24,11 +19,6 @@
         <% if can_edit_module(my_module) %>
           <li>
               <a class="edit-module" href="" data-module-id="<%= my_module.id %>"><%=t "experiments.canvas.edit.edit_module" %></a>
-          </li>
-        <% end %>
-        <% if can_edit_module_groups(my_module.experiment) %>
-          <li <%= 'style=display:none;' if my_module.my_module_group.blank? %>>
-              <a class="edit-module-group" href="" data-module-id="<%= my_module.id %>"><%=t "experiments.canvas.edit.edit_module_group" %></a>
           </li>
         <% end %>
         <% if can_clone_modules(my_module.experiment) %>

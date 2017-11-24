@@ -291,7 +291,7 @@ class MyModulesController < ApplicationController
 
       task_names = []
       new_samples = []
-      @my_module.get_downstream_modules.each do |my_module|
+      @my_module.downstream_modules.each do |my_module|
         new_samples = samples.select { |el| my_module.samples.exclude?(el) }
         my_module.samples.push(*new_samples)
         task_names << my_module.name
@@ -330,7 +330,7 @@ class MyModulesController < ApplicationController
       end
 
       task_names = []
-      @my_module.get_downstream_modules.each do |my_module|
+      @my_module.downstream_modules.each do |my_module|
         task_names << my_module.name
         my_module.samples.destroy(samples & my_module.samples)
       end
