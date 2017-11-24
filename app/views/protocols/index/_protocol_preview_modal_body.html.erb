@@ -85,7 +85,7 @@
                     <em><%= t("protocols.steps.no_description") %></em>
                   <% else %>
                     <div class="ql-editor">
-                      <%= sanitize_input(step.description) %>
+                      <%= sanitize_input(generate_image_tag_from_token(step.description), ['img']) %>
                     </div>
                   <% end %>
                 </div>

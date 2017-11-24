@@ -88,8 +88,10 @@ var TinyMCE = (function() {
     },
     destroyAll: function() {
       _.each(tinymce.editors, function(editor) {
-        editor.destroy();
-        initHighlightjs();
+        if(editor) {
+          editor.destroy();
+          initHighlightjs();
+        }
       });
     },
     refresh: function() {

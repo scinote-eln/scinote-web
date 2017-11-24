@@ -50,7 +50,7 @@ module ProtocolsExporter
       img_guid = get_guid(img.id)
       asset_file_name = "rte-#{img_guid}" \
                         "#{File.extname(img.image_file_name)}"
-      asset_xml = "<tinyMceAsset token_id=\"#{match[1]}\" id=\"#{img.id}\" guid=\"#{img_guid}\" " \
+      asset_xml = "<tinyMceAsset tokenId=\"#{match[1]}\" id=\"#{img.id}\" guid=\"#{img_guid}\" " \
                   "fileRef=\"#{asset_file_name}\">\n"
       asset_xml << "<fileName>#{img.image_file_name}</fileName>\n"
       asset_xml << "<fileType>#{img.image_content_type}</fileType>\n"
@@ -259,7 +259,7 @@ module ProtocolsExporter
     eln_xsd << "<xs:element name=\"fileType\" " \
                "type=\"xs:string\"></xs:element>\n"
     eln_xsd << "</xs:all>\n"
-    eln_xsd << "<xs:attribute name=\"id\" type=\"xs:int\" " \
+    eln_xsd << "<xs:attribute tokenId=\"xs:string\" name=\"id\" type=\"xs:int\" " \
                "use=\"required\"></xs:attribute>\n"
     eln_xsd << "<xs:attribute name=\"guid\" type=\"xs:string\" " \
                "use=\"required\"></xs:attribute>\n"

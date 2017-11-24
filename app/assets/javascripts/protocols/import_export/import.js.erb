@@ -231,11 +231,13 @@ function importProtocolFromFile(
   // display tiny_mce_assets in step description
   function displayTinyMceAssetInDescription(node, folder, stepGuid) {
     if (node.children('descriptionAssets').length === 0) {
-      return $(node.children('description')).html();
+      var description = node.children('description').html();
+      return description.replace(/\[~tiny_mce_id:([0-9a-zA-Z]+)\]/,
+                                 '<strong>Can\'t import image</strong>');
     }
     var description = node.children('description').html();
     node.find('descriptionAssets > tinyMceAsset').each(function(i, element) {
-      var match = '[~tiny_mce_id:' + element.getAttribute('token_id') + ']';
+      var match = '[~tiny_mce_id:' + element.getAttribute('tokenId') + ']';
       var assetBytes = getAssetBytes(folder, stepGuid, element.getAttribute('fileref'));
       var image_tag = "<img style='max-width:300px; max-height:300px;' src='data:" + element.children[1].innerHTML + ";base64," + assetBytes + "' />"
       description = description.replace(match, image_tag); // replace the token with image
@@ -466,7 +468,7 @@ function importProtocolFromFile(
       $(this).find("descriptionAssets > tinyMceAsset").each(function() {
         var tinyMceAsset = {};
         var fileRef = $(this).attr("fileRef");
-        tinyMceAsset.token_id = $(this).attr('token_id');
+        tinyMceAsset.tokenId = $(this).attr('tokenId');
         tinyMceAsset.fileType= $(this).children("fileType").text();
         tinyMceAsset.bytes = getAssetBytes(
           protocolFolders[index],

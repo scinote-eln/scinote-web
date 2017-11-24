@@ -160,7 +160,7 @@ module ProtocolsImporter
       )
       tiny_mce_img.image_content_type = tiny_mce_img_json['fileType']
       tiny_mce_img.save!
-      description.gsub!("[~tiny_mce_id:#{tiny_mce_img_json['token_id']}]",
+      description.gsub!("[~tiny_mce_id:#{tiny_mce_img_json['tokenId']}]",
                         "[~tiny_mce_id:#{tiny_mce_img.id}]")
 
     end
@@ -170,7 +170,6 @@ module ProtocolsImporter
   # handle import from legacy exports
   def populate_rte_legacy(step_json)
     return unless step_json['description'] && step_json['description'].present?
-    regex = /\[~tiny_mce_id:([0-9a-zA-Z]+)\]/
-    step_json['description'].gsub(regex, '')
+    step_json['description'].gsub(/\[~tiny_mce_id:([0-9a-zA-Z]+)\]/, '')
   end
 end
