@@ -251,9 +251,9 @@ module PermissionHelper
 
   # ---- PROJECT PERMISSIONS ----
 
-  def can_view_projects(team)
-    is_member_of_team(team)
-  end
+  # def can_view_projects(team)
+  #   is_member_of_team(team)
+  # end
 
   def can_create_project(team)
     is_normal_user_or_admin_of_team(team)
@@ -691,9 +691,9 @@ module PermissionHelper
 
   # ---- PROTOCOL PERMISSIONS ----
 
-  def can_view_team_protocols(team)
-    is_member_of_team(team)
-  end
+  # def can_view_team_protocols(team)
+  #   is_member_of_team(team)
+  # end
 
   def can_create_new_protocol(team)
     is_normal_user_or_admin_of_team(team)

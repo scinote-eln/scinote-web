@@ -901,7 +901,7 @@ class ProtocolsController < ApplicationController
   def check_view_all_permissions
     load_team_and_type
 
-    render_403 unless can_view_team_protocols(@current_team)
+    render_403 unless can_read_team?(@current_team)
   end
 
   def check_view_permissions
