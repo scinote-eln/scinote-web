@@ -594,7 +594,7 @@
           setupAssetsLoading();
         },
         error: function(xhr) {
-          if (xhr.responseJSON['assets.file'] != null) {
+          if (xhr.responseJSON['assets.file']) {
             $('#new-step-assets-group').addClass('has-error');
             $('#new-step-assets-tab').addClass('has-error');
             $.each(xhr.responseJSON['assets.file'], function(_, value) {
