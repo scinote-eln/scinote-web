@@ -4,11 +4,11 @@ namespace :tiny_mce_asset do
   task remove_obsolete_images: :environment do
     TinyMceAsset.where('step_id IS ? AND ' \
                        'result_text_id IS ? AND created_at < ?',
-                       nil, nil, 7.days.ago)
+                       nil, nil, 7.days.ago).destroy_all
   end
 
   desc 'Generate new tiny_mce_assets and replace old assets in RTE'
-  task regenerage_images: :environment do
+  task regenerate_images: :environment do
     regex = /\[~tiny_mce_id:([0-9a-zA-Z]+)\]/
     replaced_images = 0
     failed_attempts = 0
@@ -16,9 +16,7 @@ namespace :tiny_mce_asset do
     failed_attempts_ids = []
     puts 'Start processing steps...'
     Step.find_each do |step|
-      next unless step.description
-      images = step.description.match(regex)
-      next unless images
+      next unless step.description && step.description.match(regex)
       team = step.protocol.team
       step.description.gsub!(regex) do |el|
         match = el.match(regex)
@@ -30,7 +28,7 @@ namespace :tiny_mce_asset do
           # This image will be removed by `remove_obsolete_images` rake task
           # until all the steps are not updated we still need this image
           # in case it appears on some other step
-          old_img.update_attributes(team_id: nil, step_id: nil)
+          old_img.update_attributes(result_text_id: nil, step_id: nil)
           replaced_images += 1
           "[~tiny_mce_id:#{new_img.id}]"
         else
@@ -44,9 +42,7 @@ namespace :tiny_mce_asset do
     puts 'Completed processing steps...'
     puts 'Start processing result_texts...'
     ResultText.find_each do |result_text|
-      next unless result_text.text
-      images = result_text.text.match(regex)
-      next unless images
+      next unless result_text.text && result_text.text.match(regex)
       team = result_text.result.my_module.protocol.team
       result_text.text.gsub!(regex) do |el|
         match = el.match(regex)
@@ -58,7 +54,7 @@ namespace :tiny_mce_asset do
           # This image will be removed by `remove_obsolete_images` rake task
           # until all the steps are not updated we still need this image
           # in case it appears on some other step
-          old_img.update_attributes(team_id: nil, step_id: nil)
+          old_img.update_attributes(result_text_id: nil, step_id: nil)
           replaced_images += 1
           "[~tiny_mce_id:#{new_img.id}]"
         else
