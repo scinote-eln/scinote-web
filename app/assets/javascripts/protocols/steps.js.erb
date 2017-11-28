@@ -123,6 +123,7 @@
         initPreviewModal();
         SmartAnnotation.preventPropagation('.atwho-user-popover');
         TinyMCE.destroyAll();
+        DragNDropSteps.clearFiles();
       }, 1000);
 
     })
@@ -148,8 +149,8 @@
       initializeCheckboxSorting();
       animateSpinner(null, false);
       initPreviewModal();
-
-      TinyMCE.refresh()
+      DragNDropSteps.clearFiles();
+      TinyMCE.refresh();
       $("#new-step-checklists fieldset.nested_step_checklists ul").each(function () {
         enableCheckboxSorting(this);
       });
@@ -371,6 +372,7 @@
         newStepHandler();
       });
       toggleButtons(true);
+      DragNDropSteps.clearFiles();
     });
   }
 
