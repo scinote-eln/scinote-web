@@ -1820,6 +1820,7 @@ en:
     invalid_arguments: "Invalid arguments"
     generic_error_message: "Something went wrong! Please try again later."
     user_teams:
+      permission_error: "You don't have permission to manage users."
       leave_team_error: "An error occured."
       leave_flash: "Successfuly left team %{team}."
     user:

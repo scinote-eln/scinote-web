@@ -3,6 +3,8 @@ module ClientApi
     class UserTeamsController < ApplicationController
       include ClientApi::Users::UserTeamsHelper
 
+      before_action :check_manage_user_team_permission
+
       def leave_team
         ut_service = ClientApi::UserTeamService.new(
           user: current_user,
@@ -43,6 +45,18 @@ module ClientApi
       end
 
       private
+
+      def check_manage_user_team_permission
+        @user_team = UserTeam.find_by_id(params[:user_team])
+        unless can_update_or_delete_user_team?(@user_team)
+          respond_to do |format|
+            format.json do
+              render json: t('client_api.user_teams.permission_error'),
+                     status: 422
+            end
+          end
+        end
+      end
 
       def success_response(template, locals)
         respond_to do |format|
