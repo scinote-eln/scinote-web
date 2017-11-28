@@ -1,7 +1,7 @@
 module TinyMceHelper
   def parse_tiny_mce_asset_to_token(text, obj)
     ids = []
-    html = Nokogiri::HTML(text)
+    html = Nokogiri::HTML(remove_pasted_tokens(text))
     html.search('img').each do |img|
       next unless img['data-token']
       img_id = Base62.decode(img['data-token'])
@@ -66,8 +66,8 @@ module TinyMceHelper
     end
   end
 
-  def check_parse_token_permissions(obj, img)
-    return true if obj.class == Step && img.result_text.nil?
-    return true if obj.class == ResultText && img.step.nil?
+  def remove_pasted_tokens(text)
+    regex = Constants::TINY_MCE_ASSET_REGEX
+    text.gsub(regex, ' ')
   end
 end
