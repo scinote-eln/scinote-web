@@ -94,9 +94,11 @@ class UserMyModulesController < ApplicationController
       )
 
       respond_to do |format|
-        format.json {
-          redirect_to my_module_users_edit_path(format: :json), :status => 303
-        }
+        format.json do
+          redirect_to my_module_users_edit_path(format: :json),
+                      turbolinks: false,
+                      status: 303
+        end
       end
     else
       respond_to do |format|
