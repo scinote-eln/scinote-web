@@ -54,6 +54,12 @@ module TinyMceHelper
   end
 
   def destroy_removed_tiny_mce_assets(ids, ref)
-    ref.tiny_mce_assets.where.not('id IN (?)', ids).destroy_all
+    # need to check if the array is empty because if we pass the empty array
+    # in the SQL query it will not work properly
+    if ids.empty?
+      ref.tiny_mce_assets.destroy_all
+    else
+      ref.tiny_mce_assets.where.not('id IN (?)', ids).destroy_all
+    end
   end
 end
