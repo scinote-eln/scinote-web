@@ -6,6 +6,8 @@ import { FormattedMessage } from "react-intl";
 import { getUserProfileInfo } from "../../../../../services/api/users_api";
 import { addCurrentUser } from "../../../../../components/actions/UsersActions";
 
+import * as Permissions from "../../../../../services/permissions";
+
 import AvatarInputField from "./AvatarInputField";
 import ProfileInputField from "./ProfileInputField";
 
@@ -47,6 +49,7 @@ class MyProfile extends Component {
   }
 
   render() {
+    console.log(this.props.permissions);
     return (
       <div>
         <h2>
@@ -103,4 +106,5 @@ MyProfile.propTypes = {
   addCurrentUser: func.isRequired
 };
 
-export default connect(null, { addCurrentUser })(MyProfile);
+const ComponentWithPermissions = Permissions.connect(MyProfile, ["can_update_team", "can_read_team"], "user");
+export default connect(null, { addCurrentUser })(ComponentWithPermissions)

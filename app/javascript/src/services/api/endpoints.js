@@ -40,3 +40,6 @@ export const SETTINGS_TEAMS = "/settings/teams";
 
 // scinote configurations
 export const ABOUT_SCINOTE_PATH =  "/client_api/about_scinote";
+
+// permissions
+export const PERMISSIONS_PATH = "/client_api/premissions";
