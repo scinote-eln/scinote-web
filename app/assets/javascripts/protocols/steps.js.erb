@@ -594,6 +594,7 @@
           });
           animateSpinner(null, false);
           setupAssetsLoading();
+          DragNDropSteps.clearFiles();
         },
         error: function(xhr) {
           if (xhr.responseJSON['assets.file']) {
