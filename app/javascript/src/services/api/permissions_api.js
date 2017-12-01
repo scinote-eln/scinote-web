@@ -7,9 +7,10 @@ export const getPermissionStatus = (
   requiredPermissions: Array<string>,
   resource: string
 ): Promise<*> => {
+  const parsePermission = requiredPermissions.map(el => el.replace("?", ""));
   return axiosInstance
-    .get(PERMISSIONS_PATH, {
-      requiredPermissions,
+    .post(PERMISSIONS_PATH, {
+      parsePermission,
       resource
     })
     .then(({ data }) => data);

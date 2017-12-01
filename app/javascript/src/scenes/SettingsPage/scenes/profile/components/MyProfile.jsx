@@ -106,5 +106,5 @@ MyProfile.propTypes = {
   addCurrentUser: func.isRequired
 };
 
-const ComponentWithPermissions = Permissions.connect(MyProfile, ["can_update_team", "can_read_team"], "user");
+const ComponentWithPermissions = Permissions.connect(MyProfile, ["can_update_team?", "can_read_team?"], "user");
 export default connect(null, { addCurrentUser })(ComponentWithPermissions)
