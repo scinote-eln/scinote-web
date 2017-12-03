@@ -250,13 +250,13 @@ module ProtocolsIoHelper
        iterating_key['repository'] &&
        iterating_key['os_name'] &&
        iterating_key['os_version']
-      append = fill_attributes('name', iterating_key['name'], '8') +
-               fill_attributes('developer', iterating_key['developer'], '8') +
-               fill_attributes('version', iterating_key['version'], '8') +
-               fill_attributes('link', iterating_key['link'], '8') +
-               fill_attributes('repository', iterating_key['repository'], '8') +
-               fill_attributes('os_name', iterating_key['os_name'], '8') +
-               fill_attributes('os_version', iterating_key['os_version'], '8')
+      append = ''
+      parse_elements_array = %w(
+        name developer version link repository os_name os_version
+      )
+      parse_elements_array.each do |element|
+        append += fill_attributes(element, iterating_key[element], '8')
+      end
       return append
     end
     ''
@@ -265,8 +265,11 @@ module ProtocolsIoHelper
   def pio_stp_9(iterating_key) # protocols io dataset parser
     if iterating_key['name'].present? &&
        iterating_key['link']
-      append = fill_attributes('name', iterating_key['name'], '9') +
-               fill_attributes('link', iterating_key['link'], '9')
+      append = ''
+      parse_elements_array = %w(name link)
+      parse_elements_array.each do |element|
+        append += fill_attributes(element, iterating_key[element], '9')
+      end
       return append
     end
     ''
@@ -277,10 +280,11 @@ module ProtocolsIoHelper
        iterating_key['description'] &&
        iterating_key['os_name'] &&
        iterating_key['os_version']
-      append = fill_attributes('name', iterating_key['name'], '15') +
-               fill_attributes('description', iterating_key['description'], '15') +
-               fill_attributes('os_name', iterating_key['os_name'], '15') +
-               fill_attributes('os_version', iterating_key['os_version'], '15')
+      append = ''
+      parse_elements_array = %w(name description os_name os_version)
+      parse_elements_array.each do |element|
+        append += fill_attributes(element, iterating_key[element], '15')
+      end
       return append
     end
     ''
@@ -290,9 +294,11 @@ module ProtocolsIoHelper
     if iterating_key['protocol_name'].present? &&
        iterating_key['full_name'] &&
        iterating_key['link']
-      append = fill_attributes('protocol_name', iterating_key['protocol_name'], '18') +
-               fill_attributes('full_name', iterating_key['full_name'], '18') +
-               fill_attributes('link', iterating_key['link'], '18')
+      append = ''
+      parse_elements_array = %w(protocol_name full_name link)
+      parse_elements_array.each do |element|
+        append += fill_attributes(element, iterating_key[element], '18')
+      end
       return append
     end
     ''
@@ -301,8 +307,11 @@ module ProtocolsIoHelper
   def pio_stp_19(iterating_key) # protocols io safety information parser
     if iterating_key['body'].present? &&
        iterating_key['link']
-      append = fill_attributes('body', iterating_key['body'], '19') +
-               fill_attributes('link', iterating_key['link'], '19')
+      append = ''
+      parse_elements_array = %w(body link)
+      parse_elements_array.each do |element|
+        append += fill_attributes(element, iterating_key[element], '19')
+      end
       return append
     end
     ''
