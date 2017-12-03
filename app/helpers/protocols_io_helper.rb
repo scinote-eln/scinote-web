@@ -147,7 +147,7 @@ module ProtocolsIoHelper
   end
 
   def prepare_for_view(attribute_text, size)
-    case(size)
+    case size
     when 'small'
       pio_eval_len(
         sanitize_input(string_html_table_remove(not_null(attribute_text))),
@@ -163,8 +163,53 @@ module ProtocolsIoHelper
         sanitize_input(string_html_table_remove(not_null(attribute_text))),
         ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_BIG
       )
-    else
+    when 'small-no-table'
+      pio_eval_len(
+        sanitize_input(not_null(attribute_text)),
+        ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL
+      )
+    when 'medium-no-table'
+      pio_eval_len(
+        sanitize_input(not_null(attribute_text)),
+        ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_MEDIUM
+      )
+    when 'big-no-table'
+      pio_eval_len(
+        sanitize_input(not_null(attribute_text)),
+        ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_BIG
+      )
     end
+  end
+
+  def fill_attributes(attribute_name, attribute_text, step_component_key)
+    output_string = ''
+    trans_string = ''
+    case step_component_key
+    when '8'
+      trans_string = 'protocols.protocols_io_import.comp_append.soft_packg.'
+    when '9'
+      trans_string = 'protocols.protocols_io_import.comp_append.dataset.'
+    when '15'
+      trans_string = 'protocols.protocols_io_import.comp_append.command.'
+    when '18'
+      trans_string = 'protocols.protocols_io_import.comp_append.sub_protocol.'
+    when '19'
+      trans_string = 'protocols.protocols_io_import.comp_append.safety_infor.'
+    end
+    trans_string +=
+      if attribute_name != 'os_name' && attribute_name != 'os_version'
+        attribute_name
+      else
+        'os'
+      end
+    output_string +=
+      if attribute_name != 'os_version'
+        t(trans_string)
+      else
+        ' , '
+      end
+    output_string += prepare_for_view(attribute_text, 'small-no-table')
+    output_string
   end
 
   # pio_stp_x means protocols io step (id of component) parser
@@ -173,10 +218,7 @@ module ProtocolsIoHelper
     append =
       if iterating_key.present?
         br +
-        pio_eval_len(
-          sanitize_input(iterating_key),
-          ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL
-        ) +
+        prepare_for_view(iterating_key, 'small-no-table') +
         br
       else
         t('protocols.protocols_io_import.comp_append.missing_desc')
@@ -193,10 +235,7 @@ module ProtocolsIoHelper
     if iterating_key.present?
       append =
         t('protocols.protocols_io_import.comp_append.expected_result') +
-        pio_eval_len(
-          sanitize_input(iterating_key),
-          ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL
-        ) +
+        prepare_for_view(iterating_key, 'small-no-table') +
         '<br>'
       return append
     end
@@ -211,40 +250,13 @@ module ProtocolsIoHelper
        iterating_key['repository'] &&
        iterating_key['os_name'] &&
        iterating_key['os_version']
-      append = t('protocols.protocols_io_import.comp_append.soft_packg.title') +
-               pio_eval_len(
-                 sanitize_input(iterating_key['name']),
-                 ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL
-               ) +
-               t('protocols.protocols_io_import.comp_append.soft_packg.dev') +
-               pio_eval_len(
-                 sanitize_input(iterating_key['developer']),
-                 ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL
-               ) +
-               t('protocols.protocols_io_import.comp_append.soft_packg.vers') +
-               pio_eval_len(
-                 sanitize_input(iterating_key['version']),
-                 ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL
-               ) +
-               t('protocols.protocols_io_import.comp_append.general_link') +
-               pio_eval_len(
-                 sanitize_input(iterating_key['link']),
-                 ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL
-               ) +
-               t('protocols.protocols_io_import.comp_append.soft_packg.repo') +
-               pio_eval_len(
-                 sanitize_input(iterating_key['repository']),
-                 ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL
-               ) +
-               t('protocols.protocols_io_import.comp_append.soft_packg.os') +
-               pio_eval_len(
-                 sanitize_input(iterating_key['os_name']),
-                 ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL
-               ) + ' , ' +
-               pio_eval_len(
-                 sanitize_input(iterating_key['os_version']),
-                 ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL
-               )
+      append = fill_attributes('name', iterating_key['name'], '8') +
+               fill_attributes('developer', iterating_key['developer'], '8') +
+               fill_attributes('version', iterating_key['version'], '8') +
+               fill_attributes('link', iterating_key['link'], '8') +
+               fill_attributes('repository', iterating_key['repository'], '8') +
+               fill_attributes('os_name', iterating_key['os_name'], '8') +
+               fill_attributes('os_version', iterating_key['os_version'], '8')
       return append
     end
     ''
@@ -253,16 +265,8 @@ module ProtocolsIoHelper
   def pio_stp_9(iterating_key) # protocols io dataset parser
     if iterating_key['name'].present? &&
        iterating_key['link']
-      append = t('protocols.protocols_io_import.comp_append.dataset.title') +
-               pio_eval_len(
-                 sanitize_input(iterating_key['name']),
-                 ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL
-               ) +
-               t('protocols.protocols_io_import.comp_append.general_link') +
-               pio_eval_len(
-                 sanitize_input(iterating_key['link']),
-                 ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL
-               )
+      append = fill_attributes('name', iterating_key['name'], '9') +
+               fill_attributes('link', iterating_key['link'], '9')
       return append
     end
     ''
@@ -273,26 +277,10 @@ module ProtocolsIoHelper
        iterating_key['description'] &&
        iterating_key['os_name'] &&
        iterating_key['os_version']
-      append = t('protocols.protocols_io_import.comp_append.command.title') +
-               pio_eval_len(
-                 sanitize_input(iterating_key['name']),
-                 ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL
-               ) +
-               t('protocols.protocols_io_import.comp_append.command.desc') +
-               pio_eval_len(
-                 sanitize_input(iterating_key['description']),
-                 ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL
-               ) +
-               t('protocols.protocols_io_import.comp_append.command.os') +
-               pio_eval_len(
-                 sanitize_input(iterating_key['os_name']),
-                 ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL
-               ) +
-               ' , ' +
-               pio_eval_len(
-                 sanitize_input(iterating_key['os_version']),
-                 ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL
-               )
+      append = fill_attributes('name', iterating_key['name'], '15') +
+               fill_attributes('description', iterating_key['description'], '15') +
+               fill_attributes('os_name', iterating_key['os_name'], '15') +
+               fill_attributes('os_version', iterating_key['os_version'], '15')
       return append
     end
     ''
@@ -302,26 +290,9 @@ module ProtocolsIoHelper
     if iterating_key['protocol_name'].present? &&
        iterating_key['full_name'] &&
        iterating_key['link']
-      append =
-        t(
-          'protocols.protocols_io_import.comp_append.sub_protocol.title'
-        ) +
-        pio_eval_len(
-          sanitize_input(iterating_key['protocol_name']),
-          ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL
-        ) +
-        t(
-          'protocols.protocols_io_import.comp_append.sub_protocol.author'
-        ) +
-        pio_eval_len(
-          sanitize_input(iterating_key['full_name']),
-          ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL
-        ) +
-        t('protocols.protocols_io_import.comp_append.general_link') +
-        pio_eval_len(
-          sanitize_input(iterating_key['link']),
-          ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL
-        )
+      append = fill_attributes('protocol_name', iterating_key['protocol_name'], '18') +
+               fill_attributes('full_name', iterating_key['full_name'], '18') +
+               fill_attributes('link', iterating_key['link'], '18')
       return append
     end
     ''
@@ -330,19 +301,8 @@ module ProtocolsIoHelper
   def pio_stp_19(iterating_key) # protocols io safety information parser
     if iterating_key['body'].present? &&
        iterating_key['link']
-      append =
-        t(
-          'protocols.protocols_io_import.comp_append.safety_infor.title'
-        ) +
-        pio_eval_len(
-          sanitize_input(iterating_key['body']),
-          ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL
-        ) +
-        t('protocols.protocols_io_import.comp_append.general_link') +
-        pio_eval_len(
-          sanitize_input(iterating_key['link']),
-          ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL
-        )
+      append = fill_attributes('body', iterating_key['body'], '19') +
+               fill_attributes('link', iterating_key['link'], '19')
       return append
     end
     ''
@@ -355,13 +315,11 @@ module ProtocolsIoHelper
     ]
     description_string =
       if json_hash['description'].present?
-        '<strong>' + t('protocols.protocols_io_import.preview.prot_desc') +
-          '</strong>' + pio_eval_len(
-            sanitize_input(json_hash['description']),
-            ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_MEDIUM
-          ).html_safe
+        '<strong>' + t('protocols.protocols_io_import.preview.description') +
+          '</strong>' +
+          prepare_for_view(json_hash['description'], 'medium-no-table').html_safe
       else
-        '<strong>' + t('protocols.protocols_io_import.preview.prot_desc') +
+        '<strong>' + t('protocols.protocols_io_import.preview.description') +
           '</strong>' + t('protocols.protocols_io_import.comp_append.missing_desc')
       end
     description_string += '<br>'
@@ -369,10 +327,11 @@ module ProtocolsIoHelper
       if e == 'created_on' && json_hash[e].present?
         new_e = '<strong>' + e.humanize + '</strong>'
         description_string +=
-          new_e.to_s + ':  ' + pio_eval_len(
-            sanitize_input(params['protocol']['created_at'].to_s),
-            ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL
-          ) + '<br>'
+          new_e.to_s + ':  ' +
+          prepare_for_view(
+            params['protocol']['created_at'].to_s, 'small-no-table'
+            ) +
+          + '<br>'
       elsif e == 'tags' && json_hash[e].any? && json_hash[e] != ''
         new_e = '<strong>' + e.humanize + '</strong>'
         description_string +=
@@ -382,9 +341,8 @@ module ProtocolsIoHelper
           tags_length_checker +=
             sanitize_input(tag['tag_name']) + ' , '
         end
-        description_string += pio_eval_len(
-          tags_length_checker,
-          ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_MEDIUM
+        description_string += prepare_for_view(
+          tags_length_checker, 'medium-no-table'
         )
         description_string += '<br>'
       elsif json_hash[e].present?
