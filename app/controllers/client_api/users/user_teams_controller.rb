@@ -49,12 +49,7 @@ module ClientApi
       def check_manage_user_team_permission
         @user_team = UserTeam.find_by_id(params[:user_team])
         unless can_update_or_delete_user_team?(@user_team)
-          respond_to do |format|
-            format.json do
-              render json: t('client_api.user_teams.permission_error'),
-                     status: 422
-            end
-          end
+          respond_422(t('client_api.user_teams.permission_error'))
         end
       end
 
