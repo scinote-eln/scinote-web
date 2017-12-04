@@ -13,6 +13,7 @@
 
  Now you can access to your permissions through component params. The permissions
  you required have 3 states [true, false, null]. Null is when you are waiting for server response.
+ You can use methods params.can_uspdate_team? or whatever permissions you declare
 */
 import * as React from "react";
 import { getPermissionStatus } from "../api/permissions_api";

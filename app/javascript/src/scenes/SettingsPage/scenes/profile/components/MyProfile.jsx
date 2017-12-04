@@ -49,7 +49,6 @@ class MyProfile extends Component {
   }
 
   render() {
-    console.log(this.props.permissions);
     return (
       <div>
         <h2>
@@ -106,5 +105,4 @@ MyProfile.propTypes = {
   addCurrentUser: func.isRequired
 };
 
-const ComponentWithPermissions = Permissions.connect(MyProfile, ["can_update_team?", "can_read_team?"], "user");
-export default connect(null, { addCurrentUser })(ComponentWithPermissions)
+export default connect(null, { addCurrentUser })(MyProfile)
