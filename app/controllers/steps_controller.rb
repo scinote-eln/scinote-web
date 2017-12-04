@@ -96,11 +96,9 @@ class StepsController < ApplicationController
           status: :ok
         end
       else
-        format.json {
-          render json: {
-            html: render_to_string(partial: 'new.html.erb')
-          }, status: :bad_request
-        }
+        format.json do
+          render json: @step.errors.to_json, status: :bad_request
+        end
       end
     end
   end

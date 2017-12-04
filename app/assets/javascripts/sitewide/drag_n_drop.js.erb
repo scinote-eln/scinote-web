@@ -19,6 +19,10 @@
       return filesValid;
     }
 
+    function clearFiles() {
+      droppedFiles = [];
+    }
+
     // loops through a list of files and display each file in a separate panel
     function listItems() {
       totalSize = 0;
@@ -26,7 +30,7 @@
       $('.panel-step-attachment-new').remove();
       _dragNdropAssetsOff();
       for(var i = 0; i < droppedFiles.length; i++) {
-        $('#new-step-assets')
+        $('#new-step-assets-group')
           .append(_uploadedAssetPreview(droppedFiles[i], i))
           .promise()
           .done(function() {
@@ -49,7 +53,6 @@
         var name = 'step[assets_attributes][' + index + '][file]';
         fd.append(name, droppedFiles[i]);
       }
-      droppedFiles = [];
       filesValid = true;
       totalSize = 0;
       _dragNdropAssetsOff();
@@ -144,7 +147,8 @@
       init: init,
       appendFilesToForm: appendFilesToForm,
       listItems: listItems,
-      filesStatus: filesStatus
+      filesStatus: filesStatus,
+      clearFiles: clearFiles
     });
   })();
 
