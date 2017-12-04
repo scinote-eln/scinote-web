@@ -629,9 +629,9 @@ module PermissionHelper
 
   # ---- SAMPLE PERMISSIONS ----
 
-  def can_create_samples(team)
-    is_normal_user_or_admin_of_team(team)
-  end
+  # def can_create_samples(team)
+  #   is_normal_user_or_admin_of_team(team)
+  # end
 
   def can_view_samples(team)
     is_member_of_team(team)

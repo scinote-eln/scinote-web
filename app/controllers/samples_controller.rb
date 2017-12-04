@@ -12,7 +12,7 @@ class SamplesController < ApplicationController
   def new
     respond_to do |format|
       format.html
-      if can_create_samples(@team)
+      if can_create_sample?(@team)
         groups = @team.sample_groups.map do |g|
           { id: g.id, name: sanitize_input(g.name), color: g.color }
         end
@@ -43,7 +43,7 @@ class SamplesController < ApplicationController
     };
 
     respond_to do |format|
-      if can_create_samples(@team)
+      if can_create_sample?(@team)
         if params[:sample]
           # Sample name
           if params[:sample][:name]
@@ -319,7 +319,7 @@ class SamplesController < ApplicationController
   end
 
   def check_create_permissions
-    unless can_create_samples(@team)
+    unless can_create_sample?(@team)
       render_403
     end
   end
