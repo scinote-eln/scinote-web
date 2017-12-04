@@ -34,12 +34,7 @@ module ClientApi
       def check_invite_users_permission
         @team = Team.find_by_id(params[:team_id])
         if @team && !can_create_user_team?(@team)
-          respond_to do |format|
-            format.json do
-              render json: t('client_api.invite_users.permission_error'),
-                     status: 422
-            end
-          end
+          respond_422(t('client_api.invite_users.permission_error'))
         end
       end
     end

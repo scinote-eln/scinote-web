@@ -4,6 +4,11 @@ Canaid::Permissions.register_for(Team) do
     user.is_member_of_team?(team)
   end
 
+  # edit team name, edit team description
+  can :update_team do |user, team|
+    user.is_admin_of_team?(team)
+  end
+
   # invite user to team
   can :create_user_team do |user, team|
     user.is_admin_of_team?(team)
