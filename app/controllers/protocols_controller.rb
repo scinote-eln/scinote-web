@@ -914,7 +914,7 @@ class ProtocolsController < ApplicationController
   def check_create_permissions
     load_team_and_type
 
-    if !can_create_new_protocol(@current_team) || @type == :archive
+    if !can_create_protocol?(@current_team) || @type == :archive
       render_403
     end
   end
@@ -1057,7 +1057,7 @@ class ProtocolsController < ApplicationController
       @protocol_json.present? &&
       @team.present? &&
       (@type == :public || @type == :private) &&
-      can_import_protocols(@team)
+      can_create_protocol?(@team)
     )
       render_403
     end

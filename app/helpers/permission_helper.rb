@@ -695,13 +695,13 @@ module PermissionHelper
   #   is_member_of_team(team)
   # end
 
-  def can_create_new_protocol(team)
-    is_normal_user_or_admin_of_team(team)
-  end
+  # def can_create_new_protocol(team)
+  #   is_normal_user_or_admin_of_team(team)
+  # end
 
-  def can_import_protocols(team)
-    is_normal_user_or_admin_of_team(team)
-  end
+  # def can_import_protocols(team)
+  #   is_normal_user_or_admin_of_team(team)
+  # end
 
   def can_view_protocol(protocol)
     if protocol.in_repository_public?
