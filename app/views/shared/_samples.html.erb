@@ -21,7 +21,7 @@
     data-module-id="<%= @my_module.id %>"
   <% end %>>
 
-  <% if can_create_samples(@team) %>
+  <% if can_create_sample?(@team) %>
     <button type="button" class="btn btn-default editAdd" id="addSample" onclick="onClickAddSample()">
       <span class="glyphicon glyphicon-plus"></span>
       <span class="hidden-xs"><%= t("samples.add_new_sample") %></span>

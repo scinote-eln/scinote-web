@@ -1,5 +1,5 @@
 Canaid::Permissions.register_for(Team) do
-  # view projects
+  # view projects, view protocols
   can :read_team do |user, team|
     user.is_member_of_team?(team)
   end
@@ -16,6 +16,11 @@ Canaid::Permissions.register_for(Team) do
 
   # create protocol in repository, import protocol to repository
   can :create_protocol do |user, team|
+    user.is_normal_user_or_admin_of_team?(team)
+  end
+
+  # create sample, import sample
+  can :create_sample do |user, team|
     user.is_normal_user_or_admin_of_team?(team)
   end
 end
