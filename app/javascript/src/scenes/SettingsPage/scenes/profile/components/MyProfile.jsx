@@ -6,8 +6,6 @@ import { FormattedMessage } from "react-intl";
 import { getUserProfileInfo } from "../../../../../services/api/users_api";
 import { addCurrentUser } from "../../../../../components/actions/UsersActions";
 
-import * as Permissions from "../../../../../services/permissions";
-
 import AvatarInputField from "./AvatarInputField";
 import ProfileInputField from "./ProfileInputField";
 
