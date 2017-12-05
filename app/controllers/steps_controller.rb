@@ -639,7 +639,8 @@ class StepsController < ApplicationController
   end
 
   def check_view_permissions
-    unless can_view_steps_in_protocol(@protocol)
+    if @protocol.in_module? && !can_view_steps_in_protocol(@protocol) ||
+       @protocol.in_repository? && !can_read_protocol_in_repository?(@protocol)
       render_403
     end
   end

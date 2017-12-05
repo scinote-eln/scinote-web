@@ -11,7 +11,7 @@ class ProtocolsDatatable < CustomDatatable
   def_delegator :@view, :can_publish_protocol
   def_delegator :@view, :can_archive_protocol
   def_delegator :@view, :can_restore_protocol
-  def_delegator :@view, :can_export_protocol
+  def_delegator :@view, :can_read_protocol_in_repository?
   def_delegator :@view, :linked_children_protocol_path
   def_delegator :@view, :preview_protocol_path
 
@@ -101,7 +101,7 @@ class ProtocolsDatatable < CustomDatatable
         'DT_CanPublish': can_publish_protocol(protocol),
         'DT_CanArchive': can_archive_protocol(protocol),
         'DT_CanRestore': can_restore_protocol(protocol),
-        'DT_CanExport': can_export_protocol(protocol),
+        'DT_CanExport': can_read_protocol_in_repository?(protocol),
         '1': if protocol.in_repository_archived?
                escape_input(record.name)
              else

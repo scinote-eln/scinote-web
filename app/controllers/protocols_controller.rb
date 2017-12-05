@@ -906,7 +906,9 @@ class ProtocolsController < ApplicationController
 
   def check_view_permissions
     @protocol = Protocol.find_by_id(params[:id])
-    if @protocol.blank? || !can_view_protocol(@protocol)
+    if @protocol.blank? ||
+       @protocol.in_module? && !can_view_protocol(@protocol) ||
+       @protocol.in_repository? && !can_read_protocol_in_repository?(@protocol)
       respond_to { |f| f.json { render json: {}, status: :unauthorized } }
     end
   end
@@ -1065,8 +1067,12 @@ class ProtocolsController < ApplicationController
 
   def check_export_permissions
     @protocols = Protocol.where(id: params[:protocol_ids])
-    if @protocols.blank? || @protocols.any? { |p| !can_export_protocol(p) }
-      render_403
+    render_403 if @protocols.blank?
+    @protocols.each do |p|
+      if p.in_module? && !can_export_protocol(p) ||
+         p.in_repository? && !can_read_protocol_in_repository?(p)
+        render_403
+      end
     end
   end
 
