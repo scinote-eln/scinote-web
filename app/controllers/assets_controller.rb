@@ -11,30 +11,7 @@ class AssetsController < ApplicationController
 
   before_action :load_vars
   before_action :check_read_permission, except: :file_present
-  before_action :load_vars, except: :signature
-  before_action :check_read_permission, except: [:signature, :file_present]
   before_action :check_edit_permission, only: :edit
-
-  # Validates asset and then generates S3 upload posts, because
-  # otherwise untracked files could be uploaded to S3
-  def signature
-    respond_to do |format|
-      format.json {
-        asset = Asset.new(asset_params)
-        if asset.valid?
-          posts = generate_upload_posts asset
-          render json: {
-            posts: posts
-          }
-        else
-          render json: {
-            status: 'error',
-            errors: asset.errors
-          }, status: :bad_request
-        end
-      }
-    end
-  end
 
   def file_present
     respond_to do |format|
@@ -158,45 +135,6 @@ class AssetsController < ApplicationController
         render_403 and return
       end
     end
-  end
-
-  def generate_upload_posts(asset)
-    posts = []
-    s3_post = S3_BUCKET.presigned_post(
-      key: asset.file.path[1..-1],
-      success_action_status: '201',
-      acl: 'private',
-      storage_class: "STANDARD",
-      content_length_range: 1..Constants::FILE_MAX_SIZE_MB.megabytes,
-      content_type: asset.file_content_type
-    )
-    posts.push({
-      url: s3_post.url,
-      fields: s3_post.fields
-    })
-
-    condition = %r{^image/#{Regexp.union(Constants::WHITELISTED_IMAGE_TYPES)}}
-
-    if condition === asset.file_content_type
-      asset.file.options[:styles].each do |style, option|
-        s3_post = S3_BUCKET.presigned_post(
-          key: asset.file.path(style)[1..-1],
-          success_action_status: '201',
-          acl: 'public-read',
-          storage_class: "REDUCED_REDUNDANCY",
-          content_length_range: 1..Constants::FILE_MAX_SIZE_MB.megabytes,
-          content_type: asset.file_content_type
-        )
-        posts.push({
-          url: s3_post.url,
-          fields: s3_post.fields,
-          style_option: option,
-          mime_type: asset.file_content_type
-        })
-      end
-    end
-
-    posts
   end
 
   def append_wd_params(url)
