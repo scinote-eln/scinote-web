@@ -1,10 +1,17 @@
 <% query ||= nil %>
 <% text = query.present? ? highlight(asset.file_file_name, query.strip.split(/\s+/)) : asset.file_file_name %>
 
-<% if asset.step and can_view_or_download_step_assets(asset.step.protocol) %>
-  <a href="<%= download_asset_path asset %>" target="_blank">
-    <%= text %>
-  </a>
+<% if asset.step %>
+  <% protocol = asset.step.protocol %>
+  <% if protocol.in_module? && can_view_or_download_step_assets(protocol) %>
+    <a href="<%= download_asset_path asset %>" target="_blank">
+      <%= text %>
+    </a>
+  <% elsif protocol.in_repository? && can_read_protocol_in_repository?(protocol) %>
+    <a href="<%= download_asset_path asset %>" target="_blank">
+      <%= text %>
+    </a>
+  <% end %>
 <% elsif asset.result and can_view_or_download_result_assets(asset.result.my_module) %>
   <a href="<%= download_asset_path asset %>" target="_blank">
     <%= text %>

@@ -31,3 +31,13 @@ Canaid::Permissions.register_for(UserTeam) do
     user == user_team.user || user.is_admin_of_team?(user_team.team)
   end
 end
+
+Canaid::Permissions.register_for(Protocol) do
+  # view protocol in repository, export protocol from repository
+  # view step in protocol in repository, view or dowload step asset
+  can :read_protocol_in_repository do |user, protocol|
+    user.is_member_of_team?(protocol.team) &&
+      (protocol.in_repository_public? ||
+      protocol.in_repository_private? && user == protocol.added_by)
+  end
+end

@@ -280,10 +280,10 @@ class WopiController < ActionController::Base
     # current_user
     @current_user = @user
     if @assoc.class == Step
-      @can_read = can_view_steps_in_protocol(@protocol)
       @can_write = can_edit_step_in_protocol(@protocol)
 
       if @protocol.in_module?
+        @can_read = can_view_steps_in_protocol(@protocol)
         @close_url = protocols_my_module_url(@protocol.my_module,
                                              only_path: false,
                                              host: ENV['WOPI_USER_HOST'])
@@ -295,6 +295,7 @@ class WopiController < ActionController::Base
                                               host: ENV['WOPI_USER_HOST'])
         @breadcrumb_folder_name = @protocol.my_module.name
       else
+        @can_read = can_read_protocol_in_repository?(@protocol)
         @close_url = protocols_url(only_path: false,
                                    host: ENV['WOPI_USER_HOST'])
 

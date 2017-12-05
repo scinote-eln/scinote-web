@@ -115,7 +115,8 @@ class AssetsController < ApplicationController
 
   def check_read_permission
     if @assoc.class == Step
-      unless can_view_or_download_step_assets(@protocol)
+      if @protocol.in_module? && !can_view_or_download_step_assets(@protocol) ||
+         @protocol.in_repository? && !can_read_protocol_in_repository?(@protocol)
         render_403 and return
       end
     elsif @assoc.class == Result
