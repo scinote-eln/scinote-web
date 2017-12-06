@@ -7,10 +7,7 @@ class ProtocolsDatatable < CustomDatatable
   def_delegator :@view, :edit_protocol_path
   def_delegator :@view, :can_clone_protocol
   def_delegator :@view, :clone_protocol_path
-  def_delegator :@view, :can_make_protocol_private
-  def_delegator :@view, :can_publish_protocol
-  def_delegator :@view, :can_archive_protocol
-  def_delegator :@view, :can_restore_protocol
+  def_delegator :@view, :can_update_protocol_type_in_repository?
   def_delegator :@view, :can_read_protocol_in_repository?
   def_delegator :@view, :linked_children_protocol_path
   def_delegator :@view, :preview_protocol_path
@@ -97,10 +94,14 @@ class ProtocolsDatatable < CustomDatatable
                                              team: @team,
                                              type: @type)
                        end,
-        'DT_CanMakePrivate': can_make_protocol_private(protocol),
-        'DT_CanPublish': can_publish_protocol(protocol),
-        'DT_CanArchive': can_archive_protocol(protocol),
-        'DT_CanRestore': can_restore_protocol(protocol),
+        'DT_CanMakePrivate': protocol.in_repository_public? &&
+                             can_update_protocol_type_in_repository?(protocol),
+        'DT_CanPublish': protocol.in_repository_private? &&
+                         can_update_protocol_type_in_repository?(protocol),
+        'DT_CanArchive': protocol.in_repository_active? &&
+                         can_update_protocol_type_in_repository?(protocol),
+        'DT_CanRestore': protocol.in_repository_archived? &&
+                         can_update_protocol_type_in_repository?(protocol),
         'DT_CanExport': can_read_protocol_in_repository?(protocol),
         '1': if protocol.in_repository_archived?
                escape_input(record.name)
