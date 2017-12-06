@@ -5,7 +5,8 @@
   <div class="panel panel-default">
     <div class="panel-heading">
       <div class="panel-options pull-right">
-        <% if can_reorder_step_in_protocol(@protocol) %>
+        <% if @protocol.in_module? && can_reorder_step_in_protocol(@protocol) ||
+              @protocol.in_repository? && can_update_protocol_in_repository?(@protocol) %>
           <a data-action="move-step"
              class="btn btn-link"
              href="<%= move_up_step_path(step, format: :json) %>"
@@ -19,7 +20,8 @@
              data-remote="true">
             <span class="glyphicon glyphicon-arrow-down"></a>
         <% end %>
-        <% if can_edit_step_in_protocol(@protocol) %>
+        <% if @protocol.in_module? && can_edit_step_in_protocol(@protocol) ||
+              @protocol.in_repository? && can_update_protocol_in_repository?(@protocol) %>
           <a data-action="edit-step"
              class="btn btn-link"
              title="<%= t("protocols.steps.options.edit_title") %>"
@@ -28,7 +30,8 @@
             <span class="glyphicon glyphicon-edit">
           </a>
         <% end %>
-        <% if can_delete_step_in_protocol(@protocol) && step.can_destroy? %>
+        <% if (@protocol.in_module? && can_delete_step_in_protocol(@protocol) ||
+              @protocol.in_repository? && can_update_protocol_in_repository?(@protocol)) && step.can_destroy? %>
           <%= link_to(step_path(step), title: t("protocols.steps.options.delete_title"), method: "delete", class: "btn btn-link",
             data: {action: "delete-step", confirm: t("protocols.steps.destroy.confirm", step: step.name)}) do %>
             <span class="glyphicon glyphicon-trash">

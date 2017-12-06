@@ -12,7 +12,7 @@
                           step.protocol.team,
                           text %>
   <% end %>
-<% elsif can_edit_protocol(step.protocol) %>
+<% elsif step.protocol.in_repository? && can_update_protocol_in_repository?(step.protocol) %>
   <%= route_to_other_team edit_protocol_path(step.protocol),
                           step.protocol.team,
                           text %>
