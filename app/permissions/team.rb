@@ -40,4 +40,12 @@ Canaid::Permissions.register_for(Protocol) do
       (protocol.in_repository_public? ||
       protocol.in_repository_private? && user == protocol.added_by)
   end
+
+  # edit protocol in repository,
+  # create, edit, delete or reorder step in repository
+  can :update_protocol_in_repository do |user, protocol|
+    user.is_normal_user_or_admin_of_team?(protocol.team) &&
+      user == protocol.added_by &&
+      protocol.in_repository_active?
+  end
 end

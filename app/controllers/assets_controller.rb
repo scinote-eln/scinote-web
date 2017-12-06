@@ -128,7 +128,8 @@ class AssetsController < ApplicationController
 
   def check_edit_permission
     if @assoc.class == Step
-      unless can_edit_step_in_protocol(@protocol)
+      if @protocol.in_module? && !can_edit_step_in_protocol(@protocol) ||
+         @protocol.in_repository? && !can_update_protocol_in_repository?(@protocol)
         render_403 and return
       end
     elsif @assoc.class == Result

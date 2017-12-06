@@ -720,10 +720,10 @@ module PermissionHelper
     end
   end
 
-  def can_edit_protocol(protocol)
-    is_normal_user_or_admin_of_team(protocol.team) and
-    current_user == protocol.added_by and (not protocol.in_repository_archived?)
-  end
+  # def can_edit_protocol(protocol)
+  #   is_normal_user_or_admin_of_team(protocol.team) and
+  #   current_user == protocol.added_by and (not protocol.in_repository_archived?)
+  # end
 
   def can_clone_protocol(protocol)
     is_normal_user_or_admin_of_team(protocol.team) and
@@ -858,28 +858,28 @@ module PermissionHelper
     end
   end
 
-  def can_create_step_in_protocol(protocol)
-    if protocol.in_module?
+  def can_create_step_in_protocol(protocol) # WIP
+    if protocol.in_module? # TBD
       my_module = protocol.my_module
       my_module.active? &&
       my_module.experiment.project.active? &&
       my_module.experiment.active? &&
       is_user_or_higher_of_project(my_module.experiment.project)
-    elsif protocol.in_repository?
+    elsif protocol.in_repository? # DONE
       protocol.in_repository_active? and can_edit_protocol(protocol)
     else
       false
     end
   end
 
-  def can_reorder_step_in_protocol(protocol)
-    if protocol.in_module?
+  def can_reorder_step_in_protocol(protocol) # WIP
+    if protocol.in_module? # TBD
       my_module = protocol.my_module
       my_module.active? &&
         my_module.experiment.project.active? &&
         my_module.experiment.active? &&
         is_user_or_higher_of_project(my_module.experiment.project)
-    elsif protocol.in_repository?
+    elsif protocol.in_repository? # DONE
       protocol.in_repository_active? and can_edit_protocol(protocol)
     else
       false
@@ -892,28 +892,28 @@ module PermissionHelper
   #   - adding assets
   #   - adding tables
   # but right now we have 1 page to rule them all.
-  def can_edit_step_in_protocol(protocol)
-    if protocol.in_module?
+  def can_edit_step_in_protocol(protocol) # WIP
+    if protocol.in_module? # TBD
       my_module = protocol.my_module
       my_module.active? &&
       my_module.experiment.project.active? &&
       my_module.experiment.active? &&
       is_user_or_higher_of_project(my_module.experiment.project)
-    elsif protocol.in_repository?
+    elsif protocol.in_repository? # DONE
       protocol.in_repository_active? and can_edit_protocol(protocol)
     else
       false
     end
   end
 
-  def can_delete_step_in_protocol(protocol)
-    if protocol.in_module?
+  def can_delete_step_in_protocol(protocol) # WIP
+    if protocol.in_module? # TBD
       my_module = protocol.my_module
       my_module.active? &&
         my_module.experiment.project.active? &&
         my_module.experiment.active? &&
         is_owner_of_project(my_module.experiment.project)
-    elsif protocol.in_repository?
+    elsif protocol.in_repository? # DONE
       protocol.in_repository_active? and can_edit_protocol(protocol)
     else
       false

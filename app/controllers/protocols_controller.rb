@@ -935,7 +935,7 @@ class ProtocolsController < ApplicationController
     load_team_and_type
     @protocol = Protocol.find_by_id(params[:id])
 
-    unless can_edit_protocol(@protocol)
+    unless can_update_protocol_in_repository?(@protocol)
       render_403
     end
   end
