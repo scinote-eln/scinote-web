@@ -1014,7 +1014,8 @@ class ProtocolsController < ApplicationController
   def check_make_private_permissions
     @protocols = Protocol.where(id: params[:protocol_ids])
     @protocols.find_each do |protocol|
-      unless can_make_protocol_private(protocol) then
+      if !protocol.in_repository_public? ||
+         !can_update_protocol_type_in_repository?(protocol)
         respond_to { |f| f.json { render json: {}, status: :unauthorized } }
         return
       end
@@ -1024,7 +1025,8 @@ class ProtocolsController < ApplicationController
   def check_publish_permissions
     @protocols = Protocol.where(id: params[:protocol_ids])
     @protocols.find_each do |protocol|
-      unless can_publish_protocol(protocol) then
+      if !protocol.in_repository_private? ||
+         !can_update_protocol_type_in_repository?(protocol)
         respond_to { |f| f.json { render json: {}, status: :unauthorized } }
         return
       end
@@ -1034,7 +1036,8 @@ class ProtocolsController < ApplicationController
   def check_archive_permissions
     @protocols = Protocol.where(id: params[:protocol_ids])
     @protocols.find_each do |protocol|
-      unless can_archive_protocol(protocol) then
+      if protocol.in_repository_archived? ||
+         !can_update_protocol_type_in_repository?(protocol)
         respond_to { |f| f.json { render json: {}, status: :unauthorized } }
         return
       end
@@ -1044,7 +1047,8 @@ class ProtocolsController < ApplicationController
   def check_restore_permissions
     @protocols = Protocol.where(id: params[:protocol_ids])
     @protocols.find_each do |protocol|
-      unless can_restore_protocol(protocol) then
+      if protocol.in_repository_active? ||
+         !can_update_protocol_type_in_repository?(protocol)
         respond_to { |f| f.json { render json: {}, status: :unauthorized } }
         return
       end

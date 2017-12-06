@@ -733,15 +733,15 @@ module PermissionHelper
     )
   end
 
-  def can_make_protocol_private(protocol)
-    protocol.added_by == current_user and
-    protocol.in_repository_public?
-  end
+  # def can_make_protocol_private(protocol)
+  #   protocol.added_by == current_user and
+  #   protocol.in_repository_public?
+  # end
 
-  def can_publish_protocol(protocol)
-    protocol.added_by == current_user and
-    protocol.in_repository_private?
-  end
+  # def can_publish_protocol(protocol)
+  #   protocol.added_by == current_user and
+  #   protocol.in_repository_private?
+  # end
 
   def can_export_protocol(protocol) # WIP
     (protocol.in_repository_public? and is_member_of_team(protocol.team)) or # DONE
@@ -750,15 +750,15 @@ module PermissionHelper
         can_export_protocol_from_module(protocol.my_module))
   end
 
-  def can_archive_protocol(protocol)
-    protocol.added_by == current_user and
-      (protocol.in_repository_public? or protocol.in_repository_private?)
-  end
+  # def can_archive_protocol(protocol)
+  #   protocol.added_by == current_user and
+  #     (protocol.in_repository_public? or protocol.in_repository_private?)
+  # end
 
-  def can_restore_protocol(protocol)
-    protocol.added_by == current_user and
-      protocol.in_repository_archived?
-  end
+  # def can_restore_protocol(protocol)
+  #   protocol.added_by == current_user and
+  #     protocol.in_repository_archived?
+  # end
 
   def can_unlink_protocol(protocol)
     if protocol.linked?
