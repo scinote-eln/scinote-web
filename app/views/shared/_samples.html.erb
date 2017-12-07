@@ -99,7 +99,7 @@
     <span class="hidden-xs-custom"><%= t("samples.edit_sample") %></span>
   </button>
 
-  <% if can_delete_samples(@team) %>
+  <% if can_delete_samples?(@team) %>
     <button type="button" class="btn btn-default"
       id="deleteSamplesButton" data-target="#deleteSamples" data-toggle="modal" disabled>
       <span class="glyphicon glyphicon-trash"></span>

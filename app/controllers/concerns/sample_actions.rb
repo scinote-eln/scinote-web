@@ -11,7 +11,7 @@ module SampleActions
       params[:sample_ids].each do |id|
         sample = Sample.find_by_id(id)
 
-        if sample and can_delete_sample(sample)
+        if sample && can_update_or_delete_sample?(sample)
           sample.destroy
           counter_user += 1
         else
@@ -45,7 +45,7 @@ module SampleActions
   end
 
   def check_destroy_samples_permissions
-    unless can_delete_samples(@project.team)
+    unless can_delete_samples?(@project.team)
       render_403
     end
   end

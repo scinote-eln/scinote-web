@@ -644,13 +644,13 @@ module PermissionHelper
   # end
 
   # Only person who created sample can delete it
-  def can_delete_sample(sample)
-    sample.user == current_user
-  end
+  # def can_delete_sample(sample)
+  #   sample.user == current_user
+  # end
 
-  def can_delete_samples(team)
-    is_normal_user_or_admin_of_team(team)
-  end
+  # def can_delete_samples(team)
+  #   is_normal_user_or_admin_of_team(team)
+  # end
 
   def can_add_samples_to_module(my_module)
     is_technician_or_higher_of_project(my_module.experiment.project)
