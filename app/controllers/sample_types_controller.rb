@@ -95,7 +95,7 @@ class SampleTypesController < ApplicationController
       sample.update(sample_type_id: nil)
     end
     @sample_type.destroy
-    redirect_to :back
+    redirect_back(fallback_location: root_path)
   end
 
   def sample_type_element

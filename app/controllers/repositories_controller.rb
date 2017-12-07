@@ -267,7 +267,7 @@ class RepositoriesController < ApplicationController
     else
       flash[:alert] = t('zip_export.export_error')
     end
-    redirect_to :back
+    redirect_back(fallback_location: root_path)
   end
 
   private
@@ -326,7 +326,7 @@ class RepositoriesController < ApplicationController
     respond_to do |format|
       format.html do
         flash[:alert] = message
-        redirect_to :back
+        redirect_back(fallback_location: root_path)
       end
       format.json do
         render json: { message: message },
