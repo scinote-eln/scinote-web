@@ -60,3 +60,10 @@ Canaid::Permissions.register_for(Protocol) do
       can_read_protocol_in_repository?(user, protocol)
   end
 end
+
+Canaid::Permissions.register_for(Sample) do
+  # edit sample
+  can :update_sample do |user, sample|
+    user.is_admin_of_team?(sample.team) || user == sample.user
+  end
+end

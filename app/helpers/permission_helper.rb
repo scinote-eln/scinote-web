@@ -638,10 +638,10 @@ module PermissionHelper
 
   # Only person who created the sample
   # or team admin can edit it
-  def can_edit_sample(sample)
-    is_admin_of_team(sample.team) or
-      sample.user == current_user
-  end
+  # def can_edit_sample(sample)
+  #   is_admin_of_team(sample.team) or
+  #     sample.user == current_user
+  # end
 
   # Only person who created sample can delete it
   def can_delete_sample(sample)
