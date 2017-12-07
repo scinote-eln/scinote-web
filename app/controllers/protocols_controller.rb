@@ -926,7 +926,7 @@ class ProtocolsController < ApplicationController
     @original = Protocol.find_by_id(params[:id])
 
     if @original.blank? ||
-      !can_clone_protocol(@original) || @type == :archive
+      !can_clone_protocol?(@original) || @type == :archive
       render_403
     end
   end

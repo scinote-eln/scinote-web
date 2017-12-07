@@ -725,13 +725,13 @@ module PermissionHelper
   #   current_user == protocol.added_by and (not protocol.in_repository_archived?)
   # end
 
-  def can_clone_protocol(protocol)
-    is_normal_user_or_admin_of_team(protocol.team) and
-    (
-      protocol.in_repository_public? or
-      (protocol.in_repository_private? and current_user == protocol.added_by)
-    )
-  end
+  # def can_clone_protocol(protocol)
+  #   is_normal_user_or_admin_of_team(protocol.team) and
+  #   (
+  #     protocol.in_repository_public? or
+  #     (protocol.in_repository_private? and current_user == protocol.added_by)
+  #   )
+  # end
 
   # def can_make_protocol_private(protocol)
   #   protocol.added_by == current_user and
