@@ -167,7 +167,7 @@ class SamplesController < ApplicationController
 
     respond_to do |format|
       if sample
-        if can_update_sample?(sample)
+        if can_update_or_delete_sample?(sample)
           if params[:sample]
             if params[:sample][:name]
               sample.name = params[:sample][:name]
@@ -325,13 +325,13 @@ class SamplesController < ApplicationController
   end
 
   def check_edit_permissions
-    unless can_update_sample?(@sample)
+    unless can_update_or_delete_sample?(@sample)
       render_403
     end
   end
 
   def check_destroy_permissions
-    unless can_delete_samples(@team)
+    unless can_update_or_delete_sample?(@sample)
       render_403
     end
   end
