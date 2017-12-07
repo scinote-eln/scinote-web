@@ -53,4 +53,10 @@ Canaid::Permissions.register_for(Protocol) do
     user.is_normal_user_or_admin_of_team?(protocol.team) &&
       user == protocol.added_by
   end
+
+  # clone protocol in repository
+  can :clone_protocol do |user, protocol|
+    can_create_protocol?(user, protocol.team) &&
+      can_read_protocol_in_repository?(user, protocol)
+  end
 end
