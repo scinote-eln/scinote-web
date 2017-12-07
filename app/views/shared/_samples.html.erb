@@ -8,7 +8,7 @@
 
 <div id="alert-container"></div>
 
-<% if can_view_samples(@team) %>
+<% if can_read_team?(@team) %>
   <%= bootstrap_form_tag(url: export_samples_team_path(@team),
                          html: { id: 'form-export', class: 'hidden' }) do |f| %>
   <% end %>
@@ -32,7 +32,7 @@
       </button>
   <% end %>
 
-  <% if can_view_samples(@team) %>
+  <% if can_read_team?(@team) %>
     <a href="#" class="btn btn-default" id="exportSamplesButton">
       <span class="glyphicon glyphicon-cloud-download"></span>
       <span class="hidden-xs"><%= t("samples.export") %></span>

@@ -332,7 +332,7 @@ module PermissionHelper
   end
 
   def can_view_project_samples(project)
-    can_view_samples(project.team)
+    can_view_project(project)
   end
 
   def can_view_project_archive(project)
@@ -383,7 +383,7 @@ module PermissionHelper
   end
 
   def can_view_experiment_samples(experiment)
-    can_view_samples(experiment.project.team)
+    can_view_experiment(experiment)
   end
 
   def can_clone_experiment(experiment)
@@ -517,8 +517,7 @@ module PermissionHelper
   end
 
   def can_view_module_samples(my_module)
-    can_view_module(my_module) and
-      can_view_samples(my_module.experiment.project.team)
+    can_view_module(my_module)
   end
 
   def can_view_module_archive(my_module)
@@ -633,9 +632,9 @@ module PermissionHelper
   #   is_normal_user_or_admin_of_team(team)
   # end
 
-  def can_view_samples(team)
-    is_member_of_team(team)
-  end
+  # def can_view_samples(team)
+  #   is_member_of_team(team)
+  # end
 
   # Only person who created the sample
   # or team admin can edit it
