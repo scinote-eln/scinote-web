@@ -14,6 +14,11 @@ Canaid::Permissions.register_for(Team) do
     user.is_admin_of_team?(team)
   end
 
+  # create project
+  can :create_project do |user, team|
+    user.is_normal_user_or_admin_of_team?(team)
+  end
+
   # create protocol in repository, import protocol to repository
   can :create_protocol do |user, team|
     user.is_normal_user_or_admin_of_team?(team)

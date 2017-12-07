@@ -12,6 +12,7 @@ class ProjectsController < ApplicationController
                                                 :samples, :experiment_archive,
                                                 :samples_index]
   before_action :check_view_notifications_permissions, only: [ :notifications ]
+  before_action :check_create_permissions, only: [ :new, :create ]
   before_action :check_edit_permissions, only: [ :edit ]
   before_action :check_experiment_archive_permissions,
                 only: [:experiment_archive]
@@ -320,6 +321,10 @@ class ProjectsController < ApplicationController
     unless can_view_project(@project)
       render_403
     end
+  end
+
+  def check_create_permissions
+    render_403 unless can_create_project?(current_team)
   end
 
   def check_view_notifications_permissions
