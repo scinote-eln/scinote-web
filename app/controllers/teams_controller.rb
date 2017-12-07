@@ -217,7 +217,7 @@ class TeamsController < ApplicationController
     else
       flash[:alert] = t('zip_export.export_error')
     end
-    redirect_to :back
+    redirect_back(fallback_location: root_path)
   end
 
   def routing_error(error = 'Routing error', status = :not_found, exception=nil)

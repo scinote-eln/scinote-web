@@ -54,11 +54,11 @@ class SearchController < ApplicationController
       if query.length < Constants::NAME_MIN_LENGTH
         flash[:error] = t('general.query.length_too_short',
                           min_length: Constants::NAME_MIN_LENGTH)
-        redirect_to :back
+        redirect_back(fallback_location: root_path)
       elsif query.length > Constants::TEXT_MAX_LENGTH
         flash[:error] = t('general.query.length_too_long',
                           max_length: Constants::TEXT_MAX_LENGTH)
-        redirect_to :back
+        redirect_back(fallback_location: root_path)
       else
         @search_query = query
       end
@@ -76,7 +76,7 @@ class SearchController < ApplicationController
         flash[:error] = t('general.query.wrong_query',
                           min_length: Constants::NAME_MIN_LENGTH,
                           max_length: Constants::TEXT_MAX_LENGTH)
-        redirect_to :back
+        redirect_back(fallback_location: root_path)
       else
         @search_query.strip!
       end

@@ -109,7 +109,7 @@ class SampleGroupsController < ApplicationController
       sample.update(sample_group_id: nil)
     end
     @sample_group.destroy
-    redirect_to :back
+    redirect_back(fallback_location: root_path)
   end
 
   private

@@ -72,7 +72,7 @@ module Users
             flash[:alert] = t(
               'users.settings.account.preferences.tutorial.tutorial_reset_error'
             )
-            redirect_to :back
+            redirect_back(fallback_location: root_path)
           end
         end
 

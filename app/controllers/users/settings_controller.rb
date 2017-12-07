@@ -17,7 +17,7 @@ module Users
         end
       end
       flash[:alert] = t('users.settings.changed_team_error_flash')
-      redirect_to :back
+      redirect_back(fallback_location: root_path)
     end
 
     private
