@@ -255,9 +255,9 @@ module PermissionHelper
   #   is_member_of_team(team)
   # end
 
-  def can_create_project(team)
-    is_normal_user_or_admin_of_team(team)
-  end
+  # def can_create_project(team)
+  #   is_normal_user_or_admin_of_team(team)
+  # end
 
   # User can view project if he's assigned onto it, or if
   # a project is public/visible, and user is a member of that team
