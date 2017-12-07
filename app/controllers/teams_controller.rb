@@ -255,7 +255,7 @@ class TeamsController < ApplicationController
   end
 
   def check_view_samples_permission
-    unless can_view_samples(@team)
+    unless can_read_team?(@team)
       render_403
     end
   end
