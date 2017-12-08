@@ -662,31 +662,31 @@ module PermissionHelper
 
   # ---- SAMPLE TYPES PERMISSIONS ----
 
-  def can_create_sample_type_in_team(team)
-    is_normal_user_or_admin_of_team(team)
-  end
+  # def can_create_sample_type_in_team(team)
+  #   is_normal_user_or_admin_of_team(team)
+  # end
 
   # ---- SAMPLE GROUPS PERMISSIONS ----
 
-  def can_create_sample_group_in_team(team)
-    is_normal_user_or_admin_of_team(team)
-  end
+  # def can_create_sample_group_in_team(team)
+  #   is_normal_user_or_admin_of_team(team)
+  # end
 
   # ---- CUSTOM FIELDS PERMISSIONS ----
 
-  def can_create_custom_field_in_team(team)
-    is_normal_user_or_admin_of_team(team)
-  end
+  # def can_create_custom_field_in_team(team)
+  #   is_normal_user_or_admin_of_team(team)
+  # end
 
-  def can_edit_custom_field(custom_field)
-    custom_field.user == current_user ||
-      is_admin_of_team(custom_field.team)
-  end
+  # def can_edit_custom_field(custom_field)
+  #   custom_field.user == current_user ||
+  #     is_admin_of_team(custom_field.team)
+  # end
 
-  def can_delete_custom_field(custom_field)
-    custom_field.user == current_user ||
-      is_admin_of_team(custom_field.team)
-  end
+  # def can_delete_custom_field(custom_field)
+  #   custom_field.user == current_user ||
+  #     is_admin_of_team(custom_field.team)
+  # end
 
   # ---- PROTOCOL PERMISSIONS ----
 
