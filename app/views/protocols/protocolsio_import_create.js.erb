@@ -18,5 +18,11 @@ HelperModule.flashAlertMsg(' <%= t('my_modules.protocols.load_from_file_invalid_
         );
       <% end %>
       $('#modal-import-json-protocol-preview').modal('show');
+      $('.modal').on('hidden.bs.modal', function (e) {
+        if($('.modal').hasClass('in')) {
+          $('body').addClass('modal-open');
+        }
+      });
+
 
 <% end %>
