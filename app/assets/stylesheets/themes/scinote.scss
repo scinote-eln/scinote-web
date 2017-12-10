@@ -1278,7 +1278,6 @@ ul.content-module-activities {
 
 .import-protocols-modal-preview-container-json {
   height: 300px;
-  overflow-x: scroll;
   overflow-y: scroll;
   width: 100%;
 
@@ -1309,7 +1308,6 @@ ul.content-module-activities {
 #modal-import-json-protocol-preview .modal-dialog {
   .modal-body {
     max-height: 75vh;
-    overflow-x: scroll;
     overflow-y: auto;
     width: 100%;
 
