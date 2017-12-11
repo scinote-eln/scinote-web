@@ -1274,14 +1274,10 @@ ul.content-module-activities {
   }
 
 }
-// Import json protocols.io protocol modal
-#modal-import-json-protocol-preview .modal-dialog {
-  width: 70%;
-}
+// Protocolsio Import protocol modal
 
 .import-protocols-modal-preview-container-json {
   height: 300px;
-  overflow-x: scroll;
   overflow-y: scroll;
   width: 100%;
 
@@ -1300,6 +1296,25 @@ ul.content-module-activities {
     top: -10px;
   }
 
+}
+// Protocolsio Preview protocol modal
+@media (min-width: 768px) {
+  #modal-import-json-protocol-preview .modal-dialog {
+    width: 70%;
+
+  }
+}
+
+#modal-import-json-protocol-preview .modal-dialog {
+  .modal-body {
+    max-height: 75vh;
+    overflow-y: auto;
+    width: 100%;
+
+    .ql-editor {
+      min-height: initial;
+    }
+  }
 }
 /* Steps and Results */
 #steps {
