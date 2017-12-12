@@ -1051,9 +1051,9 @@ module PermissionHelper
       team.repositories.count < Constants::REPOSITORIES_LIMIT
   end
 
-  def can_view_repository(repository)
-    is_member_of_team(repository.team)
-  end
+  # def can_view_repository(repository)
+  #   is_member_of_team(repository.team)
+  # end
 
   def can_edit_and_destroy_repository(repository)
     is_admin_of_team(repository.team)

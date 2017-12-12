@@ -263,7 +263,7 @@ class MyModulesController < ApplicationController
 
   def repository
     @repository = Repository.find_by_id(params[:repository_id])
-    render_403 if @repository.nil? || !can_view_repository(@repository)
+    render_403 if @repository.nil? || !can_read_team?(@repository.team)
   end
 
   def archive
@@ -373,7 +373,7 @@ class MyModulesController < ApplicationController
   # AJAX actions
   def repository_index
     @repository = Repository.find_by_id(params[:repository_id])
-    if @repository.nil? || !can_view_repository(@repository)
+    if @repository.nil? || !can_read_team?(@repository.team)
       render_403
     else
       respond_to do |format|
@@ -578,7 +578,7 @@ class MyModulesController < ApplicationController
 
   def load_repository
     @repository = Repository.find_by_id(params[:repository_id])
-    render_404 unless @repository && can_view_repository(@repository)
+    render_404 unless @repository && can_read_team?(@repository.team)
   end
 
   def check_edit_permissions

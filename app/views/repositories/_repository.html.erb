@@ -20,7 +20,7 @@
     </button>
   <% end %>
 
-  <% if can_view_repository(repository) %>
+  <% if can_read_team?(repository.team) %>
     <a href="#" class="btn btn-default" id="exportRepositoriesButton">
       <span class="glyphicon glyphicon-cloud-download"></span>
       <span class="hidden-xs"><%= t("my_modules.repository.export") %></span>
