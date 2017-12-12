@@ -1077,35 +1077,35 @@ module PermissionHelper
       is_admin_of_team(column.repository.team)
   end
 
-  def can_create_repository_records(repository)
-    is_normal_user_or_admin_of_team(repository.team)
-  end
+  # def can_create_repository_records(repository)
+  #   is_normal_user_or_admin_of_team(repository.team)
+  # end
 
-  def can_import_repository_records(repository)
-    is_normal_user_or_admin_of_team(repository.team)
-  end
+  # def can_import_repository_records(repository)
+  #   is_normal_user_or_admin_of_team(repository.team)
+  # end
 
-  def can_edit_repository_record(record)
-    is_normal_user_or_admin_of_team(record.repository.team)
-  end
+  # def can_edit_repository_record(record)
+  #   is_normal_user_or_admin_of_team(record.repository.team)
+  # end
 
-  def can_delete_repository_records(repository)
-    is_normal_user_or_admin_of_team(repository.team)
-  end
+  # def can_delete_repository_records(repository)
+  #   is_normal_user_or_admin_of_team(repository.team)
+  # end
 
-  def can_delete_repository_record(record)
-    team = record.repository.team
-    is_admin_of_team(team) || (is_normal_user_of_team(team) &&
-                               record.created_by == current_user)
-  end
+  # def can_delete_repository_record(record)
+  #   team = record.repository.team
+  #   is_admin_of_team(team) || (is_normal_user_of_team(team) &&
+  #                              record.created_by == current_user)
+  # end
 
   def can_assign_repository_records(my_module, repository)
-    can_delete_repository_records(repository) &&
+    is_normal_user_or_admin_of_team(repository.team) &&
       is_technician_or_higher_of_project(my_module.experiment.project)
   end
 
   def can_unassign_repository_records(my_module, repository)
-    can_delete_repository_records(repository) &&
+    is_normal_user_or_admin_of_team(repository.team) &&
       is_technician_or_higher_of_project(my_module.experiment.project)
   end
 end

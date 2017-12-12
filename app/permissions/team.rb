@@ -34,6 +34,11 @@ Canaid::Permissions.register_for(Team) do
   can :manage_sample_elements do |user, team|
     user.is_normal_user_or_admin_of_team?(team)
   end
+
+  # create, import, edit, delete repository record
+  can :manage_repository_row do |user, team|
+    user.is_normal_user_or_admin_of_team?(team)
+  end
 end
 
 Canaid::Permissions.register_for(UserTeam) do
