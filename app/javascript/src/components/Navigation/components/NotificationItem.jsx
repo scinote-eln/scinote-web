@@ -6,6 +6,12 @@ import styled from "styled-components";
 
 import CustomNavItem from "./CustomNavItem";
 import NotificationImage from "./NotificationImage";
+import {
+  MAIN_COLOR_BLUE,
+  COLOR_ORANGE,
+  ICON_GREEN_COLOR,
+  WILD_SAND_COLOR
+} from "../../../config/constants/colors";
 
 const StyledListItem = styled(CustomNavItem)`
   border-bottom: 1px solid #d2d2d2;
@@ -13,14 +19,58 @@ const StyledListItem = styled(CustomNavItem)`
   padding-top: 10px;
 `;
 
+const StyledNotificationImage = styled(NotificationImage)`
+  margin-left: 12px;
+
+  .avatar {
+    top: 0px;
+    margin-top: 5px;
+    height: 45px;
+    width: 45px;
+  }
+
+  .assignment {
+    background-color: ${MAIN_COLOR_BLUE};
+    border-radius: 50%;
+    color: ${WILD_SAND_COLOR};
+    display: block;
+    font-size: 23px;
+    height: 45px;
+    padding-top: 5px;
+    width: 45px;
+  }
+
+  .deliver {
+    background-color: ${COLOR_ORANGE};
+    border-radius: 50%;
+    color: ${WILD_SAND_COLOR};
+    display: block;
+    font-size: 23px;
+    height: 45px;
+    padding-top: 5px;
+    width: 45px;
+  }
+
+  .system-message {
+    background-color: ${ICON_GREEN_COLOR};
+    border-radius: 50%;
+    color: ${WILD_SAND_COLOR};
+    display: block;
+    font-size: 23px;
+    height: 45px;
+    padding-top: 8px;
+    width: 45px;
+  }
+`;
+
 const NotificationItem = ({ notification }) => {
-  const { title, message, created_at, type_of } = notification;
+  const { title, message, created_at, type_of, avatarThumb } = notification;
 
   return (
     <StyledListItem>
       <Row>
         <Col xs={2}>
-          <NotificationImage type={type_of} />
+          <StyledNotificationImage type={type_of} avatar={avatarThumb} />
         </Col>
 
         <Col xs={10}>
