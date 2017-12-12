@@ -1042,9 +1042,9 @@ module PermissionHelper
 
   # ---- REPOSITORIES PERMISSIONS ----
 
-  def can_view_team_repositories(team)
-    is_member_of_team(team)
-  end
+  # def can_view_team_repositories(team)
+  #   is_member_of_team(team)
+  # end
 
   def can_create_repository(team)
     is_admin_of_team(team) &&

@@ -299,7 +299,7 @@ class RepositoriesController < ApplicationController
   end
 
   def check_view_all_permissions
-    render_403 unless can_view_team_repositories(@team)
+    render_403 unless can_read_team?(@team)
   end
 
   def check_view_permissions
