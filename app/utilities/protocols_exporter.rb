@@ -41,7 +41,7 @@ module ProtocolsExporter
 
   def get_tiny_mce_assets(text)
     return unless text
-    regex = /\[~tiny_mce_id:([0-9a-zA-Z]+)\]/
+    regex = Constants::TINY_MCE_ASSET_REGEX
     tiny_assets_xml = "<descriptionAssets>\n"
     text.gsub(regex) do |el|
       match = el.match(regex)
