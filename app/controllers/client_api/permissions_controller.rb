@@ -2,7 +2,7 @@ module ClientApi
   class PermissionsController < ApplicationController
     before_action :generate_permissions_object, only: :state
 
-    def state
+    def status
       respond_to do |format|
         format.json do
           render json: @permissions, status: :ok

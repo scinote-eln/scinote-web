@@ -18,7 +18,7 @@ Rails.application.routes.draw do
     get '/settings/*all', to: 'client_api/settings#index'
 
     namespace :client_api, defaults: { format: 'json' } do
-      post '/premissions', to: 'permissions#state'
+      post '/premissions', to: 'permissions#status'
       %i(activities teams notifications users configurations).each do |path|
         draw path
       end
