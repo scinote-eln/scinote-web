@@ -1,5 +1,6 @@
 Canaid::Permissions.register_for(Team) do
-  # view projects, view protocols, leave team
+  # view projects, view protocols
+  # leave team, view team users (ATWHO)
   # view samples, export samples
   # view repositories, view repository, export repository rows
   can :read_team do |user, team|

@@ -245,9 +245,9 @@ module PermissionHelper
   # at the beginning of this file (via aspector).
 
   # ---- ATWHO PERMISSIONS ----
-  def can_view_team_users(team)
-    is_member_of_team(team)
-  end
+  # def can_view_team_users(team)
+  #   is_member_of_team(team)
+  # end
 
   # ---- PROJECT PERMISSIONS ----
 
