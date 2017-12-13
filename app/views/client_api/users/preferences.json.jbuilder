@@ -1,6 +1,6 @@
-json.timeZone timeZone
-json.assignments_notification notifications['assignments']
-json.assignments_email_notification notifications['assignments_email']
-json.recent_notification notifications['recent']
-json.recent_email_notification notifications['recent_email']
-json.system_message_email_notification notifications['system_message_email']
+json.timeZone user.time_zone
+json.assignments_notification user.assignments_notification
+json.assignments_email_notification user.assignments_email_notification
+json.recent_notification user.recent_notification
+json.recent_email_notification user.recent_email_notification
+json.system_message_email_notification user.system_message_email_notification
