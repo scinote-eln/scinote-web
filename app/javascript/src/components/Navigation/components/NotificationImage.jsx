@@ -41,8 +41,4 @@ const NotificationImage = ({className, type, avatar}: Props) => {
   );
 };
 
-NotificationImage.defaultProps = {
-  avatar: ''
-};
-
 export default NotificationImage;
