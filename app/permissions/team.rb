@@ -36,6 +36,11 @@ Canaid::Permissions.register_for(Team) do
     user.is_normal_user_or_admin_of_team?(team)
   end
 
+  # create, copy, edit, destroy repository
+  can :manage_repository do |user, team|
+    user.is_admin_of_team?(team)
+  end
+
   # create, import, edit, delete repository record
   can :manage_repository_row do |user, team|
     user.is_normal_user_or_admin_of_team?(team)

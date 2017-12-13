@@ -34,24 +34,22 @@
            data-toggle="dropdown"
            aria-haspopup="true"
            aria-expanded="true"
-           <%= "disabled='disabled'" if !can_edit_and_destroy_repository repository and !can_copy_repository repository %>>
+           <%= "disabled='disabled'" unless can_manage_repository?(repository.team) %>>
         <span class="glyphicon glyphicon-cog"></span>
         <span class="caret"></span>
       </div>
-      <% if can_edit_and_destroy_repository repository or can_copy_repository repository %>
+      <% if can_manage_repository?(repository.team) %>
         <ul class="dropdown-menu pull-right">
           <li class="dropdown-header">
             <%= t("repositories.index.options_dropdown.header") %>
           </li>
-          <% if can_edit_and_destroy_repository repository %>
-            <li>
-              <%= link_to t('repositories.index.options_dropdown.rename'),
-                          team_repository_rename_modal_path(repository_id: repository),
-                          class: "rename-repo-option",
-                          remote: true %>
-            </li>
-          <% end %>
-          <% if can_copy_repository(repository) %>
+          <li>
+            <%= link_to t('repositories.index.options_dropdown.rename'),
+                        team_repository_rename_modal_path(repository_id: repository),
+                        class: "rename-repo-option",
+                        remote: true %>
+          </li>
+          <% if repository.team.repositories.count < Constants::REPOSITORIES_LIMIT %>
             <li>
               <%= link_to t('repositories.index.options_dropdown.copy'),
                           team_repository_copy_modal_path(repository_id: repository),
@@ -59,15 +57,13 @@
                           remote: true %>
             </li>
           <% end %>
-          <% if can_edit_and_destroy_repository repository %>
-            <li role="separator" class="divider"></li>
-            <li>
-              <%= link_to t('repositories.index.modal_delete.delete'),
-                          team_repository_destroy_modal_path(repository_id: repository),
-                          class: "delete-repo-option",
-                          remote: true %>
-            </li>
-          <% end %>
+          <li role="separator" class="divider"></li>
+          <li>
+            <%= link_to t('repositories.index.modal_delete.delete'),
+                        team_repository_destroy_modal_path(repository_id: repository),
+                        class: "delete-repo-option",
+                        remote: true %>
+          </li>
         </ul>
       <% end %>
     </div>
