@@ -1046,22 +1046,22 @@ module PermissionHelper
   #   is_member_of_team(team)
   # end
 
-  def can_create_repository(team)
-    is_admin_of_team(team) &&
-      team.repositories.count < Constants::REPOSITORIES_LIMIT
-  end
+  # def can_create_repository(team)
+  #   is_admin_of_team(team) &&
+  #     team.repositories.count < Constants::REPOSITORIES_LIMIT
+  # end
 
   # def can_view_repository(repository)
   #   is_member_of_team(repository.team)
   # end
 
-  def can_edit_and_destroy_repository(repository)
-    is_admin_of_team(repository.team)
-  end
+  # def can_edit_and_destroy_repository(repository)
+  #   is_admin_of_team(repository.team)
+  # end
 
-  def can_copy_repository(repository)
-    can_create_repository(repository.team)
-  end
+  # def can_copy_repository(repository)
+  #   can_create_repository(repository.team)
+  # end
 
   # def can_create_columns_in_repository(repository)
   #   is_normal_user_or_admin_of_team(repository.team)

@@ -8,10 +8,8 @@ class RepositoriesController < ApplicationController
   before_action :check_view_permissions, only: :export_repository
   before_action :check_edit_and_destroy_permissions, only:
     %i(destroy destroy_modal rename_modal update)
-  before_action :check_copy_permissions, only:
-    %i(copy_modal copy)
   before_action :check_create_permissions, only:
-    %i(create_new_modal create)
+    %i(create_new_modal create copy_modal copy)
 
   def index
     render('repositories/index')
@@ -307,15 +305,12 @@ class RepositoriesController < ApplicationController
   end
 
   def check_create_permissions
-    render_403 unless can_create_repository(@team)
+    render_403 unless can_manage_repository?(@team) ||
+                      @team.repositories.count < Constants::REPOSITORIES_LIMIT
   end
 
   def check_edit_and_destroy_permissions
-    render_403 unless can_edit_and_destroy_repository(@repository)
-  end
-
-  def check_copy_permissions
-    render_403 unless can_copy_repository(@repository)
+    render_403 unless can_manage_repository?(@team)
   end
 
   def repository_params
