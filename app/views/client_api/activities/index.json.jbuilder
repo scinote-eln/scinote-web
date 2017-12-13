@@ -4,5 +4,6 @@ json.global_activities do
     json.id activity.id
     json.message activity.message
     json.created_at activity.created_at
+    json.timezone @timezone
   end
 end

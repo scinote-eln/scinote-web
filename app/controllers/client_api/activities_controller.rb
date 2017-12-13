@@ -2,6 +2,7 @@ module ClientApi
   class ActivitiesController < ApplicationController
 
     def index
+      @timezone = current_user.time_zone
       respond_to do |format|
         format.json do
           render template: '/client_api/activities/index',
