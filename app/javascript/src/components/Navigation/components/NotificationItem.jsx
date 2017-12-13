@@ -1,5 +1,6 @@
+// @flow
+
 import React from "react";
-import PropTypes from "prop-types";
 import { Col, Row } from "react-bootstrap";
 import { FormattedTime } from "react-intl";
 import styled from "styled-components";
@@ -8,13 +9,14 @@ import CustomNavItem from "./CustomNavItem";
 import NotificationImage from "./NotificationImage";
 import {
   MAIN_COLOR_BLUE,
+  BORDER_GRAY_COLOR,
   COLOR_ORANGE,
   ICON_GREEN_COLOR,
   WILD_SAND_COLOR
 } from "../../../config/constants/colors";
 
 const StyledListItem = styled(CustomNavItem)`
-  border-bottom: 1px solid #d2d2d2;
+  border-bottom: 1px solid ${BORDER_GRAY_COLOR};
   padding-bottom: 10px;
   padding-top: 10px;
 `;
@@ -63,21 +65,25 @@ const StyledNotificationImage = styled(NotificationImage)`
   }
 `;
 
-const NotificationItem = ({ notification }) => {
-  const { title, message, created_at, type_of, avatarThumb } = notification;
+type Props = {
+  notification: Notification,
+};
+
+const NotificationItem = ({ notification }: Props) => {
+  const { title, message, createdAt, typeOf, avatarThumb } = notification;
 
   return (
     <StyledListItem>
       <Row>
         <Col xs={2}>
-          <StyledNotificationImage type={type_of} avatar={avatarThumb} />
+          <StyledNotificationImage type={typeOf} avatar={avatarThumb} />
         </Col>
 
         <Col xs={10}>
           <strong dangerouslySetInnerHTML={{ __html: title }} />
           <br />
           <FormattedTime
-            value={created_at}
+            value={createdAt}
             day="numeric"
             month="numeric"
             year="numeric"
@@ -88,16 +94,6 @@ const NotificationItem = ({ notification }) => {
       </Row>
     </StyledListItem>
   );
-};
-
-NotificationItem.propTypes = {
-  notification: PropTypes.shape({
-    id: PropTypes.number.isRequired,
-    title: PropTypes.string.isRequired,
-    message: PropTypes.string.isRequired,
-    type_of: PropTypes.string.isRequired,
-    created_at: PropTypes.string.isRequired
-  }).isRequired
 };
 
 export default NotificationItem;

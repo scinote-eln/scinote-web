@@ -1,8 +1,15 @@
+// @flow
+
 import React from "react";
 import { Image } from "react-bootstrap";
-import PropTypes from "prop-types";
 
-const NotificationImage = ({className, type, avatar}) => {
+type Props = {
+  className: string,
+  type: string,
+  avatar: string
+};
+
+const NotificationImage = ({className, type, avatar}: Props) => {
   const delegator = {
       recent_changes: (
           <Image
@@ -36,12 +43,6 @@ const NotificationImage = ({className, type, avatar}) => {
 
 NotificationImage.defaultProps = {
   avatar: ''
-};
-
-NotificationImage.propTypes = {
-  className: PropTypes.string.isRequired,
-  type: PropTypes.string.isRequired,
-  avatar: PropTypes.string
 };
 
 export default NotificationImage;
