@@ -3,7 +3,9 @@ module ClientApi
     class UserTeamsController < ApplicationController
       include ClientApi::Users::UserTeamsHelper
 
-      before_action :check_manage_user_team_permission
+      before_action :check_leave_team_permission, only: :leave_team
+      before_action :check_manage_user_team_permission,
+                    only: %i(update_role remove_user)
 
       def leave_team
         ut_service = ClientApi::UserTeamService.new(
@@ -46,9 +48,16 @@ module ClientApi
 
       private
 
+      def check_leave_team_permission
+        user_team = UserTeam.find_by_id(params[:user_team])
+        unless current_user == user_team.user || can_read_team?(user_team.team)
+          respond_422(t('client_api.permission_error'))
+        end
+      end
+
       def check_manage_user_team_permission
-        @user_team = UserTeam.find_by_id(params[:user_team])
-        unless can_update_or_delete_user_team?(@user_team)
+        user_team = UserTeam.find_by_id(params[:user_team])
+        unless can_manage_user_team?(user_team.team)
           respond_422(t('client_api.user_teams.permission_error'))
         end
       end
