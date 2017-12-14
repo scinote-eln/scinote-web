@@ -33,7 +33,7 @@ module ProtocolStatusHelper
       res << "<span class='glyphicon glyphicon-eye-close' title='" + I18n.t("my_modules.protocols.protocol_status_bar.private_desc") + "'></span>"
     end
     res << "&nbsp;"
-    if can_view_protocol(protocol)
+    if can_read_protocol_in_repository?(protocol)
       res << "<a href='" + edit_protocol_path(protocol) + "' target='_blank'>" + protocol_name(protocol) + "</a>"
     else
       res << "<span style='font-weight: bold;'>" + protocol_name(protocol) + "</span>"

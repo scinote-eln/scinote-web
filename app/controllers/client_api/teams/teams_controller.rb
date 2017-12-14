@@ -3,6 +3,8 @@ module ClientApi
     class TeamsController < ApplicationController
       include ClientApi::Users::UserTeamsHelper
 
+      before_action :check_update_team_permission, only: :update
+
       def index
         teams = current_user.datatables_teams
         success_response(template: '/client_api/teams/index',
@@ -65,6 +67,13 @@ module ClientApi
 
       def team_params
         params.require(:team).permit(:name, :description)
+      end
+
+      def check_update_team_permission
+        @team = Team.find_by_id(params[:team_id])
+        unless can_update_team?(@team)
+          respond_422(t('client_api.teams.permission_error'))
+        end
       end
 
       def success_response(args = {})

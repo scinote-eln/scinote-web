@@ -24,7 +24,7 @@
           <%= t(@type == :public ? "protocols.index.public_description" : "protocols.index.private_description") %>
         </div>
         <div class="btn-group" role="group">
-          <a class="btn btn-default" <%= can_create_new_protocol(@current_team) ? "data-action=create-new" : "disabled=disabled" %> data-url="<%= create_new_modal_protocols_path(team: @current_team, type: @type) %>">
+          <a class="btn btn-default" <%= can_create_protocol?(@current_team) ? "data-action=create-new" : "disabled=disabled" %> data-url="<%= create_new_modal_protocols_path(team: @current_team, type: @type) %>">
             <span class="glyphicon glyphicon-plus"></span>
             <span class="hidden-xs">&nbsp;<%= t("protocols.index.create_new") %></span>
           </a>
@@ -50,13 +50,13 @@
         </div>
 
         <div id="import-export-protocols" class="btn-group" role="group">
-          <a class="btn btn-default btn-open-file" <%= can_import_protocols(@current_team) ? 'data-action="import"' : 'disabled="disabled"' %>>
+          <a class="btn btn-default btn-open-file" <%= can_create_protocol?(@current_team) ? 'data-action="import"' : 'disabled="disabled"' %>>
             <span class="glyphicon glyphicon-import"></span>
             <span class="hidden-xs">&nbsp;<%= t("protocols.index.import") %></span>
             <input type="file" value="" accept=".eln" data-role="import-file-input"
             data-team-id="<%= @current_team.id %>"
             data-type="<%= @type %>" data-import-url="<%= import_protocols_path %>"
-            <%= 'disabled="disabled"' unless can_import_protocols(@current_team) %>>
+            <%= 'disabled="disabled"' unless can_create_protocol?(@current_team) %>>
           </a>
           <a class="btn btn-default" data-action="export" data-export-url="<%= export_protocols_path() %>">
             <span class="glyphicon glyphicon-export"></span>

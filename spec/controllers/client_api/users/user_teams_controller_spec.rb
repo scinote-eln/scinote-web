@@ -35,10 +35,10 @@ describe ClientApi::Users::UserTeamsController, type: :controller do
 
   describe 'POST #update_role' do
     it 'should return HTTP success if user can leave the team' do
-      user_team_two = create :user_team, team: team, user: user_two, role: 2
+      create :user_team, team: team, user: user_two, role: 2
       post :update_role,
            params: { team: team.id,
-                     user_team: user_team_two.id,
+                     user_team: user_team.id,
                      role: 'normal_user' },
            format: :json
       expect(response).to be_success

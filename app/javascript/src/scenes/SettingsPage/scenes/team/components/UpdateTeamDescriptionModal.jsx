@@ -54,7 +54,7 @@ class UpdateTeamDescriptionModal extends Component<Props, State> {
         this.onCloseModal();
       })
       .catch(error => {
-        (this: any).form.setErrorsForTag('description', [error.message])
+        (this: any).form.setErrorsForTag('description', error.response.data.message)
       });
   }
 
