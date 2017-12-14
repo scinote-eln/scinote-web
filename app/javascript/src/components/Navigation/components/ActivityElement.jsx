@@ -39,7 +39,7 @@ const ActivityElement = ({ activity }: Activity ): Node => (
   <StyledLi>
     <TimeSpan>
       <FormattedDate
-        value={new Date(activity.created_at)}
+        value={new Date(activity.createdAt)}
         hour="2-digit"
         minute="2-digit"
         timeZone={activity.timezone}
