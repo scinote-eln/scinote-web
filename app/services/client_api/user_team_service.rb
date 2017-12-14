@@ -24,6 +24,7 @@ module ClientApi
     end
 
     def update_role!
+      raise ClientApi::CustomUserTeamError if user_cant_leave?
       unless @role
         raise ClientApi::CustomUserTeamError,
               I18n.t('client_api.generic_error_message')

@@ -49,6 +49,7 @@ module ClientApi
       private
 
       def check_leave_team_permission
+        return unless params[:user_team]
         user_team = UserTeam.find_by_id(params[:user_team])
         unless current_user == user_team.user || can_read_team?(user_team.team)
           respond_422(t('client_api.permission_error'))
