@@ -1,7 +1,9 @@
 <!-- Modal footer for Manage users modal -->
 <span class="pull-left">
   <% if is_admin_of_team(@project.team) %>
-    <%= link_to t('projects.index.modal_manage_users.invite_users_link'), team_path(@project.team.id) %>
+    <%= link_to t('projects.index.modal_manage_users.invite_users_link'),
+                "/settings/teams/#{@project.team.id}",
+                data: { turbolinks: false } %>
     <span><%=t 'projects.index.modal_manage_users.invite_users_details', team: @project.team.name %></span>
   <% else %>
     <i><%=t 'projects.index.modal_manage_users.contact_admins', team: @project.team.name %></i>
