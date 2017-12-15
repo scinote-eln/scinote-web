@@ -36,19 +36,19 @@
               <%  json_object['tags'].each do |tag| %>
                 <% string_of_tags += tag['tag_name']+' , ' %>
               <% end %>
-              <%= prepare_for_view(string_of_tags,'medium').html_safe %>
+              <%= prepare_for_view(string_of_tags, ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_MEDIUM,'table').html_safe %>
             <% else %>
               <% prot_info_string += not_null(json_object[element]) if add_to_info_string_elements.include? element %>
               <% translation_string = 'protocols.protocols_io_import.preview.' + element %>
               <strong><%= t(translation_string) %></strong>
               <% if big_elements.include? element %>
-                <%= prepare_for_view(json_object[element],'big').html_safe %>
+                <%= prepare_for_view(json_object[element],ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_BIG,'table').html_safe %>
               <% end %>
               <% if medium_elements.include? element %>
-                <%= prepare_for_view(json_object[element],'medium').html_safe %>
+                <%= prepare_for_view(json_object[element],ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_MEDIUM,'table').html_safe %>
               <% end %>
               <% if small_elements.include? element %>
-                <%= prepare_for_view(json_object[element],'small').html_safe %>
+                <%= prepare_for_view(json_object[element],ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL,'table').html_safe %>
               <% end %>
             <% end %>
             <br>

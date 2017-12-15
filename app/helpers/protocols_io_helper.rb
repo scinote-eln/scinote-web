@@ -146,56 +146,23 @@ module ProtocolsIoHelper
     Nokogiri::HTML::DocumentFragment.parse(text).to_html
   end
 
-  def prepare_for_view(attribute_text, size)
-    case size
-    when 'small'
-      pio_eval_len(
-        sanitize_input(string_html_table_remove(not_null(attribute_text))),
-        ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL
-      )
-    when 'medium'
-      pio_eval_len(
-        sanitize_input(string_html_table_remove(not_null(attribute_text))),
-        ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_MEDIUM
-      )
-    when 'big'
-      pio_eval_len(
-        sanitize_input(string_html_table_remove(not_null(attribute_text))),
-        ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_BIG
-      )
-    when 'small-no-table'
-      pio_eval_len(
-        sanitize_input(not_null(attribute_text)),
-        ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL
-      )
-    when 'medium-no-table'
-      pio_eval_len(
-        sanitize_input(not_null(attribute_text)),
-        ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_MEDIUM
-      )
-    when 'big-no-table'
-      pio_eval_len(
-        sanitize_input(not_null(attribute_text)),
-        ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_BIG
+  def prepare_for_view(attribute_text1, size, table = 'no_table')
+    if table == 'no_table'
+      attribute_text = sanitize_input(not_null(attribute_text1))
+    elsif table == 'table'
+      attribute_text = sanitize_input(
+        string_html_table_remove(not_null(attribute_text1))
       )
     end
+    pio_eval_len(
+      attribute_text,
+      size
+    )
   end
 
-  def fill_attributes(attribute_name, attribute_text, step_component_key)
+  def fill_attributes(attribute_name, attribute_text, step_component)
     output_string = ''
-    trans_string = ''
-    case step_component_key
-    when '8'
-      trans_string = 'protocols.protocols_io_import.comp_append.soft_packg.'
-    when '9'
-      trans_string = 'protocols.protocols_io_import.comp_append.dataset.'
-    when '15'
-      trans_string = 'protocols.protocols_io_import.comp_append.command.'
-    when '18'
-      trans_string = 'protocols.protocols_io_import.comp_append.sub_protocol.'
-    when '19'
-      trans_string = 'protocols.protocols_io_import.comp_append.safety_infor.'
-    end
+    trans_string = step_component
     trans_string +=
       if attribute_name != 'os_name' && attribute_name != 'os_version'
         attribute_name
@@ -208,7 +175,9 @@ module ProtocolsIoHelper
       else
         ' , '
       end
-    output_string += prepare_for_view(attribute_text, 'small-no-table')
+    output_string += prepare_for_view(
+      attribute_text, ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL
+    )
     output_string
   end
 
@@ -218,7 +187,10 @@ module ProtocolsIoHelper
     append =
       if iterating_key.present?
         br +
-        prepare_for_view(iterating_key, 'small-no-table') +
+        prepare_for_view(
+          iterating_key,
+          ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL
+          ) +
         br
       else
         t('protocols.protocols_io_import.comp_append.missing_desc')
@@ -235,7 +207,9 @@ module ProtocolsIoHelper
     if iterating_key.present?
       append =
         t('protocols.protocols_io_import.comp_append.expected_result') +
-        prepare_for_view(iterating_key, 'small-no-table') +
+        prepare_for_view(
+          iterating_key, ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL
+        ) +
         '<br>'
       return append
     end
@@ -243,78 +217,75 @@ module ProtocolsIoHelper
   end
 
   def pio_stp_8(iterating_key) # protocols io software package parser
-    if iterating_key['name'] &&
-       iterating_key['developer'] &&
-       iterating_key['version'] &&
-       iterating_key['link'] &&
-       iterating_key['repository'] &&
-       iterating_key['os_name'] &&
-       iterating_key['os_version']
-      append = ''
-      parse_elements_array = %w(
-        name developer version link repository os_name os_version
+    append = ''
+    parse_elements_array = %w(
+      name developer version link repository os_name os_version
+    )
+    parse_elements_array.each do |element|
+      return '' unless iterating_key[element]
+      append += fill_attributes(
+        element,
+        iterating_key[element],
+        'protocols.protocols_io_import.comp_append.soft_packg.'
       )
-      parse_elements_array.each do |element|
-        append += fill_attributes(element, iterating_key[element], '8')
-      end
-      return append
     end
-    ''
+    append
   end
 
   def pio_stp_9(iterating_key) # protocols io dataset parser
-    if iterating_key['name'].present? &&
-       iterating_key['link']
-      append = ''
-      parse_elements_array = %w(name link)
-      parse_elements_array.each do |element|
-        append += fill_attributes(element, iterating_key[element], '9')
-      end
-      return append
+    append = ''
+    parse_elements_array = %w(name link)
+    parse_elements_array.each do |element|
+      return '' unless iterating_key[element]
+      append += fill_attributes(
+        element,
+        iterating_key[element],
+        'protocols.protocols_io_import.comp_append.dataset.'
+      )
     end
-    ''
+    append
   end
 
   def pio_stp_15(iterating_key) # protocols io commands parser
-    if iterating_key['name'].present? &&
-       iterating_key['description'] &&
-       iterating_key['os_name'] &&
-       iterating_key['os_version']
-      append = ''
-      parse_elements_array = %w(name description os_name os_version)
-      parse_elements_array.each do |element|
-        append += fill_attributes(element, iterating_key[element], '15')
-      end
-      return append
+    append = ''
+    parse_elements_array = %w(name description os_name os_version)
+    parse_elements_array.each do |element|
+      return '' unless iterating_key[element]
+      append += fill_attributes(
+        element,
+        iterating_key[element],
+        'protocols.protocols_io_import.comp_append.command.'
+      )
     end
-    ''
+    append
   end
 
   def pio_stp_18(iterating_key) # protocols io sub protocol parser
-    if iterating_key['protocol_name'].present? &&
-       iterating_key['full_name'] &&
-       iterating_key['link']
-      append = ''
-      parse_elements_array = %w(protocol_name full_name link)
-      parse_elements_array.each do |element|
-        append += fill_attributes(element, iterating_key[element], '18')
-      end
-      return append
+    append = ''
+    parse_elements_array = %w(protocol_name full_name link)
+    parse_elements_array.each do |element|
+      return '' unless iterating_key[element]
+      append += fill_attributes(
+        element,
+        iterating_key[element],
+        'protocols.protocols_io_import.comp_append.sub_protocol.'
+      )
     end
-    ''
+    append
   end
 
   def pio_stp_19(iterating_key) # protocols io safety information parser
-    if iterating_key['body'].present? &&
-       iterating_key['link']
-      append = ''
-      parse_elements_array = %w(body link)
-      parse_elements_array.each do |element|
-        append += fill_attributes(element, iterating_key[element], '19')
-      end
-      return append
+    append = ''
+    parse_elements_array = %w(body link)
+    parse_elements_array.each do |element|
+      return '' unless iterating_key[element]
+      append += fill_attributes(
+        element,
+        iterating_key[element],
+        'protocols.protocols_io_import.comp_append.safety_infor.'
+      )
     end
-    ''
+    append
   end
 
   def protocols_io_fill_desc(json_hash)
@@ -326,7 +297,10 @@ module ProtocolsIoHelper
       if json_hash['description'].present?
         '<strong>' + t('protocols.protocols_io_import.preview.description') +
           '</strong>' +
-          prepare_for_view(json_hash['description'], 'medium-no-table').html_safe
+          prepare_for_view(
+            json_hash['description'],
+            ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_MEDIUM
+          ).html_safe
       else
         '<strong>' + t('protocols.protocols_io_import.preview.description') +
           '</strong>' + t('protocols.protocols_io_import.comp_append.missing_desc')
@@ -338,8 +312,9 @@ module ProtocolsIoHelper
         description_string +=
           new_e.to_s + ':  ' +
           prepare_for_view(
-            params['protocol']['created_at'].to_s, 'small-no-table'
-            ) +
+            params['protocol']['created_at'].to_s,
+            ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL
+          ) +
           + '<br>'
       elsif e == 'tags' && json_hash[e].any? && json_hash[e] != ''
         new_e = '<strong>' + e.humanize + '</strong>'
@@ -351,7 +326,8 @@ module ProtocolsIoHelper
             sanitize_input(tag['tag_name']) + ' , '
         end
         description_string += prepare_for_view(
-          tags_length_checker, 'medium-no-table'
+          tags_length_checker,
+          ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_MEDIUM
         )
         description_string += '<br>'
       elsif json_hash[e].present?
