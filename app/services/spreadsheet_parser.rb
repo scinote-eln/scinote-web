@@ -20,8 +20,8 @@ class SpreadsheetParser
     when '.xlsx'
       # Roo Excel parcel was replaced with Creek, but it can be enabled back,
       # just swap lines below. But only one can be enabled at the same time.
-      # Roo::Excelx.new(file_path)
-      Creek::Book.new(file_path).sheets[0]
+      Roo::Excelx.new(file_path)
+      # Creek::Book.new(file_path).sheets[0]
     else
       raise TypeError
     end

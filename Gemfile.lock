@@ -123,9 +123,6 @@ GEM
     commit_param_routing (0.0.1)
     concurrent-ruby (1.0.5)
     crass (1.0.3)
-    creek (1.1.2)
-      nokogiri (~> 1.6.0)
-      rubyzip (>= 1.0.0)
     cucumber (3.1.0)
       builder (>= 2.1.2)
       cucumber-core (~> 3.1.0)
@@ -247,7 +244,7 @@ GEM
     mime-types (1.25.1)
     mimemagic (0.3.0)
     mini_mime (1.0.0)
-    mini_portile2 (2.1.0)
+    mini_portile2 (2.3.0)
     minitest (5.10.3)
     minitest-reporters (1.1.19)
       ansi
@@ -263,8 +260,8 @@ GEM
       jquery-rails
       rails (>= 3.2.0)
     newrelic_rpm (4.6.0.338)
-    nokogiri (1.6.8.1)
-      mini_portile2 (~> 2.1.0)
+    nokogiri (1.8.1)
+      mini_portile2 (~> 2.3.0)
     nokogumbo (1.4.13)
       nokogiri
     oj (2.18.5)
@@ -482,7 +479,6 @@ DEPENDENCIES
   byebug
   capybara
   commit_param_routing
-  creek
   cucumber-rails
   database_cleaner
   deface (~> 1.0)
@@ -511,7 +507,7 @@ DEPENDENCIES
   momentjs-rails (>= 2.9.0)
   nested_form_fields
   newrelic_rpm
-  nokogiri
+  nokogiri (~> 1.8.1)
   omniauth
   paperclip (~> 4.3)
   pg
