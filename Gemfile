@@ -51,7 +51,6 @@ gem 'commit_param_routing' # Enables different submit actions in the same form t
 gem 'kaminari'
 gem 'i18n-js', '~> 3.0' # Localization in javascript files
 gem 'roo', '~> 2.7.1' # Spreadsheet parser
-gem 'creek'
 gem 'wicked_pdf'
 gem 'silencer' # Silence certain Rails logs
 gem 'wkhtmltopdf-heroku'
@@ -59,7 +58,7 @@ gem 'remotipart', '~> 1.2' # Async file uploads
 gem 'faker' # Generate fake data
 gem 'auto_strip_attributes', '~> 2.1' # Removes unnecessary whitespaces from ActiveRecord or ActiveModel attributes
 gem 'deface', '~> 1.0'
-gem 'nokogiri' # HTML/XML parser
+gem 'nokogiri', '~> 1.8.1' # HTML/XML parser
 gem 'sneaky-save', git: 'https://github.com/einzige/sneaky-save'
 gem 'rails_autolink', '~> 1.1', '>= 1.1.6'
 gem 'delayed_paperclip',
