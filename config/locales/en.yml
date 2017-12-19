@@ -1845,6 +1845,12 @@ en:
     busy: "The server is still processing your request. If you leave this page, the changes will be lost! Are you sure you want to continue?"
     no_name: "(no name)"
 
+  api:
+    core:
+      status_ok: "Ok"
+      expired_token: "Token is expired"
+      invalid_token: "Token is invalid"
+
   Add: "Add"
   Asset: "File"
   Assets: "Files"

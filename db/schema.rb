@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170619125051) do
+ActiveRecord::Schema.define(version: 20171005135350) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -119,6 +119,9 @@ ActiveRecord::Schema.define(version: 20170619125051) do
     t.integer "output_id", null: false
   end
 
+  add_index "connections", ["input_id"], name: "index_connections_on_input_id", using: :btree
+  add_index "connections", ["output_id"], name: "index_connections_on_output_id", using: :btree
+
   create_table "custom_fields", force: :cascade do |t|
     t.string   "name",                null: false
     t.integer  "user_id",             null: false
@@ -176,7 +179,6 @@ ActiveRecord::Schema.define(version: 20170619125051) do
   add_index "experiments", ["restored_by_id"], name: "index_experiments_on_restored_by_id", using: :btree
 
   create_table "my_module_groups", force: :cascade do |t|
-    t.string   "name",                      null: false
     t.datetime "created_at",                null: false
     t.datetime "updated_at",                null: false
     t.integer  "created_by_id"
@@ -413,7 +415,6 @@ ActiveRecord::Schema.define(version: 20170619125051) do
     t.datetime "updated_at"
   end
 
-  add_index "repository_rows", ["name"], name: "index_repository_rows_on_name", using: :btree
   add_index "repository_rows", ["repository_id"], name: "index_repository_rows_on_repository_id", using: :btree
 
   create_table "repository_table_states", force: :cascade do |t|
@@ -510,6 +511,7 @@ ActiveRecord::Schema.define(version: 20170619125051) do
   end
 
   add_index "sample_my_modules", ["assigned_by_id"], name: "index_sample_my_modules_on_assigned_by_id", using: :btree
+  add_index "sample_my_modules", ["my_module_id"], name: "index_sample_my_modules_on_my_module_id", using: :btree
   add_index "sample_my_modules", ["sample_id", "my_module_id"], name: "index_sample_my_modules_on_sample_id_and_my_module_id", using: :btree
 
   create_table "sample_types", force: :cascade do |t|
@@ -544,11 +546,11 @@ ActiveRecord::Schema.define(version: 20170619125051) do
   add_index "samples", ["user_id"], name: "index_samples_on_user_id", using: :btree
 
   create_table "samples_tables", force: :cascade do |t|
-    t.jsonb    "status",     default: {"time"=>0, "order"=>[[2, "desc"]], "start"=>0, "length"=>10, "search"=>{"regex"=>false, "smart"=>true, "search"=>"", "caseInsensitive"=>true}, "columns"=>[{"search"=>{"regex"=>false, "smart"=>true, "search"=>"", "caseInsensitive"=>true}, "visible"=>true}, {"search"=>{"regex"=>false, "smart"=>true, "search"=>"", "caseInsensitive"=>true}, "visible"=>true}, {"search"=>{"regex"=>false, "smart"=>true, "search"=>"", "caseInsensitive"=>true}, "visible"=>true}, {"search"=>{"regex"=>false, "smart"=>true, "search"=>"", "caseInsensitive"=>true}, "visible"=>true}, {"search"=>{"regex"=>false, "smart"=>true, "search"=>"", "caseInsensitive"=>true}, "visible"=>true}, {"search"=>{"regex"=>false, "smart"=>true, "search"=>"", "caseInsensitive"=>true}, "visible"=>true}, {"search"=>{"regex"=>false, "smart"=>true, "search"=>"", "caseInsensitive"=>true}, "visible"=>true}], "ColReorder"=>[0, 1, 2, 3, 4, 5, 6]}, null: false
-    t.integer  "user_id",                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   null: false
-    t.integer  "team_id",                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   null: false
-    t.datetime "created_at",                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                null: false
-    t.datetime "updated_at",                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                null: false
+    t.jsonb    "status",     default: {"time"=>0, "order"=>[[2, "desc"]], "start"=>0, "length"=>10, "search"=>{"regex"=>false, "smart"=>true, "search"=>"", "caseInsensitive"=>true}, "columns"=>[{"search"=>{"regex"=>false, "smart"=>true, "search"=>"", "caseInsensitive"=>true}, "visible"=>true}, {"search"=>{"regex"=>false, "smart"=>true, "search"=>"", "caseInsensitive"=>true}, "visible"=>true}, {"search"=>{"regex"=>false, "smart"=>true, "search"=>"", "caseInsensitive"=>true}, "visible"=>true}, {"search"=>{"regex"=>false, "smart"=>true, "search"=>"", "caseInsensitive"=>true}, "visible"=>true}, {"search"=>{"regex"=>false, "smart"=>true, "search"=>"", "caseInsensitive"=>true}, "visible"=>true}, {"search"=>{"regex"=>false, "smart"=>true, "search"=>"", "caseInsensitive"=>true}, "visible"=>true}, {"search"=>{"regex"=>false, "smart"=>true, "search"=>"", "caseInsensitive"=>true}, "visible"=>true}], "assigned"=>"all", "ColReorder"=>[0, 1, 2, 3, 4, 5, 6]}, null: false
+    t.integer  "user_id",                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      null: false
+    t.integer  "team_id",                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      null: false
+    t.datetime "created_at",                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   null: false
+    t.datetime "updated_at",                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   null: false
   end
 
   add_index "samples_tables", ["team_id"], name: "index_samples_tables_on_team_id", using: :btree
@@ -671,6 +673,18 @@ ActiveRecord::Schema.define(version: 20170619125051) do
     t.integer "ttl",     null: false
     t.integer "user_id", null: false
   end
+
+  create_table "user_identities", force: :cascade do |t|
+    t.integer  "user_id"
+    t.string   "provider",   null: false
+    t.string   "uid",        null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "user_identities", ["provider", "uid"], name: "index_user_identities_on_provider_and_uid", unique: true, using: :btree
+  add_index "user_identities", ["user_id", "provider"], name: "index_user_identities_on_user_id_and_provider", unique: true, using: :btree
+  add_index "user_identities", ["user_id"], name: "index_user_identities_on_user_id", using: :btree
 
   create_table "user_my_modules", force: :cascade do |t|
     t.integer  "user_id",        null: false

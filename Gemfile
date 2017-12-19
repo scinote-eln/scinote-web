@@ -15,6 +15,10 @@ gem 'yomu'
 gem 'font-awesome-rails', '~> 4.6'
 gem 'recaptcha', require: 'recaptcha/rails'
 gem 'sanitize', '~> 4.4'
+gem 'omniauth'
+
+# Gems for API implementation
+gem 'jwt'
 
 # JS datetime library, requirement of datetime picker
 gem 'momentjs-rails', '>= 2.9.0'
@@ -26,7 +30,7 @@ gem 'uglifier', '>= 1.3.0'
 # jQuery & plugins
 gem 'jquery-turbolinks'
 gem 'jquery-rails'
-gem 'jquery-ui-rails'
+gem 'jquery-ui-rails', '~> 5.0'
 gem 'jquery-scrollto-rails'
 gem 'hammerjs-rails'
 gem 'introjs-rails' # Create quick tutorials
@@ -35,7 +39,7 @@ gem 'spinjs-rails'
 gem 'autosize-rails' # jQuery autosize plugin
 
 gem 'underscore-rails'
-gem 'turbolinks'
+gem 'turbolinks', '~> 2.0'
 gem 'sdoc', '~> 0.4.0', group: :doc
 gem 'bcrypt', '~> 3.1.10'
 gem 'logging', '~> 2.0.0'
@@ -76,7 +80,13 @@ gem 'base62' # Used for smart annotations
 gem 'newrelic_rpm'
 
 group :development, :test do
+  gem 'listen', '~> 3.0'
   gem 'byebug'
+  gem 'pry'
+  gem 'pry-byebug'
+  gem 'pry-rails'
+  gem 'factory_girl_rails'
+  gem 'rspec-rails'
   gem 'better_errors'
   gem 'binding_of_caller'
   gem 'awesome_print'
@@ -93,8 +103,14 @@ end
 
 group :test do
   gem 'minitest-reporters', '~> 1.1'
-  gem "shoulda-context"
-  gem "shoulda-matchers", ">= 3.0.1"
+  gem 'shoulda-context'
+  gem 'shoulda-matchers'
+  gem 'cucumber-rails', require: false
+  gem 'database_cleaner'
+  gem 'capybara'
+  gem 'poltergeist'
+  gem 'phantomjs', :require => 'phantomjs/poltergeist'
+  gem 'simplecov', require: false
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
