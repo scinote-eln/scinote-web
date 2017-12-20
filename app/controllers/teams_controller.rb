@@ -249,7 +249,7 @@ class TeamsController < ApplicationController
   end
 
   def check_create_sample_permissions
-    unless can_manage_sample?(@team)
+    unless can_manage_samples?(@team)
       render_403
     end
   end

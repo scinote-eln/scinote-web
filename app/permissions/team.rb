@@ -27,8 +27,8 @@ Canaid::Permissions.register_for(Team) do
     user.is_normal_user_or_admin_of_team?(team)
   end
 
-  # create, import, edit, delete sample
-  can :manage_sample do |user, team|
+  # create, import, edit, delete samples
+  can :manage_samples do |user, team|
     user.is_normal_user_or_admin_of_team?(team)
   end
 
@@ -79,5 +79,12 @@ Canaid::Permissions.register_for(Protocol) do
   can :clone_protocol do |user, protocol|
     can_create_protocol?(user, protocol.team) &&
       can_read_protocol_in_repository?(user, protocol)
+  end
+end
+
+Canaid::Permissions.register_for(Sample) do
+  # edit, delete specific sample
+  can :update_or_delete_sample do |user, sample|
+    can_manage_samples?(user, sample.team)
   end
 end

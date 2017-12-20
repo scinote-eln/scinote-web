@@ -21,7 +21,7 @@
     data-module-id="<%= @my_module.id %>"
   <% end %>>
 
-  <% if can_manage_sample?(@team) %>
+  <% if can_manage_samples?(@team) %>
     <button type="button" class="btn btn-default editAdd" id="addSample" onclick="onClickAddSample()">
       <span class="glyphicon glyphicon-plus"></span>
       <span class="hidden-xs"><%= t("samples.add_new_sample") %></span>
@@ -99,7 +99,7 @@
     <span class="hidden-xs-custom"><%= t("samples.edit_sample") %></span>
   </button>
 
-  <% if can_manage_sample?(@team) %>
+  <% if can_manage_samples?(@team) %>
     <button type="button" class="btn btn-default"
       id="deleteSamplesButton" data-target="#deleteSamples" data-toggle="modal" disabled>
       <span class="glyphicon glyphicon-trash"></span>
