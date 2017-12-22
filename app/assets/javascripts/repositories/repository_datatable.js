@@ -725,7 +725,8 @@ var RepositoryDatatable = (function(global) {
         $('#unassignRepositoryRecords').addClass('disabled');
         $('#unassignRepositoryRecords').prop('disabled', true);
       } else {
-        if (rowsSelected.length === 1) {
+        if (rowsSelected.length === 1 &&
+            $('#exportRepositoriesButton').get(0)) {
           $('#editRepositoryRecord').prop('disabled', false);
           $('#editRepositoryRecord').removeClass('disabled');
 
