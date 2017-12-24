@@ -215,60 +215,9 @@ module ProtocolsIoHelper
     end
     ''
   end
+  # protocols io software package,dataset,commands,sub_protocol and safety_information  parser
 
-  def pio_stp_8(iterating_key, parse_elements_array, en_local_text) # protocols io software package parser
-    append = ''
-    parse_elements_array.each do |element|
-      return '' unless iterating_key[element]
-      append += fill_attributes(
-        element,
-        iterating_key[element],
-        en_local_text
-      )
-    end
-    append
-  end
-
-  def pio_stp_9(iterating_key, parse_elements_array, en_local_text) # protocols io dataset parser
-    append = ''
-    parse_elements_array.each do |element|
-      return '' unless iterating_key[element]
-      append += fill_attributes(
-        element,
-        iterating_key[element],
-        en_local_text
-      )
-    end
-    append
-  end
-
-  def pio_stp_15(iterating_key, parse_elements_array, en_local_text) # protocols io commands parser
-    append = ''
-    parse_elements_array.each do |element|
-      return '' unless iterating_key[element]
-      append += fill_attributes(
-        element,
-        iterating_key[element],
-        en_local_text
-      )
-    end
-    append
-  end
-
-  def pio_stp_18(iterating_key, parse_elements_array, en_local_text) # protocols io sub protocol parser
-    append = ''
-    parse_elements_array.each do |element|
-      return '' unless iterating_key[element]
-      append += fill_attributes(
-        element,
-        iterating_key[element],
-        en_local_text
-      )
-    end
-    append
-  end
-
-  def pio_stp_19(iterating_key, parse_elements_array, en_local_text) # protocols io safety information parser
+  def pio_stp(iterating_key, parse_elements_array, en_local_text)
     append = ''
     parse_elements_array.each do |element|
       return '' unless iterating_key[element]
@@ -378,7 +327,7 @@ module ProtocolsIoHelper
             name developer version link repository os_name os_version
           )
           trans_text = 'protocols.protocols_io_import.comp_append.soft_packg.'
-          newj[i.to_s]['description'] += pio_stp_8(
+          newj[i.to_s]['description'] += pio_stp(
             key['source_data'], pe_array, trans_text
           )
         when '9'
@@ -386,7 +335,7 @@ module ProtocolsIoHelper
             name link
           )
           trans_text = 'protocols.protocols_io_import.comp_append.dataset.'
-          newj[i.to_s]['description'] += pio_stp_9(
+          newj[i.to_s]['description'] += pio_stp(
             key['source_data'], pe_array, trans_text
           )
         when '15'
@@ -394,7 +343,7 @@ module ProtocolsIoHelper
             name description os_name os_version
           )
           trans_text = 'protocols.protocols_io_import.comp_append.command.'
-          newj[i.to_s]['description'] += pio_stp_15(
+          newj[i.to_s]['description'] += pio_stp(
             key['source_data'], pe_array, trans_text
           )
         when '18'
@@ -402,7 +351,7 @@ module ProtocolsIoHelper
             protocol_name full_name link
           )
           trans_text = 'protocols.protocols_io_import.comp_append.sub_protocol.'
-          newj[i.to_s]['description'] += pio_stp_18(
+          newj[i.to_s]['description'] += pio_stp(
             key['source_data'], pe_array, trans_text
           )
         when '19'
@@ -410,7 +359,7 @@ module ProtocolsIoHelper
             body link
           )
           trans_text = 'protocols.protocols_io_import.comp_append.safety_infor.'
-          newj[i.to_s]['description'] += pio_stp_19(
+          newj[i.to_s]['description'] += pio_stp(
             key['source_data'], pe_array, trans_text
           )
         end # case end
