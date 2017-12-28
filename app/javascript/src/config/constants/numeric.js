@@ -7,3 +7,4 @@ export const NAME_MAX_LENGTH = 255;
 export const TEXT_MAX_LENGTH = 10000;
 export const INVITE_USERS_LIMIT = 20;
 export const AVATAR_MAX_SIZE_MB = 0.2;
+export const NAME_TRUNCATION_LENGTH = 25;

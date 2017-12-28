@@ -1,13 +1,18 @@
+// @flow
+
 import React from "react";
-import PropTypes from "prop-types";
 import Moment from "react-moment";
+import { Tooltip, OverlayTrigger } from "react-bootstrap";
 import styled from "styled-components";
+import { FormattedMessage } from "react-intl";
 
 import {
   WHITE_COLOR,
   COLOR_CONCRETE,
   BORDER_GRAY_COLOR
 } from "../../../config/constants/colors";
+
+import { NAME_TRUNCATION_LENGTH } from "../../../config/constants/numeric";
 
 const StyledLi = styled.li`
   border-radius: .25em;
@@ -41,14 +46,41 @@ const ActivityElement = ({ activity }) =>
         {activity.created_at}
       </Moment>
     </TimeSpan>
-    <TextSpan dangerouslySetInnerHTML={{ __html: activity.message }} />
+    <TextSpan>
+      <span dangerouslySetInnerHTML={{ __html: activity.message }} />
+      {activity.task &&
+        <span>&nbsp;
+          [&nbsp;<FormattedMessage id="general.project" />:&nbsp;
+          {activity.project.length > NAME_TRUNCATION_LENGTH ? (
+            <OverlayTrigger overlay={(
+              <Tooltip id="activity_modal.long_project_tooltip">
+                {activity.project}
+              </Tooltip>
+            )} placement="bottom">
+                <span>
+                  {activity.project.substring(0, NAME_TRUNCATION_LENGTH)}...
+                </span>
+            </OverlayTrigger>
+          ):(
+            <span>{activity.project}</span>
+          )},&nbsp;
+          <FormattedMessage id="general.task" />:&nbsp;
+          {activity.task.length > NAME_TRUNCATION_LENGTH ? (
+            <OverlayTrigger overlay={(
+              <Tooltip id="activity_modal.long_task_tooltip">
+                {activity.task}
+              </Tooltip>
+            )} placement="bottom">
+                <span>
+                  {activity.task.substring(0, NAME_TRUNCATION_LENGTH)}...
+                </span>
+            </OverlayTrigger>
+          ):(
+            <span>{activity.task}</span>
+          )}&nbsp;]
+        </span>
+      }
+    </TextSpan>
   </StyledLi>;
-
-ActivityElement.propTypes = {
-  activity: PropTypes.shape({
-    message: PropTypes.string.isRequired,
-    created_at: PropTypes.string.isRequired
-  }).isRequired
-};
 
 export default ActivityElement;
