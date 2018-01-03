@@ -148,8 +148,8 @@
         <% all_custom_fields.each do |cf| %>
         <th class="custom-field"
             id="<%= cf.id %>"
-            <%= 'data-editable' if can_manage_sample_elements?(@team) %>
-            <%= 'data-deletable' if can_manage_sample_elements?(@team) %>
+            <%= 'data-editable' if can_update_or_delete_custom_field?(cf) %>
+            <%= 'data-deletable' if can_update_or_delete_custom_field?(cf) %>
             <%= "data-edit-url='#{edit_team_custom_field_path(@team, cf)}'" %>
             <%= "data-update-url='#{team_custom_field_path(@team, cf)}'" %>
             <%= "data-destroy-html-url='#{team_custom_field_destroy_html_path(@team, cf)}'" %>

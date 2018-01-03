@@ -32,7 +32,8 @@ Canaid::Permissions.register_for(Team) do
     user.is_normal_user_or_admin_of_team?(team)
   end
 
-  # create, update, delete custom field, sample type and sample group
+  # create custom field
+  # create, update, delete sample type or sample group
   can :manage_sample_elements do |user, team|
     user.is_normal_user_or_admin_of_team?(team)
   end
@@ -86,5 +87,12 @@ Canaid::Permissions.register_for(Sample) do
   # edit, delete specific sample
   can :update_or_delete_sample do |user, sample|
     can_manage_samples?(user, sample.team)
+  end
+end
+
+Canaid::Permissions.register_for(CustomField) do
+  # update, delete custom field
+  can :update_or_delete_custom_field do |user, custom_field|
+    can_manage_sample_elements?(user, custom_field.team)
   end
 end
