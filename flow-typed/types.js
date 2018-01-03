@@ -36,6 +36,15 @@ export type Activity = {
   created_at: string
 };
 
+export type Notification = {
+  id: number,
+  title: string,
+  message: string,
+  typeOf: string,
+  createdAt: string,
+  avatarThumb: ?string
+};
+
 export type State = {
   current_team: Teams$Team,
   all_teams: Array<Teams$Team>,
