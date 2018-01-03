@@ -1,6 +1,6 @@
 module ClientApi
   class PermissionsController < ApplicationController
-    before_action :generate_permissions_object, only: :state
+    before_action :generate_permissions_object, only: :status
 
     def status
       respond_to do |format|

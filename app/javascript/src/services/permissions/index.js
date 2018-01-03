@@ -23,7 +23,7 @@ type State = {
 };
 
 type PermissionsObject = {
-  [string]: boolean
+  [string]: boolean | null
 }
 /*
  This function accepts 3 arguments which are REQUIRED
@@ -42,7 +42,7 @@ export function connect<Props: {}>(
     parsedPermissions[el] = null;
   });
 
-  return class extends React.Component<*, State, *> {
+  return class extends React.Component<*, State> {
     constructor(props: any) {
       super(props);
       this.state = { permissions: parsedPermissions };

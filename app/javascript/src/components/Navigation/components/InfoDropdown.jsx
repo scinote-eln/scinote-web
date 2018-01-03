@@ -14,7 +14,7 @@ import { getSciNoteInfo } from "../../../services/api/configurations_api";
 import AboutScinoteModal from "./AboutScinoteModal";
 
 type State = {
-  modalOpen: boolean,
+  showModal: boolean,
   scinoteVersion: string,
   addons: Array<string>
 };
