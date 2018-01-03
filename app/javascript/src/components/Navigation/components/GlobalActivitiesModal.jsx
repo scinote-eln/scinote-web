@@ -99,7 +99,7 @@ class GlobalActivitiesModal extends Component<Props, State> {
       // when the backend bug will be fixed
       const newDate = new Date(activity.createdAt);
       // returns a label with "today" if the date of the activity is today
-      if (i === 0) {
+      if (i === 0 && newDate.toDateString() === new Date().toDateString()) {
         return GlobalActivitiesModal.renderActivityDateElement(
           i,
           activity,
@@ -108,8 +108,13 @@ class GlobalActivitiesModal extends Component<Props, State> {
       }
       // else checks if the previous activity is newer than current
       // and displays a label with the date
-      const prevDate = new Date(arr[i - 1].createdAt);
-      if (prevDate.getDate() > newDate.getDate()) {
+      const prevDate =
+        i !== 0 ? new Date(arr[i - 1].createdAt) : new Date(1901, 1, 1);
+      // filter only date from createdAt without minutes and seconds
+      // used to compare dates
+      const parsePrevDate = new Date(prevDate.toDateString());
+      const parseNewDate = new Date(newDate.toDateString());
+      if (parsePrevDate.getTime() > parseNewDate.getTime()) {
         return GlobalActivitiesModal.renderActivityDateElement(
           i,
           activity,

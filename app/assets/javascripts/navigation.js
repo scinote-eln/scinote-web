@@ -109,14 +109,14 @@
       // Activity feed modal in main navigation menu
       var activityModal = $('#activity-modal');
       var activityModalBody = activityModal.find('.modal-body');
-
       var initMoreBtn = function() {
         activityModalBody.find('.btn-more-activities')
           .on('ajax:success', function(e, data) {
             $(data.html).insertBefore($(this).parents('li'));
-            $(this).attr('href', data.next_url);
-            if (data.activities_number < data.per_page) {
-              $(this).remove();
+            if(data.more_url) {
+              $(this).attr('href', data.more_url);
+            } else {
+                $(this).remove();
             }
           });
       };

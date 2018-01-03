@@ -22,7 +22,7 @@ module ClientApi
       {
         activities: activities,
         page: page,
-        more: !current_user.last_activities.page(page).last_page?,
+        more: !activities.last_page?,
         timezone: current_user.time_zone
       }
     end
