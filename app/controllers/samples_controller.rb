@@ -189,7 +189,7 @@ class SamplesController < ApplicationController
         end
 
         # Add all newly added sample fields
-        params[:custom_fields].to_a.each do |id, val|
+        custom_fields_params.to_a.each do |id, val|
           # Check if client is lying (SCF shouldn't exist)
           scf = SampleCustomField.where("custom_field_id = ? AND sample_id = ?", id, sample.id).take
 
@@ -227,7 +227,7 @@ class SamplesController < ApplicationController
 
         scf_to_delete = []
         # Update all existing custom values
-        params[:sample_custom_fields].to_a.each do |id, val|
+        sample_custom_fields_params.to_a.each do |id, val|
           scf = SampleCustomField.find_by_id(id)
 
           if scf
@@ -321,6 +321,14 @@ class SamplesController < ApplicationController
       :sample_type_id,
       :sample_group_id
     )
+  end
+
+  def custom_fields_params
+    params.permit(custom_fields: {}).to_h[:custom_fields]
+  end
+
+  def sample_custom_fields_params
+    params.permit(sample_custom_fields: {}).to_h[:sample_custom_fields]
   end
 
   def sample_annotation_notification(sample, scf, old_text = nil)
