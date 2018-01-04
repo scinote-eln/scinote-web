@@ -20,15 +20,20 @@ if ENV['PAPERCLIP_STORAGE'] == "s3"
     exit 1
   end
   Paperclip::Attachment.default_options.merge!({
-    url: ':s3_domain_url',
     path: '/:class/:attachment/:id_partition/:hash/:style/:filename',
     storage: :s3,
-    s3_host_name: "s3.#{ENV['AWS_REGION']}.amazonaws.com",
-    s3_protocol: 'https',
+    url: ":s3_path_url",
+    s3_host_name: ENV['S3_HOST_NAME'],
+    s3_protocol: :http,
     s3_credentials: {
       bucket: ENV['S3_BUCKET'],
       access_key_id: ENV['AWS_ACCESS_KEY_ID'],
-      secret_access_key: ENV['AWS_SECRET_ACCESS_KEY']
+      secret_access_key: ENV['AWS_SECRET_ACCESS_KEY'],
+      region: ENV['AWS_REGION']
+    },
+    s3_options: {
+      endpoint: "http://#{ENV['S3_HOST_NAME']}", # for aws-sdk
+      force_path_style: true # for aws-sdk (required for minio)
     },
     s3_permissions: {
       original: :private,
