@@ -183,7 +183,8 @@ class RepositoryDatatable < CustomDatatable
   # number of samples/all samples it's dependant upon sort_record query
   def fetch_records
     records = get_raw_records
-    records = filter_records(records) if dt_params[:search].present?
+    records = filter_records(records) if dt_params[:search].present? &&
+                                         dt_params[:search][:value].present?
     records = sort_records(records) if order_params.present?
     records = paginate_records(records) unless dt_params[:length].present? &&
                                                dt_params[:length] == '-1'
@@ -232,42 +233,38 @@ class RepositoryDatatable < CustomDatatable
 
   # Override default sort method if needed
   def sort_records(records)
-    if order_params.present?
-      if sort_column(order_params) == ASSIGNED_SORT_COL
-        # If "assigned" column is sorted when viewing assigned items
-        return records if @my_module && dt_params[:assigned] == 'assigned'
-        # If "assigned" column is sorted
-        direction = sort_null_direction(order_params)
-        if @my_module
-          # Depending on the sort, order nulls first or
-          # nulls last on repository_cells association
-          records.joins(
-            "LEFT OUTER JOIN my_module_repository_rows ON
-            (repository_rows.id = my_module_repository_rows.repository_row_id
-            AND (my_module_repository_rows.my_module_id = #{@my_module.id} OR
-                              my_module_repository_rows.id IS NULL))"
-          ).order("my_module_repository_rows.id NULLS #{direction}")
-        else
-          sort_assigned_records(records, order_params['dir'])
-        end
-      elsif sorting_by_custom_column
-        ci = sortable_displayed_columns[
-          order_params['column'].to_i - 1
-        ]
-        column_id = @columns_mappings.key((ci.to_i + 1).to_s)
-        dir = sort_direction(order_params)
-
+    if sort_column(order_params) == ASSIGNED_SORT_COL
+      # If "assigned" column is sorted when viewing assigned items
+      return records if @my_module && dt_params[:assigned] == 'assigned'
+      # If "assigned" column is sorted
+      direction = sort_null_direction(order_params)
+      if @my_module
+        # Depending on the sort, order nulls first or
+        # nulls last on repository_cells association
         records.joins(
-          "LEFT OUTER JOIN (SELECT repository_cells.repository_row_id,
-            repository_text_values.data AS value FROM repository_cells
-				  INNER JOIN repository_text_values
-				  ON repository_text_values.id = repository_cells.value_id
-				  WHERE repository_cells.repository_column_id = #{column_id}) AS values
-          ON values.repository_row_id = repository_rows.id"
-        ).order("values.value #{dir}")
+          "LEFT OUTER JOIN my_module_repository_rows ON
+          (repository_rows.id = my_module_repository_rows.repository_row_id
+          AND (my_module_repository_rows.my_module_id = #{@my_module.id} OR
+                            my_module_repository_rows.id IS NULL))"
+        ).order("my_module_repository_rows.id NULLS #{direction}")
       else
-        super(records)
+        sort_assigned_records(records, order_params['dir'])
       end
+    elsif sorting_by_custom_column
+      ci = sortable_displayed_columns[
+        order_params['column'].to_i - 1
+      ]
+      column_id = @columns_mappings.key((ci.to_i + 1).to_s)
+      dir = sort_direction(order_params)
+
+      records.joins(
+        "LEFT OUTER JOIN (SELECT repository_cells.repository_row_id,
+          repository_text_values.data AS value FROM repository_cells
+			  INNER JOIN repository_text_values
+			  ON repository_text_values.id = repository_cells.value_id
+			  WHERE repository_cells.repository_column_id = #{column_id}) AS values
+        ON values.repository_row_id = repository_rows.id"
+      ).order("values.value #{dir}")
     else
       super(records)
     end
@@ -323,7 +320,7 @@ class RepositoryDatatable < CustomDatatable
       ids = unassigned + assigned
     end
 
-    order_by_index = ActiveRecord::Base.__send__(
+    order_by_index = ActiveRecord::Base.send(
       :sanitize_sql_array,
       ["position((',' || repository_rows.id || ',') in ?)",
        ids.join(',') + ',']
