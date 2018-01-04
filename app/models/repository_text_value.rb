@@ -7,7 +7,7 @@ class RepositoryTextValue < ApplicationRecord
              foreign_key: :last_modified_by_id,
              class_name: 'User',
              optional: true
-  has_one :repository_cell, as: :value, dependent: :destroy
+  has_one :repository_cell, as: :value, dependent: :destroy, inverse_of: :value
   accepts_nested_attributes_for :repository_cell
 
   validates :repository_cell, presence: true
