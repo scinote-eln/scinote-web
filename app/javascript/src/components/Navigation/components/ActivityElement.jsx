@@ -38,6 +38,39 @@ const TextSpan = styled.span`
   padding: 3px 10px;
   text-align: justify;
 `
+function truncatedTooltip(id, text) {
+  return (
+    <OverlayTrigger overlay={(
+      <Tooltip id={id}>
+        {text}
+      </Tooltip>
+    )} placement="bottom">
+        <span>
+          {text.substring(0, NAME_TRUNCATION_LENGTH)}...
+        </span>
+    </OverlayTrigger>
+  );
+}
+
+function taskPath(activity) {
+  return (
+    <span>&nbsp;
+      [&nbsp;<FormattedMessage id="general.project" />:&nbsp;
+      {activity.project.length > NAME_TRUNCATION_LENGTH ? (
+        truncatedTooltip('activity_modal.long_project_tooltip', activity.project)
+      ):(
+        <span>{activity.project}</span>
+      )},&nbsp;
+      <FormattedMessage id="general.task" />:&nbsp;
+      {activity.task.length > NAME_TRUNCATION_LENGTH ? (
+        truncatedTooltip('activity_modal.long_task_tooltip', activity.task)
+      ):(
+        <span>{activity.task}</span>
+      )}&nbsp;]
+    </span>
+  );
+}
+
 
 const ActivityElement = ({ activity }) =>
   <StyledLi>
@@ -48,38 +81,7 @@ const ActivityElement = ({ activity }) =>
     </TimeSpan>
     <TextSpan>
       <span dangerouslySetInnerHTML={{ __html: activity.message }} />
-      {activity.task &&
-        <span>&nbsp;
-          [&nbsp;<FormattedMessage id="general.project" />:&nbsp;
-          {activity.project.length > NAME_TRUNCATION_LENGTH ? (
-            <OverlayTrigger overlay={(
-              <Tooltip id="activity_modal.long_project_tooltip">
-                {activity.project}
-              </Tooltip>
-            )} placement="bottom">
-                <span>
-                  {activity.project.substring(0, NAME_TRUNCATION_LENGTH)}...
-                </span>
-            </OverlayTrigger>
-          ):(
-            <span>{activity.project}</span>
-          )},&nbsp;
-          <FormattedMessage id="general.task" />:&nbsp;
-          {activity.task.length > NAME_TRUNCATION_LENGTH ? (
-            <OverlayTrigger overlay={(
-              <Tooltip id="activity_modal.long_task_tooltip">
-                {activity.task}
-              </Tooltip>
-            )} placement="bottom">
-                <span>
-                  {activity.task.substring(0, NAME_TRUNCATION_LENGTH)}...
-                </span>
-            </OverlayTrigger>
-          ):(
-            <span>{activity.task}</span>
-          )}&nbsp;]
-        </span>
-      }
+      {activity.task && taskPath(activity)}
     </TextSpan>
   </StyledLi>;
 
