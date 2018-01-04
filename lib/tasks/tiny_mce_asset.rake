@@ -21,6 +21,9 @@ namespace :tiny_mce_asset do
       step.description.gsub!(regex) do |el|
         match = el.match(regex)
         old_img = TinyMceAsset.find_by_id(match[1])
+        # skip other processing and deletes tiny_mce tag
+        # if image is not in database
+        next unless old_img
         new_img = TinyMceAsset.create(image: old_img.image,
                                       team: team,
                                       reference: step)
@@ -47,6 +50,9 @@ namespace :tiny_mce_asset do
       result_text.text.gsub!(regex) do |el|
         match = el.match(regex)
         old_img = TinyMceAsset.find_by_id(match[1])
+        # skip other processing and deletes tiny_mce tag
+        # if image is not in database
+        next unless old_img
         new_img = TinyMceAsset.create(image: old_img.image,
                                       team: team,
                                       reference: result_text)
