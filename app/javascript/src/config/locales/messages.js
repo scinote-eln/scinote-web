@@ -9,7 +9,9 @@ export default {
       upload: "Upload",
       about_scinote: "About sciNote",
       core_version: "sciNote core version",
-      addon_versions: "Addon versions"
+      addon_versions: "Addon versions",
+      project: "Project",
+      task: "Task"
     },
     page_title: {
       root: "SciNote",

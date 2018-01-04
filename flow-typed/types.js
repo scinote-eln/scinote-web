@@ -33,7 +33,9 @@ export type ValidationErrors = string | Array<string> | Array<ValidationError>;
 export type Activity = {
   id: number,
   message: string,
-  created_at: string
+  created_at: string,
+  project?: string,
+  task?: string
 };
 
 export type Notification = {
