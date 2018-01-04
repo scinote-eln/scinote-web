@@ -43,8 +43,8 @@ Canaid::Permissions.register_for(Team) do
     user.is_admin_of_team?(team)
   end
 
-  # create, import, edit, delete repository record
-  can :manage_repository_row do |user, team|
+  # create, import, edit, delete repository records
+  can :manage_repository_rows do |user, team|
     user.is_normal_user_or_admin_of_team?(team)
   end
 
@@ -94,5 +94,12 @@ Canaid::Permissions.register_for(CustomField) do
   # update, delete custom field
   can :update_or_delete_custom_field do |user, custom_field|
     can_manage_sample_elements?(user, custom_field.team)
+  end
+end
+
+Canaid::Permissions.register_for(RepositoryRow) do
+  # update, delete specific repository record
+  can :update_or_delete_repository_row do |user, repository_row|
+    can_manage_repository_rows?(user, repository_row.repository.team)
   end
 end

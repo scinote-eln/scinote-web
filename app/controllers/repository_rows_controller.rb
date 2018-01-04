@@ -5,7 +5,9 @@ class RepositoryRowsController < ApplicationController
 
   before_action :load_vars, only: %i(edit update)
   before_action :load_repository, only: %i(create delete_records)
-  before_action :check_permissions
+  before_action :check_create_permissions, only: :create
+  before_action :check_edit_permissions, only: %i(edit update)
+  before_action :check_destroy_permissions, only: :delete_records
 
   def create
     record = RepositoryRow.new(repository: @repository,
@@ -169,7 +171,9 @@ class RepositoryRowsController < ApplicationController
     if params[:selected_rows]
       params[:selected_rows].each do |row_id|
         row = @repository.repository_rows.find_by_id(row_id)
-        row.destroy && deleted_count += 1 if row
+        if row && can_update_or_delete_repository_row?(row)
+          row.destroy && deleted_count += 1
+        end
       end
       if deleted_count.zero?
         flash = t('repositories.destroy.no_deleted_records_flash',
@@ -213,8 +217,16 @@ class RepositoryRowsController < ApplicationController
     render_404 unless @repository
   end
 
-  def check_permissions
-    render_403 unless can_manage_repository_row?(@repository.team)
+  def check_create_permissions
+    render_403 unless can_manage_repository_rows?(@repository.team)
+  end
+
+  def check_edit_permissions
+    render_403 unless can_update_or_delete_repository_row?(@record)
+  end
+
+  def check_destroy_permissions
+    render_403 unless can_manage_repository_rows?(@repository.team)
   end
 
   def record_params

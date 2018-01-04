@@ -7,13 +7,13 @@
 
 <div id="repository-toolbar">
 
-  <% if can_manage_repository_row?(repository.team) %>
+  <% if can_manage_repository_rows?(repository.team) %>
     <button type="button" class="btn btn-default editAdd" id="addRepositoryRecord" onclick="onClickAddRecord()">
       <span class="glyphicon glyphicon-plus"></span>
       <span class="hidden-xs"><%= t("repositories.add_new_record") %></span>
     </button>
   <% end %>
-  <% if can_manage_repository_row?(repository.team) %>
+  <% if can_manage_repository_rows?(repository.team) %>
     <button type="button" class="btn btn-default" id="importRecordsButton">
       <span class="glyphicon glyphicon-cloud-upload"></span>
       <span class="hidden-xs"><%= t('repositories.import_records.import') %></span>
@@ -113,7 +113,7 @@
     <span class="hidden-xs-custom"><%= t("repositories.edit_record") %></span>
   </button>
 
-  <% if can_manage_repository_row?(repository.team) %>
+  <% if can_manage_repository_rows?(repository.team) %>
     <button type="button" class="btn btn-default"
       id="deleteRepositoryRecordsButton" data-target="#deleteRepositoryRecord" data-toggle="modal" disabled>
       <span class="glyphicon glyphicon-trash"></span>
