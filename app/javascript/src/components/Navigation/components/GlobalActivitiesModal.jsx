@@ -97,12 +97,11 @@ class GlobalActivitiesModal extends Component<Props, State> {
   mapActivities(): Array<*> {
     return this.state.activities.map(
       (activity: Activity, i: number, arr: Array<*>) => {
-        // when the backend bug will be fixed
         const newDate = new Date(activity.createdAt);
         // returns a label with "today" if the date of the activity is today
         if (i === 0 && newDate.toDateString() === new Date().toDateString()) {
           return GlobalActivitiesModal.renderActivityDateElement(
-            i,
+            activity.id,
             activity,
             newDate
           );
@@ -117,7 +116,7 @@ class GlobalActivitiesModal extends Component<Props, State> {
         const parseNewDate = new Date(newDate.toDateString());
         if (parsePrevDate.getTime() > parseNewDate.getTime()) {
           return GlobalActivitiesModal.renderActivityDateElement(
-            i,
+            activity.id,
             activity,
             newDate
           );
