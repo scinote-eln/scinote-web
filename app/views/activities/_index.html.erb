@@ -2,7 +2,9 @@
   <% if activities.empty? %>
     <li><em><%= t'activities.index.no_activities' %></em></li>
   <% else %>
-  <%= render 'activities/list.html.erb', activities: activities%>
+  <%= render 'activities/list.html.erb',
+             activities: activities,
+             previous_activity_created_at: previous_activity_created_at %>
   <% end %>
   <% if more_activities_url.present? && page == 1 %>
   <li class="text-center">

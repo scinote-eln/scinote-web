@@ -2,10 +2,9 @@
 
 import React from "react";
 import type { Node } from "react";
-import { FormattedDate } from "react-intl";
+import { FormattedDate, FormattedMessage } from "react-intl";
 import { Tooltip, OverlayTrigger } from "react-bootstrap";
 import styled from "styled-components";
-import { FormattedMessage } from "react-intl";
 
 import {
   WHITE_COLOR,

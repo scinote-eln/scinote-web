@@ -22,12 +22,22 @@ class ActivitiesController < ApplicationController
                              .page(page)
                              .per(Constants::ACTIVITY_AND_NOTIF_SEARCH_LIMIT)
     unless activities.last_page?
-      more_url = url_for(activities_url(format: :json, page: page + 1))
+      more_url = url_for(
+        activities_url(
+          format: :json,
+          page: page + 1,
+          last_activity: activities.last.id
+        )
+      )
     end
+    # send last activity date of the previus batch
+    previous_activity = Activity.find_by_id(params[:last_activity])
+    previus_date = previous_activity.created_at.to_date if previous_activity
     {
       activities: activities,
       more_activities_url: more_url,
-      page: page
+      page: page,
+      previous_activity_created_at: previus_date
     }
   end
 end
