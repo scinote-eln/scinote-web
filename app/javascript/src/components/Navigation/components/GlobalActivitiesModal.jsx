@@ -1,7 +1,7 @@
 // @flow
 
 import React, { Component } from "react";
-import type { Element } from "react";
+import type { Element, Node } from "react";
 import { FormattedMessage } from "react-intl";
 import { Button, Modal } from "react-bootstrap";
 import _ from "lodash";
@@ -62,7 +62,7 @@ class GlobalActivitiesModal extends Component<Props, State> {
     key: number,
     activity: Activity,
     date: Date
-  ) {
+  ): Node {
     return [
       <ActivityDateElement key={date} date={date} />,
       <ActivityElement key={key} activity={activity} />
@@ -95,35 +95,37 @@ class GlobalActivitiesModal extends Component<Props, State> {
   }
 
   mapActivities(): Array<*> {
-    return this.state.activities.map((activity, i, arr) => {
-      // when the backend bug will be fixed
-      const newDate = new Date(activity.createdAt);
-      // returns a label with "today" if the date of the activity is today
-      if (i === 0 && newDate.toDateString() === new Date().toDateString()) {
-        return GlobalActivitiesModal.renderActivityDateElement(
-          i,
-          activity,
-          newDate
-        );
+    return this.state.activities.map(
+      (activity: Activity, i: number, arr: Array<*>) => {
+        // when the backend bug will be fixed
+        const newDate = new Date(activity.createdAt);
+        // returns a label with "today" if the date of the activity is today
+        if (i === 0 && newDate.toDateString() === new Date().toDateString()) {
+          return GlobalActivitiesModal.renderActivityDateElement(
+            i,
+            activity,
+            newDate
+          );
+        }
+        // else checks if the previous activity is newer than current
+        // and displays a label with the date
+        const prevDate =
+          i !== 0 ? new Date(arr[i - 1].createdAt) : new Date(1901, 1, 1);
+        // filter only date from createdAt without minutes and seconds
+        // used to compare dates
+        const parsePrevDate = new Date(prevDate.toDateString());
+        const parseNewDate = new Date(newDate.toDateString());
+        if (parsePrevDate.getTime() > parseNewDate.getTime()) {
+          return GlobalActivitiesModal.renderActivityDateElement(
+            i,
+            activity,
+            newDate
+          );
+        }
+        // returns the default activity element
+        return <ActivityElement key={activity.id} activity={activity} />;
       }
-      // else checks if the previous activity is newer than current
-      // and displays a label with the date
-      const prevDate =
-        i !== 0 ? new Date(arr[i - 1].createdAt) : new Date(1901, 1, 1);
-      // filter only date from createdAt without minutes and seconds
-      // used to compare dates
-      const parsePrevDate = new Date(prevDate.toDateString());
-      const parseNewDate = new Date(newDate.toDateString());
-      if (parsePrevDate.getTime() > parseNewDate.getTime()) {
-        return GlobalActivitiesModal.renderActivityDateElement(
-          i,
-          activity,
-          newDate
-        );
-      }
-      // returns the default activity element
-      return <ActivityElement key={activity.id} activity={activity} />;
-    });
+    );
   }
 
   displayActivities() {

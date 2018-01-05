@@ -35,8 +35,8 @@ export type Activity = {
   message: string,
   createdAt: string,
   timezone: string,
-  project?: string,
-  task?: string
+  project: string,
+  task: string
 };
 
 export type Notification = {
