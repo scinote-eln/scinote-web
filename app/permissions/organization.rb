@@ -1,6 +1,5 @@
 Canaid::Permissions.register_generic do
-  can :create_team do |user|
-    # TBD
+  can :create_teams do |user|
     true
   end
 end
