@@ -1,7 +1,7 @@
 class SampleGroupsController < ApplicationController
   before_action :load_vars_nested
-  before_action :check_create_permissions
-  before_action :set_sample_group, except: [:create, :index]
+  before_action :check_permissions, except: %i(index sample_group_element)
+  before_action :set_sample_group, except: %i(create index)
   before_action :set_project_my_module, only: :index
   layout 'fluid'
 
@@ -109,7 +109,7 @@ class SampleGroupsController < ApplicationController
       sample.update(sample_group_id: nil)
     end
     @sample_group.destroy
-    redirect_to :back
+    redirect_back(fallback_location: root_path)
   end
 
   private
@@ -133,8 +133,8 @@ class SampleGroupsController < ApplicationController
     render_404 unless @team
   end
 
-  def check_create_permissions
-    render_403 unless can_create_sample_type_in_team(@team)
+  def check_permissions
+    render_403 unless can_manage_sample_columns?(@team)
   end
 
   def sample_group_params

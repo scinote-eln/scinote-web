@@ -7,20 +7,20 @@
 
 <div id="repository-toolbar">
 
-  <% if can_create_repository_records(repository) %>
+  <% if can_manage_repository_rows?(repository.team) %>
     <button type="button" class="btn btn-default editAdd" id="addRepositoryRecord" onclick="onClickAddRecord()">
       <span class="glyphicon glyphicon-plus"></span>
       <span class="hidden-xs"><%= t("repositories.add_new_record") %></span>
     </button>
   <% end %>
-  <% if can_import_repository_records(repository) %>
+  <% if can_manage_repository_rows?(repository.team) %>
     <button type="button" class="btn btn-default" id="importRecordsButton">
       <span class="glyphicon glyphicon-cloud-upload"></span>
       <span class="hidden-xs"><%= t('repositories.import_records.import') %></span>
     </button>
   <% end %>
 
-  <% if can_view_repository(repository) %>
+  <% if can_read_team?(repository.team) %>
     <a href="#" class="btn btn-default" id="exportRepositoriesButton">
       <span class="glyphicon glyphicon-cloud-download"></span>
       <span class="hidden-xs"><%= t("my_modules.repository.export") %></span>
@@ -34,16 +34,16 @@
            data-toggle="dropdown"
            aria-haspopup="true"
            aria-expanded="true"
-           <%= "disabled='disabled'" if !can_edit_and_destroy_repository repository and !can_copy_repository repository %>>
+           <%= "disabled='disabled'" if !can_update_or_delete_repository?(repository) && !can_create_repositories?(repository.team) %>>
         <span class="glyphicon glyphicon-cog"></span>
         <span class="caret"></span>
       </div>
-      <% if can_edit_and_destroy_repository repository or can_copy_repository repository %>
+      <% if can_update_or_delete_repository?(repository) || can_create_repositories?(repository.team) %>
         <ul class="dropdown-menu pull-right">
           <li class="dropdown-header">
             <%= t("repositories.index.options_dropdown.header") %>
           </li>
-          <% if can_edit_and_destroy_repository repository %>
+          <% if can_update_or_delete_repository?(repository) %>
             <li>
               <%= link_to t('repositories.index.options_dropdown.rename'),
                           team_repository_rename_modal_path(repository_id: repository),
@@ -51,7 +51,7 @@
                           remote: true %>
             </li>
           <% end %>
-          <% if can_copy_repository(repository) %>
+          <% if repository.team.repositories.count < Constants::REPOSITORIES_LIMIT %>
             <li>
               <%= link_to t('repositories.index.options_dropdown.copy'),
                           team_repository_copy_modal_path(repository_id: repository),
@@ -59,7 +59,7 @@
                           remote: true %>
             </li>
           <% end %>
-          <% if can_edit_and_destroy_repository repository %>
+          <% if can_update_or_delete_repository?(repository) %>
             <li role="separator" class="divider"></li>
             <li>
               <%= link_to t('repositories.index.modal_delete.delete'),
@@ -80,7 +80,7 @@
         <span class="caret"></span>
       </button>
       <ul class="dropdown-menu dropdown-menu-right smart-dropdown" id="repository-columns-list">
-        <% if can_create_columns_in_repository(repository) %>
+        <% if can_create_repository_columns?(repository.team) %>
           <li class="add-new-column-form">
             <div id="new-column-form" class="form-group" data-action="<%= repository_repository_columns_path(repository) %>">
               <div class="input-group">
@@ -117,7 +117,7 @@
     <span class="hidden-xs-custom"><%= t("repositories.edit_record") %></span>
   </button>
 
-  <% if can_delete_repository_records(repository) %>
+  <% if can_manage_repository_rows?(repository.team) %>
     <button type="button" class="btn btn-default"
       id="deleteRepositoryRecordsButton" data-target="#deleteRepositoryRecord" data-toggle="modal" disabled>
       <span class="glyphicon glyphicon-trash"></span>

@@ -431,7 +431,9 @@ class StepsController < ApplicationController
 
     respond_to do |format|
       if step
-        if can_reorder_step_in_protocol(step.protocol)
+        protocol = step.protocol
+        if protocol.in_module? && can_reorder_step_in_protocol(protocol) ||
+           protocol.in_repository? && can_update_protocol_in_repository?(protocol)
           if step.position > 0
             step_down = step.protocol.steps.where(position: step.position - 1).first
             step.position -= 1
@@ -476,7 +478,9 @@ class StepsController < ApplicationController
 
     respond_to do |format|
       if step
-        if can_reorder_step_in_protocol(step.protocol)
+        protocol = step.protocol
+        if protocol.in_module? && can_reorder_step_in_protocol(protocol) ||
+           protocol.in_repository? && can_update_protocol_in_repository?(protocol)
           if step.position < step.protocol.steps.count - 1
             step_up = step.protocol.steps.where(position: step.position + 1).first
             step.position += 1
@@ -639,25 +643,29 @@ class StepsController < ApplicationController
   end
 
   def check_view_permissions
-    unless can_view_steps_in_protocol(@protocol)
+    if @protocol.in_module? && !can_view_steps_in_protocol(@protocol) ||
+       @protocol.in_repository? && !can_read_protocol_in_repository?(@protocol)
       render_403
     end
   end
 
   def check_create_permissions
-    unless can_create_step_in_protocol(@protocol)
+    if @protocol.in_module? && !can_create_step_in_protocol(@protocol) ||
+       @protocol.in_repository? && !can_update_protocol_in_repository?(@protocol)
       render_403
     end
   end
 
   def check_edit_permissions
-    unless can_edit_step_in_protocol(@protocol)
+    if @protocol.in_module? && !can_edit_step_in_protocol(@protocol) ||
+       @protocol.in_repository? && !can_update_protocol_in_repository?(@protocol)
       render_403
     end
   end
 
   def check_destroy_permissions
-    unless can_delete_step_in_protocol(@protocol)
+    if @protocol.in_module? && !can_delete_step_in_protocol(@protocol) ||
+       @protocol.in_repository? && !can_update_protocol_in_repository?(@protocol)
       render_403
     end
   end

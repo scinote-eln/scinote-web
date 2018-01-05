@@ -112,7 +112,7 @@
                     <ul>
                       <% assets.each do |asset| %>
                         <li>
-                          <% if can_view_or_download_step_assets(@protocol) %>
+                          <% if can_read_protocol_in_repository?(@protocol) %>
                             <% if asset.file_present %>
                               <% if asset.file.processing? %>
                                 <span data-status='asset-loading'

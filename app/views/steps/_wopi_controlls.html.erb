@@ -13,6 +13,9 @@
 <% end %>
 <%= wopi_asset_view_button(asset) %>
 <% view_only ||= false %>
-<% if !view_only && can_edit_step_in_protocol(@protocol) %>
-  <%= wopi_asset_edit_button(asset) %>
+<% if !view_only %>
+  <% if @protocol.in_module? && can_edit_step_in_protocol(@protocol) ||
+     @protocol.in_repository? && can_update_protocol_in_repository?(@protocol) %>
+    <%= wopi_asset_edit_button(asset) %>
+  <% end %>
 <% end %>

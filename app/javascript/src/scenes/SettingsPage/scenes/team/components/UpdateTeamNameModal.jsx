@@ -54,7 +54,7 @@ class UpdateTeamNameModal extends Component<Props, State> {
         this.onCloseModal();
       })
       .catch(error => {
-        (this: any).form.setErrorsForTag("name", [error.message]);
+        (this: any).form.setErrorsForTag("name", error.response.data.message);
       });
   }
 

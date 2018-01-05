@@ -901,12 +901,14 @@ class ProtocolsController < ApplicationController
   def check_view_all_permissions
     load_team_and_type
 
-    render_403 unless can_view_team_protocols(@current_team)
+    render_403 unless can_read_team?(@current_team)
   end
 
   def check_view_permissions
     @protocol = Protocol.find_by_id(params[:id])
-    if @protocol.blank? || !can_view_protocol(@protocol)
+    if @protocol.blank? ||
+       @protocol.in_module? && !can_view_protocol(@protocol) ||
+       @protocol.in_repository? && !can_read_protocol_in_repository?(@protocol)
       respond_to { |f| f.json { render json: {}, status: :unauthorized } }
     end
   end
@@ -914,7 +916,7 @@ class ProtocolsController < ApplicationController
   def check_create_permissions
     load_team_and_type
 
-    if !can_create_new_protocol(@current_team) || @type == :archive
+    if !can_create_protocols_in_repository?(@current_team) || @type == :archive
       render_403
     end
   end
@@ -924,7 +926,7 @@ class ProtocolsController < ApplicationController
     @original = Protocol.find_by_id(params[:id])
 
     if @original.blank? ||
-      !can_clone_protocol(@original) || @type == :archive
+      !can_clone_protocol_in_repository?(@original) || @type == :archive
       render_403
     end
   end
@@ -933,7 +935,7 @@ class ProtocolsController < ApplicationController
     load_team_and_type
     @protocol = Protocol.find_by_id(params[:id])
 
-    unless can_edit_protocol(@protocol)
+    unless can_update_protocol_in_repository?(@protocol)
       render_403
     end
   end
@@ -1012,7 +1014,8 @@ class ProtocolsController < ApplicationController
   def check_make_private_permissions
     @protocols = Protocol.where(id: params[:protocol_ids])
     @protocols.find_each do |protocol|
-      unless can_make_protocol_private(protocol) then
+      if !protocol.in_repository_public? ||
+         !can_update_protocol_type_in_repository?(protocol)
         respond_to { |f| f.json { render json: {}, status: :unauthorized } }
         return
       end
@@ -1022,7 +1025,8 @@ class ProtocolsController < ApplicationController
   def check_publish_permissions
     @protocols = Protocol.where(id: params[:protocol_ids])
     @protocols.find_each do |protocol|
-      unless can_publish_protocol(protocol) then
+      if !protocol.in_repository_private? ||
+         !can_update_protocol_type_in_repository?(protocol)
         respond_to { |f| f.json { render json: {}, status: :unauthorized } }
         return
       end
@@ -1032,7 +1036,8 @@ class ProtocolsController < ApplicationController
   def check_archive_permissions
     @protocols = Protocol.where(id: params[:protocol_ids])
     @protocols.find_each do |protocol|
-      unless can_archive_protocol(protocol) then
+      if protocol.in_repository_archived? ||
+         !can_update_protocol_type_in_repository?(protocol)
         respond_to { |f| f.json { render json: {}, status: :unauthorized } }
         return
       end
@@ -1042,7 +1047,8 @@ class ProtocolsController < ApplicationController
   def check_restore_permissions
     @protocols = Protocol.where(id: params[:protocol_ids])
     @protocols.find_each do |protocol|
-      unless can_restore_protocol(protocol) then
+      if protocol.in_repository_active? ||
+         !can_update_protocol_type_in_repository?(protocol)
         respond_to { |f| f.json { render json: {}, status: :unauthorized } }
         return
       end
@@ -1057,7 +1063,7 @@ class ProtocolsController < ApplicationController
       @protocol_json.present? &&
       @team.present? &&
       (@type == :public || @type == :private) &&
-      can_import_protocols(@team)
+      can_create_protocols_in_repository?(@team)
     )
       render_403
     end
@@ -1065,8 +1071,12 @@ class ProtocolsController < ApplicationController
 
   def check_export_permissions
     @protocols = Protocol.where(id: params[:protocol_ids])
-    if @protocols.blank? || @protocols.any? { |p| !can_export_protocol(p) }
-      render_403
+    render_403 if @protocols.blank?
+    @protocols.each do |p|
+      if p.in_module? && !can_export_protocol(p) ||
+         p.in_repository? && !can_read_protocol_in_repository?(p)
+        render_403
+      end
     end
   end
 
