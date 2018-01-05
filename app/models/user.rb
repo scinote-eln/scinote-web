@@ -37,11 +37,11 @@ class User < ApplicationRecord
             message: I18n.t('client_api.user.avatar_too_big') }
   validate :time_zone_check
 
-  store_accessor :settings, :time_zone, :notifications
+  store_accessor :settings, :time_zone, :notifications_settings
 
   default_settings(
     time_zone: 'UTC',
-    notifications: {
+    notifications_settings: {
       assignments: true,
       assignments_email: false,
       recent: true,
@@ -405,7 +405,7 @@ class User < ApplicationRecord
   NOTIFICATIONS_TYPES.each do |name|
     define_method(name) do
       attr_name = name.gsub('_notification', '')
-      self.notifications.fetch(attr_name.to_sym)
+      notifications_settings.fetch(attr_name.to_sym)
     end
   end
 
@@ -413,7 +413,7 @@ class User < ApplicationRecord
   NOTIFICATIONS_TYPES.each do |name|
     define_method("#{name}=") do |value|
       attr_name = name.gsub('_notification', '').to_sym
-      self.notifications[attr_name] = value
+      notifications_settings[attr_name] = value
       save
     end
   end

@@ -6,5 +6,9 @@ json.global_activities do
     json.message activity.message
     json.createdAt activity.created_at
     json.timezone timezone
+    if activity.my_module
+      json.project activity.my_module.experiment.project.name
+      json.task activity.my_module.name
+    end
   end
 end

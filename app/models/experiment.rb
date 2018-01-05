@@ -600,7 +600,7 @@ class Experiment < ApplicationRecord
     end
 
     # There are no callbacks in Connection, so delete_all should be safe
-    Connection.delete_all(output_id: my_modules)
+    Connection.where(output_id: my_modules).delete_all
 
     # Add new connections
     filtered_edges = dg.edges.collect { |e| [e.source, e.target] }
@@ -732,7 +732,7 @@ class Experiment < ApplicationRecord
     end
 
     # Remove any existing module groups from modules
-    unless MyModuleGroup.destroy_all(id: group_ids.to_a)
+    unless MyModuleGroup.where(id: group_ids.to_a).destroy_all
       raise ActiveRecord::ActiveRecordError
     end
 

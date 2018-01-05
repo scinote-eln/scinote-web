@@ -8,3 +8,5 @@ export function getActivities(
   const path = `${ACTIVITIES_PATH}?page=${page}`;
   return axiosInstance.get(path).then(({ data }) => data.global_activities);
 }
+
+export default 'getActivities';

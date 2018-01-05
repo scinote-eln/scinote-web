@@ -79,7 +79,7 @@
                   <%=t 'notifications.form.notification_scinote' %>
                 </div>
                 <div class="col-sm-8">
-                  <%= check_box_tag :assignments_notification, @user.settings[:notifications][:assignments] %>
+                  <%= check_box_tag :assignments_notification, @user.assignments_notification %>
                 </div>
               </div>
               <div class="row">
@@ -87,7 +87,7 @@
                   <%=t 'notifications.form.notification_email' %>
                 </div>
                 <div class="col-sm-8">
-                  <%= check_box_tag :assignments_notification_email, @user.settings[:notifications][:assignments_email] %>
+                  <%= check_box_tag :assignments_notification_email, @user.assignments_email_notification %>
                 </div>
               </div>
             </div>
@@ -104,7 +104,7 @@
                     <%=t 'notifications.form.notification_scinote' %>
                   </div>
                   <div class="col-sm-8">
-                    <%= check_box_tag :recent_notification, @user.settings[:notifications][:recent] %>
+                    <%= check_box_tag :recent_notification, @user.recent_notification %>
                   </div>
                 </div>
                 <div class="row">
@@ -112,7 +112,7 @@
                     <%=t 'notifications.form.notification_email' %>
                   </div>
                   <div class="col-sm-8">
-                    <%= check_box_tag :recent_notification_email, @user.settings[:notifications][:recent_email] %>
+                    <%= check_box_tag :recent_notification_email, @user.recent_email_notification %>
                   </div>
                 </div>
             </div>
@@ -137,7 +137,7 @@
                   <%=t 'notifications.form.notification_email' %>
                 </div>
                 <div class="col-sm-8">
-                  <%= check_box_tag :system_message_notification_email, @user.settings[:notifications][:system_message_email] %>
+                  <%= check_box_tag :system_message_notification_email, @user.system_message_email_notification %>
                 </div>
               </div>
             </div>

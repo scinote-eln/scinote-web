@@ -1,7 +1,6 @@
 module ClientApi
   module Users
     class UsersController < ApplicationController
-
       def sign_out_user
         respond_to do |format|
           if sign_out current_user
@@ -13,15 +12,11 @@ module ClientApi
       end
 
       def preferences_info
-        settings = current_user.settings
         respond_to do |format|
           format.json do
             render template: 'client_api/users/preferences',
                    status: :ok,
-                   locals: {
-                     timeZone: settings['time_zone'],
-                     notifications: settings['notifications']
-                   }
+                   locals: { user: current_user }
           end
         end
       end

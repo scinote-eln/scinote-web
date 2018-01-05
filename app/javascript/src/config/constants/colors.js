@@ -19,3 +19,4 @@ export const COLOR_ALTO = "#dddddd";
 export const COLOR_GRAY = "#909088";
 export const COLOR_ALABASTER = "#fcfcfc";
 export const COLOR_APPLE_BLOSSOM = "#a94442";
+export const COLOR_ORANGE = "#ff900b";

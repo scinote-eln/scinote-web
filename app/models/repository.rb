@@ -6,6 +6,7 @@ class Repository < ApplicationRecord
              foreign_key: :created_by_id,
              class_name: 'User',
              optional: true
+  has_many :repository_columns
   has_many :repository_rows
   has_many :repository_table_states,
            inverse_of: :repository, dependent: :destroy

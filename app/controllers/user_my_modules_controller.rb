@@ -44,7 +44,7 @@ class UserMyModulesController < ApplicationController
     if @um.save
       # Create activity
       message = t(
-        "activities.assign_user_to_module",
+        'activities.assign_user_to_module',
         assigned_user: @um.user.full_name,
         module: @my_module.name,
         assigned_by_user: current_user.full_name
@@ -58,9 +58,11 @@ class UserMyModulesController < ApplicationController
         type_of: :assign_user_to_module
       )
       respond_to do |format|
-        format.json {
-          redirect_to :action => :index_edit, :format => :json
-        }
+        format.json do
+          redirect_to my_module_users_edit_path(format: :json),
+                      turbolinks: false,
+                      status: 303
+        end
       end
     else
       respond_to do |format|
