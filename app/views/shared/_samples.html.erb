@@ -51,7 +51,7 @@
         <span class="caret"></span>
       </button>
       <ul class="dropdown-menu dropdown-menu-right smart-dropdown" id="samples-columns-list">
-        <% if can_manage_sample_elements?(@team) %>
+        <% if can_manage_sample_columns?(@team) %>
           <li class="add-new-column-form">
             <div id="new-column-form" class="form-group" data-action="<%= team_custom_fields_path(@team) %>">
               <div class="input-group">

@@ -305,7 +305,7 @@ class RepositoriesController < ApplicationController
   end
 
   def check_create_permissions
-    render_403 unless can_manage_repository?(@team) ||
+    render_403 unless can_create_repositories?(@team) ||
                       @team.repositories.count < Constants::REPOSITORIES_LIMIT
   end
 

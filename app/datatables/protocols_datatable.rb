@@ -5,7 +5,7 @@ class ProtocolsDatatable < CustomDatatable
 
   def_delegator :@view, :can_update_protocol_in_repository?
   def_delegator :@view, :edit_protocol_path
-  def_delegator :@view, :can_clone_protocol?
+  def_delegator :@view, :can_clone_protocol_in_repository?
   def_delegator :@view, :clone_protocol_path
   def_delegator :@view, :can_update_protocol_type_in_repository?
   def_delegator :@view, :can_read_protocol_in_repository?
@@ -88,8 +88,8 @@ class ProtocolsDatatable < CustomDatatable
                                            team: @team,
                                            type: @type)
                       end,
-        'DT_CanClone': can_clone_protocol?(protocol),
-        'DT_CloneUrl': if can_clone_protocol?(protocol)
+        'DT_CanClone': can_clone_protocol_in_repository?(protocol),
+        'DT_CloneUrl': if can_clone_protocol_in_repository?(protocol)
                          clone_protocol_path(protocol,
                                              team: @team,
                                              type: @type)

@@ -33,7 +33,7 @@ module ClientApi
 
       def check_invite_users_permission
         @team = Team.find_by_id(params[:team_id])
-        if @team && !can_manage_user_team?(@team)
+        if @team && !can_manage_team_users?(@team)
           respond_422(t('client_api.invite_users.permission_error'))
         end
       end

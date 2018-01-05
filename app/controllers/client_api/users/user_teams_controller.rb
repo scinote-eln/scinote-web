@@ -58,7 +58,7 @@ module ClientApi
 
       def check_manage_user_team_permission
         user_team = UserTeam.find_by_id(params[:user_team])
-        unless can_manage_user_team?(user_team.team)
+        unless can_manage_team_users?(user_team.team)
           respond_422(t('client_api.user_teams.permission_error'))
         end
       end

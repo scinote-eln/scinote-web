@@ -134,7 +134,7 @@ class SampleGroupsController < ApplicationController
   end
 
   def check_permissions
-    render_403 unless can_manage_sample_elements?(@team)
+    render_403 unless can_manage_sample_columns?(@team)
   end
 
   def sample_group_params

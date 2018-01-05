@@ -19,11 +19,11 @@
 
     <!-- Add new repository tab -->
     <li role="presentation"
-      <% unless can_manage_repository?(current_team) || current_team.repositories.count < Constants::REPOSITORIES_LIMIT %>
+      <% unless can_create_repositories?(current_team) || current_team.repositories.count < Constants::REPOSITORIES_LIMIT %>
         class="disabled"
       <% end %>>
       <a
-        <% if can_manage_repository?(current_team) && current_team.repositories.count < Constants::REPOSITORIES_LIMIT %>
+        <% if can_create_repositories?(current_team) && current_team.repositories.count < Constants::REPOSITORIES_LIMIT %>
           href="<%= create_modal_team_repositories_path %>"
           class='create-repository'
           data-remote='true'

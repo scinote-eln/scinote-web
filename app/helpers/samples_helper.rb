@@ -8,7 +8,7 @@ module SamplesHelper
   end
 
   def can_add_sample_related_things_to_team
-    can_manage_sample_elements?(@team)
+    can_manage_sample_columns?(@team)
   end
 
   def all_custom_fields

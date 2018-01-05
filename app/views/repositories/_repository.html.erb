@@ -34,11 +34,11 @@
            data-toggle="dropdown"
            aria-haspopup="true"
            aria-expanded="true"
-           <%= "disabled='disabled'" unless can_manage_repository?(repository.team) %>>
+           <%= "disabled='disabled'" if !can_update_or_delete_repository?(repository) and !can_create_repositories?(repository.team) %>>
         <span class="glyphicon glyphicon-cog"></span>
         <span class="caret"></span>
       </div>
-      <% if can_manage_repository?(repository.team) %>
+      <% if can_update_or_delete_repository?(repository) or can_create_repositories?(repository.team) %>
         <ul class="dropdown-menu pull-right">
           <li class="dropdown-header">
             <%= t("repositories.index.options_dropdown.header") %>
@@ -80,7 +80,7 @@
         <span class="caret"></span>
       </button>
       <ul class="dropdown-menu dropdown-menu-right smart-dropdown" id="repository-columns-list">
-        <% if can_manage_repository_column?(repository.team) %>
+        <% if can_create_repository_columns?(repository.team) %>
           <li class="add-new-column-form">
             <div id="new-column-form" class="form-group" data-action="<%= repository_repository_columns_path(repository) %>">
               <div class="input-group">

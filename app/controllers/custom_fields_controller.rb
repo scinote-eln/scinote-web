@@ -105,7 +105,7 @@ class CustomFieldsController < ApplicationController
   end
 
   def check_create_permissions
-    render_403 unless can_manage_sample_elements?(@team)
+    render_403 unless can_manage_sample_columns?(@team)
   end
 
   def check_update_and_delete_permissions

@@ -324,7 +324,7 @@ class ProjectsController < ApplicationController
   end
 
   def check_create_permissions
-    render_403 unless can_create_project?(current_team)
+    render_403 unless can_create_projects?(current_team)
   end
 
   def check_view_notifications_permissions
