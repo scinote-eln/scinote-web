@@ -230,7 +230,6 @@ function importProtocolFromFile(
 
   // display tiny_mce_assets in step description
   function displayTinyMceAssetInDescription(node, folder, stepGuid) {
-    debugger;
     if (node.children('descriptionAssets').length === 0) {
       var description = node.children('description').html();
       return $('<div></div>').html(
