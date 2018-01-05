@@ -43,12 +43,14 @@
           <li class="dropdown-header">
             <%= t("repositories.index.options_dropdown.header") %>
           </li>
-          <li>
-            <%= link_to t('repositories.index.options_dropdown.rename'),
-                        team_repository_rename_modal_path(repository_id: repository),
-                        class: "rename-repo-option",
-                        remote: true %>
-          </li>
+          <% if can_update_or_delete_repository?(repository) %>
+            <li>
+              <%= link_to t('repositories.index.options_dropdown.rename'),
+                          team_repository_rename_modal_path(repository_id: repository),
+                          class: "rename-repo-option",
+                          remote: true %>
+            </li>
+          <% end %>
           <% if repository.team.repositories.count < Constants::REPOSITORIES_LIMIT %>
             <li>
               <%= link_to t('repositories.index.options_dropdown.copy'),
@@ -57,13 +59,15 @@
                           remote: true %>
             </li>
           <% end %>
-          <li role="separator" class="divider"></li>
-          <li>
-            <%= link_to t('repositories.index.modal_delete.delete'),
-                        team_repository_destroy_modal_path(repository_id: repository),
-                        class: "delete-repo-option",
-                        remote: true %>
-          </li>
+          <% if can_update_or_delete_repository?(repository) %>
+            <li role="separator" class="divider"></li>
+            <li>
+              <%= link_to t('repositories.index.modal_delete.delete'),
+                          team_repository_destroy_modal_path(repository_id: repository),
+                          class: "delete-repo-option",
+                          remote: true %>
+            </li>
+          <% end %>
         </ul>
       <% end %>
     </div>

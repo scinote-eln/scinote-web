@@ -310,7 +310,7 @@ class RepositoriesController < ApplicationController
   end
 
   def check_edit_and_destroy_permissions
-    render_403 unless can_manage_repository?(@team)
+    render_403 unless can_update_or_delete_repository?(@repository)
   end
 
   def repository_params
