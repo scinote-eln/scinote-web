@@ -21,8 +21,8 @@
         <th id="added-by"><%= t("repositories.table.added_by") %></th>
         <% repository.repository_columns.order(:id).each do |column| %>
           <th class="repository-column" id="<%= column.id %>"
-            <%= 'data-editable' if can_manage_repository_column?(repository.team) %>
-            <%= 'data-deletable' if can_manage_repository_column?(repository.team) %>
+            <%= 'data-editable' if can_update_or_delete_repository_column?(column) %>
+            <%= 'data-deletable' if can_update_or_delete_repository_column?(column) %>
             <%= "data-edit-url='#{edit_repository_repository_column_path(repository, column)}'" %>
             <%= "data-update-url='#{repository_repository_column_path(repository, column)}'" %>
             <%= "data-destroy-html-url='#{repository_columns_destroy_html_path(repository, column)}'" %>

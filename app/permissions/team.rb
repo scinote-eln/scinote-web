@@ -48,7 +48,7 @@ Canaid::Permissions.register_for(Team) do
     user.is_normal_user_or_admin_of_team?(team)
   end
 
-  # create, update, delete repository column
+  # create repository column
   can :manage_repository_column do |user, team|
     user.is_normal_user_or_admin_of_team?(team)
   end
@@ -101,5 +101,12 @@ Canaid::Permissions.register_for(RepositoryRow) do
   # update, delete specific repository record
   can :update_or_delete_repository_row do |user, repository_row|
     can_manage_repository_rows?(user, repository_row.repository.team)
+  end
+end
+
+Canaid::Permissions.register_for(RepositoryColumn) do
+  # update, delete repository column
+  can :update_or_delete_repository_column do |user, repository_column|
+    can_manage_repository_column?(user, repository_column.repository.team)
   end
 end
