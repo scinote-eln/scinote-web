@@ -1,7 +1,7 @@
 // @flow
 
 import React, { Component } from "react";
-import type { Element } from "react";
+import type { Element, Node } from "react";
 import { FormattedMessage } from "react-intl";
 import { Button, Modal } from "react-bootstrap";
 import _ from "lodash";
@@ -53,7 +53,8 @@ type Props = {
 
 type State = {
   activities: Array<Activity>,
-  more: boolean
+  more: boolean,
+  currentPage: number
 };
 
 class GlobalActivitiesModal extends Component<Props, State> {
@@ -61,7 +62,7 @@ class GlobalActivitiesModal extends Component<Props, State> {
     key: number,
     activity: Activity,
     date: Date
-  ) {
+  ): Node {
     return [
       <ActivityDateElement key={date} date={date} />,
       <ActivityElement key={key} activity={activity} />
@@ -70,7 +71,7 @@ class GlobalActivitiesModal extends Component<Props, State> {
 
   constructor(props: Props) {
     super(props);
-    this.state = { activities: [], more: false };
+    this.state = { activities: [], more: false, currentPage: 1 };
     (this: any).displayActivities = this.displayActivities.bind(this);
     (this: any).addMoreActivities = this.addMoreActivities.bind(this);
     (this: any).onCloseModalActions = this.onCloseModalActions.bind(this);
@@ -79,7 +80,7 @@ class GlobalActivitiesModal extends Component<Props, State> {
   }
 
   onCloseModalActions(): void {
-    this.setState({ activities: [], more: false });
+    this.setState({ activities: [], more: false, currentPage: 1 });
     this.props.onCloseModal();
   }
 
@@ -87,37 +88,43 @@ class GlobalActivitiesModal extends Component<Props, State> {
     getActivities().then(response => {
       this.setState({
         activities: response.activities,
-        more: response.more
+        more: response.more,
+        currentPage: response.currentPage
       });
     });
   }
 
   mapActivities(): Array<*> {
-    return this.state.activities.map((activity, i, arr) => {
-      // @todo replace key={i} with key={activity.id} !!!!!!!!!!!!!!
-      // when the backend bug will be fixed
-      const newDate = new Date(activity.created_at);
-      // returns a label with "today" if the date of the activity is today
-      if (i === 0) {
-        return GlobalActivitiesModal.renderActivityDateElement(
-          i,
-          activity,
-          newDate
-        );
+    return this.state.activities.map(
+      (activity: Activity, i: number, arr: Array<*>) => {
+        const newDate = new Date(activity.createdAt);
+        // returns a label with "today" if the date of the activity is today
+        if (i === 0 && newDate.toDateString() === new Date().toDateString()) {
+          return GlobalActivitiesModal.renderActivityDateElement(
+            activity.id,
+            activity,
+            newDate
+          );
+        }
+        // else checks if the previous activity is newer than current
+        // and displays a label with the date
+        const prevDate =
+          i !== 0 ? new Date(arr[i - 1].createdAt) : new Date(1901, 1, 1);
+        // filter only date from createdAt without minutes and seconds
+        // used to compare dates
+        const parsePrevDate = new Date(prevDate.toDateString());
+        const parseNewDate = new Date(newDate.toDateString());
+        if (parsePrevDate.getTime() > parseNewDate.getTime()) {
+          return GlobalActivitiesModal.renderActivityDateElement(
+            activity.id,
+            activity,
+            newDate
+          );
+        }
+        // returns the default activity element
+        return <ActivityElement key={activity.id} activity={activity} />;
       }
-      // else checks if the previous activity is newer than current
-      // and displays a label with the date
-      const prevDate = new Date(arr[i - 1].created_at);
-      if (prevDate.getDate() > newDate.getDate()) {
-        return GlobalActivitiesModal.renderActivityDateElement(
-          i,
-          activity,
-          newDate
-        );
-      }
-      // returns the default activity element
-      return <ActivityElement key={i} activity={activity} />;
-    });
+    );
   }
 
   displayActivities() {
@@ -136,15 +143,21 @@ class GlobalActivitiesModal extends Component<Props, State> {
   }
 
   addMoreActivities(): void {
-    const lastId = _.last(this.state.activities).id;
     getActivities(
-      lastId
-    ).then((response: { activities: Array<Activity>, more: boolean }) => {
-      this.setState({
-        activities: [...this.state.activities, ...response.activities],
-        more: response.more
-      });
-    });
+      this.state.currentPage + 1
+    ).then(
+      (response: {
+        activities: Array<Activity>,
+        more: boolean,
+        currentPage: number
+      }) => {
+        this.setState({
+          activities: [...this.state.activities, ...response.activities],
+          more: response.more,
+          currentPage: response.currentPage
+        });
+      }
+    );
   }
 
   addMoreButton(): Element<*> {
