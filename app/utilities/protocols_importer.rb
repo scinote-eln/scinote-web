@@ -162,6 +162,7 @@ module ProtocolsImporter
       tiny_mce_img.save!
       description.gsub!("[~tiny_mce_id:#{tiny_mce_img_json['tokenId']}]",
                         "[~tiny_mce_id:#{tiny_mce_img.id}]")
+                 .gsub!('  ]]--&gt;', '')
 
     end
     description
@@ -171,5 +172,6 @@ module ProtocolsImporter
   def populate_rte_legacy(step_json)
     return unless step_json['description'] && step_json['description'].present?
     step_json['description'].gsub(Constants::TINY_MCE_ASSET_REGEX, '')
+                            .gsub('  ]]--&gt;', '')
   end
 end

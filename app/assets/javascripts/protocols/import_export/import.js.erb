@@ -232,18 +232,31 @@ function importProtocolFromFile(
   function displayTinyMceAssetInDescription(node, folder, stepGuid) {
     if (node.children('descriptionAssets').length === 0) {
       var description = node.children('description').html();
-      return description.replace(/\[~tiny_mce_id:([0-9a-zA-Z]+)\]/,
-                                 '<strong>Can\'t import image</strong>');
+      return $('<div></div>').html(
+        description.replace(/\[~tiny_mce_id:([0-9a-zA-Z]+)\]/,
+                                   '<strong>Can\'t import image</strong>')
+                   .replace('<!--[CDATA[  ', '')
+                   .replace('  ]]--&gt;', '')
+                   .replace('  ]]-->','')
+                   .replace('  ]]&gt;', '')
+      ).html();
     }
     var description = node.children('description').html();
     node.find('descriptionAssets > tinyMceAsset').each(function(i, element) {
       var match = '[~tiny_mce_id:' + element.getAttribute('tokenId') + ']';
-      var assetBytes = getAssetBytes(folder, stepGuid, element.getAttribute('fileref'));
+      var assetBytes = getAssetBytes(folder,
+                                     stepGuid,
+                                     element.getAttribute('fileref'));
       var image_tag = "<img style='max-width:300px; max-height:300px;' src='data:" + element.children[1].innerHTML + ";base64," + assetBytes + "' />"
       description = description.replace(match, image_tag); // replace the token with image
     }).bind(this);
     // I know is crazy but is the only way I found to pass valid HTML
-    return $('<div></div>').html(description.replace('<!--[CDATA[', '').replace(']]&gt;', '')).html();
+    return $('<div></div>').html(
+      description.replace('<!--[CDATA[  ', '')
+                 .replace('  ]]--&gt;', '')
+                 .replace('  ]]-->','')
+                 .replace('  ]]&gt;', '')
+    ).html();
   }
 
   /* Navigation functions */
