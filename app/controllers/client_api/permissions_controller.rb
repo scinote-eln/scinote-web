@@ -15,28 +15,34 @@ module ClientApi
     def generate_permissions_object
       sanitize_permissions!
       @permissions = {}
-      if @resource
-        @required_permissions.collect do |permission|
-          @permissions.merge!("#{permission}?" => @holder.eval(permission,
-                                                               current_user,
-                                                               @resource))
-        end
-      else
-        @required_permissions.collect do |permission|
+      obj = @resource.fetch(:type)
+                     .constantize
+                     .public_send(:find_by_id, @resource.fetch(:id) {
+                       raise ArgumentError, 'ID must be present'
+                     }) if @resource
+      @required_permissions.collect do |permission|
+        parsed_permision = permission.gsub('can_', '')
+        if @resource
+          # return false if object does not exist
+          result = obj ? @holder.eval('read_team', current_user, obj) : false
+          @permissions.merge!(permission => result)
+        else
           @permissions.merge!(
-            "#{permission}?" => @holder.eval_generic(permission, current_user)
+            permission => @holder.eval_generic(
+              parsed_permision, current_user
+            )
           )
         end
       end
     end
 
     def sanitize_permissions!
-      @required_permissions = params.fetch(:parsePermission) do
+      @required_permissions = params.fetch(:requiredPermissions) do
         :permissions_array_missing
       end
       @holder = Canaid::PermissionsHolder.instance
       @required_permissions.each do |permission|
-        next if @holder.has_permission?(permission)
+        next if @holder.has_permission?(permission.gsub('can_', ''))
         # this error should happen only in development
         raise ArgumentError, "Method #{permission} has no related " \
                              "permission registered."
@@ -49,7 +55,7 @@ module ClientApi
     def resource_valid?
       @resource = params[:resource]
       return true unless @resource
-      return true if Object.const_get(@resource.classify)
+      return true if Object.const_get(@resource.fetch(:type).classify)
     rescue NameError
       return false
     end
