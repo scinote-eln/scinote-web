@@ -4,8 +4,7 @@ class RepositoryColumnsController < ApplicationController
   before_action :load_vars, except: :create
   before_action :load_vars_nested, only: :create
   before_action :check_create_permissions, only: :create
-  before_action :check_update_permissions, only: :update
-  before_action :check_destroy_permissions, only: %i(destroy destroy_html)
+  before_action :check_update_and_delete_permissions, except: :create
 
   def create
     @repository_column = RepositoryColumn.new(repository_column_params)
@@ -109,15 +108,11 @@ class RepositoryColumnsController < ApplicationController
   end
 
   def check_create_permissions
-    render_403 unless can_create_columns_in_repository(@repository)
+    render_403 unless can_create_repository_columns?(@repository.team)
   end
 
-  def check_update_permissions
-    render_403 unless can_edit_column_in_repository(@repository_column)
-  end
-
-  def check_destroy_permissions
-    render_403 unless can_delete_column_in_repository(@repository_column)
+  def check_update_and_delete_permissions
+    render_403 unless can_update_or_delete_repository_column?(@repository_column)
   end
 
   def repository_column_params

@@ -7,4 +7,3 @@ json.user do
     json.system_message_email user.system_message_notification_email
   end
 end
-

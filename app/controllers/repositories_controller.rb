@@ -8,10 +8,8 @@ class RepositoriesController < ApplicationController
   before_action :check_view_permissions, only: :export_repository
   before_action :check_edit_and_destroy_permissions, only:
     %i(destroy destroy_modal rename_modal update)
-  before_action :check_copy_permissions, only:
-    %i(copy_modal copy)
   before_action :check_create_permissions, only:
-    %i(create_new_modal create)
+    %i(create_new_modal create copy_modal copy)
 
   def index
     render('repositories/index')
@@ -167,7 +165,7 @@ class RepositoriesController < ApplicationController
 
   # AJAX actions
   def repository_table_index
-    if @repository.nil? || !can_view_repository(@repository)
+    if @repository.nil? || !can_read_team?(@repository.team)
       render_403
     else
       respond_to do |format|
@@ -267,7 +265,7 @@ class RepositoriesController < ApplicationController
     else
       flash[:alert] = t('zip_export.export_error')
     end
-    redirect_to :back
+    redirect_back(fallback_location: root_path)
   end
 
   private
@@ -299,23 +297,20 @@ class RepositoriesController < ApplicationController
   end
 
   def check_view_all_permissions
-    render_403 unless can_view_team_repositories(@team)
+    render_403 unless can_read_team?(@team)
   end
 
   def check_view_permissions
-    render_403 unless can_view_repository(@repository)
+    render_403 unless can_read_team?(@repository.team)
   end
 
   def check_create_permissions
-    render_403 unless can_create_repository(@team)
+    render_403 unless can_create_repositories?(@team) ||
+                      @team.repositories.count < Constants::REPOSITORIES_LIMIT
   end
 
   def check_edit_and_destroy_permissions
-    render_403 unless can_edit_and_destroy_repository(@repository)
-  end
-
-  def check_copy_permissions
-    render_403 unless can_copy_repository(@repository)
+    render_403 unless can_update_or_delete_repository?(@repository)
   end
 
   def repository_params
@@ -326,7 +321,7 @@ class RepositoriesController < ApplicationController
     respond_to do |format|
       format.html do
         flash[:alert] = message
-        redirect_to :back
+        redirect_back(fallback_location: root_path)
       end
       format.json do
         render json: { message: message },

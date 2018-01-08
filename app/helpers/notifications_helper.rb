@@ -44,7 +44,7 @@ module NotificationsHelper
       message: sanitize_input(message)
     )
 
-    if target_user.settings[:notifications][:assignments]
+    if target_user.assignments_notification
       UserNotification.create(notification: notification, user: target_user)
     end
   end

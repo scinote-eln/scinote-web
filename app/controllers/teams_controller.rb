@@ -217,7 +217,7 @@ class TeamsController < ApplicationController
     else
       flash[:alert] = t('zip_export.export_error')
     end
-    redirect_to :back
+    redirect_back(fallback_location: root_path)
   end
 
   def routing_error(error = 'Routing error', status = :not_found, exception=nil)
@@ -249,13 +249,13 @@ class TeamsController < ApplicationController
   end
 
   def check_create_sample_permissions
-    unless can_create_samples(@team)
+    unless can_manage_samples?(@team)
       render_403
     end
   end
 
   def check_view_samples_permission
-    unless can_view_samples(@team)
+    unless can_read_team?(@team)
       render_403
     end
   end

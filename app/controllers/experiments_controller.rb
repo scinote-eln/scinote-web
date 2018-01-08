@@ -131,7 +131,7 @@ class ExperimentsController < ApplicationController
           render json: @experiment.errors, status: :unprocessable_entity
         end
         format.html do
-          redirect_to :back
+          redirect_back(fallback_location: root_path)
         end
       end
     end
@@ -159,7 +159,7 @@ class ExperimentsController < ApplicationController
       redirect_to project_path(@experiment.project)
     else
       flash[:alert] = t('experiments.archive.error_flash')
-      redirect_to :back
+      redirect_back(fallback_location: root_path)
     end
   end
 

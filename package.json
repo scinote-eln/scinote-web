@@ -17,6 +17,7 @@
     ".eslintrc.json"
   ],
   "scripts": {
+    "flow": "flow",
     "lint": "eslint ."
   },
   "devDependencies": {
