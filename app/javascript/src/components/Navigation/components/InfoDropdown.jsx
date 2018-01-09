@@ -14,9 +14,9 @@ import { getSciNoteInfo } from "../../../services/api/configurations_api";
 import AboutScinoteModal from "./AboutScinoteModal";
 
 type State = {
-  showModal: boolean,
   scinoteVersion: string,
-  addons: Array<string>
+  addons: Array<string>,
+  showModal: boolean
 };
 
 class InfoDropdown extends Component<*, State> {

@@ -179,4 +179,19 @@ describe User, type: :model do
     it { is_expected.to respond_to(:recent_email_notification) }
     it { is_expected.to respond_to(:system_message_email_notification) }
   end
+
+  describe '#last_activities' do
+    let!(:user) { create :user }
+    let!(:project) { create :project }
+    let!(:user_projects) { create :user_project, project: project, user: user }
+    let!(:activity_one) { create :activity, user: user, project: project }
+    let!(:activity_two) { create :activity, user: user, project: project }
+
+    it 'is expected to return an array of user\'s activities' do
+      activities = user.last_activities
+      expect(activities.count).to eq 2
+      expect(activities).to include activity_one
+      expect(activities).to include activity_two
+    end
+  end
 end

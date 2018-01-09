@@ -56,4 +56,15 @@ module ActivityHelper
   def days_since_1970(dt)
     dt.to_i / 86400
   end
+
+  def calculate_previous_date(activities,
+                              index,
+                              previus_batch_last_activitiy_date)
+    if index == 1 && !activities.first_page?
+      return previus_batch_last_activitiy_date
+    end
+    activity = activities[index - 1]
+    return activity.created_at.to_date if activity
+    Date.new(1901, 1, 1)
+  end
 end

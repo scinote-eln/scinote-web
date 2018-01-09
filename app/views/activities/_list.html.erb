@@ -1,18 +1,13 @@
-<%
-  current_day = days_since_1970(DateTime.current)
-%>
-<% if !hide_today && activities.count > 0 && days_since_1970(activities[0].created_at) == current_day %>
+<% if activities.first_page? && activities.first.created_at.to_date == Date.today %>
   <li class="text-center activity-date-item">
     <span class="label label-primary">
       <%=t "activities.index.today" %>
     </span>
   </li>
 <% end %>
-<% activities.each do |activity| %>
-  <% activity_day = days_since_1970(activity.created_at) %>
-
-  <% if activity_day < current_day and activity_day < day %>
-    <% day = days_since_1970(activity.created_at) %>
+<% activities.each_with_index do |activity, index| %>
+  <% prevDate = calculate_previous_date(activities, index, previous_activity_created_at) %>
+  <% if activity.created_at.to_date < prevDate %>
     <li class="text-center activity-date-item">
       <span class="label label-primary">
         <%= activity.created_at.strftime('%d.%m.%Y') %>

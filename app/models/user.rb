@@ -324,24 +324,24 @@ class User < ApplicationRecord
   # Finds all activities of user that is assigned to project. If user
   # is not an owner of the project, user must be also assigned to
   # module.
-  def last_activities(last_activity_id = nil,
-                      per_page = Constants::ACTIVITY_AND_NOTIF_SEARCH_LIMIT)
-    last_activity_id = Constants::INFINITY if last_activity_id < 1
+  def last_activities
     Activity
       .joins(project: :user_projects)
-      .joins("LEFT OUTER JOIN my_modules ON activities.my_module_id = my_modules.id")
-      .joins("LEFT OUTER JOIN user_my_modules ON my_modules.id = user_my_modules.my_module_id")
-      .where('activities.id < ?', last_activity_id)
+      .joins(
+        'LEFT OUTER JOIN my_modules ON activities.my_module_id = my_modules.id'
+      )
+      .joins(
+        'LEFT OUTER JOIN user_my_modules ON my_modules.id = ' \
+        'user_my_modules.my_module_id'
+      )
       .where(user_projects: { user_id: self })
       .where(
-        'activities.my_module_id IS NULL OR ' +
-        'user_projects.role = 0 OR ' +
+        'activities.my_module_id IS NULL OR ' \
+        'user_projects.role = 0 OR ' \
         'user_my_modules.user_id = ?',
         id
       )
       .order(created_at: :desc)
-      .limit(per_page)
-      .uniq
   end
 
   def self.find_by_valid_wopi_token(token)
