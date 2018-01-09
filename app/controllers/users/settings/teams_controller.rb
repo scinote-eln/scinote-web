@@ -19,6 +19,9 @@ module Users
         :destroy
       ]
 
+      before_action :check_create_team_permission,
+                    only: %i(new create)
+
       def index
         @user_teams =
           @user
@@ -133,6 +136,10 @@ module Users
       end
 
       private
+
+      def check_create_team_permission
+        can_create_teams?
+      end
 
       def load_user
         @user = current_user

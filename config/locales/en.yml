@@ -1825,7 +1825,8 @@ en:
       leave_team_error: "An error occured."
       leave_flash: "Successfuly left team %{team}."
     teams:
-      permission_error: "You don't have permission to edit team."
+      create_permission_error: "You don't have permission to create team."
+      update_permission_error: "You don't have permission to edit team."
     user:
       current_password_invalid: "incorrect password"
       password_confirmation_not_match: "doesn't match"
