@@ -19,5 +19,55 @@ describe ClientApi::PermissionsController, type: :controller do
       body = JSON.parse(subject.body)
       expect(body).to eq('can_read_team' => true)
     end
+
+    it 'raises an error if no required permissions passed' do
+      expect do
+        post :status,
+             format: :json,
+             params: { resource: { type: 'Team', id: team.id } }
+      end
+        .to raise_error(NoMethodError)
+    end
+
+    it 'raises an error if no required resource type invalid' do
+      expect do
+        post :status,
+             format: :json,
+             params: { requiredPermissions: ['can_read_team'],
+                       resource: { type: 'Banana', id: team.id } }
+      end
+        .to raise_error(ArgumentError)
+    end
+
+    it 'raises an error if no required resource id is not present' do
+      expect do
+        post :status,
+             format: :json,
+             params: { requiredPermissions: ['can_read_team'],
+                       resource: { type: 'Team' } }
+      end
+        .to raise_error(ArgumentError)
+    end
+
+    context 'raises an error if can\'t find permission invalid when resource' do
+      it 'is absent' do
+        expect do
+          post :status,
+               format: :json,
+               params: { requiredPermissions: ['can_throw_bananas'] }
+        end
+          .to raise_error(ArgumentError)
+      end
+
+      it 'is present' do
+        expect do
+          post :status,
+               format: :json,
+               params: { requiredPermissions: ['can_throw_bananas'],
+                         resource: { type: 'Team', id: team.id } }
+        end
+          .to raise_error(ArgumentError)
+      end
+    end
   end
 end
