@@ -38,7 +38,6 @@
     updateButtons();
     initEditReport();
     initDeleteReports();
-    initTutorial();
   }
 
   /**
@@ -161,25 +160,6 @@
     $("#confirm-delete-reports-btn").click(function(e) {
       animateLoading();
     });
-  }
-
-  /**
-   * Initializes tutorial
-   */
-  function initTutorial() {
-    var stepNum = parseInt(Cookies.get('current_tutorial_step'), 10);
-    if (stepNum === 19) {
-      var newReportBtn = $('#new-report-btn');
-
-      var nextPage = newReportBtn.attr('href');
-      var steps = [{
-        element: newReportBtn[0],
-        intro: I18n.t('tutorial.reports_index_click_new_report_html'),
-        position: 'right'
-      }];
-      initPageTutorialSteps(19, 19, nextPage, function() {}, function() {},
-       steps);
-    }
   }
 
   $(document).ready(init);

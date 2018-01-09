@@ -4,6 +4,7 @@ class ProjectsController < ApplicationController
   include TeamsHelper
   include InputSanitizeHelper
 
+  before_action :generate_intro_demo, only: :index
   before_action :load_vars, only: [:show, :edit, :update,
                                    :notifications, :reports,
                                    :samples, :experiment_archive,
@@ -305,6 +306,12 @@ class ProjectsController < ApplicationController
   end
 
   private
+
+  def generate_intro_demo
+    return unless current_user.sign_in_count == 1
+    team = current_user.teams.where(created_by: current_user).first
+    seed_demo_data(current_user) if team && team.projects.blank?
+  end
 
   def project_params
     params.require(:project).permit(:name, :team_id, :visibility, :archived)

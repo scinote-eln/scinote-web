@@ -33,7 +33,6 @@ var ignoreUnsavedWorkAlert;
    initializeAddContentsModal();
    initializeSidebarNavigation();
    initializeUnsavedWorkDialog();
-   initTutorial();
 
    $('.report-nav-link').each(function() {
      truncateLongString($(this), <%= Constants::NAME_TRUNCATION_LENGTH %>);
@@ -1144,32 +1143,6 @@ function initializeReportSidebartruncation() {
   var config = { childList: true };
 
   observer.observe(target, config);
-}
-
-/**
- * Initializes tutorial
- */
-function initTutorial() {
-  var stepNum = parseInt(Cookies.get('current_tutorial_step'), 10);
-  if (stepNum >= 20 && stepNum <= 21) {
-    ignoreUnsavedWorkAlert = true;
-
-    var nextPage = $('.navbar-brand').attr('href');
-    var steps = [{
-      element: $('.new-element')[0],
-      intro: I18n.t('tutorial.new_report_html'),
-      position: 'left'
-    }, {
-      element: $('#team-link')[0],
-      intro: I18n.t('tutorial.new_report_click_team_html',
-                    { private_team: $('#team-link span').last().text() }),
-      position: 'left'
-    }];
-    initPageTutorialSteps(20, 21, nextPage, function() {}, function() {
-       ignoreUnsavedWorkAlert = false;
-     },
-     steps);
-  }
 }
 
 $(document).ready(function() {

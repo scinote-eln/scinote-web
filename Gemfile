@@ -36,7 +36,6 @@ gem 'jquery-ui-rails'
 gem 'jquery-scrollto-rails',
     git: 'https://github.com/biosistemika/jquery-scrollto-rails'
 gem 'hammerjs-rails'
-gem 'introjs-rails' # Create quick tutorials
 gem 'js_cookie_rails' # Simple JS API for cookies
 gem 'spinjs-rails'
 gem 'autosize-rails' # jQuery autosize plugin

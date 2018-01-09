@@ -1120,40 +1120,6 @@ table.dataTable {
   transform: translate3d(0%, 0, 0);
 }
 
-/* Custom settings for intro-js */
-.introjs-tooltip {
-  opacity: 1 !important;
-}
-
-.custom .introjs-button {
-  font-weight: bold;
-  text-transform: uppercase;
-}
-
-.custom .introjs-disabled {
-  display: none;
-}
-
-.custom .introjs-skipbutton {
-  border-radius: 0;
-  color: $color-theme-primary;
-  background-color: $color-white;
-  background-image: none;
-  border: none;
-}
-
-.disabled-next .introjs-nextbutton {
-  display: none;
-}
-
-.introjs-tooltipReferenceLayer {
-  z-index: $infinity !important;
-
-  &.max {
-    z-index: calc($infinity + 1) !important;
-  }
-}
-
 .modal-tooltip {
   border-bottom: 1px dotted $color-alto;
   cursor: help;

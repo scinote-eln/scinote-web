@@ -231,9 +231,6 @@ GEM
       concurrent-ruby (~> 1.0)
     i18n-js (3.0.3)
       i18n (~> 0.6, >= 0.6.6)
-    introjs-rails (1.0.0)
-      sass-rails (>= 3.2)
-      thor (~> 0.14)
     jbuilder (2.7.0)
       activesupport (>= 4.2.0)
       multi_json (>= 1.2)
@@ -558,7 +555,6 @@ DEPENDENCIES
   font-awesome-rails (~> 4.7.0.2)
   hammerjs-rails
   i18n-js (~> 3.0)
-  introjs-rails
   jbuilder
   jquery-rails
   jquery-scrollto-rails!

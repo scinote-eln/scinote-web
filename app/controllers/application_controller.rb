@@ -7,7 +7,6 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception, prepend: true
   before_action :authenticate_user!
   helper_method :current_team
-  before_action :generate_intro_tutorial, if: :is_current_page_root?
   before_action :update_current_team, if: :user_signed_in?
   around_action :set_time_zone, if: :current_user
   layout 'main'
@@ -65,19 +64,6 @@ class ApplicationController < ActionController::Base
   end
 
   private
-
-  def generate_intro_tutorial
-    if Rails.configuration.x.enable_tutorial &&
-      current_user.no_tutorial_done? &&
-      current_user.teams.where(created_by: current_user).count > 0 then
-      demo_cookie = seed_demo_data current_user
-      cookies[:tutorial_data] = {
-        value: demo_cookie,
-        expires: 1.week.from_now
-      }
-      current_user.update(tutorial_status: 1)
-    end
-  end
 
   def update_current_team
     if current_user.current_team_id.blank? &&
