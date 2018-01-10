@@ -138,7 +138,7 @@ module Users
       private
 
       def check_create_team_permission
-        can_create_teams?
+        render_403 unless can_create_teams?
       end
 
       def load_user
