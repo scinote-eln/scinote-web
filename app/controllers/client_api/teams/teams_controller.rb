@@ -4,6 +4,7 @@ module ClientApi
       include ClientApi::Users::UserTeamsHelper
 
       before_action :check_update_team_permission, only: :update
+      before_action :check_create_team_permission, only: :create
 
       def index
         teams = current_user.datatables_teams
@@ -69,10 +70,16 @@ module ClientApi
         params.require(:team).permit(:name, :description)
       end
 
+      def check_create_team_permission
+        unless can_create_teams?
+          respond_422(t('client_api.teams.create_permission_error'))
+        end
+      end
+
       def check_update_team_permission
         @team = Team.find_by_id(params[:team_id])
         unless can_update_team?(@team)
-          respond_422(t('client_api.teams.permission_error'))
+          respond_422(t('client_api.teams.update_permission_error'))
         end
       end
 
