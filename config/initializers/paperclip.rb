@@ -182,6 +182,7 @@ module Paperclip
         )) ||
         # Word processor application
         (Set[content_type, content_types_from_name].subset? Set.new %w(
+          application/zip
           application/vnd.ms-office
           application/msword
           application/msword-template
@@ -221,6 +222,7 @@ module Paperclip
         )) ||
         # Presentation application
         (Set[content_type, content_types_from_name].subset? Set.new %w(
+          application/zip
           application/vnd.ms-office
           application/vnd.ms-powerpoint
           application/vnd.openxmlformats-officedocument.presentationml.presentation
