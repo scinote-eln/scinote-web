@@ -145,4 +145,231 @@ module ProtocolsIoHelper
   def close_open_html_tags(text)
     Nokogiri::HTML::DocumentFragment.parse(text).to_html
   end
+
+  def prepare_for_view(attribute_text1, size, table = 'no_table')
+    if table == 'no_table'
+      attribute_text = sanitize_input(not_null(attribute_text1))
+    elsif table == 'table'
+      attribute_text = sanitize_input(
+        string_html_table_remove(not_null(attribute_text1))
+      )
+    end
+    pio_eval_len(
+      attribute_text,
+      size
+    )
+  end
+
+  def fill_attributes(attribute_name, attribute_text, step_component)
+    output_string = ''
+    trans_string = step_component
+    trans_string +=
+      if attribute_name != 'os_name' && attribute_name != 'os_version'
+        attribute_name
+      else
+        'os'
+      end
+    output_string +=
+      if attribute_name != 'os_version'
+        t(trans_string)
+      else
+        ' , '
+      end
+    output_string += prepare_for_view(
+      attribute_text, ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL
+    )
+    output_string
+  end
+
+  # pio_stp_x means protocols io step (id of component) parser
+  def pio_stp_1(iterating_key) # protocols io description parser
+    br = '<br>'
+    append =
+      if iterating_key.present?
+        br +
+        prepare_for_view(
+          iterating_key,
+          ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL
+          ) +
+        br
+      else
+        t('protocols.protocols_io_import.comp_append.missing_desc')
+      end
+    append
+  end
+
+  def pio_stp_6(iterating_key) # protocols io section(title) parser
+    return pio_eval_title_len(sanitize_input(iterating_key)) if iterating_key.present?
+    t('protocols.protocols_io_import.comp_append.missing_step')
+  end
+
+  def pio_stp_17(iterating_key) # protocols io expected result parser
+    if iterating_key.present?
+      append =
+        t('protocols.protocols_io_import.comp_append.expected_result') +
+        prepare_for_view(
+          iterating_key, ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL
+        ) +
+        '<br>'
+      return append
+    end
+    ''
+  end
+  # protocols io software package,dataset,commands,sub_protocol and safety_information  parser
+
+  def pio_stp(iterating_key, parse_elements_array, en_local_text)
+    append = ''
+    parse_elements_array.each do |element|
+      return '' unless iterating_key[element]
+      append += fill_attributes(
+        element,
+        iterating_key[element],
+        en_local_text
+      )
+    end
+    append
+  end
+
+  def protocols_io_fill_desc(json_hash)
+    description_array = %w[
+      ( before_start warning guidelines manuscript_citation publish_date
+      vendor_name vendor_link keywords tags link created_on )
+    ]
+    description_string =
+      if json_hash['description'].present?
+        '<strong>' + t('protocols.protocols_io_import.preview.description') +
+          '</strong>' +
+          prepare_for_view(
+            json_hash['description'],
+            ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_MEDIUM
+          ).html_safe
+      else
+        '<strong>' + t('protocols.protocols_io_import.preview.description') +
+          '</strong>' + t('protocols.protocols_io_import.comp_append.missing_desc')
+      end
+    description_string += '<br>'
+    description_array.each do |e|
+      if e == 'created_on' && json_hash[e].present?
+        new_e = '<strong>' + e.humanize + '</strong>'
+        description_string +=
+          new_e.to_s + ':  ' +
+          prepare_for_view(
+            params['protocol']['created_at'].to_s,
+            ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL
+          ) +
+          + '<br>'
+      elsif e == 'tags' && json_hash[e].any? && json_hash[e] != ''
+        new_e = '<strong>' + e.humanize + '</strong>'
+        description_string +=
+          new_e.to_s + ': '
+        tags_length_checker = ''
+        json_hash[e].each do |tag|
+          tags_length_checker +=
+            sanitize_input(tag['tag_name']) + ' , '
+        end
+        description_string += prepare_for_view(
+          tags_length_checker,
+          ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_MEDIUM
+        )
+        description_string += '<br>'
+      elsif json_hash[e].present?
+        new_e = '<strong>' + e.humanize + '</strong>'
+        description_string +=
+          new_e.to_s + ':  ' +
+          pio_eval_prot_desc(
+            sanitize_input(json_hash[e]),
+            e
+          ).html_safe + '<br>'
+      end
+    end
+    description_string
+  end
+
+  def protocols_io_fill_step(original_json, newj)
+    # newj = new json
+    # (simple to map) id 1= step description, id 6= section (title),
+    # id 17= expected result
+    # (complex mapping with nested hashes) id 8 = software package,
+    # id 9 = dataset, id 15 = command, id 18 = attached sub protocol
+    # id 19= safety information ,
+    # id 20= regents (materials, like scinote samples kind of)
+    newj['0'] = {}
+    newj['0']['position'] = 0
+    newj['0']['name'] = 'Protocol info'
+    @remaining = ProtocolsIoHelper::PIO_P_AVAILABLE_LENGTH
+    newj['0']['tables'], table_str = protocolsio_string_to_table_element(
+      sanitize_input(protocols_io_fill_desc(original_json).html_safe)
+    )
+    newj['0']['description'] = table_str
+    original_json['steps'].each_with_index do |step, pos_orig| # loop over steps
+      i = pos_orig + 1
+      @remaining = ProtocolsIoHelper::PIO_S_AVAILABLE_LENGTH
+      # position of step (first, second.... etc),
+      newj[i.to_s] = {} # the json we will insert into db
+      newj[i.to_s]['position'] = i
+      newj[i.to_s]['description'] = '' unless newj[i.to_s].key?('description')
+      newj[i.to_s]['name'] = '' unless newj[i.to_s].key?('name')
+      step['components'].each do |key, value|
+        # sometimes there are random index values as keys
+        # instead of hashes, this is a workaround to that buggy json format
+        key = value if value.class == Hash
+        # append is the string that we append values into for description
+        # pio_stp_x means protocols io step (id of component) parser
+        case key['component_type_id']
+        when '1'
+          newj[i.to_s]['description'] += pio_stp_1(key['data'])
+        when '6'
+          newj[i.to_s]['name'] = pio_stp_6(key['data'])
+        when '17'
+          newj[i.to_s]['description'] += pio_stp_17(key['data'])
+        when '8'
+          pe_array = %w(
+            name developer version link repository os_name os_version
+          )
+          trans_text = 'protocols.protocols_io_import.comp_append.soft_packg.'
+          newj[i.to_s]['description'] += pio_stp(
+            key['source_data'], pe_array, trans_text
+          )
+        when '9'
+          pe_array = %w(
+            name link
+          )
+          trans_text = 'protocols.protocols_io_import.comp_append.dataset.'
+          newj[i.to_s]['description'] += pio_stp(
+            key['source_data'], pe_array, trans_text
+          )
+        when '15'
+          pe_array = %w(
+            name description os_name os_version
+          )
+          trans_text = 'protocols.protocols_io_import.comp_append.command.'
+          newj[i.to_s]['description'] += pio_stp(
+            key['source_data'], pe_array, trans_text
+          )
+        when '18'
+          pe_array = %w(
+            protocol_name full_name link
+          )
+          trans_text = 'protocols.protocols_io_import.comp_append.sub_protocol.'
+          newj[i.to_s]['description'] += pio_stp(
+            key['source_data'], pe_array, trans_text
+          )
+        when '19'
+          pe_array = %w(
+            body link
+          )
+          trans_text = 'protocols.protocols_io_import.comp_append.safety_infor.'
+          newj[i.to_s]['description'] += pio_stp(
+            key['source_data'], pe_array, trans_text
+          )
+        end # case end
+      end # finished looping over step components
+      newj[i.to_s]['tables'], table_str = protocolsio_string_to_table_element(
+        newj[i.to_s]['description']
+      )
+      newj[i.to_s]['description'] = table_str
+    end # steps
+    newj
+  end
+
 end

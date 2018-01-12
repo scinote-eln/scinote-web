@@ -19,101 +19,38 @@
         <% prot_info_string = '' %>
         <% @remaining = ProtocolsIoHelper::PIO_P_AVAILABLE_LENGTH %>
         <% protocol_table_elements_array = [] %>
-        <% if json_object['description'].present? %>
-          <% prot_info_string += (json_object['description']) %>
-          <strong><%= t('protocols.protocols_io_import.preview.prot_desc') %></strong>
-          <% description = pio_eval_len(
-              sanitize_input(string_html_table_remove(json_object['description'])),
-              ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_MEDIUM) %>
-          <%= description.html_safe %><br>
-        <% end %>
-        <% if json_object['before_start'].present? %>
-          <% prot_info_string += (json_object['before_start']) %>
-          <strong><%= t('protocols.protocols_io_import.preview.b_s_p') %></strong>
-          <% before_start = pio_eval_len(
-              sanitize_input(string_html_table_remove(json_object['before_start'])),
-              ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_MEDIUM
-            ) %>
-          <%= before_start.html_safe %><br>
-        <% end %>
-        <% if json_object['warning'].present? %>
-          <% prot_info_string += (json_object['warning']) %>
-          <strong><%= t('protocols.protocols_io_import.preview.warn') %></strong>
-          <% sft_warning = pio_eval_len(
-              sanitize_input(string_html_table_remove(json_object['warning'])),
-              ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_MEDIUM
-            ) %>
-          <%= sft_warning.html_safe%><br>
-        <% end %>
-        <% if json_object['guidelines'].present? %>
-          <% prot_info_string += (json_object['guidelines']) %>
-          <strong><%= t('protocols.protocols_io_import.preview.guideln') %></strong>
-          <% guidelines = pio_eval_len(
-              sanitize_input(string_html_table_remove(json_object['guidelines'])),
-              ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_MEDIUM
-            ) %>
-          <%= guidelines.html_safe %><br>
-        <% end %>
-        <% if json_object['manuscript_citation'].present? %>
-          <% prot_info_string += (json_object['manuscript_citation']) %>
-          <strong><%= t('protocols.protocols_io_import.preview.manu_cit') %></strong>
-          <% manu_cit = pio_eval_len(
-              sanitize_input(string_html_table_remove(json_object['manuscript_citation'])),
-              ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_MEDIUM
-            ) %>
-          <%= manu_cit.html_safe %><br>
-        <% end %>
-        <% if json_object['publish_date'].present? %>
-          <strong><%= t('protocols.protocols_io_import.preview.pbl_date') %></strong>
-          <% pbl_date = pio_eval_len(
-              sanitize_input(json_object['publish_date']),
-              ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL
-            ) %>
-          <%= pbl_date.html_safe %><br>
-        <% end %>
-        <% if json_object['vendor_name'].present? %>
-          <strong><%= t('protocols.protocols_io_import.preview.vnd_name') %></strong>
-          <% vnd_name = pio_eval_len(
-              sanitize_input(json_object['vendor_name']),
-              ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_MEDIUM
-            ) %>
-          <%= vnd_name.html_safe %><br>
-        <% end %>
-        <% if json_object['vendor_link'].present? %>
-          <strong><%= t('protocols.protocols_io_import.preview.vnd_link') %></strong>
-          <% vnd_link = pio_eval_len(
-              sanitize_input(json_object['vendor_link']),
-              ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_BIG
-            ) %>
-          <%= vnd_link.html_safe %><br>
-        <% end %>
-        <% if json_object['keywords'].present? %>
-          <strong><%= t('protocols.protocols_io_import.preview.key_wrd') %></strong>
-          <% keywords = pio_eval_len(
-              sanitize_input(json_object['keywords']),
-              ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_MEDIUM
-            ) %>
-          <%= keywords.html_safe %><br>
-        <% end %>
-        <% if json_object['tags'].present? %>
-          <strong><%= t('protocols.protocols_io_import.preview.tags') %></strong>
-          <% string_of_tags='' %>
-          <%  json_object['tags'].each do |tag| %>
-            <% string_of_tags += tag['tag_name']+' , ' %>
+        <% add_to_info_string_elements = ['description','before_start','warning','guidelines','manuscript_citation']%>
+        <% protocol_attr_len_hash = {
+             description: ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_MEDIUM,
+             before_start: ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_MEDIUM,
+             warning: ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_MEDIUM,
+             guidelines: ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_MEDIUM,
+             manuscript_citation: ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_MEDIUM,
+             vendor_name: ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_MEDIUM,
+             keywords: ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_MEDIUM,
+             tags: ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_MEDIUM,
+             publish_date: ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL,
+             link: ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_BIG,
+             vendor_link: ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_BIG } %>
+        <% protocol_attr_len_hash.each do |element, value|%>
+          <% element = element.to_s %>
+          <% if(json_object[element].present?) %>
+            <% if element == 'tags' %>
+              <% translation_string = 'protocols.protocols_io_import.preview.' + element %>
+              <strong><%= t(translation_string) %></strong>
+              <% string_of_tags='' %>
+              <%  json_object['tags'].each do |tag| %>
+                <% string_of_tags += tag['tag_name']+' , ' %>
+              <% end %>
+              <%= prepare_for_view(string_of_tags, ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_MEDIUM,'table').html_safe %>
+            <% else %>
+              <% prot_info_string += not_null(json_object[element]) if add_to_info_string_elements.include? element %>
+              <% translation_string = 'protocols.protocols_io_import.preview.' + element %>
+              <strong><%= t(translation_string) %></strong>
+              <%= prepare_for_view(json_object[element],protocol_attr_len_hash[element.to_sym],'table').html_safe %>
+            <% end %>
+            <br>
           <% end %>
-          <% tags = pio_eval_len(
-              sanitize_input(string_of_tags),
-              ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_MEDIUM
-            )%>
-          <%= tags.html_safe %><br>
-        <% end %>
-        <% if json_object['link'].present? %>
-          <strong><%= t('protocols.protocols_io_import.preview.p_link') %></strong>
-          <% link = pio_eval_len(
-              sanitize_input(json_object['link']).html_safe,
-              ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_BIG
-            ) %>
-          <%= link.html_safe %><br>
         <% end %>
         <% tables, garbage = protocolsio_string_to_table_element(prot_info_string) %>
         <% if tables.present? %>
