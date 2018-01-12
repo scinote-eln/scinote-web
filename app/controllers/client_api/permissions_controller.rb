@@ -20,16 +20,16 @@ module ClientApi
                      .public_send(:find_by_id, @resource.fetch(:id) {
                        raise ArgumentError, 'ID must be present'
                      }) if @resource
-      @required_permissions.collect do |permission|
-        parsed_permision = permission.gsub('can_', '')
+      @required_permissions.each do |permission|
+        trim_permission = permission.gsub('can_', '')
         if @resource
           # return false if object does not exist
-          result = obj ? @holder.eval('read_team', current_user, obj) : false
+          result = obj ? @holder.eval(trim_permission, current_user, obj) : false
           @permissions.merge!(permission => result)
         else
           @permissions.merge!(
             permission => @holder.eval_generic(
-              parsed_permision, current_user
+              trim_permission, current_user
             )
           )
         end
