@@ -52,4 +52,15 @@ class SpreadsheetParser
     end
     return header, columns
   end
+
+  def self.parse_row(row, sheet)
+    # Creek XLSX parser returns Hash of the row, Roo - Array
+    if row.is_a?(Hash)
+      row.values.map(&:to_s)
+    elsif sheet.is_a?(Roo::Excelx)
+      row.map { |cell| cell.value.to_s }
+    else
+      row.map(&:to_s)
+    end
+  end
 end

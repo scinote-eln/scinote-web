@@ -132,8 +132,7 @@ class Repository < ActiveRecord::Base
       end
       total_nr += 1
 
-      # Creek XLSX parser returns Hash of the row, Roo - Array
-      row = row.is_a?(Hash) ? row.values.map(&:to_s) : row.map(&:to_s)
+      row = SpreadsheetParser.parse_row(row, sheet)
 
       record_row = RepositoryRow.new(name: row[name_index],
                                  repository: self,
