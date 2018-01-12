@@ -103,4 +103,4 @@ MyProfile.propTypes = {
   addCurrentUser: func.isRequired
 };
 
-export default connect(null, { addCurrentUser })(MyProfile);
+export default connect(null, { addCurrentUser })(MyProfile)
