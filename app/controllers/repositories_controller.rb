@@ -181,15 +181,15 @@ class RepositoriesController < ApplicationController
   end
 
   def parse_sheet
-    repository = current_team.repositories.find_by_id(params[:id])
+    repository = current_team.repositories.find_by_id(import_params[:id])
 
-    unless params[:file]
+    unless import_params[:file]
       repository_response(t('teams.parse_sheet.errors.no_file_selected'))
       return
     end
     begin
       parsed_file = ImportRepository::ParseRepository.new(
-        file: params[:file],
+        file: import_params[:file],
         repository: repository,
         session: session
       )
@@ -229,7 +229,7 @@ class RepositoriesController < ApplicationController
     respond_to do |format|
       format.json do
         # Check if there exist mapping for repository record (it's mandatory)
-        if params[:mappings].value?('-1')
+        if import_params[:mappings].value?('-1')
           import_records = repostiory_import_actions
           status = import_records.import!
 
@@ -272,9 +272,9 @@ class RepositoriesController < ApplicationController
 
   def repostiory_import_actions
     ImportRepository::ImportRecords.new(
-      temp_file: TempFile.find_by_id(params[:file_id]),
-      repository: current_team.repositories.find_by_id(params[:id]),
-      mappings: params[:mappings],
+      temp_file: TempFile.find_by_id(import_params[:file_id]),
+      repository: current_team.repositories.find_by_id(import_params[:id]),
+      mappings: import_params[:mappings],
       session: session,
       user: current_user
     )
@@ -315,6 +315,10 @@ class RepositoriesController < ApplicationController
 
   def repository_params
     params.require(:repository).permit(:name)
+  end
+
+  def import_params
+    params.permit(:id, :file, :file_id, mappings: {}).to_h
   end
 
   def repository_response(message)
