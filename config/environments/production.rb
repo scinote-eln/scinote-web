@@ -128,4 +128,24 @@ Rails.application.configure do
     config.x.new_team_on_signup = false
     config.x.enable_tutorial = false
   end
+
+  config.paperclip_defaults = {
+    storage: :s3,
+    s3_protocol: 'http',
+    s3_permissions: :public_read,
+    s3_region: 'us-east-1',
+    s3_credentials: {
+      bucket: ENV['S3_BUCKET'],
+      access_key_id: ENV['AWS_ACCESS_KEY_ID'],
+      secret_access_key: ENV['AWS_SECRET_ACCESS_KEY'],
+    },
+    s3_host_name: "#{ENV['S3_HOST_NAME']}",
+    s3_options: {
+      endpoint: "http://#{ENV['S3_HOST_NAME']}", # for aws-sdk
+      force_path_style: true # for aws-sdk (required for minio)
+    },
+    url: ':s3_path_url',
+    path: '/:class/:attachment/:id_partition/:hash/:style/:filename',
+  }
+
 end
