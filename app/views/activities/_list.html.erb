@@ -1,9 +1,17 @@
-<% if activities.first_page? && activities.first.created_at.to_date == Date.today %>
+<% if activities.first_page? %>
+  <% if activities.first.created_at.to_date == Date.today %>
   <li class="text-center activity-date-item">
     <span class="label label-primary">
       <%=t "activities.index.today" %>
     </span>
   </li>
+  <% else %>
+  <li class="text-center activity-date-item">
+    <span class="label label-primary">
+      <%= activity-first.created_at.strftime('%d.%m.%Y') %>
+    </span>
+  </li>
+  <% end %>
 <% end %>
 <% activities.each_with_index do |activity, index| %>
   <% prevDate = calculate_previous_date(activities, index, previous_activity_created_at) %>
