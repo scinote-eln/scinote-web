@@ -16,6 +16,10 @@ import SearchDropdown from "./components/SearchDropdown";
 import NotificationsDropdown from "./components/NotificationsDropdown";
 import InfoDropdown from "./components/InfoDropdown";
 import UserAccountDropdown from "./components/UserAccountDropdown";
+import withExtras from 'react-hijack';
+import addonsConfig from '../../componentLoader/config';
+import massageConfiguration from '../../componentLoader/massageConfiguration';
+import componentLoader from '../../componentLoader';
 
 const StyledNavbar = styled(Navbar)`
   background-color: ${WHITE_COLOR};
@@ -75,7 +79,7 @@ class Navigation extends Component {
 
   render() {
     return (
-      <div>
+      <div id="mountPoint">
         <StyledNavbar onSelect={this.selectItemCallback}>
           <Navbar.Header>
             <Navbar.Brand>
@@ -148,4 +152,9 @@ Navigation.propTypes = {
 // Map the states from store to component props
 const mapStateToProps = ({ current_team }) => ({ current_team });
 
-export default connect(mapStateToProps)(Navigation);
+const NavigationWithExtras = withExtras({
+  screenName: 'navigation',
+  config: massageConfiguration(addonsConfig, 'navigation'),
+}, componentLoader)(Navigation);
+
+export default connect(mapStateToProps)(NavigationWithExtras);
