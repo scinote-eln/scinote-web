@@ -1,7 +1,7 @@
 // @flow
 
 import React from "react";
-import Moment from "react-moment";
+import moment from 'moment-timezone';
 import { FormattedMessage } from "react-intl";
 import styled from "styled-components";
 
@@ -23,11 +23,12 @@ const StyledSpan = styled.span`
   border-radius: 0.25em;
 `;
 
-const ActivityDateElement = (props: { date: Date }) => {
+const ActivityDateElement = (props: { date: Date, timezone: string }) => {
+  const massageDate = moment(props.date).tz(props.timezone).format("DD.MM.YYYY")
   const label = isToday(props.date) ? (
     <FormattedMessage id="activities.today"/>
   ) : (
-    <Moment format="DD.MM.YYYY">{props.date}</Moment>
+    <span>{massageDate}</span>
   );
   return (
     <StyledLi className="text-center">
