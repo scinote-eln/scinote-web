@@ -18,4 +18,3 @@ Feature: Addon versions
     And I click "About sciNote" link within ".dropdown.open"
     Then I should see "About sciNote"
     And I should see "sciNote core version"
-    And I should see "Addon versions"
