@@ -64,6 +64,7 @@
     "js-yaml": "^3.9.0",
     "lodash": "^4.17.4",
     "moment": "^2.18.1",
+    "moment-timezone": "^0.5.14",
     "node-sass": "^4.5.3",
     "path-complete-extname": "^0.1.0",
     "postcss-loader": "^2.0.6",

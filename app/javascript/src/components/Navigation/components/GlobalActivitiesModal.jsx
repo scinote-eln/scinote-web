@@ -6,6 +6,7 @@ import { FormattedMessage } from "react-intl";
 import { Button, Modal } from "react-bootstrap";
 import _ from "lodash";
 import styled from "styled-components";
+import moment from "moment-timezone";
 
 import { getActivities } from "../../../services/api/activities_api";
 import ActivityElement from "./ActivityElement";
@@ -64,7 +65,11 @@ class GlobalActivitiesModal extends Component<Props, State> {
     date: Date
   ): Node {
     return [
-      <ActivityDateElement key={date} date={date} />,
+      <ActivityDateElement
+        key={date}
+        date={date}
+        timezone={activity.timezone}
+      />,
       <ActivityElement key={key} activity={activity} />
     ];
   }
@@ -99,22 +104,23 @@ class GlobalActivitiesModal extends Component<Props, State> {
       (activity: Activity, i: number, arr: Array<*>) => {
         const newDate = new Date(activity.createdAt);
         // returns a label with "today" if the date of the activity is today
-        if (i === 0 && newDate.toDateString() === new Date().toDateString()) {
+        if (i === 0) {
           return GlobalActivitiesModal.renderActivityDateElement(
             activity.id,
             activity,
             newDate
           );
         }
-        // else checks if the previous activity is newer than current
-        // and displays a label with the date
-        const prevDate =
-          i !== 0 ? new Date(arr[i - 1].createdAt) : new Date(1901, 1, 1);
-        // filter only date from createdAt without minutes and seconds
-        // used to compare dates
-        const parsePrevDate = new Date(prevDate.toDateString());
-        const parseNewDate = new Date(newDate.toDateString());
-        if (parsePrevDate.getTime() > parseNewDate.getTime()) {
+        // check dates based on user timezone value
+        const parsePrevDate = moment(arr[i - 1].createdAt)
+          .tz(activity.timezone)
+          .format( "DD/MM/YYYY")
+          .valueOf('day');
+        const parseNewDate = moment(activity.createdAt)
+          .tz(activity.timezone)
+          .format( "DD/MM/YYYY")
+          .valueOf();
+        if (parsePrevDate > parseNewDate) {
           return GlobalActivitiesModal.renderActivityDateElement(
             activity.id,
             activity,
