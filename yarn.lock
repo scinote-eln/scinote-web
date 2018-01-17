@@ -5713,9 +5713,9 @@ react-global-configuration@^1.2.0:
     object-assign "^2.0.0"
     serialize-javascript "^1.3.0"
 
-react-hijack@biosistemika/react-hijack#1.0.0:
+react-hijack@biosistemika/react-hijack#2.0.0:
   version "1.0.0"
-  resolved "https://codeload.github.com/biosistemika/react-hijack/tar.gz/30d6b40efc1cef2f68aa3cfc2b3a88aae287a23e"
+  resolved "https://codeload.github.com/biosistemika/react-hijack/tar.gz/5c3c4a311b46061077d8afc83d5e49e02cd9e6f7"
   dependencies:
     react "^16.2.0"
     react-global-configuration "^1.2.0"
