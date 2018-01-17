@@ -186,10 +186,6 @@ var RepositoryDatatable = (function(global) {
       }
     });
 
-    // Append button to inner toolbar in table
-    $('div.toolbarButtons').appendTo('div.toolbar');
-    $('div.toolbarButtons').show();
-
     // Handle click on table cells with checkboxes
     $(TABLE_ID).on('click', 'tbody td', function(e) {
       if ($(e.target).is('.repository-row-selector')) {
@@ -210,6 +206,10 @@ var RepositoryDatatable = (function(global) {
     // Timeout for table header scrolling
     setTimeout(function() {
       TABLE.columns.adjust();
+
+      // Append button to inner toolbar in table
+      $('div.toolbarButtons').appendTo('div.toolbar');
+      $('div.toolbarButtons').show();
     }, 10);
 
     return TABLE;
@@ -725,7 +725,8 @@ var RepositoryDatatable = (function(global) {
         $('#unassignRepositoryRecords').addClass('disabled');
         $('#unassignRepositoryRecords').prop('disabled', true);
       } else {
-        if (rowsSelected.length === 1) {
+        if (rowsSelected.length === 1 &&
+            $('#exportRepositoriesButton').get(0)) {
           $('#editRepositoryRecord').prop('disabled', false);
           $('#editRepositoryRecord').removeClass('disabled');
 
