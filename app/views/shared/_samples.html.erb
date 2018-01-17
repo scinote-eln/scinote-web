@@ -33,7 +33,7 @@
   <% end %>
 
   <% if can_read_team?(@team) %>
-    <a href="#" class="btn btn-default" id="exportSamplesButton">
+    <a href="#" class="btn btn-default" id="exportSamplesButton" data-turbolinks="false">
       <span class="glyphicon glyphicon-cloud-download"></span>
       <span class="hidden-xs"><%= t("samples.export") %></span>
     </a>
