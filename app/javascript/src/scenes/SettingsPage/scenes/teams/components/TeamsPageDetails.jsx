@@ -5,10 +5,18 @@ import styled from "styled-components";
 import { FormattedMessage, FormattedPlural } from "react-intl";
 import { Button, Glyphicon } from "react-bootstrap";
 import { SETTINGS_NEW_TEAM_ROUTE } from "../../../../../config/routes";
+import * as Permissions from "../../../../../services/permissions"
 
 const Wrapper = styled.div`margin: 15px 0;`;
-const TeamsPageDetails = ({ teams }) => {
+const TeamsPageDetails = ({ teams, permissions }) => {
   const teamsNumber = teams.length;
+  const newTeamButton = (
+    <LinkContainer to={SETTINGS_NEW_TEAM_ROUTE}>
+      <Button>
+        <Glyphicon glyph="plus" />&nbsp;<FormattedMessage id="global_team_switch.new_team" />
+      </Button>
+    </LinkContainer>
+  )
   return (
     <Wrapper>
       <FormattedPlural
@@ -30,11 +38,7 @@ const TeamsPageDetails = ({ teams }) => {
           />
         }
       />&nbsp;
-      <LinkContainer to={SETTINGS_NEW_TEAM_ROUTE}>
-        <Button>
-          <Glyphicon glyph="plus" />&nbsp;<FormattedMessage id="global_team_switch.new_team" />
-        </Button>
-      </LinkContainer>
+      {permissions.can_create_teams ? newTeamButton : ''}
     </Wrapper>
   );
 };
@@ -53,7 +57,8 @@ TeamsPageDetails.propTypes = {
 };
 
 TeamsPageDetails.defaultProps = {
-  teams: []
+  teams: [],
+  permissions: {}
 };
 
-export default TeamsPageDetails;
+export default Permissions.connect(TeamsPageDetails, ["can_create_teams"]);

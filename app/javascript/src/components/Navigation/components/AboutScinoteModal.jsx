@@ -25,10 +25,14 @@ export default (props: Props): Node => {
           <FormattedMessage id="general.core_version" />
         </strong>
         <p>{scinoteVersion}</p>
-        <strong>
-          <FormattedMessage id="general.addon_versions" />
-        </strong>
-        {/* {addons.map((addon: string): Node => <p>{addon}</p>)} */}
+        {addons.length > 0 &&
+          <span>
+            <strong>
+              <FormattedMessage id="general.addon_versions" />
+            </strong>
+            {addons.map((addon: string): Node => <p>{addon}</p>)}
+          </span>
+        }
       </Modal.Body>
     </Modal>
   );

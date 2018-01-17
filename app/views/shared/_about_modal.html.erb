@@ -12,14 +12,16 @@
         <br />
         <br />
         <div data-hook="about-modal-addon-versions">
-          <strong><%= t('about.addon_versions') %></strong>
-          <br />
-          <% list_all_addons.each do |addon| %>
-            <%= "#{addon.name}:" %>
+          <% if list_all_addons.any? %>
+            <strong><%= t('about.addon_versions') %></strong>
             <br />
-            <%= addon::VERSION %>
-            <br />
-            <br />
+            <% list_all_addons.each do |addon| %>
+              <%= "#{addon.name}:" %>
+              <br />
+              <%= addon::VERSION %>
+              <br />
+              <br />
+            <% end %>
           <% end %>
         </div>
       </div>
