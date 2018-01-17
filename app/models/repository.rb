@@ -161,12 +161,7 @@ class Repository < ApplicationRecord
                 repository_column: columns[index]
               }
             )
-            cell = RepositoryCell.new(repository_row: record_row,
-                                      repository_column: columns[index],
-                                      value: cell_value)
-            cell.skip_on_import = true
-            cell_value.repository_cell = cell
-            unless cell.valid? && cell_value.valid?
+            unless cell_value.valid?
               errors = true
               raise ActiveRecord::Rollback
             end
