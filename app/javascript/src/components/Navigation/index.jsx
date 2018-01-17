@@ -151,9 +151,8 @@ Navigation.propTypes = {
 
 // Map the states from store to component props
 const mapStateToProps = ({ current_team }) => ({ current_team });
-
 const NavigationWithExtras = withExtras({
-  screenName: 'navigation',
+  identifier: 'navigation',
   config: massageConfiguration(addonsConfig, 'navigation'),
 }, componentLoader)(Navigation);
 
