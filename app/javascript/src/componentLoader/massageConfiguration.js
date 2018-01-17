@@ -1,10 +1,14 @@
 const massageConfiguration = (config, identifier) => {
-  const result = {
-    [identifier]: {}
-  };
+  let result = {};
 
-  Object.keys(config)
-    .forEach(
+  const addons = Object.keys(config);
+  if (addons) {
+
+    result = {
+      [identifier]: {}
+    };
+
+    addons.forEach(
       addon => Object.keys(config[addon])
         .forEach(
           component => {
@@ -13,7 +17,8 @@ const massageConfiguration = (config, identifier) => {
             }
           }
         )
-    );
+      );
+    }
 
     return result;
 };
