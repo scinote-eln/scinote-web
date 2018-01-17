@@ -101,7 +101,7 @@ group :development, :test do
   gem 'better_errors'
   gem 'binding_of_caller'
   gem 'awesome_print'
-  gem 'rubocop', require: false
+  gem 'rubocop', '= 0.51.0', require: false
   gem 'scss_lint', require: false
   gem 'starscope', require: false
   gem 'bullet'

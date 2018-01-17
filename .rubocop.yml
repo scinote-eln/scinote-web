@@ -7,15 +7,15 @@ AllCops:
 
 ##################### Style ####################################
 
-Style/AccessModifierIndentation:
+Layout/AccessModifierIndentation:
   EnforcedStyle: indent
 
-Style/AlignHash:
+Layout/AlignHash:
   EnforcedHashRocketStyle: key
   EnforcedColonStyle: key
   EnforcedLastArgumentHashStyle: ignore_implicit
 
-Style/AlignParameters:
+Layout/AlignParameters:
   EnforcedStyle: with_first_parameter
 
 Style/AndOr:
@@ -30,7 +30,7 @@ Style/BlockDelimiters:
 Style/BracesAroundHashParameters:
   EnforcedStyle: no_braces
 
-Style/CaseIndentation:
+Layout/CaseIndentation:
   EnforcedStyle: case
 
 Style/ClassAndModuleChildren:
@@ -53,36 +53,33 @@ Style/CommandLiteral:
 Style/DocumentationMethod:
   RequireForNonPublicMethods: false
 
-Style/DotPosition:
+Layout/DotPosition:
   EnforcedStyle: leading
 
 Style/EmptyElse:
   EnforcedStyle: both
 
-Style/EmptyLineBetweenDefs:
+Layout/EmptyLineBetweenDefs:
   AllowAdjacentOneLineDefs: false
 
-Style/EmptyLinesAroundBlockBody:
+Layout/EmptyLinesAroundBlockBody:
   EnforcedStyle: no_empty_lines
 
-Style/EmptyLinesAroundClassBody:
+Layout/EmptyLinesAroundClassBody:
   EnforcedStyle: no_empty_lines
 
-Style/EmptyLinesAroundModuleBody:
+Layout/EmptyLinesAroundModuleBody:
   EnforcedStyle: no_empty_lines
 
-Style/Encoding:
-  EnforcedStyle: always
-
-Style/ExtraSpacing:
+Layout/ExtraSpacing:
   AllowForAlignment: true
   ForceEqualSignAlignment: false
 
-Style/FileName:
+Naming/FileName:
   Enabled: false
   Exclude: []
 
-Style/FirstParameterIndentation:
+Layout/FirstParameterIndentation:
   EnforcedStyle: special_for_inner_method_call_in_parentheses
 
 Style/For:
@@ -105,16 +102,16 @@ Style/IfUnlessModifier:
   Enabled: true
   MaxLineLength: 80
 
-Style/IndentationConsistency:
+Layout/IndentationConsistency:
   EnforcedStyle: normal
 
-Style/IndentationWidth:
+Layout/IndentationWidth:
   Width: 2
 
-Style/IndentArray:
+Layout/IndentArray:
   EnforcedStyle: special_inside_parentheses
 
-Style/IndentHash:
+Layout/IndentHash:
   EnforcedStyle: special_inside_parentheses
 
 Style/Next:
@@ -126,16 +123,16 @@ Style/NonNilCheck:
 Style/MethodDefParentheses:
   EnforcedStyle: require_parentheses
 
-Style/MethodName:
+Naming/MethodName:
   EnforcedStyle: snake_case
 
 Style/ModuleFunction:
   EnforcedStyle: module_function
 
-Style/MultilineArrayBraceLayout:
+Layout/MultilineArrayBraceLayout:
   EnforcedStyle: symmetrical
 
-Style/MultilineAssignmentLayout:
+Layout/MultilineAssignmentLayout:
   SupportedTypes:
     - block
     - case
@@ -145,19 +142,19 @@ Style/MultilineAssignmentLayout:
     - module
   EnforcedStyle: new_line
 
-Style/MultilineHashBraceLayout:
+Layout/MultilineHashBraceLayout:
   EnforcedStyle: symmetrical
 
-Style/MultilineMethodCallBraceLayout:
+Layout/MultilineMethodCallBraceLayout:
   EnforcedStyle: symmetrical
 
-Style/MultilineMethodCallIndentation:
+Layout/MultilineMethodCallIndentation:
   EnforcedStyle: aligned
 
-Style/MultilineMethodDefinitionBraceLayout:
+Layout/MultilineMethodDefinitionBraceLayout:
   EnforcedStyle: symmetrical
 
-Style/MultilineOperationIndentation:
+Layout/MultilineOperationIndentation:
   EnforcedStyle: aligned
 
 Style/NumericLiterals:
@@ -192,7 +189,7 @@ Style/PercentLiteralDelimiters:
 Style/PercentQLiterals:
   EnforcedStyle: lower_case_q
 
-Style/PredicateName:
+Naming/PredicateName:
   Description: Check the names of predicate methods.
   StyleGuide: https://github.com/bbatsov/ruby-style-guide#bool-methods-qmark
   Enabled: true
@@ -234,7 +231,7 @@ Style/SingleLineBlockParams:
 Style/SingleLineMethods:
   Enabled: false
 
-Style/SpaceBeforeFirstArg:
+Layout/SpaceBeforeFirstArg:
   AllowForAlignment: true
 
 Style/StringLiterals:
@@ -249,28 +246,28 @@ Style/StringMethods:
   PreferredMethods:
     intern: to_sym
 
-Style/SpaceAroundBlockParameters:
+Layout/SpaceAroundBlockParameters:
   EnforcedStyleInsidePipes: no_space
 
-Style/SpaceAroundEqualsInParameterDefault:
+Layout/SpaceAroundEqualsInParameterDefault:
   EnforcedStyle: space
 
-Style/SpaceAroundOperators:
+Layout/SpaceAroundOperators:
   AllowForAlignment: true
 
-Style/SpaceBeforeBlockBraces:
+Layout/SpaceBeforeBlockBraces:
   EnforcedStyle: space
 
-Style/SpaceInsideBlockBraces:
+Layout/SpaceInsideBlockBraces:
   EnforcedStyle: space
   EnforcedStyleForEmptyBraces: no_space
   SpaceBeforeBlockParameters: true
 
-Style/SpaceInsideHashLiteralBraces:
+Layout/SpaceInsideHashLiteralBraces:
   EnforcedStyle: space
   EnforcedStyleForEmptyBraces: no_space
 
-Style/SpaceInsideStringInterpolation:
+Layout/SpaceInsideStringInterpolation:
   EnforcedStyle: no_space
 
 Style/SymbolArray:
@@ -285,7 +282,7 @@ Style/TernaryParentheses:
   EnforcedStyle: require_no_parentheses
   AllowSafeAssignment: true
 
-Style/TrailingBlankLines:
+Layout/TrailingBlankLines:
   EnforcedStyle: final_newline
 
 Style/TrailingCommaInArguments:
@@ -294,10 +291,10 @@ Style/TrailingCommaInArguments:
 Style/TrailingCommaInLiteral:
   EnforcedStyleForMultiline: no_comma
 
-Style/VariableName:
+Naming/VariableName:
   EnforcedStyle: snake_case
 
-Style/VariableNumber:
+Naming/VariableNumber:
   EnforcedStyle: normalcase
 
 Style/WordArray:
@@ -307,7 +304,7 @@ Style/WordArray:
 Style/InlineComment:
   Enabled: false
 
-Style/AccessorMethodName:
+Naming/AccessorMethodName:
   Enabled: true
 
 Style/Alias:
