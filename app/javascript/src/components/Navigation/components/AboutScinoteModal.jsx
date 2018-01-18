@@ -30,7 +30,11 @@ export default (props: Props): Node => {
             <strong>
               <FormattedMessage id="general.addon_versions" />
             </strong>
-            {addons.map((addon: string): Node => <p>{addon}</p>)}
+            {
+              addons.map(
+                (addon: string): Node => (<p key={addon}>{addon}</p>)
+              )
+            }
           </span>
         }
       </Modal.Body>
