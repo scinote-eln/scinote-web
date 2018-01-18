@@ -66,7 +66,7 @@ module ProtocolsExporter
     protocol_xml = "<eln xmlns=\"http://www.scinote.net\" version=\"1.0\">\n"
     protocol_xml << "<protocol id=\"#{protocol.id}\" " \
                     "guid=\"#{get_guid(protocol.id)}\">\n"
-    protocol_xml << "<name><![CDATA[  #{protocol_name}  ]]></name>\n"
+    protocol_xml << "<name>#{protocol_name}</name>\n"
     protocol_xml << "<authors>#{protocol.authors}</authors>\n"
     protocol_xml << "<description>#{protocol.description}</description>\n"
     protocol_xml << "<created_at>#{protocol.created_at.as_json}</created_at>\n"
