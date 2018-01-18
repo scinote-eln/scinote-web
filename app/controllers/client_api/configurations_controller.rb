@@ -17,7 +17,7 @@ module ClientApi
     def list_all_addons
       Rails::Engine.subclasses
                    .select { |c| c.name.start_with?('Scinote') }
-                   .map(&:parent)
+                   .map { |c| c.parent.to_s }
     end
   end
 end
