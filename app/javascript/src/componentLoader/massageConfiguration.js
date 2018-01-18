@@ -2,7 +2,7 @@ const massageConfiguration = (config, identifier) => {
   let result = {};
 
   const addons = Object.keys(config);
-  if (addons) {
+  if (addons.length > 0) {
 
     result = {
       [identifier]: {}
@@ -19,7 +19,7 @@ const massageConfiguration = (config, identifier) => {
         )
       );
     }
-
+    
     return result;
 };
 
