@@ -171,25 +171,25 @@ class ProjectCommentsController < ApplicationController
   end
 
   def check_view_permissions
-    unless can_view_project_comments(@project)
+    unless can_read_project?(@project)
       render_403
     end
   end
 
   def check_add_permissions
-    unless can_add_comment_to_project(@project)
+    unless can_add_comment_to_project?(@project)
       render_403
     end
   end
 
   def check_edit_permissions
     @comment = ProjectComment.find_by_id(params[:id])
-    render_403 unless @comment.present? && can_edit_project_comment(@comment)
+    render_403 unless @comment.present? && can_update_or_delete_project_comment?(@comment)
   end
 
   def check_destroy_permissions
     @comment = ProjectComment.find_by_id(params[:id])
-    render_403 unless @comment.present? && can_delete_project_comment(@comment)
+    render_403 unless @comment.present? && can_update_or_delete_project_comment?(@comment)
   end
 
   def comment_params

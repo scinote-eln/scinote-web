@@ -181,19 +181,19 @@ class UserProjectsController < ApplicationController
   end
 
   def check_view_tab_permissions
-    unless can_view_project_users(@project)
+    unless can_read_project?(@project)
       render_403
     end
   end
 
   def check_view_permissions
-    unless can_edit_users_on_project(@project)
+    unless can_update_project?(@project)
       render_403
     end
   end
 
   def check_create_permissions
-    unless can_add_user_to_project(@project)
+    unless can_update_project?(@project)
       render_403
     end
   end
@@ -210,7 +210,7 @@ class UserProjectsController < ApplicationController
     unless params[:id] != current_user.id
       render_403
     end
-    unless can_remove_user_from_project(@project)
+    unless can_update_project?(@project)
       render_403
     end
   end

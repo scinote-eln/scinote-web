@@ -144,19 +144,19 @@ class TagsController < ApplicationController
 
   # Currently unimplemented
   def check_create_permissions
-    unless can_create_new_tag(@project)
+    unless can_manage_tags?(@project)
       render_403
     end
   end
 
   def check_update_permissions
-    unless can_edit_tag(@project)
+    unless can_manage_tags?(@project)
       render_403
     end
   end
 
   def check_destroy_permissions
-    unless can_delete_tag(@project)
+    unless can_manage_tags?(@project)
       render_403
     end
   end

@@ -20,7 +20,7 @@
     <% end %>
   <% end %>
 </ul>
-<% if can_edit_users_on_project(@project) %>
+<% if can_update_project?(@project) %>
     <p>
       <hr>
       <%= link_to t("projects.index.manage_users"), project_users_edit_path(@project, format: :json), class: "manage-users-link", remote: true %>

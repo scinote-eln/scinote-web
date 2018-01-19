@@ -25,7 +25,7 @@
             <% end %>
           </ul>
         </div>
-        <% if can_create_experiment(@project) %>
+        <% if can_create_experiment?(@project) %>
           <%= link_to new_project_experiment_url(@project),
                       remote: true,
                       type: "button",
@@ -51,7 +51,7 @@
 
     <%= content_tag(:div, '', class: 'clearfix visible-lg-block') if (index + 1) % 2 == 0 %>
   <% end %>
-  <% if can_create_experiment(@project) %>
+  <% if can_create_experiment?(@project) %>
     <%= render 'projects/show/new_experiment' %>
   <% end %>
 </div>
