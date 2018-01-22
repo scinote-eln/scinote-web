@@ -118,6 +118,7 @@ function dataTableInit() {
       $('#selected_info').html(' ('+rowsSelected.length+' entries selected)');
     },
     preDrawCallback: function() {
+      rowsSelected = [];
       animateSpinner(this);
       $('.sample-info-link').off('click');
     },
