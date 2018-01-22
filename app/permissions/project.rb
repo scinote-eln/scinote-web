@@ -35,6 +35,6 @@ end
 Canaid::Permissions.register_for(Comment) do
   can :update_or_delete_project_comment do |user, comment|
     comment.project.present? && (comment.user == user ||
-      can_update_project?(user, comment.project))
+      user.is_owner_of_project?(project))
   end
 end

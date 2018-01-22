@@ -47,7 +47,7 @@ class ReportsController < ApplicationController
     :step_contents,
     :result_contents
   ]
-  before_action :check_destroy_permissions, only: :destroy
+  before_action :check_manage_permissions, only: %i(edit update destroy)
 
   layout 'fluid'
 
@@ -454,7 +454,7 @@ class ReportsController < ApplicationController
     render_403 unless can_manage_reports?(@project)
   end
 
-  def check_destroy_permissions
+  def check_manage_permissions
     render_403 unless can_manage_reports?(@project)
     render_404 unless params.include? :report_ids
   end

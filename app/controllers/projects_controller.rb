@@ -334,7 +334,7 @@ class ProjectsController < ApplicationController
   end
 
   def check_edit_permissions
-    unless can_edit_project(@project)
+    unless can_update_project?(@project)
       render_403
     end
   end

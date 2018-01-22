@@ -1,9 +1,7 @@
 class TagsController < ApplicationController
   before_action :load_vars, only: [:create, :update, :destroy]
   before_action :load_vars_nested, only: [:update, :destroy]
-  before_action :check_create_permissions, only: [:create]
-  before_action :check_update_permissions, only: [:update]
-  before_action :check_destroy_permissions, only: [:destroy]
+  before_action :check_manage_permissions, only: %i(create update destroy)
 
   def create
     @tag = Tag.new(tag_params)
@@ -142,23 +140,8 @@ class TagsController < ApplicationController
     end
   end
 
-  # Currently unimplemented
-  def check_create_permissions
-    unless can_manage_tags?(@project)
-      render_403
-    end
-  end
-
-  def check_update_permissions
-    unless can_manage_tags?(@project)
-      render_403
-    end
-  end
-
-  def check_destroy_permissions
-    unless can_manage_tags?(@project)
-      render_403
-    end
+  def check_manage_permissions
+    render_403 unless can_manage_tags?(@project)
   end
 
   def tag_params

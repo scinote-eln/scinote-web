@@ -43,7 +43,6 @@ module PermissionHelper
     # ---- Almost everything is disabled for archived projects ----
     around [
       :can_view_project,
-      :can_edit_project,
       :can_restore_archived_modules,
       :can_edit_canvas,
       :can_reposition_modules,
@@ -69,9 +68,6 @@ module PermissionHelper
       # commented out or that functionality will not work any more.
       #:can_edit_module,
       :can_archive_module,
-      :can_edit_tags_for_module,
-      :can_add_tag_to_module,
-      :can_remove_tag_from_module,
       :can_view_module_info,
       :can_view_module_users,
       :can_edit_users_on_module,
@@ -249,10 +245,6 @@ module PermissionHelper
       (project.visible? and is_member_of_team(project.team))
   end
 
-  def can_edit_project(project)
-    is_owner_of_project(project)
-  end
-
   def can_restore_archived_modules(project)
     is_user_or_higher_of_project(project)
   end
@@ -348,18 +340,6 @@ module PermissionHelper
   def can_restore_module(my_module)
     my_module.archived? &&
       is_user_or_higher_of_project(my_module.experiment.project)
-  end
-
-  def can_edit_tags_for_module(my_module)
-    is_user_or_higher_of_project(my_module.experiment.project)
-  end
-
-  def can_add_tag_to_module(my_module)
-    is_user_or_higher_of_project(my_module.experiment.project)
-  end
-
-  def can_remove_tag_from_module(my_module)
-    is_user_or_higher_of_project(my_module.experiment.project)
   end
 
   def can_view_module_info(my_module)
