@@ -150,7 +150,7 @@ module Users
         # Don't allow the user to modify UserTeam-s if he's not admin,
         # unless he/she is modifying his/her UserTeam
         if current_user != @user_t.user &&
-           !is_admin_of_team(@user_t.team)
+           !can_read_team?(@user_t.team)
           render_403
         end
       end

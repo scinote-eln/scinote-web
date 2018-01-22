@@ -192,7 +192,7 @@ module Users
       @role = params['role']
 
       render_403 if @emails && @emails.empty?
-      render_403 if @team && !is_admin_of_team(@team)
+      render_403 if @team && !can_read_team?(@team)
       render_403 if @role && !UserTeam.roles.keys.include?(@role)
     end
   end
