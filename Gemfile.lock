@@ -516,7 +516,7 @@ DEPENDENCIES
   better_errors
   binding_of_caller
   bootstrap-sass (~> 3.3.5)
-  bootstrap-select-rails
+  bootstrap-select-rails (~> 1.6.3)
   bootstrap3-datetimepicker-rails (~> 4.15.35)
   bootstrap_form
   bullet
@@ -540,13 +540,13 @@ DEPENDENCIES
   figaro
   font-awesome-rails (~> 4.7.0.2)
   hammerjs-rails
-  i18n-js (>= 3.0.0.rc11)
+  i18n-js (~> 3.0)
   introjs-rails
   jbuilder
   jquery-rails
   jquery-scrollto-rails!
   jquery-turbolinks
-  jquery-ui-rails
+  jquery-ui-rails (~> 5.0)
   js_cookie_rails
   json_matchers
   kaminari

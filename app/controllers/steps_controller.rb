@@ -30,7 +30,7 @@ class StepsController < ApplicationController
   def create
     @step = Step.new(step_params)
     # gerate a tag that replaces img tag in database
-    @step.description = parse_tiny_mce_asset_to_token(@step.description)
+    @step.description = parse_tiny_mce_asset_to_token(@step.description, @step)
     @step.completed = false
     @step.position = @protocol.number_of_steps
     @step.protocol = @protocol
@@ -96,11 +96,9 @@ class StepsController < ApplicationController
           status: :ok
         end
       else
-        format.json {
-          render json: {
-            html: render_to_string(partial: 'new.html.erb')
-          }, status: :bad_request
-        }
+        format.json do
+          render json: @step.errors.to_json, status: :bad_request
+        end
       end
     end
   end
@@ -120,7 +118,7 @@ class StepsController < ApplicationController
   end
 
   def edit
-    @step.description = generate_image_tag_from_token(@step.description)
+    @step.description = generate_image_tag_from_token(@step.description, @step)
     respond_to do |format|
       format.json do
         render json: {

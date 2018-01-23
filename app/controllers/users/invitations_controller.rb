@@ -10,6 +10,7 @@ module Users
     before_action :update_sanitized_params, only: :update
 
     def update
+      return super unless Rails.configuration.x.new_team_on_signup
       # Instantialize a new team with the provided name
       @team = Team.new
       @team.name = params[:team][:name]
@@ -29,6 +30,8 @@ module Users
     end
 
     def accept_resource
+      return super unless Rails.configuration.x.new_team_on_signup
+
       unless @team.valid?
         # Find the user being invited
         resource = User.find_by_invitation_token(

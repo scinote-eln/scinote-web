@@ -27,7 +27,7 @@
       <%= f.label :password_confirmation %>
       <%= f.password_field :password_confirmation, autocomplete: 'off', class: 'form-control' %>
     </div>
-
+    <% if Rails.configuration.x.new_team_on_signup %>
     <div class="form-group" id="team_name_form">
       <%= label :team, :name, t('users.registrations.new.team_name_label') %>
       <% if @team %>
@@ -37,7 +37,7 @@
       <% end %>
       <span><small><%= t 'users.registrations.new.team_name_help' %></small></span>
     </div>
-
+    <% end %>
     <%= recaptcha_input_tag %>
 
     <div class="form-group" data-hook="sign-up-form-submit">

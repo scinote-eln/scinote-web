@@ -86,8 +86,7 @@ class Team < ApplicationRecord
         next
       end
       total_nr += 1
-      # Creek XLSX parser returns Hash of the row, Roo - Array
-      row = row.is_a?(Hash) ? row.values.map(&:to_s) : row.map(&:to_s)
+      row = SpreadsheetParser.parse_row(row, sheet)
 
       sample = Sample.new(name: row[sname_index],
                           team: self,
@@ -100,6 +99,7 @@ class Team < ApplicationRecord
         end
 
         row.each.with_index do |value, index|
+          next unless value.present?
           if index == stype_index
             stype = SampleType.where(team: self)
                               .where('name ILIKE ?', value.strip)

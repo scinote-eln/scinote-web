@@ -123,4 +123,12 @@ Rails.application.configure do
 
     config.cache_store = :null_store
   end
+  # Enable new team on sign up
+  new_team_on_signup = ENV['NEW_TEAM_ON_SIGNUP'] || 'true'
+  if new_team_on_signup == 'true'
+    config.x.new_team_on_signup = true
+  else
+    config.x.new_team_on_signup = false
+    config.x.enable_tutorial = false
+  end
 end
