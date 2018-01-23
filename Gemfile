@@ -19,7 +19,7 @@ gem 'sanitize', '~> 4.4'
 gem 'omniauth'
 
 # Gems for API implementation
-gem 'jwt'
+gem 'jwt', '~> 1.5'
 
 # JS datetime library, requirement of datetime picker
 gem 'momentjs-rails', '~> 2.17.1'

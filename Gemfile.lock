@@ -255,7 +255,7 @@ GEM
       addressable (>= 2.4)
     json_matchers (0.7.2)
       json-schema (~> 2.7)
-    jwt (2.1.0)
+    jwt (1.5.6)
     kaminari (1.1.1)
       activesupport (>= 4.1.0)
       kaminari-actionview (= 1.1.1)
@@ -554,7 +554,7 @@ DEPENDENCIES
   jquery-ui-rails
   js_cookie_rails
   json_matchers
-  jwt
+  jwt (~> 1.5)
   kaminari
   listen (~> 3.0)
   logging (~> 2.0.0)
