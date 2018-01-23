@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :notification do
     title '<i>Admin</i> was added as Owner to project ' \
           '<strong>Demo project - qPCR</strong> by <i>User</i>.'

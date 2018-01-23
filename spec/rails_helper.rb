@@ -78,8 +78,8 @@ RSpec.configure do |config|
   # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
 
-  # includes FactoryGirl in rspec
-  config.include FactoryGirl::Syntax::Methods
+  # includes FactoryBot in rspec
+  config.include FactoryBot::Syntax::Methods
   # Devise
   config.include Devise::Test::ControllerHelpers, type: :controller
   config.include ApiHelper, type: :controller

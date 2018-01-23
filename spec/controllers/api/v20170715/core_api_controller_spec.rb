@@ -1,11 +1,12 @@
 require 'rails_helper'
 
 describe Api::V20170715::CoreApiController, type: :controller do
-  let(:user) { create(:user) }
-  let(:task) { create(:my_module) }
-  let(:sample1) { create(:sample) }
-  let(:sample2) { create(:sample) }
-  let(:sample3) { create(:sample) }
+  let!(:user) { create :user }
+  let!(:team) { create :team, created_by: user }
+  let(:task) { create :my_module }
+  let(:sample1) { create :sample }
+  let(:sample2) { create :sample }
+  let(:sample3) { create :sample }
   before do
     task.samples << [sample1, sample2, sample3]
     UserProject.create!(user: user, project: task.experiment.project, role: 0)
@@ -16,7 +17,7 @@ describe Api::V20170715::CoreApiController, type: :controller do
       before do
         request.headers['HTTP_ACCEPT'] = 'application/json'
         request.headers['Authorization'] = 'Bearer ' + generate_token(user.id)
-        get :task_samples, task_id: task.id
+        get :task_samples, params: { task_id: task.id }
       end
 
       it 'Returns HTTP success' do
@@ -39,7 +40,7 @@ describe Api::V20170715::CoreApiController, type: :controller do
         before do
           request.headers['HTTP_ACCEPT'] = 'application/json'
           request.headers['Authorization'] = 'Bearer WroNgToken'
-          get :task_samples, task_id: task.id
+          get :task_samples, params: { task_id: task.id }
         end
 
         it 'Returns HTTP unauthorized' do
@@ -54,7 +55,7 @@ describe Api::V20170715::CoreApiController, type: :controller do
         end
 
         it 'Returns HTTP not found' do
-          get :task_samples, task_id: 1000
+          get :task_samples, params: { task_id: 1000 }
           expect(response).to have_http_status(404)
           expect(json).to match({})
         end
@@ -63,7 +64,7 @@ describe Api::V20170715::CoreApiController, type: :controller do
           UserProject.where(user: user, project: task.experiment.project)
                      .first
                      .destroy!
-          get :task_samples, task_id: task.id
+          get :task_samples, params: { task_id: task.id }
           expect(response).to have_http_status(403)
           expect(json).to match({})
         end
@@ -72,6 +73,7 @@ describe Api::V20170715::CoreApiController, type: :controller do
   end
 
   describe 'GET #tasks_tree' do
+    let!(:user_team) { create :user_team, team: team, user: user }
     context 'When valid request' do
       before do
         request.headers['HTTP_ACCEPT'] = 'application/json'
@@ -90,21 +92,25 @@ describe Api::V20170715::CoreApiController, type: :controller do
         hash_body = nil
         expect { hash_body = json }.not_to raise_exception
         expect(hash_body).to match(
-          ['team_id' => team.id.to_s, 'name' => team.name,
+          ['name' => team.name,
            'description' => team.description,
+           'team_id' => team.id.to_s,
            'projects' => [{
-             'project_id' => project.id.to_s, 'name' => project.name,
+             'name' => project.name,
              'visibility' => project.visibility,
              'archived' => project.archived,
+             'project_id' => project.id.to_s,
              'experiments' => [{
-               'experiment_id' => experiment.id.to_s,
                'name' => experiment.name,
                'description' => experiment.description,
                'archived' => experiment.archived,
+               'experiment_id' => experiment.id.to_s,
                'tasks' => [{
-                 'task_id' => task.id.to_s, 'name' => task.name,
+                 'name' => task.name,
                  'description' => task.description,
-                 'archived' => task.archived
+                 'archived' => task.archived,
+                 'task_id' => task.id.to_s,
+                 'editable' => true
                }]
              }]
            }]]

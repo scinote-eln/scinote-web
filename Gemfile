@@ -5,7 +5,7 @@ ruby '2.4.1'
 gem 'rails', '5.1.1'
 gem 'webpacker', '~> 2.0'
 gem 'figaro'
-gem 'pg'
+gem 'pg', '~> 0.18'
 gem 'devise', '~> 4.3.0'
 gem 'devise_invitable'
 gem 'simple_token_authentication', '~> 1.15.1' # Token authentication for Devise
@@ -53,7 +53,7 @@ gem 'commit_param_routing' # Enables different submit actions in the same form t
 gem 'kaminari'
 gem 'i18n-js', '~> 3.0' # Localization in javascript files
 gem 'roo', '~> 2.7.1' # Spreadsheet parser
-gem 'wicked_pdf', '~> 1.0.6'
+gem 'wicked_pdf', '~> 1.1.0'
 gem 'silencer' # Silence certain Rails logs
 gem 'wkhtmltopdf-heroku'
 gem 'remotipart', '~> 1.2' # Async file uploads
@@ -98,7 +98,7 @@ group :development, :test do
   gem 'pry'
   gem 'pry-byebug'
   gem 'pry-rails'
-  gem 'factory_girl_rails'
+  gem 'factory_bot_rails'
   gem 'rails-controller-testing'
   gem 'rspec-rails'
   gem 'better_errors'

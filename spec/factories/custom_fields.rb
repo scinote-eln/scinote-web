@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :custom_field do
     name 'My custom field'
   end

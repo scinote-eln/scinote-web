@@ -1,4 +1,4 @@
-class AddUserIdentityTable < ActiveRecord::Migration
+class AddUserIdentityTable < ActiveRecord::Migration[4.2]
   def change
     create_table :user_identities do |t|
       t.belongs_to :user, index: true

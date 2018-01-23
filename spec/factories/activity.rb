@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :activity do
     type_of :create_project
     message Faker::Lorem.sentence(10)

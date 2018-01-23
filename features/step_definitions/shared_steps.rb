@@ -36,7 +36,7 @@ Then(/^I should be on homepage$/) do
 end
 
 Given(/^the "([^"]*)" team exists$/) do |team_name|
-  FactoryGirl.create(:team, name: team_name)
+  FactoryBot.create(:team, name: team_name)
 end
 
 Given(/^I'm on the home page of "([^"]*)" team$/) do |team_name|
@@ -48,9 +48,9 @@ end
 Given(/^"([^"]*)" is in "([^"]*)" team as a "([^"]*)"$/) do |user_email, team_name, role|
   team = Team.find_by_name(team_name)
   user = User.find_by_email(user_email)
-  FactoryGirl.create(:user_team, user: user,
-                                 team: team,
-                                 role: UserTeam.roles.fetch(role))
+  FactoryBot.create(:user_team, user: user,
+                    team: team, role:
+                    UserTeam.roles.fetch(role))
 end
 
 Then(/^I attach a "([^"]*)" file to "([^"]*)" field$/) do |file, field_id|

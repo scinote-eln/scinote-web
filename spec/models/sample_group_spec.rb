@@ -27,6 +27,7 @@ describe SampleGroup, type: :model do
   end
 
   describe 'Should be a valid object' do
+    let!(:team_one) { create :team, name: 'My team' }
     it { should validate_presence_of :name }
     it { should validate_presence_of :color }
     it { should validate_presence_of :team }
@@ -37,9 +38,8 @@ describe SampleGroup, type: :model do
       should validate_length_of(:color).is_at_most(Constants::COLOR_MAX_LENGTH)
     end
     it 'should have uniq name scoped to team' do
-      create :sample_group, name: 'My Group'
-      new_group = build :sample_group, name: 'My Group'
-
+      create :sample_group, name: 'My Group', team: team_one
+      new_group = build :sample_group, name: 'My Group', team: team_one
       expect(new_group).to_not be_valid
     end
   end

@@ -26,6 +26,7 @@ Feature: Sign up
     | Full name | Email          | Password | Password confirmation | Team name   |
     | Magnus    | magnus@gmail.com | asdf1234 | asdf1234            | SpliceGirls |
     And I click "Sign up" button
+    And Show me the page
     Then I should see "SpliceGirls"
     And I should be on homepage
 
