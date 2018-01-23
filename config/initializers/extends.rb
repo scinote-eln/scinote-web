@@ -50,4 +50,6 @@ class Extends
   API_PLUGABLE_AUTH_METHODS = []
 
   OMNIAUTH_PROVIDERS = []
+
+  INITIAL_USER_OPTIONS = {}
 end
