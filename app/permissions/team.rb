@@ -118,18 +118,3 @@ Canaid::Permissions.register_for(RepositoryColumn) do
   end
 end
 
-Canaid::Permissions.register_for(Project) do
-  # view project
-  can :read_project do |user, project|
-    user.is_admin_of_team?(project.team) ||
-      user.is_member_of_project?(project) ||
-      (project.visible? && user.is_member_of_team?(project.team))
-  end
-end
-
-Canaid::Permissions.register_for(Experiment) do
-  # view experiment
-  can :read_experiment do |user, experiment|
-    user.is_member_of_team?(experiment.project.team)
-  end
-end
