@@ -3,12 +3,9 @@ class UserProjectsController < ApplicationController
   include InputSanitizeHelper
 
   before_action :load_vars
-  before_action :check_view_tab_permissions, only: :index
-  before_action :check_view_permissions, only: :index_edit
+  before_action :check_view_permissions, only: %i(index index_edit)
   before_action :check_create_permissions, only: :create
-  # TODO  check update permissions
-  before_action :check_update_permisisons, only: :update
-  before_action :check_delete_permisisons, only: :destroy
+  before_action :check_update_permisisons, only: %i(update destroy)
 
   def index
     @users = @project.user_projects
@@ -180,27 +177,17 @@ class UserProjectsController < ApplicationController
     end
   end
 
-  def check_view_tab_permissions
+  def check_view_permissions
     render_403 unless can_read_project?(@project)
   end
 
-  def check_view_permissions
-    render_403 unless can_update_project?(@project)
-  end
-
   def check_create_permissions
-    render_403 unless can_update_project?(@project)
+    render_403 unless can_create_projects?(current_team)
   end
 
   def check_update_permisisons
-    # TODO: improve permissions for changing your role on project
-    render_403 unless params[:id] != current_user.id
-  end
-
-  def check_delete_permisisons
-    # TODO: improve permissions for remove yourself from project
-    render_403 unless params[:id] != current_user.id
-    render_403 unless can_update_project?(@project)
+    render_403 unless can_update_project?(@project) ||
+                      params[:id] != current_user.id
   end
 
   def init_gui

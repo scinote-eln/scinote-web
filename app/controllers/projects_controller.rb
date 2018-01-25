@@ -8,14 +8,11 @@ class ProjectsController < ApplicationController
                                    :notifications, :reports,
                                    :samples, :experiment_archive,
                                    :delete_samples, :samples_index]
-  before_action :check_view_permissions, only: [:show, :reports,
-                                                :samples, :experiment_archive,
-                                                :samples_index]
-  before_action :check_view_notifications_permissions, only: [ :notifications ]
+  before_action :check_view_permissions, only: %i(show reports notifications
+                                                  samples experiment_archive
+                                                  samples_index)
   before_action :check_create_permissions, only: [ :new, :create ]
   before_action :check_edit_permissions, only: [ :edit ]
-  before_action :check_experiment_archive_permissions,
-                only: [:experiment_archive]
 
   @filter_by_archived = false
 
@@ -325,16 +322,8 @@ class ProjectsController < ApplicationController
     render_403 unless can_create_projects?(current_team)
   end
 
-  def check_view_notifications_permissions
-    render_403 unless can_read_project?(@project)
-  end
-
   def check_edit_permissions
     render_403 unless can_update_project?(@project)
-  end
-
-  def check_experiment_archive_permissions
-    render_403 unless can_read_project?(@project)
   end
 
   def choose_layout
