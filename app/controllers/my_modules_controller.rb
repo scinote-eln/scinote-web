@@ -2,6 +2,8 @@ class MyModulesController < ApplicationController
   include SampleActions
   include TeamsHelper
   include InputSanitizeHelper
+  include Rails.application.routes.url_helpers
+  include ActionView::Helpers::UrlHelper
 
   before_action :load_vars,
                 only: %I[show update destroy description due_date protocols
@@ -564,6 +566,32 @@ class MyModulesController < ApplicationController
       message: message,
       type_of: completed ? :complete_task : :uncomplete_task
     )
+    start_work_on_next_task_notification
+  end
+
+  def start_work_on_next_task_notification
+    if @my_module.completed?
+      title = t('notifications.start_work_on_next_task',
+                user: current_user.full_name,
+                module: @my_module.name)
+      message = t('notifications.start_work_on_next_task_message',
+                  project: link_to(@project.name, project_url(@project)),
+                  experiment: link_to(@experiment.name,
+                                      canvas_experiment_url(@experiment)),
+                  my_module: link_to(@my_module.name,
+                                     protocols_my_module_url(@my_module)))
+      notification = Notification.create(
+        type_of: :recent_changes,
+        title: sanitize_input(title, %w(strong a)),
+        message: sanitize_input(message, %w(strong a)),
+        generator_user_id: current_user.id
+      )
+      # create notification for all users on the next modules in the workflow
+      @my_module.my_modules.map(&:users).flatten.uniq.each do |target_user|
+        next if target_user == current_user
+        UserNotification.create(notification: notification, user: target_user)
+      end
+    end
   end
 
   def load_vars
