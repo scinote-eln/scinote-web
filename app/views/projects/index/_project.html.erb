@@ -2,7 +2,7 @@
 data-project-users-tab-url="<%= url_for project_user_projects_path(project_id: project.id, format: :json) %>">
   <div class="panel-heading">
 
-    <% if can_update_project?(project) %>
+    <% if can_update_project?(@project) %>
       <div class="dropdown pull-right">
         <button class="btn btn-link dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
           <span class="caret"></span>

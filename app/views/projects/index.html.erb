@@ -1,6 +1,6 @@
 <% provide(:head_title, t("projects.index.head_title")) %>
 
-<% if can_create_projects?(team) %>
+<% if can_create_projects?(current_team) %>
   <!-- New project modal -->
   <div class="modal" id="new-project-modal" tabindex="-1" role="dialog" aria-labelledby="new-project-modal-label">
     <%= bootstrap_form_for @project, remote: true do |f| %>
@@ -23,7 +23,7 @@
   </div>
 <% end %>
 
-<% if can_update_project?(project) %>
+<% if can_update_project?(@project) %>
   <!-- Edit project modal -->
   <div class="modal" id="edit-project-modal" tabindex="-1" role="dialog" aria-labelledby="edit-project-modal-label">
     <div class="modal-dialog" role="document">
