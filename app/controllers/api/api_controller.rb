@@ -4,9 +4,9 @@ module Api
     attr_reader :token
     attr_reader :current_user
 
-    before_action :load_token, except: %i(authenticate status)
-    before_action :load_iss, except: %i(authenticate status)
-    before_action :authenticate_request!, except: %i(authenticate status)
+    before_action :load_token, except: %i(authenticate status health)
+    before_action :load_iss, except: %i(authenticate status health)
+    before_action :authenticate_request!, except: %i(authenticate status health)
 
     rescue_from StandardError do |e|
       logger.error e.message
@@ -22,6 +22,10 @@ module Api
     def initialize
       super
       @iss = nil
+    end
+
+    def health
+      render plain: 'RUNNING'
     end
 
     def status

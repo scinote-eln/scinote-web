@@ -501,6 +501,7 @@ Rails.application.routes.draw do
     end
 
     namespace :api, defaults: { format: 'json' } do
+      get 'health', to: 'api#health'
       get 'status', to: 'api#status'
       post 'auth/token', to: 'api#authenticate'
       scope '20170715', module: 'v20170715' do
