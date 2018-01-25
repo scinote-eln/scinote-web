@@ -99,7 +99,7 @@ class AssetsController < ApplicationController
 
   def load_vars
     @asset = Asset.find_by_id(params[:id])
-    render_404 unless @asset
+    return render_404 unless @asset
 
     step_assoc = @asset.step
     result_assoc = @asset.result
