@@ -1,4 +1,4 @@
-class Asset < ActiveRecord::Base
+class Asset < ApplicationRecord
   include SearchableModel
   include DatabaseHelper
   include Encryptor
@@ -46,11 +46,15 @@ class Asset < ActiveRecord::Base
   # assign it to result
   validate :step_or_result
 
-  belongs_to :created_by, foreign_key: 'created_by_id', class_name: 'User'
+  belongs_to :created_by,
+             foreign_key: 'created_by_id',
+             class_name: 'User',
+             optional: true
   belongs_to :last_modified_by,
              foreign_key: 'last_modified_by_id',
-             class_name: 'User'
-  belongs_to :team
+             class_name: 'User',
+             optional: true
+  belongs_to :team, optional: true
   has_one :step_asset,
           inverse_of: :asset,
           dependent: :destroy
@@ -477,7 +481,7 @@ class Asset < ActiveRecord::Base
     if errors.size > 1
       temp_errors = errors[:file]
       errors.clear
-      errors.set(:file, temp_errors)
+      errors.add(:file, temp_errors)
     end
   end
 

@@ -1,0 +1,26 @@
+{
+  "type": "object",
+  "required": ["global_activities"],
+  "properties": {
+     "global_activities": {
+       "type": "object",
+       "required": ["activities", "more", "currentPage"],
+       "properties": {
+         "more": { "type": "boolean" },
+         "currentPage": { "type": "integer" },
+         "activities": {
+           "type": "array",
+           "items":{
+             "required": ["id", "message", "createdAt", "timezone"],
+             "properties": {
+               "id": { "type": "integer" },
+               "message": { "type": "string" },
+               "createdAt": { "type": "string" },
+               "timezone": { "type": "string" }
+             }
+           }
+         }
+       }
+     }
+   }
+}

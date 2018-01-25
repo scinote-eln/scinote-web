@@ -1,13 +1,16 @@
-class UserProject < ActiveRecord::Base
+class UserProject < ApplicationRecord
   enum role: { owner: 0, normal_user: 1, technician: 2, viewer: 3 }
 
   validates :role, presence: true
   validates :user, presence: true
   validates :project, presence: true
 
-  belongs_to :user, inverse_of: :user_projects
-  belongs_to :assigned_by, foreign_key: 'assigned_by_id', class_name: 'User'
-  belongs_to :project, inverse_of: :user_projects
+  belongs_to :user, inverse_of: :user_projects, optional: true
+  belongs_to :assigned_by,
+             foreign_key: 'assigned_by_id',
+             class_name: 'User',
+             optional: true
+  belongs_to :project, inverse_of: :user_projects, optional: true
 
   before_destroy :destroy_associations
 

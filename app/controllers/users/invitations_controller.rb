@@ -7,7 +7,7 @@ module Users
 
     before_action :check_invite_users_permission, only: :invite_users
 
-    before_filter :update_sanitized_params, only: :update
+    before_action :update_sanitized_params, only: :update
 
     def update
       return super unless Rails.configuration.x.new_team_on_signup
@@ -156,7 +156,7 @@ module Users
 
     def update_sanitized_params
       # Solution for Devise < 4.0.0
-      devise_parameter_sanitizer.for(:accept_invitation) << :full_name
+      devise_parameter_sanitizer.permit(:accept_invitation, keys: [:full_name])
     end
 
     def check_captcha

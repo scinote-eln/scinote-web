@@ -1,4 +1,4 @@
-class AddForeignKeysToTables < ActiveRecord::Migration
+class AddForeignKeysToTables < ActiveRecord::Migration[4.2]
   def change
     tables = [:assets, :checklists, :checklist_items, :my_module_groups,
       :my_module_tags, :my_modules, :teams, :projects,

@@ -66,9 +66,9 @@ class UserProjectsController < ApplicationController
       )
 
       respond_to do |format|
-        format.json {
-          redirect_to :action => :index_edit, :format => :json
-        }
+        format.json do
+          redirect_to project_users_edit_path(format: :json), turbolinks: false
+        end
       end
     else
       error = t('user_projects.create.can_add_user_to_project')
@@ -110,9 +110,9 @@ class UserProjectsController < ApplicationController
       )
 
       respond_to do |format|
-        format.json {
-          redirect_to :action => :index_edit, :format => :json
-        }
+        format.json do
+          redirect_to project_users_edit_path(format: :json), turbolinks: false
+        end
       end
     else
       respond_to do |format|
@@ -145,9 +145,11 @@ class UserProjectsController < ApplicationController
       generate_notification(current_user, @up.user, false, false, @project)
 
       respond_to do |format|
-        format.json {
-          redirect_to project_users_edit_path(format: :json), :status => 303
-        }
+        format.json do
+          redirect_to project_users_edit_path(format: :json),
+                      turbolinks: false,
+                      status: 303
+        end
       end
     else
       respond_to do |format|

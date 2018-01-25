@@ -1,8 +1,8 @@
-class UserNotification < ActiveRecord::Base
+class UserNotification < ApplicationRecord
   include NotificationsHelper
 
-  belongs_to :user
-  belongs_to :notification
+  belongs_to :user, optional: true
+  belongs_to :notification, optional: true
 
   after_save :send_email
 
@@ -40,17 +40,17 @@ class UserNotification < ActiveRecord::Base
       send_email_notification(
         user,
         notification
-      ) if user.system_message_notification_email
+      ) if user.system_message_email_notification
     when 'assignment'
       send_email_notification(
         user,
         notification
-      ) if user.assignments_notification_email
+      ) if user.assignments_email_notification
     when 'recent_changes'
       send_email_notification(
         user,
         notification
-      ) if user.recent_notification_email
+      ) if user.recent_email_notification
     when 'deliver'
       send_email_notification(
         user,

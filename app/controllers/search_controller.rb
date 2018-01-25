@@ -1,5 +1,5 @@
 class SearchController < ApplicationController
-  before_filter :load_vars, only: :index
+  before_action :load_vars, only: :index
 
   def index
     redirect_to new_search_path unless @search_query
@@ -54,11 +54,11 @@ class SearchController < ApplicationController
       if query.length < Constants::NAME_MIN_LENGTH
         flash[:error] = t('general.query.length_too_short',
                           min_length: Constants::NAME_MIN_LENGTH)
-        redirect_to :back
+        redirect_back(fallback_location: root_path)
       elsif query.length > Constants::TEXT_MAX_LENGTH
         flash[:error] = t('general.query.length_too_long',
                           max_length: Constants::TEXT_MAX_LENGTH)
-        redirect_to :back
+        redirect_back(fallback_location: root_path)
       else
         @search_query = query
       end
@@ -76,7 +76,7 @@ class SearchController < ApplicationController
         flash[:error] = t('general.query.wrong_query',
                           min_length: Constants::NAME_MIN_LENGTH,
                           max_length: Constants::TEXT_MAX_LENGTH)
-        redirect_to :back
+        redirect_back(fallback_location: root_path)
       else
         @search_query.strip!
       end
@@ -239,7 +239,7 @@ class SearchController < ApplicationController
 
   def search_repository
     @repository = Repository.find_by_id(params[:repository])
-    render_403 unless can_view_repository(@repository)
+    render_403 unless can_read_team?(@repository.team)
     @repository_results = []
     if @repository_search_count_total > 0
       @repository_results =

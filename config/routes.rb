@@ -1,5 +1,10 @@
 Rails.application.routes.draw do
   require 'subdomain'
+
+  def draw(routes_name)
+    instance_eval(File.read(Rails.root.join("config/routes/#{routes_name}.rb")))
+  end
+
   constraints UserSubdomain do
     devise_for :users,
                controllers: { registrations: 'users/registrations',
@@ -9,6 +14,17 @@ Rails.application.routes.draw do
                               omniauth_callbacks: 'users/omniauth_callbacks' }
 
     root 'projects#index'
+
+    # Client APP endpoints
+    get '/settings', to: 'client_api/settings#index'
+    get '/settings/*all', to: 'client_api/settings#index'
+
+    namespace :client_api, defaults: { format: 'json' } do
+      post '/premissions', to: 'permissions#status'
+      %i(activities teams notifications users configurations).each do |path|
+        draw path
+      end
+    end
 
     # Save sample table state
     post '/state_save/:team_id/:user_id',
@@ -27,6 +43,10 @@ Rails.application.routes.draw do
     get 'not_found', to: 'application#not_found', as: 'not_found'
 
     # Settings
+    resources :users, only: :index # needed for testing signup
+    # needed for testing edit passowrd
+    get '/users/password', to: 'devise_password#edit'
+
     get 'users/settings/account/preferences',
         to: 'users/settings/account/preferences#index',
         as: 'preferences'
@@ -473,7 +493,6 @@ Rails.application.routes.draw do
     get 'files/:id/preview', to: 'assets#preview', as: 'preview_asset'
     get 'files/:id/view', to: 'assets#view', as: 'view_asset'
     get 'files/:id/edit', to: 'assets#edit', as: 'edit_asset'
-    post 'asset_signature' => 'assets#signature'
 
     devise_scope :user do
       get 'avatar/:id/:style' => 'users/registrations#avatar', as: 'avatar'

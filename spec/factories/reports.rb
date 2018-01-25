@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :report do
     user { User.first || association(:user) }
     project { Project.first || association(:project) }

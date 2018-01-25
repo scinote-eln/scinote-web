@@ -58,6 +58,8 @@ en:
   head:
     title: "sciNote | %{title}"
 
+  body:
+    notice: "You need to enable JavaScript to run this app."
   nav:
     search: "Search"
     user_greeting: "Hi, %{full_name}"
@@ -1886,3 +1888,20 @@ en:
   More: "More"
   Added: 'Added'
   by: 'by'
+
+  client_api:
+    permission_error: "You don't have permission for this action."
+    invalid_arguments: "Invalid arguments"
+    generic_error_message: "Something went wrong! Please try again later."
+    user_teams:
+      permission_error: "You don't have permission to manage users."
+      leave_team_error: "An error occured."
+      leave_flash: "Successfuly left team %{team}."
+    teams:
+      create_permission_error: "You don't have permission to create team."
+      update_permission_error: "You don't have permission to edit team."
+    user:
+      current_password_invalid: "incorrect password"
+      password_confirmation_not_match: "doesn't match"
+    invite_users:
+      permission_error: "You don't have permission to invite additional users to team. Contact its administrator/s."

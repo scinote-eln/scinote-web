@@ -1,4 +1,4 @@
-class CreateMyModules < ActiveRecord::Migration
+class CreateMyModules < ActiveRecord::Migration[4.2]
   def change
     create_table :my_modules do |t|
       t.string :name, null: false

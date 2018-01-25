@@ -1,13 +1,16 @@
-class UserTeam < ActiveRecord::Base
+class UserTeam < ApplicationRecord
   enum role: { guest: 0, normal_user: 1, admin: 2 }
 
   validates :role, presence: true
   validates :user, presence: true
   validates :team, presence: true
 
-  belongs_to :user, inverse_of: :user_teams
-  belongs_to :assigned_by, foreign_key: 'assigned_by_id', class_name: 'User'
-  belongs_to :team, inverse_of: :user_teams
+  belongs_to :user, inverse_of: :user_teams, optional: true
+  belongs_to :assigned_by,
+             foreign_key: 'assigned_by_id',
+             class_name: 'User',
+             optional: true
+  belongs_to :team, inverse_of: :user_teams, optional: true
 
   before_destroy :destroy_associations
   after_create :create_samples_table_state

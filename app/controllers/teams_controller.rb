@@ -7,17 +7,17 @@ class TeamsController < ApplicationController
   def parse_sheet
     session[:return_to] ||= request.referer
 
-    unless params[:file]
+    unless import_params[:file]
       return parse_sheet_error(t('teams.parse_sheet.errors.no_file_selected'))
     end
-    if params[:file].size > Constants::FILE_MAX_SIZE_MB.megabytes
+    if import_params[:file].size > Constants::FILE_MAX_SIZE_MB.megabytes
       error = t('general.file.size_exceeded',
                 file_size: Constants::FILE_MAX_SIZE_MB)
       return parse_sheet_error(error)
     end
 
     begin
-      sheet = SpreadsheetParser.open_spreadsheet(params[:file])
+      sheet = SpreadsheetParser.open_spreadsheet(import_params[:file])
       @header, @columns = SpreadsheetParser.first_two_rows(sheet)
 
       if @header.empty? || @columns.empty?
@@ -34,7 +34,7 @@ class TeamsController < ApplicationController
       # Save file for next step (importing)
       @temp_file = TempFile.new(
         session_id: session.id,
-        file: params[:file]
+        file: import_params[:file]
       )
 
       if @temp_file.save
@@ -65,23 +65,25 @@ class TeamsController < ApplicationController
     session[:return_to] ||= request.referer
 
     respond_to do |format|
-      if params[:file_id]
-        @temp_file = TempFile.find_by_id(params[:file_id])
+      if import_params[:file_id]
+        @temp_file = TempFile.find_by_id(import_params[:file_id])
 
         if @temp_file
           # Check if session_id is equal to prevent file stealing
           if @temp_file.session_id == session.id
             # Check if mappings exists or else we don't have anything to parse
-            if params[:mappings]
+            if import_params[:mappings]
               @sheet = SpreadsheetParser.open_spreadsheet(@temp_file.file)
 
               # Check for duplicated values
-              h1 = params[:mappings].clone.delete_if { |k, v| v.empty? }
+              h1 = import_params[:mappings].clone.delete_if { |_, v| v.empty? }
               if h1.length == h1.invert.length
 
                 # Check if there exist mapping for sample name (it's mandatory)
-                if params[:mappings].has_value?("-1")
-                  result = @team.import_samples(@sheet, params[:mappings], current_user)
+                if import_params[:mappings].value?('-1')
+                  result = @team.import_samples(@sheet,
+                                                import_params[:mappings],
+                                                current_user)
                   nr_of_added = result[:nr_of_added]
                   total_nr = result[:total_nr]
 
@@ -212,12 +214,12 @@ class TeamsController < ApplicationController
   end
 
   def export_samples
-    if params[:sample_ids] && params[:header_ids]
+    if export_params[:sample_ids] && export_params[:header_ids]
       generate_samples_zip
     else
       flash[:alert] = t('zip_export.export_error')
     end
-    redirect_to :back
+    redirect_back(fallback_location: root_path)
   end
 
   def routing_error(error = 'Routing error', status = :not_found, exception=nil)
@@ -248,14 +250,22 @@ class TeamsController < ApplicationController
     end
   end
 
+  def import_params
+    params.permit(:id, :file, :file_id, mappings: {}).to_h
+  end
+
+  def export_params
+    params.permit(sample_ids: [], header_ids: []).to_h
+  end
+
   def check_create_sample_permissions
-    unless can_create_samples(@team)
+    unless can_manage_samples?(@team)
       render_403
     end
   end
 
   def check_view_samples_permission
-    unless can_view_samples(@team)
+    unless can_read_team?(@team)
       render_403
     end
   end
@@ -264,7 +274,10 @@ class TeamsController < ApplicationController
     zip = ZipExport.create(user: current_user)
     zip.generate_exportable_zip(
       current_user,
-      @team.to_csv(Sample.where(id: params[:sample_ids]), params[:header_ids]),
+      @team.to_csv(
+        Sample.where(id: export_params[:sample_ids]),
+        export_params[:header_ids]
+      ),
       :samples
     )
   end

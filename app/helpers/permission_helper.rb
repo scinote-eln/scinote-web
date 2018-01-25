@@ -245,19 +245,19 @@ module PermissionHelper
   # at the beginning of this file (via aspector).
 
   # ---- ATWHO PERMISSIONS ----
-  def can_view_team_users(team)
-    is_member_of_team(team)
-  end
+  # def can_view_team_users(team)
+  #   is_member_of_team(team)
+  # end
 
   # ---- PROJECT PERMISSIONS ----
 
-  def can_view_projects(team)
-    is_member_of_team(team)
-  end
+  # def can_view_projects(team)
+  #   is_member_of_team(team)
+  # end
 
-  def can_create_project(team)
-    is_normal_user_or_admin_of_team(team)
-  end
+  # def can_create_project(team)
+  #   is_normal_user_or_admin_of_team(team)
+  # end
 
   # User can view project if he's assigned onto it, or if
   # a project is public/visible, and user is a member of that team
@@ -332,7 +332,7 @@ module PermissionHelper
   end
 
   def can_view_project_samples(project)
-    can_view_samples(project.team)
+    can_view_project(project)
   end
 
   def can_view_project_archive(project)
@@ -383,7 +383,7 @@ module PermissionHelper
   end
 
   def can_view_experiment_samples(experiment)
-    can_view_samples(experiment.project.team)
+    can_view_experiment(experiment)
   end
 
   def can_clone_experiment(experiment)
@@ -517,8 +517,7 @@ module PermissionHelper
   end
 
   def can_view_module_samples(my_module)
-    can_view_module(my_module) and
-      can_view_samples(my_module.experiment.project.team)
+    can_view_module(my_module)
   end
 
   def can_view_module_archive(my_module)
@@ -629,29 +628,29 @@ module PermissionHelper
 
   # ---- SAMPLE PERMISSIONS ----
 
-  def can_create_samples(team)
-    is_normal_user_or_admin_of_team(team)
-  end
+  # def can_create_samples(team)
+  #   is_normal_user_or_admin_of_team(team)
+  # end
 
-  def can_view_samples(team)
-    is_member_of_team(team)
-  end
+  # def can_view_samples(team)
+  #   is_member_of_team(team)
+  # end
 
   # Only person who created the sample
   # or team admin can edit it
-  def can_edit_sample(sample)
-    is_admin_of_team(sample.team) or
-      sample.user == current_user
-  end
+  # def can_edit_sample(sample)
+  #   is_admin_of_team(sample.team) or
+  #     sample.user == current_user
+  # end
 
   # Only person who created sample can delete it
-  def can_delete_sample(sample)
-    sample.user == current_user
-  end
+  # def can_delete_sample(sample)
+  #   sample.user == current_user
+  # end
 
-  def can_delete_samples(team)
-    is_normal_user_or_admin_of_team(team)
-  end
+  # def can_delete_samples(team)
+  #   is_normal_user_or_admin_of_team(team)
+  # end
 
   def can_add_samples_to_module(my_module)
     is_technician_or_higher_of_project(my_module.experiment.project)
@@ -663,53 +662,53 @@ module PermissionHelper
 
   # ---- SAMPLE TYPES PERMISSIONS ----
 
-  def can_create_sample_type_in_team(team)
-    is_normal_user_or_admin_of_team(team)
-  end
+  # def can_create_sample_type_in_team(team)
+  #   is_normal_user_or_admin_of_team(team)
+  # end
 
   # ---- SAMPLE GROUPS PERMISSIONS ----
 
-  def can_create_sample_group_in_team(team)
-    is_normal_user_or_admin_of_team(team)
-  end
+  # def can_create_sample_group_in_team(team)
+  #   is_normal_user_or_admin_of_team(team)
+  # end
 
   # ---- CUSTOM FIELDS PERMISSIONS ----
 
-  def can_create_custom_field_in_team(team)
-    is_normal_user_or_admin_of_team(team)
-  end
+  # def can_create_custom_field_in_team(team)
+  #   is_normal_user_or_admin_of_team(team)
+  # end
 
-  def can_edit_custom_field(custom_field)
-    custom_field.user == current_user ||
-      is_admin_of_team(custom_field.team)
-  end
+  # def can_edit_custom_field(custom_field)
+  #   custom_field.user == current_user ||
+  #     is_admin_of_team(custom_field.team)
+  # end
 
-  def can_delete_custom_field(custom_field)
-    custom_field.user == current_user ||
-      is_admin_of_team(custom_field.team)
-  end
+  # def can_delete_custom_field(custom_field)
+  #   custom_field.user == current_user ||
+  #     is_admin_of_team(custom_field.team)
+  # end
 
   # ---- PROTOCOL PERMISSIONS ----
 
-  def can_view_team_protocols(team)
-    is_member_of_team(team)
-  end
+  # def can_view_team_protocols(team)
+  #   is_member_of_team(team)
+  # end
 
-  def can_create_new_protocol(team)
-    is_normal_user_or_admin_of_team(team)
-  end
+  # def can_create_new_protocol(team)
+  #   is_normal_user_or_admin_of_team(team)
+  # end
 
-  def can_import_protocols(team)
-    is_normal_user_or_admin_of_team(team)
-  end
+  # def can_import_protocols(team)
+  #   is_normal_user_or_admin_of_team(team)
+  # end
 
-  def can_view_protocol(protocol)
-    if protocol.in_repository_public?
+  def can_view_protocol(protocol) # WIP
+    if protocol.in_repository_public? # DONE
       is_member_of_team(protocol.team)
-    elsif protocol.in_repository_private? or protocol.in_repository_archived?
+    elsif protocol.in_repository_private? or protocol.in_repository_archived? # DONE
       is_member_of_team(protocol.team) and
         protocol.added_by == current_user
-    elsif protocol.in_module?
+    elsif protocol.in_module? # TBD
       my_module = protocol.my_module
       my_module.active? &&
         my_module.experiment.project.active? &&
@@ -720,45 +719,45 @@ module PermissionHelper
     end
   end
 
-  def can_edit_protocol(protocol)
-    is_normal_user_or_admin_of_team(protocol.team) and
-    current_user == protocol.added_by and (not protocol.in_repository_archived?)
-  end
+  # def can_edit_protocol(protocol)
+  #   is_normal_user_or_admin_of_team(protocol.team) and
+  #   current_user == protocol.added_by and (not protocol.in_repository_archived?)
+  # end
 
-  def can_clone_protocol(protocol)
-    is_normal_user_or_admin_of_team(protocol.team) and
-    (
-      protocol.in_repository_public? or
-      (protocol.in_repository_private? and current_user == protocol.added_by)
-    )
-  end
+  # def can_clone_protocol(protocol)
+  #   is_normal_user_or_admin_of_team(protocol.team) and
+  #   (
+  #     protocol.in_repository_public? or
+  #     (protocol.in_repository_private? and current_user == protocol.added_by)
+  #   )
+  # end
 
-  def can_make_protocol_private(protocol)
-    protocol.added_by == current_user and
-    protocol.in_repository_public?
-  end
+  # def can_make_protocol_private(protocol)
+  #   protocol.added_by == current_user and
+  #   protocol.in_repository_public?
+  # end
 
-  def can_publish_protocol(protocol)
-    protocol.added_by == current_user and
-    protocol.in_repository_private?
-  end
+  # def can_publish_protocol(protocol)
+  #   protocol.added_by == current_user and
+  #   protocol.in_repository_private?
+  # end
 
-  def can_export_protocol(protocol)
-    (protocol.in_repository_public? and is_member_of_team(protocol.team)) or
-      (protocol.in_repository_private? and protocol.added_by == current_user) or
-      (protocol.in_module? and
+  def can_export_protocol(protocol) # WIP
+    (protocol.in_repository_public? and is_member_of_team(protocol.team)) or # DONE
+      (protocol.in_repository_private? and protocol.added_by == current_user) or # DONE
+      (protocol.in_module? and # TBD
         can_export_protocol_from_module(protocol.my_module))
   end
 
-  def can_archive_protocol(protocol)
-    protocol.added_by == current_user and
-      (protocol.in_repository_public? or protocol.in_repository_private?)
-  end
+  # def can_archive_protocol(protocol)
+  #   protocol.added_by == current_user and
+  #     (protocol.in_repository_public? or protocol.in_repository_private?)
+  # end
 
-  def can_restore_protocol(protocol)
-    protocol.added_by == current_user and
-      protocol.in_repository_archived?
-  end
+  # def can_restore_protocol(protocol)
+  #   protocol.added_by == current_user and
+  #     protocol.in_repository_archived?
+  # end
 
   def can_unlink_protocol(protocol)
     if protocol.linked?
@@ -844,42 +843,42 @@ module PermissionHelper
       is_user_or_higher_of_project(protocol.my_module.experiment.project)
   end
 
-  def can_view_steps_in_protocol(protocol)
-    if protocol.in_module?
+  def can_view_steps_in_protocol(protocol) # WIP
+    if protocol.in_module? # TBD
       my_module = protocol.my_module
       my_module.active? &&
         my_module.experiment.project.active? &&
         my_module.experiment.active? &&
         can_view_module(my_module)
-    elsif protocol.in_repository?
+    elsif protocol.in_repository? # DONE
       protocol.in_repository_active? and can_view_protocol(protocol)
     else
       false
     end
   end
 
-  def can_create_step_in_protocol(protocol)
-    if protocol.in_module?
+  def can_create_step_in_protocol(protocol) # WIP
+    if protocol.in_module? # TBD
       my_module = protocol.my_module
       my_module.active? &&
       my_module.experiment.project.active? &&
       my_module.experiment.active? &&
       is_user_or_higher_of_project(my_module.experiment.project)
-    elsif protocol.in_repository?
+    elsif protocol.in_repository? # DONE
       protocol.in_repository_active? and can_edit_protocol(protocol)
     else
       false
     end
   end
 
-  def can_reorder_step_in_protocol(protocol)
-    if protocol.in_module?
+  def can_reorder_step_in_protocol(protocol) # WIP
+    if protocol.in_module? # TBD
       my_module = protocol.my_module
       my_module.active? &&
         my_module.experiment.project.active? &&
         my_module.experiment.active? &&
         is_user_or_higher_of_project(my_module.experiment.project)
-    elsif protocol.in_repository?
+    elsif protocol.in_repository? # DONE
       protocol.in_repository_active? and can_edit_protocol(protocol)
     else
       false
@@ -892,28 +891,28 @@ module PermissionHelper
   #   - adding assets
   #   - adding tables
   # but right now we have 1 page to rule them all.
-  def can_edit_step_in_protocol(protocol)
-    if protocol.in_module?
+  def can_edit_step_in_protocol(protocol) # WIP
+    if protocol.in_module? # TBD
       my_module = protocol.my_module
       my_module.active? &&
       my_module.experiment.project.active? &&
       my_module.experiment.active? &&
       is_user_or_higher_of_project(my_module.experiment.project)
-    elsif protocol.in_repository?
+    elsif protocol.in_repository? # DONE
       protocol.in_repository_active? and can_edit_protocol(protocol)
     else
       false
     end
   end
 
-  def can_delete_step_in_protocol(protocol)
-    if protocol.in_module?
+  def can_delete_step_in_protocol(protocol) # WIP
+    if protocol.in_module? # TBD
       my_module = protocol.my_module
       my_module.active? &&
         my_module.experiment.project.active? &&
         my_module.experiment.active? &&
         is_owner_of_project(my_module.experiment.project)
-    elsif protocol.in_repository?
+    elsif protocol.in_repository? # DONE
       protocol.in_repository_active? and can_edit_protocol(protocol)
     else
       false
@@ -974,15 +973,15 @@ module PermissionHelper
     end
   end
 
-  def can_view_or_download_step_assets(protocol)
-    if protocol.in_module?
+  def can_view_or_download_step_assets(protocol) # WIP
+    if protocol.in_module? # TBD
       my_module = protocol.my_module
       my_module.active? &&
         my_module.experiment.project.active? &&
         my_module.experiment.active? &&
         (is_member_of_project(my_module.experiment.project) ||
           can_view_project(my_module.experiment.project))
-    elsif protocol.in_repository?
+    elsif protocol.in_repository? # DONE
       protocol.in_repository_active? and can_view_protocol(protocol)
     else
       false
@@ -1043,70 +1042,70 @@ module PermissionHelper
 
   # ---- REPOSITORIES PERMISSIONS ----
 
-  def can_view_team_repositories(team)
-    is_member_of_team(team)
-  end
+  # def can_view_team_repositories(team)
+  #   is_member_of_team(team)
+  # end
 
-  def can_create_repository(team)
-    is_admin_of_team(team) &&
-      team.repositories.count < Constants::REPOSITORIES_LIMIT
-  end
+  # def can_create_repository(team)
+  #   is_admin_of_team(team) &&
+  #     team.repositories.count < Constants::REPOSITORIES_LIMIT
+  # end
 
-  def can_view_repository(repository)
-    is_member_of_team(repository.team)
-  end
+  # def can_view_repository(repository)
+  #   is_member_of_team(repository.team)
+  # end
 
-  def can_edit_and_destroy_repository(repository)
-    is_admin_of_team(repository.team)
-  end
+  # def can_edit_and_destroy_repository(repository)
+  #   is_admin_of_team(repository.team)
+  # end
 
-  def can_copy_repository(repository)
-    can_create_repository(repository.team)
-  end
+  # def can_copy_repository(repository)
+  #   can_create_repository(repository.team)
+  # end
 
-  def can_create_columns_in_repository(repository)
-    is_normal_user_or_admin_of_team(repository.team)
-  end
+  # def can_create_columns_in_repository(repository)
+  #   is_normal_user_or_admin_of_team(repository.team)
+  # end
 
-  def can_delete_column_in_repository(column)
-    column.created_by == current_user ||
-      is_admin_of_team(column.repository.team)
-  end
+  # def can_delete_column_in_repository(column)
+  #   column.created_by == current_user ||
+  #     is_admin_of_team(column.repository.team)
+  # end
 
-  def can_edit_column_in_repository(column)
-    column.created_by == current_user ||
-      is_admin_of_team(column.repository.team)
-  end
+  # def can_edit_column_in_repository(column)
+  #   column.created_by == current_user ||
+  #     is_admin_of_team(column.repository.team)
+  # end
 
-  def can_create_repository_records(repository)
-    is_normal_user_or_admin_of_team(repository.team)
-  end
+  # def can_create_repository_records(repository)
+  #   is_normal_user_or_admin_of_team(repository.team)
+  # end
 
-  def can_import_repository_records(repository)
-    is_normal_user_or_admin_of_team(repository.team)
-  end
+  # def can_import_repository_records(repository)
+  #   is_normal_user_or_admin_of_team(repository.team)
+  # end
 
-  def can_edit_repository_record(record)
-    is_normal_user_or_admin_of_team(record.repository.team)
-  end
+  # def can_edit_repository_record(record)
+  #   is_normal_user_or_admin_of_team(record.repository.team)
+  # end
 
-  def can_delete_repository_records(repository)
-    is_normal_user_or_admin_of_team(repository.team)
-  end
+  # def can_delete_repository_records(repository)
+  #   is_normal_user_or_admin_of_team(repository.team)
+  # end
 
-  def can_delete_repository_record(record)
-    team = record.repository.team
-    is_admin_of_team(team) || (is_normal_user_of_team(team) &&
-                               record.created_by == current_user)
-  end
+  # def can_delete_repository_record(record)
+  #   team = record.repository.team
+  #   is_admin_of_team(team) || (is_normal_user_of_team(team) &&
+  #                              record.created_by == current_user)
+  # end
 
   def can_assign_repository_records(my_module, repository)
-    can_delete_repository_records(repository) &&
+    is_normal_user_or_admin_of_team(repository.team) &&
       is_technician_or_higher_of_project(my_module.experiment.project)
   end
 
   def can_unassign_repository_records(my_module, repository)
-    can_delete_repository_records(repository) &&
+    is_normal_user_or_admin_of_team(repository.team) &&
       is_technician_or_higher_of_project(my_module.experiment.project)
   end
 end

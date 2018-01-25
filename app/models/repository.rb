@@ -1,8 +1,11 @@
-class Repository < ActiveRecord::Base
+class Repository < ApplicationRecord
   include SearchableModel
 
-  belongs_to :team
-  belongs_to :created_by, foreign_key: :created_by_id, class_name: 'User'
+  belongs_to :team, optional: true
+  belongs_to :created_by,
+             foreign_key: :created_by_id,
+             class_name: 'User',
+             optional: true
   has_many :repository_columns
   has_many :repository_rows
   has_many :repository_table_states,
@@ -157,12 +160,7 @@ class Repository < ActiveRecord::Base
                 repository_column: columns[index]
               }
             )
-            cell = RepositoryCell.new(repository_row: record_row,
-                                      repository_column: columns[index],
-                                      value: cell_value)
-            cell.skip_on_import = true
-            cell_value.repository_cell = cell
-            unless cell.valid? && cell_value.valid?
+            unless cell_value.valid?
               errors = true
               raise ActiveRecord::Rollback
             end

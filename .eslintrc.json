@@ -1,30 +1,38 @@
 {
-  "extends": "google",
   "env": {
     "browser": true,
-    "jquery": true
+    "jquery": true,
+    "es6": true,
+    "node": true
+  },
+  "plugins": ["flowtype", "react", "prettier"],
+  "extends": ["airbnb", "prettier", "prettier/react"],
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "sourceType": "module",
+    "ecmaVersion": 2016,
+    "ecmaFeatures": {
+      "impliedStrict": true,
+      "jsx": true
+    }
   },
   "rules": {
+    "import/extensions": "off",
+    "import/no-unresolved": "off",
+    // Because of flow-typed & flow-bin
+    "import/no-extraneous-dependencies": ["error", { "devDependencies": true }],
+    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
     "spaced-comment": [
       "error",
       "always",
       {
-        "markers": [
-          "="
-        ]
+        "markers": ["="]
       }
     ],
     "lines-around-comment": [
       "warn",
       {
         "beforeLineComment": false
-      }
-    ],
-    "quotes": [
-      "error",
-      "single",
-      {
-        "avoidEscape": true
       }
     ]
   },

@@ -3,7 +3,7 @@
 <% if @users.size == 0 then %>
   <li><em><%= t 'projects.index.modal_manage_users.no_users' %></em></li>
 <% else %>
-  <% @users.each_index do |i| user = @users[i].user %>
+  <% @users.each_with_index do |user_proj, i| user = user_proj.user %>
   <li>
   <% if i > 0 %><hr><% end %>
     <div class="row">
@@ -14,15 +14,15 @@
 
       <div class="col-xs-10 col-sm-4">
         <span><%= user.full_name %></span>
-        <br><span class="text-muted"><%= t('user_projects.enums.role.'<<@users[i].role) %></span>
+        <br><span class="text-muted"><%= t('user_projects.enums.role.'<< user_proj.role) %></span>
       </div>
 
       <% unless user.id == current_user.id %>
       <div class="visible-xs">&nbsp;</div>
       <div class="col-xs-7 col-xs-offset-2 col-sm-4 col-sm-offset-0">
-        <%= form_for @up, url: project_user_project_path(@project, @users[i].id, method: :put, format: :json), format: :json, method: 'put', remote: true, html: { class: 'update-user-form' } do |f| %>
+        <%= form_for @up, url: project_user_project_path(@project, user_proj.id, method: :put, format: :json), format: :json, method: 'put', remote: true, html: { class: 'update-user-form' } do |f| %>
           <% # TODO replace with form helper %>
-          <input type="hidden" name="user_project[user_id]" value="<%= @users[i].id %>">
+          <input type="hidden" name="user_project[user_id]" value="<%= user_proj.id %>">
           <% # TODO replace hardcoded select html with rails helper %>
           <select class="selectpicker" name="user_project[role]">
             <option value=""><%= t('user_projects.edit.update_role') %></option>
@@ -34,7 +34,7 @@
         <% end %>
       </div>
       <div class="col-xs-3 col-sm-2">
-        <%= link_to project_user_project_path(@project, @users[i], format: :json), method: :delete, remote: true, class: 'btn btn-link remove-user-link' do %>
+        <%= link_to project_user_project_path(@project, user_proj, format: :json), method: :delete, remote: true, class: 'btn btn-link remove-user-link' do %>
         <span class="glyphicon glyphicon-remove"></span>
         <% end %>
       </div>

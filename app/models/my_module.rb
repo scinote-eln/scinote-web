@@ -1,4 +1,4 @@
-class MyModule < ActiveRecord::Base
+class MyModule < ApplicationRecord
   include ArchivableModel, SearchableModel
 
   enum state: Extends::TASKS_STATES
@@ -12,31 +12,57 @@ class MyModule < ActiveRecord::Base
   validates :description, length: { maximum: Constants::TEXT_MAX_LENGTH }
   validates :x, :y, :workflow_order, presence: true
   validates :experiment, presence: true
-  validates :my_module_group, presence: true, if: "!my_module_group_id.nil?"
+  validates :my_module_group, presence: true,
+            if: proc { |mm| !mm.my_module_group_id.nil? }
 
-  belongs_to :created_by, foreign_key: 'created_by_id', class_name: 'User'
-  belongs_to :last_modified_by, foreign_key: 'last_modified_by_id', class_name: 'User'
-  belongs_to :archived_by, foreign_key: 'archived_by_id', class_name: 'User'
-  belongs_to :restored_by, foreign_key: 'restored_by_id', class_name: 'User'
-  belongs_to :experiment, inverse_of: :my_modules
-  belongs_to :my_module_group, inverse_of: :my_modules
-  has_many :results, inverse_of: :my_module, :dependent => :destroy
-  has_many :my_module_tags, inverse_of: :my_module, :dependent => :destroy
+  belongs_to :created_by,
+             foreign_key: 'created_by_id',
+             class_name: 'User',
+             optional: true
+  belongs_to :last_modified_by,
+             foreign_key: 'last_modified_by_id',
+             class_name: 'User',
+             optional: true
+  belongs_to :archived_by,
+             foreign_key: 'archived_by_id',
+             class_name: 'User',
+             optional: true
+  belongs_to :restored_by,
+             foreign_key: 'restored_by_id',
+             class_name: 'User',
+             optional: true
+  belongs_to :experiment, inverse_of: :my_modules, optional: true
+  belongs_to :my_module_group, inverse_of: :my_modules, optional: true
+  has_many :results, inverse_of: :my_module, dependent: :destroy
+  has_many :my_module_tags, inverse_of: :my_module, dependent: :destroy
   has_many :tags, through: :my_module_tags
   has_many :task_comments, foreign_key: :associated_id, dependent: :destroy
-  has_many :inputs, :class_name => 'Connection', :foreign_key => "input_id", inverse_of: :to, :dependent => :destroy
-  has_many :outputs, :class_name => 'Connection', :foreign_key => "output_id", inverse_of: :from, :dependent => :destroy
+  has_many :inputs,
+           class_name: 'Connection',
+           foreign_key: 'input_id',
+           inverse_of: :to,
+           dependent: :destroy
+  has_many :outputs,
+           class_name: 'Connection',
+           foreign_key: 'output_id',
+           inverse_of: :from,
+           dependent: :destroy
   has_many :my_modules, through: :outputs, source: :to
-  has_many :my_module_antecessors, through: :inputs, source: :from, class_name: 'MyModule'
-  has_many :sample_my_modules, inverse_of: :my_module, :dependent => :destroy
+  has_many :my_module_antecessors,
+           through: :inputs,
+           source: :from,
+           class_name: 'MyModule'
+  has_many :sample_my_modules,
+           inverse_of: :my_module,
+           dependent: :destroy
   has_many :samples, through: :sample_my_modules
   has_many :my_module_repository_rows,
            inverse_of: :my_module, dependent: :destroy
   has_many :repository_rows, through: :my_module_repository_rows
-  has_many :user_my_modules, inverse_of: :my_module, :dependent => :destroy
+  has_many :user_my_modules, inverse_of: :my_module, dependent: :destroy
   has_many :users, through: :user_my_modules
   has_many :activities, inverse_of: :my_module
-  has_many :report_elements, inverse_of: :my_module, :dependent => :destroy
+  has_many :report_elements, inverse_of: :my_module, dependent: :destroy
   has_many :protocols, inverse_of: :my_module, dependent: :destroy
 
   scope :is_archived, ->(is_archived) { where('archived = ?', is_archived) }
@@ -110,10 +136,10 @@ class MyModule < ActiveRecord::Base
     MyModule.transaction do
       archived = super
       # Unassociate all samples from module.
-      archived = SampleMyModule.destroy_all(:my_module => self) if archived
+      archived = SampleMyModule.where(my_module: self).destroy_all if archived
       # Remove all connection between modules.
-      archived = Connection.delete_all(:input_id => id) if archived
-      archived = Connection.delete_all(:output_id => id) if archived
+      archived = Connection.where(input_id: id).delete_all if archived
+      archived = Connection.where(output_id: id).delete_all if archived
       unless archived
         raise ActiveRecord::Rollback
       end
@@ -258,7 +284,7 @@ class MyModule < ActiveRecord::Base
     until modules.empty?
       my_module = modules.shift
       final << my_module unless final.include?(my_module)
-      modules.push(*my_module.my_modules.flatten)
+      modules.push(*my_module.my_modules)
     end
     final
   end
@@ -270,7 +296,7 @@ class MyModule < ActiveRecord::Base
     until modules.empty?
       my_module = modules.shift
       final << my_module unless final.include?(my_module)
-      modules.push(*my_module.my_module_antecessors.flatten)
+      modules.push(*my_module.my_module_antecessors)
     end
     final
   end

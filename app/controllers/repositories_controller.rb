@@ -8,10 +8,8 @@ class RepositoriesController < ApplicationController
   before_action :check_view_permissions, only: :export_repository
   before_action :check_edit_and_destroy_permissions, only:
     %i(destroy destroy_modal rename_modal update)
-  before_action :check_copy_permissions, only:
-    %i(copy_modal copy)
   before_action :check_create_permissions, only:
-    %i(create_new_modal create)
+    %i(create_new_modal create copy_modal copy)
 
   def index
     render('repositories/index')
@@ -167,7 +165,7 @@ class RepositoriesController < ApplicationController
 
   # AJAX actions
   def repository_table_index
-    if @repository.nil? || !can_view_repository(@repository)
+    if @repository.nil? || !can_read_team?(@repository.team)
       render_403
     else
       respond_to do |format|
@@ -183,15 +181,15 @@ class RepositoriesController < ApplicationController
   end
 
   def parse_sheet
-    repository = current_team.repositories.find_by_id(params[:id])
+    repository = current_team.repositories.find_by_id(import_params[:id])
 
-    unless params[:file]
+    unless import_params[:file]
       repository_response(t('teams.parse_sheet.errors.no_file_selected'))
       return
     end
     begin
       parsed_file = ImportRepository::ParseRepository.new(
-        file: params[:file],
+        file: import_params[:file],
         repository: repository,
         session: session
       )
@@ -231,7 +229,7 @@ class RepositoriesController < ApplicationController
     respond_to do |format|
       format.json do
         # Check if there exist mapping for repository record (it's mandatory)
-        if params[:mappings].value?('-1')
+        if import_params[:mappings].value?('-1')
           import_records = repostiory_import_actions
           status = import_records.import!
 
@@ -267,16 +265,16 @@ class RepositoriesController < ApplicationController
     else
       flash[:alert] = t('zip_export.export_error')
     end
-    redirect_to :back
+    redirect_back(fallback_location: root_path)
   end
 
   private
 
   def repostiory_import_actions
     ImportRepository::ImportRecords.new(
-      temp_file: TempFile.find_by_id(params[:file_id]),
-      repository: current_team.repositories.find_by_id(params[:id]),
-      mappings: params[:mappings],
+      temp_file: TempFile.find_by_id(import_params[:file_id]),
+      repository: current_team.repositories.find_by_id(import_params[:id]),
+      mappings: import_params[:mappings],
       session: session,
       user: current_user
     )
@@ -299,34 +297,35 @@ class RepositoriesController < ApplicationController
   end
 
   def check_view_all_permissions
-    render_403 unless can_view_team_repositories(@team)
+    render_403 unless can_read_team?(@team)
   end
 
   def check_view_permissions
-    render_403 unless can_view_repository(@repository)
+    render_403 unless can_read_team?(@repository.team)
   end
 
   def check_create_permissions
-    render_403 unless can_create_repository(@team)
+    render_403 unless can_create_repositories?(@team) ||
+                      @team.repositories.count < Constants::REPOSITORIES_LIMIT
   end
 
   def check_edit_and_destroy_permissions
-    render_403 unless can_edit_and_destroy_repository(@repository)
-  end
-
-  def check_copy_permissions
-    render_403 unless can_copy_repository(@repository)
+    render_403 unless can_update_or_delete_repository?(@repository)
   end
 
   def repository_params
     params.require(:repository).permit(:name)
   end
 
+  def import_params
+    params.permit(:id, :file, :file_id, mappings: {}).to_h
+  end
+
   def repository_response(message)
     respond_to do |format|
       format.html do
         flash[:alert] = message
-        redirect_to :back
+        redirect_back(fallback_location: root_path)
       end
       format.json do
         render json: { message: message },

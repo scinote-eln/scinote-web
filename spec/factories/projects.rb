@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :project do
     created_by { User.first || association(:project_user) }
     team { Team.first || association(:project_team) }

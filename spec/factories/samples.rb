@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :sample do
     name 'Sample'
     user { User.first || create(:user) }

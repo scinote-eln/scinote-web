@@ -1,5 +1,6 @@
-class User < ActiveRecord::Base
-  include SearchableModel
+class User < ApplicationRecord
+  include SearchableModel, SettingsModel
+  include User::TeamRoles, User::ProjectRoles
 
   acts_as_token_authenticatable
   devise :invitable, :confirmable, :database_authenticatable, :registerable,
@@ -33,9 +34,22 @@ class User < ActiveRecord::Base
 
   validates_attachment :avatar,
     :content_type => { :content_type => ["image/jpeg", "image/png"] },
-    size: { less_than: Constants::AVATAR_MAX_SIZE_MB.megabytes }
-  validates :time_zone, presence: true
+    size: { less_than: Constants::AVATAR_MAX_SIZE_MB.megabyte,
+            message: I18n.t('client_api.user.avatar_too_big') }
   validate :time_zone_check
+
+  store_accessor :settings, :time_zone, :notifications_settings
+
+  default_settings(
+    time_zone: 'UTC',
+    notifications_settings: {
+      assignments: true,
+      assignments_email: false,
+      recent: true,
+      recent_email: false,
+      system_message_email: false
+    }
+  )
 
   # Relations
   has_many :user_identities, inverse_of: :user
@@ -186,6 +200,7 @@ class User < ActiveRecord::Base
   has_many :user_notifications, inverse_of: :user
   has_many :notifications, through: :user_notifications
   has_many :zip_exports, inverse_of: :user, dependent: :destroy
+  has_many :datatables_teams, class_name: '::Views::Datatables::DatatablesTeam'
 
   # If other errors besides parameter "avatar" exist,
   # they will propagate to "avatar" also, so remove them
@@ -199,7 +214,11 @@ class User < ActiveRecord::Base
   end
 
   def name=(name)
-    full_name = name
+    self.full_name = name
+  end
+
+  def current_team
+    Team.find_by_id(self.current_team_id)
   end
 
   def self.from_omniauth(auth)
@@ -258,7 +277,7 @@ class User < ActiveRecord::Base
         end
       end
       errors.clear
-      errors.set(:avatar, messages)
+      errors.add(:avatar, messages.join(','))
     end
   end
 
@@ -318,24 +337,24 @@ class User < ActiveRecord::Base
   # Finds all activities of user that is assigned to project. If user
   # is not an owner of the project, user must be also assigned to
   # module.
-  def last_activities(last_activity_id = nil,
-                      per_page = Constants::ACTIVITY_AND_NOTIF_SEARCH_LIMIT)
-    last_activity_id = Constants::INFINITY if last_activity_id < 1
+  def last_activities
     Activity
       .joins(project: :user_projects)
-      .joins("LEFT OUTER JOIN my_modules ON activities.my_module_id = my_modules.id")
-      .joins("LEFT OUTER JOIN user_my_modules ON my_modules.id = user_my_modules.my_module_id")
-      .where('activities.id < ?', last_activity_id)
+      .joins(
+        'LEFT OUTER JOIN my_modules ON activities.my_module_id = my_modules.id'
+      )
+      .joins(
+        'LEFT OUTER JOIN user_my_modules ON my_modules.id = ' \
+        'user_my_modules.my_module_id'
+      )
       .where(user_projects: { user_id: self })
       .where(
-        'activities.my_module_id IS NULL OR ' +
-        'user_projects.role = 0 OR ' +
+        'activities.my_module_id IS NULL OR ' \
+        'user_projects.role = 0 OR ' \
         'user_my_modules.user_id = ?',
         id
       )
       .order(created_at: :desc)
-      .limit(per_page)
-      .uniq
   end
 
   def self.find_by_valid_wopi_token(token)
@@ -390,6 +409,28 @@ class User < ActiveRecord::Base
     statistics
   end
 
+  # json friendly attributes
+  NOTIFICATIONS_TYPES = %w(assignments_notification recent_notification
+                           assignments_email_notification
+                           recent_email_notification
+                           system_message_email_notification)
+  # declare notifications getters
+  NOTIFICATIONS_TYPES.each do |name|
+    define_method(name) do
+      attr_name = name.gsub('_notification', '')
+      notifications_settings.fetch(attr_name.to_sym)
+    end
+  end
+
+  # declare notifications setters
+  NOTIFICATIONS_TYPES.each do |name|
+    define_method("#{name}=") do |value|
+      attr_name = name.gsub('_notification', '').to_sym
+      notifications_settings[attr_name] = value
+      save
+    end
+  end
+
   protected
 
   def confirmation_required?
@@ -397,7 +438,8 @@ class User < ActiveRecord::Base
   end
 
   def time_zone_check
-    if time_zone.nil? or ActiveSupport::TimeZone.new(time_zone).nil?
+    if time_zone.nil? ||
+       ActiveSupport::TimeZone.new(time_zone).nil?
       errors.add(:time_zone)
     end
   end

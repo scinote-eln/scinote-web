@@ -2,15 +2,15 @@
 require 'spec_helper'
 require 'shoulda-matchers'
 require 'database_cleaner'
+require 'devise'
+require_relative 'support/controller_macros'
 ENV['RAILS_ENV'] = 'test'
 require File.expand_path('../../config/environment', __FILE__)
 # Prevent database truncation if the environment is production
 abort('The Rails environment is running in production mode!') if Rails.env.production?
 require 'rspec/rails'
 # Add additional requires below this line. Rails is not loaded until this point!
-
 Dir[Rails.root.join('spec/support/**/*.rb')].each { |f| require f }
-
 # Requires supporting ruby files with custom matchers and macros, etc, in
 # spec/support/ and its subdirectories. Files matching `spec/**/*_spec.rb` are
 # run as spec files by default. This means that files in spec/support that end
@@ -78,10 +78,12 @@ RSpec.configure do |config|
   # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
 
-  # includes FactoryGirl in rspec
-  config.include FactoryGirl::Syntax::Methods
-  config.include Devise::TestHelpers, type: :controller
+  # includes FactoryBot in rspec
+  config.include FactoryBot::Syntax::Methods
+  # Devise
+  config.include Devise::Test::ControllerHelpers, type: :controller
   config.include ApiHelper, type: :controller
+  config.extend ControllerMacros, type: :controller
 end
 
 # config shoulda matchers to work with rspec

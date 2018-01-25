@@ -1,4 +1,4 @@
-class Step < ActiveRecord::Base
+class Step < ApplicationRecord
   include SearchableModel
 
   auto_strip_attributes :name, :description, nullify: false
@@ -9,11 +9,16 @@ class Step < ActiveRecord::Base
   validates :position, presence: true
   validates :completed, inclusion: { in: [true, false] }
   validates :user, :protocol, presence: true
-  validates :completed_on, presence: true, if: "completed?"
+  validates :completed_on, presence: true, if: proc { |s| s.completed? }
 
-  belongs_to :user, inverse_of: :steps
-  belongs_to :last_modified_by, foreign_key: 'last_modified_by_id', class_name: 'User'
-  belongs_to :protocol, inverse_of: :steps
+  belongs_to :user, inverse_of: :steps, optional: true
+  belongs_to :last_modified_by,
+             foreign_key: 'last_modified_by_id',
+             class_name: 'User',
+             optional: true
+  belongs_to :protocol,
+             inverse_of: :steps,
+             optional: true
   has_many :checklists, inverse_of: :step,
     dependent: :destroy
   has_many :step_comments, foreign_key: :associated_id, dependent: :destroy

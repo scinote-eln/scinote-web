@@ -1,27 +1,28 @@
 source 'http://rubygems.org'
 
-ruby '2.3.3'
+ruby '2.4.1'
 
-gem 'rails', '4.2.10'
+gem 'rails', '5.1.1'
+gem 'webpacker', '~> 2.0'
 gem 'figaro'
-gem 'pg'
-gem 'devise', '3.5.6'
+gem 'pg', '~> 0.18'
+gem 'devise', '~> 4.3.0'
 gem 'devise_invitable'
-gem 'simple_token_authentication', '~> 1.0' # Token authentication for Devise
+gem 'simple_token_authentication', '~> 1.15.1' # Token authentication for Devise
 gem 'bootstrap-sass', '~> 3.3.5'
-gem 'sass-rails', '~> 5.0'
+gem 'sass-rails', '~> 5.0.6'
 gem 'bootstrap_form'
 gem 'yomu'
-gem 'font-awesome-rails', '~> 4.6'
+gem 'font-awesome-rails', '~> 4.7.0.2'
 gem 'recaptcha', require: 'recaptcha/rails'
 gem 'sanitize', '~> 4.4'
 gem 'omniauth'
 
 # Gems for API implementation
-gem 'jwt'
+gem 'jwt', '~> 1.5'
 
 # JS datetime library, requirement of datetime picker
-gem 'momentjs-rails', '>= 2.9.0'
+gem 'momentjs-rails', '~> 2.17.1'
 # JS datetime picker
 gem 'bootstrap3-datetimepicker-rails', '~> 4.15.35'
 # Select elements for Bootstrap
@@ -30,8 +31,9 @@ gem 'uglifier', '>= 1.3.0'
 # jQuery & plugins
 gem 'jquery-turbolinks'
 gem 'jquery-rails'
-gem 'jquery-ui-rails', '~> 5.0'
-gem 'jquery-scrollto-rails'
+gem 'jquery-ui-rails'
+gem 'jquery-scrollto-rails',
+    git: 'https://github.com/biosistemika/jquery-scrollto-rails'
 gem 'hammerjs-rails'
 gem 'introjs-rails' # Create quick tutorials
 gem 'js_cookie_rails' # Simple JS API for cookies
@@ -51,7 +53,7 @@ gem 'commit_param_routing' # Enables different submit actions in the same form t
 gem 'kaminari'
 gem 'i18n-js', '~> 3.0' # Localization in javascript files
 gem 'roo', '~> 2.7.1' # Spreadsheet parser
-gem 'wicked_pdf', '~> 1.0.6'
+gem 'wicked_pdf', '~> 1.1.0'
 gem 'silencer' # Silence certain Rails logs
 gem 'wkhtmltopdf-heroku'
 gem 'remotipart', '~> 1.2' # Async file uploads
@@ -65,18 +67,30 @@ gem 'delayed_paperclip',
     git: 'https://github.com/jrgifford/delayed_paperclip.git',
     ref: 'fcf574c'
 gem 'rubyzip'
+gem 'jbuilder' # JSON structures via a Builder-style DSL
 gem 'activerecord-import'
+gem 'scenic', '~> 1.4'
 
-gem 'paperclip', '~> 4.3' # File attachment, image attachment library
+gem 'paperclip', '~> 5.1' # File attachment, image attachment library
 gem 'aws-sdk', '~> 2'
 gem 'aws-sdk-v1'
+
 gem 'delayed_job_active_record'
-gem 'devise-async'
+gem 'devise-async',
+  git: 'https://github.com/mhfs/devise-async.git',
+  branch: 'devise-4.x'
+
 gem 'ruby-graphviz', '~> 1.2' # Graphviz for rails
-gem 'tinymce-rails', '~> 4.5.7' # Rich text editor
+gem 'tinymce-rails', '~> 4.6.4' # Rich text editor
 
 gem 'base62' # Used for smart annotations
 gem 'newrelic_rpm'
+gem 'devise_security_extension',
+    git: 'https://github.com/phatworx/devise_security_extension.git',
+    ref: 'b2ee978'
+
+# Permission helper Gem
+gem 'canaid', git: 'https://github.com/biosistemika/canaid', branch: 'master'
 
 group :development, :test do
   gem 'listen', '~> 3.0'
@@ -84,14 +98,28 @@ group :development, :test do
   gem 'pry'
   gem 'pry-byebug'
   gem 'pry-rails'
-  gem 'factory_girl_rails'
+  gem 'factory_bot_rails'
+  gem 'rails-controller-testing'
   gem 'rspec-rails'
   gem 'better_errors'
   gem 'binding_of_caller'
   gem 'awesome_print'
-  gem 'rubocop', require: false
+  gem 'rubocop', '= 0.51.0', require: false
   gem 'scss_lint', require: false
   gem 'starscope', require: false
+  gem 'bullet'
+end
+
+group :test do
+  gem 'shoulda-matchers'
+  gem 'cucumber-rails', '~> 1.5', require: false
+  gem 'database_cleaner'
+  gem 'capybara'
+  gem 'capybara-email'
+  gem 'poltergeist'
+  gem 'phantomjs', require: 'phantomjs/poltergeist'
+  gem 'simplecov', require: false
+  gem 'json_matchers'
 end
 
 group :production do
@@ -100,17 +128,5 @@ group :production do
   gem 'whacamole'
 end
 
-group :test do
-  gem 'minitest-reporters', '~> 1.1'
-  gem 'shoulda-context'
-  gem 'shoulda-matchers'
-  gem 'cucumber-rails', require: false
-  gem 'database_cleaner'
-  gem 'capybara'
-  gem 'poltergeist'
-  gem 'phantomjs', :require => 'phantomjs/poltergeist'
-  gem 'simplecov', require: false
-end
-
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
-gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
+gem 'tzinfo-data', platforms: %i(mingw mswin x64_mingw jruby)

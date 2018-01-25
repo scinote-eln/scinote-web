@@ -1,4 +1,4 @@
-class CreateStepComments < ActiveRecord::Migration
+class CreateStepComments < ActiveRecord::Migration[4.2]
   def change
     create_table :step_comments do |t|
       t.integer :step_id, null: false

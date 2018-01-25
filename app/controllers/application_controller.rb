@@ -5,13 +5,22 @@ class ApplicationController < ActionController::Base
   acts_as_token_authentication_handler_for User
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
-  protect_from_forgery with: :exception
+  protect_from_forgery with: :exception, prepend: true
   before_action :authenticate_user!
   helper_method :current_team
   before_action :generate_intro_tutorial, if: :is_current_page_root?
   before_action :update_current_team, if: :user_signed_in?
   around_action :set_time_zone, if: :current_user
   layout 'main'
+
+  def respond_422(message = t('client_api.permission_error'))
+    respond_to do |format|
+      format.json do
+        render json: { message: message },
+               status: 422
+      end
+    end
+  end
 
   def forbidden
     render_403
@@ -87,6 +96,6 @@ class ApplicationController < ActionController::Base
   end
 
   def set_time_zone(&block)
-    Time.use_zone(current_user.time_zone, &block)
+    Time.use_zone(current_user.settings[:time_zone], &block)
   end
 end

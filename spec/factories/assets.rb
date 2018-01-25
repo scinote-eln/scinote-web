@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :asset do
     association :created_by, factory: :project_user
     association :team, factory: :team

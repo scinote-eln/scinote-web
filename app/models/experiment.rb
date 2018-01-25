@@ -1,13 +1,22 @@
-class Experiment < ActiveRecord::Base
+class Experiment < ApplicationRecord
   include ArchivableModel
   include SearchableModel
 
-  belongs_to :project, inverse_of: :experiments
-  belongs_to :created_by, foreign_key: :created_by_id, class_name: 'User'
-  belongs_to :last_modified_by, foreign_key: :last_modified_by_id,
-                                class_name: 'User'
-  belongs_to :archived_by, foreign_key: :archived_by_id, class_name: 'User'
-  belongs_to :restored_by, foreign_key: :restored_by_id, class_name: 'User'
+  belongs_to :project, inverse_of: :experiments, optional: true
+  belongs_to :created_by,
+             foreign_key: :created_by_id,
+             class_name: 'User',
+             optional: true
+  belongs_to :last_modified_by,
+             foreign_key: :last_modified_by_id,
+             class_name: 'User',
+             optional: true
+  belongs_to :archived_by,
+             foreign_key: :archived_by_id, class_name: 'User', optional: true
+  belongs_to :restored_by,
+             foreign_key: :restored_by_id,
+             class_name: 'User',
+             optional: true
 
   has_many :my_modules, inverse_of: :experiment, dependent: :destroy
   has_many :my_module_groups, inverse_of: :experiment, dependent: :destroy
@@ -591,7 +600,7 @@ class Experiment < ActiveRecord::Base
     end
 
     # There are no callbacks in Connection, so delete_all should be safe
-    Connection.delete_all(output_id: my_modules)
+    Connection.where(output_id: my_modules).delete_all
 
     # Add new connections
     filtered_edges = dg.edges.collect { |e| [e.source, e.target] }
@@ -723,7 +732,7 @@ class Experiment < ActiveRecord::Base
     end
 
     # Remove any existing module groups from modules
-    unless MyModuleGroup.destroy_all(id: group_ids.to_a)
+    unless MyModuleGroup.where(id: group_ids.to_a).destroy_all
       raise ActiveRecord::ActiveRecordError
     end
 

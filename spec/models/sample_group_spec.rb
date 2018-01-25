@@ -19,10 +19,15 @@ describe SampleGroup, type: :model do
     it { should belong_to :team }
     it { should belong_to(:created_by).class_name('User') }
     it { should belong_to(:last_modified_by).class_name('User') }
-    it { should have_many :samples }
+
+    it 'have many samples' do
+      table = SampleGroup.reflect_on_association(:samples)
+      expect(table.macro).to eq(:has_many)
+    end
   end
 
   describe 'Should be a valid object' do
+    let!(:team_one) { create :team, name: 'My team' }
     it { should validate_presence_of :name }
     it { should validate_presence_of :color }
     it { should validate_presence_of :team }
@@ -33,9 +38,8 @@ describe SampleGroup, type: :model do
       should validate_length_of(:color).is_at_most(Constants::COLOR_MAX_LENGTH)
     end
     it 'should have uniq name scoped to team' do
-      create :sample_group, name: 'My Group'
-      new_group = build :sample_group, name: 'My Group'
-
+      create :sample_group, name: 'My Group', team: team_one
+      new_group = build :sample_group, name: 'My Group', team: team_one
       expect(new_group).to_not be_valid
     end
   end

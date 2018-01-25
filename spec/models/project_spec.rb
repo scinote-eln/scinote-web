@@ -45,20 +45,15 @@ describe Project, type: :model do
     it { should validate_presence_of :visibility }
     it { should validate_presence_of :team }
     it do
-      should validate_length_of(:name)
-              .is_at_least(Constants::NAME_MIN_LENGTH)
-              .is_at_most(Constants::NAME_MAX_LENGTH)
+      should validate_length_of(:name).is_at_least(Constants::NAME_MIN_LENGTH)
+        .is_at_most(Constants::NAME_MAX_LENGTH)
     end
 
     it 'should have a unique name scoped to team' do
-      FactoryGirl.create :project,
-                         created_by: user,
-                         last_modified_by: user,
-                         team: team
-      project_two = FactoryGirl.build :project,
-                                      created_by: user,
-                                      last_modified_by: user,
-                                      team: team
+      create :project, created_by: user, last_modified_by: user, team: team
+      project_two = build :project, created_by: user,
+                                    last_modified_by: user,
+                                    team: team
       expect(project_two).to_not be_valid
     end
   end

@@ -1,4 +1,4 @@
-class Protocol < ActiveRecord::Base
+class Protocol < ApplicationRecord
   include SearchableModel
   include RenamingUtil
   extend TinyMceHelper
@@ -86,18 +86,24 @@ class Protocol < ActiveRecord::Base
   belongs_to :added_by,
              foreign_key: 'added_by_id',
              class_name: 'User',
-             inverse_of: :added_protocols
-  belongs_to :my_module, inverse_of: :protocols
-  belongs_to :team, inverse_of: :protocols
-  belongs_to :parent, foreign_key: 'parent_id', class_name: 'Protocol'
+             inverse_of: :added_protocols,
+             optional: true
+  belongs_to :my_module,
+             inverse_of: :protocols,
+             optional: true
+  belongs_to :team, inverse_of: :protocols, optional: true
+  belongs_to :parent,
+             foreign_key: 'parent_id',
+             class_name: 'Protocol',
+             optional: true
   belongs_to :archived_by,
              foreign_key: 'archived_by_id',
              class_name: 'User',
-             inverse_of: :archived_protocols
+             inverse_of: :archived_protocols, optional: true
   belongs_to :restored_by,
              foreign_key: 'restored_by_id',
              class_name: 'User',
-             inverse_of: :restored_protocols
+             inverse_of: :restored_protocols, optional: true
   has_many :linked_children,
            class_name: 'Protocol',
            foreign_key: 'parent_id'
@@ -682,9 +688,9 @@ class Protocol < ActiveRecord::Base
 
   def update_linked_children
     # Increment/decrement the parent's nr of linked children
-    if self.parent_id_changed?
-      if self.parent_id_was != nil
-        p = Protocol.find_by_id(self.parent_id_was)
+    if saved_change_to_parent_id?
+      unless parent_id_before_last_save.nil?
+        p = Protocol.find_by_id(parent_id_before_last_save)
         p.record_timestamps = false
         p.decrement!(:nr_of_linked_children)
       end

@@ -1,0 +1,8 @@
+sudo: required
+install: true
+services:
+  - docker
+before_script:
+  - make docker
+script:
+  - make tests-ci

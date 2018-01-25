@@ -27,9 +27,9 @@ describe Api::ApiController, type: :controller do
 
     context 'When valid request' do
       before do
-        post :authenticate, email: user.email,
-                            password: user.password,
-                            grant_type: 'password'
+        post :authenticate, params: { email: user.email,
+                                      password: user.password,
+                                      grant_type: 'password' }
       end
 
       it 'Returns HTTP success' do
@@ -47,17 +47,17 @@ describe Api::ApiController, type: :controller do
 
     context 'When invalid password in request' do
       it 'Returns HTTP error' do
-        post :authenticate, email: user.email,
-                            password: 'wrong_password',
-                            grant_type: 'password'
+        post :authenticate, params: { email: user.email,
+                                      password: 'wrong_password',
+                                      grant_type: 'password' }
         expect(response).to have_http_status(400)
       end
     end
 
     context 'When no grant_type in request' do
       it 'Returns HTTP error' do
-        post :authenticate, email: user.email,
-                            password: user.password
+        post :authenticate, params: { email: user.email,
+                                      password: user.password }
         expect(response).to have_http_status(400)
       end
     end

@@ -1,4 +1,4 @@
-class AddDefaultColumnsToSamples < ActiveRecord::Migration
+class AddDefaultColumnsToSamples < ActiveRecord::Migration[4.2]
   def change
     add_column :samples, :sample_group_id, :integer
     add_column :samples, :sample_type_id, :integer

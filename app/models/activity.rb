@@ -1,4 +1,4 @@
-class Activity < ActiveRecord::Base
+class Activity < ApplicationRecord
   include InputSanitizeHelper
 
   after_create :generate_notification
@@ -64,11 +64,10 @@ class Activity < ActiveRecord::Base
   ]
 
   validates :type_of, presence: true
-  validates :project, :user, presence: true
 
   belongs_to :project, inverse_of: :activities
-  belongs_to :experiment, inverse_of: :activities
-  belongs_to :my_module, inverse_of: :activities
+  belongs_to :experiment, inverse_of: :activities, optional: true
+  belongs_to :my_module, inverse_of: :activities, optional: true
   belongs_to :user, inverse_of: :activities
 
   private

@@ -1,0 +1,69 @@
+@import "constants";
+@import "animations";
+
+body {
+  background-color: $color-concrete;
+  color: $color-emperor;
+  font-family: "Open Sans", Arial, Helvetica, sans-serif;
+  font-size: 13px;
+}
+
+.label-primary {
+  background-color: $color-theme-primary;
+}
+
+.btn {
+  border-radius: 1.5em;
+}
+
+.btn-primary {
+  background-color: $color-theme-secondary;
+  border-color: darken($color-theme-secondary, 5%);
+
+  &.active,
+  &.focus,
+  &.active.focus {
+    background-color: darken($color-theme-secondary, 20%);
+    border-color: darken($color-theme-secondary, 25%);
+
+    &:hover {
+      background-color: darken($color-theme-secondary, 25%);
+      border-color: darken($color-theme-secondary, 30%);
+    }
+  }
+
+  &:active,
+  &:focus,
+  &:active:focus,
+  &:active:hover,
+  &:focus:hover,
+  &:active:focus:hover {
+    background-color: darken($color-theme-secondary, 20%);
+    border-color: darken($color-theme-secondary, 25%);
+  }
+
+  &:hover {
+    background-color: darken($color-theme-secondary, 5%);
+    border-color: darken($color-theme-secondary, 10%);
+  }
+}
+
+// tags input
+.react-tagsinput--focused {
+  border-color: $color-theme-primary;
+}
+
+.react-tagsinput-input {
+  width: 100%;
+}
+
+.react-tagsinput-tag {
+  background-color: $color-theme-primary;
+  border: 0;
+  color: $color-white;
+  font-weight: bold;
+}
+
+.react-tagsinput-remove {
+  color: $color-white;
+}

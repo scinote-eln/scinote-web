@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :repository do
     name 'My Repository'
     created_by { User.first || create(:user) }

@@ -1,5 +1,17 @@
 Rails.application.configure do
+
   # Settings specified here will take precedence over those in config/application.rb.
+  config.after_initialize do
+    Bullet.enable        = true
+    Bullet.bullet_logger = true
+    Bullet.raise         = true # raise an error if n+1 query occurs
+  end
+
+  # Configure public file server for tests with Cache-Control for performance.
+  config.public_file_server.enabled = true
+  config.public_file_server.headers = {
+    'Cache-Control' => "public, max-age=#{1.hour.seconds.to_i}"
+  }
 
   # Enable this to be able to output stuff to STDOUT during tests
   # via Rails::logger.info "..."
@@ -84,4 +96,7 @@ Rails.application.configure do
 
   # Enable user registrations
   config.x.enable_user_registration = true
+
+  # prevents compile assets
+  config.assets.compile = false
 end
