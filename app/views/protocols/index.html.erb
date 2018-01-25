@@ -54,9 +54,9 @@
 
           <ul class="dropdown-menu">
             <li>
-              <a class="btn-open-file" <%= can_create_protocols_in_repository?(@current_team) ? 'data-action="import"' : 'disabled="disabled"' %>>
-                <span class="glyphicon glyphicon-import"></span>
-                <span class="hidden-xs">&nbsp;<%= t("protocols.index.import") %></span>
+              <a class="btn-link-alt btn-default-link btn-open-file" <%= can_create_protocols_in_repository?(@current_team) ? 'data-action="import"' : 'disabled="disabled"' %>>
+                <span class="glyphicon glyphicon-file"></span>
+                <span class="hidden-xs"><%= t("protocols.index.import_alt") %></span>
                 <input type="file" value="" accept=".eln" data-role="import-file-input"
                 data-team-id="<%= @current_team.id %>"
                 data-type="<%= @type %>" data-import-url="<%= import_protocols_path %>"
