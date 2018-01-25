@@ -181,38 +181,26 @@ class UserProjectsController < ApplicationController
   end
 
   def check_view_tab_permissions
-    unless can_read_project?(@project)
-      render_403
-    end
+    render_403 unless can_read_project?(@project)
   end
 
   def check_view_permissions
-    unless can_update_project?(@project)
-      render_403
-    end
+    render_403 unless can_update_project?(@project)
   end
 
   def check_create_permissions
-    unless can_update_project?(@project)
-      render_403
-    end
+    render_403 unless can_update_project?(@project)
   end
 
   def check_update_permisisons
-    # TODO improve permissions for changing your role on project
-    unless params[:id] != current_user.id
-      render_403
-    end
+    # TODO: improve permissions for changing your role on project
+    render_403 unless params[:id] != current_user.id
   end
 
   def check_delete_permisisons
-    # TODO improve permissions for remove yourself from project
-    unless params[:id] != current_user.id
-      render_403
-    end
-    unless can_update_project?(@project)
-      render_403
-    end
+    # TODO: improve permissions for remove yourself from project
+    render_403 unless params[:id] != current_user.id
+    render_403 unless can_update_project?(@project)
   end
 
   def init_gui

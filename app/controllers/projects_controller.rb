@@ -119,8 +119,8 @@ class ProjectsController < ApplicationController
 
     # Check archive permissions if archiving/restoring
     if project_params.include? :archive
-      if (project_params[:archive] and !can_update_project?(@project)) or
-        (!project_params[:archive] and !can_restore_project?(@project))
+      if (project_params[:archive] && !can_update_project?(@project)) ||
+         (!project_params[:archive] && !can_restore_project?(@project))
         return_error = true
         is_archive = URI(request.referer).path == projects_archive_path ? "restore" : "archive"
         flash_error = t("projects.#{is_archive}.error_flash", name: @project.name)
@@ -318,9 +318,7 @@ class ProjectsController < ApplicationController
   end
 
   def check_view_permissions
-    unless can_read_project?(@project)
-      render_403
-    end
+    render_403 unless can_read_project?(@project)
   end
 
   def check_create_permissions
@@ -328,15 +326,11 @@ class ProjectsController < ApplicationController
   end
 
   def check_view_notifications_permissions
-    unless can_read_project?(@project)
-      render_403
-    end
+    render_403 unless can_read_project?(@project)
   end
 
   def check_edit_permissions
-    unless can_update_project?(@project)
-      render_403
-    end
+    render_403 unless can_update_project?(@project)
   end
 
   def check_experiment_archive_permissions
