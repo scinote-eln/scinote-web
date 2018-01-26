@@ -632,6 +632,11 @@ class ProtocolsController < ApplicationController
       return 0 # return 0 stops the rest of the controller code from executing
     end
     @json_object = JSON.parse(json_file_contents)
+
+    @json_object['steps'] = protocols_io_guid_reorder_step_json(
+      @json_object['steps']
+    )
+
     @protocol = Protocol.new
     respond_to do |format|
       format.js {} # go to the js.erb file named the same as this controller,
