@@ -199,7 +199,9 @@ module ProtocolsIoHelper
   end
 
   def pio_stp_6(iterating_key) # protocols io section(title) parser
-    return pio_eval_title_len(sanitize_input(iterating_key)) if iterating_key.present?
+    if iterating_key.present?
+      return pio_eval_title_len(CGI.unescapeHTML(sanitize_input(iterating_key)))
+    end
     t('protocols.protocols_io_import.comp_append.missing_step')
   end
 
@@ -285,6 +287,24 @@ module ProtocolsIoHelper
     description_string
   end
 
+  def protocols_io_guid_reorder_step_json(unordered_step_json)
+    base_step = unordered_step_json.find { |step| step['previous_guid'].nil? }
+    number_of_steps = unordered_step_json.size
+    step_order = []
+    step_counter = 0
+    step_order[step_counter] = base_step
+    step_counter += 1
+    while step_order.length != number_of_steps
+      step_order[step_counter] =
+        unordered_step_json.find do |step|
+          step['previous_guid'] == base_step['guid']
+        end
+      base_step = step_order[step_counter]
+      step_counter += 1
+    end
+    step_order
+  end
+
   def protocols_io_fill_step(original_json, newj)
     # newj = new json
     # (simple to map) id 1= step description, id 6= section (title),
@@ -293,6 +313,10 @@ module ProtocolsIoHelper
     # id 9 = dataset, id 15 = command, id 18 = attached sub protocol
     # id 19= safety information ,
     # id 20= regents (materials, like scinote samples kind of)
+
+    original_json['steps'] = protocols_io_guid_reorder_step_json(
+      original_json['steps']
+    )
     newj['0'] = {}
     newj['0']['position'] = 0
     newj['0']['name'] = 'Protocol info'
