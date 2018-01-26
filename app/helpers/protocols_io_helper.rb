@@ -199,7 +199,7 @@ module ProtocolsIoHelper
   end
 
   def pio_stp_6(iterating_key) # protocols io section(title) parser
-    return CGI.unescapeHTML(pio_eval_title_len(sanitize_input(iterating_key))) if iterating_key.present?
+    return pio_eval_title_len(CGI.unescapeHTML(sanitize_input(iterating_key))) if iterating_key.present?
     t('protocols.protocols_io_import.comp_append.missing_step')
   end
 
