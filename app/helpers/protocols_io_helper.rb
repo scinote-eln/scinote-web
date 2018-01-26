@@ -285,6 +285,49 @@ module ProtocolsIoHelper
     description_string
   end
 
+  def protocols_io_return_first_step_guid(unordered_step_json)
+    return_step = 'null'
+    unordered_step_json['steps'].each do |step|
+      return_step = step unless step['previous_guid']
+    end
+    return_step
+  end
+
+  def protocols_io_count_steps(step_json)
+    count = 0
+    step_json['steps'].each do |step|
+      count += 1
+    end
+    count
+  end
+
+  def protocols_io_guid_reorder_step_json(unordered_step_json)
+    base_step = protocols_io_return_first_step_guid(unordered_step_json)
+    number_of_steps = protocols_io_count_steps(unordered_step_json)
+    step_order = []
+    step_counter = 0
+    step_order[step_counter] = base_step
+    step_counter += 1
+    while !correct_order_guid_check(step_order,number_of_steps)
+      unordered_step_json['steps'].each do |step|
+        next unless step['previous_guid'] == base_step['guid']
+          step_order[step_counter] = step
+          step_counter += 1
+          base_step = step
+      end
+    end
+    step_order
+  end
+
+  def correct_order_guid_check(step_array, max)
+    return false if step_array.length != max
+    step_array.each_with_index do |step, index|
+      break unless step_array[index + 1]
+      return false unless step['guid'] == step_array[index + 1]['previous_guid']
+    end
+    true
+  end
+
   def protocols_io_fill_step(original_json, newj)
     # newj = new json
     # (simple to map) id 1= step description, id 6= section (title),
@@ -293,6 +336,8 @@ module ProtocolsIoHelper
     # id 9 = dataset, id 15 = command, id 18 = attached sub protocol
     # id 19= safety information ,
     # id 20= regents (materials, like scinote samples kind of)
+
+    original_json['steps'] = protocols_io_guid_reorder_step_json(original_json)
     newj['0'] = {}
     newj['0']['position'] = 0
     newj['0']['name'] = 'Protocol info'
