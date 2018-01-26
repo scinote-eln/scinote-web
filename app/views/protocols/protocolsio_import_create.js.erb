@@ -9,8 +9,7 @@ HelperModule.flashAlertMsg(' <%= t('my_modules.protocols.load_from_file_size_err
 $('#modal-import-json-protocol').modal('hide');
 HelperModule.flashAlertMsg(' <%= t('my_modules.protocols.load_from_file_invalid_error') %>','danger');
 <% elsif @protocolsio_no_file %>
-<%# no file alert code goes here color: #a94442 %>
-$('#pio_no_file_error_span').html('<span class="help-block" style="color:#a94442"> <%= t('teams.parse_sheet.errors.no_file_selected') %></span>');
+$('#pio_no_file_error_span').addClass('has-error').html('<span class="help-block"> <%= t('teams.parse_sheet.errors.no_file_selected') %></span>');
 <% @protocolsio_no_file = false %>
 <% else %>
   $('#modal-import-json-protocol').modal('hide');
