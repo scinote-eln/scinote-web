@@ -146,12 +146,17 @@ module ProtocolsIoHelper
     Nokogiri::HTML::DocumentFragment.parse(text).to_html
   end
 
-  def prepare_for_view(attribute_text1, size, table = 'no_table')
+  # Images are allowed in:
+  # Step: description, expected result
+  # Protocol description : description before_start warning guidelines manuscript_citation
+  def prepare_for_view(attribute_text1, size, table = 'no_table', image_allowed = false)
+    image_tag = Array(nil)
+    image_tag = Array('img') if image_allowed
     if table == 'no_table'
-      attribute_text = sanitize_input(not_null(attribute_text1))
+      attribute_text = sanitize_input(not_null(attribute_text1),image_tag)
     elsif table == 'table'
       attribute_text = sanitize_input(
-        string_html_table_remove(not_null(attribute_text1))
+        string_html_table_remove(not_null(attribute_text1)),image_tag
       )
     end
     pio_eval_len(
@@ -189,7 +194,9 @@ module ProtocolsIoHelper
         br +
         prepare_for_view(
           iterating_key,
-          ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL
+          ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL,
+          'no_table',
+          true
           ) +
         br
       else
@@ -208,7 +215,9 @@ module ProtocolsIoHelper
       append =
         t('protocols.protocols_io_import.comp_append.expected_result') +
         prepare_for_view(
-          iterating_key, ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL
+          iterating_key, ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL,
+          'no_table',
+          true
         ) +
         '<br>'
       return append
@@ -235,13 +244,18 @@ module ProtocolsIoHelper
       ( before_start warning guidelines manuscript_citation publish_date
       vendor_name vendor_link keywords tags link created_on )
     ]
+    allowed_image_attributes = %w[
+      ( before_start warning guidelines manuscript_citation )
+    ]
     description_string =
       if json_hash['description'].present?
         '<strong>' + t('protocols.protocols_io_import.preview.description') +
           '</strong>' +
           prepare_for_view(
             json_hash['description'],
-            ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_MEDIUM
+            ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_MEDIUM,
+            'no_table',
+            true
           ).html_safe
       else
         '<strong>' + t('protocols.protocols_io_import.preview.description') +
@@ -274,12 +288,16 @@ module ProtocolsIoHelper
         description_string += '<br>'
       elsif json_hash[e].present?
         new_e = '<strong>' + e.humanize + '</strong>'
+
+        image_tag = Array(nil)
+        image_tag = Array('img') if allowed_image_attributes.include? e
         description_string +=
           new_e.to_s + ':  ' +
           pio_eval_prot_desc(
-            sanitize_input(json_hash[e]),
+            sanitize_input(json_hash[e],image_tag),
             e
           ).html_safe + '<br>'
+          # Problematicno, image_tag_testing
       end
     end
     description_string
@@ -298,8 +316,8 @@ module ProtocolsIoHelper
     newj['0']['name'] = 'Protocol info'
     @remaining = ProtocolsIoHelper::PIO_P_AVAILABLE_LENGTH
     newj['0']['tables'], table_str = protocolsio_string_to_table_element(
-      sanitize_input(protocols_io_fill_desc(original_json).html_safe)
-    )
+      sanitize_input(protocols_io_fill_desc(original_json).html_safe,Array('img'))
+    ) # Problematicno image_tag_testing
     newj['0']['description'] = table_str
     original_json['steps'].each_with_index do |step, pos_orig| # loop over steps
       i = pos_orig + 1
