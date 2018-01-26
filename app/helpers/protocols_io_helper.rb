@@ -148,15 +148,18 @@ module ProtocolsIoHelper
 
   # Images are allowed in:
   # Step: description, expected result
-  # Protocol description : description before_start warning guidelines manuscript_citation
-  def prepare_for_view(attribute_text1, size, table = 'no_table', image_allowed = false)
+  # Protocol description : description before_start warning
+  # guidelines manuscript_citation
+  def prepare_for_view(
+    attribute_text1, size, table = 'no_table', image_allowed = false
+  )
     image_tag = Array(nil)
     image_tag = Array('img') if image_allowed
     if table == 'no_table'
-      attribute_text = sanitize_input(not_null(attribute_text1),image_tag)
+      attribute_text = sanitize_input(not_null(attribute_text1), image_tag)
     elsif table == 'table'
       attribute_text = sanitize_input(
-        string_html_table_remove(not_null(attribute_text1)),image_tag
+        string_html_table_remove(not_null(attribute_text1)), image_tag
       )
     end
     pio_eval_len(
@@ -187,7 +190,8 @@ module ProtocolsIoHelper
   end
 
   # pio_stp_x means protocols io step (id of component) parser
-  def pio_stp_1(iterating_key) # protocols io description parser
+  # protocols io description parser
+  def pio_stp_1(iterating_key)
     br = '<br>'
     append =
       if iterating_key.present?
@@ -205,12 +209,14 @@ module ProtocolsIoHelper
     append
   end
 
-  def pio_stp_6(iterating_key) # protocols io section(title) parser
+  def pio_stp_6(iterating_key)
+    # protocols io section(title) parser
     return pio_eval_title_len(sanitize_input(iterating_key)) if iterating_key.present?
     t('protocols.protocols_io_import.comp_append.missing_step')
   end
 
-  def pio_stp_17(iterating_key) # protocols io expected result parser
+  def pio_stp_17(iterating_key)
+    # protocols io expected result parser
     if iterating_key.present?
       append =
         t('protocols.protocols_io_import.comp_append.expected_result') +
@@ -224,7 +230,8 @@ module ProtocolsIoHelper
     end
     ''
   end
-  # protocols io software package,dataset,commands,sub_protocol and safety_information  parser
+  # protocols io software package,dataset,commands,
+  # sub_protocol and safety_information  parser
 
   def pio_stp(iterating_key, parse_elements_array, en_local_text)
     append = ''
@@ -294,10 +301,9 @@ module ProtocolsIoHelper
         description_string +=
           new_e.to_s + ':  ' +
           pio_eval_prot_desc(
-            sanitize_input(json_hash[e],image_tag),
+            sanitize_input(json_hash[e], image_tag),
             e
           ).html_safe + '<br>'
-          # Problematicno, image_tag_testing
       end
     end
     description_string
@@ -316,8 +322,10 @@ module ProtocolsIoHelper
     newj['0']['name'] = 'Protocol info'
     @remaining = ProtocolsIoHelper::PIO_P_AVAILABLE_LENGTH
     newj['0']['tables'], table_str = protocolsio_string_to_table_element(
-      sanitize_input(protocols_io_fill_desc(original_json).html_safe,Array('img'))
-    ) # Problematicno image_tag_testing
+      sanitize_input(
+        protocols_io_fill_desc(original_json).html_safe, Array('img')
+      )
+    )
     newj['0']['description'] = table_str
     original_json['steps'].each_with_index do |step, pos_orig| # loop over steps
       i = pos_orig + 1
@@ -389,5 +397,4 @@ module ProtocolsIoHelper
     end # steps
     newj
   end
-
 end
