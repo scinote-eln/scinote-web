@@ -294,7 +294,7 @@ module ProtocolsIoHelper
     step_counter = 0
     step_order[step_counter] = base_step
     step_counter += 1
-    until correct_order_guid_check(step_order, number_of_steps)
+    while step_order.length != number_of_steps
       step_order[step_counter] =
         unordered_step_json.find do |step|
           step['previous_guid'] == base_step['guid']
@@ -303,11 +303,6 @@ module ProtocolsIoHelper
       step_counter += 1
     end
     step_order
-  end
-
-  def correct_order_guid_check(step_array, max)
-    return false if step_array.length != max
-    true
   end
 
   def protocols_io_fill_step(original_json, newj)
