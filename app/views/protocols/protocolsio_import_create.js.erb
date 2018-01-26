@@ -1,4 +1,6 @@
-
+$('#modal-import-json-protocol').on('hidden.bs.modal', function () {
+    $('#pio_no_file_error_span').empty();
+})
 <% if @protocolsio_too_big %>
 $('#modal-import-json-protocol').modal('hide');
 HelperModule.flashAlertMsg(' <%= t('my_modules.protocols.load_from_file_size_error',
@@ -6,6 +8,9 @@ HelperModule.flashAlertMsg(' <%= t('my_modules.protocols.load_from_file_size_err
 <% elsif @protocolsio_invalid_file %>
 $('#modal-import-json-protocol').modal('hide');
 HelperModule.flashAlertMsg(' <%= t('my_modules.protocols.load_from_file_invalid_error') %>','danger');
+<% elsif @protocolsio_no_file %>
+$('#pio_no_file_error_span').addClass('has-error').html('<span class="help-block"> <%= t('teams.parse_sheet.errors.no_file_selected') %></span>');
+<% @protocolsio_no_file = false %>
 <% else %>
   $('#modal-import-json-protocol').modal('hide');
       <% if remotipart_submitted? %> <%# a workaround to a bug with remotipart, that caused alot of headache, courtesy of github.com/dhampik %>
