@@ -175,9 +175,13 @@ module ProtocolsIoHelper
       else
         ' , '
       end
-    output_string += prepare_for_view(
-      attribute_text, ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL
-    )
+    if attribute_name == 'protocol_name'
+      output_string += pio_eval_title_len(attribute_text)
+    else
+      output_string += prepare_for_view(
+        attribute_text, ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL
+      )
+    end
     output_string
   end
 
