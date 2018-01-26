@@ -98,7 +98,7 @@
             <% when '18'%>
               <br>
               <strong><%= t('protocols.protocols_io_import.preview.sub_prot') %></strong>
-              <%= prepare_for_view(key['source_data']['protocol_name'],ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL,'table').html_safe %>
+              <%= pio_eval_title_len(sanitize_input(key['source_data']['protocol_name'])).html_safe %>
               <br>
               <%= t('protocols.protocols_io_import.preview.auth') %>
               <%= prepare_for_view(key['source_data']['full_name'],ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL,'table').html_safe %>
