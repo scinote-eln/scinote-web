@@ -633,7 +633,7 @@ class ProtocolsController < ApplicationController
     end
     @json_object = JSON.parse(json_file_contents)
 
-    @json_object['steps'] = protocols_io_guid_reorder_step_json(@json_object)
+    @json_object['steps'] = protocols_io_guid_reorder_step_json(@json_object['steps'])
 
     @protocol = Protocol.new
     respond_to do |format|
