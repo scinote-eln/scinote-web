@@ -153,8 +153,7 @@ module ProtocolsIoHelper
   def prepare_for_view(
     attribute_text1, size, table = 'no_table', image_allowed = false
   )
-    image_tag = Array(nil)
-    image_tag = Array('img') if image_allowed
+    image_tag = image_allowed ? Array('img') : Array(nil)
     if table == 'no_table'
       attribute_text = sanitize_input(not_null(attribute_text1), image_tag)
     elsif table == 'table'
@@ -301,9 +300,7 @@ module ProtocolsIoHelper
         description_string += '<br>'
       elsif json_hash[e].present?
         new_e = '<strong>' + e.humanize + '</strong>'
-
-        image_tag = Array(nil)
-        image_tag = Array('img') if allowed_image_attributes.include? e
+        image_tag = allowed_image_attributes.include?(e) ? Array('img') : Array(nil)
         description_string +=
           new_e.to_s + ':  ' +
           pio_eval_prot_desc(
