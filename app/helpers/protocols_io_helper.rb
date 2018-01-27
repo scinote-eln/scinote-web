@@ -34,7 +34,7 @@ module ProtocolsIoHelper
   # -- 0 big =
 
   PIO_TITLE_TOOLONG_LEN =
-    I18n.t('protocols.protocols_io_import.title_too_long').length + 2
+    I18n.t('protocols.protocols_io_import.title_too_long').length + 5
   PIO_STEP_TOOLONG_LEN =
     I18n.t('protocols.protocols_io_import.too_long').length
   # The + 2 above (in title) is there because if the length was at the limit,
