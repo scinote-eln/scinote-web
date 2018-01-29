@@ -2,7 +2,7 @@
   aria-labelledby="exActionsMenu-<%= experiment.id %>"
   data-id="<%= experiment.id %>">
 
-  <% if can_edit_experiment(experiment) %>
+  <% if can_manage_experiment?(experiment) %>
   <li><%= link_to t('experiments.edit.label_title'),
                 edit_project_experiment_url(project, experiment),
                 remote: true,
@@ -24,7 +24,7 @@
                   type: 'button',
                   class: 'move-experiment' %></li>
   <% end %>
-  <% if can_archive_experiment(experiment) %>
+  <% if can_manage_experiment?(experiment) %>
   <li><%= link_to t('experiments.archive.label_title'),
                 archive_experiment_url(experiment),
                 type: 'button',

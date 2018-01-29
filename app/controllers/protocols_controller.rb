@@ -1197,7 +1197,7 @@ class ProtocolsController < ApplicationController
     @protocols = Protocol.where(id: params[:protocol_ids])
     render_403 if @protocols.blank?
     @protocols.each do |p|
-      if p.in_module? && !can_export_protocol(p) ||
+      if p.in_module? && !can_read_protocol?(p) ||
          p.in_repository? && !can_read_protocol_in_repository?(p)
         render_403
       end

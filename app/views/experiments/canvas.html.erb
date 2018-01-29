@@ -17,7 +17,7 @@
               <% end %>
       <% end %>
       <!-- experiment actions -->
-      <% if can_edit_experiment(@experiment) || can_archive_experiment(@experiment) %>
+      <% if can_manage_experiment?(@experiment) %>
         <span class="dropdown">
           <button class="btn btn-default dropdown-toggle" type="button" id="exActionsMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
             <span class="hidden-xs"><%= t'experiments.canvas.actions' %></span>

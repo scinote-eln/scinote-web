@@ -19,12 +19,8 @@ class MyModulesController < ApplicationController
                 only: %I[update description due_date]
   before_action :check_destroy_permissions, only: :destroy
   before_action :check_view_info_permissions, only: :show
-  before_action :check_view_activities_permissions,
-                only: %I[activities activities_tab]
-  before_action :check_view_protocols_permissions, only: :protocols
-  before_action :check_view_results_permissions, only: :results
-  before_action :check_view_samples_permissions,
-                only: %I[samples samples_index]
+  before_action :check_view_permissions, only: %i[activities activities_tab
+    protocols results samples samples_index]
   before_action :check_view_archive_permissions, only: :archive
   before_action :check_assign_samples_permissions, only: :assign_samples
   before_action :check_unassign_samples_permissions, only: :unassign_samples
@@ -624,28 +620,8 @@ class MyModulesController < ApplicationController
     end
   end
 
-  def check_view_activities_permissions
-    unless can_view_module_activities(@my_module)
-      render_403
-    end
-  end
-
-  def check_view_protocols_permissions
-    unless can_view_module_protocols(@my_module)
-      render_403
-    end
-  end
-
-  def check_view_results_permissions
-    unless can_view_results_in_module(@my_module)
-      render_403
-    end
-  end
-
-  def check_view_samples_permissions
-    unless can_view_module_samples(@my_module)
-      render_403
-    end
+  def check_view_permissions
+    render_403 unless can_read_experiment?(@my_module.experiment)
   end
 
   def check_view_archive_permissions

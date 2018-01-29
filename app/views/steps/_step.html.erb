@@ -183,7 +183,7 @@
           <% end %>
         </div>
 
-        <% if can_view_step_comments(@protocol) %>
+        <% if can_read_step_comments?(@protocol) %>
           <div class="row">
             <div class="step-comment"
                  id="step-comments-<%= step.id %>"

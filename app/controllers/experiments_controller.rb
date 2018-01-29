@@ -14,8 +14,6 @@ class ExperimentsController < ApplicationController
                        :clone_modal, :move_modal, :delete_samples]
   before_action :check_view_permissions,
                 only: [:canvas, :module_archive]
-  before_action :check_module_archive_permissions,
-                only: [:module_archive]
   before_action :check_experiment_clone_permissions,
                 only: [:clone_modal, :clone]
   before_action :check_experiment_move_permissions,
@@ -345,11 +343,7 @@ class ExperimentsController < ApplicationController
   end
 
   def check_view_permissions
-    render_403 unless can_view_experiment(@experiment)
-  end
-
-  def check_module_archive_permissions
-    render_403 unless can_view_experiment_archive(@experiment)
+    render_403 unless can_read_experiment?(@experiment)
   end
 
   def check_experiment_clone_permissions

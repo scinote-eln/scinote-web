@@ -19,7 +19,7 @@
     <%= text %>
   <% end %>
 <% else %>
-  <% if can_view_results_in_module(result.my_module) %>
+  <% if can_read_experiment?(result.my_module.experiment) %>
     <% if target == :comment %>
     <%= route_to_other_team results_my_module_path(result.my_module, ctarget: "result-panel-#{result.id}"),
                             result.my_module.experiment.project.team,

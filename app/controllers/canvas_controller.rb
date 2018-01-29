@@ -224,9 +224,7 @@ class CanvasController < ApplicationController
   end
 
   def check_view_canvas
-    unless can_view_experiment(@experiment)
-      render_403 and return
-    end
+    render_403 unless can_read_experiment?(@experiment)
   end
 
   # Check if given value is "integer" string (e.g. "15")
