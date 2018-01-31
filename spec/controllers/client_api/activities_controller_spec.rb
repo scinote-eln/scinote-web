@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe ClientApi::ActivitiesController, type: :controller do
+describe ClientApi::ActivitiesController, type: :controller, broken: true do
   login_user
   render_views
 

@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe ClientApi::ConfigurationsController, type: :controller do
+describe ClientApi::ConfigurationsController, type: :controller, broken: true do
   login_user
 
   describe '#about_scinote' do

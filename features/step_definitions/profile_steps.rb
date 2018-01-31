@@ -3,7 +3,7 @@ Then(/^I click on Avatar$/) do
 end
 
 Given(/^I'm on the profile page$/) do
-  visit '/settings/account/profile'
+  visit edit_user_registration_path
 end
 
 Then(/^I click on Browse button$/) do
@@ -15,15 +15,8 @@ Then(/^I change "([^"]*)" with "([^"]*)" email$/) do |prev_email, new_email|
   find(:css, "input[value='#{prev_email}']").set(new_email)
 end
 
-Then(/^I fill in "([^"]*)" in Current password field$/) do |password|
-  find(:css, 'input[id="settings_page.current_password"]').set(password)
-end
-
-Then(/^I fill in "([^"]*)" in New password field$/) do |password|
-  find(:css, 'input[id="settings_page.new_password"]').set(password)
-end
-
-Then(/^I fill in "([^"]*)" in New password confirmation field$/) do |password|
-  find(:css,
-       'input[id="settings_page.new_password_confirmation"]').set(password)
+Then(/^I fill in "([^"]*)" in "([^"]*)" field of "([^"]*)" form$/) do |password, field, form_id|
+  within form_id do
+    fill_in field, with: password
+  end
 end
