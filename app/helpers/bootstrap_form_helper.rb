@@ -50,7 +50,7 @@ module BootstrapFormHelper
       if options[:clear] then
         res << "<span class='input-group-addon' id='#{id}_clear'><span class='glyphicon glyphicon-remove'></span></span></div>"
       end
-      res << "</div></div></div></div><script type='text/javascript'>$(function () { var dt = $('##{id}'); dt.datetimepicker({ #{jsOpts}ignoreReadonly: true, locale: '#{js_locale}', format: '#{js_format}' }); if (dt.data['ts'] != '') { $('##{id}').data('DateTimePicker').date(moment($('##{id}').data('ts'))); }"
+      res << "</div></div></div></div><script type='text/javascript'>$(function () { var dt = $('##{id}'); dt.datetimepicker({ #{jsOpts}ignoreReadonly: true, locale: '#{js_locale}', format: '#{js_format}' }); if (dt.length > 0 && dt.data['ts'] != '') { $('##{id}').data('DateTimePicker').date(moment($('##{id}').data('ts'))); }"
       if options[:clear] then
         res << "$('##{id}_clear').click(function() { $('##{id}').data('DateTimePicker').clear(); });"
       end
