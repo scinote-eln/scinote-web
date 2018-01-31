@@ -45,7 +45,7 @@ class RepositoryTableState < ApplicationRecord
         index = repository_state['columns'].count
         repository_state['columns'][index] = RepositoryDatatable::
           REPOSITORY_TABLE_DEFAULT_STATE['columns'].first
-        repository_state['ColReorder'].insert(2, index)
+        repository_state['ColReorder'].insert(2, index.to_s)
       end
       table_state.update(state: repository_state)
     end
