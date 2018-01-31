@@ -260,9 +260,7 @@
           </a>
           <ul class="dropdown-menu" data-hook="navigation-user-menu">
             <li>
-              <%= link_to t('nav.user.settings'),
-                          '/settings',
-                          data: { turbolinks: false } %>
+              <%= link_to t('nav.user.settings'), edit_user_registration_path %>
             </li>
             <li role="separator" class="divider"></li>
             <li>

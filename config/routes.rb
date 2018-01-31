@@ -15,16 +15,16 @@ Rails.application.routes.draw do
 
     root 'projects#index'
 
-    # Client APP endpoints
-    get '/settings', to: 'client_api/settings#index'
-    get '/settings/*all', to: 'client_api/settings#index'
-
-    namespace :client_api, defaults: { format: 'json' } do
-      post '/premissions', to: 'permissions#status'
-      %i(activities teams notifications users configurations).each do |path|
-        draw path
-      end
-    end
+    # # Client APP endpoints
+    # get '/settings', to: 'client_api/settings#index'
+    # get '/settings/*all', to: 'client_api/settings#index'
+    #
+    # namespace :client_api, defaults: { format: 'json' } do
+    #   post '/premissions', to: 'permissions#status'
+    #   %i(activities teams notifications users configurations).each do |path|
+    #     draw path
+    #   end
+    # end
 
     # Save sample table state
     post '/state_save/:team_id/:user_id',
