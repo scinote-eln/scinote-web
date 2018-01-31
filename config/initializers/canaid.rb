@@ -12,7 +12,7 @@ Canaid.configure do |config|
                 .eager_load_paths
                 .select { |p| p.ends_with?('permissions') }
                 .first
-    continue unless full_path
+    next unless full_path
     res = rx.match(full_path)
     config.permissions_paths << "#{res[1]}/**/*.rb" if res && res.length > 1
   end
