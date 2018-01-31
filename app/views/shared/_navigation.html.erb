@@ -99,6 +99,7 @@
             </span>
           </a>
 
+          <% if current_user.teams.length > 1 || can_create_teams? %>
           <ul class="dropdown-menu">
             <%= form_for(current_user,
                          url: user_current_team_path,
@@ -126,6 +127,7 @@
               </li>
             <% end %>
           </ul>
+          <% end %>
         </li>
         <% end %>
 
