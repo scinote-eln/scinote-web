@@ -1,6 +1,6 @@
 source 'http://rubygems.org'
 
-ruby '2.4.1'
+ruby '2.4.3'
 
 gem 'rails', '5.1.1'
 gem 'webpacker', '~> 2.0'
