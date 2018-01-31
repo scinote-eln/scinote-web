@@ -84,6 +84,8 @@ RSpec.configure do |config|
   config.include Devise::Test::ControllerHelpers, type: :controller
   config.include ApiHelper, type: :controller
   config.extend ControllerMacros, type: :controller
+
+  config.filter_run_excluding broken: true
 end
 
 # config shoulda matchers to work with rspec

@@ -18,26 +18,26 @@ Feature: Team settings
   @javascript
   Scenario: Successfully changes team name
     Given I'm on "BioSistemika Process" team settings page
-    Then I click on ".team-name-title" element
-    And I change "BioSistemika Process" with "BioSistemika Process Company" in "settings_page.update_team_name_modal" input field
+    Then I click on team title
+    And I change "BioSistemika Process" with "BioSistemika Process Company" in "team-name-modal" input field
     Then I click "Update" button
-    And I should see "BioSistemika Process Company" on ".team-name-title" element
+    And I should see "BioSistemika Process Company" on "#team-name" element
 
   @javascript
   Scenario: Successfully adds team description
     Given I'm on "BioSistemika Process" team settings page
-    Then I click on ".team-description" element
-    And I fill in "I was on Triglav one summer." in "teamDescription" textarea field
+    Then I click on ".description-label" element
+    And I fill in "I was on Triglav one summer." in "team_description" textarea field
     Then I click "Update" button
-    And I should see "I was on Triglav one summer." on ".team-description" element
+    And I should see "I was on Triglav one summer." on ".description-label" element
 
   @javascript
   Scenario: Successfully changes team description
     Given I'm on "BioSistemika Process" team settings page
-    Then I click on ".team-description" element
-    And I change "Lorem ipsum dolor sit amet, consectetuer adipiscing eli." with "I was on Triglav one summer." in "teamDescription" textarea field
+    Then I click on ".description-label" element
+    And I change "Lorem ipsum dolor sit amet, consectetuer adipiscing eli." with "I was on Triglav one summer." in "team_description" textarea field
     Then I click "Update" button
-    And I should see "I was on Triglav one summer." on ".team-description" element
+    And I should see "I was on Triglav one summer." on ".description-label" element
 
   @javascript
   Scenario: Successfully changes user role
@@ -65,6 +65,6 @@ Feature: Team settings
     Given I'm on "BioSistemika Process" team settings page
     Then I click on "suazana@myorg.com" action button within Team members table
     And I click "Remove" link within "suazana@myorg.com" actions dropdown within Team members table
-    And I should see "Are you sure you wish to remove user Suazana Novak from team BioSistemika Process?" on ".remove-user-modal-body" element
+    And I should see "Are you sure you wish to remove user Suazana Novak from team BioSistemika Process?"
     Then I click "Remove user" button
     Then I should not see "suazana@myorg.com" in Team members table

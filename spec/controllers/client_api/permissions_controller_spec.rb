@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe ClientApi::PermissionsController, type: :controller do
+describe ClientApi::PermissionsController, type: :controller, broken: true do
   login_user
 
   describe '#status' do

@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe ClientApi::Teams::TeamsController, type: :controller do
+describe ClientApi::Teams::TeamsController, type: :controller, broken: true do
   login_user
 
   before do

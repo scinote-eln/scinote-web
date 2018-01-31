@@ -55,7 +55,11 @@
               </div>
             <% end %>
 
-            <%= form_for(resource, as: resource_name, url: registration_path(resource_name, format: :json), remote: true, html: { method: :put, "data-for" => "full_name" }) do |f| %>
+            <%= form_for(resource,
+                         as: resource_name,
+                         url: registration_path(resource_name, format: :json),
+                         remote: true,
+                         html: { method: :put, "data-for" => "full_name", class: 'settings-page-full-name' }) do |f| %>
               <div data-part="view">
                 <div class="form-group">
                   <%= f.label t("users.registrations.edit.name_label") %>
@@ -82,7 +86,11 @@
               </div>
             <% end %>
 
-            <%= form_for(resource, as: resource_name, url: registration_path(resource_name, format: :json), remote: true, html: { method: :put, "data-for" => "initials" }) do |f| %>
+            <%= form_for(resource,
+                         as: resource_name,
+                         url: registration_path(resource_name, format: :json),
+                         remote: true,
+                         html: { method: :put, "data-for" => "initials", class: 'settings-page-initials' }) do |f| %>
               <div data-part="view">
                 <div class="form-group">
                   <%= f.label t("users.registrations.edit.initials_label") %>
@@ -109,7 +117,11 @@
               </div>
             <% end %>
 
-            <%= form_for(resource, as: resource_name, url: registration_path(resource_name, format: :json), remote: true, html: { method: :put, "data-for" => "email" }) do |f| %>
+            <%= form_for(resource,
+                         as: resource_name,
+                         url: registration_path(resource_name, format: :json),
+                         remote: true,
+                         html: { method: :put, "data-for" => "email", class: 'settings-page-email' }) do |f| %>
               <div data-part="view">
                 <div class="form-group">
                   <%= f.label t("users.registrations.edit.email_label") %>
@@ -146,7 +158,11 @@
               </div>
             <% end %>
 
-            <%= form_for(resource, as: resource_name, url: registration_path(resource_name, format: :json), remote: true, html: { method: :put, "data-for" => "password" }) do |f| %>
+            <%= form_for(resource,
+                         as: resource_name,
+                         url: registration_path(resource_name, format: :json),
+                         remote: true,
+                         html: { method: :put, "data-for" => "password", class: 'settings-page-change-password' }) do |f| %>
               <%= hidden_field_tag "user[change_password]", "true" %>
               <div data-part="view">
                 <div class="form-group">
