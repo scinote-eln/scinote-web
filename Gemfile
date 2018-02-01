@@ -73,7 +73,6 @@ gem 'scenic', '~> 1.4'
 
 gem 'paperclip', '~> 5.1' # File attachment, image attachment library
 gem 'aws-sdk', '~> 2'
-gem 'aws-sdk-v1'
 
 gem 'delayed_job_active_record'
 gem 'devise-async',
