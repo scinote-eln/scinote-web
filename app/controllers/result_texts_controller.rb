@@ -34,7 +34,8 @@ class ResultTextsController < ApplicationController
   def create
     @result_text = ResultText.new(result_params[:result_text_attributes])
     # gerate a tag that replaces img tag in database
-    @result_text.text = parse_tiny_mce_asset_to_token(@result_text.text)
+    @result_text.text = parse_tiny_mce_asset_to_token(@result_text.text,
+                                                      @result_text)
     @result = Result.new(
       user: current_user,
       my_module: @my_module,
@@ -88,7 +89,8 @@ class ResultTextsController < ApplicationController
   end
 
   def edit
-    @result_text.text = generate_image_tag_from_token(@result_text.text)
+    @result_text.text = generate_image_tag_from_token(@result_text.text,
+                                                      @result_text)
     respond_to do |format|
       format.json {
         render json: {

@@ -12,8 +12,10 @@ class Asset < ApplicationRecord
   has_attached_file :file,
                     styles: { large: [Constants::LARGE_PIC_FORMAT, :jpg],
                               medium: [Constants::MEDIUM_PIC_FORMAT, :jpg] },
-                    convert_options: { medium: '-quality 70 -strip' }
-
+                    convert_options: {
+                      medium: '-quality 70 -strip',
+                      all: '-background "#d2d2d2" -flatten +matte'
+                    }
   validates_attachment :file,
                        presence: true,
                        size: {

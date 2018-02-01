@@ -261,9 +261,7 @@
           <% if current_user.teams.length > 1 || can_create_teams? %>
             <ul class="dropdown-menu">
               <li>
-                <%= link_to t('nav.user.settings'),
-                            '/settings',
-                            data: { turbolinks: false } %>
+                <%= link_to t('nav.user.settings'), edit_user_registration_path, data: { turbolinks: false } %>
               </li>
               <li role="separator" class="divider"></li>
               <li>

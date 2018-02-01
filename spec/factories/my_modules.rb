@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :my_module do
     name 'My first module'
     x 0

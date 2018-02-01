@@ -654,6 +654,17 @@ ActiveRecord::Schema.define(version: 20171026090804) do
     t.integer "user_id", null: false
   end
 
+  create_table "user_identities", id: :serial, force: :cascade do |t|
+    t.integer "user_id"
+    t.string "provider", null: false
+    t.string "uid", null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.index ["provider", "uid"], name: "index_user_identities_on_provider_and_uid", unique: true
+    t.index ["user_id", "provider"], name: "index_user_identities_on_user_id_and_provider", unique: true
+    t.index ["user_id"], name: "index_user_identities_on_user_id"
+  end
+
   create_table "user_my_modules", id: :serial, force: :cascade do |t|
     t.integer "user_id", null: false
     t.integer "my_module_id", null: false

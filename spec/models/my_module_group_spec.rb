@@ -16,7 +16,7 @@ describe MyModuleGroup, type: :model do
   describe 'Relations' do
     it { should belong_to :experiment }
     it { should belong_to(:created_by).class_name('User') }
-    it { should have_many(:my_modules)}
+    it { should have_many(:my_modules) }
   end
 
   describe 'Should be a valid object' do

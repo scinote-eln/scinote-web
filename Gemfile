@@ -1,11 +1,11 @@
 source 'http://rubygems.org'
 
-ruby '2.4.1'
+ruby '2.4.3'
 
 gem 'rails', '5.1.1'
 gem 'webpacker', '~> 2.0'
 gem 'figaro'
-gem 'pg'
+gem 'pg', '~> 0.18'
 gem 'devise', '~> 4.3.0'
 gem 'devise_invitable'
 gem 'simple_token_authentication', '~> 1.15.1' # Token authentication for Devise
@@ -16,13 +16,17 @@ gem 'yomu'
 gem 'font-awesome-rails', '~> 4.7.0.2'
 gem 'recaptcha', require: 'recaptcha/rails'
 gem 'sanitize', '~> 4.4'
+gem 'omniauth'
+
+# Gems for API implementation
+gem 'jwt', '~> 1.5'
 
 # JS datetime library, requirement of datetime picker
 gem 'momentjs-rails', '~> 2.17.1'
 # JS datetime picker
 gem 'bootstrap3-datetimepicker-rails', '~> 4.15.35'
 # Select elements for Bootstrap
-gem 'bootstrap-select-rails'
+gem 'bootstrap-select-rails', '~> 1.6.3'
 gem 'uglifier', '>= 1.3.0'
 # jQuery & plugins
 gem 'jquery-turbolinks'
@@ -37,7 +41,7 @@ gem 'spinjs-rails'
 gem 'autosize-rails' # jQuery autosize plugin
 
 gem 'underscore-rails'
-gem 'turbolinks'
+gem 'turbolinks', '~> 2.0'
 gem 'sdoc', '~> 0.4.0', group: :doc
 gem 'bcrypt', '~> 3.1.10'
 gem 'logging', '~> 2.0.0'
@@ -47,17 +51,16 @@ gem 'nested_form_fields'
 gem 'ajax-datatables-rails', '~> 0.3.1'
 gem 'commit_param_routing' # Enables different submit actions in the same form to route to different actions in controller
 gem 'kaminari'
-gem "i18n-js", ">= 3.0.0.rc11" # Localization in javascript files
+gem 'i18n-js', '~> 3.0' # Localization in javascript files
 gem 'roo', '~> 2.7.1' # Spreadsheet parser
-gem 'creek'
-gem 'wicked_pdf'
+gem 'wicked_pdf', '~> 1.1.0'
 gem 'silencer' # Silence certain Rails logs
 gem 'wkhtmltopdf-heroku'
 gem 'remotipart', '~> 1.2' # Async file uploads
 gem 'faker' # Generate fake data
 gem 'auto_strip_attributes', '~> 2.1' # Removes unnecessary whitespaces from ActiveRecord or ActiveModel attributes
 gem 'deface', '~> 1.0'
-gem 'nokogiri' # HTML/XML parser
+gem 'nokogiri', '~> 1.8.1' # HTML/XML parser
 gem 'sneaky-save', git: 'https://github.com/einzige/sneaky-save'
 gem 'rails_autolink', '~> 1.1', '>= 1.1.6'
 gem 'delayed_paperclip',
@@ -95,7 +98,7 @@ group :development, :test do
   gem 'pry'
   gem 'pry-byebug'
   gem 'pry-rails'
-  gem 'factory_girl_rails'
+  gem 'factory_bot_rails'
   gem 'rails-controller-testing'
   gem 'rspec-rails'
   gem 'better_errors'
@@ -122,7 +125,8 @@ end
 group :production do
   gem 'puma'
   gem 'rails_12factor'
+  gem 'whacamole'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
-gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
+gem 'tzinfo-data', platforms: %i(mingw mswin x64_mingw jruby)

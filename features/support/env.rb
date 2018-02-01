@@ -38,13 +38,14 @@ World(Capybara::Email::DSL)
 # Precompile webpacker to avoid render bugs in capybara webkit
 # global hook throws an error :( https://github.com/cucumber/cucumber/wiki/Hooks
 
-compiled = false
-Before do
-  unless compiled
-    system('NODE_ENV=production bundle exec rails webpacker:compile')
-    compiled = true
-  end
-end
+# No need to run webpacker since we don't user React in the momemnt
+# compiled = false
+# Before do
+#   unless compiled
+#     system('NODE_ENV=production bundle exec rails webpacker:compile')
+#     compiled = true
+#   end
+# end
 
 # Capybara defaults to CSS3 selectors rather than XPath.
 # If you'd prefer to use XPath, just uncomment this line and adjust any

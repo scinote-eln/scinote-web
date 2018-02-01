@@ -4,12 +4,12 @@ if ENV['PAPERCLIP_HASH_SECRET'].nil?
   exit 1
 end
 
-Paperclip::Attachment.default_options.merge!({
+Paperclip::Attachment.default_options.merge!(
   hash_data: ':class/:attachment/:id/:style',
   hash_secret: ENV['PAPERCLIP_HASH_SECRET'],
-  preserve_files: false,
+  preserve_files: true,
   url: '/system/:class/:attachment/:id_partition/:hash/:style/:filename'
-})
+)
 
 if ENV['PAPERCLIP_STORAGE'] == "s3"
 
@@ -183,6 +183,7 @@ module Paperclip
         )) ||
         # Word processor application
         (Set[content_type, content_types_from_name].subset? Set.new %w(
+          application/zip
           application/vnd.ms-office
           application/msword
           application/msword-template
@@ -218,9 +219,11 @@ module Paperclip
           application/vnd.sun.xml.calc.template
           application/vnd.stardivision.calc
           application/x-starcalc
+          application/CDFV2-encrypted
         )) ||
         # Presentation application
         (Set[content_type, content_types_from_name].subset? Set.new %w(
+          application/zip
           application/vnd.ms-office
           application/vnd.ms-powerpoint
           application/vnd.openxmlformats-officedocument.presentationml.presentation

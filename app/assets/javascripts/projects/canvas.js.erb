@@ -240,6 +240,7 @@ function initializeEdit() {
   // Restore draggable position
   restoreDraggablePosition($("#diagram"), $("#canvas-container"));
 
+  preventCanvasReloadOnSave();
   $("#canvas-container").submit(function (){
     animateSpinner(
       this,
@@ -3108,3 +3109,39 @@ function tutorialAfterCb() {
     .css({'pointer-events': 'auto'});
   });
 }
+
+/** prevent reload page */
+var preventCanvasReloadOnSave = (function() {
+  'use strict';
+
+  function confirmReload() {
+    if( confirm(I18n.t('experiments.canvas.reload_on_submit')) ) {
+      return true;
+    } else {
+      return false
+    }
+  }
+
+  function preventCanvasReload() {
+    document.onkeydown = function(){
+      switch (event.keyCode){
+        case 116:
+          event.returnValue = false;
+          return confirmReload();
+        case 82:
+          if (event.ctrlKey){
+            event.returnValue = false;
+            return confirmReload();
+          }
+        }
+    }
+  }
+
+  function bindToCanvasSave(fun) {
+    $('#canvas-save').on('click', function() {
+      fun();
+    })
+  }
+
+  return function() { bindToCanvasSave(preventCanvasReload) };
+})();

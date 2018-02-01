@@ -36,7 +36,7 @@ Then(/^I should be on homepage$/) do
 end
 
 Given(/^the "([^"]*)" team exists$/) do |team_name|
-  FactoryGirl.create(:team, name: team_name)
+  FactoryBot.create(:team, name: team_name)
 end
 
 Given(/^I'm on the home page of "([^"]*)" team$/) do |team_name|
@@ -48,9 +48,9 @@ end
 Given(/^"([^"]*)" is in "([^"]*)" team as a "([^"]*)"$/) do |user_email, team_name, role|
   team = Team.find_by_name(team_name)
   user = User.find_by_email(user_email)
-  FactoryGirl.create(:user_team, user: user,
-                                 team: team,
-                                 role: UserTeam.roles.fetch(role))
+  FactoryBot.create(:user_team, user: user,
+                    team: team, role:
+                    UserTeam.roles.fetch(role))
 end
 
 Then(/^I attach a "([^"]*)" file to "([^"]*)" field$/) do |file, field_id|
@@ -60,10 +60,9 @@ Then(/^I attach a "([^"]*)" file to "([^"]*)" field$/) do |file, field_id|
   sleep(0.5)
 end
 
-Then(/^I should see "([^"]*)" error message under "([^"]*)" field$/) do |message, field_id|
+Then(/^I should see "([^"]*)" error message$/) do |message|
   wait_for_ajax
-  parent = find_by_id(field_id).first(:xpath, './/..')
-  expect(parent).to have_content(message)
+  expect(page).to have_content(message)
 end
 
 Then(/^I click on "([^"]*)"$/) do |button|
@@ -85,18 +84,21 @@ end
 
 Then(/^I click on Edit on "([^"]*)" input field$/) do |container_id|
   wait_for_ajax
-  container = page.find_by_id(container_id)
-  within(container) do
-    find('button').click
+  within(container_id) do
+    find('[data-action="edit"]').click
   end
 end
 
 Then(/^I fill in "([^"]*)" in "([^"]*)" input field$/) do |text, input_id|
-  page.find_by_id(input_id).set(text)
+  page.find("#{input_id} input[type=\"text\"]").set(text)
+end
+
+Then(/^I fill in "([^"]*)" in "([^"]*)" field$/) do |text, input_id|
+  page.find(input_id).set(text)
 end
 
 Then(/^I should see "([^"]*)" in "([^"]*)" input field$/) do |text, container_id|
-  container = page.find_by_id(container_id)
+  container = page.find(container_id)
   expect(container).to have_xpath("//input[@value='#{text}']")
 end
 
@@ -109,6 +111,7 @@ Then(/^(?:|I )click on "([^"]*)" element$/) do |selector|
 end
 
 Then(/^I change "([^"]*)" with "([^"]*)" in "([^"]*)" input field$/) do |old_text, new_text, container_id|
+  wait_for_ajax
   container = page.find_by_id(container_id)
   expect(container).to have_xpath("//input[@value='#{old_text}']")
   container.find('input').set(new_text)

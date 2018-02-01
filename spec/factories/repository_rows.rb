@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :repository_row do
     name 'Custom row'
     created_by { User.first || association(:user) }

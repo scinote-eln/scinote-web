@@ -1,6 +1,6 @@
 Given(/^the following users are registered$/) do |table|
   table.hashes.each do |hash|
-    FactoryGirl.create(:user, hash)
+    FactoryBot.create(:user, hash)
     User.find_by_email(hash.fetch('email')).confirm
   end
 end

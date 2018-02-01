@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe ClientApi::Users::InvitationsController, type: :controller do
+describe ClientApi::Users::InvitationsController, type: :controller, broken: true do
   login_user
   let(:user_one) { User.first }
   let(:team_one) { create :team }

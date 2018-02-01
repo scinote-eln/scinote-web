@@ -4,7 +4,6 @@
   function init(){
     $("[data-id]").each(function(){
       var that = $(this);
-      that.find(".workflowimg-container").hide();
       initProjectExperiment(that);
     });
 
@@ -36,7 +35,9 @@
         },
         error: function (ev) {
           if (ev.status == 404) {
-            setTimeout(checkUpdatedImg(img_url, url, timestamp, container), 500);
+            setTimeout(function () {
+              checkUpdatedImg(img_url, url, timestamp, container)
+            }, 5000);
           } else {
             animateSpinner(container, false);
           }

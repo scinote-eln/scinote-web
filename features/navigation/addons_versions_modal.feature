@@ -14,7 +14,7 @@ Feature: Addon versions
   @javascript
   Scenario: Open the sciNote addons modal
     Given I'm on the profile page
-    And I click "#nav-info-dropdown" icon
+    And I click "#help-link" icon
     And I click "About sciNote" link within ".dropdown.open"
     Then I should see "About sciNote"
     And I should see "sciNote core version"

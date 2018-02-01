@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :experiment do
     name 'My Experiment'
     description 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit.'

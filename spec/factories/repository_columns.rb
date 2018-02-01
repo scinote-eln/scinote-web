@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :repository_column do
     name 'My Column'
     created_by { User.first || create(:user) }

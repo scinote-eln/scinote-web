@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe ClientApi::Users::UsersController, type: :controller do
+describe ClientApi::Users::UsersController, type: :controller, broken: true do
   login_user
 
   before do

@@ -100,7 +100,7 @@ Style/HashSyntax:
 
 Style/IfUnlessModifier:
   Enabled: true
-  MaxLineLength: 80
+  Metrics/LineLength: 80
 
 Layout/IndentationConsistency:
   EnforcedStyle: normal
