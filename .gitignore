@@ -62,3 +62,7 @@ coverage
 /node_modules
 .DS_Store
 app/javascript/src/componentLoader/components/*
+
+# ignore addon features
+features/addons/*
+!features/addons/.gitkeep
