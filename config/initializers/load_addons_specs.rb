@@ -15,7 +15,7 @@ class AddonsSpecLoader
     end
   end
 
-  # cucumber can't respolve path with symlinks so we copy files from addons
+  # cucumber cannot resolve path with symlinks so we copy files from addons
   def copy_to_features
     FileUtils.rm_f Dir.glob("#{Dir.pwd}/features/addons/*")
     available_addons.each do |addon|
