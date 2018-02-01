@@ -64,5 +64,7 @@ coverage
 app/javascript/src/componentLoader/components/*
 
 # ignore addon features
-features/addons/*
+features/addons
+spec/addons
 !features/addons/.gitkeep
+!spec/addons/.gitkeep
