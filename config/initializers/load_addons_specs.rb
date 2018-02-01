@@ -20,6 +20,7 @@ class AddonsSpecLoader
     FileUtils.rm_f Dir.glob("#{Dir.pwd}/features/addons/*")
     available_addons.each do |addon|
       feature_path = "addons/#{addon}/features"
+      next unless Dir.exist? feature_path
       FileUtils.copy_entry("#{Dir.pwd}/#{feature_path}",
                            "#{Dir.pwd}/features/addons/#{addon}")
     end
