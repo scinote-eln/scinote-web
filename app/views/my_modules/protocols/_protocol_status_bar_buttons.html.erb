@@ -19,7 +19,7 @@
         <span class="caret"></span>
       </a>
       <ul class="dropdown-menu">
-        <% if can_unlink_protocol(@protocol) %>
+        <% if can_manage_protocol_in_module?(@protocol) %>
           <li>
             <%= link_to unlink_modal_protocol_path(@protocol, format: :json), remote: true, title: t("my_modules.protocols.protocol_status_bar.btns.unlink_title"), data: { action: "unlink" } do %>
               <%= t("my_modules.protocols.protocol_status_bar.btns.unlink") %>
@@ -40,7 +40,7 @@
         <span class="caret"></span>
       </a>
       <ul class="dropdown-menu">
-        <% if can_update_parent_protocol(@protocol) %>
+        <% if can_read_protocol_in_module?(@protocol) && can_update_protocol_in_repository?(@protocol.parent) %>
           <li>
             <%= link_to update_parent_modal_protocol_path(@protocol, format: :json), remote: true, title: t("my_modules.protocols.protocol_status_bar.btns.update_parent_title"), data: { action: "update-parent" } do %>
               <%= t("my_modules.protocols.protocol_status_bar.btns.update_parent") %>
@@ -50,7 +50,7 @@
           <li class="disabled"><a href="#" title="<%= t("my_modules.protocols.protocol_status_bar.btns.update_parent_title") %>"><%= t("my_modules.protocols.protocol_status_bar.btns.update_parent") %></a>
           </li>
         <% end %>
-        <% if can_revert_protocol(@protocol) %>
+        <% if can_manage_protocol_in_module?(@protocol) %>
           <li>
             <%= link_to revert_modal_protocol_path(@protocol, format: :json), remote: true, title: t("my_modules.protocols.protocol_status_bar.btns.revert_title"), data: { action: "revert" } do %>
               <%= t("my_modules.protocols.protocol_status_bar.btns.revert") %>
@@ -60,7 +60,7 @@
           <li class="disabled"><a href="#" title="<%= t("my_modules.protocols.protocol_status_bar.btns.revert_title") %>"><%= t("my_modules.protocols.protocol_status_bar.btns.revert") %></a>
           </li>
         <% end %>
-        <% if can_unlink_protocol(@protocol) %>
+        <% if can_manage_protocol_in_module?(@protocol) %>
           <li>
             <%= link_to unlink_modal_protocol_path(@protocol, format: :json), remote: true, title: t("my_modules.protocols.protocol_status_bar.btns.unlink_title"), data: { action: "unlink" } do %>
               <%= t("my_modules.protocols.protocol_status_bar.btns.unlink") %>
@@ -81,7 +81,8 @@
         <span class="caret"></span>
       </a>
       <ul class="dropdown-menu">
-        <% if can_update_protocol_from_parent(@protocol) %>
+        <% if can_manage_protocol_in_module?(@protocol) %>
+          <%-# For update_from_parent and update_from_parent_modal we don't need to check read permission for the parent protocol -%>
           <li><%= link_to update_from_parent_modal_protocol_path(@protocol, format: :json), remote: true, title: t("my_modules.protocols.protocol_status_bar.btns.update_self_title"), data: { action: "update-self" } do %>
               <%= t("my_modules.protocols.protocol_status_bar.btns.update_self") %>
             <% end %>
@@ -90,7 +91,7 @@
           <li class="disabled"><a href="#" title="<%= t("my_modules.protocols.protocol_status_bar.btns.update_self_title") %>"><%= t("my_modules.protocols.protocol_status_bar.btns.update_self") %></a>
           </li>
         <% end %>
-        <% if can_unlink_protocol(@protocol) %>
+        <% if can_manage_protocol_in_module?(@protocol) %>
           <li>
             <%= link_to unlink_modal_protocol_path(@protocol, format: :json), remote: true, title: t("my_modules.protocols.protocol_status_bar.btns.unlink_title"), data: { action: "unlink" } do %>
               <%= t("my_modules.protocols.protocol_status_bar.btns.unlink") %>
@@ -111,7 +112,7 @@
         <span class="caret"></span>
       </a>
       <ul class="dropdown-menu">
-        <% if can_update_parent_protocol(@protocol) %>
+        <% if can_read_protocol_in_module?(@protocol) && can_update_protocol_in_repository?(@protocol.parent) %>
           <li>
             <%= link_to update_parent_modal_protocol_path(@protocol, format: :json), remote: true, title: t("my_modules.protocols.protocol_status_bar.btns.update_parent_title"), data: { action: "update-parent" } do %>
               <%= t("my_modules.protocols.protocol_status_bar.btns.update_parent") %>
@@ -121,7 +122,8 @@
           <li class="disabled"><a href="#" title="<%= t("my_modules.protocols.protocol_status_bar.btns.update_parent_title") %>"><%= t("my_modules.protocols.protocol_status_bar.btns.update_parent") %></a>
           </li>
         <% end %>
-        <% if can_update_protocol_from_parent(@protocol) %>
+        <% if can_manage_protocol_in_module?(@protocol) %>
+          <%-# && can_read_protocol_in_repository?(@protocol) not needed - user can update protocol in module even if it's private and he's not the owner -%>
           <li>
             <%= link_to update_from_parent_modal_protocol_path(@protocol, format: :json), remote: true, title: t("my_modules.protocols.protocol_status_bar.btns.update_self_title"), data: { action: "update-self" } do %>
               <%= t("my_modules.protocols.protocol_status_bar.btns.update_self") %>
@@ -131,7 +133,7 @@
           <li class="disabled"><a href="#" title="<%= t("my_modules.protocols.protocol_status_bar.btns.update_self_title") %>"><%= t("my_modules.protocols.protocol_status_bar.btns.update_self") %></a>
           </li>
         <% end %>
-        <% if can_unlink_protocol(@protocol) %>
+        <% if can_manage_protocol_in_module?(@protocol) %>
           <li>
             <%= link_to unlink_modal_protocol_path(@protocol, format: :json), remote: true, title: t("my_modules.protocols.protocol_status_bar.btns.unlink_title"), data: { action: "unlink" } do %>
               <%= t("my_modules.protocols.protocol_status_bar.btns.unlink") %>

@@ -15,9 +15,8 @@ class MyModulesController < ApplicationController
   before_action :load_vars_nested, only: %I[new create]
   before_action :load_repository, only: %I[assign_repository_records
                                            unassign_repository_records]
-  before_action :check_edit_permissions,
-                only: %I[update description due_date]
-  before_action :check_destroy_permissions, only: :destroy
+  before_action :check_manage_permissions,
+                only: %I[update destroy description due_date]
   before_action :check_view_info_permissions, only: :show
   before_action :check_view_permissions, only: %i[activities activities_tab
     protocols results samples samples_index]
@@ -602,16 +601,8 @@ class MyModulesController < ApplicationController
     render_404 unless @repository && can_read_team?(@repository.team)
   end
 
-  def check_edit_permissions
-    unless can_edit_module(@my_module)
-      render_403
-    end
-  end
-
-  def check_destroy_permissions
-    unless can_archive_module(@my_module)
-      render_403
-    end
+  def check_manage_permissions
+    render_403 unless can_manage_experiment?(@my_module.experiment)
   end
 
   def check_view_info_permissions

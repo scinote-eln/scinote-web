@@ -181,7 +181,7 @@ class StepCommentsController < ApplicationController
   end
 
   def check_view_permissions
-    render_403 unless can_read_step_comments?(@protocol)
+    render_403 unless can_read_protocol_in_module?(@protocol)
   end
 
   def check_add_permissions

@@ -31,21 +31,19 @@ class ProtocolsController < ApplicationController
     index
     datatable
   )
-  before_action :check_unlink_permissions, only: %i(
+  # For update_from_parent and update_from_parent_modal we don't need to check
+  # read permission for the parent protocol
+  before_action :check_manage_permissions, only: %i(
     unlink
     unlink_modal
-  )
-  before_action :check_revert_permissions, only: %i(
     revert
     revert_modal
+    update_from_parent
+    update_from_parent_modal
   )
   before_action :check_update_parent_permissions, only: %i(
     update_parent
     update_parent_modal
-  )
-  before_action :check_update_from_parent_permissions, only: %i(
-    update_from_parent
-    update_from_parent_modal
   )
   before_action :check_load_from_repository_views_permissions, only: %i(
     load_from_repository_modal
@@ -266,7 +264,9 @@ class ProtocolsController < ApplicationController
   end
 
   def copy_to_repository
-    link_protocols = can_link_copied_protocol_in_repository(@protocol) && params[:link]
+    link_protocols = params[:link] &&
+                     can_manage_protocol_in_module(@protocol) &&
+                     can_create_protocols_in_repository(@protocol.team)
     respond_to do |format|
       transaction_error = false
       Protocol.transaction do
@@ -1041,9 +1041,9 @@ class ProtocolsController < ApplicationController
 
   def check_view_permissions
     @protocol = Protocol.find_by_id(params[:id])
-    if @protocol.blank? ||
-       @protocol.in_module? && !can_view_protocol(@protocol) ||
-       @protocol.in_repository? && !can_read_protocol_in_repository?(@protocol)
+    unless @protocol.present? &&
+           (can_read_protocol_in_module?(@protocol) ||
+           can_read_protocol_in_repository?(@protocol))
       respond_to { |f| f.json { render json: {}, status: :unauthorized } }
     end
   end
@@ -1061,7 +1061,7 @@ class ProtocolsController < ApplicationController
     @original = Protocol.find_by_id(params[:id])
 
     if @original.blank? ||
-      !can_clone_protocol_in_repository?(@original) || @type == :archive
+       !can_clone_protocol_in_repository?(@original) || @type == :archive
       render_403
     end
   end
@@ -1075,45 +1075,33 @@ class ProtocolsController < ApplicationController
     end
   end
 
-  def check_unlink_permissions
+  def check_manage_permissions
     @protocol = Protocol.find_by_id(params[:id])
 
-    render_403 if @protocol.blank? || !can_unlink_protocol(@protocol)
-  end
-
-  def check_revert_permissions
-    @protocol = Protocol.find_by_id(params[:id])
-
-    render_403 if @protocol.blank? || !can_revert_protocol(@protocol)
+    render_403 if @protocol.blank? || !can_manage_protocol_in_module?(@protocol)
   end
 
   def check_update_parent_permissions
     @protocol = Protocol.find_by_id(params[:id])
 
-    render_403 if @protocol.blank? || !can_update_parent_protocol(@protocol)
-  end
-
-  def check_update_from_parent_permissions
-    @protocol = Protocol.find_by_id(params[:id])
-
-    if @protocol.blank? || !can_update_protocol_from_parent(@protocol)
-      render_403
-    end
+    render_403 unless @protocol.present? &&
+                      (can_read_protocol_in_module?(@protocol) ||
+                       can_update_protocol_in_repository(@protocol.parent))
   end
 
   def check_load_from_repository_views_permissions
     @protocol = Protocol.find_by_id(params[:id])
 
-    render_403 if @protocol.blank? || !can_view_protocol(@protocol)
+    render_403 if @protocol.blank? || !can_read_protocol_in_module?(@protocol)
   end
 
   def check_load_from_repository_permissions
     @protocol = Protocol.find_by_id(params[:id])
     @source = Protocol.find_by_id(params[:source_id])
 
-    if @protocol.blank? || @source.blank? || !can_load_protocol_from_repository(@protocol, @source)
-      render_403
-    end
+    render_403 unless @protocol.present? && @source.present? &&
+                      (can_manage_protocol_in_module?(@protocol) ||
+                       can_read_protocol_in_repository?(@source))
   end
 
   def check_load_from_file_permissions
@@ -1124,7 +1112,7 @@ class ProtocolsController < ApplicationController
     if @protocol_json.blank? ||
        @protocol.blank? ||
        @my_module.blank? ||
-       !can_load_protocol_into_module(@my_module)
+       !can_manage_protocol_in_module?(@protocol)
       render_403
     end
   end
@@ -1133,9 +1121,9 @@ class ProtocolsController < ApplicationController
     @protocol = Protocol.find_by_id(params[:id])
     @my_module = @protocol.my_module
 
-    if @my_module.blank? || !can_copy_protocol_to_repository(@my_module)
-      render_403
-    end
+    render_403 unless @my_module.present? &&
+                      (can_read_protocol_in_module?(protocol) ||
+                       can_create_protocols_in_repository?(protocol.team))
   end
 
   def check_make_private_permissions
@@ -1197,10 +1185,8 @@ class ProtocolsController < ApplicationController
     @protocols = Protocol.where(id: params[:protocol_ids])
     render_403 if @protocols.blank?
     @protocols.each do |p|
-      if p.in_module? && !can_read_protocol?(p) ||
-         p.in_repository? && !can_read_protocol_in_repository?(p)
-        render_403
-      end
+      render_403 unless can_read_protocol_in_module?(p) ||
+                        can_read_protocol_in_repository?(p)
     end
   end
 

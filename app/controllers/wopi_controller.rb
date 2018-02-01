@@ -281,8 +281,8 @@ class WopiController < ActionController::Base
     @current_user = @user
     if @assoc.class == Step
       if @protocol.in_module?
-        @can_read = can_view_steps_in_protocol(@protocol)
-        @can_write = can_edit_step_in_protocol(@protocol)
+        @can_read = can_read_protocol_in_module?(@protocol)
+        @can_write = can_manage_protocol_in_module?(@protocol)
         @close_url = protocols_my_module_url(@protocol.my_module,
                                              only_path: false,
                                              host: ENV['WOPI_USER_HOST'])

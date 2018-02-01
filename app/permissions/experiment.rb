@@ -1,47 +1,65 @@
 Canaid::Permissions.register_for(Experiment) do
+  # experiment: read
+  # canvas/workflow: read
   can :read_experiment do |user, experiment|
-    user.is_user_or_higher_of_project?(experiment.project) ||
+    # TODO: When rebasing on top of refactored projects permissions, just call
+    # can_read_project?(user, experiment.project) instead
+    user.is_member_of_project?(experiment.project) ||
       user.is_admin_of_team?(experiment.project.team) ||
       (experiment.project.visible? &&
         user.is_member_of_team?(experiment.project.team))
   end
 
+  # experiment: create, update, delete
+  # canvas/workflow: edit
+  # module: create, edit, delete, archive, move
   can :manage_experiment do |user, experiment|
     user.is_user_or_higher_of_project?(experiment.project)
   end
 
   can :restore_experiment do |user, experiment|
-    experiment.archived? && can_manage_experiment(user, experiment)
+    experiment.archived? && can_manage_experiment?(user, experiment)
+  end
+
+  can :move_or_clone_experiment do |user, experiment|
+    user.is_user_or_higher_of_project?(experiment.project) &&
+      user.is_normal_user_or_admin_of_team?(experiment.project.team)
+  end
+end
+
+Canaid::Permissions.register_for(MyModule) do
+  can :restore_module do |user, my_module|
+    my_module.archived? && can_manage_experiment?(user, experiment)
   end
 end
 
 Canaid::Permissions.register_for(Protocol) do
-  can :read_step_comments do |user, protocol|
-    can_read_module_protocol?(user, protocol)
-  end
-
-  can :read_protocol do |user, protocol|
-    if protocol.in_repository_public?
-      user.is_member_of_team(protocol.team)
-    elsif protocol.in_repository_private? || protocol.in_repository_archived?
-      user.is_member_of_team(protocol.team) and
-        protocol.added_by == current_user
+  # protocol: read
+  # step: read, read comments, read assets, download assets
+  can :read_protocol_in_module do |user, protocol|
+    if protocol.in_module?
+      my_module = protocol.my_module
+      my_module.active? &&
+        my_module.experiment.active? &&
+        my_module.experiment.project.active? &&
+        can_read_experiment?(user, my_module.experiment)
     else
-      can_read_module_protocol?(user, protocot)
+      false
     end
   end
-end
 
-private
-
-def can_read_module_protocol?(user, protocol)
-  if protocol.in_module?
-    my_module = protocol.my_module
-    my_module.active? &&
-      my_module.experiment.active? &&
-      my_module.experiment.project.active? &&
-      can_read_experiment?(user, my_module.experiment)
-  else
-    false
+  # protocol: create, update, delete, unlink, revert, update from protocol in
+  # repository,
+  # step: create, update, delete, reorder ##everyting for and below protocol level (step, step comments and assets etc.)
+  can :manage_protocol_in_module do |user, protocol|
+    if protocol.in_module?
+      my_module = protocol.my_module
+      my_module.active? &&
+        my_module.experiment.active? &&
+        my_module.experiment.project.active? &&
+        can_manage_experiment?(user, my_module.experiment)
+    else
+      false
+    end
   end
 end

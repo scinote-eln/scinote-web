@@ -17,7 +17,7 @@
 
   <em><%= t("my_modules.protocols.copy_to_repository_modal.type_text") %></em>
 
-  <% if can_link_copied_protocol_in_repository(@protocol) %>
+  <% if can_manage_protocol_in_module?(@protocol) && can_create_protocols_in_repository?(@protocol.team) %>
     <div class="checkbox">
       <label>
         <input type="checkbox" name="link" id ="link" data-role="link-check"> <%= t("my_modules.protocols.copy_to_repository_modal.link_label") %>

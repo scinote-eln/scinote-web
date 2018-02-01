@@ -31,7 +31,7 @@
   </div>
 
   <div class="panel-body">
-    <% if can_edit_module(my_module) && can_edit_modules(my_module.experiment) %>
+    <% if can_manage_experiment?(my_module.experiment) %>
       <%= link_to due_date_my_module_path(my_module, format: :json), remote: true, class: "due-date-link due-date-refresh" do %>
         <%= render partial: "my_modules/due_date_label.html.erb", locals: { my_module: my_module } %>
       <% end %>
