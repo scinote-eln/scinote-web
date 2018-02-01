@@ -99,8 +99,8 @@
             </span>
           </a>
 
-          <ul class="dropdown-menu"
-              data-hook="teams-dropdown">
+          <% if current_user.teams.length > 1 || can_create_teams? %>
+          <ul class="dropdown-menu">
             <%= form_for(current_user,
                          url: user_current_team_path,
                          method: :post) do |f| %>
@@ -116,18 +116,18 @@
                 </li>
               <% end %>
             <% end %>
-            <% if current_user.teams.length > 1 %>
-            <li data-hook="new-team-btn"
-                role="separator"
-                class="divider"></li>
+            <% if current_user.teams.length > 1 && can_create_teams? %>
+              <li role="separator"
+                  class="divider"></li>
+              <li>
+                <%= link_to new_team_path do %>
+                  <span class="glyphicon glyphicon-plus"></span>
+                  <%= t('users.settings.teams.index.new_team') %>
+                <% end %>
+              </li>
             <% end %>
-            <li data-hook="new-team-btn">
-              <%= link_to new_team_path do %>
-                <span class="glyphicon glyphicon-plus"></span>
-                <%= t('users.settings.teams.index.new_team') %>
-              <% end %>
-            </li>
           </ul>
+          <% end %>
         </li>
         <% end %>
 
@@ -258,17 +258,19 @@
             <%= image_tag avatar_path(current_user, :icon_small),
                           class: "avatar" %>
           </a>
-          <ul class="dropdown-menu" data-hook="navigation-user-menu">
-            <li>
-              <%= link_to t('nav.user.settings'), edit_user_registration_path, data: { turbolinks: false }%>
-            </li>
-            <li role="separator" class="divider"></li>
-            <li>
-              <%= link_to t('nav.user.logout'),
-                          destroy_user_session_path,
-                          method: :delete %>
-            </li>
-          </ul>
+          <% if current_user.teams.length > 1 || can_create_teams? %>
+            <ul class="dropdown-menu">
+              <li>
+                <%= link_to t('nav.user.settings'), edit_user_registration_path, data: { turbolinks: false } %>
+              </li>
+              <li role="separator" class="divider"></li>
+              <li>
+                <%= link_to t('nav.user.logout'),
+                            destroy_user_session_path,
+                            method: :delete %>
+              </li>
+            </ul>
+          <% end %>
         </li>
       </ul>
     </div>

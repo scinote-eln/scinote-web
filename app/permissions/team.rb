@@ -117,3 +117,4 @@ Canaid::Permissions.register_for(RepositoryColumn) do
     can_create_repository_columns?(user, repository_column.repository.team)
   end
 end
+
