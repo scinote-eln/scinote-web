@@ -6,7 +6,7 @@ class UserProjectsController < ApplicationController
   before_action :check_view_permissions, only: :index
   before_action :check_manage_users_permissions, only: :index_edit
   before_action :check_create_permissions, only: :create
-  before_action :check_update_permisisons, only: %i(update destroy)
+  before_action :check_manage_permisisons, only: %i(update destroy)
 
   def index
     @users = @project.user_projects
@@ -183,16 +183,16 @@ class UserProjectsController < ApplicationController
   end
 
   def check_manage_users_permissions
-    render_403 unless can_update_project?(@project)
+    render_403 unless can_manage_project?(@project)
   end
 
   def check_create_permissions
     render_403 unless can_create_projects?(current_team)
   end
 
-  def check_update_permisisons
-    render_403 unless can_update_project?(@project) ||
-                      params[:id] != current_user.id
+  def check_manage_permisisons
+    render_403 unless can_manage_project?(@project) &&
+                      params[:id] == current_user.id
   end
 
   def init_gui

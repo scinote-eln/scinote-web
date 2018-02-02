@@ -5,12 +5,12 @@ Canaid::Permissions.register_for(Project) do
       (project.visible? && user.is_member_of_team?(project.team))
   end
 
-  can :update_project do |user, project|
+  can :manage_project do |user, project|
     user.is_owner_of_project?(project)
   end
 
   can :restore_project do |user, project|
-    can_update_project?(user, project) && project.archived?
+    can_manage_project?(user, project) && project.archived?
   end
 
   can :create_experiment do |user, project|
@@ -31,12 +31,12 @@ Canaid::Permissions.register_for(Project) do
     user.is_technician_or_higher_of_project?(project)
   end
 
-  %(read_project
-    update_project
-    create_experiment
-    add_comment_to_project
-    manage_tags
-    manage_reports)
+  %i(read_project
+     update_project
+     create_experiment
+     add_comment_to_project
+     manage_tags
+     manage_reports)
     .each do |perm|
     can perm do |_, project|
       project.active?
@@ -50,10 +50,10 @@ Canaid::Permissions.register_for(Comment) do
       user.is_owner_of_project?(project))
   end
 
-  %(update_or_delete_project_comment)
+  %i(update_or_delete_project_comment)
     .each do |perm|
-    can perm do |_, project|
-      project.active?
+    can perm do |_, comment|
+      comment.project.active?
     end
   end
 end

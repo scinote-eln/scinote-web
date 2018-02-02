@@ -15,12 +15,12 @@
             <span><%= user.full_name %></span>
             <br><span class="text-muted"><%= t('user_projects.enums.role.'<< user_proj.role.to_s) %></span>
           </div>
-        </div>  
+        </div>
       </li>
     <% end %>
   <% end %>
 </ul>
-<% if can_update_project?(@project) %>
+<% if can_manage_project?(@project) %>
     <p>
       <hr>
       <%= link_to t("projects.index.manage_users"), project_users_edit_path(@project, format: :json), class: "manage-users-link", remote: true %>

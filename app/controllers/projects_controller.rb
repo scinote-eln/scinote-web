@@ -12,7 +12,7 @@ class ProjectsController < ApplicationController
                                                   samples experiment_archive
                                                   samples_index)
   before_action :check_create_permissions, only: [ :new, :create ]
-  before_action :check_edit_permissions, only: [ :edit ]
+  before_action :check_manage_permissions, only: %i(edit update)
 
   @filter_by_archived = false
 
@@ -116,7 +116,7 @@ class ProjectsController < ApplicationController
 
     # Check archive permissions if archiving/restoring
     if project_params.include? :archive
-      if (project_params[:archive] && !can_update_project?(@project)) ||
+      if (project_params[:archive] && !can_manage_project?(@project)) ||
          (!project_params[:archive] && !can_restore_project?(@project))
         return_error = true
         is_archive = URI(request.referer).path == projects_archive_path ? "restore" : "archive"
@@ -322,8 +322,8 @@ class ProjectsController < ApplicationController
     render_403 unless can_create_projects?(current_team)
   end
 
-  def check_edit_permissions
-    render_403 unless can_update_project?(@project)
+  def check_manage_permissions
+    render_403 unless can_manage_project?(@project)
   end
 
   def choose_layout
