@@ -67,7 +67,7 @@
         <span class="glyphicon glyphicon-briefcase" aria-hidden="true"></span>
       </a>
 
-      <% if can_create_project?(@project) && @teams.length > 0 %>
+      <% if @teams.length > 0 && can_create_projects?(current_team) %>
       <!-- new project button -->
         <a class="btn btn-primary pull-right" id="new-project-btn">
           <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
