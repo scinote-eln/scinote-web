@@ -3,7 +3,8 @@ class UserProjectsController < ApplicationController
   include InputSanitizeHelper
 
   before_action :load_vars
-  before_action :check_view_permissions, only: %i(index index_edit)
+  before_action :check_view_permissions, only: :index
+  before_action :check_manage_users_permissions, only: :index_edit
   before_action :check_create_permissions, only: :create
   before_action :check_update_permisisons, only: %i(update destroy)
 
@@ -179,6 +180,10 @@ class UserProjectsController < ApplicationController
 
   def check_view_permissions
     render_403 unless can_read_project?(@project)
+  end
+
+  def check_manage_users_permissions
+    render_403 unless can_update_project?(@project)
   end
 
   def check_create_permissions

@@ -16,10 +16,10 @@
         <li>
           <% if can_read_team?(@project.team) %>
             <a href="<%= projects_path :team => @project.team.id %>">
-          <% end %>
-          <span class="glyphicon glyphicon-folder-open"></span>
-          <% if can_read_team?(@project.team) %>
+              <span class="glyphicon glyphicon-folder-open"></span>
             </a>
+          <% else %>
+            <span class="glyphicon glyphicon-folder-open"></span>
           <% end %>
         </li>
         <% if project_page? ||
@@ -30,36 +30,31 @@
           </li>
         <% else %>
           <li>
-           <% if can_read_project?(@project) %>
-              <a href="<%= project_url(@project) %>">
-            <% end %>
-            <span class="glyphicon glyphicon-blackboard"></span>
             <% if can_read_project?(@project) %>
+              <a href="<%= project_url(@project) %>">
+                <span class="glyphicon glyphicon-blackboard"></span>
               </a>
+            <% else %>
+              <span class="glyphicon glyphicon-blackboard"></span>
             <% end %>
           </li>
         <% end %>
-        <% if experiment_page? ||
-              module_page? %>
-          <% if !module_page? %>
-            <li class="active">
-              <%= fa_icon 'fa-flask' %>
-            </li>
-          <% else %>
-            <li>
-              <% if can_view_experiment(@experiment) %>
-                <%= link_to canvas_experiment_path(@experiment) do %>
-                  <%= fa_icon 'fa-flask' %>
-                <% end %>
-              <% else %>
+        <% if module_page? %>
+          <li>
+            <% if can_view_experiment(@experiment) %>
+              <%= link_to canvas_experiment_path(@experiment) do %>
                 <%= fa_icon 'fa-flask' %>
               <% end %>
-            </li>
-          <% end %>
-        <% end %>
-        <% if module_page? %>
+            <% else %>
+              <%= fa_icon 'fa-flask' %>
+            <% end %>
+          </li>
           <li class="active">
             <span class="glyphicon glyphicon-credit-card"></span>
+          </li>
+        <% elsif experiment_page? %>
+          <li class="active">
+            <%= fa_icon 'fa-flask' %>
           </li>
         <% end %>
       </ul>
@@ -80,8 +75,6 @@
                 <span class="hidden-xs hidden-lg glyphicon glyphicon-blackboard"></span>
               </a>
             </li>
-          <% end %>
-          <% if can_read_project?(@project) then %>
             <li id="project-samples-nav-tab" class="<%= "active" if is_project_samples? ||
                                                                     sample_types_page_project? ||
                                                                     sample_groups_page_project? %>">
@@ -90,16 +83,12 @@
                 <span class="hidden-xs hidden-lg glyphicon glyphicon-tint"></span>
               </a>
             </li>
-          <% end %>
-          <% if can_read_project?(@project) then %>
             <li id="reports-nav-tab" class="<%= "active" if is_project_reports? %>">
               <a href="<%= project_reports_url(@project) %>" title="<%=t "nav2.projects.reports" %>">
                 <span class="hidden-sm hidden-md"><%=t "nav2.projects.reports" %></span>
                 <span class="hidden-xs hidden-lg glyphicon glyphicon-list-alt"></span>
               </a>
             </li>
-          <% end %>
-          <% if can_read_project?(@project) then %>
             <li id="project-archive-nav-tab" data-turbolinks="false" class="<%= "active" if is_project_archive? %>">
               <a href="<%= experiment_archive_project_url(@project) %>" title="<%=t "nav2.projects.archive" %>">
                 <span class="glyphicon glyphicon-briefcase"></span>
@@ -232,11 +221,12 @@
         <li>
           <% if can_read_team?(@project.team) %>
             <a href="<%= projects_path :team => @project.team.id %>">
-          <% end %>
-          <%= truncate(@project.team.name,
-                       length: Constants::NAME_TRUNCATION_LENGTH) %>
-          <% if can_read_team?(@project.team) %>
+              <%= truncate(@project.team.name,
+                           length: Constants::NAME_TRUNCATION_LENGTH) %>
             </a>
+          <% else %>
+            <%= truncate(@project.team.name,
+                         length: Constants::NAME_TRUNCATION_LENGTH) %>
           <% end %>
         </li>
         <% if project_page? %>
@@ -248,11 +238,12 @@
           <li>
             <% if can_read_project?(@project) %>
               <a href="<%= project_url(@project) %>">
-            <% end %>
-            <%= truncate(@project.name,
-                         length: Constants::NAME_TRUNCATION_LENGTH) %>
-            <% if can_read_project?(@project) %>
+                <%= truncate(@project.name,
+                             length: Constants::NAME_TRUNCATION_LENGTH) %>
               </a>
+            <% else %>
+              <%= truncate(@project.name,
+                           length: Constants::NAME_TRUNCATION_LENGTH) %>
             <% end %>
           </li>
         <% end %>

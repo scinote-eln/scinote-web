@@ -33,8 +33,6 @@ class ReportsController < ApplicationController
   before_action :check_create_permissions, only: [
     :new,
     :create,
-    :edit,
-    :update,
     :generate,
     :save_modal,
     :project_contents_modal,
@@ -47,7 +45,8 @@ class ReportsController < ApplicationController
     :step_contents,
     :result_contents
   ]
-  before_action :check_manage_permissions, only: %i(edit update destroy)
+  before_action :check_manage_permissions, only: %i(edit update
+                                                    destroy)
 
   layout 'fluid'
 
