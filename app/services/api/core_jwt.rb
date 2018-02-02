@@ -7,15 +7,15 @@ module Api
       if expires_at
         payload[:exp] = expires_at
       else
-        payload[:exp] = Rails.configuration.x.core_api_token_ttl.from_now.to_i
+        payload[:exp] = Api.configuration.core_api_token_ttl.from_now.to_i
       end
-      payload[:iss] = Rails.configuration.x.core_api_token_iss
-      JWT.encode(payload, KEY_SECRET, Rails.configuration.x.core_api_sign_alg)
+      payload[:iss] = Api.configuration.core_api_token_iss
+      JWT.encode(payload, KEY_SECRET, Api.configuration.core_api_sign_alg)
     end
 
     def self.decode(token)
       HashWithIndifferentAccess.new(
-        JWT.decode(token, KEY_SECRET, Rails.configuration.x.core_api_sign_alg)[0]
+        JWT.decode(token, KEY_SECRET, Api.configuration.core_api_sign_alg)[0]
       )
     end
 
@@ -25,12 +25,10 @@ module Api
       )[:iss].to_s
     end
 
-    # Method used by Doorkeeper for custom tokens
-    def self.generate(options = {})
-      encode(
-        { sub: options[:resource_owner_id] },
-        options[:expires_in].seconds.from_now.to_i
-      )
+    def self.refresh_needed?(payload)
+      time_left = payload[:exp].to_i - Time.now.to_i
+      return true if time_left < (Api.configuration.core_api_token_ttl.to_i / 2)
+      false
     end
   end
 end

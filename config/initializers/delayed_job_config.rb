@@ -24,7 +24,9 @@ module DelayedWorkerConfig
   # or left in the database with "failed_at" set dempends on the
   # DESTROY_FAILED_JOBS value
   def max_attempts
-    1 # We want ActiveJob to handle retries
+    value = ENV['DELAYED_WORKER_MAX_ATTEMPTS'].to_i
+    return 6 if value.zero?
+    value
   end
 
   # The default DELAYED_WORKER_MAX_RUN_TIME is 30.minutes.
@@ -61,8 +63,3 @@ Delayed::Worker.max_attempts = DelayedWorkerConfig.max_attempts
 Delayed::Worker.max_run_time = DelayedWorkerConfig.max_run_time
 Delayed::Worker.read_ahead = DelayedWorkerConfig.read_ahead
 Delayed::Worker.default_queue_name = DelayedWorkerConfig.default_queue_name
-Delayed::Worker.queue_attributes = {
-  high_priority: { priority: -10 },
-  webhooks: { priority: 5 },
-  low_priority: { priority: 10 }
-}

@@ -1,4 +1,4 @@
-# SciNote Developers Documentation
+# sciNote Developers Documentation
 
 ## Front-end (React.js)
 

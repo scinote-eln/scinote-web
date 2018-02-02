@@ -1,14 +1,6 @@
-# frozen_string_literal: true
-
 require 'rails_helper'
 
 describe MyModuleRepositoryRow, type: :model do
-  let(:my_module_repository_row) { build :mm_repository_row }
-
-  it 'is valid' do
-    expect(my_module_repository_row).to be_valid
-  end
-
   it 'should be of class MyModuleRepositoryRow' do
     expect(subject.class).to eq MyModuleRepositoryRow
   end
@@ -23,8 +15,13 @@ describe MyModuleRepositoryRow, type: :model do
   end
 
   describe 'Relations' do
-    it { should belong_to(:my_module) }
-    it { should belong_to(:assigned_by).class_name('User').optional }
-    it { should belong_to(:repository_row) }
+    it { should belong_to :my_module }
+    it { should belong_to(:assigned_by).class_name('User') }
+    it { should belong_to :repository_row }
+  end
+
+  describe 'Should be a valid object' do
+    it { should validate_presence_of :repository_row }
+    it { should validate_presence_of :my_module }
   end
 end

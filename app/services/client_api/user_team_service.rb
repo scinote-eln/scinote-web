@@ -69,6 +69,7 @@ module ClientApi
       generate_notification(user,
                             user,
                             @user_team.team,
+                            false,
                             false)
     end
 

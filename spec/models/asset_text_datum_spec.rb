@@ -1,14 +1,6 @@
-# frozen_string_literal: true
-
 require 'rails_helper'
 
 describe AssetTextDatum, type: :model do
-  let(:asset_text_datum) { build :asset_text_datum }
-
-  it 'is valid' do
-    expect(asset_text_datum).to be_valid
-  end
-
   it 'should be of class Activity' do
     expect(subject.class).to eq AssetTextDatum
   end
@@ -25,14 +17,17 @@ describe AssetTextDatum, type: :model do
     it { should belong_to :asset }
   end
 
-  describe 'Validations' do
-    describe '#data' do
-      it { is_expected.to validate_presence_of(:data) }
-    end
+  describe 'Should be a valid object' do
+    let(:asset) { create :asset }
 
-    describe '#asset' do
-      it { is_expected.to validate_presence_of(:asset) }
-      it { expect(asset_text_datum).to validate_uniqueness_of(:asset) }
+    it { should validate_presence_of :data }
+    it { should validate_presence_of :asset }
+
+    it 'should have uniq asset' do
+      create :asset_text_datum, asset: asset
+      new_atd = build :asset_text_datum, asset: asset
+      # binding.pry
+      expect(new_atd).to_not be_valid
     end
   end
 end

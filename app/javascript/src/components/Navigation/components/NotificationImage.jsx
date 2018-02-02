@@ -20,17 +20,17 @@ const NotificationImage = ({className, type, avatar}: Props) => {
       ),
       system_message: (
           <span className="system-message">
-              <i className="fas fa-chess-rook" />
+              <i className="glyphicon glyphicon-tower" />
           </span>
       ),
       deliver: (
           <span className="deliver">
-              <i className="fas fa-truck" />
+              <i className="fa fa-truck" />
           </span>
       ),
       assignment: (
           <span className="assignment">
-              <i className="fas fa-newspaper-o" />
+              <i className="fa fa-newspaper-o" />
           </span>
       )
   }

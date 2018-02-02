@@ -1,10 +1,9 @@
 Feature: Log in
   As an existing User
   I want to Log in with my account
-  So that I can use SciNote
+  So that I can use sciNote
 
 Background:
-  Given default screen size
   Given the "BioSistemika Process" team exists
   Given the following users are registered
     | email                     | password          | password_confirmation |
@@ -16,7 +15,7 @@ Scenario: Successful Log in
   Given I am on Log in page
   Then I fill in Email "night.slarker@gmail.com" and Password "mypassword1234"
   And I click "Log in" button
-  Then I should be on homepage
+  Then I should see "BioSistemika Process"
 
 @javascript
 Scenario: Unsuccessful Log in
@@ -48,7 +47,7 @@ Scenario: Unsuccessful Log in
 @javascript
 Scenario: Successful Log out
   Given "night.slarker@gmail.com" is signed in with "mypassword1234"
-  And I'm on the projects page of "BioSistemika Process" team
-  And I click element with css "#user-account-dropdown"
-  And I click "Log out" link
+  And I'm on the home page of "BioSistemika Process" team
+  Then I click on "#user-account-dropdown" element
+  And I click "Log out" link within dropdown menu
   Then I should see "Logged out successfully." flash message

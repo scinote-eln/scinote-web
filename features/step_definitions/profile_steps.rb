@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 Then(/^I click on Avatar$/) do
   find('img.avatar').click
 end
@@ -19,11 +17,6 @@ end
 
 Then(/^I fill in "([^"]*)" in "([^"]*)" field of "([^"]*)" form$/) do |password, field, form_id|
   within form_id do
-    find(field).set(password)
+    fill_in field, with: password
   end
-end
-
-Then(/^I change "([^"]*)" with "([^"]*)"$/) do |prev_email, new_email|
-  wait_for_ajax
-  find(:css, "input[value='#{prev_email}']").set(new_email)
 end

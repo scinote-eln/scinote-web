@@ -1,14 +1,6 @@
-# frozen_string_literal: true
-
 require 'rails_helper'
 
 describe Notification, type: :model do
-  let(:notification) { build :notification }
-
-  it 'is valid' do
-    expect(notification).to be_valid
-  end
-
   it 'should be of class Notification' do
     expect(subject.class).to eq Notification
   end
@@ -24,7 +16,7 @@ describe Notification, type: :model do
   end
 
   describe 'Relations' do
-    it { should belong_to(:generator_user).class_name('User').optional }
+    it { should belong_to(:generator_user).class_name('User') }
     it { should have_many :users }
     it { should have_many :user_notifications }
   end

@@ -62,7 +62,7 @@ class AvatarInputField extends Component {
             alt="default avatar"
           />
           <EditAvatar className="text-center">
-            <span className="fas fa-pencil-alt" />
+            <span className="glyphicon glyphicon-pencil" />
             <FormattedMessage id="settings_page.edit_avatar" />
           </EditAvatar>
         </AvatarWrapper>

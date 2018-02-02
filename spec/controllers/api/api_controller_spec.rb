@@ -7,39 +7,59 @@ describe Api::ApiController, type: :controller do
     end
 
     it 'Returns HTTP success' do
+      expect(response).to be_success
       expect(response).to have_http_status(200)
     end
 
     it 'Response with correct JSON status structure' do
       hash_body = nil
       expect { hash_body = json }.not_to raise_exception
-      expect(hash_body).to include(message: I18n.t('api.core.status_ok'))
-      expect(hash_body).to include('versions')
-
-      Extends::API_VERSIONS.each do |ver|
-        expect(hash_body['versions']).to include(
-          'version' => ver,
-          'baseUrl' => "/api/#{ver}/"
-        )
-      end
+      expect(hash_body).to match(
+        'message' => I18n.t('api.core.status_ok'),
+        'versions' => [{ 'version' => '20170715',
+                         'baseUrl' => '/api/20170715/' }]
+      )
     end
   end
 
-  describe 'GET #health' do
-    before do
-      stub_request(:get, Rails.application.secrets.system_notifications_uri + '/api/system_notifications')
-        .with(query: hash_including('channels_slug': Rails.application.secrets.system_notifications_channel),
-              headers: { 'Accept': 'application/vnd.system-notifications.1+json' })
-        .to_return(status: 200, body: '', headers: {})
-      get :health
+  describe 'Post #authenticate' do
+    let(:user) { create(:user) }
+
+    context 'When valid request' do
+      before do
+        post :authenticate, params: { email: user.email,
+                                      password: user.password,
+                                      grant_type: 'password' }
+      end
+
+      it 'Returns HTTP success' do
+        expect(response).to have_http_status(200)
+      end
+
+      it 'Returns valid JWT token' do
+        token = nil
+        expect { token = json['access_token'] }.not_to raise_exception
+        user_id = nil
+        expect { user_id = decode_token(token) }.not_to raise_exception
+        expect(user_id).to eq(user.id)
+      end
     end
 
-    it 'Returns HTTP success' do
-      expect(response).to have_http_status(200)
+    context 'When invalid password in request' do
+      it 'Returns HTTP error' do
+        post :authenticate, params: { email: user.email,
+                                      password: 'wrong_password',
+                                      grant_type: 'password' }
+        expect(response).to have_http_status(400)
+      end
     end
 
-    it 'Response with the correct plain text' do
-      expect(response.body).to match('RUNNING')
+    context 'When no grant_type in request' do
+      it 'Returns HTTP error' do
+        post :authenticate, params: { email: user.email,
+                                      password: user.password }
+        expect(response).to have_http_status(400)
+      end
     end
   end
 end

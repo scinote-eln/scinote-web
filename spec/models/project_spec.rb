@@ -1,14 +1,6 @@
-# frozen_string_literal: true
-
 require 'rails_helper'
 
 describe Project, type: :model do
-  let(:project) { build :project }
-
-  it 'is valid' do
-    expect(project).to be_valid
-  end
-
   it 'should be of class Project' do
     expect(subject.class).to eq Project
   end
@@ -29,15 +21,14 @@ describe Project, type: :model do
     it { should have_db_column :restored_by_id }
     it { should have_db_column :restored_on }
     it { should have_db_column :experiments_order }
-    it { should have_db_column :template }
   end
 
   describe 'Relations' do
-    it { should belong_to(:team) }
-    it { should belong_to(:created_by).class_name('User').optional }
-    it { should belong_to(:last_modified_by).class_name('User').optional }
-    it { should belong_to(:archived_by).class_name('User').optional }
-    it { should belong_to(:restored_by).class_name('User').optional }
+    it { should belong_to :team }
+    it { should belong_to(:created_by).class_name('User') }
+    it { should belong_to(:last_modified_by).class_name('User') }
+    it { should belong_to(:archived_by).class_name('User') }
+    it { should belong_to(:restored_by).class_name('User') }
     it { should have_many :user_projects }
     it { should have_many :users }
     it { should have_many :experiments }
@@ -48,48 +39,22 @@ describe Project, type: :model do
     it { should have_many :report_elements }
   end
 
-  describe 'Validations' do
-    describe '#visibility' do
-      it { is_expected.to validate_presence_of :visibility }
+  describe 'Should be a valid object' do
+    let(:user) { create :user }
+    let(:team) { create :team, created_by: user }
+    it { should validate_presence_of :visibility }
+    it { should validate_presence_of :team }
+    it do
+      should validate_length_of(:name).is_at_least(Constants::NAME_MIN_LENGTH)
+        .is_at_most(Constants::NAME_MAX_LENGTH)
     end
 
-    describe '#team' do
-      it { is_expected.to validate_presence_of :team }
-    end
-
-    describe '#name' do
-      it do
-        is_expected.to(validate_length_of(:name)
-                         .is_at_least(Constants::NAME_MIN_LENGTH)
-                         .is_at_most(Constants::NAME_MAX_LENGTH))
-      end
-      it do
-        expect(project).to validate_uniqueness_of(:name).scoped_to(:team_id).case_insensitive
-      end
-    end
-
-    describe '#project_folder_team' do
-      it 'should validate equals of team and project_folder team' do
-        project_folder = create(:project_folder, name: 'Folder from another team')
-        project.project_folder = project_folder
-        project.save
-
-        expect(project.errors).to have_key(:project_folder)
-      end
-    end
-  end
-
-  describe 'after create hooks' do
-
-
-    it 'grands owner permissions to project creator' do
-      user = create(:user)
-      project.created_by = user
-      expect {
-        project.save
-      }.to change(UserAssignment, :count).by(1)
-      user_role = project.reload.user_assignments.first.user_role
-      expect(user_role.name).to eq 'Owner'
+    it 'should have a unique name scoped to team' do
+      create :project, created_by: user, last_modified_by: user, team: team
+      project_two = build :project, created_by: user,
+                                    last_modified_by: user,
+                                    team: team
+      expect(project_two).to_not be_valid
     end
   end
 end

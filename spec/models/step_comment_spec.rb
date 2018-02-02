@@ -1,14 +1,6 @@
-# frozen_string_literal: true
-
 require 'rails_helper'
 
 describe StepComment, type: :model do
-  let(:step_comment) { build :step_comment }
-
-  it 'is valid' do
-    expect(step_comment).to be_valid
-  end
-
   it 'should be of class StepComment' do
     expect(subject.class).to eq StepComment
   end
@@ -27,7 +19,7 @@ describe StepComment, type: :model do
     it { should belong_to :step }
   end
 
-  describe 'Validations' do
+  describe 'Should be a valid object' do
     it { should validate_presence_of :step }
   end
 end

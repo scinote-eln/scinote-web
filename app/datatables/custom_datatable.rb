@@ -18,8 +18,8 @@ class CustomDatatable < AjaxDatatablesRails::Base
 
   def fetch_records
     records = get_raw_records
-    records = filter_records(records) if dt_params[:search].present?
     records = sort_records(records) if order_params.present?
+    records = filter_records(records) if dt_params[:search].present?
     records = paginate_records(records) unless dt_params[:length].present? &&
                                                dt_params[:length] == '-1'
     records
@@ -36,18 +36,5 @@ class CustomDatatable < AjaxDatatablesRails::Base
       @sortable_displayed_columns << col[:data] if col[:orderable] == 'true'
     end
     @sortable_displayed_columns
-  end
-
-  def formated_date
-    f_date = I18n.backend.date_format.dup
-    f_date.gsub!(/%-d/, 'FMDD')
-    f_date.gsub!(/%d/, 'DD')
-    f_date.gsub!(/%-m/, 'FMMM')
-    f_date.gsub!(/%m/, 'MM')
-    f_date.gsub!(/%b/, 'Mon')
-    f_date.gsub!(/%B/, 'Month')
-    f_date.gsub!('%Y', 'YYYY')
-    f_date += ' HH24:MI'
-    f_date
   end
 end

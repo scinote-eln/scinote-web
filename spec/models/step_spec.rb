@@ -1,14 +1,6 @@
-# frozen_string_literal: true
-
 require 'rails_helper'
 
 describe Step, type: :model do
-  let(:step) { build :step }
-
-  it 'is valid' do
-    expect(step).to be_valid
-  end
-
   it 'should be of class Step' do
     expect(subject.class).to eq Step
   end
@@ -29,7 +21,7 @@ describe Step, type: :model do
   describe 'Relations' do
     it { should belong_to :user }
     it { should belong_to :protocol }
-    it { should belong_to(:last_modified_by).class_name('User').optional }
+    it { should belong_to(:last_modified_by).class_name('User') }
     it { should have_many :checklists }
     it { should have_many :step_comments }
     it { should have_many :step_assets }
@@ -40,7 +32,7 @@ describe Step, type: :model do
     it { should have_many :tiny_mce_assets }
   end
 
-  describe 'Validations' do
+  describe 'Should be a valid object' do
     it { should validate_presence_of :name }
     it { should validate_presence_of :position }
     it { should validate_presence_of :user }
@@ -50,7 +42,7 @@ describe Step, type: :model do
     end
     it do
       should validate_length_of(:description)
-        .is_at_most(Constants::RICH_TEXT_MAX_LENGTH)
+               .is_at_most(Constants::RICH_TEXT_MAX_LENGTH)
     end
     it { should validate_inclusion_of(:completed).in_array([true, false]) }
   end

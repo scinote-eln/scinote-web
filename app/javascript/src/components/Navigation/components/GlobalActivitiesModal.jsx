@@ -14,8 +14,8 @@ import ActivityDateElement from "./ActivityDateElement";
 import {
   WHITE_COLOR,
   COLOR_CONCRETE,
-  COLOR_EMPEROR,
-  COLOR_ALTO
+  COLOR_MINE_SHAFT,
+  COLOR_GRAY_LIGHT_YADCF
 } from "../../../config/constants/colors";
 
 const StyledBottom = styled(Button)`
@@ -37,14 +37,14 @@ const StyledBottom = styled(Button)`
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-  color: ${COLOR_EMPEROR};
+  color: ${COLOR_MINE_SHAFT};
   background-color: ${WHITE_COLOR};
-  border-color: ${COLOR_ALTO};
+  border-color: ${COLOR_GRAY_LIGHT_YADCF};
 `;
 
 const StyledModalBody = styled(Modal.Body)`
   background-color: ${COLOR_CONCRETE};
-  color: ${COLOR_EMPEROR};
+  color: ${COLOR_MINE_SHAFT};
 `;
 
 type Props = {

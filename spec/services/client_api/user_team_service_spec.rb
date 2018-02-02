@@ -1,33 +1,31 @@
-# frozen_string_literal: true
-
 require 'rails_helper'
 
 describe ClientApi::UserTeamService do
   let(:team_one) { create :team }
   let(:user_one) { create :user, email: Faker::Internet.email }
   let(:user_two) { create :user, email: Faker::Internet.email }
-  let(:user_team) { create :user_team, :admin, user: user_one, team: team_one }
+  let(:user_team) { create :user_team, user: user_one, team: team_one }
 
   it 'should raise ClientApi::CustomUserTeamError if user is not assigned' do
-    expect do
+    expect {
       ClientApi::UserTeamService.new(
         team_id: team_one.id,
         user_team_id: user_team.id
       )
-    end.to raise_error(ClientApi::CustomUserTeamError)
+    }.to raise_error(ClientApi::CustomUserTeamError)
   end
 
   it 'should raise ClientApi::CustomUserTeamError if team is not assigned' do
-    expect do
+    expect {
       ClientApi::UserTeamService.new(user: user_one, user_team_id: user_team.id)
-    end.to raise_error(ClientApi::CustomUserTeamError)
+    }.to raise_error(ClientApi::CustomUserTeamError)
   end
 
   it 'should raise ClientApi::CustomUserTeamError if ' \
      'user_team is not assigned' do
-    expect do
+    expect {
       ClientApi::UserTeamService.new(user: user_one, team_id: team_one.id)
-    end.to raise_error(ClientApi::CustomUserTeamError)
+    }.to raise_error(ClientApi::CustomUserTeamError)
   end
 
   describe '#destroy_user_team_and_assign_new_team_owner!' do
@@ -38,13 +36,13 @@ describe ClientApi::UserTeamService do
         user_team_id: user_team.id,
         user: user_one
       )
-      expect do
+      expect {
         ut_service.destroy_user_team_and_assign_new_team_owner!
-      end.to raise_error(ClientApi::CustomUserTeamError)
+      }.to raise_error(ClientApi::CustomUserTeamError)
     end
 
     it 'should destroy the user_team relation' do
-      create :user_team, :admin, team: team_one, user: user_one
+      create :user_team, team: team_one, user: user_one
       new_user_team = create :user_team, team: team_one, user: user_two
       ut_service = ClientApi::UserTeamService.new(
         team_id: team_one.id,
@@ -57,7 +55,7 @@ describe ClientApi::UserTeamService do
 
     it 'should assign a new owner to the team' do
       user_team_one = create :user_team, team: team_one, user: user_one
-      create :user_team, :admin, team: team_one, user: user_two
+      create :user_team, team: team_one, user: user_two
       ut_service = ClientApi::UserTeamService.new(
         team_id: team_one.id,
         user_team_id: user_team_one.id,
@@ -70,14 +68,15 @@ describe ClientApi::UserTeamService do
 
   describe '#update_role!' do
     it 'should raise ClientApi::CustomUserTeamError if no role is set' do
+      create :user_team, team: team_one, user: user_one
       ut_service = ClientApi::UserTeamService.new(
         user: user_one,
         team_id: team_one.id,
         user_team_id: user_team.id
       )
-      expect do
+      expect {
         ut_service.update_role!
-      end.to raise_error(ClientApi::CustomUserTeamError)
+      }.to raise_error(ClientApi::CustomUserTeamError)
     end
 
     it 'should update user role' do
@@ -96,16 +95,16 @@ describe ClientApi::UserTeamService do
 
     it 'should raise ClientApi::CustomUserTeamError if is the last ' \
        'admin on the team' do
-      user_team = create :user_team, :admin, team: team_one, user: user_one
+      user_team = create :user_team, team: team_one, user: user_one
       ut_service = ClientApi::UserTeamService.new(
         user: user_one,
         team_id: team_one.id,
         user_team_id: user_team.id,
         role: 1
       )
-      expect do
+      expect {
         ut_service.update_role!
-      end.to raise_error(ClientApi::CustomUserTeamError)
+      }.to raise_error(ClientApi::CustomUserTeamError)
     end
   end
 

@@ -4,7 +4,7 @@ import ReactDataGrid from 'react-data-grid';
 import styled from "styled-components";
 import {
   WHITE_COLOR,
-  COLOR_SILVER_CHALICE
+  COLOR_GRAY
 } from "../../config/constants/colors";
 
 const StyledReactDataGrid = styled(ReactDataGrid)`
@@ -16,7 +16,7 @@ const StyledReactDataGrid = styled(ReactDataGrid)`
 
   .react-grid-Header {
     .react-grid-HeaderCell {
-      background-color: ${COLOR_SILVER_CHALICE};
+      background-color: ${COLOR_GRAY};
 
       color: ${WHITE_COLOR};
       font-weight: normal;
@@ -92,7 +92,7 @@ class DataGrid extends Component {
   }
 
   transformColumns() {
-    // Transform columns from the "SciNote" representation into
+    // Transform columns from the "sciNote" representation into
     // ReactDataGrid-compatible representation
     this._columns =
       this.props.columns

@@ -5,9 +5,6 @@ require 'database_cleaner'
 require 'devise'
 require_relative 'support/controller_macros'
 ENV['RAILS_ENV'] = 'test'
-
-ENV['CORE_API_V1_ENABLED'] = 'true'
-
 require File.expand_path('../../config/environment', __FILE__)
 # Prevent database truncation if the environment is production
 abort('The Rails environment is running in production mode!') if Rails.env.production?
@@ -29,17 +26,18 @@ Dir[Rails.root.join('spec/support/**/*.rb')].each { |f| require f }
 #
 # Dir[Rails.root.join('spec/support/**/*.rb')].each { |f| require f }
 
-# Checks for pending migration
-begin
-  ActiveRecord::Migration.check_pending!
-rescue ActiveRecord::PendingMigrationError => e
-  abort(e.message)
-end
+# Checks for pending migration and applies them before tests are run.
+# If you are not using ActiveRecord, you can remove this line.
+ActiveRecord::Migration.maintain_test_schema!
 
 RSpec.configure do |config|
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_path = "#{::Rails.root}/spec/fixtures"
 
+  # If you're not using ActiveRecord, or you'd prefer not to run each of your
+  # examples within a transaction, remove the following line or assign false
+  # instead of true.
+  # http://www.virtuouscode.com/2012/08/31/configuring-database_cleaner-with-rails-rspec-capybara-and-selenium/
   config.use_transactional_fixtures = false
   config.before(:suite) do
     DatabaseCleaner.clean_with(:truncation)
@@ -55,33 +53,11 @@ RSpec.configure do |config|
 
   config.before(:each) do
     DatabaseCleaner.start
-
-    # project creation now requires an owner role to be present, as it assigns it to creator
-    # so we must ensure it always exists
-    UserRole.exists?(name: I18n.t('user_roles.predefined.owner')) || UserRole.owner_role.save!
   end
 
   config.after(:each) do
     DatabaseCleaner.clean
   end
-
-  config.before(:all) do
-    DatabaseCleaner.strategy = :transaction
-  end
-
-  config.before(:all) do
-    DatabaseCleaner.start
-    # project creation now requires an owner role to be present, as it assigns it to creator
-    # so we must ensure it always exists
-    UserRole.exists?(name: I18n.t('user_roles.predefined.owner')) || UserRole.owner_role.save!
-  end
-
-  config.after(:all) do
-    DatabaseCleaner.clean
-  end
-
-  Delayed::Worker.delay_jobs = false
-
   # RSpec Rails can automatically mix in different behaviours to your tests
   # based on their file location, for example enabling you to call `get` and
   # `post` in specs under `spec/controllers`.
@@ -104,16 +80,10 @@ RSpec.configure do |config|
 
   # includes FactoryBot in rspec
   config.include FactoryBot::Syntax::Methods
-  FactoryBot::SyntaxRunner.class_eval do
-    include ActionDispatch::TestProcess
-  end
   # Devise
   config.include Devise::Test::ControllerHelpers, type: :controller
-  config.include Devise::Test::IntegrationHelpers, type: :system
   config.include ApiHelper, type: :controller
-  config.include ApiHelper, type: :request
   config.extend ControllerMacros, type: :controller
-  config.include PermissionHelpers
 
   config.filter_run_excluding broken: true
 end

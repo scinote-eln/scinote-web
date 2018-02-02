@@ -1,98 +1,120 @@
 Canaid::Permissions.register_for(Team) do
-  # team: leave, read users, read projects
-  #       read protocols
-  #
+  # view projects, view protocols
+  # leave team, view team users (ATWHO)
+  # view samples, export samples
+  # view repositories, view repository, export repository rows
   can :read_team do |user, team|
     user.is_member_of_team?(team)
   end
 
-  # team: update
+  # edit team name, edit team description
   can :update_team do |user, team|
     user.is_admin_of_team?(team)
   end
 
-  # team: assign/unassing user, change user role
+  # invite user to team, change user's role, remove user from team
   can :manage_team_users do |user, team|
     user.is_admin_of_team?(team)
   end
 
-  # team: invite new users to the team
-  can :invite_team_users do
-    true
-  end
-
-  # project_folder: create
-  can :create_project_folders do |user, team|
-    user.is_admin_of_team?(team)
-  end
-
-  # project: create
+  # create project
   can :create_projects do |user, team|
     user.is_normal_user_or_admin_of_team?(team)
   end
 
-  # protocol in repository: create, import
+  # create protocol in repository, import protocol to repository
   can :create_protocols_in_repository do |user, team|
     user.is_normal_user_or_admin_of_team?(team)
   end
 
-  can :manage_bmt_filters do |user, team|
+  # create, import, edit, delete samples
+  can :manage_samples do |user, team|
     user.is_normal_user_or_admin_of_team?(team)
   end
 
-  # repository: create, copy
+  # create custom field
+  # create, update, delete sample type or sample group
+  can :manage_sample_columns do |user, team|
+    user.is_normal_user_or_admin_of_team?(team)
+  end
+
+  # create, copy repository
   can :create_repositories do |user, team|
-    within_limits = Repository.within_global_limits?
-    within_limits = Repository.within_team_limits?(team) if within_limits
-    within_limits && user.is_admin_of_team?(team)
+    user.is_admin_of_team?(team)
   end
 
-  # this permission is scattered around the application
-  # if you want to make changes here keep in mind to check/change the
-  # SQL view that lists reports in index page:
-  #   - db/views/datatables_reports_v01.sql
-  #   - check the model app/models/views/datatables/datatables_report.rb
-  #   - check visible_by method in Project model
-  can :manage_reports do |user, team|
+  # create, import, edit, delete repository records
+  can :manage_repository_rows do |user, team|
     user.is_normal_user_or_admin_of_team?(team)
   end
-end
 
-Canaid::Permissions.register_for(ProjectFolder) do
-  # ProjectFolder: delete
-  can :delete_project_folder do |user, project_folder|
-    user.is_admin_of_team?(project_folder.team) &&
-      project_folder.projects.none? &&
-      project_folder.project_folders.none?
+  # create repository column
+  can :create_repository_columns do |user, team|
+    user.is_normal_user_or_admin_of_team?(team)
   end
 end
 
 Canaid::Permissions.register_for(Protocol) do
-  # protocol in repository: read, export, read step, read/download step asset
+  # view protocol in repository, export protocol from repository
+  # view step in protocol in repository, view or dowload step asset
   can :read_protocol_in_repository do |user, protocol|
     user.is_member_of_team?(protocol.team) &&
       (protocol.in_repository_public? ||
       protocol.in_repository_private? && user == protocol.added_by)
   end
 
-  # protocol in repository: update, create/update/delete/reorder step,
-  #                         toggle private/public visibility, archive
-  can :manage_protocol_in_repository do |user, protocol|
+  # edit protocol in repository,
+  # create, edit, delete or reorder step in repository
+  can :update_protocol_in_repository do |user, protocol|
     protocol.in_repository_active? &&
-      user.is_normal_user_or_admin_of_team?(protocol.team) &&
+      can_update_protocol_type_in_repository?(user, protocol)
+  end
+
+  # toggle protocol visibility (public, private, archive, restore)
+  can :update_protocol_type_in_repository do |user, protocol|
+    user.is_normal_user_or_admin_of_team?(protocol.team) &&
       user == protocol.added_by
   end
 
-  # protocol in repository: restore
-  can :restore_protocol_in_repository do |user, protocol|
-    protocol.in_repository_archived? &&
-      user.is_normal_user_or_admin_of_team?(protocol.team) &&
-      user == protocol.added_by
-  end
-
-  # protocol in repository: copy
+  # clone protocol in repository
   can :clone_protocol_in_repository do |user, protocol|
-    can_read_protocol_in_repository?(user, protocol) &&
-      can_create_protocols_in_repository?(user, protocol.team)
+    can_create_protocols_in_repository?(user, protocol.team) &&
+      can_read_protocol_in_repository?(user, protocol)
   end
 end
+
+Canaid::Permissions.register_for(Sample) do
+  # edit, delete specific sample
+  can :update_or_delete_sample do |user, sample|
+    can_manage_samples?(user, sample.team)
+  end
+end
+
+Canaid::Permissions.register_for(CustomField) do
+  # update, delete custom field
+  can :update_or_delete_custom_field do |user, custom_field|
+    can_manage_sample_columns?(user, custom_field.team)
+  end
+end
+
+Canaid::Permissions.register_for(Repository) do
+  # edit, destroy repository
+  can :update_or_delete_repository do |user, repository|
+    can_create_repositories?(user, repository.team)
+  end
+end
+
+Canaid::Permissions.register_for(RepositoryRow) do
+  # update, delete specific repository record
+  can :update_or_delete_repository_row do |user, repository_row|
+    can_manage_repository_rows?(user, repository_row.repository.team)
+  end
+end
+
+Canaid::Permissions.register_for(RepositoryColumn) do
+  # update, delete repository column
+  can :update_or_delete_repository_column do |user, repository_column|
+    can_create_repository_columns?(user, repository_column.repository.team)
+  end
+end
+

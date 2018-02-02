@@ -16,11 +16,10 @@ import SearchDropdown from "./components/SearchDropdown";
 import NotificationsDropdown from "./components/NotificationsDropdown";
 import InfoDropdown from "./components/InfoDropdown";
 import UserAccountDropdown from "./components/UserAccountDropdown";
-// Ignore so Heroku builds pass
-//import withExtras from 'react-hijack';
-//import addonsConfig from '../../componentLoader/config';
-//import massageConfiguration from '../../componentLoader/massageConfiguration';
-//import componentLoader from '../../componentLoader';
+import withExtras from 'react-hijack';
+import addonsConfig from '../../componentLoader/config';
+import massageConfiguration from '../../componentLoader/massageConfiguration';
+import componentLoader from '../../componentLoader';
 
 const StyledNavbar = styled(Navbar)`
   background-color: ${WHITE_COLOR};
@@ -84,21 +83,21 @@ class Navigation extends Component {
         <StyledNavbar onSelect={this.selectItemCallback}>
           <Navbar.Header>
             <Navbar.Brand>
-              <StyledBrand href="/" title="SciNote">
+              <StyledBrand href="/" title="sciNote">
                 <img src="/images/logo.png" alt="Logo" />
               </StyledBrand>
             </Navbar.Brand>
           </Navbar.Header>
           <Nav>
             <NavItem eventKey={1}>
-              <span className="fas fa-folder" title="Home" />&nbsp;
+              <span className="glyphicon glyphicon-home" title="Home" />&nbsp;
               <span className="visible-xs-inline visible-sm-inline">
                 <FormattedMessage id="navbar.home_label" />
               </span>
             </NavItem>
             <NavItem eventKey={2}>
               <span
-                className="fas fa-edit"
+                className="glyphicon glyphicon-list-alt"
                 title="Protocol repositories"
               />&nbsp;
               <span className="visible-xs-inline visible-sm-inline">
@@ -107,7 +106,7 @@ class Navigation extends Component {
             </NavItem>
             <NavItem eventKey={3}>
               <i
-                className="fas fa-list-alt"
+                className="fa fa-cubes"
                 aria-hidden="true"
                 title="Repositories"
               />&nbsp;
@@ -117,7 +116,7 @@ class Navigation extends Component {
             </NavItem>
             <NavItem eventKey={4}>
               <span
-                className="fas fa-list"
+                className="glyphicon glyphicon-equalizer"
                 title="Activities"
               />&nbsp;
               <span className="visible-xs-inline visible-sm-inline">
@@ -152,12 +151,9 @@ Navigation.propTypes = {
 
 // Map the states from store to component props
 const mapStateToProps = ({ current_team }) => ({ current_team });
+const NavigationWithExtras = withExtras({
+  identifier: 'navigation',
+  config: massageConfiguration(addonsConfig, 'navigation'),
+}, componentLoader)(Navigation);
 
-// Ignore so Heroku builds pass
-//const NavigationWithExtras = withExtras({
-//  identifier: 'navigation',
-//  config: massageConfiguration(addonsConfig, 'navigation'),
-//}, componentLoader)(Navigation);
-//
-//export default connect(mapStateToProps)(NavigationWithExtras);
-export default connect(mapStateToProps)(Navigation);
+export default connect(mapStateToProps)(NavigationWithExtras);

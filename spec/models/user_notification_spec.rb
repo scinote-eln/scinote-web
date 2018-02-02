@@ -1,14 +1,7 @@
-# frozen_string_literal: true
-
 require 'rails_helper'
 
 describe UserNotification, type: :model do
   let(:user) { create :user }
-  let(:user_notification) { build :user_notification }
-
-  it 'is valid' do
-    expect(user_notification).to be_valid
-  end
 
   it 'should be of class UserNotification' do
     expect(subject.class).to eq UserNotification
@@ -23,8 +16,8 @@ describe UserNotification, type: :model do
   end
 
   describe 'Relations' do
-    it { should belong_to(:user).optional }
-    it { should belong_to(:notification).optional }
+    it { should belong_to :user }
+    it { should belong_to :notification }
   end
 
   describe '#unseen_notification_count ' do
@@ -54,9 +47,9 @@ describe UserNotification, type: :model do
     end
 
     it 'set the check status to false' do
-      expect do
+      expect {
         UserNotification.seen_by_user(user)
-      end.to change { user_notification_one.reload.checked }.from(false).to(true)
+      }.to change { user_notification_one.reload.checked }.from(false).to(true)
     end
   end
 end

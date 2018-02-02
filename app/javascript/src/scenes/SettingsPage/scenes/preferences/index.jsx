@@ -75,7 +75,7 @@ class SettingsPreferences extends Component<Props, State> {
               type={ASSIGNMENT_NOTIFICATION}
               title="settings_page.assignement"
               subtitle="settings_page.assignement_msg"
-              iconClasses="fas fa-newspaper-o"
+              iconClasses="fa fa-newspaper-o"
               inAppNotification={this.state.assignments_notification}
               emailNotification={this.state.assignments_email_notification}
               iconBackground={MAIN_COLOR_BLUE}
@@ -94,7 +94,7 @@ class SettingsPreferences extends Component<Props, State> {
               title="settings_page.system_message"
               subtitle="settings_page.system_message_msg"
               emailNotification={this.state.system_message_email_notification}
-              iconClasses="fas fa-chess-rook"
+              iconClasses="glyphicon glyphicon-tower"
               iconBackground={ICON_GREEN_COLOR}
               reloadInfo={this.getPreferencesInfo}
             />

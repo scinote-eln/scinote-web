@@ -1,25 +1,26 @@
-# frozen_string_literal: true
-
 FactoryBot.define do
-  factory :experiment, class: Experiment do
-    transient do
-      user { create :user }
-    end
-    sequence(:name) { |n| "Experiment-#{n}" }
-    description { Faker::Lorem.sentence }
-    created_by { user }
-    last_modified_by { user }
-    project { create :project, created_by: user }
-    trait :with_tasks do
-      after(:create) do |e|
-        create_list :my_module, 3, :with_tag, experiment: e, created_by: e.created_by
-      end
-    end
+  factory :experiment do
+    name 'My Experiment'
+    description 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit.'
+  end
 
-    trait :archived do
-      archived { true }
-      archived_on { Time.zone.now }
-      archived_by { created_by }
-    end
+  factory :experiment_one, class: Experiment do
+    name 'My Experiment One'
+    description 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit.'
+    association :project, factory: :project
+    association :created_by, factory: :user, email: Faker::Internet.email
+    association :last_modified_by,
+                factory: :user,
+                email: Faker::Internet.email
+  end
+
+  factory :experiment_two, class: Experiment do
+    name Faker::Name.name
+    description 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit.'
+    association :project, factory: :project
+    association :created_by, factory: :user, email: Faker::Internet.email
+    association :last_modified_by,
+                factory: :user,
+                email: Faker::Internet.email
   end
 end

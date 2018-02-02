@@ -26,7 +26,7 @@ module ClientApi
 
     def update_team!
       raise ClientApi::CustomTeamError unless @params
-      return if @team.update(@params)
+      return if @team.update_attributes(@params)
       raise ClientApi::CustomTeamError, @team.errors.full_messages
     end
 

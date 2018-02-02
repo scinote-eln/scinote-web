@@ -1,14 +1,6 @@
-# frozen_string_literal: true
-
 require 'rails_helper'
 
 describe UserTeam, type: :model do
-  let(:user_team) { build :user_team }
-
-  it 'is valid' do
-    expect(user_team).to be_valid
-  end
-
   it 'should be of class UserTeam' do
     expect(subject.class).to eq UserTeam
   end
@@ -25,10 +17,10 @@ describe UserTeam, type: :model do
   describe 'Relations' do
     it { should belong_to :user }
     it { should belong_to :team }
-    it { should belong_to(:assigned_by).class_name('User').optional }
+    it { should belong_to(:assigned_by).class_name('User') }
   end
 
-  describe 'Validations' do
+  describe 'Should be a valid object' do
     it { should validate_presence_of :role }
     it { should validate_presence_of :user }
     it { should validate_presence_of :team }

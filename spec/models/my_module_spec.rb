@@ -1,14 +1,6 @@
-# frozen_string_literal: true
-
 require 'rails_helper'
 
 describe MyModule, type: :model do
-  let(:my_module) { build :my_module }
-
-  it 'is valid' do
-    expect(my_module).to be_valid
-  end
-
   it 'should be of class MyModule' do
     expect(subject.class).to eq MyModule
   end
@@ -30,26 +22,27 @@ describe MyModule, type: :model do
     it { should have_db_column :archived_by_id }
     it { should have_db_column :restored_by_id }
     it { should have_db_column :restored_on }
+    it { should have_db_column :nr_of_assigned_samples }
     it { should have_db_column :workflow_order }
     it { should have_db_column :experiment_id }
     it { should have_db_column :state }
     it { should have_db_column :completed_on }
-    it { should have_db_column :started_on }
-    it { should have_db_column :my_module_status_id }
   end
 
   describe 'Relations' do
-    it { should belong_to(:experiment) }
-    it { should belong_to(:my_module_group).optional }
-    it { should belong_to(:created_by).class_name('User').optional }
-    it { should belong_to(:last_modified_by).class_name('User').optional }
-    it { should belong_to(:archived_by).class_name('User').optional }
-    it { should belong_to(:restored_by).class_name('User').optional }
+    it { should belong_to :experiment }
+    it { should belong_to :my_module_group }
+    it { should belong_to(:created_by).class_name('User') }
+    it { should belong_to(:last_modified_by).class_name('User') }
+    it { should belong_to(:archived_by).class_name('User') }
+    it { should belong_to(:restored_by).class_name('User') }
     it { should have_many :results }
     it { should have_many :my_module_tags }
     it { should have_many :tags }
     it { should have_many :task_comments }
     it { should have_many :my_modules }
+    it { should have_many :sample_my_modules }
+    it { should have_many :samples }
     it { should have_many :my_module_repository_rows }
     it { should have_many :repository_rows }
     it { should have_many :user_my_modules }
@@ -62,58 +55,19 @@ describe MyModule, type: :model do
     it { should have_many(:my_module_antecessors).class_name('MyModule') }
   end
 
-  describe 'Validations' do
-    describe '#name' do
-      it do
-        is_expected.to(validate_length_of(:name)
-                         .is_at_least(Constants::NAME_MIN_LENGTH)
-                         .is_at_most(Constants::NAME_MAX_LENGTH))
-      end
+  describe 'Should be a valid object' do
+    it { should validate_presence_of :x }
+    it { should validate_presence_of :y }
+    it { should validate_presence_of :workflow_order }
+    it { should validate_presence_of :experiment }
+    it do
+      should validate_length_of(:name)
+        .is_at_least(Constants::NAME_MIN_LENGTH)
+        .is_at_most(Constants::NAME_MAX_LENGTH)
     end
-
-    describe '#description' do
-      it do
-        is_expected.to(validate_length_of(:description)
-                         .is_at_most(Constants::RICH_TEXT_MAX_LENGTH))
-      end
-    end
-
-    describe '#x, #y scoped to experiment for active modules' do
-      it { is_expected.to validate_presence_of :x }
-      it { is_expected.to validate_presence_of :y }
-
-      it 'should be invalid for same x, y, and experiment' do
-        my_module.save
-        new_my_module = my_module.dup
-
-        expect(new_my_module).not_to be_valid
-      end
-
-      it 'should be valid when module with same x, y and expriment is archived' do
-        my_module.save
-        new_my_module = my_module.dup
-        my_module.update_column(:archived, true)
-
-        expect(new_my_module).to be_valid
-      end
-    end
-
-    describe '#workflow_order' do
-      it { is_expected.to validate_presence_of :workflow_order }
-    end
-
-    describe '#experiment' do
-      it { is_expected.to validate_presence_of :experiment }
-    end
-  end
-
-  describe 'after_create_commit' do
-    it 'triggers the UserAssignments::GenerateUserAssignmentsJob job' do
-      my_module.created_by = create(:user)
-      expect(UserAssignments::GenerateUserAssignmentsJob).to receive(:perform_later).with(
-        my_module, my_module.created_by
-      )
-      my_module.save!
+    it do
+      should validate_length_of(:description)
+        .is_at_most(Constants::TEXT_MAX_LENGTH)
     end
   end
 end
