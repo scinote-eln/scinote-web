@@ -1,4 +1,4 @@
-class AddEmailSystemNotificationSettingToUser < ActiveRecord::Migration
+class AddEmailSystemNotificationSettingToUser < ActiveRecord::Migration[4.2]
   def up
     add_column :users,
                :system_message_notification_email,

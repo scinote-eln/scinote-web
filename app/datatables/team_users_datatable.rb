@@ -1,4 +1,4 @@
-class TeamUsersDatatable < AjaxDatatablesRails::Base
+class TeamUsersDatatable < CustomDatatable
   include InputSanitizeHelper
   include ActiveRecord::Sanitization::ClassMethods
 

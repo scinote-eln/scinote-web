@@ -29,58 +29,41 @@ class CanvasController < ApplicationController
   end
 
   def update
-    error = false
-
     # Make sure that remove parameter is valid
     to_archive = []
-    if can_archive_modules(@experiment) and
-      update_params[:remove].present? then
-      to_archive = update_params[:remove].split(",")
-      unless to_archive.all? { |id| is_int? id }
-        error = true
+    if can_archive_modules(@experiment) && update_params[:remove].present?
+      to_archive = update_params[:remove].split(',')
+      if to_archive.all? { |id| is_int? id }
+        to_archive.collect!(&:to_i)
       else
-        to_archive.collect! { |id| id.to_i }
+        return render_403
       end
-    end
-
-    if error then
-      render_403 and return
     end
 
     # Make sure connections parameter is valid
     connections = []
-    if can_edit_connections(@experiment) and
-      update_params[:connections].present? then
-      conns = update_params[:connections].split(",")
-      unless conns.length % 2 == 0 and
-        conns.all? { |c| c.is_a? String } then
-        error = true
-      else
+    if can_edit_connections(@experiment) && update_params[:connections].present?
+      conns = update_params[:connections].split(',')
+      if conns.length.even? && conns.all? { |c| c.is_a? String }
         conns.each_slice(2).each do |c|
           connections << [c[0], c[1]]
         end
+      else
+        return render_403
       end
     end
 
-    if error then
-      render_403 and return
-    end
-
     # Make sure positions parameter is valid
-    positions = Hash.new
-    if can_reposition_modules(@experiment) and
-      update_params[:positions].present? then
-      poss = update_params[:positions].split(";")
-      center = ""
-      (poss.collect { |pos| pos.split(",") }).each_with_index do |pos, index|
-        unless pos.length == 3 &&
-               pos[0].is_a?(String) &&
-               float?(pos[1]) &&
-               float?(pos[2])
-          error = true
-          break
+    positions = {}
+    if can_reposition_modules(@experiment) && update_params[:positions].present?
+      poss = update_params[:positions].split(';')
+      center = ''
+      (poss.collect { |pos| pos.split(',') }).each_with_index do |pos, index|
+        unless pos.length == 3 && pos[0].is_a?(String) &&
+               float?(pos[1]) && float?(pos[2])
+          return render_403
         end
-        if index == 0
+        if index.zero?
           center = pos
           x = 0
           y = 0
@@ -89,68 +72,44 @@ class CanvasController < ApplicationController
           y = pos[2].to_i - center[2].to_i
         end
         # Multiple modules cannot have same position
-        if positions.any? { |k,v| v[:x] == x and v[:y] == y} then
-          error = true
-          break
-        end
+        return render_403 if positions.any? { |_, v| v[:x] == x && v[:y] == y }
         positions[pos[0]] = { x: x, y: y }
       end
-    end
-
-    if error then
-      render_403 and return
     end
 
     # Make sure that to_add is an array of strings,
     # as well as that positions for newly added modules exist
     to_add = []
-    if can_create_modules(@experiment) and
-      update_params[:add].present? and
-      update_params["add-names"].present? then
-      ids = update_params[:add].split(",")
-      names = update_params["add-names"].split("|")
-      unless ids.length == names.length and
-        ids.all? { |id| id.is_a? String and positions.include? id } and
-        names.all? { |name| name.is_a? String }
-        error = true
-      else
+    if can_create_modules(@experiment) && update_params[:add].present? &&
+       update_params['add-names'].present?
+      ids = update_params[:add].split(',')
+      names = update_params['add-names'].split('|')
+      if ids.length == names.length &&
+         ids.all? { |id| id.is_a?(String) && positions.include?(id) } &&
+         names.all? { |name| name.is_a? String }
         ids.each_with_index do |id, i|
-          to_add << {
-            id: id,
-            name: names[i],
-            x: positions[id][:x],
-            y: positions[id][:y]
-          }
+          to_add << { id: id, name: names[i],
+                      x: positions[id][:x], y: positions[id][:y] }
         end
+      else
+        return render_403
       end
-    end
-
-    if error then
-      render_403 and return
     end
 
     # Make sure rename parameter is valid
-    to_rename = Hash.new
-    if can_edit_modules(@experiment) and
-      update_params[:rename].present? then
+    to_rename = {}
+    if can_edit_modules(@experiment) && update_params[:rename].present?
       begin
         to_rename = JSON.parse(update_params[:rename])
-
         # Okay, JSON parsed!
-        unless (
-          to_rename.is_a? Hash and
-          to_rename.keys.all? { |k| k.is_a? String } and
-          to_rename.values.all? { |k| k.is_a? String }
-        )
-          error = true
+        unless to_rename.is_a?(Hash) &&
+               to_rename.keys.all? { |k| k.is_a? String } &&
+               to_rename.values.all? { |k| k.is_a? String }
+          return render_403
         end
       rescue
-        error = true
+        return render_403
       end
-    end
-
-    if error then
-      render_403 and return
     end
 
     # Make sure move parameter is valid
@@ -158,17 +117,14 @@ class CanvasController < ApplicationController
     if can_move_modules(@experiment) && update_params[:move].present?
       begin
         to_move = JSON.parse(update_params[:move])
-
         # Okay, JSON parsed!
-        unless (
-          to_move.is_a? Hash and
-          to_move.keys.all? { |k| k.is_a? String } &&
-          to_move.values.all? { |k| k.is_a? String }
-        )
-          error = true
+        unless to_move.is_a?(Hash) &&
+               to_move.keys.all? { |k| k.is_a? String } &&
+               to_move.values.all? { |k| k.is_a? String }
+          return render_403
         end
       rescue
-        error = true
+        return render_403
       end
     end
 
@@ -181,52 +137,19 @@ class CanvasController < ApplicationController
       end
     end
 
-    render_403 and return if error
-
     # Make sure that to_clone is an array of pairs,
     # as well as that all IDs exist
-    to_clone = Hash.new
-    if can_clone_modules(@experiment) and
-      update_params[:cloned].present? then
-      clones = update_params[:cloned].split(";")
-      (clones.collect { |v| v.split(",") }).each do |val|
-        unless (val.length == 2 and
-          is_int? val[0] and
-          val[1].is_a? String and
-          to_add.any? { |m| m[:id] == val[1] })
-          error = true
-          break
-        else
+    to_clone = {}
+    if can_clone_modules(@experiment) && update_params[:cloned].present?
+      clones = update_params[:cloned].split(';')
+      (clones.collect { |v| v.split(',') }).each do |val|
+        if val.length == 2 && is_int?(val[0]) && val[1].is_a?(String) &&
+           to_add.any? { |m| m[:id] == val[1] }
           to_clone[val[1]] = val[0]
+        else
+          return render_403
         end
       end
-    end
-
-    if error then
-      render_403 and return
-    end
-
-    module_groups = Hash.new
-    if can_edit_module_groups(@experiment) and
-      update_params["module-groups"].present? then
-      begin
-        module_groups = JSON.parse(update_params["module-groups"])
-
-        # Okay, JSON parsed!
-        unless (
-          module_groups.is_a? Hash and
-          module_groups.keys.all? { |k| k.is_a? String } and
-          module_groups.values.all? { |k| k.is_a? String }
-        )
-          error = true
-        end
-      rescue
-        error = true
-      end
-    end
-
-    if error then
-      render_403 and return
     end
 
     # Call the "master" function to do all the updating for us
@@ -239,36 +162,29 @@ class CanvasController < ApplicationController
       to_clone,
       connections,
       positions,
-      current_user,
-      module_groups
+      current_user
     )
-      render_403 and return
+      return render_403
     end
 
-    #Save activities that modules were archived
+    # Save activities that modules were archived
     to_archive.each do |module_id|
       my_module = MyModule.find_by_id(module_id)
-      unless my_module.blank?
-        Activity.create(
-          type_of: :archive_module,
-          project: my_module.experiment.project,
-          experiment: my_module.experiment,
-          my_module: my_module,
-          user: current_user,
-          message: t(
-            'activities.archive_module',
-            user: current_user.full_name,
-            module: my_module.name
-          )
-        )
-      end
+      next if my_module.blank?
+      Activity.create(type_of: :archive_module,
+        project: my_module.experiment.project,
+        experiment: my_module.experiment,
+        my_module: my_module,
+        user: current_user,
+        message: t('activities.archive_module',
+                   user: current_user.full_name,
+                   module: my_module.name))
     end
 
     # Create workflow image
     @experiment.delay.generate_workflow_img
 
-    flash[:success] = t(
-      "experiments.canvas.update.success_flash")
+    flash[:success] = t('experiments.canvas.update.success_flash')
     redirect_to canvas_experiment_path(@experiment)
   end
 

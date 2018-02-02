@@ -1,12 +1,14 @@
-class ProtocolProtocolKeyword < ActiveRecord::Base
+class ProtocolProtocolKeyword < ApplicationRecord
   after_create :increment_protocols_count
   after_destroy :decrement_protocols_count
 
   validates :protocol, presence: true
   validates :protocol_keyword, presence: true
 
-  belongs_to :protocol, inverse_of: :protocol_protocol_keywords
-  belongs_to :protocol_keyword, inverse_of: :protocol_protocol_keywords
+  belongs_to :protocol, inverse_of: :protocol_protocol_keywords, optional: true
+  belongs_to :protocol_keyword,
+             inverse_of: :protocol_protocol_keywords,
+             optional: true
 
   private
 

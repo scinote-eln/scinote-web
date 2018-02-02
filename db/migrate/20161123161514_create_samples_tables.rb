@@ -1,4 +1,4 @@
-class CreateSamplesTables < ActiveRecord::Migration
+class CreateSamplesTables < ActiveRecord::Migration[4.2]
   def change
     create_table :samples_tables do |t|
       t.jsonb :status, null: false,

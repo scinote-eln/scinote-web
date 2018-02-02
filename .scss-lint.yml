@@ -215,7 +215,7 @@ linters:
 
   StringQuotes:
     enabled: true
-    style: single_quotes # or double_quotes
+    style: double_quotes # or single_quotes
 
   TrailingSemicolon:
     enabled: true

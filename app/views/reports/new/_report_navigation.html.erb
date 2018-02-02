@@ -4,13 +4,13 @@
       <div>
         <ul class="breadcrumb" style="margin-left: 15px;">
           <li>
-            <% if can_view_projects(@project.team) %>
+            <% if can_read_team?(@project.team) %>
               <a id="team-link"
                  href="<%= projects_path :team => @project.team.id %>">
             <% end %>
             <span class="hidden-sm hidden-md hidden-lg">Org</span>
             <span class="hidden-xs"><%= @project.team.name %></span>
-            <% if can_view_projects(@project.team) %>
+            <% if can_read_team?(@project.team) %>
               </a>
             <% end %>
           </li>

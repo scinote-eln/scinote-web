@@ -1,4 +1,4 @@
-class CreateStepTables < ActiveRecord::Migration
+class CreateStepTables < ActiveRecord::Migration[4.2]
   def change
     create_table :step_tables do |t|
       t.integer :step_id, null: false

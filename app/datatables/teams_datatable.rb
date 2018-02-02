@@ -1,4 +1,4 @@
-class TeamsDatatable < AjaxDatatablesRails::Base
+class TeamsDatatable < CustomDatatable
   include InputSanitizeHelper
 
   def_delegator :@view, :link_to
@@ -56,16 +56,12 @@ class TeamsDatatable < AjaxDatatablesRails::Base
   # Overwrite default sort method to handle custom members column
   # which is calculated in code and not present in DB
   def sort_records(records)
-    if params[:order].present? && params[:order].length == 1
-      if sort_column(params[:order].values[0]) == MEMEBERS_SORT_COL
-        records = records.sort_by(&proc { |ut| ut.team.users.count })
-        if params[:order].values[0]['dir'] == 'asc'
-          return records
-        elsif params[:order].values[0]['dir'] == 'desc'
-          return records.reverse
-        end
-      else
-        super(records)
+    if sort_column(order_params) == MEMEBERS_SORT_COL
+      records = records.sort_by(&proc { |ut| ut.team.users.count })
+      if order_params['dir'] == 'asc'
+        return records
+      elsif order_params['dir'] == 'desc'
+        return records.reverse
       end
     else
       super(records)

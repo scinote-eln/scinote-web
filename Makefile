@@ -1,5 +1,6 @@
 APP_HOME="/usr/src/app"
 DB_IP=$(shell docker inspect scinote_db_development | grep "\"IPAddress\": " | awk '{ match($$0, /"IPAddress": "([0-9\.]*)",/, a); print a[1] }')
+PAPERCLIP_HASH_SECRET=$(shell openssl rand -base64 128 | tr -d '\n')
 
 define PRODUCTION_CONFIG_BODY
 SECRET_KEY_BASE=$(shell openssl rand -hex 64)
@@ -13,6 +14,7 @@ ENABLE_USER_REGISTRATION=true
 DEFACE_ENABLED=false
 endef
 export PRODUCTION_CONFIG_BODY
+
 
 all: docker database
 
@@ -66,7 +68,7 @@ stop:
 	@docker-compose stop
 
 worker:
-	@$(MAKE) rails cmd="rake jobs:work"
+	@$(MAKE) rails cmd="rake jobs:work export WORKER=1"
 
 cli:
 	@$(MAKE) rails cmd="/bin/bash"
@@ -74,8 +76,14 @@ cli:
 cli-production:
 	@$(MAKE) rails-production cmd="/bin/bash"
 
-tests:
-	@$(MAKE) rails cmd="rake test"
+unit-tests:
+	@$(MAKE) rails cmd="bundle exec rspec"
+
+integration-tests:
+	@$(MAKE) rails cmd="bundle exec cucumber"
+
+tests-ci:
+	@docker-compose run -e ENABLE_EMAIL_CONFIRMATIONS=false -e MAILER_PORT=$MAILER_PORT -e SMTP_DOMAIN=$SMTP_DOMAIN -e SMTP_USERNAME=$SMTP_USERNAME -e SMTP_PASSWORD=$SMTP_PASSWORD -e SMTP_ADDRESS=$SMTP_ADDRESS -e PAPERCLIP_HASH_SECRET=PAPERCLIP_HASH_SECRET -e MAIL_SERVER_URL=localhost -e PAPERCLIP_STORAGE=filesystem -e ENABLE_TUTORIAL=false -e ENABLE_RECAPTCHA=false -e ENABLE_USER_CONFIRMATION=false -e ENABLE_USER_REGISTRATION=true --rm web bash -c "bundle install && rake db:create db:migrate && rake db:migrate RAILS_ENV=test && yarn install && bundle exec rspec && bundle exec cucumber"
 
 console:
 	@$(MAKE) rails cmd="rails console"

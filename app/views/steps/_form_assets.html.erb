@@ -12,7 +12,7 @@
   </div>
   <div class="panel-body">
     <% if ff.object.file.exists? %>
-      <% if can_view_or_download_step_assets(@protocol) %>
+      <% if @protocol.in_module? && can_view_or_download_step_assets(@protocol) || @protocol.in_repository? && can_read_protocol_in_repository?(@protocol) %>
         <% if ff.object.is_image? %>
           <%= link_to download_asset_path(ff.object),
             class: 'image-preview-link',

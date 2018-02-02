@@ -1,12 +1,30 @@
 Rails.application.routes.draw do
   require 'subdomain'
+
+  def draw(routes_name)
+    instance_eval(File.read(Rails.root.join("config/routes/#{routes_name}.rb")))
+  end
+
   constraints UserSubdomain do
-    devise_for :users, controllers: { registrations: 'users/registrations',
-                                      sessions: 'users/sessions',
-                                      invitations: 'users/invitations',
-                                      confirmations: 'users/confirmations' }
+    devise_for :users,
+               controllers: { registrations: 'users/registrations',
+                              sessions: 'users/sessions',
+                              invitations: 'users/invitations',
+                              confirmations: 'users/confirmations',
+                              omniauth_callbacks: 'users/omniauth_callbacks' }
 
     root 'projects#index'
+
+    # # Client APP endpoints
+    # get '/settings', to: 'client_api/settings#index'
+    # get '/settings/*all', to: 'client_api/settings#index'
+    #
+    # namespace :client_api, defaults: { format: 'json' } do
+    #   post '/premissions', to: 'permissions#status'
+    #   %i(activities teams notifications users configurations).each do |path|
+    #     draw path
+    #   end
+    # end
 
     # Save sample table state
     post '/state_save/:team_id/:user_id',
@@ -25,9 +43,16 @@ Rails.application.routes.draw do
     get 'not_found', to: 'application#not_found', as: 'not_found'
 
     # Settings
+    resources :users, only: :index # needed for testing signup
+    # needed for testing edit passowrd
+    get '/users/password', to: 'devise_password#edit'
+
     get 'users/settings/account/preferences',
         to: 'users/settings/account/preferences#index',
         as: 'preferences'
+    get 'users/settings/account/addons',
+        to: 'users/settings/account/addons#index',
+        as: 'addons'
     put 'users/settings/account/preferences',
         to: 'users/settings/account/preferences#update',
         as: 'update_preferences'
@@ -398,6 +423,7 @@ Rails.application.routes.draw do
             to: 'protocols#load_from_repository_modal'
         post 'load_from_repository', to: 'protocols#load_from_repository'
         post 'load_from_file', to: 'protocols#load_from_file'
+
         get 'copy_to_repository_modal', to: 'protocols#copy_to_repository_modal'
         post 'copy_to_repository', to: 'protocols#copy_to_repository'
         get 'protocol_status_bar', to: 'protocols#protocol_status_bar'
@@ -415,6 +441,8 @@ Rails.application.routes.draw do
         post 'archive', to: 'protocols#archive'
         post 'restore', to: 'protocols#restore'
         post 'import', to: 'protocols#import'
+        post 'protocolsio_import_create', to: 'protocols#protocolsio_import_create'
+        post 'protocolsio_import_save', to: 'protocols#protocolsio_import_save'
         get 'export', to: 'protocols#export'
       end
     end
@@ -465,12 +493,21 @@ Rails.application.routes.draw do
     get 'files/:id/preview', to: 'assets#preview', as: 'preview_asset'
     get 'files/:id/view', to: 'assets#view', as: 'view_asset'
     get 'files/:id/edit', to: 'assets#edit', as: 'edit_asset'
-    post 'asset_signature' => 'assets#signature'
 
     devise_scope :user do
       get 'avatar/:id/:style' => 'users/registrations#avatar', as: 'avatar'
       post 'avatar_signature' => 'users/registrations#signature'
       get 'users/auth_token_sign_in' => 'users/sessions#auth_token_create'
+    end
+
+    namespace :api, defaults: { format: 'json' } do
+      get 'health', to: 'api#health'
+      get 'status', to: 'api#status'
+      post 'auth/token', to: 'api#authenticate'
+      scope '20170715', module: 'v20170715' do
+        get 'tasks/tree', to: 'core_api#tasks_tree'
+        get 'tasks/:task_id/samples', to: 'core_api#task_samples'
+      end
     end
   end
 

@@ -46,7 +46,7 @@ class MyModuleTagsController < ApplicationController
 
     respond_to do |format|
       format.json do
-        redirect_to my_module_tags_edit_path(format: :json),
+        redirect_to my_module_tags_edit_path(format: :json), turbolinks: false,
                     status: 303
       end
     end
@@ -58,7 +58,7 @@ class MyModuleTagsController < ApplicationController
 
     respond_to do |format|
       format.json do
-        redirect_to my_module_tags_edit_path(format: :json),
+        redirect_to my_module_tags_edit_path(format: :json), turbolinks: false,
                     status: 303
       end
     end

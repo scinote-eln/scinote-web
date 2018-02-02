@@ -1,4 +1,4 @@
-class CreateUserOrganizations < ActiveRecord::Migration
+class CreateUserOrganizations < ActiveRecord::Migration[4.2]
   def change
     create_table :user_teams do |t|
       t.column :role, :integer, null: false, default: 1

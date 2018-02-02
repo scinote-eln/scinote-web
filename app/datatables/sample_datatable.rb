@@ -1,6 +1,6 @@
 require 'active_record'
 
-class SampleDatatable < AjaxDatatablesRails::Base
+class SampleDatatable < CustomDatatable
   include ActionView::Helpers::TextHelper
   include SamplesHelper
   include InputSanitizeHelper
@@ -49,7 +49,8 @@ class SampleDatatable < AjaxDatatablesRails::Base
     @user = user
   end
 
-  # Define sortable columns, so 1st column will be sorted by attribute in sortable_columns[0]
+  # Define sortable columns, so 1st column will be sorted
+  # by attribute in sortable_columns[0]
   def sortable_columns
     sort_array = [
       ASSIGNED_SORT_COL,
@@ -86,9 +87,9 @@ class SampleDatatable < AjaxDatatablesRails::Base
     param_index = 2
     filtered_array = []
     input_array.each do |col|
-      next if params[:columns].to_a[param_index].nil?
+      next if dt_params.to_a[param_index].nil?
       params_col =
-        params[:columns].to_a.find { |v| v[1]['data'] == param_index.to_s }
+        columns_params.to_a.find { |v| v[1]['data'] == param_index.to_s }
       filtered_array.push(col) unless params_col[1]['searchable'] == 'false'
       param_index += 1
     end
@@ -139,9 +140,11 @@ class SampleDatatable < AjaxDatatablesRails::Base
   end
 
   def assigned_cell(record)
-    @assigned_samples.include?(record) ?
-      "<span class='circle'>&nbsp;</span>" :
+    if @assigned_samples.include?(record)
+      "<span class='circle'>&nbsp;</span>"
+    else
       "<span class='circle disabled'>&nbsp;</span>"
+    end
   end
 
   def sample_group_cell(record)
@@ -159,21 +162,21 @@ class SampleDatatable < AjaxDatatablesRails::Base
   # after that "data" function will return json
   def get_raw_records
     samples = Sample
-    .includes(
-      :sample_type,
-      :sample_group,
-      :user,
-      :sample_custom_fields
-    )
-    .references(
-      :sample_type,
-      :sample_group,
-      :user,
-      :sample_custom_fields
-    )
-    .where(
-      team: @team
-    )
+              .includes(
+                :sample_type,
+                :sample_group,
+                :user,
+                :sample_custom_fields
+              )
+              .references(
+                :sample_type,
+                :sample_group,
+                :user,
+                :sample_custom_fields
+              )
+              .where(
+                team: @team
+              )
 
     if @my_module
       @assigned_samples = @my_module.samples
@@ -184,7 +187,7 @@ class SampleDatatable < AjaxDatatablesRails::Base
                               #{@my_module.id} OR
                               sample_my_modules.id IS NULL))")
                        .references(:sample_my_modules)
-      if params[:assigned] == 'assigned'
+      if dt_params[:assigned] == 'assigned'
         samples = samples.where('"sample_my_modules"."id" > 0')
       end
     elsif @project
@@ -203,7 +206,7 @@ class SampleDatatable < AjaxDatatablesRails::Base
                                 sample_my_modules.id IS NULL))")
                          .references(:sample_my_modules)
       end
-      if params[:assigned] == 'assigned'
+      if dt_params[:assigned] == 'assigned'
         samples = samples.joins('LEFT OUTER JOIN "my_modules" ON
                                 "my_modules"."id" =
                                 "sample_my_modules"."my_module_id"')
@@ -221,8 +224,8 @@ class SampleDatatable < AjaxDatatablesRails::Base
                           (samples.id = sample_my_modules.sample_id AND
                           (sample_my_modules.my_module_id IN (#{ids.to_sql}) OR
                           sample_my_modules.id IS NULL))")
-                          .references(:sample_my_modules)
-      if params[:assigned] == 'assigned'
+                       .references(:sample_my_modules)
+      if dt_params[:assigned] == 'assigned'
         samples = samples.joins('LEFT OUTER JOIN "my_modules" ON
                                 "my_modules"."id" =
                                 "sample_my_modules"."my_module_id"')
@@ -249,154 +252,177 @@ class SampleDatatable < AjaxDatatablesRails::Base
   # number of samples/all samples it's dependant upon sort_record query
   def fetch_records
     records = get_raw_records
-    records = sort_records(records) if params[:order].present?
+    records = sort_records(records) if order_params.present?
     escape_special_chars
-    records = filter_records(records) if params[:search].present? && (not (sorting_by_custom_column))
-    records = paginate_records(records) if (not (params[:length].present? && params[:length] == '-1')) && (not (sorting_by_custom_column))
+    unless sorting_by_custom_column
+      records = filter_records(records) if dt_params[:search].present?
+      records = paginate_records(records) unless dt_params[:length].present? &&
+                                                 dt_params[:length] == '-1'
+    end
     records
   end
 
   # Override default sort method if needed
   def sort_records(records)
-    if params[:order].present? && params[:order].length == 1
-      if sort_column(params[:order].values[0]) == ASSIGNED_SORT_COL
-        # If "assigned" column is sorted
-        if @my_module then
-          # Depending on the sort, order nulls first or
-          # nulls last on sample_my_modules association
-          records.order("sample_my_modules.id NULLS #{sort_null_direction(params[:order].values[0])}")
-        elsif @experiment
-          # A very elegant solution to sort assigned samples at a experiment level
-          # grabs the ids of samples which has a modules that belongs to this project
-          assigned = Sample
-            .joins('LEFT OUTER JOIN "sample_my_modules" ON "sample_my_modules"."sample_id" = "samples"."id"')
-            .joins('LEFT OUTER JOIN "my_modules" ON "my_modules"."id" = "sample_my_modules"."my_module_id"')
-            .where('"my_modules"."experiment_id" = ?', @experiment.id)
-            .where('"my_modules"."nr_of_assigned_samples" > 0')
-            .select('"samples"."id"')
-            .distinct
+    if sort_column(order_params) == ASSIGNED_SORT_COL
+      # If "assigned" column is sorted
+      if @my_module
+        # Depending on the sort, order nulls first or
+        # nulls last on sample_my_modules association
+        records.order(
+          "sample_my_modules.id NULLS #{sort_null_direction(order_params)}"
+        )
+      elsif @experiment
+        # A very elegant solution to sort assigned samples at a experiment level
+        # grabs the ids of samples which has a modules that belongs
+        # to this project
+        assigned =
+          Sample
+          .joins('LEFT OUTER JOIN "sample_my_modules" ' \
+                 'ON "sample_my_modules"."sample_id" = "samples"."id"')
+          .joins('LEFT OUTER JOIN "my_modules" ' \
+                 'ON "my_modules"."id" = "sample_my_modules"."my_module_id"')
+          .where('"my_modules"."experiment_id" = ?', @experiment.id)
+          .where('"my_modules"."nr_of_assigned_samples" > 0')
+          .select('"samples"."id"')
+          .distinct
 
-          # grabs the ids that are not the previous one but are still
-          # of the same team
-          unassigned = Sample
-                       .where('"samples"."team_id" = ?', @team.id)
-                       .where('"samples"."id" NOT IN (?)', assigned)
-                       .select('"samples"."id"')
-                       .distinct
+        # grabs the ids that are not the previous one but are still
+        # of the same team
+        unassigned = Sample.where('"samples"."team_id" = ?', @team.id)
+                           .where('"samples"."id" NOT IN (?)', assigned)
+                           .select('"samples"."id"')
+                           .distinct
 
-          # check the input param and merge the two arrays of ids
-          if params[:order].values[0]['dir'] == 'asc'
-            ids = assigned + unassigned
-          elsif params[:order].values[0]['dir'] == 'desc'
-            ids = unassigned + assigned
-          end
-          ids = ids.collect(&:id)
-
-          # order the records by input ids
-          order_by_index = ActiveRecord::Base.send(
-                                  :sanitize_sql_array,
-                                  ["position((',' || samples.id || ',') in ?)",
-                                  ids.join(',') + ','] )
-
-          records.where(id: ids).order(order_by_index)
-        elsif @project
-          # A very elegant solution to sort assigned samples at a project level
-
-          # grabs the ids of samples which has a modules that belongs to this project
-          assigned = Sample
-            .joins('LEFT OUTER JOIN "sample_my_modules" ON "sample_my_modules"."sample_id" = "samples"."id"')
-            .joins('LEFT OUTER JOIN "my_modules" ON "my_modules"."id" = "sample_my_modules"."my_module_id"')
-            .joins('LEFT OUTER JOIN "experiments" ON "experiments"."id" = "my_modules"."experiment_id"')
-            .where('"experiments"."project_id" = ?', @project.id)
-            .where('"my_modules"."nr_of_assigned_samples" > 0')
-            .select('"samples"."id"')
-            .distinct
-
-          # grabs the ids that are not the previous one but are still of the same team
-          unassigned = Sample
-                       .where('"samples"."team_id" = ?', @team.id)
-                       .where('"samples"."id" NOT IN (?)', assigned)
-                       .select('"samples"."id"')
-                       .distinct
-
-          # check the input param and merge the two arrays of ids
-          if params[:order].values[0]['dir'] == 'asc'
-            ids = assigned + unassigned
-          elsif params[:order].values[0]['dir'] == 'desc'
-            ids = unassigned + assigned
-          end
-          ids = ids.collect { |s| s.id }
-
-          # order the records by input ids
-          order_by_index = ActiveRecord::Base.send(:sanitize_sql_array,
-                                                  ["position((',' || samples.id || ',') in ?)", ids.join(',') + ','] )
-          records.where(id: ids).order(order_by_index)
+        # check the input param and merge the two arrays of ids
+        if order_params['dir'] == 'asc'
+          ids = assigned + unassigned
+        elsif order_params['dir'] == 'desc'
+          ids = unassigned + assigned
         end
-      elsif sorting_by_custom_column
-        # Check if have to filter samples first
-        if params[:search].present? and params[:search][:value].present?
-          # Couldn't force ActiveRecord to yield the same query as below because
-          # Rails apparently forgets to join stuff in subqueries -
-          # #justrailsthings
-          conditions = build_conditions_for(params[:search][:value])
-          filter_query = %(SELECT "samples"."id" FROM "samples"
-            LEFT OUTER JOIN "sample_custom_fields" ON
-            "sample_custom_fields"."sample_id" = "samples"."id"
-            LEFT OUTER JOIN "sample_types" ON
-            "sample_types"."id" = "samples"."sample_type_id"
-            LEFT OUTER JOIN "sample_groups"
-            ON "sample_groups"."id" = "samples"."sample_group_id"
-            LEFT OUTER JOIN "users" ON "users"."id" = "samples"."user_id"
-            WHERE "samples"."team_id" = #{@team.id} AND #{conditions.to_sql})
+        ids = ids.collect(&:id)
 
-          records = records.where("samples.id IN (#{filter_query})")
+        # order the records by input ids
+        order_by_index = ActiveRecord::Base.__send__(
+          :sanitize_sql_array,
+          ["position((',' || samples.id || ',') in ?)", ids.join(',') + ',']
+        )
+
+        records.where(id: ids).order(order_by_index)
+      elsif @project
+        # A very elegant solution to sort assigned samples at a project level
+        # grabs the ids of samples which has a modules
+        # that belongs to this project
+        assigned =
+          Sample
+          .joins('LEFT OUTER JOIN "sample_my_modules" ' \
+                 'ON "sample_my_modules"."sample_id" = "samples"."id"')
+          .joins('LEFT OUTER JOIN "my_modules" ' \
+                 'ON "my_modules"."id" = "sample_my_modules"."my_module_id"')
+          .joins('LEFT OUTER JOIN "experiments" ' \
+                 'ON "experiments"."id" = "my_modules"."experiment_id"')
+          .where('"experiments"."project_id" = ?', @project.id)
+          .where('"my_modules"."nr_of_assigned_samples" > 0')
+          .select('"samples"."id"')
+          .distinct
+
+        # grabs the ids that are not the previous ones
+        # but are still of the same team
+        unassigned = Sample
+                     .where('"samples"."team_id" = ?', @team.id)
+                     .where('"samples"."id" NOT IN (?)', assigned)
+                     .select('"samples"."id"')
+                     .distinct
+
+        # check the input param and merge the two arrays of ids
+        if order_params['dir'] == 'asc'
+          ids = assigned + unassigned
+        elsif order_params['dir'] == 'desc'
+          ids = unassigned + assigned
         end
+        ids = ids.collect(&:id)
 
-        ci = sortable_displayed_columns[
-          params[:order].values[0][:column].to_i - 1
-        ]
-        cf_id = @cf_mappings.key((ci.to_i + 1).to_s)
-        dir = sort_direction(params[:order].values[0])
-
-        # Because samples can have multiple sample custom fields, we first group
-        # them by samples.id and inside that group we sort them by cf_id. Because
-        # we sort them ASC, sorted columns will be on top. Distinct then only
-        # takes the first row and cuts the rest of every group and voila we have
-        # 1 row for every sample, which are not sorted yet ...
-        records = records.select("DISTINCT ON (samples.id) *")
-        .order("samples.id, CASE WHEN sample_custom_fields.custom_field_id = #{cf_id} THEN 1 ELSE 2 END ASC")
-
-        # ... this little gem (pun intended) then takes the records query, sorts it again
-        # and paginates it. sq.t0_* are determined empirically and are crucial -
-        # imagine A -> B -> C transitive relation but where A and C are the
-        # same. Useless right? But not when you acknowledge that find_by_sql
-        # method does some funky stuff when your query spans multiple queries -
-        # Sample object might have id from SampleType, name from
-        # User ... chaos ensues basically. If something changes in db this might
-        # change.
-        formated_date = (I18n.t 'time.formats.datatables_date').gsub!(/^\"|\"?$/, '')
-        Sample.find_by_sql("SELECT sq.t0_r0 as id, sq.t0_r1 as name, to_char( sq.t0_r4, '#{ formated_date }' ) as created_at, sq.t0_r5, sq.t0_r6 as sample_group_id ,sq.t0_r7 as sample_type_id, sq.t0_r2 as user_id, sq.custom_field_id FROM (#{records.to_sql})
-                                     as sq ORDER BY CASE WHEN sq.custom_field_id = #{cf_id} THEN 1 ELSE 2 END #{dir}, sq.value #{dir}
-                                     LIMIT #{per_page} OFFSET #{offset}")
-      else
-        super(records)
+        # order the records by input ids
+        order_by_index = ActiveRecord::Base.__send__(
+          :sanitize_sql_array,
+          ["position((',' || samples.id || ',') in ?)", ids.join(',') + ',']
+        )
+        records.where(id: ids).order(order_by_index)
       end
+    elsif sorting_by_custom_column
+      # Check if have to filter samples first
+      if dt_params[:search].present? && dt_params[:search][:value].present?
+        # Couldn't force ActiveRecord to yield the same query as below because
+        # Rails apparently forgets to join stuff in subqueries -
+        # #justrailsthings
+        conditions = build_conditions_for(dt_params[:search][:value])
+        filter_query = %(SELECT "samples"."id" FROM "samples"
+          LEFT OUTER JOIN "sample_custom_fields" ON
+          "sample_custom_fields"."sample_id" = "samples"."id"
+          LEFT OUTER JOIN "sample_types" ON
+          "sample_types"."id" = "samples"."sample_type_id"
+          LEFT OUTER JOIN "sample_groups"
+          ON "sample_groups"."id" = "samples"."sample_group_id"
+          LEFT OUTER JOIN "users" ON "users"."id" = "samples"."user_id"
+          WHERE "samples"."team_id" = #{@team.id} AND #{conditions.to_sql})
+
+        records = records.where("samples.id IN (#{filter_query})")
+      end
+
+      ci = sortable_displayed_columns[
+        order_params[:column].to_i - 1
+      ]
+      cf_id = @cf_mappings.key((ci.to_i + 1).to_s)
+      dir = sort_direction(order_params)
+
+      # Because samples can have multiple sample custom fields, we first group
+      # them by samples.id and inside that group we sort them by cf_id. Because
+      # we sort them ASC, sorted columns will be on top. Distinct then only
+      # takes the first row and cuts the rest of every group and voila we have
+      # 1 row for every sample, which are not sorted yet ...
+      records =
+        records
+        .select('DISTINCT ON (samples.id) *')
+        .order("samples.id, CASE WHEN sample_custom_fields.custom_field_id = " \
+               "#{cf_id} THEN 1 ELSE 2 END ASC")
+
+      # ... this little gem (pun intended) then takes the records query,
+      # sorts it again and paginates it.
+      # sq.t0_* are determined empirically and are crucial -
+      # imagine A -> B -> C transitive relation but where A and C are the
+      # same. Useless right? But not when you acknowledge that find_by_sql
+      # method does some funky stuff when your query spans multiple queries -
+      # Sample object might have id from SampleType, name from
+      # User ... chaos ensues basically. If something changes in db this might
+      # change.
+      formated_date = I18n.t('time.formats.datatables_date')
+                          .gsub!(/^\"|\"?$/, '')
+      Sample.find_by_sql(
+        "SELECT sq.t0_r0 as id, sq.t0_r1 as name, " \
+        "to_char( sq.t0_r4, '#{formated_date}' ) as created_at, sq.t0_r5, " \
+        "sq.t0_r6 as sample_group_id ,sq.t0_r7 as sample_type_id, sq.t0_r2 " \
+        "as user_id, sq.custom_field_id FROM (#{records.to_sql}) " \
+        "as sq ORDER BY CASE WHEN sq.custom_field_id = #{cf_id} THEN 1 " \
+        "ELSE 2 END #{dir}, sq.value #{dir} LIMIT #{per_page} OFFSET #{offset}"
+      )
     else
       super(records)
     end
   end
 
-  # A hack that overrides the new_search_contition method default behavior of the ajax-datatables-rails gem
-  # now the method checks if the column is the created_at and generate a custom SQL to parse
+  # A hack that overrides the new_search_contition method default behavior
+  # of the ajax-datatables-rails gem now the method checks
+  # if the column is the created_at and generate a custom SQL to parse
   # it back to the caller method
   def new_search_condition(column, value)
     model, column = column.split('.')
     model = model.constantize
-    formated_date = (I18n.t 'time.formats.datatables_date').gsub!(/^\"|\"?$/, '')
+    formated_date = I18n.t('time.formats.datatables_date')
+                        .gsub!(/^\"|\"?$/, '')
     if model == SampleCustomField
       # Find visible (searchable) custom field IDs, and only perform filter
       # on those custom fields
-      searchable_cfs = params[:columns].select do |_, v|
+      searchable_cfs = columns_params.select do |_, v|
         v['searchable'] == 'true' && @cf_mappings.values.include?(v['data'])
       end
       cfmi = @cf_mappings.invert
@@ -414,36 +440,43 @@ class SampleDatatable < AjaxDatatablesRails::Base
       )
       casted_column
     elsif column == 'created_at'
-      casted_column = ::Arel::Nodes::NamedFunction.new('CAST',
-                        [ Arel.sql("to_char( samples.created_at, '#{ formated_date }' ) AS VARCHAR") ] )
+      casted_column = ::Arel::Nodes::NamedFunction.new(
+        'CAST',
+        [Arel.sql(
+          "to_char( samples.created_at, '#{formated_date}' ) AS VARCHAR"
+        )]
+      )
       casted_column.matches("%#{sanitize_sql_like(value)}%")
     else
-      casted_column = ::Arel::Nodes::NamedFunction.new('CAST',
-                        [model.arel_table[column.to_sym].as(typecast)])
+      casted_column = ::Arel::Nodes::NamedFunction.new(
+        'CAST',
+        [model.arel_table[column.to_sym].as(typecast)]
+      )
       casted_column.matches("%#{sanitize_sql_like(value)}%")
     end
   end
 
   def sort_null_direction(item)
     val = sort_direction(item)
-    val == "ASC" ? "LAST" : "FIRST"
+    val == 'ASC' ? 'LAST' : 'FIRST'
   end
 
   def inverse_sort_direction(item)
     val = sort_direction(item)
-    val == "ASC" ? "DESC" : "ASC"
+    val == 'ASC' ? 'DESC' : 'ASC'
   end
 
   def sorting_by_custom_column
-    sort_column(params[:order].values[0]) == 'sample_custom_fields.value'
+    sort_column(order_params) == 'sample_custom_fields.value'
   end
 
   # Escapes special characters in search query
   def escape_special_chars
-    params[:search][:value] = ActiveRecord::Base
-                              .send(:sanitize_sql_like,
-                                    params[:search][:value]) if params[:search]
-                                                                .present?
+    if dt_params[:search].present?
+      dt_params[:search][:value] =
+        ActiveRecord::Base.__send__(:sanitize_sql_like,
+                                    dt_params[:search][:value])
+    end
   end
 
   def new_sort_column(item)
@@ -452,7 +485,7 @@ class SampleDatatable < AjaxDatatablesRails::Base
                     .split('.')
 
     return model if model == ASSIGNED_SORT_COL
-    col = [model.constantize.table_name, column].join('.')
+    [model.constantize.table_name, column].join('.')
   end
 
   def generate_sortable_displayed_columns

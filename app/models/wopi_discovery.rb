@@ -1,4 +1,4 @@
-class WopiDiscovery < ActiveRecord::Base
+class WopiDiscovery < ApplicationRecord
   require 'base64'
 
   has_many :wopi_apps,

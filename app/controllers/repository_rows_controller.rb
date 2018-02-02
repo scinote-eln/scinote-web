@@ -5,7 +5,6 @@ class RepositoryRowsController < ApplicationController
 
   before_action :load_vars, only: %i(edit update)
   before_action :load_repository, only: %i(create delete_records)
-
   before_action :check_create_permissions, only: :create
   before_action :check_edit_permissions, only: %i(edit update)
   before_action :check_destroy_permissions, only: :delete_records
@@ -20,8 +19,8 @@ class RepositoryRowsController < ApplicationController
     record.transaction do
       record.name = record_params[:name] unless record_params[:name].blank?
       errors[:default_fields] = record.errors.messages unless record.save
-      if params[:repository_cells]
-        params[:repository_cells].each do |key, value|
+      if cell_params
+        cell_params.each do |key, value|
           column = @repository.repository_columns.detect do |c|
             c.id == key.to_i
           end
@@ -93,8 +92,8 @@ class RepositoryRowsController < ApplicationController
     @record.transaction do
       @record.name = record_params[:name].blank? ? nil : record_params[:name]
       errors[:default_fields] = @record.errors.messages unless @record.save
-      if params[:repository_cells]
-        params[:repository_cells].each do |key, value|
+      if cell_params
+        cell_params.each do |key, value|
           existing = @record.repository_cells.detect do |c|
             c.repository_column_id == key.to_i
           end
@@ -136,7 +135,7 @@ class RepositoryRowsController < ApplicationController
         end
         # Clean up empty cells, not present in updated record
         @record.repository_cells.each do |cell|
-          cell.value.destroy unless params[:repository_cells]
+          cell.value.destroy unless cell_params
                                     .key?(cell.repository_column_id.to_s)
         end
       else
@@ -169,18 +168,18 @@ class RepositoryRowsController < ApplicationController
 
   def delete_records
     deleted_count = 0
-    if params[:selected_rows]
-      params[:selected_rows].each do |row_id|
+    if selected_params
+      selected_params.each do |row_id|
         row = @repository.repository_rows.find_by_id(row_id)
-        if row && can_delete_repository_record(row)
+        if row && can_update_or_delete_repository_row?(row)
           row.destroy && deleted_count += 1
         end
       end
       if deleted_count.zero?
         flash = t('repositories.destroy.no_deleted_records_flash',
-                  other_records_number: params[:selected_rows].count)
-      elsif deleted_count != params[:selected_rows].count
-        not_deleted_count = params[:selected_rows].count - deleted_count
+                  other_records_number: selected_params.count)
+      elsif deleted_count != selected_params.count
+        not_deleted_count = selected_params.count - deleted_count
         flash = t('repositories.destroy.contains_other_records_flash',
                   records_number: deleted_count,
                   other_records_number: not_deleted_count)
@@ -219,19 +218,27 @@ class RepositoryRowsController < ApplicationController
   end
 
   def check_create_permissions
-    render_403 unless can_create_repository_records(@repository)
+    render_403 unless can_manage_repository_rows?(@repository.team)
   end
 
   def check_edit_permissions
-    render_403 unless can_edit_repository_record(@record)
+    render_403 unless can_update_or_delete_repository_row?(@record)
   end
 
   def check_destroy_permissions
-    render_403 unless can_delete_repository_records(@repository)
+    render_403 unless can_manage_repository_rows?(@repository.team)
   end
 
   def record_params
-    params.require(:repository_row).permit(:name)
+    params.require(:repository_row).permit(:name).to_h
+  end
+
+  def cell_params
+    params.permit(repository_cells: {}).to_h[:repository_cells]
+  end
+
+  def selected_params
+    params.permit(selected_rows: []).to_h[:selected_rows]
   end
 
   def record_annotation_notification(record, cell, old_text = nil)

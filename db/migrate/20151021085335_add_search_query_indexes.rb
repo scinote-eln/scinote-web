@@ -1,7 +1,7 @@
 require File.expand_path('app/helpers/database_helper')
 include DatabaseHelper
 
-class AddSearchQueryIndexes < ActiveRecord::Migration
+class AddSearchQueryIndexes < ActiveRecord::Migration[4.2]
   def up
     add_index :projects, :team_id
     add_index :user_teams, :user_id

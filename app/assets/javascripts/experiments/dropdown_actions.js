@@ -25,6 +25,7 @@
     })
     .on("ajax:complete", function(){
       animateSpinner(null, false);
+      $(id).find('.selectpicker').selectpicker();
     });
   }
 

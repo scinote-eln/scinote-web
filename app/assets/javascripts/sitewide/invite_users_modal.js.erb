@@ -29,9 +29,7 @@
       // This cannot be scoped outside this function
       // because it is generated via JS
       teamSelectorDropdown2 =
-        teamSelectorDropdown
-        .next('.btn-group.bootstrap-select.form-control')
-        .find('button.dropdown-toggle, li');
+        teamSelectorDropdown.parent().find('button.dropdown-toggle, li');
 
       // Show/hide correct step
       stepForm.show();

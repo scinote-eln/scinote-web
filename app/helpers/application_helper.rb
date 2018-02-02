@@ -126,12 +126,12 @@ module ApplicationHelper
         next unless project
         if project.archived?
           "<span class='sa-type'>" \
-          "#{sanitize_input(match[2])}</span> " \
+          "#{sanitize_input(match[2])}</span>" \
           "#{link_to project.name,
                      projects_archive_path} #{I18n.t('atwho.res.archived')}"
         else
           "<span class='sa-type'>" \
-          "#{sanitize_input(match[2])}</span> " \
+          "#{sanitize_input(match[2])}</span>" \
           "#{link_to project.name,
                      project_path(project)}"
         end
@@ -140,13 +140,13 @@ module ApplicationHelper
         next unless experiment
         if experiment.archived?
           "<span class='sa-type'>" \
-          "#{sanitize_input(match[2])}</span> " \
+          "#{sanitize_input(match[2])}</span>" \
           "#{link_to experiment.name,
                      experiment_archive_project_path(experiment.project)} " \
           "#{I18n.t('atwho.res.archived')}"
         else
           "<span class='sa-type'>"\
-          "#{sanitize_input(match[2])}</span> " \
+          "#{sanitize_input(match[2])}</span>" \
           "#{link_to experiment.name,
                      canvas_experiment_path(experiment)}"
         end
@@ -155,25 +155,25 @@ module ApplicationHelper
         next unless my_module
         if my_module.archived?
           "<span class='sa-type'>" \
-          "#{sanitize_input(match[2])}</span> " \
+          "#{sanitize_input(match[2])}</span>" \
           "#{link_to my_module.name,
                      module_archive_experiment_path(my_module.experiment)} " \
           "#{I18n.t('atwho.res.archived')}"
         else
           "<span class='sa-type'>" \
-          "#{sanitize_input(match[2])}</span> " \
+          "#{sanitize_input(match[2])}</span>" \
           "#{link_to my_module.name,
                      protocols_my_module_path(my_module)}"
         end
       when 'sam'
         sample = Sample.find_by_id(match[3].base62_decode)
         if sample
-          "<span class='glyphicon glyphicon-tint'></span> " \
+          "<span class='glyphicon glyphicon-tint'></span>" \
           "#{link_to(sample.name,
                      sample_path(sample.id),
                      class: 'sample-info-link')}"
         else
-          "<span class='glyphicon glyphicon-tint'></span> " \
+          "<span class='glyphicon glyphicon-tint'></span>" \
           "#{match[1]} #{I18n.t('atwho.res.deleted')}"
         end
       end

@@ -1,5 +1,5 @@
-class ReportGroupingRemoval < ActiveRecord::Migration
-  def up  
+class ReportGroupingRemoval < ActiveRecord::Migration[4.2]
+  def up
     remove_column :reports, :grouped_by
   end
 

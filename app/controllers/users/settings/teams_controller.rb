@@ -19,6 +19,9 @@ module Users
         :destroy
       ]
 
+      before_action :check_create_team_permission,
+                    only: %i(new create)
+
       def index
         @user_teams =
           @user
@@ -134,13 +137,17 @@ module Users
 
       private
 
+      def check_create_team_permission
+        render_403 unless can_create_teams?
+      end
+
       def load_user
         @user = current_user
       end
 
       def load_team
         @team = Team.find_by_id(params[:id])
-        render_403 unless is_admin_of_team(@team)
+        render_403 unless can_update_team?(@team)
       end
 
       def create_params

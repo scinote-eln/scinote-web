@@ -1,5 +1,5 @@
 class SearchController < ApplicationController
-  before_filter :load_vars, only: :index
+  before_action :load_vars, only: :index
 
   def index
     redirect_to new_search_path unless @search_query
@@ -8,7 +8,6 @@ class SearchController < ApplicationController
 
     search_projects if @search_category == :projects
     search_experiments if @search_category == :experiments
-    search_workflows if @search_category == :workflows
     search_modules if @search_category == :modules
     search_results if @search_category == :results
     search_tags if @search_category == :tags
@@ -55,11 +54,11 @@ class SearchController < ApplicationController
       if query.length < Constants::NAME_MIN_LENGTH
         flash[:error] = t('general.query.length_too_short',
                           min_length: Constants::NAME_MIN_LENGTH)
-        redirect_to :back
+        redirect_back(fallback_location: root_path)
       elsif query.length > Constants::TEXT_MAX_LENGTH
         flash[:error] = t('general.query.length_too_long',
                           max_length: Constants::TEXT_MAX_LENGTH)
-        redirect_to :back
+        redirect_back(fallback_location: root_path)
       else
         @search_query = query
       end
@@ -77,7 +76,7 @@ class SearchController < ApplicationController
         flash[:error] = t('general.query.wrong_query',
                           min_length: Constants::NAME_MIN_LENGTH,
                           max_length: Constants::TEXT_MAX_LENGTH)
-        redirect_to :back
+        redirect_back(fallback_location: root_path)
       else
         @search_query.strip!
       end
@@ -145,7 +144,6 @@ class SearchController < ApplicationController
   def count_search_results
     @project_search_count = count_by_name Project
     @experiment_search_count = count_by_name Experiment
-    @workflow_search_count = count_by_name MyModuleGroup
     @module_search_count = count_by_name MyModule
     @result_search_count = count_by_name Result
     @tag_search_count = count_by_name Tag
@@ -161,7 +159,6 @@ class SearchController < ApplicationController
 
     @search_results_count = @project_search_count
     @search_results_count += @experiment_search_count
-    @search_results_count += @workflow_search_count
     @search_results_count += @module_search_count
     @search_results_count += @result_search_count
     @search_results_count += @tag_search_count
@@ -188,14 +185,6 @@ class SearchController < ApplicationController
       @experiment_results = search_by_name(Experiment)
     end
     @search_count = @experiment_search_count
-  end
-
-  def search_workflows
-    @workflow_results = []
-    if @workflow_search_count > 0
-      @workflow_results = search_by_name(MyModuleGroup)
-    end
-    @search_count = @workflow_search_count
   end
 
   def search_modules
@@ -250,7 +239,7 @@ class SearchController < ApplicationController
 
   def search_repository
     @repository = Repository.find_by_id(params[:repository])
-    render_403 unless can_view_repository(@repository)
+    render_403 unless can_read_team?(@repository.team)
     @repository_results = []
     if @repository_search_count_total > 0
       @repository_results =

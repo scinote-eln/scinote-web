@@ -58,15 +58,13 @@
 </div>
 
 <div id="canvas-container" data-project-id="<%= @project.id %>">
-  <%= render partial: 'canvas/full_zoom', locals: { experiment: @experiment, my_modules: @experiment.active_modules } %>
+  <%= render partial: 'canvas/full_zoom', locals: { experiment: @experiment, my_modules: @active_modules } %>
 </div>
 
 <!-- Manage tags modal -->
 <%= render partial: "my_modules/modals/manage_module_tags_modal", locals: { my_module: nil } %>
 
 <!-- Include all the neccesary JS libraries -->
-<%= javascript_include_tag("jsPlumb-2.0.4-min") %>
-<%= javascript_include_tag("jsnetworkx") %>
 <%= javascript_include_tag("eventPause-min") %>
 
 <%= javascript_include_tag("projects/canvas") %>

@@ -85,7 +85,7 @@
                     <em><%= t("protocols.steps.no_description") %></em>
                   <% else %>
                     <div class="ql-editor">
-                      <%= sanitize_input(step.description) %>
+                      <%= sanitize_input(generate_image_tag_from_token(step.description, step), ['img']) %>
                     </div>
                   <% end %>
                 </div>
@@ -112,7 +112,7 @@
                     <ul>
                       <% assets.each do |asset| %>
                         <li>
-                          <% if can_view_or_download_step_assets(@protocol) %>
+                          <% if can_read_protocol_in_repository?(@protocol) %>
                             <% if asset.file_present %>
                               <% if asset.file.processing? %>
                                 <span data-status='asset-loading'

@@ -1,4 +1,4 @@
-class RemovePrivateOrganizations < ActiveRecord::Migration
+class RemovePrivateOrganizations < ActiveRecord::Migration[4.2]
   def up
     remove_foreign_key :teams, column: :private_user_id
     remove_index :teams, :private_user_id

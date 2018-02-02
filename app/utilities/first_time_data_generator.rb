@@ -150,7 +150,6 @@ module FirstTimeDataGenerator
 
     # Create a module group
     my_module_group = MyModuleGroup.create(
-      name: 'Potato qPCR workflow',
       experiment: experiment
     )
 
@@ -317,7 +316,7 @@ module FirstTimeDataGenerator
       samples_to_assign << sample
     end
 
-    my_modules[1].get_downstream_modules.each do |mm|
+    my_modules[1].downstream_modules.each do |mm|
       samples_to_assign.each do |s|
         SampleMyModule.create(
           sample: s,
@@ -881,7 +880,7 @@ module FirstTimeDataGenerator
     ).sneaky_save
 
     # create thumbnail
-    experiment.generate_workflow_img
+    experiment.delay.generate_workflow_img
 
     # Lastly, create cookie with according ids
     # so tutorial steps can be properly positioned

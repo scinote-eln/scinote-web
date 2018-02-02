@@ -1,7 +1,7 @@
 require File.expand_path('app/helpers/database_helper')
 include DatabaseHelper
 
-class AddOrganizationManagementSupport < ActiveRecord::Migration
+class AddOrganizationManagementSupport < ActiveRecord::Migration[4.2]
   def up
     # Add nullable description to team
     add_column :teams, :description, :string

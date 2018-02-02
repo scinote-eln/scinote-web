@@ -1,17 +1,14 @@
-class ProtocolsDatatable < AjaxDatatablesRails::Base
+class ProtocolsDatatable < CustomDatatable
   # Needed for sanitize_sql_like method
   include ActiveRecord::Sanitization::ClassMethods
   include InputSanitizeHelper
 
-  def_delegator :@view, :can_edit_protocol
+  def_delegator :@view, :can_update_protocol_in_repository?
   def_delegator :@view, :edit_protocol_path
-  def_delegator :@view, :can_clone_protocol
+  def_delegator :@view, :can_clone_protocol_in_repository?
   def_delegator :@view, :clone_protocol_path
-  def_delegator :@view, :can_make_protocol_private
-  def_delegator :@view, :can_publish_protocol
-  def_delegator :@view, :can_archive_protocol
-  def_delegator :@view, :can_restore_protocol
-  def_delegator :@view, :can_export_protocol
+  def_delegator :@view, :can_update_protocol_type_in_repository?
+  def_delegator :@view, :can_read_protocol_in_repository?
   def_delegator :@view, :linked_children_protocol_path
   def_delegator :@view, :preview_protocol_path
 
@@ -48,10 +45,10 @@ class ProtocolsDatatable < AjaxDatatablesRails::Base
   # See https://github.com/antillas21/ajax-datatables-rails/issues/112
   def as_json(options = {})
     {
-      :draw => params[:draw].to_i,
-      :recordsTotal =>  get_raw_records.length,
-      :recordsFiltered => filter_records(get_raw_records).length,
-      :data => data
+      draw: dt_params[:draw].to_i,
+      recordsTotal: get_raw_records.length,
+      recordsFiltered: filter_records(get_raw_records).length,
+      data: data
     }
   end
 
@@ -85,23 +82,27 @@ class ProtocolsDatatable < AjaxDatatablesRails::Base
       protocol = Protocol.find(record.id)
       result_data << {
         'DT_RowId': record.id,
-        'DT_CanEdit': can_edit_protocol(protocol),
-        'DT_EditUrl': if can_edit_protocol(protocol)
+        'DT_CanEdit': can_update_protocol_in_repository?(protocol),
+        'DT_EditUrl': if can_update_protocol_in_repository?(protocol)
                         edit_protocol_path(protocol,
                                            team: @team,
                                            type: @type)
                       end,
-        'DT_CanClone': can_clone_protocol(protocol),
-        'DT_CloneUrl': if can_clone_protocol(protocol)
+        'DT_CanClone': can_clone_protocol_in_repository?(protocol),
+        'DT_CloneUrl': if can_clone_protocol_in_repository?(protocol)
                          clone_protocol_path(protocol,
                                              team: @team,
                                              type: @type)
                        end,
-        'DT_CanMakePrivate': can_make_protocol_private(protocol),
-        'DT_CanPublish': can_publish_protocol(protocol),
-        'DT_CanArchive': can_archive_protocol(protocol),
-        'DT_CanRestore': can_restore_protocol(protocol),
-        'DT_CanExport': can_export_protocol(protocol),
+        'DT_CanMakePrivate': protocol.in_repository_public? &&
+                             can_update_protocol_type_in_repository?(protocol),
+        'DT_CanPublish': protocol.in_repository_private? &&
+                         can_update_protocol_type_in_repository?(protocol),
+        'DT_CanArchive': protocol.in_repository_active? &&
+                         can_update_protocol_type_in_repository?(protocol),
+        'DT_CanRestore': protocol.in_repository_archived? &&
+                         can_update_protocol_type_in_repository?(protocol),
+        'DT_CanExport': can_read_protocol_in_repository?(protocol),
         '1': if protocol.in_repository_archived?
                escape_input(record.name)
              else
@@ -229,7 +230,7 @@ class ProtocolsDatatable < AjaxDatatablesRails::Base
   def build_conditions_for(query)
     # Inner query to retrieve list of protocol IDs where concatenated
     # protocol keywords string, or user's full_name contains searched query
-    search_val = params[:search][:value]
+    search_val = dt_params[:search][:value]
     records_having = get_raw_records_base.having(
       ::Arel::Nodes::NamedFunction.new(
         'CAST',

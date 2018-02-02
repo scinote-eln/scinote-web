@@ -1,4 +1,4 @@
-class RenameDuplicateColumns < ActiveRecord::Migration
+class RenameDuplicateColumns < ActiveRecord::Migration[4.2]
   require 'set'
 
   def up

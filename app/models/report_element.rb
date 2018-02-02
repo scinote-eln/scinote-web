@@ -1,4 +1,4 @@
-class ReportElement < ActiveRecord::Base
+class ReportElement < ApplicationRecord
   enum type_of: Extends::REPORT_ELEMENT_TYPES
 
   # This is only used by certain elements
@@ -12,7 +12,7 @@ class ReportElement < ActiveRecord::Base
   validates :type_of, presence: true
   validate :has_one_of_referenced_elements
 
-  belongs_to :report, inverse_of: :report_elements
+  belongs_to :report, inverse_of: :report_elements, optional: true
 
   # Hierarchical structure representation
   has_many :children,
@@ -20,18 +20,18 @@ class ReportElement < ActiveRecord::Base
            class_name: 'ReportElement',
            foreign_key: 'parent_id',
            dependent: :destroy
-  belongs_to :parent, class_name: 'ReportElement'
+  belongs_to :parent, class_name: 'ReportElement', optional: true
 
   # References to various report entities
-  belongs_to :project, inverse_of: :report_elements
-  belongs_to :experiment, inverse_of: :report_elements
-  belongs_to :my_module, inverse_of: :report_elements
-  belongs_to :step, inverse_of: :report_elements
-  belongs_to :result, inverse_of: :report_elements
-  belongs_to :checklist, inverse_of: :report_elements
-  belongs_to :asset, inverse_of: :report_elements
-  belongs_to :table, inverse_of: :report_elements
-  belongs_to :repository, inverse_of: :report_elements
+  belongs_to :project, inverse_of: :report_elements, optional: true
+  belongs_to :experiment, inverse_of: :report_elements, optional: true
+  belongs_to :my_module, inverse_of: :report_elements, optional: true
+  belongs_to :step, inverse_of: :report_elements, optional: true
+  belongs_to :result, inverse_of: :report_elements, optional: true
+  belongs_to :checklist, inverse_of: :report_elements, optional: true
+  belongs_to :asset, inverse_of: :report_elements, optional: true
+  belongs_to :table, inverse_of: :report_elements, optional: true
+  belongs_to :repository, inverse_of: :report_elements, optional: true
 
   def has_children?
     children.length > 0

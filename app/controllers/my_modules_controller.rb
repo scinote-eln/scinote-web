@@ -2,6 +2,8 @@ class MyModulesController < ApplicationController
   include SampleActions
   include TeamsHelper
   include InputSanitizeHelper
+  include Rails.application.routes.url_helpers
+  include ActionView::Helpers::UrlHelper
 
   before_action :load_vars,
                 only: %I[show update destroy description due_date protocols
@@ -263,7 +265,7 @@ class MyModulesController < ApplicationController
 
   def repository
     @repository = Repository.find_by_id(params[:repository_id])
-    render_403 if @repository.nil? || !can_view_repository(@repository)
+    render_403 if @repository.nil? || !can_read_team?(@repository.team)
   end
 
   def archive
@@ -291,7 +293,7 @@ class MyModulesController < ApplicationController
 
       task_names = []
       new_samples = []
-      @my_module.get_downstream_modules.each do |my_module|
+      @my_module.downstream_modules.each do |my_module|
         new_samples = samples.select { |el| my_module.samples.exclude?(el) }
         my_module.samples.push(*new_samples)
         task_names << my_module.name
@@ -330,7 +332,7 @@ class MyModulesController < ApplicationController
       end
 
       task_names = []
-      @my_module.get_downstream_modules.each do |my_module|
+      @my_module.downstream_modules.each do |my_module|
         task_names << my_module.name
         my_module.samples.destroy(samples & my_module.samples)
       end
@@ -373,7 +375,7 @@ class MyModulesController < ApplicationController
   # AJAX actions
   def repository_index
     @repository = Repository.find_by_id(params[:repository_id])
-    if @repository.nil? || !can_view_repository(@repository)
+    if @repository.nil? || !can_read_team?(@repository.team)
       render_403
     else
       respond_to do |format|
@@ -564,6 +566,32 @@ class MyModulesController < ApplicationController
       message: message,
       type_of: completed ? :complete_task : :uncomplete_task
     )
+    start_work_on_next_task_notification
+  end
+
+  def start_work_on_next_task_notification
+    if @my_module.completed?
+      title = t('notifications.start_work_on_next_task',
+                user: current_user.full_name,
+                module: @my_module.name)
+      message = t('notifications.start_work_on_next_task_message',
+                  project: link_to(@project.name, project_url(@project)),
+                  experiment: link_to(@experiment.name,
+                                      canvas_experiment_url(@experiment)),
+                  my_module: link_to(@my_module.name,
+                                     protocols_my_module_url(@my_module)))
+      notification = Notification.create(
+        type_of: :recent_changes,
+        title: sanitize_input(title, %w(strong a)),
+        message: sanitize_input(message, %w(strong a)),
+        generator_user_id: current_user.id
+      )
+      # create notification for all users on the next modules in the workflow
+      @my_module.my_modules.map(&:users).flatten.uniq.each do |target_user|
+        next if target_user == current_user
+        UserNotification.create(notification: notification, user: target_user)
+      end
+    end
   end
 
   def load_vars
@@ -578,7 +606,7 @@ class MyModulesController < ApplicationController
 
   def load_repository
     @repository = Repository.find_by_id(params[:repository_id])
-    render_404 unless @repository && can_view_repository(@repository)
+    render_404 unless @repository && can_read_team?(@repository.team)
   end
 
   def check_edit_permissions

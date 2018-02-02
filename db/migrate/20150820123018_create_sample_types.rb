@@ -1,4 +1,4 @@
-class CreateSampleTypes < ActiveRecord::Migration
+class CreateSampleTypes < ActiveRecord::Migration[4.2]
   def change
     create_table :sample_types do |t|
       t.string :name, null: false

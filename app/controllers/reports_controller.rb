@@ -182,7 +182,8 @@ class ReportsController < ApplicationController
         @html = '<h1>No content</h1>' if @html.blank?
         render pdf: 'report',
           header: { right: '[page] of [topage]' },
-          template: 'reports/report.pdf.erb'
+          template: 'reports/report.pdf.erb',
+          disable_javascript: true
       end
     end
   end

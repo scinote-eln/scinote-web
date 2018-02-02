@@ -86,7 +86,7 @@ class AtWhoController < ApplicationController
   end
 
   def check_users_permissions
-    render_403 unless can_view_team_users(@team)
+    render_403 unless can_read_team?(@team)
   end
 
   def generate_users_data

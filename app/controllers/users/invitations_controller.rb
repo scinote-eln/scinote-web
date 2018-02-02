@@ -7,9 +7,10 @@ module Users
 
     before_action :check_invite_users_permission, only: :invite_users
 
-    before_filter :update_sanitized_params, only: :update
+    before_action :update_sanitized_params, only: :update
 
     def update
+      return super unless Rails.configuration.x.new_team_on_signup
       # Instantialize a new team with the provided name
       @team = Team.new
       @team.name = params[:team][:name]
@@ -29,6 +30,8 @@ module Users
     end
 
     def accept_resource
+      return super unless Rails.configuration.x.new_team_on_signup
+
       unless @team.valid?
         # Find the user being invited
         resource = User.find_by_invitation_token(
@@ -153,7 +156,7 @@ module Users
 
     def update_sanitized_params
       # Solution for Devise < 4.0.0
-      devise_parameter_sanitizer.for(:accept_invitation) << :full_name
+      devise_parameter_sanitizer.permit(:accept_invitation, keys: [:full_name])
     end
 
     def check_captcha
@@ -192,7 +195,7 @@ module Users
       @role = params['role']
 
       render_403 if @emails && @emails.empty?
-      render_403 if @team && !is_admin_of_team(@team)
+      render_403 if @team && !can_manage_team_users?(@team)
       render_403 if @role && !UserTeam.roles.keys.include?(@role)
     end
   end

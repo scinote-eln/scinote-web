@@ -1,4 +1,4 @@
-class RenameNonUniqueSampleTypesGroups < ActiveRecord::Migration
+class RenameNonUniqueSampleTypesGroups < ActiveRecord::Migration[4.2]
   def up
     Team.find_each do |team|
       st_ids = []

@@ -14,11 +14,11 @@
       <!-- Breadcrumbs, displayed on small screens -->
       <ul class="breadcrumb hidden-sm hidden-md hidden-lg">
         <li>
-          <% if can_view_projects(@project.team) %>
+          <% if can_read_team?(@project.team) %>
             <a href="<%= projects_path :team => @project.team.id %>">
           <% end %>
           <span class="glyphicon glyphicon-folder-open"></span>
-          <% if can_view_projects(@project.team) %>
+          <% if can_read_team?(@project.team) %>
             </a>
           <% end %>
         </li>
@@ -100,7 +100,7 @@
             </li>
           <% end %>
           <% if can_view_project_archive(@project) then %>
-            <li id="project-archive-nav-tab" class="<%= "active" if is_project_archive? %>">
+            <li id="project-archive-nav-tab" data-turbolinks="false" class="<%= "active" if is_project_archive? %>">
               <a href="<%= experiment_archive_project_url(@project) %>" title="<%=t "nav2.projects.archive" %>">
                 <span class="glyphicon glyphicon-briefcase"></span>
               </a>
@@ -137,7 +137,7 @@
               </li>
           <% end %>
           <% if can_view_experiment_archive(@experiment) then %>
-              <li id="project-archive-nav-tab" class="<%= "active" if is_experiment_archive? %>">
+              <li id="project-archive-nav-tab" data-turbolinks="false" class="<%= "active" if is_experiment_archive? %>">
                 <a href="<%= module_archive_experiment_url(@experiment) %>" title="<%=t "nav2.projects.archive" %>">
                   <span class="glyphicon glyphicon-briefcase"></span>
                 </a>
@@ -192,7 +192,7 @@
               </a>
             </li>
           <% end %>
-          <% if can_view_team_repositories(@my_module.experiment.project.team) &&
+          <% if can_read_team?(@my_module.experiment.project.team) &&
                 @my_module.experiment.project.team.repositories.exists? %>
             <li id="repositories-nav-tab" class="<%= "active" if module_repository_page? %>">
               <a href="#" id="repositoriesDropdownMenuLink" title="<%=t "nav2.modules.repositories" %>" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -218,7 +218,7 @@
             </li>
           <% end %>
           <% if can_view_module_archive(@my_module) then %>
-            <li id="archive-nav-tab" class="<%= "active" if is_module_archive? %>">
+            <li id="archive-nav-tab" data-turbolinks="false" class="<%= "active" if is_module_archive? %>">
               <a href="<%= archive_my_module_url(@my_module) %>">
                 <span class="glyphicon glyphicon-briefcase" title="<%= t'nav2.modules.archive' %>"></span></a>
             </li>
@@ -230,12 +230,12 @@
       <!-- Breadcrumbs, displayed on large screens -->
       <ul class="breadcrumb hidden-xs">
         <li>
-          <% if can_view_projects(@project.team) %>
+          <% if can_read_team?(@project.team) %>
             <a href="<%= projects_path :team => @project.team.id %>">
           <% end %>
           <%= truncate(@project.team.name,
                        length: Constants::NAME_TRUNCATION_LENGTH) %>
-          <% if can_view_projects(@project.team) %>
+          <% if can_read_team?(@project.team) %>
             </a>
           <% end %>
         </li>

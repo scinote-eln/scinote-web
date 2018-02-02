@@ -15,7 +15,7 @@
         <li>
           <a class="btn-open-file" href="#" data-action="load-from-file" data-import-url="<%= load_from_file_protocol_path(@protocol, format: :json) %>">
             <span class="glyphicon glyphicon-file"></span>&nbsp;<%= t("my_modules.protocols.buttons.load_protocol_from_file") %>
-            <input type="file" value="" accept=".eln">
+            <input type="file" value="" accept=".eln" data-turbolinks="false">
           </a>
         </li>
       <% else %>

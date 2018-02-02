@@ -474,7 +474,7 @@ function initImport() {
   });
 
   // Hack to hide "No file chosen" tooltip
-  fileInput.attr("title", window.webkitURL ? " " : "");
+  fileInput.attr("title", window.URL ? " " : "");
 
   fileInput.on("change", function(ev) {
     var importUrl = fileInput.attr("data-import-url");

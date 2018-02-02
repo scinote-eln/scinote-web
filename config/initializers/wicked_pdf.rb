@@ -6,7 +6,7 @@ WickedPdf.config ||= {}
 # it is not acceptable to enable it.
 if Rails.env.production? and Rails.configuration.assets.compile == false
 
-  WickedPdfHelper::Assets.module_eval do
+  WickedPdf::WickedPdfHelper::Assets.module_eval do
 
     def read_asset(source)
        manifest = Rails.application.assets_manifest

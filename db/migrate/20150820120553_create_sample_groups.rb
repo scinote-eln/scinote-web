@@ -1,4 +1,4 @@
-class CreateSampleGroups < ActiveRecord::Migration
+class CreateSampleGroups < ActiveRecord::Migration[4.2]
   def change
     create_table :sample_groups do |t|
       t.string :name, null: false

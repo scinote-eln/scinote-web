@@ -1,4 +1,4 @@
-class CreateResultComments < ActiveRecord::Migration
+class CreateResultComments < ActiveRecord::Migration[4.2]
   def change
     create_table :result_comments do |t|
       t.integer :result_id, null: false

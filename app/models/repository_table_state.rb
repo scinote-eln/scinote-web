@@ -1,6 +1,6 @@
-class RepositoryTableState < ActiveRecord::Base
-  belongs_to :user, inverse_of: :repository_table_states
-  belongs_to :repository, inverse_of: :repository_table_states
+class RepositoryTableState < ApplicationRecord
+  belongs_to :user, inverse_of: :repository_table_states, optional: true
+  belongs_to :repository, inverse_of: :repository_table_states, optional: true
 
   validates :user, :repository, presence: true
 
@@ -45,7 +45,7 @@ class RepositoryTableState < ActiveRecord::Base
         index = repository_state['columns'].count
         repository_state['columns'][index] = RepositoryDatatable::
           REPOSITORY_TABLE_DEFAULT_STATE['columns'].first
-        repository_state['ColReorder'].insert(2, index)
+        repository_state['ColReorder'].insert(2, index.to_s)
       end
       table_state.update(state: repository_state)
     end

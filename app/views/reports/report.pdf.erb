@@ -10,9 +10,7 @@
   <body class="print-report-body">
     <div class="print-report">
       <% # Also whitelist <img> and <input type="checkbox"> tags %>
-      <%= sanitize_input(fix_smart_annotation_image(@html),
-                         ['img', 'input'],
-                         ['type', 'disabled', 'checked']) %>
+      <%= @html.html_safe %>
     </div>
   </body>
 </html>

@@ -1,4 +1,4 @@
-class RenameOrganizationToTeam < ActiveRecord::Migration
+class RenameOrganizationToTeam < ActiveRecord::Migration[4.2]
   def up
     unless ActiveRecord::Base.connection.table_exists?('organizations') &&
            ActiveRecord::Base.connection.table_exists?('user_organizations')

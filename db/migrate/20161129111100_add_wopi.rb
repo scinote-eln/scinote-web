@@ -1,4 +1,4 @@
-class AddWopi < ActiveRecord::Migration
+class AddWopi < ActiveRecord::Migration[4.2]
   def up
     add_column :assets, :lock, :string, limit: 1024
     add_column :assets, :lock_ttl, :integer

@@ -53,3 +53,18 @@ rubocop_cache
 
 # Ignore ESLint local instalation
 node_modules
+
+# Ignore Coverage output
+coverage
+
+# Added during webpacker install
+/public/packs
+/node_modules
+.DS_Store
+app/javascript/src/componentLoader/components/*
+
+# ignore addon features
+features/addons
+spec/addons
+!features/addons/.gitkeep
+!spec/addons/.gitkeep

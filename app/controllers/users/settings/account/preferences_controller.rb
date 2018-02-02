@@ -72,7 +72,7 @@ module Users
             flash[:alert] = t(
               'users.settings.account.preferences.tutorial.tutorial_reset_error'
             )
-            redirect_to :back
+            redirect_back(fallback_location: root_path)
           end
         end
 
@@ -81,11 +81,11 @@ module Users
             params[:assignments_notification] ? true : false
           @user.recent_notification =
             params[:recent_notification] ? true : false
-          @user.recent_notification_email =
+          @user.recent_email_notification =
             params[:recent_notification_email] ? true : false
-          @user.assignments_notification_email =
+          @user.assignments_email_notification =
             params[:assignments_notification_email] ? true : false
-          @user.system_message_notification_email =
+          @user.system_message_email_notification =
             params[:system_message_notification_email] ? true : false
 
           if @user.save

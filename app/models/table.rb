@@ -1,4 +1,4 @@
-class Table < ActiveRecord::Base
+class Table < ApplicationRecord
   include SearchableModel
 
   auto_strip_attributes :name, nullify: false
@@ -8,9 +8,15 @@ class Table < ActiveRecord::Base
             presence: true,
             length: { maximum: Constants::TABLE_JSON_MAX_SIZE_MB.megabytes }
 
-  belongs_to :created_by, foreign_key: 'created_by_id', class_name: 'User'
-  belongs_to :last_modified_by, foreign_key: 'last_modified_by_id', class_name: 'User'
-  belongs_to :team
+  belongs_to :created_by,
+             foreign_key: 'created_by_id',
+             class_name: 'User',
+             optional: true
+  belongs_to :last_modified_by,
+             foreign_key: 'last_modified_by_id',
+             class_name: 'User',
+             optional: true
+  belongs_to :team, optional: true
   has_one :step_table, inverse_of: :table
   has_one :step, through: :step_table
 
@@ -114,7 +120,7 @@ class Table < ActiveRecord::Base
   end
 
   def update_ts_index
-    if contents_changed?
+    if saved_change_to_contents?
       sql = "UPDATE tables " +
             "SET data_vector = " +
             "to_tsvector(substring(encode(contents::bytea, 'escape'), 9)) " +

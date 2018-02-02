@@ -1,7 +1,7 @@
 class SampleTypesController < ApplicationController
   before_action :load_vars_nested
-  before_action :check_create_permissions
-  before_action :set_sample_type, except: [:create, :index]
+  before_action :check_permissions, except: %i(index sample_type_element)
+  before_action :set_sample_type, except: %i(create index)
   before_action :set_project_my_module, only: :index
   layout 'fluid'
 
@@ -95,7 +95,7 @@ class SampleTypesController < ApplicationController
       sample.update(sample_type_id: nil)
     end
     @sample_type.destroy
-    redirect_to :back
+    redirect_back(fallback_location: root_path)
   end
 
   def sample_type_element
@@ -129,8 +129,8 @@ class SampleTypesController < ApplicationController
     render_404 unless @team
   end
 
-  def check_create_permissions
-    render_403 unless can_create_sample_type_in_team(@team)
+  def check_permissions
+    render_403 unless can_manage_sample_columns?(@team)
   end
 
   def set_sample_type

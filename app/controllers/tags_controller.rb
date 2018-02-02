@@ -35,9 +35,13 @@ class TagsController < ApplicationController
           flash[:success] = flash_success
           redirect_to session.delete(:return_to)
         }
-        format.json {
-          redirect_to my_module_tags_edit_path(params[:my_module_id], @tag, format: :json), :status => 303
-        }
+        format.json do
+          redirect_to my_module_tags_edit_path(params[:my_module_id],
+                                               @tag,
+                                               format: :json),
+                      turbolinks: false,
+                      status: 303
+        end
       end
     else
       flash_error = t("tags.create.error_flash")
@@ -46,10 +50,14 @@ class TagsController < ApplicationController
           flash[:error] = flash_error
           render :new
         }
-        format.json {
+        format.json do
           # TODO
-          redirect_to my_module_tags_edit_path(params[:my_module_id], @tag, format: :json), :status => 303
-        }
+          redirect_to my_module_tags_edit_path(params[:my_module_id],
+                                               @tag,
+                                               format: :json),
+                      turbolinks: false,
+                      status: 303
+        end
       end
     end
   end
@@ -59,9 +67,13 @@ class TagsController < ApplicationController
     if @tag.update_attributes(tag_params)
       respond_to do |format|
         format.html
-        format.json {
-          redirect_to my_module_tags_edit_path(params[:my_module_id], @tag, format: :json), :status => 303
-        }
+        format.json do
+          redirect_to my_module_tags_edit_path(params[:my_module_id],
+                                               @tag,
+                                               format: :json),
+                      turbolinks: false,
+                      status: 303
+        end
       end
     else
       respond_to do |format|
@@ -84,9 +96,13 @@ class TagsController < ApplicationController
           flash[:success] = flash_success
           redirect_to root_path
         }
-        format.json {
-          redirect_to my_module_tags_edit_path(params[:my_module_id], @tag, format: :json), :status => 303
-        }
+        format.json do
+          redirect_to my_module_tags_edit_path(params[:my_module_id],
+                                               @tag,
+                                               format: :json),
+                      turbolinks: false,
+                      status: 303
+        end
       end
     else
       flash_error = t(
@@ -98,10 +114,12 @@ class TagsController < ApplicationController
           flash[:error] = flash_error
           redirect_to root_path
         }
-        format.json {
+        format.json do
           # TODO
-          redirect_to my_module_tags_edit_path(format: :json), :status => 303
-        }
+          redirect_to my_module_tags_edit_path(format: :json),
+                      turbolinks: false,
+                      status: 303
+        end
       end
     end
   end

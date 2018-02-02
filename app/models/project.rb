@@ -1,4 +1,4 @@
-class Project < ActiveRecord::Base
+class Project < ApplicationRecord
   include ArchivableModel, SearchableModel
 
   enum visibility: { hidden: 0, visible: 1 }
@@ -12,10 +12,23 @@ class Project < ActiveRecord::Base
   validates :visibility, presence: true
   validates :team, presence: true
 
-  belongs_to :created_by, foreign_key: 'created_by_id', class_name: 'User'
-  belongs_to :last_modified_by, foreign_key: 'last_modified_by_id', class_name: 'User'
-  belongs_to :archived_by, foreign_key: 'archived_by_id', class_name: 'User'
-  belongs_to :restored_by, foreign_key: 'restored_by_id', class_name: 'User'
+  belongs_to :created_by,
+             foreign_key: 'created_by_id',
+             class_name: 'User',
+             optional: true
+  belongs_to :last_modified_by,
+             foreign_key: 'last_modified_by_id',
+             class_name: 'User',
+             optional: true
+  belongs_to :archived_by,
+             foreign_key: 'archived_by_id',
+             class_name: 'User',
+             optional: true
+  belongs_to :restored_by,
+             foreign_key: 'restored_by_id',
+             class_name: 'User',
+             optional: true
+  belongs_to :team, inverse_of: :projects, optional: true
   has_many :user_projects, inverse_of: :project
   has_many :users, through: :user_projects
   has_many :experiments, inverse_of: :project
@@ -24,7 +37,6 @@ class Project < ActiveRecord::Base
   has_many :tags, inverse_of: :project
   has_many :reports, inverse_of: :project, dependent: :destroy
   has_many :report_elements, inverse_of: :project, dependent: :destroy
-  belongs_to :team, inverse_of: :projects
 
   def self.search(
     user,

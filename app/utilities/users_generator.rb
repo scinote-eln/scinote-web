@@ -23,12 +23,13 @@ module UsersGenerator
                   password,
                   confirmed,
                   private_team_name,
-                  team_ids)
-    nu = User.new(full_name: full_name,
-                  initials: get_user_initials(full_name),
-                  email: email,
-                  password: password,
-                  password_confirmation: password)
+                  team_ids,
+                  options = {})
+    nu = User.new({ full_name: full_name,
+                    initials: get_user_initials(full_name),
+                    email: email,
+                    password: password,
+                    password_confirmation: password }.merge(options))
 
     nu.confirmed_at = Time.now if confirmed
     nu.save!

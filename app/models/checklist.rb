@@ -1,4 +1,4 @@
-class Checklist < ActiveRecord::Base
+class Checklist < ApplicationRecord
   include SearchableModel
 
   auto_strip_attributes :name, nullify: false
@@ -7,9 +7,15 @@ class Checklist < ActiveRecord::Base
             length: { maximum: Constants::TEXT_MAX_LENGTH }
   validates :step, presence: true
 
-  belongs_to :step, inverse_of: :checklists
-  belongs_to :created_by, foreign_key: 'created_by_id', class_name: 'User'
-  belongs_to :last_modified_by, foreign_key: 'last_modified_by_id', class_name: 'User'
+  belongs_to :step, inverse_of: :checklists, optional: true
+  belongs_to :created_by,
+             foreign_key: 'created_by_id',
+             class_name: 'User',
+             optional: true
+  belongs_to :last_modified_by,
+             foreign_key: 'last_modified_by_id',
+             class_name: 'User',
+             optional: true
   has_many :checklist_items,
     -> { order(:position) },
     inverse_of: :checklist,

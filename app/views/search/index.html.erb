@@ -72,19 +72,6 @@
         </li>
         <li role="presentation"
           class="
-          <%= "active" if @search_category.present? and @search_category == :workflows %>
-          <%= "disabled" if @workflow_search_count == 0 %>"
-        >
-          <a href="?<%= {category: 'workflows', q: @search_query,
-                         whole_word: @search_whole_word, whole_phrase: @search_whole_phrase,
-                         match_case: @search_case, utf8: '✓'}.to_query %>">
-            <span class="badge pull-right"><%= @workflow_search_count %></span>
-            <span class="glyphicon glyphicon-random"></span>
-            <%= t'Workflows' %>
-          </a>
-        </li>
-        <li role="presentation"
-          class="
           <%= "active" if @search_category.present? and @search_category == :modules %>
           <%= "disabled" if @module_search_count == 0 %>"
         >
@@ -267,9 +254,6 @@
       <% end %>
       <% if @search_category == :experiments and @experiment_search_count > 0 %>
         <%= render 'search/results/experiments', search_query: @search_query, results: @experiment_results %>
-      <% end %>
-      <% if @search_category == :workflows and @workflow_search_count > 0 %>
-        <%= render 'search/results/workflows', search_query: @search_query, results: @workflow_results %>
       <% end %>
       <% if @search_category == :modules and @module_search_count > 0 %>
         <%= render 'search/results/modules', search_query: @search_query, results: @module_results %>
