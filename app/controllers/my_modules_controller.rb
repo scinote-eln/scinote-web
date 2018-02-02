@@ -18,8 +18,8 @@ class MyModulesController < ApplicationController
   before_action :check_manage_permissions,
                 only: %I[update destroy description due_date]
   before_action :check_view_info_permissions, only: :show
-  before_action :check_view_permissions, only: %i[activities activities_tab
-    protocols results samples samples_index]
+  before_action :check_view_permissions, only:
+    %i(activities activities_tab protocols results samples samples_index)
   before_action :check_view_archive_permissions, only: :archive
   before_action :check_assign_samples_permissions, only: :assign_samples
   before_action :check_unassign_samples_permissions, only: :unassign_samples

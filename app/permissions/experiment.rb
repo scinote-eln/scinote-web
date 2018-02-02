@@ -49,8 +49,8 @@ Canaid::Permissions.register_for(Protocol) do
   end
 
   # protocol: create, update, delete, unlink, revert, update from protocol in
-  # repository,
-  # step: create, update, delete, reorder ##everyting for and below protocol level (step, step comments and assets etc.)
+  # repository
+  # step: create, update, delete, reorder
   can :manage_protocol_in_module do |user, protocol|
     if protocol.in_module?
       my_module = protocol.my_module
