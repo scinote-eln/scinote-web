@@ -78,7 +78,7 @@ class MyModuleTagsController < ApplicationController
   end
 
   def check_manage_permissions
-    render_403 unless can_manage_tags?(@my_module.experiment.project)
+    render_403 unless can_create_or_manage_tags?(@my_module.experiment.project)
   end
 
   def init_gui
