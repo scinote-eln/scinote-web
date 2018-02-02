@@ -12,6 +12,11 @@ Canaid::Permissions.register_for(Project) do
     user.is_owner_of_project?(project)
   end
 
+  # project: archive
+  can :archive_project do |user, project|
+    can_manage_project?(user, project)
+  end
+
   # project: restore
   can :restore_project do |user, project|
     can_manage_project?(user, project) && project.archived?

@@ -116,7 +116,7 @@ class ProjectsController < ApplicationController
 
     # Check archive permissions if archiving/restoring
     if project_params.include? :archive
-      if (project_params[:archive] && !can_manage_project?(@project)) ||
+      if (project_params[:archive] && !can_archive_project?(@project)) ||
          (!project_params[:archive] && !can_restore_project?(@project))
         return_error = true
         is_archive = URI(request.referer).path == projects_archive_path ? "restore" : "archive"
