@@ -218,9 +218,7 @@ class CanvasController < ApplicationController
   end
 
   def check_edit_canvas
-    unless can_edit_canvas(@experiment)
-      render_403 and return
-    end
+    render_403 and return unless can_manage_experiment?(@experiment)
   end
 
   def check_view_canvas
