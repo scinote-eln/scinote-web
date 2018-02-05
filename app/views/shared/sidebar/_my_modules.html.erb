@@ -11,7 +11,7 @@
                     <% if currently_active? my_module %>
                       <%= my_module.name %>
                     <% else %>
-                      <% if can_read_experiment?(my_module.experiment) then %>
+                      <% if can_read_experiment?(my_module.experiment) %>
                         <%= link_to my_module.name, module_action_to_link_to(my_module), class: "module-link" %>
                       <% else %>
                         <%= my_module.name %>
