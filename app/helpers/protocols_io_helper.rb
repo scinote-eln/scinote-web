@@ -34,7 +34,7 @@ module ProtocolsIoHelper
   # -- 0 big =
 
   PIO_TITLE_TOOLONG_LEN =
-    I18n.t('protocols.protocols_io_import.title_too_long').length + 2
+    I18n.t('protocols.protocols_io_import.title_too_long').length + 5
   PIO_STEP_TOOLONG_LEN =
     I18n.t('protocols.protocols_io_import.too_long').length
   # The + 2 above (in title) is there because if the length was at the limit,
@@ -146,12 +146,19 @@ module ProtocolsIoHelper
     Nokogiri::HTML::DocumentFragment.parse(text).to_html
   end
 
-  def prepare_for_view(attribute_text1, size, table = 'no_table')
+  # Images are allowed in:
+  # Step: description, expected result
+  # Protocol description : description before_start warning
+  # guidelines manuscript_citation
+  def prepare_for_view(
+    attribute_text1, size, table = 'no_table', image_allowed = false
+  )
+    image_tag = image_allowed ? Array('img') : Array(nil)
     if table == 'no_table'
-      attribute_text = sanitize_input(not_null(attribute_text1))
+      attribute_text = sanitize_input(not_null(attribute_text1), image_tag)
     elsif table == 'table'
       attribute_text = sanitize_input(
-        string_html_table_remove(not_null(attribute_text1))
+        string_html_table_remove(not_null(attribute_text1)), image_tag
       )
     end
     pio_eval_len(
@@ -186,14 +193,17 @@ module ProtocolsIoHelper
   end
 
   # pio_stp_x means protocols io step (id of component) parser
-  def pio_stp_1(iterating_key) # protocols io description parser
+  # protocols io description parser
+  def pio_stp_1(iterating_key)
     br = '<br>'
     append =
       if iterating_key.present?
         br +
         prepare_for_view(
           iterating_key,
-          ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL
+          ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL,
+          'no_table',
+          true
           ) +
         br
       else
@@ -202,26 +212,31 @@ module ProtocolsIoHelper
     append
   end
 
-  def pio_stp_6(iterating_key) # protocols io section(title) parser
+  def pio_stp_6(iterating_key)
     if iterating_key.present?
+      # protocols io section(title) parser
       return pio_eval_title_len(CGI.unescapeHTML(sanitize_input(iterating_key)))
     end
     t('protocols.protocols_io_import.comp_append.missing_step')
   end
 
-  def pio_stp_17(iterating_key) # protocols io expected result parser
+  def pio_stp_17(iterating_key)
+    # protocols io expected result parser
     if iterating_key.present?
       append =
         t('protocols.protocols_io_import.comp_append.expected_result') +
         prepare_for_view(
-          iterating_key, ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL
+          iterating_key, ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL,
+          'no_table',
+          true
         ) +
         '<br>'
       return append
     end
     ''
   end
-  # protocols io software package,dataset,commands,sub_protocol and safety_information  parser
+  # protocols io software package,dataset,commands,
+  # sub_protocol and safety_information  parser
 
   def pio_stp(iterating_key, parse_elements_array, en_local_text)
     append = ''
@@ -241,13 +256,18 @@ module ProtocolsIoHelper
       ( before_start warning guidelines manuscript_citation publish_date
       vendor_name vendor_link keywords tags link created_on )
     ]
+    allowed_image_attributes = %w[
+      ( before_start warning guidelines manuscript_citation )
+    ]
     description_string =
       if json_hash['description'].present?
         '<strong>' + t('protocols.protocols_io_import.preview.description') +
           '</strong>' +
           prepare_for_view(
             json_hash['description'],
-            ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_MEDIUM
+            ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_MEDIUM,
+            'no_table',
+            true
           ).html_safe
       else
         '<strong>' + t('protocols.protocols_io_import.preview.description') +
@@ -280,10 +300,11 @@ module ProtocolsIoHelper
         description_string += '<br>'
       elsif json_hash[e].present?
         new_e = '<strong>' + e.humanize + '</strong>'
+        image_tag = allowed_image_attributes.include?(e) ? Array('img') : Array(nil)
         description_string +=
           new_e.to_s + ':  ' +
           pio_eval_prot_desc(
-            sanitize_input(json_hash[e]),
+            sanitize_input(json_hash[e], image_tag),
             e
           ).html_safe + '<br>'
       end
@@ -326,7 +347,9 @@ module ProtocolsIoHelper
     newj['0']['name'] = 'Protocol info'
     @remaining = ProtocolsIoHelper::PIO_P_AVAILABLE_LENGTH
     newj['0']['tables'], table_str = protocolsio_string_to_table_element(
-      sanitize_input(protocols_io_fill_desc(original_json).html_safe)
+      sanitize_input(
+        protocols_io_fill_desc(original_json).html_safe, Array('img')
+      )
     )
     newj['0']['description'] = table_str
     original_json['steps'].each_with_index do |step, pos_orig| # loop over steps
@@ -399,5 +422,4 @@ module ProtocolsIoHelper
     end # steps
     newj
   end
-
 end

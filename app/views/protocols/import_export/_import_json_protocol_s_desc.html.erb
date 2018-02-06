@@ -43,13 +43,13 @@
               <% step_info_string += (key['data']) %>
               <br>
               <strong><%= t('protocols.protocols_io_import.preview.strng_s_desc') %></strong>
-              <%= prepare_for_view(key['data'],ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL,'table').html_safe %>
+              <%= prepare_for_view(key['data'],ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL,'table',true).html_safe %>
               <br>
             <% when '17' %>
               <% step_info_string += (key['data']) %>
               <br>
               <strong><%= t('protocols.protocols_io_import.preview.s_exp_res') %></strong>
-              <%= prepare_for_view(key['data'],ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL,'table').html_safe %>
+              <%= prepare_for_view(key['data'],ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL,'table',true).html_safe %>
               <br>
             <% end %>
           <% elsif key && whitelist_complex.include?(key['component_type_id']) %>
