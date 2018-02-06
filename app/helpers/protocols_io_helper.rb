@@ -175,7 +175,6 @@ module ProtocolsIoHelper
       else
         ' , '
       end
-    # intercept tables here, before they are shortened
     if attribute_name == 'protocol_name'
       output_string += pio_eval_title_len(attribute_text)
     else
@@ -190,7 +189,7 @@ module ProtocolsIoHelper
   def pio_stp_1(iterating_key) # protocols io description parser
     br = '<br>'
     append =
-      if iterating_key.present? # intercept tables here before cutting
+      if iterating_key.present?
         br +
         prepare_for_view(
           iterating_key,
@@ -214,7 +213,7 @@ module ProtocolsIoHelper
     if iterating_key.present?
       append =
         t('protocols.protocols_io_import.comp_append.expected_result') +
-        prepare_for_view( # intercept tables here, before cutting
+        prepare_for_view(
           iterating_key, ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL
         ) +
         '<br>'
@@ -229,7 +228,7 @@ module ProtocolsIoHelper
     parse_elements_array.each do |element|
       return '' unless iterating_key[element]
       append += fill_attributes(
-        element, # intercept tables here, before cutting
+        element,
         iterating_key[element],
         en_local_text
       )
@@ -250,7 +249,7 @@ module ProtocolsIoHelper
         t('protocols.protocols_io_import.preview.description') +
         '</strong>' +
         prepare_for_view(
-          json_hash['description'], # intercept tables here, before they are cut
+          json_hash['description'],
           ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_MEDIUM
         ).html_safe
     else
@@ -351,6 +350,7 @@ module ProtocolsIoHelper
       newj[i.to_s]['position'] = i
       newj[i.to_s]['description'] = '' unless newj[i.to_s].key?('description')
       newj[i.to_s]['name'] = '' unless newj[i.to_s].key?('name')
+      unshortened_step_table_string = ''
       step['components'].each do |key, value|
         # sometimes there are random index values as keys
         # instead of hashes, this is a workaround to that buggy json format
@@ -360,10 +360,12 @@ module ProtocolsIoHelper
         case key['component_type_id']
         # intercept tables in all of below before cutting
         when '1'
+          unshortened_step_table_string += key['data']
           newj[i.to_s]['description'] += pio_stp_1(key['data'])
         when '6'
           newj[i.to_s]['name'] = pio_stp_6(key['data'])
         when '17'
+          unshortened_step_table_string += key['data']
           newj[i.to_s]['description'] += pio_stp_17(key['data'])
         when '8'
           pe_array = %w(
@@ -407,10 +409,13 @@ module ProtocolsIoHelper
           )
         end # case end
       end # finished looping over step components
-      newj[i.to_s]['tables'], table_str = protocolsio_string_to_table_element(
+      table_str = protocolsio_string_to_table_element(
         newj[i.to_s]['description']
-      )
+      )[1]
       newj[i.to_s]['description'] = table_str
+      newj[i.to_s]['tables'] = protocolsio_string_to_table_element(
+        sanitize_input(unshortened_step_table_string).html_safe
+      )[0]
     end # steps
     newj
   end
