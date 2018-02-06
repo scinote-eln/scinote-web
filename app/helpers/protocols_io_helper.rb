@@ -62,7 +62,7 @@ module ProtocolsIoHelper
       tables[table_counter.to_s]['contents'] = Base64.encode64(
         contents.to_s.sub('=>', ':')
       )
-      tables[table_counter.to_s]['name'] = nil
+      tables[table_counter.to_s]['name'] = ' '
     end
     # return string_without_tables, tables
     return tables, string_without_tables
