@@ -547,7 +547,7 @@ class StepsController < ApplicationController
   # Delete the step table
   def delete_step_tables(params)
     return unless params[:tables_attributes].present?
-    params[:tables_attributes].each do |key, table|
+    params[:tables_attributes].each do |_, table|
       next unless table['_destroy']
       table_to_destroy = Table.find_by_id(table['id'])
       table_to_destroy.report_elements.destroy_all
