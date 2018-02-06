@@ -1785,6 +1785,12 @@ en:
       browse_label: 'Browse to add'
       drop_label: 'Drop to add to Step'
       file_label: 'File'
+    from_clipboard:
+      modal_title: 'Add image from clipboard'
+      image_preview: 'Image preview'
+      add_image: 'Add image'
+      file_name: 'File name'
+      file_name_placeholder: 'Image'
   atwho:
     no_results: "No results found"
     users:
