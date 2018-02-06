@@ -18,7 +18,7 @@ module StepsActions
     new_checklists = step_params[:checklists_attributes]
 
     if new_checklists
-      new_checklists.each do |e|
+      new_checklists.to_h.each do |e|
         list = PreviousChecklist.new(
           e.second[:id].to_i,
           e.second[:name]
