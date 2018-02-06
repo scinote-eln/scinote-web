@@ -45,10 +45,15 @@ module ProtocolsIoHelper
     tr_regex = %r{<tr\b[^>]*>(.*?)<\/tr>}m
     td_regex = %r{<td\b[^>]*>(.*?)<\/td>}m
     tables = {}
+    description_string.gsub! '<th>', '<td>'
+    description_string.gsub! '</th>', '</td>'
     table_strings = description_string.scan(table_regex)
     table_strings.each_with_index do |table, table_counter|
       tables[table_counter.to_s] = {}
-      tr_strings = table[0].scan(tr_regex)
+      tr_number = table[0].scan(tr_regex).count
+      diff = 5 - tr_number # always tables have atleast 5 rows
+      table_fixed_string = tr_number > 4 ? table[0] : table[0] + empty_tr_gen(diff)
+      tr_strings = table_fixed_string.scan(tr_regex)
       contents = {}
       contents['data'] = []
       tr_strings.each_with_index do |tr, tr_counter|
@@ -66,6 +71,15 @@ module ProtocolsIoHelper
     end
     # return string_without_tables, tables
     return tables, string_without_tables
+  end
+
+  def empty_tr_gen(number)
+    result = ''
+    while number > 0
+      result += '<tr></tr>'
+      number -= 1
+    end
+    result
   end
 
   def string_html_table_remove(description_string)
@@ -395,6 +409,8 @@ module ProtocolsIoHelper
       newj[i.to_s]['tables'], table_str = protocolsio_string_to_table_element(
         newj[i.to_s]['description']
       )
+      # Base64.decode64(newj[i.to_s]['tables'][0]['contents'])
+      # byebug
       newj[i.to_s]['description'] = table_str
     end # steps
     newj
