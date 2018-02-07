@@ -64,7 +64,6 @@ module ProtocolsIoHelper
       )
       tables[table_counter.to_s]['name'] = nil
     end
-    # return string_without_tables, tables
     return tables, string_without_tables
   end
 
@@ -193,7 +192,8 @@ module ProtocolsIoHelper
         br +
         prepare_for_view(
           iterating_key,
-          ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL
+          ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL,
+          'table'
           ) +
         br
       else
@@ -214,7 +214,9 @@ module ProtocolsIoHelper
       append =
         t('protocols.protocols_io_import.comp_append.expected_result') +
         prepare_for_view(
-          iterating_key, ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL
+          iterating_key,
+          ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL,
+          'table'
         ) +
         '<br>'
       return append
@@ -250,7 +252,8 @@ module ProtocolsIoHelper
         '</strong>' +
         prepare_for_view(
           json_hash['description'],
-          ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_MEDIUM
+          ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_MEDIUM,
+          'table'
         ).html_safe
     else
       description_string =
