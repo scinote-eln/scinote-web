@@ -52,8 +52,8 @@ module ProtocolsIoHelper
       tables[table_counter.to_s] = {}
       tr_number = table[0].scan(tr_regex).count
       diff = 5 - tr_number # always tables have atleast 5 rows
-      table_fixed_string = tr_number > 4 ? table[0] : table[0] + empty_tbl_gen(diff)
-      tr_strings = table_fixed_string.scan(tr_regex)
+      table_fix_str = tr_number > 4 ? table[0] : table[0] + empty_tbl_gen(diff)
+      tr_strings = table_fix_str.scan(tr_regex)
       contents = {}
       contents['data'] = []
       tr_strings.each_with_index do |tr, tr_counter|
