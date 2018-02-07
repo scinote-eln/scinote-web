@@ -601,17 +601,8 @@ class ProtocolsController < ApplicationController
   def protocolsio_import_create
     @protocolsio_too_big = false
     @protocolsio_invalid_file = false
-    @protocolsio_no_file = false
-    if params[:json_file].nil?
-      @protocolsio_no_file = true
-      respond_to do |format|
-        format.js {}
-      end
-      return 0 # return 0 stops the rest of the controller code from executing
-    end
     extension = File.extname(params[:json_file].path)
     file_size = File.size(params[:json_file].path)
-
     if extension != '.txt' && extension != '.json'
       @protocolsio_invalid_file = true
       respond_to do |format|
