@@ -393,6 +393,10 @@ module ProtocolsIoHelper
           pe_array = %w(
             name description os_name os_version
           )
+          key['source_data']['name'] =
+            '<pre><code>' +
+            not_null(key['source_data']['name']) +
+            '</code></pre>'
           trans_text = 'protocols.protocols_io_import.comp_append.command.'
           newj[i.to_s]['description'] += pio_stp(
             key['source_data'], pe_array, trans_text
