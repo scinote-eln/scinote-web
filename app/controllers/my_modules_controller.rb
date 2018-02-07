@@ -83,11 +83,8 @@ class MyModulesController < ApplicationController
     @activities = @my_module.last_activities(@last_activity_id, @per_page)
 
     if @activities.count > 0
-      @more_activities_url = url_for(
-        controller: 'my_modules',
-        action: 'activities',
-        format: :json,
-        from: @activities.last.id)
+      @more_activities_url =
+        activities_my_module_path(@my_module, from: @activities.last.id)
     end
 
     respond_to do |format|
