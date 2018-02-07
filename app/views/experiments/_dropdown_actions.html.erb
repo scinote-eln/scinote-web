@@ -10,12 +10,14 @@
                 data: { id: experiment.id },
                 class: 'edit-experiment' %></li>
   <% end %>
-  <% if can_move_or_clone_experiment?(experiment) %>
+  <% if can_clone_experiment?(experiment) %>
     <li><%= link_to t('experiments.clone.label_title'),
                   clone_modal_experiment_url(experiment),
                   remote: true,
                   type: 'button',
                   class: 'clone-experiment' %></li>
+  <% end %>
+  <% if can_move_experiment?(experiment) %>
     <li><%= link_to t('experiments.move.label_title'),
                   move_modal_experiment_url(experiment),
                   remote: true,

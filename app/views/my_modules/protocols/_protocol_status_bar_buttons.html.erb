@@ -81,8 +81,8 @@
         <span class="caret"></span>
       </a>
       <ul class="dropdown-menu">
+        <%-# For updating module protocol from repository protocol we don't need to check read permission for the repository protocol -%>
         <% if can_manage_protocol_in_module?(@protocol) %>
-          <%-# For update_from_parent and update_from_parent_modal we don't need to check read permission for the parent protocol -%>
           <li><%= link_to update_from_parent_modal_protocol_path(@protocol, format: :json), remote: true, title: t("my_modules.protocols.protocol_status_bar.btns.update_self_title"), data: { action: "update-self" } do %>
               <%= t("my_modules.protocols.protocol_status_bar.btns.update_self") %>
             <% end %>
@@ -122,8 +122,8 @@
           <li class="disabled"><a href="#" title="<%= t("my_modules.protocols.protocol_status_bar.btns.update_parent_title") %>"><%= t("my_modules.protocols.protocol_status_bar.btns.update_parent") %></a>
           </li>
         <% end %>
+        <%-# For updating module protocol from repository protocol we don't need to check read permission for the repository protocol -%>
         <% if can_manage_protocol_in_module?(@protocol) %>
-          <%-# && can_read_protocol_in_repository?(@protocol) not needed - user can update protocol in module even if it's private and he's not the owner -%>
           <li>
             <%= link_to update_from_parent_modal_protocol_path(@protocol, format: :json), remote: true, title: t("my_modules.protocols.protocol_status_bar.btns.update_self_title"), data: { action: "update-self" } do %>
               <%= t("my_modules.protocols.protocol_status_bar.btns.update_self") %>

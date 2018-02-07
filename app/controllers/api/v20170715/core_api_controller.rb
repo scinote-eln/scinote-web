@@ -20,7 +20,7 @@ module Api
               exp.my_modules.find_each do |tk|
                 task = tk.as_json(only: %i(name description archived))
                 task['task_id'] = tk.id.to_s
-                task['editable'] = can_manage_experiment?(tk.experiment)
+                task['editable'] = can_manage_module?(tk)
                 tasks << task
               end
               experiment['tasks'] = tasks
