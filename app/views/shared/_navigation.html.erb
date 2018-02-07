@@ -258,8 +258,7 @@
             <%= image_tag avatar_path(current_user, :icon_small),
                           class: "avatar" %>
           </a>
-          <% if current_user.teams.length > 1 || can_create_teams? %>
-            <ul class="dropdown-menu">
+            <ul class="dropdown-menu" data-hook="navigation-user-menu">
               <li>
                 <%= link_to t('nav.user.settings'), edit_user_registration_path, data: { turbolinks: false } %>
               </li>
@@ -270,7 +269,6 @@
                             method: :delete %>
               </li>
             </ul>
-          <% end %>
         </li>
       </ul>
     </div>
