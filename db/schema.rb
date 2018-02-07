@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171026090804) do
+ActiveRecord::Schema.define(version: 20180207102347) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -392,6 +392,25 @@ ActiveRecord::Schema.define(version: 20171026090804) do
     t.datetime "updated_at"
     t.integer "created_by_id", null: false
     t.integer "last_modified_by_id", null: false
+  end
+
+  create_table "repository_list_items", force: :cascade do |t|
+    t.bigint "repository_list_value_id"
+    t.text "name", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_repository_list_items_on_name"
+    t.index ["repository_list_value_id"], name: "index_repository_list_items_on_repository_list_value_id"
+  end
+
+  create_table "repository_list_values", force: :cascade do |t|
+    t.bigint "selected_item"
+    t.bigint "created_by_id"
+    t.bigint "last_modified_by_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["created_by_id"], name: "index_repository_list_values_on_created_by_id"
+    t.index ["last_modified_by_id"], name: "index_repository_list_values_on_last_modified_by_id"
   end
 
   create_table "repository_rows", id: :serial, force: :cascade do |t|
@@ -854,6 +873,8 @@ ActiveRecord::Schema.define(version: 20171026090804) do
   add_foreign_key "repository_columns", "users", column: "created_by_id"
   add_foreign_key "repository_date_values", "users", column: "created_by_id"
   add_foreign_key "repository_date_values", "users", column: "last_modified_by_id"
+  add_foreign_key "repository_list_items", "repository_list_values"
+  add_foreign_key "repository_list_values", "users", column: "created_by_id"
   add_foreign_key "repository_rows", "users", column: "created_by_id"
   add_foreign_key "repository_rows", "users", column: "last_modified_by_id"
   add_foreign_key "repository_text_values", "users", column: "created_by_id"
