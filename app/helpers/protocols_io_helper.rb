@@ -356,14 +356,11 @@ module ProtocolsIoHelper
     shortened_string, unshortened_tables_string = protocols_io_fill_desc(
       original_json
     )
-    shortened_string = sanitize_input(
-        shortened_string.html_safe, Array('img')
-    )
     newj['0']['tables'] = protocolsio_string_to_table_element(
       sanitize_input(unshortened_tables_string).html_safe
     )[0]
     table_str = protocolsio_string_to_table_element(
-      sanitize_input(shortened_string).html_safe
+      sanitize_input(shortened_string, Array('img')).html_safe
     )[1]
     newj['0']['description'] = table_str
     original_json['steps'].each_with_index do |step, pos_orig| # loop over steps
