@@ -87,7 +87,7 @@
               <% step_info_string += not_null(key['source_data']['description']) %>
               <br>
               <strong><%= key['name']+': ' %></strong>
-              <%= prepare_for_view('<pre><code>'+key['source_data']['name']+'</code></pre>',ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL,'table').html_safe %>
+              <%= prepare_for_view('<pre><code>'+key['source_data']['name'].gsub(/\n/, '<br>')+'</code></pre>',ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL,'table').html_safe %>
               <br>
               <%= t('protocols.protocols_io_import.preview.s_desc') %>
               <%= prepare_for_view(key['source_data']['description'],ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL,'table').html_safe %>

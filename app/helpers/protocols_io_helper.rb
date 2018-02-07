@@ -154,6 +154,7 @@ module ProtocolsIoHelper
     attribute_text1, size, table = 'no_table', image_allowed = false
   )
     image_tag = image_allowed ? Array('img') : Array(nil)
+    image_tag.push('br')
     if table == 'no_table'
       attribute_text = sanitize_input(not_null(attribute_text1), image_tag)
     elsif table == 'table'
@@ -395,7 +396,7 @@ module ProtocolsIoHelper
           )
           key['source_data']['name'] =
             '<pre><code>' +
-            not_null(key['source_data']['name']) +
+            not_null(key['source_data']['name'].gsub(/\n/, '<br>')) +
             '</code></pre>'
           trans_text = 'protocols.protocols_io_import.comp_append.command.'
           newj[i.to_s]['description'] += pio_stp(
