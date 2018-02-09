@@ -6,7 +6,7 @@
         <h4 class="modal-title" id="modal-move-module-label"><%=t "experiments.canvas.edit.modal_move_module.title" %></h4>
       </div>
       <div class="modal-body">
-        <% experiments = @experiment.project.experiments.is_archived(false) %>
+        <% experiments = @experiment.project.experiments %>
         <% if experiments.count > 1 %>
           <%= bootstrap_form_tag do |f| %>
             <%= f.select :experiment_id, experiments
@@ -14,13 +14,13 @@
                                         .collect { |e| [ e.name, e.id ] }, {},
                 {class: "form-control selectpicker", "data-role" => "clear"} %>
           <% end %>
-      <% else %>
-        <div>
-          <em>
-            <%= t("experiments.canvas.edit.modal_move_module.no_experiments") %>
-          </em>
-        </div>
-      <% end %>
+        <% else %>
+          <div>
+            <em>
+              <%= t("experiments.canvas.edit.modal_move_module.no_experiments") %>
+            </em>
+          </div>
+        <% end %>
       </div>
       <div class="modal-footer">
       <% if experiments.count > 1 %>

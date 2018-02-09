@@ -43,7 +43,8 @@ Canaid::Permissions.register_for(Experiment) do
      move_experiment)
     .each do |perm|
     can perm do |_, experiment|
-      experiment.project.active?
+      experiment.active? &&
+        experiment.project.active?
     end
   end
 end
@@ -97,7 +98,9 @@ Canaid::Permissions.register_for(MyModule) do
      complete_module
      create_comment_in_module).each do |perm|
     can perm do |_, my_module|
-      my_module.experiment.project.active?
+      my_module.active? &&
+        my_module.experiment.active? &&
+        my_module.experiment.project.active?
     end
   end
 end
