@@ -127,7 +127,7 @@ class CanvasController < ApplicationController
         unless to_move.is_a?(Hash) &&
                to_move.keys.all? do |id|
                  id.is_a?(String) &&
-                 can_manage_module?(MyModule.find_by_id(id))
+                 (!is_int?(id) || can_manage_module?(MyModule.find_by_id(id)))
                end &&
                to_move.values.all? do |exp_id|
                  exp_id.is_a?(String) &&
