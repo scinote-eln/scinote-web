@@ -11,6 +11,8 @@ class StepsController < ApplicationController
   before_action :check_view_permissions, only: [:show]
   before_action :check_manage_permissions, only: %i(new create edit update
                                                     destroy)
+  before_action :check_complete_and_checkbox_permissions, only:
+    %i(toggle_step_state checklistitem_state)
 
   before_action :update_checklist_item_positions, only: [:create, :update]
 
@@ -269,53 +271,44 @@ class StepsController < ApplicationController
       if chkItem
         checked = params[:checked] == "true"
         protocol = chkItem.checklist.step.protocol
+        changed = chkItem.checked != checked
+        chkItem.checked = checked
 
-        authorized = ((checked and can_check_checkbox(protocol)) or (!checked and can_uncheck_checkbox(protocol)))
+        if chkItem.save
+          format.json {
+            render json: {}, status: :accepted
+          }
 
-        if authorized
-          changed = chkItem.checked != checked
-          chkItem.checked = checked
+          # Create activity
+          if changed
+            str = checked ? "activities.check_step_checklist_item" :
+              "activities.uncheck_step_checklist_item"
+            completed_items = chkItem.checklist.checklist_items.where(checked: true).count
+            all_items = chkItem.checklist.checklist_items.count
+            text_activity = smart_annotation_parser(chkItem.text)
+                            .gsub(/\s+/, ' ')
+            message = t(
+              str,
+              user: current_user.full_name,
+              checkbox: text_activity,
+              step: chkItem.checklist.step.position + 1,
+              step_name: chkItem.checklist.step.name,
+              completed: completed_items,
+              all: all_items
+            )
 
-          if chkItem.save
-            format.json {
-              render json: {}, status: :accepted
-            }
-
-            # Create activity
-            if changed
-              str = checked ? "activities.check_step_checklist_item" :
-                "activities.uncheck_step_checklist_item"
-              completed_items = chkItem.checklist.checklist_items.where(checked: true).count
-              all_items = chkItem.checklist.checklist_items.count
-              text_activity = smart_annotation_parser(chkItem.text)
-                              .gsub(/\s+/, ' ')
-              message = t(
-                str,
-                user: current_user.full_name,
-                checkbox: text_activity,
-                step: chkItem.checklist.step.position + 1,
-                step_name: chkItem.checklist.step.name,
-                completed: completed_items,
-                all: all_items
+            # This should always hold true (only in module can
+            # check items be checked, but still check just in case)
+            if protocol.in_module?
+              Activity.create(
+                user: current_user,
+                project: protocol.my_module.experiment.project,
+                experiment: protocol.my_module.experiment,
+                my_module: protocol.my_module,
+                message: message,
+                type_of: checked ? :check_step_checklist_item : :uncheck_step_checklist_item
               )
-
-              # This should always hold true (only in module can
-              # check items be checked, but still check just in case)
-              if protocol.in_module?
-                Activity.create(
-                  user: current_user,
-                  project: protocol.my_module.experiment.project,
-                  experiment: protocol.my_module.experiment,
-                  my_module: protocol.my_module,
-                  message: message,
-                  type_of: checked ? :check_step_checklist_item : :uncheck_step_checklist_item
-                )
-              end
             end
-          else
-            format.json {
-              render json: {}, status: :unprocessable_entity
-            }
           end
         else
           format.json {
@@ -332,92 +325,72 @@ class StepsController < ApplicationController
 
   # Complete/uncomplete step
   def toggle_step_state
-    step = Step.find_by_id(params[:id])
-
     respond_to do |format|
-      if step
-        completed = params[:completed] == 'true'
-        protocol = step.protocol
+      completed = params[:completed] == 'true'
+      protocol = step.protocol
+      changed = step.completed != completed
+      step.completed = completed
 
-        authorized = (
-          (completed and can_complete_step_in_protocol(protocol)) ||
-            (!completed and can_uncomplete_step_in_protocol(protocol))
-        )
+      # Update completed_on
+      if changed
+        step.completed_on = completed ? Time.current : nil
+      end
 
-        if authorized
-          changed = step.completed != completed
-          step.completed = completed
+      if step.save
+        if protocol.in_module?
+          ready_to_complete = protocol.my_module.check_completness_status
+        end
 
-          # Update completed_on
-          if changed
-            step.completed_on = completed ? Time.current : nil
+        # Create activity
+        if changed
+          completed_steps = protocol.steps.where(completed: true).count
+          all_steps = protocol.steps.count
+          str = 'activities.uncomplete_step'
+          str = 'activities.complete_step' if completed
+
+          message = t(
+            str,
+            user: current_user.full_name,
+            step: step.position + 1,
+            step_name: step.name,
+            completed: completed_steps,
+            all: all_steps
+          )
+
+          # Toggling step state can only occur in
+          # module protocols, so my_module is always
+          # not nil; nonetheless, check if my_module is present
+          if protocol.in_module?
+            Activity.create(
+              user: current_user,
+              project: protocol.my_module.experiment.project,
+              experiment: protocol.my_module.experiment,
+              my_module: protocol.my_module,
+              message: message,
+              type_of: completed ? :complete_step : :uncomplete_step
+            )
           end
+        end
 
-          if step.save
-            if protocol.in_module?
-              ready_to_complete = protocol.my_module.check_completness_status
-            end
-
-            # Create activity
-            if changed
-              completed_steps = protocol.steps.where(completed: true).count
-              all_steps = protocol.steps.count
-              str = 'activities.uncomplete_step'
-              str = 'activities.complete_step' if completed
-
-              message = t(
-                str,
-                user: current_user.full_name,
-                step: step.position + 1,
-                step_name: step.name,
-                completed: completed_steps,
-                all: all_steps
-              )
-
-              # Toggling step state can only occur in
-              # module protocols, so my_module is always
-              # not nil; nonetheless, check if my_module is present
-              if protocol.in_module?
-                Activity.create(
-                  user: current_user,
-                  project: protocol.my_module.experiment.project,
-                  experiment: protocol.my_module.experiment,
-                  my_module: protocol.my_module,
-                  message: message,
-                  type_of: completed ? :complete_step : :uncomplete_step
-                )
-              end
-            end
-
-            # Create localized title for complete/uncomplete button
-            localized_title = if !completed
-                                t('protocols.steps.options.complete_title')
-                              else
-                                t('protocols.steps.options.uncomplete_title')
-                              end
-            format.json do
-              if ready_to_complete && protocol.my_module.uncompleted?
-                render json: {
-                  task_ready_to_complete: true,
-                  new_title: localized_title
-                }, status: :ok
-              else
-                render json: { new_title: localized_title }, status: :ok
-              end
-            end
+        # Create localized title for complete/uncomplete button
+        localized_title = if !completed
+                            t('protocols.steps.options.complete_title')
+                          else
+                            t('protocols.steps.options.uncomplete_title')
+                          end
+        format.json do
+          if ready_to_complete && protocol.my_module.uncompleted?
+            render json: {
+              task_ready_to_complete: true,
+              new_title: localized_title
+            }, status: :ok
           else
-            format.json {
-              render json: {}, status: :unprocessable_entity
-            }
+            render json: { new_title: localized_title }, status: :ok
           end
-        else
-          format.json {
-            render json: {}, status: :unauthorized
-          }
         end
       else
         format.json {
-          render json: {}, status: :not_found
+          render json: {}, status: :unprocessable_entity
         }
       end
     end
@@ -647,6 +620,11 @@ class StepsController < ApplicationController
   def check_manage_permissions
     render_403 unless can_manage_protocol_in_module?(@protocol) ||
                       can_update_protocol_in_repository?(@protocol)
+  end
+
+  def check_complete_and_checkbox_permissions
+    render_403 unless @step.present? &&
+                      can_complete_or_checkbox_step?(@protocol)
   end
 
   def step_params

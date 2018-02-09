@@ -1,11 +1,11 @@
 <div id="update-canvas"
   data-can-create-modules="<%= can_manage_experiment?(@experiment) ? "yes" : "no" %>"
   data-can-edit-modules="<%= can_manage_experiment?(@experiment) ? "yes" : "no" %>"
-  data-can-clone-modules="<%= can_clone_modules(@experiment) ? "yes" : "no" %>"
+  data-can-clone-modules="<%= can_manage_experiment?(@experiment) ? "yes" : "no" %>"
   data-can-move-modules="<%= can_manage_experiment?(@experiment) ? "yes" : "no" %>"
   data-can-delete-modules="<%= can_manage_experiment?(@experiment) ? "yes" : "no" %>"
-  data-can-reposition-modules="<%= can_reposition_modules(@experiment) ? "yes" : "no" %>"
-  data-can-edit-connections="<%= can_edit_connections(@experiment) ? "yes" : "no" %>"
+  data-can-reposition-modules="<%= can_manage_experiment?(@experiment) ? "yes" : "no" %>"
+  data-can-edit-connections="<%= can_manage_experiment?(@experiment) ? "yes" : "no" %>"
   data-unsaved-work-text="<%=t "experiments.canvas.edit.unsaved_work" %>"
 >
   <%= bootstrap_form_tag url: canvas_experiment_url, method: "post" do |f| %>

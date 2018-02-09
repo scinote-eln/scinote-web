@@ -1,4 +1,4 @@
-<% if can_view_or_download_result_assets(result.my_module) %>
+<% if can_view_experiment?(result.my_module.experiment) %>
   <% if result.asset.file.processing? %>
     <span data-status='asset-loading'
       data-present-url='<%= file_present_asset_path(result.asset) %>'>

@@ -2,7 +2,7 @@
   <strong>
     <%=t "protocols.steps.comment_title", user: comment.user.full_name, time: l(comment.created_at, format: :time) %>
   </strong>
-  <% if can_edit_step_comment_in_protocol(comment) || can_delete_step_comment_in_protocol(comment) %>
+  <% if can_manage_comment_in_module?(comment) %>
     <div class="dropdown dropdown-comment">
       <a href="#"
          class="dropdown-toggle"
@@ -16,7 +16,6 @@
       </a>
       <ul class="dropdown-menu dropdown-menu-fixed" aria-labelledby="comment-<%= comment.id %>-dropdown">
         <li class="dropdown-header"><%= I18n.t('comments.options_dropdown.header') %></li>
-        <% if can_edit_step_comment_in_protocol(comment) %>
           <li>
             <a href="#"
                data-action="edit-comment"
@@ -24,8 +23,6 @@
               <%= t('comments.options_dropdown.edit') %>
             </a>
           </li>
-        <% end %>
-        <% if can_delete_step_comment_in_protocol(comment) %>
           <li>
             <a href="#"
                data-action="delete-comment"
@@ -34,7 +31,6 @@
               <%= t('comments.options_dropdown.delete') %>
             </a>
           </li>
-        <% end %>
       </ul>
     </div>
   <% end %>

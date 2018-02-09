@@ -21,7 +21,7 @@
               <a class="edit-module" href="" data-module-id="<%= my_module.id %>"><%=t "experiments.canvas.edit.edit_module" %></a>
           </li>
         <% end %>
-        <% if can_clone_modules(my_module.experiment) %>
+        <% if can_manage_experiment?(my_module.experiment) %>
           <li>
             <a class ="clone-module" href="" data-module-id="<%= my_module.id %>"><%=t "experiments.canvas.edit.clone_module" %></a>
           </li>
@@ -33,16 +33,18 @@
           <li>
             <a class="move-module" href="" data-module-id="<%= my_module.id %>"><%=t "experiments.canvas.edit.move_module" %></a>
           </li>
-          <li <%= 'style=display:none;' if my_module.my_module_group.blank? %>>
+        <% if my_module.my_module_group && my_module.my_module_group.my_modules.all? { |my_module| can_manage_module?(my_module) } %>
+          <li>
             <a class="move-module-group" href="" data-module-id="<%= my_module.id %>"><%=t "experiments.canvas.edit.move_module_group" %></a>
           </li>
+        <% end %>
+        <% if can_manage_module?(my_module) %>
           <li>
             <a class="delete-module" href="" data-module-id="<%= my_module.id %>"><%=t "experiments.canvas.edit.delete_module" %></a>
           </li>
         <% end %>
         <% if my_module.my_module_group && my_module.my_module_group.my_modules.all? { |my_module| can_manage_module?(my_module) } %>
-          <li data-hook="archive-module-group"
-              <%= 'style=display:none;' if my_module.my_module_group.blank? %>>
+          <li data-hook="archive-module-group">
             <a class ="delete-module-group" href="" data-module-id="<%= my_module.id %>"><%=t "experiments.canvas.edit.delete_module_group" %></a>
           </li>
         <% end %>
@@ -51,7 +53,7 @@
 
   </div>
 
-  <% if can_edit_connections(my_module.experiment) %>
+  <% if can_manage_experiment?(my_module.experiment) %>
     <div class="panel-body ep">
       <%=t "experiments.canvas.edit.drag_connections" %>
     </div>

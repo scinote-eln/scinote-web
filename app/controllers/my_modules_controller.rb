@@ -17,13 +17,12 @@ class MyModulesController < ApplicationController
                                            unassign_repository_records]
   before_action :check_manage_permissions,
                 only: %i(update destroy description due_date)
-  before_action :check_view_info_permissions, only: :show
   before_action :check_view_permissions, only:
-    %i(activities activities_tab protocols results samples samples_index)
-  before_action :check_view_archive_permissions, only: :archive
-  before_action :check_assign_samples_permissions, only: :assign_samples
-  before_action :check_unassign_samples_permissions, only: :unassign_samples
-  before_action :check_complete_my_module_perimission, only: :complete_my_module
+    %i(show activities activities_tab protocols results samples samples_index
+       archive)
+  before_action :check_assign_samples_permissions, only: %i(assign_samples
+                                                            unassign_samples)
+  before_action :check_complete_module_permission, only: :complete_my_module
   before_action :check_assign_repository_records_permissions,
                 only: :assign_repository_records
   before_action :check_unassign_repository_records_permissions,
@@ -480,7 +479,7 @@ class MyModulesController < ApplicationController
   # Complete/uncomplete task
   def toggle_task_state
     respond_to do |format|
-      if can_complete_module(@my_module)
+      if can_complete_module?(@my_module)
         @my_module.completed? ? @my_module.uncomplete : @my_module.complete
         completed = @my_module.completed?
         if @my_module.save
@@ -602,35 +601,15 @@ class MyModulesController < ApplicationController
   end
 
   def check_manage_permissions
-    render_403 unless can_manage_module?(@my_module)
-  end
-
-  def check_view_info_permissions
-    unless can_view_module_info(@my_module)
-      render_403
-    end
+     render_403 unless can_manage_module?(@my_module)
   end
 
   def check_view_permissions
     render_403 unless can_read_experiment?(@my_module.experiment)
   end
 
-  def check_view_archive_permissions
-    unless can_view_module_archive(@my_module)
-      render_403
-    end
-  end
-
   def check_assign_samples_permissions
-    unless can_add_samples_to_module(@my_module)
-      render_403
-    end
-  end
-
-  def check_unassign_samples_permissions
-    unless can_delete_samples_from_module(@my_module)
-      render_403
-    end
+    render_403 unless can_assign_sample_to_module?(@my_module)
   end
 
   def check_assign_repository_records_permissions
@@ -641,8 +620,8 @@ class MyModulesController < ApplicationController
     render_403 unless can_unassign_repository_records(@my_module, @repository)
   end
 
-  def check_complete_my_module_perimission
-    render_403 unless can_complete_module(@my_module)
+  def check_complete_module_permission
+    render_403 unless can_complete_module?(@my_module)
   end
 
   def my_module_params

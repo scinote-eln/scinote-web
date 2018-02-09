@@ -8,8 +8,7 @@ class StepCommentsController < ApplicationController
 
   before_action :check_view_permissions, only: [:index]
   before_action :check_add_permissions, only: [:create]
-  before_action :check_edit_permissions, only: [:edit, :update]
-  before_action :check_destroy_permissions, only: [:destroy]
+  before_action :check_manage_permissions, only: %i(edit update destroy)
 
   def index
     @comments = @step.last_comments(@last_comment_id, @per_page)
@@ -185,21 +184,13 @@ class StepCommentsController < ApplicationController
   end
 
   def check_add_permissions
-    unless can_add_step_comment_in_protocol(@protocol)
-      render_403
-    end
+    render_403 unless can_create_comment_in_module?(@protocol.my_module)
   end
 
-  def check_edit_permissions
+  def check_manage_permissions
     @comment = StepComment.find_by_id(params[:id])
     render_403 unless @comment.present? &&
-                      can_edit_step_comment_in_protocol(@comment)
-  end
-
-  def check_destroy_permissions
-    @comment = StepComment.find_by_id(params[:id])
-    render_403 unless @comment.present? &&
-                      can_delete_step_comment_in_protocol(@comment)
+                      can_manage_comment_in_module?(@comment)
   end
 
   def comment_params

@@ -14,7 +14,7 @@
     <%= render 'my_module_comments/list.html.erb', comments: @comments %>
   <% end %>
 </ul>
-<% if can_add_comment_to_module(@my_module) %>
+<% if create_comment_in_module?(@my_module) %>
   <ul class="no-style double-line">
     <li>
       <hr>

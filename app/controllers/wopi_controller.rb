@@ -306,8 +306,8 @@ class WopiController < ActionController::Base
       end
       @breadcrumb_folder_url  = @close_url
     else
-      @can_read = can_view_or_download_result_assets(@my_module)
-      @can_write = can_edit_result_asset_in_module(@my_module)
+      @can_read = can_view_experiment?(@my_module.experiment)
+      @can_write = can_manage_module?(@my_module)
 
       @close_url = results_my_module_url(@my_module,
                                          only_path: false,

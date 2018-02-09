@@ -18,7 +18,7 @@
             <span class="glyphicon glyphicon-edit"></span>
           </a>
         <% end %>
-        <% if can_archive_result(result) && !result.archived && result_unlocked?(result) %>
+        <% if can_archive_result(result) && result_unlocked?(result) %>
           <a href="#"
              class="btn btn-link form-submit-link"
              data-form-id="result-archive-form-<%= result.id %>"
@@ -46,7 +46,7 @@
                        locals: { result: result } %>
           </div>
         </div>
-        <% if can_view_result_comments(@my_module) %>
+        <% if can_read_experiment?(@my_module.experiment) %>
           <div class="row">
             <div class="result-comment"
                  id="result-comments-<%= result.id %>"

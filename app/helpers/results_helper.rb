@@ -20,23 +20,11 @@ module ResultsHelper
   end
 
   def can_edit_result(result)
-    if result.is_text
-      can_edit_result_text_in_module(result.my_module)
-    elsif result.is_table
-      can_edit_result_table_in_module(result.my_module)
-    elsif result.is_asset
-      can_edit_result_asset_in_module(result.my_module)
-    end
+    can_manage_module?(result.my_module)
   end
 
   def can_archive_result(result)
-    if result.is_text
-      can_archive_result_text_in_module(result.my_module)
-    elsif result.is_table
-      can_archive_result_table_in_module(result.my_module)
-    elsif result.is_asset
-      can_archive_result_asset_in_module(result.my_module)
-    end
+    can_delete_or_archive_result?(result.my_module)
   end
 
   def result_unlocked?(result)

@@ -109,15 +109,13 @@
     </button>
   <% end %>
 
-  <% if can_add_samples %>
+  <% if can_assign_sample_to_module?(@my_module) %>
     <button type="button" class="btn btn-default"
       id="assignSamples" onclick="$(this).next().click();" disabled>
       <span class="glyphicon glyphicon-ok-circle"></span>
       <span class="hidden-xs-custom"><%= t'samples.assign_samples_to_module' %></span>
     </button>
     <%= submit_tag MyModulesController::ASSIGN_SAMPLES, :class => "hidden" %>
-  <% end %>
-  <% if can_remove_samples %>
     <button type="button" class="btn btn-default"
       id="unassignSamples" onclick="$(this).next().click();" disabled>
       <span class="glyphicon glyphicon-ban-circle"></span>
