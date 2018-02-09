@@ -600,8 +600,10 @@ class MyModulesController < ApplicationController
     render_404 unless @repository && can_read_team?(@repository.team)
   end
 
+  # NOTE: 'update' action also contains restore (and archive) logic
   def check_manage_permissions
-     render_403 unless can_manage_module?(@my_module)
+    render_403 unless can_manage_module?(@my_module) ||
+                      can_restore_module?(@my_module)
   end
 
   def check_view_permissions
