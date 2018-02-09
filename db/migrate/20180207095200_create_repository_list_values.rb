@@ -7,7 +7,13 @@ class CreateRepositoryListValues < ActiveRecord::Migration[5.1]
                    foreign_key: { to_table: :users }
       t.references :last_modified_by,
                    index: true,
-                   oreign_key: { to_table: :users }
+                   foreign_key: { to_table: :users }
+      t.timestamps
+    end
+
+    create_table :repository_list_items do |t|
+      t.references :repository_list_value, foreign_key: true
+      t.text :name, index: true, using: :gin, null: false
       t.timestamps
     end
   end

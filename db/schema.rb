@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180207102347) do
+ActiveRecord::Schema.define(version: 20180207095200) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -875,6 +875,7 @@ ActiveRecord::Schema.define(version: 20180207102347) do
   add_foreign_key "repository_date_values", "users", column: "last_modified_by_id"
   add_foreign_key "repository_list_items", "repository_list_values"
   add_foreign_key "repository_list_values", "users", column: "created_by_id"
+  add_foreign_key "repository_list_values", "users", column: "last_modified_by_id"
   add_foreign_key "repository_rows", "users", column: "created_by_id"
   add_foreign_key "repository_rows", "users", column: "last_modified_by_id"
   add_foreign_key "repository_text_values", "users", column: "created_by_id"

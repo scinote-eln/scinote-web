@@ -35,7 +35,7 @@ RSpec.describe RepositoryListValue, type: :model do
                          repository_list_value: repository_list_value,
                          name: 'my item'
       repository_list_value.update_attribute(:selected_item, list_item.id)
-      expect(repository_list_value.reload.formated).to eq 'my item'
+      expect(repository_list_value.reload.formatted).to eq 'my item'
     end
 
     it 'retuns only the the item related to the list' do
@@ -49,20 +49,20 @@ RSpec.describe RepositoryListValue, type: :model do
                          repository_list_value: repository_list_value_two,
                          name: 'new item'
       repository_list_value.update_attribute(:selected_item, list_item.id)
-      expect(repository_list_value.reload.formated).to_not eq 'my item'
-      expect(repository_list_value.formated).to eq ''
+      expect(repository_list_value.reload.formatted).to_not eq 'my item'
+      expect(repository_list_value.formatted).to eq ''
     end
 
     it 'returns an empty string if no item selected' do
       list_item = create :repository_list_item,
                          repository_list_value: repository_list_value,
                          name: 'my item'
-      expect(repository_list_value.reload.formated).to eq ''
+      expect(repository_list_value.reload.formatted).to eq ''
     end
 
     it 'returns an empty string if item does not exists' do
       repository_list_value.update_attribute(:selected_item, 9999999999)
-      expect(repository_list_value.reload.formated).to eq ''
+      expect(repository_list_value.reload.formatted).to eq ''
     end
   end
 end

@@ -13,7 +13,7 @@ class RepositoryListValue < ApplicationRecord
 
   validates :repository_cell, presence: true
 
-  def formated
+  def formatted
     item = repository_list_items.find_by_id(selected_item)
     return '' unless item
     item.name
