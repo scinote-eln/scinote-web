@@ -72,9 +72,9 @@ Canaid::Permissions.register_for(MyModule) do
   end
 
   # module: assign/unassign sample
+  # NOTE: Use 'module_page? &&' before calling this permission!
   can :assign_sample_to_module do |user, my_module|
-    module_page? &&
-      user.is_technician_or_higher_of_project?(my_module.experiment.project)
+    user.is_technician_or_higher_of_project?(my_module.experiment.project)
   end
 
   # module: complete/uncomplete
