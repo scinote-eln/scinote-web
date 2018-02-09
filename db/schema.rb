@@ -395,22 +395,27 @@ ActiveRecord::Schema.define(version: 20180207095200) do
   end
 
   create_table "repository_list_items", force: :cascade do |t|
-    t.bigint "repository_list_value_id"
+    t.bigint "repository_id"
     t.text "name", null: false
+    t.bigint "created_by_id"
+    t.bigint "last_modified_by_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["created_by_id"], name: "index_repository_list_items_on_created_by_id"
+    t.index ["last_modified_by_id"], name: "index_repository_list_items_on_last_modified_by_id"
     t.index ["name"], name: "index_repository_list_items_on_name"
-    t.index ["repository_list_value_id"], name: "index_repository_list_items_on_repository_list_value_id"
+    t.index ["repository_id"], name: "index_repository_list_items_on_repository_id"
   end
 
   create_table "repository_list_values", force: :cascade do |t|
-    t.bigint "selected_item"
+    t.bigint "selected_item_id"
     t.bigint "created_by_id"
     t.bigint "last_modified_by_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["created_by_id"], name: "index_repository_list_values_on_created_by_id"
     t.index ["last_modified_by_id"], name: "index_repository_list_values_on_last_modified_by_id"
+    t.index ["selected_item_id"], name: "index_repository_list_values_on_selected_item_id"
   end
 
   create_table "repository_rows", id: :serial, force: :cascade do |t|
@@ -873,7 +878,10 @@ ActiveRecord::Schema.define(version: 20180207095200) do
   add_foreign_key "repository_columns", "users", column: "created_by_id"
   add_foreign_key "repository_date_values", "users", column: "created_by_id"
   add_foreign_key "repository_date_values", "users", column: "last_modified_by_id"
-  add_foreign_key "repository_list_items", "repository_list_values"
+  add_foreign_key "repository_list_items", "repositories"
+  add_foreign_key "repository_list_items", "users", column: "created_by_id"
+  add_foreign_key "repository_list_items", "users", column: "last_modified_by_id"
+  add_foreign_key "repository_list_values", "repository_list_items", column: "selected_item_id"
   add_foreign_key "repository_list_values", "users", column: "created_by_id"
   add_foreign_key "repository_list_values", "users", column: "last_modified_by_id"
   add_foreign_key "repository_rows", "users", column: "created_by_id"

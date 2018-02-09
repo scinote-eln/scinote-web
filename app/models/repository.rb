@@ -11,6 +11,7 @@ class Repository < ApplicationRecord
   has_many :repository_table_states,
            inverse_of: :repository, dependent: :destroy
   has_many :report_elements, inverse_of: :repository, dependent: :destroy
+  has_many :repository_list_items, inverse_of: :repository, dependent: :destroy
 
   auto_strip_attributes :name, nullify: false
   validates :name,

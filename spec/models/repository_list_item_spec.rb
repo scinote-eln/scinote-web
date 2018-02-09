@@ -7,17 +7,44 @@ RSpec.describe RepositoryListItem, type: :model do
 
   describe 'Database table' do
     it { should have_db_column :name }
-    it { should have_db_column :repository_list_value_id }
+    it { should have_db_column :repository_id }
   end
 
   describe 'Relations' do
-    it { should belong_to(:repository_list_value) }
+    it { should have_many(:repository_list_values) }
+    it { should belong_to(:repository) }
   end
 
   describe 'Validations' do
     it { should validate_presence_of(:name) }
     it do
       should validate_length_of(:name).is_at_most(Constants::TEXT_MAX_LENGTH)
+    end
+
+    context 'has a uniq name scoped on repository' do
+      let!(:user) { create :user }
+      let!(:repository_one) { create :repository }
+      let!(:repository_two) { create :repository, name: 'New repo' }
+      let!(:repository_list_item) do
+        create :repository_list_item, name: 'Test', repository: repository_one
+      end
+
+      it 'creates a repository list item in same repository' do
+        new_item = build :repository_list_item,
+                         name: 'Test',
+                         repository: repository_one
+        expect(new_item).to_not be_valid
+        expect(
+          new_item.errors.full_messages.first
+        ).to eq 'Name has already been taken'
+      end
+
+      it 'create a repository list item in other repository' do
+        new_item = build :repository_list_item,
+                         name: 'Test',
+                         repository: repository_two
+        expect(new_item).to be_valid
+      end
     end
   end
 end
