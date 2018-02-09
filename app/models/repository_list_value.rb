@@ -1,7 +1,5 @@
 class RepositoryListValue < ApplicationRecord
-  belongs_to :selected_item,
-             foreign_key: :selected_item_id,
-             class_name: 'RepositoryListItem',
+  belongs_to :repository_list_item,
              optional: true
   belongs_to :created_by,
              foreign_key: :created_by_id,
@@ -15,7 +13,7 @@ class RepositoryListValue < ApplicationRecord
   validates :repository_cell, presence: true
 
   def formatted
-    return '' unless selected_item
-    selected_item.name
+    return '' unless repository_list_item
+    repository_list_item.data
   end
 end

@@ -6,8 +6,10 @@ RSpec.describe RepositoryListItem, type: :model do
   end
 
   describe 'Database table' do
-    it { should have_db_column :name }
+    it { should have_db_column :data }
     it { should have_db_column :repository_id }
+    it { should have_db_column :created_by_id }
+    it { should have_db_column :last_modified_by_id }
   end
 
   describe 'Relations' do
@@ -16,32 +18,32 @@ RSpec.describe RepositoryListItem, type: :model do
   end
 
   describe 'Validations' do
-    it { should validate_presence_of(:name) }
+    it { should validate_presence_of(:data) }
     it do
-      should validate_length_of(:name).is_at_most(Constants::TEXT_MAX_LENGTH)
+      should validate_length_of(:data).is_at_most(Constants::TEXT_MAX_LENGTH)
     end
 
-    context 'has a uniq name scoped on repository' do
+    context 'has a uniq data scoped on repository' do
       let!(:user) { create :user }
       let!(:repository_one) { create :repository }
       let!(:repository_two) { create :repository, name: 'New repo' }
       let!(:repository_list_item) do
-        create :repository_list_item, name: 'Test', repository: repository_one
+        create :repository_list_item, data: 'Test', repository: repository_one
       end
 
       it 'creates a repository list item in same repository' do
         new_item = build :repository_list_item,
-                         name: 'Test',
+                         data: 'Test',
                          repository: repository_one
         expect(new_item).to_not be_valid
         expect(
           new_item.errors.full_messages.first
-        ).to eq 'Name has already been taken'
+        ).to eq 'Data has already been taken'
       end
 
       it 'create a repository list item in other repository' do
         new_item = build :repository_list_item,
-                         name: 'Test',
+                         data: 'Test',
                          repository: repository_two
         expect(new_item).to be_valid
       end

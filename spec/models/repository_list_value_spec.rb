@@ -8,13 +8,13 @@ RSpec.describe RepositoryListValue, type: :model do
   describe 'Database table' do
     it { should have_db_column :created_by_id }
     it { should have_db_column :last_modified_by_id }
-    it { should have_db_column :selected_item_id }
+    it { should have_db_column :repository_list_item_id }
   end
 
   describe 'Relations' do
     it { should belong_to(:created_by).class_name('User') }
     it { should belong_to(:last_modified_by).class_name('User') }
-    it { should belong_to(:selected_item).class_name('RepositoryListItem') }
+    it { should belong_to(:repository_list_item) }
     it { should accept_nested_attributes_for(:repository_cell) }
   end
 
@@ -31,11 +31,11 @@ RSpec.describe RepositoryListValue, type: :model do
       }
     end
 
-    it 'returns the name of a selected item' do
+    it 'returns the data of a selected item' do
       list_item = create :repository_list_item,
-                         name: 'my item',
+                         data: 'my item',
                          repository: repository
-      repository_list_value.selected_item = list_item
+      repository_list_value.repository_list_item = list_item
       repository_list_value.save
       expect(repository_list_value.reload.formatted).to eq 'my item'
     end
@@ -48,22 +48,22 @@ RSpec.describe RepositoryListValue, type: :model do
           repository_row: repository_row_two
         }
       list_item = create :repository_list_item,
-                         name: 'new item',
+                         data: 'new item',
                          repository: repository
-      repository_list_value.selected_item = list_item
+      repository_list_value.repository_list_item = list_item
       expect(repository_list_value.reload.formatted).to_not eq 'my item'
       expect(repository_list_value.formatted).to eq ''
     end
 
     it 'returns an empty string if no item selected' do
       list_item = create :repository_list_item,
-                         name: 'my item',
+                         data: 'my item',
                          repository: repository
       expect(repository_list_value.reload.formatted).to eq ''
     end
 
     it 'returns an empty string if item does not exists' do
-      repository_list_value.selected_item = nil
+      repository_list_value.repository_list_item = nil
       expect(repository_list_value.reload.formatted).to eq ''
     end
   end
