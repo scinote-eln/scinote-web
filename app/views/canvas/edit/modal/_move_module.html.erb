@@ -10,7 +10,7 @@
         <% if experiments.count > 1 %>
           <%= bootstrap_form_tag do |f| %>
             <%= f.select :experiment_id, experiments
-                                        .select { |e| e != @experiment }
+                                        .select { |e| e != @experiment && can_manage_experiment?(e) }
                                         .collect { |e| [ e.name, e.id ] }, {},
                 {class: "form-control selectpicker", "data-role" => "clear"} %>
           <% end %>

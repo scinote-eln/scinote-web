@@ -129,7 +129,10 @@ class CanvasController < ApplicationController
                  id.is_a?(String) &&
                  can_manage_module?(MyModule.find_by_id(id))
                end &&
-               to_move.values.all? { |k| k.is_a? String }
+               to_move.values.all? do |exp_id|
+                 exp_id.is_a?(String) &&
+                 can_manage_experiment?(Experiment.find_by_id(exp_id))
+               end
           return render_403
         end
       rescue

@@ -33,6 +33,7 @@
           <li>
             <a class="move-module" href="" data-module-id="<%= my_module.id %>"><%=t "experiments.canvas.edit.move_module" %></a>
           </li>
+        <% end %>
         <% if my_module.my_module_group && my_module.my_module_group.my_modules.all? { |my_module| can_manage_module?(my_module) } %>
           <li>
             <a class="move-module-group" href="" data-module-id="<%= my_module.id %>"><%=t "experiments.canvas.edit.move_module_group" %></a>
