@@ -275,15 +275,17 @@ class StepsController < ApplicationController
         chkItem.checked = checked
 
         if chkItem.save
-          format.json {
-            render json: {}, status: :accepted
-          }
+          format.json { render json: {}, status: :accepted }
 
           # Create activity
           if changed
-            str = checked ? "activities.check_step_checklist_item" :
-              "activities.uncheck_step_checklist_item"
-            completed_items = chkItem.checklist.checklist_items.where(checked: true).count
+            str = if checked
+                    'activities.check_step_checklist_item'
+                  else
+                    'activities.uncheck_step_checklist_item'
+                  end
+            completed_items = chkItem.checklist.checklist_items
+                                     .where(checked: true).count
             all_items = chkItem.checklist.checklist_items.count
             text_activity = smart_annotation_parser(chkItem.text)
                             .gsub(/\s+/, ' ')
@@ -306,7 +308,11 @@ class StepsController < ApplicationController
                 experiment: protocol.my_module.experiment,
                 my_module: protocol.my_module,
                 message: message,
-                type_of: checked ? :check_step_checklist_item : :uncheck_step_checklist_item
+                type_of: if checked
+                           :check_step_checklist_item
+                         else
+                           :uncheck_step_checklist_item
+                         end
               )
             end
           end
