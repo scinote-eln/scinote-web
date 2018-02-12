@@ -71,9 +71,9 @@ Canaid::Permissions.register_for(MyModule) do
     user.is_owner_of_project?(my_module.experiment.project)
   end
 
-  # module: assign/unassign sample
+  # module: assign/unassign sample, assign/unassign repository record
   # NOTE: Use 'module_page? &&' before calling this permission!
-  can :assign_sample_to_module do |user, my_module|
+  can :assign_repository_records_to_module do |user, my_module|
     user.is_technician_or_higher_of_project?(my_module.experiment.project)
   end
 

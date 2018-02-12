@@ -297,14 +297,4 @@ module PermissionHelper
   #   is_admin_of_team(team) || (is_normal_user_of_team(team) &&
   #                              record.created_by == current_user)
   # end
-
-  def can_assign_repository_records(my_module, repository)
-    is_normal_user_or_admin_of_team(repository.team) &&
-      is_technician_or_higher_of_project(my_module.experiment.project)
-  end
-
-  def can_unassign_repository_records(my_module, repository)
-    is_normal_user_or_admin_of_team(repository.team) &&
-      is_technician_or_higher_of_project(my_module.experiment.project)
-  end
 end

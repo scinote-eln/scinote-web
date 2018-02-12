@@ -20,13 +20,10 @@ class MyModulesController < ApplicationController
   before_action :check_view_permissions, only:
     %i(show activities activities_tab protocols results samples samples_index
        archive)
-  before_action :check_assign_samples_permissions, only: %i(assign_samples
-                                                            unassign_samples)
   before_action :check_complete_module_permission, only: :complete_my_module
-  before_action :check_assign_repository_records_permissions,
-                only: :assign_repository_records
-  before_action :check_unassign_repository_records_permissions,
-                only: :unassign_repository_records
+  before_action :check_assign_repository_records_permissions, only:
+    %i(assign_repository_records unassign_repository_records assign_samples
+       unassign_samples)
 
   layout 'fluid'.freeze
 
@@ -610,16 +607,8 @@ class MyModulesController < ApplicationController
     render_403 unless can_read_experiment?(@my_module.experiment)
   end
 
-  def check_assign_samples_permissions
-    render_403 unless can_assign_sample_to_module?(@my_module)
-  end
-
   def check_assign_repository_records_permissions
-    render_403 unless can_assign_repository_records(@my_module, @repository)
-  end
-
-  def check_unassign_repository_records_permissions
-    render_403 unless can_unassign_repository_records(@my_module, @repository)
+    render_403 unless can_assign_repository_records_to_module?(@my_module)
   end
 
   def check_complete_module_permission
