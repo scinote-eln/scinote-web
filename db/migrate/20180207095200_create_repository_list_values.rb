@@ -1,7 +1,8 @@
 class CreateRepositoryListValues < ActiveRecord::Migration[5.1]
   def change
     create_table :repository_list_items do |t|
-      t.references :repository, foreign_key: true
+      t.references :repository, index: true, foreign_key: true
+      t.references :repository_column, index: true, foreign_key: true
       t.text :data, index: true, using: :gin, null: false
       t.references :created_by,
                    index: true,

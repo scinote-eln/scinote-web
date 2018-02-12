@@ -20,6 +20,7 @@ RSpec.describe RepositoryListValue, type: :model do
 
   describe '#data' do
     let!(:repository) { create :repository }
+    let!(:repository_column) { create :repository_column, name: 'My column' }
     let!(:repository_column) do
       create :repository_column, data_type: :RepositoryListValue
     end
@@ -34,7 +35,8 @@ RSpec.describe RepositoryListValue, type: :model do
     it 'returns the data of a selected item' do
       list_item = create :repository_list_item,
                          data: 'my item',
-                         repository: repository
+                         repository: repository,
+                         repository_column: repository_column
       repository_list_value.repository_list_item = list_item
       repository_list_value.save
       expect(repository_list_value.reload.formatted).to eq 'my item'
@@ -49,7 +51,8 @@ RSpec.describe RepositoryListValue, type: :model do
         }
       list_item = create :repository_list_item,
                          data: 'new item',
-                         repository: repository
+                         repository: repository,
+                         repository_column: repository_column
       repository_list_value.repository_list_item = list_item
       expect(repository_list_value.reload.formatted).to_not eq 'my item'
       expect(repository_list_value.formatted).to eq ''
@@ -58,7 +61,8 @@ RSpec.describe RepositoryListValue, type: :model do
     it 'returns an empty string if no item selected' do
       list_item = create :repository_list_item,
                          data: 'my item',
-                         repository: repository
+                         repository: repository,
+                         repository_column: repository_column
       expect(repository_list_value.reload.formatted).to eq ''
     end
 

@@ -396,6 +396,7 @@ ActiveRecord::Schema.define(version: 20180207095200) do
 
   create_table "repository_list_items", force: :cascade do |t|
     t.bigint "repository_id"
+    t.bigint "repository_column_id"
     t.text "data", null: false
     t.bigint "created_by_id"
     t.bigint "last_modified_by_id"
@@ -404,6 +405,7 @@ ActiveRecord::Schema.define(version: 20180207095200) do
     t.index ["created_by_id"], name: "index_repository_list_items_on_created_by_id"
     t.index ["data"], name: "index_repository_list_items_on_data"
     t.index ["last_modified_by_id"], name: "index_repository_list_items_on_last_modified_by_id"
+    t.index ["repository_column_id"], name: "index_repository_list_items_on_repository_column_id"
     t.index ["repository_id"], name: "index_repository_list_items_on_repository_id"
   end
 
@@ -879,6 +881,7 @@ ActiveRecord::Schema.define(version: 20180207095200) do
   add_foreign_key "repository_date_values", "users", column: "created_by_id"
   add_foreign_key "repository_date_values", "users", column: "last_modified_by_id"
   add_foreign_key "repository_list_items", "repositories"
+  add_foreign_key "repository_list_items", "repository_columns"
   add_foreign_key "repository_list_items", "users", column: "created_by_id"
   add_foreign_key "repository_list_items", "users", column: "last_modified_by_id"
   add_foreign_key "repository_list_values", "users", column: "created_by_id"
