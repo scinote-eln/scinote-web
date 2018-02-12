@@ -27,7 +27,7 @@ RSpec.describe RepositoryListItem, type: :model do
       should validate_length_of(:data).is_at_most(Constants::TEXT_MAX_LENGTH)
     end
 
-    context 'has a uniq data scoped on repository' do
+    context 'has a uniq data scoped on repository column' do
       let!(:user) { create :user }
       let!(:repository_one) { create :repository }
       let!(:repository_column) do

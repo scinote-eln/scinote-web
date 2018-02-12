@@ -10,6 +10,6 @@ class RepositoryListItem < ApplicationRecord
              class_name: 'User'
   validates :data,
             presence: true,
-            uniqueness: { scope: :repository, case_sensitive: false },
+            uniqueness: { scope: :repository_column, case_sensitive: false },
             length: { maximum: Constants::TEXT_MAX_LENGTH }
 end
