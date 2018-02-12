@@ -110,9 +110,6 @@ GEM
       jmespath (~> 1.0)
     aws-sdk-resources (2.10.123)
       aws-sdk-core (= 2.10.123)
-    aws-sdk-v1 (1.67.0)
-      json (~> 1.4)
-      nokogiri (~> 1)
     aws-sigv4 (1.0.2)
     babel-source (5.8.35)
     babel-transpiler (0.7.0)
@@ -287,7 +284,7 @@ GEM
     mimemagic (0.3.2)
     mini_mime (1.0.0)
     mini_portile2 (2.3.0)
-    minitest (5.11.1)
+    minitest (5.11.3)
     momentjs-rails (2.17.1)
       railties (>= 3.1)
     multi_json (1.13.1)
@@ -307,7 +304,7 @@ GEM
       hashie (>= 3.4.6, < 3.6.0)
       rack (>= 1.6.2, < 3)
     orm_adapter (0.5.0)
-    paperclip (5.1.0)
+    paperclip (5.2.1)
       activemodel (>= 4.2.0)
       activesupport (>= 4.2.0)
       cocaine (~> 0.5.5)
@@ -516,7 +513,6 @@ DEPENDENCIES
   autosize-rails
   awesome_print
   aws-sdk (~> 2)
-  aws-sdk-v1
   base62
   bcrypt (~> 3.1.10)
   better_errors
@@ -607,7 +603,7 @@ DEPENDENCIES
   yomu
 
 RUBY VERSION
-   ruby 2.4.1p111
+   ruby 2.4.3p205
 
 BUNDLED WITH
    1.16.1
