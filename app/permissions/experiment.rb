@@ -2,15 +2,10 @@ Canaid::Permissions.register_for(Experiment) do
   # experiment: read
   # canvas/workflow: read
   can :read_experiment do |user, experiment|
-    # TODO: When rebasing on top of refactored projects permissions, just call
-    # can_read_project?(user, experiment.project) instead
-    user.is_member_of_project?(experiment.project) ||
-      user.is_admin_of_team?(experiment.project.team) ||
-      (experiment.project.visible? &&
-        user.is_member_of_team?(experiment.project.team))
+    can_read_project?(user, experiment.project)
   end
 
-  # experiment: create, update, delete
+  # experiment: create/update/delete
   # canvas/workflow: edit
   # module: create
   can :manage_experiment do |user, experiment|
@@ -83,9 +78,9 @@ Canaid::Permissions.register_for(Protocol) do
     end
   end
 
-  # protocol in module: create, update, delete, unlink, revert, update from
+  # protocol in module: create/update/delete, unlink, revert, update from
   # protocol in repository, update from file
-  # step: create, update, delete, reorder
+  # step: create/update/delete, reorder
   can :manage_protocol_in_module do |user, protocol|
     if protocol.in_module?
       my_module = protocol.my_module
