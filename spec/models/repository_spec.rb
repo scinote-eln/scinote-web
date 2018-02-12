@@ -19,6 +19,7 @@ describe Repository, type: :model do
     it { should have_many :repository_rows }
     it { should have_many :repository_table_states }
     it { should have_many :report_elements }
+    it { should have_many(:repository_list_items).dependent(:destroy) }
   end
 
   describe 'Should be a valid object' do
