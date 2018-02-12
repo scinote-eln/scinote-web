@@ -219,8 +219,8 @@ class ResultAssetsController < ApplicationController
   def create_multiple_results
     success = true
     results = []
-    params[:results_files].each_with_index do |file, index|
-      asset = Asset.new(file: file.second,
+    params[:results_files].values.each_with_index do |file, index|
+      asset = Asset.new(file: file,
                         created_by: current_user,
                         last_modified_by: current_user,
                         team: current_team)
