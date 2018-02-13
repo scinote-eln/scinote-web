@@ -45,8 +45,10 @@ Canaid::Permissions.register_for(Project) do
     user.is_technician_or_higher_of_project?(project)
   end
 
+  # Project must be active for all the specified permissions
   %i(read_project
      manage_project
+     archive_project
      create_experiment
      create_comment_in_project
      create_or_manage_tags
@@ -65,6 +67,7 @@ Canaid::Permissions.register_for(Comment) do
       user.is_owner_of_project?(project))
   end
 
+  # Project must be active for all the specified permissions
   %i(manage_comment_in_project)
     .each do |perm|
     can perm do |_, comment|
