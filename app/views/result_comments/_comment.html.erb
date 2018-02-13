@@ -18,7 +18,8 @@
         <li>
           <a href="#"
              data-action="edit-comment"
-             data-url="<%= edit_result_result_comment_path(comment.result, comment, format: :json) %>">
+             data-url="<%= edit_result_result_comment_path(comment.result, comment, format: :json) %>"
+             data-no-turbolink="true">
             <%= t('comments.options_dropdown.edit') %>
           </a>
         </li>
@@ -26,7 +27,8 @@
           <a href="#"
              data-action="delete-comment"
              data-url="<%= result_result_comment_path(comment.result, comment, format: :json) %>"
-             data-confirm-message="<%= t('comments.delete_confirm') %>">
+             data-confirm-message="<%= t('comments.delete_confirm') %>"
+             data-no-turbolink="true">
             <%= t('comments.options_dropdown.delete') %>
           </a>
         </li>
