@@ -35,7 +35,7 @@ Canaid::Permissions.register_for(Experiment) do
   can :move_experiment do |user, experiment|
     can_clone_experiment?(user, experiment)
   end
-
+  # Experiment and its project must be active for all the specified permissions
   %i(read_experiment
      manage_experiment
      archive_experiment
@@ -88,7 +88,8 @@ Canaid::Permissions.register_for(MyModule) do
   can :create_comment_in_module do |user, my_module|
     can_create_comment_in_project?(user, my_module.experiment.project)
   end
-
+  # Module, its experiment and its project must be active for all the specified
+  # permissions
   %i(manage_module
      manage_users_in_module
      delete_or_archive_result
@@ -135,6 +136,8 @@ Canaid::Permissions.register_for(Protocol) do
     end
   end
 
+  # Module, its experiment and its project must be active for all the specified
+  # permissions
   %i(read_protocol_in_module
      manage_protocol_in_module
      complete_or_checkbox_step)
@@ -160,6 +163,8 @@ Canaid::Permissions.register_for(Comment) do
       (user.is_owner_of_project?(project) || comment.user == user)
   end
 
+  # Module, its experiment and its project must be active for all the specified
+  # permissions
   %i(manage_comment_in_module).each do |perm|
     can perm do |_, comment|
       my_module = get_comment_module(comment)
