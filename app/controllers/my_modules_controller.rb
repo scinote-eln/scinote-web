@@ -585,7 +585,7 @@ class MyModulesController < ApplicationController
       )
       # create notification for all users on the next modules in the workflow
       @my_module.my_modules.map(&:users).flatten.uniq.each do |target_user|
-        next if target_user == current_user
+        next if target_user == current_user || !target_user.recent_notification
         UserNotification.create(notification: notification, user: target_user)
       end
     end
