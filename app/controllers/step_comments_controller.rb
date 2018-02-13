@@ -190,7 +190,7 @@ class StepCommentsController < ApplicationController
   def check_manage_permissions
     @comment = StepComment.find_by_id(params[:id])
     render_403 unless @comment.present? &&
-                      can_manage_comment_in_module?(@comment)
+                      can_manage_comment_in_module?(@comment.becomes(Comment))
   end
 
   def comment_params

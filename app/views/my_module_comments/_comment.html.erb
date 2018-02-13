@@ -1,6 +1,6 @@
 <div class="pull-right">
   <span class="text-muted"><%= l comment.created_at, format: '%H:%M' %></span>
-  <% if can_manage_comment_in_module?(comment) %>
+  <% if can_manage_comment_in_module?(comment.becomes(Comment)) %>
     <div class="dropdown dropdown-comment">
       <a href="#"
          class="dropdown-toggle"

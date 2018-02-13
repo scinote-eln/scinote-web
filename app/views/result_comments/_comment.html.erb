@@ -1,7 +1,7 @@
   <strong>
     <%=t "my_modules.results.comment_title", user: comment.user.full_name, time: l(comment.created_at, format: :time) %>
   </strong>
-  <% if can_manage_comment_in_module?(comment) %>
+  <% if can_manage_comment_in_module?(comment.becomes(Comment)) %>
     <div class="dropdown dropdown-comment">
       <a href="#"
          class="dropdown-toggle"

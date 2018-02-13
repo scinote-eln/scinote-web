@@ -183,13 +183,13 @@ class MyModuleCommentsController < ApplicationController
   end
 
   def check_add_permissions
-    render_403 unless create_comment_in_module?(@my_module)
+    render_403 unless can_create_comment_in_module?(@my_module)
   end
 
   def check_manage_permissions
     @comment = TaskComment.find_by_id(params[:id])
     render_403 unless @comment.present? &&
-                      can_manage_comment_in_module?(@comment)
+                      can_manage_comment_in_module?(@comment.becomes(Comment))
   end
 
   def comment_params
