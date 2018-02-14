@@ -1,6 +1,5 @@
 module SampleActions
   extend ActiveSupport::Concern
-  include PermissionHelper
 
   def delete_samples
     check_destroy_samples_permissions

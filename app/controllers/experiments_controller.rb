@@ -1,6 +1,5 @@
 class ExperimentsController < ApplicationController
   include SampleActions
-  include PermissionHelper
   include TeamsHelper
   include InputSanitizeHelper
   include ActionView::Helpers::TextHelper

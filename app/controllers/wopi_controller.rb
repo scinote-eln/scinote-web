@@ -1,6 +1,5 @@
 class WopiController < ActionController::Base
   include WopiUtil
-  include PermissionHelper
 
   before_action :load_vars, :authenticate_user_from_token!
   before_action :verify_proof!
