@@ -11,15 +11,13 @@
   data-module-conns="<%= construct_module_connections(my_module) %>"
   data-module-tags-url="<%= my_module_my_module_tags_url(my_module, format: :json) %>">
 
-  <% if can_edit_tags_for_module(my_module) %>
+  <% if can_create_or_manage_tags?(my_module.experiment.project) %>
     <a class="edit-tags-link pull-right" data-remote="true" href="<%= my_module_tags_edit_url(my_module, format: :json) %>">
-  <% else %>
-    <span class="edit-tags-link pull-right">
-  <% end %>
-    <%= render partial: "canvas/tags.html.erb", locals: { my_module: my_module } %>
-  <% if can_edit_tags_for_module(my_module) %>
+      <%= render partial: "canvas/tags.html.erb", locals: { my_module: my_module } %>
     </a>
   <% else %>
+    <span class="edit-tags-link pull-right">
+      <%= render partial: "canvas/tags.html.erb", locals: { my_module: my_module } %>
     </span>
   <% end %>
 

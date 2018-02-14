@@ -43,33 +43,14 @@ module PermissionHelper
     # ---- Almost everything is disabled for archived projects ----
     around [
       :can_view_project,
-      :can_view_project_activities,
-      :can_view_project_users,
-      :can_view_project_notifications,
-      :can_view_project_comments,
-      :can_edit_project,
-      :can_archive_project,
-      :can_add_user_to_project,
-      :can_remove_user_from_project,
-      :can_edit_users_on_project,
-      :can_add_comment_to_project,
       :can_restore_archived_modules,
-      :can_view_project_samples,
-      :can_view_project_archive,
-      :can_create_new_tag,
-      :can_edit_tag,
-      :can_delete_tag,
       :can_edit_canvas,
       :can_reposition_modules,
       :can_edit_connections,
       :can_create_modules,
       :can_edit_modules,
       :can_clone_modules,
-      :can_archive_modules,
-      :can_view_reports,
-      :can_create_new_report,
-      :can_delete_reports,
-      :can_create_experiment
+      :can_archive_modules
     ] do |proxy, *args, &block|
       if args[0]
         project = args[0]
@@ -87,9 +68,6 @@ module PermissionHelper
       # commented out or that functionality will not work any more.
       #:can_edit_module,
       :can_archive_module,
-      :can_edit_tags_for_module,
-      :can_add_tag_to_module,
-      :can_remove_tag_from_module,
       :can_view_module_info,
       :can_view_module_users,
       :can_edit_users_on_module,
@@ -267,87 +245,7 @@ module PermissionHelper
       (project.visible? and is_member_of_team(project.team))
   end
 
-  def can_view_project_activities(project)
-    is_member_of_project(project)
-  end
-
-  def can_view_project_users(project)
-    can_view_project(project)
-  end
-
-  def can_view_project_notifications(project)
-    can_view_project(project)
-  end
-
-  def can_view_project_comments(project)
-    can_view_project(project)
-  end
-
-  def can_edit_project(project)
-    is_owner_of_project(project)
-  end
-
-  def can_archive_project(project)
-    is_owner_of_project(project)
-  end
-
-  def can_restore_project(project)
-    project.archived? && is_owner_of_project(project)
-  end
-
-  def can_add_user_to_project(project)
-    is_owner_of_project(project)
-  end
-
-  def can_remove_user_from_project(project)
-    is_owner_of_project(project)
-  end
-
-  def can_edit_users_on_project(project)
-    is_owner_of_project(project)
-  end
-
-  def can_add_comment_to_project(project)
-    is_technician_or_higher_of_project(project)
-  end
-
-  def can_edit_project_comment(comment)
-    comment.project.present? &&
-      (
-        comment.user == current_user ||
-        is_owner_of_project(comment.project)
-      )
-  end
-
-  def can_delete_project_comment(comment)
-    comment.project.present? &&
-      (
-        comment.user == current_user ||
-        is_owner_of_project(comment.project)
-      )
-  end
-
   def can_restore_archived_modules(project)
-    is_user_or_higher_of_project(project)
-  end
-
-  def can_view_project_samples(project)
-    can_view_project(project)
-  end
-
-  def can_view_project_archive(project)
-    is_user_or_higher_of_project(project)
-  end
-
-  def can_create_new_tag(project)
-    is_user_or_higher_of_project(project)
-  end
-
-  def can_edit_tag(project)
-    is_user_or_higher_of_project(project)
-  end
-
-  def can_delete_tag(project)
     is_user_or_higher_of_project(project)
   end
 
@@ -356,10 +254,6 @@ module PermissionHelper
   def can_view_experiment_actions(experiment)
     can_edit_experiment(experiment) ||
       can_archive_experiment(experiment)
-  end
-
-  def can_create_experiment(project)
-    is_user_or_higher_of_project(project)
   end
 
   def can_edit_experiment(experiment)
@@ -446,18 +340,6 @@ module PermissionHelper
   def can_restore_module(my_module)
     my_module.archived? &&
       is_user_or_higher_of_project(my_module.experiment.project)
-  end
-
-  def can_edit_tags_for_module(my_module)
-    is_user_or_higher_of_project(my_module.experiment.project)
-  end
-
-  def can_add_tag_to_module(my_module)
-    is_user_or_higher_of_project(my_module.experiment.project)
-  end
-
-  def can_remove_tag_from_module(my_module)
-    is_user_or_higher_of_project(my_module.experiment.project)
   end
 
   def can_view_module_info(my_module)
@@ -613,18 +495,6 @@ module PermissionHelper
   end
 
   # ---- REPORTS PERMISSIONS ----
-
-  def can_view_reports(project)
-    can_view_project(project)
-  end
-
-  def can_create_new_report(project)
-    is_technician_or_higher_of_project(project)
-  end
-
-  def can_delete_reports(project)
-    is_technician_or_higher_of_project(project)
-  end
 
   # ---- SAMPLE PERMISSIONS ----
 

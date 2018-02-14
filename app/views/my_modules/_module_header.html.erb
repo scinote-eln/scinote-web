@@ -52,12 +52,12 @@
 <div class="row">
   <div class="col-xs-12 col-sm-12 col-md-12" id="module-tags" data-module-tags-url="<%= my_module_my_module_tags_url(@my_module, format: :json) %>">
     <div class="badge-icon bg-primary">
-      <% if can_edit_tags_for_module(@my_module) %>
+      <% if can_create_or_manage_tags?(@my_module.experiment.project) %>
         <a class="edit-tags-link" data-remote="true" href="<%= my_module_tags_edit_url(@my_module, format: :json) %>" style="color: inherit">
-      <% end %>
-      <span class="glyphicon glyphicon-tags"></span>
-      <% if can_edit_tags_for_module(@my_module) %>
+          <span class="glyphicon glyphicon-tags"></span>
         </a>
+      <% else %>
+        <span class="glyphicon glyphicon-tags"></span>
       <% end %>
     </div>
     <div class="well well-sm">
