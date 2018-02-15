@@ -1,3 +1,7 @@
+# Helper module for dealing with the migration from samples
+# to custom repositories. We need to query with SQL because probably we will not
+# have the "Sample" and other related models at the time this code will execute
+
 module Tasks
   module SamplesToRepositoryMigrationService
     def self.prepare_repository(team, copy_num = 0)
@@ -67,7 +71,8 @@ module Tasks
         RepositoryListItem.create(
           data: item.fetch('name') { "sample group item (#{index})" },
           created_by_id: item.fetch('created_by_id') { team.created_by_id },
-          last_modified_by_id: item.fetch('last_modified_by_id') { team.created_by_id },
+          last_modified_by_id:
+            item.fetch('last_modified_by_id') { team.created_by_id },
           repository_column: repository_columns.first,
           repository: repository
         )
@@ -77,7 +82,8 @@ module Tasks
         RepositoryListItem.create(
           data: item.fetch('name') { "sample group item (#{index})" },
           created_by_id: item.fetch('created_by_id') { team.created_by_id },
-          last_modified_by_id: item.fetch('last_modified_by_id') { team.created_by_id },
+          last_modified_by_id:
+            item.fetch('last_modified_by_id') { team.created_by_id },
           repository_column: repository_columns.last,
           repository: repository
         )
@@ -107,6 +113,24 @@ module Tasks
         WHERE sample_my_modules.sample_id = #{sample_id}
       SQL
       ActiveRecord::Base.connection.execute(assigned_samples_sql).to_a
+    end
+
+    def self.fetch_all_team_samples(team)
+      samples_sql = <<-SQL
+        SELECT samples.id AS sample_id,
+               samples.name AS sample_name,
+               samples.user_id AS sample_created_by_id,
+               samples.last_modified_by_id AS sample_last_modified_by_id,
+               sample_types.name AS sample_type_name,
+               sample_groups.name AS sample_group_name,
+               sample_groups.color AS sample_group_color
+        FROM samples
+        JOIN sample_types ON samples.sample_type_id = sample_types.id
+        JOIN sample_groups ON samples.sample_type_id = sample_groups.id
+        WHERE samples.team_id = #{team.id}
+      SQL
+
+      ActiveRecord::Base.connection.execute(samples_sql).to_a
     end
   end
 end

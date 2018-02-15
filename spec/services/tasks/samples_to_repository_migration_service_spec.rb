@@ -4,7 +4,6 @@ describe Tasks::SamplesToRepositoryMigrationService do
   let(:user) { create :user, email: 'happy.user@scinote.net' }
   let(:team) { create :team, created_by: user }
   let(:user_team) { create :user_team, user: user, team: team }
-  let(:sample) { create :sample, name: 'My sample', user: user, team: team }
 
   describe '#prepare_repository/2' do
     context 'creates and return a new custom repository named' do
@@ -141,6 +140,7 @@ describe Tasks::SamplesToRepositoryMigrationService do
   end
 
   describe '#get_sample_custom_fields/1' do
+    let(:sample) { create :sample, name: 'My sample', user: user, team: team }
     let(:custom_field) do
       create :custom_field, name: 'My Custom column',
                             user: user,
@@ -178,6 +178,7 @@ describe Tasks::SamplesToRepositoryMigrationService do
   end
 
   describe '#get_assigned_sample_module/1' do
+    let(:sample) { create :sample, name: 'My sample', user: user, team: team }
     let(:my_module) { create :my_module }
     let(:subject) do
       Tasks::SamplesToRepositoryMigrationService
@@ -236,6 +237,34 @@ describe Tasks::SamplesToRepositoryMigrationService do
           expect(element.fetch('assigned_by_id')).to eq user.id
         end
       end
+    end
+  end
+
+  describe 'fetch_all_team_samples/1' do
+    let(:subject) do
+      Tasks::SamplesToRepositoryMigrationService.fetch_all_team_samples(team)
+    end
+
+    context 'team has samples' do
+      before do
+        100.times do |index|
+          create :sample, name: "Sample (#{index})", user: user, team: team
+        end
+      end
+
+      it { is_expected.to be_an Array }
+      it { expect(subject.length).to eq 100 }
+
+      it 'returns an array of all team samples' do
+        subject.each_with_index do |element, index|
+          expect(element.fetch('sample_name')). to eq "Sample (#{index})"
+        end
+      end
+    end
+
+    context 'team does not have samples' do
+      it { is_expected.to be_an Array }
+      it { is_expected.to be_empty }
     end
   end
 end
