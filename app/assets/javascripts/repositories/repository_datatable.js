@@ -451,8 +451,9 @@ var RepositoryDatatable = (function(global) {
     });
 
     $('#assigned-repo-records').on('click', function() {
+      var promiseReload;
       viewAssigned = 'assigned';
-      var promiseReload = new Promise(function(resolve) {
+      promiseReload = new Promise(function(resolve) {
         resolve(TABLE.ajax.reload());
       });
       promiseReload.then(function() {
@@ -460,8 +461,9 @@ var RepositoryDatatable = (function(global) {
       })
     });
     $('#all-repo-records').on('click', function() {
+      var promiseReload;
       viewAssigned = 'all';
-      var promiseReload = new Promise(function(resolve) {
+      promiseReload = new Promise(function(resolve) {
         resolve(TABLE.ajax.reload());
       });
       promiseReload.then(function() {
