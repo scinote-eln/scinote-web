@@ -3,7 +3,7 @@ class ProtocolsDatatable < CustomDatatable
   include ActiveRecord::Sanitization::ClassMethods
   include InputSanitizeHelper
 
-  def_delegator :@view, :can_update_protocol_in_repository?
+  def_delegator :@view, :can_manage_protocol_in_repository?
   def_delegator :@view, :edit_protocol_path
   def_delegator :@view, :can_clone_protocol_in_repository?
   def_delegator :@view, :clone_protocol_path
@@ -82,8 +82,8 @@ class ProtocolsDatatable < CustomDatatable
       protocol = Protocol.find(record.id)
       result_data << {
         'DT_RowId': record.id,
-        'DT_CanEdit': can_update_protocol_in_repository?(protocol),
-        'DT_EditUrl': if can_update_protocol_in_repository?(protocol)
+        'DT_CanEdit': can_manage_protocol_in_repository?(protocol),
+        'DT_EditUrl': if can_manage_protocol_in_repository?(protocol)
                         edit_protocol_path(protocol,
                                            team: @team,
                                            type: @type)

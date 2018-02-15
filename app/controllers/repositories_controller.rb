@@ -6,7 +6,7 @@ class RepositoriesController < ApplicationController
   before_action :check_team, only: %i(parse_sheet import_records)
   before_action :check_view_all_permissions, only: :index
   before_action :check_view_permissions, only: :export_repository
-  before_action :check_edit_and_destroy_permissions, only:
+  before_action :check_manage_permissions, only:
     %i(destroy destroy_modal rename_modal update)
   before_action :check_create_permissions, only:
     %i(create_new_modal create copy_modal copy)
@@ -309,8 +309,8 @@ class RepositoriesController < ApplicationController
                       @team.repositories.count < Constants::REPOSITORIES_LIMIT
   end
 
-  def check_edit_and_destroy_permissions
-    render_403 unless can_update_or_delete_repository?(@repository)
+  def check_manage_permissions
+    render_403 unless can_manage_repository?(@repository)
   end
 
   def repository_params

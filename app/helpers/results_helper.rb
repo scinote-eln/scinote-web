@@ -24,7 +24,7 @@ module ResultsHelper
   end
 
   def can_archive_result(result)
-    can_delete_or_archive_result?(result.my_module)
+    can_manage_result?(result.my_module)
   end
 
   def result_unlocked?(result)

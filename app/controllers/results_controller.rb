@@ -1,6 +1,6 @@
 class ResultsController < ApplicationController
   before_action :load_vars
-  before_action :can_destroy_permissions
+  before_action :check_destroy_permissions
 
   def destroy
     act_log = t('my_modules.module_archive.table_log',
@@ -39,7 +39,7 @@ class ResultsController < ApplicationController
     @my_module = @result.my_module
   end
 
-  def can_destroy_permissions
-    render_403 unless can_delete_or_archive_result?(@my_module)
+  def check_destroy_permissions
+    render_403 unless can_manage_result?(@my_module)
   end
 end

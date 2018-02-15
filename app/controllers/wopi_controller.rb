@@ -294,7 +294,7 @@ class WopiController < ActionController::Base
         @breadcrumb_folder_name = @protocol.my_module.name
       else
         @can_read = can_read_protocol_in_repository?(@protocol)
-        @can_write = can_update_protocol_in_repository?(@protocol)
+        @can_write = can_manage_protocol_in_repository?(@protocol)
         @close_url = protocols_url(only_path: false,
                                    host: ENV['WOPI_USER_HOST'])
 

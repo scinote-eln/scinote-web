@@ -13,7 +13,7 @@
 </div>
 
 <div class="toolbarButtons" style="display:none">
-  <% if module_page? && can_assign_repository_records_to_module?(@my_module) %>
+  <% if module_page? && can_assign_repository_rows_to_module?(@my_module) %>
     <button type="button" class="btn btn-default"
       data-assign-url="<%= assign_repository_records_my_module_path(@my_module, @repository)%>"
       id="assignRepositoryRecords" onclick="onClickAssignRecords()" disabled>

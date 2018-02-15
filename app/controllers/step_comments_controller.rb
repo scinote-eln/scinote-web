@@ -184,7 +184,7 @@ class StepCommentsController < ApplicationController
   end
 
   def check_add_permissions
-    render_403 unless can_create_comment_in_module?(@protocol.my_module)
+    render_403 unless can_create_comments_in_module?(@protocol.my_module)
   end
 
   def check_manage_permissions

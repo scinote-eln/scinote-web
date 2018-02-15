@@ -7,8 +7,8 @@ Canaid::Permissions.register_for(Experiment) do
     can_read_project?(user, experiment.project)
   end
 
-  # experiment: create, update, delete
-  # canvas: edit
+  # experiment: create/update/delete
+  # canvas: update
   # module: create, clone, reposition, create/update/delete connection,
   #         assign/reassign/unassign tags
   can :manage_experiment do |user, experiment|
@@ -50,7 +50,7 @@ Canaid::Permissions.register_for(Experiment) do
 end
 
 Canaid::Permissions.register_for(MyModule) do
-  # module: edit, archive, move
+  # module: update, archive, move
   # result: create, update
   can :manage_module do |user, my_module|
     can_manage_experiment?(user, my_module.experiment)
@@ -67,13 +67,13 @@ Canaid::Permissions.register_for(MyModule) do
   end
 
   # result: delete, archive
-  can :delete_or_archive_result do |user, my_module|
+  can :manage_result do |user, my_module|
     user.is_owner_of_project?(my_module.experiment.project)
   end
 
   # module: assign/unassign sample, assign/unassign repository record
   # NOTE: Use 'module_page? &&' before calling this permission!
-  can :assign_repository_records_to_module do |user, my_module|
+  can :assign_repository_rows_to_module do |user, my_module|
     user.is_technician_or_higher_of_project?(my_module.experiment.project)
   end
 
@@ -85,17 +85,17 @@ Canaid::Permissions.register_for(MyModule) do
   # module: create comment
   # result: create comment
   # step: create comment
-  can :create_comment_in_module do |user, my_module|
-    can_create_comment_in_project?(user, my_module.experiment.project)
+  can :create_comments_in_module do |user, my_module|
+    can_create_comments_in_project?(user, my_module.experiment.project)
   end
   # Module, its experiment and its project must be active for all the specified
   # permissions
   %i(manage_module
      manage_users_in_module
-     delete_or_archive_result
+     manage_result
      assign_sample_to_module
      complete_module
-     create_comment_in_module).each do |perm|
+     create_comments_in_module).each do |perm|
     can perm do |_, my_module|
       my_module.active? &&
         my_module.experiment.active? &&
@@ -106,7 +106,7 @@ end
 
 Canaid::Permissions.register_for(Protocol) do
   # protocol in module: read
-  # step: read, read comments, read assets, download assets
+  # step in module: read, read comments, read/download assets
   can :read_protocol_in_module do |user, protocol|
     if protocol.in_module?
       can_read_experiment?(user, protocol.my_module.experiment)
@@ -117,7 +117,7 @@ Canaid::Permissions.register_for(Protocol) do
 
   # protocol in module: create/update/delete, unlink, revert, update from
   # protocol in repository, update from file
-  # step: create/update/delete, reorder
+  # step in module: create/update/delete, reorder
   can :manage_protocol_in_module do |user, protocol|
     if protocol.in_module?
       can_manage_module?(user, protocol.my_module)

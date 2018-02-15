@@ -18,7 +18,13 @@ class ProtocolsController < ApplicationController
     linked_children
     linked_children_datatable
   )
-  before_action :check_edit_permissions, only: %i(
+  before_action :check_view_all_permissions, only: %i(
+    index
+    datatable
+  )
+  # For update_from_parent and update_from_parent_modal we don't need to check
+  # read permission for the parent protocol
+  before_action :check_manage_in_module_permissions, only: %i(
     edit
     update_metadata
     update_keywords
@@ -26,14 +32,6 @@ class ProtocolsController < ApplicationController
     edit_keywords_modal
     edit_authors_modal
     edit_description_modal
-  )
-  before_action :check_view_all_permissions, only: %i(
-    index
-    datatable
-  )
-  # For update_from_parent and update_from_parent_modal we don't need to check
-  # read permission for the parent protocol
-  before_action :check_manage_permissions, only: %i(
     unlink
     unlink_modal
     revert
@@ -41,7 +39,7 @@ class ProtocolsController < ApplicationController
     update_from_parent
     update_from_parent_modal
   )
-  before_action :check_update_parent_permissions, only: %i(
+  before_action :check_manage_parent_in_repository_permissions, only: %i(
     update_parent
     update_parent_modal
   )
@@ -1066,27 +1064,17 @@ class ProtocolsController < ApplicationController
     end
   end
 
-  def check_edit_permissions
-    load_team_and_type
+  def check_manage_in_module_permissions
     @protocol = Protocol.find_by_id(params[:id])
-
-    unless can_update_protocol_in_repository?(@protocol)
-      render_403
-    end
-  end
-
-  def check_manage_permissions
-    @protocol = Protocol.find_by_id(params[:id])
-
-    render_403 if @protocol.blank? || !can_manage_protocol_in_module?(@protocol)
-  end
-
-  def check_update_parent_permissions
-    @protocol = Protocol.find_by_id(params[:id])
-
     render_403 unless @protocol.present? &&
-                      (can_read_protocol_in_module?(@protocol) ||
-                       can_update_protocol_in_repository(@protocol.parent))
+                      can_manage_protocol_in_module?(@protocol)
+  end
+
+  def check_manage_parent_in_repository_permissions
+    @protocol = Protocol.find_by_id(params[:id])
+    render_403 unless @protocol.present? &&
+                      can_read_protocol_in_module?(@protocol) &&
+                      can_manage_protocol_in_repository(@protocol.parent)
   end
 
   def check_load_from_repository_views_permissions
@@ -1130,7 +1118,7 @@ class ProtocolsController < ApplicationController
     @protocols = Protocol.where(id: params[:protocol_ids])
     @protocols.find_each do |protocol|
       if !protocol.in_repository_public? ||
-         !can_update_protocol_type_in_repository?(protocol)
+         !can_manage_protocol_in_repository?(protocol)
         respond_to { |f| f.json { render json: {}, status: :unauthorized } }
         return
       end
@@ -1141,7 +1129,7 @@ class ProtocolsController < ApplicationController
     @protocols = Protocol.where(id: params[:protocol_ids])
     @protocols.find_each do |protocol|
       if !protocol.in_repository_private? ||
-         !can_update_protocol_type_in_repository?(protocol)
+         !can_manage_protocol_in_repository?(protocol)
         respond_to { |f| f.json { render json: {}, status: :unauthorized } }
         return
       end
@@ -1152,7 +1140,7 @@ class ProtocolsController < ApplicationController
     @protocols = Protocol.where(id: params[:protocol_ids])
     @protocols.find_each do |protocol|
       if protocol.in_repository_archived? ||
-         !can_update_protocol_type_in_repository?(protocol)
+         !can_manage_protocol_in_repository?(protocol)
         respond_to { |f| f.json { render json: {}, status: :unauthorized } }
         return
       end
@@ -1163,7 +1151,7 @@ class ProtocolsController < ApplicationController
     @protocols = Protocol.where(id: params[:protocol_ids])
     @protocols.find_each do |protocol|
       if protocol.in_repository_active? ||
-         !can_update_protocol_type_in_repository?(protocol)
+         !can_manage_protocol_in_repository?(protocol)
         respond_to { |f| f.json { render json: {}, status: :unauthorized } }
         return
       end

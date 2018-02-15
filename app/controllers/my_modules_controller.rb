@@ -608,7 +608,8 @@ class MyModulesController < ApplicationController
   end
 
   def check_assign_repository_records_permissions
-    render_403 unless can_assign_repository_records_to_module?(@my_module)
+    render_403 unless module_page? &&
+                      can_assign_repository_rows_to_module?(@my_module)
   end
 
   def check_complete_module_permission

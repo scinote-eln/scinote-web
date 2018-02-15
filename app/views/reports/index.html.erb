@@ -4,7 +4,7 @@
 
 <div id="content">
   <div>
-    <% if can_create_or_manage_reports?(@project) %>
+    <% if can_manage_reports?(@project) %>
       <%= link_to new_project_reports_path(@project), class: 'btn btn-primary', id: 'new-report-btn', 'data-no-turbolink' => true do %>
         <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
         <span class="hidden-xs"><%=t "projects.reports.index.new" %></span>

@@ -6,7 +6,7 @@
     <div class="panel-heading">
       <div class="panel-options pull-right">
         <% if can_manage_protocol_in_module?(@protocol) ||
-              can_update_protocol_in_repository?(@protocol) %>
+              can_manage_protocol_in_repository?(@protocol) %>
           <a data-action="move-step"
              class="btn btn-link"
              href="<%= move_up_step_path(step, format: :json) %>"

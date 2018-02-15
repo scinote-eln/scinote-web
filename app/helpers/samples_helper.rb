@@ -1,8 +1,4 @@
 module SamplesHelper
-  def can_add_sample_related_things_to_team
-    can_manage_sample_columns?(@team)
-  end
-
   def all_custom_fields
     CustomField.where(team_id: @team).order(:created_at)
   end

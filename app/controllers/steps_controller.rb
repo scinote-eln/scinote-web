@@ -396,7 +396,7 @@ class StepsController < ApplicationController
       if step
         protocol = step.protocol
         if can_manage_protocol_in_module?(protocol) ||
-           can_update_protocol_in_repository?(protocol)
+           can_manage_protocol_in_repository?(protocol)
           if step.position > 0
             step_down = step.protocol.steps.where(position: step.position - 1).first
             step.position -= 1
@@ -443,7 +443,7 @@ class StepsController < ApplicationController
       if step
         protocol = step.protocol
         if can_manage_protocol_in_module?(protocol) ||
-           can_update_protocol_in_repository?(protocol)
+           can_manage_protocol_in_repository?(protocol)
           if step.position < step.protocol.steps.count - 1
             step_up = step.protocol.steps.where(position: step.position + 1).first
             step.position += 1
@@ -615,7 +615,7 @@ class StepsController < ApplicationController
 
   def check_manage_permissions
     render_403 unless can_manage_protocol_in_module?(@protocol) ||
-                      can_update_protocol_in_repository?(@protocol)
+                      can_manage_protocol_in_repository?(@protocol)
   end
 
   def check_complete_and_checkbox_permissions

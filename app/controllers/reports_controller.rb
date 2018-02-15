@@ -450,11 +450,11 @@ class ReportsController < ApplicationController
   end
 
   def check_create_permissions
-    render_403 unless can_create_or_manage_reports?(@project)
+    render_403 unless can_manage_reports?(@project)
   end
 
   def check_manage_permissions
-    render_403 unless can_create_or_manage_reports?(@project)
+    render_403 unless can_manage_reports?(@project)
     render_404 unless params.include? :report_ids
   end
 

@@ -183,7 +183,7 @@ class MyModuleCommentsController < ApplicationController
   end
 
   def check_add_permissions
-    render_403 unless can_create_comment_in_module?(@my_module)
+    render_403 unless can_create_comments_in_module?(@my_module)
   end
 
   def check_manage_permissions
