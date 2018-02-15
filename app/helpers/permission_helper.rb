@@ -44,13 +44,9 @@ module PermissionHelper
     around [
       :can_view_project,
       :can_restore_archived_modules,
-      :can_edit_canvas,
       :can_reposition_modules,
       :can_edit_connections,
-      :can_create_modules,
-      :can_edit_modules,
       :can_clone_modules,
-      :can_archive_modules
     ] do |proxy, *args, &block|
       if args[0]
         project = args[0]
@@ -62,27 +58,16 @@ module PermissionHelper
 
     # ---- Almost everything is disabled for archived modules ----
     around [
-      :can_view_module,
       # TODO: Because module restoring is made via updating module attributes,
       # (and that action checks if module is editable) this needs to be
       # commented out or that functionality will not work any more.
-      #:can_edit_module,
-      :can_archive_module,
       :can_view_module_info,
       :can_view_module_users,
       :can_edit_users_on_module,
       :can_add_user_to_module,
       :can_remove_user_from_module,
-      :can_view_module_protocols,
-      :can_load_protocol_into_module,
-      :can_export_protocol_from_module,
-      :can_copy_protocol_to_repository,
-      :can_view_module_activities,
-      :can_view_module_comments,
       :can_add_comment_to_module,
-      :can_view_module_samples,
       :can_view_module_archive,
-      :can_view_results_in_module,
       :can_view_or_download_result_assets,
       :can_view_result_comments,
       :can_add_result_comment_in_module,
@@ -114,20 +99,9 @@ module PermissionHelper
 
     # ---- Some things are disabled for archived experiment ----
     around [
-      :can_edit_experiment,
-      :can_view_experiment,
-      :can_view_experiment_archive,
-      :can_archive_experiment,
-      :can_view_experiment_samples,
-      :can_clone_experiment,
-      :can_move_experiment,
-      :can_edit_canvas,
       :can_reposition_modules,
       :can_edit_connections,
-      :can_create_modules,
-      :can_edit_modules,
       :can_clone_modules,
-      :can_archive_modules
     ] do |proxy, *args, &block|
       if args[0]
         experiment = args[0]
@@ -249,51 +223,7 @@ module PermissionHelper
     is_user_or_higher_of_project(project)
   end
 
-  # ---- EXPERIMENT PERMISSIONS ----
-
-  def can_view_experiment_actions(experiment)
-    can_edit_experiment(experiment) ||
-      can_archive_experiment(experiment)
-  end
-
-  def can_edit_experiment(experiment)
-    is_user_or_higher_of_project(experiment.project)
-  end
-
-  def can_view_experiment(experiment)
-    can_view_project(experiment.project)
-  end
-
-  def can_view_experiment_archive(experiment)
-    can_view_project(experiment.project)
-  end
-
-  def can_archive_experiment(experiment)
-    is_user_or_higher_of_project(experiment.project)
-  end
-
-  def can_restore_experiment(experiment)
-    experiment.archived? && is_user_or_higher_of_project(experiment.project)
-  end
-
-  def can_view_experiment_samples(experiment)
-    can_view_experiment(experiment)
-  end
-
-  def can_clone_experiment(experiment)
-    is_user_or_higher_of_project(experiment.project) &&
-      is_normal_user_or_admin_of_team(experiment.project.team)
-  end
-
-  def can_move_experiment(experiment)
-    is_user_or_higher_of_project(experiment.project) &&
-      is_normal_user_or_admin_of_team(experiment.project.team)
-  end
   # ---- WORKFLOW PERMISSIONS ----
-
-  def can_edit_canvas(experiment)
-    is_user_or_higher_of_project(experiment.project)
-  end
 
   def can_reposition_modules(experiment)
     is_user_or_higher_of_project(experiment.project)
@@ -305,41 +235,8 @@ module PermissionHelper
 
   # ---- MODULE PERMISSIONS ----
 
-  def can_create_modules(experiment)
-    is_user_or_higher_of_project(experiment.project)
-  end
-
-  def can_edit_modules(experiment)
-    is_user_or_higher_of_project(experiment.project)
-  end
-
   def can_clone_modules(experiment)
     is_user_or_higher_of_project(experiment.project)
-  end
-
-  def can_move_modules(experiment)
-    is_user_or_higher_of_project(experiment.project)
-  end
-
-  def can_archive_modules(experiment)
-    is_user_or_higher_of_project(experiment.project)
-  end
-
-  def can_view_module(my_module)
-    can_view_project(my_module.experiment.project)
-  end
-
-  def can_edit_module(my_module)
-    is_user_or_higher_of_project(my_module.experiment.project)
-  end
-
-  def can_archive_module(my_module)
-    is_user_or_higher_of_project(my_module.experiment.project)
-  end
-
-  def can_restore_module(my_module)
-    my_module.archived? &&
-      is_user_or_higher_of_project(my_module.experiment.project)
   end
 
   def can_view_module_info(my_module)
@@ -360,18 +257,6 @@ module PermissionHelper
 
   def can_remove_user_from_module(my_module)
     is_owner_of_project(my_module.experiment.project)
-  end
-
-  def can_view_module_protocols(my_module)
-    can_view_module(my_module)
-  end
-
-  def can_view_module_activities(my_module)
-    is_member_of_project(my_module.experiment.project)
-  end
-
-  def can_view_module_comments(my_module)
-    can_view_project(my_module.experiment.project)
   end
 
   def can_add_comment_to_module(my_module)
@@ -398,10 +283,6 @@ module PermissionHelper
       )
   end
 
-  def can_view_module_samples(my_module)
-    can_view_module(my_module)
-  end
-
   def can_view_module_archive(my_module)
     is_user_or_higher_of_project(my_module.experiment.project)
   end
@@ -411,10 +292,6 @@ module PermissionHelper
   end
 
   # ---- RESULTS PERMISSIONS ----
-
-  def can_view_results_in_module(my_module)
-    can_view_project(my_module.experiment.project)
-  end
 
   def can_view_or_download_result_assets(my_module)
     is_member_of_project(my_module.experiment.project) ||
@@ -572,23 +449,6 @@ module PermissionHelper
   #   is_normal_user_or_admin_of_team(team)
   # end
 
-  def can_view_protocol(protocol) # WIP
-    if protocol.in_repository_public? # DONE
-      is_member_of_team(protocol.team)
-    elsif protocol.in_repository_private? or protocol.in_repository_archived? # DONE
-      is_member_of_team(protocol.team) and
-        protocol.added_by == current_user
-    elsif protocol.in_module? # TBD
-      my_module = protocol.my_module
-      my_module.active? &&
-        my_module.experiment.project.active? &&
-        can_view_module(my_module) &&
-        my_module.experiment.active?
-    else
-      false
-    end
-  end
-
   # def can_edit_protocol(protocol)
   #   is_normal_user_or_admin_of_team(protocol.team) and
   #   current_user == protocol.added_by and (not protocol.in_repository_archived?)
@@ -612,13 +472,6 @@ module PermissionHelper
   #   protocol.in_repository_private?
   # end
 
-  def can_export_protocol(protocol) # WIP
-    (protocol.in_repository_public? and is_member_of_team(protocol.team)) or # DONE
-      (protocol.in_repository_private? and protocol.added_by == current_user) or # DONE
-      (protocol.in_module? and # TBD
-        can_export_protocol_from_module(protocol.my_module))
-  end
-
   # def can_archive_protocol(protocol)
   #   protocol.added_by == current_user and
   #     (protocol.in_repository_public? or protocol.in_repository_private?)
@@ -629,178 +482,7 @@ module PermissionHelper
   #     protocol.in_repository_archived?
   # end
 
-  def can_unlink_protocol(protocol)
-    if protocol.linked?
-      my_module = protocol.my_module
-      my_module.active? &&
-        my_module.experiment.project.active? &&
-        is_user_or_higher_of_project(my_module.experiment.project) &&
-        my_module.experiment.active?
-    else
-      false
-    end
-  end
-
-  def can_revert_protocol(protocol)
-    if protocol.linked?
-      my_module = protocol.my_module
-      my_module.active? &&
-        my_module.experiment.project.active? &&
-        is_user_or_higher_of_project(my_module.experiment.project) &&
-        my_module.experiment.active?
-    else
-      false
-    end
-  end
-
-  def can_update_protocol_from_parent(protocol)
-    if protocol.linked?
-      my_module = protocol.my_module
-      my_module.active? &&
-        my_module.experiment.project.active? &&
-        is_user_or_higher_of_project(my_module.experiment.project) &&
-        my_module.experiment.active?
-    else
-      false
-    end
-  end
-
-  def can_load_protocol_from_repository(protocol, source)
-    if can_view_protocol(source)
-      my_module = protocol.my_module
-      my_module.active? &&
-        my_module.experiment.project.active? &&
-        is_user_or_higher_of_project(my_module.experiment.project) &&
-        my_module.experiment.active?
-    else
-      false
-    end
-  end
-
-  def can_update_parent_protocol(protocol)
-    if protocol.linked?
-      my_module = protocol.my_module
-      parent = protocol.parent
-
-      my_module.active? &&
-        my_module.experiment.project.active? &&
-        my_module.experiment.active? &&
-        is_normal_user_or_admin_of_team(parent.team) &&
-        is_user_or_higher_of_project(my_module.experiment.project) &&
-        (parent.in_repository_public? or parent.in_repository_private?) &&
-        parent.added_by == current_user
-    else
-      false
-    end
-  end
-
   # ---- STEPS PERMISSIONS ----
-
-  def can_load_protocol_into_module(my_module)
-    is_user_or_higher_of_project(my_module.experiment.project)
-  end
-
-  def can_export_protocol_from_module(my_module)
-    can_view_module_protocols(my_module)
-  end
-
-  def can_copy_protocol_to_repository(my_module)
-    is_normal_user_or_admin_of_team(my_module.experiment.project.team)
-  end
-
-  def can_link_copied_protocol_in_repository(protocol)
-    can_copy_protocol_to_repository(protocol.my_module) and
-      is_user_or_higher_of_project(protocol.my_module.experiment.project)
-  end
-
-  def can_view_steps_in_protocol(protocol) # WIP
-    if protocol.in_module? # TBD
-      my_module = protocol.my_module
-      my_module.active? &&
-        my_module.experiment.project.active? &&
-        my_module.experiment.active? &&
-        can_view_module(my_module)
-    elsif protocol.in_repository? # DONE
-      protocol.in_repository_active? and can_view_protocol(protocol)
-    else
-      false
-    end
-  end
-
-  def can_create_step_in_protocol(protocol) # WIP
-    if protocol.in_module? # TBD
-      my_module = protocol.my_module
-      my_module.active? &&
-      my_module.experiment.project.active? &&
-      my_module.experiment.active? &&
-      is_user_or_higher_of_project(my_module.experiment.project)
-    elsif protocol.in_repository? # DONE
-      protocol.in_repository_active? and can_edit_protocol(protocol)
-    else
-      false
-    end
-  end
-
-  def can_reorder_step_in_protocol(protocol) # WIP
-    if protocol.in_module? # TBD
-      my_module = protocol.my_module
-      my_module.active? &&
-        my_module.experiment.project.active? &&
-        my_module.experiment.active? &&
-        is_user_or_higher_of_project(my_module.experiment.project)
-    elsif protocol.in_repository? # DONE
-      protocol.in_repository_active? and can_edit_protocol(protocol)
-    else
-      false
-    end
-  end
-
-  # Could possibly be divided into:
-  #   - edit step name/description
-  #   - adding checklists
-  #   - adding assets
-  #   - adding tables
-  # but right now we have 1 page to rule them all.
-  def can_edit_step_in_protocol(protocol) # WIP
-    if protocol.in_module? # TBD
-      my_module = protocol.my_module
-      my_module.active? &&
-      my_module.experiment.project.active? &&
-      my_module.experiment.active? &&
-      is_user_or_higher_of_project(my_module.experiment.project)
-    elsif protocol.in_repository? # DONE
-      protocol.in_repository_active? and can_edit_protocol(protocol)
-    else
-      false
-    end
-  end
-
-  def can_delete_step_in_protocol(protocol) # WIP
-    if protocol.in_module? # TBD
-      my_module = protocol.my_module
-      my_module.active? &&
-        my_module.experiment.project.active? &&
-        my_module.experiment.active? &&
-        is_owner_of_project(my_module.experiment.project)
-    elsif protocol.in_repository? # DONE
-      protocol.in_repository_active? and can_edit_protocol(protocol)
-    else
-      false
-    end
-  end
-
-  def can_view_step_comments(protocol)
-    if protocol.in_module?
-      my_module = protocol.my_module
-      my_module.active? &&
-        my_module.experiment.project.active? &&
-        my_module.experiment.active? &&
-        can_view_project(my_module.experiment.project)
-    else
-      # In repository, comments are disabled
-      false
-    end
-  end
 
   def can_add_step_comment_in_protocol(protocol)
     if protocol.in_module?
@@ -838,21 +520,6 @@ module PermissionHelper
         is_owner_of_project(
           protocol.my_module.experiment.project
         )
-    else
-      false
-    end
-  end
-
-  def can_view_or_download_step_assets(protocol) # WIP
-    if protocol.in_module? # TBD
-      my_module = protocol.my_module
-      my_module.active? &&
-        my_module.experiment.project.active? &&
-        my_module.experiment.active? &&
-        (is_member_of_project(my_module.experiment.project) ||
-          can_view_project(my_module.experiment.project))
-    elsif protocol.in_repository? # DONE
-      protocol.in_repository_active? and can_view_protocol(protocol)
     else
       false
     end

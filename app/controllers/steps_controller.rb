@@ -9,9 +9,8 @@ class StepsController < ApplicationController
   before_action :convert_table_contents_to_utf8, only: [:create, :update]
 
   before_action :check_view_permissions, only: [:show]
-  before_action :check_create_permissions, only: [:new, :create]
-  before_action :check_edit_permissions, only: [:edit, :update]
-  before_action :check_destroy_permissions, only: [:destroy]
+  before_action :check_manage_permissions, only: %i(new create edit update
+                                                    destroy)
 
   before_action :update_checklist_item_positions, only: [:create, :update]
 
@@ -430,8 +429,8 @@ class StepsController < ApplicationController
     respond_to do |format|
       if step
         protocol = step.protocol
-        if protocol.in_module? && can_reorder_step_in_protocol(protocol) ||
-           protocol.in_repository? && can_update_protocol_in_repository?(protocol)
+        if can_manage_protocol_in_module?(protocol) ||
+           can_update_protocol_in_repository?(protocol)
           if step.position > 0
             step_down = step.protocol.steps.where(position: step.position - 1).first
             step.position -= 1
@@ -477,8 +476,8 @@ class StepsController < ApplicationController
     respond_to do |format|
       if step
         protocol = step.protocol
-        if protocol.in_module? && can_reorder_step_in_protocol(protocol) ||
-           protocol.in_repository? && can_update_protocol_in_repository?(protocol)
+        if can_manage_protocol_in_module?(protocol) ||
+           can_update_protocol_in_repository?(protocol)
           if step.position < step.protocol.steps.count - 1
             step_up = step.protocol.steps.where(position: step.position + 1).first
             step.position += 1
@@ -641,31 +640,13 @@ class StepsController < ApplicationController
   end
 
   def check_view_permissions
-    if @protocol.in_module? && !can_view_steps_in_protocol(@protocol) ||
-       @protocol.in_repository? && !can_read_protocol_in_repository?(@protocol)
-      render_403
-    end
+    render_403 unless can_read_protocol_in_module(@protocol) ||
+                      can_read_protocol_in_repository?(@protocol)
   end
 
-  def check_create_permissions
-    if @protocol.in_module? && !can_create_step_in_protocol(@protocol) ||
-       @protocol.in_repository? && !can_update_protocol_in_repository?(@protocol)
-      render_403
-    end
-  end
-
-  def check_edit_permissions
-    if @protocol.in_module? && !can_edit_step_in_protocol(@protocol) ||
-       @protocol.in_repository? && !can_update_protocol_in_repository?(@protocol)
-      render_403
-    end
-  end
-
-  def check_destroy_permissions
-    if @protocol.in_module? && !can_delete_step_in_protocol(@protocol) ||
-       @protocol.in_repository? && !can_update_protocol_in_repository?(@protocol)
-      render_403
-    end
+  def check_manage_permissions
+    render_403 unless can_manage_protocol_in_module?(@protocol) ||
+                      can_update_protocol_in_repository?(@protocol)
   end
 
   def step_params
