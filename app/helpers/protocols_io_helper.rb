@@ -177,21 +177,21 @@ module ProtocolsIoHelper
   def generate_null_step_skeleton
     json_string = [
       {
-        "guid": 0,
-        "previous_guid": nil,
-        "components":
+        'guid' => '0',
+        'previous_guid' => nil,
+        'components' =>
         [
           {
-            "component_type_id": '1',
-            "name": 'Description',
-            "data": '',
-            "data_id": nil
+            'component_type_id' => '1',
+            'name' => 'Description',
+            'data' => '',
+            'data_id' => nil
           },
           {
-            "component_type_id": '6',
-            "name": 'Section',
-            "data": 'Step',
-            "data_id": '0'
+            'component_type_id' => '6',
+            'name' => 'Section',
+            'data' => 'Step',
+            'data_id' => '0'
           }
         ]
       }
