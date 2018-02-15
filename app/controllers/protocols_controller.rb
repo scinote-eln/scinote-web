@@ -640,7 +640,8 @@ class ProtocolsController < ApplicationController
       return 0 # return 0 stops the rest of the controller code from executing
     end
     @json_object = JSON.parse(json_file_contents)
-
+    @json_object['steps'] = step_hash_not_null(@json_object['steps'])
+    byebug
     @json_object['steps'] = protocols_io_guid_reorder_step_json(
       @json_object['steps']
     )
@@ -672,6 +673,8 @@ class ProtocolsController < ApplicationController
       sanitize_input(params['protocol']['last_modified'])
     )
     @db_json['steps'] = {}
+    @json_object['steps'] = step_hash_not_null(@json_object['steps'])
+    byebug
     @db_json['steps'] = protocols_io_fill_step(
       @json_object, @db_json['steps']
     )

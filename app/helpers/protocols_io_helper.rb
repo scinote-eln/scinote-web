@@ -103,6 +103,8 @@ module ProtocolsIoHelper
         @toolong = true
       end
       text
+    else
+      ''
     end
   end
 
@@ -129,6 +131,8 @@ module ProtocolsIoHelper
         @remaining -= text.length - reserved
       end
       text
+    else
+      ''
     end
   end
 
@@ -146,10 +150,59 @@ module ProtocolsIoHelper
     Nokogiri::HTML::DocumentFragment.parse(text).to_html
   end
 
+  def step_hash_not_null(step_json)
+    is_null_check = false
+    if step_json.blank?
+      is_null_check = true
+    elsif step_json[0].blank?
+      is_null_check = true
+    elsif step_json[0]['components'].blank?
+      is_null_check = true
+    elsif step_json[0]['components'][0].blank?
+      is_null_check = true
+    elsif step_json[0]['components'][0]['component_type_id'].blank?
+      is_null_check = true
+    else
+      is_null_check = false
+    end
+    if is_null_check
+      return generate_null_step_skeleton
+    else
+      step_json
+    end
+  end
+
+  # Creates dummy info for when empty steps json is sent, or
+  # hash structure is modified
+  def generate_null_step_skeleton
+    json_string = [
+      {
+        "guid": 0,
+        "previous_guid": nil,
+        "components":
+        [
+          {
+            "component_type_id": '1',
+            "name": 'Description',
+            "data": '',
+            "data_id": nil
+          },
+          {
+            "component_type_id": '6',
+            "name": 'Section',
+            "data": 'Step',
+            "data_id": '0'
+          }
+        ]
+      }
+    ]
+    json_string
+  end
   # Images are allowed in:
   # Step: description, expected result
   # Protocol description : description before_start warning
   # guidelines manuscript_citation
+
   def prepare_for_view(
     attribute_text1, size, table = 'no_table', image_allowed = false
   )
@@ -314,8 +367,10 @@ module ProtocolsIoHelper
   end
 
   def protocols_io_guid_reorder_step_json(unordered_step_json)
-    base_step = unordered_step_json.find { |step| step['previous_guid'].nil? }
+    return '' if unordered_step_json.nil?
     number_of_steps = unordered_step_json.size
+    return unordered_step_json if number_of_steps == 1
+    base_step = unordered_step_json.find { |step| step['previous_guid'].nil? }
     step_order = []
     step_counter = 0
     step_order[step_counter] = base_step
