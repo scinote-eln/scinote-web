@@ -176,7 +176,14 @@ var RepositoryDatatable = (function(global) {
           TABLE.column(i).visible(visibility);
           TABLE.setColumnSearchable(i, visibility);
         }
-        oSettings._colReorder.fnOrder(myData.ColReorder);
+        // Datatables triggers this action about 3 times
+        // sometimes on the first iteration the oSettings._colReorder is null
+        // and the fnOrder rises an error that breaks the table
+        // here I added a null guard for that case.
+        // @todo we need to find out why the tables are loaded multiple times
+        if( oSettings._colReorder ) {
+          oSettings._colReorder.fnOrder(myData.ColReorder);
+        }
         TABLE.on('mousedown', function() {
           $('#repository-columns-dropdown').removeClass('open');
         });
@@ -444,16 +451,24 @@ var RepositoryDatatable = (function(global) {
     });
 
     $('#assigned-repo-records').on('click', function() {
+      var promiseReload;
       viewAssigned = 'assigned';
-      TABLE.ajax.reload(function() {
+      promiseReload = new Promise(function(resolve) {
+        resolve(TABLE.ajax.reload());
+      });
+      promiseReload.then(function() {
         initRowSelection();
-      }, false);
+      })
     });
     $('#all-repo-records').on('click', function() {
+      var promiseReload;
       viewAssigned = 'all';
-      TABLE.ajax.reload(function() {
+      promiseReload = new Promise(function(resolve) {
+        resolve(TABLE.ajax.reload());
+      });
+      promiseReload.then(function() {
         initRowSelection();
-      }, false);
+      })
     });
   };
 
