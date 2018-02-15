@@ -17,6 +17,6 @@ end
 
 Then(/^I fill in "([^"]*)" in "([^"]*)" field of "([^"]*)" form$/) do |password, field, form_id|
   within form_id do
-    fill_in field, with: password
+    find(field).set(password)
   end
 end
