@@ -207,7 +207,7 @@ class ResultTextsController < ApplicationController
 
   def check_archive_permissions
     if result_params[:archived].to_s != '' and
-      not can_archive_result(@result)
+      not can_archive_result?(@result)
       render_403
     end
   end

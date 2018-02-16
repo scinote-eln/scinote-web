@@ -263,8 +263,8 @@ class ProtocolsController < ApplicationController
 
   def copy_to_repository
     link_protocols = params[:link] &&
-                     can_manage_protocol_in_module(@protocol) &&
-                     can_create_protocols_in_repository(@protocol.team)
+                     can_manage_protocol_in_module?(@protocol) &&
+                     can_create_protocols_in_repository?(@protocol.team)
     respond_to do |format|
       transaction_error = false
       Protocol.transaction do
@@ -1074,7 +1074,7 @@ class ProtocolsController < ApplicationController
     @protocol = Protocol.find_by_id(params[:id])
     render_403 unless @protocol.present? &&
                       can_read_protocol_in_module?(@protocol) &&
-                      can_manage_protocol_in_repository(@protocol.parent)
+                      can_manage_protocol_in_repository?(@protocol.parent)
   end
 
   def check_load_from_repository_views_permissions
