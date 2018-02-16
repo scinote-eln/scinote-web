@@ -122,7 +122,7 @@
         <% tables, garbage = protocolsio_string_to_table_element(step_info_string) %>
         <% if tables.present? %>
           <br><hr><br>
-          <% end %>
+        <% end %>
           <% table_count = 0 %>
           <% tables.each do |index, table| %>
           <%   table_hash = JSON.parse((Base64.decode64(table['contents']))) %>
@@ -130,7 +130,7 @@
           <%   step_table_elements_array.push([pio_table_id,table_hash['data']]) %>
           <div id="<%=pio_table_id%>" ></div>
           <%   table_count += 1 %>
-        <% end %>
+          <% end %>
         </div>
       </div>
     </div>
