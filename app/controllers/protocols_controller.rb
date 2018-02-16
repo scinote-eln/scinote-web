@@ -43,6 +43,9 @@ class ProtocolsController < ApplicationController
     update_parent
     update_parent_modal
   )
+  before_action :check_manage_in_repository_permissions, only:
+    %i(make_private publish archive)
+  before_action :check_restore_in_repository_permissions, only: :restore
   before_action :check_load_from_repository_views_permissions, only: %i(
     load_from_repository_modal
     load_from_repository_datatable
@@ -57,10 +60,6 @@ class ProtocolsController < ApplicationController
     copy_to_repository
     copy_to_repository_modal
   )
-  before_action :check_make_private_permissions, only: [:make_private]
-  before_action :check_publish_permissions, only: [:publish]
-  before_action :check_archive_permissions, only: [:archive]
-  before_action :check_restore_permissions, only: [:restore]
   before_action :check_import_permissions, only: [:import]
   before_action :check_export_permissions, only: [:export]
 
@@ -1077,6 +1076,27 @@ class ProtocolsController < ApplicationController
                       can_manage_protocol_in_repository?(@protocol.parent)
   end
 
+  def check_manage_in_repository_permissions
+    @protocols = Protocol.where(id: params[:protocol_ids])
+    @protocols.find_each do |protocol|
+      unless can_manage_protocol_in_repository?(protocol)
+        respond_to { |f| f.json { render json: {}, status: :unauthorized } }
+        break
+      end
+    end
+  end
+
+  def check_restore_in_repository_permissions
+    @protocols = Protocol.where(id: params[:protocol_ids])
+    @protocols.find_each do |protocol|
+      if protocol.in_repository_active? ||
+         !can_restore_protocol_in_repository?(protocol)
+        respond_to { |f| f.json { render json: {}, status: :unauthorized } }
+        break
+      end
+    end
+  end
+
   def check_load_from_repository_views_permissions
     @protocol = Protocol.find_by_id(params[:id])
 
@@ -1112,50 +1132,6 @@ class ProtocolsController < ApplicationController
     render_403 unless @my_module.present? &&
                       (can_read_protocol_in_module?(@protocol) ||
                        can_create_protocols_in_repository?(@protocol.team))
-  end
-
-  def check_make_private_permissions
-    @protocols = Protocol.where(id: params[:protocol_ids])
-    @protocols.find_each do |protocol|
-      if !protocol.in_repository_public? ||
-         !can_manage_protocol_in_repository?(protocol)
-        respond_to { |f| f.json { render json: {}, status: :unauthorized } }
-        return
-      end
-    end
-  end
-
-  def check_publish_permissions
-    @protocols = Protocol.where(id: params[:protocol_ids])
-    @protocols.find_each do |protocol|
-      if !protocol.in_repository_private? ||
-         !can_manage_protocol_in_repository?(protocol)
-        respond_to { |f| f.json { render json: {}, status: :unauthorized } }
-        return
-      end
-    end
-  end
-
-  def check_archive_permissions
-    @protocols = Protocol.where(id: params[:protocol_ids])
-    @protocols.find_each do |protocol|
-      if protocol.in_repository_archived? ||
-         !can_manage_protocol_in_repository?(protocol)
-        respond_to { |f| f.json { render json: {}, status: :unauthorized } }
-        return
-      end
-    end
-  end
-
-  def check_restore_permissions
-    @protocols = Protocol.where(id: params[:protocol_ids])
-    @protocols.find_each do |protocol|
-      if protocol.in_repository_active? ||
-         !can_manage_protocol_in_repository?(protocol)
-        respond_to { |f| f.json { render json: {}, status: :unauthorized } }
-        return
-      end
-    end
   end
 
   def check_import_permissions

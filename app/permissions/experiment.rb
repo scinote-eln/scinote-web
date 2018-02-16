@@ -9,7 +9,7 @@ Canaid::Permissions.register_for(Experiment) do
 
   # experiment: create/update/delete
   # canvas: update
-  # module: create, clone, reposition, create/update/delete connection,
+  # module: create, copy, reposition, create/update/delete connection,
   #         assign/reassign/unassign tags
   can :manage_experiment do |user, experiment|
     user.is_user_or_higher_of_project?(experiment.project)
@@ -25,7 +25,7 @@ Canaid::Permissions.register_for(Experiment) do
     can_manage_experiment?(user, experiment) && experiment.archived?
   end
 
-  # experiment: clone
+  # experiment: copy
   can :clone_experiment do |user, experiment|
     user.is_user_or_higher_of_project?(experiment.project) &&
       user.is_normal_user_or_admin_of_team?(experiment.project.team)

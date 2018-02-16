@@ -41,7 +41,7 @@ Canaid::Permissions.register_for(Team) do
     user.is_normal_user_or_admin_of_team?(team)
   end
 
-  # repository: create, clone
+  # repository: create, copy
   can :create_repositories do |user, team|
     user.is_admin_of_team?(team) &&
       team.repositories.count < Constants::REPOSITORIES_LIMIT
@@ -67,18 +67,24 @@ Canaid::Permissions.register_for(Protocol) do
   end
 
   # protocol in repository: update, create/update/delete/reorder step,
-  #                         toggle visibility (public, private, archive,
-  #                         restore)
+  #                         toggle private/public visibility, archive
   can :manage_protocol_in_repository do |user, protocol|
     protocol.in_repository_active? &&
       user.is_normal_user_or_admin_of_team?(protocol.team) &&
       user == protocol.added_by
   end
 
-  # protocol in repository: clone
+  # protocol in repository: restore
+  can :restore_protocol_in_repository do |user, protocol|
+    protocol.in_repository_archived? &&
+      user.is_normal_user_or_admin_of_team?(protocol.team) &&
+      user == protocol.added_by
+  end
+
+  # protocol in repository: copy
   can :clone_protocol_in_repository do |user, protocol|
-    can_create_protocols_in_repository?(user, protocol.team) &&
-      can_read_protocol_in_repository?(user, protocol)
+    can_read_protocol_in_repository?(user, protocol) &&
+      can_create_protocols_in_repository?(user, protocol.team)
   end
 end
 
