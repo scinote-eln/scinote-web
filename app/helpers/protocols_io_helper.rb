@@ -45,18 +45,30 @@ module ProtocolsIoHelper
     tr_regex = %r{<tr\b[^>]*>(.*?)<\/tr>}m
     td_regex = %r{<td\b[^>]*>(.*?)<\/td>}m
     tables = {}
+    description_string.gsub! '<th>', '<td>'
+    description_string.gsub! '</th>', '</td>'
     table_strings = description_string.scan(table_regex)
     table_strings.each_with_index do |table, table_counter|
       tables[table_counter.to_s] = {}
-      tr_strings = table[0].scan(tr_regex)
+      tr_number = table[0].scan(tr_regex).count
+      diff = 5 - tr_number # always tables have atleast 5 rows
+      table_fix_str = tr_number > 4 ? table[0] : table[0] + empty_tbl_gen(diff)
+      tr_strings = table_fix_str.scan(tr_regex)
       contents = {}
       contents['data'] = []
       tr_strings.each_with_index do |tr, tr_counter|
         td_strings = tr[0].scan(td_regex)
         contents['data'][tr_counter] = []
+        td_counter = td_strings.count
+        diff = 5 - td_counter
         td_strings.each do |td|
           td_stripped = ActionController::Base.helpers.strip_tags(td[0])
           contents['data'][tr_counter].push(td_stripped)
+        end
+        next if td_counter >= 5
+        while diff > 0
+          contents['data'][tr_counter].push(' ')
+          diff -= 1
         end
       end
       tables[table_counter.to_s]['contents'] = Base64.encode64(
@@ -65,6 +77,15 @@ module ProtocolsIoHelper
       tables[table_counter.to_s]['name'] = ' '
     end
     return tables, string_without_tables
+  end
+
+  def empty_tbl_gen(number)
+    result = ''
+    while number > 0
+      result += '<tr></tr>'
+      number -= 1
+    end
+    result
   end
 
   def string_html_table_remove(description_string)
