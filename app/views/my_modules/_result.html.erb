@@ -13,12 +13,12 @@
   <div class="panel panel-default">
     <div class="panel-heading">
       <div class="panel-options pull-right">
-        <% if can_edit_result?(result) %>
+        <% if can_manage_module?(result.my_module) %>
           <a class="btn btn-link edit-result-button <%= edit_result_button_class(result) %>" id="<%= result.id %>_edit" href="<%= edit_result_link(result) %>" data-remote="true" title="<%= t'my_modules.results.options.edit_title' %>">
             <span class="glyphicon glyphicon-edit"></span>
           </a>
         <% end %>
-        <% if can_archive_result?(result) && result_unlocked?(result) %>
+        <% if can_manage_result?(result) %>
           <a href="#"
              class="btn btn-link form-submit-link"
              data-form-id="result-archive-form-<%= result.id %>"

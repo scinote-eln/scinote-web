@@ -4,6 +4,7 @@ class MyModulesController < ApplicationController
   include InputSanitizeHelper
   include Rails.application.routes.url_helpers
   include ActionView::Helpers::UrlHelper
+  include ApplicationHelper
 
   before_action :load_vars,
                 only: %I[show update destroy description due_date protocols
@@ -15,8 +16,8 @@ class MyModulesController < ApplicationController
   before_action :load_vars_nested, only: %I[new create]
   before_action :load_repository, only: %I[assign_repository_records
                                            unassign_repository_records]
-  before_action :check_manage_permissions,
-                only: %i(update destroy description due_date)
+  before_action :check_manage_permissions, only:
+    %i(destroy description due_date)
   before_action :check_view_permissions, only:
     %i(show activities activities_tab protocols results samples samples_index
        archive)
@@ -132,13 +133,18 @@ class MyModulesController < ApplicationController
   end
 
   def update
+    render_403 && return unless if my_module_params[:archived] == 'false'
+                                  can_restore_module?(@my_module)
+                                else
+                                  can_manage_module?(@my_module)
+                                end
+
     @my_module.assign_attributes(my_module_params)
     @my_module.last_modified_by = current_user
-
     description_changed = @my_module.description_changed?
-    restored = false
 
     if @my_module.archived_changed?(from: false, to: true)
+
       saved = @my_module.archive(current_user)
       if saved
         # Currently not in use
@@ -156,6 +162,7 @@ class MyModulesController < ApplicationController
         )
       end
     elsif @my_module.archived_changed?(from: true, to: false)
+
       saved = @my_module.restore(current_user)
       if saved
         restored = true
@@ -173,8 +180,8 @@ class MyModulesController < ApplicationController
         )
       end
     else
-      saved = @my_module.save
 
+      saved = @my_module.save
       if saved and description_changed then
         Activity.create(
           type_of: :change_module_description,
@@ -597,10 +604,8 @@ class MyModulesController < ApplicationController
     render_404 unless @repository && can_read_team?(@repository.team)
   end
 
-  # NOTE: 'update' action also contains restore (and archive) logic
   def check_manage_permissions
-    render_403 unless can_manage_module?(@my_module) ||
-                      can_restore_module?(@my_module)
+    render_403 unless can_manage_module?(@my_module)
   end
 
   def check_view_permissions

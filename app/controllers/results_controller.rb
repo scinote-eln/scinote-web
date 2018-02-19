@@ -40,6 +40,6 @@ class ResultsController < ApplicationController
   end
 
   def check_destroy_permissions
-    render_403 unless can_manage_result?(@my_module)
+    render_403 unless can_manage_result?(@result)
   end
 end

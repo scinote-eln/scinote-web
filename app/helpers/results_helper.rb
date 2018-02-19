@@ -19,22 +19,6 @@ module ResultsHelper
     end
   end
 
-  def can_edit_result(result)
-    can_manage_module?(result.my_module)
-  end
-
-  def can_archive_result(result)
-    can_manage_result?(result.my_module)
-  end
-
-  def result_unlocked?(result)
-    if result.is_asset
-      !result.asset.locked?
-    else
-      true
-    end
-  end
-
   def result_path_of_type(result)
     if result.is_asset
       result_asset_path(result.result_asset)

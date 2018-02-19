@@ -24,7 +24,7 @@ class ProtocolsController < ApplicationController
   )
   # For update_from_parent and update_from_parent_modal we don't need to check
   # read permission for the parent protocol
-  before_action :check_manage_in_module_permissions, only: %i(
+  before_action :check_manage_permissions, only: %i(
     edit
     update_metadata
     update_keywords
@@ -43,9 +43,9 @@ class ProtocolsController < ApplicationController
     update_parent
     update_parent_modal
   )
-  before_action :check_manage_in_repository_permissions, only:
+  before_action :check_manage_all_in_repository_permissions, only:
     %i(make_private publish archive)
-  before_action :check_restore_in_repository_permissions, only: :restore
+  before_action :check_restore_all_in_repository_permissions, only: :restore
   before_action :check_load_from_repository_views_permissions, only: %i(
     load_from_repository_modal
     load_from_repository_datatable
@@ -1063,10 +1063,11 @@ class ProtocolsController < ApplicationController
     end
   end
 
-  def check_manage_in_module_permissions
+  def check_manage_permissions
     @protocol = Protocol.find_by_id(params[:id])
     render_403 unless @protocol.present? &&
-                      can_manage_protocol_in_module?(@protocol)
+                      (can_manage_protocol_in_module?(@protocol) ||
+                       can_manage_protocol_in_repository?(@protocol))
   end
 
   def check_manage_parent_in_repository_permissions
@@ -1076,7 +1077,7 @@ class ProtocolsController < ApplicationController
                       can_manage_protocol_in_repository?(@protocol.parent)
   end
 
-  def check_manage_in_repository_permissions
+  def check_manage_all_in_repository_permissions
     @protocols = Protocol.where(id: params[:protocol_ids])
     @protocols.find_each do |protocol|
       unless can_manage_protocol_in_repository?(protocol)
@@ -1086,11 +1087,10 @@ class ProtocolsController < ApplicationController
     end
   end
 
-  def check_restore_in_repository_permissions
+  def check_restore_all_in_repository_permissions
     @protocols = Protocol.where(id: params[:protocol_ids])
     @protocols.find_each do |protocol|
-      if protocol.in_repository_active? ||
-         !can_restore_protocol_in_repository?(protocol)
+      unless can_restore_protocol_in_repository?(protocol)
         respond_to { |f| f.json { render json: {}, status: :unauthorized } }
         break
       end

@@ -20,9 +20,12 @@ Canaid::Permissions.register_for(Experiment) do
     can_manage_experiment?(user, experiment)
   end
 
+  # NOTE: Must not be dependent on canaid parmision for which we check if it's
+  # active
   # experiment: restore
   can :restore_experiment do |user, experiment|
-    can_manage_experiment?(user, experiment) && experiment.archived?
+    user.is_user_or_higher_of_project?(experiment.project) &&
+      experiment.archived?
   end
 
   # experiment: copy
@@ -56,18 +59,16 @@ Canaid::Permissions.register_for(MyModule) do
     can_manage_experiment?(user, my_module.experiment)
   end
 
+  # NOTE: Must not be dependent on canaid parmision for which we check if it's
+  # active
   # module: restore
   can :restore_module do |user, my_module|
-    can_manage_experiment?(user, my_module.experiment) && my_module.archived?
+    user.is_user_or_higher_of_project?(my_module.experiment.project) &&
+      my_module.archived?
   end
 
   # module: assign/reassign/unassign users
   can :manage_users_in_module do |user, my_module|
-    user.is_owner_of_project?(my_module.experiment.project)
-  end
-
-  # result: delete, archive
-  can :manage_result do |user, my_module|
     user.is_owner_of_project?(my_module.experiment.project)
   end
 
@@ -92,7 +93,6 @@ Canaid::Permissions.register_for(MyModule) do
   # permissions
   %i(manage_module
      manage_users_in_module
-     manage_result
      assign_sample_to_module
      complete_module
      create_comments_in_module).each do |perm|
@@ -144,6 +144,25 @@ Canaid::Permissions.register_for(Protocol) do
     .each do |perm|
     can perm do |_, protocol|
       my_module = protocol.my_module
+      my_module.active? &&
+        my_module.experiment.active? &&
+        my_module.experiment.project.active?
+    end
+  end
+end
+
+Canaid::Permissions.register_for(Result) do
+  # result: delete, archive
+  can :manage_result do |user, result|
+    result.unlocked?(result) &&
+      user.is_owner_of_project?(result.my_module.experiment.project)
+  end
+
+  # Module, its experiment and its project must be active for all the specified
+  # permissions
+  %i(manage_result).each do |perm|
+    can perm do |_, result|
+      my_module = result.my_module
       my_module.active? &&
         my_module.experiment.active? &&
         my_module.experiment.project.active?

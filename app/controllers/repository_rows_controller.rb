@@ -217,7 +217,7 @@ class RepositoryRowsController < ApplicationController
   end
 
   def check_create_permissions
-    render_403 unless can_manage_repository_rows?(@repository.team)
+    render_403 unless can_create_repository_rows?(@repository.team)
   end
 
   def check_manage_permissions

@@ -16,7 +16,7 @@
           <%= link_to option_text, result_table_download_path(result.result_table_id), data: {no_turbolink: true} %>
         <% end %>
       </li>
-      <% if can_manage_result?(result.my_module) %>
+      <% if can_manage_result?(result) %>
       <li>
         <%= link_to t('my_modules.module_archive.option_delete'),
                     result_path(action: :delete, id: result.id),

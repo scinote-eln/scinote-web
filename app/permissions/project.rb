@@ -9,7 +9,7 @@ Canaid::Permissions.register_for(Project) do
       (project.visible? && user.is_member_of_team?(project.team))
   end
 
-  # project: update/delete, archive, assign/reassign/unassign users
+  # project: update/delete, assign/reassign/unassign users
   can :manage_project do |user, project|
     user.is_owner_of_project?(project)
   end
@@ -19,9 +19,11 @@ Canaid::Permissions.register_for(Project) do
     can_manage_project?(user, project)
   end
 
+  # NOTE: Must not be dependent on canaid parmision for which we check if it's
+  # active
   # project: restore
   can :restore_project do |user, project|
-    can_manage_project?(user, project) && project.archived?
+    user.is_owner_of_project?(project) && project.archived?
   end
 
   # experiment: create
@@ -60,18 +62,18 @@ Canaid::Permissions.register_for(Project) do
   end
 end
 
-Canaid::Permissions.register_for(Comment) do
+Canaid::Permissions.register_for(ProjectComment) do
   # project: update/delete comment
-  can :manage_comment_in_project do |user, comment|
-    comment.project.present? && (comment.user == user ||
+  can :manage_comment_in_project do |user, project_comment|
+    project_comment.project.present? && (project_comment.user == user ||
       user.is_owner_of_project?(project))
   end
 
   # Project must be active for all the specified permissions
   %i(manage_comment_in_project)
     .each do |perm|
-    can perm do |_, comment|
-      comment.project.active?
+    can perm do |_, project_comment|
+      project_comment.project.active?
     end
   end
 end

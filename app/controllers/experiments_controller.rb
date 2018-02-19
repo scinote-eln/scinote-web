@@ -13,6 +13,8 @@ class ExperimentsController < ApplicationController
                        :clone_modal, :move_modal, :delete_samples]
   before_action :check_view_permissions,
                 only: [:canvas, :module_archive]
+  before_action :check_manage_permissions, only: :edit
+  before_action :check_archive_permissions, only: :archive
   before_action :check_clone_permissions, only: %i(clone_modal clone)
   before_action :check_move_permissions, only: %i(move_modal move)
 
@@ -90,9 +92,16 @@ class ExperimentsController < ApplicationController
   end
 
   def update
+    render_403 && return unless if experiment_params[:archived] == 'false'
+                                  can_restore_experiment?(@experiment)
+                                else
+                                  can_manage_experiment?(@experiment)
+                                end
+
     old_text = @experiment.description
     @experiment.update_attributes(experiment_params)
     @experiment.last_modified_by = current_user
+
     if @experiment.save
 
       experiment_annotation_notification(old_text)
@@ -341,6 +350,14 @@ class ExperimentsController < ApplicationController
 
   def check_view_permissions
     render_403 unless can_read_experiment?(@experiment)
+  end
+
+  def check_manage_permissions
+    render_403 unless can_manage_experiment?(@experiment)
+  end
+
+  def check_archive_permissions
+    render_403 unless can_archive_experiment?(@experiment)
   end
 
   def check_clone_permissions
