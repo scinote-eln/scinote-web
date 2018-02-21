@@ -150,7 +150,7 @@ module ProtocolsIoHelper
     Nokogiri::HTML::DocumentFragment.parse(text).to_html
   end
 
-  def step_hash_not_null(step_json)
+  def step_hash_null?(step_json)
     is_null_check = false
     if step_json.blank?
       is_null_check = true
@@ -166,38 +166,12 @@ module ProtocolsIoHelper
       is_null_check = false
     end
     if is_null_check
-      return generate_null_step_skeleton
+      return true
     else
-      step_json
+      return false
     end
   end
 
-  # Creates dummy info for when empty steps json is sent, or
-  # hash structure is modified
-  def generate_null_step_skeleton
-    json_string = [
-      {
-        'guid' => '0',
-        'previous_guid' => nil,
-        'components' =>
-        [
-          {
-            'component_type_id' => '1',
-            'name' => 'Description',
-            'data' => '',
-            'data_id' => nil
-          },
-          {
-            'component_type_id' => '6',
-            'name' => 'Section',
-            'data' => 'Step',
-            'data_id' => '0'
-          }
-        ]
-      }
-    ]
-    json_string
-  end
   # Images are allowed in:
   # Step: description, expected result
   # Protocol description : description before_start warning
