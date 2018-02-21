@@ -175,7 +175,7 @@ Canaid::Permissions.register_for(Comment) do
   # result: update/delete comment
   # step: update/delete comment
   can :manage_comment_in_module do |user, comment|
-    my_module = get_comment_module(comment)
+    my_module = ::PermissionsUtil.get_comment_module(comment)
     project = my_module.experiment.project
     # Same check as in `can_manage_comment_in_project?`
     project.present? &&
@@ -186,25 +186,10 @@ Canaid::Permissions.register_for(Comment) do
   # permissions
   %i(manage_comment_in_module).each do |perm|
     can perm do |_, comment|
-      my_module = get_comment_module(comment)
+      my_module = ::PermissionsUtil.get_comment_module(comment)
       my_module.active? &&
         my_module.experiment.active? &&
         my_module.experiment.project.active?
     end
   end
-end
-
-private
-
-def get_comment_module(comment)
-  comment = comment.becomes(comment.type.constantize)
-  my_module = case comment
-              when TaskComment
-                comment.my_module
-              when ResultComment
-                comment.result.my_module
-              when StepComment
-                comment.step.protocol.my_module
-              end
-  my_module
 end
