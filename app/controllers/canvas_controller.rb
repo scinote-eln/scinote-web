@@ -45,7 +45,7 @@ class CanvasController < ApplicationController
 
     # Make sure connections parameter is valid
     connections = []
-    if can_edit_connections(@experiment) && update_params[:connections].present?
+    if update_params[:connections].present?
       conns = update_params[:connections].split(',')
       if conns.length.even? && conns.all? { |c| c.is_a? String }
         conns.each_slice(2).each do |c|
@@ -58,7 +58,7 @@ class CanvasController < ApplicationController
 
     # Make sure positions parameter is valid
     positions = {}
-    if can_reposition_modules(@experiment) && update_params[:positions].present?
+    if update_params[:positions].present?
       poss = update_params[:positions].split(';')
       center = ''
       (poss.collect { |pos| pos.split(',') }).each_with_index do |pos, index|
@@ -83,7 +83,7 @@ class CanvasController < ApplicationController
     # Make sure that to_add is an array of strings,
     # as well as that positions for newly added modules exist
     to_add = []
-    if can_manage_experiment?(@experiment) && update_params[:add].present? &&
+    if update_params[:add].present? &&
        update_params['add-names'].present?
       ids = update_params[:add].split(',')
       names = update_params['add-names'].split('|')
@@ -101,16 +101,16 @@ class CanvasController < ApplicationController
 
     # Make sure rename parameter is valid
     to_rename = {}
-    if can_manage_experiment?(@experiment) && update_params[:rename].present?
+    if update_params[:rename].present?
       begin
         to_rename = JSON.parse(update_params[:rename])
         # Okay, JSON parsed!
         unless to_rename.is_a?(Hash) &&
-               to_rename.keys.all? { |k| k.is_a? String } &&
-               to_rename.values.all? { |k| k.is_a? String } &&
                to_rename.keys.all? do |id|
+                 id.is_a?(String) &&
                  can_manage_module?(MyModule.find_by_id(id))
-               end
+               end &&
+               to_rename.values.all? { |new_name| new_name.is_a? String }
           return render_403
         end
       rescue
@@ -125,10 +125,13 @@ class CanvasController < ApplicationController
         to_move = JSON.parse(update_params[:move])
         # Okay, JSON parsed!
         unless to_move.is_a?(Hash) &&
-               to_move.keys.all? { |k| k.is_a? String } &&
-               to_move.values.all? { |k| k.is_a? String } &&
-               to_rename.keys.all? do |id|
-                 can_manage_module?(MyModule.find_by_id(id))
+               to_move.keys.all? do |id|
+                 id.is_a?(String) &&
+                 (!is_int?(id) || can_manage_module?(MyModule.find_by_id(id)))
+               end &&
+               to_move.values.all? do |exp_id|
+                 exp_id.is_a?(String) &&
+                 can_manage_experiment?(Experiment.find_by_id(exp_id))
                end
           return render_403
         end
@@ -149,7 +152,7 @@ class CanvasController < ApplicationController
     # Make sure that to_clone is an array of pairs,
     # as well as that all IDs exist
     to_clone = {}
-    if can_clone_modules(@experiment) && update_params[:cloned].present?
+    if update_params[:cloned].present?
       clones = update_params[:cloned].split(';')
       (clones.collect { |v| v.split(',') }).each do |val|
         if val.length == 2 && is_int?(val[0]) && val[1].is_a?(String) &&

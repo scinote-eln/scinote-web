@@ -1,6 +1,7 @@
 module WopiHelper
   def wopi_result_view_file_button(result)
-    if result.asset.can_perform_action('view')
+    if can_read_experiment?(result.my_module.experiment) &&
+       result.asset.can_perform_action('view')
       link_to view_asset_url(id: result.asset),
               class: 'btn btn-default btn-sm',
               target: '_blank',
@@ -13,7 +14,7 @@ module WopiHelper
   end
 
   def wopi_result_edit_file_button(result)
-    if can_edit_result_asset_in_module(result.my_module) &&
+    if can_manage_module?(result.my_module) &&
        result.asset.can_perform_action('edit')
       link_to edit_asset_url(id: result.asset),
               class: 'btn btn-default btn-sm',
@@ -27,7 +28,8 @@ module WopiHelper
   end
 
   def wopi_asset_view_button(asset)
-    if asset.can_perform_action('view')
+    if can_read_experiment?(result.my_module.experiment) &&
+       asset.can_perform_action('view')
       link_to view_asset_url(id: asset),
               class: 'btn btn-default btn-sm',
               target: '_blank',
@@ -39,7 +41,8 @@ module WopiHelper
   end
 
   def wopi_asset_edit_button(asset)
-    if asset.can_perform_action('edit')
+    if can_manage_module?(result.my_module) &&
+       asset.can_perform_action('edit')
       link_to edit_asset_url(id: asset),
               class: 'btn btn-default btn-sm',
               target: '_blank',

@@ -11,7 +11,7 @@
             <h4><%= tag.name %></h4>
           </div>
             <div class="pull-right">
-              <% if can_create_or_manage_tags?(@my_module.experiment.project) then %>
+              <% if can_create_or_manage_tags?(@my_module.experiment.project) %>
                 <%= link_to "", remote: true, class: 'btn btn-link edit-tag-link', title: t("experiments.canvas.modal_manage_tags.edit_tag") do %>
                   <span class="glyphicon glyphicon-adjust"></span>
                 <% end %>
@@ -55,7 +55,7 @@
 
 <hr>
 <div class="row">
-  <% if can_create_or_manage_tags?(@my_module.experiment.project) then %>
+  <% if can_create_or_manage_tags?(@my_module.experiment.project) %>
     <%= bootstrap_form_for [@my_module, @new_mmt], remote: true, format: :json, html: { class: 'add-tag-form' } do |f| %>
       <div class="col-xs-6">
         <div class="well well-sm">

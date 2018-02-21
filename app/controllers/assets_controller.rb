@@ -118,9 +118,7 @@ class AssetsController < ApplicationController
       render_403 && return unless can_read_protocol_in_module?(@protocol) ||
                                   can_read_protocol_in_repository?(@protocol)
     elsif @assoc.class == Result
-      unless can_view_or_download_result_assets(@my_module)
-        render_403 and return
-      end
+      render_403 and return unless can_view_experiment?(@my_module.experiment)
     end
   end
 
@@ -129,9 +127,7 @@ class AssetsController < ApplicationController
       render_403 && return unless can_manage_protocol_in_module?(@protocol) ||
                                   can_update_protocol_in_repository?(@protocol)
     elsif @assoc.class == Result
-      unless can_edit_result_asset_in_module(@my_module)
-        render_403 and return
-      end
+      render_403 and return unless can_manage_module?(@my_module)
     end
   end
 

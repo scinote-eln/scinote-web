@@ -161,18 +161,18 @@
             </div>
           <% end %>
 
-          <% if @protocol.in_module? %>
-            <% if !step.completed? and can_complete_step_in_protocol(@protocol) %>
-              <div data-action="complete-step"
-                   class="pull-right"
-                   data-link-url="<%= toggle_step_state_step_path(step)%>">
-                <button class="btn btn-primary"><%= t("protocols.steps.options.complete_title") %></button>
-              </div>
-            <% elsif step.completed? and can_uncomplete_step_in_protocol(@protocol) %>
+          <% if can_complete_or_checkbox_step?(@protocol) %>
+            <% if step.completed? %>
               <div data-action="uncomplete-step"
                    class="pull-right"
                    data-link-url="<%= toggle_step_state_step_path(step)%>">
                 <button class="btn btn-default"><%= t("protocols.steps.options.uncomplete_title") %></button>
+              </div>
+            <% else %>
+              <div data-action="complete-step"
+                   class="pull-right"
+                   data-link-url="<%= toggle_step_state_step_path(step)%>">
+                <button class="btn btn-primary"><%= t("protocols.steps.options.complete_title") %></button>
               </div>
             <% end %>
           <% end %>

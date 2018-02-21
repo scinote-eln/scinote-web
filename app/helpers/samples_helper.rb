@@ -1,12 +1,4 @@
 module SamplesHelper
-  def can_add_samples
-    module_page? && can_add_samples_to_module(@my_module)
-  end
-
-  def can_remove_samples
-    module_page? && can_delete_samples_from_module(@my_module)
-  end
-
   def can_add_sample_related_things_to_team
     can_manage_sample_columns?(@team)
   end

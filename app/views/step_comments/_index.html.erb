@@ -17,7 +17,7 @@
     <%= render 'step_comments/list.html.erb', comments: @comments %>
   <% end %>
 </ul>
-<% if can_add_step_comment_in_protocol(@protocol) %>
+<% if can_create_comment_in_module?(@protocol.my_module) %>
   <ul class="no-style double-line">
     <li>
       <hr>
