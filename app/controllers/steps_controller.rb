@@ -267,7 +267,7 @@ class StepsController < ApplicationController
   # Responds to checkbox toggling in steps view
   def checklistitem_state
     respond_to do |format|
-      checked = params[:checked] == "true"
+      checked = params[:checked] == 'true'
       changed = @chk_item.checked != checked
       @chk_item.checked = checked
 
