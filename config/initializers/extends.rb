@@ -41,7 +41,8 @@ class Extends
 
   # Data type name should match corresponding model's name
   REPOSITORY_DATA_TYPES = { RepositoryTextValue: 0,
-                            RepositoryDateValue: 1 }
+                            RepositoryDateValue: 1,
+                            RepositoryListValue: 2 }
 
   # List of implemented core API versions
   API_VERSIONS = ['20170715']
@@ -49,7 +50,7 @@ class Extends
   # Array used for injecting names of additional authentication methods for API
   API_PLUGABLE_AUTH_METHODS = []
 
-  OMNIAUTH_PROVIDERS = []
+  OMNIAUTH_PROVIDERS = [:linkedin, *(:developer if Rails.env.development?)]
 
   INITIAL_USER_OPTIONS = {}
 end

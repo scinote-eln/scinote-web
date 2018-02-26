@@ -217,6 +217,14 @@ class User < ApplicationRecord
     self.full_name = name
   end
 
+  def avatar_remote_url=(url_value)
+    self.avatar = URI.parse(url_value)
+    # Assuming url_value is http://example.com/photos/face.png
+    # avatar_file_name == "face.png"
+    # avatar_content_type == "image/png"
+    @avatar_remote_url = url_value
+  end
+
   def current_team
     Team.find_by_id(self.current_team_id)
   end

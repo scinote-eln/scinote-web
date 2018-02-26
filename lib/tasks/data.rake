@@ -69,6 +69,12 @@ namespace :data do
     .where.not(invitation_token: nil)
     .where("created_at < ?", Devise.invite_for.ago)
     destroy_users(users)
+
+    # Remove users who didn't finish signup with LinkedIn
+    users = User.joins(:user_identities)
+                .where(confirmed_at: nil)
+                #.where('created_at < ?', Devise.confirm_within.ago)
+    destroy_users(users)
   end
 
   desc "Remove temporary and obsolete data"

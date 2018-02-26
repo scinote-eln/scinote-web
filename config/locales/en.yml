@@ -40,11 +40,17 @@ en:
         submit: "Resend unlock instructions"
     links:
       login: "Log in"
+      login_with_provider: "Log in with SciNote account"
       signup: "Sign up"
       forgot: "Forgot your password?"
       not_receive_confirmation: "Didn't receive confirmation instructions?"
       not_receive_unlock: "Didn't receive unlock instructions?"
       sign_in_provider: "Sign in with %{provider}"
+    linkedin:
+      provider_name: "LinkedIn"
+      complete_sign_up: "You have to complete the sign up process"
+      email_already_taken: "SciNote account with email %{email} alreday exists"
+      failed_to_save: "Failed to create new user"
 
   helpers:
     label:
@@ -1272,6 +1278,8 @@ en:
         head_title: "Sign up"
         team_name_label: "Team name"
         team_name_help: "Team name is required in order to create your own Team. After you create your own Team, you will be able to join other Teams as well."
+      new_with_provider:
+        head_title: "Complete the Sign up"
     statistics:
       title: "My statistics"
       team: "Team"
