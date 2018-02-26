@@ -50,4 +50,8 @@ class Extends
   API_PLUGABLE_AUTH_METHODS = []
 
   OMNIAUTH_PROVIDERS = []
+
+  # Hash used for mapping file extensions to custom icons,
+  # 'extension' => 'path_to_the_icon'
+  FILE_ICON_MAPPINGS = {}
 end
