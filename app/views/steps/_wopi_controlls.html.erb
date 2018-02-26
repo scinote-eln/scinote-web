@@ -7,8 +7,11 @@
   <% if wopi_file?(asset) %>
     <%= wopi_asset_file_name(asset) %>
   <% else %>
-    <p><%= truncate(asset.file_file_name,
-                    length: Constants::FILENAME_TRUNCATION_LENGTH) %></p>
+    <p>
+      <%= file_extension_icon(asset) %>
+      <%= truncate(asset.file_file_name,
+                   length: Constants::FILENAME_TRUNCATION_LENGTH) %>
+    </p>
   <% end %>
 <% end %>
 <%= wopi_asset_view_button(asset) %>

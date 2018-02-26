@@ -123,8 +123,11 @@
                       <% else %>
                         <%= image_tag asset.url(:medium) if asset.is_image? %>
                       <% end %>
-                      <p><%= truncate(asset.file_file_name,
-                                      length: Constants::FILENAME_TRUNCATION_LENGTH) %></p>
+                      <p>
+                        <%= file_extension_icon(asset) %>
+                        <%= truncate(asset.file_file_name,
+                                     length: Constants::FILENAME_TRUNCATION_LENGTH) %>
+                      </p>
                     <% end %>
                   </li>
                 <% end %>
