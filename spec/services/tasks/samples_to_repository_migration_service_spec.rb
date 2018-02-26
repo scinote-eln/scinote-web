@@ -81,15 +81,17 @@ describe Tasks::SamplesToRepositoryMigrationService do
       end
 
       it { is_expected.to be_an Array }
-      it { expect(subject.length).to eq 2 }
+      it { expect(subject.length).to eq 3 }
       it { expect(subject.first).to be_an_instance_of(RepositoryColumn) }
       it { expect(subject.first.name).to eq 'Sample group' }
       it { expect(subject.first.data_type).to eq 'RepositoryListValue' }
-      it { expect(subject.last.name).to eq 'Sample type' }
-      it { expect(subject.last.data_type).to eq 'RepositoryListValue' }
+      it { expect(subject.second.name).to eq 'Sample type' }
+      it { expect(subject.second.data_type).to eq 'RepositoryListValue' }
+      it { expect(subject.last.name).to eq 'Sample group color hex (e980a0f5)' }
+      it { expect(subject.last.data_type).to eq 'RepositoryTextValue' }
 
       describe 'generated list items from sample types' do
-        let!(:generated_list_items) { subject.last.repository_list_items }
+        let!(:generated_list_items) { subject.second.repository_list_items }
         it { expect(generated_list_items.count).to eq 10 }
 
         it 'has generated list_items with similar properties' do
@@ -98,6 +100,24 @@ describe Tasks::SamplesToRepositoryMigrationService do
             expect(item).to be_an_instance_of RepositoryListItem
             expect(item.created_by).to eq user
             expect(item.last_modified_by).to eq user
+          end
+        end
+      end
+
+      describe 'sample type without created_at/last_modified_by field' do
+        before do
+          team.sample_types.update_all(created_by_id: nil,
+                                       last_modified_by_id: nil)
+        end
+
+        it 'generates valid list_items' do
+          generated_list_items = subject.second.repository_list_items
+          expect(generated_list_items.count).to eq 10
+          generated_list_items.each_with_index do |item, index|
+            expect(item.data).to eq "Sample Type Item (#{index})"
+            expect(item).to be_an_instance_of RepositoryListItem
+            expect(item.created_by).to eq team.created_by
+            expect(item.last_modified_by).to eq team.created_by
           end
         end
       end
@@ -115,13 +135,15 @@ describe Tasks::SamplesToRepositoryMigrationService do
       end
 
       it { is_expected.to be_an Array }
-      it { expect(subject.length).to eq 2 }
+      it { expect(subject.length).to eq 3 }
       it { expect(subject.first).to be_an_instance_of(RepositoryColumn) }
       it { expect(subject.last).to be_an_instance_of(RepositoryColumn) }
       it { expect(subject.first.name).to eq 'Sample group' }
       it { expect(subject.first.data_type).to eq 'RepositoryListValue' }
-      it { expect(subject.last.name).to eq 'Sample type' }
-      it { expect(subject.last.data_type).to eq 'RepositoryListValue' }
+      it { expect(subject.second.name).to eq 'Sample type' }
+      it { expect(subject.second.data_type).to eq 'RepositoryListValue' }
+      it { expect(subject.last.name).to eq 'Sample group color hex (e980a0f5)' }
+      it { expect(subject.last.data_type).to eq 'RepositoryTextValue' }
 
       describe 'generated list items from sample groups' do
         let!(:generated_list_items) { subject.first.repository_list_items }
@@ -133,6 +155,24 @@ describe Tasks::SamplesToRepositoryMigrationService do
             expect(item).to be_an_instance_of RepositoryListItem
             expect(item.created_by).to eq user
             expect(item.last_modified_by).to eq user
+          end
+        end
+      end
+
+      describe 'sample group without created_at/last_modified_by field' do
+        before do
+          team.sample_groups.update_all(created_by_id: nil,
+                                        last_modified_by_id: nil)
+        end
+
+        it 'generates valid list_items' do
+          generated_list_items = subject.first.repository_list_items
+          expect(generated_list_items.count).to eq 10
+          generated_list_items.each_with_index do |item, index|
+            expect(item.data).to eq "Sample Group Item (#{index})"
+            expect(item).to be_an_instance_of RepositoryListItem
+            expect(item.created_by).to eq team.created_by
+            expect(item.last_modified_by).to eq team.created_by
           end
         end
       end
@@ -202,9 +242,6 @@ describe Tasks::SamplesToRepositoryMigrationService do
         expect(
           my_module_data.fetch('assigned_by_id')
         ).to eq sample_my_module.assigned_by_id
-        expect(
-          my_module_data.fetch('assigned_on')
-        ).to eq sample_my_module.assigned_on
       end
     end
 

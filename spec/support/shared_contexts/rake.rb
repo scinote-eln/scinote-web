@@ -1,4 +1,4 @@
-require "rake"
+require 'rake'
 
 shared_context 'rake' do
   let(:rake)      { Rake::Application.new }

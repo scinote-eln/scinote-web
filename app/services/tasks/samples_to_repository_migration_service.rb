@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Helper module for dealing with the migration from samples
 # to custom repositories. We need to query with SQL because probably we will not
 # have the "Sample" and other related models at the time this code will execute
@@ -23,7 +25,7 @@ module Tasks
 
       repository_columns = []
       custom_columns.each_with_index do |column, index|
-        repository_column = RepositoryColumn.create(
+        repository_column = RepositoryColumn.create!(
           repository: repository,
           created_by_id: column.fetch('user_id') { repository.created_by_id },
           data_type: :RepositoryTextValue,
@@ -51,16 +53,22 @@ module Tasks
       sample_types = ActiveRecord::Base.connection.execute(sample_types_sql)
       sample_groups = ActiveRecord::Base.connection.execute(sample_groups_sql)
 
-      repository_columns = []
-
-      repository_columns << RepositoryColumn.create(
+      sample_group = RepositoryColumn.create!(
         repository: repository,
         created_by_id: repository.created_by_id,
         data_type: :RepositoryListValue,
         name: 'Sample group'
       )
 
-      repository_columns << RepositoryColumn.create(
+      # needs some random string to prevent duplications error
+      sample_group_color = RepositoryColumn.create!(
+        repository: repository,
+        created_by_id: repository.created_by_id,
+        data_type: :RepositoryTextValue,
+        name: 'Sample group color hex (e980a0f5)'
+      )
+
+      sample_type = RepositoryColumn.create!(
         repository: repository,
         created_by_id: repository.created_by_id,
         data_type: :RepositoryListValue,
@@ -68,28 +76,30 @@ module Tasks
       )
 
       sample_groups.each_with_index do |item, index|
-        RepositoryListItem.create(
+        created_by = item['created_by_id'] || team.created_by_id
+        last_modified_by = item['last_modified_by_id'] || team.created_by_id
+        RepositoryListItem.create!(
           data: item.fetch('name') { "sample group item (#{index})" },
-          created_by_id: item.fetch('created_by_id') { team.created_by_id },
-          last_modified_by_id:
-            item.fetch('last_modified_by_id') { team.created_by_id },
-          repository_column: repository_columns.first,
+          created_by_id: created_by,
+          last_modified_by_id: last_modified_by,
+          repository_column: sample_group,
           repository: repository
         )
       end
 
       sample_types.each_with_index do |item, index|
-        RepositoryListItem.create(
+        created_by = item['created_by_id'] || team.created_by_id
+        last_modified_by = item['last_modified_by_id'] || team.created_by_id
+        RepositoryListItem.create!(
           data: item.fetch('name') { "sample group item (#{index})" },
-          created_by_id: item.fetch('created_by_id') { team.created_by_id },
-          last_modified_by_id:
-            item.fetch('last_modified_by_id') { team.created_by_id },
-          repository_column: repository_columns.last,
+          created_by_id: created_by,
+          last_modified_by_id: last_modified_by,
+          repository_column: sample_type,
           repository: repository
         )
       end
 
-      repository_columns
+      [sample_group, sample_type, sample_group_color]
     end
 
     def self.get_sample_custom_fields(sample_id)
@@ -108,7 +118,7 @@ module Tasks
 
     def self.get_assigned_sample_module(sample_id)
       assigned_samples_sql = <<-SQL
-        SELECT my_module_id, assigned_by_id, assigned_on
+        SELECT my_module_id, assigned_by_id
         FROM sample_my_modules
         WHERE sample_my_modules.sample_id = #{sample_id}
       SQL
@@ -125,12 +135,17 @@ module Tasks
                sample_groups.name AS sample_group_name,
                sample_groups.color AS sample_group_color
         FROM samples
-        JOIN sample_types ON samples.sample_type_id = sample_types.id
-        JOIN sample_groups ON samples.sample_type_id = sample_groups.id
+        LEFT OUTER JOIN sample_types ON samples.sample_type_id = sample_types.id
+        LEFT OUTER JOIN sample_groups ON samples.sample_type_id = sample_groups.id
         WHERE samples.team_id = #{team.id}
       SQL
 
       ActiveRecord::Base.connection.execute(samples_sql).to_a
+    end
+
+    def self.get_custom_columns(team, repository)
+      prepare_text_value_custom_columns(team, repository) +
+        prepare_list_value_custom_columns_with_list_items(team, repository)
     end
   end
 end
