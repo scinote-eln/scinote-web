@@ -239,7 +239,7 @@ table {
 @import url(https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,400italic&subset=latin,latin-ext);
 
 body {
-  background-color: $color-concrete;
+  background-color: white;
   color: $color-emperor;
   font-family: "Open Sans",Arial,Helvetica,sans-serif;
   font-size: 13px;
@@ -398,13 +398,21 @@ mark,.mark {
   border-radius: 0;
 }
 
-.navbar-default {
-  background-color: $color-white;
-  border-color: $color-alto;
+/* 2018JS Add this to overwrite default bootstrap behavior */
+.navbar-default .navbar-nav > li > a {
+  color: #ffffff;
 }
 
+/* 2018JS Commented this out */
+/*.navbar-default {
+    background-color: $color-white;
+    border-color: $color-alto;
+}*/
+
+/* 2018JS Commented this out */
 .navbar-default .navbar-brand {
-  background-color: $color-theme-primary;
+  color: white;
+  /*background-color: $color-theme-primary;*/
   font-size: 23px;
 
   & > img {
@@ -427,7 +435,7 @@ mark,.mark {
   &:focus,
   &:focus:active,
   &:focus:visited {
-    background-color: $color-theme-primary;
+    /*background-color: $color-theme-primary;*/
   }
 }
 
@@ -633,8 +641,8 @@ a[data-toggle="tooltip"] {
 
  // Global team switch
 #team-switch {
-  border-left: 1px solid $color-alto;
-  border-right: 1px solid $color-alto;
+  /*border-left: 4px solid white;
+  border-right: 4px solid white;*/
   word-wrap: break-word;
 
   .dropdown-menu {
