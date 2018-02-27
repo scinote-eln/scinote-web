@@ -218,12 +218,11 @@ class RepositoryRowsController < ApplicationController
   private
 
   def load_info_modal_vars
-    @record = RepositoryRow.eager_load(:created_by).find_by_id(params[:id])
-    @assigned_modules = MyModuleRepositoryRow.where(repository_row: @record)
-                                             .includes(
-                                               my_module:
-                                                [{ experiment: :project }]
-                                             )
+    @record = RepositoryRow.eager_load(:created_by, repository: [:team])
+                           .find_by_id(params[:id])
+    @assigned_modules = MyModuleRepositoryRow.eager_load(my_module:
+                                                 [{ experiment: :project }])
+                                             .where(repository_row: @record)
     render_404 and return unless @record
     render_403 unless can_read_team?(@record.repository.team)
   end
