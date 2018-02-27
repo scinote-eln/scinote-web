@@ -74,15 +74,17 @@ module FirstTimeDataGenerator
       repository_items_sample_groups << item
     end
 
+    repository_rows_to_assign = []
     # Generate random custom respository sample names and assign sample types
     # and groups
-    repository_sample_name = (0...3).map{65.+(rand(26)).chr}.join << '/'
-    for i in 1..5
+    # (0...3).map{65.+(rand(26)).chr}.join << '/'
+    repository_sample_name = (0...3).map { 65.+(rand(26)).chr }.join << '/'
+    (1..5).each_with_index do |index|
       repository_row = RepositoryRow.create(
         repository: repository,
         created_by: user,
         last_modified_by: user,
-        name: repository_sample_name + i.to_s
+        name: repository_sample_name + index.to_s
       )
       RepositoryListValue.create(
         created_by: user,
@@ -106,6 +108,7 @@ module FirstTimeDataGenerator
           repository_column: repository_column_sample_groups
         }
       )
+      repository_rows_to_assign << repository_row
     end
     # Create sample types
     SampleType.create(
@@ -403,6 +406,13 @@ module FirstTimeDataGenerator
         SampleMyModule.create(
           sample: s,
           my_module: mm
+        )
+      end
+      repository_rows_to_assign.each do |repository_row|
+        MyModuleRepositoryRow.create!(
+          repository_row: repository_row,
+          my_module: mm,
+          assigned_by: user
         )
       end
     end
