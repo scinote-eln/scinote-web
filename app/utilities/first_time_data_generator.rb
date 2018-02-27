@@ -79,7 +79,7 @@ module FirstTimeDataGenerator
     # and groups
     # (0...3).map{65.+(rand(26)).chr}.join << '/'
     repository_sample_name = (0...3).map { 65.+(rand(26)).chr }.join << '/'
-    (1..5).each_with_index do |index|
+    (1..5).each do |index|
       repository_row = RepositoryRow.create(
         repository: repository,
         created_by: user,
