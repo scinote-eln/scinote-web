@@ -1,0 +1,76 @@
+<div class="modal fade" id="modal-info-repository-row" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title"><%= t('records.modal_info.head_title', record: @record.name) %></h4>
+      </div>
+
+      <div class="modal-body">
+        <p>
+          <span>
+            <%= t "records.modal_info.added_on" %>
+            <%= l @record.created_at, format: :full %>
+          </span>
+          <br>
+          <span>
+            <%= t "records.modal_info.added_by" %>
+            <%= @record.created_by.full_name %>
+          </span>
+          <% @record.repository_cells.each do |record_custom_field| %>
+            <br>
+            <span>
+              <%= t "records.modal_info.custom_field", cf: record_custom_field.repository_column.name %>
+              <%= custom_auto_link(record_custom_field.value.formatted, simple_format: false, team: current_team) %>
+            </span>
+          <% end %>
+        </p>
+
+      <% if @assigned_modules.count > 0 %>
+        <div>
+          <%= t("records.modal_info.title", nr: @assigned_modules.count) %>
+        </div>
+        <div class="linked-children-datatable">
+          <table id="record-info-table" class="table dataTable no-footer" role="grid">
+            <tbody>
+              <% @assigned_modules.each_with_index do |element, i|  %>
+                <tr role="row">
+                  <td class="sorting_1">
+                    <ol class='breadcrumb'>
+                      <li><span class='glyphicon glyphicon-blackboard'></span>&nbsp;
+                        <%= render partial: 'search/results/partials/project_text.html.erb',
+                                  locals: { project: element.my_module.experiment.project } %>
+                      </li>
+                      <li><i class='fa fa-flask'></i>&nbsp;
+                        <%= render partial: 'search/results/partials/experiment_text.html.erb',
+                                  locals: { experiment: element.my_module.experiment } %>
+                      </li>
+                      <li><span class='glyphicon glyphicon-credit-card'></span>&nbsp;
+                        <%= render partial: 'search/results/partials/my_module_text.html.erb',
+                                  locals: { my_module: element.my_module,
+                                            link_to_page: :repositories,
+                                            repository: @record.repository } %>
+                      </li>
+                    </ol>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+            <thead>
+              <tr>
+                <th></th>
+              </tr>
+            </thead>
+          </table>
+        </div>
+      <% else %>
+        <em><%=t "records.modal_info.no_tasks" %></em>
+      <% end %>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal"><%= t("general.close")%></button>
+      </div>
+    </div>
+  </div>
+</div>

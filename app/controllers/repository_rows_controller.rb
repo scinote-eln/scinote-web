@@ -3,6 +3,7 @@ class RepositoryRowsController < ApplicationController
   include ActionView::Helpers::TextHelper
   include ApplicationHelper
 
+  before_action :load_info_modal_vars, only: :show
   before_action :load_vars, only: %i(edit update)
   before_action :load_repository, only: %i(create delete_records)
   before_action :check_create_permissions, only: :create
@@ -57,6 +58,18 @@ class RepositoryRowsController < ApplicationController
           render json: errors,
           status: :bad_request
         end
+      end
+    end
+  end
+
+  def show
+    respond_to do |format|
+      format.json do
+        render json: {
+          html: render_to_string(
+            partial: 'repositories/repository_row_info_modal.html.erb'
+          )
+        }
       end
     end
   end
@@ -203,6 +216,17 @@ class RepositoryRowsController < ApplicationController
   end
 
   private
+
+  def load_info_modal_vars
+    @record = RepositoryRow.eager_load(:created_by).find_by_id(params[:id])
+    @assigned_modules = MyModuleRepositoryRow.where(repository_row: @record)
+                                             .includes(
+                                               my_module:
+                                                [{ experiment: :project }]
+                                             )
+    render_404 and return unless @record
+    render_403 unless can_read_team?(@record.repository.team)
+  end
 
   def load_vars
     @repository = Repository.eager_load(:repository_columns)

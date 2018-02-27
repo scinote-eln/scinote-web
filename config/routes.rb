@@ -480,6 +480,10 @@ Rails.application.routes.draw do
       end
     end
 
+    get 'repository_rows/:id', to: 'repository_rows#show',
+                               as: :repository_row,
+                               defaults: { format: 'json' }
+
     get 'search' => 'search#index'
     get 'search/new' => 'search#new', as: :new_search
 

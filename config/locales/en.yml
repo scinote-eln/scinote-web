@@ -969,6 +969,14 @@ en:
     no_records_unassigned_flash: "No items were unassigned from task"
     default_column: 'Name'
 
+  records:
+    modal_info:
+      head_title: "Information for record '%{record}'"
+      added_on: "Added on"
+      added_by: "Added by"
+      custom_field: "%{cf}: "
+      title: "This record is assigned to %{nr} tasks."
+      no_tasks: "This record in not assigned to any task."
   samples:
     columns: "Columns"
     columns_visibility: "Toggle visibility"

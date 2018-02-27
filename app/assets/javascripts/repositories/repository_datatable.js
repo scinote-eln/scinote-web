@@ -83,7 +83,13 @@ var RepositoryDatatable = (function(global) {
         searchable: false,
         orderable: true,
         sWidth: '1%'
-      }],
+      }, {
+       targets: 2,
+       render: function(data, type, row) {
+         return "<a href='" + row.recordInfoUrl + "'" +
+                "class='record-info-link'>" + data + '</a>';
+       }
+     }],
       rowCallback: function(row, data) {
         // Get row ID
         var rowId = data.DT_RowId;
@@ -126,6 +132,7 @@ var RepositoryDatatable = (function(global) {
       },
       preDrawCallback: function() {
         animateSpinner(this);
+        $('.record-info-link').off('click');
       },
       stateLoadCallback: function() {
         // Send an Ajax request to the server to get the data. Note that
@@ -199,7 +206,10 @@ var RepositoryDatatable = (function(global) {
         // Skip if clicking on selector checkbox
         return;
       }
-      $(this).parent().find('.repository-row-selector').trigger('click');
+      if (!$(e.target).is('.record-info-link')) {
+        // Skip if clicking on samples info link
+        $(this).parent().find('.repository-row-selector').trigger('click');
+      }
     });
 
     TABLE.on('column-reorder', function() {
