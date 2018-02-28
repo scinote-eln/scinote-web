@@ -15,6 +15,10 @@ Rails.application.routes.draw do
 
     root 'projects#index'
 
+    # EPA Help routes, about and contact pages
+    get 'help/about', to: 'help#about', as: 'about'
+    get 'help/contact', to: 'help#contact', as: 'contact'
+
     # # Client APP endpoints
     # get '/settings', to: 'client_api/settings#index'
     # get '/settings/*all', to: 'client_api/settings#index'

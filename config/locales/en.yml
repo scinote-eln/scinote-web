@@ -177,6 +177,12 @@ en:
     delete_confirm: "Are you sure you wish to delete this comment?"
     delete_error: "Error occured while deleting comment."
 
+  help:
+    contact:
+      head_title: "Contact"
+    about:
+      head_title: "About"
+
   projects:
     index:
       head_title: "Home"
