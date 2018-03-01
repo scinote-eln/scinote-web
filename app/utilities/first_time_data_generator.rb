@@ -77,7 +77,7 @@ module FirstTimeDataGenerator
     repository_rows_to_assign = []
     # Generate random custom respository sample names and assign sample types
     # and groups
-    # (0...3).map{65.+(rand(26)).chr}.join << '/'
+    
     repository_sample_name = (0...3).map { 65.+(rand(26)).chr }.join << '/'
     (1..5).each do |index|
       repository_row = RepositoryRow.create(
