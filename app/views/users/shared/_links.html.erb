@@ -1,6 +1,6 @@
 <%- if controller_name != 'sessions' %>
   <% login = t("devise.links.login") %>
-  <% login = t("devise.links.login_with_provider") if ['new_with_provider', 'create_with_provider'].include? action_name %>
+  <% login = t("devise.links.login_with_provider") if action_name.in? %w(new_with_provider create_with_provider) %>
   <%= link_to login, new_session_path(resource_name) %><br />
 <% end -%>
 
