@@ -499,7 +499,7 @@ Rails.application.routes.draw do
       post 'avatar_signature' => 'users/registrations#signature'
       get 'users/auth_token_sign_in' => 'users/sessions#auth_token_create'
       get 'users/sign_up_provider' => 'users/registrations#new_with_provider'
-      get 'users/completesign_up_provider' =>
+      get 'users/complete_sign_up_provider' =>
           'users/registrations#create_with_provider'
     end
 
