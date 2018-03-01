@@ -52,4 +52,8 @@ class Extends
   OMNIAUTH_PROVIDERS = []
 
   INITIAL_USER_OPTIONS = {}
+
+  # Hash used for mapping file extensions to custom icons,
+  # 'extension' => 'path_to_the_icon'
+  FILE_ICON_MAPPINGS = {}
 end
