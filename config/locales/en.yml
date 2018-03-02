@@ -969,9 +969,9 @@ en:
     no_records_unassigned_flash: "No items were unassigned from task"
     default_column: 'Name'
 
-  records:
+  repository_row:
     modal_info:
-      head_title: "Information for record '%{record}'"
+      head_title: "Information for record '%{repository_row}'"
       added_on: "Added on"
       added_by: "Added by"
       custom_field: "%{cf}: "

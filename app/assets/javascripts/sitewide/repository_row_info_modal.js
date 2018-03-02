@@ -13,11 +13,11 @@
         backdrop: true,
         keyboard: false
       }).on('hidden.bs.modal', function() {
-        $(this).find('.modal-body #record-info-table').DataTable().destroy();
+        $(this).find('.modal-body #repository_row-info-table').DataTable().destroy();
         $(this).remove();
       });
 
-      $('#record-info-table').DataTable({
+      $('#repository_row-info-table').DataTable({
         dom: 'RBltpi',
         stateSave: false,
         buttons: [],
