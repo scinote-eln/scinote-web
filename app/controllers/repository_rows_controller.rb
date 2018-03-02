@@ -219,7 +219,7 @@ class RepositoryRowsController < ApplicationController
 
   def load_info_modal_vars
     @repository_row = RepositoryRow.eager_load(:created_by, repository: [:team])
-                           .find_by_id(params[:id])
+                                   .find_by_id(params[:id])
     @assigned_modules = MyModuleRepositoryRow.eager_load(
       my_module: [{ experiment: :project }]
     ).where(repository_row: @repository_row)
