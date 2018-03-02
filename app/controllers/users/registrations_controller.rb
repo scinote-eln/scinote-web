@@ -182,7 +182,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
     # Create new team for the new user
     @team = Team.new(team_provider_params)
 
-    if @team.valid? && @user.valid? && Rails.configuration.x.new_team_on_signup
+    if @team.valid? && @user.present? && Rails.configuration.x.new_team_on_signup
       # Set the confirmed_at == created_at IF not using email confirmations
       unless Rails.configuration.x.enable_email_confirmations
         @user.update!(confirmed_at: @user.created_at)
