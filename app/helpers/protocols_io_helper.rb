@@ -52,7 +52,7 @@ module ProtocolsIoHelper
       tables[table_counter.to_s] = {}
       tr_number = table[0].scan(tr_regex).count
       diff = 5 - tr_number # always tables have atleast 5 rows
-      table_fix_str = tr_number > 4 ? table[0] : table[0] + empty_tbl_gen(diff)
+      table_fix_str = tr_number > 4 ? table[0] : table[0] + '<tr></tr>' * diff
       tr_strings = table_fix_str.scan(tr_regex)
       contents = {}
       contents['data'] = []
@@ -66,10 +66,7 @@ module ProtocolsIoHelper
           contents['data'][tr_counter].push(td_stripped)
         end
         next if td_counter >= 5
-        while diff > 0
-          contents['data'][tr_counter].push(' ')
-          diff -= 1
-        end
+        diff.times { contents['data'][tr_counter].push(' ') }
       end
       tables[table_counter.to_s]['contents'] = Base64.encode64(
         contents.to_s.sub('=>', ':')
@@ -77,15 +74,6 @@ module ProtocolsIoHelper
       tables[table_counter.to_s]['name'] = ' '
     end
     return tables, string_without_tables
-  end
-
-  def empty_tbl_gen(number)
-    result = ''
-    while number > 0
-      result += '<tr></tr>'
-      number -= 1
-    end
-    result
   end
 
   def string_html_table_remove(description_string)
