@@ -136,32 +136,19 @@ Canaid::Permissions.register_for(Protocol) do
   # protocol in module: read
   # step in module: read, read comments, read/download assets
   can :read_protocol_in_module do |user, protocol|
-    if protocol.in_module?
-      can_read_experiment?(user, protocol.my_module.experiment)
-    else
-      false
-    end
+    can_read_experiment?(user, protocol.my_module.experiment)
   end
 
   # protocol in module: create/update/delete, unlink, revert, update from
   # protocol in repository, update from file
   # step in module: create/update/delete, reorder
   can :manage_protocol_in_module do |user, protocol|
-    if protocol.in_module?
-      can_manage_module?(user, protocol.my_module)
-    else
-      false
-    end
+    can_manage_module?(user, protocol.my_module)
   end
 
   # step: complete/uncomplete
   can :complete_or_checkbox_step do |user, protocol|
-    if protocol.in_module?
-      can_complete_module?(user, protocol.my_module)
-    else
-      # In repository, user cannot complete steps
-      false
-    end
+    can_complete_module?(user, protocol.my_module)
   end
 end
 
