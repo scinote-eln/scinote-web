@@ -137,7 +137,7 @@ class UserMyModulesController < ApplicationController
   end
 
   def check_manage_permissions
-    render_403 unless manage_users_in_module?(@my_module)
+    render_403 unless can_manage_users_in_module?(@my_module)
   end
 
   def init_gui

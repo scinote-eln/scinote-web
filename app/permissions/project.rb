@@ -74,6 +74,6 @@ Canaid::Permissions.register_for(ProjectComment) do
   # project: update/delete comment
   can :manage_comment_in_project do |user, project_comment|
     project_comment.project.present? && (project_comment.user == user ||
-      user.is_owner_of_project?(project))
+      user.is_owner_of_project?(project_comment.project))
   end
 end

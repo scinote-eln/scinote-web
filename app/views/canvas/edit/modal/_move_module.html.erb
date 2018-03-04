@@ -6,7 +6,7 @@
         <h4 class="modal-title" id="modal-move-module-label"><%=t "experiments.canvas.edit.modal_move_module.title" %></h4>
       </div>
       <div class="modal-body">
-        <% experiments = @experiment.project.experiments %>
+        <% experiments = @experiment.project.experiments.is_archived(false) %>
         <% if experiments.count > 1 %>
           <%= bootstrap_form_tag do |f| %>
             <%= f.select :experiment_id, experiments
