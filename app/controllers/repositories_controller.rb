@@ -393,7 +393,7 @@ class RepositoriesController < ApplicationController
                        elsif cell.value_type == 'RepositoryListValue'
                          cell.value.repository_list_item.data
                        else
-                         cell.value.repository_list_item.data
+                         cell.value.data
                        end
                      end
         end
