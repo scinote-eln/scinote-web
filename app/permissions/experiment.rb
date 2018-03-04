@@ -1,4 +1,17 @@
 Canaid::Permissions.register_for(Experiment) do
+  # Experiment and its project must be active for all the specified permissions
+  %i(read_experiment
+     manage_experiment
+     archive_experiment
+     clone_experiment
+     move_experiment)
+    .each do |perm|
+    can perm do |_, experiment|
+      experiment.active? &&
+        experiment.project.active?
+    end
+  end
+
   # experiment: read (read archive)
   # canvas: read
   # module: read (read users, read comments, read archive)
@@ -38,21 +51,24 @@ Canaid::Permissions.register_for(Experiment) do
   can :move_experiment do |user, experiment|
     can_clone_experiment?(user, experiment)
   end
-  # Experiment and its project must be active for all the specified permissions
-  %i(read_experiment
-     manage_experiment
-     archive_experiment
-     clone_experiment
-     move_experiment)
-    .each do |perm|
-    can perm do |_, experiment|
-      experiment.active? &&
-        experiment.project.active?
-    end
-  end
 end
 
 Canaid::Permissions.register_for(MyModule) do
+  # Module, its experiment and its project must be active for all the specified
+  # permissions
+  %i(manage_module
+     manage_users_in_module
+     assign_sample_to_module
+     complete_module
+     create_comments_in_module)
+    .each do |perm|
+    can perm do |_, my_module|
+      my_module.active? &&
+        my_module.experiment.active? &&
+        my_module.experiment.project.active?
+    end
+  end
+
   # module: update, archive, move
   # result: create, update
   can :manage_module do |user, my_module|
@@ -89,22 +105,34 @@ Canaid::Permissions.register_for(MyModule) do
   can :create_comments_in_module do |user, my_module|
     can_create_comments_in_project?(user, my_module.experiment.project)
   end
+end
+
+Canaid::Permissions.register_for(Protocol) do
+  # Protocol needs to be in a module for all Protocol permissions below
+  # experiment level
+  %i(read_protocol_in_module
+     manage_protocol_in_module
+     complete_or_checkbox_step)
+    .each do |perm|
+    can perm do |_, protocol|
+      protocol.in_module?
+    end
+  end
+
   # Module, its experiment and its project must be active for all the specified
   # permissions
-  %i(manage_module
-     manage_users_in_module
-     assign_sample_to_module
-     complete_module
-     create_comments_in_module).each do |perm|
-    can perm do |_, my_module|
+  %i(read_protocol_in_module
+     manage_protocol_in_module
+     complete_or_checkbox_step)
+    .each do |perm|
+    can perm do |_, protocol|
+      my_module = protocol.my_module
       my_module.active? &&
         my_module.experiment.active? &&
         my_module.experiment.project.active?
     end
   end
-end
 
-Canaid::Permissions.register_for(Protocol) do
   # protocol in module: read
   # step in module: read, read comments, read/download assets
   can :read_protocol_in_module do |user, protocol|
@@ -135,29 +163,9 @@ Canaid::Permissions.register_for(Protocol) do
       false
     end
   end
-
-  # Module, its experiment and its project must be active for all the specified
-  # permissions
-  %i(read_protocol_in_module
-     manage_protocol_in_module
-     complete_or_checkbox_step)
-    .each do |perm|
-    can perm do |_, protocol|
-      my_module = protocol.my_module
-      my_module.active? &&
-        my_module.experiment.active? &&
-        my_module.experiment.project.active?
-    end
-  end
 end
 
 Canaid::Permissions.register_for(Result) do
-  # result: delete, archive
-  can :manage_result do |user, result|
-    result.unlocked?(result) &&
-      user.is_owner_of_project?(result.my_module.experiment.project)
-  end
-
   # Module, its experiment and its project must be active for all the specified
   # permissions
   %i(manage_result).each do |perm|
@@ -168,9 +176,27 @@ Canaid::Permissions.register_for(Result) do
         my_module.experiment.project.active?
     end
   end
+
+  # result: delete, archive
+  can :manage_result do |user, result|
+    result.unlocked?(result) &&
+      user.is_owner_of_project?(result.my_module.experiment.project)
+  end
 end
 
 Canaid::Permissions.register_for(Comment) do
+  # Module, its experiment and its project must be active for all the specified
+  # permissions
+  %i(manage_comment_in_module)
+    .each do |perm|
+    can perm do |_, comment|
+      my_module = ::PermissionsUtil.get_comment_module(comment)
+      my_module.active? &&
+        my_module.experiment.active? &&
+        my_module.experiment.project.active?
+    end
+  end
+
   # module: update/delete comment
   # result: update/delete comment
   # step: update/delete comment
@@ -180,16 +206,5 @@ Canaid::Permissions.register_for(Comment) do
     # Same check as in `can_manage_comment_in_project?`
     project.present? &&
       (user.is_owner_of_project?(project) || comment.user == user)
-  end
-
-  # Module, its experiment and its project must be active for all the specified
-  # permissions
-  %i(manage_comment_in_module).each do |perm|
-    can perm do |_, comment|
-      my_module = ::PermissionsUtil.get_comment_module(comment)
-      my_module.active? &&
-        my_module.experiment.active? &&
-        my_module.experiment.project.active?
-    end
   end
 end
