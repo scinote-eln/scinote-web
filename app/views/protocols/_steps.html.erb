@@ -1,7 +1,7 @@
 <div class="row">
   <div class="pull-right" style="margin: 20px 15px 0 0;">
-    <% if @protocol.in_module? && can_create_step_in_protocol(@protocol) ||
-          @protocol.in_repository? && can_update_protocol_in_repository?(@protocol) %>
+    <% if can_manage_protocol_in_module?(@protocol) ||
+          can_update_protocol_in_repository?(@protocol) %>
       <a href="#"
          class="btn btn-primary"
          data-action="new-step"

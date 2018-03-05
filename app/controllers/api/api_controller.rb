@@ -1,5 +1,5 @@
 module Api
-  class ApiController < ActionController::Base
+  class ApiController < ActionController::API
     attr_reader :iss
     attr_reader :token
     attr_reader :current_user

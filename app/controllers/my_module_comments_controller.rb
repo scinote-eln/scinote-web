@@ -180,9 +180,7 @@ class MyModuleCommentsController < ApplicationController
   end
 
   def check_view_permissions
-    unless can_view_module_comments(@my_module)
-      render_403
-    end
+    render_403 unless can_read_experiment?(@my_module.experiment)
   end
 
   def check_add_permissions

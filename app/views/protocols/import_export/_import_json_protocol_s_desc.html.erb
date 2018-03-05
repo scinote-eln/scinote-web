@@ -87,7 +87,7 @@
               <% step_info_string += not_null(key['source_data']['description']) %>
               <br>
               <strong><%= key['name']+': ' %></strong>
-              <%= prepare_for_view(key['source_data']['name'],ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL,'table').html_safe %>
+              <%= prepare_for_view('<pre><code>'+key['source_data']['name'].gsub(/\n/, '<br>')+'</code></pre>',ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL,'table').html_safe %>
               <br>
               <%= t('protocols.protocols_io_import.preview.s_desc') %>
               <%= prepare_for_view(key['source_data']['description'],ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL,'table').html_safe %>
@@ -122,15 +122,15 @@
         <% tables, garbage = protocolsio_string_to_table_element(step_info_string) %>
         <% if tables.present? %>
           <br><hr><br>
-          <% end %>
+        <% end %>
           <% table_count = 0 %>
           <% tables.each do |index, table| %>
           <%   table_hash = JSON.parse((Base64.decode64(table['contents']))) %>
           <%   pio_table_id = "pio_table_step_"+counter.to_s+"_info_"+table_count.to_s %>
           <%   step_table_elements_array.push([pio_table_id,table_hash['data']]) %>
-          <div id="<%=pio_table_id%>" ></div>
+          <div id="<%=pio_table_id%>"></div><br>
           <%   table_count += 1 %>
-        <% end %>
+          <% end %>
         </div>
       </div>
     </div>
@@ -145,6 +145,7 @@
     {
 
     var target = document.getElementById(javascript_table_elements_s[j][0]);
+
     var hot = new Handsontable(target, {
       data: javascript_table_elements_s[j][1],
       startRows: <%= Constants::HANDSONTABLE_INIT_ROWS_CNT %>,
@@ -153,7 +154,8 @@
       colHeaders: true,
       fillHandle: false,
       formulas: true,
-      readOnly: true
+      readOnly: true,
+      height: 200
     });
   }
   })

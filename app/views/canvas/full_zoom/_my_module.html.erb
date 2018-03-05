@@ -12,13 +12,13 @@
   data-module-tags-url="<%= my_module_my_module_tags_url(my_module, format: :json) %>"
   data-module-users-tab-url="<%= my_module_user_my_modules_url(my_module_id: my_module.id, format: :json) %>">
 
-  <% if can_edit_tags_for_module(my_module) %>
+  <% if can_create_or_manage_tags?(my_module.experiment.project) %>
     <a class="edit-tags-link pull-right" data-remote="true" href="<%= my_module_tags_edit_url(my_module, format: :json) %>">
   <% else %>
     <span class="edit-tags-link pull-right">
   <% end %>
     <%= render partial: "canvas/tags.html.erb", locals: { my_module: my_module } %>
-  <% if can_edit_tags_for_module(my_module) %>
+  <% if can_create_or_manage_tags?(my_module.experiment.project) %>
     </a>
   <% else %>
     </span>
@@ -26,12 +26,12 @@
 
   <div class="panel-heading">
     <h3 class="panel-title">
-      <%= link_to_if can_view_module(my_module), my_module.name, protocols_my_module_path(my_module) %>
+      <%= link_to_if can_read_experiment?(my_module.experiment), my_module.name, protocols_my_module_path(my_module) %>
     </h3>
   </div>
 
   <div class="panel-body">
-    <% if can_edit_module(my_module) && can_edit_modules(my_module.experiment) %>
+    <% if can_manage_module?(my_module) %>
       <%= link_to due_date_my_module_path(my_module, format: :json), remote: true, class: "due-date-link due-date-refresh" do %>
         <%= render partial: "my_modules/due_date_label.html.erb", locals: { my_module: my_module } %>
       <% end %>
@@ -60,14 +60,12 @@
           </a>
         </li>
       <% end %>
-      <% if can_view_module_activities(my_module) %>
+      <% if can_read_experiment?(my_module.experiment) %>
         <li role="presentation">
           <a class="btn btn-link task-card-view-activities" href="<%= activities_tab_my_module_url(id: my_module.id, format: :json) %>" aria-controls="<%= my_module.id %>_activities" role="tab" data-remote="true">
             <span class="glyphicon glyphicon-equalizer" aria-hidden="true"></span>
           </a>
         </li>
-      <% end %>
-      <% if can_view_module_comments(my_module) %>
         <li role="presentation">
           <a class="btn btn-link task-card-view-comments" href="<%= my_module_my_module_comments_url(my_module_id: my_module.id, format: :json) %>" aria-controls="<%= my_module.id %>_comments" role="tab" data-remote="true">
             <span class="glyphicon glyphicon-comment" aria-hidden="true"></span>
@@ -77,8 +75,6 @@
             </span>
           </a>
         </li>
-      <% end %>
-      <% if can_view_module_samples(my_module) %>
         <li role="presentation">
           <a class="btn btn-link task-card-view-samples" href="<%= my_module_sample_my_modules_url(my_module_id: my_module.id, format: :json) %>" aria-controls="<%= my_module.id %>_samples" role="tab" data-remote="true">
             <span class="glyphicon glyphicon-tint" aria-hidden="true"></span>
@@ -98,13 +94,9 @@
       <% if can_view_module_users(my_module) %>
         <div role="tabpanel" class="tab-pane" id="<%= my_module.id %>_users" data-contents="users"></div>
       <% end %>
-      <% if can_view_module_activities(my_module) %>
+      <% if can_read_experiment?(my_module.experiment) %>
         <div role="tabpanel" class="tab-pane" id="<%= my_module.id %>_activities" data-contents="activities"></div>
-      <% end %>
-      <% if can_view_module_comments(my_module) %>
         <div role="tabpanel" class="tab-pane" id="<%= my_module.id %>_comments" data-contents="comments"></div>
-      <% end %>
-      <% if can_view_module_samples(my_module) %>
         <div role="tabpanel" class="tab-pane" id="<%= my_module.id %>_samples" data-contents="samples"></div>
       <% end %>
     </div>

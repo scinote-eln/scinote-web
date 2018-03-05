@@ -31,9 +31,12 @@ class CanvasController < ApplicationController
   def update
     # Make sure that remove parameter is valid
     to_archive = []
-    if can_archive_modules(@experiment) && update_params[:remove].present?
+    if update_params[:remove].present?
       to_archive = update_params[:remove].split(',')
-      if to_archive.all? { |id| is_int? id }
+      if to_archive.all? do |id|
+           is_int?(id) &&
+           can_manage_module?(MyModule.find_by_id(id))
+         end
         to_archive.collect!(&:to_i)
       else
         return render_403
@@ -80,7 +83,7 @@ class CanvasController < ApplicationController
     # Make sure that to_add is an array of strings,
     # as well as that positions for newly added modules exist
     to_add = []
-    if can_create_modules(@experiment) && update_params[:add].present? &&
+    if can_manage_experiment?(@experiment) && update_params[:add].present? &&
        update_params['add-names'].present?
       ids = update_params[:add].split(',')
       names = update_params['add-names'].split('|')
@@ -98,13 +101,16 @@ class CanvasController < ApplicationController
 
     # Make sure rename parameter is valid
     to_rename = {}
-    if can_edit_modules(@experiment) && update_params[:rename].present?
+    if can_manage_experiment?(@experiment) && update_params[:rename].present?
       begin
         to_rename = JSON.parse(update_params[:rename])
         # Okay, JSON parsed!
         unless to_rename.is_a?(Hash) &&
                to_rename.keys.all? { |k| k.is_a? String } &&
-               to_rename.values.all? { |k| k.is_a? String }
+               to_rename.values.all? { |k| k.is_a? String } &&
+               to_rename.keys.all? do |id|
+                 can_manage_module?(MyModule.find_by_id(id))
+               end
           return render_403
         end
       rescue
@@ -114,13 +120,16 @@ class CanvasController < ApplicationController
 
     # Make sure move parameter is valid
     to_move = {}
-    if can_move_modules(@experiment) && update_params[:move].present?
+    if update_params[:move].present?
       begin
         to_move = JSON.parse(update_params[:move])
         # Okay, JSON parsed!
         unless to_move.is_a?(Hash) &&
                to_move.keys.all? { |k| k.is_a? String } &&
-               to_move.values.all? { |k| k.is_a? String }
+               to_move.values.all? { |k| k.is_a? String } &&
+               to_rename.keys.all? do |id|
+                 can_manage_module?(MyModule.find_by_id(id))
+               end
           return render_403
         end
       rescue
@@ -218,15 +227,11 @@ class CanvasController < ApplicationController
   end
 
   def check_edit_canvas
-    unless can_edit_canvas(@experiment)
-      render_403 and return
-    end
+    render_403 and return unless can_manage_experiment?(@experiment)
   end
 
   def check_view_canvas
-    unless can_view_experiment(@experiment)
-      render_403 and return
-    end
+    render_403 unless can_read_experiment?(@experiment)
   end
 
   # Check if given value is "integer" string (e.g. "15")

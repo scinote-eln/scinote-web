@@ -14,12 +14,8 @@ class ExperimentsController < ApplicationController
                        :clone_modal, :move_modal, :delete_samples]
   before_action :check_view_permissions,
                 only: [:canvas, :module_archive]
-  before_action :check_module_archive_permissions,
-                only: [:module_archive]
-  before_action :check_experiment_clone_permissions,
-                only: [:clone_modal, :clone]
-  before_action :check_experiment_move_permissions,
-                only: [:move_modal, :move]
+  before_action :check_clone_permissions, only: %i(clone_modal clone)
+  before_action :check_move_permissions, only: %i(move_modal move)
 
   # except parameter could be used but it is not working.
   layout :choose_layout
@@ -345,19 +341,15 @@ class ExperimentsController < ApplicationController
   end
 
   def check_view_permissions
-    render_403 unless can_view_experiment(@experiment)
+    render_403 unless can_read_experiment?(@experiment)
   end
 
-  def check_module_archive_permissions
-    render_403 unless can_view_experiment_archive(@experiment)
+  def check_clone_permissions
+    render_403 unless can_clone_experiment?(@experiment)
   end
 
-  def check_experiment_clone_permissions
-    render_403 unless can_clone_experiment(@experiment)
-  end
-
-  def check_experiment_move_permissions
-    render_403 unless can_move_experiment(@experiment)
+  def check_move_permissions
+    render_403 unless can_move_experiment?(@experiment)
   end
 
   def choose_layout

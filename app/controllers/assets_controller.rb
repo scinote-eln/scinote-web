@@ -115,10 +115,8 @@ class AssetsController < ApplicationController
 
   def check_read_permission
     if @assoc.class == Step
-      if @protocol.in_module? && !can_view_or_download_step_assets(@protocol) ||
-         @protocol.in_repository? && !can_read_protocol_in_repository?(@protocol)
-        render_403 and return
-      end
+      render_403 && return unless can_read_protocol_in_module?(@protocol) ||
+                                  can_read_protocol_in_repository?(@protocol)
     elsif @assoc.class == Result
       unless can_view_or_download_result_assets(@my_module)
         render_403 and return
@@ -128,10 +126,8 @@ class AssetsController < ApplicationController
 
   def check_edit_permission
     if @assoc.class == Step
-      if @protocol.in_module? && !can_edit_step_in_protocol(@protocol) ||
-         @protocol.in_repository? && !can_update_protocol_in_repository?(@protocol)
-        render_403 and return
-      end
+      render_403 && return unless can_manage_protocol_in_module?(@protocol) ||
+                                  can_update_protocol_in_repository?(@protocol)
     elsif @assoc.class == Result
       unless can_edit_result_asset_in_module(@my_module)
         render_403 and return

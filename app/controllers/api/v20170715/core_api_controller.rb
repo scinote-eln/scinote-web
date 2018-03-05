@@ -20,7 +20,7 @@ module Api
               exp.my_modules.find_each do |tk|
                 task = tk.as_json(only: %i(name description archived))
                 task['task_id'] = tk.id.to_s
-                task['editable'] = can_edit_module(tk)
+                task['editable'] = can_manage_module?(tk)
                 tasks << task
               end
               experiment['tasks'] = tasks
@@ -38,7 +38,8 @@ module Api
       def task_samples
         task = MyModule.find_by_id(params[:task_id])
         return render json: {}, status: :not_found unless task
-        return render json: {}, status: :forbidden unless can_view_module(task)
+        return render json: {}, status: :forbidden unless
+          can_read_experiment?(task.experiment)
         samples = task.samples
         samples_json = []
         samples.find_each do |s|

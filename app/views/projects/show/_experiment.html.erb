@@ -4,7 +4,7 @@
        data-canvas-link="<%= canvas_experiment_url(experiment) %>"
        >
     <div class="panel-heading">
-      <% if can_view_experiment_actions experiment %>
+      <% if can_manage_experiment?(experiment) %>
         <div class="dropdown pull-right">
           <button class="btn btn-link dropdown-toggle"
                   type="button"
@@ -30,7 +30,7 @@
         </div>
       <% else %>
         <div class="no-workflowimg">
-          <% if can_edit_experiment(experiment) %>
+          <% if can_manage_experiment?(experiment) %>
             <p><%= link_to( t('experiments.edit.add_task'),
                             canvas_experiment_path(experiment,
                                                    editMode: true)) %></p>
@@ -49,7 +49,7 @@
         </div>
       <% else %>
         <span class='experiment-no-description'>
-          <% if can_edit_experiment(experiment) %>
+          <% if can_manage_experiment?(experiment) %>
             <%= link_to t('experiments.edit.add-description'),
                         edit_project_experiment_url(@project, experiment),
                         remote: true,

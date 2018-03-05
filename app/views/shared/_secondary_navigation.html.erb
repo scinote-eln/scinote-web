@@ -16,10 +16,10 @@
         <li>
           <% if can_read_team?(@project.team) %>
             <a href="<%= projects_path :team => @project.team.id %>">
-          <% end %>
-          <span class="glyphicon glyphicon-folder-open"></span>
-          <% if can_read_team?(@project.team) %>
+              <span class="glyphicon glyphicon-folder-open"></span>
             </a>
+          <% else %>
+            <span class="glyphicon glyphicon-folder-open"></span>
           <% end %>
         </li>
         <% if project_page? ||
@@ -30,36 +30,35 @@
           </li>
         <% else %>
           <li>
-           <% if can_view_project(@project) %>
+            <% if can_read_project?(@project) %>
               <a href="<%= project_url(@project) %>">
-            <% end %>
-            <span class="glyphicon glyphicon-blackboard"></span>
-            <% if can_view_project(@project) %>
+                <span class="glyphicon glyphicon-blackboard"></span>
               </a>
+            <% else %>
+              <span class="glyphicon glyphicon-blackboard"></span>
             <% end %>
           </li>
         <% end %>
-        <% if experiment_page? ||
-              module_page? %>
-          <% if !module_page? %>
-            <li class="active">
-              <%= fa_icon 'fa-flask' %>
-            </li>
-          <% else %>
-            <li>
-              <% if can_view_experiment(@experiment) %>
-                <%= link_to canvas_experiment_path(@experiment) do %>
-                  <%= fa_icon 'fa-flask' %>
-                <% end %>
-              <% else %>
+        <% if experiment_page? %>
+          <li class="active">
+            <%= fa_icon 'fa-flask' %>
+          </li>
+        <% elsif module_page? %>
+          <li>
+            <% if can_read_experiment?(@experiment) %>
+              <%= link_to canvas_experiment_path(@experiment) do %>
                 <%= fa_icon 'fa-flask' %>
               <% end %>
-            </li>
-          <% end %>
-        <% end %>
-        <% if module_page? %>
+            <% else %>
+              <%= fa_icon 'fa-flask' %>
+            <% end %>
+          </li>
           <li class="active">
             <span class="glyphicon glyphicon-credit-card"></span>
+          </li>
+        <% elsif experiment_page? %>
+          <li class="active">
+            <%= fa_icon 'fa-flask' %>
           </li>
         <% end %>
       </ul>
@@ -73,15 +72,13 @@
         <% if project_page? ||
               sample_types_page_project? ||
               sample_groups_page_project? %>
-          <% if can_view_project(@project) then %>
+          <% if can_read_project?(@project) then %>
             <li id="canvas-nav-tab" class="<%= "active" if is_project_show? %>">
               <a href="<%= project_url(@project) %>" title="<%=t "nav2.projects.show" %>">
                 <span class="hidden-sm hidden-md"><%=t "nav2.projects.show" %></span>
                 <span class="hidden-xs hidden-lg glyphicon glyphicon-blackboard"></span>
               </a>
             </li>
-          <% end %>
-          <% if can_view_project_samples(@project) then %>
             <li id="project-samples-nav-tab" class="<%= "active" if is_project_samples? ||
                                                                     sample_types_page_project? ||
                                                                     sample_groups_page_project? %>">
@@ -90,16 +87,12 @@
                 <span class="hidden-xs hidden-lg glyphicon glyphicon-tint"></span>
               </a>
             </li>
-          <% end %>
-          <% if can_view_reports(@project) then %>
             <li id="reports-nav-tab" class="<%= "active" if is_project_reports? %>">
               <a href="<%= project_reports_url(@project) %>" title="<%=t "nav2.projects.reports" %>">
                 <span class="hidden-sm hidden-md"><%=t "nav2.projects.reports" %></span>
                 <span class="hidden-xs hidden-lg glyphicon glyphicon-list-alt"></span>
               </a>
             </li>
-          <% end %>
-          <% if can_view_project_archive(@project) then %>
             <li id="project-archive-nav-tab" data-turbolinks="false" class="<%= "active" if is_project_archive? %>">
               <a href="<%= experiment_archive_project_url(@project) %>" title="<%=t "nav2.projects.archive" %>">
                 <span class="glyphicon glyphicon-briefcase"></span>
@@ -110,15 +103,13 @@
         <% elsif experiment_page? ||
                  sample_groups_page_experiment? ||
                  sample_types_page_expermient? %>
-          <% if can_view_experiment(@experiment) then %>
-              <li id="canvas-nav-tab" class="<%= "active" if is_experiment_canvas? %>">
-                <a href="<%= canvas_experiment_url(@experiment) %>" title="<%=t "nav2.experiments.canvas" %>">
-                  <span class="hidden-sm hidden-md"><%=t "nav2.experiments.canvas" %></span>
-                  <span class="hidden-xs hidden-lg glyphicon glyphicon-blackboard"></span>
-                </a>
-              </li>
-          <% end %>
-          <% if can_view_experiment_samples(@experiment) then %>
+          <% if can_read_experiment?(@experiment) %>
+            <li id="canvas-nav-tab" class="<%= "active" if is_experiment_canvas? %>">
+              <a href="<%= canvas_experiment_url(@experiment) %>" title="<%=t "nav2.experiments.canvas" %>">
+                <span class="hidden-sm hidden-md"><%=t "nav2.experiments.canvas" %></span>
+                <span class="hidden-xs hidden-lg glyphicon glyphicon-blackboard"></span>
+              </a>
+            </li>
             <li id="experiment-samples-nav-tab" class="<%= "active" if is_experiment_samples? ||
                                                                        sample_groups_page_experiment? ||
                                                                        sample_types_page_expermient? %>">
@@ -128,7 +119,7 @@
               </a>
             </li>
           <% end %>
-          <% if can_view_reports(@experiment.project) then %>
+          <% if can_read_project?(@experiment.project) then %>
               <li id="reports-nav-tab" class="<%= "active" if is_project_reports? %>">
                 <a href="<%= project_reports_url(@experiment.project) %>" title="<%=t "nav2.projects.reports" %>">
                   <span class="hidden-sm hidden-md"><%=t "nav2.projects.reports" %></span>
@@ -136,7 +127,7 @@
                 </a>
               </li>
           <% end %>
-          <% if can_view_experiment_archive(@experiment) then %>
+          <% if can_read_experiment?(@experiment) %>
               <li id="project-archive-nav-tab" data-turbolinks="false" class="<%= "active" if is_experiment_archive? %>">
                 <a href="<%= module_archive_experiment_url(@experiment) %>" title="<%=t "nav2.projects.archive" %>">
                   <span class="glyphicon glyphicon-briefcase"></span>
@@ -147,23 +138,19 @@
         <% elsif module_page? ||
                  sample_types_page_my_module? ||
                  sample_groups_page_my_module? %>
-          <% if can_view_module_protocols(@my_module) then %>
+          <% if can_read_experiment?(@my_module.experiment) %>
             <li id="steps-nav-tab" class="<%= "active" if is_module_protocols? %>">
               <a href="<%= protocols_my_module_url(@my_module) %>" title="<%=t "nav2.modules.steps" %>">
                 <span class="hidden-sm hidden-md"><%=t "nav2.modules.steps" %></span>
                 <span class="hidden-xs hidden-lg glyphicon glyphicon-circle-arrow-right"></span>
               </a>
             </li>
-          <% end %>
-          <% if can_view_results_in_module(@my_module) then %>
             <li id="results-nav-tab" class="<%= "active" if is_module_results? %>">
               <a href="<%= results_my_module_url(@my_module) %>" title="<%=t "nav2.modules.results" %>">
                 <span class="hidden-sm hidden-md"><%=t "nav2.modules.results" %></span>
                 <span class="hidden-xs hidden-lg glyphicon glyphicon-th"></span>
               </a>
             </li>
-          <% end %>
-          <% if can_view_module_activities(@my_module) then %>
             <li id="activities-nav-tab" class="<%= "active" if is_module_activities? %>">
               <a href="<%= activities_my_module_url(@my_module) %>" title="<%=t "nav2.modules.activities" %>">
                 <span class="hidden-sm hidden-md"><%=t "nav2.modules.activities" %></span>
@@ -174,7 +161,7 @@
 
           <li data-hook="secondary-navigation-tabs"></li>
 
-          <% if can_view_module_samples(@my_module) then %>
+          <% if can_read_experiment?(@my_module.experiment) %>
             <li id="module-samples-nav-tab" class="<%= "active" if is_module_samples? ||
                                                                    sample_types_page_my_module? ||
                                                                    sample_groups_page_my_module? %>">
@@ -184,7 +171,7 @@
               </a>
             </li>
           <% end %>
-          <% if can_view_reports(@my_module.experiment.project) then %>
+          <% if can_read_project?(@my_module.experiment.project) then %>
             <li id="reports-nav-tab" >
               <a href="<%= project_reports_url(@my_module.experiment.project) %>" title="<%=t "nav2.projects.reports" %>">
                 <span class="hidden-sm hidden-md"><%=t "nav2.projects.reports" %></span>
@@ -232,11 +219,12 @@
         <li>
           <% if can_read_team?(@project.team) %>
             <a href="<%= projects_path :team => @project.team.id %>">
-          <% end %>
-          <%= truncate(@project.team.name,
-                       length: Constants::NAME_TRUNCATION_LENGTH) %>
-          <% if can_read_team?(@project.team) %>
+              <%= truncate(@project.team.name,
+                           length: Constants::NAME_TRUNCATION_LENGTH) %>
             </a>
+          <% else %>
+            <%= truncate(@project.team.name,
+                         length: Constants::NAME_TRUNCATION_LENGTH) %>
           <% end %>
         </li>
         <% if project_page? %>
@@ -246,13 +234,14 @@
           </li>
         <% else %>
           <li>
-            <% if can_view_project(@project) %>
+            <% if can_read_project?(@project) %>
               <a href="<%= project_url(@project) %>">
-            <% end %>
-            <%= truncate(@project.name,
-                         length: Constants::NAME_TRUNCATION_LENGTH) %>
-            <% if can_view_project(@project) %>
+                <%= truncate(@project.name,
+                             length: Constants::NAME_TRUNCATION_LENGTH) %>
               </a>
+            <% else %>
+              <%= truncate(@project.name,
+                           length: Constants::NAME_TRUNCATION_LENGTH) %>
             <% end %>
           </li>
         <% end %>
@@ -271,7 +260,7 @@
             </li>
           <% else %>
             <li>
-            <% if can_view_experiment(@experiment) %>
+            <% if can_read_experiment?(@experiment) %>
               <%= link_to truncate(@experiment.name,
                                    length: Constants::NAME_TRUNCATION_LENGTH),
                           canvas_experiment_path(@experiment) %>
