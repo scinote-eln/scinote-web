@@ -49,7 +49,7 @@ class Extends
   # Array used for injecting names of additional authentication methods for API
   API_PLUGABLE_AUTH_METHODS = []
 
-  OMNIAUTH_PROVIDERS = []
+  OMNIAUTH_PROVIDERS = [:linkedin]
 
   INITIAL_USER_OPTIONS = {}
 

@@ -1,5 +1,7 @@
 <%- if controller_name != 'sessions' %>
-  <%= link_to t("devise.links.login"), new_session_path(resource_name) %><br />
+  <% login = t("devise.links.login") %>
+  <% login = t("devise.links.login_with_provider") if action_name.in? %w(new_with_provider create_with_provider) %>
+  <%= link_to login, new_session_path(resource_name) %><br />
 <% end -%>
 
 <%- if devise_mapping.registerable? && Rails.configuration.x.enable_user_registration && controller_name != 'registrations' %>
@@ -20,4 +22,15 @@
 
 <%- if devise_mapping.omniauthable? && resource_class.omniauth_providers.any? %>
   <div data-hook="omniauth-sign-in-links"></div>
+<% end -%>
+
+<%- if Rails.configuration.x.enable_user_registration && Rails.configuration.x.linkedin_signin_enabled %>
+  <%- if devise_mapping.omniauthable? && resource_class.omniauth_providers.any? && controller_name != 'registrations' %>
+    <%= link_to omniauth_authorize_path(resource_name, :linkedin), :title => "Sign in with LinkedIn" do %>
+      <%= image_tag 'linkedin/Sign-in-Small---Default.png', alt: "Sign in with LinkedIn",
+          onmouseover: "src='#{image_path('linkedin/Sign-in-Small---Hover.png')}'",
+          onmouseout: "src='#{image_path('linkedin/Sign-in-Small---Default.png')}'",
+          onclick: "src='#{image_path('linkedin/Sign-in-Small---Active.png')}'" %>
+    <% end -%>
+  <% end -%>
 <% end -%>
