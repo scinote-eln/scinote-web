@@ -322,6 +322,7 @@ module ProtocolsIoHelper
 
   def protocols_io_guid_reorder_step_json(unordered_step_json)
     base_step = unordered_step_json.find { |step| step['previous_guid'].nil? }
+    return unordered_step_json if base_step.nil?
     number_of_steps = unordered_step_json.size
     step_order = []
     step_counter = 0
