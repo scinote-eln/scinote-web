@@ -39,6 +39,11 @@ module ProtocolsIoHelper
     I18n.t('protocols.protocols_io_import.too_long').length
   # The + 2 above (in title) is there because if the length was at the limit,
   # the cutter method had issues, this gives it some space
+
+  # below are default min table settings (minimum 5x5)
+  PIO_TABLE_MIN_WIDTH = 5
+  PIO_TABLE_MIN_HEIGHT = 5
+
   def protocolsio_string_to_table_element(description_string)
     string_without_tables = string_html_table_remove(description_string)
     table_regex = %r{<table\b[^>]*>(.*?)<\/table>}m
@@ -51,7 +56,7 @@ module ProtocolsIoHelper
     table_strings.each_with_index do |table, table_counter|
       tables[table_counter.to_s] = {}
       tr_number = table[0].scan(tr_regex).count
-      diff = 5 - tr_number # always tables have atleast 5 rows
+      diff = PIO_TABLE_MIN_HEIGHT - tr_number # always tables have atleast 5 row
       table_fix_str = tr_number > 4 ? table[0] : table[0] + '<tr></tr>' * diff
       tr_strings = table_fix_str.scan(tr_regex)
       contents = {}
@@ -60,7 +65,7 @@ module ProtocolsIoHelper
         td_strings = tr[0].scan(td_regex)
         contents['data'][tr_counter] = []
         td_counter = td_strings.count
-        diff = 5 - td_counter
+        diff = PIO_TABLE_MIN_WIDTH - td_counter
         td_strings.each do |td|
           td_stripped = ActionController::Base.helpers.strip_tags(td[0])
           contents['data'][tr_counter].push(td_stripped)
