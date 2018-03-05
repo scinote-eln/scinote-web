@@ -57,7 +57,12 @@ module ProtocolsIoHelper
       tables[table_counter.to_s] = {}
       tr_number = table[0].scan(tr_regex).count
       diff = PIO_TABLE_MIN_HEIGHT - tr_number # always tables have atleast 5 row
-      table_fix_str = tr_number > 4 ? table[0] : table[0] + '<tr></tr>' * diff
+      table_fix_str =
+        if tr_number >= PIO_TABLE_MIN_HEIGHT
+          table[0]
+        else
+          table[0] + '<tr></tr>' * diff
+        end
       tr_strings = table_fix_str.scan(tr_regex)
       contents = {}
       contents['data'] = []
