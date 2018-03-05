@@ -388,7 +388,13 @@ class RepositoriesController < ApplicationController
                      else
                        cell = row.repository_cells
                                  .find_by(repository_column_id: c_id)
-                       cell ? cell.value.data : nil
+                       if !cell
+                         nil
+                       elsif cell.value_type == 'RepositoryListValue'
+                         cell.value.repository_list_item.data
+                       else
+                         cell.value.data
+                       end
                      end
         end
         csv << csv_row
