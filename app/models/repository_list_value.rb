@@ -13,7 +13,11 @@ class RepositoryListValue < ApplicationRecord
   validates :repository_cell, presence: true
 
   def formatted
-    return '' unless repository_list_item
+    data.to_s
+  end
+
+  def data
+    return nil unless repository_list_item
     repository_list_item.data
   end
 end
