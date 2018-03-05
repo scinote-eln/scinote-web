@@ -83,7 +83,6 @@ class MyModulesController < ApplicationController
     end
 
     respond_to do |format|
-      format.html
       format.json {
         # 'activites' partial includes header and form for adding older
         # activities. 'list' partial is used for showing more activities.
@@ -100,6 +99,7 @@ class MyModulesController < ApplicationController
           })
         }
       }
+      format.html
     end
   end
 
