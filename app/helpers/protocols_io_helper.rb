@@ -151,8 +151,7 @@ module ProtocolsIoHelper
   end
 
   def step_hash_null?(step_json)
-    return true if step_json.dig(0, 'components', 0, 'component_type_id').nil?
-    false
+    step_json.dig(0, 'components', 0, 'component_type_id').nil?
   end
 
   # Images are allowed in:
