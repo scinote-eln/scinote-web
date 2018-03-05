@@ -640,10 +640,11 @@ class ProtocolsController < ApplicationController
       return 0 # return 0 stops the rest of the controller code from executing
     end
     @json_object = JSON.parse(json_file_contents)
-
-    @json_object['steps'] = protocols_io_guid_reorder_step_json(
-      @json_object['steps']
-    )
+    unless step_hash_null?(@json_object['steps'])
+      @json_object['steps'] = protocols_io_guid_reorder_step_json(
+        @json_object['steps']
+      )
+    end
 
     @protocol = Protocol.new
     respond_to do |format|
@@ -658,23 +659,26 @@ class ProtocolsController < ApplicationController
     @db_json = {}
     @toolong = false
     @db_json['name'] = pio_eval_title_len(
-      sanitize_input(params['protocol']['name'])
+      sanitize_input(not_null(params['protocol']['name']))
     )
     # since scinote only has description field, and protocols.io has many others
     # ,here i am putting everything important from protocols.io into description
     @db_json['authors'] = pio_eval_title_len(
-      sanitize_input(params['protocol']['authors'])
+      sanitize_input(not_null(params['protocol']['authors']))
     )
     @db_json['created_at'] = pio_eval_title_len(
-      sanitize_input(params['protocol']['created_at'])
+      sanitize_input(not_null(params['protocol']['created_at']))
     )
     @db_json['updated_at'] = pio_eval_title_len(
-      sanitize_input(params['protocol']['last_modified'])
+      sanitize_input(not_null(params['protocol']['last_modified']))
     )
     @db_json['steps'] = {}
-    @db_json['steps'] = protocols_io_fill_step(
-      @json_object, @db_json['steps']
-    )
+
+    unless step_hash_null?(@json_object['steps'])
+      @db_json['steps'] = protocols_io_fill_step(
+        @json_object, @db_json['steps']
+      )
+    end
     protocol = nil
     respond_to do |format|
       transaction_error = false

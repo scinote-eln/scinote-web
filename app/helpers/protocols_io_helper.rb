@@ -102,6 +102,8 @@ module ProtocolsIoHelper
         @toolong = true
       end
       text
+    else
+      ''
     end
   end
 
@@ -128,6 +130,8 @@ module ProtocolsIoHelper
         @remaining -= text.length - reserved
       end
       text
+    else
+      ''
     end
   end
 
@@ -145,10 +149,15 @@ module ProtocolsIoHelper
     Nokogiri::HTML::DocumentFragment.parse(text).to_html
   end
 
+  def step_hash_null?(step_json)
+    step_json.dig(0, 'components', 0, 'component_type_id').nil?
+  end
+
   # Images are allowed in:
   # Step: description, expected result
   # Protocol description : description before_start warning
   # guidelines manuscript_citation
+
   def prepare_for_view(
     attribute_text1, size, table = 'no_table', image_allowed = false
   )
@@ -321,9 +330,12 @@ module ProtocolsIoHelper
   end
 
   def protocols_io_guid_reorder_step_json(unordered_step_json)
+    return '' if unordered_step_json.blank?
     base_step = unordered_step_json.find { |step| step['previous_guid'].nil? }
     return unordered_step_json if base_step.nil?
     number_of_steps = unordered_step_json.size
+    return unordered_step_json if number_of_steps == 1
+    base_step = unordered_step_json.find { |step| step['previous_guid'].nil? }
     step_order = []
     step_counter = 0
     step_order[step_counter] = base_step
