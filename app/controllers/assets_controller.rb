@@ -118,7 +118,7 @@ class AssetsController < ApplicationController
       render_403 && return unless can_read_protocol_in_module?(@protocol) ||
                                   can_read_protocol_in_repository?(@protocol)
     elsif @assoc.class == Result
-      render_403 and return unless can_view_experiment?(@my_module.experiment)
+      render_403 and return unless can_read_experiment?(@my_module.experiment)
     end
   end
 

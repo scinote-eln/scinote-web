@@ -6,13 +6,7 @@ class MyModulesController < ApplicationController
   include ActionView::Helpers::UrlHelper
   include ApplicationHelper
 
-  before_action :load_vars,
-                only: %I[show update destroy description due_date protocols
-                         results samples activities activities_tab
-                         assign_samples unassign_samples delete_samples
-                         toggle_task_state samples_index archive
-                         complete_my_module repository repository_index
-                         assign_repository_records unassign_repository_records]
+  before_action :load_vars
   before_action :load_vars_nested, only: %I[new create]
   before_action :load_repository, only: %I[assign_repository_records
                                            unassign_repository_records]
