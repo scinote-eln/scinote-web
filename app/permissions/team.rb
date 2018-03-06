@@ -98,9 +98,7 @@ end
 Canaid::Permissions.register_for(CustomField) do
   # sample: update/delete field
   can :manage_sample_column do |user, custom_field|
-    custom_field.sample_custom_fields.all? do |sample_custom_field|
-      can_create_sample_columns?(user, sample_custom_field.sample)
-    end
+    can_create_sample_columns?(user, custom_field.team)
   end
 end
 
