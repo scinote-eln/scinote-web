@@ -7,8 +7,7 @@ class SamplesController < ApplicationController
   before_action :load_vars_nested, only: [:new, :create]
 
   before_action :check_create_permissions, only: %i(new create)
-  before_action :check_update_and_delete_permissions,
-                only: %i(edit update destroy)
+  before_action :check_manage_permissions, only: %i(edit update destroy)
 
   def new
     respond_to do |format|
@@ -308,11 +307,11 @@ class SamplesController < ApplicationController
   end
 
   def check_create_permissions
-    render_403 unless can_manage_samples?(@team)
+    render_403 unless can_create_samples?(@team)
   end
 
-  def check_update_and_delete_permissions
-    render_403 unless can_update_or_delete_sample?(@sample)
+  def check_manage_permissions
+    render_403 unless can_manage_sample?(@sample)
   end
 
   def sample_params

@@ -1,8 +1,6 @@
 module Api
   module V20170715
     class CoreApiController < ApiController
-      include PermissionHelper
-
       def tasks_tree
         teams_json = []
         current_user.teams.find_each do |tm|

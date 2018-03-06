@@ -1915,9 +1915,9 @@ en:
       leave_flash: "Successfuly left team %{team}."
     teams:
       create_permission_error: "You don't have permission to create team."
-      update_permission_error: "You don't have permission to edit team."
+      update_permission_error: "You don't have permission to edit this team."
     user:
       current_password_invalid: "incorrect password"
       password_confirmation_not_match: "doesn't match"
     invite_users:
-      permission_error: "You don't have permission to invite additional users to team. Contact its administrator/s."
+      permission_error: "You don't have permission to invite additional users to this team. Contact its administrator/s."

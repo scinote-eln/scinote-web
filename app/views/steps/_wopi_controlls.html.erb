@@ -18,7 +18,7 @@
 <% view_only ||= false %>
 <% if !view_only %>
   <% if can_manage_protocol_in_module?(@protocol) ||
-        can_update_protocol_in_repository?(@protocol) %>
+        can_manage_protocol_in_repository?(@protocol) %>
     <%= wopi_asset_edit_button(asset) %>
   <% end %>
 <% end %>

@@ -2,7 +2,7 @@
 <% query ||= nil %>
 <% text = query.present? ? highlight(step.name, query.strip.split(/\s+/)) : step.name %>
 
-<% if step.protocol.in_module? && can_view_steps_in_protocol(step.protocol) %>
+<% if can_read_protocol_in_module?(step.protocol) %>
   <% if target == :comment %>
   <%= route_to_other_team protocols_my_module_path(step.protocol.my_module, ctarget: "step-panel-#{step.id}"),
                           step.protocol.team,
@@ -12,7 +12,7 @@
                           step.protocol.team,
                           text %>
   <% end %>
-<% elsif step.protocol.in_repository? && can_update_protocol_in_repository?(step.protocol) %>
+<% elsif can_manage_protocol_in_repository?(step.protocol) %>
   <%= route_to_other_team edit_protocol_path(step.protocol),
                           step.protocol.team,
                           text %>

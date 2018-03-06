@@ -18,15 +18,6 @@ class ProtocolsController < ApplicationController
     linked_children
     linked_children_datatable
   )
-  before_action :check_edit_permissions, only: %i(
-    edit
-    update_metadata
-    update_keywords
-    edit_name_modal
-    edit_keywords_modal
-    edit_authors_modal
-    edit_description_modal
-  )
   before_action :check_view_all_permissions, only: %i(
     index
     datatable
@@ -34,6 +25,13 @@ class ProtocolsController < ApplicationController
   # For update_from_parent and update_from_parent_modal we don't need to check
   # read permission for the parent protocol
   before_action :check_manage_permissions, only: %i(
+    edit
+    update_metadata
+    update_keywords
+    edit_name_modal
+    edit_keywords_modal
+    edit_authors_modal
+    edit_description_modal
     unlink
     unlink_modal
     revert
@@ -41,10 +39,13 @@ class ProtocolsController < ApplicationController
     update_from_parent
     update_from_parent_modal
   )
-  before_action :check_update_parent_permissions, only: %i(
+  before_action :check_manage_parent_in_repository_permissions, only: %i(
     update_parent
     update_parent_modal
   )
+  before_action :check_manage_all_in_repository_permissions, only:
+    %i(make_private publish archive)
+  before_action :check_restore_all_in_repository_permissions, only: :restore
   before_action :check_load_from_repository_views_permissions, only: %i(
     load_from_repository_modal
     load_from_repository_datatable
@@ -59,10 +60,6 @@ class ProtocolsController < ApplicationController
     copy_to_repository
     copy_to_repository_modal
   )
-  before_action :check_make_private_permissions, only: [:make_private]
-  before_action :check_publish_permissions, only: [:publish]
-  before_action :check_archive_permissions, only: [:archive]
-  before_action :check_restore_permissions, only: [:restore]
   before_action :check_import_permissions, only: [:import]
   before_action :check_export_permissions, only: [:export]
 
@@ -265,8 +262,8 @@ class ProtocolsController < ApplicationController
 
   def copy_to_repository
     link_protocols = params[:link] &&
-                     can_manage_protocol_in_module(@protocol) &&
-                     can_create_protocols_in_repository(@protocol.team)
+                     can_manage_protocol_in_module?(@protocol) &&
+                     can_create_protocols_in_repository?(@protocol.team)
     respond_to do |format|
       transaction_error = false
       Protocol.transaction do
@@ -1070,27 +1067,38 @@ class ProtocolsController < ApplicationController
     end
   end
 
-  def check_edit_permissions
-    load_team_and_type
+  def check_manage_permissions
     @protocol = Protocol.find_by_id(params[:id])
+    render_403 unless @protocol.present? &&
+                      (can_manage_protocol_in_module?(@protocol) ||
+                       can_manage_protocol_in_repository?(@protocol))
+  end
 
-    unless can_update_protocol_in_repository?(@protocol)
-      render_403
+  def check_manage_parent_in_repository_permissions
+    @protocol = Protocol.find_by_id(params[:id])
+    render_403 unless @protocol.present? &&
+                      can_read_protocol_in_module?(@protocol) &&
+                      can_manage_protocol_in_repository?(@protocol.parent)
+  end
+
+  def check_manage_all_in_repository_permissions
+    @protocols = Protocol.where(id: params[:protocol_ids])
+    @protocols.find_each do |protocol|
+      unless can_manage_protocol_in_repository?(protocol)
+        respond_to { |f| f.json { render json: {}, status: :unauthorized } }
+        break
+      end
     end
   end
 
-  def check_manage_permissions
-    @protocol = Protocol.find_by_id(params[:id])
-
-    render_403 if @protocol.blank? || !can_manage_protocol_in_module?(@protocol)
-  end
-
-  def check_update_parent_permissions
-    @protocol = Protocol.find_by_id(params[:id])
-
-    render_403 unless @protocol.present? &&
-                      (can_read_protocol_in_module?(@protocol) ||
-                       can_update_protocol_in_repository(@protocol.parent))
+  def check_restore_all_in_repository_permissions
+    @protocols = Protocol.where(id: params[:protocol_ids])
+    @protocols.find_each do |protocol|
+      unless can_restore_protocol_in_repository?(protocol)
+        respond_to { |f| f.json { render json: {}, status: :unauthorized } }
+        break
+      end
+    end
   end
 
   def check_load_from_repository_views_permissions
@@ -1128,50 +1136,6 @@ class ProtocolsController < ApplicationController
     render_403 unless @my_module.present? &&
                       (can_read_protocol_in_module?(@protocol) ||
                        can_create_protocols_in_repository?(@protocol.team))
-  end
-
-  def check_make_private_permissions
-    @protocols = Protocol.where(id: params[:protocol_ids])
-    @protocols.find_each do |protocol|
-      if !protocol.in_repository_public? ||
-         !can_update_protocol_type_in_repository?(protocol)
-        respond_to { |f| f.json { render json: {}, status: :unauthorized } }
-        return
-      end
-    end
-  end
-
-  def check_publish_permissions
-    @protocols = Protocol.where(id: params[:protocol_ids])
-    @protocols.find_each do |protocol|
-      if !protocol.in_repository_private? ||
-         !can_update_protocol_type_in_repository?(protocol)
-        respond_to { |f| f.json { render json: {}, status: :unauthorized } }
-        return
-      end
-    end
-  end
-
-  def check_archive_permissions
-    @protocols = Protocol.where(id: params[:protocol_ids])
-    @protocols.find_each do |protocol|
-      if protocol.in_repository_archived? ||
-         !can_update_protocol_type_in_repository?(protocol)
-        respond_to { |f| f.json { render json: {}, status: :unauthorized } }
-        return
-      end
-    end
-  end
-
-  def check_restore_permissions
-    @protocols = Protocol.where(id: params[:protocol_ids])
-    @protocols.find_each do |protocol|
-      if protocol.in_repository_active? ||
-         !can_update_protocol_type_in_repository?(protocol)
-        respond_to { |f| f.json { render json: {}, status: :unauthorized } }
-        return
-      end
-    end
   end
 
   def check_import_permissions
