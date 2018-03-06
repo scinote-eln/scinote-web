@@ -28,8 +28,7 @@ module WopiHelper
   end
 
   def wopi_asset_view_button(asset)
-    if can_read_experiment?(result.my_module.experiment) &&
-       asset.can_perform_action('view')
+    if asset.can_perform_action('view')
       link_to view_asset_url(id: asset),
               class: 'btn btn-default btn-sm',
               target: '_blank',
@@ -41,8 +40,7 @@ module WopiHelper
   end
 
   def wopi_asset_edit_button(asset)
-    if can_manage_module?(result.my_module) &&
-       asset.can_perform_action('edit')
+    if asset.can_perform_action('edit')
       link_to edit_asset_url(id: asset),
               class: 'btn btn-default btn-sm',
               target: '_blank',
