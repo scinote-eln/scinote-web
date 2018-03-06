@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180207095200) do
+ActiveRecord::Schema.define(version: 20180306074931) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -962,6 +962,67 @@ ActiveRecord::Schema.define(version: 20180207095200) do
       user_teams.user_id
      FROM (teams
        JOIN user_teams ON ((teams.id = user_teams.team_id)));
+  SQL
+
+  create_view "search_repositories",  sql_definition: <<-SQL
+      SELECT DISTINCT repository_rows.id,
+      repository_rows.repository_id,
+      repository_rows.created_by_id,
+      repository_rows.last_modified_by_id,
+      repository_rows.name,
+      repository_rows.created_at,
+      repository_rows.updated_at,
+      users.full_name AS user_full_name,
+      "values".text_value,
+      "values".date_value,
+      "values".list_value
+     FROM ((repository_rows
+       JOIN ( SELECT users_1.id,
+              users_1.full_name,
+              users_1.initials,
+              users_1.email,
+              users_1.encrypted_password,
+              users_1.reset_password_token,
+              users_1.reset_password_sent_at,
+              users_1.remember_created_at,
+              users_1.sign_in_count,
+              users_1.current_sign_in_at,
+              users_1.last_sign_in_at,
+              users_1.current_sign_in_ip,
+              users_1.last_sign_in_ip,
+              users_1.created_at,
+              users_1.updated_at,
+              users_1.avatar_file_name,
+              users_1.avatar_content_type,
+              users_1.avatar_file_size,
+              users_1.avatar_updated_at,
+              users_1.confirmation_token,
+              users_1.confirmed_at,
+              users_1.confirmation_sent_at,
+              users_1.unconfirmed_email,
+              users_1.invitation_token,
+              users_1.invitation_created_at,
+              users_1.invitation_sent_at,
+              users_1.invitation_accepted_at,
+              users_1.invitation_limit,
+              users_1.invited_by_type,
+              users_1.invited_by_id,
+              users_1.invitations_count,
+              users_1.tutorial_status,
+              users_1.current_team_id,
+              users_1.authentication_token,
+              users_1.settings
+             FROM users users_1) users ON ((users.id = repository_rows.created_by_id)))
+       LEFT JOIN ( SELECT repository_cells.repository_row_id,
+              repository_text_values.data AS text_value,
+              to_char(repository_date_values.data, 'DD.MM.YYYY HH24:MI'::text) AS date_value,
+              ( SELECT repository_list_items.data
+                     FROM repository_list_items
+                    WHERE (repository_list_items.id = repository_list_values.repository_list_item_id)) AS list_value
+             FROM (((repository_cells
+               JOIN repository_text_values ON ((repository_text_values.id = repository_cells.value_id)))
+               FULL JOIN repository_date_values ON ((repository_date_values.id = repository_cells.value_id)))
+               FULL JOIN repository_list_values ON ((repository_list_values.id = repository_cells.value_id)))) "values" ON (("values".repository_row_id = repository_rows.id)));
   SQL
 
 end

@@ -449,7 +449,7 @@ Rails.application.routes.draw do
 
     resources :repositories do
       post 'repository_index',
-           to: 'repositories#repository_table_index',
+           to: 'repository_rows#index', # repository_rows#index repositories#repository_table_index
            as: 'table_index',
            defaults: { format: 'json' }
       # Save repository table state

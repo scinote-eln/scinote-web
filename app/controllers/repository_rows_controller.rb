@@ -5,10 +5,22 @@ class RepositoryRowsController < ApplicationController
 
   before_action :load_info_modal_vars, only: :show
   before_action :load_vars, only: %i(edit update)
-  before_action :load_repository, only: %i(create delete_records)
+  before_action :load_repository, only: %i(create delete_records index)
+  before_action :load_columns_mappings, only: :index
   before_action :check_create_permissions, only: :create
   before_action :check_edit_permissions, only: %i(edit update)
   before_action :check_destroy_permissions, only: :delete_records
+
+  def index
+    @draw = params[:draw].to_i
+    per_page = params[:length] == '-1' ? 100 : params[:length].to_i
+    page = (params[:start].to_i / per_page) + 1
+    records = RepositoryDatatableService.new(@repository,
+                                             params,
+                                             @columns_mappings)
+    @repository_row_count = records.repository_rows.count
+    @repository_rows = records.repository_rows.page(page).per(per_page)
+  end
 
   def create
     record = RepositoryRow.new(repository: @repository,
@@ -238,6 +250,17 @@ class RepositoryRowsController < ApplicationController
   def load_repository
     @repository = Repository.find_by_id(params[:repository_id])
     render_404 unless @repository
+    render_403 unless can_read_team?(@repository.team)
+  end
+
+  def load_columns_mappings
+    # Make mappings of custom columns, so we have same id for every column
+    i = 5
+    @columns_mappings = {}
+    @repository.repository_columns.order(:id).each do |column|
+      @columns_mappings[column.id] = i.to_s
+      i += 1
+    end
   end
 
   def check_create_permissions
