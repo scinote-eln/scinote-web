@@ -105,7 +105,7 @@ end
 Canaid::Permissions.register_for(Repository) do
   # repository: update, delete
   can :manage_repository do |user, repository|
-    can_create_repositories?(user, repository.team)
+    user.is_admin_of_team?(repository.team)
   end
 end
 

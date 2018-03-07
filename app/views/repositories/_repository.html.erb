@@ -32,7 +32,7 @@
            data-toggle="dropdown"
            aria-haspopup="true"
            aria-expanded="true"
-           <%= "disabled='disabled'" if !can_manage_repository?(repository) && !can_create_repositories?(repository.team) %>>
+           <%= "disabled='disabled'" unless can_manage_repository?(repository) || can_create_repositories?(repository.team) %>>
         <span class="glyphicon glyphicon-cog"></span>
         <span class="caret"></span>
       </div>
