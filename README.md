@@ -8,6 +8,8 @@
 
 ## Build & run
 
+[Visual Studio Code](https://code.visualstudio.com/) is the approved code editing tool for this project with extensions and add-ons (e.g., ruby, docker, etc.)
+
 See [Wiki/Build & run](https://github.com/biosistemika/scinote-web/wiki/setup-guide#build-&-run).
 
 ## Testing
