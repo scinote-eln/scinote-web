@@ -17,7 +17,9 @@ class RepositoryRowsController < ApplicationController
     page = (params[:start].to_i / per_page) + 1
     records = RepositoryDatatableService.new(@repository,
                                              params,
-                                             @columns_mappings)
+                                             @columns_mappings,
+                                             current_user)
+    @assigned_rows = records.assigned_rows
     @repository_row_count = records.repository_rows.count
     @repository_rows = records.repository_rows.page(page).per(per_page)
   end

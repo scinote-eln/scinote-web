@@ -1,11 +1,15 @@
 module RepositoryDatatableHelper
   include InputSanitizeHelper
-  def prepare_row_columns(repository_rows, repository, columns_mappings, team)
+  def prepare_row_columns(repository_rows,
+                          repository,
+                          columns_mappings,
+                          team,
+                          assigned_rows)
     parsed_records = []
     repository_rows.each do |record|
       row = {
             'DT_RowId': record.id,
-            '1': assigned_row(record),
+            '1': assigned_row(record, assigned_rows),
             '2': escape_input(record.name),
             '3': I18n.l(record.created_at, format: :full),
             '4': escape_input(record.created_by.full_name),
@@ -21,7 +25,6 @@ module RepositoryDatatableHelper
           }
 
       # Add custom columns
-      # byebug
       record.repository_cells.each do |cell|
         row[columns_mappings[cell.repository_column.id]] =
           custom_auto_link(
@@ -36,11 +39,11 @@ module RepositoryDatatableHelper
     parsed_records
   end
 
-  def assigned_row(record)
-    # if @assigned_rows && @assigned_rows.include?(record)
-    #   "<span class='circle'>&nbsp;</span>"
-    # else
-    "<span class='circle disabled'>&nbsp;</span>"
-    # end
+  def assigned_row(record, assigned_rows)
+    if assigned_rows&.include?(record)
+      "<span class='circle'>&nbsp;</span>"
+    else
+      "<span class='circle disabled'>&nbsp;</span>"
+    end
   end
 end

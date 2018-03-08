@@ -12,8 +12,6 @@ class Repository < ApplicationRecord
            inverse_of: :repository, dependent: :destroy
   has_many :report_elements, inverse_of: :repository, dependent: :destroy
   has_many :repository_list_items, inverse_of: :repository, dependent: :destroy
-  has_many :repository_searchable_rows,
-           class_name: '::Views::Datatables::SearchRepository'
 
   auto_strip_attributes :name, nullify: false
   validates :name,
