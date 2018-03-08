@@ -40,28 +40,149 @@
 [2018-02-21 15:30:14 +0000 fff50472d08f (1)] INFO : Dispatcher: delayed_job
 [2018-02-21 15:30:14 +0000 fff50472d08f (1)] INFO : Application: SciNote (Development)
 [2018-02-21 15:30:14 +0000 fff50472d08f (1)] WARN : No license key found. This often means your newrelic.yml file was not found, or it lacks a section for the running environment, 'development'. You may also want to try linting your newrelic.yml to ensure it is valid YML.
-[2018-03-07 17:30:57 +0000 ea7d98c79cf3 (11)] INFO : Starting the New Relic agent version 4.7.1.340 in "development" environment.
-[2018-03-07 17:30:57 +0000 ea7d98c79cf3 (11)] INFO : To prevent agent startup add a NEW_RELIC_AGENT_ENABLED=false environment variable or modify the "development" section of your newrelic.yml.
-[2018-03-07 17:30:57 +0000 ea7d98c79cf3 (11)] INFO : Reading configuration from config/newrelic.yml (/usr/src/app)
-[2018-03-07 17:30:57 +0000 ea7d98c79cf3 (11)] INFO : Environment: development
-[2018-03-07 17:30:57 +0000 ea7d98c79cf3 (11)] INFO : No known dispatcher detected.
-[2018-03-07 17:30:57 +0000 ea7d98c79cf3 (11)] INFO : Application: SciNote (Development)
-[2018-03-07 17:30:57 +0000 ea7d98c79cf3 (11)] WARN : No license key found. This often means your newrelic.yml file was not found, or it lacks a section for the running environment, 'development'. You may also want to try linting your newrelic.yml to ensure it is valid YML.
-[2018-03-07 17:30:58 +0000 ea7d98c79cf3 (11)] INFO : Installing deferred Rack::Builder instrumentation
-[2018-03-07 17:30:58 +0000 ea7d98c79cf3 (11)] INFO : Installing Rack::Builder middleware instrumentation
-[2018-03-07 17:30:58 +0000 ea7d98c79cf3 (11)] INFO : Installing DelayedJob instrumentation [part 1/2]
-[2018-03-07 17:30:58 +0000 ea7d98c79cf3 (11)] INFO : Installing ActiveRecord 5 instrumentation
-[2018-03-07 17:30:58 +0000 ea7d98c79cf3 (11)] INFO : Installing ActiveJob instrumentation
-[2018-03-07 17:30:58 +0000 ea7d98c79cf3 (11)] INFO : Installing Rails 3+ middleware instrumentation
-[2018-03-07 17:30:58 +0000 ea7d98c79cf3 (11)] INFO : Installing Net instrumentation
-[2018-03-07 17:30:58 +0000 ea7d98c79cf3 (11)] INFO : Installing Rails 5 view instrumentation
-[2018-03-07 17:30:58 +0000 ea7d98c79cf3 (11)] INFO : Installing Rails 5 Action Cable instrumentation
-[2018-03-07 17:30:58 +0000 ea7d98c79cf3 (11)] INFO : Installing Rails 5 Controller instrumentation
-[2018-03-07 17:30:58 +0000 ea7d98c79cf3 (11)] INFO : Finished instrumentation
-[2018-03-07 17:31:01 +0000 ea7d98c79cf3 (11)] INFO : Doing deferred dependency-detection before Rack startup
-[2018-03-07 17:31:17 +0000 ea7d98c79cf3 (18)] INFO : NewRelic::Agent::Samplers::DelayedJobSampler not available: No DJ worker present. Skipping DJ queue sampler
-[2018-03-07 17:31:19 +0000 ea7d98c79cf3 (18)] ERROR : Invalid license key, please contact support@newrelic.com
-[2018-03-07 17:31:19 +0000 ea7d98c79cf3 (18)] ERROR : Visit NewRelic.com to obtain a valid license key, or to upgrade your account.
-[2018-03-07 17:31:25 +0000 ea7d98c79cf3 (14)] INFO : NewRelic::Agent::Samplers::DelayedJobSampler not available: No DJ worker present. Skipping DJ queue sampler
-[2018-03-07 17:31:25 +0000 ea7d98c79cf3 (14)] ERROR : Invalid license key, please contact support@newrelic.com
-[2018-03-07 17:31:25 +0000 ea7d98c79cf3 (14)] ERROR : Visit NewRelic.com to obtain a valid license key, or to upgrade your account.
+[2018-03-04 17:54:34 +0000 f06b30ec7389 (9)] INFO : Starting the New Relic agent version 4.7.1.340 in "development" environment.
+[2018-03-04 17:54:34 +0000 f06b30ec7389 (9)] INFO : To prevent agent startup add a NEW_RELIC_AGENT_ENABLED=false environment variable or modify the "development" section of your newrelic.yml.
+[2018-03-04 17:54:34 +0000 f06b30ec7389 (9)] INFO : Reading configuration from config/newrelic.yml (/usr/src/app)
+[2018-03-04 17:54:34 +0000 f06b30ec7389 (9)] INFO : Environment: development
+[2018-03-04 17:54:34 +0000 f06b30ec7389 (9)] INFO : No known dispatcher detected.
+[2018-03-04 17:54:34 +0000 f06b30ec7389 (9)] INFO : Application: SciNote (Development)
+[2018-03-04 17:54:34 +0000 f06b30ec7389 (9)] WARN : No license key found. This often means your newrelic.yml file was not found, or it lacks a section for the running environment, 'development'. You may also want to try linting your newrelic.yml to ensure it is valid YML.
+[2018-03-04 17:54:34 +0000 f06b30ec7389 (9)] INFO : Installing ActiveJob instrumentation
+[2018-03-04 17:54:34 +0000 f06b30ec7389 (9)] INFO : Installing ActiveRecord 5 instrumentation
+[2018-03-04 17:54:34 +0000 f06b30ec7389 (9)] INFO : Installing DelayedJob instrumentation [part 1/2]
+[2018-03-04 17:54:34 +0000 f06b30ec7389 (9)] INFO : Installing Net instrumentation
+[2018-03-04 17:54:34 +0000 f06b30ec7389 (9)] INFO : Installing deferred Rack::Builder instrumentation
+[2018-03-04 17:54:34 +0000 f06b30ec7389 (9)] INFO : Installing Rack::Builder middleware instrumentation
+[2018-03-04 17:54:34 +0000 f06b30ec7389 (9)] INFO : Installing Rails 3+ middleware instrumentation
+[2018-03-04 17:54:34 +0000 f06b30ec7389 (9)] INFO : Installing Rails 5 Action Cable instrumentation
+[2018-03-04 17:54:34 +0000 f06b30ec7389 (9)] INFO : Installing Rails 5 Controller instrumentation
+[2018-03-04 17:54:34 +0000 f06b30ec7389 (9)] INFO : Installing Rails 5 view instrumentation
+[2018-03-04 17:54:34 +0000 f06b30ec7389 (9)] INFO : Finished instrumentation
+[2018-03-04 17:54:35 +0000 f06b30ec7389 (9)] INFO : Doing deferred dependency-detection before Rack startup
+[2018-03-04 17:55:53 +0000 204c5725f1e6 (1)] INFO : Starting the New Relic agent version 4.7.1.340 in "development" environment.
+[2018-03-04 17:55:53 +0000 204c5725f1e6 (1)] INFO : To prevent agent startup add a NEW_RELIC_AGENT_ENABLED=false environment variable or modify the "development" section of your newrelic.yml.
+[2018-03-04 17:55:53 +0000 204c5725f1e6 (1)] INFO : Reading configuration from config/newrelic.yml (/usr/src/app)
+[2018-03-04 17:55:53 +0000 204c5725f1e6 (1)] INFO : Installing ActiveJob instrumentation
+[2018-03-04 17:55:53 +0000 204c5725f1e6 (1)] INFO : Installing ActiveRecord 5 instrumentation
+[2018-03-04 17:55:53 +0000 204c5725f1e6 (1)] INFO : Installing DelayedJob instrumentation [part 1/2]
+[2018-03-04 17:55:53 +0000 204c5725f1e6 (1)] INFO : Installing Net instrumentation
+[2018-03-04 17:55:53 +0000 204c5725f1e6 (1)] INFO : Installing deferred Rack::Builder instrumentation
+[2018-03-04 17:55:53 +0000 204c5725f1e6 (1)] INFO : Installing Rack::Builder middleware instrumentation
+[2018-03-04 17:55:53 +0000 204c5725f1e6 (1)] INFO : Installing Rails 3+ middleware instrumentation
+[2018-03-04 17:55:53 +0000 204c5725f1e6 (1)] INFO : Installing Rails 5 Action Cable instrumentation
+[2018-03-04 17:55:53 +0000 204c5725f1e6 (1)] INFO : Installing Rails 5 Controller instrumentation
+[2018-03-04 17:55:53 +0000 204c5725f1e6 (1)] INFO : Installing Rails 5 view instrumentation
+[2018-03-04 17:55:53 +0000 204c5725f1e6 (1)] INFO : Finished instrumentation
+[2018-03-04 17:55:54 +0000 204c5725f1e6 (1)] INFO : Installing DelayedJob instrumentation [part 2/2]
+[2018-03-04 17:55:54 +0000 204c5725f1e6 (1)] INFO : Starting the New Relic agent version 4.7.1.340 in "development" environment.
+[2018-03-04 17:55:54 +0000 204c5725f1e6 (1)] INFO : To prevent agent startup add a NEW_RELIC_AGENT_ENABLED=false environment variable or modify the "development" section of your newrelic.yml.
+[2018-03-04 17:55:54 +0000 204c5725f1e6 (1)] INFO : Reading configuration from config/newrelic.yml (/usr/src/app)
+[2018-03-04 17:55:54 +0000 204c5725f1e6 (1)] INFO : Environment: development
+[2018-03-04 17:55:54 +0000 204c5725f1e6 (1)] INFO : Dispatcher: delayed_job
+[2018-03-04 17:55:54 +0000 204c5725f1e6 (1)] INFO : Application: SciNote (Development)
+[2018-03-04 17:55:54 +0000 204c5725f1e6 (1)] WARN : No license key found. This often means your newrelic.yml file was not found, or it lacks a section for the running environment, 'development'. You may also want to try linting your newrelic.yml to ensure it is valid YML.
+[2018-03-04 17:56:29 +0000 f06b30ec7389 (14)] INFO : NewRelic::Agent::Samplers::DelayedJobSampler not available: No DJ worker present. Skipping DJ queue sampler
+[2018-03-04 17:56:32 +0000 f06b30ec7389 (14)] ERROR : Invalid license key, please contact support@newrelic.com
+[2018-03-04 17:56:32 +0000 f06b30ec7389 (14)] ERROR : Visit NewRelic.com to obtain a valid license key, or to upgrade your account.
+[2018-03-04 17:57:07 +0000 f06b30ec7389 (12)] INFO : NewRelic::Agent::Samplers::DelayedJobSampler not available: No DJ worker present. Skipping DJ queue sampler
+[2018-03-04 17:57:14 +0000 f06b30ec7389 (12)] ERROR : Invalid license key, please contact support@newrelic.com
+[2018-03-04 17:57:14 +0000 f06b30ec7389 (12)] ERROR : Visit NewRelic.com to obtain a valid license key, or to upgrade your account.
+[2018-03-04 17:59:44 +0000 f06b30ec7389 (12)] INFO : Starting Agent shutdown
+[2018-03-04 17:59:44 +0000 f06b30ec7389 (14)] INFO : Starting Agent shutdown
+[2018-03-04 18:00:36 +0000 f06b30ec7389 (9)] INFO : Starting the New Relic agent version 4.7.1.340 in "development" environment.
+[2018-03-04 18:00:36 +0000 f06b30ec7389 (9)] INFO : To prevent agent startup add a NEW_RELIC_AGENT_ENABLED=false environment variable or modify the "development" section of your newrelic.yml.
+[2018-03-04 18:00:36 +0000 f06b30ec7389 (9)] INFO : Reading configuration from config/newrelic.yml (/usr/src/app)
+[2018-03-04 18:00:36 +0000 f06b30ec7389 (9)] INFO : Environment: development
+[2018-03-04 18:00:36 +0000 f06b30ec7389 (9)] INFO : No known dispatcher detected.
+[2018-03-04 18:00:36 +0000 f06b30ec7389 (9)] INFO : Application: SciNote (Development)
+[2018-03-04 18:00:36 +0000 f06b30ec7389 (9)] WARN : No license key found. This often means your newrelic.yml file was not found, or it lacks a section for the running environment, 'development'. You may also want to try linting your newrelic.yml to ensure it is valid YML.
+[2018-03-04 18:00:36 +0000 f06b30ec7389 (9)] INFO : Installing ActiveJob instrumentation
+[2018-03-04 18:00:36 +0000 f06b30ec7389 (9)] INFO : Installing ActiveRecord 5 instrumentation
+[2018-03-04 18:00:36 +0000 f06b30ec7389 (9)] INFO : Installing DelayedJob instrumentation [part 1/2]
+[2018-03-04 18:00:36 +0000 f06b30ec7389 (9)] INFO : Installing Net instrumentation
+[2018-03-04 18:00:36 +0000 f06b30ec7389 (9)] INFO : Installing deferred Rack::Builder instrumentation
+[2018-03-04 18:00:36 +0000 f06b30ec7389 (9)] INFO : Installing Rack::Builder middleware instrumentation
+[2018-03-04 18:00:36 +0000 f06b30ec7389 (9)] INFO : Installing Rails 3+ middleware instrumentation
+[2018-03-04 18:00:36 +0000 f06b30ec7389 (9)] INFO : Installing Rails 5 Action Cable instrumentation
+[2018-03-04 18:00:36 +0000 f06b30ec7389 (9)] INFO : Installing Rails 5 Controller instrumentation
+[2018-03-04 18:00:36 +0000 f06b30ec7389 (9)] INFO : Installing Rails 5 view instrumentation
+[2018-03-04 18:00:36 +0000 f06b30ec7389 (9)] INFO : Finished instrumentation
+[2018-03-04 18:00:39 +0000 f06b30ec7389 (9)] INFO : Doing deferred dependency-detection before Rack startup
+[2018-03-04 18:00:41 +0000 f06b30ec7389 (12)] INFO : NewRelic::Agent::Samplers::DelayedJobSampler not available: No DJ worker present. Skipping DJ queue sampler
+[2018-03-04 18:00:42 +0000 1173761a3194 (1)] INFO : Starting the New Relic agent version 4.7.1.340 in "development" environment.
+[2018-03-04 18:00:42 +0000 1173761a3194 (1)] INFO : To prevent agent startup add a NEW_RELIC_AGENT_ENABLED=false environment variable or modify the "development" section of your newrelic.yml.
+[2018-03-04 18:00:42 +0000 1173761a3194 (1)] INFO : Reading configuration from config/newrelic.yml (/usr/src/app)
+[2018-03-04 18:00:42 +0000 1173761a3194 (1)] INFO : Installing ActiveJob instrumentation
+[2018-03-04 18:00:42 +0000 1173761a3194 (1)] INFO : Installing ActiveRecord 5 instrumentation
+[2018-03-04 18:00:42 +0000 1173761a3194 (1)] INFO : Installing DelayedJob instrumentation [part 1/2]
+[2018-03-04 18:00:42 +0000 1173761a3194 (1)] INFO : Installing Net instrumentation
+[2018-03-04 18:00:42 +0000 1173761a3194 (1)] INFO : Installing deferred Rack::Builder instrumentation
+[2018-03-04 18:00:42 +0000 1173761a3194 (1)] INFO : Installing Rack::Builder middleware instrumentation
+[2018-03-04 18:00:42 +0000 1173761a3194 (1)] INFO : Installing Rails 3+ middleware instrumentation
+[2018-03-04 18:00:42 +0000 1173761a3194 (1)] INFO : Installing Rails 5 Action Cable instrumentation
+[2018-03-04 18:00:42 +0000 1173761a3194 (1)] INFO : Installing Rails 5 Controller instrumentation
+[2018-03-04 18:00:42 +0000 1173761a3194 (1)] INFO : Installing Rails 5 view instrumentation
+[2018-03-04 18:00:42 +0000 1173761a3194 (1)] INFO : Finished instrumentation
+[2018-03-04 18:00:44 +0000 f06b30ec7389 (12)] ERROR : Invalid license key, please contact support@newrelic.com
+[2018-03-04 18:00:44 +0000 f06b30ec7389 (12)] ERROR : Visit NewRelic.com to obtain a valid license key, or to upgrade your account.
+[2018-03-04 18:00:46 +0000 1173761a3194 (1)] INFO : Installing DelayedJob instrumentation [part 2/2]
+[2018-03-04 18:00:46 +0000 1173761a3194 (1)] INFO : Starting the New Relic agent version 4.7.1.340 in "development" environment.
+[2018-03-04 18:00:46 +0000 1173761a3194 (1)] INFO : To prevent agent startup add a NEW_RELIC_AGENT_ENABLED=false environment variable or modify the "development" section of your newrelic.yml.
+[2018-03-04 18:00:46 +0000 1173761a3194 (1)] INFO : Reading configuration from config/newrelic.yml (/usr/src/app)
+[2018-03-04 18:00:46 +0000 1173761a3194 (1)] INFO : Environment: development
+[2018-03-04 18:00:46 +0000 1173761a3194 (1)] INFO : Dispatcher: delayed_job
+[2018-03-04 18:00:46 +0000 1173761a3194 (1)] INFO : Application: SciNote (Development)
+[2018-03-04 18:00:46 +0000 1173761a3194 (1)] WARN : No license key found. This often means your newrelic.yml file was not found, or it lacks a section for the running environment, 'development'. You may also want to try linting your newrelic.yml to ensure it is valid YML.
+[2018-03-04 18:01:37 +0000 f06b30ec7389 (14)] INFO : NewRelic::Agent::Samplers::DelayedJobSampler not available: No DJ worker present. Skipping DJ queue sampler
+[2018-03-04 18:01:42 +0000 f06b30ec7389 (14)] ERROR : Invalid license key, please contact support@newrelic.com
+[2018-03-04 18:01:42 +0000 f06b30ec7389 (14)] ERROR : Visit NewRelic.com to obtain a valid license key, or to upgrade your account.
+[2018-03-04 18:01:49 +0000 1173761a3194 (1)] ERROR : Invalid license key, please contact support@newrelic.com
+[2018-03-04 18:01:49 +0000 1173761a3194 (1)] ERROR : Visit NewRelic.com to obtain a valid license key, or to upgrade your account.
+[2018-03-04 18:11:48 +0000 f06b30ec7389 (14)] INFO : Starting Agent shutdown
+[2018-03-04 18:11:48 +0000 f06b30ec7389 (12)] INFO : Starting Agent shutdown
+[2018-03-04 18:11:57 +0000 1173761a3194 (1)] INFO : Starting Agent shutdown
+[2018-03-04 18:15:54 +0000 f06b30ec7389 (9)] INFO : Starting the New Relic agent version 4.7.1.340 in "development" environment.
+[2018-03-04 18:15:54 +0000 f06b30ec7389 (9)] INFO : To prevent agent startup add a NEW_RELIC_AGENT_ENABLED=false environment variable or modify the "development" section of your newrelic.yml.
+[2018-03-04 18:15:54 +0000 f06b30ec7389 (9)] INFO : Reading configuration from config/newrelic.yml (/usr/src/app)
+[2018-03-04 18:15:54 +0000 f06b30ec7389 (9)] INFO : Environment: development
+[2018-03-04 18:15:54 +0000 f06b30ec7389 (9)] INFO : No known dispatcher detected.
+[2018-03-04 18:15:54 +0000 f06b30ec7389 (9)] INFO : Application: SciNote (Development)
+[2018-03-04 18:15:54 +0000 f06b30ec7389 (9)] WARN : No license key found. This often means your newrelic.yml file was not found, or it lacks a section for the running environment, 'development'. You may also want to try linting your newrelic.yml to ensure it is valid YML.
+[2018-03-04 18:15:54 +0000 f06b30ec7389 (9)] INFO : Installing ActiveJob instrumentation
+[2018-03-04 18:15:54 +0000 f06b30ec7389 (9)] INFO : Installing ActiveRecord 5 instrumentation
+[2018-03-04 18:15:54 +0000 f06b30ec7389 (9)] INFO : Installing DelayedJob instrumentation [part 1/2]
+[2018-03-04 18:15:54 +0000 f06b30ec7389 (9)] INFO : Installing Net instrumentation
+[2018-03-04 18:15:54 +0000 f06b30ec7389 (9)] INFO : Installing deferred Rack::Builder instrumentation
+[2018-03-04 18:15:54 +0000 f06b30ec7389 (9)] INFO : Installing Rack::Builder middleware instrumentation
+[2018-03-04 18:15:54 +0000 f06b30ec7389 (9)] INFO : Installing Rails 3+ middleware instrumentation
+[2018-03-04 18:15:54 +0000 f06b30ec7389 (9)] INFO : Installing Rails 5 Action Cable instrumentation
+[2018-03-04 18:15:54 +0000 f06b30ec7389 (9)] INFO : Installing Rails 5 Controller instrumentation
+[2018-03-04 18:15:54 +0000 f06b30ec7389 (9)] INFO : Installing Rails 5 view instrumentation
+[2018-03-04 18:15:54 +0000 f06b30ec7389 (9)] INFO : Finished instrumentation
+[2018-03-04 18:15:55 +0000 f06b30ec7389 (9)] INFO : Doing deferred dependency-detection before Rack startup
+[2018-03-04 18:16:03 +0000 f5ebb9ae488c (1)] INFO : Starting the New Relic agent version 4.7.1.340 in "development" environment.
+[2018-03-04 18:16:03 +0000 f5ebb9ae488c (1)] INFO : To prevent agent startup add a NEW_RELIC_AGENT_ENABLED=false environment variable or modify the "development" section of your newrelic.yml.
+[2018-03-04 18:16:03 +0000 f5ebb9ae488c (1)] INFO : Reading configuration from config/newrelic.yml (/usr/src/app)
+[2018-03-04 18:16:03 +0000 f5ebb9ae488c (1)] INFO : Installing ActiveJob instrumentation
+[2018-03-04 18:16:03 +0000 f5ebb9ae488c (1)] INFO : Installing ActiveRecord 5 instrumentation
+[2018-03-04 18:16:03 +0000 f5ebb9ae488c (1)] INFO : Installing DelayedJob instrumentation [part 1/2]
+[2018-03-04 18:16:03 +0000 f5ebb9ae488c (1)] INFO : Installing Net instrumentation
+[2018-03-04 18:16:03 +0000 f5ebb9ae488c (1)] INFO : Installing deferred Rack::Builder instrumentation
+[2018-03-04 18:16:03 +0000 f5ebb9ae488c (1)] INFO : Installing Rack::Builder middleware instrumentation
+[2018-03-04 18:16:03 +0000 f5ebb9ae488c (1)] INFO : Installing Rails 3+ middleware instrumentation
+[2018-03-04 18:16:03 +0000 f5ebb9ae488c (1)] INFO : Installing Rails 5 Action Cable instrumentation
+[2018-03-04 18:16:03 +0000 f5ebb9ae488c (1)] INFO : Installing Rails 5 Controller instrumentation
+[2018-03-04 18:16:03 +0000 f5ebb9ae488c (1)] INFO : Installing Rails 5 view instrumentation
+[2018-03-04 18:16:03 +0000 f5ebb9ae488c (1)] INFO : Finished instrumentation
+[2018-03-04 18:16:04 +0000 f5ebb9ae488c (1)] INFO : Installing DelayedJob instrumentation [part 2/2]
+[2018-03-04 18:16:04 +0000 f5ebb9ae488c (1)] INFO : Starting the New Relic agent version 4.7.1.340 in "development" environment.
+[2018-03-04 18:16:04 +0000 f5ebb9ae488c (1)] INFO : To prevent agent startup add a NEW_RELIC_AGENT_ENABLED=false environment variable or modify the "development" section of your newrelic.yml.
+[2018-03-04 18:16:04 +0000 f5ebb9ae488c (1)] INFO : Reading configuration from config/newrelic.yml (/usr/src/app)
+[2018-03-04 18:16:04 +0000 f5ebb9ae488c (1)] INFO : Environment: development
+[2018-03-04 18:16:04 +0000 f5ebb9ae488c (1)] INFO : Dispatcher: delayed_job
+[2018-03-04 18:16:04 +0000 f5ebb9ae488c (1)] INFO : Application: SciNote (Development)
+[2018-03-04 18:16:04 +0000 f5ebb9ae488c (1)] WARN : No license key found. This often means your newrelic.yml file was not found, or it lacks a section for the running environment, 'development'. You may also want to try linting your newrelic.yml to ensure it is valid YML.
+[2018-03-04 18:16:16 +0000 f06b30ec7389 (12)] INFO : NewRelic::Agent::Samplers::DelayedJobSampler not available: No DJ worker present. Skipping DJ queue sampler
+[2018-03-04 18:16:18 +0000 f06b30ec7389 (12)] ERROR : Invalid license key, please contact support@newrelic.com
+[2018-03-04 18:16:18 +0000 f06b30ec7389 (12)] ERROR : Visit NewRelic.com to obtain a valid license key, or to upgrade your account.
+[2018-03-04 18:20:33 +0000 f06b30ec7389 (12)] INFO : Starting Agent shutdown

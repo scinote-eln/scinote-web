@@ -1,0 +1,1915 @@
+en:
+  devise:
+    confirmations:
+      new:
+        head_title: "Resend confirmation instructions"
+        title: "Resend confirmation instructions"
+        submit: "Resend confirmation instructions"
+    invitations:
+      edit:
+        header: "Set your full name and password"
+    passwords:
+      edit:
+        head_title: "Change password"
+        title: "Change your password"
+        password: "New password"
+        password_length: "(%{min_length} characters minimum)"
+        password_confirm: "Confirm new password"
+        submit: "Change my password"
+      new:
+        head_title: "Forgot password"
+        title: "Forgot your password?"
+        submit: "Send me reset password instructions"
+    registrations:
+      password_changed: "Password successfully updated."
+    sessions:
+      new:
+        head_title: "Log in"
+        title: "Log in"
+        email_placeholder: "username@email.com"
+        password_placeholder: "pass****"
+        submit: "Log in"
+      create:
+        team_name: "%{user}'s projects"
+      auth_token_create:
+        wrong_credentials: "Failed to automatically sign in (wrong credentials)."
+    unlocks:
+      new:
+        head_title: "Resend unlock instructions"
+        title: "Resend unlock instructions"
+        submit: "Resend unlock instructions"
+    links:
+      login: "Log in"
+      signup: "Sign up"
+      forgot: "Forgot your password?"
+      not_receive_confirmation: "Didn't receive confirmation instructions?"
+      not_receive_unlock: "Didn't receive unlock instructions?"
+      sign_in_provider: "Sign in with %{provider}"
+
+  helpers:
+    label:
+      team:
+        name: "Team name"
+      user:
+        full_name: "Full name"
+        initials: "Initials"
+        avatar: "Avatar"
+
+  head:
+    title: "sciNote | %{title}"
+
+  body:
+    notice: "You need to enable JavaScript to run this app."
+  nav:
+    search: "Search"
+    user_greeting: "Hi, %{full_name}"
+    advanced_search: "Advanced search"
+    title: "sciNote"
+    user:
+      settings: "Settings"
+      logout: "Log out"
+    help:
+      tutorials: "Tutorials"
+      release_notes: "Release notes"
+      support: "Customer support"
+      premium: "Premium"
+      contact: "Contact us"
+      about: "About sciNote"
+    activities:
+      none: "No activities!"
+    label:
+      scinote: "sciNote"
+      projects: "Home"
+      protocols: "Protocols"
+      calendar: "Calendar"
+      activities: "Activities"
+      repositories: "Repositories"
+      teams: "Teams"
+      search: "Search"
+      notifications: "Notifications"
+      info: "Info"
+      account: "Account"
+
+  about:
+    modal_title: "About sciNote"
+    core_version: "sciNote core version"
+    addon_versions: "Addon versions"
+
+  sidebar:
+    title: "Navigation"
+    no_module_group: "No workflow"
+
+  nav2:
+    projects:
+      show: "Overview"
+      samples: "Samples"
+      activities: "Activity"
+      reports: "Reports"
+      archive: "Archive"
+    experiments:
+      canvas: "Overview"
+    modules:
+      steps: "Protocols"
+      results: "Results"
+      activities: "Activity"
+      samples: "Samples"
+      repositories: "Repositories"
+      archive: "Archive"
+
+  search:
+    whole_word: "Match any whole word"
+    whole_phrase: "Match whole phrase"
+    match_case: "Match case sensitive"
+    index:
+      head_title: "Search"
+      page_title: "Search"
+      results_title_html: "Search Results for '<em>%{query}</em>'"
+      public: "Public"
+      private: "Private"
+      archived: "Archived"
+      created_by: "Created by: "
+      created_at: "Created at: "
+      last_modified_by: "Last modified by: "
+      last_modified_at: "Last modified at: "
+      keywords: "Keywords: "
+      authors: "Authors: "
+      description: "Description: "
+      no_description: "No description"
+      team: "Team: "
+      project: "Project: "
+      experiment: "Experiment: "
+      protocol: "Protocol: "
+      modules: "Tasks: "
+      tag_no_modules: "not added to any tasks"
+      sample_no_modules: "not assigned to any tasks"
+      module: "Task: "
+      step: "Step: "
+      result: "Result: "
+      no_name: "(no name)"
+      error:
+        no_results: "No results for %{q}."
+      samples:
+        sample: "Sample: "
+        sample_type: "Sample type: "
+        no_sample_type: "No sample type"
+        sample_group: "Sample group: "
+        no_sample_group: "No sample group"
+        added_on: "Added on: "
+        added_by: "Added by: "
+        custom_field: "%{cf}: "
+      repositories:
+        repository_row: "Repository item: "
+        added_on: "Added on: "
+        added_by: "Added by: "
+        custom_column: "%{column}: "
+        no_modules: "not assigned to any task"
+      comments:
+        project: "Project comment"
+        my_module: "Task comment"
+        step: "Step comment"
+        result: "Result comment"
+
+  comments:
+    options_dropdown:
+      header: "Comment options"
+      edit: "Edit"
+      delete: "Delete"
+    delete_confirm: "Are you sure you wish to delete this comment?"
+    delete_error: "Error occured while deleting comment."
+
+  help:
+    contact:
+      head_title: "Contact"
+    about:
+      head_title: "About"
+
+  projects:
+    index:
+      head_title: "Home"
+      archive: "Archive"
+      new: "New project"
+      visibility_private: "Project is private. Only invited users can see it."
+      visibility_public: "Project is public. Everybody from the team can see it."
+      user_project: "%{user} joined on %{timestamp}."
+      no_activities: "No activities!"
+      no_comments: "No comments!"
+      no_users: "No users!"
+      manage_users: "Manage users"
+      no_notifications: "No notifications!"
+      module_overdue_html: "Task <em>%{module}</em> is overdue (%{days})."
+      module_overdue_days:
+        one: "1 day"
+        other: "%{count} days"
+      module_one_day_due_html: "Task <em>%{module}</em> is due in less than 1 day."
+      new_comment: "New comment"
+      user_role: "Role: "
+      user_full_name: "User: "
+      edit_user: "Edit role"
+      delete_user: "Remove user from project"
+      delete_user_confirm: "Are you sure you wish to remove user %{user} from project %{project}?"
+      team_filter: "Show projects from"
+      all_filter: "All"
+      sort: "Sort by"
+      sort_new: "Newest first"
+      sort_old: "Oldest first"
+      sort_atoz: "From A to Z"
+      sort_ztoa: "From Z to A"
+      start_date: "Start date"
+      activity_tab: "Activity"
+      users_tab: "Users"
+      notifications_tab: "Notifications"
+      comment_tab: "Comments"
+      new_comment: "New comment"
+      content_loading: "Loading..."
+      edit_option: "Edit"
+      archive_option: "Archive"
+      archive_confirm: "Are you sure to archive project?"
+      restore_option: "Restore"
+      options_header: "Options"
+      comment_placeholder: "Your Message"
+      more_comments: "More Comments"
+      no_archived_projects: "No archived projects!"
+      back_to_projects_index: "Back to home"
+      modal_new_project:
+        modal_title: "Create new project"
+        create: "Create project"
+        name: "Project name"
+        name_placeholder: "My project"
+        team: "Team"
+        visibility: "Visibility"
+        visibility_hidden: "Private"
+        visibility_visible: "Public"
+      modal_edit_project:
+        modal_title: "Edit project %{project}"
+        submit: "Update project"
+      modal_manage_users:
+        modal_title: "Manage users for"
+        no_users: "No users!"
+        create: "Add"
+        select_user_role: "Select Role"
+        invite_users_link: "Invite users"
+        invite_users_details: "to team %{team}."
+        contact_admins: "To invite additional users to team %{team}, contact its administrator/s."
+      no_teams:
+        title: "Your dashboard is empty!"
+        text: "It seems you're not a member of any team. See team management to sort it out."
+        btn: "Manage teams"
+    create:
+      success_flash: "Project <strong>%{name}</strong> successfully created."
+      name_taken: "This project name has to be unique inside a team (this includes the archive)."
+    update:
+      success_flash: "Project <strong>%{name}</strong> successfully updated."
+      error_flash: "Project <strong>%{name}</strong> not updated."
+    archive:
+      head_title: "Projects Archive"
+      success_flash: "Project <strong>%{name}</strong> successfully archived."
+      error_flash: "Project <strong>%{name}</strong> not archived."
+    restore:
+      success_flash: "Project <strong>%{name}</strong> successfully restored."
+      error_flash: "Project <strong>%{name}</strong> not restored."
+    show:
+      head_title: "%{project}"
+      page_title: "Project's experiments"
+    samples:
+      head_title: "%{project} | Sample library"
+    reports:
+      print_title: "%{project} | Report"
+      index:
+        head_title: "%{project} | Reports"
+        new: "New report"
+        edit: "Edit report"
+        delete: "Delete report/s"
+        thead_name: "Report name"
+        thead_created_by: "Created by"
+        thead_last_modified_by: "Last modified by"
+        thead_created_at: "Created at"
+        thead_updated_at: "Last updated at"
+        no_reports: "No reports!"
+        modal_delete:
+          head_title: "Delete report/s"
+          message: "Are you sure to delete selected report/s?"
+          delete: "Delete"
+      new:
+        head_title: "%{project} | New report"
+        nav_title: "Report for: "
+        nav_print: "Print"
+        nav_pdf: "Export to PDF"
+        nav_save: "Save report"
+        nav_close: "Close"
+        nav_sort_by: "Sort report by"
+        nav_sort_asc: "Oldest on top"
+        nav_sort_desc: "Newest on top"
+        nav_sort: "Sort"
+        sidebar_title: "Navigation"
+        global_sort: "Sorting whole report will undo any custom sorting you might have done. Proceed?"
+        unsaved_work: "Are you sure you want to leave this page? All unsaved data will be lost."
+      elements:
+        modals:
+          project_contents:
+            head_title: "Add contents to report"
+            tasks_tab: "Choose tasks"
+            content_tab: "Choose content"
+          project_contents_inner:
+            instructions: "Select projects/experiment/tasks to include in the report"
+            no_modules: "The project contains no tasks"
+            no_module_group: "No workflow"
+          module_contents:
+            head_title: "Add contents to task %{module}"
+            module_tab: "Task content"
+            steps_tab: "Protocols content"
+            results_tab: "Results content"
+          module_contents_inner:
+            instructions: "Choose what information from task/s to include in the report"
+            check_all: "All tasks content"
+            steps: "Steps"
+            completed_steps: "Completed"
+            uncompleted_steps: "Uncompleted"
+            no_steps: "Task has no steps"
+            results: "Results"
+            result_assets: "Files"
+            result_tables: "Tables"
+            result_texts: "Texts"
+            no_results: "Task contains no results"
+            activity: "Activity"
+            samples: "Samples"
+          experiment_contents:
+            head_title: "Add contents to experiment %{experiment}"
+            experiment_tab: "Experiment content"
+            module_tab: "Task content"
+            steps_tab: "Protocols content"
+            results_tab: "Results content"
+          experiment_contents_inner:
+            instructions: "Select tasks to include in the report"
+            no_modules: "The experiment contains no tasks"
+          step_contents:
+            head_title: "Add contents to step %{step}"
+            step_tab: "Step content"
+            results_tab: "Results content"
+          step_contents_inner:
+            instructions: "Choose what information from task protocol step/s to include in the report"
+            check_all: "All protocols steps content"
+            tables: "Tables"
+            no_tables: "Step contains no tables"
+            assets: "Files"
+            no_assets: "Step contains no uploaded files"
+            checklists: "Checklists"
+            no_checklists: "Step contains no checklists"
+            comments: "Comments"
+          result_contents:
+            head_title: "Add contents to result %{result}"
+          result_contents_inner:
+            instructions: "Include result/s comments in the report?"
+            check_all: "All results content"
+            comments: "Comments"
+          add: "Add to report"
+          save_report:
+            head_title: "Save report"
+            name: "Report name"
+            name_placeholder: "My report"
+            description: "Report description"
+            description_placeholder: "My report description..."
+            save: "Save"
+        all:
+          sort_asc: "Sort report element contents by oldest on top"
+          sort_desc: "Sort report element contents by newest on top"
+          move_up: "Move report element up"
+          move_down: "Move report element down"
+          remove: "Remove report element from the report"
+        new_element:
+          title: "Add new report element/s here"
+        project_header:
+          user_time: "Project created on %{timestamp}."
+          title: "Report for project %{project}"
+        module:
+          user_time: "Task created on %{timestamp}."
+          due_date: "Due date: %{due_date}"
+          no_due_date: "No due date"
+          no_description: "No description"
+          tags_header: "Task tags:"
+          no_tags: "No tags"
+        experiment:
+          user_time: "Experiment created on %{timestamp}."
+          no_description: "No description"
+          no_tags: "No tags"
+        module_activity:
+          name: "Activity of task %{my_module}"
+          sidebar_name: "Activity"
+          no_activity: "No activities"
+        module_samples:
+          name: "Samples of task %{my_module}"
+          sidebar_name: "Samples"
+          no_samples: "No samples"
+        module_repository:
+          name: "%{repository} of task %{my_module}"
+          no_items: "No items"
+        result_asset:
+          file_name: "[ %{file} ]"
+          user_time: "Uploaded by %{user} on %{timestamp}."
+        result_table:
+          user_time: "Created by %{user} on %{timestamp}."
+        result_text:
+          user_time: "Created by %{user} on %{timestamp}."
+        step:
+          sidebar_name: "Step %{pos}: %{name}"
+          step_pos: "Step %{pos}:"
+          no_description: "No description"
+          completed:
+            user_time: "Completed by %{user} on %{timestamp}."
+          uncompleted:
+            user_time: "Created by %{user} on %{timestamp}."
+        step_table:
+          table_name: "[ %{name} ]"
+          user_time: "Table created on %{timestamp}."
+        step_asset:
+          sidebar_name: "File %{file}"
+          file_name: "[ %{file} ]"
+          user_time: "File uploaded on %{timestamp}."
+        step_checklist:
+          checklist_name: "[ %{name} ]"
+          user_time: "Checklist created on %{timestamp}."
+        result_comments:
+          sidebar_name: "Comments"
+          name: "Comments for result %{result}"
+          no_comments: "No comments"
+          comment_prefix: "%{user} on %{date} at %{time}:"
+        step_comments:
+          sidebar_name: "Comments"
+          name: "Comments for step %{step}"
+          no_comments: "No comments"
+          comment_prefix: "%{user} on %{date} at %{time}:"
+    experiment_archive:
+      head_title: "%{project} | Archived experiments"
+      no_archived_experiments: "No archived experiments!"
+      restore_option: "Restore"
+      archived_on: "Archived on"
+      created_on: "Created on"
+      last_modified_on: "Last modified on"
+      archived_on_title: "Experiment archived on %{date} at %{time}."
+      created_on_title: "Experiment created on %{date} at %{time}."
+      last_modified_on_title: "Experiment last modified on %{date} at %{time}."
+
+  user_teams:
+    enums:
+      role:
+        guest: "Guest"
+        normal_user: "Normal user"
+        admin: "Administrator"
+
+  user_projects:
+    enums:
+      role:
+        owner: "Owner"
+        normal_user: "User"
+        technician: "Technician"
+        viewer: "Viewer"
+    edit:
+      update_role: "Change Role"
+    create:
+      select_user_role: "Please select a user role."
+      add_user_generic_error: "An error occured. "
+
+  my_modules:
+    buttons:
+      complete: "Complete task"
+      uncomplete: "Uncomplete task"
+    complete_modal:
+      description: 'You have completed all steps in the task. Would you like to mark entire task as completed?'
+      leave_uncompleted: 'Leave task in progress'
+    description:
+      title: "Edit task %{module} description"
+      label: "Description"
+    due_date:
+      title: "Edit task %{module} due date"
+      label: "Due date"
+    states:
+      state_label: "Status:"
+      in_progress: "In progress"
+      completed: "Completed on"
+      completed_on: "Task completed (%{date})"
+      due_soon: "due soon"
+      overdue: "overdue"
+    samples:
+      head_title: "%{project} | %{module} | Sample library"
+    module_archive:
+      head_title: "%{project} | %{module} | Archive"
+      option_delete: "Delete"
+      confirm_delete: "Are you sure you want to permanently delete result?"
+      delete_flash: "Sucessfully removed result <strong>%{result}</strong> from task <strong>%{module}</strong>."
+      table_log: "%{user} deleted table result <strong>%{result}</strong> on %{date}"
+      text_log: "%{user} deleted text result <strong>%{result}</strong> on %{date}"
+      asset_log: "%{user} deleted file result <strong>%{result}</strong> on %{date}"
+      archived_on: "Archived on"
+      archived_on_title: "Result archived on %{date} at %{time}."
+      option_download: "Download"
+      no_archived_results: "No archived results!"
+      archive_timelabel: "archived on %{date}"
+      restored_flash: "Task %{module} restored successfully!"
+    module_header:
+      start_date: "Start date:"
+      due_date: "Due date:"
+      tags: "Tags:"
+      no_tags: "No tags"
+      no_description: "No description"
+    protocols:
+      head_title: "%{project} | %{module} | Protocols"
+      protocol_status_bar:
+        private_parent: "(private)"
+        unlinked: "(unlinked)"
+        public_desc: "This protocol is public; everyone from team can see it."
+        private_desc: "This protocol is private; it is only visible to you."
+        added_by: "Added by"
+        added_by_tooltip: "Added at %{ts}"
+        private_protocol_desc: "The parent protocol is private. Only its author can manage it."
+        no_description: "no description"
+        keywords: "Keywords"
+        no_keywords: "no keywords"
+        btns:
+          unlink: "Unlink protocol"
+          unlink_title: "Unlink this protocol from the parent in the repository"
+          revert: "Revert protocol"
+          revert_title: "Revert the protocol to the repository version. This will discard any local changes."
+          update_parent: "Update repository version"
+          update_parent_title: "Update the repository protocol with this version"
+          update_self: "Update from repository"
+          update_self_title: "Update this protocol with the version stored in the repository"
+        btns_unlinked:
+          title: "Unlinked"
+          text: "This protocol is not stored in the protocol repository."
+        btns_linked_no_diff:
+          title: "Linked"
+          text: "This protocol is linked with the version stored in the protocol repository."
+        btns_newer_than_parent:
+          title: "Newer version in task"
+          text: "This <a href='#' data-toggle='tooltip' data-placement='below' title='Last modified at %{self_ts}'>version</a> of protocol is newer than the <a href='#' data-toggle='tooltip' data-placement='below' title='Last modified at %{parent_ts}'>version</a> stored in protocol repository."
+        btns_parent_newer:
+          title: "Newer version in repository"
+          text: "There is a newer <a href='#' data-toggle='tooltip' data-placement='below' title='Last modified at %{parent_ts}'>version</a> of <a href='#' data-toggle='tooltip' data-placement='below' title='Last modified at %{self_ts}'>this protocol</a> in the repository."
+        btns_parent_and_self_newer:
+          title: "Newer version in repository and task"
+          text: "There is a newer <a href='#' data-toggle='tooltip' data-placement='below' title='Last modified at %{parent_ts}'>version</a> of this protocol in the repository. This <a href='#' data-toggle='tooltip' data-placement='below' title='Last modified at %{self_ts}'>version</a> of protocol is newer than the version stored in protocol repository."
+      buttons:
+        load_protocol: "Load protocol"
+        load_protocol_from_repository: "from repository"
+        load_protocol_from_file: "from file"
+        export: "Export protocol"
+        copy_to_repository: "Save to protocol repository"
+      confirm_link_update_modal:
+        unlink_title: "Unlink protocol"
+        unlink_message: "Are you sure you want to unlink the task protocol from the repository version? This will stop any tracking of changes."
+        unlink_btn_text: "Unlink"
+        revert_title: "Revert protocol"
+        revert_message: "Are you sure you want to revert the task protocol to the repository version? This will override any local changes you made."
+        revert_btn_text: "Revert"
+        update_parent_title: "Update repository version"
+        update_parent_message: "Are you sure you want to update the repository protocol with this version? This will override any other changes made in the repository version."
+        update_self_title: "Update from repository"
+        update_self_message: "Are you sure you want to update this protocol with the version from the repository? This will override any local changes you made."
+      unlink_flash: "Protocol was successfully unlinked."
+      unlink_error: "Failed to unlink protocol."
+      revert_flash: "Protocol was successfully reverted to protocol version."
+      revert_error: "Failed to revert protocol."
+      revert_error_locked: "Failed to revert protocol. One or more files in the protocol are currently being edited."
+      update_parent_flash: "Protocol in repository was successfully updated with the version from the task."
+      update_parent_error: "Failed to update repository version of the protocol."
+      update_parent_error_locked: "Failed to update repository version of the protocol. One or more files in the protocol are currently being edited."
+      update_from_parent_flash: "Version in the repository was successfully updated."
+      update_from_parent_error: "Failed to update the protocol with the version in the repository."
+      update_from_parent_error_locked: "Failed to update the protocol with the version in the repository. One or more files in the protocol are currently being edited."
+      load_from_repository_flash: "Successfully loaded the protocol from the repository."
+      load_from_repository_error: "Failed to load the protocol from the repository."
+      load_from_repository_error_locked: "Failed to load the protocol from the repository. One or more files in the protocol are currently being edited."
+      load_from_repository_modal:
+        title: "Load protocol from repository"
+        text: "Choose the protocol to be loaded to the task."
+        text2: "This action will overwrite the current protocol in the task and unlink it from repository. The current protocol will remain unchanged in repository."
+        tab_public: "Public protocols"
+        tab_private: "Private protocols"
+        thead_name: "Name"
+        thead_keywords: "Keywords"
+        thead_nr_of_linked_children: "No. of linked tasks"
+        thead_published_by: "Published by"
+        thead_added_by: "Added by"
+        thead_published_on: "Published at"
+        thead_created_at: "Created at"
+        thead_updated_at: "Last modified at"
+        confirm_message: "Are you sure you wish to load protocol from repository? This action will overwrite the current protocol in the task and unlink it from repository. The current protocol will remain unchanged in repository."
+        import_to_linked_task_rep: "Are you sure you wish to load protocol from repository? This action will overwrite the current protocol in the task and unlink it from repository. The current protocol will remain unchanged in repository."
+        load: "Load"
+      copy_to_repository_modal:
+        title: "Copy protocol to repository"
+        name_label: "Repository protocol name"
+        name_placeholder: "My protocol"
+        type_label: "Copy to"
+        type_public: "Public protocols"
+        type_private: "Private protocols"
+        type_text: "You can copy the protocol to public team repository, or to your private protocols."
+        link_label: "Link task to this repository protocol"
+        link_text: "<strong>Warning!</strong>&nbsp;This will unlink the currently linked protocol."
+        error_400: "Due to unknown error, protocol could not be copied to repository."
+        confirm: "Copy to repository"
+      load_from_file_flash: "Successfully loaded the protocol from the file."
+      load_from_file_error: "Failed to load the protocol from file."
+      load_from_file_error_locked: "Failed to load the protocol from file. One or more files are currently being edited."
+      load_from_file_size_error: "Failed to load the protocol from file. Limit is %{size}Mb."
+      load_from_file_invalid_error: "The file you provided is invalid or has an invalid extension."
+      load_from_file_protocol_general_error: "Failed to load the protocol from file. It is likely that certain fields (protocol and individual step titles and names) contain too many or too few characters.(max is %{max} and min is %{min})"
+    results:
+      head_title: "%{project} | %{module} | Results"
+      add_label: "Add new result:"
+      new_text_result: "Text"
+      new_table_result: "Table"
+      new_asset_result: "File"
+      published_on: "Published on <em>%{timestamp}</em> by <em>%{user}</em>"
+      published_table: "entered a table on %{timestamp}."
+      published_text:  "entered a text on %{timestamp}."
+      published_asset:  "uploaded a file on %{timestamp}."
+      expand_label: "Expand all"
+      collapse_label: "Collapse all"
+      empty_name: "Add title"
+      archive_confirm: "Are you sure to archive result?"
+      info_tab: "Info"
+      comments_tab: "Comments"
+      comment_title: "%{user} at %{time}:"
+      options:
+        comment_title: "Comments"
+        no_comments: "No comments"
+        new_comment: "New comment"
+        edit_title: "Edit result"
+        archive_title: "Archive result"
+    activities:
+      head_title: "%{project} | %{module} | Activity"
+      no_activities: "There are no activities for this task."
+      more_activities: "Load older activities"
+    repository:
+      head_title: "%{project} | %{module} | Custom repository %{repository}"
+      export: 'Export'
+
+  experiments:
+    new:
+      create: 'New experiment'
+      modal_title: 'Create new experiment'
+      modal_create: 'Create experiment'
+      name: 'Experiment name'
+      name_placeholder: 'My experiment'
+      description: 'Description'
+    edit:
+      modal_title: 'Edit experiment details'
+      modal_create: 'Save'
+      label_title: "Edit details"
+      panel_label: 'Change details'
+      add-description: 'Add description...'
+      no-description: 'No description'
+      no_workflowimg: 'No workflow'
+      add_task: 'Add a task to experiment...'
+    create:
+      success_flash: "Successfully created experiment %{experiment}"
+      error_flash: 'Could not create a new experiment.'
+    update:
+      success_flash: "Successfully updated experiment %{experiment}"
+      error_flash: 'Could not update the experiment.'
+    archive:
+      success_flash: "Successfully archived experiment %{experiment}"
+      error_flash: 'Could not archive the experiment.'
+      label_title: 'Archive'
+    clone:
+      modal_title: 'Copy experiment %{experiment} as template'
+      label_title: 'Copy as template (only Protocols steps copied)'
+      modal_submit: 'Copy as template'
+      success_flash: 'Successfully copied experiment %{experiment} as template.'
+      error_flash: 'Could not copy the experiment as template.'
+      current_project: '(current project)'
+    move:
+      modal_title: 'Move experiment %{experiment}'
+      notice: 'Moving is possible only to projects that contain same (or additional) users.'
+      label_title: 'Move'
+      modal_submit: 'Move'
+      success_flash: "Successfully moved experiment %{experiment}"
+      error_flash: ' Could not move the experiment. Experiment name is already in use. '
+      no_projects: 'No projects to move this experiment to.'
+    canvas:
+      archive_confirm: "Are you sure to archive this experiment?"
+      actions: 'Actions'
+      head_title: "%{project} | Overview"
+      canvas_edit: "Edit experiment"
+      zoom: "Zoom: "
+      reload_on_submit: "Save action is running. Reloading this page may cause unexpected behavior."
+      modal_manage_tags:
+        head_title: "Manage tags for"
+        subtitle: "Showing tags of task %{module}"
+        no_tags: "No tags!"
+        edit_tag: "Edit tag."
+        remove_tag: "Remove tag from task %{module}."
+        delete_tag: "Permanently delete tag from all tasks."
+        save_tag: "Save tag."
+        cancel_tag: "Cancel changes to the tag."
+        create: "Add tag"
+        create_new: "Create new tag"
+      edit:
+        new_module: "New task"
+        new_module_hover: "Drag me onto canvas"
+        save: "Save workflow"
+        save_short: "Save"
+        cancel: "Cancel"
+        unsaved_work: "Are you sure you want to leave this page? All unsaved data will be lost."
+        drag_connections: "Drag connection/s from here"
+        options_header: "Options"
+        edit_module: "Rename task"
+        clone_module: "Copy task as template (only Protocols steps copied)"
+        clone_module_group: "Copy workflow as template (only Protocols steps copied)"
+        move_module: "Move task to another experiment"
+        move_module_group: "Move workflow to another experiment"
+        delete_module: "Archive task"
+        delete_module_group: "Archive workflow"
+        modal_new_module:
+          title: "Add new task"
+          name: "Task name"
+          name_placeholder: "My task"
+          confirm: "Add task"
+        modal_edit_module:
+          title: "Rename task"
+          name: "Task name"
+          confirm: "Rename task"
+        modal_move_module:
+          title: "Move task to experiment"
+          confirm: "Move task"
+          no_experiments: "There are no other experiments."
+        modal_move_module_group:
+          title: "Move workflow to experiment"
+          confirm: "Move workflow"
+          no_experiments: "There are no other experiments."
+        modal_delete_module:
+          title: "Archive task"
+          confirm: "Archive task"
+          message: "Are you sure you wish to archive task %{module}? Task's samples and position will be removed."
+        modal_delete_module_group:
+          title: "Archive workflow"
+          confirm: "Archive workflow"
+          message: "Are you sure you wish to archive the workflow task %{module} belongs to? All workflow tasks' samples and positions will be removed."
+      popups:
+        info_tab: "Task info"
+        no_description: "This task has no description."
+        full_info: "Edit description"
+        users_tab: "Assigned users"
+        no_users: "This task has no assigned users."
+        manage_users: "Manage users"
+        module_user_join: "Joined on %{date}."
+        module_user_join_full: "%{user} joined on %{date} at %{time}."
+        activities_tab: "Activity"
+        no_activities: "No activities!"
+        more_activities: "All activities"
+        comments_tab: "Comments"
+        no_comments: "No comments!"
+        more_comments: "More Comments"
+        comment_placeholder: "Your Message"
+        new_comment: "New comment"
+        samples_tab: "Samples"
+        no_samples: "No samples!"
+        manage_samples: "Manage samples"
+      full_zoom:
+        due_date: "Due date"
+        no_due_date: "not set"
+        modal_manage_users:
+          modal_title: "Manage users for"
+          no_users: "No users"
+          user_join: "Joined on %{date}."
+          user_join_full: "%{user} joined on %{date} at %{time}."
+          create: "Add"
+          invite_users_link: "Invite users"
+          invite_users_details: "to team %{team}."
+          contact_admins: "To invite additional users to team %{team}, contact its administrator/s."
+      update:
+        success_flash: "Project successfully updated."
+    module_archive:
+      head_title: "%{experiment} | Archived tasks"
+      no_archived_modules: "No archived tasks!"
+      restore_option: "Restore"
+      archived_on: "Archived on"
+      archived_on_title: "Task archived on %{date} at %{time}."
+
+  tags:
+    new:
+      head_title: "Create tag"
+      title: "Create a new tag"
+      name: "Tag name"
+      name_placeholder: "My tag"
+      color: "Tag color"
+      create: "Create tag"
+    create:
+      new_name: "New tag"
+      success_flash: "Successfully created tag <strong>%{tag}</strong>."
+      error_flash: "Could not create a new tag."
+    destroy:
+      success_flash: "Successfully removed tag <strong>%{tag}</strong>."
+      error_flash: "Could not remove tag <strong>%{tag}</strong>."
+
+  result_texts:
+    new:
+      head_title: "%{project} | %{module} | Add text result"
+      title: "Add result to task %{module}"
+      create: "Add text result"
+    edit:
+      head_title: "%{project} | %{module} | Edit text result"
+      title: "Edit result from task %{module}"
+      update: "Update text result"
+    create:
+      success_flash: "Successfully added text result to task <strong>%{module}</strong>"
+    update:
+      success_flash: "Successfully updated text result in task <strong>%{module}</strong>"
+    archive:
+      success_flash: "Successfully archived text result in task <strong>%{module}</strong>"
+    destroy:
+      success_flash: "Text result successfully deleted."
+
+  result_assets:
+    new:
+      head_title: "%{project} | %{module} | Add file result"
+      title: "Add result to task %{module}"
+      create: "Add file result"
+    edit:
+      head_title: "%{project} | %{module} | Edit file result"
+      title: "Edit result from task %{module}"
+      uploaded_asset: "Uploaded file"
+      update: "Update file result"
+      locked_file_error: 'This file is being edited by someone else.'
+    create:
+      success_flash: "Successfully added file result to task <strong>%{module}</strong>"
+    update:
+      success_flash: "Successfully updated file result in task <strong>%{module}</strong>"
+    archive:
+      success_flash: "Successfully archived file result in task <strong>%{module}</strong>"
+      error_flash: "Couldn't archive file result. Someone is editing that file."
+    destroy:
+      success_flash: "File result successfully deleted."
+    wopi_open_file: "Open in %{app}"
+    wopi_edit_file: "Edit in %{app}"
+    error_flash: 'Something went wrong! Please try again later.'
+
+  result_tables:
+    new:
+      head_title: "%{project} | %{module} | Add table result"
+      title: "Add result to task %{module}"
+      create: "Add table result"
+    edit:
+      head_title: "%{project} | %{module} | Edit table result"
+      title: "Edit result from task %{module}"
+      update: "Update table result"
+    create:
+      success_flash: "Successfully added table result to task <strong>%{module}</strong>"
+    update:
+      success_flash: "Successfully updated table result in task <strong>%{module}</strong>"
+    archive:
+      success_flash: "Successfully archived table result in task <strong>%{module}</strong>"
+    destroy:
+      success_flash: "Table result successfully deleted."
+
+  repositories:
+    index:
+      head_title: "Repositories"
+      title: "Repositories"
+      add_new_repository_tab: "Add repository"
+      delete_flash: "\"%{name}\" repository was successfully deleted!"
+      rename_flash: "\"%{old_name}\" repository was successfully renamed to \"%{new_name}\"!"
+      copy_flash: "\"%{new}\" repository was successfully copied from \"%{old}\"!"
+      no_teams:
+        title: "Your dashboard is empty!"
+        text: "It seems you're not a member of any team. See team management to sort it out."
+      options_dropdown:
+        header: "Edit repository"
+        rename: "Rename"
+        copy: "Copy"
+        delete: "Delete"
+      modal_delete:
+        title_html: "Delete repository <em>%{name}</em>"
+        message_html: "Are you sure you want to delete repository <em>%{name}</em>? This action is irreversible."
+        alert_heading: "Deleting repository has following consequences:"
+        alert_line_1: "all data inside the repository will be lost;"
+        alert_line_2: "all references to repository items will be rendered as invalid."
+        delete: "Delete repository"
+      modal_rename:
+        title_html: "Rename repository <em>%{name}</em>"
+        name: "New repository name"
+        name_placeholder: "My repository"
+        rename: "Rename repository"
+      modal_copy:
+        title_html: "Copy repository <em>%{name}</em>"
+        name: "New repository name"
+        description: "Only the structure of the repository is going to be copied."
+        name_placeholder: "My repository"
+        copy: "Copy repository"
+      modal_create:
+        title: "Create new repository"
+        name_label: "Repository name"
+        name_placeholder: "My repository"
+        submit: "Create repository"
+        success_flash: "Repository <strong>%{name}</strong> successfully created."
+    nav:
+      breadcrumbs:
+        repositories: "Repositories"
+    table:
+      assigned: "Assigned"
+      row_name: "Name"
+      added_on: "Added on"
+      added_by: "Added by"
+    add_new_record: "Add new item"
+    import_records:
+      import: 'Import'
+      no_header_name: 'No column name'
+      success_flash: "%{number_of_rows} new item(s) successfully imported."
+      partial_success_flash: "%{nr} of %{total_nr} successfully imported. Other rows contained errors."
+      error_message:
+        temp_file_not_found: "This file could not be found. Your session might expire."
+        session_expired: "Your session expired. Please try again."
+        no_data_to_parse: "There's nothing to be parsed."
+        no_column_name: "Name column is required!"
+        duplicated_values: "Two or more columns have the same mapping."
+        errors_list_title: "Items were not imported because one or more errors were found:"
+        no_repository_name: "Item name is required!"
+    edit_record: "Edit"
+    delete_record: "Delete"
+    save_record: "Save"
+    cancel_save: "Cancel"
+    assign_records_to_module: "Assign"
+    unassign_records_from_module: "Unassign"
+    columns: "Columns"
+    column_new_text: "New column"
+    column_create: "Create"
+    columns_delete: "Delete"
+    columns_visibility: "Visible columns"
+    view_all_records: "View all items"
+    view_assigned_records: "View assigned items"
+    modal_delete_record:
+      title: "Delete items"
+      notice: "Are you sure you want to delete the selected item(s)?"
+      other_records: "Only items created by you will be deleted."
+      delete: "Delete item(s)"
+    modal_delete_column:
+      title: "Delete a column"
+      message: "Are you sure you wish to permanently delete selected column %{column}? This action is irreversible."
+      alert_heading: "Deleting a column has following consequences:"
+      alert_line_1: "you will lose information in this column for %{nr} item(s);"
+      alert_line_2: "the column will be deleted for all team members."
+      delete: "Delete column"
+    modal_parse:
+      title: 'Import items'
+    modal_import:
+      title: 'Import items'
+      notice: 'You may upload .csv file (comma separated) or tab separated file (.txt or .tsv) or Excel file (.xlsx). First row should include header names, followed by rows with sample data.'
+      upload: 'Upload file'
+    js:
+      permission_error: "You don't have permission to edit this item."
+      not_found_error: "This repository item does not exist."
+      column_added: "New column was sucessfully created."
+      empty_column_name: "Please enter column name."
+    create:
+      success_flash: "Successfully added item <strong>%{record}</strong> to repository <strong>%{repository}</strong>"
+    update:
+      success_flash: "Successfully updated item <strong>%{record}</strong> in repository <strong>%{repository}</strong>"
+    destroy:
+      success_flash: "%{records_number} item(s) successfully deleted."
+      contains_other_records_flash: "%{records_number} item(s) successfully deleted. %{other_records_number} of the selected item(s) were created by other users and were not deleted."
+      no_records_selected_flash: "There were no selected items."
+      no_deleted_records_flash: "No items were deleted. %{other_records_number} of the selected items were created by other users and were not deleted."
+    assigned_records_flash: "Successfully assigned item(s) <strong>%{records}</strong> to task"
+    unassigned_records_flash: "Successfully unassigned item(s) <strong>%{records}</strong> from task"
+    no_records_assigned_flash: "No items were assigned to task"
+    no_records_unassigned_flash: "No items were unassigned from task"
+    default_column: 'Name'
+
+  samples:
+    columns: "Columns"
+    columns_visibility: "Toggle visibility"
+    columns_delete: "Delete"
+    types_and_groups: "Types and groups"
+    actions: "Actions"
+    add_new_sample: "Add new sample"
+    import: "Import"
+    export: "Export"
+    assign_samples_to_module: "Assign"
+    unassign_samples_to_module: "Unassign"
+    delete_samples: "Delete"
+    edit_sample: "Edit"
+    save_sample: "Save"
+    cancel_save: "Cancel"
+    column_create: "Create"
+    column_new_text: "New column"
+    column_visibility: "Visible columns"
+    add_new_sample_type: "Add sample type"
+    add_new_sample_group: "Add sample group"
+    add_new_column: "Add column"
+    view_all_samples: "View all samples"
+    view_assigned_samples: "View assigned samples"
+    modal_info:
+      added_on: "Added on"
+      added_by: "Added by"
+      custom_field: "%{cf}: "
+      head_title: "Information for sample '%{sample}'"
+      title: "This sample is assigned to %{nr} tasks."
+      no_tasks: "This sample in not assigned to any task."
+      no_group: "No sample group"
+      no_type: "No sample type"
+      sample_group: "Sample group:"
+      sample_type: "Sample type:"
+    modal_import:
+      title: "Import samples"
+      notice: "You may upload .csv file (comma separated) or tab separated file (.txt or .tsv) or Excel file (.xlsx). First row should include header names, followed by rows with sample data."
+      no_header_name: 'No column name'
+      upload: "Upload file"
+    modal_delete:
+      title: "Delete samples"
+      notice: "Are you sure you want to delete the selected samples?"
+      other_samples: "Only samples created by you will be deleted."
+      delete: "Delete samples"
+    modal_add_custom_field:
+      title_html: "Add new column to team <strong>%{team}</strong>"
+      create: "Add new column"
+    modal_delete_custom_field:
+      title: "Delete a column"
+      message: "Are you sure you wish to permanently delete selected column %{cf}? This action is irreversible."
+      alert_heading: "Deleting column has following consequences:"
+      alert_line_1: "you will lose information in this column for %{nr} samples;"
+      alert_line_2: "the column will be deleted for all team members."
+      delete: "Delete column"
+    modal_add_new_sample_group:
+      title_html: "Add new sample group to team <strong>%{team}</strong>"
+      create: "Add new sample group"
+    modal_add_new_sample_type:
+      title_html: "Add new sample type to team <strong>%{team}</strong>"
+      create: "Add new sample type"
+    table:
+      assigned: "Assigned"
+      sample_name: "Sample name"
+      sample_type: "Sample type"
+      sample_group: "Sample group"
+      added_on: "Added on"
+      added_by: "Added by"
+      no_group: "No sample group"
+      no_type: "No sample type"
+      add_sample_type: "Add new sample type"
+      add_sample_group: "Add new sample group"
+    new:
+      head_title: "%{team} | Add new sample"
+      title: "Add new sample to team %{team}"
+      create: "Add new sample"
+      sample_type: "Sample type"
+      sample_group: "Sample group"
+      no_group: "No sample group"
+      no_type: "No sample type"
+      edit_sample_type: "Edit sample type"
+      edit_sample_group: "Edit sample group"
+    edit:
+      head_title: "%{team} | Edit sample"
+      title: "Edit sample %{sample} from team %{team}"
+      create: "Edit sample"
+      scf_does_not_exist: "This field does not exists."
+    create:
+      success_flash: "Successfully added sample <strong>%{sample}</strong> to team <strong>%{team}</strong>"
+    update:
+      success_flash: "Successfully updated sample <strong>%{sample}</strong> to team <strong>%{team}</strong>"
+    destroy:
+      success_flash: "%{sample_number} samples successfully deleted."
+      contains_other_samples_flash: "%{sample_number} samples successfully deleted. %{other_samples_number} of the selected samples were created by other users and were not deleted."
+      no_sample_selected_flash: "There were no selected samples."
+      no_deleted_samples_flash: "No samples were deleted. %{other_samples_number} of the selected samples were created by other users and were not deleted."
+    js:
+      permission_error: "You don't have permission to edit this sample."
+      not_found_error: "This sample does not exist."
+      column_added: "New column was sucessfully created."
+      empty_column_name: "Please enter column name."
+  sample_types:
+    index:
+      head_title: 'Sample Types'
+      sample_types: 'Sample types'
+      sample_groups: 'Sample groups'
+      new: 'Create sample type'
+      destroy_modal_title: "Permanently delete the \"%{name}\" sample type?"
+      destroy_modal_body: 'This action is irreversible and makes the sample type inaccessible to all team members.'
+      destroy_modal_submit: 'Permanently delete sample type'
+      destroy_flash: "\"%{name}\" sample type was successfully deleted!"
+
+  custom_fields:
+    new:
+      title_html: "Add new column to team <strong>%{team}</strong>"
+      create: "Add new column"
+    create:
+      success_flash: "Successfully added column <strong>%{custom_field}</strong> to team <strong>%{team}</strong>."
+
+  teams:
+    parse_sheet:
+      head_title: "%{team} | Import samples"
+      title: "Import samples to team %{team}"
+      help_text: "Match the columns of your uploaded file with already existing columns in database."
+      scinote_columns_html: "<em>sciNote</em> columns:"
+      file_columns: "Imported columns:"
+      example_value: "Imported file content:"
+      import_samples: "Import samples"
+      do_not_include_column: "Do not include this column"
+      errors:
+        invalid_file: "The file you provided is invalid. Make sure the file is encoded using %{encoding}."
+        invalid_extension: "The file has invalid extension."
+        empty_file: "You've selected empty file. There's not much to import."
+        temp_file_failure: "We couldn't create temporary file. Please contact administrator."
+        no_file_selected: "You didn't select any file."
+        errors_list_title: "Samples were not imported because one or more errors were found:"
+        list_row: "Row %{row}"
+        list_error: "%{key}: %{val}"
+    import_samples:
+      head_title: "%{team} | Import samples"
+      title: "Import samples to team %{team}"
+      sample:
+        one: "1 sample"
+        other: "%{count} samples"
+      success_flash: "%{nr} of %{samples} successfully imported."
+      partial_success_flash: "%{nr} of %{samples} successfully imported. Other rows contained errors."
+      errors:
+        temp_file_not_found: "This file could not be found. Your session might expire."
+        session_expired: "Your session expired. Please retry importing samples again."
+        no_data_to_parse: "There's nothing to be parsed."
+        no_sample_name: "Sample name is required!"
+        duplicated_values: "Two or more columns have the same mapping."
+
+  sample_groups:
+    index:
+      head_title: 'Sample Groups'
+      new: 'Create sample group'
+      destroy_modal_title: "Permanently delete the \"%{name}\" sample group?"
+      destroy_modal_body: 'This action is irreversible and makes the sample group inaccessible to all team members.'
+      destroy_modal_submit: 'Permanently delete sample group'
+      destroy_flash: "\"%{name}\" sample group was successfully deleted!"
+    color_label: "Sample group color"
+    create:
+      success_flash: "Successfully added sample group <strong>%{sample_group}</strong> to team <strong>%{team}</strong>."
+
+  activities:
+    index:
+      today: "Today"
+      more_activities: "More Activities"
+      no_activities: "No activities!"
+    modal:
+      modal_title: "Activities"
+    create_project: "<i>%{user}</i> created project <strong>%{project}</strong>."
+    rename_project: "<i>%{user}</i> renamed project <strong>%{project_old}</strong> to <strong>%{project_new}</strong>."
+    change_project_visibility: "<i>%{user}</i> changed project <strong>%{project}</strong>'s visibility to %{visibility}."
+    archive_project: "<i>%{user}</i> moved project <strong>%{project}</strong> to archive."
+    restore_project: "<i>%{user}</i> restored project <strong>%{project}</strong> from archive."
+    assign_user_to_project: "<i>%{assigned_user}</i> was added as %{role} to project <strong>%{project}</strong> by <i>%{assigned_by_user}</i>."
+    change_user_role_on_project: "<i>%{actor}</i> changed <i>%{user}</i>'s role on project <strong>%{project}</strong> to %{role}."
+    unassign_user_from_project: "<i>%{unassigned_user}</i> was removed from project <strong>%{project}</strong> by <i>%{unassigned_by_user}</i>."
+    create_module: "<i>%{user}</i> created task <strong>%{module}</strong>."
+    assign_user_to_module: "<i>%{assigned_user}</i> was added to task <strong>%{module}</strong> by <i>%{assigned_by_user}</i>."
+    unassign_user_from_module: "<i>%{unassigned_user}</i> was removed from task <strong>%{module}</strong> by <i>%{unassigned_by_user}</i>."
+    clone_module: "<i>%{user}</i> copied <strong>%{module_new}</strong> from <strong>%{module_original}</strong> as template."
+    archive_module: "<i>%{user}</i> moved task <strong>%{module}</strong> to archive."
+    restore_module: "<i>%{user}</i> restored task <strong>%{module}</strong> from archive."
+    change_module_description: "<i>%{user}</i> changed task <strong>%{module}</strong>'s description."
+    complete_module: "<i>%{user}</i> completed task <strong>%{module}</strong>."
+    uncomplete_module: "<i>%{user}</i> uncompleted task <strong>%{module}</strong>."
+    assign_sample: "<i>%{user}</i> assigned sample(s) <strong>%{samples}</strong> to task(s) <strong>%{tasks}</strong>"
+    unassign_sample: "<i>%{user}</i> unassigned sample(s) <strong>%{samples}</strong> from task(s) <strong>%{tasks}</strong>"
+    assign_repository_records: "<i>%{user}</i> assigned item(s) <strong>%{records}</strong> from <strong>%{repository}</strong> repository to task <strong>%{task}</strong>"
+    unassign_repository_records: "<i>%{user}</i> unassigned item(s) <strong>%{records}</strong> from <strong>%{repository}</strong> repository from task <strong>%{task}</strong>"
+    create_step: "<i>%{user}</i> created Step %{step} <strong>%{step_name}</strong>."
+    destroy_step: "<i>%{user}</i> deleted Step %{step} <strong>%{step_name}</strong>."
+    add_comment_to_step: "<i>%{user}</i> commented on Step %{step} <strong>%{step_name}</strong>."
+    complete_step: "<i>%{user}</i> completed Step %{step} <strong>%{step_name}</strong> (%{completed}/%{all} completed)."
+    uncomplete_step: "<i>%{user}</i> uncompleted Step %{step} <strong>%{step_name}</strong> (%{completed}/%{all} completed)."
+    check_step_checklist_item: "<i>%{user}</i> completed checklist item <strong>%{checkbox}</strong> (%{completed}/%{all} completed) in Step %{step} <strong>%{step_name}</strong>."
+    uncheck_step_checklist_item: "<i>%{user}</i> uncompleted checklist item <strong>%{checkbox}</strong> (%{completed}/%{all} completed) in Step %{step} <strong>%{step_name}</strong>."
+    edit_step: "<i>%{user}</i> edited Step %{step} <strong>%{step_name}</strong>."
+    add_asset_result: "<i>%{user}</i> added file result <strong>%{result}</strong>."
+    add_text_result: "<i>%{user}</i> added text result <strong>%{result}</strong>."
+    add_table_result: "<i>%{user}</i> added table result <strong>%{result}</strong>."
+    add_comment_to_result: "<i>%{user}</i> commented on result <strong>%{result}</strong>."
+    archive_asset_result: "<i>%{user}</i> archived file result <strong>%{result}</strong>."
+    archive_text_result: "<i>%{user}</i> archived text result <strong>%{result}</strong>."
+    archive_table_result: "<i>%{user}</i> archived table result <strong>%{result}</strong>."
+    edit_asset_result: "<i>%{user}</i> edited file result <strong>%{result}</strong>."
+    edit_text_result: "<i>%{user}</i> edited text result <strong>%{result}</strong>."
+    edit_table_result: "<i>%{user}</i> edited table result <strong>%{result}</strong>."
+    archive_experiment: "<i>%{user}</i> archived experiment <strong>%{experiment}</strong>."
+    create_experiment: "<i>%{user}</i> created experiment <strong>%{experiment}</strong>."
+    edit_experiment: "<i>%{user}</i> edited experiment <strong>%{experiment}</strong>."
+    clone_experiment: "<i>%{user}</i> copied experiment <strong>%{experiment_new}</strong> from <strong>%{experiment_original}</strong> as template."
+    move_experiment: "<i>%{user}</i> moved experiment  <strong>%{experiment}</strong> from project <strong>%{project_original}</strong> to project <strong>%{project_new}</strong>."
+    add_comment_to_project: "<i>%{user}</i> commented on project <strong>%{project}</strong>."
+    edit_project_comment: "<i>%{user}</i> edited comment on project <strong>%{project}</strong>."
+    delete_project_comment: "<i>%{user}</i> deleted comment on project <strong>%{project}</strong>."
+    add_comment_to_module: "<i>%{user}</i> commented on task <strong>%{module}</strong>."
+    edit_module_comment: "<i>%{user}</i> edited comment on task <strong>%{module}</strong>."
+    delete_module_comment: "<i>%{user}</i> deleted comment on task <strong>%{module}</strong>."
+    edit_step_comment: "<i>%{user}</i> edited comment on Step %{step} <strong>%{step_name}</strong>."
+    delete_step_comment: "<i>%{user}</i> deleted comment on Step %{step} <strong>%{step_name}</strong>."
+    edit_result_comment: "<i>%{user}</i> edited comment on result <strong>%{result}</strong>."
+    delete_result_comment: "<i>%{user}</i> deleted comment on result <strong>%{result}</strong>."
+    start_edit_wopi_file_step: "<i>%{user}</i> started editing File %{file} on Step %{step} <strong>%{step_name}</strong>."
+    start_edit_wopi_file_result: "<i>%{user}</i> started editing File %{file} on Result <strong>%{result}</strong>."
+    unlock_wopi_file_step: "<i>%{user}</i>  closed File %{file} for editing on Step %{step} <strong>%{step_name}</strong>."
+    unlock_wopi_file_result: "<i>%{user}</i> started editing File %{file} on Result <strong>%{result}</strong>."
+    load_protocol_from_file: "<i>%{user}</i> loaded protocol <strong>%{protocol}</strong> from file."
+    load_protocol_from_repository: "<i>%{user}</i> loaded protocol <strong>%{protocol}</strong> from repository."
+    revert_protocol: "<i>%{user}</i> reverted protocol <strong>%{protocol}</strong> from repository."
+    create_report: "<i>%{user}</i> created report <strong>%{report}</strong>."
+    delete_report: "<i>%{user}</i> deleted report <strong>%{report}</strong>."
+    edit_report: "<i>%{user}</i> edited report <strong>%{report}</strong>."
+
+  user_my_modules:
+    new:
+      head_title: "%{project} | %{module} | Add user"
+      title: "Add user to task %{module}"
+      create: "Add user to task"
+      no_users_available: "All users of the current project all already added to this task."
+      assign_user: "Add user"
+      back_button: "Back to task"
+    create:
+      success_flash: "Successfully added user %{user} to task <strong>%{module}</strong>."
+      error_flash: "User %{user} could not be added to task <strong>%{module}</strong>."
+    destroy:
+      success_flash: "Successfully removed user %{user} from task <strong>%{module}</strong>."
+      error_flash: "User %{user} could not be removed from task <strong>%{module}</strong>."
+
+  step_comments:
+    new:
+      head_title: "%{project} | %{module} | Add comment to step"
+      title: "Add comment to step %{step}"
+      create: "Add comment"
+    create:
+      success_flash: "Successfully added comment to step <strong>%{step}</strong>."
+
+  result_comments:
+    new:
+      head_title: "%{project} | %{module} | Add comment to result"
+      title: "Add comment to result"
+      create: "Add comment"
+    create:
+      success_flash: "Successfully added comment to result."
+
+  users:
+    enums:
+      status:
+        active: "active"
+        pending: "pending"
+    invitations:
+      edit:
+        head_title: "Accept invitation"
+    registrations:
+      edit:
+        head_title: "My profile"
+        title: "My profile"
+        avatar_label: "Avatar"
+        avatar_btn: "Edit avatar"
+        avatar_title: "Change avatar"
+        avatar_edit_label: "Upload new avatar file"
+        avatar_submit: "Upload"
+        avatar_total_size: "Your avatar file cannot be larger than 0.2 MB. (Please try again with a smaller file.)"
+        name_label: "Full name"
+        name_title: "Change name"
+        initials_label: "Initials"
+        initials_title: "Change initials"
+        email_label: "Email"
+        email_title: "Change email"
+        new_email_label: "New email"
+        current_password_label: "Current password"
+        password_explanation: "(we need your current password to confirm your changes)"
+        waiting_for_confirm: "Currently waiting confirmation for: %{email}"
+        password_label: "Password"
+        password_title: "Change password"
+        new_password_label: "New password"
+        new_password_2_label: "New password confirmation"
+      new:
+        head_title: "Sign up"
+        team_name_label: "Team name"
+        team_name_help: "Team name is required in order to create your own Team. After you create your own Team, you will be able to join other Teams as well."
+    statistics:
+      title: "My statistics"
+      team: "Team"
+      project: "Project"
+      experiment: "Experiment"
+      protocol: "Protocol"
+    settings:
+      changed_team_flash: "You are working on %{team} now!"
+      changed_team_error_flash: "Something went wrong! Try again later."
+      changed_team_in_search: "The searched item is not in your current team. You will be redirected to %{team} team!"
+      navigation:
+        account: "Account"
+        teams: "Teams"
+      account:
+        navigation:
+          profile: "Profile"
+          preferences: "Preferences"
+          addons: "Add-ons"
+        preferences:
+          head_title: "Settings | My preferences"
+          edit:
+            time_zone_label: "Time zone"
+            time_zone_sublabel: "Time zone setting affects all time & date fields throughout application."
+            time_zone_title: "Time zone"
+          update_flash: "Preferences successfully updated."
+          tutorial:
+            modal_title: "Repeat tutorial"
+            no_teams: "Seems like you are not a member of any team. Tutorials can be run only by team members."
+            repeat_tutorial: "Repeat tutorial"
+            select_team_instruction: "Select the team where you wish to create the demo project."
+            select_team: "Select team"
+            tutorial_reset_flash: "Tutorial can now be repeated."
+            tutorial_reset_error: "Tutorial could not be repeated."
+        addons:
+          head_title: "Settings | Add-ons"
+          title: "Add-ons"
+          no_addons: "You have no sciNote Add-ons."
+      teams:
+        head_title: "Settings | Teams"
+        breadcrumbs:
+          all: "All teams"
+          new_team: "New team"
+        index:
+          member_of:
+            one: "You are member of %{count} team."
+            other: "You are member of %{count} teams."
+          no_teams: "You are not a member of any team."
+          new_team: "New team"
+          thead_name: "Team"
+          thead_role: "Role"
+          thead_created_at: "Created at"
+          thead_joined_on: "Joined on"
+          thead_members: "Members"
+          na: "n/a"
+          leave: "Leave team"
+        new:
+          name_label: "Team name"
+          name_placeholder: "My team"
+          name_sublabel: "Pick a name that would best describe your team (e.g. 'University of ..., Department of ...')."
+          description_label: "Description"
+          description_sublabel: "Describe your team."
+          create: "Create team"
+        edit:
+          header_created_at: "Created on:"
+          header_created_by: "Created by:"
+          header_created_by_name_email: "%{name} (%{email})"
+          header_space_taken: "Space usage:"
+          header_no_description: "No description"
+          name_title: "Edit team name"
+          name_label: "Name"
+          description_title: "Edit team description"
+          description_label: "Description"
+          team_members_title: "Team members"
+          add_user: "Add team members"
+          thead_user_name: "Name"
+          thead_email: "Email"
+          thead_joined_on: "Joined on"
+          thead_status: "Status"
+          thead_role: "Role"
+          thead_actions: "Actions"
+          user_dropdown:
+            role_label: "User role"
+            remove_label: "Remove"
+          delete_team_heading: "Delete team"
+          can_delete_message: "This team can be deleted because it doesn't have any projects."
+          delete_text: "Delete team."
+          cannot_delete_message_projects: "Cannot delete this team. Only empty teams (without any projects) can be deleted."
+          modal_destroy_team:
+            title: "Delete team"
+            message: "Are you sure you wish to delete team %{team}? All of the users will be removed from the team as well. This action is irreversible."
+            confirm: "Delete team"
+            flash_success: "Team %{team} was successfully deleted."
+      user_teams:
+        leave_uo_heading: "Leave team %{team}"
+        leave_uo_message: "Are you sure you wish to leave team %{team}? This action is irreversible."
+        leave_uo_alert_heading: "Leaving team has following consequences:"
+        leave_uo_alert_line_1: "you will lose access to all content belonging to the team (including projects, tasks, protocols and activities);"
+        leave_uo_alert_line_2: "all projects in the team where you were the sole <b>Owner</b> will receive a new owner from the team administrators;"
+        leave_uo_alert_line_3: "all repository protocols in the team belonging to you will be reassigned onto a new owner from team administrators."
+        leave_uo_confirm: "Leave"
+        destroy_uo_heading: "Remove user %{user} from team %{team}"
+        destroy_uo_message: "Are you sure you wish to remove user %{user} from team %{team}?"
+        destroy_uo_alert_heading: "Removing user from team has following consequences:"
+        destroy_uo_alert_line_1: "user will lose access to all content belonging to the team (including projects, tasks, protocols and activities);"
+        destroy_uo_alert_line_2: "all projects in the team where user was the sole <b>Owner</b> will be reassigned onto you as a new owner;"
+        destroy_uo_alert_line_3: "all repository protocols in the team belonging to user will be reassigned onto you."
+        destroy_uo_confirm: "Remove user"
+        leave_flash: "Successfuly left team %{team}."
+
+  protocols:
+    nav:
+      breadcrumbs:
+        manager: "Protocol management"
+        edit: "Edit protocol"
+    protocols_io_import:
+      title_too_long: "... Text is too long so we had to cut it off."
+      too_long: "... <span class='label label-warning'>Text is too long so we had to cut it off.</span>"
+      import_description_notice: "The protocols description is listed below under \"Protocol info\"."
+      preview:
+        description: "Protocol Description: "
+        before_start: "Before starting protocol information:"
+        warning: "Protocol warning:"
+        guidelines: "Guidelines:"
+        link: "Link:"
+        s_nobr_link: "Link:"
+        s_link: "Link:"
+        s_desc: "Description:"
+        strng_s_desc: "Description:"
+        s_exp_res: "Expected result:"
+        dev: "Developer:"
+        vers: "Version:"
+        repo: "Repository:"
+        os: "OS name , OS version:"
+        sub_prot: "This protocol also contains an attached sub-protocol:"
+        auth: "Author:"
+        manuscript_citation: "Manuscript citation:"
+        publish_date: "Publish date:"
+        vendor_name: "Vendor name:"
+        vendor_link: "Vendor link:"
+        keywords: "Keywords:"
+        tags: "Tags:"
+      comp_append:
+        table_moved: "<br><strong><i>There was a table here, it was moved to the end of this step. </i></strong>"
+        missing_step: "Step"
+        missing_desc: "Description missing"
+        general_link: "<br>Link: "
+        expected_result: "<br><strong>Expected result: </strong>"
+        soft_packg:
+          name: "<br><strong>Software package: </strong>"
+          developer: "<br>Developer: "
+          version: "<br>Version: "
+          link: "<br>Link: "
+          repository: "<br>Repository: "
+          os: "<br>OS name , OS version: "
+        dataset:
+          name: "<br><strong>Dataset: </strong>"
+          link: "<br>Link: "
+        command:
+          name: "<br><strong>Command: </strong>"
+          description: "<br>Description: "
+          os: "<br>OS name , OS version: "
+        sub_protocol:
+          protocol_name: "<br><strong>This step also contains an attached sub-protocol: </strong>"
+          full_name: "<br>Author: "
+          link: "<br>Link: "
+        safety_infor:
+          body: "<br><strong>Safety information: </strong>"
+          link: "<br>Link: "
+    import_export:
+      load_file_error: "Failed to load the protocol file."
+      import_modal:
+        title_import: "Import protocol/s"
+        title_import_into_protocol: "Load protocol from file"
+        title_import_into_protocol_protocols_io: "Load protocol from protocols.io file"
+        import_into_protocol_message: "This will overwrite the current protocol!"
+        import_into_protocol_confirm: "Are you sure you wish to load protocol from file? This action will overwrite the current protocol."
+        import_to_linked_task_file: "Are you sure you wish to load protocol from file? This action will overwrite the current protocol in the task and unlink it from repository. The current protocol will remain unchanged in repository."
+        name_label: "Protocol name"
+        authors_label: "Authors"
+        description_label: "Description"
+        created_at_label: "Created at"
+        updated_at_label: "Last modified at"
+        preview_title: "Protocol preview"
+        preview_title_position: " | %{current} of %{total}"
+        assets_header: "Files"
+        import_current: "Import current"
+        import_all: "Import all"
+        import: "Import"
+    export:
+      export_results:
+        title: "Export results"
+        message_failed: "Failed to export %{nr} protocols."
+        message_ok: "Successfully exported %{nr} protocols."
+        row_success: "Exported"
+        row_failed: "Failed"
+    header:
+      created_at: "Created at"
+      updated_at: "Last modified at"
+      added_by: "Added by"
+      keywords: "Keywords"
+      authors: "Authors"
+      no_authors: "No authors"
+      description: "Description"
+      no_description: "No description"
+      keywords_modal: "Input one or multiple keywords, confirm each keyword with ENTER key"
+      edit_name_modal:
+        title: "Edit name of protocol %{protocol}"
+        label: "Name"
+      edit_keywords_modal:
+        title: "Edit keywords of protocol %{protocol}"
+        update_failed: "Could not update protocol keywords."
+      edit_authors_modal:
+        title: "Edit authors of protocol %{protocol}"
+        label: "Authors"
+      edit_description_modal:
+        title: "Edit description of protocol %{protocol}"
+        label: "Description"
+    index:
+      head_title: "Protocol management"
+      navigation:
+        public: "Public protocols"
+        private: "Private protocols"
+        archive: "Archive"
+      public_description: "Public protocols are visible and can be used by everyone from the team."
+      private_description: "Private protocols are only visible to you."
+      create_new: "Create new"
+      edit: "Edit"
+      clone_btn: "Copy"
+      import: "Import"
+      import_alt: " from SciNote protocol file(.eln)"
+      import_json: " from protocols.io file"
+      modal_import_json_upload: "Upload file"
+      modal_import_json_title: "Import protocols.io file"
+      modal_import_json_notice: "Upload your protocols.io protocol file"
+      export: "Export"
+      make_private: "Make private"
+      publish: "Publish"
+      archive_action: "Archive"
+      thead_name: "Name"
+      thead_keywords: "Keywords"
+      thead_nr_of_linked_children: "No. of linked tasks"
+      thead_published_by: "Published by"
+      thead_added_by: "Added by"
+      thead_archived_by: "Archived by"
+      thead_published_on: "Published at"
+      thead_created_at: "Created at"
+      thead_archived_on: "Archived at"
+      thead_updated_at: "Last modified at"
+      preview:
+        title: "%{protocol} preview"
+      linked_children:
+        title: "Tasks linked to protocol %{protocol}"
+        used_in: "Number of tasks linked to this protocol: %{nr}"
+        no_linked_children: "This protocol is not linked to any task."
+      archive:
+        description: "Archived protocols can only be seen by you. Restoring protocols will return them to their previous location (public/private)."
+      restore: "Restore"
+      no_teams:
+        title: "Your dashboard is empty!"
+        text: "It seems you're not a member of any team. See team management to sort it out."
+        btn: "Manage teams"
+      make_private_unauthorized: "You do not have permission to make selected protocols private."
+      make_private_error: "Error occured while making selected protocols private."
+      publish_unauthorized: "You do not have permission to publish selected protocols."
+      publish_error: "Error occured while publishing selected protocols."
+      archive_unauthorized: "You do not have permission to archive selected protocols."
+      archive_error: "Error occured while archiving selected protocols."
+      restore_unauthorized: "You do not have permission to restore selected protocols."
+      restore_error: "Error occured while restoring selected protocols."
+      row_renamed_html: "%{old_name}<i> to </i>%{new_name}"
+      no_protocol_name: "(no name)"
+      create:
+        title: "Create new protocol"
+        name_label: "Protocol name"
+        name_placeholder: "My protocol"
+        message_public: "When you create a new public protocol, it will instantly be visible to all members of the team."
+        message_private: "When you create a new private protocol, it will only be visible to you."
+        submit: "Create"
+      clone:
+        success_flash: "Successfully copied protocol '%{new}' from protocol '%{original}'."
+        error_flash: "Failed to copied protocol '%{original}'."
+      make_private_results:
+        title: "Make private results"
+        message_failed: "Failed to make %{nr} protocols private."
+        message_ok: "Successfully made %{nr} protocols private."
+        row_success: "Made private"
+        row_renamed: "Made private & renamed"
+        row_failed: "Failed"
+      publish_results:
+        title: "Publish results"
+        message_failed: "Failed to publish %{nr} protocols."
+        message_ok: "Successfully published %{nr} protocols."
+        row_success: "Published"
+        row_renamed: "Published & renamed"
+        row_failed: "Failed"
+      import_results:
+        title: "Import results"
+        message_failed: "Failed to import %{nr} protocol/s."
+        message_ok: "Successfully imported %{nr} protocol/s."
+        message_ok_pio: "Successfully imported protocol from protocols.io file."
+        message_warn_truncated: "Successfully imported protocol from protocols.io file. However, text in some fields was too long so we had to cut it off."
+        row_success: "Imported"
+        row_renamed: "Imported & renamed"
+        row_failed: "Failed"
+        row_file_too_large: "(Protocol too large)"
+      confirm_archive:
+        title: "Archive protocols"
+        message: "Are you sure you wish to archive the selected protocols? All the task protocols will be unlinked."
+        confirm: "Archive"
+      archive_results:
+        title: "Archive results"
+        message_failed: "Failed to archive %{nr} protocols."
+        message_ok: "Successfully archived %{nr} protocols."
+        row_success: "Archived"
+        row_renamed: "Archived & renamed"
+        row_failed: "Failed"
+      restore_results:
+        title: "Restore results"
+        message_failed: "Failed to restore %{nr} protocols."
+        message_ok: "Successfully restored %{nr} protocols."
+        row_success: "Restored"
+        row_renamed: "Restored & renamed"
+        row_failed: "Failed"
+        row_in_repository_public: "%{protocol} - <i>into public protocols</i>"
+        row_in_repository_private: "%{protocol} - <i>into private protocols</i>"
+    steps:
+      completed: 'Completed'
+      uncompleted: 'Uncompleted'
+      expand_label: "Expand all"
+      collapse_label: "Collapse all"
+      new_step: "Add new"
+      subtitle: "Protocol steps"
+      no_steps: "Protocol has no steps."
+      published_on: "Published on <em>%{timestamp}</em> by <em>%{user}</em>"
+      info_tab: "Info"
+      comments_tab: "Comments"
+      no_description: "This step has no description."
+      tables: "Tables"
+      files: "Files"
+      empty_checklist: "No items"
+      comment_title: "%{user} at %{time}:"
+      options:
+        up_arrow_title: "Move step up"
+        down_arrow_title: "Move step down"
+        comment_title: "Comments"
+        no_comments: "No comments"
+        new_comments: "New comment"
+        edit_title: "Edit step"
+        delete_title: "Delete step"
+        duplicate_title: "Duplicate step"
+        complete_title: "Complete step"
+        uncomplete_title: "Uncomplete step"
+      new:
+        add_step_title: "Add new step"
+        tab_checklists: "Checklists"
+        tab_assets: "Files"
+        tab_tables: "Tables"
+        add_step: "Add"
+        name: "Step name"
+        name_placeholder: "mRNA sequencing"
+        description: "Description"
+        description_placeholder: "Write what should be done here ..."
+        checklist_panel_title: "Checklist"
+        checklist_name: "Checklist name"
+        checklist_name_placeholder: "Checklist name"
+        checklist_items: "Items"
+        checklist_item_placeholder: "Task"
+        checklist_add_item: "Add item"
+        add_checklist: "Add checklist"
+        table_panel_title: "Table"
+        table_name: "Table title"
+        table_name_placeholder: "Table title"
+        add_table: "Add table"
+        asset_panel_title: "File"
+        add_asset: "Add file"
+      edit:
+        edit_step_title: "Edit step"
+        edit_step: "Save"
+      destroy:
+        confirm: "Are you sure you want to delete step %{step}?"
+        success_flash: "Step %{step} successfully deleted."
+        error_flash: "Step %{step} couldn't be deleted. One or more files are locked."
+    edit:
+      head_title: "Edit protocol"
+    no_keywords: "No keywords"
+
+  invite_users:
+    to_team:
+      title: "Invite users to team %{team}"
+      heading: "Invite more people to team %{team} and start using sciNote."
+    no_team:
+      title: "Invite users to sciNote"
+      heading: "Invite more people to start using sciNote."
+    input_subtitle: "Input one or multiple emails, confirm each email with ENTER key."
+    invite_to_team_heading: "Invite users to my team:"
+    invite_btn: "Invite user/s"
+    invite_guest: "as Guest/s"
+    invite_user: "as Normal user/s"
+    invite_admin: "as Administrator/s"
+    results:
+      heading: "Invitation results:"
+      user_exists: "User is already a member of sciNote."
+      user_exists_unconfirmed_invited_to_team: "User is already a member of sciNote but is not confirmed yet - successfully invited to team %{team} as %{role}."
+      user_exists_and_in_team: "User is already a member of sciNote and team %{team} as %{role}."
+      user_exists_invited_to_team: "User was already a member of sciNote - successfully invited to team %{team} as %{role}."
+      user_created: "User succesfully invited to sciNote."
+      user_created_invited_to_team: "User successfully invited to sciNote and team %{team} as %{role}."
+      user_invalid: "Invalid email."
+      too_many_emails: "Only invited first %{nr} emails. To invite more users, "
+
+  time:
+    formats:
+      full: "%d.%m.%Y %H:%M"
+        # This format is used for JS datetimepicker,
+        # only in different notation;
+        # it should be the same as the above full format
+      full_js: "D.M.YYYY HH:mm"
+        # This format is used only in datatables
+        # to format the timestamp in SQL so it can
+        # be easily searched by input param
+      datatables_date: 'DD.MM.YYYY HH24:MI'
+      full_date: "%d.%m.%Y"
+      time: "%H:%M"
+      short: "%H"
+
+  tutorial:
+    title: "Tutorial"
+    back: "Back"
+    next: "Next"
+    skip_tutorial: "Skip tutorial"
+    finish_tutorial: "Start using sciNote"
+    tutorial_welcome_title_html: "Welcome to <em>sciNote</em>, your electronic lab notebook. <em>sciNote</em> organizes your work in Projects. Click <strong>Team icon</strong> <span class='fa fa-users'></span> to choose Projects from which Team you want to view on your Dashboard. You can also reorder them by clicking the <strong>Sort by</strong> button. <strong>(Step 1/26)</strong>"
+    create_project_html: "Click here to create a Project and it will appear under the Team you've chosen. Choose public <span class='glyphicon glyphicon-eye-open'></span> if you want everyone from the Team to view the Project or choose private <span class='glyphicon glyphicon-eye-close'></span> so only the people who you invite to the Project can see it. <strong>(Step 2/26)</strong>"
+    project_options_html: "In the bottom row of the Project card you can check the latest activity <span class='glyphicon glyphicon-equalizer'></span>, invite collaborators <span class='glyphicon glyphicon-user'></span>, see the notifications <span class='glyphicon glyphicon-bell'></span> and write comments <span class='glyphicon glyphicon-comment'></span>. You can also edit the Project's name and visibility or archive it. You can recall the Project from the Archive <span class='glyphicon glyphicon-briefcase'></span> in the top right side of the Dashboard at any time. <strong>(Step 3/26)</strong>"
+    create_experiment_html: "Inside of a Project you can create Experiments. To create one click on this button and edit Experiment’s name and description. <strong>(Step 4/26)</strong>"
+    edit_experiment_html: "By clicking on the down arrow <span class='caret'></span> of an Experiment card you can choose between different actions. You can <strong>Edit details</strong> to the Experiment, such as experiment name and description, <strong>Copy</strong> it as template inside of a Project, where copied Experiment is identical to the original one, <strong>Move</strong> it from one Project to another or <strong>Archive</strong> it in the Archive <span class='glyphicon glyphicon-briefcase'></span>. <strong>(Step 5/26)</strong>"
+    canvas_overview_html: "A Task is a basic unit of your Experiment. Within a Task, you can add Protocols, Results or Samples. You can connect Tasks into Workflows to assure traceability of your work. You can grab a Task or entire Workflow and move it in all directions on the canvas. <strong>(Step 6/26)</strong>"
+    canvas_click_edit_workflow_html: " Click <strong>Edit experiment</strong> to add new Tasks or to modify an existing Experiment. <strong>(Step 7/26)</strong>"
+    edit_workflow_html: "To add a new Task to the Experiment, click on <strong>New task</strong> and drag it onto canvas. <strong>(Step 8/26)</strong>"
+    edit_workflow_click_save_html: "Click <strong>Save experiment</strong> to save changes you’ve made to the Experiment. <strong>(Step 9/26)</strong>"
+    sidebar_html: "Navigation bar helps you to navigate through Experiments. It also helps you to find a specific Task on the canvas by clicking the navigate icon <span class='glyphicon glyphicon-map-marker'></span>. <strong>(Step 10/26)</strong>"
+    sidebar_click_module_html: "Click on the Task name <strong>qPCR</strong> to see its contents. <strong>(Step 11/26)</strong>"
+    module_protocols_html: "Inside of a Task you can create Protocol steps and upload existing protocol files. After you have finished a certain step, click the <strong>Complete step</strong> button. Exact time and the person who completed the step are recorded and can be seen in the <strong>Activity</strong> tab in the top right side of the Dashboard. <strong>(Step 12/26)</strong>"
+    module_protocols_save_html: "You can save the protocol to Protocol repository. Everyone within the same Team will be able to use it. <strong>(Step 13/26)</strong>"
+    module_protocols_click_results_html: "Click on the <strong>Results</strong> tab to upload experiment results. <strong>(Step 14/26)</strong>"
+    module_results_html: "You can upload any type of a file, insert table or write comments. <strong>(Step 15/26)</strong>"
+    module_results_click_samples_html: "Click on the <strong>Samples</strong> tab to import, export or assign samples to the Task. <strong>(Step 16/26)</strong>"
+    samples_html: "You can easily import sample tables from Excel or tab-delimited files. If you assign samples to a certain Task, these samples will be automatically assigned downstream the Workflow. <strong>(Step 17/26)</strong>"
+    breadcrumbs_html: "You can always use these <strong>Breadcrumbs</strong> to navigate all the way back to the Dashboard. Click on the <strong>Reports</strong> tab to generate a report of your work. <strong>(Step 18/26)</strong>"
+    reports_index_click_new_report_html: "Click the <strong>New report</strong> button to create a new report. <strong>(Step 19/26)</strong>"
+    new_report_html: "To add report elements to the report, click on the <strong>—+—</strong> sign on the sheet. Select the report contents in the tabs and click <strong>Add to report</strong>. You can save the report as a PDF on your computer or save it within sciNote for later viewing and modification. <strong>(Step 20/26)</strong>"
+    new_report_click_team_html: "Click on <strong>%{private_team}</strong> in breadcrumbs to return to the Dashboard. <strong>(Step 21/26)</strong>"
+    protocols_link_html: "Click on <span class='glyphicon glyphicon-list-alt'></span> to go to the Protocols repository page. <strong>(Step 22/26)</strong>"
+    protocols_index_html: "View your Public and Private Protocols, which you can Edit, Create new ones or Copy them. Protocols can be archived and restored from the Archive. <strong>(Step 23/26)</strong>"
+    protocols_import_export_html: "You can also Import or Export protocols to your hard drive. Return to the Dashboard. <strong>(Step 24/26)</strong>"
+    archive_project_html: "Archive Demo project - qPCR by clicking on the down arrow <span class='glyphicon glyphicon-triangle-bottom'></span>. You can always access the Archive by clicking the <span class='glyphicon glyphicon-briefcase'></span> icon on the top right side of the Dashboard and restore any item you have archived. <strong>(Step 25/26)</strong>"
+    goodbye_message: "To repeat the tutorial, go to your <strong>Settings</strong> and open <strong>Preferences</strong> tab. Click on the <strong>Repeat tutorial</strong> button and go through the tutorial as many times as needed. <strong>(Step 26/26)</strong>"
+
+  notifications:
+    title: "Notifications"
+    email_settings: "E-mail notifications"
+    form:
+      assignments: "Assignment"
+      notification_scinote: 'Show in sciNote'
+      notification_email: 'Notify me via email'
+      assignments_description: 'Assignment notifications appear whenever you get assigned to a team, project, task.'
+      recent_notification: 'Recent changes'
+      recent_notification_description: 'Recent changes notifications appear whenever there is a change on a task you are assigned to.'
+      system_message: 'System message'
+      system_message_description: 'System message notifications are specifically sent by site maintainers to notify all users about a system update.'
+    show_all: "Show all notifications"
+    show_more: "Show more notifications"
+    no_notifications: "No notifications."
+    no_recent: "No recent notifications."
+    types:
+      assignment: "Assignment"
+      recent_changes: "Recent changes"
+      system_message: "sciNote system message"
+      deliver: 'Exportable content'
+    experiment_annotation_title: "%{user} mentioned you in experiment %{experiment}."
+    experiment_annotation_message_html: "Project: %{project} | Experiment: %{experiment}"
+    project_comment_annotation_title: "%{user} mentioned you in a comment on project %{project}."
+    project_annotation_message_html: "Project: %{project}"
+    my_module_comment_annotation_title: "%{user} mentioned you in a comment on task %{my_module}."
+    my_module_annotation_message_html: "Project: %{project} | Experiment: %{experiment} | Task: %{my_module}"
+    step_comment_annotation_title: "%{user} mentioned you in a comment on step %{step}."
+    step_description_title: "%{user} mentioned you in a description on step %{step}."
+    checklist_title: "%{user} mentioned you in a checklist on step %{step}."
+    step_annotation_message_html: "Project: %{project} | Experiment: %{experiment} | Task: %{my_module} | Step: %{step}"
+    result_annotation_title: "%{user} mentioned you in result %{result}."
+    result_comment_annotation_title: "%{user} mentioned you in a comment on result %{result}."
+    result_annotation_message_html: "Project: %{project} | Experiment: %{experiment} | Task: %{my_module}"
+    sample_annotation_title: "%{user} mentioned you in Column: %{column} of Sample %{sample}"
+    sample_annotation_message_html: "Sample: %{sample} | Column: %{column}"
+    repository_annotation_title: "%{user} mentioned you in Column: %{column} of Record %{record} in Repository %{repository}"
+    repository_annotation_message_html: "Item: %{record} | Column: %{column}"
+    protocol_step_annotation_message_html: "Protocol: %{protocol}"
+    email_title: "You've received a sciNote notification!"
+    assign_user_to_team: "<i>%{assigned_user}</i> was added as %{role} to team <strong>%{team}</strong> by <i>%{assigned_by_user}</i>."
+    unassign_user_from_team: "<i>%{unassigned_user}</i> was removed from team <strong>%{team}</strong> by <i>%{unassigned_by_user}</i>."
+    task_completed: "%{user} completed task %{module}. %{date} | Project: %{project} | Experiment: %{experiment}"
+    start_work_on_next_task: "<i>%{user}</i> has completed the task <strong>%{module}</strong>. You can now start working on the next task in the workflow."
+    start_work_on_next_task_message: "Project: %{project} | Experiment: %{experiment} | Task: %{my_module}"
+
+  assets:
+    head_title:
+      edit: "sciNote | %{file_name} | Edit"
+      view: "sciNote | %{file_name} | View"
+    drag_n_drop:
+      label_html: 'Drag &amp; drop files here or '
+      browse_label: 'Browse to add'
+      drop_label: 'Drop to add to Step'
+      file_label: 'File'
+  atwho:
+    no_results: "No results found"
+    users:
+      title: "People"
+      navigate_1: "up/down"
+      navigate_2: "to navigate"
+      confirm_1: "enter/tab"
+      confirm_2: "to confirm"
+      dismiss_1: "esc"
+      dismiss_2: "to dismiss"
+      popover_html: "<span class='silver'>Team:</span>&nbsp;%{team} <br> <span class='silver'>Role:</span>&nbsp;%{role} <br> <span class='silver'>Joined:</span>&nbsp;%{time}"
+    res:
+      archived: "(archived)"
+      removed: "(removed)"
+      deleted: "(deleted)"
+
+  zip_export:
+    modal_label: 'Export repository'
+    notification_title: 'Your package is ready to be exported!'
+    expired_title: 'Looks like your link has expired.'
+    expired_description: 'Please export the data again in order to receive a new link.'
+    modal_label: 'Export request received'
+    modal_html: "<p>Your export request is being processed.</p><p>When completed we will <strong>send an email to %{email}</strong> inbox with a link to your exported samples. Note that the link will expire in 7 days.</p>"
+    repository_html: '<p>You are about to export selected items in repository %{repository}</p> <br> Repository will be exported in a .csv file format. You will receive <strong>email with a link</strong> where you can download it.'
+    export_error: "Error when creating zip export."
+
+  # This section contains general words that can be used in any parts of
+  # application.
+  tiny_mce:
+    upload_window_title: 'Insert an image from your computer'
+    upload_window_label: 'Choose an image'
+    insert_btn: 'Insert'
+    error_message: 'You must choose a file'
+    server_not_respond: "Didn't get a response from the server"
+  general:
+    save: "Save"
+    update: "Update"
+    edit: "Edit"
+    cancel: "Cancel"
+    save: "Save"
+    close: "Close"
+    create: 'Create'
+    no_comments: "No comments!"
+    more_comments: "More comments"
+    comment_placeholder: "Your Message"
+    module:
+      one: "task"
+      other: "tasks"
+    public: "public"
+    private: "private"
+    search: "Search"
+    file:
+      total_size: "You can upload max %{size} MB of files at one time. Please remove one or more files and try to submit again."
+      size_exceeded: "File size must be less than %{file_size} MB."
+      blank: "You didn't select any file"
+      uploading: "If you leave this page, the file(s) that is/are currently uploading will not be saved! Are you sure you want to continue?"
+      upload_failure: "Upload connection error. Try again or contact the administrator."
+    text:
+      not_blank: "can't be blank"
+      length_too_long: "is too long (maximum is %{max_length} characters)"
+      length_too_short: "is too short (minimum is %{min_length} characters)"
+    query:
+      wrong_query: "All words in search query are either too short (minimum is %{min_length} characters) or too long (maximum is %{max_length} characters)"
+      length_too_long: "Search query is too long (maximum is %{max_length} characters)"
+      length_too_short: "Search query is too short (minimum is %{min_length} characters)"
+    busy: "The server is still processing your request. If you leave this page, the changes will be lost! Are you sure you want to continue?"
+    no_name: "(no name)"
+
+  api:
+    core:
+      status_ok: "Ok"
+      expired_token: "Token is expired"
+      invalid_token: "Token is invalid"
+
+  Add: "Add"
+  Asset: "File"
+  Assets: "Files"
+  Download: "Download"
+  Module: "Task"
+  Modules: "Tasks"
+  Project: "Project"
+  Projects: "Projects"
+  Experiments: "Experiments"
+  Result: "Result"
+  Results: "Results"
+  Protocol: "Protocol"
+  Protocols: "Protocols"
+  Checklist: "Checklist"
+  Checklists: "Checklists"
+  Table: "Table"
+  Tables: "Tables"
+  Sample: "Sample"
+  Samples: "Samples"
+  Repositories_team: "Repositories - %{team}"
+  Reports: "Reports"
+  Comments: "Comments"
+  Step: "Step"
+  Steps: "Steps"
+  Tag: "Tag"
+  Tags: "Tags"
+  Workflow: "Workflow"
+  Workflows: "Workflows"
+  More: "More"
+  Added: 'Added'
+  by: 'by'
+
+  client_api:
+    permission_error: "You don't have permission for this action."
+    invalid_arguments: "Invalid arguments"
+    generic_error_message: "Something went wrong! Please try again later."
+    user_teams:
+      permission_error: "You don't have permission to manage users."
+      leave_team_error: "An error occured."
+      leave_flash: "Successfuly left team %{team}."
+    teams:
+      create_permission_error: "You don't have permission to create team."
+      update_permission_error: "You don't have permission to edit team."
+    user:
+      current_password_invalid: "incorrect password"
+      password_confirmation_not_match: "doesn't match"
+    invite_users:
+      permission_error: "You don't have permission to invite additional users to team. Contact its administrator/s."

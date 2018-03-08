@@ -3,14 +3,14 @@ SECRET_KEY_BASE: "<<secret_key_base>>"
 PAPERCLIP_HASH_SECRET: "<<paperclip_hash_secret>>"
 
 # Mailer settings
-MAIL_FROM: <Scinote@epa.gov>
-MAIL_REPLYTO: <Scinote@epa.gov>
+MAIL_FROM: <scinote@epa.gov>
+MAIL_REPLYTO: <scinote@epa.gov>
 SMTP_ADDRESS: localhost
 SMTP_PORT: 25
 SMTP_DOMAIN: epa.gov
 SMTP_USERNAME: gemm
 SMTP_PASSWORD: gemm.gemm
-MAIL_SERVER_URL: ordscinote.epa.gov
+MAIL_SERVER_URL: localhost
 
 # File storage
 
@@ -26,7 +26,7 @@ PAPERCLIP_STORAGE: "filesystem"
 #S3_HOST_NAME: ""
 
 # This is needed for 'better errors' gem in development mode
-TRUSTED_IP: "172.17.0.1"
+TRUSTED_IP: "127.0.0.1"
 
 # Various settings
 ENABLE_TUTORIAL: "true"
@@ -35,7 +35,7 @@ NEW_TEAM_ON_SIGNUP: "true"
 
 ENABLE_EMAIL_CONFIRMATIONS: "false"
 
-ENABLE_RECAPTCHA: "true"
+ENABLE_RECAPTCHA: "false"
 ENABLE_USER_REGISTRATION: "true"
 RECAPTCHA_SITE_KEY: "<<recaptcha_site_key>>"
 RECAPTCHA_SECRET_KEY: "<<recaptcha_secret_key>>"

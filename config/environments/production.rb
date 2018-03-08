@@ -35,6 +35,7 @@ Rails.application.configure do
     domain: Rails.application.secrets.mailer_domain,
     authentication: "plain",
     enable_starttls_auto: true,
+    ssl: true,
     user_name: Rails.application.secrets.mailer_user_name,
     password: Rails.application.secrets.mailer_password
   }
