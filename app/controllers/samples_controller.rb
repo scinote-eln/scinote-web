@@ -68,7 +68,7 @@ class SamplesController < ApplicationController
         errors[:init_fields] = sample.errors.messages
       else
         # Sample was saved, we can add all newly added sample fields
-        params[:custom_fields].to_a.each do |id, val|
+        custom_fields_params.each do |id, val|
           scf = SampleCustomField.new(
             custom_field_id: id,
             sample_id: sample.id,
