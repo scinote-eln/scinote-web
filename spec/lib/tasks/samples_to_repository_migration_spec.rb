@@ -63,7 +63,7 @@ describe 'samples_to_repository_migration:run' do
       color_column = row.repository_cells.third
       expect(
         color_column.repository_column.name
-      ).to eq 'Sample group color hex (e980a0f5)'
+      ).to eq 'Sample group color hex'
       expect(color_column.value_type).to eq 'RepositoryTextValue'
 
       # repository custom column
