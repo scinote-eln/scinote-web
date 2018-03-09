@@ -13,15 +13,18 @@ module RepositoryDatatableHelper
             '2': escape_input(record.name),
             '3': I18n.l(record.created_at, format: :full),
             '4': escape_input(record.created_by.full_name),
-            'recordEditUrl':
-              Rails.application.routes.url_helpers
-                   .edit_repository_repository_row_path(repository,
-                                                        record.id),
-            'recordUpdateUrl':
-              Rails.application.routes.url_helpers
-                   .repository_repository_row_path(repository, record.id),
-            'recordInfoUrl':
-              Rails.application.routes.url_helpers.repository_row_path(record.id)
+            'recordEditUrl': Rails.application.routes.url_helpers
+                                  .edit_repository_repository_row_path(
+                                    repository,
+                                    record.id
+                                  ),
+            'recordUpdateUrl': Rails.application.routes.url_helpers
+                                    .repository_repository_row_path(
+                                      repository,
+                                      record.id
+                                    ),
+            'recordInfoUrl': Rails.application.routes.url_helpers
+                                  .repository_row_path(record.id)
           }
 
       # Add custom columns

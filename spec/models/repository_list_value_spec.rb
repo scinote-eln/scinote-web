@@ -98,11 +98,10 @@ RSpec.describe RepositoryListValue, type: :model do
 
     it 'retuns only the the item related to the list' do
       repository_row_two = create :repository_row, name: 'New row'
-      repository_list_value_two =
-        create :repository_list_value, repository_cell_attributes: {
-          repository_column: repository_column,
-          repository_row: repository_row_two
-        }
+      create :repository_list_value, repository_cell_attributes: {
+                                       repository_column: repository_column,
+                                       repository_row: repository_row_two
+                                     }
       list_item = create :repository_list_item,
                          data: 'new item',
                          repository: repository,
@@ -113,10 +112,9 @@ RSpec.describe RepositoryListValue, type: :model do
     end
 
     it 'returns an empty string if no item selected' do
-      list_item = create :repository_list_item,
-                         data: 'my item',
-                         repository: repository,
-                         repository_column: repository_column
+      create :repository_list_item, data: 'my item',
+                                    repository: repository,
+                                    repository_column: repository_column
       expect(repository_list_value.reload.data).to be_nil
     end
 

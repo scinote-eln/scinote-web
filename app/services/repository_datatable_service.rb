@@ -14,7 +14,8 @@ class RepositoryDatatableService
   private
 
   def create_columns_mappings
-    # Make mappings of custom columns, so we have same id for every column
+    # Make mappings of custom columns, so we have same id for every
+    # column
     i = 5
     @mappings = {}
     @repository.repository_columns.order(:id).each do |column|
@@ -24,9 +25,8 @@ class RepositoryDatatableService
   end
 
   def process_query
-    contitions = build_conditions(@params)
-    order_obj = contitions[:order_by_column]
-    search_value = contitions[:search_value]
+    order_obj = build_conditions(@params)[:order_by_column]
+    search_value = build_conditions(@params)[:search_value]
     if search_value.present?
       @repository_rows = sort_rows(order_obj, search(search_value))
     else
@@ -53,7 +53,8 @@ class RepositoryDatatableService
     else
       @assigned_rows = repository_rows.joins(
         'INNER JOIN my_module_repository_rows ON
-        (repository_rows.id = my_module_repository_rows.repository_row_id)'
+        (repository_rows.id =
+          my_module_repository_rows.repository_row_id)'
       )
     end
     repository_rows
@@ -61,8 +62,10 @@ class RepositoryDatatableService
 
   def search(value)
     includes_json = {
-      repository_cells: [:repository_text_value,
-                         repository_list_value: :repository_list_item ]
+      repository_cells: [
+        :repository_text_value,
+        repository_list_value: :repository_list_item
+      ]
     }
     RepositoryRow .left_outer_joins(:created_by)
                   .left_outer_joins(includes_json)
@@ -98,7 +101,9 @@ class RepositoryDatatableService
   end
 
   def sort_rows(column_obj, records)
-    dir = %w[DESC ASC].find { |dir| dir == column_obj[:dir].upcase } || 'ASC'
+    dir = %w(DESC ASC).find do |dir|
+      dir == column_obj[:dir].upcase
+    end || 'ASC'
     column_index = column_obj[:column]
     col_order = @repository.repository_table_states
                            .find_by_user_id(@user.id)
@@ -106,17 +111,22 @@ class RepositoryDatatableService
     column_id = col_order[column_index].to_i
 
     if sortable_columns[column_id - 1] == 'assigned'
-      return records if @my_module && @params[:assigned] == 'assigned'
+      if @my_module && @params[:assigned] == 'assigned'
+        return records
+      end
       if @my_module
         # Depending on the sort, order nulls first or
         # nulls last on repository_cells association
         return records.joins(
           "LEFT OUTER JOIN my_module_repository_rows ON
-          (repository_rows.id = my_module_repository_rows.repository_row_id
-          AND (my_module_repository_rows.my_module_id = #{@my_module.id} OR
-                            my_module_repository_rows.id IS NULL))"
+          (repository_rows.id =
+            my_module_repository_rows.repository_row_id
+          AND (my_module_repository_rows.my_module_id =
+            #{@my_module.id}
+          OR my_module_repository_rows.id IS NULL))"
         ).order(
-          "my_module_repository_rows.id NULLS #{sort_null_direction(dir)}"
+          "my_module_repository_rows.id NULLS
+           #{sort_null_direction(dir)}"
         )
       else
         return sort_assigned_records(records, dir)
@@ -127,12 +137,16 @@ class RepositoryDatatableService
       return records unless type
       return select_type(type.data_type, records, id, dir)
     else
-      return records.order("#{sortable_columns[column_id - 1]} #{dir}")
+      return records.order(
+        "#{sortable_columns[column_id - 1]} #{dir}"
+      )
     end
   end
 
   def sort_assigned_records(records, direction)
-    assigned = records.joins(:my_module_repository_rows).distinct.pluck(:id)
+    assigned = records.joins(:my_module_repository_rows)
+                      .distinct
+                      .pluck(:id)
     unassigned = records.where.not(id: assigned).pluck(:id)
     if direction == 'ASC'
       ids = assigned + unassigned
@@ -149,10 +163,14 @@ class RepositoryDatatableService
   end
 
   def select_type(type, records, id, dir)
-    return filter_by_text_value(
-      records, id, dir) if type == 'RepositoryTextValue'
-    return filter_by_list_value(
-      records, id, dir) if type == 'RepositoryListValue'
+    case type
+      when 'RepositoryTextValue'
+        filter_by_text_value(records, id, dir)
+      when  'RepositoryListValue'
+        filter_by_list_value(records, id, dir)
+      else
+        records
+    end
   end
 
   def sort_null_direction(val)
@@ -160,7 +178,7 @@ class RepositoryDatatableService
   end
 
   def filter_by_text_value(records, id, dir)
-    return records.joins(
+    records.joins(
       "LEFT OUTER JOIN (SELECT repository_cells.repository_row_id,
         repository_text_values.data AS value
       FROM repository_cells
@@ -172,7 +190,7 @@ class RepositoryDatatableService
   end
 
   def filter_by_list_value(records, id, dir)
-    return records.joins(
+    records.joins(
       "LEFT OUTER JOIN (SELECT repository_cells.repository_row_id,
         repository_list_items.data AS value
       FROM repository_cells
