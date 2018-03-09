@@ -13,7 +13,7 @@ module Tasks
         created_by: team.created_by
       )
       return repository if repository.save
-      prepare_repository(team, copy_num += 1)
+      prepare_repository(team, copy_num + 1)
     end
 
     def self.prepare_text_value_custom_columns(team, repository)
@@ -65,7 +65,7 @@ module Tasks
         repository: repository,
         created_by_id: repository.created_by_id,
         data_type: :RepositoryTextValue,
-        name: 'Sample group color hex (e980a0f5)'
+        name: 'Sample group color hex'
       )
 
       sample_type = RepositoryColumn.create!(
@@ -131,12 +131,16 @@ module Tasks
                samples.name AS sample_name,
                samples.user_id AS sample_created_by_id,
                samples.last_modified_by_id AS sample_last_modified_by_id,
+               samples.created_at AS sample_created_at,
+               samples.updated_at AS sample_updated_at,
                sample_types.name AS sample_type_name,
                sample_groups.name AS sample_group_name,
                sample_groups.color AS sample_group_color
         FROM samples
-        LEFT OUTER JOIN sample_types ON samples.sample_type_id = sample_types.id
-        LEFT OUTER JOIN sample_groups ON samples.sample_type_id = sample_groups.id
+        LEFT OUTER JOIN sample_types
+        ON samples.sample_type_id = sample_types.id
+        LEFT OUTER JOIN sample_groups
+        ON samples.sample_type_id = sample_groups.id
         WHERE samples.team_id = #{team.id}
       SQL
 

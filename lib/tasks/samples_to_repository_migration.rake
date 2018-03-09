@@ -20,11 +20,16 @@ namespace :samples_to_repository_migration do
 
         team_samples.each do |item|
           created_by = item['sample_created_by_id'] || team.created_by_id
-          last_modified_by = item['sample_last_modified_by_id'] || team.created_by_id
-          row = RepositoryRow.create!(name: item['sample_name'],
-                                      created_by_id: created_by,
-                                      last_modified_by_id: last_modified_by,
-                                      repository: repository)
+          last_modified_by = item['sample_last_modified_by_id']
+          last_modified_by ||= team.created_by_id
+          row = RepositoryRow.create!(
+            name: item['sample_name'],
+            created_at: item['sample_created_at'],
+            updated_at: item['sample_updated_at'],
+            created_by_id: created_by,
+            last_modified_by_id: last_modified_by,
+            repository: repository
+          )
           # check if sample has sample type assigned
           if item['sample_type_name']
             column = custom_columns.detect { |el| el['name'] == 'Sample type' }
@@ -61,7 +66,7 @@ namespace :samples_to_repository_migration do
             # assign sample group color to the sample
             if item['sample_group_color']
               column = custom_columns.detect do |el|
-                el['name'] == 'Sample group color hex (e980a0f5)'
+                el['name'] == 'Sample group color hex'
               end
               RepositoryTextValue.create!(
                 data: item['sample_group_color'],

@@ -87,7 +87,7 @@ describe Tasks::SamplesToRepositoryMigrationService do
       it { expect(subject.first.data_type).to eq 'RepositoryListValue' }
       it { expect(subject.second.name).to eq 'Sample type' }
       it { expect(subject.second.data_type).to eq 'RepositoryListValue' }
-      it { expect(subject.last.name).to eq 'Sample group color hex (e980a0f5)' }
+      it { expect(subject.last.name).to eq 'Sample group color hex' }
       it { expect(subject.last.data_type).to eq 'RepositoryTextValue' }
 
       describe 'generated list items from sample types' do
@@ -142,7 +142,7 @@ describe Tasks::SamplesToRepositoryMigrationService do
       it { expect(subject.first.data_type).to eq 'RepositoryListValue' }
       it { expect(subject.second.name).to eq 'Sample type' }
       it { expect(subject.second.data_type).to eq 'RepositoryListValue' }
-      it { expect(subject.last.name).to eq 'Sample group color hex (e980a0f5)' }
+      it { expect(subject.last.name).to eq 'Sample group color hex' }
       it { expect(subject.last.data_type).to eq 'RepositoryTextValue' }
 
       describe 'generated list items from sample groups' do
