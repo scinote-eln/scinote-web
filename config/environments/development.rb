@@ -75,7 +75,7 @@ Rails.application.configure do
   config.assets.raise_runtime_errors = true
 
   # Only log info and higher on development
-  config.log_level = :debug
+  config.log_level = :info
 
   # Only allow Better Errors to work on trusted ip, use ifconfig to see which
   # one you use and put it into application.yml!

@@ -1,18 +1,27 @@
 class RepositoryDatatableService
 
-  attr_reader :repository_rows, :assigned_rows
+  attr_reader :repository_rows, :assigned_rows, :mappings
 
-  def initialize(repository, params, mappings, user, my_module = nil)
-    @mappings = mappings
+  def initialize(repository, params, user, my_module = nil)
     @repository = repository
-    @mappings = mappings
     @user = user
     @my_module = my_module
     @params = params
+    create_columns_mappings
     process_query
   end
 
   private
+
+  def create_columns_mappings
+    # Make mappings of custom columns, so we have same id for every column
+    i = 5
+    @mappings = {}
+    @repository.repository_columns.order(:id).each do |column|
+      @mappings[column.id] = i.to_s
+      i += 1
+    end
+  end
 
   def process_query
     contitions = build_conditions(@params)

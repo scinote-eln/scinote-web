@@ -16,7 +16,6 @@ class MyModulesController < ApplicationController
   before_action :load_repository, only: %i(assign_repository_records
                                            unassign_repository_records
                                            repository_index)
-  before_action :load_columns_mappings, only: :repository_index
   before_action :check_manage_permissions,
                 only: %i(update destroy description due_date)
   before_action :check_view_info_permissions, only: :show
@@ -373,11 +372,11 @@ class MyModulesController < ApplicationController
     page = (params[:start].to_i / per_page) + 1
     records = RepositoryDatatableService.new(@repository,
                                              params,
-                                             @columns_mappings,
                                              current_user,
                                              @my_module)
     @assigned_rows = records.assigned_rows
     @repository_row_count = records.repository_rows.count
+    @columns_mappings = records.mappings
     @repository_rows = records.repository_rows.page(page).per(per_page)
     render 'repository_rows/index.json'
   end
@@ -600,16 +599,6 @@ class MyModulesController < ApplicationController
     @repository = Repository.find_by_id(params[:repository_id])
     render_404 unless @repository
     render_403 unless can_read_team?(@repository.team)
-  end
-
-  def load_columns_mappings
-    # Make mappings of custom columns, so we have same id for every column
-    i = 5
-    @columns_mappings = {}
-    @repository.repository_columns.order(:id).each do |column|
-      @columns_mappings[column.id] = i.to_s
-      i += 1
-    end
   end
 
   def check_manage_permissions
