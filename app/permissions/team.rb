@@ -52,6 +52,11 @@ Canaid::Permissions.register_for(Team) do
     user.is_normal_user_or_admin_of_team?(team)
   end
 
+  # repository: update/delete records
+  can :manage_repository_rows do |user, team|
+    user.is_normal_user_or_admin_of_team?(team)
+  end
+
   # repository: create field
   can :create_repository_columns do |user, team|
     user.is_normal_user_or_admin_of_team?(team)

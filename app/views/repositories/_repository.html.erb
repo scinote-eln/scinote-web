@@ -115,14 +115,15 @@
     <span class="hidden-xs-custom"><%= t("repositories.edit_record") %></span>
   </button>
 
-  <!-- Don't check if user can manage the selected repository records, because the ones that he can't, will be left untouched -->
-  <button type="button" class="btn btn-default"
-    id="deleteRepositoryRecordsButton" data-target="#deleteRepositoryRecord" data-toggle="modal" disabled>
-    <span class="glyphicon glyphicon-trash"></span>
-    <span class="hidden-xs-custom"><%= t'repositories.delete_record' %></span>
-      <%= submit_tag I18n.t('repositories.delete_record'), :class => "hidden
-      delete_repository_records_submit" %>
-  </button>
+  <% if can_manage_repository_rows?(repository.team) %>
+    <button type="button" class="btn btn-default"
+      id="deleteRepositoryRecordsButton" data-target="#deleteRepositoryRecord" data-toggle="modal" disabled>
+      <span class="glyphicon glyphicon-trash"></span>
+      <span class="hidden-xs-custom"><%= t'repositories.delete_record' %></span>
+        <%= submit_tag I18n.t('repositories.delete_record'), :class => "hidden
+        delete_repository_records_submit" %>
+    </button>
+  <% end %>
 </div>
 
 <%= render partial: "repositories/repository_table.html.erb",
