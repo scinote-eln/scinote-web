@@ -103,13 +103,17 @@ class AssetsController < ApplicationController
 
     step_assoc = @asset.step
     result_assoc = @asset.result
+    repository_cell_assoc = @asset.repository_cell
     @assoc = step_assoc unless step_assoc.nil?
     @assoc = result_assoc unless result_assoc.nil?
+    @assoc = repository_cell_assoc unless repository_cell_assoc.nil?
 
     if @assoc.class == Step
       @protocol = @asset.step.protocol
-    else
+    elsif @assoc.class == Result
       @my_module = @assoc.my_module
+    else
+      # TBD
     end
   end
 
@@ -121,6 +125,8 @@ class AssetsController < ApplicationController
       unless can_view_or_download_result_assets(@my_module)
         render_403 and return
       end
+    elsif @assoc.class == RepositoryCell
+      # TBD
     end
   end
 
@@ -132,6 +138,8 @@ class AssetsController < ApplicationController
       unless can_edit_result_asset_in_module(@my_module)
         render_403 and return
       end
+    elsif @assoc.class == RepositoryCell
+      # TBD
     end
   end
 

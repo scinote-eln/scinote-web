@@ -17,6 +17,11 @@ class RepositoryCell < ActiveRecord::Base
                where(repository_cells: { value_type: 'RepositoryListValue' })
              end),
              optional: true, foreign_key: :value_id
+  belongs_to :repository_asset_value,
+             (lambda do
+               where(repository_cells: { value_type: 'RepositoryAssetValue' })
+             end),
+             optional: true, foreign_key: :value_id
 
   validates :repository_column, presence: true
   validate :repository_column_data_type

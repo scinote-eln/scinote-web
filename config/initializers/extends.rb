@@ -42,7 +42,8 @@ class Extends
   # Data type name should match corresponding model's name
   REPOSITORY_DATA_TYPES = { RepositoryTextValue: 0,
                             RepositoryDateValue: 1,
-                            RepositoryListValue: 2 }
+                            RepositoryListValue: 2,
+                            RepositoryAssetValue: 3 }
   # Extra attributes used for search in repositories, text columns
   # are only supported
   REPOSITORY_EXTRA_SEARCH_ATTR = ['repository_text_values.data',
