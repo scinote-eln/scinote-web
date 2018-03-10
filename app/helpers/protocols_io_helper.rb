@@ -165,7 +165,13 @@ module ProtocolsIoHelper
   end
 
   def step_hash_null?(step_json)
-    step_json.dig(0, 'components', 0, 'component_type_id').nil?
+    return false unless step_json.dig(
+      0, 'components', 0, 'component_type_id'
+    ).nil?
+    return false unless step_json.dig(
+      0, 'components', '0', 'component_type_id'
+    ).nil?
+    true
   end
 
   # Images are allowed in:
@@ -350,7 +356,6 @@ module ProtocolsIoHelper
     return unordered_step_json if base_step.nil?
     number_of_steps = unordered_step_json.size
     return unordered_step_json if number_of_steps == 1
-    base_step = unordered_step_json.find { |step| step['previous_guid'].nil? }
     step_order = []
     step_counter = 0
     step_order[step_counter] = base_step
