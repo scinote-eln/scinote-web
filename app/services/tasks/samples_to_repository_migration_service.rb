@@ -6,6 +6,8 @@
 
 module Tasks
   module SamplesToRepositoryMigrationService
+    include ActiveRecord::Sanitization::ClassMethods
+
     def self.prepare_repository(team, copy_num = 0)
       repository = Repository.new(
         name: copy_num > 0 ? "Samples (#{copy_num})" : 'Samples',
@@ -39,6 +41,7 @@ module Tasks
     end
 
     def self.prepare_list_value_custom_columns_with_list_items(team, repository)
+      conn = ActiveRecord::Base.connection
       sample_types_sql = <<-SQL
         SELECT name, created_by_id, last_modified_by_id
         FROM sample_types
@@ -50,8 +53,8 @@ module Tasks
         WHERE team_id = #{team.id}
       SQL
       # execute query
-      sample_types = ActiveRecord::Base.connection.execute(sample_types_sql)
-      sample_groups = ActiveRecord::Base.connection.execute(sample_groups_sql)
+      sample_types = conn.execute(sample_types_sql)
+      sample_groups = conn.execute(sample_groups_sql)
 
       sample_group = RepositoryColumn.create!(
         repository: repository,
@@ -78,25 +81,53 @@ module Tasks
       sample_groups.each_with_index do |item, index|
         created_by = item['created_by_id'] || team.created_by_id
         last_modified_by = item['last_modified_by_id'] || team.created_by_id
-        RepositoryListItem.create!(
-          data: item.fetch('name') { "sample group item (#{index})" },
-          created_by_id: created_by,
-          last_modified_by_id: last_modified_by,
-          repository_column: sample_group,
-          repository: repository
-        )
+        timestamp = conn.quote(Time.now.to_s(:db))
+        values = [
+          repository.id,
+          sample_group.id,
+          conn.quote(item.fetch('name') { "sample group item (#{index})" }),
+          created_by,
+          last_modified_by,
+          timestamp,
+          timestamp
+        ]
+        list_item_sql = <<-SQL
+          INSERT INTO repository_list_items
+            (repository_id,
+             repository_column_id,
+             data,
+             created_by_id,
+             last_modified_by_id,
+             created_at, updated_at)
+          VALUES (#{values.join(', ')})
+        SQL
+        conn.execute(list_item_sql)
       end
 
       sample_types.each_with_index do |item, index|
         created_by = item['created_by_id'] || team.created_by_id
         last_modified_by = item['last_modified_by_id'] || team.created_by_id
-        RepositoryListItem.create!(
-          data: item.fetch('name') { "sample group item (#{index})" },
-          created_by_id: created_by,
-          last_modified_by_id: last_modified_by,
-          repository_column: sample_type,
-          repository: repository
-        )
+        timestamp = conn.quote(Time.now.to_s(:db))
+        values = [
+          repository.id,
+          sample_type.id,
+          conn.quote(item.fetch('name') { "sample type item (#{index})" }),
+          created_by,
+          last_modified_by,
+          timestamp,
+          timestamp
+        ]
+        list_item_sql = <<-SQL
+          INSERT INTO repository_list_items
+            (repository_id,
+             repository_column_id,
+             data,
+             created_by_id,
+             last_modified_by_id,
+             created_at, updated_at)
+          VALUES (#{values.join(', ')})
+        SQL
+        conn.execute(list_item_sql)
       end
 
       [sample_group, sample_type, sample_group_color]
@@ -140,7 +171,7 @@ module Tasks
         LEFT OUTER JOIN sample_types
         ON samples.sample_type_id = sample_types.id
         LEFT OUTER JOIN sample_groups
-        ON samples.sample_type_id = sample_groups.id
+        ON samples.sample_group_id = sample_groups.id
         WHERE samples.team_id = #{team.id}
       SQL
 
@@ -150,6 +181,122 @@ module Tasks
     def self.get_custom_columns(team, repository)
       prepare_text_value_custom_columns(team, repository) +
         prepare_list_value_custom_columns_with_list_items(team, repository)
+    end
+
+    def self.create_text_cell(row_id, column_id, data,
+                              created_by_id, last_modified_by_id)
+      conn = ActiveRecord::Base.connection
+      timestamp = conn.quote(Time.now.to_s(:db))
+      values = [conn.quote(data), created_by_id, last_modified_by_id, timestamp, timestamp]
+      value_sql = <<-SQL
+        INSERT INTO repository_text_values
+          (data, created_by_id, last_modified_by_id,
+           created_at, updated_at)
+        VALUES (#{values.join(', ')})
+        RETURNING id
+      SQL
+
+      value_id = conn.execute(value_sql)[0]['id']
+
+      values = [row_id, column_id, value_id, conn.quote('RepositoryTextValue'),
+                timestamp, timestamp]
+      cell_sql = <<-SQL
+        INSERT INTO repository_cells
+          (repository_row_id, repository_column_id, value_id, value_type,
+           created_at, updated_at)
+        VALUES (#{values.join(', ')})
+      SQL
+      conn.execute(cell_sql)
+    end
+
+    def self.create_list_cell(row_id, column_id, list_item_id,
+                              created_by_id, last_modified_by_id)
+      conn = ActiveRecord::Base.connection
+      timestamp = conn.quote(Time.now.to_s(:db))
+      values = [list_item_id, created_by_id, last_modified_by_id,
+                timestamp, timestamp]
+      list_value_sql = <<-SQL
+        INSERT INTO repository_list_values
+          (repository_list_item_id, created_by_id, last_modified_by_id,
+           created_at, updated_at)
+        VALUES (#{values.join(', ')})
+        RETURNING id
+      SQL
+      value_id = ActiveRecord::Base.connection.execute(list_value_sql)[0]['id']
+
+      values = [row_id, column_id, value_id, conn.quote('RepositoryListValue'),
+                timestamp, timestamp]
+      cell_sql = <<-SQL
+        INSERT INTO repository_cells
+          (repository_row_id, repository_column_id, value_id, value_type,
+           created_at, updated_at)
+        VALUES (#{values.join(', ')})
+      SQL
+      ActiveRecord::Base.connection.execute(cell_sql)
+    end
+
+    def self.update_smart_annotations(team, mappings)
+      team.projects.eager_load(:project_comments).each do |pr|
+        pr.project_comments.each do |comment|
+          comment.save! if update_annotation(comment.message, mappings)
+        end
+        pr.experiments.each do |exp|
+          exp.save! if update_annotation(exp.description, mappings)
+          exp.my_modules.eager_load(:task_comments).each do |task|
+            task.task_comments.each do |comment|
+              comment.save! if update_annotation(comment.message, mappings)
+            end
+            task.save! if update_annotation(task.description, mappings)
+            task.protocol.steps.eager_load(:step_comments).each do |step|
+              step.step_comments.each do |comment|
+                comment.save! if update_annotation(comment.message, mappings)
+              end
+              step.save! if update_annotation(step.description, mappings)
+            end
+            task.results.eager_load(:result_comments, :result_text).each do |res|
+              res.result_comments.each do |comment|
+                comment.save! if update_annotation(comment.message, mappings)
+              end
+              next unless res.result_text
+              res.save! if update_annotation(res.result_text.text, mappings)
+            end
+          end
+        end
+      end
+      team.protocols.where(my_module: nil).each do |protocol|
+        protocol.steps.eager_load(:step_comments).each do |step|
+          step.step_comments.each do |comment|
+            comment.save! if update_annotation(comment.message, mappings)
+          end
+          step.save! if update_annotation(step.description, mappings)
+        end
+      end
+      team.repositories.each do |rep|
+        rep.repository_rows.includes(repository_cells: :repository_text_value)
+           .where('repository_cells.value_type': 'RepositoryTextValue')
+           .each do |row|
+          row.repository_cells.each do |cell|
+            if update_annotation(cell.repository_text_value.data, mappings)
+              cell.repository_text_value.save!
+            end
+          end
+        end
+      end
+    end
+
+    # Returns true if text was updated
+    def self.update_annotation(text, sample_mappings)
+      return false if text.nil?
+      updated = false
+      text.scan(/~sam~\w+\]/).each do |text_match|
+        orig_id_encoded = text_match.match(/~sam~(\w+)\]/)[1]
+        orig_id = orig_id_encoded.base62_decode
+        next unless sample_mappings[orig_id]
+        new_id_encoded = sample_mappings[orig_id].base62_encode
+        text.sub!("~sam~#{orig_id_encoded}]", "~rep_item~#{new_id_encoded}]")
+        updated = true
+      end
+      updated
     end
   end
 end
