@@ -202,7 +202,7 @@ class TeamImporter
     updated = false
     %w(prj exp tsk sam).each do |name|
       text.scan(/~#{name}~\w+\]/).each do |text_match|
-        orig_id_encoded = text_match.match(/~#{name}~(\w)+\]/)[1]
+        orig_id_encoded = text_match.match(/~#{name}~(\w+)\]/)[1]
         orig_id = orig_id_encoded.base62_decode
         new_id_encoded =
           case name
@@ -220,7 +220,7 @@ class TeamImporter
       end
     end
     text.scan(/\[@[\w+-@?! ]+~\w+\]/).each do |user_match|
-      orig_id_encoded = user_match.match(/\[@[\w+-@?! ]+~(\w)+\]/)[1]
+      orig_id_encoded = user_match.match(/\[@[\w+-@?! ]+~(\w+)\]/)[1]
       orig_id = orig_id_encoded.base62_decode
       new_id_encoded = @user_mappings[orig_id].base62_encode
       text.sub!("~#{orig_id_encoded}]", "~#{new_id_encoded}]")
