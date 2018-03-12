@@ -79,14 +79,14 @@ namespace :data do
     Rails.logger.info(
       "Exporting team with ID:#{args[:team_id]} to directory in tmp"
     )
-    te = TeamExporter.new(Team.find_by_id(args[:team_id]))
+    te = TeamExporter.new(args[:team_id])
     te.export_to_dir if te
   end
 
   desc 'Import team from directory'
   task :team_import, [:dir_path] => [:environment] do |_, args|
     Rails.logger.info(
-      "Importing team from to directory #{args[:dir_path]}"
+      "Importing team from directory #{args[:dir_path]}"
     )
     TeamImporter.new.import_from_dir(args[:dir_path])
   end

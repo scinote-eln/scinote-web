@@ -21,7 +21,9 @@ class TeamExporter
         team(@team).to_json
       )
       # Copying assets
-      copy_files(@assets_to_copy, :file, File.join(@dir_to_export, 'assets'))
+      copy_files(@assets_to_copy, :file, File.join(@dir_to_export, 'assets')) do
+        @asset_counter += 1
+      end
       # Copying tiny_mce_assets
       copy_files(@tiny_mce_assets_to_copy,
                  :image,
@@ -40,12 +42,15 @@ class TeamExporter
   def copy_files(assets, attachment_name, dir_name)
     assets.flatten.each do |a|
       next unless a.public_send(attachment_name).present?
-      @asset_counter += 1 if attachment_name == :file
+      unless a.public_send(attachment_name).exists?
+        raise StandardError,
+              "File id:#{a.id} of type #{attachment_name} is missing"
+      end
+      yield if block_given?
       dir = FileUtils.mkdir_p(File.join(dir_name, a.id.to_s)).first
-      if S3_BUCKET
+      if defined?(S3_BUCKET)
         s3_asset =
           S3_BUCKET.object(a.public_send(attachment_name).path.remove(%r{^/}))
-        next unless s3_asset.exists?
         file_name = a.public_send(attachment_name).original_filename
         File.open(File.join(dir, file_name), 'wb') do |f|
           s3_asset.get(response_target: f)
@@ -71,7 +76,7 @@ class TeamExporter
       notifications: Notification
         .includes(:user_notifications)
         .where('user_notifications.user_id': team.users)
-        .map { |n| notification_json(n) },
+        .map { |n| notification(n) },
       samples: team.samples.map { |s| sample(s) },
       sample_groups: team.sample_groups,
       sample_types: team.sample_types,
@@ -84,7 +89,7 @@ class TeamExporter
     }
   end
 
-  def notification_json(notification)
+  def notification(notification)
     notification_json = notification.as_json
     notification_json['type_of'] = Extends::NOTIFICATIONS_TYPES
                                    .key(notification.read_attribute('type_of'))
@@ -141,7 +146,6 @@ class TeamExporter
   def my_module(my_module)
     {
       my_module: my_module,
-      inputs: my_module.inputs,
       outputs: my_module.outputs,
       my_module_tags: my_module.my_module_tags,
       task_comments: my_module.task_comments,
@@ -170,7 +174,7 @@ class TeamExporter
       step_assets: step.step_assets,
       assets: step.assets,
       step_tables: step.step_tables,
-      tables: step.tables
+      tables: step.tables.map { |t| table(t) }
     }
   end
 
@@ -181,13 +185,21 @@ class TeamExporter
     }
   end
 
+  def table(table)
+    return {} if table.nil?
+    table_json = table.as_json(except: %i(contents data_vector))
+    table_json['contents'] = Base64.encode64(table.contents)
+    table_json['data_vector'] = Base64.encode64(table.data_vector)
+    table_json
+  end
+
   def result(result)
     @assets_to_copy.push(result.asset) if result.asset.present?
     {
       result: result,
       result_comments: result.result_comments,
       asset: result.asset,
-      table: result.table,
+      table: table(result.table),
       result_text: result.result_text
     }
   end

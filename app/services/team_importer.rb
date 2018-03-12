@@ -44,11 +44,13 @@ class TeamImporter
     Protocol.skip_callback(:save, :after, :update_linked_children)
     @import_dir = import_dir
     team_json = JSON.parse(File.read("#{@import_dir}/team_export.json"))
-    team = Team.new(team_json['team'])
+    team = Team.new(team_json['team'].slice(*Team.column_names))
     team.id = nil
     team.transaction(isolation: :serializable) do
       team_creator_id = team.created_by_id
       team.created_by_id = nil
+      team_last_modified_by = team.last_modified_by_id
+      team.last_modified_by_id = nil
       team.save!
 
       create_users(team_json['users'], team)
@@ -68,7 +70,6 @@ class TeamImporter
         user_team.save!
       end
 
-      create_repositories(team_json['repositories'], team)
       create_sample_groups(team_json['sample_groups'], team)
       create_sample_types(team_json['sample_types'], team)
       create_custom_fields(team_json['custom_fields'], team)
@@ -76,6 +77,7 @@ class TeamImporter
       create_protocol_keywords(team_json['protocol_keywords'], team)
       create_protocols(team_json['protocols'], nil, team)
       create_projects(team_json['projects'], team)
+      create_repositories(team_json['repositories'], team)
 
       # Second run, we needed it because of some models should be created
 
@@ -101,11 +103,10 @@ class TeamImporter
       end
 
       team_json['projects'].each do |project_json|
-        create_activity(project_json['activities'])
+        create_activities(project_json['activities'])
         create_reports(project_json['reports'])
         project_json['experiments'].each do |experiment_json|
           experiment_json['my_modules'].each do |my_module_json|
-            create_task_connections(my_module_json['inputs'])
             create_task_connections(my_module_json['outputs'])
           end
         end
@@ -122,6 +123,7 @@ class TeamImporter
 
       # restoring team's creator
       team.created_by_id = find_user(team_creator_id)
+      team.last_modified_by_id = find_user(team_last_modified_by)
       team.save!
 
       puts "Imported users: #{@user_counter}"
@@ -204,17 +206,19 @@ class TeamImporter
       text.scan(/~#{name}~\w+\]/).each do |text_match|
         orig_id_encoded = text_match.match(/~#{name}~(\w+)\]/)[1]
         orig_id = orig_id_encoded.base62_decode
-        new_id_encoded =
+        new_id =
           case name
           when 'prj'
-            @project_mappings[orig_id].base62_encode
+            @project_mappings[orig_id]
           when 'exp'
-            @experiment_mappings[orig_id].base62_encode
+            @experiment_mappings[orig_id]
           when 'tsk'
-            @my_module_mappings[orig_id].base62_encode
+            @my_module_mappings[orig_id]
           when 'sam'
-            @sample_mappings[orig_id].base62_encode
+            @sample_mappings[orig_id]
           end
+        next unless new_id
+        new_id_encoded = new_id.base62_encode
         text.sub!("~#{name}~#{orig_id_encoded}]", "~#{name}~#{new_id_encoded}]")
         updated = true
       end
@@ -222,6 +226,7 @@ class TeamImporter
     text.scan(/\[@[\w+-@?! ]+~\w+\]/).each do |user_match|
       orig_id_encoded = user_match.match(/\[@[\w+-@?! ]+~(\w+)\]/)[1]
       orig_id = orig_id_encoded.base62_decode
+      next unless @user_mappings[orig_id]
       new_id_encoded = @user_mappings[orig_id].base62_encode
       text.sub!("~#{orig_id_encoded}]", "~#{new_id_encoded}]")
       updated = true
@@ -239,7 +244,7 @@ class TeamImporter
     end
   end
 
-  def create_activity(activities_json)
+  def create_activities(activities_json)
     activities_json.each do |activity_json|
       activity = Activity.new(activity_json)
       activity.id = nil
@@ -290,12 +295,12 @@ class TeamImporter
   def create_users(users_json, team)
     puts 'Creating users...'
     users_json.each do |user_json|
-      user = User.new(user_json['user'])
+      user = User.new(user_json['user'].slice(*User.column_names))
       orig_user_id = user.id
       user.id = nil
       user.password = user_json['user']['encrypted_password']
       user.current_team_id = team.id
-      user.invited_by_id = nil
+      user.invited_by_id = @user_mappings[user.invited_by_id]
       if user.avatar.present?
         avatar_path = File.join(@import_dir, 'avatars', orig_user_id.to_s,
                                 user.avatar_file_name)
@@ -380,6 +385,7 @@ class TeamImporter
         mm_rep_row.repository_row = repository_row
         mm_rep_row.my_module_id = @my_module_mappings[mm_rep_row.my_module_id]
         mm_rep_row.assigned_by_id = find_user(mm_rep_row.assigned_by_id)
+        mm_rep_row.save!
       end
     end
   end
@@ -688,6 +694,8 @@ class TeamImporter
         table.last_modified_by_id =
           find_user(table.last_modified_by_id)
         table.team = protocol.team
+        table.contents = Base64.decode64(table.contents)
+        table.data_vector = Base64.decode64(table.data_vector)
         table.save!
         @table_mappings[orig_table_id] = table.id
         StepTable.create!(step: step, table: table)
@@ -722,6 +730,8 @@ class TeamImporter
         table.last_modified_by_id =
           find_user(table.last_modified_by_id)
         table.team = my_module.experiment.project.team
+        table.contents = Base64.decode64(table.contents)
+        table.data_vector = Base64.decode64(table.data_vector)
         table.save!
         @table_mappings[orig_table_id] = table.id
         result.table = table
@@ -820,24 +830,32 @@ class TeamImporter
         if report_element.project_id
           report_element.project_id =
             @project_mappings[report_element.project_id]
-        elsif report_element.my_module_id
+        end
+        if report_element.my_module_id
           report_element.my_module_id =
             @my_module_mappings[report_element.my_module_id]
-        elsif report_element.step_id
+        end
+        if report_element.step_id
           report_element.step_id = @step_mappings[report_element.step_id]
-        elsif report_element.result_id
+        end
+        if report_element.result_id
           report_element.result_id = @result_mappings[report_element.result_id]
-        elsif report_element.checklist_id
+        end
+        if report_element.checklist_id
           report_element.checklist_id =
             @checklist_mappings[report_element.checklist_id]
-        elsif report_element.asset_id
+        end
+        if report_element.asset_id
           report_element.asset_id = @asset_mappings[report_element.asset_id]
-        elsif report_element.table_id
+        end
+        if report_element.table_id
           report_element.table_id = @table_mappings[report_element.table_id]
-        elsif report_element.experiment_id
+        end
+        if report_element.experiment_id
           report_element.experiment_id =
             @experiment_mappings[report_element.experiment_id]
-        elsif report_element.repository_id
+        end
+        if report_element.repository_id
           report_element.repository_id =
             @repository_mappings[report_element.repository_id]
         end
