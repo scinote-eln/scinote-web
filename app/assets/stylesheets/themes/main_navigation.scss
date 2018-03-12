@@ -1,0 +1,391 @@
+@import 'constants';
+@import "mixins";
+
+#main-nav {
+  margin-bottom: 0;
+}
+
+#notifications-dropdown {
+  .fa-bell {
+    font-size: 15px;
+    position: absolute;
+  }
+
+  #count-notifications {
+    background-color: $color-theme-primary;
+    border-radius: 5px;
+    color: $color-wild-sand;
+    display: none;
+    font-size: 11px;
+    font-weight: bold;
+    margin-left: 12px;
+    padding: 1px 6px;
+    position: relative;
+    z-index: 1;
+  }
+}
+
+.navbar {
+  border-radius: 0;
+}
+
+.navbar-default {
+  background-color: $color-white;
+  border-color: $color-alto;
+}
+
+.navbar-default .navbar-brand {
+  & > img {
+    margin-top: -7px;
+    max-width: 55px;
+    max-height: 38px;
+  }
+}
+
+.navbar-center {
+  margin-left: 20%;
+}
+
+@media (max-width: 1766px) {
+  .navbar-center {
+    margin-left: 10%;
+  }
+}
+
+@media (max-width: 1334px) {
+  .navbar-center {
+    margin-left: 5%;
+  }
+}
+
+.dropdown-notifications {
+  max-height: 500px;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  padding-bottom: 0;
+  padding-top: 0;
+  width: 450px;
+  word-wrap: break-word;
+
+  .notifications-no-recent {
+    padding-bottom: 10px;
+    padding-left: 10px;
+    padding-top: 10px;
+  }
+
+  .notification {
+    border-bottom: 1px solid $color-alto;
+    padding-bottom: 10px;
+    padding-top: 10px;
+
+    &:hover {
+      background-color: $color-concrete;
+    }
+  }
+
+  .unseen {
+    border-left: 4px solid $color-theme-primary;
+  }
+
+  .text-center {
+    margin-left: 12px;
+  }
+
+  .avatar {
+    top: 0px;
+    margin-top: 5px;
+    height: 45px;
+    width: 45px;
+  }
+
+  .assignment {
+    background-color: $color-theme-primary;
+    border-radius: 50%;
+    color: $color-wild-sand;
+    display: block;
+    font-size: 23px;
+    height: 45px;
+    padding-top: 5px;
+    width: 45px;
+  }
+
+  .deliver {
+    background-color: $color-orange;
+    border-radius: 50%;
+    color: $color-wild-sand;
+    display: block;
+    font-size: 23px;
+    height: 45px;
+    padding-top: 5px;
+    width: 45px;
+  }
+
+  .system-message {
+    background-color: $color-theme-secondary;
+    border-radius: 50%;
+    color: $color-wild-sand;
+    display: block;
+    font-size: 23px;
+    height: 45px;
+    padding-top: 8px;
+    width: 45px;
+  }
+
+  .notifications-dropdown-header {
+    background-color: $color-theme-primary;
+    color: $color-wild-sand;
+    font-weight: bold;
+    padding: 8px;
+
+    a {
+      color: $color-white;
+    }
+  }
+
+  .notifications-dropdown-footer {
+    background-color: $color-mystic;
+    padding: 8px;
+    text-align: center;
+  }
+
+}
+
+.notification {
+  padding-right: 8px;
+  word-wrap: break-word;
+}
+
+#search-menu {
+  padding-right: 0;
+
+  .nav {
+    position: relative;
+    z-index: 1000;
+  }
+}
+
+#search-content {
+  padding-left: 0;
+}
+
+#search-container {
+  padding-left: 45px;
+}
+
+#search-bar {
+  border-color: $color-border;
+  .btn-default {
+    background-color: $color-theme-primary;
+    border-color: $color-theme-primary;
+    color: $color-white;
+  }
+
+  input {
+    border-bottom-left-radius: 0;
+    border-top-left-radius: 0;
+    width: 300px;
+  }
+}
+
+/** Search */
+.nav-search {
+  li.disabled {
+    opacity: 0.8;
+
+    .badge {
+      background-color: $color-emperor;
+      opacity: 0.8;
+    }
+
+  }
+
+  .repositories-team {
+    padding: 10px 15px;
+
+    &.active {
+      color: $color-theme-primary;
+    }
+  }
+
+  .repository-search {
+    padding-left: 15px;
+  }
+}
+
+.notification-settings-container {
+  margin-bottom: 50px;
+  margin-top: 50px;
+
+  h4 {
+    font-weight: 600;
+    margin-bottom: 2rem;
+  }
+
+  .col-sm-4 {
+    padding-left: 5rem;
+    padding-top: .5rem;
+    word-break: break-word;
+  }
+
+  .col-sm-2 {
+    padding-left: 3rem;
+    padding-top: .7rem;
+  }
+
+  @media (max-width: 768px) {
+    .col-sm-4 {
+      margin-bottom: 1rem;
+      padding-left: 1.8rem;
+    }
+
+    .col-sm-2 {
+      padding-left: 1.8rem;
+    }
+  }
+
+  .btn-group {
+    margin-bottom: 15px;
+  }
+
+  .assignment {
+    background-color: $color-theme-primary;
+    border-radius: 50%;
+    color: $color-wild-sand;
+    display: block !important;
+    font-size: 15px;
+    height: 30px;
+    margin-right: 15px;
+    padding: 7px;
+    padding-bottom: 5px;
+    padding-top: 5px;
+    width: 30px;
+  }
+
+  .system-message {
+    background-color: $color-theme-secondary;
+    border-radius: 50%;
+    color: $color-wild-sand;
+    display: block !important;
+    font-size: 15px;
+    height: 30px;
+    margin-right: 15px;
+    padding: 8px;
+    padding-bottom: 5px;
+    padding-top: 5px;
+    width: 30px;
+  }
+
+  .img-circle {
+    margin-right: 15px;
+  }
+}
+
+// Global team switch
+#team-switch {
+  word-wrap: break-word;
+
+  .team-name {
+    margin-left: 17px;
+  }
+
+  .glyphicon-ok-sign {
+    color: $color-confirmation-green;
+    margin-left: -10px;
+    margin-right: 10px;
+  }
+
+  .team-name-item {
+    border-bottom: 1px solid $color-list-separator;
+    padding-bottom: 8px;
+    padding-top: 5px;
+  }
+
+  .btn-default {
+    border-bottom-left-radius: 0;
+    border-top-left-radius: 0;
+    text-align: right;
+    width: 300px;
+  }
+
+  .btn-group {
+    border-color: $color-border;
+    margin-top: 8px;
+  }
+
+  .btn-primary {
+    background-color: $color-theme-primary;
+    border-color: $color-theme-primary;
+  }
+
+  .dropdown-menu {
+    width: 100%;
+  }
+
+  .caret {
+    color: $color-white;
+  }
+
+  i {
+    margin-right: 5px;
+  }
+
+  li {
+    display: block;
+    text-align: left;
+    word-wrap: break-word;
+
+    &:hover {
+      background-color: $color-concrete;
+    }
+
+    a {
+      color: $color-emperor;
+      display: block;
+      line-height: 1.6em;
+      padding: 3px 20px;
+      text-align: left;
+      text-decoration: none;
+      word-wrap: break-word;
+    }
+  }
+}
+
+#nav-team-switch {
+  margin-left: 30px;
+}
+
+.custom-nav-dropdown {
+  border: 1px solid $color-border;
+  padding: 10px 0 10px 30px;
+}
+
+#power-up-button {
+  margin-top: 8px;
+
+  .btn-danger {
+    width: 150px;
+  }
+}
+
+// reset margins on small screens
+@media (max-width: 1188px) {
+  #nav-team-switch {
+    margin-left: 0;
+  }
+  .navbar-center {
+    margin-left: 0;
+
+    #search-bar {
+      padding-left: 0;
+    }
+  }
+}
+
+@media (max-width: 764px) {
+  .navbar-center {
+    #search-bar {
+      max-width: 150px;
+      padding-left: 13px;
+    }
+  }
+}

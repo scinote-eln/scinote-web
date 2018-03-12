@@ -1,5 +1,5 @@
 <nav class="navbar navbar-default navbar-fixed-top" id="main-nav">
-  <div class="container">
+  <div class="container-fluid">
 
     <!-- header -->
     <div class="navbar-header">
@@ -10,166 +10,133 @@
         <span class="icon-bar"></span>
       </button>
       <%= link_to(root_path, class: 'navbar-brand', title: t('nav.label.scinote')) do %>
-        <%
-        show_version = !Rails.env.production?
-        if ENV['NAVBAR_SHOW_VERSION'].present?
-          show_version = YAML.load(ENV['NAVBAR_SHOW_VERSION'])
-        end
-        %>
-        <% if show_version %>
-          <%= image_tag('/images/logo.png', class: 'with-version', id: 'logo') %>
-          <span class="version">
-            <%= Scinote::Application::VERSION %>
-          </span>
-        <% else %>
-          <%= image_tag('/images/logo.png', id: 'logo') %>
-        <% end %>
+        <%= image_tag('/images/scinote_icon.jpg', id: 'logo') %>
       <% end %>
     </div>
 
     <% if user_signed_in? %>
     <div class="collapse navbar-collapse" id="main-menu">
-      <!-- links -->
-      <ul class="nav navbar-nav">
-        <li>
-          <a title="<%= t('nav.label.projects') %>" href="<%= projects_path %>">
-            <span class="glyphicon glyphicon-home"></span>
-            <span class="visible-xs-inline visible-sm-inline"><%= t('nav.label.projects') %></span>
-          </a>
-        </li>
-        <% if current_team %>
-        <li>
-          <a id="protocol-link" title="<%= t('nav.label.protocols') %>" href="<%= protocols_path %>">
-            <span class="glyphicon glyphicon-list-alt"></span>
-            <span class="visible-xs-inline visible-sm-inline"><%= t('nav.label.protocols') %></span>
-          </a>
-        </li>
-        <li>
-          <a id="repositories-link" title="<%= t('nav.label.repositories') %>" href="<%= team_repositories_path(current_team) %>">
-            <i class="fa fa-cubes" aria-hidden="true"></i>
-            <span class="visible-xs-inline visible-sm-inline"><%= t('nav.label.repositories') %></span>
-          </a>
-        </li>
-        <% else %>
-        <li class="disabled">
-          <a id="protocol-link" title="<%= t('nav.label.protocols') %>" href="#">
-            <span class="glyphicon glyphicon-list-alt"></span>
-            <span class="visible-xs-inline visible-sm-inline"><%= t('nav.label.protocols') %></span>
-          </a>
-        </li>
-        <li class="disabled">
-          <a id="repositories-link" title="<%= t('nav.label.repositories') %>" href="#">
-            <span class="fa fa-cubes"></span>
-            <span class="visible-xs-inline visible-sm-inline"><%= t('nav.label.repositories') %></span>
-          </a>
-        </li>
+      <ul class="nav navbar-nav navbar-left" id="nav-team-switch">
+        <!-- Global team switch -->
+        <% if current_user.teams.length > 0 %>
+          <li id="team-switch">
+            <div class="btn-group">
+              <button type="button" class="btn btn-default"><%= truncate_team_name(current_team.name) %></button>
+              <button type="button"
+                      class="btn btn-primary dropdown-toggle"
+                      title="<%= t('nav.label.teams') %>"
+                      data-toggle="dropdown"
+                      aria-haspopup="true"
+                      aria-expanded="false">
+                <span class="caret"></span>
+                <span class="sr-only">Toggle Dropdown</span>
+              </button>
+              <% if current_user.teams.length > 1 || can_create_teams? %>
+              <ul class="dropdown-menu">
+                <%= form_for(current_user,
+                             url: user_current_team_path,
+                             method: :post) do |f| %>
+                  <%= hidden_field(:user, :current_team_id) %>
+                  <% current_user.teams.each do |team| %>
+                    <li class="team-name-item">
+                      <a href="#"
+                        data-id="<%= team.id %>"
+                        class="text-center change-team">
+                        <% if current_team == team %>
+                          <span class="glyphicon glyphicon-ok-sign"></span> <strong><%= team.name %></strong>
+                        <% else %>
+                          <span class="team-name"><%= team.name %></span>
+                        <% end %>
+                      </a>
+                    </li>
+                  <% end %>
+                <% end %>
+                <% if current_user.teams.length > 1 && can_create_teams? %>
+                  <li>
+                    <%= link_to new_team_path do %>
+                      <span class="glyphicon glyphicon-plus"></span>
+                      <%= t('users.settings.teams.index.new_team') %>
+                    <% end %>
+                  </li>
+                <% end %>
+              </ul>
+              <% end %>
+            </div>
+          </li>
         <% end %>
-<% if false  %>
+      </ul>
+
+      <!-- search form -->
+      <ul class="nav navbar-nav navbar-center">
         <li>
-          <a href="#">
-            <span class="glyphicon glyphicon-calendar"></span>
-            <span class="visible-xs-inline visible-sm-inline"><%= t('nav.label.calendar') %></span>
-          </a>
-        </li>
-<% end %>
-        <li>
-          <a class="btn-activity" title="<%= t('nav.label.activities') %>" href="<%= activities_path(format: :json) %>" role="button" data-remote="true">
-            <span class="glyphicon glyphicon-equalizer"></span>
-            <span class="visible-xs-inline visible-sm-inline"><%= t('nav.label.activities') %></span>
-          </a>
+          <%= form_tag search_path,
+                       method: :get,
+                       id: 'search-bar',
+                       class: 'navbar-form',
+                       role: 'search' do %>
+              <div class="input-group">
+                <input class="form-control"
+                       type="text"
+                       name="q"
+                       placeholder="<%= t('nav.search') %>" />
+                <span class="input-group-btn">
+                  <button class="btn btn-default" type="submit"><%=t 'nav.search_button' %></button>
+                </span>
+              </div>
+          <% end %>
         </li>
       </ul>
 
       <!-- profile info -->
       <ul class="nav navbar-nav navbar-right">
-
-        <!-- Global team switch -->
-        <% if current_user.teams.length > 0 %>
-        <li class="dropdown" id="team-switch">
-          <a href="#"
-             class="dropdown-toggle"
-             title="<%= t('nav.label.teams') %>"
-             data-toggle="dropdown"
-             role="button"
-             aria-haspopup="true"
-             aria-expanded="false">
-            <%= fa_icon 'users' %>
-            <span>
-              <%= truncate_team_name(current_team.name) %>
-            </span>
-          </a>
-
-          <% if current_user.teams.length > 1 || can_create_teams? %>
-          <ul class="dropdown-menu">
-            <%= form_for(current_user,
-                         url: user_current_team_path,
-                         method: :post) do |f| %>
-              <%= hidden_field(:user, :current_team_id) %>
-              <% current_user.teams.each do |team| %>
-                <% next unless team != current_team %>
-                <li>
-                  <a href="#"
-                    data-id="<%= team.id %>"
-                    class="text-center change-team">
-                    <%= team.name %>
-                  </a>
-                </li>
-              <% end %>
-            <% end %>
-            <% if current_user.teams.length > 1 && can_create_teams? %>
-              <li role="separator"
-                  class="divider"></li>
-              <li>
-                <%= link_to new_team_path do %>
-                  <span class="glyphicon glyphicon-plus"></span>
-                  <%= t('users.settings.teams.index.new_team') %>
-                <% end %>
-              </li>
-            <% end %>
-          </ul>
-          <% end %>
+        <li id="power-up-button">
+          <div class="dropdown">
+            <button class="btn btn-danger dropdown-toggle"
+                    type="button"
+                    id="power-up-dropdown"
+                    data-toggle="dropdown"
+                    aria-haspopup="true"
+                    aria-expanded="true">
+              <%=t 'nav.power_up' %>
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="power-up-dropdown">
+              <li class="dropdown-header"><%=t 'nav.power_up_dropdown.title' %></li>
+              <li><span class="glyphicon glyphicon-certificate"></span> <%=t 'nav.power_up_dropdown.unlimited_teams' %></li>
+              <li><span class="glyphicon glyphicon-certificate"></span> <%=t 'nav.power_up_dropdown.unlimited_users' %></li>
+              <li><span class="glyphicon glyphicon-certificate"></span> <%=t 'nav.power_up_dropdown.unlimited_storage' %></li>
+              <li><span class="glyphicon glyphicon-certificate"></span> <%=t 'nav.power_up_dropdown.manuscript' %></li>
+              <li><%=t 'nav.power_up_dropdown.much_more' %></li>
+              <li class="text-center"><a href="#" class=""></a></li>
+            </ul>
+          </div>
         </li>
-        <% end %>
 
-        <!-- search -->
-        <li class="dropdown"
-            id="search-ico">
+        <!-- greetings -->
+        <li id="user-account-dropdown" class="dropdown">
           <a href="#"
              class="dropdown-toggle"
-             title="<%= t('nav.label.search') %>"
+             title="<%= t('nav.label.account') %>"
              data-toggle="dropdown"
              role="button"
              aria-haspopup="true"
              aria-expanded="false">
-            <span class="glyphicon glyphicon-search"></span>
-            <span class="visible-xs-inline visible-sm-inline"><%= t('nav.label.search') %></span>
+            <span>
+              <%= t('nav.user_greeting', full_name: current_user.full_name) %>
+            </span>
+            <%= image_tag avatar_path(current_user, :icon_small),
+                          class: "avatar" %>
           </a>
-          <ul class="dropdown-menu search-dropdown">
-            <li>
-              <!-- search form -->
-              <%= form_tag search_path,
-                           method: :get,
-                           id: 'search-bar',
-                           class: 'navbar-form navbar-right',
-                           role: 'search' do %>
-                <div class="form-group">
-                  <div class="input-group">
-                    <input class="form-control"
-                           type="text"
-                           name="q"
-                           placeholder="<%= t('nav.search') %>">
-                     <span class="input-group-btn visible-xs visible-sm">
-                      <button id="search-button"
-                              class="btn btn-default"
-                              type="submit">
-                        <span class="glyphicon glyphicon-menu-right"></span>
-                      </button>
-                    </span>
-                  </div>
-                </div>
-              <% end %>
-            </li>
-          </ul>
+            <ul class="dropdown-menu" data-hook="navigation-user-menu">
+              <li>
+                <%= link_to t('nav.user.settings'), edit_user_registration_path, data: { turbolinks: false } %>
+              </li>
+              <li role="separator" class="divider"></li>
+              <li>
+                <%= link_to t('nav.user.logout'),
+                            destroy_user_session_path,
+                            method: :delete %>
+              </li>
+            </ul>
         </li>
 
         <!-- notifications -->
@@ -205,71 +172,6 @@
           </ul>
         </li>
 
-        <!-- help -->
-        <li class="dropdown">
-          <a href="#"
-             id="help-link"
-             class="dropdown-toggle"
-             title="<%= t('nav.label.info') %>"
-             data-toggle="dropdown"
-             role="button"
-             aria-haspopup="true"
-             aria-expanded="false">
-            <span class="glyphicon glyphicon-info-sign"></span>
-            <span class="visible-xs-inline visible-sm-inline"><%= t('nav.label.info') %></span>
-          </a>
-          <ul class="dropdown-menu" data-hook="navigation-help-menu">
-            <li><%= link_to t('nav.help.support'),
-                              Constants::SUPPORT_URL,
-                              target: "_blank" %></li>
-            <li><%= link_to t('nav.help.tutorials'),
-                              Constants::TUTORIALS_URL,
-                              target: "_blank" %></li>
-            <li><%= link_to t('nav.help.release_notes'),
-                              Constants::RELEASE_NOTES_URL,
-                              target: "_blank" %></li>
-            <li><%= link_to t('nav.help.premium'),
-                              Constants::PREMIUM_URL,
-                              target: "_blank" %></li>
-            <li><%= link_to t('nav.help.contact'),
-                              Constants::CONTACT_URL,
-                              target: "_blank" %></li>
-            <li role="separator" class="divider"></li>
-            <li>
-              <%= link_to '#', data: { trigger: 'about-modal' } do %>
-                <%= t('nav.help.about') %>
-              <% end %>
-            </li>
-          </ul>
-        </li>
-
-        <!-- greetings -->
-        <li id="user-account-dropdown" class="dropdown">
-          <a href="#"
-             class="dropdown-toggle"
-             title="<%= t('nav.label.account') %>"
-             data-toggle="dropdown"
-             role="button"
-             aria-haspopup="true"
-             aria-expanded="false">
-            <span>
-              <%= t('nav.user_greeting', full_name: current_user.full_name) %>
-            </span>
-            <%= image_tag avatar_path(current_user, :icon_small),
-                          class: "avatar" %>
-          </a>
-            <ul class="dropdown-menu" data-hook="navigation-user-menu">
-              <li>
-                <%= link_to t('nav.user.settings'), edit_user_registration_path, data: { turbolinks: false } %>
-              </li>
-              <li role="separator" class="divider"></li>
-              <li>
-                <%= link_to t('nav.user.logout'),
-                            destroy_user_session_path,
-                            method: :delete %>
-              </li>
-            </ul>
-        </li>
       </ul>
     </div>
     <% end %>

@@ -94,16 +94,6 @@
       });
   }
 
-  function focusSearchInput() {
-    var searchIco = $('#search-ico');
-    searchIco
-      .on('shown.bs.dropdown', function() {
-        searchIco
-          .find('input.form-control')
-          .focus();
-      });
-  }
-
   function initActivitiesButton() {
     $(document.body).ready(function() {
       // Activity feed modal in main navigation menu
@@ -154,7 +144,6 @@
   loadDropdownNotifications();
   loadUnseenNotificationsNumber();
   toggleNotificationBellPosition();
-  focusSearchInput();
   initGlobalSwitchForm();
   initActivitiesButton();
 })();
