@@ -3,15 +3,18 @@ class SamplesTable < ApplicationRecord
   belongs_to :team, inverse_of: :samples_tables, optional: true
 
   validates :user, :team, presence: true
-  validates :user, uniqueness: { scope: :team }
 
-  scope :find_status,
-        ->(user, team) { where(user: user, team: team).pluck(:status) }
+  scope :find_status, (lambda do |user, team|
+                         where(user: user, team: team)
+                         .order(:id).pluck(:status).first
+                       end)
 
   def self.update_samples_table_state(custom_field, column_index)
     samples_table = SamplesTable.where(user: custom_field.user,
                                        team: custom_field.team)
-    team_status = samples_table.first['status']
+                                .order(:id)
+                                .first
+    team_status = samples_table['status']
     if column_index
       # delete column
       team_status['columns'].delete(column_index)
