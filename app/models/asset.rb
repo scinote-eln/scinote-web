@@ -44,7 +44,7 @@ class Asset < ApplicationRecord
   # Asset validation
   # This could cause some problems if you create empty asset and want to
   # assign it to result
-  validate :step_or_result_or_repository_cell
+  validate :step_or_result_or_repository_asset_value
 
   belongs_to :created_by,
              foreign_key: 'created_by_id',
@@ -496,13 +496,16 @@ class Asset < ApplicationRecord
     )
   end
 
-  def step_or_result_or_repository_cell
+  def step_or_result_or_repository_asset_value
     # We must allow both step and result to be blank because of GUI
     # (even though it's not really a "valid" asset)
     if step.present? && result.present? ||
-       step.present? && repository_cell.present? ||
-       result.present? && repository_cell.present?
-      errors.add(:base, "Asset can only be result or step or repository cell, not ever.")
+       step.present? && repository_asset_value.present? ||
+       result.present? && repository_asset_value.present?
+      errors.add(
+        :base,
+        'Asset can only be result or step or repository cell, not ever.'
+      )
     end
   end
 

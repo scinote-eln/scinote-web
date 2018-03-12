@@ -43,7 +43,7 @@ describe RepositoryAssetValue, type: :model do
                                         repository_column: repository_column,
                                         repository_row: repository_row
                                       }
-      expect(repository_asset_value.reload.formatted.instance).to eq asset
+      expect(repository_asset_value.reload.formatted).to eq 'my file'
     end
   end
 end

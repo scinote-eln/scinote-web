@@ -16,6 +16,6 @@ class RepositoryAssetValue < ApplicationRecord
   validates :asset, :repository_cell, presence: true
 
   def formatted
-    asset.file
+    asset.file_file_name
   end
 end
