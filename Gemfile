@@ -9,7 +9,7 @@ gem 'pg', '~> 0.18'
 gem 'devise', '~> 4.3.0'
 gem 'devise_invitable'
 gem 'simple_token_authentication', '~> 1.15.1' # Token authentication for Devise
-gem 'bootstrap-sass', '~> 3.3.5'
+gem 'bootstrap-sass', '~> 3.3.7'
 gem 'sass-rails', '~> 5.0.6'
 gem 'bootstrap_form'
 gem 'yomu'

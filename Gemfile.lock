@@ -517,7 +517,7 @@ DEPENDENCIES
   bcrypt (~> 3.1.10)
   better_errors
   binding_of_caller
-  bootstrap-sass (~> 3.3.5)
+  bootstrap-sass (~> 3.3.7)
   bootstrap-select-rails (~> 1.6.3)
   bootstrap3-datetimepicker-rails (~> 4.15.35)
   bootstrap_form
