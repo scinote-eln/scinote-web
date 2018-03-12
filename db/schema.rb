@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180207095200) do
+ActiveRecord::Schema.define(version: 20180308094354) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -362,6 +362,17 @@ ActiveRecord::Schema.define(version: 20180207095200) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.index ["team_id"], name: "index_repositories_on_team_id"
+  end
+
+  create_table "repository_asset_values", force: :cascade do |t|
+    t.bigint "asset_id"
+    t.bigint "created_by_id"
+    t.bigint "last_modified_by_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["asset_id"], name: "index_repository_asset_values_on_asset_id"
+    t.index ["created_by_id"], name: "index_repository_asset_values_on_created_by_id"
+    t.index ["last_modified_by_id"], name: "index_repository_asset_values_on_last_modified_by_id"
   end
 
   create_table "repository_cells", id: :serial, force: :cascade do |t|
@@ -877,6 +888,8 @@ ActiveRecord::Schema.define(version: 20180207095200) do
   add_foreign_key "reports", "users"
   add_foreign_key "reports", "users", column: "last_modified_by_id"
   add_foreign_key "repositories", "users", column: "created_by_id"
+  add_foreign_key "repository_asset_values", "users", column: "created_by_id"
+  add_foreign_key "repository_asset_values", "users", column: "last_modified_by_id"
   add_foreign_key "repository_columns", "users", column: "created_by_id"
   add_foreign_key "repository_date_values", "users", column: "created_by_id"
   add_foreign_key "repository_date_values", "users", column: "last_modified_by_id"
