@@ -44,6 +44,11 @@ class Extends
                             RepositoryDateValue: 1,
                             RepositoryListValue: 2,
                             RepositoryAssetValue: 3 }
+
+  # Data types which can be imported to repository,
+  # name should match record in REPOSITORY_DATA_TYPES
+  REPOSITORY_IMPORTABLE_TYPES = %i(RepositoryTextValue RepositoryListValue)
+
   # Extra attributes used for search in repositories, text columns
   # are only supported
   REPOSITORY_EXTRA_SEARCH_ATTR = ['repository_text_values.data',
