@@ -64,7 +64,11 @@ class Extends
   # Array used for injecting names of additional authentication methods for API
   API_PLUGABLE_AUTH_METHODS = []
 
-  OMNIAUTH_PROVIDERS = []
+  OMNIAUTH_PROVIDERS = [:linkedin]
 
   INITIAL_USER_OPTIONS = {}
+
+  # Hash used for mapping file extensions to custom icons,
+  # 'extension' => 'path_to_the_icon'
+  FILE_ICON_MAPPINGS = {}
 end

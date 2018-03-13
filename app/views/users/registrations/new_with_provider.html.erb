@@ -1,0 +1,37 @@
+<% provide(:head_title, t('users.registrations.new.head_title')) %>
+
+<div class="center-block center-block-narrow">
+  <h2><%= t 'users.registrations.new_with_provider.head_title' %></h2>
+  <div data-hook="sign-up-form-hook">
+  <%= form_for(:team, as: resource_name, url: users_complete_sign_up_provider_path, html: { id: "sign-up-provider-form" } ) do |f| %>
+    <%= hidden_field_tag :user, params['user'] %>
+
+    <% if Rails.configuration.x.new_team_on_signup %>
+      <div class="form-group" id="team_name_form">
+        <%= f.label :name, t('users.registrations.new.team_name_label') %>
+        <%= f.text_field :name, autofocus: true, class: 'form-control' %>
+        <span><small><%= t 'users.registrations.new.team_name_help' %></small></span>
+      </div>
+    <% end %>
+
+    <div class="form-group" data-hook="sign-up-form-submit">
+      <%= f.submit 'Sign up', class: 'btn btn-primary' %>
+    </div>
+  <% end %>
+  </div>
+  <%= render 'users/shared/links' %>
+</div>
+
+<% if @team and not @team.errors.empty? %>
+  <script>
+  (function () {
+    var formErrors = {};
+
+    <% @team.errors.each do |err, m| %>
+    formErrors["<%= err %>"] =["<%= m %>"];
+    <% end %>
+
+    $("form").renderFormErrors('team', formErrors, false);
+  }());
+  </script>
+<% end %>

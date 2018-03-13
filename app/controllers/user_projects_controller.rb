@@ -191,8 +191,8 @@ class UserProjectsController < ApplicationController
   end
 
   def check_manage_permisisons
-    render_403 unless can_manage_project?(@project) &&
-                      params[:id] == current_user.id
+    render_403 unless can_manage_project?(@project) ||
+                      params[:id] != current_user.id
   end
 
   def init_gui
