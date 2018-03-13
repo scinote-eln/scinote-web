@@ -52,7 +52,7 @@ module RepositoryZipExport
                      else
                        cell = row.repository_cells
                                  .find_by(repository_column_id: c_id)
-                       cell ? cell.value.data : nil
+                       cell ? cell.value.formatted : nil
                      end
         end
         csv << csv_row
