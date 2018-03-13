@@ -4,7 +4,6 @@
 /** Layout **/
 
 body,
-#activity-modal,
 #main-nav,
 #notifications,
 #notifications .alert {
@@ -1124,13 +1123,6 @@ ul.double-line > li {
 .panel-heading .dropdown {
   bottom: 8px;
   left: 8px;
-}
-
-#activity-modal {
-  .modal-body {
-    background-color: $color-concrete;
-    color: $color-mine-shaft;
-  }
 }
 
 #global-activity-page {
