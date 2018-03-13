@@ -183,16 +183,17 @@ en:
     delete_confirm: "Are you sure you wish to delete this comment?"
     delete_error: "Error occured while deleting comment."
 
+	
   help:
-    contact:
-	  head_title: "Contact"
-    about:
-	  head_title: "About"
-    training:
-	  head_title: "Training"
+	contact:
+      head_title: "Contact"
+	about:
+      head_title: "About"
+	training:
+      head_title: "Training"
 
   projects:
-    index:
+	index:
       head_title: "Home"
       archive: "Archive"
       new: "New project"
