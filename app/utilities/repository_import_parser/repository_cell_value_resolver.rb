@@ -4,7 +4,6 @@
 # it to the repository_row
 module RepositoryImportParser
   class RepositoryCellValueResolver
-
     def initialize(column, user, repository)
       @column = column
       @user = user

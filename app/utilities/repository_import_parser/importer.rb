@@ -8,7 +8,6 @@
 # @repository: the repository in which we import the items
 module RepositoryImportParser
   class Importer
-
     def initialize(sheet, mappings, user, repository)
       @columns = []
       @name_index = -1
@@ -24,14 +23,14 @@ module RepositoryImportParser
     end
 
     def run
-      get_columns
+      fetch_columns
       return check_for_duplicate_columns if check_for_duplicate_columns
       import_rows!
     end
 
     private
 
-    def get_columns
+    def fetch_columns
       @mappings.each.with_index do |(_, value), index|
         if value == '-1'
           # Fill blank space, so our indices stay the same
