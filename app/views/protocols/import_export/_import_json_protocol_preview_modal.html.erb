@@ -30,7 +30,7 @@
 
           <label><%= t('protocols.import_export.import_modal.name_label') %></label>
 
-          <%= f.text_field :name, :value => pio_eval_title_len(sanitize_input(@json_object['protocol_name'])), class:
+          <%= f.text_field :name, :value => pio_eval_title_len(sanitize_input(not_null(@json_object['protocol_name']))), class:
           "form-control" %>
         </div>
         <div class="form-group">
@@ -38,7 +38,7 @@
             <span class="glyphicon glyphicon-user">
             </span>&nbsp;<%= t('protocols.import_export.import_modal.authors_label') %>
           </label>
-          <%= f.text_field :authors, :value => pio_eval_title_len(sanitize_input(@json_object['full_name'])), class:
+          <%= f.text_field :authors, :value => pio_eval_title_len(sanitize_input(not_null(@json_object['authors']))), class:
           "form-control" %>
 
         </div>
@@ -52,14 +52,14 @@
             <div class="col-xs-4">
               <label><%= t('protocols.import_export.import_modal.created_at_label') %></label>
 
-              <% display_created_at=Time.at(@json_object['created_on'].to_i) %>
+              <% display_created_at=Time.at(not_null(@json_object['created_on']).to_i) %>
               <%= f.text_field :created_at, :value => display_created_at.to_s,
               readonly: true, class: "form-control" %>
             </div>
             <div class="col-xs-4">
               <label><%= t('protocols.import_export.import_modal.updated_at_label') %></label>
 
-              <% display_last_modified=Time.at(@json_object['last_modified'].to_i) %>
+              <% display_last_modified=Time.at(not_null(@json_object['last_modified']).to_i) %>
               <%= f.text_field :last_modified, :value =>
               display_last_modified.to_s,readonly: true, class:
               "form-control" %>

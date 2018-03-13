@@ -83,7 +83,13 @@ var RepositoryDatatable = (function(global) {
         searchable: false,
         orderable: true,
         sWidth: '1%'
-      }],
+      }, {
+       targets: 2,
+       render: function(data, type, row) {
+         return "<a href='" + row.recordInfoUrl + "'" +
+                "class='record-info-link'>" + data + '</a>';
+       }
+     }],
       rowCallback: function(row, data) {
         // Get row ID
         var rowId = data.DT_RowId;
@@ -126,6 +132,7 @@ var RepositoryDatatable = (function(global) {
       },
       preDrawCallback: function() {
         animateSpinner(this);
+        $('.record-info-link').off('click');
       },
       stateLoadCallback: function() {
         // Send an Ajax request to the server to get the data. Note that
@@ -176,7 +183,14 @@ var RepositoryDatatable = (function(global) {
           TABLE.column(i).visible(visibility);
           TABLE.setColumnSearchable(i, visibility);
         }
-        oSettings._colReorder.fnOrder(myData.ColReorder);
+        // Datatables triggers this action about 3 times
+        // sometimes on the first iteration the oSettings._colReorder is null
+        // and the fnOrder rises an error that breaks the table
+        // here I added a null guard for that case.
+        // @todo we need to find out why the tables are loaded multiple times
+        if( oSettings._colReorder ) {
+          oSettings._colReorder.fnOrder(myData.ColReorder);
+        }
         TABLE.on('mousedown', function() {
           $('#repository-columns-dropdown').removeClass('open');
         });
@@ -192,7 +206,10 @@ var RepositoryDatatable = (function(global) {
         // Skip if clicking on selector checkbox
         return;
       }
-      $(this).parent().find('.repository-row-selector').trigger('click');
+      if (!$(e.target).is('.record-info-link')) {
+        // Skip if clicking on samples info link
+        $(this).parent().find('.repository-row-selector').trigger('click');
+      }
     });
 
     TABLE.on('column-reorder', function() {
@@ -444,16 +461,24 @@ var RepositoryDatatable = (function(global) {
     });
 
     $('#assigned-repo-records').on('click', function() {
+      var promiseReload;
       viewAssigned = 'assigned';
-      TABLE.ajax.reload(function() {
+      promiseReload = new Promise(function(resolve) {
+        resolve(TABLE.ajax.reload());
+      });
+      promiseReload.then(function() {
         initRowSelection();
-      }, false);
+      })
     });
     $('#all-repo-records').on('click', function() {
+      var promiseReload;
       viewAssigned = 'all';
-      TABLE.ajax.reload(function() {
+      promiseReload = new Promise(function(resolve) {
+        resolve(TABLE.ajax.reload());
+      });
+      promiseReload.then(function() {
         initRowSelection();
-      }, false);
+      })
     });
   };
 

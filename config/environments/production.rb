@@ -33,7 +33,7 @@ Rails.application.configure do
     address: Rails.application.secrets.mailer_address,
     port: Rails.application.secrets.mailer_port,
     domain: Rails.application.secrets.mailer_domain,
-    authentication: "plain",
+    authentication: Rails.application.secrets.mailer_authentication,
     enable_starttls_auto: true,
     user_name: Rails.application.secrets.mailer_user_name,
     password: Rails.application.secrets.mailer_password
@@ -115,6 +115,9 @@ Rails.application.configure do
   # Enable user registrations
   config.x.enable_user_registration =
     ENV['ENABLE_USER_REGISTRATION'] == 'false' ? false : true
+
+  # Enable sign in with LinkedIn account
+  config.x.linkedin_signin_enabled = ENV['LINKEDIN_SIGNIN_ENABLED'] == 'true'
 
   # Use a different logger for distributed setups.
   # require 'syslog/logger'

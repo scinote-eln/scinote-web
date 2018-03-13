@@ -103,39 +103,39 @@ class AssetsController < ApplicationController
 
     step_assoc = @asset.step
     result_assoc = @asset.result
+    repository_cell_assoc = @asset.repository_cell
     @assoc = step_assoc unless step_assoc.nil?
     @assoc = result_assoc unless result_assoc.nil?
+    @assoc = repository_cell_assoc unless repository_cell_assoc.nil?
 
     if @assoc.class == Step
       @protocol = @asset.step.protocol
-    else
+    elsif @assoc.class == Result
       @my_module = @assoc.my_module
+    else
+      # TBD
     end
   end
 
   def check_read_permission
     if @assoc.class == Step
-      if @protocol.in_module? && !can_view_or_download_step_assets(@protocol) ||
-         @protocol.in_repository? && !can_read_protocol_in_repository?(@protocol)
-        render_403 and return
-      end
+      render_403 && return unless can_read_protocol_in_module?(@protocol) ||
+                                  can_read_protocol_in_repository?(@protocol)
     elsif @assoc.class == Result
-      unless can_view_or_download_result_assets(@my_module)
-        render_403 and return
-      end
+      render_403 and return unless can_read_experiment?(@my_module.experiment)
+    elsif @assoc.class == RepositoryCell
+      # TBD
     end
   end
 
   def check_edit_permission
     if @assoc.class == Step
-      if @protocol.in_module? && !can_edit_step_in_protocol(@protocol) ||
-         @protocol.in_repository? && !can_update_protocol_in_repository?(@protocol)
-        render_403 and return
-      end
+      render_403 && return unless can_manage_protocol_in_module?(@protocol) ||
+                                  can_manage_protocol_in_repository?(@protocol)
     elsif @assoc.class == Result
-      unless can_edit_result_asset_in_module(@my_module)
-        render_403 and return
-      end
+      render_403 and return unless can_manage_module?(@my_module)
+    elsif @assoc.class == RepositoryCell
+      # TBD
     end
   end
 

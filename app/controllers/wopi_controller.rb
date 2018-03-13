@@ -1,6 +1,5 @@
 class WopiController < ActionController::Base
   include WopiUtil
-  include PermissionHelper
 
   before_action :load_vars, :authenticate_user_from_token!
   before_action :verify_proof!
@@ -281,8 +280,8 @@ class WopiController < ActionController::Base
     @current_user = @user
     if @assoc.class == Step
       if @protocol.in_module?
-        @can_read = can_view_steps_in_protocol(@protocol)
-        @can_write = can_edit_step_in_protocol(@protocol)
+        @can_read = can_read_protocol_in_module?(@protocol)
+        @can_write = can_manage_protocol_in_module?(@protocol)
         @close_url = protocols_my_module_url(@protocol.my_module,
                                              only_path: false,
                                              host: ENV['WOPI_USER_HOST'])
@@ -295,7 +294,7 @@ class WopiController < ActionController::Base
         @breadcrumb_folder_name = @protocol.my_module.name
       else
         @can_read = can_read_protocol_in_repository?(@protocol)
-        @can_write = can_update_protocol_in_repository?(@protocol)
+        @can_write = can_manage_protocol_in_repository?(@protocol)
         @close_url = protocols_url(only_path: false,
                                    host: ENV['WOPI_USER_HOST'])
 
@@ -306,8 +305,8 @@ class WopiController < ActionController::Base
       end
       @breadcrumb_folder_url  = @close_url
     else
-      @can_read = can_view_or_download_result_assets(@my_module)
-      @can_write = can_edit_result_asset_in_module(@my_module)
+      @can_read = can_read_experiment?(@my_module.experiment)
+      @can_write = can_manage_module?(@my_module)
 
       @close_url = results_my_module_url(@my_module,
                                          only_path: false,

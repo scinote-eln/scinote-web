@@ -1,5 +1,9 @@
 class Users::RegistrationsController < Devise::RegistrationsController
   prepend_before_action :check_captcha, only: [:create]
+  before_action :registration_enabled?,
+                only: %i(new create new_with_provider create_with_provider)
+  before_action :sign_up_with_provider_enabled?,
+                only: %i(new_with_provider create_with_provider)
 
   def avatar
     user = User.find_by_id(params[:id]) || current_user
@@ -122,12 +126,9 @@ class Users::RegistrationsController < Devise::RegistrationsController
     end
   end
 
-  def new
-    render_403 && return unless Rails.configuration.x.enable_user_registration
-  end
+  def new; end
 
   def create
-    render_403 && return unless Rails.configuration.x.enable_user_registration
     build_resource(sign_up_params)
     valid_resource = resource.valid?
     # ugly checking if new team on sign up is enabled :(
@@ -174,6 +175,35 @@ class Users::RegistrationsController < Devise::RegistrationsController
     end
   end
 
+  def new_with_provider; end
+
+  def create_with_provider
+    @user = User.find_by_id(user_provider_params['user'])
+    # Create new team for the new user
+    @team = Team.new(team_provider_params)
+
+    if @team.valid? && @user && Rails.configuration.x.new_team_on_signup
+      # Set the confirmed_at == created_at IF not using email confirmations
+      unless Rails.configuration.x.enable_email_confirmations
+        @user.update!(confirmed_at: @user.created_at)
+      end
+
+      @team.created_by = @user # set created_by for team
+      @team.save!
+
+      # Add this user to the team as owner
+      UserTeam.create(user: @user, team: @team, role: :admin)
+
+      # set current team to new user
+      @user.current_team_id = @team.id
+      @user.save!
+
+      sign_in_and_redirect @user
+    else
+      render :new_with_provider
+    end
+  end
+
   protected
 
   # Called upon creating User (before .save). Permits parameters and extracts
@@ -189,6 +219,14 @@ class Users::RegistrationsController < Devise::RegistrationsController
                  initials[0..Constants::USER_INITIALS_MAX_LENGTH]
                end
     tmp.merge(:initials => initials)
+  end
+
+  def team_provider_params
+    params.require(:team).permit(:name)
+  end
+
+  def user_provider_params
+    params.permit(:user)
   end
 
   def account_update_params
@@ -266,6 +304,14 @@ class Users::RegistrationsController < Devise::RegistrationsController
         respond_with_navigational(resource) { render :new }
       end
     end
+  end
+
+  def registration_enabled?
+    render_403 unless Rails.configuration.x.enable_user_registration
+  end
+
+  def sign_up_with_provider_enabled?
+    render_403 unless Rails.configuration.x.linkedin_signin_enabled
   end
 
   # Redirect to login page after signing up

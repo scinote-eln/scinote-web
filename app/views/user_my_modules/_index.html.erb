@@ -25,7 +25,7 @@
     <% end %>
   <% end %>
 </ul>
-<% if can_edit_users_on_module(@my_module) then %>
+<% if can_manage_users_in_module?(@my_module) %>
     <p>
       <hr>
       <%= link_to t('experiments.canvas.popups.manage_users'), my_module_users_edit_path(@my_module, format: :json), remote: true, class: "manage-users-link" %>

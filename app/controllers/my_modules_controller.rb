@@ -4,35 +4,21 @@ class MyModulesController < ApplicationController
   include InputSanitizeHelper
   include Rails.application.routes.url_helpers
   include ActionView::Helpers::UrlHelper
+  include ApplicationHelper
 
-  before_action :load_vars,
-                only: %I[show update destroy description due_date protocols
-                         results samples activities activities_tab
-                         assign_samples unassign_samples delete_samples
-                         toggle_task_state samples_index archive
-                         complete_my_module repository repository_index
-                         assign_repository_records unassign_repository_records]
+  before_action :load_vars
   before_action :load_vars_nested, only: %I[new create]
   before_action :load_repository, only: %I[assign_repository_records
                                            unassign_repository_records]
-  before_action :check_edit_permissions,
-                only: %I[update description due_date]
-  before_action :check_destroy_permissions, only: :destroy
-  before_action :check_view_info_permissions, only: :show
-  before_action :check_view_activities_permissions,
-                only: %I[activities activities_tab]
-  before_action :check_view_protocols_permissions, only: :protocols
-  before_action :check_view_results_permissions, only: :results
-  before_action :check_view_samples_permissions,
-                only: %I[samples samples_index]
-  before_action :check_view_archive_permissions, only: :archive
-  before_action :check_assign_samples_permissions, only: :assign_samples
-  before_action :check_unassign_samples_permissions, only: :unassign_samples
-  before_action :check_complete_my_module_perimission, only: :complete_my_module
-  before_action :check_assign_repository_records_permissions,
-                only: :assign_repository_records
-  before_action :check_unassign_repository_records_permissions,
-                only: :unassign_repository_records
+  before_action :check_manage_permissions, only:
+    %i(destroy description due_date)
+  before_action :check_view_permissions, only:
+    %i(show activities activities_tab protocols results samples samples_index
+       archive)
+  before_action :check_complete_module_permission, only: :complete_my_module
+  before_action :check_assign_repository_records_permissions, only:
+    %i(assign_repository_records unassign_repository_records assign_samples
+       unassign_samples)
 
   layout 'fluid'.freeze
 
@@ -88,7 +74,6 @@ class MyModulesController < ApplicationController
     end
 
     respond_to do |format|
-      format.html
       format.json {
         # 'activites' partial includes header and form for adding older
         # activities. 'list' partial is used for showing more activities.
@@ -105,6 +90,7 @@ class MyModulesController < ApplicationController
           })
         }
       }
+      format.html
     end
   end
 
@@ -141,13 +127,18 @@ class MyModulesController < ApplicationController
   end
 
   def update
+    render_403 && return unless if my_module_params[:archived] == 'false'
+                                  can_restore_module?(@my_module)
+                                else
+                                  can_manage_module?(@my_module)
+                                end
+
     @my_module.assign_attributes(my_module_params)
     @my_module.last_modified_by = current_user
-
     description_changed = @my_module.description_changed?
-    restored = false
 
     if @my_module.archived_changed?(from: false, to: true)
+
       saved = @my_module.archive(current_user)
       if saved
         # Currently not in use
@@ -165,6 +156,7 @@ class MyModulesController < ApplicationController
         )
       end
     elsif @my_module.archived_changed?(from: true, to: false)
+
       saved = @my_module.restore(current_user)
       if saved
         restored = true
@@ -182,8 +174,8 @@ class MyModulesController < ApplicationController
         )
       end
     else
-      saved = @my_module.save
 
+      saved = @my_module.save
       if saved and description_changed then
         Activity.create(
           type_of: :change_module_description,
@@ -485,7 +477,7 @@ class MyModulesController < ApplicationController
   # Complete/uncomplete task
   def toggle_task_state
     respond_to do |format|
-      if can_complete_module(@my_module)
+      if can_complete_module?(@my_module)
         @my_module.completed? ? @my_module.uncomplete : @my_module.complete
         completed = @my_module.completed?
         if @my_module.save
@@ -585,7 +577,7 @@ class MyModulesController < ApplicationController
       )
       # create notification for all users on the next modules in the workflow
       @my_module.my_modules.map(&:users).flatten.uniq.each do |target_user|
-        next if target_user == current_user
+        next if target_user == current_user || !target_user.recent_notification
         UserNotification.create(notification: notification, user: target_user)
       end
     end
@@ -606,76 +598,21 @@ class MyModulesController < ApplicationController
     render_404 unless @repository && can_read_team?(@repository.team)
   end
 
-  def check_edit_permissions
-    unless can_edit_module(@my_module)
-      render_403
-    end
+  def check_manage_permissions
+    render_403 unless can_manage_module?(@my_module)
   end
 
-  def check_destroy_permissions
-    unless can_archive_module(@my_module)
-      render_403
-    end
-  end
-
-  def check_view_info_permissions
-    unless can_view_module_info(@my_module)
-      render_403
-    end
-  end
-
-  def check_view_activities_permissions
-    unless can_view_module_activities(@my_module)
-      render_403
-    end
-  end
-
-  def check_view_protocols_permissions
-    unless can_view_module_protocols(@my_module)
-      render_403
-    end
-  end
-
-  def check_view_results_permissions
-    unless can_view_results_in_module(@my_module)
-      render_403
-    end
-  end
-
-  def check_view_samples_permissions
-    unless can_view_module_samples(@my_module)
-      render_403
-    end
-  end
-
-  def check_view_archive_permissions
-    unless can_view_module_archive(@my_module)
-      render_403
-    end
-  end
-
-  def check_assign_samples_permissions
-    unless can_add_samples_to_module(@my_module)
-      render_403
-    end
-  end
-
-  def check_unassign_samples_permissions
-    unless can_delete_samples_from_module(@my_module)
-      render_403
-    end
+  def check_view_permissions
+    render_403 unless can_read_experiment?(@my_module.experiment)
   end
 
   def check_assign_repository_records_permissions
-    render_403 unless can_assign_repository_records(@my_module, @repository)
+    render_403 unless module_page? &&
+                      can_assign_repository_rows_to_module?(@my_module)
   end
 
-  def check_unassign_repository_records_permissions
-    render_403 unless can_unassign_repository_records(@my_module, @repository)
-  end
-
-  def check_complete_my_module_perimission
-    render_403 unless can_complete_module(@my_module)
+  def check_complete_module_permission
+    render_403 unless can_complete_module?(@my_module)
   end
 
   def my_module_params

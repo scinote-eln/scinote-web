@@ -39,32 +39,46 @@ module ProtocolsIoHelper
     I18n.t('protocols.protocols_io_import.too_long').length
   # The + 2 above (in title) is there because if the length was at the limit,
   # the cutter method had issues, this gives it some space
+
+  # below are default min table settings (minimum 5x5)
+  PIO_TABLE_MIN_WIDTH = 5
+  PIO_TABLE_MIN_HEIGHT = 5
+
   def protocolsio_string_to_table_element(description_string)
     string_without_tables = string_html_table_remove(description_string)
     table_regex = %r{<table\b[^>]*>(.*?)<\/table>}m
     tr_regex = %r{<tr\b[^>]*>(.*?)<\/tr>}m
     td_regex = %r{<td\b[^>]*>(.*?)<\/td>}m
     tables = {}
+    description_string.gsub! '<th>', '<td>'
+    description_string.gsub! '</th>', '</td>'
     table_strings = description_string.scan(table_regex)
     table_strings.each_with_index do |table, table_counter|
       tables[table_counter.to_s] = {}
-      tr_strings = table[0].scan(tr_regex)
+      tr_number = table[0].scan(tr_regex).count
+      diff = PIO_TABLE_MIN_HEIGHT - tr_number # always tables have atleast 5 row
+      table_fix_str = table[0]
+      table_fix_str += '<tr></tr>' * diff if tr_number < PIO_TABLE_MIN_HEIGHT
+      tr_strings = table_fix_str.scan(tr_regex)
       contents = {}
       contents['data'] = []
       tr_strings.each_with_index do |tr, tr_counter|
         td_strings = tr[0].scan(td_regex)
         contents['data'][tr_counter] = []
+        td_counter = td_strings.count
+        diff = PIO_TABLE_MIN_WIDTH - td_counter
         td_strings.each do |td|
           td_stripped = ActionController::Base.helpers.strip_tags(td[0])
           contents['data'][tr_counter].push(td_stripped)
         end
+        next if td_counter >= PIO_TABLE_MIN_WIDTH
+        diff.times { contents['data'][tr_counter].push(' ') }
       end
       tables[table_counter.to_s]['contents'] = Base64.encode64(
         contents.to_s.sub('=>', ':')
       )
       tables[table_counter.to_s]['name'] = ' '
     end
-    # return string_without_tables, tables
     return tables, string_without_tables
   end
 
@@ -103,6 +117,8 @@ module ProtocolsIoHelper
         @toolong = true
       end
       text
+    else
+      ''
     end
   end
 
@@ -129,6 +145,8 @@ module ProtocolsIoHelper
         @remaining -= text.length - reserved
       end
       text
+    else
+      ''
     end
   end
 
@@ -146,14 +164,20 @@ module ProtocolsIoHelper
     Nokogiri::HTML::DocumentFragment.parse(text).to_html
   end
 
+  def step_hash_null?(step_json)
+    step_json.dig(0, 'components', 0, 'component_type_id').nil?
+  end
+
   # Images are allowed in:
   # Step: description, expected result
   # Protocol description : description before_start warning
   # guidelines manuscript_citation
+
   def prepare_for_view(
     attribute_text1, size, table = 'no_table', image_allowed = false
   )
     image_tag = image_allowed ? Array('img') : Array(nil)
+    image_tag.push('br')
     if table == 'no_table'
       attribute_text = sanitize_input(not_null(attribute_text1), image_tag)
     elsif table == 'table'
@@ -202,7 +226,7 @@ module ProtocolsIoHelper
         prepare_for_view(
           iterating_key,
           ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL,
-          'no_table',
+          'table',
           true
           ) +
         br
@@ -226,8 +250,9 @@ module ProtocolsIoHelper
       append =
         t('protocols.protocols_io_import.comp_append.expected_result') +
         prepare_for_view(
-          iterating_key, ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL,
-          'no_table',
+          iterating_key,
+          ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_SMALL,
+          'table',
           true
         ) +
         '<br>'
@@ -252,6 +277,7 @@ module ProtocolsIoHelper
   end
 
   def protocols_io_fill_desc(json_hash)
+    unshortened_string_for_tables = ''
     description_array = %w[
       ( before_start warning guidelines manuscript_citation publish_date
       vendor_name vendor_link keywords tags link created_on )
@@ -259,20 +285,25 @@ module ProtocolsIoHelper
     allowed_image_attributes = %w[
       ( before_start warning guidelines manuscript_citation )
     ]
-    description_string =
-      if json_hash['description'].present?
-        '<strong>' + t('protocols.protocols_io_import.preview.description') +
-          '</strong>' +
-          prepare_for_view(
-            json_hash['description'],
-            ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_MEDIUM,
-            'no_table',
-            true
-          ).html_safe
-      else
-        '<strong>' + t('protocols.protocols_io_import.preview.description') +
-          '</strong>' + t('protocols.protocols_io_import.comp_append.missing_desc')
-      end
+    if json_hash['description'].present?
+      unshortened_string_for_tables += json_hash['description']
+      description_string =
+        '<strong>' +
+        t('protocols.protocols_io_import.preview.description') +
+        '</strong>' +
+        prepare_for_view(
+          json_hash['description'],
+          ProtocolsIoHelper::PIO_ELEMENT_RESERVED_LENGTH_MEDIUM,
+          'table',
+          true
+        ).html_safe
+    else
+      description_string =
+        '<strong>' +
+        t('protocols.protocols_io_import.preview.description') +
+        '</strong>' +
+        t('protocols.protocols_io_import.comp_append.missing_desc')
+    end
     description_string += '<br>'
     description_array.each do |e|
       if e == 'created_on' && json_hash[e].present?
@@ -299,22 +330,27 @@ module ProtocolsIoHelper
         )
         description_string += '<br>'
       elsif json_hash[e].present?
+        unshortened_string_for_tables += json_hash[e]
         new_e = '<strong>' + e.humanize + '</strong>'
         image_tag = allowed_image_attributes.include?(e) ? Array('img') : Array(nil)
         description_string +=
-          new_e.to_s + ':  ' +
+          new_e.to_s + ':  ' + # intercept tables here, before cut
           pio_eval_prot_desc(
             sanitize_input(json_hash[e], image_tag),
             e
           ).html_safe + '<br>'
       end
     end
-    description_string
+    return description_string, unshortened_string_for_tables
   end
 
   def protocols_io_guid_reorder_step_json(unordered_step_json)
+    return '' if unordered_step_json.blank?
     base_step = unordered_step_json.find { |step| step['previous_guid'].nil? }
+    return unordered_step_json if base_step.nil?
     number_of_steps = unordered_step_json.size
+    return unordered_step_json if number_of_steps == 1
+    base_step = unordered_step_json.find { |step| step['previous_guid'].nil? }
     step_order = []
     step_counter = 0
     step_order[step_counter] = base_step
@@ -346,11 +382,15 @@ module ProtocolsIoHelper
     newj['0']['position'] = 0
     newj['0']['name'] = 'Protocol info'
     @remaining = ProtocolsIoHelper::PIO_P_AVAILABLE_LENGTH
-    newj['0']['tables'], table_str = protocolsio_string_to_table_element(
-      sanitize_input(
-        protocols_io_fill_desc(original_json).html_safe, Array('img')
-      )
+    shortened_string, unshortened_tables_string = protocols_io_fill_desc(
+      original_json
     )
+    newj['0']['tables'] = protocolsio_string_to_table_element(
+      sanitize_input(unshortened_tables_string).html_safe
+    )[0]
+    table_str = protocolsio_string_to_table_element(
+      sanitize_input(shortened_string, Array('img')).html_safe
+    )[1]
     newj['0']['description'] = table_str
     original_json['steps'].each_with_index do |step, pos_orig| # loop over steps
       i = pos_orig + 1
@@ -360,6 +400,7 @@ module ProtocolsIoHelper
       newj[i.to_s]['position'] = i
       newj[i.to_s]['description'] = '' unless newj[i.to_s].key?('description')
       newj[i.to_s]['name'] = '' unless newj[i.to_s].key?('name')
+      unshortened_step_table_string = ''
       step['components'].each do |key, value|
         # sometimes there are random index values as keys
         # instead of hashes, this is a workaround to that buggy json format
@@ -367,11 +408,14 @@ module ProtocolsIoHelper
         # append is the string that we append values into for description
         # pio_stp_x means protocols io step (id of component) parser
         case key['component_type_id']
+        # intercept tables in all of below before cutting
         when '1'
+          unshortened_step_table_string += key['data']
           newj[i.to_s]['description'] += pio_stp_1(key['data'])
         when '6'
           newj[i.to_s]['name'] = pio_stp_6(key['data'])
         when '17'
+          unshortened_step_table_string += key['data']
           newj[i.to_s]['description'] += pio_stp_17(key['data'])
         when '8'
           pe_array = %w(
@@ -393,6 +437,10 @@ module ProtocolsIoHelper
           pe_array = %w(
             name description os_name os_version
           )
+          key['source_data']['name'] =
+            '<pre><code>' +
+            not_null(key['source_data']['name'].gsub(/\n/, '<br>')) +
+            '</code></pre>'
           trans_text = 'protocols.protocols_io_import.comp_append.command.'
           newj[i.to_s]['description'] += pio_stp(
             key['source_data'], pe_array, trans_text
@@ -415,10 +463,13 @@ module ProtocolsIoHelper
           )
         end # case end
       end # finished looping over step components
-      newj[i.to_s]['tables'], table_str = protocolsio_string_to_table_element(
+      table_str = protocolsio_string_to_table_element(
         newj[i.to_s]['description']
-      )
+      )[1]
       newj[i.to_s]['description'] = table_str
+      newj[i.to_s]['tables'] = protocolsio_string_to_table_element(
+        sanitize_input(unshortened_step_table_string).html_safe
+      )[0]
     end # steps
     newj
   end

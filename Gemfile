@@ -9,7 +9,7 @@ gem 'pg', '~> 0.18'
 gem 'devise', '~> 4.3.0'
 gem 'devise_invitable'
 gem 'simple_token_authentication', '~> 1.15.1' # Token authentication for Devise
-gem 'bootstrap-sass', '~> 3.3.5'
+gem 'bootstrap-sass', '~> 3.3.7'
 gem 'sass-rails', '~> 5.0.6'
 gem 'bootstrap_form'
 gem 'yomu'
@@ -17,6 +17,7 @@ gem 'font-awesome-rails', '~> 4.7.0.2'
 gem 'recaptcha', require: 'recaptcha/rails'
 gem 'sanitize', '~> 4.4'
 gem 'omniauth'
+gem 'omniauth-linkedin-oauth2'
 
 # Gems for API implementation
 gem 'jwt', '~> 1.5'
@@ -73,7 +74,6 @@ gem 'scenic', '~> 1.4'
 
 gem 'paperclip', '~> 5.1' # File attachment, image attachment library
 gem 'aws-sdk', '~> 2'
-gem 'aws-sdk-v1'
 
 gem 'delayed_job_active_record'
 gem 'devise-async',

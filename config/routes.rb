@@ -480,6 +480,10 @@ Rails.application.routes.draw do
       end
     end
 
+    get 'repository_rows/:id', to: 'repository_rows#show',
+                               as: :repository_row,
+                               defaults: { format: 'json' }
+
     get 'search' => 'search#index'
     get 'search/new' => 'search#new', as: :new_search
 
@@ -498,6 +502,9 @@ Rails.application.routes.draw do
       get 'avatar/:id/:style' => 'users/registrations#avatar', as: 'avatar'
       post 'avatar_signature' => 'users/registrations#signature'
       get 'users/auth_token_sign_in' => 'users/sessions#auth_token_create'
+      get 'users/sign_up_provider' => 'users/registrations#new_with_provider'
+      post 'users/complete_sign_up_provider' =>
+           'users/registrations#create_with_provider'
     end
 
     namespace :api, defaults: { format: 'json' } do

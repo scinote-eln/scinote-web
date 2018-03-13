@@ -112,7 +112,9 @@ class RepositoryDatatable < CustomDatatable
                                                     record.id),
         'recordUpdateUrl':
           Rails.application.routes.url_helpers
-               .repository_repository_row_path(@repository, record.id)
+               .repository_repository_row_path(@repository, record.id),
+        'recordInfoUrl':
+          Rails.application.routes.url_helpers.repository_row_path(record.id)
       }
 
       # Add custom columns

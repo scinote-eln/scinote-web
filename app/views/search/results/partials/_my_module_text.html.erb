@@ -4,7 +4,7 @@
 
 <% if my_module.archived? %>
   <span class="label label-warning"><%=t 'search.index.archived' %></span>
-  <% if can_view_experiment_archive(my_module.experiment) and can_restore_module(my_module) %>
+  <% if can_restore_module?(my_module) %>
     <%= route_to_other_team module_archive_experiment_url(my_module.experiment),
                             my_module.experiment.project.team,
                             text %>
@@ -12,7 +12,7 @@
     <%= text %>
   <% end %>
 <% else %>
-  <% if can_view_module(my_module) %>
+  <% if can_read_experiment?(my_module.experiment) %>
     <% case link_to_page %>
       <% when :samples %>
         <%= route_to_other_team samples_my_module_path(my_module),

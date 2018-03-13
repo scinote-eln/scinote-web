@@ -40,11 +40,17 @@ en:
         submit: "Resend unlock instructions"
     links:
       login: "Log in"
+      login_with_provider: "Log in with SciNote account"
       signup: "Sign up"
       forgot: "Forgot your password?"
       not_receive_confirmation: "Didn't receive confirmation instructions?"
       not_receive_unlock: "Didn't receive unlock instructions?"
       sign_in_provider: "Sign in with %{provider}"
+    linkedin:
+      provider_name: "LinkedIn"
+      complete_sign_up: "You have to complete the sign up process"
+      email_already_taken: "SciNote account with email %{email} alreday exists"
+      failed_to_save: "Failed to create new user"
 
   helpers:
     label:
@@ -969,6 +975,14 @@ en:
     no_records_unassigned_flash: "No items were unassigned from task"
     default_column: 'Name'
 
+  repository_row:
+    modal_info:
+      head_title: "Information for record '%{repository_row}'"
+      added_on: "Added on"
+      added_by: "Added by"
+      custom_field: "%{cf}: "
+      title: "This record is assigned to %{nr} tasks."
+      no_tasks: "This record in not assigned to any task."
   samples:
     columns: "Columns"
     columns_visibility: "Toggle visibility"
@@ -1272,6 +1286,8 @@ en:
         head_title: "Sign up"
         team_name_label: "Team name"
         team_name_help: "Team name is required in order to create your own Team. After you create your own Team, you will be able to join other Teams as well."
+      new_with_provider:
+        head_title: "Complete the Sign up"
     statistics:
       title: "My statistics"
       team: "Team"
@@ -1781,10 +1797,16 @@ en:
       edit: "sciNote | %{file_name} | Edit"
       view: "sciNote | %{file_name} | View"
     drag_n_drop:
-      label_html: 'Drag &amp; drop files here or '
+      label_html: 'Drag &amp; drop files here, CTRL+V (for images from clipboard) or '
       browse_label: 'Browse to add'
       drop_label: 'Drop to add to Step'
       file_label: 'File'
+    from_clipboard:
+      modal_title: 'Add image from clipboard'
+      image_preview: 'Image preview'
+      add_image: 'Add image'
+      file_name: 'File name'
+      file_name_placeholder: 'Image'
   atwho:
     no_results: "No results found"
     users:
@@ -1901,9 +1923,9 @@ en:
       leave_flash: "Successfuly left team %{team}."
     teams:
       create_permission_error: "You don't have permission to create team."
-      update_permission_error: "You don't have permission to edit team."
+      update_permission_error: "You don't have permission to edit this team."
     user:
       current_password_invalid: "incorrect password"
       password_confirmation_not_match: "doesn't match"
     invite_users:
-      permission_error: "You don't have permission to invite additional users to team. Contact its administrator/s."
+      permission_error: "You don't have permission to invite additional users to this team. Contact its administrator/s."

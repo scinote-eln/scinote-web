@@ -4,7 +4,7 @@
 
 <% if project.archived? %>
   <span class="label label-warning"><%=t 'search.index.archived' %></span>
-  <% if can_read_team?(project.team) and can_restore_project(project) %>
+  <% if can_read_team?(project.team) && can_restore_project?(project) %>
     <%= route_to_other_team projects_archive_path(team: project.team),
                             project.team,
                             text %>
@@ -12,7 +12,7 @@
     <%= text %>
   <% end %>
 <% else %>
-  <% if can_view_project(project) %>
+  <% if can_read_project?(project) %>
     <% if link_to_page == :show %>
       <%= route_to_other_team project_path(project),
                               project.team,

@@ -7,8 +7,7 @@ class MyModuleCommentsController < ApplicationController
   before_action :load_vars
   before_action :check_view_permissions, only: :index
   before_action :check_add_permissions, only: [:create]
-  before_action :check_edit_permissions, only: [:edit, :update]
-  before_action :check_destroy_permissions, only: [:destroy]
+  before_action :check_manage_permissions, only: %i(edit update destroy)
 
   def index
     @comments = @my_module.last_comments(@last_comment_id, @per_page)
@@ -180,25 +179,17 @@ class MyModuleCommentsController < ApplicationController
   end
 
   def check_view_permissions
-    unless can_view_module_comments(@my_module)
-      render_403
-    end
+    render_403 unless can_read_experiment?(@my_module.experiment)
   end
 
   def check_add_permissions
-    unless can_add_comment_to_module(@my_module)
-      render_403
-    end
+    render_403 unless can_create_comments_in_module?(@my_module)
   end
 
-  def check_edit_permissions
+  def check_manage_permissions
     @comment = TaskComment.find_by_id(params[:id])
-    render_403 unless @comment.present? && can_edit_module_comment(@comment)
-  end
-
-  def check_destroy_permissions
-    @comment = TaskComment.find_by_id(params[:id])
-    render_403 unless @comment.present? && can_delete_module_comment(@comment)
+    render_403 unless @comment.present? &&
+                      can_manage_comment_in_module?(@comment.becomes(Comment))
   end
 
   def comment_params
