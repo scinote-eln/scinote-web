@@ -44,7 +44,7 @@ Scenario: Unsuccessful Log in
   And I click "Log in" button
   Then I should see "Invalid Email or password." flash message
 
-@javascript
+@javascript @wip
 Scenario: Successful Log out
   Given "night.slarker@gmail.com" is signed in with "mypassword1234"
   And I'm on the home page of "BioSistemika Process" team
