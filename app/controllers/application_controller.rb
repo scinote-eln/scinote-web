@@ -1,5 +1,4 @@
 class ApplicationController < ActionController::Base
-  include PermissionHelper
   include FirstTimeDataGenerator
 
   acts_as_token_authentication_handler_for User

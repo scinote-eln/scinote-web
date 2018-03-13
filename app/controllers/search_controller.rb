@@ -111,7 +111,6 @@ class SearchController < ApplicationController
   def count_by_repository
     count_total = 0
     search_results = Repository.search(current_user,
-                                       true,
                                        @search_query,
                                        Constants::SEARCH_NO_LIMIT,
                                        nil,
@@ -243,10 +242,11 @@ class SearchController < ApplicationController
     @repository_results = []
     if @repository_search_count_total > 0
       @repository_results =
-        RepositoryRow.search(@repository, @search_query, @search_page,
-                             match_case: @search_case,
-                             whole_word: @search_whole_word,
-                             whole_phrase: @search_whole_phrase)
+        Repository.search(current_user, @search_query, @search_page,
+                          @repository,
+                          match_case: @search_case,
+                          whole_word: @search_whole_word,
+                          whole_phrase: @search_whole_phrase)
     end
     @search_count = @repository_search_count_total
   end

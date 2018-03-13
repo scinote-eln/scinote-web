@@ -1,4 +1,4 @@
-<% if can_view_or_download_result_assets(result.my_module) %>
+<% if can_read_experiment?(result.my_module.experiment) %>
   <% if result.asset.file.processing? %>
     <span data-status='asset-loading'
       data-present-url='<%= file_present_asset_path(result.asset) %>'>
@@ -20,8 +20,11 @@
         <% if wopi_file?(result.asset) %>
           <%= wopi_asset_file_name(result.asset) %>
         <% else %>
-          <p><%= truncate(result.asset.file_file_name,
-                          length: Constants::FILENAME_TRUNCATION_LENGTH) %></p>
+          <p>
+            <%= file_extension_icon(result.asset) %>
+            <%= truncate(result.asset.file_file_name,
+                         length: Constants::FILENAME_TRUNCATION_LENGTH) %>
+          </p>
         <% end %>
       <% end %>
       <%= wopi_result_view_file_button(result) %>

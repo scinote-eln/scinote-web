@@ -1,9 +1,7 @@
 module SampleActions
   extend ActiveSupport::Concern
-  include PermissionHelper
 
   def delete_samples
-    check_destroy_samples_permissions
 
     if params[:sample_ids].present?
       counter_user = 0
@@ -11,7 +9,7 @@ module SampleActions
       params[:sample_ids].each do |id|
         sample = Sample.find_by_id(id)
 
-        if sample && can_update_or_delete_sample?(sample)
+        if sample && can_manage_sample?(sample)
           sample.destroy
           counter_user += 1
         else
@@ -42,9 +40,5 @@ module SampleActions
     elsif params[:controller] == 'experiments'
       redirect_to samples_experiment_path(@experiment)
     end
-  end
-
-  def check_destroy_samples_permissions
-    render_403 unless can_manage_samples?(@project.team)
   end
 end

@@ -23,39 +23,37 @@
   </div>
 <% end %>
 
-<% if can_manage_project?(@project) %>
-  <!-- Edit project modal -->
-  <div class="modal" id="edit-project-modal" tabindex="-1" role="dialog" aria-labelledby="edit-project-modal-label">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <h4 class="modal-title" id="edit-project-modal-label"></h4>
-        </div>
-        <div class="modal-body">
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-primary" data-action="submit"><%=t "projects.index.modal_edit_project.submit" %></button>
-          <button type="button" class="btn btn-default" data-dismiss="modal"><%=t "general.cancel" %></button>
-        </div>
+<!-- Edit project modal -->
+<div class="modal" id="edit-project-modal" tabindex="-1" role="dialog" aria-labelledby="edit-project-modal-label">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="edit-project-modal-label"></h4>
+      </div>
+      <div class="modal-body">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-action="submit"><%=t "projects.index.modal_edit_project.submit" %></button>
+        <button type="button" class="btn btn-default" data-dismiss="modal"><%=t "general.cancel" %></button>
       </div>
     </div>
   </div>
+</div>
 
-  <!-- Manage users modal -->
-  <div class="modal" id="manage-users-modal" tabindex="-1" role="dialog" aria-labelledby="manage-users-modal-label">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <h4 class="modal-title" id="manage-users-modal-label"><%= t("projects.index.modal_manage_users.modal_title") %> <span id="manage-users-modal-project"></span></h4>
-        </div>
-        <div class="modal-body"></div>
-        <div class="modal-footer"></div>
+<!-- Manage users modal -->
+<div class="modal" id="manage-users-modal" tabindex="-1" role="dialog" aria-labelledby="manage-users-modal-label">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="manage-users-modal-label"><%= t("projects.index.modal_manage_users.modal_title") %> <span id="manage-users-modal-project"></span></h4>
       </div>
+      <div class="modal-body"></div>
+      <div class="modal-footer"></div>
     </div>
   </div>
-<% end %>
+</div>
 
 <div id="projects-toolbar">
 

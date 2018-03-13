@@ -2,6 +2,26 @@ class RepositoryCell < ActiveRecord::Base
   belongs_to :repository_row
   belongs_to :repository_column
   belongs_to :value, polymorphic: true, dependent: :destroy
+  belongs_to :repository_text_value,
+             (lambda do
+               where(repository_cells: { value_type: 'RepositoryTextValue' })
+             end),
+             optional: true, foreign_key: :value_id
+  belongs_to :repository_date_value,
+             (lambda do
+               where(repository_cells: { value_type: 'RepositoryDateValue' })
+             end),
+             optional: true, foreign_key: :value_id
+  belongs_to :repository_list_value,
+             (lambda do
+               where(repository_cells: { value_type: 'RepositoryListValue' })
+             end),
+             optional: true, foreign_key: :value_id
+  belongs_to :repository_asset_value,
+             (lambda do
+               where(repository_cells: { value_type: 'RepositoryAssetValue' })
+             end),
+             optional: true, foreign_key: :value_id
 
   validates :repository_column, presence: true
   validate :repository_column_data_type

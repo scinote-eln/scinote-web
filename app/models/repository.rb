@@ -23,51 +23,46 @@ class Repository < ApplicationRecord
 
   def self.search(
     user,
-    _include_archived,
     query = nil,
     page = 1,
-    current_team = nil,
+    repository = nil,
     options = {}
   )
-    team_ids =
-      if current_team
-        current_team.id
-      else
-        Team.joins(:user_teams)
-            .where('user_teams.user_id = ?', user.id)
-            .distinct
-            .pluck(:id)
-      end
+    repositories = repository ? repository : Repository.where(team: user.teams)
 
-    row_ids = RepositoryRow
-              .search(nil, query, Constants::SEARCH_NO_LIMIT, options)
-              .select(:id)
+    includes_json = { repository_cells: Extends::REPOSITORY_SEARCH_INCLUDES }
+    searchable_attributes = ['repository_rows.name', 'users.full_name'] +
+                            Extends::REPOSITORY_EXTRA_SEARCH_ATTR
 
-    new_query = Repository
-                .select('repositories.*, COUNT(repository_rows.id) AS counter')
-                .joins(:team)
-                .joins('LEFT OUTER JOIN repository_rows ON ' \
-                       'repositories.id = repository_rows.repository_id')
-                .where(team: team_ids)
-                .where('repository_rows.id IN (?)', row_ids)
-                .group('repositories.id')
+    new_query = RepositoryRow
+                .left_outer_joins(:created_by)
+                .left_outer_joins(includes_json)
+                .where(repository: repositories)
+                .where_attributes_like(searchable_attributes, query, options)
 
     # Show all results if needed
     if page == Constants::SEARCH_NO_LIMIT
       new_query
+        .joins(:repository)
+        .select(
+          'repositories.id AS id, COUNT(DISTINCT repository_rows.id) AS counter'
+        )
+        .group('repositories.id')
     else
       new_query
+        .distinct
         .limit(Constants::SEARCH_LIMIT)
         .offset((page - 1) * Constants::SEARCH_LIMIT)
     end
   end
 
-  def available_repository_fields
+  def importable_repository_fields
     fields = {}
     # First and foremost add record name
     fields['-1'] = I18n.t('repositories.default_column')
     # Add all other custom columns
     repository_columns.order(:created_at).each do |rc|
+      next unless rc.importable?
       fields[rc.id] = rc.name
     end
     fields
