@@ -46,10 +46,16 @@ describe RepositoryZipExport, type: :background_job do
     end
   end
 
-
   describe '#generate_zip/2' do
     let(:params) do
-      { header_ids: ['-1', '-2', '4', '3', '-3', '-5', '-4'], row_ids: @row_ids }
+      { header_ids: ['-1',
+                     '-2',
+                     sample_group_column.id.to_s,
+                     custom_column.id.to_s,
+                     '-3',
+                     '-5',
+                     '-4'],
+        row_ids: @row_ids }
     end
 
     it 'generates a new zip export object' do
