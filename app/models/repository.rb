@@ -56,12 +56,13 @@ class Repository < ApplicationRecord
     end
   end
 
-  def available_repository_fields
+  def importable_repository_fields
     fields = {}
     # First and foremost add record name
     fields['-1'] = I18n.t('repositories.default_column')
     # Add all other custom columns
     repository_columns.order(:created_at).each do |rc|
+      next unless rc.importable?
       fields[rc.id] = rc.name
     end
     fields
