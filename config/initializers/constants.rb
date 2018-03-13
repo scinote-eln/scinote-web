@@ -238,6 +238,7 @@ class Constants
       -moz-keyframes -o-keyframes -webkit-keyframes document
       keyframes media supports
     ],
+    # Removed option for http protocol
     protocols: ['http', 'https', :relative],
     properties: %w[
       -moz-appearance
