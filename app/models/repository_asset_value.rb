@@ -18,4 +18,8 @@ class RepositoryAssetValue < ApplicationRecord
   def formatted
     asset.file_file_name
   end
+
+  def data
+    asset.file_file_name
+  end
 end
