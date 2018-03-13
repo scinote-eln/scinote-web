@@ -134,8 +134,7 @@
     function notificationAlertClose() {
       $('#notifications .alert').on('closed.bs.alert', function() {
         $('#content-wrapper')
-          .addClass('alert-hidden')
-          .removeClass('alert-shown');
+          .addClass('alert-hidden');
       });
     }
   }

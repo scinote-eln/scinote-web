@@ -36,7 +36,6 @@ $(document).ready(function () {
   $("#hide-alert").click(function(ev) {
     $(this).closest("div.alert").addClass("alert-hidden");
     $("#content-wrapper").addClass("alert-hidden");
-    $("#content-wrapper").removeClass("alert-shown");
 
     ev.preventDefault();
     ev.stopPropagation();

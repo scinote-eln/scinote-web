@@ -367,6 +367,33 @@
   }
 }
 
+// Alert
+.alert {
+  border-radius: 0;
+  margin-bottom: 0;
+  opacity: .86;
+  width: 100%;
+
+  &.alert-hidden {
+    display: none;
+  }
+
+  a#hide-alert {
+    margin-left: 15px;
+  }
+
+  &.alert-floating {
+    position: fixed;
+    top: 50px;
+    z-index: 1000;
+  }
+}
+
+#content-wrapper {
+  margin-top: 50px;
+}
+
+
 // reset margins on small screens
 @media (max-width: 1188px) {
   #nav-team-switch {

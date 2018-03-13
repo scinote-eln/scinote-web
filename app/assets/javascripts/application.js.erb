@@ -198,9 +198,6 @@ var HelperModule = (function(){
       window.setTimeout(function () {
         flash.fadeTo(500, 0).slideUp(500, function () {
           $(this).remove();
-          if($('.alert').length <= 0) {
-            $('#content-wrapper').removeClass('alert-shown');
-          }
         });
       }, 5000);
     }
@@ -234,7 +231,6 @@ var HelperModule = (function(){
                           '</div>' +
                         '</div>';
     $('#notifications').html(htmlSnippet);
-    $('#content-wrapper').addClass('alert-shown');
     helpers.hideFlashMsg();
   }
 
