@@ -15,7 +15,7 @@ Rails.application.routes.draw do
 
     root 'projects#index'
 
-    # EPA Help routes, about and contact pages
+    # EPA Help routes: about, contact, and training pages
     get 'help/about', to: 'help#about', as: 'about'
     get 'help/contact', to: 'help#contact', as: 'contact'
     get 'help/training', to: 'help#training', as: 'training'
