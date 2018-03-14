@@ -26,7 +26,6 @@ $toggle-btn-size: 50px;
     z-index: 1000;
     position: fixed;
     width: $wrapper-width;
-    left: $wrapper-width;
     height: 100%;
     margin-left: -$wrapper-width;
     -webkit-transition: all 0.5s ease;
@@ -99,6 +98,7 @@ $toggle-btn-size: 50px;
   padding-left: 0;
 
   #sidebar-wrapper {
+    margin-left: 0;
     width: 0;
 
     #slide-panel {
