@@ -101,6 +101,15 @@ en:
     core_version: "sciNote core version"
     addon_versions: "Addon versions"
 
+  left_menu_bar:
+    projects: "Projects"
+    repositories: "Libraries"
+    templates: "Templates"
+    reports: "Reports"
+    settings: "Settings"
+    activities: "Activities"
+    help: "Help"
+
   sidebar:
     title: "Navigation"
     no_module_group: "No workflow"

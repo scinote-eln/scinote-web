@@ -64,6 +64,7 @@
       <% end %>
     </div>
 
+    <%= render "shared/left_menu_bar" %>
     <div id="content-wrapper" class="<%= "alert-shown" if flash[:success] || flash[:error] || notice || alert %>">
       <%= yield :content %>
     </div>
