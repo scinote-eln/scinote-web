@@ -127,7 +127,7 @@ GEM
     bootstrap-sass (3.3.7)
       autoprefixer-rails (>= 5.2.1)
       sass (>= 3.3.4)
-    bootstrap-select-rails (1.6.3)
+    bootstrap-select-rails (1.12.4)
     bootstrap3-datetimepicker-rails (4.15.35)
       momentjs-rails (>= 2.8.1)
     bootstrap_form (2.7.0)
@@ -518,7 +518,7 @@ DEPENDENCIES
   better_errors
   binding_of_caller
   bootstrap-sass (~> 3.3.5)
-  bootstrap-select-rails (~> 1.6.3)
+  bootstrap-select-rails (~> 1.12.4)
   bootstrap3-datetimepicker-rails (~> 4.15.35)
   bootstrap_form
   bullet

@@ -26,7 +26,7 @@ gem 'momentjs-rails', '~> 2.17.1'
 # JS datetime picker
 gem 'bootstrap3-datetimepicker-rails', '~> 4.15.35'
 # Select elements for Bootstrap
-gem 'bootstrap-select-rails', '~> 1.6.3'
+gem 'bootstrap-select-rails', '~> 1.12.4'
 gem 'uglifier', '>= 1.3.0'
 # jQuery & plugins
 gem 'jquery-turbolinks'

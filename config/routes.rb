@@ -472,13 +472,15 @@ Rails.application.routes.draw do
            as: 'columns_destroy_html'
 
       resources :repository_columns, only: %i(create edit update destroy)
-
       resources :repository_rows, only: %i(create edit update)
       member do
         post 'parse_sheet'
         post 'import_records'
       end
     end
+
+    post 'repository_list_items', to: 'repository_list_items#search',
+                                  defaults: { format: 'json' }
 
     get 'repository_rows/:id', to: 'repository_rows#show',
                                as: :repository_row,

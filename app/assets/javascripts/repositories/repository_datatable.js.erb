@@ -432,14 +432,20 @@ var RepositoryDatatable = (function(global) {
       } else if ($(th).attr('id') === 'row-name') {
         input = changeToInputField('repository_row', 'name', '');
         tr.appendChild(createTdElement(input));
-      } else if ($(th).hasClass('repository-column')) {
+      } else if ($(th).hasClass('repository-column') &&
+                 $(th).attr('data-type') === 'RepositoryTextValue') {
         input = changeToInputField('repository_cell', th.attr('id'), '');
+        tr.appendChild(createTdElement(input));
+      } else if ($(th).hasClass('repository-column') &&
+                 $(th).attr('data-type') === 'RepositoryListValue') {
+        input = initialListItemsRequest($(th).attr('id'));
         tr.appendChild(createTdElement(input));
       } else {
         // Column we don't care for, just add empty td
         tr.appendChild(createTdElement(''));
       }
     });
+
     $('table' + TABLE_ID).prepend(tr);
     selectedRecord = tr;
 
@@ -451,6 +457,8 @@ var RepositoryDatatable = (function(global) {
     });
     // Adjust columns width in table header
     adjustTableHeader();
+    // Init selectpicker
+    _initSelectPicker();
   }
 
   global.onClickToggleAssignedRecords = function() {
@@ -584,6 +592,7 @@ var RepositoryDatatable = (function(global) {
 
         // Take care of custom cells
         var cells = data.repository_row.repository_cells;
+        var list_columns = data.repository_row.repository_column_items;
         $(node).children('td').each(function(i) {
           var td = $(this);
           var rawIndex = TABLE.column.index('fromVisible', i);
@@ -592,13 +601,17 @@ var RepositoryDatatable = (function(global) {
             // Check if cell on this record exists
             var cell = cells[$(colHeader).attr('id')];
             if (cell) {
-              td.html(changeToInputField('repository_cell',
+              td.html(changeToFormField('repository_cell',
                                          $(colHeader).attr('id'),
-                                         cell.value));
+                                         cell,
+                                         list_columns));
             } else {
-              td.html(changeToInputField('repository_cell',
-                                         $(colHeader).attr('id'), ''));
+              td.html(changeToFormField('repository_cell',
+                                         $(colHeader).attr('id'),
+                                         '',
+                                         list_columns));
             }
+            _initSelectPicker();
           }
         });
 
@@ -647,12 +660,17 @@ var RepositoryDatatable = (function(global) {
     // Record name
     data.repository_row.name = $('td input[data-object = repository_row]').val();
 
-    // Custom cells
+    // Custom cells text type
     $(node).find('td input[data-object = repository_cell]').each(function() {
       // Send data only and only if cell is not empty
       if ($(this).val().trim()) {
         data.repository_cells[$(this).attr('name')] = $(this).val();
       }
+    });
+    // Custom cells list type
+    $(node).find('td[column_id]').each(function(index, el) {
+      var value = $(el).attr('list_item_id');
+      data.repository_cells[$(el).attr('column_id')] = value;
     });
 
     var url;
@@ -845,6 +863,88 @@ var RepositoryDatatable = (function(global) {
   });
 
   // Helper functions
+  function _listItemDropdown(options, current_value, column_id) {
+    var html = '<select class="form-control selectpicker" ';
+    html += 'data-abs-min-length="2" data-live-search="true" ';
+    html += 'column_id="' + column_id +'">';
+    html += '<option value="-1"></option>';
+    $.each(options, function(index, value) {
+      var selected = (current_value === value[1]) ? 'selected' : '';
+      html += '<option value="' + value[0] + '" ' + selected + '>';
+      html += value[1] + '</option>';
+    });
+    html += '</select>';
+    return html;
+  }
+
+  function initialListItemsRequest(column_id) {
+    var massage_response = [];
+    $.ajax({
+      url: '<%= Rails.application.routes.url_helpers.repository_list_items_path %>',
+      type: 'POST',
+      dataType: 'json',
+      async: false,
+      data: {
+        q: '',
+        column_id: column_id
+      }
+    }).done(function(data) {
+      $.each(data.list_items, function(index, el) {
+        massage_response.push([el.id, el.data]);
+      })
+    });
+    return _listItemDropdown(massage_response, '-1', column_id);
+  }
+
+  function _initSelectPicker() {
+    $('.selectpicker')
+      .selectpicker({liveSearch: true})
+      .ajaxSelectPicker({
+        ajax: {
+          url: '<%= Rails.application.routes.url_helpers.repository_list_items_path %>',
+          type: 'POST',
+          dataType: 'json',
+          data: function () {
+            var params = {
+              q: '{{{q}}}',
+              column_id: $(this.valueOf().plugin.$element).attr('column_id')
+            };
+
+            return params;
+          }
+        },
+        locale: {
+          emptyTitle: 'Nothing selected'
+        },
+        preprocessData: function(data){
+            var items = [];
+            if(data.hasOwnProperty('list_items')){
+              items.push({
+                'value': '-1',
+                'text': '',
+                'disabled': false
+              });
+              $.each(data.list_items, function(index, el) {
+                items.push(
+                  {
+                    'value': el.id,
+                    'text': el.data,
+                    'disabled': false
+                  }
+                )
+              });
+            }
+            return items;
+        },
+        emptyRequest: true,
+        clearOnEmpty: false,
+        preserveSelected: false
+    }).on('change.bs.select', function(el) {
+      $(this).closest('td').attr('list_item_id', el.target.value);
+      $(this).closest('td').attr('column_id', $(this).attr('column_id'));
+    });;
+  }
+
   function getColumnIndex(id) {
     if (id < 0) {
       return false;
@@ -856,6 +956,24 @@ var RepositoryDatatable = (function(global) {
   function changeToInputField(object, name, value) {
     return "<div class='form-group'><input class='form-control' data-object='" +
         object + "' name='" + name + "' value='" + value + "'></input></div>";
+  }
+
+  // Takes an object and creates custom html element
+  function changeToFormField(object, name, cell, list_columns) {
+    if (cell === '') {
+      var column = _.findWhere(list_columns, { column_id: parseInt(name) });
+      if (column) {
+        return _listItemDropdown(column.list_items, '', parseInt(name));
+      } else {
+        return changeToInputField(object, name, '');
+      }
+    } else {
+      if (cell.type === 'RepositoryListValue') {
+        return _listItemDropdown(cell.list_items, cell.value, parseInt(name));
+      } else {
+        return changeToInputField(object, name, cell.value);
+      }
+    }
   }
 
   // Return td element with content

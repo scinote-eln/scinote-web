@@ -38,15 +38,31 @@ class RepositoryRowsController < ApplicationController
           column = @repository.repository_columns.detect do |c|
             c.id == key.to_i
           end
-          cell_value = RepositoryTextValue.new(
-            data: value,
-            created_by: current_user,
-            last_modified_by: current_user,
-            repository_cell_attributes: {
-              repository_row: record,
-              repository_column: column
-            }
-          )
+          if column.data_type == 'RepositoryListValue'
+            next if value == '-1'
+            # check if item existx else revert the transaction
+            list_item = RepositoryListItem.where(repository_column: column)
+                                          .find(value)
+            cell_value = RepositoryListValue.new(
+              repository_list_item_id: list_item.id,
+              created_by: current_user,
+              last_modified_by: current_user,
+              repository_cell_attributes: {
+                repository_row: record,
+                repository_column: column
+              }
+            )
+          else
+            cell_value = RepositoryTextValue.new(
+              data: value,
+              created_by: current_user,
+              last_modified_by: current_user,
+              repository_cell_attributes: {
+                repository_row: record,
+                repository_column: column
+              }
+            )
+          end
           if cell_value.save
             record_annotation_notification(record, cell_value.repository_cell)
           else
@@ -91,7 +107,8 @@ class RepositoryRowsController < ApplicationController
     json = {
       repository_row: {
         name: escape_input(@record.name),
-        repository_cells: {}
+        repository_cells: {},
+        repository_column_items: fetch_columns_list_items
       }
     }
 
@@ -99,7 +116,9 @@ class RepositoryRowsController < ApplicationController
     @record.repository_cells.each do |cell|
       json[:repository_row][:repository_cells][cell.repository_column_id] = {
         repository_cell_id: cell.id,
-        value: escape_input(cell.value.data)
+        value: escape_input(cell.value.data),
+        type: cell.value_type,
+        list_items: fetch_list_items(cell)
       }
     end
 
@@ -125,14 +144,26 @@ class RepositoryRowsController < ApplicationController
           end
           if existing
             # Cell exists and new value present, so update value
-            existing.value.data = value
-            if existing.value.save
-              record_annotation_notification(@record, existing)
+            if existing.value_type == 'RepositoryListValue'
+              item = RepositoryListItem.where(
+                repository_column: existing.repository_column
+              ).find(value) unless value == '-1'
+              if item
+                existing.repository_list_value
+                        .update_attribute(:repository_list_item_id, item)
+              else
+                existing.delete
+              end
             else
-              errors[:repository_cells] << {
-                "#{existing.repository_column_id}":
-                existing.value.errors.messages
-              }
+              existing.value.data = value
+              if existing.value.save
+                record_annotation_notification(@record, existing)
+              else
+                errors[:repository_cells] << {
+                  "#{existing.repository_column_id}":
+                  existing.value.errors.messages
+                }
+              end
             end
           else
             # Looks like it is a new cell, so we need to create new value, cell
@@ -140,15 +171,31 @@ class RepositoryRowsController < ApplicationController
             column = @repository.repository_columns.detect do |c|
               c.id == key.to_i
             end
-            cell_value = RepositoryTextValue.new(
-              data: value,
-              created_by: current_user,
-              last_modified_by: current_user,
-              repository_cell_attributes: {
-                repository_row: @record,
-                repository_column: column
-              }
-            )
+            if column.data_type == 'RepositoryListValue'
+              next if value == '-1'
+              # check if item existx else revert the transaction
+              list_item = RepositoryListItem.where(repository_column: column)
+                                            .find(value)
+              cell_value = RepositoryListValue.new(
+                repository_list_item_id: list_item.id,
+                created_by: current_user,
+                last_modified_by: current_user,
+                repository_cell_attributes: {
+                  repository_row: @record,
+                  repository_column: column
+                }
+              )
+            else
+              cell_value = RepositoryTextValue.new(
+                data: value,
+                created_by: current_user,
+                last_modified_by: current_user,
+                repository_cell_attributes: {
+                  repository_row: @record,
+                  repository_column: column
+                }
+              )
+            end
             if cell_value.save
               record_annotation_notification(@record,
                                              cell_value.repository_cell)
@@ -161,6 +208,7 @@ class RepositoryRowsController < ApplicationController
         end
         # Clean up empty cells, not present in updated record
         @record.repository_cells.each do |cell|
+          next if cell.value_type == 'RepositoryListValue'
           cell.value.destroy unless cell_params
                                     .key?(cell.repository_column_id.to_s)
         end
@@ -292,5 +340,29 @@ class RepositoryRowsController < ApplicationController
                  record: link_to(record.name, table_url),
                  column: link_to(cell.repository_column.name, table_url))
     )
+  end
+
+  def fetch_list_items(cell)
+    return [] if cell.value_type != 'RepositoryListValue'
+    RepositoryListItem.where(repository: @repository)
+                      .where(repository_column: cell.repository_column)
+                      .limit(Constants::SEARCH_LIMIT)
+                      .pluck(:id, :data)
+  end
+
+  def fetch_columns_list_items
+    collection = []
+    @repository.repository_columns
+               .list_type
+               .preload(:repository_list_items)
+               .each do |column|
+      collection << {
+        column_id: column.id,
+        list_items: column.repository_list_items
+                          .limit(Constants::SEARCH_LIMIT)
+                          .pluck(:id, :data)
+      }
+    end
+    collection
   end
 end
