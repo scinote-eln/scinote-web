@@ -1,7 +1,9 @@
 class UserSamplesController < ApplicationController
   def save_samples_table_status
     samples_table = SamplesTable.where(user: @current_user,
-                                       team: params[:team]).first
+                                       team: params[:team])
+                                .order(:id)
+                                .first
     if samples_table
       samples_table.update(status: params[:state])
     else
@@ -20,7 +22,7 @@ class UserSamplesController < ApplicationController
 
   def load_samples_table_status
     samples_table_state = SamplesTable.find_status(current_user,
-                                                   current_team).first
+                                                   current_team)
     if samples_table_state.blank?
       st = SamplesTable.new(user: current_user, team: current_team)
       st.save
