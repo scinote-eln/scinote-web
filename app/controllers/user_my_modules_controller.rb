@@ -1,9 +1,7 @@
 class UserMyModulesController < ApplicationController
   before_action :load_vars
   before_action :check_view_permissions, only: :index
-  before_action :check_edit_permissions, only: :index_edit
-  before_action :check_create_permissions, only: :create
-  before_action :check_delete_permisisons, only: :destroy
+  before_action :check_manage_permissions, only: %i(create index_edit destroy)
 
   def index
     @user_my_modules = @my_module.user_my_modules
@@ -135,27 +133,11 @@ class UserMyModulesController < ApplicationController
   end
 
   def check_view_permissions
-    unless can_view_module_users(@my_module)
-      render_403
-    end
+    render_403 unless can_read_experiment?(@my_module.experiment)
   end
 
-  def check_edit_permissions
-    unless can_edit_users_on_module(@my_module)
-      render_403
-    end
-  end
-
-  def check_create_permissions
-    unless can_add_user_to_module(@my_module)
-      render_403
-    end
-  end
-
-  def check_delete_permisisons
-    unless can_remove_user_from_module(@my_module)
-      render_403
-    end
+  def check_manage_permissions
+    render_403 unless can_manage_users_in_module?(@my_module)
   end
 
   def init_gui

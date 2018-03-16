@@ -6,7 +6,6 @@ describe 'samples_to_repository_migration:run' do
   let!(:team) { create :team, created_by: user }
   let!(:user_team) { create :user_team, user: user, team: team }
   let!(:my_module) { create :my_module }
-  let!(:samples_table) { create :samples_table, user: user, team: team }
   let(:sample_types_names) { %w(type_one type_two type_three) }
   let(:sample_group_names) { %w(group_one group_two group_three) }
 

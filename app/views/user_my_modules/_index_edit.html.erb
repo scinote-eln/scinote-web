@@ -19,7 +19,7 @@
         </span>
       </div>
 
-      <% if can_remove_user_from_module(@my_module) then %>
+      <% if can_manage_users_in_module?(@my_module) %>
         <div class="col-xs-2">
           <%= link_to my_module_user_my_module_path(@my_module, umm, format: :json), method: :delete, remote: true, class: 'btn btn-link remove-user-link' do %>
           <span class="glyphicon glyphicon-remove"></span>
@@ -32,7 +32,7 @@
   <% end %>
 <% end %>
 
-<% if can_add_user_to_module(@my_module) and @unassigned_users.count > 0 %>
+<% if can_manage_users_in_module?(@my_module) && @unassigned_users.count > 0 %>
   <li>
     <hr>
     <div class="row">

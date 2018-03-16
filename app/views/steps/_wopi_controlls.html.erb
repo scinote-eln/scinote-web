@@ -7,15 +7,18 @@
   <% if wopi_file?(asset) %>
     <%= wopi_asset_file_name(asset) %>
   <% else %>
-    <p><%= truncate(asset.file_file_name,
-                    length: Constants::FILENAME_TRUNCATION_LENGTH) %></p>
+    <p>
+      <%= file_extension_icon(asset) %>
+      <%= truncate(asset.file_file_name,
+                   length: Constants::FILENAME_TRUNCATION_LENGTH) %>
+    </p>
   <% end %>
 <% end %>
 <%= wopi_asset_view_button(asset) %>
 <% view_only ||= false %>
 <% if !view_only %>
   <% if can_manage_protocol_in_module?(@protocol) ||
-        can_update_protocol_in_repository?(@protocol) %>
+        can_manage_protocol_in_repository?(@protocol) %>
     <%= wopi_asset_edit_button(asset) %>
   <% end %>
 <% end %>

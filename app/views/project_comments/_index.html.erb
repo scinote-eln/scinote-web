@@ -13,7 +13,7 @@
   <%= render 'project_comments/list.html.erb', comments: @comments %>
   <% end %>
 </ul>
-<% if can_create_comment_in_project?(@project) %>
+<% if can_create_comments_in_project?(@project) %>
   <ul class="no-style double-line">
     <li>
       <hr>

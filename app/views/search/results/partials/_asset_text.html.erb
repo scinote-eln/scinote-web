@@ -5,7 +5,7 @@
   <% protocol = asset.step.protocol %>
   <% if can_read_protocol_in_module?(protocol) ||
         can_read_protocol_in_repository?(protocol) ||
-        (asset.result && can_view_or_download_result_assets(asset.result.my_module) %>
+        (asset.result && can_read_experiment?(protocol.my_module.experiment)) %>
     <a href="<%= download_asset_path asset %>" target="_blank">
       <%= text %>
     </a>

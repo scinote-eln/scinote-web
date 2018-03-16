@@ -19,34 +19,6 @@ module ResultsHelper
     end
   end
 
-  def can_edit_result(result)
-    if result.is_text
-      can_edit_result_text_in_module(result.my_module)
-    elsif result.is_table
-      can_edit_result_table_in_module(result.my_module)
-    elsif result.is_asset
-      can_edit_result_asset_in_module(result.my_module)
-    end
-  end
-
-  def can_archive_result(result)
-    if result.is_text
-      can_archive_result_text_in_module(result.my_module)
-    elsif result.is_table
-      can_archive_result_table_in_module(result.my_module)
-    elsif result.is_asset
-      can_archive_result_asset_in_module(result.my_module)
-    end
-  end
-
-  def result_unlocked?(result)
-    if result.is_asset
-      !result.asset.locked?
-    else
-      true
-    end
-  end
-
   def result_path_of_type(result)
     if result.is_asset
       result_asset_path(result.result_asset)

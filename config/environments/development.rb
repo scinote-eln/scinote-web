@@ -102,6 +102,9 @@ Rails.application.configure do
   config.x.enable_user_registration =
     ENV['ENABLE_USER_REGISTRATION'] == 'false' ? false : true
 
+  # Enable sign in with LinkedIn account
+  config.x.linkedin_signin_enabled = ENV['LINKEDIN_SIGNIN_ENABLED'] == 'true'
+
   # Use an evented file watcher to asynchronously detect changes in source code,
   # routes, locales, etc. This feature depends on the listen gem.
   #config.file_watcher = ActiveSupport::EventedFileUpdateChecker
