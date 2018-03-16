@@ -26,4 +26,8 @@ class RepositoryColumn < ApplicationRecord
   def update_repository_table_state
     RepositoryTableState.update_state(self, nil, created_by)
   end
+
+  def importable?
+    Extends::REPOSITORY_IMPORTABLE_TYPES.include?(data_type.to_sym)
+  end
 end

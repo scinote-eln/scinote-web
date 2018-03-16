@@ -97,6 +97,14 @@ class Result < ApplicationRecord
     self.asset.present?
   end
 
+  def unlocked?(result)
+    if result.is_asset
+      !result.asset.locked?
+    else
+      true
+    end
+  end
+
   private
 
   def text_or_asset_or_table

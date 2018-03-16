@@ -11,12 +11,12 @@ module ImportRepository
     def data
       header, columns = SpreadsheetParser.first_two_rows(@sheet)
       # Fill in fields for dropdown
-      @repository.available_repository_fields.transform_values! do |name|
+      @repository.importable_repository_fields.transform_values! do |name|
         truncate(name, length: Constants::NAME_TRUNCATION_LENGTH_DROPDOWN)
       end
       Data.new(header,
                columns,
-               @repository.available_repository_fields,
+               @repository.importable_repository_fields,
                @repository)
     end
 

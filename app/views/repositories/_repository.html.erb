@@ -7,13 +7,11 @@
 
 <div id="repository-toolbar">
 
-  <% if can_manage_repository_rows?(repository.team) %>
+  <% if can_create_repository_rows?(repository.team) %>
     <button type="button" class="btn btn-default editAdd" id="addRepositoryRecord" onclick="onClickAddRecord()">
       <span class="glyphicon glyphicon-plus"></span>
       <span class="hidden-xs"><%= t("repositories.add_new_record") %></span>
     </button>
-  <% end %>
-  <% if can_manage_repository_rows?(repository.team) %>
     <button type="button" class="btn btn-default" id="importRecordsButton">
       <span class="glyphicon glyphicon-cloud-upload"></span>
       <span class="hidden-xs"><%= t('repositories.import_records.import') %></span>
@@ -34,16 +32,16 @@
            data-toggle="dropdown"
            aria-haspopup="true"
            aria-expanded="true"
-           <%= "disabled='disabled'" if !can_update_or_delete_repository?(repository) && !can_create_repositories?(repository.team) %>>
+           <%= "disabled='disabled'" unless can_manage_repository?(repository) || can_create_repositories?(repository.team) %>>
         <span class="glyphicon glyphicon-cog"></span>
         <span class="caret"></span>
       </div>
-      <% if can_update_or_delete_repository?(repository) || can_create_repositories?(repository.team) %>
+      <% if can_manage_repository?(repository) || can_create_repositories?(repository.team) %>
         <ul class="dropdown-menu pull-right">
           <li class="dropdown-header">
             <%= t("repositories.index.options_dropdown.header") %>
           </li>
-          <% if can_update_or_delete_repository?(repository) %>
+          <% if can_manage_repository?(repository) %>
             <li>
               <%= link_to t('repositories.index.options_dropdown.rename'),
                           team_repository_rename_modal_path(repository_id: repository),
@@ -51,7 +49,7 @@
                           remote: true %>
             </li>
           <% end %>
-          <% if repository.team.repositories.count < Constants::REPOSITORIES_LIMIT %>
+          <% if can_create_repositories?(repository.team) %>
             <li>
               <%= link_to t('repositories.index.options_dropdown.copy'),
                           team_repository_copy_modal_path(repository_id: repository),
@@ -59,7 +57,7 @@
                           remote: true %>
             </li>
           <% end %>
-          <% if can_update_or_delete_repository?(repository) %>
+          <% if can_manage_repository?(repository) %>
             <li role="separator" class="divider"></li>
             <li>
               <%= link_to t('repositories.index.modal_delete.delete'),
@@ -110,7 +108,7 @@
   </button>
 </div>
 
-<!-- These buttons are appended to table in javascript, after table initialization. -->
+<!-- These buttons are appended to table in javascript, after table initialization -->
 <div class="toolbarButtons" style="display:none">
   <button type="button" class="btn btn-default editAdd" id="editRepositoryRecord" onclick="onClickEdit()" disabled>
     <span class="glyphicon glyphicon-pencil"></span>

@@ -6,7 +6,7 @@
     <div class="panel-heading">
       <div class="panel-options pull-right">
         <% if can_manage_protocol_in_module?(@protocol) ||
-              can_update_protocol_in_repository?(@protocol) %>
+              can_manage_protocol_in_repository?(@protocol) %>
           <a data-action="move-step"
              class="btn btn-link"
              href="<%= move_up_step_path(step, format: :json) %>"
@@ -121,8 +121,11 @@
                       <% else %>
                         <%= image_tag asset.url(:medium) if asset.is_image? %>
                       <% end %>
-                      <p><%= truncate(asset.file_file_name,
-                                      length: Constants::FILENAME_TRUNCATION_LENGTH) %></p>
+                      <p>
+                        <%= file_extension_icon(asset) %>
+                        <%= truncate(asset.file_file_name,
+                                     length: Constants::FILENAME_TRUNCATION_LENGTH) %>
+                      </p>
                     <% end %>
                   </li>
                 <% end %>
@@ -161,18 +164,18 @@
             </div>
           <% end %>
 
-          <% if @protocol.in_module? %>
-            <% if !step.completed? and can_complete_step_in_protocol(@protocol) %>
-              <div data-action="complete-step"
-                   class="pull-right"
-                   data-link-url="<%= toggle_step_state_step_path(step)%>">
-                <button class="btn btn-primary"><%= t("protocols.steps.options.complete_title") %></button>
-              </div>
-            <% elsif step.completed? and can_uncomplete_step_in_protocol(@protocol) %>
+          <% if can_complete_or_checkbox_step?(@protocol) %>
+            <% if step.completed? %>
               <div data-action="uncomplete-step"
                    class="pull-right"
                    data-link-url="<%= toggle_step_state_step_path(step)%>">
                 <button class="btn btn-default"><%= t("protocols.steps.options.uncomplete_title") %></button>
+              </div>
+            <% else %>
+              <div data-action="complete-step"
+                   class="pull-right"
+                   data-link-url="<%= toggle_step_state_step_path(step)%>">
+                <button class="btn btn-primary"><%= t("protocols.steps.options.complete_title") %></button>
               </div>
             <% end %>
           <% end %>
