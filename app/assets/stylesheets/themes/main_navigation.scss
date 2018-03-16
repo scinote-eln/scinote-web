@@ -175,11 +175,11 @@
 /** Search */
 .nav-search {
   li.disabled {
-    opacity: 0.8;
+    opacity: .8;
 
     .badge {
       background-color: $color-emperor;
-      opacity: 0.8;
+      opacity: .8;
     }
 
   }
@@ -382,6 +382,7 @@
 
 // reset margins on small screens
 @media (max-width: 1188px) {
+
   #nav-team-switch {
     margin-left: 0;
   }
