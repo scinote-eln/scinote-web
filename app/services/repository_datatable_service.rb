@@ -61,22 +61,14 @@ class RepositoryDatatableService
   end
 
   def search(value)
-    includes_json = {
-      repository_cells: [
-        :repository_text_value,
-        repository_list_value: :repository_list_item
-      ]
-    }
-    RepositoryRow .left_outer_joins(:created_by)
-                  .left_outer_joins(includes_json)
-                  .where(repository: @repository)
-                  .where_attributes_like(
-                    ['repository_rows.name',
-                     'users.full_name',
-                     'repository_text_values.data',
-                     'repository_list_items.data'],
-                    value
-                  )
+    includes_json = { repository_cells: Extends::REPOSITORY_SEARCH_INCLUDES }
+    searchable_attributes = ['repository_rows.name', 'users.full_name'] +
+                            Extends::REPOSITORY_EXTRA_SEARCH_ATTR
+
+    RepositoryRow.left_outer_joins(:created_by)
+                 .left_outer_joins(includes_json)
+                 .where(repository: @repository)
+                 .where_attributes_like(searchable_attributes, value)
   end
 
   def build_conditions(params)
@@ -101,8 +93,8 @@ class RepositoryDatatableService
   end
 
   def sort_rows(column_obj, records)
-    dir = %w(DESC ASC).find do |dir|
-      dir == column_obj[:dir].upcase
+    dir = %w(DESC ASC).find do |direction|
+      direction == column_obj[:dir].upcase
     end || 'ASC'
     column_index = column_obj[:column]
     col_order = @repository.repository_table_states

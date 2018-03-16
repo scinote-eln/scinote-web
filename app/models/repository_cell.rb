@@ -28,10 +28,6 @@ class RepositoryCell < ActiveRecord::Base
   validates :repository_row,
             uniqueness: { scope: :repository_column }
 
-  belongs_to :repository_text_value, optional: true, foreign_key: :value_id
-  belongs_to :repository_date_value, optional: true, foreign_key: :value_id
-  belongs_to :repository_list_value, optional: true, foreign_key: :value_id
-
   private
 
   def repository_column_data_type

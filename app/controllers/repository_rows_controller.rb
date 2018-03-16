@@ -148,8 +148,9 @@ class RepositoryRowsController < ApplicationController
                 repository_column: existing.repository_column
               ).find(value) unless value == '-1'
               if item
-                existing.repository_list_value
-                        .update_attribute(:repository_list_item_id, item)
+                existing.value.update_attribute(
+                  :repository_list_item_id, item.id
+                )
               else
                 existing.delete
               end
