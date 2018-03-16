@@ -27,6 +27,7 @@
 
 .navbar {
   border-radius: 0;
+  padding-right: 15px;
 }
 
 .navbar-default {
@@ -39,22 +40,6 @@
     margin-top: -7px;
     max-width: 55px;
     max-height: 38px;
-  }
-}
-
-.navbar-center {
-  margin-left: 20%;
-}
-
-@media (max-width: 1766px) {
-  .navbar-center {
-    margin-left: 10%;
-  }
-}
-
-@media (max-width: 1334px) {
-  .navbar-center {
-    margin-left: 5%;
   }
 }
 
@@ -360,6 +345,7 @@
 }
 
 #power-up-button {
+  margin-right: 15px;
   margin-top: 8px;
 
   .btn-danger {
@@ -371,21 +357,5 @@
 @media (max-width: 1188px) {
   #nav-team-switch {
     margin-left: 0;
-  }
-  .navbar-center {
-    margin-left: 0;
-
-    #search-bar {
-      padding-left: 0;
-    }
-  }
-}
-
-@media (max-width: 764px) {
-  .navbar-center {
-    #search-bar {
-      max-width: 150px;
-      padding-left: 13px;
-    }
   }
 }
