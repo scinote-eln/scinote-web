@@ -441,7 +441,8 @@ Rails.application.routes.draw do
         post 'archive', to: 'protocols#archive'
         post 'restore', to: 'protocols#restore'
         post 'import', to: 'protocols#import'
-        post 'protocolsio_import_create', to: 'protocols#protocolsio_import_create'
+        post 'protocolsio_import_create',
+             to: 'protocols#protocolsio_import_create'
         post 'protocolsio_import_save', to: 'protocols#protocolsio_import_save'
         get 'export', to: 'protocols#export'
       end
@@ -449,7 +450,7 @@ Rails.application.routes.draw do
 
     resources :repositories do
       post 'repository_index',
-           to: 'repository_rows#index', # repository_rows#index repositories#repository_table_index
+           to: 'repository_rows#index',
            as: 'table_index',
            defaults: { format: 'json' }
       # Save repository table state

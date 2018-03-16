@@ -20,7 +20,9 @@ class RepositoryListItemsController < ApplicationController
   def load_vars
     @repository_column = RepositoryColumn.find_by_id(search_params[:column_id])
     repository = @repository_column.repository if @repository_column
-    render_404 and return unless @repository_column&.data_type == "RepositoryListValue"
+    unless @repository_column&.data_type == 'RepositoryListValue'
+      render_404 and return
+    end
     render_403 unless can_manage_repository_rows?(repository.team)
   end
 end
