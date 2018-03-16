@@ -40,7 +40,7 @@
         <span class="caret"></span>
       </a>
       <ul class="dropdown-menu">
-        <% if can_read_protocol_in_module?(@protocol) && can_update_protocol_in_repository?(@protocol.parent) %>
+        <% if can_read_protocol_in_module?(@protocol) && can_manage_protocol_in_repository?(@protocol.parent) %>
           <li>
             <%= link_to update_parent_modal_protocol_path(@protocol, format: :json), remote: true, title: t("my_modules.protocols.protocol_status_bar.btns.update_parent_title"), data: { action: "update-parent" } do %>
               <%= t("my_modules.protocols.protocol_status_bar.btns.update_parent") %>
@@ -112,7 +112,7 @@
         <span class="caret"></span>
       </a>
       <ul class="dropdown-menu">
-        <% if can_read_protocol_in_module?(@protocol) && can_update_protocol_in_repository?(@protocol.parent) %>
+        <% if can_read_protocol_in_module?(@protocol) && can_manage_protocol_in_repository?(@protocol.parent) %>
           <li>
             <%= link_to update_parent_modal_protocol_path(@protocol, format: :json), remote: true, title: t("my_modules.protocols.protocol_status_bar.btns.update_parent_title"), data: { action: "update-parent" } do %>
               <%= t("my_modules.protocols.protocol_status_bar.btns.update_parent") %>

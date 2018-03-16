@@ -30,23 +30,24 @@ class ReportsController < ApplicationController
   ]
 
   before_action :check_view_permissions, only: :index
-  before_action :check_create_permissions, only: [
-    :new,
-    :create,
-    :generate,
-    :save_modal,
-    :project_contents_modal,
-    :experiment_contents_modal,
-    :module_contents_modal,
-    :step_contents_modal,
-    :result_contents_modal,
-    :project_contents,
-    :module_contents,
-    :step_contents,
-    :result_contents
-  ]
-  before_action :check_manage_permissions, only: %i(edit update
-                                                    destroy)
+  before_action :check_manage_permissions, only: %i(
+    new
+    create
+    edit
+    update
+    destroy
+    generate
+    save_modal
+    project_contents_modal
+    experiment_contents_modal
+    module_contents_modal
+    step_contents_modal
+    result_contents_modal
+    project_contents
+    module_contents
+    step_contents
+    result_contents
+  )
 
   layout 'fluid'
 
@@ -449,13 +450,8 @@ class ReportsController < ApplicationController
     render_403 unless can_read_project?(@project)
   end
 
-  def check_create_permissions
-    render_403 unless can_create_or_manage_reports?(@project)
-  end
-
   def check_manage_permissions
-    render_403 unless can_create_or_manage_reports?(@project)
-    render_404 unless params.include? :report_ids
+    render_403 unless can_manage_reports?(@project)
   end
 
   def report_params

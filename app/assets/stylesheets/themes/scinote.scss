@@ -6,7 +6,6 @@
 /** Layout **/
 
 body,
-#activity-modal,
 #main-nav,
 #notifications,
 #notifications .alert {
@@ -683,11 +682,8 @@ ul.double-line > li {
   left: 8px;
 }
 
-#activity-modal {
-  .modal-body {
-    background-color: $color-concrete;
-    color: $color-mine-shaft;
-  }
+#global-activity-page {
+  margin-top: 50px;
 }
 
 /** Activity list resembling Bootstrap wells */

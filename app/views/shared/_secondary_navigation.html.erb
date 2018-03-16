@@ -126,8 +126,6 @@
                   <span class="hidden-xs hidden-lg glyphicon glyphicon-list-alt"></span>
                 </a>
               </li>
-          <% end %>
-          <% if can_read_experiment?(@experiment) %>
               <li id="project-archive-nav-tab" data-turbolinks="false" class="<%= "active" if is_experiment_archive? %>">
                 <a href="<%= module_archive_experiment_url(@experiment) %>" title="<%=t "nav2.projects.archive" %>">
                   <span class="glyphicon glyphicon-briefcase"></span>
@@ -204,7 +202,7 @@
               </ul>
             </li>
           <% end %>
-          <% if can_view_module_archive(@my_module) then %>
+          <% if can_read_experiment?(@my_module.experiment) then %>
             <li id="archive-nav-tab" data-turbolinks="false" class="<%= "active" if is_module_archive? %>">
               <a href="<%= archive_my_module_url(@my_module) %>">
                 <span class="glyphicon glyphicon-briefcase" title="<%= t'nav2.modules.archive' %>"></span></a>

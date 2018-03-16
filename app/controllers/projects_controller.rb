@@ -12,7 +12,7 @@ class ProjectsController < ApplicationController
                                                   samples experiment_archive
                                                   samples_index)
   before_action :check_create_permissions, only: [ :new, :create ]
-  before_action :check_manage_permissions, only: %i(edit update)
+  before_action :check_manage_permissions, only: :edit
 
   @filter_by_archived = false
 
@@ -115,13 +115,17 @@ class ProjectsController < ApplicationController
     flash_error = t('projects.update.error_flash', name: @project.name)
 
     # Check archive permissions if archiving/restoring
-    if project_params.include? :archive
-      if (project_params[:archive] && !can_archive_project?(@project)) ||
-         (!project_params[:archive] && !can_restore_project?(@project))
+    if project_params.include? :archived
+      if (project_params[:archived] == 'true' &&
+          !can_archive_project?(@project)) ||
+         (project_params[:archived] == 'false' &&
+           !can_restore_project?(@project))
         return_error = true
         is_archive = URI(request.referer).path == projects_archive_path ? "restore" : "archive"
         flash_error = t("projects.#{is_archive}.error_flash", name: @project.name)
       end
+    elsif !can_manage_project?(@project)
+      render_403 && return
     end
 
     message_renamed = nil

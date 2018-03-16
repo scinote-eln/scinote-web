@@ -39,25 +39,40 @@ module ProtocolsIoHelper
     I18n.t('protocols.protocols_io_import.too_long').length
   # The + 2 above (in title) is there because if the length was at the limit,
   # the cutter method had issues, this gives it some space
+
+  # below are default min table settings (minimum 5x5)
+  PIO_TABLE_MIN_WIDTH = 5
+  PIO_TABLE_MIN_HEIGHT = 5
+
   def protocolsio_string_to_table_element(description_string)
     string_without_tables = string_html_table_remove(description_string)
     table_regex = %r{<table\b[^>]*>(.*?)<\/table>}m
     tr_regex = %r{<tr\b[^>]*>(.*?)<\/tr>}m
     td_regex = %r{<td\b[^>]*>(.*?)<\/td>}m
     tables = {}
+    description_string.gsub! '<th>', '<td>'
+    description_string.gsub! '</th>', '</td>'
     table_strings = description_string.scan(table_regex)
     table_strings.each_with_index do |table, table_counter|
       tables[table_counter.to_s] = {}
-      tr_strings = table[0].scan(tr_regex)
+      tr_number = table[0].scan(tr_regex).count
+      diff = PIO_TABLE_MIN_HEIGHT - tr_number # always tables have atleast 5 row
+      table_fix_str = table[0]
+      table_fix_str += '<tr></tr>' * diff if tr_number < PIO_TABLE_MIN_HEIGHT
+      tr_strings = table_fix_str.scan(tr_regex)
       contents = {}
       contents['data'] = []
       tr_strings.each_with_index do |tr, tr_counter|
         td_strings = tr[0].scan(td_regex)
         contents['data'][tr_counter] = []
+        td_counter = td_strings.count
+        diff = PIO_TABLE_MIN_WIDTH - td_counter
         td_strings.each do |td|
           td_stripped = ActionController::Base.helpers.strip_tags(td[0])
           contents['data'][tr_counter].push(td_stripped)
         end
+        next if td_counter >= PIO_TABLE_MIN_WIDTH
+        diff.times { contents['data'][tr_counter].push(' ') }
       end
       tables[table_counter.to_s]['contents'] = Base64.encode64(
         contents.to_s.sub('=>', ':')
@@ -102,6 +117,8 @@ module ProtocolsIoHelper
         @toolong = true
       end
       text
+    else
+      ''
     end
   end
 
@@ -128,6 +145,8 @@ module ProtocolsIoHelper
         @remaining -= text.length - reserved
       end
       text
+    else
+      ''
     end
   end
 
@@ -145,10 +164,15 @@ module ProtocolsIoHelper
     Nokogiri::HTML::DocumentFragment.parse(text).to_html
   end
 
+  def step_hash_null?(step_json)
+    step_json.dig(0, 'components', 0, 'component_type_id').nil?
+  end
+
   # Images are allowed in:
   # Step: description, expected result
   # Protocol description : description before_start warning
   # guidelines manuscript_citation
+
   def prepare_for_view(
     attribute_text1, size, table = 'no_table', image_allowed = false
   )
@@ -321,8 +345,12 @@ module ProtocolsIoHelper
   end
 
   def protocols_io_guid_reorder_step_json(unordered_step_json)
+    return '' if unordered_step_json.blank?
     base_step = unordered_step_json.find { |step| step['previous_guid'].nil? }
+    return unordered_step_json if base_step.nil?
     number_of_steps = unordered_step_json.size
+    return unordered_step_json if number_of_steps == 1
+    base_step = unordered_step_json.find { |step| step['previous_guid'].nil? }
     step_order = []
     step_counter = 0
     step_order[step_counter] = base_step

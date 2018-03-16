@@ -4,16 +4,16 @@
 
 <% if result.archived? %>
   <span class="label label-warning"><%=t "search.index.archived" %></span>
-  <% if can_view_module_archive(result.my_module) %>
+  <% if can_read_experiment?(result.my_module.experiment) %>
     <% if target == :comment %>
       <%= route_to_other_team archive_my_module_path(result.my_module, ctarget: "result-panel-#{result.id}"),
                               result.my_module.experiment.project.team,
                               text %>
 
     <% else %>
-    <%= route_to_other_team archive_my_module_path(result.my_module),
-                            result.my_module.experiment.project.team,
-                            text %>
+      <%= route_to_other_team archive_my_module_path(result.my_module),
+                              result.my_module.experiment.project.team,
+                              text %>
     <% end %>
   <% else %>
     <%= text %>

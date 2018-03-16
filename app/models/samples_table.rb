@@ -1,8 +1,9 @@
 class SamplesTable < ApplicationRecord
-  validates :user, :team, presence: true
-
   belongs_to :user, inverse_of: :samples_tables, optional: true
   belongs_to :team, inverse_of: :samples_tables, optional: true
+
+  validates :user, :team, presence: true
+  validates :user, uniqueness: { scope: :team }
 
   scope :find_status,
         ->(user, team) { where(user: user, team: team).pluck(:status) }

@@ -41,7 +41,7 @@
         </div>
       </div>
 
-      <% if can_create_experiment?(@project) %>
+      <% if can_create_experiments?(@project) %>
         <%= link_to new_project_experiment_url(@project),
             remote: true,
             type: "button",

@@ -21,7 +21,7 @@
     data-module-id="<%= @my_module.id %>"
   <% end %>>
 
-  <% if can_manage_samples?(@team) %>
+  <% if can_create_samples?(@team) %>
     <button type="button" class="btn btn-default editAdd" id="addSample" onclick="onClickAddSample()">
       <span class="glyphicon glyphicon-plus"></span>
       <span class="hidden-xs"><%= t("samples.add_new_sample") %></span>
@@ -51,7 +51,7 @@
         <span class="caret"></span>
       </button>
       <ul class="dropdown-menu dropdown-menu-right smart-dropdown" id="samples-columns-list">
-        <% if can_manage_sample_columns?(@team) %>
+        <% if can_create_sample_columns?(@team) %>
           <li class="add-new-column-form">
             <div id="new-column-form" class="form-group" data-action="<%= team_custom_fields_path(@team) %>">
               <div class="input-group">
@@ -69,15 +69,15 @@
     </div>
   </div>
 
-  <% if can_add_sample_related_things_to_team %>
-  <div class="dropdown pull-right" style="display: inline;">
-    <%= link_to(t('samples.types_and_groups'),
-                team_sample_types_path(@team,
-                  project_id: (@project.id if @project),
-                  my_module_id: (@my_module.id if @my_module),
-                  experiment_id: (@experiment.id if @experiment)),
-                class: 'btn btn-default' ) %>
-  </div>
+  <% if can_manage_sample_types_and_groups?(@team) %>
+    <div class="dropdown pull-right" style="display: inline;">
+      <%= link_to(t('samples.types_and_groups'),
+                  team_sample_types_path(@team,
+                    project_id: (@project.id if @project),
+                    my_module_id: (@my_module.id if @my_module),
+                    experiment_id: (@experiment.id if @experiment)),
+                  class: 'btn btn-default' ) %>
+    </div>
   <% end %>
 </div>
 
@@ -92,32 +92,29 @@
   </button>
 </div>
 
-<!-- These buttons are appended to table in javascript, after table initialization. -->
+<!-- These buttons are appended to table in javascript, after table initialization -->
 <div class="toolbarButtons" style="display:none">
   <button type="button" class="btn btn-default editAdd" id="editSample" onclick="onClickEdit()" disabled>
     <span class="glyphicon glyphicon-pencil"></span>
     <span class="hidden-xs-custom"><%= t("samples.edit_sample") %></span>
   </button>
 
-  <% if can_manage_samples?(@team) %>
-    <button type="button" class="btn btn-default"
-      id="deleteSamplesButton" data-target="#deleteSamples" data-toggle="modal" disabled>
-      <span class="glyphicon glyphicon-trash"></span>
-      <span class="hidden-xs-custom"><%= t'samples.delete_samples' %></span>
-        <%= submit_tag I18n.t('samples.delete_samples'), :class => "hidden
-        delete_samples_submit" %>
-    </button>
-  <% end %>
+  <!-- Don't check if user can manage the selected samples, because the ones that he can't, will be left untouched -->
+  <button type="button" class="btn btn-default"
+    id="deleteSamplesButton" data-target="#deleteSamples" data-toggle="modal" disabled>
+    <span class="glyphicon glyphicon-trash"></span>
+    <span class="hidden-xs-custom"><%= t'samples.delete_samples' %></span>
+      <%= submit_tag I18n.t('samples.delete_samples'), :class => "hidden
+      delete_samples_submit" %>
+  </button>
 
-  <% if can_add_samples %>
+  <% if module_page? && can_assign_repository_rows_to_module?(@my_module) %>
     <button type="button" class="btn btn-default"
       id="assignSamples" onclick="$(this).next().click();" disabled>
       <span class="glyphicon glyphicon-ok-circle"></span>
       <span class="hidden-xs-custom"><%= t'samples.assign_samples_to_module' %></span>
     </button>
     <%= submit_tag MyModulesController::ASSIGN_SAMPLES, :class => "hidden" %>
-  <% end %>
-  <% if can_remove_samples %>
     <button type="button" class="btn btn-default"
       id="unassignSamples" onclick="$(this).next().click();" disabled>
       <span class="glyphicon glyphicon-ban-circle"></span>
@@ -148,8 +145,8 @@
         <% all_custom_fields.each do |cf| %>
         <th class="custom-field"
             id="<%= cf.id %>"
-            <%= 'data-editable' if can_update_or_delete_custom_field?(cf) %>
-            <%= 'data-deletable' if can_update_or_delete_custom_field?(cf) %>
+            <%= 'data-editable' if can_manage_sample_column?(cf) %>
+            <%= 'data-deletable' if can_manage_sample_column?(cf) %>
             <%= "data-edit-url='#{edit_team_custom_field_path(@team, cf)}'" %>
             <%= "data-update-url='#{team_custom_field_path(@team, cf)}'" %>
             <%= "data-destroy-html-url='#{team_custom_field_destroy_html_path(@team, cf)}'" %>

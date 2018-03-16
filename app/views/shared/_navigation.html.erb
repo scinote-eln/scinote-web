@@ -66,8 +66,9 @@
         <% end %>
       </ul>
 
-      <!-- search form -->
-      <ul class="nav navbar-nav navbar-center">
+      <!-- profile info -->
+      <ul class="nav navbar-nav navbar-right">
+        <!-- search form -->
         <li>
           <%= form_tag search_path,
                        method: :get,
@@ -85,10 +86,6 @@
               </div>
           <% end %>
         </li>
-      </ul>
-
-      <!-- profile info -->
-      <ul class="nav navbar-nav navbar-right">
         <li id="power-up-button">
           <div class="dropdown">
             <button class="btn btn-danger dropdown-toggle"
@@ -127,10 +124,6 @@
                           class: "avatar" %>
           </a>
             <ul class="dropdown-menu" data-hook="navigation-user-menu">
-              <li>
-                <%= link_to t('nav.user.settings'), edit_user_registration_path, data: { turbolinks: false } %>
-              </li>
-              <li role="separator" class="divider"></li>
               <li>
                 <%= link_to t('nav.user.logout'),
                             destroy_user_session_path,
