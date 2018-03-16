@@ -41,7 +41,7 @@ class SamplesTable < ApplicationRecord
         SAMPLES_TABLE_DEFAULT_STATE['columns'].first
       team_status['ColReorder'].insert(2, index)
     end
-    samples_table.first.update(status: team_status)
+    samples_table.update(status: team_status)
   end
 
   def self.create_samples_table_state(user_team)
