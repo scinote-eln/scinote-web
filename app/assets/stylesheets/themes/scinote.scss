@@ -1,7 +1,7 @@
 @import 'constants';
 @import "mixins";
-@import 'main_navigation';
-@import 'buttons';
+@import "main_navigation";
+@import "buttons";
 
 /** Layout **/
 
@@ -58,14 +58,6 @@ table {
   margin-right: 0.5em;
 }
 
-#content-wrapper {
-  margin-top: 50px;
-
-  &.alert-shown {
-    margin-top: 102px;
-  }
-}
-
 .center-block-narrow {
   max-width: 400px;
 }
@@ -114,27 +106,6 @@ a {
 
 .jumbotron {
   background-color: inherit;
-}
-
-.alert {
-  border-radius: 0;
-  margin-bottom: 0;
-  opacity: 1;
-  width: 100%;
-
-  &.alert-hidden {
-    display: none;
-  }
-
-  a#hide-alert {
-    margin-left: 15px;
-  }
-
-  &.alert-floating {
-    position: fixed;
-    top: 50px;
-    z-index: 1000;
-  }
 }
 
 .badge {
