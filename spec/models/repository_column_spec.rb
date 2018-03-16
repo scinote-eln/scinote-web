@@ -19,6 +19,7 @@ describe RepositoryColumn, type: :model do
     it { should belong_to(:created_by).class_name('User') }
     it { should have_many :repository_cells }
     it { should have_many :repository_rows }
+    it { should have_many :repository_list_items }
   end
 
   describe 'Should be a valid object' do

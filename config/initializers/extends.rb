@@ -41,7 +41,22 @@ class Extends
 
   # Data type name should match corresponding model's name
   REPOSITORY_DATA_TYPES = { RepositoryTextValue: 0,
-                            RepositoryDateValue: 1 }
+                            RepositoryDateValue: 1,
+                            RepositoryListValue: 2,
+                            RepositoryAssetValue: 3 }
+
+  # Data types which can be imported to repository,
+  # name should match record in REPOSITORY_DATA_TYPES
+  REPOSITORY_IMPORTABLE_TYPES = %i(RepositoryTextValue RepositoryListValue)
+
+  # Extra attributes used for search in repositories, text columns
+  # are only supported
+  REPOSITORY_EXTRA_SEARCH_ATTR = ['repository_text_values.data',
+                                  'repository_list_items.data']
+
+  # Array of includes used in search query for repository rows
+  REPOSITORY_SEARCH_INCLUDES = [:repository_text_value,
+                                repository_list_value: :repository_list_item]
 
   # List of implemented core API versions
   API_VERSIONS = ['20170715']

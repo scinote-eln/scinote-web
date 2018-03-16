@@ -25,6 +25,91 @@ module FirstTimeDataGenerator
     # Do nothing
     return unless team
 
+    # create custom repository samples
+    repository = Repository.create(
+      name: 'Samples',
+      team: team,
+      created_by: user
+    )
+
+    # create list value column for sample types
+    repository_column_sample_types = RepositoryColumn.create(
+      repository: repository,
+      created_by: user,
+      data_type: :RepositoryListValue,
+      name: 'Sample Types'
+    )
+
+    # create list value column for sample groups
+    repository_column_sample_groups = RepositoryColumn.create(
+      repository: repository,
+      created_by: user,
+      data_type: :RepositoryListValue,
+      name: 'Sample Groups'
+    )
+
+    # create few list items for sample types
+    repository_items_sample_types = []
+    ['Potato leaves', 'Tea leaves', 'Potato bug'].each do |name|
+      item = RepositoryListItem.create(
+        data: name,
+        created_by: user,
+        last_modified_by: user,
+        repository_column: repository_column_sample_types,
+        repository: repository
+      )
+      repository_items_sample_types << item
+    end
+
+    # create few list items for sample groups
+    repository_items_sample_groups = []
+    %i(Fodder Nutrient Seed).each do |name|
+      item = RepositoryListItem.create(
+        data: name,
+        created_by: user,
+        last_modified_by: user,
+        repository_column: repository_column_sample_groups,
+        repository: repository
+      )
+      repository_items_sample_groups << item
+    end
+
+    repository_rows_to_assign = []
+    # Generate random custom respository sample names and assign sample types
+    # and groups
+    
+    repository_sample_name = (0...3).map { 65.+(rand(26)).chr }.join << '/'
+    (1..5).each do |index|
+      repository_row = RepositoryRow.create(
+        repository: repository,
+        created_by: user,
+        last_modified_by: user,
+        name: repository_sample_name + index.to_s
+      )
+      RepositoryListValue.create(
+        created_by: user,
+        last_modified_by: user,
+        repository_list_item: repository_items_sample_types[
+          rand(0..(repository_items_sample_types.length - 1))
+        ],
+        repository_cell_attributes: {
+          repository_row: repository_row,
+          repository_column: repository_column_sample_types
+        }
+      )
+      RepositoryListValue.create(
+        created_by: user,
+        last_modified_by: user,
+        repository_list_item: repository_items_sample_groups[
+          rand(0..(repository_items_sample_groups.length - 1))
+        ],
+        repository_cell_attributes: {
+          repository_row: repository_row,
+          repository_column: repository_column_sample_groups
+        }
+      )
+      repository_rows_to_assign << repository_row
+    end
     # Create sample types
     SampleType.create(
       name: 'Potato leaves',
@@ -321,6 +406,13 @@ module FirstTimeDataGenerator
         SampleMyModule.create(
           sample: s,
           my_module: mm
+        )
+      end
+      repository_rows_to_assign.each do |repository_row|
+        MyModuleRepositoryRow.create!(
+          repository_row: repository_row,
+          my_module: mm,
+          assigned_by: user
         )
       end
     end

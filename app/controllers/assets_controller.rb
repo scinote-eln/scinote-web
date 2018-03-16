@@ -103,13 +103,17 @@ class AssetsController < ApplicationController
 
     step_assoc = @asset.step
     result_assoc = @asset.result
+    repository_cell_assoc = @asset.repository_cell
     @assoc = step_assoc unless step_assoc.nil?
     @assoc = result_assoc unless result_assoc.nil?
+    @assoc = repository_cell_assoc unless repository_cell_assoc.nil?
 
     if @assoc.class == Step
       @protocol = @asset.step.protocol
-    else
+    elsif @assoc.class == Result
       @my_module = @assoc.my_module
+    else
+      # TBD
     end
   end
 
@@ -119,6 +123,8 @@ class AssetsController < ApplicationController
                                   can_read_protocol_in_repository?(@protocol)
     elsif @assoc.class == Result
       render_403 and return unless can_read_experiment?(@my_module.experiment)
+    elsif @assoc.class == RepositoryCell
+      # TBD
     end
   end
 
@@ -128,6 +134,8 @@ class AssetsController < ApplicationController
                                   can_manage_protocol_in_repository?(@protocol)
     elsif @assoc.class == Result
       render_403 and return unless can_manage_module?(@my_module)
+    elsif @assoc.class == RepositoryCell
+      # TBD
     end
   end
 
