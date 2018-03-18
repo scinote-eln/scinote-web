@@ -986,12 +986,12 @@ en:
 
   repository_row:
     modal_info:
-      head_title: "Information for record '%{repository_row}'"
+      head_title: "Information for item '%{repository_row}'"
       added_on: "Added on"
       added_by: "Added by"
       custom_field: "%{cf}: "
-      title: "This record is assigned to %{nr} tasks."
-      no_tasks: "This record in not assigned to any task."
+      title: "This item is assigned to %{nr} tasks."
+      no_tasks: "This item in not assigned to any task."
   samples:
     columns: "Columns"
     columns_visibility: "Toggle visibility"
