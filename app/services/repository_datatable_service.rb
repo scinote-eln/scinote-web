@@ -16,22 +16,19 @@ class RepositoryDatatableService
   def create_columns_mappings
     # Make mappings of custom columns, so we have same id for every
     # column
-    i = 5
+    index = 5
     @mappings = {}
     @repository.repository_columns.order(:id).each do |column|
-      @mappings[column.id] = i.to_s
-      i += 1
+      @mappings[column.id] = index.to_s
+      index += 1
     end
   end
 
   def process_query
     order_obj = build_conditions(@params)[:order_by_column]
     search_value = build_conditions(@params)[:search_value]
-    if search_value.present?
-      @repository_rows = sort_rows(order_obj, search(search_value))
-    else
-      @repository_rows = sort_rows(order_obj, fetch_records)
-    end
+    records = search_value.present? ? search(search_value) : fetch_records
+    @repository_rows = sort_rows(order_obj, records)
   end
 
   def fetch_records
@@ -51,11 +48,7 @@ class RepositoryDatatableService
                                  .where(repository: @repository)
       return @assigned_rows if @params[:assigned] == 'assigned'
     else
-      @assigned_rows = repository_rows.joins(
-        'INNER JOIN my_module_repository_rows ON
-        (repository_rows.id =
-          my_module_repository_rows.repository_row_id)'
-      )
+      @assigned_rows = repository_rows.joins(:my_module_repository_rows)
     end
     repository_rows
   end
@@ -69,6 +62,7 @@ class RepositoryDatatableService
                  .left_outer_joins(includes_json)
                  .where(repository: @repository)
                  .where_attributes_like(searchable_attributes, value)
+                 .distinct
   end
 
   def build_conditions(params)
@@ -103,9 +97,7 @@ class RepositoryDatatableService
     column_id = col_order[column_index].to_i
 
     if sortable_columns[column_id - 1] == 'assigned'
-      if @my_module && @params[:assigned] == 'assigned'
-        return records
-      end
+      return records if @my_module && @params[:assigned] == 'assigned'
       if @my_module
         # Depending on the sort, order nulls first or
         # nulls last on repository_cells association
