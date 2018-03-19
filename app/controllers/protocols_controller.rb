@@ -60,8 +60,13 @@ class ProtocolsController < ApplicationController
     copy_to_repository
     copy_to_repository_modal
   )
-  before_action :check_import_permissions, only: [:import]
-  before_action :check_export_permissions, only: [:export]
+  before_action :check_import_permissions, only: :import
+  before_action :check_export_permissions, only: :export
+
+  before_action :check_user_role,
+                only: %i(
+                  import protocolsio_import_create protocolsio_import_save
+                )
 
   def index; end
 
@@ -1168,5 +1173,9 @@ class ProtocolsController < ApplicationController
 
   def metadata_params
     params.require(:protocol).permit(:name, :authors, :description)
+  end
+
+  def check_user_role
+    render_403 unless can_create_protocols_in_repository?(current_team)
   end
 end
