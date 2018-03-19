@@ -74,4 +74,20 @@ namespace :data do
   desc "Remove temporary and obsolete data"
   task clean: [:environment, :clean_temp_files, :clean_unconfirmed_users]
 
+  desc 'Export team to directory'
+  task :team_export, [:team_id] => [:environment] do |_, args|
+    Rails.logger.info(
+      "Exporting team with ID:#{args[:team_id]} to directory in tmp"
+    )
+    te = TeamExporter.new(args[:team_id])
+    te.export_to_dir if te
+  end
+
+  desc 'Import team from directory'
+  task :team_import, [:dir_path] => [:environment] do |_, args|
+    Rails.logger.info(
+      "Importing team from directory #{args[:dir_path]}"
+    )
+    TeamImporter.new.import_from_dir(args[:dir_path])
+  end
 end
