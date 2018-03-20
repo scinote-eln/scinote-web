@@ -64,6 +64,7 @@
       <% end %>
     </div>
 
+    <%= render "shared/left_menu_bar" if user_signed_in? %>
     <div id="content-wrapper">
       <%= yield :content %>
     </div>
