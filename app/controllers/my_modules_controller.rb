@@ -6,12 +6,20 @@ class MyModulesController < ApplicationController
   include ActionView::Helpers::UrlHelper
   include ApplicationHelper
 
-  before_action :load_vars
-  before_action :load_vars_nested, only: %I[new create]
-  before_action :load_repository, only: %I[assign_repository_records
-                                           unassign_repository_records]
-  before_action :check_manage_permissions, only:
-    %i(destroy description due_date)
+  before_action :load_vars,
+                only: %i(show update destroy description due_date protocols
+                         results samples activities activities_tab
+                         assign_samples unassign_samples delete_samples
+                         toggle_task_state samples_index archive
+                         complete_my_module repository repository_index
+                         assign_repository_records unassign_repository_records)
+  before_action :load_vars_nested, only: %i(new create)
+  before_action :load_repository, only: %i(assign_repository_records
+                                           unassign_repository_records
+                                           repository_index)
+  before_action :check_manage_permissions,
+                only: %i(update destroy description due_date)
+  before_action :check_view_info_permissions, only: :show
   before_action :check_view_permissions, only:
     %i(show activities activities_tab protocols results samples samples_index
        archive)
@@ -363,20 +371,18 @@ class MyModulesController < ApplicationController
 
   # AJAX actions
   def repository_index
-    @repository = Repository.find_by_id(params[:repository_id])
-    if @repository.nil? || !can_read_team?(@repository.team)
-      render_403
-    else
-      respond_to do |format|
-        format.html
-        format.json do
-          render json: ::RepositoryDatatable.new(view_context,
-                                                 @repository,
-                                                 @my_module,
-                                                 current_user)
-        end
-      end
-    end
+    @draw = params[:draw].to_i
+    per_page = params[:length] == '-1' ? 100 : params[:length].to_i
+    page = (params[:start].to_i / per_page) + 1
+    records = RepositoryDatatableService.new(@repository,
+                                             params,
+                                             current_user,
+                                             @my_module)
+    @assigned_rows = records.assigned_rows
+    @repository_row_count = records.repository_rows.count
+    @columns_mappings = records.mappings
+    @repository_rows = records.repository_rows.page(page).per(per_page)
+    render 'repository_rows/index.json'
   end
 
   # Submit actions
@@ -595,7 +601,8 @@ class MyModulesController < ApplicationController
 
   def load_repository
     @repository = Repository.find_by_id(params[:repository_id])
-    render_404 unless @repository && can_read_team?(@repository.team)
+    render_404 unless @repository
+    render_403 unless can_read_team?(@repository.team)
   end
 
   def check_manage_permissions
