@@ -8,6 +8,7 @@ class ProjectsController < ApplicationController
                                    :notifications, :reports,
                                    :samples, :experiment_archive,
                                    :delete_samples, :samples_index]
+  before_action :load_projects_by_teams, only: %i(index show samples)
   before_action :check_view_permissions, only: %i(show reports notifications
                                                   samples experiment_archive
                                                   samples_index)
@@ -17,7 +18,7 @@ class ProjectsController < ApplicationController
   @filter_by_archived = false
 
   # except parameter could be used but it is not working.
-  layout :choose_layout
+  layout 'fluid'
 
   # Action defined in SampleActions
   DELETE_SAMPLES = 'Delete'.freeze
@@ -25,18 +26,6 @@ class ProjectsController < ApplicationController
   def index
     if params[:team]
       current_team_switch(Team.find_by_id(params[:team]))
-    end
-
-    if current_user.teams.any?
-      @current_team_id = current_team.id if current_team
-
-      @current_team_id ||= current_user.teams.first.id
-      @current_sort = params[:sort].to_s
-      @projects_by_teams = current_user.projects_by_teams(@current_team_id,
-                                                          @current_sort,
-                                                          @filter_by_archived)
-    else
-      @projects_by_teams = []
     end
 
     @teams = current_user.teams
@@ -318,6 +307,20 @@ class ProjectsController < ApplicationController
     end
   end
 
+  def load_projects_by_teams
+    if current_user.teams.any?
+      @current_team_id = current_team.id if current_team
+
+      @current_team_id ||= current_user.teams.first.id
+      @current_sort = params[:sort].to_s
+      @projects_by_teams = current_user.projects_by_teams(@current_team_id,
+                                                          @current_sort,
+                                                          @filter_by_archived)
+    else
+      @projects_by_teams = []
+    end
+  end
+
   def check_view_permissions
     render_403 unless can_read_project?(@project)
   end
@@ -328,9 +331,5 @@ class ProjectsController < ApplicationController
 
   def check_manage_permissions
     render_403 unless can_manage_project?(@project)
-  end
-
-  def choose_layout
-    action_name.in?(['index', 'archive']) ? 'main' : 'fluid'
   end
 end
