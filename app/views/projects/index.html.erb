@@ -1,4 +1,5 @@
 <% provide(:head_title, t("projects.index.head_title")) %>
+<%= render partial: "shared/sidebar" %>
 
 <% if can_create_projects?(current_team) %>
   <!-- New project modal -->
