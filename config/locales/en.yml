@@ -69,14 +69,6 @@ en:
   nav:
     search: "Search for something..."
     search_button: 'Go!'
-    power_up: 'Power Up!'
-    power_up_dropdown:
-      title: 'Go premum and power up!'
-      unlimited_teams: 'Unlimited Teams'
-      unlimited_users: 'Unlimited Users'
-      unlimited_storage: 'Unlimited Storage'
-      manuscript: 'ManuScript'
-      much_more: 'And much, much more...'
     user_greeting: "Hi, %{full_name}"
     advanced_search: "Advanced search"
     title: "sciNote"
