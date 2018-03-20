@@ -1,5 +1,6 @@
 class Repository < ApplicationRecord
   include SearchableModel
+  include RepositoryImportParser
 
   belongs_to :team, optional: true
   belongs_to :created_by,
@@ -95,87 +96,8 @@ class Repository < ApplicationRecord
     new_repo
   end
 
-  # Imports records
   def import_records(sheet, mappings, user)
-    errors = false
-    columns = []
-    name_index = -1
-    total_nr = 0
-    nr_of_added = 0
-    header_skipped = false
-
-    mappings.each.with_index do |(_k, value), index|
-      if value == '-1'
-        # Fill blank space, so our indices stay the same
-        columns << nil
-        name_index = index
-      else
-        columns << repository_columns.find_by_id(value)
-      end
-    end
-
-    # Check for duplicate columns
-    col_compact = columns.compact
-    unless col_compact.map(&:id).uniq.length == col_compact.length
-      return { status: :error, nr_of_added: nr_of_added, total_nr: total_nr }
-    end
-    rows = SpreadsheetParser.spreadsheet_enumerator(sheet)
-
-    # Now we can iterate through record data and save stuff into db
-    rows.each do |row|
-      # Skip empty rows
-      next if row.empty?
-      unless header_skipped
-        header_skipped = true
-        next
-      end
-      total_nr += 1
-
-      row = SpreadsheetParser.parse_row(row, sheet)
-
-      record_row = RepositoryRow.new(name: row[name_index],
-                                 repository: self,
-                                 created_by: user,
-                                 last_modified_by: user)
-      record_row.transaction do
-        unless record_row.save
-          errors = true
-          raise ActiveRecord::Rollback
-        end
-
-        row_cell_values = []
-
-        row.each.with_index do |value, index|
-          if columns[index] && value
-            cell_value = RepositoryTextValue.new(
-              data: value,
-              created_by: user,
-              last_modified_by: user,
-              repository_cell_attributes: {
-                repository_row: record_row,
-                repository_column: columns[index]
-              }
-            )
-            unless cell_value.valid?
-              errors = true
-              raise ActiveRecord::Rollback
-            end
-            row_cell_values << cell_value
-          end
-        end
-        if RepositoryTextValue.import(row_cell_values,
-                                      recursive: true,
-                                      validate: false).failed_instances.any?
-          errors = true
-          raise ActiveRecord::Rollback
-        end
-        nr_of_added += 1
-      end
-    end
-
-    if errors
-      return { status: :error, nr_of_added: nr_of_added, total_nr: total_nr }
-    end
-    { status: :ok, nr_of_added: nr_of_added, total_nr: total_nr }
+    importer = RepositoryImportParser::Importer.new(sheet, mappings, user, self)
+    importer.run
   end
 end

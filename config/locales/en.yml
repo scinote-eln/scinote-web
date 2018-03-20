@@ -67,7 +67,8 @@ en:
   body:
     notice: "You need to enable JavaScript to run this app."
   nav:
-    search: "Search"
+    search: "Search for something..."
+    search_button: 'Go!'
     user_greeting: "Hi, %{full_name}"
     advanced_search: "Advanced search"
     title: "sciNote"
@@ -986,12 +987,12 @@ en:
 
   repository_row:
     modal_info:
-      head_title: "Information for record '%{repository_row}'"
+      head_title: "Information for item '%{repository_row}'"
       added_on: "Added on"
       added_by: "Added by"
       custom_field: "%{cf}: "
-      title: "This record is assigned to %{nr} tasks."
-      no_tasks: "This record in not assigned to any task."
+      title: "This item is assigned to %{nr} tasks."
+      no_tasks: "This item in not assigned to any task."
   samples:
     columns: "Columns"
     columns_visibility: "Toggle visibility"

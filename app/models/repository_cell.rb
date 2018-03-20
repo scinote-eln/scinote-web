@@ -1,7 +1,9 @@
 class RepositoryCell < ActiveRecord::Base
   belongs_to :repository_row
   belongs_to :repository_column
-  belongs_to :value, polymorphic: true, dependent: :destroy
+  belongs_to :value, polymorphic: true,
+                     inverse_of: :repository_cell,
+                     dependent: :destroy
   belongs_to :repository_text_value,
              (lambda do
                where(repository_cells: { value_type: 'RepositoryTextValue' })
