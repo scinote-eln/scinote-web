@@ -8,12 +8,12 @@ module LeftMenuBarHelper
   end
 
   def templates_are_selected?
-    # TBD
+    # TODO
     controller_name == 'protocols'
   end
 
   def reports_are_selected?
-    # TBD
+    # TODO
     controller_name == 'reports'
   end
 
@@ -26,6 +26,6 @@ module LeftMenuBarHelper
   end
 
   def help_is_selected?
-    # TBD
+    # TODO
   end
 end
