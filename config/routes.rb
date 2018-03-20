@@ -153,8 +153,6 @@ Rails.application.routes.draw do
           get 'create_modal', to: 'repositories#create_modal',
               defaults: { format: 'json' }
         end
-        get 'show_tab', to: 'repositories#show_tab',
-            defaults: { format: 'json' }
         get 'destroy_modal', to: 'repositories#destroy_modal',
             defaults: { format: 'json' }
         get 'rename_modal', to: 'repositories#rename_modal',

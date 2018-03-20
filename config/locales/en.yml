@@ -984,6 +984,15 @@ en:
     no_records_unassigned_flash: "No items were unassigned from task"
     default_column: 'Name'
 
+  libraries:
+    index:
+      head_title: "Libraries"
+      no_libraries:
+        text: "You don't have any libraries."
+        title: "Please create your first Library"
+        create_new_button: "Create New Library"
+    show:
+      head_title: "Libraries | %{library}"
   repository_row:
     modal_info:
       head_title: "Information for record '%{repository_row}'"

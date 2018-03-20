@@ -1,51 +1,19 @@
-<% provide(:head_title, t("repositories.index.head_title")) %>
+<% provide(:head_title, t("libraries.index.head_title")) %>
 
 <% if current_team %>
-  <%= render partial: "repositories/breadcrumbs.html.erb",
-             locals: { teams: @teams, current_team: current_team, type: @type } %>
-
-  <!-- Nav tabs -->
-  <ul class="nav nav-tabs nav-settings" role="tablist" id="repository-tabs">
-    <% @repositories.each do |repo| %>
-      <li role="presentation">
-        <a href="#custom_repo_<%= repo.id %>"
-           data-toggle="tab"
-           data-repo-table="#repository-table-<%= repo.id %>"
-           aria-controls="custom_repo_<%= repo.id %>"
-           data-url="<%=team_repository_show_tab_path(current_team, repo)%>"
-           title="<%=repo.name%>"><%= truncate(repo.name, length: Constants::NAME_TRUNCATION_LENGTH) %></a>
-      </li>
-    <% end %>
-
-    <!-- Add new repository tab -->
-    <li role="presentation"
-      <% unless can_create_repositories?(current_team) || current_team.repositories.count < Constants::REPOSITORIES_LIMIT %>
-        class="disabled"
-      <% end %>>
-      <a
-        <% if can_create_repositories?(current_team) && current_team.repositories.count < Constants::REPOSITORIES_LIMIT %>
-          href="<%= create_modal_team_repositories_path %>"
-          class='create-repository'
-          data-remote='true'
-        <% end %>>
-        <span class="glyphicon glyphicon-plus"></span>
-        <span class="hidden-xs">&nbsp;<%= t('repositories.index.add_new_repository_tab') %></span>
-      </a>
-    </li>
-  </ul>
-
-  <!-- Tab panes -->
-  <div class="tab-content">
-    <% @repositories.each do |repo| %>
-      <div class="tab-pane tab-pane-settings" id="custom_repo_<%= repo.id %>">
-        <!-- Tab Content -->
-        <div class="container-fluid">
-          <div class="tab-content-body"></div>
-        </div>
-      </div>
-    <% end %>
+  <%
+    # show only if no repositories present. If the team will have them we will
+    # handle this in left side navigation bar
+  %>
+  <div class="jumbotron text-center" style="margin-top:25%">
+    <strong><%=t 'libraries.index.no_libraries.text' %></strong>
+    <h2><strong><%=t 'libraries.index.no_libraries.title' %><strong></h2>
+    <br />
+    <a class="btn btn-info btn-lg"
+       id="create-new-repository"
+       href="<%= create_modal_team_repositories_path(current_team) %>"
+       data-remote="true"><%=t 'libraries.index.no_libraries.create_new_button' %></a>
   </div>
-
 <% else %>
   <!-- If member of no teams -->
   <div class="jumbotron">
@@ -54,6 +22,4 @@
   </div>
 <% end %>
 
-<%= stylesheet_link_tag 'datatables' %>
-<%= javascript_include_tag 'repositories/repository_datatable' %>
 <%= javascript_include_tag "repositories/index", "data-turbolinks-track" => true %>
