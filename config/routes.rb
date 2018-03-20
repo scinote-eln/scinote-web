@@ -441,7 +441,8 @@ Rails.application.routes.draw do
         post 'archive', to: 'protocols#archive'
         post 'restore', to: 'protocols#restore'
         post 'import', to: 'protocols#import'
-        post 'protocolsio_import_create', to: 'protocols#protocolsio_import_create'
+        post 'protocolsio_import_create',
+             to: 'protocols#protocolsio_import_create'
         post 'protocolsio_import_save', to: 'protocols#protocolsio_import_save'
         get 'export', to: 'protocols#export'
       end
@@ -449,7 +450,7 @@ Rails.application.routes.draw do
 
     resources :repositories do
       post 'repository_index',
-           to: 'repositories#repository_table_index',
+           to: 'repository_rows#index',
            as: 'table_index',
            defaults: { format: 'json' }
       # Save repository table state
@@ -472,13 +473,15 @@ Rails.application.routes.draw do
            as: 'columns_destroy_html'
 
       resources :repository_columns, only: %i(create edit update destroy)
-
       resources :repository_rows, only: %i(create edit update)
       member do
         post 'parse_sheet'
         post 'import_records'
       end
     end
+
+    post 'repository_list_items', to: 'repository_list_items#search',
+                                  defaults: { format: 'json' }
 
     get 'repository_rows/:id', to: 'repository_rows#show',
                                as: :repository_row,

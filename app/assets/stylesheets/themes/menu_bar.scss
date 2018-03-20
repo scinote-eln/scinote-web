@@ -1,0 +1,57 @@
+@import "constants";
+@import "mixins";
+
+.menu-bar {
+  background-color: $color-white;
+  box-shadow: inset -4px 0 0 0 $color-alto;
+  height: 100%;
+  left: 0;
+  overflow-x: hidden;
+  padding-bottom: 16px;
+  padding-top: 16px;
+  position: fixed;
+  width: 83px;
+
+  ul.nav > li {
+    padding-right: 4px;
+
+    & > a {
+      color: $color-gray;
+      display: grid;
+      font-size: 12px;
+      margin-left: auto;
+      margin-right: auto;
+      padding: 10px;
+      text-align: center;
+
+      & > span {
+        padding-top: 4px;
+      }
+    }
+
+    &.active {
+      background-color: $color-gainsboro;
+      margin-right: 4px;
+      padding-right: 0;
+      @include box-shadow(4px 0 0 $color-theme-primary);
+
+      & > a {
+        color: $color-emperor;
+      }
+    }
+  }
+
+  ul.nav-bottom {
+    bottom: 0;
+    padding-bottom: 16px;
+    position: fixed;
+    width: inherit;
+  }
+}
+
+@media(max-height:480px) {
+  .menu-bar > ul.nav-bottom {
+    position: relative;
+    width: auto;
+  }
+}

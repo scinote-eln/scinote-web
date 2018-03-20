@@ -26,7 +26,6 @@ describe AssetTextDatum, type: :model do
     it 'should have uniq asset' do
       create :asset_text_datum, asset: asset
       new_atd = build :asset_text_datum, asset: asset
-      # binding.pry
       expect(new_atd).to_not be_valid
     end
   end

@@ -859,6 +859,31 @@ class Constants
     ]
   }.freeze
 
+  # Repository default table state
+  REPOSITORY_TABLE_DEFAULT_STATE = {
+    'time' => 0,
+    'start' => 0,
+    'length' => 5,
+    'order' => [[2, 'desc']],
+    'search' => { 'search' => '',
+                  'smart' => true,
+                  'regex' => false,
+                  'caseInsensitive' => true },
+    'columns' => [],
+    'assigned' => 'assigned',
+    'ColReorder' => [*0..4]
+  }
+  5.times do
+    REPOSITORY_TABLE_DEFAULT_STATE['columns'] << {
+      'visible' => true,
+      'search' => { 'search' => '',
+                    'smart' => true,
+                    'regex' => false,
+                    'caseInsensitive' => true }
+    }
+  end
+  REPOSITORY_TABLE_DEFAULT_STATE.freeze
+
   EXPORTABLE_ZIP_EXPIRATION_DAYS = 7
 
   # Very basic regex to check for validity of emails
