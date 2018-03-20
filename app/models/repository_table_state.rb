@@ -43,7 +43,7 @@ class RepositoryTableState < ApplicationRecord
       else
         # add column
         index = repository_state['columns'].count
-        repository_state['columns'][index] = RepositoryDatatable::
+        repository_state['columns'][index] = Constants::
           REPOSITORY_TABLE_DEFAULT_STATE['columns'].first
         repository_state['ColReorder'].insert(2, index.to_s)
       end
@@ -52,12 +52,12 @@ class RepositoryTableState < ApplicationRecord
   end
 
   def self.create_state(user, repository)
-    default_columns_num = RepositoryDatatable::
+    default_columns_num = Constants::
                           REPOSITORY_TABLE_DEFAULT_STATE['columns'].count
     repository_state =
-      RepositoryDatatable::REPOSITORY_TABLE_DEFAULT_STATE.deep_dup
+      Constants::REPOSITORY_TABLE_DEFAULT_STATE.deep_dup
     repository.repository_columns.each_with_index do |_, index|
-      repository_state['columns'] << RepositoryDatatable::
+      repository_state['columns'] << Constants::
                                REPOSITORY_TABLE_DEFAULT_STATE['columns'].first
       repository_state['ColReorder'] << (default_columns_num + index)
     end

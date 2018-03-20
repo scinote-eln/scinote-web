@@ -21,6 +21,8 @@ class RepositoryColumn < ApplicationRecord
 
   after_create :update_repository_table_state
 
+  scope :list_type, -> { where(data_type: 'RepositoryListValue') }
+
   def update_repository_table_state
     RepositoryTableState.update_state(self, nil, created_by)
   end

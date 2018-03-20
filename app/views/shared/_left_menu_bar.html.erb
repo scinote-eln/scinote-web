@@ -1,0 +1,48 @@
+<div id="left-menu-bar" class="menu-bar">
+  <ul class="nav">
+    <li class="<%= "active" if projects_are_selected? %>">
+      <a id="projects-link" title="<%= t('left_menu_bar.projects') %>" href="<%= projects_path %>">
+        <span class="glyphicon glyphicon-home"></span>
+        <span><%= t('left_menu_bar.projects') %></span>
+      </a>
+    </li>
+    <li class="<%= "active" if repositories_are_selected? %>">
+      <a id="repositories-link" title="<%= t('left_menu_bar.repositories') %>" href="<%= team_repositories_path current_team %>">
+        <span class="fa fa-cubes" aria-hidden="true"></span>
+        <span><%= t('left_menu_bar.repositories') %></span>
+      </a>
+    </li>
+    <li class="<%= "active" if templates_are_selected? %>">
+      <a id="templates-link" title="<%= t('left_menu_bar.templates') %>" href="<%= protocols_path %>">
+        <span class="glyphicon glyphicon-list-alt"></span>
+        <span><%= t('left_menu_bar.templates') %></span>
+      </a>
+    </li>
+    <li class="<%= "active" if reports_are_selected? %>">
+      <a id="reports-link" title="<%= t('left_menu_bar.reports') %>" href="#">
+        <span class="glyphicon glyphicon-indent-left"></span>
+        <span><%= t('left_menu_bar.reports') %></span>
+      </a>
+    </li>
+    <li class="<%= "active" if settings_are_selected? %>">
+      <a id="settings-link" title="<%= t('left_menu_bar.settings') %>" href="<%= edit_user_registration_path %>">
+        <span class="glyphicon glyphicon-cog"></span>
+        <span><%= t('left_menu_bar.settings') %></span>
+      </a>
+    </li>
+  </ul>
+  <ul class="nav nav-bottom">
+    <li class="<%= "active" if activities_are_selected? %>">
+      <a id="activities-link" title="<%= t('left_menu_bar.activities') %>" href="<%= activities_path %>">
+        <span class="glyphicon glyphicon-equalizer"></span>
+        <span><%= t('left_menu_bar.activities') %></span>
+      </a>
+    </li>
+    <li class="<%= "active" if help_is_selected? %>">
+      <a id="activities-link" title="<%= t('left_menu_bar.help') %>" href="#">
+        <span class="glyphicon glyphicon-paperclip"></span>
+        <span><%= t('left_menu_bar.help') %></span>
+      </a>
+    </li>
+  </ul>
+</div>
