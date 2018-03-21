@@ -944,6 +944,7 @@ en:
     column_new_text: "New column"
     column_create: "Create"
     columns_delete: "Delete"
+    columns_reorder: "Re-Order Columns"
     columns_visibility: "Visible columns"
     view_all_records: "View all items"
     view_assigned_records: "View assigned items"
