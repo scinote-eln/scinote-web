@@ -1,0 +1,23 @@
+ <%= content_for :sidebar do %>
+  <div id="slide-panel" class="visible">
+    <div class="sidebar-header">
+      <div class="sidebar-header-title">
+        <h5><%=t "libraries.sidebar.title" %></h5>
+      </div>
+    </div>
+    <div class="sidebar-header-toggle">
+      <a href="" id="toggle-sidebar-link">
+        <span class="glyphicon glyphicon-play-circle"></span>
+      </a>
+    </div>
+    <div class="tree">
+      <ul>
+        <% repositories.each do |repository| %>
+          <% cache repository do %>
+            <li><%= link_to repository.name, repository_path(repository) %></li>
+          <% end %>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+<% end %>

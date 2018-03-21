@@ -11,6 +11,8 @@ class RepositoriesController < ApplicationController
   before_action :check_create_permissions, only:
     %i(create_new_modal create copy_modal copy)
 
+  # layout 'fluid'
+
   def index
     unless @repositories.length.zero? && current_team
       redirect_to repository_path(@repositories.first) and return
@@ -46,7 +48,7 @@ class RepositoriesController < ApplicationController
         if @repository.save
           flash[:success] = t('repositories.index.modal_create.success_flash',
                               name: @repository.name)
-          render json: { url: team_repositories_path(repository: @repository) },
+          render json: { url: repository_path(@repository) },
             status: :ok
         else
           render json: @repository.errors,

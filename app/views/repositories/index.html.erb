@@ -1,6 +1,7 @@
 <% provide(:head_title, t("libraries.index.head_title")) %>
 
 <% if current_team %>
+  <%= render partial: "sidebar", locals: { repositories: @repositories } %>
   <%
     # show only if no repositories present. If the team will have them we will
     # handle this in left side navigation bar
@@ -9,10 +10,11 @@
     <strong><%=t 'libraries.index.no_libraries.text' %></strong>
     <h2><strong><%=t 'libraries.index.no_libraries.title' %><strong></h2>
     <br />
-    <a class="btn btn-info btn-lg"
-       id="create-new-repository"
-       href="<%= create_modal_team_repositories_path(current_team) %>"
-       data-remote="true"><%=t 'libraries.index.no_libraries.create_new_button' %></a>
+    <%= link_to t('libraries.index.no_libraries.create_new_button'),
+                create_modal_team_repositories_path(current_team),
+                class: "btn btn-info btn-lg",
+                id: "create-new-repository",
+                remote: true %>
   </div>
 <% else %>
   <!-- If member of no teams -->

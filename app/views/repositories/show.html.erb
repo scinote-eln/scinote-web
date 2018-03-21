@@ -1,10 +1,7 @@
 <% provide(:head_title, t("libraries.show.head_title", library: @repository.name)) %>
+<%= stylesheet_link_tag 'datatables' %>
 
-<%= render partial: "repositories/delete_record_modal.html.erb" %>
-<%= render partial: "repositories/delete_column_modal.html.erb" %>
-<%= render partial: 'repositories/export_repository_modal.html.erb',
-           locals: { repository: @repository } %>
-
+<%= render partial: "sidebar", locals: { repositories: @repositories } %>
 <div id="alert-container"></div>
 
 <div id="repository-toolbar">
@@ -73,7 +70,18 @@
     </div>
   </div>
 
+
   <div id="datatables-buttons" style="display: inline;">
+    <div class="new-repository-button">
+      <% if can_create_repositories?(@repository.team) %>
+        <%= link_to t('libraries.index.no_libraries.create_new_button'),
+                    create_modal_team_repositories_path(@repository.team),
+                    class: "btn btn-default",
+                    id: "create-new-repository",
+                    remote: true %>
+      <% end %>
+    </div>
+
     <div id="repository-columns-dropdown" class="dropdown">
       <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
         <%= t('repositories.columns') %>
@@ -136,9 +144,13 @@
 %>
 <%= render partial: 'repositories/import_repository_records_modal.html.erb',
                     locals: { repository: @repository } %>
+
+<%= render partial: "repositories/delete_record_modal.html.erb" %>
+<%= render partial: "repositories/delete_column_modal.html.erb" %>
+<%= render partial: 'repositories/export_repository_modal.html.erb',
+           locals: { repository: @repository } %>
+
 <%= javascript_include_tag 'repositories/edit', 'data-turbolinks-track' => true %>
-
-
-<%= stylesheet_link_tag 'datatables' %>
 <%= javascript_include_tag 'repositories/repository_datatable' %>
 <%= javascript_include_tag "repositories/show", "data-turbolinks-track" => true %>
+<%= javascript_include_tag "repositories/index", "data-turbolinks-track" => true %>

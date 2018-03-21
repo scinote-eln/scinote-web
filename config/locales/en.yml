@@ -986,6 +986,8 @@ en:
     default_column: 'Name'
 
   libraries:
+    sidebar:
+      title: "Libraries"
     index:
       head_title: "Libraries"
       no_libraries:
