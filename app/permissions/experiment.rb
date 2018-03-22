@@ -152,6 +152,37 @@ Canaid::Permissions.register_for(Protocol) do
   end
 end
 
+Canaid::Permissions.register_for(Step) do
+  # Module, its experiment and its project must be active for all the specified
+  # permissions
+  %i(delete_step).each do |perm|
+    can perm do |_, step|
+      if step.protocol.in_module?
+        my_module = step.protocol.my_module
+        my_module.active? &&
+          my_module.experiment.active? &&
+          my_module.experiment.project.active?
+      else
+        step.protocol.in_repository_active?
+      end
+    end
+  end
+
+  # step: delete
+  can :delete_step do |user, step|
+    protocol = step.protocol
+    if protocol.in_module?
+      project = protocol.my_module.experiment.project
+      user.is_owner_of_project?(project) ||
+        (user.is_normal_user_or_admin_of_team?(project.team) &&
+          step.user_id == user.id)
+    else
+      user.is_normal_user_or_admin_of_team?(protocol.team) &&
+        step.user_id == user.id
+    end
+  end
+end
+
 Canaid::Permissions.register_for(Result) do
   # Module, its experiment and its project must be active for all the specified
   # permissions

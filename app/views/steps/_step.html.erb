@@ -26,6 +26,8 @@
              data-remote="true">
             <span class="glyphicon glyphicon-edit">
           </a>
+        <% end %>
+        <% if can_delete_step?(step) %>
           <%= link_to(step_path(step), title: t("protocols.steps.options.delete_title"), method: "delete", class: "btn btn-link",
             data: {action: "delete-step", confirm: t("protocols.steps.destroy.confirm", step: step.name)}) do %>
             <span class="glyphicon glyphicon-trash">
