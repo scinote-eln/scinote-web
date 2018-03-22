@@ -1,7 +1,7 @@
 <div id="left-menu-bar" class="menu-bar">
   <ul class="nav">
     <li class="<%= "active" if projects_are_selected? %>">
-      <a id="projects-link" title="<%= t('left_menu_bar.projects') %>" href="<%= projects_path %>">
+      <a id="projects-link" class="toggle-sidebar-link" title="<%= t('left_menu_bar.projects') %>" href="<%= projects_path %>">
         <span class="glyphicon glyphicon-home"></span>
         <span><%= t('left_menu_bar.projects') %></span>
       </a>

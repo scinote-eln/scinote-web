@@ -22,7 +22,7 @@ $toggle-btn-size: 50px;
   transition: all 0.5s ease;
 
   #sidebar-wrapper {
-    background-color: $color-alto;
+    background-color: $color-white;
     z-index: 1000;
     position: fixed;
     width: $wrapper-width;
@@ -82,10 +82,10 @@ $toggle-btn-size: 50px;
       }
 
       .tree {
-        overflow-y: auto;
         margin-bottom: 0;
-        padding-top: 15px;
         opacity: 1;
+        overflow-y: auto;
+        padding: 20px 0;
 
         // Animations
         @include transition(opacity 0.5s ease);
