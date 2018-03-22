@@ -1,0 +1,30 @@
+@import "constants";
+
+.repository-columns-header {
+  margin-top: 30px;
+}
+
+.repository-columns-body {
+  margin-top: 50px
+}
+
+.repository-columns-body .list-group-item {
+  padding: 28px;
+
+  .controlls {
+    margin-top: -18px;
+  }
+
+  span {
+    margin-top: -10px;
+  }
+
+  .glyphicon-trash {
+    margin-right: 10px;
+    color: $color-milano-red;
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+}

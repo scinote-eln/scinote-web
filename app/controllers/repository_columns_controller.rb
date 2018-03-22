@@ -1,10 +1,15 @@
 class RepositoryColumnsController < ApplicationController
   include InputSanitizeHelper
 
-  before_action :load_vars, except: :create
-  before_action :load_vars_nested, only: :create
+  before_action :load_vars, except: %i(create index)
+  before_action :load_vars_nested, only: %i(create index)
   before_action :check_create_permissions, only: :create
-  before_action :check_manage_permissions, except: :create
+  before_action :check_manage_permissions, except: %i(create index)
+  before_action :load_repository_columns, only: :index
+
+  def index
+
+  end
 
   def create
     @repository_column = RepositoryColumn.new(repository_column_params)
@@ -77,6 +82,7 @@ class RepositoryColumnsController < ApplicationController
 
   def destroy
     @del_repository_column = @repository_column.dup
+    column_id = @repository_column.id
     respond_to do |format|
       format.json do
         if @repository_column.destroy
@@ -85,9 +91,17 @@ class RepositoryColumnsController < ApplicationController
             params[:repository_column][:column_index],
             current_user
           )
-          render json: { status: :ok }
+          render json: {
+            message: t('libraries.repository_columns.destroy.success_flash',
+                       name: @del_repository_column.name),
+            id: column_id,
+            status: :ok
+          }
         else
-          render json: { status: :unprocessable_entity }
+          render json: {
+            message: t('libraries.repository_columns.destroy.error_flash'),
+            status: :unprocessable_entity
+          }
         end
       end
     end
@@ -105,6 +119,10 @@ class RepositoryColumnsController < ApplicationController
   def load_vars_nested
     @repository = Repository.find_by_id(params[:repository_id])
     render_404 unless @repository
+  end
+
+  def load_repository_columns
+    @repository_columns = @repository.repository_columns.order(:created_at)
   end
 
   def check_create_permissions

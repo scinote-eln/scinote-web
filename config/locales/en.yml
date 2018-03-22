@@ -985,6 +985,18 @@ en:
     no_records_unassigned_flash: "No items were unassigned from task"
     default_column: 'Name'
 
+  libraries:
+    repository_columns:
+      head_title: '%{repository} | Manage Columns'
+      destroy:
+        success_flash: "Column %{name} was successfully deleted."
+        error_flash: "Something went wrong! Please try again later."
+      index:
+        manage_column: "Manage Columns"
+        new_column: "New"
+        no_column: "No columns"
+        edit_column: "Edit"
+        back_to_repository_html: "<span class='glyphicon glyphicon-chevron-left'></span> Back to %{repository}"
   repository_row:
     modal_info:
       head_title: "Information for item '%{repository_row}'"

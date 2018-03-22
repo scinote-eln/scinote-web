@@ -1,0 +1,19 @@
+<%= bootstrap_form_for @repository_column,
+                       url: repository_repository_column_path(@repository,
+                                                              @repository_column),
+                       remote: true,                                        
+                       method: :delete,
+                       data: { role: "destroy-repository-column-form",
+                               id: @repository_column.id} do |f| %>
+  <%= f.hidden_field :column_index, value: column_index %>
+  <p><%= t("repositories.modal_delete_column.message", column: @repository_column.name) %></p>
+  <div class="alert alert-danger" role="alert">
+    <span class="glyphicon glyphicon-exclamation-sign"></span>
+    &nbsp;
+    <%= t("repositories.modal_delete_column.alert_heading") %>
+    <ul>
+      <li><%= t("repositories.modal_delete_column.alert_line_1", nr: @repository_column.repository_cells.count) %></li>
+      <li><%= t("repositories.modal_delete_column.alert_line_2") %></li>
+    </ul>
+  </div>
+<% end %>
