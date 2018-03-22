@@ -18,6 +18,9 @@ gem 'recaptcha', require: 'recaptcha/rails'
 gem 'sanitize', '~> 4.4'
 gem 'omniauth'
 
+#Added Passenger 03/14/2018
+gem 'passenger', '>= 5.0.25', require: 'phusion_passenger/rack_handler'
+
 # Gems for API implementation
 gem 'jwt', '~> 1.5'
 

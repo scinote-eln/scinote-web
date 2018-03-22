@@ -25,3 +25,4 @@ RUN mkdir $APP_HOME
 WORKDIR $APP_HOME
 
 CMD rails s -b 0.0.0.0
+#CMD rails s -b 'ssl://localhost:3000?key=/etc/httpd/ssl/httpd.key&cert=/etc/httpd/ssl/httpd.crt'

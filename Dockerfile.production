@@ -8,6 +8,8 @@ RUN curl -sL https://deb.nodesource.com/setup_8.x | bash - && \
   nodejs \
   postgresql-client \
   netcat \
+  ssmtp \
+  nano \
   default-jre-headless \
   sudo graphviz --no-install-recommends \
   libfile-mimeinfo-perl && \
@@ -35,4 +37,6 @@ RUN DATABASE_URL=postgresql://postgres@db/scinote_production \
   DEFACE_ENABLED=true \
   bash -c "rake assets:precompile && rake deface:precompile"
 
+#CMD rails s -b 'ssl://localhost:3000?key=/etc/httpd/ssl/httpd.key&cert=/etc/httpd/ssl/httpd.crt'
 CMD rails s -b 0.0.0.0
+
