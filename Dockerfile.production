@@ -10,6 +10,7 @@ RUN curl -sL https://deb.nodesource.com/setup_8.x | bash - && \
   netcat \
   ssmtp \
   nano \
+  coreutils \
   default-jre-headless \
   sudo graphviz --no-install-recommends \
   libfile-mimeinfo-perl && \
