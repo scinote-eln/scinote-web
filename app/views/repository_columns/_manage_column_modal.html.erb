@@ -1,0 +1,60 @@
+<div class="modal fade"
+     id="manageRepositoryColumn"
+     tabindex="-1"
+     role="dialog"
+     aria-labelledby="manangeRepositoryColumnLabel"
+     data-edit-type="<%= @repository_column.data_type unless @repository_column.new_record? %>">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">
+          <% if @repository_column.new_record? %>
+            <%= t("libraries.manange_modal_column.new.title") %>
+          <% else %>
+            <%= t("libraries.manange_modal_column.edit.title", name:  @repository_column.name) %>
+          <% end %>
+        </h4>
+      </div>
+      <div class="modal-body">
+        <%= bootstrap_form_for @repository_column,
+                               url: form_url(@repository, @repository_column),
+                               remote: true,
+                               data: { role: "manage-repository-column-form" } do |f| %>
+          <%= hidden_field_tag :list_items %>
+          <%= f.text_field :name %>
+          <%= f.form_group :data_type, label: { text: 'Column type' } do %>
+            <br />
+            <%= f.radio_button :data_type,
+                               'RepositoryTextValue',
+                               label: 'Text',
+                               inline: true,
+                               checked: checked?(@repository_column, 'RepositoryTextValue'),
+                               disabled: disabled?(@repository_column, 'RepositoryTextValue') %>
+            <%= f.radio_button :data_type,
+                               'RepositoryFileValue',
+                               label: 'File',
+                               inline: true,
+                               checked: checked?(@repository_column, 'RepositoryFileValue'),
+                               disabled: disabled?(@repository_column, 'RepositoryFileValue') %>
+            <%= f.radio_button :data_type,
+                               'RepositoryListValue',
+                               label: 'Dropdown',
+                               inline: true,
+                               checked: checked?(@repository_column, 'RepositoryListValue'),
+                               disabled: disabled?(@repository_column, 'RepositoryListValue') %>
+          <% end %>
+          <input class="form-control"
+                 data-role="tagsinput"
+                 style="display: none"
+                 data-value="<%= @repository_column.repository_list_items.pluck(:data) %>"
+                 />
+        <% end %>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-action="save"><%= t("general.save") %></button>
+        <button type="button" class="btn btn-default" data-dismiss="modal"><%= t("general.cancel")%></button>
+      </div>
+    </div>
+  </div>
+</div>repository_repository_column

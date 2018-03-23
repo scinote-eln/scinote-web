@@ -469,8 +469,12 @@ Rails.application.routes.draw do
            as: 'delete_records',
            defaults: { format: 'json' }
       get 'repository_columns/:id/destroy_html',
-           to: 'repository_columns#destroy_html',
-           as: 'columns_destroy_html'
+          to: 'repository_columns#destroy_html',
+          as: 'columns_destroy_html'
+      get 'create_html',
+          to: 'repository_columns#create_html',
+          as: 'columns_create_html',
+          defaults: { format: 'json' }
 
       resources :repository_columns, only: %i(index create edit update destroy)
       resources :repository_rows, only: %i(create edit update)

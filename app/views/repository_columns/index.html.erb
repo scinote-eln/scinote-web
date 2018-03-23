@@ -10,7 +10,9 @@
         <h2><strong><%=t 'libraries.repository_columns.index.manage_column' %></strong></h2>
       </div>
       <div class="col-md-6 text-right">
-        <button class="btn btn-primary btn-lg">
+        <button class="btn btn-primary btn-lg"
+                data-modal-url="<%= repository_columns_create_html_path(@repository) %>"
+                data-action="new-column-modal">
           <span class="glyphicon glyphicon-plus"></span>&nbsp;<%=t 'libraries.repository_columns.index.new_column' %>
         </button>
       </div>
@@ -20,7 +22,7 @@
     <ul class="list-group"
         data-repository-id="<%= @repository.id %>">
       <% if @repository_columns.length.zero? %>
-        <li class="list-group-item text-center">
+        <li class="list-group-item text-center" data-attr="no-columns">
           <strong><%=t 'libraries.repository_columns.index.no_column' %></strong>
         </li>
       <% else %>
@@ -28,7 +30,8 @@
           <% cache column do %>
             <li class="list-group-item"
                 data-id="<%= column.id %>"
-                data-destroy-url="<%= repository_columns_destroy_html_path(@repository, column) %>">
+                data-destroy-url="<%= repository_columns_destroy_html_path(@repository, column) %>"
+                data-edit-url="<%= edit_repository_repository_column_path(@repository, column) %>">
               <span class="pull-left"><%= column.name %></span>
               <span class="controlls pull-right">
                 <span class="glyphicon glyphicon-trash"
