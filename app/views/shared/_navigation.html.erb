@@ -102,13 +102,19 @@
             <%= image_tag avatar_path(current_user, :icon_small),
                           class: "avatar" %>
           </a>
-            <ul class="dropdown-menu" data-hook="navigation-user-menu">
-              <li>
-                <%= link_to t('nav.user.logout'),
-                            destroy_user_session_path,
-                            method: :delete %>
-              </li>
-            </ul>
+          <ul class="dropdown-menu" data-hook="navigation-user-menu">
+            <li>
+              <%= link_to t('nav.user.logout'),
+                          destroy_user_session_path,
+                          method: :delete %>
+            </li>
+            <li role="separator" class="divider">
+            <li>
+              <%= link_to '#', data: { trigger: 'about-modal' } do %>
+                <%= t('nav.help.about') %>
+              <% end %>
+            </li>
+          </ul>
         </li>
 
         <!-- notifications -->
