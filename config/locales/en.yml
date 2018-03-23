@@ -75,6 +75,7 @@ en:
     user:
       settings: "Settings"
       logout: "Log out"
+      about: "About sciNote"
     help:
       tutorials: "Tutorials"
       release_notes: "Release notes"
