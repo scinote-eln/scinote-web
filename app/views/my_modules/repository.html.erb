@@ -12,6 +12,10 @@
   <button type="button" class="btn btn-default" id="all-repo-records"><%= t("repositories.view_all_records") %></button>
 </div>
 
+<div id="datatables-buttons" class="pull-right" style="display: inline;">
+  <%= render partial: "repositories/columns_reorder_dropdown" %>
+</div>
+
 <div class="toolbarButtons" style="display:none">
   <% if module_page? && can_assign_repository_rows_to_module?(@my_module) %>
     <button type="button" class="btn btn-default"
