@@ -38,11 +38,30 @@
         <span><%= t('left_menu_bar.activities') %></span>
       </a>
     </li>
-    <li class="<%= "active" if help_is_selected? %>">
-      <a id="activities-link" title="<%= t('left_menu_bar.help') %>" href="#">
+    <!-- help -->
+    <li class="dropup">
+      <a href="#"
+         id="help-link"
+         class="dropdown-toggle"
+         title="<%= t('left_menu_bar.help') %>"
+         data-toggle="dropdown"
+         role="button"
+         aria-haspopup="true"
+         aria-expanded="false">
         <span class="glyphicon glyphicon-paperclip"></span>
         <span><%= t('left_menu_bar.help') %></span>
       </a>
+      <ul class="dropdown-menu">
+        <li><%= link_to t('nav.help.support'),
+                          Constants::SUPPORT_URL,
+                          target: "_blank" %></li>
+        <li><%= link_to t('nav.help.tutorials'),
+                          Constants::TUTORIALS_URL,
+                          target: "_blank" %></li>
+        <li><%= link_to t('nav.help.premium'),
+                          Constants::WEBINARS_URL,
+                          target: "_blank" %></li>
+      </ul>
     </li>
   </ul>
 </div>
