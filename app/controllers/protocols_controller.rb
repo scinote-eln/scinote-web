@@ -739,6 +739,7 @@ class ProtocolsController < ApplicationController
               step_dir = "#{protocol_dir}/#{step_guid}"
               if step.assets.exists?
                 step.assets.order(:id).each do |asset|
+                  next unless asset.file.exists?
                   asset_guid = get_guid(asset.id)
                   asset_file_name = asset_guid.to_s +
                                     File.extname(asset.file_file_name).to_s
