@@ -13,6 +13,10 @@
     <%= favicon_link_tag "favicon-48.png", type: "image/png", size: "48x48" %>
 
     <%= csrf_meta_tags %>
+
+    <% if content_for?(:head) %>
+      <%= yield(:head) %>
+    <% end %>
   </head>
   <body
     class="<%= yield :body_class %>"
