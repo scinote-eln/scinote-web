@@ -4,7 +4,7 @@ var RepositoryDatatable = (function(global) {
   'use strict';
 
   var TABLE_ID = '';
-  var TABLE;
+  var TABLE = {};
 
   // Extend datatables API with searchable options
   // (http://stackoverflow.com/questions/39912395/datatables-dynamically-set-columns-searchable)
@@ -1405,10 +1405,7 @@ var RepositoryDatatable = (function(global) {
   }
 
   function destroy() {
-    if (TABLE !== null) {
-     TABLE.destroy();
-     TABLE = null;
-    }
+    TABLE = {};
     TABLE_ID = '';
   }
 
