@@ -72,28 +72,7 @@
   </div>
 
   <div id="datatables-buttons" style="display: inline;">
-    <div id="repository-columns-dropdown" class="dropdown">
-      <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
-        <%= t('repositories.columns') %>
-        <span class="caret"></span>
-      </button>
-      <ul class="dropdown-menu dropdown-menu-right smart-dropdown" id="repository-columns-list">
-        <% if can_create_repository_columns?(repository.team) %>
-          <li class="add-new-column-form">
-            <div id="new-column-form" class="form-group" data-action="<%= repository_repository_columns_path(repository) %>">
-              <div class="input-group">
-                <input class="form-control" id="new-column-name" placeholder="<%= t("repositories.column_new_text") %>">
-                <span class="input-group-btn">
-                  <a id="add-new-column-button" class="btn btn-primary">
-                    <%= t("repositories.column_create") %>
-                  </a>
-                </span>
-              </div>
-            </div>
-          </li>
-        <% end %>
-      </ul>
-    </div>
+    <%= render partial: "columns_reorder_dropdown", formats: :html %>
   </div>
 </div>
 
