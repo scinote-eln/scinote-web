@@ -75,6 +75,7 @@ en:
     user:
       settings: "Settings"
       logout: "Log out"
+      about: "About sciNote"
     activities:
       none: "No activities!"
     label:
