@@ -873,6 +873,7 @@ en:
       success_flash: "Table result successfully deleted."
 
   repositories:
+    repository: "Repository"
     index:
       head_title: "Repositories"
       title: "Repositories"

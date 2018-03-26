@@ -7,6 +7,10 @@
       </div>
 
       <div class="modal-body">
+        <ol class="breadcrumb breadcrumb-repository">
+          <span class="fa fa-cubes" aria-hidden="true"></span>
+          <%= "#{t('repositories.repository')}: #{@repository_row.repository.name}" %>
+        </ol>
         <p>
           <span>
             <%= t "repository_row.modal_info.added_on" %>
