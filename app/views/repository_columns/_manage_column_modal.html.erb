@@ -23,32 +23,34 @@
                                data: { role: "manage-repository-column-form" } do |f| %>
           <%= hidden_field_tag :list_items %>
           <%= f.text_field :name %>
-          <%= f.form_group :data_type, label: { text: 'Column type' } do %>
+          <%= f.form_group :data_type, label: { text: t('libraries.manange_modal_column.colum_type') } do %>
             <br />
             <%= f.radio_button :data_type,
-                               'RepositoryTextValue',
-                               label: 'Text',
+                               'RepositoryTextValue'.freeze,
+                               label: t('libraries.manange_modal_column.labels.text'),
                                inline: true,
-                               checked: checked?(@repository_column, 'RepositoryTextValue'),
-                               disabled: disabled?(@repository_column, 'RepositoryTextValue') %>
+                               checked: checked?(@repository_column, 'RepositoryTextValue'.freeze),
+                               disabled: disabled?(@repository_column, 'RepositoryTextValue'.freeze) %>
             <%= f.radio_button :data_type,
-                               'RepositoryFileValue',
-                               label: 'File',
+                               'RepositoryFileValue'.freeze,
+                               label: t('libraries.manange_modal_column.labels.file'),
                                inline: true,
-                               checked: checked?(@repository_column, 'RepositoryFileValue'),
-                               disabled: disabled?(@repository_column, 'RepositoryFileValue') %>
+                               checked: checked?(@repository_column, 'RepositoryFileValue'.freeze),
+                               disabled: disabled?(@repository_column, 'RepositoryFileValue'.freeze) %>
             <%= f.radio_button :data_type,
-                               'RepositoryListValue',
-                               label: 'Dropdown',
+                               'RepositoryListValue'.freeze,
+                               label: t('libraries.manange_modal_column.labels.dropdown'),
                                inline: true,
-                               checked: checked?(@repository_column, 'RepositoryListValue'),
-                               disabled: disabled?(@repository_column, 'RepositoryListValue') %>
+                               checked: checked?(@repository_column, 'RepositoryListValue'.freeze),
+                               disabled: disabled?(@repository_column, 'RepositoryListValue'.freeze) %>
           <% end %>
           <input class="form-control"
                  data-role="tagsinput"
                  style="display: none"
                  data-value="<%= @repository_column.repository_list_items.pluck(:data) %>"
                  />
+          <br />
+          <span style="display: none" data-role="tagsimput-label"><%=t 'libraries.manange_modal_column.dropdown_item_descirption' %></span>
         <% end %>
       </div>
       <div class="modal-footer">
@@ -57,4 +59,4 @@
       </div>
     </div>
   </div>
-</div>repository_repository_column
+</div>

@@ -987,6 +987,12 @@ en:
 
   libraries:
     manange_modal_column:
+      colum_type: "Column type"
+      dropdown_item_descirption: "Dropdown items should be separated by comma."
+      labels:
+        text: "Text"
+        file: "File"
+        dropdown: "Dropdown"
       new:
         title: "Add New Column"
       edit:
