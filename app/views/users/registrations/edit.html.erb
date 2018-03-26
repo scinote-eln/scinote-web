@@ -21,7 +21,7 @@
             <%= form_for(resource,
                          as: resource_name,
                          url: registration_path(resource_name),
-                         html: { method: :put, "data-for" => "avatar", id: 'user-avatar-field' }) do |f| %>
+                         html: { method: :put, "data-for" => "avatar", 'data-turbolinks' => false, id: 'user-avatar-field' }) do |f| %>
               <%= hidden_field_tag "user[change_avatar]", "true" %>
               <div data-part="view">
                 <div class="form-group">
@@ -60,7 +60,7 @@
                          as: resource_name,
                          url: registration_path(resource_name, format: :json),
                          remote: true,
-                         html: { method: :put, "data-for" => "full_name", class: 'settings-page-full-name', id: 'user-full_name-field' }) do |f| %>
+                         html: { method: :put, "data-for" => "full_name", 'data-turbolinks' => false, class: 'settings-page-full-name', id: 'user-full_name-field' }) do |f| %>
               <div data-part="view">
                 <div class="form-group">
                   <%= f.label t("users.registrations.edit.name_label") %>
@@ -91,7 +91,7 @@
                          as: resource_name,
                          url: registration_path(resource_name, format: :json),
                          remote: true,
-                         html: { method: :put, "data-for" => "initials", class: 'settings-page-initials', id: 'user-initials-field' }) do |f| %>
+                         html: { method: :put, "data-for" => "initials", 'data-turbolinks' => false, class: 'settings-page-initials', id: 'user-initials-field' }) do |f| %>
               <div data-part="view">
                 <div class="form-group">
                   <%= f.label t("users.registrations.edit.initials_label") %>
@@ -122,7 +122,7 @@
                          as: resource_name,
                          url: registration_path(resource_name, format: :json),
                          remote: true,
-                         html: { method: :put, "data-for" => "email", class: 'settings-page-email', id: 'user-email-field' }) do |f| %>
+                         html: { method: :put, "data-for" => "email", 'data-turbolinks' => false, class: 'settings-page-email', id: 'user-email-field' }) do |f| %>
               <div data-part="view">
                 <div class="form-group">
                   <%= f.label t("users.registrations.edit.email_label") %>
@@ -163,7 +163,7 @@
                          as: resource_name,
                          url: registration_path(resource_name, format: :json),
                          remote: true,
-                         html: { method: :put, "data-for" => "password", class: 'settings-page-change-password', id: 'user-password-field' }) do |f| %>
+                         html: { method: :put, "data-for" => "password", 'data-turbolinks' => false, class: 'settings-page-change-password', id: 'user-password-field' }) do |f| %>
               <%= hidden_field_tag "user[change_password]", "true" %>
               <div data-part="view">
                 <div class="form-group">
