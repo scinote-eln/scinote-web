@@ -112,6 +112,8 @@ en:
   sidebar:
     title: "Navigation"
     no_module_group: "No workflow"
+    projects:
+      all: "All Projects"
 
   nav2:
     projects:
