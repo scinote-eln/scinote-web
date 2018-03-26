@@ -30,6 +30,7 @@ gem 'bootstrap3-datetimepicker-rails', '~> 4.15.35'
 gem 'bootstrap-select-rails', '~> 1.6.3'
 gem 'uglifier', '>= 1.3.0'
 # jQuery & plugins
+gem 'jquery-turbolinks'
 gem 'jquery-rails'
 gem 'jquery-ui-rails'
 gem 'jquery-scrollto-rails',
@@ -41,7 +42,7 @@ gem 'spinjs-rails'
 gem 'autosize-rails' # jQuery autosize plugin
 
 gem 'underscore-rails'
-gem 'turbolinks', '~> 5.0.1'
+gem 'turbolinks', '~> 2.0'
 gem 'sdoc', '~> 0.4.0', group: :doc
 gem 'bcrypt', '~> 3.1.10'
 gem 'logging', '~> 2.0.0'
