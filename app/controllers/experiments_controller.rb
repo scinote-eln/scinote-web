@@ -11,6 +11,7 @@ class ExperimentsController < ApplicationController
   before_action :set_project,
                 only: [:new, :create, :samples_index, :samples, :module_archive,
                        :clone_modal, :move_modal, :delete_samples]
+  before_action :load_projects_by_teams, only: %i(canvas samples)
   before_action :check_view_permissions,
                 only: [:canvas, :module_archive]
   before_action :check_manage_permissions, only: :edit
@@ -346,6 +347,10 @@ class ExperimentsController < ApplicationController
 
   def experiment_params
     params.require(:experiment).permit(:name, :description, :archived)
+  end
+
+  def load_projects_by_teams
+    @projects_by_teams = current_user.projects_by_teams
   end
 
   def check_view_permissions
