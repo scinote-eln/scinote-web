@@ -76,13 +76,6 @@ en:
       settings: "Settings"
       logout: "Log out"
       about: "About sciNote"
-    help:
-      tutorials: "Tutorials"
-      release_notes: "Release notes"
-      support: "Customer support"
-      premium: "Premium"
-      contact: "Contact us"
-      about: "About sciNote"
     activities:
       none: "No activities!"
     label:
@@ -110,7 +103,11 @@ en:
     reports: "Reports"
     settings: "Settings"
     activities: "Activities"
-    help: "Help"
+    support: "Support"
+    support_links:
+      support: "Support Center"
+      tutorials: "Video tutorials"
+      webinars: "Webinars"
 
   sidebar:
     title: "Navigation"
