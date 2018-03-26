@@ -58,6 +58,7 @@ Canaid::Permissions.register_for(MyModule) do
   # permissions
   %i(manage_module
      manage_users_in_module
+     assign_repository_rows_to_module
      assign_sample_to_module
      complete_module
      create_comments_in_module)
@@ -88,9 +89,15 @@ Canaid::Permissions.register_for(MyModule) do
     user.is_owner_of_project?(my_module.experiment.project)
   end
 
-  # module: assign/unassign sample, assign/unassign repository record
+  # module: assign/unassign repository record
   # NOTE: Use 'module_page? &&' before calling this permission!
   can :assign_repository_rows_to_module do |user, my_module|
+    user.is_technician_or_higher_of_project?(my_module.experiment.project)
+  end
+
+  # module: assign/unassign sample
+  # NOTE: Use 'module_page? &&' before calling this permission!
+  can :assign_sample_to_module do |user, my_module|
     user.is_technician_or_higher_of_project?(my_module.experiment.project)
   end
 
