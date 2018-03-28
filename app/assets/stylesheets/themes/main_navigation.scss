@@ -12,9 +12,9 @@
   }
 
   #count-notifications {
-    background-color: $color-theme-primary;
+    background-color: $brand-primary;
     border-radius: 5px;
-    color: $color-wild-sand;
+    color: $color-concrete;
     display: none;
     font-size: 11px;
     font-weight: bold;
@@ -69,7 +69,7 @@
   }
 
   .unseen {
-    border-left: 4px solid $color-theme-primary;
+    border-left: 4px solid $brand-primary;
   }
 
   .text-center {
@@ -84,9 +84,9 @@
   }
 
   .assignment {
-    background-color: $color-theme-primary;
+    background-color: $brand-primary;
     border-radius: 50%;
-    color: $color-wild-sand;
+    color: $color-concrete;
     display: block;
     font-size: 23px;
     height: 45px;
@@ -95,9 +95,9 @@
   }
 
   .deliver {
-    background-color: $color-orange;
+    background-color: $brand-warning;
     border-radius: 50%;
-    color: $color-wild-sand;
+    color: $color-concrete;
     display: block;
     font-size: 23px;
     height: 45px;
@@ -106,9 +106,9 @@
   }
 
   .system-message {
-    background-color: $color-theme-secondary;
+    background-color: $brand-default;
     border-radius: 50%;
-    color: $color-wild-sand;
+    color: $color-concrete;
     display: block;
     font-size: 23px;
     height: 45px;
@@ -117,8 +117,8 @@
   }
 
   .notifications-dropdown-header {
-    background-color: $color-theme-primary;
-    color: $color-wild-sand;
+    background-color: $brand-primary;
+    color: $color-concrete;
     font-weight: bold;
     padding: 8px;
 
@@ -128,7 +128,7 @@
   }
 
   .notifications-dropdown-footer {
-    background-color: $color-mystic;
+    background-color: $brand-primary-light;
     padding: 8px;
     text-align: center;
   }
@@ -158,10 +158,10 @@
 }
 
 #search-bar {
-  border-color: $color-border;
+  border-color: $color-alto;
   .btn-default {
-    background-color: $color-theme-primary;
-    border-color: $color-theme-primary;
+    background-color: $brand-primary;
+    border-color: $brand-primary;
     color: $color-white;
   }
 
@@ -188,7 +188,7 @@
     padding: 10px 15px;
 
     &.active {
-      color: $color-theme-primary;
+      color: $brand-primary;
     }
   }
 
@@ -233,9 +233,9 @@
   }
 
   .assignment {
-    background-color: $color-theme-primary;
+    background-color: $brand-primary;
     border-radius: 50%;
-    color: $color-wild-sand;
+    color: $color-concrete;
     display: block !important;
     font-size: 15px;
     height: 30px;
@@ -247,9 +247,9 @@
   }
 
   .system-message {
-    background-color: $color-theme-secondary;
+    background-color: $brand-default;
     border-radius: 50%;
-    color: $color-wild-sand;
+    color: $color-concrete;
     display: block !important;
     font-size: 15px;
     height: 30px;
@@ -274,13 +274,13 @@
   }
 
   .glyphicon-ok-sign {
-    color: $color-confirmation-green;
+    color: $brand-success;
     margin-left: -10px;
     margin-right: 10px;
   }
 
   .team-name-item {
-    border-bottom: 1px solid $color-list-separator;
+    border-bottom: 1px solid $color-silver-chalice;
     padding-bottom: 8px;
     padding-top: 5px;
   }
@@ -293,13 +293,13 @@
   }
 
   .btn-group {
-    border-color: $color-border;
+    border-color: $color-alto;
     margin-top: 8px;
   }
 
   .btn-primary {
-    background-color: $color-theme-primary;
-    border-color: $color-theme-primary;
+    background-color: $brand-primary;
+    border-color: $brand-primary;
   }
 
   .dropdown-menu {
@@ -340,7 +340,7 @@
 }
 
 .custom-nav-dropdown {
-  border: 1px solid $color-border;
+  border: 1px solid $color-alto;
   padding: 10px 0 10px 30px;
 }
 

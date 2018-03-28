@@ -148,7 +148,7 @@ label {
     opacity: 0.7;
     padding: 15px;
     border-radius: 5px;
-    border: 4px $color-theme-primary solid;
+    border: 4px $brand-primary solid;
 
     .plus-icon {
       bottom: 16px !important;
@@ -166,7 +166,7 @@ label {
       .filler {
         display: block;
         height: 4px;
-        background-color: $color-theme-primary;
+        background-color: $brand-primary;
         border-radius: 1px;
         margin-top: 8px;
         margin-bottom: 8px;
@@ -183,7 +183,7 @@ label {
   }
 
   .plus-icon {
-    color: $color-theme-primary;
+    color: $brand-primary;
     display: block;
     text-align: center;
     width: 40px;
@@ -201,7 +201,7 @@ label {
   opacity: 1.0;
 
   .filler {
-    background-color: $color-theme-primary;
+    background-color: $brand-primary;
 
     .plus-icon span {
       font-weight: bold;
@@ -240,8 +240,8 @@ label {
   }
 
   &:hover {
-    background-color: $color-mystic;
-    @include box-shadow(0 0 2px 15px $color-mystic);
+    background-color: $brand-primary-light;
+    @include box-shadow(0 0 2px 15px $brand-primary-light);
 
     & > .report-element-header {
 
@@ -266,7 +266,7 @@ label {
   }
 
   &:hover > .report-element-body .project-name {
-    color: $color-theme-primary;
+    color: $brand-primary;
   }
 }
 
@@ -297,7 +297,7 @@ label {
   }
 
   &:hover > .report-element-body .module-name {
-    color: $color-theme-primary;
+    color: $brand-primary;
   }
 }
 
@@ -329,7 +329,7 @@ label {
   }
 
   &:hover > .report-element-header {
-    color: $color-theme-primary;
+    color: $brand-primary;
   }
 
   .report-element-body {
@@ -368,7 +368,7 @@ label {
 /** Step element style  */
 .report-step-element {
   &:hover > .report-element-body .step-name {
-    color: $color-theme-primary;
+    color: $brand-primary;
   }
 }
 
@@ -388,7 +388,7 @@ label {
 
   &:hover > .report-element-header {
     .attachment-icon {
-      color: $color-theme-primary;
+      color: $brand-primary;
     }
   }
 }
@@ -403,7 +403,7 @@ label {
 
   &:hover > .report-element-header {
     .table-name {
-      color: $color-theme-primary;
+      color: $brand-primary;
     }
   }
 }
@@ -417,7 +417,7 @@ label {
   }
 
   &:hover > .report-element-header .file-name {
-    color: $color-theme-primary;
+    color: $brand-primary;
   }
 }
 
@@ -438,7 +438,7 @@ label {
   }
 
   &:hover > .report-element-header .checklist-name {
-    color: $color-theme-primary;
+    color: $brand-primary;
   }
 }
 
@@ -475,7 +475,7 @@ label {
 
   &:hover > .report-element-header {
     .comments-icon,.comments-name {
-      color: $color-theme-primary;
+      color: $brand-primary;
     }
   }
 }
@@ -504,7 +504,7 @@ label {
 
   &:hover > .report-element-header {
     .samples-icon,.samples-name {
-      color: $color-theme-primary;
+      color: $brand-primary;
     }
   }
 }
@@ -524,7 +524,7 @@ label {
   &:hover > .report-element-header {
     .repository-icon,
     .repository-name {
-      color: $color-theme-primary;
+      color: $brand-primary;
     }
   }
 }
@@ -559,7 +559,7 @@ label {
 
   &:hover > .report-element-header {
     .activity-icon,.activity-name {
-      color: $color-theme-primary;
+      color: $brand-primary;
     }
   }
 }

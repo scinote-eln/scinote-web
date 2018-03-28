@@ -9,7 +9,7 @@ body {
 }
 
 .label-primary {
-  background-color: $color-theme-primary;
+  background-color: $brand-primary;
 }
 
 .btn {
@@ -17,18 +17,18 @@ body {
 }
 
 .btn-primary {
-  background-color: $color-theme-secondary;
-  border-color: darken($color-theme-secondary, 5%);
+  background-color: $brand-default;
+  border-color: darken($brand-default, 5%);
 
   &.active,
   &.focus,
   &.active.focus {
-    background-color: darken($color-theme-secondary, 20%);
-    border-color: darken($color-theme-secondary, 25%);
+    background-color: darken($brand-default, 20%);
+    border-color: darken($brand-default, 25%);
 
     &:hover {
-      background-color: darken($color-theme-secondary, 25%);
-      border-color: darken($color-theme-secondary, 30%);
+      background-color: darken($brand-default, 25%);
+      border-color: darken($brand-default, 30%);
     }
   }
 
@@ -38,19 +38,19 @@ body {
   &:active:hover,
   &:focus:hover,
   &:active:focus:hover {
-    background-color: darken($color-theme-secondary, 20%);
-    border-color: darken($color-theme-secondary, 25%);
+    background-color: darken($brand-default, 20%);
+    border-color: darken($brand-default, 25%);
   }
 
   &:hover {
-    background-color: darken($color-theme-secondary, 5%);
-    border-color: darken($color-theme-secondary, 10%);
+    background-color: darken($brand-default, 5%);
+    border-color: darken($brand-default, 10%);
   }
 }
 
 // tags input
 .react-tagsinput--focused {
-  border-color: $color-theme-primary;
+  border-color: $brand-primary;
 }
 
 .react-tagsinput-input {
@@ -58,7 +58,7 @@ body {
 }
 
 .react-tagsinput-tag {
-  background-color: $color-theme-primary;
+  background-color: $brand-primary;
   border: 0;
   color: $color-white;
   font-weight: bold;
