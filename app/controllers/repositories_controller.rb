@@ -11,7 +11,7 @@ class RepositoriesController < ApplicationController
   before_action :check_create_permissions, only:
     %i(create_new_modal create copy_modal copy)
 
-  # layout 'fluid'
+  layout 'fluid'
 
   def index
     unless @repositories.length.zero? && current_team
