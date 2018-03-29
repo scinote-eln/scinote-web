@@ -75,12 +75,6 @@ en:
     user:
       settings: "Settings"
       logout: "Log out"
-    help:
-      tutorials: "Tutorials"
-      release_notes: "Release notes"
-      support: "Customer support"
-      premium: "Premium"
-      contact: "Contact us"
       about: "About sciNote"
     activities:
       none: "No activities!"
@@ -109,11 +103,17 @@ en:
     reports: "Reports"
     settings: "Settings"
     activities: "Activities"
-    help: "Help"
+    support: "Support"
+    support_links:
+      support: "Support Center"
+      tutorials: "Video tutorials"
+      webinars: "Webinars"
 
   sidebar:
     title: "Navigation"
     no_module_group: "No workflow"
+    projects:
+      all: "All Projects"
 
   nav2:
     projects:
@@ -944,6 +944,7 @@ en:
     column_new_text: "New column"
     column_create: "Create"
     columns_delete: "Delete"
+    columns_reorder: "Re-Order Columns"
     columns_visibility: "Visible columns"
     view_all_records: "View all items"
     view_assigned_records: "View assigned items"

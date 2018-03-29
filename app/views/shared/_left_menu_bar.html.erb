@@ -1,48 +1,67 @@
 <div id="left-menu-bar" class="menu-bar">
   <ul class="nav">
     <li class="<%= "active" if projects_are_selected? %>">
-      <a id="projects-link" title="<%= t('left_menu_bar.projects') %>" href="<%= projects_path %>">
+      <%= link_to projects_path, id: "projects-link", class: "toggle-sidebar-link", title: t('left_menu_bar.projects') do %>
         <span class="glyphicon glyphicon-home"></span>
         <span><%= t('left_menu_bar.projects') %></span>
-      </a>
+      <% end %>
     </li>
     <li class="<%= "active" if repositories_are_selected? %>">
-      <a id="repositories-link" title="<%= t('left_menu_bar.repositories') %>" href="<%= team_repositories_path current_team %>">
+      <%= link_to team_repositories_path(current_team), id: "repositories-link", title: t('left_menu_bar.repositories') do %>
         <span class="fa fa-cubes" aria-hidden="true"></span>
         <span><%= t('left_menu_bar.repositories') %></span>
-      </a>
+      <% end %>
     </li>
     <li class="<%= "active" if templates_are_selected? %>">
-      <a id="templates-link" title="<%= t('left_menu_bar.templates') %>" href="<%= protocols_path %>">
+      <%= link_to protocols_path, id: "templates-link", title: t('left_menu_bar.templates') do %>
         <span class="glyphicon glyphicon-list-alt"></span>
         <span><%= t('left_menu_bar.templates') %></span>
-      </a>
+      <% end %>
     </li>
     <li class="<%= "active" if reports_are_selected? %>">
-      <a id="reports-link" title="<%= t('left_menu_bar.reports') %>" href="#">
+      <%= link_to "#", id: "reports-link", title: t('left_menu_bar.reports') do %>
         <span class="glyphicon glyphicon-indent-left"></span>
         <span><%= t('left_menu_bar.reports') %></span>
-      </a>
+      <% end %>
     </li>
     <li class="<%= "active" if settings_are_selected? %>">
-      <a id="settings-link" title="<%= t('left_menu_bar.settings') %>" href="<%= edit_user_registration_path %>">
+      <%= link_to edit_user_registration_path, id: "settings-link", title: t('left_menu_bar.settings') do %>
         <span class="glyphicon glyphicon-cog"></span>
         <span><%= t('left_menu_bar.settings') %></span>
-      </a>
+      <% end %>
     </li>
   </ul>
   <ul class="nav nav-bottom">
     <li class="<%= "active" if activities_are_selected? %>">
-      <a id="activities-link" title="<%= t('left_menu_bar.activities') %>" href="<%= activities_path %>">
+      <%= link_to activities_path, id: "activities-link", title: t('left_menu_bar.activities') do %>
         <span class="glyphicon glyphicon-equalizer"></span>
         <span><%= t('left_menu_bar.activities') %></span>
-      </a>
+      <% end %>
     </li>
-    <li class="<%= "active" if help_is_selected? %>">
-      <a id="activities-link" title="<%= t('left_menu_bar.help') %>" href="#">
+    <!-- support -->
+    <li class="dropup">
+      <a href="#"
+         id="support-link"
+         class="dropdown-toggle"
+         title="<%= t('left_menu_bar.support') %>"
+         data-toggle="dropdown"
+         role="button"
+         aria-haspopup="true"
+         aria-expanded="false">
         <span class="glyphicon glyphicon-paperclip"></span>
-        <span><%= t('left_menu_bar.help') %></span>
+        <span><%= t('left_menu_bar.support') %></span>
       </a>
+      <ul class="dropdown-menu">
+        <li><%= link_to t('left_menu_bar.support_links.support'),
+                          Constants::SUPPORT_URL,
+                          target: "_blank" %></li>
+        <li><%= link_to t('left_menu_bar.support_links.tutorials'),
+                          Constants::TUTORIALS_URL,
+                          target: "_blank" %></li>
+        <li><%= link_to t('left_menu_bar.support_links.webinars'),
+                          Constants::WEBINARS_URL,
+                          target: "_blank" %></li>
+      </ul>
     </li>
   </ul>
 </div>

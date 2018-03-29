@@ -1011,102 +1011,6 @@ var RepositoryDatatable = (function(global) {
 
   var dropdown, dropdownList;
 
-  function createNewColumn() {
-    // Make an Ajax request to repository_columns_controller
-    var url = $('#new-column-form').data('action');
-    var columnName = $('#new-column-name').val();
-    if (columnName.length > 0) {
-      $.ajax({
-        method: 'POST',
-        dataType: 'json',
-        data: {repository_column: {name: columnName}},
-        error: function(data) {
-          var form = $('#new-column-form');
-          form.addClass('has-error');
-          form.find('.help-block').remove();
-          form.append('<span class="help-block">' +
-            data.responseJSON.name +
-            '</span>');
-        },
-        success: function(data) {
-          var form = $('#new-column-form');
-          form.find('.help-block').remove();
-          if (form.hasClass('has-error')) {
-            form.removeClass('has-error');
-          }
-          $('#new-column-name').val('');
-          form.append('<span class="help-block">' +
-            I18n.t('repositories.js.column_added') +
-            '</span>');
-
-          // Preserve save/delete buttons as we need them after new table
-          // will be created
-          $('div.toolbarButtons').appendTo('div.repository-table');
-          $('div.toolbarButtons').hide();
-
-          // Destroy datatable
-          TABLE.destroy();
-
-          // Add number of columns
-          $(TABLE_ID).data('num-columns',
-            $(TABLE_ID).data('num-columns') + 1);
-          // Add column to table (=table header)
-          originalHeader.append(
-            '<th class="repository-column" id="' + data.id + '" ' +
-            'data-editable data-deletable ' +
-            'data-edit-url="' + data.edit_url + '" ' +
-            'data-update-url="' + data.update_url + '" ' +
-            'data-destroy-html-url="' + data.destroy_html_url + '"' +
-            '>' + generateColumnNameTooltip(data.name) + '</th>');
-
-          // Remove all event handlers as we re-initialize them later with
-          // new table
-          $(TABLE_ID).off();
-          $(TABLE_ID +' thead').empty();
-          $(TABLE_ID + ' thead').append(originalHeader);
-
-          // Re-initialize datatable
-          TABLE = dataTableInit();
-          TABLE.on('init.dt', function() {
-            loadColumnsNames();
-            dropdownOverflow();
-          });
-        },
-        url: url
-      });
-    } else {
-      var form = $('#new-column-form');
-      form.addClass('has-error');
-      form.find('.help-block').remove();
-      form.append('<span class="help-block">' +
-        I18n.t('repositories.js.empty_column_name') +
-        '</span>');
-    }
-  }
-
-  function initNewColumnForm() {
-    $('#repository-columns-dropdown').on('show.bs.dropdown', function() {
-      // Clear input and errors when dropdown is opened
-      var input = $(this).find('input#new-column-name');
-      input.val('');
-      var form = $('#new-column-form');
-      if (form.hasClass('has-error')) {
-        form.removeClass('has-error');
-      }
-      form.find('.help-block').remove();
-    });
-    $('#add-new-column-button').click(function(e) {
-      e.stopPropagation();
-      createNewColumn();
-    });
-    $('#new-column-name').keydown(function(e) {
-      if (e.keyCode === 13) {
-        e.preventDefault();
-        createNewColumn();
-      }
-    });
-  }
-
   // loads the columns names in the dropdown list
   function loadColumnsNames() {
     // Save scroll position
@@ -1117,13 +1021,9 @@ var RepositoryDatatable = (function(global) {
       if (index > 1) {
         var colIndex = $(el).attr('data-column-index');
         var visible = TABLE.column(colIndex).visible();
-        var editable = $(el).is('[data-editable]');
-        var deletable = $(el).is('[data-deletable]');
 
         var visClass = (visible) ? 'glyphicon-eye-open' : 'glyphicon-eye-close';
         var visLi = (visible) ? '' : 'col-invisible';
-        var editClass = (editable) ? '' : 'disabled';
-        var delClass = (deletable) ? '' : 'disabled';
 
         var thederName;
         if ($(el).find('.modal-tooltiptext').length > 0) {
@@ -1132,36 +1032,20 @@ var RepositoryDatatable = (function(global) {
           thederName = el.innerText;
         }
 
-        var html =
-          '<li ' +
-          'data-position="' + colIndex + '" ' +
-          'data-id="' + $(el).attr('id') + '" ' +
-          'data-edit-url=' + $(el).attr('data-edit-url') + ' ' +
-          'data-update-url=' + $(el).attr('data-update-url') + ' ' +
-          'data-destroy-html-url=' + $(el).attr('data-destroy-html-url') + ' ' +
-          'class="' + visLi + '"><i class="grippy"></i> ' +
-          '<span class="text">' + generateColumnNameTooltip(thederName) +
-          '</span> ' +
-          '<span class="form-group"><input type="text" class="text-edit ' +
-            'form-control" style="display: none;" />' +
-          '<span class="pull-right controls">' +
-          '<span class="ok glyphicon glyphicon-ok" style="display: none;" ' +
-            'title="' + $(TABLE_ID).data('save-text') + '"></span>' +
-          '<span class="cancel glyphicon glyphicon-remove" ' +
-            'style="display: none;" ' +
-            'title="' + $(TABLE_ID).data('cancel-text') +
-            '"></span>' +
-          '<span class="vis glyphicon ' + visClass + '" title="' +
-            $(TABLE_ID).data('columns-visibility-text') + '">' +
-          '</span> ' +
-          '<span class="edit glyphicon glyphicon-pencil ' + editClass +
-            '" title="' + $(TABLE_ID).data('edit-text') +
-            '"></span>' +
-          '<span class="del glyphicon glyphicon-trash ' + delClass +
-            '" title="' + $(TABLE_ID).data('columns-delete-text') +
-            '"></span>' +
-          '</span><br></span></li>';
-        dropdownList.append(html);
+        var listItem = dropdownList
+                   .find('.repository-columns-list-template')
+                   .clone();
+
+        listItem.attr('data-position', colIndex);
+        listItem.attr('data-id', $(el).attr('id'));
+        listItem.addClass(visLi);
+        listItem.removeClass('repository-columns-list-template hide');
+        listItem.find('.text').text(generateColumnNameTooltip(thederName));
+        listItem.find('.vis').addClass(visClass);
+        listItem.find('.vis')
+                .attr('title', $(TABLE_ID).data('columns-visibility-text'));
+
+        dropdownList.append(listItem);
       }
     });
     // Restore scroll position
@@ -1218,7 +1102,7 @@ var RepositoryDatatable = (function(global) {
 
   function initSorting() {
     dropdownList.sortable({
-      items: 'li:not(.add-new-column-form)',
+      items: 'li:not(.repository-columns-list-template)',
       cancel: '.new-repository-column',
       axis: 'y',
       update: function() {
@@ -1232,256 +1116,6 @@ var RepositoryDatatable = (function(global) {
         reorderer.order(listIds, false);
         loadColumnsNames();
       }
-    });
-  }
-
-  function initEditColumns() {
-    function cancelEditMode() {
-      dropdownList.find('.text-edit').hide();
-      dropdownList.find('.controls .ok,.cancel').hide();
-      dropdownList.find('.text').css('display', ''); // show() doesn't work
-      dropdownList.find('.controls .vis,.edit,.del').css('display', ''); // show() doesn't work
-    }
-
-    function editColumn(li) {
-      var id = li.attr('data-id');
-      var text = li.find('.text');
-      var textEdit = li.find('.text-edit');
-      var newName = textEdit.val().trim();
-      var url = li.attr('data-update-url');
-
-      $.ajax({
-        url: url,
-        type: 'PUT',
-        data: {repository_column: {name: newName}},
-        dataType: 'json',
-        success: function() {
-          dropdownList.sortable('enable');
-          $(li).clearFormErrors();
-          text.html(generateColumnNameTooltip(newName));
-          $(TABLE.columns().header()).filter('#' + id)
-            .html(generateColumnNameTooltip(newName));
-          originalHeader.find('#' + id).html(newName);
-          cancelEditMode();
-          initHeaderTooltip();
-        },
-        error: function(xhr) {
-          dropdownList.sortable('disable');
-          $(li).clearFormErrors();
-          var msg = $.parseJSON(xhr.responseText);
-
-          renderFormError(xhr,
-                          $(li).find('.text-edit'),
-                          Object.keys(msg)[0] + ' ' + msg.name.toString());
-          var verticalHeight = $(li).offset().top;
-          dropdownList.scrollTo(verticalHeight, 0);
-        }
-      });
-    }
-
-    // On edit buttons click (bind onto master dropdown list)
-    dropdownList.on('click', '.edit:not(.disabled)', function(event) {
-      event.stopPropagation();
-
-      // Clear all input errors
-      _.each(dropdownList, function(el) {
-        $(el).clearFormErrors();
-      });
-
-      cancelEditMode();
-
-      var li = $(this).closest('li');
-      var url = li.attr('data-edit-url');
-      ajaxCallEvent();
-
-      function ajaxCallEvent() {
-        $.ajax({
-          url: url,
-          success: function() {
-            var text;
-            var textEdit;
-            var controls;
-            var controlsEdit;
-            text = li.find('.text');
-            if ($(text).find('.modal-tooltiptext').length > 0) {
-              text = $(text).find('.modal-tooltiptext');
-            }
-            textEdit = li.find('.text-edit');
-            controls = li.find('.controls .vis,.edit,.del');
-            controlsEdit = li.find('.controls .ok,.cancel');
-
-            // Toggle edit mode
-            li.addClass('editing');
-
-            // Set the text-edit's value
-            textEdit.val(text.text().trim());
-
-            // Toggle elements
-            text.hide();
-            controls.hide();
-            textEdit.css('display', ''); // show() doesn't work
-            controlsEdit.css('display', ''); // show() doesn't work
-            dropdownList.sortable('disable');
-            dropdownList.on('click', function(ev) {
-              ev.stopPropagation();
-            });
-            // Focus input
-            textEdit.focus();
-          },
-          error: function(e) {
-            $(li).clearFormErrors();
-            var msg = $.parseJSON(e.responseText);
-
-            renderFormError(undefined,
-                            $(li).find('.text-edit'),
-                            msg.name.toString());
-            var verticalHeight = $(li).offset().top;
-            dropdownList.scrollTo(verticalHeight, 0);
-            setTimeout(function() {
-              $(li).clearFormErrors();
-            }, 5000);
-          }
-        });
-      }
-    });
-
-    // On hiding dropdown, cancel edit mode throughout dropdown
-    dropdown.on('hidden.bs.dropdown', function() {
-      cancelEditMode();
-    });
-
-    // On OK buttons click
-    dropdownList.on('click', '.ok', function(event) {
-      event.stopPropagation();
-      dropdownList.sortable('enable');
-      var self = $(this);
-      var li = self.closest('li');
-      $(li).clearFormErrors();
-      editColumn(li);
-    });
-
-    // On enter click while editing column text
-    dropdownList.on('keydown', 'input.text-edit', function(event) {
-      if (event.keyCode === 13) {
-        event.preventDefault();
-        dropdownList.sortable('enable');
-        var self = $(this);
-        var li = self.closest('li');
-        $(li).clearFormErrors();
-        editColumn(li);
-      }
-    });
-
-    // On cancel buttons click
-    dropdownList.on('click', '.cancel', function(event) {
-      event.stopPropagation();
-      dropdownList.sortable('enable');
-      var self = $(this);
-      var li = self.closest('li');
-      $(li).clearFormErrors();
-      li.removeClass('editing');
-
-      li.find('.text-edit').hide();
-      li.find('.controls .ok,.cancel').hide();
-      li.find('.text').css('display', ''); // show() doesn't work
-      li.find('.controls .vis,.edit,.del').css('display', ''); // show() doesn't work
-    });
-  }
-
-  function initDeleteColumns() {
-    var modal = $('#deleteRepositoryColumn');
-
-    dropdownList.on('click', '.del', function(event) {
-      event.stopPropagation();
-
-      var self = $(this);
-      var li = self.closest('li');
-      var url = li.attr('data-destroy-html-url');
-      var colIndex = originalHeader.find('#' + li.attr('data-id')).index();
-
-      $.ajax({
-        url: url,
-        type: 'POST',
-        dataType: 'json',
-        data: {column_index: colIndex},
-        success: function(data) {
-          var modalBody = modal.find('.modal-body');
-
-          // Inject the body's HTML into modal
-          modalBody.html(data.html);
-
-          // Show the modal
-          modal.modal('show');
-        },
-        error: function(xhr) {
-          dropdownList.sortable('disable');
-          $(li).clearFormErrors();
-          var msg = $.parseJSON(xhr.responseText);
-
-          renderFormError(undefined,
-                          $(li).find('.text-edit'),
-                          msg.name.toString());
-          var verticalHeight = $(li).offset().top;
-          dropdownList.scrollTo(verticalHeight, 0);
-          setTimeout(function() {
-            $(li).clearFormErrors();
-          }, 5000);
-        }
-      });
-    });
-
-    modal.find('.modal-footer [data-action=delete]').on('click', function() {
-      var modalBody = modal.find('.modal-body');
-      var form = modalBody.find('[data-role=destroy-repository-column-form]');
-      var id = form.attr('data-id');
-
-      form
-      .on('ajax:success', function() {
-        // Preserve save/delete buttons as we need them after new table
-        // will be created
-        $('div.toolbarButtons').appendTo('div.repository-table');
-        $('div.toolbarButtons').hide();
-
-        // Destroy datatable
-        TABLE.destroy();
-
-        // Subtract number of columns
-        $(TABLE_ID).data(
-          'num-columns',
-          $(TABLE_ID).data('num-columns') - 1
-        );
-
-        // Remove column from table (=table header) & rows
-        var th = originalHeader.find('#' + id);
-        var index = th.index();
-        th.remove();
-        $(TABLE_ID + ' tbody td:nth-child(' + (index + 1) + ')').remove();
-
-        // Remove all event handlers as we re-initialize them later with
-        // new table
-        $(TABLE_ID).off();
-        $(TABLE_ID + ' thead').empty();
-        $(TABLE_ID + ' thead').append(originalHeader);
-
-        // Re-initialize datatable
-        TABLE = dataTableInit();
-        loadColumnsNames();
-
-        // Hide modal
-        modal.modal('hide');
-      })
-      .on('ajax:error', function() {
-        // TODO
-      });
-
-      form.submit();
-    });
-
-    modal.on('hidden.bs.modal', function() {
-      // Remove event handlers, clear contents
-      var modalBody = modal.find('.modal-body');
-      modalBody.off();
-      modalBody.html('');
     });
   }
 
@@ -1510,10 +1144,8 @@ var RepositoryDatatable = (function(global) {
     TABLE.on('init.dt', function() {
       dropdown = $('#repository-columns-dropdown');
       dropdownList = $('#repository-columns-list');
-      initNewColumnForm();
       initSorting();
       toggleColumnVisibility();
-      initEditColumns();
     });
     $('#repository-columns-dropdown').on('show.bs.dropdown', function() {
       loadColumnsNames();

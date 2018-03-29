@@ -169,7 +169,7 @@ function setupSidebarTree() {
   // Get the session-stored elements
   var collapsedIds = sessionGetCollapsedSidebarElements();
 
-  // Get the current project stered elements
+  // Get the current project stored elements
   var currentProjectIds = _.findWhere(collapsedIds, { prid: project });
   if ( currentProjectIds ){
     currentProjectIds.ids = _.filter(currentProjectIds.ids,
@@ -241,6 +241,15 @@ function setupSidebarTree() {
     e.stopPropagation();
     return false;
   });
+
+  // Add bold style to all levels of selected element
+  $(".tree li.active ")
+  .parents('.parent_li[data-parent="candidate"]')
+  .find("> span a")
+  .css("font-weight", "bold");
+
+  // Add custom borders to tree links
+  $(".tree li span.tree-link ").after("<div class='border-custom'></div>");
 }
 
 /**
@@ -260,7 +269,7 @@ function initializeSidebarToggle() {
     $(".navbar-secondary").addClass("navbar-without-sidebar");
   }
 
-  $("#toggle-sidebar-link").on("click", function() {
+  $(".toggle-sidebar-link").on("click", function() {
     $("#wrapper").toggleClass("toggled");
     sessionToggleSidebar();
     $(".navbar-secondary").toggleClass("navbar-without-sidebar", sessionIsSidebarToggled());

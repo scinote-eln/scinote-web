@@ -1,65 +1,86 @@
-@import 'constants';
+@import "constants";
 @import "mixins";
 
 .tree {
   height: 100%;
   padding-bottom: 30px;
-}
-.tree > ul {
-  margin-bottom: 0;
-}
-.tree ul {
-  padding-left: 0;
-}
-.tree li {
-  list-style-type: none;
-  margin: 0;
-  padding: 5px 5px 5px 15px;
-  position: relative;
 
-  &.active > span {
+  ul {
+    padding-left: 0;
+  }
+
+  > ul {
+    margin-bottom: 0;
+  }
+
+  .no-indent {
     background-color: $color-white;
-    border: 1px solid $color-white;
-    border-radius: 4px;
-    font-weight: bold;
   }
 
-  &.active:not span.tree-link:hover {
-    text-decoration: underline;
+  .first-indent {
+    background-color: $color-wild-sand;
+    padding-left: 30px;
   }
 
-  &.leaf {
-    padding-left: 10px;
-    .tree-link::before {
-      content: "\25B8";
+  .second-indent {
+    background-color: $color-gainsboro;
+    padding-left: 60px;
+  }
+
+  li {
+    list-style-type: none;
+    margin: 0;
+    position: relative;
+
+    span {
+      display: block;
+      padding: 15px;
+
+      &.my-module-group-element {
+        border: 0;
+        padding: 0;
+      }
+
+      &.glyphicon-map-marker {
+        border: 0;
+        display: inline-block;
+        padding: 0;
+      }
+    }
+
+    &.active > span {
+      background-color: $color-theme-primary;
+      color: $color-white;
+      font-weight: bold;
+
+      &.first-indent > span,
+      &.no-indent > span {
+        border: 0;
+        display: inline-block;
+        padding: 0;
+      }
+    }
+
+    i.glyphicon {
+      font-size: 9pt;
+
+      &.expanded {
+        @include rotate(90deg);
+      }
+    }
+
+    // Links are recolored
+    a {
+      color: $color-emperor;
+
+      &:hover {
+        color: $color-theme-primary;
+      }
+    }
+
+    .border-custom {
+      box-shadow: 0 -.25px 0 .25px $color-alto;
+      margin: 0 15px;
     }
   }
-
-  & i.glyphicon {
-    font-size: 9pt;
-
-    &.expanded {
-      @include rotate(45deg);
-    }
-  }
-
-  /* Links are recolored */
-  a {
-    color: $color-emperor;
-
-    &:hover {
-      color: $color-theme-primary;
-    }
-  }
-
-  span {
-    display:inline-block;
-    padding:3px 8px;
-  }
-}
-.tree li.parent_li>span {
-  display: block;
-}
-.tree li:last-child::before {
-  height:30px;
 }

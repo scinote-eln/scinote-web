@@ -17,6 +17,8 @@ class MyModulesController < ApplicationController
   before_action :load_repository, only: %i(assign_repository_records
                                            unassign_repository_records
                                            repository_index)
+  before_action :load_projects_by_teams,
+                only: %i(protocols results activities samples repository)
   before_action :check_manage_permissions,
                 only: %i(update destroy description due_date)
   before_action :check_view_info_permissions, only: :show
@@ -603,6 +605,10 @@ class MyModulesController < ApplicationController
     @repository = Repository.find_by_id(params[:repository_id])
     render_404 unless @repository
     render_403 unless can_read_team?(@repository.team)
+  end
+
+  def load_projects_by_teams
+    @projects_by_teams = current_user.projects_by_teams
   end
 
   def check_manage_permissions

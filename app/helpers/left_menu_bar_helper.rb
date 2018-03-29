@@ -24,8 +24,4 @@ module LeftMenuBarHelper
   def activities_are_selected?
     controller_name == 'activities'
   end
-
-  def help_is_selected?
-    # TODO
-  end
 end
