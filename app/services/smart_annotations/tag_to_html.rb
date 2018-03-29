@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'smart_annotations/permision_eval'
 require 'smart_annotations/preview'
 
