@@ -48,6 +48,10 @@
                           class: "rename-repo-option",
                           remote: true %>
             </li>
+            <li>
+              <%= link_to t('repositories.index.options_dropdown.manage_columns'),
+                          repository_repository_columns_path(repository) %>
+            </li>
           <% end %>
           <% if can_create_repositories?(repository.team) %>
             <li>

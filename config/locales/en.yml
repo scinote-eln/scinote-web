@@ -888,6 +888,7 @@ en:
         rename: "Rename"
         copy: "Copy"
         delete: "Delete"
+        manage_columns: 'Manage Columns'
       modal_delete:
         title_html: "Delete repository <em>%{name}</em>"
         message_html: "Are you sure you want to delete repository <em>%{name}</em>? This action is irreversible."
