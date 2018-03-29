@@ -157,21 +157,6 @@
   padding-left: 45px;
 }
 
-#search-bar {
-  border-color: $color-alto;
-  .btn-default {
-    background-color: $brand-primary;
-    border-color: $brand-primary;
-    color: $color-white;
-  }
-
-  input {
-    border-bottom-left-radius: 0;
-    border-top-left-radius: 0;
-    width: 300px;
-  }
-}
-
 /** Search */
 .nav-search {
   li.disabled {
@@ -286,20 +271,12 @@
   }
 
   .btn-default {
-    border-bottom-left-radius: 0;
-    border-top-left-radius: 0;
     text-align: right;
     width: 300px;
   }
 
   .btn-group {
-    border-color: $color-alto;
     margin-top: 8px;
-  }
-
-  .btn-primary {
-    background-color: $brand-primary;
-    border-color: $brand-primary;
   }
 
   .dropdown-menu {

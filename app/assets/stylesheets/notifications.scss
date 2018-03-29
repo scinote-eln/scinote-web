@@ -82,21 +82,6 @@
   }
 }
 
-
-.notifications-footer {
-
-  background-color: $brand-primary-light;
-
-  .btn-more-notifications {
-    border-bottom: 1px solid $color-alto;
-    border-left: 1px solid $color-alto;
-    border-right: 1px solid $color-alto;
-    margin: 0;
-    padding: 8px;
-    text-align: center;
-
-    &:hover {
-      background-color: $brand-primary-light;
-    }
-  }
+.btn-more-notifications {
+  margin-top: 15px;
 }

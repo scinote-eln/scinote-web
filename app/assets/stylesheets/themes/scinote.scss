@@ -1,7 +1,6 @@
 @import 'constants';
 @import "mixins";
 @import "main_navigation";
-@import "buttons";
 
 /** Layout **/
 
@@ -1241,9 +1240,19 @@ table.dataTable {
   position: absolute;
   z-index: 10;
 
-  .btn-greyed {
+  .btn-grey {
+    background-color: $color-silver-chalice;
+    border-color: $color-silver-chalice;
     border-radius: 0;
+    color: $color-white;
     width: 100px;
+
+    &:hover,
+    &:focus {
+      background-color: darken($color-silver-chalice, 15%);
+      border-color: darken($color-silver-chalice, 15%);
+      color: $color-white;
+    }
   }
 }
 
@@ -1386,15 +1395,6 @@ textarea.textarea-sm {
       -webkit-padding-before: 0;
       -webkit-padding-after: 0;
     }
-    .btn.btn-default-link {
-      border: 0;
-      height: 100%;
-      min-height: 34px;
-      padding: 0;
-      -webkit-padding-after: 0;
-      -webkit-padding-before: 0;
-    }
-
   }
 }
 
@@ -1596,11 +1596,9 @@ th.custom-field .modal-tooltiptext {
     margin-left: 15px;
 
     .btn {
-      border-radius: 4px;
       margin-right: 5px;
       padding: 3px;
     }
-
 
     .btn:last-child {
       margin-right: 20px;
