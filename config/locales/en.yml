@@ -964,6 +964,8 @@ en:
       delete: "Delete column"
     modal_parse:
       title: 'Import items'
+      warning_1: 'Be careful when importing into Dropdown column/s! Each new unique cell value from the file will create a new Dropdown option. This could result in large amounts of Dropdown options.'
+      warning_2: 'Importing into file columns is not supported.'
     modal_import:
       title: 'Import items'
       notice: 'You may upload .csv file (comma separated) or tab separated file (.txt or .tsv) or Excel file (.xlsx). First row should include header names, followed by rows with sample data.'
