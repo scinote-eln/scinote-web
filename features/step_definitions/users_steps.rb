@@ -19,8 +19,8 @@ end
 
 Given(/^"([^"]*)" is signed in with "([^"]*)"$/) do |email, password|
   visit '/users/sign_in'
-  fill_in '#user_email', with: email
-  fill_in '#user_password', with: password
+  fill_in 'user_email', with: email
+  fill_in 'user_password', with: password
   click_button 'Log in'
   @current_user = User.find_by_email(email)
 end
@@ -35,7 +35,7 @@ end
 
 Given("I click on Reset Password link in the reset password email for user {string}") do |email|
   visit new_user_password_path
-  fill_in '#user_email', with: email
+  fill_in 'user_email', with: email
   click_button 'Send me reset password instruction'
   Delayed::Worker.new.work_off
   sleep 10
@@ -52,6 +52,6 @@ Given(/^I am on Log in page$/) do
 end
 
 Then(/^I fill in Email "([^"]*)" and Password "([^"]*)"$/) do |email, password|
-  fill_in '#user_email', with: email
-  fill_in '#user_password', with: password
+  fill_in 'user_email', with: email
+  fill_in 'user_password', with: password
 end
