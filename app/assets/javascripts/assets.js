@@ -25,29 +25,22 @@ function setupAssetsLoading() {
           $el.next().hide();
           $el.html("");
 
-          if (data.type === "image") {
+          if (data.type === 'image') {
             $el.html(
-              "<a class='image-preview-link' id='modal_link" +
+              "<a class='file-preview-link' id='modal_link" +
               data['asset-id'] + "' data-status='asset-present' " +
-              "href='" + data['download-url'] + "'>" +
-              "<img src='" + data['image-tag-url'] + "' data-preview-url='" +
-              data['preview-url'] + "'><p>" +
+              "href='" + data['download-url'] + "' data-preview-url='" +
+              data['preview-url'] + "'>" +
+              "<img src='" + data['image-tag-url'] + "'><p>" +
               data.filename + '</p></a>'
             );
-          } else if (data.type === 'wopi') {
-            if (data['wopi-edit']) {
-              wopiBtns = data['wopi-file-name'] +
-                         data['wopi-view'] +
-                         data['wopi-edit'];
-            } else {
-              wopiBtns = data['wopi-file-name'] +
-                         data['wopi-view'];
-            }
-            $el.html(wopiBtns);
           } else {
             $el.html(
-              "<a href='" + data['download-url'] + "'><p>" +
-              data.filename + "</p></a>"
+              "<a class='file-preview-link' id='modal_link" +
+              data['asset-id'] + "' data-status='asset-present' " +
+              "href='" + data['download-url'] + "' data-preview-url='" +
+              data['preview-url'] + "'><p>" +
+              data.filename + '</p></a>'
             );
           }
           animateSpinner(null, false);

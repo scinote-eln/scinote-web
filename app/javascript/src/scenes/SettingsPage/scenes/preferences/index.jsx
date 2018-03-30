@@ -75,7 +75,7 @@ class SettingsPreferences extends Component<Props, State> {
               type={ASSIGNMENT_NOTIFICATION}
               title="settings_page.assignement"
               subtitle="settings_page.assignement_msg"
-              iconClasses="fa fa-newspaper-o"
+              iconClasses="far fa-newspaper-o"
               inAppNotification={this.state.assignments_notification}
               emailNotification={this.state.assignments_email_notification}
               iconBackground={MAIN_COLOR_BLUE}

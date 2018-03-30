@@ -5,6 +5,26 @@ module FileIconsHelper
   end
 
   # For showing next to file
+  def file_fa_icon_class(asset)
+    file_ext = asset.file_file_name.split('.').last
+    if %w(doc docm docx dot dotm dotx odt rtf).include?(file_ext)
+      fa_class = 'fa-file-word'
+    elsif %w(csv ods xls xlsb xlsm xlsx).include?(file_ext)
+      fa_class = 'fa-file-excel'
+    elsif %w(odp pot potm potx pps ppsm ppsx ppt pptm pptx).include?(file_ext)
+      fa_class = 'fa-file-powerpoint'
+    end
+
+    # Now check for custom mappings or possible overrides
+    if Extends::FILE_ICON_MAPPINGS[file_ext]
+      fa_class = Extends::FILE_FA_ICON_MAPPINGS[file_ext]
+    end
+
+    fa_class = 'fa-file' if fa_class.blank?
+    fa_class
+  end
+
+  # For showing next to file
   def file_extension_icon(asset)
     file_ext = asset.file_file_name.split('.').last
     if %w(doc docm docx dot dotm dotx odt rtf).include?(file_ext)

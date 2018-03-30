@@ -141,7 +141,7 @@ class NotificationsDropdown extends Component {
               this.dropdown = el;
             }}
           >
-            <i className="fa fa-bell" />&nbsp;
+            <i className="far fa-bell" />&nbsp;
             <span className="visible-xs-inline visible-sm-inline">
               <FormattedMessage id="navbar.notifications_label" />
             </span>

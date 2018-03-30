@@ -80,7 +80,7 @@ class TeamSwitch extends Component<Props, State> {
         onClick={this.setTeams}
         title={
           <span>
-            <i className="fa fa-users" />&nbsp;{this.props.current_team.name}
+            <i className="far fa-users" />&nbsp;{this.props.current_team.name}
           </span>
         }
         id="team-switch"

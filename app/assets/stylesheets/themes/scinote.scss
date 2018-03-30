@@ -1278,7 +1278,7 @@ table.dataTable {
 }
 
 // Image preview modal
-.modal-image-preview {
+.modal-file-preview {
   background: transparent;
   font-size: 16px;
   padding-right: 0 !important;
@@ -1290,6 +1290,14 @@ table.dataTable {
     color: $color-white;
     display: inline-block;
     float: right;
+  }
+
+  .file-wopi-controls {
+    display: inline-block;
+
+    .btn {
+      margin: 0 15px;
+    }
   }
 
   .modal-dialog {
@@ -1309,6 +1317,24 @@ table.dataTable {
     width: auto;
   }
 
+  .file-preview-container {
+    align-items: center;
+    background-color: $color-white;
+    color: $color-dark-gray;
+    display: -moz-flex;
+    display: -webkit-flex;
+    display: flex;
+    height: 100%;
+    justify-content: center;
+    text-align: center;
+    width: 60%;
+
+    .file-name {
+      color: $color-black;
+      margin: 30px 0;
+    }
+  }
+
   img {
     height: auto;
     max-width: 100%;
@@ -1323,6 +1349,11 @@ table.dataTable {
     background: $color-black;
     border: 0;
     height: 60px;
+    text-align: center;
+
+    .file-name {
+      float: left;
+    }
   }
 
   .modal-body {
@@ -1333,6 +1364,7 @@ table.dataTable {
     height: calc(100% - 120px);
     justify-content: center;
     overflow: hidden;
+    padding: 0;
   }
 
   .modal-footer {
@@ -1345,7 +1377,7 @@ table.dataTable {
     width: 100%;
   }
 
-  .image-download-link {
+  .file-download-link {
     color: $color-white;
     display: inline-block;
     float: right;

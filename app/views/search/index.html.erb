@@ -217,7 +217,7 @@
 
         <% @repository_search_count.each do |team, results| %>
           <li class="repositories-team <%= 'active' if results[:count] > 0 %>">
-            <span class="fa fa-cubes"></span>
+            <span class="far fa-cubes"></span>
             <%= t('Repositories_team', team: team) %>
           </li>
           <% results[:repositories].each do |repository, values| %>

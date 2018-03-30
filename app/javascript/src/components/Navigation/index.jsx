@@ -107,7 +107,7 @@ class Navigation extends Component {
             </NavItem>
             <NavItem eventKey={3}>
               <i
-                className="fa fa-cubes"
+                className="far fa-cubes"
                 aria-hidden="true"
                 title="Repositories"
               />&nbsp;
