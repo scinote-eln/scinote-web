@@ -66,7 +66,7 @@
                          whole_word: @search_whole_word, whole_phrase: @search_whole_phrase,
                          match_case: @search_case, utf8: '✓'}.to_query %>">
             <span class="badge pull-right"><%= @experiment_search_count %></span>
-            <%= fa_icon 'flask' %>
+            <i class="fas fa-flask"></i>
             <%= t'Experiments' %>
           </a>
         </li>
@@ -217,7 +217,7 @@
 
         <% @repository_search_count.each do |team, results| %>
           <li class="repositories-team <%= 'active' if results[:count] > 0 %>">
-            <span class="far fa-cubes"></span>
+            <i class="fas fa-cubes"></i>
             <%= t('Repositories_team', team: team) %>
           </li>
           <% results[:repositories].each do |repository, values| %>

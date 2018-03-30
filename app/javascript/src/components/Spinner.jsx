@@ -24,7 +24,7 @@ export default (props: { spinner_on: boolean }) => {
     spinner = (
       <Wrapper>
         <div className="center-box">
-          <i className="far fa-spinner fa-spin fa-3x" aria-hidden="true" />
+          <i className="fas fa-spinner fa-spin fa-3x" aria-hidden="true" />
         </div>
       </Wrapper>
     );
