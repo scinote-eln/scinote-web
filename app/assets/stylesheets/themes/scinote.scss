@@ -73,7 +73,7 @@ table {
 }
 
 .blockquote-search {
-  font-size: 14px;
+  font-size: $font-size-base;
   margin-bottom: 10px;
 }
 
@@ -89,18 +89,8 @@ table {
 
 /** Skin **/
 
-
-@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,400italic&subset=latin,latin-ext);
-
 body {
-  background-color: $color-concrete;
-  color: $color-emperor;
-  font-family: "Open Sans",Arial,Helvetica,sans-serif;
-  font-size: 13px;
-}
-
-a {
-  color: $brand-primary;
+  font-size: $font-size-small;
 }
 
 .jumbotron {
@@ -343,7 +333,7 @@ a[data-toggle="tooltip"] {
   padding: 13px;
 
   .glyphicon.glyphicon-info-sign {
-    font-size: 16px;
+    font-size: $font-size-large;
     margin-top: 4px;
   }
 }
@@ -709,14 +699,6 @@ ul.content-activities {
       display: table-cell;
       padding: 3px 10px;
       text-align: justify;
-    }
-  }
-  li.activity-date-item {
-    font-size: 1.4em;
-
-    & > span {
-      padding-left: 2em;
-      padding-right: 2em;
     }
   }
 }
@@ -1290,7 +1272,7 @@ table.dataTable {
 // Image preview modal
 .modal-image-preview {
   background: transparent;
-  font-size: 16px;
+  font-size: $font-size-large;
   padding-right: 0 !important;
   z-index: 1060;
 

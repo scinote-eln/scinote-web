@@ -326,7 +326,7 @@ path, ._jsPlumb_endpoint {
 
   span {
     font-weight: bold;
-    font-size: 16px;
+    font-size: $font-size-large;
     text-transform: uppercase;
     display: block;
     margin-top: 20%;
@@ -400,7 +400,7 @@ li.module-hover {
           margin-top: 5px;
           font-family: 'Glyphicons Halflings';
           color: $color-white;
-          font-size: 12pt;
+          font-size: $font-size-large;
 
           &:before {
             content: "\e221";
@@ -412,7 +412,7 @@ li.module-hover {
 
     .glyphicon {
       color: $color-white;
-      font-size: 12pt;
+      font-size: $font-size-h6;
     }
 
     a.btn-link {
@@ -463,7 +463,7 @@ li.module-hover {
   .experiment-no-description {
     color: $color-alto;
     display: block;
-    font-size: 18px;
+    font-size: $font-size-h4;
     font-weight: bold;
     text-align: center;
 

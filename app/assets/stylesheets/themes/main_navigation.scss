@@ -7,7 +7,7 @@
 
 #notifications-dropdown {
   .fa-bell {
-    font-size: 15px;
+    font-size: $font-size-large;
     position: absolute;
   }
 
@@ -88,7 +88,7 @@
     border-radius: 50%;
     color: $color-concrete;
     display: block;
-    font-size: 23px;
+    font-size: $font-size-h3;
     height: 45px;
     padding-top: 5px;
     width: 45px;
@@ -99,7 +99,7 @@
     border-radius: 50%;
     color: $color-concrete;
     display: block;
-    font-size: 23px;
+    font-size: $font-size-h3;
     height: 45px;
     padding-top: 5px;
     width: 45px;
@@ -110,7 +110,7 @@
     border-radius: 50%;
     color: $color-concrete;
     display: block;
-    font-size: 23px;
+    font-size: $font-size-h3;
     height: 45px;
     padding-top: 8px;
     width: 45px;
@@ -222,7 +222,7 @@
     border-radius: 50%;
     color: $color-concrete;
     display: block !important;
-    font-size: 15px;
+    font-size: $font-size-base;
     height: 30px;
     margin-right: 15px;
     padding: 7px;
@@ -236,7 +236,7 @@
     border-radius: 50%;
     color: $color-concrete;
     display: block !important;
-    font-size: 15px;
+    font-size: $font-size-base;
     height: 30px;
     margin-right: 15px;
     padding: 8px;
