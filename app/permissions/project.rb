@@ -16,7 +16,6 @@ Canaid::Permissions.register_for(Project) do
   # project: read, read activities, read comments, read users, read archive,
   #          read notifications
   # reports: read
-  # samples: read
   can :read_project do |user, project|
     user.is_member_of_project?(project) ||
       user.is_admin_of_team?(project.team) ||
