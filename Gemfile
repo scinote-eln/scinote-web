@@ -57,7 +57,7 @@ gem 'roo', '~> 2.7.1' # Spreadsheet parser
 gem 'wicked_pdf', '~> 1.1.0'
 gem 'silencer' # Silence certain Rails logs
 gem 'wkhtmltopdf-heroku'
-gem 'remotipart', '~> 1.2' # Async file uploads
+# gem 'remotipart', '~> 1.2' # Async file uploads
 gem 'faker' # Generate fake data
 gem 'auto_strip_attributes', '~> 2.1' # Removes unnecessary whitespaces from ActiveRecord or ActiveModel attributes
 gem 'deface', '~> 1.0'
