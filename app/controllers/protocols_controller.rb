@@ -645,6 +645,7 @@ class ProtocolsController < ApplicationController
         @json_object['steps']
       )
     end
+    
     @protocol = Protocol.new
     respond_to do |format|
       format.js {} # go to the js.erb file named the same as this controller,
