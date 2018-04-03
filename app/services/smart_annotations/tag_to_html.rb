@@ -27,7 +27,7 @@ module SmartAnnotations
           object = fetch_object(type, value[:object_id])
           # handle repository_items edge case
           if type == 'rep_item'
-            sample_or_repository_item(value[:name], user, type, object)
+            repository_item(value[:name], user, type, object)
           else
             next unless object && SmartAnnotations::PermissionEval.check(user,
                                                                          type,
@@ -40,7 +40,7 @@ module SmartAnnotations
       end
     end
 
-    def sample_or_repository_item(name, user, type, object)
+    def repository_item(name, user, type, object)
       if object && SmartAnnotations::PermissionEval.check(user, type, object)
         return SmartAnnotations::Preview.html(nil, type, object)
       end
