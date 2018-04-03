@@ -144,8 +144,8 @@ class Constants
   ].freeze
 
   # Theme colors
-  COLOR_THEME_PRIMARY = '#37a0d9'.freeze # $brand-primary
-  COLOR_THEME_SECONDARY = '#8fd13f'.freeze # $brand-default
+  BRAND_PRIMARY = '#37a0d9'.freeze # $brand-primary
+  BRAND_DEFAULT = '#8fd13f'.freeze # $brand-default
 
   # Grayscale colors
   COLOR_WHITE = '#ffffff'.freeze # $color-white
