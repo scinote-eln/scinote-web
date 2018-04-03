@@ -12,7 +12,9 @@
            <h4 class="modal-title"><%=t 'zip_export.modal_label' %></h4>
          </div>
          <div class="modal-body">
-           <%=t('zip_export.repository_html', repository: repository.name) %>
+           <div><%=t('zip_export.repository_header_html', repository: repository.name) %></div>
+           <div class="alert alert-info" role="alert"><%=t 'zip_export.files_alert' %></div>
+           <div><%=t 'zip_export.repository_footer_html' %></div>
          </div>
          <div class="modal-footer">
            <button type='button' class='btn btn-primary' data-dismiss='modal' id='export-repositories'> <%=t 'my_modules.repository.export' %> </button>
