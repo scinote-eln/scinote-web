@@ -43,16 +43,6 @@ module SmartAnnotations
         "#{object.name}</a>"
       end
 
-      def generate_sam_snippet(name, object)
-        if object
-          return "<span class='glyphicon glyphicon-tint'></span>" \
-                  "<a href='#{ROUTES.sample_path(object.id)}' " \
-                  "class='sample-info-link'>#{object.name}</a>"
-        end
-        "<span class='glyphicon glyphicon-tint'></span>" \
-        "#{name} #{I18n.t('atwho.res.deleted')}"
-      end
-
       def generate_rep_item_snippet(name, object)
         if object
           repository_name = object.repository.name
