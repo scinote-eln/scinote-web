@@ -114,13 +114,6 @@ Canaid::Permissions.register_for(Repository) do
   end
 end
 
-Canaid::Permissions.register_for(RepositoryRow) do
-  # repository: update/delete record
-  can :manage_repository_row do |user, repository_row|
-    can_create_repository_rows?(user, repository_row.repository.team)
-  end
-end
-
 Canaid::Permissions.register_for(RepositoryColumn) do
   # repository: update/delete field
   can :manage_repository_column do |user, repository_column|

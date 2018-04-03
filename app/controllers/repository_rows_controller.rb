@@ -170,7 +170,7 @@ class RepositoryRowsController < ApplicationController
     if selected_params
       selected_params.each do |row_id|
         row = @repository.repository_rows.find_by_id(row_id)
-        if row && can_manage_repository_row?(row)
+        if row && can_manage_repository_rows?(@repository.team)
           row.destroy && deleted_count += 1
         end
       end
@@ -221,9 +221,7 @@ class RepositoryRowsController < ApplicationController
   end
 
   def check_manage_permissions
-    render_403 unless @repository.repository_rows.all? do |row|
-      can_manage_repository_row?(row)
-    end
+    render_403 unless can_manage_repository_rows?(@repository.team)
   end
 
   def record_params
