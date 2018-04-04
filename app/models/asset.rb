@@ -91,37 +91,19 @@ class Asset < ApplicationRecord
 
   def self.search(
     user,
-    include_archived,
+    _include_archived,
     query = nil,
     page = 1,
     _current_team = nil,
     options = {}
   )
-    step_ids =
-      Step
-      .search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
-      .joins(:step_assets)
-      .distinct
-      .pluck('step_assets.id')
 
-    result_ids =
-      Result
-      .search(user, include_archived, nil, Constants::SEARCH_NO_LIMIT)
-      .joins(:result_asset)
-      .distinct
-      .pluck('result_assets.id')
-
-    ids =
+    new_query =
       Asset
-      .select(:id)
       .distinct
-      .joins('LEFT OUTER JOIN step_assets ON step_assets.asset_id = assets.id')
-      .joins('LEFT OUTER JOIN result_assets ON ' \
-             'result_assets.asset_id = assets.id')
-      .joins('LEFT JOIN asset_text_data ON ' \
-             'assets.id = asset_text_data.asset_id')
-      .where('(step_assets.id IN (?) OR result_assets.id IN (?))',
-             step_ids, result_ids)
+      .select('assets.*')
+      .left_outer_joins(:asset_text_datum)
+      .where(team: user.teams)
 
     a_query = s_query = ''
 
@@ -144,7 +126,7 @@ class Asset < ApplicationRecord
       a_query = '\\y(' + a_query + ')\\y'
       s_query = s_query.tr('\'', '"')
 
-      ids = ids.where(
+      new_query = new_query.where(
         "(trim_html_tags(assets.file_file_name) #{like} ? " \
         "OR asset_text_data.data_vector @@ to_tsquery(?))",
         a_query,
@@ -165,7 +147,7 @@ class Asset < ApplicationRecord
                      .map { |t| t + ':*' }
                      .join('|')
                      .tr('\'', '"')
-      ids = ids.where(
+      new_query = new_query.where(
         "(trim_html_tags(assets.file_file_name) #{like} ANY (array[?]) " \
         "OR asset_text_data.data_vector @@ to_tsquery(?))",
         a_query,
@@ -175,19 +157,14 @@ class Asset < ApplicationRecord
 
     # Show all results if needed
     if page != Constants::SEARCH_NO_LIMIT
-      ids = ids
-            .limit(Constants::SEARCH_LIMIT)
-            .offset((page - 1) * Constants::SEARCH_LIMIT)
+      new_query.select("ts_headline(data, to_tsquery('" +
+                       sanitize_sql_for_conditions(s_query) +
+                       "'), 'StartSel=<mark>, StopSel=</mark>') headline")
+               .limit(Constants::SEARCH_LIMIT)
+               .offset((page - 1) * Constants::SEARCH_LIMIT)
+    else
+      new_query
     end
-
-    Asset
-      .joins('LEFT JOIN asset_text_data ON ' \
-             ' assets.id = asset_text_data.asset_id')
-      .select('assets.*')
-      .select("ts_headline(data, to_tsquery('" +
-              sanitize_sql_for_conditions(s_query) +
-              "'), 'StartSel=<mark>, StopSel=</mark>') headline")
-      .where('assets.id IN (?)', ids)
   end
 
   def is_image?

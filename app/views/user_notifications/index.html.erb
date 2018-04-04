@@ -14,13 +14,13 @@
       <% end %>
     </ul>
   </div>
-  <div class="notifications-footer">
     <% if @overflown %>
-      <a class="btn-more-notifications col-xs-12" href="<%= @more_notifications_url %>" data-remote="true">
-        <span><%= t('notifications.show_more') %></span>
-      </a>
+      <div class="text-center">
+        <a class="btn btn-default btn-more-notifications" href="<%= @more_notifications_url %>" data-remote="true">
+          <span><%= t('notifications.show_more') %></span>
+        </a>
+      </div>
     <% end %>
-  </div>
 </div>
 
 <%= javascript_include_tag("notifications") %>
