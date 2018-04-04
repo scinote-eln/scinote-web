@@ -1,10 +1,11 @@
 GIT
   remote: https://github.com/biosistemika/canaid
-  revision: f2000c19b75e66ea929a44cb0575262b7f5fc13e
+  revision: 943ae9b9801819fd2513f6ab9e1143ad8de523ce
   branch: master
   specs:
-    canaid (1.0.1)
+    canaid (1.0.2)
       devise (>= 3.4.1)
+      docile (>= 1.1.0)
       rails (>= 4)
 
 GIT

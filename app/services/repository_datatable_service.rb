@@ -55,7 +55,9 @@ class RepositoryDatatableService
 
   def search(value)
     includes_json = { repository_cells: Extends::REPOSITORY_SEARCH_INCLUDES }
-    searchable_attributes = ['repository_rows.name', 'users.full_name'] +
+    searchable_attributes = ['repository_rows.name',
+                             'users.full_name',
+                             'repository_rows.id'] +
                             Extends::REPOSITORY_EXTRA_SEARCH_ATTR
 
     RepositoryRow.left_outer_joins(:created_by)
@@ -76,6 +78,7 @@ class RepositoryDatatableService
   def sortable_columns
     array = [
       'assigned',
+      'repository_rows.id',
       'repository_rows.name',
       'repository_rows.created_at',
       'users.full_name'

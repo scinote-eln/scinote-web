@@ -47,7 +47,7 @@ var RepositoryDatatable = (function(global) {
     originalHeader = $(TABLE_ID + ' thead').children().clone();
     viewAssigned = 'assigned';
     TABLE = $(TABLE_ID).DataTable({
-      order: [[2, 'desc']],
+      order: [[3, 'desc']],
       dom: "R<'row'<'col-sm-9-custom toolbar'l><'col-sm-3-custom'f>>tpi",
       stateSave: true,
       processing: true,
@@ -84,7 +84,12 @@ var RepositoryDatatable = (function(global) {
         orderable: true,
         sWidth: '1%'
       }, {
-       targets: 2,
+        targets: 2,
+        searchable: true,
+        orderable: true,
+        sWidth: '1%'
+      }, {
+       targets: 3,
        render: function(data, type, row) {
          return "<a href='" + row.recordInfoUrl + "'" +
                 "class='record-info-link'>" + data + '</a>';
@@ -255,14 +260,17 @@ var RepositoryDatatable = (function(global) {
             case 'assigned':
               val = -2;
               break;
-            case 'row-name':
+            case 'row-id':
               val = -3;
-              break;
-            case 'added-by':
+              break
+            case 'row-name':
               val = -4;
               break;
-            case 'added-on':
+            case 'added-by':
               val = -5;
+              break;
+            case 'added-on':
+              val = -6;
               break;
             default:
               val = th.attr('id');

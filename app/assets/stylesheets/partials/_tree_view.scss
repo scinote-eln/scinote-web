@@ -18,7 +18,7 @@
   }
 
   .first-indent {
-    background-color: $color-wild-sand;
+    background-color: $color-concrete;
     padding-left: 30px;
   }
 
@@ -49,7 +49,7 @@
     }
 
     &.active > span {
-      background-color: $color-theme-primary;
+      background-color: $brand-primary;
       color: $color-white;
       font-weight: bold;
 
@@ -74,7 +74,7 @@
       color: $color-emperor;
 
       &:hover {
-        color: $color-theme-primary;
+        color: $brand-primary;
       }
     }
 

@@ -1,0 +1,35 @@
+(function(global) {
+  'use strict';
+  global.SideBarToggle = (function() {
+
+    function show() {
+      $('#sideBarLeft').show();
+      $('#sideBarRight').hide();
+      $('#sidebar-wrapper').show(
+        'slide', { direction: 'right', easing: 'linear' }, 400
+      );
+      $('#wrapper').css('paddingLeft', '280px');
+      $('.navbar-secondary').css(
+        { 'margin-left': '-280px', 'padding-left': '280px' }
+      );
+    }
+
+    function hide() {
+      $('#sideBarLeft').hide();
+      $('#sideBarRight').show();
+      $('#sidebar-wrapper').hide(
+        'slide', { direction: 'left', easing: 'linear'}, 400
+      );
+      $('#wrapper').css('paddingLeft', '0');
+      $('.navbar-secondary').css({
+        'margin-left': '0',
+        'padding-left': '0'
+      });
+    }
+
+    return Object.freeze({
+      show: show,
+      hide: hide
+    })
+  })();
+})(window);
