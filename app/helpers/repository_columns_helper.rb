@@ -6,7 +6,7 @@ module RepositoryColumnsHelper
 
   def disabled?(column, type)
     return false if column.new_record?
-    column.data_type == type ? false : true
+    column.data_type != type
   end
 
   def checked?(column, type)

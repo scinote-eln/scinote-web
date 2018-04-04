@@ -5,26 +5,26 @@
 }
 
 .repository-columns-body {
-  margin-top: 50px
-}
+  margin-top: 50px;
 
-.repository-columns-body .list-group-item {
-  padding: 28px;
+  .list-group-item {
+    padding: 28px;
 
-  .controlls {
-    margin-top: -18px;
-  }
+    .controlls {
+      margin-top: -18px;
+    }
 
-  span {
-    margin-top: -10px;
-  }
+    span {
+      margin-top: -10px;
+    }
 
-  .glyphicon-trash {
-    margin-right: 10px;
-    color: $color-milano-red;
+    .glyphicon-trash {
+      color: $brand-danger;
+      margin-right: 10px;
 
-    &:hover {
-      cursor: pointer;
+      &:hover {
+        cursor: pointer;
+      }
     }
   }
 }
