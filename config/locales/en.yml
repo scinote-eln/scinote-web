@@ -918,6 +918,7 @@ en:
       breadcrumbs:
         repositories: "Repositories"
     table:
+      id: 'ID'
       assigned: "Assigned"
       row_name: "Name"
       added_on: "Added on"
@@ -992,6 +993,7 @@ en:
 
   repository_row:
     modal_info:
+      ID: 'ID:'
       head_title: "Information for item '%{repository_row}'"
       added_on: "Added on"
       added_by: "Added by"

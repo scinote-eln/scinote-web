@@ -6,13 +6,11 @@
   </h5>
 
   <p>
-    <% repository_row.repository_cells.each do |cell| %>
-      <span>
-        <%=t "search.index.repositories.custom_column", column: cell.repository_column.name %>
-        <%= highlight cell.value.data, search_query.strip.split(/\s+/) %>
-      </span>
-      <br>
-    <% end %>
+    <span>
+      <%=t 'repository_row.modal_info.ID' %>
+      <%= repository_row.id %>
+    </span>
+    <br />
     <span>
       <%=t "search.index.repositories.added_on" %>
       <%=l repository_row.created_at, format: :full %>
@@ -22,6 +20,13 @@
       <%=t "search.index.repositories.added_by" %>
       <%= highlight repository_row.created_by.full_name, search_query.strip.split(/\s+/) %>
     </span>
+    <% repository_row.repository_cells.each do |cell| %>
+      <span>
+        <%=t "search.index.repositories.custom_column", column: cell.repository_column.name %>
+        <%= highlight cell.value.data, search_query.strip.split(/\s+/) %>
+      </span>
+      <br>
+    <% end %>
   </p>
 
   <p>
