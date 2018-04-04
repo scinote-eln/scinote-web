@@ -1845,7 +1845,7 @@ en:
     expired_description: 'Please export the data again in order to receive a new link.'
     modal_label: 'Export request received'
     modal_html: "<p>Your export request is being processed.</p><p>When completed we will <strong>send an email to %{email}</strong> inbox with a link to your exported samples. Note that the link will expire in 7 days.</p>"
-    repository_header_html: 'You are about to export selected items in inventory %{repository}'
+    repository_header_html: 'You are about to export selected items in inventory %{repository}.'
     files_alert: 'Files uploaded to inventory items will not be exported. Only filenames will be exported.'
     repository_footer_html: 'Inventory will be exported in a .csv file format. You will receive <strong>email with a link</strong> where you can download it.'
     export_error: "Error when creating zip export."
