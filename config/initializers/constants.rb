@@ -158,7 +158,7 @@ class Constants
   COLOR_DOVE_GRAY = '#666666'.freeze # $color-dove-gray
   COLOR_EMPEROR = '#555555'.freeze # $color-emperor
   COLOR_BLACK = '#000000'.freeze # $color-black
-  
+
 
   #=============================================================================
   # External URLs
@@ -842,17 +842,17 @@ class Constants
   REPOSITORY_TABLE_DEFAULT_STATE = {
     'time' => 0,
     'start' => 0,
-    'length' => 5,
-    'order' => [[2, 'desc']],
+    'length' => 6,
+    'order' => [[3, 'desc']],
     'search' => { 'search' => '',
                   'smart' => true,
                   'regex' => false,
                   'caseInsensitive' => true },
     'columns' => [],
     'assigned' => 'assigned',
-    'ColReorder' => [*0..4]
+    'ColReorder' => [*0..5]
   }
-  5.times do
+  6.times do
     REPOSITORY_TABLE_DEFAULT_STATE['columns'] << {
       'visible' => true,
       'search' => { 'search' => '',
