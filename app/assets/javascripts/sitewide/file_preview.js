@@ -5,7 +5,7 @@
     var name;
     var url;
     var downloadUrl;
-    $('.file-preview-link').off();
+    $('.file-preview-link').off('click');
     $('.file-preview-link').click(function(e) {
       e.preventDefault();
       name = $(this).find('p').text();
