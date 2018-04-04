@@ -3,7 +3,6 @@
   remote: true, :html=> { :id => "protocolsio-import-form" }) do |f| %>
 
 <%= hidden_field_tag :json_object, JSON.generate(@json_object) %>
-<% byebug %>
 <% url_query = Rack::Utils.parse_query URI(request.referrer).query %>
 <% type_privacy = "public" %>
 <% if url_query.key?("type") && url_query["type"]=="private" %>
