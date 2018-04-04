@@ -68,7 +68,7 @@
                          match_case: @search_case, utf8: '✓',
                          search_id: @search_id}.to_query %>">
             <span class="badge pull-right"><%= @experiment_search_count %></span>
-            <%= fa_icon 'flask' %>
+            <i class="fas fa-flask"></i>
             <%= t'Experiments' %>
           </a>
         </li>
@@ -230,7 +230,7 @@
 
         <% @repository_search_count.each do |team, results| %>
           <li class="repositories-team <%= 'active' if results[:count] > 0 %>">
-            <span class="fa fa-cubes"></span>
+            <i class="fas fa-cubes"></i>
             <%= t('Repositories_team', team: team) %>
           </li>
           <% results[:repositories].each do |repository, values| %>

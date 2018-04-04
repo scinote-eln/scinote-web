@@ -1,18 +1,19 @@
-<div id="imagePreviewModal" class="modal modal-image-preview" role="dialog" tabindex="-1" aria-labelledby="imagePreviewModal" aria-hidden="true">
+<div id="filePreviewModal" class="modal modal-file-preview" role="dialog" tabindex="-1" aria-labelledby="filePreviewModal" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="preview-close" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span></button>
-        <span class="image-name"></span>
-        <a class="image-download-link" href='#'>
+        <span class="file-name"></span>
+        <span class="file-wopi-controls"></span>
+        <a class="file-download-link" href='#'>
           <p><span class="glyphicon glyphicon-download-alt"></span> <%= t('Download')%></p>
         </a>
       </div>
       <div class="modal-body">
-        <img>
+        <div class="file-preview-container">
+        </div>
       </div>
       <div class="modal-footer">
-        <span class="image-description"></span>
       </div>
     </div>
   </div>
