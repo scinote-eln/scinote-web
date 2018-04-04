@@ -13,21 +13,15 @@ $('#pio_no_file_error_span').addClass('has-error').html('<span class="help-block
 <% @protocolsio_no_file = false %>
 <% else %>
   $('#modal-import-json-protocol').modal('hide');
-      <% if remotipart_submitted? %> <%# a workaround to a bug with remotipart, that caused alot of headache, courtesy of github.com/dhampik %>
-        $('#protocolsio-preview-modal-target').html(
-          "<%= j "#{render(:partial => 'protocols/import_export/import_json_protocol_preview_modal')}" %>"
-        );
-      <% else %>
-        $('#protocolsio-preview-modal-target').html(
-          "<%= j render(:partial => 'protocols/import_export/import_json_protocol_preview_modal') %>"
-        );
-      <% end %>
-      $('#modal-import-json-protocol-preview').modal('show');
-      $('.modal').on('hidden.bs.modal', function (e) {
-        if($('.modal').hasClass('in')) {
-          $('body').addClass('modal-open');
-        }
-      });
-
-
+  $('#protocolsio-preview-modal-target').html(
+    "<%= j render(:partial => 'protocols/import_export/import_json_protocol_preview_modal') %>"
+  );
+  $('#modal-import-json-protocol-preview').modal('show');
+  $('.modal').on('hidden.bs.modal', function (e) {
+    if($('.modal').hasClass('in')) {
+      $('body').addClass('modal-open');
+    }
+  });
 <% end %>
+$("#protocols_io_form")[0].reset();
+$('#protocols_io_form').trigger("reset");
