@@ -1,8 +1,7 @@
 @import 'constants';
 @import "mixins";
 @import "main_navigation";
-@import "buttons";
-
+@import "repositories";
 /** Layout **/
 
 body,
@@ -74,7 +73,7 @@ table {
 }
 
 .blockquote-search {
-  font-size: 14px;
+  font-size: $font-size-base;
   margin-bottom: 10px;
 }
 
@@ -90,18 +89,8 @@ table {
 
 /** Skin **/
 
-
-@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,400italic&subset=latin,latin-ext);
-
 body {
-  background-color: $color-concrete;
-  color: $color-emperor;
-  font-family: "Open Sans",Arial,Helvetica,sans-serif;
-  font-size: 13px;
-}
-
-a {
-  color: $color-theme-primary;
+  font-size: $font-size-small;
 }
 
 .jumbotron {
@@ -109,7 +98,7 @@ a {
 }
 
 .badge {
-  background-color: $color-theme-primary;
+  background-color: $brand-primary;
   font-size: 11px;
   border-radius: 5px;
 }
@@ -128,7 +117,7 @@ a {
 }
 
 .bg-primary {
-  background-color: $color-theme-primary;
+  background-color: $brand-primary;
 }
 
 /* this rule is strict because the order of css files is not correct */
@@ -137,7 +126,7 @@ a {
 }
 
 mark,.mark {
-  background-color: $color-candlelight;
+  background-color: $brand-warning;
 }
 
 .label-default {
@@ -145,12 +134,12 @@ mark,.mark {
 }
 
 .label-primary {
-  background-color: $color-theme-primary;
+  background-color: $brand-primary;
 }
 
 .circle {
   @extend .badge;
-  background-color: $color-theme-primary;
+  background-color: $brand-primary;
   border-radius: 1em;
 
   &.disabled {
@@ -173,10 +162,10 @@ a[data-toggle="tooltip"] {
 
   & > li.has-error {
     & > a {
-      color: $color-apple-blossom;
+      color: $brand-danger;
 
       &:hover {
-        color: $color-mojo;
+        color: $brand-danger;
       }
     }
   }
@@ -185,7 +174,7 @@ a[data-toggle="tooltip"] {
 .has-error {
   .ql-container.ql-snow,
   .ql-toolbar.ql-snow {
-    border: 1px solid $color-apple-blossom;
+    border: 1px solid $brand-danger;
   }
 }
 
@@ -196,7 +185,7 @@ a[data-toggle="tooltip"] {
 .nav-pills {
   & > li {
     a {
-      color: $color-theme-primary;
+      color: $brand-primary;
     }
 
     &:not(.active):hover a {
@@ -205,7 +194,7 @@ a[data-toggle="tooltip"] {
 
     &.active a {
       color: $color-white;
-      background-color: $color-theme-primary;
+      background-color: $brand-primary;
     }
   }
 }
@@ -220,7 +209,7 @@ a[data-toggle="tooltip"] {
 
 .nav-tabs-less > li.active > a {
   &,&:hover,&:focus {
-    color: $color-theme-secondary;
+    color: $brand-default;
     background-color: transparent;
     border-color: transparent;
   }
@@ -228,7 +217,7 @@ a[data-toggle="tooltip"] {
 
 .tag.label.label-info {
   font-size: 100%;
-  background-color: $color-theme-primary;
+  background-color: $brand-primary;
 }
 
 #secondary-navigation {
@@ -273,14 +262,14 @@ a[data-toggle="tooltip"] {
       text-transform: uppercase;
 
       & > a {
-        color: $color-gray;
+        color: $color-silver-chalice;
 
         span {
           //width: 14px;
         }
       }
       &.active {
-        @include box-shadow(0 4px 0 $color-theme-primary);
+        @include box-shadow(0 4px 0 $brand-primary);
 
         &> a {
           font-weight: bold;
@@ -344,7 +333,7 @@ a[data-toggle="tooltip"] {
   padding: 13px;
 
   .glyphicon.glyphicon-info-sign {
-    font-size: 16px;
+    font-size: $font-size-large;
     margin-top: 4px;
   }
 }
@@ -538,16 +527,16 @@ ul.double-line > li {
 .pagination > .active > span,
 .pagination > .active > span:hover,
 .pagination > .active > span:focus {
-  background-color: $color-theme-primary;
+  background-color: $brand-primary;
 }
 
 .pagination > li > a,
 .pagination > li > span {
-  color: $color-theme-primary;
+  color: $brand-primary;
 }
 
 .panel-default > .panel-heading {
-  background-color: $color-mystic;
+  background-color: $brand-primary-light;
 
   &>.panel-title {
     overflow: hidden;
@@ -558,15 +547,15 @@ ul.double-line > li {
 
 .panel-project {
   .panel-heading {
-    background-color: $color-theme-primary;
+    background-color: $brand-primary;
     color: $color-white;
   }
 }
 
 .panel-archive {
   .panel-heading {
-    background-color: darken($color-mystic, 5%);
-    color: lighten($color-mine-shaft, 15%);
+    background-color: darken($brand-primary-light, 5%);
+    color: lighten($color-emperor, 15%);
   }
 }
 
@@ -637,11 +626,11 @@ ul.double-line > li {
 
     li.notification.alert-red > .date-time {
       font-weight: bold;
-      color: $color-milano-red;
+      color: $brand-danger;
     }
     li.notification.alert-yellow > .date-time {
       font-weight: bold;
-      color: $color-candlelight;
+      color: $brand-warning;
     }
   }
 }
@@ -653,7 +642,7 @@ ul.double-line > li {
   margin-bottom: 0;
 
   &> .panel-heading {
-    background-color: $color-mystic;
+    background-color: $brand-primary-light;
     border-bottom: 1px solid $color-alto;
 
     .panel-title > a {
@@ -712,14 +701,6 @@ ul.content-activities {
       text-align: justify;
     }
   }
-  li.activity-date-item {
-    font-size: 1.4em;
-
-    & > span {
-      padding-left: 2em;
-      padding-right: 2em;
-    }
-  }
 }
 
 ul.content-module-activities {
@@ -729,8 +710,8 @@ ul.content-module-activities {
 
     .activity-item-date {
       font-size: 1.2em;
-      background-color: $color-theme-primary;
-      border-color: $color-theme-primary;
+      background-color: $brand-primary;
+      border-color: $brand-primary;
       color: $color-white;
       padding-top: 5px;
       padding-bottom: 5px;
@@ -898,16 +879,17 @@ ul.content-module-activities {
 
 .dnd-error,
 .dnd-total-error {
-  color: $color-milano-red;
+  color: $brand-danger;
 }
 
 .is-dragover {
-  background: $color-drag-overlay;
+  background: $color-black;
   bottom: 0;
   display: none;
   height: 100%;
   left: 0;
   min-height: 100%;
+  opacity: .4;
   pointer-events: none;
   position: fixed;
   right: 0;
@@ -995,7 +977,7 @@ table.dataTable {
   word-break: initial;
 
   thead {
-    background-color: $color-gray;
+    background-color: $color-silver-chalice;
   }
 
   thead > tr > th {
@@ -1020,13 +1002,13 @@ table.dataTable {
     color: $color-emperor !important;
 
     a {
-      color: $color-theme-primary !important;
+      color: $brand-primary !important;
     }
   }
 
   .sorting_desc,
   .sorting_asc {
-    background-color: $color-theme-primary;
+    background-color: $brand-primary;
   }
 }
 
@@ -1067,12 +1049,12 @@ table.dataTable {
     top: 50%;
     margin-top: -19px;
     border-top: 19px solid transparent;
-    border-left: 13px solid $color-theme-primary;
+    border-left: 13px solid $brand-primary;
     border-bottom: 19px solid transparent;
 }
 
 .nav-stacked-arrow > li.active > a:hover:after {
-  border-left: 13px solid darken($color-theme-primary, 15%);
+  border-left: 13px solid darken($brand-primary, 15%);
 }
 
 /* Overlay to disable interaction while loading ajax */
@@ -1094,7 +1076,7 @@ table.dataTable {
 }
 
 .turbolinks-progress-bar::before {
-  background-color: $color-theme-primary;
+  background-color: $brand-primary;
 }
 
 /* Loading animation for ajax events, inspired by Codrops */
@@ -1105,7 +1087,7 @@ table.dataTable {
   z-index: -1;
   width: 100%;
   height: 3px;
-  background: $color-theme-primary;
+  background: $brand-primary;
   -webkit-transform: translate3d(-100%, 0, 0);
   transform: translate3d(-100%, 0, 0);
   pointer-events: none;
@@ -1136,7 +1118,7 @@ table.dataTable {
 
 .custom .introjs-skipbutton {
   border-radius: 0;
-  color: $color-theme-primary;
+  color: $brand-primary;
   background-color: $color-white;
   background-image: none;
   border: none;
@@ -1162,7 +1144,7 @@ table.dataTable {
   .modal-tooltiptext {
     background-color: $color-alto;
     border-radius: 6px;
-    color: $color-mine-shaft;
+    color: $color-emperor;
     display: block;
     margin-left: 100px;
     padding: 5px;
@@ -1204,7 +1186,7 @@ table.dataTable {
   top: auto;
 
   li:not(.dropdown-header):hover {
-    background-color: $color-wild-sand;
+    background-color: $color-concrete;
   }
 }
 
@@ -1240,9 +1222,19 @@ table.dataTable {
   position: absolute;
   z-index: 10;
 
-  .btn-greyed {
+  .btn-grey {
+    background-color: $color-silver-chalice;
+    border-color: $color-silver-chalice;
     border-radius: 0;
+    color: $color-white;
     width: 100px;
+
+    &:hover,
+    &:focus {
+      background-color: darken($color-silver-chalice, 15%);
+      border-color: darken($color-silver-chalice, 15%);
+      color: $color-white;
+    }
   }
 }
 
@@ -1280,7 +1272,7 @@ table.dataTable {
 // Image preview modal
 .modal-file-preview {
   background: transparent;
-  font-size: 16px;
+  font-size: $font-size-large;
   padding-right: 0 !important;
   z-index: 1060;
 
@@ -1417,15 +1409,6 @@ textarea.textarea-sm {
       -webkit-padding-before: 0;
       -webkit-padding-after: 0;
     }
-    .btn.btn-default-link {
-      border: 0;
-      height: 100%;
-      min-height: 34px;
-      padding: 0;
-      -webkit-padding-after: 0;
-      -webkit-padding-before: 0;
-    }
-
   }
 }
 
@@ -1511,7 +1494,7 @@ textarea.textarea-sm {
     }
 
     .ok {
-      color: $color-theme-secondary;
+      color: $brand-default;
       margin-right: 5px;
     }
 
@@ -1565,7 +1548,7 @@ th.custom-field .modal-tooltiptext {
   color: $color-black;
   border: 1px solid $color-emperor;
   border-radius: 3px;
-  box-shadow: 0 0 5px $color-cloud;
+  box-shadow: 0 0 5px $color-gainsboro;
   min-width: 520px;
   max-height: 200px;
   overflow: auto;
@@ -1578,11 +1561,11 @@ th.custom-field .modal-tooltiptext {
   }
 
   strong {
-    color: $color-theme-primary;
+    color: $brand-primary;
   }
 
   .cur {
-    background: $color-theme-primary;
+    background: $brand-primary;
     color: $color-white;
 
     small {
@@ -1614,7 +1597,7 @@ th.custom-field .modal-tooltiptext {
   padding-top: 3px;
   padding-bottom: 7px;
   height: 34px;
-  background-color: $color-gallery;
+  background-color: $color-concrete;
   border-bottom: 1px solid $color-emperor;
   clear: both;
 
@@ -1627,11 +1610,9 @@ th.custom-field .modal-tooltiptext {
     margin-left: 15px;
 
     .btn {
-      border-radius: 4px;
       margin-right: 5px;
       padding: 3px;
     }
-
 
     .btn:last-child {
       margin-right: 20px;

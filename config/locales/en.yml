@@ -152,6 +152,8 @@ en:
       description: "Description: "
       no_description: "No description"
       team: "Team: "
+      repository: "Repository: "
+      repository_row: "Repository item: "
       project: "Project: "
       experiment: "Experiment: "
       protocol: "Protocol: "
@@ -211,7 +213,6 @@ en:
         one: "1 day"
         other: "%{count} days"
       module_one_day_due_html: "Task <em>%{module}</em> is due in less than 1 day."
-      new_comment: "New comment"
       user_role: "Role: "
       user_full_name: "User: "
       edit_user: "Edit role"
@@ -873,6 +874,7 @@ en:
       success_flash: "Table result successfully deleted."
 
   repositories:
+    repository: "Repository: %{name}"
     index:
       head_title: "Repositories"
       title: "Repositories"
@@ -962,6 +964,8 @@ en:
       delete: "Delete column"
     modal_parse:
       title: 'Import items'
+      warning_1: 'Be careful when importing into Dropdown column/s! Each new unique cell value from the file will create a new Dropdown option. This could result in large amounts of Dropdown options.'
+      warning_2: 'Importing into file columns is not supported.'
     modal_import:
       title: 'Import items'
       notice: 'You may upload .csv file (comma separated) or tab separated file (.txt or .tsv) or Excel file (.xlsx). First row should include header names, followed by rows with sample data.'
@@ -986,6 +990,17 @@ en:
     no_records_unassigned_flash: "No items were unassigned from task"
     default_column: 'Name'
 
+  libraries:
+    sidebar:
+      title: "Inventories"
+    index:
+      head_title: "Inventories"
+      no_libraries:
+        text: "You don't have any inventories."
+        title: "Please create your first Inventory"
+        create_new_button: "Create New Inventory"
+    show:
+      head_title: "Inventories | %{library}"
   repository_row:
     modal_info:
       head_title: "Information for item '%{repository_row}'"

@@ -51,7 +51,8 @@
         >
           <a href="?<%= {category: 'projects', q: @search_query,
                          whole_word: @search_whole_word, whole_phrase: @search_whole_phrase,
-                         match_case: @search_case, utf8: '✓'}.to_query %>">
+                         match_case: @search_case, utf8: '✓',
+                         search_id: @search_id}.to_query %>">
             <span class="badge pull-right"><%= @project_search_count %></span>
             <span class="glyphicon glyphicon-blackboard"></span>
             <%= t'Projects' %>
@@ -64,7 +65,8 @@
         >
           <a href="?<%= {category: 'experiments', q: @search_query,
                          whole_word: @search_whole_word, whole_phrase: @search_whole_phrase,
-                         match_case: @search_case, utf8: '✓'}.to_query %>">
+                         match_case: @search_case, utf8: '✓',
+                         search_id: @search_id}.to_query %>">
             <span class="badge pull-right"><%= @experiment_search_count %></span>
             <i class="fas fa-flask"></i>
             <%= t'Experiments' %>
@@ -77,7 +79,8 @@
         >
           <a href="?<%= {category: 'modules', q: @search_query,
                          whole_word: @search_whole_word, whole_phrase: @search_whole_phrase,
-                         match_case: @search_case, utf8: '✓'}.to_query %>">
+                         match_case: @search_case, utf8: '✓',
+                         search_id: @search_id}.to_query %>">
             <span class="badge pull-right"><%= @module_search_count %></span>
             <span class="glyphicon glyphicon-credit-card"></span>
             <%= t'Modules' %>
@@ -90,7 +93,8 @@
         >
           <a href="?<%= {category: 'results', q: @search_query,
                          whole_word: @search_whole_word, whole_phrase: @search_whole_phrase,
-                         match_case: @search_case, utf8: '✓'}.to_query %>">
+                         match_case: @search_case, utf8: '✓',
+                         search_id: @search_id}.to_query %>">
             <span class="badge pull-right"><%= @result_search_count %></span>
             <span class="glyphicon glyphicon-modal-window"></span>
             <%= t'Results' %>
@@ -103,7 +107,8 @@
         >
           <a href="?<%= {category: 'tags', q: @search_query,
                          whole_word: @search_whole_word, whole_phrase: @search_whole_phrase,
-                         match_case: @search_case, utf8: '✓'}.to_query %>">
+                         match_case: @search_case, utf8: '✓',
+                         search_id: @search_id}.to_query %>">
             <span class="badge pull-right"><%= @tag_search_count %></span>
             <span class="glyphicon glyphicon-tags"></span>
             <%= t'Tags' %>
@@ -116,7 +121,8 @@
         >
           <a href="?<%= {category: 'reports', q: @search_query,
                          whole_word: @search_whole_word, whole_phrase: @search_whole_phrase,
-                         match_case: @search_case, utf8: '✓'}.to_query %>">
+                         match_case: @search_case, utf8: '✓',
+                         search_id: @search_id}.to_query %>">
             <span class="badge pull-right"><%= @report_search_count %></span>
             <span class="glyphicon glyphicon-align-left"></span>
             <%= t'Reports' %>
@@ -129,7 +135,8 @@
         >
           <a href="?<%= {category: 'protocols', q: @search_query,
                          whole_word: @search_whole_word, whole_phrase: @search_whole_phrase,
-                         match_case: @search_case, utf8: '✓'}.to_query %>">
+                         match_case: @search_case, utf8: '✓',
+                         search_id: @search_id}.to_query %>">
             <span class="badge pull-right"><%= @protocol_search_count %></span>
             <span class="glyphicon glyphicon-list-alt"></span>
             <%= t'Protocols' %>
@@ -142,7 +149,8 @@
         >
           <a href="?<%= {category: 'steps', q: @search_query,
                          whole_word: @search_whole_word, whole_phrase: @search_whole_phrase,
-                         match_case: @search_case, utf8: '✓'}.to_query %>">
+                         match_case: @search_case, utf8: '✓',
+                         search_id: @search_id}.to_query %>">
             <span class="badge pull-right"><%= @step_search_count %></span>
             <span class="glyphicon glyphicon-circle-arrow-right"></span>
             <%= t'Steps' %>
@@ -155,7 +163,8 @@
         >
           <a href="?<%= {category: 'checklists', q: @search_query,
                          whole_word: @search_whole_word, whole_phrase: @search_whole_phrase,
-                         match_case: @search_case, utf8: '✓'}.to_query %>">
+                         match_case: @search_case, utf8: '✓',
+                         search_id: @search_id}.to_query %>">
             <span class="badge pull-right"><%= @checklist_search_count %></span>
             <span class="glyphicon glyphicon-list"></span>
             <%= t'Checklists' %>
@@ -168,7 +177,8 @@
         >
           <a href="?<%= {category: 'samples', q: @search_query,
                          whole_word: @search_whole_word, whole_phrase: @search_whole_phrase,
-                         match_case: @search_case, utf8: '✓'}.to_query %>">
+                         match_case: @search_case, utf8: '✓',
+                         search_id: @search_id}.to_query %>">
             <span class="badge pull-right"><%= @sample_search_count %></span>
             <span class="glyphicon glyphicon-tint"></span>
             <%= t'Samples' %>
@@ -182,7 +192,8 @@
         >
           <a href="?<%= {category: 'assets', q: @search_query,
                          whole_word: @search_whole_word, whole_phrase: @search_whole_phrase,
-                         match_case: @search_case, utf8: '✓'}.to_query %>">
+                         match_case: @search_case, utf8: '✓',
+                         search_id: @search_id}.to_query %>">
             <span class="badge pull-right"><%= @asset_search_count %></span>
             <span class="glyphicon glyphicon-file"></span>
             <%= t'Assets' %>
@@ -195,7 +206,8 @@
         >
           <a href="?<%= {category: 'tables', q: @search_query,
                          whole_word: @search_whole_word, whole_phrase: @search_whole_phrase,
-                         match_case: @search_case, utf8: '✓'}.to_query %>">
+                         match_case: @search_case, utf8: '✓',
+                         search_id: @search_id}.to_query %>">
             <span class="badge pull-right"><%= @table_search_count %></span>
             <span class="glyphicon glyphicon-th"></span>
             <%= t'Tables' %>
@@ -208,7 +220,8 @@
         >
           <a href="?<%= {category: 'comments', q: @search_query,
                          whole_word: @search_whole_word, whole_phrase: @search_whole_phrase,
-                         match_case: @search_case, utf8: '✓'}.to_query %>">
+                         match_case: @search_case, utf8: '✓',
+                         search_id: @search_id}.to_query %>">
             <span class="badge pull-right"><%= @comment_search_count %></span>
             <span class="glyphicon glyphicon-comment"></span>
             <%= t'Comments' %>
@@ -229,7 +242,8 @@
               <a href="?<%= {category: 'repositories',
                              repository: values[:id], q: @search_query,
                              whole_word: @search_whole_word, whole_phrase: @search_whole_phrase,
-                             match_case: @search_case, utf8: '✓'}.to_query %>">
+                             match_case: @search_case, utf8: '✓',
+                             search_id: @search_id}.to_query %>">
                 <span class="badge pull-right"><%= values[:count] %></span>
                 <%= repository %>
               </a>

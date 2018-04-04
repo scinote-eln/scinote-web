@@ -1,14 +1,27 @@
 <div id="left-menu-bar" class="menu-bar">
   <ul class="nav">
+    <li class="text-center">
+      <span id="sideBarLeft"
+            class="glyphicon glyphicon-chevron-left"
+            aria-hidden="true"
+            onclick="SideBarToggle.hide()"
+            ></span>
+      <span id="sideBarRight"
+            class="glyphicon glyphicon-chevron-right"
+            aria-hidden="true"
+            onclick="SideBarToggle.show()"
+            style="display:none;"
+            ></span>
+    </li>
     <li class="<%= "active" if projects_are_selected? %>">
-      <%= link_to projects_path, id: "projects-link", class: "toggle-sidebar-link", title: t('left_menu_bar.projects') do %>
+      <%= link_to projects_path, id: "projects-link", title: t('left_menu_bar.projects') do %>
         <span class="glyphicon glyphicon-home"></span>
         <span><%= t('left_menu_bar.projects') %></span>
       <% end %>
     </li>
     <li class="<%= "active" if repositories_are_selected? %>">
-      <%= link_to team_repositories_path(current_team), id: "repositories-link", title: t('left_menu_bar.repositories') do %>
-        <i class="fas fa-cubes" aria-hidden="true"></i>
+      <%= link_to repositories_path, id: "repositories-link", title: t('left_menu_bar.repositories') do %>
+        <span class="fas fa-cubes" aria-hidden="true"></span>
         <span><%= t('left_menu_bar.repositories') %></span>
       <% end %>
     </li>
@@ -65,3 +78,5 @@
     </li>
   </ul>
 </div>
+
+<%= javascript_include_tag("sidebar_toggle") %>

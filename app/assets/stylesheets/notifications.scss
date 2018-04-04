@@ -31,7 +31,7 @@
     padding-top: 10px;
 
     &:hover {
-      background-color: $color-mystic;
+      background-color: $brand-primary-light;
     }
 
     &.no-notifications {
@@ -40,7 +40,7 @@
   }
 
   .unseen {
-    border-left: 4px solid $color-theme-primary;
+    border-left: 4px solid $brand-primary;
   }
 
   .text-center {
@@ -49,54 +49,39 @@
   }
 
   .assignment {
-    background-color: $color-theme-primary;
+    background-color: $brand-primary;
     border-radius: 50%;
-    color: $color-wild-sand;
+    color: $color-concrete;
     display: inline-block;
-    font-size: 13px;
+    font-size: $font-size-small;
     height: 30px;
     padding-top: 5px;
     width: 30px;
   }
 
   .system-message {
-    background-color: $color-theme-secondary;
+    background-color: $brand-default;
     border-radius: 50%;
-    color: $color-wild-sand;
+    color: $color-concrete;
     display: inline-block;
-    font-size: 13px;
+    font-size: $font-size-small;
     height: 30px;
     padding-top: 5px;
     width: 30px;
   }
 
   .deliver {
-    background-color: $color-orange;
+    background-color: $brand-warning;
     border-radius: 50%;
-    color: $color-wild-sand;
+    color: $color-concrete;
     display: inline-block;
-    font-size: 13px;
+    font-size: $font-size-small;
     height: 30px;
     padding-top: 5px;
     width: 30px;
   }
 }
 
-
-.notifications-footer {
-
-  background-color: $color-mystic;
-
-  .btn-more-notifications {
-    border-bottom: 1px solid $color-alto;
-    border-left: 1px solid $color-alto;
-    border-right: 1px solid $color-alto;
-    margin: 0;
-    padding: 8px;
-    text-align: center;
-
-    &:hover {
-      background-color: $color-mystic;
-    }
-  }
+.btn-more-notifications {
+  margin-top: 15px;
 }

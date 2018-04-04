@@ -1,13 +1,12 @@
-<%= render partial: "repositories/delete_record_modal.html.erb" %>
-<%= render partial: "repositories/delete_column_modal.html.erb" %>
-<%= render partial: 'repositories/export_repository_modal.html.erb',
-           locals: { repository: repository } %>
+<% provide(:head_title, t("libraries.show.head_title", library: @repository.name)) %>
+<%= stylesheet_link_tag 'datatables' %>
 
+<%= render partial: "sidebar", locals: { repositories: @repositories } %>
 <div id="alert-container"></div>
 
 <div id="repository-toolbar">
 
-  <% if can_create_repository_rows?(repository.team) %>
+  <% if can_create_repository_rows?(@repository.team) %>
     <button type="button" class="btn btn-default editAdd" id="addRepositoryRecord" onclick="onClickAddRecord()">
       <span class="glyphicon glyphicon-plus"></span>
       <span class="hidden-xs"><%= t("repositories.add_new_record") %></span>
@@ -18,7 +17,7 @@
     </button>
   <% end %>
 
-  <% if can_read_team?(repository.team) %>
+  <% if can_read_team?(@repository.team) %>
     <a href="#" class="btn btn-default" id="exportRepositoriesButton" data-turbolinks="false">
       <span class="glyphicon glyphicon-cloud-download"></span>
       <span class="hidden-xs"><%= t("my_modules.repository.export") %></span>
@@ -32,36 +31,36 @@
            data-toggle="dropdown"
            aria-haspopup="true"
            aria-expanded="true"
-           <%= "disabled='disabled'" unless can_manage_repository?(repository) || can_create_repositories?(repository.team) %>>
+           <%= "disabled" unless can_manage_repository?(@repository) || can_create_repositories?(@repository.team) %>>
         <span class="glyphicon glyphicon-cog"></span>
         <span class="caret"></span>
       </div>
-      <% if can_manage_repository?(repository) || can_create_repositories?(repository.team) %>
+      <% if can_manage_repository?(@repository) || can_create_repositories?(@repository.team) %>
         <ul class="dropdown-menu pull-right">
           <li class="dropdown-header">
             <%= t("repositories.index.options_dropdown.header") %>
           </li>
-          <% if can_manage_repository?(repository) %>
+          <% if can_manage_repository?(@repository) %>
             <li>
               <%= link_to t('repositories.index.options_dropdown.rename'),
-                          team_repository_rename_modal_path(repository_id: repository),
+                          team_repository_rename_modal_path(current_team, repository_id: @repository),
                           class: "rename-repo-option",
                           remote: true %>
             </li>
           <% end %>
-          <% if can_create_repositories?(repository.team) %>
+          <% if can_create_repositories?(@repository.team) %>
             <li>
               <%= link_to t('repositories.index.options_dropdown.copy'),
-                          team_repository_copy_modal_path(repository_id: repository),
+                          team_repository_copy_modal_path(current_team, repository_id: @repository),
                           class: "copy-repo-option",
                           remote: true %>
             </li>
           <% end %>
-          <% if can_manage_repository?(repository) %>
+          <% if can_manage_repository?(@repository) %>
             <li role="separator" class="divider"></li>
             <li>
               <%= link_to t('repositories.index.modal_delete.delete'),
-                          team_repository_destroy_modal_path(repository_id: repository),
+                          team_repository_destroy_modal_path(current_team, repository_id: @repository),
                           class: "delete-repo-option",
                           remote: true %>
             </li>
@@ -71,8 +70,40 @@
     </div>
   </div>
 
+
   <div id="datatables-buttons" style="display: inline;">
-    <%= render partial: "columns_reorder_dropdown", formats: :html %>
+    <div class="new-repository-button">
+      <% if can_create_repositories?(@repository.team) %>
+        <%= link_to t('libraries.index.no_libraries.create_new_button'),
+                    create_modal_team_repositories_path(@repository.team),
+                    class: "btn btn-default",
+                    id: "create-new-repository",
+                    remote: true %>
+      <% end %>
+    </div>
+
+    <div id="repository-columns-dropdown" class="dropdown">
+      <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+        <%= t('repositories.columns') %>
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu dropdown-menu-right smart-dropdown" id="repository-columns-list">
+        <% if can_create_repository_columns?(@repository.team) %>
+          <li class="add-new-column-form">
+            <div id="new-column-form" class="form-group" data-action="<%= repository_repository_columns_path(@repository) %>">
+              <div class="input-group">
+                <input class="form-control" id="new-column-name" placeholder="<%= t("repositories.column_new_text") %>">
+                <span class="input-group-btn">
+                  <a id="add-new-column-button" class="btn btn-primary">
+                    <%= t("repositories.column_create") %>
+                  </a>
+                </span>
+              </div>
+            </div>
+          </li>
+        <% end %>
+      </ul>
+    </div>
   </div>
 </div>
 
@@ -94,7 +125,7 @@
     <span class="hidden-xs-custom"><%= t("repositories.edit_record") %></span>
   </button>
 
-  <% if can_manage_repository_rows?(repository.team) %>
+  <% if can_manage_repository_rows?(@repository.team) %>
     <button type="button" class="btn btn-default"
       id="deleteRepositoryRecordsButton" data-target="#deleteRepositoryRecord" data-toggle="modal" disabled>
       <span class="glyphicon glyphicon-trash"></span>
@@ -107,10 +138,19 @@
 
 <%= render partial: "repositories/repository_table.html.erb",
            locals: {
-             repository: repository,
-             repository_index_link: repository_table_index_path(repository)
+             repository: @repository,
+             repository_index_link: repository_table_index_path(@repository)
            }
 %>
 <%= render partial: 'repositories/import_repository_records_modal.html.erb',
-                    locals: { repository: repository } %>
+                    locals: { repository: @repository } %>
+
+<%= render partial: "repositories/delete_record_modal.html.erb" %>
+<%= render partial: "repositories/delete_column_modal.html.erb" %>
+<%= render partial: 'repositories/export_repository_modal.html.erb',
+           locals: { repository: @repository } %>
+
 <%= javascript_include_tag 'repositories/edit', 'data-turbolinks-track' => true %>
+<%= javascript_include_tag 'repositories/repository_datatable' %>
+<%= javascript_include_tag "repositories/show", "data-turbolinks-track" => true %>
+<%= javascript_include_tag "repositories/index", "data-turbolinks-track" => true %>
