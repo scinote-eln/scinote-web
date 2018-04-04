@@ -68,12 +68,13 @@ module SearchableModel
         end
       else
         unless attrs.empty?
-          id_index = 0 # quick fix to enable searching by repositoy_row id
+          # quick fix to enable searching by repositoy_row id
+          id_index = { present: false }
           where_str =
             (attrs.map.with_index do |a, i|
               if a == 'repository_rows.id'
-                id_index = i
-                "#{a} = :t#{i} OR "
+                id_index = { present: true, val: i }
+                "(#{a}) = :t#{i} OR "
               else
                 "(trim_html_tags(#{a})) #{like} :t#{i} OR "
               end
@@ -81,7 +82,7 @@ module SearchableModel
             ).join[0..-5]
           vals = (
             attrs.map.with_index do |_, i|
-              if id_index == i
+              if id_index[:present] && id_index[:val] == i
                 ["t#{i}".to_sym, sanitize_sql_like(query).to_i]
               else
                 ["t#{i}".to_sym, "%#{sanitize_sql_like(query.to_s)}%"]

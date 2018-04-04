@@ -8,13 +8,14 @@
     "data": {
       "type": "array",
       "items":{
-        "required": ["DT_RowId", "1", "2", "3", "4", "recordEditUrl", "recordUpdateUrl", "recordInfoUrl"],
+        "required": ["DT_RowId", "1", "2", "3", "4", "5", "recordEditUrl", "recordUpdateUrl", "recordInfoUrl"],
         "properties": {
           "DT_RowId": { "type": "integer" },
           "1": { "type": "string" },
-          "2": { "type": "string" },
+          "2": { "type": "integer" },
           "3": { "type": "string" },
           "4": { "type": "string" },
+          "5": { "type": "string" },
           "recordEditUrl": { "type": "string" },
           "recordUpdateUrl": { "type": "string" },
           "recordInfoUrl": { "type": "string" }
