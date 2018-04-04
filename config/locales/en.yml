@@ -990,6 +990,17 @@ en:
     no_records_unassigned_flash: "No items were unassigned from task"
     default_column: 'Name'
 
+  libraries:
+    sidebar:
+      title: "Inventories"
+    index:
+      head_title: "Inventories"
+      no_libraries:
+        text: "You don't have any inventories."
+        title: "Please create your first Inventory"
+        create_new_button: "Create New Inventory"
+    show:
+      head_title: "Inventories | %{library}"
   repository_row:
     modal_info:
       head_title: "Information for item '%{repository_row}'"
