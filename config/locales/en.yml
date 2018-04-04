@@ -992,15 +992,15 @@ en:
 
   libraries:
     sidebar:
-      title: "Libraries"
+      title: "Inventories"
     index:
-      head_title: "Libraries"
+      head_title: "Inventories"
       no_libraries:
-        text: "You don't have any libraries."
-        title: "Please create your first Library"
-        create_new_button: "Create New Library"
+        text: "You don't have any inventories."
+        title: "Please create your first Inventory"
+        create_new_button: "Create New Inventory"
     show:
-      head_title: "Libraries | %{library}"
+      head_title: "Inventories | %{library}"
   repository_row:
     modal_info:
       head_title: "Information for item '%{repository_row}'"
