@@ -29,9 +29,9 @@ module TinyMceHelper
       if pdf_export_ready
         report_image_asset_url(img, :tiny_mce_asset, 'tiny-mce-pdf-ready')
       else
-        image_tag img.url,
+        image_tag(img.url,
                   class: 'img-responsive',
-                  data: { token: Base62.encode(img.id) }
+                  data: { token: Base62.encode(img.id) })
       end
     end
   end
