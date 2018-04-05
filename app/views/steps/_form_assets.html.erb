@@ -11,45 +11,6 @@
     </div>
   </div>
   <div class="panel-body">
-    <% if ff.object.file.exists? %>
-      <% if can_read_protocol_in_module?(@protocol) || can_read_protocol_in_repository?(@protocol) %>
-        <% if ff.object.is_image? %>
-          <%= link_to download_asset_path(ff.object),
-            class: 'image-preview-link',
-            id: "modal_link#{ff.object.id}",
-            data: {no_turbolink: true, id: true, status: "asset-present",
-              description: "#{step.position + 1}. #{truncate(step.name, length: Constants::FILENAME_TRUNCATION_LENGTH)}"} do %>
-              <% if ff.object.is_image? %>
-                <%= image_tag ff.object.url(:medium), data: {'preview-url': large_image_url_asset_path(ff.object)} %>
-                <p><%= truncate(ff.object.file_file_name,
-                                length: Constants::FILENAME_TRUNCATION_LENGTH) %></p>
-              <% else %>
-                <p>
-                  <%= file_extension_icon(ff.object) %>
-                  <%= ff.object.file_file_name %>
-                </p>
-              <% end %>
-          <% end %>
-        <% else %>
-          <%= link_to download_asset_path(ff.object), data: {no_turbolink: true} do %>
-            <% if ff.object.is_image? %>
-              <%= image_tag ff.object.url(:medium) %>
-              <p><%= truncate(ff.object.file_file_name,
-                              length: Constants::FILENAME_TRUNCATION_LENGTH) %></p>
-            <% else %>
-              <p>
-                <%= file_extension_icon(ff.object) %>
-                <%= ff.object.file_file_name %>
-              </p>
-            <% end %>
-          <% end %>
-        <% end %>
-      <% else %>
-        <%= image_tag image_tag ff.object.url(:medium) if ff.object.is_image? %>
-        <p><%= ff.object.file_file_name %></p>
-      <% end %>
-    <% else %>
-      <%= ff.file_field :file %>
-    <% end %>
+    <%= render partial: "shared/asset_link", locals: { asset: ff.object }, formats: :html %>
   </div>
 </div>

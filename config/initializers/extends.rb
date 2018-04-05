@@ -73,4 +73,8 @@ class Extends
   # Hash used for mapping file extensions to custom icons,
   # 'extension' => 'path_to_the_icon'
   FILE_ICON_MAPPINGS = {}
+
+  # Hash used for mapping file extensions to custom font awesome icon classes,
+  # 'extension' => 'fa class'
+  FILE_FA_ICON_MAPPINGS = {}
 end

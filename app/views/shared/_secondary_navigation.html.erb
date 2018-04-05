@@ -41,16 +41,16 @@
         <% end %>
         <% if experiment_page? %>
           <li class="active">
-            <%= fa_icon 'fa-flask' %>
+            <i class="fas fa-flask"></i>
           </li>
         <% elsif module_page? %>
           <li>
             <% if can_read_experiment?(@experiment) %>
               <%= link_to canvas_experiment_path(@experiment) do %>
-                <%= fa_icon 'fa-flask' %>
+                <i class="fas fa-flask"></i>
               <% end %>
             <% else %>
-              <%= fa_icon 'fa-flask' %>
+              <i class="fas fa-flask"></i>
             <% end %>
           </li>
           <li class="active">
@@ -58,7 +58,7 @@
           </li>
         <% elsif experiment_page? %>
           <li class="active">
-            <%= fa_icon 'fa-flask' %>
+            <i class="fas fa-flask"></i>
           </li>
         <% end %>
       </ul>

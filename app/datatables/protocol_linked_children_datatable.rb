@@ -61,7 +61,7 @@ class ProtocolLinkedChildrenDatatable < CustomDatatable
       locals: { project: record.my_module.experiment.project }
     )
     res += '</li>'
-    res += "<li><i class='fa fa-flask'></i>&nbsp;"
+    res += "<li><i class='fas fa-flask'></i>&nbsp;"
     res += @controller.render_to_string(
       partial: 'search/results/partials/experiment_text.html.erb',
       locals: { experiment: record.my_module.experiment }
