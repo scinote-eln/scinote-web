@@ -17,7 +17,8 @@ module TinyMceHelper
     html
   end
 
-  def generate_image_tag_from_token(text, obj)
+  # @param pdf_export_ready is needed for wicked_pdf in export report action
+  def generate_image_tag_from_token(text, obj, pdf_export_ready = false)
     return unless text
     regex = Constants::TINY_MCE_ASSET_REGEX
     text.gsub(regex) do |el|
@@ -25,9 +26,13 @@ module TinyMceHelper
       img = TinyMceAsset.find_by_id(match[1])
       next unless img && img.team == current_team
       next unless check_image_permissions(obj, img)
-      image_tag img.url,
-                class: 'img-responsive',
-                data: { token: Base62.encode(img.id) }
+      if pdf_export_ready
+        report_image_asset_url(img, :tiny_mce_asset, 'tiny-mce-pdf-ready')
+      else
+        image_tag img.url,
+                  class: 'img-responsive',
+                  data: { token: Base62.encode(img.id) }
+      end
     end
   end
 
