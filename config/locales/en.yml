@@ -1329,6 +1329,14 @@ en:
       navigation:
         account: "Account"
         teams: "Teams"
+      sidebar:
+        title: "Settings"
+        account: "Account"
+        teams: "Teams"
+        account_nav:
+          profile: "Profile"
+          preferences: "Preferences"
+          addons: "Add-ons"
       account:
         navigation:
           profile: "Profile"

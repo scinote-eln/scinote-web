@@ -1,0 +1,95 @@
+<%= content_for :sidebar do %>
+ <div id="slide-panel" class="visible">
+   <div class="tree">
+     <ul data-hook="user-settings-navigation-html">
+       <li>
+         <span class="tree-link line-wrap no-indent">
+           <strong title="<%= t('users.settings.sidebar.title') %>"><%= t('users.settings.sidebar.title') %></strong>
+         </span>
+       </li>
+       <!-- Account -->
+       <li class="parent_li" >
+         <span class="tree-link line-wrap no-indent">
+           <i id="triangleRight"
+              title="Expand this branch"
+              class="glyphicon glyphicon-triangle-right"
+              aria-hidden="true"
+              onclick="listToggleShow()"
+              style="<%= 'display: none;' if on_settings_account_page? %>"
+              ></i>
+           <i id="triangleDown"
+              title="Collapse this branch"
+              class="glyphicon glyphicon-triangle-right expanded"
+              aria-hidden="true"
+              onclick="listToggleHide()"
+              style="<%= 'display: none;' unless on_settings_account_page? %>"
+              ></i>
+           <% style = 'font-weight: bold;' if on_settings_account_page? %>
+           <%= link_to t("users.settings.sidebar.account"),
+                       edit_user_registration_path,
+                       style: style,
+                       data: { 'no-turbolink' => 'true' } %>
+         </span>
+
+         <ul id="accountNavigation" style="<%= 'display: none;' unless on_settings_account_page? %>">
+           <li class="<%= 'active parent_li' if on_settings_account_profile_page? %>" >
+             <span class="tree-link line-wrap first-indent">
+               <% if on_settings_account_profile_page? %>
+                 <span title="<%= t("users.settings.sidebar.account_nav.profile") %>"><%= t("users.settings.sidebar.account_nav.profile") %></span>
+               <% else %>
+                 <%= link_to t("users.settings.sidebar.account_nav.profile"),
+                             edit_user_registration_path,
+                             data: { 'no-turbolink' => 'true' } %>
+               <% end %>
+             </span>
+           </li>
+           <li class="<%= 'active parent_li' if on_settings_account_preferences_page? %>" >
+             <span class="tree-link line-wrap first-indent">
+               <% if on_settings_account_preferences_page? %>
+                 <span title="<%= t("users.settings.sidebar.account_nav.preferences") %>"><%= t("users.settings.sidebar.account_nav.preferences") %></span>
+               <% else %>
+                 <%= link_to t("users.settings.sidebar.account_nav.preferences"),
+                             preferences_path,
+                             data: { 'no-turbolink' => 'true' } %>
+               <% end %>
+             </span>
+           </li>
+           <li class="<%= 'active parent_li' if on_settings_account_addons_page? %>" >
+             <span class="tree-link line-wrap first-indent">
+               <% if on_settings_account_addons_page? %>
+                 <span title="<%= t("users.settings.sidebar.account_nav.addons") %>"><%= t("users.settings.sidebar.account_nav.addons") %></span>
+               <% else %>
+                 <%= link_to t("users.settings.sidebar.account_nav.addons"),
+                             addons_path,
+                             data: { 'no-turbolink' => 'true' } %>
+               <% end %>
+             </span>
+           </li>
+         </ul>
+       </li>
+
+       <!-- Teams -->
+       <li class="<%= 'active parent_li' if on_settings_team_page? %>" >
+         <span class="tree-link line-wrap no-indent">
+           <% if on_settings_team_page? %>
+           <span title="<%= t("users.settings.sidebar.teams") %>"><%= t("users.settings.sidebar.teams") %></span>
+           <% else %>
+             <%= link_to t("users.settings.sidebar.teams"),
+                         teams_path,
+                         data: { 'no-turbolink' => 'true' } %>
+           <% end %>
+         </span>
+       </li>
+
+     </ul>
+   </div>
+ </div>
+<% end %>
+
+<script>
+ $(document).ready(function() {
+   $('#wrapper').show();
+ })
+</script>
+
+<%= javascript_include_tag("users/settings/list_toggle") %>
