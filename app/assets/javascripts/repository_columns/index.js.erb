@@ -39,10 +39,7 @@
                 $('#list_items').val($(tagsInputID).val());
               }
 
-              _processResponse($(formID), 'update');
-
-              $(formID).submit();
-              $('#manageRepositoryColumn').modal('hide');
+              _processResponse($(formID), 'update', modalID);
             });
           });
         });
@@ -92,9 +89,7 @@
                   .val($('[data-role="tagsinput"]').val());
               }
               var form = $('[data-role="manage-repository-column-form"]');
-              _processResponse(form, 'create');
-              form.submit();
-              $(modalID).modal('hide');
+              _processResponse(form, 'create', modalID);
             });
           });
         });
@@ -169,7 +164,7 @@
     });
   }
 
-  function _processResponse(form, action) {
+  function _processResponse(form, action, modalID) {
     form.on('ajax:success', function(e, data) {
       switch(action) {
         case 'destroy':
@@ -186,10 +181,21 @@
       }
       HelperModule.flashAlertMsg(data.message, 'success');
       animateSpinner(null, false);
+      if (modalID) {
+        $(modalID).modal('hide');
+      }
     }).on('ajax:error', function(e, xhr) {
-      HelperModule.flashAlertMsg(xhr.responseJSON.message, 'danger');
       animateSpinner(null, false);
-    })
+      if (modalID) {
+        var field = { "name": xhr.responseJSON.message }
+        $(form).renderFormErrors('repository_column', field, true, e);
+      } else {
+        HelperModule.flashAlertMsg(xhr.responseJSON.message, 'danger');
+      }
+    });
+    if (modalID) {
+      form.submit();
+    }
   }
 
   /* *********************************
