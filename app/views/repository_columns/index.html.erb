@@ -3,7 +3,8 @@
   <div class="repository-columns-header container">
     <div class="row">
       <%= link_to t('libraries.repository_columns.index.back_to_repository_html', repository: @repository.name),
-                  repository_path(@repository) %>
+                  repository_path(@repository),
+                  data: { turbolinks: false } %>
     </div>
     <div class="row">
       <div class="col-md-6 text-left page-title">

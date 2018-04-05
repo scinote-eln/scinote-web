@@ -94,7 +94,7 @@ class RepositoryColumnsController < ApplicationController
       format.json do
         render json: {
           html: render_to_string(
-            partial: 'repositories/delete_column_modal_body.html.erb',
+            partial: 'repository_columns/delete_column_modal_body.html.erb',
             locals: { column_index: params[:column_index] }
           )
         }
@@ -104,6 +104,7 @@ class RepositoryColumnsController < ApplicationController
 
   def destroy
     @del_repository_column = @repository_column.dup
+    column_id = @repository_column.id
     respond_to do |format|
       format.json do
         if @repository_column.destroy

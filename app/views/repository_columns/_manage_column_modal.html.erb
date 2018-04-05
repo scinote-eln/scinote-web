@@ -32,11 +32,11 @@
                                checked: checked?(@repository_column, 'RepositoryTextValue'.freeze),
                                disabled: disabled?(@repository_column, 'RepositoryTextValue'.freeze) %>
             <%= f.radio_button :data_type,
-                               'RepositoryFileValue'.freeze,
+                               'RepositoryAssetValue'.freeze,
                                label: t('libraries.manange_modal_column.labels.file'),
                                inline: true,
-                               checked: checked?(@repository_column, 'RepositoryFileValue'.freeze),
-                               disabled: disabled?(@repository_column, 'RepositoryFileValue'.freeze) %>
+                               checked: checked?(@repository_column, 'RepositoryAssetValue'.freeze),
+                               disabled: disabled?(@repository_column, 'RepositoryAssetValue'.freeze) %>
             <%= f.radio_button :data_type,
                                'RepositoryListValue'.freeze,
                                label: t('libraries.manange_modal_column.labels.dropdown'),
