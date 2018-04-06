@@ -4,7 +4,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
                 only: %i(new create new_with_provider create_with_provider)
   before_action :sign_up_with_provider_enabled?,
                 only: %i(new_with_provider create_with_provider)
-  layout 'fluid'
+  layout :layout
 
   def avatar
     user = User.find_by_id(params[:id]) || current_user
@@ -291,6 +291,10 @@ class Users::RegistrationsController < Devise::RegistrationsController
   end
 
   private
+
+  def layout
+    'fluid' if action_name == 'edit'
+  end
 
   def check_captcha
     if Rails.configuration.x.enable_recaptcha
