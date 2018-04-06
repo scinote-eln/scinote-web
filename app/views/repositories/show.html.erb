@@ -11,17 +11,6 @@
       <span class="glyphicon glyphicon-plus"></span>
       <span class="hidden-xs"><%= t("repositories.add_new_record") %></span>
     </button>
-    <button type="button" class="btn btn-default" id="importRecordsButton">
-      <span class="glyphicon glyphicon-cloud-upload"></span>
-      <span class="hidden-xs"><%= t('repositories.import_records.import') %></span>
-    </button>
-  <% end %>
-
-  <% if can_read_team?(@repository.team) %>
-    <a href="#" class="btn btn-default" id="exportRepositoriesButton" data-turbolinks="false">
-      <span class="glyphicon glyphicon-cloud-download"></span>
-      <span class="hidden-xs"><%= t("my_modules.repository.export") %></span>
-    </a>
   <% end %>
 
   <div class="repository-cog">
@@ -47,6 +36,10 @@
                           class: "rename-repo-option",
                           remote: true %>
             </li>
+            <li>
+              <%= link_to t('repositories.index.options_dropdown.manage_columns'),
+                          repository_repository_columns_path(@repository) %>
+            </li>
           <% end %>
           <% if can_create_repositories?(@repository.team) %>
             <li>
@@ -55,6 +48,20 @@
                           class: "copy-repo-option",
                           remote: true %>
             </li>
+          <% end %>
+          <% if can_create_repository_rows?(@repository.team) %>
+          <li>
+            <a href="#" id="importRecordsButton" data-turbolinks="false">
+              <%= t('repositories.import_records.import') %>
+            </a>
+          <li>
+          <% end %>
+          <% if can_read_team?(@repository.team) %>
+          <li>
+            <a href="#"  id="exportRepositoriesButton" data-turbolinks="false">
+              <%= t("my_modules.repository.export") %>
+            </a>
+          </li>
           <% end %>
           <% if can_manage_repository?(@repository) %>
             <li role="separator" class="divider"></li>
@@ -124,7 +131,6 @@
                     locals: { repository: @repository } %>
 
 <%= render partial: "repositories/delete_record_modal.html.erb" %>
-<%= render partial: "repositories/delete_column_modal.html.erb" %>
 <%= render partial: 'repositories/export_repository_modal.html.erb',
            locals: { repository: @repository } %>
 

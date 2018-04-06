@@ -890,6 +890,7 @@ en:
         rename: "Rename"
         copy: "Copy"
         delete: "Delete"
+        manage_columns: 'Manage Columns'
       modal_delete:
         title_html: "Delete repository <em>%{name}</em>"
         message_html: "Are you sure you want to delete repository <em>%{name}</em>? This action is irreversible."
@@ -992,6 +993,33 @@ en:
     default_column: 'Name'
 
   libraries:
+    manange_modal_column:
+      colum_type: "Column type"
+      dropdown_item_descirption: "Dropdown items should be separated by comma."
+      labels:
+        text: "Text"
+        file: "File"
+        dropdown: "Dropdown"
+      new:
+        title: "Add New Column"
+      edit:
+        title: "Edit %{name} Column"
+
+    repository_columns:
+      head_title: '%{repository} | Manage Columns'
+      update:
+        success_flash: "Column %{name} was successfully updated."
+      create:
+        success_flash: "Column %{name} was successfully created."
+      destroy:
+        success_flash: "Column %{name} was successfully deleted."
+        error_flash: "Something went wrong! Please try again later."
+      index:
+        manage_column: "Manage Columns"
+        new_column: "New"
+        no_column: "No columns"
+        edit_column: "Edit"
+        back_to_repository_html: "<span class='glyphicon glyphicon-chevron-left'></span> Back to %{repository}"
     sidebar:
       title: "Inventories"
     index:

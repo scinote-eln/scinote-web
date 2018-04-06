@@ -243,14 +243,13 @@ var RepositoryDatatable = (function(global) {
   function bindExportActions() {
     $('form#form-export').submit(function() {
       var form = this;
-
       if (currentMode === 'viewMode') {
         // Remove all hidden fields
         $(form).find('input[name=row_ids\\[\\]]').remove();
         $(form).find('input[name=header_ids\\[\\]]').remove();
 
         // Append visible column information
-        $('.active table' + TABLE_ID + ' thead tr th').each(function() {
+        $('table' + TABLE_ID + ' thead tr th').each(function() {
           var th = $(this);
           var val;
           switch ($(th).attr('id')) {
@@ -767,7 +766,7 @@ var RepositoryDatatable = (function(global) {
         $('#editRepositoryRecord').addClass('disabled');
         $('#deleteRepositoryRecordsButton').prop('disabled', true);
         $('#deleteRepositoryRecordsButton').addClass('disabled');
-        $('#exportRepositoriesButton').addClass('disabled');
+        $('#exportRepositoriesButton').parent('li').addClass('disabled');
         $('#exportRepositoriesButton').prop('disabled', true);
         $('#exportRepositoriesButton').off('click');
         $('#export-repositories').off('click');
@@ -784,7 +783,7 @@ var RepositoryDatatable = (function(global) {
           // If we switched from 2 selections to 1, then this is not needed
           var events = $._data($('#exportRepositoriesButton').get(0), 'events');
           if (!events || !events.click) {
-            $('#exportRepositoriesButton').removeClass('disabled');
+            $('#exportRepositoriesButton').parent('li').removeClass('disabled');
             $('#exportRepositoriesButton').prop('disabled', false);
             $('#exportRepositoriesButton').off('click').on('click', function() {
               $('#exportRepositoryModal').modal('show');
