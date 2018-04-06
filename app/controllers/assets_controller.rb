@@ -7,7 +7,6 @@ class AssetsController < ApplicationController
   include ActionView::Context
   include InputSanitizeHelper
   include FileIconsHelper
-  include WopiHelper
 
   before_action :load_vars
   before_action :check_read_permission, except: :file_present
@@ -31,32 +30,55 @@ class AssetsController < ApplicationController
           render json: {
             'asset-id' => @asset.id,
             'image-tag-url' => @asset.url(:medium),
-            'preview-url' => large_image_url_asset_path(@asset),
+            'preview-url' => asset_file_preview_path(@asset),
             'filename' => truncate(@asset.file_file_name,
                                    length:
                                      Constants::FILENAME_TRUNCATION_LENGTH),
             'download-url' => download_asset_path(@asset),
-            'type' => asset_data_type(@asset),
-            'wopi-file-name' => wopi_asset_file_name(@asset, true),
-            'wopi-edit' => (wopi_asset_edit_button(@asset) if wopi_file?(@asset)),
-            'wopi-view' => (wopi_asset_view_button(@asset) if wopi_file?(@asset))
+            'type' => asset_data_type(@asset)
           }, status: 200
         end
       end
     end
   end
 
-  def large_image_url
+  def file_preview
+    response_json = {
+      'type' => (@asset.is_image? ? 'image' : 'file'),
+
+      'filename' => truncate(@asset.file_file_name,
+                             length:
+                               Constants::FILENAME_TRUNCATION_LENGTH),
+      'download-url' => download_asset_path(@asset)
+    }
+
+    if @asset.is_image?
+      response_json['large-preview-url'] = @asset.url(:large)
+    else
+      response_json['preview-icon'] = render_to_string(
+        partial: 'shared/file_preview_icon.html.erb',
+        locals: { asset: @asset }
+      )
+    end
+
+    if wopi_file?(@asset)
+      can_edit =
+        if @assoc.class == Step
+          can_manage_protocol_in_module?(@protocol) ||
+            can_manage_protocol_in_repository?(@protocol)
+        elsif @assoc.class == Result
+          can_manage_module?(@my_module)
+        elsif @assoc.class == RepositoryCell
+          # TBD
+        end
+      response_json['wopi-controls'] = render_to_string(
+        partial: 'shared/file_wopi_controlls.html.erb',
+        locals: { asset: @asset, can_edit: can_edit }
+      )
+    end
     respond_to do |format|
       format.json do
-        render json: {
-          'large-preview-url' => @asset.url(:large),
-          'filename' => truncate(@asset.file_file_name,
-                                 length:
-                                   Constants::FILENAME_TRUNCATION_LENGTH),
-          'download-url' => download_asset_path(@asset),
-          'type' => (@asset.is_image? ? 'image' : 'file')
-        }
+        render json: response_json
       end
     end
   end

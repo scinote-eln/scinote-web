@@ -24,10 +24,12 @@ module RepositoryZipExport
                     when -1, -2
                       next
                     when -3
-                      I18n.t('repositories.table.row_name')
+                      I18n.t('repositories.table.id')
                     when -4
-                      I18n.t('repositories.table.added_by')
+                      I18n.t('repositories.table.row_name')
                     when -5
+                      I18n.t('repositories.table.added_by')
+                    when -6
                       I18n.t('repositories.table.added_on')
                     else
                       column = RepositoryColumn.find_by_id(c_id)
@@ -44,10 +46,12 @@ module RepositoryZipExport
                      when -1, -2
                        next
                      when -3
-                       row.name
+                       row.id
                      when -4
-                       row.created_by.full_name
+                       row.name
                      when -5
+                       row.created_by.full_name
+                     when -6
                        I18n.l(row.created_at, format: :full)
                      else
                        cell = row.repository_cells

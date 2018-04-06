@@ -10,9 +10,10 @@ module RepositoryDatatableHelper
       row = {
             'DT_RowId': record.id,
             '1': assigned_row(record, assigned_rows),
-            '2': escape_input(record.name),
-            '3': I18n.l(record.created_at, format: :full),
-            '4': escape_input(record.created_by.full_name),
+            '2': record.id,
+            '3': escape_input(record.name),
+            '4': I18n.l(record.created_at, format: :full),
+            '5': escape_input(record.created_by.full_name),
             'recordEditUrl': Rails.application.routes.url_helpers
                                   .edit_repository_repository_row_path(
                                     repository,

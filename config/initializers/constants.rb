@@ -147,40 +147,21 @@ class Constants
   ].freeze
 
   # Theme colors
-  COLOR_THEME_PRIMARY = '#37a0d9'.freeze # $color-theme-primary
-  COLOR_THEME_SECONDARY = '#8fd13f'.freeze # $color-theme-secondary
-  COLOR_THEME_DARK = '#6d6e71'.freeze # $color-theme-dark
+  BRAND_PRIMARY = '#37a0d9'.freeze # $brand-primary
+  BRAND_DEFAULT = '#8fd13f'.freeze # $brand-default
 
   # Grayscale colors
   COLOR_WHITE = '#ffffff'.freeze # $color-white
   COLOR_ALABASTER = '#fcfcfc'.freeze # $color-alabaster
-  COLOR_SNOW = '#f9f9f9'.freeze # $color-snow
-  COLOR_WILD_SAND = '#f5f5f5'.freeze # $color-wild-sand
   COLOR_CONCRETE = '#f2f2f2'.freeze # $color-concrete
-  COLOR_GALLERY = '#eeeeee'.freeze # $color-gallery
   COLOR_GAINSBORO = '#e3e3e3'.freeze # $color-gainsboro
   COLOR_ALTO = '#d2d2d2'.freeze # $color-alto
   COLOR_SILVER = '#c5c5c5'.freeze # $color-silver
-  COLOR_DARK_GRAY = '#adadad'.freeze # $color-dark-gray
   COLOR_SILVER_CHALICE = '#a0a0a0'.freeze # $color-silver-chalice
-  COLOR_GRAY = '#909088'.freeze # $color-gray
   COLOR_DOVE_GRAY = '#666666'.freeze # $color-dove-gray
   COLOR_EMPEROR = '#555555'.freeze # $color-emperor
-  COLOR_MINE_SHAFT = '#333333'.freeze # $color-mine-shaft
-  COLOR_NERO = '#262626'.freeze # $color-nero
   COLOR_BLACK = '#000000'.freeze # $color-black
-  COLOR_GRAY_LIGHT_YADCF = '#cccccc'.freeze # $color-gray-light-yadcf
-  COLOR_GRAY_DARK_YADCF = '#a9a9a9'.freeze # $color-gray-dark-yadcf
 
-  # Miscelaneous colors
-  COLOR_MYSTIC = '#eaeff2'.freeze # $color-mystic
-  COLOR_CANDLELIGHT = '#ffda23'.freeze # $color-candlelight
-  COLOR_BLUE_YADCF = '#337ab7'.freeze # $color-blue-yadcf
-
-  # Red colors
-  COLOR_MOJO = '#cf4b48'.freeze # $color-mojo
-  COLOR_APPLE_BLOSSOM = '#a94442'.freeze # $color-apple-blossom
-  COLOR_MILANO_RED = '#a70b05'.freeze # $color-milano-red
 
   #=============================================================================
   # External URLs
@@ -864,17 +845,17 @@ class Constants
   REPOSITORY_TABLE_DEFAULT_STATE = {
     'time' => 0,
     'start' => 0,
-    'length' => 5,
-    'order' => [[2, 'desc']],
+    'length' => 6,
+    'order' => [[3, 'desc']],
     'search' => { 'search' => '',
                   'smart' => true,
                   'regex' => false,
                   'caseInsensitive' => true },
     'columns' => [],
     'assigned' => 'assigned',
-    'ColReorder' => [*0..4]
+    'ColReorder' => [*0..5]
   }
-  5.times do
+  6.times do
     REPOSITORY_TABLE_DEFAULT_STATE['columns'] << {
       'visible' => true,
       'search' => { 'search' => '',

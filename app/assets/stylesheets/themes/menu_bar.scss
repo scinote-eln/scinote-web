@@ -16,9 +16,9 @@
     padding-right: 4px;
 
     & > a {
-      color: $color-gray;
+      color: $color-silver-chalice;
       display: grid;
-      font-size: 12px;
+      font-size: $font-size-h6;
       margin-left: auto;
       margin-right: auto;
       padding: 10px;
@@ -33,7 +33,7 @@
       background-color: $color-gainsboro;
       margin-right: 4px;
       padding-right: 0;
-      @include box-shadow(4px 0 0 $color-theme-primary);
+      @include box-shadow(4px 0 0 $brand-primary);
 
       & > a {
         color: $color-emperor;

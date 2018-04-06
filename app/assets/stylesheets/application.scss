@@ -9,6 +9,8 @@
  *= require introjs
  *= stub reports_pdf
  */
+
+@import "constants";
 @import "bootstrap-sprockets";
 @import "bootstrap";
 @import "bootstrap-datetimepicker";
@@ -18,5 +20,4 @@
 @import "handsontable.full.min";
 @import "ajax-bootstrap-select.min";
 @import "extend/bootstrap";
-@import "font-awesome";
 @import "themes/scinote";

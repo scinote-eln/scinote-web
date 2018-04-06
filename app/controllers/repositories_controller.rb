@@ -11,21 +11,16 @@ class RepositoriesController < ApplicationController
   before_action :check_create_permissions, only:
     %i(create_new_modal create copy_modal copy)
 
+  layout 'fluid'
+
   def index
-    render('repositories/index')
+    unless @repositories.length.zero? && current_team
+      redirect_to repository_path(@repositories.first) and return
+    end
+    render 'repositories/index'
   end
 
-  def show_tab
-    respond_to do |format|
-      format.json do
-        render json: {
-          html: render_to_string(
-            partial: 'repositories/repository.html.erb',
-            locals: { repository: @repository }
-          )
-        }
-      end
-    end
+  def show
   end
 
   def create_modal
@@ -53,7 +48,7 @@ class RepositoriesController < ApplicationController
         if @repository.save
           flash[:success] = t('repositories.index.modal_create.success_flash',
                               name: @repository.name)
-          render json: { url: team_repositories_path(repository: @repository) },
+          render json: { url: repository_path(@repository) },
             status: :ok
         else
           render json: @repository.errors,
@@ -287,7 +282,7 @@ class RepositoriesController < ApplicationController
   end
 
   def load_parent_vars
-    @team = Team.find_by_id(params[:team_id])
+    @team = current_team
     render_404 unless @team
     @repositories = @team.repositories.order(created_at: :asc)
   end

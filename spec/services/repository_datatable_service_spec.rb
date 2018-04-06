@@ -52,7 +52,7 @@ describe RepositoryDatatableService do
 
   context 'object' do
     let(:params) do
-      { order: { 0 => { column: '2', dir: 'asc' } },
+      { order: { 0 => { column: '3', dir: 'asc' } },
         search: { value: 'row' } }
     end
 
@@ -65,7 +65,7 @@ describe RepositoryDatatableService do
         contitions = subject.send(:build_conditions, params)
         expect(contitions[:search_value]).to eq 'row'
         expect(contitions[:order_by_column]).to eq(
-          { column: 2, dir: 'asc' }
+          { column: 3, dir: 'asc' }
         )
       end
     end
@@ -73,7 +73,7 @@ describe RepositoryDatatableService do
     describe '#sortable_columns' do
       it 'returns an array of all columns that are sortable' do
         columns = subject.send(:sortable_columns)
-        expect(columns.length).to eq 5
+        expect(columns.length).to eq 6
       end
     end
 
@@ -92,7 +92,7 @@ describe RepositoryDatatableService do
 
   describe 'ordering' do
     it 'is ordered by row name asc' do
-      params = { order: { 0 => { column: '2', dir: 'asc' } },
+      params = { order: { 0 => { column: '3', dir: 'asc' } },
                  search: { value: '' } }
       subject = RepositoryDatatableService.new(repository,
                                                params,
@@ -102,7 +102,7 @@ describe RepositoryDatatableService do
     end
 
     it 'is ordered by row name desc' do
-      params = { order: { 0 => { column: '2', dir: 'desc' } },
+      params = { order: { 0 => { column: '3', dir: 'desc' } },
                  search: { value: '' } }
       subject = RepositoryDatatableService.new(repository,
                                                params,
@@ -121,7 +121,7 @@ describe RepositoryDatatableService do
     end
 
     it 'returns only the searched entity' do
-      params = { order: { 0 => { column: '2', dir: 'desc' } },
+      params = { order: { 0 => { column: '4', dir: 'desc' } },
                  search: { value: 'test' } }
       subject = RepositoryDatatableService.new(repository,
                                                params,

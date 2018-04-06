@@ -3,7 +3,7 @@
     data-current-uri="<%= request.original_url %>"
     data-repository-id="<%= repository.id %>"
     data-source="<%= repository_index_link %>"
-    data-num-columns="<%= 5 + repository.repository_columns.count %>"
+    data-num-columns="<%= 6 + repository.repository_columns.count %>"
     data-create-record="<%= repository_repository_rows_path(repository) %>"
     data-delete-record="<%= repository_delete_records_path(repository) %>"
     data-max-dropdown-length="<%= Constants::NAME_TRUNCATION_LENGTH_DROPDOWN %>"
@@ -16,6 +16,7 @@
       <tr>
         <th id="checkbox"><input name="select_all" value="1" type="checkbox"></th>
         <th id="assigned"><%= t("repositories.table.assigned") %></th>
+        <th id="row-id"><%= t("repositories.table.id") %></th>
         <th id="row-name"><%= t("repositories.table.row_name") %></th>
         <th id="added-on"><%= t("repositories.table.added_on") %></th>
         <th id="added-by"><%= t("repositories.table.added_by") %></th>

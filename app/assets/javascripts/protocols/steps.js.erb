@@ -43,7 +43,7 @@
             var task_button = $("[data-action='complete-task']");
             task_button.attr('data-action', 'uncomplete-task');
             task_button.find('.btn')
-              .removeClass('btn-primary').addClass('btn-greyed');
+              .removeClass('btn-primary').addClass('btn-default');
             $('.task-due-date').html(data.module_header_due_date_label);
             $('.task-state-label').html(data.module_state_label);
             task_button

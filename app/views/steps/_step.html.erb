@@ -83,50 +83,7 @@
               <ul>
                 <% assets.each do |asset| %>
                   <li>
-                    <% if can_read_protocol_in_module?(@protocol) ||
-                          can_read_protocol_in_repository?(@protocol) %>
-                      <% if asset.file_present %>
-                        <% if asset.file.processing? %>
-                          <span data-status='asset-loading'
-                                data-present-url='<%= file_present_asset_path(asset) %>'>
-                            <%= image_tag 'medium/processing.gif' %>
-                          </span>
-                        <% else %>
-                          <% if asset.is_image? %>
-                            <%= link_to download_asset_path(asset),
-                              class: 'image-preview-link',
-                              id: "modal_link#{asset.id}",
-                              data: {no_turbolink: true, id: true, status: "asset-present",
-                                description: "#{step.position + 1}. #{truncate(step.name, length: Constants::FILENAME_TRUNCATION_LENGTH)}"} do %>
-                              <%= image_tag asset.url(:medium), data: {'preview-url': large_image_url_asset_path(asset)} %>
-                              <p><%= truncate(asset.file_file_name,
-                                              length: Constants::FILENAME_TRUNCATION_LENGTH) %></p>
-                            <% end %>
-                          <% else %>
-                            <%= render partial: 'steps/wopi_controlls.html.erb', locals: { asset: asset } %>
-                          <% end %>
-                        <% end %>
-                      <% else %>
-                        <span data-status='asset-loading'
-                              data-present-url='<%= file_present_asset_path(asset) %>'>
-                          <%= image_tag 'medium/processing.gif' %>
-                        </span>
-                      <% end %>
-                    <% else %>
-                      <% if asset.file.processing? %>
-                        <span data-status='asset-loading'
-                              data-present-url='<%= file_present_asset_path(asset) %>'>
-                          <%= image_tag 'medium/processing.gif' %>
-                        </span>
-                      <% else %>
-                        <%= image_tag asset.url(:medium) if asset.is_image? %>
-                      <% end %>
-                      <p>
-                        <%= file_extension_icon(asset) %>
-                        <%= truncate(asset.file_file_name,
-                                     length: Constants::FILENAME_TRUNCATION_LENGTH) %>
-                      </p>
-                    <% end %>
+                    <%= render partial: "shared/asset_link", locals: { asset: asset }, formats: :html %>
                   </li>
                 <% end %>
               </ul>

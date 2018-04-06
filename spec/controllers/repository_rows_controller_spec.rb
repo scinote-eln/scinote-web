@@ -62,7 +62,7 @@ describe RepositoryRowsController, type: :controller do
 
     describe 'json object' do
       it 'returns a valid object' do
-        params = { order: { 0 => { column: '3', dir: 'asc' } },
+        params = { order: { 0 => { column: '4', dir: 'asc' } },
                    drow: '0',
                    search: { value: '' },
                    length: '10',
@@ -77,7 +77,7 @@ describe RepositoryRowsController, type: :controller do
 
     describe 'pagination' do
       it 'returns first 10 records' do
-        params = { order: { 0 => { column: '3', dir: 'asc' } },
+        params = { order: { 0 => { column: '4', dir: 'asc' } },
                    drow: '0',
                    search: { value: '' },
                    length: '10',
@@ -86,11 +86,11 @@ describe RepositoryRowsController, type: :controller do
         get :index, params: params, format: :json
         response_body = JSON.parse(response.body)
         expect(response_body['data'].length).to eq 10
-        expect(response_body['data'].first['2']).to eq 'row (0)'
+        expect(response_body['data'].first['3']).to eq 'row (0)'
       end
 
       it 'returns next 10 records' do
-        params = { order: { 0 => { column: '3', dir: 'asc' } },
+        params = { order: { 0 => { column: '4', dir: 'asc' } },
                    drow: '0',
                    search: { value: '' },
                    length: '10',
@@ -99,11 +99,11 @@ describe RepositoryRowsController, type: :controller do
         get :index, params: params, format: :json
         response_body = JSON.parse(response.body)
         expect(response_body['data'].length).to eq 10
-        expect(response_body['data'].first['2']).to eq 'row (10)'
+        expect(response_body['data'].first['3']).to eq 'row (10)'
       end
 
       it 'returns first 25 records' do
-        params = { order: { 0 => { column: '2', dir: 'desc' } },
+        params = { order: { 0 => { column: '4', dir: 'desc' } },
                    drow: '0',
                    search: { value: '' },
                    length: '25',

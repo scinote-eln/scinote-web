@@ -25,12 +25,12 @@ const NotificationImage = ({className, type, avatar}: Props) => {
       ),
       deliver: (
           <span className="deliver">
-              <i className="fa fa-truck" />
+              <i className="fas fa-truck" />
           </span>
       ),
       assignment: (
           <span className="assignment">
-              <i className="fa fa-newspaper-o" />
+              <i className="fas fa-newspaper-o" />
           </span>
       )
   }

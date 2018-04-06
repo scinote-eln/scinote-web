@@ -13,11 +13,10 @@ module SmartAnnotations
 
     private
 
-    REGEX = /\[\#(.*?)~(prj|exp|tsk|sam|rep_item)~([0-9a-zA-Z]+)\]/
+    REGEX = /\[\#(.*?)~(prj|exp|tsk|rep_item)~([0-9a-zA-Z]+)\]/
     OBJECT_MAPPINGS = { prj: Project,
                         exp: Experiment,
                         tsk: MyModule,
-                        sam: Sample,
                         rep_item: RepositoryRow }.freeze
 
     def parse(user, text)
@@ -26,9 +25,9 @@ module SmartAnnotations
         type = value[:object_type]
         begin
           object = fetch_object(type, value[:object_id])
-          # handle samples/repository_items edge case
-          if type.in? %w(sam rep_item)
-            sample_or_repository_item(value[:name], user, type, object)
+          # handle repository_items edge case
+          if type == 'rep_item'
+            repository_item(value[:name], user, type, object)
           else
             next unless object && SmartAnnotations::PermissionEval.check(user,
                                                                          type,
@@ -41,7 +40,7 @@ module SmartAnnotations
       end
     end
 
-    def sample_or_repository_item(name, user, type, object)
+    def repository_item(name, user, type, object)
       if object && SmartAnnotations::PermissionEval.check(user, type, object)
         return SmartAnnotations::Preview.html(nil, type, object)
       end

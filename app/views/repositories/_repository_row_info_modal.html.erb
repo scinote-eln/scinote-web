@@ -13,12 +13,17 @@
         </ol>
         <p>
           <span>
-            <%= t "repository_row.modal_info.added_on" %>
+            <%=t 'repository_row.modal_info.ID' %>
+            <%= @repository_row.id %>
+          </span>
+          <br>
+          <span>
+            <%= t "repository_row.modal_info.added_on" %>:
             <%= l @repository_row.created_at, format: :full %>
           </span>
           <br>
           <span>
-            <%= t "repository_row.modal_info.added_by" %>
+            <%= t "repository_row.modal_info.added_by" %>:
             <%= @repository_row.created_by.full_name %>
           </span>
           <% @repository_row.repository_cells.each do |repository_cell| %>
@@ -45,7 +50,7 @@
                         <%= render partial: 'search/results/partials/project_text.html.erb',
                                   locals: { project: element.my_module.experiment.project } %>
                       </li>
-                      <li><i class='fa fa-flask'></i>&nbsp;
+                      <li><i class='fas fa-flask'></i>&nbsp;
                         <%= render partial: 'search/results/partials/experiment_text.html.erb',
                                   locals: { experiment: element.my_module.experiment } %>
                       </li>

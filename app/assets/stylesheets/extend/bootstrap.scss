@@ -14,7 +14,7 @@
 
 // Active tab with error should retain error color if clicked on again
 .nav-tabs > li.active.has-error > a {
-  color: $color-apple-blossom;
+  color: $brand-danger;
 }
 
 @media (max-width: 886px) {

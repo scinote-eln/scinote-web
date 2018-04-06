@@ -2,8 +2,8 @@
 @import "mixins";
 
 // Some color definitions
-$color-group-hover: $color-theme-primary;
-$color-module-hover: $color-theme-secondary;
+$color-group-hover: $brand-primary;
+$color-module-hover: $brand-default;
 
 /* Canvas index page */
 
@@ -112,7 +112,7 @@ $color-module-hover: $color-theme-secondary;
     cursor: pointer;
 
     &:hover {
-      color: $color-theme-primary;
+      color: $brand-primary;
       padding: 2px 9px 4px 9px;
     }
   }
@@ -122,7 +122,7 @@ $color-module-hover: $color-theme-secondary;
   border: 2px solid green;
 }
 .jsplumb-drag .title {
-  background-color: $color-theme-primary !important;
+  background-color: $brand-primary !important;
   color: $color-white !important;
 }
 path, ._jsPlumb_endpoint {
@@ -132,7 +132,7 @@ path, ._jsPlumb_endpoint {
   fill: $color-white;
 }
 .ep-hover svg * {
-  fill: $color-theme-primary;
+  fill: $brand-primary;
 }
 
 /* EDIT MODE MODULE */
@@ -140,16 +140,16 @@ path, ._jsPlumb_endpoint {
   opacity: 0.7;
 }
 .module.dragged > .panel-heading {
-  background-color: $color-theme-primary;
+  background-color: $brand-primary;
   color: $color-white;
 }
 .module.collided {
   .overlay {
     display: block;
     z-index: 21;
-    background-color: $color-milano-red;
-    border: 1px solid $color-milano-red;
-    @include box-shadow(0 0 0 1pt $color-milano-red);
+    background-color: $brand-danger;
+    border: 1px solid $brand-danger;
+    @include box-shadow(0 0 0 1pt $brand-danger);
     border-radius: 4px;
     position: absolute;
     top: 0;
@@ -223,28 +223,28 @@ path, ._jsPlumb_endpoint {
   }
 
   &.alert-green .panel-body {
-    color: $color-saturated-green;
+    color: $brand-success;
     font-weight: bold;
 
     .due-date-link {
-      color: $color-saturated-green;
+      color: $brand-success;
     }
   }
 
   &.alert-yellow .panel-body {
-    color: $color-candlelight;
+    color: $brand-warning;
     font-weight: bold;
 
     .due-date-link {
-      color: $color-candlelight;
+      color: $brand-warning;
     }
   }
   &.alert-red .panel-body {
-    color: $color-milano-red;
+    color: $brand-danger;
     font-weight: bold;
 
     .due-date-link {
-      color: $color-milano-red;
+      color: $brand-danger;
     }
   }
 }
@@ -265,18 +265,18 @@ path, ._jsPlumb_endpoint {
   }
 
   &.alert-green {
-    border-color: $color-saturated-green;
+    border-color: $brand-success;
     border-radius: 8px;
     border-width: 4px;
   }
 
   &.alert-yellow {
-    border-color: $color-candlelight;
+    border-color: $brand-warning;
     border-width: 4px;
     border-radius: 8px;
   }
   &.alert-red {
-    border-color: $color-milano-red;
+    border-color: $brand-danger;
     border-width: 4px;
     border-radius: 8px;
   }
@@ -326,13 +326,13 @@ path, ._jsPlumb_endpoint {
 
   span {
     font-weight: bold;
-    font-size: 16px;
+    font-size: $font-size-large;
     text-transform: uppercase;
     display: block;
     margin-top: 20%;
 
     a {
-      color: $color-mine-shaft;
+      color: $color-emperor;
     }
   }
 
@@ -344,14 +344,14 @@ path, ._jsPlumb_endpoint {
   }
 
   &.alert-green {
-    border-color: $color-saturated-green;
+    border-color: $brand-success;
   }
 
   &.alert-yellow {
-    border-color: $color-candlelight;
+    border-color: $brand-warning;
   }
   &.alert-red {
-  border-color: $color-milano-red;
+  border-color: $brand-danger;
   }
 }
 
@@ -362,7 +362,7 @@ li.group-hover {
 }
 li.module-hover {
   a {
-    color: $color-theme-primary;
+    color: $brand-primary;
     text-decoration: underline;
   }
 }
@@ -400,7 +400,7 @@ li.module-hover {
           margin-top: 5px;
           font-family: 'Glyphicons Halflings';
           color: $color-white;
-          font-size: 12pt;
+          font-size: $font-size-large;
 
           &:before {
             content: "\e221";
@@ -412,7 +412,7 @@ li.module-hover {
 
     .glyphicon {
       color: $color-white;
-      font-size: 12pt;
+      font-size: $font-size-h6;
     }
 
     a.btn-link {
@@ -463,7 +463,7 @@ li.module-hover {
   .experiment-no-description {
     color: $color-alto;
     display: block;
-    font-size: 18px;
+    font-size: $font-size-h4;
     font-weight: bold;
     text-align: center;
 
@@ -508,7 +508,7 @@ li.module-hover {
 }
 
 .big-plus {
-  color: $color-mystic;
+  color: $brand-primary-light;
   display: block;
   font-size: 250px;
   margin: 20px 0;

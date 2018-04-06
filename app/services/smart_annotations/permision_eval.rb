@@ -23,10 +23,6 @@ module SmartAnnotations
         can_read_experiment?(user, object.experiment)
       end
 
-      def validate_sam_permissions(user, object)
-        can_read_team?(user, object.team)
-      end
-
       def validate_rep_item_permissions(user, object)
         can_read_team?(user, object.repository.team)
       end

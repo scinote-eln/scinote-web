@@ -38,8 +38,8 @@ $toggle-btn-size: 50px;
 
       .sidebar-header {
         height: $toggle-btn-size;
-        background: $color-theme-primary;
-        border-bottom: 2px solid darken($color-theme-primary, 10%);
+        background: $brand-primary;
+        border-bottom: 2px solid darken($brand-primary, 10%);
 
         .sidebar-header-title {
           width: inherit;
@@ -63,10 +63,10 @@ $toggle-btn-size: 50px;
         width: $toggle-btn-size;
         margin-left: ($wrapper-width - $toggle-btn-size);
         margin-top: -$toggle-btn-size;
-        font-size: 20pt;
-        background: $color-theme-primary;
-        border-left: 2px solid darken($color-theme-primary, 10%);
-        border-bottom: 2px solid darken($color-theme-primary, 10%);
+        font-size: $font-size-h3;
+        background: $brand-primary;
+        border-left: 2px solid darken($brand-primary, 10%);
+        border-bottom: 2px solid darken($brand-primary, 10%);
 
         // Animations
         @include transition(margin-left 0.5s ease);
@@ -118,7 +118,7 @@ $toggle-btn-size: 50px;
         @include transition(margin-left 0.5s ease);
 
         span {
-          color: darken($color-theme-primary, 10%);
+          color: darken($brand-primary, 10%);
 
           @include rotate-animation(0.5s, 0deg);
           @include transition(color 0.5s ease);

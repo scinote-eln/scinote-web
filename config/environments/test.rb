@@ -97,6 +97,9 @@ Rails.application.configure do
   # Enable user registrations
   config.x.enable_user_registration = true
 
+  # disable sign in with LinkedIn account
+  config.x.linkedin_signin_enabled = false
+
   # prevents compile assets
   config.assets.compile = false
 end
