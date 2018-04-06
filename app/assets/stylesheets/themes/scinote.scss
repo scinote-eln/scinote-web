@@ -1549,8 +1549,8 @@ th.custom-field .modal-tooltiptext {
   border: 1px solid $color-emperor;
   border-radius: 3px;
   box-shadow: 0 0 5px $color-gainsboro;
-  min-width: 520px;
-  max-height: 200px;
+  max-width: 800px;
+  min-width: 700px;
   overflow: auto;
   z-index: 11110 !important;
 
@@ -1594,33 +1594,20 @@ th.custom-field .modal-tooltiptext {
 // <End of overrides>
 
 .atwho-header-res {
-  padding-top: 3px;
-  padding-bottom: 7px;
-  height: 34px;
   background-color: $color-concrete;
   border-bottom: 1px solid $color-emperor;
-  clear: both;
+  display: flex;
+  flex-wrap: wrap;
+  padding: 3px 5px;
 
-  > div {
-    display: inline;
+  .btn {
+    border-radius: 4px;
+    margin: 5px;
+    padding: 3px;
   }
 
-  .title {
-    float: left;
-    margin-left: 15px;
-
-    .btn {
-      margin-right: 5px;
-      padding: 3px;
-    }
-
-    .btn:last-child {
-      margin-right: 20px;
-    }
-
-    .btn-default {
-      background-color: transparent;
-    }
+  .btn-default {
+    background-color: transparent;
   }
 
   .title-user {
@@ -1628,27 +1615,33 @@ th.custom-field .modal-tooltiptext {
   }
 
   .help {
-    float: right;
-    padding-top: 4px;
+    margin-left: auto;
+    margin-right: 15px;
+    order: 99;
+    padding: 4px;
+    white-space: nowrap;
 
     div {
       display: inline;
-      margin-right: 15px;
       font-size: smaller;
+      margin-left: 15px;
     }
 
-    div strong {
+    strong {
       color: $color-black;
     }
+  }
 
-    .dismiss {
-      color: $color-emperor;
-    }
+  .dismiss {
+    color: $color-emperor;
+    position: absolute;
+    right: 5px;
+    top: 5px;
+  }
 
-    .dismiss:hover {
-      color: $color-black;
-      cursor: pointer;
-    }
+  .dismiss:hover {
+    color: $color-black;
+    cursor: pointer;
   }
 }
 
