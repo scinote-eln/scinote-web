@@ -1326,9 +1326,6 @@ en:
       changed_team_flash: "You are working on %{team} now!"
       changed_team_error_flash: "Something went wrong! Try again later."
       changed_team_in_search: "The searched item is not in your current team. You will be redirected to %{team} team!"
-      navigation:
-        account: "Account"
-        teams: "Teams"
       sidebar:
         title: "Settings"
         account: "Account"
@@ -1338,10 +1335,6 @@ en:
           preferences: "Preferences"
           addons: "Add-ons"
       account:
-        navigation:
-          profile: "Profile"
-          preferences: "Preferences"
-          addons: "Add-ons"
         preferences:
           head_title: "Settings | My preferences"
           edit:
