@@ -102,6 +102,8 @@
   ********************************* */
 
   function _insertNewListItem(column) {
+    // remove element if already persent
+    $('[data-id="' + column.id + '"]').remove();
     var html = '<li class="list-group-item" data-id="' + column.id + '" ';
     html += 'data-destroy-url="' + column.destroy_html_url + '"';
     html += 'data-edit-url="' + column.edit_url + '">';
