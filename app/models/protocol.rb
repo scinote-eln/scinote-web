@@ -499,13 +499,7 @@ class Protocol < ApplicationRecord
         self.protocol_protocol_keywords.destroy_all
         if keywords.present?
           keywords.each do |kw_name|
-            kw = ProtocolKeyword.find_by(name: kw_name)
-            if kw.blank?
-              kw = ProtocolKeyword.create(
-                name: kw_name,
-                team: self.team
-              )
-            end
+            kw = ProtocolKeyword.find_or_create_by(name: kw_name, team: team)
             self.protocol_keywords << kw
           end
         end
