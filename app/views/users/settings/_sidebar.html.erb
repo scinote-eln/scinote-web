@@ -10,29 +10,25 @@
        <!-- Account -->
        <li class="parent_li" >
          <span class="tree-link line-wrap no-indent">
-           <i id="triangleRight"
-              title="Expand this branch"
-              class="glyphicon glyphicon-triangle-right"
+           <i title="Expand this branch"
+              class="glyphicon glyphicon-triangle-right triangleRight"
               aria-hidden="true"
-              onclick="listToggleShow()"
               style="<%= 'display: none;' if on_settings_account_page? %>"
               ></i>
-           <i id="triangleDown"
-              title="Collapse this branch"
-              class="glyphicon glyphicon-triangle-right expanded"
+           <i title="Collapse this branch"
+              class="glyphicon glyphicon-triangle-right expanded triangleDown"
               aria-hidden="true"
-              onclick="listToggleHide()"
               style="<%= 'display: none;' unless on_settings_account_page? %>"
               ></i>
-           <% style = 'font-weight: bold;' if on_settings_account_page? %>
+           <% account_style = 'font-weight: bold;' if on_settings_account_page? %>
            <%= link_to t("users.settings.sidebar.account"),
                        edit_user_registration_path,
-                       style: style,
+                       style: account_style,
                        data: { 'no-turbolink' => 'true' } %>
          </span>
 
-         <ul id="accountNavigation" style="<%= 'display: none;' unless on_settings_account_page? %>">
-           <li class="<%= 'active parent_li' if on_settings_account_profile_page? %>" >
+         <ul class="accountNavigation" data-hook="user-settings-account-navigation-html" style="<%= 'display: none;' unless on_settings_account_page? %>">
+           <li class="<%= 'active' if on_settings_account_profile_page? %>" >
              <span class="tree-link line-wrap first-indent">
                <% if on_settings_account_profile_page? %>
                  <span title="<%= t("users.settings.sidebar.account_nav.profile") %>"><%= t("users.settings.sidebar.account_nav.profile") %></span>
@@ -43,7 +39,7 @@
                <% end %>
              </span>
            </li>
-           <li class="<%= 'active parent_li' if on_settings_account_preferences_page? %>" >
+           <li class="<%= 'active' if on_settings_account_preferences_page? %>" >
              <span class="tree-link line-wrap first-indent">
                <% if on_settings_account_preferences_page? %>
                  <span title="<%= t("users.settings.sidebar.account_nav.preferences") %>"><%= t("users.settings.sidebar.account_nav.preferences") %></span>
@@ -54,7 +50,7 @@
                <% end %>
              </span>
            </li>
-           <li class="<%= 'active parent_li' if on_settings_account_addons_page? %>" >
+           <li class="<%= 'active' if on_settings_account_addons_page? %>" >
              <span class="tree-link line-wrap first-indent">
                <% if on_settings_account_addons_page? %>
                  <span title="<%= t("users.settings.sidebar.account_nav.addons") %>"><%= t("users.settings.sidebar.account_nav.addons") %></span>
@@ -69,7 +65,7 @@
        </li>
 
        <!-- Teams -->
-       <li class="<%= 'active parent_li' if on_settings_team_page? %>" >
+       <li class="<%= 'active' if on_settings_team_page? %>" >
          <span class="tree-link line-wrap no-indent">
            <% if on_settings_team_page? %>
            <span title="<%= t("users.settings.sidebar.teams") %>"><%= t("users.settings.sidebar.teams") %></span>
