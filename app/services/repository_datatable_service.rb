@@ -16,7 +16,7 @@ class RepositoryDatatableService
   def create_columns_mappings
     # Make mappings of custom columns, so we have same id for every
     # column
-    index = 5
+    index = 6
     @mappings = {}
     @repository.repository_columns.order(:id).each do |column|
       @mappings[column.id] = index.to_s
@@ -59,12 +59,13 @@ class RepositoryDatatableService
                              'users.full_name',
                              'repository_rows.id'] +
                             Extends::REPOSITORY_EXTRA_SEARCH_ATTR
-
-    RepositoryRow.left_outer_joins(:created_by)
-                 .left_outer_joins(includes_json)
-                 .where(repository: @repository)
-                 .where_attributes_like(searchable_attributes, value)
-                 .distinct
+    ids = @repository.repository_rows
+                     .left_outer_joins(:created_by)
+                     .left_outer_joins(includes_json)
+                     .where_attributes_like(searchable_attributes, value)
+                     .pluck(:id)
+    # using distinct raises an error when combined with sort
+    RepositoryRow.where(id: ids.uniq)
   end
 
   def build_conditions(params)
@@ -151,17 +152,33 @@ class RepositoryDatatableService
 
   def select_type(type, records, id, dir)
     case type
-      when 'RepositoryTextValue'
-        filter_by_text_value(records, id, dir)
-      when  'RepositoryListValue'
-        filter_by_list_value(records, id, dir)
-      else
-        records
+    when 'RepositoryTextValue'
+      filter_by_text_value(records, id, dir)
+    when 'RepositoryListValue'
+      filter_by_list_value(records, id, dir)
+    when 'RepositoryAssetValue'
+      filter_by_asset_value(records, id, dir)
+    else
+      records
     end
   end
 
   def sort_null_direction(val)
     val == 'ASC' ? 'LAST' : 'FIRST'
+  end
+
+  def filter_by_asset_value(records, id, dir)
+    records.joins(
+      "LEFT OUTER JOIN (SELECT repository_cells.repository_row_id,
+        assets.file_file_name AS value
+      FROM repository_cells
+      INNER JOIN repository_asset_values
+      ON repository_asset_values.id = repository_cells.value_id
+      INNER JOIN assets
+      ON repository_asset_values.asset_id = assets.id
+      WHERE repository_cells.repository_column_id = #{id}) AS values
+      ON values.repository_row_id = repository_rows.id"
+    ).order("values.value #{dir}")
   end
 
   def filter_by_text_value(records, id, dir)
