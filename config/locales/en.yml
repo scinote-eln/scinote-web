@@ -111,6 +111,8 @@ en:
 
   sidebar:
     title: "Navigation"
+    branch_expand: "Expand this branch"
+    branch_collapse: "Collapse this branch"
     no_module_group: "No workflow"
     projects:
       all: "All Projects"
@@ -1354,14 +1356,15 @@ en:
       changed_team_flash: "You are working on %{team} now!"
       changed_team_error_flash: "Something went wrong! Try again later."
       changed_team_in_search: "The searched item is not in your current team. You will be redirected to %{team} team!"
-      navigation:
+      sidebar:
+        title: "Settings"
         account: "Account"
         teams: "Teams"
-      account:
-        navigation:
+        account_nav:
           profile: "Profile"
           preferences: "Preferences"
           addons: "Add-ons"
+      account:
         preferences:
           head_title: "Settings | My preferences"
           edit:

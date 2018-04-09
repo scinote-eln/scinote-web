@@ -9,6 +9,7 @@ module Users
           :reset_tutorial,
           :notifications_settings
         ]
+        layout 'fluid'
 
         def index
         end

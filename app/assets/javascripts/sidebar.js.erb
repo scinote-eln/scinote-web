@@ -128,7 +128,7 @@ function setupSidebarTree() {
       }
       el
       .find(" > span i")
-      .attr("title", "Expand this branch")
+      .attr("title", I18n.t('sidebar.branch_expand'))
       .removeClass("expanded");
     } else {
       if (animate) {
@@ -138,7 +138,7 @@ function setupSidebarTree() {
       }
       el
       .find(" > span i")
-      .attr("title", "Collapse this branch")
+      .attr("title", I18n.t('sidebar.branch_collapse'))
       .addClass("expanded");
     }
   }
@@ -147,7 +147,7 @@ function setupSidebarTree() {
   $(".tree li:has(ul)")
   .addClass("parent_li")
   .find(" > span i")
-  .attr("title", "Collapse this branch");
+  .attr("title", I18n.t('sidebar.branch_collapse'));
   $(".tree li.parent_li ")
   .find("> span i")
   .addClass("glyphicon glyphicon-triangle-right expanded");
