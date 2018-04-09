@@ -31,16 +31,24 @@ module RepositoryDatatableHelper
       # Add custom columns
       record.repository_cells.each do |cell|
         row[columns_mappings[cell.repository_column.id]] =
-          custom_auto_link(
-            display_tooltip(cell.value.data,
-                            Constants::NAME_MAX_LENGTH),
-            simple_format: true,
-            team: team
-          )
+          display_cell_value(cell, team)
       end
       parsed_records << row
     end
     parsed_records
+  end
+
+  def display_cell_value(cell, team)
+    if cell.value_type == 'RepositoryAssetValue'
+      render partial: 'repositories/asset_link',
+                      locals: { asset: cell.value.asset },
+                      formats: :html
+    else
+      custom_auto_link(display_tooltip(cell.value.data,
+                                       Constants::NAME_MAX_LENGTH),
+                       simple_format: true,
+                       team: team)
+    end
   end
 
   def assigned_row(record, assigned_rows)
