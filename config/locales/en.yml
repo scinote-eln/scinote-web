@@ -111,6 +111,8 @@ en:
 
   sidebar:
     title: "Navigation"
+    branch_expand: "Expand this branch"
+    branch_collapse: "Collapse this branch"
     no_module_group: "No workflow"
     projects:
       all: "All Projects"

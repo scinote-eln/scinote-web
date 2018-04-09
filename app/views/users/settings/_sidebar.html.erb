@@ -10,12 +10,12 @@
        <!-- Account -->
        <li class="parent_li" >
          <span class="tree-link line-wrap no-indent">
-           <i title="Expand this branch"
+           <i title="<%= t('sidebar.branch_expand') %>"
               class="glyphicon glyphicon-triangle-right triangleRight"
               aria-hidden="true"
               style="<%= 'display: none;' if on_settings_account_page? %>"
               ></i>
-           <i title="Collapse this branch"
+           <i title="<%= t('sidebar.branch_collapse') %>"
               class="glyphicon glyphicon-triangle-right expanded triangleDown"
               aria-hidden="true"
               style="<%= 'display: none;' unless on_settings_account_page? %>"
