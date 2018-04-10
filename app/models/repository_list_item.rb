@@ -1,5 +1,4 @@
 class RepositoryListItem < ApplicationRecord
-  include ActiveModel::Validations
   has_many :repository_list_values, inverse_of: :repository_list_item
   belongs_to :repository, inverse_of: :repository_list_items
   belongs_to :repository_column, inverse_of: :repository_list_items
@@ -13,5 +12,4 @@ class RepositoryListItem < ApplicationRecord
             presence: true,
             uniqueness: { scope: :repository_column, case_sensitive: false },
             length: { maximum: Constants::TEXT_MAX_LENGTH }
-  validates_with RepositoryListItemValidator
 end

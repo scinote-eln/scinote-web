@@ -53,6 +53,7 @@ module RepositoryImportParser
 
     def import_rows!
       errors = false
+      column_items = []
       @rows.each do |row|
         # Skip empty rows
         next if row.empty?
@@ -71,16 +72,28 @@ module RepositoryImportParser
           end
 
           row_cell_values = []
-
           row.each.with_index do |value, index|
             column = @columns[index]
+            size = 0
             if column && value.present?
+              if column.data_type == 'RepositoryListValue'
+                current_items_column = get_items_column(column_items, column)
+                size = current_items_column.list_items_number
+              end
               # uses RepositoryCellValueResolver to retrieve the correct value
               cell_value_resolver =
                 RepositoryImportParser::RepositoryCellValueResolver.new(
-                  column, @user, @repository
+                  column,
+                  @user,
+                  @repository,
+                  size
                 )
               cell_value = cell_value_resolver.get_value(value, record_row)
+              if column.data_type == 'RepositoryListValue'
+                current_items_column.list_items_number =
+                  cell_value_resolver.column_list_items_size
+              end
+              next if cell_value.nil? # checks the case if we reach items limit
               unless cell_value.valid?
                 errors = true
                 raise ActiveRecord::Rollback
@@ -124,6 +137,22 @@ module RepositoryImportParser
         validate: false
       ).failed_instances.any?
       true
+    end
+
+    def get_items_column(list, column)
+      current_column = nil
+      list.each do |element|
+        current_column = element if element.column == column
+      end
+      unless current_column
+        new_column = RepositoryImportParser::ListItemsColumn.new(
+          column,
+          column.repository_list_items.size
+        )
+        list << new_column
+        return new_column
+      end
+      current_column
     end
   end
 end
