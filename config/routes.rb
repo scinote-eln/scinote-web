@@ -177,7 +177,7 @@ Rails.application.routes.draw do
         get 'destroy_html'
       end
       member do
-        post 'parse_sheet'
+        post 'parse_sheet', defaults: { format: 'json' }
         post 'import_samples'
         post 'export_samples'
         post 'export_repository', to: 'repositories#export_repository'
@@ -475,7 +475,7 @@ Rails.application.routes.draw do
 
       resources :repository_rows, only: %i(create edit update)
       member do
-        post 'parse_sheet'
+        post 'parse_sheet', defaults: { format: 'json' }
         post 'import_records'
       end
     end

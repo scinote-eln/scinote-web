@@ -6,10 +6,9 @@
         <h4 class="modal-title"><%= t('repositories.modal_import.title') %></h4>
         <%= t("repositories.modal_import.notice") %>
       </div>
-      <%= bootstrap_form_tag url: parse_sheet_repository_path(repository, format: :json),
+      <%= bootstrap_form_tag url: parse_sheet_repository_path(repository),
                              html: {'data-type' => 'json',
-                                    id: 'form-records-file'},
-                             remote: :true do |f| %>
+                                    id: 'form-records-file'} do |f| %>
         <%= f.hidden_field :team_id, value: current_team.id %>
       <div class="modal-body">
           <%= f.file_field :file %>
