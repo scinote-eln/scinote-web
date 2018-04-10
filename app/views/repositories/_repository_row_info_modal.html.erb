@@ -28,10 +28,14 @@
           </span>
           <% @repository_row.repository_cells.each do |repository_cell| %>
             <br>
+            <% if repository_cell.value_type == 'RepositoryAssetValue' %>
+              <%= render partial: "shared/asset_link", locals: { asset: repository_cell.value.asset, not_in_repository: false }, formats: :html %>
+            <% else %>
             <span>
               <%= t "repository_row.modal_info.custom_field", cf: repository_cell.repository_column.name %>
               <%= custom_auto_link(repository_cell.value.formatted, simple_format: false, team: current_team) %>
             </span>
+            <% end %>
           <% end %>
         </p>
 
@@ -76,7 +80,7 @@
         <em><%=t "repository_row.modal_info.no_tasks" %></em>
       <% end %>
       </div>
-
+      <script>window.initPreviewModal()</script>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" data-dismiss="modal"><%= t("general.close")%></button>
       </div>

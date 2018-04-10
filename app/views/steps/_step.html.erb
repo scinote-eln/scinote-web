@@ -83,7 +83,7 @@
               <ul>
                 <% assets.each do |asset| %>
                   <li>
-                    <%= render partial: "shared/asset_link", locals: { asset: asset }, formats: :html %>
+                    <%= render partial: "shared/asset_link", locals: { asset: asset, not_in_repository: true }, formats: :html %>
                   </li>
                 <% end %>
               </ul>
