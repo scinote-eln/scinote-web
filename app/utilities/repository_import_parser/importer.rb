@@ -142,7 +142,7 @@ module RepositoryImportParser
     def get_items_column(list, column)
       current_column = nil
       list.each do |element|
-        current_column = element if element.column == column
+        current_column = element if element.has_column? column
       end
       unless current_column
         new_column = RepositoryImportParser::ListItemsColumn.new(

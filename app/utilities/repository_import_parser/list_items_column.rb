@@ -6,5 +6,9 @@ module RepositoryImportParser
       @column = column
       @list_items_number = list_items_number
     end
+
+    def has_column?(column)
+      @column == column
+    end
   end
 end
