@@ -565,6 +565,29 @@ var RepositoryDatatable = (function(global) {
     });
   }
 
+
+  global.onClickCopyRepositoryRecords = function() {
+    animateSpinner();
+    $.ajax({
+      url: $('table' + TABLE_ID).data('copy-records'),
+      type: 'POST',
+      dataType: 'json',
+      data: { selected_rows: rowsSelected },
+      success: function(data) {
+        HelperModule.flashAlertMsg(data.flash, 'success');
+        rowsSelected = [];
+        onClickCancel();
+      },
+      error: function(e) {
+        if (e.status === 403) {
+          HelperModule.flashAlertMsg(
+            I18n.t('repositories.js.permission_error'), e.responseJSON.style
+          );
+        }
+      }
+    });
+  }
+
   // Edit record
   global.onClickEdit = function() {
     if (rowsSelected.length !== 1) {
@@ -768,6 +791,8 @@ var RepositoryDatatable = (function(global) {
       $('.repository-row-selector').removeClass('disabled');
       $('.repository-row-selector').prop('disabled', false);
       if (rowsSelected.length === 0) {
+        $('#copyRepositoryRecords').prop('disabled', true);
+        $('#copyRepositoryRecords').addClass('disabled');
         $('#editRepositoryRecord').prop('disabled', true);
         $('#editRepositoryRecord').addClass('disabled');
         $('#deleteRepositoryRecordsButton').prop('disabled', true);
@@ -805,6 +830,8 @@ var RepositoryDatatable = (function(global) {
         }
         $('#deleteRepositoryRecordsButton').prop('disabled', false);
         $('#deleteRepositoryRecordsButton').removeClass('disabled');
+        $('#copyRepositoryRecords').prop('disabled', false);
+        $('#copyRepositoryRecords').removeClass('disabled');
         $('#assignRepositoryRecords').removeClass('disabled');
         $('#assignRepositoryRecords').prop('disabled', false);
         $('#unassignRepositoryRecords').removeClass('disabled');
