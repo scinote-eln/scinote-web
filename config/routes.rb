@@ -56,12 +56,6 @@ Rails.application.routes.draw do
     put 'users/settings/account/preferences',
         to: 'users/settings/account/preferences#update',
         as: 'update_preferences'
-    get 'users/settings/account/preferences/tutorial',
-        to: 'users/settings/account/preferences#tutorial',
-        as: 'tutorial'
-    post 'users/settings/account/preferences/reset_tutorial/',
-         to: 'users/settings/account/preferences#reset_tutorial',
-         as: 'reset_tutorial'
     post 'users/settings/account/preferences/notifications_settings',
          to: 'users/settings/account/preferences#notifications_settings',
          as: 'notifications_settings',

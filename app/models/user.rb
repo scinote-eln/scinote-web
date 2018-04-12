@@ -16,11 +16,6 @@ class User < ApplicationRecord
                     },
                     default_url: Constants::DEFAULT_AVATAR_URL
 
-  enum tutorial_status: {
-    no_tutorial_done: 0,
-    intro_tutorial_done: 1
-  }
-
   auto_strip_attributes :full_name, :initials, nullify: false
   validates :full_name,
             presence: true,

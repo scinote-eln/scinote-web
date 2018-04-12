@@ -6,8 +6,6 @@
       var that = $(this);
       initProjectExperiment(that);
     });
-
-    initTutorial();
   }
 
   function initProjectExperiment(element){
@@ -61,59 +59,6 @@
       error: function (ev) {
         // TODO
       }
-    });
-  }
-
-  /**
-   * Initializes tutorial
-   */
-  function initTutorial() {
-    var stepNum = parseInt(Cookies.get('current_tutorial_step'), 10);
-    if (stepNum >= 4 && stepNum <= 5) {
-      var nextPage = $('[data-canvas-link]').data('canvasLink');
-      var steps = [{
-        element: $('#new-experiment')[0],
-        intro: I18n.t('tutorial.tutorial_welcome_title_html'),
-        position: 'left'
-      }, {
-        element: $('.experiment-panel')[0],
-        intro: I18n.t('tutorial.edit_experiment_html'),
-        position: 'right'
-      }];
-      initPageTutorialSteps(4, 5, nextPage, tutorialBeforeCb, tutorialAfterCb,
-       steps);
-    }
-  }
-
-  /**
-   * Callback to be executed before tutorial starts
-   */
-  function tutorialBeforeCb() {
-    $.each( $(".panel-title"), function(){
-      $(this).css({ "pointer-events": "none" });
-    });
-    $.each( $(".workflowimg-container"), function(){
-      $(this).css({ "pointer-events": "none" });
-    });
-    $.each( $(".dropdown-experiment-actions").find("li"),
-      function(){
-        $(this).css({ "pointer-events": "none" });
-    });
-  }
-
-  /**
-   * Callback to be executed after tutorial exits
-   */
-  function tutorialAfterCb() {
-    $.each( $(".panel-title"), function(){
-      $(this).css({ "pointer-events": "auto" });
-    });
-    $.each( $(".workflowimg-container"), function(){
-      $(this).css({ "pointer-events": "auto" });
-    });
-    $.each( $(".dropdown-experiment-actions").find("li"),
-      function(){
-        $(this).css({ "pointer-events": "auto" });
     });
   }
 

@@ -5,8 +5,6 @@ module Users
         before_action :load_user, only: [
           :index,
           :update,
-          :tutorial,
-          :reset_tutorial,
           :notifications_settings
         ]
         layout 'fluid'
@@ -29,51 +27,6 @@ module Users
                 status: :unprocessable_entity
               end
             end
-          end
-        end
-
-        def tutorial
-          @teams =
-            @user
-            .user_teams
-            .includes(team: :users)
-            .where(role: 1..2)
-            .order(created_at: :asc)
-            .map(&:team)
-          @member_of = @teams.count
-
-          respond_to do |format|
-            format.json do
-              render json: {
-                status: :ok,
-                html: render_to_string(
-                  partial: 'users/settings/account/preferences/' \
-                           'repeat_tutorial_modal_body.html.erb'
-                )
-              }
-            end
-          end
-        end
-
-        def reset_tutorial
-          if @user.update(tutorial_status: 0) && params[:team][:id].present?
-            @user.update(current_team_id: params[:team][:id])
-            cookies.delete :tutorial_data
-            cookies.delete :current_tutorial_step
-            cookies[:repeat_tutorial_team_id] = {
-              value: params[:team][:id],
-              expires: 1.day.from_now
-            }
-
-            flash[:notice] = t(
-              'users.settings.account.preferences.tutorial.tutorial_reset_flash'
-            )
-            redirect_to root_path
-          else
-            flash[:alert] = t(
-              'users.settings.account.preferences.tutorial.tutorial_reset_error'
-            )
-            redirect_back(fallback_location: root_path)
           end
         end
 
