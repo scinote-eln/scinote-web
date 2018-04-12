@@ -654,7 +654,7 @@ en:
       no_activities: "There are no activities for this task."
       more_activities: "Load older activities"
     repository:
-      head_title: "%{project} | %{module} |Inventory %{repository}"
+      head_title: "%{project} | %{module} | Inventory %{repository}"
       export: 'Export'
 
   experiments:
