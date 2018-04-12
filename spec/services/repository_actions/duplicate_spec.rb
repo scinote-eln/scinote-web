@@ -49,7 +49,7 @@ describe RepositoryActions::Duplicate do
 
     it 'generates an exact copy of the row with custom column values' do
       described_class.new(user, repository, [@rows_ids.first]).call
-      duplicated_row = repository.repository_rows.reload.last
+      duplicated_row = repository.repository_rows.order('created_at ASC').last
       expect(duplicated_row.name).to eq 'row (0) (1)'
       duplicated_row.repository_cells.each do |cell|
         if cell.value_type == 'RepositoryListValue'
