@@ -1,4 +1,4 @@
-# Content for tables used in tutorial (demo project).
+# Content for tables used in demo project.
 
 module1:
   experimental_design: '{"data":[["","","",null,null],["","","",null,null],["group/time","1 dpi","6 dpi","",""],["PVYNTN","1","1","",""],["mock","1","1","",""],[null,null,null,null,null]]}'

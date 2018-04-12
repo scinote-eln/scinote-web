@@ -1,24 +1,7 @@
 module FirstTimeDataGenerator
-  # Create data for tutorial for new users
-  def seed_demo_data(user)
+  # Create data for demo for new users
+  def seed_demo_data(user, team)
     @user = user
-
-    # First team that this user created
-    # should contain the "intro" project
-    if cookies[:repeat_tutorial_org_id] || cookies[:repeat_tutorial_team_id]
-      team = Team.find_by_id(cookies[:repeat_tutorial_org_id])
-      team ||= Team.find_by_id(cookies[:repeat_tutorial_team_id])
-      %w(repeat_tutorial_team_id repeat_tutorial_org_id)
-        .each do |repeat_tutorial|
-        cookies.delete repeat_tutorial.to_sym if cookies[repeat_tutorial.to_sym]
-      end
-    else
-      team = user
-             .teams
-             .where(created_by: user)
-             .order(created_at: :asc)
-             .first
-    end
 
     # If private private team does not exist,
     # there was something wrong with user creation.
@@ -77,7 +60,7 @@ module FirstTimeDataGenerator
     repository_rows_to_assign = []
     # Generate random custom respository sample names and assign sample types
     # and groups
-    
+
     repository_sample_name = (0...3).map { 65.+(rand(26)).chr }.join << '/'
     (1..5).each do |index|
       repository_row = RepositoryRow.create(
@@ -499,7 +482,7 @@ module FirstTimeDataGenerator
 
     # Load table contents yaml file
     tab_content = YAML.load_file(
-      "#{Rails.root}/app/assets/tutorial_files/tables_content.yaml"
+      "#{Rails.root}/app/assets/demo_files/tables_content.yaml"
     )
 
     # Create module content
@@ -516,7 +499,7 @@ module FirstTimeDataGenerator
                           module_step_descriptions)
 
     # Results
-    DelayedUploaderTutorial.delay(queue: :tutorial).generate_result_asset(
+    DelayedUploaderDemo.delay(queue: :demo).generate_result_asset(
       my_module: my_modules[0],
       current_user: user,
       current_team: team,
@@ -563,7 +546,7 @@ module FirstTimeDataGenerator
                           module_step_descriptions)
 
     # Add file to existig step
-    DelayedUploaderTutorial.delay(queue: :tutorial).add_step_asset(
+    DelayedUploaderDemo.delay(queue: :demo).add_step_asset(
       step: my_modules[1].protocol.steps.where('position = 0').take,
       current_user: user,
       current_team: team,
@@ -571,7 +554,7 @@ module FirstTimeDataGenerator
     )
 
     # Results
-    DelayedUploaderTutorial.delay(queue: :tutorial).generate_result_asset(
+    DelayedUploaderDemo.delay(queue: :demo).generate_result_asset(
       my_module: my_modules[1],
       current_user: user,
       current_team: team,
@@ -580,7 +563,7 @@ module FirstTimeDataGenerator
       file_name: 'DSCN0660.JPG'
     )
 
-    DelayedUploaderTutorial.delay(queue: :tutorial).generate_result_asset(
+    DelayedUploaderDemo.delay(queue: :demo).generate_result_asset(
       my_module: my_modules[1],
       current_user: user,
       current_team: team,
@@ -589,7 +572,7 @@ module FirstTimeDataGenerator
       file_name: 'DSCN0354.JPG'
     )
 
-    DelayedUploaderTutorial.delay(queue: :tutorial).generate_result_asset(
+    DelayedUploaderDemo.delay(queue: :demo).generate_result_asset(
       my_module: my_modules[1],
       current_user: user,
       current_team: team,
@@ -642,7 +625,7 @@ module FirstTimeDataGenerator
     generate_module_steps(my_modules[2], module_step_names, module_step_descriptions)
 
     # Add file to existig step
-    DelayedUploaderTutorial.delay(queue: :tutorial).add_step_asset(
+    DelayedUploaderDemo.delay(queue: :demo).add_step_asset(
       step: my_modules[2].protocol.steps.where('position = 1').take,
       current_user: user,
       current_team: team,
@@ -685,7 +668,7 @@ module FirstTimeDataGenerator
     ).sneaky_save
 
     # Second result
-    DelayedUploaderTutorial.delay(queue: :tutorial).generate_result_asset(
+    DelayedUploaderDemo.delay(queue: :demo).generate_result_asset(
       my_module: my_modules[2],
       current_user: user,
       current_team: team,
@@ -704,7 +687,7 @@ module FirstTimeDataGenerator
     generate_module_steps(my_modules[3], module_step_names, module_step_descriptions)
 
     # Add file to existig step
-    DelayedUploaderTutorial.delay(queue: :tutorial).add_step_asset(
+    DelayedUploaderDemo.delay(queue: :demo).add_step_asset(
       step: my_modules[3].protocol.steps.where('position = 0').take,
       current_user: user,
       current_team: team,
@@ -712,7 +695,7 @@ module FirstTimeDataGenerator
     )
 
     # Results
-    DelayedUploaderTutorial.delay(queue: :tutorial).generate_result_asset(
+    DelayedUploaderDemo.delay(queue: :demo).generate_result_asset(
       my_module: my_modules[3],
       current_user: user,
       current_team: team,
@@ -778,28 +761,28 @@ module FirstTimeDataGenerator
                           module_step_descriptions)
 
     # Add file to existig steps
-    DelayedUploaderTutorial.delay(queue: :tutorial).add_step_asset(
+    DelayedUploaderDemo.delay(queue: :demo).add_step_asset(
       step: my_modules[5].protocol.steps.where('position = 0').take,
       current_user: user,
       current_team: team,
       file_name: 'sample_preparation.JPG'
     )
 
-    DelayedUploaderTutorial.delay(queue: :tutorial).add_step_asset(
+    DelayedUploaderDemo.delay(queue: :demo).add_step_asset(
       step: my_modules[5].protocol.steps.where('position = 1').take,
       current_user: user,
       current_team: team,
       file_name: 'reaction_setup.JPG'
     )
 
-    DelayedUploaderTutorial.delay(queue: :tutorial).add_step_asset(
+    DelayedUploaderDemo.delay(queue: :demo).add_step_asset(
       step: my_modules[5].protocol.steps.where('position = 2').take,
       current_user: user,
       current_team: team,
       file_name: 'cycling_conditions.JPG'
     )
 
-    DelayedUploaderTutorial.delay(queue: :tutorial).add_step_asset(
+    DelayedUploaderDemo.delay(queue: :demo).add_step_asset(
       step: my_modules[5].protocol.steps.where('position = 3').take,
       current_user: user,
       current_team: team,
@@ -842,7 +825,7 @@ module FirstTimeDataGenerator
     ).sneaky_save
 
     # Results
-    DelayedUploaderTutorial.delay(queue: :tutorial).generate_result_asset(
+    DelayedUploaderDemo.delay(queue: :demo).generate_result_asset(
       my_module: my_modules[5],
       current_user: user,
       current_team: team,
@@ -851,7 +834,7 @@ module FirstTimeDataGenerator
       file_name: 'Mixes_Templats.xls'
     )
 
-    DelayedUploaderTutorial.delay(queue: :tutorial).generate_result_asset(
+    DelayedUploaderDemo.delay(queue: :demo).generate_result_asset(
       my_module: my_modules[5],
       current_user: user,
       current_team: team,
@@ -860,7 +843,7 @@ module FirstTimeDataGenerator
       file_name: 'BootCamp-Experiment-results-20122.sds'
     )
 
-    DelayedUploaderTutorial.delay(queue: :tutorial).generate_result_asset(
+    DelayedUploaderDemo.delay(queue: :demo).generate_result_asset(
       my_module: my_modules[5],
       current_user: user,
       current_team: team,
@@ -907,7 +890,7 @@ module FirstTimeDataGenerator
                           module_step_descriptions)
 
     # Add file to existig step
-    DelayedUploaderTutorial.delay(queue: :tutorial).add_step_asset(
+    DelayedUploaderDemo.delay(queue: :demo).add_step_asset(
       step: my_modules[7].protocol.steps.where('position = 0').take,
       current_user: user,
       current_team: team,
@@ -915,7 +898,7 @@ module FirstTimeDataGenerator
     )
 
     # Add result
-    DelayedUploaderTutorial.delay(queue: :tutorial).generate_result_asset(
+    DelayedUploaderDemo.delay(queue: :demo).generate_result_asset(
       my_module: my_modules[7],
       current_user: user,
       current_team: team,
@@ -924,7 +907,7 @@ module FirstTimeDataGenerator
       file_name: 'ddCq-quantification_diagnostics-results.xls'
     )
 
-    DelayedUploaderTutorial.delay(queue: :tutorial).generate_result_asset(
+    DelayedUploaderDemo.delay(queue: :demo).generate_result_asset(
       my_module: my_modules[7],
       current_user: user,
       current_team: team,
@@ -933,7 +916,7 @@ module FirstTimeDataGenerator
       file_name: 'dilution_curve-efficiency.JPG'
     )
 
-    DelayedUploaderTutorial.delay(queue: :tutorial).generate_result_asset(
+    DelayedUploaderDemo.delay(queue: :demo).generate_result_asset(
       my_module: my_modules[7],
       current_user: user,
       current_team: team,
@@ -973,12 +956,6 @@ module FirstTimeDataGenerator
 
     # create thumbnail
     experiment.delay.generate_workflow_img
-
-    # Lastly, create cookie with according ids
-    # so tutorial steps can be properly positioned
-    JSON.generate([team: team.id,
-                   project: project.id,
-                   qpcr_module: my_modules[5].id])
   end
 
   # WARNING: This only works on PostgreSQL

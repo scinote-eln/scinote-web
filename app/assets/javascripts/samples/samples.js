@@ -58,25 +58,3 @@ function updateSamplesTypesandGroups() {
       }
     });
 }
-
-/**
- * Initializes tutorial
- */
-function initTutorial() {
-  var stepNum = parseInt(Cookies.get('current_tutorial_step'), 10);
-  if (stepNum >= 17 && stepNum <= 18) {
-    var nextPage = $('#reports-nav-tab a').attr('href');
-    var steps = [{
-      element: $('#importSamplesButton')[0],
-      intro: I18n.t('tutorial.samples_html'),
-      position: 'right'
-    }, {
-      element: $('#secondary-menu')[0],
-      intro: I18n.t('tutorial.breadcrumbs_html')
-    }];
-    initPageTutorialSteps(17, 18, nextPage, function() {}, function() {},
-     steps);
-  }
-}
-
-initTutorial();

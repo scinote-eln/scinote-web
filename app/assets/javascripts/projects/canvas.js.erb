@@ -116,9 +116,6 @@ var ignoreUnsavedWorkAlert;
 // Global variable for hammer js
 var hammertime;
 
-// Cookie data for tutorial
-var tutorialData;
-
 /*
  * As a guideline, all module elements should contain
  * the following attributes:
@@ -146,7 +143,6 @@ function init() {
   bindWindowResizeEvent();
   initializeGraph(".diagram .module-large");
   initializeFullZoom();
-  initTutorial();
 }
 
 jsPlumb.ready(function () {
@@ -2998,117 +2994,6 @@ function initJsPlumb(containerSel, containerChildSel, modulesSel, params) {
     $("#edit-canvas-button").click();
   }
 })();
-
-/**
- * Initializes tutorial
- */
-function initTutorial() {
-  var tutorialData = Cookies.get('tutorial_data');
-  if (tutorialData) {
-    tutorialData = JSON.parse(tutorialData);
-    var stepNum = parseInt(Cookies.get('current_tutorial_step'), 10);
-
-    if (stepNum >= 6 && stepNum <= 7) {
-      var nextPage = window.location.pathname;
-      var steps = [{
-        element: $('#canvas-container')[0],
-        intro: I18n.t('tutorial.canvas_overview_html'),
-        position: 'left'
-      }, {
-        element: $('#edit-canvas-button')[0],
-        intro: I18n.t('tutorial.canvas_click_edit_workflow_html'),
-        position: 'left'
-      }];
-      initPageTutorialSteps(6, 7, nextPage, tutorialBeforeCb, tutorialAfterCb,
-       steps);
-    } else if (stepNum >= 8 && stepNum <= 9) {
-      // Go into edit canvas mode
-      $('.introjs-overlay').remove();
-      $('.introjs-helperLayer').remove();
-      $('.introjs-tooltipReferenceLayer').remove();
-      $('#edit-canvas-button').click();
-
-      setTimeout(function() {
-        var nextPage = window.location.pathname;
-        var steps = [{
-          intro: I18n.t('tutorial.edit_workflow_html'),
-          element: $('#canvas-new-module')[0],
-          position: 'right'
-        }, {
-          intro: I18n.t('tutorial.edit_workflow_click_save_html'),
-          element: $('#canvas-save')[0],
-          position: 'right'
-        }];
-        initPageTutorialSteps(8, 9, nextPage, tutorialBeforeCb, function() {
-          // Go out of edit canvas mode
-          $('.cancel-edit-canvas').click();
-
-          tutorialAfterCb();
-        }, steps);
-      }, 1000);
-    } else if (stepNum >= 10 && stepNum <= 11) {
-      var qpcrModuleLeaf =
-       $("li.leaf[data-module-id='" + tutorialData[0].qpcr_module + "']");
-
-      var nextPage = qpcrModuleLeaf.find('a.module-link').attr('href');
-      var steps = [{
-        element: $('#slide-panel .tree')[0],
-        intro: I18n.t('tutorial.sidebar_html'),
-        position: 'right'
-      }, {
-        element: qpcrModuleLeaf[0],
-        intro: I18n.t('tutorial.sidebar_click_module_html'),
-        position: 'right'
-      }];
-      initPageTutorialSteps(10, 11, nextPage, tutorialBeforeCb,
-       tutorialAfterCb, steps);
-    }
-  }
-}
-
-/**
- * Callback to be executed before tutorial starts
- */
-function tutorialBeforeCb() {
-  $('#slide-panel')
-    .css({'pointer-events': 'none'});
-  $('#canvas-new-module')
-    .css({'pointer-events': 'none'});
-
-  $.each($('.panel-default'), function(i, el) {
-    $(el)
-    .find('.tab-pane')
-    .css({'pointer-events': 'none'});
-    $(el)
-    .find('.edit-tags-link')
-    .css({'pointer-events': 'none'});
-    $(el)
-    .find('.panel-heading')
-    .css({'pointer-events': 'none'});
-  });
-}
-
-/**
- * Callback to be executed after tutorial exits
- */
-function tutorialAfterCb() {
-  $('#slide-panel')
-    .css({'pointer-events': 'auto'});
-  $('#canvas-new-module')
-    .css({'pointer-events': 'auto'});
-
-  $.each($('.panel-default'), function(i, el) {
-    $(el)
-    .find('.tab-pane')
-    .css({'pointer-events': 'auto'});
-    $(el)
-    .find('.edit-tags-link')
-    .css({'pointer-events': 'auto'});
-    $(el)
-    .find('.panel-heading')
-    .css({'pointer-events': 'auto'});
-  });
-}
 
 /** prevent reload page */
 var preventCanvasReloadOnSave = (function() {

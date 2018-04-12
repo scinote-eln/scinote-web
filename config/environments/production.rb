@@ -101,10 +101,6 @@ Rails.application.configure do
   # Enable/disable Deface
   config.deface.enabled = ENV['DEFACE_ENABLED'] != 'false'
 
-  # Enable first-time tutorial for users signing in the sciNote for
-  # the first time.
-  config.x.enable_tutorial = ENV['ENABLE_TUTORIAL'] != 'false'
-
   # Enable reCAPTCHA
   config.x.enable_recaptcha = ENV['ENABLE_RECAPTCHA'] == 'true'
 
@@ -166,6 +162,5 @@ Rails.application.configure do
     config.x.new_team_on_signup = true
   else
     config.x.new_team_on_signup = false
-    config.x.enable_tutorial = false
   end
 end
