@@ -85,7 +85,7 @@ tests-ci:
 	@docker-compose run --rm web bash -c "bundle install && npm install"
 	@docker-compose up -d webpack
 	@docker-compose ps
-	@docker-compose run -e ENABLE_EMAIL_CONFIRMATIONS=false -e MAILER_PORT=$MAILER_PORT -e SMTP_DOMAIN=$SMTP_DOMAIN -e SMTP_USERNAME=$SMTP_USERNAME -e SMTP_PASSWORD=$SMTP_PASSWORD -e SMTP_ADDRESS=$SMTP_ADDRESS -e PAPERCLIP_HASH_SECRET=PAPERCLIP_HASH_SECRET -e MAIL_SERVER_URL=localhost -e PAPERCLIP_STORAGE=filesystem -e -e ENABLE_RECAPTCHA=false -e ENABLE_USER_CONFIRMATION=false -e ENABLE_USER_REGISTRATION=true --rm web bash -c "rake db:create db:migrate && rake db:migrate RAILS_ENV=test && npm install && bundle exec rspec && bundle exec cucumber"
+	@docker-compose run -e ENABLE_EMAIL_CONFIRMATIONS=false -e MAILER_PORT=$MAILER_PORT -e SMTP_DOMAIN=$SMTP_DOMAIN -e SMTP_USERNAME=$SMTP_USERNAME -e SMTP_PASSWORD=$SMTP_PASSWORD -e SMTP_ADDRESS=$SMTP_ADDRESS -e PAPERCLIP_HASH_SECRET=PAPERCLIP_HASH_SECRET -e MAIL_SERVER_URL=localhost -e PAPERCLIP_STORAGE=filesystem -e ENABLE_RECAPTCHA=false -e ENABLE_USER_CONFIRMATION=false -e ENABLE_USER_REGISTRATION=true --rm web bash -c "rake db:create db:migrate && rake db:migrate RAILS_ENV=test && npm install && bundle exec rspec && bundle exec cucumber"
 
 console:
 	@$(MAKE) rails cmd="rails console"
