@@ -40,8 +40,8 @@ module RepositoryDatatableHelper
 
   def display_cell_value(cell, team)
     if cell.value_type == 'RepositoryAssetValue'
-      render partial: 'repositories/asset_link',
-                      locals: { asset: cell.value.asset },
+      render partial: 'shared/asset_link',
+                      locals: { asset: cell.value.asset, display_image_tag: false },
                       formats: :html
     else
       custom_auto_link(display_tooltip(cell.value.data,

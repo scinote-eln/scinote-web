@@ -9,7 +9,7 @@
       class: 'file-preview-link',
       id: "modal_link#{asset.id}",
       data: { no_turbolink: true, id: true, status: 'asset-present', 'preview-url': asset_file_preview_path(asset) } do %>
-      <% if asset.is_image? %>
+      <% if asset.is_image? && display_image_tag %>
         <%= image_tag asset.url(:medium) %>
       <% end %>
       <p><%= truncate(asset.file_file_name,
