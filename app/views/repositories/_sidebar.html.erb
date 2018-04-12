@@ -8,17 +8,17 @@
           </span>
         </li>
         <% repositories.each do |repository| %>
-            <li class="<%= 'active parent_li' if current_page?(repository_path(repository)) %>" >
-              <span class="tree-link line-wrap no-indent">
-                <% if current_page?(repository_path(repository)) %>
-                  <span title="<%= repository.name %>"><%= repository.name %></span>
-                <% else %>
-                  <%= link_to repository.name,
-                              repository_path(repository),
-                              data: { 'no-turbolink' => 'true' } %>
-                <% end %>
-              </span>
-            </li>
+          <li class="<%= 'active parent_li' if current_page?(repository_path(repository)) %>" >
+            <span class="tree-link line-wrap no-indent">
+              <% if current_page?(repository_path(repository)) %>
+                <span title="<%= repository.name %>"><%= repository.name %></span>
+              <% else %>
+                <%= link_to repository.name,
+                            repository_path(repository),
+                            data: { 'no-turbolink' => 'true' } %>
+              <% end %>
+            </span>
+          </li>
         <% end %>
       </ul>
     </div>
