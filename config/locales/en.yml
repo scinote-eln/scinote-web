@@ -957,7 +957,6 @@ en:
     modal_delete_record:
       title: "Delete items"
       notice: "Are you sure you want to delete the selected item(s)?"
-      other_records: "Only items created by you will be deleted."
       delete: "Delete item(s)"
     modal_delete_column:
       title: "Delete a column"
