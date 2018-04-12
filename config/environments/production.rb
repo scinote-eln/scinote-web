@@ -162,6 +162,5 @@ Rails.application.configure do
     config.x.new_team_on_signup = true
   else
     config.x.new_team_on_signup = false
-    config.x.enable_tutorial = false
   end
 end

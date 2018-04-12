@@ -299,7 +299,7 @@ class ProjectsController < ApplicationController
   def generate_intro_demo
     return unless current_user.sign_in_count == 1
     team = current_user.teams.where(created_by: current_user).first
-    seed_demo_data(current_user) if team && team.projects.blank?
+    seed_demo_data(current_user, team) if team && team.projects.blank?
   end
 
   def project_params

@@ -1,11 +1,7 @@
 module FirstTimeDataGenerator
   # Create data for demo for new users
-  def seed_demo_data(user)
+  def seed_demo_data(user, team)
     @user = user
-
-    # First team that this user created
-    # should contain the "intro" project
-    team = user.teams.where(created_by: user).order(created_at: :asc).first
 
     # If private private team does not exist,
     # there was something wrong with user creation.
@@ -64,7 +60,7 @@ module FirstTimeDataGenerator
     repository_rows_to_assign = []
     # Generate random custom respository sample names and assign sample types
     # and groups
-    
+
     repository_sample_name = (0...3).map { 65.+(rand(26)).chr }.join << '/'
     (1..5).each do |index|
       repository_row = RepositoryRow.create(
