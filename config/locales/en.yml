@@ -84,7 +84,7 @@ en:
       protocols: "Protocols"
       calendar: "Calendar"
       activities: "Activities"
-      repositories: "Repositories"
+      repositories: "Inventories"
       teams: "Teams"
       search: "Search"
       notifications: "Notifications"
@@ -98,7 +98,7 @@ en:
 
   left_menu_bar:
     projects: "Projects"
-    repositories: "Libraries"
+    repositories: "Inventories"
     templates: "Templates"
     reports: "Reports"
     settings: "Settings"
@@ -131,7 +131,7 @@ en:
       results: "Results"
       activities: "Activity"
       samples: "Samples"
-      repositories: "Repositories"
+      repositories: "Inventories"
       archive: "Archive"
 
   search:
@@ -154,8 +154,8 @@ en:
       description: "Description: "
       no_description: "No description"
       team: "Team: "
-      repository: "Repository: "
-      repository_row: "Repository item: "
+      repository: "Inventory: "
+      repository_row: "Inventory item: "
       project: "Project: "
       experiment: "Experiment: "
       protocol: "Protocol: "
@@ -178,7 +178,7 @@ en:
         added_by: "Added by: "
         custom_field: "%{cf}: "
       repositories:
-        repository_row: "Repository item: "
+        repository_row: "Inventory item: "
         added_on: "Added on: "
         added_by: "Added by: "
         custom_column: "%{column}: "
@@ -284,7 +284,7 @@ en:
       head_title: "%{project}"
       page_title: "Project's experiments"
     samples:
-      head_title: "%{project} | Sample library"
+      head_title: "%{project} | Sample inventory"
     reports:
       print_title: "%{project} | Report"
       index:
@@ -502,7 +502,7 @@ en:
       due_soon: "due soon"
       overdue: "overdue"
     samples:
-      head_title: "%{project} | %{module} | Sample library"
+      head_title: "%{project} | %{module} | Sample inventory"
     module_archive:
       head_title: "%{project} | %{module} | Archive"
       option_delete: "Delete"
@@ -876,50 +876,50 @@ en:
       success_flash: "Table result successfully deleted."
 
   repositories:
-    repository: "Repository: %{name}"
+    repository: "Inventory: %{name}"
     index:
-      head_title: "Repositories"
-      title: "Repositories"
-      add_new_repository_tab: "Add repository"
-      delete_flash: "\"%{name}\" repository was successfully deleted!"
-      rename_flash: "\"%{old_name}\" repository was successfully renamed to \"%{new_name}\"!"
-      copy_flash: "\"%{new}\" repository was successfully copied from \"%{old}\"!"
+      head_title: "Inventories"
+      title: "Inventories"
+      add_new_repository_tab: "Add inventory"
+      delete_flash: "\"%{name}\" inventory was successfully deleted!"
+      rename_flash: "\"%{old_name}\" inventory was successfully renamed to \"%{new_name}\"!"
+      copy_flash: "\"%{new}\" inventory was successfully copied from \"%{old}\"!"
       no_teams:
         title: "Your dashboard is empty!"
         text: "It seems you're not a member of any team. See team management to sort it out."
       options_dropdown:
-        header: "Edit repository"
+        header: "Edit inventory"
         rename: "Rename"
         copy: "Copy"
         delete: "Delete"
         manage_columns: 'Manage Columns'
       modal_delete:
-        title_html: "Delete repository <em>%{name}</em>"
-        message_html: "Are you sure you want to delete repository <em>%{name}</em>? This action is irreversible."
-        alert_heading: "Deleting repository has following consequences:"
-        alert_line_1: "all data inside the repository will be lost;"
-        alert_line_2: "all references to repository items will be rendered as invalid."
-        delete: "Delete repository"
+        title_html: "Delete inventory <em>%{name}</em>"
+        message_html: "Are you sure you want to delete inventory <em>%{name}</em>? This action is irreversible."
+        alert_heading: "Deleting inventory has following consequences:"
+        alert_line_1: "all data inside the inventory will be lost;"
+        alert_line_2: "all references to inventory items will be rendered as invalid."
+        delete: "Delete inventory"
       modal_rename:
-        title_html: "Rename repository <em>%{name}</em>"
-        name: "New repository name"
-        name_placeholder: "My repository"
-        rename: "Rename repository"
+        title_html: "Rename inventory <em>%{name}</em>"
+        name: "New inventory name"
+        name_placeholder: "My inventory"
+        rename: "Rename inventory"
       modal_copy:
-        title_html: "Copy repository <em>%{name}</em>"
-        name: "New repository name"
-        description: "Only the structure of the repository is going to be copied."
-        name_placeholder: "My repository"
-        copy: "Copy repository"
+        title_html: "Copy inventory <em>%{name}</em>"
+        name: "New inventory name"
+        description: "Only the structure of the inventory is going to be copied."
+        name_placeholder: "My inventory"
+        copy: "Copy inventory"
       modal_create:
-        title: "Create new repository"
-        name_label: "Repository name"
-        name_placeholder: "My repository"
-        submit: "Create repository"
-        success_flash: "Repository <strong>%{name}</strong> successfully created."
+        title: "Create new inventory"
+        name_label: "Inventory name"
+        name_placeholder: "My inventory"
+        submit: "Create inventory"
+        success_flash: "Inventory <strong>%{name}</strong> successfully created."
     nav:
       breadcrumbs:
-        repositories: "Repositories"
+        repositories: "Inventories"
     table:
       id: 'ID'
       assigned: "Assigned"
@@ -976,13 +976,13 @@ en:
       upload: 'Upload file'
     js:
       permission_error: "You don't have permission to edit this item."
-      not_found_error: "This repository item does not exist."
+      not_found_error: "This inventory item does not exist."
       column_added: "New column was sucessfully created."
       empty_column_name: "Please enter column name."
     create:
-      success_flash: "Successfully added item <strong>%{record}</strong> to repository <strong>%{repository}</strong>"
+      success_flash: "Successfully added item <strong>%{record}</strong> to inventory <strong>%{repository}</strong>"
     update:
-      success_flash: "Successfully updated item <strong>%{record}</strong> in repository <strong>%{repository}</strong>"
+      success_flash: "Successfully updated item <strong>%{record}</strong> in inventory <strong>%{repository}</strong>"
     destroy:
       success_flash: "%{records_number} item(s) successfully deleted."
       contains_other_records_flash: "%{records_number} item(s) successfully deleted. %{other_records_number} of the selected item(s) were created by other users and were not deleted."
@@ -1231,8 +1231,8 @@ en:
     uncomplete_module: "<i>%{user}</i> uncompleted task <strong>%{module}</strong>."
     assign_sample: "<i>%{user}</i> assigned sample(s) <strong>%{samples}</strong> to task(s) <strong>%{tasks}</strong>"
     unassign_sample: "<i>%{user}</i> unassigned sample(s) <strong>%{samples}</strong> from task(s) <strong>%{tasks}</strong>"
-    assign_repository_records: "<i>%{user}</i> assigned item(s) <strong>%{records}</strong> from <strong>%{repository}</strong> repository to task <strong>%{task}</strong>"
-    unassign_repository_records: "<i>%{user}</i> unassigned item(s) <strong>%{records}</strong> from <strong>%{repository}</strong> repository from task <strong>%{task}</strong>"
+    assign_repository_records: "<i>%{user}</i> assigned item(s) <strong>%{records}</strong> from <strong>%{repository}</strong> inventory to task <strong>%{task}</strong>"
+    unassign_repository_records: "<i>%{user}</i> unassigned item(s) <strong>%{records}</strong> from <strong>%{repository}</strong> inventory from task <strong>%{task}</strong>"
     create_step: "<i>%{user}</i> created Step %{step} <strong>%{step_name}</strong>."
     destroy_step: "<i>%{user}</i> deleted Step %{step} <strong>%{step_name}</strong>."
     add_comment_to_step: "<i>%{user}</i> commented on Step %{step} <strong>%{step_name}</strong>."
@@ -1841,7 +1841,7 @@ en:
     result_annotation_message_html: "Project: %{project} | Experiment: %{experiment} | Task: %{my_module}"
     sample_annotation_title: "%{user} mentioned you in Column: %{column} of Sample %{sample}"
     sample_annotation_message_html: "Sample: %{sample} | Column: %{column}"
-    repository_annotation_title: "%{user} mentioned you in Column: %{column} of Record %{record} in Repository %{repository}"
+    repository_annotation_title: "%{user} mentioned you in Column: %{column} of Record %{record} in Inventory %{repository}"
     repository_annotation_message_html: "Item: %{record} | Column: %{column}"
     protocol_step_annotation_message_html: "Protocol: %{protocol}"
     email_title: "You've received a sciNote notification!"
@@ -1883,7 +1883,7 @@ en:
       deleted: "(deleted)"
 
   zip_export:
-    modal_label: 'Export repository'
+    modal_label: 'Export inventory'
     notification_title: 'Your package is ready to be exported!'
     expired_title: 'Looks like your link has expired.'
     expired_description: 'Please export the data again in order to receive a new link.'
@@ -1961,7 +1961,7 @@ en:
   Tables: "Tables"
   Sample: "Sample"
   Samples: "Samples"
-  Repositories_team: "Repositories - %{team}"
+  Repositories_team: "Inventories - %{team}"
   Reports: "Reports"
   Comments: "Comments"
   Step: "Step"
