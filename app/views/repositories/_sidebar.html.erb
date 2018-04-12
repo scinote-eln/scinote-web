@@ -8,7 +8,6 @@
           </span>
         </li>
         <% repositories.each do |repository| %>
-          <% cache repository do %>
             <li class="<%= 'active parent_li' if current_page?(repository_path(repository)) %>" >
               <span class="tree-link line-wrap no-indent">
                 <% if current_page?(repository_path(repository)) %>
@@ -20,7 +19,6 @@
                 <% end %>
               </span>
             </li>
-          <% end %>
         <% end %>
       </ul>
     </div>
