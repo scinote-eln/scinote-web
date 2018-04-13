@@ -30,7 +30,7 @@ class RepositoryRowsController < ApplicationController
                repository_cells: [] }
 
     record.transaction do
-      record.name = record_params[:name] unless record_params[:name].blank?
+      record.name = record_params[:repository_row_name] unless record_params[:repository_row_name].blank?
       errors[:default_fields] = record.errors.messages unless record.save
       if cell_params
         cell_params.each do |key, value|
@@ -44,6 +44,27 @@ class RepositoryRowsController < ApplicationController
                                           .find(value)
             cell_value = RepositoryListValue.new(
               repository_list_item_id: list_item.id,
+              created_by: current_user,
+              last_modified_by: current_user,
+              repository_cell_attributes: {
+                repository_row: record,
+                repository_column: column
+              }
+            )
+          elsif column.data_type == 'RepositoryAssetValue'
+            asset = Asset.new(file: value,
+                              created_by: current_user,
+                              last_modified_by: current_user,
+                              team: current_team)
+            if asset.save
+              asset.post_process_file(current_team)
+            else
+              errors[:repository_cells] << {
+                "#{column.id}": { data: asset.errors.messages[:file].first }
+              }
+            end
+            cell_value = RepositoryAssetValue.new(
+              asset: asset,
               created_by: current_user,
               last_modified_by: current_user,
               repository_cell_attributes: {
@@ -113,9 +134,15 @@ class RepositoryRowsController < ApplicationController
 
     # Add custom cells ids as key (easier lookup on js side)
     @record.repository_cells.each do |cell|
+      if cell.value_type == 'RepositoryAssetValue'
+        cell_value = cell.value.asset if cell.value_type == 'RepositoryAssetValue'
+      else
+        cell_value = escape_input(cell.value.data)
+      end
+
       json[:repository_row][:repository_cells][cell.repository_column_id] = {
         repository_cell_id: cell.id,
-        value: escape_input(cell.value.data),
+        value: cell_value,
         type: cell.value_type,
         list_items: fetch_list_items(cell)
       }
@@ -134,7 +161,7 @@ class RepositoryRowsController < ApplicationController
     }
 
     @record.transaction do
-      @record.name = record_params[:name].blank? ? nil : record_params[:name]
+      @record.name = record_params[:repository_row_name].blank? ? nil : record_params[:repository_row_name]
       errors[:default_fields] = @record.errors.messages unless @record.save
       if cell_params
         cell_params.each do |key, value|
@@ -153,6 +180,16 @@ class RepositoryRowsController < ApplicationController
                 )
               else
                 existing.delete
+              end
+            elsif existing.value_type == 'RepositoryAssetValue'
+              if existing.value.asset.update(file: value)
+                existing.value.asset.created_by = current_user
+                existing.value.asset.last_modified_by = current_user
+                existing.value.asset.post_process_file(current_team)
+              else
+                errors[:repository_cells] << {
+                  "#{existing.repository_column_id}": { data: existing.value.asset.errors.messages[:file].first }
+                }
               end
             else
               existing.value.data = value
@@ -313,7 +350,7 @@ class RepositoryRowsController < ApplicationController
   end
 
   def record_params
-    params.require(:repository_row).permit(:name).to_h
+    params.permit(:repository_row_name).to_h
   end
 
   def cell_params
