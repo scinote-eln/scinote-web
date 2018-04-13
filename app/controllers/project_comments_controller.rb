@@ -71,7 +71,7 @@ class ProjectCommentsController < ApplicationController
                 comment: @comment
               }
             ),
-            date: @comment.created_at.strftime('%d.%m.%Y'),
+            date: @comment.created_at.strftime('%B %d, %Y'),
             linked_id: @project.id,
             counter: @project.project_comments.count
           }, status: :created
