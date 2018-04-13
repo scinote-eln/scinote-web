@@ -1,32 +1,31 @@
 # frozen_string_literal: true
 
-require 'repository_actions/repository_cell_resolver'
+require 'repository_actions/duplicate_cell'
 
 module RepositoryActions
-  class Duplicate
+  class DuplicateRows
     attr_reader :number_of_duplicated_items
-    def initialize(user, repository, rows_to_copy = [])
+    def initialize(user, repository, rows_ids = [])
       @user                       = user
       @repository                 = repository
-      @rows_to_copy               = rows_to_copy.map(&:to_i).uniq
+      @rows_to_duplicate          = sanitize_rows_to_duplicate(rows_ids)
       @number_of_duplicated_items = 0
     end
 
     def call
-      sanitize_rows_to_copy
-      @rows_to_copy.each do |row_id|
-        copy_row(row_id)
+      @rows_to_duplicate.each do |row_id|
+        duplicate_row(row_id)
       end
     end
 
     private
 
-    def sanitize_rows_to_copy
-      ids = @repository.repository_rows.pluck(:id)
-      @rows_to_copy.map! { |el| ids.include?(el) ? el : nil }.compact!
+    def sanitize_rows_to_duplicate(rows_ids)
+      process_ids = rows_ids.map(&:to_i).uniq
+      @repository.repository_rows.where(id: process_ids).pluck(:id)
     end
 
-    def copy_row(id)
+    def duplicate_row(id)
       row = RepositoryRow.find_by_id(id)
       new_row = RepositoryRow.new(
         row.attributes.merge(new_row_attributes(row.name))
@@ -35,7 +34,7 @@ module RepositoryActions
       if new_row.save
         @number_of_duplicated_items += 1
         row.repository_cells.each do |cell|
-          copy_repository_cell(cell, new_row)
+          duplicate_repository_cell(cell, new_row)
         end
       end
     end
@@ -48,10 +47,10 @@ module RepositoryActions
         updated_at: timestamp }
     end
 
-    def copy_repository_cell(cell, new_row)
-      RepositoryActions::RepositoryCellResolver.new(cell,
-                                                    new_row,
-                                                    @user.current_team).call
+    def duplicate_repository_cell(cell, new_row)
+      RepositoryActions::DuplicateCell.new(
+        cell, new_row, @user.current_team
+      ).call
     end
   end
 end

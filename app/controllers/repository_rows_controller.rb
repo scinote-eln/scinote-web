@@ -279,9 +279,9 @@ class RepositoryRowsController < ApplicationController
   end
 
   def copy_records
-    duplicate_service = RepositoryActions::Duplicate.new(current_user,
-                                                         @repository,
-                                                         params[:selected_rows])
+    duplicate_service = RepositoryActions::DuplicateRows.new(
+      current_user, @repository, params[:selected_rows]
+    )
     duplicate_service.call
     render json: {
       flash: t('repositories.copy_records_report',

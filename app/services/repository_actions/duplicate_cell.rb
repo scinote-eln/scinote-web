@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module RepositoryActions
-  class RepositoryCellResolver
+  class DuplicateCell
     def initialize(cell, new_row, team)
       @cell    = cell
       @new_row = new_row
@@ -9,21 +9,12 @@ module RepositoryActions
     end
 
     def call
-      case @cell.value_type
-      when 'RepositoryListValue'
-        clone_repository_list_value
-      when 'RepositoryTextValue'
-        clone_repository_text_value
-      when 'RepositoryAssetValue'
-        clone_repository_asset_value
-      when 'RepositoryDateValue'
-        clone_repository_date_value
-      end
+      self.send("duplicate_#{@cell.value_type.underscore}")
     end
 
     private
 
-    def clone_repository_list_value
+    def duplicate_repository_list_value
       old_value = @cell.value
       RepositoryListValue.create(
         old_value.attributes.merge(id: nil,
@@ -34,7 +25,7 @@ module RepositoryActions
       )
     end
 
-    def clone_repository_text_value
+    def duplicate_repository_text_value
       old_value = @cell.value
       RepositoryTextValue.create(
         old_value.attributes.merge(id: nil,
@@ -45,7 +36,7 @@ module RepositoryActions
       )
     end
 
-    def clone_repository_asset_value
+    def duplicate_repository_asset_value
       old_value = @cell.value
       new_asset = create_new_asset(old_value.asset)
       RepositoryAssetValue.create(
@@ -60,7 +51,7 @@ module RepositoryActions
       )
     end
 
-    def clone_repository_date_value
+    def duplicate_repository_date_value
       old_value = @cell.value
       RepositoryDateValue.create(
         old_value.attributes.merge(id: nil,

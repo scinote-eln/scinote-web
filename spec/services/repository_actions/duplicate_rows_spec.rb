@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe RepositoryActions::Duplicate do
+describe RepositoryActions::DuplicateRows do
   let!(:user) { create :user }
   let!(:repository) { create :repository }
   let!(:list_column) do
@@ -41,13 +41,13 @@ describe RepositoryActions::Duplicate do
       end
     end
 
-    it 'generates a copy of selected items' do
+    it 'generates a duplicate of selected items' do
       expect(repository.repository_rows.reload.size).to eq 3
       described_class.new(user, repository, @rows_ids).call
       expect(repository.repository_rows.reload.size).to eq 6
     end
 
-    it 'generates an exact copy of the row with custom column values' do
+    it 'generates an exact duplicate of the row with custom column values' do
       described_class.new(user, repository, [@rows_ids.first]).call
       duplicated_row = repository.repository_rows.order('created_at ASC').last
       expect(duplicated_row.name).to eq 'row (0) (1)'
@@ -60,7 +60,7 @@ describe RepositoryActions::Duplicate do
       end
     end
 
-    it 'prevents to copy items that do not already belong to repository' do
+    it 'prevents to duplicate items that do not already belong to repository' do
       new_repository = create :repository, name: 'new repo'
       new_row = create :repository_row, name: 'other row',
                                         repository: new_repository
@@ -68,13 +68,13 @@ describe RepositoryActions::Duplicate do
       expect(repository.repository_rows.reload.size).to eq 3
     end
 
-    it 'returns the number of copied items' do
+    it 'returns the number of duplicated items' do
       service_obj = described_class.new(user, repository, @rows_ids)
       service_obj.call
       expect(service_obj.number_of_duplicated_items).to eq 3
     end
 
-    it 'returns the number of copied items' do
+    it 'returns the number of duplicated items' do
       service_obj = described_class.new(user, repository, [])
       service_obj.call
       expect(service_obj.number_of_duplicated_items).to eq 0
