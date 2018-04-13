@@ -9,10 +9,14 @@ module FileIconsHelper
     file_ext = asset.file_file_name.split('.').last
     if %w(doc docm docx dot dotm dotx odt rtf).include?(file_ext)
       fa_class = 'fa-file-word'
-    elsif %w(csv ods xls xlsb xlsm xlsx).include?(file_ext)
+    elsif %w(ods xls xlsb xlsm xlsx).include?(file_ext)
       fa_class = 'fa-file-excel'
     elsif %w(odp pot potm potx pps ppsm ppsx ppt pptm pptx).include?(file_ext)
       fa_class = 'fa-file-powerpoint'
+    elsif %w(pdf).include?(file_ext)
+      fa_class = 'fa-file-pdf'
+    elsif %w(txt csv tab tex).include?(file_ext)
+      fa_class = 'fa-file-alt'
     end
 
     # Now check for custom mappings or possible overrides

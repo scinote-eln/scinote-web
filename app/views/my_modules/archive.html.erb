@@ -6,14 +6,13 @@
   <div class="col-xs-3">
     <% i = 0 %>
     <% @archived_results.each do |result| %>
-
       <%= render partial: "my_modules/archive/result.html.erb", locals: { result: result } %>
-
       <% i = i + 1 %>
     <% end %>
-
     <% if i == 0 %>
       <em><%=t "my_modules.module_archive.no_archived_results" %></em>
     <% end %>
   </div>
 </div>
+
+<script>window.initPreviewModal()</script>
