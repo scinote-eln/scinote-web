@@ -9,7 +9,7 @@ class RepositoriesController < ApplicationController
   before_action :check_manage_permissions, only:
     %i(destroy destroy_modal rename_modal update)
   before_action :check_create_permissions, only:
-    %i(create_new_modal create copy_modal copy)
+    %i(create_modal create copy_modal copy)
 
   layout 'fluid'
 
