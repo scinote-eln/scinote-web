@@ -20,11 +20,12 @@
            data-toggle="dropdown"
            aria-haspopup="true"
            aria-expanded="true"
-           <%= "disabled" unless can_manage_repository?(@repository) || can_create_repositories?(@repository.team) %>>
+           <%= "disabled" unless can_perform_repository_actions(@repository) %>>
         <span class="glyphicon glyphicon-cog"></span>
         <span class="caret"></span>
       </div>
-      <% if can_manage_repository?(@repository) || can_create_repositories?(@repository.team) %>
+
+      <% if can_perform_repository_actions(@repository) %>
         <ul class="dropdown-menu pull-right">
           <li class="dropdown-header">
             <%= t("repositories.index.options_dropdown.header") %>
