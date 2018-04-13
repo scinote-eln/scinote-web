@@ -1,5 +1,160 @@
 (function(global) {
   'use strict';
+  // Copy from clipboard
+  global.copyFromClipboard = (function() {
+    var UPLOADED_IMAGE = {};
+    var LOCATION = '';
+    function init(location) {
+      LOCATION = location;
+      global.addEventListener('paste', _listener, false);
+    };
+
+    function destroy() {
+      global.removeEventListener('paste', _listener, false);
+    }
+
+    function _listener(pasteEvent) {
+      _retrieveImageFromClipboardAsBlob(pasteEvent, function(imageBlob) {
+        if(imageBlob){
+          _clipboardPasteModal().promise().done(function() {
+            var canvas = document.getElementById('clipboardPreview');
+            var ctx = canvas.getContext('2d');
+            var img = new Image();
+            img.onload = function() {
+                canvas.width = this.width;
+                canvas.height = this.height;
+                ctx.drawImage(img, 0, 0);
+            };
+            var URLObj = window.URL || window.webkitURL;
+            img.src = URLObj.createObjectURL(imageBlob);
+            var extension = imageBlob.name.slice(
+              (Math.max(0, imageBlob.name.lastIndexOf(".")) || Infinity) + 1
+            );
+            $('#image-name').html('.' + extension); // add extension near file name
+            // temporary store image blob
+            UPLOADED_IMAGE = imageBlob
+          });
+        }
+      });
+    }
+
+    function _retrieveImageFromClipboardAsBlob(pasteEvent, callback){
+    	if(pasteEvent.clipboardData == false) {
+          if(typeof(callback) == "function"){
+            callback(undefined);
+          }
+        };
+
+        var items = pasteEvent.clipboardData.items;
+        if(items == undefined){
+          if(typeof(callback) == "function"){
+            callback(undefined);
+          }
+        };
+
+        for (var i = 0; i < items.length; i++) {
+          if (items[i].type.indexOf("image") == -1) continue;
+          var blob = items[i].getAsFile();
+
+          if(typeof(callback) == "function") {
+            callback(blob);
+          }
+        }
+    };
+
+    // removes modal from dom
+    function _destroyModalCallback() {
+      var modal = $('#clipboardPreviewModal');
+      modal.on('hidden.bs.modal', function() {
+        modal.modal('hide').promise().done(function() {
+          modal.remove();
+        });
+        UPLOADED_IMAGE = {};
+      });
+    }
+
+    function _closeModal() {
+      _hideModalForGood();
+      $("#clipboardPreviewModal").remove();
+    }
+
+    // $(..).modal('hide') don't work properly so here we manually remove the
+    // displayed modal
+    function _hideModalForGood(){
+      $("#clipboardPreviewModal").removeClass("in");
+      $(".modal-backdrop").remove();
+      $('body').removeClass('modal-open');
+      $('body').css('padding-right', '');
+      $("#clipboardPreviewModal").hide();
+    }
+
+    function _addImageCallback() {
+      $('[data-action="addImageFormClipboard"]').on('click', function() {
+        var inputArray = [];
+        var newName = $('#clipboardImageName').val();
+        // check if the name is set
+        if( newName && newName.length > 0 ) {
+          var extension = UPLOADED_IMAGE.name.slice(
+            (Math.max(0, UPLOADED_IMAGE.name.lastIndexOf(".")) || Infinity) + 1
+          );
+          // hack to inject custom name in File object
+          var name = newName + '.' + extension;
+          var blob = UPLOADED_IMAGE.slice(0, UPLOADED_IMAGE.size, UPLOADED_IMAGE.type);
+          // make new blob with the correct name;
+          var newFile = new File([blob], name, { type: UPLOADED_IMAGE.type });
+          inputArray.push(newFile);
+        } else { // return the default name
+          inputArray.push(UPLOADED_IMAGE);
+        }
+
+        // close modal
+        _closeModal();
+        // reuse file upload from drag'n drop :)
+        if(LOCATION === 'steps') {
+          DragNDropSteps.init(inputArray);
+        } else  {
+          DragNDropResults.init(inputArray);
+        }
+        // clear all uploaded images
+        UPLOADED_IMAGE = {};
+      });
+    }
+
+    // Generate modal html and hook callbacks
+    function _clipboardPasteModal() {
+      var html = '<div id="clipboardPreviewModal" class="modal fade" ';
+      html += 'tabindex="-1" role="dialog" aria-hidden="true">';
+      html += '<div class="modal-dialog" role="document">';
+      html += '<div class="modal-content"><div class="modal-header">';
+      html += '<button type="button" class="close" data-dismiss="modal"';
+      html += ' aria-label="Close"><span aria-hidden="true">&times;</span>';
+      html +=  '</button><h4 class="modal-title"><%= I18n.t('assets.from_clipboard.modal_title') %></h4>';
+      html += '</div><div class="modal-body"><p><strong><%= I18n.t('assets.from_clipboard.image_preview') %></strong></p>';
+      html += '<canvas style="border:1px solid grey;max-width:400px;max-height:300px" id="clipboardPreview" />';
+      html += '<p><strong><%= I18n.t('assets.from_clipboard.file_name') %></strong></p>';
+      html += '<div class="input-group">';
+      html += '<input id="clipboardImageName" type="text" class="form-control" ';
+      html += 'placeholder="<%= I18n.t('assets.from_clipboard.file_name_placeholder') %>" aria-describedby="image-name">';
+      html += '<span class="input-group-addon" id="image-name"></span></div>';
+      html += '</div><div class="modal-footer">';
+      html += '<button type="button" class="btn btn-primary" data-action="addImageFormClipboard"><%= I18n.t('assets.from_clipboard.add_image') %></button>';
+      html += '<button type="button" class="btn btn-default" data-dismiss="modal"><%= I18n.t('general.cancel') %></button>'
+      html += '</div></div></div></div><!-- /.modal -->';
+      return $(html).appendTo($('body')).promise().done(function() {
+        // display modal
+        $('#clipboardPreviewModal').modal('show');
+        // add callback to remove modal from DOM
+        _destroyModalCallback();
+        // add callback on image submit
+        _addImageCallback();
+      });
+    }
+
+    return Object.freeze({
+      init: init,
+      destroy: destroy
+    });
+  })();
 
   // Module to handle file uploading in Steps
   global.DragNDropSteps = (function() {
@@ -53,6 +208,7 @@
         var name = 'step[assets_attributes][' + index + '][file]';
         fd.append(name, droppedFiles[i]);
       }
+
       filesValid = true;
       totalSize = 0;
       _dragNdropAssetsOff();
@@ -141,6 +297,8 @@
     function _dragNdropAssetsOff() {
       $('body').off('drag dragstart dragend dragover dragenter dragleave drop');
       $('.is-dragover').hide();
+      // remove listeners for clipboard images
+      copyFromClipboard.destroy();
     }
 
     return Object.freeze({
@@ -393,6 +551,8 @@
         DragNDropResults.init(files);
       }
     });
+
+    copyFromClipboard.init(location);
   }
 
 })(window);

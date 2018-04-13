@@ -62,7 +62,7 @@ table {
 }
 
 #content-wrapper {
-  margin-top: 50px;
+  margin-top: 0px;
 
   &.alert-shown {
     margin-top: 102px;
@@ -641,8 +641,8 @@ a[data-toggle="tooltip"] {
 
  // Global team switch
 #team-switch {
-  /*border-left: 4px solid white;
-  border-right: 4px solid white;*/
+  /*border-left: 1px solid $color-alto;
+  border-right: 1px solid $color-alto;*/
   word-wrap: break-word;
 
   .dropdown-menu {
@@ -2210,4 +2210,8 @@ th.custom-field .modal-tooltiptext {
 
 .parse-records-table {
   max-height: 200px;
+}
+
+.tiny-mce-pdf-ready {
+  max-width: 100%;
 }

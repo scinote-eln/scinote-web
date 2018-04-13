@@ -8,14 +8,11 @@ class ProjectsController < ApplicationController
                                    :notifications, :reports,
                                    :samples, :experiment_archive,
                                    :delete_samples, :samples_index]
-  before_action :check_view_permissions, only: [:show, :reports,
-                                                :samples, :experiment_archive,
-                                                :samples_index]
-  before_action :check_view_notifications_permissions, only: [ :notifications ]
+  before_action :check_view_permissions, only: %i(show reports notifications
+                                                  samples experiment_archive
+                                                  samples_index)
   before_action :check_create_permissions, only: [ :new, :create ]
-  before_action :check_edit_permissions, only: [ :edit ]
-  before_action :check_experiment_archive_permissions,
-                only: [:experiment_archive]
+  before_action :check_manage_permissions, only: :edit
 
   @filter_by_archived = false
 
@@ -118,13 +115,17 @@ class ProjectsController < ApplicationController
     flash_error = t('projects.update.error_flash', name: @project.name)
 
     # Check archive permissions if archiving/restoring
-    if project_params.include? :archive
-      if (project_params[:archive] and !can_archive_project(@project)) or
-        (!project_params[:archive] and !can_restore_project(@project))
+    if project_params.include? :archived
+      if (project_params[:archived] == 'true' &&
+          !can_archive_project?(@project)) ||
+         (project_params[:archived] == 'false' &&
+           !can_restore_project?(@project))
         return_error = true
         is_archive = URI(request.referer).path == projects_archive_path ? "restore" : "archive"
         flash_error = t("projects.#{is_archive}.error_flash", name: @project.name)
       end
+    elsif !can_manage_project?(@project)
+      render_403 && return
     end
 
     message_renamed = nil
@@ -318,29 +319,15 @@ class ProjectsController < ApplicationController
   end
 
   def check_view_permissions
-    unless can_view_project(@project)
-      render_403
-    end
+    render_403 unless can_read_project?(@project)
   end
 
   def check_create_permissions
     render_403 unless can_create_projects?(current_team)
   end
 
-  def check_view_notifications_permissions
-    unless can_view_project_notifications(@project)
-      render_403
-    end
-  end
-
-  def check_edit_permissions
-    unless can_edit_project(@project)
-      render_403
-    end
-  end
-
-  def check_experiment_archive_permissions
-    render_403 unless can_view_project_archive(@project)
+  def check_manage_permissions
+    render_403 unless can_manage_project?(@project)
   end
 
   def choose_layout

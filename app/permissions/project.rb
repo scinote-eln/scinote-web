@@ -1,95 +1,79 @@
-# frozen_string_literal: true
-
 Canaid::Permissions.register_for(Project) do
-  include PermissionExtends
-
   # Project must be active for all the specified permissions
-  %i(manage_project
+  %i(read_project
+     manage_project
      archive_project
-     create_project_experiments
-     create_project_comments
-     manage_project_tags
-     manage_project_users)
+     create_experiments
+     create_comments_in_project
+     manage_tags
+     manage_reports)
     .each do |perm|
     can perm do |_, project|
       project.active?
     end
   end
 
-  %i(read_project
-     export_project)
-    .each do |perm|
-    can perm do |user, project|
-      user.is_admin_of_team?(project.team) || project.permission_granted?(user, ProjectPermissions::READ)
-    end
+  # project: read, read activities, read comments, read users, read archive,
+  #          read notifications
+  # reports: read
+  # samples: read
+  can :read_project do |user, project|
+    user.is_member_of_project?(project) ||
+      user.is_admin_of_team?(project.team) ||
+      (project.visible? && user.is_member_of_team?(project.team))
   end
 
+  # project: update/delete, assign/reassign/unassign users
   can :manage_project do |user, project|
-    project.permission_granted?(user, ProjectPermissions::MANAGE) &&
-      project.experiments.each do |experiment|
-        experiment.my_modules.all? do |my_module|
-          if my_module.my_module_status
-            my_module.my_module_status.my_module_status_implications.all? { |implication| implication.call(my_module) }
-          else
-            true
-          end
-        end
-      end
+    user.is_owner_of_project?(project)
   end
 
-  can :read_project_users do |user, project|
-    project.permission_granted?(user, ProjectPermissions::USERS_READ)
-  end
-
-  can :read_project_activities do |user, project|
-    project.permission_granted?(user, ProjectPermissions::ACTIVITIES_READ)
-  end
-
-  can :manage_project_users do |user, project|
-    user.is_admin_of_team?(project.team) || project.permission_granted?(user, ProjectPermissions::USERS_MANAGE)
-  end
-
+  # project: archive
   can :archive_project do |user, project|
-    project.permission_granted?(user, ProjectPermissions::MANAGE)
+    can_manage_project?(user, project)
   end
 
+  # NOTE: Must not be dependent on canaid parmision for which we check if it's
+  # active
+  # project: restore
   can :restore_project do |user, project|
-    project.archived? && project.permission_granted?(user, ProjectPermissions::MANAGE)
+    user.is_owner_of_project?(project) && project.archived?
   end
 
-  can :create_project_experiments do |user, project|
-    project.permission_granted?(user, ProjectPermissions::EXPERIMENTS_CREATE)
+  # experiment: create
+  can :create_experiments do |user, project|
+    user.is_user_or_higher_of_project?(project)
   end
 
-  can :read_project_comments do |user, project|
-    project.permission_granted?(user, ProjectPermissions::COMMENTS_READ)
+  # project: create comment
+  can :create_comments_in_project do |user, project|
+    user.is_technician_or_higher_of_project?(project)
   end
 
-  can :create_project_comments do |user, project|
-    project.permission_granted?(user, ProjectPermissions::COMMENTS_CREATE)
+  # project: create/update/delete tag
+  # module: assign/reassign/unassign tag
+  can :manage_tags do |user, project|
+    user.is_user_or_higher_of_project?(project)
   end
 
-  can :manage_project_tags do |user, project|
-    project.permission_granted?(user, ProjectPermissions::TAGS_MANAGE)
-  end
-
-  can :manage_project_my_modules do |user, project|
-    project.permission_granted?(user, ProjectPermissions::TASKS_MANAGE)
+  # reports: create, delete
+  can :manage_reports do |user, project|
+    user.is_technician_or_higher_of_project?(project)
   end
 end
 
 Canaid::Permissions.register_for(ProjectComment) do
-  %i(manage_project_comment)
+  # Project must be active for all the specified permissions
+  %i(manage_comment_in_project)
     .each do |perm|
-    can perm do |_, comment|
-      project = comment.project
-      project.active?
+    can perm do |_, project_comment|
+      project_comment.project.active?
     end
   end
 
-  can :manage_project_comment do |user, comment|
-    project = comment.project
-    project.permission_granted?(user, ProjectPermissions::COMMENTS_MANAGE) ||
-      ((comment.user == user) && project.permission_granted?(user, ProjectPermissions::COMMENTS_MANAGE_OWN))
+  # project: update/delete comment
+  can :manage_comment_in_project do |user, project_comment|
+    project_comment.project.present? && (project_comment.user == user ||
+      user.is_owner_of_project?(project_comment.project))
   end
 end

@@ -18,7 +18,13 @@ class ProtocolsController < ApplicationController
     linked_children
     linked_children_datatable
   )
-  before_action :check_edit_permissions, only: %i(
+  before_action :check_view_all_permissions, only: %i(
+    index
+    datatable
+  )
+  # For update_from_parent and update_from_parent_modal we don't need to check
+  # read permission for the parent protocol
+  before_action :check_manage_permissions, only: %i(
     edit
     update_metadata
     update_keywords
@@ -26,27 +32,20 @@ class ProtocolsController < ApplicationController
     edit_keywords_modal
     edit_authors_modal
     edit_description_modal
-  )
-  before_action :check_view_all_permissions, only: %i(
-    index
-    datatable
-  )
-  before_action :check_unlink_permissions, only: %i(
     unlink
     unlink_modal
-  )
-  before_action :check_revert_permissions, only: %i(
     revert
     revert_modal
-  )
-  before_action :check_update_parent_permissions, only: %i(
-    update_parent
-    update_parent_modal
-  )
-  before_action :check_update_from_parent_permissions, only: %i(
     update_from_parent
     update_from_parent_modal
   )
+  before_action :check_manage_parent_in_repository_permissions, only: %i(
+    update_parent
+    update_parent_modal
+  )
+  before_action :check_manage_all_in_repository_permissions, only:
+    %i(make_private publish archive)
+  before_action :check_restore_all_in_repository_permissions, only: :restore
   before_action :check_load_from_repository_views_permissions, only: %i(
     load_from_repository_modal
     load_from_repository_datatable
@@ -61,12 +60,11 @@ class ProtocolsController < ApplicationController
     copy_to_repository
     copy_to_repository_modal
   )
-  before_action :check_make_private_permissions, only: [:make_private]
-  before_action :check_publish_permissions, only: [:publish]
-  before_action :check_archive_permissions, only: [:archive]
-  before_action :check_restore_permissions, only: [:restore]
-  before_action :check_import_permissions, only: [:import]
-  before_action :check_export_permissions, only: [:export]
+  before_action :check_import_permissions, only: :import
+  before_action :check_export_permissions, only: :export
+
+  before_action :check_protocolsio_import_permissions,
+                only: %i(protocolsio_import_create protocolsio_import_save)
 
   def index; end
 
@@ -266,7 +264,9 @@ class ProtocolsController < ApplicationController
   end
 
   def copy_to_repository
-    link_protocols = can_link_copied_protocol_in_repository(@protocol) && params[:link]
+    link_protocols = params[:link] &&
+                     can_manage_protocol_in_module?(@protocol) &&
+                     can_create_protocols_in_repository?(@protocol.team)
     respond_to do |format|
       transaction_error = false
       Protocol.transaction do
@@ -611,7 +611,6 @@ class ProtocolsController < ApplicationController
     end
     extension = File.extname(params[:json_file].path)
     file_size = File.size(params[:json_file].path)
-
     if extension != '.txt' && extension != '.json'
       @protocolsio_invalid_file = true
       respond_to do |format|
@@ -641,10 +640,11 @@ class ProtocolsController < ApplicationController
       return 0 # return 0 stops the rest of the controller code from executing
     end
     @json_object = JSON.parse(json_file_contents)
-
-    @json_object['steps'] = protocols_io_guid_reorder_step_json(
-      @json_object['steps']
-    )
+    unless step_hash_null?(@json_object['steps'])
+      @json_object['steps'] = protocols_io_guid_reorder_step_json(
+        @json_object['steps']
+      )
+    end
 
     @protocol = Protocol.new
     respond_to do |format|
@@ -659,23 +659,26 @@ class ProtocolsController < ApplicationController
     @db_json = {}
     @toolong = false
     @db_json['name'] = pio_eval_title_len(
-      sanitize_input(params['protocol']['name'])
+      sanitize_input(not_null(params['protocol']['name']))
     )
     # since scinote only has description field, and protocols.io has many others
     # ,here i am putting everything important from protocols.io into description
     @db_json['authors'] = pio_eval_title_len(
-      sanitize_input(params['protocol']['authors'])
+      sanitize_input(not_null(params['protocol']['authors']))
     )
     @db_json['created_at'] = pio_eval_title_len(
-      sanitize_input(params['protocol']['created_at'])
+      sanitize_input(not_null(params['protocol']['created_at']))
     )
     @db_json['updated_at'] = pio_eval_title_len(
-      sanitize_input(params['protocol']['last_modified'])
+      sanitize_input(not_null(params['protocol']['last_modified']))
     )
     @db_json['steps'] = {}
-    @db_json['steps'] = protocols_io_fill_step(
-      @json_object, @db_json['steps']
-    )
+
+    unless step_hash_null?(@json_object['steps'])
+      @db_json['steps'] = protocols_io_fill_step(
+        @json_object, @db_json['steps']
+      )
+    end
     protocol = nil
     respond_to do |format|
       transaction_error = false
@@ -739,6 +742,7 @@ class ProtocolsController < ApplicationController
               step_dir = "#{protocol_dir}/#{step_guid}"
               if step.assets.exists?
                 step.assets.order(:id).each do |asset|
+                  next unless asset.file.exists?
                   asset_guid = get_guid(asset.id)
                   asset_file_name = asset_guid.to_s +
                                     File.extname(asset.file_file_name).to_s
@@ -1042,9 +1046,9 @@ class ProtocolsController < ApplicationController
 
   def check_view_permissions
     @protocol = Protocol.find_by_id(params[:id])
-    if @protocol.blank? ||
-       @protocol.in_module? && !can_view_protocol(@protocol) ||
-       @protocol.in_repository? && !can_read_protocol_in_repository?(@protocol)
+    unless @protocol.present? &&
+           (can_read_protocol_in_module?(@protocol) ||
+           can_read_protocol_in_repository?(@protocol))
       respond_to { |f| f.json { render json: {}, status: :unauthorized } }
     end
   end
@@ -1062,59 +1066,58 @@ class ProtocolsController < ApplicationController
     @original = Protocol.find_by_id(params[:id])
 
     if @original.blank? ||
-      !can_clone_protocol_in_repository?(@original) || @type == :archive
+       !can_clone_protocol_in_repository?(@original) || @type == :archive
       render_403
     end
   end
 
-  def check_edit_permissions
-    load_team_and_type
+  def check_manage_permissions
     @protocol = Protocol.find_by_id(params[:id])
+    render_403 unless @protocol.present? &&
+                      (can_manage_protocol_in_module?(@protocol) ||
+                       can_manage_protocol_in_repository?(@protocol))
+  end
 
-    unless can_update_protocol_in_repository?(@protocol)
-      render_403
+  def check_manage_parent_in_repository_permissions
+    @protocol = Protocol.find_by_id(params[:id])
+    render_403 unless @protocol.present? &&
+                      can_read_protocol_in_module?(@protocol) &&
+                      can_manage_protocol_in_repository?(@protocol.parent)
+  end
+
+  def check_manage_all_in_repository_permissions
+    @protocols = Protocol.where(id: params[:protocol_ids])
+    @protocols.find_each do |protocol|
+      unless can_manage_protocol_in_repository?(protocol)
+        respond_to { |f| f.json { render json: {}, status: :unauthorized } }
+        break
+      end
     end
   end
 
-  def check_unlink_permissions
-    @protocol = Protocol.find_by_id(params[:id])
-
-    render_403 if @protocol.blank? || !can_unlink_protocol(@protocol)
-  end
-
-  def check_revert_permissions
-    @protocol = Protocol.find_by_id(params[:id])
-
-    render_403 if @protocol.blank? || !can_revert_protocol(@protocol)
-  end
-
-  def check_update_parent_permissions
-    @protocol = Protocol.find_by_id(params[:id])
-
-    render_403 if @protocol.blank? || !can_update_parent_protocol(@protocol)
-  end
-
-  def check_update_from_parent_permissions
-    @protocol = Protocol.find_by_id(params[:id])
-
-    if @protocol.blank? || !can_update_protocol_from_parent(@protocol)
-      render_403
+  def check_restore_all_in_repository_permissions
+    @protocols = Protocol.where(id: params[:protocol_ids])
+    @protocols.find_each do |protocol|
+      unless can_restore_protocol_in_repository?(protocol)
+        respond_to { |f| f.json { render json: {}, status: :unauthorized } }
+        break
+      end
     end
   end
 
   def check_load_from_repository_views_permissions
     @protocol = Protocol.find_by_id(params[:id])
 
-    render_403 if @protocol.blank? || !can_view_protocol(@protocol)
+    render_403 if @protocol.blank? || !can_read_protocol_in_module?(@protocol)
   end
 
   def check_load_from_repository_permissions
     @protocol = Protocol.find_by_id(params[:id])
     @source = Protocol.find_by_id(params[:source_id])
 
-    if @protocol.blank? || @source.blank? || !can_load_protocol_from_repository(@protocol, @source)
-      render_403
-    end
+    render_403 unless @protocol.present? && @source.present? &&
+                      (can_manage_protocol_in_module?(@protocol) ||
+                       can_read_protocol_in_repository?(@source))
   end
 
   def check_load_from_file_permissions
@@ -1125,7 +1128,7 @@ class ProtocolsController < ApplicationController
     if @protocol_json.blank? ||
        @protocol.blank? ||
        @my_module.blank? ||
-       !can_load_protocol_into_module(@my_module)
+       !can_manage_protocol_in_module?(@protocol)
       render_403
     end
   end
@@ -1134,53 +1137,9 @@ class ProtocolsController < ApplicationController
     @protocol = Protocol.find_by_id(params[:id])
     @my_module = @protocol.my_module
 
-    if @my_module.blank? || !can_copy_protocol_to_repository(@my_module)
-      render_403
-    end
-  end
-
-  def check_make_private_permissions
-    @protocols = Protocol.where(id: params[:protocol_ids])
-    @protocols.find_each do |protocol|
-      if !protocol.in_repository_public? ||
-         !can_update_protocol_type_in_repository?(protocol)
-        respond_to { |f| f.json { render json: {}, status: :unauthorized } }
-        return
-      end
-    end
-  end
-
-  def check_publish_permissions
-    @protocols = Protocol.where(id: params[:protocol_ids])
-    @protocols.find_each do |protocol|
-      if !protocol.in_repository_private? ||
-         !can_update_protocol_type_in_repository?(protocol)
-        respond_to { |f| f.json { render json: {}, status: :unauthorized } }
-        return
-      end
-    end
-  end
-
-  def check_archive_permissions
-    @protocols = Protocol.where(id: params[:protocol_ids])
-    @protocols.find_each do |protocol|
-      if protocol.in_repository_archived? ||
-         !can_update_protocol_type_in_repository?(protocol)
-        respond_to { |f| f.json { render json: {}, status: :unauthorized } }
-        return
-      end
-    end
-  end
-
-  def check_restore_permissions
-    @protocols = Protocol.where(id: params[:protocol_ids])
-    @protocols.find_each do |protocol|
-      if protocol.in_repository_active? ||
-         !can_update_protocol_type_in_repository?(protocol)
-        respond_to { |f| f.json { render json: {}, status: :unauthorized } }
-        return
-      end
-    end
+    render_403 unless @my_module.present? &&
+                      (can_read_protocol_in_module?(@protocol) ||
+                       can_create_protocols_in_repository?(@protocol.team))
   end
 
   def check_import_permissions
@@ -1198,10 +1157,8 @@ class ProtocolsController < ApplicationController
     @protocols = Protocol.where(id: params[:protocol_ids])
     render_403 if @protocols.blank?
     @protocols.each do |p|
-      if p.in_module? && !can_export_protocol(p) ||
-         p.in_repository? && !can_read_protocol_in_repository?(p)
-        render_403
-      end
+      render_403 unless can_read_protocol_in_module?(p) ||
+                        can_read_protocol_in_repository?(p)
     end
   end
 
@@ -1215,5 +1172,9 @@ class ProtocolsController < ApplicationController
 
   def metadata_params
     params.require(:protocol).permit(:name, :authors, :description)
+  end
+
+  def check_protocolsio_import_permissions
+    render_403 unless can_create_protocols_in_repository?(current_team)
   end
 end

@@ -16,7 +16,6 @@ gem 'yomu'
 gem 'font-awesome-rails', '~> 4.7.0.2'
 gem 'recaptcha', require: 'recaptcha/rails'
 gem 'sanitize', '~> 4.4'
-gem 'omniauth'
 
 #Added Passenger 03/14/2018
 gem 'passenger', '>= 5.0.25', require: 'phusion_passenger/rack_handler'
@@ -74,7 +73,7 @@ gem 'jbuilder' # JSON structures via a Builder-style DSL
 gem 'activerecord-import'
 gem 'scenic', '~> 1.4'
 
-gem 'paperclip', '~> 5.1' # File attachment, image attachment library
+gem 'paperclip', '~> 5.3' # File attachment, image attachment library
 gem 'aws-sdk', '~> 2'
 gem 'aws-sdk-v1'
 

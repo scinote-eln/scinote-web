@@ -10,10 +10,14 @@
     <%= render partial: "users/settings/teams/breadcrumbs.html.erb" %>
 
     <!-- TITLE -->
-    <%= link_to team_name_path(@team, format: :json),
-                remote: true,
-                class: 'name-link name-refresh',
-                style: 'color: inherit' do %>
+    <% if can_update_team?(@team) %>
+      <%= link_to team_name_path(@team, format: :json),
+                  remote: true,
+                  class: 'name-link name-refresh',
+                  style: 'color: inherit' do %>
+        <h3 id="team-name"><%= @team.name %></h3>
+      <% end %>
+    <% else %>
       <h3 id="team-name"><%= @team.name %></h3>
     <% end %>
     <br />

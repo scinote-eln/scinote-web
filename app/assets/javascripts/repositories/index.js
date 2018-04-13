@@ -15,22 +15,44 @@
   }
 
   function _initParseRecordsModal() {
-    $('#form-records-file').on('ajax:success', function(ev, data) {
-      $('#modal-import-records').modal('hide');
-      $(data.html).appendTo('body').promise().done(function() {
-        $('#parse-records-modal')
-          .modal('show')
-          .on('hidden.bs.modal', function() {
-            animateSpinner();
-            location.reload();
-          });
-        repositoryRecordsImporter();
+    var form = $('#form-records-file');
+    var submitBtn = form.find('input[type="submit"]');
+    submitBtn.on('click', function(event) {
+      event.preventDefault();
+      event.stopPropagation();
+      var data = new FormData();
+      data.append('file', document.getElementById('file').files[0]);
+      data.append('team_id', document.getElementById('team_id').value);
+      $.ajax({
+        type: 'POST',
+        url: form.attr('action'),
+        data: data,
+        success: _handleSuccessfulSubmit,
+        error: _handleErrorSubmit,
+        processData: false,
+        contentType: false,
       });
-    }).on('ajax:error', function(ev, data) {
-      $(this).find('.form-group').addClass('has-error');
-      $(this).find('.form-group').find('.help-block').remove();
-      $(this).find('.form-group').append("<span class='help-block'>" +
-                                         data.responseJSON.message + '</span>');
+    });
+  }
+
+  function _handleErrorSubmit(XHR) {
+    var formGroup = $('#form-records-file').find('.form-group');
+    formGroup.addClass('has-error');
+    formGroup.find('.help-block').remove();
+    formGroup.append('<span class="help-block">' +
+                     XHR.responseJSON.message + '</span>');
+  }
+
+  function _handleSuccessfulSubmit(data) {
+    $('#modal-import-records').modal('hide');
+    $(data.html).appendTo('body').promise().done(function() {
+      $('#parse-records-modal')
+        .modal('show')
+        .on('hidden.bs.modal', function() {
+          animateSpinner();
+          location.reload();
+        });
+      repositoryRecordsImporter();
     });
   }
 

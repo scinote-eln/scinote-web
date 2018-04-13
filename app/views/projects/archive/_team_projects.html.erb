@@ -3,7 +3,7 @@
 <div class="row">
 <% projects.each_index do |i| project = projects[i] %>
   <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
-  <%= render partial: "projects/archive/project", locals: {project: project} %>
+  <%= render partial: "projects/archive/project", locals: { project: project } %>
   </div>
   <% if (i+1) % 4 == 0 %>
   <div class="clearfix visible-lg-block"></div>

@@ -8,10 +8,8 @@
       <div class="modal-body"></div>
       <div class="modal-footer">
         <span class="pull-left">
-          <% if is_admin_of_team(@experiment.project.team) %>
-            <%= link_to t("experiments.canvas.full_zoom.modal_manage_users.invite_users_link"),
-                        "/settings/teams/#{@experiment.project.team.id}",
-                        data: { turbolinks: false } %>
+          <% if current_user.is_admin_of_team?(@experiment.project.team) %>
+            <%= link_to t("experiments.canvas.full_zoom.modal_manage_users.invite_users_link"), team_path(@experiment.project.team.id) %>
             <span><%=t "experiments.canvas.full_zoom.modal_manage_users.invite_users_details", team: @experiment.project.team.name %></span>
           <% else %>
             <i><%=t "experiments.canvas.full_zoom.modal_manage_users.contact_admins", team: @experiment.project.team.name %></i>

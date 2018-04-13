@@ -6,10 +6,9 @@
         <h4 class="modal-title"><%= t('samples.modal_import.title') %></h4>
         <%= t("samples.modal_import.notice") %>
       </div>
-      <%= bootstrap_form_tag url: parse_sheet_team_path(@team, format: :json),
+      <%= bootstrap_form_tag url: parse_sheet_team_path(@team),
                              html: {'data-type' => 'json',
-                                    id: 'form-samples-file'},
-                             remote: :true do |f| %>
+                                    id: 'form-samples-file'} do |f| %>
       <div class="modal-body">
           <%= f.file_field :file %>
       </div>

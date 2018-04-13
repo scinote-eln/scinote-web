@@ -1,0 +1,53 @@
+@import 'scinote.scss';
+@import 'partials/_sidebar.scss';
+
+#nav-top-sticky{
+
+}
+
+
+.nav-top-el{
+  width: 100%;
+  position: absolute;
+  top: 115px;
+  /** This bit is for setting the secondary nav bar at the top of the screen after scrolling down, so it always stays onscreen. **/
+  .fix-nav-top-el & {
+    position: fixed;
+    top: 0px;
+  }
+}
+
+/** Overwrite the default .navbar-secondary from scinote **/
+.navbar-secondary-custom{
+  @extend .navbar-secondary;
+  margin-left: 0;
+  margin-bottom: 0;
+  padding-left: 0;
+  padding-right: 0;
+  width: 100%;
+  display: inline-block;
+}
+
+#wrapper-custom{
+  @extend #wrapper;
+  position: absolute !important;
+}
+
+#wrapper-custom.toggled{
+  @extend #wrapper.toggled;
+}
+
+#sidebar-wrapper-custom{
+  @extend #sidebar-wrapper;
+  position: absolute !important;
+  left: 0 !important;
+}
+
+.sidebar-header-toggle-custom{
+  @extend .sidebar-header-toggle;
+  margin-left: 280px !important;
+}
+
+.breadcrumb{
+  margin-left:15px;
+}

@@ -1,25 +1,27 @@
 <% provide(:head_title, t("projects.index.head_title")) %>
 
-<!-- New project modal -->
-<div class="modal" id="new-project-modal" tabindex="-1" role="dialog" aria-labelledby="new-project-modal-label">
-  <%= bootstrap_form_for @project, remote: true do |f| %>
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <h4 class="modal-title" id="new-project-modal-label"><%= t("projects.index.modal_new_project.modal_title") %></h4>
-        </div>
-        <div class="modal-body">
-          <%= render partial: "new.html.erb", locals: { form: f, teams: @teams } %>
-        </div>
-        <div class="modal-footer">
-          <%= f.submit t("projects.index.modal_new_project.create"), class: "btn btn-primary" %>
-          <button type="button" class="btn btn-default" data-dismiss="modal"><%=t "general.cancel" %></button>
+<% if can_create_projects?(current_team) %>
+  <!-- New project modal -->
+  <div class="modal" id="new-project-modal" tabindex="-1" role="dialog" aria-labelledby="new-project-modal-label">
+    <%= bootstrap_form_for @project, remote: true do |f| %>
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="new-project-modal-label"><%= t("projects.index.modal_new_project.modal_title") %></h4>
+          </div>
+          <div class="modal-body">
+            <%= render partial: "new.html.erb", locals: { form: f, teams: @teams } %>
+          </div>
+          <div class="modal-footer">
+            <%= f.submit t("projects.index.modal_new_project.create"), class: "btn btn-primary" %>
+            <button type="button" class="btn btn-default" data-dismiss="modal"><%=t "general.cancel" %></button>
+          </div>
         </div>
       </div>
-    </div>
-  <% end %>
-</div>
+    <% end %>
+  </div>
+<% end %>
 
 <!-- Edit project modal -->
 <div class="modal" id="edit-project-modal" tabindex="-1" role="dialog" aria-labelledby="edit-project-modal-label">
@@ -63,8 +65,8 @@
         <span class="glyphicon glyphicon-briefcase" aria-hidden="true"></span>
       </a>
 
+      <% if @teams.length > 0 && can_create_projects?(current_team) %>
       <!-- new project button -->
-      <% if @teams.length > 0 %>
         <a class="btn btn-primary pull-right" id="new-project-btn">
           <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
           <span class="hidden-xs"><%=t "projects.index.new" %></span>

@@ -10,15 +10,16 @@ Rails.application.routes.draw do
                controllers: { registrations: 'users/registrations',
                               sessions: 'users/sessions',
                               invitations: 'users/invitations',
-                              confirmations: 'users/confirmations',
-                              omniauth_callbacks: 'users/omniauth_callbacks' }
+                              confirmations: 'users/confirmations'
+                              }
 
     root 'projects#index'
 
-    # EPA Help routes, about and contact pages
+    # EPA Help routes: about, contact, and training pages
     get 'help/about', to: 'help#about', as: 'about'
     get 'help/contact', to: 'help#contact', as: 'contact'
-
+    get 'help/training', to: 'help#training', as: 'training'
+	
     # # Client APP endpoints
     # get '/settings', to: 'client_api/settings#index'
     # get '/settings/*all', to: 'client_api/settings#index'
@@ -181,7 +182,7 @@ Rails.application.routes.draw do
         get 'destroy_html'
       end
       member do
-        post 'parse_sheet'
+        post 'parse_sheet', defaults: { format: 'json' }
         post 'import_samples'
         post 'export_samples'
         post 'export_repository', to: 'repositories#export_repository'
@@ -479,7 +480,7 @@ Rails.application.routes.draw do
 
       resources :repository_rows, only: %i(create edit update)
       member do
-        post 'parse_sheet'
+        post 'parse_sheet', defaults: { format: 'json' }
         post 'import_records'
       end
     end
@@ -502,6 +503,10 @@ Rails.application.routes.draw do
       get 'avatar/:id/:style' => 'users/registrations#avatar', as: 'avatar'
       post 'avatar_signature' => 'users/registrations#signature'
       get 'users/auth_token_sign_in' => 'users/sessions#auth_token_create'
+	  # These weren't present in previous EPA versions of sciNote
+      #get 'users/sign_up_provider' => 'users/registrations#new_with_provider'
+      #post 'users/complete_sign_up_provider' =>
+      #     'users/registrations#create_with_provider'
     end
 
     namespace :api, defaults: { format: 'json' } do

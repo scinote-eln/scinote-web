@@ -11,6 +11,8 @@ Paperclip::Attachment.default_options.merge!(
   url: '/system/:class/:attachment/:id_partition/:hash/:style/:filename'
 )
 
+Paperclip::UriAdapter.register
+
 if ENV['PAPERCLIP_STORAGE'] == "s3"
 
   if ENV['S3_BUCKET'].nil? or ENV['AWS_REGION'].nil? or

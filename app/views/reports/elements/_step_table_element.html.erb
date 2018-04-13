@@ -6,7 +6,7 @@
       <div class="pull-left attachment-icon">
           <span class="glyphicon glyphicon-th"></span>
       </div>
-      <% unless table.name.empty? then %>
+      <% if table && table.name %>
         <div class="pull-left table-name">
           <em><%=t 'projects.reports.elements.step_table.table_name', name: table.name %></em>
         </div>

@@ -15,6 +15,11 @@ module FileIconsHelper
       image_link = 'office/PowerPoint-pptx_20x20x32.png'
     end
 
+    # Now check for custom mappings or possible overrides
+    if Extends::FILE_ICON_MAPPINGS[file_ext]
+      image_link = Extends::FILE_ICON_MAPPINGS[file_ext]
+    end
+
     if image_link
       image_tag image_link
     else

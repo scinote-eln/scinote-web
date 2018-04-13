@@ -489,10 +489,7 @@ class SampleDatatable < CustomDatatable
   end
 
   def generate_sortable_displayed_columns
-    sort_order = SamplesTable.where(user: @user,
-                                    team: @team)
-                             .pluck(:status)
-                             .first['ColReorder']
+    sort_order = SamplesTable.find_status(@user, @team)['ColReorder']
 
     sort_order.shift
     sort_order.map! { |i| (i.to_i - 1).to_s }

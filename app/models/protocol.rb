@@ -221,32 +221,37 @@ class Protocol < ApplicationRecord
     assets_to_clone.each do |src_id, dest_id|
       src = Asset.find_by_id(src_id)
       dest = Asset.find_by_id(dest_id)
-      if src.present? and dest.present? then
-        # Clone file
-        dest.file = src.file
-        dest.save
+      dest.destroy! if src.blank? && dest.present?
+      next unless src.present? && dest.present?
+      # Clone file
+      dest.file = src.file
+      dest.save!
 
-        # Clone extracted text data if it exists
-        if (atd = src.asset_text_datum).present? then
-          atd2 = AssetTextDatum.new(
-            data: atd.data,
-            asset: dest
-          )
-          atd2.save
-        end
-
-        # Update estimated size of cloned asset
-        # (& file_present flag)
-        dest.update(
-          estimated_size: src.estimated_size,
-          file_present: true
-        )
-
-        # Update team's space taken
-        team.reload
-        team.take_space(dest.estimated_size)
-        team.save
+      if dest.is_image?
+        dest.file.reprocess!(:large)
+        dest.file.reprocess!(:medium)
       end
+
+      # Clone extracted text data if it exists
+      if (atd = src.asset_text_datum).present?
+        atd2 = AssetTextDatum.new(
+          data: atd.data,
+          asset: dest
+        )
+        atd2.save!
+      end
+
+      # Update estimated size of cloned asset
+      # (& file_present flag)
+      dest.update(
+        estimated_size: src.estimated_size,
+        file_present: true
+      )
+
+      # Update team's space taken
+      team.reload
+      team.take_space(dest.estimated_size)
+      team.save!
     end
   end
 
@@ -271,18 +276,19 @@ class Protocol < ApplicationRecord
         position: step.position,
         completed: false,
         user: current_user,
-        protocol: dest)
-      step2.save
+        protocol: dest
+      )
+      step2.save!
 
       # Copy checklists
       step.checklists.asc.each do |checklist|
         checklist2 = Checklist.new(
           name: checklist.name,
           step: step2
-          )
+        )
         checklist2.created_by = current_user
         checklist2.last_modified_by = current_user
-        checklist2.save
+        checklist2.save!
 
         checklist.checklist_items.each do |item|
           item2 = ChecklistItem.new(
@@ -293,7 +299,7 @@ class Protocol < ApplicationRecord
           )
           item2.created_by = current_user
           item2.last_modified_by = current_user
-          item2.save
+          item2.save!
         end
 
         step2.checklists << checklist2
@@ -309,13 +315,9 @@ class Protocol < ApplicationRecord
         asset2.team = dest.team
         asset2.last_modified_by = current_user
         asset2.file_processing = true if asset.is_image?
-        asset2.save
+        asset2.save!
 
         step2.assets << asset2
-        if asset.is_image?
-          asset2.file.delay.reprocess!(:large)
-          asset2.file.delay.reprocess!(:medium)
-        end
         assets_to_clone << [asset.id, asset2.id]
       end
 

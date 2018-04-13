@@ -6,7 +6,7 @@
       <%= render partial: "description_label.html.erb" %>
     </span>
   </li>
-  <% if can_edit_module(@my_module) %>
+  <% if can_manage_module?(@my_module) %>
     <hr>
     <li>
       <%= link_to t("experiments.canvas.popups.full_info"), description_my_module_path(@my_module, format: :json), class: "description-link", remote: true %>

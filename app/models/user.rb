@@ -5,7 +5,6 @@ class User < ApplicationRecord
   acts_as_token_authenticatable
   devise :invitable, :confirmable, :database_authenticatable, :registerable,
          :async, :recoverable, :rememberable, :trackable, :validatable,
-         :omniauthable, omniauth_providers: Extends::OMNIAUTH_PROVIDERS,
          stretches: Constants::PASSWORD_STRETCH_FACTOR
   has_attached_file :avatar,
                     styles: {
@@ -217,19 +216,16 @@ class User < ApplicationRecord
     self.full_name = name
   end
 
-  def current_team
-    Team.find_by_id(self.current_team_id)
+  def avatar_remote_url=(url_value)
+    self.avatar = URI.parse(url_value)
+    # Assuming url_value is http://example.com/photos/face.png
+    # avatar_file_name == "face.png"
+    # avatar_content_type == "image/png"
+    @avatar_remote_url = url_value
   end
 
-  def self.from_omniauth(auth)
-    includes(:user_identities)
-      .where(
-        'user_identities.provider=? AND user_identities.uid=?',
-        auth.provider,
-        auth.uid
-      )
-      .references(:user_identities)
-      .take
+  def current_team
+    Team.find_by_id(self.current_team_id)
   end
 
   # Search all active users for username & email. Can

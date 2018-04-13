@@ -157,6 +157,9 @@
       $form.clearFormErrors();
 
       switch(resultTypeEnum) {
+        case ResultTypeEnum.FILE:
+          _handleResultFileSubmit($form, ev);
+          break;
         case ResultTypeEnum.TABLE:
           var $nameInput = $form.find('#result_name');
           var nameValid = textValidator(ev, $nameInput, 0,
@@ -176,6 +179,55 @@
             <%= Constants::TEXT_MAX_LENGTH %>);
           break;
       }
+    }
+
+    // create custom ajax request in order to fix issuses with remote: true from
+    function _handleResultFileSubmit(form, ev) {
+      ev.preventDefault();
+      ev.stopPropagation();
+      animateSpinner();
+      var data = new FormData();
+      var file = document.getElementById('result_asset_attributes_file')
+                         .files[0];
+      data.append('result[name]', form.find('#result_name').val());
+      data.append('result[asset_attributes][id]',
+                  form.find('#result_asset_attributes_id').val());
+      if( file ) {
+        data.append('result[asset_attributes][file]', file);
+      }
+
+      $.ajax({
+        type: 'PUT',
+        url: form.attr('action'),
+        data: data,
+        success: function(data) {
+          animateSpinner(null, false);
+          $('.edit_result').parent().remove();
+          $(data.html).prependTo('#results').promise().done(function() {
+            $.each($('#results').find('.result'),
+                   function() {
+              initFormSubmitLinks($(this));
+              ResutlAssets.applyEditResultAssetCallback();
+              applyCollapseLinkCallBack();
+              toggleResultEditButtons(true);
+              initPreviewModal();
+              Comments.initialize();
+              ResutlAssets.initNewResultAsset();
+              expandResult($(this));
+            });
+
+          });
+          $('#results-toolbar').show();
+        },
+        error: function(XHR) {
+          animateSpinner(null, false)
+          $('.edit_result').renderFormErrors('result',
+                                             XHR.responseJSON['errors']);
+
+        },
+        processData: false,
+        contentType: false,
+      });
     }
 
     // init cancel button

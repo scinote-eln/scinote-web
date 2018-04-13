@@ -123,7 +123,7 @@ module Users
               )
               flash.keep(:notice)
             end
-            generate_notification(@user_t.user,
+            generate_notification(current_user,
                                   @user_t.user,
                                   @user_t.team,
                                   false,

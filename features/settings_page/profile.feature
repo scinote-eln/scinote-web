@@ -71,7 +71,7 @@ Scenario: Successfully changes user email
   Given I'm on the profile page
   Then I click on Edit on ".settings-page-email" input field
   And I change "nonadmin@myorg.com" with "user@myorg.com" email
-  And I fill in "mypassword1234" in "Current password" field of ".settings-page-email" form
+  And I fill in "mypassword1234" in "#edit-email-current-password" field of ".settings-page-email" form
   Then I click "Update" button
   And I should see "user@myorg.com" in ".settings-page-email" input field
 
@@ -79,9 +79,9 @@ Scenario: Successfully changes user email
 Scenario: Unsuccessful Password Change, password is too short
   Given I'm on the profile page
   Then I click on Edit on ".settings-page-change-password" input field
-  And I fill in "mypassword1234" in "Current password" field of ".settings-page-change-password" form
-  And I fill in "mypass" in "New password" field of ".settings-page-change-password" form
-  And I fill in "mypass" in "New password confirmation" field of ".settings-page-change-password" form
+  And I fill in "mypassword1234" in "#edit-password-current-password" field of ".settings-page-change-password" form
+  And I fill in "mypass" in "#user_password" field of ".settings-page-change-password" form
+  And I fill in "mypass" in "#user_password_confirmation" field of ".settings-page-change-password" form
   Then I click "Update" button
   And I should see "is too short (minimum is 8 characters)"
 
@@ -89,9 +89,9 @@ Scenario: Unsuccessful Password Change, password is too short
 Scenario: Unsuccessful Password Change, passwords does not match
   Given I'm on the profile page
   Then I click on Edit on ".settings-page-change-password" input field
-  And I fill in "mypassword1234" in "Current password" field of ".settings-page-change-password" form
-  And I fill in "mypassword5678" in "New password" field of ".settings-page-change-password" form
-  And I fill in "mypassword56788" in "New password confirmation" field of ".settings-page-change-password" form
+  And I fill in "mypassword1234" in "#edit-password-current-password" field of ".settings-page-change-password" form
+  And I fill in "mypassword5678" in "#user_password" field of ".settings-page-change-password" form
+  And I fill in "mypassword56788" in "#user_password_confirmation" field of ".settings-page-change-password" form
   Then I click "Update" button
   And I should see "doesn't match"
 
@@ -99,9 +99,9 @@ Scenario: Unsuccessful Password Change, passwords does not match
 Scenario: Unsuccessful Password Change, current password is invalid
   Given I'm on the profile page
   Then I click on Edit on ".settings-page-change-password" input field
-  And I fill in "mypassword123" in "Current password" field of ".settings-page-change-password" form
-  And I fill in "mypassword5678" in "New password" field of ".settings-page-change-password" form
-  And I fill in "mypassword5678" in "New password confirmation" field of ".settings-page-change-password" form
+  And I fill in "mypassword123" in "#edit-password-current-password" field of ".settings-page-change-password" form
+  And I fill in "mypassword5678" in "#user_password" field of ".settings-page-change-password" form
+  And I fill in "mypassword5678" in "#user_password_confirmation" field of ".settings-page-change-password" form
   Then I click "Update" button
   And I should see "is invalid"
 
@@ -109,8 +109,8 @@ Scenario: Unsuccessful Password Change, current password is invalid
 Scenario: Successful Password Change
   Given I'm on the profile page
   Then I click on Edit on ".settings-page-change-password" input field
-  And I fill in "mypassword1234" in "Current password" field of ".settings-page-change-password" form
-  And I fill in "mypassword5678" in "New password" field of ".settings-page-change-password" form
-  And I fill in "mypassword5678" in "New password confirmation" field of ".settings-page-change-password" form
+  And I fill in "mypassword1234" in "#edit-password-current-password" field of ".settings-page-change-password" form
+  And I fill in "mypassword5678" in "#user_password" field of ".settings-page-change-password" form
+  And I fill in "mypassword5678" in "#user_password_confirmation" field of ".settings-page-change-password" form
   Then I click "Update" button
   And I should see "Password successfully updated." flash message

@@ -5,7 +5,7 @@
 <div class="row">
   <div class="container-fluid">
     <div id="diagram-buttons">
-      <% if can_edit_canvas(@experiment) %>
+      <% if can_manage_experiment?(@experiment) %>
         <%=link_to canvas_edit_experiment_url(@experiment),
               remote: true,
               type: 'button',
@@ -15,9 +15,7 @@
                 <span class="glyphicon glyphicon-pencil"></span>
                 <span class="hidden-xs"><%=t 'experiments.canvas.canvas_edit' %></span>
               <% end %>
-      <% end %>
-      <!-- experiment actions -->
-      <% if can_edit_experiment(@experiment) || can_archive_experiment(@experiment) %>
+        <!-- experiment actions -->
         <span class="dropdown">
           <button class="btn btn-default dropdown-toggle" type="button" id="exActionsMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
             <span class="hidden-xs"><%= t'experiments.canvas.actions' %></span>
@@ -43,7 +41,7 @@
         </div>
       </div>
 
-      <% if can_create_experiment(@project) && @experiment.active? %>
+      <% if can_create_experiments?(@project) %>
         <%= link_to new_project_experiment_url(@project),
             remote: true,
             type: "button",

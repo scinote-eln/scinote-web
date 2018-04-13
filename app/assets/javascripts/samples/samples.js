@@ -1,20 +1,49 @@
+(function() {
+  'use strict';
+  // handles CSV upload for samples import
+  function postSamplesCSV() {
+    var form = $('form#form-samples-file');
+    var submitBtn = form.find('input[type="submit"]');
+    submitBtn.on('click', function(event) {
+      event.preventDefault();
+      event.stopPropagation();
+      var data = new FormData();
+      data.append('file', document.getElementById('file').files[0]);
+      $.ajax({
+        type: 'POST',
+        url: form.attr('action'),
+        data: data,
+        success: _handleSuccessfulSubmit,
+        error: _handleErrorSubmit,
+        processData: false,
+        contentType: false,
+      });
+    });
+  }
+
+  function _handleSuccessfulSubmit(data) {
+    $('#modal-parse-samples').html(data.html);
+    $('#modal-import-samples').modal('hide');
+    $('#modal-parse-samples').modal('show');
+  }
+
+  function _handleErrorSubmit(XHR) {
+    var formGroup = $('form#form-samples-file').find('.form-group');
+    formGroup.addClass('has-error');
+    formGroup.find('.help-block').remove();
+    formGroup.append('<span class="help-block">' +
+                     XHR.responseJSON.message + '</span>');
+  }
+
+  $(document).ready(postSamplesCSV);
+})()
+
+
 // Create import samples ajax
 $("#modal-import-samples").on("show.bs.modal", function(event) {
     formGroup = $(this).find(".form-group");
     formGroup.removeClass("has-error");
     formGroup.find(".help-block").remove();
-});
-
-$("form#form-samples-file")
-.on("ajax:success", function(ev, data, status) {
-  $("#modal-parse-samples").html(data.html);
-  $("#modal-import-samples").modal("hide");
-  $("#modal-parse-samples").modal("show");
-})
-.on("ajax:error", function(ev, data, status) {
-  $(this).find(".form-group").addClass("has-error");
-  $(this).find(".form-group").find(".help-block").remove();
-  $(this).find(".form-group").append("<span class='help-block'>" + data.responseJSON.message + "</span>");
 });
 
 $('.sample-assign-group > .btn').click(function() {
