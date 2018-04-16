@@ -1026,6 +1026,7 @@ en:
     index:
       head_title: "Inventories"
       no_libraries:
+        no_permission_title: "You don't have permission to create new inventory. Please contact your team administrator."
         text: "You don't have any inventories."
         title: "Please create your first Inventory"
         create_new_button: "Create New Inventory"
