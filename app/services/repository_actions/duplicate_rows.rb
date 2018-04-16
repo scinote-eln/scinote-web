@@ -49,7 +49,7 @@ module RepositoryActions
 
     def duplicate_repository_cell(cell, new_row)
       RepositoryActions::DuplicateCell.new(
-        cell, new_row, @user.current_team
+        cell, new_row, @user
       ).call
     end
   end

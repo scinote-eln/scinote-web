@@ -2,10 +2,11 @@
 
 module RepositoryActions
   class DuplicateCell
-    def initialize(cell, new_row, team)
+    def initialize(cell, new_row, user)
       @cell    = cell
       @new_row = new_row
-      @team    = team
+      @user    = user
+      @team    = user.current_team
     end
 
     def call
@@ -17,22 +18,26 @@ module RepositoryActions
     def duplicate_repository_list_value
       old_value = @cell.value
       RepositoryListValue.create(
-        old_value.attributes.merge(id: nil,
+        old_value.attributes.merge(
+          id: nil, created_by: @user, last_modified_by: @user,
           repository_cell_attributes: {
             repository_row: @new_row,
             repository_column: @cell.repository_column
-          })
+          }
+        )
       )
     end
 
     def duplicate_repository_text_value
       old_value = @cell.value
       RepositoryTextValue.create(
-        old_value.attributes.merge(id: nil,
+        old_value.attributes.merge(
+          id: nil, created_by: @user, last_modified_by: @user,
           repository_cell_attributes: {
             repository_row: @new_row,
             repository_column: @cell.repository_column
-          })
+          }
+        )
       )
     end
 
@@ -41,8 +46,7 @@ module RepositoryActions
       new_asset = create_new_asset(old_value.asset)
       RepositoryAssetValue.create(
         old_value.attributes.merge(
-          id: nil,
-          asset: new_asset,
+          id: nil, asset: new_asset, created_by: @user, last_modified_by: @user,
           repository_cell_attributes: {
             repository_row: @new_row,
             repository_column: @cell.repository_column
@@ -54,11 +58,13 @@ module RepositoryActions
     def duplicate_repository_date_value
       old_value = @cell.value
       RepositoryDateValue.create(
-        old_value.attributes.merge(id: nil,
+        old_value.attributes.merge(
+          id: nil, created_by: @user, last_modified_by: @user,
           repository_cell_attributes: {
             repository_row: @new_row,
             repository_column: @cell.repository_column
-          })
+          }
+        )
       )
     end
 
@@ -69,8 +75,8 @@ module RepositoryActions
         old_asset.file_file_size
       )
       new_asset.created_by = old_asset.created_by
-      new_asset.team = old_asset.team
-      new_asset.last_modified_by = old_asset.last_modified_by
+      new_asset.team = @team
+      new_asset.last_modified_by = @user
       new_asset.file_processing = true if old_asset.is_image?
       new_asset.file = old_asset.file
       new_asset.save
