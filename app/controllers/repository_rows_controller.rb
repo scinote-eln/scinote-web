@@ -34,62 +34,7 @@ class RepositoryRowsController < ApplicationController
       errors[:default_fields] = record.errors.messages unless record.save
       if cell_params
         cell_params.each do |key, value|
-          column = @repository.repository_columns.detect do |c|
-            c.id == key.to_i
-          end
-          if column.data_type == 'RepositoryListValue'
-            next if value == '-1'
-            # check if item existx else revert the transaction
-            list_item = RepositoryListItem.where(repository_column: column)
-                                          .find(value)
-            cell_value = RepositoryListValue.new(
-              repository_list_item_id: list_item.id,
-              created_by: current_user,
-              last_modified_by: current_user,
-              repository_cell_attributes: {
-                repository_row: record,
-                repository_column: column
-              }
-            )
-          elsif column.data_type == 'RepositoryAssetValue'
-            asset = Asset.new(file: value,
-                              created_by: current_user,
-                              last_modified_by: current_user,
-                              team: current_team)
-            if asset.save
-              asset.post_process_file(current_team)
-            else
-              errors[:repository_cells] << {
-                "#{column.id}": { data: asset.errors.messages[:file].first }
-              }
-            end
-            cell_value = RepositoryAssetValue.new(
-              asset: asset,
-              created_by: current_user,
-              last_modified_by: current_user,
-              repository_cell_attributes: {
-                repository_row: record,
-                repository_column: column
-              }
-            )
-          else
-            cell_value = RepositoryTextValue.new(
-              data: value,
-              created_by: current_user,
-              last_modified_by: current_user,
-              repository_cell_attributes: {
-                repository_row: record,
-                repository_column: column
-              }
-            )
-          end
-          if cell_value.save
-            record_annotation_notification(record, cell_value.repository_cell)
-          else
-            errors[:repository_cells] << {
-              "#{column.id}": cell_value.errors.messages
-            }
-          end
+          next if create_cell_value(record, key, value, errors).nil?
         end
       end
       raise ActiveRecord::Rollback if errors[:repository_cells].any?
@@ -205,42 +150,7 @@ class RepositoryRowsController < ApplicationController
           else
             # Looks like it is a new cell, so we need to create new value, cell
             # will be created automatically
-            column = @repository.repository_columns.detect do |c|
-              c.id == key.to_i
-            end
-            if column.data_type == 'RepositoryListValue'
-              next if value == '-1'
-              # check if item existx else revert the transaction
-              list_item = RepositoryListItem.where(repository_column: column)
-                                            .find(value)
-              cell_value = RepositoryListValue.new(
-                repository_list_item_id: list_item.id,
-                created_by: current_user,
-                last_modified_by: current_user,
-                repository_cell_attributes: {
-                  repository_row: @record,
-                  repository_column: column
-                }
-              )
-            else
-              cell_value = RepositoryTextValue.new(
-                data: value,
-                created_by: current_user,
-                last_modified_by: current_user,
-                repository_cell_attributes: {
-                  repository_row: @record,
-                  repository_column: column
-                }
-              )
-            end
-            if cell_value.save
-              record_annotation_notification(@record,
-                                             cell_value.repository_cell)
-            else
-              errors[:repository_cells] << {
-                "#{column.id}": cell_value.errors.messages
-              }
-            end
+            next if create_cell_value(@record, key, value, errors).nil?
           end
         end
         # Clean up empty cells, not present in updated record
@@ -274,6 +184,66 @@ class RepositoryRowsController < ApplicationController
           status: :bad_request
         end
       end
+    end
+  end
+
+  def create_cell_value(record, key, value, errors)
+    column = @repository.repository_columns.detect do |c|
+      c.id == key.to_i
+    end
+    if column.data_type == 'RepositoryListValue'
+      return if value == '-1'
+      # check if item existx else revert the transaction
+      list_item = RepositoryListItem.where(repository_column: column)
+                                    .find(value)
+      cell_value = RepositoryListValue.new(
+        repository_list_item_id: list_item.id,
+        created_by: current_user,
+        last_modified_by: current_user,
+        repository_cell_attributes: {
+          repository_row: record,
+          repository_column: column
+        }
+      )
+    elsif column.data_type == 'RepositoryAssetValue'
+      asset = Asset.new(file: value,
+                        created_by: current_user,
+                        last_modified_by: current_user,
+                        team: current_team)
+      if asset.save
+        asset.post_process_file(current_team)
+      else
+        errors[:repository_cells] << {
+          "#{column.id}": { data: asset.errors.messages[:file].first }
+        }
+      end
+      cell_value = RepositoryAssetValue.new(
+        asset: asset,
+        created_by: current_user,
+        last_modified_by: current_user,
+        repository_cell_attributes: {
+          repository_row: record,
+          repository_column: column
+        }
+      )
+    else
+      cell_value = RepositoryTextValue.new(
+        data: value,
+        created_by: current_user,
+        last_modified_by: current_user,
+        repository_cell_attributes: {
+          repository_row: record,
+          repository_column: column
+        }
+      )
+    end
+    if cell_value.save
+      record_annotation_notification(record,
+                                     cell_value.repository_cell)
+    else
+      errors[:repository_cells] << {
+        "#{column.id}": cell_value.errors.messages
+      }
     end
   end
 
