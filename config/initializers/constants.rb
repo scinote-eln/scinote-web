@@ -168,9 +168,9 @@ class Constants
   #=============================================================================
 
   HTTP = 'http://'.freeze
-  TUTORIALS_URL = (HTTP + 'scinote.net/tutorials/').freeze
-  SUPPORT_URL = (HTTP + 'support.scinote.net/hc/en-us').freeze
-  WEBINARS_URL = (HTTP + 'scinote.net/join-a-webinar/').freeze
+  TUTORIALS_URL = (HTTP + 'goo.gl/YH3fXA').freeze
+  SUPPORT_URL = (HTTP + 'goo.gl/Jb9WXx').freeze
+  WEBINARS_URL = (HTTP + 'goo.gl/q3GdND').freeze
   # Default user picture avatar
   DEFAULT_AVATAR_URL = '/images/:style/missing.png'.freeze
 
