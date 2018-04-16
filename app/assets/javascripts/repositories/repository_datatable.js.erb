@@ -454,6 +454,10 @@ var RepositoryDatatable = (function(global) {
                  $(th).attr('data-type') === 'RepositoryListValue') {
         input = initialListItemsRequest($(th).attr('id'));
         tr.appendChild(createTdElement(input));
+      } else if ($(th).hasClass('repository-column') &&
+                 $(th).attr('data-type') === 'RepositoryAssetValue') {
+        input = changeToInputFileField('repository_cell_file', th.attr('id'), '');
+        tr.appendChild(createTdElement(input));
       } else {
         // Column we don't care for, just add empty td
         tr.appendChild(createTdElement(''));
@@ -612,19 +616,15 @@ var RepositoryDatatable = (function(global) {
           var rawIndex = TABLE.column.index('fromVisible', i);
           var colHeader = TABLE.column(rawIndex).header();
           if ($(colHeader).hasClass('repository-column')) {
+            var type = $(colHeader).attr('data-type');
             // Check if cell on this record exists
-            var cell = cells[$(colHeader).attr('id')];
-            if (cell) {
-              td.html(changeToFormField('repository_cell',
-                                         $(colHeader).attr('id'),
-                                         cell,
-                                         list_columns));
-            } else {
-              td.html(changeToFormField('repository_cell',
-                                         $(colHeader).attr('id'),
-                                         '',
-                                         list_columns));
-            }
+            var cell = cells[$(colHeader).attr('id')] || '';
+            td.html(changeToFormField('repository_cell',
+                                       $(colHeader).attr('id'),
+                                       type,
+                                       cell,
+                                       list_columns));
+            _addSelectedFile(type, cell, $(this).find('input')[0]);
             _initSelectPicker();
           }
         });
@@ -663,28 +663,32 @@ var RepositoryDatatable = (function(global) {
       node = selectedRecord;
     }
     // First fetch all the data in input fields
-    var data = {
-      request_url: $(TABLE_ID).data('current-uri'),
-      repository_row_id: $(selectedRecord).attr('id'),
-      repository_row: {},
-      repository_cells: {}
-    };
+    var formData = new FormData();
+    formData.append('request_url', $(TABLE_ID).data('current-uri'));
+    formData.append('repository_row_id', $(selectedRecord).attr('id'));
 
     // Direct record attributes
     // Record name
-    data.repository_row.name = $('td input[data-object = repository_row]').val();
+    formData.append('repository_row_name', $('td input[data-object = repository_row]').val());
 
     // Custom cells text type
     $(node).find('td input[data-object = repository_cell]').each(function() {
       // Send data only and only if cell is not empty
       if ($(this).val().trim()) {
-        data.repository_cells[$(this).attr('name')] = $(this).val();
+        formData.append('repository_cells[' + $(this).attr('name') + ']', $(this).val());
+      }
+    });
+    // Custom cells file type
+    $(node).find('td input[data-object = repository_cell_file]').each(function() {
+      // Send data only and only if cell is not empty
+      if ($(this).context.files.length == 1) {
+        formData.append('repository_cells[' + $(this).attr('name') + ']', $(this).context.files[0]);
       }
     });
     // Custom cells list type
     $(node).find('td[column_id]').each(function(index, el) {
       var value = $(el).attr('list_item_id');
-      data.repository_cells[$(el).attr('column_id')] = value;
+      formData.append('repository_cells[' + $(el).attr('column_id') + ']', value);
     });
 
     var url;
@@ -700,7 +704,9 @@ var RepositoryDatatable = (function(global) {
       url: url,
       type: type,
       dataType: 'json',
-      data: data,
+      data: formData,
+      processData: false,
+      contentType: false,
       success: function(data) {
         HelperModule.flashAlertMsg(data.flash, 'success');
         SmartAnnotation.closePopup();
@@ -910,6 +916,15 @@ var RepositoryDatatable = (function(global) {
     return _listItemDropdown(massage_response, '-1', column_id);
   }
 
+  function _addSelectedFile(type, cell, input) {
+    if (type === 'RepositoryAssetValue' && cell.value != null) {
+      const dT = new ClipboardEvent('').clipboardData || // Firefox workaround exploiting https://bugzilla.mozilla.org/show_bug.cgi?id=1422655
+        new DataTransfer(); // specs compliant (as of March 2018 only Chrome)
+      dT.items.add(new File([_], cell.value.file_file_name));
+      input.files = dT.files;
+    }
+  }
+
   function _initSelectPicker() {
     $('.selectpicker')
       .selectpicker({liveSearch: true})
@@ -972,21 +987,23 @@ var RepositoryDatatable = (function(global) {
         object + "' name='" + name + "' value='" + value + "'></input></div>";
   }
 
+  // Takes object and surrounds it with input
+  function changeToInputFileField(object, name, value) {
+    return "<div class='form-group'><input type='file' class='form-control' data-object='" +
+        object + "' name='" + name + "' value='" + value + "'></input></div>";
+  }
+
   // Takes an object and creates custom html element
-  function changeToFormField(object, name, cell, list_columns) {
-    if (cell === '') {
+  function changeToFormField(object, name, column_type, cell, list_columns) {
+    var value = cell.value || '';
+    if (column_type === 'RepositoryListValue') {
       var column = _.findWhere(list_columns, { column_id: parseInt(name) });
-      if (column) {
-        return _listItemDropdown(column.list_items, '', parseInt(name));
-      } else {
-        return changeToInputField(object, name, '');
-      }
+      var list_items = column.list_items || cell.list_items;
+      return _listItemDropdown(list_items, value, parseInt(name));
+    } else if (column_type === 'RepositoryAssetValue') {
+      return changeToInputFileField('repository_cell_file', name, value);
     } else {
-      if (cell.type === 'RepositoryListValue') {
-        return _listItemDropdown(cell.list_items, cell.value, parseInt(name));
-      } else {
-        return changeToInputField(object, name, cell.value);
-      }
+      return changeToInputField(object, name, value);
     }
   }
 
