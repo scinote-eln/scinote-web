@@ -5,15 +5,15 @@ class ProjectsController < ApplicationController
   include InputSanitizeHelper
 
   before_action :generate_intro_demo, only: :index
-  before_action :load_vars, only: [:show, :edit, :update,
-                                   :notifications, :reports,
-                                   :samples, :experiment_archive,
-                                   :delete_samples, :samples_index]
-  before_action :load_projects_by_teams, only: %i(index show samples)
+  before_action :load_vars, only: %i(show edit update
+                                     notifications reports
+                                     samples experiment_archive
+                                     delete_samples samples_index)
+  before_action :load_projects_by_teams, only: %i(index show samples archive)
   before_action :check_view_permissions, only: %i(show reports notifications
                                                   samples experiment_archive
                                                   samples_index)
-  before_action :check_create_permissions, only: [ :new, :create ]
+  before_action :check_create_permissions, only: %i(new create)
   before_action :check_manage_permissions, only: :edit
 
   @filter_by_archived = false
