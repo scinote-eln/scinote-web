@@ -9,14 +9,14 @@ class ProjectsController < ApplicationController
                                      notifications reports
                                      samples experiment_archive
                                      delete_samples samples_index)
-  before_action :load_projects_by_teams, only: %i(index show samples archive)
+  before_action :load_projects_by_teams, only: %i(index show samples archive
+                                                  experiment_archive)
+  before_action :load_archive_vars, only: :archive
   before_action :check_view_permissions, only: %i(show reports notifications
                                                   samples experiment_archive
                                                   samples_index)
   before_action :check_create_permissions, only: %i(new create)
   before_action :check_manage_permissions, only: :edit
-
-  @filter_by_archived = false
 
   # except parameter could be used but it is not working.
   layout 'fluid'
@@ -36,7 +36,6 @@ class ProjectsController < ApplicationController
   end
 
   def archive
-    @filter_by_archived = true
     index
   end
 
@@ -322,7 +321,16 @@ class ProjectsController < ApplicationController
       @current_sort = params[:sort].to_s
       @projects_by_teams = current_user.projects_by_teams(@current_team_id,
                                                           @current_sort,
-                                                          @filter_by_archived)
+                                                          false)
+    else
+      @projects_by_teams = []
+    end
+  end
+
+  def load_archive_vars
+    if current_user.teams.any?
+      @archived_projects_by_teams =
+        current_user.projects_by_teams(@current_team_id, @current_sort, true)
     else
       @projects_by_teams = []
     end
