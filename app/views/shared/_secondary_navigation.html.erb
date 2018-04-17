@@ -10,58 +10,6 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-
-      <!-- Breadcrumbs, displayed on small screens -->
-      <ul class="breadcrumb hidden-sm hidden-md hidden-lg">
-        <li>
-          <% if can_read_team?(@project.team) %>
-            <a href="<%= projects_path :team => @project.team.id %>">
-              <span class="glyphicon glyphicon-folder-open"></span>
-            </a>
-          <% else %>
-            <span class="glyphicon glyphicon-folder-open"></span>
-          <% end %>
-        </li>
-        <% if project_page? ||
-              sample_types_page_project? ||
-              sample_groups_page_project? %>
-          <li class="active">
-            <span class="glyphicon glyphicon-blackboard"></span>
-          </li>
-        <% else %>
-          <li>
-            <% if can_read_project?(@project) %>
-              <a href="<%= project_url(@project) %>">
-                <span class="glyphicon glyphicon-blackboard"></span>
-              </a>
-            <% else %>
-              <span class="glyphicon glyphicon-blackboard"></span>
-            <% end %>
-          </li>
-        <% end %>
-        <% if experiment_page? %>
-          <li class="active">
-            <i class="fas fa-flask"></i>
-          </li>
-        <% elsif module_page? %>
-          <li>
-            <% if can_read_experiment?(@experiment) %>
-              <%= link_to canvas_experiment_path(@experiment) do %>
-                <i class="fas fa-flask"></i>
-              <% end %>
-            <% else %>
-              <i class="fas fa-flask"></i>
-            <% end %>
-          </li>
-          <li class="active">
-            <span class="glyphicon glyphicon-credit-card"></span>
-          </li>
-        <% elsif experiment_page? %>
-          <li class="active">
-            <i class="fas fa-flask"></i>
-          </li>
-        <% end %>
-      </ul>
     </div>
 
     <!-- buttons -->
@@ -212,72 +160,20 @@
         <% end %>
       </ul>
 
-      <!-- Breadcrumbs, displayed on large screens -->
-      <ul class="breadcrumb hidden-xs">
-        <li>
-          <% if can_read_team?(@project.team) %>
-            <a href="<%= projects_path :team => @project.team.id %>">
-              <%= truncate(@project.team.name,
-                           length: Constants::NAME_TRUNCATION_LENGTH) %>
-            </a>
-          <% else %>
-            <%= truncate(@project.team.name,
-                         length: Constants::NAME_TRUNCATION_LENGTH) %>
-          <% end %>
-        </li>
-        <% if project_page? %>
-          <li class="active">
-            <%= truncate(@project.name,
-                         length: Constants::NAME_TRUNCATION_LENGTH) %>
-          </li>
-        <% else %>
-          <li>
-            <% if can_read_project?(@project) %>
-              <a href="<%= project_url(@project) %>">
-                <%= truncate(@project.name,
-                             length: Constants::NAME_TRUNCATION_LENGTH) %>
-              </a>
-            <% else %>
-              <%= truncate(@project.name,
-                           length: Constants::NAME_TRUNCATION_LENGTH) %>
-            <% end %>
-          </li>
-        <% end %>
-        <% if experiment_page? ||
-              module_page? ||
-              sample_types_page_my_module? ||
-              sample_groups_page_my_module? ||
-              sample_groups_page_experiment? ||
-              sample_types_page_expermient? %>
-          <% if !module_page? &&
-                !sample_types_page_my_module? &&
-                !sample_groups_page_my_module? %>
-            <li class="active">
-              <%= truncate(@experiment.name,
-                           length: Constants::NAME_TRUNCATION_LENGTH) %>
-            </li>
-          <% else %>
-            <li>
-            <% if can_read_experiment?(@experiment) %>
-              <%= link_to truncate(@experiment.name,
-                                   length: Constants::NAME_TRUNCATION_LENGTH),
-                          canvas_experiment_path(@experiment) %>
-            <% else %>
-              <%= truncate(@experiment.name,
-                           length: Constants::NAME_TRUNCATION_LENGTH) %>
-            <% end %>
-            </li>
-          <% end %>
-        <% end %>
-        <% if module_page? ||
-              sample_types_page_my_module? ||
-              sample_groups_page_my_module? %>
-          <li class="active">
-            <%= truncate(@my_module.name,
-                         length: Constants::NAME_TRUNCATION_LENGTH) %>
-          </li>
-        <% end %>
-      </ul>
+      <!-- Secondary navigation title -->
+      <% if project_page? %>
+        <% title_element = @project %>
+      <% elsif experiment_page? %>
+        <% title_element = @experiment %>
+      <% elsif module_page? %>
+        <% title_element = @my_module %>
+      <% end %>
+
+      <div class="nav-name">
+        <%= truncate(title_element.name,
+                     length: Constants::NAME_TRUNCATION_LENGTH) %>
+      </div>
+
     </div>
   </div>
 </nav>

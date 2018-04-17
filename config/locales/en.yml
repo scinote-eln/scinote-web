@@ -917,9 +917,6 @@ en:
         name_placeholder: "My inventory"
         submit: "Create inventory"
         success_flash: "Inventory <strong>%{name}</strong> successfully created."
-    nav:
-      breadcrumbs:
-        repositories: "Inventories"
     table:
       id: 'ID'
       assigned: "Assigned"
@@ -1449,10 +1446,6 @@ en:
         leave_flash: "Successfuly left team %{team}."
 
   protocols:
-    nav:
-      breadcrumbs:
-        manager: "Protocol management"
-        edit: "Edit protocol"
     protocols_io_import:
       title_too_long: "... Text is too long so we had to cut it off."
       too_long: "... <span class='label label-warning'>Text is too long so we had to cut it off.</span>"
