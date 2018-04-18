@@ -14,6 +14,12 @@ class UserProject < ApplicationRecord
 
   before_destroy :destroy_associations
 
+  after_commit do
+    Scenic.database.refresh_materialized_view(:datatables_reports,
+                                              concurrently: true,
+                                              cascade: false)
+  end
+
   def role_str
     I18n.t("user_projects.enums.role.#{role.to_s}")
   end

@@ -61,6 +61,10 @@ Canaid::Permissions.register_for(Team) do
   can :create_repository_columns do |user, team|
     user.is_normal_user_or_admin_of_team?(team)
   end
+
+  can :manage_reports do |user, team|
+    user.is_normal_user_or_admin_of_team?(team)
+  end
 end
 
 Canaid::Permissions.register_for(Protocol) do

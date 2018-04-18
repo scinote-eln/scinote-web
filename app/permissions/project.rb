@@ -5,8 +5,7 @@ Canaid::Permissions.register_for(Project) do
      archive_project
      create_experiments
      create_comments_in_project
-     manage_tags
-     manage_reports)
+     manage_tags)
     .each do |perm|
     can perm do |_, project|
       project.active?
@@ -53,11 +52,6 @@ Canaid::Permissions.register_for(Project) do
   # module: assign/reassign/unassign tag
   can :manage_tags do |user, project|
     user.is_user_or_higher_of_project?(project)
-  end
-
-  # reports: create, delete
-  can :manage_reports do |user, project|
-    user.is_technician_or_higher_of_project?(project)
   end
 end
 

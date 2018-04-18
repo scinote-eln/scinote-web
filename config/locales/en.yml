@@ -288,16 +288,22 @@ en:
     reports:
       print_title: "%{project} | Report"
       index:
-        head_title: "%{project} | Reports"
+        head_title: " Reports"
         new: "New report"
         edit: "Edit report"
         delete: "Delete report/s"
+        thead_project_name: "Project name"
         thead_name: "Report name"
         thead_created_by: "Created by"
         thead_last_modified_by: "Last modified by"
         thead_created_at: "Created at"
         thead_updated_at: "Last updated at"
         no_reports: "No reports!"
+        modal_new:
+          head_title: "Create new report"
+          no_projects: "No projects available."
+          message: "You are about to create a new report. Please select a project from which you would like to create a report for."
+          create: "Create"
         modal_delete:
           head_title: "Delete report/s"
           message: "Are you sure to delete selected report/s?"

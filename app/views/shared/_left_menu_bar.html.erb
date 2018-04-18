@@ -32,7 +32,7 @@
       <% end %>
     </li>
     <li class="<%= "active" if reports_are_selected? %>">
-      <%= link_to "#", id: "reports-link", title: t('left_menu_bar.reports') do %>
+      <%= link_to reports_path, id: "reports-link", title: t('left_menu_bar.reports') do %>
         <span class="glyphicon glyphicon-indent-left"></span>
         <span><%= t('left_menu_bar.reports') %></span>
       <% end %>

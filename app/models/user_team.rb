@@ -15,6 +15,12 @@ class UserTeam < ApplicationRecord
   before_destroy :destroy_associations
   after_create :create_samples_table_state
 
+  after_commit do
+    Scenic.database.refresh_materialized_view(:datatables_reports,
+                                              concurrently: true,
+                                              cascade: false)
+  end
+
   def role_str
     I18n.t("user_teams.enums.role.#{role}")
   end
