@@ -2,7 +2,8 @@ class UserRepositoriesController < ApplicationController
   before_action :load_vars
 
   def save_table_state
-    RepositoryTableState.update_state(current_user, @repository, params[:state])
+    service = RepositoryTableStateService.new(current_user, @repository)
+    service.update_state(params[:state])
     respond_to do |format|
       format.json do
         render json: {
@@ -13,14 +14,13 @@ class UserRepositoriesController < ApplicationController
   end
 
   def load_table_state
-    table_state = RepositoryTableState.load_state(current_user,
-                                                  @repository)
-                                      .state
+    service = RepositoryTableStateService.new(current_user, @repository)
+    state = service.load_state.state
     respond_to do |format|
-      if table_state
+      if state
         format.json do
           render json: {
-            state: table_state
+            state: state
           }
         end
       end

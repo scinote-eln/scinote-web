@@ -24,7 +24,8 @@ class RepositoryColumn < ApplicationRecord
   scope :list_type, -> { where(data_type: 'RepositoryListValue') }
 
   def update_repository_table_states
-    RepositoryTableState.update_states_with_new_column(self)
+    service = RepositoryTableStateColumnUpdateService.new
+    service.update_states_with_new_column(self)
   end
 
   def importable?

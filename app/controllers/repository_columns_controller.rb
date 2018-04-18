@@ -124,8 +124,9 @@ class RepositoryColumnsController < ApplicationController
     respond_to do |format|
       format.json do
         if @repository_column.destroy
-          RepositoryTableState.update_states_with_removed_column(
-            @del_repository_column,
+          service = RepositoryTableStateColumnUpdateService.new
+          service.update_states_with_removed_column(
+            @del_repository_column.repository,
             params[:repository_column][:column_index]
           )
           render json: {

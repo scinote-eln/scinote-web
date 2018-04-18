@@ -101,7 +101,7 @@ var RepositoryDatatable = (function(global) {
           $(row).addClass('selected');
         }
       },
-      // Next 2 options are shared with server-side default state
+      // Next 2 options are provided by server-side default state
       // (and get overriden once state load from server kicks in)
       order: <%= Constants::REPOSITORY_TABLE_DEFAULT_STATE[:order][0].to_s %>,
       columns: (function() {

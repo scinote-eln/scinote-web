@@ -95,8 +95,8 @@ class RepositoryDatatableService
       direction == column_obj[:dir].upcase
     end || 'ASC'
     column_index = column_obj[:column]
-    col_order = RepositoryTableState.load_state(@user, @repository)
-                                    .state['ColReorder']
+    service = RepositoryTableStateService.new(@user, @repository)
+    col_order = service.load_state.state['ColReorder']
     column_id = col_order[column_index].to_i
 
     if sortable_columns[column_id - 1] == 'assigned'

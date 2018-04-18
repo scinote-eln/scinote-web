@@ -846,7 +846,7 @@ class Constants
     time: 0,
     start: 0,
     length: 6,
-    order: { 0 => [[2, 'asc']] }, # Default sorting by 'ID' column
+    order: { 0 => [2, 'asc'] }, # Default sorting by 'ID' column
     search: { search: '',
               smart: true,
               regex: false,
