@@ -1,8 +1,7 @@
-<ul class="dropdown-menu" aria-labelledby="exActionsMenu-<%= experiment.id %>" data-id="<%= experiment.id %>">
-
+<ul class="dropdown-menu">
   <!-- Iterate over ALL RAP Program Level entries and create <li> for them -->
   <!-- Also add onclick or onselect to these values to automatically render the next partial -->
-  <%= programs do |program| %>
+  <%= @programs do |program| %>
     <li><%= program %></li>
   <% end %>
 </ul>
