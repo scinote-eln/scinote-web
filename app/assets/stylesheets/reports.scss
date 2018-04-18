@@ -8,26 +8,32 @@
 
 /* New page navbar */
 .navbar-report {
-  border-left: none;
-  border-top: none;
-  border-right: none;
+  background: $color-concrete;
   border-bottom: 4px solid $color-silver;
-  background: $color-concrete !important;
+  border-left: 0;
+  border-right: 0;
+  border-top: 0;
   margin-bottom: 0;
   min-width: 320px;
   padding: 0 15px;
-  z-index: 500;
+  padding-right: 100px;
   position: fixed;
   width: 100%;
+  z-index: 500;
 
   div.row {
     margin-right: 0;
   }
 
   #report-menu {
+    margin: 15px 0;
 
     form {
       display: inline-block;
+    }
+
+    .form-group {
+      margin-bottom: 0;
     }
   }
 
@@ -54,43 +60,6 @@ label {
   }
 }
 
-/* New page sidebar */
-.report-sidebar-wrapper {
-  background-color: $color-white !important;
-}
-
-// Some additional styling on the treeview
-.report-tree {
-  li {
-    padding: 0 0 0 15px;
-
-    a.report-nav-link:visited {
-      text-decoration: none;
-    }
-    a.report-nav-link:hover {
-      text-decoration: none;
-    }
-    [data-type='step']:not(.parent_li) {
-      padding-left: 27px;
-    }
-  }
-}
-.report-sidebar-panel-description {
-  margin: 10px 10px 0 10px;
-}
-
-.report-item-elements {
-  margin-top: 10px !important;
-  margin-left: 15px !important;
-
-  li {
-    margin: 5px 5px 5px 15px;
-  }
-
-  ul {
-    padding-left: 15px !important;
-  }
-}
 
 /**
  * Global fix for handsontable
@@ -115,19 +84,20 @@ label {
 .report-container {
   overflow-x: auto;
   overflow-y: auto;
-  padding-top: 30px;
-  padding-bottom: 30px;
+  padding-left: 0;
+  width: auto;
 }
 
 #report-content {
-  color: $color-black;
+  @include box-shadow(0 0 58px -10px $color-black);
   background: $color-white;
-  @include box-shadow(0px 0px 58px -10px $color-black);
-  max-width: 800px;
-  min-width: 230px;
-  min-height: 1200px;
+  color: $color-black;
   margin-left: auto;
   margin-right: auto;
+  margin-top: 50px;
+  max-width: 800px;
+  min-height: 1200px;
+  min-width: 230px;
   padding: 45px;
 }
 

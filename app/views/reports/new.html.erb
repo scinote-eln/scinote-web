@@ -1,9 +1,7 @@
 <% provide(:head_title, t("projects.reports.new.head_title", project: h(@project.name)).html_safe) %>
 <% provide(:body_class, "report-body") %>
-<% provide(:sidebar_wrapper_class, "report-sidebar-wrapper") %>
 <% provide(:container_class, "report-container") %>
 
-<%= render partial: "reports/new/report_sidebar" %>
 <%= render partial: "reports/new/report_navigation" %>
 
 <div

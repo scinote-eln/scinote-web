@@ -252,30 +252,6 @@ function setupSidebarTree() {
   $(".tree li span.tree-link ").after("<div class='border-custom'></div>");
 }
 
-/**
- * Initialize the show/hide toggling of sidebar.
- */
-function initializeSidebarToggle() {
-  var wrapper = $("#wrapper");
-  var toggled = sessionIsSidebarToggled();
-
-  if (toggled || toggled === null && $(window).width() <
-      <%= Constants::SCREEN_WIDTH_LARGE %>) {
-    wrapper.addClass("no-animation");
-    wrapper.addClass("toggled");
-    // Cause reflow of the wrapper element
-    wrapper[0].offsetHeight;
-    wrapper.removeClass("no-animation");
-    $(".navbar-secondary").addClass("navbar-without-sidebar");
-  }
-
-  $(".toggle-sidebar-link").on("click", function() {
-    $("#wrapper").toggleClass("toggled");
-    sessionToggleSidebar();
-    $(".navbar-secondary").toggleClass("navbar-without-sidebar", sessionIsSidebarToggled());
-    return false;
-  });
-}
 
 // Resize the sidebar to accomodate to the page size
 function resizeSidebarContents() {
