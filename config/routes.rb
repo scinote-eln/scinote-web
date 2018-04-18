@@ -19,7 +19,19 @@ Rails.application.routes.draw do
     get 'help/about', to: 'help#about', as: 'about'
     get 'help/contact', to: 'help#contact', as: 'contact'
     get 'help/training', to: 'help#training', as: 'training'
-	
+  
+    # EPA routes for RAP Information (Dropdowns in Project creation)
+    resources :rap_program_levels do |rap_program_levels|
+      rap_program_levels.resources :rap_topic_levels, only: %i(index show)
+    end
+    resources :rap_topic_levels do |rap_topic_levels|
+      rap_topic_levels.resources :rap_project_levels, only %i(index show)
+    end
+    resources :rap_project_levels do |rap_project_levels|
+      rap_project_levels.resources :rap_task_levels, only %i(index show)
+    end
+    resources :rap_task_levels, only %i(index show)
+
     # # Client APP endpoints
     # get '/settings', to: 'client_api/settings#index'
     # get '/settings/*all', to: 'client_api/settings#index'
