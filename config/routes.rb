@@ -22,17 +22,17 @@ Rails.application.routes.draw do
   
     # EPA routes for RAP Information (Dropdowns in Project creation)
 	resources :rap_program_levels do |rap_program_levels|
-	  rap_program_levels.resources :rap_topic_levels, only: %i(index show) do
+	  resources :rap_topic_levels, only: %i(index show) do
 		get 'show_rap_program_levels', to: 'rap_program_levels#show'
 	  end
 	end
 	resources :rap_topic_levels do |rap_topic_levels|
-	  rap_topic_levels.resources :rap_project_levels, only: %i(index show) do
+	  resources :rap_project_levels, only: %i(index show) do
 		get 'show_rap_topic_levels', to: 'rap_topic_levels#show'
 	  end
 	end
 	resources :rap_project_levels do |rap_project_levels|
-	  rap_project_levels.resources :rap_task_levels, only: %i(index show) do
+	  resources :rap_task_levels, only: %i(index show) do
 		get 'show_rap_project_levels', to: 'rap_project_levels#show'
 	  end
 	end

@@ -1,0 +1,2 @@
+class RapTopicLevelController < ApplicationController
+end

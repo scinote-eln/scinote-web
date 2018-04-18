@@ -1,0 +1,2 @@
+class RapProgramLevelController < ApplicationController
+end

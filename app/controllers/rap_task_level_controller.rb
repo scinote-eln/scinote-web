@@ -1,0 +1,2 @@
+class RapTaskLevelController < ApplicationController
+end
