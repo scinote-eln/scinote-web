@@ -12,50 +12,20 @@ class RepositoryTableState < ApplicationRecord
   def self.load_state(user, repository)
     state = where(user: user, repository: repository).take
     if state.blank?
-      state = RepositoryTableState.create_state(user, repository)
+      state = RepositoryTableState.create_default_state(user, repository)
     end
     state
   end
 
-  def self.update_state(custom_column, column_index, user)
-    # table state of every user having access to this repository needs udpating
-    table_states = RepositoryTableState.where(
-      repository: custom_column.repository
-    )
-    table_states.each do |table_state|
-      repository_state = table_state['state']
-      if column_index
-        # delete column
-        repository_state['columns'].delete(column_index)
-        repository_state['columns'].keys.each do |index|
-          if index.to_i > column_index.to_i
-            repository_state['columns'][(index.to_i - 1).to_s] =
-              repository_state['columns'].delete(index)
-          else
-            index
-          end
-        end
-
-        repository_state['ColReorder'].delete(column_index)
-        repository_state['ColReorder'].map! do |index|
-          if index.to_i > column_index.to_i
-            (index.to_i - 1).to_s
-          else
-            index
-          end
-        end
-      else
-        # add column
-        index = repository_state['columns'].count
-        repository_state['columns'][index] =
-          Constants::REPOSITORY_TABLE_DEFAULT_STATE[:columns].first
-        repository_state['ColReorder'].insert(2, index.to_s)
-      end
-      table_state.update(state: repository_state)
-    end
+  def self.update_state(user, repository, state)
+    RepositoryTableState.load_state(user, repository)
+                        .update(state: state)
   end
 
-  def self.create_state(user, repository)
+  def self.create_default_state(user, repository)
+    # Destroy any state object before recreating a new one
+    RepositoryTableState.where(user: user, repository: repository).destroy
+
     default_columns_num =
       Constants::REPOSITORY_TABLE_DEFAULT_STATE[:length]
 
@@ -74,7 +44,57 @@ class RepositoryTableState < ApplicationRecord
     state['length'] = state['columns'].length.to_s
     state['time'] = Time.new.to_i.to_s
     return RepositoryTableState.create(user: user,
-                                       repository: repository,
-                                       state: state)
+    repository: repository,
+    state: state)
+  end
+
+  def self.update_states_with_new_column(new_column)
+    RepositoryTableState.where(
+      repository: new_column.repository
+    ).find_each do |table_state|
+      state = table_state.state
+      index = state['columns'].count
+
+      # Add new columns, ColReorder, length entries
+      state['columns'][index.to_s] =
+        HashUtil.deep_stringify_keys_and_values(
+          Constants::REPOSITORY_TABLE_STATE_CUSTOM_COLUMN_TEMPLATE
+        )
+      state['ColReorder'] << index.to_s
+      state['length'] = (index + 1).to_s
+      state['time'] = Time.new.to_i.to_s
+      table_state.save
+    end
+  end
+
+  def self.update_states_with_removed_column(repository, old_column_index)
+    RepositoryTableState.where(
+      repository: repository
+    ).find_each do |table_state|
+      state = table_state.state
+
+      # old_column_index is a String!
+
+      # Remove column from ColReorder, columns, length entries
+      state['columns'].delete(old_column_index)
+      state['columns'].keys.each do |index|
+        if index.to_i > old_column_index.to_i
+          state['columns'][(index.to_i - 1).to_s] =
+            state['columns'].delete(index.to_s)
+        end
+      end
+
+      state['ColReorder'].delete(old_column_index)
+      state['ColReorder'].map! do |index|
+        if index.to_i > old_column_index.to_i
+          (index.to_i - 1).to_s
+        else
+          index
+        end
+      end
+      state['length'] = (state['length'].to_i - 1).to_s
+      state['time'] = Time.new.to_i.to_s
+      table_state.save
+    end
   end
 end

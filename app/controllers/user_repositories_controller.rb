@@ -2,15 +2,7 @@ class UserRepositoriesController < ApplicationController
   before_action :load_vars
 
   def save_table_state
-    table_state = RepositoryTableState.where(user: current_user,
-                                             repository: @repository).first
-    if table_state
-      table_state.update(state: params[:state])
-    else
-      RepositoryTableState.create(user: current_user,
-                                  repository: @repository,
-                                  state: params[:state])
-    end
+    RepositoryTableState.update_state(current_user, @repository, params[:state])
     respond_to do |format|
       format.json do
         render json: {

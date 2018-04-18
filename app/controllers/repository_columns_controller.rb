@@ -124,10 +124,9 @@ class RepositoryColumnsController < ApplicationController
     respond_to do |format|
       format.json do
         if @repository_column.destroy
-          RepositoryTableState.update_state(
+          RepositoryTableState.update_states_with_removed_column(
             @del_repository_column,
-            params[:repository_column][:column_index],
-            current_user
+            params[:repository_column][:column_index]
           )
           render json: {
             message: t('libraries.repository_columns.destroy.success_flash',

@@ -19,12 +19,12 @@ class RepositoryColumn < ApplicationRecord
   validates :repository, presence: true
   validates :data_type, presence: true
 
-  after_create :update_repository_table_state
+  after_create :update_repository_table_states
 
   scope :list_type, -> { where(data_type: 'RepositoryListValue') }
 
-  def update_repository_table_state
-    RepositoryTableState.update_state(self, nil, created_by)
+  def update_repository_table_states
+    RepositoryTableState.update_states_with_new_column(self)
   end
 
   def importable?
