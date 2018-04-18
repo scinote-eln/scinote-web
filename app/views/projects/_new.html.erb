@@ -1,9 +1,9 @@
 <div class="row">
-  <ul class="dropdown-menu">
+  <select name="rapProgramLevelSelect">
     <%= @programs.each do |program| %>
-      <li>List<%= program.name %></li>
+      <option value="<%= program %>">List<%= program.name %></option>
     <% end %>
-  </ul>
+  </select>
 </div>
 
 <div class="row">
