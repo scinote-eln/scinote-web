@@ -22,7 +22,8 @@ class UserRepositoriesController < ApplicationController
 
   def load_table_state
     table_state = RepositoryTableState.load_state(current_user,
-                                                  @repository).first
+                                                  @repository)
+                                      .state
     respond_to do |format|
       if table_state
         format.json do

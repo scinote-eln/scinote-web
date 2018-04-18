@@ -4,13 +4,17 @@ class RepositoryTableState < ApplicationRecord
 
   validates :user, :repository, presence: true
 
+  # We're using Constants::REPOSITORY_TABLE_DEFAULT_STATE as a reference for
+  # default table state; this Ruby Hash makes heavy use of Ruby symbols
+  # notation; HOWEVER, the state that is saved on the RepositoryTableState
+  # record, has EVERYTHING (booleans, symbols, keys, ...) saved as Strings.
+
   def self.load_state(user, repository)
-    table_state = where(user: user, repository: repository).pluck(:state)
-    if table_state.blank?
-      RepositoryTableState.create_state(user, repository)
-      table_state = where(user: user, repository: repository).pluck(:state)
+    state = where(user: user, repository: repository).take
+    if state.blank?
+      state = RepositoryTableState.create_state(user, repository)
     end
-    table_state
+    state
   end
 
   def self.update_state(custom_column, column_index, user)
@@ -43,8 +47,8 @@ class RepositoryTableState < ApplicationRecord
       else
         # add column
         index = repository_state['columns'].count
-        repository_state['columns'][index] = Constants::
-          REPOSITORY_TABLE_DEFAULT_STATE['columns'].first
+        repository_state['columns'][index] =
+          Constants::REPOSITORY_TABLE_DEFAULT_STATE[:columns].first
         repository_state['ColReorder'].insert(2, index.to_s)
       end
       table_state.update(state: repository_state)
@@ -52,17 +56,25 @@ class RepositoryTableState < ApplicationRecord
   end
 
   def self.create_state(user, repository)
-    default_columns_num = Constants::
-                          REPOSITORY_TABLE_DEFAULT_STATE['columns'].count
-    repository_state =
-      Constants::REPOSITORY_TABLE_DEFAULT_STATE.deep_dup
+    default_columns_num =
+      Constants::REPOSITORY_TABLE_DEFAULT_STATE[:length]
+
+    # This state should be strings-only
+    state = HashUtil.deep_stringify_keys_and_values(
+      Constants::REPOSITORY_TABLE_DEFAULT_STATE
+    )
     repository.repository_columns.each_with_index do |_, index|
-      repository_state['columns'] << Constants::
-                               REPOSITORY_TABLE_DEFAULT_STATE['columns'].first
-      repository_state['ColReorder'] << (default_columns_num + index)
+      real_index = default_columns_num + index
+      state['columns'][real_index.to_s] =
+        HashUtil.deep_stringify_keys_and_values(
+          Constants::REPOSITORY_TABLE_STATE_CUSTOM_COLUMN_TEMPLATE
+        )
+      state['ColReorder'] << real_index.to_s
     end
-    RepositoryTableState.create(user: user,
-                                repository: repository,
-                                state: repository_state)
+    state['length'] = state['columns'].length.to_s
+    state['time'] = Time.new.to_i.to_s
+    return RepositoryTableState.create(user: user,
+                                       repository: repository,
+                                       state: state)
   end
 end
