@@ -88,6 +88,9 @@ gem 'tinymce-rails', '~> 4.6.4' # Rich text editor
 # new gems for importing excel (EPA RAP Information)
 gem 'ruby-ole', '~> 1.2.12.1'
 gem 'spreadsheet', '~> 1.1.7'
+# Ruby debugging gems for vscode
+gem 'ruby-debug-ide', '~> 0.6.1'
+gem 'debase', '~> 0.2.2'
 
 gem 'base62' # Used for smart annotations
 gem 'newrelic_rpm'

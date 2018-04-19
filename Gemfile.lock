@@ -185,6 +185,9 @@ GEM
     cucumber-tag_expressions (1.1.1)
     cucumber-wire (0.0.1)
     database_cleaner (1.6.2)
+    debase (0.2.2)
+      debase-ruby_core_source (>= 0.10.2)
+    debase-ruby_core_source (0.10.2)
     debug_inspector (0.0.3)
     deface (1.3.0)
       nokogiri (~> 1.6)
@@ -412,6 +415,8 @@ GEM
       rainbow (>= 2.2.2, < 3.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (~> 1.0, >= 1.0.1)
+    ruby-debug-ide (0.6.1)
+      rake (>= 0.8.1)
     ruby-graphviz (1.2.3)
     ruby-ole (1.2.12.1)
     ruby-progressbar (1.9.0)
@@ -535,6 +540,7 @@ DEPENDENCIES
   commit_param_routing
   cucumber-rails (~> 1.5)
   database_cleaner
+  debase (~> 0.2.2)
   deface (~> 1.0)
   delayed_job_active_record
   delayed_paperclip!
@@ -583,6 +589,7 @@ DEPENDENCIES
   roo (~> 2.7.1)
   rspec-rails
   rubocop (= 0.51.0)
+  ruby-debug-ide (~> 0.6.1)
   ruby-graphviz (~> 1.2)
   ruby-ole (~> 1.2.12.1)
   rubyzip
