@@ -270,6 +270,10 @@
     padding-top: 5px;
   }
 
+  li:last-child {
+    border-bottom: 0;
+  }
+
   .btn-default {
     margin-left: 15px;
     text-align: right;
