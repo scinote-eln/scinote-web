@@ -9,7 +9,7 @@
       <li>
         <% option_text = t("my_modules.module_archive.option_download") %>
         <% if result.is_asset %>
-          <%= link_to 'View', download_asset_path(result.asset),
+          <%= link_to t('protocols.index.archive_results.preview'), download_asset_path(result.asset),
               class: 'file-preview-link',
               id: "modal_link#{result.asset.id}",
               data: { no_turbolink: true, id: true, status: 'asset-present', 'preview-url': asset_file_preview_path(result.asset) } %>
