@@ -161,14 +161,6 @@
       </ul>
 
       <!-- Secondary navigation title -->
-      <% if project_page? %>
-        <% title_element = @project %>
-      <% elsif experiment_page? %>
-        <% title_element = @experiment %>
-      <% elsif module_page? %>
-        <% title_element = @my_module %>
-      <% end %>
-
       <div class="nav-name">
         <%= truncate(title_element.name,
                      length: Constants::NAME_TRUNCATION_LENGTH) %>

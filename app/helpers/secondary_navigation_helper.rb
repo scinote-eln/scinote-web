@@ -55,4 +55,14 @@ module SecondaryNavigationHelper
   def is_module_archive?
     action_name == 'archive'
   end
+
+  def title_element
+    if project_page?
+      @project
+    elsif experiment_page?
+      @experiment
+    elsif module_page?
+      @my_module
+    end
+  end
 end
