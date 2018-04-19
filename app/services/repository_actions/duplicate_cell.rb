@@ -2,11 +2,11 @@
 
 module RepositoryActions
   class DuplicateCell
-    def initialize(cell, new_row, user)
+    def initialize(cell, new_row, user, team)
       @cell    = cell
       @new_row = new_row
       @user    = user
-      @team    = user.current_team
+      @team    = team
     end
 
     def call
