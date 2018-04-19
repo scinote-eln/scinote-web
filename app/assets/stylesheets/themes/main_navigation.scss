@@ -271,6 +271,7 @@
   }
 
   .btn-default {
+    margin-left: 15px;
     text-align: right;
     width: 300px;
   }
@@ -348,6 +349,15 @@
   margin-left: 83px;
 }
 
+#search-bar {
+  padding-right: 0;
+}
+
+@media (max-width: 768px) {
+  #search-bar {
+    padding: 10px 30px;
+  }
+}
 
 // reset margins on small screens
 @media (max-width: 1188px) {
