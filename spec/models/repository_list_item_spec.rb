@@ -22,14 +22,14 @@ RSpec.describe RepositoryListItem, type: :model do
   end
 
   describe 'Validations' do
+    let!(:user) { create :user }
+    let!(:repository_one) { create :repository }
     it { should validate_presence_of(:data) }
     it do
       should validate_length_of(:data).is_at_most(Constants::TEXT_MAX_LENGTH)
     end
 
     context 'has a uniq data scoped on repository column' do
-      let!(:user) { create :user }
-      let!(:repository_one) { create :repository }
       let!(:repository_column) do
         create :repository_column, name: 'My column', repository: repository_one
       end

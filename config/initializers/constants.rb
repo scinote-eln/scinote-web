@@ -868,6 +868,8 @@ class Constants
 
   EXPORTABLE_ZIP_EXPIRATION_DAYS = 7
 
+  REPOSITORY_LIST_ITEMS_PER_COLUMN = 500
+
   # Very basic regex to check for validity of emails
   BASIC_EMAIL_REGEX = URI::MailTo::EMAIL_REGEXP
 

@@ -965,7 +965,7 @@ en:
       delete: "Delete column"
     modal_parse:
       title: 'Import items'
-      warning_1: 'Be careful when importing into Dropdown column/s! Each new unique cell value from the file will create a new Dropdown option. This could result in large amounts of Dropdown options.'
+      warning_1: 'Be careful when importing into Dropdown column/s! Each new unique cell value from the file will create a new Dropdown option. Maximum nr. of Dropdown options is %{limit}.'
       warning_2: 'Importing into file columns is not supported.'
     modal_import:
       title: 'Import items'
@@ -1007,6 +1007,7 @@ en:
 
     repository_columns:
       head_title: '%{repository} | Manage Columns'
+      repository_list_items_limit: "Dropdown items limit reached max. %{limit}"
       update:
         success_flash: "Column %{name} was successfully updated."
       create:

@@ -64,8 +64,8 @@
         </div>
         <div class="alert alert-info" role="alert">
           <ul>
-            <li><%= t('repositories.modal_parse.warning_1') %></li>
-            <li><%= t('repositories.modal_parse.warning_2') %></li>
+            <li><%=t 'repositories.modal_parse.warning_1', limit: Constants::REPOSITORY_LIST_ITEMS_PER_COLUMN %></li>
+            <li><%=t 'repositories.modal_parse.warning_2' %></li>
           </ul>
         </div>
       </div>

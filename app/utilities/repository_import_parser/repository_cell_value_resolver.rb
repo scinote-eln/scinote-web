@@ -4,10 +4,12 @@
 # it to the repository_row
 module RepositoryImportParser
   class RepositoryCellValueResolver
-    def initialize(column, user, repository)
+    attr_reader :column_list_items_size
+    def initialize(column, user, repository, size)
       @column = column
       @user = user
       @repository = repository
+      @column_list_items_size = size
     end
 
     def get_value(value, record_row)
@@ -30,6 +32,7 @@ module RepositoryImportParser
     def new_repository_list_value(value, record_row)
       list_item = @column.repository_list_items.find_by_data(value)
       list_item ||= create_repository_list_item(value)
+      return unless list_item
       RepositoryListValue.new(
         created_by: @user,
         last_modified_by: @user,
@@ -42,13 +45,18 @@ module RepositoryImportParser
     end
 
     def create_repository_list_item(value)
-      RepositoryListItem.create(
-        data: value,
-        created_by: @user,
-        last_modified_by: @user,
-        repository_column: @column,
-        repository: @repository
-      )
+      if @column_list_items_size >= Constants::REPOSITORY_LIST_ITEMS_PER_COLUMN
+        return
+      end
+      item = RepositoryListItem.new(data: value,
+                                    created_by: @user,
+                                    last_modified_by: @user,
+                                    repository_column: @column,
+                                    repository: @repository)
+      if item.save
+        @column_list_items_size += 1
+        return item
+      end
     end
   end
 end
