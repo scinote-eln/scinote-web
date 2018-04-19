@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Views
   module Datatables
     class DatatablesReport < ApplicationRecord
@@ -14,9 +16,7 @@ module Views
           permitted_by_team    = get_permitted_by_team_tokenized
           permitted_by_project = get_permitted_by_project_tokenized
           if user.is_admin_of_team? team
-            allowed_ids = for_admin(
-              user, permitted_by_team, permitted_by_project
-            )
+            allowed_ids = for_admin(user, permitted_by_team)
           else
             allowed_ids = for_non_admin(
               user, permitted_by_team, permitted_by_project
@@ -48,12 +48,10 @@ module Views
                               .first
         end
 
-        def for_admin(user, permitted_by_team, permitted_by_project)
+        def for_admin(user, permitted_by_team)
           allowed_ids = []
           permitted_by_team.each do |item|
             next unless user.id.in? item.users_ids
-            by_project = get_by_project_item(permitted_by_project, item)
-            next unless user.id.in? by_project.users_ids
             allowed_ids << item.report_id
           end
           allowed_ids
