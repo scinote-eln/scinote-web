@@ -7,20 +7,19 @@ class ExperimentsController < ApplicationController
   include Rails.application.routes.url_helpers
 
   before_action :set_experiment,
-                except: [:new, :create]
+                except: %i(new create)
   before_action :set_project,
-                only: [:new, :create, :samples_index, :samples, :module_archive,
-                       :clone_modal, :move_modal, :delete_samples]
-  before_action :load_projects_by_teams, only: %i(canvas samples)
+                only: %i(new create samples_index samples module_archive
+                         clone_modal move_modal delete_samples)
+  before_action :load_projects_by_teams, only: %i(canvas samples module_archive)
   before_action :check_view_permissions,
-                only: [:canvas, :module_archive]
+                only: %i(canvas module_archive)
   before_action :check_manage_permissions, only: :edit
   before_action :check_archive_permissions, only: :archive
   before_action :check_clone_permissions, only: %i(clone_modal clone)
   before_action :check_move_permissions, only: %i(move_modal move)
 
-  # except parameter could be used but it is not working.
-  layout :choose_layout
+  layout 'fluid'.freeze
 
   # Action defined in SampleActions
   DELETE_SAMPLES = 'Delete'.freeze
@@ -350,7 +349,8 @@ class ExperimentsController < ApplicationController
   end
 
   def load_projects_by_teams
-    @projects_by_teams = current_user.projects_by_teams
+    @projects_by_teams = current_user.projects_by_teams(current_team.id,
+                                                        nil, false)
   end
 
   def check_view_permissions
@@ -371,10 +371,6 @@ class ExperimentsController < ApplicationController
 
   def check_move_permissions
     render_403 unless can_move_experiment?(@experiment)
-  end
-
-  def choose_layout
-    action_name.in?(%w(index archive)) ? 'main' : 'fluid'
   end
 
   def experiment_annotation_notification(old_text = nil)
