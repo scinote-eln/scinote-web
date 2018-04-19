@@ -57,7 +57,7 @@ describe SmartAnnotations::Preview do
       trimmed_repository_name = subject.__send__(
         :trim_repository_name, 'banana'
       )
-      expect(trimmed_repository_name).to eq('BAN')
+      expect(trimmed_repository_name).to eq('Ban')
     end
   end
 end
