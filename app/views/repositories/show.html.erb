@@ -106,18 +106,21 @@
 
 <!-- These buttons are appended to table in javascript, after table initialization -->
 <div class="toolbarButtons" style="display:none">
-  <button type="button" class="btn btn-default editAdd" id="editRepositoryRecord" onclick="onClickEdit()" disabled>
-    <span class="glyphicon glyphicon-pencil"></span>
-    <span class="hidden-xs-custom"><%= t("repositories.edit_record") %></span>
-  </button>
-
   <% if can_manage_repository_rows?(@repository.team) %>
+    <button type="button" class="btn btn-default editAdd" id="editRepositoryRecord" onclick="onClickEdit()" disabled>
+      <span class="glyphicon glyphicon-pencil"></span>
+      <span class="hidden-xs-custom"><%= t("repositories.edit_record") %></span>
+    </button>
     <button type="button" class="btn btn-default"
       id="deleteRepositoryRecordsButton" data-target="#deleteRepositoryRecord" data-toggle="modal" disabled>
       <span class="glyphicon glyphicon-trash"></span>
       <span class="hidden-xs-custom"><%= t'repositories.delete_record' %></span>
         <%= submit_tag I18n.t('repositories.delete_record'), :class => "hidden
         delete_repository_records_submit" %>
+    </button>
+    <button type="button" class="btn btn-default copyRow" id="copyRepositoryRecords" onclick="onClickCopyRepositoryRecords()" disabled>
+      <span class="glyphicon glyphicon-duplicate"></span>
+      <span class="hidden-xs-custom"><%= t("repositories.copy_record") %></span>
     </button>
   <% end %>
 </div>

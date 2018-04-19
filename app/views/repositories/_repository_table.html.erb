@@ -6,6 +6,7 @@
     data-num-columns="<%= 6 + repository.repository_columns.count %>"
     data-create-record="<%= repository_repository_rows_path(repository) %>"
     data-delete-record="<%= repository_delete_records_path(repository) %>"
+    data-copy-records="<%= repository_copy_records_path(repository) %>"
     data-max-dropdown-length="<%= Constants::NAME_TRUNCATION_LENGTH_DROPDOWN %>"
     data-save-text="<%= I18n.t('general.save') %>"
     data-edit-text="<%= I18n.t('general.edit') %>"

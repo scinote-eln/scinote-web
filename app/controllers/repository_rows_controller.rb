@@ -5,9 +5,11 @@ class RepositoryRowsController < ApplicationController
 
   before_action :load_info_modal_vars, only: :show
   before_action :load_vars, only: %i(edit update)
-  before_action :load_repository, only: %i(create delete_records index)
+  before_action :load_repository,
+                only: %i(create delete_records index copy_records)
   before_action :check_create_permissions, only: :create
-  before_action :check_manage_permissions, only: %i(edit update delete_records)
+  before_action :check_manage_permissions,
+                only: %i(edit update delete_records copy_records)
 
   def index
     @draw = params[:draw].to_i
@@ -281,6 +283,17 @@ class RepositoryRowsController < ApplicationController
         end
       end
     end
+  end
+
+  def copy_records
+    duplicate_service = RepositoryActions::DuplicateRows.new(
+      current_user, @repository, params[:selected_rows]
+    )
+    duplicate_service.call
+    render json: {
+      flash: t('repositories.copy_records_report',
+               number: duplicate_service.number_of_duplicated_items)
+    }, status: :ok
   end
 
   private
