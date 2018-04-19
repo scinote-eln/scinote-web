@@ -192,7 +192,7 @@
         if(xhr.responseJSON.message.hasOwnProperty('repository_list_items')) {
           var message = xhr.responseJSON.message['repository_list_items'];
           $('.dnd-error').remove();
-          $('.bootstrap-tagsinput').after(
+          $('#manageRepositoryColumn ').find('.bootstrap-tagsinput').after(
             "<i class='dnd-error'>" + message + "</i>"
           );
         } else {
