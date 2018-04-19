@@ -56,7 +56,7 @@ module SmartAnnotations
       end
 
       def trim_repository_name(name)
-        name.strip.slice(0..2).upcase
+        name.strip.slice(0..2).capitalize
       end
     end
   end
