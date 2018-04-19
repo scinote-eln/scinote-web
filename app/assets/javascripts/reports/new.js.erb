@@ -689,6 +689,32 @@ function moveElement(el, up) {
     !nextNewEl.hasClass("new-element")) {
     return;
   }
+
+  if (up) {
+    var prevEl = prevNewEl.prev();
+    if (!prevEl.length || !prevEl.hasClass("report-element")) {
+      return;
+    }
+
+    el.detach();
+    nextNewEl.detach();
+    prevEl.before(el);
+    prevEl.before(nextNewEl);
+    updateElementControls(prevEl);
+
+  } else {
+    var nextEl = nextNewEl.next();
+    if (!nextEl.length || !nextEl.hasClass("report-element")) {
+      return;
+    }
+
+    prevNewEl.detach();
+    el.detach();
+    nextEl.after(el);
+    nextEl.after(prevNewEl);
+    updateElementControls(nextEl);
+  }
+
   updateElementControls(el);
 }
 
