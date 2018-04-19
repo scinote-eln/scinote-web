@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  resources :test_rap_topic_levels
+  resources :test_rap_program_levels
   require 'subdomain'
 
   def draw(routes_name)

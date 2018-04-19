@@ -85,6 +85,10 @@ gem 'devise-async',
 gem 'ruby-graphviz', '~> 1.2' # Graphviz for rails
 gem 'tinymce-rails', '~> 4.6.4' # Rich text editor
 
+# new gems for importing excel (EPA RAP Information)
+gem 'ruby-ole', '~> 1.2.12.1'
+gem 'spreadsheet', '~> 1.1.7'
+
 gem 'base62' # Used for smart annotations
 gem 'newrelic_rpm'
 gem 'devise_security_extension',
