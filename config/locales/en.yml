@@ -1655,6 +1655,7 @@ en:
         row_success: "Archived"
         row_renamed: "Archived & renamed"
         row_failed: "Failed"
+        preview: "View"
       restore_results:
         title: "Restore results"
         message_failed: "Failed to restore %{nr} protocols."
