@@ -189,8 +189,16 @@
     }).on('ajax:error', function(e, xhr) {
       animateSpinner(null, false);
       if (modalID) {
-        var field = { "name": xhr.responseJSON.message }
-        $(form).renderFormErrors('repository_column', field, true, e);
+        if(xhr.responseJSON.message.hasOwnProperty('repository_list_items')) {
+          var message = xhr.responseJSON.message['repository_list_items'];
+          $('.dnd-error').remove();
+          $('.bootstrap-tagsinput').after(
+            "<i class='dnd-error'>" + message + "</i>"
+          );
+        } else {
+          var field = { "name": xhr.responseJSON.message }
+          $(form).renderFormErrors('repository_column', field, true, e);
+        }
       } else {
         HelperModule.flashAlertMsg(xhr.responseJSON.message, 'danger');
       }

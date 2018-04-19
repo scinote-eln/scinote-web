@@ -1007,6 +1007,7 @@ en:
 
     repository_columns:
       head_title: '%{repository} | Manage Columns'
+      repository_list_items_limit: "Dropdown items limit reached max. %{limit}"
       update:
         success_flash: "Column %{name} was successfully updated."
       create:
