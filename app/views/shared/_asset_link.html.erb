@@ -1,5 +1,5 @@
 <% if asset.file_present %>
-  <% if asset.file.processing? %>
+  <% if asset.file.processing? && display_image_tag %>
     <span data-status='asset-loading'
           data-present-url='<%= file_present_asset_path(asset.id) %>'>
       <%= image_tag 'medium/processing.gif' %>
