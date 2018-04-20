@@ -4,9 +4,9 @@ class RepositoryTableStateColumnUpdateService
   # notation; HOWEVER, the state that is saved on the RepositoryTableState
   # record, has EVERYTHING (booleans, symbols, keys, ...) saved as Strings.
 
-  def update_states_with_new_column(new_column)
+  def update_states_with_new_column(repository)
     RepositoryTableState.where(
-      repository: new_column.repository
+      repository: repository
     ).find_each do |table_state|
       state = table_state.state
       index = state['columns'].count
@@ -24,6 +24,8 @@ class RepositoryTableStateColumnUpdateService
   end
 
   def update_states_with_removed_column(repository, old_column_index)
+    raise ArgumentError, 'old_column_index is empty' if old_column_index.blank?
+
     RepositoryTableState.where(
       repository: repository
     ).find_each do |table_state|
@@ -48,6 +50,16 @@ class RepositoryTableStateColumnUpdateService
           index
         end
       end
+
+      state['order'].reject! { |k, v| v[0] == old_column_index }
+      if state['order'].empty?
+        # Fallback to default order if user had table ordered by
+        # the deleted column
+        state['order'] = HashUtil.deep_stringify_keys_and_values(
+          Constants::REPOSITORY_TABLE_DEFAULT_STATE[:order]
+        )
+      end
+
       state['length'] = (state['length'].to_i - 1).to_s
       state['time'] = Time.new.to_i.to_s
       table_state.save
