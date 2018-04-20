@@ -49,8 +49,6 @@ class ReportsController < ApplicationController
     result_contents
   )
 
-  layout 'fluid'
-
   # Index showing all reports of a single project
   def index
   end

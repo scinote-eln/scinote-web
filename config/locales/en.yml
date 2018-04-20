@@ -306,8 +306,8 @@ en:
         head_title: "%{project} | New report"
         nav_title: "Report for: "
         nav_print: "Print"
-        nav_pdf: "Export to PDF"
-        nav_save: "Save report"
+        nav_pdf: "Download PDF"
+        nav_save: "Save"
         nav_close: "Close"
         nav_sort_by: "Sort report by"
         nav_sort_asc: "Oldest on top"
@@ -323,7 +323,7 @@ en:
             tasks_tab: "Choose tasks"
             content_tab: "Choose content"
           project_contents_inner:
-            instructions: "Select projects/experiment/tasks to include in the report"
+            instructions: "Select experiments/tasks to include in the report"
             no_modules: "The project contains no tasks"
             no_module_group: "No workflow"
           module_contents:
