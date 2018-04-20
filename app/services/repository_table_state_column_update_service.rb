@@ -5,6 +5,8 @@ class RepositoryTableStateColumnUpdateService
   # record, has EVERYTHING (booleans, symbols, keys, ...) saved as Strings.
 
   def update_states_with_new_column(repository)
+    raise ArgumentError, 'repository is empty' if repository.blank?
+
     RepositoryTableState.where(
       repository: repository
     ).find_each do |table_state|
@@ -24,6 +26,7 @@ class RepositoryTableStateColumnUpdateService
   end
 
   def update_states_with_removed_column(repository, old_column_index)
+    raise ArgumentError, 'repository is empty' if repository.blank?
     raise ArgumentError, 'old_column_index is empty' if old_column_index.blank?
 
     RepositoryTableState.where(
