@@ -37,6 +37,8 @@
                           class: "rename-repo-option",
                           remote: true %>
             </li>
+          <% end %>
+          <% if can_create_repository_columns?(@repository.team) %>
             <li>
               <%= link_to t('repositories.index.options_dropdown.manage_columns'),
                           repository_repository_columns_path(@repository) %>
