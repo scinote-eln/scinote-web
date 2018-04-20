@@ -177,7 +177,7 @@ class RepositoryColumnsController < ApplicationController
   end
 
   def generate_repository_list_items(item_names)
-    return unless @repository_column.data_type == 'RepositoryListValue'
+    return true unless @repository_column.data_type == 'RepositoryListValue'
     column_items = @repository_column.repository_list_items.size
     success = true
     item_names.split(',').uniq.each do |name|
@@ -198,7 +198,7 @@ class RepositoryColumnsController < ApplicationController
   end
 
   def update_repository_list_items(item_names)
-    return unless @repository_column.data_type == 'RepositoryListValue'
+    return true unless @repository_column.data_type == 'RepositoryListValue'
     column_items = @repository_column.repository_list_items.size
     items_list = item_names.split(',').uniq
     existing = @repository_column.repository_list_items.pluck(:data)
