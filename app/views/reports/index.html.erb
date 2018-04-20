@@ -1,8 +1,7 @@
 <% provide(:head_title, t('projects.reports.index.head_title').html_safe) %>
 <%= stylesheet_link_tag 'datatables' %>
-<%= render partial: "shared/sidebar" %>
 
-<div id="content" class="container-fluid">
+<div id="content-reports-index">
   <div class="row">
     <div class="col-md-12">
       <% if can_manage_reports?(current_team) %>
@@ -79,15 +78,18 @@
       <div class="modal-body">
         <%=t "projects.reports.index.modal_new.message" %>
         <br />
-        <% if @visible_projects&.length > 0 %>
-          <select class="form-control selectpicker" data-abs-min-length="2" data-live-search="true">
-            <% @visible_projects.each do |project| %>
-              <option value="<%= project.path %>"><%= project.name %></option>
-            <% end %>
-          </select>
-        <% else %>
-          <p><%=t 'projects.reports.index.modal_new.no_projects' %></p>
-        <% end %>
+        <div class="form-group">
+          <label><%=t "projects.reports.index.modal_new.projects" %></label>
+          <% if @visible_projects&.length > 0 %>
+            <select class="form-control selectpicker" data-abs-min-length="2" data-live-search="true">
+              <% @visible_projects.each do |project| %>
+                <option value="<%= project.path %>"><%= project.name %></option>
+              <% end %>
+            </select>
+          <% else %>
+            <p><%=t 'projects.reports.index.modal_new.no_projects' %></p>
+          <% end %>
+        </end>
       </div>
       <div class="modal-footer">
         <button id="new-report-reports-btn"

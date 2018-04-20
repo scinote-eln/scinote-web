@@ -35,12 +35,6 @@
                 <span class="hidden-xs hidden-lg glyphicon glyphicon-tint"></span>
               </a>
             </li>
-            <li id="reports-nav-tab" class="<%= "active" if is_project_reports? %>">
-              <a href="<%= project_reports_url(@project) %>" title="<%=t "nav2.projects.reports" %>">
-                <span class="hidden-sm hidden-md"><%=t "nav2.projects.reports" %></span>
-                <span class="hidden-xs hidden-lg glyphicon glyphicon-list-alt"></span>
-              </a>
-            </li>
             <li id="project-archive-nav-tab" data-turbolinks="false" class="<%= "active" if is_project_archive? %>">
               <a href="<%= experiment_archive_project_url(@project) %>" title="<%=t "nav2.projects.archive" %>">
                 <span class="glyphicon glyphicon-briefcase"></span>
@@ -67,13 +61,7 @@
               </a>
             </li>
           <% end %>
-          <% if can_read_project?(@experiment.project) then %>
-              <li id="reports-nav-tab" class="<%= "active" if is_project_reports? %>">
-                <a href="<%= project_reports_url(@experiment.project) %>" title="<%=t "nav2.projects.reports" %>">
-                  <span class="hidden-sm hidden-md"><%=t "nav2.projects.reports" %></span>
-                  <span class="hidden-xs hidden-lg glyphicon glyphicon-list-alt"></span>
-                </a>
-              </li>
+          <% if can_read_project?(@experiment.project) %>
               <li id="project-archive-nav-tab" data-turbolinks="false" class="<%= "active" if is_experiment_archive? %>">
                 <a href="<%= module_archive_experiment_url(@experiment) %>" title="<%=t "nav2.projects.archive" %>">
                   <span class="glyphicon glyphicon-briefcase"></span>
@@ -114,14 +102,6 @@
               <a href="<%= samples_my_module_url(@my_module) %>" title="<%=t "nav2.modules.samples" %>">
                 <span class="hidden-sm hidden-md"><%=t "nav2.modules.samples" %></span>
                 <span class="hidden-xs hidden-lg glyphicon glyphicon-tint"></span>
-              </a>
-            </li>
-          <% end %>
-          <% if can_read_project?(@my_module.experiment.project) then %>
-            <li id="reports-nav-tab" >
-              <a href="<%= project_reports_url(@my_module.experiment.project) %>" title="<%=t "nav2.projects.reports" %>">
-                <span class="hidden-sm hidden-md"><%=t "nav2.projects.reports" %></span>
-                <span class="hidden-xs hidden-lg glyphicon glyphicon-list-alt"></span>
               </a>
             </li>
           <% end %>

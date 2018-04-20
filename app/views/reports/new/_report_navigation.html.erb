@@ -29,7 +29,7 @@
       <span class="hidden-xs"><%=t "projects.reports.new.nav_save" %></span>
     <% end %>
 
-    <%= link_to project_reports_path(@project), id: "cancel-report-link", class: "btn btn-default pull-right" do %>
+    <%= link_to reports_path, data: { no_turbolink: false }, id: "cancel-report-link", class: "btn btn-default pull-right" do %>
       <span class="hidden-xs"><%=t "projects.reports.new.nav_close" %></span>
     <% end %>
 

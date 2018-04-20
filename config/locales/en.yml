@@ -300,6 +300,7 @@ en:
         thead_updated_at: "Last updated at"
         no_reports: "No reports!"
         modal_new:
+          projects: "Projects"
           head_title: "Create new report"
           no_projects: "No projects available."
           message: "You are about to create a new report. Please select a project from which you would like to create a report for."

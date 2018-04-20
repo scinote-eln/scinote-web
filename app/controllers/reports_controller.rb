@@ -124,7 +124,7 @@ class ReportsController < ApplicationController
       )
       respond_to do |format|
         format.json do
-          render json: { url: project_reports_path(@project) }, status: :ok
+          render json: { url: reports_path }, status: :ok
         end
       end
     else
