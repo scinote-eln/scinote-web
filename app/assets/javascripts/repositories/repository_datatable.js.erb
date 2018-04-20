@@ -1,5 +1,7 @@
 //= require jquery-ui/widgets/sortable
 
+<% environment.context_class.instance_eval { include RepositoryDatatableHelper } %>
+
 var RepositoryDatatable = (function(global) {
   'use strict';
 
@@ -101,16 +103,12 @@ var RepositoryDatatable = (function(global) {
           $(row).addClass('selected');
         }
       },
-      // Next 2 options are provided by server-side default state
-      // (and get overriden once state load from server kicks in)
-      order: <%= Constants::REPOSITORY_TABLE_DEFAULT_STATE[:order][0].to_s %>,
+      <% # Next 2 options are provided by server-side default state
+         # (and get overriden once state load from server kicks in) %>
+      order: <%= default_table_order_as_js_array %>,
       columns: (function() {
         var numOfColumns = $(TABLE_ID).data('num-columns');
-        var columns =
-          <%= Constants::REPOSITORY_TABLE_DEFAULT_STATE[:columns].keys.sort.map do |k|
-            col = Constants::REPOSITORY_TABLE_DEFAULT_STATE[:columns][k]
-            col.slice(:visible, :searchable)
-          end.to_json %>;
+        var columns = <%= default_table_columns %>;
         for (var i = 0; i < numOfColumns; i++) {
           if (columns[i] == undefined) {
             // This should only occur for custom columns
@@ -153,6 +151,12 @@ var RepositoryDatatable = (function(global) {
           type: 'POST',
           success: function(json) {
             myData = json.state;
+
+            // Fix the order - convert it from index-keyed JS object that
+            // is returned from the server state into true JS array;
+            // e.g. {0: [2, 'asc'], 1: [3, 'desc']}
+            // is converted into [[2, 'asc'], [3, 'desc']]
+            myData.order = _.toArray(myData.order);
           }
         });
         return myData;
@@ -173,10 +177,11 @@ var RepositoryDatatable = (function(global) {
         loadFirstTime = false;
       },
       fnInitComplete: function(oSettings) {
-        // Reload correct column order and visibility (if you refresh page)
         // First two columns are fixed
         TABLE.column(0).visible(true);
         TABLE.column(1).visible(true);
+
+        // Reload correct column order and visibility (if you refresh page)
         for (var i = 2; i < TABLE.columns()[0].length; i++) {
           var visibility = false;
           if (myData.columns && myData.columns[i]) {
@@ -188,6 +193,13 @@ var RepositoryDatatable = (function(global) {
           TABLE.column(i).visible(visibility);
           TABLE.setColumnSearchable(i, visibility);
         }
+
+        // Re-order table as per loaded state
+        if (myData.order) {
+          TABLE.order(myData.order);
+          TABLE.draw();
+        }
+
         // Datatables triggers this action about 3 times
         // sometimes on the first iteration the oSettings._colReorder is null
         // and the fnOrder rises an error that breaks the table
