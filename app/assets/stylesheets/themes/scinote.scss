@@ -222,7 +222,7 @@ a[data-toggle="tooltip"] {
 
 #secondary-navigation {
   white-space: nowrap;
-  overflow: hidden
+  overflow: hidden;
 }
 
 .panel-body {
@@ -253,10 +253,23 @@ a[data-toggle="tooltip"] {
     border-right: 0;
     border-bottom: 4px solid $color-silver;
     padding-right: 0;
+    padding-left: 0;
+  }
+
+  .navbar-toggle {
+    margin-right: 100px;
+  }
+
+  #secondary-menu {
+    padding-left: 0;
+  }
+
+  .nav-name {
+    padding: 15px 0;
   }
 
   ul.nav {
-    margin-right: 0;
+    margin-right: 60px;
 
     & > li {
       text-transform: uppercase;
@@ -409,13 +422,6 @@ a[data-toggle="tooltip"] {
 }
 
 /** Protocols management */
-.breadcrumb-protocols-manager {
-  overflow: visible;
-  margin-top: 15px;
-  margin-bottom: 15px;
-  background-color: $color-white;
-}
-
 .tab-pane-protocols {
   & > div.protocols-description {
     margin-bottom: 15px;
@@ -1277,7 +1283,6 @@ table.dataTable {
 
   .file-preview-container {
     align-items: center;
-    background-color: $color-white;
     color: $gray-dark;
     display: -moz-flex;
     display: -webkit-flex;

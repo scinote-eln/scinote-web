@@ -1,7 +1,7 @@
 <% provide(:head_title, t("projects.archive.head_title")) %>
 <%= render partial: "shared/sidebar" %>
 
-<% if @projects_by_teams.length > 0 %>
+<% if @archived_projects_by_teams.length > 0 %>
 <div id="projects-toolbar">
 
   <form class="form-inline" action="<%= projects_archive_path %>">
@@ -29,7 +29,7 @@
   </form>
 </div>
 
-  <% @projects_by_teams.each do |team, projects| %>
+  <% @archived_projects_by_teams.each do |team, projects| %>
     <%= render partial: 'projects/archive/team_projects',
                locals: {team: team, projects: projects} %>
   <% end %>

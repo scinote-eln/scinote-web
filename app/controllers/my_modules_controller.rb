@@ -17,8 +17,8 @@ class MyModulesController < ApplicationController
   before_action :load_repository, only: %i(assign_repository_records
                                            unassign_repository_records
                                            repository_index)
-  before_action :load_projects_by_teams,
-                only: %i(protocols results activities samples repository)
+  before_action :load_projects_by_teams, only: %i(protocols results activities
+                                                  samples repository archive)
   before_action :check_manage_permissions,
                 only: %i(update destroy description due_date)
   before_action :check_view_info_permissions, only: :show
@@ -608,7 +608,8 @@ class MyModulesController < ApplicationController
   end
 
   def load_projects_by_teams
-    @projects_by_teams = current_user.projects_by_teams
+    @projects_by_teams = current_user.projects_by_teams(current_team.id,
+                                                        nil, false)
   end
 
   def check_manage_permissions

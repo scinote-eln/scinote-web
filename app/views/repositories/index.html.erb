@@ -6,15 +6,19 @@
     # show only if no repositories present. If the team will have them we will
     # handle this in left side navigation bar
   %>
-  <div class="jumbotron text-center" style="margin-top:25%">
+  <div class="jumbotron text-center" style="margin-top:18%">
     <strong><%=t 'libraries.index.no_libraries.text' %></strong>
-    <h2><strong><%=t 'libraries.index.no_libraries.title' %><strong></h2>
-    <br />
-    <%= link_to t('libraries.index.no_libraries.create_new_button'),
-                create_modal_team_repositories_path(current_team),
-                class: "btn btn-primary btn-lg",
-                id: "create-new-repository",
-                remote: true %>
+    <% if can_create_repositories?(current_team) %>
+      <h2><strong><%=t 'libraries.index.no_libraries.title' %><strong></h2>
+      <br />
+      <%= link_to t('libraries.index.no_libraries.create_new_button'),
+                  create_modal_team_repositories_path(current_team),
+                  class: "btn btn-primary btn-lg",
+                  id: "create-new-repository",
+                  remote: true %>
+    <% else %>
+      <h2><strong><%=t 'libraries.index.no_libraries.no_permission_title' %><strong></h2>
+    <% end %>
   </div>
 <% else %>
   <!-- If member of no teams -->

@@ -20,7 +20,7 @@
       <% end %>
     </li>
     <li class="<%= "active" if repositories_are_selected? %>">
-      <%= link_to repositories_path, id: "repositories-link", title: t('left_menu_bar.repositories') do %>
+      <%= link_to repositories_path, data: { no_turbolink: false }, id: "repositories-link", title: t('left_menu_bar.repositories') do %>
         <span class="fas fa-cubes" aria-hidden="true"></span>
         <span><%= t('left_menu_bar.repositories') %></span>
       <% end %>

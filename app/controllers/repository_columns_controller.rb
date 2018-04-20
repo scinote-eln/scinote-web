@@ -28,28 +28,35 @@ class RepositoryColumnsController < ApplicationController
     @repository_column.created_by = current_user
 
     respond_to do |format|
-      if @repository_column.save
-        generate_repository_list_items(params[:list_items])
-        format.json do
-          render json: {
-            id: @repository_column.id,
-            name: escape_input(@repository_column.name),
-            message: t('libraries.repository_columns.create.success_flash',
-                       name: @repository_column.name),
-            edit_url:
-              edit_repository_repository_column_path(@repository,
-                                                     @repository_column),
-            update_url:
-              repository_repository_column_path(@repository,
-                                                @repository_column),
-            destroy_html_url:
-              repository_columns_destroy_html_path(@repository,
-                                                   @repository_column)
-          },
-          status: :ok
-        end
-      else
-        format.json do
+      format.json do
+        if @repository_column.save
+          if generate_repository_list_items(params[:list_items])
+            render json: {
+              id: @repository_column.id,
+              name: escape_input(@repository_column.name),
+              message: t('libraries.repository_columns.create.success_flash',
+                         name: @repository_column.name),
+              edit_url:
+                edit_repository_repository_column_path(@repository,
+                                                       @repository_column),
+              update_url:
+                repository_repository_column_path(@repository,
+                                                  @repository_column),
+              destroy_html_url:
+                repository_columns_destroy_html_path(@repository,
+                                                     @repository_column)
+            },
+            status: :ok
+          else
+            render json: {
+              message: {
+                repository_list_items:
+                  t('libraries.repository_columns.repository_list_items_limit',
+                    limit: Constants::REPOSITORY_LIST_ITEMS_PER_COLUMN)
+              }
+            }, status: :unprocessable_entity
+          end
+        else
           render json: { message: @repository_column.errors.full_messages },
                  status: :unprocessable_entity
         end
@@ -74,13 +81,22 @@ class RepositoryColumnsController < ApplicationController
       format.json do
         @repository_column.update_attributes(repository_column_params)
         if @repository_column.save
-          update_repository_list_items(params[:list_items])
-          render json: {
-            id: @repository_column.id,
-            name: escape_input(@repository_column.name),
-            message: t('libraries.repository_columns.update.success_flash',
-                       name: @repository_column.name)
-          }, status: :ok
+          if update_repository_list_items(params[:list_items])
+            render json: {
+              id: @repository_column.id,
+              name: escape_input(@repository_column.name),
+              message: t('libraries.repository_columns.update.success_flash',
+                         name: @repository_column.name)
+            }, status: :ok
+          else
+            render json: {
+              message: {
+                repository_list_items:
+                  t('libraries.repository_columns.repository_list_items_limit',
+                    limit: Constants::REPOSITORY_LIST_ITEMS_PER_COLUMN)
+              }
+            }, status: :unprocessable_entity
+          end
         else
           render json: { message: @repository_column.errors.full_messages },
                  status: :unprocessable_entity
@@ -162,7 +178,13 @@ class RepositoryColumnsController < ApplicationController
 
   def generate_repository_list_items(item_names)
     return unless @repository_column.data_type == 'RepositoryListValue'
+    column_items = @repository_column.repository_list_items.size
+    success = true
     item_names.split(',').uniq.each do |name|
+      if column_items >= Constants::REPOSITORY_LIST_ITEMS_PER_COLUMN
+        success = false
+        next
+      end
       RepositoryListItem.create(
         repository: @repository,
         repository_column: @repository_column,
@@ -170,11 +192,14 @@ class RepositoryColumnsController < ApplicationController
         created_by: current_user,
         last_modified_by: current_user
       )
+      column_items += 1
     end
+    success
   end
 
   def update_repository_list_items(item_names)
     return unless @repository_column.data_type == 'RepositoryListValue'
+    column_items = @repository_column.repository_list_items.size
     items_list = item_names.split(',').uniq
     existing = @repository_column.repository_list_items.pluck(:data)
     existing.each do |name|
@@ -189,8 +214,13 @@ class RepositoryColumnsController < ApplicationController
         list_item_id
       ).destroy_all
     end
+    success = true
     items_list.each do |name|
       next if @repository_column.repository_list_items.find_by_data(name)
+      if column_items >= Constants::REPOSITORY_LIST_ITEMS_PER_COLUMN
+        success = false
+        next
+      end
       RepositoryListItem.create(
         repository: @repository,
         repository_column: @repository_column,
@@ -198,6 +228,8 @@ class RepositoryColumnsController < ApplicationController
         created_by: current_user,
         last_modified_by: current_user
       )
+      column_items += 1
     end
+    success
   end
 end

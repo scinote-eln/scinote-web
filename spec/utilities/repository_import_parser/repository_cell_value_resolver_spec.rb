@@ -28,7 +28,7 @@ describe RepositoryImportParser::RepositoryCellValueResolver do
     context 'RepositoryListValue' do
       let(:subject) do
         RepositoryImportParser::RepositoryCellValueResolver.new(
-          sample_group_column, user, repository
+          sample_group_column, user, repository, 0
         )
       end
 
@@ -51,7 +51,7 @@ describe RepositoryImportParser::RepositoryCellValueResolver do
     context 'RepositoryTextValue' do
       let(:subject) do
         RepositoryImportParser::RepositoryCellValueResolver.new(
-          custom_column, user, repository
+          custom_column, user, repository, 0
         )
 
         it 'returns a valid RepositoryTextValue object' do

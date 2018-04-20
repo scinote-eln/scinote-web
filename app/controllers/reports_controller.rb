@@ -30,8 +30,6 @@ class ReportsController < ApplicationController
   # before_action :check_view_permissions, only: :index
   before_action :check_manage_permissions, only: BEFORE_ACTION_METHODS
 
-  layout 'fluid'
-
   # Index showing all reports of a single project
   def index; end
 

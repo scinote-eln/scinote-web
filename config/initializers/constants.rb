@@ -168,9 +168,9 @@ class Constants
   #=============================================================================
 
   HTTP = 'http://'.freeze
-  TUTORIALS_URL = (HTTP + 'scinote.net/tutorials/').freeze
-  SUPPORT_URL = (HTTP + 'support.scinote.net/hc/en-us').freeze
-  WEBINARS_URL = (HTTP + 'scinote.net/join-a-webinar/').freeze
+  TUTORIALS_URL = (HTTP + 'goo.gl/YH3fXA').freeze
+  SUPPORT_URL = (HTTP + 'goo.gl/Jb9WXx').freeze
+  WEBINARS_URL = (HTTP + 'goo.gl/q3GdND').freeze
   # Default user picture avatar
   DEFAULT_AVATAR_URL = '/images/:style/missing.png'.freeze
 
@@ -867,6 +867,8 @@ class Constants
   REPOSITORY_TABLE_DEFAULT_STATE.freeze
 
   EXPORTABLE_ZIP_EXPIRATION_DAYS = 7
+
+  REPOSITORY_LIST_ITEMS_PER_COLUMN = 500
 
   # Very basic regex to check for validity of emails
   BASIC_EMAIL_REGEX = URI::MailTo::EMAIL_REGEXP

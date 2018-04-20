@@ -312,8 +312,8 @@ en:
         head_title: "%{project} | New report"
         nav_title: "Report for: "
         nav_print: "Print"
-        nav_pdf: "Export to PDF"
-        nav_save: "Save report"
+        nav_pdf: "Download PDF"
+        nav_save: "Save"
         nav_close: "Close"
         nav_sort_by: "Sort report by"
         nav_sort_asc: "Oldest on top"
@@ -329,7 +329,7 @@ en:
             tasks_tab: "Choose tasks"
             content_tab: "Choose content"
           project_contents_inner:
-            instructions: "Select projects/experiment/tasks to include in the report"
+            instructions: "Select experiments/tasks to include in the report"
             no_modules: "The project contains no tasks"
             no_module_group: "No workflow"
           module_contents:
@@ -923,9 +923,6 @@ en:
         name_placeholder: "My inventory"
         submit: "Create inventory"
         success_flash: "Inventory <strong>%{name}</strong> successfully created."
-    nav:
-      breadcrumbs:
-        repositories: "Inventories"
     table:
       id: 'ID'
       assigned: "Assigned"
@@ -947,6 +944,7 @@ en:
         errors_list_title: "Items were not imported because one or more errors were found:"
         no_repository_name: "Item name is required!"
     edit_record: "Edit"
+    copy_record: "Copy"
     delete_record: "Delete"
     save_record: "Save"
     cancel_save: "Cancel"
@@ -973,7 +971,7 @@ en:
       delete: "Delete column"
     modal_parse:
       title: 'Import items'
-      warning_1: 'Be careful when importing into Dropdown column/s! Each new unique cell value from the file will create a new Dropdown option. This could result in large amounts of Dropdown options.'
+      warning_1: 'Be careful when importing into Dropdown column/s! Each new unique cell value from the file will create a new Dropdown option. Maximum nr. of Dropdown options is %{limit}.'
       warning_2: 'Importing into file columns is not supported.'
     modal_import:
       title: 'Import items'
@@ -998,6 +996,7 @@ en:
     no_records_assigned_flash: "No items were assigned to task"
     no_records_unassigned_flash: "No items were unassigned from task"
     default_column: 'Name'
+    copy_records_report: "%{number} item(s) successfully copied."
 
   libraries:
     manange_modal_column:
@@ -1014,6 +1013,7 @@ en:
 
     repository_columns:
       head_title: '%{repository} | Manage Columns'
+      repository_list_items_limit: "Dropdown items limit reached max. %{limit}"
       update:
         success_flash: "Column %{name} was successfully updated."
       create:
@@ -1032,6 +1032,7 @@ en:
     index:
       head_title: "Inventories"
       no_libraries:
+        no_permission_title: "You don't have permission to create new inventory. Please contact your team administrator."
         text: "You don't have any inventories."
         title: "Please create your first Inventory"
         create_new_button: "Create New Inventory"
@@ -1454,10 +1455,6 @@ en:
         leave_flash: "Successfuly left team %{team}."
 
   protocols:
-    nav:
-      breadcrumbs:
-        manager: "Protocol management"
-        edit: "Edit protocol"
     protocols_io_import:
       title_too_long: "... Text is too long so we had to cut it off."
       too_long: "... <span class='label label-warning'>Text is too long so we had to cut it off.</span>"
@@ -1660,6 +1657,7 @@ en:
         row_success: "Archived"
         row_renamed: "Archived & renamed"
         row_failed: "Failed"
+        preview: "View"
       restore_results:
         title: "Restore results"
         message_failed: "Failed to restore %{nr} protocols."

@@ -115,4 +115,12 @@ describe RepositoryRowsController, type: :controller do
       end
     end
   end
+
+  describe 'POST #copy_records' do
+    it 'returns a success response' do
+      post :copy_records, params: { repository_id: repository.id,
+                                    selected_rows: [repository_row.id] }
+      expect(response).to have_http_status(:success)
+    end
+  end
 end
