@@ -866,6 +866,8 @@ class Constants
     }
   end
   REPOSITORY_TABLE_DEFAULT_STATE.freeze
+  # For default custom column template, any searchable default
+  # column can be reused
   REPOSITORY_TABLE_STATE_CUSTOM_COLUMN_TEMPLATE =
     REPOSITORY_TABLE_DEFAULT_STATE[:columns][1].deep_dup
                                                .freeze
