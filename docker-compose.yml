@@ -18,6 +18,7 @@ services:
       - db
     ports:
       - "3000:3000"
+      - "5433:5432"
     command: >
       bash -c "rm -f /usr/src/app/tmp/pids/server.pid &&
                (bundle check || bundle install) &&

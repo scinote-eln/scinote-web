@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171026090804) do
+ActiveRecord::Schema.define(version: 20180418124021) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -308,6 +308,36 @@ ActiveRecord::Schema.define(version: 20171026090804) do
     t.index ["protocol_type"], name: "index_protocols_on_protocol_type"
     t.index ["restored_by_id"], name: "index_protocols_on_restored_by_id"
     t.index ["team_id"], name: "index_protocols_on_team_id"
+  end
+
+  create_table "rap_program_levels", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "rap_project_levels", force: :cascade do |t|
+    t.string "name"
+    t.bigint "rap_topic_level_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["rap_topic_level_id"], name: "index_rap_project_levels_on_rap_topic_level_id"
+  end
+
+  create_table "rap_task_levels", force: :cascade do |t|
+    t.string "name"
+    t.bigint "rap_project_level_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["rap_project_level_id"], name: "index_rap_task_levels_on_rap_project_level_id"
+  end
+
+  create_table "rap_topic_levels", force: :cascade do |t|
+    t.string "name"
+    t.bigint "rap_program_level_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["rap_program_level_id"], name: "index_rap_topic_levels_on_rap_program_level_id"
   end
 
   create_table "report_elements", id: :serial, force: :cascade do |t|
@@ -838,6 +868,9 @@ ActiveRecord::Schema.define(version: 20171026090804) do
   add_foreign_key "protocols", "users", column: "added_by_id"
   add_foreign_key "protocols", "users", column: "archived_by_id"
   add_foreign_key "protocols", "users", column: "restored_by_id"
+  add_foreign_key "rap_project_levels", "rap_topic_levels"
+  add_foreign_key "rap_task_levels", "rap_project_levels"
+  add_foreign_key "rap_topic_levels", "rap_program_levels"
   add_foreign_key "report_elements", "assets"
   add_foreign_key "report_elements", "checklists"
   add_foreign_key "report_elements", "experiments"
