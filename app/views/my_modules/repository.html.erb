@@ -19,14 +19,14 @@
 <div class="toolbarButtons" style="display:none">
   <% if module_page? && can_assign_repository_rows_to_module?(@my_module) %>
     <button type="button" class="btn btn-default"
-      data-assign-url="<%= assign_repository_records_my_module_path(@my_module, @repository)%>"
-      id="assignRepositoryRecords" onclick="onClickAssignRecords()" disabled>
+      data-assign-url-modal="<%= assign_repository_records_modal_my_module_path(@my_module, @repository) %>"
+      id="assignRepositoryRecords" onclick="openAssignRecordsModal()" disabled>
       <span class="glyphicon glyphicon-ok-circle"></span>
       <span class="hidden-xs-custom"><%= t'repositories.assign_records_to_module' %></span>
     </button>
     <button type="button" class="btn btn-default"
-      data-unassign-url="<%= unassign_repository_records_my_module_path(@my_module, @repository)%>"
-      id="unassignRepositoryRecords" onclick="onClickUnassignRecords()" disabled>
+      data-unassign-url="<%= unassign_repository_records_modal_my_module_path(@my_module, @repository)%>"
+      id="unassignRepositoryRecords" onclick="openUnassignRecordsModal()" disabled>
       <span class="glyphicon glyphicon-ban-circle"></span>
       <span class="hidden-xs-custom"><%= t'repositories.unassign_records_from_module' %></span>
     </button>

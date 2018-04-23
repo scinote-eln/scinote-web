@@ -12,10 +12,14 @@ class MyModulesController < ApplicationController
                          assign_samples unassign_samples delete_samples
                          toggle_task_state samples_index archive
                          complete_my_module repository repository_index
-                         assign_repository_records unassign_repository_records)
+                         assign_repository_records unassign_repository_records
+                         unassign_repository_records_modal
+                         assign_repository_records_modal)
   before_action :load_vars_nested, only: %i(new create)
   before_action :load_repository, only: %i(assign_repository_records
                                            unassign_repository_records
+                                           unassign_repository_records_modal
+                                           assign_repository_records_modal
                                            repository_index)
   before_action :load_projects_by_teams, only: %i(protocols results activities
                                                   samples repository archive)
@@ -391,6 +395,7 @@ class MyModulesController < ApplicationController
   def assign_repository_records
     if params[:selected_rows].present? && params[:repository_id].present?
       records_names = []
+      downstream = ActiveModel::Type::Boolean.new.cast(params[:downstream])
 
       params[:selected_rows].each do |id|
         record = RepositoryRow.find_by_id(id)
@@ -398,11 +403,22 @@ class MyModulesController < ApplicationController
         record.last_modified_by = current_user
         record.save
         records_names << record.name
+
         MyModuleRepositoryRow.create!(
           my_module: @my_module,
           repository_row: record,
           assigned_by: current_user
         )
+
+        next unless downstream
+        @my_module.downstream_modules.each do |my_module|
+          next if my_module.repository_rows.include?(record)
+          MyModuleRepositoryRow.create!(
+            my_module: my_module,
+            repository_row: record,
+            assigned_by: current_user
+          )
+        end
       end
 
       if records_names.any?
@@ -440,6 +456,7 @@ class MyModulesController < ApplicationController
   def unassign_repository_records
     if params[:selected_rows].present? && params[:repository_id].present?
       records = []
+      downstream = ActiveModel::Type::Boolean.new.cast(params[:downstream])
 
       params[:selected_rows].each do |id|
         record = RepositoryRow.find_by_id(id)
@@ -450,6 +467,13 @@ class MyModulesController < ApplicationController
       end
 
       @my_module.repository_rows.destroy(records & @my_module.repository_rows)
+
+      if downstream
+        @my_module.downstream_modules.each do |my_module|
+          my_module.repository_rows.destroy(records & my_module.repository_rows)
+        end
+      end
+
       if records.any?
         Activity.create(
           type_of: :unassign_repository_record,
@@ -480,6 +504,28 @@ class MyModulesController < ApplicationController
         end
       end
     end
+  end
+
+  def unassign_repository_records_modal
+    selected_rows = params[:selected_rows]
+    modal = render_to_string(
+      partial: 'my_modules/modals/unassign_repository_records_modal.html.erb',
+      locals: { my_module: @my_module,
+                repository: @repository,
+                selected_rows: selected_rows }
+    )
+    render json: { html: modal }, status: :ok
+  end
+
+  def assign_repository_records_modal
+    selected_rows = params[:selected_rows]
+    modal = render_to_string(
+      partial: 'my_modules/modals/assign_repository_records_modal.html.erb',
+      locals: { my_module: @my_module,
+                repository: @repository,
+                selected_rows: selected_rows }
+    )
+    render json: { html: modal }, status: :ok
   end
 
   # Complete/uncomplete task
