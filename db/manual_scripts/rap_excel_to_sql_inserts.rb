@@ -2,20 +2,7 @@
 require 'spreadsheet'
 require 'byebug'
 
-
-# The following values must be updated EVERY TIME the script is run.
-# To get the values, find the max index for each RAP table.
-####################################################################
-#### UPDATE THIS WITH CURRENT MAX INDEXES BEFORE RUNNING SCRIPT ####
-####################################################################
-programLevelIndex = 0       ########################################
-topicLevelIndex = 0         ########################################
-projectLevelIndex = 0       ########################################
-taskLevelIndex = 0          ########################################
-####################################################################
-####################################################################
-
-all_inserts = ""
+all_inserts = []
 out_file_name = "rap_info_april_12_2018_insert.sql"
 in_file_name = "rap_info_april_12_2018.xls"
 excel_data = Spreadsheet.open in_file_name
@@ -26,77 +13,63 @@ projectLevelName = ""
 taskLevelName = ""
 created = Time.now.strftime('%B %d, %Y')
 sheet.each 2 do |row|
-  byebug
   # iterate through each cel
   col = 0
   row.each do |cell|
-    byebug
     # if cell is empty, look at next cell
     if cell.nil? || cell.empty?
-      byebug
       #Look at next cell
       col += 1
-      byebug
       # If col reaches > 3 without finding any values, then we've finished the file.
       if col > 3
-        byebug
         break
       end
       next
     else
-      byebug
       # else we found a value we want to record, we should break after this and go to next row
       if col === 0
-        byebug
         programLevelName = cell
         # Check to see if this value already exists in the database.
         # If it exists, get the index. If it doesn't, get the max ID and create an insert.
-        programLevelIndex = 0
-        conflictClause = "ON CONFLICT (name) DO UPDATE SET name = {}"
-        valuesClause = "VALUES ({programLevelName}, {created}), {created}) {conflictClause}"
-        programLevelInsert = "INSERT INTO rap_program_levels (name, created_at, updated_at) {valuesClause}\n"
+        conflictClause = "ON CONFLICT (name) DO UPDATE SET name = '#{programLevelName}'"
+        valuesClause = "VALUES ('#{programLevelName}', '#{created}', '#{created}') #{conflictClause}"
+        programLevelInsert = "INSERT INTO rap_program_levels (name, created_at, updated_at) #{valuesClause}\n"
         all_inserts << programLevelInsert
         # Write the insert statement to our SQL file.
       elsif col === 1
-        byebug
         topicLevelName = cell
         # Check to see if this value already exists in the database.
         # If it exists, get the index. If it doesn't, get the max ID and create an insert.
-        topicLevelIndex = 0
-        prevIdClause = "(SELECT id FROM rap_program_levels WHERE name = '{programLevelName}')"
-        conflictClause = "ON CONFLICT (name) DO UPDATE SET name = {topicLevelName}"
-        valuesClause = "VALUES ({topicLevelName},  {prevIdClause}, {created}), {created}) {conflictClause}"
-        topicLevelInsert = "INSERT INTO rap_topic_levels (name, rap_program_level_id, created_at, updated_at) {valuesClause}\n"
+        prevIdClause = "(SELECT id FROM rap_program_levels WHERE name = '#{programLevelName}')"
+        conflictClause = "ON CONFLICT (name) DO UPDATE SET name = '#{topicLevelName}'"
+        valuesClause = "VALUES ('#{topicLevelName}',  #{prevIdClause}, '#{created}', '#{created}') #{conflictClause}"
+        topicLevelInsert = "INSERT INTO rap_topic_levels (name, rap_program_level_id, created_at, updated_at) #{valuesClause}\n"
         all_inserts << topicLevelInsert
         # Write the insert statement to our SQL file.
       elsif col === 2
-        byebug
         projectLevelName = cell
         # Check to see if this value already exists in the database.
         # If it exists, get the index. If it doesn't, get the max ID and create an insert.
-        projectLevelIndex = 0
-        prevIdClause = "(SELECT id FROM rap_topic_levels WHERE name = '{topicLevelName}')"
-        conflictClause = "ON CONFLICT (name) DO UPDATE SET name = {projectLevelName}"
-        valuesClause = "VALUES ({projectLevelName},  {prevIdClause}, {created}), {created}) {conflictClause}"
-        projectLevelInsert = "INSERT INTO rap_project_levels (name, rap_topic_level_id, created_at, updated_at) {valuesClause}\n"
+        prevIdClause = "(SELECT id FROM rap_topic_levels WHERE name = '#{topicLevelName}')"
+        conflictClause = "ON CONFLICT (name) DO UPDATE SET name = '#{projectLevelName}'"
+        valuesClause = "VALUES ('#{projectLevelName}', #{prevIdClause}, '#{created}', '#{created}') #{conflictClause}"
+        projectLevelInsert = "INSERT INTO rap_project_levels (name, rap_topic_level_id, created_at, updated_at) #{valuesClause}\n"
         all_inserts << projectLevelInsert
         # Write the insert statement to our SQL file.
       elsif col === 3
-        byebug
         taskLevelName = cell
         # Check to see if this value already exists in the database.
         # If it exists, get the index. If it doesn't, get the max ID and create an insert.
-        prevIdClause = "(SELECT id FROM rap_project_levels WHERE name = '{projectLevelName}')"
-        conflictClause = "ON CONFLICT (name) DO UPDATE SET name = {taskLevelName}"
-        valuesClause = "VALUES ({taskLevelName},  {prevIdClause}, {created}), {created}) {conflictClause}"
-        taskLevelInsert = "INSERT INTO rap_task_levels (name, rap_project_level_id, created_at, updated_at) {valuesClause}\n"
+        prevIdClause = "(SELECT id FROM rap_project_levels WHERE name = '#{projectLevelName}')"
+        conflictClause = "ON CONFLICT (name) DO UPDATE SET name = '#{taskLevelName}''"
+        valuesClause = "VALUES ('#{taskLevelName}',  #{prevIdClause}, '#{created}', '#{created}') #{conflictClause}"
+        taskLevelInsert = "INSERT INTO rap_task_levels (name, rap_project_level_id, created_at, updated_at) #{valuesClause}\n"
         all_inserts << taskLevelInsert
         # Write the insert statement to our SQL file.
       end
-      byebug
       break # Go to next row
     end
   end
 end
 byebug
-File.write(out_file_name, all_inserts) 
+File.write(out_file_name, all_inserts.join) 
