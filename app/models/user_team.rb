@@ -16,9 +16,7 @@ class UserTeam < ApplicationRecord
   after_create :create_samples_table_state
 
   after_commit do
-    Scenic.database.refresh_materialized_view(:datatables_reports,
-                                              concurrently: true,
-                                              cascade: false)
+    Views::Datatables::DatatablesReport.refresh_materialized_view
   end
 
   def role_str

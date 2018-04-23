@@ -62,6 +62,12 @@ Canaid::Permissions.register_for(Team) do
     user.is_normal_user_or_admin_of_team?(team)
   end
 
+  # this permission is scattered around the application
+  # if you want to make changes here keep in mind to check/change the
+  # SQL view that lists reports in index page:
+  #   - db/views/datatables_reports_v01.sql
+  #   - check the model app/models/views/datatables/datatables_report.rb
+  #   - check visible_by method in Project model
   can :manage_reports do |user, team|
     user.is_normal_user_or_admin_of_team?(team)
   end

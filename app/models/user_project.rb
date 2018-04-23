@@ -15,9 +15,7 @@ class UserProject < ApplicationRecord
   before_destroy :destroy_associations
 
   after_commit do
-    Scenic.database.refresh_materialized_view(:datatables_reports,
-                                              concurrently: true,
-                                              cascade: false)
+    Views::Datatables::DatatablesReport.refresh_materialized_view
   end
 
   def role_str

@@ -25,6 +25,12 @@ module Views
           where(id: allowed_ids).where(project_archived: false)
         end
 
+        def refresh_materialized_view
+          Scenic.database.refresh_materialized_view(:datatables_reports,
+                                                    concurrently: true,
+                                                    cascade: false)
+        end
+
         private
 
         PermissionItem = Struct.new(:report_id, :users_ids)

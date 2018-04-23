@@ -23,9 +23,7 @@ class Report < ApplicationRecord
   has_many :report_elements, inverse_of: :report, dependent: :destroy
 
   after_commit do
-    Scenic.database.refresh_materialized_view(:datatables_reports,
-                                              concurrently: true,
-                                              cascade: false)
+    Views::Datatables::DatatablesReport.refresh_materialized_view
   end
 
   def self.search(

@@ -27,7 +27,6 @@ class ReportsController < ApplicationController
   before_action :load_vars_nested, only: BEFORE_ACTION_METHODS
   before_action :load_visible_projects, only: %i(index visible_projects)
 
-  # before_action :check_view_permissions, only: :index
   before_action :check_manage_permissions, only: BEFORE_ACTION_METHODS
 
   # Index showing all reports of a single project
@@ -441,10 +440,6 @@ class ReportsController < ApplicationController
   def load_vars_nested
     @project = Project.find_by_id(params[:project_id])
     render_404 unless @project
-  end
-
-  def check_view_permissions
-    render_403 unless can_read_project?(@project)
   end
 
   def check_manage_permissions
