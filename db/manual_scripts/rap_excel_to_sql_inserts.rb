@@ -32,10 +32,8 @@ sheet.each 2 do |row|
         # Check to see if this value already exists in the database.
         # If it exists, get the index. If it doesn't, get the max ID and create an insert.
         valuesClause = "VALUES ('#{programLevelName}', '#{created}', '#{created}')"
-        programLevelInsert = "INSERT INTO rap_program_levels (name, created_at, updated_at) #{valuesClause};"
-        updateClause = "UPDATE rap_program_levels SET name = '#{programLevelName}'"
-        finalInsert = "BEGIN; #{programLevelInsert} EXCEPTION WHEN unique_violation THEN #{updateClause}; END;\n"
-        all_inserts << finalInsert
+        programLevelInsert = "INSERT INTO rap_program_levels (name, created_at, updated_at) #{valuesClause};\n"
+        all_inserts << programLevelInsert
         # Write the insert statement to our SQL file.
       elsif col === 1
         topicLevelName = cell
@@ -43,10 +41,8 @@ sheet.each 2 do |row|
         # If it exists, get the index. If it doesn't, get the max ID and create an insert.
         prevIdClause = "(SELECT id FROM rap_program_levels WHERE name = '#{programLevelName}')"
         valuesClause = "VALUES ('#{topicLevelName}',  #{prevIdClause}, '#{created}', '#{created}')"
-        topicLevelInsert = "INSERT INTO rap_topic_levels (name, rap_program_level_id, created_at, updated_at) #{valuesClause};"
-        updateClause = "UPDATE rap_topic_levels SET name = '#{topicLevelName}'"
-        finalInsert = "BEGIN; #{topicLevelInsert} EXCEPTION WHEN unique_violation THEN #{updateClause}; END;\n"
-        all_inserts << finalInsert
+        topicLevelInsert = "INSERT INTO rap_topic_levels (name, rap_program_level_id, created_at, updated_at) #{valuesClause};\n"
+        all_inserts << topicLevelInsert
         # Write the insert statement to our SQL file.
       elsif col === 2
         projectLevelName = cell
@@ -54,10 +50,8 @@ sheet.each 2 do |row|
         # If it exists, get the index. If it doesn't, get the max ID and create an insert.
         prevIdClause = "(SELECT id FROM rap_topic_levels WHERE name = '#{topicLevelName}')"
         valuesClause = "VALUES ('#{projectLevelName}', #{prevIdClause}, '#{created}', '#{created}')"
-        projectLevelInsert = "INSERT INTO rap_project_levels (name, rap_topic_level_id, created_at, updated_at) #{valuesClause};"
-        updateClause = "UPDATE rap_project_levels SET name = '#{projectLevelName}'"
-        finalInsert = "BEGIN; #{projectLevelInsert} EXCEPTION WHEN unique_violation THEN #{updateClause}; END;\n"
-        all_inserts << finalInsert
+        projectLevelInsert = "INSERT INTO rap_project_levels (name, rap_topic_level_id, created_at, updated_at) #{valuesClause};\n"
+        all_inserts << projectLevelInsert
         # Write the insert statement to our SQL file.
       elsif col === 3
         taskLevelName = cell
@@ -65,15 +59,12 @@ sheet.each 2 do |row|
         # If it exists, get the index. If it doesn't, get the max ID and create an insert.
         prevIdClause = "(SELECT id FROM rap_project_levels WHERE name = '#{projectLevelName}')"
         valuesClause = "VALUES ('#{taskLevelName}',  #{prevIdClause}, '#{created}', '#{created}')"
-        taskLevelInsert = "INSERT INTO rap_task_levels (name, rap_project_level_id, created_at, updated_at) #{valuesClause};"
-        updateClause = "UPDATE rap_task_levels SET name = '#{taskLevelName}'"
-        finalInsert = "BEGIN; #{taskLevelInsert} EXCEPTION WHEN unique_violation THEN #{updateClause}; END;\n"
-        all_inserts << finalInsert
+        taskLevelInsert = "INSERT INTO rap_task_levels (name, rap_project_level_id, created_at, updated_at) #{valuesClause};\n"
+        all_inserts << taskLevelInsert
         # Write the insert statement to our SQL file.
       end
       break # Go to next row
     end
   end
 end
-byebug
 File.write(out_file_name, all_inserts.join) 
