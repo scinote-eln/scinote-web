@@ -1,5 +1,6 @@
-<div id="rapProgramLevelSelect" class="row">
-  <select onchange="selectRapProgramLevel(this)" onfocus="this.selectedIndex = -1;">
+<div id="rapProgramLevelSelect" class="form-group">
+  <label class="control-label" for="rap_program_level">RAP Program Level</label>
+  <select class="form-control" onchange="selectRapProgramLevel(this)" onfocus="resetRapProgramLevelChildren()">
     <option value="" selected disabled hidden></option>
     <%= @programs.each do |program| %>
       <option value="<%= program.id %>"><%= program.name %></option>

@@ -1,15 +1,28 @@
 // Place all the behaviors and hooks related to the matching controller here.
 // All this logic will automatically be available in application.js.
+
+// After selecting a RAP Program Level, retrieve all its Topic Levels
 function selectRapProgramLevel(el){
     var programLevelID = el.value;
-    console.log(programLevelID);
     // Get all RapTopicLevels for this programLevelID
+    var url = window.location.protocol + "//" + window.location.host + "/rap_topic_level/" + programLevelID;
     $.ajax({
-        url: "",
+        url: url,
         type: "GET",
         dataType: "json",
         success: function (data) {
-            console.log(data);
+            generateTopicDropdown(data);
+        },
+        error: function (err) {
+          // TODO
+          console.log("Couldn't retrieve this Program Level's owned Topic Levels.");
+          console.log(err);
         }
     });
+}
+
+function resetRapProgramLevelChildren(){
+    $("#rapTopicLevelSelect").remove();
+    $("#rapProjectLevelSelect").remove();
+    $("#rapTaskLevelSelect").remove();
 }
