@@ -1,7 +1,8 @@
-<div class="row">
-  <select name="rapProgramLevelSelect">
+<div id="rapProgramLevelSelect" class="row">
+  <select onchange="selectRapProgramLevel(this)" onfocus="this.selectedIndex = -1;">
+    <option value="" selected disabled hidden></option>
     <%= @programs.each do |program| %>
-      <option value="<%= program %>">List<%= program.name %></option>
+      <option value="<%= program.id %>"><%= program.name %></option>
     <% end %>
   </select>
 </div>

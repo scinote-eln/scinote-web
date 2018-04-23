@@ -45,9 +45,7 @@ class ProjectsController < ApplicationController
     # New project for create new project modal
     @project = Project.new
     # Get all RAP Program Level values for dropdown.
-    tempProg1 = RapProgramLevel.new
-    tempProg2 = RapProgramLevel.new
-    @programs = [tempProg1, tempProg2]
+    @programs = RapProgramLevel.all
     #@programs = RapProgramLevel.pluck(:name)
   end
 

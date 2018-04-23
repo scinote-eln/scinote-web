@@ -22,33 +22,22 @@ Rails.application.routes.draw do
     get 'help/contact', to: 'help#contact', as: 'contact'
     get 'help/training', to: 'help#training', as: 'training'
 
-    get '/rap_program_levels/', to: 'rap_program_levels#show'
+    # EPA RAP Information JSON results
+    get '/rap_program_level/',
+        to: 'rap_program_level#show',
+        as: 'rap_program_level'
 
-    # EPA routes for RAP Information (Dropdowns in Project creation)
-    #resources :rap_program_levels do |rap_program_levels|
-    #  resources :rap_topic_levels, only: %i(index show) do
-    #  get 'show_rap_program_levels', to: 'rap_program_levels#show'
-    #  end
-    #end
-    resources :rap_topic_levels do |rap_topic_levels|
-      resources :rap_project_levels, only: %i(index show) do
-      get 'show_rap_topic_levels', to: 'rap_topic_levels#show'
-      end
-	  end
-    resources :rap_project_levels do |rap_project_levels|
-      resources :rap_task_levels, only: %i(index show) do
-      get 'show_rap_project_levels', to: 'rap_project_levels#show'
-      end
-    end
-    resources :rap_task_levels, only: %i(index show) do
-      get 'show_rap_task_levels', to: 'rap_task_levels#show'
-    end
-    # Should these routes actually point to APIs?
-    # Alternatively, each route here specified could be a partial view which has a single dropdown
-    # Then when a value is selected from the dropdown, the next dropdown partial is called with a GET request from the first partial
-    # This way we won't need the complicated nested routes...
+    get 'rap_topic_level/:rap_program_level_id',
+        to: 'rap_topic_level#show',
+        as: 'rap_topic_level'
 
+    get 'rap_project_level/:rap_topic_level_id',
+        to: 'rap_project_level#show',
+        as: 'rap_project_level'
 
+    get 'rap_task_level/:rap_project_level_id',
+        to: 'rap_task_level#show',
+        as: 'rap_task_level'
 
     # # Client APP endpoints
     # get '/settings', to: 'client_api/settings#index'
