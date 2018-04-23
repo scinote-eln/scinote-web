@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180308094354) do
+ActiveRecord::Schema.define(version: 20180417062042) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -348,10 +348,12 @@ ActiveRecord::Schema.define(version: 20180308094354) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "last_modified_by_id"
+    t.bigint "team_id"
     t.index "trim_html_tags((description)::text) gin_trgm_ops", name: "index_reports_on_description", using: :gin
     t.index "trim_html_tags((name)::text) gin_trgm_ops", name: "index_reports_on_name", using: :gin
     t.index ["last_modified_by_id"], name: "index_reports_on_last_modified_by_id"
     t.index ["project_id"], name: "index_reports_on_project_id"
+    t.index ["team_id"], name: "index_reports_on_team_id"
     t.index ["user_id"], name: "index_reports_on_user_id"
   end
 
@@ -413,8 +415,8 @@ ActiveRecord::Schema.define(version: 20180308094354) do
     t.bigint "last_modified_by_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index "trim_html_tags(data) gin_trgm_ops", name: "index_repository_list_items_on_data", using: :gin
     t.index ["created_by_id"], name: "index_repository_list_items_on_created_by_id"
-    t.index ["data"], name: "index_repository_list_items_on_data"
     t.index ["last_modified_by_id"], name: "index_repository_list_items_on_last_modified_by_id"
     t.index ["repository_column_id"], name: "index_repository_list_items_on_repository_column_id"
     t.index ["repository_id"], name: "index_repository_list_items_on_repository_id"
@@ -779,7 +781,6 @@ ActiveRecord::Schema.define(version: 20180308094354) do
     t.string "invited_by_type"
     t.integer "invited_by_id"
     t.integer "invitations_count", default: 0
-    t.integer "tutorial_status", default: 0, null: false
     t.integer "current_team_id"
     t.string "authentication_token", limit: 30
     t.jsonb "settings", default: {}, null: false
@@ -976,5 +977,37 @@ ActiveRecord::Schema.define(version: 20180308094354) do
      FROM (teams
        JOIN user_teams ON ((teams.id = user_teams.team_id)));
   SQL
+
+  create_view "datatables_reports", materialized: true,  sql_definition: <<-SQL
+      SELECT DISTINCT ON (reports.id) reports.id,
+      reports.name,
+      projects.name AS project_name,
+      ( SELECT users.full_name
+             FROM users
+            WHERE (users.id = reports.user_id)) AS created_by,
+      ( SELECT users.full_name
+             FROM users
+            WHERE (users.id = reports.last_modified_by_id)) AS last_modified_by,
+      reports.created_at,
+      reports.updated_at,
+      projects.archived AS project_archived,
+      projects.visibility AS project_visibility,
+      projects.id AS project_id,
+      reports.team_id,
+      ARRAY( SELECT DISTINCT user_teams_1.user_id
+             FROM user_teams user_teams_1
+            WHERE (user_teams_1.team_id = teams.id)) AS users_with_team_read_permissions,
+      ARRAY( SELECT DISTINCT user_projects_1.user_id
+             FROM user_projects user_projects_1
+            WHERE (user_projects_1.project_id = projects.id)) AS users_with_project_read_permissions
+     FROM ((((reports
+       JOIN projects ON ((projects.id = reports.project_id)))
+       JOIN user_projects ON ((user_projects.project_id = projects.id)))
+       JOIN teams ON ((teams.id = projects.team_id)))
+       JOIN user_teams ON ((user_teams.team_id = teams.id)));
+  SQL
+
+  add_index "datatables_reports", ["id"], name: "index_datatables_reports_on_id", unique: true
+  add_index "datatables_reports", ["team_id"], name: "index_datatables_reports_on_team_id"
 
 end

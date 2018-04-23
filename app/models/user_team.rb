@@ -15,6 +15,10 @@ class UserTeam < ApplicationRecord
   before_destroy :destroy_associations
   after_create :create_samples_table_state
 
+  after_commit do
+    Views::Datatables::DatatablesReport.refresh_materialized_view
+  end
+
   def role_str
     I18n.t("user_teams.enums.role.#{role}")
   end

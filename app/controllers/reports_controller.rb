@@ -5,37 +5,11 @@ class ReportsController < ApplicationController
   # used via target='_blank')
   protect_from_forgery with: :exception, except: :generate
 
-  before_action :load_vars, only: [
-    :edit,
-    :update
-  ]
-  before_action :load_vars_nested, only: [
-    :index,
-    :new,
-    :create,
-    :edit,
-    :update,
-    :generate,
-    :destroy,
-    :save_modal,
-    :project_contents_modal,
-    :experiment_contents_modal,
-    :module_contents_modal,
-    :step_contents_modal,
-    :result_contents_modal,
-    :project_contents,
-    :module_contents,
-    :step_contents,
-    :result_contents
-  ]
-
-  before_action :check_view_permissions, only: :index
-  before_action :check_manage_permissions, only: %i(
+  BEFORE_ACTION_METHODS = %i(
     new
     create
     edit
     update
-    destroy
     generate
     save_modal
     project_contents_modal
@@ -47,10 +21,27 @@ class ReportsController < ApplicationController
     module_contents
     step_contents
     result_contents
-  )
+  ).freeze
+
+  before_action :load_vars, only: %i(edit update)
+  before_action :load_vars_nested, only: BEFORE_ACTION_METHODS
+  before_action :load_visible_projects, only: %i(index visible_projects)
+
+  before_action :check_manage_permissions, only: BEFORE_ACTION_METHODS
 
   # Index showing all reports of a single project
-  def index
+  def index; end
+
+  def datatable
+    respond_to do |format|
+      format.json do
+        render json: ::ReportDatatable.new(
+          view_context,
+          current_user,
+          current_team.datatables_reports.visible_by(current_user, current_team)
+        )
+      end
+    end
   end
 
   # Report grouped by modules
@@ -70,6 +61,7 @@ class ReportsController < ApplicationController
     @report = Report.new(report_params)
     @report.project = @project
     @report.user = current_user
+    @report.team = current_team
     @report.last_modified_by = current_user
 
     if continue && @report.save_with_contents(report_contents)
@@ -86,7 +78,7 @@ class ReportsController < ApplicationController
       )
       respond_to do |format|
         format.json do
-          render json: { url: project_reports_path(@project) }, status: :ok
+          render json: { url: reports_path }, status: :ok
         end
       end
     else
@@ -131,7 +123,7 @@ class ReportsController < ApplicationController
       )
       respond_to do |format|
         format.json do
-          render json: { url: project_reports_path(@project) }, status: :ok
+          render json: { url: reports_path }, status: :ok
         end
       end
     else
@@ -153,7 +145,7 @@ class ReportsController < ApplicationController
 
     report_ids.each do |report_id|
       report = Report.find_by_id(report_id)
-      next unless report.present?
+      next unless report.present? && can_manage_reports?(current_team)
       # record an activity
       Activity.create(
         type_of: :delete_report,
@@ -168,7 +160,7 @@ class ReportsController < ApplicationController
       report.destroy
     end
 
-    redirect_to project_reports_path(@project)
+    redirect_to reports_path
   end
 
   # Generation action
@@ -432,7 +424,13 @@ class ReportsController < ApplicationController
     end
   end
 
+  def visible_projects
+    render json: { projects: @visible_projects }, status: :ok
+  end
+
   private
+
+  VisibleProject = Struct.new(:path, :name)
 
   def load_vars
     @report = Report.find_by_id(params[:id])
@@ -444,16 +442,28 @@ class ReportsController < ApplicationController
     render_404 unless @project
   end
 
-  def check_view_permissions
-    render_403 unless can_read_project?(@project)
+  def check_manage_permissions
+    render_403 unless can_manage_reports?(@project.team)
   end
 
-  def check_manage_permissions
-    render_403 unless can_manage_reports?(@project)
+  def load_visible_projects
+    render_404 unless current_team
+    projects = current_team.projects.visible_by(current_user)
+                                    .where('projects.name ILIKE ?',
+                                           "%#{search_params[:q]}%")
+                                    .limit(Constants::SEARCH_LIMIT)
+                                    .select(:id, :name)
+    @visible_projects = projects.collect do |project|
+      VisibleProject.new(new_project_reports_path(project), project.name)
+    end
   end
 
   def report_params
     params.require(:report)
           .permit(:name, :description, :grouped_by, :report_contents)
+  end
+
+  def search_params
+    params.permit(:q)
   end
 end
