@@ -33,7 +33,7 @@ sheet.each 2 do |row|
         # If it exists, get the index. If it doesn't, get the max ID and create an insert.
         conflictClause = "ON CONFLICT (name) DO UPDATE SET name = '#{programLevelName}'"
         valuesClause = "VALUES ('#{programLevelName}', '#{created}', '#{created}') #{conflictClause}"
-        programLevelInsert = "INSERT INTO rap_program_levels (name, created_at, updated_at) #{valuesClause}\n"
+        programLevelInsert = "INSERT INTO rap_program_levels (name, created_at, updated_at) #{valuesClause};\n"
         all_inserts << programLevelInsert
         # Write the insert statement to our SQL file.
       elsif col === 1
@@ -43,7 +43,7 @@ sheet.each 2 do |row|
         prevIdClause = "(SELECT id FROM rap_program_levels WHERE name = '#{programLevelName}')"
         conflictClause = "ON CONFLICT (name) DO UPDATE SET name = '#{topicLevelName}'"
         valuesClause = "VALUES ('#{topicLevelName}',  #{prevIdClause}, '#{created}', '#{created}') #{conflictClause}"
-        topicLevelInsert = "INSERT INTO rap_topic_levels (name, rap_program_level_id, created_at, updated_at) #{valuesClause}\n"
+        topicLevelInsert = "INSERT INTO rap_topic_levels (name, rap_program_level_id, created_at, updated_at) #{valuesClause};\n"
         all_inserts << topicLevelInsert
         # Write the insert statement to our SQL file.
       elsif col === 2
@@ -53,7 +53,7 @@ sheet.each 2 do |row|
         prevIdClause = "(SELECT id FROM rap_topic_levels WHERE name = '#{topicLevelName}')"
         conflictClause = "ON CONFLICT (name) DO UPDATE SET name = '#{projectLevelName}'"
         valuesClause = "VALUES ('#{projectLevelName}', #{prevIdClause}, '#{created}', '#{created}') #{conflictClause}"
-        projectLevelInsert = "INSERT INTO rap_project_levels (name, rap_topic_level_id, created_at, updated_at) #{valuesClause}\n"
+        projectLevelInsert = "INSERT INTO rap_project_levels (name, rap_topic_level_id, created_at, updated_at) #{valuesClause};\n"
         all_inserts << projectLevelInsert
         # Write the insert statement to our SQL file.
       elsif col === 3
@@ -61,9 +61,9 @@ sheet.each 2 do |row|
         # Check to see if this value already exists in the database.
         # If it exists, get the index. If it doesn't, get the max ID and create an insert.
         prevIdClause = "(SELECT id FROM rap_project_levels WHERE name = '#{projectLevelName}')"
-        conflictClause = "ON CONFLICT (name) DO UPDATE SET name = '#{taskLevelName}''"
+        conflictClause = "ON CONFLICT (name) DO UPDATE SET name = '#{taskLevelName}'"
         valuesClause = "VALUES ('#{taskLevelName}',  #{prevIdClause}, '#{created}', '#{created}') #{conflictClause}"
-        taskLevelInsert = "INSERT INTO rap_task_levels (name, rap_project_level_id, created_at, updated_at) #{valuesClause}\n"
+        taskLevelInsert = "INSERT INTO rap_task_levels (name, rap_project_level_id, created_at, updated_at) #{valuesClause};\n"
         all_inserts << taskLevelInsert
         # Write the insert statement to our SQL file.
       end
