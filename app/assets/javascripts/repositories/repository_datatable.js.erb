@@ -124,6 +124,7 @@ var RepositoryDatatable = (function(global) {
         changeToViewMode();
         updateButtons();
         updateDataTableSelectAllCtrl();
+        initPreviewModal();
         // Prevent row toggling when selecting user smart annotation link
         SmartAnnotation.preventPropagation('.atwho-user-popover');
 

@@ -1714,3 +1714,9 @@ th.custom-field .modal-tooltiptext {
 .parse-records-table {
   max-height: 200px;
 }
+
+a.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+  cursor: default;
+}
