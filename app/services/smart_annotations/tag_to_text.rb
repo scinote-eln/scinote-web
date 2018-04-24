@@ -1,26 +1,28 @@
 # frozen_string_literal: true
 
 require 'smart_annotations/permision_eval'
-require 'smart_annotations/html_preview'
+require 'smart_annotations/text_preview'
 
 module SmartAnnotations
-  class TagToHtml
-    attr_reader :html
+  class TagToText
+    attr_reader :text
 
-    def initialize(user, text)
-      parse(user, text)
+    def initialize(user, team, text)
+      parse_items_annotations(user, text)
+      parse_users_annotations(user, team, @text)
     end
 
     private
 
-    REGEX = /\[\#(.*?)~(prj|exp|tsk|rep_item)~([0-9a-zA-Z]+)\]/
+    USER_REGEX = /\[\@(.*?)~([0-9a-zA-Z]+)\]/
+    ITEMS_REGEX = /\[\#(.*?)~(prj|exp|tsk|rep_item)~([0-9a-zA-Z]+)\]/
     OBJECT_MAPPINGS = { prj: Project,
                         exp: Experiment,
                         tsk: MyModule,
                         rep_item: RepositoryRow }.freeze
 
-    def parse(user, text)
-      @html = text.gsub(REGEX) do |el|
+    def parse_items_annotations(user, text)
+      @text = text.gsub(ITEMS_REGEX) do |el|
         value = extract_values(el)
         type = value[:object_type]
         begin
@@ -32,7 +34,7 @@ module SmartAnnotations
             next unless object && SmartAnnotations::PermissionEval.check(user,
                                                                          type,
                                                                          object)
-            SmartAnnotations::HtmlPreview.html(nil, type, object)
+            SmartAnnotations::TextPreview.text(nil, type, object)
           end
         rescue ActiveRecord::RecordNotFound
           next
@@ -40,15 +42,25 @@ module SmartAnnotations
       end
     end
 
+    def parse_users_annotations(user, team, text)
+      @text = text.gsub(USER_REGEX) do |el|
+        match = el.match(USER_REGEX)
+        user = User.find_by_id(match[2].base62_decode)
+        next unless user
+        next if UserTeam.where(user: user, team: team).empty?
+        user.full_name
+      end
+    end
+
     def repository_item(name, user, type, object)
       if object && SmartAnnotations::PermissionEval.check(user, type, object)
-        return SmartAnnotations::HtmlPreview.html(nil, type, object)
+        return SmartAnnotations::TextPreview.text(nil, type, object)
       end
-      SmartAnnotations::HtmlPreview.html(name, type, object)
+      SmartAnnotations::TextPreview.text(name, type, object)
     end
 
     def extract_values(element)
-      match = element.match(REGEX)
+      match = element.match(ITEMS_REGEX)
       {
         name: match[1],
         object_type: match[2],

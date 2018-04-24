@@ -11,12 +11,12 @@ module RepositoryZipExport
     zip = ZipExport.create(user: current_user)
     zip.generate_exportable_zip(
       current_user,
-      to_csv(ordered_rows, params[:header_ids]),
+      to_csv(ordered_rows, params[:header_ids], current_user, repository.team),
       :repositories
     )
   end
 
-  def self.to_csv(rows, column_ids)
+  def self.to_csv(rows, column_ids, user, team)
     # Parse column names
     csv_header = []
     column_ids.each do |c_id|
@@ -56,7 +56,11 @@ module RepositoryZipExport
                      else
                        cell = row.repository_cells
                                  .find_by(repository_column_id: c_id)
-                       cell ? cell.value.formatted : nil
+                       if cell
+                         SmartAnnotations::TagToText.new(
+                           user, team, cell.value.formatted
+                         ).text
+                       end
                      end
         end
         csv << csv_row

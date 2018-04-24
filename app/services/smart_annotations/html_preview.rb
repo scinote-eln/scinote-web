@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module SmartAnnotations
-  class Preview
+  class HtmlPreview
     class << self
       def html(name, type, object)
         send("generate_#{type}_snippet", name, object)
