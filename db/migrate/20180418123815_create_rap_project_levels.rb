@@ -6,6 +6,6 @@ class CreateRapProjectLevels < ActiveRecord::Migration[5.1]
 
       t.timestamps
     end
-    add_index :rap_project_levels, unique: true
+    add_index :rap_project_levels, :name, unique: true
   end
 end
