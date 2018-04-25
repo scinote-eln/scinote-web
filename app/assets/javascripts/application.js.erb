@@ -204,6 +204,12 @@ var HelperModule = (function(){
     }
   }
 
+  helpers.dismissAlert = function() {
+    $('#alert-flash').on('click', function() {
+      $('#alert-flash').alert('close');
+    })
+  }
+
   helpers.flashAlertMsg = function(message, type) {
     var alertType;
     var glyphSign;
@@ -221,23 +227,22 @@ var HelperModule = (function(){
       alertType = ' alert-warning ';
       glyphSign = ' glyphicon-exclamation-sign ';
     }
-    var htmlSnippet = '<div class="alert alert' + alertType +
+    var htmlSnippet = '<div id="alert-flash" class="alert alert' + alertType +
                       'alert-dismissable alert-floating">' +
                         '<div class="container">' +
-                          '<button type="button" class="close" ' +
-                          'data-dismiss="alert" aria-label="Close">' +
-                          '<span aria-hidden="true">×</span></button>' +
                             '<span class="glyphicon' + glyphSign + '"></span>&nbsp;' +
                             '<span>' + message + '</span>' +
                           '</div>' +
                         '</div>';
     $('#notifications').html(htmlSnippet);
     helpers.hideFlashMsg();
+    helpers.dismissAlert();
   }
 
   $( document ).ready(function() {
     helpers.treeLinkTruncation();
     helpers.hideFlashMsg();
+    helpers.dismissAlert();
   });
 
   return helpers;
