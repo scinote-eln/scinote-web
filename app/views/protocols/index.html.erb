@@ -23,7 +23,7 @@
           <%= t(@type == :public ? "protocols.index.public_description" : "protocols.index.private_description") %>
         </div>
         <div class="btn-group" role="group">
-          <a class="btn btn-default" <%= can_create_protocols_in_repository?(@current_team) ? "data-action=create-new" : "disabled=disabled" %> data-url="<%= create_new_modal_protocols_path(team: @current_team, type: @type) %>">
+          <a class="btn btn-primary" <%= can_create_protocols_in_repository?(@current_team) ? "data-action=create-new" : "disabled=disabled" %> data-url="<%= create_new_modal_protocols_path(team: @current_team, type: @type) %>">
             <span class="glyphicon glyphicon-plus"></span>
             <span class="hidden-xs">&nbsp;<%= t("protocols.index.create_new") %></span>
           </a>
@@ -41,7 +41,7 @@
               <span class="hidden-xs">&nbsp;<%= t("protocols.index.make_private") %></span>
             </a>
           <% elsif @type == :private %>
-            <a class="btn btn-primary" data-action="publish" data-url="<%= publish_protocols_path %>">
+            <a class="btn btn-default" data-action="publish" data-url="<%= publish_protocols_path %>">
               <span class="glyphicon glyphicon-open"></span>
               <span class="hidden-xs">&nbsp;<%= t("protocols.index.publish") %></span>
             </a>
@@ -49,7 +49,7 @@
         </div>
         <div id="import-export-protocols" class="btn-group" role="group">
         <a class="btn btn-default btn-open-file" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="#">
-          <span class="glyphicon glyphicon-import"></span><span class="hidden-xs">&nbsp;<%= "Import protocol" %></span></a>
+          <span class="glyphicon glyphicon-import"></span><span class="hidden-xs">&nbsp;<%= t("protocols.index.import") %></span></a>
 
           <ul class="dropdown-menu">
             <li>
@@ -78,7 +78,7 @@
 
         <div class="btn-group" role="group">
           <a class="btn btn-default" data-action="archive" data-url="<%= archive_protocols_path %>">
-            <span class="glyphicon glyphicon-trash"></span>
+            <span class="glyphicon glyphicon-briefcase"></span>
             <span class="hidden-xs">&nbsp;<%= t("protocols.index.archive_action") %></span>
           </a>
         </div>

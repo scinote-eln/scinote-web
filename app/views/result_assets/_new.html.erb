@@ -9,14 +9,16 @@
       </label>
   </div>
   <br />
-    <button type="button"
-            class="btn btn-primary save-result"
-            disabled="true"
-            data-href="<%= my_module_result_assets_path(format: :json) %>"
-            onClick="DragNDropResults.processResult(this)"><%=t 'result_assets.new.create' %></button>
+  <div class="align-right">
     <button type="button"
             class="btn btn-default cancel-new"
             onClick="DragNDropResults.destroyAll()">
       <%= t("general.cancel")%>
     </button>
+    <button type="button"
+            class="btn btn-success save-result"
+            disabled="true"
+            data-href="<%= my_module_result_assets_path(format: :json) %>"
+            onClick="DragNDropResults.processResult(this)"><%=t 'result_assets.new.create' %></button>
+  </div>
 </div>

@@ -9,10 +9,10 @@
         <%= t("repositories.modal_delete_record.notice") %>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="onClickDeleteRecord();">
+        <button type="button" class="btn btn-default" data-dismiss="modal"><%= t("general.cancel")%></button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="onClickDeleteRecord();">
           <%= t("repositories.modal_delete_record.delete") %>
         </button>
-        <button type="button" class="btn btn-default" data-dismiss="modal"><%= t("general.cancel")%></button>
       </div>
     </div>
   </div>

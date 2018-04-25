@@ -35,12 +35,14 @@
                 data-edit-url="<%= edit_repository_repository_column_path(@repository, column) %>">
               <span class="pull-left"><%= column.name %></span>
               <span class="controlls pull-right">
-                <span class="glyphicon glyphicon-trash"
-                      aria-hidden="true"
-                      data-action="destroy"></span>&nbsp;
-                      <button class="btn btn-primary" data-action="edit">
-                      <%=t 'libraries.repository_columns.index.edit_column'%>
-                    </button>
+                <button class="btn btn-default" data-action="edit">
+                  <span class="glyphicon glyphicon-pencil"></span>
+                  <%=t 'libraries.repository_columns.index.edit_column'%>
+                </button>
+                <button class="btn btn-default" data-action="destroy">
+                  <span class="glyphicon glyphicon-trash"></span>
+                  <%=t 'libraries.repository_columns.index.delete_column'%>
+                </button>
               </span>
             </li>
           <% end %>

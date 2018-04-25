@@ -4,9 +4,11 @@
     <hr>
     <%= render partial: "empty_step.html.erb", locals: {step: @step, f: f} %>
     <hr>
-    <%= f.submit t("protocols.steps.new.add_step"), class: 'btn btn-primary step-save', onclick: "processStep(event, false);" %>
-    <button type="button" data-action="cancel-new" class="btn btn-default">
-      <%= t("general.cancel")%>
-    </button>
+    <div class="align-right">
+      <button type="button" data-action="cancel-new" class="btn btn-default">
+        <%= t("general.cancel")%>
+      </button>
+      <%= f.submit t("protocols.steps.new.add_step"), class: 'btn btn-success step-save', onclick: "processStep(event, false);" %>
+    </div>
   <% end %>
 </div>

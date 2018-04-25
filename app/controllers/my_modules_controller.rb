@@ -21,7 +21,6 @@ class MyModulesController < ApplicationController
                                                   samples repository archive)
   before_action :check_manage_permissions,
                 only: %i(update destroy description due_date)
-  before_action :check_view_info_permissions, only: :show
   before_action :check_view_permissions, only:
     %i(show activities activities_tab protocols results samples samples_index
        archive)
