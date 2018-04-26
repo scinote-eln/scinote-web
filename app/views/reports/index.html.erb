@@ -1,64 +1,53 @@
-<% provide(:head_title, t("projects.reports.index.head_title", project: h(@project.name)).html_safe) %>
-<%= render partial: "shared/sidebar" %>
-<%= render partial: "shared/secondary_navigation" %>
+<% provide(:head_title, t('projects.reports.index.head_title').html_safe) %>
+<%= stylesheet_link_tag 'datatables' %>
 
-<div id="content">
-  <div>
-    <% if can_manage_reports?(@project) %>
-      <%= link_to new_project_reports_path(@project), class: 'btn btn-primary', id: 'new-report-btn', 'data-no-turbolink' => true do %>
-        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-        <span class="hidden-xs"><%=t "projects.reports.index.new" %></span>
-      <% end %>
-      <%= link_to "", remote: true, class: "btn btn-default", id: "edit-report-btn" do %>
-        <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
-        <span class="hidden-xs"><%=t "projects.reports.index.edit" %></span>
-      <% end %>
-      <%= link_to "", remote: true, class: "btn btn-default", id: "delete-reports-btn" do %>
-        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-        <span class="hidden-xs"><%=t "projects.reports.index.delete" %></span>
-      <% end %>
-    <% end %>
-  </div>
-
-  <table class="table report-table" data-project-id="<%= @project.id %>">
-    <thead>
-      <tr>
-        <th><input type="checkbox" class="check-all-reports"></th>
-        <th><%=t "projects.reports.index.thead_name" %></th>
-        <th><%=t "projects.reports.index.thead_created_by" %></th>
-        <th><%=t "projects.reports.index.thead_last_modified_by" %></th>
-        <th><%=t "projects.reports.index.thead_created_at" %></th>
-        <th><%=t "projects.reports.index.thead_updated_at" %></th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      <% if @project.reports.count > 0 %>
-        <% @project.reports.each do |report| %>
-          <tr
-            class="report-row"
-            data-id="<%= report.id %>"
-            data-edit-link="<%= edit_project_report_path(@project, report) %>"
-            >
-            <th><input type="checkbox" class="check-report"></th>
-            <td><%= report.name %></td>
-            <td><%= report.user.full_name %></td>
-            <td><%= report.last_modified_by ? report.last_modified_by.full_name : report.user.full_name %></td>
-            <td><%=l report.created_at, format: :full %></td>
-            <td><%=l report.updated_at, format: :full %></td>
-          </tr>
+<div id="content-reports-index">
+  <div class="row">
+    <div class="col-md-12">
+      <% if can_manage_reports?(current_team) %>
+        <%= link_to '#', class: 'btn btn-primary', id: 'new-report-btn', 'data-no-turbolink' => true do %>
+          <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+          <span class="hidden-xs"><%=t "projects.reports.index.new" %></span>
         <% end %>
-      <% else %>
-        <tr><td colspan="5"><%=t "projects.reports.index.no_reports" %></td></tr>
+        <%= link_to "", remote: true, class: "btn btn-default", id: "edit-report-btn" do %>
+          <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+          <span class="hidden-xs"><%=t "projects.reports.index.edit" %></span>
+        <% end %>
+        <%= link_to "", remote: true, class: "btn btn-default", id: "delete-reports-btn" do %>
+          <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+          <span class="hidden-xs"><%=t "projects.reports.index.delete" %></span>
+        <% end %>
       <% end %>
-    </tbody>
-  </table>
-
+    </div>
+  </div>
+  <br />
+  <div class="row">
+    <div class="col-md-12">
+      <div class="reports-datatable">
+        <table id="reports-table"
+               class="table"
+               data-source="<%= reports_datatable_path(format: :json) %>">
+          <thead>
+            <tr>
+              <th id="select-all"><input name="select_all" type="checkbox"></th>
+              <th id="project-name"><%=t 'projects.reports.index.thead_project_name' %></th>
+              <th id="report-name"><%=t 'projects.reports.index.thead_name' %></th>
+              <th id="report-created-by"><%=t 'projects.reports.index.thead_created_by' %></th>
+              <th id="report-last-modified-by"><%=t 'projects.reports.index.thead_last_modified_by' %></th>
+              <th id="report-created-at"><%=t 'projects.reports.index.thead_created_at' %></th>
+              <th id="report-updated-at"><%=t 'projects.reports.index.thead_updated_at' %></th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- Save report modal -->
 <div class="modal" id="delete-reports-modal" tabindex="-1" role="dialog" aria-labelledby="delete-reports-modal-label">
-  <%= bootstrap_form_tag url: destroy_project_reports_path, method: :post, id: "delete-reports-form" do |f| %>
+  <%= bootstrap_form_tag url: reports_destroy_path, method: :post, id: "delete-reports-form" do |f| %>
     <input type="hidden" name="report_ids" id="report-ids">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
@@ -79,4 +68,39 @@
 </div>
 
 
-<%= javascript_include_tag("reports/index") %>
+<div class="modal" id="new-report-modal" tabindex="-1" role="dialog" aria-labelledby="delete-reports-modal-label">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="new-report-modal-label"><%=t "projects.reports.index.modal_new.head_title" %></h4>
+      </div>
+      <div class="modal-body">
+        <p><%=t "projects.reports.index.modal_new.message" %></p>
+
+        <div class="form-group">
+          <label><%=t "projects.reports.index.modal_new.projects" %></label>
+          <% if @visible_projects&.length > 0 %>
+            <select class="form-control selectpicker" data-abs-min-length="2" data-live-search="true">
+              <% @visible_projects.each do |project| %>
+                <option value="<%= project.path %>"><%= project.name %></option>
+              <% end %>
+            </select>
+          <% else %>
+            <p><%=t 'projects.reports.index.modal_new.no_projects' %></p>
+          <% end %>
+        </end>
+      </div>
+      <div class="modal-footer">
+        <button id="new-report-reports-btn"
+                class="btn btn-primary"
+                data-new-report-path="<%= @visible_projects.first.path if @visible_projects.first %>"
+                <%= 'disabled' unless @visible_projects&.length > 0 %>
+                ><%=t 'projects.reports.index.modal_new.create' %></button>
+        <button type="button" class="btn btn-default" data-dismiss="modal"><%=t "general.cancel" %></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%= javascript_include_tag("reports/reports_datatable") %>

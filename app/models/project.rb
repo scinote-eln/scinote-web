@@ -38,6 +38,16 @@ class Project < ApplicationRecord
   has_many :reports, inverse_of: :project, dependent: :destroy
   has_many :report_elements, inverse_of: :project, dependent: :destroy
 
+  after_commit do
+    Views::Datatables::DatatablesReport.refresh_materialized_view
+  end
+
+  scope :visible_by, -> (user) {
+    joins(:user_projects).where(
+      'user_projects.user_id = ? AND projects.archived = false', user.id
+    )
+  }
+
   def self.search(
     user,
     include_archived,

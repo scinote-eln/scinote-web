@@ -61,6 +61,16 @@ Canaid::Permissions.register_for(Team) do
   can :create_repository_columns do |user, team|
     user.is_normal_user_or_admin_of_team?(team)
   end
+
+  # this permission is scattered around the application
+  # if you want to make changes here keep in mind to check/change the
+  # SQL view that lists reports in index page:
+  #   - db/views/datatables_reports_v01.sql
+  #   - check the model app/models/views/datatables/datatables_report.rb
+  #   - check visible_by method in Project model
+  can :manage_reports do |user, team|
+    user.is_normal_user_or_admin_of_team?(team)
+  end
 end
 
 Canaid::Permissions.register_for(Protocol) do
@@ -111,13 +121,6 @@ Canaid::Permissions.register_for(Repository) do
   # repository: update, delete
   can :manage_repository do |user, repository|
     user.is_admin_of_team?(repository.team)
-  end
-end
-
-Canaid::Permissions.register_for(RepositoryRow) do
-  # repository: update/delete record
-  can :manage_repository_row do |user, repository_row|
-    can_create_repository_rows?(user, repository_row.repository.team)
   end
 end
 

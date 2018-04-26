@@ -677,6 +677,11 @@ class MyModulesController < ApplicationController
                       can_assign_repository_rows_to_module?(@my_module)
   end
 
+  def check_assign_samples_permissions
+    render_403 unless module_page? &&
+                      can_assign_sample_to_module?(@my_module)
+  end
+
   def check_complete_module_permission
     render_403 unless can_complete_module?(@my_module)
   end

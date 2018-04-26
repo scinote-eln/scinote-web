@@ -56,7 +56,7 @@ module ReportsHelper
   end
 
   # "Hack" to omit file preview URL because of WKHTML issues
-  def report_image_asset_url(asset)
+  def report_image_asset_url(asset, type = :asset, klass = nil)
     prefix = ''
     if ENV['PAPERCLIP_STORAGE'].present? &&
        ENV['MAIL_SERVER_URL'].present? &&
@@ -68,8 +68,9 @@ module ReportsHelper
        !prefix.include?('https://')
       prefix = "http://#{prefix}"
     end
-    url = prefix + asset.url(:medium, timeout: Constants::URL_LONG_EXPIRE_TIME)
-    image_tag(url)
+    size = type == :tiny_mce_asset ? :large : :medium
+    url = prefix + asset.url(size, timeout: Constants::URL_LONG_EXPIRE_TIME)
+    image_tag(url, class: klass)
   end
 
   # "Hack" to load Glyphicons css directly from the CDN

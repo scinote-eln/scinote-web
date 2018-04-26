@@ -169,7 +169,7 @@ Rails.application.routes.draw do
         get 'destroy_html'
       end
       member do
-        post 'parse_sheet'
+        post 'parse_sheet', defaults: { format: 'json' }
         post 'import_samples'
         post 'export_samples'
         post 'export_repository', to: 'repositories#export_repository'
@@ -189,6 +189,12 @@ Rails.application.routes.draw do
 
     get 'projects/archive', to: 'projects#archive', as: 'projects_archive'
 
+    resources :reports, only: :index
+    get 'reports/datatable', to: 'reports#datatable'
+    post 'reports/visible_projects', to: 'reports#visible_projects',
+                                     defaults: { format: 'json' }
+    post 'reports/destroy', to: 'reports#destroy'
+
     resources :projects, except: [:new, :destroy] do
       resources :user_projects, path: '/users',
                 only: [:create, :index, :update, :destroy]
@@ -201,7 +207,7 @@ Rails.application.routes.draw do
       resources :tags, only: [:create, :update, :destroy]
       resources :reports,
                 path: '/reports',
-                only: [:index, :new, :create, :edit, :update] do
+                only: %i(edit update create) do
         collection do
           # The posts following here should in theory be gets,
           # but are posts because of parameters payload
@@ -240,7 +246,6 @@ Rails.application.routes.draw do
           post '_save',
                to: 'reports#save_modal',
                as: :save_modal
-          post 'destroy', as: :destroy # Destroy multiple entries at once
         end
       end
       resources :experiments,
@@ -481,7 +486,7 @@ Rails.application.routes.draw do
       resources :repository_columns, only: %i(index create edit update destroy)
       resources :repository_rows, only: %i(create edit update)
       member do
-        post 'parse_sheet'
+        post 'parse_sheet', defaults: { format: 'json' }
         post 'import_records'
       end
     end

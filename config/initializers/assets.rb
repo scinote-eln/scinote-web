@@ -48,7 +48,6 @@ Rails.application.config.assets.precompile += %w(samples/samples_importer.js)
 Rails.application.config.assets.precompile += %w(projects/canvas.js)
 Rails.application.config.assets.precompile +=
   %w(experiments/dropdown_actions.js)
-Rails.application.config.assets.precompile += %w(reports/index.js)
 Rails.application.config.assets.precompile += %w(reports/new.js)
 Rails.application.config.assets.precompile += %w(protocols/index.js)
 Rails.application.config.assets.precompile += %w(protocols/header.js)
@@ -87,6 +86,7 @@ Rails.application.config.assets.precompile += %w(activities/index.js)
 Rails.application.config.assets.precompile += %w(repository_columns/index.js)
 Rails.application.config.assets.precompile += %w(repositories/show.js)
 Rails.application.config.assets.precompile += %w(sidebar_toggle.js)
+Rails.application.config.assets.precompile += %w(reports/reports_datatable.js)
 
 # Libraries needed for Handsontable formulas
 Rails.application.config.assets.precompile += %w(lodash.js)

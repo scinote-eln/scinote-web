@@ -42,11 +42,6 @@
     <ul class="nav nav-tabs nav-tabs-less" role="tablist">
       <% if can_read_experiment?(my_module.experiment) %>
         <li role="presentation">
-          <a class="btn btn-link task-card-view-info" href="<%= my_module_url(id: my_module.id, format: :json) %>" aria-controls="<%= my_module.id %>_info" role="tab" data-remote="true">
-            <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
-          </a>
-        </li>
-        <li role="presentation">
           <a class="btn btn-link task-card-view-users" href="<%= my_module_user_my_modules_url(my_module_id: my_module.id, format: :json) %>" aria-controls="<%= my_module.id %>_users" role="tab" data-remote="true">
             <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
             <span class="badge badge-indicator users-badge-indicator <%= 'hidden' unless my_module.users.count.positive? %>"
