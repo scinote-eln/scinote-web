@@ -1829,7 +1829,7 @@ en:
     from_clipboard:
       modal_title: 'Add image from clipboard'
       image_preview: 'Image preview'
-      add_image: 'Add image'
+      add_image: 'Add'
       file_name: 'File name'
       file_name_placeholder: 'Image'
   atwho:
