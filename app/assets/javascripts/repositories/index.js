@@ -6,7 +6,7 @@
     animateSpinner();
     location.reload();
   }
-  
+
   $(document).ready(function() {
     $('#create-new-repository').initializeModal('#create-repo-modal');
   });

@@ -108,7 +108,7 @@
       delete_samples_submit" %>
   </button>
 
-  <% if module_page? && can_assign_repository_rows_to_module?(@my_module) %>
+  <% if module_page? && can_assign_sample_to_module?(@my_module) %>
     <button type="button" class="btn btn-default"
       id="assignSamples" onclick="$(this).next().click();" disabled>
       <span class="glyphicon glyphicon-ok-circle"></span>

@@ -27,8 +27,9 @@ class MyModulesController < ApplicationController
        archive)
   before_action :check_complete_module_permission, only: :complete_my_module
   before_action :check_assign_repository_records_permissions, only:
-    %i(assign_repository_records unassign_repository_records assign_samples
-       unassign_samples)
+    %i(assign_repository_records unassign_repository_records)
+  before_action :check_assign_samples_permissions, only: %i(assign_samples
+                                                            unassign_samples)
 
   layout 'fluid'.freeze
 
@@ -623,6 +624,11 @@ class MyModulesController < ApplicationController
   def check_assign_repository_records_permissions
     render_403 unless module_page? &&
                       can_assign_repository_rows_to_module?(@my_module)
+  end
+
+  def check_assign_samples_permissions
+    render_403 unless module_page? &&
+                      can_assign_sample_to_module?(@my_module)
   end
 
   def check_complete_module_permission

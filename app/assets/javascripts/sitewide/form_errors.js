@@ -33,7 +33,12 @@ var renderFormError = function(ev, input, errMsgs, clearErr, errAttributes) {
 
     // Add error message/s
     var errorText = ($.makeArray(errMsgs).map(function(m) {
-      return m.strToErrorFormat();
+      if( m instanceof Array ) {
+        return m.join(', ').strToErrorFormat();
+      } else {
+        return m.strToErrorFormat();
+      }
+
     })).join('<br />');
     var $errSpan = "<span class='help-block'" +
       errAttributes + '>' + errorText + '</span>';
