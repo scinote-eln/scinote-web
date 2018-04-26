@@ -47,7 +47,6 @@ var RepositoryDatatable = (function(global) {
     originalHeader = $(TABLE_ID + ' thead').children().clone();
     viewAssigned = 'assigned';
     TABLE = $(TABLE_ID).DataTable({
-      order: [[3, 'desc']],
       dom: "R<'row'<'col-sm-9-custom toolbar'l><'col-sm-3-custom'f>>tpi",
       stateSave: true,
       processing: true,
@@ -70,6 +69,7 @@ var RepositoryDatatable = (function(global) {
         type: 'POST'
       },
       columnDefs: [{
+        // Checkbox column needs special handling
         targets: 0,
         searchable: false,
         orderable: false,
@@ -79,22 +79,19 @@ var RepositoryDatatable = (function(global) {
           return "<input class='repository-row-selector' type='checkbox'>";
         }
       }, {
+        // Assigned column is not searchable
         targets: 1,
         searchable: false,
         orderable: true,
         sWidth: '1%'
       }, {
-        targets: 2,
-        searchable: true,
-        orderable: true,
-        sWidth: '1%'
-      }, {
-       targets: 3,
-       render: function(data, type, row) {
-         return "<a href='" + row.recordInfoUrl + "'" +
-                "class='record-info-link'>" + data + '</a>';
-       }
-     }],
+        // Name column is clickable
+        targets: 3,
+        render: function(data, type, row) {
+          return "<a href='" + row.recordInfoUrl + "'" +
+                 "class='record-info-link'>" + data + '</a>';
+        }
+      }],
       rowCallback: function(row, data) {
         // Get row ID
         var rowId = data.DT_RowId;
@@ -104,18 +101,19 @@ var RepositoryDatatable = (function(global) {
           $(row).addClass('selected');
         }
       },
+      <% # Next 2 options are provided by server-side default state
+         # (and get overriden once state load from server kicks in) %>
+      order: <%= default_table_order_as_js_array %>,
       columns: (function() {
         var numOfColumns = $(TABLE_ID).data('num-columns');
-        var columns = [];
+        var columns = <%= default_table_columns %>;
         for (var i = 0; i < numOfColumns; i++) {
-          var visible = (i <= 4);
-          var searchable = (i > 0 && i <= 4);
-          columns.push({
-            data: String(i),
-            defaultContent: '',
-            visible: visible,
-            searchable: searchable
-          });
+          if (columns[i] == undefined) {
+            // This should only occur for custom columns
+            columns[i] = { visible: true, searchable: true };
+          }
+          columns[i].data = String(i);
+          columns[i].defaultContent = '';
         }
         return columns;
       })(),
@@ -134,7 +132,6 @@ var RepositoryDatatable = (function(global) {
                                  rowsSelected.length +
                                  ' entries selected)');
         initRowSelection();
-        initHeaderTooltip();
       },
       preDrawCallback: function() {
         animateSpinner(this);
@@ -153,6 +150,12 @@ var RepositoryDatatable = (function(global) {
           type: 'POST',
           success: function(json) {
             myData = json.state;
+
+            // Fix the order - convert it from index-keyed JS object that
+            // is returned from the server state into true JS array;
+            // e.g. {0: [2, 'asc'], 1: [3, 'desc']}
+            // is converted into [[2, 'asc'], [3, 'desc']]
+            myData.order = _.toArray(myData.order);
           }
         });
         return myData;
@@ -171,16 +174,16 @@ var RepositoryDatatable = (function(global) {
           type: 'POST'
         });
         loadFirstTime = false;
-        initHeaderTooltip();
       },
       fnInitComplete: function(oSettings) {
-        // Reload correct column order and visibility (if you refresh page)
         // First two columns are fixed
         TABLE.column(0).visible(true);
         TABLE.column(1).visible(true);
+
+        // Reload correct column order and visibility (if you refresh page)
         for (var i = 2; i < TABLE.columns()[0].length; i++) {
           var visibility = false;
-          if (myData.columns[i]) {
+          if (myData.columns && myData.columns[i]) {
             visibility = myData.columns[i].visible;
           }
           if (typeof (visibility) === 'string') {
@@ -189,6 +192,13 @@ var RepositoryDatatable = (function(global) {
           TABLE.column(i).visible(visibility);
           TABLE.setColumnSearchable(i, visibility);
         }
+
+        // Re-order table as per loaded state
+        if (myData.order) {
+          TABLE.order(myData.order);
+          TABLE.draw();
+        }
+
         // Datatables triggers this action about 3 times
         // sometimes on the first iteration the oSettings._colReorder is null
         // and the fnOrder rises an error that breaks the table
@@ -197,10 +207,6 @@ var RepositoryDatatable = (function(global) {
         if( oSettings._colReorder ) {
           oSettings._colReorder.fnOrder(myData.ColReorder);
         }
-        TABLE.on('mousedown', function() {
-          $('#repository-columns-dropdown').removeClass('open');
-        });
-        initHeaderTooltip();
         initRowSelection();
         bindExportActions();
         disableCheckboxToggleOnAssetDownload();
@@ -383,44 +389,6 @@ var RepositoryDatatable = (function(global) {
         chkboxSelectAll.indeterminate = true;
       }
     }
-  }
-
-  function initHeaderTooltip() {
-    // Fix compatibility of fixed table header and column names modal-tooltip
-    $('.modal-tooltip').off();
-    $('.modal-tooltip').hover(function() {
-      var $tooltip = $(this).find('.modal-tooltiptext');
-      var offsetLeft = $tooltip.offset().left;
-      if ((offsetLeft + 200) > $(window).width()) {
-        offsetLeft -= 150;
-      }
-      var offsetTop = $tooltip.offset().top;
-      var width = 200;
-
-      // set tooltip params in the table body
-      if ($(this).parents(TABLE_ID).length) {
-        offsetLeft = $(TABLE_ID).offset().left + 100;
-        width = $(TABLE_ID).width() - 200;
-      }
-      $('body').append($tooltip);
-      $tooltip.css('background-color', '#d2d2d2');
-      $tooltip.css('border-radius', '6px');
-      $tooltip.css('color', '#333');
-      $tooltip.css('display', 'block');
-      $tooltip.css('left', offsetLeft + 'px');
-      $tooltip.css('padding', '5px');
-      $tooltip.css('position', 'absolute');
-      $tooltip.css('text-align', 'center');
-      $tooltip.css('top', offsetTop + 'px');
-      $tooltip.css('visibility', 'visible');
-      $tooltip.css('width', width + 'px');
-      $tooltip.css('word-wrap', 'break-word');
-      $tooltip.css('z-index', '4');
-      $(this).data('dropdown-tooltip', $tooltip);
-    }, function() {
-      $(this).append($(this).data('dropdown-tooltip'));
-      $(this).data('dropdown-tooltip').removeAttr('style');
-    });
   }
 
   global.onClickAddRecord = function() {
@@ -1061,7 +1029,6 @@ var RepositoryDatatable = (function(global) {
     currentMode = 'editMode';
     // Table specific stuff
     TABLE.button(0).enable(false);
-    initHeaderTooltip();
   }
 
   /*
@@ -1147,7 +1114,6 @@ var RepositoryDatatable = (function(global) {
         li.removeClass('col-invisible');
         column.visible(true);
         TABLE.setColumnSearchable(column.index(), true);
-        initHeaderTooltip();
       }
 
       // Re-filter/search if neccesary

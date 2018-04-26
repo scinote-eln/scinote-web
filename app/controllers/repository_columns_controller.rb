@@ -110,8 +110,7 @@ class RepositoryColumnsController < ApplicationController
       format.json do
         render json: {
           html: render_to_string(
-            partial: 'repository_columns/delete_column_modal_body.html.erb',
-            locals: { column_index: params[:column_index] }
+            partial: 'repository_columns/delete_column_modal_body.html.erb'
           )
         }
       end
@@ -119,19 +118,14 @@ class RepositoryColumnsController < ApplicationController
   end
 
   def destroy
-    @del_repository_column = @repository_column.dup
     column_id = @repository_column.id
+    column_name = @repository_column.name
     respond_to do |format|
       format.json do
         if @repository_column.destroy
-          RepositoryTableState.update_state(
-            @del_repository_column,
-            params[:repository_column][:column_index],
-            current_user
-          )
           render json: {
             message: t('libraries.repository_columns.destroy.success_flash',
-                       name: @del_repository_column.name),
+                       name: column_name),
             id: column_id,
             status: :ok
           }
