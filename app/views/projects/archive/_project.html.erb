@@ -1,20 +1,28 @@
 <div class="panel panel-default panel-project panel-archive">
   <div class="panel-heading">
-
-    <div class="dropdown pull-right">
-      <button class="btn btn-link dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-        <span class="caret"></span>
-      </button>
-      <% project_form = nil %>
-      <%= form_for project, method: :patch, format: :html do |f| %>
-        <% project_form = f %>
-        <%= f.hidden_field :archived, value: false %>
-      <% end %>
-      <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1">
-        <li class="dropdown-header"><%= t('projects.index.options_header') %></li>
-        <li><a href="#" class="form-submit-link" data-submit-form="<%= project_form.options[:html][:id] %>"><%= t 'projects.index.restore_option' %></a></li>
-      </ul>
-    </div>
+    <% if can_restore_project?(project) %>
+      <div class="dropdown pull-right">
+        <button class="btn btn-link dropdown-toggle"
+                type="button"
+                id="dropdownMenu1"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="true">
+          <span class="caret"></span>
+        </button>
+        <% project_form = nil %>
+        <%= form_for project, method: :patch, format: :html do |f| %>
+          <% project_form = f %>
+          <%= f.hidden_field :archived, value: false %>
+        <% end %>
+        <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1">
+          <li class="dropdown-header"><%= t('projects.index.options_header') %></li>
+          <li><a href="#"
+            class="form-submit-link"
+            data-submit-form="<%= project_form.options[:html][:id] %>"><%= t 'projects.index.restore_option' %></a></li>
+        </ul>
+      </div>
+    <% end %>
 
     <h3 class="panel-title">
       <% if project.hidden? then %>

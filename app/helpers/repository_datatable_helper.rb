@@ -65,4 +65,19 @@ module RepositoryDatatableHelper
       can_create_repositories?(team) ||
       can_manage_repository_rows?(team)
   end
+
+  # The order must be converted from Ruby Hash into a JS array -
+  # because arrays in JS are in truth regular JS objects with indexes as keys
+  def default_table_order_as_js_array
+    Constants::REPOSITORY_TABLE_DEFAULT_STATE[:order].keys.sort.map do |k|
+      Constants::REPOSITORY_TABLE_DEFAULT_STATE[:order][k]
+    end.to_s
+  end
+
+  def default_table_columns
+    Constants::REPOSITORY_TABLE_DEFAULT_STATE[:columns].keys.sort.map do |k|
+      col = Constants::REPOSITORY_TABLE_DEFAULT_STATE[:columns][k]
+      col.slice(:visible, :searchable)
+    end.to_json
+  end
 end

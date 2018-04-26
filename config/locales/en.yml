@@ -1090,7 +1090,6 @@ en:
     modal_delete:
       title: "Delete samples"
       notice: "Are you sure you want to delete the selected samples?"
-      other_samples: "Only samples created by you will be deleted."
       delete: "Delete samples"
     modal_add_custom_field:
       title_html: "Add new column to team <strong>%{team}</strong>"
