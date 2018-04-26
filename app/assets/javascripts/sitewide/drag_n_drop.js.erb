@@ -137,7 +137,7 @@
       html += 'placeholder="<%= I18n.t('assets.from_clipboard.file_name_placeholder') %>" aria-describedby="image-name">';
       html += '<span class="input-group-addon" id="image-name"></span></div>';
       html += '</div><div class="modal-footer">';
-      html += '<button type="button" class="btn btn-default" data-dismiss="modal"><%= I18n.t('general.cancel') %></button>'
+      html += '<button type="button" class="btn btn-default" data-dismiss="modal"><%= I18n.t('general.cancel') %></button>';
       html += '<button type="button" class="btn btn-success" data-action="addImageFormClipboard"><%= I18n.t('assets.from_clipboard.add_image') %></button>';
       html += '</div></div></div></div><!-- /.modal -->';
       return $(html).appendTo($('body')).promise().done(function() {

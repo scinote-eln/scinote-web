@@ -1396,7 +1396,7 @@ en:
             one: "You are member of %{count} team."
             other: "You are member of %{count} teams."
           no_teams: "You are not a member of any team."
-          new_team: "New team"
+          new_team: "New Team"
           thead_name: "Team"
           thead_role: "Role"
           thead_created_at: "Created at"
@@ -1410,7 +1410,7 @@ en:
           name_sublabel: "Pick a name that would best describe your team (e.g. 'University of ..., Department of ...')."
           description_label: "Description"
           description_sublabel: "Describe your team."
-          create: "Create team"
+          create: "Create"
         edit:
           header_created_at: "Created on:"
           header_created_by: "Created by:"
