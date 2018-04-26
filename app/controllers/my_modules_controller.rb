@@ -30,9 +30,13 @@ class MyModulesController < ApplicationController
     %i(show activities activities_tab protocols results samples samples_index
        archive)
   before_action :check_complete_module_permission, only: :complete_my_module
-  before_action :check_assign_repository_records_permissions, only:
-    %i(assign_repository_records unassign_repository_records assign_samples
-       unassign_samples)
+  before_action :check_assign_repository_records_permissions,
+                only: %i(unassign_repository_records_modal
+                         assign_repository_records_modal
+                         assign_repository_records
+                         unassign_repository_records
+                         assign_samples
+                         unassign_samples)
 
   layout 'fluid'.freeze
 
@@ -75,7 +79,7 @@ class MyModulesController < ApplicationController
     @last_activity_id = params[:from].to_i || 0
     @per_page = 10
 
-    @activities = @my_module.last_activities(@last_activity_id, @per_page +1 )
+    @activities = @my_module.last_activities(@last_activity_id, @per_page + 1)
     @more_activities_url = ""
 
     @overflown = @activities.length > @per_page
@@ -397,18 +401,21 @@ class MyModulesController < ApplicationController
       records_names = []
       downstream = ActiveModel::Type::Boolean.new.cast(params[:downstream])
 
-      params[:selected_rows].each do |id|
-        record = RepositoryRow.find_by_id(id)
-        next if !record || @my_module.repository_rows.include?(record)
-        record.last_modified_by = current_user
-        record.save
-        records_names << record.name
+      RepositoryRow
+        .where(id: params[:selected_rows],
+               repository_id: params[:repository_id])
+        .find_each do |record|
+        unless @my_module.repository_rows.include?(record)
+          record.last_modified_by = current_user
+          record.save
 
-        MyModuleRepositoryRow.create!(
-          my_module: @my_module,
-          repository_row: record,
-          assigned_by: current_user
-        )
+          MyModuleRepositoryRow.create!(
+            my_module: @my_module,
+            repository_row: record,
+            assigned_by: current_user
+          )
+          records_names << record.name
+        end
 
         next unless downstream
         @my_module.downstream_modules.each do |my_module|
@@ -455,24 +462,23 @@ class MyModulesController < ApplicationController
 
   def unassign_repository_records
     if params[:selected_rows].present? && params[:repository_id].present?
-      records = []
       downstream = ActiveModel::Type::Boolean.new.cast(params[:downstream])
 
-      params[:selected_rows].each do |id|
-        record = RepositoryRow.find_by_id(id)
-        next unless record && @my_module.repository_rows.include?(record)
-        record.last_modified_by = current_user
-        record.save
-        records << record
-      end
+      records = RepositoryRow.assigned_on_my_module(params[:selected_rows],
+                                                    @my_module)
 
       @my_module.repository_rows.destroy(records & @my_module.repository_rows)
 
       if downstream
         @my_module.downstream_modules.each do |my_module|
+          records = RepositoryRow.assigned_on_my_module(params[:selected_rows],
+                                                        my_module)
           my_module.repository_rows.destroy(records & my_module.repository_rows)
         end
       end
+
+      # update last last_modified_by
+      records.update_all(last_modified_by_id: current_user.id)
 
       if records.any?
         Activity.create(

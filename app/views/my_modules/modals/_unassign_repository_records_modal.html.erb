@@ -1,4 +1,4 @@
-<div id="unAssginRepositoryRecordModal"
+<div id="unassignRepositoryRecordModal"
      class="modal"
      tabindex="-1"
      role="dialog"
@@ -11,7 +11,7 @@
               class="close"
               data-dismiss="modal"
               aria-label="Close"
-              onclick="hideAssignUnasignModal('#unAssginRepositoryRecordModal')"><span aria-hidden="true">×</span></button>
+              onclick="hideAssignUnasignModal('#unassignRepositoryRecordModal')"><span aria-hidden="true">×</span></button>
       <h4 class="modal-title">
         <%=t 'my_modules.modals.assign_repository_record.unassign_title',
              repository_name: repository.name,
@@ -22,7 +22,7 @@
       <p><%=t 'my_modules.modals.assign_repository_record.unassign_message', size: selected_rows.size %></p>
     </div>
     <div class="modal-footer">
-      <a class="btn btn-default" data-dismiss="modal" onclick="hideAssignUnasignModal('#unAssginRepositoryRecordModal')">
+      <a class="btn btn-default" data-dismiss="modal" onclick="hideAssignUnasignModal('#unassignRepositoryRecordModal')">
         <%=t 'general.cancel' %>
       </a>
       <a class="btn btn-primary" onclick="submitUnassignRepositoryRecord()">

@@ -515,7 +515,7 @@ var RepositoryDatatable = (function(global) {
       .done(
       function(data) {
         $(data.html).appendTo('body').promise().done(function() {
-          $('#assginRepositoryRecordModal').modal('show');
+          $('#assignRepositoryRecordModal').modal('show');
         });
       }
     );
@@ -532,19 +532,19 @@ var RepositoryDatatable = (function(global) {
   global.submitAssignRepositoryRecord = function(option) {
     animateSpinner();
     $.ajax({
-      url: $('#assginRepositoryRecordModal').data('assign-url'),
+      url: $('#assignRepositoryRecordModal').data('assign-url'),
       type: 'POST',
       dataType: 'json',
       data: { selected_rows: rowsSelected,
               downstream: (option === 'downstream') },
       success: function(data) {
-        hideAssignUnasignModal('#assginRepositoryRecordModal');
+        hideAssignUnasignModal('#assignRepositoryRecordModal');
         HelperModule.flashAlertMsg(data.flash, 'success');
         onClickCancel();
         clearRowSelection();
       },
       error: function(data) {
-        hideAssignUnasignModal('#assginRepositoryRecordModal');
+        hideAssignUnasignModal('#assignRepositoryRecordModal');
         HelperModule.flashAlertMsg(data.responseJSON.flash, 'danger');
         onClickCancel();
         clearRowSelection();
@@ -559,7 +559,7 @@ var RepositoryDatatable = (function(global) {
       .done(
       function(data) {
         $(data.html).appendTo('body').promise().done(function() {
-          $('#unAssginRepositoryRecordModal').modal('show');
+          $('#unassignRepositoryRecordModal').modal('show');
         });
       }
     );
@@ -568,19 +568,19 @@ var RepositoryDatatable = (function(global) {
   global.submitUnassignRepositoryRecord = function(option) {
     animateSpinner();
     $.ajax({
-      url: $('#unAssginRepositoryRecordModal').data('unassign-url'),
+      url: $('#unassignRepositoryRecordModal').data('unassign-url'),
       type: 'POST',
       dataType: 'json',
       data: { selected_rows: rowsSelected,
               downstream: (option === 'downstream') },
       success: function(data) {
-        hideAssignUnasignModal('#unAssginRepositoryRecordModal');
+        hideAssignUnasignModal('#unassignRepositoryRecordModal');
         HelperModule.flashAlertMsg(data.flash, 'success');
         onClickCancel();
         clearRowSelection();
       },
       error: function(data) {
-        hideAssignUnasignModal('#unAssginRepositoryRecordModal');
+        hideAssignUnasignModal('#unassignRepositoryRecordModal');
         HelperModule.flashAlertMsg(data.responseJSON.flash, 'danger');
         onClickCancel();
         clearRowSelection();
