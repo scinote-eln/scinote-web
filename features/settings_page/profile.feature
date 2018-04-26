@@ -23,7 +23,7 @@ Scenario: Unsuccessful avatar image upload, file is too big
   Given I'm on the profile page
   Then I click on image within ".avatar-container" element
   And I attach a "Moon.png" file to "user_avatar" field
-  And I click "Upload" button
+  And I click on "Upload"
   And I should see "Your avatar file cannot be larger than 0.2 MB. (Please try again with a smaller file.)" error message
 
 @javascript
@@ -31,7 +31,7 @@ Scenario: Unsuccessful avatar image upload, file is invalid
   Given I'm on the profile page
   Then I click on image within ".avatar-container" element
   And I attach a "File.txt" file to "user_avatar" field
-  And I click "Upload" button
+  And I click on "Upload"
   And I should see "Avatar content type is invalid" error message
 
 @javascript
