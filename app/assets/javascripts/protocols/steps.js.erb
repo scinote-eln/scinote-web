@@ -595,6 +595,7 @@
           animateSpinner(null, false);
           setupAssetsLoading();
           DragNDropSteps.clearFiles();
+          initPreviewModal();
         },
         error: function(xhr) {
           if (xhr.responseJSON['assets.file']) {

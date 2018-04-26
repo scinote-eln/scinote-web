@@ -51,7 +51,7 @@ class AssetsController < ApplicationController
                                Constants::FILENAME_TRUNCATION_LENGTH),
       'download-url' => download_asset_path(@asset)
     }
-    
+
     if @asset.is_image?
       response_json.merge!(
         'processing'        => @asset.file.processing?,
@@ -59,9 +59,12 @@ class AssetsController < ApplicationController
         'processing-url'    => image_tag('medium/processing.gif')
       )
     else
-      response_json['preview-icon'] = render_to_string(
-        partial: 'shared/file_preview_icon.html.erb',
-        locals: { asset: @asset }
+      response_json.merge!(
+        'processing'   => @asset.file.processing?,
+        'preview-icon' => render_to_string(
+          partial: 'shared/file_preview_icon.html.erb',
+          locals: { asset: @asset }
+        )    
       )
     end
 

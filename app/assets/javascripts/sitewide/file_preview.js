@@ -35,7 +35,6 @@
           if(data['processing']) {
             $(data['processing-url'])
               .appendTo(modal.find('.file-preview-container'));
-              checkFileReady(url, modal);
           } else {
             modal.find('.file-preview-container')
                  .append($('<img>')
@@ -48,6 +47,9 @@
           }
         } else {
           modal.find('.file-preview-container').html(data['preview-icon']);
+        }
+        if(data['processing']) {
+          checkFileReady(url, modal);
         }
         modal.find('.file-name').text(name);
         modal.find('.modal-body').click(function() {
@@ -64,28 +66,31 @@
 
   function checkFileReady(url, modal) {
     $.get(url, function(data) {
+      console.log(data);
       if(data['processing']) {
         $('.file-download-link').addClass('disabled');
         setTimeout(function() {
           checkFileReady(url, modal);
         }, 10000);
       } else {
+        if(data['type'] === 'image') {
+          modal.find('.file-preview-container').empty();
+          modal.find('.file-preview-container')
+               .append($('<img>')
+                 .attr('src', data['large-preview-url'])
+                 .attr('alt', data['filename'])
+                 .click(function(ev) {
+                   ev.stopPropagation();
+                 })
+               );
+           modal.find('.file-name').text(data['filename']);
+           modal.find('.modal-body').click(function() {
+             modal.modal('hide');
+           });
+           modal.modal();
+           $('.modal-backdrop').last().css('z-index', modal.css('z-index') - 1);
+        }
         $('.file-download-link').removeClass('disabled');
-        modal.find('.file-preview-container').empty();
-        modal.find('.file-preview-container')
-             .append($('<img>')
-               .attr('src', data['large-preview-url'])
-               .attr('alt', data['filename'])
-               .click(function(ev) {
-                 ev.stopPropagation();
-               })
-             );
-         modal.find('.file-name').text(data['filename']);
-         modal.find('.modal-body').click(function() {
-           modal.modal('hide');
-         });
-         modal.modal();
-         $('.modal-backdrop').last().css('z-index', modal.css('z-index') - 1);
       }
     })
   }
