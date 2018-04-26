@@ -30,7 +30,7 @@
     <div class="row">
       <div class="col-xs-12 ql-editor">
         <% if strip_tags(step.description).present? %>
-          <%= custom_auto_link(generate_image_tag_from_token(step.description, step),
+          <%= custom_auto_link(generate_image_tag_from_token(step.description, step, true),
                                simple_format: false,
                                tags: %w(img)) %>
         <% else %>
