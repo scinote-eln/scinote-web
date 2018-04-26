@@ -6,7 +6,6 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception, prepend: true
   before_action :authenticate_user!
-  before_action :check_max_session_time
   helper_method :current_team
   before_action :update_current_team, if: :user_signed_in?
   around_action :set_time_zone, if: :current_user
@@ -65,13 +64,6 @@ class ApplicationController < ActionController::Base
   end
 
   private
-
-  def check_max_session_time
-    if current_user && current_user.current_sign_in_at + 7.days < Time.now
-      sign_out current_user
-      redirect_to new_user_session_path
-    end
-  end
 
   def update_current_team
     if current_user.current_team_id.blank? &&
