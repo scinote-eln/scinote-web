@@ -5,7 +5,7 @@ class RepositoriesController < ApplicationController
     %i(repository_table_index export_repository parse_sheet import_records)
   before_action :check_team, only: %i(parse_sheet import_records)
   before_action :check_view_all_permissions, only: :index
-  before_action :check_view_permissions, only: :export_repository
+  before_action :check_view_permissions, only: %i(export_repository show)
   before_action :check_manage_permissions, only:
     %i(destroy destroy_modal rename_modal update)
   before_action :check_create_permissions, only:
