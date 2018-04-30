@@ -67,7 +67,7 @@ Rails.application.routes.draw do
     get 'not_found', to: 'application#not_found', as: 'not_found'
 
     # Settings
-    resources :users, only: :index # needed for testing signup
+    resources :users #, only: :index # needed for testing signup
     # needed for testing edit passowrd
     get '/users/password', to: 'devise_password#edit'
 
@@ -523,9 +523,9 @@ Rails.application.routes.draw do
       post 'avatar_signature' => 'users/registrations#signature'
       get 'users/auth_token_sign_in' => 'users/sessions#auth_token_create'
 	  # These weren't present in previous EPA versions of sciNote
-      #get 'users/sign_up_provider' => 'users/registrations#new_with_provider'
-      #post 'users/complete_sign_up_provider' =>
-      #     'users/registrations#create_with_provider'
+      get 'users/sign_up_provider' => 'users/registrations#new_with_provider'
+      post 'users/complete_sign_up_provider' =>
+           'users/registrations#create_with_provider'
     end
 
     namespace :api, defaults: { format: 'json' } do

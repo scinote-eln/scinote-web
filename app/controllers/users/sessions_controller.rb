@@ -16,7 +16,7 @@ class Users::SessionsController < Devise::SessionsController
   #   super
   # end
 
-  # Singing in with authentication token (needed when signing in automatically
+  # Signing in with authentication token (needed when signing in automatically
   # from another website). NOTE: For some reason URL needs to end with '/'.
   def auth_token_create
     user = User.find_by_email(params[:user_email])
