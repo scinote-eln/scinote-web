@@ -209,7 +209,7 @@ a[data-toggle="tooltip"] {
 
 .nav-tabs-less > li.active > a {
   &,&:hover,&:focus {
-    color: $brand-default;
+    color: $brand-primary;
     background-color: transparent;
     border-color: transparent;
   }
@@ -1721,8 +1721,4 @@ th.custom-field .modal-tooltiptext {
 
 .tiny-mce-pdf-ready {
   max-width: 100%;
-}
-
-.task-card-badge.active > a {
-  color: $color-silver !important;
 }
