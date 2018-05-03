@@ -456,7 +456,7 @@ class ReportsController < ApplicationController
                                     .select(:id, :name)
     @visible_projects = projects.collect do |project|
       VisibleProject.new(new_project_reports_path(project),
-                         ellipsisize(project.name))
+                         ellipsisize(project.name, 75, 50))
     end
   end
 
