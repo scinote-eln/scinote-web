@@ -430,6 +430,7 @@ class ReportsController < ApplicationController
 
   private
 
+  include StringUtility
   VisibleProject = Struct.new(:path, :name)
 
   def load_vars
@@ -454,7 +455,8 @@ class ReportsController < ApplicationController
                                     .limit(Constants::SEARCH_LIMIT)
                                     .select(:id, :name)
     @visible_projects = projects.collect do |project|
-      VisibleProject.new(new_project_reports_path(project), project.name)
+      VisibleProject.new(new_project_reports_path(project),
+                         ellipsisize(project.name))
     end
   end
 

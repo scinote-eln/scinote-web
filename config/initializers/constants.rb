@@ -9,6 +9,10 @@ class Constants
   NAME_MAX_LENGTH = 255
   # Max characters for short text fields, after which they get truncated
   NAME_TRUNCATION_LENGTH = 25
+  # Max edge length
+  MAX_EDGE_LENGTH = 75
+  # Max character for listing projects in dropdown
+  MAX_NAME_TRUNCATION = 150
   # Max characters for short text fields, in dropdownList
   NAME_TRUNCATION_LENGTH_DROPDOWN = 20
   # Max characters for long text fields
