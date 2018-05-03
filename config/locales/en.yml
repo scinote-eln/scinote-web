@@ -895,7 +895,8 @@ en:
       no_teams:
         title: "Your dashboard is empty!"
         text: "It seems you're not a member of any team. See team management to sort it out."
-      settings: "Manage"
+      visibility: "Visibility"
+      advanced: "Advanced"
       options_dropdown:
         header: "Edit inventory"
         rename: "Rename"
