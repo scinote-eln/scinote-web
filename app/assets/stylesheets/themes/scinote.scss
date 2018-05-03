@@ -1722,3 +1722,7 @@ th.custom-field .modal-tooltiptext {
 .tiny-mce-pdf-ready {
   max-width: 100%;
 }
+
+.task-card-badge.active > a {
+  color: $color-silver !important;
+}
