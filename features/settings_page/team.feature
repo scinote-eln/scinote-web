@@ -20,7 +20,7 @@ Feature: Team settings
     Given I'm on "BioSistemika Process" team settings page
     Then I click on team title
     And I change "BioSistemika Process" with "BioSistemika Process Company" in "team-name-modal" input field
-    Then I click on "Update"
+    Then I click "Save" button
     And I should see "BioSistemika Process Company" on "#team-name" element
 
   @javascript
