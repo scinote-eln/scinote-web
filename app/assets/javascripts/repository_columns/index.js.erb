@@ -109,10 +109,12 @@
     html += 'data-edit-url="' + column.edit_url + '">';
     html += '<span class="pull-left">' + column.name + '</span>';
     html += '<span class="controlls pull-right">';
-    html += '<span class="glyphicon glyphicon-trash" aria-hidden="true" ';
-    html += 'data-action="destroy"></span>&nbsp;';
-    html += '<button class="btn btn-primary" data-action="edit">';
-    html += '<%= I18n.t "libraries.repository_columns.index.edit_column" %>';
+    html += '<button class="btn btn-default" data-action="edit">';
+    html += '<span class="glyphicon glyphicon-pencil"></span>&nbsp;';
+    html += '<%= I18n.t "libraries.repository_columns.index.edit_column" %></button>&nbsp;';
+    html += '<button class="btn btn-default" data-action="destroy">';
+    html += '<span class="glyphicon glyphicon-trash"></span>&nbsp;';
+    html += '<%= I18n.t "libraries.repository_columns.index.delete_column" %>';
     html += '</button></span></li>';
     $(html).insertBefore('.repository-columns-body ul li:first')
            .promise()

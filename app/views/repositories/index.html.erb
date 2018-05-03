@@ -11,11 +11,13 @@
     <% if can_create_repositories?(current_team) %>
       <h2><strong><%=t 'libraries.index.no_libraries.title' %><strong></h2>
       <br />
-      <%= link_to t('libraries.index.no_libraries.create_new_button'),
-                  create_modal_team_repositories_path(current_team),
-                  class: "btn btn-primary btn-lg",
-                  id: "create-new-repository",
-                  remote: true %>
+      <a class="btn btn-primary btn-lg"
+         id="create-new-repository"
+         data-remote="true"
+         href="<%= create_modal_team_repositories_path(current_team) %>">
+        <span class="glyphicon glyphicon-plus"></span>
+        <span class="hidden-xs"><%= t('libraries.index.no_libraries.create_new_button') %></span>
+      </a>
     <% else %>
       <h2><strong><%=t 'libraries.index.no_libraries.no_permission_title' %><strong></h2>
     <% end %>

@@ -17,15 +17,6 @@
     span {
       margin-top: -10px;
     }
-
-    .glyphicon-trash {
-      color: $brand-danger;
-      margin-right: 10px;
-
-      &:hover {
-        cursor: pointer;
-      }
-    }
   }
 }
 
@@ -39,7 +30,8 @@
 }
 
 .custom-alert-info {
-  background-color: $brand-info;
+  background-color: $brand-danger-light;
+  margin: 10px 0;
   padding: 10px;
 }
 

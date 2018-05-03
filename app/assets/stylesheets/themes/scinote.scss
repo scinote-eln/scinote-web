@@ -147,6 +147,10 @@ mark,.mark {
   }
 }
 
+.align-right {
+  text-align: right;
+}
+
 a[data-toggle="tooltip"] {
   color: inherit;
   border-bottom: 1px dashed $color-emperor;
@@ -679,6 +683,10 @@ ul.double-line > li {
 
 #global-activity-page {
   margin-top: 50px;
+}
+
+.btn-more-activities {
+  margin-bottom: 15px;
 }
 
 /** Activity list resembling Bootstrap wells */
@@ -1400,6 +1408,10 @@ textarea.textarea-sm {
     border: 1px solid $color-alto;
     padding: 10px 10px 10px 0;
     vertical-align: middle;
+
+    &.dropdown-header {
+      padding-left: 30px;
+    }
   }
 
   [data-position] {

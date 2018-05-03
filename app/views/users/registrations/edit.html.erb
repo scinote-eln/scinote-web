@@ -46,9 +46,9 @@
                     <%= f.label :avatar, t("users.registrations.edit.avatar_edit_label") %>
                     <%= f.file_field :avatar, class: "btn btn-default" %>
                   </div>
-                  <div>
+                  <div class="align-right">
                     <a href="#" class="btn btn-default" data-action="cancel"><%=t "general.cancel" %></a>
-                    <%= f.submit t("users.registrations.edit.avatar_submit"), class: 'btn btn-primary', onclick: "processFile(event);" %>
+                    <%= f.submit t("users.registrations.edit.avatar_submit"), class: 'btn btn-success', onclick: "processFile(event);" %>
                   </div>
                 </div>
               </div>
@@ -76,9 +76,9 @@
                     <%= f.label :full_name, t("users.registrations.edit.name_label") %>
                     <%= f.text_field :full_name, class: "form-control", "data-role" => "edit" %>
                   </div>
-                  <div>
+                  <div class="align-right">
                     <a href="#" class="btn btn-default" data-action="cancel"><%=t "general.cancel" %></a>
-                    <%= f.submit t("general.update"), class: "btn btn-primary" %>
+                    <%= f.submit t("general.save"), class: "btn btn-success" %>
                   </div>
                 </div>
               </div>
@@ -107,9 +107,9 @@
                     <%= f.label :initials, t("users.registrations.edit.initials_label") %>
                     <%= f.text_field :initials, class: "form-control", "data-role" => "edit" %>
                   </div>
-                  <div>
+                  <div class="align-right">
                     <a href="#" class="btn btn-default" data-action="cancel"><%=t "general.cancel" %></a>
-                    <%= f.submit t("general.update"), class: "btn btn-primary" %>
+                    <%= f.submit t("general.save"), class: "btn btn-success" %>
                   </div>
                 </div>
               </div>
@@ -148,9 +148,9 @@
                     <%= f.label :current_password, t("users.registrations.edit.current_password_label") %> <i><%=t "users.registrations.edit.password_explanation" %></i>
                     <%= f.password_field :current_password, autocomplete: "off", class: "form-control", "data-role" => "clear", id: 'edit-email-current-password' %>
                   </div>
-                  <div>
+                  <div class="align-right">
                     <a href="#" class="btn btn-default" data-action="cancel"><%=t "general.cancel" %></a>
-                    <%= f.submit t("general.update"), class: "btn btn-primary" %>
+                    <%= f.submit t("general.save"), class: "btn btn-success" %>
                   </div>
                 </div>
               </div>
@@ -191,9 +191,9 @@
                     <%= f.password_field :password_confirmation, autocomplete: "off", class: "form-control", "data-role" => "clear" %>
                   </div>
 
-                  <div>
+                  <div class="align-right">
                     <a href="#" class="btn btn-default" data-action="cancel"><%=t "general.cancel" %></a>
-                    <%= f.submit t("general.update"), class: "btn btn-primary"  %>
+                    <%= f.submit t("general.save"), class: "btn btn-success" %>
                   </div>
                 </div>
               </div>

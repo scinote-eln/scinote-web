@@ -5,6 +5,14 @@
 $color-group-hover: $brand-primary;
 $color-module-hover: $brand-default;
 
+#new-project-modal, #edit-project-modal {
+  .btn-group label.btn-primary:not(.active) {
+    background-color: $color-white;
+    border-color: $color-silver;
+    color: $color-emperor;
+  }
+}
+
 /* Canvas index page */
 
 #canvas-container:not(.canvas-container-edit-mode) {
@@ -430,6 +438,7 @@ li.module-hover {
 
   .create-new-tag-btn {
     margin-right: 15px;
+    margin-top: 10px;
   }
 }
 
