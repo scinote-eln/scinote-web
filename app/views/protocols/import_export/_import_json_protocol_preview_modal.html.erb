@@ -3,12 +3,12 @@
   remote: true, :html=> { :id => "protocolsio-import-form" }) do |f| %>
 
 <%= hidden_field_tag :json_object, JSON.generate(@json_object) %>
-
-<% if URI.parse(request.referrer).query %>
-<%= hidden_field_tag :type,CGI.parse(URI.parse(request.referrer).query).fetch('type') %>
-<% else %>
-<%= hidden_field_tag :type,'public' %>
+<% url_query = Rack::Utils.parse_query URI(request.referrer).query %>
+<% type_privacy = "public" %>
+<% if url_query.key?("type") && url_query["type"]=="private" %>
+    <% type_privacy = "private" %>
 <% end %>
+<%= hidden_field_tag :type, type_privacy %>
 <!--Get the type of protocol to import (private, public) from the url -->
 <div
   id="modal-import-json-protocol-preview"
@@ -86,8 +86,7 @@
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal"><%= t('general.cancel') %></button>
 
-          <%= f.submit t('protocols.import_export.import_modal.import'),class: "btn
-          btn-primary" %>
+          <%= f.submit t('protocols.import_export.import_modal.import'),class: "btn btn-success" %>
           <% end %>
 
         </div>

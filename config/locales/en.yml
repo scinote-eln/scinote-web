@@ -67,6 +67,7 @@ en:
   body:
     notice: "You need to enable JavaScript to run this app."
   nav:
+    team_switch_title: "Switch team"
     search: "Search for something..."
     search_button: 'Go!'
     user_greeting: "Hi, %{full_name}"
@@ -201,7 +202,7 @@ en:
     index:
       head_title: "Home"
       archive: "Archive"
-      new: "New project"
+      new: "New Project"
       visibility_private: "Project is private. Only invited users can see it."
       visibility_public: "Project is public. Everybody from the team can see it."
       user_project: "%{user} joined on %{timestamp}."
@@ -236,7 +237,7 @@ en:
       content_loading: "Loading..."
       edit_option: "Edit"
       archive_option: "Archive"
-      archive_confirm: "Are you sure to archive project?"
+      archive_confirm: "Are you sure you want to archive this project?"
       restore_option: "Restore"
       options_header: "Options"
       comment_placeholder: "Your Message"
@@ -245,7 +246,7 @@ en:
       back_to_projects_index: "Back to home"
       modal_new_project:
         modal_title: "Create new project"
-        create: "Create project"
+        create: "Create"
         name: "Project name"
         name_placeholder: "My project"
         team: "Team"
@@ -254,7 +255,7 @@ en:
         visibility_visible: "Public"
       modal_edit_project:
         modal_title: "Edit project %{project}"
-        submit: "Update project"
+        submit: "Save"
       modal_manage_users:
         modal_title: "Manage users for"
         no_users: "No users!"
@@ -266,7 +267,7 @@ en:
       no_teams:
         title: "Your dashboard is empty!"
         text: "It seems you're not a member of any team. See team management to sort it out."
-        btn: "Manage teams"
+        btn: "Manage Teams"
     create:
       success_flash: "Project <strong>%{name}</strong> successfully created."
       name_taken: "This project name has to be unique inside a team (this includes the archive)."
@@ -289,9 +290,9 @@ en:
       print_title: "%{project} | Report"
       index:
         head_title: " Reports"
-        new: "New report"
-        edit: "Edit report"
-        delete: "Delete report/s"
+        new: "New"
+        edit: "Edit"
+        delete: "Delete"
         thead_project_name: "Project name"
         thead_name: "Report name"
         thead_created_by: "Created by"
@@ -316,7 +317,7 @@ en:
         nav_pdf: "Download PDF"
         nav_save: "Save"
         nav_close: "Close"
-        nav_sort_by: "Sort report by"
+        nav_sort_by: "Sort by"
         nav_sort_asc: "Oldest on top"
         nav_sort_desc: "Newest on top"
         nav_sort: "Sort"
@@ -381,7 +382,7 @@ en:
             instructions: "Include result/s comments in the report?"
             check_all: "All results content"
             comments: "Comments"
-          add: "Add to report"
+          add: "Add"
           save_report:
             head_title: "Save report"
             name: "Report name"
@@ -490,8 +491,8 @@ en:
 
   my_modules:
     buttons:
-      complete: "Complete task"
-      uncomplete: "Uncomplete task"
+      complete: "Complete Task"
+      uncomplete: "Uncomplete Task"
     complete_modal:
       description: 'You have completed all steps in the task. Would you like to mark entire task as completed?'
       leave_uncompleted: 'Leave task in progress'
@@ -568,11 +569,11 @@ en:
           title: "Newer version in repository and task"
           text: "There is a newer <a href='#' data-toggle='tooltip' data-placement='below' title='Last modified at %{parent_ts}'>version</a> of this protocol in the repository. This <a href='#' data-toggle='tooltip' data-placement='below' title='Last modified at %{self_ts}'>version</a> of protocol is newer than the version stored in protocol repository."
       buttons:
-        load_protocol: "Load protocol"
+        load_protocol: "Load Protocol"
         load_protocol_from_repository: "from repository"
         load_protocol_from_file: "from file"
-        export: "Export protocol"
-        copy_to_repository: "Save to protocol repository"
+        export: "Export Protocol"
+        copy_to_repository: "Save To Protocol Repository"
       confirm_link_update_modal:
         unlink_title: "Unlink protocol"
         unlink_message: "Are you sure you want to unlink the task protocol from the repository version? This will stop any tracking of changes."
@@ -626,7 +627,7 @@ en:
         link_label: "Link task to this repository protocol"
         link_text: "<strong>Warning!</strong>&nbsp;This will unlink the currently linked protocol."
         error_400: "Due to unknown error, protocol could not be copied to repository."
-        confirm: "Copy to repository"
+        confirm: "Copy"
       load_from_file_flash: "Successfully loaded the protocol from the file."
       load_from_file_error: "Failed to load the protocol from file."
       load_from_file_error_locked: "Failed to load the protocol from file. One or more files are currently being edited."
@@ -643,8 +644,8 @@ en:
       published_table: "entered a table on %{timestamp}."
       published_text:  "entered a text on %{timestamp}."
       published_asset:  "uploaded a file on %{timestamp}."
-      expand_label: "Expand all"
-      collapse_label: "Collapse all"
+      expand_label: "Expand All"
+      collapse_label: "Collapse All"
       empty_name: "Add title"
       archive_confirm: "Are you sure to archive result?"
       info_tab: "Info"
@@ -659,16 +660,16 @@ en:
     activities:
       head_title: "%{project} | %{module} | Activity"
       no_activities: "There are no activities for this task."
-      more_activities: "Load older activities"
+      more_activities: "More activities"
     repository:
       head_title: "%{project} | %{module} | Inventory %{repository}"
       export: 'Export'
 
   experiments:
     new:
-      create: 'New experiment'
+      create: 'New Experiment'
       modal_title: 'Create new experiment'
-      modal_create: 'Create experiment'
+      modal_create: 'Create'
       name: 'Experiment name'
       name_placeholder: 'My experiment'
       description: 'Description'
@@ -694,7 +695,7 @@ en:
     clone:
       modal_title: 'Copy experiment %{experiment} as template'
       label_title: 'Copy as template (only Protocols steps copied)'
-      modal_submit: 'Copy as template'
+      modal_submit: 'Copy'
       success_flash: 'Successfully copied experiment %{experiment} as template.'
       error_flash: 'Could not copy the experiment as template.'
       current_project: '(current project)'
@@ -710,7 +711,7 @@ en:
       archive_confirm: "Are you sure to archive this experiment?"
       actions: 'Actions'
       head_title: "%{project} | Overview"
-      canvas_edit: "Edit experiment"
+      canvas_edit: "Edit Experiment"
       zoom: "Zoom: "
       reload_on_submit: "Save action is running. Reloading this page may cause unexpected behavior."
       modal_manage_tags:
@@ -722,8 +723,8 @@ en:
         delete_tag: "Permanently delete tag from all tasks."
         save_tag: "Save tag."
         cancel_tag: "Cancel changes to the tag."
-        create: "Add tag"
-        create_new: "Create new tag"
+        create: "Add"
+        create_new: "New"
       edit:
         new_module: "New task"
         new_module_hover: "Drag me onto canvas"
@@ -744,26 +745,26 @@ en:
           title: "Add new task"
           name: "Task name"
           name_placeholder: "My task"
-          confirm: "Add task"
+          confirm: "Add"
         modal_edit_module:
           title: "Rename task"
           name: "Task name"
-          confirm: "Rename task"
+          confirm: "Rename"
         modal_move_module:
           title: "Move task to experiment"
-          confirm: "Move task"
+          confirm: "Move"
           no_experiments: "There are no other experiments."
         modal_move_module_group:
           title: "Move workflow to experiment"
-          confirm: "Move workflow"
+          confirm: "Move"
           no_experiments: "There are no other experiments."
         modal_delete_module:
           title: "Archive task"
-          confirm: "Archive task"
+          confirm: "Archive"
           message: "Are you sure you wish to archive task %{module}? Task's samples and position will be removed."
         modal_delete_module_group:
           title: "Archive workflow"
-          confirm: "Archive workflow"
+          confirm: "Archive"
           message: "Are you sure you wish to archive the workflow task %{module} belongs to? All workflow tasks' samples and positions will be removed."
       popups:
         info_tab: "Task info"
@@ -826,11 +827,11 @@ en:
     new:
       head_title: "%{project} | %{module} | Add text result"
       title: "Add result to task %{module}"
-      create: "Add text result"
+      create: "Add"
     edit:
       head_title: "%{project} | %{module} | Edit text result"
       title: "Edit result from task %{module}"
-      update: "Update text result"
+      update: "Update"
     create:
       success_flash: "Successfully added text result to task <strong>%{module}</strong>"
     update:
@@ -844,12 +845,12 @@ en:
     new:
       head_title: "%{project} | %{module} | Add file result"
       title: "Add result to task %{module}"
-      create: "Add file result"
+      create: "Add"
     edit:
       head_title: "%{project} | %{module} | Edit file result"
       title: "Edit result from task %{module}"
       uploaded_asset: "Uploaded file"
-      update: "Update file result"
+      update: "Update"
       locked_file_error: 'This file is being edited by someone else.'
     create:
       success_flash: "Successfully added file result to task <strong>%{module}</strong>"
@@ -868,11 +869,11 @@ en:
     new:
       head_title: "%{project} | %{module} | Add table result"
       title: "Add result to task %{module}"
-      create: "Add table result"
+      create: "Add"
     edit:
       head_title: "%{project} | %{module} | Edit table result"
       title: "Edit result from task %{module}"
-      update: "Update table result"
+      update: "Update"
     create:
       success_flash: "Successfully added table result to task <strong>%{module}</strong>"
     update:
@@ -894,6 +895,8 @@ en:
       no_teams:
         title: "Your dashboard is empty!"
         text: "It seems you're not a member of any team. See team management to sort it out."
+      visibility: "Visibility"
+      advanced: "Advanced"
       options_dropdown:
         header: "Edit inventory"
         rename: "Rename"
@@ -906,23 +909,23 @@ en:
         alert_heading: "Deleting inventory has following consequences:"
         alert_line_1: "all data inside the inventory will be lost;"
         alert_line_2: "all references to inventory items will be rendered as invalid."
-        delete: "Delete inventory"
+        delete: "Delete"
       modal_rename:
         title_html: "Rename inventory <em>%{name}</em>"
         name: "New inventory name"
         name_placeholder: "My inventory"
-        rename: "Rename inventory"
+        rename: "Rename"
       modal_copy:
         title_html: "Copy inventory <em>%{name}</em>"
         name: "New inventory name"
         description: "Only the structure of the inventory is going to be copied."
         name_placeholder: "My inventory"
-        copy: "Copy inventory"
+        copy: "Copy"
       modal_create:
         title: "Create new inventory"
         name_label: "Inventory name"
         name_placeholder: "My inventory"
-        submit: "Create inventory"
+        submit: "Create"
         success_flash: "Inventory <strong>%{name}</strong> successfully created."
     table:
       id: 'ID'
@@ -930,7 +933,7 @@ en:
       row_name: "Name"
       added_on: "Added on"
       added_by: "Added by"
-    add_new_record: "Add new item"
+    add_new_record: "New item"
     import_records:
       import: 'Import'
       no_header_name: 'No column name'
@@ -957,27 +960,28 @@ en:
     columns_delete: "Delete"
     columns_reorder: "Re-Order Columns"
     columns_visibility: "Visible columns"
-    view_all_records: "View all items"
-    view_assigned_records: "View assigned items"
+    view_all_records: "View All Items"
+    view_assigned_records: "View Assigned Items"
     modal_delete_record:
       title: "Delete items"
       notice: "Are you sure you want to delete the selected item(s)?"
-      delete: "Delete item(s)"
+      delete: "Delete"
     modal_delete_column:
       title: "Delete a column"
       message: "Are you sure you wish to permanently delete selected column %{column}? This action is irreversible."
       alert_heading: "Deleting a column has following consequences:"
       alert_line_1: "you will lose information in this column for %{nr} item(s);"
       alert_line_2: "the column will be deleted for all team members."
-      delete: "Delete column"
+      delete: "Delete"
     modal_parse:
       title: 'Import items'
       warning_1: 'Be careful when importing into Dropdown column/s! Each new unique cell value from the file will create a new Dropdown option. Maximum nr. of Dropdown options is %{limit}.'
       warning_2: 'Importing into file columns is not supported.'
+      import: 'Import'
     modal_import:
       title: 'Import items'
       notice: 'You may upload .csv file (comma separated) or tab separated file (.txt or .tsv) or Excel file (.xlsx). First row should include header names, followed by rows with sample data.'
-      upload: 'Upload file'
+      upload: 'Upload'
     js:
       permission_error: "You don't have permission to edit this item."
       not_found_error: "This inventory item does not exist."
@@ -1024,8 +1028,9 @@ en:
         error_flash: "Something went wrong! Please try again later."
       index:
         manage_column: "Manage Columns"
-        new_column: "New"
+        new_column: "New Column"
         no_column: "No columns"
+        delete_column: "Delete"
         edit_column: "Edit"
         back_to_repository_html: "<span class='glyphicon glyphicon-chevron-left'></span> Back to %{repository}"
     sidebar:
@@ -1036,7 +1041,7 @@ en:
         no_permission_title: "You don't have permission to create new inventory. Please contact your team administrator."
         text: "You don't have any inventories."
         title: "Please create your first Inventory"
-        create_new_button: "Create New Inventory"
+        create_new_button: "New Inventory"
     show:
       head_title: "Inventories | %{library}"
   repository_row:
@@ -1090,7 +1095,6 @@ en:
     modal_delete:
       title: "Delete samples"
       notice: "Are you sure you want to delete the selected samples?"
-      other_samples: "Only samples created by you will be deleted."
       delete: "Delete samples"
     modal_add_custom_field:
       title_html: "Add new column to team <strong>%{team}</strong>"
@@ -1328,7 +1332,7 @@ en:
         head_title: "My profile"
         title: "My profile"
         avatar_label: "Avatar"
-        avatar_btn: "Edit avatar"
+        avatar_btn: "Edit Avatar"
         avatar_title: "Change avatar"
         avatar_edit_label: "Upload new avatar file"
         avatar_submit: "Upload"
@@ -1393,7 +1397,7 @@ en:
             one: "You are member of %{count} team."
             other: "You are member of %{count} teams."
           no_teams: "You are not a member of any team."
-          new_team: "New team"
+          new_team: "New Team"
           thead_name: "Team"
           thead_role: "Role"
           thead_created_at: "Created at"
@@ -1407,7 +1411,7 @@ en:
           name_sublabel: "Pick a name that would best describe your team (e.g. 'University of ..., Department of ...')."
           description_label: "Description"
           description_sublabel: "Describe your team."
-          create: "Create team"
+          create: "Create"
         edit:
           header_created_at: "Created on:"
           header_created_by: "Created by:"
@@ -1452,7 +1456,7 @@ en:
         destroy_uo_alert_line_1: "user will lose access to all content belonging to the team (including projects, tasks, protocols and activities);"
         destroy_uo_alert_line_2: "all projects in the team where user was the sole <b>Owner</b> will be reassigned onto you as a new owner;"
         destroy_uo_alert_line_3: "all repository protocols in the team belonging to user will be reassigned onto you."
-        destroy_uo_confirm: "Remove user"
+        destroy_uo_confirm: "Remove"
         leave_flash: "Successfuly left team %{team}."
 
   protocols:
@@ -1567,13 +1571,13 @@ en:
         archive: "Archive"
       public_description: "Public protocols are visible and can be used by everyone from the team."
       private_description: "Private protocols are only visible to you."
-      create_new: "Create new"
+      create_new: "New"
       edit: "Edit"
       clone_btn: "Copy"
       import: "Import"
       import_alt: " from SciNote protocol file(.eln)"
       import_json: " from protocols.io file"
-      modal_import_json_upload: "Upload file"
+      modal_import_json_upload: "Upload"
       modal_import_json_title: "Import protocols.io file"
       modal_import_json_notice: "Upload your protocols.io protocol file"
       export: "Export"
@@ -1602,7 +1606,7 @@ en:
       no_teams:
         title: "Your dashboard is empty!"
         text: "It seems you're not a member of any team. See team management to sort it out."
-        btn: "Manage teams"
+        btn: "Manage Teams"
       make_private_unauthorized: "You do not have permission to make selected protocols private."
       make_private_error: "Error occured while making selected protocols private."
       publish_unauthorized: "You do not have permission to publish selected protocols."
@@ -1671,9 +1675,9 @@ en:
     steps:
       completed: 'Completed'
       uncompleted: 'Uncompleted'
-      expand_label: "Expand all"
-      collapse_label: "Collapse all"
-      new_step: "Add new"
+      expand_label: "Expand All"
+      collapse_label: "Collapse All"
+      new_step: "New Step"
       subtitle: "Protocol steps"
       no_steps: "Protocol has no steps."
       published_on: "Published on <em>%{timestamp}</em> by <em>%{user}</em>"
@@ -1693,8 +1697,8 @@ en:
         edit_title: "Edit step"
         delete_title: "Delete step"
         duplicate_title: "Duplicate step"
-        complete_title: "Complete step"
-        uncomplete_title: "Uncomplete step"
+        complete_title: "Complete Step"
+        uncomplete_title: "Uncomplete Step"
       new:
         add_step_title: "Add new step"
         tab_checklists: "Checklists"
@@ -1738,10 +1742,10 @@ en:
       heading: "Invite more people to start using sciNote."
     input_subtitle: "Input one or multiple emails, confirm each email with ENTER key."
     invite_to_team_heading: "Invite users to my team:"
-    invite_btn: "Invite user/s"
-    invite_guest: "as Guest/s"
-    invite_user: "as Normal user/s"
-    invite_admin: "as Administrator/s"
+    invite_btn: "Invite Users"
+    invite_guest: "As Guests"
+    invite_user: "As Normal Users"
+    invite_admin: "As Administrators"
     results:
       heading: "Invitation results:"
       user_exists: "User is already a member of sciNote."
@@ -1826,7 +1830,7 @@ en:
     from_clipboard:
       modal_title: 'Add image from clipboard'
       image_preview: 'Image preview'
-      add_image: 'Add image'
+      add_image: 'Add'
       file_name: 'File name'
       file_name_placeholder: 'Image'
   atwho:

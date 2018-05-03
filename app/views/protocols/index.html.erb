@@ -23,7 +23,7 @@
           <%= t(@type == :public ? "protocols.index.public_description" : "protocols.index.private_description") %>
         </div>
         <div class="btn-group" role="group">
-          <a class="btn btn-default" <%= can_create_protocols_in_repository?(@current_team) ? "data-action=create-new" : "disabled=disabled" %> data-url="<%= create_new_modal_protocols_path(team: @current_team, type: @type) %>">
+          <a class="btn btn-primary" <%= can_create_protocols_in_repository?(@current_team) ? "data-action=create-new" : "disabled=disabled" %> data-url="<%= create_new_modal_protocols_path(team: @current_team, type: @type) %>">
             <span class="glyphicon glyphicon-plus"></span>
             <span class="hidden-xs">&nbsp;<%= t("protocols.index.create_new") %></span>
           </a>
@@ -41,35 +41,40 @@
               <span class="hidden-xs">&nbsp;<%= t("protocols.index.make_private") %></span>
             </a>
           <% elsif @type == :private %>
-            <a class="btn btn-primary" data-action="publish" data-url="<%= publish_protocols_path %>">
+            <a class="btn btn-default" data-action="publish" data-url="<%= publish_protocols_path %>">
               <span class="glyphicon glyphicon-open"></span>
               <span class="hidden-xs">&nbsp;<%= t("protocols.index.publish") %></span>
             </a>
           <% end %>
         </div>
         <div id="import-export-protocols" class="btn-group" role="group">
-        <a class="btn btn-default btn-open-file" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="#">
-          <span class="glyphicon glyphicon-import"></span><span class="hidden-xs">&nbsp;<%= "Import protocol" %></span></a>
-
-          <ul class="dropdown-menu">
-            <li>
-              <a class="btn-link-alt btn-default-link btn-open-file" <%= can_create_protocols_in_repository?(@current_team) ? 'data-action="import"' : 'disabled="disabled"' %>>
-                <span class="glyphicon glyphicon-file"></span>
-                <span class="hidden-xs"><%= t("protocols.index.import_alt") %></span>
-                <input type="file" value="" accept=".eln" data-role="import-file-input"
-                data-team-id="<%= @current_team.id %>"
-                data-type="<%= @type %>" data-import-url="<%= import_protocols_path %>"
-                <%= 'disabled="disabled"' unless can_create_protocols_in_repository?(@current_team) %>>
-              </a>
-            </li>
-            <li>
-            <%= link_to "#modal-import-json-protocol", "data-toggle" => "modal" do %>
-            <span class="glyphicon glyphicon-file"></span>
-            <span class="hidden-xs"><%= t("protocols.index.import_json") %></span>
-            <% end %>
-            </li>
-
-          </ul>
+        <a class="btn btn-default btn-open-file"
+           data-toggle="dropdown"
+           aria-haspopup="true"
+           aria-expanded="false"
+           href="#"
+           <%= 'disabled' unless can_create_protocols_in_repository?(@current_team) %>>
+          <span class="glyphicon glyphicon-import"></span><span class="hidden-xs">&nbsp;<%= t("protocols.index.import") %></span></a>
+          <% if can_create_protocols_in_repository?(@current_team) %>
+            <ul class="dropdown-menu">
+              <li>
+                <a class="btn-link-alt btn-default-link btn-open-file" <%= can_create_protocols_in_repository?(@current_team) ? 'data-action="import"' : 'disabled="disabled"' %>>
+                  <span class="glyphicon glyphicon-file"></span>
+                  <span class="hidden-xs"><%= t("protocols.index.import_alt") %></span>
+                  <input type="file" value="" accept=".eln" data-role="import-file-input"
+                  data-team-id="<%= @current_team.id %>"
+                  data-type="<%= @type %>" data-import-url="<%= import_protocols_path %>"
+                  <%= 'disabled="disabled"' unless can_create_protocols_in_repository?(@current_team) %>>
+                </a>
+              </li>
+              <li>
+              <%= link_to "#modal-import-json-protocol", "data-toggle" => "modal" do %>
+              <span class="glyphicon glyphicon-file"></span>
+              <span class="hidden-xs"><%= t("protocols.index.import_json") %></span>
+              <% end %>
+              </li>
+            </ul>
+          <% end %>
           <a class="btn btn-default" data-action="export" data-export-url="<%= export_protocols_path() %>">
             <span class="glyphicon glyphicon-export"></span>
             <span class="hidden-xs">&nbsp;<%= t("protocols.index.export") %></span>
@@ -78,7 +83,7 @@
 
         <div class="btn-group" role="group">
           <a class="btn btn-default" data-action="archive" data-url="<%= archive_protocols_path %>">
-            <span class="glyphicon glyphicon-trash"></span>
+            <span class="glyphicon glyphicon-briefcase"></span>
             <span class="hidden-xs">&nbsp;<%= t("protocols.index.archive_action") %></span>
           </a>
         </div>

@@ -35,9 +35,9 @@ class WopiController < ActionController::Base
     when 'REFRESH_LOCK'
       refresh_lock
     when 'GET_SHARE_URL'
-      render nothing: :true, status: 501 and return
+      render body: nil, status: 501 and return
     else
-      render nothing: :true, status: 404 and return
+      render body: nil, status: 404 and return
     end
   end
 
@@ -86,27 +86,27 @@ class WopiController < ActionController::Base
   end
 
   def put_relative
-    render nothing: :true, status: 501 and return
+    render body: nil, status: 501 and return
   end
 
   def lock
     lock = request.headers['X-WOPI-Lock']
     logger.warn 'WOPI: lock; ' + lock.to_s
-    render nothing: :true, status: 404 and return if lock.nil? || lock.blank?
+    render body: nil, status: 404 and return if lock.nil? || lock.blank?
     @asset.with_lock do
       if @asset.locked?
         if @asset.lock == lock
           @asset.refresh_lock
           response.headers['X-WOPI-ItemVersion'] = @asset.version
-          render nothing: :true, status: 200 and return
+          render body: nil, status: 200 and return
         else
           response.headers['X-WOPI-Lock'] = @asset.lock
-          render nothing: :true, status: 409 and return
+          render body: nil, status: 409 and return
         end
       else
         @asset.lock_asset(lock)
         response.headers['X-WOPI-ItemVersion'] = @asset.version
-        render nothing: :true, status: 200 and return
+        render body: nil, status: 200 and return
       end
     end
   end
@@ -116,7 +116,7 @@ class WopiController < ActionController::Base
     lock = request.headers['X-WOPI-Lock']
     old_lock = request.headers['X-WOPI-OldLock']
     if lock.nil? || lock.blank? || old_lock.blank?
-      render nothing: :true, status: 400 and return
+      render body: nil, status: 400 and return
     end
     @asset.with_lock do
       if @asset.locked?
@@ -124,21 +124,21 @@ class WopiController < ActionController::Base
           @asset.unlock
           @asset.lock_asset(lock)
           response.headers['X-WOPI-ItemVersion'] = @asset.version
-          render nothing: :true, status: 200 and return
+          render body: nil, status: 200 and return
         else
           response.headers['X-WOPI-Lock'] = @asset.lock
-          render nothing: :true, status: 409 and return
+          render body: nil, status: 409 and return
         end
       else
         response.headers['X-WOPI-Lock'] = ' '
-        render nothing: :true, status: 409 and return
+        render body: nil, status: 409 and return
       end
     end
   end
 
   def unlock
     lock = request.headers['X-WOPI-Lock']
-    render nothing: :true, status: 400 and return if lock.nil? || lock.blank?
+    render body: nil, status: 400 and return if lock.nil? || lock.blank?
     @asset.with_lock do
       if @asset.locked?
         logger.warn "WOPI: current asset lock: #{@asset.lock},
@@ -149,36 +149,36 @@ class WopiController < ActionController::Base
           create_wopi_file_activity(@user, false)
 
           response.headers['X-WOPI-ItemVersion'] = @asset.version
-          render nothing: :true, status: 200 and return
+          render body: nil, status: 200 and return
         else
           response.headers['X-WOPI-Lock'] = @asset.lock
-          render nothing: :true, status: 409 and return
+          render body: nil, status: 409 and return
         end
       else
         logger.warn 'WOPI: tried to unlock non-locked file'
         response.headers['X-WOPI-Lock'] = ' '
-        render nothing: :true, status: 409 and return
+        render body: nil, status: 409 and return
       end
     end
   end
 
   def refresh_lock
     lock = request.headers['X-WOPI-Lock']
-    render nothing: :true, status: 400 and return if lock.nil? || lock.blank?
+    render body: nil, status: 400 and return if lock.nil? || lock.blank?
     @asset.with_lock do
       if @asset.locked?
         if @asset.lock == lock
           @asset.refresh_lock
           response.headers['X-WOPI-ItemVersion'] = @asset.version
           response.headers['X-WOPI-ItemVersion'] = @asset.version
-          render nothing: :true, status: 200 and return
+          render body: nil, status: 200 and return
         else
           response.headers['X-WOPI-Lock'] = @asset.lock
-          render nothing: :true, status: 409 and return
+          render body: nil, status: 409 and return
         end
       else
         response.headers['X-WOPI-Lock'] = ' '
-        render nothing: :true, status: 409 and return
+        render body: nil, status: 409 and return
       end
     end
   end
@@ -190,7 +190,7 @@ class WopiController < ActionController::Base
       else
         response.headers['X-WOPI-Lock'] = ' '
       end
-      render nothing: :true, status: 200 and return
+      render body: nil, status: 200 and return
     end
   end
 
@@ -212,11 +212,11 @@ class WopiController < ActionController::Base
           @protocol.update(updated_at: Time.now) if @protocol
 
           response.headers['X-WOPI-ItemVersion'] = @asset.version
-          render nothing: :true, status: 200 and return
+          render body: nil, status: 200 and return
         else
           logger.warn 'WOPI: wrong lock used to try and modify file'
           response.headers['X-WOPI-Lock'] = @asset.lock
-          render nothing: :true, status: 409 and return
+          render body: nil, status: 409 and return
         end
       elsif !@asset.file_file_size.nil? && @asset.file_file_size.zero?
         logger.warn 'WOPI: initializing empty file'
@@ -228,11 +228,11 @@ class WopiController < ActionController::Base
         @team.save
 
         response.headers['X-WOPI-ItemVersion'] = @asset.version
-        render nothing: :true, status: 200 and return
+        render body: nil, status: 200 and return
       else
         logger.warn 'WOPI: trying to modify unlocked file'
         response.headers['X-WOPI-Lock'] = ' '
-        render nothing: :true, status: 409 and return
+        render body: nil, status: 409 and return
       end
     end
   end
@@ -240,7 +240,7 @@ class WopiController < ActionController::Base
   def load_vars
     @asset = Asset.find_by_id(params[:id])
     if @asset.nil?
-      render nothing: :true, status: 404 and return
+      render body: nil, status: 404 and return
     else
       logger.warn 'Found asset: ' + @asset.id.to_s
       step_assoc = @asset.step
@@ -264,13 +264,13 @@ class WopiController < ActionController::Base
     wopi_token = params[:access_token]
     if wopi_token.nil?
       logger.warn 'WOPI: nil wopi token'
-      render nothing: :true, status: 401 and return
+      render body: nil, status: 401 and return
     end
 
     @user = User.find_by_valid_wopi_token(wopi_token)
     if @user.nil?
       logger.warn 'WOPI: no user with this token found'
-      render nothing: :true, status: 401 and return
+      render body: nil, status: 401 and return
     end
     logger.warn 'WOPI: user found by token ' + wopi_token +
                 ' ID: ' + @user.id.to_s
@@ -320,7 +320,7 @@ class WopiController < ActionController::Base
       @breadcrumb_folder_url  = @close_url
     end
 
-    render nothing: :true, status: 404 and return unless @can_read
+    render body: nil, status: 404 and return unless @can_read
   end
 
   def verify_proof!
@@ -336,15 +336,15 @@ class WopiController < ActionController::Base
         logger.warn 'WOPI: proof verification: successful'
       else
         logger.warn 'WOPI: proof verification: not verified'
-        render nothing: :true, status: 500 and return
+        render body: nil, status: 500 and return
       end
     else
       logger.warn 'WOPI: proof verification: timestamp too old; ' +
                   timestamp.to_s
-      render nothing: :true, status: 500 and return
+      render body: nil, status: 500 and return
     end
   rescue => e
     logger.warn 'WOPI: proof verification: failed; ' + e.message
-    render nothing: :true, status: 500 and return
+    render body: nil, status: 500 and return
   end
 end

@@ -1,5 +1,5 @@
 When(/^I click "(.+)" button$/) do |button|
-  click_on(button)
+  click_button(button)
 end
 
 Given(/^Show me the page$/) do

@@ -32,15 +32,25 @@ module SearchableModel
           else
             a_query = Regexp.escape(query)
           end
-          a_query = '\\y(' + a_query + ')\\y'
+          # quick fix to enable searching by repositoy_row id
+          id_index = { present: false }
           where_str =
             (attrs.map.with_index do |a, i|
-              "(trim_html_tags(#{a})) #{like} :t#{i} OR "
+              if a == 'repository_rows.id'
+                id_index = { present: true, val: i }
+                "(#{a}) = :t#{i} OR "
+              else
+                "(trim_html_tags(#{a})) #{like} :t#{i} OR "
+              end
             end
             ).join[0..-5]
           vals = (
             attrs.map.with_index do |_, i|
-              ["t#{i}".to_sym, a_query]
+              if id_index[:present] && id_index[:val] == i
+                ["t#{i}".to_sym, a_query.to_i]
+              else
+                ["t#{i}".to_sym, '\\y(' + a_query + ')\\y']
+              end
             end
           ).to_h
 
@@ -53,14 +63,25 @@ module SearchableModel
       if query.count(' ') > 0
         unless attrs.empty?
           a_query = query.split.map { |a| "%#{sanitize_sql_like(a)}%" }
+          # quick fix to enable searching by repositoy_row id
+          id_index = { present: false }
           where_str =
             (attrs.map.with_index do |a, i|
-              "(trim_html_tags(#{a})) #{like} ANY (array[:t#{i}]) OR "
+              if a == 'repository_rows.id'
+                id_index = { present: true, val: i }
+                "(#{a}) IN (:t#{i}) OR "
+              else
+                "(trim_html_tags(#{a})) #{like} ANY (array[:t#{i}]) OR "
+              end
             end
             ).join[0..-5]
           vals = (
             attrs.map.with_index do |_, i|
-              ["t#{i}".to_sym, a_query]
+              if id_index[:present] && id_index[:val] == i
+                ["t#{i}".to_sym, a_query.map(&:to_i)]
+              else
+                ["t#{i}".to_sym, a_query]
+              end
             end
           ).to_h
 

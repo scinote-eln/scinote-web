@@ -1,7 +1,7 @@
 require 'rails_helper'
-require 'smart_annotations/preview'
+require 'smart_annotations/html_preview'
 
-describe SmartAnnotations::Preview do
+describe SmartAnnotations::HtmlPreview do
   let(:subject) { described_class }
   let(:user) { create :user }
   let(:project) { create :project, name: 'my project' }

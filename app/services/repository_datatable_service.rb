@@ -95,9 +95,8 @@ class RepositoryDatatableService
       direction == column_obj[:dir].upcase
     end || 'ASC'
     column_index = column_obj[:column]
-    col_order = @repository.repository_table_states
-                           .find_by_user_id(@user.id)
-                           .state['ColReorder']
+    service = RepositoryTableStateService.new(@user, @repository)
+    col_order = service.load_state.state['ColReorder']
     column_id = col_order[column_index].to_i
 
     if sortable_columns[column_id - 1] == 'assigned'
@@ -124,6 +123,8 @@ class RepositoryDatatableService
       type = RepositoryColumn.find_by_id(id)
       return records unless type
       return select_type(type.data_type, records, id, dir)
+    elsif sortable_columns[column_id - 1] == 'users.full_name'
+      return records.joins(:created_by).order("users.full_name #{dir}")
     else
       return records.order(
         "#{sortable_columns[column_id - 1]} #{dir}"

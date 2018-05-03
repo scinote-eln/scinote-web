@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'smart_annotations/permision_eval'
-require 'smart_annotations/preview'
+require 'smart_annotations/html_preview'
 
 module SmartAnnotations
   class TagToHtml
@@ -32,7 +32,7 @@ module SmartAnnotations
             next unless object && SmartAnnotations::PermissionEval.check(user,
                                                                          type,
                                                                          object)
-            SmartAnnotations::Preview.html(nil, type, object)
+            SmartAnnotations::HtmlPreview.html(nil, type, object)
           end
         rescue ActiveRecord::RecordNotFound
           next
@@ -42,9 +42,9 @@ module SmartAnnotations
 
     def repository_item(name, user, type, object)
       if object && SmartAnnotations::PermissionEval.check(user, type, object)
-        return SmartAnnotations::Preview.html(nil, type, object)
+        return SmartAnnotations::HtmlPreview.html(nil, type, object)
       end
-      SmartAnnotations::Preview.html(name, type, object)
+      SmartAnnotations::HtmlPreview.html(name, type, object)
     end
 
     def extract_values(element)

@@ -27,15 +27,15 @@ Rails.application.routes.draw do
     # end
 
     # Save sample table state
-    post '/state_save/:team_id/:user_id',
-         to: 'user_samples#save_samples_table_status',
-         as: 'save_samples_table_status',
-         defaults: { format: 'json' }
-
-    post '/state_load/:team_id/:user_id',
-         to: 'user_samples#load_samples_table_status',
-         as: 'load_samples_table_status',
-         defaults: { format: 'json' }
+    # post '/state_save/:team_id/:user_id',
+    #      to: 'user_samples#save_samples_table_status',
+    #      as: 'save_samples_table_status',
+    #      defaults: { format: 'json' }
+    #
+    # post '/state_load/:team_id/:user_id',
+    #      to: 'user_samples#load_samples_table_status',
+    #      as: 'load_samples_table_status',
+    #      defaults: { format: 'json' }
 
     resources :activities, only: [:index]
 
@@ -156,22 +156,22 @@ Rails.application.routes.draw do
         post 'copy', to: 'repositories#copy',
              defaults: { format: 'json' }
       end
-      resources :samples, only: [:new, :create]
-      resources :sample_types, except: [:show, :new] do
-        get 'sample_type_element', to: 'sample_types#sample_type_element'
-        get 'destroy_confirmation', to: 'sample_types#destroy_confirmation'
-      end
-      resources :sample_groups, except: [:show, :new] do
-        get 'sample_group_element', to: 'sample_groups#sample_group_element'
-        get 'destroy_confirmation', to: 'sample_groups#destroy_confirmation'
-      end
-      resources :custom_fields, only: [:create, :edit, :update, :destroy] do
-        get 'destroy_html'
-      end
+      # resources :samples, only: [:new, :create]
+      # resources :sample_types, except: [:show, :new] do
+      #   get 'sample_type_element', to: 'sample_types#sample_type_element'
+      #   get 'destroy_confirmation', to: 'sample_types#destroy_confirmation'
+      # end
+      # resources :sample_groups, except: [:show, :new] do
+      #   get 'sample_group_element', to: 'sample_groups#sample_group_element'
+      #   get 'destroy_confirmation', to: 'sample_groups#destroy_confirmation'
+      # end
+      # resources :custom_fields, only: [:create, :edit, :update, :destroy] do
+      #   get 'destroy_html'
+      # end
       member do
-        post 'parse_sheet'
-        post 'import_samples'
-        post 'export_samples'
+        post 'parse_sheet', defaults: { format: 'json' }
+        # post 'import_samples'
+        # post 'export_samples'
         post 'export_repository', to: 'repositories#export_repository'
         # Used for atwho (smart annotations)
         get 'atwho_users', to: 'at_who#users'
@@ -254,15 +254,15 @@ Rails.application.routes.draw do
       member do
         # Notifications popup for individual project in projects index
         get 'notifications'
-        get 'samples' # Samples for single project
+        # get 'samples' # Samples for single project
         # Renders sample datatable for single project (ajax action)
-        post 'samples_index'
+        # post 'samples_index'
         get 'experiment_archive' # Experiment archive for single project
-        post :delete_samples,
-             constraints: CommitParamRouting.new(
-               ProjectsController::DELETE_SAMPLES
-             ),
-             action: :delete_samples
+        # post :delete_samples,
+        #      constraints: CommitParamRouting.new(
+        #        ProjectsController::DELETE_SAMPLES
+        #      ),
+        #      action: :delete_samples
       end
 
       # This route is defined outside of member block
@@ -286,16 +286,16 @@ Rails.application.routes.draw do
         post 'clone' # clone experiment
         get 'move_modal' # return modal with move options
         post 'move' # move experiment
-        get 'samples' # Samples for single project
+        # get 'samples' # Samples for single project
         get 'updated_img' # Checks if the workflow image is updated
         get 'fetch_workflow_img' # Get udated workflow img
         # Renders sample datatable for single project (ajax action)
-        post 'samples_index'
-        post :delete_samples,
-             constraints: CommitParamRouting.new(
-               ExperimentsController::DELETE_SAMPLES
-             ),
-             action: :delete_samples
+      #   post 'samples_index'
+      #   post :delete_samples,
+      #        constraints: CommitParamRouting.new(
+      #          ExperimentsController::DELETE_SAMPLES
+      #        ),
+      #        action: :delete_samples
       end
     end
 
@@ -308,7 +308,7 @@ Rails.application.routes.draw do
       resources :my_module_comments,
                 path: '/comments',
                 only: [:index, :create, :edit, :update, :destroy]
-      resources :sample_my_modules, path: '/samples_index', only: [:index]
+      # resources :sample_my_modules, path: '/samples_index', only: [:index]
       resources :result_texts, only: [:new, :create]
       resources :result_assets, only: [:new, :create]
       resources :result_tables, only: [:new, :create]
@@ -321,7 +321,7 @@ Rails.application.routes.draw do
         get 'due_date'
         get 'protocols' # Protocols view for single module
         get 'results' # Results view for single module
-        get 'samples' # Samples view for single module
+        # get 'samples' # Samples view for single module
         # Repository view for single module
         get 'repository/:repository_id',
             to: 'my_modules#repository',
@@ -339,22 +339,22 @@ Rails.application.routes.draw do
         get 'complete_my_module'
         post 'toggle_task_state'
         # Renders sample datatable for single module (ajax action)
-        post 'samples_index'
-        post :assign_samples,
-             constraints: CommitParamRouting.new(
-               MyModulesController::ASSIGN_SAMPLES
-             ),
-             action: :assign_samples
-        post :assign_samples,
-             constraints: CommitParamRouting.new(
-               MyModulesController::UNASSIGN_SAMPLES
-             ),
-             action: :unassign_samples
-        post :assign_samples,
-             constraints: CommitParamRouting.new(
-               MyModulesController::DELETE_SAMPLES
-             ),
-             action: :delete_samples
+        # post 'samples_index'
+        # post :assign_samples,
+        #      constraints: CommitParamRouting.new(
+        #        MyModulesController::ASSIGN_SAMPLES
+        #      ),
+        #      action: :assign_samples
+        # post :assign_samples,
+        #      constraints: CommitParamRouting.new(
+        #        MyModulesController::UNASSIGN_SAMPLES
+        #      ),
+        #      action: :unassign_samples
+        # post :assign_samples,
+        #      constraints: CommitParamRouting.new(
+        #        MyModulesController::DELETE_SAMPLES
+        #      ),
+        #      action: :delete_samples
       end
 
       # Those routes are defined outside of member block
@@ -384,8 +384,8 @@ Rails.application.routes.draw do
                 only: [:create, :index, :edit, :update, :destroy]
     end
 
-    resources :samples, only: [:edit, :update, :destroy]
-    get 'samples/:id', to: 'samples#show'
+    # resources :samples, only: [:edit, :update, :destroy]
+    # get 'samples/:id', to: 'samples#show'
 
     resources :result_texts, only: [:edit, :update, :destroy]
     get 'result_texts/:id/download' => 'result_texts#download',
@@ -480,7 +480,7 @@ Rails.application.routes.draw do
       resources :repository_columns, only: %i(index create edit update destroy)
       resources :repository_rows, only: %i(create edit update)
       member do
-        post 'parse_sheet'
+        post 'parse_sheet', defaults: { format: 'json' }
         post 'import_records'
       end
     end
@@ -521,7 +521,7 @@ Rails.application.routes.draw do
       post 'auth/token', to: 'api#authenticate'
       scope '20170715', module: 'v20170715' do
         get 'tasks/tree', to: 'core_api#tasks_tree'
-        get 'tasks/:task_id/samples', to: 'core_api#task_samples'
+        # get 'tasks/:task_id/samples', to: 'core_api#task_samples'
       end
     end
   end
