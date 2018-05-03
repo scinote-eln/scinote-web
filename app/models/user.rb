@@ -5,7 +5,7 @@ class User < ApplicationRecord
   acts_as_token_authenticatable
   devise :invitable, :confirmable, :database_authenticatable, :registerable,
          :async, :recoverable, :rememberable, :trackable, :validatable,
-         :rememberable, :timeoutable, :omniauthable,
+         :timeoutable, :omniauthable,
          omniauth_providers: Extends::OMNIAUTH_PROVIDERS,
          stretches: Constants::PASSWORD_STRETCH_FACTOR
   has_attached_file :avatar,
