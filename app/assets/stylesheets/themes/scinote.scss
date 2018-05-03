@@ -1728,6 +1728,7 @@ th.custom-field .modal-tooltiptext {
 }
 
 #alert-flash {
+
   button {
     margin-right: 400px;
   }
@@ -1737,9 +1738,11 @@ th.custom-field .modal-tooltiptext {
   }
 
   @media(max-width:768px) {
+
     button {
       display: none;
     }
+
     .glyphicon {
       margin-left: 10px;
     }
