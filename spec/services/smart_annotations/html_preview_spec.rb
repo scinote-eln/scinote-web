@@ -52,12 +52,47 @@ describe SmartAnnotations::HtmlPreview do
     end
   end
 
-  describe '#trim_repository_name/1' do
-    it 'is returns a 3 letter upcase string' do
-      trimmed_repository_name = subject.__send__(
-        :trim_repository_name, 'banana'
-      )
-      expect(trimmed_repository_name).to eq('Ban')
+  context '#trim_repository_name/1' do
+    describe 'repository name with one word' do
+      it 'is returns a 3 letter capitalize string' do
+        trimmed_repository_name = subject.__send__(
+          :trim_repository_name, 'banana'
+        )
+        expect(trimmed_repository_name).to eq('Ban')
+      end
+    end
+
+    describe 'repository name with two words' do
+      it 'returns the first two letters of first word ' \
+         'and the first letter of second word' do
+        trimmed_repository_name = subject.__send__(
+          :trim_repository_name, 'two words'
+        )
+        expect(trimmed_repository_name).to eq('Tww')
+      end
+
+      it 'does not return 3 letters of the first word' do
+        trimmed_repository_name = subject.__send__(
+          :trim_repository_name, 'two words'
+        )
+        expect(trimmed_repository_name).not_to eq('Two')
+      end
+    end
+
+    describe 'repository name with three words' do
+      it 'returns the first letter of first 3 words capitalized' do
+        trimmed_repository_name = subject.__send__(
+          :trim_repository_name, 'two words of wisdom'
+        )
+        expect(trimmed_repository_name).to eq('Two')
+      end
+
+      it 'does not return 3 letters of the first word' do
+        trimmed_repository_name = subject.__send__(
+          :trim_repository_name, 'two words'
+        )
+        expect(trimmed_repository_name).not_to eq('Two')
+      end
     end
   end
 end

@@ -56,7 +56,15 @@ module SmartAnnotations
       end
 
       def trim_repository_name(name)
-        name.strip.slice(0..2).capitalize
+        splited_name = name.split
+        size = splited_name.size
+        return name.strip.slice(0..2).capitalize if size == 1
+        generate_name_from_array(splited_name, size).capitalize
+      end
+
+      def generate_name_from_array(names, size)
+        return "#{names[0].slice(0..1)}#{names[1][0]}" if size == 2
+        "#{names[0][0]}#{names[1][0]}#{names[2][0]}"
       end
     end
   end
