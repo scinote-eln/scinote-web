@@ -1,7 +1,8 @@
 class MyModuleTagsController < ApplicationController
   before_action :load_vars
-  before_action :check_view_permissions, only: :index
-  before_action :check_manage_permissions, only: %i(create index_edit destroy)
+  before_action :check_view_permissions, only: [:index_edit, :index]
+  before_action :check_create_permissions, only: [:create]
+  before_action :check_destroy_permissions, only: [:destroy]
 
   def index_edit
     @my_module_tags = @my_module.my_module_tags
@@ -74,11 +75,21 @@ class MyModuleTagsController < ApplicationController
   end
 
   def check_view_permissions
-    render_403 unless can_read_experiment?(@my_module.experiment)
+    unless can_edit_tags_for_module(@my_module)
+      render_403
+    end
   end
 
-  def check_manage_permissions
-    render_403 unless can_manage_tags?(@my_module.experiment.project)
+  def check_create_permissions
+    unless can_add_tag_to_module(@my_module)
+      render_403
+    end
+  end
+
+  def check_destroy_permissions
+    unless can_remove_tag_from_module(@my_module)
+      render_403
+    end
   end
 
   def init_gui

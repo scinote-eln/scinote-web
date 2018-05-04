@@ -1,8 +1,6 @@
 class SampleGroupsController < ApplicationController
   before_action :load_vars_nested
-  before_action :check_view_permissions, only: %i(index sample_group_element)
-  before_action :check_manage_permissions, only: %i(create edit update destroy
-                                                    destroy_confirmation)
+  before_action :check_permissions, except: %i(index sample_group_element)
   before_action :set_sample_group, except: %i(create index)
   before_action :set_project_my_module, only: :index
   layout 'fluid'
@@ -135,12 +133,8 @@ class SampleGroupsController < ApplicationController
     render_404 unless @team
   end
 
-  def check_view_permissions
-    render_403 unless can_read_team?(@team)
-  end
-
-  def check_manage_permissions
-    render_403 unless can_manage_sample_types_and_groups?(@team)
+  def check_permissions
+    render_403 unless can_manage_sample_columns?(@team)
   end
 
   def sample_group_params

@@ -8,7 +8,8 @@ class StepCommentsController < ApplicationController
 
   before_action :check_view_permissions, only: [:index]
   before_action :check_add_permissions, only: [:create]
-  before_action :check_manage_permissions, only: %i(edit update destroy)
+  before_action :check_edit_permissions, only: [:edit, :update]
+  before_action :check_destroy_permissions, only: [:destroy]
 
   def index
     @comments = @step.last_comments(@last_comment_id, @per_page)
@@ -51,19 +52,21 @@ class StepCommentsController < ApplicationController
         step_comment_annotation_notification
         # Generate activity (this can only occur in module,
         # but nonetheless check if my module is not nil)
-        Activity.create(
-          type_of: :add_comment_to_step,
-          user: current_user,
-          project: @step.my_module.experiment.project,
-          experiment: @step.my_module.experiment,
-          my_module: @step.my_module,
-          message: t(
-            "activities.add_comment_to_step",
-            user: current_user.full_name,
-            step: @step.position + 1,
-            step_name: @step.name
+        if @protocol.in_module?
+          Activity.create(
+            type_of: :add_comment_to_step,
+            user: current_user,
+            project: @step.my_module.experiment.project,
+            experiment: @step.my_module.experiment,
+            my_module: @step.my_module,
+            message: t(
+              "activities.add_comment_to_step",
+              user: current_user.full_name,
+              step: @step.position + 1,
+              step_name: @step.name
+            )
           )
-        )
+        end
 
         format.json {
           render json: {
@@ -110,19 +113,21 @@ class StepCommentsController < ApplicationController
 
           step_comment_annotation_notification(old_text)
           # Generate activity
-          Activity.create(
-            type_of: :edit_step_comment,
-            user: current_user,
-            project: @step.my_module.experiment.project,
-            experiment: @step.my_module.experiment,
-            my_module: @step.my_module,
-            message: t(
-              'activities.edit_step_comment',
-              user: current_user.full_name,
-              step: @step.position + 1,
-              step_name: @step.name
+          if @protocol.in_module?
+            Activity.create(
+              type_of: :edit_step_comment,
+              user: current_user,
+              project: @step.my_module.experiment.project,
+              experiment: @step.my_module.experiment,
+              my_module: @step.my_module,
+              message: t(
+                'activities.edit_step_comment',
+                user: current_user.full_name,
+                step: @step.position + 1,
+                step_name: @step.name
+              )
             )
-          )
+          end
           message = custom_auto_link(@comment.message)
           render json: { comment: message }, status: :ok
         else
@@ -138,19 +143,21 @@ class StepCommentsController < ApplicationController
       format.json do
         if @comment.destroy
           # Generate activity
-          Activity.create(
-            type_of: :delete_step_comment,
-            user: current_user,
-            project: @step.my_module.experiment.project,
-            experiment: @step.my_module.experiment,
-            my_module: @step.my_module,
-            message: t(
-              'activities.delete_step_comment',
-              user: current_user.full_name,
-              step: @step.position + 1,
-              step_name: @step.name
+          if @protocol.in_module?
+            Activity.create(
+              type_of: :delete_step_comment,
+              user: current_user,
+              project: @step.my_module.experiment.project,
+              experiment: @step.my_module.experiment,
+              my_module: @step.my_module,
+              message: t(
+                'activities.delete_step_comment',
+                user: current_user.full_name,
+                step: @step.position + 1,
+                step_name: @step.name
+              )
             )
-          )
+          end
           render json: {}, status: :ok
         else
           render json: { message: I18n.t('comments.delete_error') },
@@ -174,17 +181,27 @@ class StepCommentsController < ApplicationController
   end
 
   def check_view_permissions
-    render_403 unless can_read_protocol_in_module?(@protocol)
+    unless can_view_step_comments(@protocol)
+      render_403
+    end
   end
 
   def check_add_permissions
-    render_403 unless can_create_comments_in_module?(@protocol.my_module)
+    unless can_add_step_comment_in_protocol(@protocol)
+      render_403
+    end
   end
 
-  def check_manage_permissions
+  def check_edit_permissions
     @comment = StepComment.find_by_id(params[:id])
     render_403 unless @comment.present? &&
-                      can_manage_comment_in_module?(@comment.becomes(Comment))
+                      can_edit_step_comment_in_protocol(@comment)
+  end
+
+  def check_destroy_permissions
+    @comment = StepComment.find_by_id(params[:id])
+    render_403 unless @comment.present? &&
+                      can_delete_step_comment_in_protocol(@comment)
   end
 
   def comment_params

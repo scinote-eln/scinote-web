@@ -7,7 +7,8 @@ class ResultCommentsController < ApplicationController
 
   before_action :check_view_permissions, only: [:index]
   before_action :check_add_permissions, only: [:create]
-  before_action :check_manage_permissions, only: %i(edit update destroy)
+  before_action :check_edit_permissions, only: [:edit, :update]
+  before_action :check_destroy_permissions, only: [:destroy]
 
   def index
     @comments = @result.last_comments(@last_comment_id, @per_page)
@@ -171,17 +172,27 @@ class ResultCommentsController < ApplicationController
   end
 
   def check_view_permissions
-    render_403 unless can_read_experiment?(@my_module.experiment)
+    unless can_view_result_comments(@my_module)
+      render_403
+    end
   end
 
   def check_add_permissions
-    render_403 unless can_create_comments_in_module?(@my_module)
+    unless can_add_result_comment_in_module(@my_module)
+      render_403
+    end
   end
 
-  def check_manage_permissions
+  def check_edit_permissions
     @comment = ResultComment.find_by_id(params[:id])
     render_403 unless @comment.present? &&
-                      can_manage_comment_in_module?(@comment.becomes(Comment))
+                      can_edit_result_comment_in_module(@comment)
+  end
+
+  def check_destroy_permissions
+    @comment = ResultComment.find_by_id(params[:id])
+    render_403 unless @comment.present? &&
+                      can_delete_result_comment_in_module(@comment)
   end
 
   def comment_params

@@ -92,7 +92,7 @@ secret:
   restored_on:
 
 a_project:
-  name: A Project
+  name: A Research Effort Activity
   visibility: 1
   due_date: 2018-12-02 15:30:22
   team: biosistemika
@@ -106,7 +106,7 @@ a_project:
   restored_on:
 
 z_project:
-  name: Z Project
+  name: Z Research Effort Activity
   visibility: 1
   due_date: 2018-12-02 15:30:22
   team: biosistemika
@@ -120,7 +120,7 @@ z_project:
   restored_on:
 
 a_archived_project:
-  name: A Archived Project
+  name: A Archived Research Effort Activity
   visibility: 1
   due_date: 2018-12-02 15:30:22
   team: biosistemika
@@ -134,7 +134,7 @@ a_archived_project:
   restored_on:
 
 z_archived_project:
-  name: Z Archived Project
+  name: Z Archived Research Effort Activity
   visibility: 1
   due_date: 2018-12-02 15:30:22
   team: biosistemika
@@ -148,7 +148,7 @@ z_archived_project:
   restored_on:
 
 test1:
-  name: Project 1
+  name: Research Effort Activity 1
   visibility: 1
   due_date: <%= DateTime.now %>
   team: biosistemika
@@ -156,14 +156,14 @@ test1:
   created_by: steve
 
 test2:
-  name: Project 2
+  name: Research Effort Activity 2
   visibility: 0
   team: biosistemika
   archived: true
   archived_on: <%= DateTime.now %>
 
 test3:
-  name: Project 3
+  name: Research Effort Activity 3
   visibility: 1
   team: nib
   archived: false

@@ -10,7 +10,7 @@ export default {
       about_scinote: "About sciNote",
       core_version: "sciNote core version",
       addon_versions: "Addon versions",
-      project: "Project",
+      project: "Research Effort Activity",
       task: "Task"
     },
     page_title: {
@@ -105,8 +105,8 @@ export default {
       my_profile: "My Profile",
       my_statistics: "My Statistics",
       teams: "Teams",
-      project: "Project",
-      projects: "Projects",
+      project: "Research Effort Activity",
+      projects: "Research Effort Activities",
       experiment: "Experiment",
       experiments: "Experiments",
       protocol: "Protocol",
@@ -136,9 +136,9 @@ export default {
           "Are you sure you wish to leave team {teamName}? This action is irreversible.",
         warnings: "Leaving team has following consequences:",
         warning_message_one:
-          "you will lose access to all content belonging to the team (including projects, tasks, protocols and activities);",
+          "you will lose access to all content belonging to the team (including research effort activities, tasks, protocols and activities);",
         warning_message_two:
-          "all projects in the team where you were the sole <b>Owner</b> will receive a new owner from the team administrators;",
+          "all research effort activities in the team where you were the sole <b>Owner</b> will receive a new owner from the team administrators;",
         warning_message_three:
           "all repository protocols in the team belonging to you will be reassigned onto a new owner from team administrators.",
         leave_team: "Leave"
@@ -149,9 +149,9 @@ export default {
           "Are you sure you wish to remove user {user} from team {team}?",
         warnings: "Removing user from team has following consequences:",
         warning_message_one:
-          "user will lose access to all content belonging to the team (including projects, tasks, protocols and activities);",
+          "user will lose access to all content belonging to the team (including research effort activities, tasks, protocols and activities);",
         warning_message_two:
-          "all projects in the team where user was the sole <b>Owner</b> will be reassigned onto you as a new owner;",
+          "all research effort activities in the team where user was the sole <b>Owner</b> will be reassigned onto you as a new owner;",
         warning_message_three:
           "all repository protocols in the team belonging to user will be reassigned onto you.",
         remove_user: "Remove user"

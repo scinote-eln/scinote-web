@@ -4,7 +4,8 @@ class ResultAssetsController < ApplicationController
   before_action :load_vars, only: [:edit, :update, :download]
   before_action :load_vars_nested, only: [:new, :create]
 
-  before_action :check_manage_permissions, only: %i(new create edit update)
+  before_action :check_create_permissions, only: [:new, :create]
+  before_action :check_edit_permissions, only: [:edit, :update]
   before_action :check_archive_permissions, only: [:update]
 
   def new
@@ -190,12 +191,17 @@ class ResultAssetsController < ApplicationController
     render_404 unless @my_module
   end
 
-  def check_manage_permissions
-    render_403 unless can_manage_module?(@my_module)
+  def check_create_permissions
+    render_403 unless can_create_result_asset_in_module(@my_module)
+  end
+
+  def check_edit_permissions
+    render_403 unless can_edit_result_asset_in_module(@my_module)
   end
 
   def check_archive_permissions
-    if result_params[:archived].to_s != '' && !can_manage_result?(@result)
+    if result_params[:archived].to_s != '' and
+      not can_archive_result(@result)
       render_403
     end
   end
@@ -213,8 +219,8 @@ class ResultAssetsController < ApplicationController
   def create_multiple_results
     success = true
     results = []
-    params[:results_files].values.each_with_index do |file, index|
-      asset = Asset.new(file: file,
+    params[:results_files].each_with_index do |file, index|
+      asset = Asset.new(file: file.second,
                         created_by: current_user,
                         last_modified_by: current_user,
                         team: current_team)

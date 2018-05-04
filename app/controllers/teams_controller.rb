@@ -1,8 +1,7 @@
 class TeamsController < ApplicationController
   before_action :load_vars, only: [:parse_sheet, :import_samples, :export_samples]
 
-  before_action :check_create_samples_permissions, only: %i(parse_sheet
-                                                            import_samples)
+  before_action :check_create_sample_permissions, only: [:parse_sheet, :import_samples]
   before_action :check_view_samples_permission, only: [:export_samples]
 
   def parse_sheet
@@ -259,8 +258,10 @@ class TeamsController < ApplicationController
     params.permit(sample_ids: [], header_ids: []).to_h
   end
 
-  def check_create_samples_permissions
-    render_403 unless can_create_samples?(@team)
+  def check_create_sample_permissions
+    unless can_manage_samples?(@team)
+      render_403
+    end
   end
 
   def check_view_samples_permission
