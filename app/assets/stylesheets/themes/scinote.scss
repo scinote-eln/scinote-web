@@ -213,7 +213,7 @@ a[data-toggle="tooltip"] {
 
 .nav-tabs-less > li.active > a {
   &,&:hover,&:focus {
-    color: $brand-default;
+    color: $brand-primary;
     background-color: transparent;
     border-color: transparent;
   }
