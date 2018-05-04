@@ -3,6 +3,7 @@ class ProjectsController < ApplicationController
   include RenamingUtil
   include TeamsHelper
   include InputSanitizeHelper
+  include RapProgramLevelHelper
 
   before_action :load_vars, only: [:show, :edit, :update,
                                    :notifications, :reports,
@@ -46,6 +47,9 @@ class ProjectsController < ApplicationController
 
     # New project for create new project modal
     @project = Project.new
+    # Get all RAP Program Level values for dropdown.
+    @programs = RapProgramLevel.all
+
   end
 
   def archive
