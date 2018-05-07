@@ -34,8 +34,8 @@ Rails.application.configure do
     port: Rails.application.secrets.mailer_port,
     domain: Rails.application.secrets.mailer_domain,
     authentication: "plain",
-    enable_starttls_auto: true,
-    ssl: true,
+    enable_starttls_auto: false,
+    ssl: false,
     user_name: Rails.application.secrets.mailer_user_name,
     password: Rails.application.secrets.mailer_password
   }
@@ -61,11 +61,11 @@ Rails.application.configure do
   # `config.assets.precompile` and `config.assets.version` have moved to config/initializers/assets.rb
 
   # Specifies the header that your server uses for sending files.
-  # config.action_dispatch.x_sendfile_header = 'X-Sendfile' # for Apache
+  config.action_dispatch.x_sendfile_header = 'X-Sendfile' # for Apache
   # config.action_dispatch.x_sendfile_header = 'X-Accel-Redirect' # for NGINX
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
-  config.force_ssl = true #ENV['RAILS_FORCE_SSL'].present?
+  config.force_ssl = false #ENV['RAILS_FORCE_SSL'].present?
 
   # Display info and higher on production.
   config.log_level = :info
