@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171026090804) do
+ActiveRecord::Schema.define(version: 20180507151400) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -255,10 +255,12 @@ ActiveRecord::Schema.define(version: 20171026090804) do
     t.integer "restored_by_id"
     t.datetime "restored_on"
     t.string "experiments_order"
+    t.integer "rap_task_level_id", null: false
     t.index "trim_html_tags((name)::text) gin_trgm_ops", name: "index_projects_on_name", using: :gin
     t.index ["archived_by_id"], name: "index_projects_on_archived_by_id"
     t.index ["created_by_id"], name: "index_projects_on_created_by_id"
     t.index ["last_modified_by_id"], name: "index_projects_on_last_modified_by_id"
+    t.index ["rap_task_level_id"], name: "index_projects_on_rap_task_level_id"
     t.index ["restored_by_id"], name: "index_projects_on_restored_by_id"
     t.index ["team_id"], name: "index_projects_on_team_id"
   end
@@ -854,6 +856,7 @@ ActiveRecord::Schema.define(version: 20171026090804) do
   add_foreign_key "my_modules", "users", column: "last_modified_by_id"
   add_foreign_key "my_modules", "users", column: "restored_by_id"
   add_foreign_key "notifications", "users", column: "generator_user_id"
+  add_foreign_key "projects", "rap_task_levels"
   add_foreign_key "projects", "teams"
   add_foreign_key "projects", "users", column: "archived_by_id"
   add_foreign_key "projects", "users", column: "created_by_id"

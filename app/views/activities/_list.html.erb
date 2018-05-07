@@ -8,7 +8,7 @@
   <% else %>
   <li class="text-center activity-date-item">
     <span class="label label-primary">
-      <%= activities.first.created_at.strftime('%B %d, %Y'') %>
+      <%= activities.first.created_at.strftime('%B %d, %Y') %>
     </span>
   </li>
   <% end %>
@@ -18,7 +18,7 @@
   <% if activity.created_at.to_date < prevDate %>
     <li class="text-center activity-date-item">
       <span class="label label-primary">
-        <%= activity.created_at.strftime('%B %d, %Y'') %>
+        <%= activity.created_at.strftime('%B %d, %Y') %>
       </span>
     </li>
   <% end %>
