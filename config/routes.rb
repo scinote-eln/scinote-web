@@ -1,6 +1,4 @@
 Rails.application.routes.draw do
-  resources :test_rap_topic_levels
-  resources :test_rap_program_levels
   require 'subdomain'
 
   def draw(routes_name)
@@ -12,8 +10,8 @@ Rails.application.routes.draw do
                controllers: { registrations: 'users/registrations',
                               sessions: 'users/sessions',
                               invitations: 'users/invitations',
-                              confirmations: 'users/confirmations'
-                              }
+                              confirmations: 'users/confirmations',
+                              omniauth_callbacks: 'users/omniauth_callbacks' }
 
     root 'projects#index'
 
@@ -38,6 +36,7 @@ Rails.application.routes.draw do
     get 'rap_task_level/:rap_project_level_id',
         to: 'rap_task_level#show',
         as: 'rap_task_level'
+
 
     # # Client APP endpoints
     # get '/settings', to: 'client_api/settings#index'
@@ -67,7 +66,7 @@ Rails.application.routes.draw do
     get 'not_found', to: 'application#not_found', as: 'not_found'
 
     # Settings
-    resources :users #, only: :index # needed for testing signup
+    resources :users, only: :index # needed for testing signup
     # needed for testing edit passowrd
     get '/users/password', to: 'devise_password#edit'
 
@@ -201,7 +200,7 @@ Rails.application.routes.draw do
         get 'destroy_html'
       end
       member do
-        post 'parse_sheet', defaults: { format: 'json' }
+        post 'parse_sheet'
         post 'import_samples'
         post 'export_samples'
         post 'export_repository', to: 'repositories#export_repository'
@@ -499,7 +498,7 @@ Rails.application.routes.draw do
 
       resources :repository_rows, only: %i(create edit update)
       member do
-        post 'parse_sheet', defaults: { format: 'json' }
+        post 'parse_sheet'
         post 'import_records'
       end
     end
@@ -522,10 +521,6 @@ Rails.application.routes.draw do
       get 'avatar/:id/:style' => 'users/registrations#avatar', as: 'avatar'
       post 'avatar_signature' => 'users/registrations#signature'
       get 'users/auth_token_sign_in' => 'users/sessions#auth_token_create'
-	  # These weren't present in previous EPA versions of sciNote
-      get 'users/sign_up_provider' => 'users/registrations#new_with_provider'
-      post 'users/complete_sign_up_provider' =>
-           'users/registrations#create_with_provider'
     end
 
     namespace :api, defaults: { format: 'json' } do

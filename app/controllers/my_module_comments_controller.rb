@@ -76,7 +76,7 @@ class MyModuleCommentsController < ApplicationController
                 comment: @comment
               }
             ),
-            date: @comment.created_at.strftime('%B %d, %Y'),
+            date: @comment.created_at.strftime('%B %d, %Y''),
             linked_id: @my_module.id, # Used for counter badge
             counter: @my_module.task_comments.count # Used for counter badge
           },

@@ -30,7 +30,7 @@ en:
         password_placeholder: "pass****"
         submit: "Log in"
       create:
-        team_name: "%{user}'s Research Effort Activity"
+        team_name: "%{user}'s Research Effort Activities"
       auth_token_create:
         wrong_credentials: "Failed to automatically sign in (wrong credentials)."
     unlocks:
@@ -46,6 +46,11 @@ en:
       not_receive_confirmation: "Didn't receive confirmation instructions?"
       not_receive_unlock: "Didn't receive unlock instructions?"
       sign_in_provider: "Sign in with %{provider}"
+    linkedin:
+      provider_name: "LinkedIn"
+      complete_sign_up: "You have to complete the sign up process"
+      email_already_taken: "SciNote account with email %{email} alreday exists"
+      failed_to_save: "Failed to create new user"
 
   helpers:
     label:
@@ -191,7 +196,7 @@ en:
     index:
       head_title: "Home"
       archive: "Archive"
-      new: "New Research Effort Activity"
+      new: "Research Effort Activity"
       visibility_private: "Research Effort Activity is private. Only invited users can see it."
       visibility_public: "Research Effort Activity is public. Everybody from the team can see it."
       user_project: "%{user} joined on %{timestamp}."
@@ -227,7 +232,7 @@ en:
       content_loading: "Loading..."
       edit_option: "Edit"
       archive_option: "Archive"
-      archive_confirm: "Are you sure to archive Research Effort Activity?"
+      archive_confirm: "Are you sure you want to archive Research Effort Activity?"
       restore_option: "Restore"
       options_header: "Options"
       comment_placeholder: "Your Message"
@@ -237,8 +242,8 @@ en:
       modal_new_project:
         modal_title: "Research Effort Activity"
         create: "Create Research Effort Activity"
-        name: "Research Effort Activity"
-        name_placeholder: "My Research Effort Activity"
+        name: "Research Effort Activity name"
+        name_placeholder: "Research Effort Activity"
         team: "Team"
         visibility: "Visibility"
         visibility_hidden: "Private"
@@ -314,7 +319,7 @@ en:
             tasks_tab: "Choose tasks"
             content_tab: "Choose content"
           project_contents_inner:
-            instructions: "Select Research Effort Activity/experiment/tasks to include in the report"
+            instructions: "Select Research Effort Activities/experiment/tasks to include in the report"
             no_modules: "The Research Effort Activity contains no tasks"
             no_module_group: "No workflow"
           module_contents:
@@ -1193,7 +1198,7 @@ en:
     create_experiment: "<i>%{user}</i> created experiment <strong>%{experiment}</strong>."
     edit_experiment: "<i>%{user}</i> edited experiment <strong>%{experiment}</strong>."
     clone_experiment: "<i>%{user}</i> copied experiment <strong>%{experiment_new}</strong> from <strong>%{experiment_original}</strong> as template."
-    move_experiment: "<i>%{user}</i> moved experiment  <strong>%{experiment}</strong> from Research Effort Activity <strong>%{project_original}</strong> to project <strong>%{project_new}</strong>."
+    move_experiment: "<i>%{user}</i> moved experiment  <strong>%{experiment}</strong> from Research Effort Activity <strong>%{project_original}</strong> to Research Effort Activity <strong>%{project_new}</strong>."
     add_comment_to_project: "<i>%{user}</i> commented on Research Effort Activity <strong>%{project}</strong>."
     edit_project_comment: "<i>%{user}</i> edited comment on Research Effort Activity <strong>%{project}</strong>."
     delete_project_comment: "<i>%{user}</i> deleted comment on Research Effort Activity <strong>%{project}</strong>."
@@ -1715,7 +1720,7 @@ en:
     next: "Next"
     skip_tutorial: "Skip tutorial"
     finish_tutorial: "Start using sciNote"
-    tutorial_welcome_title_html: "Welcome to <em>sciNote</em>, your electronic lab notebook. <em>sciNote</em> organizes your work in Research Effort Activities. Click <strong>Team icon</strong> <span class='fa fa-users'></span> to choose Projects from which Team you want to view on your Dashboard. You can also reorder them by clicking the <strong>Sort by</strong> button. <strong>(Step 1/26)</strong>"
+    tutorial_welcome_title_html: "Welcome to <em>sciNote</em>, your electronic lab notebook. <em>sciNote</em> organizes your work in Research Effort Activities. Click <strong>Team icon</strong> <span class='fa fa-users'></span> to choose Research Effort Activities from which Team you want to view on your Dashboard. You can also reorder them by clicking the <strong>Sort by</strong> button. <strong>(Step 1/26)</strong>"
     create_project_html: "Click here to create a Research Effort Activity and it will appear under the Team you've chosen. Choose public <span class='glyphicon glyphicon-eye-open'></span> if you want everyone from the Team to view the Research Effort Activity or choose private <span class='glyphicon glyphicon-eye-close'></span> so only the people who you invite to the Research Effort Activity can see it. <strong>(Step 2/26)</strong>"
     project_options_html: "In the bottom row of the Research Effort Activity card you can check the latest activity <span class='glyphicon glyphicon-equalizer'></span>, invite collaborators <span class='glyphicon glyphicon-user'></span>, see the notifications <span class='glyphicon glyphicon-bell'></span> and write comments <span class='glyphicon glyphicon-comment'></span>. You can also edit the Research Effort Activity's name and visibility or archive it. You can recall the Research Effort Activity from the Archive <span class='glyphicon glyphicon-briefcase'></span> in the top right side of the Dashboard at any time. <strong>(Step 3/26)</strong>"
     create_experiment_html: "Inside of a Research Effort Activity you can create Experiments. To create one click on this button and edit Experiment’s name and description. <strong>(Step 4/26)</strong>"

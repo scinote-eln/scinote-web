@@ -310,6 +310,10 @@ class Users::RegistrationsController < Devise::RegistrationsController
     render_403 unless Rails.configuration.x.enable_user_registration
   end
 
+  def sign_up_with_provider_enabled?
+    render_403 unless Rails.configuration.x.linkedin_signin_enabled
+  end
+
   # Redirect to login page after signing up
   def after_sign_up_path_for(resource)
     new_user_session_path

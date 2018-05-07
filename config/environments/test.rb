@@ -62,7 +62,7 @@ Rails.application.configure do
     address: Rails.application.secrets.mailer_address,
     port: Rails.application.secrets.mailer_port,
     domain: Rails.application.secrets.mailer_domain,
-    authentication: Rails.application.secrets.mailer_authentication,
+    authentication: "plain",
     enable_starttls_auto: true,
     user_name: Rails.application.secrets.mailer_user_name,
     password: Rails.application.secrets.mailer_password

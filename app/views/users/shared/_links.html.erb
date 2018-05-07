@@ -19,3 +19,7 @@
 <%- if devise_mapping.lockable? && resource_class.unlock_strategy_enabled?(:email) && controller_name != 'unlocks' %>
   <%= link_to t("devise.links.not_receive_unlock"), new_unlock_path(resource_name) %><br />
 <% end -%>
+
+<%- if devise_mapping.omniauthable? && resource_class.omniauth_providers.any? %>
+  <div data-hook="omniauth-sign-in-links"></div>
+<% end -%>

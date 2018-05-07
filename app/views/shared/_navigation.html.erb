@@ -226,9 +226,9 @@
             <span class="glyphicon glyphicon-info-sign"></span>
             <span class="visible-xs-inline visible-sm-inline"><%= t('nav.label.info') %></span>
           </a>
+          
+            
           <ul class="dropdown-menu" data-hook="navigation-help-menu">
-		  
-		    
             <li href="<%= contact_path %>">
               <%= link_to t('nav.help.contact'), contact_path %>
             </li>
@@ -239,11 +239,11 @@
             <li role="separator" class="divider"></li>
             <li href="<%= training_path %>">
               <%= link_to t('nav.help.training'), training_path %>
-            </li>
+              </li>
           </ul>
-		  
-		  
-		  
+        
+          
+          
         </li>
 
         <!-- greetings -->
@@ -262,7 +262,6 @@
                           class: "avatar" %>
           </a>
           <% if current_user.teams.length > 1 || can_create_teams? %>
-            <!--<ul class="dropdown-menu" data-hook="navigation-user-menu">-->
             <ul class="dropdown-menu">
               <li>
                 <%= link_to t('nav.user.settings'), edit_user_registration_path, data: { turbolinks: false } %>

@@ -5,6 +5,7 @@ class User < ApplicationRecord
   acts_as_token_authenticatable
   devise :invitable, :confirmable, :database_authenticatable, :registerable,
          :async, :recoverable, :rememberable, :trackable, :validatable,
+         :omniauthable, omniauth_providers: Extends::OMNIAUTH_PROVIDERS,
          stretches: Constants::PASSWORD_STRETCH_FACTOR
   has_attached_file :avatar,
                     styles: {
@@ -226,6 +227,17 @@ class User < ApplicationRecord
 
   def current_team
     Team.find_by_id(self.current_team_id)
+  end
+
+  def self.from_omniauth(auth)
+    includes(:user_identities)
+      .where(
+        'user_identities.provider=? AND user_identities.uid=?',
+        auth.provider,
+        auth.uid
+      )
+      .references(:user_identities)
+      .take
   end
 
   # Search all active users for username & email. Can
