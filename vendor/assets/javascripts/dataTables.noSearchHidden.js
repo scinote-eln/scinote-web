@@ -27,6 +27,11 @@
   // Listen for DataTables initializations
   $(document).on('init.dt.dth', function(e, settings, json) {
     //console.log("out");
+    // prevents colision with the slick slider
+    if( settings.hasOwnProperty('unslicked') )  {
+      return;
+    }
+
     if (
       settings.oInit.noSearchHidden                       || // option specified
       $.fn.dataTable.defaults.noSearchHidden                 // default set
