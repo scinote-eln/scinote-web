@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180507151400) do
+ActiveRecord::Schema.define(version: 20180507160013) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -313,32 +313,36 @@ ActiveRecord::Schema.define(version: 20180507151400) do
   end
 
   create_table "rap_program_levels", force: :cascade do |t|
-    t.string "name"
+    t.string "name", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_rap_program_levels_on_name", unique: true
   end
 
   create_table "rap_project_levels", force: :cascade do |t|
-    t.string "name"
+    t.string "name", null: false
     t.bigint "rap_topic_level_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_rap_project_levels_on_name", unique: true
     t.index ["rap_topic_level_id"], name: "index_rap_project_levels_on_rap_topic_level_id"
   end
 
   create_table "rap_task_levels", force: :cascade do |t|
-    t.string "name"
+    t.string "name", null: false
     t.bigint "rap_project_level_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_rap_task_levels_on_name", unique: true
     t.index ["rap_project_level_id"], name: "index_rap_task_levels_on_rap_project_level_id"
   end
 
   create_table "rap_topic_levels", force: :cascade do |t|
-    t.string "name"
+    t.string "name", null: false
     t.bigint "rap_program_level_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_rap_topic_levels_on_name", unique: true
     t.index ["rap_program_level_id"], name: "index_rap_topic_levels_on_rap_program_level_id"
   end
 

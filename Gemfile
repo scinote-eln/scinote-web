@@ -19,6 +19,9 @@ gem 'sanitize', '~> 4.4'
 gem 'omniauth'
 gem 'omniauth-linkedin-oauth2'
 
+# Added Passenger 03/14/2018
+gem 'passenger', '>= 5.0.25', require: 'phusion_passenger/rack_handler'
+
 # Gems for API implementation
 gem 'jwt', '~> 1.5'
 
@@ -56,6 +59,7 @@ gem 'i18n-js', '~> 3.0' # Localization in javascript files
 gem 'roo', '~> 2.7.1' # Spreadsheet parser
 gem 'wicked_pdf', '~> 1.1.0'
 gem 'silencer' # Silence certain Rails logs
+gem 'remotipart', '~>1.2' # Async file uploads
 gem 'wkhtmltopdf-heroku'
 gem 'faker' # Generate fake data
 gem 'auto_strip_attributes', '~> 2.1' # Removes unnecessary whitespaces from ActiveRecord or ActiveModel attributes
@@ -73,6 +77,7 @@ gem 'scenic', '~> 1.4'
 
 gem 'paperclip', '~> 5.3' # File attachment, image attachment library
 gem 'aws-sdk', '~> 2'
+gem 'aws-sdk-v1'
 
 gem 'delayed_job_active_record'
 gem 'devise-async',

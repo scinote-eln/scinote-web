@@ -16,7 +16,7 @@ function generateTaskDropdown(data){
     var dropdownHTML = [
         '<div id="rapTaskLevelSelect" class="form-group">',
         '<label class="control-label" for="rap_task_level">RAP Task Level</label>',
-        '<select class="form-control" onchange="selectRapTaskLevel(this)" onfocus="this.selectedIndex = -1;">',
+        '<select name="project[rap_task_level_id]" class="form-control" onchange="selectRapTaskLevel(this)" onfocus="this.selectedIndex = -1;">',
         '<option value="" selected disabled hidden></option>', options, "</select></div>"
     ]
     // Remove in case it already exists, then insert new Task Level Select HTML

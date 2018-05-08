@@ -110,6 +110,9 @@ GEM
       jmespath (~> 1.0)
     aws-sdk-resources (2.10.123)
       aws-sdk-core (= 2.10.123)
+    aws-sdk-v1 (1.67.0)
+      json (~> 1.4)
+      nokogiri (~> 1)
     aws-sigv4 (1.0.2)
     babel-source (5.8.35)
     babel-transpiler (0.7.0)
@@ -330,6 +333,9 @@ GEM
     parallel (1.12.1)
     parser (2.4.0.2)
       ast (~> 2.3)
+    passenger (5.2.3)
+      rack
+      rake (>= 0.8.1)
     pg (0.21.0)
     phantomjs (2.1.1.0)
     poltergeist (1.17.0)
@@ -394,6 +400,7 @@ GEM
     rdoc (4.3.0)
     recaptcha (4.6.3)
       json
+    remotipart (1.4.0)
     responders (2.4.0)
       actionpack (>= 4.2.0, < 5.3)
       railties (>= 4.2.0, < 5.3)
@@ -536,6 +543,7 @@ DEPENDENCIES
   autosize-rails
   awesome_print
   aws-sdk (~> 2)
+  aws-sdk-v1
   base62
   bcrypt (~> 3.1.10)
   better_errors
@@ -585,6 +593,7 @@ DEPENDENCIES
   omniauth
   omniauth-linkedin-oauth2
   paperclip (~> 5.3)
+  passenger (>= 5.0.25)
   pg (~> 0.18)
   phantomjs
   poltergeist
@@ -597,6 +606,7 @@ DEPENDENCIES
   rails_12factor
   rails_autolink (~> 1.1, >= 1.1.6)
   recaptcha
+  remotipart (~> 1.2)
   rgl
   roo (~> 2.7.1)
   rspec-rails

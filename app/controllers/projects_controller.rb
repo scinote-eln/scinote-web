@@ -44,7 +44,7 @@ class ProjectsController < ApplicationController
 
     # New project for create new project modal
     @project = Project.new
-	# Get all RAP Program Level values for dropdown.
+	  # Get all RAP Program Level values for dropdown.
     @programs = RapProgramLevel.all
   end
 
@@ -61,6 +61,13 @@ class ProjectsController < ApplicationController
     @project = Project.new(project_params)
     @project.created_by = current_user
     @project.last_modified_by = current_user
+
+    puts "Team ID: #{project_params[:team_id]}"
+    puts "New project: #{project_params[:name]}"
+    puts "Creating a new project with rap_task_level_id: #{project_params[:rap_task_level_id]}"
+    puts "Printing all values inside project_params..."
+    project_params.each { |x| puts x }
+
     if current_team.id == project_params[:team_id].to_i &&
        @project.save
       # Create user-project association
@@ -310,7 +317,7 @@ class ProjectsController < ApplicationController
   private
 
   def project_params
-    params.require(:project).permit(:name, :team_id, :visibility, :archived)
+    params.require(:project).permit(:name, :team_id, :visibility, :archived, :rap_task_level_id)
   end
 
   def load_vars
