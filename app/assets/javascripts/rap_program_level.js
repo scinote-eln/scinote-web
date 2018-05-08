@@ -11,6 +11,7 @@ function selectRapProgramLevel(el, edit_suffix){
         type: "GET",
         dataType: "json",
         success: function (data) {
+            resetRapProgramLevelChildren();
             generateTopicDropdown(data, edit_suffix);
         },
         error: function (err) {

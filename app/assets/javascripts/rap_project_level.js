@@ -16,8 +16,7 @@ function generateProjectDropdown(data, edit_suffix){
     var dropdownHTML = [
         '<div id="rapProjectLevelSelect', edit_suffix, '" class="form-group">',
         '<label class="control-label" for="rap_project_level">RAP Project Level</label>',
-        '<select class="form-control" onchange="selectRapProjectLevel(this, \'', edit_suffix,
-        '\')" onfocus="resetRapProjectLevelChildren()">',
+        '<select class="form-control" onchange="selectRapProjectLevel(this, \'', edit_suffix, '\')" required>',
         '<option value="" selected disabled hidden></option>', options, "</select></div>"
     ]
     // Remove in case it already exists, then insert new Project Level Select HTML
@@ -36,6 +35,7 @@ function selectRapProjectLevel(el, edit_suffix){
         type: "GET",
         dataType: "json",
         success: function (data) {
+            resetRapProjectLevelChildren();
             generateTaskDropdown(data, edit_suffix);
         },
         error: function (err) {

@@ -17,7 +17,7 @@ function generateTopicDropdown(data, edit_suffix){
         '<div id="rapTopicLevelSelect', edit_suffix, '" class="form-group">',
         '<label class="control-label" for="rap_topic_level">RAP Topic Level</label>',
         '<select class="form-control" onchange="selectRapTopicLevel(this, \'', edit_suffix,
-        '\')" onfocus="resetRapTopicLevelChildren()">',
+        '\')" required>',
         '<option value="" selected disabled hidden></option>', options, "</select></div>"
     ]
     // Remove in case it already exists, then insert new Topic Level Select HTML
@@ -36,6 +36,7 @@ function selectRapTopicLevel(el, edit_suffix){
         type: "GET",
         dataType: "json",
         success: function (data) {
+            resetRapTopicLevelChildren();
             generateProjectDropdown(data, edit_suffix);
         },
         error: function (err) {
