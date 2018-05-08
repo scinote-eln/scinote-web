@@ -2,7 +2,7 @@
 // All this logic will automatically be available in application.js.
 
 // Build the HTML select dropdown for Task Levels
-function generateTaskDropdown(data){
+function generateTaskDropdown(data, edit_suffix){
     // Generate option fields
     var options = [];
     for(var i in data){
@@ -14,16 +14,19 @@ function generateTaskDropdown(data){
         }
     }
     var dropdownHTML = [
-        '<div id="rapTaskLevelSelect" class="form-group">',
+        '<div id="rapTaskLevelSelect', edit_suffix, '" class="form-group">',
         '<label class="control-label" for="rap_task_level">RAP Task Level</label>',
-        '<select name="project[rap_task_level_id]" class="form-control" onchange="selectRapTaskLevel(this)" onfocus="this.selectedIndex = -1;">',
+        '<select name="project[rap_task_level_id]" class="form-control" onchange="selectRapTaskLevel(this, \'',
+        edit_suffix, '\')" onfocus="this.selectedIndex = -1;">',
         '<option value="" selected disabled hidden></option>', options, "</select></div>"
     ]
     // Remove in case it already exists, then insert new Task Level Select HTML
-    $('#rapTaskLevelSelect').remove();
-    $('#rapProjectLevelSelect').after(dropdownHTML.join(""));
+    var remDivID = '#rapTaskLevelSelect' + edit_suffix
+    var addDivID = '#rapProjectLevelSelect' + edit_suffix;
+    $(remDivID).remove();
+    $(addDivID).after(dropdownHTML.join(""));
 }
 
-function selectRapTaskLevel(el){
+function selectRapTaskLevel(el, edit_suffix){
     // Do nothing...
 }

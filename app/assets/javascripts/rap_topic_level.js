@@ -2,7 +2,7 @@
 // All this logic will automatically be available in application.js.
 
 // Build the HTML select dropdown for Topic Levels
-function generateTopicDropdown(data){
+function generateTopicDropdown(data, edit_suffix){
     // Generate option fields
     var options = [];
     for(var i in data){
@@ -14,17 +14,20 @@ function generateTopicDropdown(data){
         }
     }
     var dropdownHTML = [
-        '<div id="rapTopicLevelSelect" class="form-group">',
+        '<div id="rapTopicLevelSelect', edit_suffix, '" class="form-group">',
         '<label class="control-label" for="rap_topic_level">RAP Topic Level</label>',
-        '<select class="form-control" onchange="selectRapTopicLevel(this)" onfocus="resetRapTopicLevelChildren()">',
+        '<select class="form-control" onchange="selectRapTopicLevel(this, \'', edit_suffix,
+        '\')" onfocus="resetRapTopicLevelChildren()">',
         '<option value="" selected disabled hidden></option>', options, "</select></div>"
     ]
     // Remove in case it already exists, then insert new Topic Level Select HTML
-    $('#rapTopicLevelSelect').remove();
-    $('#rapProgramLevelSelect').after(dropdownHTML.join(""));
+    var remDivID = '#rapTopicLevelSelect' + edit_suffix
+    var addDivID = '#rapProgramLevelSelect' + edit_suffix;
+    $(remDivID).remove();
+    $(addDivID).after(dropdownHTML.join(""));
 }
 
-function selectRapTopicLevel(el){
+function selectRapTopicLevel(el, edit_suffix){
     var topicLevelID = el.value;
     // Get all RapProjectLevels for this topicLevelID
     var url = window.location.protocol + "//" + window.location.host + "/rap_project_level/" + topicLevelID;
@@ -33,7 +36,7 @@ function selectRapTopicLevel(el){
         type: "GET",
         dataType: "json",
         success: function (data) {
-            generateProjectDropdown(data);
+            generateProjectDropdown(data, edit_suffix);
         },
         error: function (err) {
           // TODO
@@ -46,4 +49,7 @@ function selectRapTopicLevel(el){
 function resetRapTopicLevelChildren(){
     $("#rapProjectLevelSelect").remove();
     $("#rapTaskLevelSelect").remove();
+    // Reset the Edit children as well.
+    $("#rapProjectLevelSelectEdit").remove();
+    $("#rapTaskLevelSelectEdit").remove();
 }

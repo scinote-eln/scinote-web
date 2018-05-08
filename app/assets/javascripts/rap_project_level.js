@@ -2,7 +2,7 @@
 // All this logic will automatically be available in application.js.
 
 // Build the HTML select dropdown for Project Levels
-function generateProjectDropdown(data){
+function generateProjectDropdown(data, edit_suffix){
     // Generate option fields
     var options = [];
     for(var i in data){
@@ -14,17 +14,20 @@ function generateProjectDropdown(data){
         }
     }
     var dropdownHTML = [
-        '<div id="rapProjectLevelSelect" class="form-group">',
+        '<div id="rapProjectLevelSelect', edit_suffix, '" class="form-group">',
         '<label class="control-label" for="rap_project_level">RAP Project Level</label>',
-        '<select class="form-control" onchange="selectRapProjectLevel(this)" onfocus="resetRapProjectLevelChildren()">',
+        '<select class="form-control" onchange="selectRapProjectLevel(this, \'', edit_suffix,
+        '\')" onfocus="resetRapProjectLevelChildren()">',
         '<option value="" selected disabled hidden></option>', options, "</select></div>"
     ]
     // Remove in case it already exists, then insert new Project Level Select HTML
-    $('#rapProjectLevelSelect').remove();
-    $('#rapTopicLevelSelect').after(dropdownHTML.join(""));
+    var remDivID = '#rapProjectLevelSelect' + edit_suffix
+    var addDivID = '#rapTopicLevelSelect' + edit_suffix;
+    $(remDivID).remove();
+    $(addDivID).after(dropdownHTML.join(""));
 }
 
-function selectRapProjectLevel(el){
+function selectRapProjectLevel(el, edit_suffix){
     var projectLevelID = el.value;
     // Get all RapTaskLevels for this projectLevelID
     var url = window.location.protocol + "//" + window.location.host + "/rap_task_level/" + projectLevelID;
@@ -33,7 +36,7 @@ function selectRapProjectLevel(el){
         type: "GET",
         dataType: "json",
         success: function (data) {
-            generateTaskDropdown(data);
+            generateTaskDropdown(data, edit_suffix);
         },
         error: function (err) {
           // TODO
@@ -45,4 +48,6 @@ function selectRapProjectLevel(el){
 
 function resetRapProjectLevelChildren(){
     $("#rapTaskLevelSelect").remove();
+    // Reset the Edit children as well.
+    $("#rapTaskLevelSelectEdit").remove();
 }
