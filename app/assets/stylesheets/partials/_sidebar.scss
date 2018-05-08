@@ -22,6 +22,7 @@ $toggle-btn-size: 50px;
   transition: all 0.5s ease;
 
   #sidebar-wrapper {
+    box-shadow: 0 1px 4px $color-alto;
     background-color: $color-white;
     z-index: 1000;
     position: fixed;

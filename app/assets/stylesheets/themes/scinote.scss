@@ -46,10 +46,16 @@ table {
   }
 }
 
-#fluid-content {
+#fluid-content:not(.no-second-nav-container) {
   padding-left: 15px;
   padding-right: 15px;
-  padding-top: 80px;
+  padding-top: 50px;
+}
+
+.content-pane {
+  background-color: $color-white;
+  margin: 20px 0;
+  padding: 15px 20px;
 }
 
 .spacer {
@@ -114,10 +120,6 @@ body {
 .handle-move {
   cursor: move;
   cursor: -webkit-grabbing;
-}
-
-.bg-primary {
-  background-color: $brand-primary;
 }
 
 /* this rule is strict because the order of css files is not correct */
@@ -269,7 +271,7 @@ a[data-toggle="tooltip"] {
   }
 
   .nav-name {
-    padding: 15px 0;
+    padding: 5px 0;
   }
 
   ul.nav {
@@ -529,6 +531,7 @@ ul.double-line > li {
 
 .page-header {
   border-color: $color-alto;
+  margin-top: 0;
 }
 
 .pagination > .active > a,
@@ -682,7 +685,8 @@ ul.double-line > li {
 }
 
 #global-activity-page {
-  margin-top: 50px;
+  margin-top: 15px;
+  padding: 0;
 }
 
 .btn-more-activities {
@@ -872,8 +876,10 @@ ul.content-module-activities {
 }
 
 .badge-icon {
-  font-size: 1.4em;
+  background-color: $color-silver;
+  color: $color-white;
   float: left;
+  font-size: 1.4em;
   padding: 6px 10px;
 
   & + .well-sm {
@@ -936,6 +942,7 @@ ul.content-module-activities {
     position: absolute;
 
     & > .badge {
+      background: $brand-success;
       border-radius: 2em;
       float: left;
       font-size: 23.4px;
@@ -955,6 +962,7 @@ ul.content-module-activities {
     }
 
     & > .badge.icon {
+      background-color: $color-silver;
       font-size: 16.5px;
       padding: 9px;
     }

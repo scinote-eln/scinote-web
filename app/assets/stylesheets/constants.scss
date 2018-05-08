@@ -192,15 +192,15 @@ $btn-border-radius-small: $border-radius-small;
 // $grid-gutter-width: 30px;
 // $grid-float-breakpoint: $screen-sm-min;
 // $grid-float-breakpoint-max: ($grid-float-breakpoint - 1);
-//
-// // Container sizes
-// $container-tablet: (720px + $grid-gutter-width);
-// $container-sm: $container-tablet;
-// $container-desktop: (940px + $grid-gutter-width);
-// $container-md: $container-desktop;
-// $container-large-desktop: (1140px + $grid-gutter-width);
-// $container-lg: $container-large-desktop;
-//
+
+// Container sizes
+$container-tablet: auto;
+$container-sm: auto;
+$container-desktop: auto;
+$container-md: auto;
+$container-large-desktop: auto;
+$container-lg: auto;
+
 // // Navbar
 // $navbar-height: 50px;
 // $navbar-margin-bottom: $line-height-computed;

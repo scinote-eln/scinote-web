@@ -2,58 +2,56 @@
 <%= render partial: "shared/sidebar" %>
 <%= render partial: "shared/secondary_navigation" %>
 
-<div class="row">
-  <div class="col-sm-12"
-       id="data-holder"
-       data-project-id="<%= @project.id %>">
-    <div class="row">
-      <div class="col-sm-12">
-        <!-- experiment sort -->
-        <div class="dropdown pull-left">
-          <button class="btn btn-default dropdown-toggle" type="button" id="sortMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-            <span class="hidden-xs"><%= t'projects.index.sort' %></span>
-            <span class="visible-xs-inline"><i class="glyphicon glyphicon-sort"></i></span>
-            <span class="caret"></span>
-          </button>
-          <ul class="dropdown-menu" aria-labelledby="sortMenu">
-            <% ["new", "old", "atoz", "ztoa"].each do |sort| %>
-              <% if @current_sort != sort %>
-                <li><a href="?<%= {sort: sort}.reject{|v| v.to_s == "0"}.to_query %>"><%= t('projects.index.sort_' + sort) %></a></li>
-              <% else %>
-                <li class="disabled"><a href="#"><%= t('projects.index.sort_' + sort) %></a></li>
+<div class="content-pane">
+  <div class="row">
+    <div class="col-sm-12"
+         id="data-holder"
+         data-project-id="<%= @project.id %>">
+      <div class="row">
+        <div class="col-sm-12">
+          <!-- experiment sort -->
+          <div class="dropdown pull-left">
+            <button class="btn btn-default dropdown-toggle" type="button" id="sortMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+              <span class="hidden-xs"><%= t'projects.index.sort' %></span>
+              <span class="visible-xs-inline"><i class="glyphicon glyphicon-sort"></i></span>
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="sortMenu">
+              <% ["new", "old", "atoz", "ztoa"].each do |sort| %>
+                <% if @current_sort != sort %>
+                  <li><a href="?<%= {sort: sort}.reject{|v| v.to_s == "0"}.to_query %>"><%= t('projects.index.sort_' + sort) %></a></li>
+                <% else %>
+                  <li class="disabled"><a href="#"><%= t('projects.index.sort_' + sort) %></a></li>
+                <% end %>
               <% end %>
+            </ul>
+          </div>
+          <% if can_create_experiments?(@project) %>
+            <%= link_to new_project_experiment_url(@project),
+                        remote: true,
+                        type: "button",
+                        id: 'new-experiment',
+                        class: 'btn btn-primary pull-right' do %>
+              <span class="glyphicon glyphicon-plus"></span>
+              <span class="hidden-xs"><%=t 'experiments.new.create' %></span>
             <% end %>
-          </ul>
-        </div>
-        <% if can_create_experiments?(@project) %>
-          <%= link_to new_project_experiment_url(@project),
-                      remote: true,
-                      type: "button",
-                      id: 'new-experiment',
-                      class: 'btn btn-primary pull-right' do %>
-            <span class="glyphicon glyphicon-plus"></span>
-            <span class="hidden-xs"><%=t 'experiments.new.create' %></span>
           <% end %>
-        <% end %>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-sm-6">
-        <h2><%= t'projects.show.page_title' %></h2>
+        </div>
       </div>
     </div>
   </div>
-</div>
-<div class="row">
-  <% @project.active_experiments(@current_sort).each_with_index do |experiment, index| %>
-    <%= render partial: 'projects/show/experiment',
-               locals: { experiment: experiment } %>
+  <div class="row">
+    <% @project.active_experiments(@current_sort).each_with_index do |experiment, index| %>
+      <%= render partial: 'projects/show/experiment',
+                 locals: { experiment: experiment } %>
 
-    <%= content_tag(:div, '', class: 'clearfix visible-lg-block') if (index + 1) % 2 == 0 %>
-  <% end %>
-  <% if can_create_experiments?(@project) %>
-    <%= render 'projects/show/new_experiment' %>
-  <% end %>
+      <%= content_tag(:div, '', class: 'clearfix visible-lg-block') if (index + 1) % 2 == 0 %>
+    <% end %>
+    <% if can_create_experiments?(@project) %>
+      <%= render 'projects/show/new_experiment' %>
+    <% end %>
+  </div>
 </div>
+
 <%= javascript_include_tag("experiments/dropdown_actions") %>
 <%= javascript_include_tag("projects/show") %>

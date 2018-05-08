@@ -65,6 +65,9 @@ function initProtocolsTable() {
       { data: "5" },
       { data: "6" }
     ],
+    oLanguage: {
+      sSearch: "Filter:"
+    },
     rowCallback: function(row, data, dataIndex) {
       // Get row ID
       var rowId = data["DT_RowId"];

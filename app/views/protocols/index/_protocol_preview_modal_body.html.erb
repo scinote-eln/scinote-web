@@ -1,6 +1,6 @@
 <div class="row">
   <div class="col-xs-6 col-sm-4 col-md-4">
-    <div class="badge-icon bg-primary">
+    <div class="badge-icon">
       <span class="glyphicon glyphicon-calendar"></span>
     </div>
     <div class="well well-sm">
@@ -10,7 +10,7 @@
   </div>
 
   <div class="col-xs-6 col-sm-4 col-md-4">
-    <div class="badge-icon bg-primary">
+    <div class="badge-icon">
       <span class="glyphicon glyphicon-calendar"></span>
     </div>
     <div class="well well-sm">
@@ -20,7 +20,7 @@
   </div>
 
   <div class="col-xs-12 col-sm-4 col-md-4">
-    <div class="badge-icon bg-primary">
+    <div class="badge-icon">
       <span class="glyphicon glyphicon-user"></span>
     </div>
     <div class="well well-sm">
@@ -30,7 +30,7 @@
   </div>
 
   <div class="col-xs-12 col-sm-6 col-md-6">
-    <div class="badge-icon bg-primary">
+    <div class="badge-icon">
       <span class="glyphicon glyphicon-text-color"></span>
     </div>
     <div class="well well-sm">
@@ -40,7 +40,7 @@
   </div>
 
   <div class="col-xs-12 col-sm-6 col-md-6">
-    <div class="badge-icon bg-primary">
+    <div class="badge-icon">
       <span class="glyphicon glyphicon-education"></span>
     </div>
     <div class="well well-sm">
@@ -50,7 +50,7 @@
   </div>
 
   <div class="col-xs-12 col-sm-12 col-md-12">
-    <div class="badge-icon bg-primary">
+    <div class="badge-icon">
       <span class="glyphicon glyphicon-info-sign"></span>
     </div>
     <div class="well well-sm">
@@ -70,7 +70,7 @@
     <% protocol.steps.order(:position).each do |step| %>
       <div class ="step <%= step.completed? ? "completed" : "not-completed" %>">
         <div class="badge-num">
-          <span class="badge bg-primary size-digit-<%= (step.position + 1).to_s.length %>"><%= step.position + 1 %></span>
+          <span class="badge size-digit-<%= (step.position + 1).to_s.length %>"><%= step.position + 1 %></span>
         </div>
         <div class="panel panel-default">
           <div class="panel-heading">

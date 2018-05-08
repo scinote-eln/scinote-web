@@ -2,27 +2,29 @@
 <%= render partial: "shared/sidebar" %>
 <%= render partial: "shared/secondary_navigation" %>
 
-<% if @project.archived_experiments.count > 0 %>
-  <div class="row">
-    <% @project.archived_experiments.each_with_index do |experiment, i| %>
-      <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-        <%= render partial: "projects/experiment_archive/experiment.html.erb", locals: { experiment: experiment} %>
-      </div>
-      <% if (i+1) % 6 == 0 %>
-      <div class="clearfix visible-lg-block"></div>
+<div class="content-pane">
+  <% if @project.archived_experiments.count > 0 %>
+    <div class="row" style="margin-top: 10px;">
+      <% @project.archived_experiments.each_with_index do |experiment, i| %>
+        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+          <%= render partial: "projects/experiment_archive/experiment.html.erb", locals: { experiment: experiment} %>
+        </div>
+        <% if (i+1) % 6 == 0 %>
+        <div class="clearfix visible-lg-block"></div>
+        <% end %>
+        <% if (i+1) % 4 == 0 %>
+        <div class="clearfix visible-md-block"></div>
+        <% end %>
+        <% if (i+1) % 3 == 0 %>
+        <div class="clearfix visible-sm-block"></div>
+        <% end %>
       <% end %>
-      <% if (i+1) % 4 == 0 %>
-      <div class="clearfix visible-md-block"></div>
-      <% end %>
-      <% if (i+1) % 3 == 0 %>
-      <div class="clearfix visible-sm-block"></div>
-      <% end %>
-    <% end %>
-  </div>
-<% else %>
-  <div class="row">
-    <div class="col-xs-12">
-      <em><%=t "projects.experiment_archive.no_archived_experiments" %></em>
     </div>
-  </div>
-<% end %>
+  <% else %>
+    <div class="row">
+      <div class="col-xs-12">
+        <em><%=t "projects.experiment_archive.no_archived_experiments" %></em>
+      </div>
+    </div>
+  <% end %>
+</div>

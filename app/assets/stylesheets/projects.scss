@@ -5,7 +5,9 @@
 $color-group-hover: $brand-primary;
 $color-module-hover: $brand-default;
 
-#new-project-modal, #edit-project-modal {
+#new-project-modal,
+#edit-project-modal,
+#copy-to-repository-modal {
   .btn-group label.btn-primary:not(.active) {
     background-color: $color-white;
     border-color: $color-silver;
