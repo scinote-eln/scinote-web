@@ -529,7 +529,7 @@ a[data-toggle="tooltip"] {
 }
 
 .navbar-secondary {
-  background: $color-concrete !important;
+  background: $color-concrete;
   margin-left: -280px;
   padding-left: 295px;
   padding-right: 15px;
@@ -573,6 +573,13 @@ a[data-toggle="tooltip"] {
 }
 
 .navbar-secondary {
+  // -webkit-transition: all 0.5s ease;
+  // -moz-transition: all 0.5s ease;
+  // -o-transition: all 0.5s ease;
+  // transition: all 0.5s ease;
+
+
+  margin-left: 0px;
   -webkit-transition: all 0.5s ease;
   -moz-transition: all 0.5s ease;
   -o-transition: all 0.5s ease;
@@ -580,12 +587,12 @@ a[data-toggle="tooltip"] {
 }
 
 .navbar-without-sidebar{
-  padding-left: 15px;
-  margin-left: 0px;
-  -webkit-transition: all 0.5s ease;
-  -moz-transition: all 0.5s ease;
-  -o-transition: all 0.5s ease;
-  transition: all 0.5s ease;
+  // padding-left: 15px;
+  // margin-left: 0px;
+  // -webkit-transition: all 0.5s ease;
+  // -moz-transition: all 0.5s ease;
+  // -o-transition: all 0.5s ease;
+  // transition: all 0.5s ease;
 }
 
 /** Chat bubble */

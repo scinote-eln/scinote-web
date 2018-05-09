@@ -867,7 +867,7 @@ class Constants
   TINY_MCE_ASSET_REGEX = /\[~tiny_mce_id:([0-9a-zA-Z]+)\]/
 
   # Team name for default admin user
-  DEFAULT_PRIVATE_TEAM_NAME = 'My projects'.freeze
+  DEFAULT_PRIVATE_TEAM_NAME = 'My Team'.freeze
 
   #                             )       \   /      (
   #                            /|\      )\_/(     /|\

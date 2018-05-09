@@ -1,10 +1,16 @@
 @import 'scinote.scss';
 @import 'partials/_sidebar.scss';
 
-#nav-top-sticky{
-
+/** Overwrite css from epa.scss **/
+@media screen and (min-width: 35em), print and (min-width: 35em) {
+  .main-nav > .nav__inner,
+  .masthead,
+  .secondary-nav,
+  .main-content,
+  .main-footer > .main-footer__inner {
+    max-width: 80em !important;
+  }
 }
-
 
 .nav-top-el{
   width: 100%;
@@ -15,6 +21,13 @@
     position: fixed;
     top: 0px;
   }
+}
+
+.navbar-secondary {
+  padding-left: 15px !important;
+  padding-right: 15px !important;
+  background: #FFFFFF !important;
+  background-color: #FFFFFF !important;
 }
 
 /** Overwrite the default .navbar-secondary from scinote **/
