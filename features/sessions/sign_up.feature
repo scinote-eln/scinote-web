@@ -26,7 +26,7 @@ Feature: Sign up
     | Full name | Email          | Password | Password confirmation | Team name   |
     | Magnus    | magnus@gmail.com | asdf1234 | asdf1234            | SpliceGirls |
     And I click on "Sign up"
-    Then I'm on the home page of "SpliceGirls" team
+    Then I should be on homepage
 
   @javascript
   Scenario: Unsuccessful sign up, password confirmation does not match
