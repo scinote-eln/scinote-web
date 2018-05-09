@@ -35,7 +35,7 @@ Scenario: User successfully Change password at Change your password page
   Then I fill in "newpassword1234" in "#user_password" field
   And I fill in "newpassword1234" in "#user_password_confirmation" field
   And I click "Change my password" button
-  Then I should see "BioSistemika Process"
+  Then I'm on the home page of "BioSistemika Process" team
   And I should see "Your password has been changed successfully. You are now logged in." flash message
 
 @javascript
