@@ -22,17 +22,17 @@ $toggle-btn-size: 50px;
   transition: all 0.5s ease;
 
   #sidebar-wrapper {
-    box-shadow: 0 1px 4px $color-alto;
     background-color: $color-white;
-    z-index: 1000;
-    position: fixed;
-    width: $wrapper-width;
+    box-shadow: 0 1px 4px $color-alto;
     height: 100%;
     margin-left: -$wrapper-width;
-    -webkit-transition: all 0.5s ease;
+    position: fixed;
     -moz-transition: all 0.5s ease;
     -o-transition: all 0.5s ease;
+    -webkit-transition: all 0.5s ease;
     transition: all 0.5s ease;
+    width: $wrapper-width;
+    z-index: 1000;
 
     #slide-panel {
       height: 100%;
