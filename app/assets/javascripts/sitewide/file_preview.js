@@ -66,9 +66,15 @@
 
   function checkFileReady(url, modal) {
     $.get(url, function(data) {
-      console.log(data);
       if(data['processing']) {
-        $('.file-download-link').addClass('disabled');
+        $('.file-download-link')
+          .addClass('disabled-with-click-events')
+          .attr('title',
+                'File is still being processed and cannot be downloaded yet.')
+          .click(function(ev) {
+            ev.preventDefault();
+            ev.stopPropagation();
+          });
         setTimeout(function() {
           checkFileReady(url, modal);
         }, 10000);
@@ -90,7 +96,10 @@
            modal.modal();
            $('.modal-backdrop').last().css('z-index', modal.css('z-index') - 1);
         }
-        $('.file-download-link').removeClass('disabled');
+        $('.file-download-link')
+          .removeClass('disabled-with-click-events')
+          .removeAttr('title')
+          .off();
       }
     })
   }

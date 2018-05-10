@@ -1721,6 +1721,11 @@ a.disabled {
   cursor: default;
 }
 
+a.disabled-with-click-events {
+  opacity: 0.5;
+  cursor: wait;
+}
+
 .linkedin-signin-button {
   margin: 15px 0;
 }
