@@ -44,7 +44,8 @@ class AtWhoController < ApplicationController
   end
 
   def repositories
-    repositories = @team.repositories.limit(Constants::REPOSITORIES_LIMIT)
+    repositories =
+      @team.repositories.limit(Rails.configuration.x.repositories_limit)
     respond_to do |format|
       format.json do
         render json: {
