@@ -781,9 +781,10 @@ var RepositoryDatatable = (function(global) {
             $.each(val, function(key, val) {
               var input = $(selectedRecord).find('input[name=' + key + ']');
               if (input) {
+                var message = Array.isArray(val.data) ? val.data[0] : val.data;
                 input.closest('.form-group').addClass('has-error');
                 input.parent().append("<span class='help-block'>" +
-                                      val.data[0] + '<br /></span>');
+                                      message + '<br /></span>');
               }
             });
           });
