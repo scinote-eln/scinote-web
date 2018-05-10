@@ -664,7 +664,13 @@ en:
     repository:
       head_title: "%{project} | %{module} | Inventory %{repository}"
       export: 'Export'
-
+    modals:
+      assign_repository_record:
+        title: 'Assign %{repository_name} items to task %{my_module_name}'
+        message: Do you want to assign %{size} items only to this task, or assign them to this task & downstream tasks in the workflow as well?
+        task_and_downstream: 'Task & Downstream'
+        unassign_title: "Unassign %{repository_name} items from task %{my_module_name}"
+        unassign_message: "Do you want to unassign %{size} items only from this task, or unassign them from this task & downstream tasks in the workflow as well?"
   experiments:
     new:
       create: 'New Experiment'

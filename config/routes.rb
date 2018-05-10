@@ -329,9 +329,15 @@ Rails.application.routes.draw do
         post 'repository_index/:repository_id',
              to: 'my_modules#repository_index',
              as: :repository_index
+        post 'assign_repository_records_modal/:repository_id',
+            to: 'my_modules#assign_repository_records_modal',
+            as: :assign_repository_records_modal
         post 'assign_repository_records/:repository_id',
              to: 'my_modules#assign_repository_records',
              as: :assign_repository_records
+        post 'unassign_repository_records_modal/:repository_id',
+            to: 'my_modules#unassign_repository_records_modal',
+            as: :unassign_repository_records_modal
         post 'unassign_repository_records/:repository_id',
              to: 'my_modules#unassign_repository_records',
              as: :unassign_repository_records
