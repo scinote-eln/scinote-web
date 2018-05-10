@@ -479,19 +479,43 @@ var RepositoryDatatable = (function(global) {
     });
   };
 
-  global.onClickAssignRecords = function() {
+  global.openAssignRecordsModal = function() {
+    $.post(
+      $('#assignRepositoryRecords').data('assign-url-modal'),
+      { selected_rows: rowsSelected })
+      .done(
+      function(data) {
+        $(data.html).appendTo('body').promise().done(function() {
+          $('#assignRepositoryRecordModal').modal('show');
+        });
+      }
+    );
+  }
+
+  global.hideAssignUnasignModal = function(id) {
+    $(id).modal('hide').promise().done(
+      function() {
+        $(id).remove();
+      }
+    )
+  }
+
+  global.submitAssignRepositoryRecord = function(option) {
     animateSpinner();
     $.ajax({
-      url: $('#assignRepositoryRecords').data('assign-url'),
+      url: $('#assignRepositoryRecordModal').data('assign-url'),
       type: 'POST',
       dataType: 'json',
-      data: { selected_rows: rowsSelected },
+      data: { selected_rows: rowsSelected,
+              downstream: (option === 'downstream') },
       success: function(data) {
+        hideAssignUnasignModal('#assignRepositoryRecordModal');
         HelperModule.flashAlertMsg(data.flash, 'success');
         onClickCancel();
         clearRowSelection();
       },
       error: function(data) {
+        hideAssignUnasignModal('#assignRepositoryRecordModal');
         HelperModule.flashAlertMsg(data.responseJSON.flash, 'danger');
         onClickCancel();
         clearRowSelection();
@@ -499,19 +523,35 @@ var RepositoryDatatable = (function(global) {
     });
   }
 
-  global.onClickUnassignRecords = function() {
+  global.openUnassignRecordsModal = function() {
+    $.post(
+      $('#unassignRepositoryRecords').data('unassign-url'),
+      { selected_rows: rowsSelected })
+      .done(
+      function(data) {
+        $(data.html).appendTo('body').promise().done(function() {
+          $('#unassignRepositoryRecordModal').modal('show');
+        });
+      }
+    );
+  }
+
+  global.submitUnassignRepositoryRecord = function(option) {
     animateSpinner();
     $.ajax({
-      url: $('#unassignRepositoryRecords').data('unassign-url'),
+      url: $('#unassignRepositoryRecordModal').data('unassign-url'),
       type: 'POST',
       dataType: 'json',
-      data: {selected_rows: rowsSelected},
+      data: { selected_rows: rowsSelected,
+              downstream: (option === 'downstream') },
       success: function(data) {
+        hideAssignUnasignModal('#unassignRepositoryRecordModal');
         HelperModule.flashAlertMsg(data.flash, 'success');
         onClickCancel();
         clearRowSelection();
       },
       error: function(data) {
+        hideAssignUnasignModal('#unassignRepositoryRecordModal');
         HelperModule.flashAlertMsg(data.responseJSON.flash, 'danger');
         onClickCancel();
         clearRowSelection();
@@ -1124,6 +1164,7 @@ var RepositoryDatatable = (function(global) {
         TABLE.search(searchText).draw();
       }
       initRowSelection();
+      initPreviewModal();
     });
   }
 

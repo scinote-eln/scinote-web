@@ -44,7 +44,7 @@ Canaid::Permissions.register_for(Team) do
   # repository: create, copy
   can :create_repositories do |user, team|
     user.is_admin_of_team?(team) &&
-      team.repositories.count < Constants::REPOSITORIES_LIMIT
+      team.repositories.count < Rails.configuration.x.repositories_limit
   end
 
   # repository: create/import record

@@ -58,9 +58,6 @@ class Constants
   # Max characters for repository name in Atwho modal
   ATWHO_REP_NAME_LIMIT = 16
 
-  # Maximum number of repositories per team allowed
-  REPOSITORIES_LIMIT = 5
-
   #=============================================================================
   # File and data memory size
   #=============================================================================
