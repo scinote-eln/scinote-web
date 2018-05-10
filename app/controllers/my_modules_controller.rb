@@ -471,9 +471,14 @@ class MyModulesController < ApplicationController
 
       if downstream
         @my_module.downstream_modules.each do |my_module|
-          records = RepositoryRow.assigned_on_my_module(params[:selected_rows],
-                                                        my_module)
-          my_module.repository_rows.destroy(records & my_module.repository_rows)
+          assigned_records = RepositoryRow.assigned_on_my_module(
+            params[:selected_rows],
+            my_module
+          )
+          my_module.repository_rows.destroy(
+            assigned_records & my_module.repository_rows
+          )
+          assigned_records.update_all(last_modified_by_id: current_user.id)
         end
       end
 
