@@ -1,6 +1,9 @@
 <div class="btn-group" role="group" aria-label="" style="margin-left: 15px;">
   <div class="btn-group">
-    <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="#"><span class="glyphicon glyphicon-import"></span><span class="hidden-xs-custom">&nbsp;<%= t("my_modules.protocols.buttons.load_protocol") %></span></a>
+    <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="#">
+      <span class="glyphicon glyphicon-import"></span>
+      <span class="hidden-xs-custom">&nbsp;<%= t("my_modules.protocols.buttons.load_protocol") %></span>
+    </a>
     <ul class="dropdown-menu">
       <% if can_manage_protocol_in_module?(@protocol) %>
         <li>

@@ -59,8 +59,8 @@
           <%=t "projects.reports.index.modal_delete.message" %>
         </div>
         <div class="modal-footer">
-          <%= f.button t("projects.reports.index.modal_delete.delete"), class: "btn btn-primary", id: "confirm-delete-reports-btn", name: nil %>
           <button type="button" class="btn btn-default" data-dismiss="modal"><%=t "general.cancel" %></button>
+          <%= f.button t("projects.reports.index.modal_delete.delete"), class: "btn btn-danger", id: "confirm-delete-reports-btn", name: nil %>
         </div>
       </div>
     </div>
@@ -77,7 +77,6 @@
       </div>
       <div class="modal-body">
         <p><%=t "projects.reports.index.modal_new.message" %></p>
-
         <div class="form-group">
           <label><%=t "projects.reports.index.modal_new.projects" %></label>
           <% if @visible_projects&.length > 0 %>
@@ -89,15 +88,15 @@
           <% else %>
             <p><%=t 'projects.reports.index.modal_new.no_projects' %></p>
           <% end %>
-        </end>
+        </div>
       </div>
       <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal"><%=t "general.cancel" %></button>
         <button id="new-report-reports-btn"
-                class="btn btn-primary"
+                class="btn btn-success"
                 data-new-report-path="<%= @visible_projects.first.path if @visible_projects.first %>"
                 <%= 'disabled' unless @visible_projects&.length > 0 %>
                 ><%=t 'projects.reports.index.modal_new.create' %></button>
-        <button type="button" class="btn btn-default" data-dismiss="modal"><%=t "general.cancel" %></button>
       </div>
     </div>
   </div>

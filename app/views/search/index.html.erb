@@ -170,20 +170,6 @@
             <%= t'Checklists' %>
           </a>
         </li>
-        <li role="presentation"
-          class="
-          <%= "active" if @search_category.present? and @search_category == :samples %>
-          <%= "disabled" if @sample_search_count == 0 %>"
-        >
-          <a href="?<%= {category: 'samples', q: @search_query,
-                         whole_word: @search_whole_word, whole_phrase: @search_whole_phrase,
-                         match_case: @search_case, utf8: '✓',
-                         search_id: @search_id}.to_query %>">
-            <span class="badge pull-right"><%= @sample_search_count %></span>
-            <span class="glyphicon glyphicon-tint"></span>
-            <%= t'Samples' %>
-          </a>
-        </li>
 
         <li role="presentation"
           class="
@@ -289,9 +275,6 @@
       <% end %>
       <% if @search_category == :checklists and @checklist_search_count > 0 %>
         <%= render 'search/results/checklists', search_query: @search_query, results: @checklist_results %>
-      <% end %>
-      <% if @search_category == :samples and @sample_search_count > 0 %>
-        <%= render 'search/results/samples', search_query: @search_query, results: @sample_results %>
       <% end %>
       <% if @search_category == :repositories and @repository_search_count_total > 0 %>
         <%= render 'search/results/repositories', search_query: @search_query, results: @repository_results, repository: @repository %>

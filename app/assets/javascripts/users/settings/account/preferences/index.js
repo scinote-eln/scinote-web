@@ -75,10 +75,10 @@
     for (var i = 0; i < notification_settings.length; i++ ) {
       var setting = $('[name="' + notification_settings[i] + '"]');
       var dependant = $('[name="' + notification_settings[i] + '_email"]');
-      dependant.checkboxpicker({ onActiveCls: 'btn-primary' });
+      dependant.checkboxpicker({ onActiveCls: 'btn-primary', offActiveCls: 'btn-primary' });
       setting
         .checkboxpicker({
-          onActiveCls: 'btn-primary'
+          onActiveCls: 'btn-primary', offActiveCls: 'btn-primary'
         }).change(function() {
           if ( $(this).prop('checked') ) {
             enableDependant($('[name="' + $(this).attr('name') + '_email"]'));
@@ -100,7 +100,7 @@
     function setEmailSwitch(setting) {
       setting
         .checkboxpicker({
-          onActiveCls: 'btn-primary'
+          onActiveCls: 'btn-primary', offActiveCls: 'btn-primary'
         });
       if ( setting.attr('value') === 'true' ) {
         setting.prop('checked', true);
@@ -123,7 +123,7 @@
     var system_message_notification = $('[name="system_message_notification"]');
     system_message_notification
       .checkboxpicker({
-        onActiveCls: 'btn-primary'
+        onActiveCls: 'btn-primary', offActiveCls: 'btn-primary'
       });
     system_message_notification.prop('checked', true);
     system_message_notification.prop('disabled', true);
@@ -132,7 +132,7 @@
     var system_message_notification_mail = $('[name="system_message_notification_email"]');
     system_message_notification_mail
       .checkboxpicker({
-        onActiveCls: 'btn-primary'
+        onActiveCls: 'btn-primary', offActiveCls: 'btn-primary'
       });
     system_message_notification_mail.prop(
       'checked',

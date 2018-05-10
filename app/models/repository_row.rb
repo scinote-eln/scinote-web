@@ -21,4 +21,9 @@ class RepositoryRow < ApplicationRecord
             presence: true,
             length: { maximum: Constants::NAME_MAX_LENGTH }
   validates :created_by, presence: true
+
+  def self.assigned_on_my_module(ids, my_module)
+    where(id: ids).joins(:my_module_repository_rows)
+                  .where('my_module_repository_rows.my_module' => my_module)
+  end
 end

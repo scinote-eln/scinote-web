@@ -17,7 +17,6 @@ class SearchController < ApplicationController
     search_protocols if @search_category == :protocols
     search_steps if @search_category == :steps
     search_checklists if @search_category == :checklists
-    search_samples if @search_category == :samples
     if @search_category == :repositories && params[:repository]
       search_repository
     end
@@ -252,12 +251,6 @@ class SearchController < ApplicationController
       @checklist_results = search_by_name(Checklist)
     end
     @search_count = @checklist_search_count
-  end
-
-  def search_samples
-    @sample_results = []
-    @sample_results = search_by_name(Sample) if @sample_search_count > 0
-    @search_count = @sample_search_count
   end
 
   def search_repository

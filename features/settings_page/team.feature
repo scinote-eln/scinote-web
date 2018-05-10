@@ -20,7 +20,7 @@ Feature: Team settings
     Given I'm on "BioSistemika Process" team settings page
     Then I click on team title
     And I change "BioSistemika Process" with "BioSistemika Process Company" in "team-name-modal" input field
-    Then I click "Update" button
+    Then I click "Save" button
     And I should see "BioSistemika Process Company" on "#team-name" element
 
   @javascript
@@ -28,7 +28,7 @@ Feature: Team settings
     Given I'm on "BioSistemika Process" team settings page
     Then I click on ".description-label" element
     And I fill in "I was on Triglav one summer." in "team_description" textarea field
-    Then I click "Update" button
+    Then I click "Save" button
     And I should see "I was on Triglav one summer." on ".description-label" element
 
   @javascript
@@ -36,7 +36,7 @@ Feature: Team settings
     Given I'm on "BioSistemika Process" team settings page
     Then I click on ".description-label" element
     And I change "Lorem ipsum dolor sit amet, consectetuer adipiscing eli." with "I was on Triglav one summer." in "team_description" textarea field
-    Then I click "Update" button
+    Then I click "Save" button
     And I should see "I was on Triglav one summer." on ".description-label" element
 
   @javascript
@@ -66,5 +66,5 @@ Feature: Team settings
     Then I click on "suazana@myorg.com" action button within Team members table
     And I click "Remove" link within "suazana@myorg.com" actions dropdown within Team members table
     And I should see "Are you sure you wish to remove user Suazana Novak from team BioSistemika Process?"
-    Then I click "Remove user" button
+    Then I click "Remove" button
     Then I should not see "suazana@myorg.com" in Team members table

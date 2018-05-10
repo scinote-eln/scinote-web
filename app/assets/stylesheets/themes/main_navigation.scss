@@ -116,23 +116,24 @@
     width: 45px;
   }
 
-  .notifications-dropdown-header {
-    background-color: $brand-primary;
-    color: $color-concrete;
-    font-weight: bold;
-    padding: 8px;
-
-    a {
-      color: $color-white;
-    }
-  }
-
   .notifications-dropdown-footer {
     background-color: $brand-primary-light;
     padding: 8px;
     text-align: center;
   }
 
+}
+
+.notifications-dropdown-header,
+.team-switch-dropdown-header {
+  background-color: $brand-primary;
+  color: $color-concrete;
+  font-weight: bold;
+  padding: 8px;
+
+  a {
+    color: $color-white;
+  }
 }
 
 .notification {
@@ -259,13 +260,13 @@
   }
 
   .glyphicon-ok-sign {
-    color: $brand-success;
+    color: $brand-primary;
     margin-left: -10px;
     margin-right: 10px;
   }
 
   .team-name-item {
-    border-bottom: 1px solid $color-silver-chalice;
+    border-bottom: 1px solid $color-gainsboro;
     padding-bottom: 8px;
     padding-top: 5px;
   }
@@ -274,7 +275,7 @@
     border-bottom: 0;
   }
 
-  .btn-default {
+  .btn-default:not(.dropdown-toggle) {
     margin-left: 15px;
     text-align: right;
     width: 300px;
@@ -285,11 +286,10 @@
   }
 
   .dropdown-menu {
+    border-radius: 0;
+    margin-top: 0;
+    padding-top: 0;
     width: 100%;
-  }
-
-  .caret {
-    color: $color-white;
   }
 
   i {

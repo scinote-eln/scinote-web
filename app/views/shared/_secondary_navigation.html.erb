@@ -27,14 +27,6 @@
                 <span class="hidden-xs hidden-lg glyphicon glyphicon-blackboard"></span>
               </a>
             </li>
-            <li id="project-samples-nav-tab" class="<%= "active" if is_project_samples? ||
-                                                                    sample_types_page_project? ||
-                                                                    sample_groups_page_project? %>">
-              <a href="<%= samples_project_url(@project) %>" title="<%=t "nav2.projects.samples" %>">
-                <span class="hidden-sm hidden-md"><%=t "nav2.projects.samples" %></span>
-                <span class="hidden-xs hidden-lg glyphicon glyphicon-tint"></span>
-              </a>
-            </li>
             <li id="project-archive-nav-tab" data-turbolinks="false" class="<%= "active" if is_project_archive? %>">
               <a href="<%= experiment_archive_project_url(@project) %>" title="<%=t "nav2.projects.archive" %>">
                 <span class="glyphicon glyphicon-briefcase"></span>
@@ -50,14 +42,6 @@
               <a href="<%= canvas_experiment_url(@experiment) %>" title="<%=t "nav2.experiments.canvas" %>">
                 <span class="hidden-sm hidden-md"><%=t "nav2.experiments.canvas" %></span>
                 <span class="hidden-xs hidden-lg glyphicon glyphicon-blackboard"></span>
-              </a>
-            </li>
-            <li id="experiment-samples-nav-tab" class="<%= "active" if is_experiment_samples? ||
-                                                                       sample_groups_page_experiment? ||
-                                                                       sample_types_page_expermient? %>">
-              <a href="<%= samples_experiment_url(@experiment) %>" title="<%=t "nav2.projects.samples" %>">
-                <span class="hidden-sm hidden-md"><%=t "nav2.projects.samples" %></span>
-                <span class="hidden-xs hidden-lg glyphicon glyphicon-tint"></span>
               </a>
             </li>
           <% end %>
@@ -94,17 +78,6 @@
           <% end %>
 
           <li data-hook="secondary-navigation-tabs"></li>
-
-          <% if can_read_experiment?(@my_module.experiment) %>
-            <li id="module-samples-nav-tab" class="<%= "active" if is_module_samples? ||
-                                                                   sample_types_page_my_module? ||
-                                                                   sample_groups_page_my_module? %>">
-              <a href="<%= samples_my_module_url(@my_module) %>" title="<%=t "nav2.modules.samples" %>">
-                <span class="hidden-sm hidden-md"><%=t "nav2.modules.samples" %></span>
-                <span class="hidden-xs hidden-lg glyphicon glyphicon-tint"></span>
-              </a>
-            </li>
-          <% end %>
           <% if can_read_team?(@my_module.experiment.project.team) &&
                 @my_module.experiment.project.team.repositories.exists? %>
             <li id="repositories-nav-tab" class="<%= "active" if module_repository_page? %>">

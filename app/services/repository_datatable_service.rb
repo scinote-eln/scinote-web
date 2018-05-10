@@ -123,6 +123,8 @@ class RepositoryDatatableService
       type = RepositoryColumn.find_by_id(id)
       return records unless type
       return select_type(type.data_type, records, id, dir)
+    elsif sortable_columns[column_id - 1] == 'users.full_name'
+      return records.joins(:created_by).order("users.full_name #{dir}")
     else
       return records.order(
         "#{sortable_columns[column_id - 1]} #{dir}"

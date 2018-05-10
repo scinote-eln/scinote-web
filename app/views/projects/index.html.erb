@@ -15,8 +15,8 @@
             <%= render partial: "new.html.erb", locals: { form: f, teams: @teams } %>
           </div>
           <div class="modal-footer">
-            <%= f.submit t("projects.index.modal_new_project.create"), class: "btn btn-primary" %>
             <button type="button" class="btn btn-default" data-dismiss="modal"><%=t "general.cancel" %></button>
+            <%= f.submit t("projects.index.modal_new_project.create"), class: "btn btn-success" %>
           </div>
         </div>
       </div>
@@ -35,8 +35,8 @@
       <div class="modal-body">
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary" data-action="submit"><%=t "projects.index.modal_edit_project.submit" %></button>
         <button type="button" class="btn btn-default" data-dismiss="modal"><%=t "general.cancel" %></button>
+        <button type="button" class="btn btn-success" data-action="submit"><%=t "projects.index.modal_edit_project.submit" %></button>
       </div>
     </div>
   </div>
@@ -64,6 +64,7 @@
       <!-- project archive button -->
       <a class="btn btn-default pull-right" href="<%= url_for projects_archive_path %>" id="project-archive-btn" data-turbolinks="false" title="<%= t'projects.index.archive' %>">
         <span class="glyphicon glyphicon-briefcase" aria-hidden="true"></span>
+        <span class="hidden-xs"><%=t "projects.index.archive" %></span>
       </a>
 
       <% if @teams.length > 0 && can_create_projects?(current_team) %>

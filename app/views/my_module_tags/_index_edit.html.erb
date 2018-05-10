@@ -62,7 +62,6 @@
                                 {},
                                 { class: 'selectpicker' }) %>
           <%= f.button class: 'btn btn-primary' do %>
-            <span class="glyphicon glyphicon-plus"></span>
             <span class="hidden-xs"><%= t("experiments.canvas.modal_manage_tags.create") %></span>
           <% end %>
         </div>
@@ -75,7 +74,7 @@
         <%= f.hidden_field :name, :value => t("tags.create.new_name") %>
         <%= f.hidden_field :color, :value => Constants::TAG_COLORS[0] %>
         <%= f.button class: "btn btn-primary" do %>
-          <span class="glyphicon glyphicon-tag"></span>
+          <span class="glyphicon glyphicon-plus"></span>
           <span class="hidden-xs"><%=t "experiments.canvas.modal_manage_tags.create_new" %></span>
         <% end %>
       <% end %>

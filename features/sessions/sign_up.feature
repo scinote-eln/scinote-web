@@ -16,7 +16,7 @@ Feature: Sign up
     Then I fill the sign up form with
     | Full name | Email          | Password | Password confirmation | Team name   |
     | Magnus    | tusk@gmail.com | asdf1234 | asdf1234              | SpliceGirls |
-    And I click "Sign up" button
+    And I click on "Sign up"
     Then I should see "has already been taken"
 
   @javascript
@@ -25,7 +25,7 @@ Feature: Sign up
     Then I fill the sign up form with
     | Full name | Email          | Password | Password confirmation | Team name   |
     | Magnus    | magnus@gmail.com | asdf1234 | asdf1234            | SpliceGirls |
-    And I click "Sign up" button
+    And I click on "Sign up"
     Then I should see "SpliceGirls"
     And I should be on homepage
 
@@ -35,7 +35,7 @@ Feature: Sign up
     Then I fill the sign up form with
     | Full name | Email          | Password | Password confirmation | Team name   |
     | Magnus    | magnus@gmail.com | asdf1234 | asdf1234567         | SpliceGirls |
-    And I click "Sign up" button
+    And I click on "Sign up"
     Then I should see "doesn't match Password"
 
   @javascript
@@ -44,5 +44,5 @@ Feature: Sign up
     Then I fill the sign up form with
     | Full name | Email          | Password | Password confirmation |
     | Magnus    | magnus@gmail.com | asdf1234 | asdf1234            |
-    And I click "Sign up" button
+    And I click on "Sign up"
     Then I should see "is too short (minimum is 2 characters)"
