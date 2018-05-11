@@ -2,7 +2,7 @@
 <%= render partial: "shared/sidebar" %>
 <%= render partial: "shared/secondary_navigation" %>
 
-<div class="content-pane">
+<div class="content-pane" id="module-archive">
   <% if @experiment.archived_modules.count > 0 %>
     <div class="row" style="margin-top: 10px;">
       <% @experiment.archived_modules.each_with_index do |my_module, i| %>

@@ -33,7 +33,7 @@ table {
 }
 
 #projects-toolbar {
-  margin: 15px 0;
+  margin-bottom: 15px;
 }
 
 #projects-toolbar .form-group {
@@ -55,7 +55,7 @@ table {
 .content-pane {
   background-color: $color-white;
   margin: 20px 0;
-  padding: 15px 20px;
+  padding: 25px 20px;
 }
 
 .spacer {
@@ -245,21 +245,21 @@ a[data-toggle="tooltip"] {
 .navbar-secondary {
   background: $color-concrete !important;
   margin-left: -280px;
-  padding-left: 295px;
-  padding-right: 15px;
+  padding-left: 294px;
+  padding-right: 97px;
   margin-bottom: 0;
   border-color: transparent;
+  border-bottom: 0;
   z-index: 500;
   position: fixed;
   width: 100%;
 
   .container-fluid {
     border-left: 0;
-    border-top: 0;
     border-right: 0;
-    border-bottom: 4px solid $color-silver;
-    padding-right: 0;
+    border-top: 0;
     padding-left: 0;
+    padding-right: 0;
   }
 
   .navbar-toggle {
@@ -267,32 +267,40 @@ a[data-toggle="tooltip"] {
   }
 
   #secondary-menu {
-    padding-left: 0;
+    background: $color-white;
+    border-bottom: 1px solid $color-gainsboro;
+    margin-top: 15px;
+
+    .open > a, .open > a:hover, .open > a:focus {
+      background-color: $color-white;
+    }
   }
 
   .nav-name {
     padding: 5px 0;
   }
 
+  .navbar-nav > li > .dropdown-menu {
+    margin-top: 4px;
+  }
+
   ul.nav {
-    margin-right: 60px;
 
     & > li {
       text-transform: uppercase;
 
       & > a {
         color: $color-silver-chalice;
-
-        span {
-          //width: 14px;
-        }
       }
+
       &.active {
         @include box-shadow(0 4px 0 $brand-primary);
+        margin-bottom: 4px;
 
-        &> a {
-          font-weight: bold;
+        & > a, & > a:hover, & > a:focus   {
           color: $color-emperor;
+          background: $color-white;
+          font-weight: bold;
         }
       }
     }
@@ -546,6 +554,23 @@ ul.double-line > li {
 .pagination > li > a,
 .pagination > li > span {
   color: $brand-primary;
+}
+
+#projects-index,
+#project-archive,
+#project-show,
+#experiment-archive,
+#module-archive,
+#result-archive {
+  .panel-default {
+    box-shadow: 0 3px 6px $color-alto;
+  }
+}
+
+.module-large,
+.module-medium,
+.module-small {
+  box-shadow: 0 3px 6px $color-silver-chalice;
 }
 
 .panel-default > .panel-heading {

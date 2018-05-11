@@ -1,7 +1,6 @@
-
 <% provide(:head_title, t("protocols.index.head_title")) %>
 
-<div class="content-pane">
+<div class="content-pane" id="protocols-index">
   <% if current_team %>
     <ul class="nav nav-tabs nav-settings">
       <li role="presentation" class="<%= "active" if @type == :public %>">
@@ -11,10 +10,7 @@
         <%= link_to t("protocols.index.navigation.private"), protocols_path(team: @current_team, type: :private) %>
       </li>
       <li role="presentation" class="<%= "active" if @type == :archive %>">
-        <%= link_to protocols_path(team: @current_team, type: :archive) do %>
-          <span class="glyphicon glyphicon-briefcase" title="<%= t'protocols.index.navigation.archive' %>"></span>
-          <span class="hidden-xs"><%= t("protocols.index.navigation.archive") %></span>
-        <% end %>
+        <%= link_to t("protocols.index.navigation.archive"), protocols_path(team: @current_team, type: :archive) %>
       </li>
     </ul>
     <div class="tab-content">

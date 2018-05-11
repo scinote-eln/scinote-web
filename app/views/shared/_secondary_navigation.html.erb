@@ -27,8 +27,8 @@
             </li>
             <li id="project-archive-nav-tab" data-turbolinks="false" class="<%= "active" if is_all_projects_archive? %>">
               <a href="<%= projects_archive_path %>" title="<%=t "nav2.all_projects.archive" %>">
-                <span class="glyphicon glyphicon-briefcase"></span>
                 <span class="hidden-sm hidden-md"><%=t "nav2.all_projects.archive" %></span>
+                <span class="hidden-xs hidden-lg glyphicon glyphicon-briefcase"></span>
               </a>
             </li>
           <% end %>
@@ -45,8 +45,8 @@
             </li>
             <li id="project-archive-nav-tab" data-turbolinks="false" class="<%= "active" if is_project_archive? %>">
               <a href="<%= experiment_archive_project_url(@project) %>" title="<%=t "nav2.projects.archive" %>">
-                <span class="glyphicon glyphicon-briefcase"></span>
                 <span class="hidden-sm hidden-md"><%=t "nav2.projects.archive" %></span>
+                <span class="hidden-xs hidden-lg glyphicon glyphicon-briefcase"></span>
               </a>
             </li>
           <% end %>
@@ -65,8 +65,8 @@
           <% if can_read_project?(@experiment.project) %>
               <li id="project-archive-nav-tab" data-turbolinks="false" class="<%= "active" if is_experiment_archive? %>">
                 <a href="<%= module_archive_experiment_url(@experiment) %>" title="<%=t "nav2.experiments.archive" %>">
-                  <span class="glyphicon glyphicon-briefcase"></span>
                   <span class="hidden-sm hidden-md"><%=t "nav2.experiments.archive" %></span>
+                  <span class="hidden-xs hidden-lg glyphicon glyphicon-briefcase"></span>
                 </a>
               </li>
           <% end %>
@@ -124,8 +124,8 @@
           <% if can_read_experiment?(@my_module.experiment) then %>
             <li id="archive-nav-tab" data-turbolinks="false" class="<%= "active" if is_module_archive? %>">
               <a href="<%= archive_my_module_url(@my_module) %>">
-                <span class="glyphicon glyphicon-briefcase" title="<%= t'nav2.modules.archive' %>"></span>
                 <span class="hidden-sm hidden-md"><%=t "nav2.modules.archive" %></span>
+                <span class="hidden-xs hidden-lg glyphicon glyphicon-briefcase"></span>
               </a>
             </li>
           <% end %>

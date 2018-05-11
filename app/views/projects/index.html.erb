@@ -2,7 +2,7 @@
 <%= render partial: "shared/sidebar" %>
 <%= render partial: "shared/secondary_navigation" %>
 
-<div class="content-pane">
+<div class="content-pane" id="projects-index">
 <% if can_create_projects?(current_team) %>
   <!-- New project modal -->
   <div class="modal" id="new-project-modal" tabindex="-1" role="dialog" aria-labelledby="new-project-modal-label">
