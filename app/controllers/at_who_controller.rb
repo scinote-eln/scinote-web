@@ -30,13 +30,18 @@ class AtWhoController < ApplicationController
   end
 
   def rep_items
-    res = SmartAnnotation.new(current_user, current_team, @query)
     repository = Repository.find_by_id(params[:repository_id])
-    render_403 && return unless repository && can_read_team?(repository.team)
+    items =
+      if repository && can_read_team?(repository.team)
+        SmartAnnotation.new(current_user, current_team, @query)
+                       .repository_rows(repository)
+      else
+        []
+      end
     respond_to do |format|
       format.json do
         render json: {
-          res: res.repository_rows(repository),
+          res: items,
           status: :ok
         }
       end
