@@ -23,7 +23,7 @@ $brand-success: #2dbe61;
 $brand-info: #5bc0de;
 $brand-warning: #f0ad4e;
 $brand-danger: #e54e42;
-$brand-other: #9b59b6;
+$brand-other: #8fd13f;
 $brand-extra: #34495e;
 $brand-primary-light: #dcedf6;
 $brand-success-light: #e2eed8;
@@ -293,21 +293,21 @@ $container-lg: auto;
 // $jumbotron-heading-color: inherit;
 // $jumbotron-font-size: ceil(($font-size-base * 1.5));
 // $jumbotron-heading-font-size: ceil(($font-size-base * 4.5));
-//
-// // Form states and alerts
-// $state-success-text: #3c763d;
-// $state-success-bg: #dff0d8;
-// $state-success-border: adjust-hue(darken($state-success-bg, 5%), -10);
-// $state-info-text: #31708f;
-// $state-info-bg: #d9edf7;
-// $state-info-border: adjust-hue(darken($state-info-bg, 7%), -10);
-// $state-warning-text: #8a6d3b;
-// $state-warning-bg: #fcf8e3;
-// $state-warning-border: adjust-hue(darken($state-warning-bg, 5%), -10);
-// $state-danger-text: #a94442;
-// $state-danger-bg: #f2dede;
-// $state-danger-border: adjust-hue(darken($state-danger-bg, 5%), -10);
-//
+
+// Form states and alerts
+$state-success-text: #3c763d;
+$state-success-bg: #dff0d8;
+$state-success-border: adjust-hue(darken($state-success-bg, 5%), -10);
+$state-info-text: #31708f;
+$state-info-bg: #d9edf7;
+$state-info-border: adjust-hue(darken($state-info-bg, 7%), -10);
+$state-warning-text: #8a6d3b;
+$state-warning-bg: #fcf8e3;
+$state-warning-border: adjust-hue(darken($state-warning-bg, 5%), -10);
+$state-danger-text: #a94442;
+$state-danger-bg: #f2dede;
+$state-danger-border: adjust-hue(darken($state-danger-bg, 5%), -10);
+
 // // Tooltips
 // $tooltip-max-width: 200px;
 // $tooltip-color: #fff;

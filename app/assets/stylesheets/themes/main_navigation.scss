@@ -107,7 +107,7 @@
   }
 
   .system-message {
-    background-color: $brand-default;
+    background-color: $brand-other;
     border-radius: 50%;
     color: $color-concrete;
     display: block;
@@ -118,22 +118,13 @@
   }
 
   .notifications-dropdown-footer {
-    background-color: $brand-primary-light;
+    background-color: $color-gainsboro;
     padding: 8px;
     text-align: center;
-  }
 
-}
-
-.notifications-dropdown-header,
-.team-switch-dropdown-header {
-  background-color: $brand-primary;
-  color: $color-concrete;
-  font-weight: bold;
-  padding: 8px;
-
-  a {
-    color: $color-white;
+    a:hover {
+      background-color: $color-gainsboro;
+    }
   }
 }
 
@@ -234,7 +225,7 @@
   }
 
   .system-message {
-    background-color: $brand-default;
+    background-color: $brand-other;
     border-radius: 50%;
     color: $color-concrete;
     display: block !important;

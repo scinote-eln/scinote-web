@@ -32,7 +32,7 @@ $toggle-btn-size: 50px;
     -webkit-transition: all 0.5s ease;
     transition: all 0.5s ease;
     width: $wrapper-width;
-    z-index: 1000;
+    z-index: 999;
 
     #slide-panel {
       height: 100%;

@@ -73,6 +73,23 @@ table {
   }
 }
 
+.custom-dropdown-menu {
+  padding-top: 0;
+}
+
+.notifications-dropdown-header,
+.dropdown-header {
+  background-color: $brand-primary;
+  color: $color-concrete;
+  font-size: $font-size-base;
+  font-weight: bold;
+  padding: 8px 20px;
+
+  a {
+    color: $color-white;
+  }
+}
+
 .well-search-checklist {
   background-color: $color-concrete !important;
   margin-bottom: 5px;
@@ -578,7 +595,7 @@ ul.double-line > li {
 }
 
 .panel-default > .panel-heading {
-  background-color: $brand-primary-light;
+  background-color: $color-gainsboro;
 
   &>.panel-title {
     overflow: hidden;
@@ -596,7 +613,7 @@ ul.double-line > li {
 
 .panel-archive {
   .panel-heading {
-    background-color: darken($brand-primary-light, 5%);
+    background-color: darken($color-gainsboro, 5%);
     color: lighten($color-emperor, 15%);
   }
 }
@@ -684,7 +701,7 @@ ul.double-line > li {
   margin-bottom: 0;
 
   &> .panel-heading {
-    background-color: $brand-primary-light;
+    background-color: $color-gainsboro;
     border-bottom: 1px solid $color-alto;
 
     .panel-title > a {
@@ -757,9 +774,8 @@ ul.content-module-activities {
 
     .activity-item-date {
       font-size: 1.2em;
-      background-color: $brand-primary;
-      border-color: $brand-primary;
-      color: $color-white;
+      background-color: $color-alto;
+      border-color: $color-alto;
       padding-top: 5px;
       padding-bottom: 5px;
     }
@@ -1440,15 +1456,15 @@ textarea.textarea-sm {
     z-index: 99999999;
   }
 
-  li {
+  li:not(.dropdown-header) {
     background: $color-white;
     border: 1px solid $color-alto;
     padding: 10px 10px 10px 0;
     vertical-align: middle;
+  }
 
-    &.dropdown-header {
-      padding-left: 30px;
-    }
+  li.dropdown-header {
+    padding-left: 30px;
   }
 
   [data-position] {

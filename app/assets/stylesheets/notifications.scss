@@ -31,7 +31,7 @@
     padding-top: 10px;
 
     &:hover {
-      background-color: $brand-primary-light;
+      background-color: $color-gainsboro;
     }
 
     &.no-notifications {
@@ -60,7 +60,7 @@
   }
 
   .system-message {
-    background-color: $brand-default;
+    background-color: $brand-other;
     border-radius: 50%;
     color: $color-concrete;
     display: inline-block;

@@ -33,18 +33,32 @@
             <li class="dropdown-header">
               <%= t("repositories.index.options_dropdown.header") %>
             </li>
+            <% if can_create_repository_columns?(@repository.team) %>
+              <li>
+                <%= link_to t('repositories.index.options_dropdown.manage_columns'),
+                            repository_repository_columns_path(@repository) %>
+              </li>
+            <% end %>
+            <% if can_create_repository_rows?(@repository.team) %>
+            <li>
+              <a href="#" id="importRecordsButton" data-turbolinks="false">
+                <%= t('repositories.index.options_dropdown.import_items') %>
+              </a>
+            <li>
+            <% end %>
+            <% if can_read_team?(@repository.team) %>
+            <li>
+              <a href="#"  id="exportRepositoriesButton" data-turbolinks="false">
+                <%= t("repositories.index.options_dropdown.export_items") %>
+              </a>
+            </li>
+            <% end %>
             <% if can_manage_repository?(@repository) %>
               <li>
                 <%= link_to t('repositories.index.options_dropdown.rename'),
                             team_repository_rename_modal_path(current_team, repository_id: @repository),
                             class: "rename-repo-option",
                             remote: true %>
-              </li>
-            <% end %>
-            <% if can_create_repository_columns?(@repository.team) %>
-              <li>
-                <%= link_to t('repositories.index.options_dropdown.manage_columns'),
-                            repository_repository_columns_path(@repository) %>
               </li>
             <% end %>
             <% if can_create_repositories?(@repository.team) %>
@@ -55,24 +69,10 @@
                             remote: true %>
               </li>
             <% end %>
-            <% if can_create_repository_rows?(@repository.team) %>
-            <li>
-              <a href="#" id="importRecordsButton" data-turbolinks="false">
-                <%= t('repositories.import_records.import') %>
-              </a>
-            <li>
-            <% end %>
-            <% if can_read_team?(@repository.team) %>
-            <li>
-              <a href="#"  id="exportRepositoriesButton" data-turbolinks="false">
-                <%= t("my_modules.repository.export") %>
-              </a>
-            </li>
-            <% end %>
             <% if can_manage_repository?(@repository) %>
               <li role="separator" class="divider"></li>
               <li>
-                <%= link_to t('repositories.index.modal_delete.delete'),
+                <%= link_to t('repositories.index.options_dropdown.delete'),
                             team_repository_destroy_modal_path(current_team, repository_id: @repository),
                             class: "delete-repo-option",
                             remote: true %>

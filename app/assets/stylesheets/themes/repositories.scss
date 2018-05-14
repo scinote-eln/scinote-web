@@ -26,7 +26,11 @@
 }
 
 .custom-alert-info {
-  background-color: $brand-danger-light;
+  background-color: $state-info-bg;
+  border: 1px solid $state-info-border;
+  color: $state-info-text;
   margin: 10px 0;
-  padding: 10px;
+  opacity: .86;
+  padding: 15px;
+  width: 100%;
 }
