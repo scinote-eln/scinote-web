@@ -123,7 +123,7 @@
           <% end %>
           <% if can_read_experiment?(@my_module.experiment) then %>
             <li id="archive-nav-tab" data-turbolinks="false" class="<%= "active" if is_module_archive? %>">
-              <a href="<%= archive_my_module_url(@my_module) %>">
+              <a href="<%= archive_my_module_url(@my_module) %>" title="<%= t'nav2.modules.archive' %>">
                 <span class="hidden-sm hidden-md"><%=t "nav2.modules.archive" %></span>
                 <span class="hidden-xs hidden-lg glyphicon glyphicon-briefcase"></span>
               </a>

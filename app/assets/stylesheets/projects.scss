@@ -71,14 +71,13 @@ $color-module-hover: $brand-primary;
 }
 
 #diagram-container {
-  /* for IE10+ touch devices */
-  touch-action: none;
-
-  height: 650px;
+  @include box-shadow(0 0 2px 1px $color-silver);
   background: $color-silver;
-  @include box-shadow(0px 0px 2px 1px $color-silver);
-  overflow: hidden;
   cursor: move;
+  height: 650px;
+  overflow: hidden;
+  // for IE10+ touch devices
+  touch-action: none;
 }
 
 .diagram {

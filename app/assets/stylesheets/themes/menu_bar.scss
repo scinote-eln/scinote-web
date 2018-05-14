@@ -3,7 +3,7 @@
 
 .menu-bar {
   background-color: $color-white;
-  box-shadow: 0px 3px 6px 0 $color-alto;
+  box-shadow: 0 3px 6px 0 $color-alto;
   height: 100%;
   left: 0;
   overflow-x: hidden;
@@ -30,9 +30,9 @@
     }
 
     &.active {
+      @include box-shadow(-4px 0 0 $brand-primary);
       background-color: $color-gainsboro;
       margin-left: 4px;
-      @include box-shadow(-4px 0 0 $brand-primary);
 
       & > a {
         color: $color-emperor;

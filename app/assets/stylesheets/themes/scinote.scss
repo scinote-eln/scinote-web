@@ -271,7 +271,9 @@ a[data-toggle="tooltip"] {
     border-bottom: 1px solid $color-gainsboro;
     margin-top: 15px;
 
-    .open > a, .open > a:hover, .open > a:focus {
+    .open > a,
+    .open > a:hover,
+    .open > a:focus {
       background-color: $color-white;
     }
   }
@@ -297,9 +299,11 @@ a[data-toggle="tooltip"] {
         @include box-shadow(0 4px 0 $brand-primary);
         margin-bottom: 4px;
 
-        & > a, & > a:hover, & > a:focus   {
-          color: $color-emperor;
+        a,
+        a:hover,
+        a:focus {
           background: $color-white;
+          color: $color-emperor;
           font-weight: bold;
         }
       }

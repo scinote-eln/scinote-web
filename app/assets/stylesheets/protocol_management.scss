@@ -31,13 +31,14 @@
       color: $color-silver-chalice;
       padding: 15px 20px;
     }
+
+    a:hover {
+      border-color: $color-white;
+    }
   }
 
-  .nav-tabs > li > a:hover {
-    border-color: $color-white;
-  }
-
-  .nav > li > a:hover, .nav > li > a:focus {
+  .nav > li > a:hover,
+  .nav > li > a:focus {
     background-color: $color-white;
     color: $color-emperor;
   }
