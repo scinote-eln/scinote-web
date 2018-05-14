@@ -712,8 +712,13 @@ var RepositoryDatatable = (function(global) {
     // Custom cells file type
     $(node).find('td input[data-object = repository_cell_file]').each(function() {
       // Send data only and only if cell is not empty
-      if ($(this).context.files.length == 1) {
-        formData.append('repository_cells[' + $(this).attr('name') + ']', $(this).context.files[0]);
+      if ($(this).context.files.length == 1 ) {
+        if ($(this).data('changed')) {
+          formData.append('repository_cells[' + $(this).attr('name') + ']',
+                          $(this).context.files[0]);
+        } else {
+          formData.append('repository_cells[' + $(this).attr('name') + ']', '');
+        }
       }
     });
     // Custom cells list type
@@ -957,6 +962,9 @@ var RepositoryDatatable = (function(global) {
         new DataTransfer(); // specs compliant (as of March 2018 only Chrome)
       dT.items.add(new File([_], cell.value.file_file_name));
       input.files = dT.files;
+      $(input).on('change', function(){
+        this.dataset.changed = 'true';
+      });
     }
   }
 
