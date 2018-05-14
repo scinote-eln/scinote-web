@@ -15,7 +15,7 @@ Scenario: Successful Log in
   Given I am on Log in page
   Then I fill in Email "night.slarker@gmail.com" and Password "mypassword1234"
   And I click "Log in" button
-  Then I should see "BioSistemika Process"
+  Then I should be on homepage
 
 @javascript
 Scenario: Unsuccessful Log in

@@ -3,7 +3,7 @@
 
 .menu-bar {
   background-color: $color-white;
-  box-shadow: inset -4px 0 0 0 $color-alto;
+  box-shadow: 0 3px 6px 0 $color-alto;
   height: 100%;
   left: 0;
   overflow-x: hidden;
@@ -14,7 +14,6 @@
   z-index: 1001;
 
   ul.nav > li {
-    padding-right: 4px;
 
     & > a {
       color: $color-silver-chalice;
@@ -31,10 +30,9 @@
     }
 
     &.active {
+      @include box-shadow(-4px 0 0 $brand-primary);
       background-color: $color-gainsboro;
-      margin-right: 4px;
-      padding-right: 0;
-      @include box-shadow(4px 0 0 $brand-primary);
+      margin-left: 4px;
 
       & > a {
         color: $color-emperor;

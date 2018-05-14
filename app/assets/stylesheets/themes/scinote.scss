@@ -33,7 +33,7 @@ table {
 }
 
 #projects-toolbar {
-  margin: 15px 0;
+  margin-bottom: 15px;
 }
 
 #projects-toolbar .form-group {
@@ -46,10 +46,16 @@ table {
   }
 }
 
-#fluid-content {
+#fluid-content:not(.no-second-nav-container) {
   padding-left: 15px;
   padding-right: 15px;
-  padding-top: 80px;
+  padding-top: 50px;
+}
+
+.content-pane {
+  background-color: $color-white;
+  margin: 20px 0;
+  padding: 25px 20px;
 }
 
 .spacer {
@@ -114,10 +120,6 @@ body {
 .handle-move {
   cursor: move;
   cursor: -webkit-grabbing;
-}
-
-.bg-primary {
-  background-color: $brand-primary;
 }
 
 /* this rule is strict because the order of css files is not correct */
@@ -243,21 +245,21 @@ a[data-toggle="tooltip"] {
 .navbar-secondary {
   background: $color-concrete !important;
   margin-left: -280px;
-  padding-left: 295px;
-  padding-right: 15px;
+  padding-left: 294px;
+  padding-right: 97px;
   margin-bottom: 0;
   border-color: transparent;
+  border-bottom: 0;
   z-index: 500;
   position: fixed;
   width: 100%;
 
   .container-fluid {
     border-left: 0;
-    border-top: 0;
     border-right: 0;
-    border-bottom: 4px solid $color-silver;
-    padding-right: 0;
+    border-top: 0;
     padding-left: 0;
+    padding-right: 0;
   }
 
   .navbar-toggle {
@@ -265,32 +267,44 @@ a[data-toggle="tooltip"] {
   }
 
   #secondary-menu {
-    padding-left: 0;
+    background: $color-white;
+    border-bottom: 1px solid $color-gainsboro;
+    margin-top: 15px;
+
+    .open > a,
+    .open > a:hover,
+    .open > a:focus {
+      background-color: $color-white;
+    }
   }
 
   .nav-name {
-    padding: 15px 0;
+    padding: 5px 0;
+  }
+
+  .navbar-nav > li > .dropdown-menu {
+    margin-top: 4px;
   }
 
   ul.nav {
-    margin-right: 60px;
 
     & > li {
       text-transform: uppercase;
 
       & > a {
         color: $color-silver-chalice;
-
-        span {
-          //width: 14px;
-        }
       }
+
       &.active {
         @include box-shadow(0 4px 0 $brand-primary);
+        margin-bottom: 4px;
 
-        &> a {
-          font-weight: bold;
+        a,
+        a:hover,
+        a:focus {
+          background: $color-white;
           color: $color-emperor;
+          font-weight: bold;
         }
       }
     }
@@ -529,6 +543,7 @@ ul.double-line > li {
 
 .page-header {
   border-color: $color-alto;
+  margin-top: 0;
 }
 
 .pagination > .active > a,
@@ -543,6 +558,23 @@ ul.double-line > li {
 .pagination > li > a,
 .pagination > li > span {
   color: $brand-primary;
+}
+
+#projects-index,
+#project-archive,
+#project-show,
+#experiment-archive,
+#module-archive,
+#result-archive {
+  .panel-default {
+    box-shadow: 0 3px 6px $color-alto;
+  }
+}
+
+.module-large,
+.module-medium,
+.module-small {
+  box-shadow: 0 3px 6px $color-silver-chalice;
 }
 
 .panel-default > .panel-heading {
@@ -682,7 +714,8 @@ ul.double-line > li {
 }
 
 #global-activity-page {
-  margin-top: 50px;
+  margin-top: 15px;
+  padding: 0;
 }
 
 .btn-more-activities {
@@ -872,8 +905,10 @@ ul.content-module-activities {
 }
 
 .badge-icon {
-  font-size: 1.4em;
+  background-color: $color-silver;
+  color: $color-white;
   float: left;
+  font-size: 1.4em;
   padding: 6px 10px;
 
   & + .well-sm {
@@ -936,6 +971,7 @@ ul.content-module-activities {
     position: absolute;
 
     & > .badge {
+      background: $brand-success;
       border-radius: 2em;
       float: left;
       font-size: 23.4px;
@@ -955,6 +991,7 @@ ul.content-module-activities {
     }
 
     & > .badge.icon {
+      background-color: $color-silver;
       font-size: 16.5px;
       padding: 9px;
     }

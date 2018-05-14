@@ -1,6 +1,6 @@
 <div class ="step <%= step.completed? ? "completed" : "not-completed" %>">
   <div class="badge-num">
-    <span class="badge bg-primary size-digit-<%= (step.position + 1).to_s.length %>"><%= step.position + 1 %></span>
+    <span class="badge size-digit-<%= (step.position + 1).to_s.length %>"><%= step.position + 1 %></span>
   </div>
   <div class="panel panel-default">
     <div class="panel-heading">
@@ -126,13 +126,19 @@
               <div data-action="uncomplete-step"
                    class="pull-right"
                    data-link-url="<%= toggle_step_state_step_path(step)%>">
-                <button class="btn btn-default"><%= t("protocols.steps.options.uncomplete_title") %></button>
+                <button class="btn btn-default">
+                  <span class="glyphicon glyphicon-remove"></span>
+                  <%= t("protocols.steps.options.uncomplete_title") %>
+                </button>
               </div>
             <% else %>
               <div data-action="complete-step"
                    class="pull-right"
                    data-link-url="<%= toggle_step_state_step_path(step)%>">
-                <button class="btn btn-success"><%= t("protocols.steps.options.complete_title") %></button>
+                <button class="btn btn-success">
+                  <span class="glyphicon glyphicon-ok"></span>
+                  <%= t("protocols.steps.options.complete_title") %>
+                </button>
               </div>
             <% end %>
           <% end %>

@@ -2,7 +2,7 @@
   <div id="slide-panel" class="visible">
     <div class="tree">
       <ul>
-        <% if project_page? && action_name.in?(%w(index archive)) ||
+        <% if all_projects_page? ||
               sample_types_page_project? ||
               sample_groups_page_project? %>
 

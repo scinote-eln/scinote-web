@@ -18,11 +18,11 @@ $color-black: #000;
 
 // Theme colors
 $brand-default: $color-white;
-$brand-primary: #41b0e0;
-$brand-success: #5cb85c;
+$brand-primary: #37a0d9;
+$brand-success: #2dbe61;
 $brand-info: #5bc0de;
 $brand-warning: #f0ad4e;
-$brand-danger: #d9534f;
+$brand-danger: #e54e42;
 $brand-other: #9b59b6;
 $brand-extra: #34495e;
 $brand-primary-light: #dcedf6;
@@ -192,15 +192,15 @@ $btn-border-radius-small: $border-radius-small;
 // $grid-gutter-width: 30px;
 // $grid-float-breakpoint: $screen-sm-min;
 // $grid-float-breakpoint-max: ($grid-float-breakpoint - 1);
-//
-// // Container sizes
-// $container-tablet: (720px + $grid-gutter-width);
-// $container-sm: $container-tablet;
-// $container-desktop: (940px + $grid-gutter-width);
-// $container-md: $container-desktop;
-// $container-large-desktop: (1140px + $grid-gutter-width);
-// $container-lg: $container-large-desktop;
-//
+
+// Container sizes
+$container-tablet: auto;
+$container-sm: auto;
+$container-desktop: auto;
+$container-md: auto;
+$container-large-desktop: auto;
+$container-lg: auto;
+
 // // Navbar
 // $navbar-height: 50px;
 // $navbar-margin-bottom: $line-height-computed;

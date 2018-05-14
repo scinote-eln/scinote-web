@@ -2,10 +2,11 @@
 
 <%= render partial: 'shared/drag_n_drop_overlay' %>
 
-<%= render partial: "protocols/header.html.erb" %>
+<div class="content-pane">
+  <%= render partial: "protocols/header.html.erb" %>
+  <%= render partial: "protocols/steps.html.erb" %>
 
-<%= render partial: "protocols/steps.html.erb" %>
-
-<div class="hidden" data-role="updated-at-label-url" data-url="<%= updated_at_label_protocol_path(@protocol) %>"></div>
+  <div class="hidden" data-role="updated-at-label-url" data-url="<%= updated_at_label_protocol_path(@protocol) %>"></div>
+</div>
 
 <%= javascript_include_tag "protocols/edit" %>

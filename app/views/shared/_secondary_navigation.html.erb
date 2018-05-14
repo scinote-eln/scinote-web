@@ -17,7 +17,23 @@
 
       <!-- True secondary navigation (buttons on the right side) -->
       <ul class="nav navbar-nav navbar-right" style="vertical-align: bottom">
-        <% if project_page? ||
+        <% if all_projects_page? %>
+          <% if can_read_team?(current_team) then %>
+            <li id="canvas-nav-tab" class="<%= "active" if is_all_projects_index? %>">
+              <a href="<%= projects_path %>" title="<%=t "nav2.all_projects.index" %>">
+                <span class="hidden-sm hidden-md"><%=t "nav2.all_projects.index" %></span>
+                <span class="hidden-xs hidden-lg glyphicon glyphicon-blackboard"></span>
+              </a>
+            </li>
+            <li id="project-archive-nav-tab" data-turbolinks="false" class="<%= "active" if is_all_projects_archive? %>">
+              <a href="<%= projects_archive_path %>" title="<%=t "nav2.all_projects.archive" %>">
+                <span class="hidden-sm hidden-md"><%=t "nav2.all_projects.archive" %></span>
+                <span class="hidden-xs hidden-lg glyphicon glyphicon-briefcase"></span>
+              </a>
+            </li>
+          <% end %>
+
+        <% elsif project_page? ||
               sample_types_page_project? ||
               sample_groups_page_project? %>
           <% if can_read_project?(@project) then %>
@@ -29,7 +45,8 @@
             </li>
             <li id="project-archive-nav-tab" data-turbolinks="false" class="<%= "active" if is_project_archive? %>">
               <a href="<%= experiment_archive_project_url(@project) %>" title="<%=t "nav2.projects.archive" %>">
-                <span class="glyphicon glyphicon-briefcase"></span>
+                <span class="hidden-sm hidden-md"><%=t "nav2.projects.archive" %></span>
+                <span class="hidden-xs hidden-lg glyphicon glyphicon-briefcase"></span>
               </a>
             </li>
           <% end %>
@@ -47,8 +64,9 @@
           <% end %>
           <% if can_read_project?(@experiment.project) %>
               <li id="project-archive-nav-tab" data-turbolinks="false" class="<%= "active" if is_experiment_archive? %>">
-                <a href="<%= module_archive_experiment_url(@experiment) %>" title="<%=t "nav2.projects.archive" %>">
-                  <span class="glyphicon glyphicon-briefcase"></span>
+                <a href="<%= module_archive_experiment_url(@experiment) %>" title="<%=t "nav2.experiments.archive" %>">
+                  <span class="hidden-sm hidden-md"><%=t "nav2.experiments.archive" %></span>
+                  <span class="hidden-xs hidden-lg glyphicon glyphicon-briefcase"></span>
                 </a>
               </li>
           <% end %>
@@ -105,8 +123,10 @@
           <% end %>
           <% if can_read_experiment?(@my_module.experiment) then %>
             <li id="archive-nav-tab" data-turbolinks="false" class="<%= "active" if is_module_archive? %>">
-              <a href="<%= archive_my_module_url(@my_module) %>">
-                <span class="glyphicon glyphicon-briefcase" title="<%= t'nav2.modules.archive' %>"></span></a>
+              <a href="<%= archive_my_module_url(@my_module) %>" title="<%= t'nav2.modules.archive' %>">
+                <span class="hidden-sm hidden-md"><%=t "nav2.modules.archive" %></span>
+                <span class="hidden-xs hidden-lg glyphicon glyphicon-briefcase"></span>
+              </a>
             </li>
           <% end %>
 
@@ -114,10 +134,10 @@
       </ul>
 
       <!-- Secondary navigation title -->
-      <div class="nav-name">
+      <h4 class="nav-name">
         <%= truncate(title_element.name,
                      length: Constants::NAME_TRUNCATION_LENGTH) %>
-      </div>
+      </h4>
 
     </div>
   </div>

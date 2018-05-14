@@ -1,5 +1,13 @@
 module SecondaryNavigationHelper
 
+  def is_all_projects_index?
+    action_name == 'index'
+  end
+
+  def is_all_projects_archive?
+    action_name == 'archive'
+  end
+
   def is_project_info?
     action_name == 'show'
   end
@@ -57,7 +65,9 @@ module SecondaryNavigationHelper
   end
 
   def title_element
-    if project_page?
+    if all_projects_page?
+      current_team
+    elsif project_page?
       @project
     elsif experiment_page?
       @experiment

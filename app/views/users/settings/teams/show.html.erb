@@ -1,11 +1,12 @@
 <% provide(:head_title, t("users.settings.teams.head_title")) %>
+<% provide(:container_class, "no-second-nav-container") %>
 
 <div data-hook="team-beginning"></div>
 
 <%= render partial: "users/settings/sidebar.html.erb" %>
 <div class="tab-content">
-  <div class="tab-pane tab-pane-settings" role="tabpanel"></div>
-  <div class="tab-pane tab-pane-settings active" role="tabpanel">
+  <div class="tab-pane content-pane" role="tabpanel"></div>
+  <div class="tab-pane content-pane active" role="tabpanel">
 
     <%= render partial: "users/settings/teams/breadcrumbs.html.erb" %>
 
@@ -26,7 +27,7 @@
     <!-- HEADER -->
     <div class="row">
       <div class="col-xs-6 col-sm-3">
-        <div class="badge-icon bg-primary">
+        <div class="badge-icon">
           <span class="glyphicon glyphicon-calendar"></span>
         </div>
         <div class="well well-sm">
@@ -36,7 +37,7 @@
       </div>
 
       <div class="col-xs-10 col-sm-5">
-        <div class="badge-icon bg-primary">
+        <div class="badge-icon">
           <span class="glyphicon glyphicon-user"></span>
         </div>
         <div class="well well-sm">
@@ -46,7 +47,7 @@
       </div>
 
       <div class="col-xs-8 col-sm-4">
-        <div class="badge-icon bg-primary">
+        <div class="badge-icon">
           <span class="glyphicon glyphicon-hdd"></span>
         </div>
         <div class="well well-sm">
@@ -60,7 +61,7 @@
 
     <div class="row">
       <div class="col-xs-24 col-sm-12" data-hook="team-header-description">
-        <div class="badge-icon bg-primary">
+        <div class="badge-icon">
           <%= link_to team_description_path(@team, format: :json),
                       remote: true,
                       class: 'description-link',

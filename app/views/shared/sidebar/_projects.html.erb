@@ -3,7 +3,7 @@
     <% @projects_by_teams.each do |team, projects| %>
       <% projects.each do |project| %>
 
-        <% if (project_page? && action_name.in?(%w(show experiment_archive)) ||
+        <% if (project_page? ||
                sample_types_page_project? ||
                sample_groups_page_project?) && project == @project %>
           <li class="active" data-parent="candidate">

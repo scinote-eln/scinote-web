@@ -1,14 +1,15 @@
 <% provide(:head_title, t("users.registrations.edit.head_title")) %>
+<% provide(:container_class, "no-second-nav-container") %>
 
 <%= render partial: "users/settings/sidebar" %>
 <div class="tab-content">
-  <div class="tab-pane tab-pane-settings active" role="tabpanel">
+  <div class="tab-pane content-pane active" role="tabpanel">
 
     <div class="row">
       <div class="col-xs-12 col-sm-12">
         <div class="row">
           <div class="col-md-4">
-            <h2><%=t "users.registrations.edit.title" %></h2>
+            <h2 style="margin-top: 10px;"><%=t "users.registrations.edit.title" %></h2>
 
             <% if not resource.errors.empty? %>
               <div class="alert alert-danger">
@@ -203,7 +204,7 @@
           <div class="col-md-7 col-md-offset-1">
             <div class="row user-statistics">
               <div class="col-md-12">
-                <h2><%=t "users.statistics.title" %></h2>
+                <h2 style="margin-top: 10px;"><%=t "users.statistics.title" %></h2>
                 <ul class="list-inline">
                   <li class="label label-primary">
                     <h2><%= @user.statistics[:number_of_teams]%></h2>

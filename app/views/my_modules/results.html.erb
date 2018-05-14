@@ -3,48 +3,50 @@
 <%= render partial: "shared/secondary_navigation" %>
 <%= render partial: 'shared/drag_n_drop_overlay' %>
 
-<div id="results-toolbar">
-  <div class="pull-right">
-    <button class="btn btn-default" id="results-collapse-btn">
-      <span class="glyphicon glyphicon-collapse-up"></span>
-      <span class="hidden-xs-custom"><%= t'my_modules.results.collapse_label' %></button></span>
-    <button class="btn btn-default" id="results-expand-btn">
-      <span class="glyphicon glyphicon-collapse-down"></span>
-      <span class="hidden-xs-custom"><%= t'my_modules.results.expand_label' %></button></span>
+<div class="content-pane">
+  <div id="results-toolbar">
+    <div class="pull-right">
+      <button class="btn btn-default" id="results-collapse-btn">
+        <span class="glyphicon glyphicon-collapse-up"></span>
+        <span class="hidden-xs-custom"><%= t'my_modules.results.collapse_label' %></button></span>
+      <button class="btn btn-default" id="results-expand-btn">
+        <span class="glyphicon glyphicon-collapse-down"></span>
+        <span class="hidden-xs-custom"><%= t'my_modules.results.expand_label' %></button></span>
+    </div>
+
+    <% if can_manage_module?(@my_module) %>
+      <span class="hidden-xs"><%= t'my_modules.results.add_label' %></span>
+      <a class="btn btn-primary"
+         id="new-result-text"
+         data-href="<%= new_my_module_result_text_path(my_module_id: @my_module.id) %>"
+         href="#">
+        <span class="glyphicon glyphicon-font"></span>
+        <span class="hidden-xs"><%= t("my_modules.results.new_text_result") %></span>
+      </a>
+      <a class="btn btn-primary"
+         id="new-result-table"
+         data-href="<%= new_my_module_result_table_path(my_module_id: @my_module.id) %>"
+         href="#">
+        <span class="glyphicon glyphicon-list-alt"></span>
+        <span class="hidden-xs"><%= t("my_modules.results.new_table_result") %></span>
+      </a>
+      <a class="btn btn-primary"
+         id="new-result-asset"
+         data-href="<%= new_my_module_result_asset_path(my_module_id: @my_module.id) %>"
+         href="#">
+        <span class="glyphicon glyphicon-picture"></span>
+        <span class="hidden-xs"><%= t("my_modules.results.new_asset_result") %></span>
+      </a>
+    <% end %>
   </div>
 
-  <% if can_manage_module?(@my_module) %>
-    <span class="hidden-xs"><%= t'my_modules.results.add_label' %></span>
-    <a class="btn btn-primary"
-       id="new-result-text"
-       data-href="<%= new_my_module_result_text_path(my_module_id: @my_module.id) %>"
-       href="#">
-      <span class="glyphicon glyphicon-font"></span>
-      <span class="hidden-xs"><%= t("my_modules.results.new_text_result") %></span>
-    </a>
-    <a class="btn btn-primary"
-       id="new-result-table"
-       data-href="<%= new_my_module_result_table_path(my_module_id: @my_module.id) %>"
-       href="#">
-      <span class="glyphicon glyphicon-list-alt"></span>
-      <span class="hidden-xs"><%= t("my_modules.results.new_table_result") %></span>
-    </a>
-    <a class="btn btn-primary"
-       id="new-result-asset"
-       data-href="<%= new_my_module_result_asset_path(my_module_id: @my_module.id) %>"
-       href="#">
-      <span class="glyphicon glyphicon-picture"></span>
-      <span class="hidden-xs"><%= t("my_modules.results.new_asset_result") %></span>
-    </a>
+  <div style="height: 15px;"></div>
+
+  <div id="results" data-module-id="<%= @my_module.id %>">
+  <% ordered_result_of(@my_module).each do |result| %>
+    <%= render partial: "result", locals: { result: result } %>
   <% end %>
-</div>
-
-<div style="height: 15px;"></div>
-
-<div id="results" data-module-id="<%= @my_module.id %>">
-<% ordered_result_of(@my_module).each do |result| %>
-  <%= render partial: "result", locals: { result: result } %>
-<% end %>
+  </div>
 </div>
 
 <%= javascript_include_tag "handsontable.full.min" %>
