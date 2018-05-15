@@ -94,6 +94,7 @@ module RepositoryImportParser
                   cell_value_resolver.column_list_items_size
               end
               next if cell_value.nil? # checks the case if we reach items limit
+              cell_value.repository_cell.importing = true
               unless cell_value.valid?
                 errors = true
                 raise ActiveRecord::Rollback
