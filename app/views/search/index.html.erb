@@ -298,23 +298,33 @@
   <% end %>
 
   <% if @search_pages > 1 %>
+  <% params = { q: @search_query,
+                category: @search_category,
+                utf8: '✓',
+                search_id: @search_id } %>
+  <% if @search_category == :repositories %>
+    <% params[:repository] = @repository.id %>
+  <% end %>
   <nav class="text-center">
     <ul class="pagination">
       <% if @search_page > 1 %>
+      <% params[:page] = @search_page - 1 %>
       <li>
-        <a href="?<%= {q: @search_query, category: @search_category, page: @search_page - 1, utf8: '✓'}.to_query %>" aria-label="Previous">
+        <a href="?<%= params.to_query %>" aria-label="Previous">
           <span aria-hidden="true">&laquo;</span>
         </a>
       </li>
       <% end %>
       <% (@start_page..@end_page).each do |page_i| %>
+      <% params[:page] = page_i %>
       <li <% if @search_page == page_i %>class="active"<% end %>>
-        <a href="?<%= {q: @search_query, category: @search_category, page: page_i, utf8: '✓'}.to_query %>"><%= page_i %></a>
+        <a href="?<%= params.to_query %>"><%= page_i %></a>
       </li>
       <% end %>
       <% if @search_page < @search_pages %>
+      <% params[:page] = @search_page + 1 %>
       <li>
-        <a href="?<%= {q: @search_query, category: @search_category, page: @search_page + 1, utf8: '✓'}.to_query %>" aria-label="Previous">
+        <a href="?<%= params.to_query %>" aria-label="Next">
           <span aria-hidden="true">&raquo;</span>
         </a>
       </li>
