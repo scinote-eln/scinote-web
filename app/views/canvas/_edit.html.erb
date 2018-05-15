@@ -9,7 +9,20 @@
   data-unsaved-work-text="<%=t "experiments.canvas.edit.unsaved_work" %>"
 >
   <%= bootstrap_form_tag url: canvas_experiment_url, method: "post" do |f| %>
-    <div class="btn-group" role="group">
+    <% if can_manage_experiment?(@experiment) %>
+      <%=link_to "", type: "button", class: "btn btn-primary", id: "canvas-new-module" do %>
+        <span class="hbtn-default">
+          <span class="glyphicon glyphicon-credit-card"></span>
+          <%= t("experiments.canvas.edit.new_module") %>
+        </span>
+        <span class="hbtn-hover">
+          <span class="glyphicon glyphicon-credit-card"></span>
+          <em class="hidden-xs"><%= t("experiments.canvas.edit.new_module_hover") %></em>
+          <span class="visible-xs-inline"><%= t("experiments.canvas.edit.new_module") %></span>
+        </span>
+      <% end %>
+    <% end %>
+    <div class="btn-group pull-right" role="group">
       <%= link_to canvas_experiment_path(@experiment), type: "button", class: "btn btn-default cancel-edit-canvas" do %>
         <span class="hidden-xs"><%= t("experiments.canvas.edit.cancel") %></span>
         <span class="glyphicon glyphicon-remove visible-xs" style="height: 16px;margin-top: 4px;">&nbsp;</span>
@@ -19,19 +32,6 @@
         <span class="hidden-xs"><%= t("experiments.canvas.edit.save") %></span>
       <% end %>
     </div>
-    <% if can_manage_experiment?(@experiment) %>
-        <%=link_to "", type: "button", class: "btn btn-primary", id: "canvas-new-module" do %>
-          <span class="hbtn-default">
-            <span class="glyphicon glyphicon-credit-card"></span>
-            <%= t("experiments.canvas.edit.new_module") %>
-          </span>
-          <span class="hbtn-hover">
-            <span class="glyphicon glyphicon-credit-card"></span>
-            <em class="hidden-xs"><%= t("experiments.canvas.edit.new_module_hover") %></em>
-            <span class="visible-xs-inline"><%= t("experiments.canvas.edit.new_module") %></span>
-          </span>
-        <% end %>
-    <% end %>
     <%= hidden_field_tag 'connections', '' %>
     <%= hidden_field_tag 'positions', '' %>
     <%= hidden_field_tag 'add', '' %>

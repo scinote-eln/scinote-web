@@ -319,7 +319,7 @@ en:
         nav_print: "Print"
         nav_pdf: "Download PDF"
         nav_save: "Save"
-        nav_close: "Close"
+        nav_close: "Cancel"
         nav_sort_by: "Sort by"
         nav_sort_asc: "Oldest on top"
         nav_sort_desc: "Newest on top"

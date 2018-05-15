@@ -107,7 +107,7 @@
   }
 
   .system-message {
-    background-color: $brand-other;
+    background-color: $brand-success;
     border-radius: 50%;
     color: $color-concrete;
     display: block;
@@ -225,7 +225,7 @@
   }
 
   .system-message {
-    background-color: $brand-other;
+    background-color: $brand-success;
     border-radius: 50%;
     color: $color-concrete;
     display: block !important;
@@ -253,8 +253,8 @@
 
   .glyphicon-ok-sign {
     color: $brand-primary;
-    margin-left: -10px;
-    margin-right: 10px;
+    margin-left: -2px;
+    margin-right: 2px;
   }
 
   .team-name-item {
