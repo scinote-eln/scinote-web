@@ -144,12 +144,6 @@ class MyModulesController < ApplicationController
   end
 
   def update
-    render_403 && return unless if my_module_params[:archived] == 'false'
-                                  can_restore_module?(@my_module)
-                                else
-                                  can_manage_module?(@my_module)
-                                end
-
     @my_module.assign_attributes(my_module_params)
     @my_module.last_modified_by = current_user
     description_changed = @my_module.description_changed?
@@ -669,7 +663,11 @@ class MyModulesController < ApplicationController
   end
 
   def check_manage_permissions
-    render_403 unless can_manage_module?(@my_module)
+    render_403 && return unless if my_module_params[:archived] == 'false'
+                                  can_restore_module?(@my_module)
+                                else
+                                  can_manage_module?(@my_module)
+                                end
   end
 
   def check_view_permissions
