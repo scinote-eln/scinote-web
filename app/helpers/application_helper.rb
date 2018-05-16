@@ -21,6 +21,7 @@ module ApplicationHelper
   end
 
   def display_tooltip(message, len = Constants::NAME_TRUNCATION_LENGTH)
+    return '' unless message
     if message.strip.length > len
       sanitize_input("<div class='modal-tooltip'> \
       #{truncate(message.strip, length: len)} \
