@@ -34,3 +34,11 @@
   padding: 15px;
   width: 100%;
 }
+
+.repository-input-file-field {
+  display: inline-flex;
+
+  .btn-danger {
+    margin-left: 5px;
+  }
+}

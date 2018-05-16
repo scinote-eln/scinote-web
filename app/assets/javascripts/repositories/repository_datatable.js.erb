@@ -962,11 +962,13 @@ var RepositoryDatatable = (function(global) {
   }
 
   function _addSelectedFile(type, cell, input) {
-    if (type === 'RepositoryAssetValue' && cell.value != null) {
-      const dT = new ClipboardEvent('').clipboardData || // Firefox workaround exploiting https://bugzilla.mozilla.org/show_bug.cgi?id=1422655
-        new DataTransfer(); // specs compliant (as of March 2018 only Chrome)
-      dT.items.add(new File([_], cell.value.file_file_name));
-      input.files = dT.files;
+    if (type === 'RepositoryAssetValue') {
+      if (cell.value != null) {
+        const dT = new ClipboardEvent('').clipboardData || // Firefox workaround exploiting https://bugzilla.mozilla.org/show_bug.cgi?id=1422655
+          new DataTransfer(); // specs compliant (as of March 2018 only Chrome)
+        dT.items.add(new File([_], cell.value.file_file_name));
+        input.files = dT.files;
+      }
       $(input).on('change', function(){
         this.dataset.changed = 'true';
       });
@@ -1037,8 +1039,16 @@ var RepositoryDatatable = (function(global) {
 
   // Takes object and surrounds it with input
   function changeToInputFileField(object, name, value) {
-    return "<div class='form-group'><input type='file' class='form-control' data-object='" +
-        object + "' name='" + name + "' value='" + value + "'></input></div>";
+    return "<div class='repository-input-file-field'>" +
+        "<input type='file' class='form-control' data-object='" +
+        object + "' name='" + name + "' value='" + value + "'>" +
+        "<a class='btn btn-danger' onClick='clearFileInput(this)'>" +
+        "<i class='fas fa-times'></i>" +
+        "</a></div>";
+  }
+
+  global.clearFileInput = function (el) {
+    $(el).prev('input:file')[0].value = '';
   }
 
   // Takes an object and creates custom html element
