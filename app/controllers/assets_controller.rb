@@ -53,11 +53,18 @@ class AssetsController < ApplicationController
     }
 
     if @asset.is_image?
-      response_json['large-preview-url'] = @asset.url(:large)
+      response_json.merge!(
+        'processing'        => @asset.file.processing?,
+        'large-preview-url' => @asset.url(:large),
+        'processing-url'    => image_tag('medium/processing.gif')
+      )
     else
-      response_json['preview-icon'] = render_to_string(
-        partial: 'shared/file_preview_icon.html.erb',
-        locals: { asset: @asset }
+      response_json.merge!(
+        'processing'   => @asset.file.processing?,
+        'preview-icon' => render_to_string(
+          partial: 'shared/file_preview_icon.html.erb',
+          locals: { asset: @asset }
+        )    
       )
     end
 

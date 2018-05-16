@@ -1780,6 +1780,17 @@ th.custom-field .modal-tooltiptext {
   max-height: 200px;
 }
 
+a.disabled {
+  opacity: .5;
+  pointer-events: none;
+  cursor: default;
+}
+
+a.disabled-with-click-events {
+  opacity: .5;
+  cursor: not-allowed;
+}
+
 #alert-flash {
 
   button {
