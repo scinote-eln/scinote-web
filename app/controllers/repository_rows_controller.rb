@@ -129,6 +129,7 @@ class RepositoryRowsController < ApplicationController
                 existing.delete
               end
             elsif existing.value_type == 'RepositoryAssetValue'
+              next if value.blank?
               if existing.value.asset.update(file: value)
                 existing.value.asset.created_by = current_user
                 existing.value.asset.last_modified_by = current_user
