@@ -1915,6 +1915,7 @@ en:
       length_too_short: "Search query is too short (minimum is %{min_length} characters)"
     busy: "The server is still processing your request. If you leave this page, the changes will be lost! Are you sure you want to continue?"
     no_name: "(no name)"
+    filter: "Filter:"
 
   api:
     core:

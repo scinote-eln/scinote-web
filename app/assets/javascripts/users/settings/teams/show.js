@@ -122,7 +122,7 @@ function initUsersTable() {
       { data: "5" }
     ],
     oLanguage: {
-      sSearch: "Filter:"
+      sSearch: I18n.t('general.filter')
     }
   });
 }
