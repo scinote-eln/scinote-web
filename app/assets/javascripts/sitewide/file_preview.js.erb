@@ -33,9 +33,9 @@
         link.attr('data-status', 'asset-present');
         if (data['type'] === 'image') {
           if(data['processing']) {
-            $(data['processing-url'])
-              .appendTo(modal.find('.file-preview-container'));
+            animateSpinner('.file-preview-container', true);
           } else {
+            animateSpinner('.file-preview-container', false);
             modal.find('.file-preview-container')
                  .append($('<img>')
                    .attr('src', data['large-preview-url'])
@@ -70,7 +70,7 @@
         $('.file-download-link')
           .addClass('disabled-with-click-events')
           .attr('title',
-                'File is still being processed and cannot be downloaded yet.')
+                '<%= I18n.t('general.file.processing')%>')
           .click(function(ev) {
             ev.preventDefault();
             ev.stopPropagation();
