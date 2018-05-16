@@ -1728,13 +1728,13 @@ th.custom-field .modal-tooltiptext {
 }
 
 a.disabled {
-  opacity: 0.5;
+  opacity: .5;
   pointer-events: none;
   cursor: default;
 }
 
 a.disabled-with-click-events {
-  opacity: 0.5;
+  opacity: .5;
   cursor: wait;
 }
 
