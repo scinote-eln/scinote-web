@@ -4,6 +4,6 @@ Rails.application.configure do
     if ENV['REPOSITORIES_LIMIT']
       ENV['REPOSITORIES_LIMIT'].to_i
     else
-      5
+      6
     end
 end
