@@ -1129,7 +1129,7 @@ var RepositoryDatatable = (function(global) {
         listItem.attr('data-id', $(el).attr('id'));
         listItem.addClass(visLi);
         listItem.removeClass('repository-columns-list-template hide');
-        listItem.find('.text').text(generateColumnNameTooltip(thederName));
+        listItem.find('.text').html(generateColumnNameTooltip(thederName));
         listItem.find('.vis').addClass(visClass);
         listItem.find('.vis')
                 .attr('title', $(TABLE_ID).data('columns-visibility-text'));
