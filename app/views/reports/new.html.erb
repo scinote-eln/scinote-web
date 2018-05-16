@@ -2,6 +2,7 @@
 <% provide(:body_class, "report-body") %>
 <% provide(:container_class, "report-container") %>
 
+<div id="notifications"></div>
 <%= render partial: "reports/new/report_navigation" %>
 
 <div
@@ -71,8 +72,11 @@
     </div>
 </div>
 
+<%= render partial: 'reports/new/save_PDF_to_inventory_modal' %>
+
 <%= javascript_include_tag "handsontable.full.min" %>
 <%= javascript_include_tag("reports/new") %>
+<%= javascript_include_tag 'reports/save_pdf_to_inventory' %>
 
 <!-- Libraries for formulas -->
 <%= javascript_include_tag "lodash" %>

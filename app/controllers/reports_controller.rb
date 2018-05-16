@@ -26,6 +26,8 @@ class ReportsController < ApplicationController
   before_action :load_vars, only: %i(edit update)
   before_action :load_vars_nested, only: BEFORE_ACTION_METHODS
   before_action :load_visible_projects, only: %i(index visible_projects)
+  before_action :load_available_repositories,
+                only: %i(new edit available_repositories)
 
   before_action :check_manage_permissions, only: BEFORE_ACTION_METHODS
 
@@ -169,13 +171,37 @@ class ReportsController < ApplicationController
     respond_to do |format|
       format.pdf do
         @html = params[:html]
-        @html = '<h1>No content</h1>' if @html.blank?
+        @html = I18n.t('projects.reports.new.no_content_for_PDF_html') if @html.blank?
         render pdf: 'report',
           header: { right: '[page] of [topage]' },
           template: 'reports/report.pdf.erb',
           disable_javascript: true
       end
     end
+  end
+
+  def save_pdf_to_inventory_item
+    report_service = ReportActions::SavePdfToInventoryItem.new(
+      current_user, current_team, save_PDF_params
+    )
+    report_service.call
+    cell_value = report_service.cell_value
+    if cell_value.save
+      render json: {
+        message: I18n.t(
+          'projects.reports.new.save_PDF_to_inventory_modal.success_flash'
+        )
+      }, status: :ok
+    else
+      render json: { message: cell_value.errors.full_messages.join },
+             status: :unprocessable_entity
+    end
+  rescue ReportActions::RepostioryPermissionError => error
+    render json: { message: error },
+           status: :unprocessable_entity
+  rescue Exception => error
+    render json: { message: error.message },
+           status: :unprocessable_entity
   end
 
   # Modal for saving the existsing/new report
@@ -428,10 +454,15 @@ class ReportsController < ApplicationController
     render json: { projects: @visible_projects }, status: :ok
   end
 
+  def available_repositories
+    render json: { results: @available_repositories }, status: :ok
+  end
+
   private
 
   include StringUtility
   VisibleProject = Struct.new(:path, :name)
+  AvailableRepository = Struct.new(:id, :name)
 
   def load_vars
     @report = Report.find_by_id(params[:id])
@@ -460,6 +491,16 @@ class ReportsController < ApplicationController
     end
   end
 
+  def load_available_repositories
+    repositories = current_team.repositories
+                               .name_like(search_params[:q])
+                               .select(:id, :name)
+    @available_repositories = repositories.collect do |repository|
+      AvailableRepository.new(repository.id,
+                              ellipsisize(repository.name, 75, 50))
+    end
+  end
+
   def report_params
     params.require(:report)
           .permit(:name, :description, :grouped_by, :report_contents)
@@ -467,5 +508,12 @@ class ReportsController < ApplicationController
 
   def search_params
     params.permit(:q)
+  end
+
+  def save_PDF_params
+    params.permit(:repository_id,
+                  :respository_column_id,
+                  :repository_item_id,
+                  :html)
   end
 end

@@ -193,6 +193,13 @@ Rails.application.routes.draw do
     get 'reports/datatable', to: 'reports#datatable'
     post 'reports/visible_projects', to: 'reports#visible_projects',
                                      defaults: { format: 'json' }
+    post 'reports/available_repositories', to: 'reports#available_repositories',
+                                           defaults: { format: 'json' }
+    post 'reports/save_pdf_to_inventory_item',
+         to: 'reports#save_pdf_to_inventory_item',
+         defaults: { format: 'json' }
+    post 'file_columns', to: 'repository_columns#file_columns',
+                         defaults: { format: 'json' }
     post 'reports/destroy', to: 'reports#destroy'
 
     resources :projects, except: [:new, :destroy] do
@@ -490,6 +497,9 @@ Rails.application.routes.draw do
         post 'import_records'
       end
     end
+
+    post 'available_rows', to: 'repository_rows#available_rows',
+                           defaults: { format: 'json' }
 
     post 'repository_list_items', to: 'repository_list_items#search',
                                   defaults: { format: 'json' }
