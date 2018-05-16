@@ -1,4 +1,6 @@
 class RepositoryCell < ActiveRecord::Base
+  attr_accessor :importing
+
   belongs_to :repository_row
   belongs_to :repository_column
   belongs_to :value, polymorphic: true,
@@ -28,7 +30,8 @@ class RepositoryCell < ActiveRecord::Base
   validates :repository_column, presence: true
   validate :repository_column_data_type
   validates :repository_row,
-            uniqueness: { scope: :repository_column }
+            uniqueness: { scope: :repository_column },
+            unless: :importing
 
   private
 
