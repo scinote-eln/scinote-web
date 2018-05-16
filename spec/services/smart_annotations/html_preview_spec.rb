@@ -86,13 +86,6 @@ describe SmartAnnotations::HtmlPreview do
         )
         expect(trimmed_repository_name).to eq('Two')
       end
-
-      it 'does not return 3 letters of the first word' do
-        trimmed_repository_name = subject.__send__(
-          :trim_repository_name, 'two words'
-        )
-        expect(trimmed_repository_name).not_to eq('Two')
-      end
     end
   end
 end
