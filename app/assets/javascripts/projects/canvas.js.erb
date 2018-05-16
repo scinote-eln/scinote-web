@@ -1127,6 +1127,7 @@ function updateModuleHtml(module, id, name, gridDistX, gridDistY) {
   var dropdownMenu = document.createElement("ul");
   $(dropdownMenu)
   .addClass("dropdown-menu")
+  .addClass("custom-dropdown-menu")
   .addClass("no-scale")
   .attr("aria-labelledby", id + "_options")
   .appendTo(dropdown);

@@ -214,8 +214,8 @@ label {
   }
 
   &:hover {
-    background-color: $brand-primary-light;
-    @include box-shadow(0 0 2px 15px $brand-primary-light);
+    background-color: $color-gainsboro;
+    @include box-shadow(0 0 2px 15px $color-gainsboro);
 
     & > .report-element-header {
 

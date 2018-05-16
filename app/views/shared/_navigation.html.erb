@@ -37,7 +37,7 @@
                              url: user_current_team_path,
                              method: :post) do |f| %>
                   <%= hidden_field(:user, :current_team_id) %>
-                  <div class="team-switch-dropdown-header"><%= t('nav.team_switch_title') %></div>
+                  <div class="dropdown-header"><%= t('nav.team_switch_title') %></div>
                   <% current_user.teams.each do |team| %>
                     <li class="team-name-item">
                       <a href="#"

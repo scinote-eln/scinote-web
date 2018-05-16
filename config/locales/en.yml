@@ -319,7 +319,7 @@ en:
         nav_print: "Print"
         nav_pdf: "Download PDF"
         nav_save: "Save"
-        nav_close: "Close"
+        nav_close: "Cancel"
         nav_sort_by: "Sort by"
         nav_sort_asc: "Oldest on top"
         nav_sort_desc: "Newest on top"
@@ -909,10 +909,12 @@ en:
       advanced: "Advanced"
       options_dropdown:
         header: "Edit inventory"
-        rename: "Rename"
-        copy: "Copy"
-        delete: "Delete"
-        manage_columns: 'Manage Columns'
+        manage_columns: 'Manage columns'
+        import_items: 'Import items'
+        export_items: 'Export items'
+        rename: "Rename inventory"
+        copy: "Copy inventory"
+        delete: "Delete inventory"
       modal_delete:
         title_html: "Delete inventory <em>%{name}</em>"
         message_html: "Are you sure you want to delete inventory <em>%{name}</em>? This action is irreversible."
