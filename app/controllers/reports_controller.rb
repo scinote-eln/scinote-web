@@ -181,27 +181,25 @@ class ReportsController < ApplicationController
   end
 
   def save_pdf_to_inventory_item
-    report_service = ReportActions::SavePdfToInventoryItem.new(
+    save_pdf_to_inventory_item = ReportActions::SavePdfToInventoryItem.new(
       current_user, current_team, save_PDF_params
     )
-    report_service.call
-    cell_value = report_service.cell_value
-    if cell_value.save
+    if save_pdf_to_inventory_item.save
       render json: {
         message: I18n.t(
           'projects.reports.new.save_PDF_to_inventory_modal.success_flash'
         )
       }, status: :ok
     else
-      render json: { message: cell_value.errors.full_messages.join },
+      render json: { message: save_pdf_to_inventory_item.error_messages },
              status: :unprocessable_entity
     end
   rescue ReportActions::RepositoryPermissionError => error
     render json: { message: error },
-           status: :unprocessable_entity
+           status: :forbidden
   rescue Exception => error
     render json: { message: error.message },
-           status: :unprocessable_entity
+           status: :internal_server_error
   end
 
   # Modal for saving the existsing/new report

@@ -18,10 +18,6 @@
             id="selectInventory"
             class="form-control selectpicker"
             data-live-search="true">
-            <option></option>
-            <% @available_repositories.each do |repository| %>
-              <option value="<%= repository.id %>"><%= repository.name %></option>
-            <% end %>
           </select>
           <label><%=t 'projects.reports.new.save_PDF_to_inventory_modal.inventory_column' %></label>
           <select
