@@ -66,7 +66,7 @@ function initProtocolsTable() {
       { data: "6" }
     ],
     oLanguage: {
-      sSearch: "Filter:"
+      sSearch: I18n.t('general.filter')
     },
     rowCallback: function(row, data, dataIndex) {
       // Get row ID
