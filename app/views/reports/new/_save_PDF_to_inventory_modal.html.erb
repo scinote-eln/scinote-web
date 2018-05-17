@@ -31,7 +31,7 @@
             disabled>
           </select>
           <div id="save-PDF-to-inventory-column-warnings"></div>
-          <label><%=t 'projects.reports.new.save_PDF_to_inventory_modal.inventory_column' %></label>
+          <label><%=t 'projects.reports.new.save_PDF_to_inventory_modal.inventory_item' %></label>
           <select
             id="selectInventoryItem"
             class="form-control selectpicker"
@@ -44,13 +44,13 @@
         <div class="save-PDF-to-inventory-alerts" id="save-PDF-to-inventory-warnings"></div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal"><%=t 'general.close' %></button>
+        <button type="button" class="btn btn-default" data-dismiss="modal"><%=t 'general.cancel' %></button>
         <button
           id="savePDFtoInventorySubmit"
           type="button"
           class="btn btn-primary"
           disabled
-          >Save changes</button>
+          ><%=t 'general.save' %></button>
       </div>
     </div>
   </div>

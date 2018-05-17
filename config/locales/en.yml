@@ -329,7 +329,7 @@ en:
         no_permissions: "You don't have permissions on that repository"
         save_PDF_to_inventory_modal:
           description_one: "Here you can save PDF report to an inventory item."
-          description_two: "First select an inventory, then a column and finally the item within tne inventory to which you would like to save the PDF report to. Note that the column has to be of type \"file\"."
+          description_two: "First select an inventory, then a column and finally the item within the inventory to which you would like to save the PDF report to. Note that the column has to be of type \"file\"."
           inventory: "Select inventory:"
           inventory_column: "Select inventory column:"
           inventory_item: "Select inventory item:"

@@ -1,14 +1,15 @@
 class RepositoryColumnsController < ApplicationController
   include InputSanitizeHelper
-
-  before_action :load_vars, except: %i(create index create_html file_columns)
+  ACTIONS = %i(create index create_html available_asset_type_columns).freeze
+  before_action :load_vars,
+                except: ACTIONS
   before_action :load_vars_nested,
-                only: %i(create index create_html file_columns)
+                only: ACTIONS
   before_action :check_create_permissions, only: :create
   before_action :check_manage_permissions,
-                except: %i(create index create_html file_columns)
+                except: ACTIONS
   before_action :load_repository_columns, only: :index
-  before_action :load_asset_type_columns, only: :file_columns
+  before_action :load_asset_type_columns, only: :available_asset_type_columns
 
   def index; end
 
@@ -142,7 +143,7 @@ class RepositoryColumnsController < ApplicationController
     end
   end
 
-  def file_columns
+  def available_asset_type_columns
     if @asset_columns.empty?
       render json: {
         no_items: t(
@@ -207,7 +208,7 @@ class RepositoryColumnsController < ApplicationController
                .collect do |column|
                  AvailableRepositoryColumn.new(
                    column.id,
-                   ellipsisize(column.name)
+                   ellipsize(column.name, 75, 50)
                  )
                end
   end

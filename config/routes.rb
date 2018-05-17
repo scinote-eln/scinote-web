@@ -198,8 +198,9 @@ Rails.application.routes.draw do
     post 'reports/save_pdf_to_inventory_item',
          to: 'reports#save_pdf_to_inventory_item',
          defaults: { format: 'json' }
-    post 'file_columns', to: 'repository_columns#file_columns',
-                         defaults: { format: 'json' }
+    post 'available_asset_type_columns',
+          to: 'repository_columns#available_asset_type_columns',
+          defaults: { format: 'json' }
     post 'reports/destroy', to: 'reports#destroy'
 
     resources :projects, except: [:new, :destroy] do

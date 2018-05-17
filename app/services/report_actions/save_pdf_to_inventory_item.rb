@@ -33,22 +33,23 @@ module ReportActions
         @params[:repository_item_id]
       )
       unless can_create_repository_rows?(@user, @repository.team)
-        raise ReportActions::RepostioryPermissionError,
+        raise ReportActions::RepositoryPermissionError,
                 I18n.t('projects.reports.new.no_permissions')
       end
     end
 
-    def generate_pdf(html)
+    def generate_pdf(content)
       ac = ActionView::Base.new(ActionController::Base.view_paths, {})
       ac.extend ReportsHelper # include reports helper methods to view
       ac.extend InputSanitizeHelper # include input sanitize methods to view
       no_content_label = I18n.t('projects.reports.new.no_content_for_PDF_html')
-      save_path        = Tempfile.open('report', Rails.root.join('tmp'))
-      @html            = html
-      @html            = no_content_label if @html.blank?
+      save_path        = Tempfile.open(['report', '.pdf'], Rails.root.join('tmp'))
+      content          = no_content_label if content.blank?
       pdf_file         = WickedPdf.new.pdf_from_string(
-        ac.render(template: 'reports/report.pdf.erb'),
-        header: { right: '[page] of [topage]' }, disable_javascript: true
+        ac.render(template: 'reports/report.pdf.erb',
+                  locals: { content: content }),
+        header: { right: '[page] of [topage]' },
+        disable_javascript: true
       )
       File.open(save_path, 'wb') do |file|
         file << pdf_file
@@ -83,5 +84,5 @@ module ReportActions
     end
   end
 
-  RepostioryPermissionError = Class.new(StandardError)
+  RepositoryPermissionError = Class.new(StandardError)
 end

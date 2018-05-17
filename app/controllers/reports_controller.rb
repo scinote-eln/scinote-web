@@ -168,14 +168,14 @@ class ReportsController < ApplicationController
   # Generation action
   # Currently, only .PDF is supported
   def generate
+    content = params[:html]
+    content = I18n.t('projects.reports.new.no_content_for_PDF_html') if content.blank?
     respond_to do |format|
       format.pdf do
-        @html = params[:html]
-        @html = I18n.t('projects.reports.new.no_content_for_PDF_html') if @html.blank?
-        render pdf: 'report',
-          header: { right: '[page] of [topage]' },
-          template: 'reports/report.pdf.erb',
-          disable_javascript: true
+        render pdf: 'report', header: { right: '[page] of [topage]' },
+                              locals: { content: content },
+                              template: 'reports/report.pdf.erb',
+                              disable_javascript: true
       end
     end
   end
@@ -196,7 +196,7 @@ class ReportsController < ApplicationController
       render json: { message: cell_value.errors.full_messages.join },
              status: :unprocessable_entity
     end
-  rescue ReportActions::RepostioryPermissionError => error
+  rescue ReportActions::RepositoryPermissionError => error
     render json: { message: error },
            status: :unprocessable_entity
   rescue Exception => error
@@ -487,17 +487,18 @@ class ReportsController < ApplicationController
                                     .select(:id, :name)
     @visible_projects = projects.collect do |project|
       VisibleProject.new(new_project_reports_path(project),
-                         ellipsisize(project.name, 75, 50))
+                         ellipsize(project.name, 75, 50))
     end
   end
 
   def load_available_repositories
     repositories = current_team.repositories
                                .name_like(search_params[:q])
+                               .limit(Constants::SEARCH_LIMIT)
                                .select(:id, :name)
     @available_repositories = repositories.collect do |repository|
       AvailableRepository.new(repository.id,
-                              ellipsisize(repository.name, 75, 50))
+                              ellipsize(repository.name, 75, 50))
     end
   end
 

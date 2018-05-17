@@ -376,7 +376,7 @@ class RepositoryRowsController < ApplicationController
                    search_params[:repository_column_id]
                  )
                  AvailableRepositoryRow.new(row.id,
-                                            ellipsisize(row.name),
+                                            ellipsize(row.name, 75, 50),
                                             with_asset_cell.present?)
                end
   end
