@@ -92,6 +92,9 @@ var RepositoryDatatable = (function(global) {
                  "class='record-info-link'>" + data + '</a>';
         }
       }],
+      oLanguage: {
+        sSearch: "Filter:"
+      },
       rowCallback: function(row, data) {
         // Get row ID
         var rowId = data.DT_RowId;
@@ -122,6 +125,7 @@ var RepositoryDatatable = (function(global) {
         changeToViewMode();
         updateButtons();
         updateDataTableSelectAllCtrl();
+        initPreviewModal();
         // Prevent row toggling when selecting user smart annotation link
         SmartAnnotation.preventPropagation('.atwho-user-popover');
 
@@ -712,8 +716,13 @@ var RepositoryDatatable = (function(global) {
     // Custom cells file type
     $(node).find('td input[data-object = repository_cell_file]').each(function() {
       // Send data only and only if cell is not empty
-      if ($(this).context.files.length == 1) {
-        formData.append('repository_cells[' + $(this).attr('name') + ']', $(this).context.files[0]);
+      if ($(this).context.files.length == 1 ) {
+        if ($(this).data('changed')) {
+          formData.append('repository_cells[' + $(this).attr('name') + ']',
+                          $(this).context.files[0]);
+        } else {
+          formData.append('repository_cells[' + $(this).attr('name') + ']', '');
+        }
       }
     });
     // Custom cells list type
@@ -781,9 +790,10 @@ var RepositoryDatatable = (function(global) {
             $.each(val, function(key, val) {
               var input = $(selectedRecord).find('input[name=' + key + ']');
               if (input) {
+                var message = Array.isArray(val.data) ? val.data[0] : val.data;
                 input.closest('.form-group').addClass('has-error');
                 input.parent().append("<span class='help-block'>" +
-                                      val.data[0] + '<br /></span>');
+                                      message + '<br /></span>');
               }
             });
           });
@@ -952,11 +962,16 @@ var RepositoryDatatable = (function(global) {
   }
 
   function _addSelectedFile(type, cell, input) {
-    if (type === 'RepositoryAssetValue' && cell.value != null) {
-      const dT = new ClipboardEvent('').clipboardData || // Firefox workaround exploiting https://bugzilla.mozilla.org/show_bug.cgi?id=1422655
-        new DataTransfer(); // specs compliant (as of March 2018 only Chrome)
-      dT.items.add(new File([_], cell.value.file_file_name));
-      input.files = dT.files;
+    if (type === 'RepositoryAssetValue') {
+      if (cell.value != null) {
+        const dT = new ClipboardEvent('').clipboardData || // Firefox workaround exploiting https://bugzilla.mozilla.org/show_bug.cgi?id=1422655
+          new DataTransfer(); // specs compliant (as of March 2018 only Chrome)
+        dT.items.add(new File([_], cell.value.file_file_name));
+        input.files = dT.files;
+      }
+      $(input).on('change', function(){
+        this.dataset.changed = 'true';
+      });
     }
   }
 
@@ -1024,8 +1039,16 @@ var RepositoryDatatable = (function(global) {
 
   // Takes object and surrounds it with input
   function changeToInputFileField(object, name, value) {
-    return "<div class='form-group'><input type='file' class='form-control' data-object='" +
-        object + "' name='" + name + "' value='" + value + "'></input></div>";
+    return "<div class='repository-input-file-field'>" +
+        "<input type='file' class='form-control' data-object='" +
+        object + "' name='" + name + "' value='" + value + "'>" +
+        "<a class='btn btn-danger' onClick='clearFileInput(this)'>" +
+        "<i class='fas fa-times'></i>" +
+        "</a></div>";
+  }
+
+  global.clearFileInput = function (el) {
+    $(el).prev('input:file')[0].value = '';
   }
 
   // Takes an object and creates custom html element
@@ -1062,6 +1085,7 @@ var RepositoryDatatable = (function(global) {
     currentMode = 'viewMode';
     // Table specific stuff
     TABLE.button(0).enable(true);
+    initPreviewModal();
   }
 
   function changeToEditMode() {
@@ -1105,7 +1129,7 @@ var RepositoryDatatable = (function(global) {
         listItem.attr('data-id', $(el).attr('id'));
         listItem.addClass(visLi);
         listItem.removeClass('repository-columns-list-template hide');
-        listItem.find('.text').text(generateColumnNameTooltip(thederName));
+        listItem.find('.text').html(generateColumnNameTooltip(thederName));
         listItem.find('.vis').addClass(visClass);
         listItem.find('.vis')
                 .attr('title', $(TABLE_ID).data('columns-visibility-text'));

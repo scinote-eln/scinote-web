@@ -1,8 +1,15 @@
 <% if asset.file_present %>
-  <% if asset.file.processing? && display_image_tag %>
+  <% if asset.file.processing? && display_image_tag && asset.is_image? %>
     <span data-status='asset-loading'
           data-present-url='<%= file_present_asset_path(asset.id) %>'>
       <%= image_tag 'medium/processing.gif' %>
+      <%= link_to download_asset_path(asset),
+        class: 'file-preview-link',
+        id: "modal_link#{asset.id}",
+        data: { no_turbolink: true, id: true, status: 'asset-present', 'preview-url': asset_file_preview_path(asset) } do %>
+        <p><%= truncate(asset.file_file_name,
+                        length: Constants::FILENAME_TRUNCATION_LENGTH) %></p>
+      <% end %>
     </span>
   <% else %>
     <%= link_to download_asset_path(asset),

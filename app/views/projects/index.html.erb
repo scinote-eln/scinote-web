@@ -1,6 +1,8 @@
 <% provide(:head_title, t("projects.index.head_title")) %>
 <%= render partial: "shared/sidebar" %>
+<%= render partial: "shared/secondary_navigation" %>
 
+<div class="content-pane" id="projects-index">
 <% if can_create_projects?(current_team) %>
   <!-- New project modal -->
   <div class="modal" id="new-project-modal" tabindex="-1" role="dialog" aria-labelledby="new-project-modal-label">
@@ -61,11 +63,6 @@
   <form class="form-inline" action="<%= projects_path %>">
 
     <div class="form-group">
-      <!-- project archive button -->
-      <a class="btn btn-default pull-right" href="<%= url_for projects_archive_path %>" id="project-archive-btn" data-turbolinks="false" title="<%= t'projects.index.archive' %>">
-        <span class="glyphicon glyphicon-briefcase" aria-hidden="true"></span>
-        <span class="hidden-xs"><%=t "projects.index.archive" %></span>
-      </a>
 
       <% if @teams.length > 0 && can_create_projects?(current_team) %>
       <!-- new project button -->
@@ -108,11 +105,12 @@
   </p>
 </div>
 <% else %>
-  <h2 class="page-header"><%= current_team.name %></h2>
   <% @projects_by_teams.each do |team, projects| %>
     <%= render partial: "projects/index/team_projects",
                locals: {team: team, projects: projects} %>
   <% end %>
 
 <% end %>
+</div>
+
 <%= javascript_include_tag "projects/index", "data-turbolinks-track" => true %>

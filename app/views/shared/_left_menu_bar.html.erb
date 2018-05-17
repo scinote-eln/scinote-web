@@ -37,12 +37,6 @@
         <span><%= t('left_menu_bar.reports') %></span>
       <% end %>
     </li>
-    <li class="<%= "active" if settings_are_selected? %>">
-      <%= link_to edit_user_registration_path, id: "settings-link", title: t('left_menu_bar.settings') do %>
-        <span class="glyphicon glyphicon-cog"></span>
-        <span><%= t('left_menu_bar.settings') %></span>
-      <% end %>
-    </li>
   </ul>
   <ul class="nav nav-bottom">
     <li class="<%= "active" if activities_are_selected? %>">
@@ -75,6 +69,12 @@
                           Constants::WEBINARS_URL,
                           target: "_blank" %></li>
       </ul>
+    </li>
+    <li class="<%= "active" if settings_are_selected? %>">
+      <%= link_to edit_user_registration_path, id: "settings-link", title: t('left_menu_bar.settings') do %>
+        <span class="glyphicon glyphicon-cog"></span>
+        <span><%= t('left_menu_bar.settings') %></span>
+      <% end %>
     </li>
   </ul>
 </div>

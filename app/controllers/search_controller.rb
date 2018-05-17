@@ -154,6 +154,15 @@ class SearchController < ApplicationController
     count_total
   end
 
+  def current_repository_search_count
+    @repository_search_count.each_value do |counter|
+      res = counter[:repositories].values.detect do |rep|
+        rep[:id] == @repository.id
+      end
+      return res[:count]
+    end
+  end
+
   def count_search_results
     @project_search_count = fetch_cached_count Project
     @experiment_search_count = fetch_cached_count Experiment
@@ -265,7 +274,7 @@ class SearchController < ApplicationController
                           whole_word: @search_whole_word,
                           whole_phrase: @search_whole_phrase)
     end
-    @search_count = @repository_search_count_total
+    @search_count = current_repository_search_count
   end
 
   def search_assets

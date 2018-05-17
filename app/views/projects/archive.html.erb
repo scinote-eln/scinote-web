@@ -1,52 +1,54 @@
 <% provide(:head_title, t("projects.archive.head_title")) %>
 <%= render partial: "shared/sidebar" %>
+<%= render partial: "shared/secondary_navigation" %>
 
-<% if @archived_projects_by_teams.length > 0 %>
-<div id="projects-toolbar">
+<div class="content-pane" id="project-archive">
+  <% if @archived_projects_by_teams.length > 0 %>
+  <div id="projects-toolbar">
 
-  <form class="form-inline" action="<%= projects_archive_path %>">
+    <form class="form-inline" action="<%= projects_archive_path %>">
 
-    <div class="form-group">
-      <!-- project sort -->
-      <div class="dropdown">
-        <button class="btn btn-default dropdown-toggle" type="button" id="sortMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-          <span class="hidden-xs"><%= t'projects.index.sort' %></span>
-          <span class="visible-xs-inline"><i class="glyphicon glyphicon-sort"></i></span>
-          <span class="caret"></span>
-        </button>
-        <ul class="dropdown-menu" aria-labelledby="sortMenu">
-        <% ["new", "old", "atoz", "ztoa"].each do |sort| %>
-          <% if @current_sort != sort %>
-          <li><a href="?<%= {team: @current_team_id, sort: sort}.reject{|k,v| v.to_s == "0"}.to_query %>"><%= t('projects.index.sort_' + sort) %></a></li>
-          <% else %>
-          <li class="disabled"><a href="#"><%= t('projects.index.sort_' + sort) %></a></li>
+      <div class="form-group">
+        <!-- project sort -->
+        <div class="dropdown">
+          <button class="btn btn-default dropdown-toggle" type="button" id="sortMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+            <span class="hidden-xs"><%= t'projects.index.sort' %></span>
+            <span class="visible-xs-inline"><i class="glyphicon glyphicon-sort"></i></span>
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="sortMenu">
+          <% ["new", "old", "atoz", "ztoa"].each do |sort| %>
+            <% if @current_sort != sort %>
+            <li><a href="?<%= {team: @current_team_id, sort: sort}.reject{|k,v| v.to_s == "0"}.to_query %>"><%= t('projects.index.sort_' + sort) %></a></li>
+            <% else %>
+            <li class="disabled"><a href="#"><%= t('projects.index.sort_' + sort) %></a></li>
+            <% end %>
           <% end %>
-        <% end %>
-        </ul>
+          </ul>
+        </div>
+
       </div>
+    </form>
+  </div>
 
+    <% @archived_projects_by_teams.each do |team, projects| %>
+      <%= render partial: 'projects/archive/team_projects',
+                 locals: {team: team, projects: projects} %>
+    <% end %>
+  <% else %>
+    <div class="row">
+      <div class="col-xs-12">
+        <h4><%=t "projects.index.no_archived_projects" %></h4>
+      </div>
     </div>
-  </form>
-</div>
-
-  <% @archived_projects_by_teams.each do |team, projects| %>
-    <%= render partial: 'projects/archive/team_projects',
-               locals: {team: team, projects: projects} %>
+    <div>
+      <div class="col-xs-12">
+        <%= link_to t("projects.index.back_to_projects_index"), projects_path, data: { turbolinks: 'false' } %>
+      </div>
+    </div>
+    <!-- Some spacing... -->
+    <div class="row">
+      <div class="col-xs-12" style="height: 30px;"></div>
+    </div>
   <% end %>
-<% else %>
-  <!-- Some spacing... -->
-  <div class="row">
-    <div class="col-xs-12" style="height: 30px;"></div>
-  </div>
-
-  <div class="row">
-    <div class="col-xs-12">
-      <h4><%=t "projects.index.no_archived_projects" %></h4>
-    </div>
-  </div>
-  <div>
-    <div class="col-xs-12">
-      <%= link_to t("projects.index.back_to_projects_index"), projects_path, data: { turbolinks: 'false' } %>
-    </div>
-  </div>
-<% end %>
+</div>

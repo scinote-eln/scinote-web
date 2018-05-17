@@ -2,10 +2,12 @@
 @import "mixins";
 
 // Some color definitions
-$color-group-hover: $brand-primary;
-$color-module-hover: $brand-default;
+$color-group-hover: $color-alabaster;
+$color-module-hover: $brand-primary;
 
-#new-project-modal, #edit-project-modal {
+#new-project-modal,
+#edit-project-modal,
+#copy-to-repository-modal {
   .btn-group label.btn-primary:not(.active) {
     background-color: $color-white;
     border-color: $color-silver;
@@ -40,8 +42,6 @@ $color-module-hover: $brand-default;
 }
 
 #canvas-new-module {
-  margin-left: 10px;
-
   .hbtn-default {
     opacity: 1;
     width: 0;
@@ -69,14 +69,13 @@ $color-module-hover: $brand-default;
 }
 
 #diagram-container {
-  /* for IE10+ touch devices */
-  touch-action: none;
-
-  height: 650px;
-  background: $color-dove-gray;
-  @include box-shadow(0px 0px 2px 1px $color-dove-gray);
-  overflow: hidden;
+  @include box-shadow(0 0 2px 1px $color-silver);
+  background: $color-silver;
   cursor: move;
+  height: 650px;
+  overflow: hidden;
+  // for IE10+ touch devices
+  touch-action: none;
 }
 
 .diagram {
@@ -517,7 +516,7 @@ li.module-hover {
 }
 
 .big-plus {
-  color: $brand-primary-light;
+  color: $color-gainsboro;
   display: block;
   font-size: 250px;
   margin: 20px 0;

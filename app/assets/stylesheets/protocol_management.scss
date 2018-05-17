@@ -1,3 +1,5 @@
+@import 'constants';
+
 .btn-open-file {
   position: relative;
   overflow: hidden;
@@ -16,5 +18,44 @@
     background: white;
     cursor: inherit;
     display: block;
+  }
+}
+
+#protocols-index {
+  padding: 0;
+
+  .nav-tabs > li {
+    text-transform: uppercase;
+
+    a {
+      color: $color-silver-chalice;
+      padding: 15px 20px;
+    }
+
+    a:hover {
+      border-color: $color-white;
+    }
+  }
+
+  .nav > li > a:hover,
+  .nav > li > a:focus {
+    background-color: $color-white;
+    color: $color-emperor;
+  }
+
+  .nav-tabs > li.active > a,
+  .nav-tabs > li.active > a:hover,
+  .nav-tabs > li.active > a:focus {
+    background-color: $color-white;
+    border: 0;
+    box-shadow: 0 4px 0 $brand-primary;
+    color: $color-emperor;
+    font-weight: bold;
+    margin-bottom: 4px;
+  }
+
+  .tab-pane-settings {
+    border: 0;
+    padding: 25px 20px;
   }
 }

@@ -2,6 +2,7 @@
 @import "mixins";
 
 #main-nav {
+  box-shadow: 0 3px 6px $color-alto;
   margin-bottom: 0;
 }
 
@@ -106,7 +107,7 @@
   }
 
   .system-message {
-    background-color: $brand-default;
+    background-color: $brand-success;
     border-radius: 50%;
     color: $color-concrete;
     display: block;
@@ -117,22 +118,13 @@
   }
 
   .notifications-dropdown-footer {
-    background-color: $brand-primary-light;
+    background-color: $color-gainsboro;
     padding: 8px;
     text-align: center;
-  }
 
-}
-
-.notifications-dropdown-header,
-.team-switch-dropdown-header {
-  background-color: $brand-primary;
-  color: $color-concrete;
-  font-weight: bold;
-  padding: 8px;
-
-  a {
-    color: $color-white;
+    a:hover {
+      background-color: $color-gainsboro;
+    }
   }
 }
 
@@ -233,7 +225,7 @@
   }
 
   .system-message {
-    background-color: $brand-default;
+    background-color: $brand-success;
     border-radius: 50%;
     color: $color-concrete;
     display: block !important;
@@ -261,8 +253,8 @@
 
   .glyphicon-ok-sign {
     color: $brand-primary;
-    margin-left: -10px;
-    margin-right: 10px;
+    margin-left: -2px;
+    margin-right: 2px;
   }
 
   .team-name-item {

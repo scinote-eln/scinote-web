@@ -8,17 +8,16 @@
 
 /* New page navbar */
 .navbar-report {
-  background: $color-concrete;
-  border-bottom: 4px solid $color-silver;
+  background: $color-white;
+  border-bottom: 1px solid $color-gainsboro;
   border-left: 0;
   border-right: 0;
-  border-top: 0;
-  margin-bottom: 0;
+  border-top: 15px solid $color-concrete;
+  margin-bottom: 15px;
   min-width: 320px;
-  padding: 0 15px;
-  padding-right: 100px;
-  position: fixed;
-  width: 100%;
+  padding: 25px 20px;
+  position: sticky;
+  top: 50px;
   z-index: 500;
 
   div.row {
@@ -26,8 +25,6 @@
   }
 
   #report-menu {
-    margin: 15px 0;
-
     form {
       display: inline-block;
     }
@@ -77,13 +74,20 @@ label {
 
 
 /* New page content */
+#report-new {
+  margin-top: -15px;
+}
+
 .report-body {
-  background: $color-dove-gray;
+  background: $color-silver;
 }
 
 .report-container {
+  background: $color-silver;
+  box-shadow: 0 0 2px 1px $color-silver;
   overflow-x: auto;
   overflow-y: auto;
+  padding: 30px;
   padding-left: 0;
   width: auto;
 }
@@ -94,7 +98,7 @@ label {
   color: $color-black;
   margin-left: auto;
   margin-right: auto;
-  margin-top: 50px;
+  margin-top: -15px;
   max-width: 800px;
   min-height: 1200px;
   min-width: 230px;
@@ -210,8 +214,8 @@ label {
   }
 
   &:hover {
-    background-color: $brand-primary-light;
-    @include box-shadow(0 0 2px 15px $brand-primary-light);
+    background-color: $color-gainsboro;
+    @include box-shadow(0 0 2px 15px $color-gainsboro);
 
     & > .report-element-header {
 

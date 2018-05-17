@@ -1,9 +1,5 @@
 @import "constants";
 
-.repository-columns-header {
-  margin-top: 30px;
-}
-
 .repository-columns-body {
   margin-top: 50px;
 
@@ -30,11 +26,19 @@
 }
 
 .custom-alert-info {
-  background-color: $brand-danger-light;
+  background-color: $state-info-bg;
+  border: 1px solid $state-info-border;
+  color: $state-info-text;
   margin: 10px 0;
-  padding: 10px;
+  opacity: .86;
+  padding: 15px;
+  width: 100%;
 }
 
-#content-reports-index {
-  margin-top: 50px;
+.repository-input-file-field {
+  display: inline-flex;
+
+  .btn-danger {
+    margin-left: 5px;
+  }
 }

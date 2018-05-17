@@ -12,7 +12,7 @@ data-project-users-tab-url="<%= url_for project_user_projects_path(project_id: p
           <% project_form = f %>
           <%= f.hidden_field :archived, value: true %>
         <% end %>
-        <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1">
+        <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1" style="top: 105%;">
           <li class="dropdown-header"><%= t('projects.index.options_header') %></li>
           <li>
             <%= link_to t("projects.index.edit_option"), edit_project_path(project, format: :json), remote: true, "data-action" => "edit" %>

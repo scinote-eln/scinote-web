@@ -5,43 +5,45 @@
 <%= render partial: "shared/sidebar" %>
 <%= render partial: "shared/secondary_navigation" %>
 
-<h3><%= @repository.name %></h3>
+<div class="content-pane">
+  <h3 style="margin-top: 5px;"><%= @repository.name %></h3>
 
-<div id="show-assigned-buttons" class="btn-group repository-assign-group" data-toggle="buttons">
-  <button type="button" class="active btn btn-primary" id="assigned-repo-records"><%= t("repositories.view_assigned_records") %></button>
-  <button type="button" class="btn btn-default" id="all-repo-records"><%= t("repositories.view_all_records") %></button>
-</div>
+  <div id="show-assigned-buttons" class="btn-group repository-assign-group" data-toggle="buttons">
+    <button type="button" class="active btn btn-primary" id="assigned-repo-records"><%= t("repositories.view_assigned_records") %></button>
+    <button type="button" class="btn btn-default" id="all-repo-records"><%= t("repositories.view_all_records") %></button>
+  </div>
 
-<div id="datatables-buttons" class="pull-right" style="display: inline;">
-  <%= render partial: "repositories/columns_reorder_dropdown" %>
-</div>
+  <div id="datatables-buttons" class="pull-right" style="display: inline;">
+    <%= render partial: "repositories/columns_reorder_dropdown" %>
+  </div>
 
-<div class="toolbarButtons" style="display:none">
-  <% if module_page? && can_assign_repository_rows_to_module?(@my_module) %>
-    <button type="button" class="btn btn-default"
-      data-assign-url-modal="<%= assign_repository_records_modal_my_module_path(@my_module, @repository) %>"
-      id="assignRepositoryRecords" onclick="openAssignRecordsModal()" disabled>
-      <span class="glyphicon glyphicon-ok-circle"></span>
-      <span class="hidden-xs-custom"><%= t'repositories.assign_records_to_module' %></span>
-    </button>
-    <button type="button" class="btn btn-default"
-      data-unassign-url="<%= unassign_repository_records_modal_my_module_path(@my_module, @repository)%>"
-      id="unassignRepositoryRecords" onclick="openUnassignRecordsModal()" disabled>
-      <span class="glyphicon glyphicon-ban-circle"></span>
-      <span class="hidden-xs-custom"><%= t'repositories.unassign_records_from_module' %></span>
-    </button>
-  <% end %>
-</div>
+  <div class="toolbarButtons" style="display:none">
+    <% if module_page? && can_assign_repository_rows_to_module?(@my_module) %>
+      <button type="button" class="btn btn-default"
+        data-assign-url-modal="<%= assign_repository_records_modal_my_module_path(@my_module, @repository) %>"
+        id="assignRepositoryRecords" onclick="openAssignRecordsModal()" disabled>
+        <span class="glyphicon glyphicon-ok-circle"></span>
+        <span class="hidden-xs-custom"><%= t'repositories.assign_records_to_module' %></span>
+      </button>
+      <button type="button" class="btn btn-default"
+        data-unassign-url="<%= unassign_repository_records_modal_my_module_path(@my_module, @repository)%>"
+        id="unassignRepositoryRecords" onclick="openUnassignRecordsModal()" disabled>
+        <span class="glyphicon glyphicon-ban-circle"></span>
+        <span class="hidden-xs-custom"><%= t'repositories.unassign_records_from_module' %></span>
+      </button>
+    <% end %>
+  </div>
 
-<div id="content"
-     data-repo-id="#repository-table-<%= @repository.id %>">
-	<%= render partial: "repositories/repository_table",
-             locals: {
-               repository: @repository,
-               my_module: @my_module,
-               repository_index_link: repository_index_my_module_path(@my_module, @repository, format: :json)
-             }
-  %>
+  <div id="content"
+       data-repo-id="#repository-table-<%= @repository.id %>">
+  	<%= render partial: "repositories/repository_table",
+               locals: {
+                 repository: @repository,
+                 my_module: @my_module,
+                 repository_index_link: repository_index_my_module_path(@my_module, @repository, format: :json)
+               }
+    %>
+  </div>
 </div>
 
 <%= stylesheet_link_tag 'datatables' %>

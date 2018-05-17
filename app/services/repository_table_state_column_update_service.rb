@@ -54,7 +54,12 @@ class RepositoryTableStateColumnUpdateService
         end
       end
 
-      state['order'].reject! { |k, v| v[0] == old_column_index }
+      state['order'].reject! { |_, v| v[0] == old_column_index }
+      state['order'].each do |k, v|
+        if v[0].to_i > old_column_index.to_i
+          state['order'][k] = [(v[0].to_i - 1).to_s, v[1]]
+        end
+      end
       if state['order'].empty?
         # Fallback to default order if user had table ordered by
         # the deleted column

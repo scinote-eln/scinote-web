@@ -13,11 +13,7 @@ describe RepositoryDatatableService do
                                data_type: :RepositoryListValue
   end
   let!(:repository_state) do
-    RepositoryTableState.create(
-      repository: repository,
-      user: user,
-      state: Constants::REPOSITORY_TABLE_DEFAULT_STATE
-    )
+    RepositoryTableStateService.new(user, repository).create_default_state
   end
   let!(:repository_row) do
     create :repository_row, name: 'A row',

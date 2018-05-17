@@ -12,11 +12,16 @@ module ApplicationHelper
   end
 
   def project_page?
-    controller_name == 'projects' ||
-      (controller_name == 'reports' && action_name == 'index')
+    controller_name == 'projects' &&
+      action_name.in?(%w(show experiment_archive))
+  end
+
+  def all_projects_page?
+    controller_name == 'projects' && action_name.in?(%w(index archive))
   end
 
   def display_tooltip(message, len = Constants::NAME_TRUNCATION_LENGTH)
+    return '' unless message
     if message.strip.length > len
       sanitize_input("<div class='modal-tooltip'> \
       #{truncate(message.strip, length: len)} \
