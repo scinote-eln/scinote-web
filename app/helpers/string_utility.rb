@@ -1,5 +1,5 @@
 module StringUtility
-  def ellipsisize(
+  def ellipsize(
     string,
     minimum_length = Constants::MAX_NAME_TRUNCATION,
     edge_length = Constants::MAX_EDGE_LENGTH

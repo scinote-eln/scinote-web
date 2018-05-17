@@ -23,6 +23,11 @@ class RepositoryColumn < ApplicationRecord
   around_destroy :update_repository_table_states_with_removed_column
 
   scope :list_type, -> { where(data_type: 'RepositoryListValue') }
+  scope :asset_type, -> { where(data_type: 'RepositoryAssetValue') }
+
+  def self.name_like(query)
+    where('repository_columns.name ILIKE ?', "%#{query}%")
+  end
 
   def update_repository_table_states_with_new_column
     service = RepositoryTableStateColumnUpdateService.new

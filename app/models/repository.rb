@@ -57,6 +57,10 @@ class Repository < ApplicationRecord
     end
   end
 
+  def self.name_like(query)
+    where('repositories.name ILIKE ?', "%#{query}%")
+  end
+  
   def importable_repository_fields
     fields = {}
     # First and foremost add record name

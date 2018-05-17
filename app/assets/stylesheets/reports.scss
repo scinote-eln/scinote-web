@@ -537,3 +537,13 @@ label {
     }
   }
 }
+
+#save-PDF-to-inventory-warnings {
+  margin-top: 30px;
+}
+
+.save-PDF-to-inventory-alerts {
+  .danger {
+    color: $brand-danger;
+  }
+}

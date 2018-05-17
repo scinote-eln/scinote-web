@@ -26,6 +26,8 @@ class ReportsController < ApplicationController
   before_action :load_vars, only: %i(edit update)
   before_action :load_vars_nested, only: BEFORE_ACTION_METHODS
   before_action :load_visible_projects, only: %i(index visible_projects)
+  before_action :load_available_repositories,
+                only: %i(new edit available_repositories)
 
   before_action :check_manage_permissions, only: BEFORE_ACTION_METHODS
 
@@ -166,16 +168,38 @@ class ReportsController < ApplicationController
   # Generation action
   # Currently, only .PDF is supported
   def generate
+    content = params[:html]
+    content = I18n.t('projects.reports.new.no_content_for_PDF_html') if content.blank?
     respond_to do |format|
       format.pdf do
-        @html = params[:html]
-        @html = '<h1>No content</h1>' if @html.blank?
-        render pdf: 'report',
-          header: { right: '[page] of [topage]' },
-          template: 'reports/report.pdf.erb',
-          disable_javascript: true
+        render pdf: 'report', header: { right: '[page] of [topage]' },
+                              locals: { content: content },
+                              template: 'reports/report.pdf.erb',
+                              disable_javascript: true
       end
     end
+  end
+
+  def save_pdf_to_inventory_item
+    save_pdf_to_inventory_item = ReportActions::SavePdfToInventoryItem.new(
+      current_user, current_team, save_PDF_params
+    )
+    if save_pdf_to_inventory_item.save
+      render json: {
+        message: I18n.t(
+          'projects.reports.new.save_PDF_to_inventory_modal.success_flash'
+        )
+      }, status: :ok
+    else
+      render json: { message: save_pdf_to_inventory_item.error_messages },
+             status: :unprocessable_entity
+    end
+  rescue ReportActions::RepositoryPermissionError => error
+    render json: { message: error },
+           status: :forbidden
+  rescue Exception => error
+    render json: { message: error.message },
+           status: :internal_server_error
   end
 
   # Modal for saving the existsing/new report
@@ -428,10 +452,15 @@ class ReportsController < ApplicationController
     render json: { projects: @visible_projects }, status: :ok
   end
 
+  def available_repositories
+    render json: { results: @available_repositories }, status: :ok
+  end
+
   private
 
   include StringUtility
   VisibleProject = Struct.new(:path, :name)
+  AvailableRepository = Struct.new(:id, :name)
 
   def load_vars
     @report = Report.find_by_id(params[:id])
@@ -456,7 +485,18 @@ class ReportsController < ApplicationController
                                     .select(:id, :name)
     @visible_projects = projects.collect do |project|
       VisibleProject.new(new_project_reports_path(project),
-                         ellipsisize(project.name, 75, 50))
+                         ellipsize(project.name, 75, 50))
+    end
+  end
+
+  def load_available_repositories
+    repositories = current_team.repositories
+                               .name_like(search_params[:q])
+                               .limit(Constants::SEARCH_LIMIT)
+                               .select(:id, :name)
+    @available_repositories = repositories.collect do |repository|
+      AvailableRepository.new(repository.id,
+                              ellipsize(repository.name, 75, 50))
     end
   end
 
@@ -467,5 +507,12 @@ class ReportsController < ApplicationController
 
   def search_params
     params.permit(:q)
+  end
+
+  def save_PDF_params
+    params.permit(:repository_id,
+                  :respository_column_id,
+                  :repository_item_id,
+                  :html)
   end
 end

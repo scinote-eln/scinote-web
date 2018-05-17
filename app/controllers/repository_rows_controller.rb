@@ -6,7 +6,11 @@ class RepositoryRowsController < ApplicationController
   before_action :load_info_modal_vars, only: :show
   before_action :load_vars, only: %i(edit update)
   before_action :load_repository,
-                only: %i(create delete_records index copy_records)
+                only: %i(create
+                         delete_records
+                         index
+                         copy_records
+                         available_rows)
   before_action :check_create_permissions, only: :create
   before_action :check_manage_permissions,
                 only: %i(edit update delete_records copy_records)
@@ -297,7 +301,25 @@ class RepositoryRowsController < ApplicationController
     }, status: :ok
   end
 
+  def available_rows
+    if @repository.repository_rows.empty?
+      no_items_string =
+        "#{t('projects.reports.new.save_PDF_to_inventory_modal.no_items')} " \
+        "#{link_to(t('projects.reports.new.save_PDF_to_inventory_modal.here'),
+                   repository_path(@repository),
+                   data: { 'no-turbolink' => true })}"
+      render json: { no_items: no_items_string },
+                   status: :ok
+    else
+      render json: { results: load_available_rows(search_params[:q]) },
+                   status: :ok
+    end
+  end
+
   private
+
+  include StringUtility
+  AvailableRepositoryRow = Struct.new(:id, :name, :has_file_attached)
 
   def load_info_modal_vars
     @repository_row = RepositoryRow.eager_load(:created_by, repository: [:team])
@@ -341,6 +363,27 @@ class RepositoryRowsController < ApplicationController
 
   def selected_params
     params.permit(selected_rows: []).to_h[:selected_rows]
+  end
+
+  def load_available_rows(query)
+    @repository.repository_rows
+               .includes(:repository_cells)
+               .name_like(search_params[:q])
+               .limit(Constants::SEARCH_LIMIT)
+               .select(:id, :name)
+               .collect do |row|
+                 with_asset_cell = row.repository_cells.where(
+                   'repository_cells.repository_column_id = ?',
+                   search_params[:repository_column_id]
+                 )
+                 AvailableRepositoryRow.new(row.id,
+                                            ellipsize(row.name, 75, 50),
+                                            with_asset_cell.present?)
+               end
+  end
+
+  def search_params
+    params.permit(:q, :repository_id, :repository_column_id)
   end
 
   def record_annotation_notification(record, cell, old_text = nil)

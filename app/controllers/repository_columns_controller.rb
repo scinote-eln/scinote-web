@@ -1,11 +1,15 @@
 class RepositoryColumnsController < ApplicationController
   include InputSanitizeHelper
-
-  before_action :load_vars, except: %i(create index create_html)
-  before_action :load_vars_nested, only: %i(create index create_html)
+  ACTIONS = %i(create index create_html available_asset_type_columns).freeze
+  before_action :load_vars,
+                except: ACTIONS
+  before_action :load_vars_nested,
+                only: ACTIONS
   before_action :check_create_permissions, only: :create
-  before_action :check_manage_permissions, except: %i(create index create_html)
+  before_action :check_manage_permissions,
+                except: ACTIONS
   before_action :load_repository_columns, only: :index
+  before_action :load_asset_type_columns, only: :available_asset_type_columns
 
   def index; end
 
@@ -139,7 +143,22 @@ class RepositoryColumnsController < ApplicationController
     end
   end
 
+  def available_asset_type_columns
+    if @asset_columns.empty?
+      render json: {
+        no_items: t(
+          'projects.reports.new.save_PDF_to_inventory_modal.no_columns'
+        )
+        }, status: :ok
+    else
+      render json: { results: @asset_columns }, status: :ok
+    end
+  end
+
   private
+
+  include StringUtility
+  AvailableRepositoryColumn = Struct.new(:id, :name)
 
   def load_vars
     @repository = Repository.find_by_id(params[:repository_id])
@@ -158,6 +177,11 @@ class RepositoryColumnsController < ApplicationController
                                      .order(created_at: :desc)
   end
 
+  def load_asset_type_columns
+    render_403 unless can_read_team?(@repository.team)
+    @asset_columns = load_asset_columns(search_params[:q])
+  end
+
   def check_create_permissions
     render_403 unless can_create_repository_columns?(@repository.team)
   end
@@ -168,6 +192,23 @@ class RepositoryColumnsController < ApplicationController
 
   def repository_column_params
     params.require(:repository_column).permit(:name, :data_type)
+  end
+
+  def search_params
+    params.permit(:q, :repository_id)
+  end
+
+  def load_asset_columns(query)
+    @repository.repository_columns
+               .asset_type.name_like(query)
+               .limit(Constants::SEARCH_LIMIT)
+               .select(:id, :name)
+               .collect do |column|
+                 AvailableRepositoryColumn.new(
+                   column.id,
+                   ellipsize(column.name, 75, 50)
+                 )
+               end
   end
 
   def generate_repository_list_items(item_names)

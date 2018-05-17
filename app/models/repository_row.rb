@@ -26,4 +26,8 @@ class RepositoryRow < ApplicationRecord
     where(id: ids).joins(:my_module_repository_rows)
                   .where('my_module_repository_rows.my_module' => my_module)
   end
+
+  def self.name_like(query)
+    where('repository_rows.name ILIKE ?', "%#{query}%")
+  end
 end
