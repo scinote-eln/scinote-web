@@ -155,12 +155,10 @@ class RepositoryColumnsController < ApplicationController
     end
   end
 
-
   private
 
   include StringUtility
   AvailableRepositoryColumn = Struct.new(:id, :name)
-
 
   def load_vars
     @repository = Repository.find_by_id(params[:repository_id])
