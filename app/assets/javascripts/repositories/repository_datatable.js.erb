@@ -245,9 +245,6 @@ var RepositoryDatatable = (function(global) {
     return TABLE;
   }
 
-  // Enables noSearchHidden plugin
-  $.fn.dataTable.defaults.noSearchHidden = true;
-
   function bindExportActions() {
     $('form#form-export').submit(function() {
       var form = this;
