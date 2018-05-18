@@ -58,7 +58,7 @@
         <span class="glyphicon glyphicon-paperclip"></span>
         <span><%= t('left_menu_bar.support') %></span>
       </a>
-      <ul class="dropdown-menu">
+      <ul class="dropdown-menu" data-hook="support-dropdown">
         <li><%= link_to t('left_menu_bar.support_links.support'),
                           Constants::SUPPORT_URL,
                           target: "_blank" %></li>
