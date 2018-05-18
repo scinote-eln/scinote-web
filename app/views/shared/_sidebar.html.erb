@@ -2,26 +2,6 @@
   <div id="slide-panel" class="visible">
     <div class="tree">
       <ul>
-        <% if all_projects_page? ||
-              sample_types_page_project? ||
-              sample_groups_page_project? %>
-
-          <li class="active">
-            <span class="tree-link line-wrap no-indent">
-              <span title="<%= t('sidebar.projects.all') %>"><%= t('sidebar.projects.all') %></span>
-            </span>
-          </li>
-        <% else %>
-          <li>
-            <span class="tree-link line-wrap no-indent">
-              <strong>
-                <%= link_to t('sidebar.projects.all'),
-                            projects_path,
-                            title: t('sidebar.projects.all') %>
-              </strong>
-            </span>
-          </li>
-        <% end %>
         <%= render partial: 'shared/sidebar/projects' %>
       </ul>
     </div>

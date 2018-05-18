@@ -150,6 +150,7 @@ function setupSidebarTree() {
   .attr("title", I18n.t('sidebar.branch_collapse'));
   $(".tree li.parent_li ")
   .find("> span i")
+  .removeClass("no-arrow")
   .addClass("glyphicon glyphicon-triangle-right expanded");
 
   // Add IDs to all parent <lis>

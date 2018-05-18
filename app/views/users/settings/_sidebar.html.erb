@@ -1,12 +1,7 @@
 <%= content_for :sidebar do %>
  <div id="slide-panel" class="visible">
    <div class="tree">
-     <ul data-hook="user-settings-navigation-html">
-       <li>
-         <span class="tree-link line-wrap no-indent">
-           <strong title="<%= t('users.settings.sidebar.title') %>"><%= t('users.settings.sidebar.title') %></strong>
-         </span>
-       </li>
+     <ul id="settings" data-hook="user-settings-navigation-html">
        <!-- Account -->
        <li class="parent_li" >
          <span class="tree-link line-wrap no-indent">
