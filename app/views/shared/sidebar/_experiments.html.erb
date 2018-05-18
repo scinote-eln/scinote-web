@@ -6,7 +6,7 @@
              sample_types_page_expermient?) && experiment == @experiment %>
         <li class="active" data-parent="candidate">
           <span class="tree-link line-wrap first-indent">
-            <i></i>
+            <i class="no-arrow"></i>
             <span title="<%= @experiment.name %>"><%= @experiment.name %></span>
           </span>
           <%= render partial: 'shared/sidebar/my_modules', locals: { experiment: @experiment } %>
@@ -14,7 +14,7 @@
       <% else %>
         <li data-parent="candidate">
           <span class="tree-link line-wrap first-indent">
-            <i></i>
+            <i class="no-arrow"></i>
             <% if can_read_experiment?(experiment) %>
               <%= link_to experiment.name,
                           experiment_action_to_link_to(experiment),

@@ -115,8 +115,6 @@ en:
     branch_expand: "Expand this branch"
     branch_collapse: "Collapse this branch"
     no_module_group: "No workflow"
-    projects:
-      all: "All Projects"
 
   nav2:
     all_projects:
@@ -1061,8 +1059,6 @@ en:
         delete_column: "Delete"
         edit_column: "Edit"
         back_to_repository_html: "<span class='glyphicon glyphicon-chevron-left'></span> Back to %{repository}"
-    sidebar:
-      title: "Inventories"
     index:
       head_title: "Inventories"
       no_libraries:
@@ -1396,7 +1392,6 @@ en:
       changed_team_error_flash: "Something went wrong! Try again later."
       changed_team_in_search: "The searched item is not in your current team. You will be redirected to %{team} team!"
       sidebar:
-        title: "Settings"
         account: "Account"
         teams: "Teams"
         account_nav:

@@ -2,11 +2,6 @@
   <div id="slide-panel" class="visible">
     <div class="tree">
       <ul>
-        <li>
-          <span class="tree-link line-wrap no-indent">
-            <strong title="<%= t('libraries.sidebar.title') %>"><%= t('libraries.sidebar.title') %></strong>
-          </span>
-        </li>
         <% repositories.each do |repository| %>
           <li class="<%= 'active parent_li' if current_page?(repository_path(repository)) %>" >
             <span class="tree-link line-wrap no-indent">

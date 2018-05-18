@@ -23,7 +23,7 @@
   }
 
   .second-indent {
-    background-color: $color-gainsboro;
+    background-color: $color-concrete;
     padding-left: 60px;
   }
 
@@ -61,6 +61,10 @@
       }
     }
 
+    i.no-arrow {
+      padding-left: 15px;
+    }
+
     i.glyphicon {
       font-size: 9pt;
 
@@ -81,6 +85,20 @@
     .border-custom {
       box-shadow: 0 -.25px 0 .25px $color-alto;
       margin: 0 15px;
+    }
+  }
+
+  #settings {
+    .glyphicon-triangle-right {
+      margin-left: -15px;
+    }
+
+    .no-indent {
+      padding-left: 30px;
+    }
+
+    .first-indent {
+      padding-left: 45px;
     }
   }
 }
