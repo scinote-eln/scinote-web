@@ -8,7 +8,7 @@ $color-module-hover: $brand-primary;
 #new-project-modal,
 #edit-project-modal,
 #copy-to-repository-modal {
-  .btn-group label.btn-primary:not(.active) {
+  .btn-group label.btn-toggle:not(.active) {
     background-color: $color-white;
     border-color: $color-silver;
     color: $color-emperor;
