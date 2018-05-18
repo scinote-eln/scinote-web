@@ -431,7 +431,6 @@ class User < ApplicationRecord
     define_method("#{name}=") do |value|
       attr_name = name.gsub('_notification', '').to_sym
       notifications_settings[attr_name] = value
-      save
     end
   end
 
