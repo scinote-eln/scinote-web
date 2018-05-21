@@ -62,7 +62,7 @@ en:
         avatar: "Avatar"
 
   head:
-    title: "sciNote | %{title}"
+    title: "SciNote | %{title}"
 
   body:
     notice: "You need to enable JavaScript to run this app."
@@ -72,15 +72,15 @@ en:
     search_button: 'Go!'
     user_greeting: "Hi, %{full_name}"
     advanced_search: "Advanced search"
-    title: "sciNote"
+    title: "SciNote"
     user:
       settings: "Settings"
       logout: "Log out"
-      about: "About sciNote"
+      about: "About SciNote"
     activities:
       none: "No activities!"
     label:
-      scinote: "sciNote"
+      scinote: "SciNote"
       projects: "Home"
       protocols: "Protocols"
       calendar: "Calendar"
@@ -93,8 +93,8 @@ en:
       account: "Account"
 
   about:
-    modal_title: "About sciNote"
-    core_version: "sciNote core version"
+    modal_title: "About SciNote"
+    core_version: "SciNote core version"
     addon_versions: "Addon versions"
 
   left_menu_bar:
@@ -1199,7 +1199,7 @@ en:
       head_title: "%{team} | Import samples"
       title: "Import samples to team %{team}"
       help_text: "Match the columns of your uploaded file with already existing columns in database."
-      scinote_columns_html: "<em>sciNote</em> columns:"
+      scinote_columns_html: "<em>SciNote</em> columns:"
       file_columns: "Imported columns:"
       example_value: "Imported file content:"
       import_samples: "Import samples"
@@ -1409,7 +1409,7 @@ en:
         addons:
           head_title: "Settings | Add-ons"
           title: "Add-ons"
-          no_addons: "You have no sciNote Add-ons."
+          no_addons: "You have no SciNote Add-ons."
       teams:
         head_title: "Settings | Teams"
         breadcrumbs:
@@ -1759,10 +1759,10 @@ en:
   invite_users:
     to_team:
       title: "Invite users to team %{team}"
-      heading: "Invite more people to team %{team} and start using sciNote."
+      heading: "Invite more people to team %{team} and start using SciNote."
     no_team:
-      title: "Invite users to sciNote"
-      heading: "Invite more people to start using sciNote."
+      title: "Invite users to SciNote"
+      heading: "Invite more people to start using SciNote."
     input_subtitle: "Input one or multiple emails, confirm each email with ENTER key."
     invite_to_team_heading: "Invite users to my team:"
     invite_btn: "Invite Users"
@@ -1771,12 +1771,12 @@ en:
     invite_admin: "As Administrators"
     results:
       heading: "Invitation results:"
-      user_exists: "User is already a member of sciNote."
-      user_exists_unconfirmed_invited_to_team: "User is already a member of sciNote but is not confirmed yet - successfully invited to team %{team} as %{role}."
-      user_exists_and_in_team: "User is already a member of sciNote and team %{team} as %{role}."
-      user_exists_invited_to_team: "User was already a member of sciNote - successfully invited to team %{team} as %{role}."
-      user_created: "User succesfully invited to sciNote."
-      user_created_invited_to_team: "User successfully invited to sciNote and team %{team} as %{role}."
+      user_exists: "User is already a member of SciNote."
+      user_exists_unconfirmed_invited_to_team: "User is already a member of SciNote but is not confirmed yet - successfully invited to team %{team} as %{role}."
+      user_exists_and_in_team: "User is already a member of SciNote and team %{team} as %{role}."
+      user_exists_invited_to_team: "User was already a member of SciNote - successfully invited to team %{team} as %{role}."
+      user_created: "User succesfully invited to SciNote."
+      user_created_invited_to_team: "User successfully invited to SciNote and team %{team} as %{role}."
       user_invalid: "Invalid email."
       too_many_emails: "Only invited first %{nr} emails. To invite more users, "
 
@@ -1800,7 +1800,7 @@ en:
     email_settings: "E-mail notifications"
     form:
       assignments: "Assignment"
-      notification_scinote: 'Show in sciNote'
+      notification_scinote: 'Show in SciNote'
       notification_email: 'Notify me via email'
       assignments_description: 'Assignment notifications appear whenever you get assigned to a team, project, task.'
       recent_notification: 'Recent changes'
@@ -1814,7 +1814,7 @@ en:
     types:
       assignment: "Assignment"
       recent_changes: "Recent changes"
-      system_message: "sciNote system message"
+      system_message: "SciNote system message"
       deliver: 'Exportable content'
     experiment_annotation_title: "%{user} mentioned you in experiment %{experiment}."
     experiment_annotation_message_html: "Project: %{project} | Experiment: %{experiment}"
@@ -1834,7 +1834,7 @@ en:
     repository_annotation_title: "%{user} mentioned you in Column: %{column} of Item %{record} in Inventory %{repository}"
     repository_annotation_message_html: "Item: %{record} | Column: %{column}"
     protocol_step_annotation_message_html: "Protocol: %{protocol}"
-    email_title: "You've received a sciNote notification!"
+    email_title: "You've received a SciNote notification!"
     assign_user_to_team: "<i>%{assigned_user}</i> was added as %{role} to team <strong>%{team}</strong> by <i>%{assigned_by_user}</i>."
     unassign_user_from_team: "<i>%{unassigned_user}</i> was removed from team <strong>%{team}</strong> by <i>%{unassigned_by_user}</i>."
     task_completed: "%{user} completed task %{module}. %{date} | Project: %{project} | Experiment: %{experiment}"
@@ -1843,8 +1843,8 @@ en:
 
   assets:
     head_title:
-      edit: "sciNote | %{file_name} | Edit"
-      view: "sciNote | %{file_name} | View"
+      edit: "SciNote | %{file_name} | Edit"
+      view: "SciNote | %{file_name} | View"
     drag_n_drop:
       label_html: 'Drag &amp; drop files here, CTRL+V (for images from clipboard) or '
       browse_label: 'Browse to add'
