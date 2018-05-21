@@ -426,7 +426,9 @@ var RepositoryDatatable = (function(global) {
       } else if ($(th).hasClass('repository-column') &&
                  $(th).attr('data-type') === 'RepositoryAssetValue') {
         input = changeToInputFileField('repository_cell_file', th.attr('id'), '');
-        tr.appendChild(createTdElement(input));
+        td = createTdElement(input);
+        tr.appendChild(td);
+        _addSelectedFile($(th).attr('data-type'), '', $(td).find('input')[0]);
       } else {
         // Column we don't care for, just add empty td
         tr.appendChild(createTdElement(''));
@@ -657,9 +659,9 @@ var RepositoryDatatable = (function(global) {
                                        cell,
                                        list_columns));
             _addSelectedFile(type, cell, $(this).find('input')[0]);
-            _initSelectPicker();
           }
         });
+        _initSelectPicker();
 
         // initialize smart annotation
         _.each($('[data-object="repository_cell"]'), function(el) {
