@@ -1,7 +1,7 @@
 Feature: Log in
   As an existing User
   I want to Log in with my account
-  So that I can use sciNote
+  So that I can use SciNote
 
 Background:
   Given the "BioSistemika Process" team exists

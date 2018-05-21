@@ -1,7 +1,7 @@
 Feature: Sign up
   As a new User
   I want to create a new account
-  So that I can use sciNote
+  So that I can use SciNote
 
   Background:
     Given the following users are registered
