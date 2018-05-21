@@ -42,11 +42,17 @@ class Project < ApplicationRecord
     Views::Datatables::DatatablesReport.refresh_materialized_view
   end
 
-  scope :visible_by, -> (user) {
-    joins(:user_projects).where(
-      'user_projects.user_id = ? AND projects.archived = false', user.id
-    )
-  }
+  def self.visible_from_user_by_name(user, team, name)
+    if user.is_admin_of_team? team
+      return where('projects.archived IS FALSE AND projects.name ILIKE ?',
+                   "%#{name}%")
+    elsif user.is_normal_user_of_team? team
+      return joins(:user_projects)
+        .where('user_projects.user_id = ? OR projects.visibility = 1', user.id)
+        .where('projects.archived IS FALSE AND projects.name ILIKE ?',
+               "%#{name}%")
+    end
+  end
 
   def self.search(
     user,

@@ -33,20 +33,20 @@ module Views
 
         private
 
-        PermissionItem = Struct.new(:report_id, :users_ids)
+        PermissionItem = Struct.new(:report_id, :users_ids, :visibility)
 
         def tokenize(items)
           items.collect do |item|
-            PermissionItem.new(item[0], item[1])
+            PermissionItem.new(item[0], item[1], item[2])
           end
         end
 
         def get_permitted_by_team_tokenized
-          tokenize(pluck(:id, :users_with_team_read_permissions))
+          tokenize(pluck(:id, :users_with_team_read_permissions, :project_visibility))
         end
 
         def get_permitted_by_project_tokenized
-          tokenize(pluck(:id, :users_with_project_read_permissions))
+          tokenize(pluck(:id, :users_with_project_read_permissions, :project_visibility))
         end
 
         def get_by_project_item(permitted_by_project, item)
@@ -68,10 +68,14 @@ module Views
           permitted_by_team.each do |item|
             next unless user.id.in? item.users_ids
             by_project = get_by_project_item(permitted_by_project, item)
-            next unless user.id.in? by_project.users_ids
+            next unless user_can_view?(user, by_project)
             allowed_ids << item.report_id
           end
           allowed_ids
+        end
+
+        def user_can_view?(user, by_project)
+          user.id.in?(by_project.users_ids) || by_project.visibility == 1
         end
       end
     end

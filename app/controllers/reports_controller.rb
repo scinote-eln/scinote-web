@@ -478,11 +478,9 @@ class ReportsController < ApplicationController
 
   def load_visible_projects
     render_404 unless current_team
-    projects = current_team.projects.visible_by(current_user)
-                                    .where('projects.name ILIKE ?',
-                                           "%#{search_params[:q]}%")
-                                    .limit(Constants::SEARCH_LIMIT)
-                                    .select(:id, :name)
+    projects = current_team.projects.visible_from_user_by_name(
+      current_user, current_team, search_params[:q]
+    ).limit(Constants::SEARCH_LIMIT).select(:id, :name)
     @visible_projects = projects.collect do |project|
       VisibleProject.new(new_project_reports_path(project),
                          ellipsize(project.name, 75, 50))
