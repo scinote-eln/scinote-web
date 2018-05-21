@@ -1554,9 +1554,9 @@ en:
         preview_title: "Protocol preview"
         preview_title_position: " | %{current} of %{total}"
         assets_header: "Files"
-        import_current: "Import current"
-        import_all: "Import all"
-        import: "Import"
+        import_current: "Load Current"
+        import_all: "Load All"
+        import: "Load"
     export:
       export_results:
         title: "Export results"

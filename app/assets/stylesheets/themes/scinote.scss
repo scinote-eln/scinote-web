@@ -2,6 +2,7 @@
 @import "mixins";
 @import "main_navigation";
 @import "repositories";
+@import "bootstrap/mixins/buttons";
 /** Layout **/
 
 body,
@@ -22,6 +23,10 @@ table.dataTable td {
 // All tables are fixed, except for table of "datatables.js"
 table {
   table-layout: fixed;
+}
+
+.btn-toggle {
+  @include button-variant($btn-toggle-color, $btn-toggle-bg, $btn-toggle-border);
 }
 
 #alert-container {
@@ -987,7 +992,7 @@ ul.content-module-activities {
     position: absolute;
 
     & > .badge {
-      background: $brand-success;
+      background: $brand-primary;
       border-radius: 2em;
       float: left;
       font-size: 23.4px;
