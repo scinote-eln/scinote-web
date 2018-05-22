@@ -91,14 +91,14 @@ class Navigation extends Component {
           </Navbar.Header>
           <Nav>
             <NavItem eventKey={1}>
-              <span className="glyphicon glyphicon-home" title="Home" />&nbsp;
+              <span className="fas fa-folder" title="Home" />&nbsp;
               <span className="visible-xs-inline visible-sm-inline">
                 <FormattedMessage id="navbar.home_label" />
               </span>
             </NavItem>
             <NavItem eventKey={2}>
               <span
-                className="glyphicon glyphicon-list-alt"
+                className="fas fa-edit"
                 title="Protocol repositories"
               />&nbsp;
               <span className="visible-xs-inline visible-sm-inline">
@@ -107,7 +107,7 @@ class Navigation extends Component {
             </NavItem>
             <NavItem eventKey={3}>
               <i
-                className="fas fa-cubes"
+                className="fas fa-list-alt"
                 aria-hidden="true"
                 title="Repositories"
               />&nbsp;
@@ -117,7 +117,7 @@ class Navigation extends Component {
             </NavItem>
             <NavItem eventKey={4}>
               <span
-                className="glyphicon glyphicon-equalizer"
+                className="fas fa-list"
                 title="Activities"
               />&nbsp;
               <span className="visible-xs-inline visible-sm-inline">

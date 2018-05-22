@@ -8,7 +8,7 @@
 
       <div class="modal-body">
         <ol class="breadcrumb breadcrumb-repository">
-          <span class="fa fa-cubes" aria-hidden="true"></span>
+          <span class="fas fa-list-alt" aria-hidden="true"></span>
           <%= t('repositories.repository', name: @repository_row.repository.name) %>
         </ol>
         <p>
@@ -50,7 +50,7 @@
                 <tr role="row">
                   <td class="sorting_1">
                     <ol class='breadcrumb'>
-                      <li><span class='glyphicon glyphicon-blackboard'></span>&nbsp;
+                      <li><span class='fas fa-folder'></span>&nbsp;
                         <%= render partial: 'search/results/partials/project_text.html.erb',
                                   locals: { project: element.my_module.experiment.project } %>
                       </li>

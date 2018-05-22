@@ -26,7 +26,7 @@
               <span class="hidden-xs">&nbsp;<%= t("protocols.index.create_new") %></span>
             </a>
             <a class="btn btn-default" data-action="edit">
-              <span class="glyphicon glyphicon-pencil"></span>
+              <span class="fas fa-pencil-alt"></span>
               <span class="hidden-xs">&nbsp;<%= t("protocols.index.edit") %></span>
             </a>
             <a class="btn btn-default" data-action="clone">
@@ -35,12 +35,12 @@
             </a>
             <% if @type == :public %>
               <a class="btn btn-default" data-action="make-private" data-url="<%= make_private_protocols_path %>">
-                <span class="glyphicon glyphicon-eye-close"></span>
+                <span class="fas fa-eye-slash"></span>
                 <span class="hidden-xs">&nbsp;<%= t("protocols.index.make_private") %></span>
               </a>
             <% elsif @type == :private %>
               <a class="btn btn-default" data-action="publish" data-url="<%= publish_protocols_path %>">
-                <span class="glyphicon glyphicon-open"></span>
+                <span class="fas fa-eye"></span>
                 <span class="hidden-xs">&nbsp;<%= t("protocols.index.publish") %></span>
               </a>
             <% end %>
