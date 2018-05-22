@@ -11,7 +11,7 @@
         <p><%=t 'projects.reports.new.save_PDF_to_inventory_modal.description_one' %></p>
         <br />
         <p><%=t 'projects.reports.new.save_PDF_to_inventory_modal.description_two' %></p>
-
+        <span data-hook="SavePdfToInventoryModalBody"></span>
         <% if @available_repositories && @available_repositories.length > 0 %>
           <label><%=t 'projects.reports.new.save_PDF_to_inventory_modal.inventory' %></label>
           <select
