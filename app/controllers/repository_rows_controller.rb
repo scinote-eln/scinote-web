@@ -198,9 +198,10 @@ class RepositoryRowsController < ApplicationController
     column = @repository.repository_columns.detect do |c|
       c.id == key.to_i
     end
+    save_successful = false
     if column.data_type == 'RepositoryListValue'
       return if value == '-1'
-      # check if item existx else revert the transaction
+      # check if item exists else revert the transaction
       list_item = RepositoryListItem.where(repository_column: column)
                                     .find(value)
       cell_value = RepositoryListValue.new(
@@ -212,7 +213,9 @@ class RepositoryRowsController < ApplicationController
           repository_column: column
         }
       )
+      save_successful = list_item && cell_value.save
     elsif column.data_type == 'RepositoryAssetValue'
+      return if value.blank?
       asset = Asset.new(file: value,
                         created_by: current_user,
                         last_modified_by: current_user,
@@ -233,6 +236,7 @@ class RepositoryRowsController < ApplicationController
           repository_column: column
         }
       )
+      save_successful = cell_value.save
     else
       cell_value = RepositoryTextValue.new(
         data: value,
@@ -243,11 +247,13 @@ class RepositoryRowsController < ApplicationController
           repository_column: column
         }
       )
+      if (save_successful = cell_value.save)
+        record_annotation_notification(record,
+                                       cell_value.repository_cell)
+      end
     end
-    if cell_value.save
-      record_annotation_notification(record,
-                                     cell_value.repository_cell)
-    else
+
+    unless save_successful
       errors[:repository_cells] << {
         "#{column.id}": cell_value.errors.messages
       }
