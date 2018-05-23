@@ -24,7 +24,7 @@
              title="<%= t("protocols.steps.options.edit_title") %>"
              href="<%= edit_step_path(step, format: :json) %>"
              data-remote="true">
-            <span class="glyphicon glyphicon-edit">
+            <span class="fas fa-pencil-alt">
           </a>
           <%= link_to(step_path(step), title: t("protocols.steps.options.delete_title"), method: "delete", class: "btn btn-link",
             data: {action: "delete-step", confirm: t("protocols.steps.destroy.confirm", step: step.name)}) do %>

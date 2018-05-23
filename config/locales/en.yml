@@ -1058,7 +1058,7 @@ en:
         no_column: "No columns"
         delete_column: "Delete"
         edit_column: "Edit"
-        back_to_repository_html: "<span class='glyphicon glyphicon-chevron-left'></span> Back to %{repository}"
+        back_to_repository_html: "<span class='fas fa-arrow-left'></span> Back to %{repository}"
     index:
       head_title: "Inventories"
       no_libraries:

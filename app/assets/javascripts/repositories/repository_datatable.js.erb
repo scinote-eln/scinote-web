@@ -1110,7 +1110,7 @@ var RepositoryDatatable = (function(global) {
         var colIndex = $(el).attr('data-column-index');
         var visible = TABLE.column(colIndex).visible();
 
-        var visClass = (visible) ? 'glyphicon-eye-open' : 'glyphicon-eye-close';
+        var visClass = (visible) ? 'fa-eye' : 'fa-eye-slash';
         var visLi = (visible) ? '' : 'col-invisible';
 
         var thederName;
@@ -1165,14 +1165,14 @@ var RepositoryDatatable = (function(global) {
       var column = TABLE.column(li.attr('data-position'));
 
       if (column.visible()) {
-        self.addClass('glyphicon-eye-close');
-        self.removeClass('glyphicon-eye-open');
+        self.addClass('fa-eye-slash');
+        self.removeClass('fa-eye');
         li.addClass('col-invisible');
         column.visible(false);
         TABLE.setColumnSearchable(column.index(), false);
       } else {
-        self.addClass('glyphicon-eye-open');
-        self.removeClass('glyphicon-eye-close');
+        self.addClass('fa-eye');
+        self.removeClass('fa-eye-slash');
         li.removeClass('col-invisible');
         column.visible(true);
         TABLE.setColumnSearchable(column.index(), true);

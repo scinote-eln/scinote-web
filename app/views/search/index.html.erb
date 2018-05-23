@@ -55,7 +55,7 @@
                            match_case: @search_case, utf8: '✓',
                            search_id: @search_id}.to_query %>">
               <span class="badge pull-right"><%= @project_search_count %></span>
-              <span class="glyphicon glyphicon-blackboard"></span>
+              <span class="fas fa-folder"></span>
               <%= t'Projects' %>
             </a>
           </li>
@@ -111,7 +111,7 @@
                            match_case: @search_case, utf8: '✓',
                            search_id: @search_id}.to_query %>">
               <span class="badge pull-right"><%= @tag_search_count %></span>
-              <span class="glyphicon glyphicon-tags"></span>
+              <span class="fas fa-tags"></span>
               <%= t'Tags' %>
             </a>
           </li>
@@ -125,7 +125,7 @@
                            match_case: @search_case, utf8: '✓',
                            search_id: @search_id}.to_query %>">
               <span class="badge pull-right"><%= @report_search_count %></span>
-              <span class="glyphicon glyphicon-align-left"></span>
+              <span class="fas fa-clipboard-check"></span>
               <%= t'Reports' %>
             </a>
           </li>
@@ -139,7 +139,7 @@
                            match_case: @search_case, utf8: '✓',
                            search_id: @search_id}.to_query %>">
               <span class="badge pull-right"><%= @protocol_search_count %></span>
-              <span class="glyphicon glyphicon-list-alt"></span>
+              <span class="fas fa-edit"></span>
               <%= t'Protocols' %>
             </a>
           </li>
@@ -167,7 +167,7 @@
                            match_case: @search_case, utf8: '✓',
                            search_id: @search_id}.to_query %>">
               <span class="badge pull-right"><%= @checklist_search_count %></span>
-              <span class="glyphicon glyphicon-list"></span>
+              <span class="fas fa-tasks"></span>
               <%= t'Checklists' %>
             </a>
           </li>
@@ -196,7 +196,7 @@
                            match_case: @search_case, utf8: '✓',
                            search_id: @search_id}.to_query %>">
               <span class="badge pull-right"><%= @table_search_count %></span>
-              <span class="glyphicon glyphicon-th"></span>
+              <span class="fas fa-table"></span>
               <%= t'Tables' %>
             </a>
           </li>
@@ -210,14 +210,14 @@
                            match_case: @search_case, utf8: '✓',
                            search_id: @search_id}.to_query %>">
               <span class="badge pull-right"><%= @comment_search_count %></span>
-              <span class="glyphicon glyphicon-comment"></span>
+              <span class="fas fa-comment"></span>
               <%= t'Comments' %>
             </a>
           </li>
 
           <% @repository_search_count.each do |team, results| %>
             <li class="repositories-team <%= 'active' if results[:count] > 0 %>">
-              <i class="fas fa-cubes"></i>
+              <i class="fas fa-list-alt"></i>
               <%= t('Repositories_team', team: team) %>
             </li>
             <% results[:repositories].each do |repository, values| %>

@@ -1,6 +1,6 @@
 <% tags = my_module.tags %>
   <% tags.each do |tag| %>
-    <span class="glyphicon glyphicon-tag" style="color: <%= tag.color %>"></span>
+    <span class="fas fa-tag" style="color: <%= tag.color %>"></span>
     <strong><%= tag.name %></strong>
   <% end %>
 <% if tags.count == 0 %>

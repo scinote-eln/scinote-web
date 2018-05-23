@@ -23,7 +23,7 @@
              aria-haspopup="true"
              aria-expanded="true"
              <%= "disabled" unless can_perform_repository_actions(@repository) %>>
-          <span class="glyphicon glyphicon-cog"></span>
+          <span class="fas fa-ellipsis-v"></span>
           <span class="hidden-xs"><%= t('repositories.index.advanced') %></span>
           <span class="caret"></span>
         </div>
@@ -115,7 +115,7 @@
   <div class="toolbarButtons" style="display:none">
     <% if can_manage_repository_rows?(@repository.team) %>
       <button type="button" class="btn btn-default editAdd" id="editRepositoryRecord" onclick="onClickEdit()" disabled>
-        <span class="glyphicon glyphicon-pencil"></span>
+        <span class="fas fa-pencil-alt"></span>
         <span class="hidden-xs-custom"><%= t("repositories.edit_record") %></span>
       </button>
       <button type="button" class="btn btn-default"

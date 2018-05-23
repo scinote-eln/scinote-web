@@ -1,6 +1,6 @@
 <div class="panel panel-default panel-step-attachment">
   <div class="panel-heading">
-    <span class="glyphicon glyphicon-list"></span>
+    <span class="fas fa-tasks"></span>
     <%= t("protocols.steps.new.checklist_panel_title") %>
     <div class="pull-right">
       <%= ff.remove_nested_fields_link do %>
@@ -20,7 +20,7 @@
       <%= ff.nested_fields_for :checklist_items, ordered_checklist_items(ff.object) do |chkItems| %>
         <li>
           <div class="row">
-            <span class="glyphicon glyphicon-chevron-right handle-move pull-left"></span>
+            <span class="fas fa-circle handle-move pull-left"></span>
             <div class="row">
               <div class="col-xs-6">
                 <%= chkItems.smart_text_area :text,
