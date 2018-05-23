@@ -1606,7 +1606,7 @@ function initMoveModules() {
   })
   .on("shown.bs.modal", function(event) {
     // Focus the text element
-    $(this).find(".selectpicker").focus();
+    $(this).find(".selectpicker").selectpicker().focus();
   })
   .on("hide.bs.modal", function (event) {
     // When hiding modal, re-enable events
@@ -1705,7 +1705,7 @@ function initMoveModuleGroups() {
   })
   .on("shown.bs.modal", function(event) {
     // Focus the text element
-    $(this).find(".selectpicker").focus();
+    $(this).find(".selectpicker").selectpicker().focus();
   })
   .on("hide.bs.modal", function (event) {
     // When hiding modal, re-enable events
