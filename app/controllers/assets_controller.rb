@@ -64,7 +64,7 @@ class AssetsController < ApplicationController
         'preview-icon' => render_to_string(
           partial: 'shared/file_preview_icon.html.erb',
           locals: { asset: @asset }
-        )    
+        )
       )
     end
 
@@ -76,7 +76,7 @@ class AssetsController < ApplicationController
         elsif @assoc.class == Result
           can_manage_module?(@my_module)
         elsif @assoc.class == RepositoryCell
-          # TBD
+          can_manage_repository_rows?(@repository.team)
         end
       response_json['wopi-controls'] = render_to_string(
         partial: 'shared/file_wopi_controlls.html.erb',
@@ -141,8 +141,8 @@ class AssetsController < ApplicationController
       @protocol = @asset.step.protocol
     elsif @assoc.class == Result
       @my_module = @assoc.my_module
-    else
-      # TBD
+    elsif @assoc.class == RepositoryCell
+      @repository = @assoc.repository_column.repository
     end
   end
 
@@ -153,7 +153,7 @@ class AssetsController < ApplicationController
     elsif @assoc.class == Result
       render_403 and return unless can_read_experiment?(@my_module.experiment)
     elsif @assoc.class == RepositoryCell
-      # TBD
+      render_403 and return unless can_read_team?(@repository.team)
     end
   end
 
@@ -164,7 +164,7 @@ class AssetsController < ApplicationController
     elsif @assoc.class == Result
       render_403 and return unless can_manage_module?(@my_module)
     elsif @assoc.class == RepositoryCell
-      # TBD
+      render_403 and return unless can_manage_repository_rows?(@repository.team)
     end
   end
 
