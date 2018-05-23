@@ -1,18 +1,5 @@
 <div id="left-menu-bar" class="menu-bar">
   <ul class="nav">
-    <li class="text-center">
-      <span id="sideBarLeft"
-            class="glyphicon glyphicon-chevron-left"
-            aria-hidden="true"
-            onclick="SideBarToggle.hide()"
-            ></span>
-      <span id="sideBarRight"
-            class="glyphicon glyphicon-chevron-right"
-            aria-hidden="true"
-            onclick="SideBarToggle.show()"
-            style="display:none;"
-            ></span>
-    </li>
     <li class="<%= "active" if projects_are_selected? %>">
       <%= link_to projects_path, id: "projects-link", title: t('left_menu_bar.projects') do %>
         <span class="glyphicon glyphicon-home"></span>
@@ -75,6 +62,20 @@
         <span class="glyphicon glyphicon-cog"></span>
         <span><%= t('left_menu_bar.settings') %></span>
       <% end %>
+    </li>
+    <!-- arrow for opening/closing -->
+    <li class="text-center">
+      <span id="sideBarLeft"
+            class="glyphicon glyphicon-chevron-left"
+            aria-hidden="true"
+            onclick="SideBarToggle.hide()"
+            ></span>
+      <span id="sideBarRight"
+            class="glyphicon glyphicon-chevron-right"
+            aria-hidden="true"
+            onclick="SideBarToggle.show()"
+            style="display:none;"
+            ></span>
     </li>
   </ul>
 </div>
