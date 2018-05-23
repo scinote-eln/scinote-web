@@ -84,7 +84,7 @@ class Navigation extends Component {
         <StyledNavbar onSelect={this.selectItemCallback}>
           <Navbar.Header>
             <Navbar.Brand>
-              <StyledBrand href="/" title="sciNote">
+              <StyledBrand href="/" title="SciNote">
                 <img src="/images/logo.png" alt="Logo" />
               </StyledBrand>
             </Navbar.Brand>

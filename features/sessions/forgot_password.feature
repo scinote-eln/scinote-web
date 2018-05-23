@@ -1,7 +1,7 @@
 Feature: Forgot password
   I forgot my password
   I would like a new password
-  So that I can use sciNote
+  So that I can use SciNote
 
 Background:
   Given the "BioSistemika Process" team exists

@@ -1,14 +1,14 @@
 # feature/invite user.feature
-Feature: Invite people to sciNote
+Feature: Invite people to SciNote
   As an owner of a team
-  I want to add new User to my team throuhout the sciNote
+  I want to add new User to my team throuhout the SciNote
 
 Background:
  Given the following users is registered:
   |name                 | email              | password        | team                 | role         |
   |Karli Novak (creator)| nonadmin@myorg.com | mypassword1234  | BioSistemika Process | Administrator|
   |Marija Novak         | marija@myorg.com   | mypassword5555  | Cell              | Administrator|
-  And the following user has got sciNote - Accept Invitation email:
+  And the following user has got SciNote - Accept Invitation email:
     | email                   |invitation team
     | karolina@myorg.com      | BioSistemika Process
 
@@ -23,9 +23,9 @@ Scenario: Successful Add team members
   And confirm with ENTER key
   And I click on "Invite user/s" button
   And I click on "as Normal user/s" modal window
-  Then I should see "lojze@myorg.com - User successfully invited to sciNote and team BioSistemika Process as Normal user." Invitation results in Invite users to team BioSistemika Process modal window
-  Then I should see "marija@myorg.com - User was already a member of sciNote - successfully invited to team BioSistemika Process as Normal user." Invitation results in Invite users to team BioSistemika Process modal window
-  Then I should see "nonadmin@myorg.com - User is already a member of sciNote and team BioSistemika Process as Administrator." Invitation results in Invite users to team BioSistemika Process modal window
+  Then I should see "lojze@myorg.com - User successfully invited to SciNote and team BioSistemika Process as Normal user." Invitation results in Invite users to team BioSistemika Process modal window
+  Then I should see "marija@myorg.com - User was already a member of SciNote - successfully invited to team BioSistemika Process as Normal user." Invitation results in Invite users to team BioSistemika Process modal window
+  Then I should see "nonadmin@myorg.com - User is already a member of SciNote and team BioSistemika Process as Administrator." Invitation results in Invite users to team BioSistemika Process modal window
   And I click on "Close" button
   And I should see "active" Status of "marija@myorg.com" user in Team members list
   And I should see "pending" Status of "lojze@myorg.com" user in Team members list
@@ -40,101 +40,101 @@ Scenario: Unsuccessful Add team member
   Then I should see "anicamyorg.com - Invalid email" Invitation results in Invite users to team BioSistemika Process modal window
   And I click on "Close" button
 
-Scenario: Successful Invite people to sciNote
+Scenario: Successful Invite people to SciNote
   Given Settings page of BioSistemika Process team of a Karli Novak user
   And I click on avatar
-  And I click to "Invite people to sciNote"
-  Then I fill in "janez@myorg.com" to Invite people to sciNote input field
+  And I click to "Invite people to SciNote"
+  Then I fill in "janez@myorg.com" to Invite people to SciNote input field
   And confirm with ENTER key
-  Then I fill in "marija@myorg.com" to Invite people to sciNote input field
+  Then I fill in "marija@myorg.com" to Invite people to SciNote input field
   And confirm with ENTER key
   And I click on "Invite user/s" button
-  Then I should see "janez@myorg.com - User successfully invited to sciNote." Invitation results in Invite people to sciNote modal window
-  Then I should see "marija@myorg.com - User is already a member of sciNote." Invitation results in Invite people to sciNote modal window
+  Then I should see "janez@myorg.com - User successfully invited to SciNote." Invitation results in Invite people to SciNote modal window
+  Then I should see "marija@myorg.com - User is already a member of SciNote." Invitation results in Invite people to SciNote modal window
   And I click on "Close" button
 
-Scenario: Unsuccessful Invite people to sciNote
+Scenario: Unsuccessful Invite people to SciNote
   Given Settings page of BioSistemika Process team of a Karli Novak user
-  And I click to "Invite people to sciNote"
-  Then I fill in "anicamyorg.com" to Invite people to sciNote input field
+  And I click to "Invite people to SciNote"
+  Then I fill in "anicamyorg.com" to Invite people to SciNote input field
   And confirm with ENTER key
   And I click on "Invite user/s" button
-  Then I should see "anicamyorg.com - Invalid email" Invitation results in Invite people to sciNote modal window
+  Then I should see "anicamyorg.com - Invalid email" Invitation results in Invite people to SciNote modal window
   And I click on "Close" button
 
-Scenario: Successful Invite people to sciNote
+Scenario: Successful Invite people to SciNote
   Given Settings page of BioSistemika Process team of a Karli Novak user
   And I click on avatar
-  And I click to "Invite people to sciNote"
-  Then I fill in "nikola@myorg.com" to Invite people to sciNote input field
+  And I click to "Invite people to SciNote"
+  Then I fill in "nikola@myorg.com" to Invite people to SciNote input field
   And confirm with ENTER key
-  Then I fill in "marija@myorg.com" to Invite people to sciNote input field
+  Then I fill in "marija@myorg.com" to Invite people to SciNote input field
   And confirm with ENTER key
   And I click on checkbox "Invite user to my team"
   And I click on "Invite user/s" button
   And I click on "as Normal user/s" modal window
-  Then I should see "nikola@myorg.com - User successfully invited to sciNote and team BioSistemika Process as Normal user." Invitation results in Invite people to sciNote modal window
-  Then I should see "marija@myorg.com - User is already a member of sciNote - successfully invited to team BioSistemika Process as Normal user." Invitation results in Invite people to sciNote modal window
+  Then I should see "nikola@myorg.com - User successfully invited to SciNote and team BioSistemika Process as Normal user." Invitation results in Invite people to SciNote modal window
+  Then I should see "marija@myorg.com - User is already a member of SciNote - successfully invited to team BioSistemika Process as Normal user." Invitation results in Invite people to SciNote modal window
   And I click on "Close" button
 
-Scenario: Unsuccessful Invite people to sciNote
+Scenario: Unsuccessful Invite people to SciNote
   Given Settings page of BioSistemika Process team of a Karli Novak user
-  And I click to "Invite people to sciNote"
-  Then I fill in "anicamyorg.com" to Invite people to sciNote input field
+  And I click to "Invite people to SciNote"
+  Then I fill in "anicamyorg.com" to Invite people to SciNote input field
   And confirm with ENTER key
   And I click on checkbox "Invite user to my team"
   And I click on "Invite user/s" button
   And I click on "as Normal user/s" modal window
-  Then I should see "anicamyorg.com - Invalid email" Invitation results in Invite people to sciNote modal window
+  Then I should see "anicamyorg.com - Invalid email" Invitation results in Invite people to SciNote modal window
   And I click on "Close" button
 
-Scenario: Successful Invite people to sciNote
+Scenario: Successful Invite people to SciNote
   Given Profile page of a Karli Novak user
   And I click on avatar
-  And I click to "Invite people to sciNote"
-  Then I fill in "anton@myorg.com" to Invite people to sciNote input field
+  And I click to "Invite people to SciNote"
+  Then I fill in "anton@myorg.com" to Invite people to SciNote input field
   And confirm with ENTER key
-  Then I fill in "marija@myorg.com" to Invite people to sciNote input field
+  Then I fill in "marija@myorg.com" to Invite people to SciNote input field
   And confirm with ENTER key
   And I click on "Invite user/s" button
-  Then I should see "anton@myorg.com - User successfully invited to sciNote." Invitation results in Invite people to sciNote modal window
-  Then I should see "marija@myorg.com - User is already a member of sciNote." Invitation results in Invite people to sciNote modal window
+  Then I should see "anton@myorg.com - User successfully invited to SciNote." Invitation results in Invite people to SciNote modal window
+  Then I should see "marija@myorg.com - User is already a member of SciNote." Invitation results in Invite people to SciNote modal window
   And I click on "Close" button
 
-Scenario: Unsuccessful Invite people to sciNote
+Scenario: Unsuccessful Invite people to SciNote
   Given Profile page of a Karli Novak user
-  And I click to "Invite people to sciNote"
-  Then I fill in "anicamyorg.com" to Invite people to sciNote input field
+  And I click to "Invite people to SciNote"
+  Then I fill in "anicamyorg.com" to Invite people to SciNote input field
   And confirm with ENTER key
   And I click on "Invite user/s" button
-  Then I should see "anicamyorg.com - Invalid email" Invitation results in Invite people to sciNote modal window
+  Then I should see "anicamyorg.com - Invalid email" Invitation results in Invite people to SciNote modal window
   And I click on "Close" button
 
-Scenario: Successful Invite people to sciNote
+Scenario: Successful Invite people to SciNote
   Given Profile page of a Karli Novak user
   And I click on avatar
-  And I click to "Invite people to sciNote"
-  Then I fill in "antonio@myorg.com" to Invite people to sciNote input field
+  And I click to "Invite people to SciNote"
+  Then I fill in "antonio@myorg.com" to Invite people to SciNote input field
   And confirm with ENTER key
-  Then I fill in "marija@myorg.com" to Invite people to sciNote input field
+  Then I fill in "marija@myorg.com" to Invite people to SciNote input field
   And confirm with ENTER key
   And I click on checkbox "Invite user to my team"
   And I click on "Invite user/s" button
   And I click on "as Normal user/s" modal window
-  Then I should see "antonio@myorg.com - User successfully invited to sciNote." Invitation results in Invite people to sciNote modal window
-  Then I should see "marija@myorg.com - User is already a member of sciNote." Invitation results in Invite people to sciNote modal window
+  Then I should see "antonio@myorg.com - User successfully invited to SciNote." Invitation results in Invite people to SciNote modal window
+  Then I should see "marija@myorg.com - User is already a member of SciNote." Invitation results in Invite people to SciNote modal window
   And I click on "Close" button
 
-Scenario: Unsuccessful Invite people to sciNote
+Scenario: Unsuccessful Invite people to SciNote
   Given Profile page of a Karli Novak user
-  And I click to "Invite people to sciNote"
-  Then I fill in "anicamyorg.com" to Invite people to sciNote input field
+  And I click to "Invite people to SciNote"
+  Then I fill in "anicamyorg.com" to Invite people to SciNote input field
   And confirm with ENTER key
   And I click on "Invite user/s" button
-  Then I should see "anicamyorg.com - Invalid email" Invitation results in Invite people to sciNote modal window
+  Then I should see "anicamyorg.com - Invalid email" Invitation results in Invite people to SciNote modal window
   And I click on "Close" button
 
-Scenario: User has got sciNote - Accept Invitation email and click to link
+Scenario: User has got SciNote - Accept Invitation email and click to link
   Given I have "Accept Invitation" email for user "karolina@myorg.com"
   And I click to "ACCEPT INVITATION" link in email
   Then I should see "Set your full name and password" page
@@ -148,13 +148,13 @@ Scenario: Successful Sign up
   And I click on "Sign up" button
   Then I should see "Circle" team
   And I should see "Hi, Karolina" next to the avatar
-  And I should get a Gamification pop up message "Welcome to sciNote."
+  And I should get a Gamification pop up message "Welcome to SciNote."
 
 Scenario: Verify invited user does have invitation team
   Given Settings page of BioSistemika Process team of a Karli Novak user
   And I should see "Karolina" name in column "Name"
 
-Scenario: User has got sciNote - Accept Invitation email and click to link
+Scenario: User has got SciNote - Accept Invitation email and click to link
   Given "Accept Invitation" email for user "karolina@myorg.com"
   And I click to "ACCEPT INVITATION" link in email
   Then I should see "The invitation token prvided is not valid" error message in Log in page

@@ -1,7 +1,7 @@
 {
   "name": "scinote-web",
   "version": "1.0.0",
-  "description": "![sciNote logo](http://scinote.net/wp-content/uploads/2015/10/logo_sciNote_final.png)",
+  "description": "![SciNote logo](http://scinote.net/wp-content/uploads/2015/10/logo_sciNote_final.png)",
   "main": "application.js",
   "repository": {
     "type": "git",

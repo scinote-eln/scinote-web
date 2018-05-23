@@ -57,7 +57,7 @@ Given the following users is registered:
    And I click to "Close" button
    Then I should see "Owner" under Marija Novak in Users list of "Golica" project card
 
-  Scenario: Successful add new sciNote user to a project
+  Scenario: Successful add new SciNote user to a project
    Given home page of BioSistemika Process team of a Karli Novak user
    And I click to avatar of a "Golica" project card
    Then I click to "Manage users" on "Golica" project card

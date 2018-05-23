@@ -92,7 +92,7 @@ class DataGrid extends Component {
   }
 
   transformColumns() {
-    // Transform columns from the "sciNote" representation into
+    // Transform columns from the "SciNote" representation into
     // ReactDataGrid-compatible representation
     this._columns =
       this.props.columns
