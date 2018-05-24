@@ -46,12 +46,11 @@ class Project < ApplicationRecord
     if user.is_admin_of_team? team
       return where('projects.archived IS FALSE AND projects.name ILIKE ?',
                    "%#{name}%")
-    elsif user.is_normal_user_of_team? team
-      return joins(:user_projects)
-        .where('user_projects.user_id = ? OR projects.visibility = 1', user.id)
-        .where('projects.archived IS FALSE AND projects.name ILIKE ?',
-               "%#{name}%")
     end
+    joins(:user_projects)
+      .where('user_projects.user_id = ? OR projects.visibility = 1', user.id)
+      .where('projects.archived IS FALSE AND projects.name ILIKE ?',
+             "%#{name}%")
   end
 
   def self.search(
