@@ -159,7 +159,7 @@ class SearchController < ApplicationController
       res = counter[:repositories].values.detect do |rep|
         rep[:id] == @repository.id
       end
-      return res[:count]
+      return res[:count] if res && res[:count]
     end
   end
 
