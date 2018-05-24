@@ -245,15 +245,20 @@ class WopiController < ActionController::Base
       logger.warn 'Found asset: ' + @asset.id.to_s
       step_assoc = @asset.step
       result_assoc = @asset.result
+      repository_cell_assoc = @asset.repository_cell
       @assoc = step_assoc unless step_assoc.nil?
       @assoc = result_assoc unless result_assoc.nil?
+      @assoc = repository_cell_assoc unless repository_cell_assoc.nil?
 
       if @assoc.class == Step
         @protocol = @asset.step.protocol
         @team = @protocol.team
-      else
+      elsif @assoc.class == Result
         @my_module = @assoc.my_module
         @team = @my_module.experiment.project.team
+      elsif @assoc.class == RepositoryCell
+        @repository = @assoc.repository_column.repository
+        @team = @repository.team
       end
     end
   end
@@ -303,8 +308,8 @@ class WopiController < ActionController::Base
                                            host: ENV['WOPI_USER_HOST'])
         @breadcrumb_folder_name = 'Protocol managament'
       end
-      @breadcrumb_folder_url  = @close_url
-    else
+      @breadcrumb_folder_url = @close_url
+    elsif @assoc.class == Result
       @can_read = can_read_experiment?(@my_module.experiment)
       @can_write = can_manage_module?(@my_module)
 
@@ -317,6 +322,18 @@ class WopiController < ActionController::Base
                                             only_path: false,
                                             host: ENV['WOPI_USER_HOST'])
       @breadcrumb_folder_name = @my_module.name
+      @breadcrumb_folder_url  = @close_url
+    elsif @assoc.class == RepositoryCell
+      @can_read = can_read_team?(@team)
+      @can_write = can_manage_repository_rows?(@team)
+
+      @close_url = repository_url(@repository,
+                                  only_path: false,
+                                  host: ENV['WOPI_USER_HOST'])
+
+      @breadcrumb_brand_name  = @team.name
+      @breadcrumb_brand_url   = @close_url
+      @breadcrumb_folder_name = @assoc.repository_row.name
       @breadcrumb_folder_url  = @close_url
     end
 
