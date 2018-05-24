@@ -71,7 +71,7 @@ RSpec.describe Views::Datatables::DatatablesReport, type: :model do
                       name: 'report two'
     end
 
-    it 'returns the reports ' do
+    it 'returns the reports' do
       reports = team.datatables_reports.visible_by(user, team)
       expect(reports.length).to eq 1
       expect(reports.first.id).to eq report_one.id
