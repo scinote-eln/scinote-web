@@ -23,8 +23,8 @@ class MyModulesController < ApplicationController
                                            repository_index)
   before_action :load_projects_by_teams, only: %i(protocols results activities
                                                   samples repository archive)
-  before_action :check_manage_permissions,
-                only: %i(update destroy description due_date)
+  before_action :check_manage_permissions_archive, only: %i(update destroy)
+  before_action :check_manage_permissions, only: %i(description due_date)
   before_action :check_view_permissions, only:
     %i(show activities activities_tab protocols results samples samples_index
        archive)
@@ -663,6 +663,10 @@ class MyModulesController < ApplicationController
   end
 
   def check_manage_permissions
+    render_403 && return unless can_manage_module?(@my_module)
+  end
+
+  def check_manage_permissions_archive
     render_403 && return unless if my_module_params[:archived] == 'false'
                                   can_restore_module?(@my_module)
                                 else
