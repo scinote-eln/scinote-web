@@ -7,8 +7,8 @@ class Repository < ApplicationRecord
              foreign_key: :created_by_id,
              class_name: 'User',
              optional: true
-  has_many :repository_columns
-  has_many :repository_rows
+  has_many :repository_columns, dependent: :destroy
+  has_many :repository_rows, dependent: :destroy
   has_many :repository_table_states,
            inverse_of: :repository, dependent: :destroy
   has_many :report_elements, inverse_of: :repository, dependent: :destroy
@@ -60,7 +60,7 @@ class Repository < ApplicationRecord
   def self.name_like(query)
     where('repositories.name ILIKE ?', "%#{query}%")
   end
-  
+
   def importable_repository_fields
     fields = {}
     # First and foremost add record name

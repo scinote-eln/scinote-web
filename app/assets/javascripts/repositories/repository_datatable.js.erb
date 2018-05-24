@@ -426,7 +426,9 @@ var RepositoryDatatable = (function(global) {
       } else if ($(th).hasClass('repository-column') &&
                  $(th).attr('data-type') === 'RepositoryAssetValue') {
         input = changeToInputFileField('repository_cell_file', th.attr('id'), '');
-        tr.appendChild(createTdElement(input));
+        td = createTdElement(input);
+        tr.appendChild(td);
+        _addSelectedFile($(th).attr('data-type'), '', $(td).find('input')[0]);
       } else {
         // Column we don't care for, just add empty td
         tr.appendChild(createTdElement(''));
@@ -450,9 +452,9 @@ var RepositoryDatatable = (function(global) {
 
   global.onClickToggleAssignedRecords = function() {
     $('.repository-assign-group > .btn').click(function() {
-      $('.btn-group > .btn').removeClass('active btn-primary');
+      $('.btn-group > .btn').removeClass('active btn-toggle');
       $('.btn-group > .btn').addClass('btn-default');
-      $(this).addClass('active btn-primary');
+      $(this).addClass('active btn-toggle');
     });
 
     $('#assigned-repo-records').on('click', function() {
@@ -657,9 +659,9 @@ var RepositoryDatatable = (function(global) {
                                        cell,
                                        list_columns));
             _addSelectedFile(type, cell, $(this).find('input')[0]);
-            _initSelectPicker();
           }
         });
+        _initSelectPicker();
 
         // initialize smart annotation
         _.each($('[data-object="repository_cell"]'), function(el) {
@@ -1036,16 +1038,16 @@ var RepositoryDatatable = (function(global) {
 
   // Takes object and surrounds it with input
   function changeToInputFileField(object, name, value) {
-    return "<div class='repository-input-file-field'>" +
+    return "<div class='repository-input-file-field'><div class='form-group'>" +
         "<input type='file' class='form-control' data-object='" +
-        object + "' name='" + name + "' value='" + value + "'>" +
-        "<a class='btn btn-danger' onClick='clearFileInput(this)'>" +
+        object + "' name='" + name + "' value='" + value + "'></div>" +
+        "<a onClick='clearFileInput(this)'>" +
         "<i class='fas fa-times'></i>" +
         "</a></div>";
   }
 
   global.clearFileInput = function (el) {
-    $(el).prev('input:file')[0].value = '';
+    $(el).prev('div').find('input:file')[0].value = '';
   }
 
   // Takes an object and creates custom html element
@@ -1108,7 +1110,7 @@ var RepositoryDatatable = (function(global) {
         var colIndex = $(el).attr('data-column-index');
         var visible = TABLE.column(colIndex).visible();
 
-        var visClass = (visible) ? 'glyphicon-eye-open' : 'glyphicon-eye-close';
+        var visClass = (visible) ? 'fa-eye' : 'fa-eye-slash';
         var visLi = (visible) ? '' : 'col-invisible';
 
         var thederName;
@@ -1163,14 +1165,14 @@ var RepositoryDatatable = (function(global) {
       var column = TABLE.column(li.attr('data-position'));
 
       if (column.visible()) {
-        self.addClass('glyphicon-eye-close');
-        self.removeClass('glyphicon-eye-open');
+        self.addClass('fa-eye-slash');
+        self.removeClass('fa-eye');
         li.addClass('col-invisible');
         column.visible(false);
         TABLE.setColumnSearchable(column.index(), false);
       } else {
-        self.addClass('glyphicon-eye-open');
-        self.removeClass('glyphicon-eye-close');
+        self.addClass('fa-eye');
+        self.removeClass('fa-eye-slash');
         li.removeClass('col-invisible');
         column.visible(true);
         TABLE.setColumnSearchable(column.index(), true);

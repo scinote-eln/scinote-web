@@ -22,7 +22,7 @@
             <li id="canvas-nav-tab" class="<%= "active" if is_all_projects_index? %>">
               <a href="<%= projects_path %>" title="<%=t "nav2.all_projects.index" %>">
                 <span class="hidden-sm hidden-md"><%=t "nav2.all_projects.index" %></span>
-                <span class="hidden-xs hidden-lg glyphicon glyphicon-blackboard"></span>
+                <span class="hidden-xs hidden-lg fas fa-folder"></span>
               </a>
             </li>
             <li id="project-archive-nav-tab" data-turbolinks="false" class="<%= "active" if is_all_projects_archive? %>">
@@ -40,7 +40,7 @@
             <li id="canvas-nav-tab" class="<%= "active" if is_project_show? %>">
               <a href="<%= project_url(@project) %>" title="<%=t "nav2.projects.show" %>">
                 <span class="hidden-sm hidden-md"><%=t "nav2.projects.show" %></span>
-                <span class="hidden-xs hidden-lg glyphicon glyphicon-blackboard"></span>
+                <span class="hidden-xs hidden-lg fas fa-folder"></span>
               </a>
             </li>
             <li id="project-archive-nav-tab" data-turbolinks="false" class="<%= "active" if is_project_archive? %>">
@@ -58,7 +58,7 @@
             <li id="canvas-nav-tab" class="<%= "active" if is_experiment_canvas? %>">
               <a href="<%= canvas_experiment_url(@experiment) %>" title="<%=t "nav2.experiments.canvas" %>">
                 <span class="hidden-sm hidden-md"><%=t "nav2.experiments.canvas" %></span>
-                <span class="hidden-xs hidden-lg glyphicon glyphicon-blackboard"></span>
+                <span class="hidden-xs hidden-lg fas fa-folder"></span>
               </a>
             </li>
           <% end %>
@@ -84,13 +84,13 @@
             <li id="results-nav-tab" class="<%= "active" if is_module_results? %>">
               <a href="<%= results_my_module_url(@my_module) %>" title="<%=t "nav2.modules.results" %>">
                 <span class="hidden-sm hidden-md"><%=t "nav2.modules.results" %></span>
-                <span class="hidden-xs hidden-lg glyphicon glyphicon-th"></span>
+                <span class="hidden-xs hidden-lg glyphicon glyphicon-modal-window"></span>
               </a>
             </li>
             <li id="activities-nav-tab" class="<%= "active" if is_module_activities? %>">
               <a href="<%= activities_my_module_url(@my_module) %>" title="<%=t "nav2.modules.activities" %>">
                 <span class="hidden-sm hidden-md"><%=t "nav2.modules.activities" %></span>
-                <span class="hidden-xs hidden-lg glyphicon glyphicon-equalizer"></span>
+                <span class="hidden-xs hidden-lg fas fa-list"></span>
               </a>
             </li>
           <% end %>
@@ -101,7 +101,7 @@
             <li id="repositories-nav-tab" class="<%= "active" if module_repository_page? %>">
               <a href="#" id="repositoriesDropdownMenuLink" title="<%=t "nav2.modules.repositories" %>" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <span class="hidden-sm hidden-md"><%=t "nav2.modules.repositories" %></span>
-                <span class="hidden-xs hidden-lg glyphicon glyphicon-list"></span>
+                <span class="hidden-xs hidden-lg fas fa-list-alt"></span>
                 <span class="caret"></span>
               </a>
               <ul class="dropdown-menu repositories-dropdown-menu" aria-labelledby="repositoriesDropdownMenuLink">

@@ -38,7 +38,8 @@
 .repository-input-file-field {
   display: inline-flex;
 
-  .btn-danger {
+  a {
+    color: $brand-danger;
     margin-left: 5px;
   }
 }

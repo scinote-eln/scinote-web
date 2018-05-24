@@ -54,10 +54,10 @@
     <div class="badge-icon">
       <% if can_manage_module?(@my_module) %>
         <a class="edit-tags-link" data-remote="true" href="<%= my_module_tags_edit_url(@my_module, format: :json) %>" style="color: inherit">
-          <span class="glyphicon glyphicon-tags"></span>
+          <span class="fas fa-tags"></span>
         </a>
       <% else %>
-        <span class="glyphicon glyphicon-tags"></span>
+        <span class="fas fa-tags"></span>
       <% end %>
     </div>
     <div class="well well-sm">

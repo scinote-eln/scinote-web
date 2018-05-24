@@ -483,7 +483,7 @@ class ReportsController < ApplicationController
     ).limit(Constants::SEARCH_LIMIT).select(:id, :name)
     @visible_projects = projects.collect do |project|
       VisibleProject.new(new_project_reports_path(project),
-                         ellipsize(project.name, 75, 50))
+                         ellipsize(project.name, 50, 40))
     end
   end
 

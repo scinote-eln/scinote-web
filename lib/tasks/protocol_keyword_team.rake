@@ -1,7 +1,7 @@
 namespace :protocol_keyword_team do
   desc 'Fixes false team_id on protocol keyword entry [bug SCI-2257]'
   task exec: :environment do
-    puts '[sciNote] Start processing...'
+    puts '[SciNote] Start processing...'
     Protocol.find_each do |protocol|
       new_keywords = []
       protocol.protocol_keywords.find_each do |protocol_keyword|
@@ -20,6 +20,6 @@ namespace :protocol_keyword_team do
       # append newly created keywords to protocol
       protocol.protocol_keywords << new_keywords
     end
-    puts '[sciNote] Done!'
+    puts '[SciNote] Done!'
   end
 end

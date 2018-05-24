@@ -898,7 +898,7 @@ class Constants
   #   |        |_| |_| |_|\__,_|_| |_|_|\_\   \__, |\___/ \_,|_|   _        |
   #   |                                       |___/               (_)       |
   #   |                                                                     |
-  #   |   Special Thank You for supporting sciNote on Kicstarter goes       |
+  #   |   Special Thank You for supporting SciNote on Kicstarter goes       |
   #   |   to the following supporters                                       |
   #   | ._________________________________________________________________. |
   #   |'               l    /\ /     \\            \ /\   l                `|

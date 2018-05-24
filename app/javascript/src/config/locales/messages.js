@@ -7,8 +7,8 @@ export default {
       edit: "Edit",
       loading: "Loading ...",
       upload: "Upload",
-      about_scinote: "About sciNote",
-      core_version: "sciNote core version",
+      about_scinote: "About SciNote",
+      core_version: "SciNote core version",
       addon_versions: "Addon versions",
       project: "Project",
       task: "Task"
@@ -34,7 +34,7 @@ export default {
       }
     },
     navbar: {
-      page_title: "sciNote",
+      page_title: "SciNote",
       home_label: "Home",
       protocols_label: "Protocols",
       repositories_label: "Repositories",
@@ -45,7 +45,7 @@ export default {
     },
     invite_users: {
       modal_title: "Invite users to team {team}",
-      input_text: "Invite more people to team {team} and start using sciNote.",
+      input_text: "Invite more people to team {team} and start using SciNote.",
       input_help:
         "Input one or multiple emails, confirm each email with ENTER key.",
       dropdown_button: {
@@ -61,20 +61,20 @@ export default {
         admin: "Administrator"
       },
       results_msg: {
-        user_exists: "User is already a member of sciNote.",
+        user_exists: "User is already a member of SciNote.",
         user_exists_unconfirmed:
-          "User is already a member of sciNote but is not confirmed yet.",
+          "User is already a member of SciNote but is not confirmed yet.",
         user_exists_and_in_team_unconfirmed:
-          "User is already a member of sciNote and team {team} as {role} but is not confirmed yet.",
+          "User is already a member of SciNote and team {team} as {role} but is not confirmed yet.",
         user_exists_invited_to_team_unconfirmed:
-          "User is already a member of sciNote but is not confirmed yet - successfully invited to team {team} as {role}.",
+          "User is already a member of SciNote but is not confirmed yet - successfully invited to team {team} as {role}.",
         user_exists_and_in_team:
-          "User is already a member of sciNote and team {team} as {role}.",
+          "User is already a member of SciNote and team {team} as {role}.",
         user_exists_invited_to_team:
-          "User was already a member of sciNote - successfully invited to team {team} as {role}.",
-        user_created: "User succesfully invited to sciNote.",
+          "User was already a member of SciNote - successfully invited to team {team} as {role}.",
+        user_created: "User succesfully invited to SciNote.",
         user_created_invited_to_team:
-          "User successfully invited to sciNote and team {team} as {role}.",
+          "User successfully invited to SciNote and team {team} as {role}.",
         user_invalid: "Invalid email.",
         too_many_emails:
           "Only invited first {nr} emails. To invite more users, fill in another invitation form."
@@ -126,7 +126,7 @@ export default {
       system_message: "System message",
       system_message_msg:
         "System message notifications are specifically sent by site maintainers to notify all users about a system update.",
-      show_in_scinote: "Show in sciNote",
+      show_in_scinote: "Show in SciNote",
       notify_me_via_email: "Notify me via email",
       no: "No",
       yes: "Yes",
@@ -210,7 +210,7 @@ export default {
       release_notes: "Release notes",
       premium: "Premium",
       contact_us: "Contact us",
-      about_scinote: "About sciNote"
+      about_scinote: "About SciNote"
     },
     user_account_dropdown: {
       greeting: "Hi, {name}",

@@ -2,11 +2,11 @@
 <% if order.blank? and @order.present? then order = @order end %>
 <% comments = result.result_comments.order(created_at: order) %>
 <% timestamp = Time.current + 1.year %>
-<div class="report-element report-comments-element report-result-comments-element" data-ts="<%= timestamp.to_i %>" data-order="<%= order == :asc ? "asc" : "desc" %>" data-type="result_comments" data-id='{ "result_id": <%= result.id %> }' data-scroll-id="<%= result.id %>" data-name="<%=t "projects.reports.elements.result_comments.sidebar_name" %>" data-icon-class="glyphicon glyphicon-comment">
+<div class="report-element report-comments-element report-result-comments-element" data-ts="<%= timestamp.to_i %>" data-order="<%= order == :asc ? "asc" : "desc" %>" data-type="result_comments" data-id='{ "result_id": <%= result.id %> }' data-scroll-id="<%= result.id %>" data-name="<%=t "projects.reports.elements.result_comments.sidebar_name" %>" data-icon-class="fas fa-comment">
   <div class="report-element-header">
     <div class="row">
       <div class="pull-left comments-icon">
-          <span class="glyphicon glyphicon-comment"></span>
+          <span class="fas fa-comment"></span>
       </div>
       <div class="pull-left comments-name">
         <%=t "projects.reports.elements.result_comments.name", result: result.name %>

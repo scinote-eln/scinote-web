@@ -28,9 +28,9 @@ module ProtocolStatusHelper
   def protocol_status_popover_title(protocol)
     res = ""
     if protocol.in_repository_public?
-      res << "<span class='glyphicon glyphicon-eye-open' title='" + I18n.t("my_modules.protocols.protocol_status_bar.public_desc") + "'></span>"
+      res << "<span class='fas fa-eye' title='" + I18n.t("my_modules.protocols.protocol_status_bar.public_desc") + "'></span>"
     elsif protocol.in_repository_private?
-      res << "<span class='glyphicon glyphicon-eye-close' title='" + I18n.t("my_modules.protocols.protocol_status_bar.private_desc") + "'></span>"
+      res << "<span class='fas fa-eye-slash' title='" + I18n.t("my_modules.protocols.protocol_status_bar.private_desc") + "'></span>"
     end
     res << "&nbsp;"
     if can_read_protocol_in_repository?(protocol)
