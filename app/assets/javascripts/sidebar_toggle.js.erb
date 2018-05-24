@@ -27,9 +27,21 @@
       });
     }
 
+    function toggle() {
+      var btn = $('#sideBarButton');
+      if (btn.attr('data-shown')) {
+        btn.attr('data-shown', false);
+        hide();
+      } else {
+        btn.attr('data-shown', true);
+        show();
+      }
+    }
+
     return Object.freeze({
       show: show,
-      hide: hide
+      hide: hide,
+      toggle: toggle
     })
   })();
 })(window);

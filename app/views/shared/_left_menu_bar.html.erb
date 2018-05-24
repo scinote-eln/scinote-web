@@ -64,19 +64,22 @@
       <% end %>
     </li>
     <!-- arrow for opening/closing -->
-    <li class="text-center" style="padding: 5px;">
+    <li class="text-center"
+        style="padding: 5px;"
+        id="sideBarButton"
+        data-shown="true"
+        onclick="SideBarToggle.toggle()"
+        >
       <span id="sideBarLeft"
             class="fas fa-chevron-left"
-            aria-hidden="true"
-            onclick="SideBarToggle.hide()"
+            aria-hidden="false"
             ></span>
       <span id="sideBarRight"
             class="fas fa-chevron-right"
             aria-hidden="true"
-            onclick="SideBarToggle.show()"
             style="display:none;"
             ></span>
-    </li>   
+    </li>
   </ul>
 </div>
 
