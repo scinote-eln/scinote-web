@@ -41,9 +41,18 @@
                  locals: { flash: flash, notice: notice, alert: alert } %>
     <% end %>
 
-    <%= render "shared/left_menu_bar" if user_signed_in? %>
+    <%= render "shared/left_menu_bar" if user_signed_in? && current_user.teams.length > 0 %>
+
     <div id="content-wrapper">
-      <%= yield :content %>
+      <% if current_user.teams.length == 0 %>
+        <!-- If member of no teams -->
+        <div class="jumbotron">
+          <h2><%=t 'general.no_teams.title' %></h2>
+          <p data-hook="general-no-teams-text"><%=t 'general.no_teams.text' %></p>
+        </div>
+      <% else %>
+        <%= yield :content %>
+      <% end %>
     </div>
 
     <script>
