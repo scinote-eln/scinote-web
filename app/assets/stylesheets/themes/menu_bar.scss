@@ -58,6 +58,10 @@
       color: $color-emperor;
     }
   }
+  #sideBarButton:hover {
+    background-color: $color-concrete;
+    cursor: pointer;
+  }
 }
 
 @media(max-height:480px) {

@@ -29,11 +29,11 @@
 
     function toggle() {
       var btn = $('#sideBarButton');
-      if (btn.attr('data-shown')) {
-        btn.attr('data-shown', false);
+      if (btn.is('[data-shown]')) {
+        btn.removeAttr('data-shown');
         hide();
       } else {
-        btn.attr('data-shown', true);
+        btn.attr('data-shown', '');
         show();
       }
     }
