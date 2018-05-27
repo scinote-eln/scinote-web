@@ -4,7 +4,6 @@
  */
 
 var STORAGE_TREE_KEY = "scinote-sidebar-tree-collapsed-ids";
-var STORAGE_TOGGLE_KEY = "scinote-sidebar-toggled";
 
 /**
  * Get all collapsed sidebar elements.
@@ -82,33 +81,6 @@ function recalculateElementsPositions(ids, item, elements) {
   if ( item.eleNum !== elements) {
     item.eleNum = elements;
     sessionStorage.setItem(STORAGE_TREE_KEY, JSON.stringify(ids));
-  }
-}
-/**
- * Get the session stored toggled boolean or null value if
- * sidebar toggle state was not changed by user. It allow for
- * automatic toggling for small devices.
- *
- * @return True if sidebar is toggled; false otherwise.
- */
-function sessionIsSidebarToggled() {
-  var val = sessionStorage.getItem(STORAGE_TOGGLE_KEY);
-
-  if (val === null) {
-    return null;
-  }
-
-  return val === "toggled";
-}
-
-/**
- * Store the sidebar toggled boolean to session storage.
- */
-function sessionToggleSidebar() {
-  if (sessionIsSidebarToggled()) {
-    sessionStorage.setItem(STORAGE_TOGGLE_KEY, "not_toggled");
-  } else {
-    sessionStorage.setItem(STORAGE_TOGGLE_KEY, "toggled");
   }
 }
 
@@ -253,36 +225,11 @@ function setupSidebarTree() {
   $(".tree li span.tree-link ").after("<div class='border-custom'></div>");
 }
 
-/**
- * Initialize the show/hide toggling of sidebar.
- */
-function initializeSidebarToggle() {
-  var wrapper = $("#wrapper");
-  var toggled = sessionIsSidebarToggled();
-
-  if (toggled || toggled === null && $(window).width() <
-      <%= Constants::SCREEN_WIDTH_LARGE %>) {
-    wrapper.addClass("no-animation");
-    wrapper.addClass("toggled");
-    // Cause reflow of the wrapper element
-    wrapper[0].offsetHeight;
-    wrapper.removeClass("no-animation");
-    $(".navbar-secondary").addClass("navbar-without-sidebar");
-  }
-
-  $(".toggle-sidebar-link").on("click", function() {
-    $("#wrapper").toggleClass("toggled");
-    sessionToggleSidebar();
-    $(".navbar-secondary").toggleClass("navbar-without-sidebar", sessionIsSidebarToggled());
-    return false;
-  });
-}
-
 // Resize the sidebar to accomodate to the page size
 function resizeSidebarContents() {
   var wrapper = $("#wrapper");
   var tree = $("#sidebar-wrapper .tree");
-  var toggled = sessionIsSidebarToggled();
+  var toggled = true;
   var navbar = $(".navbar-secondary");
 
   if (tree.length && tree.length == 1) {
@@ -306,7 +253,6 @@ function resizeSidebarContents() {
 (function () {
   // Initialize click listeners
   setupSidebarTree();
-  initializeSidebarToggle();
 
   // Actually display wrapper, which is, up to now,
   // hidden
