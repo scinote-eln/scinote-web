@@ -65,20 +65,14 @@
         <% end %>
       </li>
       <!-- arrow for opening/closing -->
-      <li class="text-center"
+      <li class="text-center <%= navigation_sidebar_shown? ? '' : 'hidden2' %>"
           style="padding: 5px;"
           id="sideBarButton"
           data-shown=""
           onclick="SideBarToggle.toggle()"
           >
-        <span id="sideBarLeft"
-              class="fas fa-chevron-left"
+        <span class="fas fa-chevron-right"
               aria-hidden="false"
-              ></span>
-        <span id="sideBarRight"
-              class="fas fa-chevron-right"
-              aria-hidden="true"
-              style="display:none;"
               ></span>
       </li>
     </ul>

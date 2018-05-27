@@ -37,51 +37,6 @@ $toggle-btn-size: 50px;
     #slide-panel {
       height: 100%;
 
-      .sidebar-header {
-        height: $toggle-btn-size;
-        background: $brand-primary;
-        border-bottom: 2px solid darken($brand-primary, 10%);
-
-        .sidebar-header-title {
-          width: inherit;
-          color: $color-white;
-          display: inline-block;
-          margin-left: 15px;
-          margin-top: 6px;
-          text-transform: uppercase;
-          max-width: ($wrapper-width - $toggle-btn-size);
-          overflow: hidden;
-          text-overflow: ellipsis;
-          opacity: 1;
-
-          // Animations
-          @include transition(opacity 0.5s ease);
-        }
-      }
-
-      .sidebar-header-toggle {
-        height: $toggle-btn-size;
-        width: $toggle-btn-size;
-        margin-left: ($wrapper-width - $toggle-btn-size);
-        margin-top: -$toggle-btn-size;
-        font-size: $font-size-h3;
-        background: $brand-primary;
-        border-left: 2px solid darken($brand-primary, 10%);
-        border-bottom: 2px solid darken($brand-primary, 10%);
-
-        // Animations
-        @include transition(margin-left 0.5s ease);
-
-        span {
-          margin: 10px;
-          color: $color-white;
-
-          // Animations
-          @include rotate-animation(0.5s, 180deg);
-          @include transition(color 0.5s ease);
-        }
-      }
-
       .tree {
         margin-bottom: 0;
         opacity: 1;
@@ -103,29 +58,6 @@ $toggle-btn-size: 50px;
     width: 0;
 
     #slide-panel {
-      .sidebar-header .sidebar-header-title {
-        width: 0;
-        opacity: 0;
-
-        @include transition(width 0.5s ease);
-        @include transition(opacity 0.5s ease);
-      }
-
-      .sidebar-header-toggle {
-        margin-left: 0;
-        background: none;
-        border: none;
-
-        @include transition(margin-left 0.5s ease);
-
-        span {
-          color: darken($brand-primary, 10%);
-
-          @include rotate-animation(0.5s, 0deg);
-          @include transition(color 0.5s ease);
-        }
-      }
-
       .tree {
         opacity: 0;
 

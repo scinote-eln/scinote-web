@@ -3,8 +3,6 @@
   global.SideBarToggle = (function() {
 
     function show() {
-      $('#sideBarLeft').show();
-      $('#sideBarRight').hide();
       $('#sidebar-wrapper').show(
         'slide', { direction: 'right', easing: 'linear' }, 400
       );
@@ -16,8 +14,6 @@
     }
 
     function hide() {
-      $('#sideBarLeft').hide();
-      $('#sideBarRight').show();
       $('#sidebar-wrapper').hide(
         'slide', { direction: 'left', easing: 'linear'}, 400
       );
