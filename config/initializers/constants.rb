@@ -94,10 +94,6 @@ class Constants
   HANDSONTABLE_INIT_COLS_CNT = 5
   HANDSONTABLE_INIT_ROWS_CNT = 5
 
-  # Screen width which is still suitable for sidebar to be shown, otherwise
-  # hidden
-  SCREEN_WIDTH_LARGE = 768
-
   #=============================================================================
   # Styling
   #=============================================================================
