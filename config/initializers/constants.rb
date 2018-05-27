@@ -96,7 +96,7 @@ class Constants
 
   # Screen width which is still suitable for sidebar to be shown, otherwise
   # hidden
-  SCREEN_WIDTH_LARGE = 928
+  SCREEN_WIDTH_LARGE = 768
 
   #=============================================================================
   # Styling

@@ -12,6 +12,7 @@
       $('.navbar-secondary').css(
         { 'margin-left': '-280px', 'padding-left': '294px' }
       );
+      $('#sideBarButton').attr('data-shown', '');
     }
 
     function hide() {
@@ -25,23 +26,28 @@
         'margin-left': '0',
         'padding-left': '14px'
       });
+      $('#sideBarButton').removeAttr('data-shown');
     }
 
     function toggle() {
       var btn = $('#sideBarButton');
       if (btn.is('[data-shown]')) {
-        btn.removeAttr('data-shown');
         hide();
       } else {
-        btn.attr('data-shown', '');
         show();
       }
+    }
+
+    function isShown() {
+      var btn = $('#sideBarButton');
+      return btn.is('[data-shown]');
     }
 
     return Object.freeze({
       show: show,
       hide: hide,
-      toggle: toggle
+      toggle: toggle,
+      isShown: isShown
     })
   })();
 })(window);

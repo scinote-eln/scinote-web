@@ -227,26 +227,14 @@ function setupSidebarTree() {
 
 // Resize the sidebar to accomodate to the page size
 function resizeSidebarContents() {
-  var wrapper = $("#wrapper");
   var tree = $("#sidebar-wrapper .tree");
-  var toggled = true;
-  var navbar = $(".navbar-secondary");
 
+  // Set vertical scrollbar on navigation tree
   if (tree.length && tree.length == 1) {
     tree.css(
       "height",
       ($(window).height() - tree.position().top - 50) + "px"
     );
-  }
-  // Automatic toggling of sidebar for smaller devices
-  if (toggled === null) {
-    if ($(window).width() < <%= Constants::SCREEN_WIDTH_LARGE %>) {
-      wrapper.addClass("toggled");
-      navbar.addClass("navbar-without-sidebar");
-    } else {
-      wrapper.removeClass("toggled");
-      navbar.removeClass("navbar-without-sidebar");
-    }
   }
 }
 
