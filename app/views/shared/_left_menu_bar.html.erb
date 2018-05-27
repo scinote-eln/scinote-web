@@ -1,86 +1,88 @@
 <div id="left-menu-bar" class="menu-bar">
-  <ul class="nav">
-    <li class="<%= "active" if projects_are_selected? %>">
-      <%= link_to projects_path, id: "projects-link", title: t('left_menu_bar.projects') do %>
-        <span class="fas fa-folder"></span>
-        <span><%= t('left_menu_bar.projects') %></span>
-      <% end %>
-    </li>
-    <li class="<%= "active" if repositories_are_selected? %>">
-      <%= link_to repositories_path, data: { no_turbolink: false }, id: "repositories-link", title: t('left_menu_bar.repositories') do %>
-        <span class="fas fa-list-alt" aria-hidden="true"></span>
-        <span><%= t('left_menu_bar.repositories') %></span>
-      <% end %>
-    </li>
-    <li class="<%= "active" if templates_are_selected? %>">
-      <%= link_to protocols_path, id: "templates-link", title: t('left_menu_bar.templates') do %>
-        <span class="fas fa-edit"></span>
-        <span><%= t('left_menu_bar.templates') %></span>
-      <% end %>
-    </li>
-    <li class="<%= "active" if reports_are_selected? %>">
-      <%= link_to reports_path, data: { no_turbolink: false }, id: "reports-link", title: t('left_menu_bar.reports') do %>
-        <span class="fas fa-clipboard-check"></span>
-        <span><%= t('left_menu_bar.reports') %></span>
-      <% end %>
-    </li>
-  </ul>
-  <ul class="nav nav-bottom">
-    <li class="<%= "active" if activities_are_selected? %>">
-      <%= link_to activities_path, id: "activities-link", title: t('left_menu_bar.activities') do %>
-        <span class="fas fa-list"></span>
-        <span><%= t('left_menu_bar.activities') %></span>
-      <% end %>
-    </li>
-    <!-- support -->
-    <li class="dropup">
-      <a href="#"
-         id="support-link"
-         class="dropdown-toggle"
-         title="<%= t('left_menu_bar.support') %>"
-         data-toggle="dropdown"
-         role="button"
-         aria-haspopup="true"
-         aria-expanded="false">
-        <span class="fas fa-question-circle"></span>
-        <span><%= t('left_menu_bar.support') %></span>
-      </a>
-      <ul class="dropdown-menu" data-hook="support-dropdown">
-        <li><%= link_to t('left_menu_bar.support_links.support'),
-                          Constants::SUPPORT_URL,
-                          target: "_blank" %></li>
-        <li><%= link_to t('left_menu_bar.support_links.tutorials'),
-                          Constants::TUTORIALS_URL,
-                          target: "_blank" %></li>
-        <li><%= link_to t('left_menu_bar.support_links.webinars'),
-                          Constants::WEBINARS_URL,
-                          target: "_blank" %></li>
-      </ul>
-    </li>
-    <li class="<%= "active" if settings_are_selected? %>">
-      <%= link_to edit_user_registration_path, id: "settings-link", title: t('left_menu_bar.settings') do %>
-        <span class="fas fa-cog"></span>
-        <span><%= t('left_menu_bar.settings') %></span>
-      <% end %>
-    </li>
-    <!-- arrow for opening/closing -->
-    <li class="text-center"
-        style="padding: 5px;"
-        id="sideBarButton"
-        data-shown=""
-        onclick="SideBarToggle.toggle()"
-        >
-      <span id="sideBarLeft"
-            class="fas fa-chevron-left"
-            aria-hidden="false"
-            ></span>
-      <span id="sideBarRight"
-            class="fas fa-chevron-right"
-            aria-hidden="true"
-            style="display:none;"
-            ></span>
-    </li>
-  </ul>
+  <div class="scroll-wrapper">
+    <ul class="nav">
+      <li class="<%= "active" if projects_are_selected? %>">
+        <%= link_to projects_path, id: "projects-link", title: t('left_menu_bar.projects') do %>
+          <span class="fas fa-folder"></span>
+          <span><%= t('left_menu_bar.projects') %></span>
+        <% end %>
+      </li>
+      <li class="<%= "active" if repositories_are_selected? %>">
+        <%= link_to repositories_path, data: { no_turbolink: false }, id: "repositories-link", title: t('left_menu_bar.repositories') do %>
+          <span class="fas fa-list-alt" aria-hidden="true"></span>
+          <span><%= t('left_menu_bar.repositories') %></span>
+        <% end %>
+      </li>
+      <li class="<%= "active" if templates_are_selected? %>">
+        <%= link_to protocols_path, id: "templates-link", title: t('left_menu_bar.templates') do %>
+          <span class="fas fa-edit"></span>
+          <span><%= t('left_menu_bar.templates') %></span>
+        <% end %>
+      </li>
+      <li class="<%= "active" if reports_are_selected? %>">
+        <%= link_to reports_path, data: { no_turbolink: false }, id: "reports-link", title: t('left_menu_bar.reports') do %>
+          <span class="fas fa-clipboard-check"></span>
+          <span><%= t('left_menu_bar.reports') %></span>
+        <% end %>
+      </li>
+    </ul>
+    <ul class="nav nav-bottom">
+      <li class="<%= "active" if activities_are_selected? %>">
+        <%= link_to activities_path, id: "activities-link", title: t('left_menu_bar.activities') do %>
+          <span class="fas fa-list"></span>
+          <span><%= t('left_menu_bar.activities') %></span>
+        <% end %>
+      </li>
+      <!-- support -->
+      <li class="dropup">
+        <a href="#"
+          id="support-link"
+          class="dropdown-toggle"
+          title="<%= t('left_menu_bar.support') %>"
+          data-toggle="dropdown"
+          role="button"
+          aria-haspopup="true"
+          aria-expanded="false">
+          <span class="fas fa-question-circle"></span>
+          <span><%= t('left_menu_bar.support') %></span>
+        </a>
+        <ul class="dropdown-menu" data-hook="support-dropdown">
+          <li><%= link_to t('left_menu_bar.support_links.support'),
+                            Constants::SUPPORT_URL,
+                            target: "_blank" %></li>
+          <li><%= link_to t('left_menu_bar.support_links.tutorials'),
+                            Constants::TUTORIALS_URL,
+                            target: "_blank" %></li>
+          <li><%= link_to t('left_menu_bar.support_links.webinars'),
+                            Constants::WEBINARS_URL,
+                            target: "_blank" %></li>
+        </ul>
+      </li>
+      <li class="<%= "active" if settings_are_selected? %>">
+        <%= link_to edit_user_registration_path, id: "settings-link", title: t('left_menu_bar.settings') do %>
+          <span class="fas fa-cog"></span>
+          <span><%= t('left_menu_bar.settings') %></span>
+        <% end %>
+      </li>
+      <!-- arrow for opening/closing -->
+      <li class="text-center"
+          style="padding: 5px;"
+          id="sideBarButton"
+          data-shown=""
+          onclick="SideBarToggle.toggle()"
+          >
+        <span id="sideBarLeft"
+              class="fas fa-chevron-left"
+              aria-hidden="false"
+              ></span>
+        <span id="sideBarRight"
+              class="fas fa-chevron-right"
+              aria-hidden="true"
+              style="display:none;"
+              ></span>
+      </li>
+    </ul>
+  </div>
 </div>
 
 <%= javascript_include_tag("sidebar_toggle") %>
