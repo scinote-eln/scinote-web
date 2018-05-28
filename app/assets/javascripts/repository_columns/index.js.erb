@@ -43,6 +43,10 @@
             });
           });
         });
+      }).fail(function(error) {
+        HelperModule.flashAlertMsg(
+          "<%= I18n.t("libraries.repository_columns.no_permissions") %>",
+          'danger');
       });
     });
   }
@@ -58,6 +62,10 @@
           modal_html.modal('show');
           _initSubmitAction(modal_html, $(modal_html.find('form')));
         });
+      }).fail(function(error) {
+        HelperModule.flashAlertMsg(
+          "<%= I18n.t("libraries.repository_columns.no_permissions") %>",
+          'danger');
       });
     });
   }

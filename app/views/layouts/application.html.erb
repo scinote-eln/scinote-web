@@ -43,6 +43,7 @@
 
     <%= render "shared/left_menu_bar" if user_signed_in? %>
     <div id="content-wrapper">
+      <%= yield :flash_messages_div %>
       <%= yield :content %>
     </div>
 
