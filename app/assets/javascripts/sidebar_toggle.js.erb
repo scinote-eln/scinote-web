@@ -3,27 +3,49 @@
   global.SideBarToggle = (function() {
 
     function show() {
-      $('#sideBarLeft').show();
-      $('#sideBarRight').hide();
       $('#wrapper').removeClass('hidden2');
+      $('#sidebar-wrapper').show(
+        'slide', { direction: 'right', easing: 'linear' }, 400
+      );
+      $('#wrapper').css('paddingLeft', '280px');
       $('.navbar-secondary').css(
         { 'margin-left': '-280px', 'padding-left': '294px' }
       );
+      $('#toggle-sidebar-btn').attr('data-shown', '');
     }
 
     function hide() {
-      $('#sideBarLeft').hide();
-      $('#sideBarRight').show();
       $('#wrapper').addClass('hidden2');
+      $('#sidebar-wrapper').hide(
+        'slide', { direction: 'left', easing: 'linear'}, 400
+      );
+      $('#wrapper').css('paddingLeft', '0');
       $('.navbar-secondary').css({
         'margin-left': '0',
         'padding-left': '14px'
       });
+      $('#toggle-sidebar-btn').removeAttr('data-shown');
+    }
+
+    function toggle() {
+      var btn = $('#toggle-sidebar-btn');
+      if (btn.is('[data-shown]')) {
+        hide();
+      } else {
+        show();
+      }
+    }
+
+    function isShown() {
+      var btn = $('#toggle-sidebar-btn');
+      return btn.is('[data-shown]');
     }
 
     return Object.freeze({
       show: show,
-      hide: hide
+      hide: hide,
+      toggle: toggle,
+      isShown: isShown
     })
   })();
 })(window);
