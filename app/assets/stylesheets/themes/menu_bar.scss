@@ -65,26 +65,26 @@
     }
   }
 
-  #sideBarButton > span {
-    @include rotate-animation(0.5s, 0deg);
+  #toggle-sidebar-btn > span {
+    @include rotate-animation(.5s, 0deg);
   }
 
-  #sideBarButton[data-shown] > span {
-    @include rotate-animation(0.5s, 180deg);
+  #toggle-sidebar-btn[data-shown] > span {
+    @include rotate-animation(.5s, 180deg);
   }
 
-  #sideBarButton:hover {
+  #toggle-sidebar-btn:hover {
     background-color: $color-concrete;
     cursor: pointer;
   }
 
-  #sideBarButton.hidden2 {
+  #toggle-sidebar-btn.hidden2 {
     visibility: hidden;
   }
 }
 
 @media(max-height:510px) {
-  .menu-bar ul.nav-bottom {
+  .menu-bar .nav-bottom {
     position: relative;
     width: auto;
   }

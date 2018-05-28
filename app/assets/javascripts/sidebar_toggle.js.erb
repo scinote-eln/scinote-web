@@ -10,7 +10,7 @@
       $('.navbar-secondary').css(
         { 'margin-left': '-280px', 'padding-left': '294px' }
       );
-      $('#sideBarButton').attr('data-shown', '');
+      $('#toggle-sidebar-btn').attr('data-shown', '');
     }
 
     function hide() {
@@ -22,11 +22,11 @@
         'margin-left': '0',
         'padding-left': '14px'
       });
-      $('#sideBarButton').removeAttr('data-shown');
+      $('#toggle-sidebar-btn').removeAttr('data-shown');
     }
 
     function toggle() {
-      var btn = $('#sideBarButton');
+      var btn = $('#toggle-sidebar-btn');
       if (btn.is('[data-shown]')) {
         hide();
       } else {
@@ -35,7 +35,7 @@
     }
 
     function isShown() {
-      var btn = $('#sideBarButton');
+      var btn = $('#toggle-sidebar-btn');
       return btn.is('[data-shown]');
     }
 
