@@ -45,13 +45,13 @@ module SmartAnnotations
 
       def generate_rep_item_snippet(name, object)
         if object
-          repository_name = object.repository.name
+          repository_name = fetch_repository_name(object)
           return "<span class='sa-type'>" \
                  "#{trim_repository_name(repository_name)}</span> " \
                  "<a href='#{ROUTES.repository_row_path(object)}' " \
                  "class='record-info-link'>#{object.name}</a>"
         end
-        "<span class='sa-type'>Rep</span> " \
+        "<span class='sa-type'>Inv</span> " \
         "#{name} #{I18n.t('atwho.res.deleted')}"
       end
 
@@ -65,6 +65,13 @@ module SmartAnnotations
       def generate_name_from_array(names, size)
         return "#{names[0].slice(0..1)}#{names[1][0]}" if size == 2
         "#{names[0][0]}#{names[1][0]}#{names[2][0]}"
+      end
+
+      def fetch_repository_name(object)
+        return object.repository.name if object.repository
+        repository = Repository.with_discarded.find_by_id(object.repository_id)
+        return 'Inv' unless repository
+        repository.name
       end
     end
   end

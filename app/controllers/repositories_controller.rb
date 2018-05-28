@@ -73,7 +73,8 @@ class RepositoriesController < ApplicationController
   def destroy
     flash[:success] = t('repositories.index.delete_flash',
                         name: @repository.name)
-    @repository.destroy
+    @repository.discard
+    ClearDiscardedRepositoriesJob.perform_later
     redirect_to team_repositories_path
   end
 

@@ -47,7 +47,7 @@ describe SmartAnnotations::HtmlPreview do
     it 'returns a html snippet' do
       snippet = subject.html('my item', 'rep_item', nil)
       expect(snippet).to eq(
-        '<span class=\'sa-type\'>Rep</span> my item (deleted)'
+        '<span class=\'sa-type\'>Inv</span> my item (deleted)'
       )
     end
   end

@@ -1,7 +1,8 @@
 class Repository < ApplicationRecord
   include SearchableModel
   include RepositoryImportParser
-
+  include Discard::Model
+  
   belongs_to :team, optional: true
   belongs_to :created_by,
              foreign_key: :created_by_id,
@@ -21,6 +22,8 @@ class Repository < ApplicationRecord
             length: { maximum: Constants::NAME_MAX_LENGTH }
   validates :team, presence: true
   validates :created_by, presence: true
+
+  default_scope -> { kept }
 
   def self.search(
     user,
