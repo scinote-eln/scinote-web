@@ -41,10 +41,10 @@
                  locals: { flash: flash, notice: notice, alert: alert } %>
     <% end %>
 
-    <%= render "shared/left_menu_bar" if user_signed_in? && current_user.teams.length > 0 %>
+    <%= render "shared/left_menu_bar" if user_signed_in? && current_user.teams.exists? %>
 
     <div id="content-wrapper">
-      <% if user_signed_in? && current_user.teams.length == 0 %>
+      <% if user_signed_in? && current_user.teams.empty? %>
         <!-- If member of no teams -->
         <div class="jumbotron">
           <h2><%=t 'general.no_teams.title' %></h2>
