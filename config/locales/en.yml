@@ -1045,6 +1045,7 @@ en:
     repository_columns:
       head_title: '%{repository} | Manage Columns'
       repository_list_items_limit: "Dropdown items limit reached max. %{limit}"
+      no_permissions: "You don't have permissions on that repository"
       update:
         success_flash: "Column %{name} was successfully updated."
       create:
