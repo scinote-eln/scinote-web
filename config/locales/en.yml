@@ -327,7 +327,7 @@ en:
         global_sort: "Sorting whole report will undo any custom sorting you might have done. Proceed?"
         unsaved_work: "Are you sure you want to leave this page? All unsaved data will be lost."
         no_content_for_PDF_html: "<h1>No content</h1>"
-        no_permissions: "You don't have permissions on that repository"
+        no_permissions: "You don't have permission to manage this column"
         save_PDF_to_inventory_modal:
           description_one: "Here you can save PDF report to an inventory item."
           description_two: "First select an inventory, then a column and finally the item within the inventory to which you would like to save the PDF report to. Note that the column has to be of type \"file\"."
