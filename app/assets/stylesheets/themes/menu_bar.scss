@@ -7,11 +7,17 @@
   height: 100%;
   left: 0;
   overflow-x: hidden;
-  padding-bottom: 16px;
-  padding-top: 16px;
   position: fixed;
   width: 83px;
   z-index: 1001;
+  padding-bottom: 50px;
+
+  .scroll-wrapper {
+    height: 100%;
+    padding-top: 16px;
+    width: 83px;
+    overflow-x: hidden;
+  }
 
   ul.nav > li {
 
@@ -58,10 +64,27 @@
       color: $color-emperor;
     }
   }
+
+  #toggle-sidebar-btn > span {
+    @include rotate-animation(.5s, 0deg);
+  }
+
+  #toggle-sidebar-btn[data-shown] > span {
+    @include rotate-animation(.5s, 180deg);
+  }
+
+  #toggle-sidebar-btn:hover {
+    background-color: $color-concrete;
+    cursor: pointer;
+  }
+
+  #toggle-sidebar-btn.hidden2 {
+    visibility: hidden;
+  }
 }
 
-@media(max-height:480px) {
-  .menu-bar > ul.nav-bottom {
+@media(max-height:510px) {
+  .menu-bar .nav-bottom {
     position: relative;
     width: auto;
   }
