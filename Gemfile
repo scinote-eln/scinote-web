@@ -9,11 +9,10 @@ gem 'pg', '~> 0.18'
 gem 'devise', '~> 4.3.0'
 gem 'devise_invitable'
 gem 'simple_token_authentication', '~> 1.15.1' # Token authentication for Devise
-gem 'bootstrap-sass', '~> 3.3.5'
+gem 'bootstrap-sass', '~> 3.3.7'
 gem 'sass-rails', '~> 5.0.6'
 gem 'bootstrap_form'
 gem 'yomu'
-gem 'font-awesome-rails', '~> 4.7.0.2'
 gem 'recaptcha', require: 'recaptcha/rails'
 gem 'sanitize', '~> 4.4'
 gem 'omniauth'
@@ -27,7 +26,7 @@ gem 'momentjs-rails', '~> 2.17.1'
 # JS datetime picker
 gem 'bootstrap3-datetimepicker-rails', '~> 4.15.35'
 # Select elements for Bootstrap
-gem 'bootstrap-select-rails', '~> 1.6.3'
+gem 'bootstrap-select-rails', '~> 1.12.4'
 gem 'uglifier', '>= 1.3.0'
 # jQuery & plugins
 gem 'jquery-turbolinks'
@@ -36,7 +35,6 @@ gem 'jquery-ui-rails'
 gem 'jquery-scrollto-rails',
     git: 'https://github.com/biosistemika/jquery-scrollto-rails'
 gem 'hammerjs-rails'
-gem 'introjs-rails' # Create quick tutorials
 gem 'js_cookie_rails' # Simple JS API for cookies
 gem 'spinjs-rails'
 gem 'autosize-rails' # jQuery autosize plugin
@@ -78,6 +76,8 @@ gem 'delayed_job_active_record'
 gem 'devise-async',
   git: 'https://github.com/mhfs/devise-async.git',
   branch: 'devise-4.x'
+
+gem 'discard', '~> 1.0'
 
 gem 'ruby-graphviz', '~> 1.2' # Graphviz for rails
 gem 'tinymce-rails', '~> 4.6.4' # Rich text editor

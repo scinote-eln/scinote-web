@@ -1,6 +1,6 @@
 <div class ="step <%= step.completed? ? "completed" : "not-completed" %>">
   <div class="badge-num">
-    <span class="badge bg-primary size-digit-<%= (step.position + 1).to_s.length %>"><%= step.position + 1 %></span>
+    <span class="badge size-digit-<%= (step.position + 1).to_s.length %>"><%= step.position + 1 %></span>
   </div>
   <div class="panel panel-default">
     <div class="panel-heading">
@@ -24,7 +24,7 @@
              title="<%= t("protocols.steps.options.edit_title") %>"
              href="<%= edit_step_path(step, format: :json) %>"
              data-remote="true">
-            <span class="glyphicon glyphicon-edit">
+            <span class="fas fa-pencil-alt">
           </a>
           <%= link_to(step_path(step), title: t("protocols.steps.options.delete_title"), method: "delete", class: "btn btn-link",
             data: {action: "delete-step", confirm: t("protocols.steps.destroy.confirm", step: step.name)}) do %>
@@ -83,50 +83,7 @@
               <ul>
                 <% assets.each do |asset| %>
                   <li>
-                    <% if can_read_protocol_in_module?(@protocol) ||
-                          can_read_protocol_in_repository?(@protocol) %>
-                      <% if asset.file_present %>
-                        <% if asset.file.processing? %>
-                          <span data-status='asset-loading'
-                                data-present-url='<%= file_present_asset_path(asset) %>'>
-                            <%= image_tag 'medium/processing.gif' %>
-                          </span>
-                        <% else %>
-                          <% if asset.is_image? %>
-                            <%= link_to download_asset_path(asset),
-                              class: 'image-preview-link',
-                              id: "modal_link#{asset.id}",
-                              data: {no_turbolink: true, id: true, status: "asset-present",
-                                description: "#{step.position + 1}. #{truncate(step.name, length: Constants::FILENAME_TRUNCATION_LENGTH)}"} do %>
-                              <%= image_tag asset.url(:medium), data: {'preview-url': large_image_url_asset_path(asset)} %>
-                              <p><%= truncate(asset.file_file_name,
-                                              length: Constants::FILENAME_TRUNCATION_LENGTH) %></p>
-                            <% end %>
-                          <% else %>
-                            <%= render partial: 'steps/wopi_controlls.html.erb', locals: { asset: asset } %>
-                          <% end %>
-                        <% end %>
-                      <% else %>
-                        <span data-status='asset-loading'
-                              data-present-url='<%= file_present_asset_path(asset) %>'>
-                          <%= image_tag 'medium/processing.gif' %>
-                        </span>
-                      <% end %>
-                    <% else %>
-                      <% if asset.file.processing? %>
-                        <span data-status='asset-loading'
-                              data-present-url='<%= file_present_asset_path(asset) %>'>
-                          <%= image_tag 'medium/processing.gif' %>
-                        </span>
-                      <% else %>
-                        <%= image_tag asset.url(:medium) if asset.is_image? %>
-                      <% end %>
-                      <p>
-                        <%= file_extension_icon(asset) %>
-                        <%= truncate(asset.file_file_name,
-                                     length: Constants::FILENAME_TRUNCATION_LENGTH) %>
-                      </p>
-                    <% end %>
+                    <%= render partial: "shared/asset_link", locals: { asset: asset, display_image_tag: true }, formats: :html %>
                   </li>
                 <% end %>
               </ul>
@@ -169,13 +126,19 @@
               <div data-action="uncomplete-step"
                    class="pull-right"
                    data-link-url="<%= toggle_step_state_step_path(step)%>">
-                <button class="btn btn-default"><%= t("protocols.steps.options.uncomplete_title") %></button>
+                <button class="btn btn-default">
+                  <span class="glyphicon glyphicon-remove"></span>
+                  <%= t("protocols.steps.options.uncomplete_title") %>
+                </button>
               </div>
             <% else %>
               <div data-action="complete-step"
                    class="pull-right"
                    data-link-url="<%= toggle_step_state_step_path(step)%>">
-                <button class="btn btn-primary"><%= t("protocols.steps.options.complete_title") %></button>
+                <button class="btn btn-toggle">
+                  <span class="glyphicon glyphicon-ok"></span>
+                  <%= t("protocols.steps.options.complete_title") %>
+                </button>
               </div>
             <% end %>
           <% end %>

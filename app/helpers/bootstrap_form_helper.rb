@@ -110,7 +110,7 @@ module BootstrapFormHelper
         active_str = active ? " active" : ""
         checked_str = active ? " checked='checked'" : ""
 
-        res << "<label class='btn btn-primary#{active_str}'>"
+        res << "<label class='btn btn-toggle#{active_str}'>"
         res << "<input type='radio' value='#{val}' name='#{input_name}' id='#{id}_#{val}'#{checked_str}>"
         res << btn_names[val]
         res << "</label>"

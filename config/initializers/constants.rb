@@ -9,6 +9,10 @@ class Constants
   NAME_MAX_LENGTH = 255
   # Max characters for short text fields, after which they get truncated
   NAME_TRUNCATION_LENGTH = 25
+  # Max edge length
+  MAX_EDGE_LENGTH = 75
+  # Max character for listing projects in dropdown
+  MAX_NAME_TRUNCATION = 150
   # Max characters for short text fields, in dropdownList
   NAME_TRUNCATION_LENGTH_DROPDOWN = 20
   # Max characters for long text fields
@@ -51,8 +55,8 @@ class Constants
   # Maximum nr. of search results for atwho (smart annotations)
   ATWHO_SEARCH_LIMIT = 5
 
-  # Maximum number of repositories per team allowed
-  REPOSITORIES_LIMIT = 5
+  # Max characters for repository name in Atwho modal
+  ATWHO_REP_NAME_LIMIT = 16
 
   #=============================================================================
   # File and data memory size
@@ -89,10 +93,6 @@ class Constants
   # Hands-on-table number of starting columns and rows
   HANDSONTABLE_INIT_COLS_CNT = 5
   HANDSONTABLE_INIT_ROWS_CNT = 5
-
-  # Screen width which is still suitable for sidebar to be shown, otherwise
-  # hidden
-  SCREEN_WIDTH_LARGE = 928
 
   #=============================================================================
   # Styling
@@ -144,51 +144,30 @@ class Constants
   ].freeze
 
   # Theme colors
-  COLOR_THEME_PRIMARY = '#37a0d9'.freeze # $color-theme-primary
-  COLOR_THEME_SECONDARY = '#8fd13f'.freeze # $color-theme-secondary
-  COLOR_THEME_DARK = '#6d6e71'.freeze # $color-theme-dark
+  BRAND_PRIMARY = '#37a0d9'.freeze # $brand-primary
+  BRAND_DEFAULT = '#8fd13f'.freeze # $brand-default
 
   # Grayscale colors
   COLOR_WHITE = '#ffffff'.freeze # $color-white
   COLOR_ALABASTER = '#fcfcfc'.freeze # $color-alabaster
-  COLOR_SNOW = '#f9f9f9'.freeze # $color-snow
-  COLOR_WILD_SAND = '#f5f5f5'.freeze # $color-wild-sand
   COLOR_CONCRETE = '#f2f2f2'.freeze # $color-concrete
-  COLOR_GALLERY = '#eeeeee'.freeze # $color-gallery
   COLOR_GAINSBORO = '#e3e3e3'.freeze # $color-gainsboro
   COLOR_ALTO = '#d2d2d2'.freeze # $color-alto
   COLOR_SILVER = '#c5c5c5'.freeze # $color-silver
-  COLOR_DARK_GRAY = '#adadad'.freeze # $color-dark-gray
   COLOR_SILVER_CHALICE = '#a0a0a0'.freeze # $color-silver-chalice
-  COLOR_GRAY = '#909088'.freeze # $color-gray
   COLOR_DOVE_GRAY = '#666666'.freeze # $color-dove-gray
   COLOR_EMPEROR = '#555555'.freeze # $color-emperor
-  COLOR_MINE_SHAFT = '#333333'.freeze # $color-mine-shaft
-  COLOR_NERO = '#262626'.freeze # $color-nero
   COLOR_BLACK = '#000000'.freeze # $color-black
-  COLOR_GRAY_LIGHT_YADCF = '#cccccc'.freeze # $color-gray-light-yadcf
-  COLOR_GRAY_DARK_YADCF = '#a9a9a9'.freeze # $color-gray-dark-yadcf
 
-  # Miscelaneous colors
-  COLOR_MYSTIC = '#eaeff2'.freeze # $color-mystic
-  COLOR_CANDLELIGHT = '#ffda23'.freeze # $color-candlelight
-  COLOR_BLUE_YADCF = '#337ab7'.freeze # $color-blue-yadcf
-
-  # Red colors
-  COLOR_MOJO = '#cf4b48'.freeze # $color-mojo
-  COLOR_APPLE_BLOSSOM = '#a94442'.freeze # $color-apple-blossom
-  COLOR_MILANO_RED = '#a70b05'.freeze # $color-milano-red
 
   #=============================================================================
   # External URLs
   #=============================================================================
 
   HTTP = 'http://'.freeze
-  TUTORIALS_URL = (HTTP + 'scinote.net/product/tutorials/').freeze
-  SUPPORT_URL = (HTTP + 'scinote.net/support').freeze
-  PREMIUM_URL = (HTTP + 'scinote.net/premium/').freeze
-  CONTACT_URL = (HTTP + 'scinote.net/story-of-scinote/#contact-scinote').freeze
-  RELEASE_NOTES_URL = (HTTP + 'scinote.net/docs/release-notes/').freeze
+  TUTORIALS_URL = (HTTP + 'goo.gl/YH3fXA').freeze
+  SUPPORT_URL = (HTTP + 'goo.gl/Jb9WXx').freeze
+  WEBINARS_URL = (HTTP + 'goo.gl/T2QYAd').freeze
   # Default user picture avatar
   DEFAULT_AVATAR_URL = '/images/:style/missing.png'.freeze
 
@@ -859,7 +838,40 @@ class Constants
     ]
   }.freeze
 
+  # Repository default table state
+  REPOSITORY_TABLE_DEFAULT_STATE = {
+    time: 0,
+    start: 0,
+    length: 6,
+    order: { 0 => [2, 'asc'] }, # Default sorting by 'ID' column
+    search: { search: '',
+              smart: true,
+              regex: false,
+              caseInsensitive: true },
+    columns: {},
+    assigned: 'assigned',
+    ColReorder: [*0..5]
+  }
+  6.times do |i|
+    REPOSITORY_TABLE_DEFAULT_STATE[:columns][i] = {
+      visible: true,
+      searchable: i >= 1, # Checkboxes column is not searchable
+      search: { search: '',
+                smart: true,
+                regex: false,
+                caseInsensitive: true }
+    }
+  end
+  REPOSITORY_TABLE_DEFAULT_STATE.freeze
+  # For default custom column template, any searchable default
+  # column can be reused
+  REPOSITORY_TABLE_STATE_CUSTOM_COLUMN_TEMPLATE =
+    REPOSITORY_TABLE_DEFAULT_STATE[:columns][1].deep_dup
+                                               .freeze
+
   EXPORTABLE_ZIP_EXPIRATION_DAYS = 7
+
+  REPOSITORY_LIST_ITEMS_PER_COLUMN = 500
 
   # Very basic regex to check for validity of emails
   BASIC_EMAIL_REGEX = URI::MailTo::EMAIL_REGEXP
@@ -882,7 +894,7 @@ class Constants
   #   |        |_| |_| |_|\__,_|_| |_|_|\_\   \__, |\___/ \_,|_|   _        |
   #   |                                       |___/               (_)       |
   #   |                                                                     |
-  #   |   Special Thank You for supporting sciNote on Kicstarter goes       |
+  #   |   Special Thank You for supporting SciNote on Kicstarter goes       |
   #   |   to the following supporters                                       |
   #   | ._________________________________________________________________. |
   #   |'               l    /\ /     \\            \ /\   l                `|

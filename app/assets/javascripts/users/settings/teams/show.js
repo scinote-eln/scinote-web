@@ -120,7 +120,10 @@ function initUsersTable() {
       { data: "3" },
       { data: "4" },
       { data: "5" }
-    ]
+    ],
+    oLanguage: {
+      sSearch: I18n.t('general.filter')
+    }
   });
 }
 

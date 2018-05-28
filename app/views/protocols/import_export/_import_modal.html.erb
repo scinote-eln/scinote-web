@@ -20,7 +20,7 @@
         </div>
         <div class="form-group">
           <label for="protocol_authors">
-            <span class="glyphicon glyphicon-user"></span>&nbsp;<%= t("protocols.import_export.import_modal.authors_label") %>
+            <span class="fas fa-user"></span>&nbsp;<%= t("protocols.import_export.import_modal.authors_label") %>
           </label>
           <input type="text" class="form-control" id="protocol_authors">
         </div>
@@ -64,18 +64,18 @@
           </div>
           <div class="btn-group" role="group">
             <div data-role="import-all">
-              <button type="submit" class="btn btn-primary" data-action="import-current"><%= t("protocols.import_export.import_modal.import_current") %></button>
-              <button type="submit" class="btn btn-default" data-action="import-all"><%= t("protocols.import_export.import_modal.import_all") %></button>
+              <button type="submit" class="btn btn-success" data-action="import-current"><%= t("protocols.import_export.import_modal.import_current") %></button>
+              <button type="submit" class="btn btn-success" data-action="import-all"><%= t("protocols.import_export.import_modal.import_all") %></button>
             </div>
             <div data-role="import-single">
-              <button type="submit" class="btn btn-primary" data-action="import-current"><%= t("protocols.import_export.import_modal.import") %></button>
+              <button type="submit" class="btn btn-success" data-action="import-current"><%= t("protocols.import_export.import_modal.import") %></button>
             </div>
           </div>
         </div>
         <div data-role="single-protocol-buttons">
           <button type="button" class="btn btn-default" data-dismiss="modal"><%= t("general.cancel") %></button>
           <div class="btn-group" role="group">
-            <button type="submit" class="btn btn-primary" data-action="import-current"><%= t("protocols.import_export.import_modal.import") %></button>
+            <button type="submit" class="btn btn-success" data-action="import-current"><%= t("protocols.import_export.import_modal.import") %></button>
           </div>
         </div>
       </div>

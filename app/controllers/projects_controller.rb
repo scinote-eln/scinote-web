@@ -4,20 +4,22 @@ class ProjectsController < ApplicationController
   include TeamsHelper
   include InputSanitizeHelper
 
-  before_action :load_vars, only: [:show, :edit, :update,
-                                   :notifications, :reports,
-                                   :samples, :experiment_archive,
-                                   :delete_samples, :samples_index]
+  before_action :generate_intro_demo, only: :index
+  before_action :load_vars, only: %i(show edit update
+                                     notifications reports
+                                     samples experiment_archive
+                                     delete_samples samples_index)
+  before_action :load_projects_by_teams, only: %i(index show samples archive
+                                                  experiment_archive)
+  before_action :load_archive_vars, only: :archive
   before_action :check_view_permissions, only: %i(show reports notifications
                                                   samples experiment_archive
                                                   samples_index)
-  before_action :check_create_permissions, only: [ :new, :create ]
+  before_action :check_create_permissions, only: %i(new create)
   before_action :check_manage_permissions, only: :edit
 
-  @filter_by_archived = false
-
   # except parameter could be used but it is not working.
-  layout :choose_layout
+  layout 'fluid'
 
   # Action defined in SampleActions
   DELETE_SAMPLES = 'Delete'.freeze
@@ -27,18 +29,6 @@ class ProjectsController < ApplicationController
       current_team_switch(Team.find_by_id(params[:team]))
     end
 
-    if current_user.teams.any?
-      @current_team_id = current_team.id if current_team
-
-      @current_team_id ||= current_user.teams.first.id
-      @current_sort = params[:sort].to_s
-      @projects_by_teams = current_user.projects_by_teams(@current_team_id,
-                                                          @current_sort,
-                                                          @filter_by_archived)
-    else
-      @projects_by_teams = []
-    end
-
     @teams = current_user.teams
 
     # New project for create new project modal
@@ -46,7 +36,6 @@ class ProjectsController < ApplicationController
   end
 
   def archive
-    @filter_by_archived = true
     index
   end
 
@@ -306,6 +295,12 @@ class ProjectsController < ApplicationController
 
   private
 
+  def generate_intro_demo
+    return unless current_user.sign_in_count == 1
+    team = current_user.teams.where(created_by: current_user).first
+    seed_demo_data(current_user, team) if team && team.projects.blank?
+  end
+
   def project_params
     params.require(:project).permit(:name, :team_id, :visibility, :archived)
   end
@@ -315,6 +310,29 @@ class ProjectsController < ApplicationController
 
     unless @project
       render_404
+    end
+  end
+
+  def load_projects_by_teams
+    if current_user.teams.any?
+      @current_team_id = current_team.id if current_team
+
+      @current_team_id ||= current_user.teams.first.id
+      @current_sort = params[:sort].to_s
+      @projects_by_teams = current_user.projects_by_teams(@current_team_id,
+                                                          @current_sort,
+                                                          false)
+    else
+      @projects_by_teams = []
+    end
+  end
+
+  def load_archive_vars
+    if current_user.teams.any?
+      @archived_projects_by_teams =
+        current_user.projects_by_teams(@current_team_id, @current_sort, true)
+    else
+      @projects_by_teams = []
     end
   end
 
@@ -328,9 +346,5 @@ class ProjectsController < ApplicationController
 
   def check_manage_permissions
     render_403 unless can_manage_project?(@project)
-  end
-
-  def choose_layout
-    action_name.in?(['index', 'archive']) ? 'main' : 'fluid'
   end
 end

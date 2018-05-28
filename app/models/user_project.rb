@@ -14,6 +14,10 @@ class UserProject < ApplicationRecord
 
   before_destroy :destroy_associations
 
+  after_commit do
+    Views::Datatables::DatatablesReport.refresh_materialized_view
+  end
+
   def role_str
     I18n.t("user_projects.enums.role.#{role.to_s}")
   end

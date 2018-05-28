@@ -35,7 +35,7 @@
         </div>
         <div class="form-group">
           <label>
-            <span class="glyphicon glyphicon-user">
+            <span class="fas fa-user">
             </span>&nbsp;<%= t('protocols.import_export.import_modal.authors_label') %>
           </label>
           <%= f.text_field :authors, :value => pio_eval_title_len(sanitize_input(not_null(@json_object['authors']))), class:
@@ -86,8 +86,7 @@
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal"><%= t('general.cancel') %></button>
 
-          <%= f.submit t('protocols.import_export.import_modal.import'),class: "btn
-          btn-primary" %>
+          <%= f.submit t('protocols.import_export.import_modal.import'),class: "btn btn-success" %>
           <% end %>
 
         </div>

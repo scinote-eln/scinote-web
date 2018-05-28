@@ -12,6 +12,7 @@ class Report < ApplicationRecord
 
   belongs_to :project, inverse_of: :reports, optional: true
   belongs_to :user, inverse_of: :reports, optional: true
+  belongs_to :team, inverse_of: :reports
   belongs_to :last_modified_by,
              foreign_key: 'last_modified_by_id',
              class_name: 'User',
@@ -20,6 +21,10 @@ class Report < ApplicationRecord
   # Report either has many report elements (if grouped by timestamp),
   # or many module elements (if grouped by module)
   has_many :report_elements, inverse_of: :report, dependent: :destroy
+
+  after_commit do
+    Views::Datatables::DatatablesReport.refresh_materialized_view
+  end
 
   def self.search(
     user,

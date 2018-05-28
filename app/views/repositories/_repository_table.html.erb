@@ -3,9 +3,10 @@
     data-current-uri="<%= request.original_url %>"
     data-repository-id="<%= repository.id %>"
     data-source="<%= repository_index_link %>"
-    data-num-columns="<%= 5 + repository.repository_columns.count %>"
+    data-num-columns="<%= 6 + repository.repository_columns.count %>"
     data-create-record="<%= repository_repository_rows_path(repository) %>"
     data-delete-record="<%= repository_delete_records_path(repository) %>"
+    data-copy-records="<%= repository_copy_records_path(repository) %>"
     data-max-dropdown-length="<%= Constants::NAME_TRUNCATION_LENGTH_DROPDOWN %>"
     data-save-text="<%= I18n.t('general.save') %>"
     data-edit-text="<%= I18n.t('general.edit') %>"
@@ -16,17 +17,12 @@
       <tr>
         <th id="checkbox"><input name="select_all" value="1" type="checkbox"></th>
         <th id="assigned"><%= t("repositories.table.assigned") %></th>
+        <th id="row-id"><%= t("repositories.table.id") %></th>
         <th id="row-name"><%= t("repositories.table.row_name") %></th>
         <th id="added-on"><%= t("repositories.table.added_on") %></th>
         <th id="added-by"><%= t("repositories.table.added_by") %></th>
         <% repository.repository_columns.order(:id).each do |column| %>
-          <th class="repository-column" id="<%= column.id %>"
-            <%= 'data-editable' if can_manage_repository_column?(column) %>
-            <%= 'data-deletable' if can_manage_repository_column?(column) %>
-            <%= "data-edit-url='#{edit_repository_repository_column_path(repository, column)}'" %>
-            <%= "data-update-url='#{repository_repository_column_path(repository, column)}'" %>
-            <%= "data-destroy-html-url='#{repository_columns_destroy_html_path(repository, column)}'" %>
-          >
+          <th class="repository-column" id="<%= column.id %>" data-type="<%= column.data_type %>">
             <%= display_tooltip(column.name) %>
           </th>
         <% end %>

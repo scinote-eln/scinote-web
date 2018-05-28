@@ -1,0 +1,59 @@
+<% provide(:head_title, t('libraries.repository_columns.head_title', repository: @repository.name)) %>
+<% provide(:flash_messages_div) do %>
+  <div id="notifications"></div>
+<% end %>
+<div class="content-pane">
+  <div class="repository-columns-header container">
+    <div class="row">
+      <%= link_to t('libraries.repository_columns.index.back_to_repository_html', repository: @repository.name),
+                  repository_path(@repository),
+                  data: { no_turbolink: false } %>
+    </div>
+    <div class="row">
+      <div class="col-md-6 text-left page-title">
+        <h2><strong><%=t 'libraries.repository_columns.index.manage_column' %></strong></h2>
+      </div>
+      <div class="col-md-6 text-right">
+        <button class="btn btn-primary"
+                data-modal-url="<%= repository_columns_create_html_path(@repository) %>"
+                data-action="new-column-modal">
+          <span class="glyphicon glyphicon-plus"></span>&nbsp;<%=t 'libraries.repository_columns.index.new_column' %>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="repository-columns-body container">
+    <ul class="list-group"
+        data-repository-id="<%= @repository.id %>">
+      <% if @repository_columns.length.zero? %>
+        <li class="list-group-item text-center" data-attr="no-columns">
+          <strong><%=t 'libraries.repository_columns.index.no_column' %></strong>
+        </li>
+      <% else %>
+        <% @repository_columns.each do |column| %>
+          <% cache column do %>
+            <li class="list-group-item"
+                data-id="<%= column.id %>"
+                data-destroy-url="<%= repository_columns_destroy_html_path(@repository, column) %>"
+                data-edit-url="<%= edit_repository_repository_column_path(@repository, column) %>">
+              <span class="pull-left"><%= column.name %></span>
+              <span class="controlls pull-right">
+                <button class="btn btn-default" data-action="edit">
+                  <span class="fas fa-pencil-alt"></span>
+                  <%=t 'libraries.repository_columns.index.edit_column'%>
+                </button>
+                <button class="btn btn-default" data-action="destroy">
+                  <span class="glyphicon glyphicon-trash"></span>
+                  <%=t 'libraries.repository_columns.index.delete_column'%>
+                </button>
+              </span>
+            </li>
+          <% end %>
+        <% end %>
+      <% end %>
+    </ul>
+  </div>
+</div>
+
+<%= render partial: 'delete_column_modal' %>
+<%= javascript_include_tag "repository_columns/index", "data-turbolinks-track" => true %>

@@ -94,67 +94,9 @@
       });
   }
 
-  function focusSearchInput() {
-    var searchIco = $('#search-ico');
-    searchIco
-      .on('shown.bs.dropdown', function() {
-        searchIco
-          .find('input.form-control')
-          .focus();
-      });
-  }
-
-  function initActivitiesButton() {
-    $(document.body).ready(function() {
-      // Activity feed modal in main navigation menu
-      var activityModal = $('#activity-modal');
-      var activityModalBody = activityModal.find('.modal-body');
-      var initMoreBtn = function() {
-        activityModalBody.find('.btn-more-activities')
-          .on('ajax:success', function(e, data) {
-            $(data.html).insertBefore($(this).parents('li'));
-            if(data.more_url) {
-              $(this).attr('href', data.more_url);
-            } else {
-                $(this).remove();
-            }
-          });
-      };
-
-      notificationAlertClose();
-
-      $('#main-menu .btn-activity')
-        .on('ajax:before', function() {
-          activityModal.modal('show');
-        })
-        .on('ajax:success', function(e, data) {
-          activityModalBody.html(data.html);
-          initMoreBtn();
-        });
-
-      activityModal.on('hidden.bs.modal', function() {
-        activityModalBody.html('');
-      });
-    });
-
-    $(document).ajaxComplete(function() {
-      notificationAlertClose();
-    });
-
-    function notificationAlertClose() {
-      $('#notifications .alert').on('closed.bs.alert', function() {
-        $('#content-wrapper')
-          .addClass('alert-hidden')
-          .removeClass('alert-shown');
-      });
-    }
-  }
-
   // init
   loadDropdownNotifications();
   loadUnseenNotificationsNumber();
   toggleNotificationBellPosition();
-  focusSearchInput();
   initGlobalSwitchForm();
-  initActivitiesButton();
 })();

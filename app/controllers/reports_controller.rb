@@ -5,37 +5,11 @@ class ReportsController < ApplicationController
   # used via target='_blank')
   protect_from_forgery with: :exception, except: :generate
 
-  before_action :load_vars, only: [
-    :edit,
-    :update
-  ]
-  before_action :load_vars_nested, only: [
-    :index,
-    :new,
-    :create,
-    :edit,
-    :update,
-    :generate,
-    :destroy,
-    :save_modal,
-    :project_contents_modal,
-    :experiment_contents_modal,
-    :module_contents_modal,
-    :step_contents_modal,
-    :result_contents_modal,
-    :project_contents,
-    :module_contents,
-    :step_contents,
-    :result_contents
-  ]
-
-  before_action :check_view_permissions, only: :index
-  before_action :check_manage_permissions, only: %i(
+  BEFORE_ACTION_METHODS = %i(
     new
     create
     edit
     update
-    destroy
     generate
     save_modal
     project_contents_modal
@@ -47,12 +21,29 @@ class ReportsController < ApplicationController
     module_contents
     step_contents
     result_contents
-  )
+  ).freeze
 
-  layout 'fluid'
+  before_action :load_vars, only: %i(edit update)
+  before_action :load_vars_nested, only: BEFORE_ACTION_METHODS
+  before_action :load_visible_projects, only: %i(index visible_projects)
+  before_action :load_available_repositories,
+                only: %i(new edit available_repositories)
+
+  before_action :check_manage_permissions, only: BEFORE_ACTION_METHODS
 
   # Index showing all reports of a single project
-  def index
+  def index; end
+
+  def datatable
+    respond_to do |format|
+      format.json do
+        render json: ::ReportDatatable.new(
+          view_context,
+          current_user,
+          current_team.datatables_reports.visible_by(current_user, current_team)
+        )
+      end
+    end
   end
 
   # Report grouped by modules
@@ -72,6 +63,7 @@ class ReportsController < ApplicationController
     @report = Report.new(report_params)
     @report.project = @project
     @report.user = current_user
+    @report.team = current_team
     @report.last_modified_by = current_user
 
     if continue && @report.save_with_contents(report_contents)
@@ -88,7 +80,7 @@ class ReportsController < ApplicationController
       )
       respond_to do |format|
         format.json do
-          render json: { url: project_reports_path(@project) }, status: :ok
+          render json: { url: reports_path }, status: :ok
         end
       end
     else
@@ -133,7 +125,7 @@ class ReportsController < ApplicationController
       )
       respond_to do |format|
         format.json do
-          render json: { url: project_reports_path(@project) }, status: :ok
+          render json: { url: reports_path }, status: :ok
         end
       end
     else
@@ -155,7 +147,7 @@ class ReportsController < ApplicationController
 
     report_ids.each do |report_id|
       report = Report.find_by_id(report_id)
-      next unless report.present?
+      next unless report.present? && can_manage_reports?(current_team)
       # record an activity
       Activity.create(
         type_of: :delete_report,
@@ -170,22 +162,44 @@ class ReportsController < ApplicationController
       report.destroy
     end
 
-    redirect_to project_reports_path(@project)
+    redirect_to reports_path
   end
 
   # Generation action
   # Currently, only .PDF is supported
   def generate
+    content = params[:html]
+    content = I18n.t('projects.reports.new.no_content_for_PDF_html') if content.blank?
     respond_to do |format|
       format.pdf do
-        @html = params[:html]
-        @html = '<h1>No content</h1>' if @html.blank?
-        render pdf: 'report',
-          header: { right: '[page] of [topage]' },
-          template: 'reports/report.pdf.erb',
-          disable_javascript: true
+        render pdf: 'report', header: { right: '[page] of [topage]' },
+                              locals: { content: content },
+                              template: 'reports/report.pdf.erb',
+                              disable_javascript: true
       end
     end
+  end
+
+  def save_pdf_to_inventory_item
+    save_pdf_to_inventory_item = ReportActions::SavePdfToInventoryItem.new(
+      current_user, current_team, save_PDF_params
+    )
+    if save_pdf_to_inventory_item.save
+      render json: {
+        message: I18n.t(
+          'projects.reports.new.save_PDF_to_inventory_modal.success_flash'
+        )
+      }, status: :ok
+    else
+      render json: { message: save_pdf_to_inventory_item.error_messages },
+             status: :unprocessable_entity
+    end
+  rescue ReportActions::RepositoryPermissionError => error
+    render json: { message: error },
+           status: :forbidden
+  rescue Exception => error
+    render json: { message: error.message },
+           status: :internal_server_error
   end
 
   # Modal for saving the existsing/new report
@@ -434,7 +448,19 @@ class ReportsController < ApplicationController
     end
   end
 
+  def visible_projects
+    render json: { projects: @visible_projects }, status: :ok
+  end
+
+  def available_repositories
+    render json: { results: @available_repositories }, status: :ok
+  end
+
   private
+
+  include StringUtility
+  VisibleProject = Struct.new(:path, :name)
+  AvailableRepository = Struct.new(:id, :name)
 
   def load_vars
     @report = Report.find_by_id(params[:id])
@@ -446,16 +472,45 @@ class ReportsController < ApplicationController
     render_404 unless @project
   end
 
-  def check_view_permissions
-    render_403 unless can_read_project?(@project)
+  def check_manage_permissions
+    render_403 unless can_manage_reports?(@project.team)
   end
 
-  def check_manage_permissions
-    render_403 unless can_manage_reports?(@project)
+  def load_visible_projects
+    render_404 unless current_team
+    projects = current_team.projects.visible_from_user_by_name(
+      current_user, current_team, search_params[:q]
+    ).limit(Constants::SEARCH_LIMIT).select(:id, :name)
+    @visible_projects = projects.collect do |project|
+      VisibleProject.new(new_project_reports_path(project),
+                         ellipsize(project.name, 50, 40))
+    end
+  end
+
+  def load_available_repositories
+    repositories = current_team.repositories
+                               .name_like(search_params[:q])
+                               .limit(Constants::SEARCH_LIMIT)
+                               .select(:id, :name)
+    @available_repositories = repositories.collect do |repository|
+      AvailableRepository.new(repository.id,
+                              ellipsize(repository.name, 75, 50))
+    end
   end
 
   def report_params
     params.require(:report)
           .permit(:name, :description, :grouped_by, :report_contents)
+  end
+
+  def search_params
+    params.permit(:q)
+  end
+
+  def save_PDF_params
+    params.permit(:repository_id,
+                  :respository_column_id,
+                  :repository_item_id,
+                  :html)
   end
 end

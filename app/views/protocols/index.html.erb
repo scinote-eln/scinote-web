@@ -1,144 +1,133 @@
-
 <% provide(:head_title, t("protocols.index.head_title")) %>
 
 <% if current_team %>
-  <%= render partial: "protocols/breadcrumbs.html.erb", locals: { teams: @teams, current_team: @current_team, type: @type } %>
-  <ul class="nav nav-tabs nav-settings">
-    <li role="presentation" class="<%= "active" if @type == :public %>">
-      <%= link_to t("protocols.index.navigation.public"), protocols_path(team: @current_team, type: :public) %>
-    </li>
-    <li role="presentation" class="<%= "active" if @type == :private %>">
-      <%= link_to t("protocols.index.navigation.private"), protocols_path(team: @current_team, type: :private) %>
-    </li>
-    <li role="presentation" class="<%= "active" if @type == :archive %>">
-      <%= link_to protocols_path(team: @current_team, type: :archive) do %>
-        <span class="glyphicon glyphicon-briefcase" title="<%= t'protocols.index.navigation.archive' %>"></span>
-      <% end %>
-    </li>
-  </ul>
-  <div class="tab-content">
-    <div class="tab-pane tab-pane-settings tab-pane-protocols active" role="tabpanel">
-      <!-- Buttons container -->
-      <% if @type.in? [:public, :private] %>
-        <div class="protocols-description">
-          <%= t(@type == :public ? "protocols.index.public_description" : "protocols.index.private_description") %>
-        </div>
-        <div class="btn-group" role="group">
-          <a class="btn btn-default" <%= can_create_protocols_in_repository?(@current_team) ? "data-action=create-new" : "disabled=disabled" %> data-url="<%= create_new_modal_protocols_path(team: @current_team, type: @type) %>">
-            <span class="glyphicon glyphicon-plus"></span>
-            <span class="hidden-xs">&nbsp;<%= t("protocols.index.create_new") %></span>
-          </a>
-          <a class="btn btn-default" data-action="edit">
-            <span class="glyphicon glyphicon-pencil"></span>
-            <span class="hidden-xs">&nbsp;<%= t("protocols.index.edit") %></span>
-          </a>
-          <a class="btn btn-default" data-action="clone">
-            <span class="glyphicon glyphicon-duplicate"></span>
-            <span class="hidden-xs">&nbsp;<%= t("protocols.index.clone_btn") %></span>
-          </a>
-          <% if @type == :public %>
-            <a class="btn btn-default" data-action="make-private" data-url="<%= make_private_protocols_path %>">
-              <span class="glyphicon glyphicon-eye-close"></span>
-              <span class="hidden-xs">&nbsp;<%= t("protocols.index.make_private") %></span>
+  <div class="content-pane" id="protocols-index">
+    <ul class="nav nav-tabs nav-settings">
+      <li role="presentation" class="<%= "active" if @type == :public %>">
+        <%= link_to t("protocols.index.navigation.public"), protocols_path(team: @current_team, type: :public) %>
+      </li>
+      <li role="presentation" class="<%= "active" if @type == :private %>">
+        <%= link_to t("protocols.index.navigation.private"), protocols_path(team: @current_team, type: :private) %>
+      </li>
+      <li role="presentation" class="<%= "active" if @type == :archive %>">
+        <%= link_to t("protocols.index.navigation.archive"), protocols_path(team: @current_team, type: :archive) %>
+      </li>
+    </ul>
+    <div class="tab-content">
+      <div class="tab-pane tab-pane-settings tab-pane-protocols active" role="tabpanel">
+        <!-- Buttons container -->
+        <% if @type.in? [:public, :private] %>
+          <div class="protocols-description">
+            <%= t(@type == :public ? "protocols.index.public_description" : "protocols.index.private_description") %>
+          </div>
+          <div class="btn-group" role="group">
+            <a class="btn btn-primary" <%= can_create_protocols_in_repository?(@current_team) ? "data-action=create-new" : "disabled=disabled" %> data-url="<%= create_new_modal_protocols_path(team: @current_team, type: @type) %>">
+              <span class="glyphicon glyphicon-plus"></span>
+              <span class="hidden-xs">&nbsp;<%= t("protocols.index.create_new") %></span>
             </a>
-          <% elsif @type == :private %>
-            <a class="btn btn-primary" data-action="publish" data-url="<%= publish_protocols_path %>">
-              <span class="glyphicon glyphicon-open"></span>
-              <span class="hidden-xs">&nbsp;<%= t("protocols.index.publish") %></span>
+            <a class="btn btn-default" data-action="edit">
+              <span class="fas fa-pencil-alt"></span>
+              <span class="hidden-xs">&nbsp;<%= t("protocols.index.edit") %></span>
             </a>
-          <% end %>
-        </div>
-        <div id="import-export-protocols" class="btn-group" role="group">
-        <a class="btn btn-default btn-open-file"
-           data-toggle="dropdown"
-           aria-haspopup="true"
-           aria-expanded="false"
-           href="#"
-           <%= 'disabled' unless can_create_protocols_in_repository?(@current_team) %>>
-          <span class="glyphicon glyphicon-import"></span><span class="hidden-xs">&nbsp;<%= "Import protocol" %></span></a>
-          <% if can_create_protocols_in_repository?(@current_team) %>
-            <ul class="dropdown-menu">
-              <li>
-                <a class="btn-link-alt btn-default-link btn-open-file" <%= can_create_protocols_in_repository?(@current_team) ? 'data-action="import"' : 'disabled="disabled"' %>>
-                  <span class="glyphicon glyphicon-file"></span>
-                  <span class="hidden-xs"><%= t("protocols.index.import_alt") %></span>
-                  <input type="file" value="" accept=".eln" data-role="import-file-input"
-                  data-team-id="<%= @current_team.id %>"
-                  data-type="<%= @type %>" data-import-url="<%= import_protocols_path %>"
-                  <%= 'disabled="disabled"' unless can_create_protocols_in_repository?(@current_team) %>>
-                </a>
-              </li>
-              <li>
-              <%= link_to "#modal-import-json-protocol", "data-toggle" => "modal" do %>
-              <span class="glyphicon glyphicon-file"></span>
-              <span class="hidden-xs"><%= t("protocols.index.import_json") %></span>
-              <% end %>
-              </li>
-            </ul>
-          <% end %>
-          <a class="btn btn-default" data-action="export" data-export-url="<%= export_protocols_path() %>">
-            <span class="glyphicon glyphicon-export"></span>
-            <span class="hidden-xs">&nbsp;<%= t("protocols.index.export") %></span>
-          </a>
-        </div>
-
-        <div class="btn-group" role="group">
-          <a class="btn btn-default" data-action="archive" data-url="<%= archive_protocols_path %>">
-            <span class="glyphicon glyphicon-trash"></span>
-            <span class="hidden-xs">&nbsp;<%= t("protocols.index.archive_action") %></span>
-          </a>
-        </div>
-      <% else %>
-        <div class="protocols-description">
-          <%= t("protocols.index.archive.description") %>
-        </div>
-        <div class="btn-group" role="group">
-          <a class="btn btn-default" data-action="restore" data-url="<%= restore_protocols_path %>">
-            <span class="glyphicon glyphicon-refresh"></span>
-            <span class="hidden-xs">&nbsp;<%= t("protocols.index.restore") %></span>
-          </a>
-        </div>
-      <% end %>
-
-      <div id="protocols-datatable-spinner">
-        <div class="protocols-datatable">
-          <table id="protocols-table" class="table" data-team-id="<%= @current_team.id %>" data-type="<%= @type %>" data-source="<%= datatable_protocols_path(team: @current_team, type: @type) %>">
-            <thead>
-              <tr>
-                <th id="select-all"><input name="select_all" value="1" type="checkbox"></th>
-                <th id="protocol-name"><%= t("protocols.index.thead_name") %></th>
-                <th id="protocol-keywords"><%= t("protocols.index.thead_keywords") %></th>
-                <th id="protocol-nr-of-linked-children"><%= t("protocols.index.thead_nr_of_linked_children") %></th>
-                <% if @type == :public %>
-                  <th id="protocol-published-by"><%= t("protocols.index.thead_published_by") %></th>
-                  <th id="protocol-published-on"><%= t("protocols.index.thead_published_on") %></th>
-                <% elsif @type == :private %>
-                  <th id="protocol-added-by"><%= t("protocols.index.thead_added_by") %></th>
-                  <th id="protocol-created-at"><%= t("protocols.index.thead_created_at") %></th>
-                <% else %>
-                  <th id="protocol-archived-by"><%= t("protocols.index.thead_archived_by") %></th>
-                  <th id="protocol-archived-on"><%= t("protocols.index.thead_archived_on") %></th>
+            <a class="btn btn-default" data-action="clone">
+              <span class="glyphicon glyphicon-duplicate"></span>
+              <span class="hidden-xs">&nbsp;<%= t("protocols.index.clone_btn") %></span>
+            </a>
+            <% if @type == :public %>
+              <a class="btn btn-default" data-action="make-private" data-url="<%= make_private_protocols_path %>">
+                <span class="fas fa-eye-slash"></span>
+                <span class="hidden-xs">&nbsp;<%= t("protocols.index.make_private") %></span>
+              </a>
+            <% elsif @type == :private %>
+              <a class="btn btn-default" data-action="publish" data-url="<%= publish_protocols_path %>">
+                <span class="fas fa-eye"></span>
+                <span class="hidden-xs">&nbsp;<%= t("protocols.index.publish") %></span>
+              </a>
+            <% end %>
+          </div>
+          <div id="import-export-protocols" class="btn-group" role="group">
+          <a class="btn btn-default btn-open-file"
+             data-toggle="dropdown"
+             aria-haspopup="true"
+             aria-expanded="false"
+             href="#"
+             <%= 'disabled' unless can_create_protocols_in_repository?(@current_team) %>>
+            <span class="glyphicon glyphicon-import"></span><span class="hidden-xs">&nbsp;<%= t("protocols.index.import") %></span></a>
+            <% if can_create_protocols_in_repository?(@current_team) %>
+              <ul class="dropdown-menu">
+                <li>
+                  <a class="btn-link-alt btn-default-link btn-open-file" <%= can_create_protocols_in_repository?(@current_team) ? 'data-action="import"' : 'disabled="disabled"' %>>
+                    <span class="glyphicon glyphicon-file"></span>
+                    <span class="hidden-xs"><%= t("protocols.index.import_alt") %></span>
+                    <input type="file" value="" accept=".eln" data-role="import-file-input"
+                    data-team-id="<%= @current_team.id %>"
+                    data-type="<%= @type %>" data-import-url="<%= import_protocols_path %>"
+                    <%= 'disabled="disabled"' unless can_create_protocols_in_repository?(@current_team) %>>
+                  </a>
+                </li>
+                <li>
+                <%= link_to "#modal-import-json-protocol", "data-toggle" => "modal" do %>
+                <span class="glyphicon glyphicon-file"></span>
+                <span class="hidden-xs"><%= t("protocols.index.import_json") %></span>
                 <% end %>
-                <th id="protocol-updated-at"><%= t("protocols.index.thead_updated_at") %></th>
-              </tr>
-            </thead>
-            <tbody></tbody>
-          </table>
+                </li>
+              </ul>
+            <% end %>
+            <a class="btn btn-default" data-action="export" data-export-url="<%= export_protocols_path() %>">
+              <span class="glyphicon glyphicon-export"></span>
+              <span class="hidden-xs">&nbsp;<%= t("protocols.index.export") %></span>
+            </a>
+          </div>
+
+          <div class="btn-group" role="group">
+            <a class="btn btn-default" data-action="archive" data-url="<%= archive_protocols_path %>">
+              <span class="glyphicon glyphicon-briefcase"></span>
+              <span class="hidden-xs">&nbsp;<%= t("protocols.index.archive_action") %></span>
+            </a>
+          </div>
+        <% else %>
+          <div class="protocols-description">
+            <%= t("protocols.index.archive.description") %>
+          </div>
+          <div class="btn-group" role="group">
+            <a class="btn btn-default" data-action="restore" data-url="<%= restore_protocols_path %>">
+              <span class="glyphicon glyphicon-refresh"></span>
+              <span class="hidden-xs">&nbsp;<%= t("protocols.index.restore") %></span>
+            </a>
+          </div>
+        <% end %>
+
+        <div id="protocols-datatable-spinner">
+          <div class="protocols-datatable">
+            <table id="protocols-table" class="table" data-team-id="<%= @current_team.id %>" data-type="<%= @type %>" data-source="<%= datatable_protocols_path(team: @current_team, type: @type) %>">
+              <thead>
+                <tr>
+                  <th id="select-all"><input name="select_all" value="1" type="checkbox"></th>
+                  <th id="protocol-name"><%= t("protocols.index.thead_name") %></th>
+                  <th id="protocol-keywords"><%= t("protocols.index.thead_keywords") %></th>
+                  <th id="protocol-nr-of-linked-children"><%= t("protocols.index.thead_nr_of_linked_children") %></th>
+                  <% if @type == :public %>
+                    <th id="protocol-published-by"><%= t("protocols.index.thead_published_by") %></th>
+                    <th id="protocol-published-on"><%= t("protocols.index.thead_published_on") %></th>
+                  <% elsif @type == :private %>
+                    <th id="protocol-added-by"><%= t("protocols.index.thead_added_by") %></th>
+                    <th id="protocol-created-at"><%= t("protocols.index.thead_created_at") %></th>
+                  <% else %>
+                    <th id="protocol-archived-by"><%= t("protocols.index.thead_archived_by") %></th>
+                    <th id="protocol-archived-on"><%= t("protocols.index.thead_archived_on") %></th>
+                  <% end %>
+                  <th id="protocol-updated-at"><%= t("protocols.index.thead_updated_at") %></th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
   </div>
-<% else %>
-    <!-- Show link to team management if member of
-  no teams -->
-  <div class="jumbotron">
-    <h2><%=t 'protocols.index.no_teams.title' %></h2>
-    <p><%=t 'protocols.index.no_teams.text' %></p>
-    <p data-hook="protocols-manage-teams-button">
-      <%= link_to t('protocols.index.no_teams.btn'), teams_path, class: 'btn btn-primary' %>
-    </p>
-  </div>
 <% end %>
+
 <div id="protocolsio-preview-modal-target"></div>
 <%= render partial: "protocols/import_export/import_json_protocol_modal.html.erb" %>
 
@@ -151,7 +140,6 @@
 <%= render partial: "protocols/index/import_results_modal.html.erb" %>
 <%= render partial: "protocols/index/linked_children_modal.html.erb" %>
 <%= render partial: "protocols/index/protocol_preview_modal.html.erb" %>
-<%= render partial: "shared/image_preview_modal.html.erb" %>
 
 <%= render partial: "protocols/import_export/import_elements.html.erb" %>
 

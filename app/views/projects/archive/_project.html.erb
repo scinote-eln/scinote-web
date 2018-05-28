@@ -26,9 +26,9 @@
 
     <h3 class="panel-title">
       <% if project.hidden? then %>
-        <span class="glyphicon glyphicon-eye-close" aria-hidden="true" title="<%=t "projects.index.visibility_private" %>"></span>
+        <span class="fas fa-eye-slash" aria-hidden="true" title="<%=t "projects.index.visibility_private" %>"></span>
       <% else %>
-        <span class="glyphicon glyphicon-eye-open" aria-hidden="true" title="<%=t "projects.index.visibility_public" %>"></span>
+        <span class="fas fa-eye" aria-hidden="true" title="<%=t "projects.index.visibility_public" %>"></span>
       <% end %>
       <span><%= project.name %></span>
     </h3>

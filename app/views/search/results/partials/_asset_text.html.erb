@@ -1,15 +1,43 @@
 <% query ||= nil %>
+<% asset_read_allowed = false %>
 <% text = query.present? ? highlight(asset.file_file_name, query.strip.split(/\s+/)) : asset.file_file_name %>
 
 <% if asset.step %>
   <% protocol = asset.step.protocol %>
   <% if can_read_protocol_in_module?(protocol) ||
-        can_read_protocol_in_repository?(protocol) ||
-        (asset.result && can_read_experiment?(protocol.my_module.experiment)) %>
+        can_read_protocol_in_repository?(protocol) %>
+    <% asset_read_allowed = true %>
     <a href="<%= download_asset_path asset %>" target="_blank">
       <%= text %>
     </a>
+  <% else %>
+    <%= text %>
+  <% end %>
+<% elsif asset.result %>
+  <% if can_read_experiment?(asset.result.my_module.experiment) %>
+    <% asset_read_allowed = true %>
+    <a href="<%= download_asset_path asset %>" target="_blank">
+      <%= text %>
+    </a>
+  <% else %>
+    <%= text %>
+  <% end %>
+<% elsif asset.repository_asset_value %>
+  <% if can_read_team?(asset.repository_asset_value.repository_cell.repository_row.repository.team) %>
+    <% asset_read_allowed = true %>
+    <a href="<%= download_asset_path asset %>" target="_blank">
+      <%= text %>
+    </a>
+  <% else %>
+    <%= text %>
   <% end %>
 <% else %>
   <%= text %>
+<% end %>
+
+<!-- Display asset contents if it exists -->
+<% if asset_read_allowed && asset.headline.present? && asset.headline.include?("<mark>") %>
+  <blockquote class="blockquote-search">
+    <p><%= highlight(sanitize_input(asset.headline), query.strip.split(/\s+/)) %></p>
+  </blockquote>
 <% end %>

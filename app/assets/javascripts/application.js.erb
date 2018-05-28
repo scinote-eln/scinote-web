@@ -11,10 +11,10 @@
 //= require jquery-ui/widgets/draggable
 //= require jquery-ui/widgets/droppable
 //= require jquery.ui.touch-punch.min
+//= require jquery-ui/effects/effect-slide
 //= require jquery.caret.min
 //= require jquery.atwho.min
 //= require hammer
-//= require introjs
 //= require js.cookie
 //= require spin
 //= require jquery.spin
@@ -30,11 +30,11 @@
 //= require tinymce-jquery
 //= require jsPlumb-2.0.4-min
 //= require jsnetworkx
+//= require bootstrap-select
 //= require_directory ./sitewide
 //= require jquery.dataTables.yadcf
 //= require datatables
-//= require dataTables.noSearchHidden
-//= require bootstrap-select
+//= require ajax-bootstrap-select.min
 //= require underscore
 //= require i18n.js
 //= require i18n/translations
@@ -197,17 +197,20 @@ var HelperModule = (function(){
       window.setTimeout(function () {
         flash.fadeTo(500, 0).slideUp(500, function () {
           $(this).remove();
-          if($('.alert').length <= 0) {
-            $('#content-wrapper').removeClass('alert-shown');
-          }
         });
-      }, 5000);
+      }, 3000);
     }
   }
 
+  helpers.dismissAlert = function() {
+    $('#alert-flash').on('click', function() {
+      $('#alert-flash').alert('close');
+    })
+  }
+
   helpers.flashAlertMsg = function(message, type) {
-    var alertType;
-    var glyphSign;
+    var alertType, glyphSign;
+
     $('#notifications').html('');
     if (type === 'success') {
       alertType = ' alert-success ';
@@ -222,34 +225,38 @@ var HelperModule = (function(){
       alertType = ' alert-warning ';
       glyphSign = ' glyphicon-exclamation-sign ';
     }
-    var htmlSnippet = '<div class="alert alert' + alertType +
+    var htmlSnippet = '<div id="alert-flash" class="alert alert' + alertType +
                       'alert-dismissable alert-floating">' +
-                        '<div class="container">' +
-                          '<button type="button" class="close" ' +
-                          'data-dismiss="alert" aria-label="Close">' +
+                        '<div>' +
+                        '<button type="button" class="close" ' +
+                        'data-dismiss="alert" aria-label="Close">' +
                           '<span aria-hidden="true">×</span></button>' +
-                            '<span class="glyphicon' + glyphSign + '"></span>' +
+                            '<span class="glyphicon' + glyphSign + '"></span>&nbsp;' +
                             '<span>' + message + '</span>' +
                           '</div>' +
                         '</div>';
     $('#notifications').html(htmlSnippet);
-    $('#content-wrapper').addClass('alert-shown');
     helpers.hideFlashMsg();
+    helpers.dismissAlert();
   }
 
   $( document ).ready(function() {
     helpers.treeLinkTruncation();
     helpers.hideFlashMsg();
+    helpers.dismissAlert();
   });
 
   return helpers;
 })();
 
-// initialize code markup in rich text fields
 (function() {
   $(document).ready(function() {
+    // initialize code markup in rich text fields
     $('[class^=language]').each(function(i, block) {
       hljs.highlightBlock(block);
     });
+
+    // fix dropdown-menu style throughout the app
+    $('.dropdown-header').parent('ul').addClass('custom-dropdown-menu');
   });
 })();

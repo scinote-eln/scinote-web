@@ -1,0 +1,45 @@
+@import "constants";
+
+.repository-columns-body {
+  margin-top: 50px;
+
+  .list-group-item {
+    padding: 28px;
+
+    .controlls {
+      margin-top: -18px;
+    }
+
+    span {
+      margin-top: -10px;
+    }
+  }
+}
+
+#repository-columns-dropdown {
+  float: right;
+}
+
+.new-repository-button {
+  float: left;
+  margin-right: 5px;
+}
+
+.custom-alert-info {
+  background-color: $state-info-bg;
+  border: 1px solid $state-info-border;
+  color: $state-info-text;
+  margin: 10px 0;
+  opacity: .86;
+  padding: 15px;
+  width: 100%;
+}
+
+.repository-input-file-field {
+  display: inline-flex;
+
+  a {
+    color: $brand-danger;
+    margin-left: 5px;
+  }
+}

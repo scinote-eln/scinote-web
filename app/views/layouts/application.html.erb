@@ -11,6 +11,7 @@
     <%= favicon_link_tag "favicon-16.png", type: "image/png", size: "16x16" %>
     <%= favicon_link_tag "favicon-32.png", type: "image/png", size: "32x32" %>
     <%= favicon_link_tag "favicon-48.png", type: "image/png", size: "48x48" %>
+    <%= stylesheet_pack_tag 'fontawesome' %>
 
     <%= csrf_meta_tags %>
   </head>
@@ -21,7 +22,8 @@
     data-atwho-task-url="<%= atwho_my_modules_team_path(current_team) %>"
     data-atwho-project-url="<%= atwho_projects_team_path(current_team) %>"
     data-atwho-experiment-url="<%= atwho_experiments_team_path(current_team) %>"
-    data-atwho-sample-url="<%= atwho_samples_team_path(current_team) %>"
+    data-atwho-repositories-url="<%= atwho_repositories_team_path(current_team) %>"
+    data-atwho-rep-items-url="<%= atwho_rep_items_team_path(current_team) %>"
     data-atwho-menu-items="<%= atwho_menu_items_team_path(current_team) %>"
     <% end %>
   >
@@ -29,59 +31,29 @@
     <span style="display: none;" data-hook="body-js"></span>
     <span style="display: none;" data-hook="application-body-html"></span>
 
-    <!-- Activity modal -->
-    <div class="modal" id="activity-modal" tabindex="-1" role="dialog" aria-labelledby="activity-modal-label">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title" id="activity-modal-label"><%= t'activities.modal.modal_title' %></h4>
-          </div>
-          <div class="modal-body"></div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal"><%=t "general.close" %></button>
-          </div>
-        </div>
-      </div>
-    </div>
-
     <!-- About us modal -->
     <%= render "shared/about_modal" %>
-
+    <%= render "shared/file_preview_modal.html.erb" %>
     <%= render "shared/navigation" %>
 
-    <div id="notifications">
-      <% if flash[:success] %>
-      <div id="alert-flash" class="alert alert-success alert-dismissable alert-floating">
-        <div class="container">
-          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
-          <span class="glyphicon glyphicon-ok-sign"></span>
-          <span><%= sanitize_input(flash[:success]) %></span>
-        </div>
-      </div>
-      <% end %>
-      <% if notice %>
-      <div id="alert-flash" class="alert alert-info alert-dismissable alert-floating">
-        <div class="container">
-          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
-          <span class="glyphicon glyphicon-info-sign"></span>
-          <span><%= notice %></span>
-        </div>
-      </div>
-      <% end %>
-      <% if alert and !alert.empty? or flash[:error]%>
-      <div id="alert-flash" class="alert alert-danger alert-dismissable alert-floating">
-        <div class="container">
-          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
-          <span class="glyphicon glyphicon-exclamation-sign"></span>
-          <span><%= alert || sanitize_input(flash[:error]) %></span>
-        </div>
-      </div>
-      <% end %>
-    </div>
+    <% unless user_signed_in? %>
+      <%= render partial: 'shared/flash_alerts',
+                 locals: { flash: flash, notice: notice, alert: alert } %>
+    <% end %>
 
-    <div id="content-wrapper" class="<%= "alert-shown" if flash[:success] || flash[:error] || notice || alert %>">
-      <%= yield :content %>
+    <%= render "shared/left_menu_bar" if user_signed_in? && current_user.teams.exists? %>
+
+    <div id="content-wrapper">
+      <% if user_signed_in? && current_user.teams.empty? %>
+        <!-- If member of no teams -->
+        <div class="jumbotron">
+          <h2><%=t 'general.no_teams.title' %></h2>
+          <p data-hook="general-no-teams-text"><%=t 'general.no_teams.text' %></p>
+        </div>
+      <% else %>
+        <%= yield :flash_messages_div %>
+        <%= yield :content %>
+      <% end %>
     </div>
 
     <script>

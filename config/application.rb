@@ -37,7 +37,7 @@ module Scinote
       wopitest: ['text/plain', 'inode/x-empty']
     }
 
-    # sciNote Core Application version
+    # SciNote Core Application version
     VERSION = File.read(Rails.root.join('VERSION')).strip.freeze
   end
 end

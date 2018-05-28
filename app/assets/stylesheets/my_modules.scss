@@ -8,15 +8,15 @@
 .task-due-date,
 .task-state-label {
   .alert-green {
-    color: $color-saturated-green;
+    color: $brand-success;
   }
 
   .alert-yellow {
-    color: $color-candlelight;
+    color: $brand-warning;
   }
 
   .alert-red {
-    color: $color-milano-red;
+    color: $brand-danger;
   }
 }
 

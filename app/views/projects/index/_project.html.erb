@@ -12,7 +12,7 @@ data-project-users-tab-url="<%= url_for project_user_projects_path(project_id: p
           <% project_form = f %>
           <%= f.hidden_field :archived, value: true %>
         <% end %>
-        <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1">
+        <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1" style="top: 105%;">
           <li class="dropdown-header"><%= t('projects.index.options_header') %></li>
           <li>
             <%= link_to t("projects.index.edit_option"), edit_project_path(project, format: :json), remote: true, "data-action" => "edit" %>
@@ -26,9 +26,9 @@ data-project-users-tab-url="<%= url_for project_user_projects_path(project_id: p
 
     <h3 class="panel-title">
       <% if project.hidden? then %>
-        <span class="glyphicon glyphicon-eye-close" aria-hidden="true" title="<%=t "projects.index.visibility_private" %>"></span>
+        <span class="fas fa-eye-slash" aria-hidden="true" title="<%=t "projects.index.visibility_private" %>"></span>
       <% else %>
-        <span class="glyphicon glyphicon-eye-open" aria-hidden="true" title="<%=t "projects.index.visibility_public" %>"></span>
+        <span class="fas fa-eye" aria-hidden="true" title="<%=t "projects.index.visibility_public" %>"></span>
       <% end %>
       <% if can_read_project?(project) then %>
         <%= link_to project.name, project_path(project), id: "#{project.id}-project-canvas-link" %>
@@ -54,12 +54,12 @@ data-project-users-tab-url="<%= url_for project_user_projects_path(project_id: p
       <% if can_read_project?(project) %>
         <li role="presentation">
           <a class="btn btn-link" href="<%= url_for project_project_activities_path(project_id: project.id, format: :json) %>" aria-controls="activities-<%= project.id %>" role="tab" data-remote="true">
-            <span class="glyphicon glyphicon-equalizer"></span>
+            <span class="fas fa-list"></span>
           </a>
         </li>
         <li role="presentation">
           <a class="btn btn-link" href="<%= url_for project_user_projects_path(project_id: project.id, format: :json) %>" aria-controls="users-<%= project.id %>" role="tab" data-remote="true">
-            <span class="glyphicon glyphicon-user"></span>
+            <span class="fas fa-users"></span>
             <span class="badge badge-indicator users-badge-indicator <%= 'hidden' unless project.users.count.positive? %>"
                   data-linked-id="<%= project.id %>">
               <%= project.users.count %>
@@ -68,7 +68,7 @@ data-project-users-tab-url="<%= url_for project_user_projects_path(project_id: p
         </li>
         <li role="presentation">
           <a class="btn btn-link" href="<%= url_for notifications_project_path(id: project.id, format: :json) %>" aria-controls="notifications-<%= project.id %>" role="tab" data-remote="true">
-            <span class="glyphicon glyphicon-bell"></span>
+            <span class="fas fa-bell"></span>
             <% if project.notifications_count(current_user).positive? %>
               <span class="badge badge-indicator"><%= project.notifications_count(current_user) %></span>
             <% end %>
@@ -76,7 +76,7 @@ data-project-users-tab-url="<%= url_for project_user_projects_path(project_id: p
         </li>
         <li role="presentation">
           <a class="btn btn-link" href="<%= url_for project_project_comments_path(project_id: project.id, format: :json) %>" aria-controls="comments-<%= project.id %>" role="tab" data-remote="true">
-            <span class="glyphicon glyphicon-comment"></span>
+            <span class="fas fa-comment"></span>
             <span class="badge badge-indicator comments-badge-indicator <%= 'hidden' unless project.project_comments.count.positive? %>"
                   data-linked-id="<%= project.id %>">
               <%= project.project_comments.count %>

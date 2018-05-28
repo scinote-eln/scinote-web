@@ -1,12 +1,12 @@
 <ul class="nav nav-tabs">
   <li role="presentation" id="new-step-main-tab" class="active">
     <a href="#new-step-main" data-toggle="tab" data-no-turbolink="true">
-      <span class="glyphicon glyphicon-pencil"></span>
+      <span class="fas fa-pencil-alt"></span>
     </a>
   </li>
   <li role="presentation" id="new-step-checklists-tab">
     <a href="#new-step-checklists" data-toggle="tab" data-no-turbolink="true">
-      <span class="glyphicon glyphicon-list"></span>
+      <span class="fas fa-tasks"></span>
       <%= t("protocols.steps.new.tab_checklists") %>
     </a>
   </li>
@@ -20,7 +20,7 @@
   </li>
   <li role="presentation" id="new-step-tables-tab">
     <a href="#new-step-tables" data-toggle="tab" data-no-turbolink="true">
-      <span class="glyphicon glyphicon-th"></span>
+      <span class="fas fa-table"></span>
       <%= t("protocols.steps.new.tab_tables") %>
     </a>
   </li>
@@ -43,7 +43,12 @@
   </div>
   <div class="tab-pane" role="tabpanel" id="new-step-assets">
     <div class="text-center new-asset-box">
-      <%=t 'assets.drag_n_drop.label_html' %> <label><span class="btn btn-primary"><%=t 'assets.drag_n_drop.browse_label' %></span>
+      <%=t 'assets.drag_n_drop.label_html' %>
+      <label>
+        <span class="btn btn-primary">
+          <span class="glyphicon glyphicon-plus"></span>
+          <%=t 'assets.drag_n_drop.browse_label' %>
+        </span>
         <input type="file"
                onchange="DragNDropSteps.init(this.files)"
                id="drag-n-drop-assets"

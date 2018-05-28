@@ -7,7 +7,6 @@ SECRET_KEY_BASE=$(shell openssl rand -hex 64)
 PAPERCLIP_HASH_SECRET=$(shell openssl rand -base64 128 | tr -d '\n')
 DATABASE_URL=postgresql://postgres@db/scinote_production
 PAPERCLIP_STORAGE=filesystem
-ENABLE_TUTORIAL=true
 ENABLE_RECAPTCHA=false
 ENABLE_USER_CONFIRMATION=false
 ENABLE_USER_REGISTRATION=true
@@ -83,7 +82,10 @@ integration-tests:
 	@$(MAKE) rails cmd="bundle exec cucumber"
 
 tests-ci:
-	@docker-compose run -e ENABLE_EMAIL_CONFIRMATIONS=false -e MAILER_PORT=$MAILER_PORT -e SMTP_DOMAIN=$SMTP_DOMAIN -e SMTP_USERNAME=$SMTP_USERNAME -e SMTP_PASSWORD=$SMTP_PASSWORD -e SMTP_ADDRESS=$SMTP_ADDRESS -e PAPERCLIP_HASH_SECRET=PAPERCLIP_HASH_SECRET -e MAIL_SERVER_URL=localhost -e PAPERCLIP_STORAGE=filesystem -e ENABLE_TUTORIAL=false -e ENABLE_RECAPTCHA=false -e ENABLE_USER_CONFIRMATION=false -e ENABLE_USER_REGISTRATION=true --rm web bash -c "bundle install && rake db:create db:migrate && rake db:migrate RAILS_ENV=test && yarn install && bundle exec rspec && bundle exec cucumber"
+	@docker-compose run --rm web bash -c "bundle install && npm install"
+	@docker-compose up -d webpack
+	@docker-compose ps
+	@docker-compose run -e ENABLE_EMAIL_CONFIRMATIONS=false -e MAILER_PORT=$MAILER_PORT -e SMTP_DOMAIN=$SMTP_DOMAIN -e SMTP_USERNAME=$SMTP_USERNAME -e SMTP_PASSWORD=$SMTP_PASSWORD -e SMTP_ADDRESS=$SMTP_ADDRESS -e PAPERCLIP_HASH_SECRET=PAPERCLIP_HASH_SECRET -e MAIL_SERVER_URL=localhost -e PAPERCLIP_STORAGE=filesystem -e ENABLE_RECAPTCHA=false -e ENABLE_USER_CONFIRMATION=false -e ENABLE_USER_REGISTRATION=true --rm web bash -c "rake db:create db:migrate && rake db:migrate RAILS_ENV=test && npm install && bundle exec rspec && bundle exec cucumber"
 
 console:
 	@$(MAKE) rails cmd="rails console"

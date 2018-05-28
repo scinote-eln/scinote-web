@@ -1,7 +1,7 @@
 Feature: Log in
   As an existing User
   I want to Log in with my account
-  So that I can use sciNote
+  So that I can use SciNote
 
 Background:
   Given the "BioSistemika Process" team exists
@@ -15,7 +15,7 @@ Scenario: Successful Log in
   Given I am on Log in page
   Then I fill in Email "night.slarker@gmail.com" and Password "mypassword1234"
   And I click "Log in" button
-  Then I should see "BioSistemika Process"
+  Then I should be on homepage
 
 @javascript
 Scenario: Unsuccessful Log in
@@ -44,7 +44,7 @@ Scenario: Unsuccessful Log in
   And I click "Log in" button
   Then I should see "Invalid Email or password." flash message
 
-@javascript
+@javascript @wip
 Scenario: Successful Log out
   Given "night.slarker@gmail.com" is signed in with "mypassword1234"
   And I'm on the home page of "BioSistemika Process" team

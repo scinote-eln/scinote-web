@@ -5,7 +5,8 @@ class User < ApplicationRecord
   acts_as_token_authenticatable
   devise :invitable, :confirmable, :database_authenticatable, :registerable,
          :async, :recoverable, :rememberable, :trackable, :validatable,
-         :omniauthable, omniauth_providers: Extends::OMNIAUTH_PROVIDERS,
+         :timeoutable, :omniauthable,
+         omniauth_providers: Extends::OMNIAUTH_PROVIDERS,
          stretches: Constants::PASSWORD_STRETCH_FACTOR
   has_attached_file :avatar,
                     styles: {
@@ -15,11 +16,6 @@ class User < ApplicationRecord
                       icon_small: Constants::ICON_SMALL_PIC_FORMAT
                     },
                     default_url: Constants::DEFAULT_AVATAR_URL
-
-  enum tutorial_status: {
-    no_tutorial_done: 0,
-    intro_tutorial_done: 1
-  }
 
   auto_strip_attributes :full_name, :initials, nullify: false
   validates :full_name,
@@ -435,7 +431,6 @@ class User < ApplicationRecord
     define_method("#{name}=") do |value|
       attr_name = name.gsub('_notification', '').to_sym
       notifications_settings[attr_name] = value
-      save
     end
   end
 

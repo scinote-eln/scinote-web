@@ -24,9 +24,11 @@
       </div>
       <div class="modal-footer">
       <% if experiments.count > 1 %>
-        <button type="button" class="btn btn-primary" data-action="confirm"><%=t "experiments.canvas.edit.modal_move_module_group.confirm" %></button>
+        <button type="button" class="btn btn-default" data-dismiss="modal"><%=t "general.cancel" %></button>
+        <button type="button" class="btn btn-success" data-action="confirm">
+          <%=t "experiments.canvas.edit.modal_move_module_group.confirm" %>
+        </button>
       <% end %>
-      <button type="button" class="btn btn-default" data-dismiss="modal"><%=t "general.cancel" %></button>
       </div>
     </div>
   </div>

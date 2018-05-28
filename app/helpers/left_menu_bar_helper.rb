@@ -1,0 +1,33 @@
+module LeftMenuBarHelper
+  def projects_are_selected?
+    controller_name.in? %w(projects experiments my_modules)
+  end
+
+  def repositories_are_selected?
+    controller_name == 'repositories'
+  end
+
+  def templates_are_selected?
+    # TODO
+    controller_name == 'protocols'
+  end
+
+  def reports_are_selected?
+    # TODO
+    controller_name == 'reports'
+  end
+
+  def settings_are_selected?
+    controller_name.in? %(registrations preferences addons teams)
+  end
+
+  def activities_are_selected?
+    controller_name == 'activities'
+  end
+
+  def navigation_sidebar_shown?
+    projects_are_selected? ||
+      repositories_are_selected? ||
+      settings_are_selected?
+  end
+end

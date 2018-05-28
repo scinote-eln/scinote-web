@@ -4,6 +4,8 @@ class SearchController < ApplicationController
   def index
     redirect_to new_search_path unless @search_query
 
+    @search_id = params[:search_id] ? params[:search_id] : generate_search_id
+
     count_search_results
 
     search_projects if @search_category == :projects
@@ -15,7 +17,6 @@ class SearchController < ApplicationController
     search_protocols if @search_category == :protocols
     search_steps if @search_category == :steps
     search_checklists if @search_category == :checklists
-    search_samples if @search_category == :samples
     if @search_category == :repositories && params[:repository]
       search_repository
     end
@@ -86,6 +87,10 @@ class SearchController < ApplicationController
 
   protected
 
+  def generate_search_id
+    SecureRandom.urlsafe_base64(32)
+  end
+
   def search_by_name(model)
     model.search(current_user,
                  true,
@@ -109,53 +114,70 @@ class SearchController < ApplicationController
   end
 
   def count_by_repository
-    count_total = 0
-    search_results = Repository.search(current_user,
-                                       true,
-                                       @search_query,
-                                       Constants::SEARCH_NO_LIMIT,
-                                       nil,
-                                       match_case: @search_case,
-                                       whole_word: @search_whole_word,
-                                       whole_phrase: @search_whole_phrase)
-    @repository_search_count = {}
-    current_user.teams.includes(:repositories).each do |team|
-      team_results = {}
-      team_results[:count] = 0
-      team_results[:repositories] = {}
-      team.repositories.each do |repository|
-        repository_results = {}
-        repository_results[:id] = repository.id
-        repository_results[:count] = 0
-        search_results.each do |result|
-          if repository.id == result.id
-            count_total += result.counter
-            repository_results[:count] += result.counter
+    @repository_search_count =
+      Rails.cache.fetch("#{@search_id}/repository_search_count",
+                        expires_in: 5.minutes) do
+        search_count = {}
+        search_results = Repository.search(current_user,
+                                           @search_query,
+                                           Constants::SEARCH_NO_LIMIT,
+                                           nil,
+                                           match_case: @search_case,
+                                           whole_word: @search_whole_word,
+                                           whole_phrase: @search_whole_phrase)
+
+        current_user.teams.includes(:repositories).each do |team|
+          team_results = {}
+          team_results[:count] = 0
+          team_results[:repositories] = {}
+          team.repositories.each do |repository|
+            repository_results = {}
+            repository_results[:id] = repository.id
+            repository_results[:count] = 0
+            search_results.each do |result|
+              if repository.id == result.id
+                repository_results[:count] += result.counter
+              end
+            end
+            team_results[:repositories][repository.name] = repository_results
+            team_results[:count] += repository_results[:count]
           end
+          search_count[team.name] = team_results
         end
-        team_results[:repositories][repository.name] = repository_results
-        team_results[:count] += repository_results[:count]
+        search_count
       end
-      @repository_search_count[team.name] = team_results
+
+    count_total = 0
+    @repository_search_count.each_value do |team_results|
+      count_total += team_results[:count]
     end
     count_total
   end
 
+  def current_repository_search_count
+    @repository_search_count.each_value do |counter|
+      res = counter[:repositories].values.detect do |rep|
+        rep[:id] == @repository.id
+      end
+      return res[:count] if res && res[:count]
+    end
+  end
+
   def count_search_results
-    @project_search_count = count_by_name Project
-    @experiment_search_count = count_by_name Experiment
-    @module_search_count = count_by_name MyModule
-    @result_search_count = count_by_name Result
-    @tag_search_count = count_by_name Tag
-    @report_search_count = count_by_name Report
-    @protocol_search_count = count_by_name Protocol
-    @step_search_count = count_by_name Step
-    @checklist_search_count = count_by_name Checklist
-    @sample_search_count = count_by_name Sample
+    @project_search_count = fetch_cached_count Project
+    @experiment_search_count = fetch_cached_count Experiment
+    @module_search_count = fetch_cached_count MyModule
+    @result_search_count = fetch_cached_count Result
+    @tag_search_count = fetch_cached_count Tag
+    @report_search_count = fetch_cached_count Report
+    @protocol_search_count = fetch_cached_count Protocol
+    @step_search_count = fetch_cached_count Step
+    @checklist_search_count = fetch_cached_count Checklist
+    @sample_search_count = fetch_cached_count Sample
     @repository_search_count_total = count_by_repository
-    @asset_search_count = count_by_name Asset
-    @table_search_count = count_by_name Table
-    @comment_search_count = count_by_name Comment
+    @asset_search_count = fetch_cached_count Asset
+    @table_search_count = fetch_cached_count Table
+    @comment_search_count = fetch_cached_count Comment
 
     @search_results_count = @project_search_count
     @search_results_count += @experiment_search_count
@@ -171,6 +193,15 @@ class SearchController < ApplicationController
     @search_results_count += @asset_search_count
     @search_results_count += @table_search_count
     @search_results_count += @comment_search_count
+  end
+
+  def fetch_cached_count(type)
+    exp = 5.minutes
+    Rails.cache.fetch(
+      "#{@search_id}/#{type.name.underscore}_search_count", expires_in: exp
+    ) do
+      count_by_name type
+    end
   end
 
   def search_projects
@@ -231,24 +262,19 @@ class SearchController < ApplicationController
     @search_count = @checklist_search_count
   end
 
-  def search_samples
-    @sample_results = []
-    @sample_results = search_by_name(Sample) if @sample_search_count > 0
-    @search_count = @sample_search_count
-  end
-
   def search_repository
     @repository = Repository.find_by_id(params[:repository])
     render_403 unless can_read_team?(@repository.team)
     @repository_results = []
     if @repository_search_count_total > 0
       @repository_results =
-        RepositoryRow.search(@repository, @search_query, @search_page,
-                             match_case: @search_case,
-                             whole_word: @search_whole_word,
-                             whole_phrase: @search_whole_phrase)
+        Repository.search(current_user, @search_query, @search_page,
+                          @repository,
+                          match_case: @search_case,
+                          whole_word: @search_whole_word,
+                          whole_phrase: @search_whole_phrase)
     end
-    @search_count = @repository_search_count_total
+    @search_count = current_repository_search_count
   end
 
   def search_assets

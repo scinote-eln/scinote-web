@@ -15,7 +15,7 @@ require 'capybara/email'
 Capybara.register_driver :poltergeist do |app|
   options = {
     # inspector: true,
-    screen_size: [1200, 900],
+    screen_size: [2560, 900],
     js_errors: false,
     timeout: 30,
     phantomjs: Phantomjs.path,

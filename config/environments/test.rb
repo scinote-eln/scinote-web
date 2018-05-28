@@ -84,10 +84,6 @@ Rails.application.configure do
   # Enable/disable Deface
   config.deface.enabled = ENV['DEFACE_ENABLED'] != 'false'
 
-  # Enable first-time tutorial for users signing in the sciNote for
-  # the first time.
-  config.x.enable_tutorial = false
-
   # Enable reCAPTCHA
   config.x.enable_recaptcha = false
 
@@ -96,6 +92,9 @@ Rails.application.configure do
 
   # Enable user registrations
   config.x.enable_user_registration = true
+
+  # disable sign in with LinkedIn account
+  config.x.linkedin_signin_enabled = false
 
   # prevents compile assets
   config.assets.compile = false

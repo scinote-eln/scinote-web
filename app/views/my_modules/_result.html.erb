@@ -1,10 +1,10 @@
 <div class="result">
   <div class="badge-num">
-    <span class="badge bg-primary icon">
+    <span class="badge icon">
     <% if result.is_text %>
     <span class="glyphicon glyphicon-font"></span>
     <% elsif result.is_table %>
-    <span class="glyphicon glyphicon-list-alt"></span>
+    <span class="fas fa-table"></span>
     <% elsif result.is_asset %>
     <span class="glyphicon glyphicon-picture"></span>
     <% end %>
@@ -15,7 +15,7 @@
       <div class="panel-options pull-right">
         <% if can_manage_module?(result.my_module) %>
           <a class="btn btn-link edit-result-button <%= edit_result_button_class(result) %>" id="<%= result.id %>_edit" href="<%= edit_result_link(result) %>" data-remote="true" title="<%= t'my_modules.results.options.edit_title' %>">
-            <span class="glyphicon glyphicon-edit"></span>
+            <span class="fas fa-pencil-alt"></span>
           </a>
         <% end %>
         <% if can_manage_result?(result) %>

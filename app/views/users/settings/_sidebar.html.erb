@@ -1,0 +1,86 @@
+<%= content_for :sidebar do %>
+ <div id="slide-panel" class="visible">
+   <div class="tree">
+     <ul id="settings" data-hook="user-settings-navigation-html">
+       <!-- Account -->
+       <li class="parent_li" >
+         <span class="tree-link line-wrap no-indent">
+           <i title="<%= t('sidebar.branch_expand') %>"
+              class="glyphicon glyphicon-triangle-right triangleRight"
+              aria-hidden="true"
+              style="<%= 'display: none;' if on_settings_account_page? %>"
+              ></i>
+           <i title="<%= t('sidebar.branch_collapse') %>"
+              class="glyphicon glyphicon-triangle-right expanded triangleDown"
+              aria-hidden="true"
+              style="<%= 'display: none;' unless on_settings_account_page? %>"
+              ></i>
+           <% account_style = 'font-weight: bold;' if on_settings_account_page? %>
+           <%= link_to t("users.settings.sidebar.account"),
+                       edit_user_registration_path,
+                       style: account_style,
+                       data: { 'no-turbolink' => 'true' } %>
+         </span>
+
+         <ul class="accountNavigation" data-hook="user-settings-account-navigation-html" style="<%= 'display: none;' unless on_settings_account_page? %>">
+           <li class="<%= 'active' if on_settings_account_profile_page? %>" >
+             <span class="tree-link line-wrap first-indent">
+               <% if on_settings_account_profile_page? %>
+                 <span title="<%= t("users.settings.sidebar.account_nav.profile") %>"><%= t("users.settings.sidebar.account_nav.profile") %></span>
+               <% else %>
+                 <%= link_to t("users.settings.sidebar.account_nav.profile"),
+                             edit_user_registration_path,
+                             data: { 'no-turbolink' => 'true' } %>
+               <% end %>
+             </span>
+           </li>
+           <li class="<%= 'active' if on_settings_account_preferences_page? %>" >
+             <span class="tree-link line-wrap first-indent">
+               <% if on_settings_account_preferences_page? %>
+                 <span title="<%= t("users.settings.sidebar.account_nav.preferences") %>"><%= t("users.settings.sidebar.account_nav.preferences") %></span>
+               <% else %>
+                 <%= link_to t("users.settings.sidebar.account_nav.preferences"),
+                             preferences_path,
+                             data: { 'no-turbolink' => 'true' } %>
+               <% end %>
+             </span>
+           </li>
+           <li class="<%= 'active' if on_settings_account_addons_page? %>" >
+             <span class="tree-link line-wrap first-indent">
+               <% if on_settings_account_addons_page? %>
+                 <span title="<%= t("users.settings.sidebar.account_nav.addons") %>"><%= t("users.settings.sidebar.account_nav.addons") %></span>
+               <% else %>
+                 <%= link_to t("users.settings.sidebar.account_nav.addons"),
+                             addons_path,
+                             data: { 'no-turbolink' => 'true' } %>
+               <% end %>
+             </span>
+           </li>
+         </ul>
+       </li>
+
+       <!-- Teams -->
+       <li class="<%= 'active' if on_settings_team_page? %>" >
+         <span class="tree-link line-wrap no-indent">
+           <% if on_settings_team_page? %>
+           <span title="<%= t("users.settings.sidebar.teams") %>"><%= t("users.settings.sidebar.teams") %></span>
+           <% else %>
+             <%= link_to t("users.settings.sidebar.teams"),
+                         teams_path,
+                         data: { 'no-turbolink' => 'true' } %>
+           <% end %>
+         </span>
+       </li>
+
+     </ul>
+   </div>
+ </div>
+<% end %>
+
+<script>
+ $(document).ready(function() {
+   $('#wrapper').show();
+ })
+</script>
+
+<%= javascript_include_tag("users/settings/list_toggle") %>

@@ -7,7 +7,7 @@
             <span class="my-module-group-element">
               <% my_module_group.my_modules.sort_by{|m| m.workflow_order}.each do |my_module| %>
                 <li class="leaf <%= "active" if currently_active? my_module %>" data-module-id="<%= my_module.id %>">
-                  <span class="tree-link">
+                  <span class="tree-link second-indent">
                     <% if currently_active? my_module %>
                       <%= my_module.name %>
                     <% else %>
@@ -35,7 +35,7 @@
           <% modules_without_group.each do |my_module| %>
             <li class="leaf <%= "active" if currently_active? my_module %>"
                  data-module-id="<%= my_module.id %>">
-              <span class="tree-link">
+              <span class="tree-link second-indent">
                 <% if currently_active? my_module %>
                     <%= my_module.name %>
                 <% else %>

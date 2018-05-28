@@ -5,27 +5,22 @@ class RepositoriesController < ApplicationController
     %i(repository_table_index export_repository parse_sheet import_records)
   before_action :check_team, only: %i(parse_sheet import_records)
   before_action :check_view_all_permissions, only: :index
-  before_action :check_view_permissions, only: :export_repository
+  before_action :check_view_permissions, only: %i(export_repository show)
   before_action :check_manage_permissions, only:
     %i(destroy destroy_modal rename_modal update)
   before_action :check_create_permissions, only:
-    %i(create_new_modal create copy_modal copy)
+    %i(create_modal create copy_modal copy)
+
+  layout 'fluid'
 
   def index
-    render('repositories/index')
+    unless @repositories.length.zero? && current_team
+      redirect_to repository_path(@repositories.first) and return
+    end
+    render 'repositories/index'
   end
 
-  def show_tab
-    respond_to do |format|
-      format.json do
-        render json: {
-          html: render_to_string(
-            partial: 'repositories/repository.html.erb',
-            locals: { repository: @repository }
-          )
-        }
-      end
-    end
+  def show
   end
 
   def create_modal
@@ -53,7 +48,7 @@ class RepositoriesController < ApplicationController
         if @repository.save
           flash[:success] = t('repositories.index.modal_create.success_flash',
                               name: @repository.name)
-          render json: { url: team_repositories_path(repository: @repository) },
+          render json: { url: repository_path(@repository) },
             status: :ok
         else
           render json: @repository.errors,
@@ -78,7 +73,8 @@ class RepositoriesController < ApplicationController
   def destroy
     flash[:success] = t('repositories.index.delete_flash',
                         name: @repository.name)
-    @repository.destroy
+    @repository.discard
+    ClearDiscardedRepositoriesJob.perform_later
     redirect_to team_repositories_path
   end
 
@@ -261,7 +257,7 @@ class RepositoriesController < ApplicationController
 
   def export_repository
     if params[:row_ids] && params[:header_ids]
-      generate_zip
+      RepositoryZipExport.generate_zip(params, @repository, current_user)
     else
       flash[:alert] = t('zip_export.export_error')
     end
@@ -287,7 +283,7 @@ class RepositoriesController < ApplicationController
   end
 
   def load_parent_vars
-    @team = Team.find_by_id(params[:team_id])
+    @team = current_team
     render_404 unless @team
     @repositories = @team.repositories.order(created_at: :asc)
   end
@@ -305,8 +301,10 @@ class RepositoriesController < ApplicationController
   end
 
   def check_create_permissions
-    render_403 unless can_create_repositories?(@team) ||
-                      @team.repositories.count < Constants::REPOSITORIES_LIMIT
+    unless can_create_repositories?(@team) ||
+           @team.repositories.count < Rails.configuration.x.repositories_limit
+      render_403
+    end
   end
 
   def check_manage_permissions
@@ -330,68 +328,6 @@ class RepositoriesController < ApplicationController
       format.json do
         render json: { message: message },
           status: :unprocessable_entity
-      end
-    end
-  end
-
-  def generate_zip
-    # Fetch rows in the same order as in the currently viewed datatable
-    ordered_row_ids = params[:row_ids]
-    id_row_map = RepositoryRow.where(id: ordered_row_ids,
-                                     repository: @repository)
-                              .index_by(&:id)
-    ordered_rows = ordered_row_ids.collect { |id| id_row_map[id.to_i] }
-
-    zip = ZipExport.create(user: current_user)
-    zip.generate_exportable_zip(
-      current_user,
-      to_csv(ordered_rows, params[:header_ids]),
-      :repositories
-    )
-  end
-
-  def to_csv(rows, column_ids)
-    require 'csv'
-
-    # Parse column names
-    csv_header = []
-    column_ids.each do |c_id|
-      csv_header << case c_id.to_i
-                    when -1, -2
-                      next
-                    when -3
-                      I18n.t('repositories.table.row_name')
-                    when -4
-                      I18n.t('repositories.table.added_by')
-                    when -5
-                      I18n.t('repositories.table.added_on')
-                    else
-                      column = RepositoryColumn.find_by_id(c_id)
-                      column ? column.name : nil
-                    end
-    end
-
-    CSV.generate do |csv|
-      csv << csv_header
-      rows.each do |row|
-        csv_row = []
-        column_ids.each do |c_id|
-          csv_row << case c_id.to_i
-                     when -1, -2
-                       next
-                     when -3
-                       row.name
-                     when -4
-                       row.created_by.full_name
-                     when -5
-                       I18n.l(row.created_at, format: :full)
-                     else
-                       cell = row.repository_cells
-                                 .find_by(repository_column_id: c_id)
-                       cell ? cell.value.data : nil
-                     end
-        end
-        csv << csv_row
       end
     end
   end

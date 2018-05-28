@@ -29,12 +29,29 @@ class AtWhoController < ApplicationController
     end
   end
 
-  def samples
+  def rep_items
     res = SmartAnnotation.new(current_user, current_team, @query)
+    repository = Repository.find_by_id(params[:repository_id])
+    render_403 && return unless repository && can_read_team?(repository.team)
     respond_to do |format|
       format.json do
         render json: {
-          res: res.samples,
+          res: res.repository_rows(repository),
+          status: :ok
+        }
+      end
+    end
+  end
+
+  def repositories
+    repositories =
+      @team.repositories.limit(Rails.configuration.x.repositories_limit)
+    respond_to do |format|
+      format.json do
+        render json: {
+          repositories: repositories.map do |r|
+            [r.id, r.name.truncate(Constants::ATWHO_REP_NAME_LIMIT)]
+          end.to_h,
           status: :ok
         }
       end

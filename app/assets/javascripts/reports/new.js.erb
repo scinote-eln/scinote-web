@@ -5,7 +5,6 @@ $.fn.findWithSelf = function(selector) {
 };
 
 var REPORT_CONTENT = "#report-content";
-var SIDEBAR_PARENT_TREE = "#report-sidebar-tree";
 var ADD_CONTENTS_FORM_ID = "#add-contents-form";
 var SAVE_REPORT_FORM_ID = "#save-report-form";
 
@@ -31,13 +30,14 @@ var ignoreUnsavedWorkAlert;
    initializeSaveToPdf();
    initializeSaveReport();
    initializeAddContentsModal();
-   initializeSidebarNavigation();
    initializeUnsavedWorkDialog();
-   initTutorial();
 
    $('.report-nav-link').each(function() {
      truncateLongString($(this), <%= Constants::NAME_TRUNCATION_LENGTH %>);
    });
+
+   // Automatically display the "Add content" modal
+   $('.new-element.initial').click();
  }
 
 /**
@@ -239,9 +239,6 @@ function initializeNewElement(newEl) {
           } else if (data.status == 200) {
             // Add elements
             addElements(el, data.responseJSON.elements);
-
-            // Update sidebar
-            initializeSidebarNavigation();
           }
         })
         .on("ajax:error", function(e, xhr, settings, error) {
@@ -488,140 +485,6 @@ function initializeUnsavedWorkDialog() {
 }
 
 /**
- * SIDEBAR CODE
- */
-
- /**
-  * Get the sidebar <li> element for the specified report element.
-  * @param reportEl - The .report-element in the report.
-  * @return The corresponding sidebar <li>.
-  */
-function getSidebarEl(reportEl) {
-  var type = reportEl.data("type");
-  var scrollId = reportEl.data("scroll-id");
-  return $(SIDEBAR_PARENT_TREE).find(
-    "li" +
-    "[data-type='" + type + "']" +
-    "[data-scroll-id='" + scrollId + "']"
-  );
-}
-
-/**
- * Get the report <div.report-element> element for the specified
- * sidebar element.
- * @param sidebarEl - The <li> sidebar element.
- * @return The corresponding report element.
- */
-function getReportEl(sidebarEl) {
-  var type = sidebarEl.data("type");
-  var scrollId = sidebarEl.data("scroll-id");
-  return $(REPORT_CONTENT).find(
-    "div.report-element" +
-    "[data-type='" + type + "']" +
-    "[data-scroll-id='" + scrollId + "']"
-  );
-}
-
-/**
- * Initialize the sidebar navigation pane.
- */
-function initializeSidebarNavigation() {
-  var reportContent = $(REPORT_CONTENT);
-  var treeParent = $(SIDEBAR_PARENT_TREE);
-
-  // Remove existing contents (also remove click listeners)
-  treeParent.find(".report-nav-link").off("click");
-  treeParent.children().remove();
-
-  // Re-populate the sidebar
-  _.each(reportContent.children(".report-element"), function(child) {
-    var li = initSidebarElement($(child));
-    li.appendTo(treeParent);
-  });
-
-  // Add click listener on all links
-  treeParent.find(".report-nav-link").click(function(e) {
-    var el = $(this).closest("li");
-    scrollToElement(el);
-
-    e.preventDefault();
-    e.stopPropagation();
-    return false;
-  });
-
-  // Call to sidebar function to re-initialize tree functionality
-  setupSidebarTree();
-}
-
-/**
- * Recursive call to initialize sidebar elements.
- * @param reportEl - The report element for which to
- * generate the sidebar.
- * @return A <li> jQuery element containing sidebar entry.
- */
-function initSidebarElement(reportEl) {
-  var elChildrenContainer = reportEl.children(".report-element-children");
-  var type = reportEl.data("type");
-  var name = reportEl.data("name");
-  var scrollId = reportEl.data("scroll-id");
-  var iconClass = reportEl.data("icon-class");
-
-  // Generate list element
-  var newLi = $(document.createElement("li"));
-  newLi
-  .attr("data-type", type)
-  .attr("data-scroll-id", scrollId);
-
-  var newSpan = $(document.createElement("span"));
-  newSpan.appendTo(newLi);
-  var newI = $(document.createElement("i"));
-  newI.appendTo(newSpan);
-  var newHref = $(document.createElement("a"));
-  newHref
-  .attr("href", "")
-  .addClass("report-nav-link")
-  .text(name)
-  .appendTo(newSpan);
-  var newIcon = $(document.createElement("span"));
-  newIcon.addClass(iconClass).prependTo(newHref);
-
-  if (elChildrenContainer.length && elChildrenContainer.length > 0) {
-    var elChildren = elChildrenContainer.children(".report-element");
-    if (elChildren.length && elChildren.length > 0) {
-      var newUl = $(document.createElement("ul"));
-      newUl.appendTo(newLi);
-
-      _.each(elChildren, function(child) {
-        var li = initSidebarElement($(child));
-        li.appendTo(newUl);
-      });
-    }
-  }
-
-  return newLi;
-}
-
-/**
- * Scroll to the specified element in the report.
- * @param sidebarEl - The sidebar element.
- */
-function scrollToElement(sidebarEl) {
-  var el = getReportEl(sidebarEl);
-
-  if (el.length && el.length == 1) {
-    var content = $("body");
-    content.scrollTo(
-      el,
-      {
-        axis: 'y',
-        duration: 500,
-        offset: -150
-      }
-    );
-  }
-}
-
-/**
  * INDIVIDUAL ELEMENTS SORTING/MODIFYING FUNCTIONS
  */
 
@@ -684,8 +547,6 @@ function sortWholeReport(asc) {
     sortElementChildren($(el), asc, true);
   });
 
-  // Reinitialize sidebar
-  initializeSidebarNavigation();
   animateLoading(false);
 }
 
@@ -733,22 +594,6 @@ function sortElementChildren(el, asc, recursive) {
     updateElementControls($(child));
     if (recursive) {
       sortElementChildren($(child), asc, true);
-    }
-  });
-
-  // Update sidebar
-  var prevEl = null;
-  _.each(children, function(child) {
-    var sidebarEl = getSidebarEl($(child));
-    if (sidebarEl.length && sidebarEl.length == 1) {
-      var sidebarParent = sidebarEl.closest("ul");
-      sidebarEl.detach();
-      if (prevEl === null) {
-        sidebarParent.prepend(sidebarEl);
-      } else {
-        prevEl.after(sidebarEl);
-      }
-      prevEl = sidebarEl;
     }
   });
 }
@@ -845,18 +690,11 @@ function moveElement(el, up) {
     return;
   }
 
-  var sidebarEl;
   if (up) {
     var prevEl = prevNewEl.prev();
     if (!prevEl.length || !prevEl.hasClass("report-element")) {
       return;
     }
-
-    // Move sidebar element up
-    sidebarEl = getSidebarEl(el);
-    var sidebarPrev = sidebarEl.prev();
-    sidebarEl.detach();
-    sidebarPrev.before(sidebarEl);
 
     el.detach();
     nextNewEl.detach();
@@ -864,18 +702,11 @@ function moveElement(el, up) {
     prevEl.before(nextNewEl);
     updateElementControls(prevEl);
 
-
   } else {
     var nextEl = nextNewEl.next();
     if (!nextEl.length || !nextEl.hasClass("report-element")) {
       return;
     }
-
-    // Move sidebar element up
-    sidebarEl = getSidebarEl(el);
-    var sidebarNext = sidebarEl.next();
-    sidebarEl.detach();
-    sidebarNext.after(sidebarEl);
 
     prevNewEl.detach();
     el.detach();
@@ -906,10 +737,6 @@ function removeElement(el) {
 
   // TODO Remove event listeners
 
-  // Remove sidebar entry
-  var sidebarEl = getSidebarEl(el);
-  sidebarEl.remove();
-
   prevNewEl.remove();
   el.remove();
 
@@ -933,10 +760,6 @@ function removeResultCommentsElement(el) {
   var parent = el.closest(".report-element-children");
 
   // TODO Remove event listeners
-
-  // Remove sidebar entry
-  var sidebarEl = getSidebarEl(el);
-  sidebarEl.remove();
 
   // Remove element, show the new element container
   el.remove();
@@ -1124,52 +947,6 @@ function constructElementContentsJson(el) {
   jsonEl["children"] = jsonChildren;
 
   return jsonEl;
-}
-
-/**
-  * Binds listeners to sidebar
-  * that truncate long strings
-  */
-function initializeReportSidebartruncation() {
-  var target = document.getElementById("report-sidebar-tree");
-  var observer = new MutationObserver(
-    function() {
-      $.each($("a.report-nav-link"),
-               function(){
-                 truncateLongString($(this),
-                                    <%= Constants::NAME_TRUNCATION_LENGTH %>);
-               });
-    }
-  );
-  var config = { childList: true };
-
-  observer.observe(target, config);
-}
-
-/**
- * Initializes tutorial
- */
-function initTutorial() {
-  var stepNum = parseInt(Cookies.get('current_tutorial_step'), 10);
-  if (stepNum >= 20 && stepNum <= 21) {
-    ignoreUnsavedWorkAlert = true;
-
-    var nextPage = $('.navbar-brand').attr('href');
-    var steps = [{
-      element: $('.new-element')[0],
-      intro: I18n.t('tutorial.new_report_html'),
-      position: 'left'
-    }, {
-      element: $('#team-link')[0],
-      intro: I18n.t('tutorial.new_report_click_team_html',
-                    { private_team: $('#team-link span').last().text() }),
-      position: 'left'
-    }];
-    initPageTutorialSteps(20, 21, nextPage, function() {}, function() {
-       ignoreUnsavedWorkAlert = false;
-     },
-     steps);
-  }
 }
 
 $(document).ready(function() {

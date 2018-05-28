@@ -1,328 +1,337 @@
 <% provide(:head_title, t("search.index.head_title")) %>
 
-<div class="page-header">
-  <h1><%= t('search.index.results_title_html', query: @display_query) %></h1>
-  <br>
-  <!-- search form -->
-  <div class="row">
-    <div class="col-xs-12 col-sm-8 col-md-6">
-      <%= form_tag search_path,
-                   method: :get,
-                   role: 'search' do %>
-        <div class="form-group">
-          <div class="input-group">
-            <input class="form-control"
-                   type="text"
-                   name="q"
-                   placeholder="<%= t('nav.search') %>"
-                   value="<%= @display_query %>">
-             <span class="input-group-btn">
-              <button class="btn btn-default" type="submit">
-                <span class="glyphicon glyphicon-search"></span>
-              </button>
-            </span>
+<div class="content-pane">
+  <div class="page-header">
+    <h1><%= t('search.index.results_title_html', query: @display_query) %></h1>
+    <br>
+    <!-- search form -->
+    <div class="row">
+      <div class="col-xs-12 col-sm-8 col-md-6">
+        <%= form_tag search_path,
+                     method: :get,
+                     role: 'search' do %>
+          <div class="form-group">
+            <div class="input-group">
+              <input class="form-control"
+                     type="text"
+                     name="q"
+                     placeholder="<%= t('nav.search') %>"
+                     value="<%= @display_query %>">
+               <span class="input-group-btn">
+                <button class="btn btn-default" type="submit">
+                  <span class="glyphicon glyphicon-search"></span>
+                </button>
+              </span>
+            </div>
+            <label class="checkbox-inline">
+              <input id="search_whole_word" type="checkbox" name="whole_word" value="true" <%= 'checked' if @search_whole_word %>><%= I18n.t('search.whole_word') %>
+            </label>
+            <label class="checkbox-inline">
+              <input id="search_whole_phrase" type="checkbox" name="whole_phrase" value="true" <%= 'checked' if @search_whole_phrase %>><%= I18n.t('search.whole_phrase') %>
+            </label>
+            <label class="checkbox-inline">
+              <input id="search_match_case" type="checkbox" name="match_case" value="true" <%= 'checked' if @search_case %>><%= I18n.t('search.match_case') %>
+            </label>
           </div>
-          <label class="checkbox-inline">
-            <input id="search_whole_word" type="checkbox" name="whole_word" value="true" <%= 'checked' if @search_whole_word %>><%= I18n.t('search.whole_word') %>
-          </label>
-          <label class="checkbox-inline">
-            <input id="search_whole_phrase" type="checkbox" name="whole_phrase" value="true" <%= 'checked' if @search_whole_phrase %>><%= I18n.t('search.whole_phrase') %>
-          </label>
-          <label class="checkbox-inline">
-            <input id="search_match_case" type="checkbox" name="match_case" value="true" <%= 'checked' if @search_case %>><%= I18n.t('search.match_case') %>
-          </label>
-        </div>
-      <% end %>
-    </div>
-  </div>
-</div>
-
-<%= form_tag search_path, method: :get do %>
-  <%= hidden_field_tag :q, @search_query %>
-  <%= hidden_field_tag :category, @search_category %>
-
-  <div class="row">
-    <div class="col-xs-12 col-sm-3 col-md-3" id="search-menu">
-      <ul class="nav nav-pills nav-stacked nav-stacked-arrow nav-search">
-        <li role="presentation"
-          class="
-          <%= "active" if @search_category.present? and @search_category == :projects %>
-          <%= "disabled" if @project_search_count == 0 %>"
-        >
-          <a href="?<%= {category: 'projects', q: @search_query,
-                         whole_word: @search_whole_word, whole_phrase: @search_whole_phrase,
-                         match_case: @search_case, utf8: '✓'}.to_query %>">
-            <span class="badge pull-right"><%= @project_search_count %></span>
-            <span class="glyphicon glyphicon-blackboard"></span>
-            <%= t'Projects' %>
-          </a>
-        </li>
-        <li role="presentation"
-          class="
-          <%= "active" if @search_category.present? and @search_category == :experiments %>
-          <%= "disabled" if @experiment_search_count == 0 %>"
-        >
-          <a href="?<%= {category: 'experiments', q: @search_query,
-                         whole_word: @search_whole_word, whole_phrase: @search_whole_phrase,
-                         match_case: @search_case, utf8: '✓'}.to_query %>">
-            <span class="badge pull-right"><%= @experiment_search_count %></span>
-            <%= fa_icon 'flask' %>
-            <%= t'Experiments' %>
-          </a>
-        </li>
-        <li role="presentation"
-          class="
-          <%= "active" if @search_category.present? and @search_category == :modules %>
-          <%= "disabled" if @module_search_count == 0 %>"
-        >
-          <a href="?<%= {category: 'modules', q: @search_query,
-                         whole_word: @search_whole_word, whole_phrase: @search_whole_phrase,
-                         match_case: @search_case, utf8: '✓'}.to_query %>">
-            <span class="badge pull-right"><%= @module_search_count %></span>
-            <span class="glyphicon glyphicon-credit-card"></span>
-            <%= t'Modules' %>
-          </a>
-        </li>
-        <li role="presentation"
-          class="
-          <%= "active" if @search_category.present? and @search_category == :results %>
-          <%= "disabled" if @result_search_count == 0 %>"
-        >
-          <a href="?<%= {category: 'results', q: @search_query,
-                         whole_word: @search_whole_word, whole_phrase: @search_whole_phrase,
-                         match_case: @search_case, utf8: '✓'}.to_query %>">
-            <span class="badge pull-right"><%= @result_search_count %></span>
-            <span class="glyphicon glyphicon-modal-window"></span>
-            <%= t'Results' %>
-          </a>
-        </li>
-        <li role="presentation"
-          class="
-          <%= "active" if @search_category.present? and @search_category == :tags %>
-          <%= "disabled" if @tag_search_count == 0 %>"
-        >
-          <a href="?<%= {category: 'tags', q: @search_query,
-                         whole_word: @search_whole_word, whole_phrase: @search_whole_phrase,
-                         match_case: @search_case, utf8: '✓'}.to_query %>">
-            <span class="badge pull-right"><%= @tag_search_count %></span>
-            <span class="glyphicon glyphicon-tags"></span>
-            <%= t'Tags' %>
-          </a>
-        </li>
-        <li role="presentation"
-          class="
-          <%= "active" if @search_category.present? and @search_category == :reports %>
-          <%= "disabled" if @report_search_count == 0 %>"
-        >
-          <a href="?<%= {category: 'reports', q: @search_query,
-                         whole_word: @search_whole_word, whole_phrase: @search_whole_phrase,
-                         match_case: @search_case, utf8: '✓'}.to_query %>">
-            <span class="badge pull-right"><%= @report_search_count %></span>
-            <span class="glyphicon glyphicon-align-left"></span>
-            <%= t'Reports' %>
-          </a>
-        </li>
-        <li role="presentation"
-          class="
-          <%= "active" if @search_category.present? and @search_category == :protocols %>
-          <%= "disabled" if @protocol_search_count == 0 %>"
-        >
-          <a href="?<%= {category: 'protocols', q: @search_query,
-                         whole_word: @search_whole_word, whole_phrase: @search_whole_phrase,
-                         match_case: @search_case, utf8: '✓'}.to_query %>">
-            <span class="badge pull-right"><%= @protocol_search_count %></span>
-            <span class="glyphicon glyphicon-list-alt"></span>
-            <%= t'Protocols' %>
-          </a>
-        </li>
-        <li role="presentation"
-          class="
-          <%= "active" if @search_category.present? and @search_category == :steps %>
-          <%= "disabled" if @step_search_count == 0 %>"
-        >
-          <a href="?<%= {category: 'steps', q: @search_query,
-                         whole_word: @search_whole_word, whole_phrase: @search_whole_phrase,
-                         match_case: @search_case, utf8: '✓'}.to_query %>">
-            <span class="badge pull-right"><%= @step_search_count %></span>
-            <span class="glyphicon glyphicon-circle-arrow-right"></span>
-            <%= t'Steps' %>
-          </a>
-        </li>
-        <li role="presentation"
-          class="
-          <%= "active" if @search_category.present? and @search_category == :checklists %>
-          <%= "disabled" if @checklist_search_count == 0 %>"
-        >
-          <a href="?<%= {category: 'checklists', q: @search_query,
-                         whole_word: @search_whole_word, whole_phrase: @search_whole_phrase,
-                         match_case: @search_case, utf8: '✓'}.to_query %>">
-            <span class="badge pull-right"><%= @checklist_search_count %></span>
-            <span class="glyphicon glyphicon-list"></span>
-            <%= t'Checklists' %>
-          </a>
-        </li>
-        <li role="presentation"
-          class="
-          <%= "active" if @search_category.present? and @search_category == :samples %>
-          <%= "disabled" if @sample_search_count == 0 %>"
-        >
-          <a href="?<%= {category: 'samples', q: @search_query,
-                         whole_word: @search_whole_word, whole_phrase: @search_whole_phrase,
-                         match_case: @search_case, utf8: '✓'}.to_query %>">
-            <span class="badge pull-right"><%= @sample_search_count %></span>
-            <span class="glyphicon glyphicon-tint"></span>
-            <%= t'Samples' %>
-          </a>
-        </li>
-
-        <li role="presentation"
-          class="
-          <%= "active" if @search_category.present? and @search_category == :assets %>
-          <%= "disabled" if @asset_search_count == 0 %>"
-        >
-          <a href="?<%= {category: 'assets', q: @search_query,
-                         whole_word: @search_whole_word, whole_phrase: @search_whole_phrase,
-                         match_case: @search_case, utf8: '✓'}.to_query %>">
-            <span class="badge pull-right"><%= @asset_search_count %></span>
-            <span class="glyphicon glyphicon-file"></span>
-            <%= t'Assets' %>
-          </a>
-        </li>
-        <li role="presentation"
-          class="
-          <%= "active" if @search_category.present? and @search_category == :tables %>
-          <%= "disabled" if @table_search_count == 0 %>"
-        >
-          <a href="?<%= {category: 'tables', q: @search_query,
-                         whole_word: @search_whole_word, whole_phrase: @search_whole_phrase,
-                         match_case: @search_case, utf8: '✓'}.to_query %>">
-            <span class="badge pull-right"><%= @table_search_count %></span>
-            <span class="glyphicon glyphicon-th"></span>
-            <%= t'Tables' %>
-          </a>
-        </li>
-        <li role="presentation"
-          class="
-          <%= "active" if @search_category.present? and @search_category == :comments %>
-          <%= "disabled" if @comment_search_count == 0 %>"
-        >
-          <a href="?<%= {category: 'comments', q: @search_query,
-                         whole_word: @search_whole_word, whole_phrase: @search_whole_phrase,
-                         match_case: @search_case, utf8: '✓'}.to_query %>">
-            <span class="badge pull-right"><%= @comment_search_count %></span>
-            <span class="glyphicon glyphicon-comment"></span>
-            <%= t'Comments' %>
-          </a>
-        </li>
-
-        <% @repository_search_count.each do |team, results| %>
-          <li class="repositories-team <%= 'active' if results[:count] > 0 %>">
-            <span class="fa fa-cubes"></span>
-            <%= t('Repositories_team', team: team) %>
-          </li>
-          <% results[:repositories].each do |repository, values| %>
-            <li role="presentation"
-                class="
-                <%= "active" if @search_category == :repositories && @repository.id == values[:id] %>
-                <%= "disabled" if values[:count] == 0 %> repository-search"
-            >
-              <a href="?<%= {category: 'repositories',
-                             repository: values[:id], q: @search_query,
-                             whole_word: @search_whole_word, whole_phrase: @search_whole_phrase,
-                             match_case: @search_case, utf8: '✓'}.to_query %>">
-                <span class="badge pull-right"><%= values[:count] %></span>
-                <%= repository %>
-              </a>
-            </li>
-          <% end %>
         <% end %>
-      </ul>
+      </div>
     </div>
-
-    <% if not @search_category.empty? %>
-    <div class="col-xs-12 col-sm-9" id="search-content">
-
-      <div class="container-fluid" id="search-container">
-      <% if @search_results_count == 0 %>
-      <p><%= t'search.index.error.no_results', q: @search_query %></p>
-      <% end %>
-
-      <hr class="visible-xs">
-
-      <% if @search_category == :projects and @project_search_count > 0 %>
-        <%= render 'search/results/projects', search_query: @search_query, results: @project_results %>
-      <% end %>
-      <% if @search_category == :experiments and @experiment_search_count > 0 %>
-        <%= render 'search/results/experiments', search_query: @search_query, results: @experiment_results %>
-      <% end %>
-      <% if @search_category == :modules and @module_search_count > 0 %>
-        <%= render 'search/results/modules', search_query: @search_query, results: @module_results %>
-      <% end %>
-      <% if @search_category == :results and @result_search_count > 0 %>
-        <%= render 'search/results/results', search_query: @search_query, results: @result_results %>
-      <% end %>
-      <% if @search_category == :tags and @tag_search_count > 0 %>
-        <%= render 'search/results/tags', search_query: @search_query, results: @tag_results %>
-      <% end %>
-      <% if @search_category == :reports and @report_search_count > 0 %>
-        <%= render 'search/results/reports', search_query: @search_query, results: @report_results %>
-      <% end %>
-      <% if @search_category == :protocols and @protocol_search_count > 0 %>
-        <%= render 'search/results/protocols', search_query: @search_query, results: @protocol_results %>
-      <% end %>
-      <% if @search_category == :steps and @step_search_count > 0 %>
-        <%= render 'search/results/steps', search_query: @search_query, results: @step_results %>
-      <% end %>
-      <% if @search_category == :checklists and @checklist_search_count > 0 %>
-        <%= render 'search/results/checklists', search_query: @search_query, results: @checklist_results %>
-      <% end %>
-      <% if @search_category == :samples and @sample_search_count > 0 %>
-        <%= render 'search/results/samples', search_query: @search_query, results: @sample_results %>
-      <% end %>
-      <% if @search_category == :repositories and @repository_search_count_total > 0 %>
-        <%= render 'search/results/repositories', search_query: @search_query, results: @repository_results, repository: @repository %>
-      <% end %>
-      <% if @search_category == :assets and @asset_search_count > 0 %>
-        <%= render 'search/results/assets', search_query: @search_query, results: @asset_results %>
-      <% end %>
-      <% if @search_category == :tables and @table_search_count > 0 %>
-        <%= render 'search/results/tables', search_query: @search_query, results: @table_results %>
-      <% end %>
-      <% if @search_category == :comments and @comment_search_count > 0 %>
-        <%= render 'search/results/comments', search_query: @search_query, results: @comment_results %>
-      <% end %>
-
-    </div>
-    </div>
-    <% end %>
   </div>
 
-<% end %>
+  <%= form_tag search_path, method: :get do %>
+    <%= hidden_field_tag :q, @search_query %>
+    <%= hidden_field_tag :category, @search_category %>
 
-<% if @search_pages > 1 %>
-<nav class="text-center">
-  <ul class="pagination">
-    <% if @search_page > 1 %>
-    <li>
-      <a href="?<%= {q: @search_query, category: @search_category, page: @search_page - 1, utf8: '✓'}.to_query %>" aria-label="Previous">
-        <span aria-hidden="true">&laquo;</span>
-      </a>
-    </li>
-    <% end %>
-    <% (@start_page..@end_page).each do |page_i| %>
-    <li <% if @search_page == page_i %>class="active"<% end %>>
-      <a href="?<%= {q: @search_query, category: @search_category, page: page_i, utf8: '✓'}.to_query %>"><%= page_i %></a>
-    </li>
-    <% end %>
-    <% if @search_page < @search_pages %>
-    <li>
-      <a href="?<%= {q: @search_query, category: @search_category, page: @search_page + 1, utf8: '✓'}.to_query %>" aria-label="Previous">
-        <span aria-hidden="true">&raquo;</span>
-      </a>
-    </li>
-    <% end %>
-  </ul>
-</nav>
-<% end %>
+    <div class="row">
+      <div class="col-xs-12 col-sm-3 col-md-3" id="search-menu">
+        <ul class="nav nav-pills nav-stacked nav-stacked-arrow nav-search">
+          <li role="presentation"
+            class="
+            <%= "active" if @search_category.present? and @search_category == :projects %>
+            <%= "disabled" if @project_search_count == 0 %>"
+          >
+            <a href="?<%= {category: 'projects', q: @search_query,
+                           whole_word: @search_whole_word, whole_phrase: @search_whole_phrase,
+                           match_case: @search_case, utf8: '✓',
+                           search_id: @search_id}.to_query %>">
+              <span class="badge pull-right"><%= @project_search_count %></span>
+              <span class="fas fa-folder"></span>
+              <%= t'Projects' %>
+            </a>
+          </li>
+          <li role="presentation"
+            class="
+            <%= "active" if @search_category.present? and @search_category == :experiments %>
+            <%= "disabled" if @experiment_search_count == 0 %>"
+          >
+            <a href="?<%= {category: 'experiments', q: @search_query,
+                           whole_word: @search_whole_word, whole_phrase: @search_whole_phrase,
+                           match_case: @search_case, utf8: '✓',
+                           search_id: @search_id}.to_query %>">
+              <span class="badge pull-right"><%= @experiment_search_count %></span>
+              <i class="fas fa-flask"></i>
+              <%= t'Experiments' %>
+            </a>
+          </li>
+          <li role="presentation"
+            class="
+            <%= "active" if @search_category.present? and @search_category == :modules %>
+            <%= "disabled" if @module_search_count == 0 %>"
+          >
+            <a href="?<%= {category: 'modules', q: @search_query,
+                           whole_word: @search_whole_word, whole_phrase: @search_whole_phrase,
+                           match_case: @search_case, utf8: '✓',
+                           search_id: @search_id}.to_query %>">
+              <span class="badge pull-right"><%= @module_search_count %></span>
+              <span class="glyphicon glyphicon-credit-card"></span>
+              <%= t'Modules' %>
+            </a>
+          </li>
+          <li role="presentation"
+            class="
+            <%= "active" if @search_category.present? and @search_category == :results %>
+            <%= "disabled" if @result_search_count == 0 %>"
+          >
+            <a href="?<%= {category: 'results', q: @search_query,
+                           whole_word: @search_whole_word, whole_phrase: @search_whole_phrase,
+                           match_case: @search_case, utf8: '✓',
+                           search_id: @search_id}.to_query %>">
+              <span class="badge pull-right"><%= @result_search_count %></span>
+              <span class="glyphicon glyphicon-modal-window"></span>
+              <%= t'Results' %>
+            </a>
+          </li>
+          <li role="presentation"
+            class="
+            <%= "active" if @search_category.present? and @search_category == :tags %>
+            <%= "disabled" if @tag_search_count == 0 %>"
+          >
+            <a href="?<%= {category: 'tags', q: @search_query,
+                           whole_word: @search_whole_word, whole_phrase: @search_whole_phrase,
+                           match_case: @search_case, utf8: '✓',
+                           search_id: @search_id}.to_query %>">
+              <span class="badge pull-right"><%= @tag_search_count %></span>
+              <span class="fas fa-tags"></span>
+              <%= t'Tags' %>
+            </a>
+          </li>
+          <li role="presentation"
+            class="
+            <%= "active" if @search_category.present? and @search_category == :reports %>
+            <%= "disabled" if @report_search_count == 0 %>"
+          >
+            <a href="?<%= {category: 'reports', q: @search_query,
+                           whole_word: @search_whole_word, whole_phrase: @search_whole_phrase,
+                           match_case: @search_case, utf8: '✓',
+                           search_id: @search_id}.to_query %>">
+              <span class="badge pull-right"><%= @report_search_count %></span>
+              <span class="fas fa-clipboard-check"></span>
+              <%= t'Reports' %>
+            </a>
+          </li>
+          <li role="presentation"
+            class="
+            <%= "active" if @search_category.present? and @search_category == :protocols %>
+            <%= "disabled" if @protocol_search_count == 0 %>"
+          >
+            <a href="?<%= {category: 'protocols', q: @search_query,
+                           whole_word: @search_whole_word, whole_phrase: @search_whole_phrase,
+                           match_case: @search_case, utf8: '✓',
+                           search_id: @search_id}.to_query %>">
+              <span class="badge pull-right"><%= @protocol_search_count %></span>
+              <span class="fas fa-edit"></span>
+              <%= t'Protocols' %>
+            </a>
+          </li>
+          <li role="presentation"
+            class="
+            <%= "active" if @search_category.present? and @search_category == :steps %>
+            <%= "disabled" if @step_search_count == 0 %>"
+          >
+            <a href="?<%= {category: 'steps', q: @search_query,
+                           whole_word: @search_whole_word, whole_phrase: @search_whole_phrase,
+                           match_case: @search_case, utf8: '✓',
+                           search_id: @search_id}.to_query %>">
+              <span class="badge pull-right"><%= @step_search_count %></span>
+              <span class="glyphicon glyphicon-circle-arrow-right"></span>
+              <%= t'Steps' %>
+            </a>
+          </li>
+          <li role="presentation"
+            class="
+            <%= "active" if @search_category.present? and @search_category == :checklists %>
+            <%= "disabled" if @checklist_search_count == 0 %>"
+          >
+            <a href="?<%= {category: 'checklists', q: @search_query,
+                           whole_word: @search_whole_word, whole_phrase: @search_whole_phrase,
+                           match_case: @search_case, utf8: '✓',
+                           search_id: @search_id}.to_query %>">
+              <span class="badge pull-right"><%= @checklist_search_count %></span>
+              <span class="fas fa-tasks"></span>
+              <%= t'Checklists' %>
+            </a>
+          </li>
+
+          <li role="presentation"
+            class="
+            <%= "active" if @search_category.present? and @search_category == :assets %>
+            <%= "disabled" if @asset_search_count == 0 %>"
+          >
+            <a href="?<%= {category: 'assets', q: @search_query,
+                           whole_word: @search_whole_word, whole_phrase: @search_whole_phrase,
+                           match_case: @search_case, utf8: '✓',
+                           search_id: @search_id}.to_query %>">
+              <span class="badge pull-right"><%= @asset_search_count %></span>
+              <span class="glyphicon glyphicon-file"></span>
+              <%= t'Assets' %>
+            </a>
+          </li>
+          <li role="presentation"
+            class="
+            <%= "active" if @search_category.present? and @search_category == :tables %>
+            <%= "disabled" if @table_search_count == 0 %>"
+          >
+            <a href="?<%= {category: 'tables', q: @search_query,
+                           whole_word: @search_whole_word, whole_phrase: @search_whole_phrase,
+                           match_case: @search_case, utf8: '✓',
+                           search_id: @search_id}.to_query %>">
+              <span class="badge pull-right"><%= @table_search_count %></span>
+              <span class="fas fa-table"></span>
+              <%= t'Tables' %>
+            </a>
+          </li>
+          <li role="presentation"
+            class="
+            <%= "active" if @search_category.present? and @search_category == :comments %>
+            <%= "disabled" if @comment_search_count == 0 %>"
+          >
+            <a href="?<%= {category: 'comments', q: @search_query,
+                           whole_word: @search_whole_word, whole_phrase: @search_whole_phrase,
+                           match_case: @search_case, utf8: '✓',
+                           search_id: @search_id}.to_query %>">
+              <span class="badge pull-right"><%= @comment_search_count %></span>
+              <span class="fas fa-comment"></span>
+              <%= t'Comments' %>
+            </a>
+          </li>
+
+          <% @repository_search_count.each do |team, results| %>
+            <li class="repositories-team <%= 'active' if results[:count] > 0 %>">
+              <i class="fas fa-list-alt"></i>
+              <%= t('Repositories_team', team: team) %>
+            </li>
+            <% results[:repositories].each do |repository, values| %>
+              <li role="presentation"
+                  class="
+                  <%= "active" if @search_category == :repositories && @repository.id == values[:id] %>
+                  <%= "disabled" if values[:count] == 0 %> repository-search"
+              >
+                <a href="?<%= {category: 'repositories',
+                               repository: values[:id], q: @search_query,
+                               whole_word: @search_whole_word, whole_phrase: @search_whole_phrase,
+                               match_case: @search_case, utf8: '✓',
+                               search_id: @search_id}.to_query %>">
+                  <span class="badge pull-right"><%= values[:count] %></span>
+                  <%= repository %>
+                </a>
+              </li>
+            <% end %>
+          <% end %>
+        </ul>
+      </div>
+
+      <% if not @search_category.empty? %>
+      <div class="col-xs-12 col-sm-9" id="search-content">
+
+        <div class="container-fluid" id="search-container">
+        <% if @search_results_count == 0 %>
+        <p><%= t'search.index.error.no_results', q: @search_query %></p>
+        <% end %>
+
+        <hr class="visible-xs">
+
+        <% if @search_category == :projects and @project_search_count > 0 %>
+          <%= render 'search/results/projects', search_query: @search_query, results: @project_results %>
+        <% end %>
+        <% if @search_category == :experiments and @experiment_search_count > 0 %>
+          <%= render 'search/results/experiments', search_query: @search_query, results: @experiment_results %>
+        <% end %>
+        <% if @search_category == :modules and @module_search_count > 0 %>
+          <%= render 'search/results/modules', search_query: @search_query, results: @module_results %>
+        <% end %>
+        <% if @search_category == :results and @result_search_count > 0 %>
+          <%= render 'search/results/results', search_query: @search_query, results: @result_results %>
+        <% end %>
+        <% if @search_category == :tags and @tag_search_count > 0 %>
+          <%= render 'search/results/tags', search_query: @search_query, results: @tag_results %>
+        <% end %>
+        <% if @search_category == :reports and @report_search_count > 0 %>
+          <%= render 'search/results/reports', search_query: @search_query, results: @report_results %>
+        <% end %>
+        <% if @search_category == :protocols and @protocol_search_count > 0 %>
+          <%= render 'search/results/protocols', search_query: @search_query, results: @protocol_results %>
+        <% end %>
+        <% if @search_category == :steps and @step_search_count > 0 %>
+          <%= render 'search/results/steps', search_query: @search_query, results: @step_results %>
+        <% end %>
+        <% if @search_category == :checklists and @checklist_search_count > 0 %>
+          <%= render 'search/results/checklists', search_query: @search_query, results: @checklist_results %>
+        <% end %>
+        <% if @search_category == :repositories and @repository_search_count_total > 0 %>
+          <%= render 'search/results/repositories', search_query: @search_query, results: @repository_results, repository: @repository %>
+        <% end %>
+        <% if @search_category == :assets and @asset_search_count > 0 %>
+          <%= render 'search/results/assets', search_query: @search_query, results: @asset_results %>
+        <% end %>
+        <% if @search_category == :tables and @table_search_count > 0 %>
+          <%= render 'search/results/tables', search_query: @search_query, results: @table_results %>
+        <% end %>
+        <% if @search_category == :comments and @comment_search_count > 0 %>
+          <%= render 'search/results/comments', search_query: @search_query, results: @comment_results %>
+        <% end %>
+
+      </div>
+      </div>
+      <% end %>
+    </div>
+
+  <% end %>
+
+  <% if @search_pages > 1 %>
+  <% params = { q: @search_query,
+                category: @search_category,
+                utf8: '✓',
+                search_id: @search_id } %>
+  <% if @search_category == :repositories %>
+    <% params[:repository] = @repository.id %>
+  <% end %>
+  <nav class="text-center">
+    <ul class="pagination">
+      <% if @search_page > 1 %>
+      <% params[:page] = @search_page - 1 %>
+      <li>
+        <a href="?<%= params.to_query %>" aria-label="Previous">
+          <span aria-hidden="true">&laquo;</span>
+        </a>
+      </li>
+      <% end %>
+      <% (@start_page..@end_page).each do |page_i| %>
+      <% params[:page] = page_i %>
+      <li <% if @search_page == page_i %>class="active"<% end %>>
+        <a href="?<%= params.to_query %>"><%= page_i %></a>
+      </li>
+      <% end %>
+      <% if @search_page < @search_pages %>
+      <% params[:page] = @search_page + 1 %>
+      <li>
+        <a href="?<%= params.to_query %>" aria-label="Next">
+          <span aria-hidden="true">&raquo;</span>
+        </a>
+      </li>
+      <% end %>
+    </ul>
+  </nav>
+  <% end %>
+</div>
 
 <%= javascript_include_tag('search') %>

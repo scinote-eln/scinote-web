@@ -12,7 +12,7 @@
           </div>
             <div class="pull-right">
               <%= link_to "", remote: true, class: 'btn btn-link edit-tag-link', title: t("experiments.canvas.modal_manage_tags.edit_tag") do %>
-                <span class="glyphicon glyphicon-adjust"></span>
+                <span class="fas fa-pencil-alt"></span>
               <% end %>
               <%= link_to my_module_my_module_tag_path(@my_module, mmt, format: :json), method: :delete, remote: true, class: 'btn btn-link remove-tag-link', title: t("experiments.canvas.modal_manage_tags.remove_tag", module: @my_module.name) do %>
                 <span class="glyphicon glyphicon-remove"></span>
@@ -62,7 +62,6 @@
                                 {},
                                 { class: 'selectpicker' }) %>
           <%= f.button class: 'btn btn-primary' do %>
-            <span class="glyphicon glyphicon-plus"></span>
             <span class="hidden-xs"><%= t("experiments.canvas.modal_manage_tags.create") %></span>
           <% end %>
         </div>
@@ -75,7 +74,7 @@
         <%= f.hidden_field :name, :value => t("tags.create.new_name") %>
         <%= f.hidden_field :color, :value => Constants::TAG_COLORS[0] %>
         <%= f.button class: "btn btn-primary" do %>
-          <span class="glyphicon glyphicon-tag"></span>
+          <span class="glyphicon glyphicon-plus"></span>
           <span class="hidden-xs"><%=t "experiments.canvas.modal_manage_tags.create_new" %></span>
         <% end %>
       <% end %>

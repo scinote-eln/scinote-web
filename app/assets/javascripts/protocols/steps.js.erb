@@ -43,7 +43,7 @@
             var task_button = $("[data-action='complete-task']");
             task_button.attr('data-action', 'uncomplete-task');
             task_button.find('.btn')
-              .removeClass('btn-primary').addClass('btn-greyed');
+              .removeClass('btn-toggle').addClass('btn-default');
             $('.task-due-date').html(data.module_header_due_date_label);
             $('.task-state-label').html(data.module_state_label);
             task_button
@@ -80,7 +80,8 @@
 
             button = step.find("[data-action='complete-step']");
             button.attr("data-action", "uncomplete-step");
-            button.find(".btn").removeClass("btn-primary").addClass("btn-default");
+            button.find(".btn").removeClass("btn-toggle").addClass("btn-default");
+            button.find("button").html('<span class="glyphicon glyphicon-remove"></span>&nbsp;' + data.new_title);
 
             if (data.task_ready_to_complete) {
               $('#completed-task-modal').modal('show');
@@ -92,10 +93,9 @@
 
             button = step.find("[data-action='uncomplete-step']");
             button.attr("data-action", "complete-step");
-            button.find(".btn").removeClass("btn-default").addClass("btn-primary");
+            button.find(".btn").removeClass("btn-default").addClass("btn-toggle");
+            button.find("button").html('<span class="glyphicon glyphicon-ok"></span>&nbsp;' + data.new_title);
           }
-
-          button.find("button").html(data.new_title);
         },
         error: function (data) {
           console.log ("error");
@@ -462,7 +462,7 @@
   function enableCheckboxSorting(el) {
     Sortable.create(el, {
       draggable: 'fieldset',
-      handle: '.glyphicon-chevron-right',
+      handle: '.fa-circle',
       onUpdate: function () {
         reorderCheckboxData(el);
       }
@@ -595,6 +595,7 @@
           animateSpinner(null, false);
           setupAssetsLoading();
           DragNDropSteps.clearFiles();
+          initPreviewModal();
         },
         error: function(xhr) {
           if (xhr.responseJSON['assets.file']) {

@@ -1,0 +1,92 @@
+@import "constants";
+@import "mixins";
+
+.menu-bar {
+  background-color: $color-white;
+  box-shadow: 1px 3px 6px 0 $color-alto;
+  height: 100%;
+  left: 0;
+  overflow-x: hidden;
+  position: fixed;
+  width: 83px;
+  z-index: 1001;
+  padding-bottom: 50px;
+
+  .scroll-wrapper {
+    height: 100%;
+    padding-top: 16px;
+    width: 83px;
+    overflow-x: hidden;
+  }
+
+  ul.nav > li {
+
+    & > a {
+      color: $color-silver-chalice;
+      display: grid;
+      font-size: $font-size-h6;
+      margin-left: auto;
+      margin-right: auto;
+      padding: 10px;
+      text-align: center;
+      word-break: normal;
+
+      & > span {
+        padding-top: 4px;
+      }
+    }
+
+    &.active {
+      @include box-shadow(-4px 0 0 $brand-primary);
+      background-color: $color-gainsboro;
+      margin-left: 4px;
+
+      & > a {
+        color: $color-emperor;
+      }
+    }
+  }
+
+  ul.nav-bottom {
+    bottom: 0;
+    padding-bottom: 16px;
+    position: fixed;
+    width: inherit;
+  }
+
+  .dropup {
+    .dropdown-menu {
+      bottom: 0;
+      left: 99%;
+      margin-bottom: 0;
+    }
+
+    &.open > a {
+      color: $color-emperor;
+    }
+  }
+
+  #toggle-sidebar-btn > span {
+    @include rotate-animation(.5s, 0deg);
+  }
+
+  #toggle-sidebar-btn[data-shown] > span {
+    @include rotate-animation(.5s, 180deg);
+  }
+
+  #toggle-sidebar-btn:hover {
+    background-color: $color-concrete;
+    cursor: pointer;
+  }
+
+  #toggle-sidebar-btn.hidden2 {
+    visibility: hidden;
+  }
+}
+
+@media(max-height:510px) {
+  .menu-bar .nav-bottom {
+    position: relative;
+    width: auto;
+  }
+}
