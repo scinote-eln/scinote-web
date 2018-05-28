@@ -266,10 +266,6 @@ en:
         invite_users_link: "Invite users"
         invite_users_details: "to team %{team}."
         contact_admins: "To invite additional users to team %{team}, contact its administrator/s."
-      no_teams:
-        title: "Your dashboard is empty!"
-        text: "It seems you're not a member of any team. See team management to sort it out."
-        btn: "Manage Teams"
     create:
       success_flash: "Project <strong>%{name}</strong> successfully created."
       name_taken: "This project name has to be unique inside a team (this includes the archive)."
@@ -916,9 +912,6 @@ en:
       delete_flash: "\"%{name}\" inventory was successfully deleted!"
       rename_flash: "\"%{old_name}\" inventory was successfully renamed to \"%{new_name}\"!"
       copy_flash: "\"%{new}\" inventory was successfully copied from \"%{old}\"!"
-      no_teams:
-        title: "Your dashboard is empty!"
-        text: "It seems you're not a member of any team. See team management to sort it out."
       visibility: "Visibility"
       advanced: "Advanced"
       options_dropdown:
@@ -1627,10 +1620,6 @@ en:
       archive:
         description: "Archived protocols can only be seen by you. Restoring protocols will return them to their previous location (team/my protocols)."
       restore: "Restore"
-      no_teams:
-        title: "Your dashboard is empty!"
-        text: "It seems you're not a member of any team. See team management to sort it out."
-        btn: "Manage Teams"
       make_private_unauthorized: "You do not have permission to move selected protocols to My protocols."
       make_private_error: "Error occured while moving selected protocols to My protocols."
       publish_unauthorized: "You do not have permission to move selected protocols to Team protocols."
@@ -1929,6 +1918,9 @@ en:
     no_name: "(no name)"
     error: "An error has occurred, please try again later."
     filter: "Filter:"
+    no_teams:
+      title: "Your dashboard is empty!"
+      text: "It seems you're not a member of any team."
 
   api:
     core:

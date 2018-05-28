@@ -1,7 +1,7 @@
 <% provide(:head_title, t("protocols.index.head_title")) %>
 
-<div class="content-pane" id="protocols-index">
-  <% if current_team %>
+<% if current_team %>
+  <div class="content-pane" id="protocols-index">
     <ul class="nav nav-tabs nav-settings">
       <li role="presentation" class="<%= "active" if @type == :public %>">
         <%= link_to t("protocols.index.navigation.public"), protocols_path(team: @current_team, type: :public) %>
@@ -125,18 +125,8 @@
         </div>
       </div>
     </div>
-  <% else %>
-      <!-- Show link to team management if member of
-    no teams -->
-    <div class="jumbotron">
-      <h2><%=t 'protocols.index.no_teams.title' %></h2>
-      <p><%=t 'protocols.index.no_teams.text' %></p>
-      <p data-hook="protocols-manage-teams-button">
-        <%= link_to t('protocols.index.no_teams.btn'), teams_path, class: 'btn btn-primary' %>
-      </p>
-    </div>
-  <% end %>
-</div>
+  </div>
+<% end %>
 
 <div id="protocolsio-preview-modal-target"></div>
 <%= render partial: "protocols/import_export/import_json_protocol_modal.html.erb" %>
