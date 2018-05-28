@@ -5,10 +5,7 @@
     function show() {
       $('#sideBarLeft').show();
       $('#sideBarRight').hide();
-      $('#sidebar-wrapper').show(
-        'slide', { direction: 'right', easing: 'linear' }, 400
-      );
-      $('#wrapper').css('paddingLeft', '280px');
+      $('#wrapper').removeClass('hidden2');
       $('.navbar-secondary').css(
         { 'margin-left': '-280px', 'padding-left': '294px' }
       );
@@ -17,10 +14,7 @@
     function hide() {
       $('#sideBarLeft').hide();
       $('#sideBarRight').show();
-      $('#sidebar-wrapper').hide(
-        'slide', { direction: 'left', easing: 'linear'}, 400
-      );
-      $('#wrapper').css('paddingLeft', '0');
+      $('#wrapper').addClass('hidden2');
       $('.navbar-secondary').css({
         'margin-left': '0',
         'padding-left': '14px'

@@ -1,5 +1,7 @@
 <% provide(:head_title, t('libraries.repository_columns.head_title', repository: @repository.name)) %>
-
+<% provide(:flash_messages_div) do %>
+  <div id="notifications"></div>
+<% end %>
 <div class="content-pane">
   <div class="repository-columns-header container">
     <div class="row">

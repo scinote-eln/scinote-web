@@ -51,6 +51,7 @@
           <p data-hook="general-no-teams-text"><%=t 'general.no_teams.text' %></p>
         </div>
       <% else %>
+        <%= yield :flash_messages_div %>
         <%= yield :content %>
       <% end %>
     </div>
