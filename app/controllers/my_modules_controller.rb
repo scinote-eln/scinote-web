@@ -418,6 +418,7 @@ class MyModulesController < ApplicationController
             repository_row: record,
             assigned_by: current_user
           )
+          records_names << record.name
         end
       end
 
@@ -428,16 +429,17 @@ class MyModulesController < ApplicationController
           experiment: @experiment,
           my_module: @my_module,
           user: current_user,
-          message: I18n.t(
-            'activities.assign_repository_records',
-            user: current_user.full_name,
-            task: @my_module.name,
-            repository: @repository.name,
-            records: records_names.join(', ')
-          )
+          message: I18n.t('activities.assign_repository_records',
+                          user: current_user.full_name,
+                          task: @my_module.name,
+                          repository: @repository.name,
+                          records: records_names.join(', ')
+                        )
         )
         flash = I18n.t('repositories.assigned_records_flash',
                        records: records_names.join(', '))
+        flash = I18n.t('repositories.assigned_records_downstream_flash',
+                       records: records_names.join(', ')) if downstream
         respond_to do |format|
           format.json { render json: { flash: flash }, status: :ok }
         end

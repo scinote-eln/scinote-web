@@ -1016,6 +1016,7 @@ en:
       no_records_selected_flash: "There were no selected items."
       no_deleted_records_flash: "No items were deleted. %{other_records_number} of the selected items were created by other users and were not deleted."
     assigned_records_flash: "Successfully assigned item(s) <strong>%{records}</strong> to task"
+    assigned_records_downstream_flash: "Successfully assigned item(s) <strong>%{records}</strong> to task and downstream tasks"
     unassigned_records_flash: "Successfully unassigned item(s) <strong>%{records}</strong> from task"
     no_records_assigned_flash: "No items were assigned to task"
     no_records_unassigned_flash: "No items were unassigned from task"
