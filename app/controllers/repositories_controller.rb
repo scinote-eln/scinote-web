@@ -74,7 +74,7 @@ class RepositoriesController < ApplicationController
     flash[:success] = t('repositories.index.delete_flash',
                         name: @repository.name)
     @repository.discard
-    ClearDiscardedRepositoriesJob.perform_later
+    @repository.destroy_discarded(current_user.id)
     redirect_to team_repositories_path
   end
 
