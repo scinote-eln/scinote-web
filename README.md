@@ -1,6 +1,6 @@
 # SciNote
 
-![SciNote logo](http://scinote.net/wp-content/uploads/2015/10/logo_sciNote_final.png)
+![SciNote logo](https://scinote.net/wp-content/uploads/2018/05/SciNote-Logo-2018.png)
 
 ## About
 
