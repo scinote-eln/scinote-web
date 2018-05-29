@@ -1020,7 +1020,7 @@ var RepositoryDatatable = (function(global) {
     }).on('change.bs.select', function(el) {
       $(this).closest('td').attr('list_item_id', el.target.value);
       $(this).closest('td').attr('column_id', $(this).attr('column_id'));
-    });;
+    }).trigger('change.bs.select');
   }
 
   function getColumnIndex(id) {
