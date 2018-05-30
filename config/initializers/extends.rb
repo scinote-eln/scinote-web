@@ -53,12 +53,13 @@ class Extends
   # are only supported
   REPOSITORY_EXTRA_SEARCH_ATTR = ['repository_text_values.data',
                                   'repository_list_items.data',
-                                  'assets.file_file_name']
+                                  'assets.file_file_name',
+                                  'asset_text_data.data']
 
   # Array of includes used in search query for repository rows
   REPOSITORY_SEARCH_INCLUDES = [:repository_text_value,
                                 repository_list_value: :repository_list_item,
-                                repository_asset_value: :asset]
+                                repository_asset_value: { asset: :asset_text_datum }]
 
   # List of implemented core API versions
   API_VERSIONS = ['20170715']
