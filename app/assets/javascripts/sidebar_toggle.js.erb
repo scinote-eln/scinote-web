@@ -1,6 +1,7 @@
 (function(global) {
   'use strict';
   global.SideBarToggle = (function() {
+    var STORAGE_TOGGLE_KEY = "scinote-sidebar-toggled";
 
     function show() {
       $('#wrapper').removeClass('hidden2');
@@ -12,6 +13,7 @@
         { 'margin-left': '-280px', 'padding-left': '294px' }
       );
       $('#toggle-sidebar-btn').attr('data-shown', '');
+      sessionStorage.setItem(STORAGE_TOGGLE_KEY, "un-toggled");
     }
 
     function hide() {
@@ -25,6 +27,7 @@
         'padding-left': '14px'
       });
       $('#toggle-sidebar-btn').removeAttr('data-shown');
+      sessionStorage.setItem(STORAGE_TOGGLE_KEY, "toggled");
     }
 
     function toggle() {
@@ -41,11 +44,26 @@
       return btn.is('[data-shown]');
     }
 
+    function isToggledStorage() {
+      var val = sessionStorage.getItem(STORAGE_TOGGLE_KEY);
+      if (val === null) {
+        return null;
+      }
+      return val === "toggled";
+    }
+
     return Object.freeze({
       show: show,
       hide: hide,
       toggle: toggle,
-      isShown: isShown
+      isShown: isShown,
+      isToggledStorage: isToggledStorage
     })
   })();
+
+  $(document).ready(function() {
+    if (SideBarToggle.isToggledStorage()) {
+      SideBarToggle.hide();;
+    }
+  })
 })(window);
