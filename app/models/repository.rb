@@ -2,7 +2,9 @@ class Repository < ApplicationRecord
   include SearchableModel
   include RepositoryImportParser
   include Discard::Model
-  
+
+  attribute :discarded_by_id, :integer
+
   belongs_to :team, optional: true
   belongs_to :created_by,
              foreign_key: :created_by_id,
@@ -107,4 +109,12 @@ class Repository < ApplicationRecord
     importer = RepositoryImportParser::Importer.new(sheet, mappings, user, self)
     importer.run
   end
+
+  def destroy_discarded(discarded_by_id = nil)
+    self.discarded_by_id = discarded_by_id
+    destroy
+  end
+  handle_asynchronously :destroy_discarded,
+                        queue: :clear_discarded_repository,
+                        priority: 20
 end
