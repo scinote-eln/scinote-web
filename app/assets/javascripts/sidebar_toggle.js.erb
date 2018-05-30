@@ -5,9 +5,6 @@
 
     function show() {
       $('#wrapper').removeClass('hidden2');
-      $('#sidebar-wrapper').show(
-        'slide', { direction: 'right', easing: 'linear' }, 400
-      );
       $('#wrapper').css('paddingLeft', '280px');
       $('.navbar-secondary').css(
         { 'margin-left': '-280px', 'padding-left': '294px' }
@@ -18,9 +15,6 @@
 
     function hide() {
       $('#wrapper').addClass('hidden2');
-      $('#sidebar-wrapper').hide(
-        'slide', { direction: 'left', easing: 'linear'}, 400
-      );
       $('#wrapper').css('paddingLeft', '0');
       $('.navbar-secondary').css({
         'margin-left': '0',
