@@ -16,3 +16,16 @@
     }
   }
 }
+
+#steps {
+  // hack only for firefox
+  @-moz-document url-prefix() {
+    ul > li {
+      padding-top: 1px;
+
+      a > p:first-child {
+        margin-top: -17px;
+      }
+    }
+  }
+}
