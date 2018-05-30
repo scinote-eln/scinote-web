@@ -253,8 +253,8 @@ class Asset < ApplicationRecord
     report_elements.destroy_all
     asset_text_datum.destroy if asset_text_datum.present?
     # Nullify needed to force paperclip file deletion
-    self.file = nil
-    save
+    file = nil
+    save && reload
   end
 
   def destroy
