@@ -177,6 +177,7 @@ class Constants
 
   TEXT_EXTRACT_FILE_TYPES = [
     'application/msword',
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.template',
     'application/pdf',
     'application/rtf',
     'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
