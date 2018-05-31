@@ -959,6 +959,7 @@ en:
       success_flash: "%{number_of_rows} new item(s) successfully imported."
       partial_success_flash: "%{nr} of %{total_nr} successfully imported. Other rows contained errors."
       error_message:
+        items_limit: "The imported file contains too many rows. Max %{items_size} items allowed to upload at once."
         temp_file_not_found: "This file could not be found. Your session might expire."
         session_expired: "Your session expired. Please try again."
         no_data_to_parse: "There's nothing to be parsed."

@@ -24,6 +24,10 @@ module ImportRepository
       @file.size > Constants::FILE_MAX_SIZE_MB.megabytes
     end
 
+    def has_too_many_rows?
+      @sheet.last_row > Constants::IMPORT_REPOSITORY_ITEMS_LIMIT
+    end
+
     def generate_temp_file
       # Save file for next step (importing)
       temp_file = TempFile.new(
