@@ -10,7 +10,7 @@ class ProjectsController < ApplicationController
                                      samples experiment_archive
                                      delete_samples samples_index)
   before_action :load_projects_tree, only: %i(index show samples archive
-                                                  experiment_archive)
+                                              experiment_archive)
   before_action :load_archive_vars, only: :archive
   before_action :check_view_permissions, only: %i(show reports notifications
                                                   samples experiment_archive

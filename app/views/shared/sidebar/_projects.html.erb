@@ -1,9 +1,7 @@
 <ul>
   <% if @projects_tree.present? then %>
     <% @projects_tree.each do |project| %>
-      <% if (project_page? ||
-             sample_types_page_project? ||
-             sample_groups_page_project?) && project == @project %>
+      <% if project_page? && project == @project %>
         <li class="active" data-parent="candidate">
           <span class="tree-link line-wrap no-indent">
             <i class="no-arrow"></i>

@@ -1,6 +1,7 @@
 <% if experiment.active_my_modules.present? %>
   <ul>
-    <% experiment.active_my_modules.each do |my_module| %>
+    <% experiment.active_my_modules.sort_by{ |m| m.workflow_order }.each do |my_module| %>
+
       <li class="leaf <%= "active" if currently_active? my_module %>"
            data-module-id="<%= my_module.id %>">
         <span class="tree-link second-indent">
@@ -14,6 +15,7 @@
           <% end %>
         </span>
       </li>
+
     <% end %>
   </ul>
 <% end %>
