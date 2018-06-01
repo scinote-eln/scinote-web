@@ -21,6 +21,37 @@ $toggle-btn-size: 50px;
   -o-transition: all 0.5s ease;
   transition: all 0.5s ease;
 
+  #sidebar-arrow {
+    background-color: $brand-default;
+    border-bottom-right-radius: 10px;
+    border-top-right-radius: 10px;
+    bottom: 50%;
+    box-shadow: 2px 0 4px $color-alto;
+    display: block;
+    position: absolute;
+    right: -18px;
+
+    span {
+      padding: 9px 5px;
+    }
+  }
+
+  #sidebar-arrow:hover {
+    background-color: $color-concrete;
+    cursor: pointer;
+  }
+
+  #sidebar-arrow > span {
+    transform: rotateY(0deg);
+    transition: .6s;  }
+
+  #sidebar-arrow[data-shown] > span {
+    padding-left: 7px;
+    padding-right: 3px;
+    transform: rotateY(180deg);
+    transition: .6s;
+  }
+
   #sidebar-wrapper {
     background-color: $color-white;
     box-shadow: 1px 3px 6px $color-alto;

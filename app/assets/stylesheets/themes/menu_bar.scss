@@ -65,23 +65,6 @@
       color: $color-emperor;
     }
   }
-
-  #toggle-sidebar-btn > span {
-    @include rotate-animation(.5s, 0deg);
-  }
-
-  #toggle-sidebar-btn[data-shown] > span {
-    @include rotate-animation(.5s, 180deg);
-  }
-
-  #toggle-sidebar-btn:hover {
-    background-color: $color-concrete;
-    cursor: pointer;
-  }
-
-  #toggle-sidebar-btn.hidden2 {
-    visibility: hidden;
-  }
 }
 
 @media(max-height:510px) {

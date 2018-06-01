@@ -24,10 +24,4 @@ module LeftMenuBarHelper
   def activities_are_selected?
     controller_name == 'activities'
   end
-
-  def navigation_sidebar_shown?
-    projects_are_selected? ||
-      repositories_are_selected? ||
-      settings_are_selected?
-  end
 end
