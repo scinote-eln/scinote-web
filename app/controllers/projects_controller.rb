@@ -9,8 +9,8 @@ class ProjectsController < ApplicationController
                                      notifications reports
                                      samples experiment_archive
                                      delete_samples samples_index)
-  before_action :load_projects_by_teams, only: %i(index show samples archive
-                                                  experiment_archive)
+  before_action :load_projects_tree, only: %i(index show samples archive
+                                              experiment_archive)
   before_action :load_archive_vars, only: :archive
   before_action :check_view_permissions, only: %i(show reports notifications
                                                   samples experiment_archive
@@ -313,26 +313,24 @@ class ProjectsController < ApplicationController
     end
   end
 
-  def load_projects_by_teams
+  def load_projects_tree
     if current_user.teams.any?
-      @current_team_id = current_team.id if current_team
+      @current_team = current_team if current_team
 
-      @current_team_id ||= current_user.teams.first.id
+      @current_team ||= current_user.teams.first
       @current_sort = params[:sort].to_s
-      @projects_by_teams = current_user.projects_by_teams(@current_team_id,
-                                                          @current_sort,
-                                                          false)
+      @projects_tree = current_user.projects_tree(@current_team, @current_sort)
     else
-      @projects_by_teams = []
+      @projects_tree = []
     end
   end
 
   def load_archive_vars
     if current_user.teams.any?
       @archived_projects_by_teams =
-        current_user.projects_by_teams(@current_team_id, @current_sort, true)
+        current_user.projects_by_teams(@current_team.id, @current_sort, true)
     else
-      @projects_by_teams = []
+      @archived_projects_by_teams = []
     end
   end
 

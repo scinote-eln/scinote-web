@@ -19,7 +19,7 @@
           <ul class="dropdown-menu" aria-labelledby="sortMenu">
           <% ["new", "old", "atoz", "ztoa"].each do |sort| %>
             <% if @current_sort != sort %>
-            <li><a href="?<%= {team: @current_team_id, sort: sort}.reject{|k,v| v.to_s == "0"}.to_query %>"><%= t('projects.index.sort_' + sort) %></a></li>
+            <li><a href="?<%= {team: @current_team.id, sort: sort}.reject{|k,v| v.to_s == "0"}.to_query %>"><%= t('projects.index.sort_' + sort) %></a></li>
             <% else %>
             <li class="disabled"><a href="#"><%= t('projects.index.sort_' + sort) %></a></li>
             <% end %>

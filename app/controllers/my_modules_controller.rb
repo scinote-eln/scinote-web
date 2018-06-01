@@ -21,8 +21,8 @@ class MyModulesController < ApplicationController
                                            unassign_repository_records_modal
                                            assign_repository_records_modal
                                            repository_index)
-  before_action :load_projects_by_teams, only: %i(protocols results activities
-                                                  samples repository archive)
+  before_action :load_projects_tree, only: %i(protocols results activities
+                                              samples repository archive)
   before_action :check_manage_permissions_archive, only: %i(update destroy)
   before_action :check_manage_permissions, only: %i(description due_date)
   before_action :check_view_permissions, only:
@@ -659,9 +659,8 @@ class MyModulesController < ApplicationController
     render_403 unless can_read_team?(@repository.team)
   end
 
-  def load_projects_by_teams
-    @projects_by_teams = current_user.projects_by_teams(current_team.id,
-                                                        nil, false)
+  def load_projects_tree
+    @projects_tree = current_user.projects_tree(current_team, nil)
   end
 
   def check_manage_permissions

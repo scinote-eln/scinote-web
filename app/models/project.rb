@@ -32,6 +32,8 @@ class Project < ApplicationRecord
   has_many :user_projects, inverse_of: :project
   has_many :users, through: :user_projects
   has_many :experiments, inverse_of: :project
+  has_many :active_experiments, -> { where(archived: false) },
+           class_name: 'Experiment'
   has_many :project_comments, foreign_key: :associated_id, dependent: :destroy
   has_many :activities, inverse_of: :project
   has_many :tags, inverse_of: :project
@@ -156,7 +158,7 @@ class Project < ApplicationRecord
     return (self.user_projects.select { |up| up.user == user }).first.role
   end
 
-  def active_experiments(sort_by = :new)
+  def sorted_active_experiments(sort_by = :new)
     sort = case sort_by
            when 'old' then { created_at: :asc }
            when 'atoz' then { name: :asc }
