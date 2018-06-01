@@ -334,6 +334,22 @@ a[data-toggle="tooltip"] {
   }
 }
 
+.navbar-sign-in-halt {
+  .navbar-header {
+    float: left !important;
+  }
+
+  .sign-in-halt-logout-button {
+    padding-top: 7px;
+  }
+}
+
+.sign-in-halt-container {
+  margin: 0;
+  padding: 70px 10px 50px 10px;
+  width: 100%;
+}
+
 .navbar-secondary {
   -webkit-transition: all 0.5s ease;
   -moz-transition: all 0.5s ease;

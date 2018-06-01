@@ -1,0 +1,31 @@
+<% # This layout should be used when sign in flow is halted (due to e.g. password expiry, %>
+<% # or some similar halt in sign-in chain) %>
+<% content_for :content do %>
+  <nav class="navbar navbar-default navbar-fixed-top navbar-sign-in-halt" id="main-nav">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <span class="navbar-brand" title="<% t('nav.label.scinote') %>">
+          <%= image_tag('/images/scinote_icon.jpg', id: 'logo') %>
+        </span>
+      </div>
+      <div class="pull-right sign-in-halt-logout-button">
+        <%= link_to main_app.destroy_user_session_path, class: 'btn btn-default', method: :delete do %>
+          <%= t('nav.user.logout') %>
+        <% end %>
+      </div>
+    </div>
+  </nav>
+  <% if flash[:error]%>
+    <div class="alert alert-danger alert-dismissable alert-floating">
+      <div class="container">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+        <span class="glyphicon glyphicon-exclamation-sign"></span>
+        <span><%= sanitize_input(flash[:error]) %></span>
+      </div>
+    </div>
+  <% end %>
+  <div class="container sign-in-halt-container">
+    <%= yield %>
+  </div>
+<% end %>
+<%= render template: 'scinote/common/layouts/application' %>
