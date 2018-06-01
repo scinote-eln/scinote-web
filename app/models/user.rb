@@ -342,8 +342,8 @@ class User < ApplicationRecord
     result = team.projects.includes(active_experiments: :active_my_modules)
     unless is_admin_of_team?(team)
       # Only admins see all projects of the team
-      result = result.includes(:user_projects).where(
-        'visibility = 1 OR user_projects.user_id=:user_id)', user_id: id
+      result = result.joins(:user_projects).where(
+        'visibility=1 OR user_projects.user_id=:user_id', user_id: id
       )
     end
 
