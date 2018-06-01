@@ -50,7 +50,7 @@ data-project-users-tab-url="<%= url_for project_user_projects_path(project_id: p
   <div class="panel-footer panel-footer-scinote">
 
     <!-- Nav tabs -->
-    <ul class="nav nav-tabs nav-tabs-less" role="tablist">
+    <ul class="nav nav-tabs nav-tabs-less" role="tablist" data-hook="project-footer-icons">
       <% if can_read_project?(project) %>
         <li role="presentation">
           <a class="btn btn-link" href="<%= url_for project_project_activities_path(project_id: project.id, format: :json) %>" aria-controls="activities-<%= project.id %>" role="tab" data-remote="true">
