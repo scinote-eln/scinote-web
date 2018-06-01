@@ -41,7 +41,7 @@
     </div>
   </div>
   <div class="row">
-    <% @project.active_experiments(@current_sort).each_with_index do |experiment, index| %>
+    <% @project.sorted_active_experiments(@current_sort).each_with_index do |experiment, index| %>
       <%= render partial: 'projects/show/experiment',
                  locals: { experiment: experiment } %>
 

@@ -1,9 +1,7 @@
-<% if project.active_experiments.present? then %>
+<% if project.active_experiments.present? %>
   <ul>
     <% project.active_experiments.each do |experiment| %>
-      <% if (experiment_page? ||
-             sample_groups_page_experiment? ||
-             sample_types_page_expermient?) && experiment == @experiment %>
+      <% if experiment_page? && experiment == @experiment %>
         <li class="active" data-parent="candidate">
           <span class="tree-link line-wrap first-indent">
             <i class="no-arrow"></i>
@@ -15,15 +13,11 @@
         <li data-parent="candidate">
           <span class="tree-link line-wrap first-indent">
             <i class="no-arrow"></i>
-            <% if can_read_experiment?(experiment) %>
-              <%= link_to experiment.name,
-                          experiment_action_to_link_to(experiment),
-                          title: experiment.name,
-                          class: 'overview_exp_label'
-                          %>
-            <% else %>
-              <%= experiment.name %>
-            <% end %>
+            <%= link_to experiment.name,
+                        experiment_action_to_link_to(experiment),
+                        title: experiment.name,
+                        class: 'overview_exp_label'
+                        %>
           </span>
           <%= render partial: 'shared/sidebar/my_modules', locals: { experiment: experiment } %>
         </li>
