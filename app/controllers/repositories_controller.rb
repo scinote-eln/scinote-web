@@ -192,6 +192,11 @@ class RepositoriesController < ApplicationController
       if parsed_file.too_large?
         repository_response(t('general.file.size_exceeded',
                               file_size: Constants::FILE_MAX_SIZE_MB))
+      elsif parsed_file.has_too_many_rows?
+        repository_response(
+          t('repositories.import_records.error_message.items_limit',
+            items_size: Constants::IMPORT_REPOSITORY_ITEMS_LIMIT)
+        )
       else
         @import_data = parsed_file.data
 
