@@ -87,6 +87,7 @@ var RepositoryDatatable = (function(global) {
       }, {
         // Name column is clickable
         targets: 3,
+        visible: true,
         render: function(data, type, row) {
           return "<a href='" + row.recordInfoUrl + "'" +
                  "class='record-info-link'>" + data + '</a>';
@@ -1120,6 +1121,8 @@ var RepositoryDatatable = (function(global) {
           thederName = el.innerText;
         }
 
+
+
         var listItem = dropdownList
                    .find('.repository-columns-list-template')
                    .clone();
@@ -1129,10 +1132,11 @@ var RepositoryDatatable = (function(global) {
         listItem.addClass(visLi);
         listItem.removeClass('repository-columns-list-template hide');
         listItem.find('.text').html(generateColumnNameTooltip(thederName));
-        listItem.find('.vis').addClass(visClass);
-        listItem.find('.vis')
-                .attr('title', $(TABLE_ID).data('columns-visibility-text'));
-
+        if(thederName !== 'Name') {
+          listItem.find('.vis').addClass(visClass);
+          listItem.find('.vis')
+                  .attr('title', $(TABLE_ID).data('columns-visibility-text'));
+        }
         dropdownList.append(listItem);
       }
     });
@@ -1164,20 +1168,21 @@ var RepositoryDatatable = (function(global) {
       var li = self.closest('li');
       var column = TABLE.column(li.attr('data-position'));
 
-      if (column.visible()) {
-        self.addClass('fa-eye-slash');
-        self.removeClass('fa-eye');
-        li.addClass('col-invisible');
-        column.visible(false);
-        TABLE.setColumnSearchable(column.index(), false);
-      } else {
-        self.addClass('fa-eye');
-        self.removeClass('fa-eye-slash');
-        li.removeClass('col-invisible');
-        column.visible(true);
-        TABLE.setColumnSearchable(column.index(), true);
+      if(column.header.id !== 'row-name') {
+        if (column.visible()) {
+          self.addClass('fa-eye-slash');
+          self.removeClass('fa-eye');
+          li.addClass('col-invisible');
+          column.visible(false);
+          TABLE.setColumnSearchable(column.index(), false);
+        } else {
+          self.addClass('fa-eye');
+          self.removeClass('fa-eye-slash');
+          li.removeClass('col-invisible');
+          column.visible(true);
+          TABLE.setColumnSearchable(column.index(), true);
+        }
       }
-
       // Re-filter/search if neccesary
       var searchText = $('div.dataTables_filter input').val();
       if (!_.isEmpty(searchText)) {
