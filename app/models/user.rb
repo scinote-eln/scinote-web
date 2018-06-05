@@ -359,7 +359,7 @@ class User < ApplicationRecord
         { created_at: :desc }
       end
 
-    result.where(archived: false).order(sort)
+    result.where(archived: false).distinct.order(sort)
   end
 
   # Finds all activities of user that is assigned to project. If user
