@@ -330,7 +330,7 @@ en:
           inventory: "Select inventory:"
           inventory_column: "Select inventory column:"
           inventory_item: "Select inventory item:"
-          no_inventories: "No inventories available!"
+          no_inventories: "No inventories to save this PDF to."
           success_flash: "Report successfully saved to Inventory item."
           asset_present_warning_html: "The selected cell already contains a file. If you would like to replace the file click Save. Replacing the file will have the following consequences: <ul><li>previous file will be permanently deleted;</li><li>new file will be added to the Inventory item.</li></ul>"
           no_items: "Selected Inventory does not contain any items yet. Add the first item"
