@@ -12,7 +12,7 @@
                 type: 'button',
                 id: 'edit-canvas-button',
                 data: { action: 'edit' },
-                class: 'ajax btn btn-default' do %>
+                class: 'ajax btn btn-primary' do %>
                   <span class="fas fa-pencil-alt"></span>
                   <span class="hidden-xs"><%=t 'experiments.canvas.canvas_edit' %></span>
                 <% end %>
@@ -41,17 +41,6 @@
             <% end %>
           </div>
         </div>
-
-        <% if can_create_experiments?(@project) %>
-          <%= link_to new_project_experiment_url(@project),
-              remote: true,
-              type: "button",
-              id: 'new-experiment',
-              class: "btn btn-primary pull-right" do %>
-                <span class="glyphicon glyphicon-plus"></span>
-                <span class="hidden-xs-custom"><%=t 'experiments.new.create' %></span>
-              <% end %>
-        <% end %>
       </div>
     </div>
   </div>
@@ -68,4 +57,3 @@
 <%= javascript_include_tag("eventPause-min") %>
 
 <%= javascript_include_tag("projects/canvas") %>
-<%= javascript_include_tag("experiments/dropdown_actions") %>
