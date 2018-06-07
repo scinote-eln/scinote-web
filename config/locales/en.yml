@@ -52,6 +52,13 @@ en:
       email_already_taken: "SciNote account with email %{email} alreday exists"
       failed_to_save: "Failed to create new user"
 
+  activerecord:
+    errors:
+      models:
+        project:
+          attributes:
+            name:
+              taken: "This project name has to be unique inside a team (this includes the archive)."
   helpers:
     label:
       team:
@@ -268,7 +275,6 @@ en:
         contact_admins: "To invite additional users to team %{team}, contact its administrator/s."
     create:
       success_flash: "Project <strong>%{name}</strong> successfully created."
-      name_taken: "This project name has to be unique inside a team (this includes the archive)."
     update:
       success_flash: "Project <strong>%{name}</strong> successfully updated."
       error_flash: "Project <strong>%{name}</strong> not updated."
