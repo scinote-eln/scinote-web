@@ -47,7 +47,7 @@ class Constants
   # Comments limited query/display elements for pages
   COMMENTS_SEARCH_LIMIT = 10
   # Activity limited query/display elements for pages
-  ACTIVITY_AND_NOTIF_SEARCH_LIMIT = 10
+  ACTIVITY_AND_NOTIF_SEARCH_LIMIT = 20
 
   # Maximum number of users that can be invited in a single action
   INVITE_USERS_LIMIT = 20
