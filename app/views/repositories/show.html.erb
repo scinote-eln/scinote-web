@@ -70,8 +70,8 @@
               </li>
             <% end %>
             <% if can_manage_repository?(@repository) %>
-              <li role="separator" class="divider"></li>
-              <li>
+              <li data-hook="destroy-repository-option" role="separator" class="divider"></li>
+              <li data-hook="destroy-repository-option">
                 <%= link_to t('repositories.index.options_dropdown.delete'),
                             team_repository_destroy_modal_path(current_team, repository_id: @repository),
                             class: "delete-repo-option",
