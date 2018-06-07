@@ -500,12 +500,27 @@ a[data-toggle="tooltip"] {
   }
 }
 
-.protocols-datatable table {
-  tbody tr.selected {
-    & > td:nth-child(3), td:nth-child(4) {
-      color: $color-emperor;
-      & a {
+.protocols-datatable {
+  .dataTables_wrapper {
+    margin-top: 15px;
+    clear: both;
+
+    .dataTables_length {
+      float: left;
+    }
+
+    .dataTables_filter {
+      float: right;
+    }
+  }
+
+  table {
+    tbody tr.selected {
+      & > td:nth-child(3), td:nth-child(4) {
         color: $color-emperor;
+        & a {
+          color: $color-emperor;
+        }
       }
     }
   }
