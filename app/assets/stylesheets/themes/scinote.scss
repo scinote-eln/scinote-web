@@ -322,11 +322,15 @@ a[data-toggle="tooltip"] {
         @include box-shadow(0 4px 0 $brand-primary);
         margin-bottom: 4px;
 
-        a,
-        a:hover,
-        a:focus {
-          background: $color-white;
+        & > a,
+        & > a:hover,
+        & > a:focus {
+          background: transparent;
           color: $color-emperor;
+          font-weight: bold;
+        }
+
+        ul .active-item {
           font-weight: bold;
         }
       }
