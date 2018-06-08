@@ -8,6 +8,12 @@
     });
   }
 
+  function initTable() {
+    RepositoryDatatable.destroy();
+    RepositoryDatatable.init('#' + $('.repository-table table').attr('id'));
+    RepositoryDatatable.redrawTableOnSidebarToggle();
+  }
+
   function _initParseRecordsModal() {
     $('#form-records-file').on('ajax:success', function(ev, data) {
       $('#modal-import-records').modal('hide');
@@ -30,8 +36,7 @@
 
   function initialzerRepositoryTable() {
     initImportRecordsModal();
-    RepositoryDatatable.destroy();
-    RepositoryDatatable.init('#' + $('.repository-table table').attr('id'));
+    initTable();
   }
 
   $(document).ready(initialzerRepositoryTable);
