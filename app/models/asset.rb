@@ -199,7 +199,8 @@ class Asset < ApplicationRecord
       Rails.logger.info "Asset #{id}: Creating extract text job"
       # The extract_asset_text also includes
       # estimated size calculation
-      delay(queue: :assets).extract_asset_text(team)
+      delay(queue: :assets, run_at: 20.minutes.from_now)
+        .extract_asset_text(team)
     else
       # Update asset's estimated size immediately
       update_estimated_size(team)
@@ -207,9 +208,7 @@ class Asset < ApplicationRecord
   end
 
   def extract_asset_text(team = nil)
-    if file.blank?
-      return
-    end
+    return if file.blank?
 
     begin
       file_path = file.path
