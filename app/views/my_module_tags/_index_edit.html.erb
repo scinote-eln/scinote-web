@@ -52,7 +52,7 @@
 <hr>
 <div class="row">
     <%= bootstrap_form_for [@my_module, @new_mmt], remote: true, format: :json, html: { class: 'add-tag-form' } do |f| %>
-      <div class="col-xs-6">
+      <div>
         <div class="well well-sm">
           <%= collection_select(:my_module_tag,
                                 :tag_id,

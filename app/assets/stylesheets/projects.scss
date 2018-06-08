@@ -376,6 +376,12 @@ li.module-hover {
 
 /* Edit module tags modal window */
 #manage-module-tags-modal {
+
+  .add-tag-form {
+    display: inline-block;
+    margin-left: 15px;
+  }
+
   .modal-body ul.list-group > li {
     padding-top: 2px;
     padding-bottom: 2px;
