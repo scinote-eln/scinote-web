@@ -423,6 +423,7 @@ class MyModulesController < ApplicationController
       end
 
       if records_names.any?
+        records_names.uniq!
         Activity.create(
           type_of: :assign_repository_record,
           project: @project,
