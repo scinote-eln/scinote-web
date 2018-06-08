@@ -341,7 +341,7 @@ en:
           asset_present_warning_html: "The selected cell already contains a file. If you would like to replace the file click Save. Replacing the file will have the following consequences: <ul><li>previous file will be permanently deleted;</li><li>new file will be added to the Inventory item.</li></ul>"
           no_items: "Selected Inventory does not contain any items yet. Add the first item"
           here: "here"
-          no_columns: "You do not have any Inventories with File columns. Add a File column to existing Inventory or create a new Inventory."
+          no_columns: "You do not have File columns in selected Inventory. Add a File column to selected Inventory or select another Inventory containing File columns."
           nothing_selected: "Nothing selected"
       elements:
         modals:
