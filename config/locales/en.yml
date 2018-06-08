@@ -266,7 +266,7 @@ en:
         modal_title: "Edit project %{project}"
         submit: "Save"
       modal_manage_users:
-        modal_title: "Manage users for"
+        modal_title_html: "Manage users for <span id='manage-users-modal-project'>%{name}</span>"
         no_users: "No users!"
         create: "Add"
         select_user_role: "Select Role"

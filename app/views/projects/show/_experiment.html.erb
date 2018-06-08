@@ -43,22 +43,24 @@
         <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
         <%= localize(experiment.created_at, format: t('time.formats.full_date')) %> - <%= localize(experiment.updated_at, format: t('time.formats.full_date')) %>
       </span>
-      <% if experiment.description? %>
-        <div class='experiment-description'>
-          <%= custom_auto_link(experiment.description) %>
-        </div>
-      <% else %>
-        <span class='experiment-no-description'>
-          <% if can_manage_experiment?(experiment) %>
-            <%= link_to t('experiments.edit.add-description'),
-                        edit_project_experiment_url(@project, experiment),
-                        remote: true,
-                        data: { id: experiment.id } %>
-          <% else %>
-            <p><%= t('experiments.edit.no-description') %></p>
-          <% end %>
-        </span>
-      <% end %>
+      <div data-hook="experiment-card-body">
+        <% if experiment.description? %>
+          <div class='experiment-description'>
+            <%= custom_auto_link(experiment.description) %>
+          </div>
+        <% else %>
+          <span class='experiment-no-description'>
+            <% if can_manage_experiment?(experiment) %>
+              <%= link_to t('experiments.edit.add-description'),
+                          edit_project_experiment_url(@project, experiment),
+                          remote: true,
+                          data: { id: experiment.id } %>
+            <% else %>
+              <p><%= t('experiments.edit.no-description') %></p>
+            <% end %>
+          </span>
+        <% end %>
+      </div>
     </div>
   </div>
 </div>

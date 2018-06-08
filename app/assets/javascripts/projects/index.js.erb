@@ -20,9 +20,10 @@
   var editProjectModalBody = null;
   var editProjectBtn = null;
 
-  var manageUsersModal = null;
-  var manageUsersModalBody = null;
-  var manageUsersModalFooter = null;
+  var projectActionsModal = null;
+  var projectActionsModalHeader = null;
+  var projectActionsModalBody = null;
+  var projectActionsModalFooter = null;
 
   /**
    * Stupid Bootstrap btn-group bug hotfix
@@ -53,9 +54,10 @@
     editProjectModalBody = editProjectModal.find('.modal-body');
     editProjectBtn = editProjectModal.find(".btn[data-action='submit']");
 
-    manageUsersModal = $('#manage-users-modal');
-    manageUsersModalBody = manageUsersModal.find('.modal-body');
-    manageUsersModalFooter = manageUsersModal.find('.modal-footer');
+    projectActionsModal = $('#project-actions-modal');
+    projectActionsModalHeader = projectActionsModal.find('.modal-title');
+    projectActionsModalBody = projectActionsModal.find('.modal-body');
+    projectActionsModalFooter = projectActionsModal.find('.modal-footer');
 
     initNewProjectModal();
     initEditProjectModal();
@@ -226,7 +228,7 @@
 
   function initManageUsersModal() {
     // Reload users tab HTML element when modal is closed
-    manageUsersModal.on("hide.bs.modal", function () {
+    projectActionsModal.on("hide.bs.modal", function () {
       var projectEl = $("#" + $(this).attr("data-project-id"));
 
       // Load HTML to refresh users list
@@ -248,9 +250,10 @@
     });
 
     // Remove modal content when modal window is closed.
-    manageUsersModal.on("hidden.bs.modal", function () {
-      manageUsersModalBody.html("");
-      manageUsersModalFooter.html("");
+    projectActionsModal.on("hidden.bs.modal", function () {
+      projectActionsModalHeader.html("");
+      projectActionsModalBody.html("");
+      projectActionsModalFooter.html("");
     });
   }
 
@@ -261,8 +264,8 @@
 
        .on("ajax:before", function () {
         var projectId = $(this).closest(".panel-default").attr("id");
-          manageUsersModal.attr("data-project-id", projectId);
-          manageUsersModal.modal('show');
+          projectActionsModal.attr("data-project-id", projectId);
+          projectActionsModal.modal('show');
        })
 
        .on("ajax:success", function (e, data) {
@@ -276,7 +279,7 @@
 
   function initAddUserForm() {
 
-    manageUsersModalBody.find(".add-user-form")
+    projectActionsModalBody.find(".add-user-form")
 
       .on("ajax:success", function (e, data) {
         initUsersModalBody(data);
@@ -295,7 +298,7 @@
   // Initialize remove user from project links.
   function initRemoveUserLinks() {
 
-    manageUsersModalBody.find(".remove-user-link")
+    projectActionsModalBody.find(".remove-user-link")
 
       .on("ajax:success", function (e, data) {
         initUsersModalBody(data);
@@ -305,13 +308,13 @@
   //
   function initUserRoleForms() {
 
-    manageUsersModalBody.find(".update-user-form select")
+    projectActionsModalBody.find(".update-user-form select")
 
       .on("change", function () {
         $(this).parents("form").submit();
       });
 
-    manageUsersModalBody.find(".update-user-form")
+    projectActionsModalBody.find(".update-user-form")
 
       .on("ajax:success", function (e, data) {
         initUsersModalBody(data);
@@ -325,9 +328,10 @@
   // Initialize ajax listeners and elements style on modal body. This
   // function must be called when modal body is changed.
   function initUsersModalBody(data) {
-    manageUsersModalBody.html(data.html_body);
-    manageUsersModalFooter.html(data.html_footer);
-    manageUsersModalBody.find(".selectpicker").selectpicker();
+    projectActionsModalHeader.html(data.html_header);
+    projectActionsModalBody.html(data.html_body);
+    projectActionsModalFooter.html(data.html_footer);
+    projectActionsModalBody.find(".selectpicker").selectpicker();
     initAddUserForm();
     initRemoveUserLinks();
     initUserRoleForms();
