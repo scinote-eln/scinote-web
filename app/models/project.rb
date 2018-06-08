@@ -7,8 +7,7 @@ class Project < ApplicationRecord
   validates :name,
             length: { minimum: Constants::NAME_MIN_LENGTH,
                       maximum: Constants::NAME_MAX_LENGTH },
-            uniqueness: { scope: :team, case_sensitive: false,
-                          message: I18n.t('projects.create.name_taken') }
+            uniqueness: { scope: :team, case_sensitive: false }
   validates :visibility, presence: true
   validates :team, presence: true
 
