@@ -32,9 +32,11 @@
     <a href="#" class="btn btn-default disabled"><span class="glyphicon glyphicon-export"></span><span class="hidden-xs-custom">&nbsp;<%= t("my_modules.protocols.buttons.export") %></span></a>
   <% end %>
   <% if can_read_protocol_in_module?(@protocol) && can_create_protocols_in_repository?(@protocol.team) %>
-    <%= link_to copy_to_repository_modal_protocol_path(@protocol, format: :json), id: "protocol-copy-to-repository", class: "btn btn-default", remote: true, data: { action: "copy-to-repository" } do %>
-      <span class="glyphicon glyphicon-saved"></span><span class="hidden-xs-custom">&nbsp;<%= t("my_modules.protocols.buttons.copy_to_repository") %></span>
+    <span data-hook="protocol-copy-to-repository">
+      <%= link_to copy_to_repository_modal_protocol_path(@protocol, format: :json), id: "protocol-copy-to-repository", class: "btn btn-default", remote: true, data: { action: "copy-to-repository" } do %>
+        <span class="glyphicon glyphicon-saved"></span><span class="hidden-xs-custom">&nbsp;<%= t("my_modules.protocols.buttons.copy_to_repository") %></span>
       <% end %>
+    </span>
   <% else %>
     <a href="#" class="btn btn-default disabled"><span class="glyphicon glyphicon-saved"></span><span class="hidden-xs-custom">&nbsp;<%= t("my_modules.protocols.buttons.copy_to_repository") %></span></a>
   <% end %>
