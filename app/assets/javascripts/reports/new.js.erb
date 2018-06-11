@@ -32,10 +32,6 @@ var ignoreUnsavedWorkAlert;
    initializeAddContentsModal();
    initializeUnsavedWorkDialog();
 
-   $('.report-nav-link').each(function() {
-     truncateLongString($(this), <%= Constants::NAME_TRUNCATION_LENGTH %>);
-   });
-
    // Automatically display the "Add content" modal
    $('.new-element.initial').click();
  }
@@ -955,11 +951,3 @@ $(document).ready(function() {
     init();
   }
 })
-
-$(document).change(function(){
-  setTimeout(function(){
-    $(".report-nav-link").each( function(){
-      truncateLongString( $(this), <%= Constants::NAME_TRUNCATION_LENGTH %>);
-    });
-  }, 1000);
-});
