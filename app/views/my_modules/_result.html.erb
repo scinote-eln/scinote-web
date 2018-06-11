@@ -41,7 +41,7 @@
     <div class="panel-collapse collapse" id="result-panel-<%= result.id %>" role="tabpanel">
       <div class="panel-body">
         <div class="row">
-          <div class="col-xs-12">
+          <div class="col-xs-12" data-hook="result-content">
             <%= render partial: 'my_modules/result_user_generated.html.erb',
                        locals: { result: result } %>
           </div>
