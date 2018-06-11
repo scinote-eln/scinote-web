@@ -28,12 +28,12 @@ function truncateLongString( el, chars ) {
     }
 
     if ( html ) {
-      el.html(html.outerHTML + newText + '...' );
+      el.text(html.outerHTML + newText + '...' );
     } else {
       if($.type(el) === 'string'){
         return newText + '...';
       } else {
-      el.html(newText + '...' );
+      el.text(newText + '...' );
       }
     }
   } else {
