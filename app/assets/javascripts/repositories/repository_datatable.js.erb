@@ -956,7 +956,6 @@ var RepositoryDatatable = (function(global) {
       $.each(data.list_items, function(index, el) {
         massage_response.push([el.id, el.data]);
       });
-      TABLE.columns.adjust();
     });
     return _listItemDropdown(massage_response, '-1', column_id);
   }
