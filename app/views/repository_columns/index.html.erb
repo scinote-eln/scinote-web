@@ -32,21 +32,25 @@
       <% else %>
         <% @repository_columns.each do |column| %>
           <% cache column do %>
-            <li class="list-group-item"
+            <li class="list-group-item row"
                 data-id="<%= column.id %>"
                 data-destroy-url="<%= repository_columns_destroy_html_path(@repository, column) %>"
                 data-edit-url="<%= edit_repository_repository_column_path(@repository, column) %>">
-              <span class="pull-left"><%= column.name %></span>
-              <span class="controlls pull-right">
-                <button class="btn btn-default" data-action="edit">
-                  <span class="fas fa-pencil-alt"></span>
-                  <%=t 'libraries.repository_columns.index.edit_column'%>
-                </button>
-                <button class="btn btn-default" data-action="destroy">
-                  <span class="glyphicon glyphicon-trash"></span>
-                  <%=t 'libraries.repository_columns.index.delete_column'%>
-                </button>
-              </span>
+              <div class="col-xs-8">
+                <span class="pull-left column-name"><%= column.name %></span>
+              </div>
+              <div class="col-xs-4">
+                <span class="controlls pull-right">
+                  <button class="btn btn-default" data-action="edit">
+                    <span class="fas fa-pencil-alt"></span>
+                    <%=t 'libraries.repository_columns.index.edit_column'%>
+                  </button>&nbsp;
+                  <button class="btn btn-default delete-column" data-action="destroy">
+                    <span class="glyphicon glyphicon-trash"></span>
+                    <%=t 'libraries.repository_columns.index.delete_column'%>
+                  </button>
+                </span>
+            </div>
             </li>
           <% end %>
         <% end %>
