@@ -391,7 +391,34 @@ var RepositoryDatatable = (function(global) {
     }
   }
 
+  function checkAvailibleColumns() {
+    $.ajax({
+      url: $(TABLE_ID).data('available-columns'),
+      type: 'GET',
+      dataType: 'json',
+      success: function(data) {
+        var columns_ids     = data.columns;
+        var present_columns = [];
+        $('table' + TABLE_ID + ' thead tr').children('th').each(function() {
+          var id = parseInt($(this).attr('id'));
+          if(id) {
+            present_columns.push(id);
+          }
+        });
+        if( !_.isEqual(columns_ids, present_columns) ) {
+          alert($(TABLE_ID).data('columns-changed'));
+          animateSpinner();
+          location.reload();
+        }
+      },
+      error: function(data) {
+        location.reload();
+      }
+    });
+  }
+
   global.onClickAddRecord = function() {
+    checkAvailibleColumns();
     changeToEditMode();
     updateButtons();
 
@@ -581,7 +608,6 @@ var RepositoryDatatable = (function(global) {
     });
   }
 
-
   global.onClickCopyRepositoryRecords = function() {
     animateSpinner();
     $.ajax({
@@ -606,6 +632,7 @@ var RepositoryDatatable = (function(global) {
 
   // Edit record
   global.onClickEdit = function() {
+    checkAvailibleColumns();
     if (rowsSelected.length !== 1) {
       return;
     }
@@ -1205,6 +1232,7 @@ var RepositoryDatatable = (function(global) {
         loadColumnsNames();
       }
     });
+    $('.sorting').on('click', checkAvailibleColumns);
   }
 
   // calculate the max height of window and adjust dropdown max-height
@@ -1238,6 +1266,7 @@ var RepositoryDatatable = (function(global) {
     $('#repository-columns-dropdown').on('show.bs.dropdown', function() {
       loadColumnsNames();
       dropdownList.sortable('enable');
+      checkAvailibleColumns();
     });
 
     $('#repository-columns-dropdown').on('shown.bs.dropdown', function() {

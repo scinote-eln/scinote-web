@@ -1,6 +1,8 @@
 class RepositoryColumnsController < ApplicationController
   include InputSanitizeHelper
-  ACTIONS = %i(create index create_html available_asset_type_columns).freeze
+  ACTIONS = %i(
+    create index create_html available_asset_type_columns available_columns
+  ).freeze
   before_action :load_vars,
                 except: ACTIONS
   before_action :load_vars_nested,
@@ -153,6 +155,10 @@ class RepositoryColumnsController < ApplicationController
     else
       render json: { results: @asset_columns }, status: :ok
     end
+  end
+
+  def available_columns
+    render json: { columns: @repository.available_columns_ids }, status: :ok
   end
 
   private

@@ -66,6 +66,10 @@ class Repository < ApplicationRecord
     where('repositories.name ILIKE ?', "%#{query}%")
   end
 
+  def available_columns_ids
+    repository_columns.pluck(:id)
+  end
+
   def importable_repository_fields
     fields = {}
     # First and foremost add record name

@@ -490,6 +490,10 @@ Rails.application.routes.draw do
           to: 'repository_columns#create_html',
           as: 'columns_create_html',
           defaults: { format: 'json' }
+      get 'available_columns',
+          to: 'repository_columns#available_columns',
+          as: 'available_columns',
+          defaults: { format: 'json' }
 
       resources :repository_columns, only: %i(index create edit update destroy)
       resources :repository_rows, only: %i(create edit update)
