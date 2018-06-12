@@ -35,18 +35,21 @@
             disabled>
           </select>
         <% else %>
-          <p><%=t 'projects.reports.new.save_PDF_to_inventory_modal.no_inventories' %></p>
+          <br />
+          <p><em><%=t 'projects.reports.new.save_PDF_to_inventory_modal.no_inventories' %></em></p>
         <% end %>
         <div class="save-PDF-to-inventory-alerts" id="save-PDF-to-inventory-warnings"></div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal"><%=t 'general.cancel' %></button>
-        <button
-          id="savePDFtoInventorySubmit"
-          type="button"
-          class="btn btn-primary"
-          disabled
-          ><%=t 'general.save' %></button>
+        <% if @available_repositories && @available_repositories.length > 0 %>
+          <button
+            id="savePDFtoInventorySubmit"
+            type="button"
+            class="btn btn-primary"
+            disabled
+            ><%=t 'general.save' %></button>
+        <% end %>
       </div>
     </div>
   </div>

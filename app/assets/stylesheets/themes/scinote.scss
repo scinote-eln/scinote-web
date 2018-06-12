@@ -322,11 +322,15 @@ a[data-toggle="tooltip"] {
         @include box-shadow(0 4px 0 $brand-primary);
         margin-bottom: 4px;
 
-        a,
-        a:hover,
-        a:focus {
-          background: $color-white;
+        & > a,
+        & > a:hover,
+        & > a:focus {
+          background: transparent;
           color: $color-emperor;
+          font-weight: bold;
+        }
+
+        ul .active-item {
           font-weight: bold;
         }
       }
@@ -500,12 +504,27 @@ a[data-toggle="tooltip"] {
   }
 }
 
-.protocols-datatable table {
-  tbody tr.selected {
-    & > td:nth-child(3), td:nth-child(4) {
-      color: $color-emperor;
-      & a {
+.protocols-datatable {
+  .dataTables_wrapper {
+    margin-top: 15px;
+    clear: both;
+
+    .dataTables_length {
+      float: left;
+    }
+
+    .dataTables_filter {
+      float: right;
+    }
+  }
+
+  table {
+    tbody tr.selected {
+      & > td:nth-child(3), td:nth-child(4) {
         color: $color-emperor;
+        & a {
+          color: $color-emperor;
+        }
       }
     }
   }
@@ -765,48 +784,23 @@ ul.double-line > li {
 ul.content-activities {
 
   li.activity-item {
-    border-radius: .25em;
     background-color: $color-white;
-    border: 1px solid $color-concrete;
+    border-bottom: 1px solid $color-concrete;
+    padding: 8px 0;
 
     .activity-item-date {
       min-width: 150px;
       display: table-cell;
-      vertical-align: middle;
-      border-top-left-radius: .25em;
-      border-bottom-left-radius: .25em;
-      border: 3px solid $color-alto;
-      background-color: $color-alto;
-      padding-left: 10px;
-      padding-right: 10px;
+      padding: 0 10px;
       vertical-align: top;
+      text-align: center;
     }
     .activity-item-text {
       display: table-cell;
-      padding: 3px 10px;
+      padding: 0 10px;
       text-align: justify;
     }
   }
-}
-
-ul.content-module-activities {
-
-  li.activity-item {
-    margin-bottom: 15px;
-
-    .activity-item-date {
-      font-size: 1.2em;
-      background-color: $color-alto;
-      border-color: $color-alto;
-      padding-top: 5px;
-      padding-bottom: 5px;
-    }
-    .activity-item-text {
-      padding-top: 5px;
-      padding-bottom: 5px;
-    }
-  }
-
 }
 
 .step {
