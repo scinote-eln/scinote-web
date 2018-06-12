@@ -211,6 +211,11 @@ en:
     index:
       head_title: "Home"
       archive: "Archive"
+      no_projects:
+        text: "You don't have any active projects."
+        title: "Please create your Project"
+        create_new_button: "New Project"
+        no_permission_title: "You don't have permission to create new project. Please contact your team administrator."
       new: "New Project"
       visibility_private: "Project is visible to project members only."
       visibility_public: "Project is visible to all team members."
@@ -336,7 +341,7 @@ en:
           inventory: "Select inventory:"
           inventory_column: "Select inventory column:"
           inventory_item: "Select inventory item:"
-          no_inventories: "No inventories available!"
+          no_inventories: "No inventories to save this PDF to."
           success_flash: "Report successfully saved to Inventory item."
           asset_present_warning_html: "The selected cell already contains a file. If you would like to replace the file click Save. Replacing the file will have the following consequences: <ul><li>previous file will be permanently deleted;</li><li>new file will be added to the Inventory item.</li></ul>"
           no_items: "Selected Inventory does not contain any items yet. Add the first item"
@@ -637,14 +642,14 @@ en:
         import_to_linked_task_rep: "Are you sure you wish to load protocol from repository? This action will overwrite the current protocol in the task and unlink it from repository. The current protocol will remain unchanged in repository."
         load: "Load"
       copy_to_repository_modal:
-        title: "Copy protocol to repository"
+        title: "Copy to protocol repository"
         name_label: "Repository protocol name"
         name_placeholder: "My protocol"
         type_label: "Copy to"
         type_public: "Team protocols"
         type_private: "My protocols"
         type_text: "You can copy the protocol to protocols repository visible to all team members, or to your protocols repository."
-        link_label: "Link task to this repository protocol"
+        link_label: "Link task to this protocol repository"
         link_text: "<strong>Warning!</strong>&nbsp;This will unlink the currently linked protocol."
         error_400: "Due to unknown error, protocol could not be copied to repository."
         confirm: "Copy"
@@ -779,11 +784,11 @@ en:
         modal_move_module:
           title: "Move task to experiment"
           confirm: "Move"
-          no_experiments: "There are no other experiments."
+          no_experiments: "No experiments to move this task to."
         modal_move_module_group:
           title: "Move workflow to experiment"
           confirm: "Move"
-          no_experiments: "There are no other experiments."
+          no_experiments: "No experiments to move this workflow to."
         modal_delete_module:
           title: "Archive task"
           confirm: "Archive"

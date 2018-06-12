@@ -4,101 +4,121 @@
   <%= render partial: "shared/sidebar" %>
   <%= render partial: "shared/secondary_navigation" %>
 
-  <div class="content-pane" id="projects-index">
-    <% if can_create_projects?(current_team) %>
-      <!-- New project modal -->
-      <div class="modal" id="new-project-modal" tabindex="-1" role="dialog" aria-labelledby="new-project-modal-label">
-        <%= bootstrap_form_for @project, remote: true do |f| %>
-          <div class="modal-dialog" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="new-project-modal-label"><%= t("projects.index.modal_new_project.modal_title") %></h4>
-              </div>
-              <div class="modal-body">
-                <%= render partial: "new.html.erb", locals: { form: f, teams: @teams } %>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal"><%=t "general.cancel" %></button>
-                <%= f.submit t("projects.index.modal_new_project.create"), class: "btn btn-success" %>
-              </div>
+  <% if can_create_projects?(current_team) %>
+    <!-- New project modal -->
+    <div class="modal" id="new-project-modal" tabindex="-1" role="dialog" aria-labelledby="new-project-modal-label">
+      <%= bootstrap_form_for @project, remote: true do |f| %>
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title" id="new-project-modal-label"><%= t("projects.index.modal_new_project.modal_title") %></h4>
+            </div>
+            <div class="modal-body">
+              <%= render partial: "new.html.erb", locals: { form: f, teams: @teams } %>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal"><%=t "general.cancel" %></button>
+              <%= f.submit t("projects.index.modal_new_project.create"), class: "btn btn-success" %>
             </div>
           </div>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+
+  <div class="content-pane" id="projects-index">
+
+    <% if @projects_tree.empty? %>
+      <div class="jumbotron text-center" style="margin-top:12%">
+        <strong><%=t 'projects.index.no_projects.text' %></strong>
+        <% if @teams.exists? && can_create_projects?(current_team) %>
+          <h2><strong><%=t 'projects.index.no_projects.title' %><strong></h2>
+          <br />
+          <a class="btn btn-primary btn-lg"
+            id="new-project-btn">
+            <span class="glyphicon glyphicon-plus"></span>
+            <span class="hidden-xs"><%= t('projects.index.no_projects.create_new_button') %></span>
+          </a>
+        <% else %>
+          <p><strong><%=t 'projects.index.no_projects.no_permission_title' %></strong></p>
         <% end %>
       </div>
+    <% else %>
+      <!-- Edit project modal -->
+      <div class="modal" id="edit-project-modal" tabindex="-1" role="dialog" aria-labelledby="edit-project-modal-label">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title" id="edit-project-modal-label"></h4>
+            </div>
+            <div class="modal-body">
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal"><%=t "general.cancel" %></button>
+              <button type="button" class="btn btn-success" data-action="submit"><%=t "projects.index.modal_edit_project.submit" %></button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Manage users modal -->
+      <div class="modal" id="project-actions-modal" tabindex="-1" role="dialog" aria-labelledby="project-actions-modal-label">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title" id="project-actions-modal-label"></h4>
+            </div>
+            <div class="modal-body"></div>
+            <div class="modal-footer"></div>
+          </div>
+        </div>
+      </div>
+
+      <div id="projects-toolbar">
+
+        <form class="form-inline" action="<%= projects_path %>">
+
+          <div class="form-group">
+
+            <% if @teams.exists? && can_create_projects?(current_team) %>
+            <!-- new project button -->
+              <a class="btn btn-primary pull-right" id="new-project-btn">
+                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                <span class="hidden-xs"><%=t "projects.index.new" %></span>
+              </a>
+            <% end %>
+
+            <!-- project sort -->
+            <div class="dropdown">
+              <button class="btn btn-default dropdown-toggle" type="button" id="sortMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                <span class="hidden-xs"><%= t'projects.index.sort' %></span>
+                <span class="visible-xs-inline"><i class="glyphicon glyphicon-sort"></i></span>
+                <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu" aria-labelledby="sortMenu">
+              <% ["new", "old", "atoz", "ztoa"].each do |sort| %>
+                <% if @current_sort != sort %>
+                <li><a href="?<%= {team: @current_team.id, sort: sort}.reject{|k,v| v.to_s == "0"}.to_query %>"><%= t('projects.index.sort_' + sort) %></a></li>
+                <% else %>
+                <li class="disabled"><a href="#"><%= t('projects.index.sort_' + sort) %></a></li>
+                <% end %>
+              <% end %>
+              </ul>
+            </div>
+
+          </div>
+        </form>
+      </div>
+
+      <%= render partial: "projects/index/team_projects",
+                locals: { projects: @projects_tree } %>
     <% end %>
 
-    <!-- Edit project modal -->
-    <div class="modal" id="edit-project-modal" tabindex="-1" role="dialog" aria-labelledby="edit-project-modal-label">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title" id="edit-project-modal-label"></h4>
-          </div>
-          <div class="modal-body">
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal"><%=t "general.cancel" %></button>
-            <button type="button" class="btn btn-success" data-action="submit"><%=t "projects.index.modal_edit_project.submit" %></button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Manage users modal -->
-    <div class="modal" id="project-actions-modal" tabindex="-1" role="dialog" aria-labelledby="project-actions-modal-label">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title" id="project-actions-modal-label"></h4>
-          </div>
-          <div class="modal-body"></div>
-          <div class="modal-footer"></div>
-        </div>
-      </div>
-    </div>
-
-    <div id="projects-toolbar">
-
-      <form class="form-inline" action="<%= projects_path %>">
-
-        <div class="form-group">
-
-          <% if @teams.exists? && can_create_projects?(current_team) %>
-          <!-- new project button -->
-            <a class="btn btn-primary pull-right" id="new-project-btn">
-              <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-              <span class="hidden-xs"><%=t "projects.index.new" %></span>
-            </a>
-          <% end %>
-
-          <!-- project sort -->
-          <div class="dropdown">
-            <button class="btn btn-default dropdown-toggle" type="button" id="sortMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-              <span class="hidden-xs"><%= t'projects.index.sort' %></span>
-              <span class="visible-xs-inline"><i class="glyphicon glyphicon-sort"></i></span>
-              <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="sortMenu">
-            <% ["new", "old", "atoz", "ztoa"].each do |sort| %>
-              <% if @current_sort != sort %>
-              <li><a href="?<%= {team: @current_team.id, sort: sort}.reject{|k,v| v.to_s == "0"}.to_query %>"><%= t('projects.index.sort_' + sort) %></a></li>
-              <% else %>
-              <li class="disabled"><a href="#"><%= t('projects.index.sort_' + sort) %></a></li>
-              <% end %>
-            <% end %>
-            </ul>
-          </div>
-
-        </div>
-      </form>
-    </div>
-
-    <%= render partial: "projects/index/team_projects",
-               locals: { projects: @projects_tree } %>
   </div>
+
 <% end %>
 
 <%= javascript_include_tag "projects/index", "data-turbolinks-track" => true %>
