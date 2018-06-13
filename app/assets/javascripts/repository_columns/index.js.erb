@@ -112,18 +112,18 @@
   function _insertNewListItem(column) {
     // remove element if already persent
     $('[data-id="' + column.id + '"]').remove();
-    var html = '<li class="list-group-item" data-id="' + column.id + '" ';
+    var html = '<li class="list-group-item row" data-id="' + column.id + '" ';
     html += 'data-destroy-url="' + column.destroy_html_url + '"';
-    html += 'data-edit-url="' + column.edit_url + '">';
-    html += '<span class="pull-left">' + column.name + '</span>';
-    html += '<span class="controlls pull-right">';
+    html += 'data-edit-url="' + column.edit_url + '"><div class="col-xs-8">';
+    html += '<span class="pull-left column-name">' + column.name + '</span>';
+    html += '</div><div class="col-xs-4"><span class="controlls pull-right">';
     html += '<button class="btn btn-default" data-action="edit">';
     html += '<span class="fas fa-pencil-alt"></span>&nbsp;';
     html += '<%= I18n.t "libraries.repository_columns.index.edit_column" %></button>&nbsp;';
-    html += '<button class="btn btn-default" data-action="destroy">';
+    html += '<button class="btn btn-default delete-column" data-action="destroy">';
     html += '<span class="glyphicon glyphicon-trash"></span>&nbsp;';
     html += '<%= I18n.t "libraries.repository_columns.index.delete_column" %>';
-    html += '</button></span></li>';
+    html += '</button></span></div></li>';
     $(html).insertBefore('.repository-columns-body ul li:first')
            .promise()
            .done(function() {

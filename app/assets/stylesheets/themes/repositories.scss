@@ -5,13 +5,17 @@
 
   .list-group-item {
     padding: 28px;
+  }
 
-    .controlls {
-      margin-top: -18px;
-    }
+  .column-name {
+    margin-top: 10px;
+  }
+}
 
-    span {
-      margin-top: -10px;
+@media only screen and (max-width: 768px) {
+  .repository-columns-body {
+    .delete-column {
+      margin-top: 5px;
     }
   }
 }
