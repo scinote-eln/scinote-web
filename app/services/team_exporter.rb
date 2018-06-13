@@ -77,9 +77,6 @@ class TeamExporter
         .includes(:user_notifications)
         .where('user_notifications.user_id': team.users)
         .map { |n| notification(n) },
-      samples: team.samples.map { |s| sample(s) },
-      sample_groups: team.sample_groups,
-      sample_types: team.sample_types,
       custom_fields: team.custom_fields,
       repositories: team.repositories.map { |r| repository(r) },
       tiny_mce_assets: team.tiny_mce_assets,
@@ -110,7 +107,6 @@ class TeamExporter
       user: user_json,
       user_notifications: user.user_notifications,
       user_identities: user.user_identities,
-      samples_tables: user.samples_tables.where(team: @team),
       repository_table_states:
         user.repository_table_states.where(repository: @team.repositories)
     }
@@ -150,7 +146,6 @@ class TeamExporter
       my_module_tags: my_module.my_module_tags,
       task_comments: my_module.task_comments,
       my_module_repository_rows: my_module.my_module_repository_rows,
-      sample_my_modules: my_module.sample_my_modules,
       user_my_modules: my_module.user_my_modules,
       protocols: my_module.protocols.map { |pr| protocol(pr) },
       results: my_module.results.map { |res| result(res) }
@@ -204,17 +199,13 @@ class TeamExporter
     }
   end
 
-  def sample(sample)
-    {
-      sample: sample,
-      sample_custom_fields: sample.sample_custom_fields
-    }
-  end
-
   def repository(repository)
+    columns = repository.repository_columns
     {
       repository: repository,
-      repository_columns: repository.repository_columns,
+      repository_columns: repository.repository_columns.map do |c|
+        repository_columns(c)
+      end,
       repository_rows: repository.repository_rows.map do |r|
         repository_row(r)
       end
@@ -235,6 +226,13 @@ class TeamExporter
     {
       repository_cell: cell,
       repository_value: cell.value
+    }
+  end
+
+  def repository_columns(column)
+    {
+      repository_column: column,
+      repository_list_items: column.repository_list_items
     }
   end
 end
