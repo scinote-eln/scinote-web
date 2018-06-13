@@ -989,6 +989,7 @@ en:
     column_new_text: "New column"
     column_create: "Create"
     columns_delete: "Delete"
+    columns_changed: "Someone removed/added a new column to the inventory in use. To prevent data inconsistency we will reload this page for you."
     columns_reorder: "Re-Order Columns"
     columns_visibility: "Visible columns"
     view_all_records: "View All Items"

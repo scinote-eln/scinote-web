@@ -12,7 +12,9 @@
     data-edit-text="<%= I18n.t('general.edit') %>"
     data-cancel-text="<%= I18n.t('general.cancel') %>"
     data-columns-visibility-text="<%= I18n.t('repositories.columns_visibility') %>"
-    data-columns-delete-text="<%= I18n.t('repositories.columns_delete') %>">
+    data-columns-delete-text="<%= I18n.t('repositories.columns_delete') %>"
+    data-available-columns="<%= repository_available_columns_path(repository) %>"
+    data-columns-changed="<%= I18n.t('repositories.columns_changed') %>">
     <thead>
       <tr>
         <th id="checkbox"><input name="select_all" value="1" type="checkbox"></th>
