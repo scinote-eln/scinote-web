@@ -43,3 +43,16 @@
     margin-left: 5px;
   }
 }
+
+.repository-dropdown {
+  max-width: 174px;
+  width: 174px;
+
+  .dropdown-menu.open {
+    width: 174px;
+
+    .selected > a {
+      display: inline-block;
+    }
+  }
+}

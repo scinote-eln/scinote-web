@@ -929,9 +929,9 @@ var RepositoryDatatable = (function(global) {
 
   // Helper functions
   function _listItemDropdown(options, current_value, column_id) {
-    var html = '<select class="form-control selectpicker" ';
+    var html = '<select class="form-control selectpicker repository-dropdown" ';
     html += 'data-abs-min-length="2" data-live-search="true" ';
-    html += 'column_id="' + column_id +'">';
+    html += 'data-container="body" column_id="' + column_id +'">';
     html += '<option value="-1"></option>';
     $.each(options, function(index, value) {
       var selected = (current_value === value[1]) ? 'selected' : '';
@@ -956,7 +956,7 @@ var RepositoryDatatable = (function(global) {
     }).done(function(data) {
       $.each(data.list_items, function(index, el) {
         massage_response.push([el.id, el.data]);
-      })
+      });
     });
     return _listItemDropdown(massage_response, '-1', column_id);
   }
