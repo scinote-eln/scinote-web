@@ -1259,8 +1259,17 @@ var RepositoryDatatable = (function(global) {
     TABLE_ID = '';
   }
 
+  function redrawTableOnSidebarToggle() {
+    $('#sidebar-arrow').on('click', function() {
+      setTimeout(function() {
+        TABLE.draw();
+      }, 250);
+    });
+  }
+
   return Object.freeze({
     init: init,
-    destroy: destroy
+    destroy: destroy,
+    redrawTableOnSidebarToggle: redrawTableOnSidebarToggle
   });
 })(window);
