@@ -108,7 +108,7 @@ class TeamImporter
 
       team_json['repositories'].each do |repository_json|
         repository_json['repository_rows'].each do |repository_row_json|
-          create_repository_cells(repository_row_json['repository_cells'])
+          create_repository_cells(repository_row_json['repository_cells'], team)
         end
       end
 
@@ -384,7 +384,7 @@ class TeamImporter
     end
   end
 
-  def create_repository_cells(repository_cells_json)
+  def create_repository_cells(repository_cells_json, team)
     repository_cells_json.each do |repository_cell_json|
       repository_cell =
         RepositoryCell.new(repository_cell_json['repository_cell'])
@@ -394,7 +394,8 @@ class TeamImporter
       repository_cell.repository_row_id =
         @repository_row_mappings[repository_cell.repository_row_id]
       create_cell_value(repository_cell,
-                        repository_cell_json['repository_value'])
+                        repository_cell_json,
+                        team)
     end
   end
 
@@ -802,22 +803,24 @@ class TeamImporter
     @repository_list_item_mappings[list_item_id]
   end
 
-  def create_cell_value(repository_cell, value_json)
+  def create_cell_value(repository_cell, value_json, team)
+    cell_json = value_json['repository_value']
     case repository_cell.value_type
     when 'RepositoryListValue'
-      list_item_id = find_list_item_id(value_json['repository_list_item_id'])
+      list_item_id = find_list_item_id(cell_json['repository_list_item_id'])
       repository_value = RepositoryListValue.new(
         repository_list_item_id: list_item_id.to_i
       )
     when 'RepositoryTextValue'
-      repository_value = RepositoryTextValue.new(value_json)
+      repository_value = RepositoryTextValue.new(cell_json)
     when 'RepositoryAssetValue'
-      repository_value = RepositoryAssetValue.new()
+      asset = create_asset(value_json['repository_value_asset'], team)
+      repository_value = RepositoryAssetValue.new(asset: asset)
     end
     repository_value.id = nil
-    repository_value.created_by_id = find_user(value_json['created_by_id'])
+    repository_value.created_by_id = find_user(cell_json['created_by_id'])
     repository_value.last_modified_by_id =
-      find_user(value_json['last_modified_by_id'])
+      find_user(cell_json['last_modified_by_id'])
     repository_value.repository_cell = repository_cell
     repository_value.save!
   end

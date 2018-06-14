@@ -225,7 +225,8 @@ class TeamExporter
   def repository_cell(cell)
     {
       repository_cell: cell,
-      repository_value: cell.value
+      repository_value: cell.value,
+      repository_value_asset: get_cell_value_asset(cell)
     }
   end
 
@@ -234,5 +235,11 @@ class TeamExporter
       repository_column: column,
       repository_list_items: column.repository_list_items
     }
+  end
+
+  def get_cell_value_asset(cell)
+    return unless cell.value_type == 'RepositoryAssetValue'
+    @assets_to_copy.push(cell.value.asset)
+    cell.value.asset
   end
 end
