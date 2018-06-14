@@ -7,7 +7,7 @@
 </div>
 
 <div class="checkbox-tree">
-  <ul>
+  <ul data-hook="module-content-list">
     <li>
       <%= form.check_box :module_all, label: t("projects.reports.elements.modals.module_contents_inner.check_all") %>
       <ul>
@@ -35,8 +35,7 @@
         <% if my_module_undefined or (my_module.results.select { |r| r.active? }).exists? %>
           <li>
             <%= form.check_box :module_results, label: t("projects.reports.elements.modals.module_contents_inner.results") %>
-            <ul>
-
+            <ul data-hook="result-types-list">
               <% if my_module_undefined or (my_module.results.select { |r| r.is_asset && r.active? }).exists? %>
                 <li>
                   <%= form.check_box :module_result_assets, label: t("projects.reports.elements.modals.module_contents_inner.result_assets") %>
