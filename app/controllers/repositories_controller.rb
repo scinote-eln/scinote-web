@@ -236,7 +236,8 @@ class RepositoriesController < ApplicationController
 
           if status[:status] == :ok
             flash[:success] = t('repositories.import_records.success_flash',
-                                number_of_rows: status[:nr_of_added])
+                                number_of_rows: status[:nr_of_added],
+                                total_nr: status[:total_nr])
             render json: {}, status: :ok
           else
             flash[:alert] =
