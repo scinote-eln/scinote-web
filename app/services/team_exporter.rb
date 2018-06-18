@@ -200,11 +200,10 @@ class TeamExporter
   end
 
   def repository(repository)
-    columns = repository.repository_columns
     {
       repository: repository,
       repository_columns: repository.repository_columns.map do |c|
-        repository_columns(c)
+        repository_column(c)
       end,
       repository_rows: repository.repository_rows.map do |r|
         repository_row(r)
@@ -230,7 +229,7 @@ class TeamExporter
     }
   end
 
-  def repository_columns(column)
+  def repository_column(column)
     {
       repository_column: column,
       repository_list_items: column.repository_list_items
