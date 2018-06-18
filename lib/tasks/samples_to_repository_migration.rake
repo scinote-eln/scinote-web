@@ -105,6 +105,13 @@ namespace :samples_to_repository_migration do
           end
         end
 
+        # Update report elements
+        team.reports.each do |r|
+          r.report_elements.where(type_of: 7).each do |e|
+            e.update_attributes(type_of: 17, repository_id: repository.id)
+          end
+        end
+
         # Now update smart annotations
         migration_service.update_smart_annotations(team, sample_mappings)
       end
