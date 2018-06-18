@@ -407,7 +407,7 @@ var RepositoryDatatable = (function(global) {
             present_columns.push(id);
           }
         });
-        if( !_.isEqual(columns_ids, present_columns) ) {
+        if( !_.isEqual(columns_ids.sort(), present_columns.sort()) ) {
           alert($(TABLE_ID).data('columns-changed'));
           animateSpinner();
           location.reload();
