@@ -835,6 +835,9 @@ var RepositoryDatatable = (function(global) {
     if (currentMode === 'viewMode') {
       $('#addRepositoryRecord').removeClass('disabled');
       $('#addRepositoryRecord').prop('disabled', false);
+      $('.dataTables_length select').prop('disabled', false);
+      $('#repository-acitons-dropdown').removeClass('disabled');
+      $('#repository-acitons-dropdown').prop('disabled', false);
       $('#addNewColumn').removeClass('disabled');
       $('#addNewColumn').prop('disabled', false);
       $('#repository-columns-dropdown')
@@ -891,6 +894,9 @@ var RepositoryDatatable = (function(global) {
         $('#unassignRepositoryRecords').prop('disabled', false);
       }
     } else if (currentMode === 'editMode') {
+      $('#repository-acitons-dropdown').addClass('disabled');
+      $('#repository-acitons-dropdown').prop('disabled', true);
+      $('.dataTables_length select').prop('disabled', true);
       $('#addRepositoryRecord').addClass('disabled');
       $('#addRepositoryRecord').prop('disabled', true);
       $('#editRepositoryRecord').addClass('disabled');
