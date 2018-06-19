@@ -618,7 +618,7 @@ class ProtocolsController < ApplicationController
       end
       return 0 # return 0 stops the rest of the controller code from executing
     end
-    if file_size > Constants::FILE_MAX_SIZE_MB.megabytes
+    if file_size > Rails.configuration.x.file_max_size_mb.megabytes
       @protocolsio_too_big = true
       respond_to do |format|
         format.js {}

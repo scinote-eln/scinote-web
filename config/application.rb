@@ -26,6 +26,9 @@ module Scinote
 
     config.active_job.queue_adapter = :delayed_job
 
+    # Max uploaded file size in MB
+    config.x.file_max_size_mb = (ENV['FILE_MAX_SIZE_MB'] || 50).to_i
+
     # Logging
     config.log_formatter = proc do |severity, datetime, progname, msg|
       "[#{datetime}] #{severity}: #{msg}\n"

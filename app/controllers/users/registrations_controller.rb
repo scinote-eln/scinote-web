@@ -276,7 +276,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
         success_action_status: '201',
         acl: 'public-read',
         storage_class: "REDUCED_REDUNDANCY",
-        content_length_range: 1..Constants::FILE_MAX_SIZE_MB.megabytes,
+        content_length_range: 1..Rails.configuration.x.file_max_size_mb.megabytes,
         content_type: content_type
       )
       posts.push({

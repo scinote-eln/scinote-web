@@ -64,8 +64,6 @@ class Constants
 
   # Max table JSON size in MB
   TABLE_JSON_MAX_SIZE_MB = 20
-  # Max uploaded file size in MB
-  FILE_MAX_SIZE_MB = 50
   # Max uploaded user picture avatar size in MB
   AVATAR_MAX_SIZE_MB = 0.2
 

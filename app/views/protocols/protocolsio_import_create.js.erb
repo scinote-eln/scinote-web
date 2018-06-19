@@ -4,7 +4,7 @@ $('#modal-import-json-protocol').on('hidden.bs.modal', function () {
 <% if @protocolsio_too_big %>
 $('#modal-import-json-protocol').modal('hide');
 HelperModule.flashAlertMsg(' <%= t('my_modules.protocols.load_from_file_size_error',
-                 size: Constants::FILE_MAX_SIZE_MB ) %>','danger');
+                 size: Rails.configuration.x.file_max_size_mb ) %>','danger');
 <% elsif @protocolsio_invalid_file %>
 $('#modal-import-json-protocol').modal('hide');
 HelperModule.flashAlertMsg(' <%= t('my_modules.protocols.load_from_file_invalid_error') %>','danger');

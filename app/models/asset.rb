@@ -19,7 +19,7 @@ class Asset < ApplicationRecord
   validates_attachment :file,
                        presence: true,
                        size: {
-                         less_than: Constants::FILE_MAX_SIZE_MB.megabytes
+                         less_than: Rails.configuration.x.file_max_size_mb.megabytes
                        }
   validates :estimated_size, presence: true
   validates :file_present, inclusion: { in: [true, false] }
