@@ -125,6 +125,8 @@ module ReportExtends
                            project_header
                            step_comments)
 
+  MY_MODULE_CHILDREN_ELEMENTS = %w(step result_asset result_table result_text)
+
   # path: app/models/report_element.rb
   # method: set_element_reference
 

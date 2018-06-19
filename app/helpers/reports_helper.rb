@@ -33,7 +33,7 @@ module ReportsHelper
     end
 
     file_name = element.type_of
-    if element.type_of.in? %w(step result_asset result_table result_text)
+    if element.type_of.in? ReportExtends::MY_MODULE_CHILDREN_ELEMENTS
       file_name = "my_module_#{element.type_of.singularize}"
     end
     view = "reports/elements/#{file_name}_element.html.erb"
