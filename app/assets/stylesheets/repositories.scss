@@ -14,6 +14,15 @@
   .dataTables_length {
     display: inline-block;
   }
+
+  // hack only for firefox
+  @-moz-document url-prefix() {
+    input.form-control[type="file"] {
+      font-size: 13px;
+      height: auto;
+      padding: 3px 12px;
+    }
+  }
 }
 
 .repository-cog {
