@@ -202,6 +202,8 @@ class TeamImporter
             @experiment_mappings[orig_id]
           when 'tsk'
             @my_module_mappings[orig_id]
+          when 'rep_item'
+            @repository_row_mappings[orig_id]
           end
         next unless new_id
         new_id_encoded = new_id.base62_encode
