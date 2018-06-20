@@ -2,7 +2,7 @@ source 'http://rubygems.org'
 
 ruby '2.4.3'
 
-gem 'rails', '5.1.1'
+gem 'rails', '5.1.6'
 gem 'webpacker', '~> 2.0'
 gem 'figaro'
 gem 'pg', '~> 0.18'
