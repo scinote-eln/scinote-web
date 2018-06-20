@@ -133,7 +133,7 @@ GEM
       momentjs-rails (>= 2.8.1)
     bootstrap_form (2.7.0)
     builder (3.2.3)
-    bullet (5.7.2)
+    bullet (5.7.5)
       activesupport (>= 3.0.0)
       uniform_notifier (~> 1.11.0)
     byebug (9.1.0)
