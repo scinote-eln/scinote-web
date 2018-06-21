@@ -2,7 +2,7 @@
 Feature: Project
   As a creator of team
   I want to navigate to other my team
-  I want to navigate through a sciNote
+  I want to navigate through a SciNote
 
 Background:
 Given the following users is registered:
@@ -45,5 +45,5 @@ Given the following users is registered:
 Scenario: Successful navigate to Premium page
   Given My profile page of a Karli Novak user
   And I click to "i" icon
-  And I click to "About sciNote" in "i" menu
-  Then I should see "About sciNote" modal window
+  And I click to "About SciNote" in "i" menu
+  Then I should see "About SciNote" modal window

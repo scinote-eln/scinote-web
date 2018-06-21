@@ -1,42 +1,8 @@
 <%= content_for :sidebar do %>
   <div id="slide-panel" class="visible">
-
-    <div class="sidebar-header">
-      <div class="sidebar-header-title">
-        <h5><%=t "sidebar.title" %></h5>
-      </div>
-    </div>
-    <div class="sidebar-header-toggle">
-      <a href="" id="toggle-sidebar-link">
-        <span class="glyphicon glyphicon-play-circle"></span>
-      </a>
-    </div>
-
     <div class="tree">
       <ul>
-        <% if project_page? ||
-              sample_types_page_project? ||
-              sample_groups_page_project? %>
-          <li class="active">
-            <span class="tree-link line-wrap">
-              <i></i>
-              <span data-project-id="<%= @project.id %>"
-                    title="<%= @project.name %>"><%= @project.name %></span>
-            </span>
-          </li>
-        <% else %>
-          <li>
-            <span class="tree-link line-wrap">
-              <i></i>
-                <%= link_to @project.name,
-                            project_action_to_link_to(@project),
-                            title: @project.name,
-                            data: { project_id: @project.id } %>
-            </span>
-          </li>
-        <% end %>
-        <%= render partial: 'shared/sidebar/experiments',
-                  locals: { project: @project } %>
+        <%= render partial: 'shared/sidebar/projects' %>
       </ul>
     </div>
   </div>

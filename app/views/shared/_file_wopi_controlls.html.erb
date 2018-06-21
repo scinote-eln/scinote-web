@@ -1,0 +1,16 @@
+<%= link_to view_asset_url(id: asset),
+        class: 'btn btn-default btn-sm',
+        target: '_blank',
+        style: 'display: inline-block' do %>
+  <%= file_application_icon(asset) %>
+  <%= wopi_button_text(asset, 'view') %>
+<% end %>
+<% if can_edit %>
+  <%= link_to edit_asset_url(id: asset),
+          class: 'btn btn-default btn-sm',
+          target: '_blank',
+          style: 'display: inline-block' do %>
+    <%= file_application_icon(asset) %>
+    <%= wopi_button_text(asset, 'edit') %>
+  <% end %>
+<% end %>

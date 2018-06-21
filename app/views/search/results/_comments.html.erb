@@ -1,7 +1,7 @@
 <% results.each do |comment| %>
 
   <p>
-    <span class="glyphicon glyphicon-comment"></span>
+    <span class="fas fa-comment"></span>
     <% if comment.is_a?(ProjectComment) && comment.project.present? %>
       <%=t "search.index.comments.project" %>
     <% elsif comment.is_a?(TaskComment) && comment.my_module.present? %>

@@ -1,9 +1,10 @@
 <% provide(:head_title, t("users.settings.teams.head_title")) %>
+<% provide(:container_class, "no-second-nav-container") %>
 
-<%= render partial: "users/settings/navigation.html.erb" %>
+<%= render partial: "users/settings/sidebar.html.erb" %>
 <div class="tab-content">
-  <div class="tab-pane tab-pane-settings" role="tabpanel"></div>
-  <div class="tab-pane tab-pane-settings active" role="tabpanel">
+  <div class="tab-pane content-pane" role="tabpanel"></div>
+  <div class="tab-pane content-pane active" role="tabpanel">
 
     <%= render partial: "users/settings/teams/breadcrumbs.html.erb" %>
 
@@ -26,7 +27,7 @@
       </div>
 
       <%= link_to t('general.cancel'), teams_path, class: 'btn btn-default' %>
-      <%= f.submit t('users.settings.teams.new.create'), class: 'btn btn-primary' %>
+      <%= f.submit t('users.settings.teams.new.create'), class: 'btn btn-success' %>
 
     <% end %>
   </div>

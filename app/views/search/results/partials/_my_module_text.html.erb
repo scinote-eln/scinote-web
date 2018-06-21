@@ -14,10 +14,6 @@
 <% else %>
   <% if can_read_experiment?(my_module.experiment) %>
     <% case link_to_page %>
-      <% when :samples %>
-        <%= route_to_other_team samples_my_module_path(my_module),
-                                my_module.experiment.project.team,
-                                text %>
       <% when :repositories %>
         <%= route_to_other_team repository_my_module_path(my_module, repository),
                                 my_module.experiment.project.team,

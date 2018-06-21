@@ -6,11 +6,11 @@
 
     </div>
     <div class="panel-body">
-      <%= link_to fa_icon('plus'),
-                    new_project_experiment_url(@project),
-                    remote: true,
-                    class: 'big-plus' %>
-
+      <%= link_to new_project_experiment_url(@project),
+                  remote: true,
+                  class: 'big-plus' do %>
+        <i class="fas fa-plus"></i>
+      <% end %>
     </div>
   </div>
 </div>

@@ -1,6 +1,6 @@
 <% results.each do |tag| %>
   <h5>
-    <span class="glyphicon glyphicon-tag" style="color: <%= tag.color %>"></span>
+    <span class="fas fa-tag" style="color: <%= tag.color %>"></span>
     <%= render partial: "search/results/partials/tag_text.html.erb", locals: { tag: tag, query: search_query } %>
   </h5>
 

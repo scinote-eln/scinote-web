@@ -6,7 +6,7 @@
   <% has_keywords = protocol.in_repository? && protocol.protocol_keywords.count > 0 %>
 
   <h5>
-    <span class="glyphicon glyphicon-list-alt"></span>
+    <span class="fas fa-edit"></span>
     <%= render partial: "search/results/partials/protocol_text.html.erb", locals: { protocol: protocol, query: search_query } %>
   </h5>
 
