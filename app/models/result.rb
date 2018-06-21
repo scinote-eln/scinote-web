@@ -4,7 +4,6 @@ class Result < ApplicationRecord
   auto_strip_attributes :name, nullify: false
   validates :user, :my_module, presence: true
   validates :name, length: { maximum: Constants::NAME_MAX_LENGTH }
-  validate :text_or_asset_or_table
 
   belongs_to :user, inverse_of: :results, optional: true
   belongs_to :last_modified_by,
@@ -102,23 +101,6 @@ class Result < ApplicationRecord
       !result.asset.locked?
     else
       true
-    end
-  end
-
-  private
-
-  def text_or_asset_or_table
-    num_of_assigns = 0
-    num_of_assigns += result_text.blank? ? 0 : 1
-    num_of_assigns += asset.blank? ? 0 : 1
-    num_of_assigns += table.blank? ? 0 : 1
-
-    # Theoretically, we should make sure == 1, not > 1,
-    # but due to GUI problems this is how it is
-    if num_of_assigns > 1
-      errors.add(:base, "Result can only be instance of text/asset/table.")
-    elsif num_of_assigns < 1
-      errors.add(:base, "Result should be instance of text/asset/table.")
     end
   end
 end

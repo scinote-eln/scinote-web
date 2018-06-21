@@ -1,4 +1,4 @@
-# When WOPI performs calls onto sciNote WOPI subdomain REST endpoints
+# When WOPI performs calls onto SciNote WOPI subdomain REST endpoints
 # Rack::MethodOverride MUST be omitted because it crashes the requests
 # due to trying to parse body of the requests
 class WopiMethodOverride

@@ -343,6 +343,7 @@ class MyModule < ApplicationRecord
       .where(repository_id: repository_id)
       .order(created_at: order).find_each do |row|
       row_json = []
+      row_json << row.id
       row_json << row.name
       row_json << I18n.l(row.created_at, format: :full)
       row_json << row.created_by.full_name
@@ -351,6 +352,7 @@ class MyModule < ApplicationRecord
 
     # Prepare column headers
     headers = [
+      I18n.t('repositories.table.id'),
       I18n.t('repositories.table.row_name'),
       I18n.t('repositories.table.added_on'),
       I18n.t('repositories.table.added_by')

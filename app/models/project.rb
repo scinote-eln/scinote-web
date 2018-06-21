@@ -7,8 +7,7 @@ class Project < ApplicationRecord
   validates :name,
             length: { minimum: Constants::NAME_MIN_LENGTH,
                       maximum: Constants::NAME_MAX_LENGTH },
-            uniqueness: { scope: :team, case_sensitive: false,
-                          message: I18n.t('projects.create.name_taken') }
+            uniqueness: { scope: :team, case_sensitive: false }
   validates :visibility, presence: true
   validates :team, presence: true
 
@@ -36,11 +35,28 @@ class Project < ApplicationRecord
   has_many :user_projects, inverse_of: :project
   has_many :users, through: :user_projects
   has_many :experiments, inverse_of: :project
+  has_many :active_experiments, -> { where(archived: false) },
+           class_name: 'Experiment'
   has_many :project_comments, foreign_key: :associated_id, dependent: :destroy
   has_many :activities, inverse_of: :project
   has_many :tags, inverse_of: :project
   has_many :reports, inverse_of: :project, dependent: :destroy
   has_many :report_elements, inverse_of: :project, dependent: :destroy
+
+  after_commit do
+    Views::Datatables::DatatablesReport.refresh_materialized_view
+  end
+
+  def self.visible_from_user_by_name(user, team, name)
+    if user.is_admin_of_team? team
+      return where('projects.archived IS FALSE AND projects.name ILIKE ?',
+                   "%#{name}%")
+    end
+    joins(:user_projects)
+      .where('user_projects.user_id = ? OR projects.visibility = 1', user.id)
+      .where('projects.archived IS FALSE AND projects.name ILIKE ?',
+             "%#{name}%")
+  end
 
   def self.search(
     user,
@@ -145,7 +161,7 @@ class Project < ApplicationRecord
     return (self.user_projects.select { |up| up.user == user }).first.role
   end
 
-  def active_experiments(sort_by = :new)
+  def sorted_active_experiments(sort_by = :new)
     sort = case sort_by
            when 'old' then { created_at: :asc }
            when 'atoz' then { name: :asc }

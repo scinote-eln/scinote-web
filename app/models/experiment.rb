@@ -19,6 +19,8 @@ class Experiment < ApplicationRecord
              optional: true
 
   has_many :my_modules, inverse_of: :experiment, dependent: :destroy
+  has_many :active_my_modules, -> { where(archived: false) },
+           class_name: 'MyModule'
   has_many :my_module_groups, inverse_of: :experiment, dependent: :destroy
   has_many :report_elements, inverse_of: :experiment, dependent: :destroy
   has_many :activities, inverse_of: :experiment

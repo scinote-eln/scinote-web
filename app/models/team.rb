@@ -32,6 +32,13 @@ class Team < ApplicationRecord
   has_many :protocol_keywords, inverse_of: :team, dependent: :destroy
   has_many :tiny_mce_assets, inverse_of: :team, dependent: :destroy
   has_many :repositories, dependent: :destroy
+  has_many :reports, inverse_of: :team, dependent: :destroy
+  has_many :datatables_reports,
+           class_name: 'Views::Datatables::DatatablesReport'
+
+  after_commit do
+    Views::Datatables::DatatablesReport.refresh_materialized_view
+  end
 
   def search_users(query = nil)
     a_query = "%#{query}%"
