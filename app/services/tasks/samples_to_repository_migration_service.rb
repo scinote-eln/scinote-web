@@ -83,6 +83,7 @@ module Tasks
         last_modified_by = item['last_modified_by_id'] || team.created_by_id
         timestamp = conn.quote(Time.now.to_s(:db))
         values = [
+          repository.id,
           sample_group.id,
           conn.quote(item.fetch('name') { "sample group item (#{index})" }),
           created_by,
@@ -92,7 +93,8 @@ module Tasks
         ]
         list_item_sql = <<-SQL
           INSERT INTO repository_list_items
-            (repository_column_id,
+            (repository_id,
+             repository_column_id,
              data,
              created_by_id,
              last_modified_by_id,
@@ -107,6 +109,7 @@ module Tasks
         last_modified_by = item['last_modified_by_id'] || team.created_by_id
         timestamp = conn.quote(Time.now.to_s(:db))
         values = [
+          repository.id,
           sample_type.id,
           conn.quote(item.fetch('name') { "sample type item (#{index})" }),
           created_by,
@@ -116,7 +119,8 @@ module Tasks
         ]
         list_item_sql = <<-SQL
           INSERT INTO repository_list_items
-            (repository_column_id,
+            (repository_id,
+             repository_column_id,
              data,
              created_by_id,
              last_modified_by_id,
@@ -169,7 +173,6 @@ module Tasks
         LEFT OUTER JOIN sample_groups
         ON samples.sample_group_id = sample_groups.id
         WHERE samples.team_id = #{team.id}
-        ORDER BY samples.id
       SQL
 
       ActiveRecord::Base.connection.execute(samples_sql).to_a

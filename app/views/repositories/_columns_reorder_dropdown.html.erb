@@ -1,0 +1,19 @@
+<div id="repository-columns-dropdown" class="dropdown">
+  <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+    <span class="fas fa-eye"></span>
+    <span class="hidden-xs"><%= t('repositories.index.visibility') %></span>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-right smart-dropdown" id="repository-columns-list">
+    <li class="repository-columns-list-template hide">
+      <i class="grippy"></i>
+      <span class="text"></span>
+      <span class="pull-right controls">
+        <span class="vis fas" title=""></span>
+      </span>
+      <br>
+    </li>
+    <li class="dropdown-header">
+      <%= t('repositories.columns_reorder') %>
+    </li>
+  </ul>
+</div>
