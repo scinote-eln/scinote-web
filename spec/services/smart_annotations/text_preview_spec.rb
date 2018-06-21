@@ -1,6 +1,5 @@
-# frozen_string_literal: true
-
 require 'rails_helper'
+require 'smart_annotations/text_preview'
 
 describe SmartAnnotations::TextPreview do
   let(:subject) { described_class }
@@ -12,7 +11,7 @@ describe SmartAnnotations::TextPreview do
                         created_by: user,
                         last_modified_by: user
   end
-  let(:task) { create :my_module, name: 'task', experiment: experiment, created_by: experiment.created_by }
+  let(:task) { create :my_module, name: 'task', experiment: experiment }
 
   describe 'Project annotations' do
     it 'returns a text snippet' do

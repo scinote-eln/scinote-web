@@ -34,6 +34,8 @@ describe Asset, type: :model do
     it { should have_one :result_asset }
     it { should have_one :result }
     it { should have_one :asset_text_datum }
+    it { should have_one :repository_asset_value }
+    it { should have_one :repository_cell }
   end
 
   describe 'Should be a valid object' do

@@ -11,7 +11,7 @@ namespace :versions do
 
     puts '------------------------------------'
     puts ''
-    puts 'sciNote release name generator v0.1 ALPHA'
+    puts 'SciNote release name generator v0.1 ALPHA'
     puts ''
     puts '------------------------------------'
 

@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 require 'rails_helper'
 
 describe SmartAnnotations::TagToHtml do
@@ -8,24 +6,17 @@ describe SmartAnnotations::TagToHtml do
   let!(:user_team) { create :user_team, user: user, team: team, role: 2 }
   let!(:project) { create :project, name: 'my project', team: team }
   let!(:user_project) do
-    create :user_project, project: project, user: user
-  end
-  let!(:user_assignment) do
-    create :user_assignment,
-           assignable: project,
-           user: user,
-           user_role: UserRole.find_by(name: I18n.t('user_roles.predefined.owner')),
-           assigned_by: user
+    create :user_project, project: project, user: user, role: 0
   end
   let(:text) do
     "My annotation of [#my project~prj~#{project.id.base62_encode}]"
   end
-  let(:subject) { described_class.new(user, team, text) }
+  let(:subject) { described_class.new(user, text) }
   describe 'Parsed text' do
     it 'returns a existing string with smart annotation' do
       expect(subject.html).to eq(
-        "My annotation of <a href='/projects/#{project.id}'>" \
-        "<span class='sa-type'>Prj</span>my project</a>"
+        "My annotation of <span class='sa-type'>Prj</span> "\
+        "<a href='/projects/#{project.id}'>my project</a>"
       )
     end
   end
@@ -41,9 +32,9 @@ describe SmartAnnotations::TagToHtml do
 
   describe '#fetch_object/2' do
     it 'rises an error if type is not valid' do
-      expect do
+      expect {
         subject.send(:fetch_object, 'banana', project.id)
-      end.to raise_error(ActiveRecord::RecordNotFound)
+      }.to raise_error(ActiveRecord::RecordNotFound)
     end
 
     it 'returns the required object' do

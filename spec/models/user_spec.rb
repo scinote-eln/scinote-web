@@ -36,7 +36,6 @@ describe User, type: :model do
     it { should have_db_column :invited_by_id }
     it { should have_db_column :invited_by_type }
     it { should have_db_column :invitations_count }
-    it { should have_db_column :tutorial_status }
     it { should have_db_column :settings }
     it { should have_db_column :current_team_id }
     it { should have_db_column :authentication_token }

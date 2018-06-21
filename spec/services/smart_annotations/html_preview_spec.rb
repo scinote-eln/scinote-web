@@ -1,6 +1,5 @@
-# frozen_string_literal: true
-
 require 'rails_helper'
+require 'smart_annotations/html_preview'
 
 describe SmartAnnotations::HtmlPreview do
   let(:subject) { described_class }
@@ -12,14 +11,14 @@ describe SmartAnnotations::HtmlPreview do
                         created_by: user,
                         last_modified_by: user
   end
-  let(:task) { create :my_module, name: 'task', experiment: experiment, created_by: experiment.created_by }
+  let(:task) { create :my_module, name: 'task', experiment: experiment }
 
   describe 'Project annotations with type prj' do
     it 'returns a html snippet' do
       snippet = subject.html(nil, 'prj', project)
       expect(snippet).to eq(
-        "<a href='/projects/#{project.id}'>" \
-        "<span class='sa-type'>Prj</span>my project</a>"
+        "<span class='sa-type'>Prj</span> " \
+        "<a href='/projects/#{project.id}'>my project</a>"
       )
     end
   end
@@ -28,8 +27,8 @@ describe SmartAnnotations::HtmlPreview do
     it 'returns a html snippet' do
       snippet = subject.html(nil, 'exp', experiment)
       expect(snippet).to eq(
-        "<a href='/experiments/#{experiment.id}/canvas'>" \
-        "<span class='sa-type'>Exp</span>my experiment</a>"
+        "<span class='sa-type'>Exp</span> " \
+        "<a href='/experiments/#{experiment.id}/canvas'>my experiment</a>"
       )
     end
   end
@@ -38,8 +37,8 @@ describe SmartAnnotations::HtmlPreview do
     it 'returns a html snippet' do
       snippet = subject.html(nil, 'tsk', task)
       expect(snippet).to eq(
-        "<a href='/modules/#{task.id}/protocols'>" \
-        "<span class='sa-type'>Tsk</span>task</a>"
+        "<span class='sa-type'>Tsk</span> " \
+        "<a href='/modules/#{task.id}/protocols'>task</a>"
       )
     end
   end

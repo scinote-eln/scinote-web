@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 require 'rails_helper'
 require 'zip'
 
@@ -15,7 +13,9 @@ describe RepositoryZipExport, type: :background_job do
                                data_type: 'RepositoryListValue'
   end
   let!(:repository_list_item) do
-    create :repository_list_item, data: 'item one', repository_column: sample_group_column
+    create :repository_list_item, data: 'item one',
+                                  repository: repository,
+                                  repository_column: sample_group_column
   end
   let!(:custom_column) do
     create :repository_column, repository: repository,
@@ -59,32 +59,24 @@ describe RepositoryZipExport, type: :background_job do
     end
 
     it 'generates a new zip export object' do
-      ZipExport.skip_callback(:create, :after, :self_destruct)
       RepositoryZipExport.generate_zip(params, repository, user)
       expect(ZipExport.count).to eq 1
-      ZipExport.set_callback(:create, :after, :self_destruct)
     end
 
     it 'generates a zip with csv file with exported rows' do
-      ZipExport.skip_callback(:create, :after, :self_destruct)
       RepositoryZipExport.generate_zip(params, repository, user)
-      csv_zip_file = ZipExport.first.zip_file
-      file_path = ActiveStorage::Blob.service.public_send(:path_for, csv_zip_file.key)
-      parsed_csv_content = Zip::File.open(file_path) do |zip_file|
-        csv_file = zip_file.glob('*.csv').first
-        csv_content = csv_file.get_input_stream.read
-        CSV.parse(csv_content, headers: true)
-      end
+      zip = ZipExport.first.zip_file_file_name
+                     .gsub('export-', '')
+                     .gsub('.zip', '')
+      csv_path = Rails.root.join('tmp', "temp-zip-#{zip}", 'export.csv').to_s
       index = 0
-
-      parsed_csv_content.each do |row|
+      CSV.foreach(csv_path, headers: true) do |row|
         row_hash = row.to_h
         expect(row_hash.fetch('Sample group')).to eq 'item one'
         expect(row_hash.fetch('Custom items')).to eq 'custum column value'
         expect(row_hash.fetch('Name')).to eq "row #{index}"
         index += 1
       end
-      ZipExport.set_callback(:create, :after, :self_destruct)
     end
   end
 end

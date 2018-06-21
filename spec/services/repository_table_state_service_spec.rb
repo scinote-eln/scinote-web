@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 require 'rails_helper'
 
 describe RepositoryTableStateService do
@@ -14,7 +12,7 @@ describe RepositoryTableStateService do
     create :repository_column, name: 'My column 1',
                                repository: repository,
                                data_type: :RepositoryTextValue
-  end
+                              end
   let!(:repository_column_2) do
     create :repository_column, name: 'My column 2',
                                repository: repository,
@@ -38,7 +36,11 @@ describe RepositoryTableStateService do
 
   describe '#create_default_state' do
     let!(:initial_state) do
-      RepositoryTableStateService.new(user, repository).create_default_state
+      RepositoryTableState.create(
+        user: user,
+        repository: repository,
+        state: {}
+      )
     end
 
     context('record counts') do
@@ -73,7 +75,12 @@ describe RepositoryTableStateService do
 
   describe '#load_state' do
     it 'should load initial state if it exists' do
-      initial_state = RepositoryTableStateService.new(user, repository).create_default_state
+      initial_state = RepositoryTableState.create(
+        user: user,
+        repository: repository,
+        state: {}
+      )
+
       record = service.load_state
       expect(record).to eq initial_state
     end
@@ -88,9 +95,7 @@ describe RepositoryTableStateService do
 
   describe '#update_state' do
     let!(:new_state) do
-      initial_state = RepositoryTableStateService.new(user, repository).create_default_state
-      initial_state.state['columns'][3]['visible'] = false
-      initial_state.state
+      { 'my' => 'state' }
     end
 
     it 'should update the state' do

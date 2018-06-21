@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 require 'rails_helper'
 
 describe SmartAnnotations::TagToText do
@@ -8,16 +6,8 @@ describe SmartAnnotations::TagToText do
   let!(:user_team) { create :user_team, user: user, team: team, role: 2 }
   let!(:project) { create :project, name: 'my project', team: team }
   let!(:user_project) do
-    create :user_project, project: project, user: user
+    create :user_project, project: project, user: user, role: 0
   end
-  let!(:user_assignment) do
-    create :user_assignment,
-           assignable: project,
-           user: user,
-           user_role: UserRole.find_by(name: I18n.t('user_roles.predefined.owner')),
-           assigned_by: user
-  end
-
   let(:text) do
     "My annotation of [#my project~prj~#{project.id.base62_encode}]"
   end
@@ -39,9 +29,9 @@ describe SmartAnnotations::TagToText do
 
   describe '#fetch_object/2' do
     it 'rises an error if type is not valid' do
-      expect do
+      expect {
         subject.send(:fetch_object, 'banana', project.id)
-      end.to raise_error(ActiveRecord::RecordNotFound)
+      }.to raise_error(ActiveRecord::RecordNotFound)
     end
 
     it 'returns the required object' do
@@ -62,7 +52,7 @@ describe SmartAnnotations::TagToText do
       random_text = "Sec:[@#{user_two.full_name}~#{user_two.id.base62_encode}]"
       expect(
         subject.send(:parse_users_annotations, user, team, random_text)
-      ).to eq 'Sec:'
+      ).to eq "Sec:"
     end
   end
 end

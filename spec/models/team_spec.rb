@@ -30,6 +30,7 @@ describe Team, type: :model do
     it { should have_many :protocol_keywords }
     it { should have_many :tiny_mce_assets }
     it { should have_many :repositories }
+    it { should have_many :reports }
   end
 
   describe 'Should be a valid object' do
