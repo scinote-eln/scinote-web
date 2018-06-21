@@ -11,8 +11,20 @@
       margin-bottom: 10px;
 
       & > div > span.pull-left {
-        margin-top: 8px;
-        font-size: 1.2em;
+        margin-top: 10px;
+      }
+    }
+  }
+}
+
+#steps {
+  // hack only for firefox
+  @-moz-document url-prefix() {
+    ul > li {
+      padding-top: 1px;
+
+      a > p:first-child {
+        margin-top: -17px;
       }
     }
   }
