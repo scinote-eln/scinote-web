@@ -1,9 +1,4 @@
 module LeftMenuBarHelper
-
-  def dashboard_are_selected?
-    controller_name == 'dashboards'
-  end
-
   def projects_are_selected?
     controller_name.in? %w(projects experiments my_modules)
   end
@@ -23,10 +18,10 @@ module LeftMenuBarHelper
   end
 
   def settings_are_selected?
-    controller_name.in? %(registrations preferences addons teams connected_accounts webhooks)
+    controller_name.in? %(registrations preferences addons teams)
   end
 
   def activities_are_selected?
-    controller_name == 'global_activities'
+    controller_name == 'activities'
   end
 end

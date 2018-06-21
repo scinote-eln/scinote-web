@@ -5,14 +5,14 @@ import styled from "styled-components";
 import { FormattedMessage } from "react-intl";
 import {
   WHITE_COLOR,
-  COLOR_GRAY,
+  COLOR_SILVER_CHALICE,
   COLOR_ALTO,
   COLOR_ALABASTER
 } from "../../config/constants/colors";
 
 const StyledBootstrapTable = styled(BootstrapTable)`
   thead {
-    background-color: ${COLOR_GRAY};
+    background-color: ${COLOR_SILVER_CHALICE};
 
     > tr > th,
     > tr > td {
