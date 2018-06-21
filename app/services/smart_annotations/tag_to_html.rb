@@ -1,11 +1,14 @@
 # frozen_string_literal: true
 
+require 'smart_annotations/permision_eval'
+require 'smart_annotations/html_preview'
+
 module SmartAnnotations
   class TagToHtml
     attr_reader :html
 
-    def initialize(user, team, text)
-      parse(user, team, text)
+    def initialize(user, text)
+      parse(user, text)
     end
 
     private
@@ -16,7 +19,7 @@ module SmartAnnotations
                         tsk: MyModule,
                         rep_item: RepositoryRow }.freeze
 
-    def parse(user, team, text)
+    def parse(user, text)
       @html = text.gsub(REGEX) do |el|
         value = extract_values(el)
         type = value[:object_type]
@@ -24,10 +27,9 @@ module SmartAnnotations
           object = fetch_object(type, value[:object_id])
           # handle repository_items edge case
           if type == 'rep_item'
-            repository_item(value[:name], user, team, type, object)
+            repository_item(value[:name], user, type, object)
           else
             next unless object && SmartAnnotations::PermissionEval.check(user,
-                                                                         team,
                                                                          type,
                                                                          object)
             SmartAnnotations::HtmlPreview.html(nil, type, object)
@@ -38,10 +40,8 @@ module SmartAnnotations
       end
     end
 
-    def repository_item(name, user, team, type, object)
-      if object&.repository
-        return unless SmartAnnotations::PermissionEval.check(user, team, type, object)
-
+    def repository_item(name, user, type, object)
+      if object && SmartAnnotations::PermissionEval.check(user, type, object)
         return SmartAnnotations::HtmlPreview.html(nil, type, object)
       end
       SmartAnnotations::HtmlPreview.html(name, type, object)

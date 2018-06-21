@@ -1,11 +1,14 @@
 # frozen_string_literal: true
 
+require 'smart_annotations/permision_eval'
+require 'smart_annotations/text_preview'
+
 module SmartAnnotations
   class TagToText
     attr_reader :text
 
     def initialize(user, team, text)
-      parse_items_annotations(user, team, text)
+      parse_items_annotations(user, text)
       parse_users_annotations(user, team, @text)
     end
 
@@ -18,7 +21,7 @@ module SmartAnnotations
                         tsk: MyModule,
                         rep_item: RepositoryRow }.freeze
 
-    def parse_items_annotations(user, team, text)
+    def parse_items_annotations(user, text)
       @text = text.gsub(ITEMS_REGEX) do |el|
         value = extract_values(el)
         type = value[:object_type]
@@ -26,10 +29,9 @@ module SmartAnnotations
           object = fetch_object(type, value[:object_id])
           # handle repository_items edge case
           if type == 'rep_item'
-            repository_item(value[:name], user, team, type, object)
+            repository_item(value[:name], user, type, object)
           else
             next unless object && SmartAnnotations::PermissionEval.check(user,
-                                                                         team,
                                                                          type,
                                                                          object)
             SmartAnnotations::TextPreview.text(nil, type, object)
@@ -45,15 +47,13 @@ module SmartAnnotations
         match = el.match(USER_REGEX)
         user = User.find_by_id(match[2].base62_decode)
         next unless user
-        next if UserTeam.where(user: user, team: team).blank?
+        next if UserTeam.where(user: user, team: team).empty?
         user.full_name
       end
     end
 
-    def repository_item(name, user, team, type, object)
-      if object
-        return unless SmartAnnotations::PermissionEval.check(user, team, type, object)
-
+    def repository_item(name, user, type, object)
+      if object && SmartAnnotations::PermissionEval.check(user, type, object)
         return SmartAnnotations::TextPreview.text(nil, type, object)
       end
       SmartAnnotations::TextPreview.text(name, type, object)

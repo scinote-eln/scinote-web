@@ -16,7 +16,7 @@ module UsersGenerator
   end
 
   # If confirmed == true, the user is automatically confirmed;
-  # otherwise, sciNote sends the "confirmation" email to the user
+  # otherwise, SciNote sends the "confirmation" email to the user
   # If private_team_name == nil, private taem is not created.
   def create_user(full_name,
                   email,

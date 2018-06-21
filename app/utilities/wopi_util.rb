@@ -93,7 +93,7 @@ module WopiUtil
       end
 
       activity.save
-    else
+    elsif @assoc.class == Result
       Activity.create(
         type_of: :start_edit_wopi_file,
         user: current_user,

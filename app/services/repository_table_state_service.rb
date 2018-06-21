@@ -13,31 +13,23 @@ class RepositoryTableStateService
   # record, has EVERYTHING (booleans, symbols, keys, ...) saved as Strings.
 
   def load_state
-    loaded = RepositoryTableState.where(user: @user, repository: @repository).take
-    loaded = create_default_state unless loaded&.state&.present? &&
-                                         loaded.state['length'].to_i.positive? &&
-                                         loaded.state['order'] &&
-                                         loaded.state['columns'] &&
-                                         loaded.state['ColReorder'] &&
-                                         loaded.state.dig('columns', 1, 'visible') == true &&
-                                         loaded.state.dig('columns', 3, 'visible') == true
-    loaded
+    state = RepositoryTableState.where(user: @user, repository: @repository).take
+    if state.blank?
+      state = self.create_default_state
+    end
+    state
   end
 
   def update_state(state)
-    saved_state = load_state
-    state['order'] = @repository.default_table_state['order'] if state.dig('order', 0, 0).to_i < 1
-
-    return if saved_state.state.except('time') == state.except('time')
-
-    saved_state.update(state: state)
+    self.load_state
+        .update(state: state)
   end
 
   def create_default_state
     # Destroy any state object before recreating a new one
     RepositoryTableState.where(user: @user, repository: @repository).destroy_all
 
-    RepositoryTableState.create(
+    return RepositoryTableState.create(
       user: @user,
       repository: @repository,
       state: generate_default_state
@@ -47,16 +39,23 @@ class RepositoryTableStateService
   private
 
   def generate_default_state
-    default_columns_num = @repository.default_columns_count
+    default_columns_num =
+      Constants::REPOSITORY_TABLE_DEFAULT_STATE[:length]
 
     # This state should be strings-only
-    state = @repository.default_table_state.deep_dup
-    @repository.repository_columns.each_with_index do |_, index|
+    state = HashUtil.deep_stringify_keys_and_values(
+      Constants::REPOSITORY_TABLE_DEFAULT_STATE
+    )
+    repository.repository_columns.each_with_index do |_, index|
       real_index = default_columns_num + index
-      state['columns'][real_index] = Constants::REPOSITORY_TABLE_STATE_CUSTOM_COLUMN_TEMPLATE
-      state['ColReorder'] << real_index
+      state['columns'][real_index.to_s] =
+        HashUtil.deep_stringify_keys_and_values(
+          Constants::REPOSITORY_TABLE_STATE_CUSTOM_COLUMN_TEMPLATE
+        )
+      state['ColReorder'] << real_index.to_s
     end
-    state['time'] = Time.new.to_i
+    state['length'] = state['columns'].length.to_s
+    state['time'] = Time.new.to_i.to_s
     state
   end
 end

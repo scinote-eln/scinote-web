@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class RepositoryTableStateColumnUpdateService
   # We're using Constants::REPOSITORY_TABLE_DEFAULT_STATE as a reference for
   # default table state; this Ruby Hash makes heavy use of Ruby symbols
@@ -9,19 +7,20 @@ class RepositoryTableStateColumnUpdateService
   def update_states_with_new_column(repository)
     raise ArgumentError, 'repository is empty' if repository.blank?
 
-    columns_num = repository.default_columns_count + repository.repository_columns.count
     RepositoryTableState.where(
       repository: repository
     ).find_each do |table_state|
       state = table_state.state
-      next if state['columns'].length == columns_num
-
-      index = state['columns'].length
+      index = state['columns'].count
 
       # Add new columns, ColReorder, length entries
-      state['columns'][index] = Constants::REPOSITORY_TABLE_STATE_CUSTOM_COLUMN_TEMPLATE
-      state['ColReorder'] << index
-      state['time'] = (Time.now.to_f * 1_000).to_i
+      state['columns'][index.to_s] =
+        HashUtil.deep_stringify_keys_and_values(
+          Constants::REPOSITORY_TABLE_STATE_CUSTOM_COLUMN_TEMPLATE
+        )
+      state['ColReorder'] << index.to_s
+      state['length'] = (index + 1).to_s
+      state['time'] = Time.new.to_i.to_s
       table_state.save
     end
   end
@@ -30,36 +29,48 @@ class RepositoryTableStateColumnUpdateService
     raise ArgumentError, 'repository is empty' if repository.blank?
     raise ArgumentError, 'old_column_index is empty' if old_column_index.blank?
 
-    RepositoryTableState.where(repository: repository).find_each do |table_state|
+    RepositoryTableState.where(
+      repository: repository
+    ).find_each do |table_state|
       state = table_state.state
-      user = table_state.user
 
-      begin
-        # Remove column from ColReorder, columns, length entries
-        state['columns'].delete_at(old_column_index)
-        state['ColReorder'].delete(old_column_index)
-        state['ColReorder'].map! do |index|
-          if index > old_column_index
-            index - 1
-          else
-            index
-          end
+      # old_column_index is a String!
+
+      # Remove column from ColReorder, columns, length entries
+      state['columns'].delete(old_column_index)
+      state['columns'].keys.each do |index|
+        if index.to_i > old_column_index.to_i
+          state['columns'][(index.to_i - 1).to_s] =
+            state['columns'].delete(index.to_s)
         end
-
-        if state.dig('order', 0, 0).to_i == old_column_index
-          # Fallback to default order if user had table ordered by
-          # the deleted column
-          state['order'] = repository.default_table_state['order']
-        elsif state.dig('order', 0, 0).to_i > old_column_index
-          state['order'][0][0] -= 1
-        end
-
-        state['time'] = (Time.now.to_f * 1_000).to_i
-        table_state.save
-      rescue StandardError => e
-        Rails.logger.error e.message
-        RepositoryTableStateService.new(user, repository).create_default_state
       end
+
+      state['ColReorder'].delete(old_column_index)
+      state['ColReorder'].map! do |index|
+        if index.to_i > old_column_index.to_i
+          (index.to_i - 1).to_s
+        else
+          index
+        end
+      end
+
+      state['order'].reject! { |_, v| v[0] == old_column_index }
+      state['order'].each do |k, v|
+        if v[0].to_i > old_column_index.to_i
+          state['order'][k] = [(v[0].to_i - 1).to_s, v[1]]
+        end
+      end
+      if state['order'].empty?
+        # Fallback to default order if user had table ordered by
+        # the deleted column
+        state['order'] = HashUtil.deep_stringify_keys_and_values(
+          Constants::REPOSITORY_TABLE_DEFAULT_STATE[:order]
+        )
+      end
+
+      state['length'] = (state['length'].to_i - 1).to_s
+      state['time'] = Time.new.to_i.to_s
+      table_state.save
     end
   end
 end
