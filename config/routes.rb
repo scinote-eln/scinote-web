@@ -14,7 +14,7 @@ Rails.application.routes.draw do
                               omniauth_callbacks: 'users/omniauth_callbacks' }
 
     root 'projects#index'
-
+	
     # EPA Help routes: about, contact, and training pages
     get 'help/about', to: 'help#about', as: 'about'
     get 'help/contact', to: 'help#contact', as: 'contact'
@@ -54,7 +54,7 @@ Rails.application.routes.draw do
          to: 'user_samples#save_samples_table_status',
          as: 'save_samples_table_status',
          defaults: { format: 'json' }
-
+    
     post '/state_load/:team_id/:user_id',
          to: 'user_samples#load_samples_table_status',
          as: 'load_samples_table_status',
@@ -200,12 +200,15 @@ Rails.application.routes.draw do
         get 'destroy_html'
       end
       member do
-        post 'parse_sheet'
+        post 'parse_sheet', defaults: { format: 'json' }
         post 'import_samples'
         post 'export_samples'
         post 'export_repository', to: 'repositories#export_repository'
         # Used for atwho (smart annotations)
         get 'atwho_users', to: 'at_who#users'
+        get 'atwho_repositories', to: 'at_who#repositories'
+        get 'atwho_rep_items', to: 'at_who#rep_items'
+		# is samples still necessary, or was it replaced with one of the above?
         get 'atwho_samples', to: 'at_who#samples'
         get 'atwho_projects', to: 'at_who#projects'
         get 'atwho_experiments', to: 'at_who#experiments'
@@ -219,6 +222,20 @@ Rails.application.routes.draw do
 
     get 'projects/archive', to: 'projects#archive', as: 'projects_archive'
 
+    resources :reports, only: :index
+    get 'reports/datatable', to: 'reports#datatable'
+    post 'reports/visible_projects', to: 'reports#visible_projects',
+                                     defaults: { format: 'json' }
+    post 'reports/available_repositories', to: 'reports#available_repositories',
+                                           defaults: { format: 'json' }
+    post 'reports/save_pdf_to_inventory_item',
+         to: 'reports#save_pdf_to_inventory_item',
+         defaults: { format: 'json' }
+    post 'available_asset_type_columns',
+          to: 'repository_columns#available_asset_type_columns',
+          defaults: { format: 'json' }
+    post 'reports/destroy', to: 'reports#destroy'
+
     resources :projects, except: [:new, :destroy] do
       resources :user_projects, path: '/users',
                 only: [:create, :index, :update, :destroy]
@@ -231,7 +248,7 @@ Rails.application.routes.draw do
       resources :tags, only: [:create, :update, :destroy]
       resources :reports,
                 path: '/reports',
-                only: [:index, :new, :create, :edit, :update] do
+                only: %i(edit update create) do
         collection do
           # The posts following here should in theory be gets,
           # but are posts because of parameters payload
@@ -354,9 +371,15 @@ Rails.application.routes.draw do
         post 'repository_index/:repository_id',
              to: 'my_modules#repository_index',
              as: :repository_index
+        post 'assign_repository_records_modal/:repository_id',
+            to: 'my_modules#assign_repository_records_modal',
+            as: :assign_repository_records_modal
         post 'assign_repository_records/:repository_id',
              to: 'my_modules#assign_repository_records',
              as: :assign_repository_records
+        post 'unassign_repository_records_modal/:repository_id',
+            to: 'my_modules#unassign_repository_records_modal',
+            as: :unassign_repository_records_modal
         post 'unassign_repository_records/:repository_id',
              to: 'my_modules#unassign_repository_records',
              as: :unassign_repository_records
@@ -472,7 +495,7 @@ Rails.application.routes.draw do
 
     resources :repositories do
       post 'repository_index',
-           to: 'repositories#repository_table_index',
+           to: 'repository_rows#index',
            as: 'table_index',
            defaults: { format: 'json' }
       # Save repository table state
@@ -490,18 +513,38 @@ Rails.application.routes.draw do
            to: 'repository_rows#delete_records',
            as: 'delete_records',
            defaults: { format: 'json' }
-      post 'repository_columns/:id/destroy_html',
-           to: 'repository_columns#destroy_html',
-           as: 'columns_destroy_html'
+      post 'copy_records',
+           to: 'repository_rows#copy_records',
+           defaults: { format: 'json' }
+      get 'repository_columns/:id/destroy_html',
+          to: 'repository_columns#destroy_html',
+          as: 'columns_destroy_html'
+      get 'create_html',
+          to: 'repository_columns#create_html',
+          as: 'columns_create_html',
+          defaults: { format: 'json' }
+      get 'available_columns',
+          to: 'repository_columns#available_columns',
+          as: 'available_columns',
+          defaults: { format: 'json' }
 
-      resources :repository_columns, only: %i(create edit update destroy)
-
+      resources :repository_columns, only: %i(index create edit update destroy)
       resources :repository_rows, only: %i(create edit update)
       member do
-        post 'parse_sheet'
+        post 'parse_sheet', defaults: { format: 'json' }
         post 'import_records'
       end
     end
+
+    post 'available_rows', to: 'repository_rows#available_rows',
+                           defaults: { format: 'json' }
+
+    post 'repository_list_items', to: 'repository_list_items#search',
+                                  defaults: { format: 'json' }
+
+    get 'repository_rows/:id', to: 'repository_rows#show',
+                               as: :repository_row,
+                               defaults: { format: 'json' }
 
     get 'search' => 'search#index'
     get 'search/new' => 'search#new', as: :new_search
@@ -512,6 +555,9 @@ Rails.application.routes.draw do
     get 'files/:id/large_url',
         to: 'assets#large_image_url',
         as: 'large_image_url_asset'
+    get 'files/:id/preview',
+        to: 'assets#file_preview',
+        as: 'asset_file_preview'
     get 'files/:id/download', to: 'assets#download', as: 'download_asset'
     get 'files/:id/preview', to: 'assets#preview', as: 'preview_asset'
     get 'files/:id/view', to: 'assets#view', as: 'view_asset'
@@ -521,6 +567,9 @@ Rails.application.routes.draw do
       get 'avatar/:id/:style' => 'users/registrations#avatar', as: 'avatar'
       post 'avatar_signature' => 'users/registrations#signature'
       get 'users/auth_token_sign_in' => 'users/sessions#auth_token_create'
+      get 'users/sign_up_provider' => 'users/registrations#new_with_provider'
+      post 'users/complete_sign_up_provider' =>
+           'users/registrations#create_with_provider'
     end
 
     namespace :api, defaults: { format: 'json' } do

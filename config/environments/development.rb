@@ -1,6 +1,6 @@
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
-
+ 
   # In the development environment your application's code is reloaded on
   # every request. This slows down response time but is perfect for development
   # since you don't have to restart the web server when you make code changes.
@@ -48,7 +48,7 @@ Rails.application.configure do
     address: Rails.application.secrets.mailer_address,
     port: Rails.application.secrets.mailer_port,
     domain: Rails.application.secrets.mailer_domain,
-    authentication: 'plain',
+    authentication: Rails.application.secrets.mailer_authentication,
     enable_starttls_auto: true,
     user_name: Rails.application.secrets.mailer_user_name,
     password: Rails.application.secrets.mailer_password
@@ -75,7 +75,7 @@ Rails.application.configure do
   config.assets.raise_runtime_errors = true
 
   # Only log info and higher on development
-  config.log_level = :info
+  config.log_level = :debug
 
   # Only allow Better Errors to work on trusted ip, use ifconfig to see which
   # one you use and put it into application.yml!
@@ -87,10 +87,6 @@ Rails.application.configure do
   # Enable/disable Deface
   config.deface.enabled = ENV['DEFACE_ENABLED'] != 'false'
 
-  # Enable first-time tutorial for users signing in the sciNote for
-  # the first time.
-  config.x.enable_tutorial = ENV['ENABLE_TUTORIAL'] == 'true'
-
   # Enable reCAPTCHA
   config.x.enable_recaptcha = ENV['ENABLE_RECAPTCHA'] == 'true'
 
@@ -101,6 +97,9 @@ Rails.application.configure do
   # Enable user registrations
   config.x.enable_user_registration =
     ENV['ENABLE_USER_REGISTRATION'] == 'false' ? false : true
+
+  # Enable sign in with LinkedIn account
+  config.x.linkedin_signin_enabled = ENV['LINKEDIN_SIGNIN_ENABLED'] == 'false'
 
   # Use an evented file watcher to asynchronously detect changes in source code,
   # routes, locales, etc. This feature depends on the listen gem.
@@ -129,6 +128,5 @@ Rails.application.configure do
     config.x.new_team_on_signup = true
   else
     config.x.new_team_on_signup = false
-    config.x.enable_tutorial = false
   end
 end

@@ -15,6 +15,10 @@ module Scinote
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
 
+    # Swap the Rack::MethodOverride with a wrapped middleware for WOPI handling
+    require_relative '../app/middlewares/wopi_method_override'
+    config.middleware.swap Rack::MethodOverride, WopiMethodOverride
+
     # Load all model concerns, including subfolders
     config.autoload_paths += Dir["#{Rails.root}/app/models/concerns/**/*.rb"]
 
@@ -33,7 +37,7 @@ module Scinote
       wopitest: ['text/plain', 'inode/x-empty']
     }
 
-    # sciNote Core Application version
+    # SciNote Core Application version
     VERSION = File.read(Rails.root.join('VERSION')).strip.freeze
   end
 end

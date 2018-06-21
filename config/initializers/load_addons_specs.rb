@@ -35,12 +35,12 @@ end
 
 if ENV['RAILS_ENV'].in? %w(test development)
   begin
-    puts '[sciNote] Generating symlinks for addons!'
-    puts '[sciNote] Copying features from addons!'
+    puts '[SciNote] Generating symlinks for addons!'
+    puts '[SciNote] Copying features from addons!'
     AddonsSpecLoader.instance.mount
     AddonsSpecLoader.instance.copy_to_features
   rescue
-    puts '[sciNote] Unable to load specs from addons!'
-    puts '[sciNote] Your system does not support symlink!'
+    puts '[SciNote] Unable to load specs from addons!'
+    puts '[SciNote] Your system does not support symlink!'
   end
 end

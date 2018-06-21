@@ -27,6 +27,6 @@
 ## handles error on the platforms that does not support symlink
 ## http://ruby-doc.org/core-2.2.0/File.html#symlink-method
 #rescue
-#  puts '[sciNote] Unable to load React components from addons!'
-#  puts '[sciNote] Your system does not support symlink!'
+#  puts '[SciNote] Unable to load React components from addons!'
+#  puts '[SciNote] Your system does not support symlink!'
 #end

@@ -94,10 +94,6 @@ module ReportExtends
                       :activity,
                       false,
                       %i(my_module order)),
-    ModuleElement.new([:samples],
-                      :samples,
-                      false,
-                      %i(my_module order)),
     ModuleElement.new([:repository],
                       :repository,
                       false,
@@ -113,14 +109,12 @@ module ReportExtends
   # adds :order local to listed elements views
   # ADD REPORT ELEMENT TYPE WHICH YOU WANT TO PASS 'ORDER' LOCAL IN THE PARTIAL
   SORTED_ELEMENTS = %w(my_module_activity
-                       my_module_samples
                        my_module_repository
                        step_comments
                        result_comments)
   # sets local :my_module to the listed my_module child elements
   MY_MODULE_ELEMENTS = %w(my_module
                           my_module_activity
-                          my_module_samples
                           my_module_repository)
 
   # sets local name to first element of the listed elements
@@ -130,6 +124,8 @@ module ReportExtends
                            result_table
                            project_header
                            step_comments)
+
+  MY_MODULE_CHILDREN_ELEMENTS = %w(step result_asset result_table result_text)
 
   # path: app/models/report_element.rb
   # method: set_element_reference
